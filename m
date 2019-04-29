@@ -2,74 +2,76 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ACE7CE789
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Apr 2019 18:18:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91C89E7BD
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Apr 2019 18:28:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbfD2QRz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 29 Apr 2019 12:17:55 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52895 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728889AbfD2QRy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Apr 2019 12:17:54 -0400
-Received: by mail-wm1-f66.google.com with SMTP id j13so15000980wmh.2
-        for <linux-pwm@vger.kernel.org>; Mon, 29 Apr 2019 09:17:52 -0700 (PDT)
+        id S1728663AbfD2Q2v (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 29 Apr 2019 12:28:51 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37915 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728518AbfD2Q2v (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Apr 2019 12:28:51 -0400
+Received: by mail-wr1-f68.google.com with SMTP id k16so16971470wrn.5
+        for <linux-pwm@vger.kernel.org>; Mon, 29 Apr 2019 09:28:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=7MuCDJge4/0mQuYakHYtQWMkvS7qDdLIqKTBzfEl/Uk=;
-        b=SEcdIvIqH+AyBMg/YztPsL17kx94vmCWPOB0bYeqJfidI7vKgXjw1KdMiXwCeQk2Bz
-         Hh0IskW4kwmH4PRPOc9TUKEL+najOBoW5M3az/SWE57V+5KeEgWLVyH9Soc7J4XujrtJ
-         lc9Aw7nfSDcqpZ/RanatCcriRU+9fQfq2jGiyTiemyE+w9ZwTZ5EWW0ilafGsj6wYkrC
-         jAtUrleC7XUJJq7JDxHLolkHsehLoWluTbuy/NErldlMZ9bVHOrB03drfnpw0E3tBq1z
-         LukPQFaLnruNxDMsXIFiBJkSZBzquei1SaGHP/h+fqzR3R2DaBaFU1RBlNbMz+g+KkL8
-         Jbxw==
+        bh=q4nDCksJv20tPE5TBOQxTlxke8VntwcWQZoCTCT8r5Q=;
+        b=Gl2Xpp917cXQyaQJpzK0Ekw9OMJGU+2NqmQj/QSrUNr9XtX6MiI8GxWjF2fxe3Ed7h
+         ibeRNQ4ADNf82p9UHAZSBwpspNJRx5jU1LezAIoKltJYVMkwqU8utkItR4jvHl3z2hk/
+         DBQydo+bIHDsi4qLQj3NqzmUrxJ8n9zSSfyoakjxo4xqCJ28/nLqjQA6V9l+F3tUcVfS
+         3joHxIERVZZg3I2r3S7oLoXnwIVCI6gNw0wukUd7o5g7hPXk1ZX22E4cXpp+HvPcn/ri
+         qE1IvpUWpo3XY0++sxu8hm5VbcqjARDMs76yMIJYEPMD102Ks+Rt0IZlegDv45XMiiqe
+         wSwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7MuCDJge4/0mQuYakHYtQWMkvS7qDdLIqKTBzfEl/Uk=;
-        b=Bm2AHCZEdjGyuTFo7TFaj0fnclBuQ3EzBWk60usTBavG1ZlZfbozhRMC8LHubn+Oi1
-         1TojUTytgRYyad114loYgWyOCryMl6blIKPld8ZPQEq9s/gFoxyUDvPt1bWGgsL0GPvP
-         I+/5jHjJzkSw8y8OTH+rv+fK/sli1KmWcjCOQM4dno2MOWB788bkbskpGnwLHs5aZumE
-         1KD8fhgRke73modyJAx9lj75RlFNBIJKwXq8zR64hltXjTZQUCmGcF2JUFuwUUFEW+c7
-         wo69I2EZhVYpL41plYdDAp8zZMBfRoGAHGE/N10e75y3TFDrRk5grq2RPF6IZ7v6MxXN
-         buSQ==
-X-Gm-Message-State: APjAAAVuyvkuN0BOwRK0aCI4fz+tT6WEJcs5xGSugVxwO1shBJFX6baR
-        ZWk+WThSuM2wmKagDR7G6v0=
-X-Google-Smtp-Source: APXvYqwdA5gNM2S2Bwf8K+6P+IwPmPNSiEMupYHOOJ3RqB2bhiwwM9CgbfksIly7mlnsNqvxTNuJbQ==
-X-Received: by 2002:a1c:7610:: with SMTP id r16mr3189278wmc.15.1556554671922;
-        Mon, 29 Apr 2019 09:17:51 -0700 (PDT)
+        bh=q4nDCksJv20tPE5TBOQxTlxke8VntwcWQZoCTCT8r5Q=;
+        b=fAg12dkdleSAMF+TwusNclu+/M9aPEhI4pCCnWM/KMfdpu42a3Qy2YCu2auwy2p+SS
+         0jhyF1/7IeTk9PiukIhQXMVGyi4pUujazwu1bmSE9jrhbZrkulRgUJDk8uRiboTzFhAN
+         xDFwg0X2zAKHs1swg3wUYZrAS9MDwbsTknqJQKczYSk635CSHBZsDL35FJlQZsboreZ1
+         +HYNHzlU8nnQeSj3voeYuX4XAaFIG3k7c/MTtcUizm1pPUOKcV+GhUPaLOcFx6Iwol57
+         WRxgIYPydVsj9HeRPHTf7QKRr56JVYCclPDkzrcgMTkxHLZzk+tjZyCatnKPEGWdDmnE
+         fGeg==
+X-Gm-Message-State: APjAAAVWCBe7yhJH/R3Q5dGfsva9MjolBy4eTXEVdd35z+0VMQUZjaPU
+        167KA+K+PJs21C1KF+eGtkjmWtqFj7k=
+X-Google-Smtp-Source: APXvYqyIgydsXPAyv9zxQCosDxkcFPie2pxv4Lt8vLpIkTSVAk2ToCBe45883RQ0I/0I887TTxVPZQ==
+X-Received: by 2002:adf:f6c9:: with SMTP id y9mr5300126wrp.298.1556555328726;
+        Mon, 29 Apr 2019 09:28:48 -0700 (PDT)
 Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id q4sm35415065wrx.25.2019.04.29.09.17.50
+        by smtp.gmail.com with ESMTPSA id u17sm14503wmj.1.2019.04.29.09.28.47
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 09:17:50 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 18:17:49 +0200
+        Mon, 29 Apr 2019 09:28:47 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 18:28:47 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Doug Anderson <dianders@chromium.org>,
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
         Heiko Stuebner <heiko@sntech.de>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Chen-Yu Tsai <wens@csie.org>,
         linux-pwm <linux-pwm@vger.kernel.org>,
         "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Brian Norris <briannorris@chromium.org>
+        Sascha Hauer <kernel@pengutronix.de>
 Subject: Re: [PATCH v2 1/3] pwm: rockchip: Don't update the state for the
  caller of pwm_apply_state()
-Message-ID: <20190429161749.GD7747@ulmo>
+Message-ID: <20190429162847.GE7747@ulmo>
 References: <20190312214605.10223-1-u.kleine-koenig@pengutronix.de>
  <20190312214605.10223-2-u.kleine-koenig@pengutronix.de>
  <1707507.TOMHpQGrZ7@phil>
  <CAD=FV=WZHouhGcxOgNG3006XajJQaAp0uq9WjeKRikQx1ru4TA@mail.gmail.com>
  <20190408143914.uucb5dwafq3cnsmk@pengutronix.de>
- <20190429110354.GB7747@ulmo>
- <20190429123102.7wfcdqusn24g5rm7@pengutronix.de>
+ <CA+ASDXO=szekU97iTDK9vqWjT+JtAKeCNTyoY=8aSi5d+v4mkA@mail.gmail.com>
+ <20190429065613.n52uwgys5eugmssd@pengutronix.de>
+ <20190429111855.GC7747@ulmo>
+ <20190429131127.x535uhhtputb7zwl@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="BRE3mIcgqKzpedwo"
+        protocol="application/pgp-signature"; boundary="wchHw8dVAp53YPj8"
 Content-Disposition: inline
-In-Reply-To: <20190429123102.7wfcdqusn24g5rm7@pengutronix.de>
+In-Reply-To: <20190429131127.x535uhhtputb7zwl@pengutronix.de>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
@@ -77,225 +79,210 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---BRE3mIcgqKzpedwo
+--wchHw8dVAp53YPj8
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 29, 2019 at 02:31:02PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> On Mon, Apr 29, 2019 at 01:03:54PM +0200, Thierry Reding wrote:
-> > On Mon, Apr 08, 2019 at 04:39:14PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> > > On Mon, Apr 01, 2019 at 03:45:47PM -0700, Doug Anderson wrote:
+On Mon, Apr 29, 2019 at 03:11:27PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> On Mon, Apr 29, 2019 at 01:18:55PM +0200, Thierry Reding wrote:
+> > On Mon, Apr 29, 2019 at 08:56:13AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> > > On Thu, Apr 18, 2019 at 05:27:05PM -0700, Brian Norris wrote:
 > > > > Hi,
 > > > >=20
-> > > > On Sat, Mar 30, 2019 at 2:17 AM Heiko Stuebner <heiko@sntech.de> wr=
-ote:
+> > > > I'm not sure if I'm misreading you, but I thought I'd add here befo=
+re
+> > > > this expires out of my inbox:
+> > > >=20
+> > > > On Mon, Apr 8, 2019 at 7:39 AM Uwe Kleine-K=C3=B6nig
+> > > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > > My intention here is more to make all drivers behave the same way=
+ and
+> > > > > because only two drivers updated the pwm_state this was the varia=
+nt I
+> > > > > removed.
+> > > >=20
+> > > > To be clear, this patch on its own is probably breaking things. Just
+> > > > because the other drivers don't implement the documented behavior
+> > > > doesn't mean you should break this driver. Maybe the others just
+> > > > aren't used in precise enough scenarios where this matters.
+> > > >=20
+> > > > > When you say that the caller might actually care about the exact
+> > > > > parameters I fully agree. In this case however the consumer shoul=
+d be
+> > > > > able to know the result before actually applying it. So if you do
 > > > > >
-> > > > > Hi,
+> > > > >         pwm_apply_state(pwm, { .period =3D 17, .duty_cycle =3D 12=
+, ...})
 > > > > >
-> > > > > [adding two chromeos people, because veyron and gru are quite
-> > > > > heavy users of the rockchip pwm for both backlight and regulators]
+> > > > > and this results in .period =3D 100 and .duty_cycle =3D 0 then pr=
+obably the
+> > > > > bad things you want to know about already happend. So my idea is =
+a new
+> > > > > function pwm_round_state() that does the adaptions to pwm_state w=
+ithout
+> > > > > applying it to the hardware. After that pwm_apply_state could do =
+the
+> > > > > following:
 > > > > >
-> > > > > Doug, Brian: patchwork patch is here:
-> > > > > https://patchwork.kernel.org/patch/10851001/
+> > > > >         rstate =3D pwm_round_state(pwm, state)
+> > > > >         pwm.apply(pwm, state)
+> > > > >         gstate =3D pwm_get_state(pwm)
 > > > > >
-> > > > > Am Dienstag, 12. M=C3=A4rz 2019, 22:46:03 CET schrieb Uwe Kleine-=
-K=C3=B6nig:
-> > > > > > The pwm-rockchip driver is one of only two PWM drivers which up=
-dates the
-> > > > > > state for the caller of pwm_apply_state(). This might have surp=
-rising
-> > > > > > results if the caller reuses the values expecting them to still
-> > > > > > represent the same state.
+> > > > >         if rstate !=3D gstate:
+> > > > >                 warn about problems
 > > > >=20
-> > > > It may or may not be surprising, but it is well documented.  Specif=
-ically:
-> > > >=20
-> > > >  * pwm_apply_state() - atomically apply a new state to a PWM device
-> > > >  * @pwm: PWM device
-> > > >  * @state: new state to apply. This can be adjusted by the PWM driv=
-er
-> > > >  *    if the requested config is not achievable, for example,
-> > > >  *    ->duty_cycle and ->period might be approximated.
-> > > >=20
-> > > > I don't think your series updates that documentation, right?
-> > > >=20
-> > > >=20
-> > > > > > Also note that this feedback was incomplete as
-> > > > > > the matching struct pwm_device::state wasn't updated and so
-> > > > > > pwm_get_state still returned the originally requested state.
-> > > >=20
-> > > > The framework handles that.  Take a look at pwm_apply_state()?  It =
-does:
-> > > >=20
-> > > > ---
-> > > >=20
-> > > > err =3D pwm->chip->ops->apply(pwm->chip, pwm, state);
-> > > > if (err)
-> > > >     return err;
-> > > >=20
-> > > > pwm->state =3D *state;
+> > > > For our case (we're using this with pwm-regulator), I don't recall =
+[*]
+> > > > we need to be 100% precise about the period, but we do need to be as
+> > > > precise as possible with the duty:period ratio -- so once we get the
+> > > > "feedback" from the underlying PWM driver what the real period will
+> > > > be, we adjust the duty appropriately.
 > > >=20
+> > > I admit that I didn't understood the whole situation and (some) things
+> > > are worse with my patches applied. I still think that changing the
+> > > caller's state variable is bad design, but of course pwm_get_state
+> > > should return the currently implemented configuration.
+> > >=20
+> > > > So I don't see that "warning" would really help for this particular=
+ case.
 > > > >=20
-> > > > ---
+> > > > > But before doing that I think it would be sensible to also fix th=
+e rules
+> > > > > how the round_state callback is supposed to round.
 > > > >=20
-> > > > So I think it wasn't incomplete unless I misunderstood?
+> > > > I'm not quite sure I grok exactly what you're planning, but I would
+> > > > much appreciate if you didn't break things on the way toward fixing
+> > > > them ;)
 > > >=20
-> > > You're right, I missed that the updated state was saved.
+> > > There are currently no rules how the driver should behave for example=
+ if
+> > > the consumer requests
 > > >=20
-> > > > > > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutron=
-ix.de>
-> > > > >
-> > > > > I've tested this on both veyron and gru with backlight and pwm re=
-gulator
-> > > > > and at least both still come up, so
-> > > > > Tested-by: Heiko Stuebner <heiko@sntech.de>
-> > > > >
-> > > > > But hopefully Doug or Brian could also provide another test-point.
-> > > >=20
-> > > > I'd definitely be concerned by this change.  Specifically for the P=
-WM
-> > > > regulator little details about exactly what duty cycle / period you
-> > > > got could be pretty important.
-> > > >=20
-> > > > I guess the problem here is that pwm_get_state() doesn't actually c=
-all
-> > > > into the PWM drivers, it just returns the last state that was appli=
-ed.
-> > > > How does one get the state?  I guess you could change get_state() to
-> > > > actually call into the PWM driver's get_state if it exists?  ...but
-> > > > your patch set doesn't change that behavior...
+> > > 	.duty_cycle =3D 10, .period =3D 50
 > > >=20
-> > > My intention here is more to make all drivers behave the same way and
-> > > because only two drivers updated the pwm_state this was the variant I
-> > > removed.
+> > > and the hardware can only implement multiples of 3 for both values. T=
+he
+> > > obvious candidates are:
 > > >=20
-> > > When you say that the caller might actually care about the exact
-> > > parameters I fully agree. In this case however the consumer should be
-> > > able to know the result before actually applying it. So if you do
+> > >  - .duty_cycle =3D 9, .period =3D 51 (round nearest for both)
+> > >  - .duty_cycle =3D 12, .period =3D 51 (round up)
+> > >  - .duty_cycle =3D 9, .period =3D 48 (round down)
+> > >  - .duty_cycle =3D 9, .period =3D 45 (round duty_cycle and keep propo=
+rtion)
+> > >  - return error (which code?)
 > > >=20
-> > > 	pwm_apply_state(pwm, { .period =3D 17, .duty_cycle =3D 12, ...})
-> > >=20
-> > > and this results in .period =3D 100 and .duty_cycle =3D 0 then probab=
-ly the
-> > > bad things you want to know about already happend. So my idea is a new
-> > > function pwm_round_state() that does the adaptions to pwm_state witho=
-ut
-> > > applying it to the hardware. After that pwm_apply_state could do the
-> > > following:
-> > >=20
-> > > 	rstate =3D pwm_round_state(pwm, state)
-> > > 	pwm.apply(pwm, state)
-> > > 	gstate =3D pwm_get_state(pwm)
-> > >=20
-> > > 	if rstate !=3D gstate:
-> > > 		warn about problems
+> > > And there are some other variants (e.g. round duty_cycle to nearest a=
+nd
+> > > period in the same direction) that might be sensible.
 > >=20
-> > I'm not sure this is really useful. I would expect that in most cases
-> > where it is necessary to have an exact match between the requested state
-> > and the actual state is important, you may not even get to warning about
-> > problems because the system may shut down (e.g. the regulator might not
-> > be outputting enough power to keep the system stable).
+> > The problem is that probably all of the above are valid, though maybe
+> > not for all cases. The choice of algorithm probably depends on both the
+> > PWM driver and the consumer, so I don't think fixing things to one such
+> > algorithm is going to improve anything.
+>=20
+> But if you have pwm_round_state (which implements rounding down for
+> example) you could easily implement a helper that rounds nearest or up.
+> If however each driver rounds the way it prefers coming up with a helper
+> for rounding up is considerably harder.
+
+pwm_round_state() is fundamentally racy. What if, for example, you have
+two consumers racing to set two PWMs provided by the same controller. If
+you have some dependency between the two PWMs (perhaps they need to
+share the same divider or something like that), then between the time
+where pwm_round_state() returns and pwm_apply_state() is called, the
+results of the pwm_round_state() may no longer be valid.
+
+> > > Also it should be possible to know the result before actually
+> > > configuring the hardware. Otherwise things might already go wrong
+> > > because the driver implements a setting that is too far from the
+> > > requested configuration.
 > >=20
-> > I think it'd be far more useful to give consumers a way to request that
-> > the state be applied strictly. I'm not sure how realistic that is,
-> > though. Most PWMs have some sort of restrictions, and in most cases this
-> > might still be okay. Perhaps some sort of permissible relative deviation
-> > factor could be added to give more flexibility?
+> > I agree.
+> >=20
+> > Perhaps somebody with more experience with pwm-regulator can chime in
+> > here, but it sounds to me like if you really want to accurately output a
+> > voltage, you may want to hand-tune the duty-cycle/period pairs that are
+> > used for pwm-regulator.
 >=20
-> I think in practise this isn't going to work. Consider the case that
-> Brian cares about: "we do need to be as precise as possible with the
-> duty:period ratio". So if we want 1/5 duty we might request:
+> This might be more ugly than needed because then you have to setup the
+> table in dependance of the used PWM.
+
+Well, that's what you have to do anyway. I mean, you can't write one
+voltage table that works for one device and then expect it to work for
+every other device. DT by definition is a board-level definition.
+
+> Looking at the pwm-regulator code I
+> think the binding is badly worded. The "Duty-Cycle" parameter is used as
+> second parameter to pwm_set_relative_duty_cycle (with scale =3D 100). So
+> with the regulator defined in the Voltage Table Example of
+> Documentation/devicetree/bindings/regulator/pwm-regulator.txt you'd have
+> to configure
 >=20
-> 	.duty_cycle =3D 100, .period =3D 500
+> 	.duty_cycle =3D 2534, .period =3D 8448
+> =09
+> to get 1.056 V.
+
+Hm... indeed. Requiring the duty-cycle to be in percent is not a good
+idea. That's going to lead to rounding one way or another.
+
 >=20
-> an are using pwm_set_state_exact(). Now consider this fails. What is the
-> next value you should try?
-
-The idea is that if the driver fails to set the exact state if that's
-what was requested, then we just fail. If we really need an exact set
-of values, then it doesn't make sense to offer the user alternatives
-using rounding helpers.
-
-On the other hand, if we introduce an error margin, we could make the
-above work. Let's say the PWM regulator requires accuracy within 1%, we
-could do something like this:
-
-	state.duty_cycle =3D 100;
-	state.period =3D 500;
-	state.accuracy =3D 1; /* there's a slew of ways to encode this */
-	pwm_apply_state(pwm, &state);
-
-That way, the PWM driver can determine whether or not the ratio of
-possible duty-cycle/period is accurate within that 1% requested by the
-user:
-
-	ratio =3D duty-cycle / period
-
-	requested =3D 100 / 500
-	possible =3D 99 / 498
-
-	possible / requested ~=3D 0.993
-
-In other words, possible is > 99% of requested and therefore within the
-1% accuracy that pwm-regulator requested. The PWM driver can therefore
-go ahead and program the selected set of values.
-
-> It's hard to say without knowing why it failed. If however you could do
+> Note that my considerations are not only about pwm-regulators.
 >=20
-> 	mystate.duty_cycle =3D 100
-> 	mystate.period =3D 500
-> 	pwm_round_state(pwm, &mystate);
->=20
-> and after that we have:
->=20
-> 	mystate.duty_cycle =3D 99;
-> 	mystate.period =3D 498;
->=20
-> (because pwm_round_state is supposed to round down[1] and the hardware can
-> implement multiples of 3 only). Then it is easier to determine the next
-> state to try.
+> Also in general I prefer a suitable and well reviewed algorithm (if
+> possible) over a requirement to provide a hand-tuned table of values in
+> a machine-specific device tree.
 
-No, it's really not any easier to determine the next state to try. The
-problem is that the consumer doesn't know anything about the
-restrictions of the driver, and it shouldn't need to know. Given the
-above, how is it supposed to know that the restriction is "multiple of
-3". Just because the two values happen to be multiples of 3 doesn't mean
-that's the restriction. Also, we really don't want every consumer in the
-kernel to implement factorization (and whatnot) to guess what possible
-constraints there could be.
+I agree that an algorithm is usually better, but if you can't create an
+algorithm that works, it's usually better to have a hand-coded fallback
+rather than have no working system at all.
+
+> > According to the device tree bindings there's
+> > already support for a voltage table mode where an exact duty-cycle to
+> > output voltage correspondence is defined. This is as opposed to the
+> > continuous voltage mode where the duty cycle is linearly interpolated
+> > based on the requested output voltage.
+> >=20
+> > pwm-regulator in voltage table mode could run in "strict" mode with zero
+> > deviation allowed, on the assumption that duty-cycle values were hand-
+> > picked to give the desired results. For continuous voltage mode it
+> > probably doesn't matter all that much, since very exact results can't be
+> > guaranteed anyway.
+>=20
+> I don't understand the last sentence? Why is it impossible to get exact
+> results in continuous voltage mode?
+
+I didn't say it was impossible. I said it can't be guaranteed. There may
+very well be combinations of drivers and consumers where the results
+will be accurate, but there may very well be other combinations where
+the results won't be. So if you don't know the exact combination, you
+can't be sure that the result will be accurate.
+
+Now it seems like both voltage table and continuous modes seem to rely
+on some relative duty cycle setting, in which case there's typically
+going to be rounding in both cases (unless you make the duty cycle range
+large enough to accomodate the whole range from 0 to period.
 
 Thierry
 
->=20
-> Best regards
-> Uwe
->=20
-> [1] this isn't fixed yet, but I think it's sensible.
->=20
-> --=20
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---BRE3mIcgqKzpedwo
+--wchHw8dVAp53YPj8
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzHI6oACgkQ3SOs138+
-s6E37w//YefJYX6Z6JBbB/mqbLTpMmNQmImJslNWbDDViVQ9BfMpnH+GB2WBqq+j
-2P/JzZsnv0lwlL+CH7SdHT25DDbLtHP02NVOGOJB1ojGMiACagic92568JqGFVqE
-CaCthmXBetjzXGlW8Ptv6eKLDfadgcIMBoLjIfsP9gvW/ikCl9o6u1m3gN5wIgcT
-HHzj5tjTB0+U8vqOk1ZV4++e3H8oy8MzAlrtHc+AR/6iassKsiXL2MGj4+MDJZjK
-T27JRyn8ZYmEI8KyoE+dU923k9j1jKgKK5BQzWOUlOfpHftxAqD979aMoHf4uLwG
-QFRFWJD3L/Vvf3ELHTc2fIg+HXXXLo08mXyAfP/wnekAGRrwigI6Fy4v8j5y5vMo
-8FppC0n/e46E18pOAYDPaKjnbXs2GvOC0NWpYwqHnhknNX+k1oZym/k02J9kxYqa
-yFXaGEr9SGU4KCnwL6xWiX0I5Q1EpOImca80tU2ktH/LR0oxHIevUAznOuV/Ki4S
-MoZ1wHJA8PYFYNSpxkwDmgO2sglyNb281AqrLxEy6QOPS9lwygEweh3bL7YHkn8M
-pIC+GH3sVshap8YJFi5TeEoYww5GBCmZST/QVWsezBj2b/To7UqdOEHWLEyABXjL
-fkeQFHL2XXua7OjkeUib7wYwBQrg/1u/+vGhSy6cguXCt6qGiwE=
-=jTBu
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzHJjwACgkQ3SOs138+
+s6F+vg//XwtHr6bwoEWwb8ABsYBxluAwGg26p3zajc0Fk6tr0PdRKO5DcipO+aq8
+1Gh3KwMew85ceeGe93QsRCc64tyG/Geo4UoOtY5ge/wtS9IBtQ3d/9c/zNpN5l8I
+IaSakOqCMySBGZ4DjSe2xmtsTKSVJmc0dPd1ua+tnyblHh3uEXsl8wOrkySnJGUc
+U23bQMj+ua3QfB+4DGNCGJ+CZoYUvmOMhKy/uQDoXU5z8WDOOn4FAAS96oH3vk56
+Hhh9Gon5Zmje4qyccbghBjD5rDH5bk6Re9H/F9HQj15aMbQ79990eJt9nHAkVUG8
+qZ0gagUf6pEEuc7SCVVFm0BVqTUu99GCO1gV2eBYlSw85XgzZqnSmWOL9O5gViE9
+7cK5PSwbByBVxslkeK4TJdpUPTQLRzoWxZLQlJwwEFlBV0sfR8ja2ZKdkR2xCZsJ
+ioy43b09B8Tc6mquFmTfrwbmmxt+G7OSsNKVW+jTkfa5wZiwspJfihFrqewJbIIN
+OiUPGmX9SCkwQvvXHWoue1iDXJlw8SbFaxW/2PSAhMeqNDes4chqRtmFJvOHvXpH
+JYn1mupAhrH9SQuY15qSc0tisgSyJgHyTojwmF/eAPHh7PN25ntoL1Q1Q8qic9XG
+hlw6x7yyM2j/Hjwyndl/dgagg4ZXgIXX9+5KH/p+CMOuShb61sU=
+=8pBY
 -----END PGP SIGNATURE-----
 
---BRE3mIcgqKzpedwo--
+--wchHw8dVAp53YPj8--
