@@ -2,100 +2,210 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BBC3ECBB
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 Apr 2019 00:26:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE6DEF294
+	for <lists+linux-pwm@lfdr.de>; Tue, 30 Apr 2019 11:14:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbfD2W0t (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 29 Apr 2019 18:26:49 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34796 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729453AbfD2W0s (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Apr 2019 18:26:48 -0400
-Received: by mail-ot1-f67.google.com with SMTP id n15so4109461ota.1;
-        Mon, 29 Apr 2019 15:26:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oRenui5Af25LDBg0th7gwZb/BUZtc0JZI0y66saQTqM=;
-        b=cdtYlixFfz6J9BgtQGBuXZoDzzh1CyHGUkw5yuMN/+ZNzwbLSCjO3atYHJhzPu1YZS
-         aJedC01nHbLmzlFc/2T7yGyCgsj48LLFi5+21J2sUU5BdkEIJtSXAnjkenBy1iUsBGoz
-         cAjKYfewbBaNf41j990n1+e9BR5mezn6SwlmG6mLggef72/cAeShUMtS2Iaq68Mr3+bC
-         9UsQo81M4k0aeLlLPAjd76YnYbuvk9DTvcHuqGKJiqMh7yNwMXA0laNOWGFhAgvXsQA/
-         8TJonX4V3ve4lblLBmo+F2ssTmOqjEai4h8GTQehm1eLhxxPifM8WU5BysHbjEulIfNV
-         9Dvw==
-X-Gm-Message-State: APjAAAURspMKLIOo1/m1WxHDkZj1Aya0hzmXUianXJ8k43ImTVlCtiPQ
-        DstyzEUFVXDrUHtMbuOqwJMeRsQ=
-X-Google-Smtp-Source: APXvYqwld5ffy3XYYJumXMPmkKQz5Gc5XST2UIO1EEhtfK4zl1hJZzjNCevWVUbeRLAFuTl7ew5iqw==
-X-Received: by 2002:a9d:6397:: with SMTP id w23mr274180otk.332.1556576807861;
-        Mon, 29 Apr 2019 15:26:47 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j82sm14504482oih.31.2019.04.29.15.26.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 15:26:46 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 17:26:46 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        Sascha Hauer <kernel@pengutronix.de>,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
-        ck.hu@mediatek.com, stonea168@163.com
-Subject: Re: [v2 1/3] dt-bindings: display: mediatek: update dsi supported
- chips
-Message-ID: <20190429222646.GA20752@bogus>
-References: <20190416054217.75387-1-jitao.shi@mediatek.com>
- <20190416054217.75387-2-jitao.shi@mediatek.com>
+        id S1726165AbfD3JOo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 30 Apr 2019 05:14:44 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33243 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726644AbfD3JOo (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 Apr 2019 05:14:44 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hLOqX-0000Qt-9W; Tue, 30 Apr 2019 11:14:41 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hLOqV-00074D-6L; Tue, 30 Apr 2019 11:14:39 +0200
+Date:   Tue, 30 Apr 2019 11:14:39 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-pwm <linux-pwm@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+Subject: Re: [PATCH v2 1/3] pwm: rockchip: Don't update the state for the
+ caller of pwm_apply_state()
+Message-ID: <20190430091439.vgr2thlqq3m43hks@pengutronix.de>
+References: <20190312214605.10223-1-u.kleine-koenig@pengutronix.de>
+ <20190312214605.10223-2-u.kleine-koenig@pengutronix.de>
+ <1707507.TOMHpQGrZ7@phil>
+ <CAD=FV=WZHouhGcxOgNG3006XajJQaAp0uq9WjeKRikQx1ru4TA@mail.gmail.com>
+ <20190408143914.uucb5dwafq3cnsmk@pengutronix.de>
+ <CA+ASDXO=szekU97iTDK9vqWjT+JtAKeCNTyoY=8aSi5d+v4mkA@mail.gmail.com>
+ <20190429065613.n52uwgys5eugmssd@pengutronix.de>
+ <20190429111855.GC7747@ulmo>
+ <20190429131127.x535uhhtputb7zwl@pengutronix.de>
+ <20190429162847.GE7747@ulmo>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190416054217.75387-2-jitao.shi@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190429162847.GE7747@ulmo>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 01:42:15PM +0800, Jitao Shi wrote:
-> Update device tree binding documentation for the dsi for
-> Mediatek MT8183 SoCs.
+Hello,
+
+On Mon, Apr 29, 2019 at 06:28:47PM +0200, Thierry Reding wrote:
+> On Mon, Apr 29, 2019 at 03:11:27PM +0200, Uwe Kleine-König wrote:
+> > On Mon, Apr 29, 2019 at 01:18:55PM +0200, Thierry Reding wrote:
+> > > On Mon, Apr 29, 2019 at 08:56:13AM +0200, Uwe Kleine-König wrote:
+> > > > There are currently no rules how the driver should behave for example if
+> > > > the consumer requests
+> > > > 
+> > > > 	.duty_cycle = 10, .period = 50
+> > > > 
+> > > > and the hardware can only implement multiples of 3 for both values. The
+> > > > obvious candidates are:
+> > > > 
+> > > >  - .duty_cycle = 9, .period = 51 (round nearest for both)
+> > > >  - .duty_cycle = 12, .period = 51 (round up)
+> > > >  - .duty_cycle = 9, .period = 48 (round down)
+> > > >  - .duty_cycle = 9, .period = 45 (round duty_cycle and keep proportion)
+> > > >  - return error (which code?)
+> > > > 
+> > > > And there are some other variants (e.g. round duty_cycle to nearest and
+> > > > period in the same direction) that might be sensible.
+> > > 
+> > > The problem is that probably all of the above are valid, though maybe
+> > > not for all cases. The choice of algorithm probably depends on both the
+> > > PWM driver and the consumer, so I don't think fixing things to one such
+> > > algorithm is going to improve anything.
+> > 
+> > But if you have pwm_round_state (which implements rounding down for
+> > example) you could easily implement a helper that rounds nearest or up.
+> > If however each driver rounds the way it prefers coming up with a helper
+> > for rounding up is considerably harder.
 > 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  .../devicetree/bindings/display/mediatek/mediatek,dsi.txt       | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> pwm_round_state() is fundamentally racy. What if, for example, you have
+> two consumers racing to set two PWMs provided by the same controller. If
+> you have some dependency between the two PWMs (perhaps they need to
+> share the same divider or something like that), then between the time
+> where pwm_round_state() returns and pwm_apply_state() is called, the
+> results of the pwm_round_state() may no longer be valid.
+
+Yes, that's somewhat right. That is a problem that all approaches have
+that allow to determine the result of a given request without actually
+applying it. (Same for clk_round_rate() for example.) I think that it
+won't be possible to map all use cases without such an approach however.
+
+But the effect of the race can be minimised if I calculate a good
+PWM state (which might not be optimal because of the race) and then use
+pwm_apply_state_exact().
+
+Having said that, we already have a very similar problem today. Each
+driver that does clk_get_rate without installing a notifier for
+frequency changes might suffer from unexpected results if another clk
+consumer changes the given clk.
+
+> > > > Also it should be possible to know the result before actually
+> > > > configuring the hardware. Otherwise things might already go wrong
+> > > > because the driver implements a setting that is too far from the
+> > > > requested configuration.
+> > > 
+> > > I agree.
+> > > 
+> > > Perhaps somebody with more experience with pwm-regulator can chime in
+> > > here, but it sounds to me like if you really want to accurately output a
+> > > voltage, you may want to hand-tune the duty-cycle/period pairs that are
+> > > used for pwm-regulator.
+> > 
+> > This might be more ugly than needed because then you have to setup the
+> > table in dependance of the used PWM.
 > 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-> index fadf327c7cdf..bd68195458b9 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-> @@ -26,7 +26,7 @@ The MIPI TX configuration module controls the MIPI D-PHY.
->  
->  Required properties:
->  - compatible: "mediatek,<chip>-mipi-tx"
-> -  the supported chips are mt2701 and mt8173.
-> +  the supported chips are mt2701 , mt8173 and mt8183.
+> Well, that's what you have to do anyway. I mean, you can't write one
+> voltage table that works for one device and then expect it to work for
+> every other device. DT by definition is a board-level definition.
 
-drop the space                     ^
+We're talking about different things here. I want that if you assembled
+the same type of pwm-regulator to an imx machine and a rockchip machine
+the representation of this regulator in the respective device trees
+would look identical (apart from the handle to the PWM). Of course this
+doesn't work for two different types of regulators.
 
-With that,
+The datasheet of the regulator for sure is also agnostic to the actual
+PWM driving the input and provides a generic table or formula.
 
-Acked-by: Rob Herring <robh@kernel.org>
+> > Looking at the pwm-regulator code I
+> > think the binding is badly worded. The "Duty-Cycle" parameter is used as
+> > second parameter to pwm_set_relative_duty_cycle (with scale = 100). So
+> > with the regulator defined in the Voltage Table Example of
+> > Documentation/devicetree/bindings/regulator/pwm-regulator.txt you'd have
+> > to configure
+> > 
+> > 	.duty_cycle = 2534, .period = 8448
+> > 	
+> > to get 1.056 V.
+> 
+> Hm... indeed. Requiring the duty-cycle to be in percent is not a good
+> idea. That's going to lead to rounding one way or another.
+> 
+> > 
+> > Note that my considerations are not only about pwm-regulators.
+> > 
+> > Also in general I prefer a suitable and well reviewed algorithm (if
+> > possible) over a requirement to provide a hand-tuned table of values in
+> > a machine-specific device tree.
+> 
+> I agree that an algorithm is usually better, but if you can't create an
+> algorithm that works, it's usually better to have a hand-coded fallback
+> rather than have no working system at all.
+
+We're in agreement here. And as there are cases where a suitable
+algorithm exists, we need some support in the PWM API to actually
+implement these. pwm_round_state is the best I'm aware of as it is
+powerful enough to map all requirements I currently think necessary and
+still it is not too hard to implement the needed callback for the device
+drivers.
+
+> > > According to the device tree bindings there's
+> > > already support for a voltage table mode where an exact duty-cycle to
+> > > output voltage correspondence is defined. This is as opposed to the
+> > > continuous voltage mode where the duty cycle is linearly interpolated
+> > > based on the requested output voltage.
+> > > 
+> > > pwm-regulator in voltage table mode could run in "strict" mode with zero
+> > > deviation allowed, on the assumption that duty-cycle values were hand-
+> > > picked to give the desired results. For continuous voltage mode it
+> > > probably doesn't matter all that much, since very exact results can't be
+> > > guaranteed anyway.
+> > 
+> > I don't understand the last sentence? Why is it impossible to get exact
+> > results in continuous voltage mode?
+> 
+> I didn't say it was impossible. I said it can't be guaranteed. There may
+> very well be combinations of drivers and consumers where the results
+> will be accurate, but there may very well be other combinations where
+> the results won't be. So if you don't know the exact combination, you
+> can't be sure that the result will be accurate.
+
+Either I don't understand what you intend to say, or I fail to see its
+relevance here. If the device tree specifies a PWM regulator with
+continuous voltage mode the right thing to do with a request for a
+certain voltage is to exactly calculate the needed PWM setting with the
+parameters provided and rely on the PWM driver to implement what it
+promises. If the PWM driver is buggy or the device tree representation
+is inaccurate, well there is nothing the PWM framework or the
+pwm-regulator driver can do about it.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
