@@ -2,69 +2,87 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 80AA510DA2
-	for <lists+linux-pwm@lfdr.de>; Wed,  1 May 2019 22:01:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D45C6111FE
+	for <lists+linux-pwm@lfdr.de>; Thu,  2 May 2019 06:01:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbfEAUBH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 1 May 2019 16:01:07 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34441 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfEAUBH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 May 2019 16:01:07 -0400
-Received: by mail-ot1-f66.google.com with SMTP id n15so83211ota.1;
-        Wed, 01 May 2019 13:01:06 -0700 (PDT)
+        id S1725601AbfEBEBz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 2 May 2019 00:01:55 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36294 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbfEBEBy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 2 May 2019 00:01:54 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u17so809210lfi.3
+        for <linux-pwm@vger.kernel.org>; Wed, 01 May 2019 21:01:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wFt7883PSp3sr8375jT8hC/v5fI/cu96gfKmIMdklMc=;
+        b=NL31EuKphJharQ7ownjb9GhREqWgylPR8oRdfySKPZMDjNrY2iEQE+rRHxT4ngNhdt
+         S3dsJVBIj5WOjo2zeN5xhW4Q0JGirUI/rk/HumUBXGZPyY6c/J1IBbu6PR9T1NV5Y0wo
+         oq3rJA7JQDfBlz0eBBDCFI0gPZ23MuCxEtssLK3CzJPda4c/lvmt5xJUeEVYEz/6IAfQ
+         OOx1LWqEaZ/C69l5OxSAB7ViB3GfHPgoJiLsWv49NTYer+IitWd4Skkxi65dDWAJtav6
+         B/w2l2m0I9Wxe+wHEDFd2VXNqAkEstJoKby3kTKWhlMthCaJHtP8Y62rrHurhz+U9nD4
+         F9Zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HxbNQi9DeZ2IJLgdIUVTw8HAwd2FcPK6Vz/jlq7BRoc=;
-        b=qWYrQxsnaeocSKQFVcRphBkA+vycl3wfxbMvcbh6w51iBZqqrzHsnlfDrmXw4HeUlP
-         gdNWtOFltDo27ymGE0JLiSKjMG2Lim8qYypZUbCbjAeh9MblDhIyb/rTep0D7526Tys/
-         iICmLFmBS9dJYCHZ3L9lB0DMHCwfQsrBafFdqrNzMG/WZS1zCaN7vdFp8yHq/lcw6vh4
-         2afxJkJeVtUQ+fV3UVd1UpEt6lRzSOzfU6u+kwAq5rqKhDIn4qWpNp8dnNcehjmY06bg
-         9+OpjtWXx6gI9R90su2E3HYTJMy/RDVteapxetfzpYYFFmmVGCCUa2sE4SkBnsFaVlDf
-         4uAg==
-X-Gm-Message-State: APjAAAUdrXzVuW576feo8uN1wa3bf0EnyYgEvoTMZmY+G7tNDfRgXIIn
-        6HQD9Ai7oga6j+FXKgGdfg==
-X-Google-Smtp-Source: APXvYqzcF2UnIXneOHc3vVzJEv6m01JtjNnKY2BTBLXgguBiPwEBqQ+LDGuHzLgGqqLZG3bvV/MztA==
-X-Received: by 2002:a9d:2066:: with SMTP id n93mr14060248ota.193.1556740866212;
-        Wed, 01 May 2019 13:01:06 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r4sm16901646oia.2.2019.05.01.13.01.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 May 2019 13:01:04 -0700 (PDT)
-Date:   Wed, 1 May 2019 15:01:04 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     thierry.reding@gmail.com, devicetree@vger.kernel.org,
-        baylibre-upstreaming@groups.io,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: pwm: Update bindings for the Meson
- G12A Family
-Message-ID: <20190501200104.GA29281@bogus>
-References: <20190423133646.5705-1-narmstrong@baylibre.com>
- <20190423133646.5705-2-narmstrong@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wFt7883PSp3sr8375jT8hC/v5fI/cu96gfKmIMdklMc=;
+        b=R2ZznvteGEz4gh1TM0aZNdR/Q87WohhamwEy+0BL6jIJptgN2ht/a+ZDzjpqssLHrg
+         OIvNDOxG5IzTqKHgiNzgvql+ATb2bWJFSY4lZBR9BDN8+FAojYbYg7KtKCkwplaSIf43
+         hBf5RG2jrt1lG6lMl8gltA0fUaJ0F1s2UEQBlO0bV7dJgYzJnvgPgktlTLBSjdAaCk8S
+         fJqoW4zBjQ4UEiKtDnL783/7ucnTTLLjWG8ur4xoLYDl4jMij9jVX3GtKuRFp4YM+izz
+         Q3AOLH3Y/M/LY/6WVcF67YE4bcftNLx5Bc45mQ/V48K5dBXfXHf5hOdTQO819TrYegq4
+         a23w==
+X-Gm-Message-State: APjAAAX/HzFTGBkVdYZqRWcUh3cAqZefwvRFDrcNl+656U/TQblmYlMe
+        /mhTGpdLIToJ12aEqtSm1ZeauXV1iFwiUjgLifzFCw==
+X-Google-Smtp-Source: APXvYqxzdvzK/rjINuA4zAT9PeOdoZuUwGQBTyS9ONY/hM54JNu3Te4R4w/vTFUvuR1Nv624R8L3skIAT6evE9QmbPY=
+X-Received: by 2002:a19:81d4:: with SMTP id c203mr672545lfd.160.1556769713184;
+ Wed, 01 May 2019 21:01:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190423133646.5705-2-narmstrong@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1553508779-9685-1-git-send-email-yash.shah@sifive.com>
+ <mvmbm1zueya.fsf@suse.de> <mvmpnqcsn6u.fsf@suse.de>
+In-Reply-To: <mvmpnqcsn6u.fsf@suse.de>
+From:   Yash Shah <yash.shah@sifive.com>
+Date:   Thu, 2 May 2019 09:31:16 +0530
+Message-ID: <CAJ2_jOFu-yCZV_A4B48_fLq7h7UA6LUWhgpxr0uuh7vhW9Q8pA@mail.gmail.com>
+Subject: Re: [PATCH v11 0/2] PWM support for HiFive Unleashed
+To:     Andreas Schwab <schwab@suse.de>
+Cc:     Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sachin Ghadi <sachin.ghadi@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 23 Apr 2019 15:36:44 +0200, Neil Armstrong wrote:
-> Update the doc to explicitly support Meson G12A Family.
-> The 2 first (A & B) AO PWM uses different clock source than the last 2
-> (C & D) AO PWM modules, thus we need to differentiate them.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-meson.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
+Hi Andreas,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Wed, Mar 27, 2019 at 2:34 PM Andreas Schwab <schwab@suse.de> wrote:
+>
+> I have now found out that the ledtrig modules don't load automatically.
+> I would have expected that the linux,default-trigger entries would cause
+> the load of the corresponding ledtrig modules.
+>
+> But there is another problem, that the leds are on by default.
+> Shouldn't they be off by default?
+
+The PWM default output state is high (When duty cycle is 0), So I
+guess leds will remain on by default.
+
+Are you able to test the PWM driver at your end? or you still facing
+some issues?
+
+>
+> Andreas.
+>
+> --
+> Andreas Schwab, SUSE Labs, schwab@suse.de
+> GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+> "And now for something completely different."
