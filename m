@@ -2,87 +2,104 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D45C6111FE
-	for <lists+linux-pwm@lfdr.de>; Thu,  2 May 2019 06:01:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2652F11385
+	for <lists+linux-pwm@lfdr.de>; Thu,  2 May 2019 08:48:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725601AbfEBEBz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 2 May 2019 00:01:55 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36294 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbfEBEBy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 2 May 2019 00:01:54 -0400
-Received: by mail-lf1-f65.google.com with SMTP id u17so809210lfi.3
-        for <linux-pwm@vger.kernel.org>; Wed, 01 May 2019 21:01:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wFt7883PSp3sr8375jT8hC/v5fI/cu96gfKmIMdklMc=;
-        b=NL31EuKphJharQ7ownjb9GhREqWgylPR8oRdfySKPZMDjNrY2iEQE+rRHxT4ngNhdt
-         S3dsJVBIj5WOjo2zeN5xhW4Q0JGirUI/rk/HumUBXGZPyY6c/J1IBbu6PR9T1NV5Y0wo
-         oq3rJA7JQDfBlz0eBBDCFI0gPZ23MuCxEtssLK3CzJPda4c/lvmt5xJUeEVYEz/6IAfQ
-         OOx1LWqEaZ/C69l5OxSAB7ViB3GfHPgoJiLsWv49NTYer+IitWd4Skkxi65dDWAJtav6
-         B/w2l2m0I9Wxe+wHEDFd2VXNqAkEstJoKby3kTKWhlMthCaJHtP8Y62rrHurhz+U9nD4
-         F9Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wFt7883PSp3sr8375jT8hC/v5fI/cu96gfKmIMdklMc=;
-        b=R2ZznvteGEz4gh1TM0aZNdR/Q87WohhamwEy+0BL6jIJptgN2ht/a+ZDzjpqssLHrg
-         OIvNDOxG5IzTqKHgiNzgvql+ATb2bWJFSY4lZBR9BDN8+FAojYbYg7KtKCkwplaSIf43
-         hBf5RG2jrt1lG6lMl8gltA0fUaJ0F1s2UEQBlO0bV7dJgYzJnvgPgktlTLBSjdAaCk8S
-         fJqoW4zBjQ4UEiKtDnL783/7ucnTTLLjWG8ur4xoLYDl4jMij9jVX3GtKuRFp4YM+izz
-         Q3AOLH3Y/M/LY/6WVcF67YE4bcftNLx5Bc45mQ/V48K5dBXfXHf5hOdTQO819TrYegq4
-         a23w==
-X-Gm-Message-State: APjAAAX/HzFTGBkVdYZqRWcUh3cAqZefwvRFDrcNl+656U/TQblmYlMe
-        /mhTGpdLIToJ12aEqtSm1ZeauXV1iFwiUjgLifzFCw==
-X-Google-Smtp-Source: APXvYqxzdvzK/rjINuA4zAT9PeOdoZuUwGQBTyS9ONY/hM54JNu3Te4R4w/vTFUvuR1Nv624R8L3skIAT6evE9QmbPY=
-X-Received: by 2002:a19:81d4:: with SMTP id c203mr672545lfd.160.1556769713184;
- Wed, 01 May 2019 21:01:53 -0700 (PDT)
+        id S1725772AbfEBGsS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 2 May 2019 02:48:18 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:32917 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbfEBGsS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 2 May 2019 02:48:18 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hM5Vu-0007Ur-4B; Thu, 02 May 2019 08:48:14 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hM5Vr-0007UN-Na; Thu, 02 May 2019 08:48:11 +0200
+Date:   Thu, 2 May 2019 08:48:11 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-pwm <linux-pwm@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        kernel@pengutronix.de,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH v2 1/3] pwm: rockchip: Don't update the state for the
+ caller of pwm_apply_state()
+Message-ID: <20190502064811.p7hbsf5rxu2lrmmf@pengutronix.de>
+References: <20190312214605.10223-1-u.kleine-koenig@pengutronix.de>
+ <20190312214605.10223-2-u.kleine-koenig@pengutronix.de>
+ <1707507.TOMHpQGrZ7@phil>
+ <CAD=FV=WZHouhGcxOgNG3006XajJQaAp0uq9WjeKRikQx1ru4TA@mail.gmail.com>
+ <20190408143914.uucb5dwafq3cnsmk@pengutronix.de>
+ <CA+ASDXO=szekU97iTDK9vqWjT+JtAKeCNTyoY=8aSi5d+v4mkA@mail.gmail.com>
+ <20190429065613.n52uwgys5eugmssd@pengutronix.de>
+ <CAD=FV=U71u39ZHkBBfAXVAP=_hY-bAw3L7JdhC=36jkUVxPOmQ@mail.gmail.com>
+ <20190430092824.ijtq3gfh6mqujvnk@pengutronix.de>
+ <CAD=FV=WUi0NbsRDJA_4WeC62QYXjLNH2OygU1FOCx==W0SyqpQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <1553508779-9685-1-git-send-email-yash.shah@sifive.com>
- <mvmbm1zueya.fsf@suse.de> <mvmpnqcsn6u.fsf@suse.de>
-In-Reply-To: <mvmpnqcsn6u.fsf@suse.de>
-From:   Yash Shah <yash.shah@sifive.com>
-Date:   Thu, 2 May 2019 09:31:16 +0530
-Message-ID: <CAJ2_jOFu-yCZV_A4B48_fLq7h7UA6LUWhgpxr0uuh7vhW9Q8pA@mail.gmail.com>
-Subject: Re: [PATCH v11 0/2] PWM support for HiFive Unleashed
-To:     Andreas Schwab <schwab@suse.de>
-Cc:     Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sachin Ghadi <sachin.ghadi@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=WUi0NbsRDJA_4WeC62QYXjLNH2OygU1FOCx==W0SyqpQ@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Andreas,
+Hello Doug,
 
-On Wed, Mar 27, 2019 at 2:34 PM Andreas Schwab <schwab@suse.de> wrote:
->
-> I have now found out that the ledtrig modules don't load automatically.
-> I would have expected that the linux,default-trigger entries would cause
-> the load of the corresponding ledtrig modules.
->
-> But there is another problem, that the leds are on by default.
-> Shouldn't they be off by default?
+On Tue, Apr 30, 2019 at 07:38:09AM -0700, Doug Anderson wrote:
+> On Tue, Apr 30, 2019 at 2:28 AM Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> >
+> > > > Also it should be possible to know the result before actually
+> > > > configuring the hardware. Otherwise things might already go wrong
+> > > > because the driver implements a setting that is too far from the
+> > > > requested configuration.
+> > >
+> > > Later in this thread Thierry didn't like the "round rate" idea due to
+> > > races.  One way to solve that could be to indicate to the PWM
+> > > framework which direction you'd like it to error in: a higher duty
+> > > cycle or a lower one.
+> >
+> > I don't think this would result in settings as optimal as with my
+> > suggestion. If you don't agree and want to convince me: Show how your
+> > suggestion would work with a PWM that can implement only multiples of 3
+> > for duty_cycle and period and you want 20% duty cycle with period <= 1
+> > ms (without making use of the knowledge about the limitation of the
+> > PWM in the algorithm).
+> 
+> I guess I was assuming that somehow this would percolate down into an
+> API call that the PWM driver would implement, so you could make use of
+> the PWM knowledge in the algorithm.
 
-The PWM default output state is high (When duty cycle is 0), So I
-guess leds will remain on by default.
+As there are so many different possibilities what could be "best" for a
+consumer use case, I believe that it would end in a maintenance
+mess if each lowlevel driver would need a callback to implement each
+rounding strategy.
+ 
+> ...but I don't have any real strong feelings about this API so I'll
+> leave it to you and Thierry to hash out what makes you both happy.
 
-Are you able to test the PWM driver at your end? or you still facing
-some issues?
+I look forward to us two agreeing on a best approach ... :-)
 
->
-> Andreas.
->
-> --
-> Andreas Schwab, SUSE Labs, schwab@suse.de
-> GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-> "And now for something completely different."
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
