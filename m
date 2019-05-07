@@ -2,29 +2,29 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 779C615E4A
-	for <lists+linux-pwm@lfdr.de>; Tue,  7 May 2019 09:35:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F303C15E64
+	for <lists+linux-pwm@lfdr.de>; Tue,  7 May 2019 09:41:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfEGHfg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 7 May 2019 03:35:36 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:15356 "EHLO
+        id S1726821AbfEGHld (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 7 May 2019 03:41:33 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:30640 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726276AbfEGHff (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 May 2019 03:35:35 -0400
-X-UUID: 61e10e502b6a4bb7801dfbedde110a53-20190507
-X-UUID: 61e10e502b6a4bb7801dfbedde110a53-20190507
+        with ESMTP id S1726561AbfEGHlc (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 May 2019 03:41:32 -0400
+X-UUID: 5c8c42ba27db4e4e9655739fc1987802-20190507
+X-UUID: 5c8c42ba27db4e4e9655739fc1987802-20190507
 Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <ck.hu@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1757909939; Tue, 07 May 2019 15:35:30 +0800
+        with ESMTP id 601173642; Tue, 07 May 2019 15:41:29 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 7 May 2019 15:35:28 +0800
+ MTKMBS33N1.mediatek.inc (172.27.4.75) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 7 May 2019 15:41:27 +0800
 Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 7 May 2019 15:35:28 +0800
-Message-ID: <1557214528.3498.3.camel@mtksdaap41>
-Subject: Re: [v3 2/3] drm/mediatek: dpi dual edge support
+ Transport; Tue, 7 May 2019 15:41:27 +0800
+Message-ID: <1557214887.3498.7.camel@mtksdaap41>
+Subject: Re: [v3 3/3] drm/mediatek: add mt8183 dpi support
 From:   CK Hu <ck.hu@mediatek.com>
 To:     Jitao Shi <jitao.shi@mediatek.com>
 CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
@@ -51,10 +51,10 @@ CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
         <stonea168@163.com>
-Date:   Tue, 7 May 2019 15:35:28 +0800
-In-Reply-To: <20190416055242.75764-3-jitao.shi@mediatek.com>
+Date:   Tue, 7 May 2019 15:41:27 +0800
+In-Reply-To: <20190416055242.75764-4-jitao.shi@mediatek.com>
 References: <20190416055242.75764-1-jitao.shi@mediatek.com>
-         <20190416055242.75764-3-jitao.shi@mediatek.com>
+         <20190416055242.75764-4-jitao.shi@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
@@ -69,51 +69,60 @@ Hi, Jitao:
 
 On Tue, 2019-04-16 at 13:52 +0800, Jitao Shi wrote:
 
-Where is the commit message? I think you could introduce what is dual
-edge (Maybe it's trivial for you, but not for me)
+I need the commit message. Even though the code is easy to understand,
+words for this patch is still necessary.
 
 Regards,
 CK
 
 > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 > ---
->  drivers/gpu/drm/mediatek/mtk_dpi.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  drivers/gpu/drm/mediatek/mtk_dpi.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 > 
 > diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> index 22e68a100e7b..66405159141a 100644
+> index 66405159141a..fbb087218775 100644
 > --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
 > +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> @@ -117,6 +117,7 @@ struct mtk_dpi_conf {
->  	unsigned int (*cal_factor)(int clock);
->  	u32 reg_h_fre_con;
->  	bool edge_sel_en;
-> +	bool dual_edge;
->  };
->  
->  static void mtk_dpi_mask(struct mtk_dpi *dpi, u32 offset, u32 val, u32 mask)
-> @@ -353,6 +354,13 @@ static void mtk_dpi_config_disable_edge(struct mtk_dpi *dpi)
->  		mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, 0, EDGE_SEL_EN);
+> @@ -681,6 +681,16 @@ static unsigned int mt2701_calculate_factor(int clock)
+>  		return 2;
 >  }
 >  
-> +static void mtk_dpi_enable_dual_edge(struct mtk_dpi *dpi)
+> +static unsigned int mt8183_calculate_factor(int clock)
 > +{
-> +	mtk_dpi_mask(dpi, DPI_DDR_SETTING, DDR_EN | DDR_4PHASE,
-> +		     DDR_EN | DDR_4PHASE);
-> +	mtk_dpi_mask(dpi, DPI_OUTPUT_SETTING, EDGE_SEL, EDGE_SEL);
+> +	if (clock <= 27000)
+> +		return 8;
+> +	else if (clock <= 167000)
+> +		return 4;
+> +	else
+> +		return 2;
 > +}
 > +
->  static void mtk_dpi_config_color_format(struct mtk_dpi *dpi,
->  					enum mtk_dpi_out_color_format format)
->  {
-> @@ -509,6 +517,8 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
->  	mtk_dpi_config_color_format(dpi, dpi->color_format);
->  	mtk_dpi_config_2n_h_fre(dpi);
->  	mtk_dpi_config_disable_edge(dpi);
-> +	if (dpi->conf->dual_edge)
-> +		mtk_dpi_enable_dual_edge(dpi);
->  	mtk_dpi_sw_reset(dpi, false);
+>  static const struct mtk_dpi_conf mt8173_conf = {
+>  	.cal_factor = mt8173_calculate_factor,
+>  	.reg_h_fre_con = 0xe0,
+> @@ -692,6 +702,12 @@ static const struct mtk_dpi_conf mt2701_conf = {
+>  	.edge_sel_en = true,
+>  };
 >  
->  	return 0;
+> +static const struct mtk_dpi_conf mt8183_conf = {
+> +	.cal_factor = mt8183_calculate_factor,
+> +	.reg_h_fre_con = 0xe0,
+> +	.dual_edge = true,
+> +};
+> +
+>  static int mtk_dpi_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -787,6 +803,9 @@ static const struct of_device_id mtk_dpi_of_ids[] = {
+>  	{ .compatible = "mediatek,mt8173-dpi",
+>  	  .data = &mt8173_conf,
+>  	},
+> +	{ .compatible = "mediatek,mt8183-dpi",
+> +	  .data = &mt8183_conf,
+> +	},
+>  	{ },
+>  };
+>  
 
 
