@@ -2,112 +2,197 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 34C1E16A21
-	for <lists+linux-pwm@lfdr.de>; Tue,  7 May 2019 20:27:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE66516F15
+	for <lists+linux-pwm@lfdr.de>; Wed,  8 May 2019 04:39:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbfEGS1V (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 7 May 2019 14:27:21 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:39660 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbfEGS1V (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 May 2019 14:27:21 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 31EC0803C6;
-        Tue,  7 May 2019 20:27:14 +0200 (CEST)
-Date:   Tue, 7 May 2019 20:27:13 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Claudiu.Beznea@microchip.com,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     bbrezillon@kernel.org, airlied@linux.ie, daniel@ffwll.ch,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        Ludovic.Desroches@microchip.com, thierry.reding@gmail.com,
-        lee.jones@linaro.org, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND][PATCH v3 0/6] add LCD support for SAM9X60
-Message-ID: <20190507182713.GA16862@ravnborg.org>
-References: <1556195748-11106-1-git-send-email-claudiu.beznea@microchip.com>
+        id S1726378AbfEHCjN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 7 May 2019 22:39:13 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:14670 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726371AbfEHCjN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 May 2019 22:39:13 -0400
+X-UUID: 5c2410f0ce734c189fe4165f79ed32a3-20190508
+X-UUID: 5c2410f0ce734c189fe4165f79ed32a3-20190508
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1437165598; Wed, 08 May 2019 10:39:08 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 8 May 2019 10:39:05 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 8 May 2019 10:39:05 +0800
+Message-ID: <1557283144.31731.4.camel@mtksdaap41>
+Subject: Re: [v2 2/5] drm/mediatek: CMDQ reg address of mt8173 is different
+ with mt2701
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        Kumar Gala <galak@codeaurora.org>, <linux-pwm@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        "Ajay Kumar" <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        "Rahul Sharma" <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "Russell King" <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <stonea168@163.com>
+Date:   Wed, 8 May 2019 10:39:04 +0800
+In-Reply-To: <20190416060501.76276-3-jitao.shi@mediatek.com>
+References: <20190416060501.76276-1-jitao.shi@mediatek.com>
+         <20190416060501.76276-3-jitao.shi@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556195748-11106-1-git-send-email-claudiu.beznea@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=e5mUnYsNAAAA:8
-        a=KFo_gGakGootahdhYqwA:9 a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19
-        a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Thierry.
+On Tue, 2019-04-16 at 14:04 +0800, Jitao Shi wrote:
+> Config the different CMDQ reg address in driver data.
+> 
+For MT8173, you change reg_cmd_off from 0x180 to 0x200, so this patch is
+a bug fix. You should add a 'Fixes' tag.
 
->   pwm: atmel-hlcdc: add compatible for SAM9X60 HLCDC's PWM
-OK to add the "pwm: atmel-hlcdc: add compatible for SAM9X60 HLCDC's PWM"
-patch via drm-misc?
-Then we can add all 6 patches in one go.
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 39 +++++++++++++++++++++++-------
+>  1 file changed, 30 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index 6c4ac37f983d..573e6bec6d36 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -131,7 +131,6 @@
+>  #define VM_CMD_EN			BIT(0)
+>  #define TS_VFP_EN			BIT(5)
+>  
+> -#define DSI_CMDQ0		0x180
+>  #define CONFIG				(0xff << 0)
+>  #define SHORT_PACKET			0
+>  #define LONG_PACKET			2
+> @@ -156,6 +155,10 @@
+>  
+>  struct phy;
+>  
+> +struct mtk_dsi_driver_data {
+> +	const u32 reg_cmdq_off;
+> +};
+> +
+>  struct mtk_dsi {
+>  	struct mtk_ddp_comp ddp_comp;
+>  	struct device *dev;
+> @@ -182,6 +185,7 @@ struct mtk_dsi {
+>  	bool enabled;
+>  	u32 irq_data;
+>  	wait_queue_head_t irq_wait_queue;
+> +	struct mtk_dsi_driver_data *driver_data;
+>  };
+>  
+>  static inline struct mtk_dsi *encoder_to_dsi(struct drm_encoder *e)
+> @@ -934,6 +938,7 @@ static void mtk_dsi_cmdq(struct mtk_dsi *dsi, const struct mipi_dsi_msg *msg)
+>  	const char *tx_buf = msg->tx_buf;
+>  	u8 config, cmdq_size, cmdq_off, type = msg->type;
+>  	u32 reg_val, cmdq_mask, i;
+> +	u32 reg_cmdq_off = dsi->driver_data->reg_cmdq_off;
+>  
+>  	if (MTK_DSI_HOST_IS_READ(type))
+>  		config = BTA;
+> @@ -953,9 +958,11 @@ static void mtk_dsi_cmdq(struct mtk_dsi *dsi, const struct mipi_dsi_msg *msg)
+>  	}
+>  
+>  	for (i = 0; i < msg->tx_len; i++)
+> -		writeb(tx_buf[i], dsi->regs + DSI_CMDQ0 + cmdq_off + i);
+> +		mtk_dsi_mask(dsi, (reg_cmdq_off + cmdq_off + i) & (~0x3U),
+> +			     (0xffUL << (((i + cmdq_off) & 3U) * 8U)),
+> +			     tx_buf[i] << (((i + cmdq_off) & 3U) * 8U));
 
-	Sam
+You say you would follow Nicolas' suggestion here.
 
-(Kept remaining of mail for reference)
-> 
-> Hi,
-> 
-> These patches adds support for SAM9X60's LCD controller.
-> 
-> First patches add option to specify if controller clock source is fixed.
-> Second patch avoid a variable initialization in atmel_hlcdc_crtc_mode_set_nofb().
-> The 3rd add compatibles in pwm-atmel-hlcdc driver.
-> The 4th patch enables sys_clk in probe since SAM9X60 needs this.
-> Specific support was added also in suspend/resume hooks.
-> The 5th patch adds SAM9X60's LCD configuration and enabled it.
-> 
-> I took the changes of this series and introduced also a fix
-> (this is the 6th patch in this series) - if you want to send it separately
-> I would gladly do it.
-> 
-> I resend this to also include Lee Jones for pwm-atmel-hlcdc changes.
-> 
-> Thank you,
-> Claudiu Beznea
-> 
-> Changes in v3:
-> - keep compatible string on patch 3/6 on a single line (I keep here a tab
->   in front of ".compatible" to be aligned with the rest of the code in
->   atmel_hlcdc_dt_ids[])
-> - patches 4/7 and 3/7 from v2 were applied so remove them from this version
-> - add a fix for atmel_hlcdc (patch 6/6)
-> 
-> Changes in v2:
-> - use "|" operator in patch 1/7 to set ATMEL_HLCDC_CLKSEL on cfg
-> - collect Acked-by, Reviewed-by tags
-> 
-> Claudiu Beznea (4):
->   drm: atmel-hlcdc: add config option for clock selection
->   drm: atmel-hlcdc: avoid initializing cfg with zero
->   pwm: atmel-hlcdc: add compatible for SAM9X60 HLCDC's PWM
->   drm/atmel-hclcdc: revert shift by 8
-> 
-> Sandeep Sheriker Mallikarjun (2):
->   drm: atmel-hlcdc: enable sys_clk during initalization.
->   drm: atmel-hlcdc: add sam9x60 LCD controller
-> 
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c  |  18 ++--
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c    | 120 +++++++++++++++++++++++-
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h    |   2 +
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c |   2 +-
->  drivers/pwm/pwm-atmel-hlcdc.c                   |   1 +
->  5 files changed, 132 insertions(+), 11 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>  
+> -	mtk_dsi_mask(dsi, DSI_CMDQ0, cmdq_mask, reg_val);
+> +	mtk_dsi_mask(dsi, reg_cmdq_off, cmdq_mask, reg_val);
+>  	mtk_dsi_mask(dsi, DSI_CMDQ_SIZE, CMDQ_SIZE, cmdq_size);
+>  }
+>  
+> @@ -1074,10 +1081,27 @@ static const struct component_ops mtk_dsi_component_ops = {
+>  	.unbind = mtk_dsi_unbind,
+>  };
+>  
+> +static const struct mtk_dsi_driver_data mt8173_dsi_driver_data = {
+> +	.reg_cmdq_off = 0x200,
+> +};
+> +
+> +static const struct mtk_dsi_driver_data mt2701_dsi_driver_data = {
+> +	.reg_cmdq_off = 0x180,
+> +};
+> +
+> +static const struct of_device_id mtk_dsi_of_match[] = {
+> +	{ .compatible = "mediatek,mt2701-dsi",
+> +	  .data = &mt2701_dsi_driver_data },
+> +	{ .compatible = "mediatek,mt8173-dsi",
+> +	  .data = &mt8173_dsi_driver_data },
+> +	{ },
+> +};
+> +
+>  static int mtk_dsi_probe(struct platform_device *pdev)
+>  {
+>  	struct mtk_dsi *dsi;
+>  	struct device *dev = &pdev->dev;
+> +	const struct of_device_id *of_id;
+>  	struct resource *regs;
+>  	int irq_num;
+>  	int comp_id;
+> @@ -1101,6 +1125,9 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto err_unregister_host;
+>  
+> +	of_id = of_match_device(mtk_dsi_of_match, &pdev->dev);
+> +	dsi->driver_data = of_id->data;
+
+Maybe use of_device_get_match_data() is a more simple way. You could
+refer to [1].
+
+[1]
+https://elixir.bootlin.com/linux/v5.1/source/drivers/gpu/drm/mediatek/mtk_disp_ovl.c#L300
+
+Regards,
+CK
+
+> +
+>  	dsi->engine_clk = devm_clk_get(dev, "engine");
+>  	if (IS_ERR(dsi->engine_clk)) {
+>  		ret = PTR_ERR(dsi->engine_clk);
+> @@ -1193,12 +1220,6 @@ static int mtk_dsi_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -static const struct of_device_id mtk_dsi_of_match[] = {
+> -	{ .compatible = "mediatek,mt2701-dsi" },
+> -	{ .compatible = "mediatek,mt8173-dsi" },
+> -	{ },
+> -};
+> -
+>  struct platform_driver mtk_dsi_driver = {
+>  	.probe = mtk_dsi_probe,
+>  	.remove = mtk_dsi_remove,
+
+
