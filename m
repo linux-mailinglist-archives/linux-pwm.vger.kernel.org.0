@@ -2,69 +2,79 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B39918C70
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 May 2019 16:55:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FF9818C9B
+	for <lists+linux-pwm@lfdr.de>; Thu,  9 May 2019 17:02:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfEIOzQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 9 May 2019 10:55:16 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:32803 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfEIOzQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 May 2019 10:55:16 -0400
-Received: by mail-wr1-f67.google.com with SMTP id e11so3516039wrs.0;
-        Thu, 09 May 2019 07:55:15 -0700 (PDT)
+        id S1726687AbfEIPCq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 9 May 2019 11:02:46 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37422 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfEIPCq (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 May 2019 11:02:46 -0400
+Received: by mail-wr1-f65.google.com with SMTP id a12so3544028wrn.4;
+        Thu, 09 May 2019 08:02:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=pgroLrXjulKnOxz4J39w9NLvm6dxB7hV2FJbK952mx8=;
-        b=mta2wZVs1zifxA4N+ZLr345+hkPVQeWpcLzJp2Q9hEiN6JaKkzUMqJ3O2twKW7WrOv
-         qGx8heXrJNdupUhq6pASZZ4ylBuAZCJnfOv+4TgW8tLRYVwQEZ+9zOwWS/4iNDOLTtDY
-         FrK+UgVgh6g/EWufrLFJ0BHrtl6g/oMwO/Tt8aij/78YV3mfNwfISRJy0Jea39KAZgGP
-         fEPBerQbT5g6bvQlgRBVRu4MIY50MjWOPLCJ2ciaBy4uuBpptdMqi9i7V/zp6i2cPW8k
-         TxKRkeyds8jkhCt3qyhAepGdTYhIKbRWs765VJtjyKXqTyky4V87BDo7FFMMqEkLq9pX
-         mPGQ==
+        bh=4dsx/q7HbMfsJZPbIMqDoMkdbIHaHboqniF/scq0b4s=;
+        b=op6o+sDbTlaAqh7mLZq6GcfYJtBYwK/t5Ez5FeZjMGVM+R4nw64WCOnJHAIu6anCbL
+         BujfdZAeZMWJ/Dlaq2wod6cDWiBHkdyHNul9SUIeV0O98paTiQKNL4R0x324PuVX8Gjz
+         bFACvMoqM5o6BVotZK0jvKrZEwYCgTSHBdXcgXrwlzeEFePHDECxcqMvzZf2FN2552Hf
+         aQMw1DaX8t6ZcdCmAzG+Xt199k66+RES/9LNoSEjHu0kyuIlH4oCRpGLdAuWtfp2zxyu
+         cS2KNl3aGbr2CHQP0pDZPHAm33chi1iuIaAE9w8ax2fPTZ1Zi0bycLTZCT55uCViWszk
+         DqjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pgroLrXjulKnOxz4J39w9NLvm6dxB7hV2FJbK952mx8=;
-        b=Q/tbCYtkPE9hqFfkJg82aD8z4NOE0k2zGDu+ZfhNxuTsBW4fzEsbbICONgNSzIvcur
-         IiCZNi6prWNrMV8O0SgHkNMNoc5dtVEAuHthX46kvnus3JxDB8nfqUjIq3J6f4qaDcdz
-         G7gNSNiM2N07NCEWtTMfKqnOi8OBGMKCVqylH2hUbp/Vp3q4h2nWvtt3+veVm0dLRWpJ
-         v29SS82mGCeD2SlldTVR3reRWl4+L12ZDtE8m+MmZA6BCYcv51PWaVojKPnXU3JmBaeu
-         A12cF6cTgMKdu7/7s3GgCv3nC2z3+QIyr444zl2Lt380QlFEFnHXuS4LdmBweJBCPU+D
-         zrug==
-X-Gm-Message-State: APjAAAXPrZSqBf7fJL4jPAE/hGb2bm+R2k5fYT7aMlD1RUjnVFR7jjxw
-        4XB/zbi9IyHmsaMmoNLvvqQ=
-X-Google-Smtp-Source: APXvYqx8AvOreAFuIDbkVT/vqoQoGyW4PTRNLbrFcPikFoENIJsGVkf8thsUBovN8jMkq6YDAiPolg==
-X-Received: by 2002:a5d:4b92:: with SMTP id b18mr3471767wrt.11.1557413714464;
-        Thu, 09 May 2019 07:55:14 -0700 (PDT)
+        bh=4dsx/q7HbMfsJZPbIMqDoMkdbIHaHboqniF/scq0b4s=;
+        b=prDAztzHNhYnvSRv9ukHuJnK1lsdGndY2o5UOq3XSfirVDP7VHyOrTS9nkyx6rw6uy
+         4KtO97QZDMRVIYVeRCv5nprV9UrSu0puy5KoLQoDaxAGRD79NqB4GzIwr9kYO4V/HcOJ
+         10h0ChBc2/cqrCmnBd+8Nf96SKxsDuBEXL0CJkH54zaGjqZ9Ek2170nHj418cjQtKqjE
+         dn480c+aZx3nZMjZWt5W8sssrQbUzgaGRvtdluoj/LkgYhXUDFWkjvjerrXNibuK9la7
+         3DX0Yyi8ACPSZNRmBI+vlUAZNhhcdcP01TJqzu5urvjmjyW+W8E9OD55t9QKCdZQJ6zo
+         ArUA==
+X-Gm-Message-State: APjAAAV4JG7HxuPx//L8WkTelGbKE55ImZsNKcBYGlbf2HgABFIv2dnZ
+        lXGNUqc4O6aB9N14WmexE0I=
+X-Google-Smtp-Source: APXvYqz1DHOTlq78BMwbYXJC2Qau6WsX7Qi1e9jzkdUqySLmmY1bFf1hVZGmkhfBKtlDD7VBl5mzVw==
+X-Received: by 2002:a5d:4ec9:: with SMTP id s9mr3667227wrv.223.1557414164337;
+        Thu, 09 May 2019 08:02:44 -0700 (PDT)
 Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id t18sm4549657wrg.19.2019.05.09.07.55.13
+        by smtp.gmail.com with ESMTPSA id p18sm1628761wrp.38.2019.05.09.08.02.42
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 May 2019 07:55:13 -0700 (PDT)
-Date:   Thu, 9 May 2019 16:55:12 +0200
+        Thu, 09 May 2019 08:02:43 -0700 (PDT)
+Date:   Thu, 9 May 2019 17:02:42 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
         "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
         "kernel@pengutronix.de" <kernel@pengutronix.de>,
         "festevam@gmail.com" <festevam@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
         "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] pwm: imx27: use devm_platform_ioremap_resource() to
- simplify code
-Message-ID: <20190509145512.GB8907@ulmo>
-References: <1554095960-15638-1-git-send-email-Anson.Huang@nxp.com>
+Subject: Re: [PATCH V12 1/5] dt-bindings: pwm: Add i.MX TPM PWM binding
+Message-ID: <20190509150242.GC8907@ulmo>
+References: <1557408252-21281-1-git-send-email-Anson.Huang@nxp.com>
+ <1557408252-21281-2-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="RacQGezy2Y99S6cT"
+        protocol="application/pgp-signature"; boundary="gLcqQrOcczDba7nC"
 Content-Disposition: inline
-In-Reply-To: <1554095960-15638-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1557408252-21281-2-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
@@ -72,43 +82,46 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---RacQGezy2Y99S6cT
+--gLcqQrOcczDba7nC
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 01, 2019 at 05:24:02AM +0000, Anson Huang wrote:
-> Use the new helper devm_platform_ioremap_resource() which wraps the
-> platform_get_resource() and devm_ioremap_resource() together, to
-> simplify the code.
+On Thu, May 09, 2019 at 01:29:19PM +0000, Anson Huang wrote:
+> Add i.MX TPM(Low Power Timer/Pulse Width Modulation Module) PWM binding.
 >=20
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
->  drivers/pwm/pwm-imx27.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> No change.
+> ---
+>  .../devicetree/bindings/pwm/imx-tpm-pwm.txt        | 22 ++++++++++++++++=
+++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
 
 Applied, thanks.
 
 Thierry
 
---RacQGezy2Y99S6cT
+--gLcqQrOcczDba7nC
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUP1AACgkQ3SOs138+
-s6G0tw//agEcPC0fIAFdWa9AvRrl3E+d0tfQxSd+oiQ9H775nxrULNP4gVV2dBiy
-qyW5SsswVKV6Rl+S0Q6JvhEjo/j9ttZrwNe/f9jOTWvX/mQzqVufbAIhBikAP3r+
-6yiFICJ/idWQClOG6bkuaFBDNy/gPIIO82U+womvNEMB4fIkUEKl3wn0ZeEfJ8lN
-cxnNdFpTG8f098WBVeQSsoxJ97jzbQQNOkmIbEhBL75o5/gh5rqky8B6O2vD2Ncv
-rI04e1aQ7svRv2bVJIPpeHkAcNg0McMmjKvJQmnjCMD2FomkFbWDpcheIgCwIXJb
-yg77VXfdIbwUlIeMy9JOS6kOj/m3dbQbUoyMDr8H6J9RZ43+Xv1Neyv15+rX/cJX
-fHP1ZIIJUJy8QD0aal2ybA6jxFknAmE3loPYfCkiVwj+tj/m9Eb2Vjfi3ca1eFj+
-lXZoiZG1rYaplFjCOedZcY0DwgnOcBmbLhITnc8IOBd1QPPScNmYj8ceZr5qn9SL
-XNLpCj7cBULCJqIOKvWR2g9EY3/vEg208Sy/B8O7kbjT67uwDCEKYpuof7SzXe+/
-VvS7MHaw4uJzxuBn5ES7thUf0R7EYS/HkaMsdlPqCjnHeSHNQTxMwLOSF+cSE+G7
-QNazMfE0RaE0HX9rW9CrG3PSfv1GKq35/K7tZ1r90Q1OKVeddSg=
-=TiNT
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUQRIACgkQ3SOs138+
+s6GPVw/9Gdzsk9uaLau6Rkdgpm7E27qHxLaoGWnFIO4dSmbBB54pZ4RyBEndDzAM
++oKL64WpYLt3z8VCoEQTQ0kUyN3s1fcPfU8IQIAJ6D7cI8iIiaT7vyCWS3MCYT9q
++yx97WQdOo5AFnyy9VT6P4o9D3OE95QLrER7Wf3MXmAxWamrrS9cnly+DjB+Jien
+2mJfWK/nUfxYMSBOTZrKGNh85gPsrIb2AiMLGJn92KMyyd8/nRcHJMUlFZk+0bXn
+4VSRc2MFnUmlNcjYmqyDT/CcnkFVzLI6+Dlthcaiq3icjVw1Z61fyrG3IN+kW1KE
+Nhq7y2EywnEiFcNmhIYxjyqSDsblmJiPpAGD6EA2pLk/dxjvnoeu9KsiBiWZQnsA
+yWiaQKdUBAKJgP33vqiwv+mMQK8pYZrEThr8FKZ995qj37zlhP3ewtM9vrqMHUBN
+81hGXOH48ZBCkFT0vHPrm2c6+FMkqk+Y/sZmyxor5Pje8nR0MVh9X/w/u1U+wOlR
+RCzKA4pAvhWDzainC3x5uijo+HKomQ54wLq694KK97cUUp5CJxi0zD3PFMlye0Uc
+JQ7RGOWwunI3u/wkS+YUmA18kqvYzzCg7BLDA3+o7oVb1nYPIA0sSPyFqq7SXhh6
+YHy8kd3yzeuZ9ylMyUqeiei8prfyYiC1q2HyFi5w0ZImpq9bujY=
+=Jfgf
 -----END PGP SIGNATURE-----
 
---RacQGezy2Y99S6cT--
+--gLcqQrOcczDba7nC--
