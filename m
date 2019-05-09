@@ -2,259 +2,154 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F2FBD18617
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 May 2019 09:20:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03858188BF
+	for <lists+linux-pwm@lfdr.de>; Thu,  9 May 2019 13:12:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbfEIHUd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 9 May 2019 03:20:33 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42327 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725908AbfEIHUd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 May 2019 03:20:33 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hOdLo-0001DW-QJ; Thu, 09 May 2019 09:20:20 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hOdLm-0007dA-Ad; Thu, 09 May 2019 09:20:18 +0200
-Date:   Thu, 9 May 2019 09:20:18 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V11 2/5] pwm: Add i.MX TPM PWM driver support
-Message-ID: <20190509072018.cenumkgbysfba57l@pengutronix.de>
-References: <1554860547-18237-1-git-send-email-Anson.Huang@nxp.com>
- <1554860547-18237-3-git-send-email-Anson.Huang@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1554860547-18237-3-git-send-email-Anson.Huang@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+        id S1726674AbfEILLh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 9 May 2019 07:11:37 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45352 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbfEILLh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 May 2019 07:11:37 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s15so2423851wra.12
+        for <linux-pwm@vger.kernel.org>; Thu, 09 May 2019 04:11:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=OrI1DkG8hXh5qOzNYuZ9U1o4Js7uyFKM86UkARAQjFU=;
+        b=dDaPI9k3tcMtll47Djpz/rdtUGEzwzvLyyL0l//cu8cVR2Rt99lGVVkca4bXCWy+bF
+         6cA0oko1TzN6KJydKoxqLaE6azX6lRuedbrSJPew3NWRjR7BLke3Fqi8giw2uDhne1qD
+         qKVThZQ/j3dwNLYKXGIjM4SUk48jDT86z07FLXGIg3JuxV1uIUCtgXMDgPR09ZZMfZr+
+         TNHzhK3fyYN/vr3k/3/WP6pHTR+hO1AntaTqGiyZ0TU+Wlnzh8TPRxANcXf0ShFml+vx
+         o70PgJlW2nxCNS2TKkr488HT9y5XauThy5EedX37kOz98RiqhvvRoUuaPW9l7sXT3Nbm
+         Qhkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=OrI1DkG8hXh5qOzNYuZ9U1o4Js7uyFKM86UkARAQjFU=;
+        b=LhbcFYm8OSFJvUlNmsEK9QyF2o1onQGah91LgJpTJJEeKV3AxWPJ4wffWd8lChjj7i
+         HCvkLalm38vN5I80EgjvSFShTiz/SrR13mdzNMeQvuoZSfoCmNYj04gH8clfBNuFEqh/
+         HXcge72b2BsQBnHUyb2NJEI9+Hsu/mpgBhYZsj6W/hAxThJvfn3ICPwSL6vIub0AevQf
+         p76klN4/ieLxGUcUQVw/aa4WPdeY541oYcrwvNYnTbOoVCAxhVuMbxDNBw1CAwL+wzJR
+         2W5llJ/595QPQ3PJL9SjVoXy3jAMMT7lrWV0OxSWlcS/z5Cn0YRnFhT7+9KmtuczR2YX
+         ewDQ==
+X-Gm-Message-State: APjAAAWuztXnkRoz8B5iXR3q4X89SCxZ8XOZULSwiF+MeDU8PXjVQVhE
+        2omRnzgct4IkgazIl9LlvofyZA==
+X-Google-Smtp-Source: APXvYqzkFCRg/4jV4ymjIhFIzAV05l1GgTMsLu+5AiktxlCAcReCeZs1b3mYSzdsAI2AeT9bdLmVAw==
+X-Received: by 2002:adf:9c87:: with SMTP id d7mr2643806wre.68.1557400295729;
+        Thu, 09 May 2019 04:11:35 -0700 (PDT)
+Received: from mai.irit.fr ([141.115.39.235])
+        by smtp.gmail.com with ESMTPSA id z7sm2299778wme.26.2019.05.09.04.11.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 04:11:35 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Chas Williams <3chas3@gmail.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:MICROCHIP TIMER
+        COUNTER (TC) AND CLOCKSOURCE DR...),
+        linux-pwm@vger.kernel.org (open list:PWM SUBSYSTEM),
+        linux-atm-general@lists.sourceforge.net (moderated list:ATM),
+        netdev@vger.kernel.org (open list:ATM)
+Subject: [PATCH 07/15] ARM: at91: move SoC specific definitions to SoC folder
+Date:   Thu,  9 May 2019 13:10:40 +0200
+Message-Id: <20190509111048.11151-7-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190509111048.11151-1-daniel.lezcano@linaro.org>
+References: <7e786ba3-a664-8fd9-dd17-6a5be996a712@linaro.org>
+ <20190509111048.11151-1-daniel.lezcano@linaro.org>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello,
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-On Wed, Apr 10, 2019 at 01:47:40AM +0000, Anson Huang wrote:
-> i.MX7ULP has TPM(Low Power Timer/Pulse Width Modulation Module)
-> inside, it can support multiple PWM channels, all the channels
-> share same counter and period setting, but each channel can
-> configure its duty and polarity independently.
-> 
-> There are several TPM modules in i.MX7ULP, the number of channels
-> in TPM modules are different, it can be read from each TPM module's
-> PARAM register.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V10:
-> 	- remove channel private data which is ONLY for storing polarity, just read it from HW register;
-> 	- improve pwm_imx_tpm_round_state() and pwm_imx_tpm_apply_hw() parameters sequence;
-> 	- improve comments for polarity setting;
-> 	- refuse polarity change if PWM is active.
-> ---
->  drivers/pwm/Kconfig       |  11 ++
->  drivers/pwm/Makefile      |   1 +
->  drivers/pwm/pwm-imx-tpm.c | 442 ++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 454 insertions(+)
->  create mode 100644 drivers/pwm/pwm-imx-tpm.c
-> 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index c054bd1..1311b540 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -210,6 +210,17 @@ config PWM_IMX27
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-imx27.
->  
-> +config PWM_IMX_TPM
-> +	tristate "i.MX TPM PWM support"
-> +	depends on ARCH_MXC || COMPILE_TEST
-> +	depends on HAVE_CLK && HAS_IOMEM
-> +	help
-> +	  Generic PWM framework driver for i.MX7ULP TPM module, TPM's full
-> +	  name is Low Power Timer/Pulse Width Modulation Module.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-imx-tpm.
-> +
->  config PWM_JZ4740
->  	tristate "Ingenic JZ47xx PWM support"
->  	depends on MACH_INGENIC
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 448825e..c368599 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -19,6 +19,7 @@ obj-$(CONFIG_PWM_HIBVT)		+= pwm-hibvt.o
->  obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
->  obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
->  obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
-> +obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
->  obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
->  obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
->  obj-$(CONFIG_PWM_LPC18XX_SCT)	+= pwm-lpc18xx-sct.o
-> diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
-> new file mode 100644
-> index 0000000..9349f4f
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-imx-tpm.c
-> @@ -0,0 +1,442 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2018-2019 NXP.
-> + *
-> + * Limitations:
-> + * - The TPM counter and period counter are shared between
-> + *   multiple channels, so all channels should use same period
-> + *   settings.
-> + * - Changes to polarity cannot be latched at the time of the
-> + *   next period start.
-> + * - Changing period and duty cycle together isn't atomic,
-> + *   with the wrong timing it might happen that a period is
-> + *   produced with old duty cycle but new period settings.
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/bitops.h>
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/log2.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/slab.h>
-> +
-> +#define PWM_IMX_TPM_PARAM	0x4
-> +#define PWM_IMX_TPM_GLOBAL	0x8
-> +#define PWM_IMX_TPM_SC		0x10
-> +#define PWM_IMX_TPM_CNT		0x14
-> +#define PWM_IMX_TPM_MOD		0x18
-> +#define PWM_IMX_TPM_CnSC(n)	(0x20 + (n) * 0x8)
-> +#define PWM_IMX_TPM_CnV(n)	(0x24 + (n) * 0x8)
-> +
-> +#define PWM_IMX_TPM_PARAM_CHAN			GENMASK(7, 0)
-> +
-> +#define PWM_IMX_TPM_SC_PS			GENMASK(2, 0)
-> +#define PWM_IMX_TPM_SC_CMOD			GENMASK(4, 3)
-> +#define PWM_IMX_TPM_SC_CMOD_INC_EVERY_CLK	FIELD_PREP(PWM_IMX_TPM_SC_CMOD, 1)
-> +#define PWM_IMX_TPM_SC_CPWMS			BIT(5)
-> +
-> +#define PWM_IMX_TPM_CnSC_CHF	BIT(7)
-> +#define PWM_IMX_TPM_CnSC_MSB	BIT(5)
-> +#define PWM_IMX_TPM_CnSC_MSA	BIT(4)
-> +
-> +/*
-> + * The reference manual describes this field as two separate bits. The
-> + * semantic of the two bits isn't orthogonal though, so they are treated
-> + * together as a 2-bit field here.
-> + */
-> +#define PWM_IMX_TPM_CnSC_ELS	GENMASK(3, 2)
-> +#define PWM_IMX_TPM_CnSC_ELS_INVERSED	FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 1)
-> +#define PWM_IMX_TPM_CnSC_ELS_NORMAL	FIELD_PREP(PWM_IMX_TPM_CnSC_ELS, 2)
-> +
-> +
-> +#define PWM_IMX_TPM_MOD_WIDTH	16
-> +#define PWM_IMX_TPM_MOD_MOD	GENMASK(PWM_IMX_TPM_MOD_WIDTH - 1, 0)
-> +
-> +struct imx_tpm_pwm_chip {
-> +	struct pwm_chip chip;
-> +	struct clk *clk;
-> +	void __iomem *base;
-> +	struct mutex lock;
-> +	u32 user_count;
-> +	u32 enable_count;
-> +	u32 real_period;
-> +};
-> +
-> +struct imx_tpm_pwm_param {
-> +	u8 prescale;
-> +	u32 mod;
-> +	u32 val;
-> +};
-> +
-> +static inline struct imx_tpm_pwm_chip *to_imx_tpm_pwm_chip(struct pwm_chip *chip)
-> +{
-> +	return container_of(chip, struct imx_tpm_pwm_chip, chip);
-> +}
-> +
+Move linux/atmel_tc.h to the SoC specific folder include/soc/at91.
 
-Maybe add a comment here describing the purpose of this function.
-Something like:
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/clocksource/tcb_clksrc.c                   | 2 +-
+ drivers/misc/atmel_tclib.c                         | 2 +-
+ drivers/pwm/pwm-atmel-tcb.c                        | 2 +-
+ include/{linux/atmel_tc.h => soc/at91/atmel_tcb.h} | 4 ++--
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+ rename include/{linux/atmel_tc.h => soc/at91/atmel_tcb.h} (99%)
 
-/* 
- * This function determines for a given pwm_state *state that a consumer
- * might request the pwm_state *realstate that eventually is implemented
- * by the hardware and the necessary register values (in *p) to achive
- * this.
- */
-
-I didn't revalidate all the maths in this driver but assume they are
-still right from the previous rounds. If you add the comment I suggested
-above, feel free to also add
-
-	Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-
-> +static int pwm_imx_tpm_round_state(struct pwm_chip *chip,
-> +				   struct imx_tpm_pwm_param *p,
-> +				   struct pwm_state *real_state,
-> +				   struct pwm_state *state)
-> +{
-> +	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> +	u32 rate, prescale, period_count, clock_unit;
-> +	u64 tmp;
-> +
-> +	rate = clk_get_rate(tpm->clk);
-> +	tmp = (u64)state->period * rate;
-> +	clock_unit = DIV_ROUND_CLOSEST_ULL(tmp, NSEC_PER_SEC);
-> +	if (clock_unit <= PWM_IMX_TPM_MOD_MOD)
-> +		prescale = 0;
-> +	else
-> +		prescale = ilog2(clock_unit) + 1 - PWM_IMX_TPM_MOD_WIDTH;
-> +
-> +	if ((!FIELD_FIT(PWM_IMX_TPM_SC_PS, prescale)))
-> +		return -ERANGE;
-
-It's a bit sad that my ideas for the core concerning a round_rate
-callback don't go down particularly well on Thierry's side. 
-
-With the way I suggested we'd continue with prescale = 7 in this case.
-
-As of now there is no rule which kind of deviation to accept and which
-not. :-| (Nothing this patch can change of course.)
-
-Best regards
-Uwe
-
+diff --git a/drivers/clocksource/tcb_clksrc.c b/drivers/clocksource/tcb_clksrc.c
+index 43f4d5c4d6fa..138a12090149 100644
+--- a/drivers/clocksource/tcb_clksrc.c
++++ b/drivers/clocksource/tcb_clksrc.c
+@@ -11,7 +11,7 @@
+ #include <linux/io.h>
+ #include <linux/platform_device.h>
+ #include <linux/syscore_ops.h>
+-#include <linux/atmel_tc.h>
++#include <soc/at91/atmel_tcb.h>
+ 
+ 
+ /*
+diff --git a/drivers/misc/atmel_tclib.c b/drivers/misc/atmel_tclib.c
+index ac24a4bd63f7..194f774ab3a1 100644
+--- a/drivers/misc/atmel_tclib.c
++++ b/drivers/misc/atmel_tclib.c
+@@ -1,4 +1,3 @@
+-#include <linux/atmel_tc.h>
+ #include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/init.h>
+@@ -10,6 +9,7 @@
+ #include <linux/slab.h>
+ #include <linux/export.h>
+ #include <linux/of.h>
++#include <soc/at91/atmel_tcb.h>
+ 
+ /*
+  * This is a thin library to solve the problem of how to portably allocate
+diff --git a/drivers/pwm/pwm-atmel-tcb.c b/drivers/pwm/pwm-atmel-tcb.c
+index 0d0f8376bc35..7da1fdb4d269 100644
+--- a/drivers/pwm/pwm-atmel-tcb.c
++++ b/drivers/pwm/pwm-atmel-tcb.c
+@@ -17,10 +17,10 @@
+ #include <linux/ioport.h>
+ #include <linux/io.h>
+ #include <linux/platform_device.h>
+-#include <linux/atmel_tc.h>
+ #include <linux/pwm.h>
+ #include <linux/of_device.h>
+ #include <linux/slab.h>
++#include <soc/at91/atmel_tcb.h>
+ 
+ #define NPWM	6
+ 
+diff --git a/include/linux/atmel_tc.h b/include/soc/at91/atmel_tcb.h
+similarity index 99%
+rename from include/linux/atmel_tc.h
+rename to include/soc/at91/atmel_tcb.h
+index 468fdfa643f0..c3c7200ce151 100644
+--- a/include/linux/atmel_tc.h
++++ b/include/soc/at91/atmel_tcb.h
+@@ -7,8 +7,8 @@
+  * (at your option) any later version.
+  */
+ 
+-#ifndef ATMEL_TC_H
+-#define ATMEL_TC_H
++#ifndef __SOC_ATMEL_TCB_H
++#define __SOC_ATMEL_TCB_H
+ 
+ #include <linux/compiler.h>
+ #include <linux/list.h>
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.17.1
+
