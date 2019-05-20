@@ -2,29 +2,29 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A952B22B21
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 May 2019 07:30:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E0FA22B79
+	for <lists+linux-pwm@lfdr.de>; Mon, 20 May 2019 07:57:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729835AbfETFag (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 20 May 2019 01:30:36 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:17657 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729816AbfETFag (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 20 May 2019 01:30:36 -0400
-X-UUID: 56a159adc43646f3889b476e3beae217-20190520
-X-UUID: 56a159adc43646f3889b476e3beae217-20190520
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        id S1730376AbfETF47 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 20 May 2019 01:56:59 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:58710 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725829AbfETF47 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 20 May 2019 01:56:59 -0400
+X-UUID: 05bdecd6d289420d988b3d3773fce335-20190520
+X-UUID: 05bdecd6d289420d988b3d3773fce335-20190520
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <ck.hu@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 255121144; Mon, 20 May 2019 13:30:29 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 20 May 2019 13:30:26 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+        with ESMTP id 1874507480; Mon, 20 May 2019 13:56:54 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS33N2.mediatek.inc (172.27.4.76) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 20 May 2019 13:56:53 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 20 May 2019 13:30:27 +0800
-Message-ID: <1558330227.7311.14.camel@mtksdaap41>
-Subject: Re: [v2 3/3] drm/mediatek: add mipi_tx driver for mt8183
+ Transport; Mon, 20 May 2019 13:56:46 +0800
+Message-ID: <1558331806.7311.26.camel@mtksdaap41>
+Subject: Re: [v4 2/5] drm/mediatek: dpi dual edge support
 From:   CK Hu <ck.hu@mediatek.com>
 To:     Jitao Shi <jitao.shi@mediatek.com>
 CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
@@ -51,11 +51,10 @@ CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
         <stonea168@163.com>
-Date:   Mon, 20 May 2019 13:30:27 +0800
-In-Reply-To: <1558165892.7681.8.camel@mszsdaap41>
-References: <20190416054217.75387-1-jitao.shi@mediatek.com>
-         <20190416054217.75387-4-jitao.shi@mediatek.com>
-         <1557134258.5345.5.camel@mtksdaap41> <1558165892.7681.8.camel@mszsdaap41>
+Date:   Mon, 20 May 2019 13:56:46 +0800
+In-Reply-To: <20190518095618.18454-3-jitao.shi@mediatek.com>
+References: <20190518095618.18454-1-jitao.shi@mediatek.com>
+         <20190518095618.18454-3-jitao.shi@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
@@ -66,149 +65,72 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sat, 2019-05-18 at 15:51 +0800, Jitao Shi wrote:
-> On Mon, 2019-05-06 at 17:17 +0800, CK Hu wrote:
-> > Hi, Jitao:
-> > 
-> > On Tue, 2019-04-16 at 13:42 +0800, Jitao Shi wrote:
-> > > This patch add mt8183 mipi_tx driver.
-> > > And also support other chips that use the same binding and driver.
-> > > 
-> > > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> > > ---
-> > >  drivers/gpu/drm/mediatek/Makefile             |   1 +
-> > >  drivers/gpu/drm/mediatek/mtk_mipi_tx.c        |   2 +
-> > >  drivers/gpu/drm/mediatek/mtk_mipi_tx.h        |   1 +
-> > >  drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c | 154 ++++++++++++++++++
-> > >  4 files changed, 158 insertions(+)
-> > >  create mode 100644 drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
-> > > 
-> > 
-> > [snip]
-> > 
-> > > +
-> > > +static int mtk_mipi_tx_pll_prepare(struct clk_hw *hw)
-> > > +{
-> > > +	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
-> > > +	unsigned int txdiv, txdiv0;
-> > > +	u64 pcw;
-> > > +	int ret;
-> > > +
-> > > +	dev_dbg(mipi_tx->dev, "prepare: %u bps\n", mipi_tx->data_rate);
-> > > +
-> > > +	if (mipi_tx->data_rate >= 2000000000) {
-> > > +		txdiv = 1;
-> > > +		txdiv0 = 0;
-> > > +	} else if (mipi_tx->data_rate >= 1000000000) {
-> > > +		txdiv = 2;
-> > > +		txdiv0 = 1;
-> > > +	} else if (mipi_tx->data_rate >= 500000000) {
-> > > +		txdiv = 4;
-> > > +		txdiv0 = 2;
-> > > +	} else if (mipi_tx->data_rate > 250000000) {
-> > > +		txdiv = 8;
-> > > +		txdiv0 = 3;
-> > > +	} else if (mipi_tx->data_rate >= 125000000) {
-> > > +		txdiv = 16;
-> > > +		txdiv0 = 4;
-> > > +	} else {
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	ret = clk_prepare_enable(mipi_tx->ref_clk);
-> > > +	if (ret < 0) {
-> > > +		dev_err(mipi_tx->dev,
-> > > +			"can't prepare and enable mipi_tx ref_clk %d\n", ret);
-> > > +		return ret;
-> > > +	}
-> > 
-> > You enable the parent clock when prepare this clock here, this behavior
-> > looks strange. I think the flow should be:
-> > 
-> > 1. Parent clock prepare
-> > 2. This clock prepare
-> > 3. Parent clock enable
-> > 4. This clock enable
-> > 
-> > Maybe you should implement 'enable callback' so that parent clock would
-> > be already enabled.
-> > 
-> > One question is, mipi_tx_pll is used by dsi driver, but I does not see
-> > dsi prepare_enable() mipi_tx_pll, how does this work?
-> > 
-> > Regards,
-> > CK
-> > 
-> 
-> The mipi_tx can be accessed after clk_prepare_enable(mipi_tx->ref_clk);
-> 
-> So place the clk_prepare_enable(mipi_tx->ref_clk) before accessing
-> mipitx.
-> 
-> mipi_tx_pll is enable by mtk_mipi_tx_power_on() in mtk_mip_tx.c.
-> clk_prepare_enable(mipi_tx->pll) will enable mipi_tx_pll.
+Hi, Jitao:
 
-OK, so it start from dsi driver. The callstack is:
+On Sat, 2019-05-18 at 17:56 +0800, Jitao Shi wrote:
+> DPI sample the data both rising and falling edge.
+> It can reduce half data io pins.
 
-phy_power_on(dsi->phy);
--> mtk_mipi_tx_power_on()
---> clk_prepare_enable(mipi_tx->pll);
----> mtk_mipi_tx_pll_prepare();
-
-In clk_prepare_enable(), it separately call clk_prepare() and
-clk_enable(). When clk_prepare(), it prepare the parent clock then
-prepare this clock. When clk_enable(), it enable the parent clock then
-enable this clock. So this would result in the sequence:
-
-1. Prepare mipi_tx->ref_clk
-2. Prepare mipi_tx->pll
-3. Enable mipi_tx->ref_clk
-4. Enable mipi_tx->pll
-
-You say 'So place the clk_prepare_enable(mipi_tx->ref_clk) before
-accessing mipitx.', so the step 1 and step 3 is equal to
-clk_prepare_enable(mipi_tx->ref_clk), so I require you to access mipitx
-in step 4, not in step 2.
+All the registers which you control in this patch exist in MT8173. So I
+think this is not a SoC-level feature. This feature depends on how much
+io pins you want to use in this platform. Could we get the io pins
+information from device tree or calling any driver's api to get? If
+there is no way to get this information, I could just temporarily apply
+this patch and need plan to fix this temporary solution.
 
 Regards,
 CK
 
 > 
-> Beset Regards
-> Jitao
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_dpi.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
 > 
-> > > +
-> > > +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON4, RG_DSI_PLL_IBIAS);
-> > > +
-> > > +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_PWR_ON);
-> > > +	usleep_range(30, 100);
-> > > +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_ISO_EN);
-> > > +	pcw = div_u64(((u64)mipi_tx->data_rate * txdiv) << 24, 26000000);
-> > > +	writel(pcw, mipi_tx->regs + MIPITX_PLL_CON0);
-> > > +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_POSDIV,
-> > > +				txdiv0 << 8);
-> > > +	usleep_range(1000, 2000);
-> > > +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static void mtk_mipi_tx_pll_unprepare(struct clk_hw *hw)
-> > > +{
-> > > +	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
-> > > +
-> > > +	dev_dbg(mipi_tx->dev, "unprepare\n");
-> > > +
-> > > +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
-> > > +
-> > > +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_ISO_EN);
-> > > +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_PWR_ON);
-> > > +	clk_disable_unprepare(mipi_tx->ref_clk);
-> > > +}
-> > > +
-> > 
-> > 
-> 
-> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> index 22e68a100e7b..ccef3ac1c560 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> @@ -117,6 +117,7 @@ struct mtk_dpi_conf {
+>  	unsigned int (*cal_factor)(int clock);
+>  	u32 reg_h_fre_con;
+>  	bool edge_sel_en;
+> +	bool dual_edge;
+>  };
+>  
+>  static void mtk_dpi_mask(struct mtk_dpi *dpi, u32 offset, u32 val, u32 mask)
+> @@ -353,6 +354,13 @@ static void mtk_dpi_config_disable_edge(struct mtk_dpi *dpi)
+>  		mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, 0, EDGE_SEL_EN);
+>  }
+>  
+> +static void mtk_dpi_enable_dual_edge(struct mtk_dpi *dpi)
+> +{
+> +	mtk_dpi_mask(dpi, DPI_DDR_SETTING, DDR_EN | DDR_4PHASE,
+> +		     DDR_EN | DDR_4PHASE);
+> +	mtk_dpi_mask(dpi, DPI_OUTPUT_SETTING, EDGE_SEL, EDGE_SEL);
+> +}
+> +
+>  static void mtk_dpi_config_color_format(struct mtk_dpi *dpi,
+>  					enum mtk_dpi_out_color_format format)
+>  {
+> @@ -444,7 +452,8 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
+>  	pll_rate = clk_get_rate(dpi->tvd_clk);
+>  
+>  	vm.pixelclock = pll_rate / factor;
+> -	clk_set_rate(dpi->pixel_clk, vm.pixelclock);
+> +	clk_set_rate(dpi->pixel_clk,
+> +		     vm.pixelclock * (dpi->conf->dual_edge ? 2 : 1));
+>  	vm.pixelclock = clk_get_rate(dpi->pixel_clk);
+>  
+>  	dev_dbg(dpi->dev, "Got  PLL %lu Hz, pixel clock %lu Hz\n",
+> @@ -509,6 +518,8 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
+>  	mtk_dpi_config_color_format(dpi, dpi->color_format);
+>  	mtk_dpi_config_2n_h_fre(dpi);
+>  	mtk_dpi_config_disable_edge(dpi);
+> +	if (dpi->conf->dual_edge)
+> +		mtk_dpi_enable_dual_edge(dpi);
+>  	mtk_dpi_sw_reset(dpi, false);
+>  
+>  	return 0;
 
 
