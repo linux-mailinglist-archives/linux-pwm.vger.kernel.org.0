@@ -2,133 +2,62 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7886723953
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 May 2019 16:04:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FB1024105
+	for <lists+linux-pwm@lfdr.de>; Mon, 20 May 2019 21:19:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732857AbfETOEZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 20 May 2019 10:04:25 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55889 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730588AbfETOEZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 20 May 2019 10:04:25 -0400
-Received: by mail-wm1-f66.google.com with SMTP id x64so13429624wmb.5
-        for <linux-pwm@vger.kernel.org>; Mon, 20 May 2019 07:04:24 -0700 (PDT)
+        id S1725902AbfETTTC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 20 May 2019 15:19:02 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36120 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfETTTC (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 20 May 2019 15:19:02 -0400
+Received: by mail-ot1-f66.google.com with SMTP id c3so14075806otr.3;
+        Mon, 20 May 2019 12:19:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wZpcedj0usuNnQQe4hSwoGa27U3KI1NBMOLWj/UNRC0=;
-        b=KW11kZMRVXs4raFGQTEwJgJ0jnGGEBCREFbR1yhqhZobC8ZIER22VyXV2kmejPd8cu
-         P4Mi7yK+EkWwcaUch7S62P1OdrjOz5cxZMxywZBlIVq/fZyKHWrX/6ytzeIC429eEFVb
-         QfPa5n1hcfVyvTvxuy47siQ6HD+Hj96d0myIwOEThjRO7j58/CKzLddK4EY/0X1gOMBp
-         HD8SjLLNXc+pukPSTwp0vrUx3IAfwh2lJGt2p47Ic0CG1TvG8eAOogRkzugWhpkfYqwo
-         KgO2RKJtbYWmysT4ooHtBwoAYP1XxXmKs0g/5w1hf4Sg6s+Fl0Hd+10BXodeidFWVFIR
-         Pspw==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ILhuswdCRnMUMBRmoi3Za/asPHf+23D/dshJBOh3X34=;
+        b=IRgkt9b9zjWY7xSWKf3ivsymx+TC/KfBZhHDWrkSWQqWt6cYLLu0r0mMd+cd1BFYUz
+         cK3qTiWLGAVnFU035zQqlNUcbIC17/XLJbfFmd74MeixlEr0o9e3+PtNAAqkTVN7zf2o
+         LeX6rTJy6W4L/MtBXIU5piiG5DlQKQnwFsRmpq96AC3IXTiqCTT5EEmqUNMDc7ON2FY2
+         tg8M4yNg4Z22Na3rD4AB3Ji5+OWe/fXvUxsy6HQ189KOgw6it7Zdiy7wFbDwJAow9sTk
+         NJ/2Czl6OhEa9KaxX5Wd9IWIQaeBy2w5I/VoAChefH6yUqlSfD4Yn2pn4wNHKuo9fkDX
+         WCBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wZpcedj0usuNnQQe4hSwoGa27U3KI1NBMOLWj/UNRC0=;
-        b=e6Iy2v6Zz3KameFfa2/VpPig4AQB3a6S+HYGkQ50CBz84z6F830S2PbmKk7w+TxNuM
-         V0vWDb6oLGTkvyKYtf1GKMZwPtc55LrBzB18ZWQmNLWSKSXf3CQZ8OahyvbYEzHtNiEX
-         rKkFce5OB7i6h02GZg6kn/GnVWxus91p7FHqgB6q1qE/ADBBPpPJVvix9qGScO/zw6aN
-         kdWGP8GC4wd/Xpavx1oces56R05CBfVGnrSelGfwhm3RgFHdZ3QIB6Sa609IxGQEkfQ4
-         0iqytMLs3BW9OKMHiLpqVCkjinYQgZPyncr/3M/0OUbdwZP9YKCdm3jBjjPs1YbIFwtb
-         fCIQ==
-X-Gm-Message-State: APjAAAXZ1Y1XmzKDSgAp/s5Jt1lir/6QcuPheUz1wCwst+tK2ksBOdI4
-        qjN+PjxurNNBxYKHex+ATADKfzBdw9Eceg==
-X-Google-Smtp-Source: APXvYqxKM4u75H/WX5/D4Xu3uAIucU2k0DuLBgRqDfQN8DywNO7NTSwNq3BbTLlSpamGImB/4UMr4Q==
-X-Received: by 2002:a1c:e708:: with SMTP id e8mr30285399wmh.11.1558361063451;
-        Mon, 20 May 2019 07:04:23 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id q11sm1207286wmc.15.2019.05.20.07.04.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 20 May 2019 07:04:22 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     thierry.reding@gmail.com
-Cc:     linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH] pwm: pwm-meson: update with SPDX Licence identifier
-Date:   Mon, 20 May 2019 16:04:21 +0200
-Message-Id: <20190520140421.30074-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ILhuswdCRnMUMBRmoi3Za/asPHf+23D/dshJBOh3X34=;
+        b=EryjcNzR3iVXbl30T3uR+IcwcMCtCuhuFbqAiiemNDbjIEXhXZ4TSHHorz9vJxfmam
+         sW+7dn2RLxNA1jTCpmRiVEJPW7tqqX2nzRGutZIpzXkaGQPiAK6YysUf1+P7ynTo/3F/
+         TFQCEExbIjOJOZXlEUysexRRI4W1dV8iMiXgBChb4NDgFRRJg61SFHPglgUXhDJlaaxY
+         J5PNIiH3VrcUBP2+Rno5COu6CF//BTQ5pBjAus1tY1v1CidxIszUXxZpY3pIqQCh0gpk
+         voFBQgEOE53t9UfDulfkgid9q490/9DRLtT9ZcSIZyx4vB+9T1teoxNsYnGbiVvW2zwU
+         Ivvw==
+X-Gm-Message-State: APjAAAUjgQOoBQ2jgJcIXc7KSmH6Lh0+DeCpYZlqP71cxi1GUqHDnzpU
+        4GCBqYii/WrZ4KcCfJevaJ7g9TUUYXORcjKtgzcvTpf8Or8=
+X-Google-Smtp-Source: APXvYqxOKdOcy+woeXdOWs7xjYQizw+lQeSDcB2n1Zo2IaRnDlaZSguwn9t7esINb/joJB11sVjoVDP/NqKnjOr2KuM=
+X-Received: by 2002:a9d:744d:: with SMTP id p13mr26102765otk.96.1558379940532;
+ Mon, 20 May 2019 12:19:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190520140421.30074-1-narmstrong@baylibre.com>
+In-Reply-To: <20190520140421.30074-1-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 20 May 2019 21:18:49 +0200
+Message-ID: <CAFBinCBi_tSMMq9sUuGeTU8-KWDWczwJ=utAv4oARVTNgiDUJw@mail.gmail.com>
+Subject: Re: [PATCH] pwm: pwm-meson: update with SPDX Licence identifier
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/pwm/pwm-meson.c | 52 +----------------------------------------
- 1 file changed, 1 insertion(+), 51 deletions(-)
-
-diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index fb5a369b1a8d..5fef7e925282 100644
---- a/drivers/pwm/pwm-meson.c
-+++ b/drivers/pwm/pwm-meson.c
-@@ -1,58 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
- /*
-- * This file is provided under a dual BSD/GPLv2 license.  When using or
-- * redistributing this file, you may do so under either license.
-- *
-- * GPL LICENSE SUMMARY
-- *
-  * Copyright (c) 2016 BayLibre, SAS.
-  * Author: Neil Armstrong <narmstrong@baylibre.com>
-  * Copyright (C) 2014 Amlogic, Inc.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, see <http://www.gnu.org/licenses/>.
-- * The full GNU General Public License is included in this distribution
-- * in the file called COPYING.
-- *
-- * BSD LICENSE
-- *
-- * Copyright (c) 2016 BayLibre, SAS.
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
-- * Copyright (C) 2014 Amlogic, Inc.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- *
-- *   * Redistributions of source code must retain the above copyright
-- *     notice, this list of conditions and the following disclaimer.
-- *   * Redistributions in binary form must reproduce the above copyright
-- *     notice, this list of conditions and the following disclaimer in
-- *     the documentation and/or other materials provided with the
-- *     distribution.
-- *   * Neither the name of Intel Corporation nor the names of its
-- *     contributors may be used to endorse or promote products derived
-- *     from this software without specific prior written permission.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
- 
- #include <linux/clk.h>
--- 
-2.21.0
-
+On Mon, May 20, 2019 at 4:04 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
