@@ -2,62 +2,65 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FB1024105
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 May 2019 21:19:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 450FD253FE
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 May 2019 17:34:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725902AbfETTTC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 20 May 2019 15:19:02 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36120 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfETTTC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 20 May 2019 15:19:02 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c3so14075806otr.3;
-        Mon, 20 May 2019 12:19:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ILhuswdCRnMUMBRmoi3Za/asPHf+23D/dshJBOh3X34=;
-        b=IRgkt9b9zjWY7xSWKf3ivsymx+TC/KfBZhHDWrkSWQqWt6cYLLu0r0mMd+cd1BFYUz
-         cK3qTiWLGAVnFU035zQqlNUcbIC17/XLJbfFmd74MeixlEr0o9e3+PtNAAqkTVN7zf2o
-         LeX6rTJy6W4L/MtBXIU5piiG5DlQKQnwFsRmpq96AC3IXTiqCTT5EEmqUNMDc7ON2FY2
-         tg8M4yNg4Z22Na3rD4AB3Ji5+OWe/fXvUxsy6HQ189KOgw6it7Zdiy7wFbDwJAow9sTk
-         NJ/2Czl6OhEa9KaxX5Wd9IWIQaeBy2w5I/VoAChefH6yUqlSfD4Yn2pn4wNHKuo9fkDX
-         WCBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ILhuswdCRnMUMBRmoi3Za/asPHf+23D/dshJBOh3X34=;
-        b=EryjcNzR3iVXbl30T3uR+IcwcMCtCuhuFbqAiiemNDbjIEXhXZ4TSHHorz9vJxfmam
-         sW+7dn2RLxNA1jTCpmRiVEJPW7tqqX2nzRGutZIpzXkaGQPiAK6YysUf1+P7ynTo/3F/
-         TFQCEExbIjOJOZXlEUysexRRI4W1dV8iMiXgBChb4NDgFRRJg61SFHPglgUXhDJlaaxY
-         J5PNIiH3VrcUBP2+Rno5COu6CF//BTQ5pBjAus1tY1v1CidxIszUXxZpY3pIqQCh0gpk
-         voFBQgEOE53t9UfDulfkgid9q490/9DRLtT9ZcSIZyx4vB+9T1teoxNsYnGbiVvW2zwU
-         Ivvw==
-X-Gm-Message-State: APjAAAUjgQOoBQ2jgJcIXc7KSmH6Lh0+DeCpYZlqP71cxi1GUqHDnzpU
-        4GCBqYii/WrZ4KcCfJevaJ7g9TUUYXORcjKtgzcvTpf8Or8=
-X-Google-Smtp-Source: APXvYqxOKdOcy+woeXdOWs7xjYQizw+lQeSDcB2n1Zo2IaRnDlaZSguwn9t7esINb/joJB11sVjoVDP/NqKnjOr2KuM=
-X-Received: by 2002:a9d:744d:: with SMTP id p13mr26102765otk.96.1558379940532;
- Mon, 20 May 2019 12:19:00 -0700 (PDT)
+        id S1728708AbfEUPeb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 21 May 2019 11:34:31 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:53008 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728666AbfEUPeb (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 21 May 2019 11:34:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1558452869; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=KwEbE7zfggw/A9F2ZY+sYHeKejLXDsS/3Ae2CZCOs/Q=;
+        b=outW/Xh/qhacDMNpTl8s1t5YpMliZaebIX2KRirgb1CTnsjTmPi2OuxFg2Y1RwcPZqYv2J
+        kgQyBfw1OcKNBZm/eCUbvpro+SWfMDgSQLSF2mcFJOmwPQ32Usd9/gQjkycOR0KsTaTIbX
+        f6Rao7LoQZIMkJNPbIo96PDBQ+MNvdw=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/5] dt-bindings: Remove unused compatible strings
+Date:   Tue, 21 May 2019 17:34:11 +0200
+Message-Id: <20190521153415.14703-1-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <20190520140421.30074-1-narmstrong@baylibre.com>
-In-Reply-To: <20190520140421.30074-1-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 20 May 2019 21:18:49 +0200
-Message-ID: <CAFBinCBi_tSMMq9sUuGeTU8-KWDWczwJ=utAv4oARVTNgiDUJw@mail.gmail.com>
-Subject: Re: [PATCH] pwm: pwm-meson: update with SPDX Licence identifier
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, May 20, 2019 at 4:04 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Right now none of the Ingenic-based boards probe this driver from
+devicetree. This driver defined three compatible strings for the exact
+same behaviour. Before these strings are used, we can remove two of
+them.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
+index 7d9d3f90641b..493bec80d59b 100644
+--- a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
++++ b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
+@@ -2,10 +2,7 @@ Ingenic JZ47xx PWM Controller
+ =============================
+ 
+ Required properties:
+-- compatible: One of:
+-  * "ingenic,jz4740-pwm"
+-  * "ingenic,jz4770-pwm"
+-  * "ingenic,jz4780-pwm"
++- compatible: Should be "ingenic,jz4740-pwm"
+ - #pwm-cells: Should be 3. See pwm.txt in this directory for a description
+   of the cells format.
+ - clocks : phandle to the external clock.
+-- 
+2.21.0.593.g511ec345e18
+
