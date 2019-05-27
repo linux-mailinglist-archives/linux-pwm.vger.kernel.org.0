@@ -2,254 +2,213 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 207292B579
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2019 14:37:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 881862B763
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2019 16:17:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfE0MhK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 27 May 2019 08:37:10 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35982 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfE0MhK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 May 2019 08:37:10 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v22so8445610wml.1
-        for <linux-pwm@vger.kernel.org>; Mon, 27 May 2019 05:37:08 -0700 (PDT)
+        id S1726209AbfE0ORp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 27 May 2019 10:17:45 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35096 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfE0ORp (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 May 2019 10:17:45 -0400
+Received: by mail-wr1-f67.google.com with SMTP id m3so17111821wrv.2;
+        Mon, 27 May 2019 07:17:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=58p9uFjWmpCFDMR48fg0NW3P4SQ0InNf8hSLgO2E5y0=;
-        b=PZJIz7jKVldlj98SfaUUp48OS0pnWzI5Ub7kGcwfcQMi8kVT0za3XanBWNyq7YcEq2
-         /EI2nVDwiCyArbTm4hlB3OesVnnAQyknSLi81N5RYCpuTa30qPSwMIc5GJjI68FiyC0J
-         +vV2EQ1frXQmsc9756ZAfozjBBWE+syHppQ0UgCHJRvHGRsDxfP0pRJQFa66jwc52rs+
-         /UkF3v8UYFHMwLAg5d6PA/E1u2838kdckck8oavFSRCzPs8LXZDrJHVRklBdwJ+Ba65I
-         nbWD/4JgQW3gejx4kkhyc0wEO3PQIIVYIELkDsMrepV8i0xO8HEx2IShFpO1K4oV13yu
-         iqXQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3LKT/2C/PED5+ciUv67/zZEFcmySguZpZQ8rp55Smm8=;
+        b=lEzzFehkTo2TuRXdB3JVJx5XlSbApF65a/lNVQ2Ygb9ToN7kKZ0DL8CNuHh/h7ASgh
+         VLn9Vphklf9ThWHFRttk9y1JYehRxyd66cbtvmoD/t5hSpnFYWx1MS3Q8F/X44owBGFA
+         zkxnc/2g/4DgetK9uWCNDJLdMCiA26vVBYdApWPCeujIE1jcTLRv9RH3itwLy3+H4I57
+         xMsDYLMvF0R8C0JLMQcM5LBBHrE/l5pxu9ULPE1ui/d7tHlTxwTl8n/FKWJGT5Une3vx
+         P6IXeUODHXZlzUk0PKLIRf/w4mITrWOo9vHkNo812mq40gzopVONoOWy92XrBh83cG5u
+         cHAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=58p9uFjWmpCFDMR48fg0NW3P4SQ0InNf8hSLgO2E5y0=;
-        b=psZetyqj5PUclw7ic3siXK0kWi/ZBajlDb1deSfausXDcPAbBBRuCb8oaWIVqWX4if
-         c8QfxP+7MSasIt77X95IQuQkWTss/8SAK9MYhrG+BxSFw2qHmNzZWGs2uLF2L6lcysP4
-         OSpDw/xOZsg59cbh+KwX1Wfg6w/lRqHLPrPKBcGq5MLwzWp9hYpTPepwoZfaGSkKecP4
-         JXENWwGDQQUZUHoGHlFtTo2L4UlaM6emg0OlxzW7K7twbFh2tXUgs3fvzY0Xz/A1jk09
-         XJ0XepeLMqnIep+G3aegmcdRcC9MnX/0sV9O+9EG0E32I9jemu2K24mUlY91FeHbmGxo
-         29Rw==
-X-Gm-Message-State: APjAAAXCQQqwBx45DLrAe/pYUwSDIS35K8H7uIpJO/qV0AfM3dPN3r6U
-        /YsTXmGBywraJRv3DS0vcP5tWby7cZlb2w==
-X-Google-Smtp-Source: APXvYqxItBLqxtzO+Yw1rp1kbwyAY8BvgzlyOqnPwe3LFgNUDugvsWrcQo5yDV2eMDZoaO2lyNnH8w==
-X-Received: by 2002:a1c:98cf:: with SMTP id a198mr10499483wme.51.1558960627267;
-        Mon, 27 May 2019 05:37:07 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id t15sm9153447wmt.2.2019.05.27.05.37.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 05:37:06 -0700 (PDT)
-Subject: Re: [PATCH 10/14] pwm: meson: simplify the calculation of the
- pre-divider and count
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     kernel@pengutronix.de, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pwm@vger.kernel.org
-References: <20190525181133.4875-1-martin.blumenstingl@googlemail.com>
- <20190525181133.4875-11-martin.blumenstingl@googlemail.com>
- <20190526194120.uzuq6ncz5l2z4hfm@pengutronix.de>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <d51106ff-1b1e-b6bd-c17e-df9bb8536c2e@baylibre.com>
-Date:   Mon, 27 May 2019 14:37:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3LKT/2C/PED5+ciUv67/zZEFcmySguZpZQ8rp55Smm8=;
+        b=j0/OuM+LIkaaQ/8hBEZYsgHJHDTNgc3ipL5aOWZ2Jp2c6eCFE0DnXe44P1oCepovYI
+         KX0N6C856RDWsqFemrHxL4a4rumVEirdihh7mQb5XXrk+KBk0pwAd4OpCf4Obur+J+ng
+         eNDKJf1czagiU4ojk6ZORsA5cmj4PNfnkCopTorBnwNP0y1+al177iV5CMWVBWPD2IK3
+         kzjM3tmPTcmgqZw7vSDSRF4AducJ3K7jXkoOvXfcRK2vM0/ryE9HMjQypnRdgcXVsOmg
+         vaBq0cJ2u100PBmRYfTeqt9/nSbIOWl+TxZczAKT8D1vbeudViDNm4y8QVh2ovQ1HCtW
+         96uw==
+X-Gm-Message-State: APjAAAXcbQt/r0negA7hbbr+FLfWM8rwmNK5zCWeqVVsdrmUUhLAEntr
+        IdsgcylyWYNo0XJHA7OATqI=
+X-Google-Smtp-Source: APXvYqxgYXsPm4wmgjbLimvTmPEYAgUesw94Do2loCzJosdJmlENryru/FPEOtgF6GE3fSGkwFfEdQ==
+X-Received: by 2002:adf:f704:: with SMTP id r4mr18767807wrp.27.1558966663175;
+        Mon, 27 May 2019 07:17:43 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id c14sm11802878wrt.45.2019.05.27.07.17.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 27 May 2019 07:17:42 -0700 (PDT)
+Date:   Mon, 27 May 2019 16:17:41 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Cao Van Dong <cv-dong@jinso.co.jp>
+Cc:     linux-renesas-soc@vger.kernel.org, horms+renesas@verge.net.au,
+        geert+renesas@glider.be, broonie@kernel.org,
+        linux-pwm@vger.kernel.org, yoshihiro.shimoda.uh@renesas.com,
+        kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp,
+        na-hoan@jinso.co.jp
+Subject: Re: [PATCH v5] pwm: renesas-tpu: Add suspend/resume function
+Message-ID: <20190527141741.GC7202@ulmo>
+References: <1558923757-9843-1-git-send-email-cv-dong@jinso.co.jp>
 MIME-Version: 1.0
-In-Reply-To: <20190526194120.uzuq6ncz5l2z4hfm@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Clx92ZfkiYIKRjnr"
+Content-Disposition: inline
+In-Reply-To: <1558923757-9843-1-git-send-email-cv-dong@jinso.co.jp>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 26/05/2019 21:41, Uwe Kleine-König wrote:
-> On Sat, May 25, 2019 at 08:11:29PM +0200, Martin Blumenstingl wrote:
->> Replace the loop to calculate the pre-divider and count with two
->> separate div64_u64() calculations. This makes the code easier to read
->> and improves the precision.
->>
->> Two example cases:
->> 1) 32.768kHz LPO clock for the SDIO wifi chip on Khadas VIM
->>    clock input: 500MHz (FCLK_DIV4)
->>    period: 30518ns
->>    duty cycle: 15259ns
->> old algorithm: pre_div=0, cnt=15259
->> new algorithm: pre_div=0, cnt=15259
->> (no difference in calculated values)
->>
->> 2) PWM LED on Khadas VIM
->>    clock input: 24MHz (XTAL)
->>    period: 7812500ns
->>    duty cycle: 7812500ns
->> old algorithm: pre_div=2, cnt=62004
->> new algorithm: pre_div=2, cnt=62500
->> Using a scope (24MHz sampling rate) shows the actual difference:
->> - old: 7753000ns, off by -59500ns (0.7616%)
->> - new: 7815000ns, off by +2500ns (0.032%)
->>
->> Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
->> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->> ---
->>  drivers/pwm/pwm-meson.c | 25 ++++++++++---------------
->>  1 file changed, 10 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
->> index 27915d6475e3..9afa1e5aaebf 100644
->> --- a/drivers/pwm/pwm-meson.c
->> +++ b/drivers/pwm/pwm-meson.c
->> @@ -12,6 +12,7 @@
->>  #include <linux/err.h>
->>  #include <linux/io.h>
->>  #include <linux/kernel.h>
->> +#include <linux/math64.h>
->>  #include <linux/module.h>
->>  #include <linux/of.h>
->>  #include <linux/of_device.h>
->> @@ -145,7 +146,6 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
->>  	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
->>  	unsigned int duty, period, pre_div, cnt, duty_cnt;
->>  	unsigned long fin_freq = -1;
->> -	u64 fin_ps;
->>  
->>  	duty = state->duty_cycle;
->>  	period = state->period;
->> @@ -164,24 +164,19 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
->>  	}
->>  
->>  	dev_dbg(meson->chip.dev, "fin_freq: %lu Hz\n", fin_freq);
->> -	fin_ps = (u64)NSEC_PER_SEC * 1000;
->> -	do_div(fin_ps, fin_freq);
->> -
->> -	/* Calc pre_div with the period */
->> -	for (pre_div = 0; pre_div <= MISC_CLK_DIV_MASK; pre_div++) {
->> -		cnt = DIV_ROUND_CLOSEST_ULL((u64)period * 1000,
->> -					    fin_ps * (pre_div + 1));
->> -		dev_dbg(meson->chip.dev, "fin_ps=%llu pre_div=%u cnt=%u\n",
->> -			fin_ps, pre_div, cnt);
->> -		if (cnt <= 0xffff)
->> -			break;
->> -	}
->>  
->> +	pre_div = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * 0xffffLL);
->>  	if (pre_div > MISC_CLK_DIV_MASK) {
->>  		dev_err(meson->chip.dev, "unable to get period pre_div\n");
->>  		return -EINVAL;
->>  	}
->>  
->> +	cnt = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * (pre_div + 1));
->> +	if (cnt > 0xffff) {
->> +		dev_err(meson->chip.dev, "unable to get period cnt\n");
->> +		return -EINVAL;
->> +	}
->> +
-> 
-> There is a slight modification in the calculation of pre_div that isn't
-> catched by the examples above.
-> 
-> Before this patch we had:
-> 
-> 	pick smallest pre_div such that
-> 		round_closest(period * 1000 / (round_down(1e12 / fin_freq) * (pre_div + 1)) <= 0xffff
-> 
-> New approach is:
-> 
-> 	pre_div = round_down(fin_freq * period / (1e9 * 0xffff))
-> 
-> An advantage of the new approach is better as it rounds only once and is
-> easier.
-> 
-> Consider fin_freq = 99990001 and period = 655355, then the old algorithm
-> picks pre_div = 1 while the new picks pre_div = 0.
-> 
-> I didn't continue here to check which are the resulting waveforms, I
-> assume they are different though.
-> 
-> As there is currently no definition what is a "better" approximation for
-> a given requested pair (duty_cycle, period) I cannot say if these
-> changes are good or not.
-> 
-> And that's a pity, so I still think there should be a documented
-> definition that lays down how a lowlevel driver should round. Without
-> that a consumer that cares about fine differences can not rely an the
-> abstraction provided by the PWM framework because each low-level driver
-> might behave differently.
-> 
-> @Thierry: So can you please continue the discussion about this topic.
-> The longer this is delayed the more patches are created and submitted
-> that eventually might be wrong which is a waste of developer and
-> reviewer time.
-> 
-> Assuming the people who care about meson don't object after reading this
-> I wouldn't want to stop this patch going in though. So:
-> 
-> 	Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> 
-> Best regards
-> Uwe
-> 
 
-I don't have a strong view on this, Martin showed similar or much greater
-accuracy in the 2 principal use cases of the driver, so I'm ok with it.
+--Clx92ZfkiYIKRjnr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+On Mon, May 27, 2019 at 11:22:37AM +0900, Cao Van Dong wrote:
+> This patch adds suspend/resume function support for Renesas the 16-Bit Ti=
+mer
+> Pulse Unit (TPU) driver. This has been tested on the Salvator-XS board=20
+> with R-Car M3-N and H3 at renesas-drivers-2019-05-21-v5.2-rc1 tag.
+> I expect this to work on other SoCs.
+>=20
+> Test procedure:
+>   - Enable TPU and pin control in DTS.
+>   - Make sure switches { SW29-[1-2] are switched off or=20
+>     SW31-[1-4] are switched off(only for Salvator-xs) }.
+>   - Exercise userspace PWM control for pwm[2,3]=20
+>     of /sys/class/pwm/pwmchip1/ .
+>   - Inspect PWM signals on the input side of { CN29-[58,60]=20
+>     or SW31-[1,2] (only for Salvator-xs) }
+>     before and after suspend/resume using an oscilloscope.=20
+>=20
+> Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
+> Tested-by: Cao Van Dong <cv-dong@jinso.co.jp>
+> ---
+> Changes v4 -> v5:
+>   - Remove test_bit(PWMF_REQUESTED, &pwm->flags) check.
+> ---
+> Changes v3 -> v4:
+>   - Use pwm_is_enabled(pwm) to check channel instead of pwm_get_chip_data=
+(&chip->pwms[i]).
+>   - Move tpu_pwm_disable() to tpu_pwm_suspend(), tpu_pwm_enable() to tpu_=
+pwm_resume().
+>   - Remove tpu_pwm_restart_timer() function and remove pm_runtime_get_syn=
+c() in tpu_pwm_resume().
+> ---
+> Changes v2 -> v3:
+>   - Changes '3' -> TPU_CHANNEL_MAX in loop.
+>   - Remove pm_runtime_put() function in tpu_pwm_suspend() function.
+> ---
+> Changes v1 -> v2:
+>   - Repair the handling code to cover case of using multiple timers.
+> ---
+>  drivers/pwm/pwm-renesas-tpu.c | 36 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+
+This has been discussed before, but this really shouldn't be done in the
+PWM driver. Consumers should really be reconfiguring the PWM upon resume
+as appropriate. This is the only way to ensure that everything is
+resumed in the proper order.
+
+Most, if not all, consumers already implement suspend/resume that way.
+sysfs is the only one that I'm aware of that doesn't.
+
+Since you've been using sysfs to test this, things are slightly more
+complicated (i.e. we don't have a consumer driver in the conventional
+way). However, you should be able to solve this by implementing
+dev_pm_ops for the pwm_class.
+
+Do you think you could give that a try?
+
+Thierry
+
+>=20
+> diff --git a/drivers/pwm/pwm-renesas-tpu.c b/drivers/pwm/pwm-renesas-tpu.c
+> index 4a855a2..86b7da4 100644
+> --- a/drivers/pwm/pwm-renesas-tpu.c
+> +++ b/drivers/pwm/pwm-renesas-tpu.c
+> @@ -366,6 +366,41 @@ static void tpu_pwm_disable(struct pwm_chip *chip, s=
+truct pwm_device *_pwm)
+>  	tpu_pwm_timer_stop(pwm);
+>  }
+> =20
+> +#ifdef CONFIG_PM_SLEEP
+> +static int tpu_pwm_suspend(struct device *dev)
+> +{
+> +	struct tpu_device *tpu =3D dev_get_drvdata(dev);
+> +	struct pwm_chip *chip =3D &tpu->chip;
+> +	struct pwm_device *pwm;
+> +	int i;
+> +
+> +	for (i =3D 0; i < TPU_CHANNEL_MAX; i++) {
+> +		pwm =3D &chip->pwms[i];
+> +		if (pwm_is_enabled(pwm))
+> +			tpu_pwm_disable(pwm->chip, pwm);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int tpu_pwm_resume(struct device *dev)
+> +{
+> +	struct tpu_device *tpu =3D dev_get_drvdata(dev);
+> +	struct pwm_chip *chip =3D &tpu->chip;
+> +	struct pwm_device *pwm;
+> +	int i;
+> +
+> +	for (i =3D 0; i < TPU_CHANNEL_MAX; i++) {
+> +		pwm =3D &chip->pwms[i];
+> +		if (pwm_is_enabled(pwm))
+> +			tpu_pwm_enable(pwm->chip, pwm);
+> +	}
+> +
+> +	return 0;
+> +}
+> +#endif /* CONFIG_PM_SLEEP */
+> +static SIMPLE_DEV_PM_OPS(tpu_pwm_pm_ops, tpu_pwm_suspend, tpu_pwm_resume=
+);
+> +
+>  static const struct pwm_ops tpu_pwm_ops =3D {
+>  	.request =3D tpu_pwm_request,
+>  	.free =3D tpu_pwm_free,
+> @@ -459,6 +494,7 @@ static struct platform_driver tpu_driver =3D {
+>  	.remove		=3D tpu_remove,
+>  	.driver		=3D {
+>  		.name	=3D "renesas-tpu-pwm",
+> +		.pm	=3D &tpu_pwm_pm_ops,
+>  		.of_match_table =3D of_match_ptr(tpu_of_table),
+>  	}
+>  };
+> --=20
+> 2.7.4
+>=20
+
+--Clx92ZfkiYIKRjnr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzr8YUACgkQ3SOs138+
+s6EKpQ//foUX46nWEuswTh2M7sX5uGiebanMYMMI6aWotjybyrwd1Qeh/apKuarQ
+K1uts2J7dLzwPi8AuPFXa/J2D8+iw9f6SYW9jH5NPau/X3dYGd7DpU+3BDuTS8AT
+UCZRn10SEY2APW69wYBEqMtN9cXUiU4IKti1xgB1NcpKJQnwo/GKuS4SOyVqR9tr
+kxrJ7ryKtMyDZ35mMMbjlfmFrFvEu4osTO/1S2VJzHql9F1EJVKsXPkABu0TjDaA
+fQdmSvWGWHhZ7gASkOeDsyH22rnYQIMkCB85XGAdRWF0AlAgBKg+6yDghZJDVpt/
+ohZyBH8+aHngnpNK5OtMDmJ0fdMUdOPdWTKcb/a8O/TysLt94o8u3kBISIwxCuu5
+6LltTFKqvSu1E2hLvfEIjTgLRydJf1QAyITrf5y4XcnCdDOxbGvko4CcZk0bqQWR
+quD0fz4X7sotFcMLlQLNNqahp0ptD419ILWuJhCNgGnR6fFFs9yvT2cIpFufdgUN
+PCFWs8jyRg4wB0TvSPXYnRqjAC+TVuoBRz7JCUGbPImyGUYnv6k/prfCMF7ki7ah
+du/4CU2FyCg0dhGPw4tSk3v/EOvZBsyat2XcQo5dPgPnqj20kKUbY8MCTqPjcYzK
+DMNomPmvI1JeoV3eTC0Owc3gdpRMKHH8NItLCPZvatZa1Dh3HJ0=
+=41Rd
+-----END PGP SIGNATURE-----
+
+--Clx92ZfkiYIKRjnr--
