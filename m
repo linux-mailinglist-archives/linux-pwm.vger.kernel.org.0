@@ -2,58 +2,58 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D53B2B505
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2019 14:25:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCF6D2B508
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2019 14:25:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbfE0MZN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 27 May 2019 08:25:13 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41495 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbfE0MZM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 May 2019 08:25:12 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c2so1546977wrm.8
-        for <linux-pwm@vger.kernel.org>; Mon, 27 May 2019 05:25:10 -0700 (PDT)
+        id S1727176AbfE0MZ3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 27 May 2019 08:25:29 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51472 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfE0MZ3 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 May 2019 08:25:29 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f10so8545614wmb.1
+        for <linux-pwm@vger.kernel.org>; Mon, 27 May 2019 05:25:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=sGKq4BVOhx+YoEDuHoZbnnRiDJ7L5mqSr1atGmHYHsY=;
-        b=OAXFYXR7xyjkw6rYeOaIlE2B+Zvbvs9mSYi3/1CihglxPJKMFFFPfQw2agA2xOn/VX
-         yqen6pnt0JpNcOluLTi0Nv+mh4msw98TTC/CM7ad7Z5PrcoIAW0JBp9E2BjgyFj0PBH8
-         brBIf35wR/psVOYGMohRcCL4BiBt6xIediybjmLh9UHffxtkgHWxL1wapEnYci8ipFAl
-         WR/o4C2avtWU/GJbdb/PC8tO2BIXG0yxck3JnPfneXZbvktD/tq7HWdugg4L6ohfILKV
-         2DGj8JTOrv7qj15oxKnNouO2H1u1hx5VxP/1M4mPtZqs8JzoePUmJ1YYuE9NmISVylr8
-         v8pQ==
+        bh=xGiOy/CD4XgulwIIHSIhXC16Zrz6P2ZSbp7JsRj17Gc=;
+        b=RShj8NHI8B0WRqoRV6opiHiWCF5SyU2HSF7rp7zeEkoOQxwDFc9uIoFdh7aQtPXLoO
+         KA35HEONSjnftchnoAJK3VaaGiAvfGz+3hh61ioNInT1gJfntTXFzuLrgm86IyMBQho6
+         uISGT5Jfay4Adcd/BaVKXbgtcs1NLL5uz3phJ5MeNowaFbOSnBHftMG/tBU0kQ20Jtli
+         +pwmEG/DXtFT8h/3Gtty9CrRnkYWUP3vQ5fBrw5vakrtmIvovFyLpbuULv4ywYomLR0M
+         Nmxh4jgge0Js/EHoDie2OxnTrla/Jhxa20fJyK87BJbelEW8WMkWHCNnQdMXf/R8hJST
+         UOMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=sGKq4BVOhx+YoEDuHoZbnnRiDJ7L5mqSr1atGmHYHsY=;
-        b=OpQXb1hVlFE2GdgUbooIodhxFfxcS68H8OKe6WBM5O2WXd7/yTezxJyAtsC+y0AWc9
-         UbjKjVxhSXCDsvczhgUOnYOeS9KcW18SNBtUQ8jU1F58om+cLAfjrz7lJo9RTgkNg3Ol
-         oThZwMeawLHbbZxVed10Ae7V6oeHHA1036+1S2c+hZl8qVdeBImfX0p7QLkicwELxN5j
-         tuuxEY6MDY7cPfwhjtqrR8TerSzA4Hq/VFFAPZETvZCYFsNaz/GjVd5JykhkIiKA5lLi
-         YHkprpYYFS45zAVDyybXKfkbghfUivyQV7MpRDWhiEYYJI0riS8qIX268FgA1rpieNUG
-         BIeQ==
-X-Gm-Message-State: APjAAAWWROSShsi9T6/0oVWFks4unvgjgKURPkW997yufG1W+S9bagCu
-        uBNeo9CN10/smOnQnYc7xmqPlH9WUpZlFQ==
-X-Google-Smtp-Source: APXvYqxU3izd1btk+vMP58AKtWbDUacGuBFB8+c9b7OBPXUV/xBIYP3n8Xyvjqiry+ZGmJ+CpDpKWQ==
-X-Received: by 2002:a5d:5501:: with SMTP id b1mr53897257wrv.222.1558959909853;
-        Mon, 27 May 2019 05:25:09 -0700 (PDT)
+        bh=xGiOy/CD4XgulwIIHSIhXC16Zrz6P2ZSbp7JsRj17Gc=;
+        b=VyvrqVGrYdmvTXl35EHmfOEUd3jwdVxCO1OQi48/87YRZDo3AlXs+icKgU/bUiGtH0
+         nxU0gpi6LA6eGoyTE/tL8s/9PFIv9s1t+xw029f6vBEZ/Cg9dJAZNAQ+AWwkf3si5DrI
+         JGFmBEJAAyaldfBzAAsBmdRCtbxoNLk9ntxAccFnNMvnoQHMovLYuEVG4Pf8f+GNKg5j
+         MYIfSXHCmbZ9WiNOJadTLcf2P+0tDaZx+czpq891Zi4mcfoWucYnS3qjCI+lcXJ6RbaP
+         4Rap44aUFY1BMxrDBCNfCu6mA6qPd484Ngd/0tPB3OCtltEjkMB75v430+EwBPl/OmpY
+         B31w==
+X-Gm-Message-State: APjAAAUw5dm3NQIWyEthQaOvFX1R4Og7sN2kWhmuhoFW1Oh5/lGMJz6e
+        0HM5e+/VUZArxtJmhgBQdGNXBg==
+X-Google-Smtp-Source: APXvYqx0kZcZ0bFvNB1ltFd0rTrrYicB2CHq6sgH1HG/wAPTdfTyex5/TTdQIQ9qf2ssJbwFQ+YdAw==
+X-Received: by 2002:a05:600c:2219:: with SMTP id z25mr18258608wml.95.1558959926342;
+        Mon, 27 May 2019 05:25:26 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id g2sm9709001wru.37.2019.05.27.05.25.08
+        by smtp.gmail.com with ESMTPSA id q14sm8641844wrw.60.2019.05.27.05.25.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 05:25:08 -0700 (PDT)
-Subject: Re: [PATCH 01/14] pwm: meson: unify the parameter list of
- meson_pwm_{enable, disable}
+        Mon, 27 May 2019 05:25:25 -0700 (PDT)
+Subject: Re: [PATCH 02/14] pwm: meson: use devm_clk_get_optional() to get the
+ input clock
 To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
         thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 References: <20190525181133.4875-1-martin.blumenstingl@googlemail.com>
- <20190525181133.4875-2-martin.blumenstingl@googlemail.com>
+ <20190525181133.4875-3-martin.blumenstingl@googlemail.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -106,12 +106,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <bb920cb5-0e0b-ef1b-0ed9-35e865d54add@baylibre.com>
-Date:   Mon, 27 May 2019 14:25:08 +0200
+Message-ID: <b4cfc101-7391-aef2-0f6c-8bdec2044101@baylibre.com>
+Date:   Mon, 27 May 2019 14:25:25 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190525181133.4875-2-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20190525181133.4875-3-martin.blumenstingl@googlemail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -121,77 +121,40 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 On 25/05/2019 20:11, Martin Blumenstingl wrote:
-> This is a preparation for a future cleanup. Pass struct pwm_device
-> instead of passing the individual values required by each function as
-> these can be obtained for each struct pwm_device instance.
-> 
-> As a nice side-effect the driver now uses "switch (pwm->hwpwm)"
-> everywhere. Before some functions used "switch (id)" while others used
-> "switch (pwm->hwpwm)".
-> 
-> No functional changes.
+> Simplify the code which fetches the input clock for a PWM channel by
+> using devm_clk_get_optional().
+> This comes with a small functional change: previously all errors except
+> EPROBE_DEFER were ignored. Now all other errors are also treated as
+> errors. If no input clock is present devm_clk_get_optional() will return
+> NULL instead of an error which matches the behavior of the old code.
 > 
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  drivers/pwm/pwm-meson.c | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
+>  drivers/pwm/pwm-meson.c | 11 +++--------
+>  1 file changed, 3 insertions(+), 8 deletions(-)
 > 
 > diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index 5fef7e925282..3fbbc4128ce8 100644
+> index 3fbbc4128ce8..35b38c7201c3 100644
 > --- a/drivers/pwm/pwm-meson.c
 > +++ b/drivers/pwm/pwm-meson.c
-> @@ -183,15 +183,14 @@ static int meson_pwm_calc(struct meson_pwm *meson,
+> @@ -474,14 +474,9 @@ static int meson_pwm_init_channels(struct meson_pwm *meson,
+>  
+>  		snprintf(name, sizeof(name), "clkin%u", i);
+>  
+> -		channel->clk_parent = devm_clk_get(dev, name);
+> -		if (IS_ERR(channel->clk_parent)) {
+> -			err = PTR_ERR(channel->clk_parent);
+> -			if (err == -EPROBE_DEFER)
+> -				return err;
+> -
+> -			channel->clk_parent = NULL;
+> -		}
+> +		channel->clk_parent = devm_clk_get_optional(dev, name);
+> +		if (IS_ERR(channel->clk_parent))
+> +			return PTR_ERR(channel->clk_parent);
+>  	}
+>  
 >  	return 0;
->  }
->  
-> -static void meson_pwm_enable(struct meson_pwm *meson,
-> -			     struct meson_pwm_channel *channel,
-> -			     unsigned int id)
-> +static void meson_pwm_enable(struct meson_pwm *meson, struct pwm_device *pwm)
->  {
-> +	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
->  	u32 value, clk_shift, clk_enable, enable;
->  	unsigned int offset;
->  	unsigned long flags;
->  
-> -	switch (id) {
-> +	switch (pwm->hwpwm) {
->  	case 0:
->  		clk_shift = MISC_A_CLK_DIV_SHIFT;
->  		clk_enable = MISC_A_CLK_EN;
-> @@ -228,12 +227,12 @@ static void meson_pwm_enable(struct meson_pwm *meson,
->  	spin_unlock_irqrestore(&meson->lock, flags);
->  }
->  
-> -static void meson_pwm_disable(struct meson_pwm *meson, unsigned int id)
-> +static void meson_pwm_disable(struct meson_pwm *meson, struct pwm_device *pwm)
->  {
->  	u32 value, enable;
->  	unsigned long flags;
->  
-> -	switch (id) {
-> +	switch (pwm->hwpwm) {
->  	case 0:
->  		enable = MISC_A_EN;
->  		break;
-> @@ -266,7 +265,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  		return -EINVAL;
->  
->  	if (!state->enabled) {
-> -		meson_pwm_disable(meson, pwm->hwpwm);
-> +		meson_pwm_disable(meson, pwm);
->  		channel->state.enabled = false;
->  
->  		return 0;
-> @@ -293,7 +292,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  	}
->  
->  	if (state->enabled && !channel->state.enabled) {
-> -		meson_pwm_enable(meson, channel, pwm->hwpwm);
-> +		meson_pwm_enable(meson, pwm);
->  		channel->state.enabled = true;
->  	}
->  
 > 
 
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
