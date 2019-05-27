@@ -2,58 +2,58 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 854562B50F
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2019 14:26:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D3402B514
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2019 14:26:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfE0MZs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 27 May 2019 08:25:48 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41555 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfE0MZs (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 May 2019 08:25:48 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c2so1548751wrm.8
-        for <linux-pwm@vger.kernel.org>; Mon, 27 May 2019 05:25:46 -0700 (PDT)
+        id S1726522AbfE0M0h (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 27 May 2019 08:26:37 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39994 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726646AbfE0M0h (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 May 2019 08:26:37 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t4so8478385wrx.7
+        for <linux-pwm@vger.kernel.org>; Mon, 27 May 2019 05:26:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=iz8qLe1BhhaZ54BDc7wUVaweRviNKZbx0tXlxSxGiy0=;
-        b=Zm97XEoWbkkUMW6vYmy12z2L//XTJtKcv0jeho9kw5/Jdu2dCjdDbWoWf59ClnmAah
-         6438/L73gKlVXjSTiDAvtqKmPPeNYRmF/EM5/Kd5TdDoZwJh0ENcz6uPpE8vL6XrfQJG
-         fC8HAE8wRxk9g5j7jZ/UcCIZu74LPnH+wpxw/7WV2IkcqbTRdqJPJn1iZ1p9q0v5Y3c3
-         j1iIscywI3KzgNVKsuNNXDSkqzFTQvPca1wusw9J2hFnxoRcLQxslc/UeU7gaIUKvnCO
-         bKS4rjtjI1AXdobjD789x9ycMRG+OgQxPjeAhnWKt5bRv4cvXuCv6q6Lsac0Iwx6Stjz
-         hklQ==
+        bh=2tDDWhgNEB5bJTcFJlhnu/dr6egOdayi9M5VpMFvy6M=;
+        b=QOZCqxfYWeXse04swKa5CMF1HpU+bX4q268wgOlEOKyZGGcdeh2NT0a84W8zuUx0On
+         N1gV8dCTLfMC9nktbT2tyGnm52pEypBbv+evB88o7TjGTQ98l0gDFE/aUQSk/f/YPr8x
+         T2lq7XSIE+f46P3joL7t0sdmi9QlotBTw+yw4ZuFT5FVRBfuA3LKOKCEZNFPv5Bkwwe0
+         JpIxrW9wUfFRetHqpiFPW3wZIwmgM9LBYBdB/vaIpPbOAidvkobxTEj/W0eEmGCBeuUR
+         wn7rNLcnaxlgGHQqSbODvwAuz2Zg3BXm6Ljmqh0qn2PWQyR+1h1GOc4DHUg3haCbl0dG
+         cvAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=iz8qLe1BhhaZ54BDc7wUVaweRviNKZbx0tXlxSxGiy0=;
-        b=bXFqrFKoe4H0wVKq7wovHzoSmqzXnI5r72thz0gguGeRHMJNJgvmdWhhjHOQON+ldz
-         1WkawUsNd9sLYcyr/FE2GlN1NPgL/8WXrBPY/APGM+S41rhsJJ7Pb6QsbAljm4yDwZDR
-         Dz4LE5N3xBp0LKuVDxcQllDlMB/e2FbBK9cTxKjau+18XxtM80DUOL3yq1RU57CYDnlK
-         CCnuJ+1WwrGwZGRV26WAblOmIXHFfMsLjbvRmlM2nU04pQBKtEKmgpToEmVjZDh9EzoC
-         tL9KUJ1ctG9vPcGoscWdNTYQSe53t1GcW81XRXHXywiUiAARVTUNs/u3P+Pu0+I4F2y8
-         JYeg==
-X-Gm-Message-State: APjAAAWp8NgCknPVFVueFhDl7DrQQiEDbGuDxNYWrdZJFW/P/qAs3Qo0
-        e5yC09WPzvkPQcgGaGZZVn72uA==
-X-Google-Smtp-Source: APXvYqz7nznz1Nl9Xihs1RSzr0mxg2AhiWIx+BU5hRCpnRjtjBIl9xhT3OoBqDQXaaCBtMgDnmwOWA==
-X-Received: by 2002:a5d:4e46:: with SMTP id r6mr74373325wrt.290.1558959945354;
-        Mon, 27 May 2019 05:25:45 -0700 (PDT)
+        bh=2tDDWhgNEB5bJTcFJlhnu/dr6egOdayi9M5VpMFvy6M=;
+        b=gVOqpWkffQEwyOIxlXdtdCMMXMSw9QOhfp0fM/eL8Xq0DrkHduvMPVPDJ2pU6fiw+x
+         cGIVStFG/Z0zV4768UIcxLtzVdqfCimwIj/HmqB6jnm5LHmdPOwsanX5AjndVJUhC7+8
+         egkDtLb4YKnNY55wiYrShtIyLOLHJAnbtd5spL883foU2WCDXuzcSryVil/+amQjOoMH
+         wAjJF7OEaJlgGOtB2ra3tijYewugqpwiR/59cASWRHs7NHU/WbFMGsRf4B5d0s0h/8lQ
+         2bS+KQIdIZGr1Gx7ng8XL9N+pgmAwmMRlwaNaIpzgtLo82Y+Hr4PeZU9kGKUdWzSeeV6
+         me2A==
+X-Gm-Message-State: APjAAAURAo8GfvGiqhkdJcjjHnpWkEUNHB6LbCLgKRYIYNxIbmPpizRd
+        Y31ddY/PXaQGKG5MNhoIRbl6a24PutqYVA==
+X-Google-Smtp-Source: APXvYqycAMX2LfZD6Hn4iB2x8omd8OuzKXsuYn8CsjSORRFW6ql/ZtcEjSP/xwsER0k+iGWWUL9d8Q==
+X-Received: by 2002:adf:e649:: with SMTP id b9mr28407713wrn.195.1558959994770;
+        Mon, 27 May 2019 05:26:34 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id i32sm2369708wri.23.2019.05.27.05.25.44
+        by smtp.gmail.com with ESMTPSA id d2sm2159504wmb.9.2019.05.27.05.26.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 05:25:44 -0700 (PDT)
-Subject: Re: [PATCH 03/14] pwm: meson: use GENMASK and FIELD_PREP for the lo
- and hi values
+        Mon, 27 May 2019 05:26:34 -0700 (PDT)
+Subject: Re: [PATCH 04/14] pwm: meson: change MISC_CLK_SEL_WIDTH to
+ MISC_CLK_SEL_MASK
 To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
         thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 References: <20190525181133.4875-1-martin.blumenstingl@googlemail.com>
- <20190525181133.4875-4-martin.blumenstingl@googlemail.com>
+ <20190525181133.4875-5-martin.blumenstingl@googlemail.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -106,12 +106,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <b8e06a75-43a8-78f9-b475-61106906ac3e@baylibre.com>
-Date:   Mon, 27 May 2019 14:25:44 +0200
+Message-ID: <3b61897a-267b-fd6e-181b-a8c7e47918fb@baylibre.com>
+Date:   Mon, 27 May 2019 14:26:33 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190525181133.4875-4-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20190525181133.4875-5-martin.blumenstingl@googlemail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -121,55 +121,42 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 On 25/05/2019 20:11, Martin Blumenstingl wrote:
-> meson_pwm_calc() ensures that "lo" is always less than 16 bits wide
-> (otherwise it would overflow into the "hi" part of the REG_PWM_{A,B}
-> register).
-> Use GENMASK and FIELD_PREP for the lo and hi values to make it easier to
-> spot how wide these are internally. Additionally this is a preparation
-> step for the .get_state() implementation where the GENMASK() for lo and
-> hi becomes handy because it can be used with FIELD_GET() to extract the
-> values from the register REG_PWM_{A,B} register.
-> 
-> No functional changes intended.
+> MISC_CLK_SEL_WIDTH is only used in one place where it's converted into
+> a bit-mask. Rename and change the macro to be a bit-mask so that
+> conversion is not needed anymore. No functional changes intended.
 > 
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  drivers/pwm/pwm-meson.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+>  drivers/pwm/pwm-meson.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index 35b38c7201c3..c62a3ac924d0 100644
+> index c62a3ac924d0..84b28ba0f903 100644
 > --- a/drivers/pwm/pwm-meson.c
 > +++ b/drivers/pwm/pwm-meson.c
-> @@ -5,6 +5,8 @@
->   * Copyright (C) 2014 Amlogic, Inc.
->   */
+> @@ -33,7 +33,7 @@
+>  #define MISC_A_CLK_DIV_SHIFT	8
+>  #define MISC_B_CLK_SEL_SHIFT	6
+>  #define MISC_A_CLK_SEL_SHIFT	4
+> -#define MISC_CLK_SEL_WIDTH	2
+> +#define MISC_CLK_SEL_MASK	0x3
+
+NIT I would have used GENMASK here
+
+>  #define MISC_B_EN		BIT(1)
+>  #define MISC_A_EN		BIT(0)
 >  
-> +#include <linux/bitfield.h>
-> +#include <linux/bits.h>
->  #include <linux/clk.h>
->  #include <linux/clk-provider.h>
->  #include <linux/err.h>
-> @@ -20,7 +22,8 @@
+> @@ -463,7 +463,7 @@ static int meson_pwm_init_channels(struct meson_pwm *meson,
 >  
->  #define REG_PWM_A		0x0
->  #define REG_PWM_B		0x4
-> -#define PWM_HIGH_SHIFT		16
-> +#define PWM_LOW_MASK		GENMASK(15, 0)
-> +#define PWM_HIGH_MASK		GENMASK(31, 16)
->  
->  #define REG_MISC_AB		0x8
->  #define MISC_B_CLK_EN		BIT(23)
-> @@ -217,7 +220,8 @@ static void meson_pwm_enable(struct meson_pwm *meson, struct pwm_device *pwm)
->  	value |= clk_enable;
->  	writel(value, meson->base + REG_MISC_AB);
->  
-> -	value = (channel->hi << PWM_HIGH_SHIFT) | channel->lo;
-> +	value = FIELD_PREP(PWM_HIGH_MASK, channel->hi) |
-> +		FIELD_PREP(PWM_LOW_MASK, channel->lo);
->  	writel(value, meson->base + offset);
->  
->  	value = readl(meson->base + REG_MISC_AB);
+>  		channel->mux.reg = meson->base + REG_MISC_AB;
+>  		channel->mux.shift = mux_reg_shifts[i];
+> -		channel->mux.mask = BIT(MISC_CLK_SEL_WIDTH) - 1;
+> +		channel->mux.mask = MISC_CLK_SEL_MASK;
+>  		channel->mux.flags = 0;
+>  		channel->mux.lock = &meson->lock;
+>  		channel->mux.table = NULL;
 > 
+
+Anyway, it's still correct :
 
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
