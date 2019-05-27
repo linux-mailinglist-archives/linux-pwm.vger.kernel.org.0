@@ -2,58 +2,57 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D3402B514
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2019 14:26:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72E832B516
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2019 14:26:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfE0M0h (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 27 May 2019 08:26:37 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39994 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbfE0M0h (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 May 2019 08:26:37 -0400
-Received: by mail-wr1-f66.google.com with SMTP id t4so8478385wrx.7
-        for <linux-pwm@vger.kernel.org>; Mon, 27 May 2019 05:26:35 -0700 (PDT)
+        id S1726776AbfE0M0x (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 27 May 2019 08:26:53 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54007 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726609AbfE0M0w (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 May 2019 08:26:52 -0400
+Received: by mail-wm1-f65.google.com with SMTP id d17so2808041wmb.3
+        for <linux-pwm@vger.kernel.org>; Mon, 27 May 2019 05:26:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=2tDDWhgNEB5bJTcFJlhnu/dr6egOdayi9M5VpMFvy6M=;
-        b=QOZCqxfYWeXse04swKa5CMF1HpU+bX4q268wgOlEOKyZGGcdeh2NT0a84W8zuUx0On
-         N1gV8dCTLfMC9nktbT2tyGnm52pEypBbv+evB88o7TjGTQ98l0gDFE/aUQSk/f/YPr8x
-         T2lq7XSIE+f46P3joL7t0sdmi9QlotBTw+yw4ZuFT5FVRBfuA3LKOKCEZNFPv5Bkwwe0
-         JpIxrW9wUfFRetHqpiFPW3wZIwmgM9LBYBdB/vaIpPbOAidvkobxTEj/W0eEmGCBeuUR
-         wn7rNLcnaxlgGHQqSbODvwAuz2Zg3BXm6Ljmqh0qn2PWQyR+1h1GOc4DHUg3haCbl0dG
-         cvAw==
+        bh=IVzLJGX+MsmE++PjIznjRjrAkMHMmJHi4jtucTUiuuc=;
+        b=f71JNsaDsE2CrHCXE59CaLNQDmC3DOXsCmgc2KFa2aXT/7SLbuXAS/VYyGWn2Za6zI
+         NR62HtrFl8BR5iw2BrYb7GFNuw4YOjMMas9Ncz5AhXtXl60EU5KJNF2362gvM8Vm2Ytl
+         LtBBxVyYDGqXUVoHIucDsPN4tVuL1UFVXpqT6Xw3+6ctqv46MDN+7/Gya0x9xly+wrJP
+         YAUvYA8zBw+KOeNiyQERgiT/rB7dvmkhZvYKZ+AgZELOjiHZcwKc+Fsd/KraLANl62vD
+         BXzqwcB0Ta+q0/uQSE3ev16+Z1s+SP0qCTxcbYppfsiNpVlaBzkRT6yBzuOAYPC003oO
+         i4VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=2tDDWhgNEB5bJTcFJlhnu/dr6egOdayi9M5VpMFvy6M=;
-        b=gVOqpWkffQEwyOIxlXdtdCMMXMSw9QOhfp0fM/eL8Xq0DrkHduvMPVPDJ2pU6fiw+x
-         cGIVStFG/Z0zV4768UIcxLtzVdqfCimwIj/HmqB6jnm5LHmdPOwsanX5AjndVJUhC7+8
-         egkDtLb4YKnNY55wiYrShtIyLOLHJAnbtd5spL883foU2WCDXuzcSryVil/+amQjOoMH
-         wAjJF7OEaJlgGOtB2ra3tijYewugqpwiR/59cASWRHs7NHU/WbFMGsRf4B5d0s0h/8lQ
-         2bS+KQIdIZGr1Gx7ng8XL9N+pgmAwmMRlwaNaIpzgtLo82Y+Hr4PeZU9kGKUdWzSeeV6
-         me2A==
-X-Gm-Message-State: APjAAAURAo8GfvGiqhkdJcjjHnpWkEUNHB6LbCLgKRYIYNxIbmPpizRd
-        Y31ddY/PXaQGKG5MNhoIRbl6a24PutqYVA==
-X-Google-Smtp-Source: APXvYqycAMX2LfZD6Hn4iB2x8omd8OuzKXsuYn8CsjSORRFW6ql/ZtcEjSP/xwsER0k+iGWWUL9d8Q==
-X-Received: by 2002:adf:e649:: with SMTP id b9mr28407713wrn.195.1558959994770;
-        Mon, 27 May 2019 05:26:34 -0700 (PDT)
+        bh=IVzLJGX+MsmE++PjIznjRjrAkMHMmJHi4jtucTUiuuc=;
+        b=jb3a+pnKrl1AacG6Zu1fV2zVQxacG1+No9uYWjB4HdkOTHNWCR54i7z9vjPVJNvScp
+         z2hstzmSxaA5roVgfXSlTa006kScHicSpu8iX62d39ETAldrmKigzvCMZLjtDlf5+XZV
+         c4MYyWsHAOGTA6aopPCcPi8/AwhzJo39wu1whYI0H6ERYbooSeJ2igKwS66oFXwK+iJk
+         xjY0qElR1GB5WbV+fHRwVyn6A7dxs9rImDYpk2J8ZvabU1i4C4N52w4KYj30TFvOOJnc
+         zbg1s36D6vb/YOkZJKzqwF4hYs1bZyvwp3C9/Ze4ac8+5UabbE07wxfU6Z0zurnRbXG/
+         pIQA==
+X-Gm-Message-State: APjAAAXyFhf+Crk0zzmalRtQkZm5nM8lLFNMYuUV4a3Cp0fhJBgragjQ
+        d5RPzvFUSMFN1U/GNtg02gQl7A==
+X-Google-Smtp-Source: APXvYqzC6r8dIkZ/r1ai8+S7e0Xsf+eUf1PZs6k1kuWcoBlp5qWJGGul/RRx+fWRP5pgO0v7rxKyhQ==
+X-Received: by 2002:a1c:254:: with SMTP id 81mr9551903wmc.151.1558960009913;
+        Mon, 27 May 2019 05:26:49 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id d2sm2159504wmb.9.2019.05.27.05.26.33
+        by smtp.gmail.com with ESMTPSA id a204sm4733445wmh.8.2019.05.27.05.26.49
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 05:26:34 -0700 (PDT)
-Subject: Re: [PATCH 04/14] pwm: meson: change MISC_CLK_SEL_WIDTH to
- MISC_CLK_SEL_MASK
+        Mon, 27 May 2019 05:26:49 -0700 (PDT)
+Subject: Re: [PATCH 05/14] pwm: meson: don't duplicate the polarity internally
 To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
         thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 References: <20190525181133.4875-1-martin.blumenstingl@googlemail.com>
- <20190525181133.4875-5-martin.blumenstingl@googlemail.com>
+ <20190525181133.4875-6-martin.blumenstingl@googlemail.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -106,12 +105,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <3b61897a-267b-fd6e-181b-a8c7e47918fb@baylibre.com>
-Date:   Mon, 27 May 2019 14:26:33 +0200
+Message-ID: <edb82eba-2576-f99a-5553-cec18ee292f1@baylibre.com>
+Date:   Mon, 27 May 2019 14:26:48 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190525181133.4875-5-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20190525181133.4875-6-martin.blumenstingl@googlemail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -121,42 +120,79 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 On 25/05/2019 20:11, Martin Blumenstingl wrote:
-> MISC_CLK_SEL_WIDTH is only used in one place where it's converted into
-> a bit-mask. Rename and change the macro to be a bit-mask so that
-> conversion is not needed anymore. No functional changes intended.
+> Let meson_pwm_calc() use the polarity from struct pwm_state directly.
+> This removes a level of indirection where meson_pwm_apply() first had to
+> set a driver-internal inverter mask which was then only used by
+> meson_pwm_calc().
+> 
+> Instead of adding the polarity as parameter to meson_pwm_calc() switch
+> to struct pwm_state directly to make it easier to see where the
+> parameters are actually coming from.
 > 
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  drivers/pwm/pwm-meson.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/pwm/pwm-meson.c | 23 ++++++++---------------
+>  1 file changed, 8 insertions(+), 15 deletions(-)
 > 
 > diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index c62a3ac924d0..84b28ba0f903 100644
+> index 84b28ba0f903..39ea119add7b 100644
 > --- a/drivers/pwm/pwm-meson.c
 > +++ b/drivers/pwm/pwm-meson.c
-> @@ -33,7 +33,7 @@
->  #define MISC_A_CLK_DIV_SHIFT	8
->  #define MISC_B_CLK_SEL_SHIFT	6
->  #define MISC_A_CLK_SEL_SHIFT	4
-> -#define MISC_CLK_SEL_WIDTH	2
-> +#define MISC_CLK_SEL_MASK	0x3
-
-NIT I would have used GENMASK here
-
->  #define MISC_B_EN		BIT(1)
->  #define MISC_A_EN		BIT(0)
+> @@ -63,7 +63,6 @@ struct meson_pwm {
+>  	struct pwm_chip chip;
+>  	const struct meson_pwm_data *data;
+>  	void __iomem *base;
+> -	u8 inverter_mask;
+>  	/*
+>  	 * Protects register (write) access to the REG_MISC_AB register
+>  	 * that is shared between the two PWMs.
+> @@ -116,14 +115,17 @@ static void meson_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+>  }
 >  
-> @@ -463,7 +463,7 @@ static int meson_pwm_init_channels(struct meson_pwm *meson,
+>  static int meson_pwm_calc(struct meson_pwm *meson,
+> -			  struct meson_pwm_channel *channel, unsigned int id,
+> -			  unsigned int duty, unsigned int period)
+> +			  struct meson_pwm_channel *channel,
+> +			  struct pwm_state *state)
+>  {
+> -	unsigned int pre_div, cnt, duty_cnt;
+> +	unsigned int duty, period, pre_div, cnt, duty_cnt;
+>  	unsigned long fin_freq = -1;
+>  	u64 fin_ps;
 >  
->  		channel->mux.reg = meson->base + REG_MISC_AB;
->  		channel->mux.shift = mux_reg_shifts[i];
-> -		channel->mux.mask = BIT(MISC_CLK_SEL_WIDTH) - 1;
-> +		channel->mux.mask = MISC_CLK_SEL_MASK;
->  		channel->mux.flags = 0;
->  		channel->mux.lock = &meson->lock;
->  		channel->mux.table = NULL;
+> -	if (~(meson->inverter_mask >> id) & 0x1)
+> +	duty = state->duty_cycle;
+> +	period = state->period;
+> +
+> +	if (state->polarity == PWM_POLARITY_INVERSED)
+>  		duty = period - duty;
+>  
+>  	if (period == channel->state.period &&
+> @@ -278,15 +280,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	if (state->period != channel->state.period ||
+>  	    state->duty_cycle != channel->state.duty_cycle ||
+>  	    state->polarity != channel->state.polarity) {
+> -		if (state->polarity != channel->state.polarity) {
+> -			if (state->polarity == PWM_POLARITY_NORMAL)
+> -				meson->inverter_mask |= BIT(pwm->hwpwm);
+> -			else
+> -				meson->inverter_mask &= ~BIT(pwm->hwpwm);
+> -		}
+> -
+> -		err = meson_pwm_calc(meson, channel, pwm->hwpwm,
+> -				     state->duty_cycle, state->period);
+> +		err = meson_pwm_calc(meson, channel, state);
+>  		if (err < 0)
+>  			return err;
+>  
+> @@ -520,7 +514,6 @@ static int meson_pwm_probe(struct platform_device *pdev)
+>  	meson->chip.of_pwm_n_cells = 3;
+>  
+>  	meson->data = of_device_get_match_data(&pdev->dev);
+> -	meson->inverter_mask = BIT(meson->chip.npwm) - 1;
+>  
+>  	channels = devm_kcalloc(&pdev->dev, meson->chip.npwm,
+>  				sizeof(*channels), GFP_KERNEL);
 > 
-
-Anyway, it's still correct :
 
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
