@@ -2,57 +2,58 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 18D4A2B547
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2019 14:31:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40B4A2B568
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2019 14:34:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfE0Mbw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 27 May 2019 08:31:52 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35625 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbfE0Mbw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 May 2019 08:31:52 -0400
-Received: by mail-wr1-f65.google.com with SMTP id m3so16784027wrv.2
-        for <linux-pwm@vger.kernel.org>; Mon, 27 May 2019 05:31:51 -0700 (PDT)
+        id S1726749AbfE0Mdz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 27 May 2019 08:33:55 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36968 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbfE0Mdz (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 May 2019 08:33:55 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h1so2635897wro.4
+        for <linux-pwm@vger.kernel.org>; Mon, 27 May 2019 05:33:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=VjkdbNWZWv/rWi3OTs4zJ/tKh8dhOP47Y2RwgPFUEn8=;
-        b=CEdoD4gVbp5zp+dHatzwc7rKBJk/kKVgrUGS16Lr4BC4tY8qqpQyj6pwwrKeAq6cor
-         ECXr2NLc3AvlrapiiJfFOgEW7391VT/h08CcYhL2g857h8K7XnhBCAUpdgkg5BqTlAyb
-         E9Ua68vfyqDWHTKoLGf4QT3Ee/7N98fZdX3iJ2tGGoJI8zSCcl1JXOMnybQXYa7mHpBy
-         ExEFJ5l/7QKkY7pz9hnkj0CUYjPLV/TsUMtdsURuoklq1VuanXXMRQFxRaGCDFyrgsps
-         k8//8iKBiZGmhIhnxH3yTcLJuPajfj63nPX7rpjISKk81BUfuO92eYswc4k7mzyTROpE
-         YYSA==
+        bh=Lu584p0HvbXxFHDjm3E5Bv6klwwi/JMTJfgsCrnryS4=;
+        b=NMlGmDIui5A0tgyFH/7k/K9bwSvhSaMoTcKlOFVWMZYtSnUfiE6aY6euPvWFHlo7E5
+         bNW+mNjDAMKNNHQe6TMH+qiFqDFtYXM36A0aSur/kEca6WDIYg8rwQCwFBXEMqawm4ww
+         T4mAlF+plB9qlxlc9HTASzDoc3RTgWoKpbJPmUjYRTsnkKJE4ws79xzs55juQglL+Wb3
+         5OqfJJDzeT4ly4v5q7nI3VokTBGkHm3W8i2vgm1vvuB84uYcykyeCs9qZ3E4F1841ZQb
+         GZFVJWEhgjQh/KH7Uts5wN0oneGXh8TINJH3zRA0Soq9DqmOdruWD0IRuZqfg2ZaazuG
+         sh3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=VjkdbNWZWv/rWi3OTs4zJ/tKh8dhOP47Y2RwgPFUEn8=;
-        b=Adjjhgm5/XG5g3MucV1deiWsKdbDmlVHuv7Xoe92Wz7fGZJ5eZVlrGk5KjzsnqNpiU
-         vmYvI95VCw5RSB8zsSM4fvMAahYrMuMsWhtQBdGTZOp8vkUM6rEBsuxnYev/eWxZz7b/
-         QEhg/pPQAkixlM/5DZJ1hvEOfKOw7QPwOkXXrKNPSNQheyK8A/2BF76x/bu/h0HZsmPg
-         JN+Scxg5dZY8b88aXqns6m/9T+rhtNgNBs0e54HNswAUNgWOysNZQnnVCeieIWtpbbBg
-         K3eQt06G/zZ7ylq8TEgMQF8aDni1JtBcW1CbEdJDquIu3/w4coU7xjdsS0S/PP56HoHN
-         YohQ==
-X-Gm-Message-State: APjAAAWBRzHGzNt7Cvmv63/mAxxIC+LhfTfqlkS+ufuYvGyRwqLnG5Q4
-        474rxCFsCVJdSXjrGDn62rhvDQ==
-X-Google-Smtp-Source: APXvYqxy4hWx4u6r8rSw9MeqwBP6+PaZ5MbMXeZKRRYUxSBT2HiMkUBXrzgt9yLyvSDvRAcpaYsvVQ==
-X-Received: by 2002:a5d:4411:: with SMTP id z17mr29220039wrq.168.1558960310585;
-        Mon, 27 May 2019 05:31:50 -0700 (PDT)
+        bh=Lu584p0HvbXxFHDjm3E5Bv6klwwi/JMTJfgsCrnryS4=;
+        b=PEcSwj1uRYRjBcWJcnPXL0j6OF4A04e43xy10NuMXVJl/0EnfWB4UoVGIsbbLNrjee
+         x+wa7aiN6tvnkeMWJc4CnLZpDGut9406RrTnULrJobSPrE+ZyK7ANhLKVJNtSx2E7/1+
+         pNEx3+/OcN01dZrTKSKMmsXJ4Wkc5dcv5uBN4KTGtOrnryCs5TGAtDWvAfurXqsdro2K
+         D0MYYrw4WfjBQuB55x/i//+RjPqFgt9aJO++D9XPKCjyr+skj3arFSJ8XIK6kSb08pHJ
+         v7Z+H7cFZjJu7da49HPro8wr1BJ8HzSn+nfKAW2ndI+5Yhv6aJSEfgYMlUlU8HkBinNB
+         QFrg==
+X-Gm-Message-State: APjAAAXCsiUC2f99dTv9GfXZqO5qQ7BXwu/gbWyfEyD4K0OhOmKgr5Ec
+        BzQg8IOFq4Y3KauPOHV2icWe2w==
+X-Google-Smtp-Source: APXvYqxHJkwqnZ7CnTcUcxNEIT+3UK8ggiXkqGWeGENh3miaj9PGFisyYZjc3RJG4UEKLA7IcefNaQ==
+X-Received: by 2002:a05:6000:1285:: with SMTP id f5mr4275036wrx.112.1558960432650;
+        Mon, 27 May 2019 05:33:52 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id f10sm21641304wrg.24.2019.05.27.05.31.49
+        by smtp.gmail.com with ESMTPSA id c24sm894144wmb.21.2019.05.27.05.33.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 05:31:50 -0700 (PDT)
-Subject: Re: [PATCH 12/14] pwm: meson: don't cache struct pwm_state internally
+        Mon, 27 May 2019 05:33:52 -0700 (PDT)
+Subject: Re: [PATCH 13/14] pwm: meson: add support PWM_POLARITY_INVERSED when
+ disabling
 To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
         thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 References: <20190525181133.4875-1-martin.blumenstingl@googlemail.com>
- <20190525181133.4875-13-martin.blumenstingl@googlemail.com>
+ <20190525181133.4875-14-martin.blumenstingl@googlemail.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -105,12 +106,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <e0d88134-32f1-cbe2-5aa6-d1a31914c20e@baylibre.com>
-Date:   Mon, 27 May 2019 14:31:49 +0200
+Message-ID: <4de7d436-32b7-e4ed-39b2-e85f75a17c16@baylibre.com>
+Date:   Mon, 27 May 2019 14:33:42 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190525181133.4875-13-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20190525181133.4875-14-martin.blumenstingl@googlemail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -120,89 +121,72 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 On 25/05/2019 20:11, Martin Blumenstingl wrote:
-> The PWM core already caches the "current struct pwm_state" as the
-> "current state of the hardware registers" inside struct pwm_device.
+> meson_pwm_apply() has to consider the PWM polarity when disabling the
+> output.
+> With enabled=false and polarity=PWM_POLARITY_NORMAL the output needs to
+> be LOW. The driver already supports this.
+> With enabled=false and polarity=PWM_POLARITY_INVERSED the output needs
+> to be HIGH. Implement this in the driver by internally enabling the
+> output with the same settings that we already use for "period == duty".
 > 
-> Drop the struct pwm_state from struct meson_pwm_channel in favour of the
-> struct pwm_state in struct pwm_device. While here also drop any checks
-> based on the pwm_state because the PWM core already takes care of this.
-> 
-> No functional changes intended.
+> This fixes a PWM API violation which expects that the driver honors the
+> polarity also for enabled=false. Due to the IP block not supporting this
+> natively we only get "an as close as possible" to 100% HIGH signal (in
+> my test setup with input clock of 24MHz and measuring the output with a
+> logic analyzer at 24MHz sampling rate I got a duty cycle of 99.998475%
+> on a Khadas VIM).
 > 
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  drivers/pwm/pwm-meson.c | 25 +------------------------
->  1 file changed, 1 insertion(+), 24 deletions(-)
+>  drivers/pwm/pwm-meson.c | 23 ++++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index 010212166d5d..900d362ec3c9 100644
+> index 900d362ec3c9..bb48ba85f756 100644
 > --- a/drivers/pwm/pwm-meson.c
 > +++ b/drivers/pwm/pwm-meson.c
-> @@ -68,8 +68,6 @@ struct meson_pwm_channel {
->  	unsigned int lo;
->  	u8 pre_div;
->  
-> -	struct pwm_state state;
-> -
->  	struct clk *clk_parent;
->  	struct clk_mux mux;
->  	struct clk *clk;
-> @@ -127,8 +125,6 @@ static int meson_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
->  		return err;
->  	}
->  
-> -	chip->ops->get_state(chip, pwm, &channel->state);
-> -
->  	return pwm_set_chip_data(pwm, channel);
->  }
->  
-> @@ -153,10 +149,6 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
->  	if (state->polarity == PWM_POLARITY_INVERSED)
->  		duty = period - duty;
->  
-> -	if (period == channel->state.period &&
-> -	    duty == channel->state.duty_cycle)
-> -		return 0;
-> -
->  	fin_freq = clk_get_rate(channel->clk);
->  	if (fin_freq == 0) {
->  		dev_err(meson->chip.dev, "invalid source clock frequency\n");
-> @@ -253,7 +245,6 @@ static void meson_pwm_disable(struct meson_pwm *meson, struct pwm_device *pwm)
+> @@ -245,6 +245,7 @@ static void meson_pwm_disable(struct meson_pwm *meson, struct pwm_device *pwm)
 >  static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 >  			   struct pwm_state *state)
 >  {
-> -	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
+> +	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
 >  	struct meson_pwm *meson = to_meson_pwm(chip);
 >  	int err = 0;
 >  
-> @@ -262,26 +253,12 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> @@ -252,7 +253,27 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  		return -EINVAL;
 >  
 >  	if (!state->enabled) {
->  		meson_pwm_disable(meson, pwm);
-> -		channel->state.enabled = false;
-> -
-> -		return 0;
-> -	}
-> -
-> -	if (state->period != channel->state.period ||
-> -	    state->duty_cycle != channel->state.duty_cycle ||
-> -	    state->polarity != channel->state.polarity) {
-> +	} else {
+> -		meson_pwm_disable(meson, pwm);
+> +		if (state->polarity == PWM_POLARITY_INVERSED) {
+> +			/*
+> +			 * This IP block revision doesn't have an "always high"
+> +			 * setting which we can use for "inverted disabled".
+> +			 * Instead we achieve this using the same settings
+> +			 * that we use a pre_div of 0 (to get the shortest
+> +			 * possible duration for one "count") and
+> +			 * "period == duty_cycle". This results in a signal
+> +			 * which is LOW for one "count", while being HIGH for
+> +			 * the rest of the (so the signal is HIGH for slightly
+> +			 * less than 100% of the period, but this is the best
+> +			 * we can achieve).
+> +			 */
+> +			channel->pre_div = 0;
+> +			channel->hi = ~0;
+> +			channel->lo = 0;
+> +
+> +			meson_pwm_enable(meson, pwm);
+> +		} else {
+> +			meson_pwm_disable(meson, pwm);
+> +		}
+>  	} else {
 >  		err = meson_pwm_calc(meson, pwm, state);
 >  		if (err < 0)
->  			return err;
->  
-> -		channel->state.polarity = state->polarity;
-> -		channel->state.period = state->period;
-> -		channel->state.duty_cycle = state->duty_cycle;
-> -	}
-> -
-> -	if (state->enabled && !channel->state.enabled) {
->  		meson_pwm_enable(meson, pwm);
-> -		channel->state.enabled = true;
->  	}
->  
->  	return 0;
 > 
+
+While not perfect, it almost fills the gap.
+Another way would be to use a specific pinctrl state setting the pin
+in GPIO output in high level, but this implementation could stay
+if the pinctrl state isn't available.
 
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
