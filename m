@@ -2,57 +2,61 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ABCB02B569
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2019 14:34:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 207292B579
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2019 14:37:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfE0Md5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 27 May 2019 08:33:57 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46286 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfE0Md4 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 May 2019 08:33:56 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r7so16755739wrr.13
-        for <linux-pwm@vger.kernel.org>; Mon, 27 May 2019 05:33:54 -0700 (PDT)
+        id S1726206AbfE0MhK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 27 May 2019 08:37:10 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35982 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbfE0MhK (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 May 2019 08:37:10 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v22so8445610wml.1
+        for <linux-pwm@vger.kernel.org>; Mon, 27 May 2019 05:37:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=+cVOiVFCJq/gjwV+btY3+Tpn5Lp/RZnsuWYYB3guIMU=;
-        b=cD/KMYcYKdCaRofRRaoCOCqlDeF88o6vA7EX1SknRosohJiylXLjWoPhAYXjxyvAHu
-         w7j+zVTZn5os5e8lM+/A9Jh1N+WWjfJYLtEZe5s2IYp4Ujcxl+W318MjSW87viEOi/AJ
-         dWFZFQE4kOeaonFjW0iOT9dXyhGbxHRb4Ph4VtYNoNJ+m6ez4JTDTEttmJnKflKaLgrT
-         dChTnYUUvsSnkJk2A4tldQH/ZW2dfcixuGe1lmttykhsk9x9H8yVoZmhw7IrqAGZefpD
-         gS62iTL0hTR6Vi2hUekCwvODxPthOCvl8VYFn9sFT6AU2cSB+9c2gwF0dsCc1CCbly49
-         um7w==
+        bh=58p9uFjWmpCFDMR48fg0NW3P4SQ0InNf8hSLgO2E5y0=;
+        b=PZJIz7jKVldlj98SfaUUp48OS0pnWzI5Ub7kGcwfcQMi8kVT0za3XanBWNyq7YcEq2
+         /EI2nVDwiCyArbTm4hlB3OesVnnAQyknSLi81N5RYCpuTa30qPSwMIc5GJjI68FiyC0J
+         +vV2EQ1frXQmsc9756ZAfozjBBWE+syHppQ0UgCHJRvHGRsDxfP0pRJQFa66jwc52rs+
+         /UkF3v8UYFHMwLAg5d6PA/E1u2838kdckck8oavFSRCzPs8LXZDrJHVRklBdwJ+Ba65I
+         nbWD/4JgQW3gejx4kkhyc0wEO3PQIIVYIELkDsMrepV8i0xO8HEx2IShFpO1K4oV13yu
+         iqXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=+cVOiVFCJq/gjwV+btY3+Tpn5Lp/RZnsuWYYB3guIMU=;
-        b=cmr2D1ER3eu6RpZ9Dv5ow075TgAxPPpGAniACsgDlmAqmyFLaboWU6/NRoyXbZKY58
-         1y2MStrQajxkdVyW3dnxikkfa/cyU3l8yXEB7elgAIXNtna66mp83W7hsIHrrAjITn9q
-         LTuO/4Ge5T0dls8t1c6Q8MdVRexJGcuHlFvTtjupHGNsRwVc37Trj2fyXimbKc/wxkAy
-         YjmFruL6UkR+nLRZejVrICL3Trz3wEBML8oZ2gXsfYrY4kPHYrJ5n2RJ/0MYPgLsX4dP
-         amih0mHoavyXW3BxJgVoXKHZjWHWb1AtRVarXritgug+uHtbiw+byYzN7u8f58hwEGdD
-         L+9A==
-X-Gm-Message-State: APjAAAUJ5kWCN/NK5aVZJHk/1ADL1kJcPYjsKLbmLZdskx8xCFQaIFng
-        0Jnj+ntZCLuk7n860BPxYXHZKw==
-X-Google-Smtp-Source: APXvYqwnPwjtuEjQwUJWuvt7XAdXU/uj6r0mgRRLit94T91pyyxyMOmC5kVUPbZEQb8acNTD4G1m+w==
-X-Received: by 2002:adf:e344:: with SMTP id n4mr21535770wrj.192.1558960434048;
-        Mon, 27 May 2019 05:33:54 -0700 (PDT)
+        bh=58p9uFjWmpCFDMR48fg0NW3P4SQ0InNf8hSLgO2E5y0=;
+        b=psZetyqj5PUclw7ic3siXK0kWi/ZBajlDb1deSfausXDcPAbBBRuCb8oaWIVqWX4if
+         c8QfxP+7MSasIt77X95IQuQkWTss/8SAK9MYhrG+BxSFw2qHmNzZWGs2uLF2L6lcysP4
+         OSpDw/xOZsg59cbh+KwX1Wfg6w/lRqHLPrPKBcGq5MLwzWp9hYpTPepwoZfaGSkKecP4
+         JXENWwGDQQUZUHoGHlFtTo2L4UlaM6emg0OlxzW7K7twbFh2tXUgs3fvzY0Xz/A1jk09
+         XJ0XepeLMqnIep+G3aegmcdRcC9MnX/0sV9O+9EG0E32I9jemu2K24mUlY91FeHbmGxo
+         29Rw==
+X-Gm-Message-State: APjAAAXCQQqwBx45DLrAe/pYUwSDIS35K8H7uIpJO/qV0AfM3dPN3r6U
+        /YsTXmGBywraJRv3DS0vcP5tWby7cZlb2w==
+X-Google-Smtp-Source: APXvYqxItBLqxtzO+Yw1rp1kbwyAY8BvgzlyOqnPwe3LFgNUDugvsWrcQo5yDV2eMDZoaO2lyNnH8w==
+X-Received: by 2002:a1c:98cf:: with SMTP id a198mr10499483wme.51.1558960627267;
+        Mon, 27 May 2019 05:37:07 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id y132sm15173687wmd.35.2019.05.27.05.33.53
+        by smtp.gmail.com with ESMTPSA id t15sm9153447wmt.2.2019.05.27.05.37.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 05:33:53 -0700 (PDT)
-Subject: Re: [PATCH 14/14] pwm: meson: add documentation to the driver
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+        Mon, 27 May 2019 05:37:06 -0700 (PDT)
+Subject: Re: [PATCH 10/14] pwm: meson: simplify the calculation of the
+ pre-divider and count
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     kernel@pengutronix.de, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pwm@vger.kernel.org
 References: <20190525181133.4875-1-martin.blumenstingl@googlemail.com>
- <20190525181133.4875-15-martin.blumenstingl@googlemail.com>
+ <20190525181133.4875-11-martin.blumenstingl@googlemail.com>
+ <20190526194120.uzuq6ncz5l2z4hfm@pengutronix.de>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -105,12 +109,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <afc7da5b-dda2-84e0-a6c8-0ab3c41f7e0e@baylibre.com>
-Date:   Mon, 27 May 2019 14:33:52 +0200
+Message-ID: <d51106ff-1b1e-b6bd-c17e-df9bb8536c2e@baylibre.com>
+Date:   Mon, 27 May 2019 14:37:05 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190525181133.4875-15-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20190526194120.uzuq6ncz5l2z4hfm@pengutronix.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -119,46 +123,133 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 25/05/2019 20:11, Martin Blumenstingl wrote:
-> Add a link to the datasheet and a short summary how the hardware works.
-> The goal is to make it easier for other developers to understand why the
-> pwm-meson driver is implemented the way it is.
+On 26/05/2019 21:41, Uwe Kleine-König wrote:
+> On Sat, May 25, 2019 at 08:11:29PM +0200, Martin Blumenstingl wrote:
+>> Replace the loop to calculate the pre-divider and count with two
+>> separate div64_u64() calculations. This makes the code easier to read
+>> and improves the precision.
+>>
+>> Two example cases:
+>> 1) 32.768kHz LPO clock for the SDIO wifi chip on Khadas VIM
+>>    clock input: 500MHz (FCLK_DIV4)
+>>    period: 30518ns
+>>    duty cycle: 15259ns
+>> old algorithm: pre_div=0, cnt=15259
+>> new algorithm: pre_div=0, cnt=15259
+>> (no difference in calculated values)
+>>
+>> 2) PWM LED on Khadas VIM
+>>    clock input: 24MHz (XTAL)
+>>    period: 7812500ns
+>>    duty cycle: 7812500ns
+>> old algorithm: pre_div=2, cnt=62004
+>> new algorithm: pre_div=2, cnt=62500
+>> Using a scope (24MHz sampling rate) shows the actual difference:
+>> - old: 7753000ns, off by -59500ns (0.7616%)
+>> - new: 7815000ns, off by +2500ns (0.032%)
+>>
+>> Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>> ---
+>>  drivers/pwm/pwm-meson.c | 25 ++++++++++---------------
+>>  1 file changed, 10 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+>> index 27915d6475e3..9afa1e5aaebf 100644
+>> --- a/drivers/pwm/pwm-meson.c
+>> +++ b/drivers/pwm/pwm-meson.c
+>> @@ -12,6 +12,7 @@
+>>  #include <linux/err.h>
+>>  #include <linux/io.h>
+>>  #include <linux/kernel.h>
+>> +#include <linux/math64.h>
+>>  #include <linux/module.h>
+>>  #include <linux/of.h>
+>>  #include <linux/of_device.h>
+>> @@ -145,7 +146,6 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
+>>  	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
+>>  	unsigned int duty, period, pre_div, cnt, duty_cnt;
+>>  	unsigned long fin_freq = -1;
+>> -	u64 fin_ps;
+>>  
+>>  	duty = state->duty_cycle;
+>>  	period = state->period;
+>> @@ -164,24 +164,19 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
+>>  	}
+>>  
+>>  	dev_dbg(meson->chip.dev, "fin_freq: %lu Hz\n", fin_freq);
+>> -	fin_ps = (u64)NSEC_PER_SEC * 1000;
+>> -	do_div(fin_ps, fin_freq);
+>> -
+>> -	/* Calc pre_div with the period */
+>> -	for (pre_div = 0; pre_div <= MISC_CLK_DIV_MASK; pre_div++) {
+>> -		cnt = DIV_ROUND_CLOSEST_ULL((u64)period * 1000,
+>> -					    fin_ps * (pre_div + 1));
+>> -		dev_dbg(meson->chip.dev, "fin_ps=%llu pre_div=%u cnt=%u\n",
+>> -			fin_ps, pre_div, cnt);
+>> -		if (cnt <= 0xffff)
+>> -			break;
+>> -	}
+>>  
+>> +	pre_div = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * 0xffffLL);
+>>  	if (pre_div > MISC_CLK_DIV_MASK) {
+>>  		dev_err(meson->chip.dev, "unable to get period pre_div\n");
+>>  		return -EINVAL;
+>>  	}
+>>  
+>> +	cnt = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * (pre_div + 1));
+>> +	if (cnt > 0xffff) {
+>> +		dev_err(meson->chip.dev, "unable to get period cnt\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
 > 
-> Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> Co-authored-by: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  drivers/pwm/pwm-meson.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+> There is a slight modification in the calculation of pre_div that isn't
+> catched by the examples above.
 > 
-> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index bb48ba85f756..6a978caba483 100644
-> --- a/drivers/pwm/pwm-meson.c
-> +++ b/drivers/pwm/pwm-meson.c
-> @@ -1,5 +1,23 @@
->  // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
->  /*
-> + * PWM controller driver for Amlogic Meson SoCs.
-> + *
-> + * This PWM is only a set of Gates, Dividers and Counters:
-> + * PWM output is achieved by calculating a clock that permits calculating
-> + * two periods (low and high). The counter then has to be set to switch after
-> + * N cycles for the first half period.
-> + * The hardware has no "polarity" setting. This driver reverses the period
-> + * cycles (the low length is inverted with the high length) for
-> + * PWM_POLARITY_INVERSED. This means that .get_state cannot read the polarity
-> + * from the hardware.
-> + * Setting the duty cycle will disable and re-enable the PWM output.
-> + * Disabling the PWM stops the output immediately (without waiting for the
-> + * current period to complete first).
-> + *
-> + * The public S922X datasheet contains some documentation for this PWM
-> + * controller starting on page 1084:
-> + * https://dl.khadas.com/Hardware/VIM2/Datasheet/S912_Datasheet_V0.220170314publicversion-Wesion.pdf
-> + *
->   * Copyright (c) 2016 BayLibre, SAS.
->   * Author: Neil Armstrong <narmstrong@baylibre.com>
->   * Copyright (C) 2014 Amlogic, Inc.
+> Before this patch we had:
 > 
+> 	pick smallest pre_div such that
+> 		round_closest(period * 1000 / (round_down(1e12 / fin_freq) * (pre_div + 1)) <= 0xffff
+> 
+> New approach is:
+> 
+> 	pre_div = round_down(fin_freq * period / (1e9 * 0xffff))
+> 
+> An advantage of the new approach is better as it rounds only once and is
+> easier.
+> 
+> Consider fin_freq = 99990001 and period = 655355, then the old algorithm
+> picks pre_div = 1 while the new picks pre_div = 0.
+> 
+> I didn't continue here to check which are the resulting waveforms, I
+> assume they are different though.
+> 
+> As there is currently no definition what is a "better" approximation for
+> a given requested pair (duty_cycle, period) I cannot say if these
+> changes are good or not.
+> 
+> And that's a pity, so I still think there should be a documented
+> definition that lays down how a lowlevel driver should round. Without
+> that a consumer that cares about fine differences can not rely an the
+> abstraction provided by the PWM framework because each low-level driver
+> might behave differently.
+> 
+> @Thierry: So can you please continue the discussion about this topic.
+> The longer this is delayed the more patches are created and submitted
+> that eventually might be wrong which is a waste of developer and
+> reviewer time.
+> 
+> Assuming the people who care about meson don't object after reading this
+> I wouldn't want to stop this patch going in though. So:
+> 
+> 	Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> 
+> Best regards
+> Uwe
+> 
+
+I don't have a strong view on this, Martin showed similar or much greater
+accuracy in the 2 principal use cases of the driver, so I'm ok with it.
 
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
