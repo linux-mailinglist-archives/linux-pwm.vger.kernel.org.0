@@ -2,70 +2,75 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27DD32B993
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2019 19:53:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8883C2B9A2
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2019 19:57:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfE0RxB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 27 May 2019 13:53:01 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38941 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbfE0RxB (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 May 2019 13:53:01 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r7so15461496otn.6;
-        Mon, 27 May 2019 10:53:00 -0700 (PDT)
+        id S1726657AbfE0R5k (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 27 May 2019 13:57:40 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36597 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfE0R5k (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 May 2019 13:57:40 -0400
+Received: by mail-oi1-f196.google.com with SMTP id y124so12434603oiy.3;
+        Mon, 27 May 2019 10:57:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=odU0SgbTEI5GhdwYmf/8HQWqSSD3RqQBq6W2Heqhv/g=;
-        b=bxE/eExN9DUllzlPqfF6gBqDQmqz6kf3hkDdqXF1OsTTBF6tFi/jlwB0B9y4Hc1xs5
-         wDNnDO4c5ec1MjJTgFAHYbmeozBgLYwg+wOlWfNWDz7p7NJfcI8gkPfUmZhCr8O2ZnRc
-         K4h6PoOPb+FOMjip8VMFMe6JOg9IHvqG+j9zFUpmemOfdlOheyrZgVb38w7ychsQ26Pn
-         eAXTK35CW404qo4h4pSJDwRZVGOPcXT1juOyfKEAzTDcSxqT2YmvCxcuITKtDRAaViyz
-         3PO0j0f4K4yYEgQtf/xfQs2N/j62Pr0SEMMG4M5cMkWC0rbkMZ0x5x50PANo7U04AoOW
-         RsbQ==
+        bh=hDEYY5ygEYM7eB8269ZdfC9BLmmN/DHPKYh4QFppUlg=;
+        b=ToqlEVP2NUqk1yF13crV2WHETC3Rsq4ZiR2PYfd/TyWMJVA6FhZGrByCR6zCejUNzX
+         H6kN3G6X15TWMGk7g5ytqjtUJDlelgsy6siA8+nqU6ejM8qsDp6RG8U+k6SQgI0QogBs
+         kvVja4Yi/60/tOSkYZB/Y3SJRzQFyoHtkbEk6V9z8W6L1HWWEUL8A8i8+MnAj7PdRTk7
+         klyBlz4jTut2pFPOc4O/mT2mnfPwflAZQYVx5Tcx7RP90t1YgaS3NWbfqaMemxgWisUW
+         3DQhU3KWZ4LKOmQqVzvxmQDF8FcTcjxebNuN+CcE9kiBuMNLEnX1f8DBCrbYIdzJe5+C
+         f80A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=odU0SgbTEI5GhdwYmf/8HQWqSSD3RqQBq6W2Heqhv/g=;
-        b=nO/Og+LTtV34IvmZgx/Iz+KbmK2EN0BbBOa3U0YYR6AzIYLGJqdqSk76tSPkQPi0sb
-         LJxutRRIK1QTLH3UKr4+85N6PioLJzM/hpk7MpfoaGmvh9BXt56MNyohSMFBGAYvx7pZ
-         fJJ6OLYU8zRGFx9R7JXRPv8dKH5duQa/yPJBKUAtnHQoxRKrJQlktYHvH+6s8GphCmCN
-         Zb0CgDoNOLWC+uEegq2VolOm5lbeeXE2yt63GvgpeueUqFnynm5LkTTHL+HAEYF2hbZl
-         D0goWfhJ9l7iAnVVvFUpSLsSNEKDZsRYu1ix8wCXep7QjFV1OTKuNtPz4Zw8+RpcWoy0
-         75Cw==
-X-Gm-Message-State: APjAAAUfukY+hrSg53ajxMNKXB96PCTPbk0W+uMcY78ghnX3WzUtIm0j
-        rBz9v/Naj892hKhqN/Rnk6dKjxNrnbQOsoQ55Pc=
-X-Google-Smtp-Source: APXvYqzN00Cuv7RkZRm5zYVZtYYroc43LSaIjSU8KO/gl+bM0ccpLPNKsokyqH3WeTCV0u7HXvOhGtnnXYEw4k8FwJU=
-X-Received: by 2002:a9d:32a6:: with SMTP id u35mr61251110otb.81.1558979580496;
- Mon, 27 May 2019 10:53:00 -0700 (PDT)
+        bh=hDEYY5ygEYM7eB8269ZdfC9BLmmN/DHPKYh4QFppUlg=;
+        b=hk2troikOlVDMwlGktiRSyHnY1i+XbilR83tYlB9b88oZ7ulD8f01S7klRXvQNzuYj
+         ccVfomFIKyhQKUS9nuRq21hC3B9s/0hzKuDQajY5kcUIdQnbCZyVTORRDHFpk1SEjM2Z
+         Q+Jilozd+0Yowji2NExTTcR3Dl4PiPL6PtdkRsLHnDJB0pviWOTl9V5OoFuzz6f7Xj36
+         2Tzka+/IFICUTk1NZgQb+YTWZbvxkcBrbL5Zf2rQY4HlApkizmSf2dnOmg+9PN33s4mW
+         jmypny9kGT+LrWLi2s3bALPtvJXOvNOXTNGsVCc5KmdqMUPPKXkM6iW8c16iDxi0CHuG
+         WrNQ==
+X-Gm-Message-State: APjAAAV+TfOSq4eF2cxZCYWDT9yP2P536ekv+mdE5RVNRlddaXxgvUk0
+        q71FEfoEtsuKgDKwkQUjdb3KxIqV/8gt6Q6GX4E=
+X-Google-Smtp-Source: APXvYqzab+WElPiNBsDpIzidV2Ij/UyqpF0GjvkeY5qPyeOb9lXKwJVd5EfTjjin5MC7D7V4d97PzrxHd9FeOB3RKqQ=
+X-Received: by 2002:aca:4341:: with SMTP id q62mr131767oia.140.1558979859769;
+ Mon, 27 May 2019 10:57:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190525181133.4875-1-martin.blumenstingl@googlemail.com> <20190525181133.4875-8-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20190525181133.4875-8-martin.blumenstingl@googlemail.com>
+References: <20190525181133.4875-1-martin.blumenstingl@googlemail.com>
+ <20190525181133.4875-9-martin.blumenstingl@googlemail.com> <7d169605-e117-70d4-5c66-47d2f80f4d4e@baylibre.com>
+In-Reply-To: <7d169605-e117-70d4-5c66-47d2f80f4d4e@baylibre.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 27 May 2019 19:52:49 +0200
-Message-ID: <CAFBinCAYaLd60ABFxEB28p4J7FO1PRaTZ+N6Ak1AnizAKGaxnw@mail.gmail.com>
-Subject: Re: [PATCH 07/14] pwm: meson: add the meson_pwm_channel data to
- struct meson_pwm
-To:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Mon, 27 May 2019 19:57:28 +0200
+Message-ID: <CAFBinCCyVHAG3yum_ty2dWXGaScafRcNPU-bHjxaKu9kzr8xQA@mail.gmail.com>
+Subject: Re: [PATCH 08/14] pwm: meson: add the per-channel register offsets
+ and bits in a struct
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sat, May 25, 2019 at 8:11 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
+Hi Neil,
+
+On Mon, May 27, 2019 at 2:28 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
 [...]
-> @@ -509,18 +509,13 @@ static int meson_pwm_probe(struct platform_device *pdev)
->         meson->chip.dev = &pdev->dev;
->         meson->chip.ops = &meson_pwm_ops;
->         meson->chip.base = -1;
-> -       meson->chip.npwm = 2;
-> +       meson->chip.npwm = MESON_NUM_PWM;
-I messed this up during rebase, the macro name is actually MESON_NUM_PWMS
-I'll re-send a fix so these patches can be bisected cleanly (patch 8
-fixes this typo accidentally)
+> This looks a little over-engineered, but it's correct :
+my main motivation was to "not copy the 20 line switch/case statement
+from meson_pwm_enable() to meson_pwm_get_state()"
+I extended the idea that already existed for the "mux_reg_shifts"
+array and made it work for "more than one value"
+
+please speak up if you have another idea in mind, maybe that makes the
+result even better
+
+
+Martin
