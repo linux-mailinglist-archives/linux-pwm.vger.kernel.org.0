@@ -2,112 +2,147 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A89C52C0E7
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 May 2019 10:09:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2725C2C0ED
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 May 2019 10:11:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbfE1IJX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 28 May 2019 04:09:23 -0400
-Received: from mail-eopbgr1410132.outbound.protection.outlook.com ([40.107.141.132]:54705
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726362AbfE1IJW (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 28 May 2019 04:09:22 -0400
+        id S1726312AbfE1ILL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 28 May 2019 04:11:11 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43495 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfE1ILL (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 May 2019 04:11:11 -0400
+Received: by mail-wr1-f67.google.com with SMTP id l17so10724112wrm.10
+        for <linux-pwm@vger.kernel.org>; Tue, 28 May 2019 01:11:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RiFGUyM85Q58wWEWo6VmidSNMTJI0aR5TdLg/trK1JA=;
- b=XtZtMN1WQXM9ui+HvswlLp0Q+1s6okdoPiK7yI5e6k3I6t0a+7qBGSfc/kqYS45DIEm625mEImPOWZewjJak0l92drcudLJaDFYMrkT480DLWn96VSBMgMth8j3Ysi4hfwc7iLu1KpXc/hq8u5oAK2Wxq/xmj4glcqvK1iugITI=
-Received: from OSAPR01MB3089.jpnprd01.prod.outlook.com (52.134.247.150) by
- OSAPR01MB2145.jpnprd01.prod.outlook.com (52.134.236.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.16; Tue, 28 May 2019 08:09:17 +0000
-Received: from OSAPR01MB3089.jpnprd01.prod.outlook.com
- ([fe80::4597:5353:28fb:cfd8]) by OSAPR01MB3089.jpnprd01.prod.outlook.com
- ([fe80::4597:5353:28fb:cfd8%7]) with mapi id 15.20.1922.017; Tue, 28 May 2019
- 08:09:17 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "geert+renesas@glider.be" <geert+renesas@glider.be>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        hideo inayoshi <h-inayoshi@jinso.co.jp>,
-        "na-hoan@jinso.co.jp" <na-hoan@jinso.co.jp>,
-        Cao Van Dong <cv-dong@jinso.co.jp>
-Subject: RE: [PATCH v5] pwm: renesas-tpu: Add suspend/resume function
-Thread-Topic: [PATCH v5] pwm: renesas-tpu: Add suspend/resume function
-Thread-Index: AQHVFDMg6ZD9P64qcEWd+8ju6SEvhaZ/BX2AgAEpnEA=
-Date:   Tue, 28 May 2019 08:09:17 +0000
-Message-ID: <OSAPR01MB3089DB21780B1236507E10D3D81E0@OSAPR01MB3089.jpnprd01.prod.outlook.com>
-References: <1558923757-9843-1-git-send-email-cv-dong@jinso.co.jp>
- <20190527141741.GC7202@ulmo>
-In-Reply-To: <20190527141741.GC7202@ulmo>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [118.238.235.108]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a4b85d6b-54b8-4c9c-b85e-08d6e343c7d6
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:OSAPR01MB2145;
-x-ms-traffictypediagnostic: OSAPR01MB2145:
-x-ms-exchange-purlcount: 1
-x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-x-microsoft-antispam-prvs: <OSAPR01MB2145BE0E4AAA647CD1F839C4D81E0@OSAPR01MB2145.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 00514A2FE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(396003)(376002)(39860400002)(136003)(189003)(199004)(26005)(33656002)(446003)(186003)(6506007)(256004)(476003)(76176011)(486006)(53936002)(55016002)(99286004)(102836004)(66066001)(6916009)(6246003)(6306002)(9686003)(54906003)(316002)(3846002)(478600001)(6116002)(966005)(14454004)(6436002)(25786009)(66556008)(66476007)(11346002)(4326008)(8936002)(68736007)(7736002)(305945005)(81166006)(8676002)(81156014)(15650500001)(86362001)(5660300002)(52536014)(71200400001)(71190400001)(2906002)(229853002)(66946007)(73956011)(66446008)(64756008)(76116006)(74316002)(14444005)(7696005)(6606295002);DIR:OUT;SFP:1102;SCL:1;SRVR:OSAPR01MB2145;H:OSAPR01MB3089.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Y8eSVmgTOVNy4aTmUaHPKDScfxAmDijUwwLAVV59kKm7tI2uVwME3zPtKah4mlPhtm5D7FqQgp1o/Zmlen69NDRLGTw7B5O9eskq6CTpJWo6gTbcSBsexxRxQCCjXzYH8pfzHb2QXGn6TcNkx00+Tvtj4K/P6/JUMRVLFu0ngWtoc8K+WmlB8EzDoJ56L+efblgWUnPMr8R8UhBR1ZUNmat3LEHzQwnzGztj5vgllrz57j9bE85L39cYYGXKDe55rNHAYZljfJ6GXDBfy2UM6IBrzeqUVPcH4bywPRqn3RFTo7Uvm0eOIXr0dal4xP9IzrKl57P0e0dO8TddHd75DgDcJ+PgJ5FSF3hTnfJvOXLmpuyVpeOypV0PjnCvFsuq/DfDtBXbSdgf3zIiC7k37UB2PTn8MDoXMjL+cSifd1U=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=324RJUymkD/9oCfiHw+uPVqj0pB70dg4l3Zq0IU/0+s=;
+        b=0LQdAlKTO/X4dTN1gKRWEWqTL9h5H2FJfDn0xcV3ddEXRYtCIxeKL53dqkrPMLKRb7
+         gCWyqT/Af0pOpO3ewtTpf+lt3IqhBQIPlNKSEtM9hJXVELHJthModtX5vb9VXSj1eApj
+         ehcGnMB5wRuczRvG3SUQmga7JV7DdiFOlM3dlWlHkol/1SuaiXWTqP1NqHfNuQuoxST2
+         LVxKj6g+o62p/AvJh+4xlKUEmncy15Y+Jm9hzW1Xa4EU+3ad4bNqv7lexN1VOB9cTW6b
+         /LCyQ/KxeuyH9SEcqZeoxp7sPdhllu4WZ0+NqAgHVn2JzxVYb34F5JZKouIt9DtjfQoa
+         SIUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=324RJUymkD/9oCfiHw+uPVqj0pB70dg4l3Zq0IU/0+s=;
+        b=b0UW823uxh9APFmnhEYsiCHNZa6S3Yu270dYwCv+oj09wKr1s8Gx6qKLllBHn44Rwu
+         8eXwH9dqQxEULIlsVMguq4zM3KZ9pZgwTDp3zxtOOYDu6nHTwErfKbclwQ/WL99kDM2F
+         Sw3Q69HDj/QYnfGu6EiRSsLy59aAXdHn3C1ydLZZQccc8IlcgmY/DxKC2jNyl0ya5hrV
+         irZVcRZfLWL5WJVbSyUvx7dnySxOOTae5LPzKhHxmACd5k2xE1kQKLbX5m6MzF4BSQN4
+         lxKBq7b5RBV1Ab88pLNF7glhkzsJI2yECDTsRtU1ijE/yqFsQoRByH7luF+6brQ5mWHn
+         bxmw==
+X-Gm-Message-State: APjAAAVBmuktXr+XTPBsLSlX0I6iK9fJoiu3OAX85Dlz+OuBJAeWfLkZ
+        exrz/yhEF5NVK2Bi3r+GrFCXUw==
+X-Google-Smtp-Source: APXvYqx5GA2dQJ4Gj1I9ruifgHTF8sgpl4A3Z1Nj3kdHETunZoZ/s+EltNXzbnQTAqzfktHdmZQEfQ==
+X-Received: by 2002:a5d:4a10:: with SMTP id m16mr2931874wrq.183.1559031068518;
+        Tue, 28 May 2019 01:11:08 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id g5sm5790159wrp.29.2019.05.28.01.11.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 01:11:07 -0700 (PDT)
+Subject: Re: [PATCH 08/14] pwm: meson: add the per-channel register offsets
+ and bits in a struct
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20190525181133.4875-1-martin.blumenstingl@googlemail.com>
+ <20190525181133.4875-9-martin.blumenstingl@googlemail.com>
+ <7d169605-e117-70d4-5c66-47d2f80f4d4e@baylibre.com>
+ <CAFBinCCyVHAG3yum_ty2dWXGaScafRcNPU-bHjxaKu9kzr8xQA@mail.gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <b990a2da-8705-0579-14d0-c779f7aa70c5@baylibre.com>
+Date:   Tue, 28 May 2019 10:11:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4b85d6b-54b8-4c9c-b85e-08d6e343c7d6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 08:09:17.3026
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yoshihiro.shimoda.uh@renesas.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB2145
+In-Reply-To: <CAFBinCCyVHAG3yum_ty2dWXGaScafRcNPU-bHjxaKu9kzr8xQA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Thierry,
+On 27/05/2019 19:57, Martin Blumenstingl wrote:
+> Hi Neil,
+> 
+> On Mon, May 27, 2019 at 2:28 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> [...]
+>> This looks a little over-engineered, but it's correct :
+> my main motivation was to "not copy the 20 line switch/case statement
+> from meson_pwm_enable() to meson_pwm_get_state()"
+> I extended the idea that already existed for the "mux_reg_shifts"
+> array and made it work for "more than one value"
+> 
+> please speak up if you have another idea in mind, maybe that makes the
+> result even better
 
-> From: Thierry Reding, Sent: Monday, May 27, 2019 11:18 PM
-<snip>
-> This has been discussed before, but this really shouldn't be done in the
-> PWM driver. Consumers should really be reconfiguring the PWM upon resume
-> as appropriate. This is the only way to ensure that everything is
-> resumed in the proper order.
->=20
-> Most, if not all, consumers already implement suspend/resume that way.
-> sysfs is the only one that I'm aware of that doesn't.
->=20
-> Since you've been using sysfs to test this, things are slightly more
-> complicated (i.e. we don't have a consumer driver in the conventional
-> way). However, you should be able to solve this by implementing
-> dev_pm_ops for the pwm_class.
+Sorry if I was misunderstood, your solution is correct, and I don't have any
+simpler ideas in mind !
 
-Thank you for your coment! I'm interesting about implementing dev_pm_ops
-for the pwm_class. This is because you talked related things on other
-pwm driver (pwm-rcar) on the following email thread.
-https://marc.info/?l=3Dlinux-renesas-soc&m=3D155169831832176&w=3D2
+Neil
 
-So, I'll try to implement it and tested on the pwm-rcar driver.
-
-Best regards,
-Yoshihiro Shimoda
+> 
+> 
+> Martin
+> 
 
