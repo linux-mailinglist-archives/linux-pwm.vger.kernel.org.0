@@ -2,96 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BC4C2B9AC
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2019 20:00:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21A2A2BCAA
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 May 2019 03:10:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbfE0SAu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 27 May 2019 14:00:50 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54167 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbfE0SAu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 May 2019 14:00:50 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hVJvU-0005Dw-Cj; Mon, 27 May 2019 20:00:48 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hVJvT-0008G3-Vv; Mon, 27 May 2019 20:00:47 +0200
-Date:   Mon, 27 May 2019 20:00:47 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thierry.reding@gmail.com, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 04/14] pwm: meson: change MISC_CLK_SEL_WIDTH to
- MISC_CLK_SEL_MASK
-Message-ID: <20190527180047.nfsjfqs22coyqmvp@pengutronix.de>
-References: <20190525181133.4875-1-martin.blumenstingl@googlemail.com>
- <20190525181133.4875-5-martin.blumenstingl@googlemail.com>
- <3b61897a-267b-fd6e-181b-a8c7e47918fb@baylibre.com>
- <CAFBinCDXNy4=6U2gsh6vK6WEtJKAdfDGPMrpPJthbp5Rru1hbg@mail.gmail.com>
+        id S1727090AbfE1BKm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 27 May 2019 21:10:42 -0400
+Received: from www3345.sakura.ne.jp ([49.212.235.55]:27853 "EHLO
+        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbfE1BKm (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 May 2019 21:10:42 -0400
+Received: from fsav103.sakura.ne.jp (fsav103.sakura.ne.jp [27.133.134.230])
+        by www3345.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4S1AeVo073086;
+        Tue, 28 May 2019 10:10:40 +0900 (JST)
+        (envelope-from cv-dong@jinso.co.jp)
+Received: from www3345.sakura.ne.jp (49.212.235.55)
+ by fsav103.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp);
+ Tue, 28 May 2019 10:10:40 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp)
+Received: from [192.168.1.225] (p14010-ipadfx41marunouchi.tokyo.ocn.ne.jp [61.118.107.10])
+        (authenticated bits=0)
+        by www3345.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4S1AdV8073075
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Tue, 28 May 2019 10:10:40 +0900 (JST)
+        (envelope-from cv-dong@jinso.co.jp)
+Subject: Re: [PATCH v5] pwm: renesas-tpu: Add suspend/resume function
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-renesas-soc@vger.kernel.org, horms+renesas@verge.net.au,
+        geert+renesas@glider.be, broonie@kernel.org,
+        linux-pwm@vger.kernel.org, yoshihiro.shimoda.uh@renesas.com,
+        kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp,
+        na-hoan@jinso.co.jp
+References: <1558923757-9843-1-git-send-email-cv-dong@jinso.co.jp>
+ <20190527141741.GC7202@ulmo>
+From:   Cao Van Dong <cv-dong@jinso.co.jp>
+Message-ID: <bbc7a187-d1ad-2ba5-0ee1-e241461faca5@jinso.co.jp>
+Date:   Tue, 28 May 2019 10:10:39 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFBinCDXNy4=6U2gsh6vK6WEtJKAdfDGPMrpPJthbp5Rru1hbg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20190527141741.GC7202@ulmo>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, May 27, 2019 at 07:46:43PM +0200, Martin Blumenstingl wrote:
-> Hi Neil,
-> 
-> On Mon, May 27, 2019 at 2:26 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >
-> > On 25/05/2019 20:11, Martin Blumenstingl wrote:
-> > > MISC_CLK_SEL_WIDTH is only used in one place where it's converted into
-> > > a bit-mask. Rename and change the macro to be a bit-mask so that
-> > > conversion is not needed anymore. No functional changes intended.
-> > >
-> > > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > > ---
-> > >  drivers/pwm/pwm-meson.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> > > index c62a3ac924d0..84b28ba0f903 100644
-> > > --- a/drivers/pwm/pwm-meson.c
-> > > +++ b/drivers/pwm/pwm-meson.c
-> > > @@ -33,7 +33,7 @@
-> > >  #define MISC_A_CLK_DIV_SHIFT 8
-> > >  #define MISC_B_CLK_SEL_SHIFT 6
-> > >  #define MISC_A_CLK_SEL_SHIFT 4
-> > > -#define MISC_CLK_SEL_WIDTH   2
-> > > +#define MISC_CLK_SEL_MASK    0x3
-> >
-> > NIT I would have used GENMASK here
-> that was my initial idea but I decided against it.
-> the variant I came up with was: #define MISC_CLK_SEL_MASK    GENMASK(1, 0)
-> 
-> however, the actual offset is either 4 or 6 (depending on the PWM channel)
-> and I felt that duplicating the macro would just make it more complicated
-> so instead I chose to be consistent with MISC_CLK_DIV_MASK
+Dear Thierry-san,
 
-An option would be:
+Thank for your feedback!
 
-	#define MISC_CLK_SEL_MASK(hwid)		GENMASK(1 + 4 * (hwid), 0 + 4 * (hwid))
+> This has been discussed before, but this really shouldn't be done in the
+> PWM driver. Consumers should really be reconfiguring the PWM upon resume
+> as appropriate. This is the only way to ensure that everything is
+> resumed in the proper order.
+>
+> Most, if not all, consumers already implement suspend/resume that way.
+> sysfs is the only one that I'm aware of that doesn't.
+>
+> Since you've been using sysfs to test this, things are slightly more
+> complicated (i.e. we don't have a consumer driver in the conventional
+> way). However, you should be able to solve this by implementing
+> dev_pm_ops for the pwm_class.
+>
+> Do you think you could give that a try?
 
-(Note I didn't check a manual to the 4 above is probably wrong.)
+I understood the problem. Really this is difficult with me.
+Therefore, I will just stop here.
 
-Best regards
-Uwe
+Thank you,
+Dong
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Thierry
+>
