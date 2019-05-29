@@ -2,101 +2,68 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 312ED2D704
-	for <lists+linux-pwm@lfdr.de>; Wed, 29 May 2019 09:52:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C71B12DCA4
+	for <lists+linux-pwm@lfdr.de>; Wed, 29 May 2019 14:25:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbfE2Hw4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 29 May 2019 03:52:56 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:28844 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726141AbfE2Hw4 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 29 May 2019 03:52:56 -0400
-X-IronPort-AV: E=Sophos;i="5.60,526,1549897200"; 
-   d="scan'208";a="17264017"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 29 May 2019 16:52:52 +0900
-Received: from localhost.localdomain (unknown [10.166.17.210])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id A79D34003EA5;
-        Wed, 29 May 2019 16:52:52 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     thierry.reding@gmail.com
-Cc:     linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 4/4] pwm: rcar: Remove suspend/resume support
-Date:   Wed, 29 May 2019 16:48:02 +0900
-Message-Id: <1559116082-9851-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1559116082-9851-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1559116082-9851-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        id S1725935AbfE2MZf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 29 May 2019 08:25:35 -0400
+Received: from mail.steuer-voss.de ([85.183.69.95]:53054 "EHLO
+        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbfE2MZf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 29 May 2019 08:25:35 -0400
+X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
+Received: from pc-niv.weinmann.com (localhost [127.0.0.1])
+        by mail.steuer-voss.de (Postfix) with ESMTP id 23E174BB0E;
+        Wed, 29 May 2019 14:18:39 +0200 (CEST)
+From:   Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>,
+        linux-acpi@vger.kernel.org, devel@acpica.org,
+        linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: [PATCH 0/3] PWM framework: add support referencing PWMs from ACPI 
+Date:   Wed, 29 May 2019 14:18:19 +0200
+Message-Id: <cover.1559127603.git.nikolaus.voss@loewensteinmedical.de>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-According to the Documentation/pwm.txt, all PWM consumers should
-implement power management instead of the PWM driver. So, this
-patch removes suspend/resume support.
+As described in Documentation/firmware-guide/acpi/gpio-properties.rst a
+GPIO can be referenced from ACPI ASL _DSD with the "gpios"-property of the
+form:
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/pwm/pwm-rcar.c | 39 ---------------------------------------
- 1 file changed, 39 deletions(-)
+  Package () { "gpios", Package () { ref, index, pin, active_low }}
 
-diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
-index cfe7dd1..5b2b8ec 100644
---- a/drivers/pwm/pwm-rcar.c
-+++ b/drivers/pwm/pwm-rcar.c
-@@ -254,50 +254,11 @@ static const struct of_device_id rcar_pwm_of_table[] = {
- };
- MODULE_DEVICE_TABLE(of, rcar_pwm_of_table);
- 
--#ifdef CONFIG_PM_SLEEP
--static struct pwm_device *rcar_pwm_dev_to_pwm_dev(struct device *dev)
--{
--	struct rcar_pwm_chip *rcar_pwm = dev_get_drvdata(dev);
--	struct pwm_chip *chip = &rcar_pwm->chip;
--
--	return &chip->pwms[0];
--}
--
--static int rcar_pwm_suspend(struct device *dev)
--{
--	struct pwm_device *pwm = rcar_pwm_dev_to_pwm_dev(dev);
--
--	if (!test_bit(PWMF_REQUESTED, &pwm->flags))
--		return 0;
--
--	pm_runtime_put(dev);
--
--	return 0;
--}
--
--static int rcar_pwm_resume(struct device *dev)
--{
--	struct pwm_device *pwm = rcar_pwm_dev_to_pwm_dev(dev);
--	struct pwm_state state;
--
--	if (!test_bit(PWMF_REQUESTED, &pwm->flags))
--		return 0;
--
--	pm_runtime_get_sync(dev);
--
--	pwm_get_state(pwm, &state);
--
--	return rcar_pwm_apply(pwm->chip, pwm, &state);
--}
--#endif /* CONFIG_PM_SLEEP */
--static SIMPLE_DEV_PM_OPS(rcar_pwm_pm_ops, rcar_pwm_suspend, rcar_pwm_resume);
--
- static struct platform_driver rcar_pwm_driver = {
- 	.probe = rcar_pwm_probe,
- 	.remove = rcar_pwm_remove,
- 	.driver = {
- 		.name = "pwm-rcar",
--		.pm	= &rcar_pwm_pm_ops,
- 		.of_match_table = of_match_ptr(rcar_pwm_of_table),
- 	}
- };
+The second patch of this series adds support for specifing a PWM
+reference in ASL of the form
+
+  Package () { "pwms", Package () { ref, index, pwm-period [, pwm flags]}}
+
+The first patch of this series is necessary to resolve the "ref" in ASL
+if the table has been loaded by efivar_ssdt_load() or configfs.
+
+The third patch of this series makes leds-pwm use the ACPI-enabled
+PWM framework.
+
+Nikolaus Voss (3):
+  ACPI: Resolve objects on host-directed table loads
+  PWM framework: add support referencing PWMs from ACPI
+  leds-pwm.c: support ACPI via firmware-node framework
+
+ drivers/acpi/acpi_configfs.c   |   6 +-
+ drivers/acpi/acpica/tbxfload.c |  11 ++++
+ drivers/leds/leds-pwm.c        |  44 +++++++------
+ drivers/pwm/core.c             | 112 +++++++++++++++++++++++++++++++++
+ include/linux/pwm.h            |   9 +++
+ 5 files changed, 159 insertions(+), 23 deletions(-)
+
 -- 
-2.7.4
+2.17.1
 
