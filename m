@@ -2,29 +2,29 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D7CE2FA28
-	for <lists+linux-pwm@lfdr.de>; Thu, 30 May 2019 12:21:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C59B92FA2C
+	for <lists+linux-pwm@lfdr.de>; Thu, 30 May 2019 12:21:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfE3KVB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 30 May 2019 06:21:01 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:16431 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727761AbfE3KVB (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 30 May 2019 06:21:01 -0400
+        id S1727921AbfE3KVD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 30 May 2019 06:21:03 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:6884 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727917AbfE3KVC (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 30 May 2019 06:21:02 -0400
 X-IronPort-AV: E=Sophos;i="5.60,530,1549897200"; 
-   d="scan'208";a="17378680"
+   d="scan'208";a="17175268"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 30 May 2019 19:20:59 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 30 May 2019 19:20:59 +0900
 Received: from localhost.localdomain (unknown [10.166.17.210])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 53E5A4235028;
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 781A44235028;
         Thu, 30 May 2019 19:20:59 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     thierry.reding@gmail.com
 Cc:     linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 1/4] pwm: Add power management descriptions
-Date:   Thu, 30 May 2019 19:16:04 +0900
-Message-Id: <1559211367-25106-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 2/4] pwm: sysfs: Switch to SPDX identifier
+Date:   Thu, 30 May 2019 19:16:05 +0900
+Message-Id: <1559211367-25106-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559211367-25106-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1559211367-25106-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
@@ -33,39 +33,39 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This patch adds power management descriptions that consumers should
-implement it.
+Adopt the SPDX license identifier headers to ease license compliance
+management.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- Documentation/pwm.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/pwm/sysfs.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/Documentation/pwm.txt b/Documentation/pwm.txt
-index 8fbf0aa..996e5ea 100644
---- a/Documentation/pwm.txt
-+++ b/Documentation/pwm.txt
-@@ -65,6 +65,10 @@ period). struct pwm_args contains 2 fields (period and polarity) and should
- be used to set the initial PWM config (usually done in the probe function
- of the PWM user). PWM arguments are retrieved with pwm_get_args().
+diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
+index 719f8fa..7eb4a13 100644
+--- a/drivers/pwm/sysfs.c
++++ b/drivers/pwm/sysfs.c
+@@ -1,19 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * A simple sysfs interface for the generic PWM framework
+  *
+  * Copyright (C) 2013 H Hartley Sweeten <hsweeten@visionengravers.com>
+  *
+  * Based on previous work by Lars Poeschel <poeschel@lemonage.de>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2, or (at your option)
+- * any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+  */
  
-+All consumers should really be reconfiguring the PWM upon resume as
-+appropriate. This is the only way to ensure that everything is resumed in
-+the proper order.
-+
- Using PWMs with the sysfs interface
- -----------------------------------
- 
-@@ -141,6 +145,9 @@ The implementation of ->get_state() (a method used to retrieve initial PWM
- state) is also encouraged for the same reason: letting the PWM user know
- about the current PWM state would allow him to avoid glitches.
- 
-+Drivers should not implement any power management. In other words,
-+consumers should implement it as described as the "Using PWMs" section.
-+
- Locking
- -------
- 
+ #include <linux/device.h>
 -- 
 2.7.4
 
