@@ -2,41 +2,41 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 924872FE9B
-	for <lists+linux-pwm@lfdr.de>; Thu, 30 May 2019 16:56:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D7D32FF23
+	for <lists+linux-pwm@lfdr.de>; Thu, 30 May 2019 17:14:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfE3Oyn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 30 May 2019 10:54:43 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:34802 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727376AbfE3Oyn (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 30 May 2019 10:54:43 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4UEsUie069672;
-        Thu, 30 May 2019 09:54:30 -0500
+        id S1726359AbfE3POs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 30 May 2019 11:14:48 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:44372 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfE3POr (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 30 May 2019 11:14:47 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4UFEXeY070295;
+        Thu, 30 May 2019 10:14:33 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559228070;
-        bh=kCVEE6RftNg+CR0Qr7gt6vfGGGAIIStsNmVWKIPanME=;
+        s=ti-com-17Q1; t=1559229273;
+        bh=ija2CP43k/HJ3UFzMPN6ji2dFsdMVgUAdQ28mpdCZSI=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=h61yE8qfOGavnWzAHZX0v1/LVEf0hGoHmqg0vC3I0ffYi9sgvY5V2uI+f1zxgwJTG
-         ZMRB8mi997qAq51l2vOmQkhJh1u1XBw2mfS9fFRWzFglnhzEuQfogSXIHOoONNGK64
-         6R2HDUUf1HhFICaTZwCysa8slMq8yEkTMi0mI1+0=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4UEsUcv122341
+        b=dZiT56ALKGxAUt4LMVTjbpfFl82LBXrROu/AttXlObJIQuVjD0SLgnato957Ydx8c
+         0b0gLty+XWKu/gjYgdt/UEGjdidC4IjIrkIInK35xSIrPuU0vOdEyPHU5IxtM6yBxJ
+         OgKa6l/6F8xtTig6o3GyOuZ7n3m4D4036zmAmIwg=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4UFEXe0089410
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 30 May 2019 09:54:30 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 30 May 2019 10:14:33 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 30
- May 2019 09:54:29 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ May 2019 10:14:32 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 30 May 2019 09:54:29 -0500
+ Frontend Transport; Thu, 30 May 2019 10:14:32 -0500
 Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4UEsTtw038549;
-        Thu, 30 May 2019 09:54:29 -0500
-Subject: Re: [PATCH 2/3] PWM framework: add support referencing PWMs from ACPI
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4UFEWj1069622;
+        Thu, 30 May 2019 10:14:32 -0500
+Subject: Re: [PATCH 3/3] leds-pwm.c: support ACPI via firmware-node framework
 To:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>,
@@ -48,16 +48,16 @@ To:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>,
 CC:     <linux-acpi@vger.kernel.org>, <devel@acpica.org>,
         <linux-leds@vger.kernel.org>, <linux-pwm@vger.kernel.org>
 References: <cover.1559127603.git.nikolaus.voss@loewensteinmedical.de>
- <254cc03d5467ba7db0f5677646266768e5b24127.1559127603.git.nikolaus.voss@loewensteinmedical.de>
+ <4f89c4b91cc918302a9d5a7eedfa39259a5583bb.1559127603.git.nikolaus.voss@loewensteinmedical.de>
 From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <d4e035b7-7419-cb69-9e22-6103d53d5aaf@ti.com>
-Date:   Thu, 30 May 2019 09:54:29 -0500
+Message-ID: <3c763c8f-985e-a292-1bd6-af20caab5239@ti.com>
+Date:   Thu, 30 May 2019 10:14:32 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <254cc03d5467ba7db0f5677646266768e5b24127.1559127603.git.nikolaus.voss@loewensteinmedical.de>
+In-Reply-To: <4f89c4b91cc918302a9d5a7eedfa39259a5583bb.1559127603.git.nikolaus.voss@loewensteinmedical.de>
 Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pwm-owner@vger.kernel.org
@@ -65,214 +65,147 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Nikolaus
 
 On 5/29/19 7:18 AM, Nikolaus Voss wrote:
-> In analogy to referencing a GPIO using the "gpios" property from ACPI,
-> support referencing a PWM using the "pwms" property.
+> DT specific handling is replaced by firmware-node abstration to support
+> ACPI specification of PWM LEDS.
 >
-> ACPI entries must look like
->   Package () {"pwms", Package ()
->       { <PWM device reference>, <PWM index>, <PWM period> [, <PWM flags>]}}
+> Example ASL:
+> Device (PWML)
+> {
+>      Name (_HID, "PRP0001")
+>      Name (_DSD, Package () {
+>            ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>            Package () { Package () {"compatible",
+>                                      Package () {"pwm-leds"}}}})
 >
-> In contrast to the DT implementation, only _one_ PWM entry in the "pwms"
-> property is supported. As a consequence "pwm-names"-property and
-> con_id lookup aren't supported.
->
-> Support for ACPI is added via the firmware-node framework which is an
-> abstraction layer on top of ACPI/DT. To keep this patch clean, DT and
-> ACPI paths are kept separate. The firmware-node framework could be used
-> to unify both paths in a future patch.
->
-> To support leds-pwm driver, an additional method devm_fwnode_pwm_get()
-> which supports both ACPI and DT configuration is exported.
+>      Device (PWL0)
+>      {
+>          Name (_HID, "PRP0001")
+>          Name (_DSD, Package () {
+>                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>                Package () {
+>                             Package () {"label", "alarm-led"},
+>                             Package () {"pwms", Package ()
+>                                         {\_SB_.PCI0.PWM, 0, 600000, 0}},
+>                             Package () {"linux,default-state", "off"}}})
+>      }
+> }
 >
 > Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
 > ---
->   drivers/pwm/core.c  | 112 ++++++++++++++++++++++++++++++++++++++++++++
->   include/linux/pwm.h |   9 ++++
->   2 files changed, 121 insertions(+)
+>   drivers/leds/leds-pwm.c | 44 ++++++++++++++++++++++++-----------------
+>   1 file changed, 26 insertions(+), 18 deletions(-)
 >
-> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index 275b5f399a1a..1d788c05193e 100644
-> --- a/drivers/pwm/core.c
-> +++ b/drivers/pwm/core.c
-> @@ -6,6 +6,7 @@
->    * Copyright (C) 2011-2012 Avionic Design GmbH
->    */
->   
-> +#include <linux/acpi.h>
->   #include <linux/module.h>
->   #include <linux/pwm.h>
->   #include <linux/radix-tree.h>
-> @@ -700,6 +701,75 @@ struct pwm_device *of_pwm_get(struct device_node *np, const char *con_id)
+> diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+> index af08bcdc4fd8..cc717dd6a12c 100644
+> --- a/drivers/leds/leds-pwm.c
+> +++ b/drivers/leds/leds-pwm.c
+> @@ -75,7 +75,7 @@ static inline size_t sizeof_pwm_leds_priv(int num_leds)
 >   }
->   EXPORT_SYMBOL_GPL(of_pwm_get);
 >   
-> +static struct pwm_chip *device_to_pwmchip(struct device *dev)
-> +{
-> +	struct pwm_chip *chip;
-> +
-> +	mutex_lock(&pwm_lock);
-> +
-> +	list_for_each_entry(chip, &pwm_chips, list) {
-> +		struct acpi_device *adev = ACPI_COMPANION(chip->dev);
-> +
-> +		if ((chip->dev == dev) || (adev && &adev->dev == dev)) {
-> +			mutex_unlock(&pwm_lock);
-> +			return chip;
+>   static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
+> -		       struct led_pwm *led, struct device_node *child)
+> +		       struct led_pwm *led, struct fwnode_handle *fwnode)
+>   {
+>   	struct led_pwm_data *led_data = &priv->leds[priv->num_leds];
+>   	struct pwm_args pargs;
+> @@ -88,8 +88,8 @@ static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
+>   	led_data->cdev.max_brightness = led->max_brightness;
+>   	led_data->cdev.flags = LED_CORE_SUSPENDRESUME;
+>   
+> -	if (child)
+> -		led_data->pwm = devm_of_pwm_get(dev, child, NULL);
+> +	if (fwnode)
+> +		led_data->pwm = devm_fwnode_pwm_get(dev, fwnode, NULL);
+>   	else
+>   		led_data->pwm = devm_pwm_get(dev, led->name);
+>   	if (IS_ERR(led_data->pwm)) {
+> @@ -114,7 +114,8 @@ static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
+>   	if (!led_data->period && (led->pwm_period_ns > 0))
+>   		led_data->period = led->pwm_period_ns;
+>   
+> -	ret = devm_of_led_classdev_register(dev, child, &led_data->cdev);
+> +	ret = devm_of_led_classdev_register(dev, to_of_node(fwnode),
+> +					    &led_data->cdev);
+>   	if (ret == 0) {
+>   		priv->num_leds++;
+>   		led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
+> @@ -126,27 +127,34 @@ static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
+>   	return ret;
+>   }
+>   
+> -static int led_pwm_create_of(struct device *dev, struct led_pwm_priv *priv)
+> +static int led_pwm_create_fwnode(struct device *dev, struct led_pwm_priv *priv)
+>   {
+> -	struct device_node *child;
+> +	struct fwnode_handle *fwnode;
+>   	struct led_pwm led;
+>   	int ret = 0;
+>   
+>   	memset(&led, 0, sizeof(led));
+>   
+> -	for_each_child_of_node(dev->of_node, child) {
+> -		led.name = of_get_property(child, "label", NULL) ? :
+> -			   child->name;
+> +	device_for_each_child_node(dev, fwnode) {
+> +		ret = fwnode_property_read_string(fwnode, "label", &led.name);
+> +		if (ret && is_of_node(fwnode))
+> +			led.name = to_of_node(fwnode)->name;
+
+new line
+
+
+> +		if (!led.name) {
+> +			fwnode_handle_put(fwnode);
+> +			return -EINVAL;
 > +		}
-> +	}
-> +
-> +	mutex_unlock(&pwm_lock);
-> +
-> +	return ERR_PTR(-EPROBE_DEFER);
-> +}
-> +
-> +/**
-> + * acpi_pwm_get() - request a PWM via parsing "pwms" property in ACPI
-> + * @fwnode: firmware node to get the "pwm" property from
-> + *
-> + * Returns the PWM device parsed from the fwnode and index specified in the
-> + * "pwms" property or a negative error-code on failure.
-> + * Values parsed from the device tree are stored in the returned PWM device
-> + * object.
-> + *
-> + * This is analogous to of_pwm_get() except con_id is not yet supported.
-> + * ACPI entries must look like
-> + * Package () {"pwms", Package ()
-> + *     { <PWM device reference>, <PWM index>, <PWM period> [, <PWM flags>]}}
-> + *
-> + * Returns: A pointer to the requested PWM device or an ERR_PTR()-encoded
-> + * error code on failure.
-> + */
-> +struct pwm_device *acpi_pwm_get(struct fwnode_handle *fwnode)
-static?
-> +{
-> +	struct fwnode_reference_args args;
-> +	struct pwm_chip *chip;
-> +	struct pwm_device *pwm = ERR_PTR(-ENODEV);
-> +	int ret;
-> +
-> +	memset(&args, 0, sizeof(args));
 
-args should be zero'd out when initialized on the stack so this is 
-necessary.
+'label' is an optional parameter for device tree returning here makes it 
+required.
 
-> +	ret = __acpi_node_get_property_reference(fwnode, "pwms", 0, 3, &args);
-> +
-> +	if (!to_acpi_device_node(args.fwnode))
-> +		return ERR_PTR(-EINVAL);
-Add new line
-> +	if (args.nargs < 2)
-> +		return ERR_PTR(-EPROTO);
-> +
-> +	chip = device_to_pwmchip(&to_acpi_device_node(args.fwnode)->dev);
-> +	if (IS_ERR(chip))
-> +		return ERR_CAST(chip);
-> +
-> +	pwm = pwm_request_from_chip(chip, args.args[0], NULL);
-> +	if (IS_ERR(pwm))
-> +		return pwm;
-> +
-> +	pwm->args.period = args.args[1];
-> +	pwm->args.polarity = PWM_POLARITY_NORMAL;
-> +
-> +	if (args.nargs > 2 && args.args[2] & PWM_POLARITY_INVERTED)
-> +		pwm->args.polarity = PWM_POLARITY_INVERSED;
-> +
-> +	return pwm;
-> +}
-> +
->   /**
->    * pwm_add_table() - register PWM device consumers
->    * @table: array of consumers to register
-> @@ -763,6 +833,10 @@ struct pwm_device *pwm_get(struct device *dev, const char *con_id)
->   	if (IS_ENABLED(CONFIG_OF) && dev && dev->of_node)
->   		return of_pwm_get(dev->of_node, con_id);
+Maybe derive a default name.  There is a patch series which is going to 
+modify how labels are created for LED class devices.
+
+https://lore.kernel.org/patchwork/project/lkml/list/?series=391005
+
 >   
-> +	/* then lookup via ACPI */
-> +	if (dev && is_acpi_node(dev->fwnode))
-> +		return acpi_pwm_get(dev->fwnode);
-> +
->   	/*
->   	 * We look up the provider in the static table typically provided by
->   	 * board setup code. We first try to lookup the consumer device by
-> @@ -942,6 +1016,44 @@ struct pwm_device *devm_of_pwm_get(struct device *dev, struct device_node *np,
->   }
->   EXPORT_SYMBOL_GPL(devm_of_pwm_get);
+> -		led.default_trigger = of_get_property(child,
+> -						"linux,default-trigger", NULL);
+> -		led.active_low = of_property_read_bool(child, "active-low");
+> -		of_property_read_u32(child, "max-brightness",
+> -				     &led.max_brightness);
+> +		fwnode_property_read_string(fwnode, "linux,default-trigger",
+> +					    &led.default_trigger);
 >   
-> +/**
-> + * devm_fwnode_pwm_get() - request a resource managed PWM from firmware node
-> + * @dev: device for PWM consumer
-> + * @fwnode: firmware node to get the PWM from
-> + * @con_id: consumer name
-> + *
-> + * Returns the PWM device parsed from the firmware node. See of_pwm_get() and
-> + * acpi_pwm_get() for a detailed description.
-> + *
-> + * Returns: A pointer to the requested PWM device or an ERR_PTR()-encoded
-> + * error code on failure.
-> + */
-> +struct pwm_device *devm_fwnode_pwm_get(struct device *dev,
-> +				       struct fwnode_handle *fwnode,
-> +				       const char *con_id)
-
-I am wondering if it would be better just to convert the existing of_ 
-calls to device_property calls and make it more generic.
-
-Dan
-
-> +{
-> +	struct pwm_device **ptr, *pwm = ERR_PTR(-ENODEV);
+> -		ret = led_pwm_add(dev, priv, &led, child);
+> +		led.active_low = fwnode_property_read_bool(fwnode,
+> +							   "active-low");
+> +		fwnode_property_read_u32(fwnode, "max-brightness",
+> +					 &led.max_brightness);
 > +
-> +	ptr = devres_alloc(devm_pwm_release, sizeof(*ptr), GFP_KERNEL);
-> +	if (!ptr)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	if (is_of_node(fwnode))
-> +		pwm = of_pwm_get(to_of_node(fwnode), con_id);
-> +	else if (is_acpi_node(fwnode))
-> +		pwm = acpi_pwm_get(fwnode);
-> +
-> +	if (!IS_ERR(pwm)) {
-> +		*ptr = pwm;
-> +		devres_add(dev, ptr);
-> +	} else {
-> +		devres_free(ptr);
-> +	}
-> +
-> +	return pwm;
-> +}
-> +EXPORT_SYMBOL_GPL(devm_fwnode_pwm_get);
-> +
->   static int devm_pwm_match(struct device *dev, void *res, void *data)
->   {
->   	struct pwm_device **p = res;
-> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-> index eaa5c6e3fc9f..1a635916cdfb 100644
-> --- a/include/linux/pwm.h
-> +++ b/include/linux/pwm.h
-> @@ -411,6 +411,9 @@ void pwm_put(struct pwm_device *pwm);
->   struct pwm_device *devm_pwm_get(struct device *dev, const char *con_id);
->   struct pwm_device *devm_of_pwm_get(struct device *dev, struct device_node *np,
->   				   const char *con_id);
-> +struct pwm_device *devm_fwnode_pwm_get(struct device *dev,
-> +				       struct fwnode_handle *fwnode,
-> +				       const char *con_id);
->   void devm_pwm_put(struct device *dev, struct pwm_device *pwm);
->   #else
->   static inline struct pwm_device *pwm_request(int pwm_id, const char *label)
-> @@ -516,6 +519,12 @@ static inline struct pwm_device *devm_of_pwm_get(struct device *dev,
->   	return ERR_PTR(-ENODEV);
->   }
+> +		ret = led_pwm_add(dev, priv, &led, fwnode);
+>   		if (ret) {
+> -			of_node_put(child);
+> +			fwnode_handle_put(fwnode);
+>   			break;
+>   		}
+>   	}
+> @@ -164,7 +172,7 @@ static int led_pwm_probe(struct platform_device *pdev)
+>   	if (pdata)
+>   		count = pdata->num_leds;
+>   	else
+> -		count = of_get_child_count(pdev->dev.of_node);
+> +		count = device_get_child_node_count(&pdev->dev);
 >   
-> +static inline struct pwm_device *devm_fwnode_pwm_get(
-> +	struct device *dev, struct fwnode_handle *fwnode, const char *con_id)
-> +{
-> +	return ERR_PTR(-ENODEV);
-> +}
-> +
->   static inline void devm_pwm_put(struct device *dev, struct pwm_device *pwm)
->   {
->   }
+>   	if (!count)
+>   		return -EINVAL;
+> @@ -182,7 +190,7 @@ static int led_pwm_probe(struct platform_device *pdev)
+>   				break;
+>   		}
+>   	} else {
+> -		ret = led_pwm_create_of(&pdev->dev, priv);
+> +		ret = led_pwm_create_fwnode(&pdev->dev, priv);
+>   	}
+>   
+>   	if (ret)
