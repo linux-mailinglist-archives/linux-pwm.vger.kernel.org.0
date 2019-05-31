@@ -2,99 +2,83 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 106423070D
-	for <lists+linux-pwm@lfdr.de>; Fri, 31 May 2019 05:40:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 233C93093E
+	for <lists+linux-pwm@lfdr.de>; Fri, 31 May 2019 09:20:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfEaDks (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 30 May 2019 23:40:48 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:62049 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726531AbfEaDks (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 30 May 2019 23:40:48 -0400
-X-UUID: 90c434ee22d747c5a374ad6b8076e0ab-20190531
-X-UUID: 90c434ee22d747c5a374ad6b8076e0ab-20190531
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1162707599; Fri, 31 May 2019 11:40:43 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS33N2.mediatek.inc (172.27.4.76) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 31 May 2019 11:40:41 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 31 May 2019 11:40:41 +0800
-Message-ID: <1559274041.9102.3.camel@mtksdaap41>
-Subject: Re: [v3 7/7] drm: mediatek: adjust dsi and mipi_tx probe sequence
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        Kumar Gala <galak@codeaurora.org>, <linux-pwm@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "Ajay Kumar" <ajaykumar.rs@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        "Rahul Sharma" <rahul.sharma@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Russell King" <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <stonea168@163.com>
-Date:   Fri, 31 May 2019 11:40:41 +0800
-In-Reply-To: <20190519092537.69053-8-jitao.shi@mediatek.com>
-References: <20190519092537.69053-1-jitao.shi@mediatek.com>
-         <20190519092537.69053-8-jitao.shi@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        id S1726275AbfEaHUU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 31 May 2019 03:20:20 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34733 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfEaHUU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 31 May 2019 03:20:20 -0400
+Received: by mail-lj1-f196.google.com with SMTP id j24so8607079ljg.1;
+        Fri, 31 May 2019 00:20:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9jXZlTN/tiOKjaoNuJyBeyNNRI0OLDr8cxIPqp/wd1M=;
+        b=beJtUwK/ZHm8UuJ38J1EkXcsUWEi7kpYZMJGVlNyBL131coWkt2I/GYzIf2A7lF824
+         GrVaErsMrtnPdi8lpZ3SuG9Gvm1m80VJxDTpEvf35u8rnLIwAeMn2qke0U3YfY00zhri
+         X6S6vZMbW2vqBWIXbpH5WkABhIC/o8eHOmzXihbw6Cy2Gkzx3iKKP7YIr8WNSAl0nsy8
+         KE1ezB4ySlEg9rc98xsmme+6+1uC1v+VqAKkb+lXV8vUnHedOcMir9V12EzR345wI4O5
+         ZMjVPIVdPKoq8h/PNR552SFu+LvHgFUmWtDdkU8iK7eBP/ti1QcSmjUM7eL/VGgjOosC
+         7zYg==
+X-Gm-Message-State: APjAAAUTQrygpHj8YR5h3ip83gzrj4QPRTZUuM42kp9qC/cFq2LXeAlD
+        bgX9Mheu5il6LGcVJF4KfZ1LWYTy0T3L58/rwuA=
+X-Google-Smtp-Source: APXvYqy6ygRoYPG6/kTbM5lCE2988kpz8i4vpTTTxOR6JEzh3aHGuTB2fum5nUyIcPyyvft3LPymZPtGDa23DZ4NrPg=
+X-Received: by 2002:a2e:249:: with SMTP id 70mr4383095ljc.178.1559287218129;
+ Fri, 31 May 2019 00:20:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+References: <1559211367-25106-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1559211367-25106-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1559211367-25106-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 31 May 2019 09:20:06 +0200
+Message-ID: <CAMuHMdVjOuvUyX3QJP-DOmYt3wzt3NOioDfm_CQhyZvOnGgy6Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] pwm: Add power management descriptions
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi, Jitao:
+Hi Shimoda-san,
 
-On Sun, 2019-05-19 at 17:25 +0800, Jitao Shi wrote:
-> mtk_mipi_tx is the phy of mtk_dsi.
-> mtk_dsi get the phy(mtk_mipi_tx) in probe().
-> 
-> So,  mtk_mipi_tx init should be ahead of mtk_dsi. Or mtk_dsi will
-> defer to wait mtk_mipi_tx probe done.
+On Thu, May 30, 2019 at 12:21 PM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> This patch adds power management descriptions that consumers should
+> implement it.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Thanks for your patch!
 
-> 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> index cf59ea9bccfd..583d533d9574 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> @@ -633,8 +633,8 @@ static struct platform_driver * const mtk_drm_drivers[] = {
->  	&mtk_disp_rdma_driver,
->  	&mtk_dpi_driver,
->  	&mtk_drm_platform_driver,
-> -	&mtk_dsi_driver,
->  	&mtk_mipi_tx_driver,
-> +	&mtk_dsi_driver,
->  };
->  
->  static int __init mtk_drm_init(void)
+> --- a/Documentation/pwm.txt
+> +++ b/Documentation/pwm.txt
 
+> @@ -141,6 +145,9 @@ The implementation of ->get_state() (a method used to retrieve initial PWM
+>  state) is also encouraged for the same reason: letting the PWM user know
+>  about the current PWM state would allow him to avoid glitches.
+>
+> +Drivers should not implement any power management. In other words,
+> +consumers should implement it as described as the "Using PWMs" section.
 
+s/as/in/
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
