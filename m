@@ -2,102 +2,88 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2143F30C3F
-	for <lists+linux-pwm@lfdr.de>; Fri, 31 May 2019 11:59:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD5BE30E04
+	for <lists+linux-pwm@lfdr.de>; Fri, 31 May 2019 14:23:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbfEaJ76 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 31 May 2019 05:59:58 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:48673 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726233AbfEaJ76 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 31 May 2019 05:59:58 -0400
-X-IronPort-AV: E=Sophos;i="5.60,534,1549897200"; 
-   d="scan'208";a="17275318"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 31 May 2019 18:59:54 +0900
-Received: from localhost.localdomain (unknown [10.166.17.210])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 5FAFB421A17A;
-        Fri, 31 May 2019 18:59:54 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     thierry.reding@gmail.com
-Cc:     linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v3 4/4] pwm: rcar: Remove suspend/resume support
-Date:   Fri, 31 May 2019 18:55:01 +0900
-Message-Id: <1559296501-30620-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1559296501-30620-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1559296501-30620-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        id S1726515AbfEaMXX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 31 May 2019 08:23:23 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:55413 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfEaMXW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 31 May 2019 08:23:22 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id C0169802F5; Fri, 31 May 2019 14:23:10 +0200 (CEST)
+Date:   Fri, 31 May 2019 14:23:21 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-acpi@vger.kernel.org, devel@acpica.org,
+        linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 1/3] ACPI: Resolve objects on host-directed table loads
+Message-ID: <20190531122320.GB3722@amd>
+References: <cover.1559127603.git.nikolaus.voss@loewensteinmedical.de>
+ <8704391ae3004a6b4dd17975dbcc9e88bd28cf4b.1559127603.git.nikolaus.voss@loewensteinmedical.de>
+ <2944848d-d004-6750-b95d-825b1758ff22@ti.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="A6N2fC+uXW/VQSAv"
+Content-Disposition: inline
+In-Reply-To: <2944848d-d004-6750-b95d-825b1758ff22@ti.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-According to the Documentation/pwm.txt, all PWM consumers should
-implement power management instead of the PWM driver. So, this
-patch removes suspend/resume support.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/pwm/pwm-rcar.c | 39 ---------------------------------------
- 1 file changed, 39 deletions(-)
+--A6N2fC+uXW/VQSAv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
-index cfe7dd1..5b2b8ec 100644
---- a/drivers/pwm/pwm-rcar.c
-+++ b/drivers/pwm/pwm-rcar.c
-@@ -254,50 +254,11 @@ static const struct of_device_id rcar_pwm_of_table[] = {
- };
- MODULE_DEVICE_TABLE(of, rcar_pwm_of_table);
- 
--#ifdef CONFIG_PM_SLEEP
--static struct pwm_device *rcar_pwm_dev_to_pwm_dev(struct device *dev)
--{
--	struct rcar_pwm_chip *rcar_pwm = dev_get_drvdata(dev);
--	struct pwm_chip *chip = &rcar_pwm->chip;
--
--	return &chip->pwms[0];
--}
--
--static int rcar_pwm_suspend(struct device *dev)
--{
--	struct pwm_device *pwm = rcar_pwm_dev_to_pwm_dev(dev);
--
--	if (!test_bit(PWMF_REQUESTED, &pwm->flags))
--		return 0;
--
--	pm_runtime_put(dev);
--
--	return 0;
--}
--
--static int rcar_pwm_resume(struct device *dev)
--{
--	struct pwm_device *pwm = rcar_pwm_dev_to_pwm_dev(dev);
--	struct pwm_state state;
--
--	if (!test_bit(PWMF_REQUESTED, &pwm->flags))
--		return 0;
--
--	pm_runtime_get_sync(dev);
--
--	pwm_get_state(pwm, &state);
--
--	return rcar_pwm_apply(pwm->chip, pwm, &state);
--}
--#endif /* CONFIG_PM_SLEEP */
--static SIMPLE_DEV_PM_OPS(rcar_pwm_pm_ops, rcar_pwm_suspend, rcar_pwm_resume);
--
- static struct platform_driver rcar_pwm_driver = {
- 	.probe = rcar_pwm_probe,
- 	.remove = rcar_pwm_remove,
- 	.driver = {
- 		.name = "pwm-rcar",
--		.pm	= &rcar_pwm_pm_ops,
- 		.of_match_table = of_match_ptr(rcar_pwm_of_table),
- 	}
- };
--- 
-2.7.4
+Hi!
 
+> >diff --git a/drivers/acpi/acpica/tbxfload.c b/drivers/acpi/acpica/tbxflo=
+ad.c
+> >index 4f30f06a6f78..61f2d46e52ba 100644
+> >--- a/drivers/acpi/acpica/tbxfload.c
+> >+++ b/drivers/acpi/acpica/tbxfload.c
+> >@@ -297,6 +297,17 @@ acpi_status acpi_load_table(struct acpi_table_heade=
+r *table)
+> >  	status =3D acpi_tb_install_and_load_table(ACPI_PTR_TO_PHYSADDR(table),
+> >  						ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL,
+> >  						FALSE, &table_index);
+> >+
+> >+	if (!ACPI_FAILURE(status)) {
+> Checkpatch should complain about putting brackets around single statement
+> if's.
+
+With multiline statement like that and including comment -- I'd say
+keep {'s. It is cleaner this way.
+									Pavel
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--A6N2fC+uXW/VQSAv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzxHLgACgkQMOfwapXb+vLSVwCgvkY1xHITo54fK5GMzNokK4g7
+zJQAoJM8WPcbSTGlKCz03eSbtVaS66m4
+=DJMy
+-----END PGP SIGNATURE-----
+
+--A6N2fC+uXW/VQSAv--
