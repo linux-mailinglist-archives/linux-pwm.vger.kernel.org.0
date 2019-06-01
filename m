@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C59A831E52
-	for <lists+linux-pwm@lfdr.de>; Sat,  1 Jun 2019 15:36:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD6CF31CCE
+	for <lists+linux-pwm@lfdr.de>; Sat,  1 Jun 2019 15:24:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbfFANfw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 1 Jun 2019 09:35:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52900 "EHLO mail.kernel.org"
+        id S1729282AbfFANYm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 1 Jun 2019 09:24:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728104AbfFANXL (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:23:11 -0400
+        id S1728677AbfFANYl (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:24:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BA11240F2;
-        Sat,  1 Jun 2019 13:23:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F6F02737D;
+        Sat,  1 Jun 2019 13:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395390;
-        bh=Abv9GsTyntkTHWoXQ9xFksd//sO3na6syWyCUco9TYM=;
+        s=default; t=1559395480;
+        bh=aakVm1fe6JS20FpJm/uZt4030/TZ2dr6Dos+i764OZ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WPzK1xSXCcmV7hK0NssgjaZUcpSnwUJX5GtmJcKDl7UXDBuIB2zwMTut6m3ORb2G5
-         9ez2VvSkuiZdz2TqyWr8bIG9v/fw2YcxxDXjq8To/547xoJOMhBHkOrOy4xVYsetQh
-         eaNMaapKD1TrRau4sIwuURJzm3igHTqyZlxIuFN0=
+        b=b6w+LUFnA4pxAW0YyEVTqaZ6uF0jF7y6GPtC7RAHW50AMOBaTw/gHYPhvoZSbVeHJ
+         3MwV2MOGo4co8Q2CKiQ+8UTJk4W8LLB2faee1S5RtXhfp9Riz63O+ouyImQUzw+Syo
+         +X9jqxrDB4IWKiRN5E3x2ax7nvcPzP31y62mCn0o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
@@ -32,12 +32,12 @@ Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
         linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 031/141] pwm: meson: Use the spin-lock only to protect register modifications
-Date:   Sat,  1 Jun 2019 09:20:07 -0400
-Message-Id: <20190601132158.25821-31-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 25/99] pwm: meson: Use the spin-lock only to protect register modifications
+Date:   Sat,  1 Jun 2019 09:22:32 -0400
+Message-Id: <20190601132346.26558-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190601132158.25821-1-sashal@kernel.org>
-References: <20190601132158.25821-1-sashal@kernel.org>
+In-Reply-To: <20190601132346.26558-1-sashal@kernel.org>
+References: <20190601132346.26558-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -80,7 +80,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 17 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index c1ed641b3e266..f6e738ad7bd92 100644
+index 3540d00425d03..9b79cbc7a7152 100644
 --- a/drivers/pwm/pwm-meson.c
 +++ b/drivers/pwm/pwm-meson.c
 @@ -111,6 +111,10 @@ struct meson_pwm {
