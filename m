@@ -2,70 +2,95 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 76CDB31969
-	for <lists+linux-pwm@lfdr.de>; Sat,  1 Jun 2019 05:49:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D91F731AC9
+	for <lists+linux-pwm@lfdr.de>; Sat,  1 Jun 2019 11:26:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbfFADtH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 31 May 2019 23:49:07 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51254 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726428AbfFADtH (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 31 May 2019 23:49:07 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D27372D7FDA04B78A18B;
-        Sat,  1 Jun 2019 11:49:00 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 1 Jun 2019 11:48:52 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        <u.kleine-koenig@pengutronix.de>,
-        <andriy.shevchenko@linux.intel.com>, <thesven73@gmail.com>
-CC:     YueHaibing <yuehaibing@huawei.com>, <linux-pwm@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] pwm: pca9685: Remove set but not used variable 'pwm'
-Date:   Sat, 1 Jun 2019 03:57:09 +0000
-Message-ID: <20190601035709.85379-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726547AbfFAJ03 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 1 Jun 2019 05:26:29 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:64382 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726089AbfFAJ02 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 1 Jun 2019 05:26:28 -0400
+X-UUID: 27c8530086f9486db697b69fb0584e58-20190601
+X-UUID: 27c8530086f9486db697b69fb0584e58-20190601
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1148342631; Sat, 01 Jun 2019 17:26:21 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sat, 1 Jun
+ 2019 17:26:19 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
+ MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1395.4 via Frontend Transport; Sat, 1 Jun 2019 17:26:18 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Jitao Shi <jitao.shi@mediatek.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <ck.hu@mediatek.com>, <stonea168@163.com>
+Subject: [v4 0/7] Support dsi for mt8183
+Date:   Sat, 1 Jun 2019 17:26:08 +0800
+Message-ID: <20190601092615.67917-1-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type:   text/plain; charset=US-ASCII
+X-MTK:  N
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+changes since v3
+ - add one more 'tab' for bitwise define.
+ - add Tested-by: Ryan Case <ryandcase@chromium.org>
+	and Reviewed-by: CK Hu <ck.hu@mediatek.com>.
+ - remove compare da_hs_zero to da_hs_prepare.
 
-drivers/pwm/pwm-pca9685.c: In function 'pca9685_pwm_gpio_free':
-drivers/pwm/pwm-pca9685.c:173:21: warning:
- variable 'pwm' set but not used [-Wunused-but-set-variable]
+Changes since v2:
+ - change the video timing calc method
+ - fine the dsi and mipitx init sequence
+ - fine tune commit msg
 
-It's not used since commit e926b12c611c ("pwm: Clear chip_data in pwm_put()")
+Changes since v1:
+ - separate frame size and reg commit control independent patches.
+ - fix some return values in probe
+ - remove DSI_CMDW0 in "CMDQ reg address of mt8173 is different with mt2701" 
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/pwm/pwm-pca9685.c | 2 --
- 1 file changed, 2 deletions(-)
+Jitao Shi (7):
+  drm/mediatek: move mipi_dsi_host_register to probe
+  drm/mediatek: fixes CMDQ reg address of mt8173 is different with
+    mt2701
+  drm/mediatek: add dsi reg commit disable control
+  drm/mediatek: add frame size control
+  drm/mediatek: add mt8183 dsi driver support
+  drm/mediatek: change the dsi phytiming calculate method
+  drm: mediatek: adjust dsi and mipi_tx probe sequence
 
-diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-index 567f5e2771c4..d16215c276bd 100644
---- a/drivers/pwm/pwm-pca9685.c
-+++ b/drivers/pwm/pwm-pca9685.c
-@@ -170,12 +170,10 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
- static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
- {
- 	struct pca9685 *pca = gpiochip_get_data(gpio);
--	struct pwm_device *pwm;
- 
- 	pca9685_pwm_gpio_set(gpio, offset, 0);
- 	pm_runtime_put(pca->chip.dev);
- 	mutex_lock(&pca->lock);
--	pwm = &pca->chip.pwms[offset];
- 	mutex_unlock(&pca->lock);
- }
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c |   2 +-
+ drivers/gpu/drm/mediatek/mtk_dsi.c     | 222 ++++++++++++++++++-------
+ 2 files changed, 160 insertions(+), 64 deletions(-)
 
-
+-- 
+2.21.0
 
