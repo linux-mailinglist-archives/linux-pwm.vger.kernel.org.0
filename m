@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6665731AD7
-	for <lists+linux-pwm@lfdr.de>; Sat,  1 Jun 2019 11:26:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E033531AF0
+	for <lists+linux-pwm@lfdr.de>; Sat,  1 Jun 2019 11:27:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfFAJ0g (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 1 Jun 2019 05:26:36 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:57734 "EHLO
+        id S1726130AbfFAJ1C (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 1 Jun 2019 05:27:02 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:22862 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727053AbfFAJ0f (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 1 Jun 2019 05:26:35 -0400
-X-UUID: e961f31d0b3c4b55a4de8a894ad30ce3-20190601
-X-UUID: e961f31d0b3c4b55a4de8a894ad30ce3-20190601
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        with ESMTP id S1726109AbfFAJ0d (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 1 Jun 2019 05:26:33 -0400
+X-UUID: 3e00882d8a9e47c7a0460bc89af5e646-20190601
+X-UUID: 3e00882d8a9e47c7a0460bc89af5e646-20190601
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <jitao.shi@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 261343506; Sat, 01 Jun 2019 17:26:26 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sat, 1 Jun
- 2019 17:26:24 +0800
+        with ESMTP id 996128453; Sat, 01 Jun 2019 17:26:27 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N2.mediatek.inc
+ (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sat, 1 Jun
+ 2019 17:26:26 +0800
 Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
  MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Sat, 1 Jun 2019 17:26:23 +0800
+ 15.0.1395.4 via Frontend Transport; Sat, 1 Jun 2019 17:26:24 +0800
 From:   Jitao Shi <jitao.shi@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -48,9 +48,9 @@ CC:     Jitao Shi <jitao.shi@mediatek.com>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
         <ck.hu@mediatek.com>, <stonea168@163.com>
-Subject: [v4 3/7] drm/mediatek: add dsi reg commit disable control
-Date:   Sat, 1 Jun 2019 17:26:11 +0800
-Message-ID: <20190601092615.67917-4-jitao.shi@mediatek.com>
+Subject: [v4 4/7] drm/mediatek: add frame size control
+Date:   Sat, 1 Jun 2019 17:26:12 +0800
+Message-ID: <20190601092615.67917-5-jitao.shi@mediatek.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190601092615.67917-1-jitao.shi@mediatek.com>
 References: <20190601092615.67917-1-jitao.shi@mediatek.com>
@@ -63,53 +63,45 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-New DSI IP has shadow register and working reg. The register
-values are writen to shadow register. And then trigger with
-commit reg, the register values will be moved working register.
-
-This fucntion is defualt on. But this driver doesn't use this
-function. So add the disable control.
+Our new DSI chip has frame size control.
+So add the driver data to control for different chips.
 
 Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_dsi.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index a48db056df6c..eea47294079e 100644
+index eea47294079e..18a192656a89 100644
 --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
 +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -131,6 +131,10 @@
- #define VM_CMD_EN			BIT(0)
- #define TS_VFP_EN			BIT(5)
- 
-+#define DSI_SHADOW_DEBUG	0x190U
-+#define FORCE_COMMIT			BIT(0)
-+#define BYPASS_SHADOW			BIT(1)
-+
- #define CONFIG				(0xff << 0)
- #define SHORT_PACKET			0
- #define LONG_PACKET			2
-@@ -157,6 +161,7 @@ struct phy;
- 
+@@ -78,6 +78,7 @@
+ #define DSI_VBP_NL		0x24
+ #define DSI_VFP_NL		0x28
+ #define DSI_VACT_NL		0x2C
++#define DSI_SIZE_CON		0x38
+ #define DSI_HSA_WC		0x50
+ #define DSI_HBP_WC		0x54
+ #define DSI_HFP_WC		0x58
+@@ -162,6 +163,7 @@ struct phy;
  struct mtk_dsi_driver_data {
  	const u32 reg_cmdq_off;
-+	bool has_shadow_ctl;
+ 	bool has_shadow_ctl;
++	bool has_size_ctl;
  };
  
  struct mtk_dsi {
-@@ -594,6 +599,11 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
- 	}
+@@ -430,6 +432,9 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
+ 	writel(vm->vfront_porch, dsi->regs + DSI_VFP_NL);
+ 	writel(vm->vactive, dsi->regs + DSI_VACT_NL);
  
- 	mtk_dsi_enable(dsi);
++	if (dsi->driver_data->has_size_ctl)
++		writel(vm->vactive << 16 | vm->hactive, dsi->regs + DSI_SIZE_CON);
 +
-+	if (dsi->driver_data->has_shadow_ctl)
-+		writel(FORCE_COMMIT | BYPASS_SHADOW,
-+		       dsi->regs + DSI_SHADOW_DEBUG);
-+
- 	mtk_dsi_reset_engine(dsi);
- 	mtk_dsi_phy_timconfig(dsi);
+ 	horizontal_sync_active_byte = (vm->hsync_len * dsi_tmp_buf_bpp - 10);
  
+ 	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
 -- 
 2.21.0
 
