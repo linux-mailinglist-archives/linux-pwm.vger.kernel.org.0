@@ -2,29 +2,29 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 01AF6326B9
-	for <lists+linux-pwm@lfdr.de>; Mon,  3 Jun 2019 04:46:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7281326D0
+	for <lists+linux-pwm@lfdr.de>; Mon,  3 Jun 2019 04:53:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfFCCqD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 2 Jun 2019 22:46:03 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:33261 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726270AbfFCCqD (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 2 Jun 2019 22:46:03 -0400
-X-UUID: ccba8311c7104560a43b0932aced7c1a-20190603
-X-UUID: ccba8311c7104560a43b0932aced7c1a-20190603
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        id S1726550AbfFCCxn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 2 Jun 2019 22:53:43 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:39435 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726270AbfFCCxn (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 2 Jun 2019 22:53:43 -0400
+X-UUID: dbeae6dfbe254c01aa4bacb80e7a1606-20190603
+X-UUID: dbeae6dfbe254c01aa4bacb80e7a1606-20190603
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <ck.hu@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 929432739; Mon, 03 Jun 2019 10:45:55 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+        with ESMTP id 564166442; Mon, 03 Jun 2019 10:53:36 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
  MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 3 Jun 2019 10:45:52 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ 15.0.1395.4; Mon, 3 Jun 2019 10:53:34 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 3 Jun 2019 10:45:52 +0800
-Message-ID: <1559529952.32185.7.camel@mtksdaap41>
-Subject: Re: [v4 6/7] drm/mediatek: change the dsi phytiming calculate method
+ Transport; Mon, 3 Jun 2019 10:53:33 +0800
+Message-ID: <1559530413.32185.8.camel@mtksdaap41>
+Subject: Re: [v4 3/3] drm/mediatek: add mipi_tx driver for mt8183
 From:   CK Hu <ck.hu@mediatek.com>
 To:     Jitao Shi <jitao.shi@mediatek.com>
 CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
@@ -49,11 +49,11 @@ CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
         Sascha Hauer <kernel@pengutronix.de>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <stonea168@163.com>, "Ryan Case" <ryandcase@chromium.org>
-Date:   Mon, 3 Jun 2019 10:45:52 +0800
-In-Reply-To: <20190601092615.67917-7-jitao.shi@mediatek.com>
-References: <20190601092615.67917-1-jitao.shi@mediatek.com>
-         <20190601092615.67917-7-jitao.shi@mediatek.com>
+        <stonea168@163.com>
+Date:   Mon, 3 Jun 2019 10:53:33 +0800
+In-Reply-To: <20190601095235.9194-4-jitao.shi@mediatek.com>
+References: <20190601095235.9194-1-jitao.shi@mediatek.com>
+         <20190601095235.9194-4-jitao.shi@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
@@ -66,233 +66,231 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 Hi, Jitao:
 
-On Sat, 2019-06-01 at 17:26 +0800, Jitao Shi wrote:
-> Change the method of frame rate calc which can get more accurate
-> frame rate.
-> 
-> data rate = pixel_clock * bit_per_pixel / lanes
-> Adjust hfp_wc to adapt the additional phy_data
-> 
-> if MIPI_DSI_MODE_VIDEO_BURST
-> 	hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12 - 6;
-> else
-> 	hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12;
-> 
-> Note:
-> //(2: 1 for sync, 1 for phy idle)
-> data_phy_cycles = T_hs_exit + T_lpx + T_hs_prepare + T_hs_zero + 2;
-> 
-> bpp: bit per pixel
+On Sat, 2019-06-01 at 17:52 +0800, Jitao Shi wrote:
+> This patch add mt8183 mipi_tx driver.
+> And also support other chips that use the same binding and driver.
 > 
 > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> Tested-by: Ryan Case <ryandcase@chromium.org>
 > ---
->  drivers/gpu/drm/mediatek/mtk_dsi.c | 122 ++++++++++++++++++++---------
->  1 file changed, 83 insertions(+), 39 deletions(-)
+>  drivers/gpu/drm/mediatek/Makefile             |   1 +
+>  drivers/gpu/drm/mediatek/mtk_mipi_tx.c        |   2 +
+>  drivers/gpu/drm/mediatek/mtk_mipi_tx.h        |   1 +
+>  drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c | 162 ++++++++++++++++++++++++++
+>  4 files changed, 166 insertions(+)
+>  create mode 100644 drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
 > 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> index abf6ddec5db6..558727c60ba3 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -144,12 +144,6 @@
->  #define DATA_0				(0xff << 16)
->  #define DATA_1				(0xff << 24)
+> diff --git a/drivers/gpu/drm/mediatek/Makefile b/drivers/gpu/drm/mediatek/Makefile
+> index 2c8de1f5a5ee..8067a4be8311 100644
+> --- a/drivers/gpu/drm/mediatek/Makefile
+> +++ b/drivers/gpu/drm/mediatek/Makefile
+> @@ -13,6 +13,7 @@ mediatek-drm-y := mtk_disp_color.o \
+>  		  mtk_dsi.o \
+>  		  mtk_mipi_tx.o \
+>  		  mtk_mt8173_mipi_tx.o \
+> +		  mtk_mt8183_mipi_tx.o \
+>  		  mtk_dpi.o
 >  
-> -#define T_LPX		5
-> -#define T_HS_PREP	6
-> -#define T_HS_TRAIL	8
-> -#define T_HS_EXIT	7
-> -#define T_HS_ZERO	10
-> -
->  #define NS_TO_CYCLE(n, c)    ((n) / (c) + (((n) % (c)) ? 1 : 0))
+>  obj-$(CONFIG_DRM_MEDIATEK) += mediatek-drm.o
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+> index cdc68b88cefd..ab0fbfba5572 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+> @@ -182,6 +182,8 @@ static const struct of_device_id mtk_mipi_tx_match[] = {
+>  	  .data = &mt2701_mipitx_data },
+>  	{ .compatible = "mediatek,mt8173-mipi-tx",
+>  	  .data = &mt8173_mipitx_data },
+> +	{ .compatible = "mediatek,mt8183-mipi-tx",
+> +	  .data = &mt8183_mipitx_data },
+>  	{ },
+>  };
 >  
->  #define MTK_DSI_HOST_IS_READ(type) \
-> @@ -158,6 +152,25 @@
->  	(type == MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM) || \
->  	(type == MIPI_DSI_DCS_READ))
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.h b/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+> index 660726924992..3fd24563952e 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+> @@ -45,5 +45,6 @@ unsigned long mtk_mipi_tx_pll_recalc_rate(struct clk_hw *hw,
 >  
-> +struct mtk_phy_timing {
-> +	u32 lpx;
-> +	u32 da_hs_prepare;
-> +	u32 da_hs_zero;
-> +	u32 da_hs_trail;
+>  extern const struct mtk_mipitx_data mt2701_mipitx_data;
+>  extern const struct mtk_mipitx_data mt8173_mipitx_data;
+> +extern const struct mtk_mipitx_data mt8183_mipitx_data;
+>  
+>  #endif
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c b/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+> new file mode 100644
+> index 000000000000..a9f893d8e409
+> --- /dev/null
+> +++ b/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+> @@ -0,0 +1,162 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + * Author: jitao.shi <jitao.shi@mediatek.com>
+> + */
 > +
-> +	u32 ta_go;
-> +	u32 ta_sure;
-> +	u32 ta_get;
-> +	u32 da_hs_exit;
+> +#include "mtk_mipi_tx.h"
 > +
-> +	u32 clk_hs_zero;
-> +	u32 clk_hs_trail;
+> +#define MIPITX_LANE_CON		0x000c
+> +#define RG_DSI_CPHY_T1DRV_EN		BIT(0)
+> +#define RG_DSI_ANA_CK_SEL		BIT(1)
+> +#define RG_DSI_PHY_CK_SEL		BIT(2)
+> +#define RG_DSI_CPHY_EN			BIT(3)
+> +#define RG_DSI_PHYCK_INV_EN		BIT(4)
+> +#define RG_DSI_PWR04_EN			BIT(5)
+> +#define RG_DSI_BG_LPF_EN		BIT(6)
+> +#define RG_DSI_BG_CORE_EN		BIT(7)
+> +#define RG_DSI_PAD_TIEL_SEL		BIT(8)
 > +
-> +	u32 clk_hs_prepare;
-> +	u32 clk_hs_post;
-> +	u32 clk_hs_exit;
+> +#define MIPITX_PLL_PWR	0x0028
+> +#define MIPITX_PLL_CON0	0x002c
+> +#define MIPITX_PLL_CON1	0x0030
+> +#define MIPITX_PLL_CON2	0x0034
+> +#define MIPITX_PLL_CON3	0x0038
+> +#define MIPITX_PLL_CON4	0x003c
+> +#define RG_DSI_PLL_IBIAS		(3 << 10)
+> +
+> +#define MIPITX_D2_SW_CTL_EN	0x0144
+> +#define MIPITX_D0_SW_CTL_EN	0x0244
+> +#define MIPITX_CK_CKMODE_EN	0x0328
+> +#define DSI_CK_CKMODE_EN		BIT(0)
+> +#define MIPITX_CK_SW_CTL_EN	0x0344
+> +#define MIPITX_D1_SW_CTL_EN	0x0444
+> +#define MIPITX_D3_SW_CTL_EN	0x0544
+> +#define DSI_SW_CTL_EN			BIT(0)
+> +#define AD_DSI_PLL_SDM_PWR_ON		BIT(0)
+> +#define AD_DSI_PLL_SDM_ISO_EN		BIT(1)
+> +
+> +#define RG_DSI_PLL_EN			BIT(4)
+> +#define RG_DSI_PLL_POSDIV		(0x7 << 8)
+> +
+> +static int mtk_mipi_tx_pll_prepare(struct clk_hw *hw)
+> +{
+> +	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
+> +	unsigned int txdiv, txdiv0;
+> +	u64 pcw;
+> +	int ret;
+> +
+> +	dev_dbg(mipi_tx->dev, "prepare: %u bps\n", mipi_tx->data_rate);
+> +
+> +	if (mipi_tx->data_rate >= 2000000000) {
+> +		txdiv = 1;
+> +		txdiv0 = 0;
+> +	} else if (mipi_tx->data_rate >= 1000000000) {
+> +		txdiv = 2;
+> +		txdiv0 = 1;
+> +	} else if (mipi_tx->data_rate >= 500000000) {
+> +		txdiv = 4;
+> +		txdiv0 = 2;
+> +	} else if (mipi_tx->data_rate > 250000000) {
+> +		txdiv = 8;
+> +		txdiv0 = 3;
+> +	} else if (mipi_tx->data_rate >= 125000000) {
+> +		txdiv = 16;
+> +		txdiv0 = 4;
+> +	} else {
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = clk_prepare_enable(mipi_tx->ref_clk);
+
+My last comment is in [1].
+
+[1]
+http://lists.infradead.org/pipermail/linux-mediatek/2019-May/019851.html
+
+Regards,
+CK
+
+> +	if (ret < 0) {
+> +		dev_err(mipi_tx->dev,
+> +			"can't prepare and enable mipi_tx ref_clk %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON4, RG_DSI_PLL_IBIAS);
+> +
+> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_PWR_ON);
+> +	usleep_range(30, 100);
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_ISO_EN);
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
+> +	pcw = div_u64(((u64)mipi_tx->data_rate * txdiv) << 24, 26000000);
+> +	writel(pcw, mipi_tx->regs + MIPITX_PLL_CON0);
+> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_POSDIV,
+> +				txdiv0 << 8);
+> +	usleep_range(1000, 2000);
+> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
+> +
+> +	return 0;
+> +}
+> +
+> +static void mtk_mipi_tx_pll_unprepare(struct clk_hw *hw)
+> +{
+> +	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
+> +
+> +	dev_dbg(mipi_tx->dev, "unprepare\n");
+> +
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
+> +
+> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_ISO_EN);
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_PWR_ON);
+> +	clk_disable_unprepare(mipi_tx->ref_clk);
+> +}
+> +
+> +static long mtk_mipi_tx_pll_round_rate(struct clk_hw *hw, unsigned long rate,
+> +				       unsigned long *prate)
+> +{
+> +	return clamp_val(rate, 50000000, 1600000000);
+> +}
+> +
+> +static const struct clk_ops mtk_mipi_tx_pll_ops = {
+> +	.prepare = mtk_mipi_tx_pll_prepare,
+> +	.unprepare = mtk_mipi_tx_pll_unprepare,
+> +	.round_rate = mtk_mipi_tx_pll_round_rate,
+> +	.set_rate = mtk_mipi_tx_pll_set_rate,
+> +	.recalc_rate = mtk_mipi_tx_pll_recalc_rate,
 > +};
 > +
->  struct phy;
->  
->  struct mtk_dsi_driver_data {
-> @@ -182,12 +195,13 @@ struct mtk_dsi {
->  	struct clk *digital_clk;
->  	struct clk *hs_clk;
->  
-> -	u32 data_rate;
-> +	u64 data_rate;
->  
->  	unsigned long mode_flags;
->  	enum mipi_dsi_pixel_format format;
->  	unsigned int lanes;
->  	struct videomode vm;
-> +	struct mtk_phy_timing phy_timing;
->  	int refcount;
->  	bool enabled;
->  	u32 irq_data;
-> @@ -221,17 +235,36 @@ static void mtk_dsi_phy_timconfig(struct mtk_dsi *dsi)
->  {
->  	u32 timcon0, timcon1, timcon2, timcon3;
->  	u32 ui, cycle_time;
-> +	struct mtk_phy_timing *timing = &dsi->phy_timing;
+> +static void mtk_mipi_tx_power_on_signal(struct phy *phy)
+> +{
+> +	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
 > +
-> +	ui = 1000000000 / dsi->data_rate;
-> +	cycle_time = 8000000000 / dsi->data_rate;
+> +	/* BG_LPF_EN / BG_CORE_EN */
+> +	writel(RG_DSI_PAD_TIEL_SEL | RG_DSI_BG_CORE_EN,
+> +	       mipi_tx->regs + MIPITX_LANE_CON);
+> +	usleep_range(30, 100);
+> +	writel(RG_DSI_BG_CORE_EN | RG_DSI_BG_LPF_EN,
+> +	       mipi_tx->regs + MIPITX_LANE_CON);
 > +
-> +	timing->lpx = NS_TO_CYCLE(60, cycle_time);
-> +	timing->da_hs_prepare = NS_TO_CYCLE(40 + 5 * ui, cycle_time);
-> +	timing->da_hs_zero = NS_TO_CYCLE(110 + 6 * ui, cycle_time);
-> +	timing->da_hs_trail = NS_TO_CYCLE(80 + 4 * ui, cycle_time);
->  
-> -	ui = 1000 / dsi->data_rate + 0x01;
-> -	cycle_time = 8000 / dsi->data_rate + 0x01;
-> +	timing->ta_go = 4 * timing->lpx;
-> +	timing->ta_sure = 3 * timing->lpx / 2;
-> +	timing->ta_get = 5 * timing->lpx;
-> +	timing->da_hs_exit = 2 * timing->lpx;
->  
-> -	timcon0 = T_LPX | T_HS_PREP << 8 | T_HS_ZERO << 16 | T_HS_TRAIL << 24;
-> -	timcon1 = 4 * T_LPX | (3 * T_LPX / 2) << 8 | 5 * T_LPX << 16 |
-> -		  T_HS_EXIT << 24;
-> -	timcon2 = ((NS_TO_CYCLE(0x64, cycle_time) + 0xa) << 24) |
-> -		  (NS_TO_CYCLE(0x150, cycle_time) << 16);
-> -	timcon3 = NS_TO_CYCLE(0x40, cycle_time) | (2 * T_LPX) << 16 |
-> -		  NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8;
-> +	timing->clk_hs_zero = NS_TO_CYCLE(336, cycle_time);
-> +	timing->clk_hs_trail = NS_TO_CYCLE(100, cycle_time) + 10;
+> +	/* Switch OFF each Lane */
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_D0_SW_CTL_EN, DSI_SW_CTL_EN);
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_D1_SW_CTL_EN, DSI_SW_CTL_EN);
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_D2_SW_CTL_EN, DSI_SW_CTL_EN);
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_D3_SW_CTL_EN, DSI_SW_CTL_EN);
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_CK_SW_CTL_EN, DSI_SW_CTL_EN);
 > +
-> +	timing->clk_hs_prepare = NS_TO_CYCLE(64, cycle_time);
-> +	timing->clk_hs_post = NS_TO_CYCLE(80 + 52 * ui, cycle_time);
-> +	timing->clk_hs_exit = 2 * timing->lpx;
+> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_CK_CKMODE_EN, DSI_CK_CKMODE_EN);
+> +}
 > +
-> +	timcon0 = timing->lpx | timing->da_hs_prepare << 8 |
-> +		  timing->da_hs_zero << 16 | timing->da_hs_trail << 24;
-> +	timcon1 = timing->ta_go | timing->ta_sure << 8 |
-> +		  timing->ta_get << 16 | timing->da_hs_exit << 24;
-> +	timcon2 = 1 << 8 | timing->clk_hs_zero << 16 |
-> +		  timing->clk_hs_trail << 24;
-> +	timcon3 = timing->clk_hs_prepare | timing->clk_hs_post << 8 |
-> +		  timing->clk_hs_exit << 16;
->  
->  	writel(timcon0, dsi->regs + DSI_PHY_TIMECON0);
->  	writel(timcon1, dsi->regs + DSI_PHY_TIMECON1);
-> @@ -418,7 +451,8 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
->  	u32 horizontal_sync_active_byte;
->  	u32 horizontal_backporch_byte;
->  	u32 horizontal_frontporch_byte;
-> -	u32 dsi_tmp_buf_bpp;
-> +	u32 dsi_tmp_buf_bpp, data_phy_cycles;
-> +	struct mtk_phy_timing *timing = &dsi->phy_timing;
->  
->  	struct videomode *vm = &dsi->vm;
->  
-> @@ -433,7 +467,8 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
->  	writel(vm->vactive, dsi->regs + DSI_VACT_NL);
->  
->  	if (dsi->driver_data->has_size_ctl)
-> -		writel(vm->vactive << 16 | vm->hactive, dsi->regs + DSI_SIZE_CON);
-> +		writel(vm->vactive << 16 | vm->hactive,
-> +		       dsi->regs + DSI_SIZE_CON);
-
-Except this line,
-
-Reviewed-by: CK Hu: <ck.hu@mediatek.com>
-
-This line is added in "This line is added in "drm/mediatek: add frame
-size control", maybe this is belong to that patch.
-
->  
->  	horizontal_sync_active_byte = (vm->hsync_len * dsi_tmp_buf_bpp - 10);
->  
-> @@ -444,7 +479,34 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
->  		horizontal_backporch_byte = ((vm->hback_porch + vm->hsync_len) *
->  			dsi_tmp_buf_bpp - 10);
->  
-> -	horizontal_frontporch_byte = (vm->hfront_porch * dsi_tmp_buf_bpp - 12);
-> +	data_phy_cycles = timing->lpx + timing->da_hs_prepare +
-> +				  timing->da_hs_zero + timing->da_hs_exit + 2;
+> +static void mtk_mipi_tx_power_off_signal(struct phy *phy)
+> +{
+> +	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
 > +
-> +	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
-> +		if (vm->hfront_porch * dsi_tmp_buf_bpp >
-> +		    data_phy_cycles * dsi->lanes + 18) {
-> +			horizontal_frontporch_byte = vm->hfront_porch *
-> +						     dsi_tmp_buf_bpp -
-> +						     data_phy_cycles *
-> +						     dsi->lanes - 18;
-> +		} else {
-> +			DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
-> +			horizontal_frontporch_byte = vm->hfront_porch *
-> +						     dsi_tmp_buf_bpp;
-> +		}
-> +	} else {
-> +		if (vm->hfront_porch * dsi_tmp_buf_bpp >
-> +		    data_phy_cycles * dsi->lanes + 12) {
-> +			horizontal_frontporch_byte = vm->hfront_porch *
-> +						     dsi_tmp_buf_bpp -
-> +						     data_phy_cycles *
-> +						     dsi->lanes - 12;
-> +		} else {
-> +			DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
-> +			horizontal_frontporch_byte = vm->hfront_porch *
-> +						     dsi_tmp_buf_bpp;
-> +		}
-> +	}
->  
->  	writel(horizontal_sync_active_byte, dsi->regs + DSI_HSA_WC);
->  	writel(horizontal_backporch_byte, dsi->regs + DSI_HBP_WC);
-> @@ -544,8 +606,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
->  {
->  	struct device *dev = dsi->dev;
->  	int ret;
-> -	u64 pixel_clock, total_bits;
-> -	u32 htotal, htotal_bits, bit_per_pixel, overhead_cycles, overhead_bits;
-> +	u32 bit_per_pixel;
->  
->  	if (++dsi->refcount != 1)
->  		return 0;
-> @@ -564,24 +625,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
->  		break;
->  	}
->  
-> -	/**
-> -	 * htotal_time = htotal * byte_per_pixel / num_lanes
-> -	 * overhead_time = lpx + hs_prepare + hs_zero + hs_trail + hs_exit
-> -	 * mipi_ratio = (htotal_time + overhead_time) / htotal_time
-> -	 * data_rate = pixel_clock * bit_per_pixel * mipi_ratio / num_lanes;
-> -	 */
-> -	pixel_clock = dsi->vm.pixelclock;
-> -	htotal = dsi->vm.hactive + dsi->vm.hback_porch + dsi->vm.hfront_porch +
-> -			dsi->vm.hsync_len;
-> -	htotal_bits = htotal * bit_per_pixel;
-> -
-> -	overhead_cycles = T_LPX + T_HS_PREP + T_HS_ZERO + T_HS_TRAIL +
-> -			T_HS_EXIT;
-> -	overhead_bits = overhead_cycles * dsi->lanes * 8;
-> -	total_bits = htotal_bits + overhead_bits;
-> -
-> -	dsi->data_rate = DIV_ROUND_UP_ULL(pixel_clock * total_bits,
-> -					  htotal * dsi->lanes);
-> +	dsi->data_rate = dsi->vm.pixelclock * bit_per_pixel / dsi->lanes;
->  
->  	ret = clk_set_rate(dsi->hs_clk, dsi->data_rate);
->  	if (ret < 0) {
+> +	/* Switch ON each Lane */
+> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_D0_SW_CTL_EN, DSI_SW_CTL_EN);
+> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_D1_SW_CTL_EN, DSI_SW_CTL_EN);
+> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_D2_SW_CTL_EN, DSI_SW_CTL_EN);
+> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_D3_SW_CTL_EN, DSI_SW_CTL_EN);
+> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_CK_SW_CTL_EN, DSI_SW_CTL_EN);
+> +
+> +	writel(RG_DSI_PAD_TIEL_SEL | RG_DSI_BG_CORE_EN,
+> +	       mipi_tx->regs + MIPITX_LANE_CON);
+> +	writel(RG_DSI_PAD_TIEL_SEL, mipi_tx->regs + MIPITX_LANE_CON);
+> +}
+> +
+> +const struct mtk_mipitx_data mt8183_mipitx_data = {
+> +	.mipi_tx_clk_ops = &mtk_mipi_tx_pll_ops,
+> +	.mipi_tx_enable_signal = mtk_mipi_tx_power_on_signal,
+> +	.mipi_tx_disable_signal = mtk_mipi_tx_power_off_signal,
+> +};
+> +
 
 
