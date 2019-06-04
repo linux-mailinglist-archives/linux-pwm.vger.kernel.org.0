@@ -2,166 +2,274 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DDFEF34D10
-	for <lists+linux-pwm@lfdr.de>; Tue,  4 Jun 2019 18:18:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C1F734FA5
+	for <lists+linux-pwm@lfdr.de>; Tue,  4 Jun 2019 20:13:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbfFDQSl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 4 Jun 2019 12:18:41 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:6658 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728166AbfFDQSl (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 4 Jun 2019 12:18:41 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.60,550,1549954800"; 
-   d="scan'208";a="35533999"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Jun 2019 09:18:38 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex01.mchp-main.com (10.10.87.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 4 Jun 2019 09:18:37 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Tue, 4 Jun 2019 09:18:38 -0700
+        id S1726352AbfFDSNx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 4 Jun 2019 14:13:53 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45498 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfFDSNx (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 4 Jun 2019 14:13:53 -0400
+Received: by mail-io1-f68.google.com with SMTP id e3so18095568ioc.12;
+        Tue, 04 Jun 2019 11:13:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+3tI8LXi5R3L7VQnDezNvjooeBm3q62YSN/CRKjnfe4=;
- b=Imyztnv0YaM49ySTHizWxKmSKC1DXvAYzcYluxBdmyDi2F9UO3b7AE21Y/knd3AMX06uDWJX01QmEe6P4Nb/jMd2KzelsPt7Td3MfSNcGEHu3kaTBbmrY885hZcnEK6YdKhj4xSsqiEGESN1mXJ0SkbLaIl4d2+jYktkf70qp+A=
-Received: from MWHPR11MB1549.namprd11.prod.outlook.com (10.172.54.17) by
- MWHPR11MB1583.namprd11.prod.outlook.com (10.172.53.136) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.20; Tue, 4 Jun 2019 16:18:34 +0000
-Received: from MWHPR11MB1549.namprd11.prod.outlook.com
- ([fe80::316b:7774:8db6:30ec]) by MWHPR11MB1549.namprd11.prod.outlook.com
- ([fe80::316b:7774:8db6:30ec%7]) with mapi id 15.20.1943.018; Tue, 4 Jun 2019
- 16:18:34 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <sam@ravnborg.org>, <thierry.reding@gmail.com>
-CC:     <linux-pwm@vger.kernel.org>, <alexandre.belloni@bootlin.com>,
-        <bbrezillon@kernel.org>, <airlied@linux.ie>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <Ludovic.Desroches@microchip.com>, <daniel@ffwll.ch>,
-        <lee.jones@linaro.org>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RESEND][PATCH v3 0/6] add LCD support for SAM9X60
-Thread-Topic: [RESEND][PATCH v3 0/6] add LCD support for SAM9X60
-Thread-Index: AQHU+2NzxFOsw6p3b0iYuTBfPVB4RaZgDjOAgCvdRQA=
-Date:   Tue, 4 Jun 2019 16:18:33 +0000
-Message-ID: <c361b013-2d98-76e3-d30f-cec83000933c@microchip.com>
-References: <1556195748-11106-1-git-send-email-claudiu.beznea@microchip.com>
- <20190507182713.GA16862@ravnborg.org>
-In-Reply-To: <20190507182713.GA16862@ravnborg.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR0701CA0032.eurprd07.prod.outlook.com
- (2603:10a6:800:90::18) To MWHPR11MB1549.namprd11.prod.outlook.com
- (2603:10b6:301:c::17)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tagtoolbar-keys: D20190604191820598
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8622c385-bc4e-430f-465f-08d6e9084a4d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR11MB1583;
-x-ms-traffictypediagnostic: MWHPR11MB1583:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <MWHPR11MB1583EDA94CA77947B5B5DB6B87150@MWHPR11MB1583.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0058ABBBC7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(39860400002)(366004)(346002)(199004)(189003)(52116002)(76176011)(316002)(66476007)(66556008)(64756008)(66446008)(5660300002)(446003)(26005)(486006)(66946007)(73956011)(2906002)(66066001)(2616005)(3846002)(31696002)(6506007)(386003)(7416002)(68736007)(6116002)(8676002)(86362001)(72206003)(81156014)(186003)(8936002)(81166006)(14444005)(476003)(305945005)(7736002)(478600001)(256004)(6436002)(229853002)(25786009)(14454004)(6512007)(6306002)(11346002)(53936002)(966005)(54906003)(110136005)(31686004)(6246003)(102836004)(99286004)(71190400001)(71200400001)(6486002)(4326008)(36756003)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1583;H:MWHPR11MB1549.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: d3gRv7rqLimiMosEx4WSpSnFA41PAJYeK+DYVDlFUzW6TWXPYWQeHqf8u06t5qbCwdyLorTdFYBhtcQO2iU4I5XMNKub1DwRy4a2Jg7CMlaCb+iadRICGWcRB2UZaEcjXv8os7uvVLbIvE7HZBrUSFd6FFJoQGq8hVYUpkbsAt74V9XUzAQZCpl0HRRxSyf3ZTFH/XHSbUXkp7VSGLqH1i/FZstjBq6cviMMEwgGHj2HxcNeiRnrzqGQqE9xMXX7cwS762Pn4lr2mvGPoqJbDmXK2WLj8InOzaXc9K0kalOjm1IC+bD4S48EafdGx+e5mJru7tkLbCVQOfz0nrX/W33JO3nSPQR6mcB0aKryfdPNjDBTyX22veJgouT3ZCj9Qd0+wCJZznGYFID9REYiExpasWKHlCi9yAW4hKzQfao=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4EDBCAD05C24604EBEFA9A6EEF02CDE8@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dGSsW8Ao/tRLmi/QZzRT3Q7h2dCLCK16CHOjhabkhac=;
+        b=lGhE8dWo78aPDnJJTq2KYG6HTf8jhF3fmAjd1UY65GrQ0xOOyaH2GSz0CXAJIJS6YR
+         5FK2QaGPERBNCBYl5c6C0xtQtWV4avgdm++VzGCHD9a+ntESkIZuyrHrcBmvfmvQwet6
+         B32kmuK6UlqVVDz9ro8CxEs/w5E0o+TW3xVcFkpXZK1kgqBXUulDEb10gh17kXfO+ITt
+         343nLkLsbw6gRIj7nCT9vu6UBv7MtLz/a9B8FZKBz+3JTXWEVhYkLeQ1pQWP4wWP3ieX
+         KVJg19aLCEQnhZk34xXycGHbr/n7W78KqZhkf4rzSN02wskU/Qia4JwseGdLrAyfjmNU
+         OVWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dGSsW8Ao/tRLmi/QZzRT3Q7h2dCLCK16CHOjhabkhac=;
+        b=RmbJ6jsJgaF3SBj4MoUxVqyVk7cnJHAnah7tB1/8b+9WT1wmiVMis1WsvptI/Lliff
+         s7NPbPbK1mo5MTCBu90Wkwk0Ct3mHgDLSU9xGe3anRn22c3Q3uOD2b0PByyKADOGn9+r
+         EXi0ZczHolfNkwNgMOm9bbuHvytCnnQTuJo1xcHb7YaZsqzJ5jT048qcelmjEDse3C4C
+         VEDD6AIT+WBvlGC86kpn/T8+8VQaUaC1WZi4KDTV3lj5RcDCjrLOnAY0knE/8gWyYDgk
+         oURUYHPU0bUIzePgxcif8zZQLdmu0yGS4/GmaVFGUvcGTAoSn7btzVkm+6bum1XOvrAr
+         GSwA==
+X-Gm-Message-State: APjAAAXpRtJovgHXKYkB2nq+AisACggSoiX59EZm2rb1CbdaL79zt8eI
+        0wLTcl7+0Y9pWOiGrdJXkeaxh7DI
+X-Google-Smtp-Source: APXvYqziwAoPHhUTvZK7FN6Gl1lKhpzhnnuaIkaqQv6EsPmDIq5Oczwb73mappcHmQ2XUCVYrfGcHg==
+X-Received: by 2002:a5d:9812:: with SMTP id a18mr8336186iol.289.1559672032130;
+        Tue, 04 Jun 2019 11:13:52 -0700 (PDT)
+Received: from svens-asus.arcx.com ([184.94.50.30])
+        by smtp.gmail.com with ESMTPSA id p11sm1558265itc.2.2019.06.04.11.13.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Jun 2019 11:13:51 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2] pwm: pca9685: fix pwm/gpio inter-operation
+Date:   Tue,  4 Jun 2019 14:13:45 -0400
+Message-Id: <20190604181345.9107-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8622c385-bc4e-430f-465f-08d6e9084a4d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2019 16:18:33.8565
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: claudiu.beznea@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1583
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-SGkgU2FtLA0KDQpPbiAwNy4wNS4yMDE5IDIxOjI3LCBTYW0gUmF2bmJvcmcgd3JvdGU6DQo+IEV4
-dGVybmFsIEUtTWFpbA0KPiANCj4gDQo+IEhpIFRoaWVycnkuDQo+IA0KPj4gICBwd206IGF0bWVs
-LWhsY2RjOiBhZGQgY29tcGF0aWJsZSBmb3IgU0FNOVg2MCBITENEQydzIFBXTQ0KPiBPSyB0byBh
-ZGQgdGhlICJwd206IGF0bWVsLWhsY2RjOiBhZGQgY29tcGF0aWJsZSBmb3IgU0FNOVg2MCBITENE
-QydzIFBXTSINCj4gcGF0Y2ggdmlhIGRybS1taXNjPw0KPiBUaGVuIHdlIGNhbiBhZGQgYWxsIDYg
-cGF0Y2hlcyBpbiBvbmUgZ28uDQoNClNpbmNlIHdlIGRvbid0IGhhdmUgYW4gYW5zd2VyIGZyb20g
-VGhpZXJyeSB0aWxsIG5vdywgZG8geW91IHRoaW5rIGl0IGNvdWxkDQpiZSBmZWFzaWJsZSB0byB0
-YWtlIHRoZSByZXN0IG9mIHRoZSBwYXRjaGVzIGluIHRoaXMgc2VyaWVzPyBBZnRlciB0aGF0IEkN
-CndpbGwgcmUtc2VuZCB0aGUgUFdNIHBhdGNoIHRvIFBXTSBsaXN0Lg0KDQpUaGFuayB5b3UsDQpD
-bGF1ZGl1IEJlem5lYQ0KDQo+IA0KPiAJU2FtDQo+IA0KPiAoS2VwdCByZW1haW5pbmcgb2YgbWFp
-bCBmb3IgcmVmZXJlbmNlKQ0KPj4NCj4+IEhpLA0KPj4NCj4+IFRoZXNlIHBhdGNoZXMgYWRkcyBz
-dXBwb3J0IGZvciBTQU05WDYwJ3MgTENEIGNvbnRyb2xsZXIuDQo+Pg0KPj4gRmlyc3QgcGF0Y2hl
-cyBhZGQgb3B0aW9uIHRvIHNwZWNpZnkgaWYgY29udHJvbGxlciBjbG9jayBzb3VyY2UgaXMgZml4
-ZWQuDQo+PiBTZWNvbmQgcGF0Y2ggYXZvaWQgYSB2YXJpYWJsZSBpbml0aWFsaXphdGlvbiBpbiBh
-dG1lbF9obGNkY19jcnRjX21vZGVfc2V0X25vZmIoKS4NCj4+IFRoZSAzcmQgYWRkIGNvbXBhdGli
-bGVzIGluIHB3bS1hdG1lbC1obGNkYyBkcml2ZXIuDQo+PiBUaGUgNHRoIHBhdGNoIGVuYWJsZXMg
-c3lzX2NsayBpbiBwcm9iZSBzaW5jZSBTQU05WDYwIG5lZWRzIHRoaXMuDQo+PiBTcGVjaWZpYyBz
-dXBwb3J0IHdhcyBhZGRlZCBhbHNvIGluIHN1c3BlbmQvcmVzdW1lIGhvb2tzLg0KPj4gVGhlIDV0
-aCBwYXRjaCBhZGRzIFNBTTlYNjAncyBMQ0QgY29uZmlndXJhdGlvbiBhbmQgZW5hYmxlZCBpdC4N
-Cj4+DQo+PiBJIHRvb2sgdGhlIGNoYW5nZXMgb2YgdGhpcyBzZXJpZXMgYW5kIGludHJvZHVjZWQg
-YWxzbyBhIGZpeA0KPj4gKHRoaXMgaXMgdGhlIDZ0aCBwYXRjaCBpbiB0aGlzIHNlcmllcykgLSBp
-ZiB5b3Ugd2FudCB0byBzZW5kIGl0IHNlcGFyYXRlbHkNCj4+IEkgd291bGQgZ2xhZGx5IGRvIGl0
-Lg0KPj4NCj4+IEkgcmVzZW5kIHRoaXMgdG8gYWxzbyBpbmNsdWRlIExlZSBKb25lcyBmb3IgcHdt
-LWF0bWVsLWhsY2RjIGNoYW5nZXMuDQo+Pg0KPj4gVGhhbmsgeW91LA0KPj4gQ2xhdWRpdSBCZXpu
-ZWENCj4+DQo+PiBDaGFuZ2VzIGluIHYzOg0KPj4gLSBrZWVwIGNvbXBhdGlibGUgc3RyaW5nIG9u
-IHBhdGNoIDMvNiBvbiBhIHNpbmdsZSBsaW5lIChJIGtlZXAgaGVyZSBhIHRhYg0KPj4gICBpbiBm
-cm9udCBvZiAiLmNvbXBhdGlibGUiIHRvIGJlIGFsaWduZWQgd2l0aCB0aGUgcmVzdCBvZiB0aGUg
-Y29kZSBpbg0KPj4gICBhdG1lbF9obGNkY19kdF9pZHNbXSkNCj4+IC0gcGF0Y2hlcyA0LzcgYW5k
-IDMvNyBmcm9tIHYyIHdlcmUgYXBwbGllZCBzbyByZW1vdmUgdGhlbSBmcm9tIHRoaXMgdmVyc2lv
-bg0KPj4gLSBhZGQgYSBmaXggZm9yIGF0bWVsX2hsY2RjIChwYXRjaCA2LzYpDQo+Pg0KPj4gQ2hh
-bmdlcyBpbiB2MjoNCj4+IC0gdXNlICJ8IiBvcGVyYXRvciBpbiBwYXRjaCAxLzcgdG8gc2V0IEFU
-TUVMX0hMQ0RDX0NMS1NFTCBvbiBjZmcNCj4+IC0gY29sbGVjdCBBY2tlZC1ieSwgUmV2aWV3ZWQt
-YnkgdGFncw0KPj4NCj4+IENsYXVkaXUgQmV6bmVhICg0KToNCj4+ICAgZHJtOiBhdG1lbC1obGNk
-YzogYWRkIGNvbmZpZyBvcHRpb24gZm9yIGNsb2NrIHNlbGVjdGlvbg0KPj4gICBkcm06IGF0bWVs
-LWhsY2RjOiBhdm9pZCBpbml0aWFsaXppbmcgY2ZnIHdpdGggemVybw0KPj4gICBwd206IGF0bWVs
-LWhsY2RjOiBhZGQgY29tcGF0aWJsZSBmb3IgU0FNOVg2MCBITENEQydzIFBXTQ0KPj4gICBkcm0v
-YXRtZWwtaGNsY2RjOiByZXZlcnQgc2hpZnQgYnkgOA0KPj4NCj4+IFNhbmRlZXAgU2hlcmlrZXIg
-TWFsbGlrYXJqdW4gKDIpOg0KPj4gICBkcm06IGF0bWVsLWhsY2RjOiBlbmFibGUgc3lzX2NsayBk
-dXJpbmcgaW5pdGFsaXphdGlvbi4NCj4+ICAgZHJtOiBhdG1lbC1obGNkYzogYWRkIHNhbTl4NjAg
-TENEIGNvbnRyb2xsZXINCj4+DQo+PiAgZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVs
-X2hsY2RjX2NydGMuYyAgfCAgMTggKystLQ0KPj4gIGRyaXZlcnMvZ3B1L2RybS9hdG1lbC1obGNk
-Yy9hdG1lbF9obGNkY19kYy5jICAgIHwgMTIwICsrKysrKysrKysrKysrKysrKysrKysrLQ0KPj4g
-IGRyaXZlcnMvZ3B1L2RybS9hdG1lbC1obGNkYy9hdG1lbF9obGNkY19kYy5oICAgIHwgICAyICsN
-Cj4+ICBkcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfcGxhbmUuYyB8ICAg
-MiArLQ0KPj4gIGRyaXZlcnMvcHdtL3B3bS1hdG1lbC1obGNkYy5jICAgICAgICAgICAgICAgICAg
-IHwgICAxICsNCj4+ICA1IGZpbGVzIGNoYW5nZWQsIDEzMiBpbnNlcnRpb25zKCspLCAxMSBkZWxl
-dGlvbnMoLSkNCj4+DQo+PiAtLSANCj4+IDIuNy40DQo+Pg0KPj4gX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QN
-Cj4+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcNCj4+IGh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsDQo+IA0KPiBfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdA0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4g
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
-bmVsDQo+IA0KPiANCg==
+This driver allows pwms to be requested as gpios via gpiolib.
+Obviously, it should not be allowed to request a gpio when its
+corresponding pwm is already requested (and vice versa).
+So it requires some exclusion code.
+
+Given that the pwm and gpio cores are not synchronized with
+respect to each other, this exclusion code will also require
+proper synchronization.
+
+Such a mechanism was in place, but was inadvertently removed
+by Uwe's clean-up patch.
+
+Upon revisiting the synchronization mechanism, we found that
+theoretically, it could allow two threads to successfully
+request conflicting pwms / gpios.
+
+Replace with a bitmap which tracks pwm in-use, plus a mutex.
+As long as pwm and gpio's respective request/free functions
+modify the in-use bitmap while holding the mutex, proper
+synchronization will be guaranteed.
+
+Reported-by: YueHaibing <yuehaibing@huawei.com>
+Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Link: https://lkml.org/lkml/2019/5/31/963
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+---
+
+WARNING:
+	Untested on a real system, I do not have any test h/w.
+	This patch should get someone's Tested-by tag.
+
+v1 -> v2:
+	applied suggestions from Mika Westerberg:
+		rename pca9685_pwm_test_set_inuse -> pca9685_pwm_test_and_set_inuse
+		use test_set_inuse and clear_inuse functions for both pwm and gpio
+	improve exclusion policy so "all LEDs" channel cannot conflict with the
+		other channels, for pwm and gpio alike
+
+ drivers/pwm/pwm-pca9685.c | 89 +++++++++++++++++++++------------------
+ 1 file changed, 48 insertions(+), 41 deletions(-)
+
+diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+index 567f5e2771c4..259fd58812ae 100644
+--- a/drivers/pwm/pwm-pca9685.c
++++ b/drivers/pwm/pwm-pca9685.c
+@@ -31,6 +31,7 @@
+ #include <linux/slab.h>
+ #include <linux/delay.h>
+ #include <linux/pm_runtime.h>
++#include <linux/bitmap.h>
+ 
+ /*
+  * Because the PCA9685 has only one prescaler per chip, changing the period of
+@@ -85,6 +86,7 @@ struct pca9685 {
+ #if IS_ENABLED(CONFIG_GPIOLIB)
+ 	struct mutex lock;
+ 	struct gpio_chip gpio;
++	DECLARE_BITMAP(pwms_inuse, PCA9685_MAXCHAN + 1);
+ #endif
+ };
+ 
+@@ -94,51 +96,51 @@ static inline struct pca9685 *to_pca(struct pwm_chip *chip)
+ }
+ 
+ #if IS_ENABLED(CONFIG_GPIOLIB)
+-static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
++static bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca, int pwm_idx)
+ {
+-	struct pca9685 *pca = gpiochip_get_data(gpio);
+-	struct pwm_device *pwm;
++	bool is_inuse;
+ 
+ 	mutex_lock(&pca->lock);
+-
+-	pwm = &pca->chip.pwms[offset];
+-
+-	if (pwm->flags & (PWMF_REQUESTED | PWMF_EXPORTED)) {
+-		mutex_unlock(&pca->lock);
+-		return -EBUSY;
++	if (pwm_idx >= PCA9685_MAXCHAN) {
++		/*
++		 * "all LEDs" channel:
++		 * pretend already in use if any of the PWMs are requested
++		 */
++		if (!bitmap_empty(pca->pwms_inuse, PCA9685_MAXCHAN)) {
++			is_inuse = true;
++			goto out;
++		}
++	} else {
++		/*
++		 * regular channel:
++		 * pretend already in use if the "all LEDs" channel is requested
++		 */
++		if (test_bit(PCA9685_MAXCHAN, pca->pwms_inuse)) {
++			is_inuse = true;
++			goto out;
++		}
+ 	}
+-
+-	pwm_set_chip_data(pwm, (void *)1);
+-
++	is_inuse = test_and_set_bit(pwm_idx, pca->pwms_inuse);
++out:
+ 	mutex_unlock(&pca->lock);
+-	pm_runtime_get_sync(pca->chip.dev);
+-	return 0;
++	return is_inuse;
+ }
+ 
+-static bool pca9685_pwm_is_gpio(struct pca9685 *pca, struct pwm_device *pwm)
++static void pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
+ {
+-	bool is_gpio = false;
+-
+ 	mutex_lock(&pca->lock);
++	clear_bit(pwm_idx, pca->pwms_inuse);
++	mutex_unlock(&pca->lock);
++}
+ 
+-	if (pwm->hwpwm >= PCA9685_MAXCHAN) {
+-		unsigned int i;
+-
+-		/*
+-		 * Check if any of the GPIOs are requested and in that case
+-		 * prevent using the "all LEDs" channel.
+-		 */
+-		for (i = 0; i < pca->gpio.ngpio; i++)
+-			if (gpiochip_is_requested(&pca->gpio, i)) {
+-				is_gpio = true;
+-				break;
+-			}
+-	} else if (pwm_get_chip_data(pwm)) {
+-		is_gpio = true;
+-	}
++static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
++{
++	struct pca9685 *pca = gpiochip_get_data(gpio);
+ 
+-	mutex_unlock(&pca->lock);
+-	return is_gpio;
++	if (pca9685_pwm_test_and_set_inuse(pca, offset))
++		return -EBUSY;
++	pm_runtime_get_sync(pca->chip.dev);
++	return 0;
+ }
+ 
+ static int pca9685_pwm_gpio_get(struct gpio_chip *gpio, unsigned int offset)
+@@ -170,13 +172,10 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
+ static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
+ {
+ 	struct pca9685 *pca = gpiochip_get_data(gpio);
+-	struct pwm_device *pwm;
+ 
+ 	pca9685_pwm_gpio_set(gpio, offset, 0);
+ 	pm_runtime_put(pca->chip.dev);
+-	mutex_lock(&pca->lock);
+-	pwm = &pca->chip.pwms[offset];
+-	mutex_unlock(&pca->lock);
++	pca9685_pwm_clear_inuse(pca, offset);
+ }
+ 
+ static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
+@@ -228,12 +227,17 @@ static int pca9685_pwm_gpio_probe(struct pca9685 *pca)
+ 	return devm_gpiochip_add_data(dev, &pca->gpio, pca);
+ }
+ #else
+-static inline bool pca9685_pwm_is_gpio(struct pca9685 *pca,
+-				       struct pwm_device *pwm)
++static inline bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca,
++						  int pwm_idx)
+ {
+ 	return false;
+ }
+ 
++static inline void
++pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
++{
++}
++
+ static inline int pca9685_pwm_gpio_probe(struct pca9685 *pca)
+ {
+ 	return 0;
+@@ -417,7 +421,7 @@ static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+ 	struct pca9685 *pca = to_pca(chip);
+ 
+-	if (pca9685_pwm_is_gpio(pca, pwm))
++	if (pca9685_pwm_test_and_set_inuse(pca, pwm->hwpwm))
+ 		return -EBUSY;
+ 	pm_runtime_get_sync(chip->dev);
+ 
+@@ -426,8 +430,11 @@ static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ 
+ static void pca9685_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
++	struct pca9685 *pca = to_pca(chip);
++
+ 	pca9685_pwm_disable(chip, pwm);
+ 	pm_runtime_put(chip->dev);
++	pca9685_pwm_clear_inuse(pca, pwm->hwpwm);
+ }
+ 
+ static const struct pwm_ops pca9685_pwm_ops = {
+-- 
+2.17.1
+
