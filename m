@@ -2,162 +2,114 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D3B80358D8
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 Jun 2019 10:44:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E299C35A14
+	for <lists+linux-pwm@lfdr.de>; Wed,  5 Jun 2019 12:03:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbfFEIoH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 5 Jun 2019 04:44:07 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:32988 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfFEIoG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 5 Jun 2019 04:44:06 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.60,550,1549954800"; 
-   d="scan'208";a="35658835"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 05 Jun 2019 01:44:04 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.87.71) by
- chn-vm-ex03.mchp-main.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 5 Jun 2019 01:43:57 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Wed, 5 Jun 2019 01:43:57 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ndpe7qI8Nn3TggX3YDVteH/xqjgGej+SPms7N5tbswo=;
- b=Y/lJQXRoIz10k8JczUz0GlL8s90IOuHn6R3IqmNDUbeoRbrt3FzJi9XIm123ofChe6OKAfb9ctBaLm8j2+tX9kwN0tIzZ6ioKqeA8BTmrkm+n83oBAMwu3NoWdvtoUmxVvNbh6+uHJkEKyn+HP4ms2Yq+tv/ngW41ptfO2u6bgE=
-Received: from DM5PR11MB1547.namprd11.prod.outlook.com (10.172.37.15) by
- DM5PR11MB1817.namprd11.prod.outlook.com (10.175.89.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.22; Wed, 5 Jun 2019 08:43:37 +0000
-Received: from DM5PR11MB1547.namprd11.prod.outlook.com
- ([fe80::11dc:d9db:1a6a:a0b8]) by DM5PR11MB1547.namprd11.prod.outlook.com
- ([fe80::11dc:d9db:1a6a:a0b8%6]) with mapi id 15.20.1965.011; Wed, 5 Jun 2019
- 08:43:37 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <lee.jones@linaro.org>
-CC:     <linux-pwm@vger.kernel.org>, <alexandre.belloni@bootlin.com>,
-        <bbrezillon@kernel.org>, <airlied@linux.ie>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <Ludovic.Desroches@microchip.com>, <thierry.reding@gmail.com>,
-        <daniel@ffwll.ch>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RESEND][PATCH v3 0/6] add LCD support for SAM9X60
-Thread-Topic: [RESEND][PATCH v3 0/6] add LCD support for SAM9X60
-Thread-Index: AQHU+2NzxFOsw6p3b0iYuTBfPVB4RaaM3vQAgAAfvgA=
-Date:   Wed, 5 Jun 2019 08:43:36 +0000
-Message-ID: <0bf41938-b64c-b505-0a30-0abf4ad72a4b@microchip.com>
-References: <1556195748-11106-1-git-send-email-claudiu.beznea@microchip.com>
- <20190605064948.GI4797@dell>
-In-Reply-To: <20190605064948.GI4797@dell>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0359.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:d::35) To DM5PR11MB1547.namprd11.prod.outlook.com
- (2603:10b6:4:a::15)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tagtoolbar-keys: D20190605114324182
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5689a2e9-6613-458f-e0ff-08d6e991e62e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR11MB1817;
-x-ms-traffictypediagnostic: DM5PR11MB1817:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <DM5PR11MB1817A7928950917899D766C087160@DM5PR11MB1817.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 00594E8DBA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(376002)(346002)(396003)(39860400002)(199004)(189003)(6486002)(6436002)(11346002)(229853002)(53936002)(66556008)(5660300002)(966005)(2906002)(6306002)(54906003)(72206003)(8676002)(52116002)(2616005)(73956011)(446003)(486006)(66946007)(64756008)(71200400001)(31686004)(71190400001)(14444005)(256004)(14454004)(66446008)(66476007)(305945005)(76176011)(8936002)(6512007)(7416002)(7736002)(81156014)(476003)(316002)(36756003)(6116002)(3846002)(25786009)(6246003)(478600001)(4326008)(6916009)(102836004)(26005)(186003)(6506007)(99286004)(386003)(31696002)(66066001)(86362001)(53546011)(68736007)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1817;H:DM5PR11MB1547.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: jsG8GA5WR8GoKREzBSpi85d+12Ca0oHVBdnkKwv/+6iekxcgVAon7jjyi1KZjlpA7+uVJTh4wsj+NiEGWnC3MtFyALeiMzj2HJFr1ClTkC+BDfofAxeZyZ6K2Pg54RWyUdg127rTtQhbB36WrtONyy+pDpLwgjKaqvQF46+qV9d2MArtoLh5xn5u7bgmXudZOX/YJKSp7JzDK5OYzbDPgyMeIlieRboFICw2lMO5XLw5nA3WrNM854yYxqRUalBoPYo1P+iZ1xEMO1Uc7oFUkXjQIg4uqKX1KkoV0xWmOPPjzJufpQIy0lyoUzYVMKUqXkThoWCcfuXf7DU5ZjDhJSLlKv0q8ZXSL0dNSsTra/YcxKUV+aib0MmV6CsBPnNy3I03EXPjG+yAj7TUm59pEFTyGpTTu1phKO2xwma36Fo=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <518B9938BFF0F946ADC161C9F98296A0@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1727211AbfFEKD2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 5 Jun 2019 06:03:28 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50280 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbfFEKD1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 5 Jun 2019 06:03:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=u3C13c87086hMiV9w85rPm7zIsQPWFDde0xcEZuXQO4=; b=dorjVI3a+BwPR4KW5H82UKRlg
+        Q9KqAanswJa5R2Wb689KlEmobdDfNHeCIoIrmt5I/PSgctZsHRi60Lg3gnFmHSNLPuQAliaq0R9s2
+        vaYe1Hr5IKUF5PPoEbYIxmcmqmsGkWm/Qs6VhqrIEdJ0/Z6P1uHRVEgDVNJ/doyVFZ37k=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hYSkO-0008Uv-UU; Wed, 05 Jun 2019 10:02:21 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 7EA0A440046; Wed,  5 Jun 2019 11:02:20 +0100 (BST)
+Date:   Wed, 5 Jun 2019 11:02:20 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, gwendal@chromium.org,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>, kernel@collabora.com,
+        dtor@chromium.org, Mauro Carvalho Chehab <mchehab@kernel.org>,
+        alsa-devel@alsa-project.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-iio@vger.kernel.org,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-i2c@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Brian Norris <briannorris@chromium.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rushikesh S Kadam <rushikesh.s.kadam@intel.com>,
+        linux-input@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        linux-pm@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Evan Green <evgreen@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Kees Cook <keescook@chromium.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Jiri Kosina <jikos@kernel.org>
+Subject: Re: [PATCH 06/10] mfd / platform: cros_ec: Reorganize platform and
+ mfd includes
+Message-ID: <20190605100220.GN2456@sirena.org.uk>
+References: <20190604152019.16100-1-enric.balletbo@collabora.com>
+ <20190604152019.16100-7-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5689a2e9-6613-458f-e0ff-08d6e991e62e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 08:43:37.3936
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: claudiu.beznea@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1817
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="RnxXMyWEPIZsopkG"
+Content-Disposition: inline
+In-Reply-To: <20190604152019.16100-7-enric.balletbo@collabora.com>
+X-Cookie: The other line moves faster.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-DQoNCk9uIDA1LjA2LjIwMTkgMDk6NDksIExlZSBKb25lcyB3cm90ZToNCj4gRXh0ZXJuYWwgRS1N
-YWlsDQo+IA0KPiANCj4gT24gVGh1LCAyNSBBcHIgMjAxOSwgQ2xhdWRpdS5CZXpuZWFAbWljcm9j
-aGlwLmNvbSB3cm90ZToNCj4gDQo+PiBGcm9tOiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpu
-ZWFAbWljcm9jaGlwLmNvbT4NCj4+DQo+PiBIaSwNCj4+DQo+PiBUaGVzZSBwYXRjaGVzIGFkZHMg
-c3VwcG9ydCBmb3IgU0FNOVg2MCdzIExDRCBjb250cm9sbGVyLg0KPj4NCj4+IEZpcnN0IHBhdGNo
-ZXMgYWRkIG9wdGlvbiB0byBzcGVjaWZ5IGlmIGNvbnRyb2xsZXIgY2xvY2sgc291cmNlIGlzIGZp
-eGVkLg0KPj4gU2Vjb25kIHBhdGNoIGF2b2lkIGEgdmFyaWFibGUgaW5pdGlhbGl6YXRpb24gaW4g
-YXRtZWxfaGxjZGNfY3J0Y19tb2RlX3NldF9ub2ZiKCkuDQo+PiBUaGUgM3JkIGFkZCBjb21wYXRp
-YmxlcyBpbiBwd20tYXRtZWwtaGxjZGMgZHJpdmVyLg0KPj4gVGhlIDR0aCBwYXRjaCBlbmFibGVz
-IHN5c19jbGsgaW4gcHJvYmUgc2luY2UgU0FNOVg2MCBuZWVkcyB0aGlzLg0KPj4gU3BlY2lmaWMg
-c3VwcG9ydCB3YXMgYWRkZWQgYWxzbyBpbiBzdXNwZW5kL3Jlc3VtZSBob29rcy4NCj4+IFRoZSA1
-dGggcGF0Y2ggYWRkcyBTQU05WDYwJ3MgTENEIGNvbmZpZ3VyYXRpb24gYW5kIGVuYWJsZWQgaXQu
-DQo+Pg0KPj4gSSB0b29rIHRoZSBjaGFuZ2VzIG9mIHRoaXMgc2VyaWVzIGFuZCBpbnRyb2R1Y2Vk
-IGFsc28gYSBmaXgNCj4+ICh0aGlzIGlzIHRoZSA2dGggcGF0Y2ggaW4gdGhpcyBzZXJpZXMpIC0g
-aWYgeW91IHdhbnQgdG8gc2VuZCBpdCBzZXBhcmF0ZWx5DQo+PiBJIHdvdWxkIGdsYWRseSBkbyBp
-dC4NCj4+DQo+PiBJIHJlc2VuZCB0aGlzIHRvIGFsc28gaW5jbHVkZSBMZWUgSm9uZXMgZm9yIHB3
-bS1hdG1lbC1obGNkYyBjaGFuZ2VzLg0KPj4NCj4+IFRoYW5rIHlvdSwNCj4+IENsYXVkaXUgQmV6
-bmVhDQo+Pg0KPj4gQ2hhbmdlcyBpbiB2MzoNCj4+IC0ga2VlcCBjb21wYXRpYmxlIHN0cmluZyBv
-biBwYXRjaCAzLzYgb24gYSBzaW5nbGUgbGluZSAoSSBrZWVwIGhlcmUgYSB0YWINCj4+ICAgaW4g
-ZnJvbnQgb2YgIi5jb21wYXRpYmxlIiB0byBiZSBhbGlnbmVkIHdpdGggdGhlIHJlc3Qgb2YgdGhl
-IGNvZGUgaW4NCj4+ICAgYXRtZWxfaGxjZGNfZHRfaWRzW10pDQo+PiAtIHBhdGNoZXMgNC83IGFu
-ZCAzLzcgZnJvbSB2MiB3ZXJlIGFwcGxpZWQgc28gcmVtb3ZlIHRoZW0gZnJvbSB0aGlzIHZlcnNp
-b24NCj4+IC0gYWRkIGEgZml4IGZvciBhdG1lbF9obGNkYyAocGF0Y2ggNi82KQ0KPj4NCj4+IENo
-YW5nZXMgaW4gdjI6DQo+PiAtIHVzZSAifCIgb3BlcmF0b3IgaW4gcGF0Y2ggMS83IHRvIHNldCBB
-VE1FTF9ITENEQ19DTEtTRUwgb24gY2ZnDQo+PiAtIGNvbGxlY3QgQWNrZWQtYnksIFJldmlld2Vk
-LWJ5IHRhZ3MNCj4+DQo+PiBDbGF1ZGl1IEJlem5lYSAoNCk6DQo+PiAgIGRybTogYXRtZWwtaGxj
-ZGM6IGFkZCBjb25maWcgb3B0aW9uIGZvciBjbG9jayBzZWxlY3Rpb24NCj4+ICAgZHJtOiBhdG1l
-bC1obGNkYzogYXZvaWQgaW5pdGlhbGl6aW5nIGNmZyB3aXRoIHplcm8NCj4+ICAgcHdtOiBhdG1l
-bC1obGNkYzogYWRkIGNvbXBhdGlibGUgZm9yIFNBTTlYNjAgSExDREMncyBQV00NCj4+ICAgZHJt
-L2F0bWVsLWhjbGNkYzogcmV2ZXJ0IHNoaWZ0IGJ5IDgNCj4+DQo+PiBTYW5kZWVwIFNoZXJpa2Vy
-IE1hbGxpa2FyanVuICgyKToNCj4+ICAgZHJtOiBhdG1lbC1obGNkYzogZW5hYmxlIHN5c19jbGsg
-ZHVyaW5nIGluaXRhbGl6YXRpb24uDQo+PiAgIGRybTogYXRtZWwtaGxjZGM6IGFkZCBzYW05eDYw
-IExDRCBjb250cm9sbGVyDQo+Pg0KPj4gIGRyaXZlcnMvZ3B1L2RybS9hdG1lbC1obGNkYy9hdG1l
-bF9obGNkY19jcnRjLmMgIHwgIDE4ICsrLS0NCj4+ICBkcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxj
-ZGMvYXRtZWxfaGxjZGNfZGMuYyAgICB8IDEyMCArKysrKysrKysrKysrKysrKysrKysrKy0NCj4+
-ICBkcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfZGMuaCAgICB8ICAgMiAr
-DQo+PiAgZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX3BsYW5lLmMgfCAg
-IDIgKy0NCj4+ICBkcml2ZXJzL3B3bS9wd20tYXRtZWwtaGxjZGMuYyAgICAgICAgICAgICAgICAg
-ICB8ICAgMSArDQo+PiAgNSBmaWxlcyBjaGFuZ2VkLCAxMzIgaW5zZXJ0aW9ucygrKSwgMTEgZGVs
-ZXRpb25zKC0pDQo+IA0KPiBXaHkgaXMgdGhpcyBiZWluZyBzZW50IHRvIG1lPw0KDQpTb3JyeSwg
-eW91IHdlcmUgaW4gdGhlIG9yaWdpbmFsICJ0byIgbGlzdCBkdWUgdG8gY2hhbmdlcyB0aGF0IHlv
-dSBhc2tlZCBmb3INCmluIHYyIG9uIG1mZCBwYXJ0Lg0KDQpUaGllcnJ5IHN1Z2dlc3RlZCBpbiB2
-MSBvZiB0aGlzIHNlcmllcyB0byB0YWtlIHB3bS1hdG1lbC1obGNkYy5jIGNoYW5nZXMNCnRob3Vn
-aCBNRkQgdHJlZSBbMV0uIFRoZW4sIGluIHYyIHlvdSBhc2sgbWUgdG8gZG8gdXBkYXRlIGEgYml0
-IHRoZSBjaGFuZ2VzDQppbiBwd20tYXRtZWwtaGxjZGMuYyBbMl0uDQoNCkFuZCBpbiB0aGlzIHJl
-cGx5IEkgZm9yZ290IHRvIHJlbW92ZSB5b3VyIGVtYWlsIGFzIHlvdSBwcmV2aW91c2x5DQpzdWdn
-ZXN0ZWQuIE15IGJhZCENCg0KVGhhbmsgeW91LA0KQ2xhdWRpdSBCZXpuZWENCg0KWzFdIGh0dHBz
-Oi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMjAxOTAzMDQxMTA1MTcuR0I1MTIxQHVsbW8vDQpbMl0g
-aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8yMDE5MDQyNTA4MzEzMi5HRDE0NzU4QGRlbGwv
-DQoNCg0KPiANCg==
+
+--RnxXMyWEPIZsopkG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Jun 04, 2019 at 05:20:15PM +0200, Enric Balletbo i Serra wrote:
+> There is a bit of mess between cros-ec mfd includes and platform
+> includes. For example, we have a linux/mfd/cros_ec.h include that
+> exports the interface implemented in platform/chrome/cros_ec_proto.c. Or
+
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--RnxXMyWEPIZsopkG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz3kysACgkQJNaLcl1U
+h9BVMAf+I/I3bNW13EZ789wBAFxmn5KXFbH0t6CdJDgbILW9HMsGSKGbJXJRTRDG
+GGeIfMEYK0lv5boeQbArMfoX/kkuVYHVj/71aQVsgC53JIBFFxHS2zEfzrFzgN+R
+sNsvROQYmO1T5gOySrMN+AsqPwnu3CR2LgMPRqsvguCPduIfXzEM3afJQuRh2lAW
+a5Im4U6GQX5cez1MGDHB3/Mk8fH194coSUTUtH134gpeA5LWemALrlDCRsfdSbw2
+G2oeM++LQIDx2VcKfRKWfqvKhC1Ajp5FdiZw6Z7lo6+BXFHKSVupSjKAhtIdT4gj
+RVhPy7IzR78PM8sLvDnqD6CyTHtuXQ==
+=7p/R
+-----END PGP SIGNATURE-----
+
+--RnxXMyWEPIZsopkG--
