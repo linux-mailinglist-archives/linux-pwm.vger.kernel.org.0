@@ -2,129 +2,128 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D72A3572D
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 Jun 2019 08:49:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1F7D358C2
+	for <lists+linux-pwm@lfdr.de>; Wed,  5 Jun 2019 10:40:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfFEGtw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 5 Jun 2019 02:49:52 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40461 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfFEGtw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 5 Jun 2019 02:49:52 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p11so13380963wre.7
-        for <linux-pwm@vger.kernel.org>; Tue, 04 Jun 2019 23:49:51 -0700 (PDT)
+        id S1726824AbfFEIkB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 5 Jun 2019 04:40:01 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:32776 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbfFEIkA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 5 Jun 2019 04:40:00 -0400
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.60,550,1549954800"; 
+   d="scan'208";a="35658394"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 05 Jun 2019 01:40:00 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex03.mchp-main.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 5 Jun 2019 01:39:59 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Wed, 5 Jun 2019 01:39:59 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Aa9SiEOP57dMUPIPXZ4uRkPtqSgf6jJ4AGTncZG28+8=;
-        b=zi+4AOGqVMCKl+mid40KDQdfPs+xU211Ce0sh8e2CuDwew50rwR7HmE9RNsXOpW38J
-         7nnLm9odQTjC/LvSmcEj3vtRmQ0dK+u2BHtiWxamIssDnHEsuvkR9OdSBvkKwltKKILD
-         YIqkE3sdv4UGDkYJIfhmh2vYVKOLpEXRD0bEV1YB3GAZlTQZpLJApMRHd+Knh2tb3kYv
-         Tr/5XLuDlozOjb/5OGBOh2EDP71Ysw9vzOHMeSQZmoveZpw1Oo3LEEgP16hPmkbb+nQ0
-         Ur+k/LHdXxpVmQJLDfgoejyaW6uiZdPgGrfWtIcaet7s1PmOmI2b5Y1NW8XHmSTPZMqh
-         SEew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Aa9SiEOP57dMUPIPXZ4uRkPtqSgf6jJ4AGTncZG28+8=;
-        b=kiqN8aEMblsjTvXAb0amwJrsLgnEOrNvNer63NX4uURm3kypaskrlkukfrdUeo3xUM
-         BchbYgTEJITWIPGPt82Slhlpl0awr8nbF2i16aX7n+G2U3LncOUfkCS8Rmwcbyr/yMlD
-         5FzR20dqR+s3kCLeRHETxhqqfChO36nSCBW9PdOUrpq8SaeZjzVOfGRCjlkcmurhiDec
-         /KZKfC3kiXFTzYnIEn7VLKz5bEohwSkW0t7uppwSAUZkWcXBedZ1/t+3QEJ40lv6K1fs
-         Xod+CwJWmkxjc+0PB+EliW73KPO3lg1vWCo4i7Gil60hUxy/Qeq2EikLcpcw+4lsQqYf
-         5xAQ==
-X-Gm-Message-State: APjAAAUcw0JgopFmYDGOqJ0rwVucVWfVwEpfoy5ikwMCJe2AbmNFQbsl
-        968QJaH+/jQHR87rNRlPLUPatxBqIME=
-X-Google-Smtp-Source: APXvYqwajN0uRRCoaJnBR/tXaECbZNfMRnmng7+jNtUyT+LwmBN5T6WdLNxU3OssrQaDRvfxZEYoPQ==
-X-Received: by 2002:a5d:6406:: with SMTP id z6mr8042948wru.87.1559717390470;
-        Tue, 04 Jun 2019 23:49:50 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id s9sm17126517wmc.1.2019.06.04.23.49.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Jun 2019 23:49:49 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 07:49:48 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Claudiu.Beznea@microchip.com
-Cc:     bbrezillon@kernel.org, airlied@linux.ie, daniel@ffwll.ch,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        Ludovic.Desroches@microchip.com, thierry.reding@gmail.com,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sZ4kuQTYUGt9Re2dSCz1OsSrPeQ3KrZk3vR8EDZGnjs=;
+ b=mk3PlU3jHSkNsBs5aaz5xzCuVum11zhv3rE6OW/yeE+lGR5LzkjSaY2cUhU4ZOC0gngXYIpYmi1Je2xJjtwjfSc0PmugPcauYGF7Y0If92Te6ipv2WHnY4Pvk/D/XivfBGA+7OrPSRoTW9DURikH+vfopjVMdCNYyJbpW1UvXtM=
+Received: from MWHPR11MB1549.namprd11.prod.outlook.com (10.172.54.17) by
+ MWHPR11MB1326.namprd11.prod.outlook.com (10.169.232.135) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Wed, 5 Jun 2019 08:39:54 +0000
+Received: from MWHPR11MB1549.namprd11.prod.outlook.com
+ ([fe80::316b:7774:8db6:30ec]) by MWHPR11MB1549.namprd11.prod.outlook.com
+ ([fe80::316b:7774:8db6:30ec%7]) with mapi id 15.20.1943.018; Wed, 5 Jun 2019
+ 08:39:54 +0000
+From:   <Claudiu.Beznea@microchip.com>
+To:     <sam@ravnborg.org>
+CC:     <thierry.reding@gmail.com>, <linux-pwm@vger.kernel.org>,
+        <alexandre.belloni@bootlin.com>, <bbrezillon@kernel.org>,
+        <airlied@linux.ie>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <Ludovic.Desroches@microchip.com>,
+        <daniel@ffwll.ch>, <linux-arm-kernel@lists.infradead.org>
 Subject: Re: [RESEND][PATCH v3 0/6] add LCD support for SAM9X60
-Message-ID: <20190605064948.GI4797@dell>
+Thread-Topic: [RESEND][PATCH v3 0/6] add LCD support for SAM9X60
+Thread-Index: AQHU+2NzxFOsw6p3b0iYuTBfPVB4RaZgDjOAgCvdRQCAAF3mAIAAtEsA
+Date:   Wed, 5 Jun 2019 08:39:54 +0000
+Message-ID: <b0c867a3-4bb1-4e3d-cfa1-803c5a8bd607@microchip.com>
 References: <1556195748-11106-1-git-send-email-claudiu.beznea@microchip.com>
+ <20190507182713.GA16862@ravnborg.org>
+ <c361b013-2d98-76e3-d30f-cec83000933c@microchip.com>
+ <20190604215424.GA1959@ravnborg.org>
+In-Reply-To: <20190604215424.GA1959@ravnborg.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR0701CA0035.eurprd07.prod.outlook.com
+ (2603:10a6:800:90::21) To MWHPR11MB1549.namprd11.prod.outlook.com
+ (2603:10b6:301:c::17)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tagtoolbar-keys: D20190605113942134
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c743e925-6302-4e2f-aa4a-08d6e991616f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR11MB1326;
+x-ms-traffictypediagnostic: MWHPR11MB1326:
+x-microsoft-antispam-prvs: <MWHPR11MB1326D74F8A03D2FC0CDC7CFE87160@MWHPR11MB1326.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 00594E8DBA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(136003)(39860400002)(376002)(366004)(199004)(189003)(51914003)(54534003)(99286004)(72206003)(25786009)(76176011)(102836004)(52116002)(53936002)(6246003)(54906003)(6436002)(386003)(3846002)(6506007)(53546011)(14454004)(86362001)(6116002)(4326008)(478600001)(31686004)(68736007)(6512007)(8676002)(81156014)(316002)(4744005)(5660300002)(2906002)(8936002)(229853002)(6916009)(81166006)(305945005)(7416002)(6486002)(7736002)(31696002)(66946007)(66556008)(476003)(66446008)(64756008)(486006)(11346002)(446003)(2616005)(26005)(186003)(71190400001)(71200400001)(66066001)(256004)(36756003)(14444005)(73956011)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1326;H:MWHPR11MB1549.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: M1yxJD/fVKbJnYeHu3n+jVJgevYSam8IO4vG78CJ0uyYzDrupTg6oAmq73fJLejTzF5egI/R9hVx1fSB5WT5VMLaHBlFkereLI+/UmDzzyojkRn1SchKRyRb/ILXKWHnH74TiZoAy5fJDdnu9puYunoYDpjSE/v9ixLO9gtOCMJEK/xBKi+eUXJAFSa1bqqOp2RpRSGdrBiEdcgubzyK9IeB/WtaZ9SbjhKBpCFIdjEMrCxJgzZth5vZGDiTfGgn0ao1mx3mI3Bpj4IQzNyaCzO3Ni1OQt8XTUQvayzpzuJTak0A3UlBUtn204guwj7GEI8y9ZmoMPw0lPzsZz0xCn1rKgwnAt1w+n26lxHyTxmm7fnTp3SikuQJbOn2WWvQDhJQCxCUD5fQXTetKSUVXtWd18T/G0dWDmMzafJDQik=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FEB6224F58D15849822188E05B50093F@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1556195748-11106-1-git-send-email-claudiu.beznea@microchip.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c743e925-6302-4e2f-aa4a-08d6e991616f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2019 08:39:54.1417
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: claudiu.beznea@microchip.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1326
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, 25 Apr 2019, Claudiu.Beznea@microchip.com wrote:
-
-> From: Claudiu Beznea <claudiu.beznea@microchip.com>
-> 
-> Hi,
-> 
-> These patches adds support for SAM9X60's LCD controller.
-> 
-> First patches add option to specify if controller clock source is fixed.
-> Second patch avoid a variable initialization in atmel_hlcdc_crtc_mode_set_nofb().
-> The 3rd add compatibles in pwm-atmel-hlcdc driver.
-> The 4th patch enables sys_clk in probe since SAM9X60 needs this.
-> Specific support was added also in suspend/resume hooks.
-> The 5th patch adds SAM9X60's LCD configuration and enabled it.
-> 
-> I took the changes of this series and introduced also a fix
-> (this is the 6th patch in this series) - if you want to send it separately
-> I would gladly do it.
-> 
-> I resend this to also include Lee Jones for pwm-atmel-hlcdc changes.
-> 
-> Thank you,
-> Claudiu Beznea
-> 
-> Changes in v3:
-> - keep compatible string on patch 3/6 on a single line (I keep here a tab
->   in front of ".compatible" to be aligned with the rest of the code in
->   atmel_hlcdc_dt_ids[])
-> - patches 4/7 and 3/7 from v2 were applied so remove them from this version
-> - add a fix for atmel_hlcdc (patch 6/6)
-> 
-> Changes in v2:
-> - use "|" operator in patch 1/7 to set ATMEL_HLCDC_CLKSEL on cfg
-> - collect Acked-by, Reviewed-by tags
-> 
-> Claudiu Beznea (4):
->   drm: atmel-hlcdc: add config option for clock selection
->   drm: atmel-hlcdc: avoid initializing cfg with zero
->   pwm: atmel-hlcdc: add compatible for SAM9X60 HLCDC's PWM
->   drm/atmel-hclcdc: revert shift by 8
-> 
-> Sandeep Sheriker Mallikarjun (2):
->   drm: atmel-hlcdc: enable sys_clk during initalization.
->   drm: atmel-hlcdc: add sam9x60 LCD controller
-> 
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c  |  18 ++--
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c    | 120 +++++++++++++++++++++++-
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h    |   2 +
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c |   2 +-
->  drivers/pwm/pwm-atmel-hlcdc.c                   |   1 +
->  5 files changed, 132 insertions(+), 11 deletions(-)
-
-Why is this being sent to me?
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+DQoNCk9uIDA1LjA2LjIwMTkgMDA6NTQsIFNhbSBSYXZuYm9yZyB3cm90ZToNCj4gSGkgQ2xhdWRp
+dS4NCj4gDQo+IE9uIFR1ZSwgSnVuIDA0LCAyMDE5IGF0IDA0OjE4OjMzUE0gKzAwMDAsIENsYXVk
+aXUuQmV6bmVhQG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+PiBIaSBTYW0sDQo+Pg0KPj4gT24gMDcu
+MDUuMjAxOSAyMToyNywgU2FtIFJhdm5ib3JnIHdyb3RlOg0KPj4+IEV4dGVybmFsIEUtTWFpbA0K
+Pj4+DQo+Pj4NCj4+PiBIaSBUaGllcnJ5Lg0KPj4+DQo+Pj4+ICAgcHdtOiBhdG1lbC1obGNkYzog
+YWRkIGNvbXBhdGlibGUgZm9yIFNBTTlYNjAgSExDREMncyBQV00NCj4+PiBPSyB0byBhZGQgdGhl
+ICJwd206IGF0bWVsLWhsY2RjOiBhZGQgY29tcGF0aWJsZSBmb3IgU0FNOVg2MCBITENEQydzIFBX
+TSINCj4+PiBwYXRjaCB2aWEgZHJtLW1pc2M/DQo+Pj4gVGhlbiB3ZSBjYW4gYWRkIGFsbCA2IHBh
+dGNoZXMgaW4gb25lIGdvLg0KPj4NCj4+IFNpbmNlIHdlIGRvbid0IGhhdmUgYW4gYW5zd2VyIGZy
+b20gVGhpZXJyeSB0aWxsIG5vdywgZG8geW91IHRoaW5rIGl0IGNvdWxkDQo+PiBiZSBmZWFzaWJs
+ZSB0byB0YWtlIHRoZSByZXN0IG9mIHRoZSBwYXRjaGVzIGluIHRoaXMgc2VyaWVzPyBBZnRlciB0
+aGF0IEkNCj4+IHdpbGwgcmUtc2VuZCB0aGUgUFdNIHBhdGNoIHRvIFBXTSBsaXN0Lg0KPiANCj4g
+VGhhbmtzIGZvciB0aGUgcmVtaW5kZXIuDQo+IA0KPiBQYXRjaGVzIDEsMiBhbmQgNCw1LDYgYXBw
+bGllZCB0byBkcm0tbWlzYy1uZXh0Lg0KPiANCj4gUmV3b3JkZWQgY2hhbmdlbG9nIGEgYml0IGlu
+IHBhdGNoIDYuDQoNClRoYW5rIHlvdSwNCkNsYXVkaXUNCg0KPiANCj4gCVNhbQ0KPiANCg==
