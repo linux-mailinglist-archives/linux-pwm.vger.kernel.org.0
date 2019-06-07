@@ -2,74 +2,48 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3302E388CF
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Jun 2019 13:18:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E96CD39104
+	for <lists+linux-pwm@lfdr.de>; Fri,  7 Jun 2019 17:57:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbfFGLSl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 7 Jun 2019 07:18:41 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:54007 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728073AbfFGLSl (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 7 Jun 2019 07:18:41 -0400
-X-Originating-IP: 90.88.159.246
-Received: from localhost (aaubervilliers-681-1-40-246.w90-88.abo.wanadoo.fr [90.88.159.246])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id EE8FC4000B;
-        Fri,  7 Jun 2019 11:18:38 +0000 (UTC)
-Date:   Fri, 7 Jun 2019 13:18:38 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Mark Rutland <mark.rutland@arm.com>,
+        id S1731044AbfFGPoV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 7 Jun 2019 11:44:21 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:48028 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731031AbfFGPoU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 7 Jun 2019 11:44:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1559922256; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=nn6RIORPQvEj4MNZ9mPFLhw4J2PhKsLEWf+gGxpQV0I=;
+        b=VQmtVJAJrh89fwCdB4/nVjLe9gVObowaj6Xkf0c5wFOOYBGIZtPfcnaIkwDrGjaRBzGBG7
+        h+BHxB/Zsw0wrLNpBJE0ummHguYkMgK5ys/Ab3B6IijcYZYh6ZE5+PLMCyuRX6FsDc+0tx
+        7zsaTTMe0O83PIQek6KTqJ/EEbrnpJQ=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: pwm: Convert Allwinner PWM to a schema
-Message-ID: <20190607111838.xlx74cvcfhaob3wf@flea>
-References: <20190516120848.25007-1-maxime.ripard@bootlin.com>
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/6] PWM JZ4740 fixes and cleanups
+Date:   Fri,  7 Jun 2019 17:44:04 +0200
+Message-Id: <20190607154410.10633-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fsx2qrso5t2rhcip"
-Content-Disposition: inline
-In-Reply-To: <20190516120848.25007-1-maxime.ripard@bootlin.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Thierry,
 
---fsx2qrso5t2rhcip
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I rebased my patchset on top of v5.2-rc3 since it didn't apply anymore.
+Patches 1-4 are unmodified. The old patch 5 added a SPDX license
+notifier, but somebody else added it in -rc3 apparently, so I dropped
+it. In the meantime I added two more cleanups.
 
-On Thu, May 16, 2019 at 02:08:48PM +0200, Maxime Ripard wrote:
-> The Allwinner SoCs have a PWM controller supported in Linux, with a
-> matching Device Tree binding.
->
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for that controller over to a YAML schemas.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Cheers
+-Paul
 
-Ping?
 
-Maxime
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---fsx2qrso5t2rhcip
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXPpIDgAKCRDj7w1vZxhR
-xdluAP41N1Jp3Dwm49Xfan9JPKoR2ntx+N8mCFZ4hxJNzCClgwEA/b+vciuNG8XX
-hSmZYYIlPhekGqLpadsETIfXDVafiAI=
-=BXUr
------END PGP SIGNATURE-----
-
---fsx2qrso5t2rhcip--
