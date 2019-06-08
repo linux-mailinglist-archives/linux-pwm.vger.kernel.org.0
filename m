@@ -2,78 +2,114 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A062E39113
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Jun 2019 17:57:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49BE739B6B
+	for <lists+linux-pwm@lfdr.de>; Sat,  8 Jun 2019 09:02:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730649AbfFGP4a (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 7 Jun 2019 11:56:30 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:48150 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731066AbfFGPoZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 7 Jun 2019 11:44:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1559922263; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Lyfxz9ZFMEgaN/ge8mu7C3B/fHgwTl4wfi0Crw5xZyg=;
-        b=B+SxfZQvKKJ0G1xakg+RrSsSTb/IaRp/FPOPYpUXf1ALKKrVlVTXNIDrAEuHM3eha0k/YQ
-        JkRvV4F6FcbXZQMJcMRSNKaMzrwsll7F138nPI6CSCc9wQNW6nmD9Geq15Dys4lcj40a11
-        xHG9sSsvEgF6iiN8Y0YpQ7BUDfA/xAY=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 6/6] pwm: jz4740: Use __init_or_module and __exit for .probe and .remove
-Date:   Fri,  7 Jun 2019 17:44:10 +0200
-Message-Id: <20190607154410.10633-7-paul@crapouillou.net>
-In-Reply-To: <20190607154410.10633-1-paul@crapouillou.net>
-References: <20190607154410.10633-1-paul@crapouillou.net>
+        id S1726473AbfFHHC4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 8 Jun 2019 03:02:56 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:11289 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726042AbfFHHC4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 8 Jun 2019 03:02:56 -0400
+X-UUID: de7b22cbbe734bdc890c08b46d4caf10-20190608
+X-UUID: de7b22cbbe734bdc890c08b46d4caf10-20190608
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 231119346; Sat, 08 Jun 2019 15:02:36 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sat, 8 Jun
+ 2019 15:02:34 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
+ MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1395.4 via Frontend Transport; Sat, 8 Jun 2019 15:02:33 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Jitao Shi <jitao.shi@mediatek.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <ck.hu@mediatek.com>, <stonea168@163.com>
+Subject: [1/2] dt-bindngs: display: panel: Add BOE tv101wum-nl6 panel bindings
+Date:   Sat, 8 Jun 2019 15:02:29 +0800
+Message-ID: <20190608070230.55381-1-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-MTK:  N
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This allows the probe function to be dropped after the kernel finished
-its initialization, in the case where the driver was not compiled as a
-module.
+Add documentation for boe tv101wum-n16 panel.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 ---
+ .../display/panel/boe,tv101wum-nl6.txt        | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
 
-Notes:
-    v2: New patch
-
- drivers/pwm/pwm-jz4740.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
-index f901e8a0d33d..1b5077825721 100644
---- a/drivers/pwm/pwm-jz4740.c
-+++ b/drivers/pwm/pwm-jz4740.c
-@@ -145,7 +145,7 @@ static const struct pwm_ops jz4740_pwm_ops = {
- 	.owner = THIS_MODULE,
- };
- 
--static int jz4740_pwm_probe(struct platform_device *pdev)
-+static int __init_or_module jz4740_pwm_probe(struct platform_device *pdev)
- {
- 	struct jz4740_pwm_chip *jz4740;
- 
-@@ -169,7 +169,7 @@ static int jz4740_pwm_probe(struct platform_device *pdev)
- 	return pwmchip_add(&jz4740->chip);
- }
- 
--static int jz4740_pwm_remove(struct platform_device *pdev)
-+static int __exit jz4740_pwm_remove(struct platform_device *pdev)
- {
- 	struct jz4740_pwm_chip *jz4740 = platform_get_drvdata(pdev);
- 
+diff --git a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
+new file mode 100644
+index 000000000000..2a84735d742d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
+@@ -0,0 +1,34 @@
++Boe Corporation 10.1" WUXGA TFT LCD panel
++
++Required properties:
++- compatible: should be "boe,tv101wum"
++- reg: the virtual channel number of a DSI peripheral
++- enable-gpios: a GPIO spec for the enable pin
++- pp1800-supply: core voltage supply
++- avdd-supply: 
++- avee-supply: 
++- backlight: phandle of the backlight device attached to the panel
++
++The device node can contain one 'port' child node with one child
++'endpoint' node, according to the bindings defined in
++media/video-interfaces.txt. This node should describe panel's video bus.
++
++Example:
++&dsi {
++	...
++	panel@0 {
++		compatible = "boe,tv101wum-nl6";
++		reg = <0>;
++		enable-gpios = <&pio 45 0>;
++		avdd-supply = <&ppvarn_lcd>;
++		avee-supply = <&ppvarp_lcd>;
++		pp1800-supply = <&pp1800_lcd>;
++		backlight = <&backlight_lcd0>;
++		status = "okay";
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&dsi_out>;
++			};
++		};
++	};
++};
+\ No newline at end of file
 -- 
-2.21.0.593.g511ec345e18
+2.21.0
 
