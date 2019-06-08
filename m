@@ -2,48 +2,48 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BDB153A115
-	for <lists+linux-pwm@lfdr.de>; Sat,  8 Jun 2019 20:07:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 332A53A104
+	for <lists+linux-pwm@lfdr.de>; Sat,  8 Jun 2019 20:07:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbfFHSHV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 8 Jun 2019 14:07:21 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44540 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727220AbfFHSGl (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 8 Jun 2019 14:06:41 -0400
-Received: by mail-wr1-f68.google.com with SMTP id b17so5195462wrq.11;
-        Sat, 08 Jun 2019 11:06:41 -0700 (PDT)
+        id S1727427AbfFHSGp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 8 Jun 2019 14:06:45 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33733 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727392AbfFHSGn (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 8 Jun 2019 14:06:43 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so5252294wru.0;
+        Sat, 08 Jun 2019 11:06:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ULxtsw8dujAsYVt5zC7SDOdydkdqEp/VduAIrsjyFQE=;
-        b=SBHxrcDiscWsMPlgUe1eue3IB7jYsIcP8LOxKnBLi/mcoN0HQC0c4nr5sRBPn+qmQM
-         HQnASudTpyUH2PPAOdA5RAnqmEKhS69NmcTqDzT44DZrxcP533fDz4mFEKQtvzW5bk++
-         a+wuFcmv24SnXfkCFwObZfODttniBC8DNtWs9pxov4CzBcUZWO9YnFCUGQP1PvmHtV1y
-         3HE7Qo1bZXlX/hsv45hdM/CITvIsAzcYcM8C7/5OH0YtynfhfrEx2TAtQqhdVYw6IHVU
-         y62BsUxGetOMUdms3Xu7E8NxIpaBj90SC6YPtntZO9aOJujrK5dVYn+uFlkZAiw7RjR1
-         zIsA==
+        bh=E2Kzd+gfP4FNDRd81CbW9jNNxdcKoqrgoqbenZAf8Uw=;
+        b=XOC6FG3RL+XqM8IRylgcSr4c7yPG45c3Mfkp9EVn9AnzEbDjSC/LqzGfKlU7u+G1Oe
+         D77RNYPyjHgGVLDchXgtmbkcBw07+e8Qj02XyS5lAiGJeNICL1BUF89eCiXxTHV37P0U
+         LTf3vvrYNE1/YZ0TlbGuepZBJWRUcLuJoGiGjPlu9B/cCOUgwNDjU2fX5C2fv96/P/L9
+         Qtidz3IHRMBBY9MgU+hoAJw0NAd4bzAL5qk6FnbXWCjoJnauoA/p3kmhbvfwNSUVZ6Wr
+         1eTJ13jRPufn7jCSAmkfPWUyuOfR5tA7t+Py7FRQai3NjwHVAROvxUIrtEgWDgv5WhgY
+         Yulw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ULxtsw8dujAsYVt5zC7SDOdydkdqEp/VduAIrsjyFQE=;
-        b=Kva1VPCW2qtq1nR8Sx0c92vuxNeAPDzd/l7bTqMVrb4hGsGwXsQ7W4sW6JNZvoypy3
-         DU9NH6pTLzThsu2dJP0sYoHPQaZ6CZI89ixkKlduaFvWtXQijB7NzlBIND/WgVxHfho8
-         5cJhUarylhPbF2EvfzEuN4lm84sbugkgTRtVaJHVMN2nan30j2kKcvHHyxYOUQ3h/GDM
-         xIR6tNvi8eWSu6KwOy483i/0xiJzqBXacHzYcq8Q/MF3VsYiaghzAEfCuXtFbiYYwPUe
-         ado1CtvEfN+5fqJRaGDUmZQe4/mkpwlHwVZud9Rbc8HUpunPcaJK7fMKznXBEzF6UpCP
-         zm2A==
-X-Gm-Message-State: APjAAAX0VIhh2hgtLIu34bF/VRe3TYx5HOv05zIpLT2H+Z7TvtJe9OLb
-        cys95trDT4/xcDoG9I43Jeg=
-X-Google-Smtp-Source: APXvYqwpgkhDaAIFoY4aTBBevnRJflkVdXiiIro0E7UPi1OhSmsgF91My8rGM24/7ZxDIpgiuELmag==
-X-Received: by 2002:adf:f3cc:: with SMTP id g12mr36157030wrp.149.1560017200358;
-        Sat, 08 Jun 2019 11:06:40 -0700 (PDT)
+        bh=E2Kzd+gfP4FNDRd81CbW9jNNxdcKoqrgoqbenZAf8Uw=;
+        b=Rq9CH4/KfVpEXFW8v/zEohK+ez8Zn8ds/Lww7elBUb+A9GFcVg5+kKwN8l0DIOTb9M
+         fg9JZsrhDb4jT2hNIU4mV3ssctwMuYvJS+mwTIZv1HO89bei+q7/TuwYVqO0DIA61O6b
+         nZdIBrCbxQHJd3c4NPLDgo0QsofAjATdkWfR4buz3C0BvbMaoIzkv8t7E0kdQiJJVTlg
+         XZPUQE56ydFvEEbWCO6O7ez5Phnvw8RkfXD3NcB/oztSDTFLPjq2CSwa6nfSV6lf92mu
+         wbqVHmRT+XqIRn97/BUa7uKOVNy6nRpB1HmrgbzTeiy/ScfAg3iCFZZW95ogrYMGyKiK
+         DV+w==
+X-Gm-Message-State: APjAAAWCOYQq5EhN2jFv1ROf4JVk6L4XdWRYYZjlsSNFpHnQ7Gd+t2Nv
+        ODHyYXODXh+8//XMjmx384YapavE
+X-Google-Smtp-Source: APXvYqzskCpgZHK48bBTIniJ6+KvBh8PtZJL6Yq+Y5wx77jNwRNxtRKXhTqO6wWBOspc2m0wd0b3Ug==
+X-Received: by 2002:a5d:4603:: with SMTP id t3mr14944740wrq.315.1560017201326;
+        Sat, 08 Jun 2019 11:06:41 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300F133DDA400D12EFF43FED1E981.dip0.t-ipconnect.de. [2003:f1:33dd:a400:d12e:ff43:fed1:e981])
-        by smtp.googlemail.com with ESMTPSA id c7sm5143345wrp.57.2019.06.08.11.06.39
+        by smtp.googlemail.com with ESMTPSA id c7sm5143345wrp.57.2019.06.08.11.06.40
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 08 Jun 2019 11:06:39 -0700 (PDT)
+        Sat, 08 Jun 2019 11:06:40 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
         thierry.reding@gmail.com
@@ -51,9 +51,9 @@ Cc:     u.kleine-koenig@pengutronix.de,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 06/14] pwm: meson: pass struct pwm_device to meson_pwm_calc()
-Date:   Sat,  8 Jun 2019 20:06:18 +0200
-Message-Id: <20190608180626.30589-7-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 07/14] pwm: meson: add the meson_pwm_channel data to struct meson_pwm
+Date:   Sat,  8 Jun 2019 20:06:19 +0200
+Message-Id: <20190608180626.30589-8-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190608180626.30589-1-martin.blumenstingl@googlemail.com>
 References: <20190608180626.30589-1-martin.blumenstingl@googlemail.com>
@@ -64,51 +64,114 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-meson_pwm_calc() is the last function that accepts a struct
-meson_pwm_channel. meson_pwm_enable(), meson_pwm_disable() and
-meson_pwm_apply() for example are all taking a struct pwm_device as
-parameter. When they need the struct meson_pwm_channel these functions
-simply call pwm_get_chip_data() internally.
+Make struct meson_pwm_channel accessible from struct meson_pwm.
 
-Make meson_pwm_calc() consistent with the other functions in the
-meson-pwm driver by passing struct pwm_device to it as well. The value
-of the "id" parameter is actually pwm->hwpwm, but the driver never read
-the "id" parameter, which is why there's no replacement for it in the
-new code.
+PWM core has a limitation: per-channel data can only be set after
+pwmchip_add() is called. However, pwmchip_add() internally calls
+pwm_ops.get_state(). If pwm_ops.get_state() needs access to the
+per-channel data it has to obtain it from struct pwm_chip and struct
+pwm_device's hwpwm information.
 
-No functional changes.
+Add a struct meson_pwm_channel for each PWM channel to struct meson_pwm
+so the pwm_ops.get_state() callback can be implemented as it needs
+access to the clock from struct meson_pwm_channel.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/pwm/pwm-meson.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pwm/pwm-meson.c | 25 ++++++++++---------------
+ 1 file changed, 10 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index 39ea119add7b..d6eb4d04d5c9 100644
+index d6eb4d04d5c9..a4ae3587a3ce 100644
 --- a/drivers/pwm/pwm-meson.c
 +++ b/drivers/pwm/pwm-meson.c
-@@ -114,10 +114,10 @@ static void meson_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- 		clk_disable_unprepare(channel->clk);
+@@ -37,6 +37,8 @@
+ #define MISC_B_EN		BIT(1)
+ #define MISC_A_EN		BIT(0)
+ 
++#define MESON_NUM_PWMS		2
++
+ static const unsigned int mux_reg_shifts[] = {
+ 	MISC_A_CLK_SEL_SHIFT,
+ 	MISC_B_CLK_SEL_SHIFT
+@@ -62,6 +64,7 @@ struct meson_pwm_data {
+ struct meson_pwm {
+ 	struct pwm_chip chip;
+ 	const struct meson_pwm_data *data;
++	struct meson_pwm_channel channels[MESON_NUM_PWMS];
+ 	void __iomem *base;
+ 	/*
+ 	 * Protects register (write) access to the REG_MISC_AB register
+@@ -435,8 +438,7 @@ static const struct of_device_id meson_pwm_matches[] = {
+ };
+ MODULE_DEVICE_TABLE(of, meson_pwm_matches);
+ 
+-static int meson_pwm_init_channels(struct meson_pwm *meson,
+-				   struct meson_pwm_channel *channels)
++static int meson_pwm_init_channels(struct meson_pwm *meson)
+ {
+ 	struct device *dev = meson->chip.dev;
+ 	struct clk_init_data init;
+@@ -445,7 +447,7 @@ static int meson_pwm_init_channels(struct meson_pwm *meson,
+ 	int err;
+ 
+ 	for (i = 0; i < meson->chip.npwm; i++) {
+-		struct meson_pwm_channel *channel = &channels[i];
++		struct meson_pwm_channel *channel = &meson->channels[i];
+ 
+ 		snprintf(name, sizeof(name), "%s#mux%u", dev_name(dev), i);
+ 
+@@ -480,18 +482,16 @@ static int meson_pwm_init_channels(struct meson_pwm *meson,
+ 	return 0;
  }
  
--static int meson_pwm_calc(struct meson_pwm *meson,
--			  struct meson_pwm_channel *channel,
-+static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
- 			  struct pwm_state *state)
+-static void meson_pwm_add_channels(struct meson_pwm *meson,
+-				   struct meson_pwm_channel *channels)
++static void meson_pwm_add_channels(struct meson_pwm *meson)
  {
-+	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
- 	unsigned int duty, period, pre_div, cnt, duty_cnt;
- 	unsigned long fin_freq = -1;
- 	u64 fin_ps;
-@@ -280,7 +280,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	if (state->period != channel->state.period ||
- 	    state->duty_cycle != channel->state.duty_cycle ||
- 	    state->polarity != channel->state.polarity) {
--		err = meson_pwm_calc(meson, channel, state);
-+		err = meson_pwm_calc(meson, pwm, state);
- 		if (err < 0)
- 			return err;
+ 	unsigned int i;
+ 
+ 	for (i = 0; i < meson->chip.npwm; i++)
+-		pwm_set_chip_data(&meson->chip.pwms[i], &channels[i]);
++		pwm_set_chip_data(&meson->chip.pwms[i], &meson->channels[i]);
+ }
+ 
+ static int meson_pwm_probe(struct platform_device *pdev)
+ {
+-	struct meson_pwm_channel *channels;
+ 	struct meson_pwm *meson;
+ 	struct resource *regs;
+ 	int err;
+@@ -509,18 +509,13 @@ static int meson_pwm_probe(struct platform_device *pdev)
+ 	meson->chip.dev = &pdev->dev;
+ 	meson->chip.ops = &meson_pwm_ops;
+ 	meson->chip.base = -1;
+-	meson->chip.npwm = 2;
++	meson->chip.npwm = MESON_NUM_PWMS;
+ 	meson->chip.of_xlate = of_pwm_xlate_with_flags;
+ 	meson->chip.of_pwm_n_cells = 3;
+ 
+ 	meson->data = of_device_get_match_data(&pdev->dev);
+ 
+-	channels = devm_kcalloc(&pdev->dev, meson->chip.npwm,
+-				sizeof(*channels), GFP_KERNEL);
+-	if (!channels)
+-		return -ENOMEM;
+-
+-	err = meson_pwm_init_channels(meson, channels);
++	err = meson_pwm_init_channels(meson);
+ 	if (err < 0)
+ 		return err;
+ 
+@@ -530,7 +525,7 @@ static int meson_pwm_probe(struct platform_device *pdev)
+ 		return err;
+ 	}
+ 
+-	meson_pwm_add_channels(meson, channels);
++	meson_pwm_add_channels(meson);
+ 
+ 	platform_set_drvdata(pdev, meson);
  
 -- 
 2.21.0
