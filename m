@@ -2,54 +2,55 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CCBF41703
-	for <lists+linux-pwm@lfdr.de>; Tue, 11 Jun 2019 23:38:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87A44417B4
+	for <lists+linux-pwm@lfdr.de>; Tue, 11 Jun 2019 23:59:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407677AbfFKViF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 11 Jun 2019 17:38:05 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40894 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407674AbfFKViF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 11 Jun 2019 17:38:05 -0400
-Received: by mail-pl1-f196.google.com with SMTP id a93so5669167pla.7
-        for <linux-pwm@vger.kernel.org>; Tue, 11 Jun 2019 14:38:04 -0700 (PDT)
+        id S2407788AbfFKV7C (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 11 Jun 2019 17:59:02 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45288 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407785AbfFKV7C (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 11 Jun 2019 17:59:02 -0400
+Received: by mail-pf1-f193.google.com with SMTP id s11so8255379pfm.12
+        for <linux-pwm@vger.kernel.org>; Tue, 11 Jun 2019 14:59:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=c/V5azhQK0NKG3CgTrOQr2YdB5nv03TCL7KtVGmmTnE=;
-        b=oIUVz20NxztwZIHdK3k65o0Fojj8X3TmNQgvsbpNbh+NJFEE9FTzcALPGexsN2u0lV
-         R4N/0/VHL69lIgdJo/Mavd44QxzYFnGkGyNM5SqP5YDejiSLqcxh4/bWKonb2Q9Rk44g
-         4lfQgqfTvNf3GlM1jKlbf4K51OOFbRZUH6njQ=
+        bh=STdR09JTplMSpZu8BTmSobDKkVojc1fyDlFwggPK8Uk=;
+        b=MR5Ygywl093uFDulviOIYvyfuuIg7LVcRCENxaahnbQl3TWTuyLFxmaN/CsCFje4ZW
+         lMOJpV5vlQByThnbSdpFW5pDrScHKNyi5Uayf6G9Qo/JGt6L3QsMwiyIsPBFjywBcNsB
+         KOnwwUTJm+TTD2GsLYgy//6zZNVAYMjKqx244=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=c/V5azhQK0NKG3CgTrOQr2YdB5nv03TCL7KtVGmmTnE=;
-        b=TDVzQGE2Ad01NTahCibRasUwMtdTajmwD1bfRUwnTQUEOg4u+2V7lvo2XwCB8mKIcg
-         7p6YraXT1mitomCnsn4YWWA6Geazw4QVbrwxljrn1AiG8x1mYTk35QQDRQMJpXNrM+Gm
-         CetvwfGXS4+KiAcu5dpjW7eYFUWOqS9WxzFWA62NZayRYRwTXxDGQPxDOaMXwTgPH46x
-         p7QI9jpci+EeQCm9dq2acyHjznTgHjhHUG25jxB8GFkjVqUKml0AVDh0OewUlrIkjueS
-         gstOGEK2EFfm55X8qJjGFRV+1Pv2iWGT8jK8hE75IaIa3onu1HEbNTgl1NMSPUHozAT8
-         cEuw==
-X-Gm-Message-State: APjAAAXqtVcA4uby+7KTY1Fe4XbweMuBvoyS4tErXq47WZryeMCPIpvn
-        RXNjlT9atgCmDUQPmbxyeZ6Tfw==
-X-Google-Smtp-Source: APXvYqw7YuxbYKqsmcBwdCJJBrsNVyyiE8CmkHa4T0LQVEl29ePKAtTry61J448brFzrtjCg2vAB6Q==
-X-Received: by 2002:a17:902:d695:: with SMTP id v21mr62285877ply.342.1560289084363;
-        Tue, 11 Jun 2019 14:38:04 -0700 (PDT)
+        bh=STdR09JTplMSpZu8BTmSobDKkVojc1fyDlFwggPK8Uk=;
+        b=q3eeoH8McO/YPWArMwnxdTUwb6R6lnIdSQqdVc1tcXvGn5fshyRdWdf97hVpNf9Cn3
+         wkYhwWggIJMjDP3OnlrfeojiiCiIIxQG247pPanASoi/zrwCk5xbvvK0GnGR7iABh+kQ
+         Ep6bEiMuzMALLZPDf4qaySoz6SQ4VXD1lGTghG1QlrgJVhbSZLJgjG0XkzCziPfcGpQY
+         yDE7epqSfzwEesglpE8dp3doJDkReApPi+a3pyJUD0biSvh2S9O5UsVT6yVf5omgnLt6
+         adTdniTRT0CuKICocJLXP9OwFXp7Sx1/wJEVe45pI/VYQBO5j9CvSMLHne4kSniG7Jv/
+         F2/g==
+X-Gm-Message-State: APjAAAXEBrL7QvMZQZrofyQa9x/549EHWtve2Zff1dA3KsleV2l7PSx8
+        n9tWXrvjo2MMmUHvh7+TaEX0tg==
+X-Google-Smtp-Source: APXvYqwNRiFSWTAdFHpr/jTf2FF34I6ZRq0BdECtRnB+Jk555Y9lQHvSTV1z1QBb+8m6aiHhXzbajQ==
+X-Received: by 2002:a17:90b:d8a:: with SMTP id bg10mr29155223pjb.92.1560290341471;
+        Tue, 11 Jun 2019 14:59:01 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id b128sm15771434pfa.165.2019.06.11.14.38.03
+        by smtp.gmail.com with ESMTPSA id m2sm15311952pgq.48.2019.06.11.14.59.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 14:38:03 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 14:38:01 -0700
+        Tue, 11 Jun 2019 14:59:00 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 14:58:59 -0700
 From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
+To:     Pavel Machek <pavel@ucw.cz>
 Cc:     Lee Jones <lee.jones@linaro.org>,
         Daniel Thompson <daniel.thompson@linaro.org>,
         Jingoo Han <jingoohan1@gmail.com>,
         Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
@@ -57,71 +58,54 @@ Cc:     Lee Jones <lee.jones@linaro.org>,
         linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org,
         Douglas Anderson <dianders@chromium.org>,
         Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pwm-backlight: Add 'max-brightness'
- property
-Message-ID: <20190611213801.GE137143@google.com>
+Subject: Re: [PATCH 2/2] backlight: pwm_bl: Get number of brightness levels
+ for CIE 1931 from the device tree
+Message-ID: <20190611215859.GF137143@google.com>
 References: <20190610233739.29477-1-mka@chromium.org>
- <20190611102851.GA16611@ulmo>
+ <20190610233739.29477-2-mka@chromium.org>
+ <20190611101843.GD7526@amd>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190611102851.GA16611@ulmo>
+In-Reply-To: <20190611101843.GD7526@amd>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Thierry,
+Hi Pavel,
 
-On Tue, Jun 11, 2019 at 12:28:51PM +0200, Thierry Reding wrote:
-> On Mon, Jun 10, 2019 at 04:37:38PM -0700, Matthias Kaehlcke wrote:
-> > Add an optional 'max-brightness' property, which is used to specify
-> > the number of brightness levels (max-brightness + 1) when the node
-> > has no 'brightness-levels' table.
+On Tue, Jun 11, 2019 at 12:18:43PM +0200, Pavel Machek wrote:
+> On Mon 2019-06-10 16:37:39, Matthias Kaehlcke wrote:
+> > Commit 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED
+> > linearly to human eye") uses pwm_period / hweight32(pwm_period) as
+> > as heuristic to determine the number of brightness levels when the DT
+> > doesn't provide a brightness level table. This heuristic is broken
+> > and can result in excessively large brightness tables.
 > > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> >  .../devicetree/bindings/leds/backlight/pwm-backlight.txt       | 3 +++
-> >  1 file changed, 3 insertions(+)
+> > Instead of using the heuristic try to retrieve the number of
+> > brightness levels from the device tree (property 'max-brightness'
+> > + 1). If the value is not specified use a default of 256 levels.
 > > 
-> > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> > index 64fa2fbd98c9..98f4ba626054 100644
-> > --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> > @@ -27,6 +27,9 @@ Optional properties:
-> >                              resolution pwm duty cycle can be used without
-> >                              having to list out every possible value in the
-> >                              brightness-level array.
-> > +  - max-brightness: Maximum brightness value. Used to specify the number of
-> > +                    brightness levels (max-brightness + 1) when the node
-> > +                    has no 'brightness-levels' table.
+> > Fixes: 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED linearly to human eye")
 > 
-> Back at the time when these bindings were defined we specifically didn't
-> add this because it was deemed impractical. That is, no real hardware is
-> actually capable of achieving useful results with a simplified
-> description like this.
-> 
-> Besides, we already have the num-interpolated-steps property which
-> should allow you to achieve the same thing:
-> 
-> 	brightness-levels = <0 255>;
-> 	default-brightness-level = <1>;
-> 	num-interpolated-steps = <255>;
+> I don't think this one is suitable for stable. I'm pretty sure the
+> heuristics works well for many boards, and you just replaced it with
+> another heuristics ("256").
 
-It doesn't achieve the same. With this configuration the device would
-have a table with 256 linearly increasing values, the intended use of
-the property is to provide the number of brightness levels to be used
-by the CIE 1931 algorithm to compute a brightness scale that is
-perceived as linear by the human eye. We could possibly treat a
-'brightness-levels' table with only two levels as special case and
-get the number of levels from it.
+whether the patch is suitable for stable/upstream is certainly
+debatable, in any case I'd argue the current heuristic is bogus and
+works by accident or at a cost:
 
-In any case from the discussion on "backlight: pwm_bl: Get number of
-brightness levels for CIE 1931 from the device tree" it might not be
-necessary to specify the number of levels in the DT.
+nlevels = period / hweight(period)
 
-> Though given the original discussion that we had around how backlight
-> hardware behaves, that doesn't seem like a good choice.
+w/ period = 131071 ns  (0x1FFFF)
 
+  nlevels = 131071 / 17 = 7710
 
+w/ period = 131072 ns (0x20000)
+
+  nlevels = 131072 / 1 = 131072
+
+and some PWMs use significantly higher periods like 1 ms or 10 ms.
