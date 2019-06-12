@@ -2,58 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DCB5A43080
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Jun 2019 21:59:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 659F74308F
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Jun 2019 22:01:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388669AbfFLT7d (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Jun 2019 15:59:33 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35821 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388521AbfFLT7c (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Jun 2019 15:59:32 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c6so7784922wml.0;
-        Wed, 12 Jun 2019 12:59:30 -0700 (PDT)
+        id S2389155AbfFLT7f (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Jun 2019 15:59:35 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34408 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388658AbfFLT7d (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Jun 2019 15:59:33 -0400
+Received: by mail-wr1-f67.google.com with SMTP id k11so50754wrl.1;
+        Wed, 12 Jun 2019 12:59:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gSCXfO4SZrHlREdSSaw8mmXbrGugYj3k3dCGPOAQii8=;
-        b=b5yvmRACWpqZ/mN/ykGbaGobmJoGlHZekESdaJ+IMrlyyO486QMrsD9N2cimWIO4dG
-         Kq+tWdh2lksKWf5OOkGBv8kWpJtVTyYTxgO5jkGDcfD3zruKUO/v+Y6hTLzpMZ3sD4jI
-         3eIvzVe7KE5gFjV57z7PQ53N9aaJRubZLPgVENh/O079qENraDUMbkWeMnLZRCAZSlaR
-         i7AJIZ5lJc/a+FysvG/zS0quCQKlZfchyH4/9CiNF4EhIELK80/GqmMomPJAqhSxAStJ
-         RQYLZpsXBIEW2BTaYaj6aAbYNDwTNRxCkc8ke5VpzvkcTKKZKlmlEkfMAl+jm/1+vjPs
-         UE4g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DbdAX0bV85Dko/n1L+nFmKMabI9Kh0fLOwLLV1IH53M=;
+        b=i98jcwEgONXb3ZOPIzPaDduImuV0oAvjS9qfSmC5tx3AcS2Ny/sC+OFo8VMuEFDyN9
+         8kO0wtjx655Rhp9mXl4zeUa2GVSWhqtq7n2yidRk4ED+WXElWp2iY11rpMjQvLzvS4rm
+         VoHVs7TMtYOj7i25xCkTxoJKzPkdS8smwL7tmtAkI/LrVrplmn1MW6jkMpTmzk5PGL17
+         8zn0ZraSMPZcl4EQFRuMmHyhziVAiswTUj4qoARxdWiVw8Ugj6A40BQSdzWhVHg+pF/f
+         GTZaz8DuBDTGXA4qWGfQZ+Bn/+bcO3zDmCfeARHURfoOn8UAqxoydYC1adaol1wSMEW5
+         snzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gSCXfO4SZrHlREdSSaw8mmXbrGugYj3k3dCGPOAQii8=;
-        b=rFvNQtoup7LzYQd4RO4J4AM4jEeVUE31PInxbXmCxOawcCRjk8zAjizePxQ7BD2ryN
-         nuZUwcMk1VV9atT9DxsfSaongnGFaHEqqgFciVwIZaibAKaPxr3sJDECr2lWJcz+bl0L
-         gsEcbMx+kBFosXMWIrOtbsZkSpR8WbX6EKA4JqlwaDf1Kj2Bk7g3ylxk0yKp1rtIMe2Q
-         6FtgslkkLm/AvChXZhhI7lq1EIRXs51uqfNDEJ2XvpwRUf+fFHnHVYwN9o/UnEH2nKTt
-         0qmujLbYIoycFf++YHMSVO6q5EkPdVMkhdYtGgIx4CBuqqD9DDURaiVQA8qWSVQAkS6+
-         oZsQ==
-X-Gm-Message-State: APjAAAW+pi6ycrnIpO5RiISG+W/FBcCZOq7MlgZLTxijW3JmiQZTij+G
-        sOLt7wpOu81vF3D9sMhUfVA=
-X-Google-Smtp-Source: APXvYqxx6WQ0Q2TthI9hcw9mcaNNk72tal9lYxSvbzj/rzuhF1Bm90n0CNI5eUROu1nDamDovAo5Tw==
-X-Received: by 2002:a1c:4b1a:: with SMTP id y26mr601629wma.105.1560369569855;
-        Wed, 12 Jun 2019 12:59:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DbdAX0bV85Dko/n1L+nFmKMabI9Kh0fLOwLLV1IH53M=;
+        b=QDB91pjWwIp1V59jGejr4lw0xFWdyB666c1cMb2vH+SSjLSfxNX4LRdZ7FopF3fD0C
+         uF4uVmAHUXvDA06GNIv8y9ia3amhlyc/RvX/m59ZVtMe7IIyxM7DUZesVz4xg8QQHBP3
+         sEVuydd7JAEQCOVffsyfK4OGDMrg0qFdOXLJ6aD4Z4SmbmFiu0zvw+D5tgEDA+SxeZC8
+         qIBQ3kXbiztPOkOtb+E+O2HiDMk8/rHDzXFaEHicULy64Sdpeojochf7AFRopOoUfhpj
+         lB18QWAi48XFv8DAW+J2JEh/aIDG5TIREP9Eq+psum4n5olVh8XOTs0YGnp0mWi2UsYz
+         B1LQ==
+X-Gm-Message-State: APjAAAWVAYsz6UjzxovP63dDj+VCbocX3y9FIr7VVF/9MgHL9w0I0sVQ
+        wkKDa8dW20JnhOINcO0SYX0=
+X-Google-Smtp-Source: APXvYqz8FPKyN4u6g2XV8ExWl7unahV+eyESFia516NWg/4YKZGCKK1sV/9qmYUtmXKVI4t10SWXMg==
+X-Received: by 2002:adf:a38b:: with SMTP id l11mr3832905wrb.325.1560369571376;
+        Wed, 12 Jun 2019 12:59:31 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300F133DDA400428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:33dd:a400:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id f10sm1026745wrg.24.2019.06.12.12.59.28
+        by smtp.googlemail.com with ESMTPSA id f10sm1026745wrg.24.2019.06.12.12.59.29
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 12:59:28 -0700 (PDT)
+        Wed, 12 Jun 2019 12:59:30 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
         thierry.reding@gmail.com
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         u.kleine-koenig@pengutronix.de, narmstrong@baylibre.com,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 00/14] pwm-meson: cleanups and improvements
-Date:   Wed, 12 Jun 2019 21:58:57 +0200
-Message-Id: <20190612195911.4442-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 01/14] pwm: meson: unify the parameter list of meson_pwm_{enable,disable}
+Date:   Wed, 12 Jun 2019 21:58:58 +0200
+Message-Id: <20190612195911.4442-2-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190612195911.4442-1-martin.blumenstingl@googlemail.com>
+References: <20190612195911.4442-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,101 +64,79 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This series consists of various cleanups and improvements for the
-pwm-meson driver.
+This is a preparation for a future cleanup. Pass struct pwm_device
+instead of passing the individual values required by each function as
+these can be obtained for each struct pwm_device instance.
 
-Patches 1 to 6 are small code cleanups with the goal of making the code
-easier to read.
+As a nice side-effect the driver now uses "switch (pwm->hwpwm)"
+everywhere. Before some functions used "switch (id)" while others used
+"switch (pwm->hwpwm)".
 
-Patches 7 to 9 are reworking the way the per-channel settings are
-accessed. This is a first preparation step for adding full support to
-meson_pwm_get_state() in the pwm-meson driver. Patch 7 makes struct
-meson_pwm_channel accessible from struct meson_pwm because
-meson_pwm_get_state() cannot use pwm_get_chip_data(). Patch 8 removes
-redundant switch/case statements and ensures that we don't have to
-add another redundant one for the upcoming full meson_pwm_get_state()
-implementation. Patch 9 gets rid of meson_pwm_add_channels() and moves
-the pwm_set_chip_data() call to meson_pwm_request() (like all other PWM
-drivers do - except two).
+No functional changes.
 
-Patch 10 is based on a suggestion by Uwe to simplify the calculation of
-the values which the PWM IP requires. The nice benefit of this is that
-we have an easier calculation which we can do "in reverse" for the
-meson_pwm_get_state() (which calculates nanoseconds from the hardware
-values).
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ drivers/pwm/pwm-meson.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-Patch 11 implements reading the period and duty cycle in the
-meson_pwm_get_state() callback.
-
-Patch 12 removes some internal caching which we don't need anymore now
-meson_pwm_get_state() is fully implemented. The PWM core now takes care
-of not calling pwm_ops.apply() if "nothing has changed".
-
-Patch 13 adds support for PWM_POLARITY_INVERSED when disabling the
-output as suggested by Uwe.
-
-Patch 14 completes this series by adding some documentation to the
-driver. Thanks to Neil for summarizing how the hardware works
-internally.
-
-Due to the changed PWM calculation in patch 10 I have verified that
-we don't break any existing boards. The patch itself contains two
-examples which show that the new calculation improves precision. I
-made screenshots of the measurements in pulseview [0] for the second
-case ("PWM LED on Khadas VIM"):
-- old algorithm: [1]
-- old algorithm: [2]
-
-Dependencies:
-This series applies on top of Neil's patch "pwm: pwm-meson: update with
-SPDX Licence identifier" [3]
-
-Changes since v1 at [4]:
-- fixed MESON_NUM_PWM vs MESON_NUM_PWMS typo in patch #7
-- add another example to patch #10 where the pre_div has changed with
-  the new calculation. the generated PWM signal is still the same as
-  measuring shows
-- added Neil's Reviewed-by's and Uwe's Acked-by (thank you!)
-
-Changes since v2 at [5]:
-- fix the SoC name in the documentation patch (#14). The link points
-  to the S912 datasheet so we shouldn't call it the "S922X datasheet".
-  Spotted by Chris Moore (thank you!)
-- add the link to the S922X datasheet in the documentation patch (#14)
-  because that SoC generation contains an updated version of the IP
-  block with hardware support for "inversion" and "constant mode"
-- put my Signed-off-by after all Reviewed-by/Acked-by to indicate that
-  I was the one who put the R-b/A-b there (spotted by Uwe - thank you)
-- added Uwe's Reviewed-by to three patches (thank you!)
-
-
-[0] https://sigrok.org/wiki/PulseView
-[1] https://abload.de/img/old-algormjs9.png
-[2] https://abload.de/img/new-algo4ckjo.png
-[3] https://patchwork.kernel.org/patch/10951319/
-[4] https://patchwork.kernel.org/cover/10961073/
-[5] https://patchwork.kernel.org/cover/10983279/
-
-
-Martin Blumenstingl (14):
-  pwm: meson: unify the parameter list of meson_pwm_{enable,disable}
-  pwm: meson: use devm_clk_get_optional() to get the input clock
-  pwm: meson: use GENMASK and FIELD_PREP for the lo and hi values
-  pwm: meson: change MISC_CLK_SEL_WIDTH to MISC_CLK_SEL_MASK
-  pwm: meson: don't duplicate the polarity internally
-  pwm: meson: pass struct pwm_device to meson_pwm_calc()
-  pwm: meson: add the meson_pwm_channel data to struct meson_pwm
-  pwm: meson: add the per-channel register offsets and bits in a struct
-  pwm: meson: move pwm_set_chip_data() to meson_pwm_request()
-  pwm: meson: simplify the calculation of the pre-divider and count
-  pwm: meson: read the full hardware state in meson_pwm_get_state()
-  pwm: meson: don't cache struct pwm_state internally
-  pwm: meson: add support PWM_POLARITY_INVERSED when disabling
-  pwm: meson: add documentation to the driver
-
- drivers/pwm/pwm-meson.c | 327 +++++++++++++++++++++-------------------
- 1 file changed, 173 insertions(+), 154 deletions(-)
-
+diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+index 5fef7e925282..3fbbc4128ce8 100644
+--- a/drivers/pwm/pwm-meson.c
++++ b/drivers/pwm/pwm-meson.c
+@@ -183,15 +183,14 @@ static int meson_pwm_calc(struct meson_pwm *meson,
+ 	return 0;
+ }
+ 
+-static void meson_pwm_enable(struct meson_pwm *meson,
+-			     struct meson_pwm_channel *channel,
+-			     unsigned int id)
++static void meson_pwm_enable(struct meson_pwm *meson, struct pwm_device *pwm)
+ {
++	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
+ 	u32 value, clk_shift, clk_enable, enable;
+ 	unsigned int offset;
+ 	unsigned long flags;
+ 
+-	switch (id) {
++	switch (pwm->hwpwm) {
+ 	case 0:
+ 		clk_shift = MISC_A_CLK_DIV_SHIFT;
+ 		clk_enable = MISC_A_CLK_EN;
+@@ -228,12 +227,12 @@ static void meson_pwm_enable(struct meson_pwm *meson,
+ 	spin_unlock_irqrestore(&meson->lock, flags);
+ }
+ 
+-static void meson_pwm_disable(struct meson_pwm *meson, unsigned int id)
++static void meson_pwm_disable(struct meson_pwm *meson, struct pwm_device *pwm)
+ {
+ 	u32 value, enable;
+ 	unsigned long flags;
+ 
+-	switch (id) {
++	switch (pwm->hwpwm) {
+ 	case 0:
+ 		enable = MISC_A_EN;
+ 		break;
+@@ -266,7 +265,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		return -EINVAL;
+ 
+ 	if (!state->enabled) {
+-		meson_pwm_disable(meson, pwm->hwpwm);
++		meson_pwm_disable(meson, pwm);
+ 		channel->state.enabled = false;
+ 
+ 		return 0;
+@@ -293,7 +292,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	}
+ 
+ 	if (state->enabled && !channel->state.enabled) {
+-		meson_pwm_enable(meson, channel, pwm->hwpwm);
++		meson_pwm_enable(meson, pwm);
+ 		channel->state.enabled = true;
+ 	}
+ 
 -- 
 2.22.0
 
