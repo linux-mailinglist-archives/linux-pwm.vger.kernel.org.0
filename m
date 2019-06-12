@@ -2,141 +2,101 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A2B5842E3A
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Jun 2019 20:01:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EFBF43065
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Jun 2019 21:47:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbfFLSAM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Jun 2019 14:00:12 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35936 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbfFLSAM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Jun 2019 14:00:12 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d21so6947730plr.3
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Jun 2019 11:00:11 -0700 (PDT)
+        id S1728084AbfFLTrU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Jun 2019 15:47:20 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37263 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727924AbfFLTrT (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Jun 2019 15:47:19 -0400
+Received: by mail-oi1-f195.google.com with SMTP id t76so12610499oih.4;
+        Wed, 12 Jun 2019 12:47:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m17jcxzIUWgBG3pTTkNAHaWLFrUkZn/F2jLeWBAwk/I=;
-        b=K9ECcdPpoHNdUO2vD2Dylfi36k+JOk+4YD8Cfgm4Bn3VTPQdmcyN78WXD7L3d/HO0s
-         hBdUSzi4DPjwEJ/logkQnM3DpJ+UFfFYykyjVso6WnixS6vlIlfMi6BeZJkZPIjx/bHO
-         Dd9kFBgl1ab6JdR3Fm+FtrF4Nn2Y8//52ybEM=
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EwdJu4okQ0L+2u52FXeBDXEGzF/ps8ei03aC+UR7txM=;
+        b=jCItuHIqjcFP/izwsSFnf5iZ4EN8OEZMF4/+XoTAcFGTIvjn8FEFSDtrZZEXarIJht
+         XFvZdFpsTYx2UKP8PreoZMEQCIurJCAtxHYRQnD1cDiUz4rMk9IZ5jwLjsMkH6YwbfV8
+         JK7juYY/NCn4SQ+bolXDhhhULZdOmNaiTFX6lctDPTgbJ6gXu4x0ppbCc25UIyEGVQtp
+         oUF9u4OeEsxLsGYmWkYR/KK1cMA1rXxJ0a5UKjCDFAyN28VcUBpUKp09Cc2KrkGEUmwm
+         uhHb8XCubFuUi3Xf0TqPGnVSzGzpC6kjENt0cAfNwGqVy32ibiYbhHmkyb1DMkDKOBAr
+         C6pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m17jcxzIUWgBG3pTTkNAHaWLFrUkZn/F2jLeWBAwk/I=;
-        b=gz5zEgTSxY5mqZ1Xl0z02qF9MtYR1f64CJREnxXoXo1UHV67w2wOYy9QAsYClAgWaH
-         HNbfcfdRbRoVuHkViQRiH+O4OGY5MH42tKWp6a4eMYcH/fZHTUvB5GN7C1TDJ8HXFTQ6
-         zV+J4xZwC538HQPUeAYAWWGQW9YndKNStRmnFvWXmqBhG+YtMHqYJ7m3iOJioO5+mhV2
-         7zCiMOCXHADGC5PTWQKG6nETa2eGL8X+92heCHxySh/QGsZnYLEj/MGpUop4hSxwrqtO
-         hxmY50Z7Rtr61mCynIldFUl+HuhpjAncP9vVs2O0kC9/Wpx6pm6H9TvU2DVf8V12TebJ
-         ng8Q==
-X-Gm-Message-State: APjAAAWfDJkhq6bdBKpkxktxAZrwJPBgWeYiMgycpwek76NoaL+p8jja
-        pNhW7Q7mq94H6dNB5ICqUy68Cw==
-X-Google-Smtp-Source: APXvYqx+SYfjf3qHKIePuC+ovfW0Z/QkZdT+QlY9I+ubfQA4/smq+JtaGNSKh6quVM8FvVoa9qFIKw==
-X-Received: by 2002:a17:902:2006:: with SMTP id n6mr25655685pla.232.1560362411522;
-        Wed, 12 Jun 2019 11:00:11 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id m6sm180932pgr.18.2019.06.12.11.00.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 11:00:10 -0700 (PDT)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH] backlight: pwm_bl: Fix heuristic to determine number of brightness levels
-Date:   Wed, 12 Jun 2019 11:00:03 -0700
-Message-Id: <20190612180003.161966-1-mka@chromium.org>
-X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EwdJu4okQ0L+2u52FXeBDXEGzF/ps8ei03aC+UR7txM=;
+        b=gXvgu8JXznQEOFUpkx3VQfZjre+qsxVSkSBWDeUeBCAx+ys68pIDj4Ks4FFIp4e/EJ
+         h+29HGMkoN60nArVODe7tR82MRa/3xynbqA2OEyay4xYMVsr/WVf8i+opHErm/x2Ve5s
+         5aJVYFFiNZYiFbOCaKfTPDrj1QfA+tr4+S2r/S3B3SD+xOtBL8WLlZ1hnkEnazyYlHB6
+         rHPU9ch8Ec9RjpgBdQ3lN9pJ0cdLMfEEOrlq1s76JLnqGtTyN2c+Jh/BsdZM2mKCI6Xr
+         KI6KmB8WhZB7+6Uu90vdrx+NMy4sC+EbyxqTjDq0S4y75Cn6lKc9NP0b9wNrP5/VFLRv
+         bVkQ==
+X-Gm-Message-State: APjAAAV6COKj6NLHhODnvxQeOxKTcs5CoINdV83wKQno45B4DnQlaWnr
+        auVjru0VupKoyars4LLFR8Dlgmrj8npApSvu+VU=
+X-Google-Smtp-Source: APXvYqxI6uMKFy/wojvtvvvIYK/SGmxdGD9fTWk5+T6YyUI+oS3PdPTdR1rtH6s0f//6So6WdhsACfIUlxQ2vDXFdDk=
+X-Received: by 2002:aca:f144:: with SMTP id p65mr598979oih.47.1560368838921;
+ Wed, 12 Jun 2019 12:47:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190608180626.30589-1-martin.blumenstingl@googlemail.com>
+ <20190608180626.30589-5-martin.blumenstingl@googlemail.com> <20190611163318.tfb5c4jbekjybj76@pengutronix.de>
+In-Reply-To: <20190611163318.tfb5c4jbekjybj76@pengutronix.de>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Wed, 12 Jun 2019 21:47:07 +0200
+Message-ID: <CAFBinCA1SVXVPJdLQr4S99qEoowqXsNqP5tr64xn46xjaKLqeA@mail.gmail.com>
+Subject: Re: [PATCH v2 04/14] pwm: meson: change MISC_CLK_SEL_WIDTH to MISC_CLK_SEL_MASK
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
+        thierry.reding@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-With commit 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of
-LED linearly to human eye") the number of set bits (aka hweight())
-in the PWM period is used in the heuristic to determine the number
-of brightness levels, when the brightness table isn't specified in
-the DT. The number of set bits doesn't provide a reliable clue about
-the length of the period, instead change the heuristic to:
+Hi Uwe,
 
- nlevels = period / fls(period)
+On Tue, Jun 11, 2019 at 6:33 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+[...]
+> > @@ -463,7 +463,7 @@ static int meson_pwm_init_channels(struct meson_pwm=
+ *meson,
+> >
+> >               channel->mux.reg =3D meson->base + REG_MISC_AB;
+> >               channel->mux.shift =3D mux_reg_shifts[i];
+> > -             channel->mux.mask =3D BIT(MISC_CLK_SEL_WIDTH) - 1;
+> > +             channel->mux.mask =3D MISC_CLK_SEL_MASK;
+> >               channel->mux.flags =3D 0;
+> >               channel->mux.lock =3D &meson->lock;
+> >               channel->mux.table =3D NULL;
+>
+> IMHO clk_mux is ugly here. It could easily just take
+>
+>         .mask =3D 3 << mux_reg_shifts[i],
+in most cases that would be even nicer to read because it could be expresse=
+d as:
+  .mask =3D GENMASK(5, 4)
 
-Also limit the maximum number of brightness levels to 4096 to avoid
-excessively large tables.
+so I like your idea in general
+though I think it should not block this patch
 
-With this the number of levels increases monotonically with the PWM
-period, until the maximum of 4096 levels is reached:
+[...]
+> Apart from that, I wonder if the pwm-meson driver should better use
+> clk_register_mux instead of open coding it. (Though there doesn't seem
+> to exists a devm_ variant of it.)
+I tried to use clk_register_mux in the past. it works but it's not as
+nice to read as the open-coded variant because it takes 10 parameters.
+I find it easier to read 13 separate lines compared to reading a
+function call with 10 parameters
 
-period (ns)    # levels
 
-100    	       16
-500	       62
-1000	       111
-5000	       416
-10000	       769
-50000	       3333
-100000	       4096
-
-Fixes: 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED linearly to human eye")
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
- drivers/video/backlight/pwm_bl.c | 24 ++++++------------------
- 1 file changed, 6 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index fb45f866b923..0b7152fa24f7 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -194,29 +194,17 @@ int pwm_backlight_brightness_default(struct device *dev,
- 				     struct platform_pwm_backlight_data *data,
- 				     unsigned int period)
- {
--	unsigned int counter = 0;
--	unsigned int i, n;
-+	unsigned int i;
- 	u64 retval;
- 
- 	/*
--	 * Count the number of bits needed to represent the period number. The
--	 * number of bits is used to calculate the number of levels used for the
--	 * brightness-levels table, the purpose of this calculation is have a
--	 * pre-computed table with enough levels to get linear brightness
--	 * perception. The period is divided by the number of bits so for a
--	 * 8-bit PWM we have 255 / 8 = 32 brightness levels or for a 16-bit PWM
--	 * we have 65535 / 16 = 4096 brightness levels.
--	 *
--	 * Note that this method is based on empirical testing on different
--	 * devices with PWM of 8 and 16 bits of resolution.
-+	 * Once we have 4096 levels there's little point going much higher...
-+	 * neither interactive sliders nor animation benefits from having
-+	 * more values in the table.
- 	 */
--	n = period;
--	while (n) {
--		counter += n % 2;
--		n >>= 1;
--	}
-+	data->max_brightness =
-+		min((int)DIV_ROUND_UP(period, fls(period)), 4096);
- 
--	data->max_brightness = DIV_ROUND_UP(period, counter);
- 	data->levels = devm_kcalloc(dev, data->max_brightness,
- 				    sizeof(*data->levels), GFP_KERNEL);
- 	if (!data->levels)
--- 
-2.22.0.rc2.383.gf4fbbf30c2-goog
-
+Martin
