@@ -2,143 +2,174 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BD9143096
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Jun 2019 22:01:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22D3A43098
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Jun 2019 22:01:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389733AbfFLT7n (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Jun 2019 15:59:43 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43487 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389642AbfFLT7m (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Jun 2019 15:59:42 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p13so8125798wru.10;
-        Wed, 12 Jun 2019 12:59:41 -0700 (PDT)
+        id S2389958AbfFLT7o (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Jun 2019 15:59:44 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35835 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389667AbfFLT7o (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Jun 2019 15:59:44 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c6so7785477wml.0;
+        Wed, 12 Jun 2019 12:59:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ZO2I0nc2ZuC8lo4fZqPZLu1ILdKFupecX1fpt0vJbX8=;
-        b=s2k7UPtXJrKmRqewFzECaggm0X0f1LVk4ve6wyxIHpM/+aaRLVzCL0oIPaATv+7icK
-         giRfO3MeaQ9+0n7NZZKRcmKvneynm/p6mx4DFiVUi1qWjWuddVUJwW+DdtgQX38MAcTf
-         ofWXa05BtJwNhTgJF3NYhy7Mkh2RdMIo1OizJgCep9waUpq80XvJrIrb5EDYSlDSERzh
-         /+8VRIOvbTxqBexLHe9TC2QuBcvlwywgIZYYG+Uh9u0OKbQv+qpvIotcFOD3g7ngDbeZ
-         slhUjjFhv5pebPc/uYry4PoYjy9qhGo5Q18RvGAxVRpRbaHbkQclZi00i2RvbaM/9xmt
-         a/WA==
+        bh=bdTVLAwNdb8owtGfmpMjHz1Rqh0e7CEJ+yms9qNEUEE=;
+        b=ImFSiHawukgvGDKEkdVhtWjkNYpr3APrYMZTo5l+SYrYXqtCHHgdbiiMYiKzE+q+mZ
+         H/+t6xmhBabAbGg1fgqQA5sB7gnazN4hiaMQGW92ZZ4EHnr2sORtUe+HaEJuBswrCeuQ
+         AIJtevwzdrNPq1qjD3N76VM9UNBQmFUq32dbu5uucvo9xMC9NrhuiuRRB+dvUQxxME9O
+         vxiSROhC3xxZuc1g98xZ3UqRPKi63v9g+P10L+HsKt1iau+QCP8SkL1BtnXoUb4QwJSL
+         kbSgb795GiB7r7KV7eOQl87P1z9c0ZNTFHXPKNORoM43MvBy9adh2iEcFtUBs/12k90/
+         QUcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZO2I0nc2ZuC8lo4fZqPZLu1ILdKFupecX1fpt0vJbX8=;
-        b=ACJ7Yqmg2lMG9vfx/OVeqqeK1B7TmoTUw7pAEfj7LkzUtDk9e+pww3Y0sISebrWadF
-         7bWcpFUeX9DR07G3DTWBUCsgTdfq0af+SG1o72mkr00ukqnYaImcMFTbsm7zMkQUzjie
-         ky6azZtjgIfFsAJ+hweNVgjx95TW5igWhEbLj+lelzSLGrdfi1kzn8mESH3Sq5d60ZNo
-         5zY/5PsiQQW3Sh1H33OoQtbS5Quo2SJSY/Cu6LYNPT4olrjdJ6ldt/yX/NSn2nuXq0ek
-         bZ8cjorRpykKFPvVuLHlmkt7pdCFu4dmFNV2enj8DWlolN7GDN9L1z2mswBWbteuSrTW
-         dPIQ==
-X-Gm-Message-State: APjAAAXJoJbPpJRZekykrSg5lMO+KML2gbBejmy4LfPhF+kpGLrgKoI7
-        jcAX1SUygxGv/N/IF+KOhFA=
-X-Google-Smtp-Source: APXvYqwsZeC2xWn46wSwc6F1FRQQkyg4g9mdYUrvu06Wn8TkkSHFCVkYpWEmZcaG6bt4PqKqBTkDYQ==
-X-Received: by 2002:a5d:6312:: with SMTP id i18mr16038992wru.203.1560369580608;
-        Wed, 12 Jun 2019 12:59:40 -0700 (PDT)
+        bh=bdTVLAwNdb8owtGfmpMjHz1Rqh0e7CEJ+yms9qNEUEE=;
+        b=d2MeHebZ1lWzQbZh4g7TMweBoqsdy8Yk98uS2UhJtegaQM38/YG4QSNuO2RGG62BcK
+         IPhtOhwGrQUi/em1VdCMUwbUWnZ5QcANDi9xNRzb9NofNy34oPu1T/aILn2EhSLtX7/B
+         7e29RRgWEGboVdsI2BncC5DFZSAjQ1hbhLOO/vPYj4hFA5THghF/W8ViqyQbfANHQ7Oy
+         x/1KhUG4pJaTEC8jsG7QJo1Fg8/NceTqKWphGbwUHRg/8RmmQByLe6FDnUTQCnU6JUcG
+         1rXUTS0Llhb/R/cO8JHwgk16KmmsvY6C+urAwabCIebj84XtSVn8Vt3SLWVnDcDSTR56
+         f5Ng==
+X-Gm-Message-State: APjAAAWJrHqrJZhpp0zjXkMCeqSdnxNPycH9THeXMK2XGZp6rwq9FkHM
+        sW+9umW/wPQ4Kw10fFfoZ2M=
+X-Google-Smtp-Source: APXvYqx1euxXqWvm17uaq4OeXTaDLpI3mLzeZHlbR31M6tMSTIu+iCO+7X2+HMUU/IRX78KClQd3Kg==
+X-Received: by 2002:a1c:7614:: with SMTP id r20mr661319wmc.142.1560369581619;
+        Wed, 12 Jun 2019 12:59:41 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300F133DDA400428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:33dd:a400:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id f10sm1026745wrg.24.2019.06.12.12.59.39
+        by smtp.googlemail.com with ESMTPSA id f10sm1026745wrg.24.2019.06.12.12.59.40
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 12:59:39 -0700 (PDT)
+        Wed, 12 Jun 2019 12:59:41 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
         thierry.reding@gmail.com
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         u.kleine-koenig@pengutronix.de, narmstrong@baylibre.com,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 09/14] pwm: meson: move pwm_set_chip_data() to meson_pwm_request()
-Date:   Wed, 12 Jun 2019 21:59:06 +0200
-Message-Id: <20190612195911.4442-10-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 10/14] pwm: meson: simplify the calculation of the pre-divider and count
+Date:   Wed, 12 Jun 2019 21:59:07 +0200
+Message-Id: <20190612195911.4442-11-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190612195911.4442-1-martin.blumenstingl@googlemail.com>
 References: <20190612195911.4442-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-All existing PWM drivers (except pwm-meson and two other ones) call
-pwm_set_chip_data() from their pwm_ops.request() callback. Now that we
-can access the struct meson_pwm_channel from struct meson_pwm we can do
-the same.
+Replace the loop to calculate the pre-divider and count with two
+separate div64_u64() calculations. This makes the code easier to read
+and improves the precision.
 
-Move the call to pwm_set_chip_data() to meson_pwm_request() and drop the
-custom meson_pwm_add_channels(). This makes the implementation
-consistent with other drivers and makes it slightly more obvious
-thatpwm_get_chip_data() cannot be used from pwm_ops.get_state() (because
-that's called by the PWM core before pwm_ops.request()).
+Three example cases:
+1) 32.768kHz LPO clock for the SDIO wifi chip on Khadas VIM
+   clock input: 500MHz (FCLK_DIV4)
+   period: 30518ns
+   duty cycle: 15259ns
+old algorithm: pre_div=0, cnt=15259
+new algorithm: pre_div=0, cnt=15259
+(no difference in calculated values)
 
-No functional changes intended.
+2) PWM LED on Khadas VIM
+   clock input: 24MHz (XTAL)
+   period: 7812500ns
+   duty cycle: 7812500ns
+old algorithm: pre_div=2, cnt=62004
+new algorithm: pre_div=2, cnt=62500
+Using a scope (24MHz sampling rate) shows the actual difference:
+- old: 7753000ns, off by -59500ns (0.7616%)
+- new: 7815000ns, off by +2500ns (0.032%)
 
+3) Theoretical case where pre_div is different
+   clock input: 24MHz (XTAL)
+   period: 2730624ns
+   duty cycle: 1365312ns
+old algorithm: pre_div=1, cnt=32768
+new algorithm: pre_div=0, cnt=65534
+Using a scope (24MHz sampling rate) shows the actual difference:
+- old: 2731000ns
+- new: 2731000ns
+(my scope is not precise enough to measure the difference if there's
+any)
+
+Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- drivers/pwm/pwm-meson.c | 22 ++++++++--------------
- 1 file changed, 8 insertions(+), 14 deletions(-)
+ drivers/pwm/pwm-meson.c | 25 ++++++++++---------------
+ 1 file changed, 10 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index ac7e188155fd..27915d6475e3 100644
+index 27915d6475e3..9afa1e5aaebf 100644
 --- a/drivers/pwm/pwm-meson.c
 +++ b/drivers/pwm/pwm-meson.c
-@@ -98,12 +98,16 @@ static inline struct meson_pwm *to_meson_pwm(struct pwm_chip *chip)
+@@ -12,6 +12,7 @@
+ #include <linux/err.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
++#include <linux/math64.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+@@ -145,7 +146,6 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
+ 	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
+ 	unsigned int duty, period, pre_div, cnt, duty_cnt;
+ 	unsigned long fin_freq = -1;
+-	u64 fin_ps;
  
- static int meson_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- {
--	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
-+	struct meson_pwm *meson = to_meson_pwm(chip);
-+	struct meson_pwm_channel *channel;
- 	struct device *dev = chip->dev;
- 	int err;
- 
--	if (!channel)
--		return -ENODEV;
-+	channel = pwm_get_chip_data(pwm);
-+	if (channel)
-+		return 0;
-+
-+	channel = &meson->channels[pwm->hwpwm];
- 
- 	if (channel->clk_parent) {
- 		err = clk_set_parent(channel->clk, channel->clk_parent);
-@@ -124,7 +128,7 @@ static int meson_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- 
- 	chip->ops->get_state(chip, pwm, &channel->state);
- 
--	return 0;
-+	return pwm_set_chip_data(pwm, channel);
- }
- 
- static void meson_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-@@ -460,14 +464,6 @@ static int meson_pwm_init_channels(struct meson_pwm *meson)
- 	return 0;
- }
- 
--static void meson_pwm_add_channels(struct meson_pwm *meson)
--{
--	unsigned int i;
--
--	for (i = 0; i < meson->chip.npwm; i++)
--		pwm_set_chip_data(&meson->chip.pwms[i], &meson->channels[i]);
--}
--
- static int meson_pwm_probe(struct platform_device *pdev)
- {
- 	struct meson_pwm *meson;
-@@ -503,8 +499,6 @@ static int meson_pwm_probe(struct platform_device *pdev)
- 		return err;
+ 	duty = state->duty_cycle;
+ 	period = state->period;
+@@ -164,24 +164,19 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
  	}
  
--	meson_pwm_add_channels(meson);
+ 	dev_dbg(meson->chip.dev, "fin_freq: %lu Hz\n", fin_freq);
+-	fin_ps = (u64)NSEC_PER_SEC * 1000;
+-	do_div(fin_ps, fin_freq);
 -
- 	platform_set_drvdata(pdev, meson);
+-	/* Calc pre_div with the period */
+-	for (pre_div = 0; pre_div <= MISC_CLK_DIV_MASK; pre_div++) {
+-		cnt = DIV_ROUND_CLOSEST_ULL((u64)period * 1000,
+-					    fin_ps * (pre_div + 1));
+-		dev_dbg(meson->chip.dev, "fin_ps=%llu pre_div=%u cnt=%u\n",
+-			fin_ps, pre_div, cnt);
+-		if (cnt <= 0xffff)
+-			break;
+-	}
  
- 	return 0;
++	pre_div = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * 0xffffLL);
+ 	if (pre_div > MISC_CLK_DIV_MASK) {
+ 		dev_err(meson->chip.dev, "unable to get period pre_div\n");
+ 		return -EINVAL;
+ 	}
+ 
++	cnt = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * (pre_div + 1));
++	if (cnt > 0xffff) {
++		dev_err(meson->chip.dev, "unable to get period cnt\n");
++		return -EINVAL;
++	}
++
+ 	dev_dbg(meson->chip.dev, "period=%u pre_div=%u cnt=%u\n", period,
+ 		pre_div, cnt);
+ 
+@@ -195,8 +190,8 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
+ 		channel->lo = cnt;
+ 	} else {
+ 		/* Then check is we can have the duty with the same pre_div */
+-		duty_cnt = DIV_ROUND_CLOSEST_ULL((u64)duty * 1000,
+-						 fin_ps * (pre_div + 1));
++		duty_cnt = div64_u64(fin_freq * (u64)duty,
++				     NSEC_PER_SEC * (pre_div + 1));
+ 		if (duty_cnt > 0xffff) {
+ 			dev_err(meson->chip.dev, "unable to get duty cycle\n");
+ 			return -EINVAL;
 -- 
 2.22.0
 
