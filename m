@@ -2,112 +2,126 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BEBEF4309E
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Jun 2019 22:01:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6E0443E53
+	for <lists+linux-pwm@lfdr.de>; Thu, 13 Jun 2019 17:49:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390069AbfFLT7x (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Jun 2019 15:59:53 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:32975 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390167AbfFLT7r (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Jun 2019 15:59:47 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n9so18274425wru.0;
-        Wed, 12 Jun 2019 12:59:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=PXhKgHiRKTDbq5+IaKGfsR6BmgG7q4N1qI/aWdYB6Q8=;
-        b=hsWXPbeCUxn3AeVTaPkpWpYSU2rkvwPwmfSQhu5TejlCTxIevBFbCaEhNMeVV3Eadv
-         iMEl6v4r1YDJGL+0c92HnsZAUK8z8U8zq9cd1BHn8Wjc0+q7JLDqkjYpVnQJR1NyUNmf
-         lD+O+U7pAXvs3nKGVevnBnGsdqiV1HavIGsHSVU+ekgZxBBmLmwYfZGrLHH7SqvjgUDe
-         7elnq0Keg1BIVERCnF7K2WnYAhfvHByXXd4k1xBS/JrA4FQmPERQyS4Qr5z358KOE/dH
-         hqPQjLV5c/km5q7eVFSYRaiCxgMEAVLjM99fuQEjERJrVxg15VUSB1dw14m7kB6e5I1i
-         n+9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PXhKgHiRKTDbq5+IaKGfsR6BmgG7q4N1qI/aWdYB6Q8=;
-        b=l5TTFanvlh4ahqeRGqHnuQIJcJjZu5IKWBmxBB2xqyJfN/PJo1Wok8XJkLcpENx8O7
-         7PU5+O7ntPHCz1mFQRGp7TbvpWGGqs981io4GIyj+jSNfpgTaNDRD0b5oFpFZWFrLumr
-         7ShL08GacVclY37UojEOJr9QNT3PHdeh/Z+9Z/3BqAQmkF4KN+8ASPa38DYziaa+LBjk
-         wZd/QQEs+/n3xguSFe1juoNziLB/3JVZJe443OlRsuIHM1G+AssWMgALWyNfhPct6oPV
-         HHXyqr4+MyanJlbOENxTtyUoxNaO2+V32VoUhXjDQBqnFPncqBwHOg6tWFMfgtl/g7Fh
-         ehiA==
-X-Gm-Message-State: APjAAAWd+F1qsDAfqDBCNX3K0HPl2MRPC8Xs9MJy2Zmds0OJfmtqlCBR
-        J9xBmNwGtn7VGvAooo5hmNs=
-X-Google-Smtp-Source: APXvYqx8IAmX+s+7TK5qnozIRIA6bDm97DsRI8ndxcRI4R7vbPriPYONQXPZ8+lE0Itz0xkzmnsqoQ==
-X-Received: by 2002:adf:f68f:: with SMTP id v15mr5871100wrp.4.1560369586066;
-        Wed, 12 Jun 2019 12:59:46 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133DDA400428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:33dd:a400:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id f10sm1026745wrg.24.2019.06.12.12.59.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 12:59:45 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
-        thierry.reding@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        u.kleine-koenig@pengutronix.de, narmstrong@baylibre.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 14/14] pwm: meson: add documentation to the driver
-Date:   Wed, 12 Jun 2019 21:59:11 +0200
-Message-Id: <20190612195911.4442-15-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190612195911.4442-1-martin.blumenstingl@googlemail.com>
-References: <20190612195911.4442-1-martin.blumenstingl@googlemail.com>
+        id S1731712AbfFMPsw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 13 Jun 2019 11:48:52 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:52428 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731710AbfFMJPD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 13 Jun 2019 05:15:03 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 73D26260CB2
+Subject: Re: [PATCH] backlight: pwm_bl: Fix heuristic to determine number of
+ brightness levels
+To:     Matthias Kaehlcke <mka@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+References: <20190612180003.161966-1-mka@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <fd554750-7ec6-73e1-be3a-5bac0749fa0b@collabora.com>
+Date:   Thu, 13 Jun 2019 11:14:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190612180003.161966-1-mka@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add links to the datasheet and a short summary how the hardware works.
-The goal is to make it easier for other developers to understand why the
-pwm-meson driver is implemented the way it is.
+Hi Matthias,
 
-Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Co-authored-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/pwm/pwm-meson.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+On 12/6/19 20:00, Matthias Kaehlcke wrote:
+> With commit 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of
+> LED linearly to human eye") the number of set bits (aka hweight())
+> in the PWM period is used in the heuristic to determine the number
+> of brightness levels, when the brightness table isn't specified in
+> the DT. The number of set bits doesn't provide a reliable clue about
+> the length of the period, instead change the heuristic to:
+> 
+>  nlevels = period / fls(period)
+> 
+> Also limit the maximum number of brightness levels to 4096 to avoid
+> excessively large tables.
+> 
+> With this the number of levels increases monotonically with the PWM
+> period, until the maximum of 4096 levels is reached:
+> 
+> period (ns)    # levels
+> 
+> 100    	       16
+> 500	       62
+> 1000	       111
+> 5000	       416
+> 10000	       769
+> 50000	       3333
+> 100000	       4096
+> 
+> Fixes: 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED linearly to human eye")
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 
-diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index bb48ba85f756..31259026484c 100644
---- a/drivers/pwm/pwm-meson.c
-+++ b/drivers/pwm/pwm-meson.c
-@@ -1,5 +1,27 @@
- // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
- /*
-+ * PWM controller driver for Amlogic Meson SoCs.
-+ *
-+ * This PWM is only a set of Gates, Dividers and Counters:
-+ * PWM output is achieved by calculating a clock that permits calculating
-+ * two periods (low and high). The counter then has to be set to switch after
-+ * N cycles for the first half period.
-+ * The hardware has no "polarity" setting. This driver reverses the period
-+ * cycles (the low length is inverted with the high length) for
-+ * PWM_POLARITY_INVERSED. This means that .get_state cannot read the polarity
-+ * from the hardware.
-+ * Setting the duty cycle will disable and re-enable the PWM output.
-+ * Disabling the PWM stops the output immediately (without waiting for the
-+ * current period to complete first).
-+ *
-+ * The public S912 (GXM) datasheet contains some documentation for this PWM
-+ * controller starting on page 543:
-+ * https://dl.khadas.com/Hardware/VIM2/Datasheet/S912_Datasheet_V0.220170314publicversion-Wesion.pdf
-+ * An updated version of this IP block is found in S922X (G12B) SoCs. The
-+ * datasheet contains the description for this IP block revision starting at
-+ * page 1084:
-+ * https://dn.odroid.com/S922X/ODROID-N2/Datasheet/S922X_Public_Datasheet_V0.2.pdf
-+ *
-  * Copyright (c) 2016 BayLibre, SAS.
-  * Author: Neil Armstrong <narmstrong@baylibre.com>
-  * Copyright (C) 2014 Amlogic, Inc.
--- 
-2.22.0
+Tested on Samsung Chromebook Plus (16-bit pwm)
 
+Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+
+> ---
+>  drivers/video/backlight/pwm_bl.c | 24 ++++++------------------
+>  1 file changed, 6 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> index fb45f866b923..0b7152fa24f7 100644
+> --- a/drivers/video/backlight/pwm_bl.c
+> +++ b/drivers/video/backlight/pwm_bl.c
+> @@ -194,29 +194,17 @@ int pwm_backlight_brightness_default(struct device *dev,
+>  				     struct platform_pwm_backlight_data *data,
+>  				     unsigned int period)
+>  {
+> -	unsigned int counter = 0;
+> -	unsigned int i, n;
+> +	unsigned int i;
+>  	u64 retval;
+>  
+>  	/*
+> -	 * Count the number of bits needed to represent the period number. The
+> -	 * number of bits is used to calculate the number of levels used for the
+> -	 * brightness-levels table, the purpose of this calculation is have a
+> -	 * pre-computed table with enough levels to get linear brightness
+> -	 * perception. The period is divided by the number of bits so for a
+> -	 * 8-bit PWM we have 255 / 8 = 32 brightness levels or for a 16-bit PWM
+> -	 * we have 65535 / 16 = 4096 brightness levels.
+> -	 *
+> -	 * Note that this method is based on empirical testing on different
+> -	 * devices with PWM of 8 and 16 bits of resolution.
+> +	 * Once we have 4096 levels there's little point going much higher...
+> +	 * neither interactive sliders nor animation benefits from having
+> +	 * more values in the table.
+>  	 */
+> -	n = period;
+> -	while (n) {
+> -		counter += n % 2;
+> -		n >>= 1;
+> -	}
+> +	data->max_brightness =
+> +		min((int)DIV_ROUND_UP(period, fls(period)), 4096);
+>  
+> -	data->max_brightness = DIV_ROUND_UP(period, counter);
+>  	data->levels = devm_kcalloc(dev, data->max_brightness,
+>  				    sizeof(*data->levels), GFP_KERNEL);
+>  	if (!data->levels)
+> 
