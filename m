@@ -2,77 +2,79 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 558564585B
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2019 11:14:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EEA5845892
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2019 11:26:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725859AbfFNJOg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 14 Jun 2019 05:14:36 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:57303 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfFNJOg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 14 Jun 2019 05:14:36 -0400
-Received: from localhost (aaubervilliers-681-1-81-150.w90-88.abo.wanadoo.fr [90.88.23.150])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id D8B1F240002;
-        Fri, 14 Jun 2019 09:14:33 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 11:14:33 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: pwm: Convert Allwinner PWM to a schema
-Message-ID: <20190614091433.xac42w3n7cx7buh6@flea>
-References: <20190516120848.25007-1-maxime.ripard@bootlin.com>
- <20190607111838.xlx74cvcfhaob3wf@flea>
+        id S1726751AbfFNJ0W (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 14 Jun 2019 05:26:22 -0400
+Received: from mail.steuer-voss.de ([85.183.69.95]:50578 "EHLO
+        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbfFNJ0W (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 14 Jun 2019 05:26:22 -0400
+X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
+Received: by mail.steuer-voss.de (Postfix, from userid 1000)
+        id D56394CEDA; Fri, 14 Jun 2019 11:25:58 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.steuer-voss.de (Postfix) with ESMTP id D098E4CDFA;
+        Fri, 14 Jun 2019 11:25:58 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 11:25:58 +0200 (CEST)
+From:   Nikolaus Voss <nv@vosn.de>
+X-X-Sender: nv@fox.voss.local
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        linux-leds@vger.kernel.org,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
+ loads
+In-Reply-To: <CAJZ5v0jqxWs=PPik-TCDqQiyxCSyRP7HTue1WsdWP9e-nik2eA@mail.gmail.com>
+Message-ID: <alpine.DEB.2.20.1906141114490.6579@fox.voss.local>
+References: <cover.1560327219.git.nikolaus.voss@loewensteinmedical.de> <e2a4ddfd93a904b50b7ccc074e00e14dc4661963.1560327219.git.nikolaus.voss@loewensteinmedical.de> <CAJZ5v0jqxWs=PPik-TCDqQiyxCSyRP7HTue1WsdWP9e-nik2eA@mail.gmail.com>
+User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2ulork7hxmrmxe3s"
-Content-Disposition: inline
-In-Reply-To: <20190607111838.xlx74cvcfhaob3wf@flea>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Rafael,
 
---2ulork7hxmrmxe3s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Jun 07, 2019 at 01:18:38PM +0200, Maxime Ripard wrote:
-> On Thu, May 16, 2019 at 02:08:48PM +0200, Maxime Ripard wrote:
-> > The Allwinner SoCs have a PWM controller supported in Linux, with a
-> > matching Device Tree binding.
-> >
-> > Now that we have the DT validation in place, let's convert the device tree
-> > bindings for that controller over to a YAML schemas.
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+On Fri, 14 Jun 2019, Rafael J. Wysocki wrote:
+> On Wed, Jun 12, 2019 at 10:36 AM Nikolaus Voss
+> <nikolaus.voss@loewensteinmedical.de> wrote:
+>>
+>> If an ACPI SSDT overlay is loaded after built-in tables
+>> have been loaded e.g. via configfs or efivar_ssdt_load()
+>> it is necessary to rewalk the namespace to resolve
+>> references. Without this, relative and absolute paths
+>> like ^PCI0.SBUS or \_SB.PCI0.SBUS are not resolved
+>> correctly.
+>>
+>> Make configfs load use the same method as efivar_ssdt_load().
+>>
+>> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
 >
-> Ping?
+> This is fine by me, so
+>
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Or if you want me to take this patch (without the other two in the
+> series), please let me know.
 
-Anyone? Should I just go ahead and merge it through the sunxi tree?
+thanks. I think it would be the best if you take up this patch as it is an 
+independent topic. In retrospect it wasn't a good idea to put it into this 
+series.
 
-Maxime
+Kind regards,
+Niko
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---2ulork7hxmrmxe3s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQNleQAKCRDj7w1vZxhR
-xbjNAP9u2gIWLx6Xy6i2Tdwxun/a8yx08d/HSPLSI34w6E8USAD9H4mszsZNc+Uo
-kU9HDUDOJN7I1BDXvlp8F8tUft9QOAE=
-=aqsN
------END PGP SIGNATURE-----
-
---2ulork7hxmrmxe3s--
+[...]
