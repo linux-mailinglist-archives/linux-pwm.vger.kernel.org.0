@@ -2,170 +2,128 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A06144EC9
-	for <lists+linux-pwm@lfdr.de>; Thu, 13 Jun 2019 23:56:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 508EE45853
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2019 11:13:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbfFMV4u (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 13 Jun 2019 17:56:50 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40645 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727162AbfFMV4u (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 13 Jun 2019 17:56:50 -0400
-Received: by mail-pg1-f195.google.com with SMTP id d30so263751pgm.7
-        for <linux-pwm@vger.kernel.org>; Thu, 13 Jun 2019 14:56:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CqSKUfplOln9iJ64al9vHogCwxzrRaa83C6tRk2QQv4=;
-        b=bmGw/SSMPtz8TE4EKqoCf4eLamt3dGCnE78OhZFLR1j3AZMAPdFK6N1D2wU0jpgmTc
-         TQMHeLtGxZalAqLGnm4EwKQ86Br67IcUCO4J2VujjS2raHFk08WiqngAoT1IhPARrEaQ
-         02N2tSwU3jtn+gGyNBs3XOqsFEvuYN/QORCeI=
+        id S1726530AbfFNJNF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 14 Jun 2019 05:13:05 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:32773 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725859AbfFNJNE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 14 Jun 2019 05:13:04 -0400
+Received: by mail-ot1-f66.google.com with SMTP id p4so2016299oti.0;
+        Fri, 14 Jun 2019 02:13:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CqSKUfplOln9iJ64al9vHogCwxzrRaa83C6tRk2QQv4=;
-        b=XNzr+4fcv9AgGdCqZ05NDDhCdfP9bMcYXng4GYT4iME8MX7tTDkfBBcqYpT0QszLI5
-         xEYbWak+Q99HH7Ih53FCDn90bK7HW5EpQhh/AXU1coq3Kn6EVX5GowAW89PGLRc+4iBO
-         cC9w74ph6utN1+OFn8WgoVxBKofclq52t+dqtXesGknPZpLWyVTggVQDyNoCVQGYk1Po
-         PX4EioecxeUEacH3nt7vNIl0Ohakbbk/0uEvcTy9+PLLNKv0fWvyOCIxPzFHlPTchqTM
-         ayj1SPkGXehbrt9eOkzyj+tuQGJlIIxbL+4J5nBaftRiy7nHPF/9zBMu8iSVukAG0kLu
-         q2nQ==
-X-Gm-Message-State: APjAAAVfZWUWiiEYZCR9hB6Kn5HizqAV8j1nlyJroL5nPzUBpva1+DcB
-        B7hmUfiCHVlEjx2lv+fVySYwbA==
-X-Google-Smtp-Source: APXvYqxa8NPQpW/ncEZ+9wWZVsY/YQvADDPz4jjl5yyTTQ0yaFx82hxstv7CK/gJQmit6jtF7CSy+w==
-X-Received: by 2002:a17:90a:b294:: with SMTP id c20mr7807965pjr.16.1560463009452;
-        Thu, 13 Jun 2019 14:56:49 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id v28sm687528pga.65.2019.06.13.14.56.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 14:56:48 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 14:56:46 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 2/4] backlight: Expose brightness curve type through sysfs
-Message-ID: <20190613215646.GO137143@google.com>
-References: <20190613194326.180889-1-mka@chromium.org>
- <20190613194326.180889-3-mka@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iQKOlho3IePwEIN90jAdwdDwovI9WsnmIGTODVgkjRA=;
+        b=WBt42ZFsjkB1h+W59AEmW0p5Z4PbncLAzeV7iKPVlD7QvQ9y2IT96iXNMvAaPvBZ9T
+         kRypHl/oFlCIe9FQwmX2HizCmXz1mn7xXMMBTgmWJwP5zhs0xdc5J8+A3J0zzmjITFgy
+         YXwY53hLE3WZY2zcjfJt0pECB/c4SFYu4lkEHDr+ViYw0Z73lawdd1XkJDJIiojbhg19
+         IM0VlvJkQuGKP73ImtI2UpZVMxw/VIYTU2yj90HdX2qnxEX+mMQLiVCpvdMGICkDUsSk
+         5AVj2BjxWjA1TK6dpx6Ixr4qzMFPp+1k/nO5Rhd5Wmfqaxy6t2KeNpr3mJK1h9DlTgIy
+         tE8w==
+X-Gm-Message-State: APjAAAXF07kaErJ4haKJqz+S1idWeYEYZed0uniVnjQ9T0lCeNSeuNFW
+        N4axdw0modMa5gQJ3NmPag31s54hLH+9NlVD9A0=
+X-Google-Smtp-Source: APXvYqwmdZTMd2v6GPlEy1a/TL7qrJsrqpXKgBAz63iJnH2gtW407SGicB8TN5jAyyOvInGV4i/vIKKPF+eAlUMk8A4=
+X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr2077918otp.189.1560503583969;
+ Fri, 14 Jun 2019 02:13:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190613194326.180889-3-mka@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1560327219.git.nikolaus.voss@loewensteinmedical.de> <e2a4ddfd93a904b50b7ccc074e00e14dc4661963.1560327219.git.nikolaus.voss@loewensteinmedical.de>
+In-Reply-To: <e2a4ddfd93a904b50b7ccc074e00e14dc4661963.1560327219.git.nikolaus.voss@loewensteinmedical.de>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 14 Jun 2019 11:12:53 +0200
+Message-ID: <CAJZ5v0jqxWs=PPik-TCDqQiyxCSyRP7HTue1WsdWP9e-nik2eA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table loads
+To:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        linux-leds@vger.kernel.org,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        nv@vosn.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-I noticed a few minor things when glancing over the patch on patchwork
+On Wed, Jun 12, 2019 at 10:36 AM Nikolaus Voss
+<nikolaus.voss@loewensteinmedical.de> wrote:
+>
+> If an ACPI SSDT overlay is loaded after built-in tables
+> have been loaded e.g. via configfs or efivar_ssdt_load()
+> it is necessary to rewalk the namespace to resolve
+> references. Without this, relative and absolute paths
+> like ^PCI0.SBUS or \_SB.PCI0.SBUS are not resolved
+> correctly.
+>
+> Make configfs load use the same method as efivar_ssdt_load().
+>
+> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
 
-On Thu, Jun 13, 2019 at 12:43:24PM -0700, Matthias Kaehlcke wrote:
-> Backlight brightness curves can have different shapes. The two main
-> types are linear and non-linear curves. The human eye doesn't
-> perceive linearly increasing/decreasing brightness as linear (see
-> also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
-> linearly to human eye"), hence many backlights use non-linear (often
-> logarithmic) brightness curves. The type of curve currently is opaque
-> to userspace, so userspace often relies on more or less reliable
+This is fine by me, so
 
-nit: avoid relies ... reliable :)
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> heuristics (like the number of brightness levels) to decide whether
-> to treat a backlight device as linear or non-linear.
-> 
-> Export the type of the brightness curve via the new sysfs attribute
-> 'scale'. The value of the attribute may be a simple string like
-> 'linear' or 'non-linear', or a composite string similar to
-> 'compatible' strings of the device tree. A composite string consists
-> of different elements separated by commas, starting with the
-> most-detailed description and ending with the least-detailed one. An
-> example for a composite string is "cie-1931,perceptual,non-linear"
-> This brightness curve was generated with the CIE 1931 algorithm, it
-> is perceptually linear, but not actually linear in terms of the
-> emitted light. If userspace doesn't know about 'cie-1931' or
-> 'perceptual' it should at least be able to interpret the 'non-linear'
-> part.
-> 
-> For devices that don't provide information about the scale of their
-> brightness curve the value of the 'scale' attribute is 'unknown'.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Or if you want me to take this patch (without the other two in the
+series), please let me know.
+
+As for the other two patches, someone else needs to review them for
+you as I'm not particularly familiar with the PWM subsystem.
+
 > ---
->  .../ABI/testing/sysfs-class-backlight         | 32 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  drivers/video/backlight/backlight.c           | 22 +++++++++++++
->  include/linux/backlight.h                     | 10 ++++++
->  4 files changed, 65 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-backlight
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-backlight b/Documentation/ABI/testing/sysfs-class-backlight
-> new file mode 100644
-> index 000000000000..924fb68940e6
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-backlight
-> @@ -0,0 +1,32 @@
-> +What:		/sys/class/backlight/<backlight>/scale
-> +Date:		June 2019
-> +KernelVersion:	5.4
-> +Contact:	Daniel Thompson <daniel.thompson@linaro.org>
-> +Description:
-> +		Description of the scale of the brightness curve. The
-> +		description consists of one or more elements separated by
-> +		commas, from the most detailed to the least detailed
-> +		description.
+>  drivers/acpi/acpi_configfs.c   |  6 +-----
+>  drivers/acpi/acpica/tbxfload.c | 11 +++++++++++
+>  2 files changed, 12 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/acpi/acpi_configfs.c b/drivers/acpi/acpi_configfs.c
+> index f92033661239..663f0d88f912 100644
+> --- a/drivers/acpi/acpi_configfs.c
+> +++ b/drivers/acpi/acpi_configfs.c
+> @@ -56,11 +56,7 @@ static ssize_t acpi_table_aml_write(struct config_item *cfg,
+>         if (!table->header)
+>                 return -ENOMEM;
+>
+> -       ACPI_INFO(("Host-directed Dynamic ACPI Table Load:"));
+> -       ret = acpi_tb_install_and_load_table(
+> -                       ACPI_PTR_TO_PHYSADDR(table->header),
+> -                       ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL, FALSE,
+> -                       &table->index);
+> +       ret = acpi_load_table(table->header);
+>         if (ret) {
+>                 kfree(table->header);
+>                 table->header = NULL;
+> diff --git a/drivers/acpi/acpica/tbxfload.c b/drivers/acpi/acpica/tbxfload.c
+> index 4f30f06a6f78..ef8f8a9f3c9c 100644
+> --- a/drivers/acpi/acpica/tbxfload.c
+> +++ b/drivers/acpi/acpica/tbxfload.c
+> @@ -297,6 +297,17 @@ acpi_status acpi_load_table(struct acpi_table_header *table)
+>         status = acpi_tb_install_and_load_table(ACPI_PTR_TO_PHYSADDR(table),
+>                                                 ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL,
+>                                                 FALSE, &table_index);
 > +
-> +		Possible values are:
+> +       if (ACPI_SUCCESS(status)) {
+> +               /* Complete the initialization/resolution of package objects */
 > +
-> +		unknown
-> +		  The scale of the brightness curve is unknown.
+> +               status = acpi_ns_walk_namespace(ACPI_TYPE_PACKAGE,
+> +                                               ACPI_ROOT_OBJECT,
+> +                                               ACPI_UINT32_MAX, 0,
+> +                                               acpi_ns_init_one_package,
+> +                                               NULL, NULL, NULL);
+> +       }
 > +
-> +		linear
-> +		  The brightness changes linearly in terms of the emitted
-> +		  light, changes are perceived as non-linear by the human eye.
-> +
-> +		non-linear
-> +		  The brightness changes non-linearly in terms of the emitted
-> +		  light, changes might be perceived as linear by the human eye.
-> +
-> +		perceptual,non-linear
-> +		  The brightness changes non-linearly in terms of the emitted
-> +		  light, changes should be perceived as linear by the human eye.
-> +
-> +		cie-1931,perceptual,non-linear
-> +		  The brightness curves was calculated with the CIE 1931
-
-s/curves/curve/
-
-> +static const char *const backlight_scale_types[] = {
-> +	[BACKLIGHT_SCALE_UNKNOWN]	= "unknown",
-> +	[BACKLIGHT_SCALE_CIE1931]	= "cie-1931,perceptual,non-linear",
-> +	[BACKLIGHT_SCALE_PERCEPTUAL]	= "perceptual,non-linear",
-> +	[BACKLIGHT_SCALE_LINEAR]	= "linear",
-> +	[BACKLIGHT_SCALE_NON_LINEAR]	= "non-linear",
-> +};
-> +
-> +
-
-Delete one blank line
-
-> +enum backlight_scale {
-> +	BACKLIGHT_SCALE_UNKNOWN,
-> +	BACKLIGHT_SCALE_CIE1931 = 1,
-> +	BACKLIGHT_SCALE_PERCEPTUAL,
-> +	BACKLIGHT_SCALE_LINEAR,
-> +	BACKLIGHT_SCALE_NON_LINEAR,	/* needed for backwards compatibility */
-
-maybe better list the more generic options first, same for the string
-table.
+>         return_ACPI_STATUS(status);
+>  }
+>
+> --
+> 2.17.1
+>
