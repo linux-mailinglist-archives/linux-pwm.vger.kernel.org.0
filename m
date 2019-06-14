@@ -2,128 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 508EE45853
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2019 11:13:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 558564585B
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2019 11:14:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfFNJNF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 14 Jun 2019 05:13:05 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:32773 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725859AbfFNJNE (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 14 Jun 2019 05:13:04 -0400
-Received: by mail-ot1-f66.google.com with SMTP id p4so2016299oti.0;
-        Fri, 14 Jun 2019 02:13:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iQKOlho3IePwEIN90jAdwdDwovI9WsnmIGTODVgkjRA=;
-        b=WBt42ZFsjkB1h+W59AEmW0p5Z4PbncLAzeV7iKPVlD7QvQ9y2IT96iXNMvAaPvBZ9T
-         kRypHl/oFlCIe9FQwmX2HizCmXz1mn7xXMMBTgmWJwP5zhs0xdc5J8+A3J0zzmjITFgy
-         YXwY53hLE3WZY2zcjfJt0pECB/c4SFYu4lkEHDr+ViYw0Z73lawdd1XkJDJIiojbhg19
-         IM0VlvJkQuGKP73ImtI2UpZVMxw/VIYTU2yj90HdX2qnxEX+mMQLiVCpvdMGICkDUsSk
-         5AVj2BjxWjA1TK6dpx6Ixr4qzMFPp+1k/nO5Rhd5Wmfqaxy6t2KeNpr3mJK1h9DlTgIy
-         tE8w==
-X-Gm-Message-State: APjAAAXF07kaErJ4haKJqz+S1idWeYEYZed0uniVnjQ9T0lCeNSeuNFW
-        N4axdw0modMa5gQJ3NmPag31s54hLH+9NlVD9A0=
-X-Google-Smtp-Source: APXvYqwmdZTMd2v6GPlEy1a/TL7qrJsrqpXKgBAz63iJnH2gtW407SGicB8TN5jAyyOvInGV4i/vIKKPF+eAlUMk8A4=
-X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr2077918otp.189.1560503583969;
- Fri, 14 Jun 2019 02:13:03 -0700 (PDT)
+        id S1725859AbfFNJOg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 14 Jun 2019 05:14:36 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:57303 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfFNJOg (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 14 Jun 2019 05:14:36 -0400
+Received: from localhost (aaubervilliers-681-1-81-150.w90-88.abo.wanadoo.fr [90.88.23.150])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id D8B1F240002;
+        Fri, 14 Jun 2019 09:14:33 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 11:14:33 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: pwm: Convert Allwinner PWM to a schema
+Message-ID: <20190614091433.xac42w3n7cx7buh6@flea>
+References: <20190516120848.25007-1-maxime.ripard@bootlin.com>
+ <20190607111838.xlx74cvcfhaob3wf@flea>
 MIME-Version: 1.0
-References: <cover.1560327219.git.nikolaus.voss@loewensteinmedical.de> <e2a4ddfd93a904b50b7ccc074e00e14dc4661963.1560327219.git.nikolaus.voss@loewensteinmedical.de>
-In-Reply-To: <e2a4ddfd93a904b50b7ccc074e00e14dc4661963.1560327219.git.nikolaus.voss@loewensteinmedical.de>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 14 Jun 2019 11:12:53 +0200
-Message-ID: <CAJZ5v0jqxWs=PPik-TCDqQiyxCSyRP7HTue1WsdWP9e-nik2eA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table loads
-To:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        linux-leds@vger.kernel.org,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        nv@vosn.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2ulork7hxmrmxe3s"
+Content-Disposition: inline
+In-Reply-To: <20190607111838.xlx74cvcfhaob3wf@flea>
+User-Agent: NeoMutt/20180716
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 10:36 AM Nikolaus Voss
-<nikolaus.voss@loewensteinmedical.de> wrote:
->
-> If an ACPI SSDT overlay is loaded after built-in tables
-> have been loaded e.g. via configfs or efivar_ssdt_load()
-> it is necessary to rewalk the namespace to resolve
-> references. Without this, relative and absolute paths
-> like ^PCI0.SBUS or \_SB.PCI0.SBUS are not resolved
-> correctly.
->
-> Make configfs load use the same method as efivar_ssdt_load().
->
-> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
 
-This is fine by me, so
+--2ulork7hxmrmxe3s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Fri, Jun 07, 2019 at 01:18:38PM +0200, Maxime Ripard wrote:
+> On Thu, May 16, 2019 at 02:08:48PM +0200, Maxime Ripard wrote:
+> > The Allwinner SoCs have a PWM controller supported in Linux, with a
+> > matching Device Tree binding.
+> >
+> > Now that we have the DT validation in place, let's convert the device tree
+> > bindings for that controller over to a YAML schemas.
+> >
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>
+> Ping?
 
-Or if you want me to take this patch (without the other two in the
-series), please let me know.
+Anyone? Should I just go ahead and merge it through the sunxi tree?
 
-As for the other two patches, someone else needs to review them for
-you as I'm not particularly familiar with the PWM subsystem.
+Maxime
 
-> ---
->  drivers/acpi/acpi_configfs.c   |  6 +-----
->  drivers/acpi/acpica/tbxfload.c | 11 +++++++++++
->  2 files changed, 12 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/acpi/acpi_configfs.c b/drivers/acpi/acpi_configfs.c
-> index f92033661239..663f0d88f912 100644
-> --- a/drivers/acpi/acpi_configfs.c
-> +++ b/drivers/acpi/acpi_configfs.c
-> @@ -56,11 +56,7 @@ static ssize_t acpi_table_aml_write(struct config_item *cfg,
->         if (!table->header)
->                 return -ENOMEM;
->
-> -       ACPI_INFO(("Host-directed Dynamic ACPI Table Load:"));
-> -       ret = acpi_tb_install_and_load_table(
-> -                       ACPI_PTR_TO_PHYSADDR(table->header),
-> -                       ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL, FALSE,
-> -                       &table->index);
-> +       ret = acpi_load_table(table->header);
->         if (ret) {
->                 kfree(table->header);
->                 table->header = NULL;
-> diff --git a/drivers/acpi/acpica/tbxfload.c b/drivers/acpi/acpica/tbxfload.c
-> index 4f30f06a6f78..ef8f8a9f3c9c 100644
-> --- a/drivers/acpi/acpica/tbxfload.c
-> +++ b/drivers/acpi/acpica/tbxfload.c
-> @@ -297,6 +297,17 @@ acpi_status acpi_load_table(struct acpi_table_header *table)
->         status = acpi_tb_install_and_load_table(ACPI_PTR_TO_PHYSADDR(table),
->                                                 ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL,
->                                                 FALSE, &table_index);
-> +
-> +       if (ACPI_SUCCESS(status)) {
-> +               /* Complete the initialization/resolution of package objects */
-> +
-> +               status = acpi_ns_walk_namespace(ACPI_TYPE_PACKAGE,
-> +                                               ACPI_ROOT_OBJECT,
-> +                                               ACPI_UINT32_MAX, 0,
-> +                                               acpi_ns_init_one_package,
-> +                                               NULL, NULL, NULL);
-> +       }
-> +
->         return_ACPI_STATUS(status);
->  }
->
-> --
-> 2.17.1
->
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--2ulork7hxmrmxe3s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQNleQAKCRDj7w1vZxhR
+xbjNAP9u2gIWLx6Xy6i2Tdwxun/a8yx08d/HSPLSI34w6E8USAD9H4mszsZNc+Uo
+kU9HDUDOJN7I1BDXvlp8F8tUft9QOAE=
+=aqsN
+-----END PGP SIGNATURE-----
+
+--2ulork7hxmrmxe3s--
