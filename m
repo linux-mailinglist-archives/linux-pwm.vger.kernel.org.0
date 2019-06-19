@@ -2,179 +2,106 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 24CA54B596
-	for <lists+linux-pwm@lfdr.de>; Wed, 19 Jun 2019 11:53:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38C0B4B6AB
+	for <lists+linux-pwm@lfdr.de>; Wed, 19 Jun 2019 13:06:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731351AbfFSJwk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 19 Jun 2019 05:52:40 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:13226 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726826AbfFSJwk (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 19 Jun 2019 05:52:40 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5J9kvaL028234;
-        Wed, 19 Jun 2019 11:52:17 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=rXR4M7t22XwNh12WImA9EjQhM49Lilzc8OvfTApgm+o=;
- b=iGGsogxeuihyRqyf+NUuAHw1UY8OdhkL66YAdnA03GETYkx8MvSRj/acGEsad8Bv9CZL
- yflRA4BVX68NOhqfBKkYR/ldH4q0H8mtoDXk2198JgawTSuSfYxANORwl2rpz1OukU8M
- p3owuyH3jdgaxsSwaxE/KgkD0q72El3OGyLNFocpuuPvI3MQmPgdPdrszukc0K+q8J+V
- K8jHfRrbQAdHf5AVdAMbJ0Mtqngvm+ckjur9u7Mb3+d4cg6sIZ8Nl8Y40hNwvQ32Nw1p
- fnar9ce4L7R/af3VHInsrXbCJV/hIw3WvWLlNSjapiA/BLoVzHRZTsiWvVm9FDa/3vlv Lg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2t781uu6dm-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 19 Jun 2019 11:52:17 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2E17634;
-        Wed, 19 Jun 2019 09:52:17 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 126D124CA;
-        Wed, 19 Jun 2019 09:52:17 +0000 (GMT)
-Received: from localhost (10.75.127.44) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Jun 2019 11:52:16
- +0200
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
-        <alexandre.torgue@st.com>
-CC:     <mark.rutland@arm.com>, <linux@armlinux.org.uk>,
-        <mcoquelin.stm32@gmail.com>, <fabrice.gasnier@st.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <benjamin.gaignard@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH 5/5] ARM: dts: stm32: add pwm cells to stm32f746
-Date:   Wed, 19 Jun 2019 11:52:05 +0200
-Message-ID: <1560937925-8990-6-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560937925-8990-1-git-send-email-fabrice.gasnier@st.com>
-References: <1560937925-8990-1-git-send-email-fabrice.gasnier@st.com>
+        id S1727134AbfFSLF7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 19 Jun 2019 07:05:59 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55584 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731566AbfFSLF6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 19 Jun 2019 07:05:58 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a15so1270615wmj.5
+        for <linux-pwm@vger.kernel.org>; Wed, 19 Jun 2019 04:05:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xl41q9hNOc/g9EYGMDVv6e3kqykgA8u4AjfGsUyaRHQ=;
+        b=JdBKTLDrjuc2YV4PWxdd20VcvL3iFMegCFa3Q6/uzxvqugEYTjmLnyj3TVyv5+lys4
+         PVN+wGlTXU/nam3nxiTvzOWWzj9hPkoHQ+xbPGb+E3B8NyUvnBV/CfvX4yvCMHuiSmFt
+         3AqbNmYSEqL1Es3/1h3AwunxKHbRwcaLzPU1yKE6dk5/1OO04B5XEPyBvkL2tpm1Flem
+         EFAI8EhR6ft5+W4a1Rcw04rvaT/1+0dFW8gjs1eG/PoBy2xi+eySWVD8tVEPwTsoKRwn
+         F9bSd1N5bhkLh+fdtRtGYuKSbiqJP1LG/v1NxcE+PbhV/JwyBeI09YxUpy7B5UiSy2q3
+         Vipg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xl41q9hNOc/g9EYGMDVv6e3kqykgA8u4AjfGsUyaRHQ=;
+        b=GsJb+y32r1EzsvnOdFWcldw0Q0lc9m0Sl+Vj7lsXXJy0pJzZ+lnK1gLCLIimLcJJTT
+         km5QNaogycv1GMOJqN4uu+fgnq6vyA32w1PpfO4EDLvxTsg9cqADfglGunwGsSCPamjp
+         wJ69mzlyD4TJa61BFXJMR3v0RIiTZ9G7zQ+LoruNW6bjtSzxEPlYGyPtcGUJ76azvjoz
+         FdpT5GlncjMPvC9BVL3FQ6vaLaK6V3F2L9NbelhZi15H/7VOCMMMtu/AEMifh2WNR199
+         xX+FiUBzaQ/P0kDO7dhVqVYpfeXRGZk7FVNWoTy/mr6wPLHlx6f2/YJDpYggop9dKcdW
+         05aA==
+X-Gm-Message-State: APjAAAUiqAybkkBca7kFvHEzI8SPdplF/oIczK8rGwFROyIjVqjYQEmg
+        y2EcEkz94RtR0vGIha6mUAZnnw==
+X-Google-Smtp-Source: APXvYqy0Vj4gusY17LcUMJkB9rXJuNIK1DSDRJXpXkTwo5jvGI4HfycfIswmjX9F29RGTZ3uyd8gDw==
+X-Received: by 2002:a7b:c313:: with SMTP id k19mr7615451wmj.2.1560942356321;
+        Wed, 19 Jun 2019 04:05:56 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id u6sm1599073wml.9.2019.06.19.04.05.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 19 Jun 2019 04:05:55 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 12:05:53 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 1/4] MAINTAINERS: Add entry for stable backlight sysfs
+ ABI documentation
+Message-ID: <20190619110553.zyz3jqshscqxqtum@holly.lan>
+References: <20190613194326.180889-1-mka@chromium.org>
+ <20190613194326.180889-2-mka@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_05:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613194326.180889-2-mka@chromium.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-STM32 Timers support generic 3 cells PWM to encode PWM number, period and
-polarity.
+On Thu, Jun 13, 2019 at 12:43:23PM -0700, Matthias Kaehlcke wrote:
+> Add an entry for the stable backlight sysfs ABI to the MAINTAINERS
+> file.
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 
-Fixes: 9bd7b77af8e4 ("ARM: dts: stm32: add Timers driver for stm32f746
-MCU")
+Well spotted. Thanks!
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- arch/arm/boot/dts/stm32f746.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
-index a25b700..d26f93f 100644
---- a/arch/arm/boot/dts/stm32f746.dtsi
-+++ b/arch/arm/boot/dts/stm32f746.dtsi
-@@ -94,6 +94,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -123,6 +124,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -152,6 +154,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -180,6 +183,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -249,6 +253,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -270,6 +275,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 		};
-@@ -285,6 +291,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 		};
-@@ -419,6 +426,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -440,6 +448,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -512,6 +521,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -533,6 +543,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 		};
-@@ -548,6 +559,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 		};
--- 
-2.7.4
 
+Daniel.
+
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 57f496cff999..d51e74340870 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2857,6 +2857,7 @@ F:	drivers/video/backlight/
+>  F:	include/linux/backlight.h
+>  F:	include/linux/pwm_backlight.h
+>  F:	Documentation/devicetree/bindings/leds/backlight
+> +F:	Documentation/ABI/stable/sysfs-class-backlight
+>  
+>  BATMAN ADVANCED
+>  M:	Marek Lindner <mareklindner@neomailbox.ch>
+> -- 
+> 2.22.0.rc2.383.gf4fbbf30c2-goog
+> 
