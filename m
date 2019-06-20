@@ -2,161 +2,131 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D6B84C7A9
-	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jun 2019 08:49:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19FE04CAB8
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jun 2019 11:24:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfFTGtb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 20 Jun 2019 02:49:31 -0400
-Received: from mail.steuer-voss.de ([85.183.69.95]:60686 "EHLO
-        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726262AbfFTGtb (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 20 Jun 2019 02:49:31 -0400
-X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
-Received: by mail.steuer-voss.de (Postfix, from userid 1000)
-        id 2BDDB4D00C; Thu, 20 Jun 2019 08:49:28 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.steuer-voss.de (Postfix) with ESMTP id 295AA4D000;
-        Thu, 20 Jun 2019 08:49:28 +0200 (CEST)
-Date:   Thu, 20 Jun 2019 08:49:28 +0200 (CEST)
-From:   Nikolaus Voss <nv@vosn.de>
-X-X-Sender: nv@fox.voss.local
-To:     "Moore, Robert" <robert.moore@intel.com>
-cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
- loads
-In-Reply-To: <94F2FBAB4432B54E8AACC7DFDE6C92E3B95FC28D@ORSMSX110.amr.corp.intel.com>
-Message-ID: <alpine.DEB.2.20.1906200843320.9673@fox.voss.local>
-References: <cover.1560327219.git.nikolaus.voss@loewensteinmedical.de> <e2a4ddfd93a904b50b7ccc074e00e14dc4661963.1560327219.git.nikolaus.voss@loewensteinmedical.de> <CAJZ5v0jqxWs=PPik-TCDqQiyxCSyRP7HTue1WsdWP9e-nik2eA@mail.gmail.com>
- <alpine.DEB.2.20.1906141114490.6579@fox.voss.local> <94F2FBAB4432B54E8AACC7DFDE6C92E3B95EFB26@ORSMSX110.amr.corp.intel.com> <alpine.DEB.2.20.1906170746150.12344@fox.voss.local> <94F2FBAB4432B54E8AACC7DFDE6C92E3B95F9EC6@ORSMSX110.amr.corp.intel.com>
- <alpine.DEB.2.20.1906181030240.24846@fox.voss.local>    <94F2FBAB4432B54E8AACC7DFDE6C92E3B95FB0BA@ORSMSX110.amr.corp.intel.com> <alpine.DEB.2.20.1906191123400.34742@fox.voss.local> <94F2FBAB4432B54E8AACC7DFDE6C92E3B95FC28D@ORSMSX110.amr.corp.intel.com>
-User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
+        id S1725925AbfFTJYq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 20 Jun 2019 05:24:46 -0400
+Received: from mga05.intel.com ([192.55.52.43]:30814 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725875AbfFTJYq (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 20 Jun 2019 05:24:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 02:24:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,396,1557212400"; 
+   d="scan'208";a="154062813"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga008.jf.intel.com with ESMTP; 20 Jun 2019 02:24:44 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 7D194162; Thu, 20 Jun 2019 12:24:43 +0300 (EEST)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pwm@vger.kernel.org
+Subject: [PATCH] pwm: lpss: Convert to use SPDX identifier
+Date:   Thu, 20 Jun 2019 12:24:43 +0300
+Message-Id: <20190620092443.4854-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 19 Jun 2019, Moore, Robert wrote:
->
->
->> -----Original Message-----
->> From: Nikolaus Voss [mailto:nv@vosn.de]
->> Sent: Wednesday, June 19, 2019 2:31 AM
->> To: Moore, Robert <robert.moore@intel.com>
->> Cc: Rafael J. Wysocki <rafael@kernel.org>; Rafael J. Wysocki
->> <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; Schmauss, Erik
->> <erik.schmauss@intel.com>; Jacek Anaszewski
->> <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy
->> <dmurphy@ti.com>; Thierry Reding <thierry.reding@gmail.com>; ACPI Devel
->> Maling List <linux-acpi@vger.kernel.org>; open list:ACPI COMPONENT
->> ARCHITECTURE (ACPICA) <devel@acpica.org>; linux-leds@vger.kernel.org;
->> Linux PWM List <linux-pwm@vger.kernel.org>; Linux Kernel Mailing List
->> <linux-kernel@vger.kernel.org>; nikolaus.voss@loewensteinmedical.de
->> Subject: RE: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
->> loads
->>
->> Hi Bob,
->>
->> On Tue, 18 Jun 2019, Moore, Robert wrote:
->>>
->>>
->>>> -----Original Message-----
->>>> From: Moore, Robert
->>>> Sent: Tuesday, June 18, 2019 1:25 PM
->>>> To: 'Nikolaus Voss' <nv@vosn.de>
->>>> Cc: 'Rafael J. Wysocki' <rafael@kernel.org>; 'Rafael J. Wysocki'
->>>> <rjw@rjwysocki.net>; 'Len Brown' <lenb@kernel.org>; Schmauss, Erik
->>>> <erik.schmauss@intel.com>; 'Jacek Anaszewski'
->>>> <jacek.anaszewski@gmail.com>; 'Pavel Machek' <pavel@ucw.cz>; 'Dan
->>>> Murphy' <dmurphy@ti.com>; 'Thierry Reding'
->>>> <thierry.reding@gmail.com>; 'ACPI Devel Maling List'
->>>> <linux-acpi@vger.kernel.org>; 'open list:ACPI COMPONENT ARCHITECTURE
->>>> (ACPICA)' <devel@acpica.org>; 'linux- leds@vger.kernel.org' <linux-
->> leds@vger.kernel.org>; 'Linux PWM List'
->>>> <linux-pwm@vger.kernel.org>; 'Linux Kernel Mailing List' <linux-
->>>> kernel@vger.kernel.org>
->>>> Subject: RE: [PATCH v2 1/3] ACPI: Resolve objects on host-directed
->>>> table loads
->>>>
->>>> If it is in fact the AcpiLoadTable interface that is incorrect, that
->>>> of course is different. I'll check that out next.
->>>>
->>> [Moore, Robert]
->>>
->>> Yes, this is the issue, not specifically the Load() operator, but the
->>> AcpiLoadTable interface only.
->>
->> thanks for checking this out. So what is the conclusion? Is my fix of
->> AcpiLoadTable() sufficient or do we need a different solution?
->>
->> Niko
->>
->
->
-> Your change is in the correct area. We want to do something like this, however:
->
-> diff --git a/source/components/executer/exconfig.c b/source/components/executer/exconfig.c
-> index 84a058ada..eba1a6d28 100644
-> --- a/source/components/executer/exconfig.c
-> +++ b/source/components/executer/exconfig.c
-> @@ -342,10 +342,9 @@ AcpiExLoadTableOp (
->         return_ACPI_STATUS (Status);
->     }
->
-> -    /* Complete the initialization/resolution of package objects */
-> +    /* Complete the initialization/resolution of new objects */
->
-> -    Status = AcpiNsWalkNamespace (ACPI_TYPE_PACKAGE, ACPI_ROOT_OBJECT,
-> -        ACPI_UINT32_MAX, 0, AcpiNsInitOnePackage, NULL, NULL, NULL);
-> +    AcpiNsInitializeObjects ();
->
->     /* Parameter Data (optional) */
->
-> @@ -620,10 +619,11 @@ AcpiExLoadOp (
->         return_ACPI_STATUS (Status);
->     }
->
-> -    /* Complete the initialization/resolution of package objects */
-> +    /* Complete the initialization/resolution of new objects */
->
-> -    Status = AcpiNsWalkNamespace (ACPI_TYPE_PACKAGE, ACPI_ROOT_OBJECT,
-> -        ACPI_UINT32_MAX, 0, AcpiNsInitOnePackage, NULL, NULL, NULL);
-> +    AcpiExExitInterpreter ();
-> +    AcpiNsInitializeObjects ();
-> +    AcpiExEnterInterpreter ();
->
->     /* Store the DdbHandle into the Target operand */
->
-> diff --git a/source/components/tables/tbxfload.c b/source/components/tables/tbxfload.c
-> index 217d54bf0..1e17db6c8 100644
-> --- a/source/components/tables/tbxfload.c
-> +++ b/source/components/tables/tbxfload.c
-> @@ -479,6 +479,13 @@ AcpiLoadTable (
->     ACPI_INFO (("Host-directed Dynamic ACPI Table Load:"));
->     Status = AcpiTbInstallAndLoadTable (ACPI_PTR_TO_PHYSADDR (Table),
->         ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL, FALSE, &TableIndex);
-> +    if (ACPI_SUCCESS (Status))
-> +    {
-> +        /* Complete the initialization/resolution of new objects */
-> +
-> +        AcpiNsInitializeObjects ();
-> +    }
-> +
->     return_ACPI_STATUS (Status);
-> }
+This gets rid of the license boilerplate duplicated in each file.
 
-Ok, I see your are taking this up (I was a bit unsure after your previous 
-post). Thanks,
-Niko
+No functional changes intended.
+
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/pwm/pwm-lpss-pci.c      | 5 +----
+ drivers/pwm/pwm-lpss-platform.c | 5 +----
+ drivers/pwm/pwm-lpss.c          | 5 +----
+ drivers/pwm/pwm-lpss.h          | 5 +----
+ 4 files changed, 4 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/pwm/pwm-lpss-pci.c b/drivers/pwm/pwm-lpss-pci.c
+index c1527cb645be..5e47d9bccf22 100644
+--- a/drivers/pwm/pwm-lpss-pci.c
++++ b/drivers/pwm/pwm-lpss-pci.c
+@@ -1,13 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Intel Low Power Subsystem PWM controller PCI driver
+  *
+  * Copyright (C) 2014, Intel Corporation
+  *
+  * Derived from the original pwm-lpss.c
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+  */
+ 
+ #include <linux/kernel.h>
+diff --git a/drivers/pwm/pwm-lpss-platform.c b/drivers/pwm/pwm-lpss-platform.c
+index 757230e1f575..ce77539a0855 100644
+--- a/drivers/pwm/pwm-lpss-platform.c
++++ b/drivers/pwm/pwm-lpss-platform.c
+@@ -1,13 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Intel Low Power Subsystem PWM controller driver
+  *
+  * Copyright (C) 2014, Intel Corporation
+  *
+  * Derived from the original pwm-lpss.c
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+  */
+ 
+ #include <linux/acpi.h>
+diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
+index 2ac3a2aa9e53..9a1b25926956 100644
+--- a/drivers/pwm/pwm-lpss.c
++++ b/drivers/pwm/pwm-lpss.c
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Intel Low Power Subsystem PWM controller driver
+  *
+@@ -7,10 +8,6 @@
+  * Author: Chang Rebecca Swee Fun <rebecca.swee.fun.chang@intel.com>
+  * Author: Chew Chiau Ee <chiau.ee.chew@intel.com>
+  * Author: Alan Cox <alan@linux.intel.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+  */
+ 
+ #include <linux/delay.h>
+diff --git a/drivers/pwm/pwm-lpss.h b/drivers/pwm/pwm-lpss.h
+index 3236be835bd9..f47dede100f8 100644
+--- a/drivers/pwm/pwm-lpss.h
++++ b/drivers/pwm/pwm-lpss.h
+@@ -1,13 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Intel Low Power Subsystem PWM controller driver
+  *
+  * Copyright (C) 2014, Intel Corporation
+  *
+  * Derived from the original pwm-lpss.c
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+  */
+ 
+ #ifndef __PWM_LPSS_H
+-- 
+2.20.1
+
