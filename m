@@ -2,45 +2,45 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 62B9651C59
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 Jun 2019 22:31:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3FB551C5C
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 Jun 2019 22:31:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731833AbfFXUbZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 24 Jun 2019 16:31:25 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39050 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731819AbfFXUbZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Jun 2019 16:31:25 -0400
-Received: by mail-pf1-f196.google.com with SMTP id j2so8162715pfe.6
-        for <linux-pwm@vger.kernel.org>; Mon, 24 Jun 2019 13:31:24 -0700 (PDT)
+        id S1731825AbfFXUb3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 24 Jun 2019 16:31:29 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39770 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731828AbfFXUb0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Jun 2019 16:31:26 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b7so7552255pls.6
+        for <linux-pwm@vger.kernel.org>; Mon, 24 Jun 2019 13:31:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lSYYVqhHYII5ViyDtFOkp4I/i31+agPnClo/p5CN7rU=;
-        b=Mg4fv0I1KvsvYo7P+k+I0/jzY0DpnxpM73UwzZA397nYxCv69Pmx51bd0IZKJQS/T0
-         e/T2av1TRlRVmfz56FF9Jew1DTrqN5iqbEIH15c5yTcYw4xPo9wLhvaIaKD96sdi5ihi
-         w7DU16/nElyk+XneNHQnooeQwSyLleBKKFhyY=
+        bh=uZKHvCx8L/nRTrUb/ohywx0d3IXX3vcHyiOoGdIF2Vg=;
+        b=G/bUhQslRBb9yDeN/Ju1v2H78Jn3pcV6lvi6ZsyGVCuBbzJ+oIhAcvU04QfS10U/4R
+         pdE3J6hWbwxyP4QcHwwtH00UNcd1LgYEz2XOvY5wmOr4tiTSrA/9uD0OATvj9bqrmoPn
+         id+vaY8rgFoQ9n7vUdhFL4XPoNNii/WHKNs9A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lSYYVqhHYII5ViyDtFOkp4I/i31+agPnClo/p5CN7rU=;
-        b=SRDKoX7nl8q4fSxtIKsqBqcSYutLmNWzqu2fz35sqasopPYYjBziC9rubtQbVQ+daS
-         +uwQrFw1j1YyQ5awyXM4IFujY9cgnw1nsuGu4nHFIwIexZPnHMbZ04DzuHIuRcUox7bf
-         vjI4dTIjsbEiZIGQzoigX2Igyos5KWcozkqBdxVTzhbM/a01JCCyCN5ygQ90C6o2ceKo
-         w6SzxFUamUUyJ+GdbvKbKYuaY0TZToPef24uByecVaEOEagy6qS+ACr0TNbI/+dIFS+j
-         FAs8mIk8SSctlk/4/OUAa+9/tdHiFCx6zVWtF/YTeBSnMxq1EzKHPlGdXC8eJmxPXpF2
-         6UdA==
-X-Gm-Message-State: APjAAAXVWwcm5PwOuzohDOAR20IuuoGdY4N+s1MwNoGfY+rCxxAIVxDF
-        +0MvwmEFStLYNozgEuVJC42qvA==
-X-Google-Smtp-Source: APXvYqzbWxM5xrdZvQVssIkJ108K28bRsNta+aYXMp4VczMFyBnMpEFk0/3OUZMH3nt4zl2HLpoBMQ==
-X-Received: by 2002:a65:62ca:: with SMTP id m10mr34696355pgv.57.1561408284531;
-        Mon, 24 Jun 2019 13:31:24 -0700 (PDT)
+        bh=uZKHvCx8L/nRTrUb/ohywx0d3IXX3vcHyiOoGdIF2Vg=;
+        b=s9iaDsTsK03M2czX1G1kl/Nd6bfILCzaIn0rxzNJA4NZn0sautjOPxlz4K5LcagIzh
+         5xQ3/3d/JuuxwVljWXqn/R6WtWlNOMwcNbV/8R7Tv31sxPHPb5BDKkUVP6s4lxZOdxwA
+         3cZfRzL0e4fY2JACxuQBJ4At6bdvUBi7t9tZhmW7CRviOy0K2FuZmd2LUd3Yic1x90bu
+         d1aKEt9hoxwBBfqeYhQWC3VSfKOqzaBinwPJaoVOJdxgo1G66AAl+HY4WPCxuOZVE+6o
+         jAk0w49PvyU/QYHnCYv0CfhR3Hy/8L3g3rDHZluUIlBip1ThUm9w+KPDrBmhnG+3I3wC
+         Bz4w==
+X-Gm-Message-State: APjAAAUOyHKPAB/a+isulX7/f8H2ddkTc2T/rTKMon+aiL8xg5+cLOR3
+        b9Xc6CLIBEy/Fe16b6jVfsknkg==
+X-Google-Smtp-Source: APXvYqzY0+srP89wCVDbPca+cx8EHxAJHQuHwUe5lX3IaE2YnttbyJ+9Ii8mxU7OnlFea1FBJZ1y0Q==
+X-Received: by 2002:a17:902:2006:: with SMTP id n6mr94261265pla.232.1561408286127;
+        Mon, 24 Jun 2019 13:31:26 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id e10sm9833411pfi.153.2019.06.24.13.31.23
+        by smtp.gmail.com with ESMTPSA id r2sm21887470pfl.67.2019.06.24.13.31.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 13:31:24 -0700 (PDT)
+        Mon, 24 Jun 2019 13:31:25 -0700 (PDT)
 From:   Matthias Kaehlcke <mka@chromium.org>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
@@ -55,9 +55,9 @@ Cc:     linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         Pavel Machek <pavel@ucw.cz>,
         Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v2 3/4] backlight: pwm_bl: Set scale type for CIE 1931 curves
-Date:   Mon, 24 Jun 2019 13:31:12 -0700
-Message-Id: <20190624203114.93277-4-mka@chromium.org>
+Subject: [PATCH v2 4/4] backlight: pwm_bl: Set scale type for brightness curves specified in the DT
+Date:   Mon, 24 Jun 2019 13:31:13 -0700
+Message-Id: <20190624203114.93277-5-mka@chromium.org>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 In-Reply-To: <20190624203114.93277-1-mka@chromium.org>
 References: <20190624203114.93277-1-mka@chromium.org>
@@ -68,51 +68,74 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-For backlight curves calculated with the CIE 1931 algorithm set
-the brightness scale type property accordingly. This makes the
+Check if a brightness curve specified in the device tree is linear or
+not and set the corresponding property accordingly. This makes the
 scale type available to userspace via the 'scale' sysfs attribute.
 
+To determine if a curve is linear it is compared to a interpolated linear
+curve between min and max brightness. The curve is considered linear if
+no value deviates more than +/-5% of ${brightness_range} from their
+interpolated value.
+
 Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 ---
 Changes in v2:
-- added Enric's 'Tested-by' tag
+- use 128 (power of two) instead of 100 as factor for the slope
+- add comment about max quantization error
 - added Daniel's 'Acked-by' tag
 ---
- drivers/video/backlight/pwm_bl.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/video/backlight/pwm_bl.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
 diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index fb45f866b923..f067fe7aa35d 100644
+index f067fe7aa35d..2297fb4af49d 100644
 --- a/drivers/video/backlight/pwm_bl.c
 +++ b/drivers/video/backlight/pwm_bl.c
-@@ -553,6 +553,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 		goto err_alloc;
- 	}
+@@ -404,6 +404,31 @@ int pwm_backlight_brightness_default(struct device *dev,
+ }
+ #endif
  
-+	memset(&props, 0, sizeof(struct backlight_properties));
++static bool pwm_backlight_is_linear(struct platform_pwm_backlight_data *data)
++{
++	unsigned int nlevels = data->max_brightness + 1;
++	unsigned int min_val = data->levels[0];
++	unsigned int max_val = data->levels[nlevels - 1];
++	/*
++	 * Multiplying by 128 means that even in pathological cases such
++	 * as (max_val - min_val) == nlevels the error at max_val is less
++	 * than 1%.
++	 */
++	unsigned int slope = (128 * (max_val - min_val)) / nlevels;
++	unsigned int margin = (max_val - min_val) / 20; /* 5% */
++	int i;
 +
- 	if (data->levels) {
- 		/*
- 		 * For the DT case, only when brightness levels is defined
-@@ -591,6 +593,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
++	for (i = 1; i < nlevels; i++) {
++		unsigned int linear_value = min_val + ((i * slope) / 128);
++		unsigned int delta = abs(linear_value - data->levels[i]);
++
++		if (delta > margin)
++			return false;
++	}
++
++	return true;
++}
++
+ static int pwm_backlight_initial_power_state(const struct pwm_bl_data *pb)
+ {
+ 	struct device_node *node = pb->dev->of_node;
+@@ -567,6 +592,11 @@ static int pwm_backlight_probe(struct platform_device *pdev)
  
  			pb->levels = data->levels;
  		}
 +
-+		props.scale = BACKLIGHT_SCALE_CIE1931;
- 	} else {
++		if (pwm_backlight_is_linear(data))
++			props.scale = BACKLIGHT_SCALE_LINEAR;
++		else
++			props.scale = BACKLIGHT_SCALE_NON_LINEAR;
+ 	} else if (!data->max_brightness) {
  		/*
- 		 * That only happens for the non-DT case, where platform data
-@@ -601,7 +605,6 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 
- 	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
- 
--	memset(&props, 0, sizeof(struct backlight_properties));
- 	props.type = BACKLIGHT_RAW;
- 	props.max_brightness = data->max_brightness;
- 	bl = backlight_device_register(dev_name(&pdev->dev), &pdev->dev, pb,
+ 		 * If no brightness levels are provided and max_brightness is
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
