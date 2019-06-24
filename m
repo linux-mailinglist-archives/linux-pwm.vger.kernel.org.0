@@ -2,123 +2,97 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FBEF51B00
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 Jun 2019 20:54:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C09D51C63
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 Jun 2019 22:31:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbfFXSyQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 24 Jun 2019 14:54:16 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35484 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727851AbfFXSyN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Jun 2019 14:54:13 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d126so8048768pfd.2
-        for <linux-pwm@vger.kernel.org>; Mon, 24 Jun 2019 11:54:12 -0700 (PDT)
+        id S1731760AbfFXUbV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 24 Jun 2019 16:31:21 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35121 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729013AbfFXUbV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Jun 2019 16:31:21 -0400
+Received: by mail-pl1-f196.google.com with SMTP id p1so7553444plo.2
+        for <linux-pwm@vger.kernel.org>; Mon, 24 Jun 2019 13:31:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=b5H8RtrC0Gc1uC0P9BdPRFehSMvKPE2eLTGWQg50TOo=;
-        b=VRfzqrCH2jFEWWjjlDlGd02Xe8ZQsb0AVWLLZIFUZPGPtVv9VLFJ+zz8bC8OUOaOUx
-         Oqcae7vUarDSmjpET3Ghcc9JlKP5Vf1bg21hv25Rq8NQJgF9ue1AbbSuNNetGP6GzyMs
-         qfJaOC3Qph/i6rx21qTIWZqCKCXB8QBPi1VFQ=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p8eKR4sWGzU8LALqN+Rywpmmy+C9BMm/CB6qnIMC0UI=;
+        b=OerfV0snZfWTKFe6g+LZSlNlk+hlaRZTYdkXi6xFzubIfsuYRqrR478es590r/uipG
+         Za9cOfVOlS/Tx8biMdxBPavuRBtuFpD5DqsfSl4Frr5uGAgXHd9EfJPHv7PHPKGz5ykf
+         Ha81o5GREDJwrbSfWGjsmCtO9Dqm7iWDvuM8g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b5H8RtrC0Gc1uC0P9BdPRFehSMvKPE2eLTGWQg50TOo=;
-        b=oqrCtWCzHvvzO1MA8HLSX4sfIhQuHHVFPD/PP/UWMSN2sGIaB6OdfZksuP3Xd222Xe
-         2YwKqhzkCMrRroMyTxtKDOHSqbt7tIGt13r8IfcylQ031BmH/uQ0AesBaU8FprMEcHMJ
-         J1ImYZrq9XpiC78k0qRF/I5Wl7F/3IqIfYwdVehG+TVu93cuQmBpoU/HWATXXeEfqGPv
-         B0hIYLTLZXGM+GMzuhiqmiIEErZ6IYJoens/YAndt8MdAhAM7ZmdWwThfWtA2+wg/zHH
-         IE1P+Jkd4KdGtgHYyKckeH/kKvfthrPlmCT+jcC+WJ9NiwOCatDLvRe4m43JSDZmCoRc
-         /ATg==
-X-Gm-Message-State: APjAAAXqhVtxhkEutn8k6+SbK+6IBgix7leTo22lFbsY3/RnqIoLrX8/
-        Hb4EFDMqMOxvjJ+qZmjWZt1SAA==
-X-Google-Smtp-Source: APXvYqyXn1SQMUZwvxp4v/17SbLT1K8S5ekQlOyMcC+7be/m4tA2Bnx7hthlNDGzX/lhBeNI08UitQ==
-X-Received: by 2002:a17:90a:8a0b:: with SMTP id w11mr26442545pjn.125.1561402452192;
-        Mon, 24 Jun 2019 11:54:12 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p8eKR4sWGzU8LALqN+Rywpmmy+C9BMm/CB6qnIMC0UI=;
+        b=EbdkNLjpCiNjBu33ySIS4kXXD9+WFpsieXE2NLCavTAU9V9y18QMZK9mrGjIWAd1jr
+         t79Vj71YBu+blQzZ4QfT/tUIoE62o1KYIhZclp2S5h0zBByZd6PM0/4XKdyzX/WRDRXb
+         sm2/SvzJKZVWd0iF557ZAJnVlnT72OHxUApqSOwNZm8lUtzAJXIrriW8E262LC6g06gM
+         KZOQc9Xa9/euygvEf0BlM5g9ZZVRlAMhix04hhiqK99n99ALixhD2Nw/rSv9fryPS0bz
+         o0c+Es60vjwFgarPXzPM8jBuDd46gEfCnJol9/cY3Gcpi0ZJEyB5XWj6E5JEfjYA9Khi
+         qg6Q==
+X-Gm-Message-State: APjAAAXCEi6druYo4dkBYXI4ozMpjRa/sDKL/j/oJ77/TzKyd8YshsKA
+        sKcqSsaJkpgl6FI6CBfWkcuwmA==
+X-Google-Smtp-Source: APXvYqzBKihWAttr4Rykcb5BT7S4M6tWgTs4LN43nmmOkYIKYPwMKpzMISvKirmoiIp5hny8kMFQzQ==
+X-Received: by 2002:a17:902:d916:: with SMTP id c22mr20031582plz.195.1561408280395;
+        Mon, 24 Jun 2019 13:31:20 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id l7sm14434756pfl.9.2019.06.24.11.54.10
+        by smtp.gmail.com with ESMTPSA id u128sm15650127pfu.26.2019.06.24.13.31.19
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 11:54:11 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 11:54:08 -0700
+        Mon, 24 Jun 2019 13:31:19 -0700 (PDT)
 From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+To:     Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
         Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Douglas Anderson <dianders@chromium.org>,
         Brian Norris <briannorris@chromium.org>,
         Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 4/4] backlight: pwm_bl: Set scale type for brightness
- curves specified in the DT
-Message-ID: <20190624185408.GB137143@google.com>
-References: <20190613194326.180889-1-mka@chromium.org>
- <20190613194326.180889-5-mka@chromium.org>
- <9ea1bb40-95a6-7a67-a8a6-ecc77a70e547@linaro.org>
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v2 0/4] backlight: Expose brightness curve type through sysfs
+Date:   Mon, 24 Jun 2019 13:31:09 -0700
+Message-Id: <20190624203114.93277-1-mka@chromium.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <9ea1bb40-95a6-7a67-a8a6-ecc77a70e547@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Daniel,
+Backlight brightness curves can have different shapes. The two main
+types are linear and non-linear curves. The human eye doesn't
+perceive linearly increasing/decreasing brightness as linear (see
+also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
+linearly to human eye"), hence many backlights use non-linear (often
+logarithmic) brightness curves. The type of curve is currently opaque
+to userspace, so userspace often relies on more or less reliable
+heuristics (like the number of brightness levels) to decide whether
+to treat a backlight device as linear or non-linear.
 
-On Fri, Jun 21, 2019 at 02:10:19PM +0100, Daniel Thompson wrote:
-> On 13/06/2019 20:43, Matthias Kaehlcke wrote:
-> > Check if a brightness curve specified in the device tree is linear or
-> > not and set the corresponding property accordingly. This makes the
-> > scale type available to userspace via the 'scale' sysfs attribute.
-> > 
-> > To determine if a curve is linear it is compared to a interpolated linear
-> > curve between min and max brightness. The curve is considered linear if
-> > no value deviates more than +/-5% of ${brightness_range} from their
-> > interpolated value.
-> > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> >   drivers/video/backlight/pwm_bl.c | 25 +++++++++++++++++++++++++
-> >   1 file changed, 25 insertions(+)
-> > 
-> > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> > index f067fe7aa35d..912407b6d67f 100644
-> > --- a/drivers/video/backlight/pwm_bl.c
-> > +++ b/drivers/video/backlight/pwm_bl.c
-> > @@ -404,6 +404,26 @@ int pwm_backlight_brightness_default(struct device *dev,
-> >   }
-> >   #endif
-> > +static bool pwm_backlight_is_linear(struct platform_pwm_backlight_data *data)
-> > +{
-> > +	unsigned int nlevels = data->max_brightness + 1;
-> > +	unsigned int min_val = data->levels[0];
-> > +	unsigned int max_val = data->levels[nlevels - 1];
-> > +	unsigned int slope = (100 * (max_val - min_val)) / nlevels;
-> 
-> Why 100 (rather than a power of 2)?
+Export the type of the brightness curve via a new sysfs attribute.
 
-I guess it came from the decimal part of my brain, I can change it to
-128 ;-)
+Matthias Kaehlcke (4):
+  MAINTAINERS: Add entry for stable backlight sysfs ABI documentation
+  backlight: Expose brightness curve type through sysfs
+  backlight: pwm_bl: Set scale type for CIE 1931 curves
+  backlight: pwm_bl: Set scale type for brightness curves specified in
+    the DT
 
-> It would also be good to have a comment here saying what the maximum
-> quantization error is. Doesn't have to be over complex just mentioning
-> something like the following (assuming you agree that its true ;-) ):
-> 
->   Multiplying by XXX means that even in pathalogical cases such as
->   (max_val - min_val) == nlevels then the error at max_val is less than
->   1%.
+ .../ABI/testing/sysfs-class-backlight         | 32 +++++++++++++++++
+ MAINTAINERS                                   |  2 ++
+ drivers/video/backlight/backlight.c           | 21 +++++++++++
+ drivers/video/backlight/pwm_bl.c              | 35 ++++++++++++++++++-
+ include/linux/backlight.h                     | 10 ++++++
+ 5 files changed, 99 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-backlight
 
-Sounds good, thanks for the suggestion!
+-- 
+2.22.0.410.gd8fdbe21b5-goog
 
-> With a suitable comment in the fixed point code:
-> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-
-Thanks
