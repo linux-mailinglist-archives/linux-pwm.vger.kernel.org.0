@@ -2,164 +2,139 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A92C05200D
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jun 2019 02:43:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5865152505
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jun 2019 09:42:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbfFYAnK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 24 Jun 2019 20:43:10 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41026 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729448AbfFYAnK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Jun 2019 20:43:10 -0400
-Received: by mail-qk1-f193.google.com with SMTP id c11so11254878qkk.8
-        for <linux-pwm@vger.kernel.org>; Mon, 24 Jun 2019 17:43:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e2ogumH57Dk+mOO0y5/CmcdAve3k/tPr0Lofkj3W1yQ=;
-        b=gn85bRpxX7rX0vPi2OF9kz6nsjSpDytW5uaW02EslXpNifmNJJW+bfXA/vNHvtnfyd
-         LEbGvEe0UTmhomOdUgl3WLDYKeBbP9GS8Ul3o4lm0omA18ix5UVvi5y53tJ9mWlSYZ+O
-         2tGmkRpE9D4p4h3dyylbbuMMhbJXozsVkMUW4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e2ogumH57Dk+mOO0y5/CmcdAve3k/tPr0Lofkj3W1yQ=;
-        b=JVNN3iIrqcqhPQCNdjANNDJzfS8sS0bQ6F1ggsYBVmlMs8B2sxP3NKxUlJ8oyCZxRK
-         hvItidGajcj9muSckGE1YeiW0VrcnsYHnNkTMBukUtlp66sEIKYBGgmAaRAJ8t4CtIdd
-         cXgzv2X7Q7SjKCrVbibN+8lLtoWxcX5XDDPlvNjU34RVIvqSDomDN62dkBEHHqzf6DTm
-         9uaBw3LNuWe7lLA1P+fnQ6Ce8HyYCxVQp3jiUskCNyYDeYcHWxgCFN4fo1Phkg7ASMwb
-         8ZDv7WuFa5gqxZtweBxbrxZSy5Iw1BpB/ZRAW0WPiwJCliUSy8GqWgXO8e+c7KPvmGWh
-         Nudg==
-X-Gm-Message-State: APjAAAUD2VjMUYNCgbKEa8S1CBzFbH/qRzbmFSpiBx8n45fL//ujRzQ7
-        rGXxtth++DGqIehSI8E1uVfFnkSka45fVIRKYAHXzQ==
-X-Google-Smtp-Source: APXvYqwwA4s9JiBdyoHXEJ7/imxeIhWDD7nr1Z+Ib6NtNVV+u9MWlCR9lGtMIebURg5vdee28cPPsppvaqexL5f8k3E=
-X-Received: by 2002:a37:9c88:: with SMTP id f130mr19471044qke.457.1561423388940;
- Mon, 24 Jun 2019 17:43:08 -0700 (PDT)
+        id S1728962AbfFYHmd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 25 Jun 2019 03:42:33 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53533 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728771AbfFYHmc (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Jun 2019 03:42:32 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hfg5v-0004yl-BO; Tue, 25 Jun 2019 09:42:23 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hfg5s-0005kx-EO; Tue, 25 Jun 2019 09:42:20 +0200
+Date:   Tue, 25 Jun 2019 09:42:20 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        od@zcrc.me, linux-pwm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
+ down
+Message-ID: <20190625074220.ckj7e7gwbszwknaa@pengutronix.de>
+References: <20190522163428.7078-1-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <20190624080001.67222-1-jitao.shi@mediatek.com> <20190624080001.67222-3-jitao.shi@mediatek.com>
-In-Reply-To: <20190624080001.67222-3-jitao.shi@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Tue, 25 Jun 2019 08:42:57 +0800
-Message-ID: <CANMq1KDixwQN13o84Jp6E6tyfTQSZjiZSMzaNFZ02LEVPx0Z8g@mail.gmail.com>
-Subject: Re: [v2 2/2] drm/panel: support for auo, kd101n80-45na wuxga dsi
- video mode panel
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>, stonea168@163.com,
-        dri-devel@lists.freedesktop.org,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        cawa cheng <cawa.cheng@mediatek.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Thierry Reding <treding@nvidia.com>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Sean Paul <seanpaul@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190522163428.7078-1-paul@crapouillou.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 4:00 PM Jitao Shi <jitao.shi@mediatek.com> wrote:
->
-> Auo,kd101n80-45na's connector is same as boe,tv101wum-nl6.
-> The most codes can be reuse.
-> So auo,kd101n80-45na and boe,tv101wum-nl6 use one driver file.
-> Add the different parts in driver data.
->
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 40 +++++++++++++++++++
->  1 file changed, 40 insertions(+)
->
-> diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> index 6e06c8506623..d1ee43cfcbe2 100644
-> --- a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> +++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> @@ -372,6 +372,15 @@ static const struct panel_init_cmd boe_init_cmd[] = {
->         {},
->  };
->
-> +static const struct panel_init_cmd auo_init_cmd[] = {
-> +       _INIT_DELAY_CMD(24),
-> +       _INIT_DCS_CMD(0x11),
-> +       _INIT_DELAY_CMD(120),
-> +       _INIT_DCS_CMD(0x29),
-> +       _INIT_DELAY_CMD(120),
-> +       {},
-> +};
-> +
->  static inline struct boe_panel *to_boe_panel(struct drm_panel *panel)
->  {
->         return container_of(panel, struct boe_panel, base);
-> @@ -572,6 +581,34 @@ static const struct panel_desc boe_tv101wum_nl6_desc = {
->         .init_cmds = boe_init_cmd,
->  };
->
-> +static const struct drm_display_mode auo_default_mode = {
-> +       .clock = 157000,
-> +       .hdisplay = 1200,
-> +       .hsync_start = 1200 + 80,
-> +       .hsync_end = 1200 + 80 + 24,
-> +       .htotal = 1200 + 80 + 24 + 36,
-> +       .vdisplay = 1920,
-> +       .vsync_start = 1920 + 16,
-> +       .vsync_end = 1920 + 16 + 4,
-> +       .vtotal = 1920 + 16 + 4 + 16,
-> +       .vrefresh = 60,
-> +       .type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
-> +};
-> +
-> +static const struct panel_desc auo_kd101n80_45na_desc = {
-> +       .modes = &auo_default_mode,
-> +       .bpc = 8,
-> +       .size = {
-> +               .width = 216,
-> +               .height = 135,
+On Wed, May 22, 2019 at 06:34:28PM +0200, Paul Cercueil wrote:
+> When the driver probes, the PWM pin is automatically configured to its
+> default state, which should be the "pwm" function. However, at this
+> point we don't know the actual level of the pin, which may be active or
+> inactive. As a result, if the driver probes without enabling the
+> backlight, the PWM pin might be active, and the backlight would be
+> lit way before being officially enabled.
 
-Same issue as the BOE panel:
-This is wrong, as this is a portrait panel, should be: width=135, height=216.
+I'm not sure I understand the problem completely here. Let me try to
+summarize the problem you solve here:
 
-> +       },
-> +       .lanes = 4,
-> +       .format = MIPI_DSI_FMT_RGB888,
-> +       .mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
-> +                     MIPI_DSI_MODE_LPM,
-> +       .init_cmds = auo_init_cmd,
-> +};
-> +
->  static int boe_panel_get_modes(struct drm_panel *panel)
->  {
->         struct boe_panel *boe = to_boe_panel(panel);
-> @@ -695,6 +732,9 @@ static const struct of_device_id boe_of_match[] = {
->         { .compatible = "boe,tv101wum-nl6",
->           .data = &boe_tv101wum_nl6_desc
->         },
-> +       { .compatible = "auo,kd101n80-45na",
-> +         .data = &auo_kd101n80_45na_desc
-> +       },
->         { /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, boe_of_match);
-> --
-> 2.21.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+The backlight device's default pinctrl contains the PWM function of the
+PWM pin. As the PWM is (or at least might be) in an undefined state the
+default pinctrl should only be switched to when it's clear if the
+backlight should be on or off.
+
+So you use the "init"-pinctrl to keep the PWM pin in some (undriven?)
+state and by switching to "sleep" you prevent "default" getting active.
+
+Did I get this right? If not, please correct me.
+
+What is the PWM pin configured to in "init" in your case? Is the pinctrl
+just empty? Or is it a gpio-mode (together with a gpio-hog)?
+
+My thoughts to this is are:
+
+ a) This is a general problem that applies (I think) to most if not all
+    PWM consumers. If the PWM drives a motor, or makes your mobile
+    vibrate, or drives an LED, or a clk, the PWM shouldn't start
+    to do something before its consumer is ready.
+
+ b) Thierry made it quite clear[1] that the PWM pin should be configured
+    in a pinctrl of the pwm device, not the backlight (or more general:
+    the consumer) device.
+
+While I don't entirely agree with b) I think that even a) alone
+justifies to think a bit more about the problem and preferably come up
+with a solution that helps other consumers, too. Ideally if the
+bootloader sets up the PWM to do something sensible, probing the
+lowlevel PWM driver and the consumer driver should not interfere with
+the bootloader's intention until the situation reaches a controlled
+state. (I.e. if the backlight was left on by the bootloader to show a
+nice logo, it should not flicker until a userspace program takes over
+the display device.)
+
+A PWM is special in contrast to other devices as its intended behaviour
+is only fixed once a consumer is present. Without a consumer it is
+unknown if the PWM is inverted or not. And so the common approach that
+pinctrl is setup by the device core only doesn't work without drawbacks
+for PWMs.
+
+So if a PWM driver is probing and the PWM hardware already runs at say
+constant one, some instance must define if the pin is supposed to be
+configured in its "default" or "sleep" pinctrl. IMHO this isn't possible
+in general without knowing the polarity of the PWM. (And even if it were
+known that the polarity is inversed, it might be hard to say if your
+PWM's hardware doesn't implement a disabled state and has to simulate
+that using a 0% duty cycle.)
+
+Another thing that complicates the matter is that at least pwm-imx27 has
+the annoying property that disabling it (in hardware) drives the pin low
+irrespective of the configured polarity. So if you want this type of
+device to behave properly on disable, it must first drive a 0% duty
+cycle, then switch the pinctrl state and only then disable the hardware.
+This rules out that the lowlevel driver is unaware of the pinctrl stuff
+which would be nice (or an inverted PWM won't be disabled in hardware or
+you need an ugly sequence of callbacks to disable glitch-free). Also if
+there is no sleep state, you better don't disable an inversed pwm-imx27
+at all (in hardware)? (Alternatively we could drop the (undocumented)
+guarantee that a disabled PWM results in the pin staying in its idle
+level.)
+
+What are the ways out? I think that if we go and apply your patch, we
+should at least write some documentation with the details to provide some
+"standard" way to solve similar problems.
+
+Also it might be a good idea to let a PWM know if it is inverted or not
+such that even without the presence of a consumer it can determine if
+the hardware is active or not at probe time (in most cases at least).
+
+Best regards
+Uwe
+
+[1] https://www.spinics.net/lists/linux-pwm/msg08246.html
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
