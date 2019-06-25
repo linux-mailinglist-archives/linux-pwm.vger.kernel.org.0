@@ -2,72 +2,69 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 30BFB5288B
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jun 2019 11:48:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24283528CB
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jun 2019 11:58:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfFYJsB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 25 Jun 2019 05:48:01 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39367 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbfFYJsB (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Jun 2019 05:48:01 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z23so2242238wma.4;
-        Tue, 25 Jun 2019 02:47:58 -0700 (PDT)
+        id S1728707AbfFYJ60 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 25 Jun 2019 05:58:26 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37026 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfFYJ60 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Jun 2019 05:58:26 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v14so17134512wrr.4;
+        Tue, 25 Jun 2019 02:58:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=lYoRiYMPDqJ615Z1cmg/E7Z6c9CCp2cXFBXsrhXIk/Q=;
-        b=hJ1QrRsmQszF8RNHk4snwHNOtUbSau5zU14890YS7sTTXvGMDB8Kvil3SjOBv+zxZ2
-         wyq3XmBe2jMbMYLRjnMHGirh/el872bcuo7P0Tthrl50rfPZdulFjnLx6Lxbjdg/7U9v
-         IbERJWHB+AgiOS2ixE6N/PWhgAPidFONtT4jfH+cjX7vErJukTQNVXsoxWrdTYy6E39k
-         5yaH8cv4GpTfLgV1tru5JQyyyq+l65WAlNajWuN6Ok+h/afr/iC0eVE42evcNduevPnW
-         YL8SsTP9Qcy3waWLM/kCtv2CRipyxQXI9LwhkcwJhcSVz6CDHoFKr8wUNa1zEFYw+RJo
-         CSFg==
+        bh=z2FC5ARETFnUnn2kCEl6AER1qtcj7xB4LnbOY4f3FIw=;
+        b=cfcIKl5l+OVBRuwna6QPhC+ZpgUs5RO/jLDMwyUevqsGrkNw6y31buH/n5QB5foXJD
+         TMYGpLVlCdzHviBV0L1NSK60gbZdb10Y+7sAdqCjj0YuBsD0EIB9mJzJ13GnnZBmo3yF
+         y/OZQfUjrGHoQIgXE0Ro94987iy0iOA+huwKOWY3mPL4KZpWulkxZ1mrOWb10Tw4hK8M
+         B2cyYS1KA57dWjDIuBc5phai18eodDtHzwko1ToXYKTKT6xOli0f6rhqu+CN/q9Go5o7
+         r5uf8TYLczg9SRU89VD15I2GKnboTw+ZpM2Xwh/scm+Wo+N2tqHWyrfZm954GqpthvGQ
+         EnYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lYoRiYMPDqJ615Z1cmg/E7Z6c9CCp2cXFBXsrhXIk/Q=;
-        b=nd+f9XsQttUdNyEzocjPvfbpFMQe10AejLVH0e6DpOhJhe6a5JvLbUaLMhcr5HJMUd
-         BMRdlK+O7nytwSktjpibqpV3lTbhRUr8r4j7Eq5n6DXRBcm+QuxgoJ8IOYdB2I44b7dI
-         CwBMnra55UY9cdO1JxzRqCt5SWMfUF5Pk/y5g5gMpI71YaPooKMexCHGoz1MV4ELMDNK
-         xm7HU3DYTbsM9P0dlYZ3dCyhYdBe+2IjxMHY7xe5YFyDEkgGR2IL6I4c6S6ECGoUSsQY
-         hzoA1DL2LIHWPciGBW7/MFa/f9Y2SN2nUmNo0PBuNxtfOVz72/NHhRKn1bUuWYTInh9p
-         88gQ==
-X-Gm-Message-State: APjAAAUIZh9oX1XLwO1s03fPITHIeH9f0G5/wDODAbpreygh+KDH2rXG
-        RawbJlHuHGaS4A+tk5tD3iY=
-X-Google-Smtp-Source: APXvYqymw/zXJ2rbnbNEhN/CLa/1taPiU4sl3wi/5yVBLGK+MMOJHgL3CHclaDRU07sY5n6ZnSXcLg==
-X-Received: by 2002:a1c:2e09:: with SMTP id u9mr19325923wmu.137.1561456078097;
-        Tue, 25 Jun 2019 02:47:58 -0700 (PDT)
+        bh=z2FC5ARETFnUnn2kCEl6AER1qtcj7xB4LnbOY4f3FIw=;
+        b=AF/GeJnq3tdeiTyVk/1Nk7Eg9E0s+ekYav/3JcuXi9MQACKwUFIA0mK5yDKq7vdIwq
+         7ZmRugMGeug+ulEoGslNisG1/MV/0Ux11wMqAbHF3ZVYl4JG74GmCgHidBfuzKGr9B7t
+         PoIuhNVzZ6nL9KIVwvL7htCVPE9RKQBgZj+t2wei/HDRTEpye5UKUDrMoxoZQFh7oQ1W
+         X9YjlXtmGlvT7FYFmL1H6C6oM0/WaWWMxk4ztVFBbG61K8IlI+bNAwTsIjQKBZmp37vl
+         3njq4oD+W6MMLLOuHiKsdYiv4sWoJB0hMmhcrD13kcSplasuA/+okLGQ+4Z6AKsO3Ksd
+         JPTQ==
+X-Gm-Message-State: APjAAAVLOHaxvuYs2ofFkMa2y50x9ZeOXQKcK6Pjqgkoah1fWHAeFTwY
+        ODI41mkJaCZchKFSMAWwvcY=
+X-Google-Smtp-Source: APXvYqxN12se0+0LURby+qcAbr9bevP6FmWbz8ooSxv4a55hUEaAVYAlG+JSJTOD90CxDX92yxSXIQ==
+X-Received: by 2002:a5d:6144:: with SMTP id y4mr19269936wrt.84.1561456703106;
+        Tue, 25 Jun 2019 02:58:23 -0700 (PDT)
 Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id m9sm12433654wrn.92.2019.06.25.02.47.57
+        by smtp.gmail.com with ESMTPSA id o4sm1847384wmh.35.2019.06.25.02.58.22
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 02:47:57 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 11:47:56 +0200
+        Tue, 25 Jun 2019 02:58:22 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 11:58:21 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
         Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
         Jingoo Han <jingoohan1@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         od@zcrc.me, linux-pwm@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
 Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
  down
-Message-ID: <20190625094756.GC1516@ulmo>
+Message-ID: <20190625095821.GD1516@ulmo>
 References: <20190522163428.7078-1-paul@crapouillou.net>
- <5b0f8bb3-e7b0-52c1-1f2f-9709992b76fc@linaro.org>
- <20190621135608.GB11839@ulmo>
- <20190624112844.fmwbfpdxjkst3u7r@holly.lan>
- <1561386717.20436.0@crapouillou.net>
+ <20190625074220.ckj7e7gwbszwknaa@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="s9fJI615cBHmzTOP"
+        protocol="application/pgp-signature"; boundary="MAH+hnPXVZWQ5cD/"
 Content-Disposition: inline
-In-Reply-To: <1561386717.20436.0@crapouillou.net>
+In-Reply-To: <20190625074220.ckj7e7gwbszwknaa@pengutronix.de>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
@@ -75,171 +72,150 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---s9fJI615cBHmzTOP
+--MAH+hnPXVZWQ5cD/
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 24, 2019 at 04:31:57PM +0200, Paul Cercueil wrote:
+On Tue, Jun 25, 2019 at 09:42:20AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> On Wed, May 22, 2019 at 06:34:28PM +0200, Paul Cercueil wrote:
+> > When the driver probes, the PWM pin is automatically configured to its
+> > default state, which should be the "pwm" function. However, at this
+> > point we don't know the actual level of the pin, which may be active or
+> > inactive. As a result, if the driver probes without enabling the
+> > backlight, the PWM pin might be active, and the backlight would be
+> > lit way before being officially enabled.
 >=20
+> I'm not sure I understand the problem completely here. Let me try to
+> summarize the problem you solve here:
 >=20
-> Le lun. 24 juin 2019 =C3=A0 13:28, Daniel Thompson <daniel.thompson@linar=
-o.org> a
-> =C3=A9crit :
-> > On Fri, Jun 21, 2019 at 03:56:08PM +0200, Thierry Reding wrote:
-> > >  On Fri, Jun 21, 2019 at 01:41:45PM +0100, Daniel Thompson wrote:
-> > >  > On 22/05/2019 17:34, Paul Cercueil wrote:
-> > >  > > When the driver probes, the PWM pin is automatically configured
-> > > to its
-> > >  > > default state, which should be the "pwm" function.
-> > >  >
-> > >  > At which point in the probe... and by who?
-> > >=20
-> > >  The driver core will select the "default" state of a device right
-> > > before
-> > >  calling the driver's probe, see:
-> > >=20
-> > >  	drivers/base/pinctrl.c: pinctrl_bind_pins()
-> > >=20
-> > >  which is called from:
-> > >=20
-> > >  	drivers/base/dd.c: really_probe()
-> > >=20
-> >=20
-> > Thanks. I assumed it would be something like that... although given
-> > pwm-backlight is essentially a wrapper driver round a PWM I wondered why
-> > the pinctrl was on the backlight node (rather than the PWM node).
-> >=20
-> > Looking at the DTs in the upstream kernel it looks like ~20% of the
-> > backlight drivers have pinctrl on the backlight node. Others presumable
-> > have none or have it on the PWM node (and it looks like support for
-> > sleeping the pins is *very* rare amoung the PWM drivers).
+> The backlight device's default pinctrl contains the PWM function of the
+> PWM pin. As the PWM is (or at least might be) in an undefined state the
+> default pinctrl should only be switched to when it's clear if the
+> backlight should be on or off.
 >=20
-> If your PWM driver has more than one channel and has the pinctrl node, you
-> cannot fine-tune the state of individual pins. They all share the same
-> state.
-
-But that's something that could be changed, right? We could for example
-extend the PWM bindings to allow describing each PWM instance via a sub-
-node of the controller node. Pin control states could be described on a
-per-channel basis that way.
-
-> > >  > > However, at this
-> > >  > > point we don't know the actual level of the pin, which may be
-> > > active or
-> > >  > > inactive. As a result, if the driver probes without enabling the
-> > >  > > backlight, the PWM pin might be active, and the backlight would
-> > > be
-> > >  > > lit way before being officially enabled.
-> > >  > >
-> > >  > > To work around this, if the probe function doesn't enable the
-> > > backlight,
-> > >  > > the pin is set to its sleep state instead of the default one,
-> > > until the
-> > >  > > backlight is enabled. Whenk the backlight is disabled, the pin
-> > > is reset
-> > >  > > to its sleep state.
-> > >  > Doesn't this workaround result in a backlight flash between
-> > > whatever enables
-> > >  > it and the new code turning it off again?
-> > >=20
-> > >  Yeah, I think it would. I guess if you're very careful on how you
-> > > set up
-> > >  the device tree you might be able to work around it. Besides the
-> > > default
-> > >  and idle standard pinctrl states, there's also the "init" state. The
-> > >  core will select that instead of the default state if available.
-> > > However
-> > >  there's also pinctrl_init_done() which will try again to switch to
-> > > the
-> > >  default state after probe has finished and the driver didn't switch
-> > > away
-> > >  from the init state.
-> > >=20
-> > >  So you could presumably set up the device tree such that you have
-> > > three
-> > >  states defined: "default" would be the one where the PWM pin is
-> > > active,
-> > >  "idle" would be used when backlight is off (PWM pin inactive) and
-> > > then
-> > >  another "init" state that would be the same as "idle" to be used
-> > > during
-> > >  probe. During probe the driver could then switch to the "idle"
-> > > state so
-> > >  that the pin shouldn't glitch.
-> > >=20
-> > >  I'm not sure this would actually work because I think the way that
-> > >  pinctrl handles states both "init" and "idle" would be the same
-> > > pointer
-> > >  values and therefore pinctrl_init_done() would think the driver
-> > > didn't
-> > >  change away from the "init" state because it is the same pointer
-> > > value
-> > >  as the "idle" state that the driver selected. One way to work around
-> > >  that would be to duplicate the "idle" state definition and
-> > > associate one
-> > >  instance of it with the "idle" state and the other with the "init"
-> > >  state. At that point both states should be different (different
-> > > pointer
-> > >  values) and we'd get the init state selected automatically before
-> > > probe,
-> > >  select "idle" during probe and then the core will leave it alone.
-> > > That's
-> > >  of course ugly because we duplicate the pinctrl state in DT, but
-> > > perhaps
-> > >  it's the least ugly solution.
-> > >  Adding Linus for visibility. Perhaps he can share some insight.
-> >=20
-> > To be honest I'm happy to summarize in my head as "if it flashes then
-> > it's not
-> > a pwm_bl.c's problem" ;-).
+> So you use the "init"-pinctrl to keep the PWM pin in some (undriven?)
+> state and by switching to "sleep" you prevent "default" getting active.
 >=20
-> It does not flash. But the backlight lits way too early, so we have a 1-2
-> seconds
-> of "white screen" before the panel driver starts.
+> Did I get this right? If not, please correct me.
+>=20
+> What is the PWM pin configured to in "init" in your case? Is the pinctrl
+> just empty? Or is it a gpio-mode (together with a gpio-hog)?
+>=20
+> My thoughts to this is are:
+>=20
+>  a) This is a general problem that applies (I think) to most if not all
+>     PWM consumers. If the PWM drives a motor, or makes your mobile
+>     vibrate, or drives an LED, or a clk, the PWM shouldn't start
+>     to do something before its consumer is ready.
 
-I think this always goes both ways. If you set the sleep state for the
-PWM on backlight probe with this patch, you may be able to work around
-the problem of the backlight lighting up too early. But what if your
-bootloader had already enabled the backlight and is showing a splash
-screen during boot? Your patch would turn off the backlight and then it
-would turn on again after everything else was initialized. That's one
-type of flashing.
+Yes, it shouldn't start before it is explicitly told to do so by the
+consumer. One exception is if the PWM was already set up by firmware
+to run. So I think in general terms we always want the PWM to remain
+in the current state upon probe.
 
-What we need in this case are explicit pin control states that will
-enable fine-grained control over what happens. Anything implicit is
-bound to fail because it bakes in an assumption (either that the
-backlight is off during boot, or that it has been turned on already).
+The atomic PWM API was designed with that in mind. The original use-
+case was to allow seamlessly taking over from a PWM regulator. In order
+to do so, the driver needs to be able to read back the hardware state
+and *not* initialize the PWM to some default state.
 
-Ideally we'd need to detect that the backlight is on and if it is we
-just don't do anything with it. Actually, I think that's what we want
-even if the backlight is off. During probe the backlight state should
-not be modified. You only want to modify it when you know that some
-display driver is going to take over. If you can't seamlessly transition
-to the kernel display driver, flashing may be okay. If your display
-driver can take over seamlessly, then the backlight is likely already in
-the desired state anyway.
+I think that same approach can be extended to backlights. The driver's
+probe needs to determine what the current state of the backlight is and
+preferable not touch it. And that basically propagates all the way to
+the display driver, which ultimately needs to determine whether or not
+the display configuration (including the backlight) is enabled.
+
+>  b) Thierry made it quite clear[1] that the PWM pin should be configured
+>     in a pinctrl of the pwm device, not the backlight (or more general:
+>     the consumer) device.
+>=20
+> While I don't entirely agree with b) I think that even a) alone
+> justifies to think a bit more about the problem and preferably come up
+> with a solution that helps other consumers, too. Ideally if the
+> bootloader sets up the PWM to do something sensible, probing the
+> lowlevel PWM driver and the consumer driver should not interfere with
+> the bootloader's intention until the situation reaches a controlled
+> state. (I.e. if the backlight was left on by the bootloader to show a
+> nice logo, it should not flicker until a userspace program takes over
+> the display device.)
+
+Yes, exactly that.
+
+> A PWM is special in contrast to other devices as its intended behaviour
+> is only fixed once a consumer is present. Without a consumer it is
+> unknown if the PWM is inverted or not. And so the common approach that
+> pinctrl is setup by the device core only doesn't work without drawbacks
+> for PWMs.
+
+Actually I don't think PWMs are special in this regard. A GPIO, for
+example, can also be active-low or active-high, and without a consumer
+there's not enough context to determine which one it should be.
+
+So this is really a more general problem. Whenever you want to take over
+some bootloader configuration, basically all of your OS drivers have to
+be taught to handle it properly, which usually means not touching any
+hardware at probe time, preferably reading back the current hardware
+state and "apply the delta" once the consumer says so.
 
 Thierry
 
---s9fJI615cBHmzTOP
+> So if a PWM driver is probing and the PWM hardware already runs at say
+> constant one, some instance must define if the pin is supposed to be
+> configured in its "default" or "sleep" pinctrl. IMHO this isn't possible
+> in general without knowing the polarity of the PWM. (And even if it were
+> known that the polarity is inversed, it might be hard to say if your
+> PWM's hardware doesn't implement a disabled state and has to simulate
+> that using a 0% duty cycle.)
+>=20
+> Another thing that complicates the matter is that at least pwm-imx27 has
+> the annoying property that disabling it (in hardware) drives the pin low
+> irrespective of the configured polarity. So if you want this type of
+> device to behave properly on disable, it must first drive a 0% duty
+> cycle, then switch the pinctrl state and only then disable the hardware.
+> This rules out that the lowlevel driver is unaware of the pinctrl stuff
+> which would be nice (or an inverted PWM won't be disabled in hardware or
+> you need an ugly sequence of callbacks to disable glitch-free). Also if
+> there is no sleep state, you better don't disable an inversed pwm-imx27
+> at all (in hardware)? (Alternatively we could drop the (undocumented)
+> guarantee that a disabled PWM results in the pin staying in its idle
+> level.)
+>=20
+> What are the ways out? I think that if we go and apply your patch, we
+> should at least write some documentation with the details to provide some
+> "standard" way to solve similar problems.
+>=20
+> Also it might be a good idea to let a PWM know if it is inverted or not
+> such that even without the presence of a consumer it can determine if
+> the hardware is active or not at probe time (in most cases at least).
+>=20
+> Best regards
+> Uwe
+>=20
+> [1] https://www.spinics.net/lists/linux-pwm/msg08246.html
+>=20
+> --=20
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--MAH+hnPXVZWQ5cD/
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0R7cwACgkQ3SOs138+
-s6FL5Q/+LnIWzKdbonzgRFNIdGOvTzzhsl/UXibA/87usIpnjSEyvhDGTIPP/HAk
-J0y5cyOws1pUhwyzmSbcz31MAsMUO4q9PjMFGRJHN0DbjEJSlFw8DgMV8Vii4jpk
-xKiRTwch9VKjIe/iiT0kEk7C0ZlaKPu1fUoacN98UrskLNF4x3megjuvoZiGuiNu
-URKLlTrYmHpcZUgGr6N+e1PHCHWnPGvWR5sk6FuQk7At//3gs1a40lOPSBDgxvwo
-DuEHGi7SWZkgd1kVkPTxz4QiyHKt5Hw0ryw+BRyW2eqX2Od3LNJOFFHroR8vYKs4
-7fo5hK4aoTDpNBbudd86dxo85XL7w+DMbz29u/punmSrxDFUKIDfOZqcyasFsm+r
-JEoMPuZEjYr/6ssZpKebuInBiuBRyLY7PCCy7NU2lUb7/Ls79wYj1ZkURO3J2w5m
-ioWNeDSqrgy6bEp699HPNaybR0ffxt4fqeP5cAhNUa1++Jc2b2C5UFcCgKuuks4t
-fP/H+sjjvQHMI6m9wTdWrZzYHDNuHk414522/v6ybqqNf36seB5kStD3kGOBDsKo
-MyLDMBuw5WXOmCaCSnjvZdOe3SFTY3n0yMl/JaxX5EWpCwxnZFSJpdKNantHdc2U
-zvwFz5elaoCeu7P8HekTRV2e3xqeDeusk/OJrbPo5VJOaK+sIJs=
-=B4rf
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0R8DsACgkQ3SOs138+
+s6G4SA/9G/RR8wadIG+NTTjQjNlcqNQAxMww/G0ZY3WkofecUPpDWm6oRHkBPqQW
+2nZeOKQBmiisMDXvXTCEljq/i+3dtHxsPlGtEHdCsnBsf6YVE67UGx3F1q6jwGLn
+SUxgcwxmtnV395YKmgF2QR90m+HsVynAm4rYI9CoAXwVBrsStbH71KVW1h3H6sSU
+EJUJ+ZcmWoidjKu6hNlUzfXPEkOnB9gLQTSOzHadng+4Wd9MARX7z4nDIalaobDS
+hNWVEBf0telxb5HZyBJRYx9QAuzBO+UJrbn6Gcy2NuFON4KCfqwF/ftfgBbEgt4A
+xDKs/HzcjfXkFYkPaughMYpbxMECP6yRg66GBs6poDIhMtGTNDdPXzSatAvwiCtT
+Htu0PMzBljY6445V+gHNgmHK1P86SiLc+xW99V9TWl5yFAjJkMLV9j4v1OfGLnPh
+LO4tzlltQp+Gkfv3zIYfAN78azC4pICOwbTUscwnD5oWoRpTEPJosIeHMY/7tpTs
+YC1KeT9pGd8BuVYd8F+sIMe8LDqAJ95gqsEc1KQTLH+BQjkRk3udpxZd2KuJ0doj
+d2ugvpgPy6r2o7PviB1DZlP1Fh7qAQiSQYDtCGGjipY1Esm7YcAjRo9RQF6aB+io
+2N0M1K5VYxwD0TosVnTPqKtQ+sFUPiysL1CCuXnx5Ux4+DvQfos=
+=lyNf
 -----END PGP SIGNATURE-----
 
---s9fJI615cBHmzTOP--
+--MAH+hnPXVZWQ5cD/--
