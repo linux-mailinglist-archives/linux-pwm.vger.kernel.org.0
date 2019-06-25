@@ -2,139 +2,165 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5865152505
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jun 2019 09:42:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F36652835
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jun 2019 11:38:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728962AbfFYHmd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 25 Jun 2019 03:42:33 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53533 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728771AbfFYHmc (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Jun 2019 03:42:32 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hfg5v-0004yl-BO; Tue, 25 Jun 2019 09:42:23 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hfg5s-0005kx-EO; Tue, 25 Jun 2019 09:42:20 +0200
-Date:   Tue, 25 Jun 2019 09:42:20 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        id S1731558AbfFYJio (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 25 Jun 2019 05:38:44 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37640 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729258AbfFYJio (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Jun 2019 05:38:44 -0400
+Received: by mail-wr1-f65.google.com with SMTP id v14so17063335wrr.4;
+        Tue, 25 Jun 2019 02:38:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qf/dovgdWTDk466aS2w6QCAW9lwJESqELVwht+4vdoM=;
+        b=UK5LsYSqWuafK78PCet8ADx8Ui+gLTbo/kd5PMPzHrB0UVrg8tMhSZfY9qYB7CY0d5
+         EuFsae5j40PmZqoQO0A91isoNZS2ySAlziToPDacxit7lura60G9CaPHYdWL1kKjXyD6
+         27u59DGDsxiFCrLeYB1H0t1uN2bZ5gP3CIFTtbvOtM3OAGcxqkbvcaDj5ZUK2kgLZbq0
+         xy0czAd+/PjiKY8rqVSS2HnYQMz4z6GcLeHH7p/ppyuIBgKX4IItydkKGnyZmKaPn/6K
+         zOBZBQhD7/HPxJxWFEPVTC2YZ1caA7ynvRoLYmsGlWuxPgeYcv58svHZ1ZHo6QvR+s7O
+         7HpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qf/dovgdWTDk466aS2w6QCAW9lwJESqELVwht+4vdoM=;
+        b=IXJZXeI3qohwpbNVYmKdmNLLW2V1JOezkDK/Ta+BRowHhNOWn/YA2LP91oh7Tb6PR3
+         0MjyCAUzK7TnW1udR7Yf+fftU3QRaOoaBWWF2hUMdBHhuPnViy9rt7S9Olygyh4dtBfZ
+         i83x+J5FFXxwYdxJxeVQjwmu23AJDc5V4Tjobnb4aAfyWOoqVU7UeE2htv8idCfcSV6w
+         lYZ6h3tL4HgM1I+/x5qh1EJASkxp1DK5AzVc5JQn8yPW549dliPf4J/iTZSN3TkMhWKP
+         wX7Fy5poodL/+kSE/IH9QsmSI3s+SybB3Qrpviak6+Rcn88UTRSUYpvXKF3dutdrKYx2
+         krMA==
+X-Gm-Message-State: APjAAAUQS+HriKYmT4uS+Bz98LlLsrkIhR5jjc7LXOhRx1nbXtT/uccS
+        v5AkoH1TfjgQFoyT0ugHNCI=
+X-Google-Smtp-Source: APXvYqw1+B5Zke9wCKXvrY6sFnQ6nzawXFqyztWPByGXC8pJ4XNb1PrX21ikjVB/ftfgcKA516vrTQ==
+X-Received: by 2002:adf:de90:: with SMTP id w16mr81130541wrl.217.1561455522093;
+        Tue, 25 Jun 2019 02:38:42 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id r12sm14936370wrt.95.2019.06.25.02.38.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 02:38:40 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 11:38:39 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
         Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
         Jingoo Han <jingoohan1@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         od@zcrc.me, linux-pwm@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+        linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
  down
-Message-ID: <20190625074220.ckj7e7gwbszwknaa@pengutronix.de>
+Message-ID: <20190625093839.GB1516@ulmo>
 References: <20190522163428.7078-1-paul@crapouillou.net>
+ <5b0f8bb3-e7b0-52c1-1f2f-9709992b76fc@linaro.org>
+ <20190621135608.GB11839@ulmo>
+ <20190624112844.fmwbfpdxjkst3u7r@holly.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="0eh6TmSyL6TZE2Uz"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190522163428.7078-1-paul@crapouillou.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20190624112844.fmwbfpdxjkst3u7r@holly.lan>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, May 22, 2019 at 06:34:28PM +0200, Paul Cercueil wrote:
-> When the driver probes, the PWM pin is automatically configured to its
-> default state, which should be the "pwm" function. However, at this
-> point we don't know the actual level of the pin, which may be active or
-> inactive. As a result, if the driver probes without enabling the
-> backlight, the PWM pin might be active, and the backlight would be
-> lit way before being officially enabled.
 
-I'm not sure I understand the problem completely here. Let me try to
-summarize the problem you solve here:
+--0eh6TmSyL6TZE2Uz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The backlight device's default pinctrl contains the PWM function of the
-PWM pin. As the PWM is (or at least might be) in an undefined state the
-default pinctrl should only be switched to when it's clear if the
-backlight should be on or off.
+On Mon, Jun 24, 2019 at 12:28:44PM +0100, Daniel Thompson wrote:
+> On Fri, Jun 21, 2019 at 03:56:08PM +0200, Thierry Reding wrote:
+> > On Fri, Jun 21, 2019 at 01:41:45PM +0100, Daniel Thompson wrote:
+> > > On 22/05/2019 17:34, Paul Cercueil wrote:
+> > > > When the driver probes, the PWM pin is automatically configured to =
+its
+> > > > default state, which should be the "pwm" function.
+> > >=20
+> > > At which point in the probe... and by who?
+> >=20
+> > The driver core will select the "default" state of a device right before
+> > calling the driver's probe, see:
+> >=20
+> > 	drivers/base/pinctrl.c: pinctrl_bind_pins()
+> >=20
+> > which is called from:
+> >=20
+> > 	drivers/base/dd.c: really_probe()
+> >=20
+>=20
+> Thanks. I assumed it would be something like that... although given
+> pwm-backlight is essentially a wrapper driver round a PWM I wondered why
+> the pinctrl was on the backlight node (rather than the PWM node).
 
-So you use the "init"-pinctrl to keep the PWM pin in some (undriven?)
-state and by switching to "sleep" you prevent "default" getting active.
+I agree with this. We're defining the pin control state for the PWM pin,
+so in my opinion it should be the PWM driver that controls it.
 
-Did I get this right? If not, please correct me.
+One reason why I think this is important is if we ever end up with a
+device that requires pins from two different controllers to be
+configured at runtime, then how would we model that? Since pin control
+states cannot be aggregated, so you'd have to have multiple "default"
+states, each for the pins that they control.
 
-What is the PWM pin configured to in "init" in your case? Is the pinctrl
-just empty? Or is it a gpio-mode (together with a gpio-hog)?
+On the other hand if we associate the pin control states with each of
+the resources that need those states, then when those resources are
+controlled, they will automatically know how to deal with the states.
+The top-level device (i.e. backlight) doesn't need to concern itself
+with those details.
 
-My thoughts to this is are:
+> Looking at the DTs in the upstream kernel it looks like ~20% of the
+> backlight drivers have pinctrl on the backlight node. Others presumable
+> have none or have it on the PWM node (and it looks like support for
+> sleeping the pins is *very* rare amoung the PWM drivers).
 
- a) This is a general problem that applies (I think) to most if not all
-    PWM consumers. If the PWM drives a motor, or makes your mobile
-    vibrate, or drives an LED, or a clk, the PWM shouldn't start
-    to do something before its consumer is ready.
+I suspect that that's mostly a sign of our device trees and kernel
+subsystems still maturing. For example, I think it's fairly rare for a
+device to seamlessly take over the display configuration from the
+bootloader. Most of the time you'll just see things go black (that's
+actually one of the better cases) when the kernel takes over and then
+the backlight will come up again at some point.
 
- b) Thierry made it quite clear[1] that the PWM pin should be configured
-    in a pinctrl of the pwm device, not the backlight (or more general:
-    the consumer) device.
+Taking over the bootloader's display configuration is pretty hard and
+there are numerous pieces to the puzzle (need to make sure clocks and
+power supplies are not automatically disabled after the initcalls,
+display drivers need to know how to read out hardware, claim whatever
+memory region the bootloader was using for a bootsplash, backlight is
+supposed to remain enabled if the bootloader turned it on, ...).
 
-While I don't entirely agree with b) I think that even a) alone
-justifies to think a bit more about the problem and preferably come up
-with a solution that helps other consumers, too. Ideally if the
-bootloader sets up the PWM to do something sensible, probing the
-lowlevel PWM driver and the consumer driver should not interfere with
-the bootloader's intention until the situation reaches a controlled
-state. (I.e. if the backlight was left on by the bootloader to show a
-nice logo, it should not flicker until a userspace program takes over
-the display device.)
+I don't think the fact that PWM drivers don't support this implies that
+hardware doesn't support it. I think we've just never needed it before
+because we get away with it.
 
-A PWM is special in contrast to other devices as its intended behaviour
-is only fixed once a consumer is present. Without a consumer it is
-unknown if the PWM is inverted or not. And so the common approach that
-pinctrl is setup by the device core only doesn't work without drawbacks
-for PWMs.
+Thierry
 
-So if a PWM driver is probing and the PWM hardware already runs at say
-constant one, some instance must define if the pin is supposed to be
-configured in its "default" or "sleep" pinctrl. IMHO this isn't possible
-in general without knowing the polarity of the PWM. (And even if it were
-known that the polarity is inversed, it might be hard to say if your
-PWM's hardware doesn't implement a disabled state and has to simulate
-that using a 0% duty cycle.)
+--0eh6TmSyL6TZE2Uz
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Another thing that complicates the matter is that at least pwm-imx27 has
-the annoying property that disabling it (in hardware) drives the pin low
-irrespective of the configured polarity. So if you want this type of
-device to behave properly on disable, it must first drive a 0% duty
-cycle, then switch the pinctrl state and only then disable the hardware.
-This rules out that the lowlevel driver is unaware of the pinctrl stuff
-which would be nice (or an inverted PWM won't be disabled in hardware or
-you need an ugly sequence of callbacks to disable glitch-free). Also if
-there is no sleep state, you better don't disable an inversed pwm-imx27
-at all (in hardware)? (Alternatively we could drop the (undocumented)
-guarantee that a disabled PWM results in the pin staying in its idle
-level.)
+-----BEGIN PGP SIGNATURE-----
 
-What are the ways out? I think that if we go and apply your patch, we
-should at least write some documentation with the details to provide some
-"standard" way to solve similar problems.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0R650ACgkQ3SOs138+
+s6FApw//X6YPIMSBehRgeG/YYLTIA2NFvbDmGSL7AndIcj/QTu4qHzVehMDRtQOn
+wgw+SF/yRrqGryLdFI7EdfslMS++FvPSwtowwRt1BWGog372Q63Zgl0o147klX2/
+iXcoF7eBV9x9Ied+XVqjLs3Ag0BQAX9AV0MRnXmBz3IOicg3bU8n03xcyZCDAWvc
+w95lmRGM9z+iP2I3W73i+4+3hj6jgUztZsopwa0t56Bp8q0dcqX9Bm6ap+pcxAmX
+MPFcogA6k8Qj075yujpCCzY6Y3z4ZV2MRyIhA0f3PZnFl37+liS3gnDqdq5PXNXN
++DVhI5rgB7ZOi1MSkPRgHbtn2XkOZ+ct1QW1dvd/Na4CuVny67/CfvshUOd7y+y9
+I9QPlEvlNGvBHtEbFGEAjF4VOH3j7moN48CK41hxkLBlcuQJ6s5MBGxNQaRK0UC2
++QLrVgsQriv+NnzaLKEiGlBIJMRZjaRYYTpywXDI9nuiEEBPNppXbzyAamIZbcup
+nJapCAsSaO1h4WnmP0Alo0hjyW6kQx9aCoWWAySeUfVkeGPK6Ogqgteda+ob5qjc
+h20T6YzAa0Mky7j52RUPdHCxu7q6dRrNS5viGqyBSzyvkSZgYN3Fkys3x4dnLl/x
+McVvQdPQ51Os3ftQ3u03yRFdPJ34ZVV/kFy7Y7G0XSM9gEroD1I=
+=pSQv
+-----END PGP SIGNATURE-----
 
-Also it might be a good idea to let a PWM know if it is inverted or not
-such that even without the presence of a consumer it can determine if
-the hardware is active or not at probe time (in most cases at least).
-
-Best regards
-Uwe
-
-[1] https://www.spinics.net/lists/linux-pwm/msg08246.html
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+--0eh6TmSyL6TZE2Uz--
