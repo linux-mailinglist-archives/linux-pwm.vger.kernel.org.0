@@ -2,63 +2,74 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F715565D2
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Jun 2019 11:44:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8126556609
+	for <lists+linux-pwm@lfdr.de>; Wed, 26 Jun 2019 11:59:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfFZJo1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 26 Jun 2019 05:44:27 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46690 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbfFZJo1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 26 Jun 2019 05:44:27 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n4so1885284wrw.13
-        for <linux-pwm@vger.kernel.org>; Wed, 26 Jun 2019 02:44:25 -0700 (PDT)
+        id S1726932AbfFZJ6u (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 26 Jun 2019 05:58:50 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50843 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbfFZJ6t (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 26 Jun 2019 05:58:49 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c66so1431836wmf.0;
+        Wed, 26 Jun 2019 02:58:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=eZqJSyb3By1yvEkeTXSDZiKIi7taDnu42rZYf099+Bc=;
-        b=RyQzcg7sfl+8qTcg1rFXK6oCi47o13DtlqwV1rD+nlNi3T50qTagj2+fzo4L5/GCZM
-         OPF9DMEaIjZpFhmS4BVWwhAnZALx6EEcsQn+o4AOXGCao1eifxgfF46fqQs+wS0Cb8OA
-         Z6N4p1tRAKUOWitppSxVAEgBks0qlY7+R0nMVVi8mIBfhIxZG3xAeNE3veLvjn55hfHh
-         I4YIcySjzT/O+jNtcmvu1+WB4nKaxl1HFBjfoBtvmTqvkHpY7vSpr+PSIZsgGt7/X5p/
-         bc+FJddA8pHFjb88QTF9rIm7riiWnVCh/GvPjRHT/nmXJlw8ZiUWbOkprn3sxuQ/lrwp
-         bKHw==
+        bh=aZ/7nxuWyF4ZUl2CqjmctPnbH8K3jsESHhf+wgkM5qA=;
+        b=CDgg39YEWJpx2FRGHNkWzn9a6zNGoUw09/FYa5+bfOKHpCRDku0dy2qA5M4f4fBSL4
+         ClFkMQCXz7ZoS153C4Fj68KczSqxJFKdA9Th6Ns+8SxFfEYuZ/aQQaXpClgsoygufeiO
+         0xg5IQAVfN6lIixcCN1vfV3a+x0hL62SA8iC+r6Xk3T66tfLqJsyEFRCOJ+xHtwcJskX
+         80jC62/NSUkV1qhNfpq8+bNLlxFKhJSVJGjRPLspuQOU2hC3j75dccThDJGA4Gk53Yh9
+         FdWqKP6FUNY8ukQoyNx3+aGYsAZ9MNSHS/ELbDMa/mVRWQdCOfA9T8YAbA1gAO6vlHhl
+         +p6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eZqJSyb3By1yvEkeTXSDZiKIi7taDnu42rZYf099+Bc=;
-        b=no/Ka1UsSXpqnM3Bg4IeNGxBWwoFOw2sl/D3aqF2CHuKIiSpN2eiiU8IVjqKGM/Hsi
-         u40rC7jYkGelyy7x++PAW3kMlUL/gvbNEvN3AgWEyfItV75T2xNJRNvk1+FOaJMRwCVf
-         RIJWyVyngcjtZ3e435JADgLQ/FNXRVImT7diRLymf6P59e80vc10/61XP3Vo1rxpvF0E
-         L1c2GkLaV889wvoBly1c8iOMlqMJDY6xPI92Aazbto60mG0/v5HiplmvY8qi/G5dO4ZH
-         ZPfNEDT/Qdnn8TRvErhQ0r5ASC14nTd2i2V9QeG8w/KYc2y3W0BRzesPidUgjRVD4pcJ
-         Cj0g==
-X-Gm-Message-State: APjAAAVYZLkkDbaHtqeJcS+YcVX/vmY24QtP/RxI0YarCIU6SbE0VZ4b
-        t3AL+m7fUSqDp+qFy9mL5hM=
-X-Google-Smtp-Source: APXvYqyengN0rpEZ3db9vLkhe1KzbKfnGLK2fUCTvSaEL4fiOAHVRnbyrs59an5XyzR0Re7v/UNF1w==
-X-Received: by 2002:a5d:5552:: with SMTP id g18mr2885997wrw.254.1561542264500;
-        Wed, 26 Jun 2019 02:44:24 -0700 (PDT)
+        bh=aZ/7nxuWyF4ZUl2CqjmctPnbH8K3jsESHhf+wgkM5qA=;
+        b=Wuu/fOUUm3BdWeJ45g+uyR9nwOQddMBXP/5buUiD0kWvKvCe3fJt3AawDkxRl8owA2
+         6wElksoy2hLQi9Skv27m6ISJArlQsKTwOxbDogv0eTh9/p1O6OlIPIPiaFTqzfl0YsKc
+         EFIXGFT8TSiIB2lpwdmoG+YlMkvIDYKPvHz4KPlc/J0JS40a09xgjxsZvWiFiaC/JYSG
+         CWWFbDqTd8Z7fbOZLPP0IsXVwbJEn17/w+E3Zd54YPOwe7SbO1SVLSUbxBJ6QiqPnfku
+         APAxj52y0OUwkqSZBvek9Pw8/JDTeA8YwY1jHonLwcPNuvjy9AT3rw8j0qwiDn1G81mM
+         g7bg==
+X-Gm-Message-State: APjAAAWn0ih/k5amc4WEcY0tBQYwhvffVrGzMKji+stwisjst+eYd2Dg
+        yL7TU9XDD+bf4tmgfQniDpY=
+X-Google-Smtp-Source: APXvYqxpADgvHeAMQy31SKVTn0YPx5Afl1rct9+YwAAUniseVINEQHv2KOaVu/Z6OQY1C75pyR2P0w==
+X-Received: by 2002:a1c:dc46:: with SMTP id t67mr1956191wmg.159.1561543126566;
+        Wed, 26 Jun 2019 02:58:46 -0700 (PDT)
 Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id z126sm1980003wmb.32.2019.06.26.02.44.23
+        by smtp.gmail.com with ESMTPSA id 128sm2413396wme.12.2019.06.26.02.58.45
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 02:44:23 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 11:44:22 +0200
+        Wed, 26 Jun 2019 02:58:45 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 11:58:44 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [pwm:for-next 13/37] ERROR: "jz4740_timer_base"
- [drivers/pwm/pwm-jz4740.ko] undefined!
-Message-ID: <20190626094422.GB22424@ulmo>
-References: <201906260804.9UofywY8%lkp@intel.com>
- <1561510359.10069.3@crapouillou.net>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        od@zcrc.me, linux-pwm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
+ down
+Message-ID: <20190626095844.GA6362@ulmo>
+References: <20190522163428.7078-1-paul@crapouillou.net>
+ <5b0f8bb3-e7b0-52c1-1f2f-9709992b76fc@linaro.org>
+ <20190621135608.GB11839@ulmo>
+ <20190624112844.fmwbfpdxjkst3u7r@holly.lan>
+ <20190625093839.GB1516@ulmo>
+ <20190626085827.fija4kfzb5uhwosi@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="TRYliJ5NKNqkz5bu"
+        protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
 Content-Disposition: inline
-In-Reply-To: <1561510359.10069.3@crapouillou.net>
+In-Reply-To: <20190626085827.fija4kfzb5uhwosi@pengutronix.de>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
@@ -66,80 +77,126 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---TRYliJ5NKNqkz5bu
+--gBBFr7Ir9EOA20Yy
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 26, 2019 at 02:52:39AM +0200, Paul Cercueil wrote:
->=20
->=20
-> Le mer. 26 juin 2019 =C3=A0 2:47, kbuild test robot <lkp@intel.com> a =C3=
-=A9crit :
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/=
-linux-pwm.git
-> > for-next
-> > head:   cb8338e4fe3a8278cee91f666d2155a0ce1dd82f
-> > commit: e9bd35ff751fac8755fe3480bec1f470383f4522 [13/37] pwm: jz4740:
-> > Drop dependency on MACH_INGENIC
-> > config: mips-allmodconfig (attached as .config)
-> > compiler: mips-linux-gcc (GCC) 7.4.0
-> > reproduce:
-> >         wget
-> > https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross
-> > -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         git checkout e9bd35ff751fac8755fe3480bec1f470383f4522
-> >         # save the attached .config to linux build tree
-> >         GCC_VERSION=3D7.4.0 make.cross ARCH=3Dmips
+On Wed, Jun 26, 2019 at 10:58:27AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> On Tue, Jun 25, 2019 at 11:38:39AM +0200, Thierry Reding wrote:
+> > On Mon, Jun 24, 2019 at 12:28:44PM +0100, Daniel Thompson wrote:
+> > > [...] although given pwm-backlight is essentially a wrapper driver
+> > > round a PWM I wondered why the pinctrl was on the backlight node
+> > > (rather than the PWM node).
 > >=20
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kbuild test robot <lkp@intel.com>
+> > I agree with this. We're defining the pin control state for the PWM pin,
+> > so in my opinion it should be the PWM driver that controls it.
 > >=20
-> > All errors (new ones prefixed by >>):
-> >=20
-> >  ERROR: "jz4740_timer_base" [drivers/pwm/pwm-jz4740.ko] undefined!
+> > One reason why I think this is important is if we ever end up with a
+> > device that requires pins from two different controllers to be
+> > configured at runtime, then how would we model that? Since pin control
+> > states cannot be aggregated, so you'd have to have multiple "default"
+> > states, each for the pins that they control.
 >=20
-> Looks like this patch was a bit premature...
-> I think you can drop it...
+> I thought you can do:
+>=20
+> 	pinctrl-names =3D "default";
+> 	pinctrl-0 =3D <&pinctrl_in_first_pincontroller>, <&pinctrl_in_another_co=
+ntroller>;
+>=20
+> if two (or more) controllers are involved.
 
-Hmm, I didn't catch this during my build tests because I hadn't updated
-my build configurations to leave out the MACH_INGENIC dependency, so I
-was still building that and hence getting the symbol.
+You're right. Both the bindings say that this can be done and the code
+is also there to parse multiple states per pinctrl-* entry.
 
-I've dropped this patch for now. Let's look at that again once you're
-done untangling this in arch/mips.
+> > On the other hand if we associate the pin control states with each of
+> > the resources that need those states, then when those resources are
+> > controlled, they will automatically know how to deal with the states.
+> > The top-level device (i.e. backlight) doesn't need to concern itself
+> > with those details.
+>=20
+> So the options are:
+>=20
+>  a) put "active" and "inactive" pinctrls into the pwm-node, and nothing
+>     related to the involved PWM pins in the consumer
+>=20
+>  b) put the PWM pin config in the consumer's "default" pinctrl (and
+>     maybe leave it out int "init" if you want smooth taking over).
 
-Thanks,
+You can't put it into the "default" state because that state is applied
+before the consumer driver's ->probe().
+
+>=20
+> (Or maybe use "enabled" and "disabled" in a) to match the pwm_states
+> .enabled?)
+
+Yeah, I think this is what we'll need to do in order to implement the
+explicit behaviour that we need here.
+
+> The advantages I see in b) over a) are:
+>=20
+>  - "default" and "init" are a known pinctrl concept that most people
+>    should have understood.
+
+The problem is that they won't work in this case. The "init" state will
+be applied before the consumer driver's ->probe() if it exists. If it
+doesn't then "default" will be applied instead. Both cases are not
+something that we want if we want to take over the existing
+configuration.
+
+>  - You have all pinctrl config for the backlight in a single place.
+
+Depending on your point of view this could be considered a disadvantage.
+
+>  - none of the involved driver must explicitly handle pinctrl stuff
+
+Like I said, none of the automatic state handling is flexible enough for
+this situation. Also, my understanding is that even if you use the
+standard pinctrl state names ("default" and "idle") you still need to
+explicitly select them at the right time. "default" will always be
+applied before the consumer driver's ->probe(), but if you want to go to
+the "idle" state you have to make that explicit. Now, there are helpers
+to simplify this a bit, but you still need to implement suspend/resume
+callbacks (or however you want to deal with it) that call these helpers.
+
+In the case of PWM I think what we want is to select an "active" and
+"idle" state on enable and disable, respectively. I suppose we could add
+some infrastructure to help with this, such as perhaps scanning the
+device tree for per-PWM pin control states at PWM chip registration time
+and then adding helpers to select these states at the driver's
+discretion. I don't think we can add generic code to do this because the
+exact time when the pin control state needs to be applied may vary from
+one PWM controller to another.
+
+> You presume that b) being commonly done is a sign of "our device trees
+> and kernel subsystems still maturing". But maybe it's only that the
+> capabilities provided by pinctrl subsystem without extra effort is good
+> enough?
+
+Like I pointed out above, I don't think that's the case. But I don't
+want to overcomplicate things, so if you can prove that it can be done
+with the existing pinctrl helpers, I'd be happy to be proven wrong.
+
 Thierry
 
->=20
-> > ---
-> > 0-DAY kernel test infrastructure                Open Source Technology
-> > Center
-> > https://lists.01.org/pipermail/kbuild-all                   Intel
-> > Corporation
->=20
->=20
-
---TRYliJ5NKNqkz5bu
+--gBBFr7Ir9EOA20Yy
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0TPnYACgkQ3SOs138+
-s6Hnsg//U24yrWvZVoBHNBP1Yf+RnAW5HxL0ir9CUHqOk1wTa2sHUr6Ga9EnVvZ7
-TQjUfE8m0Miv2wA9bPlSgapF9LkkEckJPjUhEZ8ObcDA2tdUl6eORIXGB6VI3uhC
-s+VfwI2a95jlfJZa4TAjAcOJA6gW9TcWtmPbmZWsRYsbqFpBXD69XKQa/8T6uT24
-DXjbRw+x8p2mAfUKaaAx4Yn3Sk8uyYqHTmjSUDuR0lg3HdX+iEAkLBmrbQB8LmOh
-m9FkDybr1LLatdruYh+8XaHzA+BSpChpAJR71jLb5wbMBXANROseEVvwOfJfVikz
-VFNDb+X3KHh9U3LQTOoyZOpRfVLdfFaV2nE6pQsuiJC+/Igc50HFLtxa3EMy1o4Q
-qIOfcTYx5bMP3UwPxcINgrutpKtYIFRr9B+4qrRrGjhaQdymYBrW7ocSmv8d6KEE
-EsQMtmim6apXb8Hbr77oRa9H1o2PnjcGHVtWIRwxU2AwZiXvAkuF9b5Gxy8bxHED
-0r5AiRd4Lvvf9MpxpTlJECKFUNA/jLIgkCO/dwlTv8pgspt4Uq2POidk8DZu0al3
-B8/IoMK5OoJvMV1gQGDo1qFN+IijWBDcJetX4/HMD0wK3OcectB6fvBHkaTdD2gc
-rc0goB2AB9MNyqSPHYIJs1H/p0GdXfBJpJGshiNHKUI6L5/zKV8=
-=9sTv
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0TQdEACgkQ3SOs138+
+s6Ex3RAAjClObHbY4caZt7PjHEVLwZp9p0uGXYE7ZemSo5DwnYe5KNVqX+Kez3jS
+JDE/DK7UMkD1Xwf6HuYsZ1u/pwHE0Af7FE+TeM16T26zvPS2K1bSjytshBIXcLkp
+kgfWKEQMgNF11bUZ03aFz833Po0sK+2LFzjhNCugRi1owXQ0910iefni03Jmna4g
+4ZHqaQx7oetefd22xPHgpgHR43WN3qG/Ykz2gn2yxE/RLaojTiv+QC3B3/s6pCmL
+SrlbkuqGJSUehGRJhVmxBC5CkQaJjV4L3JVysKl6Svf6e1RBZOeoiyS6eGv7xR7/
+th556XLjVZggDCMurtRwEppxjZPVhi0ohl9sCD4kHpF35ZgQ5A/ZEvH/IjU5xFdW
+Cros48qyEq4TlKqzUpYpJ2m7cpq0CCv+EGdGo51eHICBIvjvT1cy/DftCc13x2z4
+16ButDJ+3xc75gVjHfVtIyH6g5jSrV0pYlOE1mC1FUj9uOPS+yqo0U5Q8l9ElzI/
+VpHIhLU6jw2iOPVhrOFoJ2gIr86+cuwXqxAK3Rf7ccmI4P3DQeKK1S2ci+uY/SHe
+IOlQT3ITZUjZKA57iQQIMc+Stb1SICEFcZFtybT6/jmmootTjgUnARLbmnPsE5QI
+g4TArRprq3PzZQvmANv9QnWsLgTlum6hlul3j0gspYFDX4iyjes=
+=b0SN
 -----END PGP SIGNATURE-----
 
---TRYliJ5NKNqkz5bu--
+--gBBFr7Ir9EOA20Yy--
