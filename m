@@ -2,132 +2,115 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 469F8564C4
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Jun 2019 10:43:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBC77564F6
+	for <lists+linux-pwm@lfdr.de>; Wed, 26 Jun 2019 10:58:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725954AbfFZInr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 26 Jun 2019 04:43:47 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:49037
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725876AbfFZInr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 26 Jun 2019 04:43:47 -0400
-X-IronPort-AV: E=Sophos;i="5.63,419,1557180000"; 
-   d="scan'208";a="311457712"
-Received: from wifi-eduroam-0-109.u-strasbg.fr (HELO hadrien) ([130.79.0.109])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 10:43:43 +0200
-Date:   Wed, 26 Jun 2019 10:43:43 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Patrick Havelange <patrick.havelange@essensium.com>
-cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, kbuild-all@01.org
-Subject: [pwm:for-next 36/37] drivers/pwm/pwm-fsl-ftm.c:324:3-9: preceding
- lock on line 305 (fwd)
-Message-ID: <alpine.DEB.2.21.1906261042400.2523@hadrien>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        id S1726565AbfFZI6h (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 26 Jun 2019 04:58:37 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40935 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbfFZI6g (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 26 Jun 2019 04:58:36 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hg3l8-0006dR-FY; Wed, 26 Jun 2019 10:58:30 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hg3l5-0008VO-Se; Wed, 26 Jun 2019 10:58:27 +0200
+Date:   Wed, 26 Jun 2019 10:58:27 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        od@zcrc.me, linux-pwm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
+ down
+Message-ID: <20190626085827.fija4kfzb5uhwosi@pengutronix.de>
+References: <20190522163428.7078-1-paul@crapouillou.net>
+ <5b0f8bb3-e7b0-52c1-1f2f-9709992b76fc@linaro.org>
+ <20190621135608.GB11839@ulmo>
+ <20190624112844.fmwbfpdxjkst3u7r@holly.lan>
+ <20190625093839.GB1516@ulmo>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190625093839.GB1516@ulmo>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello,
+On Tue, Jun 25, 2019 at 11:38:39AM +0200, Thierry Reding wrote:
+> On Mon, Jun 24, 2019 at 12:28:44PM +0100, Daniel Thompson wrote:
+> > [...] although given pwm-backlight is essentially a wrapper driver
+> > round a PWM I wondered why the pinctrl was on the backlight node
+> > (rather than the PWM node).
+> 
+> I agree with this. We're defining the pin control state for the PWM pin,
+> so in my opinion it should be the PWM driver that controls it.
+> 
+> One reason why I think this is important is if we ever end up with a
+> device that requires pins from two different controllers to be
+> configured at runtime, then how would we model that? Since pin control
+> states cannot be aggregated, so you'd have to have multiple "default"
+> states, each for the pins that they control.
 
-It seems like there may be missing unlocks on lines 324 and 328.
+I thought you can do:
 
-julia
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_in_first_pincontroller>, <&pinctrl_in_another_controller>;
 
----------- Forwarded message ----------
-Date: Wed, 26 Jun 2019 12:23:38 +0800
-From: kbuild test robot <lkp@intel.com>
-To: kbuild@01.org
-Cc: Julia Lawall <julia.lawall@lip6.fr>
-Subject: [pwm:for-next 36/37] drivers/pwm/pwm-fsl-ftm.c:324:3-9: preceding lock
-    on line 305
+if two (or more) controllers are involved.
+ 
+> On the other hand if we associate the pin control states with each of
+> the resources that need those states, then when those resources are
+> controlled, they will automatically know how to deal with the states.
+> The top-level device (i.e. backlight) doesn't need to concern itself
+> with those details.
 
-CC: kbuild-all@01.org
-CC: linux-pwm@vger.kernel.org
-TO: Patrick Havelange <patrick.havelange@essensium.com>
-CC: Thierry Reding <thierry.reding@gmail.com>
+So the options are:
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git for-next
-head:   cb8338e4fe3a8278cee91f666d2155a0ce1dd82f
-commit: c9aad8a921c23054dc10e783829fe6ee86826101 [36/37] pwm: fsl-ftm: More relaxed permissions for updating period
-:::::: branch date: 9 hours ago
-:::::: commit date: 9 hours ago
+ a) put "active" and "inactive" pinctrls into the pwm-node, and nothing
+    related to the involved PWM pins in the consumer
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+ b) put the PWM pin config in the consumer's "default" pinctrl (and
+    maybe leave it out int "init" if you want smooth taking over).
 
->> drivers/pwm/pwm-fsl-ftm.c:324:3-9: preceding lock on line 305
-   drivers/pwm/pwm-fsl-ftm.c:328:3-9: preceding lock on line 305
+(Or maybe use "enabled" and "disabled" in a) to match the pwm_states
+.enabled?)
 
-# https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git/commit/?id=c9aad8a921c23054dc10e783829fe6ee86826101
-git remote add pwm https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git
-git remote update pwm
-git checkout c9aad8a921c23054dc10e783829fe6ee86826101
-vim +324 drivers/pwm/pwm-fsl-ftm.c
+The advantages I see in b) over a) are:
 
-b505183b Xiubo Li          2014-02-27  288
-c9aad8a9 Patrick Havelange 2019-06-12  289  static int fsl_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-c9aad8a9 Patrick Havelange 2019-06-12  290  			 struct pwm_state *newstate)
-b505183b Xiubo Li          2014-02-27  291  {
-b505183b Xiubo Li          2014-02-27  292  	struct fsl_pwm_chip *fpc = to_fsl_chip(chip);
-c9aad8a9 Patrick Havelange 2019-06-12  293  	struct pwm_state *oldstate = &pwm->state;
-c9aad8a9 Patrick Havelange 2019-06-12  294  	int ret = 0;
-b505183b Xiubo Li          2014-02-27  295
-c9aad8a9 Patrick Havelange 2019-06-12  296  	/*
-c9aad8a9 Patrick Havelange 2019-06-12  297  	 * oldstate to newstate : action
-c9aad8a9 Patrick Havelange 2019-06-12  298  	 *
-c9aad8a9 Patrick Havelange 2019-06-12  299  	 * disabled to disabled : ignore
-c9aad8a9 Patrick Havelange 2019-06-12  300  	 * enabled to disabled : disable
-c9aad8a9 Patrick Havelange 2019-06-12  301  	 * enabled to enabled : update settings
-c9aad8a9 Patrick Havelange 2019-06-12  302  	 * disabled to enabled : update settings + enable
-c9aad8a9 Patrick Havelange 2019-06-12  303  	 */
-b505183b Xiubo Li          2014-02-27  304
-c9aad8a9 Patrick Havelange 2019-06-12 @305  	mutex_lock(&fpc->lock);
-b505183b Xiubo Li          2014-02-27  306
-c9aad8a9 Patrick Havelange 2019-06-12  307  	if (!newstate->enabled) {
-c9aad8a9 Patrick Havelange 2019-06-12  308  		if (oldstate->enabled) {
-c9aad8a9 Patrick Havelange 2019-06-12  309  			regmap_update_bits(fpc->regmap, FTM_OUTMASK,
-c9aad8a9 Patrick Havelange 2019-06-12  310  					   BIT(pwm->hwpwm), BIT(pwm->hwpwm));
-c9aad8a9 Patrick Havelange 2019-06-12  311  			clk_disable_unprepare(fpc->clk[FSL_PWM_CLK_CNTEN]);
-c9aad8a9 Patrick Havelange 2019-06-12  312  			clk_disable_unprepare(fpc->clk[fpc->period.clk_select]);
-c9aad8a9 Patrick Havelange 2019-06-12  313  		}
-c9aad8a9 Patrick Havelange 2019-06-12  314  		goto end_mutex;
-b505183b Xiubo Li          2014-02-27  315  	}
-b505183b Xiubo Li          2014-02-27  316
-c9aad8a9 Patrick Havelange 2019-06-12  317  	ret = fsl_pwm_apply_config(fpc, pwm, newstate);
-c9aad8a9 Patrick Havelange 2019-06-12  318  	if (ret)
-c9aad8a9 Patrick Havelange 2019-06-12  319  		goto end_mutex;
-c9aad8a9 Patrick Havelange 2019-06-12  320  	/* check if need to enable */
-c9aad8a9 Patrick Havelange 2019-06-12  321  	if (!oldstate->enabled) {
-c9aad8a9 Patrick Havelange 2019-06-12  322  		ret = clk_prepare_enable(fpc->clk[fpc->period.clk_select]);
-b505183b Xiubo Li          2014-02-27  323  		if (ret)
-b505183b Xiubo Li          2014-02-27 @324  			return ret;
-b505183b Xiubo Li          2014-02-27  325  		ret = clk_prepare_enable(fpc->clk[FSL_PWM_CLK_CNTEN]);
-b505183b Xiubo Li          2014-02-27  326  		if (ret) {
-c9aad8a9 Patrick Havelange 2019-06-12  327  			clk_disable_unprepare(fpc->clk[fpc->period.clk_select]);
-b505183b Xiubo Li          2014-02-27  328  			return ret;
-b505183b Xiubo Li          2014-02-27  329  		}
-c9aad8a9 Patrick Havelange 2019-06-12  330  		regmap_update_bits(fpc->regmap, FTM_OUTMASK, BIT(pwm->hwpwm),
-c9aad8a9 Patrick Havelange 2019-06-12  331  				   0);
-b505183b Xiubo Li          2014-02-27  332  	}
-b505183b Xiubo Li          2014-02-27  333
-c9aad8a9 Patrick Havelange 2019-06-12  334  end_mutex:
-b505183b Xiubo Li          2014-02-27  335  	mutex_unlock(&fpc->lock);
-b505183b Xiubo Li          2014-02-27  336  	return ret;
-b505183b Xiubo Li          2014-02-27  337  }
-b505183b Xiubo Li          2014-02-27  338
+ - "default" and "init" are a known pinctrl concept that most people
+   should have understood.
 
-:::::: The code at line 324 was first introduced by commit
-:::::: b505183b5117ce149c65ae62f8c00e889acafa69 pwm: Add Freescale FTM PWM driver support
+ - You have all pinctrl config for the backlight in a single place.
 
-:::::: TO: Xiubo Li <Li.Xiubo@freescale.com>
-:::::: CC: Thierry Reding <thierry.reding@gmail.com>
+ - none of the involved driver must explicitly handle pinctrl stuff
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+You presume that b) being commonly done is a sign of "our device trees
+and kernel subsystems still maturing". But maybe it's only that the
+capabilities provided by pinctrl subsystem without extra effort is good
+enough?
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
