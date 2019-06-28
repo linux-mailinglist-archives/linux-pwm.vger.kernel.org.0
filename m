@@ -2,29 +2,30 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 517CF59022
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Jun 2019 04:03:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD85F593E0
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Jun 2019 07:57:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbfF1CDC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 27 Jun 2019 22:03:02 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:36781 "EHLO
+        id S1726827AbfF1F5f (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 28 Jun 2019 01:57:35 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:2133 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725770AbfF1CDC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 27 Jun 2019 22:03:02 -0400
-X-UUID: c2ece93bab67479591380ff8da29426a-20190628
-X-UUID: c2ece93bab67479591380ff8da29426a-20190628
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        with ESMTP id S1726574AbfF1F5f (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Jun 2019 01:57:35 -0400
+X-UUID: 78ed0b10d4474fc08ffd9dfae75b74b0-20190628
+X-UUID: 78ed0b10d4474fc08ffd9dfae75b74b0-20190628
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <ck.hu@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1235482751; Fri, 28 Jun 2019 10:02:55 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 28 Jun 2019 10:02:52 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+        with ESMTP id 885150733; Fri, 28 Jun 2019 13:57:16 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ MTKMBS33N2.mediatek.inc (172.27.4.76) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 28 Jun 2019 13:57:14 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 28 Jun 2019 10:02:51 +0800
-Message-ID: <1561687371.29330.11.camel@mtksdaap41>
-Subject: Re: [v5 2/3] drm/mediatek: separate mipi_tx to different file
+ Transport; Fri, 28 Jun 2019 13:57:14 +0800
+Message-ID: <1561701434.18399.3.camel@mtksdaap41>
+Subject: Re: [v5 2/7] drm/mediatek: fixes CMDQ reg address of mt8173 is
+ different with mt2701
 From:   CK Hu <ck.hu@mediatek.com>
 To:     Jitao Shi <jitao.shi@mediatek.com>
 CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
@@ -50,27 +51,15 @@ CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
         <stonea168@163.com>
-Date:   Fri, 28 Jun 2019 10:02:51 +0800
-In-Reply-To: <20190627025901.28418-3-jitao.shi@mediatek.com>
-References: <20190627025901.28418-1-jitao.shi@mediatek.com>
-         <20190627025901.28418-3-jitao.shi@mediatek.com>
+Date:   Fri, 28 Jun 2019 13:57:14 +0800
+In-Reply-To: <20190627080116.40264-3-jitao.shi@mediatek.com>
+References: <20190627080116.40264-1-jitao.shi@mediatek.com>
+         <20190627080116.40264-3-jitao.shi@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-TM-AS-Product-Ver: SMEX-12.5.0.1684-8.5.1010-24722.000
-X-TM-AS-Result: No-10.247700-8.000000-10
-X-TMASE-MatchedRID: L8tZF6zWW2rmLzc6AOD8DfHkpkyUphL9APiR4btCEeZJK2eJhY02w+Z5
-        Gn23AeDZBCJmNbrkQwEB1c8PTXnqofI1YbpS1+avgmAd4Attpn/YuVu0X/rOkBpX1zEL4nq3zod
-        Om+zp8Klvb8FTrUVVI7tTg4w4u0QPVdgv/fqHkl7obINHZkH5xqgmQ5FI9tvDDlLOAk1ICsupTt
-        npKpQyOnuvCtBi52L250DWRAwkrYTtmWsUlPYSbZXIRfiL5JZTGEfoClqBl86bKItl61J/ycnjL
-        TA/UDoAoTCA5Efyn8CNo+PRbWqfRDsAVzN+Ov/sHFf9y5qyR15CjO3g32i4QW3xAkDtY0KKM0RM
-        yIBWAJybBCcU0pWFpQ==
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--10.247700-8.000000
-X-TMASE-Version: SMEX-12.5.0.1684-8.5.1010-24722.000
-X-TM-SNTS-SMTP: 5329DA286C4A6660442E20F3A9F915E02E66B2517D31A07EE8877C820797CA0F2000:8
+X-TM-SNTS-SMTP: EFC69EF3637C30387605FE58F2031FD41C3BF0457DDCD7D8088A30B41732E1EB2000:8
 X-MTK:  N
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
@@ -79,83 +68,105 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 Hi, Jitao:
 
-On Thu, 2019-06-27 at 10:59 +0800, Jitao Shi wrote:
-> Different IC has different mipi_tx setting of dsi.
-> This patch separates the mipi_tx hardware relate part for mt8173.
+On Thu, 2019-06-27 at 16:01 +0800, Jitao Shi wrote:
+> Config the different CMDQ reg address in driver data.
 > 
 > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
 > ---
->  drivers/gpu/drm/mediatek/Makefile             |   1 +
->  drivers/gpu/drm/mediatek/mtk_mipi_tx.c        | 343 ++----------------
->  drivers/gpu/drm/mediatek/mtk_mipi_tx.h        |  49 +++
->  drivers/gpu/drm/mediatek/mtk_mt8173_mipi_tx.c | 289 +++++++++++++++
->  4 files changed, 363 insertions(+), 319 deletions(-)
->  create mode 100644 drivers/gpu/drm/mediatek/mtk_mipi_tx.h
->  create mode 100644 drivers/gpu/drm/mediatek/mtk_mt8173_mipi_tx.c
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 29 ++++++++++++++++++++++++-----
+>  1 file changed, 24 insertions(+), 5 deletions(-)
 > 
-
-[snip]
-
-> @@ -391,10 +101,8 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct mtk_mipi_tx *mipi_tx;
->  	struct resource *mem;
-> -	struct clk *ref_clk;
->  	const char *ref_clk_name;
->  	struct clk_init_data clk_init = {
-> -		.ops = &mtk_mipi_tx_pll_ops,
->  		.num_parents = 1,
->  		.parent_names = (const char * const *)&ref_clk_name,
->  		.flags = CLK_SET_RATE_GATE,
-> @@ -408,6 +116,7 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
->  		return -ENOMEM;
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index 595b3b047c7b..bd37d823c762 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -131,7 +131,6 @@
+>  #define VM_CMD_EN			BIT(0)
+>  #define TS_VFP_EN			BIT(5)
 >  
->  	mipi_tx->driver_data = of_device_get_match_data(dev);
+> -#define DSI_CMDQ0		0x180
+>  #define CONFIG				(0xff << 0)
+>  #define SHORT_PACKET			0
+>  #define LONG_PACKET			2
+> @@ -156,6 +155,10 @@
+>  
+>  struct phy;
+>  
+> +struct mtk_dsi_driver_data {
+> +	const u32 reg_cmdq_off;
+> +};
 > +
->  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	mipi_tx->regs = devm_ioremap_resource(dev, mem);
->  	if (IS_ERR(mipi_tx->regs)) {
-> @@ -416,13 +125,14 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
->  		return ret;
+>  struct mtk_dsi {
+>  	struct mtk_ddp_comp ddp_comp;
+>  	struct device *dev;
+> @@ -182,6 +185,7 @@ struct mtk_dsi {
+>  	bool enabled;
+>  	u32 irq_data;
+>  	wait_queue_head_t irq_wait_queue;
+> +	const struct mtk_dsi_driver_data *driver_data;
+>  };
+>  
+>  static inline struct mtk_dsi *encoder_to_dsi(struct drm_encoder *e)
+> @@ -934,6 +938,7 @@ static void mtk_dsi_cmdq(struct mtk_dsi *dsi, const struct mipi_dsi_msg *msg)
+>  	const char *tx_buf = msg->tx_buf;
+>  	u8 config, cmdq_size, cmdq_off, type = msg->type;
+>  	u32 reg_val, cmdq_mask, i;
+> +	u32 reg_cmdq_off = dsi->driver_data->reg_cmdq_off;
+>  
+>  	if (MTK_DSI_HOST_IS_READ(type))
+>  		config = BTA;
+> @@ -953,9 +958,11 @@ static void mtk_dsi_cmdq(struct mtk_dsi *dsi, const struct mipi_dsi_msg *msg)
 >  	}
 >  
-> -	ref_clk = devm_clk_get(dev, NULL);
-> -	if (IS_ERR(ref_clk)) {
-> -		ret = PTR_ERR(ref_clk);
-> +	mipi_tx->ref_clk = devm_clk_get(dev, NULL);
+>  	for (i = 0; i < msg->tx_len; i++)
+> -		writeb(tx_buf[i], dsi->regs + DSI_CMDQ0 + cmdq_off + i);
+> +		mtk_dsi_mask(dsi, (reg_cmdq_off + cmdq_off + i) & (~0x3U),
+> +			     (0xffUL << (((i + cmdq_off) & 3U) * 8U)),
+> +			     tx_buf[i] << (((i + cmdq_off) & 3U) * 8U));
 
-I think you need not to keep ref_clk in driver private data because you
-would not use it any more.
+If writeb() has the same problem in MT2701, I think we need a patch that
+just change writeb() to mtk_dsi_mask(), and then a patch to fix CMDQ reg
+address of MT8173. So break this patch into two patches.
 
 Regards,
 CK
 
-> +	if (IS_ERR(mipi_tx->ref_clk)) {
-> +		ret = PTR_ERR(mipi_tx->ref_clk);
->  		dev_err(dev, "Failed to get reference clock: %d\n", ret);
->  		return ret;
->  	}
-> -	ref_clk_name = __clk_get_name(ref_clk);
-> +
-> +	ref_clk_name = __clk_get_name(mipi_tx->ref_clk);
 >  
->  	ret = of_property_read_string(dev->of_node, "clock-output-names",
->  				      &clk_init.name);
-> @@ -431,6 +141,8 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
->  		return ret;
->  	}
+> -	mtk_dsi_mask(dsi, DSI_CMDQ0, cmdq_mask, reg_val);
+> +	mtk_dsi_mask(dsi, reg_cmdq_off, cmdq_mask, reg_val);
+>  	mtk_dsi_mask(dsi, DSI_CMDQ_SIZE, CMDQ_SIZE, cmdq_size);
+>  }
 >  
-> +	clk_init.ops = mipi_tx->driver_data->mipi_tx_clk_ops;
+> @@ -1099,6 +1106,8 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto err_unregister_host;
+>  
+> +	dsi->driver_data = of_device_get_match_data(dev);
 > +
->  	mipi_tx->pll_hw.init = &clk_init;
->  	mipi_tx->pll = devm_clk_register(dev, &mipi_tx->pll_hw);
->  	if (IS_ERR(mipi_tx->pll)) {
-> @@ -465,20 +177,12 @@ static int mtk_mipi_tx_remove(struct platform_device *pdev)
+>  	dsi->engine_clk = devm_clk_get(dev, "engine");
+>  	if (IS_ERR(dsi->engine_clk)) {
+>  		ret = PTR_ERR(dsi->engine_clk);
+> @@ -1192,9 +1201,19 @@ static int mtk_dsi_remove(struct platform_device *pdev)
 >  	return 0;
 >  }
 >  
-
-
+> +static const struct mtk_dsi_driver_data mt8173_dsi_driver_data = {
+> +	.reg_cmdq_off = 0x200,
+> +};
+> +
+> +static const struct mtk_dsi_driver_data mt2701_dsi_driver_data = {
+> +	.reg_cmdq_off = 0x180,
+> +};
+> +
+>  static const struct of_device_id mtk_dsi_of_match[] = {
+> -	{ .compatible = "mediatek,mt2701-dsi" },
+> -	{ .compatible = "mediatek,mt8173-dsi" },
+> +	{ .compatible = "mediatek,mt2701-dsi",
+> +	  .data = &mt2701_dsi_driver_data },
+> +	{ .compatible = "mediatek,mt8173-dsi",
+> +	  .data = &mt8173_dsi_driver_data },
+>  	{ },
+>  };
+>  
 
 
