@@ -2,171 +2,128 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4036C5999C
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Jun 2019 14:00:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D50045B2BA
+	for <lists+linux-pwm@lfdr.de>; Mon,  1 Jul 2019 03:29:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfF1MAM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 28 Jun 2019 08:00:12 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39976 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbfF1MAM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Jun 2019 08:00:12 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p11so6002763wre.7;
-        Fri, 28 Jun 2019 05:00:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zFhViWU2ix/FGtwFa2dw2ZghUA5CNul/fAu8w0UyxW8=;
-        b=ARp+PRzs5JzuKsvLfkHkuhA2bBmmH2qEuAsiROw3mHouKomY2trDc2A1XPrxeo/0KR
-         tHG3hS3pVUFyUc8UiEnzT59Bgt8mIOTl66vJZ2nNbcU4nzV8nHDKFMhK6lLil2j2JZ2y
-         ITiI7ICg7ll7qf26pm/nmSRnJ6thM27BMscaaUheHMc8W/dET5lEabjWvXUn9K3k+jg3
-         NJdhemc+u4dH3zxq3eP8r82yLzXgz+1M2kaEGFMF0Mq0LnC+ldngmS3GDzZgCDTH8KXu
-         TFk/V+5wWbbUDikwlY7OHjxqGiNXfmGE+gJhk+TTE2wYV95LjxO2RTCHI4f/nI8gwkhg
-         tMZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zFhViWU2ix/FGtwFa2dw2ZghUA5CNul/fAu8w0UyxW8=;
-        b=izG6XClqkuGB4gy2r/sqAPBboZgboeBYxG90QIPNvkNnONovmhI1Ib6hWp4B4+VmiR
-         DAIYhP2vsnWsY+xEMse05AB+gseshVDdLd4flg37kx2cM4IJP150pYfvRppHRzQMYftK
-         jidm+vxrbGOdcwhxTFwT+xKlaTGT0aR9/xXmm4kufxwm/g9g5tbTEEPyyZhX2Bq3S9m1
-         ga8GmaQxByK9GY7WE+/H/4ghvYF9ydyaCGD9OGw/7MR5PUMYqVcQFlv7ehZr78R9z3qv
-         X+Il7khejq5QSRc5OLnkpZmu2qo3T/oto5RN1Z7TZ9hYsUOKnoR/+z7td924yRa7CZ30
-         Ibqw==
-X-Gm-Message-State: APjAAAWkGlX246V8gSz4h79CW6PlDg6eMGT9amUbRjdG25fx9hA+58uf
-        K2I6qKUmp+o9MpZmgFEQSCmu5Q3ZOEo=
-X-Google-Smtp-Source: APXvYqwHNfcDEyvEEko3CDQl75vx4ggUJxH8AlV3szGQA1YFMXUfDlUD37+YRKrpHDNf9O4d+YFZ6A==
-X-Received: by 2002:adf:cc85:: with SMTP id p5mr7204435wrj.47.1561723209234;
-        Fri, 28 Jun 2019 05:00:09 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id t15sm2014117wrx.84.2019.06.28.05.00.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 28 Jun 2019 05:00:08 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] pwm: Changes for v5.3-rc1
-Date:   Fri, 28 Jun 2019 14:00:02 +0200
-Message-Id: <20190628120002.19597-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        id S1727193AbfGAB3u (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 30 Jun 2019 21:29:50 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:57351 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727159AbfGAB3t (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 30 Jun 2019 21:29:49 -0400
+X-UUID: d29bdff237594c7c81a1686025d435ae-20190701
+X-UUID: d29bdff237594c7c81a1686025d435ae-20190701
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 872957804; Mon, 01 Jul 2019 09:29:35 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 1 Jul 2019 09:29:25 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 1 Jul 2019 09:29:23 +0800
+Message-ID: <1561944562.17120.1.camel@mtksdaap41>
+Subject: Re: [v5 4/7] drm/mediatek: add frame size control
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Thierry Reding" <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        "Inki Dae" <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        "Sean Paul" <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        "Andy Yan" <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <stonea168@163.com>
+Date:   Mon, 1 Jul 2019 09:29:22 +0800
+In-Reply-To: <20190627080116.40264-5-jitao.shi@mediatek.com>
+References: <20190627080116.40264-1-jitao.shi@mediatek.com>
+         <20190627080116.40264-5-jitao.shi@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-AS-Product-Ver: SMEX-12.5.0.1684-8.5.1010-24732.000
+X-TM-AS-Result: No-12.337600-8.000000-10
+X-TMASE-MatchedRID: zGP2F0O7j/vmLzc6AOD8DfHkpkyUphL9xXRDKEyu2zF+SLLtNOiBhmmd
+        1p2wVSdNRw3fpQHgw3t0pmQclXiHl4UJf3YQjB6CiJwEp8weVXwxXH/dlhvLv2q646qiEnRz7yL
+        x17DX9aet2gtuWr1Lmt52diAVzqN2Z/mERv8EXlX754IB1tyKcqg3Fm19nZrJ0u/U/L+rNlES99
+        dUV0LYkjvFiNq8G3M5EiVVgKqFXk5Nfs8n85Te8oMbH85DUZXyseWplitmp0j6C0ePs7A07RRAJ
+        C2k3BZ6qjisAJ9xR93/FHz8N5NA/ciiN6rHv+xKGCY6L4Z1ACk=
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--12.337600-8.000000
+X-TMASE-Version: SMEX-12.5.0.1684-8.5.1010-24732.000
+X-TM-SNTS-SMTP: A90BCEAADDCB8D640566EAD2CCD718AC8B8A63ED6C117C0EF66499DE0C7667252000:8
+X-MTK:  N
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Linus,
+Hi, Jitao:
 
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+On Thu, 2019-06-27 at 16:01 +0800, Jitao Shi wrote:
+> Our new DSI chip has frame size control.
+> So add the driver data to control for different chips.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+This version is different than previous version, so you should remove
+the reviewed-by tag. For this version, I still give you a
 
-are available in the Git repository at:
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.3-rc1
+> ---
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index 6b6550926db6..45e331055842 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -78,6 +78,7 @@
+>  #define DSI_VBP_NL		0x24
+>  #define DSI_VFP_NL		0x28
+>  #define DSI_VACT_NL		0x2C
+> +#define DSI_SIZE_CON		0x38
+>  #define DSI_HSA_WC		0x50
+>  #define DSI_HBP_WC		0x54
+>  #define DSI_HFP_WC		0x58
+> @@ -162,6 +163,7 @@ struct phy;
+>  struct mtk_dsi_driver_data {
+>  	const u32 reg_cmdq_off;
+>  	bool has_shadow_ctl;
+> +	bool has_size_ctl;
+>  };
+>  
+>  struct mtk_dsi {
+> @@ -430,6 +432,10 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
+>  	writel(vm->vfront_porch, dsi->regs + DSI_VFP_NL);
+>  	writel(vm->vactive, dsi->regs + DSI_VACT_NL);
+>  
+> +	if (dsi->driver_data->has_size_ctl)
+> +		writel(vm->vactive << 16 | vm->hactive,
+> +		       dsi->regs + DSI_SIZE_CON);
+> +
+>  	horizontal_sync_active_byte = (vm->hsync_len * dsi_tmp_buf_bpp - 10);
+>  
+>  	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
 
-for you to fetch changes up to 3d25025ce9c2f364ea4ee76f1461c8714b9c0b6d:
 
-  pwm: fsl-ftm: Make sure to unlock mutex on failure (2019-06-26 11:39:25 +0200)
-
-I'm sending this out early for this cycle because I have travel plans
-that will likely intersect with the merge window.
-
-Thanks,
-Thierry
-
-----------------------------------------------------------------
-pwm: Changes for v5.3-rc1
-
-This set of changes contains a new driver for SiFive SoCs as well as
-enhancements to the core (device links are used to track dependencies
-between PWM providers and consumers, support for PWM controllers via
-ACPI, sysfs will now suspend/resume PWMs that it has claimed) and
-various existing drivers.
-
-----------------------------------------------------------------
-Claudiu Beznea (1):
-      pwm: atmel-hlcdc: Add compatible for SAM9X60 HLCDC's PWM
-
-Fabrice Gasnier (5):
-      dt-bindings: pwm: stm32-lp: Document pin control sleep state
-      pwm: stm32-lp: Add power management support
-      pwm: Add consumer device link
-      dt-bindings: pwm: stm32: Add #pwm-cells
-      pwm: stm32: Use 3 cells ->of_xlate()
-
-Martin Blumenstingl (14):
-      pwm: meson: Unify the parameter list of meson_pwm_{enable, disable}
-      pwm: meson: Use devm_clk_get_optional() to get the input clock
-      pwm: meson: Use GENMASK and FIELD_PREP for the lo and hi values
-      pwm: meson: Change MISC_CLK_SEL_WIDTH to MISC_CLK_SEL_MASK
-      pwm: meson: Don't duplicate the polarity internally
-      pwm: meson: Pass struct pwm_device to meson_pwm_calc()
-      pwm: meson: Add the meson_pwm_channel data to struct meson_pwm
-      pwm: meson: Add the per-channel register offsets and bits in a struct
-      pwm: meson: Move pwm_set_chip_data() to meson_pwm_request()
-      pwm: meson: Simplify the calculation of the pre-divider and count
-      pwm: meson: Read the full hardware state in meson_pwm_get_state()
-      pwm: meson: Don't cache struct pwm_state internally
-      pwm: meson: Add support PWM_POLARITY_INVERSED when disabling
-      pwm: meson: Add documentation to the driver
-
-Neil Armstrong (2):
-      pwm: meson: Update with SPDX Licence identifier
-      pwm: meson: Fix the G12A AO clock parents order
-
-Nikolaus Voss (2):
-      pwm: Add support referencing PWMs from ACPI
-      leds: pwm: Support ACPI via firmware-node framework
-
-Patrick Havelange (2):
-      pwm: fsl-ftm: More relaxed permissions for updating period
-      pwm: fsl-ftm: Use write protection for prescaler & polarity
-
-Paul Cercueil (4):
-      dt-bindings: pwm: jz47xx: Remove unused compatible strings
-      pwm: jz4740: Remove unused devicetree compatible strings
-      pwm: jz4740: Apply configuration atomically
-      pwm: jz4740: Force TCU2 channels to return to their init level
-
-Sean Young (1):
-      pwm: bcm2835: Improve precision of PWM
-
-Thierry Reding (1):
-      pwm: fsl-ftm: Make sure to unlock mutex on failure
-
-Yash Shah (2):
-      pwm: sifive: Add DT documentation for SiFive PWM Controller
-      pwm: sifive: Add a driver for SiFive SoC PWM
-
-Yoshihiro Shimoda (3):
-      pwm: Add power management descriptions
-      pwm: sysfs: Add suspend/resume support
-      pwm: rcar: Remove suspend/resume support
-
- .../devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt |   5 +-
- .../devicetree/bindings/pwm/pwm-sifive.txt         |  33 ++
- .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |   9 +-
- .../devicetree/bindings/pwm/pwm-stm32.txt          |   3 +
- Documentation/pwm.txt                              |   7 +
- drivers/leds/leds-pwm.c                            |  45 ++-
- drivers/pwm/Kconfig                                |  11 +
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/core.c                                 | 172 ++++++++-
- drivers/pwm/pwm-atmel-hlcdc.c                      |   1 +
- drivers/pwm/pwm-bcm2835.c                          |   8 +-
- drivers/pwm/pwm-fsl-ftm.c                          | 383 ++++++++++----------
- drivers/pwm/pwm-jz4740.c                           |  49 ++-
- drivers/pwm/pwm-meson.c                            | 386 ++++++++++-----------
- drivers/pwm/pwm-rcar.c                             |  39 ---
- drivers/pwm/pwm-sifive.c                           | 339 ++++++++++++++++++
- drivers/pwm/pwm-stm32-lp.c                         |  25 ++
- drivers/pwm/pwm-stm32.c                            |   2 +
- drivers/pwm/sysfs.c                                | 102 ++++++
- include/linux/pwm.h                                |  16 +-
- 20 files changed, 1154 insertions(+), 482 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.txt
- create mode 100644 drivers/pwm/pwm-sifive.c
