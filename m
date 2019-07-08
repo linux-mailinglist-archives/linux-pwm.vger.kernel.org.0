@@ -2,248 +2,116 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A423B61378
-	for <lists+linux-pwm@lfdr.de>; Sun,  7 Jul 2019 04:13:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB92C6255E
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jul 2019 17:51:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727147AbfGGCNm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 6 Jul 2019 22:13:42 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:36960 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727127AbfGGCNm (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 6 Jul 2019 22:13:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1562465617; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fznRMUZAZm3iHbL6qyuoO4hMPI4FOSHJ7kLY24FuOZI=;
-        b=meQffMhT7/byhhbXYDtJprcmMUATZqkEpI4hd/tl1CTIQpbwPpKL89XDPJuGJoZs1xXYOl
-        Ll9syGbefwxlBQmfKwnalmU4Phk/ERo+/kUKCFpZNrPFfY7s6C5i0V1XXjsm/WPD0yd+L8
-        V/7mBH4OZfdNPMa2cY/1IwKj2Q3cOKQ=
-Date:   Sat, 06 Jul 2019 22:13:13 -0400
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
- down
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        od@zcrc.me, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-Id: <1562465593.2019.0@crapouillou.net>
-In-Reply-To: <20190625094756.GC1516@ulmo>
-References: <20190522163428.7078-1-paul@crapouillou.net>
-        <5b0f8bb3-e7b0-52c1-1f2f-9709992b76fc@linaro.org>
-        <20190621135608.GB11839@ulmo> <20190624112844.fmwbfpdxjkst3u7r@holly.lan>
-        <1561386717.20436.0@crapouillou.net> <20190625094756.GC1516@ulmo>
+        id S2388357AbfGHPvH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 8 Jul 2019 11:51:07 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40716 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731766AbfGHPvH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 8 Jul 2019 11:51:07 -0400
+Received: by mail-lf1-f67.google.com with SMTP id b17so7682079lff.7
+        for <linux-pwm@vger.kernel.org>; Mon, 08 Jul 2019 08:51:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Lcu6DKhuqC2EdjddGasiGPHtfViOaKatj/mPHVzp6VA=;
+        b=PgagO2IsiF4rFEsQ1pEGwMwtjC8l+1tE8BYXAKHXqKARn1Bgx6b0qiLcG4o9m8tAef
+         j2UHyQ87E5pA7Mj1JvJuqxMQqRBNveBXnd3sZkPk3PmHPvJzJSLZcqBZZQC/0yn6VvEn
+         SkHCb6zWMay4selpqMxmN7N9KrSzkrgwRKnNxIfypr53cC4Y5rjNVXAKd4rJxM34RKob
+         xl14dKBErxnaPATmaknikgb7R4iRU5F8zITKvktvo0mF2/bOBK47FZGxd2Y4SCHGDdAP
+         0VxhjAWpVyMLvzYBCevSIT7jmdk1ua3SD2czk/0TVdRBKWwH1OZUeVFpig2/K4Su0MO4
+         +Ndw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Lcu6DKhuqC2EdjddGasiGPHtfViOaKatj/mPHVzp6VA=;
+        b=F+uSfztGHcxz3FQ3EbfD7CYAJHF9aTdUBgXz+90CIYoblfTepVlkZn9jJ3AbzXRpuv
+         ZvFWXwj5bzlSw5fPUGv8zS73KLVfTfgzu8VCtoJ+ko9P6osodv7Q3TZq/t5aGzjrv01Z
+         OW50IOmozLrIXCKoFjLj5fLWp/loGgC7fesuGSPOj9LDc8uhjahq/6FAcsXI1/KlmimI
+         HkBbS1/xVijRpO2BAMQXtOkeuk4Ck/xpTVkV7HEMAsZ/2fe/l3O33Os5DBmBuYt336pH
+         wJPb4L7G9+73SKuanNLZ6WE8tz4mHQaC+8T2M1gvwkripMQpjhjRdQxi6AaFyI9+WL6D
+         qz/Q==
+X-Gm-Message-State: APjAAAURcmTlgyFhWxkiRxX8Vq7vfyV0ZyYfdwoxrnrhCwLgQJTnNimk
+        +YcrhmuqR0w6GXEqZzety+nRXg==
+X-Google-Smtp-Source: APXvYqxEVIlyCLwyyxfKqlR4trRT9l0+9B6drLsoXei3PDRFkDOgzGGIqdglLJdOft3RmoF5pEmJJQ==
+X-Received: by 2002:a05:6512:48f:: with SMTP id v15mr7144576lfq.37.1562601065318;
+        Mon, 08 Jul 2019 08:51:05 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:4440:228b:a5c8:af47:c662:2fa9? ([2a00:1fa0:4440:228b:a5c8:af47:c662:2fa9])
+        by smtp.gmail.com with ESMTPSA id n10sm2819753lfe.24.2019.07.08.08.51.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 08:51:04 -0700 (PDT)
+Subject: Re: [PATCH RFC 1/7] pinctrl: sh-pfc: add new flags into struct
+ sh_pfc_pin_config
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linus.walleij@linaro.org, geert+renesas@glider.be,
+        thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1562576868-8124-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <f5f0a790-3ed5-dfbc-e489-be1ecc55d742@cogentembedded.com>
+Date:   Mon, 8 Jul 2019 18:51:00 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1562576868-8124-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 08.07.2019 12:07, Yoshihiro Shimoda wrote:
 
+> To clean/modify the code up later, this patch just adds new flags
+> "mux_set" and "gpio_enabled" into the struct sh_pfc_pin_config.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>   drivers/pinctrl/sh-pfc/pinctrl.c | 14 +++++++++++++-
+>   1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/sh-pfc/pinctrl.c b/drivers/pinctrl/sh-pfc/pinctrl.c
+> index 2824be4..157b257 100644
+> --- a/drivers/pinctrl/sh-pfc/pinctrl.c
+> +++ b/drivers/pinctrl/sh-pfc/pinctrl.c
+> @@ -27,6 +27,8 @@
+>   
+>   struct sh_pfc_pin_config {
+>   	u32 type;
+> +	bool mux_set;
+> +	bool gpio_enabled;
+>   };
+>   
+>   struct sh_pfc_pinctrl {
+> @@ -364,7 +366,15 @@ static int sh_pfc_func_set_mux(struct pinctrl_dev *pctldev, unsigned selector,
+>   	for (i = 0; i < grp->nr_pins; ++i) {
+>   		ret = sh_pfc_config_mux(pfc, grp->mux[i], PINMUX_TYPE_FUNCTION);
+>   		if (ret < 0)
+> -			break;
+> +			goto done;
+> +	}
+> +
+> +	/* All group pins are configurated, mark the pins as mux_set */
 
-Le mar. 25 juin 2019 =E0 5:47, Thierry Reding <thierry.reding@gmail.com>=20
-a =E9crit :
-> On Mon, Jun 24, 2019 at 04:31:57PM +0200, Paul Cercueil wrote:
->>=20
->>=20
->>  Le lun. 24 juin 2019 =E0 13:28, Daniel Thompson=20
->> <daniel.thompson@linaro.org> a
->>  =E9crit :
->>  > On Fri, Jun 21, 2019 at 03:56:08PM +0200, Thierry Reding wrote:
->>  > >  On Fri, Jun 21, 2019 at 01:41:45PM +0100, Daniel Thompson=20
->> wrote:
->>  > >  > On 22/05/2019 17:34, Paul Cercueil wrote:
->>  > >  > > When the driver probes, the PWM pin is automatically=20
->> configured
->>  > > to its
->>  > >  > > default state, which should be the "pwm" function.
->>  > >  >
->>  > >  > At which point in the probe... and by who?
->>  > >
->>  > >  The driver core will select the "default" state of a device=20
->> right
->>  > > before
->>  > >  calling the driver's probe, see:
->>  > >
->>  > >  	drivers/base/pinctrl.c: pinctrl_bind_pins()
->>  > >
->>  > >  which is called from:
->>  > >
->>  > >  	drivers/base/dd.c: really_probe()
->>  > >
->>  >
->>  > Thanks. I assumed it would be something like that... although=20
->> given
->>  > pwm-backlight is essentially a wrapper driver round a PWM I=20
->> wondered why
->>  > the pinctrl was on the backlight node (rather than the PWM node).
->>  >
->>  > Looking at the DTs in the upstream kernel it looks like ~20% of=20
->> the
->>  > backlight drivers have pinctrl on the backlight node. Others=20
->> presumable
->>  > have none or have it on the PWM node (and it looks like support=20
->> for
->>  > sleeping the pins is *very* rare amoung the PWM drivers).
->>=20
->>  If your PWM driver has more than one channel and has the pinctrl=20
->> node, you
->>  cannot fine-tune the state of individual pins. They all share the=20
->> same
->>  state.
->=20
-> But that's something that could be changed, right? We could for=20
-> example
-> extend the PWM bindings to allow describing each PWM instance via a=20
-> sub-
-> node of the controller node. Pin control states could be described on=20
-> a
-> per-channel basis that way.
+    Configured.
 
-There could be an API to dynamically add/remove pin groups to a given
-pinctrl state. The PWM driver would start with an empty (no groups)
-"default" state, then when enabling e.g. PWM1, the driver would call
-a function to add the "pwm1" pin group to the "default" state.
+> +	for (i = 0; i < grp->nr_pins; ++i) {
+> +		int idx = sh_pfc_get_pin_index(pfc, grp->pins[i]);
+> +		struct sh_pfc_pin_config *cfg = &pmx->configs[idx];
+> +
+> +		cfg->mux_set = true;
+>   	}
+>   
+>   done:
+[...]
 
-Does that sound like a good idea?
-
-Thanks,
--Paul
-
-
->>  > >  > > However, at this
->>  > >  > > point we don't know the actual level of the pin, which may=20
->> be
->>  > > active or
->>  > >  > > inactive. As a result, if the driver probes without=20
->> enabling the
->>  > >  > > backlight, the PWM pin might be active, and the backlight=20
->> would
->>  > > be
->>  > >  > > lit way before being officially enabled.
->>  > >  > >
->>  > >  > > To work around this, if the probe function doesn't enable=20
->> the
->>  > > backlight,
->>  > >  > > the pin is set to its sleep state instead of the default=20
->> one,
->>  > > until the
->>  > >  > > backlight is enabled. Whenk the backlight is disabled, the=20
->> pin
->>  > > is reset
->>  > >  > > to its sleep state.
->>  > >  > Doesn't this workaround result in a backlight flash between
->>  > > whatever enables
->>  > >  > it and the new code turning it off again?
->>  > >
->>  > >  Yeah, I think it would. I guess if you're very careful on how=20
->> you
->>  > > set up
->>  > >  the device tree you might be able to work around it. Besides=20
->> the
->>  > > default
->>  > >  and idle standard pinctrl states, there's also the "init"=20
->> state. The
->>  > >  core will select that instead of the default state if=20
->> available.
->>  > > However
->>  > >  there's also pinctrl_init_done() which will try again to=20
->> switch to
->>  > > the
->>  > >  default state after probe has finished and the driver didn't=20
->> switch
->>  > > away
->>  > >  from the init state.
->>  > >
->>  > >  So you could presumably set up the device tree such that you=20
->> have
->>  > > three
->>  > >  states defined: "default" would be the one where the PWM pin is
->>  > > active,
->>  > >  "idle" would be used when backlight is off (PWM pin inactive)=20
->> and
->>  > > then
->>  > >  another "init" state that would be the same as "idle" to be=20
->> used
->>  > > during
->>  > >  probe. During probe the driver could then switch to the "idle"
->>  > > state so
->>  > >  that the pin shouldn't glitch.
->>  > >
->>  > >  I'm not sure this would actually work because I think the way=20
->> that
->>  > >  pinctrl handles states both "init" and "idle" would be the same
->>  > > pointer
->>  > >  values and therefore pinctrl_init_done() would think the driver
->>  > > didn't
->>  > >  change away from the "init" state because it is the same=20
->> pointer
->>  > > value
->>  > >  as the "idle" state that the driver selected. One way to work=20
->> around
->>  > >  that would be to duplicate the "idle" state definition and
->>  > > associate one
->>  > >  instance of it with the "idle" state and the other with the=20
->> "init"
->>  > >  state. At that point both states should be different (different
->>  > > pointer
->>  > >  values) and we'd get the init state selected automatically=20
->> before
->>  > > probe,
->>  > >  select "idle" during probe and then the core will leave it=20
->> alone.
->>  > > That's
->>  > >  of course ugly because we duplicate the pinctrl state in DT,=20
->> but
->>  > > perhaps
->>  > >  it's the least ugly solution.
->>  > >  Adding Linus for visibility. Perhaps he can share some insight.
->>  >
->>  > To be honest I'm happy to summarize in my head as "if it flashes=20
->> then
->>  > it's not
->>  > a pwm_bl.c's problem" ;-).
->>=20
->>  It does not flash. But the backlight lits way too early, so we have=20
->> a 1-2
->>  seconds
->>  of "white screen" before the panel driver starts.
->=20
-> I think this always goes both ways. If you set the sleep state for the
-> PWM on backlight probe with this patch, you may be able to work around
-> the problem of the backlight lighting up too early. But what if your
-> bootloader had already enabled the backlight and is showing a splash
-> screen during boot? Your patch would turn off the backlight and then=20
-> it
-> would turn on again after everything else was initialized. That's one
-> type of flashing.
->=20
-> What we need in this case are explicit pin control states that will
-> enable fine-grained control over what happens. Anything implicit is
-> bound to fail because it bakes in an assumption (either that the
-> backlight is off during boot, or that it has been turned on already).
->=20
-> Ideally we'd need to detect that the backlight is on and if it is we
-> just don't do anything with it. Actually, I think that's what we want
-> even if the backlight is off. During probe the backlight state should
-> not be modified. You only want to modify it when you know that some
-> display driver is going to take over. If you can't seamlessly=20
-> transition
-> to the kernel display driver, flashing may be okay. If your display
-> driver can take over seamlessly, then the backlight is likely already=20
-> in
-> the desired state anyway.
->=20
-> Thierry
-
-=
-
+MBR, Sergei
