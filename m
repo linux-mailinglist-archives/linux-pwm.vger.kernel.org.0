@@ -2,45 +2,45 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EC6463B87
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 Jul 2019 21:00:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2614E63B91
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Jul 2019 21:01:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfGITAN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 9 Jul 2019 15:00:13 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36912 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbfGITAN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 9 Jul 2019 15:00:13 -0400
-Received: by mail-pg1-f195.google.com with SMTP id g15so9916823pgi.4
-        for <linux-pwm@vger.kernel.org>; Tue, 09 Jul 2019 12:00:13 -0700 (PDT)
+        id S1727248AbfGITAQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 9 Jul 2019 15:00:16 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36240 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727245AbfGITAO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 9 Jul 2019 15:00:14 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r7so9748827pfl.3
+        for <linux-pwm@vger.kernel.org>; Tue, 09 Jul 2019 12:00:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=agNl784XHpZcC5LqJknrXQYgxU0CtqquUElpKGVsi2U=;
-        b=mM+cViIx9xyiXexrT0Zh5UFoRyGLEmGjKHq5xGLVtu+6hX2D9Xflb35m087yPOGTEv
-         2Xd3YFtFbsxce06tMJnfUqCnxvQ8BI99jPS6rnPRrckKhk2lty/H/3JDLY34nN0jGr+0
-         Jhznan7TeSV+j2PqhnFvH4vf4Y2JUaaRQLcvs=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=m85WlLZHJVH8RETgsg0HqiVDllfx4XvsXRbdu3drMNc=;
+        b=isQf2VDU03YGOtf8dFbZaoe7mOqoq6z2fbnfI76lyieAkq9c/O3MWRQWJsEu7o6Kv6
+         +sO3jC2+6lChlABv2PHw4N+6FJo/vPGNbtghULmIYVEdHFqpxVU20P941UYVUnUfnmw0
+         h+yt4jFHUsAjNf4RH7qkXTZR+LeFbJpXpHuk8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=agNl784XHpZcC5LqJknrXQYgxU0CtqquUElpKGVsi2U=;
-        b=nFRC6UCtdpnNiCcwmdI/xBCCcZnjAy9bJcSoBXZ4iFvVzAqfBEk/1XSPeVMMUJsQ8e
-         wLTmN80WqtGwQRky062OkfP0iRSIaQGzbYxV5fC+vO3PqtcMRdw5ZVrF44P3p6UpOLED
-         oLx+f4YNhtfcR1sgxAK7J097WgHekSdAVFmcWsLw0JEoi0RnjGoeRk+8BvFXc44WV2ux
-         v5IRzRgnEPC6KvjUbVMGtR0dgLtxT3thGNm07iGcwbBMxmXt+hGH2L8LgI6Tou2eCtuG
-         +7fqhFBmnT37JOwWTGD97A0FRpY52ktz7ONSjBfk7k7Y10yt1fbxZadv6QIx5G4mODXv
-         ZGjw==
-X-Gm-Message-State: APjAAAVVhfzSM3yH029+COU61dAkGJtbJU25Sbe67SzWHZwx435pCkOG
-        zf3D/cVEYKRHhUnZ6QIjsC2+SA==
-X-Google-Smtp-Source: APXvYqzgiljPNQtmksVwQeu0mnKjNy5a2B+0y32N9WtWnsDmQw+D32h0y78iStJjuRbgrXwJH1vfTw==
-X-Received: by 2002:a63:1658:: with SMTP id 24mr33215318pgw.167.1562698812609;
-        Tue, 09 Jul 2019 12:00:12 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=m85WlLZHJVH8RETgsg0HqiVDllfx4XvsXRbdu3drMNc=;
+        b=Dz/Bg3pcDO0zJKsYHZBvJJSc0WyyNSyKxxRJ8lXdoDYFqFmM45/oWDGA3crr97+LpD
+         Y3Fd5jkIyJITIhShpG4MTlzPDAvj8aed+VmZU/bt5tzcMyfTuyR46OztcOFOSSc0blEk
+         rEXG1a1xlTW1TkD89v1nHpBsAqjSJXozVa4CIK7wAwaGkyI+k0iH3QfM5MIIjW/VcnJo
+         XZhBcUi0zSvwF5oudHrmBYQLDZGEHZSfC4788rX5rbxG9CIoGZFuEymI8auGOsPMP1oe
+         B6VmSso9JsaG6VqkhjsjfYWZbpaAtokFubEeQbn0tl7dEAuW9LHuGNai/W5t+2Co49QW
+         8jvw==
+X-Gm-Message-State: APjAAAVdkv22qBAc5ofh/rRyCAmrUh4pUxAi6mYhovf6BwyW2l0hgTZx
+        njR1eqWSUAdzIMeElX7qM9Bdcw==
+X-Google-Smtp-Source: APXvYqxDiBZW0Xb64K9vuI4D4EUi9LKfdzKQ60nHEzq2OO07kpy0OeqgLete4I10Vsc93WIyQfVezg==
+X-Received: by 2002:a63:a1a:: with SMTP id 26mr31979652pgk.265.1562698814151;
+        Tue, 09 Jul 2019 12:00:14 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id x26sm22747410pfq.69.2019.07.09.12.00.11
+        by smtp.gmail.com with ESMTPSA id g62sm3356521pje.11.2019.07.09.12.00.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jul 2019 12:00:12 -0700 (PDT)
+        Tue, 09 Jul 2019 12:00:13 -0700 (PDT)
 From:   Matthias Kaehlcke <mka@chromium.org>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
@@ -55,10 +55,12 @@ Cc:     linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         Pavel Machek <pavel@ucw.cz>,
         Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v3 0/4] backlight: Expose brightness curve type through sysfs
-Date:   Tue,  9 Jul 2019 12:00:03 -0700
-Message-Id: <20190709190007.91260-1-mka@chromium.org>
+Subject: [PATCH v3 1/4] MAINTAINERS: Add entry for stable backlight sysfs ABI documentation
+Date:   Tue,  9 Jul 2019 12:00:04 -0700
+Message-Id: <20190709190007.91260-2-mka@chromium.org>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+In-Reply-To: <20190709190007.91260-1-mka@chromium.org>
+References: <20190709190007.91260-1-mka@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
@@ -66,33 +68,33 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Backlight brightness curves can have different shapes. The two main
-types are linear and non-linear curves. The human eye doesn't
-perceive linearly increasing/decreasing brightness as linear (see
-also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
-linearly to human eye"), hence many backlights use non-linear (often
-logarithmic) brightness curves. The type of curve is currently opaque
-to userspace, so userspace often relies on more or less reliable
-heuristics (like the number of brightness levels) to decide whether
-to treat a backlight device as linear or non-linear.
+Add an entry for the stable backlight sysfs ABI to the MAINTAINERS
+file.
 
-Export the type of the brightness curve via a new sysfs attribute.
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+---
+Changes in v3:
+- none
 
-Matthias Kaehlcke (4):
-  MAINTAINERS: Add entry for stable backlight sysfs ABI documentation
-  backlight: Expose brightness curve type through sysfs
-  backlight: pwm_bl: Set scale type for CIE 1931 curves
-  backlight: pwm_bl: Set scale type for brightness curves specified in
-    the DT
+Changes in v2:
+- added Daniel's 'Acked-by' tag
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
- .../ABI/testing/sysfs-class-backlight         | 26 ++++++++++++++
- MAINTAINERS                                   |  2 ++
- drivers/video/backlight/backlight.c           | 19 ++++++++++
- drivers/video/backlight/pwm_bl.c              | 35 ++++++++++++++++++-
- include/linux/backlight.h                     |  8 +++++
- 5 files changed, 89 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/ABI/testing/sysfs-class-backlight
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 57f496cff999..d51e74340870 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2857,6 +2857,7 @@ F:	drivers/video/backlight/
+ F:	include/linux/backlight.h
+ F:	include/linux/pwm_backlight.h
+ F:	Documentation/devicetree/bindings/leds/backlight
++F:	Documentation/ABI/stable/sysfs-class-backlight
+ 
+ BATMAN ADVANCED
+ M:	Marek Lindner <mareklindner@neomailbox.ch>
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
