@@ -2,275 +2,296 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CC9A6C2C0
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Jul 2019 23:49:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 281226C2F1
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jul 2019 00:03:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfGQVtL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 17 Jul 2019 17:49:11 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41085 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727385AbfGQVtL (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 17 Jul 2019 17:49:11 -0400
-Received: by mail-qk1-f194.google.com with SMTP id v22so18760313qkj.8
-        for <linux-pwm@vger.kernel.org>; Wed, 17 Jul 2019 14:49:10 -0700 (PDT)
+        id S1727447AbfGQWDP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 17 Jul 2019 18:03:15 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:35374 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727410AbfGQWDO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 17 Jul 2019 18:03:14 -0400
+Received: by mail-qt1-f195.google.com with SMTP id d23so25071712qto.2
+        for <linux-pwm@vger.kernel.org>; Wed, 17 Jul 2019 15:03:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ejsg9zFg1SBlFMIbKb0gYl6rd1BQSyw/OZUvkIgAnYs=;
-        b=TaxnU2Oyx2xFw2mWD1NKL4w1DaCcE7Y+7E0ijhbB4LV85kcJJFyakph9adbzXQFHOz
-         878Z2XS7PJvMkQstz8d2kM8Kv7PEN4jRzmh6HzEWEDzyxpeFJz6gON8Dvj5Ye2rZvKH3
-         6EiuYt1IV5zpofrOF9eJsX4oYBwWwKBOexo0M=
+        bh=eUlTffAvSCym+EN8x6Xer387d72KBIqU0xjI+Qp9AZQ=;
+        b=mRBQVsxJ5hH7rx0TDoqbXg3hVL+LxBLAH/7WcvKGedYSVPk79cuwiagqxujDX9kDgl
+         yOKEhn8NeODMUeWG4XjuJuub6jwZh0qQGYAFL+JU+F0uC+liJCT37Cvb92U0Wcw79QTz
+         zunhLyVbf7FSSRSTmGugqijqQ7/8tB3XKe/oY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ejsg9zFg1SBlFMIbKb0gYl6rd1BQSyw/OZUvkIgAnYs=;
-        b=EtvqBGwFhu6WRL3wB3qbHCRsurgVjtwzkQ6Pjf+Y3BeT/5QoWvyqcFDY2X+5DAM53W
-         mQhs0dCeDo5sz5X/dd6sknaqMtEYoo0G09UWf1EFPz8w4QAstTHghxdYXGCG2SmpCrWu
-         WSlePW/AXHGEpQGNH046nEAD6kSKJWLbNm22IC50crQVdj6xL8yToHsWHKJhBwhGYXwM
-         VwC9Hhpyl7zp6jtRjdRv5DLTbIdR2qVMap2TvDpEYLNjXJL0dFlI3w22yyR6cFRPSeqx
-         njhEUePigt4HvvOAIGui1DonSzP0ZLghEmpwf1WdwOczl/EdYnYR4pk9iZ/Zzt1FKIki
-         0ToQ==
-X-Gm-Message-State: APjAAAUtx1Q/LLTKK4NJQZZtFATAKykxJt95jU1S4hdfY5xs4+6ScDyq
-        ue7d/r93inSpza623osESh5ErMSXM3VOSFam4nYokQ==
-X-Google-Smtp-Source: APXvYqyNm7b7/Vdeq0kcv6bDvARYwnBGZlOZ5GZXhVqH5sSSwkvumU2WuAPzCpUXnbYRnopJaVkUVvXRBo30p08cZDQ=
-X-Received: by 2002:a37:48d0:: with SMTP id v199mr27184138qka.318.1563400149938;
- Wed, 17 Jul 2019 14:49:09 -0700 (PDT)
+        bh=eUlTffAvSCym+EN8x6Xer387d72KBIqU0xjI+Qp9AZQ=;
+        b=ESf8aZvEeTEnalugH/7FQhJ8Vzbz9XZREfPyIP/Zug1j1S7UYdQy/mdvTr6xEkH0q0
+         2mAEGkCrkour1APM60wY1v+7ZbHvpafGOXFcaoBfOUXJlZjQVyWA8G24Ws6PATntJHfG
+         iKQz95iWUKqphbiuSMHLNQFf2Z3mMlKvmdi8dR+dQeAsgp2/TXddrngIhRdqNuZ/uIu6
+         GhQwS7LeO0HtSr6u4xfBITrI9+x7KNHsCpfPhMsd9c7wWDOjsPNZQ5ELX6fWsGatISwb
+         hVBCMTwys5mLdLyxkdl1tNG9NV+WtG45S4lAOOJBHtBNdHBMQCV0DJv3auLW+q9YkSTM
+         jtGQ==
+X-Gm-Message-State: APjAAAWDGqbj8BqrpsBKtWCA5kNyDzlcO7iiKhwlhWdIScxU51wMqbQE
+        lc8IzeHpPG9i+5UglRjF+sdJNudXJumH9Vaugk6rcw==
+X-Google-Smtp-Source: APXvYqwlZ/+M4C2ZxvRJLy8gaEXSFZyKFFT5fxDNnE2XZA0FFCCziGYDv5isP9eILwhLMyxH0KfusFXlDRxsixsO5GA=
+X-Received: by 2002:aed:3b1c:: with SMTP id p28mr28131013qte.312.1563400993457;
+ Wed, 17 Jul 2019 15:03:13 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190627080116.40264-1-jitao.shi@mediatek.com>
- <20190627080116.40264-2-jitao.shi@mediatek.com> <1561702259.18399.7.camel@mtksdaap41>
-In-Reply-To: <1561702259.18399.7.camel@mtksdaap41>
+ <20190627080116.40264-7-jitao.shi@mediatek.com> <1561945387.17120.4.camel@mtksdaap41>
+In-Reply-To: <1561945387.17120.4.camel@mtksdaap41>
 From:   Ryan Case <ryandcase@chromium.org>
-Date:   Wed, 17 Jul 2019 14:48:59 -0700
-Message-ID: <CACjz--k+Z2QqLEyrWoWSma_K1eP9jcaN3osc80UJQNK9m8=TFQ@mail.gmail.com>
-Subject: Re: [v5 1/7] drm/mediatek: move mipi_dsi_host_register to probe
+Date:   Wed, 17 Jul 2019 15:03:02 -0700
+Message-ID: <CACjz--m8BuJbe80m7HfakVi8uXj5mTj72=6YZ5+OAa-gF29M8Q@mail.gmail.com>
+Subject: Re: [v5 6/7] drm/mediatek: change the dsi phytiming calculate method
 To:     CK Hu <ck.hu@mediatek.com>
 Cc:     Jitao Shi <jitao.shi@mediatek.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        stonea168@163.com, dri-devel@lists.freedesktop.org,
-        yingjoe.chen@mediatek.com, Ajay Kumar <ajaykumar.rs@samsung.com>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Thierry Reding <treding@nvidia.com>, linux-pwm@vger.kernel.org,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Pawel Moll <pawel.moll@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        Inki Dae <inki.dae@samsung.com>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Andy Yan <andy.yan@rock-chips.com>,
+        Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org,
+        Thierry Reding <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
         Rahul Sharma <rahul.sharma@samsung.com>,
-        srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
-        Sean Paul <seanpaul@chromium.org>
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        Sascha Hauer <kernel@pengutronix.de>,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        stonea168@163.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 11:11 PM CK Hu <ck.hu@mediatek.com> wrote:
+On Sun, Jun 30, 2019 at 6:43 PM CK Hu <ck.hu@mediatek.com> wrote:
 >
 > Hi, Jitao:
 >
 > On Thu, 2019-06-27 at 16:01 +0800, Jitao Shi wrote:
-> > DSI panel driver need attach function which is inculde in
-> > mipi_dsi_host_ops.
+> > Change the method of frame rate calc which can get more accurate
+> > frame rate.
 > >
-> > If mipi_dsi_host_register is not in probe, dsi panel will
-> > probe more delay.
+> > data rate = pixel_clock * bit_per_pixel / lanes
+> > Adjust hfp_wc to adapt the additional phy_data
 > >
-> > So move the mipi_dsi_host_register to probe from bind.
+> > if MIPI_DSI_MODE_VIDEO_BURST
+> >       hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12 - 6;
+> > else
+> >       hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12;
+> >
+> > Note:
+> > //(2: 1 for sync, 1 for phy idle)
+> > data_phy_cycles = T_hs_exit + T_lpx + T_hs_prepare + T_hs_zero + 2;
+> >
+> > bpp: bit per pixel
 > >
 > > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> > Tested-by: Ryan Case <ryandcase@chromium.org>
 > > Reviewed-by: CK Hu <ck.hu@mediatek.com>
 >
-> This version is different than v4, so please remove reviewed-by tag when
-> this patch change. When I see a reviewed-by tag of mine, I would just
-> skip review it again because I assume this patch is the same as previous
-> version.
->
-> For this version, I give still give it a
+> This version is different than previous version, so you should remove
+> Reviewed-by tag. For this version, I still give you a
 >
 > Reviewed-by: CK Hu <ck.hu@mediatek.com>
 >
 > > ---
-> >  drivers/gpu/drm/mediatek/mtk_dsi.c | 53 +++++++++++++++++-------------
-> >  1 file changed, 31 insertions(+), 22 deletions(-)
+> >  drivers/gpu/drm/mediatek/mtk_dsi.c | 117 ++++++++++++++++++++---------
+> >  1 file changed, 80 insertions(+), 37 deletions(-)
 > >
 > > diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> > index b00eb2d2e086..595b3b047c7b 100644
+> > index 1621e8cdacc2..cefdcb1509cb 100644
 > > --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
 > > +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> > @@ -528,7 +528,7 @@ static s32 mtk_dsi_switch_to_cmd_mode(struct mtk_dsi *dsi, u8 irq_flag, u32 t)
+> > @@ -144,12 +144,6 @@
+> >  #define DATA_0                               (0xff << 16)
+> >  #define DATA_1                               (0xff << 24)
 > >
-> >  static int mtk_dsi_poweron(struct mtk_dsi *dsi)
-> >  {
-> > -     struct device *dev = dsi->dev;
-> > +     struct device *dev = dsi->->host.dev;
-
-single -> here
-
-> >       int ret;
-> >       u64 pixel_clock, total_bits;
-> >       u32 htotal, htotal_bits, bit_per_pixel, overhead_cycles, overhead_bits;
-> > @@ -1045,12 +1045,6 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
-> >               return ret;
-> >       }
-> >
-> > -     ret = mipi_dsi_host_register(&dsi->host);
-> > -     if (ret < 0) {
-> > -             dev_err(dev, "failed to register DSI host: %d\n", ret);
-> > -             goto err_ddp_comp_unregister;
-> > -     }
+> > -#define T_LPX                5
+> > -#define T_HS_PREP    6
+> > -#define T_HS_TRAIL   8
+> > -#define T_HS_EXIT    7
+> > -#define T_HS_ZERO    10
 > > -
-> >       ret = mtk_dsi_create_conn_enc(drm, dsi);
-> >       if (ret) {
-> >               DRM_ERROR("Encoder create failed with %d\n", ret);
-> > @@ -1060,8 +1054,6 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
-> >       return 0;
+> >  #define NS_TO_CYCLE(n, c)    ((n) / (c) + (((n) % (c)) ? 1 : 0))
 > >
-> >  err_unregister:
-> > -     mipi_dsi_host_unregister(&dsi->host);
-> > -err_ddp_comp_unregister:
-> >       mtk_ddp_comp_unregister(drm, &dsi->ddp_comp);
-> >       return ret;
-> >  }
-> > @@ -1073,7 +1065,6 @@ static void mtk_dsi_unbind(struct device *dev, struct device *master,
-> >       struct mtk_dsi *dsi = dev_get_drvdata(dev);
+> >  #define MTK_DSI_HOST_IS_READ(type) \
+> > @@ -158,6 +152,25 @@
+> >       (type == MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM) || \
+> >       (type == MIPI_DSI_DCS_READ))
 > >
-> >       mtk_dsi_destroy_conn_enc(dsi);
-> > -     mipi_dsi_host_unregister(&dsi->host);
-> >       mtk_ddp_comp_unregister(drm, &dsi->ddp_comp);
-> >  }
+> > +struct mtk_phy_timing {
+> > +     u32 lpx;
+> > +     u32 da_hs_prepare;
+> > +     u32 da_hs_zero;
+> > +     u32 da_hs_trail;
+> > +
+> > +     u32 ta_go;
+> > +     u32 ta_sure;
+> > +     u32 ta_get;
+> > +     u32 da_hs_exit;
+> > +
+> > +     u32 clk_hs_zero;
+> > +     u32 clk_hs_trail;
+> > +
+> > +     u32 clk_hs_prepare;
+> > +     u32 clk_hs_post;
+> > +     u32 clk_hs_exit;
+> > +};
+> > +
+> >  struct phy;
 > >
-> > @@ -1097,31 +1088,36 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+> >  struct mtk_dsi_driver_data {
+> > @@ -188,6 +201,7 @@ struct mtk_dsi {
+> >       enum mipi_dsi_pixel_format format;
+> >       unsigned int lanes;
+> >       struct videomode vm;
+> > +     struct mtk_phy_timing phy_timing;
+> >       int refcount;
+> >       bool enabled;
+> >       u32 irq_data;
+> > @@ -221,17 +235,36 @@ static void mtk_dsi_phy_timconfig(struct mtk_dsi *dsi)
+> >  {
+> >       u32 timcon0, timcon1, timcon2, timcon3;
+> >       u32 ui, cycle_time;
+> > +     struct mtk_phy_timing *timing = &dsi->phy_timing;
+> > +
+> > +     ui = 1000000000 / dsi->data_rate;
+> > +     cycle_time = div_u64(8000000000ULL, dsi->data_rate);
+> > +
+> > +     timing->lpx = NS_TO_CYCLE(60, cycle_time);
+> > +     timing->da_hs_prepare = NS_TO_CYCLE(40 + 5 * ui, cycle_time);
+> > +     timing->da_hs_zero = NS_TO_CYCLE(110 + 6 * ui, cycle_time);
+> > +     timing->da_hs_trail = NS_TO_CYCLE(80 + 4 * ui, cycle_time);
 > >
-> >       dsi->host.ops = &mtk_dsi_ops;
-> >       dsi->host.dev = dev;
-> > +     ret = mipi_dsi_host_register(&dsi->host);
-> > +     if (ret < 0) {
-> > +             dev_err(dev, "failed to register DSI host: %d\n", ret);
-> > +             return ret;
+> > -     ui = 1000 / dsi->data_rate + 0x01;
+> > -     cycle_time = 8000 / dsi->data_rate + 0x01;
+> > +     timing->ta_go = 4 * timing->lpx;
+> > +     timing->ta_sure = 3 * timing->lpx / 2;
+> > +     timing->ta_get = 5 * timing->lpx;
+> > +     timing->da_hs_exit = 2 * timing->lpx;
+> >
+> > -     timcon0 = T_LPX | T_HS_PREP << 8 | T_HS_ZERO << 16 | T_HS_TRAIL << 24;
+> > -     timcon1 = 4 * T_LPX | (3 * T_LPX / 2) << 8 | 5 * T_LPX << 16 |
+> > -               T_HS_EXIT << 24;
+> > -     timcon2 = ((NS_TO_CYCLE(0x64, cycle_time) + 0xa) << 24) |
+> > -               (NS_TO_CYCLE(0x150, cycle_time) << 16);
+> > -     timcon3 = NS_TO_CYCLE(0x40, cycle_time) | (2 * T_LPX) << 16 |
+> > -               NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8;
+> > +     timing->clk_hs_zero = NS_TO_CYCLE(336, cycle_time);
+> > +     timing->clk_hs_trail = NS_TO_CYCLE(100, cycle_time) + 10;
+> > +
+> > +     timing->clk_hs_prepare = NS_TO_CYCLE(64, cycle_time);
+> > +     timing->clk_hs_post = NS_TO_CYCLE(80 + 52 * ui, cycle_time);
+> > +     timing->clk_hs_exit = 2 * timing->lpx;
+> > +
+> > +     timcon0 = timing->lpx | timing->da_hs_prepare << 8 |
+> > +               timing->da_hs_zero << 16 | timing->da_hs_trail << 24;
+> > +     timcon1 = timing->ta_go | timing->ta_sure << 8 |
+> > +               timing->ta_get << 16 | timing->da_hs_exit << 24;
+> > +     timcon2 = 1 << 8 | timing->clk_hs_zero << 16 |
+> > +               timing->clk_hs_trail << 24;
+> > +     timcon3 = timing->clk_hs_prepare | timing->clk_hs_post << 8 |
+> > +               timing->clk_hs_exit << 16;
+> >
+> >       writel(timcon0, dsi->regs + DSI_PHY_TIMECON0);
+> >       writel(timcon1, dsi->regs + DSI_PHY_TIMECON1);
+> > @@ -418,7 +451,8 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
+> >       u32 horizontal_sync_active_byte;
+> >       u32 horizontal_backporch_byte;
+> >       u32 horizontal_frontporch_byte;
+> > -     u32 dsi_tmp_buf_bpp;
+> > +     u32 dsi_tmp_buf_bpp, data_phy_cycles;
+> > +     struct mtk_phy_timing *timing = &dsi->phy_timing;
+> >
+> >       struct videomode *vm = &dsi->vm;
+> >
+> > @@ -445,7 +479,34 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
+> >               horizontal_backporch_byte = ((vm->hback_porch + vm->hsync_len) *
+> >                       dsi_tmp_buf_bpp - 10);
+> >
+> > -     horizontal_frontporch_byte = (vm->hfront_porch * dsi_tmp_buf_bpp - 12);
+> > +     data_phy_cycles = timing->lpx + timing->da_hs_prepare +
+> > +                               timing->da_hs_zero + timing->da_hs_exit + 2;
+> > +
+> > +     if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
+> > +             if (vm->hfront_porch * dsi_tmp_buf_bpp >
+> > +                 data_phy_cycles * dsi->lanes + 18) {
+> > +                     horizontal_frontporch_byte = vm->hfront_porch *
+> > +                                                  dsi_tmp_buf_bpp -
+> > +                                                  data_phy_cycles *
+> > +                                                  dsi->lanes - 18;
+> > +             } else {
+> > +                     DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
+> > +                     horizontal_frontporch_byte = vm->hfront_porch *
+> > +                                                  dsi_tmp_buf_bpp;
+> > +             }
+> > +     } else {
+> > +             if (vm->hfront_porch * dsi_tmp_buf_bpp >
+> > +                 data_phy_cycles * dsi->lanes + 12) {
+> > +                     horizontal_frontporch_byte = vm->hfront_porch *
+> > +                                                  dsi_tmp_buf_bpp -
+> > +                                                  data_phy_cycles *
+> > +                                                  dsi->lanes - 12;
+> > +             } else {
+> > +                     DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
+> > +                     horizontal_frontporch_byte = vm->hfront_porch *
+> > +                                                  dsi_tmp_buf_bpp;
+> > +             }
 > > +     }
 > >
-> >       ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
-> >                                         &dsi->panel, &dsi->bridge);
-> >       if (ret)
-> > -             return ret;
-> > +             goto err_unregister_host;
+> >       writel(horizontal_sync_active_byte, dsi->regs + DSI_HSA_WC);
+> >       writel(horizontal_backporch_byte, dsi->regs + DSI_HBP_WC);
+> > @@ -545,8 +606,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+> >  {
+> >       struct device *dev = dsi->->host.dev;
+> >       int ret;
+> > -     u64 pixel_clock, total_bits;
+> > -     u32 htotal, htotal_bits, bit_per_pixel, overhead_cycles, overhead_bits;
+> > +     u32 bit_per_pixel;
 > >
-> >       dsi->engine_clk = devm_clk_get(dev, "engine");
-> >       if (IS_ERR(dsi->engine_clk)) {
-> >               ret = PTR_ERR(dsi->engine_clk);
-> >               dev_err(dev, "Failed to get engine clock: %d\n", ret);
-> > -             return ret;
-> > +             goto err_unregister_host;
+> >       if (++dsi->refcount != 1)
+> >               return 0;
+> > @@ -565,24 +625,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+> >               break;
 > >       }
 > >
-> >       dsi->digital_clk = devm_clk_get(dev, "digital");
-> >       if (IS_ERR(dsi->digital_clk)) {
-> >               ret = PTR_ERR(dsi->digital_clk);
-> >               dev_err(dev, "Failed to get digital clock: %d\n", ret);
-> > -             return ret;
-> > +             goto err_unregister_host;
-> >       }
+> > -     /**
+> > -      * htotal_time = htotal * byte_per_pixel / num_lanes
+> > -      * overhead_time = lpx + hs_prepare + hs_zero + hs_trail + hs_exit
+> > -      * mipi_ratio = (htotal_time + overhead_time) / htotal_time
+> > -      * data_rate = pixel_clock * bit_per_pixel * mipi_ratio / num_lanes;
+> > -      */
+> > -     pixel_clock = dsi->vm.pixelclock;
+> > -     htotal = dsi->vm.hactive + dsi->vm.hback_porch + dsi->vm.hfront_porch +
+> > -                     dsi->vm.hsync_len;
+> > -     htotal_bits = htotal * bit_per_pixel;
+> > -
+> > -     overhead_cycles = T_LPX + T_HS_PREP + T_HS_ZERO + T_HS_TRAIL +
+> > -                     T_HS_EXIT;
+> > -     overhead_bits = overhead_cycles * dsi->lanes * 8;
+> > -     total_bits = htotal_bits + overhead_bits;
+> > -
+> > -     dsi->data_rate = DIV_ROUND_UP_ULL(pixel_clock * total_bits,
+> > -                                       htotal * dsi->lanes);
+> > +     dsi->data_rate = DIV_ROUND_UP_ULL(dsi->vm.pixelclock * bit_per_pixel, dsi->lanes);
+
+nit: Wrap this line, it's over 80 characters.
+
 > >
-> >       dsi->hs_clk = devm_clk_get(dev, "hs");
-> >       if (IS_ERR(dsi->hs_clk)) {
-> >               ret = PTR_ERR(dsi->hs_clk);
-> >               dev_err(dev, "Failed to get hs clock: %d\n", ret);
-> > -             return ret;
-> > +             goto err_unregister_host;
-> >       }
-> >
-> >       regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > @@ -1129,33 +1125,35 @@ static int mtk_dsi_probe(struct platform_device *pdev)
-> >       if (IS_ERR(dsi->regs)) {
-> >               ret = PTR_ERR(dsi->regs);
-> >               dev_err(dev, "Failed to ioremap memory: %d\n", ret);
-> > -             return ret;
-> > +             goto err_unregister_host;
-> >       }
-> >
-> >       dsi->phy = devm_phy_get(dev, "dphy");
-> >       if (IS_ERR(dsi->phy)) {
-> >               ret = PTR_ERR(dsi->phy);
-> >               dev_err(dev, "Failed to get MIPI-DPHY: %d\n", ret);
-> > -             return ret;
-> > +             goto err_unregister_host;
-> >       }
-> >
-> >       comp_id = mtk_ddp_comp_get_id(dev->of_node, MTK_DSI);
-> >       if (comp_id < 0) {
-> >               dev_err(dev, "Failed to identify by alias: %d\n", comp_id);
-> > -             return comp_id;
-> > +             ret = comp_id;
-> > +             goto err_unregister_host;
-> >       }
-> >
-> >       ret = mtk_ddp_comp_init(dev, dev->of_node, &dsi->ddp_comp, comp_id,
-> >                               &mtk_dsi_funcs);
-> >       if (ret) {
-> >               dev_err(dev, "Failed to initialize component: %d\n", ret);
-> > -             return ret;
-> > +             goto err_unregister_host;
-> >       }
-> >
-> >       irq_num = platform_get_irq(pdev, 0);
-> >       if (irq_num < 0) {
-> > -             dev_err(&pdev->dev, "failed to request dsi irq resource\n");
-> > -             return -EPROBE_DEFER;
-> > +             dev_err(&pdev->dev, "failed to get dsi irq_num: %d\n", irq_num);
-> > +             ret = irq_num;
-> > +             goto err_unregister_host;
-> >       }
-> >
-> >       irq_set_status_flags(irq_num, IRQ_TYPE_LEVEL_LOW);
-> > @@ -1163,14 +1161,24 @@ static int mtk_dsi_probe(struct platform_device *pdev)
-> >                              IRQF_TRIGGER_LOW, dev_name(&pdev->dev), dsi);
-> >       if (ret) {
-> >               dev_err(&pdev->dev, "failed to request mediatek dsi irq\n");
-> > -             return -EPROBE_DEFER;
-> > +             goto err_unregister_host;
-> >       }
-> >
-> >       init_waitqueue_head(&dsi->irq_wait_queue);
-> >
-> >       platform_set_drvdata(pdev, dsi);
-> >
-> > -     return component_add(&pdev->dev, &mtk_dsi_component_ops);
-> > +     ret = component_add(&pdev->dev, &mtk_dsi_component_ops);
-> > +     if (ret) {
-> > +             dev_err(&pdev->dev, "failed to add component: %d\n", ret);
-> > +             goto err_unregister_host;
-> > +     }
-> > +
-> > +     return 0;
-> > +
-> > +err_unregister_host:
-> > +     mipi_dsi_host_unregister(&dsi->host);
-> > +     return ret;
-> >  }
-> >
-> >  static int mtk_dsi_remove(struct platform_device *pdev)
-> > @@ -1179,6 +1187,7 @@ static int mtk_dsi_remove(struct platform_device *pdev)
-> >
-> >       mtk_output_dsi_disable(dsi);
-> >       component_del(&pdev->dev, &mtk_dsi_component_ops);
-> > +     mipi_dsi_host_unregister(&dsi->host);
-> >
-> >       return 0;
-> >  }
+> >       ret = clk_set_rate(dsi->hs_clk, dsi->data_rate);
+> >       if (ret < 0) {
 >
 >
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
