@@ -2,62 +2,61 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A56486CA83
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jul 2019 10:01:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD1736D597
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jul 2019 22:11:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfGRIB1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 18 Jul 2019 04:01:27 -0400
-Received: from cmccmta1.chinamobile.com ([221.176.66.79]:2578 "EHLO
-        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfGRIB1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 18 Jul 2019 04:01:27 -0400
-X-Greylist: delayed 581 seconds by postgrey-1.27 at vger.kernel.org; Thu, 18 Jul 2019 04:01:18 EDT
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.1]) by rmmx-syy-dmz-app03-12003 (RichMail) with SMTP id 2ee35d3024f6001-9a38b; Thu, 18 Jul 2019 15:51:19 +0800 (CST)
-X-RM-TRANSID: 2ee35d3024f6001-9a38b
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[223.105.0.243])
-        by rmsmtp-syy-appsvr01-12001 (RichMail) with SMTP id 2ee15d3024f6bc7-f01c1;
-        Thu, 18 Jul 2019 15:51:19 +0800 (CST)
-X-RM-TRANSID: 2ee15d3024f6bc7-f01c1
-From:   Ding Xiang <dingxiang@cmss.chinamobile.com>
-To:     thierry.reding@gmail.com
-Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pwm: sifive: remove redundant dev_err message
-Date:   Thu, 18 Jul 2019 15:51:11 +0800
-Message-Id: <1563436271-31356-1-git-send-email-dingxiang@cmss.chinamobile.com>
-X-Mailer: git-send-email 1.9.1
+        id S2390241AbfGRULi convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Thu, 18 Jul 2019 16:11:38 -0400
+Received: from mail.colonizacion.com.uy ([201.217.141.18]:35965 "EHLO
+        colonizaciontest.com.uy" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727687AbfGRULh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 18 Jul 2019 16:11:37 -0400
+X-Greylist: delayed 53878 seconds by postgrey-1.27 at vger.kernel.org; Thu, 18 Jul 2019 16:11:37 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by colonizaciontest.com.uy (Postfix) with ESMTP id 6B1A6AD7F5A;
+        Wed, 17 Jul 2019 23:38:36 -0300 (GMT+3)
+Received: from colonizaciontest.com.uy ([127.0.0.1])
+        by localhost (colonizaciontest.com.uy [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id elfnvA06MkbC; Wed, 17 Jul 2019 23:38:36 -0300 (GMT+3)
+Received: from localhost (localhost [127.0.0.1])
+        by colonizaciontest.com.uy (Postfix) with ESMTP id 1D3AFAD7F54;
+        Wed, 17 Jul 2019 23:38:36 -0300 (GMT+3)
+X-Virus-Scanned: amavisd-new at colonizaciontest.com.uy
+Received: from colonizaciontest.com.uy ([127.0.0.1])
+        by localhost (colonizaciontest.com.uy [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id A2_2Wsbz1sL9; Wed, 17 Jul 2019 23:38:35 -0300 (GMT+3)
+Received: from [10.53.219.149] (unknown [105.4.1.176])
+        by colonizaciontest.com.uy (Postfix) with ESMTPSA id 88EB9AD7EE2;
+        Wed, 17 Jul 2019 23:38:25 -0300 (GMT+3)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000_Millionen_Euro?=
+To:     Recipients <rbarboza@colonizaciontest.com.uy>
+From:   ''Michael Weirsky'' <rbarboza@colonizaciontest.com.uy>
+Date:   Thu, 18 Jul 2019 04:38:22 +0200
+Reply-To: mikeweirskyspende@gmail.com
+Message-Id: <20190718023825.88EB9AD7EE2@colonizaciontest.com.uy>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-devm_ioremap_resource already contains error message, so remove
-the redundant dev_err message
-
-Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
----
- drivers/pwm/pwm-sifive.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index a7c107f..bb4f02c 100644
---- a/drivers/pwm/pwm-sifive.c
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -250,10 +250,8 @@ static int pwm_sifive_probe(struct platform_device *pdev)
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	ddata->regs = devm_ioremap_resource(dev, res);
--	if (IS_ERR(ddata->regs)) {
--		dev_err(dev, "Unable to map IO resources\n");
-+	if (IS_ERR(ddata->regs))
- 		return PTR_ERR(ddata->regs);
--	}
- 
- 	ddata->clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(ddata->clk)) {
--- 
-1.9.1
 
 
 
+
+Lieber Freund,
+
+Ich bin Herr Mike Weirsky, New Jersey, Vereinigte Staaten von Amerika, der Mega-Gewinner von $ 273million In Mega Millions Jackpot, spende ich an 5 zufällige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Mail nach einem Spinball ausgewählt.Ich habe den größten Teil meines Vermögens auf eine Reihe von Wohltätigkeitsorganisationen und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die Summe von € 2.000.000,00 an Sie als eine der ausgewählten 5 zu spenden, um meine Gewinne zu überprüfen.
+Das ist dein Spendencode: [MW530342019]
+
+www.youtube.com/watch?v=un8yRTmrYMY
+
+Antworten Sie mit dem SPENDE-CODE an diese E-Mail:mikeweirskyspende@gmail.com
+
+Ich hoffe, Sie und Ihre Familie glücklich zu machen.
+
+Grüße
+Herr Mike Weirsky
