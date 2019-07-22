@@ -2,38 +2,38 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A08717078E
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2019 19:40:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D18A70795
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2019 19:40:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729250AbfGVRjT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 22 Jul 2019 13:39:19 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41693 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728860AbfGVRjS (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Jul 2019 13:39:18 -0400
-Received: by mail-io1-f68.google.com with SMTP id j5so71613042ioj.8;
-        Mon, 22 Jul 2019 10:39:18 -0700 (PDT)
+        id S1728551AbfGVRjm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 22 Jul 2019 13:39:42 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33239 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729483AbfGVRji (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Jul 2019 13:39:38 -0400
+Received: by mail-io1-f66.google.com with SMTP id z3so75838742iog.0;
+        Mon, 22 Jul 2019 10:39:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wjVlpYQpZUbO09orLG9AZ6U1/SPFAZfxcKpbcS0Hb5E=;
-        b=FWyOqNxQHH7yho5+sxcTPAFyritixUoY/nXnHNostYsp18cwcctYEQk+a1vStNnnPZ
-         a+mvCp7tDpE0/mG9WjqQnt6VUkFN2vxATdVPMRknLw5dPkHN83jHT6/fs1u7IYCSac2l
-         yMclkySkffkugDl8nWKJskoLJsbk2znLfMfsw3aunc/THlxpRVIymyenv7Bkk70L4JhZ
-         aSs9TSAXM0g4n/qHr1IkbmVshp6KoY8ziIU8vriDhnWeWDtikMphXRHJHPgdP7hKQ+15
-         mTCwCCXaVOqlokSEKkRYVhFFQuvgjox2jLO1gDdGdJa2XfeeiTbvfaqBn0rjJhoDlkom
-         yrBQ==
-X-Gm-Message-State: APjAAAV/WY767og7vclfWdaa2khjyiSVHr4s3BWxpffaD/cyUhdACm7o
-        tfZgC7zQgIIQACyVtCkmGw==
-X-Google-Smtp-Source: APXvYqxApqbNIx0zyoWtwrvfuA/FYi/DJQeGo5LXD2cSKwEdYujoOCwjHXvKo/HVr55kQ3JiI42Arg==
-X-Received: by 2002:a6b:7606:: with SMTP id g6mr11597267iom.288.1563817157557;
-        Mon, 22 Jul 2019 10:39:17 -0700 (PDT)
+        bh=yuyB8pILujpflF/Q/M9APeaT5IXpHOGkbQKNsVipriU=;
+        b=YMnDDGpqtihngU2XWC4e9SLK1sLrK28a7LKJBSpEwCjcLouedXzcTGrHou65W6SfSV
+         rHMHML8qaNGPuIJ3wcIi3ZVgx7puk8T5kviG53nnYuqNcaTiXROyL2NYDe3F31XQcutI
+         peVgLKOXOhBoor2j+PgkQg5mqK5LmDOv6hKUAGT87MAWb/oGSpWrm6jL5x+cgo8WoL6d
+         evleacvElgPIEumo3tWSRJxbL30GBZqmVfa37En8q7cLC2UiFo0ocoS2KDgDP38A2/fG
+         wYXjR9RPSD6i8vyrJWy/yOIHU92Z7rn4mPSOswrCSZIjhOfiMHQj+8r4qB8gayCRwF+W
+         xtag==
+X-Gm-Message-State: APjAAAX/JE0yrEk0c+62p54U3IXsY3s4ZHyj9RWdMsGNo1uKLKsTbuYg
+        xL0qmQdE+byfGfXLKL8tPg==
+X-Google-Smtp-Source: APXvYqxNSkCw3W+oC2a+dAbLpos4fIcmpa8N1UVKkDaxst8+m0rwQM+coXmVvshQIkATlSLf6D7EeA==
+X-Received: by 2002:a02:b713:: with SMTP id g19mr74167358jam.77.1563817177425;
+        Mon, 22 Jul 2019 10:39:37 -0700 (PDT)
 Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id z19sm52082738ioh.12.2019.07.22.10.39.16
+        by smtp.gmail.com with ESMTPSA id i3sm37295539ion.9.2019.07.22.10.39.36
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 10:39:16 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 11:39:16 -0600
+        Mon, 22 Jul 2019 10:39:36 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 11:39:36 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Jitao Shi <jitao.shi@mediatek.com>
 Cc:     Pawel Moll <pawel.moll@arm.com>,
@@ -58,30 +58,32 @@ Cc:     Pawel Moll <pawel.moll@arm.com>,
         Sascha Hauer <kernel@pengutronix.de>,
         yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
         cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
-        ck.hu@mediatek.com, stonea168@163.com
-Subject: Re: [v3 1/4] dt-bindngs: display: panel: Add BOE tv101wum-n16 panel
- bindings
-Message-ID: <20190722173916.GA26308@bogus>
+        ck.hu@mediatek.com, stonea168@163.com,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [v3 3/4] dt-bindings: display: panel: add auo kd101n80-45na
+ panel bindings
+Message-ID: <20190722173936.GA26950@bogus>
 References: <20190626025400.109567-1-jitao.shi@mediatek.com>
- <20190626025400.109567-2-jitao.shi@mediatek.com>
+ <20190626025400.109567-4-jitao.shi@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190626025400.109567-2-jitao.shi@mediatek.com>
+In-Reply-To: <20190626025400.109567-4-jitao.shi@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 26 Jun 2019 10:53:57 +0800, Jitao Shi wrote:
-> Add documentation for boe tv101wum-n16 panel.
+On Wed, 26 Jun 2019 10:53:59 +0800, Jitao Shi wrote:
+> Add documentation for auo kd101n80-45na panel.
 > 
 > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 > ---
->  .../display/panel/boe,tv101wum-nl6.txt        | 34 +++++++++++++++++++
+>  .../display/panel/auo,kd101n80-45na.txt       | 34 +++++++++++++++++++
 >  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/auo,kd101n80-45na.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
