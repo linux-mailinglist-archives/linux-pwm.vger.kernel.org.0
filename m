@@ -2,88 +2,131 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AB07371ACE
-	for <lists+linux-pwm@lfdr.de>; Tue, 23 Jul 2019 16:51:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50F1A7210A
+	for <lists+linux-pwm@lfdr.de>; Tue, 23 Jul 2019 22:46:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390759AbfGWOvG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 23 Jul 2019 10:51:06 -0400
-Received: from muru.com ([72.249.23.125]:55730 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388251AbfGWOvE (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 23 Jul 2019 10:51:04 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 82FC2808C;
-        Tue, 23 Jul 2019 14:51:28 +0000 (UTC)
-Date:   Tue, 23 Jul 2019 07:51:00 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     David Lechner <david@lechnology.com>
-Cc:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 3/4] ARM: dts: am33xx: Add nodes for eQEP
-Message-ID: <20190723145100.GS5447@atomide.com>
-References: <20190722154538.5314-1-david@lechnology.com>
- <20190722154538.5314-4-david@lechnology.com>
- <20190723084213.GR5447@atomide.com>
- <af21fd76-7123-b317-896b-bfe18d293325@lechnology.com>
+        id S2389126AbfGWUq5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 23 Jul 2019 16:46:57 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:60644 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731769AbfGWUq4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 23 Jul 2019 16:46:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1563914814; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eHCZ20CpjI6Z66bdYx7K2SWFrol5Ee4ySm5RZTiYqis=;
+        b=DILV6jJLyq/jptU0x6tkbW8Phqrnv3eh7dPeDEUtI7Id+APgHIM6PRzugl36z5U10ozOOa
+        lbwuW+cLX+cbXOiMMchaJiiTf2D1xAYHa5JTQ5GJKZFfynEgyppqDjUPqryxHM9+GxyfLC
+        R99iHbvt69sm+robuLb2ETjmtkongL8=
+Date:   Tue, 23 Jul 2019 16:46:40 -0400
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 3/6] pwm: jz4740: Apply configuration atomically
+To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <1563914800.1918.0@crapouillou.net>
+In-Reply-To: <20190722193456.h4hfte5cczucermd@pengutronix.de>
+References: <20190607154410.10633-1-paul@crapouillou.net>
+        <20190607154410.10633-4-paul@crapouillou.net>
+        <20190722193456.h4hfte5cczucermd@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <af21fd76-7123-b317-896b-bfe18d293325@lechnology.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-* David Lechner <david@lechnology.com> [190723 14:46]:
-> On 7/23/19 3:42 AM, Tony Lindgren wrote:
-> > * David Lechner <david@lechnology.com> [190722 15:46]:
-> > > This adds new nodes for the Texas Instruments Enhanced Quadrature
-> > > Encoder Pulse (eQEP) module in the PWM subsystem on AM33XX.
-> > > 
-> > > Signed-off-by: David Lechner <david@lechnology.com>
-> > > ---
-> > >   arch/arm/boot/dts/am33xx-l4.dtsi | 27 +++++++++++++++++++++++++++
-> > >   1 file changed, 27 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-> > > index 3b1fb2ba4dff..7fdc2f61c553 100644
-> > > --- a/arch/arm/boot/dts/am33xx-l4.dtsi
-> > > +++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-> > > @@ -1908,6 +1908,15 @@
-> > >   					status = "disabled";
-> > >   				};
-> > > +				eqep0: eqep@180 {
-> > > +					compatible = "ti,am3352-eqep";
-> > > +					reg = <0x180 0x80>;
-> > > +					clocks = <&l4ls_gclk>;
-> > > +					clock-names = "fck";
-> > > +					interrupts = <79>;
-> > > +					status = "disabled";
-> > > +				};
-> > > +
-> > 
-> > You probably no longer need to map any clocks here as this> is now a child of the interconnect target module managed
-> > by ti-sysc driver. I have not checked but probably l4ls_gclk
-> > is same as clocks = <&l4ls_clkctrl AM3_L4LS_EPWMSS0_CLKCTRL 0>
-> > already managed by ti-sysc. If so, then just using runtime PM
-> > calls in any of the child device drivers will keep it enabled.
-> > 
-> > If l4ls_gclk is a separate functional clock, then it still
-> > needs to be managed by the child device driver directly.
-> 
-> The clock is included so that we can get the clock rate for
-> the timing aspects of the eQEP, not for power management.
-> 
-> I chose to use the "fck" name to be consistent with the
-> sibling EHRPWM and ECAP nodes that already have the same
-> bindings for the same clock.
+Hi Uwe,
 
-OK makes sense to me thanks.
 
-Tony
+
+Le lun. 22 juil. 2019 =E0 15:34, Uwe =3D?iso-8859-1?q?Kleine-K=3DF6nig?=3D=20
+<u.kleine-koenig@pengutronix.de> a =E9crit :
+> Hello Paul,
+>=20
+> On Fri, Jun 07, 2019 at 05:44:07PM +0200, Paul Cercueil wrote:
+>>  -static int jz4740_pwm_config(struct pwm_chip *chip, struct=20
+>> pwm_device *pwm,
+>>  -			     int duty_ns, int period_ns)
+>>  +static int jz4740_pwm_apply(struct pwm_chip *chip, struct=20
+>> pwm_device *pwm,
+>>  +			    struct pwm_state *state)
+>>   {
+>>   	struct jz4740_pwm_chip *jz4740 =3D to_jz4740(pwm->chip);
+>>   	unsigned long long tmp;
+>>   	unsigned long period, duty;
+>>   	unsigned int prescaler =3D 0;
+>>   	uint16_t ctrl;
+>>  -	bool is_enabled;
+>>=20
+>>  -	tmp =3D (unsigned long long)clk_get_rate(jz4740->clk) * period_ns;
+>>  +	tmp =3D (unsigned long long)clk_get_rate(jz4740->clk) *=20
+>> state->period;
+>>   	do_div(tmp, 1000000000);
+>>   	period =3D tmp;
+>>=20
+>>  @@ -96,16 +95,14 @@ static int jz4740_pwm_config(struct pwm_chip=20
+>> *chip, struct pwm_device *pwm,
+>>   	if (prescaler =3D=3D 6)
+>>   		return -EINVAL;
+>>=20
+>>  -	tmp =3D (unsigned long long)period * duty_ns;
+>>  -	do_div(tmp, period_ns);
+>>  +	tmp =3D (unsigned long long)period * state->duty_cycle;
+>>  +	do_div(tmp, state->period);
+>>   	duty =3D period - tmp;
+>>=20
+>>   	if (duty >=3D period)
+>>   		duty =3D period - 1;
+>>=20
+>>  -	is_enabled =3D jz4740_timer_is_enabled(pwm->hwpwm);
+>>  -	if (is_enabled)
+>>  -		jz4740_pwm_disable(chip, pwm);
+>>  +	jz4740_pwm_disable(chip, pwm);
+>=20
+> I assume this stops the PWM. Does this complete the currently running
+> period? How does the PWM behave then? (Does it still drive the output?
+> If so, on which level?)
+
+Some PWM channels work in one mode "TCU1" and others work in "TCU2". The
+mode in which channels work depends on the version of the SoC.
+
+When stopped, the pins of TCU1 channels will be driven to the inactive
+level (which depends on the polarity). It is unknown whether or not the
+currently running period is completed. We set a bit to configure for
+"abrupt shutdown", so I expect that it's not, but somebody would need
+to hook up a logic analyzer to see what's the exact behaviour with
+and without that bit.
+
+TCU2 channels on the other hand will stop in the middle of a period,
+leaving the pin hanging at whatever level it was before the stop.
+That's the rationale behind the trick in commit 6580fd173070 ("pwm:
+jz4740: Force TCU2 channels to return to their init level").
+
+Regards,
+-Paul
+
+
+>>=20
+>>   	jz4740_timer_set_count(pwm->hwpwm, 0);
+>>   	jz4740_timer_set_duty(pwm->hwpwm, duty);
+>=20
+> Best regards
+> Uwe
+>=20
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
+>     |
+> Industrial Linux Solutions                 |=20
+> http://www.pengutronix.de/  |
+
+=
+
