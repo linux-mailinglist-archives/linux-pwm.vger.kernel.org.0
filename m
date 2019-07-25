@@ -2,98 +2,116 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9529572873
-	for <lists+linux-pwm@lfdr.de>; Wed, 24 Jul 2019 08:47:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8767374CAB
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jul 2019 13:16:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725851AbfGXGry (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 24 Jul 2019 02:47:54 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38857 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfGXGry (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 24 Jul 2019 02:47:54 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hqB41-0006XM-CV; Wed, 24 Jul 2019 08:47:49 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hqB3x-0004ZG-Mb; Wed, 24 Jul 2019 08:47:45 +0200
-Date:   Wed, 24 Jul 2019 08:47:45 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Paul Cercueil <paul@crapouillou.net>
+        id S2391696AbfGYLQA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 25 Jul 2019 07:16:00 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40385 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388791AbfGYLQA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 25 Jul 2019 07:16:00 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v19so44397521wmj.5
+        for <linux-pwm@vger.kernel.org>; Thu, 25 Jul 2019 04:15:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=QF+7Jm8pJkonsuJf5bcYYdklp7SuR7E7WLX/qpmLIMY=;
+        b=JPcCwXhG2xYcAxickSomrOJkvgTBB5DjGLN3ImW41oQin65O47uBJez5y6QHqPi4CR
+         R7p/PX3cBDvjHCCXcAM73DTDSepGGTQQ2CN2Mn3M7v7z93rwWzHrKJCmJY9wOEvBDKq2
+         NpiyRbMo36jxYlVEKnTElXwIE0Y6sqOOKYRQcc+CbQLpWYGGyF1vhlYKPIneuigp7lER
+         g/uEtUrvKDd1sm7FXHFVMcoPSdQ6TQYr3xRhUnqsEI0ABKQ9ZgKAV5U2smgQQPt2O5M5
+         Inroyadx6ibMupV0tHIR/8R1NUETYkUXGcS33jsQ20wFt42RB7EmtkbcaAmdRw7W/QHJ
+         31MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=QF+7Jm8pJkonsuJf5bcYYdklp7SuR7E7WLX/qpmLIMY=;
+        b=DXIh+eVMP2Cv5lBoUx/o6iJdfY86v3tIg9WQWaqlcl7BzIye9nxhHei/8GnC4IaVU5
+         jKDp2R4ZqqoBsbq6QJTuAkS2xtQY20n+piZ0W8DIpPwDIZOpL458Hao/+nKcebgiPDRk
+         m2COJ0HcjpkHBvtkFsKPNORd74AfqziWJeZgQ/veTv72t3kkPmHbD2p2Ch1+yJWx1D/C
+         kueqgvY2uLnfi3Pas4lcq7CnOHu2NhtCBqV1xY7+Qx/fuFCkK46RPeYwS/fa9bLv162e
+         v4kjdbefXxMJGogw3jHeLMoRA1eFkTcKrLnOJV+zJPYURE1Ni5CjGWCLJWP660p5qRTZ
+         Xc+Q==
+X-Gm-Message-State: APjAAAXUVZyWz5QezW5rNB5C7qLF9O9kA7R7qRP/bKMfGgv7aPQGV3GR
+        NNZINmf3DN35RJ0ok8P1cKG3kw==
+X-Google-Smtp-Source: APXvYqwHJQvJFZHzw1frET7Zmr1qdyEsn845eWjpbVigiDXyd3xqohC1yA+q2+bnBWLbG0Uze50N5Q==
+X-Received: by 2002:a1c:3c04:: with SMTP id j4mr74612867wma.37.1564053358224;
+        Thu, 25 Jul 2019 04:15:58 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id y16sm100988574wrg.85.2019.07.25.04.15.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Jul 2019 04:15:57 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 12:15:41 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH v2 3/6] pwm: jz4740: Apply configuration atomically
-Message-ID: <20190724064745.7ghecdpg3gmxsiim@pengutronix.de>
-References: <20190607154410.10633-1-paul@crapouillou.net>
- <20190607154410.10633-4-paul@crapouillou.net>
- <20190722193456.h4hfte5cczucermd@pengutronix.de>
- <1563914800.1918.0@crapouillou.net>
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 0/4] backlight: Expose brightness curve type through
+ sysfs
+Message-ID: <20190725111541.GA23883@dell>
+References: <20190709190007.91260-1-mka@chromium.org>
+ <20190722235926.GA250418@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1563914800.1918.0@crapouillou.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20190722235926.GA250418@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Paul,
+On Mon, 22 Jul 2019, Matthias Kaehlcke wrote:
 
-On Tue, Jul 23, 2019 at 04:46:40PM -0400, Paul Cercueil wrote:
-> Le lun. 22 juil. 2019 ‡ 15:34, Uwe =?iso-8859-1?q?Kleine-K=F6nig?=
-> <u.kleine-koenig@pengutronix.de> a Ècrit :
-> > On Fri, Jun 07, 2019 at 05:44:07PM +0200, Paul Cercueil wrote:
-> > >  -	is_enabled = jz4740_timer_is_enabled(pwm->hwpwm);
-> > >  -	if (is_enabled)
-> > >  -		jz4740_pwm_disable(chip, pwm);
-> > >  +	jz4740_pwm_disable(chip, pwm);
+> On Tue, Jul 09, 2019 at 12:00:03PM -0700, Matthias Kaehlcke wrote:
+> > Backlight brightness curves can have different shapes. The two main
+> > types are linear and non-linear curves. The human eye doesn't
+> > perceive linearly increasing/decreasing brightness as linear (see
+> > also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
+> > linearly to human eye"), hence many backlights use non-linear (often
+> > logarithmic) brightness curves. The type of curve is currently opaque
+> > to userspace, so userspace often relies on more or less reliable
+> > heuristics (like the number of brightness levels) to decide whether
+> > to treat a backlight device as linear or non-linear.
 > > 
-> > I assume this stops the PWM. Does this complete the currently running
-> > period? How does the PWM behave then? (Does it still drive the output?
-> > If so, on which level?)
+> > Export the type of the brightness curve via a new sysfs attribute.
+> > 
+> > Matthias Kaehlcke (4):
+> >   MAINTAINERS: Add entry for stable backlight sysfs ABI documentation
+> >   backlight: Expose brightness curve type through sysfs
+> >   backlight: pwm_bl: Set scale type for CIE 1931 curves
+> >   backlight: pwm_bl: Set scale type for brightness curves specified in
+> >     the DT
+> > 
+> >  .../ABI/testing/sysfs-class-backlight         | 26 ++++++++++++++
+> >  MAINTAINERS                                   |  2 ++
+> >  drivers/video/backlight/backlight.c           | 19 ++++++++++
+> >  drivers/video/backlight/pwm_bl.c              | 35 ++++++++++++++++++-
+> >  include/linux/backlight.h                     |  8 +++++
+> >  5 files changed, 89 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-class-backlight
 > 
-> Some PWM channels work in one mode "TCU1" and others work in "TCU2". The
-> mode in which channels work depends on the version of the SoC.
-> 
-> When stopped, the pins of TCU1 channels will be driven to the inactive
-> level (which depends on the polarity). It is unknown whether or not the
-> currently running period is completed. We set a bit to configure for
-> "abrupt shutdown", so I expect that it's not, but somebody would need
-> to hook up a logic analyzer to see what's the exact behaviour with
-> and without that bit.
+> ping, any comments on v3?
 
-This might be done even without a logic analyzer. Just do something
-like:
-
-	pwm_apply_state(pwm, { .enabled = 1, .period = 5s })
-	pwm_apply_state(pwm, { .enabled = 1, .period = 5s, .duty = 5s })
-
-and if that takes less then 5s the period is not completed.
-
-And note that "abrupt shutdown" is a bug.
-
-> TCU2 channels on the other hand will stop in the middle of a period,
-> leaving the pin hanging at whatever level it was before the stop.
-> That's the rationale behind the trick in commit 6580fd173070 ("pwm:
-> jz4740: Force TCU2 channels to return to their init level").
-
-Strange, but ok.
-
-Best regards
-Uwe
+Looks like PATCH 2/4 still needs seeing to.
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-Kˆnig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Lee Jones [ÊùéÁêºÊñØ]
+Linaro Services Technical Lead
+Linaro.org ‚îÇ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
