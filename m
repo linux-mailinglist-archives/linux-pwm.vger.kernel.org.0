@@ -2,127 +2,167 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BC4E87911F
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jul 2019 18:37:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79DD17913E
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jul 2019 18:40:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726305AbfG2QhW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 29 Jul 2019 12:37:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbfG2QhW (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:37:22 -0400
-Received: from localhost (lpr83-1-88-168-111-231.fbx.proxad.net [88.168.111.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10133206A2;
-        Mon, 29 Jul 2019 16:37:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564418240;
-        bh=VKA8DIso9CdNJ8gOxAJ7MGKl1tbtr3ng9ZYI2lKQkaE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XHE1r3AAw6dpQSdpj+Gj50Cqp4CxCDPjTo4pyFJ+rAHvdh1j0Y8l/ineFW/+H+KFS
-         3LEI6GdMNIHewUWnsaBja7LdXvUsNb8+DYqLcIJX/UYEt9To4C70JnCvtvxDQtESSJ
-         KuQXm8q1R0zhoWkDoreCM2927q1TC08Om9PlUp1Y=
-Date:   Mon, 29 Jul 2019 18:37:15 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        id S1727559AbfG2QkV convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Mon, 29 Jul 2019 12:40:21 -0400
+Received: from mailoutvs51.siol.net ([185.57.226.242]:38916 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726240AbfG2QkV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jul 2019 12:40:21 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 56D3A5220E8;
+        Mon, 29 Jul 2019 18:40:17 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id rCV9RUjdNIE8; Mon, 29 Jul 2019 18:40:16 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id CA35F5224B7;
+        Mon, 29 Jul 2019 18:40:16 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-194-152-11-237.cable.triera.net [194.152.11.237])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 508A35224B1;
+        Mon, 29 Jul 2019 18:40:16 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     linux-sunxi@googlegroups.com, u.kleine-koenig@pengutronix.de
+Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
+        linux-pwm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 2/6] pwm: sun4i: Add a quirk for reset line
-Message-ID: <20190729163715.vtv7lkrywewomxga@flea.home>
-References: <20190726184045.14669-1-jernej.skrabec@siol.net>
- <20190726184045.14669-3-jernej.skrabec@siol.net>
- <20190729063630.rn325whatfnc3m7n@pengutronix.de>
- <CAGb2v65KOpivHQNkg+R2=D=ejCJYnPdVcyHJZW-GJCR8j0Yk0g@mail.gmail.com>
- <20190729071218.bukw7vxilqy523k3@pengutronix.de>
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
+Date:   Mon, 29 Jul 2019 18:40:15 +0200
+Message-ID: <2346193.MplWYqIveT@jernej-laptop>
+In-Reply-To: <20190729162428.bxuzgxg5sjqptlbp@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net> <CAGb2v66C=ghjck6rxTg6Vt4xN2DcXntzVOa=KJWh98KRjkhnHQ@mail.gmail.com> <20190729162428.bxuzgxg5sjqptlbp@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="c27mc7zieuu4am73"
-Content-Disposition: inline
-In-Reply-To: <20190729071218.bukw7vxilqy523k3@pengutronix.de>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
---c27mc7zieuu4am73
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jul 29, 2019 at 09:12:18AM +0200, Uwe Kleine-K=F6nig wrote:
+Dne ponedeljek, 29. julij 2019 ob 18:24:28 CEST je Uwe Kleine-König 
+napisal(a):
 > Hello,
->
-> On Mon, Jul 29, 2019 at 02:43:23PM +0800, Chen-Yu Tsai wrote:
-> > On Mon, Jul 29, 2019 at 2:36 PM Uwe Kleine-K=F6nig
+> 
+> On Tue, Jul 30, 2019 at 12:09:40AM +0800, Chen-Yu Tsai wrote:
+> > On Tue, Jul 30, 2019 at 12:07 AM Uwe Kleine-König
+> > 
 > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > On Fri, Jul 26, 2019 at 08:40:41PM +0200, Jernej Skrabec wrote:
-> > > > @@ -371,6 +374,14 @@ static int sun4i_pwm_probe(struct platform_dev=
-ice *pdev)
-> > > >       if (IS_ERR(pwm->clk))
-> > > >               return PTR_ERR(pwm->clk);
-> > > >
-> > > > +     if (pwm->data->has_reset) {
-> > > > +             pwm->rst =3D devm_reset_control_get(&pdev->dev, NULL);
-> > > > +             if (IS_ERR(pwm->rst))
-> > > > +                     return PTR_ERR(pwm->rst);
-> > > > +
-> > > > +             reset_control_deassert(pwm->rst);
-> > > > +     }
-> > > > +
-> > >
-> > > I wonder why there is a need to track if a given chip needs a reset
-> > > line. I'd just use devm_reset_control_get_optional() and drop the
-> > > .has_reset member in struct sun4i_pwm_data.
-> >
-> > Because it's not optional for this platform, i.e. it won't work if
-> > the reset control (or clk, in the next patch) is somehow missing from
-> > the device tree.
+> > > On Mon, Jul 29, 2019 at 05:55:52PM +0200, Jernej Škrabec wrote:
+> > > > Dne ponedeljek, 29. julij 2019 ob 08:40:30 CEST je Uwe Kleine-König
+> > > > 
+> > > > napisal(a):
+> > > > > On Fri, Jul 26, 2019 at 08:40:43PM +0200, Jernej Skrabec wrote:
+> > > > > > --- a/drivers/pwm/pwm-sun4i.c
+> > > > > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > > > > @@ -331,6 +331,13 @@ static const struct sun4i_pwm_data
+> > > > > > sun4i_pwm_single_bypass = {>
+> > > > > > 
+> > > > > >   .npwm = 1,
+> > > > > >  
+> > > > > >  };
+> > > > > > 
+> > > > > > +static const struct sun4i_pwm_data sun50i_pwm_dual_bypass_clk_rst
+> > > > > > = {
+> > > > > > + .has_bus_clock = true,
+> > > > > > + .has_prescaler_bypass = true,
+> > > > > > + .has_reset = true,
+> > > > > > + .npwm = 2,
+> > > > > > +};
+> > > > > > +
+> > > > > > 
+> > > > > >  static const struct of_device_id sun4i_pwm_dt_ids[] = {
+> > > > > >  
+> > > > > >   {
+> > > > > >   
+> > > > > >           .compatible = "allwinner,sun4i-a10-pwm",
+> > > > > > 
+> > > > > > @@ -347,6 +354,9 @@ static const struct of_device_id
+> > > > > > sun4i_pwm_dt_ids[] =
+> > > > > > {
+> > > > > > 
+> > > > > >   }, {
+> > > > > >   
+> > > > > >           .compatible = "allwinner,sun8i-h3-pwm",
+> > > > > >           .data = &sun4i_pwm_single_bypass,
+> > > > > > 
+> > > > > > + }, {
+> > > > > > +         .compatible = "allwinner,sun50i-h6-pwm",
+> > > > > > +         .data = &sun50i_pwm_dual_bypass_clk_rst,
+> > > > > 
+> > > > > If you follow my suggestion for the two previous patches, you can
+> > > > > just
+> > > > > 
+> > > > > use:
+> > > > >     compatible = "allwinner,sun50i-h6-pwm",
+> > > > >     "allwinner,sun5i-a10s-pwm";
+> > > > > 
+> > > > > and drop this patch.
+> > > > 
+> > > > Maxime found out that it's not compatible with A10s due to difference
+> > > > in bypass bit, but yes, I know what you mean.
+> > > > 
+> > > > Since H6 requires reset line and bus clock to be specified, it's not
+> > > > compatible from DT binding side. New yaml based binding must somehow
+> > > > know that in order to be able to validate DT node, so it needs
+> > > > standalone compatible. However, depending on conclusions of other
+> > > > discussions, this new compatible can be associated with already
+> > > > available quirks structure or have it's own.> > 
+> > > I cannot follow. You should be able to specify in the binding that the
+> > > reset line and bus clock is optional. Then allwinner,sun50i-h6-pwm
+> > > without a reset line and bus clock also verifies, but this doesn't
+> > > really hurt (and who knows, maybe the next allwinner chip needs exactly
+> > > this).
+> > 
+> > It is not optional. It will not work if either the clocks or reset
+> > controls
+> > are missing. How would these be optional anyway? Either it's connected and
+> > thus required, or it's not and therefore should be omitted from the
+> > description.
+> 
+> [Just arguing about the clock here, the argumentation is analogous for
+> the reset control.]
+> 
+> From the driver's perspective it's optional: There are devices with and
+> without a bus clock. This doesn't mean that you can just ignore this
+> clock if it's specified. It's optional in the sense "If dt doesn't
+> specify it, then assume this is a device that doesn't have it and so you
+> don't need to handle it." but not in the sense "it doesn't matter if
+> you handle it or not.".
+> 
+> Other than that I'm on your side. So for example I think it's not
+> optimal that gpiod_get_optional returns NULL if GPIOLIB=n or that
+> devm_reset_control_get_optional returns NULL if RESET_CONTROLLER=n
+> because this hides exactly the kind of problem you point out here.
 >
-> If the device tree is wrong it is considered ok that the driver doesn't
-> behave correctly. So this is not a problem you need (or should) care
-> about.
 
-To some extent that's true, but if we can make the life easier for
-everyone by reporting an error and bailing out instead of silently
-ignoring that, continuing to probe and just ending up with a
-completely broken system for no apparent reason, then why not just do
-that?
+I think there's misunderstanding. I only argued that we can't use
 
-I mean, all it takes is three lines of code.
+compatible = "allwinner,sun50i-h6-pwm",
+	 "allwinner,sun5i-a10s-pwm";
 
-It's no different than just calling clk_get, and testing the return
-code to see if it's there or not. I wouldn't call that check when you
-depend on a clock "validating the DT". It's just making sure that all
-the resources needed for you to operate properly are there, which is a
-pretty common thing to do.
+as you suggested and only 
 
-Maxime
+compatible = "allwinner,sun50i-h6-pwm"; 
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+will work. Not because of driver itself (it can still use _optional() 
+variants), but because of DT binding, which should be able to validate H6 PWM 
+node - reset and bus clock references are required in this case.
 
---c27mc7zieuu4am73
-Content-Type: application/pgp-signature; name="signature.asc"
+Best regards,
+Jernej
+ 
+> Best regards
+> Uwe
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXT8guwAKCRDj7w1vZxhR
-xUcMAP48/d4gHWLB2ieD8luRNO7UdNKhBxkKVaYQSUwwNhdNhgEA6GotfwgqiOLI
-FehMWvNcDSv607KLMFEsu5CWk9sxRwQ=
-=W5NU
------END PGP SIGNATURE-----
 
---c27mc7zieuu4am73--
+
