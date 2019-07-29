@@ -2,193 +2,127 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 12CC9790D6
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jul 2019 18:29:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC4E87911F
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jul 2019 18:37:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbfG2Q30 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 29 Jul 2019 12:29:26 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37445 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727814AbfG2Q30 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jul 2019 12:29:26 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hs8WW-0000VG-G7; Mon, 29 Jul 2019 18:29:20 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hs8WW-00069u-3Y; Mon, 29 Jul 2019 18:29:20 +0200
-Date:   Mon, 29 Jul 2019 18:29:20 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     thierry.reding@gmail.com, mripard@kernel.org, wens@csie.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 5/6] pwm: sun4i: Add support to output source clock
- directly
-Message-ID: <20190729162920.orx3rhkrfmp7stzh@pengutronix.de>
+        id S1726305AbfG2QhW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 29 Jul 2019 12:37:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44518 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726197AbfG2QhW (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 29 Jul 2019 12:37:22 -0400
+Received: from localhost (lpr83-1-88-168-111-231.fbx.proxad.net [88.168.111.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10133206A2;
+        Mon, 29 Jul 2019 16:37:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564418240;
+        bh=VKA8DIso9CdNJ8gOxAJ7MGKl1tbtr3ng9ZYI2lKQkaE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XHE1r3AAw6dpQSdpj+Gj50Cqp4CxCDPjTo4pyFJ+rAHvdh1j0Y8l/ineFW/+H+KFS
+         3LEI6GdMNIHewUWnsaBja7LdXvUsNb8+DYqLcIJX/UYEt9To4C70JnCvtvxDQtESSJ
+         KuQXm8q1R0zhoWkDoreCM2927q1TC08Om9PlUp1Y=
+Date:   Mon, 29 Jul 2019 18:37:15 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 2/6] pwm: sun4i: Add a quirk for reset line
+Message-ID: <20190729163715.vtv7lkrywewomxga@flea.home>
 References: <20190726184045.14669-1-jernej.skrabec@siol.net>
- <20190726184045.14669-6-jernej.skrabec@siol.net>
- <20190729070605.vlu7kgzn362ph2q3@pengutronix.de>
- <2499807.IN78SsLMYo@jernej-laptop>
+ <20190726184045.14669-3-jernej.skrabec@siol.net>
+ <20190729063630.rn325whatfnc3m7n@pengutronix.de>
+ <CAGb2v65KOpivHQNkg+R2=D=ejCJYnPdVcyHJZW-GJCR8j0Yk0g@mail.gmail.com>
+ <20190729071218.bukw7vxilqy523k3@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="c27mc7zieuu4am73"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2499807.IN78SsLMYo@jernej-laptop>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20190729071218.bukw7vxilqy523k3@pengutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello,
 
-On Mon, Jul 29, 2019 at 06:16:55PM +0200, Jernej Škrabec wrote:
-> Dne ponedeljek, 29. julij 2019 ob 09:06:05 CEST je Uwe Kleine-König 
-> napisal(a):
-> > On Fri, Jul 26, 2019 at 08:40:44PM +0200, Jernej Skrabec wrote:
-> > > PWM core has an option to bypass whole logic and output unchanged source
-> > > clock as PWM output. This is achieved by enabling bypass bit.
-> > > 
-> > > Note that when bypass is enabled, no other setting has any meaning, not
-> > > even enable bit.
-> > > 
-> > > This mode of operation is needed to achieve high enough frequency to
-> > > serve as clock source for AC200 chip, which is integrated into same
-> > > package as H6 SoC.
-> > > 
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > ---
-> > > 
-> > >  drivers/pwm/pwm-sun4i.c | 31 ++++++++++++++++++++++++++++++-
-> > >  1 file changed, 30 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > > index 9e0eca79ff88..848cff26f385 100644
-> > > --- a/drivers/pwm/pwm-sun4i.c
-> > > +++ b/drivers/pwm/pwm-sun4i.c
-> > > @@ -120,6 +120,19 @@ static void sun4i_pwm_get_state(struct pwm_chip
-> > > *chip,
-> > > 
-> > >  	val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
-> > > 
-> > > +	/*
-> > > +	 * PWM chapter in H6 manual has a diagram which explains that if bypass
-> > > +	 * bit is set, no other setting has any meaning. Even more, experiment
-> > > +	 * proved that also enable bit is ignored in this case.
-> > > +	 */
-> > > +	if (val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) {
-> > > +		state->period = DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, clk_rate);
-> > > +		state->duty_cycle = state->period / 2;
-> > > +		state->polarity = PWM_POLARITY_NORMAL;
-> > > +		state->enabled = true;
-> > > +		return;
-> > > +	}
-> > > +
-> > > 
-> > >  	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
-> > >  	
-> > >  	    sun4i_pwm->data->has_prescaler_bypass)
-> > >  		
-> > >  		prescaler = 1;
-> > > 
-> > > @@ -211,7 +224,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,
-> > > struct pwm_device *pwm,> 
-> > >  {
-> > >  
-> > >  	struct sun4i_pwm_chip *sun4i_pwm = to_sun4i_pwm_chip(chip);
-> > >  	struct pwm_state cstate;
-> > > 
-> > > -	u32 ctrl;
-> > > +	u32 ctrl, clk_rate;
-> > > +	bool bypass;
-> > > 
-> > >  	int ret;
-> > >  	unsigned int delay_us;
-> > >  	unsigned long now;
-> > > 
-> > > @@ -226,6 +240,16 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,
-> > > struct pwm_device *pwm,> 
-> > >  		}
-> > >  	
-> > >  	}
-> > > 
-> > > +	/*
-> > > +	 * Although it would make much more sense to check for bypass in
-> > > +	 * sun4i_pwm_calculate(), value of bypass bit also depends on "enabled".
-> > > +	 * Period is allowed to be rounded up or down.
-> > > +	 */
-> > 
-> > Every driver seems to implement rounding the way its driver considers it
-> > sensible. @Thierry: This is another patch where it would be good to have
-> > a global directive about how rounding is supposed to work to provide the
-> > users an reliable and uniform way to work with PWMs.
-> > 
-> > > +	clk_rate = clk_get_rate(sun4i_pwm->clk);
-> > > +	bypass = (state->period == NSEC_PER_SEC / clk_rate ||
-> > > +		 state->period == DIV_ROUND_UP(NSEC_PER_SEC, clk_rate)) &&
-> > > +		 state->enabled;
-> > 
-> > Not sure if the compiler is clever enough to notice the obvious
-> > optimisation with this code construct, but you can write this test in a
-> > more clever way which has zero instead of up to two divisions. Something
-> > like:
-> > 
-> > bypass = ((state->period * clk_rate >= NSEC_PER_SEC &&
-> > 	   state->period * clk_rate < NSEC_PER_SEC + clk_rate) &&
-> > 	  state->enabled);
-> > 
-> > In the commit log you write the motivation for using bypass is that it
-> > allows to implement higher frequency then with the "normal" operation.
-> > As you don't skip calculating the normal parameters requesting such a
-> > high-frequency setting either errors out or doesn't catch the impossible
-> > request. In both cases there is something to fix.
-> 
-> It's the latter, otherwise it wouldn't work for my case. I'll fix the check and 
-> skip additional logic.
+--c27mc7zieuu4am73
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Great.
+On Mon, Jul 29, 2019 at 09:12:18AM +0200, Uwe Kleine-K=F6nig wrote:
+> Hello,
+>
+> On Mon, Jul 29, 2019 at 02:43:23PM +0800, Chen-Yu Tsai wrote:
+> > On Mon, Jul 29, 2019 at 2:36 PM Uwe Kleine-K=F6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > On Fri, Jul 26, 2019 at 08:40:41PM +0200, Jernej Skrabec wrote:
+> > > > @@ -371,6 +374,14 @@ static int sun4i_pwm_probe(struct platform_dev=
+ice *pdev)
+> > > >       if (IS_ERR(pwm->clk))
+> > > >               return PTR_ERR(pwm->clk);
+> > > >
+> > > > +     if (pwm->data->has_reset) {
+> > > > +             pwm->rst =3D devm_reset_control_get(&pdev->dev, NULL);
+> > > > +             if (IS_ERR(pwm->rst))
+> > > > +                     return PTR_ERR(pwm->rst);
+> > > > +
+> > > > +             reset_control_deassert(pwm->rst);
+> > > > +     }
+> > > > +
+> > >
+> > > I wonder why there is a need to track if a given chip needs a reset
+> > > line. I'd just use devm_reset_control_get_optional() and drop the
+> > > .has_reset member in struct sun4i_pwm_data.
+> >
+> > Because it's not optional for this platform, i.e. it won't work if
+> > the reset control (or clk, in the next patch) is somehow missing from
+> > the device tree.
+>
+> If the device tree is wrong it is considered ok that the driver doesn't
+> behave correctly. So this is not a problem you need (or should) care
+> about.
 
-> > > +
-> > > 
-> > >  	spin_lock(&sun4i_pwm->ctrl_lock);
-> > >  	ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
-> > > 
-> > > @@ -273,6 +297,11 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,
-> > > struct pwm_device *pwm,> 
-> > >  		ctrl &= ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
-> > >  	
-> > >  	}
-> > > 
-> > > +	if (bypass)
-> > > +		ctrl |= BIT_CH(PWM_BYPASS, pwm->hwpwm);
-> > > +	else
-> > > +		ctrl &= ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
-> > > +
-> > 
-> > Does switching on (or off) the bypass bit complete the currently running
-> > period?
-> 
-> I don't really know. If I understand correctly, it just bypasses PWM logic 
-> completely, so I would say it doesn't complete the currently running period.
+To some extent that's true, but if we can make the life easier for
+everyone by reporting an error and bailing out instead of silently
+ignoring that, continuing to probe and just ending up with a
+completely broken system for no apparent reason, then why not just do
+that?
 
-This is a bug. It's part of the promise of the PWM API that started
-periods are completed. Please at least document this limitation at the
-top of the driver. drivers/pwm/pwm-sifive.c has an example you might
-want to use as a template.
+I mean, all it takes is three lines of code.
 
-Best regards
-Uwe
+It's no different than just calling clk_get, and testing the return
+code to see if it's there or not. I wouldn't call that check when you
+depend on a clock "validating the DT". It's just making sure that all
+the resources needed for you to operate properly are there, which is a
+pretty common thing to do.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--c27mc7zieuu4am73
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXT8guwAKCRDj7w1vZxhR
+xUcMAP48/d4gHWLB2ieD8luRNO7UdNKhBxkKVaYQSUwwNhdNhgEA6GotfwgqiOLI
+FehMWvNcDSv607KLMFEsu5CWk9sxRwQ=
+=W5NU
+-----END PGP SIGNATURE-----
+
+--c27mc7zieuu4am73--
