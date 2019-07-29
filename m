@@ -2,99 +2,120 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 38BF979389
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jul 2019 21:04:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA1BA79AEC
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jul 2019 23:19:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbfG2TEK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 29 Jul 2019 15:04:10 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37903 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbfG2TEJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jul 2019 15:04:09 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hsAwI-00078Z-O8; Mon, 29 Jul 2019 21:04:06 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hsAwG-0002rt-PT; Mon, 29 Jul 2019 21:04:04 +0200
-Date:   Mon, 29 Jul 2019 21:04:04 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        id S2388439AbfG2VTl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 29 Jul 2019 17:19:41 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:43848 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388438AbfG2VTk (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jul 2019 17:19:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1564435178; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QmEPIGFBMm6hTexG00Zc+PEgLZAbvvk8D/QaFLV1UTU=;
+        b=x4tH5xz6Tnwv9keFVRYGBUv2iYQ1Nh1fmK+6DvgUAs/VqBGsLKMDw72yTxoQ6praZ4VV6J
+        9TjVBzJnbiL5PgvbnCGWrF0f6NUce24hSRlN+8V8w1r/aK1OJyoQzofAzVaqBRp4apw/ZZ
+        c2fSPStyF4N+bQT061Q+azuv2epAOJY=
+Date:   Mon, 29 Jul 2019 17:19:23 -0400
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 3/6] pwm: jz4740: Apply configuration atomically
+To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
-        mark.rutland@arm.com, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-sunxi@googlegroups.com,
-        linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org,
-        thierry.reding@gmail.com, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/6] pwm: sun4i: Add a quirk for bus clock
-Message-ID: <20190729190404.rnxw2aihmciafy6c@pengutronix.de>
-References: <20190726184045.14669-1-jernej.skrabec@siol.net>
- <20190726184045.14669-4-jernej.skrabec@siol.net>
- <20190729063825.wxfky6nswcru26g7@pengutronix.de>
- <4022372.WfP88Fa4Lu@jernej-laptop>
- <20190729161435.5bnj3ikocsyep4dd@pengutronix.de>
- <20190729164516.yxfgj2zd3d5ii4c4@flea.home>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Message-Id: <1564435163.6633.4@crapouillou.net>
+In-Reply-To: <20190724064745.7ghecdpg3gmxsiim@pengutronix.de>
+References: <20190607154410.10633-1-paul@crapouillou.net>
+        <20190607154410.10633-4-paul@crapouillou.net>
+        <20190722193456.h4hfte5cczucermd@pengutronix.de>
+        <1563914800.1918.0@crapouillou.net>
+        <20190724064745.7ghecdpg3gmxsiim@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190729164516.yxfgj2zd3d5ii4c4@flea.home>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Maxime,
+Hi Uwe,
 
-On Mon, Jul 29, 2019 at 06:45:16PM +0200, Maxime Ripard wrote:
-> On Mon, Jul 29, 2019 at 06:14:35PM +0200, Uwe Kleine-König wrote:
-> > Then maybe something like the following?:
-> >
-> > 	busclk = devm_clk_get_optional(..., "bus");
-> > 	modclk = devm_clk_get_optional(..., "mod");
-> >
-> > 	/*
-> > 	 * old dtbs might have a single clock but no clock names. Fall
-> > 	 * back to this for compatibility reasons.
-> > 	 */
-> > 	if (!modclk) {
-> > 		modclk = devm_clk_get(..., NULL);
-> > 	}
-> 
-> Again, there's nothing optional about these clocks. You need a
-> particular set of clocks for a given generation, and a separate set of
-> them on another generation of SoCs.
 
-It depends on the way how "optional" is understood. The semantic of
-"optional" as it is used and implemented by devm_clk_get_optional (and
-gpiod_get_optional and devm_reset_control_get_optional) is different
-than yours when saying "on H6 the clock is not optional". If it was
-about the "it doesn't matter if it's taken care of or not" semantic you
-seem to mean the function would be useless and no driver would need to
-actually use it. In the sense of the functions listed above "optional"
-means: Some devices need it, others don't. Using this semantic the "bus"
-clock is optional.
+Le mer. 24 juil. 2019 =E0 2:47, Uwe =3D?iso-8859-1?q?Kleine-K=3DF6nig?=3D=20
+<u.kleine-koenig@pengutronix.de> a =E9crit :
+> Hello Paul,
+>=20
+> On Tue, Jul 23, 2019 at 04:46:40PM -0400, Paul Cercueil wrote:
+>>  Le lun. 22 juil. 2019 =E0 15:34, Uwe =3D?iso-8859-1?q?Kleine-K=3DF6nig?=
+=3D
+>>  <u.kleine-koenig@pengutronix.de> a =E9crit :
+>>  > On Fri, Jun 07, 2019 at 05:44:07PM +0200, Paul Cercueil wrote:
+>>  > >  -	is_enabled =3D jz4740_timer_is_enabled(pwm->hwpwm);
+>>  > >  -	if (is_enabled)
+>>  > >  -		jz4740_pwm_disable(chip, pwm);
+>>  > >  +	jz4740_pwm_disable(chip, pwm);
+>>  >
+>>  > I assume this stops the PWM. Does this complete the currently=20
+>> running
+>>  > period? How does the PWM behave then? (Does it still drive the=20
+>> output?
+>>  > If so, on which level?)
+>>=20
+>>  Some PWM channels work in one mode "TCU1" and others work in=20
+>> "TCU2". The
+>>  mode in which channels work depends on the version of the SoC.
+>>=20
+>>  When stopped, the pins of TCU1 channels will be driven to the=20
+>> inactive
+>>  level (which depends on the polarity). It is unknown whether or not=20
+>> the
+>>  currently running period is completed. We set a bit to configure for
+>>  "abrupt shutdown", so I expect that it's not, but somebody would=20
+>> need
+>>  to hook up a logic analyzer to see what's the exact behaviour with
+>>  and without that bit.
+>=20
+> This might be done even without a logic analyzer. Just do something
+> like:
+>=20
+> 	pwm_apply_state(pwm, { .enabled =3D 1, .period =3D 5s })
+> 	pwm_apply_state(pwm, { .enabled =3D 1, .period =3D 5s, .duty =3D 5s })
+>=20
+> and if that takes less then 5s the period is not completed.
+>=20
+> And note that "abrupt shutdown" is a bug.
 
-> It really isn't about DT validation. We're really making sure that the
-> device can be operational. It's as much of a validation step than
-> making sure we have mapped registers (reg), or an interrupt if we had
-> any.
+I remember you asked that already in an older patchset.
+The result of this test is that the period is never completed,
+independently of the "abrupt shutdown" bit.
 
-Do you agree with Jernej in the other end of this thread? If so I don't
-think that repeating the same arguments here is sensible. Please read
-what I wrote there.
+Cheers,
+-Paul
 
-Best regards
-Uwe
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+>>  TCU2 channels on the other hand will stop in the middle of a period,
+>>  leaving the pin hanging at whatever level it was before the stop.
+>>  That's the rationale behind the trick in commit 6580fd173070 ("pwm:
+>>  jz4740: Force TCU2 channels to return to their init level").
+>=20
+> Strange, but ok.
+>=20
+> Best regards
+> Uwe
+>=20
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
+>     |
+> Industrial Linux Solutions                 |=20
+> http://www.pengutronix.de/  |
+
+=
+
