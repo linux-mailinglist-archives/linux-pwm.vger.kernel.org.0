@@ -2,98 +2,97 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B3AE778669
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jul 2019 09:35:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3648A78986
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jul 2019 12:19:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbfG2HfT convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Mon, 29 Jul 2019 03:35:19 -0400
-Received: from smtp180.sjtu.edu.cn ([202.120.2.180]:40790 "EHLO
-        smtp180.sjtu.edu.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfG2HfT (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jul 2019 03:35:19 -0400
-Received: from mta04.sjtu.edu.cn (mta04.sjtu.edu.cn [202.121.179.8])
-        by smtp180.sjtu.edu.cn (Postfix) with ESMTPS id 8916710089E1C;
-        Mon, 29 Jul 2019 15:35:15 +0800 (CST)
-Received: from localhost (localhost [127.0.0.1])
-        by mta04.sjtu.edu.cn (Postfix) with ESMTP id 6A8B0180610F8;
-        Mon, 29 Jul 2019 15:35:15 +0800 (CST)
-X-Virus-Scanned: amavisd-new at 
-Received: from mta04.sjtu.edu.cn ([127.0.0.1])
-        by localhost (mta04.sjtu.edu.cn [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 7dS9vcJ9Qf-l; Mon, 29 Jul 2019 15:35:15 +0800 (CST)
-Received: from mailstore19.sjtu.edu.cn (mailstore19.sjtu.edu.cn [202.121.179.19])
-        by mta04.sjtu.edu.cn (Postfix) with ESMTP id 3F0A0180610F7;
-        Mon, 29 Jul 2019 15:35:15 +0800 (CST)
-Date:   Mon, 29 Jul 2019 15:35:14 +0800 (CST)
-From:   Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Yash Shah <yash.shah@sifive.com>,
-        thierry reding <thierry.reding@gmail.com>,
-        palmer <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-pwm@vger.kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Message-ID: <310108829.9436429.1564385714781.JavaMail.zimbra@sjtu.edu.cn>
-In-Reply-To: <20190729062548.4pio5sfuxfwwxecr@pengutronix.de>
-References: <20190727070916.2960-1-xywang.sjtu@sjtu.edu.cn> <20190729062548.4pio5sfuxfwwxecr@pengutronix.de>
-Subject: Re: [PATCH] pwm: avoid disabling clk twice
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [202.120.40.82]
-X-Mailer: Zimbra 8.8.9_GA_3798 (ZimbraWebClient - GC73 (Linux)/8.8.9_GA_3744)
-Thread-Topic: avoid disabling clk twice
-Thread-Index: 5H4ORNZJT/EZAbsON7ampQXHnGMF2w==
+        id S1726470AbfG2KTG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 29 Jul 2019 06:19:06 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47331 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfG2KTG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jul 2019 06:19:06 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1hs2k8-0005Yb-DO; Mon, 29 Jul 2019 12:19:00 +0200
+Message-ID: <1564395538.7633.7.camel@pengutronix.de>
+Subject: Re: [PATCH 2/6] pwm: sun4i: Add a quirk for reset line
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Chen-Yu Tsai <wens@csie.org>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Date:   Mon, 29 Jul 2019 12:18:58 +0200
+In-Reply-To: <20190729071218.bukw7vxilqy523k3@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net>
+         <20190726184045.14669-3-jernej.skrabec@siol.net>
+         <20190729063630.rn325whatfnc3m7n@pengutronix.de>
+         <CAGb2v65KOpivHQNkg+R2=D=ejCJYnPdVcyHJZW-GJCR8j0Yk0g@mail.gmail.com>
+         <20190729071218.bukw7vxilqy523k3@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi,
 
-
------ On Jul 29, 2019, at 2:25 PM, Uwe Kleine-König u.kleine-koenig@pengutronix.de wrote:
-
+On Mon, 2019-07-29 at 09:12 +0200, Uwe Kleine-König wrote:
 > Hello,
 > 
-> On Sat, Jul 27, 2019 at 03:09:16PM +0800, Wang Xiayang wrote:
->> Similar to commit 63fd4b94b948 ("serial: imx: fix error handling
->> in console_setup"), as ddata->clk has been explicitly disabled two
->> lines above, it should avoid being disabled for the second time.
->> clk_unprepare() suits here better.
->> 
->> Signed-off-by: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
->> ---
->>  drivers/pwm/pwm-sifive.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
->> index a7c107f19e66..00f6fab5bd3b 100644
->> --- a/drivers/pwm/pwm-sifive.c
->> +++ b/drivers/pwm/pwm-sifive.c
->> @@ -312,7 +312,7 @@ static int pwm_sifive_remove(struct platform_device *dev)
->>  	if (is_enabled)
->>  		clk_disable(ddata->clk);
->>  
->> -	clk_disable_unprepare(ddata->clk);
->> +	clk_unprepare(ddata->clk);
->>  	ret = pwmchip_remove(&ddata->chip);
->>  	clk_notifier_unregister(ddata->clk, &ddata->notifier);
+> On Mon, Jul 29, 2019 at 02:43:23PM +0800, Chen-Yu Tsai wrote:
+> > On Mon, Jul 29, 2019 at 2:36 PM Uwe Kleine-König
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > On Fri, Jul 26, 2019 at 08:40:41PM +0200, Jernej Skrabec wrote:
+> > > > @@ -371,6 +374,14 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
+> > > >       if (IS_ERR(pwm->clk))
+> > > >               return PTR_ERR(pwm->clk);
+> > > > 
+> > > > +     if (pwm->data->has_reset) {
+> > > > +             pwm->rst = devm_reset_control_get(&pdev->dev, NULL);
+> > > > +             if (IS_ERR(pwm->rst))
+> > > > +                     return PTR_ERR(pwm->rst);
+> > > > +
+> > > > +             reset_control_deassert(pwm->rst);
+> > > > +     }
+> > > > +
+> > > 
+> > > I wonder why there is a need to track if a given chip needs a reset
+> > > line. I'd just use devm_reset_control_get_optional() and drop the
+> > > .has_reset member in struct sun4i_pwm_data.
+> > 
+> > Because it's not optional for this platform, i.e. it won't work if
+> > the reset control (or clk, in the next patch) is somehow missing from
+> > the device tree.
 > 
-> I think this patch is wrong.
-> 
-> After a successfull call to .probe the clock is left prepared and
-> enabled. This is undone in the unconditional call to
-> clk_disable_unprepare that you removed.
+> If the device tree is wrong it is considered ok that the driver doesn't
+> behave correctly. So this is not a problem you need (or should) care
+> about.
 
-Thank you very much for pointing out the issue. I did miss the normal path:(
+I agree with this. Catching missing DT properties and other device tree
+validation is not the job of device drivers. The _optional request
+variants were introduced to simplify drivers that require the reset line
+on some platforms and not on others.
 
-> There is however still a problem: If Linux is started with the pwm
-> enabled (such that .get_state returns state->enabled = true) then
-> disabling the pwm has one clk_disable too much.
-> 
+I would ask to explicitly state whether the driver needs full control
+over the moment of (de)assertion of the reset signal, or whether the
+only requirement is that the reset signal stays deasserted while the PWM
+driver is active, by using devm_reset_control_get_optional_exclusive or
+devm_reset_control_get_optional_shared to request the reset control.
 
-There is another path of double-disabling: pwm_sifive_enable() may disable
-ddata->clk as required by the 'enable' flag.
-pwm_sifive_apply() calls it and passes the flag. However, there is
-a clk_disable(ddata->clk) just below invoking pwm_sifive_enable()
-in pwm_sifive_apply().
+regards
+Philipp
