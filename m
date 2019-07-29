@@ -2,50 +2,47 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 687C1792F2
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jul 2019 20:20:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB1197933A
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jul 2019 20:40:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387422AbfG2SU6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 29 Jul 2019 14:20:58 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33101 "EHLO
+        id S2388074AbfG2Sks (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 29 Jul 2019 14:40:48 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38691 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727136AbfG2SU6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jul 2019 14:20:58 -0400
+        with ESMTP id S2387535AbfG2Sks (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jul 2019 14:40:48 -0400
 Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
         by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1hsAGS-0003Im-Gu; Mon, 29 Jul 2019 20:20:52 +0200
+        id 1hsAZg-0004z0-MR; Mon, 29 Jul 2019 20:40:44 +0200
 Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
         (envelope-from <ukl@pengutronix.de>)
-        id 1hsAGM-0001Qa-Ko; Mon, 29 Jul 2019 20:20:46 +0200
-Date:   Mon, 29 Jul 2019 20:20:46 +0200
+        id 1hsAZd-0001w2-Kr; Mon, 29 Jul 2019 20:40:41 +0200
+Date:   Mon, 29 Jul 2019 20:40:41 +0200
 From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
         Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
         devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 2/6] pwm: sun4i: Add a quirk for reset line
-Message-ID: <20190729182046.6bwrterbxoceulrx@pengutronix.de>
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel@pengutronix.de,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
+Message-ID: <20190729184041.vlvfz3vz3ykhufdk@pengutronix.de>
 References: <20190726184045.14669-1-jernej.skrabec@siol.net>
- <20190726184045.14669-3-jernej.skrabec@siol.net>
- <20190729063630.rn325whatfnc3m7n@pengutronix.de>
- <CAGb2v65KOpivHQNkg+R2=D=ejCJYnPdVcyHJZW-GJCR8j0Yk0g@mail.gmail.com>
- <20190729071218.bukw7vxilqy523k3@pengutronix.de>
- <20190729163715.vtv7lkrywewomxga@flea.home>
+ <CAGb2v66C=ghjck6rxTg6Vt4xN2DcXntzVOa=KJWh98KRjkhnHQ@mail.gmail.com>
+ <20190729162428.bxuzgxg5sjqptlbp@pengutronix.de>
+ <2346193.MplWYqIveT@jernej-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190729163715.vtv7lkrywewomxga@flea.home>
+In-Reply-To: <2346193.MplWYqIveT@jernej-laptop>
 User-Agent: NeoMutt/20170113 (1.7.2)
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
 X-SA-Exim-Mail-From: ukl@pengutronix.de
@@ -56,74 +53,134 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 06:37:15PM +0200, Maxime Ripard wrote:
-> On Mon, Jul 29, 2019 at 09:12:18AM +0200, Uwe Kleine-K�nig wrote:
+On Mon, Jul 29, 2019 at 06:40:15PM +0200, Jernej Škrabec wrote:
+> Dne ponedeljek, 29. julij 2019 ob 18:24:28 CEST je Uwe Kleine-König 
+> napisal(a):
 > > Hello,
-> >
-> > On Mon, Jul 29, 2019 at 02:43:23PM +0800, Chen-Yu Tsai wrote:
-> > > On Mon, Jul 29, 2019 at 2:36 PM Uwe Kleine-K�nig
+> > 
+> > On Tue, Jul 30, 2019 at 12:09:40AM +0800, Chen-Yu Tsai wrote:
+> > > On Tue, Jul 30, 2019 at 12:07 AM Uwe Kleine-König
+> > > 
 > > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > On Fri, Jul 26, 2019 at 08:40:41PM +0200, Jernej Skrabec wrote:
-> > > > > @@ -371,6 +374,14 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
-> > > > >       if (IS_ERR(pwm->clk))
-> > > > >               return PTR_ERR(pwm->clk);
-> > > > >
-> > > > > +     if (pwm->data->has_reset) {
-> > > > > +             pwm->rst = devm_reset_control_get(&pdev->dev, NULL);
-> > > > > +             if (IS_ERR(pwm->rst))
-> > > > > +                     return PTR_ERR(pwm->rst);
-> > > > > +
-> > > > > +             reset_control_deassert(pwm->rst);
-> > > > > +     }
-> > > > > +
-> > > >
-> > > > I wonder why there is a need to track if a given chip needs a reset
-> > > > line. I'd just use devm_reset_control_get_optional() and drop the
-> > > > .has_reset member in struct sun4i_pwm_data.
-> > >
-> > > Because it's not optional for this platform, i.e. it won't work if
-> > > the reset control (or clk, in the next patch) is somehow missing from
-> > > the device tree.
+> > > > On Mon, Jul 29, 2019 at 05:55:52PM +0200, Jernej Škrabec wrote:
+> > > > > Dne ponedeljek, 29. julij 2019 ob 08:40:30 CEST je Uwe Kleine-König
+> > > > > 
+> > > > > napisal(a):
+> > > > > > On Fri, Jul 26, 2019 at 08:40:43PM +0200, Jernej Skrabec wrote:
+> > > > > > > --- a/drivers/pwm/pwm-sun4i.c
+> > > > > > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > > > > > @@ -331,6 +331,13 @@ static const struct sun4i_pwm_data
+> > > > > > > sun4i_pwm_single_bypass = {>
+> > > > > > > 
+> > > > > > >   .npwm = 1,
+> > > > > > >  
+> > > > > > >  };
+> > > > > > > 
+> > > > > > > +static const struct sun4i_pwm_data sun50i_pwm_dual_bypass_clk_rst
+> > > > > > > = {
+> > > > > > > + .has_bus_clock = true,
+> > > > > > > + .has_prescaler_bypass = true,
+> > > > > > > + .has_reset = true,
+> > > > > > > + .npwm = 2,
+> > > > > > > +};
+> > > > > > > +
+> > > > > > > 
+> > > > > > >  static const struct of_device_id sun4i_pwm_dt_ids[] = {
+> > > > > > >  
+> > > > > > >   {
+> > > > > > >   
+> > > > > > >           .compatible = "allwinner,sun4i-a10-pwm",
+> > > > > > > 
+> > > > > > > @@ -347,6 +354,9 @@ static const struct of_device_id
+> > > > > > > sun4i_pwm_dt_ids[] =
+> > > > > > > {
+> > > > > > > 
+> > > > > > >   }, {
+> > > > > > >   
+> > > > > > >           .compatible = "allwinner,sun8i-h3-pwm",
+> > > > > > >           .data = &sun4i_pwm_single_bypass,
+> > > > > > > 
+> > > > > > > + }, {
+> > > > > > > +         .compatible = "allwinner,sun50i-h6-pwm",
+> > > > > > > +         .data = &sun50i_pwm_dual_bypass_clk_rst,
+> > > > > > 
+> > > > > > If you follow my suggestion for the two previous patches, you can
+> > > > > > just
+> > > > > > 
+> > > > > > use:
+> > > > > >     compatible = "allwinner,sun50i-h6-pwm",
+> > > > > >     "allwinner,sun5i-a10s-pwm";
+> > > > > > 
+> > > > > > and drop this patch.
+> > > > > 
+> > > > > Maxime found out that it's not compatible with A10s due to difference
+> > > > > in bypass bit, but yes, I know what you mean.
+> > > > > 
+> > > > > Since H6 requires reset line and bus clock to be specified, it's not
+> > > > > compatible from DT binding side. New yaml based binding must somehow
+> > > > > know that in order to be able to validate DT node, so it needs
+> > > > > standalone compatible. However, depending on conclusions of other
+> > > > > discussions, this new compatible can be associated with already
+> > > > > available quirks structure or have it's own.> > 
+> > > > I cannot follow. You should be able to specify in the binding that the
+> > > > reset line and bus clock is optional. Then allwinner,sun50i-h6-pwm
+> > > > without a reset line and bus clock also verifies, but this doesn't
+> > > > really hurt (and who knows, maybe the next allwinner chip needs exactly
+> > > > this).
+> > > 
+> > > It is not optional. It will not work if either the clocks or reset
+> > > controls
+> > > are missing. How would these be optional anyway? Either it's connected and
+> > > thus required, or it's not and therefore should be omitted from the
+> > > description.
+> > 
+> > [Just arguing about the clock here, the argumentation is analogous for
+> > the reset control.]
+> > 
+> > From the driver's perspective it's optional: There are devices with and
+> > without a bus clock. This doesn't mean that you can just ignore this
+> > clock if it's specified. It's optional in the sense "If dt doesn't
+> > specify it, then assume this is a device that doesn't have it and so you
+> > don't need to handle it." but not in the sense "it doesn't matter if
+> > you handle it or not.".
+> > 
+> > Other than that I'm on your side. So for example I think it's not
+> > optimal that gpiod_get_optional returns NULL if GPIOLIB=n or that
+> > devm_reset_control_get_optional returns NULL if RESET_CONTROLLER=n
+> > because this hides exactly the kind of problem you point out here.
 > >
-> > If the device tree is wrong it is considered ok that the driver doesn't
-> > behave correctly. So this is not a problem you need (or should) care
-> > about.
 > 
-> To some extent that's true, but if we can make the life easier for
-> everyone by reporting an error and bailing out instead of silently
-> ignoring that, continuing to probe and just ending up with a
-> completely broken system for no apparent reason, then why not just do
-> that?
+> I think there's misunderstanding. I only argued that we can't use
 > 
-> I mean, all it takes is three lines of code.
+> compatible = "allwinner,sun50i-h6-pwm",
+> 	 "allwinner,sun5i-a10s-pwm";
+> 
+> as you suggested and only 
+> 
+> compatible = "allwinner,sun50i-h6-pwm"; 
+> 
+> will work. Not because of driver itself (it can still use _optional() 
+> variants), but because of DT binding, which should be able to validate H6 PWM 
+> node - reset and bus clock references are required in this case.
 
-<pedantic>Actually it's more because you need to track for each variant
-if it needs the clock (or reset stuff) or not.</pedantic>
+I think I understood. In my eyes there is no need to let validation of
+the DT bindings catch a missing "optional" property that is needed on
+H6.
 
-It's a weighing between "simpler driver" and "catch unlikely errors".
-(If the SoC's .dtsi includes the needed stuff, an error here is really
-unlikely, isn't it?)
-
-So to some degree it's subjective which one is better. I tend to prefer
-"simpler driver". Also when catching this type of error you have to do
-it right twice (in the .dtsi and the driver) while with my approach
-there is only a single place that defines what is right, which is a good
-design according to what I learned during my studies.
-
-> It's no different than just calling clk_get, and testing the return
-> code to see if it's there or not. I wouldn't call that check when you
-> depend on a clock "validating the DT". It's just making sure that all
-> the resources needed for you to operate properly are there, which is a
-> pretty common thing to do.
-
-This is different. As a driver author you are allowed (or even supposed)
-to assume that the device tree (or ACPI or platform data ...) is right
-and completely defines the stuff for the driven hardware to work
-correctly. You must not assume that clk_get() succeeds unconditionally.
+You have to draw the line somewhere which information the driver has
+hard-coded and what is only provided by the device tree and just assumed
+to be correct by the driver. You argue the driver should know that if it
+cares for a "allwinner,sun50i-h6-pwm" device it should know (and check)
+that there is a clock named "bus" and a resets property that links to a
+reset controller. How is that different from checking that the base
+address is 0x0300a000 or that the "pwm" clock is the osc24M clock
+running at 24 MHz? This isn't checked in the driver or the dt schema.
+Still if the device tree got one of them wrong this yields an
+non-working pwm device that isn't catched in the driver.
 
 Best regards
 Uwe
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-K�nig            |
+Pengutronix e.K.                           | Uwe Kleine-König            |
 Industrial Linux Solutions                 | http://www.pengutronix.de/  |
