@@ -2,50 +2,44 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 14CDD790BF
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jul 2019 18:24:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12CC9790D6
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jul 2019 18:29:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfG2QYd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 29 Jul 2019 12:24:33 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37203 "EHLO
+        id S1728796AbfG2Q30 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 29 Jul 2019 12:29:26 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:37445 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727324AbfG2QYd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jul 2019 12:24:33 -0400
+        with ESMTP id S1727814AbfG2Q30 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jul 2019 12:29:26 -0400
 Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
         by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1hs8Rq-0008EM-0Y; Mon, 29 Jul 2019 18:24:30 +0200
+        id 1hs8WW-0000VG-G7; Mon, 29 Jul 2019 18:29:20 +0200
 Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
         (envelope-from <ukl@pengutronix.de>)
-        id 1hs8Ro-000620-Ls; Mon, 29 Jul 2019 18:24:28 +0200
-Date:   Mon, 29 Jul 2019 18:24:28 +0200
+        id 1hs8WW-00069u-3Y; Mon, 29 Jul 2019 18:29:20 +0200
+Date:   Mon, 29 Jul 2019 18:29:20 +0200
 From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
-        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [linux-sunxi] Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
-Message-ID: <20190729162428.bxuzgxg5sjqptlbp@pengutronix.de>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     thierry.reding@gmail.com, mripard@kernel.org, wens@csie.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 5/6] pwm: sun4i: Add support to output source clock
+ directly
+Message-ID: <20190729162920.orx3rhkrfmp7stzh@pengutronix.de>
 References: <20190726184045.14669-1-jernej.skrabec@siol.net>
- <20190726184045.14669-5-jernej.skrabec@siol.net>
- <20190729064030.7uenld2kbof45zti@pengutronix.de>
- <223488703.0I5IR7NXoI@jernej-laptop>
- <20190729160723.am3cs5pasi22pibi@pengutronix.de>
- <CAGb2v66C=ghjck6rxTg6Vt4xN2DcXntzVOa=KJWh98KRjkhnHQ@mail.gmail.com>
+ <20190726184045.14669-6-jernej.skrabec@siol.net>
+ <20190729070605.vlu7kgzn362ph2q3@pengutronix.de>
+ <2499807.IN78SsLMYo@jernej-laptop>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGb2v66C=ghjck6rxTg6Vt4xN2DcXntzVOa=KJWh98KRjkhnHQ@mail.gmail.com>
+In-Reply-To: <2499807.IN78SsLMYo@jernej-laptop>
 User-Agent: NeoMutt/20170113 (1.7.2)
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
 X-SA-Exim-Mail-From: ukl@pengutronix.de
@@ -58,88 +52,139 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 Hello,
 
-On Tue, Jul 30, 2019 at 12:09:40AM +0800, Chen-Yu Tsai wrote:
-> On Tue, Jul 30, 2019 at 12:07 AM Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Mon, Jul 29, 2019 at 05:55:52PM +0200, Jernej Škrabec wrote:
-> > > Dne ponedeljek, 29. julij 2019 ob 08:40:30 CEST je Uwe Kleine-König
-> > > napisal(a):
-> > > > On Fri, Jul 26, 2019 at 08:40:43PM +0200, Jernej Skrabec wrote:
-> > > > > --- a/drivers/pwm/pwm-sun4i.c
-> > > > > +++ b/drivers/pwm/pwm-sun4i.c
-> > > > > @@ -331,6 +331,13 @@ static const struct sun4i_pwm_data
-> > > > > sun4i_pwm_single_bypass = {>
-> > > > >   .npwm = 1,
-> > > > >
-> > > > >  };
-> > > > >
-> > > > > +static const struct sun4i_pwm_data sun50i_pwm_dual_bypass_clk_rst = {
-> > > > > + .has_bus_clock = true,
-> > > > > + .has_prescaler_bypass = true,
-> > > > > + .has_reset = true,
-> > > > > + .npwm = 2,
-> > > > > +};
-> > > > > +
-> > > > >
-> > > > >  static const struct of_device_id sun4i_pwm_dt_ids[] = {
-> > > > >
-> > > > >   {
-> > > > >
-> > > > >           .compatible = "allwinner,sun4i-a10-pwm",
-> > > > >
-> > > > > @@ -347,6 +354,9 @@ static const struct of_device_id sun4i_pwm_dt_ids[] =
-> > > > > {
-> > > > >
-> > > > >   }, {
-> > > > >
-> > > > >           .compatible = "allwinner,sun8i-h3-pwm",
-> > > > >           .data = &sun4i_pwm_single_bypass,
-> > > > >
-> > > > > + }, {
-> > > > > +         .compatible = "allwinner,sun50i-h6-pwm",
-> > > > > +         .data = &sun50i_pwm_dual_bypass_clk_rst,
-> > > >
-> > > > If you follow my suggestion for the two previous patches, you can just
-> > > > use:
-> > > >
-> > > >     compatible = "allwinner,sun50i-h6-pwm", "allwinner,sun5i-a10s-pwm";
-> > > >
-> > > > and drop this patch.
-> > >
-> > > Maxime found out that it's not compatible with A10s due to difference in bypass
-> > > bit, but yes, I know what you mean.
-> > >
-> > > Since H6 requires reset line and bus clock to be specified, it's not compatible
-> > > from DT binding side. New yaml based binding must somehow know that in order
-> > > to be able to validate DT node, so it needs standalone compatible. However,
-> > > depending on conclusions of other discussions, this new compatible can be
-> > > associated with already available quirks structure or have it's own.
-> >
-> > I cannot follow. You should be able to specify in the binding that the
-> > reset line and bus clock is optional. Then allwinner,sun50i-h6-pwm
-> > without a reset line and bus clock also verifies, but this doesn't
-> > really hurt (and who knows, maybe the next allwinner chip needs exactly
-> > this).
+On Mon, Jul 29, 2019 at 06:16:55PM +0200, Jernej Škrabec wrote:
+> Dne ponedeljek, 29. julij 2019 ob 09:06:05 CEST je Uwe Kleine-König 
+> napisal(a):
+> > On Fri, Jul 26, 2019 at 08:40:44PM +0200, Jernej Skrabec wrote:
+> > > PWM core has an option to bypass whole logic and output unchanged source
+> > > clock as PWM output. This is achieved by enabling bypass bit.
+> > > 
+> > > Note that when bypass is enabled, no other setting has any meaning, not
+> > > even enable bit.
+> > > 
+> > > This mode of operation is needed to achieve high enough frequency to
+> > > serve as clock source for AC200 chip, which is integrated into same
+> > > package as H6 SoC.
+> > > 
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > ---
+> > > 
+> > >  drivers/pwm/pwm-sun4i.c | 31 ++++++++++++++++++++++++++++++-
+> > >  1 file changed, 30 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > > index 9e0eca79ff88..848cff26f385 100644
+> > > --- a/drivers/pwm/pwm-sun4i.c
+> > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > @@ -120,6 +120,19 @@ static void sun4i_pwm_get_state(struct pwm_chip
+> > > *chip,
+> > > 
+> > >  	val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> > > 
+> > > +	/*
+> > > +	 * PWM chapter in H6 manual has a diagram which explains that if bypass
+> > > +	 * bit is set, no other setting has any meaning. Even more, experiment
+> > > +	 * proved that also enable bit is ignored in this case.
+> > > +	 */
+> > > +	if (val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) {
+> > > +		state->period = DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, clk_rate);
+> > > +		state->duty_cycle = state->period / 2;
+> > > +		state->polarity = PWM_POLARITY_NORMAL;
+> > > +		state->enabled = true;
+> > > +		return;
+> > > +	}
+> > > +
+> > > 
+> > >  	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
+> > >  	
+> > >  	    sun4i_pwm->data->has_prescaler_bypass)
+> > >  		
+> > >  		prescaler = 1;
+> > > 
+> > > @@ -211,7 +224,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,
+> > > struct pwm_device *pwm,> 
+> > >  {
+> > >  
+> > >  	struct sun4i_pwm_chip *sun4i_pwm = to_sun4i_pwm_chip(chip);
+> > >  	struct pwm_state cstate;
+> > > 
+> > > -	u32 ctrl;
+> > > +	u32 ctrl, clk_rate;
+> > > +	bool bypass;
+> > > 
+> > >  	int ret;
+> > >  	unsigned int delay_us;
+> > >  	unsigned long now;
+> > > 
+> > > @@ -226,6 +240,16 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,
+> > > struct pwm_device *pwm,> 
+> > >  		}
+> > >  	
+> > >  	}
+> > > 
+> > > +	/*
+> > > +	 * Although it would make much more sense to check for bypass in
+> > > +	 * sun4i_pwm_calculate(), value of bypass bit also depends on "enabled".
+> > > +	 * Period is allowed to be rounded up or down.
+> > > +	 */
+> > 
+> > Every driver seems to implement rounding the way its driver considers it
+> > sensible. @Thierry: This is another patch where it would be good to have
+> > a global directive about how rounding is supposed to work to provide the
+> > users an reliable and uniform way to work with PWMs.
+> > 
+> > > +	clk_rate = clk_get_rate(sun4i_pwm->clk);
+> > > +	bypass = (state->period == NSEC_PER_SEC / clk_rate ||
+> > > +		 state->period == DIV_ROUND_UP(NSEC_PER_SEC, clk_rate)) &&
+> > > +		 state->enabled;
+> > 
+> > Not sure if the compiler is clever enough to notice the obvious
+> > optimisation with this code construct, but you can write this test in a
+> > more clever way which has zero instead of up to two divisions. Something
+> > like:
+> > 
+> > bypass = ((state->period * clk_rate >= NSEC_PER_SEC &&
+> > 	   state->period * clk_rate < NSEC_PER_SEC + clk_rate) &&
+> > 	  state->enabled);
+> > 
+> > In the commit log you write the motivation for using bypass is that it
+> > allows to implement higher frequency then with the "normal" operation.
+> > As you don't skip calculating the normal parameters requesting such a
+> > high-frequency setting either errors out or doesn't catch the impossible
+> > request. In both cases there is something to fix.
 > 
-> It is not optional. It will not work if either the clocks or reset controls
-> are missing. How would these be optional anyway? Either it's connected and
-> thus required, or it's not and therefore should be omitted from the
-> description.
+> It's the latter, otherwise it wouldn't work for my case. I'll fix the check and 
+> skip additional logic.
 
-[Just arguing about the clock here, the argumentation is analogous for
-the reset control.]
+Great.
 
-From the driver's perspective it's optional: There are devices with and
-without a bus clock. This doesn't mean that you can just ignore this
-clock if it's specified. It's optional in the sense "If dt doesn't
-specify it, then assume this is a device that doesn't have it and so you
-don't need to handle it." but not in the sense "it doesn't matter if
-you handle it or not.".
+> > > +
+> > > 
+> > >  	spin_lock(&sun4i_pwm->ctrl_lock);
+> > >  	ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> > > 
+> > > @@ -273,6 +297,11 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,
+> > > struct pwm_device *pwm,> 
+> > >  		ctrl &= ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
+> > >  	
+> > >  	}
+> > > 
+> > > +	if (bypass)
+> > > +		ctrl |= BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> > > +	else
+> > > +		ctrl &= ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> > > +
+> > 
+> > Does switching on (or off) the bypass bit complete the currently running
+> > period?
+> 
+> I don't really know. If I understand correctly, it just bypasses PWM logic 
+> completely, so I would say it doesn't complete the currently running period.
 
-Other than that I'm on your side. So for example I think it's not
-optimal that gpiod_get_optional returns NULL if GPIOLIB=n or that
-devm_reset_control_get_optional returns NULL if RESET_CONTROLLER=n
-because this hides exactly the kind of problem you point out here.
+This is a bug. It's part of the promise of the PWM API that started
+periods are completed. Please at least document this limitation at the
+top of the driver. drivers/pwm/pwm-sifive.c has an example you might
+want to use as a template.
 
 Best regards
 Uwe
