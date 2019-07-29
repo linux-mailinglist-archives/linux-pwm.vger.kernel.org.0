@@ -2,120 +2,222 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DA1BA79AEC
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jul 2019 23:19:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E257F79C29
+	for <lists+linux-pwm@lfdr.de>; Tue, 30 Jul 2019 00:05:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388439AbfG2VTl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 29 Jul 2019 17:19:41 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:43848 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388438AbfG2VTk (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jul 2019 17:19:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1564435178; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QmEPIGFBMm6hTexG00Zc+PEgLZAbvvk8D/QaFLV1UTU=;
-        b=x4tH5xz6Tnwv9keFVRYGBUv2iYQ1Nh1fmK+6DvgUAs/VqBGsLKMDw72yTxoQ6praZ4VV6J
-        9TjVBzJnbiL5PgvbnCGWrF0f6NUce24hSRlN+8V8w1r/aK1OJyoQzofAzVaqBRp4apw/ZZ
-        c2fSPStyF4N+bQT061Q+azuv2epAOJY=
-Date:   Mon, 29 Jul 2019 17:19:23 -0400
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 3/6] pwm: jz4740: Apply configuration atomically
-To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
+        id S1728667AbfG2WEy convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Mon, 29 Jul 2019 18:04:54 -0400
+Received: from mailoutvs39.siol.net ([185.57.226.230]:34773 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728032AbfG2WEy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jul 2019 18:04:54 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id 490F8522CFE;
+        Tue, 30 Jul 2019 00:04:49 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id WKzvpPpu-wT9; Tue, 30 Jul 2019 00:04:48 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id 923D1522CD2;
+        Tue, 30 Jul 2019 00:04:48 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-194-152-11-237.cable.triera.net [194.152.11.237])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Zimbra) with ESMTPA id DCAB5522CFE;
+        Tue, 30 Jul 2019 00:04:47 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Message-Id: <1564435163.6633.4@crapouillou.net>
-In-Reply-To: <20190724064745.7ghecdpg3gmxsiim@pengutronix.de>
-References: <20190607154410.10633-1-paul@crapouillou.net>
-        <20190607154410.10633-4-paul@crapouillou.net>
-        <20190722193456.h4hfte5cczucermd@pengutronix.de>
-        <1563914800.1918.0@crapouillou.net>
-        <20190724064745.7ghecdpg3gmxsiim@pengutronix.de>
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel@pengutronix.de,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
+Date:   Tue, 30 Jul 2019 00:04:47 +0200
+Message-ID: <2452836.v7ux4bnEjb@jernej-laptop>
+In-Reply-To: <20190729185108.tpilwoooxvi2z72e@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net> <173825848.1FZsmuHfpq@jernej-laptop> <20190729185108.tpilwoooxvi2z72e@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
+Dne ponedeljek, 29. julij 2019 ob 20:51:08 CEST je Uwe Kleine-König 
+napisal(a):
+> On Mon, Jul 29, 2019 at 08:46:25PM +0200, Jernej Škrabec wrote:
+> > Dne ponedeljek, 29. julij 2019 ob 20:40:41 CEST je Uwe Kleine-König
+> > 
+> > napisal(a):
+> > > On Mon, Jul 29, 2019 at 06:40:15PM +0200, Jernej Škrabec wrote:
+> > > > Dne ponedeljek, 29. julij 2019 ob 18:24:28 CEST je Uwe Kleine-König
+> > > > 
+> > > > napisal(a):
+> > > > > Hello,
+> > > > > 
+> > > > > On Tue, Jul 30, 2019 at 12:09:40AM +0800, Chen-Yu Tsai wrote:
+> > > > > > On Tue, Jul 30, 2019 at 12:07 AM Uwe Kleine-König
+> > > > > > 
+> > > > > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > > > > On Mon, Jul 29, 2019 at 05:55:52PM +0200, Jernej Škrabec wrote:
+> > > > > > > > Dne ponedeljek, 29. julij 2019 ob 08:40:30 CEST je Uwe
+> > > > > > > > Kleine-König
+> > > > > > > > 
+> > > > > > > > napisal(a):
+> > > > > > > > > On Fri, Jul 26, 2019 at 08:40:43PM +0200, Jernej Skrabec 
+wrote:
+> > > > > > > > > > --- a/drivers/pwm/pwm-sun4i.c
+> > > > > > > > > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > > > > > > > > @@ -331,6 +331,13 @@ static const struct sun4i_pwm_data
+> > > > > > > > > > sun4i_pwm_single_bypass = {>
+> > > > > > > > > > 
+> > > > > > > > > >   .npwm = 1,
+> > > > > > > > > >  
+> > > > > > > > > >  };
+> > > > > > > > > > 
+> > > > > > > > > > +static const struct sun4i_pwm_data
+> > > > > > > > > > sun50i_pwm_dual_bypass_clk_rst
+> > > > > > > > > > = {
+> > > > > > > > > > + .has_bus_clock = true,
+> > > > > > > > > > + .has_prescaler_bypass = true,
+> > > > > > > > > > + .has_reset = true,
+> > > > > > > > > > + .npwm = 2,
+> > > > > > > > > > +};
+> > > > > > > > > > +
+> > > > > > > > > > 
+> > > > > > > > > >  static const struct of_device_id sun4i_pwm_dt_ids[] = {
+> > > > > > > > > >  
+> > > > > > > > > >   {
+> > > > > > > > > >   
+> > > > > > > > > >           .compatible = "allwinner,sun4i-a10-pwm",
+> > > > > > > > > > 
+> > > > > > > > > > @@ -347,6 +354,9 @@ static const struct of_device_id
+> > > > > > > > > > sun4i_pwm_dt_ids[] =
+> > > > > > > > > > {
+> > > > > > > > > > 
+> > > > > > > > > >   }, {
+> > > > > > > > > >   
+> > > > > > > > > >           .compatible = "allwinner,sun8i-h3-pwm",
+> > > > > > > > > >           .data = &sun4i_pwm_single_bypass,
+> > > > > > > > > > 
+> > > > > > > > > > + }, {
+> > > > > > > > > > +         .compatible = "allwinner,sun50i-h6-pwm",
+> > > > > > > > > > +         .data = &sun50i_pwm_dual_bypass_clk_rst,
+> > > > > > > > > 
+> > > > > > > > > If you follow my suggestion for the two previous patches,
+> > > > > > > > > you
+> > > > > > > > > can
+> > > > > > > > > just
+> > > > > > > > > 
+> > > > > > > > > use:
+> > > > > > > > >     compatible = "allwinner,sun50i-h6-pwm",
+> > > > > > > > >     "allwinner,sun5i-a10s-pwm";
+> > > > > > > > > 
+> > > > > > > > > and drop this patch.
+> > > > > > > > 
+> > > > > > > > Maxime found out that it's not compatible with A10s due to
+> > > > > > > > difference
+> > > > > > > > in bypass bit, but yes, I know what you mean.
+> > > > > > > > 
+> > > > > > > > Since H6 requires reset line and bus clock to be specified,
+> > > > > > > > it's
+> > > > > > > > not
+> > > > > > > > compatible from DT binding side. New yaml based binding must
+> > > > > > > > somehow
+> > > > > > > > know that in order to be able to validate DT node, so it needs
+> > > > > > > > standalone compatible. However, depending on conclusions of
+> > > > > > > > other
+> > > > > > > > discussions, this new compatible can be associated with
+> > > > > > > > already
+> > > > > > > > available quirks structure or have it's own.> >
+> > > > > > > 
+> > > > > > > I cannot follow. You should be able to specify in the binding
+> > > > > > > that
+> > > > > > > the
+> > > > > > > reset line and bus clock is optional. Then
+> > > > > > > allwinner,sun50i-h6-pwm
+> > > > > > > without a reset line and bus clock also verifies, but this
+> > > > > > > doesn't
+> > > > > > > really hurt (and who knows, maybe the next allwinner chip needs
+> > > > > > > exactly
+> > > > > > > this).
+> > > > > > 
+> > > > > > It is not optional. It will not work if either the clocks or reset
+> > > > > > controls
+> > > > > > are missing. How would these be optional anyway? Either it's
+> > > > > > connected
+> > > > > > and
+> > > > > > thus required, or it's not and therefore should be omitted from
+> > > > > > the
+> > > > > > description.
+> > > > > 
+> > > > > [Just arguing about the clock here, the argumentation is analogous
+> > > > > for
+> > > > > the reset control.]
+> > > > > 
+> > > > > From the driver's perspective it's optional: There are devices with
+> > > > > and
+> > > > > without a bus clock. This doesn't mean that you can just ignore this
+> > > > > clock if it's specified. It's optional in the sense "If dt doesn't
+> > > > > specify it, then assume this is a device that doesn't have it and so
+> > > > > you
+> > > > > don't need to handle it." but not in the sense "it doesn't matter if
+> > > > > you handle it or not.".
+> > > > > 
+> > > > > Other than that I'm on your side. So for example I think it's not
+> > > > > optimal that gpiod_get_optional returns NULL if GPIOLIB=n or that
+> > > > > devm_reset_control_get_optional returns NULL if RESET_CONTROLLER=n
+> > > > > because this hides exactly the kind of problem you point out here.
+> > > > 
+> > > > I think there's misunderstanding. I only argued that we can't use
+> > > > 
+> > > > compatible = "allwinner,sun50i-h6-pwm",
+> > > > 
+> > > > 	 "allwinner,sun5i-a10s-pwm";
+> > > > 
+> > > > as you suggested and only
+> > > > 
+> > > > compatible = "allwinner,sun50i-h6-pwm";
+> > > > 
+> > > > will work. Not because of driver itself (it can still use _optional()
+> > > > variants), but because of DT binding, which should be able to validate
+> > > > H6
+> > > > PWM node - reset and bus clock references are required in this case.
+> > > 
+> > > I think I understood. In my eyes there is no need to let validation of
+> > > the DT bindings catch a missing "optional" property that is needed on
+> > > H6.
+> > > 
+> > > You have to draw the line somewhere which information the driver has
+> > > hard-coded and what is only provided by the device tree and just assumed
+> > > to be correct by the driver. You argue the driver should know that
+> > 
+> > No, in this thread I argue that DT validation tool, executed by
+> > 
+> > make ARCH=arm64 dtbs_check
+> > 
+> > should catch that. This is not a driver, but DT binding described in YAML.
+> 
+> The argumentation is the same. dtbs_check doesn't notice if the base
+> address of your "allwinner,sun50i-h6-pwm" device is wrong. So why should
+> it catch a missing reset controller phandle?
 
+Of course checking actual values of node properties doesn't make sense in 
+dtbs_check, otherwise we would have million DT bindings. If you have 10 copies 
+of the same IP core, of course you would use same compatible, but actual 
+register ranges, interrupts, etc. would be different in DT nodes.
 
-Le mer. 24 juil. 2019 =E0 2:47, Uwe =3D?iso-8859-1?q?Kleine-K=3DF6nig?=3D=20
-<u.kleine-koenig@pengutronix.de> a =E9crit :
-> Hello Paul,
->=20
-> On Tue, Jul 23, 2019 at 04:46:40PM -0400, Paul Cercueil wrote:
->>  Le lun. 22 juil. 2019 =E0 15:34, Uwe =3D?iso-8859-1?q?Kleine-K=3DF6nig?=
-=3D
->>  <u.kleine-koenig@pengutronix.de> a =E9crit :
->>  > On Fri, Jun 07, 2019 at 05:44:07PM +0200, Paul Cercueil wrote:
->>  > >  -	is_enabled =3D jz4740_timer_is_enabled(pwm->hwpwm);
->>  > >  -	if (is_enabled)
->>  > >  -		jz4740_pwm_disable(chip, pwm);
->>  > >  +	jz4740_pwm_disable(chip, pwm);
->>  >
->>  > I assume this stops the PWM. Does this complete the currently=20
->> running
->>  > period? How does the PWM behave then? (Does it still drive the=20
->> output?
->>  > If so, on which level?)
->>=20
->>  Some PWM channels work in one mode "TCU1" and others work in=20
->> "TCU2". The
->>  mode in which channels work depends on the version of the SoC.
->>=20
->>  When stopped, the pins of TCU1 channels will be driven to the=20
->> inactive
->>  level (which depends on the polarity). It is unknown whether or not=20
->> the
->>  currently running period is completed. We set a bit to configure for
->>  "abrupt shutdown", so I expect that it's not, but somebody would=20
->> need
->>  to hook up a logic analyzer to see what's the exact behaviour with
->>  and without that bit.
->=20
-> This might be done even without a logic analyzer. Just do something
-> like:
->=20
-> 	pwm_apply_state(pwm, { .enabled =3D 1, .period =3D 5s })
-> 	pwm_apply_state(pwm, { .enabled =3D 1, .period =3D 5s, .duty =3D 5s })
->=20
-> and if that takes less then 5s the period is not completed.
->=20
-> And note that "abrupt shutdown" is a bug.
+At this point I would make same argument as were made before, but there is no 
+point going in circles. I'm interested what have DT maintainers to say.
 
-I remember you asked that already in an older patchset.
-The result of this test is that the period is never completed,
-independently of the "abrupt shutdown" bit.
+Best regards,
+Jernej
 
-Cheers,
--Paul
-
-
->>  TCU2 channels on the other hand will stop in the middle of a period,
->>  leaving the pin hanging at whatever level it was before the stop.
->>  That's the rationale behind the trick in commit 6580fd173070 ("pwm:
->>  jz4740: Force TCU2 channels to return to their init level").
->=20
-> Strange, but ok.
->=20
-> Best regards
-> Uwe
->=20
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
->     |
-> Industrial Linux Solutions                 |=20
-> http://www.pengutronix.de/  |
-
-=
 
