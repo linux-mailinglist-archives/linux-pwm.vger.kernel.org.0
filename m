@@ -2,335 +2,229 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2ECB37A01B
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 Jul 2019 06:46:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DD647A2D2
+	for <lists+linux-pwm@lfdr.de>; Tue, 30 Jul 2019 10:09:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbfG3EqB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 30 Jul 2019 00:46:01 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36477 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728554AbfG3EqB (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 Jul 2019 00:46:01 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r7so29153970pfl.3;
-        Mon, 29 Jul 2019 21:46:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Wv8DWY08GJEMxC7NWmO7+gLC+yTdYVQmPavAno3uIdU=;
-        b=PiZOHOhFVESZCZRuk8yA2q62dB4REo9ehIvOOLnyMVpMb878mrDpqxzyO7oSS5iFH8
-         2Jvca/DAnruayAq06RMV5jgjjRlzC2LnqIn3B6CtXnn96ntvi4r7JtwyIFTqRUMAE6ru
-         rZkMz2XR+5zYDAntaPBp6mC3qCc2O3frrldjw8azwP1yi56gRMlvw1IMdnqbZmc0IsJB
-         3HK2Zfos/LG7WXYTZmwnulabRWqSqK/+6nFkUc3OAxw12rPXLaQ+dYZIHLk1p8sbCnnw
-         qPG+8YMHjxxoe5EyUakYeoUkDLmpsI+tyg9TjxIBPts2O7k5CUt45slrdfWstMHyJRRk
-         5dEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Wv8DWY08GJEMxC7NWmO7+gLC+yTdYVQmPavAno3uIdU=;
-        b=MnuI62kMZFqJ9tNNtTWwEYcHznHElUvoJHk54bx0Rq95LS6gsw8MBNHyh3Y5n67t2w
-         fqCSxlyJUp2+zKOqhAEyZIYIC7xM3NjtW8N4hxxLG4svLcgzpKtumIsLtOTOHoL83pQ6
-         UckWn2tAIGPa/mFYBxHOlWyP5+H+7Q842Nfa95yu5YUu03DU2URas9I3TDSRlagyur6U
-         JmSXMYcWWgWHRah3B3JpJQbB6s5z6CPnZ0mopvGaEsADeAyE5G/F8FVCO0vvI/NIpK5d
-         ffgJpY1T7K2uAD/sDPL8o9TdDJKwVC4qaT4kC541RyDxKOqiy8LtUYTJqqmBO0rRtpca
-         r9hw==
-X-Gm-Message-State: APjAAAWZkUpMfx7AOAI14j2DwvmcNxRGDQ3dnNPVGBQvo1CYNs5JnWUY
-        WxmOqTVfHluU3isw0JiVmKQ=
-X-Google-Smtp-Source: APXvYqxFCfAzJGa1k5c3LAK/vUqF/r7i1noLfCqemvD+Wd9M3RjfvKecUzgt1pqjSfDPgsHrPKMn+w==
-X-Received: by 2002:a62:35c6:: with SMTP id c189mr40033698pfa.96.1564461960067;
-        Mon, 29 Jul 2019 21:46:00 -0700 (PDT)
-Received: from icarus ([2001:268:c147:5dce:41f:f559:d580:dcd4])
-        by smtp.gmail.com with ESMTPSA id c8sm72532828pjq.2.2019.07.29.21.45.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 21:45:58 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 13:45:36 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     David Lechner <david@lechnology.com>
-Cc:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
+        id S1729204AbfG3IJH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 30 Jul 2019 04:09:07 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45033 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729072AbfG3IJH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 Jul 2019 04:09:07 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hsNBu-0006rg-0n; Tue, 30 Jul 2019 10:09:02 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hsNBs-0002oA-5x; Tue, 30 Jul 2019 10:09:00 +0200
+Date:   Tue, 30 Jul 2019 10:09:00 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
+        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 0/4] new driver for TI eQEP
-Message-ID: <20190730044536.GA5063@icarus>
-References: <20190722154538.5314-1-david@lechnology.com>
- <20190725124037.GA4802@icarus>
- <4616508c-d753-586d-0d3b-5a003e86f582@lechnology.com>
+        kernel@pengutronix.de,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
+Message-ID: <20190730080900.hhxrqun7vk4nsj2h@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net>
+ <173825848.1FZsmuHfpq@jernej-laptop>
+ <20190729185108.tpilwoooxvi2z72e@pengutronix.de>
+ <2452836.v7ux4bnEjb@jernej-laptop>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4616508c-d753-586d-0d3b-5a003e86f582@lechnology.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2452836.v7ux4bnEjb@jernej-laptop>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 05:52:21PM -0500, David Lechner wrote:
-> On 7/25/19 7:40 AM, William Breathitt Gray wrote:
-> > On Mon, Jul 22, 2019 at 10:45:34AM -0500, David Lechner wrote:
-> >> This series adds device tree bindings and a new counter driver for the Texas
-> >> Instruments Enhanced Quadrature Encoder Pulse (eQEP).
-> >>
-> >> As mentioned in one of the commit messages, to start with, the driver only
-> >> supports reading the current counter value and setting the min/max values.
-> >> Other features can be added on an as-needed basis.
-> >>
-> >> The only other feature I am interested in is adding is getting time data in
-> >> order to calculate the rotational speed of a motor. However, there probably
-> >> needs to be a higher level discussion of how this can fit into the counter
-> >> subsystem in general first.
+Hello Rob and Frank,
+
+Maxime and Jernej on one side and me on the other cannot agree about a
+detail in the change to the bindings here. I'm trying to objectively
+summarize the situation for you to help deciding what is the right thing
+to do here.
+
+TLDR: The sun4i pwm driver is extended to support a new variant of that
+device on the H6 SoC. Compared to the earlier supported variants
+allwinner,sun50i-h6-pwm on H6 needs to handle a reset controller and an
+additional clock. 
+
+The two positions are:
+
+ - We need a new compatible because only then the driver and/or the dt
+   schema checker can check that each "allwinner,sun50i-h6-pwm" device
+   has a reset property and a "bus" clock; and the earlier variants
+   don't.
+
+ - The driver can be simpler and the device specific knowledge is only
+   in a single place (the dt) if the device tree is considered valid and
+   a reset property and "bus" clock is used iff it's provided in the
+   device tree without additional comparison for the compatible.
+
+Now our arguments seem to go in circles and Jernej was interested in
+your position. That's something I agree with ;-) Can you please share
+your view?
+
+Find below some context about the arguments.
+
+Best regards
+Uwe
+
+On Tue, Jul 30, 2019 at 12:04:47AM +0200, Jernej Škrabec wrote:
+> Dne ponedeljek, 29. julij 2019 ob 20:51:08 CEST je Uwe Kleine-König 
+> napisal(a):
+> > On Mon, Jul 29, 2019 at 08:46:25PM +0200, Jernej Škrabec wrote:
+> > > Dne ponedeljek, 29. julij 2019 ob 20:40:41 CEST je Uwe Kleine-König
+> > > napisal(a):
+> > > > On Mon, Jul 29, 2019 at 06:40:15PM +0200, Jernej Škrabec wrote:
+> > > > > Dne ponedeljek, 29. julij 2019 ob 18:24:28 CEST je Uwe Kleine-König
+> > > > > napisal(a):
+> > > > > > On Tue, Jul 30, 2019 at 12:09:40AM +0800, Chen-Yu Tsai wrote:
+> > > > > > > On Tue, Jul 30, 2019 at 12:07 AM Uwe Kleine-König
+> > > > > > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > > > > > On Mon, Jul 29, 2019 at 05:55:52PM +0200, Jernej Škrabec wrote:
+> > > > > > > > > Dne ponedeljek, 29. julij 2019 ob 08:40:30 CEST je Uwe Kleine-König
+> > > > > > > > > napisal(a):
+> > > > > > > > > > On Fri, Jul 26, 2019 at 08:40:43PM +0200, Jernej Skrabec wrote:
+> > > > > > > > > > > --- a/drivers/pwm/pwm-sun4i.c
+> > > > > > > > > > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > > > > > > > > > @@ -331,6 +331,13 @@ static const struct sun4i_pwm_data
+> > > > > > > > > > > sun4i_pwm_single_bypass = {>
+> > > > > > > > > > > 
+> > > > > > > > > > >   .npwm = 1,
+> > > > > > > > > > >  
+> > > > > > > > > > >  };
+> > > > > > > > > > > 
+> > > > > > > > > > > +static const struct sun4i_pwm_data
+> > > > > > > > > > > sun50i_pwm_dual_bypass_clk_rst
+> > > > > > > > > > > = {
+> > > > > > > > > > > + .has_bus_clock = true,
+> > > > > > > > > > > + .has_prescaler_bypass = true,
+> > > > > > > > > > > + .has_reset = true,
+> > > > > > > > > > > + .npwm = 2,
+> > > > > > > > > > > +};
+> > > > > > > > > > > +
+> > > > > > > > > > > 
+> > > > > > > > > > >  static const struct of_device_id sun4i_pwm_dt_ids[] = {
+> > > > > > > > > > >  
+> > > > > > > > > > >   {
+> > > > > > > > > > >   
+> > > > > > > > > > >           .compatible = "allwinner,sun4i-a10-pwm",
+> > > > > > > > > > > 
+> > > > > > > > > > > @@ -347,6 +354,9 @@ static const struct of_device_id
+> > > > > > > > > > > sun4i_pwm_dt_ids[] =
+> > > > > > > > > > > {
+> > > > > > > > > > > 
+> > > > > > > > > > >   }, {
+> > > > > > > > > > >   
+> > > > > > > > > > >           .compatible = "allwinner,sun8i-h3-pwm",
+> > > > > > > > > > >           .data = &sun4i_pwm_single_bypass,
+> > > > > > > > > > > 
+> > > > > > > > > > > + }, {
+> > > > > > > > > > > +         .compatible = "allwinner,sun50i-h6-pwm",
+> > > > > > > > > > > +         .data = &sun50i_pwm_dual_bypass_clk_rst,
+> > > > > > > > > > 
+> > > > > > > > > > If you follow my suggestion for the two previous patches,
+
+(i.e. use devm_clk_get_optional instead of using devm_clk_get iff the
+compatible is allwinner,sun50i-h6-pwm; analogous for the reset
+controller.)
+
+> > > > > > > > > > you can just use:
+> > > > > > > > > >
+> > > > > > > > > >     compatible = "allwinner,sun50i-h6-pwm", "allwinner,sun5i-a10s-pwm";
+> > > > > > > > > > 
+> > > > > > > > > > and drop this patch.
+> > > > > > > > > 
+> > > > > > > > > Maxime found out that it's not compatible with A10s due to difference
+> > > > > > > > > in bypass bit, but yes, I know what you mean.
+> > > > > > > > > 
+> > > > > > > > > Since H6 requires reset line and bus clock to be specified, it's not
+> > > > > > > > > compatible from DT binding side. New yaml based binding must somehow
+> > > > > > > > > know that in order to be able to validate DT node, so it needs
+> > > > > > > > > standalone compatible. However, depending on conclusions of other
+> > > > > > > > > discussions, this new compatible can be associated with already
+> > > > > > > > > available quirks structure or have it's own.
+> > > > > > > > 
+> > > > > > > > I cannot follow. You should be able to specify in the binding that the
+> > > > > > > > reset line and bus clock is optional. Then allwinner,sun50i-h6-pwm
+> > > > > > > > without a reset line and bus clock also verifies, but this doesn't
+> > > > > > > > really hurt (and who knows, maybe the next allwinner chip needs exactly this).
+> > > > > > > 
+> > > > > > > It is not optional. It will not work if either the clocks or reset controls
+> > > > > > > are missing. How would these be optional anyway? Either it's connected and
+> > > > > > > thus required, or it's not and therefore should be omitted from the description.
+> > > > > > 
+> > > > > > [Just arguing about the clock here, the argumentation is analogous for
+> > > > > > the reset control.]
+> > > > > > 
+> > > > > > From the driver's perspective it's optional: There are devices with and
+> > > > > > without a bus clock. This doesn't mean that you can just ignore this
+> > > > > > clock if it's specified. It's optional in the sense "If dt doesn't
+> > > > > > specify it, then assume this is a device that doesn't have it and so you
+> > > > > > don't need to handle it." but not in the sense "it doesn't matter if
+> > > > > > you handle it or not.".
+> > > > > > 
+> > > > > > Other than that I'm on your side. So for example I think it's not
+> > > > > > optimal that gpiod_get_optional returns NULL if GPIOLIB=n or that
+> > > > > > devm_reset_control_get_optional returns NULL if RESET_CONTROLLER=n
+> > > > > > because this hides exactly the kind of problem you point out here.
+> > > > > 
+> > > > > I think there's misunderstanding. I only argued that we can't use
+> > > > > 
+> > > > > compatible = "allwinner,sun50i-h6-pwm", "allwinner,sun5i-a10s-pwm";
+> > > > > 
+> > > > > as you suggested and only
+> > > > > 
+> > > > > compatible = "allwinner,sun50i-h6-pwm";
+> > > > > 
+> > > > > will work. Not because of driver itself (it can still use _optional()
+> > > > > variants), but because of DT binding, which should be able to validate H6
+> > > > > PWM node - reset and bus clock references are required in this case.
+> > > > 
+> > > > I think I understood. In my eyes there is no need to let validation of
+> > > > the DT bindings catch a missing "optional" property that is needed on
+> > > > H6.
+> > > > 
+> > > > You have to draw the line somewhere which information the driver has
+> > > > hard-coded and what is only provided by the device tree and just assumed
+> > > > to be correct by the driver. You argue the driver should know that
+> > > 
+> > > No, in this thread I argue that DT validation tool, executed by
+> > > 
+> > > make ARCH=arm64 dtbs_check
+> > > 
+> > > should catch that. This is not a driver, but DT binding described in YAML.
 > > 
-> > I believe exposing some sort of time data has merit. Quadrature counter
-> > devices in particular are commonly used for position tracking of
-> > automation systems, and such systems would benefit from velocity/speed
-> > information. So let's try to introduce that sort of functionality in this
-> > driver if possible.
-> > 
-> > First, let's discuss your specific use case and requirements, and hopefully we
-> > can generalize it enough to be of use for future drivers. From your description,
-> > it sounds like you're attaching some sort of rotary encoder to the eQEP device.
-> > Is that correct? What sort of time data are you hoping to use; does the eQEP
-> > device provide a clock value, or would you be grabbing a timestamp from the
-> > system?
+> > The argumentation is the same. dtbs_check doesn't notice if the base
+> > address of your "allwinner,sun50i-h6-pwm" device is wrong. So why should
+> > it catch a missing reset controller phandle?
 > 
-> My use case is robotics using LEGO MINDSTORMS. More specifically, I am using
-> motors that have a cheap optical rotary encoder (plastic wheel and infrared
-> LED/detectors) that give 360 counts per 1 rotation of the motor shaft. One count
-> is defined as the rising edge or falling edge of the A signal. We are looking at
-> anywhere from 0 to around 2000 counts per second. We use the speed as feedback in
-> a control algorithm to drive the motor at a constant speed. The control loop
-> updates on the order of 1 to 10 ms.
+> Of course checking actual values of node properties doesn't make sense in 
+> dtbs_check, otherwise we would have million DT bindings. If you have 10 copies 
+> of the same IP core, of course you would use same compatible, but actual 
+> register ranges, interrupts, etc. would be different in DT nodes.
 > 
-> Because the encoder resolution and speeds are relatively low, we are currently
-> logging a timestamp for each count. If no count occurs for 50ms, then we log the
-> same count again with a new timestamp (otherwise we would never see 0 speed). To
-> get the actual speed, we find the first timestamp > 20 ms before the current
-> timestamp then compute the speed as the change in position divided by the change
-> in time between these two samples. This give a fairly accurate speed across most
-> of the range, but does get a bit noisy once we get below 100 counts per second.
-> It also means that we need a ring buffer that holds about 50 samples.
-> 
-> The timestamp itself comes from the eQEP, not the system. There are latching
-> registers to ensure that the timestamp read is from exactly the moment when
-> the count register was read.
+> At this point I would make same argument as were made before, but there is no 
+> point going in circles. I'm interested what have DT maintainers to say.
 
-So if I understand correctly, there are two registers you're reading: a
-count register and a timestamp register. The count register is updated
-by the rotation of the motor shaft, while the timestamp register is
-updated by reading the count register (thus logging the time associated
-with the read count value).
-
-> > I'm not sure yet if it would make sense to expose rotational speed directly as
-> > an attribute. If we were to expose just the count value and timestamp since the
-> > last read, that should be enough for a user to compute the delta and derive
-> > speed. I'll think more about this since some devices may simplify that case if
-> > the hardware is able to compute the speed for us.
-> > 
-> 
-> I agree that it probably doesn't make sense to expect drivers to compute the
-> speed. There isn't really a general way to do that works for an arbitrary
-> speed. For example at high speeds, it is better to just look at the change
-> in counts over a fixed interval rather than triggering a timestamp based on
-> a certain number of counts.
-
-This is a good point. Depending on the resolution the user cares about,
-they may be more interested in the speed over a short time interval
-versus a long time interval. It doesn't seem practical to have the driver
-try to handle all possible speed calculations when the user can decide
-themselves how best to use the data.
-
-> I also don't think having a timestamp sysfs attribute would be very useful.
-> To make it work at all, I think it would have to be implemented such that
-> it returns the timestamp for the count that was most recently read via sysfs.
-> And it would require 4 syscalls (2 seeks and 2 reads) to get a single count/
-> timestamp pair in a control loop. On a 300MHz ARM9 processor, this is not
-> a negligible amount of time.
-
-This is a concern I've had as well. The sysfs interface is useful in
-that it provides an intuitive and human-friendly way to expose data
-about devices. But as you note, there is considerable overhead in the
-amount of syscalls we have to make to interact with multiple attributes.
-
-One solution that may work is providing a character device interface in
-addition to the sysfs interface. I believe that should reduce the
-syscall overhead since a user can pass in a data structure with a
-configuration defining what data/actions they want, and receive back
-all data in a single syscall.
-
-I think concern over latency was one of the reasons the GPIO subsystem
-gained a character device interface as well. It's an addition to the
-Counter subsystem that is worth considering, but the possible downsides
-to such an interface should also be investigated.
- 
-> I noticed that several of the other counter drivers also register an IIO
-> device. So this got me thinking that perhaps the counter subsystem should
-> just be for configuring a counter device an then the IIO subsystem should
-> be used for triggers and ring buffers.
-> 
-> For the general case a counter device could have two possible triggers.
-> One that triggers an interrupt after X counts and another that triggers
-> with a period of T nanoseconds (or microseconds). Both triggers would add
-> a count/timestamp pair to an IIO ring buffer.
-> 
-> To fully reproduce our current methodology the first trigger would actually
-> need two configurable settings, the count X that triggers every X counts and
-> a watchdog time setting (using terminology from eQEP docs) that will also
-> trigger if and only if the count does not change before the time has elapsed.
-> Note, this is different from the other proposed time based trigger which
-> would cause a trigger interrupt at a fixed period regardless of whether
-> the count changed or not.
-
-The counter drivers in the kernel right now are registering IIO devices
-in order to keep the preexisting (but now deprecated) IIO Counter
-interface working for these devices -- some users may be using this
-older interface so we don't want to remove it cold turkey. Regardless,
-there's nothing the prevents incorporating the IIO interface with your
-Counter drivers; in fact, in some circumstances it's better that you do
-just that.
-
-The key idea to recognize is how the Counter subsystem differs from the
-IIO subsystem on a conceptual level: the IIO subsystem provides an
-interface for your device by describing it on a hardware level, whereas
-the Counter subsystem provides an interface for your device by
-describing it on a more abstract level.
-
-What I mean is that every interface interaction in the Counter subsystem
-relates to the abstract concept of an ideal "counter device" (Counts,
-Synapses, Signals); if a device functionality or data does not relate
-directly to those ideal counter device components, then the Counter
-subsystem isn't that right interface for it.
-
-For example, it makes sense to have an "enable" attribute or "present"
-attribute, because these functionalities/data are directly related to
-the Count, Synapse, and Signal components conceptually. However, in the
-Counter subsystem you will likely not see something like the IIO
-"in_voltageY_supply_raw" attribute -- not because that data is not
-useful to know about for the operation of the counter device hardware,
-but because it is outside the scope of the Counter subsystem paradigm
-(i.e. it does not directly related to Counts, Synapses, or Signals).
-As such, this would be a case where the counter driver should register
-both a Counter device and IIO device, one to handle the counter device
-on an abstract level while the other provides an interface for control
-of the more specific hardware details.
-
-> ---
-> 
-> Thinking more generally though, I think what I would propose is adding a new
-> component to the existing list of Count, Signal and Synapse. The new component
-> could be called Event. Event would be more general than the trigger conditions
-> I have just discussed. In addition to those two, it could be any event
-> generated by the hardware, such as an error condition or a change in direction.
-> 
-> Drivers could register an arbitrary number of events for each Count, so we
-> would have /sys/bus/counter/devices/counterX/eventY/*. There should be a few
-> standard attributes, like "name" and "enable". Configurable events would need
-> ext attributes to allow configuration.
-> 
-> However, I see that there are already preset and error_noise "events" for
-> count objects, so maybe we don't do the eventY thing and keep it flatter (or
-> is the counter subsystem still considered in "staging" where breaking ABI
-> changes could be made?).
-
-The components for handling events already exist in the Counter
-interface paradigm: Signals and Synapses. Although, the Counter
-subsystem is currently lacking the implementation (I still need to code
-in support for interrupts and such), the paradigm itself supports the
-concept of events and triggers.
-
-Recall that the Counter subsystem represents hardware via the
-abstraction of an idealized "counter device". This is important to
-understand because it means that Signals are not necessarily limited to
-the physical wires of the hardware. To summarize the Counter interface
-paradigm:
-
-    * A Signal is a stream of data to be evaluated.
-    * A Synapse is a trigger condition based on the evaluation of the
-      data streams (i.e. the Signals).
-    * A Count is the accumulation of the effects of Synapses (i.e. the
-      triggers).
-
-As such, in order to represent an event, you would add in a Signal to
-represent the stream of device events, and a Synapse defining the
-specific event that will trigger the action. I'll give an example in
-order to demonstrate what I mean.
-
-A simple clock can be conceptualize as a proper counter device: an
-oscillation is a Signal, a rising edge from that oscillation line can be
-the Synapse, and the current clock value is the Count.
-
-                Count                Synapse          Signal
-                -----                -------          ------
-        +---------------------+
-        | Data: Clock ticks   |    Rising Edge     _____________
-        | Function: Increase  |  <-------------   / Oscillation \
-        |                     |                  _________________
-        +---------------------+
-
-Now, in order to represent your timestamping clock we need two Signals:
-a simple clock and an event stream. The simple clock is the source of
-the current clock ticks we will store, while the event stream provides
-the rotation count register read notification that will trigger the
-timestamp.
-
-                   Count                       Synapse      Signal
-                   -----                       -------      ------
-        +-------------------------------+
-        | Data: Timestamp               |       None        _______
-        | Function: Current clock ticks |  <------------   / Clock \
-        |                               |                 ___________
-        |                               |
-        |                               |    Read event     ________
-        |                               |  <------------   / Events \
-        |                               |                 ____________
-        +-------------------------------+
-
-Note that in this case both Signals either do not exist in or are not
-exposed by the hardware (maybe the simple clock is exposed, but it's not
-necessary to be) -- they are meant to be abstract representations of the
-components of the timestamp clock as an idealized "counter device".
-
-By organizing the timestamp clock in this way, we can control and
-configure the components using the standard Counter interface: common
-attributes such as "name", "preset", "enable", etc. can now be exposed
-to users like every other counter device component.
-
-In theory we can sleep on the timestamp count attribute read (or
-character device equivalent if we go down that route), and be woken when
-an event triggers updating the timestamp value. However, the current
-Counter subsystem implementation is lacking the code for this so it
-needs to be added to the core functionality first.
-
-> When thinking about what events would actually do when enabled though, it
-> seems like we should be using IIO events and triggers (we have found reading
-> sysfs attributes to be insufficient performance-wise). It seems like unnecessary
-> work to reproduce all of this in the counter subsystem. Which makes me wonder if
-> it would be better to have counter devices just be a different device type (i.e.
-> different struct device_type for dev->type) in the IIO subsystem instead of
-> creating a completely new subsystem.
-
-I plan on adding interrupt support for the 104-QUAD-8 counter driver
-since this device has some useful interrupts on configured threshold
-conditions and such, so having the ability to handle an event rather
-than constantly read and loop is something I want to have in the Counter
-subsystem.
-
-It's possible that I can reuse some code from the IIO subsystem, as
-Jonathan pointed out, but overall I believe these should be separate
-subsystems. From the reasons described above, the IIO subsystem and
-Counter subsystem have different goals and thus different
-implementations. I don't think that's a bad thing, and we can share code
-in the few cases where the two may overlap.
-
-Regarding whether to use IIO events and triggers within the TI eQEP
-counter driver, I think we should wait for a proper Counter subsystem
-implementation to be added first. My fear is that we'll have a similar
-situation as what happened with IIO_COUNT, where we'll have to keep a
-IIO interface present with a newer Counter interface. If adding in event
-support to the Counter subsystem will take too long, we can add this TI
-eQEP driver as-is now and later add in the timestamp support.
-
-William Breathitt Gray
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
