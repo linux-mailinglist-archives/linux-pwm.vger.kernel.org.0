@@ -2,125 +2,149 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 41E947B195
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 Jul 2019 20:18:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09CED7B9F4
+	for <lists+linux-pwm@lfdr.de>; Wed, 31 Jul 2019 08:52:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388024AbfG3SQ3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 30 Jul 2019 14:16:29 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33274 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388012AbfG3SQ3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 Jul 2019 14:16:29 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c14so29144596plo.0
-        for <linux-pwm@vger.kernel.org>; Tue, 30 Jul 2019 11:16:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9QcLwsc+g9/nkAYconN3atycpaD3W9Oj7VTl50rUYI8=;
-        b=flOWBgeKN66a+lkeYUJw67um1dky5NseAGdVBwDkLgqqgNPE51BaQrLl2XD9uIw7ow
-         bt7ThNZmPP60v8Zjs3DNydj3XPHteDsC5c+C7zSiODg1yt4rUB/ita+9jHnavVBb0mr9
-         avUKc1BFKlVMQBujqr9SoXL5dRwA4Ep05wSDU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9QcLwsc+g9/nkAYconN3atycpaD3W9Oj7VTl50rUYI8=;
-        b=QWHe3LHMTqIXZnGMg6IRpWXO+wCg8J+2rsjTkVW5m3a59AYJWT40SO2ZjVHTF1C61j
-         y7fUHpJJjxDIEyocWnzPfGxC3p2rQGWoT1i1Elbi71XxKTSQ94rBnDp4HzDcjSNLHLV6
-         2qM/Ra5Qi5TStP7/kXjz142lCukfI43aMVH6DvzpsCIZsxyz0VhhofAlKvUHr9uxLnjQ
-         wNIXIV7qxGRFvPkCBe6AD+s50UGPJWX2+q6kIe6coYuMJ9E/t0CJIOmglo9cg4SKL8YI
-         7i55jlyiH2kKE15ohOsYdsAocl+43L2kMoLw3sQXzMMuR1i3hfzNDD0Jlmc9ldcFYQyG
-         Vr+w==
-X-Gm-Message-State: APjAAAVS/j3uqRvIeOs6xPjEiCNesDT/S9rZ4qsJliW5SI90GJXCcYhF
-        Ukibd6fXaRpl9ETJh/IxGA2JJA==
-X-Google-Smtp-Source: APXvYqw8qhi0NlIOlpgPnm+0CiKy/x0CAkkQYAenrtgmro/8bcy85mYSXx1l5obJEIg5J+PbbaIREA==
-X-Received: by 2002:a17:902:29a7:: with SMTP id h36mr119155726plb.158.1564510588597;
-        Tue, 30 Jul 2019 11:16:28 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 11:16:28 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v6 36/57] pwm: Remove dev_err() usage after platform_get_irq()
-Date:   Tue, 30 Jul 2019 11:15:36 -0700
-Message-Id: <20190730181557.90391-37-swboyd@chromium.org>
-X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-In-Reply-To: <20190730181557.90391-1-swboyd@chromium.org>
-References: <20190730181557.90391-1-swboyd@chromium.org>
+        id S1727822AbfGaGwj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 31 Jul 2019 02:52:39 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57717 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfGaGwj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 31 Jul 2019 02:52:39 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hsiTP-0005UT-U7; Wed, 31 Jul 2019 08:52:31 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hsiTO-0005LC-5S; Wed, 31 Jul 2019 08:52:30 +0200
+Date:   Wed, 31 Jul 2019 08:52:30 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
+        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel@pengutronix.de,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
+Message-ID: <20190731065230.mqbtn5sfoxrkevw5@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net>
+ <173825848.1FZsmuHfpq@jernej-laptop>
+ <20190729185108.tpilwoooxvi2z72e@pengutronix.de>
+ <2452836.v7ux4bnEjb@jernej-laptop>
+ <20190730080900.hhxrqun7vk4nsj2h@pengutronix.de>
+ <20190730170601.a7ei43wku6jsjanu@flea>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190730170601.a7ei43wku6jsjanu@flea>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-We don't need dev_err() messages when platform_get_irq() fails now that
-platform_get_irq() prints an error message itself when something goes
-wrong. Let's remove these prints with a simple semantic patch.
+On Tue, Jul 30, 2019 at 07:06:01PM +0200, Maxime Ripard wrote:
+> On Tue, Jul 30, 2019 at 10:09:00AM +0200, Uwe Kleine-König wrote:
+> > Hello Rob and Frank,
+> >
+> > Maxime and Jernej on one side and me on the other cannot agree about a
+> > detail in the change to the bindings here. I'm trying to objectively
+> > summarize the situation for you to help deciding what is the right thing
+> > to do here.
+> >
+> > TLDR: The sun4i pwm driver is extended to support a new variant of that
+> > device on the H6 SoC. Compared to the earlier supported variants
+> > allwinner,sun50i-h6-pwm on H6 needs to handle a reset controller and an
+> > additional clock.
+> >
+> > The two positions are:
+> >
+> >  - We need a new compatible because only then the driver and/or the dt
+> >    schema checker can check that each "allwinner,sun50i-h6-pwm" device
+> >    has a reset property and a "bus" clock; and the earlier variants
+> >    don't.
+> 
+> There is two topics here, really. The binding itself really must have
+> those properties as required.
+> 
+> You had an analogy before that we shouldn't really do that, since it
+> would be verification and that it would be similar to checking whether
+> the register range was right. This analogy isn't correct, a better one
+> would be checking that the register range exists in the first place.
 
-// <smpl>
-@@
-expression ret;
-struct platform_device *E;
-@@
+The relevant difference is that *all* devices supported by the driver
+have to have a register range. Compared to that only a subset of the
+devices have to have a bus clock.
 
-ret =
-(
-platform_get_irq(E, ...)
-|
-platform_get_irq_byname(E, ...)
-);
+> Indeed, if you don't have a register range, you have no register to
+> write to, and that's a showstopper for any driver. I'm pretty sure we
+> all agree on that. But on those SoCs, like Chen-Yu said, having no
+> resets or clocks properties result in an equally bad result: either
+> any write to that device is completely ignored (missing reset), or the
+> system completely (and silently) locks up (missing bus clock).
+> 
+> We *have* to catch that somehow and not let anything like that happen.
 
-if ( \( ret < 0 \| ret <= 0 \) )
-{
-(
--if (ret != -EPROBE_DEFER)
--{ ...
--dev_err(...);
--... }
-|
-...
--dev_err(...);
-)
-...
-}
-// </smpl>
+IIUC both the clock and the reset stuff is SoC specific, so it's the
+same for all machines with the H6, right? So assuming this is correctly
+contained in the h6.dtsi, in which cases can this go wrong? I only see
+the cases that the dts author includes the wrong dtsi or overrides
+stuff. In the first case a non-working PWM is probably one of the
+smaller problems and the second is something we're not really able to
+catch.
 
-While we're here, remove braces on if statements that only have one
-statement (manually).
+But even if each machine's dts author has to get this right, I don't
+think the dts schema is the right place to assert this.
 
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-pwm@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
+> That being said, we can't really validate that the clock pointed is
+> the right one, just like we can't really check that the register range
+> is the proper one. Or rather, we could, but it's completely
+> impractical and we do agree on that as well.
+> 
+> Having the bus clock and reset line being required however is only a
+> few lines in the binding though, and is very practical.
+> 
+> >  - The driver can be simpler and the device specific knowledge is only
+> >    in a single place (the dt) if the device tree is considered valid and
+> >    a reset property and "bus" clock is used iff it's provided in the
+> >    device tree without additional comparison for the compatible.
+> 
+> And now we have the discussion on how it's implemented in a
+> driver. Since it's pretty cheap to implement (only a couple of lines:
+> two for the if block, one for the additional field in the structure,
+> one for each SoC using that) and have huge benefits (not silently
+> locking up the system at boot), then I'd say we should go for it.
 
-Please apply directly to subsystem trees
+Right, it's only a few lines. Still it (IMHO needlessly) complicates the
+driver. From the driver's POV the device tree defines the
+characteristics of the device and if the dts defines an h6-pwm without a
+bus clock then maybe this is the PWM on the next generation SoC that
+doesn't need it. And maybe you're happy in a few year's time when you
+don't have to touch the driver again for this next generation SoC
+because the driver is not only simpler but also flexible enough to
+handle the new PWM without adaptions.
 
- drivers/pwm/pwm-sti.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+All in all I don't care much about the dt schema stuff, I want to keep
+the driver simple. So if we agree that the schema ensures that the h6
+pwms have a reset and a bus clock and we just use reset_get_optional and
+clk_get_optional that's a compromise I can agree to.
 
-diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
-index 20450e34ad57..1508616d794c 100644
---- a/drivers/pwm/pwm-sti.c
-+++ b/drivers/pwm/pwm-sti.c
-@@ -564,10 +564,8 @@ static int sti_pwm_probe(struct platform_device *pdev)
- 		return PTR_ERR(pc->regmap);
- 
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(&pdev->dev, "Failed to obtain IRQ\n");
-+	if (irq < 0)
- 		return irq;
--	}
- 
- 	ret = devm_request_irq(&pdev->dev, irq, sti_pwm_interrupt, 0,
- 			       pdev->name, pc);
+Best regards
+Uwe
+
 -- 
-Sent by a computer through tubes
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
