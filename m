@@ -2,138 +2,128 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C1C18168E
-	for <lists+linux-pwm@lfdr.de>; Mon,  5 Aug 2019 12:11:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E22381731
+	for <lists+linux-pwm@lfdr.de>; Mon,  5 Aug 2019 12:37:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbfHEKL3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 5 Aug 2019 06:11:29 -0400
-Received: from mail.steuer-voss.de ([85.183.69.95]:50888 "EHLO
-        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727868AbfHEKL3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 5 Aug 2019 06:11:29 -0400
-X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
-Received: by mail.steuer-voss.de (Postfix, from userid 1000)
-        id 333A1466FE; Mon,  5 Aug 2019 12:11:27 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.steuer-voss.de (Postfix) with ESMTP id 2F33C46510;
-        Mon,  5 Aug 2019 12:11:27 +0200 (CEST)
-Date:   Mon, 5 Aug 2019 12:11:27 +0200 (CEST)
-From:   Nikolaus Voss <nv@vosn.de>
-X-X-Sender: nv@fox.voss.local
-To:     Hans de Goede <hdegoede@redhat.com>
-cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "youling257@gmail.com" <youling257@gmail.com>
-Subject: Re: [PATCH 5.3 regression fix] pwm: Fallback to the static lookup-list
- when acpi_pwm_get fails
-In-Reply-To: <4e2afae5-ce42-9f32-e3df-cdf222690af2@redhat.com>
-Message-ID: <alpine.DEB.2.20.1908051159370.64037@fox.voss.local>
-References: <20190730154848.5164-1-hdegoede@redhat.com> <alpine.DEB.2.20.1908050935570.62587@fox.voss.local> <4e2afae5-ce42-9f32-e3df-cdf222690af2@redhat.com>
-User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
+        id S1728028AbfHEKhz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 5 Aug 2019 06:37:55 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55416 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbfHEKhz (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 5 Aug 2019 06:37:55 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a15so74218929wmj.5
+        for <linux-pwm@vger.kernel.org>; Mon, 05 Aug 2019 03:37:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=EjSGNU5tuMFasj89k5pfoAkxeWuwm7YGZxI63pDJurY=;
+        b=SdYRFXozELsThSHXdS1mXooull3R6J9nnf8C9J4LG2rf8Ay/tHpcXw2sFKAZoIllXB
+         UKzi8TW1M0OqDdoMJIDgbNPtrLtVsqGNe/0mrOegp1PJbxsi91tSM2AMp05i+GQJGWfv
+         0ndxMSUXoF6zD4BAG4BkQVA5ggAsEF1fWdZLuxRZwHQxF2mE9tNSwMUHD6NPuvpOd/pG
+         t6FqshJ99YgzsFLuWKobI7n04sKxA23fNY0aWKPCmWnE/D5C39GPb0eyMHtNpKwaD/mJ
+         4ho5THOfnm4/3mlbtxwCfPSP8ZB7VdziBnItzlaaDFyKQ7bhlLHbMKVB7phZr+csRiRE
+         XmCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=EjSGNU5tuMFasj89k5pfoAkxeWuwm7YGZxI63pDJurY=;
+        b=o4pXLeohOegnILZZ8MUKu+IY0gB3yoW9tjiYQOW45sV9BmKspiWP3apMMwmnf6q1a0
+         vYZwRXNNCT7PjaOWwZDh950rHHlRfF4zJfjpvG+B3wH6M5l8TlUPciY7wxWUfwGxOa5j
+         Nb0wFDEm5VFgJKRvyI6f1ERqVorEfEO6GhKmXt3gYCMIAGnqHhAbNnAwAQiduqjoOhnM
+         8qoF1OuTFBPBZqJlUh8tDvlpkvRJHGH5bNVuQtDLwfH+gfrj8LjkCv9sJe4s89mK4szA
+         vG6nTmzrARI4BB7UaZ0KGKqkMCal/AWdvwU9liS6zS60bqckrglttuaE7opcjXakJ5VV
+         /Vdw==
+X-Gm-Message-State: APjAAAVwHfdjHx83u6c8SkJ07+prQjE3M1sRGlR9n7dHR9kD12MxbXkw
+        8aGmgCzcqlcwiHXVlHMN+4IdyA==
+X-Google-Smtp-Source: APXvYqyfPy8bJ4jliIHsN8Aii8j0f6KsqZMMACwhVIeHmj6Cf501bv9kzRahA7ZUnqifBzzHRD/S/w==
+X-Received: by 2002:a1c:cfc3:: with SMTP id f186mr17103441wmg.134.1565001472966;
+        Mon, 05 Aug 2019 03:37:52 -0700 (PDT)
+Received: from dell ([109.180.115.177])
+        by smtp.gmail.com with ESMTPSA id o11sm79528209wmh.37.2019.08.05.03.37.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 05 Aug 2019 03:37:52 -0700 (PDT)
+Date:   Mon, 5 Aug 2019 11:37:50 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 0/4] backlight: Expose brightness curve type through
+ sysfs
+Message-ID: <20190805103750.GG4739@dell>
+References: <20190709190007.91260-1-mka@chromium.org>
+ <20190722235926.GA250418@google.com>
+ <20190725111541.GA23883@dell>
+ <20190725171726.GD250418@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-630655690-1564999887=:64037"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190725171726.GD250418@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, 25 Jul 2019, Matthias Kaehlcke wrote:
 
---8323329-630655690-1564999887=:64037
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+> On Thu, Jul 25, 2019 at 12:15:41PM +0100, Lee Jones wrote:
+> > On Mon, 22 Jul 2019, Matthias Kaehlcke wrote:
+> > 
+> > > On Tue, Jul 09, 2019 at 12:00:03PM -0700, Matthias Kaehlcke wrote:
+> > > > Backlight brightness curves can have different shapes. The two main
+> > > > types are linear and non-linear curves. The human eye doesn't
+> > > > perceive linearly increasing/decreasing brightness as linear (see
+> > > > also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
+> > > > linearly to human eye"), hence many backlights use non-linear (often
+> > > > logarithmic) brightness curves. The type of curve is currently opaque
+> > > > to userspace, so userspace often relies on more or less reliable
+> > > > heuristics (like the number of brightness levels) to decide whether
+> > > > to treat a backlight device as linear or non-linear.
+> > > > 
+> > > > Export the type of the brightness curve via a new sysfs attribute.
+> > > > 
+> > > > Matthias Kaehlcke (4):
+> > > >   MAINTAINERS: Add entry for stable backlight sysfs ABI documentation
+> > > >   backlight: Expose brightness curve type through sysfs
+> > > >   backlight: pwm_bl: Set scale type for CIE 1931 curves
+> > > >   backlight: pwm_bl: Set scale type for brightness curves specified in
+> > > >     the DT
+> > > > 
+> > > >  .../ABI/testing/sysfs-class-backlight         | 26 ++++++++++++++
+> > > >  MAINTAINERS                                   |  2 ++
+> > > >  drivers/video/backlight/backlight.c           | 19 ++++++++++
+> > > >  drivers/video/backlight/pwm_bl.c              | 35 ++++++++++++++++++-
+> > > >  include/linux/backlight.h                     |  8 +++++
+> > > >  5 files changed, 89 insertions(+), 1 deletion(-)
+> > > >  create mode 100644 Documentation/ABI/testing/sysfs-class-backlight
+> > > 
+> > > ping, any comments on v3?
+> > 
+> > Looks like PATCH 2/4 still needs seeing to.
+> 
+> The patch currently doesn't have any comments.
+> 
+> Do you see any specific things that need improvement? If so, could you
+> comment on the patch?
 
-On Mon, 5 Aug 2019, Hans de Goede wrote:
-> Hi,
->
-> On 05-08-19 11:31, Nikolaus Voss wrote:
->> Hi Hans,
->> 
->> On Tue, 30 Jul 2019, Hans de Goede wrote:
->>> Commit 4a6ef8e37c4d ("pwm: Add support referencing PWMs from ACPI")
->>> made pwm_get unconditionally return the acpi_pwm_get return value if
->>> the device passed to pwm_get has an ACPI fwnode.
->>> 
->>> But even if the passed in device has an ACPI fwnode, it does not
->>> necessarily have the necessary ACPI package defining its pwm bindings,
->>> especially since the binding / API of this ACPI package has only been
->>> introduced very recently.
->>> 
->>> Up until now X86/ACPI devices which use a separate pwm controller for
->>> controlling their LCD screen's backlight brightness have been relying
->>> on the static lookup-list to get their pwm.
->>> 
->>> pwm_get unconditionally returning the acpi_pwm_get return value breaks
->>> this, breaking backlight control on these devices.
->>> 
->>> This commit fixes this by making pwm_get fall back to the static
->>> lookup-list if acpi_pwm_get returns -ENOENT.
->> 
->> Ok, I didn't find any pwm_add_table() calls in the x86 directory, so I 
->> thought the fallback matching is only for non-DT/non-ACPI systems.
->
-> AFAIK only Bay Trail and Cherry Trail X86 systems use a separate
-> (not integrated into the GPU) PWM controller, but there are a lot of
-> these systems out there. I got a bug report for this pretty much the
-> day rc1 was out :)
->
-> The pwm_add_table calls are done in drivers/acpi/acpi_lpss.c.
->
->> If it is used for ACPI nodes without PWM controller binding, it maybe 
->> should apply to DT nodes without PWM controller binding, too?
->> 
->> It would be structurally cleaner as DT and ACPI handling was symmetrical.
->
-> I'm fine with someone doing a follow up patch along this lines, but
-> given that this is a serious regression in 5.3 I would like to move
-> forward with my tested patch as is to fix the regression in 5.3.
+It needs Daniel T's Ack.
 
-Makes sense, thank you for the explanation.
-
-Acked-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-
->
-> Regards,
->
-> Hans
->
->
->
->>> BugLink: https://bugs.freedesktop.org/show_bug.cgi?id=96571
->>> Reported-by: youling257@gmail.com
->>> Fixes: 4a6ef8e37c4d ("pwm: Add support referencing PWMs from ACPI")
->>> Cc: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
->>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>> ---
->>> drivers/pwm/core.c | 7 +++++--
->>> 1 file changed, 5 insertions(+), 2 deletions(-)
->>> 
->>> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
->>> index c3ab07ab31a9..8edfac17364e 100644
->>> --- a/drivers/pwm/core.c
->>> +++ b/drivers/pwm/core.c
->>> @@ -882,8 +882,11 @@ struct pwm_device *pwm_get(struct device *dev, const 
->>> char *con_id)
->>>                return of_pwm_get(dev, dev->of_node, con_id);
->>> 
->>>        /* then lookup via ACPI */
->>> -       if (dev && is_acpi_node(dev->fwnode))
->>> -               return acpi_pwm_get(dev->fwnode);
->>> +       if (dev && is_acpi_node(dev->fwnode)) {
->>> +               pwm = acpi_pwm_get(dev->fwnode);
->>> +               if (!IS_ERR(pwm) || PTR_ERR(pwm) != -ENOENT)
->>> +                       return pwm;
->>> +       }
->>> 
->>>        /*
->>>         * We look up the provider in the static table typically provided 
->>> by
->>> -- 
->>> 2.21.0
->>> 
->>> 
->
---8323329-630655690-1564999887=:64037--
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
