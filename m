@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 770FE84427
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Aug 2019 08:03:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFB2C84421
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Aug 2019 08:03:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfHGGDV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 7 Aug 2019 02:03:21 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:53955 "EHLO
+        id S1726772AbfHGGDT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 7 Aug 2019 02:03:19 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:9357 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726872AbfHGGDU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Aug 2019 02:03:20 -0400
-X-UUID: e0a996c9a3a44907ba62ee4ddd8ead28-20190807
-X-UUID: e0a996c9a3a44907ba62ee4ddd8ead28-20190807
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        with ESMTP id S1726777AbfHGGDS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Aug 2019 02:03:18 -0400
+X-UUID: 9a2df9b7262d4750a79ae726566ef34a-20190807
+X-UUID: 9a2df9b7262d4750a79ae726566ef34a-20190807
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <jitao.shi@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1543499440; Wed, 07 Aug 2019 14:03:06 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 7 Aug
- 2019 14:03:02 +0800
+        with ESMTP id 1505431920; Wed, 07 Aug 2019 14:03:08 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 7 Aug
+ 2019 14:03:04 +0800
 Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
  MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Wed, 7 Aug 2019 14:03:01 +0800
+ 15.0.1395.4 via Frontend Transport; Wed, 7 Aug 2019 14:03:02 +0800
 From:   Jitao Shi <jitao.shi@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -48,42 +48,66 @@ CC:     Jitao Shi <jitao.shi@mediatek.com>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
         <ck.hu@mediatek.com>, <stonea168@163.com>
-Subject: [PATCH v5 0/4] add mt8183 dpi driver
-Date:   Wed, 7 Aug 2019 14:02:53 +0800
-Message-ID: <20190807060257.57007-1-jitao.shi@mediatek.com>
+Subject: [PATCH v5 1/4] dt-bindings: display: mediatek: update dpi  supported chips
+Date:   Wed, 7 Aug 2019 14:02:54 +0800
+Message-ID: <20190807060257.57007-2-jitao.shi@mediatek.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190807060257.57007-1-jitao.shi@mediatek.com>
+References: <20190807060257.57007-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-TM-SNTS-SMTP: DCB0DFC6858284B6DFB1DC1FB7C2F36A5001F83DF042B729EFA399187E50DB232000:8
+X-TM-SNTS-SMTP: C69E228641317CEF5F977F938A43637FA6695ED07D1225B291DE2BC80CE66BAA2000:8
 X-MTK:  N
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Changes since v4:
- - move pin mode control and dual edge control to deveice tree.
- - update dt-bindings document for pin mode swap and dual edge control.
+Add decriptions about supported chips, including MT2701 & MT8173 &
+mt8183
 
-Changes since v3:
- - add dpi pin mode control when dpi on or off.
- - update dpi dual edge comment.
+Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+---
+ .../bindings/display/mediatek/mediatek,dpi.txt        | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Changes since v2:
- - update dt-bindings document for mt8183 dpi.
- - separate dual edge modfication as independent patch.
-
-Jitao Shi (4):
-  dt-bindings: display: mediatek: update dpi  supported chips
-  drm/mediatek: dpi dual edge support
-  drm/mediatek: add mt8183 dpi clock factor
-  drm/mediatek: control dpi pins dpi or gpio mode in on or off
-
- .../display/mediatek/mediatek,dpi.txt         | 11 +++
- drivers/gpu/drm/mediatek/mtk_dpi.c            | 71 ++++++++++++++++++-
- 2 files changed, 80 insertions(+), 2 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+index b6a7e7397b8b..cd6a1469c8b7 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+@@ -7,6 +7,7 @@ output bus.
+ 
+ Required properties:
+ - compatible: "mediatek,<chip>-dpi"
++  the supported chips are mt2701 , mt8173 and mt8183.
+ - reg: Physical base address and length of the controller's registers
+ - interrupts: The interrupt signal from the function block.
+ - clocks: device clocks
+@@ -16,6 +17,11 @@ Required properties:
+   Documentation/devicetree/bindings/graph.txt. This port should be connected
+   to the input port of an attached HDMI or LVDS encoder chip.
+ 
++Optional properties:
++- dpi_pin_mode_swap: Swap the pin mode between dpi mode and gpio mode.
++- pinctrl-names: Contain "gpiomode" and "dpimode".
++- dpi_dual_edge: Control the RGB 24bit data on 12 pins or 24 pins.
++
+ Example:
+ 
+ dpi0: dpi@1401d000 {
+@@ -26,6 +32,11 @@ dpi0: dpi@1401d000 {
+ 		 <&mmsys CLK_MM_DPI_ENGINE>,
+ 		 <&apmixedsys CLK_APMIXED_TVDPLL>;
+ 	clock-names = "pixel", "engine", "pll";
++	dpi_dual_edge;
++	dpi_pin_mode_swap;
++	pinctrl-names = "gpiomode", "dpimode";
++	pinctrl-0 = <&dpi_pin_gpio>;
++	pinctrl-1 = <&dpi_pin_func>;
+ 
+ 	port {
+ 		dpi0_out: endpoint {
 -- 
 2.21.0
 
