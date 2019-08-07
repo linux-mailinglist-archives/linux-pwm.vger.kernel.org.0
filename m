@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DE7868442A
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Aug 2019 08:03:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D3B784425
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Aug 2019 08:03:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfHGGDa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 7 Aug 2019 02:03:30 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:59228 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726861AbfHGGDT (ORCPT
+        id S1727018AbfHGGDU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 7 Aug 2019 02:03:20 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:50329 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726137AbfHGGDT (ORCPT
         <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Aug 2019 02:03:19 -0400
-X-UUID: 11cca7c1d3254cfcbab6bebdd5996c88-20190807
-X-UUID: 11cca7c1d3254cfcbab6bebdd5996c88-20190807
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+X-UUID: 66379fd288374440afeac1fca168d612-20190807
+X-UUID: 66379fd288374440afeac1fca168d612-20190807
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <jitao.shi@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 202368417; Wed, 07 Aug 2019 14:03:09 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 7 Aug
- 2019 14:03:07 +0800
+        with ESMTP id 564144345; Wed, 07 Aug 2019 14:03:11 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 7 Aug
+ 2019 14:03:09 +0800
 Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
  MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Wed, 7 Aug 2019 14:03:06 +0800
+ 15.0.1395.4 via Frontend Transport; Wed, 7 Aug 2019 14:03:07 +0800
 From:   Jitao Shi <jitao.shi@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -48,73 +48,116 @@ CC:     Jitao Shi <jitao.shi@mediatek.com>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
         <ck.hu@mediatek.com>, <stonea168@163.com>
-Subject: [PATCH v5 3/4] drm/mediatek: add mt8183 dpi clock factor
-Date:   Wed, 7 Aug 2019 14:02:56 +0800
-Message-ID: <20190807060257.57007-4-jitao.shi@mediatek.com>
+Subject: [PATCH v5 4/4] drm/mediatek: control dpi pins dpi or gpio mode in on or off
+Date:   Wed, 7 Aug 2019 14:02:57 +0800
+Message-ID: <20190807060257.57007-5-jitao.shi@mediatek.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190807060257.57007-1-jitao.shi@mediatek.com>
 References: <20190807060257.57007-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-TM-SNTS-SMTP: 0C390326424C10AA3C3085083CFE39619D6B7E7D496F7D7C048FF37BC493A5D52000:8
+X-TM-SNTS-SMTP: 1B2CA2D23DF96E5EB5B80F2CCDC9DF7A23B524F7C9EECA1DDDD30165E22A6FB52000:8
 X-MTK:  N
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The factor depends on the divider of DPI in MT8183, therefore,
-we should fix this factor to the right and new one.
+Pull dpi pins low when dpi has nothing to display. Aovid leakage
+current from some dpi pins (Hsync Vsync DE ... ).
+
+Some chips have dpi pins, but there are some chip don't have pins.
+So this function is controlled by device tree.
 
 Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_dpi.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_dpi.c | 39 +++++++++++++++++++++++++++++-
+ 1 file changed, 38 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index 743230864ba0..4f2700cbfdb7 100644
+index 4f2700cbfdb7..83fb0d753f72 100644
 --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
 +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -672,6 +672,16 @@ static unsigned int mt2701_calculate_factor(int clock)
- 		return 1;
- }
- 
-+static unsigned int mt8183_calculate_factor(int clock)
-+{
-+	if (clock <= 27000)
-+		return 8;
-+	else if (clock <= 167000)
-+		return 4;
-+	else
-+		return 2;
-+}
-+
- static const struct mtk_dpi_conf mt8173_conf = {
- 	.cal_factor = mt8173_calculate_factor,
- 	.reg_h_fre_con = 0xe0,
-@@ -683,6 +693,11 @@ static const struct mtk_dpi_conf mt2701_conf = {
- 	.edge_sel_en = true,
+@@ -9,10 +9,12 @@
+ #include <drm/drm_of.h>
+ #include <linux/kernel.h>
+ #include <linux/component.h>
+-#include <linux/platform_device.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/of_gpio.h>
+ #include <linux/of_graph.h>
++#include <linux/pinctrl/consumer.h>
++#include <linux/platform_device.h>
+ #include <linux/interrupt.h>
+ #include <linux/types.h>
+ #include <linux/clk.h>
+@@ -71,8 +73,12 @@ struct mtk_dpi {
+ 	enum mtk_dpi_out_yc_map yc_map;
+ 	enum mtk_dpi_out_bit_num bit_num;
+ 	enum mtk_dpi_out_channel_swap channel_swap;
++	struct pinctrl *pinctrl;
++	struct pinctrl_state *pins_gpio;
++	struct pinctrl_state *pins_dpi;
+ 	int refcount;
+ 	bool dual_edge;
++	bool dpi_pin_ctrl;
  };
  
-+static const struct mtk_dpi_conf mt8183_conf = {
-+	.cal_factor = mt8183_calculate_factor,
-+	.reg_h_fre_con = 0xe0,
-+};
-+
- static int mtk_dpi_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -779,6 +794,9 @@ static const struct of_device_id mtk_dpi_of_ids[] = {
- 	{ .compatible = "mediatek,mt8173-dpi",
- 	  .data = &mt8173_conf,
- 	},
-+	{ .compatible = "mediatek,mt8183-dpi",
-+	  .data = &mt8183_conf,
-+	},
- 	{ },
- };
+ static inline struct mtk_dpi *mtk_dpi_from_encoder(struct drm_encoder *e)
+@@ -384,6 +390,9 @@ static void mtk_dpi_power_off(struct mtk_dpi *dpi)
+ 	if (--dpi->refcount != 0)
+ 		return;
  
++	if (dpi->dpi_pin_ctrl)
++		pinctrl_select_state(dpi->pinctrl, dpi->pins_gpio);
++
+ 	mtk_dpi_disable(dpi);
+ 	clk_disable_unprepare(dpi->pixel_clk);
+ 	clk_disable_unprepare(dpi->engine_clk);
+@@ -408,6 +417,9 @@ static int mtk_dpi_power_on(struct mtk_dpi *dpi)
+ 		goto err_pixel;
+ 	}
+ 
++	if (dpi->dpi_pin_ctrl)
++		pinctrl_select_state(dpi->pinctrl, dpi->pins_dpi);
++
+ 	mtk_dpi_enable(dpi);
+ 	return 0;
+ 
+@@ -713,6 +725,31 @@ static int mtk_dpi_probe(struct platform_device *pdev)
+ 	dpi->dev = dev;
+ 	dpi->conf = (struct mtk_dpi_conf *)of_device_get_match_data(dev);
+ 	dpi->dual_edge = of_property_read_bool(dev->of_node, "dpi_dual_edge");
++	dpi->dpi_pin_ctrl = of_property_read_bool(dev->of_node,
++						  "dpi_pin_mode_swap");
++
++	if (dpi->dpi_pin_ctrl) {
++		dpi->pinctrl = devm_pinctrl_get(&pdev->dev);
++		if (IS_ERR(dpi->pinctrl)) {
++			dev_err(&pdev->dev, "Cannot find pinctrl!\n");
++			return PTR_ERR(dpi->pinctrl);
++		}
++
++		dpi->pins_gpio = pinctrl_lookup_state(dpi->pinctrl,
++						      "gpiomode");
++		if (IS_ERR(dpi->pins_gpio)) {
++			dev_err(&pdev->dev, "Cannot find pinctrl gpiomode!\n");
++			return PTR_ERR(dpi->pins_gpio);
++		}
++
++		pinctrl_select_state(dpi->pinctrl, dpi->pins_gpio);
++
++		dpi->pins_dpi = pinctrl_lookup_state(dpi->pinctrl, "dpimode");
++		if (IS_ERR(dpi->pins_dpi)) {
++			dev_err(&pdev->dev, "Cannot find pinctrl dpimode!\n");
++			return PTR_ERR(dpi->pins_dpi);
++		}
++	}
+ 
+ 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	dpi->regs = devm_ioremap_resource(dev, mem);
 -- 
 2.21.0
 
