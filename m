@@ -2,125 +2,165 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3881285B5F
-	for <lists+linux-pwm@lfdr.de>; Thu,  8 Aug 2019 09:15:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D6DF85B9E
+	for <lists+linux-pwm@lfdr.de>; Thu,  8 Aug 2019 09:32:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731167AbfHHHOv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 8 Aug 2019 03:14:51 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:2751 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731038AbfHHHOu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 8 Aug 2019 03:14:50 -0400
-X-UUID: 28828ab66c3845e0bd6f50b3bdb4f73d-20190808
-X-UUID: 28828ab66c3845e0bd6f50b3bdb4f73d-20190808
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2033063645; Thu, 08 Aug 2019 15:14:39 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS33N1.mediatek.inc (172.27.4.75) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 8 Aug 2019 15:14:35 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 8 Aug 2019 15:14:34 +0800
-Message-ID: <1565248475.31636.0.camel@mtksdaap41>
-Subject: Re: [PATCH v5 3/4] drm/mediatek: add mt8183 dpi clock factor
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Thierry Reding" <treding@nvidia.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        "Inki Dae" <inki.dae@samsung.com>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        "Sean Paul" <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        "Andy Yan" <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <stonea168@163.com>
-Date:   Thu, 8 Aug 2019 15:14:35 +0800
-In-Reply-To: <20190807060257.57007-4-jitao.shi@mediatek.com>
-References: <20190807060257.57007-1-jitao.shi@mediatek.com>
-         <20190807060257.57007-4-jitao.shi@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        id S1731493AbfHHHb7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 8 Aug 2019 03:31:59 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:56303 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730887AbfHHHb7 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 8 Aug 2019 03:31:59 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hvcts-0003Z3-Gm; Thu, 08 Aug 2019 09:31:52 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hvcto-0000H4-HQ; Thu, 08 Aug 2019 09:31:48 +0200
+Date:   Thu, 8 Aug 2019 09:31:48 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+Cc:     "geert+renesas@glider.be" <geert+renesas@glider.be>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH RFC 6/7] pwm: rcar: Add gpio support to output duty zero
+Message-ID: <20190808073148.xx2ywr2myntcqry3@pengutronix.de>
+References: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1562576868-8124-7-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20190807070326.cgkbt4kpzhqvo5a3@pengutronix.de>
+ <TYAPR01MB45445D854C1FDBB473A89559D8D70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: ACA0D368338ADFB945EC0DEE8709C7B8CB13598F3D79743A33E08B5CF2A1E74F2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <TYAPR01MB45445D854C1FDBB473A89559D8D70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi, Jitao:
+Hello,
 
-On Wed, 2019-08-07 at 14:02 +0800, Jitao Shi wrote:
-> The factor depends on the divider of DPI in MT8183, therefore,
-> we should fix this factor to the right and new one.
+On Thu, Aug 08, 2019 at 03:52:52AM +0000, Yoshihiro Shimoda wrote:
+> > From: Uwe Kleine-König, Sent: Wednesday, August 7, 2019 4:03 PM
+> > On Mon, Jul 08, 2019 at 06:07:47PM +0900, Yoshihiro Shimoda wrote:
+> > > @@ -119,8 +121,11 @@ static int rcar_pwm_set_counter(struct rcar_pwm_chip *rp, int div, int duty_ns,
+> > >  	ph = tmp & RCAR_PWMCNT_PH0_MASK;
+> > >
+> > >  	/* Avoid prohibited setting */
+> > > -	if (cyc == 0 || ph == 0)
+> > > +	if (cyc == 0)
+> > >  		return -EINVAL;
+> > > +	/* Try to use GPIO to output duty zero */
+> > > +	if (ph == 0)
+> > > +		return -EAGAIN;
+> > 
+> > If there is no gpio requesting cyc=0 should still yield an error.
 > 
+> I'm sorry, I cannot understand this.
 
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
+I meant that if getting the gpio failed but it's needed to yield the
+right level this should result in an error. I thought I removed that
+comment because this is taken care of further below.
 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_dpi.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+> > >  	rcar_pwm_write(rp, cyc | ph, RCAR_PWMCNT);
+> > >
+> > > @@ -157,6 +162,28 @@ static void rcar_pwm_disable(struct rcar_pwm_chip *rp)
+> > >  	rcar_pwm_update(rp, RCAR_PWMCR_EN0, 0, RCAR_PWMCR);
+> > >  }
+> > >
+> > > +static int rcar_pwm_gpiod_get(struct rcar_pwm_chip *rp)
+> > > +{
+> > > +	if (rp->gpio)
+> > > +		return 0;
+> > > +
+> > > +	rp->gpio = gpiod_get(rp->chip.dev, "renesas,duty-zero", GPIOD_OUT_LOW);
+> > > +	if (!IS_ERR(rp->gpio))
+> > > +		return 0;
+> > > +
+> > > +	rp->gpio = NULL;
+> > > +	return -EINVAL;
+> > 
+> > Does getting the gpio automatically switch the pinmuxing?
+> > 
+> > If yes, this is IMHO a really surprising mis-feature of the gpio
+> > subsystem. I'd prefer to "get" the gpio at probe time and only switch
+> > the pinmuxing in .apply(). This makes .apply() quicker, ensures that all
+> > resources necessary for pwm operation are available, handles
+> > -EPROBE_DEFER (and maybe other errors) correctly.
 > 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> index 743230864ba0..4f2700cbfdb7 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> @@ -672,6 +672,16 @@ static unsigned int mt2701_calculate_factor(int clock)
->  		return 1;
->  }
->  
-> +static unsigned int mt8183_calculate_factor(int clock)
-> +{
-> +	if (clock <= 27000)
-> +		return 8;
-> +	else if (clock <= 167000)
-> +		return 4;
-> +	else
-> +		return 2;
-> +}
-> +
->  static const struct mtk_dpi_conf mt8173_conf = {
->  	.cal_factor = mt8173_calculate_factor,
->  	.reg_h_fre_con = 0xe0,
-> @@ -683,6 +693,11 @@ static const struct mtk_dpi_conf mt2701_conf = {
->  	.edge_sel_en = true,
->  };
->  
-> +static const struct mtk_dpi_conf mt8183_conf = {
-> +	.cal_factor = mt8183_calculate_factor,
-> +	.reg_h_fre_con = 0xe0,
-> +};
-> +
->  static int mtk_dpi_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -779,6 +794,9 @@ static const struct of_device_id mtk_dpi_of_ids[] = {
->  	{ .compatible = "mediatek,mt8173-dpi",
->  	  .data = &mt8173_conf,
->  	},
-> +	{ .compatible = "mediatek,mt8183-dpi",
-> +	  .data = &mt8183_conf,
-> +	},
->  	{ },
->  };
->  
+> The current pinctrl subsystem only has .set_mux(). I checked the pinctrl subsystem
+> history and the commit 2243a87d90b42eb38bc281957df3e57c712b5e56 removed the ".disable()" ops.
+> So, IIUC, we cannot such a handling.
 
+You'd need to reactivate the pwm setting when changing from 0% to
+something bigger of course.
 
+But as I understand it "getting" the gpio already implies that it is
+muxed which is bad here. So it would be great if we could opt-out.
+Linus?
+
+The pwm-imx driver has a similar problem[1] where we already considered
+using a gpio. There auto-muxing would be in the way, too. (Maybe it
+isn't because it isn't implmented on i.MX?)
+
+> > Note you're introducing a bug here because switching to gpio doesn't
+> > ensure that the currently running period is completed.
+> 
+> Umm, the hardware doesn't have such a condition so that the driver cannot manage it.
+> So, I'll add this into the "Limitations" too.
+
+yes please.
+
+> > > +static void rcar_pwm_gpiod_put(struct rcar_pwm_chip *rp)
+> > > +{
+> > > +	if (!rp->gpio)
+> > > +		return;
+> > > +
+> > > +	gpiod_put(rp->gpio);
+> > > +	rp->gpio = NULL;
+> > > +}
+> > > +
+> > >  static int rcar_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > >  			  struct pwm_state *state)
+> > >  {
+> > > @@ -171,6 +198,7 @@ static int rcar_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > >
+> > >  	if (!state->enabled) {
+> > >  		rcar_pwm_disable(rp);
+> > > +		rcar_pwm_gpiod_put(rp);
+> > 
+> > From the framework's POV disabling a PWM is quite similar to duty cycle
+> > 0. Assuming disabling the PWM completes the currently running period[1]
+> > it might be better and easier to disable instead of switching to gpio.
+> > (Further assuming that disable really yields the inactive level which is
+> > should and is another limitation if not.)
+> 
+> If we disable the hardware, the duty cycle is 100% unfortunately. So,
+> I think I should describe it as one of "Limitations".
+
+It seems you got the idea .. :-)
+
+Best regards
+Uwe
+
+[1] it goes to 0 on disable even if the polarity is inverted
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
