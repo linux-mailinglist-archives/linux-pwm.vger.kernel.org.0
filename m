@@ -2,53 +2,81 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 38B9B88041
-	for <lists+linux-pwm@lfdr.de>; Fri,  9 Aug 2019 18:35:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 759188805B
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 Aug 2019 18:41:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437378AbfHIQf1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 9 Aug 2019 12:35:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437336AbfHIQfL (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 9 Aug 2019 12:35:11 -0400
-Subject: Re: [GIT PULL] pwm: Fixes for v5.3-rc4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565368510;
-        bh=V8oXQxfmqp7qCQuqH/9/wYJ5mskVhb6yYv8o1W+SQco=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=qQrpvHaQlvPuGW0ScxrhwIjGnrEetCe0/kf6/TXUxWSXEtF6iXATcVa5oSUUqy4Tt
-         jWYqTmIVfQMxAGlhsxiM3P1eU/fsBks+of24+Yh9VIaeX+XKGxA0kOZw2XRIbLPzU3
-         re1QC3RcpShlnJYiu+2u92pG7UoVQh27s/RQGEOY=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190809134848.18297-1-thierry.reding@gmail.com>
-References: <20190809134848.18297-1-thierry.reding@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190809134848.18297-1-thierry.reding@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git
- tags/pwm/for-5.3-rc4
-X-PR-Tracked-Commit-Id: 6cf9481b440da6d6d86bd8e4c99a8b553b9d1271
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c808f2ad8fcddb856ce42901cd5b4f06f9da9184
-Message-Id: <156536851085.6429.6086666407903295936.pr-tracker-bot@kernel.org>
-Date:   Fri, 09 Aug 2019 16:35:10 +0000
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        id S1726216AbfHIQlu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 9 Aug 2019 12:41:50 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57271 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfHIQlu (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Aug 2019 12:41:50 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hw7xb-0004IA-7S; Fri, 09 Aug 2019 18:41:47 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hw7xX-0004bE-T1; Fri, 09 Aug 2019 18:41:43 +0200
+Date:   Fri, 9 Aug 2019 18:41:43 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
         linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/7] pwm: jz4740: Drop dependency on MACH_INGENIC
+Message-ID: <20190809164143.2p573g7wlx43hero@pengutronix.de>
+References: <20190809123031.24219-1-paul@crapouillou.net>
+ <20190809123031.24219-4-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190809123031.24219-4-paul@crapouillou.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The pull request you sent on Fri,  9 Aug 2019 15:48:48 +0200:
+On Fri, Aug 09, 2019 at 02:30:27PM +0200, Paul Cercueil wrote:
+> Depending on MACH_INGENIC prevent us from creating a generic kernel that
+> works on more than one MIPS board. Instead, we just depend on MIPS being
+> set.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  drivers/pwm/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index d2557c6fcf65..82a75e0b72e5 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -224,7 +224,7 @@ config PWM_IMX_TPM
+>  
+>  config PWM_JZ4740
+>  	tristate "Ingenic JZ47xx PWM support"
+> -	depends on MACH_INGENIC
+> +	depends on MIPS
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.3-rc4
+If this isn't actually useful on MIPS without MACH_INGENIC this is
+better expressed using:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c808f2ad8fcddb856ce42901cd5b4f06f9da9184
+	depends on MIPS
+	depends on MACH_INGENIC || COMPILE_TEST
 
-Thank you!
+This way some configuring a mips kernel without INGENIC isn't bothered
+by this question.
+
+Best regards
+Uwe
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
