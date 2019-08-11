@@ -2,95 +2,98 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 169AD88525
-	for <lists+linux-pwm@lfdr.de>; Fri,  9 Aug 2019 23:41:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44448890E2
+	for <lists+linux-pwm@lfdr.de>; Sun, 11 Aug 2019 11:10:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbfHIVlH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 9 Aug 2019 17:41:07 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:38168 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfHIVlH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Aug 2019 17:41:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1565386864; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MqvMWi6bGElHL7UoyZd9oBNxDJqpMVxG2HIbZaBBGmc=;
-        b=mmukrfnP68b29AvzmDRP/RS81Heh9NQAcjG4CJVqNKHWaPZ+Hkuk3RPMGQ+x6oZWLuUs6p
-        0RaIFBl7h8gh+1buPrmnYnhOicfwFrzeLal3OSB79Xw8tlywFmWAgt34eR0LMnYuTt5QgN
-        BIhGHW4IhW4g2P6nYNz4c4N6cclWG0w=
-Date:   Fri, 09 Aug 2019 23:40:59 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 3/7] pwm: jz4740: Drop dependency on MACH_INGENIC
-To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <1565386860.2091.5@crapouillou.net>
-In-Reply-To: <20190809164143.2p573g7wlx43hero@pengutronix.de>
-References: <20190809123031.24219-1-paul@crapouillou.net>
-        <20190809123031.24219-4-paul@crapouillou.net>
-        <20190809164143.2p573g7wlx43hero@pengutronix.de>
+        id S1726070AbfHKJKX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 11 Aug 2019 05:10:23 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:18611 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725826AbfHKJKX (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 11 Aug 2019 05:10:23 -0400
+X-UUID: 05ffea0b1da64af4b9ab527241d52319-20190811
+X-UUID: 05ffea0b1da64af4b9ab527241d52319-20190811
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 313713411; Sun, 11 Aug 2019 17:10:12 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N2.mediatek.inc
+ (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sun, 11 Aug
+ 2019 17:10:06 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
+ MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1395.4 via Frontend Transport; Sun, 11 Aug 2019 17:10:04 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Jitao Shi <jitao.shi@mediatek.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <ck.hu@mediatek.com>, <stonea168@163.com>
+Subject: [PATCH v4 0/4] Add drivers for auo,kd101n80-45na and boe,tv101wum-nl6 panels
+Date:   Sun, 11 Aug 2019 17:09:57 +0800
+Message-ID: <20190811091001.49555-1-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-TM-SNTS-SMTP: 13D0A12DC02939C6C15BF9FF5D1853EE5ED675A5B964FD3864D887C10CD6F7A02000:8
+X-MTK:  N
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Changes since v3:
+ - remove check enable_gpio.
+ - fine tune the auo,kd101n80-45na panel's power on timing.
 
+Changes since v2:
+ - correct the panel size
+ - remove blank line in Kconfig
+ - move auo,kd101n80-45na panel driver in this series.
 
-Le ven. 9 ao=FBt 2019 =E0 18:41, Uwe =3D?iso-8859-1?q?Kleine-K=3DF6nig?=3D=20
-<u.kleine-koenig@pengutronix.de> a =E9crit :
-> On Fri, Aug 09, 2019 at 02:30:27PM +0200, Paul Cercueil wrote:
->>  Depending on MACH_INGENIC prevent us from creating a generic kernel=20
->> that
->>  works on more than one MIPS board. Instead, we just depend on MIPS=20
->> being
->>  set.
->>=20
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  ---
->>   drivers/pwm/Kconfig | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->>  diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->>  index d2557c6fcf65..82a75e0b72e5 100644
->>  --- a/drivers/pwm/Kconfig
->>  +++ b/drivers/pwm/Kconfig
->>  @@ -224,7 +224,7 @@ config PWM_IMX_TPM
->>=20
->>   config PWM_JZ4740
->>   	tristate "Ingenic JZ47xx PWM support"
->>  -	depends on MACH_INGENIC
->>  +	depends on MIPS
->=20
-> If this isn't actually useful on MIPS without MACH_INGENIC this is
-> better expressed using:
->=20
-> 	depends on MIPS
-> 	depends on MACH_INGENIC || COMPILE_TEST
->=20
-> This way some configuring a mips kernel without INGENIC isn't bothered
-> by this question.
+Changes since v1:
 
-As said in the commit message, it is useful on MIPS without=20
-MACH_INGENIC,
-if you want to create a generic kernel that works on more than one MIPS
-board.
+ - update typo nl6 -> n16.
+ - update new panel config and makefile are added in alphabetically order.
+ - add the panel mode and panel info in driver data.
+ - merge auo,kd101n80-45a and boe,tv101wum-nl6 in one driver
 
+Jitao Shi (4):
+  dt-bindings: display: panel: Add BOE tv101wum-n16 panel bindings
+  drm/panel: support for BOE tv101wum-nl6 wuxga dsi video mode panel
+  dt-bindings: display: panel: add auo kd101n80-45na panel bindings
+  drm/panel: support for auo,kd101n80-45na wuxga dsi video mode panel
 
-> Best regards
-> Uwe
->=20
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
->     |
-> Industrial Linux Solutions                 |=20
-> http://www.pengutronix.de/  |
+ .../display/panel/auo,kd101n80-45na.txt       |  34 +
+ .../display/panel/boe,tv101wum-nl6.txt        |  34 +
+ drivers/gpu/drm/panel/Kconfig                 |   9 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 761 ++++++++++++++++++
+ 5 files changed, 839 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/auo,kd101n80-45na.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
+ create mode 100644 drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
 
-=
+-- 
+2.21.0
 
