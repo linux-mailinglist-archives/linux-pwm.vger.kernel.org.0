@@ -2,41 +2,39 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6580F8A88A
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Aug 2019 22:43:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF41A8A8A3
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Aug 2019 22:50:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbfHLUnV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 12 Aug 2019 16:43:21 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:40364 "EHLO
+        id S1726809AbfHLUuI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 12 Aug 2019 16:50:08 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:46294 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfHLUnU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Aug 2019 16:43:20 -0400
+        with ESMTP id S1726702AbfHLUuI (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Aug 2019 16:50:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1565642596; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1565643005; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=S402R7yWPRIlPyhZbuZ2UYbs3ZpBD3pnHEhveVMgT3s=;
-        b=blqSD4u7dwHqPMLaySSc90NE9VxPM0z13ash3Mx3uvtEJH3jb5mKcSyE+T16VzspW64AI8
-        NPbe1NGCuFWBGL78kASSSoCzmBoISbbwrNpLiAxhUm/sorCIuuipu3vq7lq1LpGqeYMZ6b
-        pKqec9O5rvj7vKefVq48HQ3ZqjlcMOk=
-Date:   Mon, 12 Aug 2019 22:43:10 +0200
+        bh=R5cu4TbrdhiCsOGYq9bAxCaKQGkNk/ZGyyL86bqYhdk=;
+        b=N9VyZvxxVB7k2t0mOE1IDnJixL17ZlQQE9aHvyOQjYmQV4536NxH5fz67LrZkQIdMxuYoH
+        Qm9apbRg+zt34yldxMH4yJqoXXjzlK9L129ibTLoRWHGKzPFUJJizfF59W6s2Ey2p5mxS9
+        p1QFprDz4Xjm2Krmz9uBKSHGmGMrr24=
+Date:   Mon, 12 Aug 2019 22:50:01 +0200
 From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 4/7] pwm: jz4740: Improve algorithm of clock calculation
+Subject: Re: [PATCH 6/7] pwm: jz4740: Make PWM start with the active part
 To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
 Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Message-Id: <1565642590.2007.1@crapouillou.net>
-In-Reply-To: <20190812061520.lwzk3us4ginwwxov@pengutronix.de>
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <1565643001.2007.2@crapouillou.net>
+In-Reply-To: <20190812055515.ne7o4ujchfeubjid@pengutronix.de>
 References: <20190809123031.24219-1-paul@crapouillou.net>
-        <20190809123031.24219-5-paul@crapouillou.net>
-        <20190809170551.u4ybilf5ay2rsvnn@pengutronix.de>
-        <1565370885.2091.2@crapouillou.net>
-        <20190812061520.lwzk3us4ginwwxov@pengutronix.de>
+        <20190809123031.24219-7-paul@crapouillou.net>
+        <20190809171058.gothydohec6qx7hu@pengutronix.de>
+        <1565372004.2091.3@crapouillou.net>
+        <20190812055515.ne7o4ujchfeubjid@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Transfer-Encoding: quoted-printable
@@ -47,199 +45,156 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 
 
-Le lun. 12 ao=FBt 2019 =E0 8:15, Uwe =3D?iso-8859-1?q?Kleine-K=3DF6nig?=3D=20
+Le lun. 12 ao=FBt 2019 =E0 7:55, Uwe =3D?iso-8859-1?q?Kleine-K=3DF6nig?=3D=20
 <u.kleine-koenig@pengutronix.de> a =E9crit :
-> Hello Paul,
->=20
-> On Fri, Aug 09, 2019 at 07:14:45PM +0200, Paul Cercueil wrote:
->>  Le ven. 9 ao=FBt 2019 =E0 19:05, Uwe =3D?iso-8859-1?q?Kleine-K=3DF6nig?=
+> On Fri, Aug 09, 2019 at 07:33:24PM +0200, Paul Cercueil wrote:
+>>=20
+>>=20
+>>  Le ven. 9 ao=FBt 2019 =E0 19:10, Uwe =3D?iso-8859-1?q?Kleine-K=3DF6nig?=
 =3D
 >>  <u.kleine-koenig@pengutronix.de> a =E9crit :
->>  > On Fri, Aug 09, 2019 at 02:30:28PM +0200, Paul Cercueil wrote:
->>  > >  The previous algorithm hardcoded details about how the TCU=20
->> clocks
->>  > > work.
->>  > >  The new algorithm will use clk_round_rate to find the perfect=20
->> clock
->>  > > rate
->>  > >  for the PWM channel.
+>>  > On Fri, Aug 09, 2019 at 02:30:30PM +0200, Paul Cercueil wrote:
+>>  > >  The PWM will always start with the inactive part. To counter=20
+>> that,
+>>  > >  when PWM is enabled we switch the configured polarity, and use
+>>  > >  'period - duty + 1' as the real duty.
+>>  >
+>>  > Where does the + 1 come from? This looks wrong. (So if duty=3D0 is
+>>  > requested you use duty =3D period + 1?)
+>>=20
+>>  You'd never request duty =3D=3D 0, would you?
+>>=20
+>>  Your duty must always be in the inclusive range [1, period]
+>>  (hardware values, not ns). A duty of 0 is a hardware fault
+>>  (on the jz4740 it is).
+>=20
+> From the PWM framework's POV duty cycle =3D 0 is perfectly valid.=20
+> Similar
+> to duty =3D=3D period. Not supporting dutz cycle 0 is another limitation=20
+> of
+> your PWM that should be documented.
+>=20
+> For actual use cases of duty cycle =3D 0 see drivers/hwmon/pwm-fan.c or
+> drivers/leds/leds-pwm.c.
+
+Perfectly valid for the PWM framework, maybe; but what is the expected
+output then? A constant inactive state? Then I guess I can just disable
+the PWM output in the driver when configured with duty =3D=3D 0.
+
+
+>>  If you request duty =3D=3D 1 (the minimum), then the new duty is equal
+>>  to (period - 1 + 1) =3D=3D period, which is the maximum of your range.
+>>=20
+>>  If you request duty =3D=3D period (the maximum), then the new duty
+>>  calculated is equal to (period - period + 1) =3D=3D 1, which is the
+>>  minimum of your range.
+>>=20
+>>=20
 >>  > >
 >>  > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  > >  Tested-by: Mathieu Malaterre <malat@debian.org>
->>  > >  Tested-by: Artur Rojek <contact@artur-rojek.eu>
 >>  > >  ---
->>  > >   drivers/pwm/pwm-jz4740.c | 60
->>  > > +++++++++++++++++++++++++++++-----------
->>  > >   1 file changed, 44 insertions(+), 16 deletions(-)
+>>  > >   drivers/pwm/pwm-jz4740.c | 22 +++++++++++++---------
+>>  > >   1 file changed, 13 insertions(+), 9 deletions(-)
 >>  > >
 >>  > >  diff --git a/drivers/pwm/pwm-jz4740.c=20
 >> b/drivers/pwm/pwm-jz4740.c
->>  > >  index 6ec8794d3b99..f20dc2e19240 100644
+>>  > >  index 85e2110aae4f..8df898429d47 100644
 >>  > >  --- a/drivers/pwm/pwm-jz4740.c
 >>  > >  +++ b/drivers/pwm/pwm-jz4740.c
->>  > >  @@ -110,24 +110,56 @@ static int jz4740_pwm_apply(struct=20
->> pwm_chip
+>>  > >  @@ -121,6 +121,7 @@ static int jz4740_pwm_apply(struct pwm_chip
 >>  > > *chip, struct pwm_device *pwm,
->>  > >   	struct jz4740_pwm_chip *jz4740 =3D to_jz4740(pwm->chip);
->>  > >   	struct clk *clk =3D pwm_get_chip_data(pwm),
 >>  > >   		   *parent_clk =3D clk_get_parent(clk);
->>  > >  -	unsigned long rate, period, duty;
->>  > >  +	unsigned long rate, parent_rate, period, duty;
+>>  > >   	unsigned long rate, parent_rate, period, duty;
 >>  > >   	unsigned long long tmp;
->>  > >  -	unsigned int prescaler =3D 0;
->>  > >  +	int ret;
+>>  > >  +	bool polarity_inversed;
+>>  > >   	int ret;
 >>  > >
->>  > >  -	rate =3D clk_get_rate(parent_clk);
->>  > >  -	tmp =3D (unsigned long long)rate * state->period;
->>  > >  -	do_div(tmp, 1000000000);
->>  > >  -	period =3D tmp;
->>  > >  +	parent_rate =3D clk_get_rate(parent_clk);
->>  > >  +
->>  > >  +	jz4740_pwm_disable(chip, pwm);
->>  > >
->>  > >  -	while (period > 0xffff && prescaler < 6) {
->>  > >  -		period >>=3D 2;
->>  > >  -		rate >>=3D 2;
->>  > >  -		++prescaler;
->>  > >  +	/* Reset the clock to the maximum rate, and we'll reduce it=20
->> if needed */
->>  > >  +	ret =3D clk_set_max_rate(clk, parent_rate);
->>  >
->>  > What is the purpose of this call? IIUC this limits the allowed=20
->> range of
->>  > rates for clk. I assume the idea is to prevent other consumers to=20
->> change
->>  > the rate in a way that makes it unsuitable for this pwm. But this=20
->> only
->>  > makes sense if you had a notifier for clk changes, doesn't it? I'm
->>  > confused.
->>=20
->>  Nothing like that. The second call to clk_set_max_rate() might have=20
->> set
->>  a maximum clock rate that's lower than the parent's rate, and we=20
->> want to
->>  undo that.
->=20
-> I still don't get the purpose of this call. Why do you limit the clock
-> rate at all?
-
-As it says below, we "limit the clock to a maximum rate that still gives
-us a period value which fits in 16 bits". So that the computed hardware
-values won't overflow.
-
-E.g. if at a rate of 12 MHz your computed hardware value for the period
-is 0xf000, then at a rate of 24 MHz it won't fit in 16 bits. So the=20
-clock
-rate must be reduced to the highest possible that will still give you a
-< 16-bit value.
-
-We always want the highest possible clock rate that works, for the sake=20
-of
-precision.
-
-
->>  > I think this doesn't match the commit log, you didn't even=20
->> introduced a
->>  > call to clk_round_rate().
->>=20
->>  Right, I'll edit the commit message.
->>=20
->>=20
->>  > >  +	if (ret) {
->>  > >  +		dev_err(chip->dev, "Unable to set max rate: %d\n", ret);
->>  > >  +		return ret;
->>  > >   	}
->>  > >
->>  > >  -	if (prescaler =3D=3D 6)
->>  > >  -		return -EINVAL;
->>  > >  +	ret =3D clk_set_rate(clk, parent_rate);
->>  > >  +	if (ret) {
->>  > >  +		dev_err(chip->dev, "Unable to reset to parent rate (%lu=20
->> Hz)",
->>  > >  +			parent_rate);
->>  > >  +		return ret;
->>  > >  +	}
->>  > >  +
->>  > >  +	/*
->>  > >  +	 * Limit the clock to a maximum rate that still gives us a=20
->> period value
->>  > >  +	 * which fits in 16 bits.
->>  > >  +	 */
->>  > >  +	tmp =3D 0xffffull * NSEC_PER_SEC;
->>  > >  +	do_div(tmp, state->period);
->>  > >
->>  > >  +	ret =3D clk_set_max_rate(clk, tmp);
->>  >
->>  > And now you change the maximal rate again?
->>=20
->>  Basically, we start from the maximum clock rate we can get for that=20
->> PWM
->>  - which is the rate of the parent clk - and from that compute the=20
->> maximum
->>  clock rate that we can support that still gives us < 16-bits=20
->> hardware
->>  values for the period and duty.
->>=20
->>  We then pass that computed maximum clock rate to=20
->> clk_set_max_rate(), which
->>  may or may not update the current PWM clock's rate to match the new=20
->> limits.
->>  Finally we read back the PWM clock's rate and compute the period=20
->> and duty
->>  from that.
->=20
-> If you change the clk rate, is this externally visible on the PWM
-> output? Does this affect other PWM instances?
-
-The clock rate doesn't change the PWM output because the hardware=20
-values for
-the period and duty are adapted accordingly to reflect the change.
-
-
->>  > >  +	if (ret) {
->>  > >  +		dev_err(chip->dev, "Unable to set max rate: %d\n", ret);
->>  > >  +		return ret;
->>  > >  +	}
->>  > >  +
->>  > >  +	/*
->>  > >  +	 * Read back the clock rate, as it may have been modified by
->>  > >  +	 * clk_set_max_rate()
->>  > >  +	 */
->>  > >  +	rate =3D clk_get_rate(clk);
->>  > >  +
->>  > >  +	if (rate !=3D parent_rate)
->>  > >  +		dev_dbg(chip->dev, "PWM clock updated to %lu Hz\n", rate);
->>  > >  +
->>  > >  +	/* Calculate period value */
->>  > >  +	tmp =3D (unsigned long long)rate * state->period;
->>  > >  +	do_div(tmp, NSEC_PER_SEC);
->>  > >  +	period =3D (unsigned long)tmp;
->>  > >  +
->>  > >  +	/* Calculate duty value */
->>  > >   	tmp =3D (unsigned long long)period * state->duty_cycle;
->>  > >   	do_div(tmp, state->period);
->>  > >   	duty =3D period - tmp;
->>  > >  @@ -135,14 +167,10 @@ static int jz4740_pwm_apply(struct=20
+>>  > >   	parent_rate =3D clk_get_rate(parent_clk);
+>>  > >  @@ -183,24 +184,27 @@ static int jz4740_pwm_apply(struct=20
 >> pwm_chip
 >>  > > *chip, struct pwm_device *pwm,
->>  > >   	if (duty >=3D period)
->>  > >   		duty =3D period - 1;
+>>  > >   	/* Reset counter to 0 */
+>>  > >   	regmap_write(jz4740->map, TCU_REG_TCNTc(pwm->hwpwm), 0);
 >>  > >
->>  > >  -	jz4740_pwm_disable(chip, pwm);
+>>  > >  -	/* Set duty */
+>>  > >  -	regmap_write(jz4740->map, TCU_REG_TDHRc(pwm->hwpwm), duty);
 >>  > >  -
->>  > >   	/* Set abrupt shutdown */
->>  > >   	regmap_update_bits(jz4740->map, TCU_REG_TCSRc(pwm->hwpwm),
->>  > >   			   TCU_TCSR_PWM_SD, TCU_TCSR_PWM_SD);
+>>  > >   	/* Set period */
+>>  > >   	regmap_write(jz4740->map, TCU_REG_TDFRc(pwm->hwpwm), period);
 >>  > >
->>  > >  -	clk_set_rate(clk, rate);
->>  > >  -
+>>  > >  +	/*
+>>  > >  +	 * The PWM will always start with the inactive part. To=20
+>> counter that,
+>>  > >  +	 * when PWM is enabled we switch the configured polarity,=20
+>> and use
+>>  > >  +	 * 'period - duty + 1' as the real duty.
+>>  > >  +	 */
+>>  > >  +
+>>  > >  +	/* Set duty */
+>>  > >  +	regmap_write(jz4740->map, TCU_REG_TDHRc(pwm->hwpwm), period=20
+>> - duty + 1);
+>>  > >  +
 >>  >
->>  > It's not obvious to me why removing these two lines belong in the
->>  > current patch.
+>>  > Before you set duty first, then period, now you do it the other=20
+>> way
+>>  > round. Is there a good reason?
 >>=20
->>  They're not removed, they're both moved up in the function.
+>>  To move it below the comment that explains why we use 'period -=20
+>> duty + 1'.
+>>=20
+>>  We modify that line anyway, so it's not like it makes the patch=20
+>> much more
+>>  verbose.
 >=20
-> OK, will look closer in the next iteration.
+> It doesn't make it more verbose, but that's not the background of my
+> question. For most(?) PWM implementation the order of hardware=20
+> accesses
+> matters and introducing such a difference as an unneeded side effect
+> isn't optimal.
+
+There's no side effect. The PWM is disabled when reconfigured.
+
+
+> Why not add the comment above the line that already used to set the=20
+> duty
+> in hardware?
+
+I thought it made sense to have the two parts of the trick closer=20
+together
+in the code, below the comment, so that it's clearer what it does.
+
+
+>>  > >   	/* Set polarity */
+>>  > >  -	switch (state->polarity) {
+>>  > >  -	case PWM_POLARITY_NORMAL:
+>>  > >  +	polarity_inversed =3D state->polarity =3D=3D PWM_POLARITY_INVERS=
+ED;
+>>  > >  +	if (!polarity_inversed ^ state->enabled)
+>>  >
+>>  > Why does state->enabled suddenly matter here?
+>>=20
+>>  The pin stay inactive when the PWM is disabled, but the level of the
+>>  inactive state depends on the polarity of the pin. So we need to=20
+>> switch
+>>  the polarity only when the PWM is enabled.
+>=20
+> After some thought I got that. When knowing this, this is already
+> mentioned in the comment you introduced as you write about enabled=20
+> PWMs
+> only. Maybe it's just me, but mentioning that case more explicit would
+> have helped me. Something like:
+>=20
+> 	/*
+> 	 * The hardware always starts a period with the inactive part.
+> 	 * So invert polarity and duty cycle to yield the output that is
+> 	 * expected by the PWM framework and its users. This inversion
+> 	 * must not be done for a disabled PWM however because otherwise
+> 	 * it outputs a constant active level.
+> 	 */
+
+Ok.
+
+
 >=20
 > Best regards
 > Uwe
