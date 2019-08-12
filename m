@@ -2,205 +2,183 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A54B898CB
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Aug 2019 10:36:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8A49898D6
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Aug 2019 10:41:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfHLIgE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 12 Aug 2019 04:36:04 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50669 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727239AbfHLIgE (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Aug 2019 04:36:04 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hx5o6-0001lO-8V; Mon, 12 Aug 2019 10:35:58 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hx5o4-0005vW-EO; Mon, 12 Aug 2019 10:35:56 +0200
-Date:   Mon, 12 Aug 2019 10:35:56 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
-Subject: Re: [PATCH 2/2] pwm: sprd: Add Spreadtrum PWM support
-Message-ID: <20190812083556.dvprpwv6mjy3cjae@pengutronix.de>
-References: <6a38a3655bc8100764d85cb04dea5c2546a311e1.1565168564.git.baolin.wang@linaro.org>
- <40127356a1acd1f2ff1be1d8a120b305a4e17af4.1565168564.git.baolin.wang@linaro.org>
- <20190809091013.vguj4wty7qiab64t@pengutronix.de>
- <CAMz4kuLQsrBWjta1s=ZRPgxUd0_+_f-GbJV138tccuMLg2XCLA@mail.gmail.com>
- <20190809144124.3as3rtctlywxkudr@pengutronix.de>
- <CAMz4ku+o6dCyxhR3-5yM+zr2nBpTQG5A8Pbnxpo7yRciwPbv3Q@mail.gmail.com>
+        id S1727070AbfHLIlJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 12 Aug 2019 04:41:09 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:40042 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726495AbfHLIlJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Aug 2019 04:41:09 -0400
+X-UUID: bb1fdf773bde477f920666978733070e-20190812
+X-UUID: bb1fdf773bde477f920666978733070e-20190812
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1888449034; Mon, 12 Aug 2019 16:40:45 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 12 Aug 2019 16:40:39 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 12 Aug 2019 16:40:39 +0800
+Message-ID: <1565599241.3510.0.camel@mtksdaap41>
+Subject: Re: [PATCH v6 2/7] drm/mediatek: fixes CMDQ reg address of mt8173
+ is different with mt2701
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Thierry Reding" <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        "Inki Dae" <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        "Sean Paul" <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        "Andy Yan" <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <stonea168@163.com>
+Date:   Mon, 12 Aug 2019 16:40:41 +0800
+In-Reply-To: <20190811104008.53372-3-jitao.shi@mediatek.com>
+References: <20190811104008.53372-1-jitao.shi@mediatek.com>
+         <20190811104008.53372-3-jitao.shi@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMz4ku+o6dCyxhR3-5yM+zr2nBpTQG5A8Pbnxpo7yRciwPbv3Q@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+X-TM-AS-Product-Ver: SMEX-12.5.0.1684-8.5.1010-24842.000
+X-TM-AS-Result: No-13.018600-8.000000-10
+X-TMASE-MatchedRID: L8tZF6zWW2rmLzc6AOD8DfHkpkyUphL9SWg+u4ir2NNquuOqohJ0c+8i
+        8dew1/WnrdoLblq9S5olCvqYcPZDx7VdhtJxXnUI8pRHzcG+oi1vV3/OnMClWlVkJxysad/Iu/0
+        GhfXBucU9osQh+w/oGQ81SqsdNAtCQSWnAG0egjGiAZ3zAhQYgn607foZgOWyf2dEskHXJhBRLT
+        ERhRg1g3YZvR6JDTidiNK3wKXSWGL+651tSm/JkUeDzzDviY0OGEfoClqBl86bKItl61J/ycnjL
+        TA/UDoAoTCA5Efyn8CNo+PRbWqfRDsAVzN+Ov/sSGDwQigllyZJi14HLH6kDpCPr2awuHdZ/xhI
+        NXxE7nbxWl/hXOyjTA==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--13.018600-8.000000
+X-TMASE-Version: SMEX-12.5.0.1684-8.5.1010-24842.000
+X-TM-SNTS-SMTP: C14B02D73BB3E63EA400F57743FC20A46C0A1B48032BFB28AC7C29B36717EC8C2000:8
+X-MTK:  N
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Baolin,
+Hi, Jitao:
 
-On Mon, Aug 12, 2019 at 03:29:07PM +0800, Baolin Wang wrote:
-> Hi Uwe,
+On Sun, 2019-08-11 at 18:40 +0800, Jitao Shi wrote:
+> Config the different CMDQ reg address in driver data.
 > 
-> On Fri, 9 Aug 2019 at 22:41, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Fri, Aug 09, 2019 at 06:06:21PM +0800, Baolin Wang wrote:
-> > > On Fri, 9 Aug 2019 at 17:10, Uwe Kleine-König
-> > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > On Thu, Aug 08, 2019 at 04:59:39PM +0800, Baolin Wang wrote:
-> > > > > +static void sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > > > +                            struct pwm_state *state)
-> > > > > +{
-> > > > > +     struct sprd_pwm_chip *spc =
-> > > > > +             container_of(chip, struct sprd_pwm_chip, chip);
-> > > > > +     struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
-> > > > > +     u32 enabled, duty, prescale;
-> > > > > +     u64 tmp;
-> > > > > +     int ret;
-> > > > > +
-> > > > > +     ret = clk_bulk_prepare_enable(SPRD_PWM_NUM_CLKS, chn->clks);
-> > > > > +     if (ret) {
-> > > > > +             dev_err(spc->dev, "failed to enable pwm%u clocks\n",
-> > > > > +                     pwm->hwpwm);
-> > > > > +             return;
-> > > > > +     }
-> > > > > +
-> > > > > +     chn->clk_enabled = true;
-> > > > > +
-> > > > > +     duty = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_DUTY) & SPRD_PWM_REG_MSK;
-> > > > > +     prescale = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE) & SPRD_PWM_REG_MSK;
-> > > > > +     enabled = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_ENABLE) & SPRD_PWM_ENABLE_BIT;
-> > > > > +
-> > > > > +     /*
-> > > > > +      * According to the datasheet, the period_ns and duty_ns calculation
-> > > > > +      * formula should be:
-> > > > > +      * period_ns = 10^9 * (prescale + 1) * mod / clk_rate
-> > > > > +      * duty_ns = 10^9 * (prescale + 1) * duty / clk_rate
-> > > > > +      */
-> > > > > +     tmp = (prescale + 1) * 1000000000ULL * SPRD_PWM_MOD_MAX;
-> > > > > +     state->period = div64_u64(tmp, chn->clk_rate);
-> > > >
-> > > > This is not idempotent. If you apply the configuration that is returned
-> > > > here this shouldn't result in a reconfiguration.
-> > >
-> > > Since we may configure the  PWM in bootloader, so in kernel part we
-> > > should get current PWM state to avoid reconfiguration if state
-> > > configuration are same.
-> >
-> > This is also important as some consumers might do something like:
-> >
-> >         state = pwm_get_state(mypwm)
-> >         if (something):
-> >                 state->duty = 0
-> >         else:
-> >                 state->duty = state->period / 2
-> >         pwm_set_state(mypwm, state)
-> >
-> > and then period shouldn't get smaller in each step.
-> > (This won't happen as of now because the PWM framework caches the last
-> > state that was set and returns this for pwm_get_state. Still getting
-> > this right would be good.)
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 29 ++++++++++++++++++++++++-----
+>  1 file changed, 24 insertions(+), 5 deletions(-)
 > 
-> I understood your concern, but the period can be configured in
-> bootloader, we have no software things to save the accurate period.
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index 52b49daeed9f..ac8e80e379f7 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -123,7 +123,6 @@
+>  #define VM_CMD_EN			BIT(0)
+>  #define TS_VFP_EN			BIT(5)
+>  
+> -#define DSI_CMDQ0		0x180
+>  #define CONFIG				(0xff << 0)
+>  #define SHORT_PACKET			0
+>  #define LONG_PACKET			2
+> @@ -148,6 +147,10 @@
+>  
+>  struct phy;
+>  
+> +struct mtk_dsi_driver_data {
+> +	const u32 reg_cmdq_off;
+> +};
+> +
+>  struct mtk_dsi {
+>  	struct mtk_ddp_comp ddp_comp;
+>  	struct device *dev;
+> @@ -174,6 +177,7 @@ struct mtk_dsi {
+>  	bool enabled;
+>  	u32 irq_data;
+>  	wait_queue_head_t irq_wait_queue;
+> +	const struct mtk_dsi_driver_data *driver_data;
+>  };
+>  
+>  static inline struct mtk_dsi *encoder_to_dsi(struct drm_encoder *e)
+> @@ -936,6 +940,7 @@ static void mtk_dsi_cmdq(struct mtk_dsi *dsi, const struct mipi_dsi_msg *msg)
+>  	const char *tx_buf = msg->tx_buf;
+>  	u8 config, cmdq_size, cmdq_off, type = msg->type;
+>  	u32 reg_val, cmdq_mask, i;
+> +	u32 reg_cmdq_off = dsi->driver_data->reg_cmdq_off;
+>  
+>  	if (MTK_DSI_HOST_IS_READ(type))
+>  		config = BTA;
+> @@ -955,9 +960,11 @@ static void mtk_dsi_cmdq(struct mtk_dsi *dsi, const struct mipi_dsi_msg *msg)
+>  	}
+>  
+>  	for (i = 0; i < msg->tx_len; i++)
+> -		writeb(tx_buf[i], dsi->regs + DSI_CMDQ0 + cmdq_off + i);
+> +		mtk_dsi_mask(dsi, (reg_cmdq_off + cmdq_off + i) & (~0x3U),
+> +			     (0xffUL << (((i + cmdq_off) & 3U) * 8U)),
+> +			     tx_buf[i] << (((i + cmdq_off) & 3U) * 8U));
 
-I don't understand what you're saying here. The bootloader configuring
-the hardware is a usual use-case. That's why we have the .get_state
-callback in the first place.
+If writeb() has the same problem in MT2701, I think we need a patch that
+just change writeb() to mtk_dsi_mask(), and then a patch to fix CMDQ reg
+address of MT8173. So break this patch into two patches.
 
-> Moreover I think I can change to use DIV_ROUND_CLOSET_ULL to keep the
-> accuracy.
+Regards,
+CK
 
-DIV_ROUND_CLOSEST_ULL still doesn't match what the apply callback uses.
-With the lack of an official statement from the maintainer I'd prefer
-.apply to round down and implement .get_state such that
+>  
+> -	mtk_dsi_mask(dsi, DSI_CMDQ0, cmdq_mask, reg_val);
+> +	mtk_dsi_mask(dsi, reg_cmdq_off, cmdq_mask, reg_val);
+>  	mtk_dsi_mask(dsi, DSI_CMDQ_SIZE, CMDQ_SIZE, cmdq_size);
+>  }
+>  
+> @@ -1101,6 +1108,8 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto err_unregister_host;
+>  
+> +	dsi->driver_data = of_device_get_match_data(dev);
+> +
+>  	dsi->engine_clk = devm_clk_get(dev, "engine");
+>  	if (IS_ERR(dsi->engine_clk)) {
+>  		ret = PTR_ERR(dsi->engine_clk);
+> @@ -1194,9 +1203,19 @@ static int mtk_dsi_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct mtk_dsi_driver_data mt8173_dsi_driver_data = {
+> +	.reg_cmdq_off = 0x200,
+> +};
+> +
+> +static const struct mtk_dsi_driver_data mt2701_dsi_driver_data = {
+> +	.reg_cmdq_off = 0x180,
+> +};
+> +
+>  static const struct of_device_id mtk_dsi_of_match[] = {
+> -	{ .compatible = "mediatek,mt2701-dsi" },
+> -	{ .compatible = "mediatek,mt8173-dsi" },
+> +	{ .compatible = "mediatek,mt2701-dsi",
+> +	  .data = &mt2701_dsi_driver_data },
+> +	{ .compatible = "mediatek,mt8173-dsi",
+> +	  .data = &mt8173_dsi_driver_data },
+>  	{ },
+>  };
+>  
 
-	pwm_apply(pwm, pwm_get_state(pwm))
 
-is a no-op.
- 
-> > > > > +
-> > > > > +                     dev_err(spc->dev, "failed to get channel clocks\n");
-> > > > > +                     return ret;
-> > > > > +             }
-> > > > > +
-> > > > > +             clk_pwm = chn->clks[1].clk;
-> > > >
-> > > > This 1 looks suspicious. Are you using all clocks provided in the dtb at
-> > > > all? You're not using i in the loop at all, this doesn't look right.
-> > >
-> > > Like I said above, each channel has 2 clocks: enable clock and pwm
-> > > clock, the 2nd clock of each channel's bulk clocks is the pwm clock,
-> > > which is used to set the source clock. I know this's not easy to read,
-> > > so do you have any good suggestion?
-> >
-> > Not sure this is easily possible to rework to make this clearer.
-> >
-> > Do these clks have different uses? e.g. one to enable register access
-> > and the other to enable the pwm output? If so just using
-> 
-> Yes.
-
-So assuming one of the clocks is for operation of the output and the
-other for accessing the registers, the latter can be disabled at the end
-of each callback?
-
-> > devm_clk_bulk_get isn't the right thing because you should be able know
-> > if clks[0] or clks[1] is the one you need to enable the output (or
-> > register access).
-> 
-> We've fixed the clock order in bulk clocks by the array
-> 'sprd_pwm_clks', maybe I should define one readable macro instead of
-> magic number.
-
-ack.
-
-> > > > > +             if (!clk_set_parent(clk_pwm, clk_parent))
-> > > > > +                     chn->clk_rate = clk_get_rate(clk_pwm);
-> > > > > +             else
-> > > > > +                     chn->clk_rate = SPRD_PWM_DEFAULT_CLK;
-> > > >
-> > > > I don't know all the clock framework details, but I think there are
-> > > > better ways to ensure that a given clock is used as parent for another
-> > > > given clock. Please read the chapter about "Assigned clock parents and
-> > > > rates" in the clock bindings and check if this could be used for the
-> > > > purpose here and so simplify the driver.
-> > >
-> > > Actually there are many other drivers set the parent clock like this,
-> > > and we want a default clock if failed to set the parent clock.
-> >
-> > These might be older than the clk framework capabilities, or the
-> > reviewers didn't pay attention to this detail; both shouldn't be a
-> > reason to not make it better here.
-> 
-> The clock framework supplies 'assigned-clocks' and
-> 'assigned-clock-parents' properties to set parent, but for our case we
-> still want to set a default clock rate if failed to set parent when
-> met some abnormal things.
-
-Without understanding the complete problem I'd say this is out of the
-area the driver should care about.
- 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
