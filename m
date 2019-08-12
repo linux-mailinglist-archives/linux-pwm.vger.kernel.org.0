@@ -2,29 +2,34 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E31089BD6
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Aug 2019 12:47:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC41689BE7
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Aug 2019 12:51:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbfHLKrF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 12 Aug 2019 06:47:05 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55661 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727691AbfHLKrF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Aug 2019 06:47:05 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hx7qw-0001B8-KY; Mon, 12 Aug 2019 12:47:02 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hx7qu-0001m9-Up; Mon, 12 Aug 2019 12:47:00 +0200
-Date:   Mon, 12 Aug 2019 12:47:00 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        id S1728011AbfHLKvL convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Mon, 12 Aug 2019 06:51:11 -0400
+Received: from mailoutvs28.siol.net ([185.57.226.219]:57653 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727847AbfHLKvK (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Aug 2019 06:51:10 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 837F7523530;
+        Mon, 12 Aug 2019 12:51:07 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id t6JWQo8cCAfO; Mon, 12 Aug 2019 12:51:07 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 2C631521B92;
+        Mon, 12 Aug 2019 12:51:07 +0200 (CEST)
+Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id AA26E522124;
+        Mon, 12 Aug 2019 12:51:05 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
-        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
         devicetree <devicetree@vger.kernel.org>,
         Chen-Yu Tsai <wens@csie.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
@@ -33,42 +38,39 @@ Cc:     Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
         kernel@pengutronix.de, Frank Rowand <frowand.list@gmail.com>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Subject: Re: [linux-sunxi] Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
-Message-ID: <20190812104700.vzpdxx3yddthiif5@pengutronix.de>
-References: <20190726184045.14669-1-jernej.skrabec@siol.net>
- <173825848.1FZsmuHfpq@jernej-laptop>
- <20190729185108.tpilwoooxvi2z72e@pengutronix.de>
- <2452836.v7ux4bnEjb@jernej-laptop>
- <20190730080900.hhxrqun7vk4nsj2h@pengutronix.de>
- <20190730170601.a7ei43wku6jsjanu@flea>
- <20190731065230.mqbtn5sfoxrkevw5@pengutronix.de>
- <20190812095648.wuefcr2mep3dpkth@flea>
+Date:   Mon, 12 Aug 2019 12:51:05 +0200
+Message-ID: <2877943.4JjSNuc4x8@jernej-laptop>
+In-Reply-To: <20190812104700.vzpdxx3yddthiif5@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net> <20190812095648.wuefcr2mep3dpkth@flea> <20190812104700.vzpdxx3yddthiif5@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190812095648.wuefcr2mep3dpkth@flea>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Maxime,
+Dne ponedeljek, 12. avgust 2019 ob 12:47:00 CEST je Uwe Kleine-König 
+napisal(a):
+> Hello Maxime,
+> 
+> the idea of my mail was to summarize quickly the discussion for the dt
+> people to give their judgement to stop us circling in a discussion about
+> the always same points.
+> 
+> I suggest we stop the discussion here now and wait for a reply from them
+> instead.
 
-the idea of my mail was to summarize quickly the discussion for the dt
-people to give their judgement to stop us circling in a discussion about
-the always same points.
+Shouldn't we just go with compromise solution you suggested and Maxime 
+accepted? I would like to send new version in time for 5.4.
 
-I suggest we stop the discussion here now and wait for a reply from them
-instead.
+Best regards,
+Jernej
 
-Best regards
-Uwe
+> 
+> Best regards
+> Uwe
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+
+
