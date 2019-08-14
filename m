@@ -2,208 +2,365 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F3F198D599
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Aug 2019 16:07:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E7288D6CE
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Aug 2019 17:03:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfHNOHY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 14 Aug 2019 10:07:24 -0400
-Received: from uho.ysoft.cz ([81.19.3.130]:54974 "EHLO uho.ysoft.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfHNOHY (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Wed, 14 Aug 2019 10:07:24 -0400
-Received: from [10.1.8.111] (unknown [10.1.8.111])
-        by uho.ysoft.cz (Postfix) with ESMTP id AEBD0A5445;
-        Wed, 14 Aug 2019 16:07:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
-        s=20160406-ysoft-com; t=1565791641;
-        bh=1KDHAEVLeAzyxuvhgFrcUkQxVky/Kb+EijlReZ8Th8c=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=HJsqsAdgoV9M7OsXgAlii8PY6K04J108K92He7M7VcpjCx43lCav0h3ml00nZddSk
-         AsfHxuCop3jZpKzQacqSh6lE2m9TkF/HmRmoAwvlujC8XOJ9ZUEhvGGq719EMah3v3
-         koBxTWngpxIcYHI0DCxXEuB0cTuDUHFOxrLtxbLs=
-Subject: Re: [PATCH v2 2/2] pwm: sprd: Add Spreadtrum PWM support
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Baolin Wang <baolin.wang@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
-References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
- <4f6e3110b4d7e0a2f7ab317bba98a933de12e5da.1565703607.git.baolin.wang@linaro.org>
- <20190813151612.v6x6e6kzxflkpu7b@pengutronix.de>
- <CAMz4kuJURx=fPE6+0gP4ukzMcXr_z3t1ZH0K3Gv6=o4Od4uc7w@mail.gmail.com>
- <20190814092339.73ybj5mycklvpnrq@pengutronix.de>
-From:   =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
-Message-ID: <3181509c-a167-28c8-fb8b-947b7c72a65c@ysoft.com>
-Date:   Wed, 14 Aug 2019 16:07:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1725828AbfHNPDK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 14 Aug 2019 11:03:10 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53817 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfHNPDK (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Aug 2019 11:03:10 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hxunp-00088e-Ak; Wed, 14 Aug 2019 17:03:05 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hxuno-0000fe-8G; Wed, 14 Aug 2019 17:03:04 +0200
+Date:   Wed, 14 Aug 2019 17:03:04 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        vincent.guittot@linaro.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] pwm: sprd: Add Spreadtrum PWM support
+Message-ID: <20190814150304.x44lalde3cwp67ge@pengutronix.de>
+References: <65a34dd943b0260bfe45ec76dcf414a67e5d8343.1565785291.git.baolin.wang@linaro.org>
+ <446eb284a096a1fd8998765669b1c9a2f78d7d22.1565785291.git.baolin.wang@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190814092339.73ybj5mycklvpnrq@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <446eb284a096a1fd8998765669b1c9a2f78d7d22.1565785291.git.baolin.wang@linaro.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 14. 08. 19 11:23, Uwe Kleine-KÃ¶nig wrote:
-> Hello Baolin,
+On Wed, Aug 14, 2019 at 08:46:11PM +0800, Baolin Wang wrote:
+> This patch adds the Spreadtrum PWM support, which provides maximum 4
+> channels.
 > 
-> On Wed, Aug 14, 2019 at 04:42:28PM +0800, Baolin Wang wrote:
->> On Tue, 13 Aug 2019 at 23:16, Uwe Kleine-KÃ¶nig
->> <u.kleine-koenig@pengutronix.de> wrote:
->>> On Tue, Aug 13, 2019 at 09:46:41PM +0800, Baolin Wang wrote:
->>> [...]
->> Not really, our hardware's method is, when you changed a new
->> configuration (MOD or duty is changed) , the hardware will wait for a
->> while to complete current period, then change to the new period.
+> Signed-off-by: Neo Hou <neo.hou@unisoc.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+> Changes from v2:
+>  - Optimize some macors' name.
+>  - Improve some comments.
+>  - Optimize the calculation of prescale.
+>  - Do not print error log if error numeber is EPROBE_DEFER.
+>  - Return -ENODEV if no available PWM channels.
+>  - Simplify the logics in sprd_pwm_clk_init().
+>  - Remove disabling PWM clocks in sprd_pwm_remove().
+>  - Remove pwm_get_state().
 > 
-> Can you describe that in more detail? This doesn't explain why MOD must be
-> configured before DUTY. Is there another reason for that?
+> Changes from v1:
+>  - Add depending on HAS_IOMEM.
+>  - Rename parameters' names.
+>  - Implement .apply() instead of .config(), .enable() and .disable().
+>  - Use NSEC_PER_SEC instead of 1000000000ULL.
+>  - Add some comments to make code more readable.
+>  - Remove some redundant operation.
+>  - Use standard clock properties to set clock parent.
+>  - Other coding style optimization.
+> ---
+>  drivers/pwm/Kconfig    |   11 ++
+>  drivers/pwm/Makefile   |    1 +
+>  drivers/pwm/pwm-sprd.c |  309 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 321 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-sprd.c
 > 
->>>> +static int sprd_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->>>> +                       struct pwm_state *state)
->>>> +{
->>>> +     struct sprd_pwm_chip *spc =
->>>> +             container_of(chip, struct sprd_pwm_chip, chip);
->>>> +     struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
->>>> +     struct pwm_state cstate;
->>>> +     int ret;
->>>> +
->>>> +     pwm_get_state(pwm, &cstate);
->>>
->>> I don't like it when pwm drivers call pwm_get_state(). If ever
->>> pwm_get_state would take a lock, this would deadlock as the lock is
->>> probably already taken when your .apply() callback is running. Moreover
->>> the (expensive) calculations are not used appropriately. See below.
->>
->> I do not think so, see:
->>
->> static inline void pwm_get_state(const struct pwm_device *pwm, struct
->> pwm_state *state)
->> {
->>          *state = pwm->state;
->> }
-> 
-> OK, the PWM framework currently caches this for you. Still I would
-> prefer if you didn't call PWM API functions in your lowlevel driver.
-> There is (up to now) nothing bad that will happen if you do it anyhow,
-> but when the PWM framework evolves it might (and I want to work on such
-> an evolution). You must not call clk_get_rate() in a .set_rate()
-> callback of a clock either.
->   
->>>> +     if (state->enabled) {
->>>> +             if (!cstate.enabled) {
->>>
->>> To just know the value of cstate.enabled you only need to read the
->>> register with the ENABLE flag. That is cheaper than calling get_state.
->>>
->>>> +                     /*
->>>> +                      * The clocks to PWM channel has to be enabled first
->>>> +                      * before writing to the registers.
->>>> +                      */
->>>> +                     ret = clk_bulk_prepare_enable(SPRD_PWM_NUM_CLKS,
->>>> +                                                   chn->clks);
->>>> +                     if (ret) {
->>>> +                             dev_err(spc->dev,
->>>> +                                     "failed to enable pwm%u clocks\n",
->>>> +                                     pwm->hwpwm);
->>>> +                             return ret;
->>>> +                     }
->>>> +             }
->>>> +
->>>> +             if (state->period != cstate.period ||
->>>> +                 state->duty_cycle != cstate.duty_cycle) {
->>>
->>> This is a coarse check. If state->period and cstate.period only differ
->>> by one calling sprd_pwm_config(spc, pwm, state->duty_cycle,
->>> state->period) probably results in a noop. So you're doing an expensive
->>> division to get an unreliable check. It would be better to calculate the
->>> register values from the requested state and compare the register
->>> values. The costs are more or less the same than calling .get_state and
->>> the check is reliable. And you don't need to spend another division to
->>> calculate the new register values.
->>
->> Same as above comment.
-> 
-> When taking the caching into account (which I wouldn't) the check is
-> still incomplete. OK, you could argue avoiding the recalculation in 90%
-> (to just say some number) of the cases where it is unnecessary is good.
->   
->>>
->>>> +                     ret = sprd_pwm_config(spc, pwm, state->duty_cycle,
->>>> +                                           state->period);
->>>> +                     if (ret)
->>>> +                             return ret;
->>>> +             }
->>>> +
->>>> +             sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_ENABLE, 1);
->>>> +     } else if (cstate.enabled) {
->>>> +             sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_ENABLE, 0);
->>>> +
->>>> +             clk_bulk_disable_unprepare(SPRD_PWM_NUM_CLKS, chn->clks);
->>>
->>> Assuming writing SPRD_PWM_ENABLE = 0 to the hardware completes the
->>> currently running period and the write doesn't block that long: Does
->>> disabling the clocks interfere with completing the period?
->>
->> Writing SPRD_PWM_ENABLE = 0 will stop the PWM immediately, will not
->> waiting for completing the currently period.
-> 
-> The currently active period is supposed to be completed. If you cannot
-> implement this please point this out as limitation at the top of the
-> driver.
-> 
-> Honestly I think most pwm users won't mind and they should get the
-> possibility to tell they prefer pwm_apply_state to return immediately
-> even if this could result in a spike. But we're not there yet.
-> (Actually there are three things a PWM consumer might want:
-> 
->   a) stop immediately;
->   b) complete the currently running period, then stop and return only
->      when the period is completed; or
->   c) complete the currently running period and then stop, return immediately if
->      possible.
-> 
-> Currently the expected semantic is b).
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index a7e5751..31dfc88 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -423,6 +423,17 @@ config PWM_SPEAR
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-spear.
+>  
+> +config PWM_SPRD
+> +	tristate "Spreadtrum PWM support"
+> +	depends on ARCH_SPRD || COMPILE_TEST
+> +	depends on HAS_IOMEM
+> +	help
+> +	  Generic PWM framework driver for the PWM controller on
+> +	  Spreadtrum SoCs.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-sprd.
+> +
+>  config PWM_STI
+>  	tristate "STiH4xx PWM support"
+>  	depends on ARCH_STI
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 76b555b..26326ad 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -41,6 +41,7 @@ obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
+>  obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
+>  obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
+>  obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
+> +obj-$(CONFIG_PWM_SPRD)		+= pwm-sprd.o
+>  obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
+>  obj-$(CONFIG_PWM_STM32)		+= pwm-stm32.o
+>  obj-$(CONFIG_PWM_STM32_LP)	+= pwm-stm32-lp.o
+> diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
+> new file mode 100644
+> index 0000000..68c2d9f
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-sprd.c
+> @@ -0,0 +1,309 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019 Spreadtrum Communications Inc.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/math64.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +
+> +#define SPRD_PWM_PRESCALE	0x0
+> +#define SPRD_PWM_MOD		0x4
+> +#define SPRD_PWM_DUTY		0x8
+> +#define SPRD_PWM_ENABLE		0x18
+> +
+> +#define SPRD_PWM_MOD_MAX	GENMASK(7, 0)
+> +#define SPRD_PWM_DUTY_MSK	GENMASK(15, 0)
+> +#define SPRD_PWM_PRESCALE_MSK	GENMASK(7, 0)
+> +#define SPRD_PWM_ENABLE_BIT	BIT(0)
+> +
+> +#define SPRD_PWM_CHN_NUM	4
+> +#define SPRD_PWM_REGS_SHIFT	5
+> +#define SPRD_PWM_CHN_CLKS_NUM	2
+> +#define SPRD_PWM_CHN_OUTPUT_CLK	1
+> +
+> +struct sprd_pwm_chn {
+> +	struct clk_bulk_data clks[SPRD_PWM_CHN_CLKS_NUM];
+> +	u32 clk_rate;
+> +};
+> +
+> +struct sprd_pwm_chip {
+> +	void __iomem *base;
+> +	struct device *dev;
+> +	struct pwm_chip chip;
+> +	int num_pwms;
+> +	struct sprd_pwm_chn chn[SPRD_PWM_CHN_NUM];
+> +};
+> +
+> +/*
+> + * The list of clocks required by PWM channels, and each channel has 2 clocks:
+> + * enable clock and pwm clock.
+> + */
+> +static const char * const sprd_pwm_clks[] = {
+> +	"enable0", "pwm0",
+> +	"enable1", "pwm1",
+> +	"enable2", "pwm2",
+> +	"enable3", "pwm3",
+> +};
+> +
+> +static u32 sprd_pwm_read(struct sprd_pwm_chip *spc, u32 hwid, u32 reg)
+> +{
+> +	u32 offset = reg + (hwid << SPRD_PWM_REGS_SHIFT);
+> +
+> +	return readl_relaxed(spc->base + offset);
+> +}
+> +
+> +static void sprd_pwm_write(struct sprd_pwm_chip *spc, u32 hwid,
+> +			   u32 reg, u32 val)
+> +{
+> +	u32 offset = reg + (hwid << SPRD_PWM_REGS_SHIFT);
+> +
+> +	writel_relaxed(val, spc->base + offset);
+> +}
+> +
+> +static void sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			       struct pwm_state *state)
+> +{
+> +	struct sprd_pwm_chip *spc =
+> +		container_of(chip, struct sprd_pwm_chip, chip);
+> +	struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
+> +	u32 val, duty, prescale;
+> +	u64 tmp;
+> +	int ret;
+> +
+> +	/*
+> +	 * The clocks to PWM channel has to be enabled first before
+> +	 * reading to the registers.
+> +	 */
+> +	ret = clk_bulk_prepare_enable(SPRD_PWM_CHN_CLKS_NUM, chn->clks);
+> +	if (ret) {
+> +		dev_err(spc->dev, "failed to enable pwm%u clocks\n",
+> +			pwm->hwpwm);
+> +		return;
+> +	}
+> +
+> +	val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_ENABLE);
+> +	if (val & SPRD_PWM_ENABLE_BIT)
+> +		state->enabled = true;
+> +	else
+> +		state->enabled = false;
+> +
+> +	/*
+> +	 * The hardware provides a counter that is feed by the source clock.
+> +	 * The period length is (PRESCALE + 1) * MOD counter steps.
+> +	 * The duty cycle length is (PRESCALE + 1) * DUTY counter steps.
+> +	 * Thus the period_ns and duty_ns calculation formula should be:
+> +	 * period_ns = NSEC_PER_SEC * (prescale + 1) * mod / clk_rate
+> +	 * duty_ns = NSEC_PER_SEC * (prescale + 1) * duty / clk_rate
+> +	 */
+> +	val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE);
+> +	prescale = val & SPRD_PWM_PRESCALE_MSK;
+> +	tmp = (prescale + 1) * NSEC_PER_SEC * SPRD_PWM_MOD_MAX;
+> +	state->period = DIV_ROUND_CLOSEST_ULL(tmp, chn->clk_rate);
+> +
+> +	val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_DUTY);
+> +	duty = val & SPRD_PWM_DUTY_MSK;
+> +	tmp = (prescale + 1) * NSEC_PER_SEC * duty;
+> +	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, chn->clk_rate);
+> +
+> +	/* Disable PWM clocks if the PWM channel is not in enable state. */
+> +	if (!state->enabled)
+> +		clk_bulk_disable_unprepare(SPRD_PWM_CHN_CLKS_NUM, chn->clks);
+> +}
+> +
+> +static int sprd_pwm_config(struct sprd_pwm_chip *spc, struct pwm_device *pwm,
+> +			   int duty_ns, int period_ns)
+> +{
+> +	struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
+> +	u32 prescale, duty;
+> +	u64 tmp;
+> +
+> +	/*
+> +	 * The hardware provides a counter that is feed by the source clock.
+> +	 * The period length is (PRESCALE + 1) * MOD counter steps.
+> +	 * The duty cycle length is (PRESCALE + 1) * DUTY counter steps.
+> +	 *
+> +	 * To keep the maths simple we're always using MOD = SPRD_PWM_MOD_MAX.
 
-Hi Uwe et all,
+Did you spend some thoughts about how wrong your period can get because
+of that "lazyness"?
 
-I am sorry for interrupting your discussion. From my (last year or so)
-observation of the PWM mailing list I see this as a common pattern in
-almost every submission of a new PWM driver. That is PWM driver authors
-keep submitting solution a) and you tell them the expected behavior
-is b).
+Let's assume a clk rate of 100/3 MHz. Then the available period lengths
+are:
 
-Why is that? I hope that the fact that implementing a) is simpler
-than b) is not the main reason. I believe that people think a)
-is the correct solution.
+	PRESCALE =  0  ->  period =   7.65 µs
+	PRESCALE =  1  ->  period =  15.30 µs
+	...
+	PRESCALE = 17  ->  period = 137.70 µs
+	PRESCALE = 18  ->  period = 145.35 µs
 
-I agree that smooth transition from one period/duty setting to
-different setting makes sense. But I also believe the expected
-behavior of setting enabled=0 is different. That is to stop
-immediately the technology that is fed by the PWM signal.
-Otherwise the concept of enabled/disabled does not make sense
-because setting duty=0 would have the same effect.
+So the error can be up to (nearly) 7.65 µs (or in general 
+255 / clk_rate) because if 145.34 µs is requested you configure
+PRESCALE = 17 and so yield a period of 137.70 µs. If however you'd pick
+PRESCALE = 18 and MOD = 254 you get a period of 144.78 µs and so the
+error is only 0.56 µs which is a factor of 13 better.
 
-So I still wonder where the expectation for b) is coming from.
-What would be the physical/electrical reasoning for b)?
-Why/how it can be dangerous/harmful for any device to stop the
-PWM signal immediately?
+Hmm.
 
-Would be great to finally reach consensus on that so the expected
-behavior can be documented. I know you already attempted that [1].
-IÂ think you have done a great job but I still consider the part
-about state changes little controversial and unresolved.
+> +	 * The value for PRESCALE is selected such that the resulting period
+> +	 * gets the maximal length not bigger than the requested one with the
+> +	 * given settings (MOD = SPRD_PWM_MOD_MAX and input clock).
+> +	 */
+> +	duty = duty_ns * SPRD_PWM_MOD_MAX / period_ns;
 
-Best regards,
-Michal
+I wonder if you loose some precision here as you use period_ns but might
+actually implement a shorter period.
 
-[1] http://patchwork.ozlabs.org/patch/1021566/
+Quick example, again consider clk_rate = 100 / 3 MHz,
+period_ns = 145340, duty_ns = 72670. Then you end up with
 
+	PRESCALE = 17
+	MOD = 255
+	DUTY = 127
+
+That corresponds to period_ns = 137700, duty_ns = 68580. With DUTY = 134
+you get 72360 ns which is still smaller than the requested 72670 ns.
+(But then again it is not obvious which of the two is the "better"
+approximation because Thierry doesn't seem to see the necessity to
+discuss or define a policy here.)
+
+(And to pick up the thoughts about not using SPRD_PWM_MOD_MAX
+unconditionally, you could also use
+
+	PRESCALE = 18
+	MOD = 254
+	DUTY = 127
+
+yielding period_ns = 144780 and duty_ns = 72390. Summary:
+
+	Request:                 72670 / 145340
+	your result:             68580 / 137700
+	also possible:           72390 / 144780
+
+Judge yourself.)
+
+> +	tmp = (u64)chn->clk_rate * period_ns;
+> +	do_div(tmp, NSEC_PER_SEC);
+> +	prescale = DIV_ROUND_CLOSEST_ULL(tmp, SPRD_PWM_MOD_MAX) - 1;
+
+Now that you use DIV_ROUND_CLOSEST_ULL the comment is wrong because you
+might provide a period bigger than the requested one. Also you divide
+twice instead of once before. (I don't know what architecture your SoC
+uses, but compared to a multiplication a division is usually expensive.)
+Also the math is more complicated now as you have a round-down div and a
+round-closest div.
+
+My preference for how to fix that is to restore the behaviour of v2 that
+matches the comment and adapt .get_state() instead.
+
+For .get_state() this should then be:
+
+	val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE);
+	prescale = FIELD_GET(SPRD_PWM_PRESCALE_MSK, val);
+
+	tmp = (prescale + 1) * NSEC_PER_SEC * SPRD_PWM_MOD_MAX;
+	state->period = DIV_ROUND_UP_ULL(tmp, chn->clk_rate);
+
+> +	if (prescale > SPRD_PWM_PRESCALE_MSK)
+> +		prescale = SPRD_PWM_PRESCALE_MSK;
+> +
+> +	/*
+> +	 * Note: Writing DUTY triggers the hardware to actually apply the
+> +	 * values written to MOD and DUTY to the output, so must keep writing
+> +	 * DUTY last.
+> +	 *
+> +	 * The hardware can ensures that current running period is completed
+> +	 * before changing a new configuration to avoid mixed settings.
+
+I'm not a native English speaker, but I would write:
+
+	* The hardware ensures that currently running period is
+	* completed before changing to the new configuration to avoid
+	* mixed settings.
+
+Does this mechanism also apply to PRESCALE? If yes, please include it in
+your description. If not there is still a possibility for a wrong
+period.
+
+> +	 */
+> +	sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_PRESCALE, prescale);
+> +	sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_MOD, SPRD_PWM_MOD_MAX);
+> +	sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_DUTY, duty);
+> +
+> +	return 0;
+> +}
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
