@@ -2,27 +2,56 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C23D8CFF6
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Aug 2019 11:46:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AB768D032
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Aug 2019 12:02:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726047AbfHNJqP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 14 Aug 2019 05:46:15 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59755 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725265AbfHNJqP (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Aug 2019 05:46:15 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hxpr8-0004OO-DB; Wed, 14 Aug 2019 11:46:10 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hxpr7-0005BZ-BS; Wed, 14 Aug 2019 11:46:09 +0200
-Date:   Wed, 14 Aug 2019 11:46:09 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        id S1726157AbfHNKCE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 14 Aug 2019 06:02:04 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36526 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726918AbfHNKCE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Aug 2019 06:02:04 -0400
+Received: by mail-oi1-f194.google.com with SMTP id c15so16650604oic.3
+        for <linux-pwm@vger.kernel.org>; Wed, 14 Aug 2019 03:02:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=jTwlo3HfpzwBbLjZdlYNR7XMc3lGAwn/CGtf8DP+Tqk=;
+        b=rtpr4bWGyZLiQk4iGaAs4o8pz6SokjlDum0l8s2GJ+6G/M0kbIjrJG8JsxY79jCDLg
+         Z01xW6gfihVhjFb+JEZORo2Oykezoo6J5Uvvx+e2LdA6GEoGSFDBliqdcuObCboFpcur
+         qNJDiaWdS7N8B038fOqYFYkZnRN0ohkjP5C8j8sTUyE+Nx5E7yeHqyBHW9aMEcyp7PzN
+         mgbmB5cbk2eN82yH99kiADVtiX3MHzMmIgZqLdsoDOdvKvsBxc4lONRAjg+FogK3joTF
+         AO12YDOLB/aYEvSeKyKMd5DZk4W24W5+GGSEpuAlFjGGLy9VRnFtZ1UjBQT/9igGKQwT
+         4OGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jTwlo3HfpzwBbLjZdlYNR7XMc3lGAwn/CGtf8DP+Tqk=;
+        b=TB+xJgoOND7z1748jN9/J6xHvSt+lHTiVvvuaAw/SHDZsk8nR34RIDBM+Z2dJHsyaH
+         naP8qPJJZlmcgbttE2ZNfcVkTf9mCMxhbcBrXd66arg8AAjULREItqSBPmNVodSOmBc4
+         CHFOiEV+aw6kKuJTOjWy1C3/dGhGXWMDOZsMd2IHqiUv86/8RFvHoit8Dt9nY1Rf2fx3
+         3oG29WKzO0eYAeEx2XQ9/DkWHtWkbuMMRkpt7SsHQmROWlB1/uVLeHDMzQh0tmxNlrJw
+         nLo8nkqKwReGeM57T0M6KqvbvrgzZEFUMyl1ysXdghUVLdYKV1+YX2OFi9YWgSciRDLV
+         FkkA==
+X-Gm-Message-State: APjAAAWpsLSplhOSkja37obQLjhrx3mJrGIgU0ydb10BN74GHvx91b+X
+        9tHEYS73LWojm0Zu1Oi+tyK/qMq63BRaR6hzTaJtGQ==
+X-Google-Smtp-Source: APXvYqwdNNqld3DanaeusS2W1477dJnsaSjW0fOGh2rhi3wBxakJwBAH2jGLtU439DOoTxW4H4D4h+/A+Agv5kIlN84=
+X-Received: by 2002:aca:52c2:: with SMTP id g185mr4855081oib.33.1565776922537;
+ Wed, 14 Aug 2019 03:02:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
+ <4f6e3110b4d7e0a2f7ab317bba98a933de12e5da.1565703607.git.baolin.wang@linaro.org>
+ <20190813151612.v6x6e6kzxflkpu7b@pengutronix.de> <CAMz4kuJURx=fPE6+0gP4ukzMcXr_z3t1ZH0K3Gv6=o4Od4uc7w@mail.gmail.com>
+ <20190814092339.73ybj5mycklvpnrq@pengutronix.de>
+In-Reply-To: <20190814092339.73ybj5mycklvpnrq@pengutronix.de>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Wed, 14 Aug 2019 18:01:50 +0800
+Message-ID: <CAMz4ku+3txx5kO-u_+_pxFwoovnX81WFF-moNBasUUgEpvQb+Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] pwm: sprd: Add Spreadtrum PWM support
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Baolin Wang <baolin.wang@linaro.org>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -31,137 +60,206 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Vincent Guittot <vincent.guittot@linaro.org>,
         linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
-Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: sprd: Add Spreadtrum PWM
- documentation
-Message-ID: <20190814094609.pm7ulg57e37pphrs@pengutronix.de>
-References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
- <20190813141256.jnbrfld42rtigek3@pengutronix.de>
- <CAMz4kuJA+a=nzFRja4wRkfJu3Gzb0wnvaM8H4Ek9X5u8CNegPg@mail.gmail.com>
- <20190814070121.o53tj2mtky4hcy3n@pengutronix.de>
- <CAMz4ku+55O6ORVM9xDv4R954QG4PXV8EkcGypSTB5wKni+Dq+Q@mail.gmail.com>
- <20190814073939.ubgzysmkmmel5h4y@pengutronix.de>
- <CAMz4ku+Q7CV+0dP1P0hAPJR7KiG0HOkZbT_LPXY4Q03hMuvS8A@mail.gmail.com>
- <20190814084929.q3uy7cpf4ullpevo@pengutronix.de>
- <CAMz4kuLFeg2OyzgxZLp4Ks5ucTptOBTrxod5yVFXQ+q8ttKjcw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMz4kuLFeg2OyzgxZLp4Ks5ucTptOBTrxod5yVFXQ+q8ttKjcw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello,
+Hi Uwe,
 
-On Wed, Aug 14, 2019 at 05:33:25PM +0800, Baolin Wang wrote:
-> On Wed, 14 Aug 2019 at 16:49, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Wed, Aug 14, 2019 at 03:52:08PM +0800, Baolin Wang wrote:
-> > > On 14/08/2019, Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote:
-> > > > On Wed, Aug 14, 2019 at 03:25:53PM +0800, Baolin Wang wrote:
-> > > >> On Wed, 14 Aug 2019 at 15:01, Uwe Kleine-König
-> > > >> <u.kleine-koenig@pengutronix.de> wrote:
-> > > >> > On Wed, Aug 14, 2019 at 09:51:34AM +0800, Baolin Wang wrote:
-> > > >> > > On Tue, 13 Aug 2019 at 22:13, Uwe Kleine-König
-> > > >> > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > >> > > > On Tue, Aug 13, 2019 at 09:46:40PM +0800, Baolin Wang wrote:
-> > > >> > > > > +- assigned-clock-parents: The phandle of the parent clock of PWM
-> > > >> > > > > clock.
-> > > >> > > >
-> > > >> > > > I'm not sure you need to point out assigned-clocks and
-> > > >> > > > assigned-clock-parents as this is general clk stuff. Also I wonder if
-> > > >> > > > these should be "required properties".
-> > > >> > >
-> > > >> > > I think I should describe any properties used by PWM node, like
-> > > >> > > 'clocks' and 'clock-names' properties, though they are common clock
-> > > >> > > properties.
-> > > >> >
-> > > >> > Then you might want to describe also "status", "assigned-clock-rates",
-> > > >> > "pinctrl-$n", "pinctrl-names", "power-domains", "power-domain-names"
-> > > >> > and
-> > > >> > probably another dozen I'm not aware of.
-> > > >>
-> > > >> We usually do not describe 'status', but if your device node used
-> > > >> "pinctrl-$n", "pinctrl-names" ... common properties, yes, you should
-> > > >> describe them to let users know what is the purpose of these
-> > > >> properties. That's also asked by DT maintainer Rob.
-> > > >
-> > > > Does this convince you that you should also describe "pinctrl-$n" and
-> > > > the others? If not, why not? We also usually don't describe
+On Wed, 14 Aug 2019 at 17:23, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello Baolin,
+>
+> On Wed, Aug 14, 2019 at 04:42:28PM +0800, Baolin Wang wrote:
+> > On Tue, 13 Aug 2019 at 23:16, Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > On Tue, Aug 13, 2019 at 09:46:41PM +0800, Baolin Wang wrote:
+> > > [...]
+> > Not really, our hardware's method is, when you changed a new
+> > configuration (MOD or duty is changed) , the hardware will wait for a
+> > while to complete current period, then change to the new period.
+>
+> Can you describe that in more detail? This doesn't explain why MOD must b=
+e
+> configured before DUTY. Is there another reason for that?
+
+Sorry, I did not explain this explicitly. When we change a new PWM
+configuration, the PWM controller will make sure the current period is
+completed before changing to a new period. Once setting the MOD
+register (since we always set MOD firstly), that will tell the
+hardware that a new period need to change.
+
+The reason MOD must be configured before DUTY is that, if we
+configured DUTY firstly, the PWM can work abnormally if the current
+DUTY is larger than previous MOD. That is also our hardware's
+limitation.
+
+>
+> > > > +static int sprd_pwm_apply(struct pwm_chip *chip, struct pwm_device=
+ *pwm,
+> > > > +                       struct pwm_state *state)
+> > > > +{
+> > > > +     struct sprd_pwm_chip *spc =3D
+> > > > +             container_of(chip, struct sprd_pwm_chip, chip);
+> > > > +     struct sprd_pwm_chn *chn =3D &spc->chn[pwm->hwpwm];
+> > > > +     struct pwm_state cstate;
+> > > > +     int ret;
+> > > > +
+> > > > +     pwm_get_state(pwm, &cstate);
 > > >
-> > > Our PWM device node did not use "pinctrl-$n" things, why I should
-> > > describe "pinctrl-$n"?
+> > > I don't like it when pwm drivers call pwm_get_state(). If ever
+> > > pwm_get_state would take a lock, this would deadlock as the lock is
+> > > probably already taken when your .apply() callback is running. Moreov=
+er
+> > > the (expensive) calculations are not used appropriately. See below.
 > >
-> > The binding you implemented supports "pinctrl-$n". And this is described
-> > somewhere in the generic pinctrl binding docs. The same applies to
-> > "assigned-clock-parents".
+> > I do not think so, see:
 > >
-> > That you happen to use assigned-clock-parents but not pinctrl-$n on the
-> > board you used to develop your driver is a detail that IMHO shouldn't
-> > decide about being listed in the binding doc for your PWM type.
-> >
-> > > If some devices use pinctrl, yes, they should describe what is the
-> > > purpose of pinctrl, see:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/mmc/sdhci-sprd.txt
-> >
-> > I agree that if the driver assumes special pinctrl names this is worth
-> > mentioning. If however there is nothing special and just some generic
-> > stuff is used that is described in some other location then I'd chose to
-> > not add this redundant information to the binding document. So if I
-> > reviewed the patch that created
-> > Documentation/devicetree/bindings/mmc/sdhci-sprd.txt I would have
-> > suggested to drop "assigned-clocks" and "assigned-clock-parents" there,
-> > too.
-> >
-> > > > assigned-clock-parents. For me these are all in the same catagory:
+> > static inline void pwm_get_state(const struct pwm_device *pwm, struct
+> > pwm_state *state)
+> > {
+> >         *state =3D pwm->state;
+> > }
+>
+> OK, the PWM framework currently caches this for you. Still I would
+> prefer if you didn't call PWM API functions in your lowlevel driver.
+> There is (up to now) nothing bad that will happen if you do it anyhow,
+> but when the PWM framework evolves it might (and I want to work on such
+> an evolution). You must not call clk_get_rate() in a .set_rate()
+> callback of a clock either.
+
+Make sense, I will change to:
+
+struct pwm_state *cstate =3D pwm->state;
+
+>
+> > > > +     if (state->enabled) {
+> > > > +             if (!cstate.enabled) {
 > > >
-> > > Lots of dt bindings describe 'assigned-clock-parents',:
-> > > ./Documentation/devicetree/bindings/display/msm/dsi.txt
-> > > ./Documentation/devicetree/bindings/display/msm/dsi.txt
-> > > ./Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.txt
-> > > ./Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-> > > ./Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-> > > ./Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-> > > ./Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt
-> > > ./Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
-> > > ./Documentation/devicetree/bindings/sound/brcm,cygnus-audio.txt
-> > > ./Documentation/devicetree/bindings/sound/brcm,cygnus-audio.txt
-> > > ......
+> > > To just know the value of cstate.enabled you only need to read the
+> > > register with the ENABLE flag. That is cheaper than calling get_state=
+.
+> > >
+> > > > +                     /*
+> > > > +                      * The clocks to PWM channel has to be enable=
+d first
+> > > > +                      * before writing to the registers.
+> > > > +                      */
+> > > > +                     ret =3D clk_bulk_prepare_enable(SPRD_PWM_NUM_=
+CLKS,
+> > > > +                                                   chn->clks);
+> > > > +                     if (ret) {
+> > > > +                             dev_err(spc->dev,
+> > > > +                                     "failed to enable pwm%u clock=
+s\n",
+> > > > +                                     pwm->hwpwm);
+> > > > +                             return ret;
+> > > > +                     }
+> > > > +             }
+> > > > +
+> > > > +             if (state->period !=3D cstate.period ||
+> > > > +                 state->duty_cycle !=3D cstate.duty_cycle) {
+> > >
+> > > This is a coarse check. If state->period and cstate.period only diffe=
+r
+> > > by one calling sprd_pwm_config(spc, pwm, state->duty_cycle,
+> > > state->period) probably results in a noop. So you're doing an expensi=
+ve
+> > > division to get an unreliable check. It would be better to calculate =
+the
+> > > register values from the requested state and compare the register
+> > > values. The costs are more or less the same than calling .get_state a=
+nd
+> > > the check is reliable. And you don't need to spend another division t=
+o
+> > > calculate the new register values.
 > >
-> > I didn't check each of them, but I assume the same applies here, too.
-> > Please don't copy blindly but think before using other people's stuff as
-> 
-> I did not  copy blindly.
+> > Same as above comment.
+>
+> When taking the caching into account (which I wouldn't) the check is
+> still incomplete. OK, you could argue avoiding the recalculation in 90%
+> (to just say some number) of the cases where it is unnecessary is good.
 
-OK, there was no offence intended.
+Yes :)
 
-> > reference. Even in the Linux kernel where reviews seem and are told to
-> > catch non-optimal stuff, there are places where this doesn't work. IMHO
-> > the key question is: Does it add value to describe "assigned-clocks" in
-> > the binding for your PWM device given that you're only using this
-> > generic and well documented construct?
-> 
-> I just want to remind users that they should set the parent clock for
-> PWMs, otherwise the PWM source clock can be not available.
+>
+> > >
+> > > > +                     ret =3D sprd_pwm_config(spc, pwm, state->duty=
+_cycle,
+> > > > +                                           state->period);
+> > > > +                     if (ret)
+> > > > +                             return ret;
+> > > > +             }
+> > > > +
+> > > > +             sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_ENABLE, 1);
+> > > > +     } else if (cstate.enabled) {
+> > > > +             sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_ENABLE, 0);
+> > > > +
+> > > > +             clk_bulk_disable_unprepare(SPRD_PWM_NUM_CLKS, chn->cl=
+ks);
+> > >
+> > > Assuming writing SPRD_PWM_ENABLE =3D 0 to the hardware completes the
+> > > currently running period and the write doesn't block that long: Does
+> > > disabling the clocks interfere with completing the period?
+> >
+> > Writing SPRD_PWM_ENABLE =3D 0 will stop the PWM immediately, will not
+> > waiting for completing the currently period.
+>
+> The currently active period is supposed to be completed. If you cannot
+> implement this please point this out as limitation at the top of the
+> driver.
 
-Probably it is just subjective where to draw the line here. There are a
-thousand and one things that can go wrong when the PWM should be used.
-To me it seems artificial to pick one of these and mention it in a
-document that is supposed to describe how to formalize such a device.
+Sure.
 
-But given that we're going in cycles, I will stop trying to convince you
-now.
+>
+> Honestly I think most pwm users won't mind and they should get the
+> possibility to tell they prefer pwm_apply_state to return immediately
+> even if this could result in a spike. But we're not there yet.
+> (Actually there are three things a PWM consumer might want:
+>
+>  a) stop immediately;
+>  b) complete the currently running period, then stop and return only
+>     when the period is completed; or
+>  c) complete the currently running period and then stop, return immediate=
+ly if
+>     possible.
+>
+> Currently the expected semantic is b).
 
-Best regards
-Uwe
+Make sense.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+>
+> > > > +static int sprd_pwm_remove(struct platform_device *pdev)
+> > > > +{
+> > > > +     struct sprd_pwm_chip *spc =3D platform_get_drvdata(pdev);
+> > > > +     int ret, i;
+> > > > +
+> > > > +     ret =3D pwmchip_remove(&spc->chip);
+> > > > +
+> > > > +     for (i =3D 0; i < spc->num_pwms; i++) {
+> > > > +             struct sprd_pwm_chn *chn =3D &spc->chn[i];
+> > > > +
+> > > > +             clk_bulk_disable_unprepare(SPRD_PWM_NUM_CLKS, chn->cl=
+ks);
+> > >
+> > > If a PWM was still running you're effectively stopping it here, right=
+?
+> > > Are you sure you don't disable once more than you enabled?
+> >
+> > Yes, you are right. I should check current enable status of the PWM cha=
+nnel.
+> > Thanks for your comments.
+>
+> I didn't recheck, but I think the right approach is to not fiddle with
+> the clocks at all and rely on the PWM framework to not let someone call
+> sprd_pwm_remove when a PWM is still in use.
+
+So you mean just return pwmchip_remove(&spc->chip); ?
+
+--=20
+Baolin Wang
+Best Regards
