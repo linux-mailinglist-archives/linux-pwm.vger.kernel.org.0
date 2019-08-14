@@ -2,49 +2,49 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C38D8D7D5
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Aug 2019 18:17:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECEAC8DBED
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Aug 2019 19:32:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfHNQRe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 14 Aug 2019 12:17:34 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53053 "EHLO
+        id S1728443AbfHNRc1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 14 Aug 2019 13:32:27 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:39959 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727875AbfHNQRe (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Aug 2019 12:17:34 -0400
+        with ESMTP id S1728284AbfHNRc1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Aug 2019 13:32:27 -0400
 Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
         by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1hxvxo-0007I3-Ko; Wed, 14 Aug 2019 18:17:28 +0200
+        id 1hxx8H-000772-PS; Wed, 14 Aug 2019 19:32:21 +0200
 Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
         (envelope-from <ukl@pengutronix.de>)
-        id 1hxvxn-0003CC-LB; Wed, 14 Aug 2019 18:17:27 +0200
-Date:   Wed, 14 Aug 2019 18:17:27 +0200
+        id 1hxx8E-0005XC-W2; Wed, 14 Aug 2019 19:32:18 +0200
+Date:   Wed, 14 Aug 2019 19:32:18 +0200
 From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
-Subject: Are the requirements of the PWM API sensible?
-Message-ID: <20190814161727.ahfh6mlcbaozle3v@pengutronix.de>
-References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
- <4f6e3110b4d7e0a2f7ab317bba98a933de12e5da.1565703607.git.baolin.wang@linaro.org>
- <20190813151612.v6x6e6kzxflkpu7b@pengutronix.de>
- <CAMz4kuJURx=fPE6+0gP4ukzMcXr_z3t1ZH0K3Gv6=o4Od4uc7w@mail.gmail.com>
- <20190814092339.73ybj5mycklvpnrq@pengutronix.de>
- <3181509c-a167-28c8-fb8b-947b7c72a65c@ysoft.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH 4/7] pwm: jz4740: Improve algorithm of clock calculation
+Message-ID: <20190814173218.zhg4se3pppano5m3@pengutronix.de>
+References: <20190812061520.lwzk3us4ginwwxov@pengutronix.de>
+ <1565642590.2007.1@crapouillou.net>
+ <20190812214838.e5hyhnlcyykjfvsb@pengutronix.de>
+ <1565648183.2007.3@crapouillou.net>
+ <20190813052726.g37upws5rlvrszc4@pengutronix.de>
+ <1565694066.1856.1@crapouillou.net>
+ <20190813123331.m4ttfhcgt6wyrcfi@pengutronix.de>
+ <1565700448.1856.2@crapouillou.net>
+ <20190813140903.rdwy7p3mhwetmlnt@pengutronix.de>
+ <1565799035.1984.0@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3181509c-a167-28c8-fb8b-947b7c72a65c@ysoft.com>
+In-Reply-To: <1565799035.1984.0@crapouillou.net>
 User-Agent: NeoMutt/20170113 (1.7.2)
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
 X-SA-Exim-Mail-From: ukl@pengutronix.de
@@ -55,138 +55,167 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Michal,
+Hello Paul,
 
-[adapted the Subject to the actual topic of this mail]
-
-On Wed, Aug 14, 2019 at 04:07:21PM +0200, Michal VokÃ¡Ä wrote:
-> > Honestly I think most pwm users won't mind and they should get the
-> > possibility to tell they prefer pwm_apply_state to return immediately
-> > even if this could result in a spike. But we're not there yet.
-> > (Actually there are three things a PWM consumer might want:
+On Wed, Aug 14, 2019 at 06:10:35PM +0200, Paul Cercueil wrote:
+> Le mar. 13 août 2019 à 16:09, Uwe =?iso-8859-1?q?Kleine-K=F6nig?= a écrit :
+> > On Tue, Aug 13, 2019 at 02:47:28PM +0200, Paul Cercueil wrote:
+> > > Le mar. 13 août 2019 à 14:33, Uwe Kleine-König a écrit :
+> > > > On Tue, Aug 13, 2019 at 01:01:06PM +0200, Paul Cercueil wrote:
+> > > > > Well, you said that I shouln't rely on the fact that clk_round_rate() will
+> > > > > round down. That completely defeats the previous algorithm. So please tell
+> > > > > me how to use it correctly, because I don't see it.
+> > > >
+> > > > Using clk_round_rate correctly without additional knowledge is hard. If
+> > > > you assume at least some sane behaviour you'd still have to call it
+> > > > multiple times. Assuming maxrate is the maximal rate you can handle
+> > > > without overflowing your PWM registers you have to do:
+> > > >
+> > > > 	rate = maxrate;
+> > > > 	rounded_rate = clk_round_rate(clk, rate);
+> > > > 	while (rounded_rate > rate) {
+> > > > 		if (rate < rounded_rate - rate) {
+> > > > 			/*
+> > > > 			 * clk doesn't support a rate smaller than
+> > > > 			 * maxrate (or the round_rate callback doesn't
+> > > > 			 * round consistently).
+> > > > 			 */
+> > > > 			 return -ESOMETHING;
+> > > > 		}
+> > > > 		rate = rate - (rounded_rate - rate)
+> > > > 		rounded_rate = clk_round_rate(clk, rate);
+> > > > 	}
+> > > >
+> > > > 	return rate;
+> > > >
+> > > > Probably it would be sensible to put that in a function provided by the
+> > > > clk framework (maybe call it clk_round_rate_down and maybe with
+> > > > additional checks).
+> > > 
+> > >  clk_round_rate_down() has been refused multiple times in the past for
+> > >  reasons that Stephen can explain.
 > > 
-> >   a) stop immediately;
-> >   b) complete the currently running period, then stop and return
-> >   only
-> >      when the period is completed; or
-> >   c) complete the currently running period and then stop, return
-> >   immediately if
-> >      possible.
+> > I'd be really interested in these reasons as I think the clk framework
+> > should make it easy to solve common tasks related to clocks. And finding
+> > out the biggest supported rate not bigger than a given maxrate is
+> > something I consider such a common task.
 > > 
-> > Currently the expected semantic is b).
+> > The first hit I found when searching was
+> > https://lkml.org/lkml/2010/7/14/260 . In there Stephen suggested that
+> > clk_round_rate with the current semantic is hardly useful and suggested
+> > clk_round_rate_up() and clk_round_rate_down() himself.
 > 
-> I am sorry for interrupting your discussion. From my (last year or so)
-> observation of the PWM mailing list I see this as a common pattern in
-> almost every submission of a new PWM driver. That is PWM driver authors
-> keep submitting solution a) and you tell them the expected behavior
-> is b).
+> That's from 2010, though.
 
-The history is that there was a discussion about something related to
-the pwm-imx27 or the pwm-mxs driver between Thierry and me. I don't
-remember the exact issue though. My impression back then was that
-Thierry had a conception of how a PWM should work that was idealised and
-hard to implement with a big part of the actually available hardware
-implementations. In the end Thierry ended the discussion saying
-something like: "I'm not aware that the available drivers don't fulfill
-the requirements so I must assume they are right. If you know otherwise,
-please tell us. I'm not willing to change the API's requirements just
-because of one or two drivers having problems." (I didn't look up the
-mail thread, so this is not an exact quote.)
+If you have a better link please tell me.
 
-One of these requirements was b) from above. So if you notice a common
-pattern here on the list that most new drivers have problems to
-implement b) I'm happy. I let you decide what this probably means for
-the existing drivers.
+> I agree that clk_round_rate_up() and clk_round_rate_down() should exist.
+> Even if they return -ENOSYS if it's not implemented for a given clock
+> controller.
 
-> Why is that? I hope that the fact that implementing a) is simpler
-> than b) is not the main reason. I believe that people think a)
-> is the correct solution.
+ack.
 
-Honestly I think people are not aware of the requirements and/or don't
-care enough about these details instead of actively being convinced that
-a) is right. Their test cases are most of the time quite limited and if
-the LED's brightness reacts according to the expectations the driver is
-considered done.
+> > > > > I came up with a much smarter alternative, that doesn't rely on the rounding
+> > > > > method of clk_round_rate, and which is better overall (no loop needed). It
+> > > > > sounds to me like you're bashing the code without making the effort to
+> > > > > understand what it does.
+> > > > >
+> > > > > Thierry called it a "neat trick"
+> > > > > (https://patchwork.kernel.org/patch/10836879/) so it cannot be as bad as you
+> > > > > say.
+> > > >
+> > > > Either that or Thierry failed to see the downside. The obvious downside
+> > > > is that once you set the period to something long (and so the clk was
+> > > > limited to a small frequency) you never make the clock any faster
+> > > > afterwards.
+> > >
+> > >  Read the algorithm again.
+> > 
+> > I indeed missed a call to clk_set_rate(clk, parent_rate). I thought I
+> > grepped for clk_set_rate before claiming the code was broken. Sorry.
+> > 
+> > So I think the code works indeed, but it feels like abusing
+> > clk_set_max_rate. So I'd like to see some words from Stephen about this
+> > procedure.
+> > 
+> > Also I think this is kind of inelegant to set the maximal rate twice. At
+> > least call clk_set_max_rate only once please.
+> 
+> Ok. I can do that.
 
-And I agree with Thierry that in some situations it is sane to require
-that periods are completed to prevent spikes. (I'm not a hardware guy,
-but I think controlling a step motor is such a situation where you'd want
-to prevent spikes.)
+I would still prefer to hear from Stephen about this approach. It seems
+wrong to have two different ways to achieve the same goal and my
+impression is that clk_round_rate is the function designed for this use
+case.
+ 
+> > > > > > > > > E.g. if at a rate of 12 MHz your computed hardware value for the period
+> > > > > > > > > is 0xf000, then at a rate of 24 MHz it won't fit in 16 bits. So the clock
+> > > > > > > > > rate must be reduced to the highest possible that will still give you a
+> > > > > > > > > < 16-bit value.
+> > > > > > > > >
+> > > > > > > > > We always want the highest possible clock rate that works, for the sake of
+> > > > > > > > > precision.
+> > > > > > > >
+> > > > > > > > This is dubious; but ok to keep the driver simple.> (Consider a PWM that
+> > > > > > > > can run at i MHz for i in [1, .. 30]. If a period of 120 ns and a duty
+> > > > > > > > cycle of 40 ns is requested you can get an exact match with 25 MHz, but
+> > > > > > > > not with 30 MHz.)
+> > > > > > >
+> > > > > > > The clock rate is actually (parent_rate >> (2 * x) )
+> > > > > > > for x = 0, 1, 2, ...
+> > > > > > >
+> > > > > > > So if your parent_rate is 30 MHz the next valid one is 7.5 MHz, and the
+> > > > > > > next one is 1.875 MHz. It'd be very unlikely that you get a better match at
+> > > > > > > a lower clock.
+> > > > > >
+> > > > > > If the smaller freqs are all dividers of the fastest that's fine. Please
+> > > > > > note in a code comment that you're assuming this.
+> > > > >
+> > > > >  No, I am not assuming this. The current driver just picks the highest clock
+> > > > >  rate that works. We're not changing the behaviour here.
+> > > >
+> > > > But you hide it behind clk API functions that don't guarantee this
+> > > > behaviour. And even if it works for you it might not for the next person
+> > > > who copies your code to support another hardware.
+> > > 
+> > >  Again, I'm not *trying* to guarantee this behaviour.
+> > 
+> > I didn't request you should guarantee this behaviour. I want you to make
+> > it obvious for readers of your code that you rely on something that
+> > isn't guaranteed. That your code works today isn't a good enough excuse.
+> > There are various examples like these. If you want a few:
+> > 
+> >  - printf("string: %s\n", NULL); works fine with glibc, but segfaults on
+> >    other libcs.
+> >  - setenv("MYVAR", NULL) used to work (and was equivalent to
+> >    setenv("MYVAR", "")) but that was never guaranteed. Then at some
+> >    point of time it started to segfault.
+> >  - Look into commits like a4435febd4c0f14b25159dca249ecf91301c7c76. This
+> >    used to work fine until compilers were changed to optimize more
+> >    aggressively.
+> > 
+> > Now if you use a clk and know that all rates smaller than the requested
+> > one are divisors of the fast one and your code only works (here: is
+> > optimal) when this condition is given, you're walking on thin ice just
+> > because this fact it's not guaranteed.
+> > The least you can do is to add a code comment to make people aware who
+> > debug the breakage or copy your code.
+> 
+> If I was assuming something, it's not that the requested clock rates are
+> always integer dividers of the parent rate - but rather that the difference
+> in precision between two possible clock rates (even non-integer-dividers) is
+> so tiny that we just don't care.
 
-> I agree that smooth transition from one period/duty setting to
-> different setting makes sense. But I also believe the expected
-> behavior of setting enabled=0 is different. That is to stop
-> immediately the technology that is fed by the PWM signal.
-> Otherwise the concept of enabled/disabled does not make sense
-> because setting duty=0 would have the same effect.
-
-That's approximately my argumentation from back then. I asked several
-times what was the difference between duty=0 and enabled=0. Thierry was
-unable to come up with a better explanation but insisted there was a
-difference. (Later I became aware that there is a difference, i.e. with
-duty=0 the inactive time still has to be a multiple of the configured
-period. So disabled is actually equivalent to duty=0 with an
-infinitesimal period. Unless I missed something of course.)
-
-I even questioned if consumers really care about a PWM going to it's
-inactive level on disable and suggested to introduce something to the
-PWM API to let consumers express they don't care. But the discussion
-led nowhere. In my eyes the PWM framework would become better if
-consumers were able to specify their intentions in a more detailed way.
-Thierry didn't agree.
-
-I think allowing lowlevel drivers to act immediately on enabled=0 would
-be fine. Consumers who'd want to disable only after completion of the
-currently running period could then do:
-
-	pwm_apply(pwm, duty=0, period=dontcare, enabled=1);
-	pwm_apply(pwm, duty=0, period=dontcare, enabled=0);
-
-to achieve this completion. So after all consumers are converted the API
-is more powerful than before because consumers have the choice between
-the above and a single
-
-	pwm_apply(pwm, duty=0, period=dontcare, enabled=0);
-
-The net benefit is that consumers don't have to wait if they don't
-actually care about completing the period. The downside is that all
-consumers must be reviewed and maybe fixed and maybe that people's
-expectations are not met anymore. (But I doubt the latter a bit because
-I'm not sure that most people actually expect that pwm_apply() blocks
-until the output reached its disabled state.)
-
-And we could even go further and tell consumers who care about the
-output's level should not disable the pwm but instead do
-
-	pwm_apply(pwm, duty=0, period=1, enabled=1);
-
-which has effectively the same semantic as enabled=0 today. This would
-give at least two (probably more) PWM drivers the freedom to really
-disable the hardware which might result in something different than
-"inactive level" without taking the possibility from consumers to
-actually request what they want.
-
-> So I still wonder where the expectation for b) is coming from.
-> What would be the physical/electrical reasoning for b)?
-> Why/how it can be dangerous/harmful for any device to stop the
-> PWM signal immediately?
-
-Maybe you can get Thierry to answer this. He is the source of this
-requirement.
-
-> Would be great to finally reach consensus on that so the expected
-> behavior can be documented. I know you already attempted that [1].
-> IÂ think you have done a great job but I still consider the part
-> about state changes little controversial and unresolved.
-
-I'm completely open to document the expectations. I'm also open to shift
-the expectations to something that is saner and/or gives consumers more
-possibilities. But it's Thierry's responsibility to go forward here or
-at least stop the blockade.
+I'm more exacting here. If you are asked for X and can provide X - 2 you
+shouldn't provide X - 12. Depending on the use case the consumer is happy
+about every bit of accuracy they can get. So if you deliberately provide
+X - 12 because it is easier to do and good enough for you, at least
+document this laziness to not waste other people's time more than
+necessary.
 
 Best regards
 Uwe
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-KÃ¶nig            |
+Pengutronix e.K.                           | Uwe Kleine-König            |
 Industrial Linux Solutions                 | http://www.pengutronix.de/  |
