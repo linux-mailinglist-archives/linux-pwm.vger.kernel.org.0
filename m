@@ -2,220 +2,109 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ECEAC8DBED
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Aug 2019 19:32:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D53D8DD8B
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Aug 2019 20:51:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbfHNRc1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 14 Aug 2019 13:32:27 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39959 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728284AbfHNRc1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Aug 2019 13:32:27 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hxx8H-000772-PS; Wed, 14 Aug 2019 19:32:21 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hxx8E-0005XC-W2; Wed, 14 Aug 2019 19:32:18 +0200
-Date:   Wed, 14 Aug 2019 19:32:18 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: Re: [PATCH 4/7] pwm: jz4740: Improve algorithm of clock calculation
-Message-ID: <20190814173218.zhg4se3pppano5m3@pengutronix.de>
-References: <20190812061520.lwzk3us4ginwwxov@pengutronix.de>
- <1565642590.2007.1@crapouillou.net>
- <20190812214838.e5hyhnlcyykjfvsb@pengutronix.de>
- <1565648183.2007.3@crapouillou.net>
- <20190813052726.g37upws5rlvrszc4@pengutronix.de>
- <1565694066.1856.1@crapouillou.net>
- <20190813123331.m4ttfhcgt6wyrcfi@pengutronix.de>
- <1565700448.1856.2@crapouillou.net>
- <20190813140903.rdwy7p3mhwetmlnt@pengutronix.de>
- <1565799035.1984.0@crapouillou.net>
+        id S1728014AbfHNSvC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 14 Aug 2019 14:51:02 -0400
+Received: from mga12.intel.com ([192.55.52.136]:26665 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726722AbfHNSvC (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 14 Aug 2019 14:51:02 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Aug 2019 11:51:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,386,1559545200"; 
+   d="scan'208";a="179144901"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga003.jf.intel.com with ESMTP; 14 Aug 2019 11:50:57 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1hxyMJ-0000P8-Lh; Wed, 14 Aug 2019 21:50:55 +0300
+Date:   Wed, 14 Aug 2019 21:50:55 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-acpi@vger.kernel.org, devel@acpica.org,
+        linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 1/3] ACPI: Resolve objects on host-directed table loads
+Message-ID: <20190814185055.GZ30120@smile.fi.intel.com>
+References: <cover.1559127603.git.nikolaus.voss@loewensteinmedical.de>
+ <8704391ae3004a6b4dd17975dbcc9e88bd28cf4b.1559127603.git.nikolaus.voss@loewensteinmedical.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1565799035.1984.0@crapouillou.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <8704391ae3004a6b4dd17975dbcc9e88bd28cf4b.1559127603.git.nikolaus.voss@loewensteinmedical.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Paul,
-
-On Wed, Aug 14, 2019 at 06:10:35PM +0200, Paul Cercueil wrote:
-> Le mar. 13 août 2019 à 16:09, Uwe =?iso-8859-1?q?Kleine-K=F6nig?= a écrit :
-> > On Tue, Aug 13, 2019 at 02:47:28PM +0200, Paul Cercueil wrote:
-> > > Le mar. 13 août 2019 à 14:33, Uwe Kleine-König a écrit :
-> > > > On Tue, Aug 13, 2019 at 01:01:06PM +0200, Paul Cercueil wrote:
-> > > > > Well, you said that I shouln't rely on the fact that clk_round_rate() will
-> > > > > round down. That completely defeats the previous algorithm. So please tell
-> > > > > me how to use it correctly, because I don't see it.
-> > > >
-> > > > Using clk_round_rate correctly without additional knowledge is hard. If
-> > > > you assume at least some sane behaviour you'd still have to call it
-> > > > multiple times. Assuming maxrate is the maximal rate you can handle
-> > > > without overflowing your PWM registers you have to do:
-> > > >
-> > > > 	rate = maxrate;
-> > > > 	rounded_rate = clk_round_rate(clk, rate);
-> > > > 	while (rounded_rate > rate) {
-> > > > 		if (rate < rounded_rate - rate) {
-> > > > 			/*
-> > > > 			 * clk doesn't support a rate smaller than
-> > > > 			 * maxrate (or the round_rate callback doesn't
-> > > > 			 * round consistently).
-> > > > 			 */
-> > > > 			 return -ESOMETHING;
-> > > > 		}
-> > > > 		rate = rate - (rounded_rate - rate)
-> > > > 		rounded_rate = clk_round_rate(clk, rate);
-> > > > 	}
-> > > >
-> > > > 	return rate;
-> > > >
-> > > > Probably it would be sensible to put that in a function provided by the
-> > > > clk framework (maybe call it clk_round_rate_down and maybe with
-> > > > additional checks).
-> > > 
-> > >  clk_round_rate_down() has been refused multiple times in the past for
-> > >  reasons that Stephen can explain.
-> > 
-> > I'd be really interested in these reasons as I think the clk framework
-> > should make it easy to solve common tasks related to clocks. And finding
-> > out the biggest supported rate not bigger than a given maxrate is
-> > something I consider such a common task.
-> > 
-> > The first hit I found when searching was
-> > https://lkml.org/lkml/2010/7/14/260 . In there Stephen suggested that
-> > clk_round_rate with the current semantic is hardly useful and suggested
-> > clk_round_rate_up() and clk_round_rate_down() himself.
+On Wed, May 29, 2019 at 02:18:20PM +0200, Nikolaus Voss wrote:
+> If an ACPI SSDT overlay is loaded after built-in tables
+> have been loaded e.g. via configfs or efivar_ssdt_load()
+> it is necessary to rewalk the namespace to resolve
+> references. Without this, relative and absolute paths
+> like ^PCI0.SBUS or \_SB.PCI0.SBUS are not resolved
+> correctly.
 > 
-> That's from 2010, though.
+> Make configfs load use the same method as efivar_ssdt_load().
 
-If you have a better link please tell me.
+This patch brought a regression (bisect log below).
+Now I'm unable to unload the table which was working before.
 
-> I agree that clk_round_rate_up() and clk_round_rate_down() should exist.
-> Even if they return -ENOSYS if it's not implemented for a given clock
-> controller.
+Reverting (manual, due to ACPICA changes) helps.
 
-ack.
+Please, consider to revert for this cycle, or fix. I will be glad to test any
+proposed fix.
 
-> > > > > I came up with a much smarter alternative, that doesn't rely on the rounding
-> > > > > method of clk_round_rate, and which is better overall (no loop needed). It
-> > > > > sounds to me like you're bashing the code without making the effort to
-> > > > > understand what it does.
-> > > > >
-> > > > > Thierry called it a "neat trick"
-> > > > > (https://patchwork.kernel.org/patch/10836879/) so it cannot be as bad as you
-> > > > > say.
-> > > >
-> > > > Either that or Thierry failed to see the downside. The obvious downside
-> > > > is that once you set the period to something long (and so the clk was
-> > > > limited to a small frequency) you never make the clock any faster
-> > > > afterwards.
-> > >
-> > >  Read the algorithm again.
-> > 
-> > I indeed missed a call to clk_set_rate(clk, parent_rate). I thought I
-> > grepped for clk_set_rate before claiming the code was broken. Sorry.
-> > 
-> > So I think the code works indeed, but it feels like abusing
-> > clk_set_max_rate. So I'd like to see some words from Stephen about this
-> > procedure.
-> > 
-> > Also I think this is kind of inelegant to set the maximal rate twice. At
-> > least call clk_set_max_rate only once please.
-> 
-> Ok. I can do that.
 
-I would still prefer to hear from Stephen about this approach. It seems
-wrong to have two different ways to achieve the same goal and my
-impression is that clk_round_rate is the function designed for this use
-case.
- 
-> > > > > > > > > E.g. if at a rate of 12 MHz your computed hardware value for the period
-> > > > > > > > > is 0xf000, then at a rate of 24 MHz it won't fit in 16 bits. So the clock
-> > > > > > > > > rate must be reduced to the highest possible that will still give you a
-> > > > > > > > > < 16-bit value.
-> > > > > > > > >
-> > > > > > > > > We always want the highest possible clock rate that works, for the sake of
-> > > > > > > > > precision.
-> > > > > > > >
-> > > > > > > > This is dubious; but ok to keep the driver simple.> (Consider a PWM that
-> > > > > > > > can run at i MHz for i in [1, .. 30]. If a period of 120 ns and a duty
-> > > > > > > > cycle of 40 ns is requested you can get an exact match with 25 MHz, but
-> > > > > > > > not with 30 MHz.)
-> > > > > > >
-> > > > > > > The clock rate is actually (parent_rate >> (2 * x) )
-> > > > > > > for x = 0, 1, 2, ...
-> > > > > > >
-> > > > > > > So if your parent_rate is 30 MHz the next valid one is 7.5 MHz, and the
-> > > > > > > next one is 1.875 MHz. It'd be very unlikely that you get a better match at
-> > > > > > > a lower clock.
-> > > > > >
-> > > > > > If the smaller freqs are all dividers of the fastest that's fine. Please
-> > > > > > note in a code comment that you're assuming this.
-> > > > >
-> > > > >  No, I am not assuming this. The current driver just picks the highest clock
-> > > > >  rate that works. We're not changing the behaviour here.
-> > > >
-> > > > But you hide it behind clk API functions that don't guarantee this
-> > > > behaviour. And even if it works for you it might not for the next person
-> > > > who copies your code to support another hardware.
-> > > 
-> > >  Again, I'm not *trying* to guarantee this behaviour.
-> > 
-> > I didn't request you should guarantee this behaviour. I want you to make
-> > it obvious for readers of your code that you rely on something that
-> > isn't guaranteed. That your code works today isn't a good enough excuse.
-> > There are various examples like these. If you want a few:
-> > 
-> >  - printf("string: %s\n", NULL); works fine with glibc, but segfaults on
-> >    other libcs.
-> >  - setenv("MYVAR", NULL) used to work (and was equivalent to
-> >    setenv("MYVAR", "")) but that was never guaranteed. Then at some
-> >    point of time it started to segfault.
-> >  - Look into commits like a4435febd4c0f14b25159dca249ecf91301c7c76. This
-> >    used to work fine until compilers were changed to optimize more
-> >    aggressively.
-> > 
-> > Now if you use a clk and know that all rates smaller than the requested
-> > one are divisors of the fast one and your code only works (here: is
-> > optimal) when this condition is given, you're walking on thin ice just
-> > because this fact it's not guaranteed.
-> > The least you can do is to add a code comment to make people aware who
-> > debug the breakage or copy your code.
-> 
-> If I was assuming something, it's not that the requested clock rates are
-> always integer dividers of the parent rate - but rather that the difference
-> in precision between two possible clock rates (even non-integer-dividers) is
-> so tiny that we just don't care.
-
-I'm more exacting here. If you are asked for X and can provide X - 2 you
-shouldn't provide X - 12. Depending on the use case the consumer is happy
-about every bit of accuracy they can get. So if you deliberately provide
-X - 12 because it is easier to do and good enough for you, at least
-document this laziness to not waste other people's time more than
-necessary.
-
-Best regards
-Uwe
+git bisect start
+# good: [0ecfebd2b52404ae0c54a878c872bb93363ada36] Linux 5.2
+git bisect good 0ecfebd2b52404ae0c54a878c872bb93363ada36
+# bad: [5f9e832c137075045d15cd6899ab0505cfb2ca4b] Linus 5.3-rc1
+git bisect bad 5f9e832c137075045d15cd6899ab0505cfb2ca4b
+# bad: [e786741ff1b52769b044b7f4407f39cd13ee5d2d] Merge tag 'staging-5.3-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging
+git bisect bad e786741ff1b52769b044b7f4407f39cd13ee5d2d
+# bad: [8f6ccf6159aed1f04c6d179f61f6fb2691261e84] Merge tag 'clone3-v5.3' of git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux
+git bisect bad 8f6ccf6159aed1f04c6d179f61f6fb2691261e84
+# good: [ed63b9c873601ca113da5c7b1745e3946493e9f3] Merge tag 'media/v5.3-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
+git bisect good ed63b9c873601ca113da5c7b1745e3946493e9f3
+# bad: [4b4704520d97b74e045154fc3b844b73ae4e7ebd] Merge tag 'acpi-5.3-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+git bisect bad 4b4704520d97b74e045154fc3b844b73ae4e7ebd
+# good: [e3303268f9cfa4eb7c2217df471417d4327109fd] ASoC: soc-core: don't use soc_find_component() at snd_soc_find_dai()
+git bisect good e3303268f9cfa4eb7c2217df471417d4327109fd
+# good: [3c53c6255d598db7084c5c3d7553d7200e857818] Merge tag 'asoc-v5.3' of https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound into for-linus
+git bisect good 3c53c6255d598db7084c5c3d7553d7200e857818
+# good: [4cdd5f9186bbe80306e76f11da7ecb0b9720433c] Merge tag 'sound-5.3-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
+git bisect good 4cdd5f9186bbe80306e76f11da7ecb0b9720433c
+# good: [13b06b78c772d64e2207e4a5a5329856fe2bf241] Merge branches 'pm-opp', 'pm-misc', 'pm-avs' and 'pm-tools'
+git bisect good 13b06b78c772d64e2207e4a5a5329856fe2bf241
+# good: [cf2d213e49fdf47e4c10dc629a3659e0026a54b8] Merge tag 'pm-5.3-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+git bisect good cf2d213e49fdf47e4c10dc629a3659e0026a54b8
+# bad: [02a93f35f57fe5d4d1bac0ac8496884235e2fd2e] ACPICA: Update version to 20190703
+git bisect bad 02a93f35f57fe5d4d1bac0ac8496884235e2fd2e
+# bad: [d4ca763eed3bcc227f220beb11ff4eb2fa548755] Merge ACPI tables handling changes for v5.3.
+git bisect bad d4ca763eed3bcc227f220beb11ff4eb2fa548755
+# bad: [d06c47e3dd07fdf3f07e8fc45f2ce655e9b295c5] ACPI: configfs: Resolve objects on host-directed table loads
+git bisect bad d06c47e3dd07fdf3f07e8fc45f2ce655e9b295c5
+# good: [c78fea61f0c1f8568fbbb36ac3d1e1c85a903ae4] ACPI: tables: Allow BGRT to be overridden
+git bisect good c78fea61f0c1f8568fbbb36ac3d1e1c85a903ae4
+# first bad commit: [d06c47e3dd07fdf3f07e8fc45f2ce655e9b295c5] ACPI: configfs: Resolve objects on host-directed table loads
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+With Best Regards,
+Andy Shevchenko
+
+
