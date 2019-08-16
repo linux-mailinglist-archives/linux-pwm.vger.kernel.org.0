@@ -2,76 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 170F690990
-	for <lists+linux-pwm@lfdr.de>; Fri, 16 Aug 2019 22:44:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F56D909EB
+	for <lists+linux-pwm@lfdr.de>; Fri, 16 Aug 2019 23:02:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbfHPUoH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 16 Aug 2019 16:44:07 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:59233 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbfHPUoH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Aug 2019 16:44:07 -0400
-X-Originating-IP: 90.65.161.137
-Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 00F6AFF807;
-        Fri, 16 Aug 2019 20:43:57 +0000 (UTC)
-Date:   Fri, 16 Aug 2019 22:43:57 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
-Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        id S1727668AbfHPVCJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 16 Aug 2019 17:02:09 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40379 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727548AbfHPVCI (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Aug 2019 17:02:08 -0400
+Received: by mail-ot1-f65.google.com with SMTP id c34so10829519otb.7;
+        Fri, 16 Aug 2019 14:02:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZFxKR576aWu66XIGODf4Dfqh9pMbrp3cn6HjNum0x/A=;
+        b=lkQ7a7EEws2eTQsn87CRGSqBxNIYRGijVCfv+nXWBlVB1i5ZkHkoyZNvXI/LAqVfcI
+         N/IuDJOLFK+l6HhmQ1SIhMePndOH6Bpy7nZ0WgBuoZIuwnN8QfxLzydj1WIWJx+PL1FV
+         5zc/kxb9UL7LOQRD31PoO3URHoJXF8erRmyIPuMWev0i89w9ju2cm8PGnC+JvQkosk/2
+         IMBM+ht+yZUn97PU8RVdsGNQg2IB13oa3732CgU8IxYUlWd+OgCrwmegkDFhgO9UlOx3
+         olBXzIV1hKxNEZI4/usd1l9brAglRKmoD4dwrBS9tqx3gvclkFtsEmXChKqWeh2dNqMV
+         uzfQ==
+X-Gm-Message-State: APjAAAUGpE7sOgMp7eb7+U5Fxe7j9txFMDnTPtf9HZhEpB4APRnNPxH1
+        ZPZpUuCqbsfjy4Xdl9o7LA==
+X-Google-Smtp-Source: APXvYqx2dK3twuUktSJd04/r2aF5V2tGmUhKOx7YAFKtnfAaGx9f/qJ8sIFYoDauwR1vMrY5vHRb/A==
+X-Received: by 2002:a9d:590b:: with SMTP id t11mr9386551oth.239.1565989327722;
+        Fri, 16 Aug 2019 14:02:07 -0700 (PDT)
+Received: from localhost (ip-173-126-47-137.ftwttx.spcsdns.net. [173.126.47.137])
+        by smtp.gmail.com with ESMTPSA id 11sm2590891otc.45.2019.08.16.14.02.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2019 14:02:07 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 16:02:05 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sam Shih <sam.shih@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 4/3] pwm: atmel: document known weaknesses of both
- hardware and software
-Message-ID: <20190816204357.GG3545@piout.net>
-References: <20190815214133.11134-1-uwe@kleine-koenig.org>
- <20190816093748.11769-1-uwe@kleine-koenig.org>
+        Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Sam Shih <sam.shih@mediatek.com>
+Subject: Re: [PATCH v3 7/10] dt-bindings: pwm: update bindings for MT7629 SoC
+Message-ID: <20190816210205.GA23351@bogus>
+References: <1565940088-845-1-git-send-email-sam.shih@mediatek.com>
+ <1565940088-845-8-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190816093748.11769-1-uwe@kleine-koenig.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1565940088-845-8-git-send-email-sam.shih@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 16/08/2019 11:37:48+0200, Uwe Kleine-König wrote:
-> Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
-> ---
->  drivers/pwm/pwm-atmel.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+On Fri, 16 Aug 2019 15:21:25 +0800, Sam Shih wrote:
+> From: Ryder Lee <ryder.lee@mediatek.com>
 > 
-> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-> index 42fe7bc043a8..1ddb93db9627 100644
-> --- a/drivers/pwm/pwm-atmel.c
-> +++ b/drivers/pwm/pwm-atmel.c
-> @@ -7,6 +7,16 @@
->   *
->   * Reference manual for "atmel,at91sam9rl-pwm":
->   *   http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-11032-32-bit-ARM926EJ-S-Microcontroller-SAM9G25_Datasheet.pdf
-> + *
-> + * Limitations:
-> + * - Periods start with the inactive level.
-> + * - Hardware has to be stopped in general to update settings.
-> + *
-> + * Software bugs/possible improvements:
-> + * - When atmel_pwm_apply() is called with state->enabled=false a change in
-> + *   state->polarity isn't honored.
-> + * - Instead of sleeping to wait for a completed period, the interrupt
-> + *   functionality could be used.
+> This updates bindings for MT7629 pwm controller.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-This is definitively not trivial to do right. The main reason it is not
-done so is that reading PWM_ISR will clear all the bits so it is
-necessary to be very careful to avoid race conditions. I'm not sure it
-is worth the effort.
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+If a tag was not added on purpose, please state why and what changed.
