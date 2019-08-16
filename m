@@ -2,110 +2,76 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 488C6908E4
-	for <lists+linux-pwm@lfdr.de>; Fri, 16 Aug 2019 21:48:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 170F690990
+	for <lists+linux-pwm@lfdr.de>; Fri, 16 Aug 2019 22:44:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfHPTsF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 16 Aug 2019 15:48:05 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35547 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727514AbfHPTsF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Aug 2019 15:48:05 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hyiCa-0000qu-4D; Fri, 16 Aug 2019 21:47:56 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hyiCY-0006aL-DA; Fri, 16 Aug 2019 21:47:54 +0200
-Date:   Fri, 16 Aug 2019 21:47:54 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through
- sysfs
-Message-ID: <20190816194754.ldzjqy2yjonfvaat@pengutronix.de>
-References: <20190709190007.91260-1-mka@chromium.org>
- <20190709190007.91260-3-mka@chromium.org>
- <20190816165148.7keg45fmlndr22fl@pengutronix.de>
- <20190816175157.GT250418@google.com>
+        id S1727613AbfHPUoH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 16 Aug 2019 16:44:07 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:59233 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727548AbfHPUoH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Aug 2019 16:44:07 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 00F6AFF807;
+        Fri, 16 Aug 2019 20:43:57 +0000 (UTC)
+Date:   Fri, 16 Aug 2019 22:43:57 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
+Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 4/3] pwm: atmel: document known weaknesses of both
+ hardware and software
+Message-ID: <20190816204357.GG3545@piout.net>
+References: <20190815214133.11134-1-uwe@kleine-koenig.org>
+ <20190816093748.11769-1-uwe@kleine-koenig.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190816175157.GT250418@google.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20190816093748.11769-1-uwe@kleine-koenig.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 10:51:57AM -0700, Matthias Kaehlcke wrote:
-> Hi Uwe,
+On 16/08/2019 11:37:48+0200, Uwe Kleine-König wrote:
+> Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
+> ---
+>  drivers/pwm/pwm-atmel.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> On Fri, Aug 16, 2019 at 06:51:48PM +0200, Uwe Kleine-König wrote:
-> > On Tue, Jul 09, 2019 at 12:00:05PM -0700, Matthias Kaehlcke wrote:
-> > > Backlight brightness curves can have different shapes. The two main
-> > > types are linear and non-linear curves. The human eye doesn't
-> > > perceive linearly increasing/decreasing brightness as linear (see
-> > > also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
-> > > linearly to human eye"), hence many backlights use non-linear (often
-> > > logarithmic) brightness curves. The type of curve currently is opaque
-> > > to userspace, so userspace often uses more or less reliable heuristics
-> > > (like the number of brightness levels) to decide whether to treat a
-> > > backlight device as linear or non-linear.
-> > > 
-> > > Export the type of the brightness curve via the new sysfs attribute
-> > > 'scale'. The value of the attribute can be 'linear', 'non-linear' or
-> > > 'unknown'. For devices that don't provide information about the scale
-> > > of their brightness curve the value of the 'scale' attribute is 'unknown'.
-> > > 
-> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > 
-> > I wonder what kind of problem you are solving here. Can you describe
-> > that in a few words?
-> 
-> The human eye perceives brightness in a logarithmic manner. For
-> backlights with a linear brightness curve brightness controls like
-> sliders need to use a mapping to achieve a behavior that is perceived
-> as linear-ish (more details: http://www.pathwaylighting.com/products/downloads/brochure/technical_materials_1466797044_Linear+vs+Logarithmic+Dimming+White+Paper.pdf)
-> 
-> As of now userspace doesn't have information about the type of the
-> brightness curve, and often uses heuristics to make a guess, which may
-> be right most of the time, but not always. The new attribute eliminates
-> the need to guess.
+> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
+> index 42fe7bc043a8..1ddb93db9627 100644
+> --- a/drivers/pwm/pwm-atmel.c
+> +++ b/drivers/pwm/pwm-atmel.c
+> @@ -7,6 +7,16 @@
+>   *
+>   * Reference manual for "atmel,at91sam9rl-pwm":
+>   *   http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-11032-32-bit-ARM926EJ-S-Microcontroller-SAM9G25_Datasheet.pdf
+> + *
+> + * Limitations:
+> + * - Periods start with the inactive level.
+> + * - Hardware has to be stopped in general to update settings.
+> + *
+> + * Software bugs/possible improvements:
+> + * - When atmel_pwm_apply() is called with state->enabled=false a change in
+> + *   state->polarity isn't honored.
+> + * - Instead of sleeping to wait for a completed period, the interrupt
+> + *   functionality could be used.
 
-This is about backlights right? So the kernel provides to userspace an
-interval [0, x] for some x and depending on the physics of the the
-backlight configuring x/2 (probably?) either means 50% measured light or
-50% perceived light, right?
+This is definitively not trivial to do right. The main reason it is not
+done so is that reading PWM_ISR will clear all the bits so it is
+necessary to be very careful to avoid race conditions. I'm not sure it
+is worth the effort.
 
-I wonder if it would be possible instead of giving different backlight
-implementations the freedom to use either linear or logarithmic (or
-quadratic?) scaling and tell userspace which of the options were picked
-require the drivers to provide a (say) linear scaling and then userspace
-wouldn't need to care about the exact physics.
-
-Best regards
-Uwe
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
