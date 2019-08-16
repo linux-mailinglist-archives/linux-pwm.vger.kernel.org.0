@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 605E48FC08
-	for <lists+linux-pwm@lfdr.de>; Fri, 16 Aug 2019 09:22:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB06F8FC0D
+	for <lists+linux-pwm@lfdr.de>; Fri, 16 Aug 2019 09:22:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfHPHWN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 16 Aug 2019 03:22:13 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:25143 "EHLO
+        id S1726575AbfHPHWX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 16 Aug 2019 03:22:23 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:62952 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726634AbfHPHWN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Aug 2019 03:22:13 -0400
-X-UUID: d49054488efc4eb6997fa908461bf604-20190816
-X-UUID: d49054488efc4eb6997fa908461bf604-20190816
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        with ESMTP id S1726166AbfHPHWX (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Aug 2019 03:22:23 -0400
+X-UUID: aafa1fce64b94941840dd43317b1bb9d-20190816
+X-UUID: aafa1fce64b94941840dd43317b1bb9d-20190816
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
         (envelope-from <sam.shih@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1658573712; Fri, 16 Aug 2019 15:22:06 +0800
+        with ESMTP id 945494156; Fri, 16 Aug 2019 15:22:19 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 16 Aug 2019 15:22:07 +0800
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 16 Aug 2019 15:22:22 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 16 Aug 2019 15:22:07 +0800
+ Transport; Fri, 16 Aug 2019 15:22:22 +0800
 From:   Sam Shih <sam.shih@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -33,15 +33,14 @@ CC:     Ryder Lee <ryder.lee@mediatek.com>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v3 1/10] pwm: mediatek: add a property "num-pwms"
-Date:   Fri, 16 Aug 2019 15:21:19 +0800
-Message-ID: <1565940088-845-2-git-send-email-sam.shih@mediatek.com>
+Subject: [PATCH v3 2/10] pwm: mediatek: allocate the clks array dynamically
+Date:   Fri, 16 Aug 2019 15:21:20 +0800
+Message-ID: <1565940088-845-3-git-send-email-sam.shih@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1565940088-845-1-git-send-email-sam.shih@mediatek.com>
 References: <1565940088-845-1-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 0C902ACE32ECD8BBAAFC990D921AF25369D49794EA9493C6726966A50E95A3502000:8
 X-MTK:  N
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
@@ -50,111 +49,161 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 From: Ryder Lee <ryder.lee@mediatek.com>
 
-This adds a property "num-pwms" to avoid having an endless
-list of compatibles with no differences for the same driver.
+Instead of using fixed size of arrays, allocate the memory for them
+based on the information we get from the chips.
 
 Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 Signed-off-by: Sam Shih <sam.shih@mediatek.com>
 ---
- drivers/pwm/pwm-mediatek.c | 35 ++++++++++++++++++++++-------------
- 1 file changed, 22 insertions(+), 13 deletions(-)
+ drivers/pwm/pwm-mediatek.c | 76 +++++++++++++++++++-------------------
+ 1 file changed, 39 insertions(+), 37 deletions(-)
 
 diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index eb6674ce995f..f9d67fb66adb 100644
+index f9d67fb66adb..47585b68483d 100644
 --- a/drivers/pwm/pwm-mediatek.c
 +++ b/drivers/pwm/pwm-mediatek.c
-@@ -55,7 +55,7 @@ static const char * const mtk_pwm_clk_name[MTK_CLK_MAX] = {
- };
+@@ -35,25 +35,6 @@
  
+ #define PWM_CLK_DIV_MAX		7
+ 
+-enum {
+-	MTK_CLK_MAIN = 0,
+-	MTK_CLK_TOP,
+-	MTK_CLK_PWM1,
+-	MTK_CLK_PWM2,
+-	MTK_CLK_PWM3,
+-	MTK_CLK_PWM4,
+-	MTK_CLK_PWM5,
+-	MTK_CLK_PWM6,
+-	MTK_CLK_PWM7,
+-	MTK_CLK_PWM8,
+-	MTK_CLK_MAX,
+-};
+-
+-static const char * const mtk_pwm_clk_name[MTK_CLK_MAX] = {
+-	"main", "top", "pwm1", "pwm2", "pwm3", "pwm4", "pwm5", "pwm6", "pwm7",
+-	"pwm8"
+-};
+-
  struct mtk_pwm_platform_data {
--	unsigned int num_pwms;
-+	unsigned int fallback_npwms;
+ 	unsigned int fallback_npwms;
  	bool pwm45_fixup;
- 	bool has_clks;
+@@ -64,12 +45,16 @@ struct mtk_pwm_platform_data {
+  * struct mtk_pwm_chip - struct representing PWM chip
+  * @chip: linux PWM chip representation
+  * @regs: base address of PWM chip
+- * @clks: list of clocks
++ * @clk_top: the top clock generator
++ * @clk_main: the clock used by PWM core
++ * @clk_pwms: the clock used by each PWM channel
+  */
+ struct mtk_pwm_chip {
+ 	struct pwm_chip chip;
+ 	void __iomem *regs;
+-	struct clk *clks[MTK_CLK_MAX];
++	struct clk *clk_top;
++	struct clk *clk_main;
++	struct clk **clk_pwms;
+ 	const struct mtk_pwm_platform_data *soc;
  };
-@@ -226,27 +226,36 @@ static const struct pwm_ops mtk_pwm_ops = {
  
- static int mtk_pwm_probe(struct platform_device *pdev)
+@@ -90,24 +75,24 @@ static int mtk_pwm_clk_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	if (!pc->soc->has_clks)
+ 		return 0;
+ 
+-	ret = clk_prepare_enable(pc->clks[MTK_CLK_TOP]);
++	ret = clk_prepare_enable(pc->clk_top);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = clk_prepare_enable(pc->clks[MTK_CLK_MAIN]);
++	ret = clk_prepare_enable(pc->clk_main);
+ 	if (ret < 0)
+ 		goto disable_clk_top;
+ 
+-	ret = clk_prepare_enable(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
++	ret = clk_prepare_enable(pc->clk_pwms[pwm->hwpwm]);
+ 	if (ret < 0)
+ 		goto disable_clk_main;
+ 
+ 	return 0;
+ 
+ disable_clk_main:
+-	clk_disable_unprepare(pc->clks[MTK_CLK_MAIN]);
++	clk_disable_unprepare(pc->clk_main);
+ disable_clk_top:
+-	clk_disable_unprepare(pc->clks[MTK_CLK_TOP]);
++	clk_disable_unprepare(pc->clk_top);
+ 
+ 	return ret;
+ }
+@@ -119,9 +104,9 @@ static void mtk_pwm_clk_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	if (!pc->soc->has_clks)
+ 		return;
+ 
+-	clk_disable_unprepare(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
+-	clk_disable_unprepare(pc->clks[MTK_CLK_MAIN]);
+-	clk_disable_unprepare(pc->clks[MTK_CLK_TOP]);
++	clk_disable_unprepare(pc->clk_pwms[pwm->hwpwm]);
++	clk_disable_unprepare(pc->clk_main);
++	clk_disable_unprepare(pc->clk_top);
+ }
+ 
+ static inline u32 mtk_pwm_readl(struct mtk_pwm_chip *chip, unsigned int num,
+@@ -141,7 +126,7 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			  int duty_ns, int period_ns)
  {
--	const struct mtk_pwm_platform_data *data;
-+	struct device_node *np = pdev->dev.of_node;
+ 	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
+-	struct clk *clk = pc->clks[MTK_CLK_PWM1 + pwm->hwpwm];
++	struct clk *clk = pc->soc->has_clks ? pc->clk_pwms[pwm->hwpwm] : NULL;
+ 	u32 clkdiv = 0, cnt_period, cnt_duty, reg_width = PWMDWIDTH,
+ 	    reg_thres = PWMTHRES;
+ 	u64 resolution;
+@@ -229,7 +214,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+ 	struct device_node *np = pdev->dev.of_node;
  	struct mtk_pwm_chip *pc;
  	struct resource *res;
--	unsigned int i;
-+	unsigned int i, npwms;
+-	unsigned int i, npwms;
++	unsigned int npwms;
  	int ret;
  
  	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
- 	if (!pc)
- 		return -ENOMEM;
+@@ -255,12 +240,29 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+ 		}
+ 	}
  
--	data = of_device_get_match_data(&pdev->dev);
--	if (data == NULL)
--		return -EINVAL;
--	pc->soc = data;
-+	pc->soc = of_device_get_match_data(&pdev->dev);
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	pc->regs = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(pc->regs))
- 		return PTR_ERR(pc->regs);
- 
--	for (i = 0; i < data->num_pwms + 2 && pc->soc->has_clks; i++) {
-+	ret = of_property_read_u32(np, "num-pwms", &npwms);
-+	if (ret < 0) {
-+		/* It's deprecated, we should specify num_pwms via DT now. */
-+		if (pc->soc->fallback_npwms) {
-+			npwms = pc->soc->fallback_npwms;
-+			dev_warn(&pdev->dev, "DT is outdated, please update it\n");
-+		} else {
-+			dev_err(&pdev->dev, "failed to get number of PWMs\n");
-+			return ret;
-+		}
-+	}
+-	for (i = 0; i < npwms + 2 && pc->soc->has_clks; i++) {
+-		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
+-		if (IS_ERR(pc->clks[i])) {
+-			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
+-				mtk_pwm_clk_name[i], PTR_ERR(pc->clks[i]));
+-			return PTR_ERR(pc->clks[i]);
++	if (pc->soc->has_clks) {
++		int i;
 +
-+	for (i = 0; i < npwms + 2 && pc->soc->has_clks; i++) {
- 		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
- 		if (IS_ERR(pc->clks[i])) {
- 			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
-@@ -260,7 +269,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
- 	pc->chip.dev = &pdev->dev;
- 	pc->chip.ops = &mtk_pwm_ops;
- 	pc->chip.base = -1;
--	pc->chip.npwm = data->num_pwms;
-+	pc->chip.npwm = npwms;
++		pc->clk_pwms = devm_kcalloc(&pdev->dev, npwms,
++					    sizeof(*pc->clk_pwms), GFP_KERNEL);
++		if (!pc->clk_pwms)
++			return -ENOMEM;
++
++		pc->clk_top = devm_clk_get(&pdev->dev, "top");
++		if (IS_ERR(pc->clk_top))
++			return PTR_ERR(pc->clk_top);
++
++		pc->clk_main = devm_clk_get(&pdev->dev, "main");
++		if (IS_ERR(pc->clk_main))
++			return PTR_ERR(pc->clk_main);
++
++		for (i = 0; i < npwms; i++) {
++			char name[8];
++
++			snprintf(name, sizeof(name), "pwm%d", i + 1);
++			pc->clk_pwms[i] = devm_clk_get(&pdev->dev, name);
++			if (IS_ERR(pc->clk_pwms[i]))
++				return PTR_ERR(pc->clk_pwms[i]);
+ 		}
+ 	}
  
- 	ret = pwmchip_add(&pc->chip);
- 	if (ret < 0) {
-@@ -279,25 +288,25 @@ static int mtk_pwm_remove(struct platform_device *pdev)
- }
- 
- static const struct mtk_pwm_platform_data mt2712_pwm_data = {
--	.num_pwms = 8,
-+	.fallback_npwms = 8,
- 	.pwm45_fixup = false,
- 	.has_clks = true,
- };
- 
- static const struct mtk_pwm_platform_data mt7622_pwm_data = {
--	.num_pwms = 6,
-+	.fallback_npwms = 6,
- 	.pwm45_fixup = false,
- 	.has_clks = true,
- };
- 
- static const struct mtk_pwm_platform_data mt7623_pwm_data = {
--	.num_pwms = 5,
-+	.fallback_npwms = 5,
- 	.pwm45_fixup = true,
- 	.has_clks = true,
- };
- 
- static const struct mtk_pwm_platform_data mt7628_pwm_data = {
--	.num_pwms = 4,
-+	.fallback_npwms = 4,
- 	.pwm45_fixup = true,
- 	.has_clks = false,
- };
 -- 
 2.17.1
 
