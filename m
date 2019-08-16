@@ -2,77 +2,135 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F56D909EB
-	for <lists+linux-pwm@lfdr.de>; Fri, 16 Aug 2019 23:02:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 449F290A08
+	for <lists+linux-pwm@lfdr.de>; Fri, 16 Aug 2019 23:11:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727668AbfHPVCJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 16 Aug 2019 17:02:09 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40379 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbfHPVCI (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Aug 2019 17:02:08 -0400
-Received: by mail-ot1-f65.google.com with SMTP id c34so10829519otb.7;
-        Fri, 16 Aug 2019 14:02:08 -0700 (PDT)
+        id S1727548AbfHPVKz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 16 Aug 2019 17:10:55 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40469 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727674AbfHPVKz (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Aug 2019 17:10:55 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w10so3523530pgj.7
+        for <linux-pwm@vger.kernel.org>; Fri, 16 Aug 2019 14:10:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=omJ8IItzAJQAPO3tmBsIeieU2u668VutyYMbYeYnfXY=;
+        b=njDzsoq5Y3wMuR1vIA+MGdo+BzO+B/f9SdopkAr0xFHgrStJXA7Ik/UCP8qP6cVwv4
+         lzcubXnyj8uqy6qltZibMeg3xHuVhU5Jzu2yjdBrpex1+Y5E/vNWNcIBdyff7zVFbDPv
+         S7ia2p8XxRtlv61pL9/W76ViOPP2pTn+6Amts=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZFxKR576aWu66XIGODf4Dfqh9pMbrp3cn6HjNum0x/A=;
-        b=lkQ7a7EEws2eTQsn87CRGSqBxNIYRGijVCfv+nXWBlVB1i5ZkHkoyZNvXI/LAqVfcI
-         N/IuDJOLFK+l6HhmQ1SIhMePndOH6Bpy7nZ0WgBuoZIuwnN8QfxLzydj1WIWJx+PL1FV
-         5zc/kxb9UL7LOQRD31PoO3URHoJXF8erRmyIPuMWev0i89w9ju2cm8PGnC+JvQkosk/2
-         IMBM+ht+yZUn97PU8RVdsGNQg2IB13oa3732CgU8IxYUlWd+OgCrwmegkDFhgO9UlOx3
-         olBXzIV1hKxNEZI4/usd1l9brAglRKmoD4dwrBS9tqx3gvclkFtsEmXChKqWeh2dNqMV
-         uzfQ==
-X-Gm-Message-State: APjAAAUGpE7sOgMp7eb7+U5Fxe7j9txFMDnTPtf9HZhEpB4APRnNPxH1
-        ZPZpUuCqbsfjy4Xdl9o7LA==
-X-Google-Smtp-Source: APXvYqx2dK3twuUktSJd04/r2aF5V2tGmUhKOx7YAFKtnfAaGx9f/qJ8sIFYoDauwR1vMrY5vHRb/A==
-X-Received: by 2002:a9d:590b:: with SMTP id t11mr9386551oth.239.1565989327722;
-        Fri, 16 Aug 2019 14:02:07 -0700 (PDT)
-Received: from localhost (ip-173-126-47-137.ftwttx.spcsdns.net. [173.126.47.137])
-        by smtp.gmail.com with ESMTPSA id 11sm2590891otc.45.2019.08.16.14.02.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2019 14:02:07 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 16:02:05 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: Re: [PATCH v3 7/10] dt-bindings: pwm: update bindings for MT7629 SoC
-Message-ID: <20190816210205.GA23351@bogus>
-References: <1565940088-845-1-git-send-email-sam.shih@mediatek.com>
- <1565940088-845-8-git-send-email-sam.shih@mediatek.com>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=omJ8IItzAJQAPO3tmBsIeieU2u668VutyYMbYeYnfXY=;
+        b=HZfIshiLqtIy/WLowo6ZlSJu97H3dm3CZamzbCQasuZWIQtGYao3sNfXjJbgn1mZhw
+         0iVR3v2YJvI5hGfbGlUMt3lzPI1UXViX/mqEbAaixrvyj2e/u4Mfl2OgplTpdoOcE8Da
+         /GLQ9n22QKGQrVnqTjU8t9T+Xcx0dpy/tDR5I14YBgRon9h3YktwabqEZdA2PSYsyMZ6
+         IaVc8wX++GaVwPsx9BYRAOukBbVnbpCo3OPO/rjC4qRsLe1K1pUWqk2XSfMZrl2mWus0
+         XHFm+PdpwYVQQK4iLQaBFbHmFuY+i67ZBeCad6CCKdMBCz+J6n7YUT2v79GHko1Zx4qn
+         ZEPA==
+X-Gm-Message-State: APjAAAXQoWWOKzhrYPnP1Ko8qd3NDA34zsdh0Kum3hfKIAOXqwS7MvK2
+        dV56Rj8gHnXPfAOI6o4WkyRF6g==
+X-Google-Smtp-Source: APXvYqx/9biztZysWMeW6sR50lVpQxokVJNMUldAOC4JXEFv4e9JNEnzqyrf//WtPwGuqvJWoi3P2A==
+X-Received: by 2002:aa7:9293:: with SMTP id j19mr13113379pfa.90.1565989854997;
+        Fri, 16 Aug 2019 14:10:54 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id c71sm7437581pfc.106.2019.08.16.14.10.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 16 Aug 2019 14:10:54 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 14:10:51 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through
+ sysfs
+Message-ID: <20190816211051.GV250418@google.com>
+References: <20190709190007.91260-1-mka@chromium.org>
+ <20190709190007.91260-3-mka@chromium.org>
+ <20190816165148.7keg45fmlndr22fl@pengutronix.de>
+ <20190816175157.GT250418@google.com>
+ <20190816194754.ldzjqy2yjonfvaat@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1565940088-845-8-git-send-email-sam.shih@mediatek.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190816194754.ldzjqy2yjonfvaat@pengutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, 16 Aug 2019 15:21:25 +0800, Sam Shih wrote:
-> From: Ryder Lee <ryder.lee@mediatek.com>
+On Fri, Aug 16, 2019 at 09:47:54PM +0200, Uwe Kleine-König wrote:
+> On Fri, Aug 16, 2019 at 10:51:57AM -0700, Matthias Kaehlcke wrote:
+> > Hi Uwe,
+> > 
+> > On Fri, Aug 16, 2019 at 06:51:48PM +0200, Uwe Kleine-König wrote:
+> > > On Tue, Jul 09, 2019 at 12:00:05PM -0700, Matthias Kaehlcke wrote:
+> > > > Backlight brightness curves can have different shapes. The two main
+> > > > types are linear and non-linear curves. The human eye doesn't
+> > > > perceive linearly increasing/decreasing brightness as linear (see
+> > > > also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
+> > > > linearly to human eye"), hence many backlights use non-linear (often
+> > > > logarithmic) brightness curves. The type of curve currently is opaque
+> > > > to userspace, so userspace often uses more or less reliable heuristics
+> > > > (like the number of brightness levels) to decide whether to treat a
+> > > > backlight device as linear or non-linear.
+> > > > 
+> > > > Export the type of the brightness curve via the new sysfs attribute
+> > > > 'scale'. The value of the attribute can be 'linear', 'non-linear' or
+> > > > 'unknown'. For devices that don't provide information about the scale
+> > > > of their brightness curve the value of the 'scale' attribute is 'unknown'.
+> > > > 
+> > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > 
+> > > I wonder what kind of problem you are solving here. Can you describe
+> > > that in a few words?
+> > 
+> > The human eye perceives brightness in a logarithmic manner. For
+> > backlights with a linear brightness curve brightness controls like
+> > sliders need to use a mapping to achieve a behavior that is perceived
+> > as linear-ish (more details: http://www.pathwaylighting.com/products/downloads/brochure/technical_materials_1466797044_Linear+vs+Logarithmic+Dimming+White+Paper.pdf)
+> > 
+> > As of now userspace doesn't have information about the type of the
+> > brightness curve, and often uses heuristics to make a guess, which may
+> > be right most of the time, but not always. The new attribute eliminates
+> > the need to guess.
 > 
-> This updates bindings for MT7629 pwm controller.
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+> This is about backlights right? So the kernel provides to userspace an
+> interval [0, x] for some x and depending on the physics of the the
+> backlight configuring x/2 (probably?) either means 50% measured light or
+> 50% perceived light, right?
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+correct
 
-If a tag was not added on purpose, please state why and what changed.
+> I wonder if it would be possible instead of giving different backlight
+> implementations the freedom to use either linear or logarithmic (or
+> quadratic?) scaling and tell userspace which of the options were picked
+> require the drivers to provide a (say) linear scaling and then userspace
+> wouldn't need to care about the exact physics.
+
+In an ideal world the backlight interface would be consistent as you
+suggest, however there are plenty of existing devices which use the
+'other' scaling (regardless of which is chosen as the 'correct'
+one). Userspace still has to deal with these. And changing previously
+'logarithmic' drivers to linear (or viceversa) may 'break' userspace,
+when it keeps using its 'old' scaling, which now isn't correct anymore.
+
+
