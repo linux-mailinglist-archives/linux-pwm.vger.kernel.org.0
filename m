@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CD898FC29
-	for <lists+linux-pwm@lfdr.de>; Fri, 16 Aug 2019 09:23:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E5B48FC2B
+	for <lists+linux-pwm@lfdr.de>; Fri, 16 Aug 2019 09:23:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbfHPHWt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        id S1726594AbfHPHWt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
         Fri, 16 Aug 2019 03:22:49 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:46014 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727011AbfHPHWt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Aug 2019 03:22:49 -0400
-X-UUID: 4b87a54041ae48ab93f682292eafd01d-20190816
-X-UUID: 4b87a54041ae48ab93f682292eafd01d-20190816
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+Received: from mailgw02.mediatek.com ([210.61.82.184]:5653 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727003AbfHPHWs (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Aug 2019 03:22:48 -0400
+X-UUID: c3ccc2f6e2be42f5bd135a392d638d82-20190816
+X-UUID: c3ccc2f6e2be42f5bd135a392d638d82-20190816
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
         (envelope-from <sam.shih@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 261053278; Fri, 16 Aug 2019 15:22:39 +0800
+        with ESMTP id 1870297669; Fri, 16 Aug 2019 15:22:42 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 16 Aug 2019 15:22:43 +0800
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 16 Aug 2019 15:22:44 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 16 Aug 2019 15:22:43 +0800
+ Transport; Fri, 16 Aug 2019 15:22:44 +0800
 From:   Sam Shih <sam.shih@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -33,9 +33,9 @@ CC:     Ryder Lee <ryder.lee@mediatek.com>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v3 6/10] arm: dts: mt7623: add a property "num-pwms" for PWM node
-Date:   Fri, 16 Aug 2019 15:21:24 +0800
-Message-ID: <1565940088-845-7-git-send-email-sam.shih@mediatek.com>
+Subject: [PATCH v3 7/10] dt-bindings: pwm: update bindings for MT7629 SoC
+Date:   Fri, 16 Aug 2019 15:21:25 +0800
+Message-ID: <1565940088-845-8-git-send-email-sam.shih@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1565940088-845-1-git-send-email-sam.shih@mediatek.com>
 References: <1565940088-845-1-git-send-email-sam.shih@mediatek.com>
@@ -49,26 +49,27 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 From: Ryder Lee <ryder.lee@mediatek.com>
 
-This adds a property "num-pwms" for PWM controller.
+This updates bindings for MT7629 pwm controller.
 
 Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
- arch/arm/boot/dts/mt7623.dtsi | 1 +
+ Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index a79f0b6c3429..208e0d19a575 100644
---- a/arch/arm/boot/dts/mt7623.dtsi
-+++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -452,6 +452,7 @@
- 			 <&pericfg CLK_PERI_PWM5>;
- 		clock-names = "top", "main", "pwm1", "pwm2",
- 			      "pwm3", "pwm4", "pwm5";
-+		num-pwms = <5>;
- 		status = "disabled";
- 	};
- 
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+index ea95b490a913..c7bd5633d1eb 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
++++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+@@ -6,6 +6,7 @@ Required properties:
+    - "mediatek,mt7622-pwm": found on mt7622 SoC.
+    - "mediatek,mt7623-pwm": found on mt7623 SoC.
+    - "mediatek,mt7628-pwm": found on mt7628 SoC.
++   - "mediatek,mt7629-pwm", "mediatek,mt7622-pwm": found on mt7629 SoC.
+  - reg: physical base address and length of the controller's registers.
+  - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
+    the cell format.
 -- 
 2.17.1
 
