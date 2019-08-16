@@ -2,50 +2,30 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB89090748
-	for <lists+linux-pwm@lfdr.de>; Fri, 16 Aug 2019 19:53:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 488C6908E4
+	for <lists+linux-pwm@lfdr.de>; Fri, 16 Aug 2019 21:48:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbfHPRxV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 16 Aug 2019 13:53:21 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46664 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727467AbfHPRxU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Aug 2019 13:53:20 -0400
-Received: by mail-pg1-f195.google.com with SMTP id m3so2696840pgv.13
-        for <linux-pwm@vger.kernel.org>; Fri, 16 Aug 2019 10:53:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qj+FqdPY7E+evYAajO1pGkO3Jxq482Q+PVPBi3aWl84=;
-        b=dzBCnLLWXkS4Ws52BWzTOeqaC5aRUz5q2pg8F0eAd5SdnxF3jZGdMmM4k7+pbM4cIy
-         HFdX+vc2Ll7YBxNtOVC6nR4VfPlZbR1gPHuO2FCfrh49LSO6E+8jtbOv1VsY/io0Q/qF
-         Tuh6jQsfKZuGDOeVmqR2t4wOkS67aa0Q91mLo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qj+FqdPY7E+evYAajO1pGkO3Jxq482Q+PVPBi3aWl84=;
-        b=gFe+Y9KOm/6+fD0BD2h+xC7eKwgLc2LZrj3ikPpJh1aIu7IcScSrWQcPyqnA7Tj4G3
-         qdFdjpuAb2qFnPsTY+fyXRwFedwkfFLQ0lX3PY7umGvqxsEo+zLDMkXA13PePnakqAlg
-         fdKO/duaXJ59txKuDjKgNG7ZkdGnDYWqE53UWLgpimH5KycoTihIXGu7ziOjTcwicvIA
-         jZYeV/r3kCn26tpIi9q8zfwM1SPZ/kp8bxgH9F5w6eL5KxwpdAUFPGPcDvCrRAAy6cRg
-         wJd7lvfORpu65hF1B8DwVqNCtLnH6m/NQ0XkUISTb+H3E51K3IRjdqGrgvLPdgdID/9F
-         U7QQ==
-X-Gm-Message-State: APjAAAVsQEwym/J9/kiZtOmqzzD34iAvrT/C1I9gNX9ipDrcu80u9Orr
-        daSdIpZSdQeWopZ2pPwmFVXSPg==
-X-Google-Smtp-Source: APXvYqzTIq0zTOTZXmt8ILZwmsbuiDzRx2Ft09CbHR4OyhK8UqKzWfU17MizJnJeqdWUnX7nUxPe8Q==
-X-Received: by 2002:a63:1046:: with SMTP id 6mr9033102pgq.111.1565978000238;
-        Fri, 16 Aug 2019 10:53:20 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id g10sm7048716pfb.95.2019.08.16.10.53.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 16 Aug 2019 10:53:19 -0700 (PDT)
-Date:   Fri, 16 Aug 2019 10:53:17 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
+        id S1727542AbfHPTsF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 16 Aug 2019 15:48:05 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35547 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727514AbfHPTsF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Aug 2019 15:48:05 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hyiCa-0000qu-4D; Fri, 16 Aug 2019 21:47:56 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hyiCY-0006aL-DA; Fri, 16 Aug 2019 21:47:54 +0200
+Date:   Fri, 16 Aug 2019 21:47:54 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Matthias Kaehlcke <mka@chromium.org>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
         Jingoo Han <jingoohan1@gmail.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
@@ -57,23 +37,30 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through
  sysfs
-Message-ID: <20190816175317.GU250418@google.com>
+Message-ID: <20190816194754.ldzjqy2yjonfvaat@pengutronix.de>
 References: <20190709190007.91260-1-mka@chromium.org>
  <20190709190007.91260-3-mka@chromium.org>
- <20190807201528.GO250418@google.com>
- <510f6d8a-71a0-fa6e-33ea-c4a4bfa96607@linaro.org>
+ <20190816165148.7keg45fmlndr22fl@pengutronix.de>
+ <20190816175157.GT250418@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <510f6d8a-71a0-fa6e-33ea-c4a4bfa96607@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190816175157.GT250418@google.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 04:54:18PM +0100, Daniel Thompson wrote:
-> On 07/08/2019 21:15, Matthias Kaehlcke wrote:
+On Fri, Aug 16, 2019 at 10:51:57AM -0700, Matthias Kaehlcke wrote:
+> Hi Uwe,
+> 
+> On Fri, Aug 16, 2019 at 06:51:48PM +0200, Uwe Kleine-König wrote:
 > > On Tue, Jul 09, 2019 at 12:00:05PM -0700, Matthias Kaehlcke wrote:
 > > > Backlight brightness curves can have different shapes. The two main
 > > > types are linear and non-linear curves. The human eye doesn't
@@ -92,17 +79,33 @@ On Fri, Aug 16, 2019 at 04:54:18PM +0100, Daniel Thompson wrote:
 > > > 
 > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 > > 
-> > Daniel (et al): do you have any more comments on this patch/series or
-> > is it ready to land?
+> > I wonder what kind of problem you are solving here. Can you describe
+> > that in a few words?
 > 
-> I decided to leave it for a long while for others to review since I'm still
-> a tiny bit uneasy about the linear/non-linear terminology.
+> The human eye perceives brightness in a logarithmic manner. For
+> backlights with a linear brightness curve brightness controls like
+> sliders need to use a mapping to achieve a behavior that is perceived
+> as linear-ish (more details: http://www.pathwaylighting.com/products/downloads/brochure/technical_materials_1466797044_Linear+vs+Logarithmic+Dimming+White+Paper.pdf)
 > 
-> However that's my only concern, its fairly minor and I've dragged by feet
-> for more then long enough, so:
-> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> As of now userspace doesn't have information about the type of the
+> brightness curve, and often uses heuristics to make a guess, which may
+> be right most of the time, but not always. The new attribute eliminates
+> the need to guess.
 
-Thanks!
+This is about backlights right? So the kernel provides to userspace an
+interval [0, x] for some x and depending on the physics of the the
+backlight configuring x/2 (probably?) either means 50% measured light or
+50% perceived light, right?
 
-If you or someone else has another suggestion for the terminology that
-we can all agree on I'm happy to change it.
+I wonder if it would be possible instead of giving different backlight
+implementations the freedom to use either linear or logarithmic (or
+quadratic?) scaling and tell userspace which of the options were picked
+require the drivers to provide a (say) linear scaling and then userspace
+wouldn't need to care about the exact physics.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
