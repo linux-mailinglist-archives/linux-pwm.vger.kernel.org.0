@@ -2,58 +2,43 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E2F19236C
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 Aug 2019 14:29:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C494392843
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 Aug 2019 17:20:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbfHSM3V (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 19 Aug 2019 08:29:21 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40115 "EHLO
+        id S1726728AbfHSPUs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 19 Aug 2019 11:20:48 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:34105 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbfHSM3U (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 19 Aug 2019 08:29:20 -0400
+        with ESMTP id S1726366AbfHSPUs (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 19 Aug 2019 11:20:48 -0400
 Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
         by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1hzgmj-0002vD-DX; Mon, 19 Aug 2019 14:29:17 +0200
+        id 1hzjSX-0006NW-1z; Mon, 19 Aug 2019 17:20:37 +0200
 Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
         (envelope-from <ukl@pengutronix.de>)
-        id 1hzgmh-0007dT-8g; Mon, 19 Aug 2019 14:29:15 +0200
-Date:   Mon, 19 Aug 2019 14:29:15 +0200
+        id 1hzjSV-0003tf-To; Mon, 19 Aug 2019 17:20:35 +0200
+Date:   Mon, 19 Aug 2019 17:20:35 +0200
 From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through
- sysfs
-Message-ID: <20190819122915.icjszuvnwyjpa75n@pengutronix.de>
-References: <20190709190007.91260-1-mka@chromium.org>
- <20190709190007.91260-3-mka@chromium.org>
- <20190816165148.7keg45fmlndr22fl@pengutronix.de>
- <20190816175157.GT250418@google.com>
- <20190816194754.ldzjqy2yjonfvaat@pengutronix.de>
- <20190816211051.GV250418@google.com>
- <20190819054628.asw3cxp46w3rpml7@pengutronix.de>
- <20190819095037.h3gig3quyhnzshm7@holly.lan>
- <20190819102127.wqudnbngottjakf5@pengutronix.de>
- <20190819111613.2kkn25tmjgyjhbip@holly.lan>
+To:     Claudiu.Beznea@microchip.com
+Cc:     thierry.reding@gmail.com, Nicolas.Ferre@microchip.com,
+        alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 4/3] pwm: atmel: document known weaknesses of both
+ hardware and software
+Message-ID: <20190819152035.lkemndmypcehb2a2@pengutronix.de>
+References: <20190815214133.11134-1-uwe@kleine-koenig.org>
+ <20190816093748.11769-1-uwe@kleine-koenig.org>
+ <0a389abe-15ef-0e63-109f-2db4cb36f4b9@microchip.com>
+ <20190819104617.kujgwthxtjy6cssa@pengutronix.de>
+ <3029467b-be14-d78b-5580-8bd3842d86e2@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190819111613.2kkn25tmjgyjhbip@holly.lan>
+In-Reply-To: <3029467b-be14-d78b-5580-8bd3842d86e2@microchip.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
 X-SA-Exim-Mail-From: ukl@pengutronix.de
@@ -64,61 +49,99 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 12:16:13PM +0100, Daniel Thompson wrote:
-> On Mon, Aug 19, 2019 at 12:21:27PM +0200, Uwe Kleine-König wrote:
-> > > > > In an ideal world the backlight interface would be consistent as you
-> > > > > suggest, however there are plenty of existing devices which use the
-> > > > > 'other' scaling (regardless of which is chosen as the 'correct'
-> > > > > one). Userspace still has to deal with these. And changing previously
-> > > > > 'logarithmic' drivers to linear (or viceversa) may 'break' userspace,
-> > > > > when it keeps using its 'old' scaling, which now isn't correct anymore.
-> > > > 
-> > > > It might be subjective, or maybe I'm just too optimistic, but I think if
-> > > > there was no policy before about the meaning of
-> > > > 
-> > > > 	echo 17 > brightness
-> > > > 
-> > > > other than "brighter than lower values and darker than higher ones"
-> > > > introducing (say) the scale is intended to represent a linear brightness
-> > > > curve is ok.
-> > > > 
-> > > > Unless userspace jumps through hoops and tries to identify the actual
-> > > > device it is running on it is wrong on some machines anyhow and we're
-> > > > only shifting the set of affected machines with a tighter policy (until
-> > > > that userspace application is fixed).
-> > > 
-> > > I believe that there are two common approaches by userspace at present:
-> > > 
-> > > 1. Assume the scale is perceptual and we can directly map a slider
-> > >    to the backlight value. This is common simply because most ACPI
-> > >    backlights are perceptual and therefore when tested in a laptop
-> > >    it works OK.
-> > > 
-> > > 2. Assume that is max brightness is small (e.g. ACPI) then the
-> > >    scale is perceptual and if the max brightness is large (e.g.
-> > >    a PWM) then the scale is linear and apply a correction
-> > >    function between the slider and the control.
-> > > 
-> > > That historic baggage makes is diffcult to "just define a standardized
-> > > scale"... especially given that if we selected a standardized scale we
-> > > would probably want a perceptual scale with lots of steps (e.g. break
-> > > the heuristic).
+Hello Claudiu,
+
+On Mon, Aug 19, 2019 at 12:28:59PM +0000, Claudiu.Beznea@microchip.com wrote:
+> On 19.08.2019 13:46, Uwe Kleine-König wrote:
+> > On Mon, Aug 19, 2019 at 09:26:04AM +0000, Claudiu.Beznea@microchip.com wrote:
+> >> On 16.08.2019 12:37, Uwe Kleine-König wrote:
+> >>> Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
+> >>> ---
+> >>>  drivers/pwm/pwm-atmel.c | 10 ++++++++++
+> >>>  1 file changed, 10 insertions(+)
+> >>>
+> >>> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
+> >>> index 42fe7bc043a8..1ddb93db9627 100644
+> >>> --- a/drivers/pwm/pwm-atmel.c
+> >>> +++ b/drivers/pwm/pwm-atmel.c
+> >>> @@ -7,6 +7,16 @@
+> >>>   *
+> >>>   * Reference manual for "atmel,at91sam9rl-pwm":
+> >>>   *   http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-11032-32-bit-ARM926EJ-S-Microcontroller-SAM9G25_Datasheet.pdf
+> >>> + *
+> >>> + * Limitations:
+> >>> + * - Periods start with the inactive level.
+> >>
+> >> Are you talking here about the normal polarity (from documentation: By
+> >> definition, normal polarity characterizes a signal starts high for the
+> >> duration of the duty cycle and goes low for the remainder of the period.)
 > > 
-> > With "perceptual" you mean that logarithmic stuff, right?
+> > When .polarity = PWM_POLARITY_NORMAL is passed to atmel_pwm_apply() the
+> > drivers sets PWM_CMR_CPOL=0 which according to the datasheet (linked
+> > above) means: "The output waveform starts at a low level."
+> > 
+> > So maybe just the logic has to be inverted there,
 > 
-> Human perception is fairly complex so it depends how strict you want to
-> get. At the end of the day what it means is you can map a slider UI
-> component directly to the backlight range and it will feel right. Thus
-> a userspace that maps directly to a slider *is* assuming the scale
-> is perceptual.
+> Agree.
+> 
+> > but then maybe the
+> > output gets active instead of inactive when the PWM is disabled.
+> 
+> Yes, this would happen. Playing again with CPOL when disabling may be a
+> solution.
 
-I have problems to declare something as "the right thing to do" that
-depends on feeling of users. I much prefer to make a technical device
-authoritative here (in this case a device that measures emitted light).
+Alternatively you could argue that it would be more sensible to drop the
+requirement for a certain output level on disable. You would have my
+support here.
 
-Other than that I don't have enough experience with backlights to judge
-the decisions that have to be done and so will stop my participation in
-this thread now.
+> > (Which in my book is ok, but it's Thierry's opinion that counts here.)
+> > 
+> >> If yes, this should be solved by playing with CPOL bit of CMR.
+> >>
+> >>> + * - Hardware has to be stopped in general to update settings.
+> >>
+> >> Sama5d2 has duty cycle that could be updated on the fly.
+> > 
+> > There is some functionality in the 9G25, too. I didn't understand it
+> > completely but maybe it only helps updating one of period or duty cycle.
+> >  
+> >>> + *
+> >>> + * Software bugs/possible improvements:
+> >>> + * - When atmel_pwm_apply() is called with state->enabled=false a change in
+> >>> + *   state->polarity isn't honored.
+> >>
+> >> I know that when configuring a PWM one should get the current state of the
+> >> PWM, change it, then pass it to the driver via pwm_apply_state().
+> > 
+> > That seems to be a common pattern at least. IMHO letting the consumer
+> > just configure the state that should be used should be fine, too.>
+> >> In case one would call the pwm_apply_state() with state->enabled =
+> >> false the state would be stored in PWM specific object (of type struct
+> >> pwm_device). On the next apply, with enabled = true, all the PWM
+> >> parameters would be actually applied to hardware. So, until
+> >> enable=true the PWM state would only be cached by PWM core specific
+> >> objects (in pwm_apply_state()).
+> > 
+> > I fail to follow what you mean here. If a PWM runs with (say) normal
+> > polarity and you call pwm_apply_state(mypwm, { .polarity =
+> > PWM_POLARITY_INVERSED, .enabled = false, }); the apply callback of the
+> > lowlevel driver is called and supposed to configure the output to yield
+> > a constant high.
+> 
+> Ok, I see it now. I'll put it on my queue.
+
+See above. The atmel driver is just part of my quest to get a general
+picture what the common PWM implementation does. Thierry argued that it
+is natural that a PWM drives the inactive level on disable.
+
+I'd say that it would be more natural to not demand a certain level
+because a) IMHO there are enough implementations that differ here and b)
+consumers could just configure for duty_cycle=0 if they care.
+
+In the case of the imx driver we could just put aside the discussions
+about how we atomically switch the output to a GPIO to provide the
+needed level. In case of the atmel driver you'd just invert polarity and
+be done.
 
 Best regards
 Uwe
