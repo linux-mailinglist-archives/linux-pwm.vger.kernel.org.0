@@ -2,159 +2,199 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 265269209F
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 Aug 2019 11:46:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8708F920B4
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 Aug 2019 11:51:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbfHSJqT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 19 Aug 2019 05:46:19 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:41979 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfHSJqT (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 19 Aug 2019 05:46:19 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="Nicolas.Ferre@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: DDCquKh3MuszV6EqB5T0ZSQ/dpEpvogk+GkFBnrRA3lmbild8K5ykL3tAXoure2MVVTiCkhrgy
- AvW2XDJZQjFhqkLqtbdJ4ABfcCqsawP3/ZDRtUna6yNIrKLlkVuLdvsfFEv9a/dMzLAoFy1iF2
- EvdoJb4hMB2RB+Hafpzggps3StBjdv7uOgUExdM1aCir8p42qEun1HB2L+PfhZ3SLmjY9waZW6
- tvM1t9tvxehIf3Vz5SL/8+ZqbWO2LC/RzNlwM8LySSabFHP3UlqVj+2/R5Es/bs8pOabCdYZUx
- 4nc=
-X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
-   d="scan'208";a="45738523"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 Aug 2019 02:46:17 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 19 Aug 2019 02:46:17 -0700
-Received: from NAM01-BY2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 19 Aug 2019 02:46:17 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S4cKb/7PIDbu9dsGyhAT1kS32deq56R4DmNR1MAsNrXCu79QGHg1vCTAts9ghFIG1gNh82Dg5JMwx0mvpnP432+FkmBEwWloa0/m6d7sZUuOHP1ziNd2xtaGbcLRJ9B9jArAFFmEoilk5BYswAqa2rjma6QScWpE/pGWb0QrpI/E0fbQT9ToA0uOlnBh6TtJ59inWq0AOWVBrdvNSOjbvDbp1oR/VcY5Ma+Ct6eyik9DeH3LzXzAAOf7OcKwsLmDw0i7nUQ8W8xVCmPSSxk/bIhjyHMqQy5CfnOtHgQv3RF96YuB8s9U/bt4Ajq2YXrwXhkM4qvYkd6IcSlfotcnEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CjthBnwzpPIetsCqEuHFw7sh4cAPWNbK9I1vEKZmq/o=;
- b=c0I/9xHefrmMMPVNqQOaTmKHKUSJPiZnnlpRkkU1ijYV3/oRQcUVRSEtBfoqQTVqIL2HzVFDZjYSpXSC5TUMNbJPXViQ9vkr6LHEmn4/4h7tSbqMgZFPD3bNeEZZIjFT8h1AuCfvtAAPwEwSymCoglhTx7dXEE/lx5A9YEyiZZZ0rTulIQuY93Wd6Zwa1xXbTT+P/yRS9MYFZbbioIvZRKI5nBhI0sqCU5ge3HY8VCZ9n193qBP3LQO2OVP1PyqbYPTvB+2D0ykY2cInwC5Wbg4KvGdofFdn3HOM8xo4nure5+7vnHMRTeJDbEdS7gyIERFhHcS4mBHMzTX0aCcPVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        id S1726784AbfHSJum (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 19 Aug 2019 05:50:42 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39227 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbfHSJum (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 19 Aug 2019 05:50:42 -0400
+Received: by mail-wm1-f67.google.com with SMTP id i63so1023887wmg.4
+        for <linux-pwm@vger.kernel.org>; Mon, 19 Aug 2019 02:50:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CjthBnwzpPIetsCqEuHFw7sh4cAPWNbK9I1vEKZmq/o=;
- b=P441dcPSwHEs/N79/MGo3g9K6CTjI3TU9ZkBxSnUUBcIQGGvyumFThUpOo0wkLpdgVtdKIIFeU/CUqV8ZvoWiSw/jwJqOkK/ybwnyu8UFfnl/9nZ77iaocpPMOmHW3egv0jItoPaV6mOEKai+GetP2NxjaiDTgFji6cDrM+j0uI=
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
- MWHPR11MB1325.namprd11.prod.outlook.com (10.169.230.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Mon, 19 Aug 2019 09:46:16 +0000
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::410a:9d4b:b1df:2134]) by MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::410a:9d4b:b1df:2134%12]) with mapi id 15.20.2178.018; Mon, 19 Aug
- 2019 09:46:16 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <Claudiu.Beznea@microchip.com>, <uwe@kleine-koenig.org>,
-        <thierry.reding@gmail.com>
-CC:     <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH 1/3] pwm: atmel: Add link to reference manual
-Thread-Topic: [PATCH 1/3] pwm: atmel: Add link to reference manual
-Thread-Index: AQHVU7JDiUnwTszSTkGrZWj0MVpKnacCOOSAgAAFkoA=
-Date:   Mon, 19 Aug 2019 09:46:15 +0000
-Message-ID: <fa7be631-49fc-392b-c760-63010e9b2e66@microchip.com>
-References: <20190815214133.11134-1-uwe@kleine-koenig.org>
- <488f7c7e-6de5-f860-4a48-8f8a67cdcbc6@microchip.com>
-In-Reply-To: <488f7c7e-6de5-f860-4a48-8f8a67cdcbc6@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0108.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:c::24) To MWHPR11MB1662.namprd11.prod.outlook.com
- (2603:10b6:301:e::15)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [213.41.198.74]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 50e88918-e962-4be9-a138-08d7248a1413
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR11MB1325;
-x-ms-traffictypediagnostic: MWHPR11MB1325:
-x-ms-exchange-purlcount: 2
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR11MB13258801800EAE7370ABDEA4E0A80@MWHPR11MB1325.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0134AD334F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(39860400002)(136003)(346002)(376002)(199004)(189003)(31696002)(966005)(4326008)(478600001)(25786009)(31686004)(6246003)(76176011)(14454004)(229853002)(81156014)(81166006)(8936002)(52116002)(99286004)(7736002)(6116002)(305945005)(316002)(2906002)(54906003)(110136005)(3846002)(71200400001)(71190400001)(26005)(66476007)(66556008)(64756008)(66446008)(66946007)(86362001)(486006)(66066001)(6436002)(5660300002)(11346002)(2616005)(446003)(476003)(53936002)(6306002)(6512007)(6486002)(8676002)(36756003)(186003)(102836004)(256004)(53546011)(6506007)(386003);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1325;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: DGEOL4ZiYtFYQvB5Kp5EXfNW+usFbjtAtXxe9iMArPVVFjpwSuFhwIDT5PAokCDxEV+U5eb7XnTm4aSHnbdxwZAgetpGQGYfVUspyTjuufR5EWdas5Nn3LKrR78p2454+IDl0ec/MjXFP2/i2fS2qr9Sjd52zHvIQI1Su4A+N/c/yY7a2H/s3XqpcdJyuuP07y6rMcr5LGQUDhDHIuTyODYvUNEPZiHFubVWcgULjwy3YNA/UJE9nRY9IRyovriAXaaKagfPkace1DPRZ0kVoO4Gt9ZA+XGV8LzVa3FOkBY734ZlX4CCOmBB7p2k12odxl3JR/6pJrBKI6iR+A28ZAagFbm19Tk558Caj01vt19Fugjc9L4qFXvJhdGT2DDM3S/xmpev2Qw6N0jEXKr8X78sRGd9ILQfDMtpStG32aU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <15A71F9B5CDD5541854C287DF9D4952C@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=wICfFLnXhIBKpRL3MkChT8cnTtZKk7MVOyrCJIfR7D4=;
+        b=jWDr4u7KdKLlFacXo7dujEGjOc/1AXUmMpT0Ji/Pdu4LLH2ALWJ8i7wPh/C1iVIbYn
+         bwZnMTvkfCMFE4O3yPzd4bDvO1mXRsSRESmgwtTEetC0GVmNHDe4GX+8vIsFeHZfjLbK
+         jAujLEvOtZxgzNlXLRW8NmUlr0QvI0c7rKtlMg42PU86FWlSxy0epJzqjrqiSupx2Z4w
+         ZNP1BvKM2hnEZXgCYNgLKtW1CdFKQ49JTia96GIE6vT1jKxOdQ4NaKCpgArrzD2rZ3qV
+         q4p6uw1juHGyc8DfyirFfCO0V/w4034IBfD/1/m/bAB1mZlnjXSBY+3d2Xdza74dTIRi
+         4sNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=wICfFLnXhIBKpRL3MkChT8cnTtZKk7MVOyrCJIfR7D4=;
+        b=GK9AigDeYj6zJwa17YQr1g7CGkeuwpZtSg3+yJv2u55a1eZP7LhBX9gc1DNoLS7Aj8
+         b/mxBWt3cunkBpykePMfaBiVPrU3aNu/UAcUJszoNz7q/lW3WLgDrH0BHaAUwl8tt0oT
+         /6TpiZOjcf5gcMqCy1vixkdzRqjGfbLIiX7MiaY9Vr6iKIuZec7N8QzsBGR6jPLKLWSP
+         GMxLjL67SywD//12+UK+8AgWvGE2uJoTc0L0gLF9xuD+9PEz4/luOJF16jO6pQNsc7A8
+         8Mg7tnTWe+KK9ucfY/tPSsJWw4TP/QGKgb/lGe837de3z8KcRYzyEjJN6GNqVfg/J/lu
+         dMbw==
+X-Gm-Message-State: APjAAAWprUIkpFjWnXBTVVsgvAfi//XCBYQqINig/63jIrH15YqZqjyj
+        hIHtYagbD07LQDBgbeYl5h6tmQ==
+X-Google-Smtp-Source: APXvYqzo8MEEXCCxdKSZfzaFQthu5ElI1s13ZbbnpzjLTOaUkTmyi8JDnWb7nZOqVe1cES2YKuJZjA==
+X-Received: by 2002:a1c:630b:: with SMTP id x11mr19227174wmb.135.1566208239870;
+        Mon, 19 Aug 2019 02:50:39 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id f13sm4491631wrr.5.2019.08.19.02.50.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 02:50:39 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 10:50:37 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through
+ sysfs
+Message-ID: <20190819095037.h3gig3quyhnzshm7@holly.lan>
+References: <20190709190007.91260-1-mka@chromium.org>
+ <20190709190007.91260-3-mka@chromium.org>
+ <20190816165148.7keg45fmlndr22fl@pengutronix.de>
+ <20190816175157.GT250418@google.com>
+ <20190816194754.ldzjqy2yjonfvaat@pengutronix.de>
+ <20190816211051.GV250418@google.com>
+ <20190819054628.asw3cxp46w3rpml7@pengutronix.de>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 50e88918-e962-4be9-a138-08d7248a1413
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2019 09:46:15.9501
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xYCZ8Xzz4x8pOvF6Twb+H38ZwdPFSOk2oPAK5BytgVJgJMgxs3FwuA81b6fogSTBe/nZCOWTrxqL2vBEMUVfcpFACeyVyEIm2icCJqEuCiY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1325
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190819054628.asw3cxp46w3rpml7@pengutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-T24gMTkvMDgvMjAxOSBhdCAxMToyNiwgQ2xhdWRpdSBCZXpuZWEgLSBNMTgwNjMgd3JvdGU6DQo+
-IA0KPiANCj4gT24gMTYuMDguMjAxOSAwMDo0MSwgVXdlIEtsZWluZS1Lw7ZuaWcgd3JvdGU6DQo+
-PiBUaGUgcmVmZXJlbmNlIG1hbnVhbCBmb3IgYXQgbGVhc3Qgb25lIG9mIHRoZSBzdXBwb3J0ZWQg
-dmFyaWFudHMgaXMNCj4+IHB1YmxpY2x5IGF2YWlsYWJsZS4gQWRkIGEgbGluayB0byBpdCBhdCB0
-aGUgdG9wIG9mIHRoZSBkcml2ZXIuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogVXdlIEtsZWluZS1L
-w7ZuaWcgPHV3ZUBrbGVpbmUta29lbmlnLm9yZz4NCj4+IC0tLQ0KPj4gICBkcml2ZXJzL3B3bS9w
-d20tYXRtZWwuYyB8IDMgKysrDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKykN
-Cj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wd20vcHdtLWF0bWVsLmMgYi9kcml2ZXJzL3B3
-bS9wd20tYXRtZWwuYw0KPj4gaW5kZXggZTVlMWVhZjM3MmZhLi5hYzNkN2EyMDBiOWUgMTAwNjQ0
-DQo+PiAtLS0gYS9kcml2ZXJzL3B3bS9wd20tYXRtZWwuYw0KPj4gKysrIGIvZHJpdmVycy9wd20v
-cHdtLWF0bWVsLmMNCj4+IEBAIC00LDYgKzQsOSBAQA0KPj4gICAgKg0KPj4gICAgKiBDb3B5cmln
-aHQgKEMpIDIwMTMgQXRtZWwgQ29ycG9yYXRpb24NCj4+ICAgICoJCSBCbyBTaGVuIDx2b2ljZS5z
-aGVuQGF0bWVsLmNvbT4NCj4+ICsgKg0KPj4gKyAqIFJlZmVyZW5jZSBtYW51YWwgZm9yICJhdG1l
-bCxhdDkxc2FtOXJsLXB3bSI6DQo+PiArICogICBodHRwOi8vd3cxLm1pY3JvY2hpcC5jb20vZG93
-bmxvYWRzL2VuL0RldmljZURvYy9BdG1lbC0xMTAzMi0zMi1iaXQtQVJNOTI2RUotUy1NaWNyb2Nv
-bnRyb2xsZXItU0FNOUcyNV9EYXRhc2hlZXQucGRmDQo+IA0KPiBFdmVuIFNBTTlHMjUgUFdNIGhh
-dmUgYWxtb3N0IHRoZSBzYW1lIHJlZ2lzdGVycyB3aXRoIEFUOTFTQU05UkwsIHRoZQ0KPiBkYXRh
-c2hlZXQgZm9yIEFUOTFTQU05UkwgaXMgbG9jYXRlZCBhdDoNCj4gaHR0cDovL3d3MS5taWNyb2No
-aXAuY29tL2Rvd25sb2Fkcy9lbi9EZXZpY2VEb2MvZG9jNjI4OS5wZGYNCj4gTWF5YmUgd2Ugc2hv
-dWxkIHVzZSB0aGlzIG9uZS4NCj4gDQo+IEknbSBub3QgZmFtaWxpYXIgd2l0aCBoYXZpbmcgcmVm
-ZXJlbmNlIG1hbnVhbHMgaW4gdGhpcyBwYXJ0IG9mIHRoZSBkcml2ZXINCj4gYnV0IGlmIHdlIGFy
-ZSBkb2luZyBzbyB3b3VsZCBpdCBiZSBmZWFzaWJsZSB0byBhbHNvIGhhdmUgbGlua3MgZm9yIHRo
-ZSByZXN0DQo+IFNvQ3MgdGhhdCBpbnRyb2R1Y2VzIG5ldyBQV00gdmVyc2lvbnM/IEknbSB0aGlu
-a2luZyBoZXJlIGF0IGFsbCB0aGUNCj4gY29tcGF0aWJsZXMgZnJvbSBhdG1lbF9wd21fZHRfaWRz
-W106DQo+IC0gYXRtZWwsc2FtYTVkMy1wd20NCj4gLSBhdG1lbCxzYW1hNWQyLXB3bQ0KDQpUaGVz
-ZSBkb2N1bWVudHMgYXJlIGxpc3RlZCBoZXJlOg0KRG9jdW1lbnRhdGlvbi9hcm0vbWljcm9jaGlw
-LnJzdA0KYW5kIG11c3QgYmUgbWFpbnRhaW5lZCBpZiBVUkwgYXJlIG91dCBvZiBkYXRlLiBJIGRv
-bid0IGJlbGlldmUgdGhhdCB3ZSANCnNob3VsZCBhZGQgYW5vdGhlciByZWZlcmVuY2UgdG8gdGhl
-bSBpbiB0aGlzIGRyaXZlciAoYW5kIG90aGVyIHNvdXJjZSBjb2RlKS4NClJlZmVycmluZyB0byB0
-aGUgZGF0YXNoZWV0IHBvaW50ZWQgb3V0IGJ5IHRoZSBtaWNyb2NoaXAucnN0IGZpbGUgaXMgDQpj
-ZXJ0YWlubHkgdGhlIHdheSB0byBnby4uLg0KDQpSZWdhcmRzLA0KICAgTmljb2xhcw0KDQoNCj4g
-LSBtaWNyb2NoaXAsc2FtOXg2MC1wd20NCj4gDQo+IEFsdGhvdWdoIHRoZSBsYXN0IG9uZSBpcyBu
-b3QgYWxyZWFkeSBwdWJsaWMuDQo+IA0KPj4gICAgKi8NCj4+ICAgDQo+PiAgICNpbmNsdWRlIDxs
-aW51eC9jbGsuaD4NCj4+DQoNCg0KLS0gDQpOaWNvbGFzIEZlcnJlDQo=
+On Mon, Aug 19, 2019 at 07:46:28AM +0200, Uwe Kleine-König wrote:
+> Hello Matthias,
+> 
+> On Fri, Aug 16, 2019 at 02:10:51PM -0700, Matthias Kaehlcke wrote:
+> > On Fri, Aug 16, 2019 at 09:47:54PM +0200, Uwe Kleine-König wrote:
+> > > On Fri, Aug 16, 2019 at 10:51:57AM -0700, Matthias Kaehlcke wrote:
+> > > > Hi Uwe,
+> > > > 
+> > > > On Fri, Aug 16, 2019 at 06:51:48PM +0200, Uwe Kleine-König wrote:
+> > > > > On Tue, Jul 09, 2019 at 12:00:05PM -0700, Matthias Kaehlcke wrote:
+> > > > > > Backlight brightness curves can have different shapes. The two main
+> > > > > > types are linear and non-linear curves. The human eye doesn't
+> > > > > > perceive linearly increasing/decreasing brightness as linear (see
+> > > > > > also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
+> > > > > > linearly to human eye"), hence many backlights use non-linear (often
+> > > > > > logarithmic) brightness curves. The type of curve currently is opaque
+> > > > > > to userspace, so userspace often uses more or less reliable heuristics
+> > > > > > (like the number of brightness levels) to decide whether to treat a
+> > > > > > backlight device as linear or non-linear.
+> > > > > > 
+> > > > > > Export the type of the brightness curve via the new sysfs attribute
+> > > > > > 'scale'. The value of the attribute can be 'linear', 'non-linear' or
+> > > > > > 'unknown'. For devices that don't provide information about the scale
+> > > > > > of their brightness curve the value of the 'scale' attribute is 'unknown'.
+> > > > > > 
+> > > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > > > 
+> > > > > I wonder what kind of problem you are solving here. Can you describe
+> > > > > that in a few words?
+> > > > 
+> > > > The human eye perceives brightness in a logarithmic manner. For
+> > > > backlights with a linear brightness curve brightness controls like
+> > > > sliders need to use a mapping to achieve a behavior that is perceived
+> > > > as linear-ish (more details: http://www.pathwaylighting.com/products/downloads/brochure/technical_materials_1466797044_Linear+vs+Logarithmic+Dimming+White+Paper.pdf)
+> > > > 
+> > > > As of now userspace doesn't have information about the type of the
+> > > > brightness curve, and often uses heuristics to make a guess, which may
+> > > > be right most of the time, but not always. The new attribute eliminates
+> > > > the need to guess.
+> > > 
+> > > This is about backlights right? So the kernel provides to userspace an
+> > > interval [0, x] for some x and depending on the physics of the the
+> > > backlight configuring x/2 (probably?) either means 50% measured light or
+> > > 50% perceived light, right?
+> > 
+> > correct
+> > 
+> > > I wonder if it would be possible instead of giving different backlight
+> > > implementations the freedom to use either linear or logarithmic (or
+> > > quadratic?) scaling and tell userspace which of the options were picked
+> > > require the drivers to provide a (say) linear scaling and then userspace
+> > > wouldn't need to care about the exact physics.
+> > 
+> > In an ideal world the backlight interface would be consistent as you
+> > suggest, however there are plenty of existing devices which use the
+> > 'other' scaling (regardless of which is chosen as the 'correct'
+> > one). Userspace still has to deal with these. And changing previously
+> > 'logarithmic' drivers to linear (or viceversa) may 'break' userspace,
+> > when it keeps using its 'old' scaling, which now isn't correct anymore.
+> 
+> It might be subjective, or maybe I'm just too optimistic, but I think if
+> there was no policy before about the meaning of
+> 
+> 	echo 17 > brightness
+> 
+> other than "brighter than lower values and darker than higher ones"
+> introducing (say) the scale is intended to represent a linear brightness
+> curve is ok.
+> 
+> Unless userspace jumps through hoops and tries to identify the actual
+> device it is running on it is wrong on some machines anyhow and we're
+> only shifting the set of affected machines with a tighter policy (until
+> that userspace application is fixed).
+
+I believe that there are two common approaches by userspace at present:
+
+1. Assume the scale is perceptual and we can directly map a slider
+   to the backlight value. This is common simply because most ACPI
+   backlights are perceptual and therefore when tested in a laptop
+   it works OK.
+
+2. Assume that is max brightness is small (e.g. ACPI) then the
+   scale is perceptual and if the max brightness is large (e.g.
+   a PWM) then the scale is linear and apply a correction
+   function between the slider and the control.
+
+That historic baggage makes is diffcult to "just define a standardized
+scale"... especially given that if we selected a standardized scale we
+would probably want a perceptual scale with lots of steps (e.g. break
+the heuristic).
+
+
+> And the big upside is that in the end (i.e. when all kernel drivers and
+> userspace applications are adapted to provide/consume the "correct"
+> curve) the result is simpler.
+
+My view is that this convergence will eventually be achieved but it will
+happen through the obsolescence of the backlight sysfs interface. The
+sysfs interface has other flaws, in particular no integration with the
+DRM connector API.
+
+Thus I would expect an alternative interface to emerge, most likely as
+part of the DRM connector API. I'd expect such a new API to a
+perceptual scale and to have a fixed max brightness with enough
+steps to support animated backlight effects (IIRC 0..100 has been
+proposed in the past) 
+
+In the mean time getting the existing collection of backlight drivers
+marked up as linear/logarithmic/etc will ease the introduction of that
+API because, within the kernel, we might have gathered enough knowledge
+to have some hope of correctly mapping each backlight onto a
+standardized scale.
+
+
+Daniel.
