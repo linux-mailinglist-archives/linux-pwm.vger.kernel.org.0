@@ -2,150 +2,138 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C494392843
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 Aug 2019 17:20:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CE6694D54
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 Aug 2019 20:58:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfHSPUs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 19 Aug 2019 11:20:48 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:34105 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbfHSPUs (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 19 Aug 2019 11:20:48 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hzjSX-0006NW-1z; Mon, 19 Aug 2019 17:20:37 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hzjSV-0003tf-To; Mon, 19 Aug 2019 17:20:35 +0200
-Date:   Mon, 19 Aug 2019 17:20:35 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Claudiu.Beznea@microchip.com
-Cc:     thierry.reding@gmail.com, Nicolas.Ferre@microchip.com,
-        alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 4/3] pwm: atmel: document known weaknesses of both
- hardware and software
-Message-ID: <20190819152035.lkemndmypcehb2a2@pengutronix.de>
-References: <20190815214133.11134-1-uwe@kleine-koenig.org>
- <20190816093748.11769-1-uwe@kleine-koenig.org>
- <0a389abe-15ef-0e63-109f-2db4cb36f4b9@microchip.com>
- <20190819104617.kujgwthxtjy6cssa@pengutronix.de>
- <3029467b-be14-d78b-5580-8bd3842d86e2@microchip.com>
+        id S1728127AbfHSS6T (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 19 Aug 2019 14:58:19 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44810 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727957AbfHSS6T (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 19 Aug 2019 14:58:19 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t14so1391169plr.11
+        for <linux-pwm@vger.kernel.org>; Mon, 19 Aug 2019 11:58:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=C0e2APdFMcCL115V7DOVVJSnlHloFclNY39dd69/lO0=;
+        b=WbPRIlO58ztUhi7i2oz12gIxghvYFhvGj5detvHL64ciojw1Jbh1rIUinASAN5D8ZH
+         oktM00ScxqNk41KTkk3qw/+BHQPD4Q3wJeTI1oV2U3gwQatbTu8PX10ZFmAfuarYSyE2
+         ivJrpHi6loe1F9bmEmdOWwWzx2oF50n/ZrQtM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=C0e2APdFMcCL115V7DOVVJSnlHloFclNY39dd69/lO0=;
+        b=ey0eyVHQBtxldOyTcMooRhR0skTELKSRot2rQT7zO4dfh+8lbW8aamFQ10Sik3/l1E
+         d+fleHAJLhJId7FHAWZ3hgTINvCUQ2LtkdH1rNCLesAfvKEzLf7G8Z+ZLhHIY3ULcFa6
+         6S+cKuKYP05KzmCUh0SvSVVpe64ss5Z+laU9RWWNgNGm5PxITMDXqeuDX+haAwVzSG3O
+         KSW7nQrdv40RR2A/52hdYEnQGQvtnglx42Ek2pFrwtjJPbMExLFTpfire7fXAoyPOjHJ
+         ucUUN9KkyDxXuNo7Ysoy9p9bJt1vhmXtIJMnqBL0Obc9///FDYp4j+ZUYv/vw5/b2feS
+         oydQ==
+X-Gm-Message-State: APjAAAWg5hrbUcRRBuxr8vXIYpJXMpiF4lFV8I1CIADoR/yH76I8bRoM
+        hWknsSBsb44J8Yi2WrVvI7Qsig==
+X-Google-Smtp-Source: APXvYqxh+E8TFUryXTjcfNmp7eEgV3tGYzniOp22FCvAHtBGpb7ARiJTtlOQVWkRBrXizfRtmjdGHw==
+X-Received: by 2002:a17:902:788b:: with SMTP id q11mr24093153pll.308.1566240655357;
+        Mon, 19 Aug 2019 11:50:55 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id x25sm18660949pfa.90.2019.08.19.11.50.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Aug 2019 11:50:54 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 11:50:49 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through
+ sysfs
+Message-ID: <20190819185049.GZ250418@google.com>
+References: <20190709190007.91260-1-mka@chromium.org>
+ <20190709190007.91260-3-mka@chromium.org>
+ <20190807201528.GO250418@google.com>
+ <510f6d8a-71a0-fa6e-33ea-c4a4bfa96607@linaro.org>
+ <20190816175317.GU250418@google.com>
+ <20190819100241.5pctjxmsq6crlale@holly.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3029467b-be14-d78b-5580-8bd3842d86e2@microchip.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20190819100241.5pctjxmsq6crlale@holly.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Claudiu,
+Hi Daniel,
 
-On Mon, Aug 19, 2019 at 12:28:59PM +0000, Claudiu.Beznea@microchip.com wrote:
-> On 19.08.2019 13:46, Uwe Kleine-König wrote:
-> > On Mon, Aug 19, 2019 at 09:26:04AM +0000, Claudiu.Beznea@microchip.com wrote:
-> >> On 16.08.2019 12:37, Uwe Kleine-König wrote:
-> >>> Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
-> >>> ---
-> >>>  drivers/pwm/pwm-atmel.c | 10 ++++++++++
-> >>>  1 file changed, 10 insertions(+)
-> >>>
-> >>> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-> >>> index 42fe7bc043a8..1ddb93db9627 100644
-> >>> --- a/drivers/pwm/pwm-atmel.c
-> >>> +++ b/drivers/pwm/pwm-atmel.c
-> >>> @@ -7,6 +7,16 @@
-> >>>   *
-> >>>   * Reference manual for "atmel,at91sam9rl-pwm":
-> >>>   *   http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-11032-32-bit-ARM926EJ-S-Microcontroller-SAM9G25_Datasheet.pdf
-> >>> + *
-> >>> + * Limitations:
-> >>> + * - Periods start with the inactive level.
-> >>
-> >> Are you talking here about the normal polarity (from documentation: By
-> >> definition, normal polarity characterizes a signal starts high for the
-> >> duration of the duty cycle and goes low for the remainder of the period.)
+On Mon, Aug 19, 2019 at 11:02:41AM +0100, Daniel Thompson wrote:
+> On Fri, Aug 16, 2019 at 10:53:17AM -0700, Matthias Kaehlcke wrote:
+> > On Fri, Aug 16, 2019 at 04:54:18PM +0100, Daniel Thompson wrote:
+> > > On 07/08/2019 21:15, Matthias Kaehlcke wrote:
+> > > > On Tue, Jul 09, 2019 at 12:00:05PM -0700, Matthias Kaehlcke wrote:
+> > > > > Backlight brightness curves can have different shapes. The two main
+> > > > > types are linear and non-linear curves. The human eye doesn't
+> > > > > perceive linearly increasing/decreasing brightness as linear (see
+> > > > > also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
+> > > > > linearly to human eye"), hence many backlights use non-linear (often
+> > > > > logarithmic) brightness curves. The type of curve currently is opaque
+> > > > > to userspace, so userspace often uses more or less reliable heuristics
+> > > > > (like the number of brightness levels) to decide whether to treat a
+> > > > > backlight device as linear or non-linear.
+> > > > > 
+> > > > > Export the type of the brightness curve via the new sysfs attribute
+> > > > > 'scale'. The value of the attribute can be 'linear', 'non-linear' or
+> > > > > 'unknown'. For devices that don't provide information about the scale
+> > > > > of their brightness curve the value of the 'scale' attribute is 'unknown'.
+> > > > > 
+> > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > > 
+> > > > Daniel (et al): do you have any more comments on this patch/series or
+> > > > is it ready to land?
+> > > 
+> > > I decided to leave it for a long while for others to review since I'm still
+> > > a tiny bit uneasy about the linear/non-linear terminology.
+> > > 
+> > > However that's my only concern, its fairly minor and I've dragged by feet
+> > > for more then long enough, so:
+> > > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 > > 
-> > When .polarity = PWM_POLARITY_NORMAL is passed to atmel_pwm_apply() the
-> > drivers sets PWM_CMR_CPOL=0 which according to the datasheet (linked
-> > above) means: "The output waveform starts at a low level."
+> > Thanks!
 > > 
-> > So maybe just the logic has to be inverted there,
+> > If you or someone else has another suggestion for the terminology that
+> > we can all agree on I'm happy to change it.
 > 
-> Agree.
+> As you will see in my reply to Uwe. The term I tend to adopt when I want
+> to be precise about userspace behaviour is "perceptual" (e.g. that a
+> backlight can be mapped directly to a slider and it will feel right).
 > 
-> > but then maybe the
-> > output gets active instead of inactive when the PWM is disabled.
+> However that raises its own concerns: mostly about what is perceptual
+> enough.
 > 
-> Yes, this would happen. Playing again with CPOL when disabling may be a
-> solution.
-
-Alternatively you could argue that it would be more sensible to drop the
-requirement for a certain output level on disable. You would have my
-support here.
-
-> > (Which in my book is ok, but it's Thierry's opinion that counts here.)
-> > 
-> >> If yes, this should be solved by playing with CPOL bit of CMR.
-> >>
-> >>> + * - Hardware has to be stopped in general to update settings.
-> >>
-> >> Sama5d2 has duty cycle that could be updated on the fly.
-> > 
-> > There is some functionality in the 9G25, too. I didn't understand it
-> > completely but maybe it only helps updating one of period or duty cycle.
-> >  
-> >>> + *
-> >>> + * Software bugs/possible improvements:
-> >>> + * - When atmel_pwm_apply() is called with state->enabled=false a change in
-> >>> + *   state->polarity isn't honored.
-> >>
-> >> I know that when configuring a PWM one should get the current state of the
-> >> PWM, change it, then pass it to the driver via pwm_apply_state().
-> > 
-> > That seems to be a common pattern at least. IMHO letting the consumer
-> > just configure the state that should be used should be fine, too.>
-> >> In case one would call the pwm_apply_state() with state->enabled =
-> >> false the state would be stored in PWM specific object (of type struct
-> >> pwm_device). On the next apply, with enabled = true, all the PWM
-> >> parameters would be actually applied to hardware. So, until
-> >> enable=true the PWM state would only be cached by PWM core specific
-> >> objects (in pwm_apply_state()).
-> > 
-> > I fail to follow what you mean here. If a PWM runs with (say) normal
-> > polarity and you call pwm_apply_state(mypwm, { .polarity =
-> > PWM_POLARITY_INVERSED, .enabled = false, }); the apply callback of the
-> > lowlevel driver is called and supposed to configure the output to yield
-> > a constant high.
+> Clear the automatic brightness curve support in the PWM driver is
+> perceptual.
 > 
-> Ok, I see it now. I'll put it on my queue.
+> To be honest I suspect that in most cases a true logarithmic curve (given a
+> sane exponent) would be perceptual enough. In other words it will feel
+> comfortable with a direct mapped slider and using it for animation
+> won't be too bad.
+> 
+> However when we get right down to it *that* is the information that is
+> actually most useful to userspace: explicit confirmation that the scale
+> can be mapped directly to a slider. I think it also aligned better with
+> Uwe's feedback (e.g. to start working towards having a preferred scale).
 
-See above. The atmel driver is just part of my quest to get a general
-picture what the common PWM implementation does. Thierry argued that it
-is natural that a PWM drives the inactive level on disable.
-
-I'd say that it would be more natural to not demand a certain level
-because a) IMHO there are enough implementations that differ here and b)
-consumers could just configure for duty_cycle=0 if they care.
-
-In the case of the imx driver we could just put aside the discussions
-about how we atomically switch the output to a GPIO to provide the
-needed level. In case of the atmel driver you'd just invert polarity and
-be done.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+IIUC the conclusion is that there is no need for a string attribute
+because we only need to distinguish between 'perceptual' and
+'non-perceptual'. If that is correct, do you have any preference for
+the attribute name ('perceptual_scale', 'perceptual', ...)?
