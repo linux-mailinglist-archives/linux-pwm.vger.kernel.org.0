@@ -2,172 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F0E339643F
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Aug 2019 17:24:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42BFE96839
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Aug 2019 20:01:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbfHTPYb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 20 Aug 2019 11:24:31 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33611 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729639AbfHTPYb (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 20 Aug 2019 11:24:31 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1i05zq-0007vJ-7f; Tue, 20 Aug 2019 17:24:30 +0200
-Message-ID: <1566314668.3030.16.camel@pengutronix.de>
-Subject: Re: [PATCH RFC] pwm: add debug knob to help driver authors
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-pwm@vger.kernel.org,
-        Michal =?UTF-8?Q?Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-        kernel@pengutronix.de, Baolin Wang <baolin.wang@linaro.org>
-Date:   Tue, 20 Aug 2019 17:24:28 +0200
-In-Reply-To: <20190815093839.23710-1-u.kleine-koenig@pengutronix.de>
-References: <20190815093839.23710-1-u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+        id S1727358AbfHTSAS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 20 Aug 2019 14:00:18 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35932 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbfHTSAS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 20 Aug 2019 14:00:18 -0400
+Received: by mail-oi1-f196.google.com with SMTP id n1so2396090oic.3;
+        Tue, 20 Aug 2019 11:00:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Q1gvNC9FakNN70iNTlLfpOxXe43hETiV8DaUowjuk4k=;
+        b=qUAMqzpRFw2L6Fcsm7gYUp4B9TblbORRvAuoXoQE1BkkuoBOoyXNJf+4xXYuOAcnI8
+         o+cB5TwxHn4HNj+BfQT3P9HMdhcOyMq0n2lvho344G3jgP4bY+7RQNrmYByWw/RP1ayw
+         bAMiHhiYHTFBmiLDvvic9bY1IitIvDmbjUr6+j7Mm2Z6423r4dxEXcO6bR6w/RsH0b1d
+         eqXd9SwGaoI07VS/6WD1ixQrxnv7ws7Rw5ccVyOX/DEcpagKN/jKQPEAu4Ee2ag+JS04
+         6M/jESB8tEMJf7PIuq7XFVw6sTtZUKmecpmISKm9od7AUz377ESTwCJ6D0+ANn4cLQFF
+         JOxA==
+X-Gm-Message-State: APjAAAXBUcbw/D2L43Yzbj71ylO9JI6hAvlCnZuudJtnBH+rZNasfdxw
+        KCCV+TVpsUB3B3UeNA8hTQ==
+X-Google-Smtp-Source: APXvYqwS6vfSL5GG6Hy6vUEP0afiI29iW09/eMOV/jj9QtbvAKZYhgHCM2xtDsPdntbHcHfBhRBbOg==
+X-Received: by 2002:aca:3509:: with SMTP id c9mr900141oia.179.1566324016813;
+        Tue, 20 Aug 2019 11:00:16 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id o26sm6431165otl.34.2019.08.20.11.00.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 11:00:16 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 13:00:15 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sam Shih <sam.shih@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Sam Shih <sam.shih@mediatek.com>
+Subject: Re: [PATCH v4 9/10] dt-bindings: pwm: update bindings for MT7629 SoC
+Message-ID: <20190820180015.GA12975@bogus>
+References: <1566265225-27452-1-git-send-email-sam.shih@mediatek.com>
+ <1566265225-27452-10-git-send-email-sam.shih@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566265225-27452-10-git-send-email-sam.shih@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
-
-I have two suggestions below:
-
-On Thu, 2019-08-15 at 11:38 +0200, Uwe Kleine-König wrote:
-> This patch adds some additional checks to the pwm core that help getting
-> the details right. The check about rounding isn't approved yet, but I
-> consider that sensible as it helps consistency when all drivers round in
-> the same direction. The other checks are in line with what I understood
-> are the intended requirements.
+On Tue, 20 Aug 2019 09:40:24 +0800, Sam Shih wrote:
+> From: Ryder Lee <ryder.lee@mediatek.com>
 > 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> This updates bindings for MT7629 pwm controller.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 > ---
-> Hello,
+>  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> this patch is only compile tested up to now but still I think it adds
-> useful diagnostics for driver authors that helps even more than an exact
-> documentation. Feedback welcome.
-> 
-> Best regards
-> Uwe
-> 
->  drivers/pwm/Kconfig |  8 +++++++
->  drivers/pwm/core.c  | 56 +++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 64 insertions(+)
-> 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index a7e57516959e..76105cfd581d 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -33,6 +33,14 @@ config PWM_SYSFS
->  	bool
->  	default y if SYSFS
->  
-> +config PWM_DEBUG
-> +	bool "Additional checks for correctness of lowlevel drivers"
-> +	help
-> +	  This option enables some additional checks to help lowlevel driver
-> +	  authors to get their callbacks implemented correctly.
-> +	  It is expected to introduce some runtime overhead and diagnostic
-> +	  output to the kernel log, so only enable while working on a driver.
-> +
->  config PWM_AB8500
->  	tristate "AB8500 PWM support"
->  	depends on AB8500_CORE && ARCH_U8500
-> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index 8edfac17364e..6ce341a4574d 100644
-> --- a/drivers/pwm/core.c
-> +++ b/drivers/pwm/core.c
-> @@ -467,12 +467,68 @@ int pwm_apply_state(struct pwm_device *pwm, struct pwm_state *state)
->  		return 0;
->  
->  	if (pwm->chip->ops->apply) {
-> +		struct pwm_state state_pre = *state;
-> +
->  		err = pwm->chip->ops->apply(pwm->chip, pwm, state);
->  		if (err)
->  			return err;
->  
-> +		if (IS_ENABLED(CONFIG_PWM_DEBUG)) {
 
-How about moving this whole block into a separate function, say
-'pwm_validate_state', to reduce the level of indentation and to separate
-the debug/validation code from the common business logic a bit?
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-> +			if (pwm->chip->ops->get_state) {
-> +				struct pwm_state state_post = { 0, };
-> +
-> +				pwm->chip->ops->get_state(pwm->chip, pwm, &state_post);
-> +
-> +				if (state_post.period != state->period ||
-> +				    state_post.duty_cycle != state->duty_cycle ||
-> +				    state_post.polarity != state->polarity ||
-> +				    state_post.enabled != state->enabled) {
-
-This is only used twice here, but there is an inverted version of this
-check in the beginning of pwm_apply_state already. You could introduce a
-'pwm_state_equal' helper function to simplify this.
-
-> +
-> +					dev_warn(pwm->chip->dev,
-> +						 ".apply is supposed to modify the pwm_state parameter to match the actual output.\n");
-> +				}
-> +
-> +				if (state_pre.polarity == state_post.polarity &&
-> +				    state_pre.enabled &&
-> +				    (state_pre.period > state_post.period ||
-> +				     state_pre.duty_cycle > state_post.period)) {
-> +
-> +					dev_warn(pwm->chip->dev,
-> +						 ".apply is supposed to round down both period and duty_cycle.\n");
-> +
-> +				}
-> +
-> +				*state = state_post;
-> +
-> +				/* reapply state_post and check it is unmodified */
-> +				err = pwm->chip->ops->apply(pwm->chip, pwm, state);
-> +				if (err) {
-> +					dev_err(pwm->chip->dev,
-> +						 "failed to reapply the current setting\n");
-> +					return err;
-> +				}
-> +
-> +				if (state_post.period != state->period ||
-> +				    state_post.duty_cycle != state->duty_cycle ||
-> +				    state_post.polarity != state->polarity ||
-> +				    state_post.enabled != state->enabled) {
-> +					dev_warn(pwm->chip->dev,
-> +						 "applying the settings that .get_state returned yields changes\n");
-> +				}
-> +
-> +			} else {
-> +				dev_warn(pwm->chip->dev,
-> +					 "Please update the driver to provide .get_state()\n");
-> +			}
-> +		}
-> +
->  		pwm->state = *state;
->  	} else {
-> +		if (IS_ENABLED(CONFIG_PWM_DEBUG)) {
-> +			dev_warn(pwm->chip->dev,
-> +				 "Please update the driver to provide .apply() instead of .config()\n");
-> +		}
-> +
->  		/*
->  		 * FIXME: restore the initial state in case of error.
->  		 */
-
-regards
-Philipp
+If a tag was not added on purpose, please state why and what changed.
