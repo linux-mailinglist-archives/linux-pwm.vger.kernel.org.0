@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A3C0898C23
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 Aug 2019 09:04:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AC6D98C25
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 Aug 2019 09:04:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732048AbfHVHCp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 22 Aug 2019 03:02:45 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:21167 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730048AbfHVHCo (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 22 Aug 2019 03:02:44 -0400
-X-UUID: 8b5b994b19934c8fb6ec44cf27186598-20190822
-X-UUID: 8b5b994b19934c8fb6ec44cf27186598-20190822
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        id S1729964AbfHVHCu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 22 Aug 2019 03:02:50 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:45334 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730048AbfHVHCu (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 22 Aug 2019 03:02:50 -0400
+X-UUID: b4b4cd9a999845b89599d32499c65354-20190822
+X-UUID: b4b4cd9a999845b89599d32499c65354-20190822
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
         (envelope-from <sam.shih@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1661304108; Thu, 22 Aug 2019 15:02:40 +0800
+        with ESMTP id 114307298; Thu, 22 Aug 2019 15:02:44 +0800
 Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 22 Aug 2019 15:02:39 +0800
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 22 Aug 2019 15:02:43 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 22 Aug 2019 15:02:35 +0800
+ Transport; Thu, 22 Aug 2019 15:02:39 +0800
 From:   Sam Shih <sam.shih@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -33,9 +33,9 @@ CC:     Ryder Lee <ryder.lee@mediatek.com>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v5 12/13] pwm: mediatek: remove a property "has-clock"
-Date:   Thu, 22 Aug 2019 14:58:42 +0800
-Message-ID: <1566457123-20791-13-git-send-email-sam.shih@mediatek.com>
+Subject: [PATCH v5 13/13] arm: dts: mediatek: add mt7629 pwm support
+Date:   Thu, 22 Aug 2019 14:58:43 +0800
+Message-ID: <1566457123-20791-14-git-send-email-sam.shih@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
 References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
@@ -47,120 +47,40 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Due to we added clock-frequency property to fix
-mt7628 pwm during configure from userspace.
-We can alos use this property to determine whether
-the complex clock tree exists in the SoC or not.
-So we can safety remove has-clock property in the
-driver specific data.
+This adds pwm support for MT7629.
 
 Signed-off-by: Sam Shih <sam.shih@mediatek.com>
 ---
- drivers/pwm/pwm-mediatek.c | 26 ++++++++------------------
- 1 file changed, 8 insertions(+), 18 deletions(-)
+ arch/arm/boot/dts/mt7629.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index 290536a92a80..96f592595063 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -35,7 +35,6 @@
- struct pwm_mediatek_of_data {
- 	unsigned int fallback_npwms;
- 	bool pwm45_fixup;
--	bool has_clks;
- };
+diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
+index 9608bc2ccb3f..493be9a9453b 100644
+--- a/arch/arm/boot/dts/mt7629.dtsi
++++ b/arch/arm/boot/dts/mt7629.dtsi
+@@ -241,6 +241,22 @@
+ 			status = "disabled";
+ 		};
  
- /**
-@@ -73,7 +72,7 @@ static int pwm_mediatek_clk_enable(struct pwm_chip *chip,
- 	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
- 	int ret;
- 
--	if (!pc->soc->has_clks)
-+	if (pc->clk_freq)
- 		return 0;
- 
- 	ret = clk_prepare_enable(pc->clk_top);
-@@ -103,7 +102,7 @@ static void pwm_mediatek_clk_disable(struct pwm_chip *chip,
- {
- 	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
- 
--	if (!pc->soc->has_clks)
-+	if (pc->clk_freq)
- 		return;
- 
- 	clk_disable_unprepare(pc->clk_pwms[pwm->hwpwm]);
-@@ -134,10 +133,10 @@ static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	u64 resolution;
- 	int ret;
- 
--	if (pc->soc->has_clks)
--		clk_freq = clk_get_rate(pc->clk_pwms[pwm->hwpwm]);
--	else
-+	if (pc->clk_freq)
- 		clk_freq = pc->clk_freq;
-+	else
-+		clk_freq = clk_get_rate(pc->clk_pwms[pwm->hwpwm]);
- 
- 	ret = pwm_mediatek_clk_enable(chip, pwm);
- 	if (ret < 0)
-@@ -222,6 +221,7 @@ static int pwm_mediatek_probe(struct platform_device *pdev)
- 	struct pwm_mediatek_chip *pc;
- 	struct resource *res;
- 	unsigned int npwms;
-+	unsigned int clk_freq;
- 	int ret;
- 
- 	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
-@@ -247,7 +247,8 @@ static int pwm_mediatek_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	if (pc->soc->has_clks) {
-+	ret = of_property_read_u32(np, "clock-frequency", &clk_freq);
-+	if (ret < 0) {
- 		int i;
- 
- 		pc->clk_pwms = devm_kcalloc(&pdev->dev, npwms,
-@@ -280,13 +281,6 @@ static int pwm_mediatek_probe(struct platform_device *pdev)
- 			}
- 		}
- 	} else {
--		unsigned int clk_freq;
--
--		ret = of_property_read_u32(np, "clock-frequency", &clk_freq);
--		if (ret < 0) {
--			dev_err(&pdev->dev, "failed to get clock_frequency\n");
--			return ret;
--		}
- 		pc->clk_freq = clk_freq;
- 	}
- 
-@@ -316,25 +310,21 @@ static int pwm_mediatek_remove(struct platform_device *pdev)
- static const struct pwm_mediatek_of_data mt2712_pwm_data = {
- 	.fallback_npwms = 8,
- 	.pwm45_fixup = false,
--	.has_clks = true,
- };
- 
- static const struct pwm_mediatek_of_data mt7622_pwm_data = {
- 	.fallback_npwms = 6,
- 	.pwm45_fixup = false,
--	.has_clks = true,
- };
- 
- static const struct pwm_mediatek_of_data mt7623_pwm_data = {
- 	.fallback_npwms = 5,
- 	.pwm45_fixup = true,
--	.has_clks = true,
- };
- 
- static const struct pwm_mediatek_of_data mt7628_pwm_data = {
- 	.fallback_npwms = 4,
- 	.pwm45_fixup = true,
--	.has_clks = false,
- };
- 
- static const struct of_device_id pwm_mediatek_of_match[] = {
++		pwm: pwm@11006000 {
++			compatible = "mediatek,mt7629-pwm",
++				     "mediatek,mt7622-pwm";
++			reg = <0 0x11006000 0 0x1000>;
++			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&topckgen CLK_TOP_PWM_SEL>,
++				 <&pericfg CLK_PERI_PWM_PD>,
++				 <&pericfg CLK_PERI_PWM1_PD>;
++			clock-names = "top", "main", "pwm1";
++			assigned-clocks = <&topckgen CLK_TOP_PWM_SEL>;
++			assigned-clock-parents =
++					<&topckgen CLK_TOP_UNIVPLL2_D4>;
++			num-pwms = <1>;
++			status = "disabled";
++		};
++
+ 		i2c: i2c@11007000 {
+ 			compatible = "mediatek,mt7629-i2c",
+ 				     "mediatek,mt2712-i2c";
 -- 
 2.17.1
 
