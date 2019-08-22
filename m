@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C1FC898BEF
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 Aug 2019 09:00:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C818198BF3
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 Aug 2019 09:00:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731918AbfHVHA0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 22 Aug 2019 03:00:26 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:27207 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728605AbfHVHA0 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 22 Aug 2019 03:00:26 -0400
-X-UUID: b702d273852648b3ad3c60f7b35ead3e-20190822
-X-UUID: b702d273852648b3ad3c60f7b35ead3e-20190822
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        id S1731349AbfHVHAp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 22 Aug 2019 03:00:45 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:24426 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728605AbfHVHAp (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 22 Aug 2019 03:00:45 -0400
+X-UUID: 17eb2086c4e3493798a5996dce96b8e8-20190822
+X-UUID: 17eb2086c4e3493798a5996dce96b8e8-20190822
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
         (envelope-from <sam.shih@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 332468386; Thu, 22 Aug 2019 15:00:19 +0800
+        with ESMTP id 1696701101; Thu, 22 Aug 2019 15:00:40 +0800
 Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 22 Aug 2019 15:00:17 +0800
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 22 Aug 2019 15:00:38 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 22 Aug 2019 15:00:13 +0800
+ Transport; Thu, 22 Aug 2019 15:00:34 +0800
 From:   Sam Shih <sam.shih@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -33,9 +33,9 @@ CC:     Ryder Lee <ryder.lee@mediatek.com>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v5 02/13] pwm: mediatek: droping the check for of_device_get_match_data
-Date:   Thu, 22 Aug 2019 14:58:32 +0800
-Message-ID: <1566457123-20791-3-git-send-email-sam.shih@mediatek.com>
+Subject: [PATCH v5 03/13] pwm: mediatek: add a property "clock-frequency"
+Date:   Thu, 22 Aug 2019 14:58:33 +0800
+Message-ID: <1566457123-20791-4-git-send-email-sam.shih@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
 References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
@@ -47,51 +47,115 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This patch drop the check for of_device_get_match_data.
-Due to the only way call driver probe is compatible match.
-The .data pointer which point to the SoC specify data is
-directly set by driver, and it should not be NULL in our case.
-We can safety remove the check for of_device_get_match_data.
+This fix mt7628 pwm during configure from userspace. The SoC
+is legacy MIPS and has no complex clock tree. This patch add property
+clock-frequency to the SoC specific data and legacy MIPS SoC need to
+configure it in DT. This property is use for period calculation.
+
+We will improve this fix by droping has-clks attribute and using
+clock-frequency to do the same thing in a new patch.
 
 Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 Signed-off-by: Sam Shih <sam.shih@mediatek.com>
 ---
-Used:
-https://patchwork.kernel.org/patch/11096905/
-Changes since v4:
-Follow reviewer's comments:
-Move the changes of droping the check for of_device_get_match_data
-returning non-NULL to this patch
+Changes since v5:
+1. Follow reviewer's comments
+Make the changes of fix mt7628 pwm as a single patch
 
-Change-Id: Ibcba903d5b26159051adfc5ef2e601ee2f78729b
+Changes since v4:
+- Follow reviewers's comments
+1. use pc->soc->has_clks to check clocks exist or not.
+2. Add error message when probe() unable to get clks
+- Fixes bug when SoC is old mips which has no complex clock tree.
+if clocks not exist, use the new property from DT to apply period caculation;
+otherwise, use clk_get_rate to get clock frequency and apply period caculation.
+
+Change-Id: Ibbe6d7a4f80b30f60725bcbeca1d02ce7834d28c
 ---
- drivers/pwm/pwm-mediatek.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/pwm/pwm-mediatek.c | 39 ++++++++++++++++++++++++++++++--------
+ 1 file changed, 31 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index e214f4f57107..ebd62629e3fe 100644
+index ebd62629e3fe..1f18bff4800c 100644
 --- a/drivers/pwm/pwm-mediatek.c
 +++ b/drivers/pwm/pwm-mediatek.c
-@@ -226,7 +226,6 @@ static const struct pwm_ops mtk_pwm_ops = {
+@@ -65,11 +65,13 @@ struct mtk_pwm_platform_data {
+  * @chip: linux PWM chip representation
+  * @regs: base address of PWM chip
+  * @clks: list of clocks
++ * @clk_freq: the fix clock frequency of legacy MIPS SoC
+  */
+ struct mtk_pwm_chip {
+ 	struct pwm_chip chip;
+ 	void __iomem *regs;
+ 	struct clk *clks[MTK_CLK_MAX];
++	unsigned int clk_freq;
+ 	const struct mtk_pwm_platform_data *soc;
+ };
  
- static int mtk_pwm_probe(struct platform_device *pdev)
+@@ -141,19 +143,27 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			  int duty_ns, int period_ns)
  {
--	const struct mtk_pwm_platform_data *data;
- 	struct device_node *np = pdev->dev.of_node;
- 	struct mtk_pwm_chip *pc;
- 	struct resource *res;
-@@ -237,10 +236,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
- 	if (!pc)
- 		return -ENOMEM;
+ 	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
+-	struct clk *clk = pc->clks[MTK_CLK_PWM1 + pwm->hwpwm];
++	unsigned int clk_freq;
+ 	u32 clkdiv = 0, cnt_period, cnt_duty, reg_width = PWMDWIDTH,
+ 	    reg_thres = PWMTHRES;
+ 	u64 resolution;
+ 	int ret;
  
--	data = of_device_get_match_data(&pdev->dev);
--	if (data == NULL)
--		return -EINVAL;
--	pc->soc = data;
-+	pc->soc = of_device_get_match_data(&pdev->dev);
++	if (pc->soc->has_clks) {
++		struct clk *clk = pc->clks[MTK_CLK_PWM1 + pwm->hwpwm];
++
++		clk_freq = clk_get_rate(clk);
++	} else {
++		clk_freq = pc->clk_freq;
++	}
++
+ 	ret = mtk_pwm_clk_enable(chip, pwm);
+ 	if (ret < 0)
+ 		return ret;
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	pc->regs = devm_ioremap_resource(&pdev->dev, res);
+ 	/* Using resolution in picosecond gets accuracy higher */
+ 	resolution = (u64)NSEC_PER_SEC * 1000;
+-	do_div(resolution, clk_get_rate(clk));
++	do_div(resolution, clk_freq);
+ 
+ 	cnt_period = DIV_ROUND_CLOSEST_ULL((u64)period_ns * 1000, resolution);
+ 	while (cnt_period > 8191) {
+@@ -262,13 +272,26 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+ 		npwms = MTK_CLK_MAX - 2;
+ 	}
+ 
+-	for (i = 0; i < npwms + 2 && pc->soc->has_clks; i++) {
+-		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
+-		if (IS_ERR(pc->clks[i])) {
+-			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
+-				mtk_pwm_clk_name[i], PTR_ERR(pc->clks[i]));
+-			return PTR_ERR(pc->clks[i]);
++	if (pc->soc->has_clks) {
++		for (i = 0; i < npwms + 2 ; i++) {
++			pc->clks[i] = devm_clk_get(&pdev->dev,
++						  mtk_pwm_clk_name[i]);
++			if (IS_ERR(pc->clks[i])) {
++				dev_err(&pdev->dev, "clock: %s fail: %ld\n",
++					mtk_pwm_clk_name[i],
++					PTR_ERR(pc->clks[i]));
++				return PTR_ERR(pc->clks[i]);
++			}
++		}
++	} else {
++		unsigned int clk_freq;
++
++		ret = of_property_read_u32(np, "clock-frequency", &clk_freq);
++		if (ret < 0) {
++			dev_err(&pdev->dev, "failed to get clock_frequency\n");
++			return ret;
+ 		}
++		pc->clk_freq = clk_freq;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, pc);
 -- 
 2.17.1
 
