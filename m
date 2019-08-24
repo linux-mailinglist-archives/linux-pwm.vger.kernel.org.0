@@ -2,101 +2,86 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3D229B958
-	for <lists+linux-pwm@lfdr.de>; Sat, 24 Aug 2019 02:11:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F5E99B98D
+	for <lists+linux-pwm@lfdr.de>; Sat, 24 Aug 2019 02:26:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbfHXALF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 23 Aug 2019 20:11:05 -0400
-Received: from antares.kleine-koenig.org ([94.130.110.236]:56656 "EHLO
-        antares.kleine-koenig.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfHXALF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Aug 2019 20:11:05 -0400
-Received: by antares.kleine-koenig.org (Postfix, from userid 1000)
-        id 3431277D4BE; Sat, 24 Aug 2019 02:11:03 +0200 (CEST)
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org
-Subject: [PATCH v2 6/6] pwm: atmel: implement .get_state()
-Date:   Sat, 24 Aug 2019 02:10:41 +0200
-Message-Id: <20190824001041.11007-7-uwe@kleine-koenig.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190824001041.11007-1-uwe@kleine-koenig.org>
-References: <20190824001041.11007-1-uwe@kleine-koenig.org>
+        id S1725917AbfHXA0j (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 23 Aug 2019 20:26:39 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:32981 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfHXA0j (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Aug 2019 20:26:39 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1i1Jt4-0004mc-Tb; Sat, 24 Aug 2019 02:26:34 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1i1Jt4-0000Br-38; Sat, 24 Aug 2019 02:26:34 +0200
+Date:   Sat, 24 Aug 2019 02:26:34 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH] pwm: mxs: use devm_platform_ioremap_resource() to
+ simplify code
+Message-ID: <20190824002634.nfrhof3kpsrcc742@pengutronix.de>
+References: <20190718013205.24919-1-Anson.Huang@nxp.com>
+ <AM0PR04MB42116F0753C9C6A619A2D8EC80C80@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916423A6E334EDD4C06B884F5AB0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <DB3PR0402MB3916423A6E334EDD4C06B884F5AB0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This function reads back the configured parameters from the hardware. As
-.apply rounds down (mostly) I'm rounding up in .get_state() to achieve
-that applying a state just read from hardware is a no-op.
+Hello,
 
-Signed-off-by: Uwe Kleine-KÃ¶nig <uwe@kleine-koenig.org>
----
-New in v2
+On Tue, Aug 20, 2019 at 05:56:40AM +0000, Anson Huang wrote:
+> Gentle ping...
 
- drivers/pwm/pwm-atmel.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+My impression[1] is that Thierry collects patches in bulk once or twice
+per release cycle. The last two such bulks were between 5.2-rc6 and
+5.2-rc7 and in the 5.2 merge window. So given we're at v5.3-rc5 now I
+expect some action soon :-)
 
-diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-index 152c2b7dd6df..f788501ab6ca 100644
---- a/drivers/pwm/pwm-atmel.c
-+++ b/drivers/pwm/pwm-atmel.c
-@@ -295,8 +295,47 @@ static int atmel_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	return 0;
- }
- 
-+static void atmel_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				struct pwm_state *state)
-+{
-+	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
-+	u32 sr, cmr;
-+
-+	sr = atmel_pwm_readl(atmel_pwm, PWM_SR);
-+	cmr = atmel_pwm_ch_readl(atmel_pwm, pwm->hwpwm, PWM_CMR);
-+
-+	if (sr & (1 << pwm->hwpwm)) {
-+		unsigned long rate = clk_get_rate(atmel_pwm->clk);
-+		u32 cdty, cprd, pres; 
-+		u64 tmp;
-+
-+		pres = cmr & PWM_CMR_CPRE_MSK;
-+
-+		cprd = atmel_pwm_ch_readl(atmel_pwm, pwm->hwpwm, atmel_pwm->data->regs.period);
-+		tmp = (u64)cprd * NSEC_PER_SEC;
-+		tmp <<= pres;
-+		state->period = DIV64_U64_ROUND_UP(tmp, rate);
-+
-+		cdty = atmel_pwm_ch_readl(atmel_pwm, pwm->hwpwm, atmel_pwm->data->regs.duty);
-+		tmp = (u64)cdty * NSEC_PER_SEC;
-+		tmp <<= pres;
-+		state->duty_cycle = DIV64_U64_ROUND_UP(tmp, rate);
-+
-+		state->enabled = true;
-+	} else {
-+		state->enabled = false;
-+	}
-+
-+	if (cmr & PWM_CMR_CPOL)
-+		state->polarity = PWM_POLARITY_INVERSED;
-+	else
-+		state->polarity = PWM_POLARITY_NORMAL;
-+
-+}
-+
- static const struct pwm_ops atmel_pwm_ops = {
- 	.apply = atmel_pwm_apply,
-+	.get_state = atmel_pwm_get_state,
- 	.owner = THIS_MODULE,
- };
- 
+> > > From: Anson.Huang@nxp.com <Anson.Huang@nxp.com>
+> > > Sent: Thursday, July 18, 2019 9:32 AM
+> > >
+> > > Use the new helper devm_platform_ioremap_resource() which wraps the
+> > > platform_get_resource() and devm_ioremap_resource() together, to
+> > > simplify the code.
+> > >
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > 
+> > Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+
+Best regards
+Uwe
+
+[1] from git log --committer=Thierry --format=%ci drivers/pwm | cut -d\  -f1 | uniq -c
 -- 
-2.20.1
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
