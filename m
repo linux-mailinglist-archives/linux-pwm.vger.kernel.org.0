@@ -2,26 +2,26 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A95A39BC4E
-	for <lists+linux-pwm@lfdr.de>; Sat, 24 Aug 2019 09:08:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24FFC9BC4F
+	for <lists+linux-pwm@lfdr.de>; Sat, 24 Aug 2019 09:08:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726018AbfHXHIA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        id S1725798AbfHXHIA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
         Sat, 24 Aug 2019 03:08:00 -0400
-Received: from mout.gmx.net ([212.227.15.15]:48089 "EHLO mout.gmx.net"
+Received: from mout.gmx.net ([212.227.15.15]:44397 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbfHXHH7 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sat, 24 Aug 2019 03:07:59 -0400
+        id S1725974AbfHXHIA (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sat, 24 Aug 2019 03:08:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1566630463;
-        bh=7zmLzSl5QEPcdtQwy7pC80ljPOepFXeVShtWEIEYFf8=;
+        s=badeba3b8450; t=1566630464;
+        bh=cNfgDpMsStRYRSGRVwwso2ry+d80CNC09Rh9sIRN7vw=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=FXvtBikCxHyYJ5pd66Qj5Khv2Gx8b7Xxf/tHar4op/NeA4BccB8phnLo28f6E6QZV
-         LpMW3dPxX/GN33RhyZNKSj+unItC4TWXduUYibrEfDE/Xlun3yEGw4vd+ja5+xHVmZ
-         fAEuacnxVnYffrz6Plf48T2/vAAWCOof5V78H6AA=
+        b=J1GxJSMmHdiU1WDp/v4RUmwUYaEIFwwSDi1JYNxNf8nmqDiS8zkt4vFLugCEGzB1X
+         Sxib9CZaMZH+lR29y4qm6xZKM+LaAkdc5BHvXG9iYPxWn/6YN7tjt4qe1anlNoSCrr
+         V8B+qsbivnBDHKIvwwMJi27z3Kt6IvvHgGMluWFo=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([37.4.249.106]) by mail.gmx.com
  (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1Mw9Q6-1iJv0F2u84-00s5RQ; Sat, 24 Aug 2019 09:07:43 +0200
+ 1N7zFZ-1iFDlE4AC3-014xl1; Sat, 24 Aug 2019 09:07:44 +0200
 From:   Stefan Wahren <wahrenst@gmx.net>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Eric Anholt <eric@anholt.net>,
@@ -30,66 +30,90 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Scott Branden <sbranden@broadcom.com>
 Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH 1/3] pwm: bcm2835: suppress error message for invalid period_ns
-Date:   Sat, 24 Aug 2019 09:07:23 +0200
-Message-Id: <1566630445-4599-2-git-send-email-wahrenst@gmx.net>
+Subject: [PATCH 2/3] pwm: bcm2835: fix period_ns range check
+Date:   Sat, 24 Aug 2019 09:07:24 +0200
+Message-Id: <1566630445-4599-3-git-send-email-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1566630445-4599-1-git-send-email-wahrenst@gmx.net>
 References: <1566630445-4599-1-git-send-email-wahrenst@gmx.net>
-X-Provags-ID: V03:K1:R0rW09NZDppqcsM8P+s82dRAM2pzVvmlFRvXrFJwJkMbvk72HFO
- dlryHWDKQVAjfoYFqvodWM5E4VY6N0yp4iKQeKqkzXWr68yY71hvuDcF5jbNbNUreGQpHQt
- s1PilcgL+J7jB2F0GmzE7uOG40aQd3JmQ/boXh4QdYpT7opq7gnO3JJZKBQxWBoeJ5+KHN1
- 8V7kBWLJVRFk3tqVXt2QA==
+X-Provags-ID: V03:K1:wUJTwdwF8cbSJSzQyvUcO+97RrgtJK5jY47JakdXyNBlfDeOxA6
+ TBAht+wgvDofDruqZXGrLWEv2DVBWSagz9wvqFyNzDLYSgDQxR2YeTlVnE/AACzCmLDg3H2
+ y2tAIeLE8VhFrevaflCxKgDr2UtjYnm2/NZK2OgSsqpVDimelHf1bUBP7/P96i2rzq9tpY0
+ UGJ6xYsNWhDsqxU85wPrA==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:o+iHcj1vHTk=:Io+XoR6JaAcaQXGdTyr5qk
- Tni7PnouSwq8noVSlsO0kpzTWKOO4N2Jm7ebh35jn4d+FDUVAuOAK2P2V/4Y8cnC0aCdX/CKv
- cntumpopx4yuOo5pwpjPBjJDsWv7X1i7c8LXRZOpLVvnyvPreyZiYWfnLSHATOhbc45dHWAgn
- yGu+v4F4n2POeGmJe7pJCqcBEdiGcKcKx+Ec0ReEtz/SgzlwmLOwERAdY4k50kGAx8H8cRcKs
- xArVavDCC4sVkReNAfrk8ZH/VhxCybiAjScTy+t0p1h5kAlsKj2YeYuidoXKjKFv5QSqtOvqN
- x3YZYb04xUMWenOOezkTUHOBQE00+4igm1RsRxDY10QOrIuXJ0Y2yC7+CSuaY0FwKJJryMKO/
- 7HX9fGxUXrFdr6tyuCohyZqHadDVGhOIL/p/QM1xFLWvPQhXAW24NSLUpptzCXhFUpA+C3pGe
- Ue6bjf/uzidtH24tjAo0yVli4WFUx417S4+XT019zM/cTP/EtwevnELYnKnlvRLq2RX7S1GtE
- /02kbUkOvhiG0mzHsS3xItP/wAYZdchjGXH2Zk/SIdPSnNfflAoAo2Ye8BhTBsdkftaAUw1V2
- vq22/Y8JGW401qC4BcDqKt5slDPqWln/hZlk1hcConWuDIBcQzHVa3MTmJ7Ca8G+B9oHUvPTs
- 47u91ShCp8mNbj/RuuE1QDta6LnhzV5jcVPBhsMtudpI0UwVsWfxrMlPsOundANibANQu6CMq
- jwrJrNuRYjTbA8+zu250FnHdeJFR42oamMMSnmdHPUcvUGXjT34zjjWaro4bnHG53SyCw/3f5
- Z9srReOTLJ9Ws+UulS7yJDmprDvjXLg7fUN4QJiI0kcrSnSCJPRoBnnmOn61HSSiIhqL5WSjK
- l1UIh66mXtnXefBWWwS8E5gqf9Ee6hdN341XG58ExRJB8hCcvMXxeUb9zfmL//wm65g22FrcA
- AIyIm/00A+KjK1VB6j8BuD2jRNGonKNcGK8ixeZx0bZbwD/OLxRRHh1E6HlUC3Qsq5y5VWNJT
- ymmhfQIL8L2CewWMZrH/GngZRTQlZoTDA2FIQ/80DQ9PsTVJH0+ZOEfh7eQH6rwSlqaP6vAVd
- yLZSBrOQd85RLE8zh2dpmxNW5NO1Mbu0Z22jHlzRa3EvnfRFxX/+Nhrkw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mFZRJEsZ2DQ=:LIXA2QWwfPvnGU149PBboe
+ NWy7nrmfyj+6creVK/QOPaH4wkW+A99q1w0zdS6lz+L1cU6fx8YdZWT9xuCd8KFjEDP+0iyp9
+ pSHANrQfRbAHmBOKdLC3LuQQhN89xbSmCM8rXZGqAwSvPGAsH9fPDYH/BwWHIB/jpUhvOhYIA
+ fQcJCyvIihpPMTIhS5CH9n65bhiyYZ/8u7t7ZGymwPyV5JASGeyX6n5LInZ3OYcquBLQxtWPS
+ hh5mRMnfT7MixloKkP2FtuYFPmICd7ZjDPKmUSkmCba8rd9+TWACGv39ubEnGVTo1XMHIa5UI
+ sjq+Ob8W0+9n5QDmGzhEnQCdczWqmbrGGNPPlldJ4RWKfkZR4tK7xefeVJYFZhQU+qvcj7lBa
+ ZsEIz9rVk7nOWVNp2d1AHg8B+EwA1p1iywVx+4f94TaOntwkQteCkopEq4b4DIAbxvdR1jIJR
+ Y+yhEW98EwiD9E/Cmf1RQnS4ntHai7V+4W8lLDMBy+2TM91BAKG0N7hZT/tg1sKWmAYqkVZfB
+ eCffwGU18xSqO81x2XspLRXYZmH1T8ThgjF2NOitDtg+JguWvhzj+iNvxkpfcr3Wvr04IYcwc
+ QNWejTllsgnf7plqKBv6eZ+weJFz/8Yv7FuzuxPuX0U1rXQmKCynz1nQKXy83/XEhu6ArkZWR
+ qx7IUSlx5gUaXssrk8wBlvXSHaM/akmDKlKe0RJ2U9XhaRxAFAaer8p5w3wcLPy88/gB7v/nE
+ qEHmOJ+m1F+rfPd7dG35w/eCTCqXKAIneqg6imBwpVoaczEgVW6KAk3tGN03abyiYFLxJvJCO
+ ConYRnMvgn1Vqvdd1NewXZ32Ot+b0oeVVC4PcNIhbMFgDM1zMKQCCn0SrCDDvbvvfKEJmIhbA
+ PQLD9Eqn+n6/eaevv7pMgDpQQ+n4YsIgX/nI8uFGM3PoH9aJ7C9yY8sUsfHnKgK1G9c3ThKTX
+ 5I0GXQb/47uasEuqft9yowe3ze7kE6H3KVRHT2gVTdWZXLjytz8rYFly5Fs7kh8JGvOiPRMKA
+ otQ1bQ3LojJtdTg0TkVqd2C/uBOMTXSa3CncjK54QfPoQWoi77NLrluJf2XvGUg5CyNHg8mzf
+ CDZu0eDxaWH0SnKdDOzI3vb/J0J52GUqeZuw34DbjUBpdCC4y/0pHB50A==
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The PWM config can be triggered via sysfs, so we better suppress the
-error message in case of an invalid period to avoid kernel log spamming.
+The range check for period_ns was written under assumption of a fixed
+PWM clock. With clk-bcm2835 driver the PWM clock is a dynamic one.
+So fix this by doing the range check on the period register value.
 
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 =2D--
- drivers/pwm/pwm-bcm2835.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/pwm/pwm-bcm2835.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
-index f6fe0b9..5276306 100644
+index 5276306..2c82386 100644
 =2D-- a/drivers/pwm/pwm-bcm2835.c
 +++ b/drivers/pwm/pwm-bcm2835.c
-@@ -72,11 +72,8 @@ static int bcm2835_pwm_config(struct pwm_chip *chip, st=
-ruct pwm_device *pwm,
+@@ -21,7 +21,7 @@
+ #define PERIOD(x)		(((x) * 0x10) + 0x10)
+ #define DUTY(x)			(((x) * 0x10) + 0x14)
+
+-#define MIN_PERIOD		108		/* 9.2 MHz max. PWM clock */
++#define PERIOD_MIN		0x2
+
+ struct bcm2835_pwm {
+ 	struct pwm_chip chip;
+@@ -64,6 +64,7 @@ static int bcm2835_pwm_config(struct pwm_chip *chip, str=
+uct pwm_device *pwm,
+ 	struct bcm2835_pwm *pc =3D to_bcm2835_pwm(chip);
+ 	unsigned long rate =3D clk_get_rate(pc->clk);
+ 	unsigned long scaler;
++	u32 period;
+
+ 	if (!rate) {
+ 		dev_err(pc->dev, "failed to get clock rate\n");
+@@ -71,14 +72,14 @@ static int bcm2835_pwm_config(struct pwm_chip *chip, s=
+truct pwm_device *pwm,
+ 	}
 
  	scaler =3D DIV_ROUND_CLOSEST(NSEC_PER_SEC, rate);
++	period =3D DIV_ROUND_CLOSEST(period_ns, scaler);
 
--	if (period_ns <=3D MIN_PERIOD) {
--		dev_err(pc->dev, "period %d not supported, minimum %d\n",
--			period_ns, MIN_PERIOD);
-+	if (period_ns <=3D MIN_PERIOD)
+-	if (period_ns <=3D MIN_PERIOD)
++	if (period < PERIOD_MIN)
  		return -EINVAL;
--	}
 
  	writel(DIV_ROUND_CLOSEST(duty_ns, scaler),
  	       pc->base + DUTY(pwm->hwpwm));
+-	writel(DIV_ROUND_CLOSEST(period_ns, scaler),
+-	       pc->base + PERIOD(pwm->hwpwm));
++	writel(period, pc->base + PERIOD(pwm->hwpwm));
+
+ 	return 0;
+ }
 =2D-
 2.7.4
 
