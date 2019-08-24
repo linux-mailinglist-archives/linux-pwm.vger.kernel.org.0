@@ -2,99 +2,98 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EE059BD2C
-	for <lists+linux-pwm@lfdr.de>; Sat, 24 Aug 2019 12:56:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83B279BE22
+	for <lists+linux-pwm@lfdr.de>; Sat, 24 Aug 2019 16:10:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbfHXK4Q (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 24 Aug 2019 06:56:16 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53387 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727752AbfHXK4Q (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 24 Aug 2019 06:56:16 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1i1TiR-0001bO-Bw; Sat, 24 Aug 2019 12:56:15 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1i1TiQ-0003T7-75; Sat, 24 Aug 2019 12:56:14 +0200
-Date:   Sat, 24 Aug 2019 12:56:14 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Stefan Wahren <wahrenst@gmx.net>
-Cc:     linux-pwm@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>, Eric Anholt <eric@anholt.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/3] pwm: bcm2835: Minor fixes
-Message-ID: <20190824105614.wpkvqqxjey6umhrs@pengutronix.de>
-References: <1566630445-4599-1-git-send-email-wahrenst@gmx.net>
- <20190824092553.j4rjpzaz4m6yaa5t@pengutronix.de>
- <22f8e65b-2d65-84e7-de50-ba6538a84292@gmx.net>
+        id S1727668AbfHXOKJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 24 Aug 2019 10:10:09 -0400
+Received: from mout.gmx.net ([212.227.15.19]:36031 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727665AbfHXOKJ (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sat, 24 Aug 2019 10:10:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1566655798;
+        bh=Gw0uvY9zV94pNModeowkG7ft0KsjTu+9nSEiRmDoueo=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=I/KsoGp7RsJ91JRFXS5dPd+dcnqIL2qgjjBYovEMV0dNcvw7qQ1UHZywX5j08VKDs
+         njcR2bXyTHzj3q8LkH7zu3mi9oqNFV48pPAUaKbJtHcm67rYNWNKi5BjJl9VeCQ3D5
+         nwxu2raHO3CFo8I3fDGr4aaof2cpF9AWVqFT6IF0=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([37.4.249.106]) by mail.gmx.com
+ (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1N95e9-1iGDcv05OJ-0169B9; Sat, 24 Aug 2019 16:09:58 +0200
+From:   Stefan Wahren <wahrenst@gmx.net>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Eric Anholt <eric@anholt.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH V2 1/3] pwm: bcm2835: suppress error message for invalid period_ns
+Date:   Sat, 24 Aug 2019 16:09:46 +0200
+Message-Id: <1566655788-24949-2-git-send-email-wahrenst@gmx.net>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1566655788-24949-1-git-send-email-wahrenst@gmx.net>
+References: <1566655788-24949-1-git-send-email-wahrenst@gmx.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <22f8e65b-2d65-84e7-de50-ba6538a84292@gmx.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:fddocn95lqFR/2NouKKedgB4+IDR2qPI8KHoNbsqdP4ouU+F1eh
+ j6b5ucNtQpz6aal5CGHWp1O5FRd6jNVF2ZI4swmnGYJ28hsEgBez/rEjJUs0aiXH22/bdG9
+ 0VxfIZbWDaxlSCGLLJ/7heooFlTXal24wuswUrhH9k/170U1dFs4xnJrTbvzIWapZ/ubujW
+ EUunYkaCatNkUsQPGf0jQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4sKyPc6fcIg=:UKPqGFFRGs8RbS/7w3zeZn
+ GZPqkRoyMOXlWVCiZ6oJ6GlcnyOK1ij6VzRJ/30QxMLbtW0kPyAsGMDPh6HlFw0ayWG4TG+dr
+ ynrSl6w85sfUK6VhlWALYmWe5w1QdarIL0Uy0sm/G3MUxqfWkkgGhBRRoCYvMdWx8sGevH4hz
+ bPL3I5H3diXukgRYox+xIZ9DLxt6hUO/0jGqYMgrgEPjQ3bTODcrmTcbsOga1fb750Vkv0MH3
+ 46xDmjtiYIQJCLPYIRTRBjdeF53HMk4Qa/5QfNE2x7q54mAAdcvVQ2jXFqrqA/VtCUXuBLHhz
+ ZvNe5OuGZEYZOhzyqGCo0UgFWuEYAAt0dz//emGhReYxlUkBTGyDEHMzsYamyDl51d8VnJV+B
+ gEub3ivyGSrGKD5zPmOODmdy49L0QTLoxYHnKZ/hxLy7nBI+vM00eIvoLTqoH0y+b9oRj4j86
+ z3U/LIzOmPgH2Aq1R7Ipj3518atDOE8v1vD0KMRJpo5xjqhCKYVwBgwet0lSN4EE6KLpzFe6R
+ p94vzHy1CLkriJEUECNDuCSSdlBLkZVbLGmJqxXdINRuk1n0aKLkNGcHl/tQJKkqOtBkzKY6M
+ NcQMT2kxzq6T/rdAmp5N+aaIToi3smX12VORQLN/V/NeQ9KbITu9aplZOyXiJEHBzcnRHq+Qw
+ OmNVMkkhEbdCzhye2d1fq+1SjIwcgFoT2d4SWxp2LDZl34kHB7c/kOVhLSkfF4lajtvCIi3ho
+ Cov9V1FsKptAk5FhRsO0ujhohkaxVi4jfRqAuFaQCtU00AV2ORmHcOT6TAAIpCXuWNb5C8Cs+
+ f5HC/3tT+B7FzA6JOAuCUFW/TaJ0f1a5cdrICc3z8aq7wwJF9cb6hoXV4RaS3Hoxe8TvwldwX
+ jYQz2HhQphwAWJGIsmvc/al9E0Bz7gH1c/zRDPjNil6GqFF6UzVcrrVZG13UDJVFfbaSfCMyQ
+ OGa1C99Qr2kXLHW4cp0mWRe3blDnRlUJvWSqHEQ2N6MtO7bUZvYuJFkEh5KRqsF4UXiQHM/EN
+ 6k/j9MmHJiPLom/nhopBwlCRr/QJhK1wQnpy6ADdlxonYd275NOCZpVp1mJcAvMyDuBPAYJpP
+ adjny2zaBuTKwsg6ps4zBHw6L3runIuC7BNZXRn4YBjJa7akICsjwhbTWY1G8MpST5XAxqvXX
+ oPzfs=
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Stefan,
+The PWM config can be triggered via sysfs, so we better suppress the
+error message in case of an invalid period to avoid kernel log spamming.
 
-On Sat, Aug 24, 2019 at 12:05:00PM +0200, Stefan Wahren wrote:
-> Am 24.08.19 um 11:25 schrieb Uwe Kleine-König:
-> > Hello Stefan,
-> >
-> > On Sat, Aug 24, 2019 at 09:07:22AM +0200, Stefan Wahren wrote:
-> >> This small patch series contains minor fixes for clock handling and the
-> >> period range check.
-> >
-> > I'd like to understand the various different usecases of PWMs. The
-> > in-kernel consumers are kind of obvious, but sysfs users are not. It
-> > seems you are one of the latter.
-> >
-> > Would you mind sharing what you control using the PWM?
-> 
-> not really a PWM user with BCM2835. It's more the motivation as a
-> platform maintainer to keep the drivers in shape. At work we are using
-> sysfs interface for user applications to control ventilation (via hwmon
-> interface) and EV charging (IEC 61851) with a different SoC.
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+=2D--
+ drivers/pwm/pwm-bcm2835.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-I don't understand how you use the sysfs interface and still interact
-with the hwmon interface. Other than that, thanks for sharing.
+diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
+index f6fe0b9..5276306 100644
+=2D-- a/drivers/pwm/pwm-bcm2835.c
++++ b/drivers/pwm/pwm-bcm2835.c
+@@ -72,11 +72,8 @@ static int bcm2835_pwm_config(struct pwm_chip *chip, st=
+ruct pwm_device *pwm,
 
+ 	scaler =3D DIV_ROUND_CLOSEST(NSEC_PER_SEC, rate);
 
-> > Assuming you have some interest in this driver: It still uses the legacy
-> > stuff implementing .config, .enable, .disable, .set_polarity. Are you
-> > willing to test (or even implement) a switch to .apply instead?
-> 
-> Yes, definitely. This is one of my never ending TODO list [1]. But i
-> would be suprised that you wont have access to a Raspberry Pi.
+-	if (period_ns <=3D MIN_PERIOD) {
+-		dev_err(pc->dev, "period %d not supported, minimum %d\n",
+-			period_ns, MIN_PERIOD);
++	if (period_ns <=3D MIN_PERIOD)
+ 		return -EINVAL;
+-	}
 
-So be surprised :-)
+ 	writel(DIV_ROUND_CLOSEST(duty_ns, scaler),
+ 	       pc->base + DUTY(pwm->hwpwm));
+=2D-
+2.7.4
 
-> > Just from a quick lock into the driver I wonder a few things, maybe you
-> > can shed some light here. If there is publicly available documenation
-> > for this piece of hardware, feel free to point this out, then I might be
-> > able to work out some of the answers myself.
-> 
-> Fortunately yes [2]
-
-Care to add a link to this document in the driver for others to easily
-find it?
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
