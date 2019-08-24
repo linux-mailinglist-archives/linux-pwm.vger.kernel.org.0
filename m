@@ -2,26 +2,26 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E70C9BC4D
-	for <lists+linux-pwm@lfdr.de>; Sat, 24 Aug 2019 09:07:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A95A39BC4E
+	for <lists+linux-pwm@lfdr.de>; Sat, 24 Aug 2019 09:08:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725930AbfHXHH5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 24 Aug 2019 03:07:57 -0400
-Received: from mout.gmx.net ([212.227.15.18]:41649 "EHLO mout.gmx.net"
+        id S1726018AbfHXHIA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 24 Aug 2019 03:08:00 -0400
+Received: from mout.gmx.net ([212.227.15.15]:48089 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725798AbfHXHH5 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sat, 24 Aug 2019 03:07:57 -0400
+        id S1725948AbfHXHH7 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sat, 24 Aug 2019 03:07:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
         s=badeba3b8450; t=1566630463;
-        bh=PKxEsX2rISWKrQgeMW80jwB5sy0XViIuMLHUBk/9zKE=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=RTrS/Au//V1m6EYSNRGyIyWBvkOzVWmLtAKoLO85mRng3Yfk4MqUCfkhnHGB3kVrG
-         a/zdlsKo6pec2dmUo0tW++x+FoY1IoXma25AKsTP7Ius0tIvPu4Vk/IZyCY2FVfvbG
-         sBiAyfZXZSp5yaVzG2QMNdP8nYoOfVfhsZVeZ7jg=
+        bh=7zmLzSl5QEPcdtQwy7pC80ljPOepFXeVShtWEIEYFf8=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=FXvtBikCxHyYJ5pd66Qj5Khv2Gx8b7Xxf/tHar4op/NeA4BccB8phnLo28f6E6QZV
+         LpMW3dPxX/GN33RhyZNKSj+unItC4TWXduUYibrEfDE/Xlun3yEGw4vd+ja5+xHVmZ
+         fAEuacnxVnYffrz6Plf48T2/vAAWCOof5V78H6AA=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([37.4.249.106]) by mail.gmx.com
  (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MgNh7-1ij2Dw1QY3-00hyJX; Sat, 24 Aug 2019 09:07:43 +0200
+ 1Mw9Q6-1iJv0F2u84-00s5RQ; Sat, 24 Aug 2019 09:07:43 +0200
 From:   Stefan Wahren <wahrenst@gmx.net>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Eric Anholt <eric@anholt.net>,
@@ -30,50 +30,66 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Scott Branden <sbranden@broadcom.com>
 Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH 0/3] pwm: bcm2835: Minor fixes
-Date:   Sat, 24 Aug 2019 09:07:22 +0200
-Message-Id: <1566630445-4599-1-git-send-email-wahrenst@gmx.net>
+Subject: [PATCH 1/3] pwm: bcm2835: suppress error message for invalid period_ns
+Date:   Sat, 24 Aug 2019 09:07:23 +0200
+Message-Id: <1566630445-4599-2-git-send-email-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.7.4
-X-Provags-ID: V03:K1:5sT5Ex7dt/31unK59b6877E1kyCY1ETyVze+xHrp/25aGjWqyKl
- +7UxjOl+imgWagWboabnY3NcHgxK+CTt4kfy1Ht75YBHE1BnneMkaHKFPl8TdoAZDIiBiqK
- hUmE0zLqxBUYPy4a891QFuSrkIOkb5FCS1q3H6jLWFu3jdTcbSTcFNrMx/ep6sPLmhk1Hvx
- 3SFtJU0PsIP4P8lgQIHUw==
+In-Reply-To: <1566630445-4599-1-git-send-email-wahrenst@gmx.net>
+References: <1566630445-4599-1-git-send-email-wahrenst@gmx.net>
+X-Provags-ID: V03:K1:R0rW09NZDppqcsM8P+s82dRAM2pzVvmlFRvXrFJwJkMbvk72HFO
+ dlryHWDKQVAjfoYFqvodWM5E4VY6N0yp4iKQeKqkzXWr68yY71hvuDcF5jbNbNUreGQpHQt
+ s1PilcgL+J7jB2F0GmzE7uOG40aQd3JmQ/boXh4QdYpT7opq7gnO3JJZKBQxWBoeJ5+KHN1
+ 8V7kBWLJVRFk3tqVXt2QA==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Y0qf36lRIz0=:QFZR3QfKNKspBowGFNoHnQ
- pTKW+L09U8yVdh2YPm9XE/i7ni7VMagHaJWIHC2FZFlKg6hiFJIB4WmV+GUy9cjveyexVnf1d
- eGbFhRu0HzNBrgvzNCfPUWvcCQv4tMbrR1mte3lhwahkilubNecAI9ipmBIaNHmypq+60hsi9
- HUl7d5OLjxSkCL+WVM9DdFiAgRs3mUEr4Q5jV84mwOeGieLvZ3T21A07ZfG38R3wOz514vIMK
- k20jQrXUzjPdxKGyNC64PHx1N9fmwVtV33oilrTUZ938MAAPodzQKbhZJfCGtDAicCOYhMCaS
- 0I23OKtA60/y+jfZptz1bYnqA4hRzIFjmvc4kLi9L0/L+dvR5Lx+a4/I/iP8P0dmRzkysqFuJ
- yQEjcmH53M3Zou8J255U9+pSFmjrRiyHvscodlJtYSKsQ1BU4WtR31RNV6XGT+pH48KKKOCsI
- q17kOfLlNAXo22TNOs42Wt1ksI2C3ralBFiqTwgeK/bxTZI/ktrKqNYmhE60zu/Tge2+PAhiG
- 6tbfzSO0UeHsiZw85eEOHp4NeReDxIFYwRQ1sLyEdn8VDl9w3sWg1wZ1zzAu6MAY+6rzFAsP9
- lgvcn3asr4fOsFgsokd1fnJolVhtxrzO6INVZXnSP8jFXfuPGtWBnaHbjkBIltt6zUCQ9AqB2
- i7xbRjutAHwnhD3utc+jeXloW6fWhs26dK3xBBHZwoJ8dV+uYkCjhvMzEKNClNNOjE6R8t8iI
- ZL//qUDLT9e/XVJZ8yonEI/oL4PMFjy1eEx+UVqyMnBYQYzQbFYc8xPgINOYP8TiRvxRCcXsw
- qBmGryLnUs9OTMdck2NDUYfC4Fw3uV5RnXbP8bV1+/zXXcTAxgUfrEJ+CKBAQbt8zcCnV9MAR
- CX/xdvGIOQnP/OVVlrGM6xYootULsHoOc+XAZY6mvFdkweqbnkqmVWMyCUj0zTQxeQN6DLnCG
- ytvpr0/ltTdLQt9Jnmox1EznIUOeoYL7hCAXTIuWGUtB9z/gvAnWRInpTTaNyCrVjHzNaeHRY
- L6a5jD2FWBJTcGQTnv4vmWpuyLmeD3RsdRhtQTdd8PclewWaC9f36BkPE05dgRsiIKCc+KBbw
- Sp1T1X2jb7g5VHfSQlnR/H4fR8O9ixmSIuknfBsDfn3fz1XYDVnRwtKlx7NSbrUsLZHE9CHGM
- 36/T40kjbsy00Dw+nfc0At7DbxwG/ZDhtT0BCCCswGBxkEIg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:o+iHcj1vHTk=:Io+XoR6JaAcaQXGdTyr5qk
+ Tni7PnouSwq8noVSlsO0kpzTWKOO4N2Jm7ebh35jn4d+FDUVAuOAK2P2V/4Y8cnC0aCdX/CKv
+ cntumpopx4yuOo5pwpjPBjJDsWv7X1i7c8LXRZOpLVvnyvPreyZiYWfnLSHATOhbc45dHWAgn
+ yGu+v4F4n2POeGmJe7pJCqcBEdiGcKcKx+Ec0ReEtz/SgzlwmLOwERAdY4k50kGAx8H8cRcKs
+ xArVavDCC4sVkReNAfrk8ZH/VhxCybiAjScTy+t0p1h5kAlsKj2YeYuidoXKjKFv5QSqtOvqN
+ x3YZYb04xUMWenOOezkTUHOBQE00+4igm1RsRxDY10QOrIuXJ0Y2yC7+CSuaY0FwKJJryMKO/
+ 7HX9fGxUXrFdr6tyuCohyZqHadDVGhOIL/p/QM1xFLWvPQhXAW24NSLUpptzCXhFUpA+C3pGe
+ Ue6bjf/uzidtH24tjAo0yVli4WFUx417S4+XT019zM/cTP/EtwevnELYnKnlvRLq2RX7S1GtE
+ /02kbUkOvhiG0mzHsS3xItP/wAYZdchjGXH2Zk/SIdPSnNfflAoAo2Ye8BhTBsdkftaAUw1V2
+ vq22/Y8JGW401qC4BcDqKt5slDPqWln/hZlk1hcConWuDIBcQzHVa3MTmJ7Ca8G+B9oHUvPTs
+ 47u91ShCp8mNbj/RuuE1QDta6LnhzV5jcVPBhsMtudpI0UwVsWfxrMlPsOundANibANQu6CMq
+ jwrJrNuRYjTbA8+zu250FnHdeJFR42oamMMSnmdHPUcvUGXjT34zjjWaro4bnHG53SyCw/3f5
+ Z9srReOTLJ9Ws+UulS7yJDmprDvjXLg7fUN4QJiI0kcrSnSCJPRoBnnmOn61HSSiIhqL5WSjK
+ l1UIh66mXtnXefBWWwS8E5gqf9Ee6hdN341XG58ExRJB8hCcvMXxeUb9zfmL//wm65g22FrcA
+ AIyIm/00A+KjK1VB6j8BuD2jRNGonKNcGK8ixeZx0bZbwD/OLxRRHh1E6HlUC3Qsq5y5VWNJT
+ ymmhfQIL8L2CewWMZrH/GngZRTQlZoTDA2FIQ/80DQ9PsTVJH0+ZOEfh7eQH6rwSlqaP6vAVd
+ yLZSBrOQd85RLE8zh2dpmxNW5NO1Mbu0Z22jHlzRa3EvnfRFxX/+Nhrkw==
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This small patch series contains minor fixes for clock handling and the
-period range check.
+The PWM config can be triggered via sysfs, so we better suppress the
+error message in case of an invalid period to avoid kernel log spamming.
 
-Stefan Wahren (3):
-  pwm: bcm2835: suppress error message for invalid period_ns
-  pwm: bcm2835: fix period_ns range check
-  pwm: bcm2835: suppress error message during deferred probe
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+=2D--
+ drivers/pwm/pwm-bcm2835.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
- drivers/pwm/pwm-bcm2835.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
+index f6fe0b9..5276306 100644
+=2D-- a/drivers/pwm/pwm-bcm2835.c
++++ b/drivers/pwm/pwm-bcm2835.c
+@@ -72,11 +72,8 @@ static int bcm2835_pwm_config(struct pwm_chip *chip, st=
+ruct pwm_device *pwm,
 
+ 	scaler =3D DIV_ROUND_CLOSEST(NSEC_PER_SEC, rate);
+
+-	if (period_ns <=3D MIN_PERIOD) {
+-		dev_err(pc->dev, "period %d not supported, minimum %d\n",
+-			period_ns, MIN_PERIOD);
++	if (period_ns <=3D MIN_PERIOD)
+ 		return -EINVAL;
+-	}
+
+ 	writel(DIV_ROUND_CLOSEST(duty_ns, scaler),
+ 	       pc->base + DUTY(pwm->hwpwm));
 =2D-
 2.7.4
 
