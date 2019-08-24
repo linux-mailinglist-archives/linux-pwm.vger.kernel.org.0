@@ -2,92 +2,123 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 78B889BC50
-	for <lists+linux-pwm@lfdr.de>; Sat, 24 Aug 2019 09:08:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AB619BCBE
+	for <lists+linux-pwm@lfdr.de>; Sat, 24 Aug 2019 11:25:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725948AbfHXHIA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 24 Aug 2019 03:08:00 -0400
-Received: from mout.gmx.net ([212.227.15.15]:47755 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725798AbfHXHH7 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sat, 24 Aug 2019 03:07:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1566630464;
-        bh=MB84cv/KL61N5vEmJ6+3TzMhv+UMcSlJU00FuLqAzrU=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=TeryD+a12udrVP51FXUZT6+1uVeoL5/GsgAGw0m91KCU4/69KNsUAy17oEGEHxBRz
-         CcrMhGlV9k7Me5UeXyhguzMvzbOyDJpijkTa/9h2jFvrK7kpRAKsnSSeYdewak7+0r
-         NpAMA49EEWWIEZ7LxkMDuvedTm/xl0o+5t1tFXHE=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([37.4.249.106]) by mail.gmx.com
- (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MVvPD-1hcIdB1Io9-00RnFR; Sat, 24 Aug 2019 09:07:44 +0200
-From:   Stefan Wahren <wahrenst@gmx.net>
-To:     Thierry Reding <thierry.reding@gmail.com>,
+        id S1725906AbfHXJZ6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 24 Aug 2019 05:25:58 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46419 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfHXJZ6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 24 Aug 2019 05:25:58 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1i1SJ0-0002Yt-TG; Sat, 24 Aug 2019 11:25:54 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1i1SIz-0000pl-Bu; Sat, 24 Aug 2019 11:25:53 +0200
+Date:   Sat, 24 Aug 2019 11:25:53 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Stefan Wahren <wahrenst@gmx.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Eric Anholt <eric@anholt.net>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH 3/3] pwm: bcm2835: suppress error message during deferred probe
-Date:   Sat, 24 Aug 2019 09:07:25 +0200
-Message-Id: <1566630445-4599-4-git-send-email-wahrenst@gmx.net>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1566630445-4599-1-git-send-email-wahrenst@gmx.net>
+        Scott Branden <sbranden@broadcom.com>,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/3] pwm: bcm2835: Minor fixes
+Message-ID: <20190824092553.j4rjpzaz4m6yaa5t@pengutronix.de>
 References: <1566630445-4599-1-git-send-email-wahrenst@gmx.net>
-X-Provags-ID: V03:K1:vSh+FWB0hIgx87Ju8ImsCa1tHiFyOl1sni3i5VO3MMQcFsr1yVv
- T6YDh/7DK1cfchpa7U2REVHF69x2UCsx9F928SGJ6avsB06jLrqjWq/sfjQcRFfMSECAKKL
- pufGrMjAvmTxaTSEkxeac+vwg6bifMhF45t+5LZk+1Wqe94x6kPmgXiCj8iWMWGALvlFntO
- oODfydGw0LDFsPWrY4ANQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4/wiuCA+KLA=:ySVx7KJdsxd9TLlv32vmgJ
- ysdV6Esxf1Hx6VAmQzDPoNcWoTPtKEmWyXWBJbVwUfwoDHlUshk7CUUbYzSAz0VHI9g7O0IrE
- A+zeu8iMaEojrN8HvmnjAXFUUR0w3YLSuJJomGdpvXVWm7OpbEdgtz153oKU9JRPvVHqsmdwD
- FFoFsMGKMbpT6l613Ga4y0rr5/ZpABtw+HlgbbH1SRE/6KT4GhXhbA46fjyI/1lECOeETwPF5
- sNNGeqHKJcZFW+iUUB2J5oW47LK7whN3fYo/z6r1cVcGLp7ADhdoDplhSZYUnTAfLljiaZPJt
- 0zb4KSNrWQePszVGZ3VPgkIQJbQyLCjvq7txU7n2B+P+WTqxwgLQts6PtC3WtvT3zuEhjeoY7
- UQ+hQB5rynAkRkU/WEAOmGz6L4TlE5w1U/W3I4YbFVwXLOMpW8vITZZP5YeMY2yQwqJYGZdgR
- u3JwIWVYsfVPiDx3tR+Yg1ZtXVsoUdG/K8islNYBPyzDsQ8pUsuSqpgtyw3E9FkQngkpwAwEk
- cVJKVkZfiz3Fo64z/I/OcDocAnkMP33frKGB1kifOSTDk4X3QHg3ktEH2wAQpujcwXULZeLCC
- zyw6FRjy/xMsWhkrlt/9O0obPrEMwmh2F4p7BWCFHrZrHCzXCd8Kx6RnWz8qohcVNGcUkO7LT
- nljWcv3OLvV230nMNzH0pLCUsBCtF1q9ERp4UYOe1RNo1VsywTSfb0kGN8/zT70G4QUXf2ntj
- bJbMc2xjl1o+T2Ny57ioc0gpHmyq3MC0Qu72iOPZIkqEbPvzcMVYbzGQyMI9qPP0x4i5Uk00e
- UK5BfDp/xsHh15gkD+HCpodSnE+P96J4ThNO0SKF5wP3h6UbAWZE0FB1Y4UvIvfv7oQWhHqrI
- 0MxaXpHHdEpWsychVCh3fbD8hmaYknZI3JY37EJzSRsNXz5ArRycYAH3RMVt0gZZqagIkq40X
- MEoaNUnSapCztsuIdj1wn8HeK2k8dHq+2yCKxaN+/YqQGbofL/foJ0j6Vj6v2TT3FfBtdvWZU
- 7fHIw3z0wbM1BLnjo96wn5M0QNNpLo7+kMCHaYoRyP0rLW+P5m3XfguJEy/tx4L8L2jJJ//kz
- W98XoVf8RARniKqcrtUiBnUd5CileaO11eCT1cIC9vovhxmVqqJMzTGyw==
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1566630445-4599-1-git-send-email-wahrenst@gmx.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This suppresses error messages in case the PWM clock isn't ready yet.
+Hello Stefan,
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-=2D--
- drivers/pwm/pwm-bcm2835.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+On Sat, Aug 24, 2019 at 09:07:22AM +0200, Stefan Wahren wrote:
+> This small patch series contains minor fixes for clock handling and the
+> period range check.
 
-diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
-index 2c82386..ce362be 100644
-=2D-- a/drivers/pwm/pwm-bcm2835.c
-+++ b/drivers/pwm/pwm-bcm2835.c
-@@ -153,7 +153,10 @@ static int bcm2835_pwm_probe(struct platform_device *=
-pdev)
+I'd like to understand the various different usecases of PWMs. The
+in-kernel consumers are kind of obvious, but sysfs users are not. It
+seems you are one of the latter.
 
- 	pc->clk =3D devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(pc->clk)) {
--		dev_err(&pdev->dev, "clock not found: %ld\n", PTR_ERR(pc->clk));
-+		if (PTR_ERR(pc->clk) !=3D -EPROBE_DEFER) {
-+			dev_err(&pdev->dev, "clock not found: %ld\n",
-+				PTR_ERR(pc->clk));
-+		}
- 		return PTR_ERR(pc->clk);
- 	}
+Would you mind sharing what you control using the PWM? Does it bother
+you that the sysfs interface doesn't allow atomic configuration?
 
-=2D-
-2.7.4
+Assuming you have some interest in this driver: It still uses the legacy
+stuff implementing .config, .enable, .disable, .set_polarity. Are you
+willing to test (or even implement) a switch to .apply instead?
 
+Just from a quick lock into the driver I wonder a few things, maybe you
+can shed some light here. If there is publicly available documenation
+for this piece of hardware, feel free to point this out, then I might be
+able to work out some of the answers myself.
+
+The overall (and common) design of the PWM is an input clk, a counter, a
+duty and a period register.
+
+The slightly simplified logic in .config is:
+
+	scaler = DIV_ROUND_CLOSEST(NSEC_PER_SEC, rate);
+	writel(DIV_ROUND_CLOSEST(duty_ns, scaler), PWM_DUTY);
+	writel(DIV_ROUND_CLOSEST(period_ns, scaler), PWM_PERIOD);
+
+This is loosing precision while the calculation could be cheaper (in CPU
+cycles) and more exact when using:
+
+	writel(DIV_ROUND_CLOSEST(duty_ns * rate, NSEC_PER_SEC), PWM_DUTY);
+	writel(DIV_ROUND_CLOSEST(period_ns * rate, NSEC_PER_SEC), PWM_PERIOD);
+
+This is only two divisions instead of three. And assuming a rate of 9.2
+MHz and a request of duty_ns = 499945, period_ns = 999891 the original
+calculation yields
+
+	DUTY = 4587
+	PERIOD = 9173
+
+	real_duty_ns = 498586.95652173914
+	real_period_ns = 997065.2173913043
+
+	error_duty_ns = 1358.0434782608645
+	error_period_ns = 2825.7826086956775
+
+With my suggestion you'd get
+
+	DUTY = 4599
+	PERIOD = 9199
+
+	real_duty_ns = 499891.3043478261
+	real_period_ns = 999891.304347826
+
+	error_duty_ns = 53.69565217389027
+	error_period_ns = -0.30434782605152577
+
+(But having said this, I'd prefer to use rounding down instead of
+rounding closest).
+
+Also I wonder if reprogramming the hardware completes the currently
+running period and how the hardware behaves on disable. (In the latter
+case I'm interested in "Does it complete the running period?" and "Which
+state does the output stop in?")
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
