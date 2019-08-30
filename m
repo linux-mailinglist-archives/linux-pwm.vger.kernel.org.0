@@ -2,85 +2,111 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A802CA2DEF
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 Aug 2019 05:59:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D265A39A1
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 Aug 2019 16:53:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbfH3D6s (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 29 Aug 2019 23:58:48 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:5445 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727454AbfH3D6r (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 29 Aug 2019 23:58:47 -0400
-X-UUID: 27cf3a1fe5384e1e9c639b102bb8f450-20190830
-X-UUID: 27cf3a1fe5384e1e9c639b102bb8f450-20190830
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 505007506; Fri, 30 Aug 2019 11:58:44 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 30 Aug 2019 11:58:48 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 30 Aug 2019 11:58:48 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v7 11/11] arm: dts: mediatek: add mt7629 pwm support
-Date:   Fri, 30 Aug 2019 11:57:17 +0800
-Message-ID: <1567137437-10041-12-git-send-email-sam.shih@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1567137437-10041-1-git-send-email-sam.shih@mediatek.com>
-References: <1567137437-10041-1-git-send-email-sam.shih@mediatek.com>
+        id S1727887AbfH3Oxx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 30 Aug 2019 10:53:53 -0400
+Received: from mga05.intel.com ([192.55.52.43]:55256 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727857AbfH3Oxx (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 30 Aug 2019 10:53:53 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Aug 2019 07:53:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,447,1559545200"; 
+   d="scan'208";a="198051411"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001.fm.intel.com with ESMTP; 30 Aug 2019 07:53:49 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1i3iHc-0008QV-0c; Fri, 30 Aug 2019 17:53:48 +0300
+Date:   Fri, 30 Aug 2019 17:53:48 +0300
+From:   "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+To:     Nikolaus Voss <nv@vosn.de>
+Cc:     "Schmauss, Erik" <erik.schmauss@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "Moore, Robert" <robert.moore@intel.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        nikolaus.voss@loewensteinmedical.de
+Subject: Re: [PATCH 1/3] ACPI: Resolve objects on host-directed table loads
+Message-ID: <20190830145348.GM2680@smile.fi.intel.com>
+References: <cover.1559127603.git.nikolaus.voss@loewensteinmedical.de>
+ <8704391ae3004a6b4dd17975dbcc9e88bd28cf4b.1559127603.git.nikolaus.voss@loewensteinmedical.de>
+ <20190814185055.GZ30120@smile.fi.intel.com>
+ <CF6A88132359CE47947DB4C6E1709ED53C61A211@ORSMSX122.amr.corp.intel.com>
+ <alpine.DEB.2.20.1908161345590.41303@fox.voss.local>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.20.1908161345590.41303@fox.voss.local>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This adds pwm support for MT7629.
+On Fri, Aug 16, 2019 at 01:57:26PM +0200, Nikolaus Voss wrote:
+> On Wed, 14 Aug 2019, Schmauss, Erik wrote:
+> > > -----Original Message-----
+> > > From: Shevchenko, Andriy
+> > > Sent: Wednesday, August 14, 2019 11:51 AM
+> > > To: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+> > > Cc: Rafael J. Wysocki <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>;
+> > > Moore, Robert <robert.moore@intel.com>; Schmauss, Erik
+> > > <erik.schmauss@intel.com>; Jacek Anaszewski <jacek.anaszewski@gmail.com>;
+> > > Pavel Machek <pavel@ucw.cz>; Dan Murphy <dmurphy@ti.com>; Thierry
+> > > Reding <thierry.reding@gmail.com>; linux-acpi@vger.kernel.org;
+> > > devel@acpica.org; linux-leds@vger.kernel.org; linux-pwm@vger.kernel.org
+> > > Subject: Re: [PATCH 1/3] ACPI: Resolve objects on host-directed table loads
+> > > 
+> > > On Wed, May 29, 2019 at 02:18:20PM +0200, Nikolaus Voss wrote:
+> > > > If an ACPI SSDT overlay is loaded after built-in tables have been
+> > > > loaded e.g. via configfs or efivar_ssdt_load() it is necessary to
+> > > > rewalk the namespace to resolve references. Without this, relative and
+> > > > absolute paths like ^PCI0.SBUS or \_SB.PCI0.SBUS are not resolved
+> > > > correctly.
+> > > > 
+> > > > Make configfs load use the same method as efivar_ssdt_load().
+> > > 
+> > > This patch brought a regression (bisect log below).
+> > > Now I'm unable to unload the table which was working before.
+> > > 
+> > > Reverting (manual, due to ACPICA changes) helps.
+> > > 
+> > > Please, consider to revert for this cycle, or fix. I will be glad to test any
+> > > proposed fix.
+> > 
+> > We submitted a patch (d1fb5b2f623b1af5a0d2a83d205df1b61f430dc6)
+> > in response to this suggestion and I was not aware that this had been applied.
+> > 
+> > Rafael, please revert at least the ACPICA portion of this patch.
+> 
+> As I see it, my ACPICA change is not part of 5.3-rc1 any more. Reverting my
+> fix is part of the patch above (d1fb5b2f623b1af5a0d2a83d205df1b61f430dc6)
+> which is already applied.
+> 
+> Nevertheless, what is new, is that acpi_ns_initialize_objects() is called in
+> acpi_load_table(). This is necessary to resolve the references in the newly
+> loaded table. Maybe this prevents the table from being unloaded?
 
-Signed-off-by: Sam Shih <sam.shih@mediatek.com>
----
- arch/arm/boot/dts/mt7629.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+So, can we do something about it? It's a regression.
 
-diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
-index 9608bc2ccb3f..493be9a9453b 100644
---- a/arch/arm/boot/dts/mt7629.dtsi
-+++ b/arch/arm/boot/dts/mt7629.dtsi
-@@ -241,6 +241,22 @@
- 			status = "disabled";
- 		};
- 
-+		pwm: pwm@11006000 {
-+			compatible = "mediatek,mt7629-pwm",
-+				     "mediatek,mt7622-pwm";
-+			reg = <0 0x11006000 0 0x1000>;
-+			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&topckgen CLK_TOP_PWM_SEL>,
-+				 <&pericfg CLK_PERI_PWM_PD>,
-+				 <&pericfg CLK_PERI_PWM1_PD>;
-+			clock-names = "top", "main", "pwm1";
-+			assigned-clocks = <&topckgen CLK_TOP_PWM_SEL>;
-+			assigned-clock-parents =
-+					<&topckgen CLK_TOP_UNIVPLL2_D4>;
-+			num-pwms = <1>;
-+			status = "disabled";
-+		};
-+
- 		i2c: i2c@11007000 {
- 			compatible = "mediatek,mt7629-i2c",
- 				     "mediatek,mt2712-i2c";
+Rafael, Nikolaus?
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
