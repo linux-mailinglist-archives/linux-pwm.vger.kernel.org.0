@@ -2,92 +2,140 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E065DA3D14
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 Aug 2019 19:39:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DF0DA3D32
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 Aug 2019 19:48:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbfH3Rjb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 30 Aug 2019 13:39:31 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38825 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727922AbfH3Rjb (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 30 Aug 2019 13:39:31 -0400
-Received: by mail-io1-f68.google.com with SMTP id p12so15690747iog.5
-        for <linux-pwm@vger.kernel.org>; Fri, 30 Aug 2019 10:39:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=47tlWRLNKtj5MR91kGpu5smjeLymr++ZvcjSqhRL9xQ=;
-        b=IPKx/3JEZ5V7Zy0ANXfTidU7rnyx4RWn0FcNVp/C9l0DJIoJBM3ASstr5m+MHb5w8g
-         cJu96elID8dyHtruySXwxNbM9T6+2glSq3lNsvDHUE2xmdpCAWsZgmyeHaxGEGSurZbX
-         MH/GzcGg7yP0B79Zqi9hetJn/P2H8dj7eW5V0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=47tlWRLNKtj5MR91kGpu5smjeLymr++ZvcjSqhRL9xQ=;
-        b=c8AG163ke9DHtqLyUFWk71E87obOiTRUIVZ/BVnlIUttce16vAniZvgGxsFsFcp9bs
-         sgNjx9YIlIuvioKHoQ4v2IWEKPCHHAdnP8IhCD1JkkaH8FuKxIo9tsGixLTcew+X297x
-         nxkZ+ndiPYA59aj4/RgsGZFq3KMjQkBYV6sUk7IbUz2FwbpHV/pusBZV9SvpVXwAQc/y
-         jKidS/lQywH5bP1pp27rIK8UAVB42g1fXZ10zdVJtdi5jc+rTzXoDL/HsMbd5d8FqBk9
-         g4omUr5zIG/VYSA571I9nzFhI40gUrEJE260NCF0DXpDMZ8KuULIAZx1xHv1snvCf1tb
-         kQNQ==
-X-Gm-Message-State: APjAAAVS+fOSj28wLVrP0qZpJdqmGgTt+2mv49jDvtrXviTeSKyBl0N2
-        inLRq5d5XPfx25S1gz6U9H5JIznBm6c=
-X-Google-Smtp-Source: APXvYqyXm4BJGJSvPK1v5i+pN+9EnuWy+4Uu8tTFpTaLdiAdGS4wvewLqEGjqzkV0iOBzPA3JhfU/Q==
-X-Received: by 2002:a02:ca0c:: with SMTP id i12mr1653483jak.82.1567186770523;
-        Fri, 30 Aug 2019 10:39:30 -0700 (PDT)
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com. [209.85.166.52])
-        by smtp.gmail.com with ESMTPSA id v13sm7671025iol.60.2019.08.30.10.39.29
-        for <linux-pwm@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Aug 2019 10:39:29 -0700 (PDT)
-Received: by mail-io1-f52.google.com with SMTP id b10so15724599ioj.2
-        for <linux-pwm@vger.kernel.org>; Fri, 30 Aug 2019 10:39:29 -0700 (PDT)
-X-Received: by 2002:a02:a1c7:: with SMTP id o7mr18093414jah.26.1567186769165;
- Fri, 30 Aug 2019 10:39:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190824153707.13746-1-uwe@kleine-koenig.org> <20190824153707.13746-6-uwe@kleine-koenig.org>
-In-Reply-To: <20190824153707.13746-6-uwe@kleine-koenig.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 30 Aug 2019 10:39:16 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=X8kVU_zr69aKe-+GkAQh-tDwVf8tFogKve3s5O5ndF-g@mail.gmail.com>
-Message-ID: <CAD=FV=X8kVU_zr69aKe-+GkAQh-tDwVf8tFogKve3s5O5ndF-g@mail.gmail.com>
-Subject: Re: [PATCH v3 5/6] pwm: fsl-ftm: Don't update the state for the
- caller of pwm_apply_state()
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>
+        id S1727891AbfH3Rsu convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Fri, 30 Aug 2019 13:48:50 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:41936 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727791AbfH3Rst (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 30 Aug 2019 13:48:49 -0400
+Received: from [104.132.1.107] (helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1i3l0o-0005xA-HL; Fri, 30 Aug 2019 19:48:38 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= <uwe@kleine-koenig.org>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Chen-Yu Tsai <wens@csie.org>,
         Patrick Havelange <patrick.havelange@essensium.com>,
-        linux-pwm <linux-pwm@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        kernel@pengutronix.de, linux-pwm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v3 2/6] pwm: let pwm_get_state() return the last implemented state
+Date:   Fri, 30 Aug 2019 19:48:35 +0200
+Message-ID: <5802279.ETANMDGNFP@phil>
+In-Reply-To: <20190824153707.13746-3-uwe@kleine-koenig.org>
+References: <20190824153707.13746-1-uwe@kleine-koenig.org> <20190824153707.13746-3-uwe@kleine-koenig.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
+Am Samstag, 24. August 2019, 17:37:03 CEST schrieb Uwe Kleine-König:
+> When pwm_apply_state() is called the lowlevel driver usually has to
+> apply some rounding because the hardware doesn't support nanosecond
+> resolution. So let pwm_get_state() return the actually implemented state
+> instead of the last applied one if possible.
+> 
+> Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
 
-On Sat, Aug 24, 2019 at 8:37 AM Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.or=
-g> wrote:
->
-> The pwm-fsl-ftm driver is one of only three PWM drivers which updates
-> the state for the caller of pwm_apply_state(). This might have
-> surprising results if the caller reuses the values expecting them to
-> still represent the same state.
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.org>
+With this applied, the display brightness on my rk3399-gru-scarlet gets
+inverted. Now it's very bright on level 1 and very dim on the max level.
+
+According to the debugfs, the inverted state changes:
+
+OLD STATE:
+----------
+root@localhost:~# cat /debug/pwm
+platform/ff420030.pwm, 1 PWM device
+ pwm-0   (ppvar-bigcpu-pwm    ): requested enabled period: 3334 ns duty: 331 ns polarity: normal
+
+platform/ff420020.pwm, 1 PWM device
+ pwm-0   (ppvar-litcpu-pwm    ): requested enabled period: 3334 ns duty: 414 ns polarity: normal
+
+platform/ff420010.pwm, 1 PWM device
+ pwm-0   (backlight           ): requested enabled period: 999996 ns duty: 941148 ns polarity: normal
+
+platform/ff420000.pwm, 1 PWM device
+ pwm-0   (ppvar-gpu-pwm       ): requested enabled period: 3334 ns duty: 3334 ns polarity: normal
+
+NEW STATE:
+----------
+root@localhost:~# cat /debug/pwm 
+platform/ff420030.pwm, 1 PWM device
+ pwm-0   (ppvar-bigcpu-pwm    ): requested enabled period: 3334 ns duty: 331 ns polarity: normal
+
+platform/ff420020.pwm, 1 PWM device
+ pwm-0   (ppvar-litcpu-pwm    ): requested enabled period: 3334 ns duty: 414 ns polarity: normal
+
+platform/ff420010.pwm, 1 PWM device
+ pwm-0   (backlight           ): requested enabled period: 999996 ns duty: 941148 ns polarity: inverse
+
+platform/ff420000.pwm, 1 PWM device
+ pwm-0   (ppvar-gpu-pwm       ): requested enabled period: 3334 ns duty: 3334 ns polarity: normal
+
+
+And the reason is below.
+
 > ---
->  drivers/pwm/pwm-fsl-ftm.c | 4 ----
->  1 file changed, 4 deletions(-)
+>  drivers/pwm/core.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> index 72347ca4a647..92333b89bf02 100644
+> --- a/drivers/pwm/core.c
+> +++ b/drivers/pwm/core.c
+> @@ -473,7 +473,14 @@ int pwm_apply_state(struct pwm_device *pwm, struct pwm_state *state)
+>  		if (err)
+>  			return err;
+>  
+> -		pwm->state = *state;
+> +		/*
+> +		 * .apply might have to round some values in *state, if possible
+> +		 * read the actually implemented value back.
+> +		 */
+> +		if (chip->ops->get_state)
+> +			chip->ops->get_state(chip, pwm, &pwm->state);
+> +		else
+> +			pwm->state = *state;
 
-Presumably this patch could break something since the pwm-fsl-ftm
-driver doesn't appear to implement the get_state() function.  ...or
-did I miss it?
+This should probably become
+>-		pwm->state = *state;
+> +
+> +		/*
+> +		 * .apply might have to round some values in *state, if possible
+> +		 * read the actually implemented value back.
+> +		 */
+> +		if (chip->ops->get_state)
+> +			chip->ops->get_state(chip, pwm, &pwm->state);
 
--Doug
+so always initialize the state to the provided one and then let the driver
+override values?
+
+The inversion case stems from the Rockchip pwm driver (wrongly?) only
+setting the polarity field when actually inverted, so here the polarity field
+probably never actually got set at all.
+
+But while we should probably fix the rockchip driver to set polarity all the
+time, this is still being true for possible future state-fields, which also
+wouldn't get initialzed from all drivers, which might need an adaption
+first?
+
+
+Heiko
+
+
+>  	} else {
+>  		/*
+>  		 * FIXME: restore the initial state in case of error.
+> 
+
+
+
+
