@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AAF1A2DA1
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 Aug 2019 05:53:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C84ABA2DC4
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 Aug 2019 05:57:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727410AbfH3Dxi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 29 Aug 2019 23:53:38 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:1963 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727348AbfH3Dxi (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 29 Aug 2019 23:53:38 -0400
-X-UUID: 80d9f2bfdd174cc8800f0bb00a87327b-20190830
-X-UUID: 80d9f2bfdd174cc8800f0bb00a87327b-20190830
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        id S1727994AbfH3D51 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 29 Aug 2019 23:57:27 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:17552 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727392AbfH3D51 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 29 Aug 2019 23:57:27 -0400
+X-UUID: fefe565595ed48edb3adb77924f16125-20190830
+X-UUID: fefe565595ed48edb3adb77924f16125-20190830
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
         (envelope-from <sam.shih@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 157572892; Fri, 30 Aug 2019 11:53:31 +0800
+        with ESMTP id 546792957; Fri, 30 Aug 2019 11:57:21 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 30 Aug 2019 11:53:35 +0800
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 30 Aug 2019 11:57:25 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 30 Aug 2019 11:53:35 +0800
+ Transport; Fri, 30 Aug 2019 11:57:25 +0800
 From:   Sam Shih <sam.shih@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -33,12 +33,13 @@ CC:     Ryder Lee <ryder.lee@mediatek.com>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         Sam Shih <sam.shih@mediatek.com>
-Subject: [RESEND PATCH v7 0/11] Add mt7629 and fix mt7628 pwm
-Date:   Fri, 30 Aug 2019 11:53:16 +0800
-Message-ID: <1567137207-9827-1-git-send-email-sam.shih@mediatek.com>
+Subject: [RESEND, PATCH v7 0/11] Add mt7629 and fix mt7628 pwm
+Date:   Fri, 30 Aug 2019 11:57:06 +0800
+Message-ID: <1567137437-10041-1-git-send-email-sam.shih@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-SNTS-SMTP: F7BDBA47FF00EC61B619D606C371BCB2892B5403477FFFBA9C3B3A2986E6A3682000:8
 X-MTK:  N
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
@@ -46,7 +47,7 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 Changes since v7:
-  1. PATCH v7 10/100: Add a missed Reviewed-by tag back
+  1. PATCH v7 10/11: Add a missed Reviewed-by tag
 
 Changes since v6:
   1. Due to we can use fixed-clock in DT
