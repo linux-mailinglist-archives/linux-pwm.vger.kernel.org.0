@@ -2,32 +2,32 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 19203A4C91
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Sep 2019 00:59:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21E4BA4C88
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Sep 2019 00:58:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729233AbfIAW6v (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 1 Sep 2019 18:58:51 -0400
-Received: from vern.gendns.com ([98.142.107.122]:37432 "EHLO vern.gendns.com"
+        id S1729253AbfIAW6w (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 1 Sep 2019 18:58:52 -0400
+Received: from vern.gendns.com ([98.142.107.122]:37446 "EHLO vern.gendns.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729199AbfIAW6u (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sun, 1 Sep 2019 18:58:50 -0400
+        id S1729132AbfIAW6w (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sun, 1 Sep 2019 18:58:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=lechnology.com; s=default; h=References:In-Reply-To:Message-Id:Date:Subject
         :Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=JrDIoiYt0QKp0vkHM7uUyefbzL6N+98RnvUjU6Hug0Y=; b=rpM/eJ/gP7xic2H+C5tc13Q25
-        FopoUmmxFiv9MnAC0HirjaIz9R7fWsL8L9zVWD/73xWJc71wl9jbUBzoS1DNpoQG743fUEv6Wyddv
-        9Su8WTX5C8/vy9GEsurSF8p8sqgcVTvSAo77t9IFJGTxHGpiDRami3ONajKANucVclKjrFvD8a0Ga
-        7EKGtk3fqYLF+Q6GVD1l0YUSMI+UtQXnkQCjiR1/Utwgabg0D/pOjSKzE7nXMyHK7zRzkJVJptESG
-        H1IiPEu3MWePwEaa2UOgGHDY55I6Ziycap45A9YQxu+tWaYSNb4mWpTkOMMmRpdgfbS+woO3DKYU5
-        a6/9lzVuQ==;
+         bh=UWqdC7qainDYiI83hlQ8fsjYCgOyB5DxNVt66ZZMzls=; b=ylitdJlj49OjGR89tj65PvTZ5
+        mtjniIleBJvINx6qFjoIrM5Ges/AFdY2u++OdzX2n5GJdrc81o6tBrNgcAPxThoSL/E9IFM+SBt85
+        l+iird9IcCpCLoV3fOufqspRqTKEdWfWXA5EdBLBBrf2uFoZ1F6ehP5dlobEW7Q9HUX+oqt2nfDa/
+        3pn9nIaE8URhiBCpxwmZHypnf/JbkJE85sk6pYFu4L79w5856BN2Vi3GMHHAYT7oEE+yHEK13Dki0
+        zpQbwclV9vzG2D4gbzzR50wIdE5odvfJA6I7VmdJclNHb0Y2jfdeHbH8iU7qg46UMy/dSRfhqofOc
+        G3BXMVmnw==;
 Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:58390 helo=freyr.lechnology.com)
         by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92)
         (envelope-from <david@lechnology.com>)
-        id 1i4Yo4-000351-5r; Sun, 01 Sep 2019 18:58:48 -0400
+        id 1i4Yo5-000351-7e; Sun, 01 Sep 2019 18:58:49 -0400
 From:   David Lechner <david@lechnology.com>
 To:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org
 Cc:     David Lechner <david@lechnology.com>,
@@ -39,9 +39,9 @@ Cc:     David Lechner <david@lechnology.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pwm@vger.kernel.org
-Subject: [PATCH v3 4/6] ARM: dts: am33xx: Add nodes for eQEP
-Date:   Sun,  1 Sep 2019 17:58:25 -0500
-Message-Id: <20190901225827.12301-5-david@lechnology.com>
+Subject: [PATCH v3 5/6] ARM: dts: am335x-boneblue: Enable eQEP
+Date:   Sun,  1 Sep 2019 17:58:26 -0500
+Message-Id: <20190901225827.12301-6-david@lechnology.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190901225827.12301-1-david@lechnology.com>
 References: <20190901225827.12301-1-david@lechnology.com>
@@ -60,73 +60,89 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This adds new nodes for the Texas Instruments Enhanced Quadrature
-Encoder Pulse (eQEP) module in the PWM subsystem on AM33XX.
+This enables the Enhanced Quadrature Encoder Pulse (eQEP) module for
+connectors E1, E2 and E3 on BeagleBone Blue.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
 
 v3 changes:
-- rename eqep@ to counter@
+- none
 v2 changes:
-- clocks renamed to "sysclkout"
+- none
 
+ arch/arm/boot/dts/am335x-boneblue.dts | 54 +++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
- arch/arm/boot/dts/am33xx-l4.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-index 3b1fb2ba4dff..8dd5fd9eb862 100644
---- a/arch/arm/boot/dts/am33xx-l4.dtsi
-+++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -1908,6 +1908,15 @@
- 					status = "disabled";
- 				};
- 
-+				eqep0: counter@180 {
-+					compatible = "ti,am3352-eqep";
-+					reg = <0x180 0x80>;
-+					clocks = <&l4ls_gclk>;
-+					clock-names = "sysclkout";
-+					interrupts = <79>;
-+					status = "disabled";
-+				};
+diff --git a/arch/arm/boot/dts/am335x-boneblue.dts b/arch/arm/boot/dts/am335x-boneblue.dts
+index 0257576d5d16..df3978ce061c 100644
+--- a/arch/arm/boot/dts/am335x-boneblue.dts
++++ b/arch/arm/boot/dts/am335x-boneblue.dts
+@@ -258,6 +258,30 @@
+ 			AM33XX_PADCONF(AM335X_PIN_MII1_RXD0, PIN_OUTPUT, MUX_MODE7)		/* (M16) gmii1_rxd0.gpio2[21] */
+ 		>;
+ 	};
 +
- 				ehrpwm0: pwm@200 {
- 					compatible = "ti,am3352-ehrpwm",
- 						     "ti,am33xx-ehrpwm";
-@@ -1961,6 +1970,15 @@
- 					status = "disabled";
- 				};
- 
-+				eqep1: counter@180 {
-+					compatible = "ti,am3352-eqep";
-+					reg = <0x180 0x80>;
-+					clocks = <&l4ls_gclk>;
-+					clock-names = "sysclkout";
-+					interrupts = <88>;
-+					status = "disabled";
-+				};
++	/* E1 */
++	eqep0_pins: pinmux_eqep0_pins {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_MCASP0_AXR0, PIN_INPUT, MUX_MODE1)		/* (B12) mcasp0_aclkr.eQEP0A_in */
++			AM33XX_PADCONF(AM335X_PIN_MCASP0_FSR, PIN_INPUT, MUX_MODE1)		/* (C13) mcasp0_fsr.eQEP0B_in */
++		>;
++	};
 +
- 				ehrpwm1: pwm@200 {
- 					compatible = "ti,am3352-ehrpwm",
- 						     "ti,am33xx-ehrpwm";
-@@ -2014,6 +2032,15 @@
- 					status = "disabled";
- 				};
- 
-+				eqep2: counter@180 {
-+					compatible = "ti,am3352-eqep";
-+					reg = <0x180 0x80>;
-+					clocks = <&l4ls_gclk>;
-+					clock-names = "sysclkout";
-+					interrupts = <89>;
-+					status = "disabled";
-+				};
++	/* E2 */
++	eqep1_pins: pinmux_eqep1_pins {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_LCD_DATA12, PIN_INPUT, MUX_MODE2)		/* (V2) lcd_data12.eQEP1A_in */
++			AM33XX_PADCONF(AM335X_PIN_LCD_DATA13, PIN_INPUT, MUX_MODE2)		/* (V3) lcd_data13.eQEP1B_in */
++		>;
++	};
 +
- 				ehrpwm2: pwm@200 {
- 					compatible = "ti,am3352-ehrpwm",
- 						     "ti,am33xx-ehrpwm";
++	/* E3 */
++	eqep2_pins: pinmux_eqep2_pins {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD12, PIN_INPUT, MUX_MODE4)		/* (T12) gpmc_ad12.eQEP2A_in */
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD13, PIN_INPUT, MUX_MODE4)		/* (R12) gpmc_ad13.eQEP2B_in */
++		>;
++	};
+ };
+ 
+ &uart0 {
+@@ -530,3 +554,33 @@
+ 		line-name = "LS_BUF_EN";
+ 	};
+ };
++
++&epwmss0 {
++	status = "okay";
++};
++
++&eqep0 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&eqep0_pins>;
++};
++
++&epwmss1 {
++	status = "okay";
++};
++
++&eqep1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&eqep1_pins>;
++};
++
++&epwmss2 {
++	status = "okay";
++};
++
++&eqep2 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&eqep2_pins>;
++};
 -- 
 2.17.1
 
