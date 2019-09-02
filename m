@@ -2,124 +2,125 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AD674A5A18
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Sep 2019 17:03:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 312E9A5B0F
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Sep 2019 18:04:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731825AbfIBPCu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 2 Sep 2019 11:02:50 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52820 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbfIBPCu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 2 Sep 2019 11:02:50 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t17so14949395wmi.2;
-        Mon, 02 Sep 2019 08:02:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=V0QC7l1ZAHBC37nciCVz+hD6vR5ujcLNIOHx5Ail9V8=;
-        b=sD3ba2zobMVSqXvV1TL5qdw9q/KlllvuwnvEwPV3wsPue/gPP2lXS8ilqpOty4Jya/
-         lZzKayaGo+0vFQ3ACv5nAsf3V/krhz68TOvxg1vYjnDC68WquwlkTAYSj8K6NrQTJyxT
-         8Bi5hqZYQaNYsqkP/xiVe4+v5h+rKsaLP3TBlP1RTIlZYreGcw9MDiGZH3FZjrjH7SiE
-         /BLe/QI7fiQBj5K1hL+BhWkgbyTudbc6vAsDGX+PAGwUI9LLHaOEotsISlUtl+UMNi1O
-         sP4UCpw8oAwVI0GROY4iqWjBFIbQXgqHpdk5KEIKvYNhhO98qpMNgs3fn+67litLJckM
-         pbtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=V0QC7l1ZAHBC37nciCVz+hD6vR5ujcLNIOHx5Ail9V8=;
-        b=LMnOCqXVQ6qXwWmjxN6bvZvU2i/aq4hHR8Tg2I03jaj+faHYHHmWRQM5SHK/Ggjata
-         2zn6qpFrHP7uWQINmSXb5BUe0uHhQl2qHtI6cm0I4UFWgJaLNcLjufEsayetHTPFcBSk
-         18s3xJLsWJYjXSLCAE1TyzgmAJyVigfYBTE0LfDf8MqCR445t9+197DuAXfrUjynW3vi
-         5eKlryFPCZldVIU2b4w4utJF5fA7R2Oo4Ms9aeVqNUHbm/+O2uuWqM8P5Zj1Vh5EtiPK
-         rFWpy9HksLeyNxlrYLgM4B7z0DrEN2OdG11zoWnZk/+4tZneYOSbhn1dvVIyVs6GfUjI
-         nEPw==
-X-Gm-Message-State: APjAAAU42sK/4Hwdvx7rqpjpx2cDs9lR4pdfgfzL3U23/P4OVoFVxQbA
-        v7759PLXgJ+ltu31jqQOnXloM4aC
-X-Google-Smtp-Source: APXvYqyRWvnKMnSM98+I7HYqBNsQWVC/pXJ3FGiKsgQOI1mXh7rupygOkL63+CRXj6VKKTvU0UaKqg==
-X-Received: by 2002:a05:600c:224d:: with SMTP id a13mr4615948wmm.45.1567436567679;
-        Mon, 02 Sep 2019 08:02:47 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id b194sm33888347wmg.46.2019.09.02.08.02.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 08:02:46 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 17:02:45 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     David Lechner <david@lechnology.com>
-Cc:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
+        id S1726027AbfIBQEz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 2 Sep 2019 12:04:55 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55807 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbfIBQEz (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 2 Sep 2019 12:04:55 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1i4oow-0001oT-VY; Mon, 02 Sep 2019 18:04:46 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1i4oov-0002kp-AO; Mon, 02 Sep 2019 18:04:45 +0200
+Date:   Mon, 2 Sep 2019 18:04:45 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Sam Shih <sam.shih@mediatek.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 1/6] bus/ti-pwmss: move TI PWMSS driver from PWM to
- bus subsystem
-Message-ID: <20190902150245.GE1445@ulmo>
-References: <20190901225827.12301-1-david@lechnology.com>
- <20190901225827.12301-2-david@lechnology.com>
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v5 07/13] dt-bindings: pwm: add a property "num-pwms"
+Message-ID: <20190902160445.fitoa65t4ndzjq6v@pengutronix.de>
+References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
+ <1566457123-20791-8-git-send-email-sam.shih@mediatek.com>
+ <20190827183924.GA24178@bogus>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Lb0e7rgc7IsuDeGj"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190901225827.12301-2-david@lechnology.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190827183924.GA24178@bogus>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Tue, Aug 27, 2019 at 01:39:24PM -0500, Rob Herring wrote:
+> On Thu, Aug 22, 2019 at 02:58:37PM +0800, Sam Shih wrote:
+> > From: Ryder Lee <ryder.lee@mediatek.com>
+> 
+> The subject should indicate this is for Mediatek.
+> 
+> > 
+> > This adds a property "num-pwms" in example so that we could
+> > specify the number of PWM channels via device tree.
+> > 
+> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > ---
+> > Changes since v5:
+> > - Add an Acked-by tag
+> > - This file is original v4 patch 5/10
+> > (https://patchwork.kernel.org/patch/11102577/)
+> > 
+> > Change-Id: I429048afeffa96f3f14533910efe242f88776043
+> > ---
+> >  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> > index 991728cb46cb..ea95b490a913 100644
+> > --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> > +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> > @@ -14,12 +14,12 @@ Required properties:
+> >                  has no clocks
+> >     - "top": the top clock generator
+> >     - "main": clock used by the PWM core
+> > -   - "pwm1-8": the eight per PWM clocks for mt2712
+> > -   - "pwm1-6": the six per PWM clocks for mt7622
+> > -   - "pwm1-5": the five per PWM clocks for mt7623
+> > +   - "pwm1-N": the PWM clocks for each channel
+> > +   where N starting from 1 to the maximum number of PWM channels
+> 
+> Once converted to schema, you are going to be back to listing them out.
+> 
+> >   - pinctrl-names: Must contain a "default" entry.
+> >   - pinctrl-0: One property must exist for each entry in pinctrl-names.
+> >     See pinctrl/pinctrl-bindings.txt for details of the property values.
+> > + - num-pwms: the number of PWM channels.
+> 
+> You can't add new required properties without breaking compatibility. 
+> 
+> You already have to imply the number of channels from the compatible (or 
+> number of clocks) and you have to keep doing so to maintain 
+> compatibility, so why not just keep doing that for new chips?
 
---Lb0e7rgc7IsuDeGj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This was a suggestion by me. The driver still handles compatibility
+(i.e. falls back to the number of PWMs that was implied by the
+compatible before). Given that there are various drivers that all solve
+the same problem (i.e. different variants with different number of PWMs)
+I thought it would be a good idea to introduce a property in the device
+tree that specifies this number.
 
-On Sun, Sep 01, 2019 at 05:58:22PM -0500, David Lechner wrote:
-> The TI PWMSS driver is a simple bus driver for providing power
-> power management for the PWM peripherals on TI AM33xx SoCs, namely
-> eCAP, eHRPWM and eQEP. The eQEP is a counter rather than a PWM, so
-> it does not make sense to have the bus driver in the PWM subsystem
-> since the PWMSS is not exclusive to PWM devices.
->=20
-> Signed-off-by: David Lechner <david@lechnology.com>
-> ---
->=20
-> v3 changes:
-> - none
-> v2 changes:
-> - new patch
->=20
->  drivers/bus/Kconfig                           | 9 +++++++++
->  drivers/bus/Makefile                          | 1 +
->  drivers/{pwm/pwm-tipwmss.c =3D> bus/ti-pwmss.c} | 0
->  drivers/pwm/Kconfig                           | 9 ---------
->  drivers/pwm/Makefile                          | 1 -
->  5 files changed, 10 insertions(+), 10 deletions(-)
->  rename drivers/{pwm/pwm-tipwmss.c =3D> bus/ti-pwmss.c} (100%)
+Only for newly introduced compatibles the num-pwms property is really
+required. Differentiating the ones that need it and the ones that don't
+seems over-engineered to me.
 
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
+(BTW, using the number of clks doesn't really work because there are
+also some variants without clocks. It is still under discussion if in
+this case dummy-clocks should be provided IIRC.)
 
---Lb0e7rgc7IsuDeGj
-Content-Type: application/pgp-signature; name="signature.asc"
+Best regards
+Uwe
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1tLxUACgkQ3SOs138+
-s6Ex9g//T+ZKzUz859zn7FRpj13m+ndi84IulhyCYr54G2sXpuiLxVOo9q9WVI/v
-QNkuu8KOb1W91FXpJudcY4eagg0PoJtE0/8u2kO7PX9QNe5vMoUbIm0j/CrMJH1O
-3RJEfArqrHlRIfWxik5gkAnbVMvkhTrEv+zVUZyNAQFNua8qw1mTCSDac+iX7QLH
-/zubXqDPaDP/FCq/avt+hB4Rlzywv6G6GFzs4boUjwXN814RsVTdf2XBz8Hx+So2
-a3o0Qtht/NVcO5p1/UM/Ps9JChuTHB0gy7/pOe2sx3ayQ7Nd/wgcUsaVkwOlQ02z
-emSxOqYCLze1rHba6O1iqJb3QwKKVaIFfswfH2xSy94gSCZZmExukdDfVRunfQcS
-YO//p3px8p8wdxUR3E6CwgylIo8QlQthMLEywC3BZkVR29W/bE7301GfDEw4MmQa
-kT+GmJF4Fh1Zp7WYMsD4peV71pEAvycWO56CS83uSOSJ0kF0gGG6f9SFuIqD/lYj
-Zn+ODFy5c3VEbSfOIUBtKy+IFG5lhYhjXHc9SfPXAtk/5Mybv2/NI9hP8PtKbRRN
-q/wfXpZ/S/C+rRJ00HkO8druk8zMfts87+q5XUMg/Sr3OixDQvW4qT4T2bKUzRBB
-bCA5jRYdMVnX2eAdrMNsZY2ZQL+/3YF3B2j5R8ZmWTIP1AI2xsQ=
-=6nvw
------END PGP SIGNATURE-----
-
---Lb0e7rgc7IsuDeGj--
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
