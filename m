@@ -2,61 +2,74 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C694A5990
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Sep 2019 16:41:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A01AA59A3
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Sep 2019 16:44:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731620AbfIBOks (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 2 Sep 2019 10:40:48 -0400
-Received: from antares.kleine-koenig.org ([94.130.110.236]:56066 "EHLO
-        antares.kleine-koenig.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731614AbfIBOkr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 2 Sep 2019 10:40:47 -0400
-Received: by antares.kleine-koenig.org (Postfix, from userid 1000)
-        id 007B0792C0D; Mon,  2 Sep 2019 16:40:45 +0200 (CEST)
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH] pwm: rockchip: set polarity unconditionally in .get_state()
-Date:   Mon,  2 Sep 2019 16:39:41 +0200
-Message-Id: <20190902143941.10631-1-uwe@kleine-koenig.org>
-X-Mailer: git-send-email 2.23.0
+        id S1731175AbfIBOnl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 2 Sep 2019 10:43:41 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53536 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbfIBOnl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 2 Sep 2019 10:43:41 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q19so6067855wmc.3;
+        Mon, 02 Sep 2019 07:43:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=iZLcdNS033cxSK0Fvg6MV+q8rh6JD3AHU1mNNgBVJpQ=;
+        b=LEyT1WQyBOp6pEz6uwSiYjFL99BbFbIaJTSOXwSiIoX11EBxKOtAxZGuyHdLKRtCWT
+         vHBk1Mcx8L/nHg/tZsMCN/I3NO1q/nm4O1BOTKmM3qzTD8II8gDw6rGQ20O5ma6hoybc
+         uz4irnSjurKltAK6rMUFlhZfBjJ5ZUkEV4FImEF9Lb9KS9EhDGVzNpSU+aZPuClLTb9t
+         nH+P9xUNi8gfVLRRowR63+h6vqzAz1Bg5xpLjfsH/pEQw33VzALk7jUxpZvGmXifZPSV
+         po2f2Ie91f+qhtqlNnPPAvnlnaovGK4/fTtK1Np+DKtN3RtC8+beFd8TuPwiB2pTBqmw
+         cQFw==
+X-Gm-Message-State: APjAAAXaj+2UfUuB2Ul05YqbtAYGqOoiVzK0hVCGODfcdFmcfsh48RnA
+        SnjcSzEpdRuMuzvVlp3Bng==
+X-Google-Smtp-Source: APXvYqwxtxRib647UlHObm5LyGs/Ur8DIObbfrBfd03KY7R2uk+nMKra+8g2kZJ8KgljWasyIMoWRA==
+X-Received: by 2002:a05:600c:23cd:: with SMTP id p13mr33723857wmb.86.1567435418805;
+        Mon, 02 Sep 2019 07:43:38 -0700 (PDT)
+Received: from localhost ([212.187.182.166])
+        by smtp.gmail.com with ESMTPSA id q192sm3004661wme.23.2019.09.02.07.43.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 07:43:38 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 15:43:37 +0100
+From:   Rob Herring <robh@kernel.org>
+To:     Sam Shih <sam.shih@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v7 07/11] dt-bindings: pwm: pwm-mediatek: add a property
+ "num-pwms"
+Message-ID: <20190902144337.GA25200@bogus>
+References: <1567137437-10041-1-git-send-email-sam.shih@mediatek.com>
+ <1567137437-10041-8-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1567137437-10041-8-git-send-email-sam.shih@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Don't rely on *state being zero initialized and PWM_POLARITY_NORMAL
-being zero. So always assign .polarity.
+On Fri, Aug 30, 2019 at 11:57:13AM +0800, Sam Shih wrote:
+> From: Ryder Lee <ryder.lee@mediatek.com>
+> 
+> This adds a property "num-pwms" in example so that we could
+> specify the number of PWM channels via device tree.
 
-Signed-off-by: Uwe Kleine-KÃ¶nig <uwe@kleine-koenig.org>
----
- drivers/pwm/pwm-rockchip.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Please respond to my questions on v5.
 
-diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
-index 51b96cb7dd25..8eb2db59741d 100644
---- a/drivers/pwm/pwm-rockchip.c
-+++ b/drivers/pwm/pwm-rockchip.c
-@@ -90,10 +90,10 @@ static void rockchip_pwm_get_state(struct pwm_chip *chip,
- 		state->enabled = ((val & enable_conf) == enable_conf) ?
- 				 true : false;
- 
--	if (pc->data->supports_polarity) {
--		if (!(val & PWM_DUTY_POSITIVE))
--			state->polarity = PWM_POLARITY_INVERSED;
--	}
-+	if (pc->data->supports_polarity && !(val & PWM_DUTY_POSITIVE))
-+		state->polarity = PWM_POLARITY_INVERSED;
-+	else
-+		state->polarity = PWM_POLARITY_NORMAL;
- 
- 	clk_disable(pc->pclk);
- }
--- 
-2.23.0
-
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
