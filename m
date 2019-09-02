@@ -2,51 +2,51 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9776FA5315
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Sep 2019 11:41:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6202A5319
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Sep 2019 11:42:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731262AbfIBJlz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 2 Sep 2019 05:41:55 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45434 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731294AbfIBJlz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 2 Sep 2019 05:41:55 -0400
-Received: by mail-wr1-f65.google.com with SMTP id q12so13252798wrj.12
-        for <linux-pwm@vger.kernel.org>; Mon, 02 Sep 2019 02:41:53 -0700 (PDT)
+        id S1730695AbfIBJmP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 2 Sep 2019 05:42:15 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53404 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730405AbfIBJmP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 2 Sep 2019 05:42:15 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q19so4984915wmc.3
+        for <linux-pwm@vger.kernel.org>; Mon, 02 Sep 2019 02:42:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=ZL2haMI2aTtJurgKOti2qg6P2dpB10rrMYX8xsD2bK8=;
-        b=Jp3giVDeY/0YoOVsPWRfoipAvNrzI7SL/np7C/5ElKhomtCfzrE5qjSsgFLnvv+6ZH
-         lILykF95Pb4ijIZzZkaRiTqqBEIeFeKsVvMtQvJ6lBPBwxjaQVfXsjEyVLkPFCKXE4B3
-         DrWHHs+HbI/F+q3dhSOuFdgQsNXLr0nM2yrOla+U/Aw8bvW0fsrUez9tDU4q4HSs2cB4
-         3UtfZt8rdx6Gl4LZk1oY0gUY8s7knHlKkWdn3nwNRkUjShH/h3ie/SGOfYieJgjpA2XY
-         2DI18qzAQKD2TsWZW7QDG9lKvubbZH1Kkkp4cH54fJQ0CZG37DAim0aE1ELf7PWuLK4/
-         zkJw==
+        bh=iK4LKa2PqlS0Y5u4Gjl7mrzOSTmztak1fj4wGqVsFy4=;
+        b=S/WMwjjBsYD6eC5+gEOI58+jRpAry6yXwLdfqno73t/WpmJzLCQpqM2O2mTs/aiwQR
+         TCGv+n2vwxgVgIx+fPgz4pHjr9PA1fIL+38d3IdqZWTS9Tyg0SCxGxy5hC9PnOHU0A6S
+         6S6nOWcPZFNCZ2aIevsy5XbQrn1qE0XwXbaXnXNnt6jhsNbdKuXnJjHv+pVAVFGLna0+
+         YU/tKj9qpFXh/951Jev2PUuDzIubEmF24MUyCESqrgAuuraAsPwd1+e18ZC6zmc4eaRi
+         cQ7yC7GHWkx6zeRgTvQrH97fL7TXhIoW0isOYDcSdW/bYVSopm5JEQjiBCDxmVrFQc+/
+         YUuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=ZL2haMI2aTtJurgKOti2qg6P2dpB10rrMYX8xsD2bK8=;
-        b=MIePrEq7NJmiKsnWVEgiv43mpdfmEOHYtQtt3LZRfFWvHUJUhpn15F56UgIZO6OPad
-         jMZGR/aJqWrzavDZZ/VDqWnNFu67E18wBo+h/PKQWftxopLpPZ29BOc2Tg0U7rvLFw7G
-         KUX0ezp7SS3rSaOC0AmQw9fuNhvQei3cXIBQN9c2duLP0vc3KhuUo0Zv2PU+UWbh0Vrk
-         CAvOwkk+bEhv2jdoae9uDS5vgekW+CKojwAXDw57VNr8yFETXXeYiZpiavhsLEZbL6v0
-         6ZvOjwXyV69rwAbcBL3NphTwm0d7vc7vddQ6eFPfXy3f6eA2C3tQn54GA96VWqfK4kgQ
-         pLjw==
-X-Gm-Message-State: APjAAAVXHUCSBMxODML7LCRjvadByN0x24Q3TBKxN/Fc5h54nWsqQHRf
-        M1aRK/2y6NhnjrkZ9rc1sw6baQ==
-X-Google-Smtp-Source: APXvYqz+ei3zvK9WDCLGPKSb6mZHeIVD4NjOj/SiGtZ3rCzqedIErcw16UBzZxGSMgr8fc4SWNzRbQ==
-X-Received: by 2002:a5d:51c6:: with SMTP id n6mr14215758wrv.206.1567417312894;
-        Mon, 02 Sep 2019 02:41:52 -0700 (PDT)
+        bh=iK4LKa2PqlS0Y5u4Gjl7mrzOSTmztak1fj4wGqVsFy4=;
+        b=hENq/x3xjzPXXXp45dt9u/26LOWLVI965s77vaV132PsRtqWF3WB1GdVQu3Tx7fQZ4
+         gLgCniv5YQH2rcHLfWu8EqbGoWlT75+WHlHb756wao83W3bbpiQsv5m37X/BY9ECOIe+
+         vjnteAqtN7cvnh5rbLpei+kQvPraNH5Gd2HmoSgMV0JP8LzQxsV/THYDUiunkpB7C/MA
+         S80e70qA2gyl09FTv1Osk9fiBBdFTiZNuE4hXIUhgYsGyPtv0E8YiqAzX2RsyucIFfw2
+         gzzJdGbqLGyZEt+ZiPtx9FaTQ3LZx85Z27SegkFnZMp9MjuVBDqtEyNXMrKasfjZ6SWM
+         kbuA==
+X-Gm-Message-State: APjAAAVHtepRUqJGkLhEh0luQaq/3HUTggzD0smoxb+LJ1kW2BngxqdJ
+        0euQxaoUgG90FSV28wjlZ+DPyA==
+X-Google-Smtp-Source: APXvYqzNZJNoxLswvc9p2LnkDfvzZJYlWCgpWeM7LW0HaPoM2ddXbfzMbv9rhLZWFOa3XTsnVAB6og==
+X-Received: by 2002:a7b:c019:: with SMTP id c25mr35998457wmb.116.1567417333221;
+        Mon, 02 Sep 2019 02:42:13 -0700 (PDT)
 Received: from dell ([95.147.198.93])
-        by smtp.gmail.com with ESMTPSA id j26sm4577684wrd.2.2019.09.02.02.41.52
+        by smtp.gmail.com with ESMTPSA id k9sm16402618wrq.15.2019.09.02.02.42.12
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Sep 2019 02:41:52 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 10:41:50 +0100
+        Mon, 02 Sep 2019 02:42:12 -0700 (PDT)
+Date:   Mon, 2 Sep 2019 10:42:11 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Matthias Kaehlcke <mka@chromium.org>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -60,16 +60,16 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Brian Norris <briannorris@chromium.org>,
         Pavel Machek <pavel@ucw.cz>,
         Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: Set scale type for CIE 1931
- curves
-Message-ID: <20190902094150.GN32232@dell>
+Subject: Re: [PATCH v3 4/4] backlight: pwm_bl: Set scale type for brightness
+ curves specified in the DT
+Message-ID: <20190902094211.GO32232@dell>
 References: <20190709190007.91260-1-mka@chromium.org>
- <20190709190007.91260-4-mka@chromium.org>
+ <20190709190007.91260-5-mka@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190709190007.91260-4-mka@chromium.org>
+In-Reply-To: <20190709190007.91260-5-mka@chromium.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
@@ -78,25 +78,28 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 On Tue, 09 Jul 2019, Matthias Kaehlcke wrote:
 
-> For backlight curves calculated with the CIE 1931 algorithm set
-> the brightness scale type to non-linear. This makes the scale type
-> available to userspace via the 'scale' sysfs attribute.
+> Check if a brightness curve specified in the device tree is linear or
+> not and set the corresponding property accordingly. This makes the
+> scale type available to userspace via the 'scale' sysfs attribute.
+> 
+> To determine if a curve is linear it is compared to a interpolated linear
+> curve between min and max brightness. The curve is considered linear if
+> no value deviates more than +/-5% of ${brightness_range} from their
+> interpolated value.
 > 
 > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 > ---
 > Changes in v3:
-> - mark scale as non-linear instead of using the CIE1931 type which
->   has been removed
-> - updated commit message
+> - none
 > 
 > Changes in v2:
-> - added Enric's 'Tested-by' tag
+> - use 128 (power of two) instead of 100 as factor for the slope
+> - add comment about max quantization error
 > - added Daniel's 'Acked-by' tag
 > ---
->  drivers/video/backlight/pwm_bl.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  drivers/video/backlight/pwm_bl.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
 
 Applied, thanks.
 
