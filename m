@@ -2,29 +2,29 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DC2BDA986A
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Sep 2019 04:38:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5CD6A987A
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Sep 2019 04:41:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730781AbfIECic (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 4 Sep 2019 22:38:32 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:39694 "EHLO
+        id S1730781AbfIEClu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 4 Sep 2019 22:41:50 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:36641 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728008AbfIECic (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 Sep 2019 22:38:32 -0400
-X-UUID: 85662b706e4842e9829949980f2aa41f-20190905
-X-UUID: 85662b706e4842e9829949980f2aa41f-20190905
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        with ESMTP id S1730451AbfIEClu (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 Sep 2019 22:41:50 -0400
+X-UUID: ee9c975d9c9f4a36948ac9b4ed035b23-20190905
+X-UUID: ee9c975d9c9f4a36948ac9b4ed035b23-20190905
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <ck.hu@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1277019290; Thu, 05 Sep 2019 10:38:24 +0800
+        with ESMTP id 291277882; Thu, 05 Sep 2019 10:41:45 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS33N1.mediatek.inc (172.27.4.75) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 5 Sep 2019 10:38:19 +0800
+ MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 5 Sep 2019 10:41:38 +0800
 Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 5 Sep 2019 10:38:19 +0800
-Message-ID: <1567651100.13330.1.camel@mtksdaap41>
-Subject: Re: [PATCH v6 0/3] Support mipitx for mt8183
+ Transport; Thu, 5 Sep 2019 10:41:37 +0800
+Message-ID: <1567651299.13330.4.camel@mtksdaap41>
+Subject: Re: [PATCH v6 0/7] Support dsi for mt8183
 From:   CK Hu <ck.hu@mediatek.com>
 To:     Jitao Shi <jitao.shi@mediatek.com>
 CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
@@ -50,14 +50,27 @@ CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
         <stonea168@163.com>
-Date:   Thu, 5 Sep 2019 10:38:20 +0800
-In-Reply-To: <20190807084645.63738-1-jitao.shi@mediatek.com>
-References: <20190807084645.63738-1-jitao.shi@mediatek.com>
+Date:   Thu, 5 Sep 2019 10:41:39 +0800
+In-Reply-To: <20190811104008.53372-1-jitao.shi@mediatek.com>
+References: <20190811104008.53372-1-jitao.shi@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 6FC0B6C8ACCBF84F2E1844C1B7B45B0403D54D0812C4D28F17CDBF053DE0F48D2000:8
+X-TM-AS-Product-Ver: SMEX-12.5.0.1684-8.5.1010-24890.000
+X-TM-AS-Result: No-10.241600-8.000000-10
+X-TMASE-MatchedRID: 6otD/cJAac2EFkjzuXHNt+LdprnA5EQRJih/yo+OvlVSAxvL+nqAnW4+
+        gA+i9D2DqMlm1+4tGhQfHS8wUUuW9T4Pcn5OGAtGMpVOsYwN78M0YG6kQ2QiFFSOymiJfTYXrr5
+        TE4GLzk06n5U+9hWy0GYwRleGHW3t0/GyN5MpGlOqNnzrkU+2mgKflB9+9kWVcJHSK1bfF9XGcw
+        gtERMbmd99l6mYw28dfPU3ZRMebCuKiQbKW6KJeAlpVkdtt3WuOHhqIXe4IzZIyDY579vwTFYvW
+        mlP6FyeEu6Hmd7GM5PTDbyTDLiYnVGEd5OSBmbmngIgpj8eDcC063Wh9WVqgmWCfbzydb0g2EuZ
+        q9zngaeNo+PRbWqfRDsAVzN+Ov/sXEXPO/6fybNBoFITciebPaiz/Co2CGruef8GeKgmo5snmxJ
+        8YZpSdw==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--10.241600-8.000000
+X-TMASE-Version: SMEX-12.5.0.1684-8.5.1010-24890.000
+X-TM-SNTS-SMTP: 75FAA2A7B910283301DE15DCDB5DB7A8A744F4C0B4B7E434DF4A678FAB936AED2000:8
 X-MTK:  N
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
@@ -66,7 +79,9 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 Hi, Jitao:
 
-For this series, applied to mediatek-drm-next-5.5 [1], thanks.
+For this series, applied to mediatek-drm-next-5.5 [1], and I break
+"[v6,2/7] drm/mediatek: fixes CMDQ reg address of mt8173 is different
+with mt2701" into two patches, thanks.
 
 [1]
 https://github.com/ckhu-mediatek/linux.git-tags/commits/mediatek-drm-next-5.5
@@ -74,46 +89,46 @@ https://github.com/ckhu-mediatek/linux.git-tags/commits/mediatek-drm-next-5.5
 Regards,
 CK
 
-On Wed, 2019-08-07 at 16:46 +0800, Jitao Shi wrote:
+
+On Sun, 2019-08-11 at 18:40 +0800, Jitao Shi wrote:
 > Change since v5:
->  - remove mipi_tx->ref_clk
->  - remove mt8183 pll prepare unprepare
+>  - fine tune dphy timing.
 > 
 > Change since v4:
->  - fine tune the mipi_tx->ref_clk and mipi_tx->pll sequence
->    1. Prepare mipi_tx->ref_clk
->    2. Prepare mipi_tx->pll
->    3. Enable mipi_tx->ref_clk
->    4. Enable mipi_tx->pll
+>  - move mipi_dsi_host_unregiter() to .remove()
+>  - fine tune add frame size control coding style
+>  - change the data type of data_rate as u32, and add DIV_ROUND_UP_ULL
+>  - use div_u64 when 8000000000ULL / dsi->data_rate.
 > 
-> Changes since v3:
->  - turn off PLL before setting PLL parameters.
+> Changes since v3
+>  - add one more 'tab' for bitwise define.
+>  - add Tested-by: Ryan Case <ryandcase@chromium.org>
+> 	and Reviewed-by: CK Hu <ck.hu@mediatek.com>.
+>  - remove compare da_hs_zero to da_hs_prepare.
 > 
 > Changes since v2:
->  - update Acked-by: Rob Herring <robh@kernel.org>
->  - update mt8183 max bit rate support
+>  - change the video timing calc method
+>  - fine the dsi and mipitx init sequence
+>  - fine tune commit msg
 > 
 > Changes since v1:
->  - update dt-bindings document for mt8183 mipitx.
->  - remove mtk_mipitx_clk_get_ops and assign clk_ops in probe.
->  - fix the lincence
->  - remove txdiv1 from mtk_mipi_tx_pll_prepare
+>  - separate frame size and reg commit control independent patches.
+>  - fix some return values in probe
+>  - remove DSI_CMDW0 in "CMDQ reg address of mt8173 is different with mt2701" 
 > 
-> Jitao Shi (3):
->   dt-bindings: display: mediatek: update dsi supported chips
->   drm/mediatek: separate mipi_tx to different file
->   drm/mediatek: add mipi_tx driver for mt8183
+> Jitao Shi (7):
+>   drm/mediatek: move mipi_dsi_host_register to probe
+>   drm/mediatek: fixes CMDQ reg address of mt8173 is different with
+>     mt2701
+>   drm/mediatek: add dsi reg commit disable control
+>   drm/mediatek: add frame size control
+>   drm/mediatek: add mt8183 dsi driver support
+>   drm/mediatek: change the dsi phytiming calculate method
+>   drm: mediatek: adjust dsi and mipi_tx probe sequence
 > 
->  .../display/mediatek/mediatek,dsi.txt         |   4 +-
->  drivers/gpu/drm/mediatek/Makefile             |   2 +
->  drivers/gpu/drm/mediatek/mtk_mipi_tx.c        | 338 ++----------------
->  drivers/gpu/drm/mediatek/mtk_mipi_tx.h        |  49 +++
->  drivers/gpu/drm/mediatek/mtk_mt8173_mipi_tx.c | 289 +++++++++++++++
->  drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c | 150 ++++++++
->  6 files changed, 515 insertions(+), 317 deletions(-)
->  create mode 100644 drivers/gpu/drm/mediatek/mtk_mipi_tx.h
->  create mode 100644 drivers/gpu/drm/mediatek/mtk_mt8173_mipi_tx.c
->  create mode 100644 drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c |   2 +-
+>  drivers/gpu/drm/mediatek/mtk_dsi.c     | 224 ++++++++++++++++++-------
+>  2 files changed, 161 insertions(+), 65 deletions(-)
 > 
 
 
