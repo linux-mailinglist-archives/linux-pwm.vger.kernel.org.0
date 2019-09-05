@@ -2,134 +2,76 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C1A18A98E0
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Sep 2019 05:27:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0B27A9AE9
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Sep 2019 08:50:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730112AbfIED1h (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 4 Sep 2019 23:27:37 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:54351 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729907AbfIED1h (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 Sep 2019 23:27:37 -0400
-X-UUID: f6ab314cbd2349c7972528ade85c3875-20190905
-X-UUID: f6ab314cbd2349c7972528ade85c3875-20190905
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 852391426; Thu, 05 Sep 2019 11:27:32 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 5 Sep 2019 11:27:30 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 5 Sep 2019 11:27:28 +0800
-Message-ID: <1567654050.23074.38.camel@mtksdccf07>
-Subject: Re: [PATCH v5 07/13] dt-bindings: pwm: add a property "num-pwms"
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
+        id S1730914AbfIEGu0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 5 Sep 2019 02:50:26 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58893 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728267AbfIEGuZ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Sep 2019 02:50:25 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1i5lan-0002ZF-Lq; Thu, 05 Sep 2019 08:50:05 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1i5laZ-0001pD-N3; Thu, 05 Sep 2019 08:49:51 +0200
+Date:   Thu, 5 Sep 2019 08:49:51 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "Ryder Lee" <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Thu, 5 Sep 2019 11:27:30 +0800
-In-Reply-To: <20190902160445.fitoa65t4ndzjq6v@pengutronix.de>
-References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
-         <1566457123-20791-8-git-send-email-sam.shih@mediatek.com>
-         <20190827183924.GA24178@bogus>
-         <20190902160445.fitoa65t4ndzjq6v@pengutronix.de>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 8bit
+        Thierry Reding <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        Sascha Hauer <kernel@pengutronix.de>,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, stonea168@163.com
+Subject: Re: [PATCH v6 0/7] Support dsi for mt8183
+Message-ID: <20190905064951.mttzwrg7muhfimdw@pengutronix.de>
+References: <20190811104008.53372-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: F4EEF144BCC51E8C6B7272CD2260074CD95FDFA362855DF08FFFF6DA4DBF7AF12000:8
-X-MTK:  N
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190811104008.53372-1-jitao.shi@mediatek.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 2019-09-02 at 18:04 +0200, Uwe Kleine-König wrote:
-> On Tue, Aug 27, 2019 at 01:39:24PM -0500, Rob Herring wrote:
-> > On Thu, Aug 22, 2019 at 02:58:37PM +0800, Sam Shih wrote:
-> > > From: Ryder Lee <ryder.lee@mediatek.com>
-> > 
-> > The subject should indicate this is for Mediatek.
-> > 
-> > > 
-> > > This adds a property "num-pwms" in example so that we could
-> > > specify the number of PWM channels via device tree.
-> > > 
-> > > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> > > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> > > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > > ---
-> > > Changes since v5:
-> > > - Add an Acked-by tag
-> > > - This file is original v4 patch 5/10
-> > > (https://patchwork.kernel.org/patch/11102577/)
-> > > 
-> > > Change-Id: I429048afeffa96f3f14533910efe242f88776043
-> > > ---
-> > >  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 7 ++++---
-> > >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> > > index 991728cb46cb..ea95b490a913 100644
-> > > --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> > > +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> > > @@ -14,12 +14,12 @@ Required properties:
-> > >                  has no clocks
-> > >     - "top": the top clock generator
-> > >     - "main": clock used by the PWM core
-> > > -   - "pwm1-8": the eight per PWM clocks for mt2712
-> > > -   - "pwm1-6": the six per PWM clocks for mt7622
-> > > -   - "pwm1-5": the five per PWM clocks for mt7623
-> > > +   - "pwm1-N": the PWM clocks for each channel
-> > > +   where N starting from 1 to the maximum number of PWM channels
-> > 
-> > Once converted to schema, you are going to be back to listing them out.
-> > 
-> > >   - pinctrl-names: Must contain a "default" entry.
-> > >   - pinctrl-0: One property must exist for each entry in pinctrl-names.
-> > >     See pinctrl/pinctrl-bindings.txt for details of the property values.
-> > > + - num-pwms: the number of PWM channels.
-> > 
-> > You can't add new required properties without breaking compatibility. 
-> > 
-> > You already have to imply the number of channels from the compatible (or 
-> > number of clocks) and you have to keep doing so to maintain 
-> > compatibility, so why not just keep doing that for new chips?
-> 
-> This was a suggestion by me. The driver still handles compatibility
-> (i.e. falls back to the number of PWMs that was implied by the
-> compatible before). Given that there are various drivers that all solve
-> the same problem (i.e. different variants with different number of PWMs)
-> I thought it would be a good idea to introduce a property in the device
-> tree that specifies this number.
-> Only for newly introduced compatibles the num-pwms property is really
-> required. Differentiating the ones that need it and the ones that don't
-> seems over-engineered to me.
+Hello,
 
-I'm fine with both.
+I somehow fail to see how this is relevant for the linux-pwm list. Did
+you add this list to the recipents by accident, or is there something I
+missed?
 
-num-pwms and pwm1-N is required properties for new chip, but it still
-have backward compatibility for old dt without num-pwms properties.
+Best regards
+Uwe
 
-
-> (BTW, using the number of clks doesn't really work because there are
-> also some variants without clocks. It is still under discussion if in
-> this case dummy-clocks should be provided IIRC.)
-
-Yes, the dummy-clocks of "top", "main" is needed in old MIPS dt.
-We also need fixed-clock for period calculation.
-
-
-
-Best Regards,
-Sam
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
