@@ -2,49 +2,49 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BD340B3C04
-	for <lists+linux-pwm@lfdr.de>; Mon, 16 Sep 2019 16:01:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48DD4B3C0E
+	for <lists+linux-pwm@lfdr.de>; Mon, 16 Sep 2019 16:02:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388279AbfIPOAz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 16 Sep 2019 10:00:55 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41186 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388202AbfIPOAy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 16 Sep 2019 10:00:54 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h7so38006935wrw.8;
-        Mon, 16 Sep 2019 07:00:51 -0700 (PDT)
+        id S2388202AbfIPOBx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 16 Sep 2019 10:01:53 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39347 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728154AbfIPOBx (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 16 Sep 2019 10:01:53 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v17so10025018wml.4;
+        Mon, 16 Sep 2019 07:01:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Qd2PZquZEt7TGu4jipazWdI04SsgSJSCx5Z0Sk9nhnA=;
-        b=M9SGoML+RjJma+CxOKH34G6igseJZlCRWdiLNQuoWY/CqV6m8RxRR2YCI81rtmosnV
-         FZFvPw8hPCPGgoacBKngQgbWnqQijQsY9zegcWRV/Pz4LDRLgwMctCDCb+v57bJCkVP2
-         C2kO/eHCMSgzDem66tCFZTPhZz4q2dC/FLYHYEYUuYS97C2L525Hxr6EYt0m84JYrgzR
-         9PtUhvozEiOKkyJ2C8tFK5vItr+LoJkgQoWCX2G/bFLY76FbGN7mpXM5Y1hLoqfFl/Dc
-         OwKSDJQqpSt7/Uo2HcVVjz7Y0BzTdmbMOFOvpr7qHuenNyE22q0pTTCnjCuIDeN1GL32
-         NcxQ==
+        bh=MJLLYmU54a4xaRGmKBckleHVBVuJ7R5VnrshdzzxD4A=;
+        b=MjVYgM0Ui+70erQUFwva8j3TX7YSxY6bZ/0O7fQ5BjrMgbmQ11pq5U6x1lB7tKUsK9
+         LSxy/wBBgXwQ5eMRCOxrokq8U8kolgwUzVvYdMMG3f0P4y+Bvu3NXRfbq5/S88XqZGk5
+         fw8PYMFVLpRVQsR8+MZV0GVegMtnvvv1OSS/nfSollvcZzoLf5YkzUxZEZtOX/zpb8Rq
+         JADhTSqqsgh4JIKz6QqKQdhvi1EgbFMQO6u0yf5zrVHiBbzR73UughkZreXbftTKjo57
+         8hlpmHmKKCePXATKmB9OsiAw8a6YnJYKOk0hZsFhEHYmKuLUqDyhATMQMZT99bIpx8eU
+         fwDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Qd2PZquZEt7TGu4jipazWdI04SsgSJSCx5Z0Sk9nhnA=;
-        b=SvhgxDu39TKiuPHHaB2H9ZXpEjlfwOWwNu0q8vGgnEBJQzfMuijS77mcfZ1+oYw54E
-         gCDMS03munBpCThzIQbZkue5g3jXIe7xxrmhyx5lPMrpnJZctzr1RHd78/+dOWko8z76
-         59eO+DVeJMsMEiToIg9NEESvm09NNIm0IFkCBYdK7qoEHd8YNMC9LLH3th3ipHDYc8az
-         cs1k/uFEvcKTgHi6NIedzzyexhyNmyTaYyuH5CCunP5xLxNSbsoALpG0N3yMVVgg3lA2
-         PUt5S6XfW5Ug5AITRoS7o/0TeVelu9WGw7eEhdVaXEXZpz1cMi4+4ANcs+0Za0eQfSo/
-         CenQ==
-X-Gm-Message-State: APjAAAVtRdYsaP8K2jO54TwlC8ZGUQk9cs7IELg9Dddh5plogyje6l+3
-        jozRMD2Y7as3ua6bbPKnfbtS4KSV
-X-Google-Smtp-Source: APXvYqxGdRKXIJywqHIeb6KasqZt7UcKkIFWP0u4ZT0IIy6fMs/8eCXjhQ/gLPAWGRgvEgTc4ys/GA==
-X-Received: by 2002:adf:fc05:: with SMTP id i5mr899883wrr.134.1568642450856;
-        Mon, 16 Sep 2019 07:00:50 -0700 (PDT)
+        bh=MJLLYmU54a4xaRGmKBckleHVBVuJ7R5VnrshdzzxD4A=;
+        b=PtbmGG85By6XQnGDMJXVmEUIXMY7+BuV7VEJBspn8EiqAR/qaMIlvk+9uuqQPL8rBl
+         tnh+/k3En+zZVY3ieICzEhb48UMwaAB8tw0vE4XQqIwo7OnUK/sCranBe9J4OwjpMrME
+         gtXblwPNog7LY0eAzAPoShtIYNem4lvy39ucgUPkGk0OG4wllXjipPszlyIRu0lO2uQY
+         6+R0MqjgAHBQWYl/nLvwzHfaTi4Dvm6ULyM6dQxULvt/L2kSJ5eZkMvLyLU1raV3njf1
+         vjafyo5TTmH5dFaaaovgdCFLlmQfEIXd8V5JBdv8nGxzqZgW0qgHaeovs0GelszI1eu9
+         uqBA==
+X-Gm-Message-State: APjAAAXX+Vw4qJReprEjMMHBu9r7xv0rHgI/OKAXZ8Q3m9wRyZuaBZzF
+        VYE/hwWI/B14VyGdHILveLo=
+X-Google-Smtp-Source: APXvYqzbfOuk7bFgrhYVh39kc7nSu+vgqGsLzsdEu077Qtm3C0to2fR7+FwuVxpXiTdFpZYWXYkk8w==
+X-Received: by 2002:a1c:a90b:: with SMTP id s11mr15324071wme.92.1568642509221;
+        Mon, 16 Sep 2019 07:01:49 -0700 (PDT)
 Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id v6sm25414392wma.24.2019.09.16.07.00.49
+        by smtp.gmail.com with ESMTPSA id m16sm11063893wml.11.2019.09.16.07.01.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 07:00:49 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 16:00:48 +0200
+        Mon, 16 Sep 2019 07:01:47 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 16:01:46 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Guru Das Srinagesh <gurus@codeaurora.org>
 Cc:     linux-pwm@vger.kernel.org, kernel-team@android.com,
@@ -52,16 +52,14 @@ Cc:     linux-pwm@vger.kernel.org, kernel-team@android.com,
         Sandeep Patil <sspatil@google.com>,
         Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         linux-kernel@vger.kernel.org, Fenglin Wu <fenglinw@codeaurora.org>
-Subject: Re: [PATCH 2/2] pwm: core: Add option to config PWM duty/period with
- u64 data length
-Message-ID: <20190916140048.GB7488@ulmo>
+Subject: Re: [PATCH 1/2] pwm: Add different PWM output types support
+Message-ID: <20190916140146.GC7488@ulmo>
 References: <1568415464-20267-1-git-send-email-gurus@codeaurora.org>
- <1568415464-20267-2-git-send-email-gurus@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="O5XBE6gyVG5Rl6Rj"
+        protocol="application/pgp-signature"; boundary="m51xatjYGsM+13rf"
 Content-Disposition: inline
-In-Reply-To: <1568415464-20267-2-git-send-email-gurus@codeaurora.org>
+In-Reply-To: <1568415464-20267-1-git-send-email-gurus@codeaurora.org>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
@@ -69,335 +67,296 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---O5XBE6gyVG5Rl6Rj
+--m51xatjYGsM+13rf
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 13, 2019 at 03:57:44PM -0700, Guru Das Srinagesh wrote:
+On Fri, Sep 13, 2019 at 03:57:43PM -0700, Guru Das Srinagesh wrote:
 > From: Fenglin Wu <fenglinw@codeaurora.org>
 >=20
-> Currently, PWM core driver provides interfaces for configuring PWM
-> period and duty length in nanoseconds with an integer data type, so
-> the max period can be only set to ~2.147 seconds. Add interfaces which
-> can set PWM period and duty with u64 data type to remove this
-> limitation.
+> Normally, PWM channel has fixed output until software request to change
+> its settings. There are some PWM devices which their outputs could be
+> changed autonomously according to a predefined pattern programmed in
+> hardware. Add pwm_output_type enum type to identify these two different
+> PWM types and add relevant helper functions to set and get PWM output
+> types and pattern.
 >=20
-> Change-Id: Ic8722088510d447fc939ab6a5014711aef1b832f
+> Change-Id: Ia1f914a45ab4f4dd7be037a395eeb89d0e65a80e
 > Signed-off-by: Fenglin Wu <fenglinw@codeaurora.org>
 > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 > ---
->  drivers/pwm/core.c  |  20 ++++++---
->  drivers/pwm/sysfs.c |   6 +--
->  include/linux/pwm.h | 115 ++++++++++++++++++++++++++++++++++++++++++++++=
-++----
->  3 files changed, 126 insertions(+), 15 deletions(-)
+>  drivers/pwm/core.c  | 26 ++++++++++++++++++++
+>  drivers/pwm/sysfs.c | 50 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/pwm.h | 70 +++++++++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 146 insertions(+)
 
-pwm_ops->config() is considered legacy API and only remains for drivers
-that haven't been converted to the atomic API yet. If you want to extend
-the range for period and duty cycle, please add that to the atomic API,
-which is pwm_ops->apply() and struct pwm_state.
+This doesn't seem right to me. Are you describing a PWM pin that's
+actually driven in GPIO mode? We usually configure that using pinctrl.
 
 Thierry
 
 >=20
 > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index 960a451..02ad16b 100644
+> index 8edfac1..960a451 100644
 > --- a/drivers/pwm/core.c
 > +++ b/drivers/pwm/core.c
-> @@ -526,9 +526,19 @@ int pwm_apply_state(struct pwm_device *pwm, struct p=
-wm_state *state)
+> @@ -282,6 +282,7 @@ int pwmchip_add_with_polarity(struct pwm_chip *chip,
+>  		pwm->pwm =3D chip->base + i;
+>  		pwm->hwpwm =3D i;
+>  		pwm->state.polarity =3D polarity;
+> +		pwm->state.output_type =3D PWM_OUTPUT_FIXED;
 > =20
+>  		if (chip->ops->get_state)
+>  			chip->ops->get_state(chip, pwm, &pwm->state);
+> @@ -498,6 +499,31 @@ int pwm_apply_state(struct pwm_device *pwm, struct p=
+wm_state *state)
+>  			pwm->state.polarity =3D state->polarity;
+>  		}
+> =20
+> +		if (state->output_type !=3D pwm->state.output_type) {
+> +			if (!pwm->chip->ops->set_output_type)
+> +				return -ENOTSUPP;
+> +
+> +			err =3D pwm->chip->ops->set_output_type(pwm->chip, pwm,
+> +						state->output_type);
+> +			if (err)
+> +				return err;
+> +
+> +			pwm->state.output_type =3D state->output_type;
+> +		}
+> +
+> +		if (state->output_pattern !=3D pwm->state.output_pattern &&
+> +				state->output_pattern !=3D NULL) {
+> +			if (!pwm->chip->ops->set_output_pattern)
+> +				return -ENOTSUPP;
+> +
+> +			err =3D pwm->chip->ops->set_output_pattern(pwm->chip,
+> +					pwm, state->output_pattern);
+> +			if (err)
+> +				return err;
+> +
+> +			pwm->state.output_pattern =3D state->output_pattern;
+> +		}
+> +
 >  		if (state->period !=3D pwm->state.period ||
 >  		    state->duty_cycle !=3D pwm->state.duty_cycle) {
-> -			err =3D pwm->chip->ops->config(pwm->chip, pwm,
-> -						     state->duty_cycle,
-> -						     state->period);
-> +			if (pwm->chip->ops->config_extend) {
-> +				err =3D pwm->chip->ops->config_extend(pwm->chip,
-> +						pwm, state->duty_cycle,
-> +						state->period);
-> +			} else {
-> +				if (state->period > UINT_MAX)
-> +					pr_warn("period %llu duty_cycle %llu will be truncated\n",
-> +							state->period,
-> +							state->duty_cycle);
-> +				err =3D pwm->chip->ops->config(pwm->chip, pwm,
-> +						state->duty_cycle,
-> +						state->period);
-> +			}
->  			if (err)
->  				return err;
-> =20
-> @@ -1181,8 +1191,8 @@ static void pwm_dbg_show(struct pwm_chip *chip, str=
-uct seq_file *s)
->  		if (state.enabled)
->  			seq_puts(s, " enabled");
-> =20
-> -		seq_printf(s, " period: %u ns", state.period);
-> -		seq_printf(s, " duty: %u ns", state.duty_cycle);
-> +		seq_printf(s, " period: %llu ns", state.period);
-> +		seq_printf(s, " duty: %llu ns", state.duty_cycle);
->  		seq_printf(s, " polarity: %s",
->  			   state.polarity ? "inverse" : "normal");
-> =20
+>  			err =3D pwm->chip->ops->config(pwm->chip, pwm,
 > diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-> index ab703f2..ef78c40 100644
+> index 2389b86..ab703f2 100644
 > --- a/drivers/pwm/sysfs.c
 > +++ b/drivers/pwm/sysfs.c
-> @@ -42,7 +42,7 @@ static ssize_t period_show(struct device *child,
-> =20
->  	pwm_get_state(pwm, &state);
-> =20
-> -	return sprintf(buf, "%u\n", state.period);
-> +	return sprintf(buf, "%llu\n", state.period);
+> @@ -215,11 +215,60 @@ static ssize_t capture_show(struct device *child,
+>  	return sprintf(buf, "%u %u\n", result.period, result.duty_cycle);
 >  }
 > =20
->  static ssize_t period_store(struct device *child,
-> @@ -77,7 +77,7 @@ static ssize_t duty_cycle_show(struct device *child,
+> +static ssize_t output_type_show(struct device *child,
+> +			     struct device_attribute *attr,
+> +			     char *buf)
+> +{
+> +	const struct pwm_device *pwm =3D child_to_pwm_device(child);
+> +	const char *output_type =3D "unknown";
+> +	struct pwm_state state;
+> +
+> +	pwm_get_state(pwm, &state);
+> +	switch (state.output_type) {
+> +	case PWM_OUTPUT_FIXED:
+> +		output_type =3D "fixed";
+> +		break;
+> +	case PWM_OUTPUT_MODULATED:
+> +		output_type =3D "modulated";
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return snprintf(buf, PAGE_SIZE, "%s\n", output_type);
+> +}
+> +
+> +static ssize_t output_type_store(struct device *child,
+> +			      struct device_attribute *attr,
+> +			      const char *buf, size_t size)
+> +{
+> +	struct pwm_export *export =3D child_to_pwm_export(child);
+> +	struct pwm_device *pwm =3D export->pwm;
+> +	struct pwm_state state;
+> +	int ret =3D -EINVAL;
+> +
+> +	mutex_lock(&export->lock);
+> +	pwm_get_state(pwm, &state);
+> +	if (sysfs_streq(buf, "fixed"))
+> +		state.output_type =3D PWM_OUTPUT_FIXED;
+> +	else if (sysfs_streq(buf, "modulated"))
+> +		state.output_type =3D PWM_OUTPUT_MODULATED;
+> +	else
+> +		goto unlock;
+> +
+> +	ret =3D pwm_apply_state(pwm, &state);
+> +unlock:
+> +	mutex_unlock(&export->lock);
+> +
+> +	return ret ? : size;
+> +}
+> +
+>  static DEVICE_ATTR_RW(period);
+>  static DEVICE_ATTR_RW(duty_cycle);
+>  static DEVICE_ATTR_RW(enable);
+>  static DEVICE_ATTR_RW(polarity);
+>  static DEVICE_ATTR_RO(capture);
+> +static DEVICE_ATTR_RW(output_type);
 > =20
->  	pwm_get_state(pwm, &state);
-> =20
-> -	return sprintf(buf, "%u\n", state.duty_cycle);
-> +	return sprintf(buf, "%llu\n", state.duty_cycle);
->  }
-> =20
->  static ssize_t duty_cycle_store(struct device *child,
-> @@ -212,7 +212,7 @@ static ssize_t capture_show(struct device *child,
->  	if (ret)
->  		return ret;
-> =20
-> -	return sprintf(buf, "%u %u\n", result.period, result.duty_cycle);
-> +	return sprintf(buf, "%llu %llu\n", result.period, result.duty_cycle);
->  }
-> =20
->  static ssize_t output_type_show(struct device *child,
+>  static struct attribute *pwm_attrs[] =3D {
+>  	&dev_attr_period.attr,
+> @@ -227,6 +276,7 @@ static ssize_t capture_show(struct device *child,
+>  	&dev_attr_enable.attr,
+>  	&dev_attr_polarity.attr,
+>  	&dev_attr_capture.attr,
+> +	&dev_attr_output_type.attr,
+>  	NULL
+>  };
+>  ATTRIBUTE_GROUPS(pwm);
 > diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-> index 416f08e..d714385 100644
+> index 24632a7..416f08e 100644
 > --- a/include/linux/pwm.h
 > +++ b/include/linux/pwm.h
-> @@ -39,7 +39,7 @@ enum pwm_polarity {
->   * current PWM hardware state.
->   */
->  struct pwm_args {
-> -	unsigned int period;
-> +	u64 period;
->  	enum pwm_polarity polarity;
+> @@ -48,6 +48,29 @@ enum {
+>  	PWMF_EXPORTED =3D 1 << 1,
 >  };
 > =20
-> @@ -66,9 +66,9 @@ enum pwm_output_type {
->   * @cycles_per_duty: number of PWM period cycles an entry stays at
->   */
->  struct pwm_output_pattern {
-> -	unsigned int *duty_pattern;
-> +	u64 *duty_pattern;
->  	unsigned int num_entries;
-> -	unsigned int cycles_per_duty;
-> +	u64 cycles_per_duty;
->  };
-> =20
+> +/**
+> + * enum pwm_output_type - output type of the PWM signal
+> + * @PWM_OUTPUT_FIXED: PWM output is fixed until a change request
+> + * @PWM_OUTPUT_MODULATED: PWM output is modulated in hardware
+> + * autonomously with a predefined pattern
+> + */
+> +enum pwm_output_type {
+> +	PWM_OUTPUT_FIXED =3D 1 << 0,
+> +	PWM_OUTPUT_MODULATED =3D 1 << 1,
+> +};
+> +
+> +/**
+> + * struct pwm_output_pattern - PWM duty pattern for MODULATED duty type
+> + * @duty_pattern: PWM duty cycles in the pattern for duty modulation
+> + * @num_entries: number of entries in the pattern
+> + * @cycles_per_duty: number of PWM period cycles an entry stays at
+> + */
+> +struct pwm_output_pattern {
+> +	unsigned int *duty_pattern;
+> +	unsigned int num_entries;
+> +	unsigned int cycles_per_duty;
+> +};
+> +
 >  /*
-> @@ -79,8 +79,8 @@ struct pwm_output_pattern {
->   * @enabled: PWM enabled status
->   */
->  struct pwm_state {
-> -	unsigned int period;
-> -	unsigned int duty_cycle;
-> +	u64 period;
-> +	u64 duty_cycle;
+>   * struct pwm_state - state of a PWM channel
+>   * @period: PWM period (in nanoseconds)
+> @@ -59,6 +82,8 @@ struct pwm_state {
+>  	unsigned int period;
+>  	unsigned int duty_cycle;
 >  	enum pwm_polarity polarity;
->  	enum pwm_output_type output_type;
->  	struct pwm_output_pattern *output_pattern;
-> @@ -136,12 +136,30 @@ static inline void pwm_set_period(struct pwm_device=
- *pwm, unsigned int period)
->  		pwm->state.period =3D period;
+> +	enum pwm_output_type output_type;
+> +	struct pwm_output_pattern *output_pattern;
+>  	bool enabled;
+>  };
+> =20
+> @@ -144,6 +169,26 @@ static inline enum pwm_polarity pwm_get_polarity(con=
+st struct pwm_device *pwm)
+>  	return state.polarity;
 >  }
 > =20
-> +static inline void pwm_set_period_extend(struct pwm_device *pwm, u64 per=
-iod)
-> +{
-> +	if (pwm)
-> +		pwm->state.period =3D period;
-> +}
-> +
->  static inline unsigned int pwm_get_period(const struct pwm_device *pwm)
->  {
->  	struct pwm_state state;
-> =20
->  	pwm_get_state(pwm, &state);
-> =20
-> +	if (state.period > UINT_MAX)
-> +		pr_warn("PWM period %llu is truncated\n", state.period);
-> +
-> +	return (unsigned int)state.period;
-> +}
-> +
-> +static inline u64 pwm_get_period_extend(const struct pwm_device *pwm)
+> +static inline enum pwm_output_type pwm_get_output_type(
+> +		const struct pwm_device *pwm)
 > +{
 > +	struct pwm_state state;
 > +
 > +	pwm_get_state(pwm, &state);
 > +
->  	return state.period;
->  }
-> =20
-> @@ -151,12 +169,30 @@ static inline void pwm_set_duty_cycle(struct pwm_de=
-vice *pwm, unsigned int duty)
->  		pwm->state.duty_cycle =3D duty;
->  }
-> =20
-> +static inline void pwm_set_duty_cycle_extend(struct pwm_device *pwm, u64=
- duty)
-> +{
-> +	if (pwm)
-> +		pwm->state.duty_cycle =3D duty;
+> +	return state.output_type;
 > +}
 > +
->  static inline unsigned int pwm_get_duty_cycle(const struct pwm_device *p=
-wm)
->  {
->  	struct pwm_state state;
-> =20
->  	pwm_get_state(pwm, &state);
-> =20
-> +	if (state.duty_cycle > UINT_MAX)
-> +		pr_warn("PWM duty cycle %llu is truncated\n", state.duty_cycle);
-> +
-> +	return (unsigned int)state.duty_cycle;
-> +}
-> +
-> +static inline u64 pwm_get_duty_cycle_extend(const struct pwm_device *pwm)
+> +static inline struct pwm_output_pattern *pwm_get_output_pattern(
+> +				struct pwm_device *pwm)
 > +{
 > +	struct pwm_state state;
 > +
 > +	pwm_get_state(pwm, &state);
 > +
->  	return state.duty_cycle;
->  }
-> =20
-> @@ -300,6 +336,8 @@ static inline void pwm_init_state(const struct pwm_de=
+> +	return pwm->state.output_pattern ?: NULL;
+> +}
+> +
+>  static inline void pwm_get_args(const struct pwm_device *pwm,
+>  				struct pwm_args *args)
+>  {
+> @@ -250,6 +295,9 @@ static inline void pwm_init_state(const struct pwm_de=
 vice *pwm,
->   * @set_output_pattern: set the pattern for the modulated output
+>   * @get_state: get the current PWM state. This function is only
+>   *	       called once per PWM device when the PWM chip is
+>   *	       registered.
+> + * @get_output_type_supported: get the supported output type
+> + * @set_output_type: set PWM output type
+> + * @set_output_pattern: set the pattern for the modulated output
 >   * @owner: helps prevent removal of modules exporting active PWMs
 >   * @config: configure duty cycles and period length for this PWM
-> + * @config_extend: configure duty cycles and period length for this
-> + *	PWM with u64 data type
 >   * @set_polarity: configure the polarity of this PWM
->   * @enable: enable PWM output toggling
->   * @disable: disable PWM output toggling
-> @@ -325,6 +363,8 @@ struct pwm_ops {
->  	/* Only used by legacy drivers */
->  	int (*config)(struct pwm_chip *chip, struct pwm_device *pwm,
->  		      int duty_ns, int period_ns);
-> +	int (*config_extend)(struct pwm_chip *chip, struct pwm_device *pwm,
-> +		      u64 duty_ns, u64 period_ns);
->  	int (*set_polarity)(struct pwm_chip *chip, struct pwm_device *pwm,
->  			    enum pwm_polarity polarity);
->  	int (*enable)(struct pwm_chip *chip, struct pwm_device *pwm);
-> @@ -363,8 +403,8 @@ struct pwm_chip {
->   * @duty_cycle: duty cycle of the PWM signal (in nanoseconds)
->   */
->  struct pwm_capture {
-> -	unsigned int period;
-> -	unsigned int duty_cycle;
-> +	u64 period;
-> +	u64 duty_cycle;
->  };
+> @@ -265,6 +313,13 @@ struct pwm_ops {
+>  		     struct pwm_state *state);
+>  	void (*get_state)(struct pwm_chip *chip, struct pwm_device *pwm,
+>  			  struct pwm_state *state);
+> +	int (*get_output_type_supported)(struct pwm_chip *chip,
+> +			struct pwm_device *pwm);
+> +	int (*set_output_type)(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			enum pwm_output_type output_type);
+> +	int (*set_output_pattern)(struct pwm_chip *chip,
+> +			struct pwm_device *pwm,
+> +			struct pwm_output_pattern *output_pattern);
+>  	struct module *owner;
 > =20
->  #if IS_ENABLED(CONFIG_PWM)
-> @@ -418,6 +458,67 @@ static inline int pwm_config(struct pwm_device *pwm,=
- int duty_ns,
->  }
+>  	/* Only used by legacy drivers */
+> @@ -320,6 +375,21 @@ struct pwm_capture {
+>  int pwm_adjust_config(struct pwm_device *pwm);
 > =20
 >  /**
-> + * pwm_config_extend() - change PWM period and duty length with u64 data=
- type
+> + * pwm_output_type_support()
 > + * @pwm: PWM device
-> + * @duty_ns: "on" time (in nanoseconds)
-> + * @period_ns: duration (in nanoseconds) of one cycle
 > + *
-> + * Returns: 0 on success or a negative error code on failure.
+> + * Returns:  output types supported by the PWM device
 > + */
-> +static inline int pwm_config_extend(struct pwm_device *pwm, u64 duty_ns,
-> +			     u64 period_ns)
+> +static inline int pwm_get_output_type_supported(struct pwm_device *pwm)
 > +{
-> +	struct pwm_state state;
-> +
-> +	if (!pwm)
-> +		return -EINVAL;
-> +
-> +	pwm_get_state(pwm, &state);
-> +	if (state.duty_cycle =3D=3D duty_ns && state.period =3D=3D period_ns)
-> +		return 0;
-> +
-> +	state.duty_cycle =3D duty_ns;
-> +	state.period =3D period_ns;
-> +	return pwm_apply_state(pwm, &state);
+> +	if (pwm->chip->ops->get_output_type_supported !=3D NULL)
+> +		return pwm->chip->ops->get_output_type_supported(pwm->chip,
+> +				pwm);
+> +	else
+> +		return PWM_OUTPUT_FIXED;
 > +}
 > +
 > +/**
-> + * pwm_set_polarity() - configure the polarity of a PWM signal
-> + * @pwm: PWM device
-> + * @polarity: new polarity of the PWM signal
-> + *
-> + * Note that the polarity cannot be configured while the PWM device is
-> + * enabled.
-> + *
-> + * Returns: 0 on success or a negative error code on failure.
-> + */
-> +static inline int pwm_set_polarity(struct pwm_device *pwm,
-> +				   enum pwm_polarity polarity)
-> +{
-> +	struct pwm_state state;
-> +
-> +	if (!pwm)
-> +		return -EINVAL;
-> +
-> +	pwm_get_state(pwm, &state);
-> +	if (state.polarity =3D=3D polarity)
-> +		return 0;
-> +
-> +	/*
-> +	 * Changing the polarity of a running PWM without adjusting the
-> +	 * dutycycle/period value is a bit risky (can introduce glitches).
-> +	 * Return -EBUSY in this case.
-> +	 * Note that this is allowed when using pwm_apply_state() because
-> +	 * the user specifies all the parameters.
-> +	 */
-> +	if (state.enabled)
-> +		return -EBUSY;
-> +
-> +	state.polarity =3D polarity;
-> +	return pwm_apply_state(pwm, &state);
-> +}
-> +
-> +/**
->   * pwm_enable() - start a PWM output toggling
+>   * pwm_config() - change a PWM device configuration
 >   * @pwm: PWM device
->   *
+>   * @duty_ns: "on" time (in nanoseconds)
 > --=20
 > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 > a Linux Foundation Collaborative Project
 >=20
 
---O5XBE6gyVG5Rl6Rj
+--m51xatjYGsM+13rf
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1/lZAACgkQ3SOs138+
-s6Gr9w//fWzdVFYyV5O4upWdw2GnsmaWBHWyYbrYTqnnOUJ+shyIUee36nwUEr9c
-TGxLFUIfJrAOCd5zifME3fT+DQouOWdvvicgcUExJUSpetcB9Tcf2eYqnbQtjaox
-VLycmqxFwqzY74nWG6vpSykDNlFdrGtkGRJcxENVW1Rb6DvNbKpf1GVqzhd7VmB6
-Hii42L/li0eN08pwgxLgXmIFZo7wdhQf+wOYjE8BKliRs2hYhaTQX1bYFB8mpEjD
-7mjvxRZeU664MjagRh0Dcxrv4iNGFzRsQroImWKrPivQRIMeBrWZk1n74QKI4G/e
-m+xM72T4qD0I6oJ2tqd/Cm2JiM4UlxcsZMMDDCS8FOCRJiikFMVC8Y+WvjY/gxWI
-qA0MOQXS5IRp+oGSOyngbEqBaRvQmVW5pwN3ZjWQxaogUvkUAbfLehkEtuPit7/t
-oYw8SvTooWxkpNzGnDsmdhgQF2W5pBE+phQwEag7/TVrKCQ4elBuEyslQQ5D5hbp
-u8Z95VP6JOOtSAJxOp7KnZmg+aV8zViq0utF56OYeFE0TZeh/onkCjTdgixcALGc
-qf9oYm/gRClvo15pQhVXiQbp8q2C7OOYdy2iGo6GiCnEC4GuPxpmicaXQ+LAeHjL
-0i481/q/XGq60Rbzl4f8fqtTqFVine3uUJNT/RDkhM8X8EhpF0c=
-=j7hY
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1/lcoACgkQ3SOs138+
+s6GM0A/+IRUR5WGQo40/BHtmMW53AXJJEf7dZK44p/Fnx4wgEG4bIc5bxKYL9ECj
+vXTT5eoVCd17oA1pObpnzXMi4cZDGtVhkr/iYG1Uz+ejAsxESlBwtxdU+qoLIOqd
+iDl0e+pNHwJ1bYCAg2oKMtxLk3fucDnTqZQGL1BEQRZ5xKP1hSFmPwB3hyHiMf9Y
+lo+PAppmylD0CNmGDCLy0eYXq6KuXbiZrmAtdeQ8POpxAV6MJzYSV3hvGODHmSB5
+o5XRfZiP/6ciSncq0go/K8k8kHcNKWM5UwMneUYvSYw9csZtCn4W9y9r14aNOJQz
+L4XCrBKmC16sBHohiG2mJdxEdPLXbqJNLErqJa9LgbljH0rcA3C5OlKYIscIdSI7
+LedrTYo1kBKrHSgM8CXwx0k25ArEDMzYVAe/385A3YDn4/AaTab/k+eNkIfqjj6S
+TgCbIXr+nB1g32S6CUZ65vJXe3M9PBnGTxtCiGeWBKoQWXNRDMqkCPY9kdgT25la
+DFQzEuCcFapWF5HHTILIeCJWGGV02nm6cLkZ2gCT9irOK1f4RilgK2yP4joEJk4X
+MICxurACtQtu6rRiBKsHDauZewdHm7a+ha/6X/m2chOhY+oC+v8SylSsALO5E/tj
+SNmjtSqmMgleEXhjR62+iWRsTXXR4zsr1X2jhHQAgsgG56+ey9U=
+=6J/Y
 -----END PGP SIGNATURE-----
 
---O5XBE6gyVG5Rl6Rj--
+--m51xatjYGsM+13rf--
