@@ -2,361 +2,341 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 48DD4B3C0E
-	for <lists+linux-pwm@lfdr.de>; Mon, 16 Sep 2019 16:02:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73E3DB3C2A
+	for <lists+linux-pwm@lfdr.de>; Mon, 16 Sep 2019 16:07:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388202AbfIPOBx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 16 Sep 2019 10:01:53 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39347 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728154AbfIPOBx (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 16 Sep 2019 10:01:53 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v17so10025018wml.4;
-        Mon, 16 Sep 2019 07:01:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MJLLYmU54a4xaRGmKBckleHVBVuJ7R5VnrshdzzxD4A=;
-        b=MjVYgM0Ui+70erQUFwva8j3TX7YSxY6bZ/0O7fQ5BjrMgbmQ11pq5U6x1lB7tKUsK9
-         LSxy/wBBgXwQ5eMRCOxrokq8U8kolgwUzVvYdMMG3f0P4y+Bvu3NXRfbq5/S88XqZGk5
-         fw8PYMFVLpRVQsR8+MZV0GVegMtnvvv1OSS/nfSollvcZzoLf5YkzUxZEZtOX/zpb8Rq
-         JADhTSqqsgh4JIKz6QqKQdhvi1EgbFMQO6u0yf5zrVHiBbzR73UughkZreXbftTKjo57
-         8hlpmHmKKCePXATKmB9OsiAw8a6YnJYKOk0hZsFhEHYmKuLUqDyhATMQMZT99bIpx8eU
-         fwDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MJLLYmU54a4xaRGmKBckleHVBVuJ7R5VnrshdzzxD4A=;
-        b=PtbmGG85By6XQnGDMJXVmEUIXMY7+BuV7VEJBspn8EiqAR/qaMIlvk+9uuqQPL8rBl
-         tnh+/k3En+zZVY3ieICzEhb48UMwaAB8tw0vE4XQqIwo7OnUK/sCranBe9J4OwjpMrME
-         gtXblwPNog7LY0eAzAPoShtIYNem4lvy39ucgUPkGk0OG4wllXjipPszlyIRu0lO2uQY
-         6+R0MqjgAHBQWYl/nLvwzHfaTi4Dvm6ULyM6dQxULvt/L2kSJ5eZkMvLyLU1raV3njf1
-         vjafyo5TTmH5dFaaaovgdCFLlmQfEIXd8V5JBdv8nGxzqZgW0qgHaeovs0GelszI1eu9
-         uqBA==
-X-Gm-Message-State: APjAAAXX+Vw4qJReprEjMMHBu9r7xv0rHgI/OKAXZ8Q3m9wRyZuaBZzF
-        VYE/hwWI/B14VyGdHILveLo=
-X-Google-Smtp-Source: APXvYqzbfOuk7bFgrhYVh39kc7nSu+vgqGsLzsdEu077Qtm3C0to2fR7+FwuVxpXiTdFpZYWXYkk8w==
-X-Received: by 2002:a1c:a90b:: with SMTP id s11mr15324071wme.92.1568642509221;
-        Mon, 16 Sep 2019 07:01:49 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id m16sm11063893wml.11.2019.09.16.07.01.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 07:01:47 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 16:01:46 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
+        id S2388429AbfIPOHz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 16 Sep 2019 10:07:55 -0400
+Received: from mga14.intel.com ([192.55.52.115]:26302 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388428AbfIPOHz (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 16 Sep 2019 10:07:55 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 07:07:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,512,1559545200"; 
+   d="gz'50?scan'50,208,50";a="201604722"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 16 Sep 2019 07:07:52 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1i9rfU-0006o8-05; Mon, 16 Sep 2019 22:07:51 +0800
+Date:   Mon, 16 Sep 2019 22:07:48 +0800
+From:   kbuild test robot <lkp@intel.com>
 To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     linux-pwm@vger.kernel.org, kernel-team@android.com,
-        Mark Salyzyn <salyzyn@google.com>,
+Cc:     kbuild-all@01.org, linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel-team@android.com, Mark Salyzyn <salyzyn@google.com>,
         Sandeep Patil <sspatil@google.com>,
         Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Fenglin Wu <fenglinw@codeaurora.org>
-Subject: Re: [PATCH 1/2] pwm: Add different PWM output types support
-Message-ID: <20190916140146.GC7488@ulmo>
-References: <1568415464-20267-1-git-send-email-gurus@codeaurora.org>
+        linux-kernel@vger.kernel.org, Fenglin Wu <fenglinw@codeaurora.org>,
+        Guru Das Srinagesh <gurus@codeaurora.org>
+Subject: Re: [PATCH 2/2] pwm: core: Add option to config PWM duty/period with
+ u64 data length
+Message-ID: <201909162236.7IhbnNzS%lkp@intel.com>
+References: <1568415464-20267-2-git-send-email-gurus@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="m51xatjYGsM+13rf"
+Content-Type: multipart/mixed; boundary="z2xevoiqflftl3sp"
 Content-Disposition: inline
-In-Reply-To: <1568415464-20267-1-git-send-email-gurus@codeaurora.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1568415464-20267-2-git-send-email-gurus@codeaurora.org>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---m51xatjYGsM+13rf
+--z2xevoiqflftl3sp
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 13, 2019 at 03:57:43PM -0700, Guru Das Srinagesh wrote:
-> From: Fenglin Wu <fenglinw@codeaurora.org>
->=20
-> Normally, PWM channel has fixed output until software request to change
-> its settings. There are some PWM devices which their outputs could be
-> changed autonomously according to a predefined pattern programmed in
-> hardware. Add pwm_output_type enum type to identify these two different
-> PWM types and add relevant helper functions to set and get PWM output
-> types and pattern.
->=20
-> Change-Id: Ia1f914a45ab4f4dd7be037a395eeb89d0e65a80e
-> Signed-off-by: Fenglin Wu <fenglinw@codeaurora.org>
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> ---
->  drivers/pwm/core.c  | 26 ++++++++++++++++++++
->  drivers/pwm/sysfs.c | 50 ++++++++++++++++++++++++++++++++++++++
->  include/linux/pwm.h | 70 +++++++++++++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 146 insertions(+)
+Hi Guru,
 
-This doesn't seem right to me. Are you describing a PWM pin that's
-actually driven in GPIO mode? We usually configure that using pinctrl.
+Thank you for the patch! Yet something to improve:
 
-Thierry
+[auto build test ERROR on linus/master]
+[cannot apply to v5.3 next-20190915]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
->=20
-> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index 8edfac1..960a451 100644
-> --- a/drivers/pwm/core.c
-> +++ b/drivers/pwm/core.c
-> @@ -282,6 +282,7 @@ int pwmchip_add_with_polarity(struct pwm_chip *chip,
->  		pwm->pwm =3D chip->base + i;
->  		pwm->hwpwm =3D i;
->  		pwm->state.polarity =3D polarity;
-> +		pwm->state.output_type =3D PWM_OUTPUT_FIXED;
-> =20
->  		if (chip->ops->get_state)
->  			chip->ops->get_state(chip, pwm, &pwm->state);
-> @@ -498,6 +499,31 @@ int pwm_apply_state(struct pwm_device *pwm, struct p=
-wm_state *state)
->  			pwm->state.polarity =3D state->polarity;
->  		}
-> =20
-> +		if (state->output_type !=3D pwm->state.output_type) {
-> +			if (!pwm->chip->ops->set_output_type)
-> +				return -ENOTSUPP;
-> +
-> +			err =3D pwm->chip->ops->set_output_type(pwm->chip, pwm,
-> +						state->output_type);
-> +			if (err)
-> +				return err;
-> +
-> +			pwm->state.output_type =3D state->output_type;
-> +		}
-> +
-> +		if (state->output_pattern !=3D pwm->state.output_pattern &&
-> +				state->output_pattern !=3D NULL) {
-> +			if (!pwm->chip->ops->set_output_pattern)
-> +				return -ENOTSUPP;
-> +
-> +			err =3D pwm->chip->ops->set_output_pattern(pwm->chip,
-> +					pwm, state->output_pattern);
-> +			if (err)
-> +				return err;
-> +
-> +			pwm->state.output_pattern =3D state->output_pattern;
-> +		}
-> +
->  		if (state->period !=3D pwm->state.period ||
->  		    state->duty_cycle !=3D pwm->state.duty_cycle) {
->  			err =3D pwm->chip->ops->config(pwm->chip, pwm,
-> diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-> index 2389b86..ab703f2 100644
-> --- a/drivers/pwm/sysfs.c
-> +++ b/drivers/pwm/sysfs.c
-> @@ -215,11 +215,60 @@ static ssize_t capture_show(struct device *child,
->  	return sprintf(buf, "%u %u\n", result.period, result.duty_cycle);
->  }
-> =20
-> +static ssize_t output_type_show(struct device *child,
-> +			     struct device_attribute *attr,
-> +			     char *buf)
-> +{
-> +	const struct pwm_device *pwm =3D child_to_pwm_device(child);
-> +	const char *output_type =3D "unknown";
-> +	struct pwm_state state;
-> +
-> +	pwm_get_state(pwm, &state);
-> +	switch (state.output_type) {
-> +	case PWM_OUTPUT_FIXED:
-> +		output_type =3D "fixed";
-> +		break;
-> +	case PWM_OUTPUT_MODULATED:
-> +		output_type =3D "modulated";
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return snprintf(buf, PAGE_SIZE, "%s\n", output_type);
-> +}
-> +
-> +static ssize_t output_type_store(struct device *child,
-> +			      struct device_attribute *attr,
-> +			      const char *buf, size_t size)
-> +{
-> +	struct pwm_export *export =3D child_to_pwm_export(child);
-> +	struct pwm_device *pwm =3D export->pwm;
-> +	struct pwm_state state;
-> +	int ret =3D -EINVAL;
-> +
-> +	mutex_lock(&export->lock);
-> +	pwm_get_state(pwm, &state);
-> +	if (sysfs_streq(buf, "fixed"))
-> +		state.output_type =3D PWM_OUTPUT_FIXED;
-> +	else if (sysfs_streq(buf, "modulated"))
-> +		state.output_type =3D PWM_OUTPUT_MODULATED;
-> +	else
-> +		goto unlock;
-> +
-> +	ret =3D pwm_apply_state(pwm, &state);
-> +unlock:
-> +	mutex_unlock(&export->lock);
-> +
-> +	return ret ? : size;
-> +}
-> +
->  static DEVICE_ATTR_RW(period);
->  static DEVICE_ATTR_RW(duty_cycle);
->  static DEVICE_ATTR_RW(enable);
->  static DEVICE_ATTR_RW(polarity);
->  static DEVICE_ATTR_RO(capture);
-> +static DEVICE_ATTR_RW(output_type);
-> =20
->  static struct attribute *pwm_attrs[] =3D {
->  	&dev_attr_period.attr,
-> @@ -227,6 +276,7 @@ static ssize_t capture_show(struct device *child,
->  	&dev_attr_enable.attr,
->  	&dev_attr_polarity.attr,
->  	&dev_attr_capture.attr,
-> +	&dev_attr_output_type.attr,
->  	NULL
->  };
->  ATTRIBUTE_GROUPS(pwm);
-> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-> index 24632a7..416f08e 100644
-> --- a/include/linux/pwm.h
-> +++ b/include/linux/pwm.h
-> @@ -48,6 +48,29 @@ enum {
->  	PWMF_EXPORTED =3D 1 << 1,
->  };
-> =20
-> +/**
-> + * enum pwm_output_type - output type of the PWM signal
-> + * @PWM_OUTPUT_FIXED: PWM output is fixed until a change request
-> + * @PWM_OUTPUT_MODULATED: PWM output is modulated in hardware
-> + * autonomously with a predefined pattern
-> + */
-> +enum pwm_output_type {
-> +	PWM_OUTPUT_FIXED =3D 1 << 0,
-> +	PWM_OUTPUT_MODULATED =3D 1 << 1,
-> +};
-> +
-> +/**
-> + * struct pwm_output_pattern - PWM duty pattern for MODULATED duty type
-> + * @duty_pattern: PWM duty cycles in the pattern for duty modulation
-> + * @num_entries: number of entries in the pattern
-> + * @cycles_per_duty: number of PWM period cycles an entry stays at
-> + */
-> +struct pwm_output_pattern {
-> +	unsigned int *duty_pattern;
-> +	unsigned int num_entries;
-> +	unsigned int cycles_per_duty;
-> +};
-> +
->  /*
->   * struct pwm_state - state of a PWM channel
->   * @period: PWM period (in nanoseconds)
-> @@ -59,6 +82,8 @@ struct pwm_state {
->  	unsigned int period;
->  	unsigned int duty_cycle;
->  	enum pwm_polarity polarity;
-> +	enum pwm_output_type output_type;
-> +	struct pwm_output_pattern *output_pattern;
->  	bool enabled;
->  };
-> =20
-> @@ -144,6 +169,26 @@ static inline enum pwm_polarity pwm_get_polarity(con=
-st struct pwm_device *pwm)
->  	return state.polarity;
->  }
-> =20
-> +static inline enum pwm_output_type pwm_get_output_type(
-> +		const struct pwm_device *pwm)
-> +{
-> +	struct pwm_state state;
-> +
-> +	pwm_get_state(pwm, &state);
-> +
-> +	return state.output_type;
-> +}
-> +
-> +static inline struct pwm_output_pattern *pwm_get_output_pattern(
-> +				struct pwm_device *pwm)
-> +{
-> +	struct pwm_state state;
-> +
-> +	pwm_get_state(pwm, &state);
-> +
-> +	return pwm->state.output_pattern ?: NULL;
-> +}
-> +
->  static inline void pwm_get_args(const struct pwm_device *pwm,
->  				struct pwm_args *args)
->  {
-> @@ -250,6 +295,9 @@ static inline void pwm_init_state(const struct pwm_de=
-vice *pwm,
->   * @get_state: get the current PWM state. This function is only
->   *	       called once per PWM device when the PWM chip is
->   *	       registered.
-> + * @get_output_type_supported: get the supported output type
-> + * @set_output_type: set PWM output type
-> + * @set_output_pattern: set the pattern for the modulated output
->   * @owner: helps prevent removal of modules exporting active PWMs
->   * @config: configure duty cycles and period length for this PWM
->   * @set_polarity: configure the polarity of this PWM
-> @@ -265,6 +313,13 @@ struct pwm_ops {
->  		     struct pwm_state *state);
->  	void (*get_state)(struct pwm_chip *chip, struct pwm_device *pwm,
->  			  struct pwm_state *state);
-> +	int (*get_output_type_supported)(struct pwm_chip *chip,
-> +			struct pwm_device *pwm);
-> +	int (*set_output_type)(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			enum pwm_output_type output_type);
-> +	int (*set_output_pattern)(struct pwm_chip *chip,
-> +			struct pwm_device *pwm,
-> +			struct pwm_output_pattern *output_pattern);
->  	struct module *owner;
-> =20
->  	/* Only used by legacy drivers */
-> @@ -320,6 +375,21 @@ struct pwm_capture {
->  int pwm_adjust_config(struct pwm_device *pwm);
-> =20
->  /**
-> + * pwm_output_type_support()
-> + * @pwm: PWM device
-> + *
-> + * Returns:  output types supported by the PWM device
-> + */
-> +static inline int pwm_get_output_type_supported(struct pwm_device *pwm)
-> +{
-> +	if (pwm->chip->ops->get_output_type_supported !=3D NULL)
-> +		return pwm->chip->ops->get_output_type_supported(pwm->chip,
-> +				pwm);
-> +	else
-> +		return PWM_OUTPUT_FIXED;
-> +}
-> +
-> +/**
->   * pwm_config() - change a PWM device configuration
->   * @pwm: PWM device
->   * @duty_ns: "on" time (in nanoseconds)
-> --=20
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->=20
+url:    https://github.com/0day-ci/linux/commits/Guru-Das-Srinagesh/pwm-Add-different-PWM-output-types-support/20190916-151008
+config: arm-multi_v4t_defconfig (attached as .config)
+compiler: arm-linux-gnueabi-gcc (GCC) 7.4.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        GCC_VERSION=7.4.0 make.cross ARCH=arm 
 
---m51xatjYGsM+13rf
-Content-Type: application/pgp-signature; name="signature.asc"
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
------BEGIN PGP SIGNATURE-----
+All errors (new ones prefixed by >>):
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1/lcoACgkQ3SOs138+
-s6GM0A/+IRUR5WGQo40/BHtmMW53AXJJEf7dZK44p/Fnx4wgEG4bIc5bxKYL9ECj
-vXTT5eoVCd17oA1pObpnzXMi4cZDGtVhkr/iYG1Uz+ejAsxESlBwtxdU+qoLIOqd
-iDl0e+pNHwJ1bYCAg2oKMtxLk3fucDnTqZQGL1BEQRZ5xKP1hSFmPwB3hyHiMf9Y
-lo+PAppmylD0CNmGDCLy0eYXq6KuXbiZrmAtdeQ8POpxAV6MJzYSV3hvGODHmSB5
-o5XRfZiP/6ciSncq0go/K8k8kHcNKWM5UwMneUYvSYw9csZtCn4W9y9r14aNOJQz
-L4XCrBKmC16sBHohiG2mJdxEdPLXbqJNLErqJa9LgbljH0rcA3C5OlKYIscIdSI7
-LedrTYo1kBKrHSgM8CXwx0k25ArEDMzYVAe/385A3YDn4/AaTab/k+eNkIfqjj6S
-TgCbIXr+nB1g32S6CUZ65vJXe3M9PBnGTxtCiGeWBKoQWXNRDMqkCPY9kdgT25la
-DFQzEuCcFapWF5HHTILIeCJWGGV02nm6cLkZ2gCT9irOK1f4RilgK2yP4joEJk4X
-MICxurACtQtu6rRiBKsHDauZewdHm7a+ha/6X/m2chOhY+oC+v8SylSsALO5E/tj
-SNmjtSqmMgleEXhjR62+iWRsTXXR4zsr1X2jhHQAgsgG56+ey9U=
-=6J/Y
------END PGP SIGNATURE-----
+   drivers/pwm/pwm-clps711x.o: In function `clps711x_pwm_config':
+>> pwm-clps711x.c:(.text+0x64): undefined reference to `__aeabi_uldivmod'
+   drivers/pwm/pwm-clps711x.o: In function `clps711x_pwm_enable':
+   pwm-clps711x.c:(.text+0x168): undefined reference to `__aeabi_uldivmod'
+   drivers/video/backlight/pwm_bl.o: In function `pwm_backlight_probe':
+>> pwm_bl.c:(.text+0x5fc): undefined reference to `__aeabi_uldivmod'
 
---m51xatjYGsM+13rf--
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+
+--z2xevoiqflftl3sp
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+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
+j29+tMntL5ArsAMozwAA
+
+--z2xevoiqflftl3sp--
