@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 19E82B5B3E
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Sep 2019 07:52:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CC46B5B33
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Sep 2019 07:51:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbfIRFvZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Sep 2019 01:51:25 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:3539 "EHLO
+        id S1728554AbfIRFva (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Sep 2019 01:51:30 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:24519 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728394AbfIRFvZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Sep 2019 01:51:25 -0400
-X-UUID: 832e12c5200549db9849920f8fd16a81-20190918
-X-UUID: 832e12c5200549db9849920f8fd16a81-20190918
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        with ESMTP id S1728394AbfIRFva (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Sep 2019 01:51:30 -0400
+X-UUID: 3bedb23932be4b0f805037f5d569f9fd-20190918
+X-UUID: 3bedb23932be4b0f805037f5d569f9fd-20190918
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
         (envelope-from <sam.shih@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1858826012; Wed, 18 Sep 2019 13:51:18 +0800
+        with ESMTP id 577048816; Wed, 18 Sep 2019 13:51:25 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 18 Sep 2019 13:51:14 +0800
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 18 Sep 2019 13:51:21 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 18 Sep 2019 13:51:14 +0800
+ Transport; Wed, 18 Sep 2019 13:51:21 +0800
 From:   Sam Shih <sam.shih@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -33,9 +33,9 @@ CC:     Ryder Lee <ryder.lee@mediatek.com>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         Sam Shih <sam.shih@mediatek.com>
-Subject: [RESEND, PATCH v7 10/11] dt-bindings: pwm: update bindings for MT7629 SoC
-Date:   Wed, 18 Sep 2019 13:50:10 +0800
-Message-ID: <1568785811-9577-11-git-send-email-sam.shih@mediatek.com>
+Subject: [RESEND, PATCH v7 11/11] arm: dts: mediatek: add mt7629 pwm support
+Date:   Wed, 18 Sep 2019 13:50:11 +0800
+Message-ID: <1568785811-9577-12-git-send-email-sam.shih@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1568785811-9577-1-git-send-email-sam.shih@mediatek.com>
 References: <1568785811-9577-1-git-send-email-sam.shih@mediatek.com>
@@ -47,37 +47,40 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
+This adds pwm support for MT7629.
 
-This updates bindings for MT7629 pwm controller.
-
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
-Changes since v7:
-- add a missed Reviewed-by tag back from v1:
-https://patchwork.kernel.org/patch/10769381/
-Changes since v1:
-- add a Reviewed-by tag
+ arch/arm/boot/dts/mt7629.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
----
- Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-index ea95b490a913..c7bd5633d1eb 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-@@ -6,6 +6,7 @@ Required properties:
-    - "mediatek,mt7622-pwm": found on mt7622 SoC.
-    - "mediatek,mt7623-pwm": found on mt7623 SoC.
-    - "mediatek,mt7628-pwm": found on mt7628 SoC.
-+   - "mediatek,mt7629-pwm", "mediatek,mt7622-pwm": found on mt7629 SoC.
-  - reg: physical base address and length of the controller's registers.
-  - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
-    the cell format.
+diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
+index 9608bc2ccb3f..493be9a9453b 100644
+--- a/arch/arm/boot/dts/mt7629.dtsi
++++ b/arch/arm/boot/dts/mt7629.dtsi
+@@ -241,6 +241,22 @@
+ 			status = "disabled";
+ 		};
+ 
++		pwm: pwm@11006000 {
++			compatible = "mediatek,mt7629-pwm",
++				     "mediatek,mt7622-pwm";
++			reg = <0 0x11006000 0 0x1000>;
++			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&topckgen CLK_TOP_PWM_SEL>,
++				 <&pericfg CLK_PERI_PWM_PD>,
++				 <&pericfg CLK_PERI_PWM1_PD>;
++			clock-names = "top", "main", "pwm1";
++			assigned-clocks = <&topckgen CLK_TOP_PWM_SEL>;
++			assigned-clock-parents =
++					<&topckgen CLK_TOP_UNIVPLL2_D4>;
++			num-pwms = <1>;
++			status = "disabled";
++		};
++
+ 		i2c: i2c@11007000 {
+ 			compatible = "mediatek,mt7629-i2c",
+ 				     "mediatek,mt2712-i2c";
 -- 
 2.17.1
 
