@@ -2,135 +2,123 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 96CDCB7BA1
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Sep 2019 16:06:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7D4BB879B
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Sep 2019 00:50:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389519AbfISOGh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Sep 2019 10:06:37 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41464 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389025AbfISOGf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Sep 2019 10:06:35 -0400
-Received: by mail-lj1-f196.google.com with SMTP id f5so3730456ljg.8
-        for <linux-pwm@vger.kernel.org>; Thu, 19 Sep 2019 07:06:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Jg7JcvREMiiX5x2HEJEjAcDv3XByVb0RNmStAp9nahQ=;
-        b=MZKdSEpOEV+5iG16oW7TXFRd1eg5H9XeUG6b1t8t2jgOvEG6oGHacyhtyg3NPIEGY/
-         uKiTYPItaGHpX/90K1aP/bPkpA8b+8k/Rldl4zxvx2B9det3NTU55vbdyWW1nSSp9eg3
-         YRFw3EAaRrmgYhPjv9gwnV6JQyEwF2erlvjsw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Jg7JcvREMiiX5x2HEJEjAcDv3XByVb0RNmStAp9nahQ=;
-        b=t96EILSP7NivYOs+IDPv+ag9zdW8jkQqYMI7NT5vIqH0v5lB4YfhToV5u20CK3IfHq
-         dRMks4Xh09+xzfhd8lAoZ4VhVweIoiVuUkTKDA81y8HKVniCB3OxsDRynQsZ6wb3P9Ra
-         07peBlL42/CqHLPnICeSGadBCJF5EAhx4id9ksKvHVoc0hK/0HkXbFn1MR2LjxhezenY
-         kqmvdhbZtYq1RHGG3IgXpzvhkyHI92y2QeCMq29n/KFJZbkjKA11j6DQfDqthIQ2QaMF
-         nYEHdM30QgVgRSSUiKS7SYX8cOoEdiQ3gHb+RS6gn12u6Z3f+NkdcSXsspdt2D7pipTA
-         PVdQ==
-X-Gm-Message-State: APjAAAU4qg/3WK19qmHNt4fxIvNujI+lbNaEvPGuJ3XF90RnMBTFdIKK
-        i8hQ1uFCXB0tcZKD2+i1kX5SdQ==
-X-Google-Smtp-Source: APXvYqwT7aVA83Vb4qPr4tBmMd1vi6mmQP81J4Kl4kTliuCxLy+GI3jRKm2Szplr4kWj55N1eonI9A==
-X-Received: by 2002:a05:651c:c9:: with SMTP id 9mr107103ljr.29.1568901992739;
-        Thu, 19 Sep 2019 07:06:32 -0700 (PDT)
-Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id h3sm1687886ljf.12.2019.09.19.07.06.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 07:06:32 -0700 (PDT)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] backlight: pwm_bl: switch to power-of-2 base for fixed-point math
-Date:   Thu, 19 Sep 2019 16:06:19 +0200
-Message-Id: <20190919140620.32407-4-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190919140620.32407-1-linux@rasmusvillemoes.dk>
-References: <20190919140620.32407-1-linux@rasmusvillemoes.dk>
+        id S2390260AbfISWuA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 19 Sep 2019 18:50:00 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:35463 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389023AbfISWt7 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Sep 2019 18:49:59 -0400
+X-UUID: a7044866f2f1420e87633eef95e94b06-20190920
+X-UUID: a7044866f2f1420e87633eef95e94b06-20190920
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1816646468; Fri, 20 Sep 2019 06:49:54 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 20 Sep 2019 06:49:48 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 20 Sep 2019 06:49:48 +0800
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Sam Shih <sam.shih@mediatek.com>
+Subject: [PATCH v9 0/11] Add mt7629 and fix mt7628 pwm
+Date:   Fri, 20 Sep 2019 06:49:00 +0800
+Message-ID: <1568933351-8584-1-git-send-email-sam.shih@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: E18B8C972B43F1D1F32E001CB69C38189E2D0D039B9154FF9508845B5D1A95982000:8
+X-MTK:  N
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Using a power-of-2 instead of power-of-10 base makes the computations
-much cheaper. 2^16 is safe; retval never becomes more than 2^48 +
-2^16/2. On a 32 bit platform, the very expensive 64/32 division at the
-end of cie1931() instead becomes essentially free (a shift by 32 is
-just a register rename).
+Changes since v9:
+  1. PATCH 03/11: Add an Acked-by tag
 
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
----
- drivers/video/backlight/pwm_bl.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+Changes since v8:
+  1. Fix warning and build-error for patch 04/11
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index aee6839e024a..102bc191310f 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -148,7 +148,8 @@ static const struct backlight_ops pwm_backlight_ops = {
- };
- 
- #ifdef CONFIG_OF
--#define PWM_LUMINANCE_SCALE	10000 /* luminance scale */
-+#define PWM_LUMINANCE_SHIFT	16
-+#define PWM_LUMINANCE_SCALE	(1 << PWM_LUMINANCE_SHIFT) /* luminance scale */
- 
- /*
-  * CIE lightness to PWM conversion.
-@@ -165,23 +166,25 @@ static const struct backlight_ops pwm_backlight_ops = {
-  * The following function does the fixed point maths needed to implement the
-  * above formula.
-  */
--static u64 cie1931(unsigned int lightness, unsigned int scale)
-+static u64 cie1931(unsigned int lightness)
- {
- 	u64 retval;
- 
- 	/*
- 	 * @lightness is given as a number between 0 and 1, expressed
--	 * as a fixed-point number in scale @scale. Convert to a
--	 * percentage, still expressed as a fixed-point number, so the
--	 * above formulas can be applied.
-+	 * as a fixed-point number in scale
-+	 * PWM_LUMINANCE_SCALE. Convert to a percentage, still
-+	 * expressed as a fixed-point number, so the above formulas
-+	 * can be applied.
- 	 */
- 	lightness *= 100;
--	if (lightness <= (8 * scale)) {
-+	if (lightness <= (8 * PWM_LUMINANCE_SCALE)) {
- 		retval = DIV_ROUND_CLOSEST(lightness * 10, 9033);
- 	} else {
--		retval = (lightness + (16 * scale)) / 116;
-+		retval = (lightness + (16 * PWM_LUMINANCE_SCALE)) / 116;
- 		retval *= retval * retval;
--		retval = DIV_ROUND_CLOSEST_ULL(retval, (scale * scale));
-+		retval += PWM_LUMINANCE_SCALE/2;
-+		retval >>= 2*PWM_LUMINANCE_SHIFT;
- 	}
- 
- 	return retval;
-@@ -215,8 +218,7 @@ int pwm_backlight_brightness_default(struct device *dev,
- 	/* Fill the table using the cie1931 algorithm */
- 	for (i = 0; i < data->max_brightness; i++) {
- 		retval = cie1931((i * PWM_LUMINANCE_SCALE) /
--				 data->max_brightness, PWM_LUMINANCE_SCALE) *
--				 period;
-+				 data->max_brightness) * period;
- 		retval = DIV_ROUND_CLOSEST_ULL(retval, PWM_LUMINANCE_SCALE);
- 		if (retval > UINT_MAX)
- 			return -EINVAL;
+Changes since v7:
+  1. PATCH v7 10/11: Add a missed Reviewed-by tag
+
+Changes since v6:
+  1. Due to we can use fixed-clock in DT
+     We removed has_clks and fixed-clock properties 
+
+Changes since v5:
+- Follow reviewer's comments:
+  1. the license stuff is a separate change
+  2. split fix mt7628 pwm into a single patch
+  3. to ensure to not use mtk_pwm_clk_name[10] 
+     (After dynamic allocate clock array patch, 
+      this is no need to check)
+  4. Use clock-frequency property to replace 
+     the use of has_clks
+
+Changes since v4:
+- Follow reviewer's comments (v3: pwm: mediatek: add a property "num-pwms")
+  Move the changes of droping the check for of_device_get_match_data
+  returning non-NULL to next patch
+- Follow reviewers's comments 
+  (v3: pwm: mediatek: allocate the clks array dynamically)
+  1. use pc->soc->has_clks to check clocks exist or not.
+  2. Add error message when probe() unable to get clks
+- Fixes bug when SoC is old mips which has no complex clock tree.
+if clocks not exist, use the new property from DT to apply period 
+calculation; otherwise, use clk_get_rate to get clock frequency and 
+apply period calculation.
+
+Changes since v3:
+- add a new property "clock-frequency" and fix mt7628 pwm
+- add mt7629 pwm support
+
+Changes since v2:
+- use num-pwms instead of mediatek,num-pwms.
+- rename the member from num_pwms to fallback_num_pwms to make it 
+  more obvious that it doesn't represent the actually used value.
+- add a dev_warn and a expressive comment to help other developers 
+  to not start adding num_pwms in the compatible_data.
+
+Changes since v1:
+- add some checks for backwards compatibility.
+
+
+Ryder Lee (5):
+  pwm: mediatek: add a property "num-pwms"
+  dt-bindings: pwm: add a property "num-pwms"
+  arm64: dts: mt7622: add a property "num-pwms" for PWM
+  arm: dts: mt7623: add a property "num-pwms" for PWM
+  dt-bindings: pwm: update bindings for MT7629 SoC
+
+Sam Shih (6):
+  pwm: mediatek: droping the check for of_device_get_match_data
+  pwm: mediatek: remove a property "has-clks"
+  pwm: mediatek: allocate the clks array dynamically
+  pwm: mediatek: use pwm_mediatek as common prefix
+  pwm: mediatek: update license and switch to SPDX tag
+  arm: dts: mediatek: add mt7629 pwm support
+
+ .../devicetree/bindings/pwm/pwm-mediatek.txt  |   8 +-
+ arch/arm/boot/dts/mt7623.dtsi                 |   1 +
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi      |   1 +
+ drivers/pwm/pwm-mediatek.c                    | 245 +++++++++---------
+ arch/arm/boot/dts/mt7629.dtsi                 | 16 ++++++++++++++++
+ 5 files changed, 149 insertions(+), 122 deletions(-)
+
 -- 
-2.20.1
+2.17.1
 
