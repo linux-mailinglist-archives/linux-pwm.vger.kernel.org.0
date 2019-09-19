@@ -2,84 +2,111 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 50DE2B783D
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Sep 2019 13:11:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9ABA8B7B98
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Sep 2019 16:06:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387693AbfISLLX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Sep 2019 07:11:23 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38291 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387690AbfISLLX (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Sep 2019 07:11:23 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iAuLF-0001IP-5b; Thu, 19 Sep 2019 13:11:17 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iAuLD-0002qQ-8O; Thu, 19 Sep 2019 13:11:15 +0200
-Date:   Thu, 19 Sep 2019 13:11:15 +0200
-From:   oUwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        David Wu <david.wu@rock-chips.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: rockchip: simplify rockchip_pwm_get_state()
-Message-ID: <20190919111115.5oraof2bdl4627xv@pengutronix.de>
-References: <20190919091728.24756-1-linux@rasmusvillemoes.dk>
+        id S2388656AbfISOGa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 19 Sep 2019 10:06:30 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34348 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388616AbfISOGa (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Sep 2019 10:06:30 -0400
+Received: by mail-lf1-f66.google.com with SMTP id r22so2487151lfm.1
+        for <linux-pwm@vger.kernel.org>; Thu, 19 Sep 2019 07:06:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9jGZhci6ir2QQxaMaZ4RPKwsW6VmlML93zQ3UVVvLVc=;
+        b=OCn3gIYj+wUYxAtXas8eOyf4fSEWhP2JZywuNcvWhoXd2re/NpOYXHVgx+ktYyP5cV
+         f+T9+6Yleq+jPzmdljsDSTYYkv0hRJ4OXI6VngwNHBQhZ+MPKG8XvWun3Tnm4NO4agx6
+         jyhuQWbNOO26WlFgyizU4iA2+osQUAPnhKYiE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9jGZhci6ir2QQxaMaZ4RPKwsW6VmlML93zQ3UVVvLVc=;
+        b=VZjcoyP4/3Qq/M1Uob/hQn35D0h3kxFifidzvDZPT6y71abDlFmI42gBoNp5SLQtBC
+         BI1fXnJyg8zTtwkBr7dP8bxV8F8mBXZYieIBY7fgwPcjS95VjBxSEaEAd9YDV5MUCvwe
+         /hDEAIFCkfpfHt6HHx+wznsENhm36SGAjKQ4jdxyMM6DrBzLd0s4LdHAzeA52yKWk46L
+         a+etoSYDqa3Ln0FMDKUII9sPtp33QdPpw7Jcr7eaCxspfjagcYsZGwjKgISq5oIvrVpK
+         zNsBDf5SHsq90/ohY0+w6wodHQ9d9RfzqDm9f5v9tghNYlDbsL7ZdjlkTuCpPfGmAmgy
+         ZMwg==
+X-Gm-Message-State: APjAAAV8VPHqwQJpxUcQyhfmM9AJstWPeXs/ZjzB5Ld6/VizJvkts/d7
+        azjL0eU3tY1sa+jQgRncM8wQMg==
+X-Google-Smtp-Source: APXvYqx94tejJIy0k7sD7BxbdRz2nLUSrH5aFo9cmoMdLo9lK0ILNVQtax9BnK0daUvVanbqCyRpiw==
+X-Received: by 2002:ac2:51a7:: with SMTP id f7mr5064133lfk.119.1568901989001;
+        Thu, 19 Sep 2019 07:06:29 -0700 (PDT)
+Received: from prevas-ravi.prevas.se ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id h3sm1687886ljf.12.2019.09.19.07.06.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 07:06:28 -0700 (PDT)
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/5] backlight: pwm_bl: fix cie1913 comments and constant
+Date:   Thu, 19 Sep 2019 16:06:16 +0200
+Message-Id: <20190919140620.32407-1-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190919091728.24756-1-linux@rasmusvillemoes.dk>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 11:17:27AM +0200, Rasmus Villemoes wrote:
-> The way state->enabled is computed is rather convoluted and hard to
-> read - both branches of the if() actually do the exact same thing. So
-> remove the if(), and further simplify "<boolean condition> ? true :
-> false" to "<boolean condition>".
-> 
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> ---
-> I stumbled on this while trying to understand how the pwm subsystem
-> works. This patch is a semantic no-op, but it's also possible that,
-> say, the first branch simply contains a "double negative" so either
-> the != should be == or the "false : true" should be "true : false".
+The "break-even" point for the two formulas is L==8, which is also
+what the code actually implements. [Incidentally, at that point one
+has Y=0.008856, not 0.08856].
 
-The change looks obviously right, it's a noop.
+Moreover, all the sources I can find say the linear factor is 903.3
+rather than 902.3, which makes sense since then the formulas agree at
+L==8, both yielding the 0.008856 figure to four significant digits.
 
-I share your doubts however. The construct was introduced in commit 
-831b2790507b ("pwm: rockchip: Use same PWM ops for each IP") by David
-Wu.
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+---
+ drivers/video/backlight/pwm_bl.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-Before there were rockchip_pwm_get_state_v1 for the supports_polarity =
-false case and rockchip_pwm_get_state_v2 for supports_polarity = true.
-
-In both state->enabled was assigned true if ((val & enable_conf) ==
-enable_conf). So I assume everything is fine.
-
-A confirmation by David would be great though.
-
-As a side note: Is there publicly available documentation for this IP?
-If a link were added to the driver's header we could check easily
-ourselves.
-
-Best regards
-Uwe
-
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index 2201b8c78641..be36be1cacb7 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -155,8 +155,8 @@ static const struct backlight_ops pwm_backlight_ops = {
+  *
+  * The CIE 1931 lightness formula is what actually describes how we perceive
+  * light:
+- *          Y = (L* / 902.3)           if L* ≤ 0.08856
+- *          Y = ((L* + 16) / 116)^3    if L* > 0.08856
++ *          Y = (L* / 903.3)           if L* ≤ 8
++ *          Y = ((L* + 16) / 116)^3    if L* > 8
+  *
+  * Where Y is the luminance, the amount of light coming out of the screen, and
+  * is a number between 0.0 and 1.0; and L* is the lightness, how bright a human
+@@ -169,9 +169,15 @@ static u64 cie1931(unsigned int lightness, unsigned int scale)
+ {
+ 	u64 retval;
+ 
++	/*
++	 * @lightness is given as a number between 0 and 1, expressed
++	 * as a fixed-point number in scale @scale. Convert to a
++	 * percentage, still expressed as a fixed-point number, so the
++	 * above formulas can be applied.
++	 */
+ 	lightness *= 100;
+ 	if (lightness <= (8 * scale)) {
+-		retval = DIV_ROUND_CLOSEST_ULL(lightness * 10, 9023);
++		retval = DIV_ROUND_CLOSEST_ULL(lightness * 10, 9033);
+ 	} else {
+ 		retval = int_pow((lightness + (16 * scale)) / 116, 3);
+ 		retval = DIV_ROUND_CLOSEST_ULL(retval, (scale * scale));
 -- 
-Pengutronix e.K.                           | Uwe Kleine-K�nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.20.1
+
