@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E733DB87A9
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Sep 2019 00:50:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 141B7B87A5
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Sep 2019 00:50:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405729AbfISWur (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Sep 2019 18:50:47 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:58454 "EHLO
+        id S2405902AbfISWus (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 19 Sep 2019 18:50:48 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:30362 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2404705AbfISWur (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Sep 2019 18:50:47 -0400
-X-UUID: 84bc3b745cde4057b8f50c887d41625a-20190920
-X-UUID: 84bc3b745cde4057b8f50c887d41625a-20190920
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        with ESMTP id S2405645AbfISWus (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Sep 2019 18:50:48 -0400
+X-UUID: 69ed344e10414a15bd61ec291e97afd3-20190920
+X-UUID: 69ed344e10414a15bd61ec291e97afd3-20190920
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
         (envelope-from <sam.shih@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 572780076; Fri, 20 Sep 2019 06:50:42 +0800
+        with ESMTP id 1590415493; Fri, 20 Sep 2019 06:50:45 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 20 Sep 2019 06:50:36 +0800
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 20 Sep 2019 06:50:39 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 20 Sep 2019 06:50:36 +0800
+ Transport; Fri, 20 Sep 2019 06:50:39 +0800
 From:   Sam Shih <sam.shih@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -33,69 +33,128 @@ CC:     Ryder Lee <ryder.lee@mediatek.com>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v9 02/11] pwm: mediatek: droping the check for of_device_get_match_data
-Date:   Fri, 20 Sep 2019 06:49:02 +0800
-Message-ID: <1568933351-8584-3-git-send-email-sam.shih@mediatek.com>
+Subject: [PATCH v9 03/11] pwm: mediatek: remove a property "has-clks"
+Date:   Fri, 20 Sep 2019 06:49:03 +0800
+Message-ID: <1568933351-8584-4-git-send-email-sam.shih@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1568933351-8584-1-git-send-email-sam.shih@mediatek.com>
 References: <1568933351-8584-1-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: 6995D0CD1E89DD8C55A65645E857674A0AC324C17485BA14F03EFFC00924B0E02000:8
 X-MTK:  N
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This patch drop the check for of_device_get_match_data.
-Due to the only way call driver probe is compatible match.
-The .data pointer which point to the SoC specify data is
-directly set by driver, and it should not be NULL in our case.
-We can safety remove the check for of_device_get_match_data.
+We can use fixed-clock to repair mt7628 pwm during configure from
+userspace. The SoC is legacy MIPS and has no complex clock tree.
+Due to we can get clock frequency for period calculation from DT
+fixed-clock, so we can remove has-clock property, and directly
+use devm_clk_get and clk_get_rate.
 
 Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Acked-by: Uwe Kleine-Kö <u.kleine-koenig@pengutronix.de>
 ---
-Used:
-https://patchwork.kernel.org/patch/11096905/
+Changes since v9:
+Added an Acked-by tag
+
 Changes since v6:
-Add an Acked-by tag
+Based on fixed-clock in DT, we can remove has-clks property
+
+Changes since v5:
+1. Follow reviewer's comments
+Make the changes of fix mt7628 pwm as a single patch
 
 Changes since v4:
-Follow reviewer's comments:
-Move the changes of droping the check for of_device_get_match_data
-returning non-NULL to this patch
-
+- Follow reviewers's comments
+1. use pc->soc->has_clks to check clocks exist or not.
+2. Add error message when probe() unable to get clks
+- Fixes bug when SoC is old mips which has no complex clock tree.
+if clocks not exist, use the new property from DT to apply period caculation;
+otherwise, use clk_get_rate to get clock frequency and apply period caculation.
 ---
- drivers/pwm/pwm-mediatek.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/pwm/pwm-mediatek.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index e214f4f57107..ebd62629e3fe 100644
+index ebd62629e3fe..07e843aeddb1 100644
 --- a/drivers/pwm/pwm-mediatek.c
 +++ b/drivers/pwm/pwm-mediatek.c
-@@ -226,7 +226,6 @@ static const struct pwm_ops mtk_pwm_ops = {
+@@ -57,7 +57,6 @@ static const char * const mtk_pwm_clk_name[MTK_CLK_MAX] = {
+ struct mtk_pwm_platform_data {
+ 	unsigned int fallback_npwms;
+ 	bool pwm45_fixup;
+-	bool has_clks;
+ };
  
- static int mtk_pwm_probe(struct platform_device *pdev)
+ /**
+@@ -87,9 +86,6 @@ static int mtk_pwm_clk_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
+ 	int ret;
+ 
+-	if (!pc->soc->has_clks)
+-		return 0;
+-
+ 	ret = clk_prepare_enable(pc->clks[MTK_CLK_TOP]);
+ 	if (ret < 0)
+ 		return ret;
+@@ -116,9 +112,6 @@ static void mtk_pwm_clk_disable(struct pwm_chip *chip, struct pwm_device *pwm)
  {
--	const struct mtk_pwm_platform_data *data;
- 	struct device_node *np = pdev->dev.of_node;
- 	struct mtk_pwm_chip *pc;
- 	struct resource *res;
-@@ -237,10 +236,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
- 	if (!pc)
- 		return -ENOMEM;
+ 	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
  
--	data = of_device_get_match_data(&pdev->dev);
--	if (data == NULL)
--		return -EINVAL;
--	pc->soc = data;
-+	pc->soc = of_device_get_match_data(&pdev->dev);
+-	if (!pc->soc->has_clks)
+-		return;
+-
+ 	clk_disable_unprepare(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
+ 	clk_disable_unprepare(pc->clks[MTK_CLK_MAIN]);
+ 	clk_disable_unprepare(pc->clks[MTK_CLK_TOP]);
+@@ -262,11 +255,13 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+ 		npwms = MTK_CLK_MAX - 2;
+ 	}
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	pc->regs = devm_ioremap_resource(&pdev->dev, res);
+-	for (i = 0; i < npwms + 2 && pc->soc->has_clks; i++) {
+-		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
++	for (i = 0; i < npwms + 2 ; i++) {
++		pc->clks[i] = devm_clk_get(&pdev->dev,
++					  mtk_pwm_clk_name[i]);
+ 		if (IS_ERR(pc->clks[i])) {
+ 			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
+-				mtk_pwm_clk_name[i], PTR_ERR(pc->clks[i]));
++				mtk_pwm_clk_name[i],
++				PTR_ERR(pc->clks[i]));
+ 			return PTR_ERR(pc->clks[i]);
+ 		}
+ 	}
+@@ -297,25 +292,21 @@ static int mtk_pwm_remove(struct platform_device *pdev)
+ static const struct mtk_pwm_platform_data mt2712_pwm_data = {
+ 	.fallback_npwms = 8,
+ 	.pwm45_fixup = false,
+-	.has_clks = true,
+ };
+ 
+ static const struct mtk_pwm_platform_data mt7622_pwm_data = {
+ 	.fallback_npwms = 6,
+ 	.pwm45_fixup = false,
+-	.has_clks = true,
+ };
+ 
+ static const struct mtk_pwm_platform_data mt7623_pwm_data = {
+ 	.fallback_npwms = 5,
+ 	.pwm45_fixup = true,
+-	.has_clks = true,
+ };
+ 
+ static const struct mtk_pwm_platform_data mt7628_pwm_data = {
+ 	.fallback_npwms = 4,
+ 	.pwm45_fixup = true,
+-	.has_clks = false,
+ };
+ 
+ static const struct of_device_id mtk_pwm_of_match[] = {
 -- 
 2.17.1
 
