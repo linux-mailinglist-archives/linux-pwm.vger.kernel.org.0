@@ -2,100 +2,157 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 12035BAF09
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Sep 2019 10:14:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 159F8BAF4C
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Sep 2019 10:25:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437137AbfIWIOA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Sep 2019 04:14:00 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38608 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437271AbfIWIOA (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Sep 2019 04:14:00 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u28so9377017lfc.5
-        for <linux-pwm@vger.kernel.org>; Mon, 23 Sep 2019 01:13:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yaEGfYYzHwOCfVyIlgvVjUBZGDRTASgoNwVywAAbPHY=;
-        b=ewfXG73buI74XMq7fZvVCWZKlgR+0TiV4JG9jO/fe49Cgrg27am4riX0e0bPmvYroq
-         u1b3ifBwwoH+Hu3VVrsI7kvp9IgLIBUnoVgqO1+NL1lZp+dR74yHyrgZ1unaAXzC4J6X
-         kayGRA9zv0hm5PTVKc5F3g/2+TsbFV+athuPM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yaEGfYYzHwOCfVyIlgvVjUBZGDRTASgoNwVywAAbPHY=;
-        b=sPV/LJ0GtXLSP3/ZDv38hheyZ6pkLBI6REZpM53LgbRtxMcIeWmFkMywWZEDamQnU3
-         mRfaoQY0oReYV0O3hnsDqJ8jHbVK9t3j32mmNkdHTxqyfhE779NySLyV8oH1zu9UDp7c
-         s8Di5XpoiWBPlGgB1BxZ3Zo5aJa3Di5qIXJ1Bx78qckhzJUzKYYaLYr9igvxBOsMtDhh
-         0IKW7nDVqyskLB9GIzIbRR/yOaZhrydwlE/1ryodIpFYcSMKtADrPKkMXoZEgXFaRXcj
-         w+AGW2cN5DOkHmKMN4MZSTlOK5LGEZh54NaWTCYR5rcVtcBAtyg0CDV1j/mzg96LhXVz
-         Y5eg==
-X-Gm-Message-State: APjAAAXyz6Lkkjz4+i5xyKYp2OU2DmHbJ5D0wrec5gKminougN/znkEx
-        7E9nHlR7hmF70DbDOHIXzOyq7Q==
-X-Google-Smtp-Source: APXvYqwa45HyJC3lNRp5/zE7lrzcpW7gGM4PVnCUaEY3v11W5wPXc/WNYcX42D8uo4bAGlw71Tm2Fg==
-X-Received: by 2002:a19:c396:: with SMTP id t144mr16546948lff.14.1569226436978;
-        Mon, 23 Sep 2019 01:13:56 -0700 (PDT)
-Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id c21sm2054946lff.61.2019.09.23.01.13.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 01:13:56 -0700 (PDT)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        id S2405296AbfIWIZD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 23 Sep 2019 04:25:03 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:34637 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406068AbfIWIZD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Sep 2019 04:25:03 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iCJeW-000794-FX; Mon, 23 Sep 2019 10:25:00 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iCJeV-0008W6-GZ; Mon, 23 Sep 2019 10:24:59 +0200
+Date:   Mon, 23 Sep 2019 10:24:59 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     devicetree@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] dt-bindings: pwm: mxs-pwm: Increase #pwm-cells
-Date:   Mon, 23 Sep 2019 10:13:48 +0200
-Message-Id: <20190923081348.6843-5-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190923081348.6843-1-linux@rasmusvillemoes.dk>
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/4] pwm: mxs: implement ->apply
+Message-ID: <20190923082459.huqpbz5eseonkscv@pengutronix.de>
 References: <20190923081348.6843-1-linux@rasmusvillemoes.dk>
+ <20190923081348.6843-2-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190923081348.6843-2-linux@rasmusvillemoes.dk>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-We need to increase the pwm-cells for the optional flags parameter, in
-order to implement support for polarity setting via DT.
+Hello Rasmus,
 
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
----
- Documentation/devicetree/bindings/pwm/mxs-pwm.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Mon, Sep 23, 2019 at 10:13:45AM +0200, Rasmus Villemoes wrote:
+> In preparation for supporting setting the polarity, switch the driver
+> to support the ->apply method.
+> 
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> ---
+>  drivers/pwm/pwm-mxs.c | 62 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+> 
+> diff --git a/drivers/pwm/pwm-mxs.c b/drivers/pwm/pwm-mxs.c
+> index 04c0f6b95c1a..c70c26a9ff68 100644
+> --- a/drivers/pwm/pwm-mxs.c
+> +++ b/drivers/pwm/pwm-mxs.c
+> @@ -26,6 +26,7 @@
+>  #define  PERIOD_PERIOD_MAX	0x10000
+>  #define  PERIOD_ACTIVE_HIGH	(3 << 16)
+>  #define  PERIOD_INACTIVE_LOW	(2 << 18)
+> +#define  PERIOD_POLARITY_NORMAL	(PERIOD_ACTIVE_HIGH | PERIOD_INACTIVE_LOW)
+>  #define  PERIOD_CDIV(div)	(((div) & 0x7) << 20)
+>  #define  PERIOD_CDIV_MAX	8
+>  
+> @@ -41,6 +42,66 @@ struct mxs_pwm_chip {
+>  
+>  #define to_mxs_pwm_chip(_chip) container_of(_chip, struct mxs_pwm_chip, chip)
+>  
+> +static int mxs_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			 struct pwm_state *state)
+> +{
+> +	struct mxs_pwm_chip *mxs = to_mxs_pwm_chip(chip);
+> +	int ret, div = 0;
+> +	unsigned int period_cycles, duty_cycles;
+> +	unsigned long rate;
+> +	unsigned long long c;
+> +
+> +	if (state->polarity != PWM_POLARITY_NORMAL)
+> +		return -ENOTSUPP;
+> +
+> +	rate = clk_get_rate(mxs->clk);
+> +	while (1) {
+> +		c = rate / cdiv[div];
+> +		c = c * state->period;
+> +		do_div(c, 1000000000);
+> +		if (c < PERIOD_PERIOD_MAX)
+> +			break;
+> +		div++;
+> +		if (div >= PERIOD_CDIV_MAX)
+> +			return -EINVAL;
+> +	}
+> +
+> +	period_cycles = c;
+> +	c *= state->duty_cycle;
+> +	do_div(c, state->period);
+> +	duty_cycles = c;
+> +
+> +	/*
+> +	 * If the PWM channel is disabled, make sure to turn on the clock
+> +	 * before writing the register. Otherwise, keep it enabled.
+> +	 */
+> +	if (!pwm_is_enabled(pwm)) {
+> +		ret = clk_prepare_enable(mxs->clk);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	writel(duty_cycles << 16,
+> +	       mxs->base + PWM_ACTIVE0 + pwm->hwpwm * 0x20);
+> +	writel(PERIOD_PERIOD(period_cycles) | PERIOD_POLARITY_NORMAL | PERIOD_CDIV(div),
+> +	       mxs->base + PWM_PERIOD0 + pwm->hwpwm * 0x20);
+> +
+> +	if (state->enabled) {
+> +		if (!pwm_is_enabled(pwm)) {
+> +			/*
+> +			 * The clock was enabled above. Just enable
+> +			 * the channel in the control register.
+> +			 */
+> +			writel(1 << pwm->hwpwm, mxs->base + PWM_CTRL + SET);
+> +		}
+> +	} else {
+> +		if (pwm_is_enabled(pwm))
+> +			writel(1 << pwm->hwpwm, mxs->base + PWM_CTRL + CLR);
+> +		clk_disable_unprepare(mxs->clk);
+> +	}
+> +	return 0;
+> +}
 
-diff --git a/Documentation/devicetree/bindings/pwm/mxs-pwm.txt b/Documentation/devicetree/bindings/pwm/mxs-pwm.txt
-index 96cdde5f6208..1697dcd3b07c 100644
---- a/Documentation/devicetree/bindings/pwm/mxs-pwm.txt
-+++ b/Documentation/devicetree/bindings/pwm/mxs-pwm.txt
-@@ -3,7 +3,7 @@ Freescale MXS PWM controller
- Required properties:
- - compatible: should be "fsl,imx23-pwm"
- - reg: physical base address and length of the controller's registers
--- #pwm-cells: should be 2. See pwm.txt in this directory for a description of
-+- #pwm-cells: should be 3. See pwm.txt in this directory for a description of
-   the cells format.
- - fsl,pwm-number: the number of PWM devices
- 
-@@ -12,6 +12,6 @@ Example:
- pwm: pwm@80064000 {
- 	compatible = "fsl,imx28-pwm", "fsl,imx23-pwm";
- 	reg = <0x80064000 0x2000>;
--	#pwm-cells = <2>;
-+	#pwm-cells = <3>;
- 	fsl,pwm-number = <8>;
- };
+Maybe it would be easier to review when converting from .config +
+.enable + .disable to .apply in a single step. (Note this "maybe" is
+honest, I'm not entirely sure.)
+
+There is a bug: If the PWM is running at (say) period=100ms, duty=0ms
+and we call
+pwm_apply_state(pwm, { .enabled = false, duty=100000, period=1000000 });
+the output might get high which it should not.
+
+Also there is a bug already in .config: You are not supposed to call
+clk_get_rate if the clk might be off.
+
+Best regards
+Uwe
+
 -- 
-2.20.1
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
