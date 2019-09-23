@@ -2,208 +2,192 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C8DB5BB587
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Sep 2019 15:36:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD8C1BB796
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Sep 2019 17:12:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730617AbfIWNgz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Sep 2019 09:36:55 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37449 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730554AbfIWNgy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Sep 2019 09:36:54 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f22so2213198wmc.2;
-        Mon, 23 Sep 2019 06:36:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yH2Z3eB11JStYll32sor1zY2h8/0gzevYqkhkFZ31BY=;
-        b=YMaiVB/O5nOQIawf2+AD07JImIMw9lFdKXicFGJvicXXLOGZEVzXAJ9PSYsvu/6F9h
-         vfHwQuMzxtvizf+AjralsFCB4FS8RzqrZqoFduivuO+MSrC6VTPXYozIKl3Zcdvbu6E3
-         PRL9NV3aYRtXAikXdssBNwNc6yEiuYCcnVwspYu0wOLe6imQ8dX/UkDE2rQU8CaVHchX
-         V8pO2lpVH8FV4EEaqWps4aYuqCM0JMmKw9w1/W2Q4PkmmdjETVwniVQViADb9ZMhJvvN
-         BaBloaGPPT9T+NSsgv521PJR+pt9o9PA0zPN66au7+SlizhDQyIzmpTFJBfbMVdjSq0y
-         7DLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yH2Z3eB11JStYll32sor1zY2h8/0gzevYqkhkFZ31BY=;
-        b=THakykxJSW7Qtjq6Z6Kix0M2IO9qN3vMSrZrVELlJgnr/6ukSRmc7mbIdldm+ybyLr
-         7LwLnLNunraWCW5nwOuNWRLpJUT/221CjcYrFvZsWk371/WwfRnJs2fQZIcmawfRUV6d
-         JDspT3TmgwuyvlNguJF+MZcRHgbTqfh5biDLe14KwvKIUh4QZMXFPQ0U70uEe+3dW8gu
-         I1JroHzSSmYsphm7QSfP3LVclOYwwT4IAra7KcSnZkIsDuslBd8KpeX7Sak3Ni04RM23
-         oZ/hEhapXsW4GCR3hHNIOw91Kh1y5Lmst+RyMrjVSCzTTbCpI2IMz6woYy40NwEVt4OB
-         z64g==
-X-Gm-Message-State: APjAAAVGhTTs2wbHiStV0bFDRM0tni1TagihfYLEsEJZJ9O+8YQ6KXuF
-        GpY7PJPZ4JwtkG2/p+05aFE=
-X-Google-Smtp-Source: APXvYqxy5t8sZwmSDR/SPwoi0/r03PWhLWTaJCtRRizFjCbQ7/MwEf6Q2E/Wvdj5pSaDoRvFvlSNFg==
-X-Received: by 2002:a1c:cc0e:: with SMTP id h14mr14026505wmb.117.1569245812548;
-        Mon, 23 Sep 2019 06:36:52 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id 26sm9807939wmf.20.2019.09.23.06.36.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 06:36:31 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 15:36:26 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
-        Ryder Lee <ryder.lee@mediatek.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        John Crispin <john@phrozen.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
+        id S1726509AbfIWPMH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 23 Sep 2019 11:12:07 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:33897 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726413AbfIWPMH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Sep 2019 11:12:07 -0400
+X-UUID: 0803255001274d039f165dabacd3c12d-20190923
+X-UUID: 0803255001274d039f165dabacd3c12d-20190923
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 397497340; Mon, 23 Sep 2019 23:11:56 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 23 Sep 2019 23:11:54 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 23 Sep 2019 23:11:52 +0800
+Message-ID: <1569251515.4102.31.camel@mtksdccf07>
 Subject: Re: [PATCH v9 07/11] dt-bindings: pwm: pwm-mediatek: add a property
  "num-pwms"
-Message-ID: <20190923133626.GA4671@ulmo>
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     Mark Rutland <mark.rutland@arm.com>, <linux-pwm@vger.kernel.org>,
+        "Ryder Lee" <ryder.lee@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        John Crispin <john@phrozen.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Date:   Mon, 23 Sep 2019 23:11:55 +0800
+In-Reply-To: <20190923133626.GA4671@ulmo>
 References: <1568933351-8584-1-git-send-email-sam.shih@mediatek.com>
- <1568933351-8584-8-git-send-email-sam.shih@mediatek.com>
- <20190921002149.GB86019@mithrandir>
- <1569208857.4102.9.camel@mtksdccf07>
+         <1568933351-8584-8-git-send-email-sam.shih@mediatek.com>
+         <20190921002149.GB86019@mithrandir> <1569208857.4102.9.camel@mtksdccf07>
+         <20190923133626.GA4671@ulmo>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="YZ5djTAD1cGYuMQK"
-Content-Disposition: inline
-In-Reply-To: <1569208857.4102.9.camel@mtksdccf07>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-MTK:  N
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Mon, 2019-09-23 at 15:36 +0200, Thierry Reding wrote:
+> On Mon, Sep 23, 2019 at 11:20:57AM +0800, Sam Shih wrote:
+> > On Sat, 2019-09-21 at 02:21 +0200, Thierry Reding wrote:
+> > > On Fri, Sep 20, 2019 at 06:49:07AM +0800, Sam Shih wrote:
+> > > > From: Ryder Lee <ryder.lee@mediatek.com>
+> > > > 
+> > > > This adds a property "num-pwms" in example so that we could
+> > > > specify the number of PWM channels via device tree.
+> > > > 
+> > > > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > > > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> > > > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> > > > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > > > ---
+> > > > Changes since v6:
+> > > > Follow reviewers's comments:
+> > > > - The subject should indicate this is for Mediatek
+> > > > 
+> > > > Changes since v5:
+> > > > - Add an Acked-by tag
+> > > > - This file is original v4 patch 5/10
+> > > > (https://patchwork.kernel.org/patch/11102577/)
+> > > > 
+> > > > ---
+> > > >  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 7 ++++---
+> > > >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > > 
+> > > You failed to address Rob's questions repeatedly and I agree with him
+> > > that you can just as easily derive the number of PWMs from the specific
+> > > compatible string. I won't be applying this and none of the patches that
+> > > depend on it.
+> > > 
+> > 
+> > Hi, 
+> > 
+> > Thanks for getting back to me.
+> > 
+> > New pwm driver (patch 04/11 : "pwm: mediatek: allocate the clks array
+> > dynamically") can support different variants with different number of
+> > PWMs by the new property <num-pwms>
+> > 
+> > For example:
+> > 1. Use "num-pwms" = <2> and assign clocks pwm1, pwm2 for mt7622
+> > 2. Use "num-pwms" = <6> and assign clocks pwm1, pwm2, pwm3, pwm4, pwm5,
+> > pwm6 for mt7622.
+> > 
+> > If we just as easily derive the number of PWMs from the specific
+> > compatible string in this document:
+> > 
+> >    - "pwm1-6": the six per PWM clocks for mt7622
+> >    
+> > This looks like all "pwm1", "pwm2", "pwm3", "pwm4", "pwm5", "pwm6" is
+> > required property in DT, It doesn't make sense.
+> 
+> I don't understand. Why doesn't that make sense? If your hardware block
+> has 6 PWMs and each can be driven by its own clock, then you need to
+> provide references for each of those clocks, otherwise you won't be able
+> to use them.
 
---YZ5djTAD1cGYuMQK
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for your instruction,
+I will add all clock-names and clocks according to
+hardware blocks instead of value of <num-pwms> in DT.
 
-On Mon, Sep 23, 2019 at 11:20:57AM +0800, Sam Shih wrote:
-> On Sat, 2019-09-21 at 02:21 +0200, Thierry Reding wrote:
-> > On Fri, Sep 20, 2019 at 06:49:07AM +0800, Sam Shih wrote:
-> > > From: Ryder Lee <ryder.lee@mediatek.com>
-> > >=20
-> > > This adds a property "num-pwms" in example so that we could
-> > > specify the number of PWM channels via device tree.
-> > >=20
-> > > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> > > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> > > Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> > > ---
-> > > Changes since v6:
-> > > Follow reviewers's comments:
-> > > - The subject should indicate this is for Mediatek
-> > >=20
-> > > Changes since v5:
-> > > - Add an Acked-by tag
-> > > - This file is original v4 patch 5/10
-> > > (https://patchwork.kernel.org/patch/11102577/)
-> > >=20
-> > > ---
-> > >  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 7 ++++---
-> > >  1 file changed, 4 insertions(+), 3 deletions(-)
-> >=20
-> > You failed to address Rob's questions repeatedly and I agree with him
-> > that you can just as easily derive the number of PWMs from the specific
-> > compatible string. I won't be applying this and none of the patches that
-> > depend on it.
-> >=20
->=20
-> Hi,=20
->=20
-> Thanks for getting back to me.
->=20
-> New pwm driver (patch 04/11 : "pwm: mediatek: allocate the clks array
-> dynamically") can support different variants with different number of
-> PWMs by the new property <num-pwms>
->=20
-> For example:
-> 1. Use "num-pwms" =3D <2> and assign clocks pwm1, pwm2 for mt7622
-> 2. Use "num-pwms" =3D <6> and assign clocks pwm1, pwm2, pwm3, pwm4, pwm5,
-> pwm6 for mt7622.
->=20
-> If we just as easily derive the number of PWMs from the specific
-> compatible string in this document:
->=20
->    - "pwm1-6": the six per PWM clocks for mt7622
->   =20
-> This looks like all "pwm1", "pwm2", "pwm3", "pwm4", "pwm5", "pwm6" is
-> required property in DT, It doesn't make sense.
+> >    
+> > So we removed those descriptions and added  
+> > 
+> >    - "pwm1-N": the PWM clocks for each channel 
+> >    
+> >    
+> > But the max number of clocks from the compatible string are still
+> > important information that should be provide in this document.
+> > 
+> > 
+> > What do you think of this?
+> > 
+> >    - "pwm1-N": per PWM clocks for mt2712, the max number of PWM channels
+> > is 8
+> > 
+> >    - "pwm1-N": per PWM clocks for mt7622, the max number of PWM channels
+> > is 6
+> > 
+> >    - "pwm1-N": per PWM clocks for mt7623, the max number of PWM channels
+> > is 5
+> 
+> That's what's in the bindings already, isn't it?
+> 
+> 	 - clocks: phandle and clock specifier of the PWM reference clock.
+> 	 - clock-names: must contain the following, except for MT7628 which
+> 			has no clocks
+> 	   - "top": the top clock generator
+> 	   - "main": clock used by the PWM core
+> 	   - "pwm1-8": the eight per PWM clocks for mt2712
+> 	   - "pwm1-6": the six per PWM clocks for mt7622
+> 	   - "pwm1-5": the five per PWM clocks for mt7623
 
-I don't understand. Why doesn't that make sense? If your hardware block
-has 6 PWMs and each can be driven by its own clock, then you need to
-provide references for each of those clocks, otherwise you won't be able
-to use them.
-
->   =20
-> So we removed those descriptions and added =20
->=20
->    - "pwm1-N": the PWM clocks for each channel=20
->   =20
->   =20
-> But the max number of clocks from the compatible string are still
-> important information that should be provide in this document.
->=20
->=20
-> What do you think of this?
->=20
->    - "pwm1-N": per PWM clocks for mt2712, the max number of PWM channels
-> is 8
->=20
->    - "pwm1-N": per PWM clocks for mt7622, the max number of PWM channels
-> is 6
->=20
->    - "pwm1-N": per PWM clocks for mt7623, the max number of PWM channels
-> is 5
-
-That's what's in the bindings already, isn't it?
-
-	 - clocks: phandle and clock specifier of the PWM reference clock.
-	 - clock-names: must contain the following, except for MT7628 which
-			has no clocks
+Yes, You are right, 
+I will keep original description and remove "pwm1-N" from this patch.
 	   - "top": the top clock generator
 	   - "main": clock used by the PWM core
 	   - "pwm1-8": the eight per PWM clocks for mt2712
 	   - "pwm1-6": the six per PWM clocks for mt7622
-	   - "pwm1-5": the five per PWM clocks for mt7623
+	   - "pwm1-5": the five per PWM clocks for mt7623       
 
-Note that the description of the "clocks" property isn't quite accurate.
-It should be something like:
+Actually, MT7629 also use "mediatek,mt7622-pwm" as compatible string,
+but it's hardware only support one pwm, so I was wrongly stick by
+expecting "pwm1-N" in clock-names based on "num-pwms" in DT.
+(that we can assign num-pwms to 1 and only provide pwm1 as clock-names)
 
+Maybe added mt7629 description to this document can solve this simply.
+	   - "pwm1": the PWM1 clock for mt7629    
+
+> Note that the description of the "clocks" property isn't quite accurate.
+> It should be something like:
+> 
+> 	- clocks: One phandle and clock specifier for each entry in the
+> 	          "clock-names" property.
+> 
+> In the above you clearly describe which PWMs you have to specify for
+> each generation of the hardware block.
+
+Thanks for your advise, I will update this description
 	- clocks: One phandle and clock specifier for each entry in the
 	          "clock-names" property.
 
-In the above you clearly describe which PWMs you have to specify for
-each generation of the hardware block.
+> > 
+> >    where N starting from 1 to the maximum number of PWM channels
+> >    - num-pwms: the number of PWM channels.
+> 
+> That's redundant information. The specific number of PWMs in already
+> implied by the compatible string, so you don't need to duplicate that
+> information here.
 
->=20
->    where N starting from 1 to the maximum number of PWM channels
->    - num-pwms: the number of PWM channels.
+Okay, I will remove it.
 
-That's redundant information. The specific number of PWMs in already
-implied by the compatible string, so you don't need to duplicate that
-information here.
 
-Thierry
 
---YZ5djTAD1cGYuMQK
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
+Best Regards,
+Sam 
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2IylEACgkQ3SOs138+
-s6EpJg//QC3ldqkwsoa+KY+dhrpZlAxv2zdjRAxF8rCag6XtDLtIlvV66zVQeowZ
-5+NMRQqJHAdqFzNPZO8wxH7Dkiexw50Wpa64Xb1JEyVAmotqvfiyJr59MG9CGZ+T
-EW7o+U8WHGdVT6xtkUZ17QQHK6OqvitX8GmXU746FXuza5zYkp3quVFtjQ1V2GNR
-N2s3dvvfhIcqjm0GhN310Pp2vHCyczDmpCbppC+QNfkArUCW25oDFck69ceBdXXG
-1UjtIasUcEoTC8qrK31Yk2GctIxkF0KiPKX24Kuk3oDTqCb3Acp/eNQmE3j0zs+1
-+3a2Xgs5jADOprnJLpszBvlO+PKCybVAAhW65QgcH67spbgNVxuhXCjmSpplelfI
-F7FJEbz+nI2Az36ogFtewhvVPFa5SqPKUEygCjE5eRd62HooiUiEK/zXbBfE5eNm
-72viYDW0wwkmqjLIuahyji2HMlu3ImG3moqiQH1OaZkaivONUzWqn2fsEVdQaI4I
-o41UMHnZNWs7znhcs2SeGZNrLSvC4mdetpXDOuVr9WWqunzIckHDabA/hm5yMvFD
-l/Oiyyv9AcIICgAFBXq1+4bfbztgS7wAek6JDYRUHBj4jBI+3J0zEvK7ah246wlg
-pp+mPQhPxMx+VbEpB5BVx0/KB1eQ6+8E9+zyB227JdD4oLR3G9Y=
-=Za9m
------END PGP SIGNATURE-----
-
---YZ5djTAD1cGYuMQK--
