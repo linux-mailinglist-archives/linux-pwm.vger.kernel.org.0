@@ -2,122 +2,87 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 44ABCBC625
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Sep 2019 13:03:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27E50BC764
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Sep 2019 14:00:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504520AbfIXLDd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 24 Sep 2019 07:03:33 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54212 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504519AbfIXLDd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 24 Sep 2019 07:03:33 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i16so1735542wmd.3
-        for <linux-pwm@vger.kernel.org>; Tue, 24 Sep 2019 04:03:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aPNewFKIabAVhRulRTJUvJ4LCImysX5uKq9IsVOhhLA=;
-        b=W9b6Tex2B0d5oKFyO5nC27hRGVFVPMraKPqpp1KUzwt/0urbvgAxUehJtXyI8LPDZw
-         +7PfvWBDKZyTFNuSJdHG2bdeWwYOnU71mobzqlCyHc/AOBR07QuN2zP3DpyDfvoTKel2
-         uc9U+AWKjkke5gwsXsnxyII5CYEKT5Ee+/0MteHJlYrH9SA8ZTvHUOlGJ7Vce3sSd8Fi
-         edE5FPXB/A2a+UpJDItdzezSL4DsumwVxrqaSPlFFU341eshliV3FJf4O8lNPyW+nX6l
-         GSC41YX9Rs2KLAPfmwqHNFYfyompuYbXXqckc9KFJ4dK5Hv6Wq3CkZewrDv6dhKi4gB6
-         o6gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aPNewFKIabAVhRulRTJUvJ4LCImysX5uKq9IsVOhhLA=;
-        b=W2AJybbU7HSCHjOERdTdkrbyic1YJC7t4wINPv0g9gOkBixSJFzG4IZDDRlYduPQLk
-         Wv1kFroH7/nHPr5cR1mh4nljeKFyeGMWoMdCUomeySPLBHxJ+P3QPlZ9DogoXPJ1SjIt
-         Sl+ArfMTj1tT68c3wuzZpacL99Dfz/bQqB46tTaHdtnpX6dIJODwNqqEKjaSEjK5AICM
-         ey+E/m+LDCjwP+yzoym/eFq6PMMQP/qQcOMQa3h5c9J+VlcH0eJXIuSKM60K88k9O+rk
-         FtG8kxRgGTzAzMmGT+461xP0FN7gqb9OFQlbZ8C6GBXJTnYy7tvof+u45Nfw+LloWZLC
-         piVA==
-X-Gm-Message-State: APjAAAVi95hB7oSOsefp+P/SG44MGhovxHcGfn4wqy2Ig43NoEoIC+K9
-        3qmZSIX1sE1TtWUdaN3Ms0I=
-X-Google-Smtp-Source: APXvYqzYpAePGifxHHlgdTIafjZamW84yclGMJ8dIOkZtiOwDQ9MOF5eu8ME/cvTsu3XQRnW9qSTwg==
-X-Received: by 2002:a1c:2d85:: with SMTP id t127mr2345783wmt.81.1569323009569;
-        Tue, 24 Sep 2019 04:03:29 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id a6sm1716327wrr.85.2019.09.24.04.03.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 04:03:28 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 13:03:26 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+        id S2504806AbfIXMAJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 24 Sep 2019 08:00:09 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40971 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388614AbfIXMAJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 24 Sep 2019 08:00:09 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iCjUG-0003qy-FS; Tue, 24 Sep 2019 14:00:08 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iCjUG-00071E-6D; Tue, 24 Sep 2019 14:00:08 +0200
+Date:   Tue, 24 Sep 2019 14:00:08 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH 1/3] MAINTAINERS: add a selection of pwm related keywords
- to the PWM entry
-Message-ID: <20190924110326.GG14924@ulmo>
-References: <20190923084937.20358-1-u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 4/4] [RFC] Documentation: pwm: rework documentation for
+ the framework
+Message-ID: <20190924120008.m3l4qsyhmuyfssnl@pengutronix.de>
+References: <20190107194938.3004-1-u.kleine-koenig@pengutronix.de>
+ <20190107194938.3004-5-u.kleine-koenig@pengutronix.de>
+ <20190726093912.q6m6syroot2eqie6@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="8bBEDOJVaa9YlTAt"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190923084937.20358-1-u.kleine-koenig@pengutronix.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190726093912.q6m6syroot2eqie6@pengutronix.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hello Thierry,
 
---8bBEDOJVaa9YlTAt
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jul 26, 2019 at 11:39:12AM +0200, Uwe Kleine-König wrote:
+> Hello Thierry,
+> 
+> On Mon, Jan 07, 2019 at 08:49:43PM +0100, Uwe Kleine-König wrote:
+> > This is a draft for an in my eyes improved documentation describing
+> > consumers, providers and backend drivers of the PWM framework.
+> > 
+> > The bigger changes include:
+> > 
+> >  - sysfs description is split into a separate document (otherwise unchanged)
+> >  - Only the new style functions and callbacks are described; the legacy
+> >    stuff is just mentioned shortly in a dedicated paragraph.
+> >  - The expectations for the different callbacks (most importantly .apply)
+> >    are mentioned explicitly.
+> > 
+> > There is a gap in the documentation because I didn't understand the
+> > .capture callback. There is no documentation about it, just two drivers
+> > implementing it. I guess it is about measuring an input signal, so it seems
+> > to be misplaced in the PWM framework which otherwise is just about an
+> > output pin.
+> 
+> I'm still waiting for feedback here. AFAICT there is nothing that should
+> be controversial as I intended to just describe the status quo.
 
-On Mon, Sep 23, 2019 at 10:49:35AM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> This is just a small subset of the relevant functions, but should at
-> least catch all new code as every consumer has to call pwm_apply_state
-> (or the legacy function pwm_config) and every PWM provider has to
-> implement pwm_ops.
->=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
+This patch doesn't apply any more since
 
-All three patches applied. Thanks for volunteering to be a reviewer!
+	baa293e9544b ("docs: driver-api: add a series of orphaned documents")
 
-Thierry
+. (The respective patch didn't make it to the linux-pwm list.)
 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b85f2abfe69b..2e8dd2ea4eaa 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13254,6 +13254,7 @@ F:	drivers/video/backlight/pwm_bl.c
->  F:	include/linux/pwm_backlight.h
->  F:	drivers/gpio/gpio-mvebu.c
->  F:	Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
-> +K:	pwm_(config|apply_state|ops)
-> =20
->  PXA GPIO DRIVER
->  M:	Robert Jarzmik <robert.jarzmik@free.fr>
-> --=20
-> 2.23.0
->=20
+Do you consider it worthwhile to update the patch? Should the sysfs
+stuff live under Documentation/driver-api, too?
 
---8bBEDOJVaa9YlTAt
-Content-Type: application/pgp-signature; name="signature.asc"
+Best regards
+Uwe
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2J9/4ACgkQ3SOs138+
-s6GAJA/+KAXbZrvmE4BhxjVt6j0+Z+VsP9oculsxeVlXWrvZoklv+7C5URh+jKBg
-BO2KsOJjUYFlpI6smIhBrBHIIGrAd35Sastr5uYYn330jkG+bPTjcfx9oon/bPwA
-tYHQfJAs64dgE5nSNnp+S91EYO9BuAt0Qsnng13XXPazyjkOVzTp24IMXGLMkG5y
-5b8j8Jl3JIqc8AhZIHYru13HACOzdwGA74C2E6hRZzo2lykzqPsROTOc5zOsdwBv
-SVcm/Zcte2Vz3QdrjBORfLsWSqNyG3e/SDguNQKYF3qEIEgD1l+IpIf5aafGLPVd
-dCwOncRFTz+gFCYFX90bshfmnp5YKCyTwVMAGk6VMjFtqXDAD2MjTVWmAXBByavR
-LPR2LsFcCohv3dLTryrha4nUjZwlPQrkhPtrSpKEZi+n2AgAv7ITDe6rb1dNP1rA
-6/PwHHi/8udAlIaR763YAAcyGbTOfNPpgmbIUVZt5s2SYKUo/crpQEyGwILZTpeK
-hcXTpvtrIE8YNwR6d5nZ1ELbCBiNkpTOCjk/Ospitp0sFoX93sSts8B4WUd/f6ED
-46frDDYK9Gw3y1uEmJfZGb5CLb29vkPab4BmRdZxxprtkttxC770/sS/3u51uGkf
-GBKLNroYESED770h0LkZZU4WJAFnkx1nZNiVktpcjXEz0x07HBs=
-=nVwz
------END PGP SIGNATURE-----
-
---8bBEDOJVaa9YlTAt--
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
