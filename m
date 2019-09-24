@@ -2,122 +2,94 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 778EBBC1D6
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Sep 2019 08:39:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83CE4BC460
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Sep 2019 11:02:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393474AbfIXGj3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 24 Sep 2019 02:39:29 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53615 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389156AbfIXGj3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 24 Sep 2019 02:39:29 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iCeTu-0000ja-Ta; Tue, 24 Sep 2019 08:39:26 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iCeTu-00055Q-5i; Tue, 24 Sep 2019 08:39:26 +0200
-Date:   Tue, 24 Sep 2019 08:39:26 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, kernel-team@android.com,
-        Mark Salyzyn <salyzyn@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Fenglin Wu <fenglinw@codeaurora.org>
-Subject: Re: [PATCH 1/2] pwm: Add different PWM output types support
-Message-ID: <20190924063926.vb3cxcdybv33owpg@pengutronix.de>
-References: <1568415464-20267-1-git-send-email-gurus@codeaurora.org>
- <20190916140146.GC7488@ulmo>
- <20190924054343.GA12462@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190924054343.GA12462@codeaurora.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+        id S1729588AbfIXJCA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 24 Sep 2019 05:02:00 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:49584 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726094AbfIXJB7 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 24 Sep 2019 05:01:59 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C0AD1200857;
+        Tue, 24 Sep 2019 11:01:56 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8EF1620077E;
+        Tue, 24 Sep 2019 11:01:52 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 22B6A4029F;
+        Tue, 24 Sep 2019 17:01:47 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     thierry.reding@gmail.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] pwm: pwm-imx27: Use 'dev' instead of dereferencing it repeatedly
+Date:   Tue, 24 Sep 2019 16:59:53 +0800
+Message-Id: <1569315593-769-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 10:43:43PM -0700, Guru Das Srinagesh wrote:
-> On Mon, Sep 16, 2019 at 04:01:46PM +0200, Thierry Reding wrote:
-> > On Fri, Sep 13, 2019 at 03:57:43PM -0700, Guru Das Srinagesh wrote:
-> > > From: Fenglin Wu <fenglinw@codeaurora.org>
-> > > 
-> > > Normally, PWM channel has fixed output until software request to change
-> > > its settings. There are some PWM devices which their outputs could be
-> > > changed autonomously according to a predefined pattern programmed in
-> > > hardware. Add pwm_output_type enum type to identify these two different
-> > > PWM types and add relevant helper functions to set and get PWM output
-> > > types and pattern.
-> > > 
-> > > Change-Id: Ia1f914a45ab4f4dd7be037a395eeb89d0e65a80e
-> > > Signed-off-by: Fenglin Wu <fenglinw@codeaurora.org>
-> > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> > > ---
-> > >  drivers/pwm/core.c  | 26 ++++++++++++++++++++
-> > >  drivers/pwm/sysfs.c | 50 ++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/pwm.h | 70 +++++++++++++++++++++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 146 insertions(+)
-> > 
-> > This doesn't seem right to me. Are you describing a PWM pin that's
-> > actually driven in GPIO mode? We usually configure that using pinctrl.
-> > 
-> > Thierry
-> 
-> Sorry, let me clarify.
-> 
-> Some Qualcomm PMICs have a PWM block called the Light Pulse Generator (LPG).
-> This block allows for the generation of a HW-controlled PWM "pattern", i.e. a
-> sequential altering of duty cycle, in addition to the normal PWM "fixed" duty
-> cycle operation, which is what the framework does currently. This pattern is
-> user-configurable in the form of a look-up table in the devicetree. The LPG's
-> registers have to be configured with the data in the look up table in order to
-> start the generation of the pattern. An example of a pattern is the "breath"
-> pattern, which simply ramps up the duty cycle and then ramps it down.
+Add helper variable dev = &pdev->dev to simply the code.
 
-I'll try to describe it in my words to check if I got it right: So the
-mode you want to add needs a sequence of PWM states and the hardware is
-expected to apply them in turn, each for a configurable count of
-periods. If I understand this right, this is expected to be cyclic?
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/pwm/pwm-imx27.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-> This "pattern" mode is what has been defined as PWM_OUTPUT_MODULATED in this
-> patch. I see that the use of the term "modulated" is misleading - a more
-> accurate term would be PWM_OUTPUT_PATTERN perhaps.
-
-Not sure "pattern" is better. 
-
-The PWM on the newer imx SoCs (using the imx27 driver) has a FIFO with
-length 4 that allows to program changing settings. Only the duty cycle
-can be modified and as repeat count only 1, 2, 4 and 8 are available. I
-assume the FIFO can be fed by the dma engine.
-
-Note I only know this feature from reading the reference manual and
-never used it.
-
-> This patch merely adds framework support to differentiate between the "fixed"
-> and "pattern" modes of operation. Actions such as configuring the LPG with the
-> devicetree pattern and setting it up for generating the pattern are performed
-> in the driver only if the output type is read as "pattern" and not otherwise.
-
-Up to now I'm not convinced that this extension is a good one that can
-be supported by several PWM implementations. I'd say we should collect
-first some details about different implementations and what these could
-implement to get a picture what kind of API is sensible.
-
-Best regards
-Uwe
-
+diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+index 434a351..3afee29 100644
+--- a/drivers/pwm/pwm-imx27.c
++++ b/drivers/pwm/pwm-imx27.c
+@@ -290,27 +290,28 @@ MODULE_DEVICE_TABLE(of, pwm_imx27_dt_ids);
+ 
+ static int pwm_imx27_probe(struct platform_device *pdev)
+ {
++	struct device *dev = &pdev->dev;
+ 	struct pwm_imx27_chip *imx;
+ 
+-	imx = devm_kzalloc(&pdev->dev, sizeof(*imx), GFP_KERNEL);
++	imx = devm_kzalloc(dev, sizeof(*imx), GFP_KERNEL);
+ 	if (imx == NULL)
+ 		return -ENOMEM;
+ 
+ 	platform_set_drvdata(pdev, imx);
+ 
+-	imx->clk_ipg = devm_clk_get(&pdev->dev, "ipg");
++	imx->clk_ipg = devm_clk_get(dev, "ipg");
+ 	if (IS_ERR(imx->clk_ipg)) {
+-		dev_err(&pdev->dev, "getting ipg clock failed with %ld\n",
++		dev_err(dev, "getting ipg clock failed with %ld\n",
+ 				PTR_ERR(imx->clk_ipg));
+ 		return PTR_ERR(imx->clk_ipg);
+ 	}
+ 
+-	imx->clk_per = devm_clk_get(&pdev->dev, "per");
++	imx->clk_per = devm_clk_get(dev, "per");
+ 	if (IS_ERR(imx->clk_per)) {
+ 		int ret = PTR_ERR(imx->clk_per);
+ 
+ 		if (ret != -EPROBE_DEFER)
+-			dev_err(&pdev->dev,
++			dev_err(dev,
+ 				"failed to get peripheral clock: %d\n",
+ 				ret);
+ 
+@@ -318,7 +319,7 @@ static int pwm_imx27_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	imx->chip.ops = &pwm_imx27_ops;
+-	imx->chip.dev = &pdev->dev;
++	imx->chip.dev = dev;
+ 	imx->chip.base = -1;
+ 	imx->chip.npwm = 1;
+ 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.7.4
+
