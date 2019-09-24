@@ -2,33 +2,33 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 83CE4BC460
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Sep 2019 11:02:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99A8FBC464
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Sep 2019 11:02:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729588AbfIXJCA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 24 Sep 2019 05:02:00 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:49584 "EHLO inva021.nxp.com"
+        id S1729625AbfIXJCp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 24 Sep 2019 05:02:45 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:35774 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726094AbfIXJB7 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 24 Sep 2019 05:01:59 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C0AD1200857;
-        Tue, 24 Sep 2019 11:01:56 +0200 (CEST)
+        id S1726094AbfIXJCp (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 24 Sep 2019 05:02:45 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5F3151A00D4;
+        Tue, 24 Sep 2019 11:02:43 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8EF1620077E;
-        Tue, 24 Sep 2019 11:01:52 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3048E1A0169;
+        Tue, 24 Sep 2019 11:02:39 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 22B6A4029F;
-        Tue, 24 Sep 2019 17:01:47 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id BB501402ED;
+        Tue, 24 Sep 2019 17:02:33 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     thierry.reding@gmail.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
         linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH] pwm: pwm-imx27: Use 'dev' instead of dereferencing it repeatedly
-Date:   Tue, 24 Sep 2019 16:59:53 +0800
-Message-Id: <1569315593-769-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH] pwm: pwm-imx-tpm: Use 'dev' instead of dereferencing it repeatedly
+Date:   Tue, 24 Sep 2019 17:01:07 +0800
+Message-Id: <1569315667-1525-1-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-pwm-owner@vger.kernel.org
@@ -40,55 +40,63 @@ Add helper variable dev = &pdev->dev to simply the code.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/pwm/pwm-imx27.c | 13 +++++++------
+ drivers/pwm/pwm-imx-tpm.c | 13 +++++++------
  1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-index 434a351..3afee29 100644
---- a/drivers/pwm/pwm-imx27.c
-+++ b/drivers/pwm/pwm-imx27.c
-@@ -290,27 +290,28 @@ MODULE_DEVICE_TABLE(of, pwm_imx27_dt_ids);
+diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
+index e8385c1..4385801 100644
+--- a/drivers/pwm/pwm-imx-tpm.c
++++ b/drivers/pwm/pwm-imx-tpm.c
+@@ -337,11 +337,12 @@ static const struct pwm_ops imx_tpm_pwm_ops = {
  
- static int pwm_imx27_probe(struct platform_device *pdev)
+ static int pwm_imx_tpm_probe(struct platform_device *pdev)
  {
 +	struct device *dev = &pdev->dev;
- 	struct pwm_imx27_chip *imx;
+ 	struct imx_tpm_pwm_chip *tpm;
+ 	int ret;
+ 	u32 val;
  
--	imx = devm_kzalloc(&pdev->dev, sizeof(*imx), GFP_KERNEL);
-+	imx = devm_kzalloc(dev, sizeof(*imx), GFP_KERNEL);
- 	if (imx == NULL)
+-	tpm = devm_kzalloc(&pdev->dev, sizeof(*tpm), GFP_KERNEL);
++	tpm = devm_kzalloc(dev, sizeof(*tpm), GFP_KERNEL);
+ 	if (!tpm)
  		return -ENOMEM;
  
- 	platform_set_drvdata(pdev, imx);
+@@ -351,23 +352,23 @@ static int pwm_imx_tpm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(tpm->base))
+ 		return PTR_ERR(tpm->base);
  
--	imx->clk_ipg = devm_clk_get(&pdev->dev, "ipg");
-+	imx->clk_ipg = devm_clk_get(dev, "ipg");
- 	if (IS_ERR(imx->clk_ipg)) {
--		dev_err(&pdev->dev, "getting ipg clock failed with %ld\n",
-+		dev_err(dev, "getting ipg clock failed with %ld\n",
- 				PTR_ERR(imx->clk_ipg));
- 		return PTR_ERR(imx->clk_ipg);
- 	}
- 
--	imx->clk_per = devm_clk_get(&pdev->dev, "per");
-+	imx->clk_per = devm_clk_get(dev, "per");
- 	if (IS_ERR(imx->clk_per)) {
- 		int ret = PTR_ERR(imx->clk_per);
- 
+-	tpm->clk = devm_clk_get(&pdev->dev, NULL);
++	tpm->clk = devm_clk_get(dev, NULL);
+ 	if (IS_ERR(tpm->clk)) {
+ 		ret = PTR_ERR(tpm->clk);
  		if (ret != -EPROBE_DEFER)
 -			dev_err(&pdev->dev,
 +			dev_err(dev,
- 				"failed to get peripheral clock: %d\n",
- 				ret);
- 
-@@ -318,7 +319,7 @@ static int pwm_imx27_probe(struct platform_device *pdev)
+ 				"failed to get PWM clock: %d\n", ret);
+ 		return ret;
  	}
  
- 	imx->chip.ops = &pwm_imx27_ops;
--	imx->chip.dev = &pdev->dev;
-+	imx->chip.dev = dev;
- 	imx->chip.base = -1;
- 	imx->chip.npwm = 1;
+ 	ret = clk_prepare_enable(tpm->clk);
+ 	if (ret) {
+-		dev_err(&pdev->dev,
++		dev_err(dev,
+ 			"failed to prepare or enable clock: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+-	tpm->chip.dev = &pdev->dev;
++	tpm->chip.dev = dev;
+ 	tpm->chip.ops = &imx_tpm_pwm_ops;
+ 	tpm->chip.base = -1;
+ 	tpm->chip.of_xlate = of_pwm_xlate_with_flags;
+@@ -381,7 +382,7 @@ static int pwm_imx_tpm_probe(struct platform_device *pdev)
+ 
+ 	ret = pwmchip_add(&tpm->chip);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "failed to add PWM chip: %d\n", ret);
++		dev_err(dev, "failed to add PWM chip: %d\n", ret);
+ 		clk_disable_unprepare(tpm->clk);
+ 	}
  
 -- 
 2.7.4
