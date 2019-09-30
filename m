@@ -2,124 +2,76 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 209D5C1E74
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Sep 2019 11:51:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDDE4C247A
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Sep 2019 17:40:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfI3Jv1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 30 Sep 2019 05:51:27 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:59170 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726504AbfI3Jv1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 Sep 2019 05:51:27 -0400
-X-UUID: 6ae0d28dc9b24e3187041e13772beeaa-20190930
-X-UUID: 6ae0d28dc9b24e3187041e13772beeaa-20190930
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 231710556; Mon, 30 Sep 2019 17:51:21 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 30 Sep 2019 17:51:18 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 30 Sep 2019 17:51:17 +0800
-Message-ID: <1569837079.32131.5.camel@mtksdccf07>
-Subject: Re: [PATCH v10 08/12] pwm: mediatek: Add MT7629 compatible string
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Mon, 30 Sep 2019 17:51:19 +0800
-In-Reply-To: <20190930093629.GH1518582@ulmo>
-References: <1569421957-20765-1-git-send-email-sam.shih@mediatek.com>
-         <1569421957-20765-9-git-send-email-sam.shih@mediatek.com>
-         <20190927112831.GA1171568@ulmo> <1569833468.32131.4.camel@mtksdccf07>
-         <20190930093629.GH1518582@ulmo>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        id S1731868AbfI3Pj5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 30 Sep 2019 11:39:57 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:24426 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727326AbfI3Pj5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 Sep 2019 11:39:57 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8UFUk76017914;
+        Mon, 30 Sep 2019 17:39:43 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=oqsc+1QmxySevnQ/cOpQpMNn/oNbv445DQVbjVNoArI=;
+ b=f1MgDsNhuFHK8bCjXeH8DmXI/CufFHMbcnW9G7FHHrX2iG4T4YPR608/YWXZzC2AdxTb
+ 86URQUZFfI/A8K3AJp/ujzArs4wMkvHp+YSj0Pyy4gaBihMcGmJnVgiN54JH+BUpj5Z5
+ 7TLydY58qojHS//sun3gev4W1yP+1MhI81pnPW+BPoHpWWWhJQ7EXbDwkpPjUzf8shZG
+ dY12HH3sgENVgTMEx6+OqqMeXS0QnLWg6JTNTQiuBMUTKb+TY0uKpA6ovdr33PeHdzwN
+ Gh8bWygbIcsi9PeYvcztSL3OJCpKA0NR+wojkn+WQNWKq/i5az248bO5oJXsfCU/5bf/ BA== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2v9w9vm0qc-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 30 Sep 2019 17:39:43 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 57A6F24;
+        Mon, 30 Sep 2019 15:39:40 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 77EA12A45FA;
+        Mon, 30 Sep 2019 17:39:39 +0200 (CEST)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.92) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 30 Sep
+ 2019 17:39:39 +0200
+Received: from localhost (10.48.0.192) by Webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 30 Sep 2019 17:39:38 +0200
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <thierry.reding@gmail.com>, <robh+dt@kernel.org>
+CC:     <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
+        <mcoquelin.stm32@gmail.com>, <fabrice.gasnier@st.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <benjamin.gaignard@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH 0/2] Add PM support to STM32 Timer PWM
+Date:   Mon, 30 Sep 2019 17:39:09 +0200
+Message-ID: <1569857951-20007-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain
+X-Originating-IP: [10.48.0.192]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-09-30_09:2019-09-30,2019-09-30 signatures=0
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 2019-09-30 at 11:36 +0200, Thierry Reding wrote:
-> On Mon, Sep 30, 2019 at 04:51:08PM +0800, Sam Shih wrote:
-> > Hi,
-> > 
-> > On Fri, 2019-09-27 at 13:28 +0200, Thierry Reding wrote:
-> > > On Wed, Sep 25, 2019 at 10:32:33PM +0800, Sam Shih wrote:
-> > > > This adds pwm support for MT7629, and separate mt7629 compatible string
-> > > > from mt7622
-> > > > 
-> > > > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> > > > ---
-> > > >  drivers/pwm/pwm-mediatek.c | 6 ++++++
-> > > >  1 file changed, 6 insertions(+)
-> > > 
-> > > I picked this patch up and made some minor adjustments to make it build
-> > > without the num_pwms patches. With that I don't think there's anything
-> > > left from this series that you need.
-> > 
-> > Yes, I think the driver should work once dtsi updated.
-> > ("[v10,12/12] arm: dts: mediatek: add mt7629 pwm support")
-> > 
-> > But, due to we use comaptible string separately for every SoC now,
-> > The comaptible string in dt-bindings should be "mediatek,mt7629-pwm".
-> > I think we should use "[v10,11/12] dt-bindings: pwm: update bindings 
-> > for MT7629" to replace commit 1c00ad6ebf36aa3b0fa598a48b8ae59782be4121,
-> > Or maybe we need a little modification like this ?
-> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt ...
-> > - - "mediatek,mt7629-pwm", "mediatek,mt7622-pwm": found on mt7629 SoC.
-> > + - "mediatek,mt7629-pwm": found on mt7629 SoC.
-> 
-> Good catch, I must've taken this from the wrong version of the patch.
-> 
-> How about the attached patch?
-> 
-> Thanks,
-> Thierry
-> --- >8 ---
-> From 641b0ee176b139f9edd137ba636ca0cb9c63289a Mon Sep 17 00:00:00 2001
-> From: Thierry Reding <thierry.reding@gmail.com>
-> Date: Mon, 30 Sep 2019 11:33:31 +0200
-> Subject: [PATCH] dt-bindings: pwm: mediatek: Remove gratuitous compatible
->  string for MT7629
-> 
-> The MT7629 is, in fact, not compatible with the MT7622 because the
-> former has a single PWM channel while the former has 6. Remove the
-> gratuitous compatible string for MT7629.
-> 
-> Reported-by: Sam Shih <sam.shih@mediatek.com>
-> Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> index c8501530173c..053e9b5880f1 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> @@ -6,7 +6,7 @@ Required properties:
->     - "mediatek,mt7622-pwm": found on mt7622 SoC.
->     - "mediatek,mt7623-pwm": found on mt7623 SoC.
->     - "mediatek,mt7628-pwm": found on mt7628 SoC.
-> -   - "mediatek,mt7629-pwm", "mediatek,mt7622-pwm": found on mt7629 SoC.
-> +   - "mediatek,mt7629-pwm": found on mt7629 SoC.
->     - "mediatek,mt8516-pwm": found on mt8516 SoC.
->   - reg: physical base address and length of the controller's registers.
->   - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
+This patch series adds power management support for STM32 Timer PWM:
+- Document the pinctrl sleep state for STM32 Timer PWM
+- STM32 Timer PWM driver
 
-It seems good to me.
+Fabrice Gasnier (2):
+  dt-bindings: pwm-stm32: document pinctrl sleep state
+  pwm: stm32: add power management support
 
-Thanks,
-Regards, Sam
+ .../devicetree/bindings/pwm/pwm-stm32.txt          |  8 ++-
+ drivers/pwm/pwm-stm32.c                            | 82 ++++++++++++++++------
+ 2 files changed, 67 insertions(+), 23 deletions(-)
 
+-- 
+2.7.4
 
