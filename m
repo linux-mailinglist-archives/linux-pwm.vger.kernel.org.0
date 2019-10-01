@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A193C3C2E
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Oct 2019 18:50:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBC84C3DD3
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Oct 2019 19:03:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390035AbfJAQol (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 1 Oct 2019 12:44:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56988 "EHLO mail.kernel.org"
+        id S1729299AbfJAQkA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Oct 2019 12:40:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390027AbfJAQok (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:44:40 -0400
+        id S1729254AbfJAQkA (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:40:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C1A721D80;
-        Tue,  1 Oct 2019 16:44:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC1C02190F;
+        Tue,  1 Oct 2019 16:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948280;
-        bh=heI1w7nY6McwTvjkvsOTZmwnaKryPkblh2fn31KdwDI=;
+        s=default; t=1569947999;
+        bh=QW0ekt2NVtSUYBkmf2MI5jiIISU16b48NI9jA7OHoJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p3JxL0QehT9RtB9drhPvLC52XGzR9N3YIxQCrJYTh/gbv7r1Gd2bRCuw1GMh9twRL
-         msK9whXgfgtQKZIzzMWwK5fdlfW4VpWKupjZJ54ru5XUZb6CZI+iGrdPv57FVkPB99
-         c13OgzZEKf3jAdKlWZsehMbgzqom34WgojIlJW1E=
+        b=U2sxihZ/5ESRDgKQL7TyJM01KgJ0AE2WlLCEe8i6pahu//PjPfNuSJqGG8BnGkvwZ
+         3XPb47IN6FxqkDXU9bQK3EJ00E4Jh/WwKepzn8WictLE8a1nRosLCU5Rt/1KFDfqRF
+         3IJ2ve+U8na9xX/AQr4DyXzVx+Ftwk6F1yoTUgIk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
@@ -30,12 +30,12 @@ Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
         <u.kleine-koenig@pengutronix.de>,
         Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 13/29] pwm: stm32-lp: Add check in case requested period cannot be achieved
-Date:   Tue,  1 Oct 2019 12:44:07 -0400
-Message-Id: <20191001164423.16406-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 25/71] pwm: stm32-lp: Add check in case requested period cannot be achieved
+Date:   Tue,  1 Oct 2019 12:38:35 -0400
+Message-Id: <20191001163922.14735-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164423.16406-1-sashal@kernel.org>
-References: <20191001164423.16406-1-sashal@kernel.org>
+In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
+References: <20191001163922.14735-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -68,7 +68,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 6 insertions(+)
 
 diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-index 9793b296108ff..3f2e4ef695d75 100644
+index 2211a642066db..97a9afa191ee0 100644
 --- a/drivers/pwm/pwm-stm32-lp.c
 +++ b/drivers/pwm/pwm-stm32-lp.c
 @@ -59,6 +59,12 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
