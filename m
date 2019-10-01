@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 391D2C3B4E
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Oct 2019 18:43:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A193C3C2E
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Oct 2019 18:50:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732838AbfJAQng (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 1 Oct 2019 12:43:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55700 "EHLO mail.kernel.org"
+        id S2390035AbfJAQol (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Oct 2019 12:44:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732809AbfJAQnf (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:43:35 -0400
+        id S2390027AbfJAQok (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:44:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BCA821D80;
-        Tue,  1 Oct 2019 16:43:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C1A721D80;
+        Tue,  1 Oct 2019 16:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948215;
-        bh=aLfiwxh2cGEke7pOc3TnWhzlU9xXH4nxrckrExWMU18=;
+        s=default; t=1569948280;
+        bh=heI1w7nY6McwTvjkvsOTZmwnaKryPkblh2fn31KdwDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kWWIZRNqbE4vqel5OdWH3sr+frEE5US6n38icgt6oKSuf6iz2NqmNR2UYjNxzgpKm
-         aOWAFBlkMYgTg58gMX+iehZ0tiMB9CyA9DHZ7qIRds15weOf1jJf5zA2snYF2B5FM3
-         VAJ/jxYGbX3YB9wbS7/X3UPdKRsp7txmJWcj6Jp0=
+        b=p3JxL0QehT9RtB9drhPvLC52XGzR9N3YIxQCrJYTh/gbv7r1Gd2bRCuw1GMh9twRL
+         msK9whXgfgtQKZIzzMWwK5fdlfW4VpWKupjZJ54ru5XUZb6CZI+iGrdPv57FVkPB99
+         c13OgzZEKf3jAdKlWZsehMbgzqom34WgojIlJW1E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
@@ -30,12 +30,12 @@ Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
         <u.kleine-koenig@pengutronix.de>,
         Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 17/43] pwm: stm32-lp: Add check in case requested period cannot be achieved
-Date:   Tue,  1 Oct 2019 12:42:45 -0400
-Message-Id: <20191001164311.15993-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 13/29] pwm: stm32-lp: Add check in case requested period cannot be achieved
+Date:   Tue,  1 Oct 2019 12:44:07 -0400
+Message-Id: <20191001164423.16406-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
-References: <20191001164311.15993-1-sashal@kernel.org>
+In-Reply-To: <20191001164423.16406-1-sashal@kernel.org>
+References: <20191001164423.16406-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -68,10 +68,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 6 insertions(+)
 
 diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-index 0059b24cfdc3c..28e1f64134763 100644
+index 9793b296108ff..3f2e4ef695d75 100644
 --- a/drivers/pwm/pwm-stm32-lp.c
 +++ b/drivers/pwm/pwm-stm32-lp.c
-@@ -58,6 +58,12 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+@@ -59,6 +59,12 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
  	/* Calculate the period and prescaler value */
  	div = (unsigned long long)clk_get_rate(priv->clk) * state->period;
  	do_div(div, NSEC_PER_SEC);
