@@ -2,248 +2,105 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 46213C8E9D
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2019 18:42:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EECDC8F12
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2019 18:56:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfJBQlV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 2 Oct 2019 12:41:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47434 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726101AbfJBQlV (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Wed, 2 Oct 2019 12:41:21 -0400
-Received: from localhost.localdomain (unknown [194.230.155.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2495F21848;
-        Wed,  2 Oct 2019 16:41:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570034480;
-        bh=sTdcUmQnTJMo/eGaxv0uopEjwcptgep/O3PJEVo0xyI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N5PdC8DvoCbOh3O5NRy0lVGuQbT9DgJt2yYsR8eLbXzVRfINqyFK6QQb0KTbPNKUN
-         Gx/4NhZOOnF1nCxGx8Fe7KG0NGum83wbi7+B5G/IZpaGbUBbk+o81b3JK49Dq7szBF
-         jYLh0cfAB8oH11+a9WfvFfi7Xac1pnWR9qN8DHu4=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-tegra@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 2/2] dt-bindings: pwm: Convert Samsung PWM bindings to json-schema
-Date:   Wed,  2 Oct 2019 18:40:47 +0200
-Message-Id: <20191002164047.14499-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191002164047.14499-1-krzk@kernel.org>
-References: <20191002164047.14499-1-krzk@kernel.org>
+        id S1728086AbfJBQ4J (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 2 Oct 2019 12:56:09 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45626 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbfJBQ4J (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 2 Oct 2019 12:56:09 -0400
+Received: by mail-pg1-f194.google.com with SMTP id q7so12140144pgi.12
+        for <linux-pwm@vger.kernel.org>; Wed, 02 Oct 2019 09:56:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0V6I7vxpenGYwQo+a0w9xjv8KE9amu4CMjrShydQWuc=;
+        b=BNCWbn4YoFqFl6WmXRRnHBUsgZ15/0sG7ZoaJNoV2ERMyL0F2sh9H6Yz4aKEHvZdvj
+         FJID9ANMx4kNqAyZ9Z+YtoAd6pfJacgQhQywuPzDjBbBLhTtZwVTI3CUZKUGgL2PHSrq
+         QB9oc/76C2javT9MA1DwV78kZ9l7USnccItEI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0V6I7vxpenGYwQo+a0w9xjv8KE9amu4CMjrShydQWuc=;
+        b=FO3R58LFPAekTsYawPhF+b5iww0nD+/Ys221TSGKlZEkOH+3FanhBjLwoIjVcr+kKT
+         JZSHKkrRgX9I///U1gnX/yrAi2YukV3nkGBfqbZmrlrXIImsZhBME2OYqMnxLrhxDZt3
+         pWS3A3DsSm6oOwh/UusiEENgUGya9S7CtChLxOWg8CjtwzstTxZlj1LvaPPAI0KpQKWZ
+         1rjCq2x5/DXCF3H+C5LnG8cN9de31BswYVKzYxf6KaKTjKDZKypwYZLX+M8B/D6tnoP6
+         ll30uGED41ihJXA0L+xT1PjGg7G7H3MIQNf464Isvwyqy/5lhox6VaCUF/XJnIub74ai
+         J30Q==
+X-Gm-Message-State: APjAAAValmxf2/Wg/P5uwVy7yicLI/IUY9fR+IbmaQRQDhNOqQO9uJDF
+        0LGyLa/LnGct0AoJ7NiWXQPFWQ==
+X-Google-Smtp-Source: APXvYqw7iJb+eM19mWGTE2rmb9T/7FR39PHihYj+YtlS7q6rqzp4liG+5Pq1fL6s78/n2zPG//C9Cw==
+X-Received: by 2002:a17:90a:cf93:: with SMTP id i19mr5509952pju.72.1570035368715;
+        Wed, 02 Oct 2019 09:56:08 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id b123sm27546480pgc.72.2019.10.02.09.56.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Oct 2019 09:56:07 -0700 (PDT)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Matthias Kaehlcke <mka@chromium.org>, linux-pwm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] backlight: pwm_bl: Don't assign levels table repeatedly
+Date:   Wed,  2 Oct 2019 09:56:01 -0700
+Message-Id: <20191002095541.v2.1.I4f2ede1f55ddd1c72b0303b7fd7f73a782fa33e5@changeid>
+X-Mailer: git-send-email 2.23.0.444.g18eeb5a265-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Convert Samsung PWM (S3C, S5P and Exynos SoCs) bindings to DT schema
-format using json-schema.
+pwm_backlight_probe() re-assigns pb->levels for every brightness
+level. This is not needed and was likely not intended, since
+neither side of the assignment changes during the loop. Assign
+the field only once.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
 
-Changes since v2:
-1. Add additionalProperties: false.
+Changes in v2:
+- removed curly braces from for loop
 
-Changes since v1:
-1. Indent example with four spaces (more readable),
-2. Fix samsung,pwm-outputs after review,
-3. Remove double-quotes from clock names.
----
- .../devicetree/bindings/pwm/pwm-samsung.txt   |  51 --------
- .../devicetree/bindings/pwm/pwm-samsung.yaml  | 109 ++++++++++++++++++
- 2 files changed, 109 insertions(+), 51 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-samsung.txt
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
+ drivers/video/backlight/pwm_bl.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt b/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
-deleted file mode 100644
-index 5538de9c2007..000000000000
---- a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
-+++ /dev/null
-@@ -1,51 +0,0 @@
--* Samsung PWM timers
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index 746eebc411df..05d3b3802658 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -564,18 +564,17 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+ 	memset(&props, 0, sizeof(struct backlight_properties));
+ 
+ 	if (data->levels) {
++		pb->levels = data->levels;
++
+ 		/*
+ 		 * For the DT case, only when brightness levels is defined
+ 		 * data->levels is filled. For the non-DT case, data->levels
+ 		 * can come from platform data, however is not usual.
+ 		 */
+-		for (i = 0; i <= data->max_brightness; i++) {
++		for (i = 0; i <= data->max_brightness; i++)
+ 			if (data->levels[i] > pb->scale)
+ 				pb->scale = data->levels[i];
+ 
+-			pb->levels = data->levels;
+-		}
 -
--Samsung SoCs contain PWM timer blocks which can be used for system clock source
--and clock event timers, as well as to drive SoC outputs with PWM signal. Each
--PWM timer block provides 5 PWM channels (not all of them can drive physical
--outputs - see SoC and board manual).
--
--Be aware that the clocksource driver supports only uniprocessor systems.
--
--Required properties:
--- compatible : should be one of following:
--    samsung,s3c2410-pwm - for 16-bit timers present on S3C24xx SoCs
--    samsung,s3c6400-pwm - for 32-bit timers present on S3C64xx SoCs
--    samsung,s5p6440-pwm - for 32-bit timers present on S5P64x0 SoCs
--    samsung,s5pc100-pwm - for 32-bit timers present on S5PC100, S5PV210,
--			  Exynos4210 rev0 SoCs
--    samsung,exynos4210-pwm - for 32-bit timers present on Exynos4210,
--                          Exynos4x12, Exynos5250 and Exynos5420 SoCs
--- reg: base address and size of register area
--- interrupts: list of timer interrupts (one interrupt per timer, starting at
--  timer 0)
--- clock-names: should contain all following required clock names:
--    - "timers" - PWM base clock used to generate PWM signals,
--  and any subset of following optional clock names:
--    - "pwm-tclk0" - first external PWM clock source,
--    - "pwm-tclk1" - second external PWM clock source.
--  Note that not all IP variants allow using all external clock sources.
--  Refer to SoC documentation to learn which clock source configurations
--  are available.
--- clocks: should contain clock specifiers of all clocks, which input names
--  have been specified in clock-names property, in same order.
--- #pwm-cells: should be 3. See pwm.txt in this directory for a description of
--  the cells format. The only third cell flag supported by this binding is
--  PWM_POLARITY_INVERTED.
--
--Optional properties:
--- samsung,pwm-outputs: list of PWM channels used as PWM outputs on particular
--    platform - an array of up to 5 elements being indices of PWM channels
--    (from 0 to 4), the order does not matter.
--
--Example:
--	pwm@7f006000 {
--		compatible = "samsung,s3c6400-pwm";
--		reg = <0x7f006000 0x1000>;
--		interrupt-parent = <&vic0>;
--		interrupts = <23>, <24>, <25>, <27>, <28>;
--		clocks = <&clock 67>;
--		clock-names = "timers";
--		samsung,pwm-outputs = <0>, <1>;
--		#pwm-cells = <3>;
--	}
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
-new file mode 100644
-index 000000000000..ea7f32905172
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
-@@ -0,0 +1,109 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/pwm-samsung.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung SoC PWM timers
-+
-+maintainers:
-+  - Thierry Reding <thierry.reding@gmail.com>
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+
-+description: |+
-+  Samsung SoCs contain PWM timer blocks which can be used for system clock source
-+  and clock event timers, as well as to drive SoC outputs with PWM signal. Each
-+  PWM timer block provides 5 PWM channels (not all of them can drive physical
-+  outputs - see SoC and board manual).
-+
-+  Be aware that the clocksource driver supports only uniprocessor systems.
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - samsung,s3c2410-pwm             # 16-bit, S3C24xx
-+      - samsung,s3c6400-pwm             # 32-bit, S3C64xx
-+      - samsung,s5p6440-pwm             # 32-bit, S5P64x0
-+      - samsung,s5pc100-pwm             # 32-bit, S5PC100, S5PV210, Exynos4210 rev0 SoCs
-+      - samsung,exynos4210-pwm          # 32-bit, Exynos
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 3
-+
-+  clock-names:
-+    description: |
-+      Should contain all following required clock names:
-+      - "timers" - PWM base clock used to generate PWM signals,
-+      and any subset of following optional clock names:
-+      - "pwm-tclk0" - first external PWM clock source,
-+      - "pwm-tclk1" - second external PWM clock source.
-+      Note that not all IP variants allow using all external clock sources.
-+      Refer to SoC documentation to learn which clock source configurations
-+      are available.
-+    oneOf:
-+      - items:
-+        - const: timers
-+      - items:
-+        - const: timers
-+        - const: pwm-tclk0
-+      - items:
-+        - const: timers
-+        - const: pwm-tclk1
-+      - items:
-+        - const: timers
-+        - const: pwm-tclk0
-+        - const: pwm-tclk1
-+
-+  interrupts:
-+    description:
-+      One interrupt per timer, starting at timer 0.
-+    minItems: 1
-+    maxItems: 5
-+
-+  "#pwm-cells":
-+    description:
-+      The only third cell flag supported by this binding
-+      is PWM_POLARITY_INVERTED.
-+    const: 3
-+
-+  samsung,pwm-outputs:
-+    description:
-+      A list of PWM channels used as PWM outputs on particular platform.
-+      It is an array of up to 5 elements being indices of PWM channels
-+      (from 0 to 4), the order does not matter.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32-array
-+      - uniqueItems: true
-+      - items:
-+          minimum: 0
-+          maximum: 4
-+
-+required:
-+  - clocks
-+  - clock-names
-+  - compatible
-+  - interrupts
-+  - "#pwm-cells"
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pwm@7f006000 {
-+        compatible = "samsung,s3c6400-pwm";
-+        reg = <0x7f006000 0x1000>;
-+        interrupt-parent = <&vic0>;
-+        interrupts = <23>, <24>, <25>, <27>, <28>;
-+        clocks = <&clock 67>;
-+        clock-names = "timers";
-+        samsung,pwm-outputs = <0>, <1>;
-+        #pwm-cells = <3>;
-+    };
+ 		if (pwm_backlight_is_linear(data))
+ 			props.scale = BACKLIGHT_SCALE_LINEAR;
+ 		else
 -- 
-2.17.1
+2.23.0.444.g18eeb5a265-goog
 
