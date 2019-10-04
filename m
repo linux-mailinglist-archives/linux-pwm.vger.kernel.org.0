@@ -2,154 +2,135 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3A0FCB409
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Oct 2019 06:53:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEA83CB40F
+	for <lists+linux-pwm@lfdr.de>; Fri,  4 Oct 2019 06:59:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387978AbfJDEx0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 4 Oct 2019 00:53:26 -0400
-Received: from mx5.ucr.edu ([138.23.62.67]:6114 "EHLO mx5.ucr.edu"
+        id S2388021AbfJDE7y (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 4 Oct 2019 00:59:54 -0400
+Received: from mx1.ucr.edu ([138.23.248.2]:1741 "EHLO mx1.ucr.edu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387976AbfJDEx0 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 4 Oct 2019 00:53:26 -0400
-X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Fri, 04 Oct 2019 00:53:25 EDT
+        id S2387872AbfJDE7x (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 4 Oct 2019 00:59:53 -0400
+X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Fri, 04 Oct 2019 00:59:53 EDT
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
-  t=1570164805; x=1601700805;
-  h=from:to:cc:subject:date:message-id;
-  bh=jWL5W27uUFoqE45P9aToaJkEZWCPur2rRlOPC00wtwM=;
-  b=IEMA8Apzm/u+hUBVdFgwDGJJVBRoyPeqBf90XRcxtfqh7YYXKEOoP8zc
-   rq8HOWvOM9dJDxLl5QXnlkDfk5WGFTqcUXZftEvS77QnAYrah1vHA4Twm
-   F881F0FJJax6LGrYKkfoeMKk35EpSX2EdJlXH4OP+AQESJZBokj7z/zJG
-   +38yYD/vvPuAIkEEnFIdKyWpPGD3PdipePjy3R/wOPspyV5Zs8LViFHqb
-   H5AOMnAqZRlNdO0+7TAhGCYPL8BZg209PEBDBVguipCZT/8wn2i/WfBsb
-   HsEcrPfaDz3RiPZV+ss0AwFO5sKP+R2wQ8Cantf/N+8NrhIhZhcEvEuZX
-   g==;
-IronPort-SDR: ycPJTiP98ztSVqAHn+0UnWiknFgCEuUl3EQi1CsWD6JLAaHMmLXOAWh8HOViqLe7/C8rJ2ds+v
- dETvUjBZlhXLLUtOFf4M4f5WXIpMxPypPgsKrtjmNvI1F+n1OWmhBjbQBy6nkQHKCLNpbJdmIu
- F/QlH5D6b8iL90BqpMGbFatG3O+zm9G1mfVCTnmn7tNOKtwXAppQSIaOoEpidC2wgPz4tjc6eV
- /3PUcOvQp3JNhGLmCOC+R2LWTiR+xp64tRutnCjexDb9qrR5Whl8eZwUPOcy8CKB52tY5x4Aib
- WDk=
-IronPort-PHdr: =?us-ascii?q?9a23=3A55Y0HRSIK/dFGn4hvpIks6lU5tpsv+yvbD5Q0Y?=
- =?us-ascii?q?Iujvd0So/mwa6yZReN2/xhgRfzUJnB7Loc0qyK6vumBDRLu8zJmUtBWaQEbw?=
- =?us-ascii?q?UCh8QSkl5oK+++Imq/EsTXaTcnFt9JTl5v8iLzG0FUHMHjew+a+SXqvnYdFR?=
- =?us-ascii?q?rlKAV6OPn+FJLMgMSrzeCy/IDYbxlViDanbr5+MRu7oR/Ru8UKjoduNLg9wQ?=
- =?us-ascii?q?bVr3VVfOhb2XlmLk+JkRbm4cew8p9j8yBOtP8k6sVNT6b0cbkmQLJBFDgpPH?=
- =?us-ascii?q?w768PttRnYUAuA/WAcXXkMkhpJGAfK8hf3VYrsvyTgt+p93C6aPdDqTb0xRD?=
- =?us-ascii?q?+v4btnRAPuhSwaLDMy7n3ZhdJsg6JauBKhpgJww4jIYIGOKfFyerrRcc4GSW?=
- =?us-ascii?q?ZdW8pcUSlBAoKnb4sUDuoBO+lYpJTjqVUXsBC+CwisC/3ryjBVm3T62aM33/?=
- =?us-ascii?q?gkHQzA2wMtA9wDvGjJoNnsKKseTP2+wK3VwTjDav9b3yr25orVfRA7ufyCXa?=
- =?us-ascii?q?x+f9ffx0csEA3IlUmcpZD/Mj+JzOkBr3SX4ux9XuyvkW4nrARxryCtyccti4?=
- =?us-ascii?q?jJhp8VylfZ/ih+wIc0JN24R1R6YdK4DJdduTqXN5ZqTcM4WW1npjs1yqAftJ?=
- =?us-ascii?q?O9YSMEy4wnygbBZ/Cbd4WE+BHuWeaLLTtmmX5oeKiziwiu/US80uHwS8i53V?=
- =?us-ascii?q?JQoiZbnNTBtmoB2wLS58SdSPZw8UGs0iuV2Q/J8OFLO0U0mLLeK54m37E/iI?=
- =?us-ascii?q?IesV/GHi/qgEX2i7KWdlk89uio9evnZrLmq4eZN4BuiwH+Nr0imtSwAeglKw?=
- =?us-ascii?q?QOUXaX9fig2LH58k35R7JKjvIykqbHqpzVOcMbpquhDw9U1IYs9Qq/Ai+43N?=
- =?us-ascii?q?gEmXQLNlFIdRKdg4T3Jl3DIOr0Aemjj1iwiDtrwurJPrzlApXDNHjDl7LhcK?=
- =?us-ascii?q?596k9dyAo819Ff645IBrwPO//zR1P+tMbCAhAnLgO03v7rCM9h2YMGRWKPHq?=
- =?us-ascii?q?iZPbvWsV+J4OIvPuaNaJYNuDfzLvgo/ODujXAnll8HZ6Wp3oUYaGq+Hvt4J0?=
- =?us-ascii?q?WVe33sgs0OETRCkBA5SbnbiU+CTDkbM2egX6s9vmlgIJ+tF8HOSp370+/J5z?=
- =?us-ascii?q?uyApADPjMOMVuLC3q9MtjZVg=3D=3D?=
+  t=1570165194; x=1601701194;
+  h=mime-version:from:date:message-id:subject:to;
+  bh=ql44aBwf8muduY7E8woRGM6sMLEeHBMPetACIWQG9tI=;
+  b=coqY9aqs8mWi2XCslKEwc2M6IY1m493OaIKsEcQW7ZPglfarNLf6d9k/
+   jI8mcW8nu3BQQ11TeHLkTm2YOvYfnRc0qLzS6iFBWr2Gy3JEVYatSZKPE
+   fiMDAL4D8RLbBh65J7KK89Vfd3Ha5trfMfwU2eyElAxcY7hlPE1YlFZbQ
+   QBZkgu56KTpH+FRzB/o3Pj9qY69yxxUZoHn6mkeWjvsDnYprJ2DAy+KMb
+   9/LTpNmJPzFsbWHa9m1kRE65tlyxgtDOB6mELwpqv+hGdMooWts21Wehl
+   MpGnNEGy/P/VkoLob8ECM7GqMuY19jkKOdPUqBTnGM/7T+TqKuSkA7Akb
+   A==;
+IronPort-SDR: zpjGLrfAyIuwmuhlxuJaZ971SGgODGKHacnU+xqD53sCuhSj6L5S4T9+S2iAmJY41GHjkBLln+
+ DJP4TXhp2N1GIWS2/8HnH6+LKjW27RgAXwJgfh0CSWpC7fj6UYaSswm1tn/g3KXghE7u871mRE
+ r4HDtyooCDkfIpMCkylSzVDOMUVlTkhCxsHA5a7TllZGfwH2TeVgmGNJRFn6qRyB6+QEqpxiZN
+ Nsmp7KbEqt0tjlwYTBTpTrPe1w8dyvcR74PDfY5IQW3iVez9tZnLMF6MyFApQzBkFWfOPtZkZZ
+ W08=
+IronPort-PHdr: =?us-ascii?q?9a23=3ARyDNKh95QCSJ7/9uRHKM819IXTAuvvDOBiVQ1K?=
+ =?us-ascii?q?B+0uwUIJqq85mqBkHD//Il1AaPAdyAra8cwLCM+4nbGkU4qa6bt34DdJEeHz?=
+ =?us-ascii?q?Qksu4x2zIaPcieFEfgJ+TrZSFpVO5LVVti4m3peRMNQJW2aFLduGC94iAPER?=
+ =?us-ascii?q?vjKwV1Ov71GonPhMiryuy+4ZLebxhGiTanYb5+MBq6oRvPusILnYZsN6E9xw?=
+ =?us-ascii?q?fTrHBVYepW32RoJVySnxb4+Mi9+YNo/jpTtfw86cNOSL32cKskQ7NWCjQmKH?=
+ =?us-ascii?q?0169bwtRbfVwuP52ATXXsQnxFVHgXK9hD6XpP2sivnqupw3TSRMMPqQbwoXz?=
+ =?us-ascii?q?mp8rxmQwH0higZKzE58XnXis1ug6JdvBKhvAF0z4rNbI2IKPZyYqbRcNUHTm?=
+ =?us-ascii?q?RDQ8lRTTRMDYy8YYUBDOQPIPhWoJXmqlsSsRezHxWgCP/zxjJKgHL9wK000/?=
+ =?us-ascii?q?4mEQHDxAEvHdMOsXXUrNXoM6cZTOO6zKnSwjXCcvhb3jf86YnIch87oPGAQa?=
+ =?us-ascii?q?58fMTKxEkyCwzFlE+cppL4MDOIz+kAtXWQ4el4Ve+3lWIrtwV8riKsy8oskI?=
+ =?us-ascii?q?XFmJ4Zx1Pe+Sln3Io5Odu1Q1Nhb9G+CptfrSSaOpNzQsMlXm5npj43yqYDuZ?=
+ =?us-ascii?q?6nZCgKz4knxwLHZ/yHbYeI5hXjWf6UIThihXJlfKuzhxKw8US90+H8WNe43E?=
+ =?us-ascii?q?pWoiZfndnMsXcN1xPX6seZUPdy4kCh2TOX2wDS7OFLP1w0mLLFJ5I9xrM8jJ?=
+ =?us-ascii?q?kevETZEiPohEn7j7Waels49uS08+jnZ6/ppp6YN496kAH+NaEul9S/AOU5Mg?=
+ =?us-ascii?q?gBRWmb9fig2LDt5kD5XalFjucsnqbHrZ/aONwXprSlDA9NzoYj9xG/Ai+i0N?=
+ =?us-ascii?q?QZm3kHMV1EdAufj4nnPlHDO+74DfihjFS2ijtrxO7JPqfnAprTKnjPirDhfa?=
+ =?us-ascii?q?xy6x0U9A1m49lV/ZNfB/kuKen1W0Lr/IjWBxUjMge5henuE9N825k2Qn7JCa?=
+ =?us-ascii?q?icZueajV+J6/g1MqG2aYMUvjm1f+Ql5vP0l25/g1IRfK+m9ZQSYXG8WP9hJh?=
+ =?us-ascii?q?PdKUfzj+AiFWoLuAd7b3LsiVLKBSMVZHK/XqQxozI8BYSnAq/bS4ainaCb2y?=
+ =?us-ascii?q?G6DttaazYCQnWFAXbtes2vXO4RZSaTJIc1lzcDTKWsT44nkwqysVSg47ViJ+?=
+ =?us-ascii?q?vQvCYfsMSnnPFx6v3akx0o+HRICN6SzmzFG2hwk3MBQTMs0eZjplZy11qryr?=
+ =?us-ascii?q?Q+iPtdQ5gb4/JPTxd/LYHZ5/J1Bsq0WQ/beNqNDlG8TZHuBTA3U8J02MMLOB?=
+ =?us-ascii?q?xVAMnnixyG2iOrB7ockfqQGJsu97jRx3zgYc16zjKO0KgnkkljS9FKcG6rnK?=
+ =?us-ascii?q?hy8yDXBpXViAOYkaiwfKgR1SKL832MiSKKvUdFQEtzXL/DUHQ3eETbt5L661?=
+ =?us-ascii?q?nEQrvoDq4odkNzyc+TN60CU9zgix0SVvfiKcnYekq6gCGtDgzOy7+ROs6iUG?=
+ =?us-ascii?q?UQ2irMFQA/lAYctSKNLg84CQ+quCTDByYoGF7yNRDC6+57/UK6XE8pyEm4b0?=
+ =?us-ascii?q?Rgn+6k6B4chKTEENsO1ahCtSs8/WYnVG2h1s7bXoLT7zFqe79RNJZkuA9K?=
 X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2FFIgBGzpZdgMjXVdFlHgEGEoFpg1x?=
- =?us-ascii?q?MEI0khV1QAQEBBosmGHGFeoMLhyMBCAEBAQwBAS0CAQGEQIJIIzgTAgMJAQE?=
- =?us-ascii?q?FAQEBAQEFBAEBAhABAQkNCQgnhUJCAQwBgWopgzULFhVSgRUBBQE1IjmCRwG?=
- =?us-ascii?q?BdhQFoVeBAzyMJTOIZQEJDYFICQEIgSIBhzSEWYEQgQeDbgdsh2WCRASBNwE?=
- =?us-ascii?q?BAY12hzWWUgEGAoIRFIF4kxQnhDyJP4tEAS2nLwIKBwYPI4FGgXtNJYFsCoF?=
- =?us-ascii?q?EUBAUgVsXFY4uITOBCIJpjVoB?=
-X-IPAS-Result: =?us-ascii?q?A2FFIgBGzpZdgMjXVdFlHgEGEoFpg1xMEI0khV1QAQEBB?=
- =?us-ascii?q?osmGHGFeoMLhyMBCAEBAQwBAS0CAQGEQIJIIzgTAgMJAQEFAQEBAQEFBAEBA?=
- =?us-ascii?q?hABAQkNCQgnhUJCAQwBgWopgzULFhVSgRUBBQE1IjmCRwGBdhQFoVeBAzyMJ?=
- =?us-ascii?q?TOIZQEJDYFICQEIgSIBhzSEWYEQgQeDbgdsh2WCRASBNwEBAY12hzWWUgEGA?=
- =?us-ascii?q?oIRFIF4kxQnhDyJP4tEAS2nLwIKBwYPI4FGgXtNJYFsCoFEUBAUgVsXFY4uI?=
- =?us-ascii?q?TOBCIJpjVoB?=
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2HiAgD4zpZdgMjQVdFlDhABBhKFRDO?=
+ =?us-ascii?q?ETI5fhRcBmBgBCAEBAQ4vAQGEOwOCSiM4EwIDCQEBBQEBAQEBBQQBAQIQAQE?=
+ =?us-ascii?q?JDQkIJ4VCgjopAYNVEXwPAiYCJBIBBQEiATSFC6FbgQM8iyaBMoQMAYRYAQk?=
+ =?us-ascii?q?NgUgSeiiMDoIXg25zh1GCWASBNwEBAZUrllIBBgKCERQDjFGIRBuCKpcWjiu?=
+ =?us-ascii?q?ZSg8jgUaBezMaJX8GZ4FPTxAUgVsXjWgEAVYkkXsBAQ?=
+X-IPAS-Result: =?us-ascii?q?A2HiAgD4zpZdgMjQVdFlDhABBhKFRDOETI5fhRcBmBgBC?=
+ =?us-ascii?q?AEBAQ4vAQGEOwOCSiM4EwIDCQEBBQEBAQEBBQQBAQIQAQEJDQkIJ4VCgjopA?=
+ =?us-ascii?q?YNVEXwPAiYCJBIBBQEiATSFC6FbgQM8iyaBMoQMAYRYAQkNgUgSeiiMDoIXg?=
+ =?us-ascii?q?25zh1GCWASBNwEBAZUrllIBBgKCERQDjFGIRBuCKpcWjiuZSg8jgUaBezMaJ?=
+ =?us-ascii?q?X8GZ4FPTxAUgVsXjWgEAVYkkXsBAQ?=
 X-IronPort-AV: E=Sophos;i="5.67,254,1566889200"; 
-   d="scan'208";a="80567868"
-Received: from mail-pg1-f200.google.com ([209.85.215.200])
-  by smtpmx5.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Oct 2019 21:46:03 -0700
-Received: by mail-pg1-f200.google.com with SMTP id 6so3510161pgi.10
-        for <linux-pwm@vger.kernel.org>; Thu, 03 Oct 2019 21:46:03 -0700 (PDT)
+   d="scan'208";a="12059797"
+Received: from mail-lj1-f200.google.com ([209.85.208.200])
+  by smtp1.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Oct 2019 21:52:47 -0700
+Received: by mail-lj1-f200.google.com with SMTP id i18so1386307ljg.14
+        for <linux-pwm@vger.kernel.org>; Thu, 03 Oct 2019 21:52:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=psYXa8mIT1FkAshfcFCubEkA00yN3VjYG8rNmfjs5/o=;
-        b=qlhGHeUfOAuykvEeWjmhK/UKmrw2yGjT9mNTmwLDapL/L/a8Kx9k94gL5OEZ/JeSb4
-         rgjaa8VpzTnLkzE6uCd2NdRlh30BGCnKviE3E2jmr2q4RiRfLX2NyzTsXp2gqy6AbeTd
-         +En7OTEVlDWM+1MSQpnQahRvknrslgGALiZw8US2t6HTRlBvTRCLGNMr884sfEJW0KIi
-         t8gwINeZJ94UZ/OFYFyvC6PF+WwXFc256H85jcms6zO30ps9snxf010tL7VirQNR6zTF
-         +1dU8XjN7yme8HgOh1wioVf76FNWgFkuRm+gX6JVZBBHwe4aMi8ekDyBlDTsJMJP1kdu
-         7gkw==
-X-Gm-Message-State: APjAAAUaHEzoA5i7HkJUnJg7XMTHxwVqNHSnNli+3Bcf2EkDeCGCZiya
-        DOGwH+8RNNbER5WMU8rSOf1aHDfF3EgEKHz+nCBznjINu2toClY5Dn1PrAbF1lTlWtKhdhNRPPe
-        BGWpaxGwlo8GpNVqA7duddQ==
-X-Received: by 2002:a17:90a:22b0:: with SMTP id s45mr14621632pjc.22.1570164362693;
-        Thu, 03 Oct 2019 21:46:02 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyGjRTgwnhlo2KZICWhErm2QBBJwJvYEziM2d39vj6xXurXwJPnB9wMG3PeWPQZzN2CBEQCIQ==
-X-Received: by 2002:a17:90a:22b0:: with SMTP id s45mr14621596pjc.22.1570164362245;
-        Thu, 03 Oct 2019 21:46:02 -0700 (PDT)
-Received: from Yizhuo.cs.ucr.edu (yizhuo.cs.ucr.edu. [169.235.26.74])
-        by smtp.googlemail.com with ESMTPSA id p88sm3786036pjp.22.2019.10.03.21.46.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 21:46:01 -0700 (PDT)
-From:   Yizhuo <yzhai003@ucr.edu>
-Cc:     Yizhuo <yzhai003@ucr.edu>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=UonwauBUbF5jJCMbv+kEyggRBo1MYeaIpr/rVjEka4g=;
+        b=p36kkhaaEQp6ZhAwRgHRrJFLiZ/rj+iUzqu1zn/sqvRB5Tk5JbnlJpg9LguRS49l6e
+         tSguRSB7GaFG0Q2kZSbKVz8i6V9+deAMrKVIWBCtG1QNqt6Fjf8fuqabfmZnWWuhR+db
+         oWhhEeu3BbgrdYaPCMtnDn3oAP7N5SOLtTJfyh4nvV+BqDwG0PffshyB66ztx9WRtxKy
+         s1aebZam95zRhA3ROIBdkB60S74FDA8DkJ1Z4xAqN3J75snPqyoFFlwGPO0WLUexC1cI
+         xQOQWTchidpUqJ6ZHvNiOdQNt7Eon44Iun56pZl4Mg4Dam54qiK2d9tkgdiM3diz4jVC
+         yM3A==
+X-Gm-Message-State: APjAAAVwIaiQeyVul7IFsJ5IH7kwleeg9c5LEhWeKP/837orc3jmrwFb
+        Hf4nSuBw1gR4gkPcH88mNrJoiuC0FOr9LNH4XTwK9Clm2761Q+YMQM1+K3MYAaK7Sk0fPjxA353
+        JMD9nSEu6eILh/Ye/G7QF5D9grQkOT9oP/XIJpw==
+X-Received: by 2002:a19:4347:: with SMTP id m7mr7417796lfj.146.1570164764937;
+        Thu, 03 Oct 2019 21:52:44 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxQwQ4yv8ZIWgEbfBVR+NQnXGTuto6AhZqOSD61PfrwsPbsqTELSWEjRUHKiie8C8KsIwGEinKXPs2u+mEFOfQ=
+X-Received: by 2002:a19:4347:: with SMTP id m7mr7417782lfj.146.1570164764695;
+ Thu, 03 Oct 2019 21:52:44 -0700 (PDT)
+MIME-Version: 1.0
+From:   Yizhuo Zhai <yzhai003@ucr.edu>
+Date:   Thu, 3 Oct 2019 21:52:31 -0700
+Message-ID: <CABvMjLSR9kFJpU19OX8Us4jPQ9vuTtNR571Njn_gqqpb-=hdCQ@mail.gmail.com>
+Subject: Potential uninitialized variables in pwm: stm32-lp
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         Alexandre Torgue <alexandre.torgue@st.com>,
         linux-pwm@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pwm: stm32: Fix the usage of uninitialized variable in stm32_pwm_config()
-Date:   Thu,  3 Oct 2019 21:46:49 -0700
-Message-Id: <20191004044649.2405-1-yzhai003@ucr.edu>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Zhiyun Qian <zhiyunq@cs.ucr.edu>,
+        Chengyu Song <csong@cs.ucr.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Inside function stm32_pwm_config(), variable "psc" and " arr"
-could be uninitialized if regmap_read() returns -EINVALs.
-However, they are used later in the if statement to decide
-the return value which is potentially unsafe.
+Hi All:
 
-The same case happens in function stm32_pwm_detect_channels()
-with variable "ccer", but we cannot just return -EINVAL because
-the error code is not acceptable by the caller. Aslo, the variable
-"ccer" in functionstm32_pwm_detect_complementary() could also be
-uninitialized, since stm32_pwm_detect_complementary() returns void,
-the patch is not easy.
+drivers/pwm/pwm-stm32-lp.c:
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
----
- drivers/pwm/pwm-stm32.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Variable "val" and "prd" in function stm32_pwm_lp_get_state() could be
+uninitialized
+if regmap_read() returns -EINVAL. But it's directly used later without
+the return check,
+which is potentially unsafe.
 
-diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-index 359b08596d9e..22c54df52977 100644
---- a/drivers/pwm/pwm-stm32.c
-+++ b/drivers/pwm/pwm-stm32.c
-@@ -346,9 +346,15 @@ static int stm32_pwm_config(struct stm32_pwm *priv, int ch,
- 	 */
- 	if (active_channels(priv) & ~(1 << ch * 4)) {
- 		u32 psc, arr;
-+		int ret;
- 
--		regmap_read(priv->regmap, TIM_PSC, &psc);
--		regmap_read(priv->regmap, TIM_ARR, &arr);
-+		ret = regmap_read(priv->regmap, TIM_PSC, &psc);
-+		if (ret)
-+			return ret;
-+
-+		ret = regmap_read(priv->regmap, TIM_ARR, &arr);
-+		if (ret)
-+			return ret;
- 
- 		if ((psc != prescaler) || (arr != prd - 1))
- 			return -EBUSY;
+Also, we cannot simply return -EINVAL in stm32_pwm_lp_get_state() because the
+return type is void.
+
+Thanks for your time to check this case.
 -- 
-2.17.1
+Kind Regards,
 
+Yizhuo Zhai
+
+Computer Science, Graduate Student
+University of California, Riverside
