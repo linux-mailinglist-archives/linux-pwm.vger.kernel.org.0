@@ -2,42 +2,42 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E0C1ACBAEA
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Oct 2019 14:54:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31E30CBAED
+	for <lists+linux-pwm@lfdr.de>; Fri,  4 Oct 2019 14:54:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387573AbfJDMy1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 4 Oct 2019 08:54:27 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57822 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387690AbfJDMyZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 4 Oct 2019 08:54:25 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x94Cpg40007976;
-        Fri, 4 Oct 2019 14:54:11 +0200
+        id S2387690AbfJDMya (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 4 Oct 2019 08:54:30 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:15210 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387696AbfJDMy1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 4 Oct 2019 08:54:27 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x94Cp1gS031982;
+        Fri, 4 Oct 2019 14:54:12 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=rnzvoLapup62xEU3qg28JHDE/fN/lvzvSo1oUmE5lRo=;
- b=gXvIsmAwnIC3KiMLDDGzeZtiwm3CDgVZJiZdxRVGlJ56oif6xSepVCbuMwhZx3CNGp4w
- 7HKx0y+sTIDRSPvnO6ULI5wLMTEziPSpq2poz6ReTzFBXLNwr678DOOmFMaAq/0QtMv7
- NO4D5ojBZfsNirkE2TbOfSpP0R/y7mC7B1/uh9NtAzeLqhR/1Lxp932AhLGW0hJ+iFqd
- w42w1hrcn210XWLIEQ8jToKTRndNqVrUvG4fOlF8+G1Y+cYF5oZDQSveLqso4/EaJYn4
- JLGW3J6Xr4sr+rB9UIsPEkrKrDBJh9p2l44YyfOOVHGpSVTHj5SB2g8whu88Z5fA0SMs jA== 
+ bh=33Y2KA3m/b4jRDQPrOEVAIPKGGtoSOGNe2bJpPVSj7U=;
+ b=Fy8AkiTLP2OIaoI7+ALvU8i6C9cO3G3dPg8HFgKEnpT69ijcVB1EXEC7ZBSwhL1IQ6k/
+ 1JJ4I+i8JYmlIoQnz+WSbxXd4iNlh3SpHQknfQyWfIZn0SQxF5R8wTit4UhDJLivWs23
+ SvQjG/pmGzSg6dLnhFLfAo9xuUSkfiRLJcDoGaG8Q2lYaVMD3tm5222SwOUKvZWWVJP2
+ VgDfz1IEM9nqU77ya6D/zvaF/D/5UQnP3XGjSTLeAXP/7YzXMFca/ies+e4WEUnBPuw1
+ mRcrxFbGgIkDddMLOdM4vjO2VjD8LvjhfVM0xkS7NYGxKJ0yU30A6xZ49ryxf5qNLPNP Jw== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vcem3fwgh-1
+        by mx08-00178001.pphosted.com with ESMTP id 2v9vnau38b-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Oct 2019 14:54:11 +0200
+        Fri, 04 Oct 2019 14:54:12 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 27F7D100034;
-        Fri,  4 Oct 2019 14:54:11 +0200 (CEST)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 11F422BFDEE;
-        Fri,  4 Oct 2019 14:54:11 +0200 (CEST)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.92) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 4 Oct 2019
- 14:54:10 +0200
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2F3C510002A;
+        Fri,  4 Oct 2019 14:54:12 +0200 (CEST)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 211722BFDEE;
+        Fri,  4 Oct 2019 14:54:12 +0200 (CEST)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.92) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 4 Oct 2019
+ 14:54:12 +0200
 Received: from localhost (10.48.0.192) by Webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 4 Oct 2019 14:54:10 +0200
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 4 Oct 2019 14:54:11 +0200
 From:   Fabrice Gasnier <fabrice.gasnier@st.com>
 To:     <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
         <u.kleine-koenig@pengutronix.de>
@@ -48,9 +48,9 @@ CC:     <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
         <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
         <benjamin.gaignard@st.com>,
         <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v2 1/3] dt-bindings: pwm-stm32: document pinctrl sleep state
-Date:   Fri, 4 Oct 2019 14:53:51 +0200
-Message-ID: <1570193633-6600-2-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH v2 2/3] pwm: stm32: split breakinput apply routine to ease PM support
+Date:   Fri, 4 Oct 2019 14:53:52 +0200
+Message-ID: <1570193633-6600-3-git-send-email-fabrice.gasnier@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1570193633-6600-1-git-send-email-fabrice.gasnier@st.com>
 References: <1570193633-6600-1-git-send-email-fabrice.gasnier@st.com>
@@ -64,40 +64,121 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add documentation for pinctrl sleep state that can be used by
-STM32 timers PWM.
+Split breakinput routine that configures STM32 timers 'break' safety
+feature upon probe, into two routines:
+- stm32_pwm_apply_breakinputs() sets all the break inputs into registers.
+- stm32_pwm_probe_breakinputs() probes the device tree break input settings
+  before calling stm32_pwm_apply_breakinputs()
+
+This is a precursor patch to ease PM support. Registers content may get
+lost during low power. So, break input settings applied upon probe need
+to be restored upon resume (e.g. by calling stm32_pwm_apply_breakinputs()).
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- Documentation/devicetree/bindings/pwm/pwm-stm32.txt | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/pwm/pwm-stm32.c | 48 ++++++++++++++++++++++++++++--------------------
+ 1 file changed, 28 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-index a8690bf..f1620c1 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-@@ -5,8 +5,9 @@ See ../mfd/stm32-timers.txt for details about the parent node.
+diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
+index 359b085..cf8658c 100644
+--- a/drivers/pwm/pwm-stm32.c
++++ b/drivers/pwm/pwm-stm32.c
+@@ -19,6 +19,12 @@
+ #define CCMR_CHANNEL_MASK  0xFF
+ #define MAX_BREAKINPUT 2
  
- Required parameters:
- - compatible:		Must be "st,stm32-pwm".
--- pinctrl-names: 	Set to "default".
--- pinctrl-0: 		List of phandles pointing to pin configuration nodes for PWM module.
-+- pinctrl-names: 	Set to "default". An additional "sleep" state can be
-+			defined to set pins in sleep state when in low power.
-+- pinctrl-n: 		List of phandles pointing to pin configuration nodes for PWM module.
- 			For Pinctrl properties see ../pinctrl/pinctrl-bindings.txt
- - #pwm-cells:		Should be set to 3. This PWM chip uses the default 3 cells
- 			bindings defined in pwm.txt.
-@@ -32,7 +33,8 @@ Example:
- 			compatible = "st,stm32-pwm";
- 			#pwm-cells = <3>;
- 			pinctrl-0	= <&pwm1_pins>;
--			pinctrl-names	= "default";
-+			pinctrl-1	= <&pwm1_sleep_pins>;
-+			pinctrl-names	= "default", "sleep";
- 			st,breakinput = <0 1 5>;
- 		};
- 	};
++struct stm32_breakinput {
++	u32 index;
++	u32 level;
++	u32 filter;
++};
++
+ struct stm32_pwm {
+ 	struct pwm_chip chip;
+ 	struct mutex lock; /* protect pwm config/enable */
+@@ -26,15 +32,11 @@ struct stm32_pwm {
+ 	struct regmap *regmap;
+ 	u32 max_arr;
+ 	bool have_complementary_output;
++	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
++	unsigned int nbreakinput;
+ 	u32 capture[4] ____cacheline_aligned; /* DMA'able buffer */
+ };
+ 
+-struct stm32_breakinput {
+-	u32 index;
+-	u32 level;
+-	u32 filter;
+-};
+-
+ static inline struct stm32_pwm *to_stm32_pwm_dev(struct pwm_chip *chip)
+ {
+ 	return container_of(chip, struct stm32_pwm, chip);
+@@ -512,15 +514,27 @@ static int stm32_pwm_set_breakinput(struct stm32_pwm *priv,
+ 	return (bdtr & bke) ? 0 : -EINVAL;
+ }
+ 
+-static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
++static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv)
++{
++	int i, ret = 0;
++
++	for (i = 0; i < priv->nbreakinput && !ret; i++) {
++		ret = stm32_pwm_set_breakinput(priv,
++					       priv->breakinput[i].index,
++					       priv->breakinput[i].level,
++					       priv->breakinput[i].filter);
++	}
++
++	return ret;
++}
++
++static int stm32_pwm_probe_breakinputs(struct stm32_pwm *priv,
+ 				       struct device_node *np)
+ {
+-	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
+-	int nb, ret, i, array_size;
++	int nb, ret, array_size;
+ 
+ 	nb = of_property_count_elems_of_size(np, "st,breakinput",
+ 					     sizeof(struct stm32_breakinput));
+-
+ 	/*
+ 	 * Because "st,breakinput" parameter is optional do not make probe
+ 	 * failed if it doesn't exist.
+@@ -531,20 +545,14 @@ static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
+ 	if (nb > MAX_BREAKINPUT)
+ 		return -EINVAL;
+ 
++	priv->nbreakinput = nb;
+ 	array_size = nb * sizeof(struct stm32_breakinput) / sizeof(u32);
+ 	ret = of_property_read_u32_array(np, "st,breakinput",
+-					 (u32 *)breakinput, array_size);
++					 (u32 *)priv->breakinput, array_size);
+ 	if (ret)
+ 		return ret;
+ 
+-	for (i = 0; i < nb && !ret; i++) {
+-		ret = stm32_pwm_set_breakinput(priv,
+-					       breakinput[i].index,
+-					       breakinput[i].level,
+-					       breakinput[i].filter);
+-	}
+-
+-	return ret;
++	return stm32_pwm_apply_breakinputs(priv);
+ }
+ 
+ static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
+@@ -614,7 +622,7 @@ static int stm32_pwm_probe(struct platform_device *pdev)
+ 	if (!priv->regmap || !priv->clk)
+ 		return -EINVAL;
+ 
+-	ret = stm32_pwm_apply_breakinputs(priv, np);
++	ret = stm32_pwm_probe_breakinputs(priv, np);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.7.4
 
