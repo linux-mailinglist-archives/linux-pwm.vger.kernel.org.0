@@ -2,72 +2,127 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 869C7CE07C
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Oct 2019 13:30:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84F2ECE6A9
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Oct 2019 17:09:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbfJGLat (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 7 Oct 2019 07:30:49 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40417 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727490AbfJGLat (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Oct 2019 07:30:49 -0400
-Received: by mail-ot1-f65.google.com with SMTP id y39so10619096ota.7;
-        Mon, 07 Oct 2019 04:30:47 -0700 (PDT)
+        id S1728813AbfJGPIn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Oct 2019 11:08:43 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:32885 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728790AbfJGPIn (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Oct 2019 11:08:43 -0400
+Received: by mail-wr1-f65.google.com with SMTP id b9so15794185wrs.0
+        for <linux-pwm@vger.kernel.org>; Mon, 07 Oct 2019 08:08:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=rmvp3U9wOO9fx1V5/5lVy3lHSgb3r92p/5Ndn8D9Cno=;
+        b=PZ88vPGKZhvCrX5TQAJCXwbZ/+D6pVQWntk88MxmxD8JNoIcsCt3mUkxbkopRKq2Ok
+         S4zvSHsn2Y4D2U15ngxrUfkOgx2ZnWmIrkIHbxaBIqhfzOQBjA/ixUT+jmWFnoRLJoUf
+         Gr+x/k240g7pHGj3e5EWGz+4qddvm/hVrYCBRl/XV+bNGUYRfgnXy5nsWLgkANYb71ix
+         9Yl1XlQr8iq+6Qs4GaRLGgzG354SH3TytK8CKLgMVaGPzIVYqikwxQWhAVz18kCQQyT8
+         gaM+0swlRNT83/HMqXi3+wEbTmwu2QFdmqwgFVOz/RTQOA+1D1kl8rJ0C8OvcCjj/h3a
+         ofpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7F0WkJv48+GPGKyb1Dgf9OLKRcqPwFjYveqQlob2kvM=;
-        b=CK9ah5jPwKoYfH8whGvfCSbF4JUo0tB5vv6QheUJAVUYf8B2asBSpzKFKD1O3ha2XZ
-         5SxwKo4na/ftDS9cT2QbqtOPqzflWr2Rgypd5qt3bsbQLajJKW6qGhX0ZfeQTkipe6Yh
-         4JmmZBczek2uVT9Z38JXgNNI2ieVjw7RoZxYtZPvj53Cf1MbyQKfFOzGOV1E+LRO6xdl
-         ZDlUOkJZp/M2GpbOi6XX1z+9BMD+dYXr+4bW8CaOPEHZvOwqdtzcz0Cax5bLbb6AOd2t
-         Hajv9PGLnzKq8OHsapn8Z7h/bIKzN6w4rnjMaX0ZKmy1jHXXXc8iECgPzWVK4pwffKoe
-         1RIg==
-X-Gm-Message-State: APjAAAXv2V3dlOY4QqwAU2d4PVjW4cXxxmaQyXJ2eABueTZculzf5gR+
-        0uPogyxdZbecunlqA0bJLeI4e68NJBfrl41+lEw=
-X-Google-Smtp-Source: APXvYqwnbiaCerhQZkfhR6ihvCrToXIJMFZIzVImomPLDjPNDMH9GS3mk5H/WRI6pkMRCXHijjz82wobtOwBNezlmtY=
-X-Received: by 2002:a9d:404d:: with SMTP id o13mr11215187oti.39.1570447847197;
- Mon, 07 Oct 2019 04:30:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <1569931360-17196-1-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1569931360-17196-1-git-send-email-biju.das@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 7 Oct 2019 13:30:36 +0200
-Message-ID: <CAMuHMdVrO9+cCd_C_ANRjMNSo2yasrUXzhQUeZmau_c9FT8bCA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pwm: rcar: Add r8a774b1 support
-To:     Biju Das <biju.das@bp.renesas.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=rmvp3U9wOO9fx1V5/5lVy3lHSgb3r92p/5Ndn8D9Cno=;
+        b=QvtdCE+n1haahW3Zw75NN/ZcKFOQwhDS+WarHE4BzhK9nm9DADPn/dPKg+V34Eb/o/
+         CsAYszhySBgdHACGzGyFWXLrZAG+leu9nKm8YB2jVdNSsdca1es22s6W1K3ECLpPOzZl
+         vP1iu4jhddUaSMPEBmjkULXQTOsedglq2EIYjW5SnJzMvhYXf7VsxEs7Lk6L+F6YK3nd
+         5+3ieE8z/hsWXXqv4O4rnnQCQktaAWATRz7ullRDziNWdAlX5MjwivUMAJblxv27X9Rz
+         bkgAXOL/XaY59EFpzZtjTe4VjD8Xg5LQM42dLSYK5PpNM21IeCXGzeqAm6OEsHMdmVOE
+         HX4w==
+X-Gm-Message-State: APjAAAXYPRrcQzi9EQAjGzYF/ITnryNFieWuXMVLsMY3z2CNKzwRIbxx
+        bY6WRCJXPZSMNdjomhhZi5Jngw==
+X-Google-Smtp-Source: APXvYqwkVghS0eHq32QO7i9QSOrwUCdtltFtZcTTIjruUxA68yY7ARWhzNO4HSBRH43QK2i2Zgw8JA==
+X-Received: by 2002:a5d:6a09:: with SMTP id m9mr21687302wru.12.1570460921085;
+        Mon, 07 Oct 2019 08:08:41 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id s12sm29340436wra.82.2019.10.07.08.08.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 08:08:40 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 16:08:38 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/5] backlight: pwm_bl: fix cie1913 comments and constant
+Message-ID: <20191007150838.3qbrten34ln6ufo4@holly.lan>
+References: <20190919140620.32407-1-linux@rasmusvillemoes.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190919140620.32407-1-linux@rasmusvillemoes.dk>
+User-Agent: NeoMutt/20180716
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 2:03 PM Biju Das <biju.das@bp.renesas.com> wrote:
-> Document RZ/G2N (R8A774B1) SoC bindings.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+On Thu, Sep 19, 2019 at 04:06:16PM +0200, Rasmus Villemoes wrote:
+> The "break-even" point for the two formulas is L==8, which is also
+> what the code actually implements. [Incidentally, at that point one
+> has Y=0.008856, not 0.08856].
+> 
+> Moreover, all the sources I can find say the linear factor is 903.3
+> rather than 902.3, which makes sense since then the formulas agree at
+> L==8, both yielding the 0.008856 figure to four significant digits.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Indeed. Interestingly the following doc (with a high search rank in
+Google) has exactly this inconsistency and uses different values at
+different times:
+http://www.photonstophotos.net/GeneralTopics/Exposure/Psychometric_Lightness_and_Gamma.htm
 
-Gr{oetje,eeting}s,
+> 
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-                        Geert
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> ---
+>  drivers/video/backlight/pwm_bl.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> index 2201b8c78641..be36be1cacb7 100644
+> --- a/drivers/video/backlight/pwm_bl.c
+> +++ b/drivers/video/backlight/pwm_bl.c
+> @@ -155,8 +155,8 @@ static const struct backlight_ops pwm_backlight_ops = {
+>   *
+>   * The CIE 1931 lightness formula is what actually describes how we perceive
+>   * light:
+> - *          Y = (L* / 902.3)           if L* ≤ 0.08856
+> - *          Y = ((L* + 16) / 116)^3    if L* > 0.08856
+> + *          Y = (L* / 903.3)           if L* ≤ 8
+> + *          Y = ((L* + 16) / 116)^3    if L* > 8
+>   *
+>   * Where Y is the luminance, the amount of light coming out of the screen, and
+>   * is a number between 0.0 and 1.0; and L* is the lightness, how bright a human
+> @@ -169,9 +169,15 @@ static u64 cie1931(unsigned int lightness, unsigned int scale)
+>  {
+>  	u64 retval;
+>  
+> +	/*
+> +	 * @lightness is given as a number between 0 and 1, expressed
+> +	 * as a fixed-point number in scale @scale. Convert to a
+> +	 * percentage, still expressed as a fixed-point number, so the
+> +	 * above formulas can be applied.
+> +	 */
+>  	lightness *= 100;
+>  	if (lightness <= (8 * scale)) {
+> -		retval = DIV_ROUND_CLOSEST_ULL(lightness * 10, 9023);
+> +		retval = DIV_ROUND_CLOSEST_ULL(lightness * 10, 9033);
+>  	} else {
+>  		retval = int_pow((lightness + (16 * scale)) / 116, 3);
+>  		retval = DIV_ROUND_CLOSEST_ULL(retval, (scale * scale));
+> -- 
+> 2.20.1
