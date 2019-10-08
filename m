@@ -2,118 +2,127 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B65ECF75E
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2019 12:43:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5FABCF78C
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2019 12:54:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730016AbfJHKnS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Oct 2019 06:43:18 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39031 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730389AbfJHKnR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Oct 2019 06:43:17 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v17so2584449wml.4
-        for <linux-pwm@vger.kernel.org>; Tue, 08 Oct 2019 03:43:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kNT0uravG5d+lNDf6zaLGqaWiN2XpE5JXyYmizVBilE=;
-        b=K9H4eDofUQAKZFM6o8SaI1fDGTLc4h7zvLiQ1+kb/3hl9KTydNTP7sOmaT6ZOvOy+h
-         qCDq8mzBa37VmuqcmWj5VvjaBvps+QwcM68guyWqS7cr9uaOY134H4lb7mkzoSRr4Buc
-         MoeRrevZYD2M/FEAhj2Pmft/ekWeOstHP3Qd7drNLISZ3UzzZWZWJrRbTlsAaqGTlbMn
-         zlC88mSLkqFcvForhTUElc0Tk8aobntBt2kXJ7UPWhnu9ZKaS1Q5JYKqELXmOkI4xbf4
-         4yCCbqemhFWRxC1rFNomOZHXO8jgNt7JK20q4ZEL/O60BOBasjqAhiJtzqMKkGJNHJHP
-         hZBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kNT0uravG5d+lNDf6zaLGqaWiN2XpE5JXyYmizVBilE=;
-        b=ddS/n5aXNlmOH+WSYVTG3Kh89iY4Ti+tyZTXNFyAaEJpZ8CUpZcSgDdFdLJvVAPKEN
-         2gZKrumc0uhotpQ6qizSwZhlFLptPZxjYz17XpvJae0MeRxa4vPRWdSqXo58QVnBg3ei
-         hUzDE2a8zphte6/NAVvwrrLJdK3uFictvdRKP9QibWkZ+ScKxjrcsNeXZkuxhjlYE5+T
-         MpBwjyWTn4QsIGaZjnkOTKyForDnpuPbFD7IrnHjIhoOH915sxp8hWUQgQYWceaMTkQX
-         ICM/Jb0FQhQvL1MH3ybkNuUSCBFhkK35IDqpLdt8ze2HtUTqvlDwGECMnLGAeRJzRCoz
-         FVxQ==
-X-Gm-Message-State: APjAAAUcWNzEhBaJTFsW645Qye9DMJvj21CTUJ9ObDvhvZRbIdm30y0C
-        DbKm/2PnGaAC90zoXjty8cs/aA==
-X-Google-Smtp-Source: APXvYqwDdhuAhHaQJXOqUmc7Qcgp2Qnp21uhE7Cr0GMQdE2+Bt2iLHZCWbFgdquKZmjYilbrPc3XeA==
-X-Received: by 2002:a7b:c7d4:: with SMTP id z20mr3278073wmk.145.1570531394197;
-        Tue, 08 Oct 2019 03:43:14 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id b62sm4548867wmc.13.2019.10.08.03.43.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 03:43:13 -0700 (PDT)
-Date:   Tue, 8 Oct 2019 11:43:11 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] backlight: pwm_bl: drop use of int_pow()
-Message-ID: <20191008104311.s4k5syr7gd7tb55w@holly.lan>
-References: <20190919140620.32407-1-linux@rasmusvillemoes.dk>
- <20190919140620.32407-3-linux@rasmusvillemoes.dk>
- <20191007152800.3nhbf7h7knumriz4@holly.lan>
- <5f19e307-29c4-f077-568d-b2bd6ae74608@rasmusvillemoes.dk>
- <20191008093145.kgx6ytkbycmmkist@holly.lan>
- <9bf6baf9-46be-771c-7e26-527b117c998a@rasmusvillemoes.dk>
+        id S1730307AbfJHKy1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Oct 2019 06:54:27 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44762 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730118AbfJHKy1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Oct 2019 06:54:27 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 7DDAD28FBC6
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org, thierry.reding@gmail.com
+Cc:     heiko@sntech.de, dianders@chromium.org, mka@chromium.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
+        groeck@chromium.org, kernel@collabora.com, bleung@chromium.org,
+        linux-pwm@vger.kernel.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Subject: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the last applied state
+Date:   Tue,  8 Oct 2019 12:54:17 +0200
+Message-Id: <20191008105417.16132-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9bf6baf9-46be-771c-7e26-527b117c998a@rasmusvillemoes.dk>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 12:02:07PM +0200, Rasmus Villemoes wrote:
-> On 08/10/2019 11.31, Daniel Thompson wrote:
-> > On Mon, Oct 07, 2019 at 08:43:31PM +0200, Rasmus Villemoes wrote:
-> >> On 07/10/2019 17.28, Daniel Thompson wrote:
-> >>> On Thu, Sep 19, 2019 at 04:06:18PM +0200, Rasmus Villemoes wrote:
-> >>>
-> >>> It feels like there is some rationale missing in the description here.
-> >>>
-> >>
-> >> Apart from the function call overhead (and resulting register pressure
-> >> etc.), using int_pow is less efficient (for an exponent of 3, it ends up
-> >> doing four 64x64 multiplications instead of just two). But feel free to
-> >> drop it, I'm not going to pursue it further - it just seemed like a
-> >> sensible thing to do while I was optimizing the code anyway.
-> >>
-> >> [At the time I wrote the patch, this was also the only user of int_pow
-> >> in the tree, so it also allowed removing int_pow altogether.]
-> > 
-> > To be honest the change is fine but the patch description doesn't make
-> > sense if the only current purpose of the patch is as a optimization.
-> 
-> Agreed. Do you want me to resend the series with patch 3 updated to read
-> 
-> "For a fixed small exponent of 3, it is more efficient to simply use two
-> explicit multiplications rather than calling the int_pow() library
-> function: Aside from the function call overhead, its implementation
-> using repeated squaring means it ends up doing four 64x64 multiplications."
-> 
-> (and obviously patch 5 dropped)?
+For the cros-ec-pwm, "disabled" is the same as "duty cycle == 0", and is
+not possible to program a duty cycle while the device is disabled. However,
+the PWM API allows us to configure the "duty cycle" while the device is
+"disabled". But now, pwm_get_state() is returning the real hardware state
+instead of the last applied state, and this change of behavior, broke
+the display on my rk3399-gru-kevin and doesn't turn on anymore.
 
-Yes, please.
+Commit 01ccf903edd6 ("pwm: Let pwm_get_state() return the last implemented
+state") introduced this change of behavior. And, assuming that this is
+the right to do, workaround this problem for the cros-ec-pwm driver by
+reverting the mentioned commit at the lowlevel driver.
 
-When you resend you can add my R-B: to all patches:
+With that patch applied pwm_get_state() will return only the programmed
+hardware duty cycle value if the PWM is enabled. When is disabled, will
+return the last applied duty_cycle value instead. That's not ideal, but
+definetely is better than don't implement .get_state().
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Fixes: 01ccf903edd6 ("pwm: Let pwm_get_state() return the last implemented state")
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
 
+ drivers/pwm/pwm-cros-ec.c | 32 ++++++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 8 deletions(-)
 
-Daniel.
+diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
+index 89497448d217..f750a3cf0c6c 100644
+--- a/drivers/pwm/pwm-cros-ec.c
++++ b/drivers/pwm/pwm-cros-ec.c
+@@ -18,11 +18,13 @@
+  * @dev: Device node
+  * @ec: Pointer to EC device
+  * @chip: PWM controller chip
++ * @state: Holds the last state applied
+  */
+ struct cros_ec_pwm_device {
+ 	struct device *dev;
+ 	struct cros_ec_device *ec;
+ 	struct pwm_chip chip;
++	struct pwm_state state;
+ };
+ 
+ static inline struct cros_ec_pwm_device *pwm_to_cros_ec_pwm(struct pwm_chip *c)
+@@ -102,6 +104,9 @@ static int cros_ec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	if (state->period != EC_PWM_MAX_DUTY)
+ 		return -EINVAL;
+ 
++	/* Store the new state */
++	ec_pwm->state = *state;
++
+ 	/*
+ 	 * EC doesn't separate the concept of duty cycle and enabled, but
+ 	 * kernel does. Translate.
+@@ -117,17 +122,28 @@ static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
+ 	int ret;
+ 
+-	ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
+-	if (ret < 0) {
+-		dev_err(chip->dev, "error getting initial duty: %d\n", ret);
+-		return;
++	/*
++	 * As there is no way for this hardware to separate the concept of
++	 * duty cycle and enabled, but the PWM API does, let return the last
++	 * applied state when the PWM is disabled and only return the real
++	 * hardware value when the PWM is enabled. Otherwise, a user of this
++	 * driver, can get confused because won't be able to program a duty
++	 * cycle while the PWM is disabled.
++	 */
++	state->enabled = ec_pwm->state.enabled;
++	if (state->enabled) {
++		ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
++		if (ret < 0) {
++			dev_err(chip->dev, "error getting initial duty: %d\n",
++				ret);
++			return;
++		}
++		state->duty_cycle = ret;
++	} else {
++		state->duty_cycle = ec_pwm->state.duty_cycle;
+ 	}
+ 
+-	state->enabled = (ret > 0);
+ 	state->period = EC_PWM_MAX_DUTY;
+-
+-	/* Note that "disabled" and "duty cycle == 0" are treated the same */
+-	state->duty_cycle = ret;
+ }
+ 
+ static struct pwm_device *
+-- 
+2.20.1
 
-
-PS Don't mind either way but I wondered the following is clearer than
-   the slightly funky multiply-and-assign expression (which isn't wrong
-   but isn't very common either so my brain won't speed read it):
-
-		retval = DIV_ROUND_CLOSEST_ULL(retval * retval * retval,
-		 			       scale * scale);
