@@ -2,90 +2,172 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 32886CFCB7
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2019 16:46:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C2DECFEF6
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2019 18:33:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725900AbfJHOpj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Oct 2019 10:45:39 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36713 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbfJHOpi (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Oct 2019 10:45:38 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iHqk0-0001Zs-Vp; Tue, 08 Oct 2019 16:45:32 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iHqjz-0001yc-As; Tue, 08 Oct 2019 16:45:31 +0200
-Date:   Tue, 8 Oct 2019 16:45:31 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     thierry.reding@gmail.com, alexandre.torgue@st.com,
-        benjamin.gaignard@st.com, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH] pwm: stm32: add comment to better describe breakinput
- feature
-Message-ID: <20191008144531.pjt525xuz7n5a3hq@pengutronix.de>
-References: <1570534887-26181-1-git-send-email-fabrice.gasnier@st.com>
+        id S1727999AbfJHQdV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Oct 2019 12:33:21 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48474 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728561AbfJHQdV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Oct 2019 12:33:21 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id C352228FC0D
+Subject: Re: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the last
+ applied state
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
+        heiko@sntech.de, dianders@chromium.org, mka@chromium.org,
+        groeck@chromium.org, kernel@collabora.com, bleung@chromium.org,
+        linux-pwm@vger.kernel.org
+References: <20191008105417.16132-1-enric.balletbo@collabora.com>
+ <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
+Date:   Tue, 8 Oct 2019 18:33:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1570534887-26181-1-git-send-email-fabrice.gasnier@st.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 01:41:27PM +0200, Fabrice Gasnier wrote:
-> Add a comment to better describe the purpose of breakinput feature that
-> can be found on some STM32 timer instances. Briefly comment on the
-> characteristics of this input for PWM, and pinmuxing as suggested in [1].
+Hi Uwe,
+
+Thanks for the quick reply.
+
+On 8/10/19 16:34, Uwe Kleine-KÃ¶nig wrote:
+> Hello Enric,
 > 
-> [1] https://lkml.org/lkml/2019/10/1/207
+> On Tue, Oct 08, 2019 at 12:54:17PM +0200, Enric Balletbo i Serra wrote:
+>> @@ -117,17 +122,28 @@ static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+>>  	struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
+>>  	int ret;
+>>  
+>> -	ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
+>> -	if (ret < 0) {
+>> -		dev_err(chip->dev, "error getting initial duty: %d\n", ret);
+>> -		return;
+>> +	/*
+>> +	 * As there is no way for this hardware to separate the concept of
+>> +	 * duty cycle and enabled, but the PWM API does, let return the last
+>> +	 * applied state when the PWM is disabled and only return the real
+>> +	 * hardware value when the PWM is enabled. Otherwise, a user of this
+>> +	 * driver, can get confused because won't be able to program a duty
+>> +	 * cycle while the PWM is disabled.
+>> +	 */
+>> +	state->enabled = ec_pwm->state.enabled;
 > 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> ---
->  drivers/pwm/pwm-stm32.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+>> +	if (state->enabled) {
 > 
-> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-> index 359b085..6406ebb 100644
-> --- a/drivers/pwm/pwm-stm32.c
-> +++ b/drivers/pwm/pwm-stm32.c
-> @@ -522,8 +522,14 @@ static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
->  					     sizeof(struct stm32_breakinput));
->  
->  	/*
-> +	 * Some timer instances can have BRK input pins (e.g. basically a fault
-> +	 * pin from the output power stage). The break feature allows a safe
-> +	 * shut-down of the PWM outputs to a predefined state. Further details
-> +	 * are available in application note AN4277, "Using STM32 device PWM
-> +	 * shut-down features..."
+> As part of registration of the pwm .get_state is called. In this case
+> .apply wasn't called before and so state->enabled is probably 0. So this
+> breaks reporting the initial state ...
+> 
+>> +		ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
+>> +		if (ret < 0) {
+>> +			dev_err(chip->dev, "error getting initial duty: %d\n",
+>> +				ret);
+>> +			return;
+>> +		}
+>> +		state->duty_cycle = ret;
+>> +	} else {
+>> +		state->duty_cycle = ec_pwm->state.duty_cycle;
+>>  	}
+>>  
+>> -	state->enabled = (ret > 0);
+>>  	state->period = EC_PWM_MAX_DUTY;
+>> -
+>> -	/* Note that "disabled" and "duty cycle == 0" are treated the same */
+>> -	state->duty_cycle = ret;
+> 
+> A few thoughts to your approach here ...:
+> 
+>  - Would it make sense to only store duty_cycle and enabled in the
+>    driver struct?
+> 
 
-Without having read the application note I don't understand the purpose.
-Not sure if this should be a show stopper though.
-
->  	 * Because "st,breakinput" parameter is optional do not make probe
-> -	 * failed if it doesn't exist.
-> +	 * failed if it doesn't exist. The pinctrl handle must hold the BRK
-> +	 * pin(s) when using "st,breakinput" property.
-
-Is this a comment that has a better place in the binding doc?
-
-Best regards
-Uwe
+Yes, in fact, my first approach (that I didn't send) was only storing enabled
+and duty cycle. For some reason I ended storing the full pwm_state struct, but I
+guess is not really needed.
 
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+>  - Which driver is the consumer of your pwm? If I understand correctly
+>    the following sequence is the bad one:
+> 
+
+The consumer is the pwm_bl driver. Actually I'n trying to identify other consumers.
+
+> 	state.period = P;
+> 	state.duty_cycle = D;
+> 	state.enabled = 0;
+>    	pwm_apply_state(pwm, &state);
+> 
+> 	...
+> 
+> 	pwm_get_state(pwm, &state);
+> 	state.enabled = 1;
+>    	pwm_apply_state(pwm, &state);
+> 
+
+Yes that's the sequence.
+
+>    Before my patch there was an implicit promise in the PWM framework
+>    that the last pwm_apply_state has .duty_cycle = D (and .period = P).
+>    Is this worthwile, or should we instead declare this as
+>    non-guaranteed and fix the caller?
+> 
+
+pwm_bl is compliant with this, the problem in the pwm-cros-ec driver is when you
+set the duty_cycle but enable is 0.
+
+>  - If this is a more or less common property that hardware doesn't know
+>    the concept of "disabled" maybe it would make sense to drop this from
+>    the PWM framework, too. (This is a question that I discussed some
+>    time ago already with Thierry, but without an result. The key
+>    question is: What is the difference between "disabled" and
+>    "duty_cycle = 0" in general and does any consumer care about it.)
+> 
+
+Good question, I don't really know all consumer requirements, but AFAIK, usually
+when you want to program duty_cycle to 0 you also want to disable the PWM. At
+least for the backlight case doesn't make sense program first the duty_cycle and
+then enable the PWM, is implicit, if duty_cycle is 0 the PWM is disabled, if
+duty_cycle > 0 the PWM is enabled.
+
+>  - A softer variant of the above: Should pwm_get_state() anticipate that
+>    with .enabled = 0 the duty_cycle (and maybe also period) is
+>    unreliable and cache that for callers?
+> 
+
+Sorry, when you say pwm_get_state(), you mean the core call or the lowlevel
+driver call?
+
+> Unrelated to the patch in question I noticed that the cros-ec-pwm driver
+> doesn't handle polarity. We need
+> 
+> 	state->polarity = PWM_POLARITY_NORMAL;
+> 
+> in cros_ec_pwm_get_state() and
+> 
+> 	if (state->polarity != PWM_POLARITY_NORMAL)
+> 		return -ERANGE;
+> 
+> in cros_ec_pwm_apply(). (Not sure -ERANGE is the right value, I think
+> there is no global rule in force that tells the right value though.)
+> 
+
+Nice catch, thanks, I'll send a patch to fix this.
+
+Thanks,
+ Enric
+
+> Best regards
+> Uwe
+> 
