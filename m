@@ -2,130 +2,218 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DCE2D019F
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2019 21:55:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F175D0222
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2019 22:31:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730823AbfJHTz2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Oct 2019 15:55:28 -0400
-Received: from mail-ed1-f50.google.com ([209.85.208.50]:43749 "EHLO
-        mail-ed1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730811AbfJHTzX (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Oct 2019 15:55:23 -0400
-Received: by mail-ed1-f50.google.com with SMTP id r9so16819010edl.10
-        for <linux-pwm@vger.kernel.org>; Tue, 08 Oct 2019 12:55:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=d9t6Rq0RbZ7PXIZmIcLbP2JTBMFny2QBILsKgMXZe9M=;
-        b=aMQQgi7dIXVBnmVMSSMCLgb3oXTzeafbZdgWl2Y7dgh9d3yilS1+9yTnvWoS7+GzUk
-         LWbTYKnbDzuBJ3/U6U4a0Txwis4unkVKDohWYyBjnKYrTLghN7laSYeGp1/FcmznDyEO
-         GS9pgiMN+uT0qCjbihaa5wuvtHOM98vqOW8UVjJ7Cv+EprgLSNS8LJdhrjnJyNqQEN56
-         5sfOyU15h4kpoOXNgzNljIz5N8IZnpl4XHLYJYLCwvTOpHMRDfM3ywlgrk+4Qs+isMtv
-         bwWMXB9P8rpPXCaQx70qpw2S2sG0Q07XznOIe3PPQ9uFVdh7+iWMtRM+rtyrWFblwrYM
-         wXZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=d9t6Rq0RbZ7PXIZmIcLbP2JTBMFny2QBILsKgMXZe9M=;
-        b=hruBW24IlRqS2euhyHGduY4fiUyd4/4QxukRlXRYLH4nvaGNyMgyY2y5Op05L0WlqD
-         YrGrNOzHCmFlBiahSggeSwbtRl+Xm6pV/4inz0rP2OpqNbt6noc8ENefH4RlqwxIBdHu
-         Vw1oRb/p5GHckQezZ0vOdx2OcsC0n5FE3/pbxl6vFxrAJ/sklrLVUx/FN7bx880W6cj8
-         cu+MkxMZ/6nhAyeaxvu3SmLXTlQyafUno33W9p5xltmbl/yVONa2HY48sS+FrUMvzJr/
-         DjmrDabDDsGEWgVnEhzGOIRw5ifsmoRBVqT9rkznXKFSTnSTpcAEJAMs8VkPS1ooa0Iy
-         xZKg==
-X-Gm-Message-State: APjAAAXzozygwGjVXVIBQnVjJATHfpEKlEkABp2f7wJXSSOZqaYf8RPX
-        1H+mKPGX9nrVXbR/Ht+IVDuA6a7o3J5ErQdzncs=
-X-Google-Smtp-Source: APXvYqxaZfvXk0/G1PfPN40JEbEfue6b7v2Lk/SQWmnUxoxmnZyxXwpPNC4UPIh9mJw4kQ9atMHeHG1Orcb22TWXOSk=
-X-Received: by 2002:a50:c306:: with SMTP id a6mr36339639edb.108.1570564517490;
- Tue, 08 Oct 2019 12:55:17 -0700 (PDT)
+        id S1730565AbfJHUbp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Oct 2019 16:31:45 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:32909 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727835AbfJHUbn (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Oct 2019 16:31:43 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iHw8x-0001v9-1N; Tue, 08 Oct 2019 22:31:39 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iHw8v-0005Xa-FM; Tue, 08 Oct 2019 22:31:37 +0200
+Date:   Tue, 8 Oct 2019 22:31:37 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
+        heiko@sntech.de, dianders@chromium.org, mka@chromium.org,
+        groeck@chromium.org, kernel@collabora.com, bleung@chromium.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the
+ last applied state
+Message-ID: <20191008203137.s22clq6v2om5ktio@pengutronix.de>
+References: <20191008105417.16132-1-enric.balletbo@collabora.com>
+ <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
+ <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
 MIME-Version: 1.0
-Received: by 2002:a17:906:cc89:0:0:0:0 with HTTP; Tue, 8 Oct 2019 12:55:16
- -0700 (PDT)
-Reply-To: moneygram.1820@outlook.fr
-From:   MONEY GRAM <currency1000000@gmail.com>
-Date:   Tue, 8 Oct 2019 20:55:16 +0100
-Message-ID: <CAPqfnSEO==O6BEtBbcMMZfh3qcY4Bz0qndhCqbcLqZx4DCs44A@mail.gmail.com>
-Subject: HERE IS YOUR MONEY GRAM PAYMENT HAS BEEN SENT TO YOU HERE IS THE M.T.C.N:78393135
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-HERE IS YOUR MONEY GRAM PAYMENT HAS BEEN SENT TO YOU HERE IS THE
-M.T.C.N:78393135
+On Tue, Oct 08, 2019 at 06:33:15PM +0200, Enric Balletbo i Serra wrote:
+> Hi Uwe,
+> 
+> Thanks for the quick reply.
+> 
+> On 8/10/19 16:34, Uwe Kleine-König wrote:
+> > Hello Enric,
+> > 
+> > On Tue, Oct 08, 2019 at 12:54:17PM +0200, Enric Balletbo i Serra wrote:
+> >> @@ -117,17 +122,28 @@ static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> >>  	struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
+> >>  	int ret;
+> >>  
+> >> -	ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
+> >> -	if (ret < 0) {
+> >> -		dev_err(chip->dev, "error getting initial duty: %d\n", ret);
+> >> -		return;
+> >> +	/*
+> >> +	 * As there is no way for this hardware to separate the concept of
+> >> +	 * duty cycle and enabled, but the PWM API does, let return the last
+> >> +	 * applied state when the PWM is disabled and only return the real
+> >> +	 * hardware value when the PWM is enabled. Otherwise, a user of this
+> >> +	 * driver, can get confused because won't be able to program a duty
+> >> +	 * cycle while the PWM is disabled.
+> >> +	 */
+> >> +	state->enabled = ec_pwm->state.enabled;
+> > 
+> >> +	if (state->enabled) {
+> > 
+> > As part of registration of the pwm .get_state is called. In this case
+> > .apply wasn't called before and so state->enabled is probably 0. So this
+> > breaks reporting the initial state ...
+> > 
+> >> +		ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
+> >> +		if (ret < 0) {
+> >> +			dev_err(chip->dev, "error getting initial duty: %d\n",
+> >> +				ret);
+> >> +			return;
+> >> +		}
+> >> +		state->duty_cycle = ret;
+> >> +	} else {
+> >> +		state->duty_cycle = ec_pwm->state.duty_cycle;
+> >>  	}
+> >>  
+> >> -	state->enabled = (ret > 0);
+> >>  	state->period = EC_PWM_MAX_DUTY;
+> >> -
+> >> -	/* Note that "disabled" and "duty cycle == 0" are treated the same */
+> >> -	state->duty_cycle = ret;
+> > 
+> > A few thoughts to your approach here ...:
+> > 
+> >  - Would it make sense to only store duty_cycle and enabled in the
+> >    driver struct?
+> > 
+> 
+> Yes, in fact, my first approach (that I didn't send) was only storing enabled
+> and duty cycle. For some reason I ended storing the full pwm_state struct, but I
+> guess is not really needed.
+> 
+> 
+> >  - Which driver is the consumer of your pwm? If I understand correctly
+> >    the following sequence is the bad one:
+> > 
+> 
+> The consumer is the pwm_bl driver. Actually I'n trying to identify
+> other consumers.
 
-Attn: Beneficiary,
+Ah, I see why I missed to identify the problem back when I checked this
+driver. The problem is not that .duty_cycle isn't set but there .enabled
+isn't set. So maybe we just want:
 
-This is to inform you that the America Embassy office was instructed
-to transfer your fund $980,000.00 U.S Dollars compensating all the
-SCAM VICTIMS and your email was found as one of the VICTIMS. by
-America security leading team and America representative officers so
-between today the 8th of October till 1ST Of December 2019 you will
-be receiving MONEY GRAM the sum of $6,000 dollars per day. However be informed
-that we have already sent the $6,000 dollars this morning to avoid
-cancellation of your payment, remain the total sum of $980,000.00.
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index 2201b8c78641..0468c6ee4448 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -123,6 +123,7 @@ static int pwm_backlight_update_status(struct backlight_device *bl)
+        if (brightness > 0) {
+                pwm_get_state(pb->pwm, &state);
+                state.duty_cycle = compute_duty_cycle(pb, brightness);
++               state.enabled = true;
+                pwm_apply_state(pb->pwm, &state);
+                pwm_backlight_power_on(pb);
+        } else
 
-You have only six hours to call this office upon the receipt of this
-email the maximum amount you will be receiving per a day starting from
-today's $6,000 and the Money Transfer Control Number of today is
-below.
+? On a side note: It's IMHO strange that pwm_backlight_power_on
+reconfigures the PWM once more.
 
-NOTE; The sent $6,000 is on hold because of the instruction from IMF
-office, they asked us to place it on hold by requesting the (Clean
-Bill Record Certificate) which will cost you $25 in order to fulfill
-all the necessary obligation to avoid any hitches while sending you
-the payment through MONEY GRAM money transfer, the necessary
-obligation I mean here is to obtain the (Clean Bill Record
-Certificate)
+> > 	state.period = P;
+> > 	state.duty_cycle = D;
+> > 	state.enabled = 0;
+> >    	pwm_apply_state(pwm, &state);
+> > 
+> > 	...
+> > 
+> > 	pwm_get_state(pwm, &state);
+> > 	state.enabled = 1;
+> >    	pwm_apply_state(pwm, &state);
+> > 
+> 
+> Yes that's the sequence.
+> 
+> >    Before my patch there was an implicit promise in the PWM framework
+> >    that the last pwm_apply_state has .duty_cycle = D (and .period = P).
+> >    Is this worthwile, or should we instead declare this as
+> >    non-guaranteed and fix the caller?
+> > 
+> 
+> pwm_bl is compliant with this, the problem in the pwm-cros-ec driver is when you
+> set the duty_cycle but enable is 0.
 
-Below is the information of today track it in our
+pwm_bl *relies* on this behaviour. The question is: Is this a valid
+assumption to rely on (for consumers) resp. to guarantee (for the PWM
+framework)? I'm not sure it is because each PWM that doesn't know the
+concept of "disabled" (not sure how many there are) needs some effort to
+simulate it (by caching duty_cycle and period on disable).
 
-websitehttps://moneygarm.com/asp/orderStatus.asp?country=global
-to see is available to pick up by the receiver, but if we didn't here
-from you soon we'll pickup it up from line for security reason to
-avoid hackers stealing the money online.
+Dropping this promise and fix pwm_bl (and maybe other consumers that
+rely on it) is my preferred solution.
+ 
+> >  - If this is a more or less common property that hardware doesn't know
+> >    the concept of "disabled" maybe it would make sense to drop this from
+> >    the PWM framework, too. (This is a question that I discussed some
+> >    time ago already with Thierry, but without an result. The key
+> >    question is: What is the difference between "disabled" and
+> >    "duty_cycle = 0" in general and does any consumer care about it.)
+> > 
+> 
+> Good question, I don't really know all consumer requirements, but AFAIK, usually
+> when you want to program duty_cycle to 0 you also want to disable the PWM.
 
-Money Transfer Control Number M.T.C.N)::78393135
-SENDERS FIRST NAME: John
-SENDERS LAST NAME: Chun
-SENDERS COUNTRY...BENIN REPUBLIC
-TEXT QUESTION: A
-ANSWER: B
-AMOUNT: $6,000
+Note that hardware designers are "creative" and "disable the PWM" has
+different semantics for different PWMs. Some PWMs just stop the output
+at the level that it happens to be in, some stop in the inactive level,
+some stop at 0, some stop driving the pin. Currently the intended
+semantic of a disabled PWM is that it drives the inactive level (but it
+might be smart and stop driving if there is a pull in the right
+direction). I see no benefit of this semantic as it can also be
+accomplished by setting .duty_cycle = 0, .period = $something_small.
+Thierry doesn't agree and I fail to understand his reasoning.
 
-We need the below details from you, to enable us place the payment to
-your name and transfer the fund to you.
+> At least for the backlight case doesn't make sense program first the
+> duty_cycle and then enable the PWM, is implicit, if duty_cycle is 0
+> the PWM is disabled, if duty_cycle > 0 the PWM is enabled.
 
-(Full Receivers name)...................
-(You're Country)................................
-(Address)......................................
-(Phone NuMBER-...............................
-(You're Age)............................
-(OCCUPATION)..REAL ESTATE..................
-(A Copy of Your ID CARD).SEE ATTACHMENTS.............
+Yeah, that's my conclusion of above, too. After all the pwm_apply_state
+function is there for being able to go from one state to each other
+state with a single function call.
 
-HOWEVER YOU HAVE TO PAY $25 FOR THE (Clean Bill Record Certificate)
-AND THAT IS ALL YOU HAVE TO DO ASAP.
+> >  - A softer variant of the above: Should pwm_get_state() anticipate that
+> >    with .enabled = 0 the duty_cycle (and maybe also period) is
+> >    unreliable and cache that for callers?
+> 
+> Sorry, when you say pwm_get_state(), you mean the core call or the lowlevel
+> driver call?
 
-The payment will be sending to below information, such as:
+The suggestion is to do what you do in the driver (i.e. remember
+duty_cycle and in the general case also period) in the framework
+instead and fix the problem for all lowlevel drivers that behave similar
+to the implementation in question. i.e. don't rely on .duty_cycle and
+.period having a sensible value after .get_state() if the PWM is off.
+This is IMHO the second best option.
 
-Receiver.............. ALAN UDE
-Country................Benin Republic
-Amount: ....................$25
-Question: .....................A
-Answer:................... B
-Sender...............Name:
-MTCN :..............
+Best regards
+Uwe
 
-According to the instruction and order we received from IMF the their
-requested $25 must be made directly to the above info's.
-
-Furthermore you are advised to call us as the instruction was passed
-that within 6hours without hearing from you, Count your payment
-canceled. Number to call is below listed manager director office of
-release order:
-DR.ALAN UDE
-Director MONEY GRAM-Benin
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
