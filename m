@@ -2,130 +2,145 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0233CD0BCA
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2019 11:51:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03BC9D0BEF
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2019 11:56:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729575AbfJIJvS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 9 Oct 2019 05:51:18 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:14316 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727228AbfJIJvS (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Oct 2019 05:51:18 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x999k2Tq018596;
-        Wed, 9 Oct 2019 11:51:07 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=wZHBdNbfW8cemZbtM4EyVZqKxEgCY/Nj31PdlfGQS9w=;
- b=ygm2/EHfTI96Znm/14gtNcEhtO2j8lgebssB8pz/Uu2kujmiis96wSn+laxTxviRv3hc
- 0VG8qHKo6ajKRj/bkz7qTLPzNhySRBzi/C7vlVBSD4SpTsXP+/Zq6cmqJVHxyVFfrM5L
- e80fsS3gxj0xHLWXMIIF2HF20gYN12D1oZMDN8M/dE3w8Y1E1qMY5gL+DChB3UEoUNuR
- lqWdXvBmTLOTETuApSs9mdvAB+zdeSOat4Vr61wJg+i+V1oXcOJGT6wB59wRDBuOsstL
- vDbKaDt5rMrFff+4fOCcWkMRB4RdY8iTN9GKrcuYv2uodGBnPkCLXcqi3aqcuzkCtCjY qg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2vegah5vm0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Oct 2019 11:51:07 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B681B10002A;
-        Wed,  9 Oct 2019 11:51:06 +0200 (CEST)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A777320681A;
-        Wed,  9 Oct 2019 11:51:06 +0200 (CEST)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.46) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 9 Oct 2019
- 11:51:06 +0200
-Received: from [10.48.0.192] (10.48.0.192) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 9 Oct 2019 11:51:06
- +0200
-Subject: Re: [PATCH] pwm: stm32: add comment to better describe breakinput
- feature
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-CC:     <thierry.reding@gmail.com>, <alexandre.torgue@st.com>,
-        <benjamin.gaignard@st.com>, <linux-pwm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1570534887-26181-1-git-send-email-fabrice.gasnier@st.com>
- <20191008144531.pjt525xuz7n5a3hq@pengutronix.de>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <5c05893b-e938-4db8-e33a-803b1a498f97@st.com>
-Date:   Wed, 9 Oct 2019 11:51:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1729790AbfJIJ4k (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 9 Oct 2019 05:56:40 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37965 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbfJIJ4k (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Oct 2019 05:56:40 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 3so1829625wmi.3
+        for <linux-pwm@vger.kernel.org>; Wed, 09 Oct 2019 02:56:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=hxsH3GTQwNHLdOw5Q3OdNk0c6ypT5eKzYZW7xFORZ1w=;
+        b=EwqXO91U89voAZZgK4r8r/6JEomJfDCkHUPJswri+0lmgGB4uGECUPwAqgrxsMdB3u
+         mtHVF2ROrbo7X5IVW6emaGY6DXmsrtjgCfVHgmwxmuuLnbiNAOWcDAo3awvgBsVCaSMs
+         /E0lbp6cNMF/Ho5XTWxiQ53BkCtG4Mi+viufedal8Ziv30/sr0z+UjkPjXiW9yaNU5D7
+         ojg/+4EOsCoqlws1bqtfbLiOvNmZ3EVdgHlnEP1Vg6epRK361SQo4rAWVDZ12rKACyw1
+         W7hOpstagl9wEMAnXFITv7uamQNYK3zVSuC9Ar0BFD4asAQ2sPdzUfPxyaFXydZ1/BUx
+         12Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=hxsH3GTQwNHLdOw5Q3OdNk0c6ypT5eKzYZW7xFORZ1w=;
+        b=gwdFGUcMxPGW1hvdQoU+TMtrKt1z/jEi819yrMZMOUzefs4ieVykTOSCPiS1WNQ07C
+         PskKPP0bisQ3GWNzspECVFa8YlcM8RvzoOZu0CnTzccjg2bEfaZ04QjeUfHOMyLUSunl
+         7iSLdljLDEsrTGZw3YqinEm1EMtWGyQeQjlkJTGN0dQBy/Q8YU5FDrGzolr4VcYVCAPs
+         oJ7Y1ryJ0hFWWSoCxMdqs669ZDztoICUQwQZKZK0H2IJsP3nwBFAmL3OssUnBqQX4h/y
+         uEJKyMsJWGWnvSHLkqGYMntKrffUv9gI6bRajwMgbn+HNqY5H4rl+jXHSW5ehwlMFhFq
+         jtaw==
+X-Gm-Message-State: APjAAAWXHiT3DcDLfZ7PXcfGMiWJC+psMQth9WYB06zJk3mLQeIq+6MV
+        rDv8g4g6kyfUWp8rzG8Z9of1aw==
+X-Google-Smtp-Source: APXvYqykMolF/GFDnS3dpUQWijyd/lH/UiuWQEj924XkgMileNAmUU2j4IopMiyQRtc9Fl0UVjpbsg==
+X-Received: by 2002:a7b:cf0e:: with SMTP id l14mr1983091wmg.46.1570614997677;
+        Wed, 09 Oct 2019 02:56:37 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id r12sm1569593wrq.88.2019.10.09.02.56.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 02:56:36 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 10:56:35 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org,
+        thierry.reding@gmail.com, heiko@sntech.de, dianders@chromium.org,
+        mka@chromium.org, groeck@chromium.org, kernel@collabora.com,
+        bleung@chromium.org, linux-pwm@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the
+ last applied state
+Message-ID: <20191009095635.yysr33lnwldicyng@holly.lan>
+References: <20191008105417.16132-1-enric.balletbo@collabora.com>
+ <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
+ <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
+ <20191008203137.s22clq6v2om5ktio@pengutronix.de>
+ <53b7d02b-1a2d-11da-fdd0-5378f360d876@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20191008144531.pjt525xuz7n5a3hq@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.48.0.192]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-09_05:2019-10-08,2019-10-09 signatures=0
+In-Reply-To: <53b7d02b-1a2d-11da-fdd0-5378f360d876@collabora.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 10/8/19 4:45 PM, Uwe Kleine-KÃ¶nig wrote:
-> On Tue, Oct 08, 2019 at 01:41:27PM +0200, Fabrice Gasnier wrote:
->> Add a comment to better describe the purpose of breakinput feature that
->> can be found on some STM32 timer instances. Briefly comment on the
->> characteristics of this input for PWM, and pinmuxing as suggested in [1].
->>
->> [1] https://lkml.org/lkml/2019/10/1/207
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->> ---
->>  drivers/pwm/pwm-stm32.c | 8 +++++++-
->>  1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
->> index 359b085..6406ebb 100644
->> --- a/drivers/pwm/pwm-stm32.c
->> +++ b/drivers/pwm/pwm-stm32.c
->> @@ -522,8 +522,14 @@ static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
->>  					     sizeof(struct stm32_breakinput));
->>  
->>  	/*
->> +	 * Some timer instances can have BRK input pins (e.g. basically a fault
->> +	 * pin from the output power stage). The break feature allows a safe
->> +	 * shut-down of the PWM outputs to a predefined state. Further details
->> +	 * are available in application note AN4277, "Using STM32 device PWM
->> +	 * shut-down features..."
+On Wed, Oct 09, 2019 at 11:27:13AM +0200, Enric Balletbo i Serra wrote:
+> Hi Uwe,
 > 
-> Without having read the application note I don't understand the purpose.
-> Not sure if this should be a show stopper though.
+> Adding Daniel and Lee to the discussion ...
 
-Hi Uwe,
+Thanks!
 
-I can rephrase this. Do you think the bellow comment would be more
-relevant and easy to understand ?
-
-/*
- * The break feature allows a safe shut-down of the PWM outputs.
- * It's based on the BRK event signal defined in the dt-bindings
- * by <index level filter> values.
- * Because "st,breakinput" parameter is optional do not make probe
- * failed if it doesn't exist.
- */
-
+> On 8/10/19 22:31, Uwe Kleine-König wrote:
+> > On Tue, Oct 08, 2019 at 06:33:15PM +0200, Enric Balletbo i Serra wrote:
+> >>> A few thoughts to your approach here ...:
+> >>>
+> >>>  - Would it make sense to only store duty_cycle and enabled in the
+> >>>    driver struct?
+> >>>
+> >>
+> >> Yes, in fact, my first approach (that I didn't send) was only storing enabled
+> >> and duty cycle. For some reason I ended storing the full pwm_state struct, but I
+> >> guess is not really needed.
+> >>
+> >>
+> >>>  - Which driver is the consumer of your pwm? If I understand correctly
+> >>>    the following sequence is the bad one:
+> >>>
+> >>
+> >> The consumer is the pwm_bl driver. Actually I'n trying to identify
+> >> other consumers.
+> > 
 > 
->>  	 * Because "st,breakinput" parameter is optional do not make probe
->> -	 * failed if it doesn't exist.
->> +	 * failed if it doesn't exist. The pinctrl handle must hold the BRK
->> +	 * pin(s) when using "st,breakinput" property.
+> So far, the pwm_bl driver is the only consumer of cros-ec-pwm.
 > 
-> Is this a comment that has a better place in the binding doc?
+> > Ah, I see why I missed to identify the problem back when I checked this
+> > driver. The problem is not that .duty_cycle isn't set but there .enabled
+> > isn't set. So maybe we just want:
+> > 
+> > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> > index 2201b8c78641..0468c6ee4448 100644
+> > --- a/drivers/video/backlight/pwm_bl.c
+> > +++ b/drivers/video/backlight/pwm_bl.c
+> > @@ -123,6 +123,7 @@ static int pwm_backlight_update_status(struct backlight_device *bl)
+> >         if (brightness > 0) {
+> >                 pwm_get_state(pb->pwm, &state);
+> >                 state.duty_cycle = compute_duty_cycle(pb, brightness);
+> > +               state.enabled = true;
+> >                 pwm_apply_state(pb->pwm, &state);
+> >                 pwm_backlight_power_on(pb);
+> >         } else
+> > 
+> > ? On a side note: It's IMHO strange that pwm_backlight_power_on
+> > reconfigures the PWM once more.
+> > 
+> 
+> Looking again to the pwm_bl code, now, I am not sure this is correct (although
+> it probably solves the problem for me).
 
-You're right, this is unneeded here. I'll remove this.
+Looking at the pwm_bl code I wouldn't accept the above as it is but I'd
+almost certainly accept a patch to pwm_bl to move the PWM enable/disable
+out of both the power on/off functions so the duty-cycle/enable or
+disable can happen in one go within the update_status function. I don't
+think such a change would interfere with the power and enable sequencing
+needed by panels and it would therefore be a nice continuation of the
+work to convert over to the pwm_apply_state() API.
 
-Please advise,
-BR,
-Fabrice
+None of the above has anything to do with what is right or wrong for
+the PWM API evolution. Of course, if this thread does conclude that it
+is OK the duty cycle of a disabled PWM to be retained for some drivers
+and not others then I'd hope to see some WARN_ON()s added to the PWM
+framework to help bring problems to the surface with all drivers.
 
-> 
-> Best regards
-> Uwe
-> 
-> 
+
+Daniel.
