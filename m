@@ -2,105 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AC545D215A
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Oct 2019 09:07:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B2A8D2AE9
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Oct 2019 15:17:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732912AbfJJHH4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 10 Oct 2019 03:07:56 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58471 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727080AbfJJHHz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Oct 2019 03:07:55 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iISY7-0004f8-Fx; Thu, 10 Oct 2019 09:07:47 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iISY1-0003fP-PN; Thu, 10 Oct 2019 09:07:41 +0200
-Date:   Thu, 10 Oct 2019 09:07:41 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     thierry.reding@gmail.com, alexandre.torgue@st.com,
-        benjamin.gaignard@st.com, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH] pwm: stm32: add comment to better describe breakinput
- feature
-Message-ID: <20191010070741.jhkpqgmfpqp2jteo@pengutronix.de>
-References: <1570534887-26181-1-git-send-email-fabrice.gasnier@st.com>
- <20191008144531.pjt525xuz7n5a3hq@pengutronix.de>
- <5c05893b-e938-4db8-e33a-803b1a498f97@st.com>
+        id S2388282AbfJJNRv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 10 Oct 2019 09:17:51 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42721 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388140AbfJJNRo (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Oct 2019 09:17:44 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c10so4804904otd.9
+        for <linux-pwm@vger.kernel.org>; Thu, 10 Oct 2019 06:17:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ub-ac-id.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=QTZIdVmjWEaVgfwGRupI4vAqJVGET3VIX90hz2R16m0=;
+        b=kbDD0ETnfb+9T5ky4afnuU19WL5B3TgSTtrvr8/78l52RfSJ/bD7cjcm8C45XsJ4wr
+         kY8zUv/ms1sLDr56E/0rqAcpldgbTirzVsO1TqrlTRt5AL5IhxusLfWbWkCQZqSDApog
+         xVZixZPZF5pv+wD9wYHHFszyBuRJ0Z0/71+2E/SGgHwnMzv66/86w9uplcX1z0grTv9p
+         1TYZ7MtIagYr+hnMPgyspL8CH18dkY1RexU6NSgr6L6/lGHi7jHNMmmGOoiBuh2azqNd
+         aWHFVXbx5cxjkbX5kJe7PAp4IU2wf06fogqa+YoO9ylF7jna+POCU+xNsHXT6R2wFQg9
+         YqYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=QTZIdVmjWEaVgfwGRupI4vAqJVGET3VIX90hz2R16m0=;
+        b=HdxxRHo836soNojxq/bUf4WA3BbtT2Q8doiJ5vVcL1eApwlH7o4boczfV2WMgKoqQ9
+         bC6dlgIZwH/MtJQezlzSKnH4nKIQWWfPEPxu9MzOxRTWDDvVGE9Uv7BIn+5//3OqYgPz
+         ZAiDVv2C8JDhv96JDf/LmhMLWRXVzhUoNqywGIwfTX7X4zPJPAPIN7cDhM1Ims1ACp3W
+         r1FfyCn64sqTSOd2mpkoB6vhP6/moPGKpuA02lOcYNfgEr0g7riAo90EXCajtZfoJIaV
+         PfQ8cXopOpcTnpQf3MNxJzhPqR5heEH0xn3ZBh7+7EXgKPUvfCj10OKz4Dg6VCNYXgp0
+         0f9Q==
+X-Gm-Message-State: APjAAAUdVvW+kUOSSj3EEcTpf61ExuZNtCG74aocblmFdjvKVoiaIesM
+        cfeNK2FengEgRghryy3eRl0ApfJcXrD9AKIL4diy
+X-Google-Smtp-Source: APXvYqwe5B6z/3dUuNDQtQ0n2oQYOsdY3HQR3dkIin1gqVhu0NNteov05tKzv4DhJBBR4bjK2RG7Phnj6WUHoBrkRYc=
+X-Received: by 2002:a05:6830:1103:: with SMTP id w3mr7909437otq.312.1570713462861;
+ Thu, 10 Oct 2019 06:17:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5c05893b-e938-4db8-e33a-803b1a498f97@st.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Received: by 2002:a4a:3346:0:0:0:0:0 with HTTP; Thu, 10 Oct 2019 06:17:41
+ -0700 (PDT)
+Reply-To: sunrisefundingltd50@gmail.com
+From:   Valentina Yurina <v_yurina@ub.ac.id>
+Date:   Thu, 10 Oct 2019 14:17:41 +0100
+Message-ID: <CAKoEkvu4vc5Yn9-hzxQ5dYmUL=oO69=GSP0FC7O+CGz9Jni8+Q@mail.gmail.com>
+Subject: Apply For Financial investment at a lower rate 2%
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 11:51:05AM +0200, Fabrice Gasnier wrote:
-> On 10/8/19 4:45 PM, Uwe Kleine-König wrote:
-> > On Tue, Oct 08, 2019 at 01:41:27PM +0200, Fabrice Gasnier wrote:
-> >> Add a comment to better describe the purpose of breakinput feature that
-> >> can be found on some STM32 timer instances. Briefly comment on the
-> >> characteristics of this input for PWM, and pinmuxing as suggested in [1].
-> >>
-> >> [1] https://lkml.org/lkml/2019/10/1/207
-> >>
-> >> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> >> ---
-> >>  drivers/pwm/pwm-stm32.c | 8 +++++++-
-> >>  1 file changed, 7 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-> >> index 359b085..6406ebb 100644
-> >> --- a/drivers/pwm/pwm-stm32.c
-> >> +++ b/drivers/pwm/pwm-stm32.c
-> >> @@ -522,8 +522,14 @@ static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
-> >>  					     sizeof(struct stm32_breakinput));
-> >>  
-> >>  	/*
-> >> +	 * Some timer instances can have BRK input pins (e.g. basically a fault
-> >> +	 * pin from the output power stage). The break feature allows a safe
-> >> +	 * shut-down of the PWM outputs to a predefined state. Further details
-> >> +	 * are available in application note AN4277, "Using STM32 device PWM
-> >> +	 * shut-down features..."
-> > 
-> > Without having read the application note I don't understand the purpose.
-> > Not sure if this should be a show stopper though.
-> 
-> Hi Uwe,
-> 
-> I can rephrase this. Do you think the bellow comment would be more
-> relevant and easy to understand ?
-> 
-> /*
->  * The break feature allows a safe shut-down of the PWM outputs.
->  * It's based on the BRK event signal defined in the dt-bindings
->  * by <index level filter> values.
->  * Because "st,breakinput" parameter is optional do not make probe
->  * failed if it doesn't exist.
->  */
-
-I still fail to understand. This is an input that determines the actual
-value of the output pin? What makes a shutdown of outputs safe? What is
-a shutdown anyhow?
-
-Apart from that: s/do not make probe failed/don't fail to probe/.
-
-Best regards
-Uwe
-
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Hello,
+
+We are private lenders based in UK.
+
+Do you need a loan (credit) as soon as possible. Are you in search of
+money to solve your personal needs or finance your business venture,
+then get Your desired loan today! Consult us at Sunrise Funding Ltd.
+
+* We offer personal loan & huge capital loan at 2% interest rate to
+the general public both locally and internationally.
+* Credit amount range from $5,000.00 -- $500,000.00 and above.
+* Special $10,000,000.00 Loan offer for huge project also available.
+* Loan period of 6 months -- 10 years.
+* Loan is granted 24 hours after approval and accredited, directly in
+hand or bank account.
+
+Please note that you are advised to contact us for more details via
+the following e-mail address below;
+
+EMAIL : sunrisefundingltd50@gmail.com
+FIRM : Sunrise Funding Ltd UK.
