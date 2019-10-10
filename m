@@ -2,77 +2,143 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B2A8D2AE9
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Oct 2019 15:17:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C7E4D30EC
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Oct 2019 20:54:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388282AbfJJNRv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 10 Oct 2019 09:17:51 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42721 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388140AbfJJNRo (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Oct 2019 09:17:44 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c10so4804904otd.9
-        for <linux-pwm@vger.kernel.org>; Thu, 10 Oct 2019 06:17:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ub-ac-id.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=QTZIdVmjWEaVgfwGRupI4vAqJVGET3VIX90hz2R16m0=;
-        b=kbDD0ETnfb+9T5ky4afnuU19WL5B3TgSTtrvr8/78l52RfSJ/bD7cjcm8C45XsJ4wr
-         kY8zUv/ms1sLDr56E/0rqAcpldgbTirzVsO1TqrlTRt5AL5IhxusLfWbWkCQZqSDApog
-         xVZixZPZF5pv+wD9wYHHFszyBuRJ0Z0/71+2E/SGgHwnMzv66/86w9uplcX1z0grTv9p
-         1TYZ7MtIagYr+hnMPgyspL8CH18dkY1RexU6NSgr6L6/lGHi7jHNMmmGOoiBuh2azqNd
-         aWHFVXbx5cxjkbX5kJe7PAp4IU2wf06fogqa+YoO9ylF7jna+POCU+xNsHXT6R2wFQg9
-         YqYQ==
+        id S1726489AbfJJSyh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 10 Oct 2019 14:54:37 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41812 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfJJSyh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Oct 2019 14:54:37 -0400
+Received: by mail-ot1-f66.google.com with SMTP id g13so5810790otp.8;
+        Thu, 10 Oct 2019 11:54:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=QTZIdVmjWEaVgfwGRupI4vAqJVGET3VIX90hz2R16m0=;
-        b=HdxxRHo836soNojxq/bUf4WA3BbtT2Q8doiJ5vVcL1eApwlH7o4boczfV2WMgKoqQ9
-         bC6dlgIZwH/MtJQezlzSKnH4nKIQWWfPEPxu9MzOxRTWDDvVGE9Uv7BIn+5//3OqYgPz
-         ZAiDVv2C8JDhv96JDf/LmhMLWRXVzhUoNqywGIwfTX7X4zPJPAPIN7cDhM1Ims1ACp3W
-         r1FfyCn64sqTSOd2mpkoB6vhP6/moPGKpuA02lOcYNfgEr0g7riAo90EXCajtZfoJIaV
-         PfQ8cXopOpcTnpQf3MNxJzhPqR5heEH0xn3ZBh7+7EXgKPUvfCj10OKz4Dg6VCNYXgp0
-         0f9Q==
-X-Gm-Message-State: APjAAAUdVvW+kUOSSj3EEcTpf61ExuZNtCG74aocblmFdjvKVoiaIesM
-        cfeNK2FengEgRghryy3eRl0ApfJcXrD9AKIL4diy
-X-Google-Smtp-Source: APXvYqwe5B6z/3dUuNDQtQ0n2oQYOsdY3HQR3dkIin1gqVhu0NNteov05tKzv4DhJBBR4bjK2RG7Phnj6WUHoBrkRYc=
-X-Received: by 2002:a05:6830:1103:: with SMTP id w3mr7909437otq.312.1570713462861;
- Thu, 10 Oct 2019 06:17:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=o+zin2bL1A/EltcDjtt8OSEY4VLYK08n8Dj1hQ6Wf2k=;
+        b=NK80gRkKNwDHsBMg0GSP1e/bG/pYjwQZzjy3vZyMSsay1NN3FQ3YnrTF4bNz6+HKeg
+         aYvQPqsSIvhPPRpEj0bk0phRBT1Jnl9xoKTx39tlTM3vqrXGLNrJUkCUoIB0z5xsSYb7
+         A6v+gL4GrW2lCYvNVSUVDrqDAIYUam92A0FacTSuD8R0p3DK49Yot3owk3nDgYpkbZ9B
+         aPwlnHEhuT4IK5ablxSTCoiFLqhhMAHHeRNsJi3Uf9sq1g8S7lPFV9uJAxFuF4mX7Sl6
+         FD4DN3F6DvwYygZT/HEinr0QCbg93tKWwoHOaxXiKKAUPBj2Im5bkwUmGAQVoYotT+Jt
+         8big==
+X-Gm-Message-State: APjAAAV2Ci4ZiTprfbwQ4kK9Koc7wkjQEUv7w0/p+j8So0hGa4Qi4L7j
+        FYH7YuujYOaPx0k7MKy7Jg==
+X-Google-Smtp-Source: APXvYqxQEXGO9Uc01zKUGpeB8t0R+xv3eN1jyvC9TPfe47vyIsyRP58qHhRhPLQG1SNW3RGl2mO7pw==
+X-Received: by 2002:a9d:73d8:: with SMTP id m24mr8810042otk.227.1570733674052;
+        Thu, 10 Oct 2019 11:54:34 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r19sm1846829ota.79.2019.10.10.11.54.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 11:54:33 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 13:54:32 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-tegra@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v3 1/2] dt-bindings: pwm: Convert PWM bindings to
+ json-schema
+Message-ID: <20191010185432.GA17457@bogus>
+References: <20191002164047.14499-1-krzk@kernel.org>
 MIME-Version: 1.0
-Received: by 2002:a4a:3346:0:0:0:0:0 with HTTP; Thu, 10 Oct 2019 06:17:41
- -0700 (PDT)
-Reply-To: sunrisefundingltd50@gmail.com
-From:   Valentina Yurina <v_yurina@ub.ac.id>
-Date:   Thu, 10 Oct 2019 14:17:41 +0100
-Message-ID: <CAKoEkvu4vc5Yn9-hzxQ5dYmUL=oO69=GSP0FC7O+CGz9Jni8+Q@mail.gmail.com>
-Subject: Apply For Financial investment at a lower rate 2%
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002164047.14499-1-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
--- 
-Hello,
+On Wed, Oct 02, 2019 at 06:40:46PM +0200, Krzysztof Kozlowski wrote:
+> Convert generic PWM bindings to DT schema format using json-schema.  The
+> consumer bindings are split to separate file.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> ---
+> 
+> Changes since v2:
+> 1. Change also pwm-sprd.txt
+> 
+> Changes since v1:
+> 1. Indent example with four spaces (more readable),
+> 2. Change pattern for pwm nodes,
+> 3. Remove $ref from #cells.
+> ---
 
-We are private lenders based in UK.
 
-Do you need a loan (credit) as soon as possible. Are you in search of
-money to solve your personal needs or finance your business venture,
-then get Your desired loan today! Consult us at Sunrise Funding Ltd.
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-consumers.yaml b/Documentation/devicetree/bindings/pwm/pwm-consumers.yaml
+> new file mode 100644
+> index 000000000000..39c844fe6338
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-consumers.yaml
+> @@ -0,0 +1,76 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/pwm-consumers.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Specifying PWM information for devices
+> +
+> +maintainers:
+> +  - Thierry Reding <thierry.reding@gmail.com>
+> +
+> +description: |
+> +  PWM properties should be named "pwms". The exact meaning of each pwms
+> +  property must be documented in the device tree binding for each device.
+> +  An optional property "pwm-names" may contain a list of strings to label
+> +  each of the PWM devices listed in the "pwms" property. If no "pwm-names"
+> +  property is given, the name of the user node will be used as fallback.
+> +
+> +  Drivers for devices that use more than a single PWM device can use the
+> +  "pwm-names" property to map the name of the PWM device requested by the
+> +  pwm_get() call to an index into the list given by the "pwms" property.
+> +
+> +properties:
+> +  pwms:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: |
+> +      Phandle to PWM controller node and pwm-specifier (controller specific).
+> +      pwm-specifier typically encodes the chip-relative PWM number and the PWM
+> +      period in nanoseconds.
+> +      Optionally, the pwm-specifier can encode a number of flags (defined in
+> +      <dt-bindings/pwm/pwm.h>) in a third cell:
+> +        - PWM_POLARITY_INVERTED: invert the PWM signal polarity
+> +
+> +  pwm-names:
+> +    $ref: /schemas/types.yaml#/definitions/string-array
+> +    description:
+> +      A list of strings to label each of the PWM devices listed in the "pwms"
+> +      property. If no "pwm-names" property is given, the name of the user node
+> +      will be used as fallback.
+> +
+> +required:
+> +  - pwms
 
-* We offer personal loan & huge capital loan at 2% interest rate to
-the general public both locally and internationally.
-* Credit amount range from $5,000.00 -- $500,000.00 and above.
-* Special $10,000,000.00 Loan offer for huge project also available.
-* Loan period of 6 months -- 10 years.
-* Loan is granted 24 hours after approval and accredited, directly in
-hand or bank account.
+This schema is never applied because it has no 'select' which is only 
+automatic for $nodename or compatible. You could include this from other 
+schemas, but why? Any consumer still has to list these properties to 
+define their specific constraints.
 
-Please note that you are advised to contact us for more details via
-the following e-mail address below;
+We already have a schema in dtschema for consumer side. It's just 
+missing descriptions which needs relicensing from this.
 
-EMAIL : sunrisefundingltd50@gmail.com
-FIRM : Sunrise Funding Ltd UK.
+> +
+> +dependencies:
+> +  pwm-names: [ pwms ]
