@@ -2,97 +2,148 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9364AD3354
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Oct 2019 23:23:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9855D38EC
+	for <lists+linux-pwm@lfdr.de>; Fri, 11 Oct 2019 07:53:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfJJVXs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 10 Oct 2019 17:23:48 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36811 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJJVXs (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Oct 2019 17:23:48 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 67so6196697oto.3;
-        Thu, 10 Oct 2019 14:23:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8fsaLFcYDAROH9HBoKC5Vafqp1MCH4HA/pJSglSZ4co=;
-        b=bKjELxGNAZN7UBGTFrZEAnN7TuoetlHlelmVWf9GsyR5amJTLlVS5UmG4om4QBlfoc
-         uZ7XzRvahamKbuTFPmhWzLU7vIPRpfFPqStqvLBY1D3CmnMztcUhcx7I+QUlJU8I+k2D
-         EMAUiHjg0tfdNM9GuQq1c/HawnH9s/2bOYZ8q2gJ++E0fBI/QpKIJ/2aFwhkkUel1kXG
-         V2O2TJLIhHwjwmm4czN8yNjLFoPXpIB3hFE81KHMTYstsW9Es6cLx1+CaN8Hr41uSP7T
-         O5/5AdyHOn+2540VlVk+KBQHidUyrcYKPAosq9dnhgi9B8aK9GxYZZQucHtX8EHHPUl9
-         7NVg==
-X-Gm-Message-State: APjAAAWE4pp2C/Gyu/UbUgqwLHAdIXjVNL2ivp/Z3RmJEaQ78dy6yT2e
-        nFhOVvTEcgLL7otfuWRw4w==
-X-Google-Smtp-Source: APXvYqyIyxVe/QML8xBJW19srjEWY1fzMm01BIPfEyxogOHEBtnRrO0q0z3M7piA63qkH2laitZG7g==
-X-Received: by 2002:a05:6830:13d8:: with SMTP id e24mr9348918otq.42.1570742627232;
-        Thu, 10 Oct 2019 14:23:47 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v132sm2027358oif.34.2019.10.10.14.23.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 14:23:46 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 16:23:46 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
+        id S1727334AbfJKFwa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 11 Oct 2019 01:52:30 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:52523 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727321AbfJKFwa (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 11 Oct 2019 01:52:30 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iInqC-0008KX-1r; Fri, 11 Oct 2019 07:51:52 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iInq9-0001Vy-3U; Fri, 11 Oct 2019 07:51:49 +0200
+Date:   Fri, 11 Oct 2019 07:51:49 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-crypto@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 4/8] dt-bindings: memory-controllers: Convert Samsung
- Exynos SROM bindings to json-schema
-Message-ID: <20191010212346.GA7896@bogus>
-References: <20190918173141.4314-1-krzk@kernel.org>
- <20190918173141.4314-4-krzk@kernel.org>
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Olof Johansson <olof@lixom.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH 11/36] ARM: s5pv210: split from plat-samsung
+Message-ID: <20191011055149.4dudr4tk2znpt65u@pengutronix.de>
+References: <20191010202802.1132272-1-arnd@arndb.de>
+ <20191010203043.1241612-1-arnd@arndb.de>
+ <20191010203043.1241612-11-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190918173141.4314-4-krzk@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191010203043.1241612-11-arnd@arndb.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 18 Sep 2019 19:31:37 +0200, Krzysztof Kozlowski wrote:
-> Convert Samsung Exynos SROM controller bindings to DT schema format
-> using json-schema.
+On Thu, Oct 10, 2019 at 10:29:55PM +0200, Arnd Bergmann wrote:
+> These can be build completely independently, so split
+> the two Kconfig symbols.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> ---
-> 
-> Changes since v1:
-> 1. Indent example with four spaces (more readable),
-> 2. Split examples into two,
-> 3. Fix pattern for subnode name,
-> 4. Remove checks for #address-cells-ranges-#size-cells,
-> 5. Add "additionalProperties" so the wrongly named subnodes would be
->    matched.
-> ---
->  .../memory-controllers/exynos-srom.txt        |  79 -----------
->  .../memory-controllers/exynos-srom.yaml       | 128 ++++++++++++++++++
->  2 files changed, 128 insertions(+), 79 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos-srom.txt
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos-srom.yaml
-> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Applied, thanks.
+I'd mention the two symbols' names you're working on in the commit log.
+I guess it's about PLAT_SAMSUNG and ARCH_S5PV210. And I wouldn't call it
+"split" which IMHO suggests there was only one symbol before.
 
-Rob
+Maybe:
+
+	Don't imply PLAT_SAMSUNG if ARCH_S5PV210 is enabled
+
+would be a better subject line?
+
+> ---
+>  arch/arm/Kconfig.debug        | 6 +++---
+>  arch/arm/Makefile             | 1 -
+>  arch/arm/plat-samsung/Kconfig | 2 +-
+>  drivers/mmc/host/Kconfig      | 2 +-
+>  drivers/pwm/Kconfig           | 2 +-
+>  drivers/spi/Kconfig           | 2 +-
+>  drivers/tty/serial/Kconfig    | 2 +-
+>  sound/soc/samsung/Kconfig     | 2 +-
+>  8 files changed, 9 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+> index 9c4f2d6deb06..4c4e97ae4fcb 100644
+> --- a/arch/arm/Kconfig.debug
+> +++ b/arch/arm/Kconfig.debug
+> @@ -998,7 +998,7 @@ choice
+>  		  via SCIFA4 on Renesas SH-Mobile AG5 (SH73A0).
+>  
+>  	config DEBUG_S3C_UART0
+> -		depends on PLAT_SAMSUNG || ARCH_EXYNOS
+> +		depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
+>  		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+>  		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
+>  		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+> @@ -1010,7 +1010,7 @@ choice
+>  		  by the boot-loader before use.
+>  
+>  	config DEBUG_S3C_UART1
+> -		depends on PLAT_SAMSUNG || ARCH_EXYNOS
+> +		depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
+>  		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+>  		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
+>  		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+> @@ -1022,7 +1022,7 @@ choice
+>  		  by the boot-loader before use.
+>  
+>  	config DEBUG_S3C_UART2
+> -		depends on PLAT_SAMSUNG || ARCH_EXYNOS
+> +		depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
+>  		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+>  		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
+>  		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+> index f492d7c338fe..a1bc15cda751 100644
+> --- a/arch/arm/Makefile
+> +++ b/arch/arm/Makefile
+> @@ -235,7 +235,6 @@ machine-$(CONFIG_PLAT_SPEAR)		+= spear
+>  # by CONFIG_* macro name.
+>  plat-$(CONFIG_ARCH_OMAP)	+= omap
+>  plat-$(CONFIG_ARCH_S3C64XX)	+= samsung
+> -plat-$(CONFIG_ARCH_S5PV210)	+= samsung
+
+Would it make more sense to make this
+
+	plat-$(PLAT_SAMSUNG) += samsung
+
+(in a separate patch)? Hmm, it seems there is no plat-y for
+PLAT_S3C24XX=y builds. Is this intended? If yes, the directory name
+containing "samsung" suggests something that seems untrue.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
