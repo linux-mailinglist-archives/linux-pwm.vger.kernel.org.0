@@ -2,148 +2,70 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D9855D38EC
-	for <lists+linux-pwm@lfdr.de>; Fri, 11 Oct 2019 07:53:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3887D43DD
+	for <lists+linux-pwm@lfdr.de>; Fri, 11 Oct 2019 17:10:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfJKFwa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 11 Oct 2019 01:52:30 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52523 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727321AbfJKFwa (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 11 Oct 2019 01:52:30 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iInqC-0008KX-1r; Fri, 11 Oct 2019 07:51:52 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iInq9-0001Vy-3U; Fri, 11 Oct 2019 07:51:49 +0200
-Date:   Fri, 11 Oct 2019 07:51:49 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Olof Johansson <olof@lixom.net>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH 11/36] ARM: s5pv210: split from plat-samsung
-Message-ID: <20191011055149.4dudr4tk2znpt65u@pengutronix.de>
-References: <20191010202802.1132272-1-arnd@arndb.de>
- <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-11-arnd@arndb.de>
+        id S1726800AbfJKPKQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 11 Oct 2019 11:10:16 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34696 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbfJKPKQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 11 Oct 2019 11:10:16 -0400
+Received: by mail-ot1-f66.google.com with SMTP id m19so8264829otp.1;
+        Fri, 11 Oct 2019 08:10:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AYqY8ptTKV39xxtFZyc1+8jrTs0a76lcIovZ+BLPMag=;
+        b=nQ2DLP/XVGil9naV8d2EwI93UN/S2WvNyxN1AtE2Lhw4aXOOAmgAfEE/qoGjP3wOQf
+         Zg6BRloeF7rPCjiIDL+DOqK4+8f11yzdoKXtK45oHqOKl1AZROXJuX/xY9IevTRCk2MW
+         Qod2G2SHABfcUdNspksak21n5w6OuRK6yM+KUXMfD1ZkarwP8/oVm7MQtjO7YZROIe6G
+         h7A+hKfKeEtetfmnTE/yLov+2PcxpQEcmFK9fMb/uCWjpxmAGpq7w+wKgByF2tCzLrmx
+         yM852KfVSn4o3Fmm998CdjqYxqrLDRT0uHxgrvvmBUxLveLg7XmX4qeDL/5gVpMpA0l5
+         pRDg==
+X-Gm-Message-State: APjAAAX9U0OCtJ+xFrMXf3cbk+aojNdyFvOilm6Lo/sBMkkFU13QwCf5
+        E8726rEZ8eSDbP9TQdapBg==
+X-Google-Smtp-Source: APXvYqwkpn2Rm6NPxteihd3r7HUcq/7kBVqTZFOHHnjYbh6GQJSC3s6NgoJrW3CK0nueqj8fb335Cg==
+X-Received: by 2002:a9d:7345:: with SMTP id l5mr3406363otk.39.1570806615029;
+        Fri, 11 Oct 2019 08:10:15 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k2sm2719648oih.38.2019.10.11.08.10.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 08:10:14 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 10:10:13 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
+        u.kleine-koenig@pengutronix.de, alexandre.torgue@st.com,
+        mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
+        fabrice.gasnier@st.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, benjamin.gaignard@st.com,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 1/3] dt-bindings: pwm-stm32: document pinctrl sleep
+ state
+Message-ID: <20191011151013.GA12791@bogus>
+References: <1570193633-6600-1-git-send-email-fabrice.gasnier@st.com>
+ <1570193633-6600-2-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191010203043.1241612-11-arnd@arndb.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <1570193633-6600-2-git-send-email-fabrice.gasnier@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 10:29:55PM +0200, Arnd Bergmann wrote:
-> These can be build completely independently, so split
-> the two Kconfig symbols.
+On Fri, 4 Oct 2019 14:53:51 +0200, Fabrice Gasnier wrote:
+> Add documentation for pinctrl sleep state that can be used by
+> STM32 timers PWM.
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-I'd mention the two symbols' names you're working on in the commit log.
-I guess it's about PLAT_SAMSUNG and ARCH_S5PV210. And I wouldn't call it
-"split" which IMHO suggests there was only one symbol before.
-
-Maybe:
-
-	Don't imply PLAT_SAMSUNG if ARCH_S5PV210 is enabled
-
-would be a better subject line?
-
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 > ---
->  arch/arm/Kconfig.debug        | 6 +++---
->  arch/arm/Makefile             | 1 -
->  arch/arm/plat-samsung/Kconfig | 2 +-
->  drivers/mmc/host/Kconfig      | 2 +-
->  drivers/pwm/Kconfig           | 2 +-
->  drivers/spi/Kconfig           | 2 +-
->  drivers/tty/serial/Kconfig    | 2 +-
->  sound/soc/samsung/Kconfig     | 2 +-
->  8 files changed, 9 insertions(+), 10 deletions(-)
+>  Documentation/devicetree/bindings/pwm/pwm-stm32.txt | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-> index 9c4f2d6deb06..4c4e97ae4fcb 100644
-> --- a/arch/arm/Kconfig.debug
-> +++ b/arch/arm/Kconfig.debug
-> @@ -998,7 +998,7 @@ choice
->  		  via SCIFA4 on Renesas SH-Mobile AG5 (SH73A0).
->  
->  	config DEBUG_S3C_UART0
-> -		depends on PLAT_SAMSUNG || ARCH_EXYNOS
-> +		depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
->  		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
->  		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
->  		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
-> @@ -1010,7 +1010,7 @@ choice
->  		  by the boot-loader before use.
->  
->  	config DEBUG_S3C_UART1
-> -		depends on PLAT_SAMSUNG || ARCH_EXYNOS
-> +		depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
->  		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
->  		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
->  		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
-> @@ -1022,7 +1022,7 @@ choice
->  		  by the boot-loader before use.
->  
->  	config DEBUG_S3C_UART2
-> -		depends on PLAT_SAMSUNG || ARCH_EXYNOS
-> +		depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
->  		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
->  		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
->  		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index f492d7c338fe..a1bc15cda751 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -235,7 +235,6 @@ machine-$(CONFIG_PLAT_SPEAR)		+= spear
->  # by CONFIG_* macro name.
->  plat-$(CONFIG_ARCH_OMAP)	+= omap
->  plat-$(CONFIG_ARCH_S3C64XX)	+= samsung
-> -plat-$(CONFIG_ARCH_S5PV210)	+= samsung
 
-Would it make more sense to make this
-
-	plat-$(PLAT_SAMSUNG) += samsung
-
-(in a separate patch)? Hmm, it seems there is no plat-y for
-PLAT_S3C24XX=y builds. Is this intended? If yes, the directory name
-containing "samsung" suggests something that seems untrue.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Reviewed-by: Rob Herring <robh@kernel.org>
