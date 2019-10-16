@@ -2,48 +2,48 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 36A1AD8EE9
-	for <lists+linux-pwm@lfdr.de>; Wed, 16 Oct 2019 13:06:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B368BD8EEA
+	for <lists+linux-pwm@lfdr.de>; Wed, 16 Oct 2019 13:06:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390722AbfJPLGL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 16 Oct 2019 07:06:11 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55833 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388896AbfJPLGL (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Oct 2019 07:06:11 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a6so2417932wma.5
-        for <linux-pwm@vger.kernel.org>; Wed, 16 Oct 2019 04:06:09 -0700 (PDT)
+        id S2392598AbfJPLGN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 16 Oct 2019 07:06:13 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34176 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388896AbfJPLGN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Oct 2019 07:06:13 -0400
+Received: by mail-wr1-f68.google.com with SMTP id j11so27549158wrp.1
+        for <linux-pwm@vger.kernel.org>; Wed, 16 Oct 2019 04:06:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=c/rXG7dZ6ZZm2mP84hlYfs8wnMTiZSfso3bXtqugNtM=;
-        b=ZzbLdYezjTXkU16z7PUrdL0Iki0lJuPsOIg6IM3Dl9MbHhEr195j45uH3vk1Jy/Pv2
-         3TdvYIqpWh7R8kLag6HdUPq8mJ0A2u8JMB+EZMjsVYJGIx3BVmrQDzaXezqYPw5xlagJ
-         E6lTNiqmqhXQyAsebZuInXV0UtSg2VQpI/5e/zUC90I1/wophbCMz+iK9G7z7+UnpMxL
-         4q0Jv93LqpRv5/KRX3/kDy9APIwpSxZk5fsgE5oIKfLPDFEffOUb25Dpw/dk3CxK4mav
-         u+ZgIL8CXRs6qvA++RVB5pFqHOlqG4QMy7IqCGWVBxXC+0/ik3z5lIHjve2bITpr36gd
-         KgIg==
+        bh=2SctoXZXMTWMcfDaJGPRRERJhsy9k0np9nwBe9LnY3E=;
+        b=WQyUAxeU7Jjo8i+J1ZteY+hKwpe/7zuBan5j21vAZyFEosrTczwfs9qjGMPunP68GR
+         zHCxJ+wYZNLqStkc4HVqmqOEZzxglm19sRfEg7QtEPdo1pRh6s2r2h0tJdDonF2ti+2K
+         u9eZAV/eb0qLqPRhd0bWgZSJEAt62Hjce9C3bFcK3czMSooj5L2m8SO8CMYXFPnyZxmp
+         2X3FvK+Mb+TVDDdgas7dbK3hp0Ak9X/wurIq5tXZ3ockOT5n3nDb8FZnjiJVERDauSDa
+         kJ3nwFm/rx1P9wjOTdIFFyTsue5lo516zLYMooSuOXXcFkdBQr/+Dc3zWyknyVUyofze
+         6SKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=c/rXG7dZ6ZZm2mP84hlYfs8wnMTiZSfso3bXtqugNtM=;
-        b=S53D0uyThDFpC77KnhtBiivQrSdj3jn3CQtgUFx7cC76hwGxu7SL8pgSYKHu/yul0/
-         ui3crRDlrIbVUhCw8Y8sFSkA9oAXpdNm/TtKWB6XMvVLewWdCBgn5tqOhRufZXVXOv4R
-         WGyXLV8PvfwRe0td1dT2bqOMMeDpULpvhlkSMT6shcseGgbw4+JEOzULt4zL5mT5+2ch
-         uS8Gw7IV+fWYYRVjzSflhjV3cMoT9ence7iYoeBxdwlc1LHPG5A8TkTGpmVafcGbKKr2
-         6NEfOhIiC+oaRJ38SHdInmET6Pk0jE8UWc+gYKLtUGfDeI2kY1m8YfSepKR0aFB++zdP
-         8FIQ==
-X-Gm-Message-State: APjAAAUcpH+aC6hS8YwkvJQenE8jpTSftnv4qNGSolKxxO5fglUMLoB6
-        CrdRC3bmxReKPQ0OPbJsCxykLsSH
-X-Google-Smtp-Source: APXvYqyIhaULJipFFRhEx7tjW1pvft2xdpg6B8OsbW3XzBtoiKLm0pyDlO67J9MTKKuJ2vIPYZUyng==
-X-Received: by 2002:a7b:c629:: with SMTP id p9mr2904875wmk.65.1571223968592;
-        Wed, 16 Oct 2019 04:06:08 -0700 (PDT)
+        bh=2SctoXZXMTWMcfDaJGPRRERJhsy9k0np9nwBe9LnY3E=;
+        b=UmF+hC+7MhizKki/VMgiHsunJ6sNk8KWahNv7TFJ3TJfj22ZOZLjl3rbf9SdzIzVcZ
+         fm1dofbZFMnPmuRle/oIC5I5SByBUMjuQLSDARzPMIX2fJuExG0eddWiZUjt4WhNxMrq
+         +QVzxsyzVsRge0KeZcTUmsZaFWO9YXwgmi/ZnLG8Jj58lejOrPlEd+T1MOj2LRfqQrsC
+         Ojtoa+ErS5KEPETAUvjemgVrzIaGa9bwMUX1T6SIiaZ4rXEfimRyYDzpOW97knTVipab
+         zZrvRXqENm6ThJwf4q12Y/N2GOTTGO3q9kCRReKRiHIIrdFNVamO09nxkU8ci3fFul/I
+         etBA==
+X-Gm-Message-State: APjAAAUHh6/i8AY2j1RB1Lj59AMGKf9MRkJ4vfMSbYUx+E0yEn5FXMEp
+        LiS6FBrmeUxefttKxe58rcs=
+X-Google-Smtp-Source: APXvYqzNDS8nPVpl/fPpKFFQCXSkpF/eINhsijEledejUcr/9GuB9HOaL4gta4mJlPnrDk6nQcw8JA==
+X-Received: by 2002:a5d:53c2:: with SMTP id a2mr2201844wrw.10.1571223970921;
+        Wed, 16 Oct 2019 04:06:10 -0700 (PDT)
 Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id 3sm2251940wmo.22.2019.10.16.04.06.07
+        by smtp.gmail.com with ESMTPSA id n3sm18747504wrr.50.2019.10.16.04.06.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 04:06:07 -0700 (PDT)
+        Wed, 16 Oct 2019 04:06:09 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>
@@ -51,9 +51,9 @@ Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
         <u.kleine-koenig@pengutronix.de>,
         Fabrice Gasnier <fabrice.gasnier@st.com>,
         linux-pwm@vger.kernel.org
-Subject: [PATCH v2 2/3] pwm: stm32: Pass breakinput instead of its values
-Date:   Wed, 16 Oct 2019 13:06:00 +0200
-Message-Id: <20191016110601.1765415-3-thierry.reding@gmail.com>
+Subject: [PATCH v2 3/3] pwm: stm32: Validate breakinput data from DT
+Date:   Wed, 16 Oct 2019 13:06:01 +0200
+Message-Id: <20191016110601.1765415-4-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016110601.1765415-1-thierry.reding@gmail.com>
 References: <20191016110601.1765415-1-thierry.reding@gmail.com>
@@ -64,56 +64,41 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Instead of passing the individual values of the breakpoint, pass a
-pointer to the breakpoint.
+Both index and level can only be either 0 or 1 and the filter value is
+limited to values between (and including) 0 and 15. Validate that the
+device tree node contains values that are within these ranges.
 
 Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 ---
- drivers/pwm/pwm-stm32.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+ drivers/pwm/pwm-stm32.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-index a5b323432d8c..db1d675b45fb 100644
+index db1d675b45fb..7ff48c14fae8 100644
 --- a/drivers/pwm/pwm-stm32.c
 +++ b/drivers/pwm/pwm-stm32.c
-@@ -491,18 +491,18 @@ static const struct pwm_ops stm32pwm_ops = {
- };
- 
- static int stm32_pwm_set_breakinput(struct stm32_pwm *priv,
--				    int index, int level, int filter)
-+				    const struct stm32_breakinput *bi)
+@@ -530,6 +530,7 @@ static int stm32_pwm_probe_breakinputs(struct stm32_pwm *priv,
+ 				       struct device_node *np)
  {
--	u32 shift = TIM_BDTR_BKF_SHIFT(index);
--	u32 bke = TIM_BDTR_BKE(index);
--	u32 bkp = TIM_BDTR_BKP(index);
--	u32 bkf = TIM_BDTR_BKF(index);
-+	u32 shift = TIM_BDTR_BKF_SHIFT(bi->index);
-+	u32 bke = TIM_BDTR_BKE(bi->index);
-+	u32 bkp = TIM_BDTR_BKP(bi->index);
-+	u32 bkf = TIM_BDTR_BKF(bi->index);
- 	u32 mask = bkf | bkp | bke;
- 	u32 bdtr;
+ 	int nb, ret, array_size;
++	unsigned int i;
  
--	bdtr = (filter & TIM_BDTR_BKF_MASK) << shift | bke;
-+	bdtr = (bi->filter & TIM_BDTR_BKF_MASK) << shift | bke;
+ 	nb = of_property_count_elems_of_size(np, "st,breakinput",
+ 					     sizeof(struct stm32_breakinput));
+@@ -551,6 +552,13 @@ static int stm32_pwm_probe_breakinputs(struct stm32_pwm *priv,
+ 	if (ret)
+ 		return ret;
  
--	if (level)
-+	if (bi->level)
- 		bdtr |= bkp;
++	for (i = 0; i < priv->num_breakinputs; i++) {
++		if (priv->breakinputs[i].index > 1 ||
++		    priv->breakinputs[i].level > 1 ||
++		    priv->breakinputs[i].filter > 15)
++			return -EINVAL;
++	}
++
+ 	return stm32_pwm_apply_breakinputs(priv);
+ }
  
- 	regmap_update_bits(priv->regmap, TIM_BDTR, mask, bdtr);
-@@ -518,10 +518,7 @@ static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv)
- 	int ret;
- 
- 	for (i = 0; i < priv->num_breakinputs; i++) {
--		ret = stm32_pwm_set_breakinput(priv,
--					       priv->breakinputs[i].index,
--					       priv->breakinputs[i].level,
--					       priv->breakinputs[i].filter);
-+		ret = stm32_pwm_set_breakinput(priv, &priv->breakinputs[i]);
- 		if (ret < 0)
- 			return ret;
- 	}
 -- 
 2.23.0
 
