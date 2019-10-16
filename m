@@ -2,158 +2,183 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3E4CD8CE5
-	for <lists+linux-pwm@lfdr.de>; Wed, 16 Oct 2019 11:50:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 188E0D8D54
+	for <lists+linux-pwm@lfdr.de>; Wed, 16 Oct 2019 12:09:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbfJPJur (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 16 Oct 2019 05:50:47 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36677 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727434AbfJPJur (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Oct 2019 05:50:47 -0400
-Received: by mail-wr1-f66.google.com with SMTP id y19so27277314wrd.3
-        for <linux-pwm@vger.kernel.org>; Wed, 16 Oct 2019 02:50:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oFHi4Z8TLBaXSaOEuT5IQ7wdEFfH7drDr71VD+4T6pY=;
-        b=TrL782UIFTfu9H3RnDAWP3GdfczO9MPrIWvhl6EeYcbfGYSk4ZLl6y3S6YJO+QoCMV
-         FbElRmLNoseUX9FsbrQtvZe4zglBeRLkU2cc8VllS/S37iqOOoz4RV+idNHOWShpjrXX
-         vA4q5TvsvYbgX8SDPAFYmKe8pSnQIgAVXhKSHkFqzIUwi2b9yKvnU7g91HlVyJ+DTW87
-         05WN60B8MoAddqAWLtFghJkJOv1TLoZ/7TGHxkrGqTIAJhXTDtz1VocKru2olwGz/qMx
-         Hf2ekZDkpq3zpbBazkIqDtARteBA6WE+6STRKkn66h1EcbFD/IFqZXGG2mbHEOTPsy4I
-         BiMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oFHi4Z8TLBaXSaOEuT5IQ7wdEFfH7drDr71VD+4T6pY=;
-        b=ecdo+3hSIth+5uPAiTtrHYKcaNSIVtlM7hcF/x7Q7QzD5Kzf15P9oshznr5rtP8xu8
-         Lg0acP8idZSTcgHKqoJuf2S0euPKdLryvXG/kHTbk6A+fN+kf2cIWHIDfj4cjCf9D+jj
-         3nFcUIi7ZIR+Xb/UNJ3bL+ahUB9WXQYl0LelbPsX9PXmxT7EB2D7epgUGr2hhcPLsjoW
-         Up8/0LmIW05EWXttenmiL99y7wG4mbzQ53Q2eE0r2/q3kLRJSLKFbWxkAeG7NdQv2m5S
-         FrUU6gEirrad+zldkyWonxCTTrG/+ml9ObfI7b85dWTdSIsXBaeHZ+UcgkuXkb2DX+Ix
-         zC1w==
-X-Gm-Message-State: APjAAAXozyKNwi7ISKuXxaF8EFupVAFEtwJKnkDkbgNoz13MSlzRYInz
-        cCk5KgML/9xUZzqg8pvMAAI=
-X-Google-Smtp-Source: APXvYqwzkEpyWCcajar5bN/SN1KwuU1k/pbi17ihogL9+6DLr9lfFxrX0xjXqZphJuxCTLuJ3u7Xtg==
-X-Received: by 2002:a5d:6408:: with SMTP id z8mr1846506wru.108.1571219444391;
-        Wed, 16 Oct 2019 02:50:44 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id w4sm21855612wrv.66.2019.10.16.02.50.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 02:50:42 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 11:50:42 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 2/3] pwm: stm32: Remove confusing bitmask
-Message-ID: <20191016095042.GB1303817@ulmo>
-References: <20191016073842.1300297-1-thierry.reding@gmail.com>
- <20191016073842.1300297-3-thierry.reding@gmail.com>
- <20191016083107.fetprdj7k52hkdvy@pengutronix.de>
+        id S2390344AbfJPKJN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 16 Oct 2019 06:09:13 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:6866 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727235AbfJPKJN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Oct 2019 06:09:13 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9G9vJSb022321;
+        Wed, 16 Oct 2019 12:08:57 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=DRK6nnWxIpQcRpa27goNNKQ6VsydMmtRJ5E896Ce4Mg=;
+ b=bgO95zmf6k2aVs9w1Xi40fm7M97azWEHfHLRVkbo0ZJC5b8wbkMYjy3JqcGa/3hDtU0V
+ a05oW0Z2xC+WtxdaqXmFvJSIC5d8mRebsgQ2gbwHQCcHBrjAlDqrdLtQG869tjSoHhtP
+ bB9U3dxRq3HkKMd4MSk5tFrPp0gemXEoUjf8Chyhjstyx9zuSluokafzcfjR6hcdMNUH
+ ZTTJ/EKLLxFqT+Wx4Y/tB9Go12HCV/e7mZuqVVqTs6yBEmPhYXEb0NDZ/5mVM9AcTrOZ
+ yBiTzslx4ssweZHkXlP4z3lwYc8XBKg+K4PgT3xZQFZtj0PaIz3KNoZS0hOVI8iOVFPq GA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2vk4kx5eyf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 16 Oct 2019 12:08:57 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 07B0410002A;
+        Wed, 16 Oct 2019 12:08:56 +0200 (CEST)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C67EE205D2C;
+        Wed, 16 Oct 2019 12:08:56 +0200 (CEST)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.46) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 16 Oct
+ 2019 12:08:56 +0200
+Received: from [10.48.0.192] (10.48.0.192) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 16 Oct 2019 12:08:56
+ +0200
+Subject: Re: [PATCH v2 3/3] pwm: stm32: add power management support
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <robh+dt@kernel.org>, <u.kleine-koenig@pengutronix.de>,
+        <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
+        <mcoquelin.stm32@gmail.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <benjamin.gaignard@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <1570193633-6600-1-git-send-email-fabrice.gasnier@st.com>
+ <1570193633-6600-4-git-send-email-fabrice.gasnier@st.com>
+ <20191016070635.GC1296874@ulmo>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <15371530-a932-08b7-dd78-a7e20d213203@st.com>
+Date:   Wed, 16 Oct 2019 12:08:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="eAbsdosE1cNLO4uF"
-Content-Disposition: inline
-In-Reply-To: <20191016083107.fetprdj7k52hkdvy@pengutronix.de>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191016070635.GC1296874@ulmo>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.48.0.192]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-16_03:2019-10-15,2019-10-16 signatures=0
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 10/16/19 9:06 AM, Thierry Reding wrote:
+> On Fri, Oct 04, 2019 at 02:53:53PM +0200, Fabrice Gasnier wrote:
+>> Add suspend/resume PM sleep ops. When going to low power, enforce the PWM
+>> channel isn't active. Let the PWM consumers disable it during their own
+>> suspend sequence, see [1]. So, perform a check here, and handle the
+>> pinctrl states. Also restore the break inputs upon resume, as registers
+>> content may be lost when going to low power mode.
+>>
+>> [1] https://lkml.org/lkml/2019/2/5/770
+>>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>> ---
+>> Changes in v2:
+>> Follow Uwe suggestions/remarks:
+>> - Add a precursor patch to ease reviewing
+>> - Use registers read instead of pwm_get_state
+>> - Add a comment to mention registers content may be lost in low power mode
+>> ---
+>>  drivers/pwm/pwm-stm32.c | 38 ++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 38 insertions(+)
+> 
+> Applied, thanks. I made two minor changes, though, see below.
+> 
+>>
+>> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
+>> index cf8658c..546b661 100644
+>> --- a/drivers/pwm/pwm-stm32.c
+>> +++ b/drivers/pwm/pwm-stm32.c
+>> @@ -12,6 +12,7 @@
+>>  #include <linux/mfd/stm32-timers.h>
+>>  #include <linux/module.h>
+>>  #include <linux/of.h>
+>> +#include <linux/pinctrl/consumer.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/pwm.h>
+>>  
+>> @@ -655,6 +656,42 @@ static int stm32_pwm_remove(struct platform_device *pdev)
+>>  	return 0;
+>>  }
+>>  
+>> +static int __maybe_unused stm32_pwm_suspend(struct device *dev)
+>> +{
+>> +	struct stm32_pwm *priv = dev_get_drvdata(dev);
+>> +	unsigned int ch;
+> 
+> I renamed this to just "i", which is more idiomatic for loop variables.
+> The function is small enough not to need to differentiate between loop
+> variables.
+> 
+>> +	u32 ccer, mask;
+>> +
+>> +	/* Look for active channels */
+>> +	ccer = active_channels(priv);
+>> +
+>> +	for (ch = 0; ch < priv->chip.npwm; ch++) {
+>> +		mask = TIM_CCER_CC1E << (ch * 4);
+>> +		if (ccer & mask) {
+>> +			dev_err(dev, "The consumer didn't stop us (%s)\n",
+>> +				priv->chip.pwms[ch].label);
+> 
+> Changed this to:
+> 
+> 	"PWM %u still in use by consumer %s\n", i, priv->chip.pwms[i].label
+> 
+> I think that might help clarify which PWM is still enabled in case the
+> consumers don't set a label.
 
---eAbsdosE1cNLO4uF
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Thierry,
 
-On Wed, Oct 16, 2019 at 10:31:07AM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> On Wed, Oct 16, 2019 at 09:38:41AM +0200, Thierry Reding wrote:
-> > Both BKP bits are set in the BDTR register and the code relies on the
-> > mask used during write to make sure only one of them is written. Since
-> > this isn't immediately obvious, a comment is needed to explain it. The
-> > same can be achieved by making explicit what happens, so add another
-> > temporary variable that contains only the one bit that is actually ORed
-> > into the register and get rid of the comment.
-> >=20
-> > Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-> > ---
-> >  drivers/pwm/pwm-stm32.c | 10 ++++------
-> >  1 file changed, 4 insertions(+), 6 deletions(-)
-> >=20
-> > diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-> > index b12fb11b7a55..8f1f3371e1dd 100644
-> > --- a/drivers/pwm/pwm-stm32.c
-> > +++ b/drivers/pwm/pwm-stm32.c
-> > @@ -493,26 +493,24 @@ static const struct pwm_ops stm32pwm_ops =3D {
-> >  static int stm32_pwm_set_breakinput(struct stm32_pwm *priv,
-> >  				    int index, int level, int filter)
-> >  {
-> > -	u32 bke, shift, mask, bdtr;
-> > +	u32 bke, bkp, shift, mask, bdtr;
-> > =20
-> >  	if (index =3D=3D 0) {
-> >  		bke =3D TIM_BDTR_BKE;
-> > +		bkp =3D TIM_BDTR_BKP;
-> >  		shift =3D TIM_BDTR_BKF_SHIFT;
-> >  		mask =3D TIM_BDTR_BKE | TIM_BDTR_BKP | TIM_BDTR_BKF;
-> >  	} else {
-> >  		bke =3D TIM_BDTR_BK2E;
-> > +		bkp =3D TIM_BDTR_BK2P;
-> >  		shift =3D TIM_BDTR_BK2F_SHIFT;
-> >  		mask =3D TIM_BDTR_BK2E | TIM_BDTR_BK2P | TIM_BDTR_BK2F;
->=20
-> Assuming in the else branch index is always 1, the following would be
-> IMHO nicer:
->=20
-> #define TIM_BDTR_BKE(i) BIT(12 + 12 * (i))
-> #define TIM_BDTR_BKP(i) BIT(13 + 12 * (i))
-> #define TIM_BDTR_BKF_SHIFT(i) (16 + 4 * (i))
->=20
-> ..
->=20
-> 	bke =3D TIM_BDTR_BKE(index);
-> 	bkp =3D TIM_BDTR_BKP(index);
+Many thanks for all the improvements on this series!
 
-I had thought about that, but ultimately decided against it because
-the original defines might match exactly what's in the datasheet, so
-there's some value to keep the originals.
+Best Regards,
+Fabrice
 
-I suppose one other alternative would be to let the macros be and do the
-computations in the driver instead, something like:
-
-	bke =3D TIM_BDTR_BKE << (index * 12);
-	bkp =3D TIM_BDTR_BKP << (index * 12);
-	bkf =3D TIM_BDTR_BKF << (index *  4);
-
-But yeah, I agree that having the parameters be part of the macros is
-even better.
-
-Fabrice, any objection to redefining the macros as above?
-
-Thierry
-
---eAbsdosE1cNLO4uF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2m5+8ACgkQ3SOs138+
-s6GSqA/+MTdWclsUcjCM3mrE8mDdl7NpUvdj/aCo5d6Q6f6Ihyy+f9RhBX27Sirk
-K917UMgnm5ZXnDX2WHBJd/ntPePAzeQaFtedR8aiprk87C+8iWqgBzRxEyobNDAO
-Z2fwAMqTsnHpdy+GedKAPugzsHvYuKqdrlkEuT3ka5/Yxs+kVqyVZsJVNJou6pIa
-BMqxclu4q7mHWmhLCZN1Xk8Aejk/IyHi9KQr5SljOm4RLkVASZ2z740YZC4O1DCc
-cqH4+sa6CrmI2nYBGrS8nYLjg3yZq6NzDLmN68VUseGpNYZXJsMe6AJ12JChOiIh
-Dg9uNHyRNAEEXOzNblGif+fJnIfaTIQ7oX3pLST9c9nwGSieNsOpNf/1PMdY1+vE
-H+duv5ojUZGxw54FshUpXzKbJMWKL/AxHVN/LRsPI/1rpus3uQMSCJbzKdsPaKQF
-0qvm1YeRvj79QRcnt4k7i0eiUxPyy/VHsVNENad/xiX3BkluiPpSnAtKD9mh54fE
-roZBEPCNmAOLg0T8h1LiL4p03TIvxqGYAv7nV2rcD4bPUfOy2A+zBOr+ZmLttfVB
-zzBrsubXxkSttLbTEPYBPrC7OLIPCdDPHEjQpmWK6vT6LjSawT1z/pPVXZAGQnsK
-aU0jP2YxgdkLFOMhawaEeBXHIQwphunGkkJTj1IrK9TtK3O8428=
-=YbQI
------END PGP SIGNATURE-----
-
---eAbsdosE1cNLO4uF--
+> 
+> Thierry
+> 
+>> +			return -EBUSY;
+>> +		}
+>> +	}
+>> +
+>> +	return pinctrl_pm_select_sleep_state(dev);
+>> +}
+>> +
+>> +static int __maybe_unused stm32_pwm_resume(struct device *dev)
+>> +{
+>> +	struct stm32_pwm *priv = dev_get_drvdata(dev);
+>> +	int ret;
+>> +
+>> +	ret = pinctrl_pm_select_default_state(dev);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/* restore breakinput registers that may have been lost in low power */
+>> +	return stm32_pwm_apply_breakinputs(priv);
+>> +}
+>> +
+>> +static SIMPLE_DEV_PM_OPS(stm32_pwm_pm_ops, stm32_pwm_suspend, stm32_pwm_resume);
+>> +
+>>  static const struct of_device_id stm32_pwm_of_match[] = {
+>>  	{ .compatible = "st,stm32-pwm",	},
+>>  	{ /* end node */ },
+>> @@ -667,6 +704,7 @@ static struct platform_driver stm32_pwm_driver = {
+>>  	.driver	= {
+>>  		.name = "stm32-pwm",
+>>  		.of_match_table = stm32_pwm_of_match,
+>> +		.pm = &stm32_pwm_pm_ops,
+>>  	},
+>>  };
+>>  module_platform_driver(stm32_pwm_driver);
+>> -- 
+>> 2.7.4
+>>
