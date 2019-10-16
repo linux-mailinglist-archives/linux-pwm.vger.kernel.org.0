@@ -2,103 +2,147 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B368BD8EEA
-	for <lists+linux-pwm@lfdr.de>; Wed, 16 Oct 2019 13:06:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE127D8F03
+	for <lists+linux-pwm@lfdr.de>; Wed, 16 Oct 2019 13:11:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392598AbfJPLGN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 16 Oct 2019 07:06:13 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34176 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388896AbfJPLGN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Oct 2019 07:06:13 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j11so27549158wrp.1
-        for <linux-pwm@vger.kernel.org>; Wed, 16 Oct 2019 04:06:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2SctoXZXMTWMcfDaJGPRRERJhsy9k0np9nwBe9LnY3E=;
-        b=WQyUAxeU7Jjo8i+J1ZteY+hKwpe/7zuBan5j21vAZyFEosrTczwfs9qjGMPunP68GR
-         zHCxJ+wYZNLqStkc4HVqmqOEZzxglm19sRfEg7QtEPdo1pRh6s2r2h0tJdDonF2ti+2K
-         u9eZAV/eb0qLqPRhd0bWgZSJEAt62Hjce9C3bFcK3czMSooj5L2m8SO8CMYXFPnyZxmp
-         2X3FvK+Mb+TVDDdgas7dbK3hp0Ak9X/wurIq5tXZ3ockOT5n3nDb8FZnjiJVERDauSDa
-         kJ3nwFm/rx1P9wjOTdIFFyTsue5lo516zLYMooSuOXXcFkdBQr/+Dc3zWyknyVUyofze
-         6SKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2SctoXZXMTWMcfDaJGPRRERJhsy9k0np9nwBe9LnY3E=;
-        b=UmF+hC+7MhizKki/VMgiHsunJ6sNk8KWahNv7TFJ3TJfj22ZOZLjl3rbf9SdzIzVcZ
-         fm1dofbZFMnPmuRle/oIC5I5SByBUMjuQLSDARzPMIX2fJuExG0eddWiZUjt4WhNxMrq
-         +QVzxsyzVsRge0KeZcTUmsZaFWO9YXwgmi/ZnLG8Jj58lejOrPlEd+T1MOj2LRfqQrsC
-         Ojtoa+ErS5KEPETAUvjemgVrzIaGa9bwMUX1T6SIiaZ4rXEfimRyYDzpOW97knTVipab
-         zZrvRXqENm6ThJwf4q12Y/N2GOTTGO3q9kCRReKRiHIIrdFNVamO09nxkU8ci3fFul/I
-         etBA==
-X-Gm-Message-State: APjAAAUHh6/i8AY2j1RB1Lj59AMGKf9MRkJ4vfMSbYUx+E0yEn5FXMEp
-        LiS6FBrmeUxefttKxe58rcs=
-X-Google-Smtp-Source: APXvYqzNDS8nPVpl/fPpKFFQCXSkpF/eINhsijEledejUcr/9GuB9HOaL4gta4mJlPnrDk6nQcw8JA==
-X-Received: by 2002:a5d:53c2:: with SMTP id a2mr2201844wrw.10.1571223970921;
-        Wed, 16 Oct 2019 04:06:10 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id n3sm18747504wrr.50.2019.10.16.04.06.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 04:06:09 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        id S2392634AbfJPLLe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 16 Oct 2019 07:11:34 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45305 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732366AbfJPLLe (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Oct 2019 07:11:34 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iKhDI-00046n-Re; Wed, 16 Oct 2019 13:11:32 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iKhDH-0003m3-93; Wed, 16 Oct 2019 13:11:31 +0200
+Date:   Wed, 16 Oct 2019 13:11:31 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
         Fabrice Gasnier <fabrice.gasnier@st.com>,
         linux-pwm@vger.kernel.org
-Subject: [PATCH v2 3/3] pwm: stm32: Validate breakinput data from DT
-Date:   Wed, 16 Oct 2019 13:06:01 +0200
-Message-Id: <20191016110601.1765415-4-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016110601.1765415-1-thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 1/3] pwm: stm32: Remove clutter from ternary operator
+Message-ID: <20191016111131.n2rrmkjfju2sc72y@pengutronix.de>
 References: <20191016110601.1765415-1-thierry.reding@gmail.com>
+ <20191016110601.1765415-2-thierry.reding@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191016110601.1765415-2-thierry.reding@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Both index and level can only be either 0 or 1 and the filter value is
-limited to values between (and including) 0 and 15. Validate that the
-device tree node contains values that are within these ranges.
+On Wed, Oct 16, 2019 at 01:05:59PM +0200, Thierry Reding wrote:
+> Remove usage of the ternary operator to assign values for register
+> fields. Instead, parameterize the register and field offset macros
+> and pass the index to them.
+> 
+> This removes clutter and improves readability.
+> 
+> Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+> ---
+>  drivers/pwm/pwm-stm32.c          | 21 +++++++++------------
+>  include/linux/mfd/stm32-timers.h | 12 ++++--------
+>  2 files changed, 13 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
+> index 9430b4cd383f..a5b323432d8c 100644
+> --- a/drivers/pwm/pwm-stm32.c
+> +++ b/drivers/pwm/pwm-stm32.c
+> @@ -493,20 +493,17 @@ static const struct pwm_ops stm32pwm_ops = {
+>  static int stm32_pwm_set_breakinput(struct stm32_pwm *priv,
+>  				    int index, int level, int filter)
+>  {
+> -	u32 bke = (index == 0) ? TIM_BDTR_BKE : TIM_BDTR_BK2E;
+> -	int shift = (index == 0) ? TIM_BDTR_BKF_SHIFT : TIM_BDTR_BK2F_SHIFT;
+> -	u32 mask = (index == 0) ? TIM_BDTR_BKE | TIM_BDTR_BKP | TIM_BDTR_BKF
+> -				: TIM_BDTR_BK2E | TIM_BDTR_BK2P | TIM_BDTR_BK2F;
+> -	u32 bdtr = bke;
+> +	u32 shift = TIM_BDTR_BKF_SHIFT(index);
+> +	u32 bke = TIM_BDTR_BKE(index);
+> +	u32 bkp = TIM_BDTR_BKP(index);
+> +	u32 bkf = TIM_BDTR_BKF(index);
+> +	u32 mask = bkf | bkp | bke;
+> +	u32 bdtr;
 
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
----
- drivers/pwm/pwm-stm32.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+It's not clear that
 
-diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-index db1d675b45fb..7ff48c14fae8 100644
---- a/drivers/pwm/pwm-stm32.c
-+++ b/drivers/pwm/pwm-stm32.c
-@@ -530,6 +530,7 @@ static int stm32_pwm_probe_breakinputs(struct stm32_pwm *priv,
- 				       struct device_node *np)
- {
- 	int nb, ret, array_size;
-+	unsigned int i;
- 
- 	nb = of_property_count_elems_of_size(np, "st,breakinput",
- 					     sizeof(struct stm32_breakinput));
-@@ -551,6 +552,13 @@ static int stm32_pwm_probe_breakinputs(struct stm32_pwm *priv,
- 	if (ret)
- 		return ret;
- 
-+	for (i = 0; i < priv->num_breakinputs; i++) {
-+		if (priv->breakinputs[i].index > 1 ||
-+		    priv->breakinputs[i].level > 1 ||
-+		    priv->breakinputs[i].filter > 15)
-+			return -EINVAL;
-+	}
-+
- 	return stm32_pwm_apply_breakinputs(priv);
- }
- 
+	(index == 0) ? TIM_BDTR_BKE : TIM_BDTR_BK2E
+
+is the same as
+
+	TIM_BDTR_BKE(index)
+
+unless we know that index is 0 or 1. A word about that in the commit log
+would be great, maybe even ...
+
+>  
+> -	/*
+> -	 * The both bits could be set since only one will be wrote
+> -	 * due to mask value.
+> -	 */
+> -	if (level)
+> -		bdtr |= TIM_BDTR_BKP | TIM_BDTR_BK2P;
+> +	bdtr = (filter & TIM_BDTR_BKF_MASK) << shift | bke;
+>  
+> -	bdtr |= (filter & TIM_BDTR_BKF_MASK) << shift;
+> +	if (level)
+> +		bdtr |= bkp;
+>  
+>  	regmap_update_bits(priv->regmap, TIM_BDTR, mask, bdtr);
+>  
+> diff --git a/include/linux/mfd/stm32-timers.h b/include/linux/mfd/stm32-timers.h
+> index 067d14655c28..f8db83aedb2b 100644
+> --- a/include/linux/mfd/stm32-timers.h
+> +++ b/include/linux/mfd/stm32-timers.h
+> @@ -70,14 +70,11 @@
+>  #define TIM_CCER_CC4E	BIT(12)	/* Capt/Comp 4  out Ena    */
+>  #define TIM_CCER_CC4P	BIT(13)	/* Capt/Comp 4  Polarity   */
+>  #define TIM_CCER_CCXE	(BIT(0) | BIT(4) | BIT(8) | BIT(12))
+> -#define TIM_BDTR_BKE	BIT(12) /* Break input enable	   */
+> -#define TIM_BDTR_BKP	BIT(13) /* Break input polarity	   */
+> +#define TIM_BDTR_BKE(x)	BIT(12 + (x) * 12) /* Break input enable */
+> +#define TIM_BDTR_BKP(x)	BIT(13 + (x) * 12) /* Break input polarity */
+>  #define TIM_BDTR_AOE	BIT(14)	/* Automatic Output Enable */
+>  #define TIM_BDTR_MOE	BIT(15)	/* Main Output Enable      */
+> -#define TIM_BDTR_BKF	(BIT(16) | BIT(17) | BIT(18) | BIT(19))
+> -#define TIM_BDTR_BK2F	(BIT(20) | BIT(21) | BIT(22) | BIT(23))
+> -#define TIM_BDTR_BK2E	BIT(24) /* Break 2 input enable	   */
+> -#define TIM_BDTR_BK2P	BIT(25) /* Break 2 input polarity  */
+> +#define TIM_BDTR_BKF(x)	(0xf << (16 + (x) * 4))
+>  #define TIM_DCR_DBA	GENMASK(4, 0)	/* DMA base addr */
+>  #define TIM_DCR_DBL	GENMASK(12, 8)	/* DMA burst len */
+>  
+> @@ -87,8 +84,7 @@
+>  #define TIM_CR2_MMS2_SHIFT	20
+>  #define TIM_SMCR_TS_SHIFT	4
+>  #define TIM_BDTR_BKF_MASK	0xF
+> -#define TIM_BDTR_BKF_SHIFT	16
+> -#define TIM_BDTR_BK2F_SHIFT	20
+> +#define TIM_BDTR_BKF_SHIFT(x)	(16 + (x) * 4)
+
+... define the macros as:
+
+	#define TIM_BDTR_BKF_SHIFT(x)        (BUF_ON(index != 0 && index != 1), 16 + (x) * 4)
+
+?
+
+Best regards
+Uwe
+
 -- 
-2.23.0
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
