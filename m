@@ -2,110 +2,206 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 81EE2DAB6F
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Oct 2019 13:47:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 797D0DABBC
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Oct 2019 14:09:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405275AbfJQLre (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 17 Oct 2019 07:47:34 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52505 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405758AbfJQLre (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Oct 2019 07:47:34 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r19so2237684wmh.2
-        for <linux-pwm@vger.kernel.org>; Thu, 17 Oct 2019 04:47:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=9EgRoWT1S/esycl2KztK0v8EdhOHABE+DCs/Zs7xJ2g=;
-        b=yk8pv0ZohxDRImGSseeQ94X4SFOB1f3whjH3gE0/kgd3BhXkwMfQuiFzfbo8kV7hWL
-         WTWM5jOHJQqpVMIQwPB2qoXZmWLkGSYH+S7jw4dL81rSOAtR8ODMKEa03GnNzonNBqpi
-         sqEgotnNJCGaaZli7QevDDrC0zvNJl48PllosPtH5bRKowTt0nfgPFT/dNYS/2PY+Bvu
-         si1brAfp1c2sqxZ9sWW55jeccgEsLJTjQXkzdK+FUUgm/Ic48qG2BKOAr7kFARZL0lng
-         O01Bak48rOIOgUgIOSFMUG0kZndFotRdFxYs+W1sGMpY1MAkI5HRrYvnEiSIvgyLfO6X
-         0Fog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=9EgRoWT1S/esycl2KztK0v8EdhOHABE+DCs/Zs7xJ2g=;
-        b=YdUfPI3aXmllapix49PvRqlPioxCZIJzMgkbBq/BEG16ya5GypoROVNbf0gEcj8FO0
-         Hg48G3Gph4lExp67f9I0ryxnj5+O+yQxnbNOmf01ISM9Q41H2wjNzG507WK1rZnaIKrk
-         zpBhDnOwcGq+KPLVPEvOZ+LxB2PM9JV8MBwOWDM6QJ4hIuA5n8+IXw23cVCQ746iVG0c
-         L5+qgIurs5sUfAt5wrDernRPi4Jw2HhA74UGJE9Kgon3DbTNkX4PChgCDffntftNQXgf
-         ewrscPEi5ayy1rMA0myqZ0+9ft9FS0gLZpq4UXS+L54FHSbxdFd7FlkxOwqU6s2ZTv6e
-         X8CA==
-X-Gm-Message-State: APjAAAV9r86+rpuCTa7HSTDhBHAL9/JuoFW1bP3u3k3wwbIFmIJuYx1Z
-        b9vKogqKZK59gJYJGPDVknHXfw==
-X-Google-Smtp-Source: APXvYqzhSWmeuMPlHQbLiJ024kOkuwLOq4wR8LHDKVRH96iLuA31ZMAoJouWa9QvRJfI5cC0Eh+JAA==
-X-Received: by 2002:a1c:a8c7:: with SMTP id r190mr2320221wme.148.1571312850183;
-        Thu, 17 Oct 2019 04:47:30 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id z189sm2554703wmc.25.2019.10.17.04.47.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 04:47:29 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 12:47:27 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Adam Ford <aford173@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        id S2393046AbfJQMJV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 17 Oct 2019 08:09:21 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:49753 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731634AbfJQMJV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Oct 2019 08:09:21 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iL4al-0007IQ-IQ; Thu, 17 Oct 2019 14:09:19 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iL4aj-0005J5-JR; Thu, 17 Oct 2019 14:09:17 +0200
+Date:   Thu, 17 Oct 2019 14:09:17 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kernel@pengutronix.de,
         Jingoo Han <jingoohan1@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, kernel@pengutronix.de
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Adam Ford <aford173@gmail.com>
 Subject: Re: [PATCH] backlight: pwm_bl: configure pwm only once per backlight
  toggle
-Message-ID: <20191017114727.fy5tg2kgi6mr2sei@holly.lan>
+Message-ID: <20191017120917.fcb7x4fq4tbl2iat@pengutronix.de>
 References: <20191017081059.31761-1-u.kleine-koenig@pengutronix.de>
+ <c89925bd-857d-874f-b74f-c5700d4c9fbd@ysoft.com>
+ <20191017101116.3d5okxmto5coecad@pengutronix.de>
+ <20191017111131.GB3122066@ulmo>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191017081059.31761-1-u.kleine-koenig@pengutronix.de>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191017111131.GB3122066@ulmo>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 10:10:59AM +0200, Uwe Kleine-K�nig wrote:
-> A previous change in the pwm core (namely 01ccf903edd6 ("pwm: Let
-> pwm_get_state() return the last implemented state")) changed the
-> semantic of pwm_get_state() and disclosed an (as it seems) common
-> problem in lowlevel PWM drivers. By not relying on the period and duty
-> cycle being retrievable from a disabled PWM this type of problem is
-> worked around.
+On Thu, Oct 17, 2019 at 01:11:31PM +0200, Thierry Reding wrote:
+> On Thu, Oct 17, 2019 at 12:11:16PM +0200, Uwe Kleine-König wrote:
+> > On Thu, Oct 17, 2019 at 11:48:08AM +0200, Michal Vokáč wrote:
+> > > On 17. 10. 19 10:10, Uwe Kleine-König wrote:
+> > > > A previous change in the pwm core (namely 01ccf903edd6 ("pwm: Let
+> > > > pwm_get_state() return the last implemented state")) changed the
+> > > > semantic of pwm_get_state() and disclosed an (as it seems) common
+> > > > problem in lowlevel PWM drivers. By not relying on the period and duty
+> > > > cycle being retrievable from a disabled PWM this type of problem is
+> > > > worked around.
+> > > > 
+> > > > Apart from this issue only calling the pwm_get_state/pwm_apply_state
+> > > > combo once is also more effective.
+> > > > 
+> > > > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > > > ---
+> > > > Hello,
+> > > > 
+> > > > There are now two reports about 01ccf903edd6 breaking a backlight. As
+> > > > far as I understand the problem this is a combination of the backend pwm
+> > > > driver yielding surprising results and the pwm-bl driver doing things
+> > > > more complicated than necessary.
+> > > > 
+> > > > So I guess this patch works around these problems. Still it would be
+> > > > interesting to find out the details in the imx driver that triggers the
+> > > > problem. So Adam, can you please instrument the pwm-imx27 driver to
+> > > > print *state at the beginning of pwm_imx27_apply() and the end of
+> > > > pwm_imx27_get_state() and provide the results?
+> > > > 
+> > > > Note I only compile tested this change.
+> > > 
+> > > Hi Uwe,
+> > > I was just about to respond to the "pwm_bl on i.MX6Q broken on 5.4-RC1+"
+> > > thread that I have a similar problem when you submitted this patch.
+> > > 
+> > > So here are my few cents:
+> > > 
+> > > My setup is as follows:
+> > >  - imx6dl-yapp4-draco with i.MX6Solo
+> > >  - backlight is controlled with inverted PWM signal
+> > >  - max brightness level = 32, default brightness level set to 32 in DT.
+> > > 
+> > > 1. Almost correct backlight behavior before 01ccf903edd6 ("pwm: Let
+> > >    pwm_get_state() return the last implemented state):
+> > > 
+> > >  - System boots to userspace and backlight is enabled all the time from
+> > >    power up.
+> > > 
+> > >    $ dmesg | grep state
+> > >    [    1.763381] get state end: -1811360608, enabled: 0
+> > 
+> > What is -1811360608? When I wrote "print *state" above, I thought about
+> > something like:
+> > 
+> > 	pr_info("%s: period: %u, duty: %u, polarity: %d, enabled: %d",
+> > 		__func__, state->period, state->duty_cycle, state->polarity, state->enabled);
+> > 
+> > A quick look into drivers/pwm/pwm-imx27.c shows that this is another
+> > driver that yields duty_cycle = 0 when the hardware is off.
 > 
-> Apart from this issue only calling the pwm_get_state/pwm_apply_state
-> combo once is also more effective.
-
-I'm only interested in the second paragraph here.
-
-There seems to be a reasonable consensus that the i.MX27 and cros-ec
-PWM drivers should be fixed for the benefit of other PWM clients.
-So we make this change because it makes the pwm-bl better... not to
-work around bugs ;-).
-
-> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> index 746eebc411df..ddebd62b3978 100644
-> --- a/drivers/video/backlight/pwm_bl.c
-> +++ b/drivers/video/backlight/pwm_bl.c
-> @@ -67,40 +62,27 @@ static void pwm_backlight_power_on(struct pwm_bl_data *pb)
+> It seems to me like the best recourse to fix this for now would be to
+> patch up the drivers that return 0 when the hardware is off by caching
+> the currently configured duty cycle.
+> 
+> How about the patch below?
+> 
+> Thierry
+> 
+> --- >8 ---
+> From 15a52a7f1b910804fabd74a5882befd3f9d6bb37 Mon Sep 17 00:00:00 2001
+> From: Thierry Reding <thierry.reding@gmail.com>
+> Date: Thu, 17 Oct 2019 12:56:00 +0200
+> Subject: [PATCH] pwm: imx27: Cache duty cycle register value
+> 
+> The hardware register containing the duty cycle value cannot be accessed
+> when the PWM is disabled. This causes the ->get_state() callback to read
+> back a duty cycle value of 0, which can confuse consumer drivers.
+> 
+> Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+> ---
+>  drivers/pwm/pwm-imx27.c | 31 ++++++++++++++++++++++++-------
+>  1 file changed, 24 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+> index ae11d8577f18..4113d5cd4c62 100644
+> --- a/drivers/pwm/pwm-imx27.c
+> +++ b/drivers/pwm/pwm-imx27.c
+> @@ -85,6 +85,13 @@ struct pwm_imx27_chip {
+>  	struct clk	*clk_per;
+>  	void __iomem	*mmio_base;
+>  	struct pwm_chip	chip;
+> +
+> +	/*
+> +	 * The driver cannot read the current duty cycle from the hardware if
+> +	 * the hardware is disabled. Cache the last programmed duty cycle
+> +	 * value to return in that case.
+> +	 */
+> +	unsigned int duty_cycle;
+>  };
 >  
->  static void pwm_backlight_power_off(struct pwm_bl_data *pb)
->  {
-> -	struct pwm_state state;
-> -
-> -	pwm_get_state(pb->pwm, &state);
-> -	if (!pb->enabled)
-> -		return;
-> -
+>  #define to_pwm_imx27_chip(chip)	container_of(chip, struct pwm_imx27_chip, chip)
+> @@ -155,14 +162,17 @@ static void pwm_imx27_get_state(struct pwm_chip *chip,
+>  	tmp = NSEC_PER_SEC * (u64)(period + 2);
+>  	state->period = DIV_ROUND_CLOSEST_ULL(tmp, pwm_clk);
+>  
+> -	/* PWMSAR can be read only if PWM is enabled */
+> -	if (state->enabled) {
+> +	/*
+> +	 * PWMSAR can be read only if PWM is enabled. If the PWM is disabled,
+> +	 * use the cached value.
+> +	 */
+> +	if (state->enabled)
+>  		val = readl(imx->mmio_base + MX3_PWMSAR);
+> -		tmp = NSEC_PER_SEC * (u64)(val);
+> -		state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, pwm_clk);
+> -	} else {
+> -		state->duty_cycle = 0;
+> -	}
+> +	else
+> +		val = imx->duty_cycle;
+> +
+> +	tmp = NSEC_PER_SEC * (u64)(val);
+> +	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, pwm_clk);
+>  
+>  	if (!state->enabled)
+>  		pwm_imx27_clk_disable_unprepare(chip);
+> @@ -261,6 +271,13 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  		writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
+>  		writel(period_cycles, imx->mmio_base + MX3_PWMPR);
+>  
+> +		/*
+> +		 * Store the duty cycle for future reference in cases where
+> +		 * the MX3_PWMSAR register can't be read (i.e. when the PWM
+> +		 * is disabled).
+> +		 */
+> +		imx->duty_cycle = duty_cycles;
+> +
 
-Why remove the pb->enabled check? I thought that was there to ensure we
-don't mess up the regular reference counts.
+I wonder if it would be more sensible to do this in the pwm core
+instead. Currently there are two drivers known with this problem. I
+wouldn't be surprised if there were more.
 
+If we want to move clients to not rely on .period and .duty_cycle for a
+disabled PWM (do we?) a single change in the core is also beneficial
+compared to fixing several lowlevel drivers.
 
-Daniel.
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
