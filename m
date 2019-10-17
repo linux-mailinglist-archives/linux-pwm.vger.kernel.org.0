@@ -2,95 +2,90 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AEA6BDA542
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Oct 2019 08:02:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C875ADA656
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Oct 2019 09:23:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392526AbfJQGCt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 17 Oct 2019 02:02:49 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:7489 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2392520AbfJQGCt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Oct 2019 02:02:49 -0400
-IronPort-SDR: i19YbcRh5VPk31Qa+JZ+UXjWkwxwqsHycbkK2tlRyr55ak/TyxvvWn/tr7i93B3PtSZWyF94Kr
- RhpuQo3evWfAlHragIdMWR5wtEr+CFNK0TbAREIJcqKcpTqL7JrCwj0gNxiW6boB1m3GhfxlZ3
- p9d1iNOSpDqABhPLegSy6ZEcjXN5Eve0qGiwLa3ahPKOsGMxia5aQnlFmkI3xP7MlaxuBcJxqI
- 7Ky9bNrqpuS88SB85Vnpka2JhWpoCMLSXYif+PcW5YktDFGBj5rhKFy/FkBI9uWy/sz3UIwiaX
- e6A=
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 16 Oct 2019 23:02:48 -0700
-IronPort-SDR: ernh8agRQqL4TbhwNG80wQJkqZ3pFDc7Bzt9df8rc98IEKe3cVFhXcQmH2OYtYTsU+Ox7tJrye
- keMV9wsHlxK+C8iEMpWul5uzrYYJEYomwJ9kuq8xX6TrK9GPZ6bXJ1wHrGkN2UZ7hut8dv4zFl
- bsnDS8O0hhG+Qvs0EMBJpVtyK2bf7eHh+cThRZpEVJ+OhSa5axS8N3qSxJfksVOSacgR7NSkJP
- DRHS819snjeOXHJMAqaMalQ/z7BIysoTNEh1A1oFG6JOpVqrxXFCRjQB+n2MN8DnyLcumlU4ZA
- 5V7RfsyedDhDcoWb1Z6LgIof
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 16 Oct 2019 23:02:48 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id DAC6C475A; Wed, 16 Oct 2019 23:02:47 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 23:02:47 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
+        id S2404942AbfJQHXQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 17 Oct 2019 03:23:16 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37712 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727132AbfJQHXP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Oct 2019 03:23:15 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p14so1049742wro.4
+        for <linux-pwm@vger.kernel.org>; Thu, 17 Oct 2019 00:23:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=bJaZjiCjaQtaB4bTbXFULjRD1sl5x1sEWLifkMF+gkw=;
+        b=a/EiLVXZW+HT/sD53bL0i7pXjmuVsDqccI/74Zl4d+EkKXzOjQeh7W9o//pg1SqadH
+         5ibWdUKmmJick7gLUUHWIot5SMAATRHPqt2lIjjgzGKSSi3tCqcwveLYq4/5FIn+K7E2
+         ClGUIIHWRNcG8Kf12GMv8VcBIFNmxgqh4X0S7YHOiVyNQVd0D8inN6Pm9nvECG0tm+Jb
+         uyg0jWtT7ipqPGy2y6cg71kq/AYkxvC+86gc+eWRZ/d8KLaTSJ7SdHqgvn3KyiafxEdQ
+         WCO2n4wB3LeqYr3pSF2QlA1QqKv73z5EG/MG4cRbALdEUMu9Qdxoy2gKTxVOuPIcZJn+
+         GYnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=bJaZjiCjaQtaB4bTbXFULjRD1sl5x1sEWLifkMF+gkw=;
+        b=e1foslR/46rYZL+5unNlly2wUJnoPsScPlf8aIHwEGQl1sh4CCO2jQbSIrbmYWH5BP
+         ZWqST9YPAiNMFifwup6/4l5iQNfQDQTPZD8+9fILjFAi2FYt9KhKNqNxXrLiC4Uh4Ion
+         cQ5sLQ5Nac2PqYQP0SoxajoUdE7kr4rx4eRdlDpQp3avU7LcBNakCtOqWwa5cumcN19M
+         box+UqkIeiBABtJ6ElNNlK630u1+UN1NrVdRWZ2DyAxL3VFORf9bTFxknpQ/98mnrRjM
+         Z2l5P+6+QDnkel6bdTVvuLzJmtcIQQY8/dmwgHWavQ+pyak5wmpT3olVu59sDgbDQRVt
+         66iA==
+X-Gm-Message-State: APjAAAXpyNjd7kLXEPUhNGyuHCUnzVUzOG53SffYxSWGw8mnoKjEMKjW
+        0Q6CewUE0LqmQiUoEgmYJaDvSg==
+X-Google-Smtp-Source: APXvYqwG1PUY2YSznRp+xzXuWxf9Lb+1WbAdj4Wwau7GWQHe9gwTD6Vp2mN9FrJsc1ayE8NYCfon4A==
+X-Received: by 2002:a5d:6a4e:: with SMTP id t14mr1699652wrw.286.1571296993299;
+        Thu, 17 Oct 2019 00:23:13 -0700 (PDT)
+Received: from dell ([95.149.164.47])
+        by smtp.gmail.com with ESMTPSA id z13sm1408861wrm.64.2019.10.17.00.23.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 17 Oct 2019 00:23:12 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 08:23:11 +0100
+From:   Lee Jones <lee.jones@linaro.org>
 To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-pwm@vger.kernel.org, kernel-team@android.com,
-        Mark Salyzyn <salyzyn@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] pwm: Convert period and duty cycle to u64
-Message-ID: <20191017060247.GA12487@codeaurora.org>
-References: <1571191899-6150-1-git-send-email-gurus@codeaurora.org>
- <1571191899-6150-2-git-send-email-gurus@codeaurora.org>
- <20191016101539.GC1303817@ulmo>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] pwm: stm32: Remove clutter from ternary operator
+Message-ID: <20191017072311.GJ4365@dell>
+References: <20191016110601.1765415-1-thierry.reding@gmail.com>
+ <20191016110601.1765415-2-thierry.reding@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191016101539.GC1303817@ulmo>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191016110601.1765415-2-thierry.reding@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 12:15:39PM +0200, Thierry Reding wrote:
-> On Tue, Oct 15, 2019 at 07:11:39PM -0700, Guru Das Srinagesh wrote:
-> > Because period and duty cycle are defined as ints with units of
-> > nanoseconds, the maximum time duration that can be set is limited to
-> > ~2.147 seconds. Change their definitions to u64 so that higher durations
-> > may be set.
-> > 
-> > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> > ---
-> >  drivers/pwm/core.c  |  4 ++--
-> >  drivers/pwm/sysfs.c | 10 +++++-----
-> >  include/linux/pwm.h | 16 ++++++++--------
-> >  3 files changed, 15 insertions(+), 15 deletions(-)
+On Wed, 16 Oct 2019, Thierry Reding wrote:
+
+> Remove usage of the ternary operator to assign values for register
+> fields. Instead, parameterize the register and field offset macros
+> and pass the index to them.
 > 
-> Actually, we can't do that without further preparatory work. The reason
-> is that consumers use the period and duty_cycle members in computations
-> of their own, which lead to errors such as this:
+> This removes clutter and improves readability.
 > 
-> 	armv7l-unknown-linux-gnueabihf-ld: drivers/video/backlight/pwm_bl.o: in function `pwm_backlight_probe':
-> 	pwm_bl.c:(.text+0x3b0): undefined reference to `__aeabi_uldivmod'
-> 
-> So I think we need to audit all consumers carefully and make sure that
-> they use do_div() where necessary to avoid such errors.
-> 
-> Thierry
+> Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+> ---
+>  drivers/pwm/pwm-stm32.c          | 21 +++++++++------------
 
-Hi Thierry,
+>  include/linux/mfd/stm32-timers.h | 12 ++++--------
 
-I would like to try doing the preparatory work by fixing the errors seen
-in consumers so that this u64 patch may be applied without issues.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-Before sending the patch, I tried "make"-ing for arm, arm64 and i386
-architectures to check for compilation/linking errors and encountered
-none. I see that the above error arises from using a cross-compiler for
-arm v7, which I haven't tried yet.
-
-Could you please provide details of the compile tests that you run at
-your end? I could then try to reproduce the errors you see in the
-consumer drivers and fix them. Please do share any other ideas or
-suggestions you may have in this regard.
-
-Thank you.
-
-Guru Das.
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
