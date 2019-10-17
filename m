@@ -2,84 +2,129 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B0D0FDB77F
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Oct 2019 21:29:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECAE1DB7C5
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Oct 2019 21:44:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503533AbfJQT3O (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 17 Oct 2019 15:29:14 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44674 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503522AbfJQT3O (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Oct 2019 15:29:14 -0400
-Received: by mail-wr1-f66.google.com with SMTP id z9so3628769wrl.11
-        for <linux-pwm@vger.kernel.org>; Thu, 17 Oct 2019 12:29:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Y2Yht26P1vktZqaQqNQXULa6hC952BSjLWHUGdYiAU8=;
-        b=fCVM4e+bvdog5i14IO692HIFF2qWjQ0LOWu44jjaqLNYlT57j+YcEM3ekGAQzZxz20
-         3tXFppYjDQYdLxkimlZWT/gcCRiQyRg320zGG1vYFDcrK67Jq7KAEOqi626aIGH63Im+
-         8Pds1sqO0H0UNx8RL3YqD6sO/ctMHvtOhdyaRg1CG5km52KKuU321lt6Quh/OP9Tqu1U
-         QWHd+dOgBZtVUrFAJvcjnWoc0ybTzWsXXpklDwCUusD9+qX/2j2lVcI0GRcBE7aln3QR
-         v0icYUOa2IQjV7XpwtuLPAcoX1QGU0ZzDUOK8STZwCPOFF09pCfrSKFCmSGTSSBv41lr
-         iU0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Y2Yht26P1vktZqaQqNQXULa6hC952BSjLWHUGdYiAU8=;
-        b=Sz1FQcIaQ1y3ef4xumLgqqLQyXnZ6zb9YTpglBFcXvVgpJasDfR/BuwjJHhiceVs3d
-         ZCuq9lknqxo/O6NOzBi1YLQ+f+gXa0jsar+b8rpc2VLjbCPx8RT9vtTts1T2HLKu4tpk
-         ysnJO2pYqs1yjeeQco/FLbsJjjBG6l+Xz/JyYTrrh8TQ/Nf/3uTbkWiA++LPyRmak11Z
-         /sKGJFCZ5Jq3RCNuV9t1lpBXAW7h6PlTMJeN0qrGH2ZDJHDVU9CBoEzNtRh4EA9VffUA
-         QGQZR8xz1LXpDiUoH0m6WZC4oQnNlhY0Vt9HaqUlPepEbDR/2g8B4sVCUcKHYHPq2tOo
-         7VfA==
-X-Gm-Message-State: APjAAAVnOd80qIH4gM3y/vn1RHxbgeJccNbX/3UlOGAO4aOoJiwo/3re
-        SNkp5y0V2H5jH9CNgsnfwU8=
-X-Google-Smtp-Source: APXvYqxX+snzChK31VXq4N7NBXDyDvvBCati/n7FkaOSt0E8/hS5jW4bweg0u6211P5O37rSRC5gSQ==
-X-Received: by 2002:a5d:4d46:: with SMTP id a6mr4350839wru.75.1571340552062;
-        Thu, 17 Oct 2019 12:29:12 -0700 (PDT)
-Received: from [10.230.29.119] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id k3sm3227342wrn.41.2019.10.17.12.29.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Oct 2019 12:29:11 -0700 (PDT)
-Subject: Re: [PATCH] pwm: bcm-iproc: prevent unloading the driver module while
- in use
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Yendapally Reddy Dhananjaya Reddy 
-        <yendapally.reddy@broadcom.com>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
-References: <20191017192218.9042-1-u.kleine-koenig@pengutronix.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <b5ebfe5b-1c5a-8349-d232-d69f28024d35@gmail.com>
-Date:   Thu, 17 Oct 2019 12:29:08 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S2391217AbfJQToG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 17 Oct 2019 15:44:06 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:34095 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726590AbfJQToG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Oct 2019 15:44:06 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iLBgr-0006ya-5S; Thu, 17 Oct 2019 21:44:05 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iLBgq-0003XT-95; Thu, 17 Oct 2019 21:44:04 +0200
+Date:   Thu, 17 Oct 2019 21:44:04 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>,
+        Jingoo Han <jingoohan1@gmail.com>, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kernel@pengutronix.de,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Adam Ford <aford173@gmail.com>
+Subject: Re: [PATCH] backlight: pwm_bl: configure pwm only once per backlight
+ toggle
+Message-ID: <20191017194404.vvjfgt2wdrfoq7l2@pengutronix.de>
+References: <20191017081059.31761-1-u.kleine-koenig@pengutronix.de>
+ <c89925bd-857d-874f-b74f-c5700d4c9fbd@ysoft.com>
+ <20191017101116.3d5okxmto5coecad@pengutronix.de>
+ <20191017111131.GB3122066@ulmo>
+ <20191017120917.fcb7x4fq4tbl2iat@pengutronix.de>
+ <20191017125932.GB3768303@ulmo>
 MIME-Version: 1.0
-In-Reply-To: <20191017192218.9042-1-u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191017125932.GB3768303@ulmo>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hello Thierry,
 
-
-On 10/17/2019 12:22 PM, Uwe Kleine-KÃ¶nig wrote:
-> The owner member of struct pwm_ops must be set to THIS_MODULE to
-> increase the reference count of the module such that the module cannot
-> be removed while its code is in use.
+On Thu, Oct 17, 2019 at 02:59:32PM +0200, Thierry Reding wrote:
+> On Thu, Oct 17, 2019 at 02:09:17PM +0200, Uwe Kleine-König wrote:
+> > On Thu, Oct 17, 2019 at 01:11:31PM +0200, Thierry Reding wrote:
+> > > diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+> > > index ae11d8577f18..4113d5cd4c62 100644
+> > > --- a/drivers/pwm/pwm-imx27.c
+> > > +++ b/drivers/pwm/pwm-imx27.c
+> > > [...]
+> > 
+> > I wonder if it would be more sensible to do this in the pwm core
+> > instead. Currently there are two drivers known with this problem. I
+> > wouldn't be surprised if there were more.
 > 
-> Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
-> Signed-off-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
+> I've inspected all the drivers and didn't spot any beyond cros-ec and
+> i.MX that have this problem.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+I took a look, too, and I'd say pwm-atmel.c, pwm-imx-tpm.c, pwm-lpss.c,
+pwm-meson.c, pwm-sifive.c, pwm-sprd.c and pwm-stm32-lp.c are affected.
+
+> So the core would have to rely on state->duty_cycle that is passed in,
+> but then the offending commit becomes useless because the whole point
+> was to return the state as written to hardware (rather than the
+> software state which was being returned before that patch).
+
+I like allowing lowlevel drivers to implement the .enabled = false case
+lazily as there is little value in calculating the needed register
+values for a request like
+
+	.duty_cycle = X, .period = Y, .enabled = false
+
+even if the next request might be
+
+	.duty_cycle = X, .period = Y, .enabled = true
+
+because quite likely the same calculation is done for the second request
+again and there is no benefit to save X and Y in the hardware (or the
+driver if the hardware is incapable) apart from returning it to a
+consumer who maybe even doesn't care because these values don't tell
+anything at all about the implemented wave form and so it seems natural
+to me that the lowlevel driver shouldn't care.
+
+> > If we want to move clients to not rely on .period and .duty_cycle for a
+> > disabled PWM (do we?) a single change in the core is also beneficial
+> > compared to fixing several lowlevel drivers.
+> 
+> These are really two orthogonal problems. We don't currently consider
+> enabled = 0 to be equivalent to duty_cycle = 0 at an API level. I'm not
+> prepared to do that at this point in the release cycle either.
+
+Yeah, I fully agree that we should not do that now. Given the number of
+affected drivers I opt for reverting and retrying again more carefully
+later.
+ 
+> What this here has shown is that we have at least two drivers that don't
+> behave the way they are supposed to according to the API and they break
+> consumers. If they break for pwm-backlight, it's possible that they will
+> break for other consumers as well. So the right thing to do is fix the
+> two drivers that are broken.
+
+In my eyes shifting the definition of "expected behaviour" and adapting
+the core code accordingly to make this invisible to consumers is also a
+viable option. Also shifting the definition and adapt all consumers not
+to rely on the old behaviour is fine. But as above, this is not a good
+idea at the current point in time.
+
+Best regards
+Uwe
+
 -- 
-Florian
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
