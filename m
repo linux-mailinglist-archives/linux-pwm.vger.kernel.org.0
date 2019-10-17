@@ -2,189 +2,265 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A1D5DAA30
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Oct 2019 12:43:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C3A2DAAA9
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Oct 2019 12:59:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbfJQKnW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 17 Oct 2019 06:43:22 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38794 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbfJQKnW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Oct 2019 06:43:22 -0400
-Received: by mail-wr1-f66.google.com with SMTP id o15so1337115wru.5;
-        Thu, 17 Oct 2019 03:43:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gS/OXdkGtVPAlZZeqcYEO2ANkJNPbPf75+gRouTgeNk=;
-        b=mqNVAvA6k6WIODYFnCempZMPIaU2hjvqF3Cboy/TkcOu0zCNKkhbBPDRGQsAGXvPC9
-         Bl19M/lKuBUbLnujNMf+ZjggL5LCT9VZ6CjHZd5f90gxLqygxafX/ga/RylWocHNOTIa
-         POrNjhRWLMXYxAVJswA9bArTcsc6/wWZHDApRmWn1Zk9EkokU6h6b/9ma56CP/pTd1/L
-         ckKNQJwZqLyJSdzwDPcLGyjb631T1DLvjjPE5Chc3Upgp4UnJ5Nu26kVMEodXREL/+lh
-         mKdPL1t36ZDgJvPHPutGtq60DggMG13F0iM51R2lyr4DRtlizBd4ZDTvWqFhXqLahplD
-         3F6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gS/OXdkGtVPAlZZeqcYEO2ANkJNPbPf75+gRouTgeNk=;
-        b=ZnO+MNtGaGZR9WjoGTKD3ueCBeN1sqGcylgeCs2fBSHK3bMrNBcJlQO4SsQLBhrKM4
-         FgZ199q14t4w6+S2zt0Ti5OkS2gq4rdxLjGPXvcO0n0jgcK6NP4aIbSb8WXMSmMzwW6l
-         YZwtANodnL5L9XEz6PicXz8rnMqEZqCXdA6fP1vqP0BgkKRJLU5srJ6hY6vanzxYp+AF
-         DtzrerFH8Vas5shsBK0l5cBcEvG9Yfc94nbxc/+HMVLux3SXeEo0b7JGWuFfj8hdXtGE
-         65AMUunT/PK2vYf/1i/WgGSljGt4tTUK6uQ2JugWNXSSSN7ZJkWHivx+WvgqEN0p+6pS
-         CSfA==
-X-Gm-Message-State: APjAAAVb4iWrM5u5WW2d4HnkDG3iDBUQ4mMN6dq+StN8h8Nf/SF65oHS
-        lW21u+ma8DFFvnRUZzFJEuM=
-X-Google-Smtp-Source: APXvYqzgeKrX3IXkmbMwb/JRu8uN/KxUrI0womG13xUUqx3NTQksgSG7V8XUPCB3kTevtDmMj2RGzg==
-X-Received: by 2002:adf:a157:: with SMTP id r23mr2305967wrr.51.1571308997822;
-        Thu, 17 Oct 2019 03:43:17 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id q19sm2376466wra.89.2019.10.17.03.43.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 03:43:14 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 12:43:13 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     linux-pwm@vger.kernel.org, kernel-team@android.com,
-        Mark Salyzyn <salyzyn@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] pwm: Convert period and duty cycle to u64
-Message-ID: <20191017104313.GA3122066@ulmo>
-References: <1571191899-6150-1-git-send-email-gurus@codeaurora.org>
- <1571191899-6150-2-git-send-email-gurus@codeaurora.org>
- <20191016101539.GC1303817@ulmo>
- <20191017060247.GA12487@codeaurora.org>
+        id S2409178AbfJQK7Z (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 17 Oct 2019 06:59:25 -0400
+Received: from uho.ysoft.cz ([81.19.3.130]:58584 "EHLO uho.ysoft.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2409037AbfJQK7Z (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 17 Oct 2019 06:59:25 -0400
+Received: from [10.1.8.111] (unknown [10.1.8.111])
+        by uho.ysoft.cz (Postfix) with ESMTP id 75D1DA385F;
+        Thu, 17 Oct 2019 12:59:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
+        s=20160406-ysoft-com; t=1571309960;
+        bh=AGv9vLAQlMiuhqBtdNcQ+30BcWRtQ9ivxHwKeF48j3Q=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=g+WlJfxqcYbuHCYObhZx9jvRSkN2vuxQuhY7VH5jFH0j49rluRQUQv8Qvom4NJmak
+         BinlPrb79MSGbhX5QtWfHCLBzTBeTjS4fzsAgtWfdCYbYoPswi2Rc0ynshZ+EoAc00
+         Dobwc56CJO9LjflCpcjNjYjUujbwzpwzT5lqPyyo=
+Subject: Re: [PATCH] backlight: pwm_bl: configure pwm only once per backlight
+ toggle
+From:   =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Adam Ford <aford173@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, kernel@pengutronix.de
+References: <20191017081059.31761-1-u.kleine-koenig@pengutronix.de>
+ <c89925bd-857d-874f-b74f-c5700d4c9fbd@ysoft.com>
+Message-ID: <4f9594e5-f99b-f17d-531a-37d4c4161203@ysoft.com>
+Date:   Thu, 17 Oct 2019 12:59:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
-Content-Disposition: inline
-In-Reply-To: <20191017060247.GA12487@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <c89925bd-857d-874f-b74f-c5700d4c9fbd@ysoft.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 17. 10. 19 11:48, Michal Vokáč wrote:
+> On 17. 10. 19 10:10, Uwe Kleine-König wrote:
+>> A previous change in the pwm core (namely 01ccf903edd6 ("pwm: Let
+>> pwm_get_state() return the last implemented state")) changed the
+>> semantic of pwm_get_state() and disclosed an (as it seems) common
+>> problem in lowlevel PWM drivers. By not relying on the period and duty
+>> cycle being retrievable from a disabled PWM this type of problem is
+>> worked around.
+>>
+>> Apart from this issue only calling the pwm_get_state/pwm_apply_state
+>> combo once is also more effective.
+>>
+>> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+>> ---
+>> Hello,
+>>
+>> There are now two reports about 01ccf903edd6 breaking a backlight. As
+>> far as I understand the problem this is a combination of the backend pwm
+>> driver yielding surprising results and the pwm-bl driver doing things
+>> more complicated than necessary.
+>>
+>> So I guess this patch works around these problems. Still it would be
+>> interesting to find out the details in the imx driver that triggers the
+>> problem. So Adam, can you please instrument the pwm-imx27 driver to
+>> print *state at the beginning of pwm_imx27_apply() and the end of
+>> pwm_imx27_get_state() and provide the results?
+>>
+>> Note I only compile tested this change.
+> 
+> Hi Uwe,
+> I was just about to respond to the "pwm_bl on i.MX6Q broken on 5.4-RC1+"
+> thread that I have a similar problem when you submitted this patch.
+> 
+> So here are my few cents:
 
---rwEMma7ioTxnRzrJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Once again with updated and more detailed debug messages.
 
-On Wed, Oct 16, 2019 at 11:02:47PM -0700, Guru Das Srinagesh wrote:
-> On Wed, Oct 16, 2019 at 12:15:39PM +0200, Thierry Reding wrote:
-> > On Tue, Oct 15, 2019 at 07:11:39PM -0700, Guru Das Srinagesh wrote:
-> > > Because period and duty cycle are defined as ints with units of
-> > > nanoseconds, the maximum time duration that can be set is limited to
-> > > ~2.147 seconds. Change their definitions to u64 so that higher durati=
-ons
-> > > may be set.
-> > >=20
-> > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> > > ---
-> > >  drivers/pwm/core.c  |  4 ++--
-> > >  drivers/pwm/sysfs.c | 10 +++++-----
-> > >  include/linux/pwm.h | 16 ++++++++--------
-> > >  3 files changed, 15 insertions(+), 15 deletions(-)
-> >=20
-> > Actually, we can't do that without further preparatory work. The reason
-> > is that consumers use the period and duty_cycle members in computations
-> > of their own, which lead to errors such as this:
-> >=20
-> > 	armv7l-unknown-linux-gnueabihf-ld: drivers/video/backlight/pwm_bl.o: i=
-n function `pwm_backlight_probe':
-> > 	pwm_bl.c:(.text+0x3b0): undefined reference to `__aeabi_uldivmod'
-> >=20
-> > So I think we need to audit all consumers carefully and make sure that
-> > they use do_div() where necessary to avoid such errors.
-> >=20
-> > Thierry
->=20
-> Hi Thierry,
->=20
-> I would like to try doing the preparatory work by fixing the errors seen
-> in consumers so that this u64 patch may be applied without issues.
->=20
-> Before sending the patch, I tried "make"-ing for arm, arm64 and i386
-> architectures to check for compilation/linking errors and encountered
-> none. I see that the above error arises from using a cross-compiler for
-> arm v7, which I haven't tried yet.
->=20
-> Could you please provide details of the compile tests that you run at
-> your end? I could then try to reproduce the errors you see in the
-> consumer drivers and fix them. Please do share any other ideas or
-> suggestions you may have in this regard.
+> My setup is as follows:
+>   - imx6dl-yapp4-draco with i.MX6Solo
+>   - backlight is controlled with inverted PWM signal
+>   - max brightness level = 32, default brightness level set to 32 in DT.
+> 
+> 1. Almost correct backlight behavior before 01ccf903edd6 ("pwm: Let
+>     pwm_get_state() return the last implemented state):
+> 
+>   - System boots to userspace and backlight is enabled all the time from
+>     power up.
+> 
+     -  $ dmesg | grep pwm_
+       [    1.761546] pwm_imx27_get_state: period: 992970, duty: 0, polarity: 0, enabled: 0
+       [    5.012352] pwm_imx27_apply: period: 500000, duty: 0, polarity: 1, enabled: 0
+       [    5.021143] pwm_imx27_apply: period: 500000, duty: 500000, polarity: 1, enabled: 0
+       [    5.030182] pwm_imx27_apply: period: 500000, duty: 500000, polarity: 1, enabled: 1
+> 
+>   - $ cat brightness
+>     32
+> 
+>   - $ echo 32 > brightness # nothing happens, max. brightness
+> 
+>   - $ echo 1 > brightness # backlight goes down to lowest level
+       [   93.976354] pwm_imx27_apply: period: 500000, duty: 7843, polarity: 1, enabled: 1
+> 
+>   - $ echo 0 > brightness # backlight goes up to max. level, this is
+>                           # problem of the inverted PWM on i.MX we attempted
+>                           # to solve some time ago.
+       [  115.496350] pwm_imx27_apply: period: 500000, duty: 0, polarity: 1, enabled: 0
+>
+> 2. Backlight behavior on v5.4-rc3:
+> 
+>   - System boots to userspace and backlight is enabled all the time from
+>     power up.
+> 
+     - $ dmesg | grep pwm_
+       [    1.774071] pwm_imx27_get_state: period: 992970, duty: 0, polarity: 0, enabled: 0
+       [    5.003961] pwm_imx27_apply: period: 500000, duty: 0, polarity: 1, enabled: 0
+       [    5.012649] pwm_imx27_get_state: period: 992970, duty: 0, polarity: 0, enabled: 0
+       [    5.021694] pwm_imx27_apply: period: 992970, duty: 992970, polarity: 0, enabled: 0
+       [    5.030732] pwm_imx27_get_state: period: 992970, duty: 0, polarity: 0, enabled: 0
+       [    5.039643] pwm_imx27_apply: period: 992970, duty: 0, polarity: 0, enabled: 1
+       [    5.049605] pwm_imx27_get_state: period: 992970, duty: 0, polarity: 0, enabled: 1
+> 
+>   - $ cat brightness
+>     32
+> 
+>   - $ echo 32 > brightness # backlight goes down
+       [  707.946970] pwm_imx27_apply: period: 992970, duty: 992970, polarity: 0, enabled: 1
+       [  707.958551] pwm_imx27_get_state: period: 992970, duty: 992970, polarity: 0, enabled: 1
+> 
+>   - $ echo 1 > brightness # backlight goes up to high level
+       [  757.516845] pwm_imx27_apply: period: 992970, duty: 15576, polarity: 0, enabled: 1
+       [  757.528438] pwm_imx27_get_state: period: 992970, duty: 15576, polarity: 0, enabled: 1
+> 
+>   - $ echo 0 > brightness # backlight goes up to highest level
+       [  783.386838] pwm_imx27_apply: period: 992970, duty: 0, polarity: 0, enabled: 0
+       [  783.398025] pwm_imx27_get_state: period: 496485, duty: 0, polarity: 0, enabled: 0
+> 
+> So the behavior is clearly inverted to how it worked prior to 01ccf903edd6
+> with the weird exception that the initial brightness level 32 is
+> not applied.
+> 
+> 3. Backlight behavior on v5.4-rc3 + this patch:
+> 
+>   - System boots with backlight enabled. In the middle of kernel boot
+>     backlight is disabled.
+> 
+>   - $ dmesg | grep state
+       [    1.773099] pwm_imx27_get_state: period: 992970, duty: 0, polarity: 0, enabled: 0
+       [    5.002532] pwm_imx27_apply: period: 500000, duty: 0, polarity: 1, enabled: 0
+       [    5.011263] pwm_imx27_get_state: period: 992970, duty: 0, polarity: 0, enabled: 0
+       [    5.020307] pwm_imx27_apply: period: 992970, duty: 992970, polarity: 0, enabled: 1
+       [    5.031066] pwm_imx27_get_state: period: 992970, duty: 992970, polarity: 0, enabled: 1
+> 
+>   - $ cat brightness
+>     32
+> 
+>   - $ echo 32 > brightness # nothing happens, backlight is down
+> 
+>   - $ echo 1 > brightness # backlight goes to high level
+       [   73.786926] pwm_imx27_apply: period: 992970, duty: 15576, polarity: 0, enabled: 1
+       [   73.798469] pwm_imx27_get_state: period: 992970, duty: 15576, polarity: 0, enabled: 1
+> 
+>   - $ echo 0 > brightness # backlight goes to max brightness
+       [  104.636908] pwm_imx27_apply: period: 992970, duty: 0, polarity: 0, enabled: 0
+       [  104.648093] pwm_imx27_get_state: period: 496485, duty: 0, polarity: 0, enabled: 0
+> 
+> Same behavior as (2) but the default state from DT is apparently applied.
+> 
+> I only did this experiments. I did not delve into the code to track what is
+> going on in there yet.
+> 
+> Hopefully this helps you a bit and feel free to request other experiments,
+> Michal
+> 
+>>   drivers/video/backlight/pwm_bl.c | 34 +++++++++++---------------------
+>>   1 file changed, 12 insertions(+), 22 deletions(-)
+>>
+>> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+>> index 746eebc411df..ddebd62b3978 100644
+>> --- a/drivers/video/backlight/pwm_bl.c
+>> +++ b/drivers/video/backlight/pwm_bl.c
+>> @@ -42,10 +42,8 @@ struct pwm_bl_data {
+>>   static void pwm_backlight_power_on(struct pwm_bl_data *pb)
+>>   {
+>> -    struct pwm_state state;
+>>       int err;
+>> -    pwm_get_state(pb->pwm, &state);
+>>       if (pb->enabled)
+>>           return;
+>> @@ -53,9 +51,6 @@ static void pwm_backlight_power_on(struct pwm_bl_data *pb)
+>>       if (err < 0)
+>>           dev_err(pb->dev, "failed to enable power supply\n");
+>> -    state.enabled = true;
+>> -    pwm_apply_state(pb->pwm, &state);
+>> -
+>>       if (pb->post_pwm_on_delay)
+>>           msleep(pb->post_pwm_on_delay);
+>> @@ -67,40 +62,27 @@ static void pwm_backlight_power_on(struct pwm_bl_data *pb)
+>>   static void pwm_backlight_power_off(struct pwm_bl_data *pb)
+>>   {
+>> -    struct pwm_state state;
+>> -
+>> -    pwm_get_state(pb->pwm, &state);
+>> -    if (!pb->enabled)
+>> -        return;
+>> -
+>>       if (pb->enable_gpio)
+>>           gpiod_set_value_cansleep(pb->enable_gpio, 0);
+>>       if (pb->pwm_off_delay)
+>>           msleep(pb->pwm_off_delay);
+>> -    state.enabled = false;
+>> -    state.duty_cycle = 0;
+>> -    pwm_apply_state(pb->pwm, &state);
+>> -
+>>       regulator_disable(pb->power_supply);
+>>       pb->enabled = false;
+>>   }
+>> -static int compute_duty_cycle(struct pwm_bl_data *pb, int brightness)
+>> +static int compute_duty_cycle(struct pwm_bl_data *pb, int brightness, struct pwm_state *state)
+>>   {
+>>       unsigned int lth = pb->lth_brightness;
+>> -    struct pwm_state state;
+>>       u64 duty_cycle;
+>> -    pwm_get_state(pb->pwm, &state);
+>> -
+>>       if (pb->levels)
+>>           duty_cycle = pb->levels[brightness];
+>>       else
+>>           duty_cycle = brightness;
+>> -    duty_cycle *= state.period - lth;
+>> +    duty_cycle *= state->period - lth;
+>>       do_div(duty_cycle, pb->scale);
+>>       return duty_cycle + lth;
+>> @@ -122,12 +104,20 @@ static int pwm_backlight_update_status(struct backlight_device *bl)
+>>       if (brightness > 0) {
+>>           pwm_get_state(pb->pwm, &state);
+>> -        state.duty_cycle = compute_duty_cycle(pb, brightness);
+>> +        state.duty_cycle = compute_duty_cycle(pb, brightness, &state);
+>> +        state.enabled = true;
+>>           pwm_apply_state(pb->pwm, &state);
+>> +
+>>           pwm_backlight_power_on(pb);
+>> -    } else
+>> +    } else {
+>>           pwm_backlight_power_off(pb);
+>> +        pwm_get_state(pb->pwm, &state);
+>> +        state.enabled = false;
+>> +        state.duty_cycle = 0;
+>> +        pwm_apply_state(pb->pwm, &state);
+>> +    }
+>> +
+>>       if (pb->notify_after)
+>>           pb->notify_after(pb->dev, brightness);
+>>
+> 
 
-I keep a set of scripts in the pwm/ subdirectory of the following
-repository:
-
-	https://github.com/thierryreding/scripts
-
-Typically what I do is run:
-
-	$ /path/to/scripts.git/pwm/build --jobs 13 --color
-
-That requires a bit of setup for the cross-compilers. I have the
-following in my ~/.cross-compile file:
-
-	path: $HOME/pbs-stage1/bin:$HOME/toolchain/avr32/bin:$HOME/toolchain/unico=
-re32/bin
-	arm: armv7l-unknown-linux-gnueabihf-
-	arm64: aarch64-unknown-linux-gnu-
-	avr32: avr32-
-	blackfin: bfin-unknown-elf-
-	mips: mips-linux-gnu-
-	unicore32: unicore32-linux-
-	riscv: riscv64-linux-gnu-
-	x86:
-	x86_64:
-
-The blackfin and unicore32 builds are expected to fail because the
-blackfin architecture was removed and there's no recent enough kernel
-publicly available for unicore32.
-
-The last two entries in .cross-compile indicate that builds are native,
-so regular gcc from the build system will be used.
-
-Most of these compilers I've built from scratch using pbs-stage1:
-
-	https://github.com/thierryreding/pbs-stage1
-
-Note that I don't guarantee that that build system works for anyone but
-myself, but I'd be happy to hear feedback if you decide to use it. That
-said, you can probably find prebuilt toolchains for all of the above in
-a number of locations, like:
-
-	https://mirrors.edge.kernel.org/pub/tools/crosstool/
-
-or:
-
-	https://toolchains.bootlin.com/
-
-Thierry
-
---rwEMma7ioTxnRzrJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2oRb4ACgkQ3SOs138+
-s6Eubg//QRlhY2yWMvDbi5TV86IHTijMq1mWsuyUNHqqIur8iqDzT8pyJfV13YP/
-5CwTfBxc1LzYGzRq4woVEZiffrazudhVsjS0jA1ElxSRJX7RLG40KxVuGYH2fkCq
-MU0kn0wZEIPCpAVyMr1/g8KQLc9QmGBcL5sPB2wUpKRsAmL3nSyZIiNtJkEM2d5g
-w2V+YFN1ISY+gqp45f2v1jWWn+hSz6v1xzCyBIoaE80SPQ0aiU261ma/bARrUSzQ
-MNFvpyBf8Fbc9PsWKq/cU3qEj7EDK9kFkZp8EqwBnr+tDCIDCxLLdGIt25q8mIQT
-Gzgu2wO6NHcCH3wrKDzPiZUulwtiQ6XJfC+p7+77F3/SNSKFL2jL+cnc7P19F/Ub
-W1KhCuraOjZvuSqS+hpiUUfKOw//gl2fsYcyEVgxT7xIKGflI9dcFWLB1tPe9LZP
-vD2CXMsz5lsNV+hZN8gtFKt2A3LR902tovfYPqhbm2wy0oOakExbQGZPDWgN36iX
-rgy7v+YDUj8MOSRowGmESniRIlYG7WfS063B/E+TASTfQonJ5UVZSc1oyKcWCh8Q
-WkUHY3qW0SUqC4JrBOpyRJMAgYHVWuLI7vj8VcyyckwhqU3B3hkJO0KcQT4Vo8kY
-YF7GsDp55zzoH563Tm3stx+uurmrA749F5QU5IZ6rZFe1itXaVQ=
-=g7bs
------END PGP SIGNATURE-----
-
---rwEMma7ioTxnRzrJ--
