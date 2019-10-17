@@ -2,72 +2,95 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E4186D9A81
-	for <lists+linux-pwm@lfdr.de>; Wed, 16 Oct 2019 21:56:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEA6BDA542
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Oct 2019 08:02:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730890AbfJPT4H (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 16 Oct 2019 15:56:07 -0400
-Received: from mail-il1-f179.google.com ([209.85.166.179]:41613 "EHLO
-        mail-il1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730603AbfJPT4H (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Oct 2019 15:56:07 -0400
-Received: by mail-il1-f179.google.com with SMTP id z10so3884240ilo.8;
-        Wed, 16 Oct 2019 12:56:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=h/P3JA46kWkR1ok83p5Cbw7TV2607e8IBxUrOI+c/JY=;
-        b=Sum1X28FKUFNIoD0TNCMnYgp67D/UN5XOavrIbFzvM2OhQqxcIp0ZcOU/WPmuTG97l
-         WrFb0fodakzC54W5Ff73sJr/YUykiA4jcILXc/kv0/7pBCt6XjQQvcQShAf2pTNkF6o+
-         b21vOXJhCIT/oiuwPd8iHKE9yOGo6CLKbT7sHkiElIe0Ryqnh8hmtoj9j8xxRU9s/HGz
-         VNKIigtDHhmedxxSla4gD2d/jwbsRQ7Vw1mIAq+CgTUZHQ9iG/79+BjXsZWv/g+GnZI2
-         R0JgYpjCuJqBF0TpAMWyBzyc69+1ffJpaxnK5gNrSrnGa8HFzJgBp3IxJvIozwH83w5Z
-         DDHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=h/P3JA46kWkR1ok83p5Cbw7TV2607e8IBxUrOI+c/JY=;
-        b=AfSmZEQyMxvq1y/NNvDbPdMMdroMIi5xLNgWDEPsZdtCKUJ1IYJvxSJW7D1fQEL7Mu
-         Bs+h8+jEeyj/PXn6t87yAuGwiE5WcvlW9i7y2MvQTcDADGK3XIyGMbT13zfhWgV7xuKu
-         wT7h3zyRYYf8xrZA1PEUg15SWrvmRacQSpdf+/RQGZPp1T7hX7zd8AepML1lup0RDXWt
-         /UbuNjbwO9ML3jbu3o7DeLB8P7txiqI7UdSppOGmvkLM3fCJYeDDhLkrCzUGjSTbvSPz
-         tFNre2OR/B4QQ3fiU6iLB0+ZGw/1sdx/aZx7NtGXcuIFPCJNLvLz7Sxos198Oq5q8grT
-         NEFQ==
-X-Gm-Message-State: APjAAAVAnbT/7c/r6k1FHiPOLp4X5rkKgUjbg85QuipIvBBxWmf74WXx
-        b7prxy1tP5GSoOpFyNgd413c1NOD779y/6vWU/U=
-X-Google-Smtp-Source: APXvYqwWRSTsjGSsfAbBn3FBmQk3IwJ5gHMMJQp1jBBJhZxZT6EEM6o0ey+7Uxf6QgNXcqBvjgCmILXp3weYahkWuSM=
-X-Received: by 2002:a92:5b98:: with SMTP id c24mr13115016ilg.158.1571255766169;
- Wed, 16 Oct 2019 12:56:06 -0700 (PDT)
+        id S2392526AbfJQGCt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 17 Oct 2019 02:02:49 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:7489 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2392520AbfJQGCt (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Oct 2019 02:02:49 -0400
+IronPort-SDR: i19YbcRh5VPk31Qa+JZ+UXjWkwxwqsHycbkK2tlRyr55ak/TyxvvWn/tr7i93B3PtSZWyF94Kr
+ RhpuQo3evWfAlHragIdMWR5wtEr+CFNK0TbAREIJcqKcpTqL7JrCwj0gNxiW6boB1m3GhfxlZ3
+ p9d1iNOSpDqABhPLegSy6ZEcjXN5Eve0qGiwLa3ahPKOsGMxia5aQnlFmkI3xP7MlaxuBcJxqI
+ 7Ky9bNrqpuS88SB85Vnpka2JhWpoCMLSXYif+PcW5YktDFGBj5rhKFy/FkBI9uWy/sz3UIwiaX
+ e6A=
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 16 Oct 2019 23:02:48 -0700
+IronPort-SDR: ernh8agRQqL4TbhwNG80wQJkqZ3pFDc7Bzt9df8rc98IEKe3cVFhXcQmH2OYtYTsU+Ox7tJrye
+ keMV9wsHlxK+C8iEMpWul5uzrYYJEYomwJ9kuq8xX6TrK9GPZ6bXJ1wHrGkN2UZ7hut8dv4zFl
+ bsnDS8O0hhG+Qvs0EMBJpVtyK2bf7eHh+cThRZpEVJ+OhSa5axS8N3qSxJfksVOSacgR7NSkJP
+ DRHS819snjeOXHJMAqaMalQ/z7BIysoTNEh1A1oFG6JOpVqrxXFCRjQB+n2MN8DnyLcumlU4ZA
+ 5V7RfsyedDhDcoWb1Z6LgIof
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 16 Oct 2019 23:02:48 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id DAC6C475A; Wed, 16 Oct 2019 23:02:47 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 23:02:47 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, kernel-team@android.com,
+        Mark Salyzyn <salyzyn@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] pwm: Convert period and duty cycle to u64
+Message-ID: <20191017060247.GA12487@codeaurora.org>
+References: <1571191899-6150-1-git-send-email-gurus@codeaurora.org>
+ <1571191899-6150-2-git-send-email-gurus@codeaurora.org>
+ <20191016101539.GC1303817@ulmo>
 MIME-Version: 1.0
-From:   Adam Ford <aford173@gmail.com>
-Date:   Wed, 16 Oct 2019 14:55:54 -0500
-Message-ID: <CAHCN7xJSz+QhOb4vE6b67jh5jnSOHnw79EyX8RW91TqPkD__Lw@mail.gmail.com>
-Subject: pwm_bl on i.MX6Q broken on 5.4-RC1+
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016101539.GC1303817@ulmo>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-I have an i.MX6Q with an LCD and PWM controlled backlight.  On 5.4-RC1
-through the current master (16 Oct 2019), the backlight does not come
-on by default.  I can get it come on by manually setting the
-brightness, but any video activity seems to blank the screen again
-until I change the brightness again.
+On Wed, Oct 16, 2019 at 12:15:39PM +0200, Thierry Reding wrote:
+> On Tue, Oct 15, 2019 at 07:11:39PM -0700, Guru Das Srinagesh wrote:
+> > Because period and duty cycle are defined as ints with units of
+> > nanoseconds, the maximum time duration that can be set is limited to
+> > ~2.147 seconds. Change their definitions to u64 so that higher durations
+> > may be set.
+> > 
+> > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> > ---
+> >  drivers/pwm/core.c  |  4 ++--
+> >  drivers/pwm/sysfs.c | 10 +++++-----
+> >  include/linux/pwm.h | 16 ++++++++--------
+> >  3 files changed, 15 insertions(+), 15 deletions(-)
+> 
+> Actually, we can't do that without further preparatory work. The reason
+> is that consumers use the period and duty_cycle members in computations
+> of their own, which lead to errors such as this:
+> 
+> 	armv7l-unknown-linux-gnueabihf-ld: drivers/video/backlight/pwm_bl.o: in function `pwm_backlight_probe':
+> 	pwm_bl.c:(.text+0x3b0): undefined reference to `__aeabi_uldivmod'
+> 
+> So I think we need to audit all consumers carefully and make sure that
+> they use do_div() where necessary to avoid such errors.
+> 
+> Thierry
 
-I bisected the patch to 01ccf903edd6 ("pwm: Let pwm_get_state() return
-the last implemented state")
+Hi Thierry,
 
-If I revert this patch on 5.4-rc3, the issue goes away.
+I would like to try doing the preparatory work by fixing the errors seen
+in consumers so that this u64 patch may be applied without issues.
 
-I was hoping someone might have a suggestion on how to fix it to play
-nicely with the iMX6Q PWM or revert if no solution can be found.
+Before sending the patch, I tried "make"-ing for arm, arm64 and i386
+architectures to check for compilation/linking errors and encountered
+none. I see that the above error arises from using a cross-compiler for
+arm v7, which I haven't tried yet.
 
-thank you,
+Could you please provide details of the compile tests that you run at
+your end? I could then try to reproduce the errors you see in the
+consumer drivers and fix them. Please do share any other ideas or
+suggestions you may have in this regard.
 
-adam
+Thank you.
+
+Guru Das.
