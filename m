@@ -2,323 +2,259 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91359DE55E
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Oct 2019 09:34:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1010BDE854
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Oct 2019 11:42:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbfJUHek (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 21 Oct 2019 03:34:40 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50531 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfJUHek (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Oct 2019 03:34:40 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iMSCs-0004Nz-0r; Mon, 21 Oct 2019 09:34:22 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iMSCp-00056Q-OM; Mon, 21 Oct 2019 09:34:19 +0200
-Date:   Mon, 21 Oct 2019 09:34:19 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     lee.jones@linaro.org, dmitry.torokhov@gmail.com, jdelvare@suse.com,
-        linux@roeck-us.net, thierry.reding@gmail.com, jic23@kernel.org,
-        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH 5/8] pwm: Add support for Azoteq IQS620A PWM generator
-Message-ID: <20191021073419.27r4xjqpz2wswerj@pengutronix.de>
-References: <1571631083-4962-1-git-send-email-jeff@labundy.com>
- <1571631083-4962-6-git-send-email-jeff@labundy.com>
+        id S1726987AbfJUJmL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 21 Oct 2019 05:42:11 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33006 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbfJUJmL (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Oct 2019 05:42:11 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 5C6B528A5C5
+Subject: Re: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the last
+ applied state
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        linux-kernel@vger.kernel.org, heiko@sntech.de,
+        dianders@chromium.org, mka@chromium.org, groeck@chromium.org,
+        kernel@collabora.com, bleung@chromium.org,
+        linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+References: <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
+ <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
+ <20191008203137.s22clq6v2om5ktio@pengutronix.de>
+ <53b7d02b-1a2d-11da-fdd0-5378f360d876@collabora.com>
+ <20191009095635.yysr33lnwldicyng@holly.lan>
+ <20191009101637.gmvghwdvcmfw4yyk@pengutronix.de>
+ <20191009104236.ux23ywnhvsym2qcb@holly.lan>
+ <20191009112126.slpyxhnuqpiqgmes@pengutronix.de>
+ <20191009113540.x6uxo3ryiuf7ql55@holly.lan>
+ <49990b56-44f9-7c3c-ce81-ed295895f90a@collabora.com>
+ <20191017113552.GC3122066@ulmo>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <bb32d5f8-6915-d5f1-06ba-1cf0da99f6b1@collabora.com>
+Date:   Mon, 21 Oct 2019 11:42:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1571631083-4962-6-git-send-email-jeff@labundy.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20191017113552.GC3122066@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Jeff,
+Hi Thierry,
+On 17/10/19 13:35, Thierry Reding wrote:
+> On Wed, Oct 09, 2019 at 03:47:43PM +0200, Enric Balletbo i Serra wrote:
 
-On Sun, Oct 20, 2019 at 11:11:20PM -0500, Jeff LaBundy wrote:
-> This patch adds support for the Azoteq IQS620A, capable of generating
-> a 1-kHz PWM output with duty cycle between 0.4% and 100% (inclusive).
+[snip]
+
 > 
-> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+> --- >8 ---
+> From 15245e5f0dc02af021451b098df93901c9f49373 Mon Sep 17 00:00:00 2001
+> From: Thierry Reding <thierry.reding@gmail.com>
+> Date: Thu, 17 Oct 2019 13:21:15 +0200
+> Subject: [PATCH] pwm: cros-ec: Cache duty cycle value
+> 
+> The ChromeOS embedded controller doesn't differentiate between disabled
+> and duty cycle being 0. In order not to potentially confuse consumers,
+> cache the duty cycle and return the cached value instead of the real
+> value when the PWM is disabled.
+> 
+> Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 > ---
->  drivers/pwm/Kconfig       |  10 +++
->  drivers/pwm/Makefile      |   1 +
->  drivers/pwm/pwm-iqs620a.c | 167 ++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 178 insertions(+)
->  create mode 100644 drivers/pwm/pwm-iqs620a.c
+>  drivers/pwm/pwm-cros-ec.c | 58 ++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 54 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index e3a2518..712445e 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -222,6 +222,16 @@ config PWM_IMX_TPM
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-imx-tpm.
+> diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
+> index 89497448d217..09c08dee099e 100644
+> --- a/drivers/pwm/pwm-cros-ec.c
+> +++ b/drivers/pwm/pwm-cros-ec.c
+> @@ -25,11 +25,39 @@ struct cros_ec_pwm_device {
+>  	struct pwm_chip chip;
+>  };
 >  
-> +config PWM_IQS620A
-> +	tristate "Azoteq IQS620A PWM support"
-> +	depends on MFD_IQS62X
-
-This is only a runtime dependency if I'm not mistaken, so it would be
-great to have
-
-	depends on MFD_IQS62X || COMPILE_TEST
-	depends on REGMAP
-
-here.
-
-> +	help
-> +	  Generic PWM framework driver for the Azoteq IQS620A multi-function
-> +	  sensor.
-> +
-> +	  To compile this driver as a module, choose M here: the module will
-> +	  be called pwm-iqs620a.
-> +
->  config PWM_JZ4740
->  	tristate "Ingenic JZ47xx PWM support"
->  	depends on MACH_INGENIC
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 26326ad..27c9bfa 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
->  obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
->  obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
->  obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
-> +obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
->  obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
->  obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
->  obj-$(CONFIG_PWM_LPC18XX_SCT)	+= pwm-lpc18xx-sct.o
-> diff --git a/drivers/pwm/pwm-iqs620a.c b/drivers/pwm/pwm-iqs620a.c
-> new file mode 100644
-> index 0000000..6451eb1
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-iqs620a.c
-> @@ -0,0 +1,167 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Azoteq IQS620A PWM Generator
-> + *
-> + * Copyright (C) 2019
-> + * Author: Jeff LaBundy <jeff@labundy.com>
+> +/**
+> + * struct cros_ec_pwm - per-PWM driver data
+> + * @duty_cycle: cached duty cycle
 > + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/iqs62x.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +
-> +#define IQS620_PWR_SETTINGS			0xD2
-> +#define IQS620_PWR_SETTINGS_PWM_OUT		BIT(7)
-> +
-> +#define IQS620_PWM_DUTY_CYCLE			0xD8
-> +
-> +#define IQS620_PWM_PERIOD_NS			1000000
-> +
-> +struct iqs620_pwm_private {
-> +	struct iqs62x_core *iqs62x;
-> +	struct pwm_chip chip;
-> +	struct notifier_block notifier;
-> +	bool ready;
-
-This is always true, so you can drop it.
-
+> +struct cros_ec_pwm {
+> +	u16 duty_cycle;
 > +};
 > +
-> +static int iqs620_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			    struct pwm_state *state)
-
-Since
-
-	71523d1812ac ("pwm: Ensure pwm_apply_state() doesn't modify the state argument")
-
-this isn't the right prototype.
-
+>  static inline struct cros_ec_pwm_device *pwm_to_cros_ec_pwm(struct pwm_chip *c)
+>  {
+>  	return container_of(c, struct cros_ec_pwm_device, chip);
+>  }
+>  
+> +static int cros_ec_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
 > +{
-> +	struct iqs620_pwm_private *iqs620_pwm;
-> +	struct iqs62x_core *iqs62x;
-> +	int error;
-> +	int duty_calc = state->duty_cycle * 256 / IQS620_PWM_PERIOD_NS - 1;
-> +	u8 duty_clamp = clamp(duty_calc, 0, 0xFF);
+> +	struct cros_ec_pwm *channel;
 > +
-> +	iqs620_pwm = container_of(chip, struct iqs620_pwm_private, chip);
-> +	iqs62x = iqs620_pwm->iqs62x;
-> +
-> +	error = regmap_write(iqs62x->map, IQS620_PWM_DUTY_CYCLE, duty_clamp);
-> +	if (error)
-> +		return error;
-> +
-> +	state->period = IQS620_PWM_PERIOD_NS;
-> +	state->duty_cycle = (duty_clamp + 1) * IQS620_PWM_PERIOD_NS / 256;
-
-This suggests that if the value in the IQS620_PWM_DUTY_CYCLE is 0 the
-duty cycle is 1/256 ms with a period of 1 ms and the output cannot be
-constant inactive. If this is right please add a paragraph in the
-driver's comment at the top:
-
-	* Limitations:
-	* - The hardware cannot generate a 0% duty cycle
-
-(Please stick to this format, other drivers use it, too.)
-
-How does the hardware behave on changes? For example you're first
-committing the duty cycle and then on/off. Can it happen that between
-
-	pwm_apply_state(pwm, { .duty_cycle = 3900, .period = 1000000, .enabled = true)
-	...
-	pwm_apply_state(pwm, { .duty_cycle = 1000000, .period = 1000000, .enabled = false)
-
-the output is active for longer than 4 µs because the iqs620_pwm_apply
-function is preempted between the two register writes and so we already
-have .duty_cycle = 1000000 but still .enabled = true in the hardware?
-
-Does a change complete the currently running period? Does disabling
-complete the currently running period? If so, does regmap_update_bits
-block until the new setting is active?
-
-The .apply function fails to check for .pwm_polarity. You want something
-like:
-
-	if (state->polarity != PWM_POLARITY_NORMAL)
-		return -ENOTSUPP;
-
-(That's what pwm-rcar and the core (in the absence of .set_polarity for
-old-style drivers) are using. @Thierry: It would be great to fix the
-vaule that should be returned in this case. pwm-lpss and sifive use
--EINVAL.)
-
-> +	return regmap_update_bits(iqs62x->map, IQS620_PWR_SETTINGS,
-> +				  IQS620_PWR_SETTINGS_PWM_OUT,
-> +				  state->enabled ? 0xFF : 0);
-> +}
-> +
-> +static int iqs620_pwm_notifier(struct notifier_block *notifier,
-> +			       unsigned long event_flags, void *context)
-> +{
-> +	struct iqs620_pwm_private *iqs620_pwm;
-> +	struct pwm_state state;
-> +	int error;
-> +
-> +	iqs620_pwm = container_of(notifier, struct iqs620_pwm_private,
-> +				  notifier);
-> +
-> +	if (!iqs620_pwm->ready || !(event_flags & BIT(IQS62X_EVENT_SYS_RESET)))
-> +		return NOTIFY_DONE;
-> +
-> +	pwm_get_state(&iqs620_pwm->chip.pwms[0], &state);
-> +
-> +	error = iqs620_pwm_apply(&iqs620_pwm->chip,
-> +				 &iqs620_pwm->chip.pwms[0], &state);
-> +	if (error) {
-> +		dev_err(iqs620_pwm->chip.dev,
-> +			"Failed to re-initialize device: %d\n", error);
-> +		return NOTIFY_BAD;
-> +	}
-> +
-> +	return NOTIFY_OK;
-
-So the PWM can loose it's state sometimes? When does that happen?
-
-> +}
-> +
-> +static void iqs620_pwm_notifier_unregister(void *context)
-> +{
-> +	struct iqs620_pwm_private *iqs620_pwm = context;
-> +	int error;
-> +
-> +	error = blocking_notifier_chain_unregister(&iqs620_pwm->iqs62x->nh,
-> +						   &iqs620_pwm->notifier);
-> +	if (error)
-> +		dev_err(iqs620_pwm->chip.dev,
-> +			"Failed to unregister notifier: %d\n", error);
-> +}
-> +
-> +static const struct pwm_ops iqs620_pwm_ops = {
-> +	.apply	= iqs620_pwm_apply,
-
-Please implement a .get_state callback.
-
-> +	.owner	= THIS_MODULE,
-> +};
-> +
-> +static int iqs620_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct iqs620_pwm_private *iqs620_pwm;
-> +	int error;
-> +
-> +	iqs620_pwm = devm_kzalloc(&pdev->dev, sizeof(*iqs620_pwm), GFP_KERNEL);
-> +	if (!iqs620_pwm)
+> +	channel = kzalloc(sizeof(*channel), GFP_KERNEL);
+> +	if (!channel)
 > +		return -ENOMEM;
 > +
-> +	platform_set_drvdata(pdev, iqs620_pwm);
-> +	iqs620_pwm->iqs62x = dev_get_drvdata(pdev->dev.parent);
+> +	pwm_set_chip_data(pwm, channel);
 > +
-> +	iqs620_pwm->chip.dev = &pdev->dev;
-> +	iqs620_pwm->chip.ops = &iqs620_pwm_ops;
-> +	iqs620_pwm->chip.base = -1;
-> +	iqs620_pwm->chip.npwm = 1;
+> +	return 0;
+> +}
 > +
-> +	iqs620_pwm->notifier.notifier_call = iqs620_pwm_notifier;
-> +	error = blocking_notifier_chain_register(&iqs620_pwm->iqs62x->nh,
-> +						 &iqs620_pwm->notifier);
-> +	if (error) {
-> +		dev_err(&pdev->dev, "Failed to register notifier: %d\n", error);
-> +		return error;
-> +	}
+> +static void cros_ec_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+> +{
+> +	struct cros_ec_pwm *channel = pwm_get_chip_data(pwm);
 > +
-> +	error = devm_add_action_or_reset(&pdev->dev,
-> +					 iqs620_pwm_notifier_unregister,
-> +					 iqs620_pwm);
-
-I wonder if this is safe. If in iqs620_pwm_notifier_unregister()
-unregistering of the notifier goes wrong (not sure when this can happen)
-the memory behind iqs620_pwm goes away. Then later iqs620_pwm_notifier
-might be called trying to use *iqs620_pwm ...
-
-> +	if (error) {
-> +		dev_err(&pdev->dev, "Failed to add action: %d\n", error);
-> +		return error;
-> [...]
+> +	kfree(channel);
+> +}
+> +
+>  static int cros_ec_pwm_set_duty(struct cros_ec_device *ec, u8 index, u16 duty)
+>  {
+>  	struct {
+> @@ -96,7 +124,9 @@ static int cros_ec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  			     const struct pwm_state *state)
+>  {
+>  	struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
+> -	int duty_cycle;
+> +	struct cros_ec_pwm *channel = pwm_get_chip_data(pwm);
+> +	u16 duty_cycle;
+> +	int ret;
+>  
+>  	/* The EC won't let us change the period */
+>  	if (state->period != EC_PWM_MAX_DUTY)
+> @@ -108,13 +138,20 @@ static int cros_ec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	 */
+>  	duty_cycle = state->enabled ? state->duty_cycle : 0;
+>  
+> -	return cros_ec_pwm_set_duty(ec_pwm->ec, pwm->hwpwm, duty_cycle);
+> +	ret = cros_ec_pwm_set_duty(ec_pwm->ec, pwm->hwpwm, duty_cycle);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	channel->duty_cycle = state->duty_cycle;
+> +
+> +	return 0;
+>  }
+>  
+>  static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+>  				  struct pwm_state *state)
+>  {
+>  	struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
+> +	struct cros_ec_pwm *channel = pwm_get_chip_data(pwm);
+>  	int ret;
+>  
+>  	ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
+> @@ -126,8 +163,19 @@ static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	state->enabled = (ret > 0);
+>  	state->period = EC_PWM_MAX_DUTY;
+>  
+> -	/* Note that "disabled" and "duty cycle == 0" are treated the same */
+> -	state->duty_cycle = ret;
+> +	/*
+> +	 * Note that "disabled" and "duty cycle == 0" are treated the same. If
+> +	 * the cached duty cycle is not zero, used the cached duty cycle. This
+> +	 * ensures that the configured duty cycle is kept across a disable and
+> +	 * enable operation and avoids potentially confusing consumers.
+> +	 *
+> +	 * For the case of the initial hardware readout, channel->duty_cycle
+> +	 * will be 0 and the actual duty cycle read from the EC is used.
+> +	 */
+> +	if (ret == 0 && channel->duty_cycle > 0)
+> +		state->duty_cycle = channel->duty_cycle;
+> +	else
+> +		state->duty_cycle = ret;
+>  }
+>  
+>  static struct pwm_device *
+> @@ -149,6 +197,8 @@ cros_ec_pwm_xlate(struct pwm_chip *pc, const struct of_phandle_args *args)
+>  }
+>  
+>  static const struct pwm_ops cros_ec_pwm_ops = {
+> +	.request = cros_ec_pwm_request,
+> +	.free = cros_ec_pwm_free,
+>  	.get_state	= cros_ec_pwm_get_state,
+>  	.apply		= cros_ec_pwm_apply,
+>  	.owner		= THIS_MODULE,
 > 
-> +static struct platform_driver iqs620_pwm_platform_driver = {
-> +	.driver = {
-> +		.name	= IQS620_DRV_NAME_PWM,
-> +	},
-> +	.probe		= iqs620_pwm_probe,
-> +	.remove		= iqs620_pwm_remove,
-> +};
 
-I'm not a big fan of aligning the = in struct initializers. The downside
-is that if you later add
+I just tried your approach but I got a NULL pointer dereference while probe. I
+am just back from a week off but I'll be able to dig into it between today and
+tomorrow, just wanted to let you know that the patch doesn't works as is for me.
 
-	.prevent_deferred_probe = true,
+[   10.128455] Unable to handle kernel NULL pointer dereference at virtual
+address 0000000000000000
+[   10.141895] Mem abort info:
 
-you either have to touch all (otherwise unrelated) lines to realign
-which adds churn, or the structure is only partially aligned which looks
-ugly. That's why I stick to a single space before the =.
+[   10.145090]   ESR = 0x96000004
 
-Best regards
-Uwe
+[   10.148537]   EC = 0x25: DABT (current EL), IL = 32 bits
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+[   10.154560]   SET = 0, FnV = 0
+
+[   10.157986]   EA = 0, S1PTW = 0
+
+[   10.161548] Data abort info:
+
+[   10.164804]   ISV = 0, ISS = 0x00000004
+
+[   10.169111]   CM = 0, WnR = 0
+
+[   10.172436] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000ed44b000
+
+[   10.179660] [0000000000000000] pgd=0000000000000000
+
+[   10.179669] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+
+[   10.179673] Modules linked in: atmel_mxt_ts(+) rockchip_saradc pwm_cros_ec(+)
+rockchip_thermal pcie_rockchip_host snd_soc_rl6231 ip_tables x_
+tables ipv6 nf_defrag_ipv6
+
+[   10.179694] CPU: 1 PID: 255 Comm: systemd-udevd Not tainted 5.4.0-rc4+ #230
+
+[   10.179696] Hardware name: Google Kevin (DT)
+
+[   10.179700] pstate: 60000005 (nZCv daif -PAN -UAO)
+
+[   10.179714] pc : cros_ec_pwm_get_state+0xcc/0xf8 [pwm_cros_ec]
+
+[   10.179721] lr : cros_ec_pwm_get_state+0x80/0xf8 [pwm_cros_ec]
+
+[   10.247829] sp : ffff800012433810
+
+[   10.251531] x29: ffff800012433810 x28: 0000000200000026
+
+[   10.257469] x27: ffff800012433942 x26: ffff0000ef075010
+
+[   10.263405] x25: ffff800011ca8508 x24: ffff800011e68e30
+
+[   10.269341] x23: 0000000000000000 x22: ffff0000ee273190
+[   10.275278] x21: ffff0000ee2e3240 x20: ffff0000ee2e3270
+[   10.281214] x19: ffff800011bc98c8 x18: 0000000000000003
+[   10.287150] x17: 0000000000000007 x16: 000000000000000e
+[   10.293088] x15: 0000000000000001 x14: 0000000000000019
+[   10.299024] x13: 0000000000000033 x12: 0000000000000018
+[   10.304962] x11: 071c71c71c71c71c x10: 00000000000009d0
+[   10.310379] atmel_mxt_ts 5-004a: Family: 164 Variant: 17 Firmware V2.0.AA
+Objects: 31
+[   10.310901] x9 : ffff800012433490 x8 : ffff0000edb81830
+[   10.310905] x7 : 000000000000011b x6 : 0000000000000001
+[   10.310908] x5 : 0000000000000000 x4 : 0000000000000000
+[   10.310911] x3 : ffff0000edb80e00 x2 : 0000000000000002
+[   10.310914] x1 : 0000000000000000 x0 : 0000000000000000
+[   10.310918] Call trace:
+[   10.310931]  cros_ec_pwm_get_state+0xcc/0xf8 [pwm_cros_ec]
+[   10.310944]  pwmchip_add_with_polarity+0x134/0x290
+[   10.363576]  pwmchip_add+0x24/0x30
+[   10.367383]  cros_ec_pwm_probe+0x13c/0x1cc [pwm_cros_ec]
+[   10.373325]  platform_drv_probe+0x58/0xa8
+[   10.377809]  really_probe+0xe0/0x318
+[   10.381804]  driver_probe_device+0x5c/0xf0
+[   10.386381]  device_driver_attach+0x74/0x80
+
+Thanks,
+ Enric
