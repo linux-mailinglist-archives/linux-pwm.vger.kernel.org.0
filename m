@@ -2,136 +2,161 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 34C8EDEF27
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Oct 2019 16:17:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9167FDEF56
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Oct 2019 16:21:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfJUOR1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 21 Oct 2019 10:17:27 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54909 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727152AbfJUOR1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Oct 2019 10:17:27 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p7so13549661wmp.4
-        for <linux-pwm@vger.kernel.org>; Mon, 21 Oct 2019 07:17:25 -0700 (PDT)
+        id S1728872AbfJUOVc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 21 Oct 2019 10:21:32 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41688 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729219AbfJUOVc (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Oct 2019 10:21:32 -0400
+Received: by mail-io1-f65.google.com with SMTP id r144so4243589iod.8
+        for <linux-pwm@vger.kernel.org>; Mon, 21 Oct 2019 07:21:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CGfSFNX9Bdx5FZVahFtf6VWgnjw/7hb/XXNX9kNMVFk=;
-        b=XHX+fk6WW+yO9iqQJXYyar0dDh5/56apvSfFgI/eLjWLgGyOOVoCA9wD7GesgKcmFx
-         oeKo6HunCI6l0Byj56lkbVFrRj58xcJPjP7Qst/4MPaX3Kp9V0Ez2fyNmk5FO6jJ+fb2
-         ZdYBvNIYZhS1dTgnvWFAiVOLcEjr+7zmw3oWFhZMxKFX8PB2EnQcbCDO4pXuJBey4v6K
-         AhP1zVK1HAOkB41WBVZWMd3ZWz9akYB3/jv+pSQg4c8wTkprBr0d7UGcjribdFh9rbsP
-         214fqG8Mq0yjfPtZF6MRcFfYkTdE3hOqn+KLaGzRt/beLp0bmS7J1WO++K6HhYWt7aUm
-         hC/g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=M8TxkGCBrZ94ssUK3IwKsn6W2BiCIxjI5bhMjceU0gI=;
+        b=T9c2jhWXK6mZYPBhDM6huYQxzS8aHgSEVoxEsRNawnbs534jhuD61wf+KpdbjDeQaF
+         WQMw6z8EhXHQ/nJq+ZDyrPotmtl0ZGSfTeqcqIvdtuj6sPANihZqAdu2jX8yDaPbLse0
+         cuD2E2JEy19BYgHCrj3gaNEmumE6gpOgy0j8kUpEHPRQXVDEiDWBxrTUyWoVxNSzQi9s
+         r+CRkjkLM6nzOTc3+KofBZ1Ri+G7962krucMbuXoVOH7qWSlZEt4N3TzxhCsp3YjwG45
+         +RQhiP9ZrNxiq0BQngZPXDVIj5iNpXGImzyPaWCSx+y1H/zfO9x5Nhm8hZwI+Wc3e/D3
+         Tfgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CGfSFNX9Bdx5FZVahFtf6VWgnjw/7hb/XXNX9kNMVFk=;
-        b=kZdGDzWGQcJvZyXfENAXNBoXpn002zgXmrY/C3YBNPsoTdaLzqy6oO/P9hceJegwdO
-         EiMxzuoCKlADBDDa2ZMgLJOsAPotwHdGrbKOKQTcAXty7XOjHfMRW0LuHczEmcmzOoUt
-         krkme437gsz9AlHW6NCCRENQFv6MQOAnVp3BUIai8c1Q697Ybu+M55dM7r5tSOXvMOWA
-         lU23XhXA+XXmQ8ajGoQqpay7oxb7xciaAbEiEm9OpgctMy1JiSfuqne/zNVB62V+xyQ+
-         RcQSwkiq1/rIYsMsVyFpq280KWQBfbc5YNKqJL/i4su/QVWmuJv3Q5L4LPI9aVTPBtDY
-         VX8A==
-X-Gm-Message-State: APjAAAWhyltoPBulX6EXlcWMwOeiwFDxBziz7h1CQbTb0TQ/5HBCKoI2
-        TEowiAvsdXXEArZaaDBrr+v3saLm
-X-Google-Smtp-Source: APXvYqwkEkAMXWPGTF/dsX4HrmRREnzwo+zfQOj1vGRvBQEZwoZr5YYzb6pWCYp30rMQarn2J9VAXg==
-X-Received: by 2002:a05:600c:29a:: with SMTP id 26mr20857791wmk.127.1571667444785;
-        Mon, 21 Oct 2019 07:17:24 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id l11sm14271218wmh.34.2019.10.21.07.17.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 07:17:23 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 16:17:21 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] Revert "pwm: Let pwm_get_state() return the last
- implemented state"
-Message-ID: <20191021141721.GA1476994@ulmo>
-References: <20191021105830.1357795-1-thierry.reding@gmail.com>
- <20191021111847.c5j4qycyqy5wmynh@pengutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=M8TxkGCBrZ94ssUK3IwKsn6W2BiCIxjI5bhMjceU0gI=;
+        b=kKtjO7WZqG0p6Uua7jf6DQ4tTdNf3C46ov8siz0CPUk/ymsCGnqteBh5FFgOQ6vwSU
+         U574Sq4FVwy4vKGuC3sn901JZDuvcgbZERtPZs3cwnUfvitYzpXH+7ihWg0/ovGbqJhj
+         4fXjBDf/QRAiIpGoJ0g1N3CfwPWBrn2wiWdicMZMfm7qPxgwE+l+yVumaxKh0H0z7InQ
+         2FFfRXK0VE4ksSO/2tjTT6pz0JRnCZMQ/561VWSbAXGIkv8yAv0Qpx6HbZgMgFAdBblw
+         YmmguXypzZIdtd/eQO94sM30EDadSGIu88DoZyUwxgJzqLefoIFJsTOssXeBw4C5gwk9
+         M2PA==
+X-Gm-Message-State: APjAAAXHTyqO07ODbNpoe/8wcx2WQ1eTedekjdcM3iyOaYl+cpfs9oF0
+        55GRiv7zB+AB3dNZNd5AbVCeomt0uXakeyBpmS8=
+X-Google-Smtp-Source: APXvYqz5Mx6/WkrQqa0gTOBRitwMXbg1/9vr8nYmRsE2+o0ATCijIc83vcUju5TmxbjP+4O/1rtoBg3xdRmGTYG08qc=
+X-Received: by 2002:a5e:9245:: with SMTP id z5mr17596735iop.205.1571667691319;
+ Mon, 21 Oct 2019 07:21:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
-Content-Disposition: inline
-In-Reply-To: <20191021111847.c5j4qycyqy5wmynh@pengutronix.de>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191021105739.1357629-1-thierry.reding@gmail.com>
+ <20191021105739.1357629-3-thierry.reding@gmail.com> <5e6c86a1-932c-77ce-3501-f03d03e4c963@ysoft.com>
+In-Reply-To: <5e6c86a1-932c-77ce-3501-f03d03e4c963@ysoft.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 21 Oct 2019 09:21:19 -0500
+Message-ID: <CAHCN7xKrGwWcdP79YbS924ACi6Sggds7J31i7HiE5rNHMkbt0w@mail.gmail.com>
+Subject: Re: [PATCH 3/4] pwm: imx27: Cache duty cycle register value
+To:     =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Mon, Oct 21, 2019 at 8:46 AM Michal Vok=C3=A1=C4=8D <michal.vokac@ysoft.=
+com> wrote:
+>
+> +Adam
+>
+> On 21. 10. 19 12:57, Thierry Reding wrote:
+> > The hardware register containing the duty cycle value cannot be accesse=
+d
+> > when the PWM is disabled. This causes the ->get_state() callback to rea=
+d
+> > back a duty cycle value of 0, which can confuse consumer drivers.
+>
+> Me and Adam Ford already tested the patches [3/4] and [4/4] and gave ours
+> Tested-by tags in the previous thread but do not see those here.
+> I re-tested these again and have no issues.
+>
+> Tested-by: Michal Vok=C3=A1=C4=8D <michal.vokac@ysoft.com>
 
---9amGYk9869ThD9tj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Tested-by: Adam Ford <aford173@gmail.com>
 
-On Mon, Oct 21, 2019 at 01:18:47PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> On Mon, Oct 21, 2019 at 12:58:30PM +0200, Thierry Reding wrote:
-> > It turns out that commit 01ccf903edd6 ("pwm: Let pwm_get_state() return
-> > the last implemented state") causes backlight failures on a number of
-> > boards. The reason is that some of the drivers do not write the full
-> > state through to the hardware registers, which means that ->get_state()
-> > subsequently does not return the correct state. Consumers which rely on
-> > pwm_get_state() returning the current state will therefore get confused
-> > and subsequently try to program a bad state.
-> >=20
-> > Before this change can be made, existing drivers need to be more
-> > carefully audited and fixed to behave as the framework expects. Until
-> > then, keep the original behaviour of returning the software state that
-> > was applied rather than reading the state back from hardware.
->=20
-> I would really prefer to fix that in the framework instead. This is
-
-There's nothing to fix in the framework. The framework isn't broken, the
-drivers are.
-
-> something that affects several drivers (cros-ec, imx27, atmel, imx-tpm,
-> lpss, meson, sifive, sprd and stm32-lp). This is im my eyes really
-> sufficient to justify a framework wide solution instead of adapting
-> several drivers in a way that doesn't affect the values programmed to
-> hardware.
-
-Can you come up with a proposal for how to want to implement this in the
-framework?
-
-Thierry
-
+>
+> Thank you Thierry,
+> Michal
+>
+>
 > > Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
->=20
-> Reviewed-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
->=20
-> Thanks
-> Uwe
->=20
-> --=20
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---9amGYk9869ThD9tj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2tve8ACgkQ3SOs138+
-s6GHpw/9GYOgNp2EvuAjjsfFTHen1k1dcaxq+o0AA4va2oT+diXvqto5L6C2fpKN
-S0B3dR/sSBeGdBt+vZDyW0TC4tU9ez8LtX1ia+d0bkrroF7I+Ikr2YdtC1lkGfeQ
-BBt4aTqegtXOXL+rctg85q6NRvbN8zNMUvP+bho5YrO68ShjsgjUBq/wmQ+T6WP+
-iMH55Y/YYDzBG+p+Lv1PAtTQ+a9EQnutSikqw2WeKIYOl9GBHvGdvPwH+Kt3gvAY
-rpKNOHqKPZUkeF7e0Wcpvy+KkxNVWWOkIvn3WvOTTdOoa7uyJwXvJRAjBHxezQuz
-1TKZ5Oxro+bVb/v+w1tly89ulSquLmXM6yJnQIW+i5TVBlpZH2DVnskfplmn+lNH
-ObVLDgAtqZ1j51g2+ilruRQH+fkuBuws5bPZYrpxfqsZgYA2vh23TJsc2qyEwptJ
-rZBTfJ0EUaxnhPiZGHQLVakLVYF0a8n1T3HN2jR7pjNXWpJOV+m5vzxCc72aVF0o
-C9wyz2qJbBply2Q2+4Urnwx6cH2sFGivMqRVo+kK/2FdO9ZUVpf1KatxoZWwAsGq
-pO8bwA90ONcmDLOxR8ZFCdxD+6xKHcPqIblUHWgoOFEpCumNdiJ1yeO6qyy1P9e0
-dDrSKaV4hcQCdv4jLsxIhfpzAktgjB4DPrrfdKFXGJaL9+91dY4=
-=9gHC
------END PGP SIGNATURE-----
-
---9amGYk9869ThD9tj--
+> > ---
+> >   drivers/pwm/pwm-imx27.c | 31 ++++++++++++++++++++++++-------
+> >   1 file changed, 24 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+> > index ae11d8577f18..4113d5cd4c62 100644
+> > --- a/drivers/pwm/pwm-imx27.c
+> > +++ b/drivers/pwm/pwm-imx27.c
+> > @@ -85,6 +85,13 @@ struct pwm_imx27_chip {
+> >       struct clk      *clk_per;
+> >       void __iomem    *mmio_base;
+> >       struct pwm_chip chip;
+> > +
+> > +     /*
+> > +      * The driver cannot read the current duty cycle from the hardwar=
+e if
+> > +      * the hardware is disabled. Cache the last programmed duty cycle
+> > +      * value to return in that case.
+> > +      */
+> > +     unsigned int duty_cycle;
+> >   };
+> >
+> >   #define to_pwm_imx27_chip(chip)     container_of(chip, struct pwm_imx=
+27_chip, chip)
+> > @@ -155,14 +162,17 @@ static void pwm_imx27_get_state(struct pwm_chip *=
+chip,
+> >       tmp =3D NSEC_PER_SEC * (u64)(period + 2);
+> >       state->period =3D DIV_ROUND_CLOSEST_ULL(tmp, pwm_clk);
+> >
+> > -     /* PWMSAR can be read only if PWM is enabled */
+> > -     if (state->enabled) {
+> > +     /*
+> > +      * PWMSAR can be read only if PWM is enabled. If the PWM is disab=
+led,
+> > +      * use the cached value.
+> > +      */
+> > +     if (state->enabled)
+> >               val =3D readl(imx->mmio_base + MX3_PWMSAR);
+> > -             tmp =3D NSEC_PER_SEC * (u64)(val);
+> > -             state->duty_cycle =3D DIV_ROUND_CLOSEST_ULL(tmp, pwm_clk)=
+;
+> > -     } else {
+> > -             state->duty_cycle =3D 0;
+> > -     }
+> > +     else
+> > +             val =3D imx->duty_cycle;
+> > +
+> > +     tmp =3D NSEC_PER_SEC * (u64)(val);
+> > +     state->duty_cycle =3D DIV_ROUND_CLOSEST_ULL(tmp, pwm_clk);
+> >
+> >       if (!state->enabled)
+> >               pwm_imx27_clk_disable_unprepare(chip);
+> > @@ -261,6 +271,13 @@ static int pwm_imx27_apply(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+> >               writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
+> >               writel(period_cycles, imx->mmio_base + MX3_PWMPR);
+> >
+> > +             /*
+> > +              * Store the duty cycle for future reference in cases whe=
+re
+> > +              * the MX3_PWMSAR register can't be read (i.e. when the P=
+WM
+> > +              * is disabled).
+> > +              */
+> > +             imx->duty_cycle =3D duty_cycles;
+> > +
+> >               cr =3D MX3_PWMCR_PRESCALER_SET(prescale) |
+> >                    MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITE=
+N |
+> >                    FIELD_PREP(MX3_PWMCR_CLKSRC, MX3_PWMCR_CLKSRC_IPG_HI=
+GH) |
+> >
+>
