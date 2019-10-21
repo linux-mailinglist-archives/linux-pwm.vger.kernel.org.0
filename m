@@ -2,169 +2,200 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A083DDEE52
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Oct 2019 15:49:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36F4BDEE54
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Oct 2019 15:49:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbfJUNtE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 21 Oct 2019 09:49:04 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35928 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728083AbfJUNtE (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Oct 2019 09:49:04 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 8B22128AC19
-Subject: Re: [PATCH 2/4] pwm: cros-ec: Cache duty cycle value
+        id S1728826AbfJUNti (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 21 Oct 2019 09:49:38 -0400
+Received: from uho.ysoft.cz ([81.19.3.130]:51996 "EHLO uho.ysoft.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727322AbfJUNti (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:49:38 -0400
+Received: from [10.1.8.111] (unknown [10.1.8.111])
+        by uho.ysoft.cz (Postfix) with ESMTP id A3A1CA28BA;
+        Mon, 21 Oct 2019 15:49:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
+        s=20160406-ysoft-com; t=1571665776;
+        bh=8w3DkTso2wMiC0FF5ZMH5BUlTSmHT1UzRk9c+xW3VSo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=KvCa5x0i6vuIMU0TZqbUklVW2b1YW0e8Ij9D29ALcnkpDGc/vXkFEydwFyZAX6pZC
+         eOVcz5bx5+OnrWygXZOFOZEv6RVltEX/oRto27+TAGNicUzyfUgA9nw7rZaZP0uPp4
+         g00dDYNKBASY/kjwK1TfC2LtQ15R/WqLT0nhV8m8=
+Subject: Re: [PATCH 4/4] pwm: imx27: Unconditionally write state to hardware
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-pwm@vger.kernel.org
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-pwm@vger.kernel.org, Adam Ford <aford173@gmail.com>
 References: <20191021105739.1357629-1-thierry.reding@gmail.com>
- <20191021105739.1357629-2-thierry.reding@gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <041c05b7-f558-0249-0450-305dfa2697a9@collabora.com>
-Date:   Mon, 21 Oct 2019 15:48:59 +0200
+ <20191021105739.1357629-4-thierry.reding@gmail.com>
+From:   =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
+Message-ID: <5e129df5-1110-29ea-35ce-4c2274b135fe@ysoft.com>
+Date:   Mon, 21 Oct 2019 15:49:36 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191021105739.1357629-2-thierry.reding@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191021105739.1357629-4-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
++Adam
 
-On 21/10/19 12:57, Thierry Reding wrote:
-> The ChromeOS embedded controller doesn't differentiate between disabled
-> and duty cycle being 0. In order not to potentially confuse consumers,
-> cache the duty cycle and return the cached value instead of the real
-> value when the PWM is disabled.
+On 21. 10. 19 12:57, Thierry Reding wrote:
+> The i.MX driver currently uses a shortcut and doesn't write all of the
+> state through to the hardware when the PWM is disabled. This causes an
+> inconsistent state to be read back by consumers with the result of them
+> malfunctioning.
 > 
+> Fix this by always writing the full state through to the hardware
+> registers so that the correct state can always be read back.
+
+Gave it another shot and got expected results.
+
+Tested-by: Michal Vokáč <michal.vokac@ysoft.com>
+
 > Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-
-One nit and tested on top of 5.4.0-rc4. The backlight is alive again. So,
-
-Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-Thanks,
- Enric
-
 > ---
->  drivers/pwm/pwm-cros-ec.c | 58 ++++++++++++++++++++++++++++++++++++---
->  1 file changed, 54 insertions(+), 4 deletions(-)
+>   drivers/pwm/pwm-imx27.c | 120 ++++++++++++++++++++--------------------
+>   1 file changed, 59 insertions(+), 61 deletions(-)
 > 
-> diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
-> index 89497448d217..09c08dee099e 100644
-> --- a/drivers/pwm/pwm-cros-ec.c
-> +++ b/drivers/pwm/pwm-cros-ec.c
-> @@ -25,11 +25,39 @@ struct cros_ec_pwm_device {
->  	struct pwm_chip chip;
->  };
->  
-> +/**
-> + * struct cros_ec_pwm - per-PWM driver data
-> + * @duty_cycle: cached duty cycle
-> + */
-> +struct cros_ec_pwm {
-> +	u16 duty_cycle;
-> +};
+> diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+> index 4113d5cd4c62..59d8b1289808 100644
+> --- a/drivers/pwm/pwm-imx27.c
+> +++ b/drivers/pwm/pwm-imx27.c
+> @@ -230,70 +230,68 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>   
+>   	pwm_get_state(pwm, &cstate);
+>   
+> -	if (state->enabled) {
+> -		c = clk_get_rate(imx->clk_per);
+> -		c *= state->period;
+> -
+> -		do_div(c, 1000000000);
+> -		period_cycles = c;
+> -
+> -		prescale = period_cycles / 0x10000 + 1;
+> -
+> -		period_cycles /= prescale;
+> -		c = (unsigned long long)period_cycles * state->duty_cycle;
+> -		do_div(c, state->period);
+> -		duty_cycles = c;
+> -
+> -		/*
+> -		 * according to imx pwm RM, the real period value should be
+> -		 * PERIOD value in PWMPR plus 2.
+> -		 */
+> -		if (period_cycles > 2)
+> -			period_cycles -= 2;
+> -		else
+> -			period_cycles = 0;
+> -
+> -		/*
+> -		 * Wait for a free FIFO slot if the PWM is already enabled, and
+> -		 * flush the FIFO if the PWM was disabled and is about to be
+> -		 * enabled.
+> -		 */
+> -		if (cstate.enabled) {
+> -			pwm_imx27_wait_fifo_slot(chip, pwm);
+> -		} else {
+> -			ret = pwm_imx27_clk_prepare_enable(chip);
+> -			if (ret)
+> -				return ret;
+> -
+> -			pwm_imx27_sw_reset(chip);
+> -		}
+> -
+> -		writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
+> -		writel(period_cycles, imx->mmio_base + MX3_PWMPR);
+> -
+> -		/*
+> -		 * Store the duty cycle for future reference in cases where
+> -		 * the MX3_PWMSAR register can't be read (i.e. when the PWM
+> -		 * is disabled).
+> -		 */
+> -		imx->duty_cycle = duty_cycles;
+> -
+> -		cr = MX3_PWMCR_PRESCALER_SET(prescale) |
+> -		     MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
+> -		     FIELD_PREP(MX3_PWMCR_CLKSRC, MX3_PWMCR_CLKSRC_IPG_HIGH) |
+> -		     MX3_PWMCR_DBGEN | MX3_PWMCR_EN;
+> -
+> -		if (state->polarity == PWM_POLARITY_INVERSED)
+> -			cr |= FIELD_PREP(MX3_PWMCR_POUTC,
+> -					MX3_PWMCR_POUTC_INVERTED);
+> -
+> -		writel(cr, imx->mmio_base + MX3_PWMCR);
+> -	} else if (cstate.enabled) {
+> -		writel(0, imx->mmio_base + MX3_PWMCR);
+> +	c = clk_get_rate(imx->clk_per);
+> +	c *= state->period;
+>   
+> -		pwm_imx27_clk_disable_unprepare(chip);
+> +	do_div(c, 1000000000);
+> +	period_cycles = c;
 > +
->  static inline struct cros_ec_pwm_device *pwm_to_cros_ec_pwm(struct pwm_chip *c)
->  {
->  	return container_of(c, struct cros_ec_pwm_device, chip);
->  }
->  
-> +static int cros_ec_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-> +{
-> +	struct cros_ec_pwm *channel;
+> +	prescale = period_cycles / 0x10000 + 1;
 > +
-> +	channel = kzalloc(sizeof(*channel), GFP_KERNEL);
-> +	if (!channel)
-> +		return -ENOMEM;
+> +	period_cycles /= prescale;
+> +	c = (unsigned long long)period_cycles * state->duty_cycle;
+> +	do_div(c, state->period);
+> +	duty_cycles = c;
 > +
-> +	pwm_set_chip_data(pwm, channel);
-> +
-> +	return 0;
-> +}
-> +
-> +static void cros_ec_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-> +{
-> +	struct cros_ec_pwm *channel = pwm_get_chip_data(pwm);
-> +
-> +	kfree(channel);
-> +}
-> +
->  static int cros_ec_pwm_set_duty(struct cros_ec_device *ec, u8 index, u16 duty)
->  {
->  	struct {
-> @@ -96,7 +124,9 @@ static int cros_ec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  			     const struct pwm_state *state)
->  {
->  	struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
-> -	int duty_cycle;
-> +	struct cros_ec_pwm *channel = pwm_get_chip_data(pwm);
-> +	u16 duty_cycle;
-> +	int ret;
->  
->  	/* The EC won't let us change the period */
->  	if (state->period != EC_PWM_MAX_DUTY)
-> @@ -108,13 +138,20 @@ static int cros_ec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  	 */
->  	duty_cycle = state->enabled ? state->duty_cycle : 0;
->  
-> -	return cros_ec_pwm_set_duty(ec_pwm->ec, pwm->hwpwm, duty_cycle);
-> +	ret = cros_ec_pwm_set_duty(ec_pwm->ec, pwm->hwpwm, duty_cycle);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	channel->duty_cycle = state->duty_cycle;
-> +
-> +	return 0;
->  }
->  
->  static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->  				  struct pwm_state *state)
->  {
->  	struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
-> +	struct cros_ec_pwm *channel = pwm_get_chip_data(pwm);
->  	int ret;
->  
->  	ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
-> @@ -126,8 +163,19 @@ static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->  	state->enabled = (ret > 0);
->  	state->period = EC_PWM_MAX_DUTY;
->  
-> -	/* Note that "disabled" and "duty cycle == 0" are treated the same */
-> -	state->duty_cycle = ret;
 > +	/*
-> +	 * Note that "disabled" and "duty cycle == 0" are treated the same. If
-> +	 * the cached duty cycle is not zero, used the cached duty cycle. This
-> +	 * ensures that the configured duty cycle is kept across a disable and
-> +	 * enable operation and avoids potentially confusing consumers.
-> +	 *
-> +	 * For the case of the initial hardware readout, channel->duty_cycle
-> +	 * will be 0 and the actual duty cycle read from the EC is used.
+> +	 * according to imx pwm RM, the real period value should be PERIOD
+> +	 * value in PWMPR plus 2.
 > +	 */
-> +	if (ret == 0 && channel->duty_cycle > 0)
-> +		state->duty_cycle = channel->duty_cycle;
+> +	if (period_cycles > 2)
+> +		period_cycles -= 2;
 > +	else
-> +		state->duty_cycle = ret;
->  }
->  
->  static struct pwm_device *
-> @@ -149,6 +197,8 @@ cros_ec_pwm_xlate(struct pwm_chip *pc, const struct of_phandle_args *args)
->  }
->  
->  static const struct pwm_ops cros_ec_pwm_ops = {
-> +	.request = cros_ec_pwm_request,
-> +	.free = cros_ec_pwm_free,
-
-nit: Align using tabs for readability.
-
->  	.get_state	= cros_ec_pwm_get_state,
->  	.apply		= cros_ec_pwm_apply,
->  	.owner		= THIS_MODULE,
+> +		period_cycles = 0;
+> +
+> +	/*
+> +	 * Wait for a free FIFO slot if the PWM is already enabled, and flush
+> +	 * the FIFO if the PWM was disabled and is about to be enabled.
+> +	 */
+> +	if (cstate.enabled) {
+> +		pwm_imx27_wait_fifo_slot(chip, pwm);
+> +	} else {
+> +		ret = pwm_imx27_clk_prepare_enable(chip);
+> +		if (ret)
+> +			return ret;
+> +
+> +		pwm_imx27_sw_reset(chip);
+>   	}
+>   
+> +	writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
+> +	writel(period_cycles, imx->mmio_base + MX3_PWMPR);
+> +
+> +	/*
+> +	 * Store the duty cycle for future reference in cases where the
+> +	 * MX3_PWMSAR register can't be read (i.e. when the PWM is disabled).
+> +	 */
+> +	imx->duty_cycle = duty_cycles;
+> +
+> +	cr = MX3_PWMCR_PRESCALER_SET(prescale) |
+> +	     MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
+> +	     FIELD_PREP(MX3_PWMCR_CLKSRC, MX3_PWMCR_CLKSRC_IPG_HIGH) |
+> +	     MX3_PWMCR_DBGEN;
+> +
+> +	if (state->polarity == PWM_POLARITY_INVERSED)
+> +		cr |= FIELD_PREP(MX3_PWMCR_POUTC,
+> +				MX3_PWMCR_POUTC_INVERTED);
+> +
+> +	if (state->enabled)
+> +		cr |= MX3_PWMCR_EN;
+> +
+> +	writel(cr, imx->mmio_base + MX3_PWMCR);
+> +
+> +	if (!state->enabled && cstate.enabled)
+> +		pwm_imx27_clk_disable_unprepare(chip);
+> +
+>   	return 0;
+>   }
+>   
 > 
+
