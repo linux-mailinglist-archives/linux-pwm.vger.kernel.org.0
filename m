@@ -2,39 +2,39 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 36F4BDEE54
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Oct 2019 15:49:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 577D9DEE7B
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Oct 2019 15:55:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbfJUNti (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 21 Oct 2019 09:49:38 -0400
-Received: from uho.ysoft.cz ([81.19.3.130]:51996 "EHLO uho.ysoft.cz"
+        id S1728832AbfJUNzg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 21 Oct 2019 09:55:36 -0400
+Received: from uho.ysoft.cz ([81.19.3.130]:52650 "EHLO uho.ysoft.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727322AbfJUNti (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:49:38 -0400
+        id S1728696AbfJUNzf (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:55:35 -0400
 Received: from [10.1.8.111] (unknown [10.1.8.111])
-        by uho.ysoft.cz (Postfix) with ESMTP id A3A1CA28BA;
-        Mon, 21 Oct 2019 15:49:36 +0200 (CEST)
+        by uho.ysoft.cz (Postfix) with ESMTP id 65B47A28ED;
+        Mon, 21 Oct 2019 15:55:34 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
-        s=20160406-ysoft-com; t=1571665776;
-        bh=8w3DkTso2wMiC0FF5ZMH5BUlTSmHT1UzRk9c+xW3VSo=;
+        s=20160406-ysoft-com; t=1571666134;
+        bh=THebfvsMkcYIOyYv/5w/H4orM9JPOjtQd8emeIaXx8g=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=KvCa5x0i6vuIMU0TZqbUklVW2b1YW0e8Ij9D29ALcnkpDGc/vXkFEydwFyZAX6pZC
-         eOVcz5bx5+OnrWygXZOFOZEv6RVltEX/oRto27+TAGNicUzyfUgA9nw7rZaZP0uPp4
-         g00dDYNKBASY/kjwK1TfC2LtQ15R/WqLT0nhV8m8=
-Subject: Re: [PATCH 4/4] pwm: imx27: Unconditionally write state to hardware
+        b=l6Ei1w0ll/KcFskD509lgbGYx7otEiEd/ePz6tvhhLfBzrfNIwCGJ9/zfWLF8/U/X
+         LyD69dGWJkeFkswvIPc9BaechqaE2jRF+lh27ZYHYQoaaf3PMIWiJBVM2qnwZqm+8V
+         ml0NGp+KzCnd8OJS2t6wsYtpoaTjbff3O5YV6SYo=
+Subject: Re: [PATCH] Revert "pwm: Let pwm_get_state() return the last
+ implemented state"
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-pwm@vger.kernel.org, Adam Ford <aford173@gmail.com>
-References: <20191021105739.1357629-1-thierry.reding@gmail.com>
- <20191021105739.1357629-4-thierry.reding@gmail.com>
+        linux-pwm@vger.kernel.org
+References: <20191021105830.1357795-1-thierry.reding@gmail.com>
 From:   =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
-Message-ID: <5e129df5-1110-29ea-35ce-4c2274b135fe@ysoft.com>
-Date:   Mon, 21 Oct 2019 15:49:36 +0200
+Message-ID: <35885da4-4172-4d1f-a05e-d094669535c9@ysoft.com>
+Date:   Mon, 21 Oct 2019 15:55:34 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191021105739.1357629-4-thierry.reding@gmail.com>
+In-Reply-To: <20191021105830.1357795-1-thierry.reding@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -43,159 +43,49 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-+Adam
-
-On 21. 10. 19 12:57, Thierry Reding wrote:
-> The i.MX driver currently uses a shortcut and doesn't write all of the
-> state through to the hardware when the PWM is disabled. This causes an
-> inconsistent state to be read back by consumers with the result of them
-> malfunctioning.
+On 21. 10. 19 12:58, Thierry Reding wrote:
+> It turns out that commit 01ccf903edd6 ("pwm: Let pwm_get_state() return
+> the last implemented state") causes backlight failures on a number of
+> boards. The reason is that some of the drivers do not write the full
+> state through to the hardware registers, which means that ->get_state()
+> subsequently does not return the correct state. Consumers which rely on
+> pwm_get_state() returning the current state will therefore get confused
+> and subsequently try to program a bad state.
 > 
-> Fix this by always writing the full state through to the hardware
-> registers so that the correct state can always be read back.
+> Before this change can be made, existing drivers need to be more
+> carefully audited and fixed to behave as the framework expects. Until
+> then, keep the original behaviour of returning the software state that
+> was applied rather than reading the state back from hardware.
 
-Gave it another shot and got expected results.
+Backlight on our imx6dl-yapp4-draco board works fine again when
+this is reverted.
 
 Tested-by: Michal Vokáč <michal.vokac@ysoft.com>
 
 > Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 > ---
->   drivers/pwm/pwm-imx27.c | 120 ++++++++++++++++++++--------------------
->   1 file changed, 59 insertions(+), 61 deletions(-)
+>   drivers/pwm/core.c | 9 +--------
+>   1 file changed, 1 insertion(+), 8 deletions(-)
 > 
-> diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-> index 4113d5cd4c62..59d8b1289808 100644
-> --- a/drivers/pwm/pwm-imx27.c
-> +++ b/drivers/pwm/pwm-imx27.c
-> @@ -230,70 +230,68 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> index 6ad51aa60c03..f877e77d9184 100644
+> --- a/drivers/pwm/core.c
+> +++ b/drivers/pwm/core.c
+> @@ -472,14 +472,7 @@ int pwm_apply_state(struct pwm_device *pwm, const struct pwm_state *state)
+>   		if (err)
+>   			return err;
 >   
->   	pwm_get_state(pwm, &cstate);
->   
-> -	if (state->enabled) {
-> -		c = clk_get_rate(imx->clk_per);
-> -		c *= state->period;
-> -
-> -		do_div(c, 1000000000);
-> -		period_cycles = c;
-> -
-> -		prescale = period_cycles / 0x10000 + 1;
-> -
-> -		period_cycles /= prescale;
-> -		c = (unsigned long long)period_cycles * state->duty_cycle;
-> -		do_div(c, state->period);
-> -		duty_cycles = c;
-> -
 > -		/*
-> -		 * according to imx pwm RM, the real period value should be
-> -		 * PERIOD value in PWMPR plus 2.
+> -		 * .apply might have to round some values in *state, if possible
+> -		 * read the actually implemented value back.
 > -		 */
-> -		if (period_cycles > 2)
-> -			period_cycles -= 2;
+> -		if (chip->ops->get_state)
+> -			chip->ops->get_state(chip, pwm, &pwm->state);
 > -		else
-> -			period_cycles = 0;
-> -
-> -		/*
-> -		 * Wait for a free FIFO slot if the PWM is already enabled, and
-> -		 * flush the FIFO if the PWM was disabled and is about to be
-> -		 * enabled.
-> -		 */
-> -		if (cstate.enabled) {
-> -			pwm_imx27_wait_fifo_slot(chip, pwm);
-> -		} else {
-> -			ret = pwm_imx27_clk_prepare_enable(chip);
-> -			if (ret)
-> -				return ret;
-> -
-> -			pwm_imx27_sw_reset(chip);
-> -		}
-> -
-> -		writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
-> -		writel(period_cycles, imx->mmio_base + MX3_PWMPR);
-> -
-> -		/*
-> -		 * Store the duty cycle for future reference in cases where
-> -		 * the MX3_PWMSAR register can't be read (i.e. when the PWM
-> -		 * is disabled).
-> -		 */
-> -		imx->duty_cycle = duty_cycles;
-> -
-> -		cr = MX3_PWMCR_PRESCALER_SET(prescale) |
-> -		     MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
-> -		     FIELD_PREP(MX3_PWMCR_CLKSRC, MX3_PWMCR_CLKSRC_IPG_HIGH) |
-> -		     MX3_PWMCR_DBGEN | MX3_PWMCR_EN;
-> -
-> -		if (state->polarity == PWM_POLARITY_INVERSED)
-> -			cr |= FIELD_PREP(MX3_PWMCR_POUTC,
-> -					MX3_PWMCR_POUTC_INVERTED);
-> -
-> -		writel(cr, imx->mmio_base + MX3_PWMCR);
-> -	} else if (cstate.enabled) {
-> -		writel(0, imx->mmio_base + MX3_PWMCR);
-> +	c = clk_get_rate(imx->clk_per);
-> +	c *= state->period;
->   
-> -		pwm_imx27_clk_disable_unprepare(chip);
-> +	do_div(c, 1000000000);
-> +	period_cycles = c;
-> +
-> +	prescale = period_cycles / 0x10000 + 1;
-> +
-> +	period_cycles /= prescale;
-> +	c = (unsigned long long)period_cycles * state->duty_cycle;
-> +	do_div(c, state->period);
-> +	duty_cycles = c;
-> +
-> +	/*
-> +	 * according to imx pwm RM, the real period value should be PERIOD
-> +	 * value in PWMPR plus 2.
-> +	 */
-> +	if (period_cycles > 2)
-> +		period_cycles -= 2;
-> +	else
-> +		period_cycles = 0;
-> +
-> +	/*
-> +	 * Wait for a free FIFO slot if the PWM is already enabled, and flush
-> +	 * the FIFO if the PWM was disabled and is about to be enabled.
-> +	 */
-> +	if (cstate.enabled) {
-> +		pwm_imx27_wait_fifo_slot(chip, pwm);
-> +	} else {
-> +		ret = pwm_imx27_clk_prepare_enable(chip);
-> +		if (ret)
-> +			return ret;
-> +
-> +		pwm_imx27_sw_reset(chip);
->   	}
->   
-> +	writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
-> +	writel(period_cycles, imx->mmio_base + MX3_PWMPR);
-> +
-> +	/*
-> +	 * Store the duty cycle for future reference in cases where the
-> +	 * MX3_PWMSAR register can't be read (i.e. when the PWM is disabled).
-> +	 */
-> +	imx->duty_cycle = duty_cycles;
-> +
-> +	cr = MX3_PWMCR_PRESCALER_SET(prescale) |
-> +	     MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
-> +	     FIELD_PREP(MX3_PWMCR_CLKSRC, MX3_PWMCR_CLKSRC_IPG_HIGH) |
-> +	     MX3_PWMCR_DBGEN;
-> +
-> +	if (state->polarity == PWM_POLARITY_INVERSED)
-> +		cr |= FIELD_PREP(MX3_PWMCR_POUTC,
-> +				MX3_PWMCR_POUTC_INVERTED);
-> +
-> +	if (state->enabled)
-> +		cr |= MX3_PWMCR_EN;
-> +
-> +	writel(cr, imx->mmio_base + MX3_PWMCR);
-> +
-> +	if (!state->enabled && cstate.enabled)
-> +		pwm_imx27_clk_disable_unprepare(chip);
-> +
->   	return 0;
->   }
->   
+> -			pwm->state = *state;
+> +		pwm->state = *state;
+>   	} else {
+>   		/*
+>   		 * FIXME: restore the initial state in case of error.
 > 
 
