@@ -2,60 +2,58 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD670DEA30
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Oct 2019 12:57:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CE63DEA3B
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Oct 2019 12:58:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727649AbfJUK5w (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 21 Oct 2019 06:57:52 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33500 "EHLO
+        id S1728334AbfJUK6n (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 21 Oct 2019 06:58:43 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42002 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727058AbfJUK5w (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Oct 2019 06:57:52 -0400
-Received: by mail-wr1-f65.google.com with SMTP id s1so4655732wro.0
-        for <linux-pwm@vger.kernel.org>; Mon, 21 Oct 2019 03:57:48 -0700 (PDT)
+        with ESMTP id S1727032AbfJUK6e (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Oct 2019 06:58:34 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r1so3609679wrs.9
+        for <linux-pwm@vger.kernel.org>; Mon, 21 Oct 2019 03:58:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=sfBsCyYhcxQv6g80SbodsZVoivSPnkYbuxxCNV6WrOg=;
-        b=G6FjY87EMDcHJYaT+cftTzu8xRf6/ceFp+MxjvuNIrzkXHPf2xWlQph5TSO1d5K2es
-         1Jr4kgaPeCKwBowXPcmpzrUxN2t2Y37OjRQwj31ORnHAHi5iAO4Xr0uG1YwqhWEeyeNB
-         xeGmnFb4sPrh7aTWzsfa5M5bsHlh28xIlGuahaTRJf6nQxNYlSqukBo5Wnr+BGF0Q/ST
-         eb9SdB33Z1n9wSTdA7W6S51ZD3NUbJVsLYV/VPmhaDy4QnqYKqwQR19oqRlPyL2AgnIB
-         NBI/sag1rCCGQfI2ZyTFwf5AQoYHSpOWUqFpPUh+hoPNbN7BdeVa+DedFI7jA3npnIwD
-         FEKw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VGCIBmW/Cb8USuy1i53TIbLdFLqD0xjnRbjcRmVWcp8=;
+        b=bWy6amsZ4Lr7kyk5yk1vWb6AIn081dpVGpAK0n8WiVZPwisGDPAEZZ878bTX6VP/pi
+         AlCM8QqDt7rE5Ae28DHG81R5hSQcmQgwr/HmhKL1Zul9LeZtXCv/bYqJTggI8+SKMbwf
+         pRN3Fzq6o71L2TWvabGnUNLEvJxhpsbE/zRosbcsBmyhtaAWgNsNXXyCgb+touffqclw
+         +akClaB2fVI1bbY/Hjte4qXmInLiJtMbigCyJkCed4kqGZitBT2MBVHMQRIakWeUqdqg
+         Almnuzry4ecHpB28844CfJDZMA2i15xHkpOs78sYvyKZ5s8did3VWLtWekeYF6qKfcRi
+         vcdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=sfBsCyYhcxQv6g80SbodsZVoivSPnkYbuxxCNV6WrOg=;
-        b=HwUWwKVIrLo1wfpDEsafpvdglxBzAfIpncUOfOvkUTOqyxpAZuKthVJeuOgbWZLfRm
-         WBmFgJK7+JJj+nYOrw+B+DwpVrljgaGrMsDEjgBOtWbxZPvK3pu9y3uz0qhVZi2BKUdd
-         mZeb1lHcwT4scJ6HR5yEZGPMdhfFJRU4h0ipKWo4ln3KEX35cmv7HVyvbOFqEdH3XQNz
-         Tal2rGnJccWgxylKjpXFWolbsKeS58hPM0oOWsfrLcyCuxw79IcWp0lCKPwU4qBlLsih
-         hnHeiEr+5ZBbJnEJxd/opQUbiFaUN/RWC2U0fGeOXmcJdJXxf1qQEEpLnB2C4534nLyD
-         iqiA==
-X-Gm-Message-State: APjAAAWOhZtWqguIAtY6KpdholuKbTSpMhhb2OWokCjRJQOmwvs8WVtL
-        GxdI9Cy6tQ06J0Msr1e3B7A=
-X-Google-Smtp-Source: APXvYqyecFRNIBJhTWhE0KTzKNVAcDWA3trlRhbM0CWPP0AYBTgTYfZgX/JBqApPb+EmIZTzAwukUQ==
-X-Received: by 2002:a05:6000:12cd:: with SMTP id l13mr19247292wrx.181.1571655467978;
-        Mon, 21 Oct 2019 03:57:47 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VGCIBmW/Cb8USuy1i53TIbLdFLqD0xjnRbjcRmVWcp8=;
+        b=P8etwrxu7FqNWyaeJ6BgIa/p4gaUsYZVCM4WkXUc6jUmaCf2qF4U/1pl9jKVH0dbIu
+         nt05Lm4gi4QeTkTSuyBSh3kbfZ0I63/CuReo7/2CJd+y5ZHHceLMjUggR636vxbYIItO
+         QqmkVWcucxC37YCe2e/0z3S7Ljsl3F6xVpazAh+29RJjVo5wOb+po9VjgIVf5x6PN87v
+         Zxt0XNv4jKYxgORJB1TDaWECvDEcaCoiN1o65dGH011CbiDcJlAFMlCBCLxLkFiU4xgy
+         bdulVAkC/+OVFW0nQFM5bXjFtoV0xwiUipLVsxOI7WAEKHAr3xVW4fZF2YnSEXGEUrVh
+         Uyfg==
+X-Gm-Message-State: APjAAAWVeAwtbwFPvTxA//qxy0a7gzWrGhTQG6P9BopW/iM6FjMwLaBi
+        e21J8e49b5J0H3/83eLA6D2A9v4d
+X-Google-Smtp-Source: APXvYqzU2/i9teOkKcrXQ4rHgv11qn+3CQG0sgdwOEPkNM7aJZDLjZqWrFwsuBT5qY3xTRRQJLa04g==
+X-Received: by 2002:a5d:5690:: with SMTP id f16mr8484858wrv.380.1571655512561;
+        Mon, 21 Oct 2019 03:58:32 -0700 (PDT)
 Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id p12sm938044wrt.7.2019.10.21.03.57.46
+        by smtp.gmail.com with ESMTPSA id i5sm12945933wmd.21.2019.10.21.03.58.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 03:57:47 -0700 (PDT)
+        Mon, 21 Oct 2019 03:58:31 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         linux-pwm@vger.kernel.org
-Subject: [PATCH 4/4] pwm: imx27: Unconditionally write state to hardware
-Date:   Mon, 21 Oct 2019 12:57:39 +0200
-Message-Id: <20191021105739.1357629-4-thierry.reding@gmail.com>
+Subject: [PATCH] Revert "pwm: Let pwm_get_state() return the last implemented state"
+Date:   Mon, 21 Oct 2019 12:58:30 +0200
+Message-Id: <20191021105830.1357795-1-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191021105739.1357629-1-thierry.reding@gmail.com>
-References: <20191021105739.1357629-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
@@ -63,153 +61,44 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The i.MX driver currently uses a shortcut and doesn't write all of the
-state through to the hardware when the PWM is disabled. This causes an
-inconsistent state to be read back by consumers with the result of them
-malfunctioning.
+It turns out that commit 01ccf903edd6 ("pwm: Let pwm_get_state() return
+the last implemented state") causes backlight failures on a number of
+boards. The reason is that some of the drivers do not write the full
+state through to the hardware registers, which means that ->get_state()
+subsequently does not return the correct state. Consumers which rely on
+pwm_get_state() returning the current state will therefore get confused
+and subsequently try to program a bad state.
 
-Fix this by always writing the full state through to the hardware
-registers so that the correct state can always be read back.
+Before this change can be made, existing drivers need to be more
+carefully audited and fixed to behave as the framework expects. Until
+then, keep the original behaviour of returning the software state that
+was applied rather than reading the state back from hardware.
 
 Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 ---
- drivers/pwm/pwm-imx27.c | 120 ++++++++++++++++++++--------------------
- 1 file changed, 59 insertions(+), 61 deletions(-)
+ drivers/pwm/core.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-index 4113d5cd4c62..59d8b1289808 100644
---- a/drivers/pwm/pwm-imx27.c
-+++ b/drivers/pwm/pwm-imx27.c
-@@ -230,70 +230,68 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 6ad51aa60c03..f877e77d9184 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -472,14 +472,7 @@ int pwm_apply_state(struct pwm_device *pwm, const struct pwm_state *state)
+ 		if (err)
+ 			return err;
  
- 	pwm_get_state(pwm, &cstate);
- 
--	if (state->enabled) {
--		c = clk_get_rate(imx->clk_per);
--		c *= state->period;
--
--		do_div(c, 1000000000);
--		period_cycles = c;
--
--		prescale = period_cycles / 0x10000 + 1;
--
--		period_cycles /= prescale;
--		c = (unsigned long long)period_cycles * state->duty_cycle;
--		do_div(c, state->period);
--		duty_cycles = c;
--
 -		/*
--		 * according to imx pwm RM, the real period value should be
--		 * PERIOD value in PWMPR plus 2.
+-		 * .apply might have to round some values in *state, if possible
+-		 * read the actually implemented value back.
 -		 */
--		if (period_cycles > 2)
--			period_cycles -= 2;
+-		if (chip->ops->get_state)
+-			chip->ops->get_state(chip, pwm, &pwm->state);
 -		else
--			period_cycles = 0;
--
--		/*
--		 * Wait for a free FIFO slot if the PWM is already enabled, and
--		 * flush the FIFO if the PWM was disabled and is about to be
--		 * enabled.
--		 */
--		if (cstate.enabled) {
--			pwm_imx27_wait_fifo_slot(chip, pwm);
--		} else {
--			ret = pwm_imx27_clk_prepare_enable(chip);
--			if (ret)
--				return ret;
--
--			pwm_imx27_sw_reset(chip);
--		}
--
--		writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
--		writel(period_cycles, imx->mmio_base + MX3_PWMPR);
--
--		/*
--		 * Store the duty cycle for future reference in cases where
--		 * the MX3_PWMSAR register can't be read (i.e. when the PWM
--		 * is disabled).
--		 */
--		imx->duty_cycle = duty_cycles;
--
--		cr = MX3_PWMCR_PRESCALER_SET(prescale) |
--		     MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
--		     FIELD_PREP(MX3_PWMCR_CLKSRC, MX3_PWMCR_CLKSRC_IPG_HIGH) |
--		     MX3_PWMCR_DBGEN | MX3_PWMCR_EN;
--
--		if (state->polarity == PWM_POLARITY_INVERSED)
--			cr |= FIELD_PREP(MX3_PWMCR_POUTC,
--					MX3_PWMCR_POUTC_INVERTED);
--
--		writel(cr, imx->mmio_base + MX3_PWMCR);
--	} else if (cstate.enabled) {
--		writel(0, imx->mmio_base + MX3_PWMCR);
-+	c = clk_get_rate(imx->clk_per);
-+	c *= state->period;
- 
--		pwm_imx27_clk_disable_unprepare(chip);
-+	do_div(c, 1000000000);
-+	period_cycles = c;
-+
-+	prescale = period_cycles / 0x10000 + 1;
-+
-+	period_cycles /= prescale;
-+	c = (unsigned long long)period_cycles * state->duty_cycle;
-+	do_div(c, state->period);
-+	duty_cycles = c;
-+
-+	/*
-+	 * according to imx pwm RM, the real period value should be PERIOD
-+	 * value in PWMPR plus 2.
-+	 */
-+	if (period_cycles > 2)
-+		period_cycles -= 2;
-+	else
-+		period_cycles = 0;
-+
-+	/*
-+	 * Wait for a free FIFO slot if the PWM is already enabled, and flush
-+	 * the FIFO if the PWM was disabled and is about to be enabled.
-+	 */
-+	if (cstate.enabled) {
-+		pwm_imx27_wait_fifo_slot(chip, pwm);
-+	} else {
-+		ret = pwm_imx27_clk_prepare_enable(chip);
-+		if (ret)
-+			return ret;
-+
-+		pwm_imx27_sw_reset(chip);
- 	}
- 
-+	writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
-+	writel(period_cycles, imx->mmio_base + MX3_PWMPR);
-+
-+	/*
-+	 * Store the duty cycle for future reference in cases where the
-+	 * MX3_PWMSAR register can't be read (i.e. when the PWM is disabled).
-+	 */
-+	imx->duty_cycle = duty_cycles;
-+
-+	cr = MX3_PWMCR_PRESCALER_SET(prescale) |
-+	     MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
-+	     FIELD_PREP(MX3_PWMCR_CLKSRC, MX3_PWMCR_CLKSRC_IPG_HIGH) |
-+	     MX3_PWMCR_DBGEN;
-+
-+	if (state->polarity == PWM_POLARITY_INVERSED)
-+		cr |= FIELD_PREP(MX3_PWMCR_POUTC,
-+				MX3_PWMCR_POUTC_INVERTED);
-+
-+	if (state->enabled)
-+		cr |= MX3_PWMCR_EN;
-+
-+	writel(cr, imx->mmio_base + MX3_PWMCR);
-+
-+	if (!state->enabled && cstate.enabled)
-+		pwm_imx27_clk_disable_unprepare(chip);
-+
- 	return 0;
- }
- 
+-			pwm->state = *state;
++		pwm->state = *state;
+ 	} else {
+ 		/*
+ 		 * FIXME: restore the initial state in case of error.
 -- 
 2.23.0
 
