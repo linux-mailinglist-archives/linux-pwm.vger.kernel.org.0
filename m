@@ -2,28 +2,28 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 14BC6E0323
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Oct 2019 13:39:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A795E0321
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Oct 2019 13:39:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387941AbfJVLjE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 22 Oct 2019 07:39:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33550 "EHLO mail.kernel.org"
+        id S2388746AbfJVLjA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Oct 2019 07:39:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387871AbfJVLjE (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 22 Oct 2019 07:39:04 -0400
+        id S2387871AbfJVLjA (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 22 Oct 2019 07:39:00 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96A4B21906;
-        Tue, 22 Oct 2019 11:38:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E32821872;
+        Tue, 22 Oct 2019 11:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571744342;
-        bh=w/GkOhmpY1fplQqM2FEPna9QIWy0ihEsSIaCqe0TZt0=;
+        s=default; t=1571744338;
+        bh=DVRQXGi/+LcNMdfe1uvXxUIxjGqQJhmmqWuLFKF4gZE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=t2drMTbl5c/xfBbxu4SlsNm9VbiSGQq39MrFbbC3H70pat6WFeV2N5xlvUoH06i5p
-         RnRtxKmfHvxSkjnNelhmdBl3jnGG1H4B6nLHKXIoI9xDwV1aDUhy9zxE9vxu/zKfvv
-         MmRT+zRzfKIBhtLpzOTq3bRjvIIUuiO42Oft/h7w=
-Date:   Tue, 22 Oct 2019 12:23:46 +0100
+        b=gSl5IXb8ScsTc9HHPMrMPwKV5ZgCOPKQ7veYp3gNVGbQpi7ch8O7XJROO87hnwSRu
+         CLLswAhZHtgtyaE2Fp+ZhKEiasC/AHIWtPJHvhBSnRxyqRhsMlV7V4CT6ldr3asbvx
+         g7Zpjky6fD6MmgCYllddeYe85b6yLrf363Lea+IA=
+Date:   Tue, 22 Oct 2019 12:23:49 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Jeff LaBundy <jeff@labundy.com>
 Cc:     lee.jones@linaro.org, dmitry.torokhov@gmail.com, jdelvare@suse.com,
@@ -33,12 +33,12 @@ Cc:     lee.jones@linaro.org, dmitry.torokhov@gmail.com, jdelvare@suse.com,
         linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
         pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
         mark.rutland@arm.com
-Subject: Re: [PATCH 7/8] iio: proximity: Add support for Azoteq IQS622
- proximity sensor
-Message-ID: <20191022122341.32f0883f@archlinux>
-In-Reply-To: <1571631083-4962-8-git-send-email-jeff@labundy.com>
+Subject: Re: [PATCH 6/8] iio: light: Add support for Azoteq IQS621 ambient
+ light sensor
+Message-ID: <20191022121949.0b6b27d4@archlinux>
+In-Reply-To: <1571631083-4962-7-git-send-email-jeff@labundy.com>
 References: <1571631083-4962-1-git-send-email-jeff@labundy.com>
-        <1571631083-4962-8-git-send-email-jeff@labundy.com>
+        <1571631083-4962-7-git-send-email-jeff@labundy.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -48,71 +48,71 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun, 20 Oct 2019 23:11:22 -0500
+On Sun, 20 Oct 2019 23:11:21 -0500
 Jeff LaBundy <jeff@labundy.com> wrote:
 
-> This patch adds support for the Azoteq IQS622 proximity sensor,
-> capable of reporting a unitless measurement of a target's prox-
-> imity to the sensor.
+> This patch adds support for the Azoteq IQS621 ambient light sensor,
+> capable of reporting intensity directly in units of lux.
+
+If they are in lux, should be using IIO_CHAN_INFO_PROCESSED to indicate
+that.  I was wondering why we had no scale then noticed this comment.
+
+Other than that, this looks good to me.  So with that tidied up in V2.
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+One trivial comment to perhaps drop an error print as overly verbose inline.
+
 > 
 > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-A few trivial bits inline + that question on the dt binding and
-whether it is something we ought to be deciding at device build
-time or whether there are devices where it should be configurable.
-
-Thanks,
-
-Jonathan
-
 > ---
->  drivers/iio/proximity/Kconfig       |  10 ++
->  drivers/iio/proximity/Makefile      |   1 +
->  drivers/iio/proximity/iqs622-prox.c | 334 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 345 insertions(+)
->  create mode 100644 drivers/iio/proximity/iqs622-prox.c
+>  drivers/iio/light/Kconfig      |  10 ++
+>  drivers/iio/light/Makefile     |   1 +
+>  drivers/iio/light/iqs621-als.c | 361 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 372 insertions(+)
+>  create mode 100644 drivers/iio/light/iqs621-als.c
 > 
-> diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-> index d536014..2366fd7 100644
-> --- a/drivers/iio/proximity/Kconfig
-> +++ b/drivers/iio/proximity/Kconfig
-> @@ -21,6 +21,16 @@ endmenu
+> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
+> index 4a1a883..aad26dc 100644
+> --- a/drivers/iio/light/Kconfig
+> +++ b/drivers/iio/light/Kconfig
+> @@ -162,6 +162,16 @@ config GP2AP020A00F
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called gp2ap020a00f.
 >  
->  menu "Proximity and distance sensors"
->  
-> +config IQS622_PROX
-> +	tristate "Azoteq IQS622 proximity sensor"
+> +config IQS621_ALS
+> +	tristate "Azoteq IQS621 ambient light sensor"
 > +	depends on MFD_IQS62X
 > +	help
-> +	  Say Y here if you want to build support for the Azoteq IQS622
-> +	  proximity sensor.
+> +	  Say Y here if you want to build support for the Azoteq IQS621
+> +	  ambient light sensor.
 > +
 > +	  To compile this driver as a module, choose M here: the module
-> +	  will be called iqs622-prox.
+> +	  will be called iqs621-als.
 > +
->  config ISL29501
->  	tristate "Intersil ISL29501 Time Of Flight sensor"
+>  config SENSORS_ISL29018
+>  	tristate "Intersil 29018 light and proximity sensor"
 >  	depends on I2C
-> diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-> index 0bb5f9d..802ba9d 100644
-> --- a/drivers/iio/proximity/Makefile
-> +++ b/drivers/iio/proximity/Makefile
-> @@ -5,6 +5,7 @@
->  
->  # When adding new entries keep the list in alphabetical order
->  obj-$(CONFIG_AS3935)		+= as3935.o
-> +obj-$(CONFIG_IQS622_PROX)	+= iqs622-prox.o
->  obj-$(CONFIG_ISL29501)		+= isl29501.o
->  obj-$(CONFIG_LIDAR_LITE_V2)	+= pulsedlight-lidar-lite-v2.o
->  obj-$(CONFIG_MB1232)		+= mb1232.o
-> diff --git a/drivers/iio/proximity/iqs622-prox.c b/drivers/iio/proximity/iqs622-prox.c
+> diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
+> index 00d1f9b..aa34358 100644
+> --- a/drivers/iio/light/Makefile
+> +++ b/drivers/iio/light/Makefile
+> @@ -20,6 +20,7 @@ obj-$(CONFIG_IIO_CROS_EC_LIGHT_PROX) += cros_ec_light_prox.o
+>  obj-$(CONFIG_GP2AP020A00F)	+= gp2ap020a00f.o
+>  obj-$(CONFIG_HID_SENSOR_ALS)	+= hid-sensor-als.o
+>  obj-$(CONFIG_HID_SENSOR_PROX)	+= hid-sensor-prox.o
+> +obj-$(CONFIG_IQS621_ALS)	+= iqs621-als.o
+>  obj-$(CONFIG_SENSORS_ISL29018)	+= isl29018.o
+>  obj-$(CONFIG_SENSORS_ISL29028)	+= isl29028.o
+>  obj-$(CONFIG_ISL29125)		+= isl29125.o
+> diff --git a/drivers/iio/light/iqs621-als.c b/drivers/iio/light/iqs621-als.c
 > new file mode 100644
-> index 0000000..a805fb21
+> index 0000000..92a6173
 > --- /dev/null
-> +++ b/drivers/iio/proximity/iqs622-prox.c
-> @@ -0,0 +1,334 @@
+> +++ b/drivers/iio/light/iqs621-als.c
+> @@ -0,0 +1,361 @@
 > +// SPDX-License-Identifier: GPL-2.0+
 > +/*
-> + * Azoteq IQS622 Proximity Sensor
+> + * Azoteq IQS621 Ambient Light Sensor
 > + *
 > + * Copyright (C) 2019
 > + * Author: Jeff LaBundy <jeff@labundy.com>
@@ -127,79 +127,79 @@ Jonathan
 > +#include <linux/mutex.h>
 > +#include <linux/notifier.h>
 > +#include <linux/platform_device.h>
-> +#include <linux/property.h>
 > +#include <linux/regmap.h>
 > +
-> +#define IQS622_IR_FLAGS				0x16
-> +#define IQS622_IR_FLAGS_TOUCH			BIT(1)
-> +#define IQS622_IR_FLAGS_PROX			BIT(0)
+> +#define IQS621_ALS_FLAGS			0x16
+> +#define IQS621_ALS_FLAGS_LIGHT			BIT(7)
 > +
-> +#define IQS622_IR_UI_OUT			0x17
+> +#define IQS621_ALS_UI_OUT			0x17
 > +
-> +#define IQS622_IR_THRESH_PROX			0x91
-> +#define IQS622_IR_THRESH_PROX_MAX		255
-> +#define IQS622_IR_THRESH_PROX_SHIFT		0
+> +#define IQS621_ALS_THRESH_DARK			0x80
+> +#define IQS621_ALS_THRESH_DARK_MAX		1020
+> +#define IQS621_ALS_THRESH_DARK_SHIFT		2
 > +
-> +#define IQS622_IR_THRESH_TOUCH			0x92
-> +#define IQS622_IR_THRESH_TOUCH_MAX		1020
-> +#define IQS622_IR_THRESH_TOUCH_SHIFT		2
+> +#define IQS621_ALS_THRESH_LIGHT			0x81
+> +#define IQS621_ALS_THRESH_LIGHT_MAX		4080
+> +#define IQS621_ALS_THRESH_LIGHT_SHIFT		4
 > +
-> +struct iqs622_prox_private {
+> +struct iqs621_als_private {
 > +	struct iqs62x_core *iqs62x;
 > +	struct notifier_block notifier;
 > +	struct mutex lock;
-> +	bool thresh_prox;
 > +	bool event_en;
-> +	u8 thresh;
+> +	u8 thresh_light;
+> +	u8 thresh_dark;
 > +	u8 flags;
 > +};
 > +
-> +static int iqs622_prox_init(struct iqs622_prox_private *iqs622_prox)
+> +static int iqs621_als_init(struct iqs621_als_private *iqs621_als)
 > +{
-> +	struct iqs62x_core *iqs62x = iqs622_prox->iqs62x;
+> +	struct iqs62x_core *iqs62x = iqs621_als->iqs62x;
 > +	unsigned int val;
 > +	int error;
 > +
-> +	mutex_lock(&iqs622_prox->lock);
+> +	mutex_lock(&iqs621_als->lock);
 > +
-> +	error = regmap_write(iqs62x->map,
-> +			     iqs622_prox->thresh_prox ? IQS622_IR_THRESH_PROX :
-> +							IQS622_IR_THRESH_TOUCH,
-> +			     iqs622_prox->thresh);
+> +	error = regmap_write(iqs62x->map, IQS621_ALS_THRESH_LIGHT,
+> +			     iqs621_als->thresh_light);
 > +	if (error)
 > +		goto err_mutex;
 > +
-> +	error = regmap_read(iqs62x->map, IQS622_IR_FLAGS, &val);
+> +	error = regmap_write(iqs62x->map, IQS621_ALS_THRESH_DARK,
+> +			     iqs621_als->thresh_dark);
 > +	if (error)
 > +		goto err_mutex;
-> +	iqs622_prox->flags = val;
+> +
+> +	error = regmap_read(iqs62x->map, IQS621_ALS_FLAGS, &val);
+> +	if (error)
+> +		goto err_mutex;
+> +	iqs621_als->flags = val;
 > +
 > +	error = regmap_update_bits(iqs62x->map, IQS620_GLBL_EVENT_MASK,
-> +				   iqs62x->dev_desc->ir_mask,
-> +				   iqs622_prox->event_en ? 0 : 0xFF);
+> +				   iqs62x->dev_desc->als_mask,
+> +				   iqs621_als->event_en ? 0 : 0xFF);
 > +
 > +err_mutex:
-> +	mutex_unlock(&iqs622_prox->lock);
+> +	mutex_unlock(&iqs621_als->lock);
 > +
 > +	return error;
 > +}
 > +
-> +static int iqs622_prox_notifier(struct notifier_block *notifier,
-> +				unsigned long event_flags, void *context)
+> +static int iqs621_als_notifier(struct notifier_block *notifier,
+> +			       unsigned long event_flags, void *context)
 > +{
 > +	struct iqs62x_event_data *event_data = context;
-> +	struct iqs622_prox_private *iqs622_prox;
+> +	struct iqs621_als_private *iqs621_als;
 > +	struct iio_dev *indio_dev;
 > +	enum iio_event_direction dir;
 > +	int error;
-> +	u8 flags_mask;
 > +
-> +	iqs622_prox = container_of(notifier, struct iqs622_prox_private,
-> +				   notifier);
-> +	indio_dev = iio_priv_to_dev(iqs622_prox);
+> +	iqs621_als = container_of(notifier, struct iqs621_als_private,
+> +				  notifier);
+> +	indio_dev = iio_priv_to_dev(iqs621_als);
 > +
 > +	if (event_flags & BIT(IQS62X_EVENT_SYS_RESET)) {
-> +		error = iqs622_prox_init(iqs622_prox);
+> +		error = iqs621_als_init(iqs621_als);
 > +		if (error) {
 > +			dev_err(indio_dev->dev.parent,
 > +				"Failed to re-initialize device: %d\n", error);
@@ -209,53 +209,51 @@ Jonathan
 > +		return NOTIFY_OK;
 > +	}
 > +
-> +	flags_mask = iqs622_prox->thresh_prox ? IQS622_IR_FLAGS_PROX :
-> +						IQS622_IR_FLAGS_TOUCH;
-> +
-> +	if (!((event_data->ir_flags ^ iqs622_prox->flags) & flags_mask))
+> +	if (!((event_data->als_flags ^ iqs621_als->flags) &
+> +	    IQS621_ALS_FLAGS_LIGHT))
 > +		return NOTIFY_DONE;
 > +
-> +	iqs622_prox->flags = event_data->ir_flags;
+> +	iqs621_als->flags = event_data->als_flags;
 > +
-> +	if (!iqs622_prox->event_en)
+> +	if (!iqs621_als->event_en)
 > +		return NOTIFY_OK;
 > +
-> +	dir = iqs622_prox->flags & flags_mask ? IIO_EV_DIR_RISING :
-> +						IIO_EV_DIR_FALLING;
+> +	dir = iqs621_als->flags & IQS621_ALS_FLAGS_LIGHT ? IIO_EV_DIR_RISING :
+> +							   IIO_EV_DIR_FALLING;
 > +
 > +	iio_push_event(indio_dev,
-> +		       IIO_UNMOD_EVENT_CODE(IIO_PROXIMITY, 0,
+> +		       IIO_UNMOD_EVENT_CODE(IIO_LIGHT, 0,
 > +					    IIO_EV_TYPE_THRESH, dir),
 > +		       iio_get_time_ns(indio_dev));
 > +
 > +	return NOTIFY_OK;
 > +}
 > +
-> +static void iqs622_prox_notifier_unregister(void *context)
+> +static void iqs621_als_notifier_unregister(void *context)
 > +{
-> +	struct iqs622_prox_private *iqs622_prox = context;
-> +	struct iio_dev *indio_dev = iio_priv_to_dev(iqs622_prox);
+> +	struct iqs621_als_private *iqs621_als = context;
+> +	struct iio_dev *indio_dev = iio_priv_to_dev(iqs621_als);
 > +	int error;
 > +
-> +	error = blocking_notifier_chain_unregister(&iqs622_prox->iqs62x->nh,
-> +						   &iqs622_prox->notifier);
+> +	error = blocking_notifier_chain_unregister(&iqs621_als->iqs62x->nh,
+> +						   &iqs621_als->notifier);
 > +	if (error)
 > +		dev_err(indio_dev->dev.parent,
 > +			"Failed to unregister notifier: %d\n", error);
 > +}
 > +
-> +static int iqs622_prox_read_raw(struct iio_dev *indio_dev,
-> +				struct iio_chan_spec const *chan,
-> +				int *val, int *val2, long mask)
+> +static int iqs621_als_read_raw(struct iio_dev *indio_dev,
+> +			       struct iio_chan_spec const *chan,
+> +			       int *val, int *val2, long mask)
 > +{
-> +	struct iqs622_prox_private *iqs622_prox = iio_priv(indio_dev);
-> +	struct iqs62x_core *iqs62x = iqs622_prox->iqs62x;
+> +	struct iqs621_als_private *iqs621_als = iio_priv(indio_dev);
+> +	struct iqs62x_core *iqs62x = iqs621_als->iqs62x;
 > +	int error;
 > +	__le16 val_buf;
 > +
 > +	switch (mask) {
 > +	case IIO_CHAN_INFO_RAW:
-> +		error = regmap_raw_read(iqs62x->map, IQS622_IR_UI_OUT,
+> +		error = regmap_raw_read(iqs62x->map, IQS621_ALS_UI_OUT,
 > +					&val_buf, sizeof(val_buf));
 > +		if (error)
 > +			return error;
@@ -268,172 +266,196 @@ Jonathan
 > +	}
 > +}
 > +
-> +static int iqs622_prox_read_event_config(struct iio_dev *indio_dev,
-> +					 const struct iio_chan_spec *chan,
-> +					 enum iio_event_type type,
-> +					 enum iio_event_direction dir)
+> +static int iqs621_als_read_event_config(struct iio_dev *indio_dev,
+> +					const struct iio_chan_spec *chan,
+> +					enum iio_event_type type,
+> +					enum iio_event_direction dir)
 > +{
-> +	struct iqs622_prox_private *iqs622_prox = iio_priv(indio_dev);
+> +	struct iqs621_als_private *iqs621_als = iio_priv(indio_dev);
 > +
-> +	return iqs622_prox->event_en;
+> +	return iqs621_als->event_en;
 > +}
 > +
-> +static int iqs622_prox_write_event_config(struct iio_dev *indio_dev,
-> +					  const struct iio_chan_spec *chan,
-> +					  enum iio_event_type type,
-> +					  enum iio_event_direction dir,
-> +					  int state)
+> +static int iqs621_als_write_event_config(struct iio_dev *indio_dev,
+> +					 const struct iio_chan_spec *chan,
+> +					 enum iio_event_type type,
+> +					 enum iio_event_direction dir,
+> +					 int state)
 > +{
-> +	struct iqs622_prox_private *iqs622_prox = iio_priv(indio_dev);
-> +	struct iqs62x_core *iqs62x = iqs622_prox->iqs62x;
+> +	struct iqs621_als_private *iqs621_als = iio_priv(indio_dev);
+> +	struct iqs62x_core *iqs62x = iqs621_als->iqs62x;
 > +	int error;
 > +
-> +	mutex_lock(&iqs622_prox->lock);
+> +	mutex_lock(&iqs621_als->lock);
 > +
 > +	error = regmap_update_bits(iqs62x->map, IQS620_GLBL_EVENT_MASK,
-> +				   iqs62x->dev_desc->ir_mask, state ? 0 : 0xFF);
+> +				   iqs62x->dev_desc->als_mask,
+> +				   state ? 0 : 0xFF);
 > +	if (!error)
-> +		iqs622_prox->event_en = state;
+> +		iqs621_als->event_en = state;
 > +
-> +	mutex_unlock(&iqs622_prox->lock);
+> +	mutex_unlock(&iqs621_als->lock);
 > +
 > +	return error;
 > +}
 > +
-> +static int iqs622_prox_read_event_value(struct iio_dev *indio_dev,
+> +static int iqs621_als_read_event_value(struct iio_dev *indio_dev,
+> +				       const struct iio_chan_spec *chan,
+> +				       enum iio_event_type type,
+> +				       enum iio_event_direction dir,
+> +				       enum iio_event_info info,
+> +				       int *val, int *val2)
+> +{
+> +	struct iqs621_als_private *iqs621_als = iio_priv(indio_dev);
+> +
+> +	switch (dir) {
+> +	case IIO_EV_DIR_RISING:
+> +		*val = iqs621_als->thresh_light;
+> +		*val <<= IQS621_ALS_THRESH_LIGHT_SHIFT;
+> +		return IIO_VAL_INT;
+> +
+> +	case IIO_EV_DIR_FALLING:
+> +		*val = iqs621_als->thresh_dark;
+> +		*val <<= IQS621_ALS_THRESH_DARK_SHIFT;
+> +		return IIO_VAL_INT;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int iqs621_als_write_event_value(struct iio_dev *indio_dev,
 > +					const struct iio_chan_spec *chan,
 > +					enum iio_event_type type,
 > +					enum iio_event_direction dir,
 > +					enum iio_event_info info,
-> +					int *val, int *val2)
+> +					int val, int val2)
 > +{
-> +	struct iqs622_prox_private *iqs622_prox = iio_priv(indio_dev);
-> +
-> +	*val = iqs622_prox->thresh;
-> +	*val <<= (iqs622_prox->thresh_prox ? IQS622_IR_THRESH_PROX_SHIFT :
-> +					     IQS622_IR_THRESH_TOUCH_SHIFT);
-> +
-> +	return IIO_VAL_INT;
-> +}
-> +
-> +static int iqs622_prox_write_event_value(struct iio_dev *indio_dev,
-> +					 const struct iio_chan_spec *chan,
-> +					 enum iio_event_type type,
-> +					 enum iio_event_direction dir,
-> +					 enum iio_event_info info,
-> +					 int val, int val2)
-> +{
-> +	struct iqs622_prox_private *iqs622_prox = iio_priv(indio_dev);
-> +	struct iqs62x_core *iqs62x = iqs622_prox->iqs62x;
+> +	struct iqs621_als_private *iqs621_als = iio_priv(indio_dev);
+> +	struct iqs62x_core *iqs62x = iqs621_als->iqs62x;
 > +	int error = -EINVAL;
 > +
-> +	mutex_lock(&iqs622_prox->lock);
-
-The ternary operators in here are bit messy, perhaps better to just
-have an if else block and some local variables?
-
+> +	mutex_lock(&iqs621_als->lock);
 > +
-> +	if (val > (iqs622_prox->thresh_prox ? IQS622_IR_THRESH_PROX_MAX :
-> +					      IQS622_IR_THRESH_TOUCH_MAX))
-> +		goto err_mutex;
-> +	val >>= (iqs622_prox->thresh_prox ? IQS622_IR_THRESH_PROX_SHIFT :
-> +					    IQS622_IR_THRESH_TOUCH_SHIFT);
+> +	switch (dir) {
+> +	case IIO_EV_DIR_RISING:
+> +		if (val > IQS621_ALS_THRESH_LIGHT_MAX)
+> +			break;
+> +		val >>= IQS621_ALS_THRESH_LIGHT_SHIFT;
 > +
-> +	error = regmap_write(iqs62x->map,
-> +			     iqs622_prox->thresh_prox ? IQS622_IR_THRESH_PROX :
-> +							IQS622_IR_THRESH_TOUCH,
-> +			     val);
-> +	if (!error)
-> +		iqs622_prox->thresh = val;
+> +		error = regmap_write(iqs62x->map, IQS621_ALS_THRESH_LIGHT, val);
+> +		if (!error)
+> +			iqs621_als->thresh_light = val;
+> +		break;
 > +
-> +err_mutex:
-> +	mutex_unlock(&iqs622_prox->lock);
+> +	case IIO_EV_DIR_FALLING:
+> +		if (val > IQS621_ALS_THRESH_DARK)
+> +			break;
+> +		val >>= IQS621_ALS_THRESH_DARK_SHIFT;
+> +
+> +		error = regmap_write(iqs62x->map, IQS621_ALS_THRESH_DARK, val);
+> +		if (!error)
+> +			iqs621_als->thresh_dark = val;
+> +		break;
+> +
+> +	default:
+> +		break;
+> +	}
+> +
+> +	mutex_unlock(&iqs621_als->lock);
 > +
 > +	return error;
 > +}
 > +
-> +static const struct iio_info iqs622_prox_info = {
-> +	.read_raw = &iqs622_prox_read_raw,
-> +	.read_event_config = iqs622_prox_read_event_config,
-> +	.write_event_config = iqs622_prox_write_event_config,
-> +	.read_event_value = iqs622_prox_read_event_value,
-> +	.write_event_value = iqs622_prox_write_event_value,
+> +static const struct iio_info iqs621_als_info = {
+> +	.read_raw = &iqs621_als_read_raw,
+> +	.read_event_config = iqs621_als_read_event_config,
+> +	.write_event_config = iqs621_als_write_event_config,
+> +	.read_event_value = iqs621_als_read_event_value,
+> +	.write_event_value = iqs621_als_write_event_value,
 > +};
 > +
-> +static const struct iio_event_spec iqs622_prox_events[] = {
+> +static const struct iio_event_spec iqs621_als_events[] = {
 > +	{
 > +		.type = IIO_EV_TYPE_THRESH,
 > +		.dir = IIO_EV_DIR_EITHER,
-> +		.mask_separate = BIT(IIO_EV_INFO_ENABLE) |
-> +				 BIT(IIO_EV_INFO_VALUE),
+> +		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
 > +	},
-> +};
-> +
-> +static const struct iio_chan_spec iqs622_prox_channels[] = {
 > +	{
-> +		.type = IIO_PROXIMITY,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +		.event_spec = iqs622_prox_events,
-> +		.num_event_specs = ARRAY_SIZE(iqs622_prox_events),
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_RISING,
+> +		.mask_separate = BIT(IIO_EV_INFO_VALUE),
+> +	},
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_FALLING,
+> +		.mask_separate = BIT(IIO_EV_INFO_VALUE),
 > +	},
 > +};
 > +
-> +static int iqs622_prox_probe(struct platform_device *pdev)
+> +static const struct iio_chan_spec iqs621_als_channels[] = {
+> +	{
+> +		.type = IIO_LIGHT,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.event_spec = iqs621_als_events,
+> +		.num_event_specs = ARRAY_SIZE(iqs621_als_events),
+> +	},
+> +};
+> +
+> +static int iqs621_als_probe(struct platform_device *pdev)
 > +{
 > +	struct iqs62x_core *iqs62x = dev_get_drvdata(pdev->dev.parent);
-> +	struct iqs622_prox_private *iqs622_prox;
+> +	struct iqs621_als_private *iqs621_als;
 > +	struct iio_dev *indio_dev;
 > +	unsigned int val;
 > +	int error;
 > +
-> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*iqs622_prox));
+> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*iqs621_als));
 > +	if (!indio_dev)
 > +		return -ENOMEM;
 > +
 > +	indio_dev->modes = INDIO_DIRECT_MODE;
 > +	indio_dev->dev.parent = &pdev->dev;
-> +	indio_dev->channels = iqs622_prox_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(iqs622_prox_channels);
+> +	indio_dev->channels = iqs621_als_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(iqs621_als_channels);
 > +	indio_dev->name = iqs62x->dev_desc->dev_name;
-> +	indio_dev->info = &iqs622_prox_info;
+> +	indio_dev->info = &iqs621_als_info;
 > +
-> +	iqs622_prox = iio_priv(indio_dev);
-> +	iqs622_prox->iqs62x = iqs62x;
+> +	iqs621_als = iio_priv(indio_dev);
+> +	iqs621_als->iqs62x = iqs62x;
 > +
-> +	iqs622_prox->thresh_prox = device_property_read_bool(&pdev->dev,
-> +							     "azoteq,use-prox");
-
-Outstanding question on this in the binding patch.
-
-> +
-> +	error = regmap_read(iqs62x->map,
-> +			    iqs622_prox->thresh_prox ? IQS622_IR_THRESH_PROX :
-> +						       IQS622_IR_THRESH_TOUCH,
-> +			    &val);
+> +	error = regmap_read(iqs62x->map, IQS621_ALS_THRESH_LIGHT, &val);
 > +	if (error)
 > +		return error;
-> +	iqs622_prox->thresh = val;
+> +	iqs621_als->thresh_light = val;
 > +
-> +	mutex_init(&iqs622_prox->lock);
+> +	error = regmap_read(iqs62x->map, IQS621_ALS_THRESH_DARK, &val);
+> +	if (error)
+> +		return error;
+> +	iqs621_als->thresh_dark = val;
 > +
-> +	error = iqs622_prox_init(iqs622_prox);
+> +	mutex_init(&iqs621_als->lock);
+> +
+> +	error = iqs621_als_init(iqs621_als);
 > +	if (error)
 > +		return error;
 > +
-> +	iqs622_prox->notifier.notifier_call = iqs622_prox_notifier;
-> +	error = blocking_notifier_chain_register(&iqs622_prox->iqs62x->nh,
-> +						 &iqs622_prox->notifier);
+> +	iqs621_als->notifier.notifier_call = iqs621_als_notifier;
+> +	error = blocking_notifier_chain_register(&iqs621_als->iqs62x->nh,
+> +						 &iqs621_als->notifier);
 > +	if (error) {
 > +		dev_err(&pdev->dev, "Failed to register notifier: %d\n", error);
 > +		return error;
 > +	}
 > +
 > +	error = devm_add_action_or_reset(&pdev->dev,
-> +					 iqs622_prox_notifier_unregister,
-> +					 iqs622_prox);
+> +					 iqs621_als_notifier_unregister,
+> +					 iqs621_als);
 > +	if (error) {
 
-As in previous, feels a little verbose.
+This one can only fail if a memory allocation fails (IIRC) so it feels
+a bit paranoid to worry about this little corner case when you are
+fairly (correctly in my view) sparse in error message for other cases..
 
 > +		dev_err(&pdev->dev, "Failed to add action: %d\n", error);
 > +		return error;
@@ -442,16 +464,16 @@ As in previous, feels a little verbose.
 > +	return devm_iio_device_register(&pdev->dev, indio_dev);
 > +}
 > +
-> +static struct platform_driver iqs622_prox_platform_driver = {
+> +static struct platform_driver iqs621_als_platform_driver = {
 > +	.driver = {
-> +		.name	= IQS622_DRV_NAME_PROX,
+> +		.name	= IQS621_DRV_NAME_ALS,
 > +	},
-> +	.probe		= iqs622_prox_probe,
+> +	.probe		= iqs621_als_probe,
 > +};
-> +module_platform_driver(iqs622_prox_platform_driver);
+> +module_platform_driver(iqs621_als_platform_driver);
 > +
 > +MODULE_AUTHOR("Jeff LaBundy <jeff@labundy.com>");
-> +MODULE_DESCRIPTION("Azoteq IQS622 Proximity Sensor");
+> +MODULE_DESCRIPTION("Azoteq IQS621 Ambient Light Sensor");
 > +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:" IQS622_DRV_NAME_PROX);
+> +MODULE_ALIAS("platform:" IQS621_DRV_NAME_ALS);
 
