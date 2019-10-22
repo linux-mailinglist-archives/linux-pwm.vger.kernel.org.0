@@ -2,134 +2,258 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DA7DDF76B
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Oct 2019 23:25:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B246DFB9F
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Oct 2019 04:26:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729388AbfJUVZp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 21 Oct 2019 17:25:45 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38203 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728943AbfJUVZp (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Oct 2019 17:25:45 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iMfBP-0003d5-TV; Mon, 21 Oct 2019 23:25:43 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iMfBP-0002Pe-8q; Mon, 21 Oct 2019 23:25:43 +0200
-Date:   Mon, 21 Oct 2019 23:25:43 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] Revert "pwm: Let pwm_get_state() return the last
- implemented state"
-Message-ID: <20191021212543.d24sh4pfofqpmuu4@pengutronix.de>
-References: <20191021105830.1357795-1-thierry.reding@gmail.com>
- <20191021111847.c5j4qycyqy5wmynh@pengutronix.de>
- <20191021141721.GA1476994@ulmo>
+        id S1730728AbfJVC0P (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 21 Oct 2019 22:26:15 -0400
+Received: from p3plsmtpa06-05.prod.phx3.secureserver.net ([173.201.192.106]:54757
+        "EHLO p3plsmtpa06-05.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730494AbfJVC0P (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Oct 2019 22:26:15 -0400
+Received: from labundy.com ([136.49.227.119])
+        by :SMTPAUTH: with ESMTPSA
+        id MjsBiH1esLAS6MjsDiXjWF; Mon, 21 Oct 2019 19:26:14 -0700
+Date:   Mon, 21 Oct 2019 21:26:11 -0500
+From:   Jeff LaBundy <jeff@labundy.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     lee.jones@linaro.org, dmitry.torokhov@gmail.com, jdelvare@suse.com,
+        thierry.reding@gmail.com, jic23@kernel.org,
+        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH 4/8] hwmon: Add support for Azoteq IQS620AT temperature
+ sensor
+Message-ID: <20191022022611.GA2091@labundy.com>
+References: <1571631083-4962-1-git-send-email-jeff@labundy.com>
+ <1571631083-4962-5-git-send-email-jeff@labundy.com>
+ <20191021153825.GA15359@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191021141721.GA1476994@ulmo>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20191021153825.GA15359@roeck-us.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-CMAE-Envelope: MS4wfGJXJ7DKDqeffUp2x5+zWn/LaqyoEP3xy95w1Y78+RlMEddsI4mewX72fPuQnAgxR4Z7lgs/aCmFg1BckHEMss2fZ9C1uc8v9dmTBXoDJzclpMYQYbBq
+ 1jAtutivnffzYKh2uukMvwhcThkY8w5tQnThDTApdEoYkf+lh7pX8tAW4jj7c7UZYv7moIo66HstekJFcR23tTJqgev/YFgCDWTyU5ZC5klfppSWtd/2742j
+ 0BXveaq3EGWep0RQ+ZUsohAm79Ux2e9rDT2pS5dYngPWCMNXxx+jCg8oabYSSsylay7ioyaa/WHsx4ikTG4mQSu3sqhfP/iDS5lWsHsJxqdGFm8BmYTAJCmR
+ EoL58591QT7m2AXMbZz8swPyM/jBZeCjrIvy2rWpbg00FqL1U1a6Nrj/A7/dMbf396gGaNepb99PPz94xifqjSRSKjz0Vo+CUZi8tB4UBJqPgkPYnrZTp13u
+ Zm3WM2MGSCc3y53eSupeP4aDGEphBO2z0UPKjLwTXR7WLFJcNy9NpKC+XLfpvoUZTxDmOHXrTwB7x208/23o+AvJQQ9XmBU6sbJKXfkNLiJ1F/MhEl/j+/ib
+ C0SZEEf5/7UkbNsUouwLrSt1OiL7aox0rs9qb7FeIfYPKZFL7Oebmy48KAbLgf7zaByVKurK69/v/Nk9RlyAHMe+DeHCN6ohlBNm5fsznilSSctiV777zgFB
+ raGopmm02rQ=
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 04:17:21PM +0200, Thierry Reding wrote:
-> On Mon, Oct 21, 2019 at 01:18:47PM +0200, Uwe Kleine-König wrote:
-> > On Mon, Oct 21, 2019 at 12:58:30PM +0200, Thierry Reding wrote:
-> > > It turns out that commit 01ccf903edd6 ("pwm: Let pwm_get_state() return
-> > > the last implemented state") causes backlight failures on a number of
-> > > boards. The reason is that some of the drivers do not write the full
-> > > state through to the hardware registers, which means that ->get_state()
-> > > subsequently does not return the correct state. Consumers which rely on
-> > > pwm_get_state() returning the current state will therefore get confused
-> > > and subsequently try to program a bad state.
-> > > 
-> > > Before this change can be made, existing drivers need to be more
-> > > carefully audited and fixed to behave as the framework expects. Until
-> > > then, keep the original behaviour of returning the software state that
-> > > was applied rather than reading the state back from hardware.
+Hi Guenter,
+
+Thank you for your prompt review.
+
+On Mon, Oct 21, 2019 at 08:38:25AM -0700, Guenter Roeck wrote:
+> On Sun, Oct 20, 2019 at 11:11:19PM -0500, Jeff LaBundy wrote:
+> > This patch adds support for the Azoteq IQS620AT temperature sensor,
+> > capable of reporting its absolute die temperature.
 > > 
-> > I would really prefer to fix that in the framework instead. This is
+> > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
 > 
-> There's nothing to fix in the framework. The framework isn't broken, the
-> drivers are.
-
-The drivers behave in a way that result in unexpected behaviour for
-consumers. There are several ways to fix this, adapting the drivers to
-the consumer's expectations is only one of them.
-
-> > something that affects several drivers (cros-ec, imx27, atmel, imx-tpm,
-> > lpss, meson, sifive, sprd and stm32-lp). This is im my eyes really
-> > sufficient to justify a framework wide solution instead of adapting
-> > several drivers in a way that doesn't affect the values programmed to
-> > hardware.
+> Seems to me this might be more feasible as iio driver.
+> Jonathan, what do you think ?
 > 
-> Can you come up with a proposal for how to want to implement this in the
-> framework?
 
-My preferred solution is to make consumers not expect that
-pwm_get_state() keeps .duty_cycle and .period for disabled PWMs. For
-that consumers must be moved away from the idiom:
+Interestingly enough, this actually started as an iio driver; however the
+"When to Use" slide of [0] made me suspect that conventional devices with
+the temperature sensing element integrated on the die belong in hwmon.
 
-	pwm_get_state(mypwm, &state);
-	state.enabled = true;
-	pwm_apply_state(mypwm, &state);
+I then found the highly similar ad7314, which Jonathan himself appears to
+have converted from iio to hwmon. Therefore, I placed this where existing
+drivers seemed to match the most, especially since the temperature sensors
+in iio generally use IR or a thermocouple.
 
-IMHO it is very artificial from a lowlevel driver's POV to differentiate
-between
+That being said, I would be happy to move this into iio so long as Jonathan
+does not mind, as it would limit the blast radius of this patch series.
 
-	.period = 1000000, .duty_cycle = 50000, .enabled = false
+> > ---
+> >  drivers/hwmon/Kconfig         | 12 +++++-
+> >  drivers/hwmon/Makefile        |  1 +
+> >  drivers/hwmon/iqs620at-temp.c | 96 +++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 108 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/hwmon/iqs620at-temp.c
+> > 
+> > diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> > index 13a6b4a..3e56be6 100644
+> > --- a/drivers/hwmon/Kconfig
+> > +++ b/drivers/hwmon/Kconfig
+> > @@ -385,6 +385,16 @@ config SENSORS_ATXP1
+> >  	  This driver can also be built as a module. If so, the module
+> >  	  will be called atxp1.
+> >  
+> > +config SENSORS_IQS620AT
+> > +	tristate "Azoteq IQS620AT temperature sensor"
+> > +	depends on MFD_IQS62X
+> > +	help
+> > +	  Say Y here if you want to build support for the Azoteq IQS620AT
+> > +	  temperature sensor.
+> > +
+> > +	  To compile this driver as a module, choose M here: the module
+> > +	  will be called iqs620at-temp.
+> > +
+> >  config SENSORS_DS620
+> >  	tristate "Dallas Semiconductor DS620"
+> >  	depends on I2C
+> > @@ -1593,7 +1603,7 @@ config SENSORS_ADS7871
+> >  
+> >  config SENSORS_AMC6821
+> >  	tristate "Texas Instruments AMC6821"
+> > -	depends on I2C 
+> > +	depends on I2C
+> 
+> No unrelated changes, please, and most definitely no
+> unrelated whitespace changes.
+> 
 
-and
+Sorry about that; it seems the original file had some trailing whitespace
+here and my editor cropped it automatically. Unfortunately I didn't catch
+it until after I sent out the series.
 
-	.period = 100, .duty_cycle = 0, .enabled = false
+> >  	help
+> >  	  If you say yes here you get support for the Texas Instruments
+> >  	  AMC6821 hardware monitoring chips.
+> > diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> > index 40c036e..2360add 100644
+> > --- a/drivers/hwmon/Makefile
+> > +++ b/drivers/hwmon/Makefile
+> > @@ -83,6 +83,7 @@ obj-$(CONFIG_SENSORS_IIO_HWMON) += iio_hwmon.o
+> >  obj-$(CONFIG_SENSORS_INA209)	+= ina209.o
+> >  obj-$(CONFIG_SENSORS_INA2XX)	+= ina2xx.o
+> >  obj-$(CONFIG_SENSORS_INA3221)	+= ina3221.o
+> > +obj-$(CONFIG_SENSORS_IQS620AT)	+= iqs620at-temp.o
+> >  obj-$(CONFIG_SENSORS_IT87)	+= it87.o
+> >  obj-$(CONFIG_SENSORS_JC42)	+= jc42.o
+> >  obj-$(CONFIG_SENSORS_K8TEMP)	+= k8temp.o
+> > diff --git a/drivers/hwmon/iqs620at-temp.c b/drivers/hwmon/iqs620at-temp.c
+> > new file mode 100644
+> > index 0000000..0af49b6
+> > --- /dev/null
+> > +++ b/drivers/hwmon/iqs620at-temp.c
+> > @@ -0,0 +1,96 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Azoteq IQS620AT Temperature Sensor
+> > + *
+> > + * Copyright (C) 2019
+> > + * Author: Jeff LaBundy <jeff@labundy.com>
+> > + */
+> > +
+> > +#include <linux/device.h>
+> > +#include <linux/err.h>
+> > +#include <linux/hwmon.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/mfd/iqs62x.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> > +
+> > +#define IQS620_TEMP_UI_OUT			0x1A
+> > +
+> > +static umode_t iqs620_temp_is_visible(const void *drvdata,
+> > +				      enum hwmon_sensor_types type,
+> > +				      u32 attr, int channel)
+> > +{
+> > +	if (type != hwmon_temp || attr != hwmon_temp_input)
+> > +		return 0;
+> > +
+> > +	return 0444;
+> > +}
+> > +
+> > +static int iqs620_temp_read(struct device *dev, enum hwmon_sensor_types type,
+> > +			    u32 attr, int channel, long *val)
+> > +{
+> > +	struct iqs62x_core *iqs62x = dev_get_drvdata(dev);
+> > +	int error;
+> > +	__le16 val_buf;
+> > +
+> > +	if (type != hwmon_temp || attr != hwmon_temp_input)
+> > +		return -EINVAL;
+> 
+> 			-EOPNOTSUPP
 
-because the respective expected behaviour is completely identical (apart
-from the requirement under discussion). So I'd do something like:
+Sure thing; will do.
 
-	if (!state->enabled) {
-		state->period = 1;
-		state->duty_cycle = 0;
-	}
+> > +
+> > +	error = regmap_raw_read(iqs62x->map, IQS620_TEMP_UI_OUT, &val_buf,
+> > +				sizeof(val_buf));
+> > +	if (error)
+> > +		return error;
+> > +
+> > +	*val = (le16_to_cpu(val_buf) - 100) * 1000;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct hwmon_ops iqs620_temp_ops = {
+> > +	.is_visible = iqs620_temp_is_visible,
+> > +	.read = iqs620_temp_read,
+> > +};
+> > +
+> > +static const struct hwmon_channel_info *iqs620_temp_channel_info[] = {
+> > +	HWMON_CHANNEL_INFO(chip, HWMON_C_REGISTER_TZ),
+> > +	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
+> > +	NULL
+> > +};
+> > +
+> > +static const struct hwmon_chip_info iqs620_temp_chip_info = {
+> > +	.ops = &iqs620_temp_ops,
+> > +	.info = iqs620_temp_channel_info,
+> > +};
+> > +
+> > +static int iqs620_temp_probe(struct platform_device *pdev)
+> > +{
+> > +	struct iqs62x_core *iqs62x = dev_get_drvdata(pdev->dev.parent);
+> > +	struct device *hdev;
+> > +	int error = 0;
+> > +
+> > +	hdev = devm_hwmon_device_register_with_info(&pdev->dev,
+> > +						    iqs62x->dev_desc->dev_name,
+> > +						    iqs62x,
+> > +						    &iqs620_temp_chip_info,
+> > +						    NULL);
+> > +	if (IS_ERR(hdev)) {
+> > +		error = PTR_ERR(hdev);
+> > +		dev_err(&pdev->dev, "Failed to register device: %d\n", error);
+> 
+> Such an error would either be static, caused by bad attributes,
+> or a bad name, which is already logged, or a memory allocation
+> failure, which is also already logged. The error message does
+> therefore not add any value.
+> 
 
-after calling the driver's .get_state callback once all in-tree
-consumers are converted to provide a uniform behaviour to consumers.
+Sure thing; I'll remove the error message.
 
-The next best solution is to cache the values for .period and
-.duty_cycle for disabled PWMs only. But the ugly detail then is that
-pwm_get_state() sometimes returns actually implemented values and
-sometimes requested values. (The same holds true for the approach to
-make lowlevel drivers cache these values.)
+> > +	}
+> > +
+> > +	return error;
+> > +}
+> > +
+> > +static struct platform_driver iqs620_temp_platform_driver = {
+> > +	.driver = {
+> > +		.name	= IQS620_DRV_NAME_TEMP,
+> > +	},
+> > +	.probe		= iqs620_temp_probe,
+> > +};
+> > +module_platform_driver(iqs620_temp_platform_driver);
+> > +
+> > +MODULE_AUTHOR("Jeff LaBundy <jeff@labundy.com>");
+> > +MODULE_DESCRIPTION("Azoteq IQS620AT Temperature Sensor");
+> > +MODULE_LICENSE("GPL");
+> > +MODULE_ALIAS("platform:" IQS620_DRV_NAME_TEMP);
+> > -- 
+> > 2.7.4
+> > 
+> 
 
-So it makes probably more sense to introduce two new functions
+Kind regards,
+Jeff LaBundy
 
-	pwm_get_applied_state()
-	pwm_get_implemented_state()
-
-with the first having the semantic of pwm_get_state() before
-01ccf903edd6 and the latter of after 01ccf903edd6. Then today's users of
-pwm_get_state can be converted to the right of these two. But I'm not
-convinced this is a good idea now. Maybe we should first clean up the
-already started stuff (like converting lowlevel drivers and consumers to
-the atomic API). Maybe renaming pwm_get_state to pwm_get_applied_state
-is something that is easy enough to justify already today?
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+[0]: https://elinux.org/images/b/ba/ELC_2017_-_Industrial_IO_and_You-_Nonsense_Hacks%21.pdf
