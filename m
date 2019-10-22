@@ -2,28 +2,28 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C56BEE0269
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Oct 2019 13:01:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1F86E02D7
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Oct 2019 13:28:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730197AbfJVLBA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 22 Oct 2019 07:01:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52646 "EHLO mail.kernel.org"
+        id S2388576AbfJVL2M (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Oct 2019 07:28:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728375AbfJVLA7 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 22 Oct 2019 07:00:59 -0400
+        id S2387645AbfJVL2M (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 22 Oct 2019 07:28:12 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDEEE21783;
-        Tue, 22 Oct 2019 11:00:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84EB0214B2;
+        Tue, 22 Oct 2019 11:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571742058;
-        bh=3wr2brRuPL3nrxk9/+udPN9G8ogjlg23jMUoDvyxk+k=;
+        s=default; t=1571743690;
+        bh=V/0s0ZRwrgm5Qwfen8duYMl7qGwZghFvLCMVWK8zds0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OW/zqk0hi6SfASYvNIGLiANYFDtusXa3A6NDHzMdckQrZ6Rt9DE+cRw3etOvdjo+P
-         3S/ja/s9cnWBUY8g6s8EpDcUAB/wayph/AlomQ0h5Y3ifGmB5SzIGJAsKGq1k5iwub
-         yMFpAfhZnR02eyIBHVyBiqu7HIp3nhV9yo4jcduU=
-Date:   Tue, 22 Oct 2019 12:00:51 +0100
+        b=na0R7mgXtu0flfTonRcAlXyd1xZtIniH1qTCEySUX87aMjmUcsUILRLmPemEqBiEO
+         M4VAefeoXCVJm4WbjN0K0efcc/urnixUGfc0V6e5aO+l3ZQk+0o1TKdJ9rNl6Smv2g
+         Uwch96WvQAXMGfnr2ERudyCawTX49T2J5gQCItII=
+Date:   Tue, 22 Oct 2019 12:28:04 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Jeff LaBundy <jeff@labundy.com>
 Cc:     lee.jones@linaro.org, dmitry.torokhov@gmail.com, jdelvare@suse.com,
@@ -33,11 +33,12 @@ Cc:     lee.jones@linaro.org, dmitry.torokhov@gmail.com, jdelvare@suse.com,
         linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
         pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
         mark.rutland@arm.com
-Subject: Re: [PATCH 1/8] dt-bindings: mfd: iqs62x: Add bindings
-Message-ID: <20191022120051.686ed9f9@archlinux>
-In-Reply-To: <1571631083-4962-2-git-send-email-jeff@labundy.com>
+Subject: Re: [PATCH 8/8] iio: position: Add support for Azoteq IQS624/625
+ angle sensor
+Message-ID: <20191022122804.37b6988c@archlinux>
+In-Reply-To: <1571631083-4962-9-git-send-email-jeff@labundy.com>
 References: <1571631083-4962-1-git-send-email-jeff@labundy.com>
-        <1571631083-4962-2-git-send-email-jeff@labundy.com>
+        <1571631083-4962-9-git-send-email-jeff@labundy.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -47,283 +48,411 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun, 20 Oct 2019 23:11:16 -0500
+On Sun, 20 Oct 2019 23:11:23 -0500
 Jeff LaBundy <jeff@labundy.com> wrote:
 
-> This patch adds binding documentation for six-channel members of the
-> Azoteq ProxFusion family of sensor devices.
+> This patch adds support for the Azoteq IQS624 and IQS625 angular position
+> sensors, capable of reporting the angle of a rotating shaft down to 1 and
+> 10 degrees of accuracy, respectively.
 > 
-> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+> This patch also introduces a home for linear and angular position sensors.
+> Unlike resolvers, they are typically contactless and use the Hall effect.
+Hmm. I wonder if it makes sense to just move the resolvers into this directory
+and not maintain the distinction.  Guess we can do that in the future if we
+feel like it! :)
 
-I'm not sure if Lee has made the switch for mfd entirely yet, but
-mostly new dt bindings need to be in yaml format as it allows
-automated parsing of the examples + bindings using them for
-correctness.
+This one looks good to me.
 
-One comment inline.  I'm far from an expert on most of the stuff here
-so will leave it for others!
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+I'm assuming these will all go through mfd and an immutable branch once
+everyone is happy.
+
+Thanks,
 
 Jonathan
 
-
-> ---
->  Documentation/devicetree/bindings/mfd/iqs62x.txt | 242 +++++++++++++++++++++++
->  1 file changed, 242 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/iqs62x.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/iqs62x.txt b/Documentation/devicetree/bindings/mfd/iqs62x.txt
+> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+> ---
+>  drivers/iio/Kconfig               |   1 +
+>  drivers/iio/Makefile              |   1 +
+>  drivers/iio/position/Kconfig      |  19 +++
+>  drivers/iio/position/Makefile     |   7 +
+>  drivers/iio/position/iqs624-pos.c | 302 ++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 330 insertions(+)
+>  create mode 100644 drivers/iio/position/Kconfig
+>  create mode 100644 drivers/iio/position/Makefile
+>  create mode 100644 drivers/iio/position/iqs624-pos.c
+> 
+> diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
+> index 5bd5185..d5c073a 100644
+> --- a/drivers/iio/Kconfig
+> +++ b/drivers/iio/Kconfig
+> @@ -88,6 +88,7 @@ source "drivers/iio/orientation/Kconfig"
+>  if IIO_TRIGGER
+>     source "drivers/iio/trigger/Kconfig"
+>  endif #IIO_TRIGGER
+> +source "drivers/iio/position/Kconfig"
+>  source "drivers/iio/potentiometer/Kconfig"
+>  source "drivers/iio/potentiostat/Kconfig"
+>  source "drivers/iio/pressure/Kconfig"
+> diff --git a/drivers/iio/Makefile b/drivers/iio/Makefile
+> index bff682a..1712011 100644
+> --- a/drivers/iio/Makefile
+> +++ b/drivers/iio/Makefile
+> @@ -31,6 +31,7 @@ obj-y += light/
+>  obj-y += magnetometer/
+>  obj-y += multiplexer/
+>  obj-y += orientation/
+> +obj-y += position/
+>  obj-y += potentiometer/
+>  obj-y += potentiostat/
+>  obj-y += pressure/
+> diff --git a/drivers/iio/position/Kconfig b/drivers/iio/position/Kconfig
 > new file mode 100644
-> index 0000000..089f567
+> index 0000000..ed9f975
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/iqs62x.txt
-> @@ -0,0 +1,242 @@
-> +Azoteq IQS620A/621/622/624/625 ProxFusion Sensor Family
+> +++ b/drivers/iio/position/Kconfig
+> @@ -0,0 +1,19 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Linear and angular position sensors
+> +#
+> +# When adding new entries keep the list in alphabetical order
 > +
-> +Required properties:
+> +menu "Linear and angular position sensors"
 > +
-> +- compatible			: Must be equal to one of the following:
-> +				  "azoteq,iqs620a"
-> +				  "azoteq,iqs621"
-> +				  "azoteq,iqs622"
-> +				  "azoteq,iqs624"
-> +				  "azoteq,iqs625"
+> +config IQS624_POS
+> +	tristate "Azoteq IQS624/625 angular position sensor"
+> +	depends on MFD_IQS62X
+> +	help
+> +	  Say Y here if you want to build support for the Azoteq IQS624
+> +	  and IQS625 angular position sensors.
 > +
-> +- reg				: I2C slave address for the device.
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called iqs624-pos.
 > +
-> +- interrupts			: GPIO to which the device's active-low RDY
-> +				  output is connected (see [0]).
+> +endmenu
+> diff --git a/drivers/iio/position/Makefile b/drivers/iio/position/Makefile
+> new file mode 100644
+> index 0000000..3cbe7a7
+> --- /dev/null
+> +++ b/drivers/iio/position/Makefile
+> @@ -0,0 +1,7 @@
+> +#
+> +# Makefile for IIO linear and angular position sensors
+> +#
 > +
-> +Optional properties:
+> +# When adding new entries keep the list in alphabetical order
 > +
-> +- linux,fw-file			: Specifies the name of the calibration and
-> +				  configuration file selected by the driver.
-> +				  If this property is omitted, the filename
-> +				  is selected based on the device name with
-> +				  ".bin" as the extension (e.g. iqs620a.bin
-> +				  for IQS620A).
+> +obj-$(CONFIG_IQS624_POS)	+= iqs624-pos.o
+> diff --git a/drivers/iio/position/iqs624-pos.c b/drivers/iio/position/iqs624-pos.c
+> new file mode 100644
+> index 0000000..d975065
+> --- /dev/null
+> +++ b/drivers/iio/position/iqs624-pos.c
+> @@ -0,0 +1,302 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Azoteq IQS624/625 Angular Position Sensor
+> + *
+> + * Copyright (C) 2019
+> + * Author: Jeff LaBundy <jeff@labundy.com>
+> + */
 > +
-> +All devices accommodate a child node (e.g. "keys") that represents touch key
-> +support. Required properties for the "keys" child node include:
+> +#include <linux/device.h>
+> +#include <linux/iio/events.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/iqs62x.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/notifier.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
 > +
-> +- compatible			: Must be equal to one of the following:
-> +				  "azoteq,iqs620a-keys"
-> +				  "azoteq,iqs621-keys"
-> +				  "azoteq,iqs622-keys"
-> +				  "azoteq,iqs624-keys"
-> +				  "azoteq,iqs625-keys"
+> +#define IQS624_POS_DEG_OUT			0x16
 > +
-> +- linux,keycodes		: Specifies an array of up to 16 numeric key-
-> +				  codes corresponding to each available touch
-> +				  or proximity event. An 'x' in the following
-> +				  table indicates an event is supported for a
-> +				  given device; specify 0 for unused events.
+> +#define IQS624_POS_SCALE1			(314159 / 180)
+> +#define IQS624_POS_SCALE2			100000
 > +
-> +  ----------------------------------------------------------------------------
-> +  | #  | Event                 | IQS620A | IQS621 | IQS622 | IQS624 | IQS625 |
-> +  ----------------------------------------------------------------------------
-> +  | 0  | CH0 Touch             |    x    |    x   |    x   |    x   |    x   |
-> +  |    | Antenna 1 Touch*      |    x    |        |        |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 1  | CH0 Proximity         |    x    |    x   |    x   |    x   |    x   |
-> +  |    | Antenna 1 Proximity*  |    x    |        |        |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 2  | CH1 Touch             |    x    |    x   |    x   |    x   |    x   |
-> +  |    | Antenna 1 Deep Touch* |    x    |        |        |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 3  | CH1 Proximity         |    x    |    x   |    x   |    x   |    x   |
-> +  ----------------------------------------------------------------------------
-> +  | 4  | CH2 Touch             |    x    |        |        |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 5  | CH2 Proximity         |    x    |        |        |        |        |
-> +  |    | Antenna 2 Proximity*  |    x    |        |        |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 6  | Metal (+) Touch**     |    x    |    x   |        |        |        |
-> +  |    | Antenna 2 Deep Touch* |    x    |        |        |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 7  | Metal (+) Proximity** |    x    |    x   |        |        |        |
-> +  |    | Antenna 2 Touch*      |    x    |        |        |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 8  | Metal (-) Touch**     |    x    |    x   |        |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 9  | Metal (-) Proximity** |    x    |    x   |        |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 10 | SAR Active***         |    x    |        |    x   |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 11 | SAR Quick Release***  |    x    |        |    x   |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 12 | SAR Movement***       |    x    |        |    x   |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 13 | SAR Filter Halt***    |    x    |        |    x   |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 14 | Wheel Up              |         |        |        |    x   |        |
-> +  ----------------------------------------------------------------------------
-> +  | 15 | Wheel Down            |         |        |        |    x   |        |
-> +  ----------------------------------------------------------------------------
-> +  *   Dual-channel SAR. Replaces CH0-2 and metal touch and proximity events if
-> +      enabled via firmware.
-> +  **  "+" and "-" refer to the polarity of the channel's delta (LTA - counts),
-> +      where "LTA" is defined as the channel's long-term average.
-> +  *** Single-channel SAR. Replaces CH0-2 touch and proximity events if enabled
-> +      via firmware.
-> +
-> +The "keys" child node supports "hall_switch_north" and "hall_switch_south"
-> +child nodes that represent north-field and south-field Hall-effect sensor
-> +events, respectively (IQS620A/621/622 only). Required properties include:
-> +
-> +- linux,code			: Numeric switch code.
-> +
-> +Optional properties for the "hall_switch_north" and "hall_switch_south" nodes:
-> +
-> +- azoteq,use-prox		: Boolean to specify that Hall-effect sensor
-> +				  reporting must use the device's wide-range
-> +				  proximity threshold instead of its narrow-
-> +				  range touch threshold.
-> +
-> +Note: North/south-field orientation is reversed on the IQS620AXzCSR device due
-> +      to its flip-chip package.
-> +
-> +The IQS620A supports a PWM controller node; required properties include:
-> +
-> +- compatible			: Must be equal to "azoteq,iqs620a-pwm".
-> +
-> +- #pwm-cells			: Must be equal to 2 (see [1]).
-> +
-> +The IQS622 supports an additional child node (e.g. "prox") that represents
-> +active IR detection; required properties include:
-> +
-> +- compatible			: Must be equal to "azoteq,iqs622-prox".
-> +
-> +Optional properties for the "prox" child node:
-> +
-> +- azoteq,use-prox		: Boolean to specify that IR threshold event
-> +				  reporting must use the device's wide-range
-> +				  proximity threshold instead of its narrow-
-> +				  range touch threshold.
-This one is certainly interesting.  Does it always make sense to
-set this only at boot?  Of could we control this from userspace?
-
-It sits somewhere between a hardware requirement that we should
-put in DT and a policy decision.  I can conceive of devices where both
-options make sense, but also ones where only one does.
-
-> +
-> +[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> +[1]: Documentation/devicetree/bindings/pwm/pwm.txt
-> +
-> +Example 1: Dual capacitive buttons with additional "air button," unipolar lid
-> +	   switch and panel-mounted LED.
-> +
-> +	&i2c1 {
-> +		/* ... */
-> +
-> +		iqs620a: iqs620a@44 {
-> +			compatible = "azoteq,iqs620a";
-> +			reg = <0x44>;
-> +			interrupt-parent = <&gpio>;
-> +			interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +			iqs620a_keys: keys {
-> +				compatible = "azoteq,iqs620a-keys";
-> +
-> +				linux,keycodes = <KEY_SELECT>,
-> +						 <KEY_MENU>,
-> +						 <KEY_OK>,
-> +						 <KEY_MENU>;
-> +
-> +				hall_switch_south {
-> +					linux,code = <SW_LID>;
-> +					azoteq,use-prox;
-> +				};
-> +			};
-> +
-> +			iqs620a_pwm: pwm {
-> +				compatible = "azoteq,iqs620a-pwm";
-> +				#pwm-cells = <2>;
-> +			};
-> +		};
-> +
-> +		/* ... */
+> +struct iqs624_pos_private {
+> +	struct iqs62x_core *iqs62x;
+> +	struct notifier_block notifier;
+> +	struct mutex lock;
+> +	bool event_en;
+> +	union {
+> +		u16 angle;
+> +		u8 interval;
 > +	};
+> +};
 > +
-> +	pwmleds {
-> +		compatible = "pwm-leds";
+> +static int iqs624_pos_init(struct iqs624_pos_private *iqs624_pos)
+> +{
+> +	struct iqs62x_core *iqs62x = iqs624_pos->iqs62x;
+> +	unsigned int val;
+> +	int error;
+> +	__le16 val_buf;
 > +
-> +		panel {
-> +			pwms = <&iqs620a_pwm 0 1000000>;
-> +			max-brightness = <255>;
-> +		};
-> +	};
+> +	if (iqs62x->dev_desc->prod_num == IQS624_PROD_NUM) {
+> +		error = regmap_raw_read(iqs62x->map, IQS624_POS_DEG_OUT,
+> +					&val_buf, sizeof(val_buf));
+> +		if (error)
+> +			return error;
 > +
-> +Example 2: Single inductive button with bipolar dock/tablet-mode switch.
+> +		iqs624_pos->angle = le16_to_cpu(val_buf);
+> +	} else {
+> +		error = regmap_read(iqs62x->map, iqs62x->dev_desc->interval,
+> +				    &val);
+> +		if (error)
+> +			return error;
 > +
-> +	&i2c1 {
-> +		/* ... */
+> +		iqs624_pos->interval = val;
+> +	}
 > +
-> +		iqs620a: iqs620a@44 {
-> +			compatible = "azoteq,iqs620a";
-> +			reg = <0x44>;
-> +			interrupt-parent = <&gpio>;
-> +			interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
+> +	mutex_lock(&iqs624_pos->lock);
 > +
-> +			linux,fw-file = "iqs620a_coil.bin";
+> +	/*
+> +	 * The IQS625 reports angular position in the form of coarse intervals,
+> +	 * so only interval change events are unmasked. Conversely, the IQS624
+> +	 * reports angular position down to one degree of resolution, so wheel
+> +	 * movement events are unmasked instead.
+> +	 */
+> +	error = regmap_update_bits(iqs62x->map, IQS624_HALL_UI,
+> +				   iqs62x->dev_desc->prod_num ==
+> +				   IQS624_PROD_NUM ? IQS624_HALL_UI_WHL_EVENT :
+> +						     IQS624_HALL_UI_INT_EVENT,
+> +				   iqs624_pos->event_en ? 0 : 0xFF);
 > +
-> +			iqs620a_keys: keys {
-> +				compatible = "azoteq,iqs620a-keys";
+> +	mutex_unlock(&iqs624_pos->lock);
 > +
-> +				linux,keycodes = <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <KEY_MUTE>;
+> +	return error;
+> +}
 > +
-> +				hall_switch_north {
-> +					linux,code = <SW_DOCK>;
-> +				};
+> +static int iqs624_pos_notifier(struct notifier_block *notifier,
+> +			       unsigned long event_flags, void *context)
+> +{
+> +	struct iqs62x_event_data *event_data = context;
+> +	struct iqs624_pos_private *iqs624_pos;
+> +	struct iqs62x_core *iqs62x;
+> +	struct iio_dev *indio_dev;
+> +	int error;
 > +
-> +				hall_switch_south {
-> +					linux,code = <SW_TABLET_MODE>;
-> +				};
-> +			};
-> +		};
+> +	iqs624_pos = container_of(notifier, struct iqs624_pos_private,
+> +				  notifier);
+> +	indio_dev = iio_priv_to_dev(iqs624_pos);
+> +	iqs62x = iqs624_pos->iqs62x;
 > +
-> +		/* ... */
-> +	};
+> +	if (event_flags & BIT(IQS62X_EVENT_SYS_RESET)) {
+> +		error = iqs624_pos_init(iqs624_pos);
+> +		if (error) {
+> +			dev_err(indio_dev->dev.parent,
+> +				"Failed to re-initialize device: %d\n", error);
+> +			return NOTIFY_BAD;
+> +		}
 > +
-> +Example 3: Dual capacitive buttons with volume knob.
+> +		return NOTIFY_OK;
+> +	}
 > +
-> +	&i2c1 {
-> +		/* ... */
+> +	if (iqs62x->dev_desc->prod_num == IQS624_PROD_NUM) {
+> +		if (event_data->ui_data == iqs624_pos->angle)
+> +			return NOTIFY_DONE;
 > +
-> +		iqs624: iqs624@44 {
-> +			compatible = "azoteq,iqs624";
-> +			reg = <0x44>;
-> +			interrupt-parent = <&gpio>;
-> +			interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
+> +		iqs624_pos->angle = event_data->ui_data;
+> +	} else {
+> +		if (event_data->interval == iqs624_pos->interval)
+> +			return NOTIFY_DONE;
 > +
-> +			iqs624_keys: keys {
-> +				compatible = "azoteq,iqs624-keys";
+> +		iqs624_pos->interval = event_data->interval;
+> +	}
 > +
-> +				linux,keycodes = <BTN_0>,
-> +						 <0>,
-> +						 <BTN_1>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <KEY_VOLUMEUP>,
-> +						 <KEY_VOLUMEDOWN>;
-> +			};
-> +		};
+> +	if (!iqs624_pos->event_en)
+> +		return NOTIFY_OK;
 > +
-> +		/* ... */
-> +	};
+> +	iio_push_event(indio_dev,
+> +		       IIO_UNMOD_EVENT_CODE(IIO_ANGL, 0,
+> +					    IIO_EV_TYPE_CHANGE,
+> +					    IIO_EV_DIR_NONE),
+> +		       iio_get_time_ns(indio_dev));
+> +
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static void iqs624_pos_notifier_unregister(void *context)
+> +{
+> +	struct iqs624_pos_private *iqs624_pos = context;
+> +	struct iio_dev *indio_dev = iio_priv_to_dev(iqs624_pos);
+> +	int error;
+> +
+> +	error = blocking_notifier_chain_unregister(&iqs624_pos->iqs62x->nh,
+> +						   &iqs624_pos->notifier);
+> +	if (error)
+> +		dev_err(indio_dev->dev.parent,
+> +			"Failed to unregister notifier: %d\n", error);
+> +}
+> +
+> +static int iqs624_pos_read_raw(struct iio_dev *indio_dev,
+> +			       struct iio_chan_spec const *chan,
+> +			       int *val, int *val2, long mask)
+> +{
+> +	struct iqs624_pos_private *iqs624_pos = iio_priv(indio_dev);
+> +	struct iqs62x_core *iqs62x = iqs624_pos->iqs62x;
+> +	int error;
+> +	__le16 val_buf;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		if (iqs62x->dev_desc->prod_num == IQS624_PROD_NUM) {
+> +			error = regmap_raw_read(iqs62x->map, IQS624_POS_DEG_OUT,
+> +						&val_buf, sizeof(val_buf));
+> +			if (error)
+> +				return error;
+> +
+> +			*val = le16_to_cpu(val_buf);
+> +		} else {
+> +			error = regmap_read(iqs62x->map,
+> +					    iqs62x->dev_desc->interval, val);
+> +			if (error)
+> +				return error;
+> +		}
+> +		return IIO_VAL_INT;
+> +
+> +	case IIO_CHAN_INFO_SCALE:
+> +		if (iqs62x->dev_desc->prod_num == IQS624_PROD_NUM) {
+> +			*val = IQS624_POS_SCALE1;
+> +		} else {
+> +			error = regmap_read(iqs62x->map, IQS624_INTERVAL_DIV,
+> +					    val);
+> +			if (error)
+> +				return error;
+> +
+> +			*val *= IQS624_POS_SCALE1;
+> +		}
+> +
+> +		*val2 = IQS624_POS_SCALE2;
+> +		return IIO_VAL_FRACTIONAL;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int iqs624_pos_read_event_config(struct iio_dev *indio_dev,
+> +					const struct iio_chan_spec *chan,
+> +					enum iio_event_type type,
+> +					enum iio_event_direction dir)
+> +{
+> +	struct iqs624_pos_private *iqs624_pos = iio_priv(indio_dev);
+> +
+> +	return iqs624_pos->event_en;
+> +}
+> +
+> +static int iqs624_pos_write_event_config(struct iio_dev *indio_dev,
+> +					 const struct iio_chan_spec *chan,
+> +					 enum iio_event_type type,
+> +					 enum iio_event_direction dir,
+> +					 int state)
+> +{
+> +	struct iqs624_pos_private *iqs624_pos = iio_priv(indio_dev);
+> +	struct iqs62x_core *iqs62x = iqs624_pos->iqs62x;
+> +	int error;
+> +
+> +	mutex_lock(&iqs624_pos->lock);
+> +
+> +	error = regmap_update_bits(iqs62x->map, IQS624_HALL_UI,
+> +				   iqs62x->dev_desc->prod_num ==
+> +				   IQS624_PROD_NUM ? IQS624_HALL_UI_WHL_EVENT :
+> +						     IQS624_HALL_UI_INT_EVENT,
+> +				   state ? 0 : 0xFF);
+> +	if (!error)
+> +		iqs624_pos->event_en = state;
+> +
+> +	mutex_unlock(&iqs624_pos->lock);
+> +
+> +	return error;
+> +}
+> +
+> +static const struct iio_info iqs624_pos_info = {
+> +	.read_raw = &iqs624_pos_read_raw,
+> +	.read_event_config = iqs624_pos_read_event_config,
+> +	.write_event_config = iqs624_pos_write_event_config,
+> +};
+> +
+> +static const struct iio_event_spec iqs624_pos_events[] = {
+> +	{
+> +		.type = IIO_EV_TYPE_CHANGE,
+> +		.dir = IIO_EV_DIR_NONE,
+> +		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
+> +	},
+> +};
+> +
+> +static const struct iio_chan_spec iqs624_pos_channels[] = {
+> +	{
+> +		.type = IIO_ANGL,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +				      BIT(IIO_CHAN_INFO_SCALE),
+> +		.event_spec = iqs624_pos_events,
+> +		.num_event_specs = ARRAY_SIZE(iqs624_pos_events),
+> +	},
+> +};
+> +
+> +static int iqs624_pos_probe(struct platform_device *pdev)
+> +{
+> +	struct iqs62x_core *iqs62x = dev_get_drvdata(pdev->dev.parent);
+> +	struct iqs624_pos_private *iqs624_pos;
+> +	struct iio_dev *indio_dev;
+> +	int error;
+> +
+> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*iqs624_pos));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->dev.parent = &pdev->dev;
+> +	indio_dev->channels = iqs624_pos_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(iqs624_pos_channels);
+> +	indio_dev->name = iqs62x->dev_desc->dev_name;
+> +	indio_dev->info = &iqs624_pos_info;
+> +
+> +	iqs624_pos = iio_priv(indio_dev);
+> +	iqs624_pos->iqs62x = iqs62x;
+> +
+> +	mutex_init(&iqs624_pos->lock);
+> +
+> +	error = iqs624_pos_init(iqs624_pos);
+> +	if (error)
+> +		return error;
+> +
+> +	iqs624_pos->notifier.notifier_call = iqs624_pos_notifier;
+> +	error = blocking_notifier_chain_register(&iqs624_pos->iqs62x->nh,
+> +						 &iqs624_pos->notifier);
+> +	if (error) {
+> +		dev_err(&pdev->dev, "Failed to register notifier: %d\n", error);
+> +		return error;
+> +	}
+> +
+> +	error = devm_add_action_or_reset(&pdev->dev,
+> +					 iqs624_pos_notifier_unregister,
+> +					 iqs624_pos);
+> +	if (error) {
+> +		dev_err(&pdev->dev, "Failed to add action: %d\n", error);
+> +		return error;
+> +	}
+> +
+> +	return devm_iio_device_register(&pdev->dev, indio_dev);
+> +}
+> +
+> +static struct platform_driver iqs624_pos_platform_driver = {
+> +	.driver = {
+> +		.name	= IQS624_DRV_NAME_POS,
+> +	},
+> +	.probe		= iqs624_pos_probe,
+> +};
+> +module_platform_driver(iqs624_pos_platform_driver);
+> +
+> +MODULE_AUTHOR("Jeff LaBundy <jeff@labundy.com>");
+> +MODULE_DESCRIPTION("Azoteq IQS624/625 Angular Position Sensor");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:" IQS624_DRV_NAME_POS);
 
