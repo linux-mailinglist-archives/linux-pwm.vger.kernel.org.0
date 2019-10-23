@@ -2,308 +2,491 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 235D1E103A
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Oct 2019 04:52:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3634DE1048
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Oct 2019 04:59:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389378AbfJWCwr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 22 Oct 2019 22:52:47 -0400
-Received: from p3plsmtpa11-10.prod.phx3.secureserver.net ([68.178.252.111]:49013
-        "EHLO p3plsmtpa11-10.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389384AbfJWCwr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Oct 2019 22:52:47 -0400
+        id S2389484AbfJWC7d (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Oct 2019 22:59:33 -0400
+Received: from p3plsmtpa11-03.prod.phx3.secureserver.net ([68.178.252.104]:35260
+        "EHLO p3plsmtpa11-03.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388917AbfJWC7c (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Oct 2019 22:59:32 -0400
 Received: from labundy.com ([136.49.227.119])
         by :SMTPAUTH: with ESMTPSA
-        id N6eLiOopsnCKMN6eNiDE02; Tue, 22 Oct 2019 19:45:28 -0700
-Date:   Tue, 22 Oct 2019 21:45:25 -0500
+        id N6rxieuLKeKc0N6ryiaA7E; Tue, 22 Oct 2019 19:59:31 -0700
+Date:   Tue, 22 Oct 2019 21:59:28 -0500
 From:   Jeff LaBundy <jeff@labundy.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
+To:     Jonathan Cameron <jic23@kernel.org>
 Cc:     lee.jones@linaro.org, dmitry.torokhov@gmail.com, jdelvare@suse.com,
-        linux@roeck-us.net, thierry.reding@gmail.com, jic23@kernel.org,
+        linux@roeck-us.net, thierry.reding@gmail.com,
         devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH 5/8] pwm: Add support for Azoteq IQS620A PWM generator
-Message-ID: <20191023024525.GC3233@labundy.com>
+        linux-hwmon@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH 6/8] iio: light: Add support for Azoteq IQS621 ambient
+ light sensor
+Message-ID: <20191023025928.GD3233@labundy.com>
 References: <1571631083-4962-1-git-send-email-jeff@labundy.com>
- <1571631083-4962-6-git-send-email-jeff@labundy.com>
- <20191021073419.27r4xjqpz2wswerj@pengutronix.de>
- <20191022043649.GB2091@labundy.com>
- <20191022065415.2zxmpbsmogvgul7x@pengutronix.de>
+ <1571631083-4962-7-git-send-email-jeff@labundy.com>
+ <20191022121949.0b6b27d4@archlinux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191022065415.2zxmpbsmogvgul7x@pengutronix.de>
+In-Reply-To: <20191022121949.0b6b27d4@archlinux>
 User-Agent: Mutt/1.5.24 (2015-08-30)
-X-CMAE-Envelope: MS4wfMcclth9O7PC0fd6iqJbU4Y02w8NFCaUz1cNkRK2OB+itn9EN/4bxpqbpXuZ8OnitWkK8p20kLALxyzVmbaBlFxx1Jq2OEBM2hpKsmFJpmH66QRtdhfS
- 78XSMtUUat1QHo5MfJel2AF5Nu1R0UWJqAGCqaSNrIRavWnMLW7z6IPWxsf3UHfCm/HqK+rHG1fmo/25olWzCzOQVlXhC38oquyDqxU/sUwoZ59pkhnkFxYk
- 95H24ZiuL1otrgQFQVLo3OF1QFXmPOPsn298qTB8VExeuahZFaSHmRTMJhLxLEJ0ZeMUVCdVimF7+pR7Ha8tsgeWFuGJzGr06rpP9YOgDBl5Lgj4W3rzZ+2W
- bgggMYlcBjW5K3z52FOmSLRXh4tmdC99iCUY3TNeoJaANMbdjTKKzby26UlGikKfTX59z4JgZ95sQKEYhBeiCfvJfSkIX974IO/BjLnW9FsPnH111yzbecI5
- r9kwxB09xbC9gbrqR1/2BuFX22YDuTpK0zRRJKuYCBSsCpv19slx7b+daaEeNtDpXSEX+obs/t6xc/Tlnt/V6FsO4mxnOIghDbSVhWQtJF+SeGFnrhtvxOct
- YkJT7VlS9fr9nbKvIFe1FqOeKZGMPpN9lKDJhB3fxXcyqjFm30Ijbp1TuHP+VYiHh8V7uSA7lZK+II3bboMb1pQndYghj8Nrv6Ebd+nZ1XWAiYr792gOt68X
- +7P5QMPEspA=
+X-CMAE-Envelope: MS4wfOV2j8eSwsVhZMIA37lSwYecZr0oUtrbXvXiaTlCuu1dyZbRZPMoJb9QfzUXMcZtxarq9F6w1215/QMBbz21dePPcfi7h7SJ7y8N7YdMZz7wsc1BcnaO
+ nUsjsqIfGTEHDxhe86ULmGyTlxr2JJXL5m9Cvcvw///puVYB4dpKIzBA19Zdik4kDkccwwqV2s8BHQ1O3m2K5aLT99SdWm8cIdlKCzenGZggLd35NxznmlgP
+ eUfp9bnW0l8MkYghDGdBbUBDIXpqwMKHMNinrWSKTOwA9DXV/jq7MGNu1b2adXM1RTAr5bsfpbeM34zzFz6FiC4gH5Buc7EldbbvYX3NOTv7cyzt+uBR/SAl
+ 4LAvbTY8IQ9dijSoR/lGsUBWy/o9QPON9FwSJBsoVYOddD6bVwb9wMah9uYzuyv4wi5+bBS00HZLcEAAh6If4YZYh/t7O/jxsJKKoiCAo7uoHyXC77thMla3
+ OfPNIXnwVpGidefQTS+SQtBt58NMJ9shT/kGpc6fcbAq61G0R2L/bCTxU9txBCN/EawX4yNqj9mfCAce6wXOBRziB1zZqSx7v9YJwYXk8e9X8IQ4QtfYRplb
+ x3EQLOsYwdIYgi5phQ8wV8ZOf8t6z9gkYoHYnvlfJ7eANGfSRxIafr4lYSlhzzVlvD6yFBdNGt1Npd5fvPeHek2aes8VWRagHsIPB2znCFLhqIUhMgAnK6fK
+ QnO+z1ei5VI=
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
+Hi Jonathan,
 
-On Tue, Oct 22, 2019 at 08:54:15AM +0200, Uwe Kleine-König wrote:
-> Hello Jeff,
+Thank you for your prompt review.
+
+On Tue, Oct 22, 2019 at 12:23:49PM +0100, Jonathan Cameron wrote:
+> On Sun, 20 Oct 2019 23:11:21 -0500
+> Jeff LaBundy <jeff@labundy.com> wrote:
 > 
-> On Mon, Oct 21, 2019 at 11:36:49PM -0500, Jeff LaBundy wrote:
-> > On Mon, Oct 21, 2019 at 09:34:19AM +0200, Uwe Kleine-König wrote:
-> > > > +struct iqs620_pwm_private {
-> > > > +	struct iqs62x_core *iqs62x;
-> > > > +	struct pwm_chip chip;
-> > > > +	struct notifier_block notifier;
-> > > > +	bool ready;
-> > > 
-> > > This is always true, so you can drop it.
-> > > 
-> > 
-> > This is here because iqs620_pwm_notifier references chip.pwms, which is
-> > not allocated until after the notifier is registered and pwmchip_add is
-> > called. So it protects against this (albeit unlikely) race condition:
-> > 
-> > 1. iqs620_pwm_notifier is registered
-> > 2. Device immediately suffers an asynchronous reset and notifier chain
-> >    is called (more on that in a bit)
-> > 3. iqs620_pwm_notifier evaluates chips.pwms (NULL)
-> > 
-> > I felt this was simpler than calling pwmchip_add before registering the
-> > notifier and adding an error/tear-down path in iqs620_pwm_probe in case
-> > of failure. I would be happy to add a comment or two to explain the not-
-> > so-obvious purpose of this flag.
+> > This patch adds support for the Azoteq IQS621 ambient light sensor,
+> > capable of reporting intensity directly in units of lux.
 > 
-> Ah, understood. A comment is definitively necessary here.
+> If they are in lux, should be using IIO_CHAN_INFO_PROCESSED to indicate
+> that.  I was wondering why we had no scale then noticed this comment.
 > 
 
 Sure thing; will do.
 
-> > > > +};
-> > > > +
-> > > > +static int iqs620_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > > +			    struct pwm_state *state)
-> > > 
-> > > Since
-> > > 
-> > > 	71523d1812ac ("pwm: Ensure pwm_apply_state() doesn't modify the state argument")
-> > > 
-> > > this isn't the right prototype.
-> > > 
+> Other than that, this looks good to me.  So with that tidied up in V2.
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> One trivial comment to perhaps drop an error print as overly verbose inline.
+> 
 > > 
-> > Sure thing; I will add the 'const' qualifier and remove the two changes
-> > to the state argument.
+> > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+> > ---
+> >  drivers/iio/light/Kconfig      |  10 ++
+> >  drivers/iio/light/Makefile     |   1 +
+> >  drivers/iio/light/iqs621-als.c | 361 +++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 372 insertions(+)
+> >  create mode 100644 drivers/iio/light/iqs621-als.c
 > > 
-> > > > +{
-> > > > +	struct iqs620_pwm_private *iqs620_pwm;
-> > > > +	struct iqs62x_core *iqs62x;
-> > > > +	int error;
-> > > > +	int duty_calc = state->duty_cycle * 256 / IQS620_PWM_PERIOD_NS - 1;
-> > > > +	u8 duty_clamp = clamp(duty_calc, 0, 0xFF);
+> > diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
+> > index 4a1a883..aad26dc 100644
+> > --- a/drivers/iio/light/Kconfig
+> > +++ b/drivers/iio/light/Kconfig
+> > @@ -162,6 +162,16 @@ config GP2AP020A00F
+> >  	  To compile this driver as a module, choose M here: the
+> >  	  module will be called gp2ap020a00f.
+> >  
+> > +config IQS621_ALS
+> > +	tristate "Azoteq IQS621 ambient light sensor"
+> > +	depends on MFD_IQS62X
+> > +	help
+> > +	  Say Y here if you want to build support for the Azoteq IQS621
+> > +	  ambient light sensor.
+> > +
+> > +	  To compile this driver as a module, choose M here: the module
+> > +	  will be called iqs621-als.
+> > +
+> >  config SENSORS_ISL29018
+> >  	tristate "Intersil 29018 light and proximity sensor"
+> >  	depends on I2C
+> > diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
+> > index 00d1f9b..aa34358 100644
+> > --- a/drivers/iio/light/Makefile
+> > +++ b/drivers/iio/light/Makefile
+> > @@ -20,6 +20,7 @@ obj-$(CONFIG_IIO_CROS_EC_LIGHT_PROX) += cros_ec_light_prox.o
+> >  obj-$(CONFIG_GP2AP020A00F)	+= gp2ap020a00f.o
+> >  obj-$(CONFIG_HID_SENSOR_ALS)	+= hid-sensor-als.o
+> >  obj-$(CONFIG_HID_SENSOR_PROX)	+= hid-sensor-prox.o
+> > +obj-$(CONFIG_IQS621_ALS)	+= iqs621-als.o
+> >  obj-$(CONFIG_SENSORS_ISL29018)	+= isl29018.o
+> >  obj-$(CONFIG_SENSORS_ISL29028)	+= isl29028.o
+> >  obj-$(CONFIG_ISL29125)		+= isl29125.o
+> > diff --git a/drivers/iio/light/iqs621-als.c b/drivers/iio/light/iqs621-als.c
+> > new file mode 100644
+> > index 0000000..92a6173
+> > --- /dev/null
+> > +++ b/drivers/iio/light/iqs621-als.c
+> > @@ -0,0 +1,361 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Azoteq IQS621 Ambient Light Sensor
+> > + *
+> > + * Copyright (C) 2019
+> > + * Author: Jeff LaBundy <jeff@labundy.com>
+> > + */
+> > +
+> > +#include <linux/device.h>
+> > +#include <linux/iio/events.h>
+> > +#include <linux/iio/iio.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/mfd/iqs62x.h>
+> > +#include <linux/module.h>
+> > +#include <linux/mutex.h>
+> > +#include <linux/notifier.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> > +
+> > +#define IQS621_ALS_FLAGS			0x16
+> > +#define IQS621_ALS_FLAGS_LIGHT			BIT(7)
+> > +
+> > +#define IQS621_ALS_UI_OUT			0x17
+> > +
+> > +#define IQS621_ALS_THRESH_DARK			0x80
+> > +#define IQS621_ALS_THRESH_DARK_MAX		1020
+> > +#define IQS621_ALS_THRESH_DARK_SHIFT		2
+> > +
+> > +#define IQS621_ALS_THRESH_LIGHT			0x81
+> > +#define IQS621_ALS_THRESH_LIGHT_MAX		4080
+> > +#define IQS621_ALS_THRESH_LIGHT_SHIFT		4
+> > +
+> > +struct iqs621_als_private {
+> > +	struct iqs62x_core *iqs62x;
+> > +	struct notifier_block notifier;
+> > +	struct mutex lock;
+> > +	bool event_en;
+> > +	u8 thresh_light;
+> > +	u8 thresh_dark;
+> > +	u8 flags;
+> > +};
+> > +
+> > +static int iqs621_als_init(struct iqs621_als_private *iqs621_als)
+> > +{
+> > +	struct iqs62x_core *iqs62x = iqs621_als->iqs62x;
+> > +	unsigned int val;
+> > +	int error;
+> > +
+> > +	mutex_lock(&iqs621_als->lock);
+> > +
+> > +	error = regmap_write(iqs62x->map, IQS621_ALS_THRESH_LIGHT,
+> > +			     iqs621_als->thresh_light);
+> > +	if (error)
+> > +		goto err_mutex;
+> > +
+> > +	error = regmap_write(iqs62x->map, IQS621_ALS_THRESH_DARK,
+> > +			     iqs621_als->thresh_dark);
+> > +	if (error)
+> > +		goto err_mutex;
+> > +
+> > +	error = regmap_read(iqs62x->map, IQS621_ALS_FLAGS, &val);
+> > +	if (error)
+> > +		goto err_mutex;
+> > +	iqs621_als->flags = val;
+> > +
+> > +	error = regmap_update_bits(iqs62x->map, IQS620_GLBL_EVENT_MASK,
+> > +				   iqs62x->dev_desc->als_mask,
+> > +				   iqs621_als->event_en ? 0 : 0xFF);
+> > +
+> > +err_mutex:
+> > +	mutex_unlock(&iqs621_als->lock);
+> > +
+> > +	return error;
+> > +}
+> > +
+> > +static int iqs621_als_notifier(struct notifier_block *notifier,
+> > +			       unsigned long event_flags, void *context)
+> > +{
+> > +	struct iqs62x_event_data *event_data = context;
+> > +	struct iqs621_als_private *iqs621_als;
+> > +	struct iio_dev *indio_dev;
+> > +	enum iio_event_direction dir;
+> > +	int error;
+> > +
+> > +	iqs621_als = container_of(notifier, struct iqs621_als_private,
+> > +				  notifier);
+> > +	indio_dev = iio_priv_to_dev(iqs621_als);
+> > +
+> > +	if (event_flags & BIT(IQS62X_EVENT_SYS_RESET)) {
+> > +		error = iqs621_als_init(iqs621_als);
+> > +		if (error) {
+> > +			dev_err(indio_dev->dev.parent,
+> > +				"Failed to re-initialize device: %d\n", error);
+> > +			return NOTIFY_BAD;
+> > +		}
+> > +
+> > +		return NOTIFY_OK;
+> > +	}
+> > +
+> > +	if (!((event_data->als_flags ^ iqs621_als->flags) &
+> > +	    IQS621_ALS_FLAGS_LIGHT))
+> > +		return NOTIFY_DONE;
+> > +
+> > +	iqs621_als->flags = event_data->als_flags;
+> > +
+> > +	if (!iqs621_als->event_en)
+> > +		return NOTIFY_OK;
+> > +
+> > +	dir = iqs621_als->flags & IQS621_ALS_FLAGS_LIGHT ? IIO_EV_DIR_RISING :
+> > +							   IIO_EV_DIR_FALLING;
+> > +
+> > +	iio_push_event(indio_dev,
+> > +		       IIO_UNMOD_EVENT_CODE(IIO_LIGHT, 0,
+> > +					    IIO_EV_TYPE_THRESH, dir),
+> > +		       iio_get_time_ns(indio_dev));
+> > +
+> > +	return NOTIFY_OK;
+> > +}
+> > +
+> > +static void iqs621_als_notifier_unregister(void *context)
+> > +{
+> > +	struct iqs621_als_private *iqs621_als = context;
+> > +	struct iio_dev *indio_dev = iio_priv_to_dev(iqs621_als);
+> > +	int error;
+> > +
+> > +	error = blocking_notifier_chain_unregister(&iqs621_als->iqs62x->nh,
+> > +						   &iqs621_als->notifier);
+> > +	if (error)
+> > +		dev_err(indio_dev->dev.parent,
+> > +			"Failed to unregister notifier: %d\n", error);
+> > +}
+> > +
+> > +static int iqs621_als_read_raw(struct iio_dev *indio_dev,
+> > +			       struct iio_chan_spec const *chan,
+> > +			       int *val, int *val2, long mask)
+> > +{
+> > +	struct iqs621_als_private *iqs621_als = iio_priv(indio_dev);
+> > +	struct iqs62x_core *iqs62x = iqs621_als->iqs62x;
+> > +	int error;
+> > +	__le16 val_buf;
+> > +
+> > +	switch (mask) {
+> > +	case IIO_CHAN_INFO_RAW:
+> > +		error = regmap_raw_read(iqs62x->map, IQS621_ALS_UI_OUT,
+> > +					&val_buf, sizeof(val_buf));
+> > +		if (error)
+> > +			return error;
+> > +
+> > +		*val = le16_to_cpu(val_buf);
+> > +		return IIO_VAL_INT;
+> > +
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +}
+> > +
+> > +static int iqs621_als_read_event_config(struct iio_dev *indio_dev,
+> > +					const struct iio_chan_spec *chan,
+> > +					enum iio_event_type type,
+> > +					enum iio_event_direction dir)
+> > +{
+> > +	struct iqs621_als_private *iqs621_als = iio_priv(indio_dev);
+> > +
+> > +	return iqs621_als->event_en;
+> > +}
+> > +
+> > +static int iqs621_als_write_event_config(struct iio_dev *indio_dev,
+> > +					 const struct iio_chan_spec *chan,
+> > +					 enum iio_event_type type,
+> > +					 enum iio_event_direction dir,
+> > +					 int state)
+> > +{
+> > +	struct iqs621_als_private *iqs621_als = iio_priv(indio_dev);
+> > +	struct iqs62x_core *iqs62x = iqs621_als->iqs62x;
+> > +	int error;
+> > +
+> > +	mutex_lock(&iqs621_als->lock);
+> > +
+> > +	error = regmap_update_bits(iqs62x->map, IQS620_GLBL_EVENT_MASK,
+> > +				   iqs62x->dev_desc->als_mask,
+> > +				   state ? 0 : 0xFF);
+> > +	if (!error)
+> > +		iqs621_als->event_en = state;
+> > +
+> > +	mutex_unlock(&iqs621_als->lock);
+> > +
+> > +	return error;
+> > +}
+> > +
+> > +static int iqs621_als_read_event_value(struct iio_dev *indio_dev,
+> > +				       const struct iio_chan_spec *chan,
+> > +				       enum iio_event_type type,
+> > +				       enum iio_event_direction dir,
+> > +				       enum iio_event_info info,
+> > +				       int *val, int *val2)
+> > +{
+> > +	struct iqs621_als_private *iqs621_als = iio_priv(indio_dev);
+> > +
+> > +	switch (dir) {
+> > +	case IIO_EV_DIR_RISING:
+> > +		*val = iqs621_als->thresh_light;
+> > +		*val <<= IQS621_ALS_THRESH_LIGHT_SHIFT;
+> > +		return IIO_VAL_INT;
+> > +
+> > +	case IIO_EV_DIR_FALLING:
+> > +		*val = iqs621_als->thresh_dark;
+> > +		*val <<= IQS621_ALS_THRESH_DARK_SHIFT;
+> > +		return IIO_VAL_INT;
+> > +
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +}
+> > +
+> > +static int iqs621_als_write_event_value(struct iio_dev *indio_dev,
+> > +					const struct iio_chan_spec *chan,
+> > +					enum iio_event_type type,
+> > +					enum iio_event_direction dir,
+> > +					enum iio_event_info info,
+> > +					int val, int val2)
+> > +{
+> > +	struct iqs621_als_private *iqs621_als = iio_priv(indio_dev);
+> > +	struct iqs62x_core *iqs62x = iqs621_als->iqs62x;
+> > +	int error = -EINVAL;
+> > +
+> > +	mutex_lock(&iqs621_als->lock);
+> > +
+> > +	switch (dir) {
+> > +	case IIO_EV_DIR_RISING:
+> > +		if (val > IQS621_ALS_THRESH_LIGHT_MAX)
+> > +			break;
+> > +		val >>= IQS621_ALS_THRESH_LIGHT_SHIFT;
+> > +
+> > +		error = regmap_write(iqs62x->map, IQS621_ALS_THRESH_LIGHT, val);
+> > +		if (!error)
+> > +			iqs621_als->thresh_light = val;
+> > +		break;
+> > +
+> > +	case IIO_EV_DIR_FALLING:
+> > +		if (val > IQS621_ALS_THRESH_DARK)
+> > +			break;
+> > +		val >>= IQS621_ALS_THRESH_DARK_SHIFT;
+> > +
+> > +		error = regmap_write(iqs62x->map, IQS621_ALS_THRESH_DARK, val);
+> > +		if (!error)
+> > +			iqs621_als->thresh_dark = val;
+> > +		break;
+> > +
+> > +	default:
+> > +		break;
+> > +	}
+> > +
+> > +	mutex_unlock(&iqs621_als->lock);
+> > +
+> > +	return error;
+> > +}
+> > +
+> > +static const struct iio_info iqs621_als_info = {
+> > +	.read_raw = &iqs621_als_read_raw,
+> > +	.read_event_config = iqs621_als_read_event_config,
+> > +	.write_event_config = iqs621_als_write_event_config,
+> > +	.read_event_value = iqs621_als_read_event_value,
+> > +	.write_event_value = iqs621_als_write_event_value,
+> > +};
+> > +
+> > +static const struct iio_event_spec iqs621_als_events[] = {
+> > +	{
+> > +		.type = IIO_EV_TYPE_THRESH,
+> > +		.dir = IIO_EV_DIR_EITHER,
+> > +		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
+> > +	},
+> > +	{
+> > +		.type = IIO_EV_TYPE_THRESH,
+> > +		.dir = IIO_EV_DIR_RISING,
+> > +		.mask_separate = BIT(IIO_EV_INFO_VALUE),
+> > +	},
+> > +	{
+> > +		.type = IIO_EV_TYPE_THRESH,
+> > +		.dir = IIO_EV_DIR_FALLING,
+> > +		.mask_separate = BIT(IIO_EV_INFO_VALUE),
+> > +	},
+> > +};
+> > +
+> > +static const struct iio_chan_spec iqs621_als_channels[] = {
+> > +	{
+> > +		.type = IIO_LIGHT,
+> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> > +		.event_spec = iqs621_als_events,
+> > +		.num_event_specs = ARRAY_SIZE(iqs621_als_events),
+> > +	},
+> > +};
+> > +
+> > +static int iqs621_als_probe(struct platform_device *pdev)
+> > +{
+> > +	struct iqs62x_core *iqs62x = dev_get_drvdata(pdev->dev.parent);
+> > +	struct iqs621_als_private *iqs621_als;
+> > +	struct iio_dev *indio_dev;
+> > +	unsigned int val;
+> > +	int error;
+> > +
+> > +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*iqs621_als));
+> > +	if (!indio_dev)
+> > +		return -ENOMEM;
+> > +
+> > +	indio_dev->modes = INDIO_DIRECT_MODE;
+> > +	indio_dev->dev.parent = &pdev->dev;
+> > +	indio_dev->channels = iqs621_als_channels;
+> > +	indio_dev->num_channels = ARRAY_SIZE(iqs621_als_channels);
+> > +	indio_dev->name = iqs62x->dev_desc->dev_name;
+> > +	indio_dev->info = &iqs621_als_info;
+> > +
+> > +	iqs621_als = iio_priv(indio_dev);
+> > +	iqs621_als->iqs62x = iqs62x;
+> > +
+> > +	error = regmap_read(iqs62x->map, IQS621_ALS_THRESH_LIGHT, &val);
+> > +	if (error)
+> > +		return error;
+> > +	iqs621_als->thresh_light = val;
+> > +
+> > +	error = regmap_read(iqs62x->map, IQS621_ALS_THRESH_DARK, &val);
+> > +	if (error)
+> > +		return error;
+> > +	iqs621_als->thresh_dark = val;
+> > +
+> > +	mutex_init(&iqs621_als->lock);
+> > +
+> > +	error = iqs621_als_init(iqs621_als);
+> > +	if (error)
+> > +		return error;
+> > +
+> > +	iqs621_als->notifier.notifier_call = iqs621_als_notifier;
+> > +	error = blocking_notifier_chain_register(&iqs621_als->iqs62x->nh,
+> > +						 &iqs621_als->notifier);
+> > +	if (error) {
+> > +		dev_err(&pdev->dev, "Failed to register notifier: %d\n", error);
+> > +		return error;
+> > +	}
+> > +
+> > +	error = devm_add_action_or_reset(&pdev->dev,
+> > +					 iqs621_als_notifier_unregister,
+> > +					 iqs621_als);
+> > +	if (error) {
 > 
-> Another problem that we have here is that the period is fixed to 1 ms
-> and if a consumer requests for example:
-> 
-> 	.period = 5000000,
-> 	.duty_cycle = 1000000,
-> 
-> the hardware is actually configured for
-> 
-> 	.period = 1000000,
-> 	.duty_cycle = 1000000,
-> 
-> . I don't have a good suggestion how to fix this. We'd need to
-> draw a line somewhere and decline a request that is too far from the
-> result. But where this line should be is not obvious, it should
-> definitively not be implemented in the driver itself IMHO.
-> 
-> (The only halfway sane approach would be to let lowlevel drivers
-> implement a .round_state callback and then let the framework judge. But
-> we're a long way from having that, so that's not a solution for today.)
+> This one can only fail if a memory allocation fails (IIRC) so it feels
+> a bit paranoid to worry about this little corner case when you are
+> fairly (correctly in my view) sparse in error message for other cases..
 > 
 
-Agreed on all counts. For now, I will mention in the 'Limitations' heading that
-the period cannot be adjusted.
+Sure thing; I'll drop the error message.
 
-> > > > +	iqs620_pwm = container_of(chip, struct iqs620_pwm_private, chip);
-> > > > +	iqs62x = iqs620_pwm->iqs62x;
-> > > > +
-> > > > +	error = regmap_write(iqs62x->map, IQS620_PWM_DUTY_CYCLE, duty_clamp);
-> > > > +	if (error)
-> > > > +		return error;
-> > > > +
-> > > > +	state->period = IQS620_PWM_PERIOD_NS;
-> > > > +	state->duty_cycle = (duty_clamp + 1) * IQS620_PWM_PERIOD_NS / 256;
-> > > 
-> > > This suggests that if the value in the IQS620_PWM_DUTY_CYCLE is 0 the
-> > > duty cycle is 1/256 ms with a period of 1 ms and the output cannot be
-> > > constant inactive. If this is right please add a paragraph in the
-> > > driver's comment at the top:
-> > > 
-> > > 	* Limitations:
-> > > 	* - The hardware cannot generate a 0% duty cycle
-> > > 
-> > > (Please stick to this format, other drivers use it, too.)
-> > 
-> > That's correct; the lowest duty cycle that can be achieved using only the
-> > IQS620_PWM_DUTY_CYCLE register is 0.4%. We can, however, generate 0% duty
-> > cycle by disabling the output altogether using a separate register. Would
-> > that be better than flat-out saying it's impossible?
+> > +		dev_err(&pdev->dev, "Failed to add action: %d\n", error);
+> > +		return error;
+> > +	}
+> > +
+> > +	return devm_iio_device_register(&pdev->dev, indio_dev);
+> > +}
+> > +
+> > +static struct platform_driver iqs621_als_platform_driver = {
+> > +	.driver = {
+> > +		.name	= IQS621_DRV_NAME_ALS,
+> > +	},
+> > +	.probe		= iqs621_als_probe,
+> > +};
+> > +module_platform_driver(iqs621_als_platform_driver);
+> > +
+> > +MODULE_AUTHOR("Jeff LaBundy <jeff@labundy.com>");
+> > +MODULE_DESCRIPTION("Azoteq IQS621 Ambient Light Sensor");
+> > +MODULE_LICENSE("GPL");
+> > +MODULE_ALIAS("platform:" IQS621_DRV_NAME_ALS);
 > 
-> There is (maybe) a small difference between disabled and 0% duty cycle,
-> at least from the framework's POV: If you do:
-> 
-> 	pwm_apply_state(pwm, { .enabled = true, .period = 1000000, .duty_cycle = 1000000, });
-> 	pwm_apply_state(pwm, { .enabled = false, .period = $DC, .duty_cycle = $DC, });
-> 	pwm_apply_state(pwm, { .enabled = true, .period = 1000000, .duty_cycle = 1000000, });
-> 
-> and compare it to the expected result of
-> 
-> 	pwm_apply_state(pwm, { .enabled = true, .period = 1000000, .duty_cycle = 1000000, });
-> 	pwm_apply_state(pwm, { .enabled = true, .period = 1000000, .duty_cycle = 0, });
-> 	pwm_apply_state(pwm, { .enabled = true, .period = 1000000, .duty_cycle = 1000000, });
-> 
-> the difference is that the duration of the inactive phase in the latter
-> case is a multiple of 1 ms.
-> 
-> There is no policy for lowlevel drivers what to do, but disabling when
-> 0% is requested is at least not unseen and probably more what consumers
-> expect.
-> 
-
-With the change I am proposing, the output will be driven to zero if enabled = false
-OR duty_cycle < 4000 ns. Stated another way:
-
-enable duty_cycle IQS620_PWR_SETTINGS[7] IQS620_PWM_DUTY_CYCLE
------- ---------- ---------------------- ---------------------
-  0    don't care           0                  don't care
-  1    0 ... 3999           0                  don't care
-  1    4000 ... x           1                      0
-  1    x+1  ... y           1                      1
-
-...and so on. For context, if IQS620_PWR_SETTINGS[7] = 0 then the output is held to
-zero. If IQS620_PWR_SETTINGS[7] = 1 then the output toggles at a duty cycle between
-0.4% and 100% as a function of IQS620_PWM_DUTY_CYCLE.
-
-Based on how the device behaves in response to its two available registers, I think
-your two examples will appear equal, but please let me know if I have understood.
-
-> > > How does the hardware behave on changes? For example you're first
-> > > committing the duty cycle and then on/off. Can it happen that between
-> > > 
-> > > 	pwm_apply_state(pwm, { .duty_cycle = 3900, .period = 1000000, .enabled = true)
-> > > 	...
-> > > 	pwm_apply_state(pwm, { .duty_cycle = 1000000, .period = 1000000, .enabled = false)
-> > > 
-> > > the output is active for longer than 4 µs because the iqs620_pwm_apply
-> > > function is preempted between the two register writes and so we already
-> > > have .duty_cycle = 1000000 but still .enabled = true in the hardware?
-> > > 
-> > 
-> > My results show that it is possible to generate up to two irregular periods
-> > by changing the duty cycle while the output is active.
-> > 
-> > Depending on the ratio of old-to-new duty cycle and the position of the I2C
-> > write relative to the asynchronous output, the device may produce one pulse
-> > for which the width represents neither the old nor the new duty cycle.
-> > 
-> > > Does a change complete the currently running period? Does disabling
-> > > complete the currently running period? If so, does regmap_update_bits
-> > > block until the new setting is active?
-> > > 
-> > 
-> > A quick test reveals the following:
-> > 
-> > * Duty cycle changes may interrupt a running period, i.e., the output may
-> >   transition in the middle of the period to accommodate the new duty cycle.
-> > * Disabling the output drives it to zero immediately, i.e., the period does
-> >   does not run to completion.
-> > 
-> > I will add a 'Limitations' section at the top as other drivers do, and call
-> > these points out specifically.
-> 
-> Great. Thanks.
-> 
-> > > > +static int iqs620_pwm_notifier(struct notifier_block *notifier,
-> > > > +			       unsigned long event_flags, void *context)
-> > > > +{
-> > > > +	struct iqs620_pwm_private *iqs620_pwm;
-> > > > +	struct pwm_state state;
-> > > > +	int error;
-> > > > +
-> > > > +	iqs620_pwm = container_of(notifier, struct iqs620_pwm_private,
-> > > > +				  notifier);
-> > > > +
-> > > > +	if (!iqs620_pwm->ready || !(event_flags & BIT(IQS62X_EVENT_SYS_RESET)))
-> > > > +		return NOTIFY_DONE;
-> > > > +
-> > > > +	pwm_get_state(&iqs620_pwm->chip.pwms[0], &state);
-> > > > +
-> > > > +	error = iqs620_pwm_apply(&iqs620_pwm->chip,
-> > > > +				 &iqs620_pwm->chip.pwms[0], &state);
-> > > > +	if (error) {
-> > > > +		dev_err(iqs620_pwm->chip.dev,
-> > > > +			"Failed to re-initialize device: %d\n", error);
-> > > > +		return NOTIFY_BAD;
-> > > > +	}
-> > > > +
-> > > > +	return NOTIFY_OK;
-> > > 
-> > > So the PWM can loose it's state sometimes? When does that happen?
-> > 
-> > That's correct. The device performs an internal soft reset in the presence
-> > of what it considers to be an I2C timeout error; in this case all registers
-> > are restored to their default values.
-> 
-> Is this a theoretic problem or does that happen from time to time?
->  
-
-This event can occur if the I2C master stalls a transaction for 10's of ms. It's
-not a theoretical problem, but it should not happen during normal circumstances.
-
-> > The data sheet goes so far as to recommend monitoring for this interrupt and
-> > restoring the device on-the-fly. I have added some comments in iqs62x_irq in
-> > patch [2/8] which provides some further detail.
-> 
-> Monitoring that interrupt seems reasonable.
->  
-> > > > +	error = devm_add_action_or_reset(&pdev->dev,
-> > > > +					 iqs620_pwm_notifier_unregister,
-> > > > +					 iqs620_pwm);
-> > > 
-> > > I wonder if this is safe. If in iqs620_pwm_notifier_unregister()
-> > > unregistering of the notifier goes wrong (not sure when this can happen)
-> > > the memory behind iqs620_pwm goes away. Then later iqs620_pwm_notifier
-> > > might be called trying to use *iqs620_pwm ...
-> > 
-> > I think this is purely theoretical, as blocking_notifier_chain_unregister
-> > only fails if the notifier is not found in the chain. If for some reason
-> > blocking_notifier_chain_register fails (which currently cannot happen, as
-> > it always returns zero), the driver will fail to probe before the action
-> > could be added.
-> > 
-> > This of course means the error message in iqs620_pwm_notifier_unregister
-> > is unnecessary; it is simply provided for debug/visibility.
-> 
-> I'd suggest to do the unregister call in the remove callback which you
-> have for pwm unregistration anyhow. Or alternatively implement a devm_
-> variant of the notifier registration that explains in the comments that
-> it is safe.
-
-Sure thing; I'll unregister the notifier in iqs620_pwm_remove.
-
-> 
-> Best regards
-> Uwe
-> 
-> -- 
-> Pengutronix e.K.                           | Uwe Kleine-König            |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 > 
 
 Kind regards,
