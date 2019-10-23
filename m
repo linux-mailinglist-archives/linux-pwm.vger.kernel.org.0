@@ -2,112 +2,107 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ACE9AE1C23
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Oct 2019 15:18:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DE18E1CED
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Oct 2019 15:40:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391184AbfJWNRz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 23 Oct 2019 09:17:55 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:54383 "EHLO
+        id S2405946AbfJWNjz convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Wed, 23 Oct 2019 09:39:55 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:43825 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730450AbfJWNRz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Oct 2019 09:17:55 -0400
-Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MXYEr-1iVkTO0q2p-00YwUO; Wed, 23 Oct 2019 15:17:53 +0200
-Received: by mail-qk1-f176.google.com with SMTP id w2so19692817qkf.2;
-        Wed, 23 Oct 2019 06:17:52 -0700 (PDT)
-X-Gm-Message-State: APjAAAVRP7+XXLOGJ2qzxRPim87cYAH/HCvEjuapVyW383qOmJ2p6k/j
-        r44ZulpoeG/MKquLWO2W2DrKHIC7YfqReeZDQ98=
-X-Google-Smtp-Source: APXvYqwuwF999+RxRIbSV5NNX+xHenNtGFCAqCA+7Cahtx0tw1C0BafJPH8NNbUYS7dpsAsfv3lWqVq7b2MktsSH9qA=
-X-Received: by 2002:a37:9442:: with SMTP id w63mr7981201qkd.138.1571836671589;
- Wed, 23 Oct 2019 06:17:51 -0700 (PDT)
+        with ESMTP id S2392089AbfJWNjy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Oct 2019 09:39:54 -0400
+Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mf0Nm-1hmXPR1EIE-00gboz; Wed, 23 Oct 2019 15:39:51 +0200
+Received: by mail-qt1-f177.google.com with SMTP id o49so24470171qta.7;
+        Wed, 23 Oct 2019 06:39:49 -0700 (PDT)
+X-Gm-Message-State: APjAAAU6rjuILI+dBSQWkepJeZcFXjrhStzYWyvwa71wsCNVgYufVnZt
+        iHt9MtJEPLOwsEVZaopkvY4n9SDmIlf2VoWvAbc=
+X-Google-Smtp-Source: APXvYqyt7m8OnGbGOfKvN6UapNf8Y0PixnD+b/5MFVO15QeK4AzpoE5xCHBxjuJT4OWklHgs4L5FWsrmt4sucJ53v+g=
+X-Received: by 2002:ac8:18eb:: with SMTP id o40mr9289234qtk.304.1571837989082;
+ Wed, 23 Oct 2019 06:39:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-11-arnd@arndb.de> <20191023121458.GB11048@pi3>
-In-Reply-To: <20191023121458.GB11048@pi3>
+References: <20191010202802.1132272-1-arnd@arndb.de> <20191023131049.GG11048@pi3>
+In-Reply-To: <20191023131049.GG11048@pi3>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 23 Oct 2019 15:17:35 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3ktdA12vpi6zrTXs7-03efk2Ke_0_mQ9X40MLNcZnEqA@mail.gmail.com>
-Message-ID: <CAK8P3a3ktdA12vpi6zrTXs7-03efk2Ke_0_mQ9X40MLNcZnEqA@mail.gmail.com>
-Subject: Re: [PATCH 11/36] ARM: s5pv210: split from plat-samsung
+Date:   Wed, 23 Oct 2019 15:39:32 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1v2-+geD+JbNP-t418ZjntQNSte4rt8c7N6sJdpb3+DQ@mail.gmail.com>
+Message-ID: <CAK8P3a1v2-+geD+JbNP-t418ZjntQNSte4rt8c7N6sJdpb3+DQ@mail.gmail.com>
+Subject: Re: [PATCH 00/36] ARM: samsung platform cleanup
 To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sangbeom Kim <sbkim73@samsung.com>,
+Cc:     Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
         Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-leds@vger.kernel.org,
         "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
         <linux-samsung-soc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Olof Johansson <olof@lixom.net>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Lihua Yao <ylhuajnu@outlook.com>,
+        Kukjin Kim <kgene@kernel.org>, linux-serial@vger.kernel.org,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
         Linux PWM List <linux-pwm@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-serial@vger.kernel.org,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>
+        Sergio Prado <sergio.prado@e-labworks.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Lihua Yao <ylhuajnu@163.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-hwmon@vger.kernel.org, patches@opensource.cirrus.com,
+        USB list <linux-usb@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:U1spPertaXPTso5CJBqN3itC6kIsQkitKvFOpXuZUkF7n9Dgmy6
- +jlyWhU42oj4t6ZztdvUm8YHBEQ7Y6VhrDKem6yvAiCDF3IcZwCSl4uQg6aib0HeUltEYoh
- 8n84Je1GgeCfquk69wqeYJ166CJs8AgHBUxbI9HGlFaS5uLwzXjd+4sgsQHrdIx5VV5XEYb
- lW3KwwZ0Clc9+qFYFaSFA==
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:NLof35stNYTGVLCCiBOj5shE8fEwjZaac7cdAu2nrrmym/kOcjv
+ Qnfa/3i0a5qyJkyMXctYodBV7VP0bHQaFrXIBjwV/gpmENyzPTQE7+sVihuV4liYROCT33b
+ 9WO8+gy5V2fG2DuQgIo6thaPwkDMewwBExepC4yasYMIPkDiS0zr+8kJODaOpU4HPFc7gMV
+ MPShUYeuOvxdtdljHgfJg==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IQQX/1aQd6U=:2/HZS3UQ1BXkUgYtvzQNbJ
- 4FzJPajCM9id9EM7B5VCR4XvBcm+uMGZUG63BGI4IHVW5SI0NYadiSkOEfoqOWrizzLK/K8wN
- b81STCOV4oV0ZwRdj4+VPx50TKjth8D8uz1YD/AH/i5HsYiPW0Q2PAJ3TgUQvX3pzTCAHx43/
- fUKUM++xVm29jA94vAj9ufb6o2gLanexMb+mLmFV0RkvsH59WiuuLYygG4dh/exJacpv3tnr/
- 0G6i4XfvCBozYHzY+WvDeliu2Wt2o7+mCm9HBWyZMgfoMiaUOZFEvwOrtWH5FNuuOcpLyu/R+
- c89JyNOJfoRZMKxNiz7vQ7TjcQo1jN6kxz7+VZu3KSDhuqLpIfVwp+h/BSaVjVny5pXrA9yyH
- PzHjqCYdQnZkLdT7484NrXuTrW6TAGNhB9/7I8MIJzH7u4J1crc/8o1f4F8B3kDSNZ7gHgs0V
- TgHWwyEtOCO4poorlBpoBG93/yJeJNE8Lxfe0yFK4BiPC0wBzEjgeRfcg9UvBVJHtgGkqmZUX
- J+O7d6bThy0GIqG5fw4eboTWoISB62yRCg50sf2/CyOzhVfxuKcmSbMIhkLKDfBxIZjm3pej3
- 4RSsbprGtHaRfrbOicCrT+9tcAq74Ar+3FYU1gRTm2p1CwPqGfDDssJtNnr7SM+W+75S2Hsml
- xP7/fYdQRym6pcChRqrw5hyigRv+8KCgsU2k+WM2Za6MEzhPiCUMjqZ6zP6Ab42eeVgbkKQff
- Z+UrgdgBcmejwdC4RNw/NERiOohLNV1HJoKx4UMEPDFZplvGBwfRbHRoxazS6buZJQyaV36hc
- 0tisvUg/omTaQeBNTNh7K67oL+vcp8+lmzHCgMSCIIwowwxDqIXl2xu/fJ7gdoMG19juFH372
- py8sY0FmOY2495P77yVg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DaQc5ZGaJsY=:F603/POvpKLPXWa0X1lFEH
+ aQjxfOCxGD/pIMHmKlHcbcFD80Nc+ewErQWmvj+Qgp6xaAE5MxfbNNNrin9LMgRKve0v8GrHu
+ BPPYcLBIJd/tRGzy7EoHKzi1xCTWBRKPuZW+NRo5Q3c4o6tNWGjXzPGUI9xyOYPIzGuB4sxow
+ ECbUMNeq+vtLAQSVxvpHOttzchCbbhPJcjfvA+bQAYJp52FgAuxb7i+4FvHbE4PKIBUfZrfn7
+ RTWpJntJNT2FyPouWE44kX34NjZBTj4rpIcCKzq/vJGEBiexW1JIi5IKVdXZvOH5f6ayOyfG4
+ N5aMRdit65bReN0guN1SsKJ7uFbD0kzxYt0bE1Mf25djeRlbjBl6eNdESrSyRRUYp5EHOfQ/A
+ Sa10vMW4Ena5av/pF9Ivtanmnx43oe8gg/n1e283kgsPXqMvxru3WC5Nzl6w8FtOo8cSrKeIA
+ 4cwYy4vh4ukZW7IvGkXi8VTyHR5QO0uX/EIi41POGGpNZfuz2RZFE3OQuaZ2ZAWDyKIDIkMiS
+ w6MOzO71LwFlzMud8Juwt083ioitXDvT/9TIYbAIAmfnUtb8NIa87LZjq9LnymQfMT/771jDX
+ Pv0pU2J8yDYscI2Ar/9iY65bLYD1odSzwo1yupcBRkEYBk2LtDP2ofqM/FtIHQxHEgUCSL8BF
+ +DQWO4nbj5c/D8V8Rcbk6xIsj3dpX/eZmDwcjBHzixCuvxTtC6bkTqxwxXemSc09w9sXO96BH
+ 8wrLVBqppvA4u9/3mwzDk1TPdUl264mBZECZMuP2bwYmiOyo6CZ+bMP0dYsot7zDsLQZk6JM2
+ zgDILD/0tZiVRCT1r1eA1ueLWwCTN+MFNjGnfX1TAxma6wIGEoHuP9Uzto3sTth328X/tkiaT
+ tiL3D4xHp9lUaPHnTz2w==
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 2:15 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Thu, Oct 10, 2019 at 10:29:55PM +0200, Arnd Bergmann wrote:
-> > These can be build completely independently, so split
-> > the two Kconfig symbols.
-> >       config DEBUG_S3C_UART0
-> > -             depends on PLAT_SAMSUNG || ARCH_EXYNOS
-> > +             depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
+On Wed, Oct 23, 2019 at 3:11 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On Thu, Oct 10, 2019 at 10:28:02PM +0200, Arnd Bergmann wrote:
+> > The contents are available for testing in
+> >
+> > git://kernel.org:/pub/scm/linux/kernel/git/arnd/playground.git s3c-multiplatform
 >
-> How are you going to select DEBUG_S5PV210_UART now?
+> When sending v2, can you Cc:
+>
+> Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> Lihua Yao <ylhuajnu@outlook.com>
+> (or Lihua Yao <ylhuajnu@163.com> if outlook.com bounces)
+> Sergio Prado <sergio.prado@e-labworks.com>
+> Sylwester Nawrocki <s.nawrocki@samsung.com>
+>
+> These are folks which to my knowledge had working S3C and S5P boards
+> so maybe they could provide testing.
 
-I don't see a problem here, the patch should not change the behavior at all.
+Ok, will do. I've uploaded the modified version based on your comments to
+the above URL for now.
 
-The whole entry now looks like:
+I'll probably give it a little more time before resending, but they
+could already
+start testing that version.
 
-        config DEBUG_S3C_UART0
-                depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
-                select DEBUG_EXYNOS_UART if ARCH_EXYNOS
-                select DEBUG_S3C24XX_UART if ARCH_S3C24XX
-                select DEBUG_S3C64XX_UART if ARCH_S3C64XX
-                select DEBUG_S5PV210_UART if ARCH_S5PV210
-                bool "Use Samsung S3C UART 0 for low-level debug"
+Thanks a lot for the review!
 
-so this will work as before with any of ARCH_EXYNOS, ARCH_S3C24XX,
-ARCH_S3C64XX and ARCH_S5PV210.
-
-What am I missing?
-
-     Arnd
+      Arnd
