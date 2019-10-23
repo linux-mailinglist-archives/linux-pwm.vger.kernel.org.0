@@ -2,19 +2,19 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 62A5AE106A
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Oct 2019 05:09:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D971EE10A2
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Oct 2019 05:36:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbfJWDJb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 22 Oct 2019 23:09:31 -0400
-Received: from p3plsmtpa07-08.prod.phx3.secureserver.net ([173.201.192.237]:42733
-        "EHLO p3plsmtpa07-08.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728076AbfJWDJb (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Oct 2019 23:09:31 -0400
+        id S1730032AbfJWDgv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Oct 2019 23:36:51 -0400
+Received: from p3plsmtpa07-01.prod.phx3.secureserver.net ([173.201.192.230]:54328
+        "EHLO p3plsmtpa07-01.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725874AbfJWDgu (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Oct 2019 23:36:50 -0400
 Received: from labundy.com ([136.49.227.119])
         by :SMTPAUTH: with ESMTPSA
-        id N71bi1FneKVk0N71ci7phJ; Tue, 22 Oct 2019 20:09:29 -0700
-Date:   Tue, 22 Oct 2019 22:09:26 -0500
+        id N7S2i8g3AKgoPN7S4iFQer; Tue, 22 Oct 2019 20:36:49 -0700
+Date:   Tue, 22 Oct 2019 22:36:46 -0500
 From:   Jeff LaBundy <jeff@labundy.com>
 To:     Jonathan Cameron <jic23@kernel.org>
 Cc:     lee.jones@linaro.org, dmitry.torokhov@gmail.com, jdelvare@suse.com,
@@ -24,24 +24,23 @@ Cc:     lee.jones@linaro.org, dmitry.torokhov@gmail.com, jdelvare@suse.com,
         linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
         pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
         mark.rutland@arm.com
-Subject: Re: [PATCH 7/8] iio: proximity: Add support for Azoteq IQS622
- proximity sensor
-Message-ID: <20191023030926.GA4458@labundy.com>
+Subject: Re: [PATCH 1/8] dt-bindings: mfd: iqs62x: Add bindings
+Message-ID: <20191023033646.GB4458@labundy.com>
 References: <1571631083-4962-1-git-send-email-jeff@labundy.com>
- <1571631083-4962-8-git-send-email-jeff@labundy.com>
- <20191022122341.32f0883f@archlinux>
+ <1571631083-4962-2-git-send-email-jeff@labundy.com>
+ <20191022120051.686ed9f9@archlinux>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191022122341.32f0883f@archlinux>
+In-Reply-To: <20191022120051.686ed9f9@archlinux>
 User-Agent: Mutt/1.5.24 (2015-08-30)
-X-CMAE-Envelope: MS4wfJ7L6SZZRs9QEKetqQuLCirqsgeSEMNqTdbU5gW8I8RkGRJvkaPwoUScNrbRSredWSxwP4GLFTFo8HzP7OAqW6lZ/8O/ToyJk+iOQhlpsnUmh/0R5M/E
- BtSREfMRr8ntUYQdVHtQpLWUCO9NyVd47J4ahjVMn71Y5fFHN5frD5akO0HMmeBSRHheVk4Ks/OBCnFgIs+lc3uH0E1E2jrF5BWnO0fGbuvR/jXejJWGkJ3s
- odezzyEBRUX2a8hGEUwWey16Krw5r6zlcpiQ7yPfjJBOjFTlBI4ATYgxs7yF+jBP3rrWAQ9Pos2UPsr0lzOK+v8cOeD8hhrHaT1J+RRx3kysHYPplUAAPCbH
- aJlDMo/0fOzzbmpwyKB/+SiEjsCfj2DIoDE02fIITkKLpRSes2ohD48B2EWMHMBjV9r6NXpSDFdEi9AkYpXu9dpQaUnVmh8FiQoKKyuZYu6VOrM7H4ixQQOm
- lNUGyMnuntzwNhm82b+Pzp3vb119BEbR6+EkD4SuDestbPlgG8zLykXraS5tt9m2ATvkg50ciTtbHXGUP4y7b4fCykSEQSXXEdC9hUZT9kvl2XZdqDLrZ4Lt
- EE1Q+8uEXniyrm5vspKZWAjlYgEK+ItDQ4d0i4hDL82CAYPMrE0VxaijXPOPDkF6zUY6WjG9EdgqE7RBBXQE+rtv1THNO1iGQeGL1Q1qhWIaD4kTBZl8K1Xu
- 3GkGYxyTgMM=
+X-CMAE-Envelope: MS4wfPy5VNELZTK655s72NNtnuKndUpv82PqewmblSw/ZOKD6Mj71ZooUOpVnTWrM61PTT0u8Yr2oFcM62OjdcD5qlmrAqETdej3HagcNMmwB60k44bWoalW
+ EI8W1eucz+r7vnIZoCKgqfmg19A7+mNiwCf6H/Yoy/61t7LajdjG7odFjm2UPttMAixQe7s6JsovE3p7A8iKvcurliFjc8HOX+n3J4ld0pGjwLaiOGsqo/db
+ mT5MN1+EeoWYe5f8a4owAb/PXBqFnnm66edWpSQJnF3cO1pvJkG0QIQoStbqtCERhC6qzyTzbqX4n+iXfO6DYEBujYriwn9WE+JAKFgAOwUtjN1t/d48h5h3
+ /WURc+dWWwoeVvxwUjGEpD/eVTwNGGaBE2uBETxJgMyOpju/zSB9Tf6qlbc4/vGGOeAEbAAaGtOvd/WVuaVg/S2L2OW/vl/3TPUeCZT8QuQcR66ZYlhx15g+
+ O6XuXrevBVPtt/LCCMkkYcOQJl9mFM+BqIxVQW2c+XVVbMgVvVpoQkItbd6CVTnsQAy0rPEGcEMEkqSrvqoD/eoj6SVQynKrMGbwSKokupb7UcvOahvYAEyV
+ VGZJUyW5YFS7ojTjw74MflPJeJVFmdSm8VZD5rUaadSTxEZ5hpKDVJTmNr4Qpx1hlcwoSk7TFmc0Pv315HFg2JDSBJunrbzjh79aCpEWmx6PA/stLtn9FiJh
+ b1am/TSDeFM=
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
@@ -49,426 +48,309 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 Hi Jonathan,
 
-Thanks again for your prompt review here and the rest of the series.
-
-On Tue, Oct 22, 2019 at 12:23:46PM +0100, Jonathan Cameron wrote:
-> On Sun, 20 Oct 2019 23:11:22 -0500
+On Tue, Oct 22, 2019 at 12:00:51PM +0100, Jonathan Cameron wrote:
+> On Sun, 20 Oct 2019 23:11:16 -0500
 > Jeff LaBundy <jeff@labundy.com> wrote:
 > 
-> > This patch adds support for the Azoteq IQS622 proximity sensor,
-> > capable of reporting a unitless measurement of a target's prox-
-> > imity to the sensor.
+> > This patch adds binding documentation for six-channel members of the
+> > Azoteq ProxFusion family of sensor devices.
 > > 
 > > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-> A few trivial bits inline + that question on the dt binding and
-> whether it is something we ought to be deciding at device build
-> time or whether there are devices where it should be configurable.
 > 
-> Thanks,
+> I'm not sure if Lee has made the switch for mfd entirely yet, but
+> mostly new dt bindings need to be in yaml format as it allows
+> automated parsing of the examples + bindings using them for
+> correctness.
+> 
+
+I'll wait for Lee or Rob's cue, but I'm happy to move to yaml if it's time
+to make the switch here.
+
+> One comment inline.  I'm far from an expert on most of the stuff here
+> so will leave it for others!
 > 
 > Jonathan
 > 
+> 
 > > ---
-> >  drivers/iio/proximity/Kconfig       |  10 ++
-> >  drivers/iio/proximity/Makefile      |   1 +
-> >  drivers/iio/proximity/iqs622-prox.c | 334 ++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 345 insertions(+)
-> >  create mode 100644 drivers/iio/proximity/iqs622-prox.c
+> >  Documentation/devicetree/bindings/mfd/iqs62x.txt | 242 +++++++++++++++++++++++
+> >  1 file changed, 242 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/iqs62x.txt
 > > 
-> > diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-> > index d536014..2366fd7 100644
-> > --- a/drivers/iio/proximity/Kconfig
-> > +++ b/drivers/iio/proximity/Kconfig
-> > @@ -21,6 +21,16 @@ endmenu
-> >  
-> >  menu "Proximity and distance sensors"
-> >  
-> > +config IQS622_PROX
-> > +	tristate "Azoteq IQS622 proximity sensor"
-> > +	depends on MFD_IQS62X
-> > +	help
-> > +	  Say Y here if you want to build support for the Azoteq IQS622
-> > +	  proximity sensor.
-> > +
-> > +	  To compile this driver as a module, choose M here: the module
-> > +	  will be called iqs622-prox.
-> > +
-> >  config ISL29501
-> >  	tristate "Intersil ISL29501 Time Of Flight sensor"
-> >  	depends on I2C
-> > diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-> > index 0bb5f9d..802ba9d 100644
-> > --- a/drivers/iio/proximity/Makefile
-> > +++ b/drivers/iio/proximity/Makefile
-> > @@ -5,6 +5,7 @@
-> >  
-> >  # When adding new entries keep the list in alphabetical order
-> >  obj-$(CONFIG_AS3935)		+= as3935.o
-> > +obj-$(CONFIG_IQS622_PROX)	+= iqs622-prox.o
-> >  obj-$(CONFIG_ISL29501)		+= isl29501.o
-> >  obj-$(CONFIG_LIDAR_LITE_V2)	+= pulsedlight-lidar-lite-v2.o
-> >  obj-$(CONFIG_MB1232)		+= mb1232.o
-> > diff --git a/drivers/iio/proximity/iqs622-prox.c b/drivers/iio/proximity/iqs622-prox.c
+> > diff --git a/Documentation/devicetree/bindings/mfd/iqs62x.txt b/Documentation/devicetree/bindings/mfd/iqs62x.txt
 > > new file mode 100644
-> > index 0000000..a805fb21
+> > index 0000000..089f567
 > > --- /dev/null
-> > +++ b/drivers/iio/proximity/iqs622-prox.c
-> > @@ -0,0 +1,334 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Azoteq IQS622 Proximity Sensor
-> > + *
-> > + * Copyright (C) 2019
-> > + * Author: Jeff LaBundy <jeff@labundy.com>
-> > + */
+> > +++ b/Documentation/devicetree/bindings/mfd/iqs62x.txt
+> > @@ -0,0 +1,242 @@
+> > +Azoteq IQS620A/621/622/624/625 ProxFusion Sensor Family
 > > +
-> > +#include <linux/device.h>
-> > +#include <linux/iio/events.h>
-> > +#include <linux/iio/iio.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/mfd/iqs62x.h>
-> > +#include <linux/module.h>
-> > +#include <linux/mutex.h>
-> > +#include <linux/notifier.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/property.h>
-> > +#include <linux/regmap.h>
+> > +Required properties:
 > > +
-> > +#define IQS622_IR_FLAGS				0x16
-> > +#define IQS622_IR_FLAGS_TOUCH			BIT(1)
-> > +#define IQS622_IR_FLAGS_PROX			BIT(0)
+> > +- compatible			: Must be equal to one of the following:
+> > +				  "azoteq,iqs620a"
+> > +				  "azoteq,iqs621"
+> > +				  "azoteq,iqs622"
+> > +				  "azoteq,iqs624"
+> > +				  "azoteq,iqs625"
 > > +
-> > +#define IQS622_IR_UI_OUT			0x17
+> > +- reg				: I2C slave address for the device.
 > > +
-> > +#define IQS622_IR_THRESH_PROX			0x91
-> > +#define IQS622_IR_THRESH_PROX_MAX		255
-> > +#define IQS622_IR_THRESH_PROX_SHIFT		0
+> > +- interrupts			: GPIO to which the device's active-low RDY
+> > +				  output is connected (see [0]).
 > > +
-> > +#define IQS622_IR_THRESH_TOUCH			0x92
-> > +#define IQS622_IR_THRESH_TOUCH_MAX		1020
-> > +#define IQS622_IR_THRESH_TOUCH_SHIFT		2
+> > +Optional properties:
 > > +
-> > +struct iqs622_prox_private {
-> > +	struct iqs62x_core *iqs62x;
-> > +	struct notifier_block notifier;
-> > +	struct mutex lock;
-> > +	bool thresh_prox;
-> > +	bool event_en;
-> > +	u8 thresh;
-> > +	u8 flags;
-> > +};
+> > +- linux,fw-file			: Specifies the name of the calibration and
+> > +				  configuration file selected by the driver.
+> > +				  If this property is omitted, the filename
+> > +				  is selected based on the device name with
+> > +				  ".bin" as the extension (e.g. iqs620a.bin
+> > +				  for IQS620A).
 > > +
-> > +static int iqs622_prox_init(struct iqs622_prox_private *iqs622_prox)
-> > +{
-> > +	struct iqs62x_core *iqs62x = iqs622_prox->iqs62x;
-> > +	unsigned int val;
-> > +	int error;
+> > +All devices accommodate a child node (e.g. "keys") that represents touch key
+> > +support. Required properties for the "keys" child node include:
 > > +
-> > +	mutex_lock(&iqs622_prox->lock);
+> > +- compatible			: Must be equal to one of the following:
+> > +				  "azoteq,iqs620a-keys"
+> > +				  "azoteq,iqs621-keys"
+> > +				  "azoteq,iqs622-keys"
+> > +				  "azoteq,iqs624-keys"
+> > +				  "azoteq,iqs625-keys"
 > > +
-> > +	error = regmap_write(iqs62x->map,
-> > +			     iqs622_prox->thresh_prox ? IQS622_IR_THRESH_PROX :
-> > +							IQS622_IR_THRESH_TOUCH,
-> > +			     iqs622_prox->thresh);
-> > +	if (error)
-> > +		goto err_mutex;
+> > +- linux,keycodes		: Specifies an array of up to 16 numeric key-
+> > +				  codes corresponding to each available touch
+> > +				  or proximity event. An 'x' in the following
+> > +				  table indicates an event is supported for a
+> > +				  given device; specify 0 for unused events.
 > > +
-> > +	error = regmap_read(iqs62x->map, IQS622_IR_FLAGS, &val);
-> > +	if (error)
-> > +		goto err_mutex;
-> > +	iqs622_prox->flags = val;
+> > +  ----------------------------------------------------------------------------
+> > +  | #  | Event                 | IQS620A | IQS621 | IQS622 | IQS624 | IQS625 |
+> > +  ----------------------------------------------------------------------------
+> > +  | 0  | CH0 Touch             |    x    |    x   |    x   |    x   |    x   |
+> > +  |    | Antenna 1 Touch*      |    x    |        |        |        |        |
+> > +  ----------------------------------------------------------------------------
+> > +  | 1  | CH0 Proximity         |    x    |    x   |    x   |    x   |    x   |
+> > +  |    | Antenna 1 Proximity*  |    x    |        |        |        |        |
+> > +  ----------------------------------------------------------------------------
+> > +  | 2  | CH1 Touch             |    x    |    x   |    x   |    x   |    x   |
+> > +  |    | Antenna 1 Deep Touch* |    x    |        |        |        |        |
+> > +  ----------------------------------------------------------------------------
+> > +  | 3  | CH1 Proximity         |    x    |    x   |    x   |    x   |    x   |
+> > +  ----------------------------------------------------------------------------
+> > +  | 4  | CH2 Touch             |    x    |        |        |        |        |
+> > +  ----------------------------------------------------------------------------
+> > +  | 5  | CH2 Proximity         |    x    |        |        |        |        |
+> > +  |    | Antenna 2 Proximity*  |    x    |        |        |        |        |
+> > +  ----------------------------------------------------------------------------
+> > +  | 6  | Metal (+) Touch**     |    x    |    x   |        |        |        |
+> > +  |    | Antenna 2 Deep Touch* |    x    |        |        |        |        |
+> > +  ----------------------------------------------------------------------------
+> > +  | 7  | Metal (+) Proximity** |    x    |    x   |        |        |        |
+> > +  |    | Antenna 2 Touch*      |    x    |        |        |        |        |
+> > +  ----------------------------------------------------------------------------
+> > +  | 8  | Metal (-) Touch**     |    x    |    x   |        |        |        |
+> > +  ----------------------------------------------------------------------------
+> > +  | 9  | Metal (-) Proximity** |    x    |    x   |        |        |        |
+> > +  ----------------------------------------------------------------------------
+> > +  | 10 | SAR Active***         |    x    |        |    x   |        |        |
+> > +  ----------------------------------------------------------------------------
+> > +  | 11 | SAR Quick Release***  |    x    |        |    x   |        |        |
+> > +  ----------------------------------------------------------------------------
+> > +  | 12 | SAR Movement***       |    x    |        |    x   |        |        |
+> > +  ----------------------------------------------------------------------------
+> > +  | 13 | SAR Filter Halt***    |    x    |        |    x   |        |        |
+> > +  ----------------------------------------------------------------------------
+> > +  | 14 | Wheel Up              |         |        |        |    x   |        |
+> > +  ----------------------------------------------------------------------------
+> > +  | 15 | Wheel Down            |         |        |        |    x   |        |
+> > +  ----------------------------------------------------------------------------
+> > +  *   Dual-channel SAR. Replaces CH0-2 and metal touch and proximity events if
+> > +      enabled via firmware.
+> > +  **  "+" and "-" refer to the polarity of the channel's delta (LTA - counts),
+> > +      where "LTA" is defined as the channel's long-term average.
+> > +  *** Single-channel SAR. Replaces CH0-2 touch and proximity events if enabled
+> > +      via firmware.
 > > +
-> > +	error = regmap_update_bits(iqs62x->map, IQS620_GLBL_EVENT_MASK,
-> > +				   iqs62x->dev_desc->ir_mask,
-> > +				   iqs622_prox->event_en ? 0 : 0xFF);
+> > +The "keys" child node supports "hall_switch_north" and "hall_switch_south"
+> > +child nodes that represent north-field and south-field Hall-effect sensor
+> > +events, respectively (IQS620A/621/622 only). Required properties include:
 > > +
-> > +err_mutex:
-> > +	mutex_unlock(&iqs622_prox->lock);
+> > +- linux,code			: Numeric switch code.
 > > +
-> > +	return error;
-> > +}
+> > +Optional properties for the "hall_switch_north" and "hall_switch_south" nodes:
 > > +
-> > +static int iqs622_prox_notifier(struct notifier_block *notifier,
-> > +				unsigned long event_flags, void *context)
-> > +{
-> > +	struct iqs62x_event_data *event_data = context;
-> > +	struct iqs622_prox_private *iqs622_prox;
-> > +	struct iio_dev *indio_dev;
-> > +	enum iio_event_direction dir;
-> > +	int error;
-> > +	u8 flags_mask;
+> > +- azoteq,use-prox		: Boolean to specify that Hall-effect sensor
+> > +				  reporting must use the device's wide-range
+> > +				  proximity threshold instead of its narrow-
+> > +				  range touch threshold.
 > > +
-> > +	iqs622_prox = container_of(notifier, struct iqs622_prox_private,
-> > +				   notifier);
-> > +	indio_dev = iio_priv_to_dev(iqs622_prox);
+> > +Note: North/south-field orientation is reversed on the IQS620AXzCSR device due
+> > +      to its flip-chip package.
 > > +
-> > +	if (event_flags & BIT(IQS62X_EVENT_SYS_RESET)) {
-> > +		error = iqs622_prox_init(iqs622_prox);
-> > +		if (error) {
-> > +			dev_err(indio_dev->dev.parent,
-> > +				"Failed to re-initialize device: %d\n", error);
-> > +			return NOTIFY_BAD;
-> > +		}
+> > +The IQS620A supports a PWM controller node; required properties include:
 > > +
-> > +		return NOTIFY_OK;
-> > +	}
+> > +- compatible			: Must be equal to "azoteq,iqs620a-pwm".
 > > +
-> > +	flags_mask = iqs622_prox->thresh_prox ? IQS622_IR_FLAGS_PROX :
-> > +						IQS622_IR_FLAGS_TOUCH;
+> > +- #pwm-cells			: Must be equal to 2 (see [1]).
 > > +
-> > +	if (!((event_data->ir_flags ^ iqs622_prox->flags) & flags_mask))
-> > +		return NOTIFY_DONE;
+> > +The IQS622 supports an additional child node (e.g. "prox") that represents
+> > +active IR detection; required properties include:
 > > +
-> > +	iqs622_prox->flags = event_data->ir_flags;
+> > +- compatible			: Must be equal to "azoteq,iqs622-prox".
 > > +
-> > +	if (!iqs622_prox->event_en)
-> > +		return NOTIFY_OK;
+> > +Optional properties for the "prox" child node:
 > > +
-> > +	dir = iqs622_prox->flags & flags_mask ? IIO_EV_DIR_RISING :
-> > +						IIO_EV_DIR_FALLING;
-> > +
-> > +	iio_push_event(indio_dev,
-> > +		       IIO_UNMOD_EVENT_CODE(IIO_PROXIMITY, 0,
-> > +					    IIO_EV_TYPE_THRESH, dir),
-> > +		       iio_get_time_ns(indio_dev));
-> > +
-> > +	return NOTIFY_OK;
-> > +}
-> > +
-> > +static void iqs622_prox_notifier_unregister(void *context)
-> > +{
-> > +	struct iqs622_prox_private *iqs622_prox = context;
-> > +	struct iio_dev *indio_dev = iio_priv_to_dev(iqs622_prox);
-> > +	int error;
-> > +
-> > +	error = blocking_notifier_chain_unregister(&iqs622_prox->iqs62x->nh,
-> > +						   &iqs622_prox->notifier);
-> > +	if (error)
-> > +		dev_err(indio_dev->dev.parent,
-> > +			"Failed to unregister notifier: %d\n", error);
-> > +}
-> > +
-> > +static int iqs622_prox_read_raw(struct iio_dev *indio_dev,
-> > +				struct iio_chan_spec const *chan,
-> > +				int *val, int *val2, long mask)
-> > +{
-> > +	struct iqs622_prox_private *iqs622_prox = iio_priv(indio_dev);
-> > +	struct iqs62x_core *iqs62x = iqs622_prox->iqs62x;
-> > +	int error;
-> > +	__le16 val_buf;
-> > +
-> > +	switch (mask) {
-> > +	case IIO_CHAN_INFO_RAW:
-> > +		error = regmap_raw_read(iqs62x->map, IQS622_IR_UI_OUT,
-> > +					&val_buf, sizeof(val_buf));
-> > +		if (error)
-> > +			return error;
-> > +
-> > +		*val = le16_to_cpu(val_buf);
-> > +		return IIO_VAL_INT;
-> > +
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +}
-> > +
-> > +static int iqs622_prox_read_event_config(struct iio_dev *indio_dev,
-> > +					 const struct iio_chan_spec *chan,
-> > +					 enum iio_event_type type,
-> > +					 enum iio_event_direction dir)
-> > +{
-> > +	struct iqs622_prox_private *iqs622_prox = iio_priv(indio_dev);
-> > +
-> > +	return iqs622_prox->event_en;
-> > +}
-> > +
-> > +static int iqs622_prox_write_event_config(struct iio_dev *indio_dev,
-> > +					  const struct iio_chan_spec *chan,
-> > +					  enum iio_event_type type,
-> > +					  enum iio_event_direction dir,
-> > +					  int state)
-> > +{
-> > +	struct iqs622_prox_private *iqs622_prox = iio_priv(indio_dev);
-> > +	struct iqs62x_core *iqs62x = iqs622_prox->iqs62x;
-> > +	int error;
-> > +
-> > +	mutex_lock(&iqs622_prox->lock);
-> > +
-> > +	error = regmap_update_bits(iqs62x->map, IQS620_GLBL_EVENT_MASK,
-> > +				   iqs62x->dev_desc->ir_mask, state ? 0 : 0xFF);
-> > +	if (!error)
-> > +		iqs622_prox->event_en = state;
-> > +
-> > +	mutex_unlock(&iqs622_prox->lock);
-> > +
-> > +	return error;
-> > +}
-> > +
-> > +static int iqs622_prox_read_event_value(struct iio_dev *indio_dev,
-> > +					const struct iio_chan_spec *chan,
-> > +					enum iio_event_type type,
-> > +					enum iio_event_direction dir,
-> > +					enum iio_event_info info,
-> > +					int *val, int *val2)
-> > +{
-> > +	struct iqs622_prox_private *iqs622_prox = iio_priv(indio_dev);
-> > +
-> > +	*val = iqs622_prox->thresh;
-> > +	*val <<= (iqs622_prox->thresh_prox ? IQS622_IR_THRESH_PROX_SHIFT :
-> > +					     IQS622_IR_THRESH_TOUCH_SHIFT);
-> > +
-> > +	return IIO_VAL_INT;
-> > +}
-> > +
-> > +static int iqs622_prox_write_event_value(struct iio_dev *indio_dev,
-> > +					 const struct iio_chan_spec *chan,
-> > +					 enum iio_event_type type,
-> > +					 enum iio_event_direction dir,
-> > +					 enum iio_event_info info,
-> > +					 int val, int val2)
-> > +{
-> > +	struct iqs622_prox_private *iqs622_prox = iio_priv(indio_dev);
-> > +	struct iqs62x_core *iqs62x = iqs622_prox->iqs62x;
-> > +	int error = -EINVAL;
-> > +
-> > +	mutex_lock(&iqs622_prox->lock);
+> > +- azoteq,use-prox		: Boolean to specify that IR threshold event
+> > +				  reporting must use the device's wide-range
+> > +				  proximity threshold instead of its narrow-
+> > +				  range touch threshold.
+> This one is certainly interesting.  Does it always make sense to
+> set this only at boot?  Of could we control this from userspace?
 > 
-> The ternary operators in here are bit messy, perhaps better to just
-> have an if else block and some local variables?
+> It sits somewhere between a hardware requirement that we should
+> put in DT and a policy decision.  I can conceive of devices where both
+> options make sense, but also ones where only one does.
 > 
 
-Sure thing; will do.
+I've given this some thought, and I think this needs to move to a runtime control
+that can be adjusted from user space.
+
+I originally made this a binding simply because a similar decision is offered for
+Hall-effect switches in the input driver (lid switch, dock switch, etc.). In that
+case, the decision is based on industrial design (distance from magnet, enclosure
+thickness, etc.). so that one makes sense as a binding.
+
+IR proximity reporting represents a different use case (in-ear detection, etc.) and
+I can forsee instances where narrow vs. wide range decision needs to be dynamically
+controlled.
+
+Most importantly, the corresponding iio driver already allows the selected detection
+threshold to be adjusted from user space. So it only makes sense that the particular
+threshold to be used can be selected from user space as well.
+
+I'll drop the binding and add a "touch" vs. "proximity" attribute to the iio driver.
 
 > > +
-> > +	if (val > (iqs622_prox->thresh_prox ? IQS622_IR_THRESH_PROX_MAX :
-> > +					      IQS622_IR_THRESH_TOUCH_MAX))
-> > +		goto err_mutex;
-> > +	val >>= (iqs622_prox->thresh_prox ? IQS622_IR_THRESH_PROX_SHIFT :
-> > +					    IQS622_IR_THRESH_TOUCH_SHIFT);
+> > +[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> > +[1]: Documentation/devicetree/bindings/pwm/pwm.txt
 > > +
-> > +	error = regmap_write(iqs62x->map,
-> > +			     iqs622_prox->thresh_prox ? IQS622_IR_THRESH_PROX :
-> > +							IQS622_IR_THRESH_TOUCH,
-> > +			     val);
-> > +	if (!error)
-> > +		iqs622_prox->thresh = val;
+> > +Example 1: Dual capacitive buttons with additional "air button," unipolar lid
+> > +	   switch and panel-mounted LED.
 > > +
-> > +err_mutex:
-> > +	mutex_unlock(&iqs622_prox->lock);
+> > +	&i2c1 {
+> > +		/* ... */
 > > +
-> > +	return error;
-> > +}
+> > +		iqs620a: iqs620a@44 {
+> > +			compatible = "azoteq,iqs620a";
+> > +			reg = <0x44>;
+> > +			interrupt-parent = <&gpio>;
+> > +			interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
 > > +
-> > +static const struct iio_info iqs622_prox_info = {
-> > +	.read_raw = &iqs622_prox_read_raw,
-> > +	.read_event_config = iqs622_prox_read_event_config,
-> > +	.write_event_config = iqs622_prox_write_event_config,
-> > +	.read_event_value = iqs622_prox_read_event_value,
-> > +	.write_event_value = iqs622_prox_write_event_value,
-> > +};
+> > +			iqs620a_keys: keys {
+> > +				compatible = "azoteq,iqs620a-keys";
 > > +
-> > +static const struct iio_event_spec iqs622_prox_events[] = {
-> > +	{
-> > +		.type = IIO_EV_TYPE_THRESH,
-> > +		.dir = IIO_EV_DIR_EITHER,
-> > +		.mask_separate = BIT(IIO_EV_INFO_ENABLE) |
-> > +				 BIT(IIO_EV_INFO_VALUE),
-> > +	},
-> > +};
+> > +				linux,keycodes = <KEY_SELECT>,
+> > +						 <KEY_MENU>,
+> > +						 <KEY_OK>,
+> > +						 <KEY_MENU>;
 > > +
-> > +static const struct iio_chan_spec iqs622_prox_channels[] = {
-> > +	{
-> > +		.type = IIO_PROXIMITY,
-> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> > +		.event_spec = iqs622_prox_events,
-> > +		.num_event_specs = ARRAY_SIZE(iqs622_prox_events),
-> > +	},
-> > +};
+> > +				hall_switch_south {
+> > +					linux,code = <SW_LID>;
+> > +					azoteq,use-prox;
+> > +				};
+> > +			};
 > > +
-> > +static int iqs622_prox_probe(struct platform_device *pdev)
-> > +{
-> > +	struct iqs62x_core *iqs62x = dev_get_drvdata(pdev->dev.parent);
-> > +	struct iqs622_prox_private *iqs622_prox;
-> > +	struct iio_dev *indio_dev;
-> > +	unsigned int val;
-> > +	int error;
+> > +			iqs620a_pwm: pwm {
+> > +				compatible = "azoteq,iqs620a-pwm";
+> > +				#pwm-cells = <2>;
+> > +			};
+> > +		};
 > > +
-> > +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*iqs622_prox));
-> > +	if (!indio_dev)
-> > +		return -ENOMEM;
+> > +		/* ... */
+> > +	};
 > > +
-> > +	indio_dev->modes = INDIO_DIRECT_MODE;
-> > +	indio_dev->dev.parent = &pdev->dev;
-> > +	indio_dev->channels = iqs622_prox_channels;
-> > +	indio_dev->num_channels = ARRAY_SIZE(iqs622_prox_channels);
-> > +	indio_dev->name = iqs62x->dev_desc->dev_name;
-> > +	indio_dev->info = &iqs622_prox_info;
+> > +	pwmleds {
+> > +		compatible = "pwm-leds";
 > > +
-> > +	iqs622_prox = iio_priv(indio_dev);
-> > +	iqs622_prox->iqs62x = iqs62x;
+> > +		panel {
+> > +			pwms = <&iqs620a_pwm 0 1000000>;
+> > +			max-brightness = <255>;
+> > +		};
+> > +	};
 > > +
-> > +	iqs622_prox->thresh_prox = device_property_read_bool(&pdev->dev,
-> > +							     "azoteq,use-prox");
-> 
-> Outstanding question on this in the binding patch.
-> 
-
-After thinking about this some more, I think the control in question needs to be
-configurable from user space at runtime. I'll provide more detail in the binding
-patch [1/8].
-
+> > +Example 2: Single inductive button with bipolar dock/tablet-mode switch.
 > > +
-> > +	error = regmap_read(iqs62x->map,
-> > +			    iqs622_prox->thresh_prox ? IQS622_IR_THRESH_PROX :
-> > +						       IQS622_IR_THRESH_TOUCH,
-> > +			    &val);
-> > +	if (error)
-> > +		return error;
-> > +	iqs622_prox->thresh = val;
+> > +	&i2c1 {
+> > +		/* ... */
 > > +
-> > +	mutex_init(&iqs622_prox->lock);
+> > +		iqs620a: iqs620a@44 {
+> > +			compatible = "azoteq,iqs620a";
+> > +			reg = <0x44>;
+> > +			interrupt-parent = <&gpio>;
+> > +			interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
 > > +
-> > +	error = iqs622_prox_init(iqs622_prox);
-> > +	if (error)
-> > +		return error;
+> > +			linux,fw-file = "iqs620a_coil.bin";
 > > +
-> > +	iqs622_prox->notifier.notifier_call = iqs622_prox_notifier;
-> > +	error = blocking_notifier_chain_register(&iqs622_prox->iqs62x->nh,
-> > +						 &iqs622_prox->notifier);
-> > +	if (error) {
-> > +		dev_err(&pdev->dev, "Failed to register notifier: %d\n", error);
-> > +		return error;
-> > +	}
+> > +			iqs620a_keys: keys {
+> > +				compatible = "azoteq,iqs620a-keys";
 > > +
-> > +	error = devm_add_action_or_reset(&pdev->dev,
-> > +					 iqs622_prox_notifier_unregister,
-> > +					 iqs622_prox);
-> > +	if (error) {
-> 
-> As in previous, feels a little verbose.
-> 
-
-Sure thing; I'll drop the error message.
-
-> > +		dev_err(&pdev->dev, "Failed to add action: %d\n", error);
-> > +		return error;
-> > +	}
+> > +				linux,keycodes = <0>,
+> > +						 <0>,
+> > +						 <0>,
+> > +						 <0>,
+> > +						 <0>,
+> > +						 <0>,
+> > +						 <KEY_MUTE>;
 > > +
-> > +	return devm_iio_device_register(&pdev->dev, indio_dev);
-> > +}
+> > +				hall_switch_north {
+> > +					linux,code = <SW_DOCK>;
+> > +				};
 > > +
-> > +static struct platform_driver iqs622_prox_platform_driver = {
-> > +	.driver = {
-> > +		.name	= IQS622_DRV_NAME_PROX,
-> > +	},
-> > +	.probe		= iqs622_prox_probe,
-> > +};
-> > +module_platform_driver(iqs622_prox_platform_driver);
+> > +				hall_switch_south {
+> > +					linux,code = <SW_TABLET_MODE>;
+> > +				};
+> > +			};
+> > +		};
 > > +
-> > +MODULE_AUTHOR("Jeff LaBundy <jeff@labundy.com>");
-> > +MODULE_DESCRIPTION("Azoteq IQS622 Proximity Sensor");
-> > +MODULE_LICENSE("GPL");
-> > +MODULE_ALIAS("platform:" IQS622_DRV_NAME_PROX);
+> > +		/* ... */
+> > +	};
+> > +
+> > +Example 3: Dual capacitive buttons with volume knob.
+> > +
+> > +	&i2c1 {
+> > +		/* ... */
+> > +
+> > +		iqs624: iqs624@44 {
+> > +			compatible = "azoteq,iqs624";
+> > +			reg = <0x44>;
+> > +			interrupt-parent = <&gpio>;
+> > +			interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
+> > +
+> > +			iqs624_keys: keys {
+> > +				compatible = "azoteq,iqs624-keys";
+> > +
+> > +				linux,keycodes = <BTN_0>,
+> > +						 <0>,
+> > +						 <BTN_1>,
+> > +						 <0>,
+> > +						 <0>,
+> > +						 <0>,
+> > +						 <0>,
+> > +						 <0>,
+> > +						 <0>,
+> > +						 <0>,
+> > +						 <0>,
+> > +						 <0>,
+> > +						 <0>,
+> > +						 <0>,
+> > +						 <KEY_VOLUMEUP>,
+> > +						 <KEY_VOLUMEDOWN>;
+> > +			};
+> > +		};
+> > +
+> > +		/* ... */
+> > +	};
 > 
 > 
 
