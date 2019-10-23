@@ -2,199 +2,106 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ED79E12FE
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Oct 2019 09:23:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48D38E1623
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Oct 2019 11:31:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389767AbfJWHX1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 23 Oct 2019 03:23:27 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40729 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731524AbfJWHX1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Oct 2019 03:23:27 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iNAz5-0007Ds-RB; Wed, 23 Oct 2019 09:23:07 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iNAz2-0004MW-TD; Wed, 23 Oct 2019 09:23:04 +0200
-Date:   Wed, 23 Oct 2019 09:23:04 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
+        id S2403831AbfJWJbS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 23 Oct 2019 05:31:18 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37411 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403929AbfJWJbS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Oct 2019 05:31:18 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f22so18933034wmc.2
+        for <linux-pwm@vger.kernel.org>; Wed, 23 Oct 2019 02:31:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=2fLQAYivjPCeFhrnS0eAbtLcKwI/jjUTQJtAub9j6h8=;
+        b=plSwP6c6mLqj8vkc7p9cJc1rbasnfbXWCxxziBoPaInno3/XEo+2lmnN2HKb3mng3y
+         tYdqtYrpxH1mA80BuazCzz8AKwvOVTCbjnSSs3m5XVf+trbtHa5TntpXxJcnw+P7+8Ge
+         gRWgy5U0wtzomDDu+DfmIsyVbWAxuBLLW7qp8G39q+jjv+eJ1CwMjsisd3/vmUs5NEOb
+         B9sQQbrPK2U/TKjclRAaDLPlcTBZGqbul8HMqEKMkLrRlhS1sCO1ptnKQkRd0DYALnvi
+         P5kZG5BNVrgxUfiU8KlCWnMqp7q5B4QSDiLRw/prg85Dkhy+aY6QfrDGUA3h87jRTcQP
+         lQyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=2fLQAYivjPCeFhrnS0eAbtLcKwI/jjUTQJtAub9j6h8=;
+        b=pjqybRDeMezeeBsqwHvuj0rX2mAXtrNzjl8JVNy+6IflgNunFIgWc6LLftKywokBvr
+         3WVJWNUtwt3YphKJKM3NqoMuX3niynhGry8PG5CuRsuB3tuXj4ydaAw4vfq9VM+9SUSA
+         rcaMEmG38/xyFPXz3qL0merOF9bpuX3an3fdL4PH6PhAgC57yMEPlQhu7H1yYLJLGr3S
+         xqkDyNqd0y6Iic8MWKwEnuTGlzSHeDxa06J5r1DXuSovLxjVqvWEQOTNKAqQjJv6acLE
+         fxaqyv9HAo2uVYqG05YPTIQbMKVEP8eSl8GLqbJwG/IWmGj/UK2hcrXtNtYsx+R3x89p
+         m76w==
+X-Gm-Message-State: APjAAAU4R7ywhFrYIUJCIj5uZ0oCnTrST3qqNrlwAJftgA4I0uyEezkA
+        8p5N/z+ub0JkLcKT735X4EuR2A==
+X-Google-Smtp-Source: APXvYqykfve4PxGAzNbeonYmDixqLBfWcdLX29lVDVQi9qir+N9Q6u3ur5hniBnheE7/KszY9XK5Eg==
+X-Received: by 2002:a1c:5415:: with SMTP id i21mr3193435wmb.120.1571823075340;
+        Wed, 23 Oct 2019 02:31:15 -0700 (PDT)
+Received: from dell ([95.149.164.99])
+        by smtp.gmail.com with ESMTPSA id u1sm31823556wru.90.2019.10.23.02.31.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 23 Oct 2019 02:31:14 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 10:30:58 +0100
+From:   Lee Jones <lee.jones@linaro.org>
 To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     lee.jones@linaro.org, dmitry.torokhov@gmail.com, jdelvare@suse.com,
-        linux@roeck-us.net, thierry.reding@gmail.com, jic23@kernel.org,
+Cc:     Jonathan Cameron <jic23@kernel.org>, dmitry.torokhov@gmail.com,
+        jdelvare@suse.com, linux@roeck-us.net, thierry.reding@gmail.com,
         devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH 5/8] pwm: Add support for Azoteq IQS620A PWM generator
-Message-ID: <20191023072304.7qmw4skssfm7iykm@pengutronix.de>
+        linux-hwmon@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH 1/8] dt-bindings: mfd: iqs62x: Add bindings
+Message-ID: <20191023093058.GA19477@dell>
 References: <1571631083-4962-1-git-send-email-jeff@labundy.com>
- <1571631083-4962-6-git-send-email-jeff@labundy.com>
- <20191021073419.27r4xjqpz2wswerj@pengutronix.de>
- <20191022043649.GB2091@labundy.com>
- <20191022065415.2zxmpbsmogvgul7x@pengutronix.de>
- <20191023024525.GC3233@labundy.com>
+ <1571631083-4962-2-git-send-email-jeff@labundy.com>
+ <20191022120051.686ed9f9@archlinux>
+ <20191023033646.GB4458@labundy.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191023024525.GC3233@labundy.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20191023033646.GB4458@labundy.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Jeff,
+On Tue, 22 Oct 2019, Jeff LaBundy wrote:
 
-On Tue, Oct 22, 2019 at 09:45:25PM -0500, Jeff LaBundy wrote:
-> On Tue, Oct 22, 2019 at 08:54:15AM +0200, Uwe Kleine-Kˆnig wrote:
-> > On Mon, Oct 21, 2019 at 11:36:49PM -0500, Jeff LaBundy wrote:
-> > > On Mon, Oct 21, 2019 at 09:34:19AM +0200, Uwe Kleine-Kˆnig wrote:
-> > > > > +{
-> > > > > +	struct iqs620_pwm_private *iqs620_pwm;
-> > > > > +	struct iqs62x_core *iqs62x;
-> > > > > +	int error;
-> > > > > +	int duty_calc = state->duty_cycle * 256 / IQS620_PWM_PERIOD_NS - 1;
-> > > > > +	u8 duty_clamp = clamp(duty_calc, 0, 0xFF);
-> > 
-> > Another problem that we have here is that the period is fixed to 1 ms
-> > and if a consumer requests for example:
-> > 
-> > 	.period = 5000000,
-> > 	.duty_cycle = 1000000,
-> > 
-> > the hardware is actually configured for
-> > 
-> > 	.period = 1000000,
-> > 	.duty_cycle = 1000000,
-> > 
-> > . I don't have a good suggestion how to fix this. We'd need to
-> > draw a line somewhere and decline a request that is too far from the
-> > result. But where this line should be is not obvious, it should
-> > definitively not be implemented in the driver itself IMHO.
-> > 
-> > (The only halfway sane approach would be to let lowlevel drivers
-> > implement a .round_state callback and then let the framework judge. But
-> > we're a long way from having that, so that's not a solution for today.)
-> > 
+> Hi Jonathan,
 > 
-> Agreed on all counts. For now, I will mention in the 'Limitations' heading that
-> the period cannot be adjusted.
-
-Ack. My longterm plan is to require .apply_state() to round down both
-.period and .duty_cycle. This isn't wrong already today, so I suggest
-you decline a request to set the period to something smaller than 1 ms
-with an error code. (I think most drivers use -EINVAL here, conceptually
--EDOM might be sensible. I'd stick to EINVAL for now.)
-
-> > > > > +	iqs620_pwm = container_of(chip, struct iqs620_pwm_private, chip);
-> > > > > +	iqs62x = iqs620_pwm->iqs62x;
-> > > > > +
-> > > > > +	error = regmap_write(iqs62x->map, IQS620_PWM_DUTY_CYCLE, duty_clamp);
-> > > > > +	if (error)
-> > > > > +		return error;
-> > > > > +
-> > > > > +	state->period = IQS620_PWM_PERIOD_NS;
-> > > > > +	state->duty_cycle = (duty_clamp + 1) * IQS620_PWM_PERIOD_NS / 256;
-> > > > 
-> > > > This suggests that if the value in the IQS620_PWM_DUTY_CYCLE is 0 the
-> > > > duty cycle is 1/256 ms with a period of 1 ms and the output cannot be
-> > > > constant inactive. If this is right please add a paragraph in the
-> > > > driver's comment at the top:
-> > > > 
-> > > > 	* Limitations:
-> > > > 	* - The hardware cannot generate a 0% duty cycle
-> > > > 
-> > > > (Please stick to this format, other drivers use it, too.)
+> On Tue, Oct 22, 2019 at 12:00:51PM +0100, Jonathan Cameron wrote:
+> > On Sun, 20 Oct 2019 23:11:16 -0500
+> > Jeff LaBundy <jeff@labundy.com> wrote:
+> > 
+> > > This patch adds binding documentation for six-channel members of the
+> > > Azoteq ProxFusion family of sensor devices.
 > > > 
-> > > That's correct; the lowest duty cycle that can be achieved using only the
-> > > IQS620_PWM_DUTY_CYCLE register is 0.4%. We can, however, generate 0% duty
-> > > cycle by disabling the output altogether using a separate register. Would
-> > > that be better than flat-out saying it's impossible?
+> > > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
 > > 
-> > There is (maybe) a small difference between disabled and 0% duty cycle,
-> > at least from the framework's POV: If you do:
-> > 
-> > 	pwm_apply_state(pwm, { .enabled = true, .period = 1000000, .duty_cycle = 1000000, });
-> > 	pwm_apply_state(pwm, { .enabled = false, .period = $DC, .duty_cycle = $DC, });
-> > 	pwm_apply_state(pwm, { .enabled = true, .period = 1000000, .duty_cycle = 1000000, });
-> > 
-> > and compare it to the expected result of
-> > 
-> > 	pwm_apply_state(pwm, { .enabled = true, .period = 1000000, .duty_cycle = 1000000, });
-> > 	pwm_apply_state(pwm, { .enabled = true, .period = 1000000, .duty_cycle = 0, });
-> > 	pwm_apply_state(pwm, { .enabled = true, .period = 1000000, .duty_cycle = 1000000, });
-> > 
-> > the difference is that the duration of the inactive phase in the latter
-> > case is a multiple of 1 ms.
-> > 
-> > There is no policy for lowlevel drivers what to do, but disabling when
-> > 0% is requested is at least not unseen and probably more what consumers
-> > expect.
+> > I'm not sure if Lee has made the switch for mfd entirely yet, but
+> > mostly new dt bindings need to be in yaml format as it allows
+> > automated parsing of the examples + bindings using them for
+> > correctness.
 > > 
 > 
-> With the change I am proposing, the output will be driven to zero if enabled = false
-> OR duty_cycle < 4000 ns. Stated another way:
+> I'll wait for Lee or Rob's cue, but I'm happy to move to yaml if it's time
+> to make the switch here.
 > 
-> enable duty_cycle IQS620_PWR_SETTINGS[7] IQS620_PWM_DUTY_CYCLE
-> ------ ---------- ---------------------- ---------------------
->   0    don't care           0                  don't care
->   1    0 ... 3999           0                  don't care
->   1    4000 ... x           1                      0
->   1    x+1  ... y           1                      1
-> 
-> ...and so on. For context, if IQS620_PWR_SETTINGS[7] = 0 then the output is held to
-> zero. If IQS620_PWR_SETTINGS[7] = 1 then the output toggles at a duty cycle between
-> 0.4% and 100% as a function of IQS620_PWM_DUTY_CYCLE.
+> > One comment inline.  I'm far from an expert on most of the stuff here
+> > so will leave it for others!
 
-Your table isn't accurate. IQS620_PWM_DUTY_CYCLE=0 results in a
-duty_cycle of 3906.25 ns so the table should look as follows:
-
-enable  duty_cycle  IQS620_PWR_SETTINGS[7] IQS620_PWM_DUTY_CYCLE
------- ------------ ---------------------- ---------------------
-  0     don't care           0                  don't care
-  1       [0, 3906]          0                  don't care
-  1    [3907, 7812]          1                      0
-  1    [7813,11718]          1                      1
-
-In general:
-
-	dc = state->duty_cycle * 256 / 1000000
-	if state->enabled == false or dc == 0:
-	    IQS620_PWR_SETTINGS[7] = 0
-
-	else:
-	    IQS620_PWM_DUTY_CYCLE = min(dc - 1, 0xff)
-	    IQS620_PWR_SETTINGS[7] = 1
-
-> Based on how the device behaves in response to its two available
-> registers, I think your two examples will appear equal, but please let
-> me know if I have understood.
-
-Yeah, that's the expectation.
-
-With the rounding as I suggested above this yields strange effects like
-if
-
-	.period = 1 s, .duty_cycle = 0.5 s
-
-is requested you end up in
-
-	.period = 1 ms, .duty_cycle = 1 ms
-
-but I think there is nothing we can reasonably do about this.
-
-Best regards
-Uwe
+It would make sense.
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-Kˆnig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Lee Jones [ÊùéÁêºÊñØ]
+Linaro Services Technical Lead
+Linaro.org ‚îÇ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
