@@ -2,163 +2,128 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7108EED307
-	for <lists+linux-pwm@lfdr.de>; Sun,  3 Nov 2019 12:08:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF752ED498
+	for <lists+linux-pwm@lfdr.de>; Sun,  3 Nov 2019 21:33:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727377AbfKCLIt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 3 Nov 2019 06:08:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726676AbfKCLIt (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sun, 3 Nov 2019 06:08:49 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9974820842;
-        Sun,  3 Nov 2019 11:08:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572779327;
-        bh=FbaoVaWioLqr0Z7FxL6DKXeAOHtNY6YOT3zMnzdc8eU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aD6PQEf1YtBiqkJF3yrAS2+/Z6KUwhqc68hNZX6/JK6K79E/SC6l/MJJK/XPvHMVo
-         FKFtMgi5uMvstFpoEvL8wAOJ/0IAUtx1un5J0bwBbMya+o7K3qc6EBB8uSXwD0/x9c
-         +PTJWqhrPJrpGPKRQQy4w5Ow7wodiZeOSRK/hR54=
-Date:   Sun, 3 Nov 2019 11:08:41 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
-        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <lee.jones@linaro.org>, <thierry.reding@gmail.com>,
-        <u.kleine-koenig@pengutronix.de>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH 2/4] dt-bindings: iio: timer: Convert stm32 IIO trigger
- bindings to json-schema
-Message-ID: <20191103110841.3ad3ecfb@archlinux>
-In-Reply-To: <20191031123040.26316-3-benjamin.gaignard@st.com>
-References: <20191031123040.26316-1-benjamin.gaignard@st.com>
-        <20191031123040.26316-3-benjamin.gaignard@st.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1728113AbfKCUdt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 3 Nov 2019 15:33:49 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34079 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727922AbfKCUds (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 3 Nov 2019 15:33:48 -0500
+Received: by mail-wr1-f65.google.com with SMTP id e6so12955452wrw.1;
+        Sun, 03 Nov 2019 12:33:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ml4/ldXuaRQFs9xTSFQLPpar7FuQY3/SbLZ03W92l0I=;
+        b=m2CnugqT3ACAYmgD1Cjtv8ShPg2gnHMeL6ADrw+IxJXZnXvs+2YvxvraUH+x+ChuPw
+         cD9xXN/XJOv4kSDXQ5A2dC+a/MpxBWnGYZvtmycVaMj7HtzNIQpNKdWlBcHRYBo7V6Is
+         qscC1rtUfdz8citmpet4A1MxLR6PAgnXYG7uxtJOoQqcP+pD6L7XEZe0XOiVMgEjpapl
+         zn4sDcEMULw9v+M2tBEFGkZGYFg1VhhYCLzDOUNxYMT25/XLf4/5q5VI+NeyoK+8CCMa
+         IbEO1BoYBJpkYYbTPtZkeYa6o6GK6tmmFn5wm6W20NSV2VVLjxoVuz+x9lClnSUqlzCo
+         zlBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ml4/ldXuaRQFs9xTSFQLPpar7FuQY3/SbLZ03W92l0I=;
+        b=ZyT+JjMepllH+furZ3z39PnDYhak5npGFFK2JtdCHt6ZT1335547NvwbBAbAvOZqK6
+         scCGMR6Qh49ye0ogV+KwrnCcnXiUzlUdKVIFws1G/SHQ5hZokwKA4XnbikpzTJUSLmwB
+         yyAusMBCuD0R96MN5w3ao8vMCjaRLR8e4+Rx+R3foBavFMU0/IvHSERodUwLsvJWSQQL
+         jBsJYJ9pOsc1tdD76zwJF/lj6B542H7TD9fDKELqVcsuswIGjyrsZCWohbR/Q9DRmUIM
+         uVigzUXL9LMYP7F66o0CAmtbWmeQEMYweMOo0UPK4rM4Eh5GI2K/BFlPP5W7xfRCI6Sv
+         ZajQ==
+X-Gm-Message-State: APjAAAVMWsey8Z+iEqhPKci++qocxqshJTxFhyzcoIdF6MutYcs9qQH1
+        Ug4GCDR/UILN3OI4eeDj1n65YDjTI+s=
+X-Google-Smtp-Source: APXvYqx+wOrdNP6iaYemu5Ag6rWAskgEk1/DDlhAjLULO3ca3go6P9wmGnBOY6scWrhWi34887aI3Q==
+X-Received: by 2002:a5d:4446:: with SMTP id x6mr20834900wrr.103.1572813225276;
+        Sun, 03 Nov 2019 12:33:45 -0800 (PST)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id x16sm13644026wrp.91.2019.11.03.12.33.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Nov 2019 12:33:44 -0800 (PST)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?=27Uwe=20Kleine-K=C3=B6nig=27?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v2 0/7] Add support for H6 PWM
+Date:   Sun,  3 Nov 2019 21:33:27 +0100
+Message-Id: <20191103203334.10539-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, 31 Oct 2019 13:30:38 +0100
-Benjamin Gaignard <benjamin.gaignard@st.com> wrote:
+Hi,
 
-> Convert the STM32 IIO trigger binding to DT schema format using json-schema
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-I'm far from great on these as still haven't taken the time I should to learn
-the yaml syntax properly.  A few comments inline however based mostly on this
-doesn't quite look like other ones I've seen recently.
+This is a rework of Jernej's previous work[1] taking account all the
+previous remarks.
+
+Bindings is still strict but probe in the driver are now optionnals.
+
+If someone could confirm that the PWM is not broken, as my board
+doesn't output it.
+
+I didn't add the acked-tags as there are big changes.
 
 Thanks,
+Clément
 
-Jonathan
+Jernej's cover:
+Allwinner H6 SoC has PWM core which is basically the same as that found
+in A20, it's just depends on additional bus clock and reset line.
 
-> ---
->  .../bindings/iio/timer/st,stm32-timer-trigger.yaml | 44 ++++++++++++++++++++++
->  .../bindings/iio/timer/stm32-timer-trigger.txt     | 25 ------------
->  2 files changed, 44 insertions(+), 25 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
->  delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml b/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
-> new file mode 100644
-> index 000000000000..1c8c8b55e8cd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
-> @@ -0,0 +1,44 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/timer/st,stm32-timer-trigger.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STMicroelectronics STM32 Timers IIO timer bindings
-> +
-> +maintainers:
-> +  - Benjamin Gaignard <benjamin.gaignard@st.com>
-> +  - Fabrice Gasnier <fabrice.gasnier@st.com>
-> +
-> +properties:
-> +  $nodemane:
+This series adds support for it and extends PWM driver functionality in
+a way that it's now possible to bypass whole core and output PWM source
+clock directly as a PWM signal. This functionality is needed by AC200
+chip, which is bundled in same physical package as H6 SoC, to serve as a
+clock source of 24 MHz. AC200 clock input pin is bonded internally to
+the second PWM channel.
 
-nodename?
+I would be grateful if anyone can test this patch series for any kind of
+regression on other SoCs.
 
-> +    pattern: "^timer@[0-9]+$"
-> +    type: object
-> +
-> +    description:
-> +      must be a sub-node of an STM32 Timer device tree node
-> +
-> +    properties:
-> +      compatible:
-> +        oneOf:
+[1]: https://patchwork.kernel.org/cover/11061737/
 
-enum is I think preferred for these.
+Changes in v2:
+ - Remove allOf in Documentation
+ - Add H6 example in Documentation
+ - Change clock name from "pwm" to "mod"
+ - Change reset quirk to optional probe
+ - Change bus_clock quirk to optional probe
+ - Add limitation comment about mod_clk_output
+ - Add quirk for mod_clk_output
+ - Change bypass formula
 
-> +          - const: st,stm32-timer-trigger
-> +          - const: st,stm32h7-timer-trigger
-> +            
-> +      reg: true
+Clément Péron (1):
+  [DO NOT MERGE] arm64: allwinner: h6: enable Beelink GS1 PWM
 
-Normally some info for what the reg value is..
+Jernej Skrabec (6):
+  dt-bindings: pwm: allwinner: Add H6 PWM description
+  pwm: sun4i: Add an optional probe for reset line
+  pwm: sun4i: Add an optional probe for bus clock
+  pwm: sun4i: Add support to output source clock directly
+  pwm: sun4i: Add support for H6 PWM
+  arm64: dts: allwinner: h6: Add PWM node
 
-> +
-> +    required:
-> +      - compatible
-> +      - reg
-> +
-> +examples:
-> +  - |
-> +    timers2: timer@40000000 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      timer@0 {
-> +        compatible = "st,stm32-timer-trigger";
-> +        reg = <0>;
-> +      };
-> +    };
-> +    
-> +...
-> diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt b/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-> deleted file mode 100644
-> index b8e8c769d434..000000000000
-> --- a/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-> +++ /dev/null
-> @@ -1,25 +0,0 @@
-> -STMicroelectronics STM32 Timers IIO timer bindings
-> -
-> -Must be a sub-node of an STM32 Timers device tree node.
-> -See ../mfd/stm32-timers.txt for details about the parent node.
-> -
-> -Required parameters:
-> -- compatible:	Must be one of:
-> -		"st,stm32-timer-trigger"
-> -		"st,stm32h7-timer-trigger"
-> -- reg:		Identify trigger hardware block.
-> -
-> -Example:
-> -	timers@40010000 {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		compatible = "st,stm32-timers";
-> -		reg = <0x40010000 0x400>;
-> -		clocks = <&rcc 0 160>;
-> -		clock-names = "int";
-> -
-> -		timer@0 {
-> -			compatible = "st,stm32-timer-trigger";
-> -			reg = <0>;
-> -		};
-> -	};
+ .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml |  45 ++++++-
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |   4 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  10 ++
+ drivers/pwm/pwm-sun4i.c                       | 116 +++++++++++++++++-
+ 4 files changed, 171 insertions(+), 4 deletions(-)
+
+-- 
+2.20.1
 
