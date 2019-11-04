@@ -2,34 +2,55 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ADA37EE9C4
-	for <lists+linux-pwm@lfdr.de>; Mon,  4 Nov 2019 21:38:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B9910EEB17
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 Nov 2019 22:29:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbfKDUih convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Mon, 4 Nov 2019 15:38:37 -0500
-Received: from mailoutvs62.siol.net ([185.57.226.253]:47541 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728377AbfKDUig (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 4 Nov 2019 15:38:36 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 99859524703;
-        Mon,  4 Nov 2019 21:38:32 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Xas64fhSD14G; Mon,  4 Nov 2019 21:38:32 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id F320B5250A1;
-        Mon,  4 Nov 2019 21:38:31 +0100 (CET)
-Received: from jernej-laptop.localnet (cpe-86-58-102-7.static.triera.net [86.58.102.7])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 72C21524703;
-        Mon,  4 Nov 2019 21:38:31 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     =?ISO-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        id S1729577AbfKDV3J (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 4 Nov 2019 16:29:09 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50335 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728409AbfKDV3J (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 4 Nov 2019 16:29:09 -0500
+Received: by mail-wm1-f66.google.com with SMTP id 11so18404540wmk.0;
+        Mon, 04 Nov 2019 13:29:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Tp7E0KMvbL6BOAUu2NNrtQeKJbNH0Cxz/NvxU3jQlik=;
+        b=PtstzIB3y4gOTVfBvLknyAu6/bRt6HO26iBUPi+jtjtcHKqtC3BAX5Vglcl36CTDXk
+         vdyO63PGHx/jlldvBKhG8dxzO7elOem1o6UxjLObum4u9ajaoYO15TOxkzTfyi9+RJHj
+         8OQSze8CiegkGhAtfI3YvVvmgWMysT+QVDDuxjtgzHuQ4Puuj5RAelKdHfv8VvA95X/9
+         HEgwmpl6TybsMjv1V37wNav+xhxMHOHetk02mcJCJc12/4hedag2qv6OhSzyzep+xrjV
+         aMz2z1v45p9bp93fv6GljUmPm9IfNkk8wxwViMJJJhPGskW53ydGxQTTzjsNzJljfi0G
+         3jrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Tp7E0KMvbL6BOAUu2NNrtQeKJbNH0Cxz/NvxU3jQlik=;
+        b=bGqdcvmEEsuUex7IEna/S4sCp0IM6mLN652DaTIvVi5irxQCZV2ifWZS/WZfesxnUu
+         l3h0MXQZaXvkLIOeC4wMq/6FyHV/6DOUC0Osqh9QRHkGUiB9ZW3+QMilCZPDfHzFM9+/
+         OKyibZHx7JkVIDi6g4Wf82aNXh2qCpiNkli3l79NUVXx5uobSu3zuSG/4Is51fym7Zqu
+         Tl/GKB61zpf/7KFPBf5bHFHqJsI4ffNfHLUPJ26WsiZCtBblAFT0kFl6NK01ZvyfTUue
+         mWgxaGiSXZuIXBNYTqPw8VAghrzt4b3fXnLmDGgKp4cm32y0LjwGfympaSSdmkRrT3D9
+         PmYA==
+X-Gm-Message-State: APjAAAXMWHR/NgWexXFAXFdBRloXWRpKS4ngvlFki6BJ4zkVTkb7kRso
+        /abVpIhrVq3juctp7fjEXGQeBHp54zhRec8EozI=
+X-Google-Smtp-Source: APXvYqyn++80Z0P0IqvOwdBOky/MrB6MAOFkJrrpZmla4Vmh4glLP0MhXJPlaBoPF3H93AUZ23e4xWA86T3r+VljyWI=
+X-Received: by 2002:a05:600c:228e:: with SMTP id 14mr937906wmf.119.1572902945693;
+ Mon, 04 Nov 2019 13:29:05 -0800 (PST)
+MIME-Version: 1.0
+References: <20191103203334.10539-1-peron.clem@gmail.com> <20191103203334.10539-5-peron.clem@gmail.com>
+ <20191104083835.m2pd4fvhn2ze6bjt@pengutronix.de>
+In-Reply-To: <20191104083835.m2pd4fvhn2ze6bjt@pengutronix.de>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 4 Nov 2019 22:28:54 +0100
+Message-ID: <CAJiuCccjgtMcJa-pZCB_DGN6L8m9bDTgQRoV6WUKPSjv8kn8vA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] pwm: sun4i: Add support to output source clock directly
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Maxime Ripard <mripard@kernel.org>,
@@ -37,191 +58,165 @@ Cc:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?=
         devicetree <devicetree@vger.kernel.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH v2 3/7] pwm: sun4i: Add an optional probe for bus clock
-Date:   Mon, 04 Nov 2019 21:38:31 +0100
-Message-ID: <2257359.GL6loUrO9r@jernej-laptop>
-In-Reply-To: <CAJiuCcfCo2QiKEvaRphcBkdTtFui3ympU9aikJTmXDa4OoiXZQ@mail.gmail.com>
-References: <20191103203334.10539-1-peron.clem@gmail.com> <524459750.Kvg9uK5Sr7@jernej-laptop> <CAJiuCcfCo2QiKEvaRphcBkdTtFui3ympU9aikJTmXDa4OoiXZQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
+        Jernej Skrabec <jernej.skrabec@siol.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Dne ponedeljek, 04. november 2019 ob 21:27:04 CET je Clément Péron napisal(a):
-> Hi,
-> 
-> On Mon, 4 Nov 2019 at 21:19, Jernej Škrabec <jernej.skrabec@siol.net> wrote:
-> > Dne ponedeljek, 04. november 2019 ob 21:10:52 CET je Uwe Kleine-König
-> > 
-> > napisal(a):
-> > > Hello Clément,
-> > > 
-> > > On Mon, Nov 04, 2019 at 07:07:00PM +0100, Clément Péron wrote:
-> > > > On Mon, 4 Nov 2019 at 09:24, Uwe Kleine-König
-> > > > 
-> > > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > > On Sun, Nov 03, 2019 at 09:33:30PM +0100, Clément Péron wrote:
-> > > > > > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > > > 
-> > > > > > H6 PWM core needs bus clock to be enabled in order to work.
-> > > > > > 
-> > > > > > Add an optional probe for it and a fallback for previous
-> > > > > > bindings without name on module clock.
-> > > > > > 
-> > > > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> > > > > > ---
-> > > > > > 
-> > > > > >  drivers/pwm/pwm-sun4i.c | 36 ++++++++++++++++++++++++++++++++++++
-> > > > > >  1 file changed, 36 insertions(+)
-> > > > > > 
-> > > > > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > > > > > index d194b8ebdb00..b5e7ac364f59 100644
-> > > > > > --- a/drivers/pwm/pwm-sun4i.c
-> > > > > > +++ b/drivers/pwm/pwm-sun4i.c
-> > > > > > @@ -78,6 +78,7 @@ struct sun4i_pwm_data {
-> > > > > > 
-> > > > > >  struct sun4i_pwm_chip {
-> > > > > >  
-> > > > > >       struct pwm_chip chip;
-> > > > > > 
-> > > > > > +     struct clk *bus_clk;
-> > > > > > 
-> > > > > >       struct clk *clk;
-> > > > > >       struct reset_control *rst;
-> > > > > >       void __iomem *base;
-> > > > > > 
-> > > > > > @@ -367,6 +368,31 @@ static int sun4i_pwm_probe(struct
-> > > > > > platform_device
-> > > > > > *pdev)> >
-> > > > > 
-> > > > > Adding more context here:
-> > > > > |       pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> > > > > |       
-> > > > > >       if (IS_ERR(pwm->clk))
-> > > > > >       
-> > > > > >               return PTR_ERR(pwm->clk);
-> > > > > > 
-> > > > > > +     /* Get all clocks and reset line */
-> > > > > > +     pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
-> > > > > > +     if (IS_ERR(pwm->clk)) {
-> > > > > > +             dev_err(&pdev->dev, "get clock failed %ld\n",
-> > > > > > +                     PTR_ERR(pwm->clk));
-> > > > > > +             return PTR_ERR(pwm->clk);
-> > > > > > +     }
-> > > > > 
-> > > > > I guess you want to drop the first assignment to pwm->clk.
-> > > > 
-> > > > devm_clk_get_optional will return NULL if there is no entry, I don't
-> > > > get where I need to drop it assignment.
-> > > 
-> > > With your patch the code looks as follows:
-> > >       pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> > >       if (IS_ERR(pwm->clk))
-> > >       
-> > >               return PTR_ERR(pwm->clk);
-> > >       
-> > >       /* Get all clocks and reset line */
-> > >       pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
-> > 
-> > Actually, it's the other way around, e.g. "mod" clock is checked first.
-> 
-> The first devm_clk_get is indeed wrong, I will remove it!
+Hi Uwe
 
-Sorry, I missed that too. Yeah, it should be removed.
+On Mon, 4 Nov 2019 at 09:38, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> On Sun, Nov 03, 2019 at 09:33:31PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> >
+> > PWM core has an option to bypass whole logic and output unchanged sourc=
+e
+> > clock as PWM output. This is achieved by enabling bypass bit.
+> >
+> > Note that when bypass is enabled, no other setting has any meaning, not
+> > even enable bit.
+> >
+> > This mode of operation is needed to achieve high enough frequency to
+> > serve as clock source for AC200 chip, which is integrated into same
+> > package as H6 SoC.
+>
+> I think the , should be dropped.
+>
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  drivers/pwm/pwm-sun4i.c | 39 ++++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 38 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > index b5e7ac364f59..2441574674d9 100644
+> > --- a/drivers/pwm/pwm-sun4i.c
+> > +++ b/drivers/pwm/pwm-sun4i.c
+> > @@ -3,6 +3,10 @@
+> >   * Driver for Allwinner sun4i Pulse Width Modulation Controller
+> >   *
+> >   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electr=
+ons.com>
+> > + *
+> > + * Limitations:
+> > + * - When outputing the source clock directly, the PWM logic will be b=
+ypassed
+> > + *   and the currently running period is not guaranted to be completed
+>
+> Typo: guaranted  -> guaranteed
+>
+> >   */
+> >
+> >  #include <linux/bitops.h>
+> > @@ -73,6 +77,7 @@ static const u32 prescaler_table[] =3D {
+> >
+> >  struct sun4i_pwm_data {
+> >       bool has_prescaler_bypass;
+> > +     bool has_direct_mod_clk_output;
+> >       unsigned int npwm;
+> >  };
+> >
+> > @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *c=
+hip,
+> >
+> >       val =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> >
+> > +     /*
+> > +      * PWM chapter in H6 manual has a diagram which explains that if =
+bypass
+> > +      * bit is set, no other setting has any meaning. Even more, exper=
+iment
+> > +      * proved that also enable bit is ignored in this case.
+> > +      */
+> > +     if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
+> > +         data->has_direct_mod_clk_output) {
+> > +             state->period =3D DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, clk=
+_rate);
+> > +             state->duty_cycle =3D state->period / 2;
+> > +             state->polarity =3D PWM_POLARITY_NORMAL;
+> > +             state->enabled =3D true;
+> > +             return;
+> > +     }
+>
+> Not sure how the rest of sun4i_pwm_get_state behaves, but I would prefer
+> to let .get_state() round up which together with .apply_state() rounding
+> down yields sound behaviour.
+Ok
+>
+> > +
+> >       if ((PWM_REG_PRESCAL(val, pwm->hwpwm) =3D=3D PWM_PRESCAL_MASK) &&
+> >           sun4i_pwm->data->has_prescaler_bypass)
+> >               prescaler =3D 1;
+> > @@ -203,7 +222,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, s=
+truct pwm_device *pwm,
+> >  {
+> >       struct sun4i_pwm_chip *sun4i_pwm =3D to_sun4i_pwm_chip(chip);
+> >       struct pwm_state cstate;
+> > -     u32 ctrl;
+> > +     u32 ctrl, clk_rate;
+> > +     bool bypass;
+> >       int ret;
+> >       unsigned int delay_us;
+> >       unsigned long now;
+> > @@ -218,6 +238,16 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+> >               }
+> >       }
+> >
+> > +     /*
+> > +      * Although it would make much more sense to check for bypass in
+> > +      * sun4i_pwm_calculate(), value of bypass bit also depends on "en=
+abled".
+> > +      * Period is allowed to be rounded up or down.
+> > +      */
+> > +     clk_rate =3D clk_get_rate(sun4i_pwm->clk);
+> > +     bypass =3D ((state->period * clk_rate >=3D NSEC_PER_SEC &&
+> > +                state->period * clk_rate < NSEC_PER_SEC + clk_rate) &&
+> > +               state->enabled);
+>
+> I guess the compiler is smart enough here, but checking for
+> state->enabled is cheaper than the other checks, so putting this at the
+> start of the expression seems sensible.
+>
+> The comment doesn't match the code. You don't round up state->period.
+> (This is good, please fix the comment.) I think dropping the check
+>
+>         state->period * clk_rate < NSEC_PER_SEC + clk_rate
+>
+> would be fine, too.
+Ok
 
-Best regards,
-Jernej
+>
+> I'd like to have a check for
+>
+>         state->duty_cycle * clk_rate >=3D NSEC_PER_SEC / 2 &&
+>         state->duty_cycle * clk_rate < NSEC_PER_SEC
+>
+> here. If this isn't true rather disable the PWM or output a 100% duty
+> cycle with a larger period.
 
-> 
-> > >       ...
-> > > 
-> > > The assignment to pwm->clk above the comment is the one I suggested to
-> > > drop.
-> > 
-> > Neither can be dropped. DT files for other SoCs don't have clock-names
-> > property, so search for "mod" clock will fail and then fallback option
-> > without name is used.
-> > 
-> > Best regards,
-> > Jernej
-> > 
-> > > > > > +     /* Fallback for old dtbs with a single clock and no name */
-> > > > > > +     if (!pwm->clk) {
-> > > > > > +             pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> > > > > > +             if (IS_ERR(pwm->clk)) {
-> > > > > > +                     dev_err(&pdev->dev, "get clock failed
-> > > > > > %ld\n",
-> > > > > > +                             PTR_ERR(pwm->clk));
-> > > > > > +                     return PTR_ERR(pwm->clk);
-> > > > > > +             }
-> > > > > > +     }
-> > > > > 
-> > > > > There is a slight change of behaviour if I'm not mistaken. If you
-> > > > > have
-> > > > > 
-> > > > > this:
-> > > > >         clocks = <&clk1>;
-> > > > >         clock-names = "mod";
-> > > > >         
-> > > > >         pwm {
-> > > > >         
-> > > > >                 compatible = "allwinner,sun4i-a10-pwm"
-> > > > >                 clocks = <&clk2>;
-> > > > >         
-> > > > >         }
-> > > > > 
-> > > > > you now use clk1 instead of clk2 before.
-> > > > > 
-> > > > > Assuming this is only a theoretical problem, at least pointing this
-> > > > > out
-> > > > > in the commit log would be good I think.
-> > > > 
-> > > > Yes it's correct and as you said the driver don't check for a correct
-> > > > device tree, that why it's now optional probe.
-> > > > Let's assume that's the device-tree is correct, I will add a comment
-> > > > in the commit log.
-> > > 
-> > > If the mod clock was shared by all peripherals on the bus this would be
-> > > IMHO quite elegant. Probably it depends on what you mean by saying
-> > > "incorrect" if this snippet is incorrect. (It can be part of a valid dtb
-> > > that even complies to the binding documentation. However that's not how
-> > > any existing allwinner hardware looks like.) But let's stop arguing as
-> > > we agree it's a corner case and if you mention it in the commit log
-> > > we're both happy.
-> > > 
-> > > > > What is that clock used for? Is it required to access the hardware
-> > > > > registers? Or is it only required while the PWM is enabled? If so
-> > > > > you
-> > > > > could enable the clock more finegrainded.
-> > > > 
-> > > > Regarding the datasheet it's required to access the hardware.
-> > > > page 261 :
-> > > > https://linux-sunxi.org/File:Allwinner_H6_V200_User_Manual_V1.1.pdf
-> > > 
-> > > So enabling the bus clock is called "open APB1 Bus gating" in that
-> > > manual? If I understand that correctly the bus clock then only need to
-> > > be on while accessing the registers and could be disabled once the
-> > > hardware is programmed and running.
-> > > 
-> > > Can you please describe that in a comment. Something like:
-> > >       /*
-> > >       
-> > >        * We're keeping the bus clock on for the sake of simplicity.
-> > >        * Actually it only needs to be on for hardware register
-> > >        * accesses.
-> > >        */
-> > > 
-> > > should be fine. This way it's at least obvious that the handling could
-> > > be improved.
-> > > 
-> > > Best regards
-> > > Uwe
+Why not just having the duty_cycle is 50% only ?
+state->duty_cycle * 2 =3D=3D state->period;
 
+Regards,
+Clement
 
-
-
+>
+> > +
+> >       spin_lock(&sun4i_pwm->ctrl_lock);
+> >       ctrl =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> >
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
