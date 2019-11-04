@@ -2,64 +2,64 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A08D9EE3DB
-	for <lists+linux-pwm@lfdr.de>; Mon,  4 Nov 2019 16:32:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AB08EE690
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 Nov 2019 18:49:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbfKDPch (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 4 Nov 2019 10:32:37 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41261 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727891AbfKDPcg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 4 Nov 2019 10:32:36 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 94so14694644oty.8
-        for <linux-pwm@vger.kernel.org>; Mon, 04 Nov 2019 07:32:35 -0800 (PST)
+        id S1728287AbfKDRtN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 4 Nov 2019 12:49:13 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54720 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728188AbfKDRtN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 4 Nov 2019 12:49:13 -0500
+Received: by mail-wm1-f67.google.com with SMTP id z26so4499951wmi.4;
+        Mon, 04 Nov 2019 09:49:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=UCa5z4wM9ujAZVKxuB1XurT7/b8EmjpHqxtKJ4ezjzc=;
-        b=S6CB0AlwooUoRSw6ziiydGxesCarlK3ax1IvdUt042v+6e7vu0MQQuEccP2x9Vmclg
-         lZcw0d/CojZZSHzppk4d1uYymb7/ChgJPHYHyD5WBHfqu79a6C5A5gRjtt1FQMx3+NCi
-         lQmgg4xvQ4rmhxpCyli3Or/D9vilHfamW1yXIE6G2p0O5SAb1aP4hHjp6+VyCuFeteaa
-         xykIUmKfU+b0UEhM4RRfki5flpCaA4OtNWbAgiNOEc+tBrSjefz4IgJzquklqdt23tsT
-         7syHbrRvCyIsNb7l1POjVBDt9ivyzvCe+AYr7qgcJ/DauV4KvteEm+5E5tmlQxArEreO
-         vblA==
+        bh=p2xKl9sk3AGAtQ4LlnI3zNkpScq7gYHsvOfvGfAQyL4=;
+        b=hDuEqnDhVk7kPLTfGLMq/WeOZAhbhSMAJJbCeOf+BLERB82koHBkKphxwkbknhDs3J
+         Obr+dHWwQWzWiEy1P9TZaAGqTwD9QQLPDKlpSq2UeZQ72RKbsbQW2kmOjIH3jjybyQar
+         jiapj0psw8heQmPX0/1XhGmakh5EQEDo03gownZn2neuCbngAF1WMIJ2w4VvaB7zLmNR
+         smmZAcW1rzVodKEX6DURemUVuZhKbcuxtcg+h7b7+J/bdYiMga1q9epRQj6i+BVp/fOi
+         AMd5GIZyPG55XP9KQuaqH6yfrfUaKokf2Rzc+DBfmeurrUhAuhXpu3805K50ix2tLlgm
+         W4HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UCa5z4wM9ujAZVKxuB1XurT7/b8EmjpHqxtKJ4ezjzc=;
-        b=afbClV2Qbg4byyNkzrpTe/Ni9Q99V9V4rnP/l/1Y3nSSLjsTDQkvVty+74PNAy0WPw
-         ayer+q896xlNUjsc6V2V9orVIA4LzNjaA050vuwCpLz2hn4mc36mX6xqbVJwnTU8znkc
-         +7NfcXkY49M4bjar1FIxiSI/006OGb5AFB6wN3FZwPvZvnWiKnhGSd/cmp6DnRhS1DzM
-         yHLIr8R1ZZyaUky0CZen5E/3RsLeNZFd0SoW1nJKWvHqZxD4CA+qztO/gpw+DXzm8Q2I
-         mKTJuFKdXyuBvW3oqgspJAFT5rg2h3lN/2KKwAfLIKwN5/rNar/Fc7kn3N+tZHVlqFZ+
-         ew+Q==
-X-Gm-Message-State: APjAAAV7y+qr9wiwpczJMDsygoKSc+NZ9iHRIH6TIJEGW5/8BnFpGJwC
-        m6TSXn5eh3+BguWcEoBgpq+vFjPZ7nixAWkJ3eAkkw==
-X-Google-Smtp-Source: APXvYqyJQLIZzGfgeSsHwKjl/BQkyaU13SkRdn65mcF4t2kAdW4LPVlJR3+Qis/y4aioE3UYq3en5DM0CHajAdOQFO0=
-X-Received: by 2002:a05:6830:22ef:: with SMTP id t15mr3195246otc.256.1572881555374;
- Mon, 04 Nov 2019 07:32:35 -0800 (PST)
+        bh=p2xKl9sk3AGAtQ4LlnI3zNkpScq7gYHsvOfvGfAQyL4=;
+        b=CVtqKNjqgd6vP6HKuofmGdQw0DDIUql6nM5ezs4/gFv4WQSLES8Tc2pGYhsTzpAOis
+         zMb+w9/+pxGjM36pE+2fJwl74kr9+B0cJeyA8gKt78f9IPSiywRHJsu6lKwVTAhzY+3L
+         L5lVB7aeFH9g3nV0w/h8QvuaqNR6TdjRj2b99RKJ6EYIP1n361yJrCa41wX3jPfhpaTS
+         CzzCGPqAUt35L/8Rk+ukdgWRldJNE4JO3l3ELiF2PdTb/nDGu0QFuyYnFmJ8UkMlhfyq
+         1W/7wEorUjKs4lP/Nm0stgoAOkxn/Yv4tZ481Ad92geZkPZEjgXvMJqLYHLS7TnEjcXn
+         uDSg==
+X-Gm-Message-State: APjAAAVwusJ7Pc5gXPwCF4CvXaYXvbjEmOVqLVAKx5QBusBpHX9h3SRU
+        TSt3LCkkVoXi1fVfWkrWmPLaCZZJ75mXPN43J14=
+X-Google-Smtp-Source: APXvYqwOHtKxgzOFlIXHimPJ2owhRc/to3TzER1kse9EqS8W/w1eEg9DUEJJUI1U5VQmdGnU3C50BansJnwSlPsMMA0=
+X-Received: by 2002:a05:600c:228e:: with SMTP id 14mr241937wmf.119.1572889751662;
+ Mon, 04 Nov 2019 09:49:11 -0800 (PST)
 MIME-Version: 1.0
-References: <20191014124803.13661-1-miquel.raynal@bootlin.com>
- <CAHp75Vc4vnNVKc+Q_TY8DpwV4rLZYGm2MvGBC7r67XjmtNoskQ@mail.gmail.com>
- <20191015163055.0d8f44e5@xps13> <CAHp75VemkA7kap0O7=iACX4cD5_r6QXaLF6nS8R94ErStK0DwA@mail.gmail.com>
- <20191104161103.64995b8a@xps13>
-In-Reply-To: <20191104161103.64995b8a@xps13>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 4 Nov 2019 16:32:23 +0100
-Message-ID: <CAMpxmJVjyUXSNFEiTxMC1bdzXTex74DqeiHPqLBPdnb2_LYRnQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pca953x: Add Maxim MAX7313 PWM support
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20191103203334.10539-1-peron.clem@gmail.com> <20191103203334.10539-2-peron.clem@gmail.com>
+ <20191104080359.6kjugbt3yi63ywhb@pengutronix.de>
+In-Reply-To: <20191104080359.6kjugbt3yi63ywhb@pengutronix.de>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 4 Nov 2019 18:49:00 +0100
+Message-ID: <CAJiuCccf3=McRfJ85SiudDHZ4nDOT+d7hh+nKDgC1u6nTpphPQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] dt-bindings: pwm: allwinner: Add H6 PWM description
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-pwm-owner@vger.kernel.org
@@ -67,116 +67,99 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-pon., 4 lis 2019 o 16:11 Miquel Raynal <miquel.raynal@bootlin.com> napisa=
-=C5=82(a):
+On Mon, 4 Nov 2019 at 09:04, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
 >
-> Hi Linus,
+> On Sun, Nov 03, 2019 at 09:33:28PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> >
+> > H6 PWM block is basically the same as A20 PWM, except that it also has
+> > bus clock and reset line which needs to be handled accordingly.
+> >
+> > Expand Allwinner PWM binding with H6 PWM specifics.
+> >
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 45 ++++++++++++++++++-
+> >  1 file changed, 44 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-=
+pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.ya=
+ml
+> > index 0ac52f83a58c..bf36ea509f31 100644
+> > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yam=
+l
+> > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yam=
+l
+> > @@ -30,13 +30,46 @@ properties:
+> >        - items:
+> >            - const: allwinner,sun50i-h5-pwm
+> >            - const: allwinner,sun5i-a13-pwm
+> > +      - const: allwinner,sun50i-h6-pwm
+> >
+> >    reg:
+> >      maxItems: 1
+> >
+> > -  clocks:
+> > +  # Even though it only applies to subschemas under the conditionals,
+> > +  # not listing them here will trigger a warning because of the
+> > +  # additionalsProperties set to false.
+> > +  clocks: true
+> > +  clock-names: true
+> > +  resets:
+> >      maxItems: 1
+> >
+> > +  if:
+> > +    properties:
+> > +      compatible:
+> > +        contains:
+> > +          const: allwinner,sun50i-h6-pwm
+> > +
+> > +  then:
+> > +    properties:
+> > +      clocks:
+> > +        items:
+> > +          - description: Module Clock
+> > +          - description: Bus Clock
+> > +
+> > +      clock-names:
+> > +        items:
+> > +          - const: mod
+> > +          - const: bus
+> > +
+> > +    required:
+> > +      - clock-names
+> > +      - resets
+> > +
+> > +  else:
+> > +    properties:
+> > +      clocks:
+> > +        maxItems: 1
+> > +
 >
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Tue, 15 Oct 2019
-> 17:55:33 +0300:
->
-> > On Tue, Oct 15, 2019 at 5:30 PM Miquel Raynal <miquel.raynal@bootlin.co=
-m> wrote:
-> > >
-> > > Hi Andy,
-> > >
-> > > Thanks for the feedback.
-> > >
-> > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Mon, 14 Oct 2019
-> > > 20:59:01 +0300:
-> > >
-> > > > On Mon, Oct 14, 2019 at 4:09 PM Miquel Raynal <miquel.raynal@bootli=
-n.com> wrote:
-> > > > >
-> > > > > The MAX7313 chip is fully compatible with the PCA9535 on its basi=
-c
-> > > > > functions but can also manage the intensity on each of its ports =
-with
-> > > > > PWM. Each output is independent and may be tuned with 16 values (=
-4
-> > > > > bits per output). The period is always 32kHz, only the duty-cycle=
- may
-> > > > > be changed. One can use any output as GPIO or PWM.
-> > > >
-> > > > Can we rather not contaminate driver with this?
-> > > >
-> > > > Just register a separate PWM driver and export its functionality to
-> > > > GPIO, or other way around (in the latter case we actually have PCA8=
-685
-> > > > which provides a GPIO fgunctionality).
-> > > >
-> > >
-> > > I understand your concern but I am not sure to understand which
-> > > solution you have in mind. In the former case, could you explain a bi=
-t
-> > > more what you are thinking about? Would linking the PWM support with
-> > > the GPIO driver (code would be located in another .c file) work for
-> > > you? Or maybe you would prefer an MFD on top of the GPIO driver?
-> > >
-> > > As for the later case, I am not willing to re-implement GPIO support =
-in
-> > > an alternate driver for an already supported chip, it is too much wor=
-k
-> > > for the time I can spend on it.
-> >
-> >
-> > drivers/pwm/pwm-max7313.c:
-> >
-> > probe(platform_device)
-> > {
-> >   struct regmap =3D pdata;
-> >   ...
-> > }
-> >
-> > --- 8< --- 8< ---
-> > drivers/gpio/gpio-pca953x.c:
-> >
-> > probe()
-> > {
-> >   struct regmap rm;
-> > ...
-> >   if (dev_has_pwm)
-> >    pca953x_register_pwm_driver(rm);
-> > ...
-> > }
-> >
-> > In the above regmap may be replaced with some (shared) container.
-> >
-> > Or other way around. PWM registers GPIO (which actually I prefer since
-> > we have PCA9685 case where PWM provides GPIO functionality, though via
-> > different means)
-> >
->
-> Can I have your input on this proposal?
->
-> On one hand I agree that the GPIO driver is already quite big due to
-> its genericity and the amount of controllers it supports, on the other
-> hand:
-> 1/ Registering a PWM driver from the GPIO core seems strange. Maybe
-> registering a platform device could do the trick but I am not convinced
-> it is worth the trouble.
-> 2/ Putting the PWM logic in the drivers/pwm/ directory is not very
-> convenient as the object file will have to be embedded within the GPIO
-> one; this line in drivers/gpio/Makefile would be horrible:
-> ... +=3D gpio-pca953x.o ../pwm/pwm-max7313.o (not even sure it works)
-> 3/ In any cases, the regmap's ->readable_reg(), ->writable_reg()
-> callbacks shall be tweaked to turn the PWM registers accessible, so we
-> would still have PWM related code in the PCA953x GPIO driver.
->
-> In the end, I wonder if keeping everything in one file is not better?
-> Eventually I can create a separate file and fill it with just the PWM
-> helpers/hooks. Please advise on the better solution for you, I'll wait
-> your feedback before addressing Thierry Reding's other review and
-> resubmit.
->
+> I guess this hunk says "If this is a allwinner,sun50i-h6-pwm, a mod and
+> bus clock is required.", right?
 
-I'm not sure if this has been discussed, but is it possible to create
-an MFD driver for this chip and conditionally plug in the GPIO part
-from pca953x? I don't like the idea of having PWM functionality in a
-GPIO driver either.
+Correct.
+>
+>
+> I wonder if it is sensible to require a clock-names property in the else
+> branch, too. This would make it obvious if the clock there corresponds
+> to the "mod" or the "bus" clock on H6. (I guess it's "mod".)
 
-Bart
+This will also require to change example and all the current allwinner
+device-tree that have a PWM declared.
+
+Regards,
+Cl=C3=A9ment
 
 >
-> Thanks,
-> Miqu=C3=A8l
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
