@@ -2,64 +2,64 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C0ADEFD2D
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Nov 2019 13:34:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F0C6EFDC9
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Nov 2019 13:58:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388049AbfKEMev (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 5 Nov 2019 07:34:51 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54262 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387744AbfKEMev (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 5 Nov 2019 07:34:51 -0500
-Received: by mail-wm1-f68.google.com with SMTP id x4so9556905wmi.3;
-        Tue, 05 Nov 2019 04:34:49 -0800 (PST)
+        id S2388008AbfKEM6q (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 5 Nov 2019 07:58:46 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42185 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388678AbfKEM6q (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 5 Nov 2019 07:58:46 -0500
+Received: by mail-wr1-f67.google.com with SMTP id a15so21234346wrf.9;
+        Tue, 05 Nov 2019 04:58:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=uXDWMsp5qvVlHIVMxPVb2fsrIl1aloFJ+doxLS5hVLU=;
-        b=XWLAY/tT9UADwTl92xmE3tOUHaT4sD3761TLXhMGIk74SGtCX8Hy6pfaiZiCsNnSfM
-         kyecKhsvFggXdcfzTFcq8MnDlzOwDZ6u2WFeKaSD9kexaCcYEPayqcvkgEsxZtd+DGZ+
-         dSc67hY54a5/yjv8WFht9F6gO/9gj8WbJ62dcM9TByXAPxPDsS3ymi92JOXtl1+rjBvj
-         Ep/DAnTg53X4oJXJKuvvWG/+DZcInFCfHhZtfaUnlMpFifqeoEi9m+r+4yew5jUxWOXW
-         Vcv98KvzLv5Y0NqX19D5zaEUtajaNW5G+GgLLJKbfNflvbHaiBaKKUUQTKVy9ATYrDWN
-         UfEg==
+        bh=EbBVKTp3TAv641EyIKDqjqojRLx2ND1gdrPY2el5f7g=;
+        b=VZEcu9xz9shvIsdGNSkSlsc2gfEgSSDku4HPpaR2nVZkeVS653tgcsFFeM+1PwScLP
+         uFIfYRckoWBrGJj/vWEjitpWe1bSL/OrJuw3+IyUnQDUgQbv/Y2sSrm0SgHZMPoZhhGm
+         t7L5sg80wT4jnLt3T3v0zzSvJqTYMq6YyTkr5ricx/VwzvdHFQ8cSyBmXRsrwGMR1O9q
+         by6C/ug3oECowAguTc27m1SuyN9noC0lEEnQ99DqN+i/81ztkaXjcpGXGj7YAw6/8MeU
+         +DxuWdodANOT+5MbUrtYDb6Tepg1inwTLNxSgy+5OBhXGRK1TrUpTW1gsM5f86B7+Tf9
+         1SdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uXDWMsp5qvVlHIVMxPVb2fsrIl1aloFJ+doxLS5hVLU=;
-        b=g+1oyk/Vb7lsr9hu5sYAMBu8w1vwr9AIzES6Cop3fBfvuAtgVT+BDL9X88hNvObT3G
-         PMuTN1hjPJm9R4IZj/JUT1s4wqQzRl4rgt8+0EE2TrPK8sdT+B6ogzEmxKBIpAkbtMPa
-         emcymNizMBIxNq5M/8UKd3QKQUROKba4q1sGjLKd7kaHud8AOBOAYifP9bI25hKzi5PD
-         fnxOtsGMLLpqY4u3rCIZPJh7eWf1CXNFuuUr2I0w64K160AV8/j+n56Tw9sRXBOp3ROy
-         Bie4Dhn2oKDPlFrFKliNGTyvbvk8fz1yin0rIySIqBi/1l9/cDTWoTaXPZPsrVVKLNvm
-         HNJA==
-X-Gm-Message-State: APjAAAWtTi814NZRuAFyoMyHuj/EbmjgC+vmk1O9V9AemBOb0ItsN7kg
-        y33cyWBNbPEXA8Qri+pYFUTgA1SdqhgC/5py9H4=
-X-Google-Smtp-Source: APXvYqx2VTjX7SpCQ9bFbyLIvq0HI/5gSO9syMahnkO6f1EAMR8g0VgtqPCSwcYkRvXnLfPvgMsRFdEEsyBOBDbtRhQ=
-X-Received: by 2002:a05:600c:228e:: with SMTP id 14mr3817629wmf.119.1572957288363;
- Tue, 05 Nov 2019 04:34:48 -0800 (PST)
+        bh=EbBVKTp3TAv641EyIKDqjqojRLx2ND1gdrPY2el5f7g=;
+        b=dINNP0GVLmIypH2qi+A7/DeZasE0Msz0cNOr/AtWewZI3KdaOiKqQU72KJgF7pkUwi
+         UUm4fJkeK0E11LI9hXdX7Vqn+CJMKDRvMI3W1WFz42l7CcfYJILWNzzK0j8Z2fuyxPo8
+         GoJMl37h1O3SkwEb1uBoLPtVYhhBHzNzBMHhXLVYFQ0UZdWKkasv2e4BOPP7cer7iSIZ
+         mYQuxcK86yLicXrBl4PM2ET4lguApwYOgTzoqDDHyl1bmyvlFbx3i3raSjVj3ylRqoVo
+         mB/p/tneYYQgNdOtMKTD3zE6zvDfIq8E++gcyvQLy2HBxzsnxqE7TCiL9RRgFU8vTTL6
+         qdlw==
+X-Gm-Message-State: APjAAAXD1Ca26wOyEIW3Zn7Wx4eiOuQvB6veqI+FB4KcqeywKUnDNcWX
+        ct/h79NKvZcfdSeFa3ECLnaEb0YWDnAEACxfbV8=
+X-Google-Smtp-Source: APXvYqzXcIldjXyqcQeNIUogKwZf4MmDYxHvGPy9t8BV0gGj8v8HgjgDjpF+P0vtdFNp+pJ5lsj4oW7eNcIaJp/y7q0=
+X-Received: by 2002:a5d:69c8:: with SMTP id s8mr28130527wrw.167.1572958722979;
+ Tue, 05 Nov 2019 04:58:42 -0800 (PST)
 MIME-Version: 1.0
-References: <20191103203334.10539-1-peron.clem@gmail.com> <20191103203334.10539-2-peron.clem@gmail.com>
- <20191104080359.6kjugbt3yi63ywhb@pengutronix.de> <20191105111134.GG3876@gilmour.lan>
-In-Reply-To: <20191105111134.GG3876@gilmour.lan>
+References: <20191103203334.10539-1-peron.clem@gmail.com> <20191103203334.10539-5-peron.clem@gmail.com>
+ <20191104083835.m2pd4fvhn2ze6bjt@pengutronix.de> <CAJiuCccjgtMcJa-pZCB_DGN6L8m9bDTgQRoV6WUKPSjv8kn8vA@mail.gmail.com>
+ <20191105072922.rku2of3cfphpfirq@pengutronix.de>
+In-Reply-To: <20191105072922.rku2of3cfphpfirq@pengutronix.de>
 From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Tue, 5 Nov 2019 13:34:37 +0100
-Message-ID: <CAJiuCcc7sQvuPX+FTErXS+_RzUDvbDrB3Z5EX9wE_2EZaex0qw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/7] dt-bindings: pwm: allwinner: Add H6 PWM description
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
+Date:   Tue, 5 Nov 2019 13:58:31 +0100
+Message-ID: <CAJiuCcdxvhra7L927UXMHHt3JZmWf8BCoWH4Jijyam2aEHfTPg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] pwm: sun4i: Add support to output source clock directly
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
         devicetree <devicetree@vger.kernel.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
+        Jernej Skrabec <jernej.skrabec@siol.net>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-pwm-owner@vger.kernel.org
@@ -67,139 +67,198 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Maxime,
+Hi Uwe,
 
-On Tue, 5 Nov 2019 at 12:11, Maxime Ripard <mripard@kernel.org> wrote:
+On Tue, 5 Nov 2019 at 08:29, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
 >
-> Hi Clement, Uwe,
+> Hi Cl=C3=A9ment,
 >
-> On Mon, Nov 04, 2019 at 09:03:59AM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > On Sun, Nov 03, 2019 at 09:33:28PM +0100, Cl=C3=A9ment P=C3=A9ron wrote=
-:
-> > > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> On Mon, Nov 04, 2019 at 10:28:54PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > On Mon, 4 Nov 2019 at 09:38, Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > On Sun, Nov 03, 2019 at 09:33:31PM +0100, Cl=C3=A9ment P=C3=A9ron wro=
+te:
+> > > > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > >
+> > > > PWM core has an option to bypass whole logic and output unchanged s=
+ource
+> > > > clock as PWM output. This is achieved by enabling bypass bit.
+> > > >
+> > > > Note that when bypass is enabled, no other setting has any meaning,=
+ not
+> > > > even enable bit.
+> > > >
+> > > > This mode of operation is needed to achieve high enough frequency t=
+o
+> > > > serve as clock source for AC200 chip, which is integrated into same
+> > > > package as H6 SoC.
 > > >
-> > > H6 PWM block is basically the same as A20 PWM, except that it also ha=
-s
-> > > bus clock and reset line which needs to be handled accordingly.
+> > > I think the , should be dropped.
 > > >
-> > > Expand Allwinner PWM binding with H6 PWM specifics.
-> > >
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > > ---
-> > >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 45 +++++++++++++++++=
+> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > > > ---
+> > > >  drivers/pwm/pwm-sun4i.c | 39 +++++++++++++++++++++++++++++++++++++=
 +-
-> > >  1 file changed, 44 insertions(+), 1 deletion(-)
+> > > >  1 file changed, 38 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > > > index b5e7ac364f59..2441574674d9 100644
+> > > > --- a/drivers/pwm/pwm-sun4i.c
+> > > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > > @@ -3,6 +3,10 @@
+> > > >   * Driver for Allwinner sun4i Pulse Width Modulation Controller
+> > > >   *
+> > > >   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-el=
+ectrons.com>
+> > > > + *
+> > > > + * Limitations:
+> > > > + * - When outputing the source clock directly, the PWM logic will =
+be bypassed
+> > > > + *   and the currently running period is not guaranted to be compl=
+eted
 > > >
-> > > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a1=
-0-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.=
-yaml
-> > > index 0ac52f83a58c..bf36ea509f31 100644
-> > > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.y=
-aml
-> > > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.y=
-aml
-> > > @@ -30,13 +30,46 @@ properties:
-> > >        - items:
-> > >            - const: allwinner,sun50i-h5-pwm
-> > >            - const: allwinner,sun5i-a13-pwm
-> > > +      - const: allwinner,sun50i-h6-pwm
+> > > Typo: guaranted  -> guaranteed
 > > >
-> > >    reg:
-> > >      maxItems: 1
+> > > >   */
+> > > >
+> > > >  #include <linux/bitops.h>
+> > > > @@ -73,6 +77,7 @@ static const u32 prescaler_table[] =3D {
+> > > >
+> > > >  struct sun4i_pwm_data {
+> > > >       bool has_prescaler_bypass;
+> > > > +     bool has_direct_mod_clk_output;
+> > > >       unsigned int npwm;
+> > > >  };
+> > > >
+> > > > @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chi=
+p *chip,
+> > > >
+> > > >       val =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> > > >
+> > > > +     /*
+> > > > +      * PWM chapter in H6 manual has a diagram which explains that=
+ if bypass
+> > > > +      * bit is set, no other setting has any meaning. Even more, e=
+xperiment
+> > > > +      * proved that also enable bit is ignored in this case.
+> > > > +      */
+> > > > +     if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
+> > > > +         data->has_direct_mod_clk_output) {
+> > > > +             state->period =3D DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC,=
+ clk_rate);
+> > > > +             state->duty_cycle =3D state->period / 2;
+> > > > +             state->polarity =3D PWM_POLARITY_NORMAL;
+> > > > +             state->enabled =3D true;
+> > > > +             return;
+> > > > +     }
 > > >
-> > > -  clocks:
-> > > +  # Even though it only applies to subschemas under the conditionals=
-,
-> > > +  # not listing them here will trigger a warning because of the
-> > > +  # additionalsProperties set to false.
-> > > +  clocks: true
-> > > +  clock-names: true
-> > > +  resets:
-> > >      maxItems: 1
+> > > Not sure how the rest of sun4i_pwm_get_state behaves, but I would pre=
+fer
+> > > to let .get_state() round up which together with .apply_state() round=
+ing
+> > > down yields sound behaviour.
+> > Ok
 > > >
-> > > +  if:
-> > > +    properties:
-> > > +      compatible:
-> > > +        contains:
-> > > +          const: allwinner,sun50i-h6-pwm
-> > > +
-> > > +  then:
-> > > +    properties:
-> > > +      clocks:
-> > > +        items:
-> > > +          - description: Module Clock
-> > > +          - description: Bus Clock
-> > > +
-> > > +      clock-names:
-> > > +        items:
-> > > +          - const: mod
-> > > +          - const: bus
-> > > +
-> > > +    required:
-> > > +      - clock-names
-> > > +      - resets
-> > > +
-> > > +  else:
-> > > +    properties:
-> > > +      clocks:
-> > > +        maxItems: 1
-> > > +
+> > > > +
+> > > >       if ((PWM_REG_PRESCAL(val, pwm->hwpwm) =3D=3D PWM_PRESCAL_MASK=
+) &&
+> > > >           sun4i_pwm->data->has_prescaler_bypass)
+> > > >               prescaler =3D 1;
+> > > > @@ -203,7 +222,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chi=
+p, struct pwm_device *pwm,
+> > > >  {
+> > > >       struct sun4i_pwm_chip *sun4i_pwm =3D to_sun4i_pwm_chip(chip);
+> > > >       struct pwm_state cstate;
+> > > > -     u32 ctrl;
+> > > > +     u32 ctrl, clk_rate;
+> > > > +     bool bypass;
+> > > >       int ret;
+> > > >       unsigned int delay_us;
+> > > >       unsigned long now;
+> > > > @@ -218,6 +238,16 @@ static int sun4i_pwm_apply(struct pwm_chip *ch=
+ip, struct pwm_device *pwm,
+> > > >               }
+> > > >       }
+> > > >
+> > > > +     /*
+> > > > +      * Although it would make much more sense to check for bypass=
+ in
+> > > > +      * sun4i_pwm_calculate(), value of bypass bit also depends on=
+ "enabled".
+> > > > +      * Period is allowed to be rounded up or down.
+> > > > +      */
+> > > > +     clk_rate =3D clk_get_rate(sun4i_pwm->clk);
+> > > > +     bypass =3D ((state->period * clk_rate >=3D NSEC_PER_SEC &&
+> > > > +                state->period * clk_rate < NSEC_PER_SEC + clk_rate=
+) &&
+> > > > +               state->enabled);
+> > >
+> > > I guess the compiler is smart enough here, but checking for
+> > > state->enabled is cheaper than the other checks, so putting this at t=
+he
+> > > start of the expression seems sensible.
+> > >
+> > > The comment doesn't match the code. You don't round up state->period.
+> > > (This is good, please fix the comment.) I think dropping the check
+> > >
+> > >         state->period * clk_rate < NSEC_PER_SEC + clk_rate
+> > >
+> > > would be fine, too.
+> > Ok
 > >
-> > I guess this hunk says "If this is a allwinner,sun50i-h6-pwm, a mod and
-> > bus clock is required.", right?
+> > >
+> > > I'd like to have a check for
+> > >
+> > >         state->duty_cycle * clk_rate >=3D NSEC_PER_SEC / 2 &&
+> > >         state->duty_cycle * clk_rate < NSEC_PER_SEC
+> > >
+> > > here. If this isn't true rather disable the PWM or output a 100% duty
+> > > cycle with a larger period.
 > >
-> > I wonder if it is sensible to require a clock-names property in the els=
-e
-> > branch, too. This would make it obvious if the clock there corresponds
-> > to the "mod" or the "bus" clock on H6. (I guess it's "mod".)
+> > Why not just having the duty_cycle is 50% only ?
+> > state->duty_cycle * 2 =3D=3D state->period;
 >
-> This can be done a bit differently and could address your concerns
->
-> Something like
->
-> properties:
->   ...
->
->   clocks:
->     minItems: 1
->     maxItems: 2
->     items:
->       - description: Bus Clock
->       - description: Module Clock
->
-> required:
->   - clocks
->
-> if:
->   ...
->
-> then:
->   properties:
->     clocks:
->       maxItems: 2
+> Yeah, for the bypass case you can only provide a 50% duty cycle. The
+> problem you have to address is that you cannot rely on your consumer to
+> request only 50% duty cycles. So you have to implement some behaviour if
+> your consumer requests period =3D 1 / clk_rate and 20% duty cycle.
 
-Here we should set minItems to 2 right ?
-so Max =3D Min =3D 2
+So you request to add a new patch in this series for fixing the actual
+PWM behavior at corner case?
+
+This series just want to add a new device and a new bypass
+functionality and I can't measure the output of PWM and testing it
+properly.
+Can this be done in another patch/series ?
 
 Regards,
 Cl=C3=A9ment
 
 >
->     clocks-names:
->       items:
->         - const: mod
->         - const: bus
+> Where I want to get the pwm framework as a whole is to let lowlevel
+> drivers round down both duty_cycle and period to the next possible values
+> in their .apply callback to be able to provide a more uniform behaviour
+> for consumers. So here this would mean:
 >
->     required:
->       - clock-names
+>  - 1 / clk_rate <=3D state->period < smallest value without bypass &&
+>    0 <=3D state->duty_cycle < state->period / 2
+>         =3D> provide a constant 0
 >
-> else:
->   properties:
->     clocks:
->       maxItems: 1
+>  - 1 / clk_rate <=3D state->period < smallest value without bypass &&
+>    state->period / 2 <=3D state->duty_cycle < state->period
+>         =3D> use bypass mode providing 50% duty cycle
 >
-> That way, the definition of the order and which clock is which is
-> pretty obvious in both cases, and we don't get any weird warnings.
+>  - 1 / clk_rate <=3D state->period < smallest value without bypass &&
+>    state->period =3D=3D state->duty_cycle
+>         =3D> provide a constant 1
 >
-> Maxime
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
