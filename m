@@ -2,218 +2,97 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 597FCEFA70
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Nov 2019 11:07:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52026EFAFB
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Nov 2019 11:24:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387702AbfKEKH3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 5 Nov 2019 05:07:29 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33652 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730711AbfKEKH3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 5 Nov 2019 05:07:29 -0500
-Received: by mail-qk1-f193.google.com with SMTP id 71so20622015qkl.0
-        for <linux-pwm@vger.kernel.org>; Tue, 05 Nov 2019 02:07:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=CNinsozng4H5Ktf3rvHjg3jRh9c0NmbS8rmNz478Pe8=;
-        b=VEO755CMkWYZ+HZKjDSD2H8hkfHFILjBODJuUT7dyLJ2VacVXn30QPaKiB2aJr3dFj
-         UUfvdFj6N0LnOAXPpkBIo09s0N5k2JqZAjoxblyCjvylpwFmN2gB0t7J2CGgbJNVhTmU
-         Xcr/1pKIJxSCw64FjFq0CtKjgFgTUfNVSSd9U2EvGxP5Nf0q3JVy0Cb5eF45Tr0S+WOE
-         0zKyddIay8ulBTDwkAa9yHfkd+eUs/9amxlaNsSWxZ5fur+Ya/bxWYGvrXrX0FWTo8vt
-         H4Dh97ZxjUuuKm7+8LrgGpf1cTXIb42yHnSZIPyQugGcQMUmFsLEOAZC5E/3rGykiu40
-         5mcA==
+        id S2388135AbfKEKYj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 5 Nov 2019 05:24:39 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42113 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388098AbfKEKYj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 5 Nov 2019 05:24:39 -0500
+Received: by mail-lj1-f195.google.com with SMTP id n5so10152908ljc.9;
+        Tue, 05 Nov 2019 02:24:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CNinsozng4H5Ktf3rvHjg3jRh9c0NmbS8rmNz478Pe8=;
-        b=LHbLrrLms2SVfAuboq75HWTlJPpcdLBrf5uXDoauGJx+ijmwpmn53Lf1F7UN9FOXvO
-         AjPIaaFL4kOkZZQPjfvU9l230bi07Bp3pKq6m0s57hU8w0cueR/cr3RnFldrbZbzNDS1
-         j2/oiWs1QDReYL3z7ONwXSfBfYdWtow4oPw83Dftnn5mI7rvxKaJ6dFo6wfYw4lpC16q
-         XxAT1oqDDEyuFFOYg3v4hEJh2DrqU0L22p38jb3XPX8hSXVBRdcOg7AG5j+3tyPEWEB2
-         KAEjufJNkSn5yrofRhGWcJNC9+nF3nu2ooMEOG5so02Z61s0dVRJieW3rl12Ij8TtBlJ
-         73tw==
-X-Gm-Message-State: APjAAAXr5pcCauWwzHF1VUWbvCRfQeszWGNgX0zQPC9NzbhtuhPwrBy/
-        xQ++qWBcI1unI3sH66EXXxrRFUOx2W1TzIFn13rYYQ==
-X-Google-Smtp-Source: APXvYqw9bNDchC8BBBpEdelYeypgmRQMVHiuZm+RJGKYBw6ulBdYAA7iNafLNDZB2gz23179UM0YXlSw8t9Sm2JcFdA=
-X-Received: by 2002:ae9:eb07:: with SMTP id b7mr7705763qkg.104.1572948447803;
- Tue, 05 Nov 2019 02:07:27 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bHPDrr3HiImPjNjg8bWMTYHlcggZ66/9TrLdtK5mAS4=;
+        b=Op5fg1/UyCpjzEOZYxDCqmeU/YjTp70xoK3LZtOmCXG38Y+KkD/W79xQS4Asoo4J9+
+         aOlGdt64pvPg0bPrCZzijTbssONcGwbKxj2Td/Y+c33ZWFQeAYTc1HVYDMpkCf7o6o1z
+         OY/oeV29zD/PPfeuAtfGYzdX1fnfTKmBNB1Yw+RI83e5lLO7VdGAoKBs9LvuXyYrhNze
+         AJQkLvnrRe7n+AzLvOMS8yjwkXMaKsmVsMOz1AwuxqcngRDkA17NEk7bJqlBciodpcVF
+         XqFAycCY4mEtWwUcLl7OvFceVTIQ7+maP58HJF2DP4ZznjpZEHPPZxolfKasjgR+dIOo
+         k0ng==
+X-Gm-Message-State: APjAAAW9AKF/6nXs2LxQe1l+1h67Kv3kZfRvDnfy1Jm/rhczn61M8/f5
+        mG+ZRiOdqVscswc9O6/pWPI=
+X-Google-Smtp-Source: APXvYqw+ZGoOz3OiTd9yy3EqEwKGHGu7H0qfhS7OYfsTGPHGDgCtefUyk+bHnFzg2hW+fILf71btuw==
+X-Received: by 2002:a2e:96c1:: with SMTP id d1mr23520531ljj.87.1572949476956;
+        Tue, 05 Nov 2019 02:24:36 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id j8sm2302302lja.32.2019.11.05.02.24.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 02:24:36 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:24:27 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 26/62] gpio: gpio-mvebu: Use new GPIO_LINE_DIRECTION
+Message-ID: <dc06a640f92c4b6c1ae68f5b3156130a6b8fac1f.1572945830.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1572945830.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-References: <20191031123040.26316-1-benjamin.gaignard@st.com>
- <20191031123040.26316-3-benjamin.gaignard@st.com> <20191103110841.3ad3ecfb@archlinux>
-In-Reply-To: <20191103110841.3ad3ecfb@archlinux>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Tue, 5 Nov 2019 11:07:16 +0100
-Message-ID: <CA+M3ks5sZ6wwV-V+HCLC8OLdeLqrxK0Ga-pXTsdktQErbMOk4g@mail.gmail.com>
-Subject: Re: [PATCH 2/4] dt-bindings: iio: timer: Convert stm32 IIO trigger
- bindings to json-schema
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        linux-iio@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1572945830.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Le dim. 3 nov. 2019 =C3=A0 12:08, Jonathan Cameron <jic23@kernel.org> a =C3=
-=A9crit :
->
-> On Thu, 31 Oct 2019 13:30:38 +0100
-> Benjamin Gaignard <benjamin.gaignard@st.com> wrote:
->
-> > Convert the STM32 IIO trigger binding to DT schema format using json-sc=
-hema
-> >
-> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> I'm far from great on these as still haven't taken the time I should to l=
-earn
-> the yaml syntax properly.  A few comments inline however based mostly on =
-this
-> doesn't quite look like other ones I've seen recently.
->
-> Thanks,
->
-> Jonathan
->
-> > ---
-> >  .../bindings/iio/timer/st,stm32-timer-trigger.yaml | 44 ++++++++++++++=
-++++++++
-> >  .../bindings/iio/timer/stm32-timer-trigger.txt     | 25 ------------
-> >  2 files changed, 44 insertions(+), 25 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/timer/st,stm3=
-2-timer-trigger.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-t=
-imer-trigger.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/timer/st,stm32-timer=
--trigger.yaml b/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-=
-trigger.yaml
-> > new file mode 100644
-> > index 000000000000..1c8c8b55e8cd
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigge=
-r.yaml
-> > @@ -0,0 +1,44 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/timer/st,stm32-timer-trigger.ya=
-ml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: STMicroelectronics STM32 Timers IIO timer bindings
-> > +
-> > +maintainers:
-> > +  - Benjamin Gaignard <benjamin.gaignard@st.com>
-> > +  - Fabrice Gasnier <fabrice.gasnier@st.com>
-> > +
-> > +properties:
-> > +  $nodemane:
->
-> nodename?
+It's hard for occasional GPIO code reader/writer to know if values 0/1
+equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
+GPIO_LINE_DIRECTION_OUT to help them out.
 
-That will be in v2
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ drivers/gpio/gpio-mvebu.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
->
-> > +    pattern: "^timer@[0-9]+$"
-> > +    type: object
-> > +
-> > +    description:
-> > +      must be a sub-node of an STM32 Timer device tree node
-> > +
-> > +    properties:
-> > +      compatible:
-> > +        oneOf:
->
-> enum is I think preferred for these.
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index 6c0687694341..9b2adf0ef880 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -384,7 +384,10 @@ static int mvebu_gpio_get_direction(struct gpio_chip *chip, unsigned int pin)
+ 
+ 	regmap_read(mvchip->regs, GPIO_IO_CONF_OFF + mvchip->offset, &u);
+ 
+-	return !!(u & BIT(pin));
++	if (u & BIT(pin))
++		return GPIO_LINE_DIRECTION_IN;
++
++	return GPIO_LINE_DIRECTION_OUT;
+ }
+ 
+ static int mvebu_gpio_to_irq(struct gpio_chip *chip, unsigned int pin)
+-- 
+2.21.0
 
-as you like it will be in v2
 
->
-> > +          - const: st,stm32-timer-trigger
-> > +          - const: st,stm32h7-timer-trigger
-> > +
-> > +      reg: true
->
-> Normally some info for what the reg value is..
-I can't put "description" on this field because the syntax doesn't allow it=
-.
-I will add a comment in v2 to explain what reg is.
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-Thanks for your review.
-Benjamin
->
-> > +
-> > +    required:
-> > +      - compatible
-> > +      - reg
-> > +
-> > +examples:
-> > +  - |
-> > +    timers2: timer@40000000 {
-> > +      #address-cells =3D <1>;
-> > +      #size-cells =3D <0>;
-> > +      timer@0 {
-> > +        compatible =3D "st,stm32-timer-trigger";
-> > +        reg =3D <0>;
-> > +      };
-> > +    };
-> > +
-> > +...
-> > diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-timer-tr=
-igger.txt b/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger=
-.txt
-> > deleted file mode 100644
-> > index b8e8c769d434..000000000000
-> > --- a/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.t=
-xt
-> > +++ /dev/null
-> > @@ -1,25 +0,0 @@
-> > -STMicroelectronics STM32 Timers IIO timer bindings
-> > -
-> > -Must be a sub-node of an STM32 Timers device tree node.
-> > -See ../mfd/stm32-timers.txt for details about the parent node.
-> > -
-> > -Required parameters:
-> > -- compatible:        Must be one of:
-> > -             "st,stm32-timer-trigger"
-> > -             "st,stm32h7-timer-trigger"
-> > -- reg:               Identify trigger hardware block.
-> > -
-> > -Example:
-> > -     timers@40010000 {
-> > -             #address-cells =3D <1>;
-> > -             #size-cells =3D <0>;
-> > -             compatible =3D "st,stm32-timers";
-> > -             reg =3D <0x40010000 0x400>;
-> > -             clocks =3D <&rcc 0 160>;
-> > -             clock-names =3D "int";
-> > -
-> > -             timer@0 {
-> > -                     compatible =3D "st,stm32-timer-trigger";
-> > -                     reg =3D <0>;
-> > -             };
-> > -     };
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
