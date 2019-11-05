@@ -2,132 +2,103 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 14681EF5DF
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Nov 2019 08:01:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B4C38EF5EA
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Nov 2019 08:07:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387499AbfKEHBi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 5 Nov 2019 02:01:38 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50471 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387466AbfKEHBi (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 5 Nov 2019 02:01:38 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <pza@pengutronix.de>)
-        id 1iRsqI-00057P-4n; Tue, 05 Nov 2019 08:01:30 +0100
-Received: from pza by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <pza@pengutronix.de>)
-        id 1iRsqG-0008UW-VW; Tue, 05 Nov 2019 08:01:28 +0100
-Date:   Tue, 5 Nov 2019 08:01:28 +0100
-From:   Philipp Zabel <pza@pengutronix.de>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v2 2/7] pwm: sun4i: Add an optional probe for reset line
-Message-ID: <20191105070128.ve73ha5ibiymcxnx@pengutronix.de>
-References: <20191103203334.10539-1-peron.clem@gmail.com>
- <20191103203334.10539-3-peron.clem@gmail.com>
- <20191104081157.373v22atswsaktbe@pengutronix.de>
+        id S2387705AbfKEHGu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 5 Nov 2019 02:06:50 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38183 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387639AbfKEHGu (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 5 Nov 2019 02:06:50 -0500
+Received: by mail-pl1-f193.google.com with SMTP id w8so8900341plq.5;
+        Mon, 04 Nov 2019 23:06:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ShytpwrE9c/FcWybQ1i8wdsSV+dPeLCEN7Fog34ck4M=;
+        b=Qly7w3n56sEAX8+qHxDiN0dOm97fk2e0bMCHv0C7hzT7UxfgIHCXpHeCMbGxEqOu12
+         65kDjs8Q4QCxfhIo3eSam+2r87znfS+EIEpbWO4LkJnMB2KLlRe3E3Vxe9NC+fOnwAlx
+         g0BIa5NvEYLq91N8mr2/gDG40xpT1AI0+/IQYWWZ4XNWuA5nUPdJ0nPTbH7eIkfS+PFd
+         Owwjk8EccsG3BOZFZS8KGioNjnJhZne32XkdNUjXM0NvIboRHqc9qUT2lSq6kEIYm/Mp
+         1kgFJ8CYjbvzPOaU71RrfSiL8A1WQe2dzV8y0Trw6MUfemuDZ/TOhAUojHwDAV1e9dhf
+         5SpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ShytpwrE9c/FcWybQ1i8wdsSV+dPeLCEN7Fog34ck4M=;
+        b=gMn4LDaBmmLoFnW1uo5yTDjWrfka6hfyrQCalMwdv4zl2I/8GhaMJFRU7WQ3wwrOaI
+         zOxET5RMdhAUxBuySiaTFRXq/vqZxJjPmOey5E1IZ2ZC3JpI0TWz7ioUEvtou83CLd+/
+         yOjY+xIpv9KJbkuXUpMUlTcTUbm9nL+kBShGtVEKnBIMDxwfdcVvi7kamXbiL6RSnBGA
+         5bgJiki2FWrODaMfjD9eEnWoc0Te2uY65gnkbscKQ1NEj34FPqNZbb5l+0x+imVSAAEJ
+         3pKI0uqRTVqYugD8YBQBYkRo9POMGcMhSh1BHyyYhweoSi52xd1KP5mbwq+BX+kFibK4
+         pT1g==
+X-Gm-Message-State: APjAAAXECVRENdvBxIH/mpAVI8Y24b7CEHBvXHkOT68A9LsMBcuy1GnU
+        s7ytDDZB/QOHg2a4y83oU5YRTRYi8lG5UwdJV/g=
+X-Google-Smtp-Source: APXvYqwCsvxlaaO9BJWDSs1t0acsmzJfTzTMCiW3dcP5aUui10WRJLGndqyUkT6KTRWGUChZEmuWlBLbeXmoPpc0IB4=
+X-Received: by 2002:a17:902:9881:: with SMTP id s1mr32247185plp.18.1572937609577;
+ Mon, 04 Nov 2019 23:06:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191104081157.373v22atswsaktbe@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:50:49 up 120 days, 13:01, 112 users,  load average: 0.25, 0.17,
- 0.11
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: pza@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+References: <20191014124803.13661-1-miquel.raynal@bootlin.com>
+ <CAHp75Vc4vnNVKc+Q_TY8DpwV4rLZYGm2MvGBC7r67XjmtNoskQ@mail.gmail.com>
+ <20191015163055.0d8f44e5@xps13> <CAHp75VemkA7kap0O7=iACX4cD5_r6QXaLF6nS8R94ErStK0DwA@mail.gmail.com>
+ <20191104161103.64995b8a@xps13> <CAMpxmJVjyUXSNFEiTxMC1bdzXTex74DqeiHPqLBPdnb2_LYRnQ@mail.gmail.com>
+ <20191104203346.epdbzflnynh2gf3z@pengutronix.de>
+In-Reply-To: <20191104203346.epdbzflnynh2gf3z@pengutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 5 Nov 2019 09:06:37 +0200
+Message-ID: <CAHp75VdULzZ6NXP7fp=6KQFAHOSvoJ-_WTqfcmhQJbrLUw3M4Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pca953x: Add Maxim MAX7313 PWM support
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 09:11:57AM +0100, Uwe Kleine-König wrote:
-> Hello,
-> 
-> adding Philipp Zabel (= reset controller maintainer) to Cc: and so I'm
-> not stripping the uncommented parts of the patch.
-> 
-> On Sun, Nov 03, 2019 at 09:33:29PM +0100, Clément Péron wrote:
-> > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> > 
-> > H6 PWM core needs deasserted reset line in order to work.
-> > 
-> > Add an optional probe for it.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> > ---
-> >  drivers/pwm/pwm-sun4i.c | 32 ++++++++++++++++++++++++++++++--
-> >  1 file changed, 30 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > index 6f5840a1a82d..d194b8ebdb00 100644
-> > --- a/drivers/pwm/pwm-sun4i.c
-> > +++ b/drivers/pwm/pwm-sun4i.c
-> > @@ -16,6 +16,7 @@
-> >  #include <linux/of_device.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/pwm.h>
-> > +#include <linux/reset.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/spinlock.h>
-> >  #include <linux/time.h>
-> > @@ -78,6 +79,7 @@ struct sun4i_pwm_data {
-> >  struct sun4i_pwm_chip {
-> >  	struct pwm_chip chip;
-> >  	struct clk *clk;
-> > +	struct reset_control *rst;
-> >  	void __iomem *base;
-> >  	spinlock_t ctrl_lock;
-> >  	const struct sun4i_pwm_data *data;
-> > @@ -365,6 +367,20 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
-> >  	if (IS_ERR(pwm->clk))
-> >  		return PTR_ERR(pwm->clk);
-> >  
-> > +	pwm->rst = devm_reset_control_get_optional(&pdev->dev, NULL);
-> > +	if (IS_ERR(pwm->rst)) {
-> > +		if (PTR_ERR(pwm->rst) == -EPROBE_DEFER)
-> > +			return PTR_ERR(pwm->rst);
-> > +		dev_info(&pdev->dev, "no reset control found\n");
-> 
-> I would degrade this to a dev_dbg. Otherwise this spams the log for all
-> unaffected machines.
+On Mon, Nov 4, 2019 at 10:33 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+> On Mon, Nov 04, 2019 at 04:32:23PM +0100, Bartosz Golaszewski wrote:
+> > pon., 4 lis 2019 o 16:11 Miquel Raynal <miquel.raynal@bootlin.com> napi=
+sa=C5=82(a):
+> > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Tue, 15 Oct 2019
+> > > 17:55:33 +0300:
+> > >
+> > > > Or other way around. PWM registers GPIO (which actually I prefer si=
+nce
+> > > > we have PCA9685 case where PWM provides GPIO functionality, though =
+via
+> > > > different means)
 
-The _optional variants return NULL if the reset is not specified in the
-device tree, so this is not "no reset control found", but a real error
-that should be returned.
+> While it's not nice to have a driver that provides two different devices
+> (here: gpio controller and pwm controller) similar things are not
+> unseen. And for example the splitting of watchdog
+> (drivers/watchdog/stmp3xxx_rtc_wdt.c) and rtc
+> (drivers/rtc/rtc-stmp3xxx.c) of the device in the mx28 is more trouble
+> than worth.
+>
+> So I'd vote for putting it in a single file that lives where the
+> bigger/more complex part fits to. So assuming that's the GPIO part (as
+> the driver supports several variants and not all of them have a PWM
+> function if I'm not mistaken) having it in drivers/gpio is fine for me.
 
-> devm_reset_control_get_optional() is defined in a section that has a
-> comment "These inline function calls will be removed once all
-> consumers have been moved over to the new explicit API.", so I guess
-> you want devm_reset_control_get_optional_exclusive or even
-> devm_reset_control_get_optional_shared here.
+For me it sounds more likely that PWM is a *pin function* of a pin
+controller and actually this GPIO driver should be a pin controller
+with corresponding function(s).
 
-Correct. If this driver deasserts in probe() and asserts the reset in
-remove(), this can use the refcounting _shared variant.
-
-> @Philipp: maybe a check in checkpatch that warns about introduction of
-> such new instances would be good?!
-
-Yes, that would be helpful.
-
-regards
-Philipp
+--=20
+With Best Regards,
+Andy Shevchenko
