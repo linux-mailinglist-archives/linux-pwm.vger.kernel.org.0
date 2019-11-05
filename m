@@ -2,74 +2,174 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B2BBF0072
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Nov 2019 15:57:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EB68F041D
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Nov 2019 18:32:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389081AbfKEO54 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 5 Nov 2019 09:57:56 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45225 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388875AbfKEO54 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 5 Nov 2019 09:57:56 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iS0HF-0000SN-Bl; Tue, 05 Nov 2019 15:57:49 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iS0HE-0001Yr-Vt; Tue, 05 Nov 2019 15:57:48 +0100
-Date:   Tue, 5 Nov 2019 15:57:48 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
+        id S2390114AbfKERcO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 5 Nov 2019 12:32:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387776AbfKERcN (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 5 Nov 2019 12:32:13 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BD482087E;
+        Tue,  5 Nov 2019 17:32:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572975132;
+        bh=yDuxotFXs1FYNXnjjemxUjVnTa7mhmweVIbX2xUY4Po=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lH2+6849jtmlQEYhuHDm8T1wfQtFGbiPiMYzlJSBFroTT5+hom11G9nS1EGuMRwMB
+         yKDuyuZNPw9UsMin8XJ6oo61kMPcr0DMDg+C7trMcMc7GECpzZSOJr82RoQpmLhV54
+         4Ohb/xjlD1HtNDGL0Iq9v8AIRXB5RMpepFdOqzsU=
+Date:   Tue, 5 Nov 2019 18:32:08 +0100
+From:   Maxime Ripard <mripard@kernel.org>
 To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v3 5/7] pwm: sun4i: Add support for H6 PWM
-Message-ID: <20191105145748.6l4ke7zxlt6mibmk@pengutronix.de>
-References: <20191105131456.32400-1-peron.clem@gmail.com>
- <20191105131456.32400-6-peron.clem@gmail.com>
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH v2 1/7] dt-bindings: pwm: allwinner: Add H6 PWM
+ description
+Message-ID: <20191105173208.GA46143@gilmour.lan>
+References: <20191103203334.10539-1-peron.clem@gmail.com>
+ <20191103203334.10539-2-peron.clem@gmail.com>
+ <20191104080359.6kjugbt3yi63ywhb@pengutronix.de>
+ <20191105111134.GG3876@gilmour.lan>
+ <CAJiuCcc7sQvuPX+FTErXS+_RzUDvbDrB3Z5EX9wE_2EZaex0qw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191105131456.32400-6-peron.clem@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAJiuCcc7sQvuPX+FTErXS+_RzUDvbDrB3Z5EX9wE_2EZaex0qw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 02:14:54PM +0100, Clément Péron wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
-> 
-> Now that sun4i PWM driver supports deasserting reset line and enabling
-> bus clock, support for H6 PWM can be added.
-> 
-> Note that while H6 PWM has two channels, only first one is wired to
-> output pin. Second channel is used as a clock source to companion AC200
-> chip which is bundled into same package.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+On Tue, Nov 05, 2019 at 01:34:37PM +0100, Cl=E9ment P=E9ron wrote:
+> On Tue, 5 Nov 2019 at 12:11, Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > Hi Clement, Uwe,
+> >
+> > On Mon, Nov 04, 2019 at 09:03:59AM +0100, Uwe Kleine-K=F6nig wrote:
+> > > On Sun, Nov 03, 2019 at 09:33:28PM +0100, Cl=E9ment P=E9ron wrote:
+> > > > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > >
+> > > > H6 PWM block is basically the same as A20 PWM, except that it also =
+has
+> > > > bus clock and reset line which needs to be handled accordingly.
+> > > >
+> > > > Expand Allwinner PWM binding with H6 PWM specifics.
+> > > >
+> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> > > > ---
+> > > >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 45 +++++++++++++++=
++++-
+> > > >  1 file changed, 44 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-=
+a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pw=
+m.yaml
+> > > > index 0ac52f83a58c..bf36ea509f31 100644
+> > > > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm=
+=2Eyaml
+> > > > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm=
+=2Eyaml
+> > > > @@ -30,13 +30,46 @@ properties:
+> > > >        - items:
+> > > >            - const: allwinner,sun50i-h5-pwm
+> > > >            - const: allwinner,sun5i-a13-pwm
+> > > > +      - const: allwinner,sun50i-h6-pwm
+> > > >
+> > > >    reg:
+> > > >      maxItems: 1
+> > > >
+> > > > -  clocks:
+> > > > +  # Even though it only applies to subschemas under the conditiona=
+ls,
+> > > > +  # not listing them here will trigger a warning because of the
+> > > > +  # additionalsProperties set to false.
+> > > > +  clocks: true
+> > > > +  clock-names: true
+> > > > +  resets:
+> > > >      maxItems: 1
+> > > >
+> > > > +  if:
+> > > > +    properties:
+> > > > +      compatible:
+> > > > +        contains:
+> > > > +          const: allwinner,sun50i-h6-pwm
+> > > > +
+> > > > +  then:
+> > > > +    properties:
+> > > > +      clocks:
+> > > > +        items:
+> > > > +          - description: Module Clock
+> > > > +          - description: Bus Clock
+> > > > +
+> > > > +      clock-names:
+> > > > +        items:
+> > > > +          - const: mod
+> > > > +          - const: bus
+> > > > +
+> > > > +    required:
+> > > > +      - clock-names
+> > > > +      - resets
+> > > > +
+> > > > +  else:
+> > > > +    properties:
+> > > > +      clocks:
+> > > > +        maxItems: 1
+> > > > +
+> > >
+> > > I guess this hunk says "If this is a allwinner,sun50i-h6-pwm, a mod a=
+nd
+> > > bus clock is required.", right?
+> > >
+> > > I wonder if it is sensible to require a clock-names property in the e=
+lse
+> > > branch, too. This would make it obvious if the clock there corresponds
+> > > to the "mod" or the "bus" clock on H6. (I guess it's "mod".)
+> >
+> > This can be done a bit differently and could address your concerns
+> >
+> > Something like
+> >
+> > properties:
+> >   ...
+> >
+> >   clocks:
+> >     minItems: 1
+> >     maxItems: 2
+> >     items:
+> >       - description: Bus Clock
+> >       - description: Module Clock
+> >
+> > required:
+> >   - clocks
+> >
+> > if:
+> >   ...
+> >
+> > then:
+> >   properties:
+> >     clocks:
+> >       maxItems: 2
+>
+> Here we should set minItems to 2 right ?
+> so Max =3D Min =3D 2
 
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+It's done automatically by the tooling when the other is missing.
 
-Thanks
-Uwe
-
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Maxime
