@@ -2,44 +2,44 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 18608EFE2B
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Nov 2019 14:15:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A0CEEFE1B
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Nov 2019 14:15:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388987AbfKENPW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 5 Nov 2019 08:15:22 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52333 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388945AbfKENPF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 5 Nov 2019 08:15:05 -0500
-Received: by mail-wm1-f67.google.com with SMTP id c17so13507734wmk.2;
-        Tue, 05 Nov 2019 05:15:03 -0800 (PST)
+        id S2389070AbfKENPG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 5 Nov 2019 08:15:06 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52338 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388710AbfKENPG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 5 Nov 2019 08:15:06 -0500
+Received: by mail-wm1-f65.google.com with SMTP id c17so13507806wmk.2;
+        Tue, 05 Nov 2019 05:15:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DFpznEDpNoqbmapZynyzmsx8KHYXXRH6cqD0i8XMxAs=;
-        b=f3YD4Ug76oHoUiN2crsPXDr3EPqby4+c3lsOUMycDhYNq/6o4SNBSto4xo+qsJAwx3
-         Zol/D6WTEF5MjdbCemPv4t29kj/WxcDBW7dtegaY7sCh7B2DYPqbQmm2uAAdA9PolHl3
-         IgiUuJwwNkd8xpU9S2QQxN3hvuI3AbpYvrvZuZ7c6Aa8wedCqkA+lC+CfUeGCSNw4e17
-         y69oRLohtZEtA5pIeBk/9WtzIaf2S0VMULc9fc+xCancs6LArLYHor6ZihYeQ3JfzkOr
-         U6j3UZE8HlOxHVyMNtm8UqiUgLWd6k6oMeiy7UtLOlcSaPVbWB+ijzW8qfAAh5aIrImD
-         rCng==
+        bh=rylm49vbwAP0jTLqPJTMvxfUjjjnX0b1bndG2Prv3MM=;
+        b=czvQULzeZnU/hHelxIDEbrHjoHdaiPYQD8gnbGsKhOEh19ZBw8jd8B0nls9dBjk0SH
+         Tb6wvy6h9Nkzy5j/9X8SLNn166nTOTPmABsrBk0ocCLCrF+510qtKrT++c2NbY4RRtLo
+         mNH5VaXaXyU5Yjdic9cvMEqDR4x8pUvL92nVY9+oGXcDYx9Du1LePiojZOnup3C5/LpZ
+         s7yf7fp4OG0BqmTFjkJZ6UOrhb0LQ8W4KZ3GIiZQ5SWe8pHvaTP8aZh4ren+mwRLy2lb
+         lRLVpRh92D7yC1H8DLTUShi6GLwke4L37aSDDeMQrxLwvdFhgXuefoaU/+5sYoP2znqG
+         G05w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DFpznEDpNoqbmapZynyzmsx8KHYXXRH6cqD0i8XMxAs=;
-        b=aprZpJzAmyHRv3uPHdIAX6YdhWp0FwutXdzkiXjzYPM9HmYRM7noyIL7vUP9PxoXd7
-         b4Oy1BKKNQuCLsH4LFtnr4fVSuauhmruZUQuKrdM1cTEDK7kr8Fm/y9fUXSijdlSP/5O
-         8hxCXasGfYQZQPU1iD+YN+8CjyEHnV4pKOHbItNNF5En4RZbvAtygBwMDo1axdUbnkM3
-         kCh78cr8090eKyMX94Zhug/tySAuj/xTF7CAKZfRkiuEgFbv3EjmK6gSWfy88Jy2ol4F
-         gEu2Wc1NT5VfQfN9qSUsQI57+PIZIuqm1y6ZRBmt47m9x6wFZCV3jO1kx1lRE3CfUxPJ
-         oGuA==
-X-Gm-Message-State: APjAAAVbXOq/XjR77X2O+Ao947tjHP9dnaxmhOt4fcOSQMuPNrJ2juI6
-        BC6utZv4G6JkX5h+qSGmo1FCUxlW6/3dUw==
-X-Google-Smtp-Source: APXvYqyytLo0hQuO6sVxwOrnNs0IMG5xvWjRMfkyUlPHv/0jVyEk1u++gI1pakSzxaECVGMTFnJaFA==
-X-Received: by 2002:a7b:c632:: with SMTP id p18mr4219706wmk.73.1572959702668;
-        Tue, 05 Nov 2019 05:15:02 -0800 (PST)
+        bh=rylm49vbwAP0jTLqPJTMvxfUjjjnX0b1bndG2Prv3MM=;
+        b=GZGL/k0fNb7zWzlJjcsN2F95B220PudK4uHpnwjw+YOfeabFZZY3C2eWCaAetaxBIW
+         XaHWofBej+zu5cimFgmNipzqaqPNa6KQsXs8y/Gb1J6d8+i1/1ibyOWH2611coY3xCbo
+         WaVUO2+8u2J2hkk18TcNT7I1wEH4kLkKXhUCfd16WhQfCfJ6YvJkziWKZOddytiQ1n7m
+         yqjH2medrhUCIQCKK9WZljCM6/vu0iLi5JRJv8d5c8/KTRvgIfZeQLDxTA59ZGJxISQ4
+         sTd9G949wDpyF4kglRCkmurpsUHzIwaqela479aAB4wK6+mjcXmo1UHg+r+HJ2WuIdmr
+         It5g==
+X-Gm-Message-State: APjAAAXQUAOd2Ea4HdGifF73Dh/24chmWZGsgATu6pQ8mK7byT43LODl
+        ZxaiB5KUxDZbMbr25/MvisY=
+X-Google-Smtp-Source: APXvYqznbNCR4gLMX1epuZh7z03kgXnDOQWlHW6f0JH8v91E8iiEzK9mKwb3zm4PfWZeD9g5ak73aw==
+X-Received: by 2002:a1c:2706:: with SMTP id n6mr4432965wmn.154.1572959703335;
+        Tue, 05 Nov 2019 05:15:03 -0800 (PST)
 Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
         by smtp.gmail.com with ESMTPSA id a6sm13549920wmj.1.2019.11.05.05.15.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
@@ -56,9 +56,9 @@ Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v3 2/7] pwm: sun4i: Add an optional probe for reset line
-Date:   Tue,  5 Nov 2019 14:14:51 +0100
-Message-Id: <20191105131456.32400-3-peron.clem@gmail.com>
+Subject: [PATCH v3 3/7] pwm: sun4i: Add an optional probe for bus clock
+Date:   Tue,  5 Nov 2019 14:14:52 +0100
+Message-Id: <20191105131456.32400-4-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191105131456.32400-1-peron.clem@gmail.com>
 References: <20191105131456.32400-1-peron.clem@gmail.com>
@@ -72,92 +72,102 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-H6 PWM core needs deasserted reset line in order to work.
+H6 PWM core needs bus clock to be enabled in order to work.
 
-Add an optional probe for it.
+Add an optional probe for it and a fallback for previous
+bindings without name on module clock.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- drivers/pwm/pwm-sun4i.c | 33 +++++++++++++++++++++++++++++++--
- 1 file changed, 31 insertions(+), 2 deletions(-)
+ drivers/pwm/pwm-sun4i.c | 45 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 43 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 6f5840a1a82d..9ba83769a478 100644
+index 9ba83769a478..54e19fa56a4e 100644
 --- a/drivers/pwm/pwm-sun4i.c
 +++ b/drivers/pwm/pwm-sun4i.c
-@@ -16,6 +16,7 @@
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
-+#include <linux/reset.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/time.h>
-@@ -78,6 +79,7 @@ struct sun4i_pwm_data {
+@@ -78,6 +78,7 @@ struct sun4i_pwm_data {
+ 
  struct sun4i_pwm_chip {
  	struct pwm_chip chip;
++	struct clk *bus_clk;
  	struct clk *clk;
-+	struct reset_control *rst;
+ 	struct reset_control *rst;
  	void __iomem *base;
- 	spinlock_t ctrl_lock;
- 	const struct sun4i_pwm_data *data;
-@@ -365,6 +367,21 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 	if (IS_ERR(pwm->clk))
- 		return PTR_ERR(pwm->clk);
+@@ -363,9 +364,35 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(pwm->base))
+ 		return PTR_ERR(pwm->base);
  
-+	pwm->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
-+	if (IS_ERR(pwm->rst)) {
-+		if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "get reset failed %ld\n",
-+				PTR_ERR(pwm->rst));
-+		return PTR_ERR(pwm->rst);
+-	pwm->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(pwm->clk))
++	/* Get all clocks and reset line */
++	pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
++	if (IS_ERR(pwm->clk)) {
++		dev_err(&pdev->dev, "get clock failed %ld\n",
++			PTR_ERR(pwm->clk));
+ 		return PTR_ERR(pwm->clk);
 +	}
 +
-+	/* Deassert reset */
-+	ret = reset_control_deassert(pwm->rst);
++	/*
++	 * Fallback for old dtbs with a single clock and no name.
++	 * If a parent has a clock-name called "mod" whereas the
++	 * current node is unnamed the clock reference will be
++	 * incorrectly obtained and will not go into this fallback.
++	 */
++	if (!pwm->clk) {
++		pwm->clk = devm_clk_get(&pdev->dev, NULL);
++		if (IS_ERR(pwm->clk)) {
++			dev_err(&pdev->dev, "get clock failed %ld\n",
++				PTR_ERR(pwm->clk));
++			return PTR_ERR(pwm->clk);
++		}
++	}
++
++	pwm->bus_clk = devm_clk_get_optional(&pdev->dev, "bus");
++	if (IS_ERR(pwm->bus_clk)) {
++		dev_err(&pdev->dev, "get bus_clock failed %ld\n",
++			PTR_ERR(pwm->bus_clk));
++		return PTR_ERR(pwm->bus_clk);
++	}
+ 
+ 	pwm->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
+ 	if (IS_ERR(pwm->rst)) {
+@@ -382,6 +409,17 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	/*
++	 * We're keeping the bus clock on for the sake of simplicity.
++	 * Actually it only needs to be on for hardware register
++	 * accesses.
++	 */
++	ret = clk_prepare_enable(pwm->bus_clk);
 +	if (ret) {
-+		dev_err(&pdev->dev, "Cannot deassert reset control\n");
-+		return ret;
++		dev_err(&pdev->dev, "Cannot prepare and enable bus_clk\n");
++		goto err_bus;
 +	}
 +
  	pwm->chip.dev = &pdev->dev;
  	pwm->chip.ops = &sun4i_pwm_ops;
  	pwm->chip.base = -1;
-@@ -377,19 +394,31 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 	ret = pwmchip_add(&pwm->chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to add PWM chip: %d\n", ret);
--		return ret;
-+		goto err_pwm_add;
- 	}
+@@ -402,6 +440,8 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
+ 	return 0;
  
- 	platform_set_drvdata(pdev, pwm);
+ err_pwm_add:
++	clk_disable_unprepare(pwm->bus_clk);
++err_bus:
+ 	reset_control_assert(pwm->rst);
+ 
+ 	return ret;
+@@ -416,6 +456,7 @@ static int sun4i_pwm_remove(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	clk_disable_unprepare(pwm->bus_clk);
+ 	reset_control_assert(pwm->rst);
  
  	return 0;
-+
-+err_pwm_add:
-+	reset_control_assert(pwm->rst);
-+
-+	return ret;
- }
- 
- static int sun4i_pwm_remove(struct platform_device *pdev)
- {
- 	struct sun4i_pwm_chip *pwm = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&pwm->chip);
-+	if (ret)
-+		return ret;
-+
-+	reset_control_assert(pwm->rst);
- 
--	return pwmchip_remove(&pwm->chip);
-+	return 0;
- }
- 
- static struct platform_driver sun4i_pwm_driver = {
 -- 
 2.20.1
 
