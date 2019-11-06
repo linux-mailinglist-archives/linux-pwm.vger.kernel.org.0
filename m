@@ -2,154 +2,157 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F424F0D8C
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Nov 2019 05:07:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 882B7F0D98
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 Nov 2019 05:10:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfKFEHA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 5 Nov 2019 23:07:00 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45954 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbfKFEHA (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 5 Nov 2019 23:07:00 -0500
-Received: by mail-oi1-f195.google.com with SMTP id k2so19721544oij.12;
-        Tue, 05 Nov 2019 20:06:59 -0800 (PST)
+        id S1731027AbfKFEK2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 5 Nov 2019 23:10:28 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43313 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727266AbfKFEK1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 5 Nov 2019 23:10:27 -0500
+Received: by mail-oi1-f196.google.com with SMTP id l20so7670925oie.10;
+        Tue, 05 Nov 2019 20:10:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=pbXWYeEjjc1tNeD8Va0Rn7W5q8WImyzirMTHLiEKYGY=;
-        b=HDvT0r1O4hYvec9HRTLyyiRoRCgRpMUAnN8NYp3qonrng2HCXN05NI8IF//H6UzyTz
-         s37E6T15SEV+ZNYj4JbFAvNUzQ2njM88WrhHTmWiv2VI/tmYa/GkJYl3fBPghGLjRap7
-         TCc6L2ixyel0KqCdeHQaW8MP5faYkPGaNoxdyNQJMbnIdiVoIGr+XxJSIs3+8LSxEZy/
-         UhhiL++TWq+rig8o3KvXasRs1axFUSltBNfM5aUZk4uPxbQD9zi5MJ8YMXkTZdyaJTsq
-         XrjXuetjq/Kcd+fGjcyCJ6kuZLfd2D+mSCt4hG/lVpagelMVrD1F0IoTJzXR/W67mI93
-         KqIA==
-X-Gm-Message-State: APjAAAWxQyuhT2AoHxUH1Uqccj9rF26Efe3IdILIKmorCJAh1t8/RZYH
-        RZR/QMpzTz8HNSkW/g/R0iBxHjk=
-X-Google-Smtp-Source: APXvYqwe0beNgeLE8gya+f9XdJ7ynxnQMAtyk6u+v0005b8KLbqtym2m20lGy9EYFxREtXyxePD27Q==
-X-Received: by 2002:aca:f18b:: with SMTP id p133mr406122oih.22.1573013219216;
-        Tue, 05 Nov 2019 20:06:59 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XTqm+5ilx5cNXoALUuokKsa13a1L8tV/eJS9nqrIoLA=;
+        b=AxRjLWUkheslZwJuMCM4tchOHlof1rZOUN9Lp5d8yP+KNvC6Z+CCSvvWXwbcx/S2Pd
+         5FGkhkR32/X+a86Q+S2dKHC/SK8gsHv2YyEo7tWE1Kyc+OhZvLWf5TDvk2mC1Bj+AHd5
+         dywO4AkfUWmuauuN33fn+krGCBcIfg/bL+WRbpitnyWyjKsPwZP87BJzhCtcHCpG4fNe
+         PQ2UTSYZ+s0m1TOdrENtpwzqB3v35k+ck1sAgDphnIfj1KJFdwPO7XTYTbUXH/xzfMh7
+         A0zXmWzoFDBu7wnQOYUARINvxJdc3qMTPLZ/9+GupdQPn4F6HuqJZx44rP4jIJOQ5mbf
+         jt4Q==
+X-Gm-Message-State: APjAAAUKIipVpu/AjGM2mZFkL1Gfiswv6RRuzi3qVfX064h5XyrHc3U8
+        rMSeoqaTS8sa3+UeCm2jeQ==
+X-Google-Smtp-Source: APXvYqylmIWEBXlGiig5sQDLxWMziJuvUvr8lMR4v+i6TBlZUwvxqcsWnINhAkMmXTCCEcsff6WZoQ==
+X-Received: by 2002:aca:5dd5:: with SMTP id r204mr400621oib.73.1573013425171;
+        Tue, 05 Nov 2019 20:10:25 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k93sm6726958otc.30.2019.11.05.20.06.58
+        by smtp.gmail.com with ESMTPSA id w33sm6874277otb.68.2019.11.05.20.10.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 20:06:58 -0800 (PST)
-Date:   Tue, 5 Nov 2019 22:06:57 -0600
+        Tue, 05 Nov 2019 20:10:24 -0800 (PST)
+Date:   Tue, 5 Nov 2019 22:10:23 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        linux-iio@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Lee Jones <lee.jones@linaro.org>,
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     mark.rutland@arm.com, alexandre.torgue@st.com,
+        fabrice.gasnier@st.com, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, lee.jones@linaro.org,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        devicetree@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 2/4] dt-bindings: iio: timer: Convert stm32 IIO trigger
- bindings to json-schema
-Message-ID: <20191106040657.GA5294@bogus>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: counter: Convert stm32 counter bindings
+ to json-schema
+Message-ID: <20191106041023.GB5294@bogus>
 References: <20191031123040.26316-1-benjamin.gaignard@st.com>
- <20191031123040.26316-3-benjamin.gaignard@st.com>
- <20191103110841.3ad3ecfb@archlinux>
- <CA+M3ks5sZ6wwV-V+HCLC8OLdeLqrxK0Ga-pXTsdktQErbMOk4g@mail.gmail.com>
+ <20191031123040.26316-2-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+M3ks5sZ6wwV-V+HCLC8OLdeLqrxK0Ga-pXTsdktQErbMOk4g@mail.gmail.com>
+In-Reply-To: <20191031123040.26316-2-benjamin.gaignard@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 11:07:16AM +0100, Benjamin Gaignard wrote:
-> Le dim. 3 nov. 2019 à 12:08, Jonathan Cameron <jic23@kernel.org> a écrit :
-> >
-> > On Thu, 31 Oct 2019 13:30:38 +0100
-> > Benjamin Gaignard <benjamin.gaignard@st.com> wrote:
-> >
-> > > Convert the STM32 IIO trigger binding to DT schema format using json-schema
-> > >
-> > > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> > I'm far from great on these as still haven't taken the time I should to learn
-> > the yaml syntax properly.  A few comments inline however based mostly on this
-> > doesn't quite look like other ones I've seen recently.
-> >
-> > Thanks,
-> >
-> > Jonathan
-> >
-> > > ---
-> > >  .../bindings/iio/timer/st,stm32-timer-trigger.yaml | 44 ++++++++++++++++++++++
-> > >  .../bindings/iio/timer/stm32-timer-trigger.txt     | 25 ------------
-> > >  2 files changed, 44 insertions(+), 25 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
-> > >  delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml b/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
-> > > new file mode 100644
-> > > index 000000000000..1c8c8b55e8cd
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
-> > > @@ -0,0 +1,44 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/iio/timer/st,stm32-timer-trigger.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: STMicroelectronics STM32 Timers IIO timer bindings
-> > > +
-> > > +maintainers:
-> > > +  - Benjamin Gaignard <benjamin.gaignard@st.com>
-> > > +  - Fabrice Gasnier <fabrice.gasnier@st.com>
-> > > +
-> > > +properties:
-> > > +  $nodemane:
-> >
-> > nodename?
-> 
-> That will be in v2
+On Thu, Oct 31, 2019 at 01:30:37PM +0100, Benjamin Gaignard wrote:
+> Convert the STM32 counter binding to DT schema format using json-schema
 
-No, $nodename is correct. The '$' signifies something we generate and 
-add in. IOW, not a real property. I guess we could have used 'name' here 
-and stuck with traditional OpenFirmware.
+Probably this should all be 1 file instead.
 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  .../bindings/counter/st,stm32-timer-cnt.yaml       | 38 ++++++++++++++++++++++
+>  .../bindings/counter/stm32-timer-cnt.txt           | 31 ------------------
+>  2 files changed, 38 insertions(+), 31 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/counter/st,stm32-timer-cnt.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
 > 
-> >
-> > > +    pattern: "^timer@[0-9]+$"
-> > > +    type: object
-> > > +
-> > > +    description:
-> > > +      must be a sub-node of an STM32 Timer device tree node
-> > > +
-> > > +    properties:
-> > > +      compatible:
-> > > +        oneOf:
-> >
-> > enum is I think preferred for these.
+> diff --git a/Documentation/devicetree/bindings/counter/st,stm32-timer-cnt.yaml b/Documentation/devicetree/bindings/counter/st,stm32-timer-cnt.yaml
+> new file mode 100644
+> index 000000000000..56192d613601
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/counter/st,stm32-timer-cnt.yaml
+> @@ -0,0 +1,38 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/counter/st,stm32-timer-cnt.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STMicroelectronics STM32 Timers quadrature bindings
+> +
+> +description:
+> +  STM32 Timer provides quadrature encoder to detect angular position
+> +  and direction of rotary elements, from IN1 and IN2 input signals.
+> +
+> +maintainers:
+> +  - Benjamin Gaignard <benjamin.gaignard@st.com>
+> +  - Fabrice Gasnier <fabrice.gasnier@st.com>
+> +
+> +properties:
+> +  counter:
+> +    type: object
+> +
+> +    description:
+> +      must be a sub-node of an STM32 Timer device tree node
+> +
+> +    properties:
+> +      compatible:
+> +        const: st,stm32-timer-counter
+> +            
+> +    required:
+> +      - compatible
+> +
+> +examples:
+> +  - |
+> +    counter {
+> +      compatible = "st,stm32-timer-counter";
+> +    };
+> +
+> +...
+> +
+> diff --git a/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt b/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+> deleted file mode 100644
+> index c52fcdd4bf6c..000000000000
+> --- a/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+> +++ /dev/null
+> @@ -1,31 +0,0 @@
+> -STMicroelectronics STM32 Timer quadrature encoder
+> -
+> -STM32 Timer provides quadrature encoder to detect
+> -angular position and direction of rotary elements,
+> -from IN1 and IN2 input signals.
+> -
+> -Must be a sub-node of an STM32 Timer device tree node.
+> -See ../mfd/stm32-timers.txt for details about the parent node.
+> -
+> -Required properties:
+> -- compatible:		Must be "st,stm32-timer-counter".
+> -- pinctrl-names: 	Set to "default".
+> -- pinctrl-0: 		List of phandles pointing to pin configuration nodes,
+> -			to set CH1/CH2 pins in mode of operation for STM32
+> -			Timer input on external pin.
+> -
+> -Example:
+> -	timers@40010000 {
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -		compatible = "st,stm32-timers";
+> -		reg = <0x40010000 0x400>;
+> -		clocks = <&rcc 0 160>;
+> -		clock-names = "int";
+> -
+> -		counter {
+> -			compatible = "st,stm32-timer-counter";
+> -			pinctrl-names = "default";
+> -			pinctrl-0 = <&tim1_in_pins>;
+> -		};
+> -	};
+> -- 
+> 2.15.0
 > 
-> as you like it will be in v2
-> 
-> >
-> > > +          - const: st,stm32-timer-trigger
-> > > +          - const: st,stm32h7-timer-trigger
-> > > +
-> > > +      reg: true
-> >
-> > Normally some info for what the reg value is..
-> I can't put "description" on this field because the syntax doesn't allow it.
-> I will add a comment in v2 to explain what reg is.
-
-items:
-  - maximum: <max timer number>
-
-Rob
