@@ -2,66 +2,57 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 57298F4270
-	for <lists+linux-pwm@lfdr.de>; Fri,  8 Nov 2019 09:46:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85ABFF52C1
+	for <lists+linux-pwm@lfdr.de>; Fri,  8 Nov 2019 18:42:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730858AbfKHIpf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 8 Nov 2019 03:45:35 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33192 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730743AbfKHIpe (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 8 Nov 2019 03:45:34 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a17so6017714wmb.0;
-        Fri, 08 Nov 2019 00:45:32 -0800 (PST)
+        id S1728914AbfKHRmZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 8 Nov 2019 12:42:25 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39636 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbfKHRmZ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 8 Nov 2019 12:42:25 -0500
+Received: by mail-wr1-f67.google.com with SMTP id a11so8006664wra.6;
+        Fri, 08 Nov 2019 09:42:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9aSxRdpuFtWHR4fiaYF0NucipXPgTqmHceHSDmByEc8=;
-        b=fewmUdz8Bc1voBvS9gkVz79gCkt7venyCUove7xWvuUQ7Y4j/5GuWd2AXvvgJu1Kfj
-         N0dQ5nNqgLQudUbMeirlTSoTROX+NXDVjv7tmF7iOf3rJrWmkKmh2vS/eJjIzlX3uqx4
-         STJgeC8x6DSUy9PENPKGwtPtmXM483oVZq4Tm20Sg9l4PF42SkfQzBy8FNi7A54AoFCP
-         k5F6YhLTTRPhmtsmFWLs8KjOql5qNPJDr74p2c7q4oNgfFgToC/aHzfjzHqwBIH5YJcz
-         u/9zV1l8RwIgs5Kml7dx0uYElJGbgKN5fExDkFmeNqi4iAmfvBOItS7w5LRN0zL+qcHs
-         ssbg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bLpxLiOoyJlR/gSpAnwkPXjar8cw71Hz2t/eOeAgaNg=;
+        b=OtLbRvsVMsMOSQOVLGs4ke8ojgitE0iVhTAuaRcljAKVyPVYl6gsmir+PsExInJlxd
+         w/WSaplhQfEaZMj1++wwaDMlvIt5/SYfeOf9/kgskkDgUxcdd6wh3qLJGAMv+YP9Qqkn
+         BC/bosVjIFMmPsW7iiST1bQDiwUDltMN6OcyroCRAGmeWdhxT7yfpIiRDzX6nB2ffFJI
+         CpNDfAbf2NvCWerkXysm2yBWE+L/x5X2renloc44a+EmlkQMMSY2pYsrD/zS56PXiue0
+         6Q+yWyV0WkEeCKRNBR484DaudTWk7NCLhK73/TzzlWQ6srFWIVLhfIKK2FckACLt9VKk
+         /qbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9aSxRdpuFtWHR4fiaYF0NucipXPgTqmHceHSDmByEc8=;
-        b=rJg1cIZnjA1j/18+0GfLSqJG7FV3ZyFOozrzAgJX1OKGg5PBwbwldvO+Ft/6fg7swT
-         UqwfIOQ+8ccayn/7xEmLiwFyIWLUPxyvyQlWoiMBB7/5tOhm64KEt498nz/VtuOi/C1A
-         Xgn26Bf5h70ZwvEnjU20VOPktKNVCtN7+z0S0AYaw4egVa9dJeQIJY8udfeeHWsP6V/C
-         BCxbAOhUwcZUQE8aM4QqOCcUn4sQAdJBzpU/ONK/5qf7g6mh7uyrJcK/kQTpZfMYUZMW
-         6zdHTDfgP52FfiFYW2eEy6y2T1GWVQt3UPgXuO8zBLb0PAeCLs1sohxCsRcErqvM6K+i
-         cgoA==
-X-Gm-Message-State: APjAAAVmE3+dSPATC3w3YnyKwhpm4//U2H+IuChlE4Ad0gfzNKbxu313
-        WOcvSBJxwQXtA+m6lenBG/4=
-X-Google-Smtp-Source: APXvYqzDrSyXBmSgmOwIGNCEnIg0mdtNJewcjpzu3/9Z4+a5/R+2nI67UgxKiYB47MIydRckpkp04g==
-X-Received: by 2002:a1c:558a:: with SMTP id j132mr6983373wmb.21.1573202731677;
-        Fri, 08 Nov 2019 00:45:31 -0800 (PST)
-Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
-        by smtp.gmail.com with ESMTPSA id q25sm6662665wra.3.2019.11.08.00.45.31
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bLpxLiOoyJlR/gSpAnwkPXjar8cw71Hz2t/eOeAgaNg=;
+        b=LFNaRbLXj9zjx5WFCRzz8jQDIlnM+ThUrHWGoFZezGbxe/DyGi9Vy6dsCuX8lOrssr
+         iI1tcIPZh73Yp8MDi9/kQhPfNIIu5T0i1UXaJGOMaT0yErvOuYoStta8kmsETllABEEj
+         i9ewxeKagx5mujTK2lT7y1DRn6m+cFuivKHl3GypdE2kzVXZViMW3tGSguYlj22ccYHh
+         SHIZVpuGg3jnmHgwU/5uZUDCLRLYZCYhDYuF22HMMXSnzemdkq1MXj4xL0wwwb/y/lXN
+         WmS9p9apYaAj89E71lyUFO7XgffuSTimBqQTBlnZu1Hl9Bsc9+0oeCIN0wjn8AA0CxUc
+         aUmA==
+X-Gm-Message-State: APjAAAW+n6NA5hKU7vb+KAiUClVzTTQBpRI85i4RhhEHexTb1nXyJSMW
+        JbiueBZJHBOIJKazYVzIo9/gqioDGCI=
+X-Google-Smtp-Source: APXvYqwj19uqZv95ef6LajG2/vuJSid1NG2XDKHTOp9c05U/dR633lHPrIQpZ1kmfiHvmctDqlu/hA==
+X-Received: by 2002:adf:e8ca:: with SMTP id k10mr8925784wrn.377.1573234943057;
+        Fri, 08 Nov 2019 09:42:23 -0800 (PST)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id w13sm6267368wrm.8.2019.11.08.09.42.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 00:45:31 -0800 (PST)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 7/7] [DO NOT MERGE] arm64: allwinner: h6: enable Beelink GS1 PWM
-Date:   Fri,  8 Nov 2019 09:45:17 +0100
-Message-Id: <20191108084517.21617-8-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108084517.21617-1-peron.clem@gmail.com>
-References: <20191108084517.21617-1-peron.clem@gmail.com>
+        Fri, 08 Nov 2019 09:42:21 -0800 (PST)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] pwm: Fixes for v5.4-rc7
+Date:   Fri,  8 Nov 2019 18:42:20 +0100
+Message-Id: <20191108174220.3384630-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -70,26 +61,32 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Hi Linus,
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-index 1d05d570142f..38aba7e5bbd9 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-@@ -131,6 +131,10 @@
- 	vcc-pg-supply = <&reg_aldo1>;
- };
- 
-+&pwm {
-+	status = "okay";
-+};
-+
- &r_i2c {
- 	status = "okay";
- 
--- 
-2.20.1
+The following changes since commit 40a6b9a00930fd6b59aa2eb6135abc2efe5440c3:
 
+  Revert "pwm: Let pwm_get_state() return the last implemented state" (2019-10-21 16:48:52 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.4-rc7
+
+for you to fetch changes up to 24906a41eecb73d51974ade0847c21e429beec60:
+
+  pwm: bcm-iproc: Prevent unloading the driver module while in use (2019-11-08 18:38:06 +0100)
+
+Thanks,
+Thierry
+
+----------------------------------------------------------------
+pwm: Fixes for v5.4-rc7
+
+Here's one more fix to keep a reference to the driver's module as long
+as there are users of the PWM exposed by the driver.
+
+----------------------------------------------------------------
+Uwe Kleine-König (1):
+      pwm: bcm-iproc: Prevent unloading the driver module while in use
+
+ drivers/pwm/pwm-bcm-iproc.c | 1 +
+ 1 file changed, 1 insertion(+)
