@@ -2,46 +2,46 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56674F4268
+	by mail.lfdr.de (Postfix) with ESMTP id CC7B6F4269
 	for <lists+linux-pwm@lfdr.de>; Fri,  8 Nov 2019 09:46:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730632AbfKHIpb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        id S1730596AbfKHIpb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
         Fri, 8 Nov 2019 03:45:31 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46177 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfKHIpa (ORCPT
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46179 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727421AbfKHIpa (ORCPT
         <rfc822;linux-pwm@vger.kernel.org>); Fri, 8 Nov 2019 03:45:30 -0500
-Received: by mail-wr1-f66.google.com with SMTP id b3so5994238wrs.13;
-        Fri, 08 Nov 2019 00:45:28 -0800 (PST)
+Received: by mail-wr1-f68.google.com with SMTP id b3so5994270wrs.13;
+        Fri, 08 Nov 2019 00:45:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lXctZT9szOude0/tzOobu9MVmKEaCphOc5TWHI1R/+o=;
-        b=WdY6nR0/Jp+x7ZOowmnVHfztGLVygNvroENA6yBkFeG6Y8J6MdNWkU5wlp+hZFdGLE
-         JGz2/0cgugAvqCRFUlxMF40CNgPH0eOMT4XkfrObYacIn3gXmDD4p/aMz1PTm7fpW3ha
-         r80j+ukVgX1HPOMbZ1Ss+smvyms6gB94q3id8WN/f4wdRgpnJoQRomnSGLtmbE9RtQna
-         h9bklZ9VcEXBTCv1lGEkNbk34tPD8tpDwvUJAgm5QImq5gklZenXpk2ss5cmVyJFsnCy
-         PXYbFfziTLWXsrOfjpeSz2QMyZ2wumiEo/KTYw5054vX82a/EEuMWkeu8Nrb1Kn3/mOh
-         qC+Q==
+        bh=4QB9cDt6fQFRk5SFMea9eu/ALXFa2Va/mC6ymi+w/Cs=;
+        b=XAIZ3SDFz73VRt8TZCqiOw69FrFZzRA1dTXc1hz0ORCz+jktoeMrothomPqIFQnMX/
+         zXyXRHN5y/AOcEwPSMzCu1ucukhVGog6MOeheYacZR9kWZc4zYpImP1NmndcN/7OPHOo
+         xpsr6JYrl4Lt7gC1iuvuA+cojKhG0Zhk+SndYQCpyrKrISaaubKr+9LL7/bIV9keknYJ
+         pk3O4dJCG7kgfcX2HK8D2cJesxBVmihhqFZVUGJNkN5PQSJmtk4hl9zh6utMONSE1e0H
+         VvZEIPGHrezzqSrg6HYEJF7ayIb4arDg3BA3A7hbfceyczL1rswg/VN08wgDRfX7MXsL
+         vhVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lXctZT9szOude0/tzOobu9MVmKEaCphOc5TWHI1R/+o=;
-        b=PyvcUaeZNVkVom08Rik6MHqMwP7hlUSWlAI7kLLRuEt412jl8p1jtXCanmkrMPvUyt
-         Rh/wCbxSBZK3CxCqTQJdIvy6AahAZcV1wHsaYGgvF5UpuoS+ydXHblmKHNLjGTE3V7Zp
-         Zr6TSe+f7kNne2kkt1oR1C2SPdbpiH19s+u7caKB/YIyy/hcTTtG6wvCe8HILuTUljx7
-         1UtPMD2ChnWghLpCm7LAUpk+BraIfujodLatuFzLR2EA27Kh3AZ2eS2S3RPiIKyTZTol
-         E5qc/tqhJpPonzoKXa/iu7P6NQHS4Da4OL24OlXArZmqtY43QliLtvlWN8x3nB3B6ymA
-         a8AA==
-X-Gm-Message-State: APjAAAXn4CipsfUEr0SBWYsaFruZ+vd3029gXe6wu7mIYQX+OusbcNh6
-        frBsqi7cp/sVVMAK8JS/KMU=
-X-Google-Smtp-Source: APXvYqwP1PQg+Qz0CsAYeKQRWcWxaJuimaCkAjha6SKIoYhOxnoyF8fMyOe15V7v2E8HDLzWw/GVZg==
-X-Received: by 2002:adf:f685:: with SMTP id v5mr7586956wrp.246.1573202727559;
-        Fri, 08 Nov 2019 00:45:27 -0800 (PST)
+        bh=4QB9cDt6fQFRk5SFMea9eu/ALXFa2Va/mC6ymi+w/Cs=;
+        b=g/sJs1oPKQrSOaPZ26UmsqDxjWfhmTBhnwG0BHLydtNsQ8ddyM4PLFXubIVHciiSGO
+         u+hF6zWAnCH+pNWTMg0F2gD+JkaxDHaJQr5nPalxm4h5pEICIut2GQ/UXvpGGPZ+KHI/
+         19Z3czVCKCa7jNzu4Zco4LSdarpwPzucNXT7o48kAG2m0Oe4BAMo5L8uxWbAe5NI1338
+         dICBr5AbnZ78dFhzeuqpDrrBjUFLrL7A/p88g9vrfuJsDhE4Lr8PB7qd6eMapbir6UwK
+         S9GVtC5CKKUK9UhyHPAkYHM1/bsv9sqIxm8Vyd91cuYbVGvw/EKRujsETIL9CvwWmrzx
+         tCnA==
+X-Gm-Message-State: APjAAAWCTBIGu++CPWotlkTX/YXUTthT6IuRrueVwwvxmrpxnMgOplJc
+        S8YcIc6t6gdDcYW9ryNKbnYl+qT4+gw=
+X-Google-Smtp-Source: APXvYqxd907rYnKrigSrYCn3h6dEANybH8eRG+Xwv2u3fyvd4zj6zcYXc+0Y4jkia+vCViGcSMYgog==
+X-Received: by 2002:a5d:6947:: with SMTP id r7mr7396315wrw.129.1573202728267;
+        Fri, 08 Nov 2019 00:45:28 -0800 (PST)
 Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
-        by smtp.gmail.com with ESMTPSA id q25sm6662665wra.3.2019.11.08.00.45.26
+        by smtp.gmail.com with ESMTPSA id q25sm6662665wra.3.2019.11.08.00.45.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 08 Nov 2019 00:45:27 -0800 (PST)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
@@ -57,9 +57,9 @@ Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-sunxi@googlegroups.com,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 1/7] dt-bindings: pwm: allwinner: Add H6 PWM description
-Date:   Fri,  8 Nov 2019 09:45:11 +0100
-Message-Id: <20191108084517.21617-2-peron.clem@gmail.com>
+Subject: [PATCH v4 2/7] pwm: sun4i: Add an optional probe for reset line
+Date:   Fri,  8 Nov 2019 09:45:12 +0100
+Message-Id: <20191108084517.21617-3-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108084517.21617-1-peron.clem@gmail.com>
 References: <20191108084517.21617-1-peron.clem@gmail.com>
@@ -73,88 +73,92 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-H6 PWM block is basically the same as A20 PWM, except that it also has
-bus clock and reset line which needs to be handled accordingly.
+H6 PWM core needs deasserted reset line in order to work.
 
-Expand Allwinner PWM binding with H6 PWM specifics.
+Add an optional probe for it.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 48 +++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ drivers/pwm/pwm-sun4i.c | 33 +++++++++++++++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-index 0ac52f83a58c..1bae446febbb 100644
---- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-@@ -30,13 +30,51 @@ properties:
-       - items:
-           - const: allwinner,sun50i-h5-pwm
-           - const: allwinner,sun5i-a13-pwm
-+      - const: allwinner,sun50i-h6-pwm
+diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+index 6f5840a1a82d..2b9a2a78591f 100644
+--- a/drivers/pwm/pwm-sun4i.c
++++ b/drivers/pwm/pwm-sun4i.c
+@@ -16,6 +16,7 @@
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/pwm.h>
++#include <linux/reset.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+ #include <linux/time.h>
+@@ -78,6 +79,7 @@ struct sun4i_pwm_data {
+ struct sun4i_pwm_chip {
+ 	struct pwm_chip chip;
+ 	struct clk *clk;
++	struct reset_control *rst;
+ 	void __iomem *base;
+ 	spinlock_t ctrl_lock;
+ 	const struct sun4i_pwm_data *data;
+@@ -365,6 +367,21 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(pwm->clk))
+ 		return PTR_ERR(pwm->clk);
  
-   reg:
-     maxItems: 1
++	pwm->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
++	if (IS_ERR(pwm->rst)) {
++		if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "get reset failed %pe\n",
++				pwm->rst);
++		return PTR_ERR(pwm->rst);
++	}
++
++	/* Deassert reset */
++	ret = reset_control_deassert(pwm->rst);
++	if (ret) {
++		dev_err(&pdev->dev, "Cannot deassert reset control\n");
++		return ret;
++	}
++
+ 	pwm->chip.dev = &pdev->dev;
+ 	pwm->chip.ops = &sun4i_pwm_ops;
+ 	pwm->chip.base = -1;
+@@ -377,19 +394,31 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
+ 	ret = pwmchip_add(&pwm->chip);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "failed to add PWM chip: %d\n", ret);
+-		return ret;
++		goto err_pwm_add;
+ 	}
  
-   clocks:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description: Module Clock
-+      - description: Bus Clock
-+
-+  # Even though it only applies to subschemas under the conditionals,
-+  # not listing them here will trigger a warning because of the
-+  # additionalsProperties set to false.
-+  clock-names: true
-+
-+  resets:
-     maxItems: 1
+ 	platform_set_drvdata(pdev, pwm);
  
-+  if:
-+    properties:
-+      compatible:
-+        contains:
-+          const: allwinner,sun50i-h6-pwm
+ 	return 0;
 +
-+  then:
-+    properties:
-+      clocks:
-+        maxItems: 2
++err_pwm_add:
++	reset_control_assert(pwm->rst);
 +
-+      clock-names:
-+        items:
-+          - const: mod
-+          - const: bus
-+
-+    required:
-+      - clock-names
-+      - resets
-+
-+  else:
-+    properties:
-+      clocks:
-+        maxItems: 1
-+
- required:
-   - "#pwm-cells"
-   - compatible
-@@ -54,4 +92,14 @@ examples:
-         #pwm-cells = <3>;
-     };
++	return ret;
+ }
  
-+  - |
-+    pwm@300a000 {
-+      compatible = "allwinner,sun50i-h6-pwm";
-+      reg = <0x0300a000 0x400>;
-+      clocks = <&osc24M>, <&ccu CLK_BUS_PWM>;
-+      clock-names = "mod", "bus";
-+      resets = <&ccu RST_BUS_PWM>;
-+      #pwm-cells = <3>;
-+    };
+ static int sun4i_pwm_remove(struct platform_device *pdev)
+ {
+ 	struct sun4i_pwm_chip *pwm = platform_get_drvdata(pdev);
++	int ret;
 +
- ...
++	ret = pwmchip_remove(&pwm->chip);
++	if (ret)
++		return ret;
++
++	reset_control_assert(pwm->rst);
+ 
+-	return pwmchip_remove(&pwm->chip);
++	return 0;
+ }
+ 
+ static struct platform_driver sun4i_pwm_driver = {
 -- 
 2.20.1
 
