@@ -2,26 +2,26 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4820EF74D6
-	for <lists+linux-pwm@lfdr.de>; Mon, 11 Nov 2019 14:29:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA8E0F74D0
+	for <lists+linux-pwm@lfdr.de>; Mon, 11 Nov 2019 14:29:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfKKN3E (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 11 Nov 2019 08:29:04 -0500
-Received: from mout.web.de ([212.227.17.11]:34659 "EHLO mout.web.de"
+        id S1726910AbfKKN3B (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 11 Nov 2019 08:29:01 -0500
+Received: from mout.web.de ([217.72.192.78]:43447 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726906AbfKKN3E (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 11 Nov 2019 08:29:04 -0500
+        id S1727028AbfKKN3B (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 11 Nov 2019 08:29:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1573478934;
+        s=dbaedf251592; t=1573478933;
         bh=9i5xRqQw02PIr0vo9cbpgB28RyeG9nFcczIEk1OQyv8=;
         h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=VZz/2xyDtlT4JZPoD7NxsSL3eNWnMp3pil7PMk7noSppUmENs4ojMZ0VR5enhoI7y
-         vJJlMQh4SBfy1QQAiJ1q1IiuT4eO5ywHYc1PQ2ZFAwJHmQVbD8uaT/1cMiwvfopWTo
-         Bn5+qd169Df/v28uSF8f04Iy0DI7ptwzHk++ZUOs=
+        b=QOpehSSSQwP/4Hy3WF76GJEVuD6RGeUchrQ13QuRNeCQD196t/rBPNmoYBXlQrv6M
+         X2lZZ1g16zRM2jlxxI1wUlSKY+NwIaeJ84/ZnTWjDWkrkpXbPQkXv82qPidPKCe23H
+         PKmZcvOAsyLbCdzk3GiFJDUv573FXBKNVAtEgFU8=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.49.55.229]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LgYG1-1i96oK2IMf-00nw75; Mon, 11
- Nov 2019 14:28:54 +0100
+Received: from [192.168.1.3] ([78.49.55.229]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LyDlZ-1hrRR21WhJ-015ZHr; Mon, 11
+ Nov 2019 14:28:53 +0100
 Subject: Re: [0/4] pwm: omap-dmtimer: Software improvements
 To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         linux-pwm@vger.kernel.org
@@ -77,7 +77,7 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <1f86414a-0779-5684-4edd-7ed0d47e7a7b@web.de>
+Message-ID: <3672014f-14f2-7568-8258-bc472f3b9ae1@web.de>
 Date:   Mon, 11 Nov 2019 14:28:52 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
@@ -86,30 +86,30 @@ In-Reply-To: <20191111091606.qf7gj5gln3khfnsl@pengutronix.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:VSTaaTxIQWG/n/UXJMfqOxV7DOUGGhVWNcj5RoG9MzQSrwy3SL8
- SHIVR9b8eM9hdwcWf2FWCtuAsJTA5Xy+1gAV+O7K7f3V+RtLtwdM3UuIB8LzGrLnWJjp4Pn
- cMWSB9k6F5QejIaCmzET/yYKrtFIZEcJQFlj71O8JhonCxMOtz0cNC8fnYXBqPBO9Hmrxqq
- C9gcJWMtJ3hqM7cKfkzLw==
+X-Provags-ID: V03:K1:xSTvbwzjapXnF/XBMPQTAcTrEJ1YInrQe01BSlUtomJLo6ck6Hq
+ +n7vwuR/O4p2zg5jBJ8cUEyFhjlmF86TCWFtxmVCZqF3osw2jbe2lj34G3y7z+/05uvFQ+f
+ oLxIdfTUfoEA+o9QTgLwU5wiu518XWYRIuZVv/AZbo0WdjZsaZlMXvkZM4xVb6HXlin3dHL
+ dN8x8d/8AtEfGPDFrZ8hw==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:B8CLsl/4Pxc=:k0qmLK0xuMH6sxltwcnmJ9
- L8iWdkVaOppIfpfH4jD56bniJ7Ya3XLLQbbasm39ksLTYA3m3MvHFx5QKsZgjbN789/QIxwzV
- U472JrLE1R11gZlJPy+xtmO1goMJfw9LvC10fO+OAerV5KHsvP45frj152UWwcnhH4+HhU0mR
- 5fEAEPX2rCS2qikdXyXrlQcmE+7eTMaDiwqGLO9vXwyVr3bpXAi5s4x6wSE4TjuwQMu+Z8Bdf
- dqumt8Vn+iH1PSXvPcje6ZJAK/Dx6TFlZ4xwkcsHB6WBkVYSzUngW8Tr+5N+kFrgtlrykn/f6
- 3tNrJDhSLBNuOKbSP0mOrB/8d9Br3/v///B1mfN66LuWwRu1fdMZ3JVnW0xHC806PmlXRBT/x
- IEn9ahf0H2gY2f4NHU5+h4PCuGByMLVxam9B5diORLofvI3/D51hdyvWSo2riokHHdGDR5zyR
- /dniAJ9gJw/gm/uf4MkZzIkGU5oJ1BAIFwK9e3CBNV6BG2OTg35eG1gIHpEe+z3NTeU1dOu47
- TKstEYNi2fMd9iCU63EE2rRGY36bZcxYf3ra2SIbtYbIN5/SvqbI6XZwDumD0hPHrTdmk5hQv
- 8nByBwFR9h4Wq4jqUK/WU663ro09ieo+m8LsFSD3DR7Z7de6UNJT9s/7k6j+K+wE6rAN+8uiV
- zwW6zwqVK/0zM5GR9P/F4TPfv6mrWm9V9oyFMs4Li84TaDXVIzKzcxPU182+ScKehgsB97MtO
- 5MnWcfXpx52w+L5KpAUBntiJh3PU3LGU9klH+0HeTMeTTZeaf+LO9KRqUNNbPtE68Ugt9eSXz
- 8f+7j5/B+yxjfp/OJ5LNIj19v5SBthJg3ymcHaRFZRUkZSIdTNWH5ZngKPAVtZD0iY6ShrtJ0
- UI1YS1YZZqm34QT2BenNhEwuGQ/NmQYev/Qc6GDedBSas599xJg+AyMteNoKa03zG7Oo37TCv
- T5VFNUa6nGjTBu9Ule3MIUzmImB6edFPooIMb4wnhSnK4vyXrVgNk+I3EFUUdn7YDjPe0IFZC
- amlqSh3E54GAa+P1XDUvzruE6xi1zwqPc7+3IDce9H0/p1iG2GF5QoWJEDxXlHDsa/u4IqB50
- VkkQrtRtEIT2xFAwJA8ExmAvv6YlY/evTIiiGOo4jqdpfp0vSLSseFInLqY8akIACIwOG7i3Y
- pQ/Jll3M13depRmBlKp7uT2oF5o0TTjoVEDkdwOasI0Yt4sCAWvcW01Y2mETArqaHlM1ykf8V
- uuldZEXIXZw+QknVRw4WBxWboLke3LJG61E2RGhkHpyoY4f/3ppcexw2g5ys=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:YMsbmDf2bAQ=:fXHoLKtMFBDzbZiND/uis9
+ /neHu7efWXujHhaeYEyJ7GcOP5zPAOqWKqTWSgZnefViBy9KU7c7dAWbYW8Isj2SD4miFVbc6
+ BpxMsmHAWRPMRUGolS+BlZ4rurMMkgoV2gJB5WGq+b/jQboBQc642MfFEhJQsGQ2Dx++QgPHu
+ rDiZdJT1UM92F8avDTnB/DQ4ipWsJnp8z8YAiqdkblz//6g2Cj71HW/uizFNFCnbrnw1uMTeJ
+ VzOkYJq1jZ63xGacW6hB0L/ERqncqCLF5IFqAPXIbtWV5JKIwyLeJKyO1YReGZTdDd7adSHfE
+ eXIh0LIBKUgGx2FA/CPesxDQDLLWm/3M7YTZPe7jYTTBxDa5wkgKObD12V7rZMPOJqDWmlx3q
+ PF1iMMYKGN85ZOGndNralsIm2Oz1XicsvgymgViSDk3gMP/OeTvyVt/wZrWrKR64JAKJjFPRW
+ M7aynqK9f+NgrYu2TxYX0SnLW+526Ge/GmjNgf7gqbfYEiSiBkxuDnJ8eX47gkm3FV78/44o/
+ fErP+uh4HrHkIJKENCkhwub8bo4IW0iKI36qpjdebngNfqiJKroKbzhjT00cCaJJzwmprONpP
+ 8mAJd3fn0lJ6sLm6IRB2HHA08rxAg3JKMSLp2qoSdWTt+sfYY/XVBOmsQaszPBvNIuI3pu3M/
+ a5TTLi1LIjhF5ITcSMTo8sN8Nh1XFURK+Tr/UWF485+h2hnMaQPM56clDvDGyehn4/5gurwuQ
+ F2Sj+tBaMPYdrsX5FMkcqgKh93PcBCePWyFwV4Ge5BZ2xWXdgPKgMoDFG7q8DQAa4Xkl1GU47
+ cgPGax2UrMKrysSvXviKlAynJJOVww9eLf/trYFtJy4BnovuCBFGVbdf4cwNIyxT2qSqFXYrr
+ 8A92VZcD6+YelLJjvnA2jDQkpMB7t89Ud3WG5TPSIortky47NR6LMToWOsQbZjcOuPknUhV/b
+ nanwqvQqVRPX8PbFTsPQ1QXafFKSwY0XCCcZ0RkyDzaQVfMZ1Nd4zYG205eV5earrTnTt1gvE
+ HfwX3GwN6NugrFIJrz7+jCcryAxFdJcabJDg8vUg4CyFxwg9nwwRQkHpDS/gbBhcREhol2xjG
+ ugIGlkbF+rxrzy1Ax7x7A73i9r4/64edJMXfgQHWl5lmOhvx3xsOcec27sqN4+hWYmI5ivGR0
+ B8WsONDmjAXeU+Df+Nl3mxa+Tesh36yMXyamu+yK1LTeMETiJP/MeZ8TKSdUxV3d7OOSm4M3y
+ 1CWun7hhI2mbB6iLnJcE8Wtskfmk0EyJW4GfgfuJL1mYNwCPCCfg/CC+l+nA=
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
