@@ -2,14 +2,14 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 88115F7551
+	by mail.lfdr.de (Postfix) with ESMTP id B99BAF7552
 	for <lists+linux-pwm@lfdr.de>; Mon, 11 Nov 2019 14:48:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfKKNrz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 11 Nov 2019 08:47:55 -0500
-Received: from mout.web.de ([212.227.17.12]:33035 "EHLO mout.web.de"
+        id S1727074AbfKKNr7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 11 Nov 2019 08:47:59 -0500
+Received: from mout.web.de ([212.227.17.11]:54315 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbfKKNrz (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        id S1726906AbfKKNrz (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
         Mon, 11 Nov 2019 08:47:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
         s=dbaedf251592; t=1573480070;
@@ -19,9 +19,9 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
          2hraRyEAkFnG5ErbmvOPvGv7oYUgWhhWam6Gghp3Wz3S/yP8y1B86kMJbJBCdoPXTK
          eVhJGClamMq3491k2adRBkCPR4jjSW1AiPWLtba0=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.49.55.229]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MQelV-1iJtCV0Onl-00U0Xd; Mon, 11
- Nov 2019 14:47:50 +0100
+Received: from [192.168.1.3] ([78.49.55.229]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M0ymZ-1hcbxC3LAd-00vAER; Mon, 11
+ Nov 2019 14:47:49 +0100
 Subject: Re: [PATCH 4/4] pwm: omap-dmtimer: Allow compiling with COMPILE_TEST
 To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         linux-pwm@vger.kernel.org
@@ -77,7 +77,7 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <f01b3443-9dcc-6485-4a05-a658d93326da@web.de>
+Message-ID: <7edadbe3-1f79-91ce-fafa-f3ad78c22c2c@web.de>
 Date:   Mon, 11 Nov 2019 14:47:48 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
@@ -86,30 +86,30 @@ In-Reply-To: <20191111090357.13903-4-u.kleine-koenig@pengutronix.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Uj2vQBMasG+LCAwBnNTLrJNI+arYtkAU4Rh68Kljn/JYXfiMtfQ
- z55xJT9+jm2PpzeY6xoAFLWuH5aTMdCCkfa3PwvE4+XxlGXNUb0DOv9A4detGkI0n1wI+Oi
- sjJI502E0OEVP37NTWZJcqq9YNwQ+r+t+eZORw55+5AUjIfR6PhCEPlF8gyedWTEjhkT3ax
- sD8ys/SbleOTQ8l8m9aeQ==
+X-Provags-ID: V03:K1:gA/nE9+bLvMegnAhrLgWE079n436Xy4Z48S/AhKL6OR/MBNd2nH
+ LUFVsoc2n4JX+uFgMSO7+hWY5u+dCk2UGqaPkrpLjOl/MOe0d/6Cpg+ANs+hhNvM7wpFvV5
+ yJq3esIcuvBZYVuFmSV29NUsvnR5pVVcqum0ciJjz7Q4L54b5BoTP4urgqZN9cm2LguIkaC
+ POaC5hIJWrT3mLy52f3sg==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yd1SyIhVKig=:w21slXE85TOrPIqIZFvJLv
- jqb67gAMds+u0lHe8+gh/gF6yxZvV/ecx3+WFBSQQPP9O5NVqPECtUvv1vlW72ZlHfrO0LjhV
- /DTxq0fh8QfYE9igSSshW0Cz2WHXpCpU6U47nOjOae8+AS4DPeQLl43qzHTjk4PlWlwx9W8hB
- 8HySMf7hrsrciPbZ2l090LEoDPaCrKr9hTcXOoo7V3OowvoDbFgnrEvuHeVb1nfM1XCtu3Mdr
- dfxD0WmBRI7EmU791ENq93NQQOJVEG36iK63irRw3wnLOc8Wj4HRM+cXYuvnN3doadwbgNjKY
- pMb6JqRv/3+wkcbAKx6mgc9t5F7gxdfDMwBUfupIEExguGjCPrpbCS9Lw/yk1arai/lVXE6Fi
- AnhFWpsFp36cXSe/Gur4bHH2hSGF7TIQyoXI18fwrByv13dtLrzoCrM3pp9RCiSRhmR4VCFNZ
- qrGmBnOgl2nbCyUJYYacLv5HSFdqMSSsedmnSyyuhfz+m8as7QcSqe9AljgDxhM967egj+okD
- FdA5V5Q7+DSOxQc49aUQH3hChy4nVFDP8b6TkSfB5Oa7V0NLkG6pq3EMEWqTACRoJP1iemi8q
- fIJrzTMYa4Y6R6IA4zJdkox5GLplMwhizg1nx4v36JuwENY/ZmB/BjWkXr54KExXrXUbr7b5w
- 5lUGpfYFR/8DfOKTr7iCBEg4UUOfbqzQKGwFeiDuDU/GQApIAyBTBWz6+LKLCD3+gR9N6xxhZ
- w94mllGnDTZLiLQ/vddtQZKF88fTvdoHQOtpZ47atq+CCq1m8KvJfHGGU+RLA17zYIEw4ZOqx
- OCktaY6Ey6d0njqer2b4iEMhH+9wNsO43revQ+WUnp+MtkUPkYwL9YiWh/R7p8u2E3NhTDIMh
- MZAei7G9iczMJjWozGM4bDXRTB8Nof5e9VR6mPTVIjetSXuGRouWHVft+eTM14GMlPmNR7qBy
- pzwUuvaOzGTPX4XovB3fKkySHev8CFo9+rxKoCnbyA6TdMBT3gmeiEKshvJ9y3PXdSI83cgeq
- t0ESFodQllHMINavoj4iXuOv91iuAz+kVqRKtJnuZejgelWxH9KHSU6kS46074CQemZWIXY59
- XVowrVQwI39mKf3r8LWD1Y7QRDIpocTnpaCYwg+tiwba41fB4MR4EsdOMDJ9gEMJaGhNKYIjj
- MKfcUzfsqaxxojkcy1bHSDa0YpKzLhflCxQWZWxXlboqIKzlvgTS2UFJElnRT/oLSQHlH1wUb
- dlEgChpzqnT1hVAYHJqh/tySi7vcT1KvT/g7ncxAwNAOaBVqOGrsIVrewhr0=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Dg/OrLlHUnw=:pWib2VFMc9aSgJK9h3OLdn
+ 1cTPj7gU+vxi9kLAe6js4oVfkCG6cEk4gH2oG3CZzAt32ytd/jRAHLNvuvWshFLXHZHSEqVTK
+ bJmmiDfSH40kuag4b8aKb1C/4DL+Hu4AVN3xTM/j5X2Q3p1cXqRk2KNAUKQ+wtwJc8J2u/p4w
+ tmFvWKEcJcIffoKKnlIzT/zs68i5ayF93ePJh8VhQRyiVDbbjnUCu+/8u2HOnmIwHulp98CyU
+ rX9o3hfbh+X5waehGwACOUq+x5NH4rLbeIPifIz1Zh5pplcLw5svGiH9vl+OGDjs3yN11xo9a
+ 2x7rfUdkVavu1bwuWArRuwe+ykMSvceBuvj4h0WvrlDeY5HiDd7989CuPp3XRRILMVJGLy77X
+ 3qqJYZafQnMgllZpmodzcCQfI3NCf0Wwi2rslpOFerxDvZ3i4xgcJYRYeLzLzI53ObtHC34yx
+ 9dQAHj4dc+CwvyYSVU7nOeympEYvooRKkIpCZv1OXwxw4pO5NhfIQY0MYe2IHUrdo4f/jHekN
+ 1dx6SpjQZpdCMZRlzMMYRF1PCrfOz9sKZUlWcb6nXyensaVORj9zJ+3hqYaTpbFnHaipFP9tJ
+ slpV3PAovX9eRsPr/zwBZcnAhoWZkn9dDsnycpZrVTJ0q0CimWir1z6LHgkeF9vawZl6Qdqp7
+ oJI5AI2kIGSHiTug1/pccMx1Yi90vIIjBcygxJhp8tJPh3vvc4/FE7zH0/8/i66OtYTOHE0Z+
+ ueEps/8mLP4IwXjHb842WNQh/ZaDbYETbOrb/A9noOza2nHopiETa50TZIhRwMvjQ3nBHyfkM
+ JUWl1RD9EWNq8HZyQnEx2nEwdF4//Vj8RXSFQEPKT8YkE/TM586NTOYA/dr6A7Da8RFN78pjK
+ 6HDAtqD/4ISe4nCEKzqXoOguaBNwRhs2KSSZkV2kCFKknM7APeyVtQwHaoL6Iqum5RJL+yvK4
+ 9l7Z0nELkw/VmeQIB1Hg9x/KeeS+24o3R99T2lePeMTO3aor1m1/nK6PEnaWRu6DBiLDLH00g
+ yOSCROMNAcbnOJTf6Mw3HV0t5zO/r99Dn9yIhtJuCi3lhWdL/tHcNcj3wxaEV5c6NQXDMrruP
+ p5sZWoXcBOCh2qQ+Fneci4N29/LtNQIJBUbGbqrm7781Es2vsaVsjivw19ulY/Tu/Ppgn08++
+ UUkHpA2gAKxuQP9MfkJdXpvlUUZJq5IEvfKMT9QnRB9MthEg7DhZwzZE23U2x+Qu3Yr/9QbGd
+ Ij/UU2C0va3O3lyxccUnlveyeFULTOVck6tKqII2dAHx8+iuNxYwhDoQIeLQ=
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
