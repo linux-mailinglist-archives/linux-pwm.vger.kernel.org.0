@@ -2,435 +2,127 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BA93F69F7
-	for <lists+linux-pwm@lfdr.de>; Sun, 10 Nov 2019 16:58:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9421BF6EF9
+	for <lists+linux-pwm@lfdr.de>; Mon, 11 Nov 2019 08:20:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfKJP6m (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 10 Nov 2019 10:58:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726800AbfKJP6m (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sun, 10 Nov 2019 10:58:42 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E3862077C;
-        Sun, 10 Nov 2019 15:58:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573401520;
-        bh=6wJ+i1d7XzsfKKuAZNjckdYPBns3/LQocyqrOKe2gh4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0rndzS2Uqi9vBuRK5a0rEO3sUaRnuk/RwUQFHuSjKVCep8X6DioSXSkAqnY5tJVtG
-         sl/LE5bB8/Sj3RGTOPGm3TzQlIppBsAUM79462QYtAQcC9qMnxsWNO2cGuJl2s/cd1
-         7ReQpCTUxk61fiTAfthJNs3oTd90N4n9QM/YgXLM=
-Date:   Sun, 10 Nov 2019 15:58:33 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
-        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <lee.jones@linaro.org>, <thierry.reding@gmail.com>,
-        <u.kleine-koenig@pengutronix.de>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: mfd: Convert stm32 timers bindings to
- json-schema
-Message-ID: <20191110155833.444d4a2e@archlinux>
-In-Reply-To: <20191107191425.22273-1-benjamin.gaignard@st.com>
-References: <20191107191425.22273-1-benjamin.gaignard@st.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726770AbfKKHUB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 11 Nov 2019 02:20:01 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53013 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbfKKHUB (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 11 Nov 2019 02:20:01 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iU3zQ-0005vi-5D; Mon, 11 Nov 2019 08:19:56 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iU3zM-0007yV-Kj; Mon, 11 Nov 2019 08:19:52 +0100
+Date:   Mon, 11 Nov 2019 08:19:52 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-pwm@vger.kernel.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Grant Erickson <marathon96@gmail.com>,
+        Joachim Eastwood <manabian@gmail.com>,
+        Neil Brown <neilb@suse.de>, Wen Yang <wen.yang99@zte.com.cn>
+Subject: Re: [PATCH] pwm: omap-dmtimer: Add missing put_device() call in
+ pwm_omap_dmtimer_probe()
+Message-ID: <20191111071952.6pbswbboqreen6im@pengutronix.de>
+References: <fd7a56e4-2a35-a6c4-e5bd-1e53a6c48687@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fd7a56e4-2a35-a6c4-e5bd-1e53a6c48687@web.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, 7 Nov 2019 20:14:25 +0100
-Benjamin Gaignard <benjamin.gaignard@st.com> wrote:
+Hello Markus,
 
-> Convert the STM32 timers binding to DT schema format using json-schema
+On Sat, Nov 09, 2019 at 01:26:50PM +0100, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Sat, 9 Nov 2019 13:09:42 +0100
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-As a total non expert on this, looks sane to me.
-
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
+> A coccicheck run provided information like the following.
+> 
+> drivers/pwm/pwm-omap-dmtimer.c:304:2-8: ERROR: missing put_device;
+> call of_find_device_by_node on line 255, but without a corresponding
+> object release within this function.
+> 
+> Generated by: scripts/coccinelle/free/put_device.cocci
+> 
+> Thus add jump targets to fix the exception handling for this
+> function implementation.
+> 
+> Fixes: b7290cf6ff7869ec12070aa146c370728cab62c2 ("pwm: pwm-omap-dmtimer: Adapt driver to utilize dmtimer pdata ops")
+> Fixes: 6604c6556db9e41c85f2839f66bd9d617bcf9f87 ("pwm: Add PWM driver for OMAP using dual-mode timers")
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 > ---
-> version 2:
-> - merge all (mfd, iio, pwm, counter) bindings in one file
-> - fix typo and trailing spaces
-> - rework dmas and dma-names properties to allow schemas like:
->   ch1 , ch2, ch4
->   ch2, up, com
-> - use patternProperties to describe timer subnode
-> - improve st,breakinput property definition to be able to check the values
->   inside de tuple
->  .../bindings/counter/stm32-timer-cnt.txt           |  31 -----
->  .../bindings/iio/timer/stm32-timer-trigger.txt     |  25 ----
->  .../devicetree/bindings/mfd/st,stm32-timers.yaml   | 155 +++++++++++++++++++++
->  .../devicetree/bindings/mfd/stm32-timers.txt       |  73 ----------
->  .../devicetree/bindings/pwm/pwm-stm32.txt          |  38 -----
->  5 files changed, 155 insertions(+), 167 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
->  delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mfd/stm32-timers.txt
->  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+>  drivers/pwm/pwm-omap-dmtimer.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt b/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
-> deleted file mode 100644
-> index c52fcdd4bf6c..000000000000
-> --- a/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
-> +++ /dev/null
-> @@ -1,31 +0,0 @@
-> -STMicroelectronics STM32 Timer quadrature encoder
-> -
-> -STM32 Timer provides quadrature encoder to detect
-> -angular position and direction of rotary elements,
-> -from IN1 and IN2 input signals.
-> -
-> -Must be a sub-node of an STM32 Timer device tree node.
-> -See ../mfd/stm32-timers.txt for details about the parent node.
-> -
-> -Required properties:
-> -- compatible:		Must be "st,stm32-timer-counter".
-> -- pinctrl-names: 	Set to "default".
-> -- pinctrl-0: 		List of phandles pointing to pin configuration nodes,
-> -			to set CH1/CH2 pins in mode of operation for STM32
-> -			Timer input on external pin.
-> -
-> -Example:
-> -	timers@40010000 {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		compatible = "st,stm32-timers";
-> -		reg = <0x40010000 0x400>;
-> -		clocks = <&rcc 0 160>;
-> -		clock-names = "int";
-> -
-> -		counter {
-> -			compatible = "st,stm32-timer-counter";
-> -			pinctrl-names = "default";
-> -			pinctrl-0 = <&tim1_in_pins>;
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt b/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-> deleted file mode 100644
-> index b8e8c769d434..000000000000
-> --- a/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-> +++ /dev/null
-> @@ -1,25 +0,0 @@
-> -STMicroelectronics STM32 Timers IIO timer bindings
-> -
-> -Must be a sub-node of an STM32 Timers device tree node.
-> -See ../mfd/stm32-timers.txt for details about the parent node.
-> -
-> -Required parameters:
-> -- compatible:	Must be one of:
-> -		"st,stm32-timer-trigger"
-> -		"st,stm32h7-timer-trigger"
-> -- reg:		Identify trigger hardware block.
-> -
-> -Example:
-> -	timers@40010000 {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		compatible = "st,stm32-timers";
-> -		reg = <0x40010000 0x400>;
-> -		clocks = <&rcc 0 160>;
-> -		clock-names = "int";
-> -
-> -		timer@0 {
-> -			compatible = "st,stm32-timer-trigger";
-> -			reg = <0>;
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml b/Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml
-> new file mode 100644
-> index 000000000000..e8bd80038fa9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml
-> @@ -0,0 +1,155 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/st,stm32-timers.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+> index 00772fc53490..958854213786 100644
+> --- a/drivers/pwm/pwm-omap-dmtimer.c
+> +++ b/drivers/pwm/pwm-omap-dmtimer.c
+> @@ -301,12 +301,13 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
+>  put:
+>  	of_node_put(timer);
+>  	if (ret < 0)
+> -		return ret;
+> +		goto check_timer_pdev;
+> 
+>  	omap = devm_kzalloc(&pdev->dev, sizeof(*omap), GFP_KERNEL);
+>  	if (!omap) {
+>  		pdata->free(dm_timer);
+> -		return -ENOMEM;
+> +		ret = -ENOMEM;
+> +		goto put_device;
+>  	}
+> 
+>  	omap->pdata = pdata;
+> @@ -340,12 +341,19 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
+>  	if (ret < 0) {
+>  		dev_err(&pdev->dev, "failed to register PWM\n");
+>  		omap->pdata->free(omap->dm_timer);
+> -		return ret;
+> +		goto put_device;
+>  	}
+> 
+>  	platform_set_drvdata(pdev, omap);
+> 
+>  	return 0;
 > +
-> +title: STMicroelectronics STM32 Timers bindings
-> +
-> +description: |
-> +  This hardware block provides 3 types of timer along with PWM functionality:
-> +    - advanced-control timers consist of a 16-bit auto-reload counter driven by a programmable
-> +      prescaler, break input feature, PWM outputs and complementary PWM ouputs channels.
-> +    - general-purpose timers consist of a 16-bit or 32-bit auto-reload counter driven by a
-> +      programmable prescaler and PWM outputs.
-> +    - basic timers consist of a 16-bit auto-reload counter driven by a programmable prescaler.
-> +
-> +maintainers:
-> +  - Benjamin Gaignard <benjamin.gaignard@st.com>
-> +  - Fabrice Gasnier <fabrice.gasnier@st.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: st,stm32-timers
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: int
-> +
-> +  reset:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    minItems: 1
-> +    maxItems: 7
-> +
-> +  dma-names:
-> +    items:
-> +      - enum: [ ch1, ch2, ch3, ch4, up, trig, com ]
-> +    minItems: 1
-> +    maxItems: 7
-> +    additionalItems: true
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +  pwm:
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +        const: st,stm32-pwm
-> +
-> +      "#pwm-cells":
-> +        const: 3
-> +
-> +      st,breakinput:
-> +        description: |
-> +          One or two <index level filter> to describe break input configurations.
-> +
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> +          - items:
-> +              items:
-> +                - description: |
-> +                    "index" indicates on which break input (0 or 1) the configuration should be applied.
-> +                  enum: [ 0 , 1]
-> +                - description: |
-> +                    "level" gives the active level (0=low or 1=high) of the input signal for this configuration
-> +                  enum: [ 0, 1 ]
-> +                - description: |
-> +                    "filter" gives the filtering value (up to 15) to be applied.
-> +                  maximum: 15
-> +
-> +    required:
-> +      - "#pwm-cells"
-> +      - compatible
-> +
-> +patternProperties:
-> +  "^timer@[0-9]+$":
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +        enum:
-> +          - st,stm32-timer-trigger
-> +          - st,stm32h7-timer-trigger
-> +
-> +      reg:
-> +        maxItems: 1
-> +        description: identify trigger hardware block.
-> +
-> +    required:
-> +      - compatible
-> +      - reg
-> +
-> +  counter:
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +        const: st,stm32-timer-counter
-> +
-> +    required:
-> +      - compatible
-> +
-> +required:
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    timers2: timers@40000000 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      compatible = "st,stm32-timers";
-> +      reg = <0x40000000 0x400>;
-> +      clocks = <&rcc TIM2_K>;
-> +      clock-names = "int";
-> +      dmas = <&dmamux1 18 0x400 0x1>,
-> +             <&dmamux1 19 0x400 0x1>,
-> +             <&dmamux1 20 0x400 0x1>,
-> +             <&dmamux1 21 0x400 0x1>,
-> +             <&dmamux1 22 0x400 0x1>;
-> +      dma-names = "ch1", "ch2", "ch3", "ch4", "up";
-> +      pwm {
-> +        compatible = "st,stm32-pwm";
-> +        #pwm-cells = <3>;
-> +        st,breakinput = <0 1 5>;
-> +      };
-> +      timer@0 {
-> +        compatible = "st,stm32-timer-trigger";
-> +        reg = <0>;
-> +      };
-> +      counter {
-> +        compatible = "st,stm32-timer-counter";
-> +      };
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/mfd/stm32-timers.txt b/Documentation/devicetree/bindings/mfd/stm32-timers.txt
-> deleted file mode 100644
-> index 15c3b87f51d9..000000000000
-> --- a/Documentation/devicetree/bindings/mfd/stm32-timers.txt
-> +++ /dev/null
-> @@ -1,73 +0,0 @@
-> -STM32 Timers driver bindings
-> -
-> -This IP provides 3 types of timer along with PWM functionality:
-> -- advanced-control timers consist of a 16-bit auto-reload counter driven by a programmable
-> -  prescaler, break input feature, PWM outputs and complementary PWM ouputs channels.
-> -- general-purpose timers consist of a 16-bit or 32-bit auto-reload counter driven by a
-> -  programmable prescaler and PWM outputs.
-> -- basic timers consist of a 16-bit auto-reload counter driven by a programmable prescaler.
-> -
-> -Required parameters:
-> -- compatible: must be "st,stm32-timers"
-> -
-> -- reg:			Physical base address and length of the controller's
-> -			registers.
-> -- clock-names:		Set to "int".
-> -- clocks: 		Phandle to the clock used by the timer module.
-> -			For Clk properties, please refer to ../clock/clock-bindings.txt
-> -
-> -Optional parameters:
-> -- resets:		Phandle to the parent reset controller.
-> -			See ../reset/st,stm32-rcc.txt
-> -- dmas:			List of phandle to dma channels that can be used for
-> -			this timer instance. There may be up to 7 dma channels.
-> -- dma-names:		List of dma names. Must match 'dmas' property. Valid
-> -			names are: "ch1", "ch2", "ch3", "ch4", "up", "trig",
-> -			"com".
-> -
-> -Optional subnodes:
-> -- pwm:			See ../pwm/pwm-stm32.txt
-> -- timer:		See ../iio/timer/stm32-timer-trigger.txt
-> -- counter:		See ../counter/stm32-timer-cnt.txt
-> -
-> -Example:
-> -	timers@40010000 {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		compatible = "st,stm32-timers";
-> -		reg = <0x40010000 0x400>;
-> -		clocks = <&rcc 0 160>;
-> -		clock-names = "int";
-> -
-> -		pwm {
-> -			compatible = "st,stm32-pwm";
-> -			pinctrl-0	= <&pwm1_pins>;
-> -			pinctrl-names	= "default";
-> -		};
-> -
-> -		timer@0 {
-> -			compatible = "st,stm32-timer-trigger";
-> -			reg = <0>;
-> -		};
-> -
-> -		counter {
-> -			compatible = "st,stm32-timer-counter";
-> -			pinctrl-names = "default";
-> -			pinctrl-0 = <&tim1_in_pins>;
-> -		};
-> -	};
-> -
-> -Example with all dmas:
-> -	timer@40010000 {
-> -		...
-> -		dmas = <&dmamux1 11 0x400 0x0>,
-> -		       <&dmamux1 12 0x400 0x0>,
-> -		       <&dmamux1 13 0x400 0x0>,
-> -		       <&dmamux1 14 0x400 0x0>,
-> -		       <&dmamux1 15 0x400 0x0>,
-> -		       <&dmamux1 16 0x400 0x0>,
-> -		       <&dmamux1 17 0x400 0x0>;
-> -		dma-names = "ch1", "ch2", "ch3", "ch4", "up", "trig", "com";
-> -		...
-> -		child nodes...
-> -	};
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-> deleted file mode 100644
-> index a8690bfa5e1f..000000000000
-> --- a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-> +++ /dev/null
-> @@ -1,38 +0,0 @@
-> -STMicroelectronics STM32 Timers PWM bindings
-> -
-> -Must be a sub-node of an STM32 Timers device tree node.
-> -See ../mfd/stm32-timers.txt for details about the parent node.
-> -
-> -Required parameters:
-> -- compatible:		Must be "st,stm32-pwm".
-> -- pinctrl-names: 	Set to "default".
-> -- pinctrl-0: 		List of phandles pointing to pin configuration nodes for PWM module.
-> -			For Pinctrl properties see ../pinctrl/pinctrl-bindings.txt
-> -- #pwm-cells:		Should be set to 3. This PWM chip uses the default 3 cells
-> -			bindings defined in pwm.txt.
-> -
-> -Optional parameters:
-> -- st,breakinput:	One or two <index level filter> to describe break input configurations.
-> -			"index" indicates on which break input (0 or 1) the configuration
-> -			should be applied.
-> -			"level" gives the active level (0=low or 1=high) of the input signal
-> -			for this configuration.
-> -			"filter" gives the filtering value to be applied.
-> -
-> -Example:
-> -	timers@40010000 {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		compatible = "st,stm32-timers";
-> -		reg = <0x40010000 0x400>;
-> -		clocks = <&rcc 0 160>;
-> -		clock-names = "int";
-> -
-> -		pwm {
-> -			compatible = "st,stm32-pwm";
-> -			#pwm-cells = <3>;
-> -			pinctrl-0	= <&pwm1_pins>;
-> -			pinctrl-names	= "default";
-> -			st,breakinput = <0 1 5>;
-> -		};
-> -	};
+> +check_timer_pdev:
+> +	if (timer_pdev)
+> +put_device:
+> +		put_device(&timer_pdev->dev);
 
+This is ugly but necessary with the driver as is because the error
+handling is interwinded within the normal path through this function.
+
+I would prefer to clean this up first, then this fix gets a bit nicer.
+Will send a patch in reply to this mail.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
