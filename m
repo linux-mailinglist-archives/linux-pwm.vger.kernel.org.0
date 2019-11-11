@@ -2,27 +2,28 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 54738F7504
-	for <lists+linux-pwm@lfdr.de>; Mon, 11 Nov 2019 14:32:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B4A83F753A
+	for <lists+linux-pwm@lfdr.de>; Mon, 11 Nov 2019 14:42:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfKKNcg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 11 Nov 2019 08:32:36 -0500
-Received: from mout.web.de ([212.227.17.11]:42887 "EHLO mout.web.de"
+        id S1726877AbfKKNmF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 11 Nov 2019 08:42:05 -0500
+Received: from mout.web.de ([212.227.17.11]:59071 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbfKKNcg (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 11 Nov 2019 08:32:36 -0500
+        id S1726832AbfKKNmF (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 11 Nov 2019 08:42:05 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1573479151;
-        bh=lEZega4NQqb14eF8jrF2nOLSTFFT/Y2epxDcrqkCzpA=;
+        s=dbaedf251592; t=1573479719;
+        bh=6OzZTDobX1qW6aU8a5k9FJMLNxyGjCA8Fr6CeXxsDeY=;
         h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=LksIZEZSVH8FEsI8t3Zh5h71vh5i9aWt992mzWjxI+plDm6Ggg7Wppuc3guewwC6d
-         zDwd4O6ihA0iJ+VHAjWk3Zik68OVX2fdLFAHH9OTSGb7VCiS6+8YK5qmYNR4x0rgzv
-         nVzi8Uh+dJSG4PgjX6rnJZEjd/0+pmF8Tqrf4fPc=
+        b=PWN5+C6jzcPbsGpCU0dQPbbC7guynd72Nq0Gk6lmUBCqDDtUFyLcQ5kn13/dKC/6h
+         jngUrvy3BNM3IECsHFYB17Bhga3eVTMbgRoMQgYIgW21DjRLCXM6DzjFuavXztWGdH
+         yAfnEzg5HQuQFKYEcpRbksnd8mEvgBDgn0ySHrsc=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.49.55.229]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LZedc-1i2m3v2ejs-00lXOR; Mon, 11
- Nov 2019 14:32:31 +0100
-Subject: Re: [PATCH 2/4] pwm: omap-dmtimer: simplify error handling
+Received: from [192.168.1.3] ([78.49.55.229]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MBkLb-1ieIQC2SeN-00An2H; Mon, 11
+ Nov 2019 14:41:59 +0100
+Subject: Re: [PATCH 3/4] pwm: omap-dmtimer: put_device() after
+ of_find_device_by_node()
 To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -32,7 +33,7 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         LKML <linux-kernel@vger.kernel.org>
 References: <20191111071952.6pbswbboqreen6im@pengutronix.de>
  <20191111090357.13903-1-u.kleine-koenig@pengutronix.de>
- <20191111090357.13903-2-u.kleine-koenig@pengutronix.de>
+ <20191111090357.13903-3-u.kleine-koenig@pengutronix.de>
 From:   Markus Elfring <Markus.Elfring@web.de>
 Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
@@ -77,89 +78,96 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <a7a4656d-98b4-6bbb-e389-fe7028a38f97@web.de>
-Date:   Mon, 11 Nov 2019 14:32:30 +0100
+Message-ID: <812c95a0-7eb6-7ad6-16fa-c9e8339ff213@web.de>
+Date:   Mon, 11 Nov 2019 14:41:58 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191111090357.13903-2-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20191111090357.13903-3-u.kleine-koenig@pengutronix.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:JR0EW8xNBi+POd/MG9WbpEkvmVl78oVefTqYMfKp1EYsbLdSXc+
- Qx5gCx1cnoLy37iHpiH94s6rMlpykDOlnrc3e9Qiew2kTE+llqxwtYMQMt9bSohRN6JBLpm
- ZwDJgzHuBp9LritUXT4K4SaMxi7X8G3rWxJRB1iI8hsJLZE6NfcbVfKiDcCvMW3iBC5edvZ
- SOjQrw9VBEtFdz9LBuAjQ==
+X-Provags-ID: V03:K1:CiPgPEsnOUeBUu3pmyaf/u5yCWvpIa9d81ExnECWJ5Kru7RP0/R
+ shHlTY1cwJV8e7xDOdICZ4hyKButiWmzoxDC8OjLcmJHrbwvbVRFUzV2n6yowgFImyiZHJz
+ G3KZt1p7IO9WLo8zYMyUBTm/K8bFzebC69QDcleg8Sh2Q8gmxQjAhbEG7hq2VCuPrtlq/e6
+ pbhrQOi6QQ50XXFKn7VWw==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:a3J5GtyOYs4=:K1Qdhb8qmWE8EdilycbZMK
- 0iWPChxI5aCpqH/qy22/q1V8HA2c6Gt1Iz15Vc7WNKYEfwB2SIdjlm4RjKg/fZr4FhXE6xkfa
- CpzKW//z4F+eF3yyT2V9YVl8Ml1Se/7hDOMNxuYVzhi7z5zSoAhgwBDZLjt7dKZS5iaAsxXRL
- VblVBtAoO6YpX8TmL5Rxp4Cc5kjMfseBaB5Q0u/HqMMd8ysKaSYE8SAb30ED8E0FJfgaFqdRg
- 03IhzYDol5UNOMhsyelET2Ljwf7hFjdnczk78IFJQyBz6eBQAz8ZLAOdtb72ixobCLTAzHHqS
- p+tXoJarMHAsq/i5ADlQdEd4MPlGNvIzFlee2o2HDePnNyVbEElrAeaOzp1tRTRVatKXlyVca
- VlKrydGAxoxeQlGGXOowRWAS/RjybgEpUv5cu+7jkneGXSnud+ZVyFuSmlgpRNHhGy7mJe6yk
- U9OjTuM1HFOg0SM5fuEsjemD3Qf11fi5Sm5j5Kl5uZeyTRCQPyV2Te7cHf03fo3fbm/8ZrVEV
- xBwSeXcMl3gyaHek08BBtjOqQKuH1Pn6nSlzMHWkcSfeIj8eII7H3kax6wJnmVJ941qjchCbL
- +OU63SYMsbrQCDxU+12Ty7M1m5U+ZNNp5WfjG9pIRqmPVVEdTDjOrO81JkYUWI3oUIsSn0xxe
- mk6nG/FESkM6p8z9V5HrNsS6LAamW2qTFE16YDmfkWX91mGEA6v+KNINTH2hXJWJZbqLTYMvu
- KFJ1NDxV+vIlk1ygOAsKYdwq4dOPplO0nIrrwYUZLR7whrWv8EMC4CPIGw686NPkSnmypY4Lv
- PX3u6fpAqW0YaAF6ouT8SAZEIf33TxURMY8f/0qrIX5UtKg0Y/OtdlcAK3JBjSJnT/1DMcC70
- ePEPisDbsAsEmzgpjGGDAmkDC7T0etJGms8t98W70rzbAcs4yEO22rOqa7mJtAiuxQKNP3ki7
- MNIL775ks5fPBhy8UliZ8eP4b/jCp0KW0zK9CP/V/H93ItRVtDqyjItBqPQa5ZDfiG+W0PvET
- 70GE6mkP8Ux8eUW/qrQLZVZlUeE/PcgreI4WK5tGuNO5DxSgoj1UMSvsLbTI1ZCAFZXaO9ydh
- 6s7kyXxHSOE8egF45HqDJiOUydI1wqW0UC5XqwKxTecH8A36hHLoXu+Awmc+PuaUmpa66kD5j
- VpZ+Yf9VwkCg1RHNfeovnPPEZhmtZ51VNFCrAOgeqKucYenaohcL4xV/vcENjEdvBJJf7sVCY
- htNNBMGxwBM5fBGW1BmDvIjXDqF7sBY9MaVvZsYqRQiQg/9VlQn8YWDm08Bk=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sjhQAGAM33o=:XlZyHv0FCJk8qWrfEZ3nFI
+ CyCdr45xlkdqJRwpBDyUXH8tXoUBUf218lQR5FzU8p/3AMqiJIEG3CKN5vWn+sqFcrxeHj9Pu
+ K60Gl0i479Fw32Bg7p/CtEYKxSHGSVJ5841wd+FdsI8g+WneZ6fsSi4veUK+JxfgOVEvaa9uv
+ k7nsslMDMaOhsfuIP/dc2nY5WpZuDZKp5cJkmgfSxn0zgVHjIwzeH28ESy9nnCMjTX5G+KOet
+ u69TZB9LoWlax1xHiD62uVUVGUWm3E9QxSKpHvuyyXJNWIIIz4Bf/dM0ybAsb98S20apAF6dm
+ X3SVz518K2mBgbbgCohK/VPUdYFrRzEar33VL2d/JGymG4TazQwf4uq1hGpUiH5ieHv8KvY98
+ x3gTc2qwwrLR/Z1fI4QXwZ7cXCPbPPrgLxfQMTrvXD1UtlbyGc9kTIYVI21vnFAil+5F3PHy9
+ +WMDxMiZUw/xUx0ZBONDMgXk14KkMZ+e+bP58DCcdv4c3ilTeYF37rwPZCGqTgrCweLyyPsYu
+ 3t4WI3Zmbvb2f2bUwoUgQV8SSecIvsCNRPfAv/nMcVdJ06H5Tv720hdGKlZjFWmSL1Z3p8db5
+ /qj5UGBZbxNJGpWjPelpmJaFuR9SkRFy6DbdCbT4EV24dSwvreW5xHF5gOwFAJkvUTPAc1ixK
+ 3ULpCeqZJO6nnW7xZMiKw8I96Q1Fzk+0yYXzJI0vXauJj86CKJtiiIiUMzPfj4m7TZDN5m3QP
+ Lv1Rn11P8AUEFMsEFxan7V4RrZlrJkR9e2eLgCT/uJBBbirXbzLNX/Dr8o9baExTLDdeJFY/d
+ 3VMh6c84JqTdnBPsr099Hl6n92VzOg4F2KY2ARWnRZZjnu07f3QAeTz4WueZls6UOP3pYl8mA
+ joCV1UhYOe7LdIqn6FlsVkyEBRxuYdfS+aC11cHcbmagtkq4iuP7g8mSXyyKY1SbL5FYMGjup
+ qjXbdrRRRABJj4Kej4ELvyn7Hg1I4sefYrL1hHvqtZRekNdYmE0laUmXU0+RlcbBvpGk6yr+i
+ wHUCBGJXopobxZFbGCCFt/pyq+Azl43xL73eDEhbKrMGHFCd9k/opquAfF3dg9w7mIhaXycj8
+ RthbMgmPYxfWLg/pQN5inh/WNfTZQEnt5Jqlv6te1FoM18Ybms0hwA980eiXWv9PDnfIj2Ntg
+ B+6zCM2KurezeBSHjl1X7ayV7IDatzqS7fIFzybAqHhTez9vvvHrdWzDGuDcm+B+uR6tJWStA
+ EhptzCqg0Wjk3+MKa5x/OLal/HD2wO2bWMc7k4EPgnRX7E+18KJca6l36rBQ=
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-> Implementation note: The put: label was never reached without a goto and
-> ret being unequal to 0, so the removed return statement is fine.
+> This was found by coccicheck:
+>
+> 	drivers/pwm/pwm-omap-dmtimer.c:304:2-8: ERROR: missing put_device;
+> 	call of_find_device_by_node on line 255, but without a corresponding
+> 	object release within this function.
 
-This can look fine (in principle) because the label was repositioned here.
-Do you really want to call the function =E2=80=9Cof_node_put=E2=80=9D at t=
-wo places now?
+How do you think about to add a wording according to =E2=80=9Cimperative m=
+ood=E2=80=9D
+for your change description?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?id=3D31f4f5b495a62c9a8b15b1c358=
+1acd5efeb9af8c#n151
 
-
+=E2=80=A6
 > +++ b/drivers/pwm/pwm-omap-dmtimer.c
 =E2=80=A6
->  	omap =3D devm_kzalloc(&pdev->dev, sizeof(*omap), GFP_KERNEL);
->  	if (!omap) {
-> -		pdata->free(dm_timer);
-> -		return -ENOMEM;
-> +		ret =3D -ENOMEM;
-> +		goto err_alloc_omap;
->  	}
+> @@ -352,7 +352,14 @@ static int pwm_omap_dmtimer_probe(struct platform_d=
+evice *pdev)
 =E2=80=A6
-
-I suggest to reconsider your label name selection according to
-the Linux coding style.
-
-
-> @@ -339,13 +334,28 @@ static int pwm_omap_dmtimer_probe(struct platform_=
-device *pdev)
-=E2=80=A6
-> +err_pwmchip_add:
+>  	pdata->free(dm_timer);
+> -put:
+> +err_request_timer:
 > +
-> +	/*
-> +	 * *omap is allocated using devm_kzalloc,
-> +	 * so no free necessary here
-> +	 */
-> +err_alloc_omap:
+> +err_timer_property:
+> +err_platdata:
 > +
-> +	pdata->free(dm_timer);
+> +	put_device(&timer_pdev->dev);
 
-Would the use of the label =E2=80=9Cfree_dm_timer=E2=80=9D be more appropr=
-iate?
+Would the use of the label =E2=80=9Cput_device=E2=80=9D be more appropriat=
+e?
 
 
-> +put:
-> +	of_node_put(timer);
+> +err_find_timer_pdev:
+> +
+>  	of_node_put(timer);
 =E2=80=A6
 
-Can the label =E2=80=9Cput_node=E2=80=9D be nicer?
+Would the use of the label =E2=80=9Cput_node=E2=80=9D be better here?
+
+
+> @@ -372,6 +379,8 @@ static int pwm_omap_dmtimer_remove(struct platform_d=
+evice *pdev)
+>
+>  	omap->pdata->free(omap->dm_timer);
+>
+> +	put_device(&omap->dm_timer_pdev->dev);
+> +
+>  	mutex_destroy(&omap->mutex);
+>
+>  	return 0;
+
+I suggest to omit a few blank lines.
 
 Regards,
 Markus
