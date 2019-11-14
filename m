@@ -2,94 +2,205 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB8C8FCBE1
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Nov 2019 18:31:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B9F8FD100
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Nov 2019 23:36:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfKNRbd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 14 Nov 2019 12:31:33 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36929 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfKNRbc (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 Nov 2019 12:31:32 -0500
-Received: by mail-oi1-f195.google.com with SMTP id y194so6031925oie.4;
-        Thu, 14 Nov 2019 09:31:31 -0800 (PST)
+        id S1727063AbfKNWgb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 14 Nov 2019 17:36:31 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39708 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbfKNWgb (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 Nov 2019 17:36:31 -0500
+Received: by mail-wm1-f65.google.com with SMTP id t26so8159292wmi.4;
+        Thu, 14 Nov 2019 14:36:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=RVuenm9Qi2pw+STW4ZtMyXnbY+dRwGZQd6cok8GsC1M=;
+        b=P9vKR2GWHbPY7STfXXInk+UIPKLvMJfeivMHW7HZGEMbjb15YJ1xDERjzAeqnoF4tU
+         SRh7rAuY7x1sUzF30nhAS3cqIHus5guXb1IVBXgXRUGtaQaizyed0p0GMr1TXtCwdMI6
+         pwQC7ANmkxp64rgZkLmZtYbIL3c5W9PE4Fir8yw0LeNYj4iWTSnGws7mX9iFqwkqH0L9
+         5RxEIJNUojdI72q9Cq496qwe/v54onHciEGhAH9PA0Knb7Q4CEW+zZMS6/P/sqhPy2br
+         oDg7QM1wX9w+UrMwqUhgZhMZI55QqDjbe+2pIK7DorvfYkO+vmMTEgjE16JmfEoQnkiZ
+         q3mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3G1UrTKYq6h7EeCf3xtk9ByNRfqNtMiSs5YT8e3r4Hw=;
-        b=eS5yEwbnuVBbDQBYjzVfMgJAK3auLxE/WxBGyCZbdA5LrVZl36NA+i4ZuddlAidTTy
-         LoG5nRmyEtMDELckh++qOgYYkZZhJ2XOp1FojntwMSMLLSziOmtFmzKQm/6lI9SdUwLD
-         L0VH+WaVgHPzYmY2BJ/dEbYXXiMr66m9fGPBOg13Jq5rKlDVFc5XpqLzl+4A4g10Dhc4
-         e3xpIVWg9mnW3vhM+Bid1ULCAqpYQHaxVSbomtAC3cxWQP2I1YIZ73tZFI2j8pvmzunG
-         fNDDxsMElqGxvPw77oXQnAqY3eD0lQRYXKe1ZGI/FMcTozoWmqxrYVID8/PJ1HNwJq10
-         vUQA==
-X-Gm-Message-State: APjAAAWshox70p1VUW4hGicSuI+i7WADQ+67/eRWZPe71VpuXjdRxDv7
-        +BdJyQGwx/xcPo2JG2E4GQ==
-X-Google-Smtp-Source: APXvYqwyclOEvGyBTY6vREWnjvU+4uvkYPxZcorcMlSKeYf3ZPoZJUiEVybWjLsGdKUcmAP2Hril7Q==
-X-Received: by 2002:aca:5e04:: with SMTP id s4mr4533315oib.159.1573752690884;
-        Thu, 14 Nov 2019 09:31:30 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o4sm2019336ota.57.2019.11.14.09.31.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 09:31:30 -0800 (PST)
-Date:   Thu, 14 Nov 2019 11:31:29 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com,
-        fabrice.gasnier@st.com, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, lee.jones@linaro.org,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        benjamin.gaignard@st.com, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3] dt-bindings: mfd: Convert stm32 timers bindings to
- json-schema
-Message-ID: <20191114173129.GA25237@bogus>
-References: <20191114101823.23144-1-benjamin.gaignard@st.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=RVuenm9Qi2pw+STW4ZtMyXnbY+dRwGZQd6cok8GsC1M=;
+        b=sN0rGs5uT4glCURPa6lRzyK9f8ifgDp9sXj1gbC4qMs2qWFN//VJVwv1dvZPwNRDKH
+         UUbTq6kyG9LrYRvCbz+2vLBGV48790iX15zpRTYQ7wYFyXtG8jmMny7/XkeGDKDNtSTK
+         P1Id7f2YtQxZkLpjwNo7Clq3+j+6tXNXe3otzWOxf2ZabSIRGm+DMR8bR6RYhKW5IHIc
+         /p0HquvEdtsUEnwVKa9rxHnC6xvRRbnc/jbQtUeq6+7WZE5ipLbkPTZWrE7biLk+LBxe
+         HXOyYLs/sg72xC1dNZyyB4lvwpZsc3/lstQJc5qyP+Z/SOs7f1gXMSrS+WAjwaZ8vpLW
+         vDbg==
+X-Gm-Message-State: APjAAAXbo+PogTRlYFrp6Kqkyd0kd9d6X1uBlZvNlxkRo87VwZYIBWmr
+        lWwaM/3y5PcreUWbQNo7fg3XeeUEVrYWf6Y+/Jg=
+X-Google-Smtp-Source: APXvYqydkqVGAsZY/QfQUfncgiKmd2qGu81mlw7Lyn/j6hx/Zt8E9beVOYAmq795PN88N0QMg3qiHr5bP6gMpLIuoQw=
+X-Received: by 2002:a1c:6405:: with SMTP id y5mr11626914wmb.175.1573770987981;
+ Thu, 14 Nov 2019 14:36:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114101823.23144-1-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191108084517.21617-1-peron.clem@gmail.com> <20191108084517.21617-4-peron.clem@gmail.com>
+ <20191113083524.aqtf2ed4ltuiazjg@pengutronix.de>
+In-Reply-To: <20191113083524.aqtf2ed4ltuiazjg@pengutronix.de>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Thu, 14 Nov 2019 23:36:16 +0100
+Message-ID: <CAJiuCccqyPbxRLjv1NRy6eukMnma8OUJGKvVHHDSKwybNJgKrg@mail.gmail.com>
+Subject: Re: [PATCH v4 3/7] pwm: sun4i: Add an optional probe for bus clock
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, 14 Nov 2019 11:18:23 +0100, Benjamin Gaignard wrote:
-> Convert the STM32 timers binding to DT schema format using json-schema
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
-> version 3:
-> - correctly use enum for dma-names and remove additionalItems: true
-> - provide a range of values for reg property
-> 
-> version 2:
-> - merge all (mfd, iio, pwm, counter) bindings in one file
-> - fix typo and trailing spaces
-> - rework dmas and dma-names properties to allow schemas like:
->   ch1 , ch2, ch4
->   ch2, up, com
-> - use patternProperties to describe timer subnode
-> - improve st,breakinput property definition to be able to check the values
->   inside de tuple
-> 
->  .../bindings/counter/stm32-timer-cnt.txt           |  31 ----
->  .../bindings/iio/timer/stm32-timer-trigger.txt     |  25 ----
->  .../devicetree/bindings/mfd/st,stm32-timers.yaml   | 159 +++++++++++++++++++++
->  .../devicetree/bindings/mfd/stm32-timers.txt       |  73 ----------
->  .../devicetree/bindings/pwm/pwm-stm32.txt          |  38 -----
->  5 files changed, 159 insertions(+), 167 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
->  delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mfd/stm32-timers.txt
->  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-> 
+Hi Uwe,
 
-Applied, thanks.
+On Wed, 13 Nov 2019 at 09:35, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> On Fri, Nov 08, 2019 at 09:45:13AM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> >
+> > H6 PWM core needs bus clock to be enabled in order to work.
+> >
+> > Add an optional probe for it and a fallback for previous
+> > bindings without name on module clock.
+> >
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  drivers/pwm/pwm-sun4i.c | 48 +++++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 46 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > index 2b9a2a78591f..a10022d6c0fd 100644
+> > --- a/drivers/pwm/pwm-sun4i.c
+> > +++ b/drivers/pwm/pwm-sun4i.c
+> > @@ -78,6 +78,7 @@ struct sun4i_pwm_data {
+> >
+> >  struct sun4i_pwm_chip {
+> >       struct pwm_chip chip;
+> > +     struct clk *bus_clk;
+> >       struct clk *clk;
+> >       struct reset_control *rst;
+> >       void __iomem *base;
+> > @@ -363,9 +364,38 @@ static int sun4i_pwm_probe(struct platform_device =
+*pdev)
+> >       if (IS_ERR(pwm->base))
+> >               return PTR_ERR(pwm->base);
+> >
+> > -     pwm->clk =3D devm_clk_get(&pdev->dev, NULL);
+> > -     if (IS_ERR(pwm->clk))
+> > +     /* Get all clocks and reset line */
+> > +     pwm->clk =3D devm_clk_get_optional(&pdev->dev, "mod");
+> > +     if (IS_ERR(pwm->clk)) {
+> > +             if (PTR_ERR(pwm->rst) !=3D -EPROBE_DEFER)
+> > +                     dev_err(&pdev->dev, "get clock failed %pe\n",
+> > +                             pwm->clk);
+> >               return PTR_ERR(pwm->clk);
+> > +     }
+> > +
+> > +     /*
+> > +      * Fallback for old dtbs with a single clock and no name.
+> > +      * If a parent has a clock-name called "mod" whereas the
+> > +      * current node is unnamed the clock reference will be
+> > +      * incorrectly obtained and will not go into this fallback.
+>
+> For me "old dtbs" suggests that today a device tree should have a "mod"
+> clock. Is this true also for machines other than H6? And I'd put the
+> comment before the acquisition of the "mod" clock. Something like:
 
-Rob
+Agree to remove the "old dtbs" but specifying the SoC instead
+of the reason is less clear for me.
+
+I would prefer to have something like this:
+
+A clock is explicitly called "mod" when several clocks are referenced.
+However, when only one clock is declared this one is unamed.
+So we request "mod" first (and ignore the corner case that a parent
+provides a "mod" clock)
+and if this is not found we fall back to the first clock of the PWM.
+
+What do you think?
+
+>
+>         /*
+>          * A clock called "mod" is only required on H6 (for now) and on
+>          * other SoCs we expect an unnamed clock. So we request "mod"
+>          * first (and ignore the corner case that a parent provides a
+>          * "mod" clock) and if this is not found we fall back to the
+>          * first clock of the PWM.
+>          */
+>
+> > +      */
+> > +     if (!pwm->clk) {
+> > +             pwm->clk =3D devm_clk_get(&pdev->dev, NULL);
+> > +             if (IS_ERR(pwm->clk)) {
+> > +                     if (PTR_ERR(pwm->rst) !=3D -EPROBE_DEFER)
+> > +                             dev_err(&pdev->dev, "get clock failed %pe=
+\n",
+> > +                                     pwm->clk);
+> > +                     return PTR_ERR(pwm->clk);
+> > +             }
+> > +     }
+> > +
+> > +     pwm->bus_clk =3D devm_clk_get_optional(&pdev->dev, "bus");
+> > +     if (IS_ERR(pwm->bus_clk)) {
+> > +             if (PTR_ERR(pwm->rst) !=3D -EPROBE_DEFER)
+> > +                     dev_err(&pdev->dev, "get bus_clock failed %pe\n",
+> > +                             pwm->bus_clk);
+> > +             return PTR_ERR(pwm->bus_clk);
+> > +     }
+> >
+> >       pwm->rst =3D devm_reset_control_get_optional_shared(&pdev->dev, N=
+ULL);
+> >       if (IS_ERR(pwm->rst)) {
+> > @@ -382,6 +412,17 @@ static int sun4i_pwm_probe(struct platform_device =
+*pdev)
+> >               return ret;
+> >       }
+> >
+> > +     /*
+> > +      * We're keeping the bus clock on for the sake of simplicity.
+> > +      * Actually it only needs to be on for hardware register
+> > +      * accesses.
+> > +      */
+> > +     ret =3D clk_prepare_enable(pwm->bus_clk);
+> > +     if (ret) {
+> > +             dev_err(&pdev->dev, "Cannot prepare and enable bus_clk\n"=
+);
+> > +             goto err_bus;
+> > +     }
+> > +
+>
+> Would it make sense to split this patch into "Prefer "mod" clock to
+> (unnamed) clock" and "Introduce optional bus clock"?
+
+Yes I will do in v5,
+
+Regards,
+Cl=C3=A9ment
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
