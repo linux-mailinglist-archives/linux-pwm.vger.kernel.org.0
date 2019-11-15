@@ -2,86 +2,74 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBD76FE1E7
-	for <lists+linux-pwm@lfdr.de>; Fri, 15 Nov 2019 16:49:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7C83FE6C2
+	for <lists+linux-pwm@lfdr.de>; Fri, 15 Nov 2019 22:03:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfKOPtu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 15 Nov 2019 10:49:50 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37821 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727699AbfKOPtp (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 15 Nov 2019 10:49:45 -0500
-Received: by mail-io1-f66.google.com with SMTP id 1so10935578iou.4
-        for <linux-pwm@vger.kernel.org>; Fri, 15 Nov 2019 07:49:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=X5NAAOrJ3bS32ihsXavVCESX6DNfXdWEE7aVqtLVIHM=;
-        b=T96mBsWswYjsm0w7ecYkWpV509ib/ulk9bHbI0Xwo0rzkePegh7rSfOcmzGbyf8vTc
-         lns/HOXyf4/6jOYDVIgZ/CZyIfN2m2y88qVdmXSABhNsP0MXDIRsHGSOOd7wWkwuGiQx
-         ehcoBpFXp6INIFq3jwmveina1L3fsWjpzHRhMvlhwo8OJ8Dy4xuFXwCrYZiL/Ja/dmiU
-         sEvBblBcC09ww5H/W1Li3rJXBc1TYjMn46kjeboNwYGUiqFeNnjz46iJxarBlBzUTpau
-         7EU4w1MkRxjhgPFrJ2/ipVqnuE4IawmENFYcW1JVUg9OFLrEKZvfb77T8+3XayPV4Zd+
-         KrHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=X5NAAOrJ3bS32ihsXavVCESX6DNfXdWEE7aVqtLVIHM=;
-        b=aXshZmstTWQsnzX4CZU+j9AhnEUp5zGtM/bgYUMa9xACxjD3YL02NWLtq/EBmEf6g+
-         i+tDWHPLZlWeyTZXt8y8TWYhzQk7LEsWPexWGA+nlyArR4lDyRkC24Pim73OzXTeHfcA
-         GStbJfNLYSwXmTbnr1kYUDcfTOsAPl9+Lu+HuMzV/PrgircDGJO6uKxC1gvCy2bhqrao
-         zn8DaATgHp09J/RXq9vQf4fgrHq4ok4Wp9LEpGMKCTs9URSENWtNKnWfRKU7x6lSxPrm
-         3Vx/IPNNnvUrWL5TNEaQq2Sb/dCsgFWfJsA5B+DeKHVU3oXOMA+xorEOrG3zmKQ8PbXP
-         xdEg==
-X-Gm-Message-State: APjAAAWRV1yrI/KvG0k3ETve/wCdYy9/sf/sDUZn/+3Vt95j1g5526qb
-        Ms8Cs6Vno1Lr8hoCiaJKnvZ7zYUQhTBOyKOK9Q==
-X-Google-Smtp-Source: APXvYqxEj1beLI6zhjihT/lmX2Dk324PGcIr8veC5c+0F/PFQKT7AeNYgljOGh72OwNqCMMZvqGkvMbSAqCkDjgGkjg=
-X-Received: by 2002:a5e:8e02:: with SMTP id a2mr1343031ion.269.1573832982053;
- Fri, 15 Nov 2019 07:49:42 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a02:7749:0:0:0:0:0 with HTTP; Fri, 15 Nov 2019 07:49:41
- -0800 (PST)
-Reply-To: moneygram.1820@outlook.fr
-From:   "Ms.Mary Coster" <info.zennitbankplcnigerian@gmail.com>
-Date:   Fri, 15 Nov 2019 16:49:41 +0100
-Message-ID: <CABHzvrkUQbbmg0Gr7foD3OjAJiY7Fd37=SW3mU=fnOPOcOyNdQ@mail.gmail.com>
-Subject: Goodnews, I have deposited your transfer total amount US$4.8million
- Dollars with Money Gram this morning. we agreed you will be receiving it
- $5000.00 daily.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        id S1726550AbfKOVDF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 15 Nov 2019 16:03:05 -0500
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:56931 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726567AbfKOVDE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 15 Nov 2019 16:03:04 -0500
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 15 Nov 2019 13:02:37 -0800
+IronPort-SDR: GZO1xmP+vwE6tRS0wMvCmVAmH8iiCxZNUgMWWzAO5aQAYwTpobVIkyciYCtGGLzbgyZS8DfjGo
+ N6+ceEUObPr34rBEPsWRRrSLc7eveuV2o=
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 15 Nov 2019 13:02:37 -0800
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 4626F47B8; Fri, 15 Nov 2019 13:02:37 -0800 (PST)
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     linux-pwm@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>, kernel-team@android.com,
+        Mark Salyzyn <salyzyn@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        Guru Das Srinagesh <gurus@codeaurora.org>
+Subject: [PATCH v3 0/1] Convert period and duty cycle to u64
+Date:   Fri, 15 Nov 2019 13:02:31 -0800
+Message-Id: <cover.1573851299.git.gurus@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Attn, Dear
-Goodnews, I have deposited your transfer total amount US$4.8million
-Dollars with Money Gram this morning. we agreed you will be receiving
-it $5000.00 daily.
-Contact Mr. John Dave Director, Money Gram to pick up your first Money
-Gram payment $5000.00 today.
-Contact Person; Mr. John Dave Director, Money Gram,International
-Remittance-Benin
-Email; moneygram.1820@outlook.fr
-Telephone; +229 62619517
-Please re-confirm your address to him once again such as listed below.
-1.Your Full Name..............................
-2.Address.........................
-3.Country....................
-4.Sex.........................................
-5.Your telephone numbers..........................
-6. Copy of your ID...........................
-This is to avoid sending your funds to wrong person, He is waiting to
-hear from you urgent today.
-Let me know once you pick up your transfer $5000.00 today.
-Finally, Note I have paid for the service fees, but only money will
-send to him is $90.00 transfer fee before you can pick up the transfer
-today.
-Ask, Mr. John Dave Director, Money Gram to give you direction where to
-send your transfer fee $90.00 only to Him Immediately so that you can
-pick up $5000.00 us dollars today.
-Thanks for undrstanding.
-Mary Coster
-m.coster@aol.com
+Reworked the change pushed upstream earlier [1] so as to not add an extension
+to an obsolete API. With this change, pwm_ops->apply() can be used to set
+pwm_state parameters as usual.
+
+[1] https://lore.kernel.org/lkml/20190916140048.GB7488@ulmo/
+
+Changes from v1:
+  - Fixed compilation errors seen when compiling for different archs.
+
+Changes from v2:
+  - Fixed %u -> %llu in a dev_dbg in pwm-stm32-lp.c, thanks to kbuild test robot
+  - Added a couple of fixes to pwm-imx-tpm.c and pwm-sifive.c
+
+Guru Das Srinagesh (1):
+  pwm: Convert period and duty cycle to u64
+
+ drivers/clk/clk-pwm.c                      |  2 +-
+ drivers/gpu/drm/i915/display/intel_panel.c |  2 +-
+ drivers/hwmon/pwm-fan.c                    |  2 +-
+ drivers/media/rc/ir-rx51.c                 |  3 ++-
+ drivers/pwm/core.c                         |  4 ++--
+ drivers/pwm/pwm-clps711x.c                 |  2 +-
+ drivers/pwm/pwm-imx-tpm.c                  |  2 +-
+ drivers/pwm/pwm-imx27.c                    |  5 ++---
+ drivers/pwm/pwm-sifive.c                   |  2 +-
+ drivers/pwm/pwm-sti.c                      |  4 ++--
+ drivers/pwm/pwm-stm32-lp.c                 |  2 +-
+ drivers/pwm/pwm-sun4i.c                    |  2 +-
+ drivers/pwm/sysfs.c                        | 10 +++++-----
+ drivers/video/backlight/pwm_bl.c           |  3 ++-
+ include/linux/pwm.h                        | 16 ++++++++--------
+ 15 files changed, 31 insertions(+), 30 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
