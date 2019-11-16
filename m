@@ -2,38 +2,38 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D11DFF384
-	for <lists+linux-pwm@lfdr.de>; Sat, 16 Nov 2019 17:26:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43C8BFF1AF
+	for <lists+linux-pwm@lfdr.de>; Sat, 16 Nov 2019 17:13:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbfKPQ0N (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 16 Nov 2019 11:26:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45374 "EHLO mail.kernel.org"
+        id S1729862AbfKPPr4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 16 Nov 2019 10:47:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728075AbfKPPl7 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:41:59 -0500
+        id S1729855AbfKPPr4 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:47:56 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 175912072D;
-        Sat, 16 Nov 2019 15:41:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 469D0208E3;
+        Sat, 16 Nov 2019 15:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918918;
+        s=default; t=1573919275;
         bh=pHdX6CY6Rf7zrpKNhcJf+fkTXPMjxTYy8EVKOPNPvA4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gwd16+2bHd1BWQ+74DSeLSEXKMyUtIsthSsHYcJ5kbe2TOvPx6GJgewcxIb9GahSX
-         8ZDNODitjNnHcn/gh+kspwrDGUW9/I1492yhRlQMVOSFiBLDyRN8fN/iMiWDpzM+O/
-         gkg3NFv4lEScseiE60tWnhpF6YIo9Y8iO4boaUUk=
+        b=fDWoQ1zWgg1YZifMljOlZ6NmZ9XKEnq86y26VjzOeuqH4vys7hLb8TLK2grWdXPGY
+         O+l0dNkkfsREsM8Nv7RxBldnrFjSnL9MAi63iFQHLjvDogoo19qR7V6nFDIZiw6oG2
+         d3E3vv/UwOIGZ7kC24G1OCsKEyexasMPQsUw4IjM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 042/237] pwm: lpss: Only set update bit if we are actually changing the settings
-Date:   Sat, 16 Nov 2019 10:37:57 -0500
-Message-Id: <20191116154113.7417-42-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 024/150] pwm: lpss: Only set update bit if we are actually changing the settings
+Date:   Sat, 16 Nov 2019 10:45:22 -0500
+Message-Id: <20191116154729.9573-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
-References: <20191116154113.7417-1-sashal@kernel.org>
+In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
+References: <20191116154729.9573-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
