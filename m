@@ -2,48 +2,48 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 18A4E100321
+	by mail.lfdr.de (Postfix) with ESMTP id 98227100323
 	for <lists+linux-pwm@lfdr.de>; Mon, 18 Nov 2019 12:00:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfKRLAm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 18 Nov 2019 06:00:42 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40413 "EHLO
+        id S1726686AbfKRLAn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 18 Nov 2019 06:00:43 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36343 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfKRLAm (ORCPT
+        with ESMTP id S1726563AbfKRLAm (ORCPT
         <rfc822;linux-pwm@vger.kernel.org>); Mon, 18 Nov 2019 06:00:42 -0500
-Received: by mail-wr1-f65.google.com with SMTP id q15so6090151wrw.7;
-        Mon, 18 Nov 2019 03:00:40 -0800 (PST)
+Received: by mail-wr1-f65.google.com with SMTP id r10so18902478wrx.3;
+        Mon, 18 Nov 2019 03:00:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CwG2QKBTPng2ELiNtc6lBmywHFbDH68p/PbyzwMke0w=;
-        b=seaSPzcWW7pAe6mvpfNGIERNdtwFtoRJGER3FNZ3pjh5BXyy25wIBOIe1jm0Ppszfb
-         +M7hxsDAsA8Xwp0E8MLUAISuM3CF/CY5Pn4G+aerOUO2QlsVvjf/DuExFwDUSagUZ32Y
-         RAHkot59E2fxg1rzppEHTVw/Q6AI54xRVOVtB1m3fgl1hNYFB3nV1BXhutcmcDkNnWgE
-         4IV2f/zR9onY7jrj0y5x9BzMKSdUaCVVHqYWsQg4xA8ertEw/gTZFYGBbzQ4nWAB3K7y
-         1qVtTTRNXvvxQVI95tyVxxI4Xz3Vg7nbp6T1CqAA6+GiK+AaZLYynnIL7teVHqL9iEAd
-         lILQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=/r/rbSHnQ681j6w5Fd1xT+tCG0CKj+LRyHPCBVvmrlM=;
+        b=axyw3CadnYKZZ/gPWsjDxs4XIRVAbwQA2BIPtCkbInP+P5tLbFpCU451G7RuR37Z9l
+         ngNfWM+B2QlQT6ZFR4BjTiP5kgxgdwN3Fy2FBXubHDp3BVEgFsTV9E2yFVLgS3Dy5tY2
+         mtozqqdqgWFfS7FhuwMK5zdEC7a13CXKFPr7KmRQ861zPsj4CmXlqCyT3+6sEkGiDGuM
+         ZLS9Qcw35kxi4bErUZqf9Rl8lHF9jcdCQcO/mPP/rMfVUq3cQ/OhJ6GrlWCsqC0TQx5e
+         +4THiAdRNt35MiDPE2SrPRjTHjJgbwI5HHkIEb9vrQ94w/xIk7hpEwWe5eObrAXytAD/
+         PNRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CwG2QKBTPng2ELiNtc6lBmywHFbDH68p/PbyzwMke0w=;
-        b=oxZ4IpVYfvqwM2152QH4hdcTh1PdwvELWsC4Q9IQlYm80i3KKfFX+0pVQcDO8AG2E1
-         t5vlsW7LRlloXi0KBuh1EmWgyvDUeUjuwx7a+L7EF/7jiagSQy2ZIiK41Cr/H9FdQKv8
-         G/8BXGklP/83IRZrEjK5+8R5wRYoAYHwpKXrOq6bZOZaDOq+ftEC43Gjlymd1lPKHJXn
-         DtAvL2/WyHRRLKdCvzkoUiK3mHk45Y+KpSvftNKfI5/L6GjIzfZy1OlPhFZDOWizjRy/
-         +t6BGS6vNzoX0sRoK85nov1jFprFx1XPFAD8mndk6k52mIDMJcEHPRNR7b/YA9dCyZ2L
-         N4qw==
-X-Gm-Message-State: APjAAAUWgSVPLFAuyU+obJwEe+vLHPyKCmXcahjt7CitkIJgB/K28uRz
-        E68cpzh4ooG2EnKTAUcLnbM=
-X-Google-Smtp-Source: APXvYqy51ZqGdaG0m12s1h+XihVJJ3jXrIA+ItvBShJOBrCbxAo7ED8x2y4bje26IMScyYqPIzMP/g==
-X-Received: by 2002:adf:b608:: with SMTP id f8mr27742764wre.99.1574074839807;
-        Mon, 18 Nov 2019 03:00:39 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/r/rbSHnQ681j6w5Fd1xT+tCG0CKj+LRyHPCBVvmrlM=;
+        b=RbKH0MHrUsDpkvEz0/yl1AX/8sPXMU2hAYoOK7pBu/Rs9xUr4Yh9XrNZbjxl9HmksN
+         VV99EbN7myQ4ZN8sivMRNrQYdoOckbpGkCw3WPH/wBJ3y11ZLvQbrCp49hkYMquwjudG
+         m09Dzd8EX+LhFpArlstknZBpFREue96TOI5h+2/x9Q6RTSAlUjwk1BeHtpPgDOSZK6+F
+         +RdlaUPY/LHUOCoWbHp9Nh366rgFm0sjy9TgtPojnaFf0+rJGsdu/w6K4oydleLnoK2i
+         wFuYEbE2wvt8PzSyd+7TYVzhcj02mts29MMvtxiZFsnV2BpATQJ6dkDUuV1L3Pyc9Vc6
+         W/JA==
+X-Gm-Message-State: APjAAAXvGG4HIBrqGnYoQv7lsA8wJUmh/LmLtZK+ndPSb8ZHviBd3m7k
+        Z3mvf9l/2Eu/uKP0b1qHTjM=
+X-Google-Smtp-Source: APXvYqxEFAX5cEn1tc0TWYXeLTvWC45ER2bxKy0vHBbmoO46RYGcBJIFgShG/Z/M5rcmO7fKz2Repg==
+X-Received: by 2002:adf:f005:: with SMTP id j5mr28478666wro.295.1574074840489;
+        Mon, 18 Nov 2019 03:00:40 -0800 (PST)
 Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
         by smtp.gmail.com with ESMTPSA id f67sm19873313wme.16.2019.11.18.03.00.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 03:00:39 -0800 (PST)
+        Mon, 18 Nov 2019 03:00:40 -0800 (PST)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -55,11 +55,15 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v6 0/8] Add support for H6 PWM
-Date:   Mon, 18 Nov 2019 12:00:26 +0100
-Message-Id: <20191118110034.19444-1-peron.clem@gmail.com>
+Subject: [PATCH v6 1/8] dt-bindings: pwm: allwinner: Add H6 PWM description
+Date:   Mon, 18 Nov 2019 12:00:27 +0100
+Message-Id: <20191118110034.19444-2-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191118110034.19444-1-peron.clem@gmail.com>
+References: <20191118110034.19444-1-peron.clem@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -68,88 +72,91 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-This is a rework of Jernej's previous work[1] taking account all the
-previous remarks.
+H6 PWM block is basically the same as A20 PWM, except that it also has
+bus clock and reset line which needs to be handled accordingly.
 
-Bindings is still strict but probe in the driver are now optionnals.
+Expand Allwinner PWM binding with H6 PWM specifics.
 
-If someone could confirm that the PWM is not broken, as my board
-doesn't output it.
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-I didn't add the acked-tags as there are big changes.
-
-Thanks,
-Clément
-
-Jernej's cover:
-Allwinner H6 SoC has PWM core which is basically the same as that found
-in A20, it's just depends on additional bus clock and reset line.
-
-This series adds support for it and extends PWM driver functionality in
-a way that it's now possible to bypass whole core and output PWM source
-clock directly as a PWM signal. This functionality is needed by AC200
-chip, which is bundled in same physical package as H6 SoC, to serve as a
-clock source of 24 MHz. AC200 clock input pin is bonded internally to
-the second PWM channel.
-
-I would be grateful if anyone can test this patch series for any kind of
-regression on other SoCs.
-
-[1]: https://patchwork.kernel.org/cover/11061737/
-
-Changes in v6:
- - Update git commit log
- - Distinguish error message 
-
-Changes in v5:
- - Move bypass calculation to pwm_calculate
- - Split mod_clock fallback from bus_clk probe    
- - Update comment
- - Move my SoB after acked-by/reviewed-by
-
-Changes in v4:
- - item description in correct order and add a blank line
- - use %pe for printing PTR_ERR
- - don't print error when it's an EPROBE_DEFER
- - change output clock bypass formula to match PWM policy
-
-Changes in v3:
- - Documentation update to allow one clock without name
- - Change reset optional to shared
- - If reset probe failed return an error
- - Remove old clock probe
- - Update bypass enabled formula
-
-Changes in v2:
- - Remove allOf in Documentation
- - Add H6 example in Documentation
- - Change clock name from "pwm" to "mod"
- - Change reset quirk to optional probe
- - Change bus_clock quirk to optional probe
- - Add limitation comment about mod_clk_output
- - Add quirk for mod_clk_output
- - Change bypass formula
-
-Clément Péron (2):
-  pwm: sun4i: Prefer "mod" clock to unnamed
-  [DO NOT MERGE] arm64: allwinner: h6: enable Beelink GS1 PWM
-
-Jernej Skrabec (6):
-  dt-bindings: pwm: allwinner: Add H6 PWM description
-  pwm: sun4i: Add an optional probe for reset line
-  pwm: sun4i: Add an optional probe for bus clock
-  pwm: sun4i: Add support to output source clock directly
-  pwm: sun4i: Add support for H6 PWM
-  arm64: dts: allwinner: h6: Add PWM node
-
- .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml |  48 +++++
- .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |   4 +
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  10 +
- drivers/pwm/pwm-sun4i.c                       | 185 +++++++++++++++---
- 4 files changed, 215 insertions(+), 32 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+index 0ac52f83a58c..1bae446febbb 100644
+--- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+@@ -30,13 +30,51 @@ properties:
+       - items:
+           - const: allwinner,sun50i-h5-pwm
+           - const: allwinner,sun5i-a13-pwm
++      - const: allwinner,sun50i-h6-pwm
+ 
+   reg:
+     maxItems: 1
+ 
+   clocks:
++    minItems: 1
++    maxItems: 2
++    items:
++      - description: Module Clock
++      - description: Bus Clock
++
++  # Even though it only applies to subschemas under the conditionals,
++  # not listing them here will trigger a warning because of the
++  # additionalsProperties set to false.
++  clock-names: true
++
++  resets:
+     maxItems: 1
+ 
++  if:
++    properties:
++      compatible:
++        contains:
++          const: allwinner,sun50i-h6-pwm
++
++  then:
++    properties:
++      clocks:
++        maxItems: 2
++
++      clock-names:
++        items:
++          - const: mod
++          - const: bus
++
++    required:
++      - clock-names
++      - resets
++
++  else:
++    properties:
++      clocks:
++        maxItems: 1
++
+ required:
+   - "#pwm-cells"
+   - compatible
+@@ -54,4 +92,14 @@ examples:
+         #pwm-cells = <3>;
+     };
+ 
++  - |
++    pwm@300a000 {
++      compatible = "allwinner,sun50i-h6-pwm";
++      reg = <0x0300a000 0x400>;
++      clocks = <&osc24M>, <&ccu CLK_BUS_PWM>;
++      clock-names = "mod", "bus";
++      resets = <&ccu RST_BUS_PWM>;
++      #pwm-cells = <3>;
++    };
++
+ ...
 -- 
 2.20.1
 
