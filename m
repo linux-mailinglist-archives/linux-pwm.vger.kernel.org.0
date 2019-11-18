@@ -2,46 +2,46 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DAC6110033E
-	for <lists+linux-pwm@lfdr.de>; Mon, 18 Nov 2019 12:01:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5980D100330
+	for <lists+linux-pwm@lfdr.de>; Mon, 18 Nov 2019 12:01:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfKRLBF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 18 Nov 2019 06:01:05 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40091 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbfKRLAr (ORCPT
+        id S1726994AbfKRLAr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 18 Nov 2019 06:00:47 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33921 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726951AbfKRLAr (ORCPT
         <rfc822;linux-pwm@vger.kernel.org>); Mon, 18 Nov 2019 06:00:47 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f3so18227816wmc.5;
+Received: by mail-wm1-f68.google.com with SMTP id j18so15645286wmk.1;
         Mon, 18 Nov 2019 03:00:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Q0mPzKXAC37oXp0wVkV8/ys9/u7aTcSnLuWMUuY5ccw=;
-        b=Wr086HtETOZcOmc4iZyEckCSVl84N673n+TidoSKWx/tsWUykTFSEw0lVTE7A7/cHq
-         kA7CelwmTaEk9vXiH9I1UTDGMbeEpKPDtbkQoE6O6NZRUvxhWYWhqBOclnS3PO9m07eB
-         zx8MqwgyY4bVZQu56j63cjjRkWfFs5kT8tb7UDkSRRZvSVmKcF5l8cCzOEs6uSXoVg11
-         iqD6LL1eN8v2B8nwluCKWahNwl4Ub1aQ243SZJsjjw7ABqgyOELMD5fpBUcHNYD0UR8r
-         cXwfS9aqlqMINWywAgBUHeQAvgYHEgqt8YeMXd6eYuRiZFB7IjVtuzawScSxmdHCAtKw
-         xQgw==
+        bh=iGqUalssFt90BW+qC26cPJ2ocimtOg3RIH0RE3W1sS4=;
+        b=oHTBVWCzKbEEX8ADBqtS0nC4h3CNYn1XfnE4upjcrU9jd9WOlvNbtYTmD+5cn8y61a
+         AtXhSXsQe2jqj9xCOUPD47GxZa2WNeUOQP0F/BexCFOxpgS0Cibok9YMUFQCHHSMbJru
+         x54QTghn8OTid42B41o6KQZkwK9dqeYDz3fYthk6Bt5dqfpcZ5sW/n3J51nJd1mZbLha
+         yshq5NVf/JpBrh8AaZV1sImpXOO7tj68GC2YnSc88Hi4ceBwsC0Na5L8yBAWQvEnswbn
+         04sLIfQBYErlUi+bgzg+zfbsE0TSsFdFxMynRVwZlGfBPu7MBD8X5XDO1Grehx2HWHbG
+         jSlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Q0mPzKXAC37oXp0wVkV8/ys9/u7aTcSnLuWMUuY5ccw=;
-        b=CtPdsPTAeTdTKOKEMFr/UtRlsPKWgVT1ohIApWI4nZFCQrME89b58YEOTb49KqukQF
-         jNu5Sa0cPP4Z/Qh70rwNx0rAFQ7bnOxRji9pLRk+9N52/88HhRT+ppzwnXaD2/QtHdY4
-         jwr1DkQdR/lnLnO5TWmuhIq2VJHlJ3dzBfddWA0AI2GzTeiQJCvZk//erBJU/SxMvo/k
-         ZKrikg5bxbIZgtNxhNj4q4Ula5SWI9cFQNhIq5qMd0FN/NXQr4787OHSwLrFoH92ZSNu
-         TNOjL5jpfqACxC/IvhDtGHUtb0QQwTIGBhUhMh5bE6IOxd/xEz5AwS7I2dlDkyhrojIL
-         UmrA==
-X-Gm-Message-State: APjAAAUPnqJe7bOL79Krs+wIjfBQDcKBS+vf+hoP6yXrJd2LBk0T9+Tg
-        bJUVtjGQV0dQwqveleigS8s=
-X-Google-Smtp-Source: APXvYqwJPN1Zn8wdFBpSu4h4FnkR4VySti7UEN2KiwGGp1NrFrPsGy/qRfs1nyJMt6qg4QbJ2U7YXg==
-X-Received: by 2002:a1c:1fcc:: with SMTP id f195mr28211273wmf.137.1574074844581;
-        Mon, 18 Nov 2019 03:00:44 -0800 (PST)
+        bh=iGqUalssFt90BW+qC26cPJ2ocimtOg3RIH0RE3W1sS4=;
+        b=Sm88K1hQKn8ONaLAzHqPG+01ZvS2rQKSrZMPfcZfkIEIj2h6qsXj2nHnbFQWIKGLFS
+         +POMW7e2WNanaR/5si8ut5TB1BKZRWr7Z/M8xlzoIrhdXTIY/qxcrRkJhErD6GIhYgH0
+         6m3rysfv/m7UedBaEky5IND7Vai1rBexDJRxqTA0FXiYkLdNu+202w0xRE5mL3DtHKi+
+         cY/F5GlRglYXVFQFQVTZFD87CyAgF3XUMyrr3SxQn9UtSUxPR13kydaXK0cN6SK97FZ2
+         5qiOpmb4nVlUvN7fl0js/7X9tM+9Jgw4VltVNYWxE1YxpSRAlbcBG7qEQYJgReDmaiB0
+         X/5A==
+X-Gm-Message-State: APjAAAVUdu77Oncear8Gq74+nVvt/5NiQKMCzodU3Bad82mrlBNTLHx/
+        cNpGTRdlxb62/CNaLMFmdC8=
+X-Google-Smtp-Source: APXvYqylsRp4Nj3fkxX+SPKT7MsCCNLSmcFaIEujk7WAbZj4htC5DEVRLFeS7TNDCdftzyqTPoROuw==
+X-Received: by 2002:a1c:7c06:: with SMTP id x6mr30073630wmc.34.1574074845202;
+        Mon, 18 Nov 2019 03:00:45 -0800 (PST)
 Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
-        by smtp.gmail.com with ESMTPSA id f67sm19873313wme.16.2019.11.18.03.00.43
+        by smtp.gmail.com with ESMTPSA id f67sm19873313wme.16.2019.11.18.03.00.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 18 Nov 2019 03:00:44 -0800 (PST)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
@@ -55,11 +55,10 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v6 7/8] arm64: dts: allwinner: h6: Add PWM node
-Date:   Mon, 18 Nov 2019 12:00:33 +0100
-Message-Id: <20191118110034.19444-8-peron.clem@gmail.com>
+Subject: [PATCH v6 8/8] [DO NOT MERGE] arm64: allwinner: h6: enable Beelink GS1 PWM
+Date:   Mon, 18 Nov 2019 12:00:34 +0100
+Message-Id: <20191118110034.19444-9-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191118110034.19444-1-peron.clem@gmail.com>
 References: <20191118110034.19444-1-peron.clem@gmail.com>
@@ -71,43 +70,26 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
-
-Allwinner H6 PWM is similar to that in A20 except that it has additional
-bus clock and reset line.
-
-Note that first PWM channel is connected to output pin and second
-channel is used internally, as a clock source to AC200 co-packaged chip.
-This means that any combination of these two channels can be used and
-thus it doesn't make sense to add pinctrl nodes at this point.
-
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 29824081b43b..6d4bde488f15 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -245,6 +245,16 @@
- 			status = "disabled";
- 		};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+index f335f7482a73..cf684bc7374d 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+@@ -136,6 +136,10 @@
+ 	vcc-pg-supply = <&reg_aldo1>;
+ };
  
-+		pwm: pwm@300a000 {
-+			compatible = "allwinner,sun50i-h6-pwm";
-+			reg = <0x0300a000 0x400>;
-+			clocks = <&osc24M>, <&ccu CLK_BUS_PWM>;
-+			clock-names = "mod", "bus";
-+			resets = <&ccu RST_BUS_PWM>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
++&pwm {
++	status = "okay";
++};
 +
- 		pio: pinctrl@300b000 {
- 			compatible = "allwinner,sun50i-h6-pinctrl";
- 			reg = <0x0300b000 0x400>;
+ &r_i2c {
+ 	status = "okay";
+ 
 -- 
 2.20.1
 
