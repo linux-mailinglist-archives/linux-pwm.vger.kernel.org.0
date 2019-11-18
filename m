@@ -2,94 +2,148 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5980D100330
-	for <lists+linux-pwm@lfdr.de>; Mon, 18 Nov 2019 12:01:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4AEE100383
+	for <lists+linux-pwm@lfdr.de>; Mon, 18 Nov 2019 12:06:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfKRLAr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 18 Nov 2019 06:00:47 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33921 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbfKRLAr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 18 Nov 2019 06:00:47 -0500
-Received: by mail-wm1-f68.google.com with SMTP id j18so15645286wmk.1;
-        Mon, 18 Nov 2019 03:00:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=iGqUalssFt90BW+qC26cPJ2ocimtOg3RIH0RE3W1sS4=;
-        b=oHTBVWCzKbEEX8ADBqtS0nC4h3CNYn1XfnE4upjcrU9jd9WOlvNbtYTmD+5cn8y61a
-         AtXhSXsQe2jqj9xCOUPD47GxZa2WNeUOQP0F/BexCFOxpgS0Cibok9YMUFQCHHSMbJru
-         x54QTghn8OTid42B41o6KQZkwK9dqeYDz3fYthk6Bt5dqfpcZ5sW/n3J51nJd1mZbLha
-         yshq5NVf/JpBrh8AaZV1sImpXOO7tj68GC2YnSc88Hi4ceBwsC0Na5L8yBAWQvEnswbn
-         04sLIfQBYErlUi+bgzg+zfbsE0TSsFdFxMynRVwZlGfBPu7MBD8X5XDO1Grehx2HWHbG
-         jSlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iGqUalssFt90BW+qC26cPJ2ocimtOg3RIH0RE3W1sS4=;
-        b=Sm88K1hQKn8ONaLAzHqPG+01ZvS2rQKSrZMPfcZfkIEIj2h6qsXj2nHnbFQWIKGLFS
-         +POMW7e2WNanaR/5si8ut5TB1BKZRWr7Z/M8xlzoIrhdXTIY/qxcrRkJhErD6GIhYgH0
-         6m3rysfv/m7UedBaEky5IND7Vai1rBexDJRxqTA0FXiYkLdNu+202w0xRE5mL3DtHKi+
-         cY/F5GlRglYXVFQFQVTZFD87CyAgF3XUMyrr3SxQn9UtSUxPR13kydaXK0cN6SK97FZ2
-         5qiOpmb4nVlUvN7fl0js/7X9tM+9Jgw4VltVNYWxE1YxpSRAlbcBG7qEQYJgReDmaiB0
-         X/5A==
-X-Gm-Message-State: APjAAAVUdu77Oncear8Gq74+nVvt/5NiQKMCzodU3Bad82mrlBNTLHx/
-        cNpGTRdlxb62/CNaLMFmdC8=
-X-Google-Smtp-Source: APXvYqylsRp4Nj3fkxX+SPKT7MsCCNLSmcFaIEujk7WAbZj4htC5DEVRLFeS7TNDCdftzyqTPoROuw==
-X-Received: by 2002:a1c:7c06:: with SMTP id x6mr30073630wmc.34.1574074845202;
-        Mon, 18 Nov 2019 03:00:45 -0800 (PST)
-Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
-        by smtp.gmail.com with ESMTPSA id f67sm19873313wme.16.2019.11.18.03.00.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 03:00:44 -0800 (PST)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        id S1726464AbfKRLGp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 18 Nov 2019 06:06:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49026 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726461AbfKRLGo (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 18 Nov 2019 06:06:44 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E708C2071B;
+        Mon, 18 Nov 2019 11:06:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574075203;
+        bh=YoYaR1M+lDGoxsiTxlkwf8DP5q8rsGTY5JiNj2sqbTE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WvOTFqZH2Tm1IT+xFFdw4YD99+QWWIdABD05lu0lHbZBaBKCA/Ywwd570/CiD6Gst
+         t/0k/2k9OU1IVNON0R9u22AYCXnxTTTY4vvIVhOBU/Rah0/yagTbbfE2PvBE3aUb3V
+         QYibqUrEB0TinljLpUp9D0s8kmzVi/hnd/c/Whw4=
+Date:   Mon, 18 Nov 2019 12:06:40 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v6 8/8] [DO NOT MERGE] arm64: allwinner: h6: enable Beelink GS1 PWM
-Date:   Mon, 18 Nov 2019 12:00:34 +0100
-Message-Id: <20191118110034.19444-9-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191118110034.19444-1-peron.clem@gmail.com>
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 1/8] dt-bindings: pwm: allwinner: Add H6 PWM
+ description
+Message-ID: <20191118110640.GE4345@gilmour.lan>
 References: <20191118110034.19444-1-peron.clem@gmail.com>
+ <20191118110034.19444-2-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="YE4mVuFar47/lB0E"
+Content-Disposition: inline
+In-Reply-To: <20191118110034.19444-2-peron.clem@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-index f335f7482a73..cf684bc7374d 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-@@ -136,6 +136,10 @@
- 	vcc-pg-supply = <&reg_aldo1>;
- };
- 
-+&pwm {
-+	status = "okay";
-+};
-+
- &r_i2c {
- 	status = "okay";
- 
--- 
-2.20.1
+--YE4mVuFar47/lB0E
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
+
+On Mon, Nov 18, 2019 at 12:00:27PM +0100, Cl=E9ment P=E9ron wrote:
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
+>
+> H6 PWM block is basically the same as A20 PWM, except that it also has
+> bus clock and reset line which needs to be handled accordingly.
+>
+> Expand Allwinner PWM binding with H6 PWM specifics.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> ---
+>  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 48 +++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pw=
+m.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+> index 0ac52f83a58c..1bae446febbb 100644
+> --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+> @@ -30,13 +30,51 @@ properties:
+>        - items:
+>            - const: allwinner,sun50i-h5-pwm
+>            - const: allwinner,sun5i-a13-pwm
+> +      - const: allwinner,sun50i-h6-pwm
+>
+>    reg:
+>      maxItems: 1
+>
+>    clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description: Module Clock
+> +      - description: Bus Clock
+> +
+> +  # Even though it only applies to subschemas under the conditionals,
+> +  # not listing them here will trigger a warning because of the
+> +  # additionalsProperties set to false.
+> +  clock-names: true
+> +
+> +  resets:
+>      maxItems: 1
+>
+> +  if:
+> +    properties:
+> +      compatible:
+> +        contains:
+> +          const: allwinner,sun50i-h6-pwm
+> +
+> +  then:
+> +    properties:
+> +      clocks:
+> +        maxItems: 2
+> +
+> +      clock-names:
+> +        items:
+> +          - const: mod
+> +          - const: bus
+> +
+> +    required:
+> +      - clock-names
+> +      - resets
+> +
+> +  else:
+> +    properties:
+> +      clocks:
+> +        maxItems: 1
+> +
+
+Sorry for not noticing this earlier, but this should be at the topmost
+level
+
+Maxime
+
+--YE4mVuFar47/lB0E
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXdJ7QAAKCRDj7w1vZxhR
+xUZpAQDf57xL+KiMJD5aQ0XQT0XHFOYAwW8cCUu/FgXYpgJmjwEAqJZh4AHN3JSQ
+09PXO0+LTVk76RQKjiW46/vLtI+iIgo=
+=u4lN
+-----END PGP SIGNATURE-----
+
+--YE4mVuFar47/lB0E--
