@@ -2,232 +2,157 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 10ABA1006B3
-	for <lists+linux-pwm@lfdr.de>; Mon, 18 Nov 2019 14:43:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E35E102B12
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 Nov 2019 18:53:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfKRNnF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 18 Nov 2019 08:43:05 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:50348 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbfKRNnF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 18 Nov 2019 08:43:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1574084582; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Nv4c7b/VT1Qmp5FKMYjEz/m1ECdlwRjOHA4Ocl+2ptw=;
-        b=WMf0u/GQ3KniECf/8SwYXobL09aAfJoaNGi4OYbWXe/vrPT42kubSsezGh+M0hZRXUka+5
-        O73hjeLP6vcZTlRrvkoAUjsCH6Gjd4tq5IGaxDdfvKbjvfVvydiE6p9/UArgakKOb9Vgj4
-        hmW7ZEP4zCvjfksQ1JSzq4QudGieyrY=
-Date:   Mon, 18 Nov 2019 14:42:54 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 1/3] pwm: jz4740: Use clocks from TCU driver
-To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>, kernel@pengutronix.de
-Message-Id: <1574084574.3.1@crapouillou.net>
-In-Reply-To: <20191118111933.vipfycc2j7j6esb7@pengutronix.de>
-References: <20191116173613.72647-1-paul@crapouillou.net>
-        <20191116173613.72647-2-paul@crapouillou.net>
-        <20191117202028.4chgjv2kulyyq2eu@pengutronix.de>
-        <1574031523.3.0@crapouillou.net>
-        <20191118071538.46egokrswvjxdvfp@pengutronix.de>
-        <1574074556.3.0@crapouillou.net>
-        <20191118111933.vipfycc2j7j6esb7@pengutronix.de>
+        id S1727575AbfKSRxa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 19 Nov 2019 12:53:30 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33733 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfKSRx2 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 19 Nov 2019 12:53:28 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a17so3079718wmb.0;
+        Tue, 19 Nov 2019 09:53:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rUwtSzPXTRcEUR7weY+64klnEjLlQGMUJOj+eZFoLpY=;
+        b=WV2YmFq/1NqnLUrXwSeECTAhQndtc/FQ1Y0TJjLJTP7V6IATxEkFqu00exfnnXxb2/
+         FG2PXwM2VCS7uY4/x8vz+mLEWUcGXFYGyL2b8nQNpgGz6ASMB3i8iQRHbDlBYvsn9iPh
+         QCq3PzuReqaaJ/XbzM3GSSTIfw5X1UdXJF/hVjlGXMLPC0SYpSJWKLT6dG3bJ7GJzv47
+         BTVDycl+qCcQ+n4yXOstNBOnDFAcC7X+Ny+nMnltQ2eztdjKkUKC0zgUprp6fOX2+59n
+         i79L9CLOX0Pe+guZrPO1JpdFTLyMAN7v6QYssv0A/9+QRKz28Et7lJHQy2SaFi3lLLHn
+         aszg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rUwtSzPXTRcEUR7weY+64klnEjLlQGMUJOj+eZFoLpY=;
+        b=Y6sTVf/8AvbhxVFNzltCmzH3yuSZt1loKcRcLRgHtcOIbSQjMjndI+Uqcd1O0mwvTl
+         55X47iWzBdZITRN9ElMLoqX81Y8luP4qZjPFDPLV/TF77T/CnS6dNbzoTlaghjKSMSuf
+         AxeaXHNkD6prWI4Mtj79FwBI1BSW5hm2eyv1BpZIgW34Z96Bo8z6ROTUYk+zDnLGFV32
+         /LciyX3G9NWzF0628wM20+w2xxhPIc56S8KlIGSUB4qNGVCNkDspepH+pQsjVdqCJ/Ax
+         ZWw7TtuwpXKAWlld1Ug2deEGzSD/cF/8V8KpVzKQoxfYxssRE3WCDcnO7YZM1BJxh1pi
+         g7ZA==
+X-Gm-Message-State: APjAAAXIGWbbGMkRzJASfkcrunl+1+2ijAFQRoOySfFSx9F2pxqHrsyz
+        tyBzDB5cPX5rNM767OoQGCM=
+X-Google-Smtp-Source: APXvYqwRygRbzbAUfcVeS+0wJOvcRhwtVsXt8DZUDn5OP2ZJRPfaOEWt3fbHlAVyMzU6EfJZg5G/Iw==
+X-Received: by 2002:a7b:c10e:: with SMTP id w14mr7624417wmi.40.1574186004594;
+        Tue, 19 Nov 2019 09:53:24 -0800 (PST)
+Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
+        by smtp.gmail.com with ESMTPSA id l13sm3772618wmh.12.2019.11.19.09.53.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 09:53:23 -0800 (PST)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v7 0/8] Add support for H6 PWM
+Date:   Tue, 19 Nov 2019 18:53:11 +0100
+Message-Id: <20191119175319.16561-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
+Hi,
 
+This is a rework of Jernej's previous work[1] taking account all the
+previous remarks.
 
-Le lun., nov. 18, 2019 at 12:19, Uwe Kleine-K=F6nig=20
-<u.kleine-koenig@pengutronix.de> a =E9crit :
-> Hello Paul,
->=20
-> On Mon, Nov 18, 2019 at 11:55:56AM +0100, Paul Cercueil wrote:
->>  Le lun., nov. 18, 2019 at 08:15, Uwe Kleine-K=F6nig
->>  <u.kleine-koenig@pengutronix.de> a =E9crit :
->>  > On Sun, Nov 17, 2019 at 11:58:43PM +0100, Paul Cercueil wrote:
->>  > >  Le dim., nov. 17, 2019 at 21:20, Uwe Kleine-K=F6nig
->>  > >  <u.kleine-koenig@pengutronix.de> a =E9crit :
->>  > >  > On Sat, Nov 16, 2019 at 06:36:11PM +0100, Paul Cercueil=20
->> wrote:
->>  > >  > >   struct jz4740_pwm_chip {
->>  > >  > >   	struct pwm_chip chip;
->>  > >  > >  -	struct clk *clk;
->>  > >  >
->>  > >  > What is the motivation to go away from this approach to=20
->> store the
->>  > > clock?
->>  > >
->>  > >  It's actually not the same clock. Instead of obtaining "ext"=20
->> clock
->>  > > from the
->>  > >  probe, we obtain "timerX" clocks (X being the PWM channel)=20
->> from the
->>  > > request
->>  > >  callback.
->>  >
->>  > Before you used driver data and container_of to get it, now you=20
->> used
->>  > pwm_set_chip_data. I wondered why you changed the approach to=20
->> store
->>  > data. That the actual data is different now is another thing (and
->>  > obviously ok).
->>=20
->>  Thierry suggested it: https://lkml.org/lkml/2019/3/4/486
->=20
-> If you motivate that in the commit log (preferably with a better
-> rationale than "Thierry suggested it") that's fine for. (Do I claim=20
-> now
-> without having read the rationale :-)
+Bindings is still strict but probe in the driver are now optionnals.
 
-I don't really have a better rationale. The alternative was to have a=20
-"struct clk[NB_PWMS];" in the struct jz4740_pwm_chip, so this is=20
-arguably better. I'm not sure it's worth mentioning in the commit=20
-message, is it?
+If someone could confirm that the PWM is not broken, as my board
+doesn't output it.
 
+I didn't add the acked-tags as there are big changes.
 
->>  > >  > >   static void jz4740_pwm_free(struct pwm_chip *chip,=20
->> struct pwm_device *pwm)
->>  > >  > >   {
->>  > >  > >  +	struct clk *clk =3D pwm_get_chip_data(pwm);
->>  > >  > >  +
->>  > >  > >   	jz4740_timer_set_ctrl(pwm->hwpwm, 0);
->>  > >  >
->>  > >  > What is the purpose of this call? I would have expected that=20
->> all these
->>  > >  > would go away when converting to the clk stuff?!
->>  > >
->>  > >  Some go away in patch [1/3] as they are clock-related, this=20
->> one will go away
->>  > >  in patch [2/3] when the driver is converted to use regmap.
->>  >
->>  > I'd like to understand what it does. Judging from the name I=20
->> expect this
->>  > is somehow related to the clock stuff and so I wonder if the=20
->> conversion
->>  > to the clk API is as complete as it should be.
->>=20
->>  It clears the PWM channel's CTRL register. That's the register used=20
->> for
->>  instance to enable the PWM function of a TCU channel.
->=20
-> OK, so this is a register in a different register range than the PWM
-> related registers to set duty and period, right? Looking at the code,
-> this register has a bit to enable PWM mode and other than that bit
-> fields to tune the clock feeding the PWM counters, right?
+Thanks,
+Clément
 
-They are actually all in the same register range. Each channel has 4=20
-32-bit registers, the first one is the CTRL (aka. TCSR) register which=20
-is written to here. The following two configure the duty/period values,=20
-the last one is the counter. The 'timer enable' bit is however in the=20
-global TCU registers area.
+Jernej's cover:
+Allwinner H6 SoC has PWM core which is basically the same as that found
+in A20, it's just depends on additional bus clock and reset line.
 
-The clock bits of the TCSRs registers (including the TCSR registers of=20
-the watchdog and 64-bit OS timer) are controlled by the clocks driver.=20
-All register accesses are properly handled thanks to regmap, that we=20
-add in patch [2/3].
+This series adds support for it and extends PWM driver functionality in
+a way that it's now possible to bypass whole core and output PWM source
+clock directly as a PWM signal. This functionality is needed by AC200
+chip, which is bundled in same physical package as H6 SoC, to serve as a
+clock source of 24 MHz. AC200 clock input pin is bonded internally to
+the second PWM channel.
 
+I would be grateful if anyone can test this patch series for any kind of
+regression on other SoCs.
 
-> This probably explains my resistance because such a setup if really=20
-> hard
-> to map to nice code. At least the "PWM enable" bit doesn't fit the clk
-> abstraction, no good idea here. Maybe it's easier and more straight
-> forward to not wrap that register in a clock driver and only use a clk
-> for the parent? What is the motivation to convert this piece of=20
-> hardware
-> to a clk driver? Or abstract it as a proper clk and provide a function
-> to enable PWM mode for channel X?
+[1]: https://patchwork.kernel.org/cover/11061737/
 
-The motivation behind converting it to a clocks driver, is that it's=20
-not only used for PWM, but for system timers, the watchdog, and the=20
-64-bit OS timer.
+Changes in v7:
+ - Fix indent in Yaml bindings
 
-There is some overview of the TCU hardware here:=20
-linux/Documentation/mips/ingenic-tcu.rst (and yes, that hardware is a=20
-mess).
+Changes in v6:
+ - Update git commit log
+ - Distinguish error message 
 
-All the bits have been merged or accepted upstream minus the OST driver=20
-which is still under review, and this patchset.
+Changes in v5:
+ - Move bypass calculation to pwm_calculate
+ - Split mod_clock fallback from bus_clk probe    
+ - Update comment
+ - Move my SoB after acked-by/reviewed-by
 
+Changes in v4:
+ - item description in correct order and add a blank line
+ - use %pe for printing PTR_ERR
+ - don't print error when it's an EPROBE_DEFER
+ - change output clock bypass formula to match PWM policy
 
->>  > >  > >  -	jz4740_timer_stop(pwm->hwpwm);
->>  > >  > >  +	clk_disable_unprepare(clk);
->>  > >  > >  +	clk_put(clk);
->>  > >  > >   }
->>  > >  > >
->>  > >  > >   static int jz4740_pwm_enable(struct pwm_chip *chip,=20
->> struct
->>  > > pwm_device *pwm)
->>  > >  > >  @@ -91,17 +110,21 @@ static int jz4740_pwm_apply(struct
->>  > > pwm_chip *chip, struct pwm_device *pwm,
->>  > >  > >   			    const struct pwm_state *state)
->>  > >  > >   {
->>  > >  > >   	struct jz4740_pwm_chip *jz4740 =3D to_jz4740(pwm->chip);
->>  > >  > >  +	struct clk *clk =3D pwm_get_chip_data(pwm),
->>  > >  > >  +		   *parent_clk =3D clk_get_parent(clk);
->>  > >  > >  +	unsigned long rate, period, duty;
->>  > >  > >   	unsigned long long tmp;
->>  > >  > >  -	unsigned long period, duty;
->>  > >  > >   	unsigned int prescaler =3D 0;
->>  > >  > >   	uint16_t ctrl;
->>  > >  > >
->>  > >  > >  -	tmp =3D (unsigned long long)clk_get_rate(jz4740->clk) *
->>  > > state->period;
->>  > >  > >  +	rate =3D clk_get_rate(parent_clk);
->>  > >  >
->>  > >  > Why is it the parent's rate that is relevant here?
->>  > >
->>  > >  We calculate the divider to be used for the "timerX" clock, so=20
->> we
->>  > > need to
->>  > >  know the parent clock.
->>  >
->>  > Then the approach here is wrong. You should not assume anything=20
->> about
->>  > the internal details of the clock, that's the task of the clock=20
->> driver.
->>  > As a consumer of the clock just request a rate (or use=20
->> clk_round_rate to
->>  > find a good setting first) and use that.
->>=20
->>  Totally agreed. I wanted to do that, but you were fighting tooth=20
->> and nails
->>  against my patch "Improve algorithm of clock calculation", remember?
->=20
-> No, I don't, but I looked that up :-) And I fighted because I thought
-> the clk API isn't used properly (and I think your problem is that the
-> clk API as is today doesn't give you what you want, so there is more
-> work to do on the clk side of the problem).
+Changes in v3:
+ - Documentation update to allow one clock without name
+ - Change reset optional to shared
+ - If reset probe failed return an error
+ - Remove old clock probe
+ - Update bypass enabled formula
 
-That's a question of point of view, really. I need to specify the=20
-maximum clock rate that still gives me a valid value, the clk API gives=20
-me clk_set_max_rate(). Doesn't look like I'm doing something out of=20
-bounds.
+Changes in v2:
+ - Remove allOf in Documentation
+ - Add H6 example in Documentation
+ - Change clock name from "pwm" to "mod"
+ - Change reset quirk to optional probe
+ - Change bus_clock quirk to optional probe
+ - Add limitation comment about mod_clk_output
+ - Add quirk for mod_clk_output
+ - Change bypass formula
 
-> The conceptual problem I see is that currently the code uses some
-> internal knowledge about how this timer clock works but as soon as you
-> use the clk abstraction it's wrong to use such internal knowledge.
+Clément Péron (2):
+  pwm: sun4i: Prefer "mod" clock to unnamed
+  [DO NOT MERGE] arm64: allwinner: h6: enable Beelink GS1 PWM
 
-Well, this patch is still a step in the right direction. I too would=20
-like to see a better solution, but I don't want to hold it until we fix=20
-the problem mentioned above. Right now jz4740-pwm is broken upstream=20
-(incompatible with the documented DT bindings) and that's something I=20
-want fixed ASAP, hence this reduced patchset.
+Jernej Skrabec (6):
+  dt-bindings: pwm: allwinner: Add H6 PWM description
+  pwm: sun4i: Add an optional probe for reset line
+  pwm: sun4i: Add an optional probe for bus clock
+  pwm: sun4i: Add support to output source clock directly
+  pwm: sun4i: Add support for H6 PWM
+  arm64: dts: allwinner: h6: Add PWM node
 
-Best regards,
--Paul
+ .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml |  48 +++++
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |   4 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  10 +
+ drivers/pwm/pwm-sun4i.c                       | 185 +++++++++++++++---
+ 4 files changed, 215 insertions(+), 32 deletions(-)
 
-=
+-- 
+2.20.1
 
