@@ -2,48 +2,48 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 05255105ABB
+	by mail.lfdr.de (Postfix) with ESMTP id 7E07A105ABC
 	for <lists+linux-pwm@lfdr.de>; Thu, 21 Nov 2019 20:59:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfKUT7S (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        id S1727107AbfKUT7S (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
         Thu, 21 Nov 2019 14:59:18 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33446 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbfKUT7Q (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 21 Nov 2019 14:59:16 -0500
-Received: by mail-wm1-f65.google.com with SMTP id t26so4605893wmi.0;
-        Thu, 21 Nov 2019 11:59:14 -0800 (PST)
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36480 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfKUT7R (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 21 Nov 2019 14:59:17 -0500
+Received: by mail-wm1-f66.google.com with SMTP id n188so3212321wme.1;
+        Thu, 21 Nov 2019 11:59:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PYYcMhCYLh99IaUN22VzlWfjt3WzTsIGH/YGey+qGyI=;
-        b=i9w4EOY4O9bXhQu+sR8nZY5pzFKJZCx/BBuFxaVSZR+0PdyRLkH8st0Ng44twdhayu
-         nUO7fWgGO8VqhbTGoi+oLEq3kTO4Yoj//6rgF+nYd9LBn77ceoF76LDjrlz2zDf2RLn/
-         BZLMX0HRa5/2o0A58gV3UyjYec2lWJ9VDn9UHP+iXQQhQLYbidwuK0NJ+GGmfRReQcex
-         vfpcshQMFpJXNpZ1F5u3OnyDzU2Ao0/d55n1dnWwb499EJNRyT6cI8HjsL0BOXwKI9de
-         a3RjQk7IKI/UwDKaag+F1pHvUNgryebvGzR1yTqwRYZHbhRaEZFbJtn2gPnrq7paTbGr
-         YOgA==
+        bh=q+B/OIVjrG1dlH6HSUpfUfOtGFBjbxI16EIo0y2GEAU=;
+        b=MfIKbSxz1ViKv1FClZ1Y7HO8tDP27iqEfRdOQn7Z+H2SZ+3vBlAnSCT5KzzC+Rst/L
+         79LbaZbN7hOK2FGlTYrI0WGeufKMf2xjcUIXSu/RR8k+ZoeM/e6ApOfmfjvRmyRipHQ2
+         0xq+FiUkUvodQ+PpptjFzwNzNkmQCel34fwSO99VxjQQ50SGQ7PGw+Q0cLzHYMhTEOQp
+         yVXOoOzShn0yUtcbHPkTgZg+JTpR9HKJ3i83CSSNTtJzXv3Nem5cnhOd2a4Tyw4xjY+N
+         HQdNFktej6DSE5D9fX8a39EwfQWd7nESK5zzqzH3hMFoTYBcxgP4w7kray8peKiix5Gx
+         GPcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PYYcMhCYLh99IaUN22VzlWfjt3WzTsIGH/YGey+qGyI=;
-        b=LxaXeJyjxDvjdSi1HbPFMITaD+3pknvhjB1hodvl0NU3PM5uZq+rqwEFxjR3h2paOx
-         0ixC35wbHsv7pjyYq575LvL5mvl38IDMuTHpcReGzHHhXqjTkrFgbz+COcGRIfQGVEHs
-         oRPxeUxDWSdQQNwOc1eKjvUaRftBxgQ/4RU+mQEM55Ym13Z5QvPpsRx32cf7K9TiPlh1
-         5WNUTQi7fTi3jgOLRu/X7KbUxE7gzX0xEe8Y9hAG8V43mL2xsnibrwCrmy080VzHFemu
-         1YgshievVBOclNJNxamTC+wFsLBGFjMsHcrsIHw+kO4y51LPmaJ9GLW+LrCpRMx6nLFe
-         J/wA==
-X-Gm-Message-State: APjAAAXvRGCROZWDyCBcmMgq7vzsBEvSMIk28f4WSrgJTNkcsv27u9Ut
-        8pvi0GHz7T25fcacnDbHXIM=
-X-Google-Smtp-Source: APXvYqwbgqimjqppMsN2KbSc785eOX59193AYNJJcYkigIB+7/VTzs4LtmZNnv6gckI42ubUc8ba7w==
-X-Received: by 2002:a1c:6a1a:: with SMTP id f26mr12594907wmc.19.1574366354139;
+        bh=q+B/OIVjrG1dlH6HSUpfUfOtGFBjbxI16EIo0y2GEAU=;
+        b=K0Gx+b252FsFcyyBdw3d/xcvhnCQVBKF8QAPDy8pbbUmnJ0YVWlw8ZsEgOCAhtWz8P
+         s+qYvzkfMikYiFgWhtF6A6wHzQV40G7IdnR9jUadFwsi4qpRRHHCVMgWGyMcuK//wUp5
+         ewESjVxufRrcURtayK7rZPNCktnrHp+oYpDfUlplRetdG7eGVQZ9JUleCHAXWGH0ByBd
+         WV0KpSa9yhqRzf2OQPK5TKkuIalW2p08rdBc495BnHgowIQTJDGe6ehPFoQFsRRykAkk
+         pHcCltyYHNdxMo0nRel9JPYzVFqUaLyRTQSffPDgrn9WV8yAhdeTpACc5U35wMvwVz3R
+         mWGw==
+X-Gm-Message-State: APjAAAUnnbwpBx9nylN8ImiHzrQ/KUqTb+bpP31F22m2IoStn4f/Ufal
+        boFlA/+lmeXgBTuVbiMtipc=
+X-Google-Smtp-Source: APXvYqyPDEXLEsfGsvqz9l3KdOkpAXePb3VTVy0wMdLDHlo6Ya6Kzeu0XRM4i9iNcMC3qKaYHJ4WsA==
+X-Received: by 2002:a1c:cc1a:: with SMTP id h26mr1000354wmb.40.1574366354830;
         Thu, 21 Nov 2019 11:59:14 -0800 (PST)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id l4sm747124wme.4.2019.11.21.11.59.12
+        by smtp.gmail.com with ESMTPSA id l4sm747124wme.4.2019.11.21.11.59.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 11:59:13 -0800 (PST)
+        Thu, 21 Nov 2019 11:59:14 -0800 (PST)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -53,11 +53,10 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Philipp Zabel <pza@pengutronix.de>
 Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v8 3/6] pwm: sun4i: Add an optional probe for bus clock
-Date:   Thu, 21 Nov 2019 20:58:59 +0100
-Message-Id: <20191121195902.6906-4-peron.clem@gmail.com>
+Subject: [PATCH v8 4/6] pwm: sun4i: Always calculate params when applying new parameters
+Date:   Thu, 21 Nov 2019 20:59:00 +0100
+Message-Id: <20191121195902.6906-5-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191121195902.6906-1-peron.clem@gmail.com>
 References: <20191121195902.6906-1-peron.clem@gmail.com>
@@ -69,80 +68,97 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+Bypass mode will require to be re-calculated when the pwm state
+is changed.
 
-H6 PWM core needs bus clock to be enabled in order to work.
+Remove the condition so pwm_sun4i_calculate is always called.
 
-Add an optional probe for it.
-
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- drivers/pwm/pwm-sun4i.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/pwm/pwm-sun4i.c | 52 ++++++++++++++++++-----------------------
+ 1 file changed, 23 insertions(+), 29 deletions(-)
 
 diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 369990ae7d09..66befd8d6f9c 100644
+index 66befd8d6f9c..1fa2057419fb 100644
 --- a/drivers/pwm/pwm-sun4i.c
 +++ b/drivers/pwm/pwm-sun4i.c
-@@ -78,6 +78,7 @@ struct sun4i_pwm_data {
+@@ -202,9 +202,9 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ {
+ 	struct sun4i_pwm_chip *sun4i_pwm = to_sun4i_pwm_chip(chip);
+ 	struct pwm_state cstate;
+-	u32 ctrl;
++	u32 ctrl, duty, period, val;
+ 	int ret;
+-	unsigned int delay_us;
++	unsigned int delay_us, prescaler;
+ 	unsigned long now;
  
- struct sun4i_pwm_chip {
- 	struct pwm_chip chip;
-+	struct clk *bus_clk;
- 	struct clk *clk;
- 	struct reset_control *rst;
- 	void __iomem *base;
-@@ -391,6 +392,14 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 		}
- 	}
+ 	pwm_get_state(pwm, &cstate);
+@@ -220,43 +220,37 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	spin_lock(&sun4i_pwm->ctrl_lock);
+ 	ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
  
-+	pwm->bus_clk = devm_clk_get_optional(&pdev->dev, "bus");
-+	if (IS_ERR(pwm->bus_clk)) {
-+		if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "get bus clock failed %pe\n",
-+				pwm->bus_clk);
-+		return PTR_ERR(pwm->bus_clk);
-+	}
-+
- 	pwm->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
- 	if (IS_ERR(pwm->rst)) {
- 		if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
-@@ -407,6 +416,17 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	/*
-+	 * We're keeping the bus clock on for the sake of simplicity.
-+	 * Actually it only needs to be on for hardware register accesses.
-+	 */
-+	ret = clk_prepare_enable(pwm->bus_clk);
+-	if ((cstate.period != state->period) ||
+-	    (cstate.duty_cycle != state->duty_cycle)) {
+-		u32 period, duty, val;
+-		unsigned int prescaler;
+-
+-		ret = sun4i_pwm_calculate(sun4i_pwm, state,
+-					  &duty, &period, &prescaler);
+-		if (ret) {
+-			dev_err(chip->dev, "period exceeds the maximum value\n");
+-			spin_unlock(&sun4i_pwm->ctrl_lock);
+-			if (!cstate.enabled)
+-				clk_disable_unprepare(sun4i_pwm->clk);
+-			return ret;
+-		}
+-
+-		if (PWM_REG_PRESCAL(ctrl, pwm->hwpwm) != prescaler) {
+-			/* Prescaler changed, the clock has to be gated */
+-			ctrl &= ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
+-			sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
++	ret = sun4i_pwm_calculate(sun4i_pwm, state, &duty, &period, &prescaler);
 +	if (ret) {
-+		dev_err(&pdev->dev, "Cannot prepare and enable bus_clk %d\n",
-+			ret);
-+		goto err_bus;
++		dev_err(chip->dev, "period exceeds the maximum value\n");
++		spin_unlock(&sun4i_pwm->ctrl_lock);
++		if (!cstate.enabled)
++			clk_disable_unprepare(sun4i_pwm->clk);
++		return ret;
 +	}
+ 
+-			ctrl &= ~BIT_CH(PWM_PRESCAL_MASK, pwm->hwpwm);
+-			ctrl |= BIT_CH(prescaler, pwm->hwpwm);
+-		}
++	if (PWM_REG_PRESCAL(ctrl, pwm->hwpwm) != prescaler) {
++		/* Prescaler changed, the clock has to be gated */
++		ctrl &= ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
++		sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
+ 
+-		val = (duty & PWM_DTY_MASK) | PWM_PRD(period);
+-		sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
+-		sun4i_pwm->next_period[pwm->hwpwm] = jiffies +
+-			usecs_to_jiffies(cstate.period / 1000 + 1);
+-		sun4i_pwm->needs_delay[pwm->hwpwm] = true;
++		ctrl &= ~BIT_CH(PWM_PRESCAL_MASK, pwm->hwpwm);
++		ctrl |= BIT_CH(prescaler, pwm->hwpwm);
+ 	}
+ 
++	val = (duty & PWM_DTY_MASK) | PWM_PRD(period);
++	sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
++	sun4i_pwm->next_period[pwm->hwpwm] = jiffies +
++		usecs_to_jiffies(cstate.period / 1000 + 1);
++	sun4i_pwm->needs_delay[pwm->hwpwm] = true;
 +
- 	pwm->chip.dev = &pdev->dev;
- 	pwm->chip.ops = &sun4i_pwm_ops;
- 	pwm->chip.base = -1;
-@@ -427,6 +447,8 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 	return 0;
+ 	if (state->polarity != PWM_POLARITY_NORMAL)
+ 		ctrl &= ~BIT_CH(PWM_ACT_STATE, pwm->hwpwm);
+ 	else
+ 		ctrl |= BIT_CH(PWM_ACT_STATE, pwm->hwpwm);
  
- err_pwm_add:
-+	clk_disable_unprepare(pwm->bus_clk);
-+err_bus:
- 	reset_control_assert(pwm->rst);
- 
- 	return ret;
-@@ -441,6 +463,7 @@ static int sun4i_pwm_remove(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	clk_disable_unprepare(pwm->bus_clk);
- 	reset_control_assert(pwm->rst);
- 
- 	return 0;
+ 	ctrl |= BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
++
+ 	if (state->enabled) {
+ 		ctrl |= BIT_CH(PWM_EN, pwm->hwpwm);
+ 	} else if (!sun4i_pwm->needs_delay[pwm->hwpwm]) {
 -- 
 2.20.1
 
