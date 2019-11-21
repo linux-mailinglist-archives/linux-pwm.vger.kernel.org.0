@@ -2,86 +2,102 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C6DE61050EC
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 Nov 2019 11:58:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EBC16105134
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 Nov 2019 12:14:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbfKUK6w (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 21 Nov 2019 05:58:52 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:45837 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726014AbfKUK6w (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 21 Nov 2019 05:58:52 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xALAv0D0003536;
-        Thu, 21 Nov 2019 11:58:42 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=+ryPb9ETJPdsYWVGk+7MMd7fF4WRlNWEqIU9BO/5o/E=;
- b=c5n+Tu9CAwZRtKQzeN+Gk8BIJqhT8+m8ggCyptm0ywzgiRLJSE8JSbYgaf1Q74YvNe1S
- iMiCAiNSbaz3lmcSc7eZg7p//tEkJuDgffXpQK99A7AzmXj1NpBdeF19kOI/v+42rGPl
- bEavf9hTpDw/AAtrkegWrKwv+oProMFBNjv7Cc24wM/8DuOc2mv11/btkS5JYsrmFz9N
- PVqwFnPezKkLlkIvUnhvAu29qnHPVEgK2R3xSroOwu7SGUS67BONKotm7AMjZxas/4xp
- tp0CnzLLlB5iguJknqTti1mf3A7HAB2X9a5RYhaW9Q5TtcE0knB4TjmWARN19XfJQPa6 zA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wa9usjv1h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 Nov 2019 11:58:42 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 34550100034;
-        Thu, 21 Nov 2019 11:58:42 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2690D2B90B8;
-        Thu, 21 Nov 2019 11:58:42 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 Nov 2019 11:58:41
- +0100
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>
-CC:     <alexandre.torgue@st.com>, <benjamin.gaignard@st.com>,
-        <fabrice.gasnier@st.com>, <linux-pwm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH] pwm: stm32: remove automatic output enable
-Date:   Thu, 21 Nov 2019 11:58:00 +0100
-Message-ID: <1574333880-29339-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726343AbfKULOs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 21 Nov 2019 06:14:48 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51848 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfKULOs (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 21 Nov 2019 06:14:48 -0500
+Received: by mail-wm1-f67.google.com with SMTP id g206so2990451wme.1;
+        Thu, 21 Nov 2019 03:14:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+XKnyLW7EkXsYW0OJmmjEyRkfOHk15VlPRrsfW5K/GQ=;
+        b=nGG0G4TDZ07B5ePVOevmNed8Et1MxEL8/RLS2CZCsI3i2+dw5ppqEaLBa0/XU+Hn9C
+         vwj7h6rhsaO1fP/VpRHyiZxu97Qg7Vh8Lg/EV0EN7KDxAKyjscm+ivNN0nR7Hq16zlDn
+         UxBoWD4TOdk0M0dAwS61sQJmIQr4v5mu4zt8bTficpjzxGVqXiRBHOdEECVs2cO2bVDP
+         36MN5auC1PKorNXd5Acq/UTBB3TnKhvbn7UabyyG0Ba+D4jAN1F+LNccAFm7reJG7Psl
+         OH1rlHrIR3vDmCqgS5mwQrmL4GtPN6vQkri9GRQD3LdnOClpiS3cx3C/O+NBui3nBRhs
+         jNxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+XKnyLW7EkXsYW0OJmmjEyRkfOHk15VlPRrsfW5K/GQ=;
+        b=ZtHA8VrSBjy6alkSnGjPbqElLh3CAWsyspsPLImlMRdgBSWYXtyXJHgwnvjzPzlKzu
+         n2T/xmr5ahsuMvK7tS3ZefQElmbPdOYYQ1gxrwX/99WPpSi7hB97wyCW9mrjLZuBIWwn
+         LCSc+V15CPt8ndWbRHXKi1h5g8RxFb+OX8FKufocCpJpQhfwyFIdz45CDkEkd0a6nHhG
+         XUkdkemdm1r+/9sRlWEU4Yl+diXysjQZHejgdQKU118Fu17TtdmAix+N0qc4Loeblbzv
+         n6UAA485xwAJCgJwoxSkv1pU8MUucSSs/W04wHdsEg0H4j6ygdVBcWFRNmUyOlH8F9rU
+         HxZg==
+X-Gm-Message-State: APjAAAXYSCZtVjX+tZOgMR9rn7ZzzXjfhVs0uHq7d6xh+ktnhkm+Zs3l
+        lCJyjkBRpgXNIYYmGZujdMunFSpQR+sLt72yPrU=
+X-Google-Smtp-Source: APXvYqy4gWhRFyEMy2eA/GJL+WSgZR1v22hDCvHKX8RxCdIYCTXzWX/G5nJmVbFrWcNa9M53KSqxoxL+RA6fDm/PDhg=
+X-Received: by 2002:a1c:a512:: with SMTP id o18mr8822754wme.4.1574334885350;
+ Thu, 21 Nov 2019 03:14:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-21_02:2019-11-21,2019-11-21 signatures=0
+References: <20191119175319.16561-1-peron.clem@gmail.com> <20191119175319.16561-5-peron.clem@gmail.com>
+ <20191121072829.vitly7altcvlt4sj@pengutronix.de>
+In-Reply-To: <20191121072829.vitly7altcvlt4sj@pengutronix.de>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Thu, 21 Nov 2019 12:14:34 +0100
+Message-ID: <CAJiuCceMjLGsFW8sVsHO3iz+rOXpvGfSYUDDOsbhx3A159cZQg@mail.gmail.com>
+Subject: Re: [PATCH v7 4/8] pwm: sun4i: Add an optional probe for bus clock
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Don't use AOE (automatic output enable) by default.
-In case of break events, pwm is automatically re-enabled on next pwm
-cycle otherwise.
+Hi Uwe,
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- drivers/pwm/pwm-stm32.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+On Thu, 21 Nov 2019 at 08:28, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello Cl=C3=A9ment,
+>
+> On Tue, Nov 19, 2019 at 06:53:15PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > +     /*
+> > +      * We're keeping the bus clock on for the sake of simplicity.
+> > +      * Actually it only needs to be on for hardware register accesses=
+.
+> > +      */
+> > +     ret =3D clk_prepare_enable(pwm->bus_clk);
+> > +     if (ret) {
+> > +             dev_err(&pdev->dev, "Cannot prepare and enable bus_clk\n"=
+);
+>
+> Maybe add the error code to the message?
 
-diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-index 359b085..3079818 100644
---- a/drivers/pwm/pwm-stm32.c
-+++ b/drivers/pwm/pwm-stm32.c
-@@ -374,9 +374,7 @@ static int stm32_pwm_config(struct stm32_pwm *priv, int ch,
- 	else
- 		regmap_update_bits(priv->regmap, TIM_CCMR2, mask, ccmr);
- 
--	regmap_update_bits(priv->regmap, TIM_BDTR,
--			   TIM_BDTR_MOE | TIM_BDTR_AOE,
--			   TIM_BDTR_MOE | TIM_BDTR_AOE);
-+	regmap_update_bits(priv->regmap, TIM_BDTR, TIM_BDTR_MOE, TIM_BDTR_MOE);
- 
- 	return 0;
- }
--- 
-2.7.4
+Ok I will change it for the reset control deassert if you agree.
 
+Clement
+
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
