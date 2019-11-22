@@ -2,39 +2,39 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1ACAF106204
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Nov 2019 07:01:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2900C1062A7
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Nov 2019 07:05:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbfKVF5Q (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 22 Nov 2019 00:57:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35492 "EHLO mail.kernel.org"
+        id S1729757AbfKVGCg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 22 Nov 2019 01:02:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729396AbfKVF5P (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:15 -0500
+        id S1729445AbfKVGCg (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:02:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AB782070A;
-        Fri, 22 Nov 2019 05:57:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5439020718;
+        Fri, 22 Nov 2019 06:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402235;
+        s=default; t=1574402555;
         bh=wLBO30qA8tZlK3OT5pGv0t3ty/ImslmbiEW2j4YjAG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OzMIdrCsc6ZPu85A8u5NdpIX2gnXxt29o3X6N6Qtn6IS0LmIewxikfjH3AVbiSXGz
-         EpfX6MpFC5enteSPJjNhuzbvE3HtSm+ZoooqHBHslgjTdCuNHAEDCdoch6CdZBZWIy
-         OsQgJfovYMs/Y8oA9mYZVLS9K1BG/y8h3swtCQd4=
+        b=tfhlrSAyA+UXH6Uk0DN1dLHFLfAyrOgWBlrUMdxFptFJVPVXWRCKLfqVXZQWsNkmG
+         0TESOZw2TE+PL7LSl7hJ3V72jPPd5JStTr/jgNeg9nXuRolTlDFlUyz+JJ3Z3syGva
+         p+8Qo/obOB6Hurq2/uKicYuvnv/ehijmSjWkWbeU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Alexander Shiyan <shc_work@mail.ru>,
         Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 080/127] pwm: clps711x: Fix period calculation
-Date:   Fri, 22 Nov 2019 00:54:58 -0500
-Message-Id: <20191122055544.3299-79-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 60/91] pwm: clps711x: Fix period calculation
+Date:   Fri, 22 Nov 2019 01:00:58 -0500
+Message-Id: <20191122060129.4239-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
-References: <20191122055544.3299-1-sashal@kernel.org>
+In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
+References: <20191122060129.4239-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
