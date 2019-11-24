@@ -2,225 +2,158 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 491EF108032
-	for <lists+linux-pwm@lfdr.de>; Sat, 23 Nov 2019 21:01:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EC2410844E
+	for <lists+linux-pwm@lfdr.de>; Sun, 24 Nov 2019 18:30:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfKWUBN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 23 Nov 2019 15:01:13 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47707 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbfKWUBN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 23 Nov 2019 15:01:13 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iYbad-0002X6-7w; Sat, 23 Nov 2019 21:01:07 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iYbaU-0004d5-BV; Sat, 23 Nov 2019 21:00:58 +0100
-Date:   Sat, 23 Nov 2019 21:00:58 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        id S1726792AbfKXRaB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 24 Nov 2019 12:30:01 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34043 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbfKXRaB (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 24 Nov 2019 12:30:01 -0500
+Received: by mail-wr1-f67.google.com with SMTP id t2so14725908wrr.1;
+        Sun, 24 Nov 2019 09:29:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uGgPipfEFZWFwRwOJjgrASaTd0TQYkmoA4Tjo4oBFUc=;
+        b=vND+AQHeVrhINFZ4UDVHu58t/f+qBqUvbP7TqVB3/0goOOJCe8I2oR7GT1/p+RN5/E
+         WxN2vQ9j0KfPfEYNuAPQT+kTxt6FE2XTlFQJLoH+FYwMyzX7bffYruhqjklwBb+arxjw
+         KIW7ED5yJnXpGr5l3MX8b9v7xm4I4iwMtm1tw24mY4FoIk2ezPzNJ8s65Kz8iHRBcflm
+         QbD/DCVmTfkob2TTDwsGfi4dBcoq7TOi2vwYgu1aO5sp1OaHiz15B62BK/PMVugLz15K
+         zHo/qk/WgWPiG3Yc10JGL153B/mda+vShSnfzFKOOer5XG0NPWcq4+trXvs8yP/6UfmY
+         jc5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uGgPipfEFZWFwRwOJjgrASaTd0TQYkmoA4Tjo4oBFUc=;
+        b=UNl5T52rE61L6C2zRUmczgO5wlSNSw6JxWtliHkmfW/WVUgtCajaRIafbzFFRfpQNB
+         yLDe7ycu05A0SrxH4EmXLf7/a7RDr66QWFUn38uYYylY+QNBthcm1Tq7IcFRATbxUhzC
+         fE5X9/Wo8wE0tCG2fn89oG6DoWiM0xITGzK+QDMA66Jzdbw3mrJuWNVz0xOqepWBzebL
+         necMO382KU1EmIoY9Z+PTMcqPyQcOX7o10aTc7vNXG8JxKM8JFSITvAs6s3zgHYNRNNF
+         LngAOvpENbsik0bTD6Xo4fbxpybCpzqOf0Ss+aNw7O8DBPYC2hBayC5dgy+gwoQT1AzO
+         h2Tw==
+X-Gm-Message-State: APjAAAXnh02LVYlBX4MqIS824Ed1erLxJ221lPHI3f9iwQlsyTrPBiOA
+        Jz4pQ1pWHXzSr7Zo8+dWfVU=
+X-Google-Smtp-Source: APXvYqzCaeqjuWWepuHVZDNLDDp3b8VLbgpBzaodvuX34Rg653xyvG74z8MdFcuL0oOfDoO2AS4FHQ==
+X-Received: by 2002:a5d:5484:: with SMTP id h4mr25794215wrv.136.1574616598780;
+        Sun, 24 Nov 2019 09:29:58 -0800 (PST)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id n13sm5537275wmi.25.2019.11.24.09.29.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Nov 2019 09:29:57 -0800 (PST)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Maxime Ripard <mripard@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH v8 5/6] pwm: sun4i: Add support to output source clock
- directly
-Message-ID: <20191123200058.kz2farbyvruybtjj@pengutronix.de>
-References: <20191121195902.6906-1-peron.clem@gmail.com>
- <20191121195902.6906-6-peron.clem@gmail.com>
- <20191121211630.slgayfbuykwvlvdt@pengutronix.de>
- <CAJiuCcdhH9zbRMMYsZbBYL-H8YWn2kimvJEjZ8Z8kF7Uh9MCpg@mail.gmail.com>
- <CAJiuCcd8VK2xHqRuWTVpNvw4e+rCR9-KjOSF5KsTcN9qQhaNVw@mail.gmail.com>
+        Philipp Zabel <pza@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v9 0/6] Add support for H6 PWM
+Date:   Sun, 24 Nov 2019 18:29:02 +0100
+Message-Id: <20191124172908.10804-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJiuCcd8VK2xHqRuWTVpNvw4e+rCR9-KjOSF5KsTcN9qQhaNVw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sat, Nov 23, 2019 at 03:05:48PM +0100, Clément Péron wrote:
-> Hi Uwe,
-> 
-> On Thu, 21 Nov 2019 at 22:21, Clément Péron <peron.clem@gmail.com> wrote:
-> >
-> > Hi Uwe,
-> >
-> > On Thu, 21 Nov 2019 at 22:16, Uwe Kleine-König
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > >
-> > > On Thu, Nov 21, 2019 at 08:59:01PM +0100, Clément Péron wrote:
-> > > > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > >
-> > > > PWM core has an option to bypass whole logic and output unchanged source
-> > > > clock as PWM output. This is achieved by enabling bypass bit.
-> > > >
-> > > > Note that when bypass is enabled, no other setting has any meaning, not
-> > > > even enable bit.
-> > > >
-> > > > This mode of operation is needed to achieve high enough frequency to
-> > > > serve as clock source for AC200 chip which is integrated into same
-> > > > package as H6 SoC.
-> > > >
-> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> > > > ---
-> > > >  drivers/pwm/pwm-sun4i.c | 48 +++++++++++++++++++++++++++++++++++++++--
-> > > >  1 file changed, 46 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > > > index 1fa2057419fb..0fe9c680d6d0 100644
-> > > > --- a/drivers/pwm/pwm-sun4i.c
-> > > > +++ b/drivers/pwm/pwm-sun4i.c
-> > > > @@ -3,6 +3,10 @@
-> > > >   * Driver for Allwinner sun4i Pulse Width Modulation Controller
-> > > >   *
-> > > >   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> > > > + *
-> > > > + * Limitations:
-> > > > + * - When outputing the source clock directly, the PWM logic will be bypassed
-> > > > + *   and the currently running period is not guaranteed to be completed
-> > > >   */
-> > > >
-> > > >  #include <linux/bitops.h>
-> > > > @@ -73,6 +77,7 @@ static const u32 prescaler_table[] = {
-> > > >
-> > > >  struct sun4i_pwm_data {
-> > > >       bool has_prescaler_bypass;
-> > > > +     bool has_direct_mod_clk_output;
-> > > >       unsigned int npwm;
-> > > >  };
-> > > >
-> > > > @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
-> > > >
-> > > >       val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
-> > > >
-> > > > +     /*
-> > > > +      * PWM chapter in H6 manual has a diagram which explains that if bypass
-> > > > +      * bit is set, no other setting has any meaning. Even more, experiment
-> > > > +      * proved that also enable bit is ignored in this case.
-> > > > +      */
-> > > > +     if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
-> > > > +         sun4i_pwm->data->has_direct_mod_clk_output) {
-> > > > +             state->period = DIV_ROUND_UP_ULL(NSEC_PER_SEC, clk_rate);
-> > > > +             state->duty_cycle = DIV_ROUND_UP_ULL(state->period, 2);
-> > > > +             state->polarity = PWM_POLARITY_NORMAL;
-> > > > +             state->enabled = true;
-> > > > +             return;
-> > > > +     }
-> > > > +
-> > > >       if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
-> > > >           sun4i_pwm->data->has_prescaler_bypass)
-> > > >               prescaler = 1;
-> > > > @@ -149,13 +168,24 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
-> > > >
-> > > >  static int sun4i_pwm_calculate(struct sun4i_pwm_chip *sun4i_pwm,
-> > > >                              const struct pwm_state *state,
-> > > > -                            u32 *dty, u32 *prd, unsigned int *prsclr)
-> > > > +                            u32 *dty, u32 *prd, unsigned int *prsclr,
-> > > > +                            bool *bypass)
-> > > >  {
-> > > >       u64 clk_rate, div = 0;
-> > > >       unsigned int pval, prescaler = 0;
-> > > >
-> > > >       clk_rate = clk_get_rate(sun4i_pwm->clk);
-> > > >
-> > > > +     *bypass = sun4i_pwm->data->has_direct_mod_clk_output &&
-> > > > +               state->enabled &&
-> > > > +               (state->period * clk_rate >= NSEC_PER_SEC) &&
-> > > > +               (state->period * clk_rate < 2 * NSEC_PER_SEC) &&
-> > > > +               (state->duty_cycle * clk_rate * 2 >= NSEC_PER_SEC);
-> > > > +
-> > > > +     /* Skip calculation of other parameters if we bypass them */
-> > > > +     if (*bypass)
-> > > > +             return 0;
-> > > > +
-> > > >       if (sun4i_pwm->data->has_prescaler_bypass) {
-> > > >               /* First, test without any prescaler when available */
-> > > >               prescaler = PWM_PRESCAL_MASK;
-> > > > @@ -206,6 +236,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > >       int ret;
-> > > >       unsigned int delay_us, prescaler;
-> > > >       unsigned long now;
-> > > > +     bool bypass;
-> > > >
-> > > >       pwm_get_state(pwm, &cstate);
-> > > >
-> > > > @@ -220,7 +251,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > >       spin_lock(&sun4i_pwm->ctrl_lock);
-> > > >       ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
-> > > >
-> > > > -     ret = sun4i_pwm_calculate(sun4i_pwm, state, &duty, &period, &prescaler);
-> > > > +     ret = sun4i_pwm_calculate(sun4i_pwm, state, &duty, &period, &prescaler,
-> > > > +                               &bypass);
-> > > >       if (ret) {
-> > > >               dev_err(chip->dev, "period exceeds the maximum value\n");
-> > > >               spin_unlock(&sun4i_pwm->ctrl_lock);
-> > > > @@ -229,6 +261,18 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > >               return ret;
-> > > >       }
-> > > >
-> > > > +     if (sun4i_pwm->data->has_direct_mod_clk_output) {
-> > > > +             if (bypass) {
-> > > > +                     ctrl |= BIT_CH(PWM_BYPASS, pwm->hwpwm);
-> > > > +                     /* We can skip other parameter */
-> > > > +                     sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
-> > > > +                     spin_unlock(&sun4i_pwm->ctrl_lock);
-> > > > +                     return 0;
-> > > > +             } else {
-> > > > +                     ctrl &= ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
-> > > > +             }
-> > > > +     }
-> > >
-> > > This could be simplified to:
-> > >
-> > >         if (bypass) {
-> > >                 ctrl |= BIT_CH(PWM_BYPASS, pwm->hwpwm);
-> > >                 /*
-> > >                  * Other parameters are not relevant in this mode and so
-> > >                  * writing them can be skipped
-> > >                  */
-> > >                 sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
-> > >                 spin_unlock(&sun4i_pwm->ctrl_lock);
-> > >                 return 0;
-> > >         } else {
-> > >                 ctrl &= ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
-> > >         }
-> > >
-> > > which has the advantage(?) that the bypass bit is also (more obviously)
-> > > cleared for SoCs that don't support it and it reduces the indention
-> > > level.
-> >
-> > This bit is not guaranteed to be reserved for all the SoC variants.
-> >
-> > I don't think it's a good idea to set to 0 a bit which is undefined.
-> 
-> Let me know if you agree or not with this and I send the v9 according
-> to your answer.
+Hi,
 
-If my suggestion is not safe according to the documentation, it is
-obviously wrong. So only take it into account if a zero can be safely
-written.
+This is a rework of Jernej's previous work[1] taking account all the
+previous remarks.
 
-Best regards
-Uwe
+Bindings is still strict but probe in the driver are now optionnals.
+
+If someone could confirm that the PWM is not broken, as my board
+doesn't output it.
+
+Thanks,
+ClÃ©ment
+
+Jernej's cover:
+Allwinner H6 SoC has PWM core which is basically the same as that found
+in A20, it's just depends on additional bus clock and reset line.
+
+This series adds support for it and extends PWM driver functionality in
+a way that it's now possible to bypass whole core and output PWM source
+clock directly as a PWM signal. This functionality is needed by AC200
+chip, which is bundled in same physical package as H6 SoC, to serve as a
+clock source of 24 MHz. AC200 clock input pin is bonded internally to
+the second PWM channel.
+
+I would be grateful if anyone can test this patch series for any kind of
+regression on other SoCs.
+
+[1]: https://patchwork.kernel.org/cover/11061737/
+
+Changes in v9:
+ - print error code in error message
+ - no capital letter to keep coherency
+
+Changes in v8:
+ - Display error return code
+ - split commit
+ - bypass is false if unsupported
+ - return instead of goto
+
+Changes in v7:
+ - Fix indent in Yaml bindings
+
+Changes in v6:
+ - Update git commit log
+ - Distinguish error message
+
+Changes in v5:
+ - Move bypass calculation to pwm_calculate
+ - Split mod_clock fallback from bus_clk probe   
+ - Update comment
+ - Move my SoB after acked-by/reviewed-by
+
+Changes in v4:
+ - item description in correct order and add a blank line
+ - use %pe for printing PTR_ERR
+ - don't print error when it's an EPROBE_DEFER
+ - change output clock bypass formula to match PWM policy
+
+Changes in v3:
+ - Documentation update to allow one clock without name
+ - Change reset optional to shared
+ - If reset probe failed return an error
+ - Remove old clock probe
+ - Update bypass enabled formula
+
+Changes in v2:
+ - Remove allOf in Documentation
+ - Add H6 example in Documentation
+ - Change clock name from "pwm" to "mod"
+ - Change reset quirk to optional probe
+ - Change bus_clock quirk to optional probe
+ - Add limitation comment about mod_clk_output
+ - Add quirk for mod_clk_output
+ - Change bypass formula
+
+ClÃ©ment PÃ©ron (2):
+  pwm: sun4i: Prefer "mod" clock to unnamed
+  pwm: sun4i: Always calculate params when applying new parameters
+
+Jernej Skrabec (4):
+  pwm: sun4i: Add an optional probe for reset line
+  pwm: sun4i: Add an optional probe for bus clock
+  pwm: sun4i: Add support to output source clock directly
+  pwm: sun4i: Add support for H6 PWM
+
+ drivers/pwm/pwm-sun4i.c | 187 +++++++++++++++++++++++++++++++++-------
+ 1 file changed, 156 insertions(+), 31 deletions(-)
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.20.1
+
