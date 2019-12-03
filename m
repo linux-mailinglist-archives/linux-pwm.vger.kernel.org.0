@@ -2,38 +2,38 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5019810F79F
-	for <lists+linux-pwm@lfdr.de>; Tue,  3 Dec 2019 07:04:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 652AA10F7A2
+	for <lists+linux-pwm@lfdr.de>; Tue,  3 Dec 2019 07:04:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfLCGE0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 3 Dec 2019 01:04:26 -0500
-Received: from mail-eopbgr140081.outbound.protection.outlook.com ([40.107.14.81]:15454
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        id S1727194AbfLCGEb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 3 Dec 2019 01:04:31 -0500
+Received: from mail-eopbgr10045.outbound.protection.outlook.com ([40.107.1.45]:42113
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726521AbfLCGE0 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 3 Dec 2019 01:04:26 -0500
+        id S1726521AbfLCGEb (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 3 Dec 2019 01:04:31 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cdyazBItDTBW8xFeZuo3AV0TCDUD+2aRb0Qci/nH85agMmm3a5nbEKGo4LYmtvoMknbb9EPBTT07jsWu3+40iyivdQ9KSGyAyvii8kik8VPHD2jIEzsse76pvygP5B/fFONwRJ4ISk65tQqYkeGrukGnprBHS8pGigET3j/1Mj08dt9x9tcC1EYzi9rpPTJrqsLJzz3eJBtm7Tb43HQ6p7DzTUm/R7oBQ5t6BmIjdsuKNsz2C0b4fbD2bFoORbit8RQ2kzbd20E2YUNNj8xPvY/3UnOt9pcDXTkkDVqRMS7hX+ZgMGaETjaU1bhK2Gbv6NZK4pJ3T7LaGqHjoxxtHg==
+ b=HLT2inD7xdNrHWZf6g3erpw5i8iNwgf2Bdp9TdtulpLTFHPLXPcO8P+8t7l4/PBIhyzm/jEtKTGel690ypiN8XX8KfaAMXPgq6JY/E4gPmXaLXOnOzmIJlOki4qN8faE/ltiJR2tlFdn+T8MW8j5hYhe9WRNaMOCzzWvF84U7tDy2c/MiW7H8mABOEgejMNQc5PMNzLpM599r8SB96zwipMqRHqSi7sbZg+z8URqlAiYqIYylRd08kRcchjHG4UdWf+d7Gt/TECQV3Si5kO/LEEV+2aJbdofkIt/rSI+eYKMHpupdABXLA9BLQfNgTtTs/g0O4zu4xxu7bc5jwTOUQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1AJvhOrjWXY8Cde7pIWJ6/TqHSbVnmBTAaREaIxIzYw=;
- b=X6MqI1Gz0xg9LFIg6RtXlturhk8jjdF95JUaz9uRNdbRhkR6gdkpMxkO5wo/KHu5ETYK/DuHfDY88XyohoTAI5e1D0LrI5CkvXhzOFMRIpsetA8bAiQlxvL/zlWdUNM2lx26BoHmwvXW15rMgtzRhJAbDhRpIQY69fERjxiLPvxZt2hLpnt7OHGB/tTd13zlDOAEnGDFcTSpbqZFX+HD2YjjcSm06BaxL4prMKNnMOHwJBkXvL7VY5aA/1KTAYHqmDNIWIljV+I2ZoZ9UvEaZTVIwrbiGfGVDzfmU9hfRwC1KTHI0HZliiopvCqQ0TY9IBe6QPHSbYB//raRcVUnXw==
+ bh=XUduKPc7gDVG3wwztu07UiUSTOzq4i8hAbySFMKdy9A=;
+ b=OUBhVwDSyZZsbpgGfKBCc8D5aMMejkJX88WQJb0mrJ5YWK9v4hjcLkJjxjzXAO00+bGr77limu8ds6GQa0oi7IBuiGdj3n7GzJ/WwssdDzM+gjtHJjULT4L5ZRkKkikCzMOys0K6M3YJ40R3y4eBBE5CMUX03YKOyvm8fDPvLLghj/zMeqlqkkMo1vjsKSH7+ozmIGl0T/K8cIrOKge8P5JkkAaQXfgHq4C0Vszs4jq2Aic7UZIZc+WrwnuRRVW5S9xg6JGX5v8iKBFxIiEdJba6PfpuwpKPPx+7u0ZEuI66Eh3g9bFjTkHfXDD/3ZbdHQWbBiYihrT/QEQK5377UQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1AJvhOrjWXY8Cde7pIWJ6/TqHSbVnmBTAaREaIxIzYw=;
- b=e8ncpEu3oY1EsgRbFKL9t/HTz++JBz5X2QN4bCFs8H9WPXTE3xg/fcUzGCLtL0yZLndJDnyB4l+c5hJRyWB718vlQaP8yH7H5b3nb82yIzjCK4If9Yuh+vzcDhhX9I5rPx/mPPa4LYe8Pzcft3LLQBcKFoBPCGi9mQY/z0pa7OQ=
+ bh=XUduKPc7gDVG3wwztu07UiUSTOzq4i8hAbySFMKdy9A=;
+ b=IWaRWtlTqxJeNOm/IofemwtEk87yHfpRbCEwzqbHnb4EqQABijQJqdctaD7k2RTFtF6u6Qr+Vn/d4ppRvXDDPT5KmDmZ9q6cOiFLy4ITxLrWmHTsyjkOe2xXVbPxCfjwY82ZDyJ6whSSKBpzYQlzELhHFxx1FYUsseLN6CP/aHY=
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
  AM0PR04MB6993.eurprd04.prod.outlook.com (52.132.212.7) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.18; Tue, 3 Dec 2019 06:04:22 +0000
+ 15.20.2495.18; Tue, 3 Dec 2019 06:04:27 +0000
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2495.014; Tue, 3 Dec 2019
- 06:04:22 +0000
+ 06:04:27 +0000
 From:   Peng Fan <peng.fan@nxp.com>
 To:     "rjui@broadcom.com" <rjui@broadcom.com>,
         "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
@@ -50,11 +50,13 @@ CC:     "bcm-kernel-feedback-list@broadcom.com"
         "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Alice Guo <alice.guo@nxp.com>, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 1/2] gpio: mvebu: use platform_irq_count
-Thread-Topic: [PATCH 1/2] gpio: mvebu: use platform_irq_count
-Thread-Index: AQHVqZ+C2ZbmEZTAyUWwsa6EK7twoQ==
-Date:   Tue, 3 Dec 2019 06:04:22 +0000
-Message-ID: <1575352925-17271-1-git-send-email-peng.fan@nxp.com>
+Subject: [PATCH 2/2] gpio: bcm-kona: use platform_irq_count
+Thread-Topic: [PATCH 2/2] gpio: bcm-kona: use platform_irq_count
+Thread-Index: AQHVqZ+EtDMj9Zrebkmeuofu5PHegQ==
+Date:   Tue, 3 Dec 2019 06:04:27 +0000
+Message-ID: <1575352925-17271-2-git-send-email-peng.fan@nxp.com>
+References: <1575352925-17271-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1575352925-17271-1-git-send-email-peng.fan@nxp.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -69,29 +71,29 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d74b764c-9a04-4a83-cd5a-08d777b6a455
+x-ms-office365-filtering-correlation-id: 7ccf880d-c762-48f9-2889-08d777b6a735
 x-ms-traffictypediagnostic: AM0PR04MB6993:|AM0PR04MB6993:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB6993B5D3BD90B83B70763C6F88420@AM0PR04MB6993.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:792;
+x-microsoft-antispam-prvs: <AM0PR04MB6993563F0F8A1DB27D58085888420@AM0PR04MB6993.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:972;
 x-forefront-prvs: 02408926C4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(39860400002)(346002)(366004)(199004)(189003)(102836004)(305945005)(7736002)(71200400001)(81156014)(81166006)(8676002)(71190400001)(86362001)(50226002)(5660300002)(66556008)(2201001)(66946007)(66476007)(64756008)(66446008)(6486002)(8936002)(66066001)(2501003)(2616005)(36756003)(44832011)(256004)(186003)(6436002)(7416002)(478600001)(14454004)(6116002)(4326008)(54906003)(3846002)(110136005)(316002)(25786009)(26005)(2906002)(386003)(6506007)(99286004)(52116002)(6512007)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6993;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(39860400002)(346002)(366004)(199004)(189003)(102836004)(305945005)(7736002)(71200400001)(81156014)(81166006)(8676002)(71190400001)(86362001)(50226002)(5660300002)(66556008)(2201001)(446003)(66946007)(66476007)(64756008)(66446008)(6486002)(8936002)(66066001)(2501003)(2616005)(36756003)(44832011)(256004)(186003)(6436002)(7416002)(478600001)(76176011)(14454004)(6116002)(4326008)(54906003)(3846002)(110136005)(316002)(25786009)(26005)(2906002)(386003)(6506007)(99286004)(52116002)(6512007)(11346002)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6993;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qaf5J2slBfkgniPKk0Id/IOwwaLJgaQ/Bd51b2rCfVbnNwgIFRTu3rXlp9FkQTHJg8911WJ8r4lTMjNTBRgUneJxr2ioYaW3Pyt4tEuf21Hru/H41kteBEC6baaPBrRjYLxJkjRrKaDKwJRLMiLG5BwxvQSTbe/FYWeVgM+8f+KuOoBQNVhRd9+iN7lOzZEbTgoAAhAW1RKRsYLERZCW6SCdWHHx4I7cQ08Cz0g7+vaft9NtQEdm/WFslaAxmFgTHZs3ROgpw1RT87P++DH+6VOguOjv+RFDJN3L3wpkKfKI3sXu1wCb9wqgVEeHNUF9ZjYNldbn4B3gMMkXmjXWI6p960PSI7vVLo+fPzHHOhhhKc458dc9rAuewjm9G/z8g9RcIOC1She6ofTATW2s7+N9elnKSsRQVoy/8eQPY3YVD6OGG+2VUrx5s3AOPi6Q
+x-microsoft-antispam-message-info: tRkslL+qopJ2AYPDZlhb22xpPXcIoO6gQ5hY+BfHbZrnMTsRWYm3L5Ev1+vCJWpjex9asBGx1rSFSLZM4hNjkFBciElry1e5OGbW7xiKB4kgcju0T6c+/3cPmQT1hfXqdHjbx0B9uM4gbOPIs1ZJlzPNuRbliknK108QsCoDVQjAbaBbahL0Oo4jhHnEfD/GBWGjNtefUBHjzbRWMgYMGpla9FSn8sV811VRxPw2Q+LLQHGQmvuihtVNzvdKYDx0arV1pF5hJLkgqOTeuiNEuQn5Q0Rr1xbxTPvCgISm6YDSuorbcoT3iHKER4MioebylYQsvUznXJEBa8qpwtWdeRZHeFwhmLVkIIBGCnVH/ZlGu0hAOeO/3MQGEB+YgWuv7gmU74l7t1YoVw63vLLaBx0KeZCG/31MftuxL+xH6MSOtJFmBsWyORSR1q8uMPMM
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d74b764c-9a04-4a83-cd5a-08d777b6a455
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 06:04:22.5052
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ccf880d-c762-48f9-2889-08d777b6a735
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 06:04:27.2894
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UZIQn9dnu93xfFk/PMh1yrtYJMGSeklSeuxSRR3kGMH1/IEof8aZKYCtzE8wmPAtkc5FEZGAmHWi3IX0FS+T9w==
+X-MS-Exchange-CrossTenant-userprincipalname: tBxG6WG05J5MlN/IRznTOcb8FNxoUyqYJW6N7BptsU7z1OyjxVMb/H7mM394ulPhG7BNfhh8o/FN3O0b2ZPL+g==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6993
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
@@ -108,31 +110,31 @@ Signed-off-by: Peng Fan <peng.fan@nxp.com>
 V1:
  Code inspection, not tested
 
- drivers/gpio/gpio-mvebu.c | 3 +--
+ drivers/gpio/gpio-bcm-kona.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index 993bbeb3c006..ecfedcdadc0d 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -46,7 +46,6 @@
- #include <linux/irqdomain.h>
- #include <linux/mfd/syscon.h>
+diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
+index 4122683eb1f9..c50721980a7c 100644
+--- a/drivers/gpio/gpio-bcm-kona.c
++++ b/drivers/gpio/gpio-bcm-kona.c
+@@ -19,7 +19,6 @@
+ #include <linux/io.h>
+ #include <linux/gpio/driver.h>
  #include <linux/of_device.h>
 -#include <linux/of_irq.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
-@@ -1102,7 +1101,7 @@ static int mvebu_gpio_probe(struct platform_device *p=
-dev)
- 		soc_variant =3D MVEBU_GPIO_SOC_VARIANT_ORION;
+ #include <linux/init.h>
+ #include <linux/irqdomain.h>
+ #include <linux/irqchip/chained_irq.h>
+@@ -586,7 +585,7 @@ static int bcm_kona_gpio_probe(struct platform_device *=
+pdev)
 =20
- 	/* Some gpio controllers do not provide irq support */
--	have_irqs =3D of_irq_count(np) !=3D 0;
-+	have_irqs =3D platform_irq_count(pdev) !=3D 0;
-=20
- 	mvchip =3D devm_kzalloc(&pdev->dev, sizeof(struct mvebu_gpio_chip),
- 			      GFP_KERNEL);
+ 	kona_gpio->gpio_chip =3D template_chip;
+ 	chip =3D &kona_gpio->gpio_chip;
+-	kona_gpio->num_bank =3D of_irq_count(dev->of_node);
++	kona_gpio->num_bank =3D platform_irq_count(pdev);
+ 	if (kona_gpio->num_bank =3D=3D 0) {
+ 		dev_err(dev, "Couldn't determine # GPIO banks\n");
+ 		return -ENOENT;
 --=20
 2.16.4
 
