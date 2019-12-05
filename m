@@ -2,118 +2,86 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D241D113B93
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2019 07:10:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47D42113C23
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2019 08:12:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725905AbfLEGKv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 5 Dec 2019 01:10:51 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40445 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbfLEGKv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Dec 2019 01:10:51 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t14so2261460wmi.5;
-        Wed, 04 Dec 2019 22:10:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ArLi67MutEfJm1xYk1UV39NkETu8w3LGxgZUr4uMUhM=;
-        b=qPVow2Hk4o5+1WIh/HU4A9dCAFKXssaxFnoREXVgfUNekkba6Xp6ZKKXTJfa7FqxiE
-         rNSNKrMGQERENYIfxVKffRhoBrS9s38aEA5Qgv40ZFBLXI1Vr6npC7a2yyOyK+UBau9H
-         7eG2IyAD2RIf18w9lax1HQfN8F/LhFVI3q1G+bySK0ebfH3mPCTDeHgJ0xkNa1fvk1qd
-         TQ1+bHp1zBEIrT7oM+ZLS7XoEbix4k2YfjcUpj8xmiOBtGjeKCa4g4PsP6KXXVgQTvXF
-         dz/ip/GEI6QzCy2w7iPG+e0kuazsRSkG5KTRmcwJgEOW80lZCnoK5yC+/1OJWwlDoSnw
-         R+Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ArLi67MutEfJm1xYk1UV39NkETu8w3LGxgZUr4uMUhM=;
-        b=gb2BOIy3IGGoMZHx8Zd6lTDR7+Hak+socuDwi3qmi1zkmjY9ISE3ZyPWjLijn2X0jA
-         1t6/B2I16mQoiY7Al/6qfHstpNPeLPQHMpdfo2D7p82UM+0su0CX+cNBfEehm83Hzr3A
-         KTUWZG/83cSrwYGYl8AV+0/WCwfBgT8hXfP4fq5BpIirPwjicPxjD/eNgqtMj0rtKOSP
-         Eshimm5xlIZcDHfHCfygLH2/dgJf9VHCuTuGFbFqgUNLYiRZWKO1MhxW13Rh03R2wUqm
-         SsgXXElwtKEOnL0fGXS/fdxcFP5HdyOHWBs8CSFbPD4FRuY967Dd9FhH2/aosO5QbYVP
-         +LCA==
-X-Gm-Message-State: APjAAAWe/BCF1cAS+aAIgO6emoeJ8/0uH7TrNgZDhMP/XjV7VDFOT0ew
-        Ov9/c+HQ9JYnWuYJq881tTk=
-X-Google-Smtp-Source: APXvYqyaq4P8aZhdb+VYjY2oEPts6nfj2eJx99tS+iwSemPDHGSF/vEPXx8w+j2MAIM5a62SPtVpog==
-X-Received: by 2002:a1c:f404:: with SMTP id z4mr3069874wma.12.1575526248274;
-        Wed, 04 Dec 2019 22:10:48 -0800 (PST)
-Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id e18sm12477940wrw.70.2019.12.04.22.10.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 22:10:47 -0800 (PST)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] pwm: Changes for v5.5-rc1
-Date:   Thu,  5 Dec 2019 07:10:44 +0100
-Message-Id: <20191205061044.1006766-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        id S1725953AbfLEHMQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 5 Dec 2019 02:12:16 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35315 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfLEHMQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Dec 2019 02:12:16 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iclJ8-0003Hm-7D; Thu, 05 Dec 2019 08:12:14 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iclJ7-0007BY-F2; Thu, 05 Dec 2019 08:12:13 +0100
+Date:   Thu, 5 Dec 2019 08:12:13 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 2/4] pwm: cros-ec: Cache duty cycle value
+Message-ID: <20191205071213.5ahi474skoz6y35p@pengutronix.de>
+References: <20191021105739.1357629-1-thierry.reding@gmail.com>
+ <20191021105739.1357629-2-thierry.reding@gmail.com>
+ <041c05b7-f558-0249-0450-305dfa2697a9@collabora.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <041c05b7-f558-0249-0450-305dfa2697a9@collabora.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Linus,
+Hello Enric,
 
-The following changes since commit 40a6b9a00930fd6b59aa2eb6135abc2efe5440c3:
+On Mon, Oct 21, 2019 at 03:48:59PM +0200, Enric Balletbo i Serra wrote:
+> On 21/10/19 12:57, Thierry Reding wrote:
+> >  static const struct pwm_ops cros_ec_pwm_ops = {
+> > +	.request = cros_ec_pwm_request,
+> > +	.free = cros_ec_pwm_free,
+> 
+> nit: Align using tabs for readability.
 
-  Revert "pwm: Let pwm_get_state() return the last implemented state" (2019-10-21 16:48:52 +0200)
+My personal opinion here is that not aligning is saner in the long run.
+For me at least it doesn't disturb readability, and once you have
 
-are available in the Git repository at:
+	.request	= cros_ec_pwm_request,
+	.free		= cros_ec_pwm_free,
+	.get_state	= cros_ec_pwm_get_state,
+	.apply		= cros_ec_pwm_apply,
+	.owner		= THIS_MODULE,
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.5-rc1
+and want to set a new member with a long name, fixing the unrelated
+lines adds churn and not fixing them looks as ugly as it does with mixed
+styling. So I prefer to go with "<space>=<space>" from the start.
 
-for you to fetch changes up to f5ff2628867b9c7cb4abb6c6a5a7eea079dad4b6:
+> >  	.get_state	= cros_ec_pwm_get_state,
+> >  	.apply		= cros_ec_pwm_apply,
+> >  	.owner		= THIS_MODULE,
 
-  pwm: imx27: Unconditionally write state to hardware (2019-10-21 16:58:09 +0200)
+But given that the already existing members are already using some
+indention following this style seems right.
 
-Thanks,
-Thierry
+@Thierry: You didn't pick up this in your pull request. Should it stay
+as it is now with the mixed style to not add churn, or should we fix to
+something uniform?
 
-----------------------------------------------------------------
-pwm: Changes for v5.5-rc1
+Best regards
+Uwe
 
-Various changes and minor fixes across a couple of drivers.
-
-----------------------------------------------------------------
-Colin Ian King (1):
-      pwm: sun4i: Drop redundant assignment to variable pval
-
-Fabrice Gasnier (3):
-      dt-bindings: pwm-stm32: Document pinctrl sleep state
-      pwm: stm32: Split breakinput apply routine to ease PM support
-      pwm: stm32: Add power management support
-
-Ondrej Jirman (1):
-      pwm: sun4i: Fix incorrect calculation of duty_cycle/period
-
-Rasmus Villemoes (1):
-      pwm: Update comment on struct pwm_ops::apply
-
-Thierry Reding (8):
-      dt-bindings: pwm: mediatek: Remove gratuitous compatible string for MT7629
-      pwm: stm32: Validate breakinput data from DT
-      pwm: stm32: Remove clutter from ternary operator
-      pwm: stm32: Pass breakinput instead of its values
-      pwm: Read initial hardware state at request time
-      pwm: cros-ec: Cache duty cycle value
-      pwm: imx27: Cache duty cycle register value
-      pwm: imx27: Unconditionally write state to hardware
-
- .../devicetree/bindings/pwm/pwm-mediatek.txt       |   2 +-
- .../devicetree/bindings/pwm/pwm-stm32.txt          |   8 +-
- drivers/pwm/core.c                                 |   6 +-
- drivers/pwm/pwm-cros-ec.c                          |  58 ++++++++-
- drivers/pwm/pwm-imx27.c                            | 137 ++++++++++++---------
- drivers/pwm/pwm-stm32.c                            | 112 ++++++++++++-----
- drivers/pwm/pwm-sun4i.c                            |   5 +-
- include/linux/mfd/stm32-timers.h                   |  12 +-
- include/linux/pwm.h                                |   5 +-
- 9 files changed, 228 insertions(+), 117 deletions(-)
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
