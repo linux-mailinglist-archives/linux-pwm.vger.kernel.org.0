@@ -2,116 +2,102 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F8CD118EC9
-	for <lists+linux-pwm@lfdr.de>; Tue, 10 Dec 2019 18:20:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B494118F40
+	for <lists+linux-pwm@lfdr.de>; Tue, 10 Dec 2019 18:47:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727568AbfLJRUh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 10 Dec 2019 12:20:37 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51963 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727553AbfLJRUg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 10 Dec 2019 12:20:36 -0500
-Received: by mail-wm1-f68.google.com with SMTP id d73so860771wmd.1;
-        Tue, 10 Dec 2019 09:20:35 -0800 (PST)
+        id S1727566AbfLJRr3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 10 Dec 2019 12:47:29 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42364 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727527AbfLJRr2 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 10 Dec 2019 12:47:28 -0500
+Received: by mail-wr1-f65.google.com with SMTP id a15so21080199wrf.9;
+        Tue, 10 Dec 2019 09:47:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vXNgKnKakq//mqsjHx2g+hBYoldB3gxR/8Kku6DLL+U=;
-        b=CZ0bHp90mZ89RJhZ5yeN2D65NblE7wKE0cp66lieBBsxBZc5lAmTZuxm5C9j8z2ddz
-         d7XTirSpIozZ8RuBDecQ10Zi1Pde6T4J9Bh0mj6TFDaIYi0frSMXMUNE8ZEVMhgrhi2m
-         L+OkGfKViJ6zdA76ZinbMbuxJ5BTebyhU84OQlBQ1VPCmXudz4wr0Nc6FpWzeCx/aXG7
-         BHT6H2167RZV1xAk//4oWSW/Jp6w/Kra1N47pxDGvFTvnJoklLfZIpWVi652VFVARlZT
-         VuEkS8l8aVU7Enz09V2pFbMok3B7iPSpMDEk6KTYZHx5uqs6+OW3gtj/BfnhmpVqA8ky
-         ncUw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pB5aeFO1410E6SGmKnOdXbn7rGZMrphLj2vjpPn/Q54=;
+        b=tZLox4/DcbVLjr0GuKmEUZ40aNSAzAUtXPNsdWDCbuh/YucUzlcc3IO9PvmIXMJrwT
+         KInAl4ad0Xe1fZrHkiU98FAJCxGyMhGD+vv5Cn/3E5cC8BML1uGijPRDCYIA1p8GMu8K
+         mQLsTGnCnRAow9YGWhSDdbXybSYxkyiibX9TOBXC/s4mjNX4JzuBQ1uG65w6jPdGBMIB
+         DGwqFkiCMaZc/iQCqAs8xblVQgkP4h5bt5BSv76IGx8OW0aXyXsiP/B9e/9eKCJMesbH
+         pKx6nSMO4ihtGy7UlpzVcgyOq/OTaESIt/Qp0AROW4eCHHXaEJgoDFefn4e8ybgFfTGf
+         5TFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vXNgKnKakq//mqsjHx2g+hBYoldB3gxR/8Kku6DLL+U=;
-        b=EXIylpDxwZgf0wiF0vFhyhPrpgLIyTpD2ZQtNut8sPMrKlKmT+s3KJIyu4nxsRmDPY
-         rsf1sHLzUgLXu2EsvoiHFT7TKXcRRM/6MHRGKdBECuAEFvOx2Vg3cm+coiSvw9UJpm5e
-         /n0KvMOf9P+wjb70ZlWDzRa6LNZTIpjfZmkr/dLtTn0jpBvkVifRK0aSx4cbGtqE4ztY
-         VZpgvCbDSL+PZaE/9T8jDRCO5xEFe9whm9vPFOSIlqO0k3UIkP2qm2Dh60ImTzJbd2vu
-         Qy93hlnOrmjnLn11+EWrqKrVj/Wl9hv0IKczRb/BsCCuSgF5eOZg5HECZIpHABXrmk8V
-         MsgQ==
-X-Gm-Message-State: APjAAAX+ESZv/fyJ+k4ScUx/GA4mWDJDjRZNpzRO680/v4CmricW7NXy
-        xoI9bK5XrJlQKdghjCnkv23xtfN18dFfCZL2AcY=
-X-Google-Smtp-Source: APXvYqzq2LF8lClRiVJknmho7Xph1Cns7f+NRbX50kA9+PcdLQvbd5vJqhRZzwD+i28IAUbyBTJ6d0Se3jofTsXHQ4I=
-X-Received: by 2002:a1c:a7c8:: with SMTP id q191mr6114178wme.176.1575998434072;
- Tue, 10 Dec 2019 09:20:34 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pB5aeFO1410E6SGmKnOdXbn7rGZMrphLj2vjpPn/Q54=;
+        b=S6jYYqJXezJThjic7STyjNznDPyx/gG1iL0YKhVLcf5sWrw6DD06Sn8WcIhrf3ars5
+         Xp9G3kMz+mv+/452vBYUI1HRGK9A1XxPoe/4Cnw4sV6QIO8dmxKwox2XAYkqJTLeAYl6
+         AkIqyQp+Z2VlQPFFONvEiBJWPaXjpasltINsw5vG9rfeOl2warZZyCr/QveiIOZ87508
+         5Ns5WzsTMC3fRww+4i3umVaCZnrvGVLODqQSYOj1o5PKTa6vDjgNuKILX7ptI+er9NdG
+         DYbKdWb3P/8qPR9zUm8nwTxT+tyFAGFS190yEc13G2cwgoXetkHGJqDtYY3uE59XF0Xf
+         uVRg==
+X-Gm-Message-State: APjAAAWEC0XFhCF/B3XYJwIyc8VLyr/ewO9MO+xqxPihozpsb0WUGOI6
+        2iFBSUeu25mCaThzzMZya8Q=
+X-Google-Smtp-Source: APXvYqz/yJP6QpGzZqSAc9mGuduUlZcsBSpQ40KMnzjM4er7cgiFR/7ZbB/7mnLGr6iMRnmun5xyEA==
+X-Received: by 2002:adf:f990:: with SMTP id f16mr4772626wrr.185.1576000046349;
+        Tue, 10 Dec 2019 09:47:26 -0800 (PST)
+Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
+        by smtp.gmail.com with ESMTPSA id s8sm3966040wrt.57.2019.12.10.09.47.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 09:47:25 -0800 (PST)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Rob Herring <robh@kernel.org>, Maxime Ripard <maxime@cerno.tech>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Chen-Yu Tsai <wens@csie.org>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH] dt-bindings: pwm: allwinner: Fix missing header in H6 example
+Date:   Tue, 10 Dec 2019 18:47:10 +0100
+Message-Id: <20191210174710.10649-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191119175319.16561-1-peron.clem@gmail.com> <20191121072408.GE4345@gilmour.lan>
- <CAL_JsqJevcG2qv+BYKTnP=out0jPxuEcdYuLq7idxK04Q05fag@mail.gmail.com>
-In-Reply-To: <CAL_JsqJevcG2qv+BYKTnP=out0jPxuEcdYuLq7idxK04Q05fag@mail.gmail.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Tue, 10 Dec 2019 18:20:22 +0100
-Message-ID: <CAJiuCcd3ttm_DxBrpB8b+yWAZLbvP1zAEp=vL4iNXD8cD=Zxyw@mail.gmail.com>
-Subject: Re: [PATCH v7 0/8] Add support for H6 PWM
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Rob,
+Latest linux-next doesn't build due to the following error:
 
-On Tue, 10 Dec 2019 at 17:48, Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Thu, Nov 21, 2019 at 1:24 AM Maxime Ripard <maxime@cerno.tech> wrote:
-> >
-> > On Tue, Nov 19, 2019 at 06:53:11PM +0100, Cl=C3=A9ment P=C3=A9ron wrote=
-:
-> > > Hi,
-> > >
-> > > This is a rework of Jernej's previous work[1] taking account all the
-> > > previous remarks.
-> > >
-> > > Bindings is still strict but probe in the driver are now optionnals.
-> > >
-> > > If someone could confirm that the PWM is not broken, as my board
-> > > doesn't output it.
-> > >
-> > > I didn't add the acked-tags as there are big changes.
-> >
-> > Applied 1 and 7 for 5.6, thanks!
->
-> I believe patch 7 breaks linux-next:
+Error: Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.example.dts:35.37-38
+syntax error
+FATAL ERROR: Unable to parse input tree
+make[1]: *** [Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.example.dt.yaml]
+Error 1
 
-Sorry for that,
+This is due to missing header in the device-tree yaml example.
 
->
-> Error: Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.exam=
-ple.dts:35.37-38
-> syntax error
-> FATAL ERROR: Unable to parse input tree
-> make[1]: *** [Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-p=
-wm.example.dt.yaml]
-> Error 1
->
-> Usually that's due to a missing include.
-Indeed include are missing.
+Fix this by adding the missing headers.
 
-I will send a patch ASAP with a fixes tag.
+Fixes: 4ee929b3f08e ("dt-bindings: pwm: allwinner: Add H6 PWM description")
+Reported-by: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ .../devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml       | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Thanks for the report,
-Cl=C3=A9ment
+diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+index a7dc19fc347a..fab89f052450 100644
+--- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+@@ -93,6 +93,9 @@ examples:
+     };
+ 
+   - |
++    #include <dt-bindings/clock/sun50i-h6-ccu.h>
++    #include <dt-bindings/reset/sun50i-h6-ccu.h>
++
+     pwm@300a000 {
+       compatible = "allwinner,sun50i-h6-pwm";
+       reg = <0x0300a000 0x400>;
+-- 
+2.20.1
 
->
-> Rob
