@@ -2,45 +2,43 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E552111848D
-	for <lists+linux-pwm@lfdr.de>; Tue, 10 Dec 2019 11:12:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD5E51184ED
+	for <lists+linux-pwm@lfdr.de>; Tue, 10 Dec 2019 11:24:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfLJKMf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 10 Dec 2019 05:12:35 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40981 "EHLO
+        id S1727127AbfLJKYx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 10 Dec 2019 05:24:53 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51637 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfLJKMf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 10 Dec 2019 05:12:35 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        with ESMTP id S1726915AbfLJKYx (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 10 Dec 2019 05:24:53 -0500
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1iecVL-00015W-G5; Tue, 10 Dec 2019 11:12:31 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        id 1iechH-0002GB-4u; Tue, 10 Dec 2019 11:24:51 +0100
+Received: from ukl by dude.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1iecVK-0005Q1-2t; Tue, 10 Dec 2019 11:12:30 +0100
-Date:   Tue, 10 Dec 2019 11:12:29 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        id 1iechG-000777-It; Tue, 10 Dec 2019 11:24:50 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     walter harms <wharms@bfs.de>
-Cc:     Colin King <colin.king@canonical.com>,
+To:     Colin King <colin.king@canonical.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        kernel@pengutronix.de, linux-pwm@vger.kernel.org,
+        Walter Harms <wharms@bfs.de>
+Cc:     kernel@pengutronix.de, linux-pwm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         kernel-janitors@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH] pwm: sun4i: Narrow scope of local variable
-Message-ID: <20191210101229.rvqelc2hanisd2cp@pengutronix.de>
-References: <20191002101624.gljyf7g4nia2rcbx@pengutronix.de>
- <20191205072404.6858-1-u.kleine-koenig@pengutronix.de>
- <5DE8C1E3.4080204@bfs.de>
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v2] pwm: sun4i: Narrow scope of local variable
+Date:   Tue, 10 Dec 2019 11:24:44 +0100
+Message-Id: <20191210102444.26594-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191210101229.rvqelc2hanisd2cp@pengutronix.de>
+References: <20191210101229.rvqelc2hanisd2cp@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5DE8C1E3.4080204@bfs.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
@@ -49,44 +47,61 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Walter,
+The variable pval is only used in a single block in the function
+sun4i_pwm_calculate(). So declare it in a more local scope to simplify
+the function for humans and compilers.
 
-On Thu, Dec 05, 2019 at 09:37:55AM +0100, walter harms wrote:
-> Am 05.12.2019 08:24, schrieb Uwe Kleine-König:
-> > +			unsigned int pval;
-> > +
-> >  			if (!prescaler_table[prescaler])
-> >  				continue;
-> >  			pval = prescaler_table[prescaler];
-> 
-> 
-> nit picking:
-> Doing the assignment first would remove the only use
-> of prescaler_table[prescaler].
+While at it also simplify assignment to pval.
 
-nit picking: it would be reduced to a single use?!
+While the diffstat for this patch is negative for this patch I still
+thing the advantage of having a narrower scope is beneficial.
 
-> unsigned int pval = prescaler_table[prescaler];
-> if ( ! pval )
->   continue;
+In my compiler / .config setup (gcc 8.2.1, arm/imx_v6_v7_defconfig +
+COMPILE_TEST + PWM_SUN4I) this change doesn't result in any binary
+changes.
 
-Right, will send a v2 with that.
+Signed-off-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
+---
+Hello,
 
-> if you feel adventures you could also replace the for() for a while()
-> since we know that prescaler == 0.
-> 
-> while ( prescaler < PWM_PRESCAL_MASK )
-> {
-> unsigned int pval = prescaler_table[prescaler++];
-> ....
+changes since (implicit) v1:
 
-That however has some side effects as prescaler is used after leaving
-the loop.
+ - also simplify assignment to pval as suggested by Walter
+ - verify the patch doesn't introduce binary changes
 
 Best regards
 Uwe
 
+ drivers/pwm/pwm-sun4i.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+index 1fa2057419fb..4f77ebc8ae69 100644
+--- a/drivers/pwm/pwm-sun4i.c
++++ b/drivers/pwm/pwm-sun4i.c
+@@ -152,7 +152,7 @@ static int sun4i_pwm_calculate(struct sun4i_pwm_chip *sun4i_pwm,
+ 			       u32 *dty, u32 *prd, unsigned int *prsclr)
+ {
+ 	u64 clk_rate, div = 0;
+-	unsigned int pval, prescaler = 0;
++	unsigned int prescaler = 0;
+ 
+ 	clk_rate = clk_get_rate(sun4i_pwm->clk);
+ 
+@@ -173,9 +173,11 @@ static int sun4i_pwm_calculate(struct sun4i_pwm_chip *sun4i_pwm,
+ 	if (prescaler == 0) {
+ 		/* Go up from the first divider */
+ 		for (prescaler = 0; prescaler < PWM_PRESCAL_MASK; prescaler++) {
++			unsigned int pval = prescaler_table[prescaler];
++
+-			if (!prescaler_table[prescaler])
++			if (!pval)
+ 				continue;
+-			pval = prescaler_table[prescaler];
++
+ 			div = clk_rate;
+ 			do_div(div, pval);
+ 			div = div * state->period;
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.24.0
+
