@@ -2,88 +2,131 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D068511A5E7
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Dec 2019 09:33:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B52C411A6A1
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Dec 2019 10:20:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbfLKIdf convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Wed, 11 Dec 2019 03:33:35 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46932 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfLKIdf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Dec 2019 03:33:35 -0500
-Received: by mail-ed1-f65.google.com with SMTP id m8so18639328edi.13;
-        Wed, 11 Dec 2019 00:33:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HzQhBjl4CEATxmwnIgxUg2g0u1Z69db5jVtArs+GAuc=;
-        b=dQRppAsGdy3FvauCVF7oYCrZHl2I79rgZuPJixQwb4C5MoZZyaEyIBUsVRdPfqbxnU
-         xHvrBCtCUZkSdJw7ivlikRK4LrKHAjrZC2/+QVci0YUwhCQHqi80Zw8jxpOMznTnrUYy
-         YBcg3r+7KDWSwQI1oihAooUVaRIJl/82wd7zSSMvK3D+qi42a4PzkccRo3fNxTyeYkEe
-         vWgYZ5/GXBSaF2lZNzFsOKGPPnP6En3vq1RyUMDjC+Ho1LIitEkT+f98ukzQheyq+xto
-         jQb9YRu/uJmLvcIeY//ekghPAtVom0ckfVpbwomS194Cm5ycV8oPChQTj81QqmmJEWNl
-         CHqQ==
-X-Gm-Message-State: APjAAAVyD03+ZwIcumqlYlcHnrCmyb6A0bLQ4vR+bjI/jG9vOHZFVvnN
-        Fc4ORy6zCZ+uYSuIWoAAM7kxMWDWPx0=
-X-Google-Smtp-Source: APXvYqzwQTuYd/TjOPWeR3KKV7am/bZZPm2uZWfhkZtV7xZYTGc/D59x8oNVY8mQByduPUhvCHkP0w==
-X-Received: by 2002:a50:ce56:: with SMTP id k22mr1969229edj.34.1576053212561;
-        Wed, 11 Dec 2019 00:33:32 -0800 (PST)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com. [209.85.221.46])
-        by smtp.gmail.com with ESMTPSA id bx25sm22710edb.80.2019.12.11.00.33.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 00:33:32 -0800 (PST)
-Received: by mail-wr1-f46.google.com with SMTP id t2so23051585wrr.1;
-        Wed, 11 Dec 2019 00:33:32 -0800 (PST)
-X-Received: by 2002:adf:81e3:: with SMTP id 90mr2310139wra.23.1576053211823;
- Wed, 11 Dec 2019 00:33:31 -0800 (PST)
-MIME-Version: 1.0
-References: <20191210174710.10649-1-peron.clem@gmail.com> <20191211080633.a6yzwbxi7fcmislp@gilmour.lan>
-In-Reply-To: <20191211080633.a6yzwbxi7fcmislp@gilmour.lan>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Wed, 11 Dec 2019 16:33:19 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66mWgDKyZEWVVYqq5McOaYmiY0PSP7iXE8TBtVZv03u1Q@mail.gmail.com>
-Message-ID: <CAGb2v66mWgDKyZEWVVYqq5McOaYmiY0PSP7iXE8TBtVZv03u1Q@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pwm: allwinner: Fix missing header in H6 example
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        id S1727318AbfLKJUY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 11 Dec 2019 04:20:24 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:59127 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726983AbfLKJUY (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Dec 2019 04:20:24 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 9DBEE222DC;
+        Wed, 11 Dec 2019 04:20:22 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 11 Dec 2019 04:20:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=ySBDIdCmN4b66v2rt406sMgYC+s
+        60FnStsfbyOUEeeg=; b=lK3T3o0giemtq3YQD+fdy6n4+Y/JbEWxUJb9bw8gReN
+        n5F4wacWdJPv+fNbXUmgQinwkM9DbNryV6OY6tdKGxVpHYUdXtafvkKVXWXghBi5
+        +AjSUVkQi9IMtFpRpiGiWnvlg3aQw/IMICrFDHqLhVgrYDMyC8CzJxglgzzrRxX+
+        U844BRkkEdHObMkqKEmcu6GjwpRofqQ1Ij2zk3JtvEkIis/R67mWvhgTTm2aSWck
+        +xV2O5CAhrMxO4Nrf5Vx89Jg3/HSP+8oqcyOi9o2Z4w8xRymjKJWCPTYlXREzRhx
+        ASEsNnwajSU36b8S1oABFe7b3PLasijc5QjFGZIck1g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=ySBDId
+        CmN4b66v2rt406sMgYC+s60FnStsfbyOUEeeg=; b=i8CiQ1AekbDbtnMa1MAQlH
+        jJNEnytU+axw0liKJijffIqf5hg3KCBDAiDwHWXp15UBNzTV8Yn2EdYe2GzQwXzU
+        6RJ+SRSP+nANzWN86Kb+sssedgXVhJ0Jws4cNLnE41gbrLXvettTicKNcB0Ij3Mo
+        eE1J8BWjhGab3l1QQO1o0QT+BRoHUiTkPNob8GXqJaDOypWGy431TtehIBz0SdiQ
+        4KskTGurDGlcPoDI0eluej4hEY1d0H1MfZwva/qYQWe/ZP+s2eQqdZE/rxnxJarJ
+        37NE5cRITLcDBtZA7PgGHV9pCN35ZrcbabQ7xnwzZpdRqwhNc6luWaOOMHBgdMUw
+        ==
+X-ME-Sender: <xms:07TwXUWgUUFvb1atOGXCsPcKBwfuNGuUrQlyiAVeD59E5yyHpMOrbw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudelgedguddvfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkpheple
+    dtrdekledrieekrdejieenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegt
+    vghrnhhordhtvggthhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:07TwXdhN2bVbCV7eHGBM5QkkmlxgQ1jPByWumAuN-sSI-u70vGTX6w>
+    <xmx:07TwXQhImlbXa9AqY88BnXKuo4po4AT1C-yf1ChICA5zl8C8NeOBCQ>
+    <xmx:07TwXTxRgR3W0QjStv0V5nLeYZsd66UbpuwfPYpi01bmrGLaXjJ_hw>
+    <xmx:1rTwXT2rlkpc4W9MzzJ5PJkn4VGknYNT8XaJngsRlGFujWfsGf2LYg>
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1A7E88005B;
+        Wed, 11 Dec 2019 04:20:19 -0500 (EST)
+Date:   Wed, 11 Dec 2019 10:20:16 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
         Rob Herring <robh@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
         devicetree <devicetree@vger.kernel.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Subject: Re: [PATCH] dt-bindings: pwm: allwinner: Fix missing header in H6
+ example
+Message-ID: <20191211092016.2hhjw6mn7iefupql@gilmour.lan>
+References: <20191210174710.10649-1-peron.clem@gmail.com>
+ <20191211080633.a6yzwbxi7fcmislp@gilmour.lan>
+ <CAGb2v66mWgDKyZEWVVYqq5McOaYmiY0PSP7iXE8TBtVZv03u1Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tt72ar2obv6t5rpi"
+Content-Disposition: inline
+In-Reply-To: <CAGb2v66mWgDKyZEWVVYqq5McOaYmiY0PSP7iXE8TBtVZv03u1Q@mail.gmail.com>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 4:06 PM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> On Tue, Dec 10, 2019 at 06:47:10PM +0100, Clément Péron wrote:
-> > Latest linux-next doesn't build due to the following error:
-> >
-> > Error: Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.example.dts:35.37-38
-> > syntax error
-> > FATAL ERROR: Unable to parse input tree
-> > make[1]: *** [Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.example.dt.yaml]
-> > Error 1
-> >
-> > This is due to missing header in the device-tree yaml example.
-> >
-> > Fix this by adding the missing headers.
-> >
-> > Fixes: 4ee929b3f08e ("dt-bindings: pwm: allwinner: Add H6 PWM description")
-> > Reported-by: Rob Herring <robh+dt@kernel.org>
-> > Signed-off-by: Clément Péron <peron.clem@gmail.com>
->
-> Applied, thanks!
-> Maxime
 
-Maybe squash it instead? :)
+--tt72ar2obv6t5rpi
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-ChenYu
+On Wed, Dec 11, 2019 at 04:33:19PM +0800, Chen-Yu Tsai wrote:
+> On Wed, Dec 11, 2019 at 4:06 PM Maxime Ripard <maxime@cerno.tech> wrote:
+> >
+> > On Tue, Dec 10, 2019 at 06:47:10PM +0100, Cl=E9ment P=E9ron wrote:
+> > > Latest linux-next doesn't build due to the following error:
+> > >
+> > > Error: Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.=
+example.dts:35.37-38
+> > > syntax error
+> > > FATAL ERROR: Unable to parse input tree
+> > > make[1]: *** [Documentation/devicetree/bindings/pwm/allwinner,sun4i-a=
+10-pwm.example.dt.yaml]
+> > > Error 1
+> > >
+> > > This is due to missing header in the device-tree yaml example.
+> > >
+> > > Fix this by adding the missing headers.
+> > >
+> > > Fixes: 4ee929b3f08e ("dt-bindings: pwm: allwinner: Add H6 PWM descrip=
+tion")
+> > > Reported-by: Rob Herring <robh+dt@kernel.org>
+> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> >
+> > Applied, thanks!
+> > Maxime
+>
+> Maybe squash it instead? :)
+
+Indeed, I just did.
+
+Thanks!
+Maxime
+
+--tt72ar2obv6t5rpi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfC00AAKCRDj7w1vZxhR
+xaW5AQD69VlsGmpCynvOIn/zNXum5pWnY3SEEbx2GLYyZPdLZQD/TXS6GjJD2+MJ
+MiEEHgbac/j7/sn/oCxDjRN5XAUaoQg=
+=9JT0
+-----END PGP SIGNATURE-----
+
+--tt72ar2obv6t5rpi--
