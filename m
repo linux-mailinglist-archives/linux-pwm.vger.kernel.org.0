@@ -2,117 +2,83 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C1C9811A889
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Dec 2019 11:03:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EF3C11AEA2
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Dec 2019 16:00:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbfLKKD0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 11 Dec 2019 05:03:26 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42125 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728634AbfLKKD0 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Dec 2019 05:03:26 -0500
-Received: by mail-qt1-f196.google.com with SMTP id j5so5728144qtq.9
-        for <linux-pwm@vger.kernel.org>; Wed, 11 Dec 2019 02:03:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9cAOkUmumX1baWPx8mq3cUq6Rwz3U0hfDddkRl9OQAQ=;
-        b=aMd/OWlqZFzVIYrC+5D3onezrFpfiY4lwf7ZzCS9YYoEonUgO1FmDUptCXo1djU6bW
-         h+QaDHb47NJmtyOD3WXT4eYT/6dSgxYeNQHtHWgTNwBGc93BJslZj5h3bItsM/Sp0elI
-         s2kIkrYn6Z3mrggJns1IHJaC0pNM5zoNKf0zLLWf8OVHFADMNfNyRw4oCZFvJZ/eyjZQ
-         bSuJHAkRw5ur5UgivinXLJhcnGlp6WfQuaTeZUFVJ0k1JT8bShEN3ZlpuIr87RmikCLQ
-         CqS/SyxpwJQEnUaaRRAAt20VRZ+wWw+zHWEy7Lyy6Kot8b2T77DKtGpG3Bvkmknv4nET
-         1qxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9cAOkUmumX1baWPx8mq3cUq6Rwz3U0hfDddkRl9OQAQ=;
-        b=r7CKvwtBZ7KxYvua9HBA2wfxTCY+pUhYct4i19/gDx05j3RQgvlbmyWN4klj1BrR1K
-         4q5yt9aRa9nQRO39rM2NiTeXUcKVXI80HxlLSIeSnyZp8y4z5pk6PQsHLdK2iDqXzs98
-         FmeMyCZvMXxUHP/48/7dpX7QWjpQDtylQvS8+13tvALHphNLxFUEhKAjXXtiAxCRcE4E
-         zDN/0aSoDKsNuukGcTGwthcdw7VtdWu7GO7+nzj2Sc2y7MEM9gC7F0s07nfRPln3qRG7
-         5ubWU8j1Lyhl86yiqefko3jmTgZ1ZDb4b61ahNxdEmL92X8Oxykm57jSPCNKW2vbrNzM
-         8kkw==
-X-Gm-Message-State: APjAAAVR8TMbMJF9T/QEs0X4/y6HIYzinuzh/AxTrUibAfAMO55vOO/B
-        zFDeRdNGNI7EzzhlyX5CgqVKkcwx9PqM2Pr+C4lUfg==
-X-Google-Smtp-Source: APXvYqytoucRYG6syAs7nvi4fXL/HwMswDafJP5Ndd2GpOVbJ1lLN+murfZoUtXD9BpSNF0ppyVWKopA4zeVoqnfgJc=
-X-Received: by 2002:ac8:5208:: with SMTP id r8mr1934293qtn.131.1576058604073;
- Wed, 11 Dec 2019 02:03:24 -0800 (PST)
+        id S1728030AbfLKPAj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 11 Dec 2019 10:00:39 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:34765 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727457AbfLKPAj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Dec 2019 10:00:39 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBBEhAkJ010271;
+        Wed, 11 Dec 2019 16:00:28 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=X7XKW0IFAjlaDZjhcypUC4M+ZEHKNAi6hKrzPgGf/sA=;
+ b=g/T3BAzqjvFArvGv1o4HuY9OIO22HvWGAaXTT+CnW4j8jfwbJ6TP9Tim9UfR/B0lpoJl
+ Xwk/DEXeTLq1qmWfigTr/k3/tNlypJMk77VniAOT21OarcOXgMPQKVwquoZ+eSJCf3Dh
+ cHg/yfs5iTVAQzL9QXcgMXUnPoI2rSuNE7OcRgba9/lKaREWnwANC1r4+Axj7vWNOo7b
+ iG/tEac4gj5zxlM1dOQ7Gnr0qGG5BsE+Nsjw6xi9gQ55uP0FNjkaRzd7JW3xG309o6fI
+ G0Y7krqmELHZeQLoy1m9zImC6QfXMIYZN0ODZJhh3821Om02TyA9zb3t03wtkBpWgubA 8Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wtfqh4wyx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Dec 2019 16:00:28 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 74EEB10002A;
+        Wed, 11 Dec 2019 16:00:24 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5E69F2BC7C8;
+        Wed, 11 Dec 2019 16:00:24 +0100 (CET)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 11 Dec 2019 16:00:24
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] dt-bindings: pwm: fix nodename pattern
+Date:   Wed, 11 Dec 2019 16:00:21 +0100
+Message-ID: <20191211150021.20125-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-References: <1575451330-11112-1-git-send-email-peng.fan@nxp.com>
- <1575451330-11112-2-git-send-email-peng.fan@nxp.com> <20191204100925.sjp6cztozlm5qm6y@pengutronix.de>
- <CAMpxmJWMSnTB6JF8vOCmQzE3swWhbx8uwNEzU=qf49L26QCDPQ@mail.gmail.com> <20191211094954.qk44xv3uh33rgz7z@pengutronix.de>
-In-Reply-To: <20191211094954.qk44xv3uh33rgz7z@pengutronix.de>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 11 Dec 2019 11:03:13 +0100
-Message-ID: <CAMpxmJVSe9crFabywAdeEWWRYmCW9cE2tRcKBb7eyfKuPV9RXw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] gpio: bcm-kona: use platform_irq_count
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "rjui@broadcom.com" <rjui@broadcom.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-11_03:2019-12-11,2019-12-11 signatures=0
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-=C5=9Br., 11 gru 2019 o 10:49 Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> napisa=C5=82(a):
->
-> On Wed, Dec 11, 2019 at 10:30:33AM +0100, Bartosz Golaszewski wrote:
-> > =C5=9Br., 4 gru 2019 o 11:09 Uwe Kleine-K=C3=B6nig
-> > <u.kleine-koenig@pengutronix.de> napisa=C5=82(a):
-> > >
-> > > On Wed, Dec 04, 2019 at 09:24:39AM +0000, Peng Fan wrote:
-> > > > From: Peng Fan <peng.fan@nxp.com>
-> > > >
-> > > > platform_irq_count() is the more generic way (independent of
-> > > > device trees) to determine the count of available interrupts. So
-> > > > use this instead.
-> > > >
-> > > > As platform_irq_count() might return an error code (which
-> > > > of_irq_count doesn't) some additional handling is necessary.
-> > > >
-> > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > > ---
-> > > >
-> > > > V3:
-> > > >  Use %pe
-> > >
-> > > Great. Note that with %pe there is a dependency on commit 57f5677e535=
-b
-> > > ("printf: add support for printing symbolic error names") which was
-> > > applied during the current merge window.
-> > >
-> >
-> > Why would %pe be better in this case? The function returned an int -
-> > why convert it to a pointer?
->
-> The conversion to a pointer is (currently still) needed, because there
-> is no printk facility (yet) that consumes an int error pointer and
-> results in the respecting code.
->
-> Somewhere on my todo-list is an item to fix that, but we're not there
-> yet and so the best option is to use %pe.
->
+Typical pwm nodes should be named pwm@xxx.
+The pattern shouldn't match nodes named pwm-xxx to avoid
+conflicts with pinmux or pwm-fan nodes.
 
-Fair enough, I wasn't aware of this new format modifier.
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ Documentation/devicetree/bindings/pwm/pwm.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Both applied.
+diff --git a/Documentation/devicetree/bindings/pwm/pwm.yaml b/Documentation/devicetree/bindings/pwm/pwm.yaml
+index fa4f9de92090..29b86886c282 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/pwm.yaml
+@@ -11,7 +11,7 @@ maintainers:
+ 
+ properties:
+   $nodename:
+-    pattern: "^pwm(@.*|-[0-9a-f])*$"
++    pattern: "^pwm(@.*[0-9a-f])*$"
+ 
+   "#pwm-cells":
+     description:
+-- 
+2.15.0
 
-Bartosz
