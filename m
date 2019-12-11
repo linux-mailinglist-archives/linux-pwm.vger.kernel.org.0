@@ -2,131 +2,148 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B52C411A6A1
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Dec 2019 10:20:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D93811A71F
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Dec 2019 10:30:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbfLKJUY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 11 Dec 2019 04:20:24 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:59127 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726983AbfLKJUY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Dec 2019 04:20:24 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 9DBEE222DC;
-        Wed, 11 Dec 2019 04:20:22 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 11 Dec 2019 04:20:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=ySBDIdCmN4b66v2rt406sMgYC+s
-        60FnStsfbyOUEeeg=; b=lK3T3o0giemtq3YQD+fdy6n4+Y/JbEWxUJb9bw8gReN
-        n5F4wacWdJPv+fNbXUmgQinwkM9DbNryV6OY6tdKGxVpHYUdXtafvkKVXWXghBi5
-        +AjSUVkQi9IMtFpRpiGiWnvlg3aQw/IMICrFDHqLhVgrYDMyC8CzJxglgzzrRxX+
-        U844BRkkEdHObMkqKEmcu6GjwpRofqQ1Ij2zk3JtvEkIis/R67mWvhgTTm2aSWck
-        +xV2O5CAhrMxO4Nrf5Vx89Jg3/HSP+8oqcyOi9o2Z4w8xRymjKJWCPTYlXREzRhx
-        ASEsNnwajSU36b8S1oABFe7b3PLasijc5QjFGZIck1g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=ySBDId
-        CmN4b66v2rt406sMgYC+s60FnStsfbyOUEeeg=; b=i8CiQ1AekbDbtnMa1MAQlH
-        jJNEnytU+axw0liKJijffIqf5hg3KCBDAiDwHWXp15UBNzTV8Yn2EdYe2GzQwXzU
-        6RJ+SRSP+nANzWN86Kb+sssedgXVhJ0Jws4cNLnE41gbrLXvettTicKNcB0Ij3Mo
-        eE1J8BWjhGab3l1QQO1o0QT+BRoHUiTkPNob8GXqJaDOypWGy431TtehIBz0SdiQ
-        4KskTGurDGlcPoDI0eluej4hEY1d0H1MfZwva/qYQWe/ZP+s2eQqdZE/rxnxJarJ
-        37NE5cRITLcDBtZA7PgGHV9pCN35ZrcbabQ7xnwzZpdRqwhNc6luWaOOMHBgdMUw
-        ==
-X-ME-Sender: <xms:07TwXUWgUUFvb1atOGXCsPcKBwfuNGuUrQlyiAVeD59E5yyHpMOrbw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudelgedguddvfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkpheple
-    dtrdekledrieekrdejieenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegt
-    vghrnhhordhtvggthhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:07TwXdhN2bVbCV7eHGBM5QkkmlxgQ1jPByWumAuN-sSI-u70vGTX6w>
-    <xmx:07TwXQhImlbXa9AqY88BnXKuo4po4AT1C-yf1ChICA5zl8C8NeOBCQ>
-    <xmx:07TwXTxRgR3W0QjStv0V5nLeYZsd66UbpuwfPYpi01bmrGLaXjJ_hw>
-    <xmx:1rTwXT2rlkpc4W9MzzJ5PJkn4VGknYNT8XaJngsRlGFujWfsGf2LYg>
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1A7E88005B;
-        Wed, 11 Dec 2019 04:20:19 -0500 (EST)
-Date:   Wed, 11 Dec 2019 10:20:16 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: pwm: allwinner: Fix missing header in H6
- example
-Message-ID: <20191211092016.2hhjw6mn7iefupql@gilmour.lan>
-References: <20191210174710.10649-1-peron.clem@gmail.com>
- <20191211080633.a6yzwbxi7fcmislp@gilmour.lan>
- <CAGb2v66mWgDKyZEWVVYqq5McOaYmiY0PSP7iXE8TBtVZv03u1Q@mail.gmail.com>
+        id S1728447AbfLKJap (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 11 Dec 2019 04:30:45 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39308 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728265AbfLKJao (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Dec 2019 04:30:44 -0500
+Received: by mail-qt1-f196.google.com with SMTP id i12so4511297qtp.6
+        for <linux-pwm@vger.kernel.org>; Wed, 11 Dec 2019 01:30:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2BC+9/TiZfps/b95kJW4uBoQA4KaDxSNdYTJBUn4gCs=;
+        b=NPdllIBA+bj+UStDT7bl1Rv1PclFC4OqrdpoNdXo7cz0Mj3FkjxI7pucjAVFANaogi
+         NffE55LMj+mJ4LTVFm3bo448ejF9005PtfGOKoL+yTsoq5GKf6d0nGG27QNWKnRCeR0N
+         p9x0u0eR+7IbL+Q6djt0iTdnKLCIC3O6fdu2+FXFF20Ghki/CCvNgGlK2G6q7JTApE73
+         it0Wf6/UpiTErJcyhUgIPY4BHonA5IkzXb9j2/d0yRW8o99nrsbIYRxYpNzgVy0E6A/3
+         vTglo5Mm4bq6+Ay6AKQU8yPUea8RGK3cdIxqXAqKlbCktXdNOBxZxzbzJB8yfqSQnjrL
+         j5qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2BC+9/TiZfps/b95kJW4uBoQA4KaDxSNdYTJBUn4gCs=;
+        b=VKs7TtkhJf6sW8vRsDhsskGVJ7OorX7D0LGwZIGr9DgZJyaumzsTG1x6U8eXd3ZhHu
+         6wMnfSu03Ma4+nDZM67Jf00j9yGEmfYZBd5NwZ7EftuwsYQSbF+x54aPzOEjxWVjXxwX
+         iQhNvVuNaSpuHmdV1/mxWiTIcq+dyHKINREEoPONn2WbVbKuZM6NIgPYaC8C1zB2AAV5
+         An4+vkNFOeSlAt0kv+P8RrokzdFvyFX14A/kRXyqCSWyxHfngSx7EjAvvk/8Baiacyun
+         lq2S+p5Pz0O7+a6+6NWcdvIdWKKS/A9xGsFwq/w+eNtbKzuaS6lpxdK86o0aEdkX2NW6
+         eMhg==
+X-Gm-Message-State: APjAAAWiTpCA0pg+YmuOu/b4Cgnx8corLWy5T/EDyG7RDNkMrhDTNf+0
+        k4CNl7LChy76QdmIx48AvvZ8eaigtTo+CsbpNIL79w==
+X-Google-Smtp-Source: APXvYqxaTP18w6zc4VO5j7KsdsiDxibQ8t/74TgQNa6gYF+g7p5dJRc/VEErwcCQJiSS7ym4scFbWgWHFE2Li4AvAc4=
+X-Received: by 2002:ac8:6691:: with SMTP id d17mr1791217qtp.57.1576056643909;
+ Wed, 11 Dec 2019 01:30:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tt72ar2obv6t5rpi"
-Content-Disposition: inline
-In-Reply-To: <CAGb2v66mWgDKyZEWVVYqq5McOaYmiY0PSP7iXE8TBtVZv03u1Q@mail.gmail.com>
+References: <1575451330-11112-1-git-send-email-peng.fan@nxp.com>
+ <1575451330-11112-2-git-send-email-peng.fan@nxp.com> <20191204100925.sjp6cztozlm5qm6y@pengutronix.de>
+In-Reply-To: <20191204100925.sjp6cztozlm5qm6y@pengutronix.de>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 11 Dec 2019 10:30:33 +0100
+Message-ID: <CAMpxmJWMSnTB6JF8vOCmQzE3swWhbx8uwNEzU=qf49L26QCDPQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] gpio: bcm-kona: use platform_irq_count
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
---tt72ar2obv6t5rpi
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Dec 11, 2019 at 04:33:19PM +0800, Chen-Yu Tsai wrote:
-> On Wed, Dec 11, 2019 at 4:06 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> >
-> > On Tue, Dec 10, 2019 at 06:47:10PM +0100, Cl=E9ment P=E9ron wrote:
-> > > Latest linux-next doesn't build due to the following error:
-> > >
-> > > Error: Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.=
-example.dts:35.37-38
-> > > syntax error
-> > > FATAL ERROR: Unable to parse input tree
-> > > make[1]: *** [Documentation/devicetree/bindings/pwm/allwinner,sun4i-a=
-10-pwm.example.dt.yaml]
-> > > Error 1
-> > >
-> > > This is due to missing header in the device-tree yaml example.
-> > >
-> > > Fix this by adding the missing headers.
-> > >
-> > > Fixes: 4ee929b3f08e ("dt-bindings: pwm: allwinner: Add H6 PWM descrip=
-tion")
-> > > Reported-by: Rob Herring <robh+dt@kernel.org>
-> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> >
-> > Applied, thanks!
-> > Maxime
+=C5=9Br., 4 gru 2019 o 11:09 Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> napisa=C5=82(a):
 >
-> Maybe squash it instead? :)
+> On Wed, Dec 04, 2019 at 09:24:39AM +0000, Peng Fan wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > platform_irq_count() is the more generic way (independent of
+> > device trees) to determine the count of available interrupts. So
+> > use this instead.
+> >
+> > As platform_irq_count() might return an error code (which
+> > of_irq_count doesn't) some additional handling is necessary.
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >
+> > V3:
+> >  Use %pe
+>
+> Great. Note that with %pe there is a dependency on commit 57f5677e535b
+> ("printf: add support for printing symbolic error names") which was
+> applied during the current merge window.
+>
 
-Indeed, I just did.
+Why would %pe be better in this case? The function returned an int -
+why convert it to a pointer?
 
-Thanks!
-Maxime
+Bart
 
---tt72ar2obv6t5rpi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfC00AAKCRDj7w1vZxhR
-xaW5AQD69VlsGmpCynvOIn/zNXum5pWnY3SEEbx2GLYyZPdLZQD/TXS6GjJD2+MJ
-MiEEHgbac/j7/sn/oCxDjRN5XAUaoQg=
-=9JT0
------END PGP SIGNATURE-----
-
---tt72ar2obv6t5rpi--
+> > V2:
+> >  Update commit log, and add err handling
+> >  Not tested, just code inspection
+> >
+> >
+> >  drivers/gpio/gpio-bcm-kona.c | 12 +++++++++---
+> >  1 file changed, 9 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.=
+c
+> > index 4122683eb1f9..baee8c3f06ad 100644
+> > --- a/drivers/gpio/gpio-bcm-kona.c
+> > +++ b/drivers/gpio/gpio-bcm-kona.c
+> > @@ -19,7 +19,6 @@
+> >  #include <linux/io.h>
+> >  #include <linux/gpio/driver.h>
+> >  #include <linux/of_device.h>
+> > -#include <linux/of_irq.h>
+> >  #include <linux/init.h>
+> >  #include <linux/irqdomain.h>
+> >  #include <linux/irqchip/chained_irq.h>
+> > @@ -586,11 +585,18 @@ static int bcm_kona_gpio_probe(struct platform_de=
+vice *pdev)
+> >
+> >       kona_gpio->gpio_chip =3D template_chip;
+> >       chip =3D &kona_gpio->gpio_chip;
+> > -     kona_gpio->num_bank =3D of_irq_count(dev->of_node);
+> > -     if (kona_gpio->num_bank =3D=3D 0) {
+> > +     ret =3D platform_irq_count(pdev);
+> > +     if (!ret) {
+> >               dev_err(dev, "Couldn't determine # GPIO banks\n");
+> >               return -ENOENT;
+> > +     } else if (ret < 0) {
+> > +             if (ret !=3D -EPROBE_DEFER)
+> > +                     dev_err(dev, "Couldn't determine GPIO banks: (%pe=
+)\n",
+> > +                             ERR_PTR(ret));
+>
+> I'd say drop either the colon or the parenthesis.
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
