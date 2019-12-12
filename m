@@ -2,50 +2,50 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A92211D106
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Dec 2019 16:29:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 122D211D10D
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Dec 2019 16:31:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbfLLP3d (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 12 Dec 2019 10:29:33 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40218 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729009AbfLLP3d (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Dec 2019 10:29:33 -0500
-Received: by mail-lj1-f195.google.com with SMTP id s22so2742768ljs.7
-        for <linux-pwm@vger.kernel.org>; Thu, 12 Dec 2019 07:29:32 -0800 (PST)
+        id S1728939AbfLLPbv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 12 Dec 2019 10:31:51 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45829 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729013AbfLLPbv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Dec 2019 10:31:51 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 203so1997812lfa.12
+        for <linux-pwm@vger.kernel.org>; Thu, 12 Dec 2019 07:31:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qTpkotce35zOQrVkQ1ddp2xTck4OkTwMYGpdBkrE2zc=;
-        b=UzEaq2vnzr9sjAB8ubKyX2pmHVWmdWkuu+kXjYG2MrzZD1H3BCHFpbhGTRmEhU2lOT
-         OsxjshF4T1juteQFcTCADG9+eUhhqBXa1LK7eTSY3cUAUZTikyDVIqcbmcmZIQuRxA6L
-         +517/FUr48FJvqV5Tr9xy3tuB2iRmccAiG9kYzTcjSSq3rCLDwyjpt18RS8SYr9PA0jr
-         mXVoz/WVbIQmTmvhUapSfHUWf/g3WkNxTansBEtW996+m9U+dD+ToYp0AHoFboma2Umw
-         ef2KrP/fZWJce09hRI69t023T50EAaAtJXUh5Omb32YPhdLcg5ruX60UShLSzSr14EEY
-         d6mg==
+        bh=ECIp9lV6kJ+VM+6W7bBk3Sdy+LzurMj7dRD2Wk/+8N0=;
+        b=b/TELp6QCwaXPDO9kaxh1LNS6hl2y/m9h+qIZeOi/JE7x4Ws8x2zw0/PTtRzRfs2yy
+         K8UswXohSzdNsWP7mWOSDld6pgtvcOpoY8/jYLYvxxvntzQ4rpmeSlcZV3+H6LlOhS7b
+         v6U+gqlikaQqB8bJzmBmsEGMFL4yxu20K9mJNqkvPcQCbOvY1EANEeqtfIIon/R2gaHa
+         VlhrDdjqVizCY+mEHoFxzKRcEjd96cmVJ6fuIgKXipL685jRgQjRJaFraVv2haoI/GJE
+         qRAmbDDx67PT9FmuNVAi9DK8w7BiOKHsHcXm/HiRsA1mLqb5NNffqvRJk5lDBZIxg9Wv
+         Ns2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qTpkotce35zOQrVkQ1ddp2xTck4OkTwMYGpdBkrE2zc=;
-        b=JrC7Rn+YJrrf3eSym2qNqBShYTBQxpZ73soyBT2wxcVyJFCoSaNoY+0Y+RW1t/eEWm
-         WE2Rg7hFt/HMx5yhrmsGymo71ZGOyIJvrc+AXk3Aq7l8DtRvHmqU2h76CMXOTI8QhZMo
-         q6BkV7qG4uIeoufMU0AvFEIpJpFFVqYNc8HL1RIEuqyLdyb8doKAb4QqTZNk3E8WI3bn
-         LMDhCZiJXjKr3qS+4QHPjMA2ayMYPQtq78OY8Yqf/0vpQHiep5ExeKN+tnNCz9TBzMkQ
-         8VS47D8+98+7rOXhTKlW7ngyxEkoUgulS+FwzuMUzqVlaCwtynolw7HGnCXJlnMRsgyD
-         QjIA==
-X-Gm-Message-State: APjAAAWdGX5QjRAxORP8JdGzcpErOPN0gRdl5SH518yEZn3xvGNRCUhP
-        jI2G52/mTJVKCDNYqRrDGk96C7T9oHQw8HMEdDantA==
-X-Google-Smtp-Source: APXvYqyj+Hsn41+C6NSE3ED5W7WfWudu0qa263fd1v1kKFO4Z7x5NLyw0A//WCDy2x3t0vaix6Qdu0vgTudDQt588nQ=
-X-Received: by 2002:a2e:9ec4:: with SMTP id h4mr6403872ljk.77.1576164571573;
- Thu, 12 Dec 2019 07:29:31 -0800 (PST)
+        bh=ECIp9lV6kJ+VM+6W7bBk3Sdy+LzurMj7dRD2Wk/+8N0=;
+        b=NbdHjIPSVuXiQhyFTeDYqOmZeXRkeFnVfI9auvHIO0pfF84DUyLj808salrgSKdM3b
+         VZ5pRwIIK6sYgzyD9HF/bfHC6nfqXBTBhNmaPNGw/wNIZso3lf0f8Ds4nJu/VOKyhcGG
+         Yv58YnukaJLLsE+QcfutZzjtwvXSUKFHeOAhKaQxOmLBODfJtShHkAQEMgLQoYmfLkd+
+         BaF6mIrVALY6eM5Md07OPndPeqUaBN3JN0Y/vRzzVfm1xjdexb6lelHZeL8a1hzY38/1
+         WZCeaTz5dWa2YOv9U56cS8E/MN6hN631ZnKOPX3ZCi/fpMS6BIhtwu+n6V9I+kjkkmfJ
+         4KUw==
+X-Gm-Message-State: APjAAAXAG9x0wnpI/6YrBchZOns6Y8Mme9kITAbtdAPVfkP23sdQpn0E
+        O3F0tEvfRS9qlg0tbQGHEbBv57CXBagKrMaT1UAaRA==
+X-Google-Smtp-Source: APXvYqw1PlfuejP1ZPxzLQvWLLSvj4Zx4f38wbFgrFKRxNPyTKCVACivic8/ENzEHqljQsQrx4I1syaFHSBrQG19/gM=
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr5854026lfi.93.1576164708519;
+ Thu, 12 Dec 2019 07:31:48 -0800 (PST)
 MIME-Version: 1.0
-References: <1575352925-17271-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1575352925-17271-1-git-send-email-peng.fan@nxp.com>
+References: <1575352925-17271-1-git-send-email-peng.fan@nxp.com> <CACRpkdaTLVNXd+-j_gkOfKnTk02XaZiMA_XxUeM0_4zZ_F-=ug@mail.gmail.com>
+In-Reply-To: <CACRpkdaTLVNXd+-j_gkOfKnTk02XaZiMA_XxUeM0_4zZ_F-=ug@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Dec 2019 16:29:19 +0100
-Message-ID: <CACRpkdaTLVNXd+-j_gkOfKnTk02XaZiMA_XxUeM0_4zZ_F-=ug@mail.gmail.com>
+Date:   Thu, 12 Dec 2019 16:31:37 +0100
+Message-ID: <CACRpkdYjCnx46kOuWXMZFme3emm1TugqjQPDctakOppAeCZvZg@mail.gmail.com>
 Subject: Re: [PATCH 1/2] gpio: mvebu: use platform_irq_count
 To:     Peng Fan <peng.fan@nxp.com>
 Cc:     "rjui@broadcom.com" <rjui@broadcom.com>,
@@ -68,19 +68,24 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 7:04 AM Peng Fan <peng.fan@nxp.com> wrote:
+On Thu, Dec 12, 2019 at 4:29 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Tue, Dec 3, 2019 at 7:04 AM Peng Fan <peng.fan@nxp.com> wrote:
+>
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > Use platform_irq_count to replace of_irq_count
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >
+> > V1:
+> >  Code inspection, not tested
+>
+> Patch applied.
 
-> From: Peng Fan <peng.fan@nxp.com>
->
-> Use platform_irq_count to replace of_irq_count
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->
-> V1:
->  Code inspection, not tested
-
-Patch applied.
+Oops dropped again now that I see there are comments on
+2/2 that warrants a v2 of this as well.
 
 Yours,
 Linus Walleij
