@@ -2,103 +2,224 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 615BB11E28B
-	for <lists+linux-pwm@lfdr.de>; Fri, 13 Dec 2019 12:12:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB16211F90A
+	for <lists+linux-pwm@lfdr.de>; Sun, 15 Dec 2019 17:37:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfLMLMG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 13 Dec 2019 06:12:06 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:16232 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726608AbfLMLMG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 13 Dec 2019 06:12:06 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBDB9en6024382;
-        Fri, 13 Dec 2019 12:09:57 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=kn47bweEcRXjNdyx35wkLzXPiXE55ZWSwCRUAHvHXbA=;
- b=Dz5wO7vZTR3jxun7AaF48i5y0oFQ2pc7iZZlcyCCMeEoJin3Bpr6/iMy3UkCYKt/ZWhQ
- FnZweSWH/7Z+75WlrB0Nv/PaYOaTctPY/lJeJK7XWfivA3LkclQTOj0XdVWBVEoG8kqg
- Hu5En5eAQ443ZWw24bS3/KmdLOnlMX2xdv+Jscv6hMMc6aDrHjHGXm8zt4SUx8fl56Y+
- k5LGLR/wSWPEfXHBoIAouty4/WnpjAucLQXa1OYl2PH5Aoud0m63qvG61hMwRjXFIqZR
- kXp3fj/NXokm2BmWU4zdAm02br9XtEkBSQl1VqzBi0Q45nZDkXOJm5NRjnTQyS0+Jbcj 8g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wrbrfvrut-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 13 Dec 2019 12:09:57 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0406A100034;
-        Fri, 13 Dec 2019 12:09:52 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BDC572AB94E;
-        Fri, 13 Dec 2019 12:09:52 +0100 (CET)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 13 Dec
- 2019 12:09:52 +0100
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Fri, 13 Dec 2019 12:09:51 +0100
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Alexandre TORGUE <alexandre.torgue@st.com>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
+        id S1726299AbfLOQfC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 15 Dec 2019 11:35:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47246 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726135AbfLOQfC (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sun, 15 Dec 2019 11:35:02 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 716D1206C3;
+        Sun, 15 Dec 2019 16:34:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576427700;
+        bh=Qj/LMjimQUlWIIpHUTnD39DZUW7SiK2YRr6BXqJi6do=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bGVuxnYiCa1P1cvk6XuW+mSLDWYnV1wclXRRj6lv7wS6yUxtg4uwu8ec/LuP01nCa
+         PF70kSEat7MYJiIh62g5WCI8jMqx92F7noPAWq8ivgwsh8dBw/ar8gA5CQ2Sm9UHQ+
+         efRShABgs+OrBsNFTiO8KLKPDoB0vzG/xV6J8IUQ=
+Date:   Sun, 15 Dec 2019 16:34:55 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Jeff LaBundy <jeff@labundy.com>
+Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: pwm: fix nodename pattern
-Thread-Topic: [PATCH] dt-bindings: pwm: fix nodename pattern
-Thread-Index: AQHVsDO3MV8l3Qp4hkSb3+FMjTJqHqe1R/UAgADP3oCAALXMAIABDOQA
-Date:   Fri, 13 Dec 2019 11:09:51 +0000
-Message-ID: <7b0167ca-6797-b89a-dd61-fa6db30022f7@st.com>
-References: <20191211150021.20125-1-benjamin.gaignard@st.com>
- <CAL_JsqJKWoX_kY2kSieOA-wXO5xKtDbhXPMCjg-d4FHHEvOmHg@mail.gmail.com>
- <60921a82-9241-9c6e-0a17-0bd93dc52978@st.com>
- <CAL_JsqLboOKoJ0SjjS_AFkibdHzVo4tK3Z2xSUxVNBrdt5UEsQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqLboOKoJ0SjjS_AFkibdHzVo4tK3Z2xSUxVNBrdt5UEsQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AD768ADD1075174EBB9969B3FA46AC4C@st.com>
-Content-Transfer-Encoding: base64
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 5/7] iio: temperature: Add support for Azoteq
+ IQS620AT temperature sensor
+Message-ID: <20191215163455.25ff929f@archlinux>
+In-Reply-To: <1575851866-18919-6-git-send-email-jeff@labundy.com>
+References: <1575851866-18919-1-git-send-email-jeff@labundy.com>
+        <1575851866-18919-6-git-send-email-jeff@labundy.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-13_03:2019-12-13,2019-12-13 signatures=0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-DQpPbiAxMi8xMi8xOSA4OjA3IFBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4gT24gVGh1LCBEZWMg
-MTIsIDIwMTkgYXQgMjoxNiBBTSBCZW5qYW1pbiBHQUlHTkFSRA0KPiA8YmVuamFtaW4uZ2FpZ25h
-cmRAc3QuY29tPiB3cm90ZToNCj4+DQo+PiBPbiAxMi8xMS8xOSA4OjUyIFBNLCBSb2IgSGVycmlu
-ZyB3cm90ZToNCj4+PiBPbiBXZWQsIERlYyAxMSwgMjAxOSBhdCA5OjAwIEFNIEJlbmphbWluIEdh
-aWduYXJkDQo+Pj4gPGJlbmphbWluLmdhaWduYXJkQHN0LmNvbT4gd3JvdGU6DQo+Pj4+IFR5cGlj
-YWwgcHdtIG5vZGVzIHNob3VsZCBiZSBuYW1lZCBwd21AeHh4Lg0KPj4+PiBUaGUgcGF0dGVybiBz
-aG91bGRuJ3QgbWF0Y2ggbm9kZXMgbmFtZWQgcHdtLXh4eCB0byBhdm9pZA0KPj4+PiBjb25mbGlj
-dHMgd2l0aCBwaW5tdXggb3IgcHdtLWZhbiBub2Rlcy4NCj4+PiBJdCBvbmx5IG1hdGNoZXMgcHdt
-LSQoYS1oZXgtbnVtYmVyKSwgbm90IGFueSBzdHJpbmcsIHNvIHRoYXQgc2hvdWxkbid0DQo+Pj4g
-YmUgYSBwcm9ibGVtLiBUaGlzIGlzIG5lZWRlZCBmb3IgdGhpbmdzIGxpa2UgR1BJTyBiYXNlZCBk
-ZXZpY2VzIChub3QNCj4+PiBqdXN0IFBXTXMpIHdoaWNoIGRvbid0IGhhdmUgYW55IGFkZHJlc3Mu
-DQo+Pj4NCj4+PiBQaW5tdXggbm9kZXMgYXJlIGdvaW5nIHRvIG5lZWQgdG8gYWRvcHQgc29tZSBz
-b3J0IG9mIHN0YW5kYXJkIHBhdHRlcm4NCj4+PiB3ZSBjYW4gbWF0Y2ggb24uDQo+PiBJIGhhdmUg
-cHVzaCBhIHBhdGNoIHRvIHN0b3AgdXNpbmcgJ0AnIGFuZCAnXycgaW4gcGlubXV4IGdyb3VwcyBu
-YW1lczoNCj4+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3BhdGNod29yay9wYXRjaC8xMTYyNTkx
-Lw0KPj4gSXQgcmVtb3ZlIHRoZSB3YXJuaW5ncyB3aGVuIGNvbXBpbGluZyB0aGUgZGV2aWNldHJl
-IHdpdGggVz0xMiBidXQgcHdtLnlhbWwNCj4+IGNvbXBsYWluIGJlY2F1c2UgcHdtIHBpbm11eCBp
-cyBuYW1lZCBwd20tMS4NCj4+DQo+PiBIb3cgY2FuIEkgc29sdmUgdGhlc2UgaXNzdWVzIGF0IHRo
-ZSBzYW1lIHRpbWUgPw0KPiBOYW1lIHRoZSBub2RlcyAqLXBpbnMgb3IgKi1waW5zLVswLTldLiBZ
-b3UncmUgcHJvYmFibHkgZ29pbmcgdG8gbmVlZA0KPiBzb21lIHBhdHRlcm4gYW55d2F5cyB3aGVu
-IHlvdSBkbyBhIHBpbm11eCBzY2hlbWEuDQorIEFsZXggYmVjYXVzZSB0aGF0IGltcGFjdCBwaW4g
-bm9kZSBwYXR0ZXJuIGluIHN0LHN0bTMyLXBpbmN0cmwueWFtbA0KDQpCZW5qYW1pbg0KDQo+IFJv
-Yg==
+On Mon, 9 Dec 2019 00:38:38 +0000
+Jeff LaBundy <jeff@labundy.com> wrote:
+
+> This patch adds support for the Azoteq IQS620AT temperature sensor,
+> capable of reporting its absolute die temperature.
+> 
+> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+Looks good to me.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+Thanks,
+
+Jonathan
+
+> ---
+> Changes in v2:
+>   - Moved the driver from hwmon to iio
+>   - Merged 'Copyright' and 'Author' lines into one in introductory comments
+>   - Replaced 'error' with 'ret' throughout
+>   - Eliminated tabbed alignment of platform_driver struct members
+>   - Changed Kconfig "depends on" logic to MFD_IQS62X || COMPILE_TEST
+> 
+>  drivers/iio/temperature/Kconfig         | 10 ++++
+>  drivers/iio/temperature/Makefile        |  1 +
+>  drivers/iio/temperature/iqs620at-temp.c | 97 +++++++++++++++++++++++++++++++++
+>  3 files changed, 108 insertions(+)
+>  create mode 100644 drivers/iio/temperature/iqs620at-temp.c
+> 
+> diff --git a/drivers/iio/temperature/Kconfig b/drivers/iio/temperature/Kconfig
+> index e1ccb40..f1f2a14 100644
+> --- a/drivers/iio/temperature/Kconfig
+> +++ b/drivers/iio/temperature/Kconfig
+> @@ -4,6 +4,16 @@
+>  #
+>  menu "Temperature sensors"
+> 
+> +config IQS620AT_TEMP
+> +	tristate "Azoteq IQS620AT temperature sensor"
+> +	depends on MFD_IQS62X || COMPILE_TEST
+> +	help
+> +	  Say Y here if you want to build support for the Azoteq IQS620AT
+> +	  temperature sensor.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called iqs620at-temp.
+> +
+>  config LTC2983
+>  	tristate "Analog Devices Multi-Sensor Digital Temperature Measurement System"
+>  	depends on SPI
+> diff --git a/drivers/iio/temperature/Makefile b/drivers/iio/temperature/Makefile
+> index d6b850b..90c1131 100644
+> --- a/drivers/iio/temperature/Makefile
+> +++ b/drivers/iio/temperature/Makefile
+> @@ -3,6 +3,7 @@
+>  # Makefile for industrial I/O temperature drivers
+>  #
+> 
+> +obj-$(CONFIG_IQS620AT_TEMP) += iqs620at-temp.o
+>  obj-$(CONFIG_LTC2983) += ltc2983.o
+>  obj-$(CONFIG_HID_SENSOR_TEMP) += hid-sensor-temperature.o
+>  obj-$(CONFIG_MAXIM_THERMOCOUPLE) += maxim_thermocouple.o
+> diff --git a/drivers/iio/temperature/iqs620at-temp.c b/drivers/iio/temperature/iqs620at-temp.c
+> new file mode 100644
+> index 0000000..d20cb6ad
+> --- /dev/null
+> +++ b/drivers/iio/temperature/iqs620at-temp.c
+> @@ -0,0 +1,97 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Azoteq IQS620AT Temperature Sensor
+> + *
+> + * Copyright (C) 2019 Jeff LaBundy <jeff@labundy.com>
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/iqs62x.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#define IQS620_TEMP_UI_OUT			0x1A
+> +
+> +#define IQS620_TEMP_SCALE			1000
+> +#define IQS620_TEMP_OFFSET			(-100)
+> +
+> +static int iqs620_temp_read_raw(struct iio_dev *indio_dev,
+> +				struct iio_chan_spec const *chan,
+> +				int *val, int *val2, long mask)
+> +{
+> +	struct iqs62x_core *iqs62x = iio_device_get_drvdata(indio_dev);
+> +	int ret;
+> +	__le16 val_buf;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = regmap_raw_read(iqs62x->map, IQS620_TEMP_UI_OUT, &val_buf,
+> +				      sizeof(val_buf));
+> +		if (ret)
+> +			return ret;
+> +
+> +		*val = le16_to_cpu(val_buf);
+> +		return IIO_VAL_INT;
+> +
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val = IQS620_TEMP_SCALE;
+> +		return IIO_VAL_INT;
+> +
+> +	case IIO_CHAN_INFO_OFFSET:
+> +		*val = IQS620_TEMP_OFFSET;
+> +		return IIO_VAL_INT;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static const struct iio_info iqs620_temp_info = {
+> +	.read_raw = &iqs620_temp_read_raw,
+> +};
+> +
+> +static const struct iio_chan_spec iqs620_temp_channels[] = {
+> +	{
+> +		.type = IIO_TEMP,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +				      BIT(IIO_CHAN_INFO_SCALE) |
+> +				      BIT(IIO_CHAN_INFO_OFFSET),
+> +	},
+> +};
+> +
+> +static int iqs620_temp_probe(struct platform_device *pdev)
+> +{
+> +	struct iqs62x_core *iqs62x = dev_get_drvdata(pdev->dev.parent);
+> +	struct iio_dev *indio_dev;
+> +
+> +	indio_dev = devm_iio_device_alloc(&pdev->dev, 0);
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	iio_device_set_drvdata(indio_dev, iqs62x);
+> +
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->dev.parent = &pdev->dev;
+> +	indio_dev->channels = iqs620_temp_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(iqs620_temp_channels);
+> +	indio_dev->name = iqs62x->dev_desc->dev_name;
+> +	indio_dev->info = &iqs620_temp_info;
+> +
+> +	return devm_iio_device_register(&pdev->dev, indio_dev);
+> +}
+> +
+> +static struct platform_driver iqs620_temp_platform_driver = {
+> +	.driver = {
+> +		.name = IQS620_DRV_NAME_TEMP,
+> +	},
+> +	.probe = iqs620_temp_probe,
+> +};
+> +module_platform_driver(iqs620_temp_platform_driver);
+> +
+> +MODULE_AUTHOR("Jeff LaBundy <jeff@labundy.com>");
+> +MODULE_DESCRIPTION("Azoteq IQS620AT Temperature Sensor");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:" IQS620_DRV_NAME_TEMP);
+> --
+> 2.7.4
+> 
+
