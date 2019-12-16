@@ -2,77 +2,267 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A7EF1200F4
-	for <lists+linux-pwm@lfdr.de>; Mon, 16 Dec 2019 10:25:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D5A3121C2B
+	for <lists+linux-pwm@lfdr.de>; Mon, 16 Dec 2019 22:51:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfLPJY1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 16 Dec 2019 04:24:27 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45009 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbfLPJY0 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 16 Dec 2019 04:24:26 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1igmc2-0007UI-5I; Mon, 16 Dec 2019 10:24:22 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1igmc1-0007rp-8f; Mon, 16 Dec 2019 10:24:21 +0100
-Date:   Mon, 16 Dec 2019 10:24:21 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
+        id S1727183AbfLPVvE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 16 Dec 2019 16:51:04 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:37005 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfLPVvE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 16 Dec 2019 16:51:04 -0500
+Received: by mail-pj1-f67.google.com with SMTP id ep17so3601837pjb.4;
+        Mon, 16 Dec 2019 13:51:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+xJ7AuWshCK/rKZ+UPRR9KpKzBzzJ/zLDj2LbgfCe70=;
+        b=oSKxRFjZilaMpzgJltlBgqaWD2rGZM/fE7M3YD9DmDc2pySzRC1UI+lQP1oTaQAYph
+         0X9+m3tz2QUtTdRQtRUwvIUp8ZDFHQ2xR8EwDLncR3IxGipcVdKlXrs6HvUYKkrE4S2r
+         76Lb6LToOunSXQE0eeb0m/5kAjTXeXyjqmswtKjj/8zVizRD7dygRaSrD8ps56uwdMzp
+         Mvt0k+Kaz4mlZJEjrNQ3TFfbX6IaThMTNRcCyZoLlhBOnSYxJW/5ODbWAgpEPYPzQCzf
+         g2hiliMLaLp2aMX70mLmNnMQN74giLfqQHOhPlPDevP69ZdMw9O/Gln7XsdvYVDp8n7o
+         Ddig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+xJ7AuWshCK/rKZ+UPRR9KpKzBzzJ/zLDj2LbgfCe70=;
+        b=AMJb0kpXYPSTU4wxV/ICWD66hJxJmljg6FbIywVAOZAKOHIkeQxYmgU7gPE77QwUMC
+         LUngfO2lL/n5/IFjzct2GmONESSfTV6koNr1mkRUUl8eJI2B+HDLPazfCU1Hbt2Z//J9
+         ST6dFFaCgpOtejQI9Y00/98OVBFSFveh4YQ/uyhK7Lcriaepl3fLBnlwXlHJt1I3v4jT
+         ZDE/yfjlL/sgJad89dnxKk8R0AP6YBqX2Rp4yesx6Hjy6pNw9in/BTpELMKDi4tXHB/A
+         vWC5F5+ClyfGyWEdXVZLVI2cejQQOkuPu/DWT/HX8nDoUGPcB3Y2OraZ2riAktw1FJFi
+         UJsA==
+X-Gm-Message-State: APjAAAVkM32Gk7+Iv0J9D9bwIOjUWyUl18GxxTm1EELSgyB4peaDf8ml
+        EOcSCK5gLTPGuyrCpxXnr6XtQMryERLV41HYnWM=
+X-Google-Smtp-Source: APXvYqzEdkeB4ph9YGYvX3ZNEG9A0T3KWxL9/K8KzZe7uhifYuMF1e7WqVPnA59GN9mafj8sJCdPwzE4OoQbWUfLaRA=
+X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr1873888pjq.132.1576533062790;
+ Mon, 16 Dec 2019 13:51:02 -0800 (PST)
+MIME-Version: 1.0
+References: <20191129191023.2209-1-miquel.raynal@bootlin.com>
+In-Reply-To: <20191129191023.2209-1-miquel.raynal@bootlin.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 16 Dec 2019 23:50:51 +0200
+Message-ID: <CAHp75VeJNZWz_Cv=dozAwt74OBu8TgyYe5bNU3sHreRMdqxR8A@mail.gmail.com>
+Subject: Re: [PATCH v4] gpio: pca953x: Add Maxim MAX7313 PWM support
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     linux-pwm@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org,
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v4] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20191216092421.qjifzrdggu7jgqj3@pengutronix.de>
-References: <20191129191023.2209-1-miquel.raynal@bootlin.com>
- <20191212211434.455trhnlcvn26zl6@pengutronix.de>
- <20191216093955.177a04af@xps13>
- <20191216085424.x6fqr4gxkph5zqjh@pengutronix.de>
- <20191216101416.339d873f@xps13>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191216101416.339d873f@xps13>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Miquèl
+I would like to be Cc'ed on the matters.
 
-On Mon, Dec 16, 2019 at 10:14:16AM +0100, Miquel Raynal wrote:
-> Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote on Mon, 16 Dec
-> 2019 09:54:24 +0100:
-> > intensity = DIV_ROUND_DOWN_ULL((unsigned long long)state->duty_cycle * PWM_DC_STATES, state->period);
-> > 
-> > should be both more exact and cheaper to calculate. (But this is
-> > somewhat moot given that state->period shouldn't be there.)
-> > (And in general you have to care for overflowing, but I think that's not
-> > a problem in practise here as struct pwm_state::duty_cycle is an int
-> > (still), and PWM_DC_STATES is small.)
-> 
-> Do you plan to change duty_cycle type?
+On Fri, Nov 29, 2019 at 9:13 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+>
+> The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> functions but can also manage the intensity on each of its ports with
+> PWM. Each output is independent and may be tuned with 16 values (4
+> bits per output). The period is always 32kHz, only the duty-cycle may
+> be changed. One can use any output as GPIO or PWM.
 
-I don't, but https://patchwork.ozlabs.org/patch/1195481/
+Thanks for an update!
 
-Best regards
-Uwe
+Still I think it's wrong approach. What should be done is:
+ - adding a pin configuration type of PWM (when, for example, argument
+defines duty cycle and period)
+ - conversion to pin control of this driver
+ - enabling pin configuration PWM for it.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+For now it looks like a custom way of doing it.
+If GPIO maintainers are okay with it, I'll not object, just want to
+have than something like TODO updated for the matter.
+
+Taking above into consideration, I also provide my comments to the patch
+
+...
+
+>  #include <linux/bits.h>
+> +#include <linux/bitmap.h>
+
+It seems you need to take gpio/fixes branch as a base.
+
+...
+
+>  #define PCA_INT                        BIT(8)
+>  #define PCA_PCAL               BIT(9)
+
+> +#define MAX_PWM                        BIT(10)
+
+Use same prefix.
+
+...
+
+> +#define PWM_MAX_COUNT 16
+> +#define PWM_PER_REG 2
+
+> +#define PWM_BITS_PER_REG (8 / PWM_PER_REG)
+
+Can we simple put 4 here?
+
+...
+
+> +#define PWM_INTENSITY_MASK GENMASK(PWM_BITS_PER_REG - 1, 0)
+
+Please use plain numbers for the GENMASK() arguments.
+
+...
+
+> +struct max7313_pwm_data {
+> +       struct gpio_desc *desc;
+> +};
+
+Are you plan to extend this? Can we directly use struct gpio_desc pointer?
+
+...
+
+> +       if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE &&
+> +           chip->driver_data & MAX_PWM) {
+
+Can't we simple check only for a flag for now?
+
+> +               if (reg >= MAX7313_MASTER &&
+> +                   reg < (MAX7313_INTENSITY + bank_sz))
+> +                       return true;
+> +       }
+
+...
+
+> +       if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE &&
+> +           chip->driver_data & MAX_PWM) {
+> +               if (reg >= MAX7313_MASTER &&
+> +                   reg < (MAX7313_INTENSITY + bank_sz))
+> +                       return true;
+> +       }
+
+This is a duplicate from above. Need a helper?
+
+...
+
+> +/*
+> + * Max7313 PWM specific methods
+> + *
+> + * Limitations:
+> + * - Does not support a disabled state
+> + * - Period fixed to 31.25ms
+> + * - Only supports normal polarity
+> + * - Some glitches cannot be prevented
+> + */
+
+Can we have below in a separate file and attach it to the gpio-pca953x
+code iff CONFIG_PWM != n?
+
+...
+
+> +       mutex_lock(&pca_chip->i2c_lock);
+
+> +       regmap_read(pca_chip->regmap, reg, &val);
+
+No error check?
+
+> +       mutex_unlock(&pca_chip->i2c_lock);
+
+...
+
+> +       if (shift)
+
+Redundant.
+
+> +               val >>= shift;
+
+...
+
+> +       mutex_lock(&pca_chip->i2c_lock);
+> +       regmap_read(pca_chip->regmap, reg, &output);
+> +       mutex_unlock(&pca_chip->i2c_lock);
+
+No error check?
+
+...
+
+> +       mutex_lock(&pca_chip->i2c_lock);
+> +       regmap_read(pca_chip->regmap, reg, &output);
+> +       mutex_unlock(&pca_chip->i2c_lock);
+
+No error check?
+
+...
+
+> +static int max7313_pwm_request(struct pwm_chip *chip,
+> +                              struct pwm_device *pwm)
+> +{
+> +       struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
+> +       struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
+> +       struct max7313_pwm_data *data;
+> +       struct gpio_desc *desc;
+> +
+> +       desc = gpiochip_request_own_desc(&pca_chip->gpio_chip, pwm->hwpwm,
+> +                                        "max7313-pwm", GPIO_ACTIVE_HIGH, 0);
+> +       if (IS_ERR(desc)) {
+
+> +               dev_err(&pca_chip->client->dev,
+
+Can't we get to struct device easily?
+If it's possible maybe we could move next line to this one?
+
+> +                       "pin already in use (probably as GPIO): %ld\n",
+> +                       PTR_ERR(desc));
+> +               return PTR_ERR(desc);
+> +       }
+
+> +       return 0;
+> +}
+
+...
+
+> +       if (intensity)
+> +               set_bit(pwm->hwpwm, max_pwm->active_pwm);
+> +       else
+> +               clear_bit(pwm->hwpwm, max_pwm->active_pwm);
+
+assign_bit()
+
+By the way, do you really need it to be atomic? Perhaps __asign_bit()?
+
+...
+
+> +       active = bitmap_weight(max_pwm->active_pwm, PWM_MAX_COUNT);
+
+> +       if (!active)
+
+In this case more readable will be active == 0 since you compare this
+to the exact value.
+
+> +               ret = max7313_pwm_set_master_intensity(pca_chip, 0);
+> +       else if (active == 1)
+> +               ret = max7313_pwm_set_master_intensity(pca_chip,
+> +                                                      PWM_INTENSITY_MASK);
+
+...
+
+> +       if (IS_ENABLED(CONFIG_PWM)) {
+
+I'm not sure it eliminates all PWM related callbacks.
+
+> +               ret = max7313_pwm_probe(&client->dev, chip);
+> +               if (ret) {
+> +                       dev_err(&client->dev, "pwm probe failed, %d\n", ret);
+> +                       return ret;
+> +               }
+> +       }
+
+--
+With Best Regards,
+Andy Shevchenko
