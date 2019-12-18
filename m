@@ -2,81 +2,94 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 556961222CF
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Dec 2019 05:02:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D99F124B33
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Dec 2019 16:14:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfLQECk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 16 Dec 2019 23:02:40 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:55599 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727089AbfLQECk (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 16 Dec 2019 23:02:40 -0500
-X-UUID: 7094b7437bbe449a9a45173f66eee083-20191217
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=tZYQtktGRy8Who+pLVHW/cHqPk4WeYEvryM79MNiedY=;
-        b=e6H7lO7zW+21JvQCmHwBvWYy+w3pSqnwPNF5tYSlMt827/aLAi21rkazOIrHYVzJdeY0LZDBuCulCx7nAlcMDKQibOtjTAqCIxJajOlLtXbpIWzyr/ymJLJgZE2aM8n3d3IybrJolHridRzOVNuEn2CZ1QnJIS8X4NaXnQ9rwpY=;
-X-UUID: 7094b7437bbe449a9a45173f66eee083-20191217
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1127974747; Tue, 17 Dec 2019 12:02:35 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 17 Dec
- 2019 12:02:54 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
- MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Tue, 17 Dec 2019 12:02:12 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-pwm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, CK Hu <ck.hu@mediatek.com>
-CC:     <linux-mediatek@lists.infradead.org>, <sj.huang@mediatek.com>,
-        Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH v4 2/2] pwm: mtk_disp: keep the trigger register after pwm setting.
-Date:   Tue, 17 Dec 2019 12:02:37 +0800
-Message-ID: <20191217040237.28238-3-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191217040237.28238-1-jitao.shi@mediatek.com>
-References: <20191217040237.28238-1-jitao.shi@mediatek.com>
+        id S1727384AbfLRPOL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Dec 2019 10:14:11 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42933 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727370AbfLRPOE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Dec 2019 10:14:04 -0500
+Received: by mail-io1-f67.google.com with SMTP id n11so802734iom.9
+        for <linux-pwm@vger.kernel.org>; Wed, 18 Dec 2019 07:14:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=R9l9mbjTMtC+3agOxuj88vgGSGUSi1shzIvbtHPQHDA=;
+        b=RfaUJbE64AqObBUWyZFAX00yFzfv+PMQBeMlfEbyOTSSIZSlP9dNPzblRe9C4/Xp5G
+         OOrfzjlEIPRCszaxaclLviha/Gl6J+8MNE2wJIlQr3g8uWJn+m5NNx6dyOIWXJDzHKAu
+         CFfw6ayoPSChbR+RAE0+B68G/pEf5o1uZqam8GCW/DM3JVJn1rrKg09G5nyaA4x8K46C
+         DidFmOGbhUnnebgzWtKvL2IYqcm0dJ4hRYsroJX5h4wZl5ygcdMBOrPylnEG0iZgtaC4
+         tctA6UVKTV1ZO7eaOpJeM3zJ9lY8Otzi6Az77Sm1wv6CYLTS/yvcKPbBaIHIL7wY9gk+
+         23sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=R9l9mbjTMtC+3agOxuj88vgGSGUSi1shzIvbtHPQHDA=;
+        b=sm0J6wzW4TsTMIpYzWk5va9wXG/M7zqxqOI3Imu5vVO9iIRH6vE0BYQc1A2vZ23IqG
+         akwuZlYeDjeFw2+H9SsjurZa3cKc8i7RinwjBddTJNoyrjZaOTRU/c0UWE/rc8r521sF
+         LYwYYyssViQ+5CCXYFv/hv2IL8+NDpRBobkDgk6sqzdauF7OTMYJxDktP6KL0XuJHJs/
+         ZXYzXnlsFXWkvZm4Ewv/hnKhoeiZcBjzUIgow+DEwLiuhBJaxaaZWsUFa5LA1alKTsIL
+         CjHCYleWJii10mkHeVp+wKpbAzVDG8XHjb6jPK01I380gQhUiTBnA3HST/SlCmptx1zU
+         tnWg==
+X-Gm-Message-State: APjAAAXy8v5e/rRcBsbRH4C9xwnkOwo6B2vsD+Kjoleuy71Cn3IVdOWX
+        T3wAZtlF3hjKpAzG/IZsFYZ8dF8O+0UKXLXAYg==
+X-Google-Smtp-Source: APXvYqyIz9CrpHcrXivylieLEiE1VxRyGUw+E9DXz6VIYz+kYlOCef915g/qsmML8+OoqrwbsBK3G0eW6o6RBALrF/E=
+X-Received: by 2002:a05:6638:950:: with SMTP id f16mr2789501jad.107.1576682043767;
+ Wed, 18 Dec 2019 07:14:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 3E0F6F0913388D23C7EBEF8FEBBD9736E8493E1439D04217FAD8B691804CC4792000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Received: by 2002:a02:6603:0:0:0:0:0 with HTTP; Wed, 18 Dec 2019 07:14:03
+ -0800 (PST)
+Reply-To: dhl.expresscourier102156@outlook.fr
+From:   "MS. MARYANNA B. THOMASON" <info.zennitbankplcnigerian@gmail.com>
+Date:   Wed, 18 Dec 2019 16:14:03 +0100
+Message-ID: <CABHzvr=Pq7-TqhY8TPvFCsr+5-DhDQy=XOg-TM13qqbFWeemfQ@mail.gmail.com>
+Subject: =?UTF-8?Q?Urgent_delivery_Notification_of_your_ATM_MASTER_CARD?=
+        =?UTF-8?Q?_Amount=2C=2415=2E800=E2=80=99000=E2=80=9900=2C?=
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-TW92ZSB0aGUgdHJpZ2dlciBhZnRlciBwd20gc2V0dGluZyB0byBhdm9pZCB0aGUgcHdtIHdyb25n
-IHNpZ25hbA0Kb3V0cHV0Lg0KDQpSZW1vdmUgdGhlIHJlZ2lzdCBlbmFibGUgdHJpZ2dlciBzZXR0
-aW5nIGluIHByb2JlLg0KTW92ZSB0aGUgdHJpZ2dlciB0byBlbmQgb2YgbXRrX2Rpc3BfcHdtX2Nv
-bmZpZygpLg0KDQpTaWduZWQtb2ZmLWJ5OiBKaXRhbyBTaGkgPGppdGFvLnNoaUBtZWRpYXRlay5j
-b20+DQotLS0NCiBkcml2ZXJzL3B3bS9wd20tbXRrLWRpc3AuYyB8IDIwICsrKysrKystLS0tLS0t
-LS0tLS0tDQogMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgMTMgZGVsZXRpb25zKC0p
-DQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3B3bS9wd20tbXRrLWRpc3AuYyBiL2RyaXZlcnMvcHdt
-L3B3bS1tdGstZGlzcC5jDQppbmRleCBjN2IxNGFjYzkzMTYuLmMxYWFlNWI1NjkzYiAxMDA2NDQN
-Ci0tLSBhL2RyaXZlcnMvcHdtL3B3bS1tdGstZGlzcC5jDQorKysgYi9kcml2ZXJzL3B3bS9wd20t
-bXRrLWRpc3AuYw0KQEAgLTEyMiw2ICsxMjIsMTMgQEAgc3RhdGljIGludCBtdGtfZGlzcF9wd21f
-Y29uZmlnKHN0cnVjdCBwd21fY2hpcCAqY2hpcCwgc3RydWN0IHB3bV9kZXZpY2UgKnB3bSwNCiAJ
-CW10a19kaXNwX3B3bV91cGRhdGVfYml0cyhtZHAsIG1kcC0+ZGF0YS0+Y29tbWl0LA0KIAkJCQkJ
-IG1kcC0+ZGF0YS0+Y29tbWl0X21hc2ssDQogCQkJCQkgMHgwKTsNCisJfSBlbHNlIHsNCisJCW10
-a19kaXNwX3B3bV91cGRhdGVfYml0cyhtZHAsIG1kcC0+ZGF0YS0+YmxzX2RlYnVnLA0KKwkJCQkJ
-IG1kcC0+ZGF0YS0+YmxzX2RlYnVnX21hc2ssDQorCQkJCQkgbWRwLT5kYXRhLT5ibHNfZGVidWdf
-bWFzayk7DQorCQltdGtfZGlzcF9wd21fdXBkYXRlX2JpdHMobWRwLCBtZHAtPmRhdGEtPmNvbjAs
-DQorCQkJCQkgbWRwLT5kYXRhLT5jb24wX3NlbCwNCisJCQkJCSBtZHAtPmRhdGEtPmNvbjBfc2Vs
-KTsNCiAJfQ0KIA0KIAljbGtfZGlzYWJsZV91bnByZXBhcmUobWRwLT5jbGtfbW0pOw0KQEAgLTIw
-NywxOSArMjE0LDYgQEAgc3RhdGljIGludCBtdGtfZGlzcF9wd21fcHJvYmUoc3RydWN0IHBsYXRm
-b3JtX2RldmljZSAqcGRldikNCiANCiAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgbWRwKTsN
-CiANCi0JLyoNCi0JICogRm9yIE1UMjcwMSwgZGlzYWJsZSBkb3VibGUgYnVmZmVyIGJlZm9yZSB3
-cml0aW5nIHJlZ2lzdGVyDQotCSAqIGFuZCBzZWxlY3QgbWFudWFsIG1vZGUgYW5kIHVzZSBQV01f
-UEVSSU9EL1BXTV9ISUdIX1dJRFRILg0KLQkgKi8NCi0JaWYgKCFtZHAtPmRhdGEtPmhhc19jb21t
-aXQpIHsNCi0JCW10a19kaXNwX3B3bV91cGRhdGVfYml0cyhtZHAsIG1kcC0+ZGF0YS0+YmxzX2Rl
-YnVnLA0KLQkJCQkJIG1kcC0+ZGF0YS0+YmxzX2RlYnVnX21hc2ssDQotCQkJCQkgbWRwLT5kYXRh
-LT5ibHNfZGVidWdfbWFzayk7DQotCQltdGtfZGlzcF9wd21fdXBkYXRlX2JpdHMobWRwLCBtZHAt
-PmRhdGEtPmNvbjAsDQotCQkJCQkgbWRwLT5kYXRhLT5jb24wX3NlbCwNCi0JCQkJCSBtZHAtPmRh
-dGEtPmNvbjBfc2VsKTsNCi0JfQ0KLQ0KIAlyZXR1cm4gMDsNCiB9DQogDQotLSANCjIuMjEuMA0K
+Attn Dear.
 
+Urgent delivery Notification of your ATM MASTER CARD, Dhl-Benin is
+ready for delivery of your ATM Master card worth $15.800=E2=80=99000=E2=80=
+=9900, as
+approved this morning, Date, 18/12/2019. Through the Intruction from
+INTERNATIONAL MONETARY FUNDS, I.M.F official Directors.
+
+REGISTRATION NO :EG58945
+PARCEL NUMBER: 140479
+Delivery Schuleded now,
+Finally all we required from you is your ATM Card Proccessing Delivery
+fees $19.00 only which you must send to this DHL service to enable us
+dispatch the parcel to your destination today.
+
+Here is our receiving payment details.
+You are advised to send it Via Money Gram Service.
+
+Receiver's Name--------Alan Ude
+Country-------Benin Republic.
+City/ Address--------Cotonou
+Test Question--------In God
+Answer-------We Trust
+Amount------------$US19.00 only
+Mtcn-------------
+Sender's Name-------
+
+Your delivery  ATM card worth $15.800=E2=80=99000=E2=80=9900,
+Is Due for delivery to your address today upon confirmation of
+required fee from you asap.
+
+Call us on this phone number for any inquiry. +229 62819378
+Awaiting your urgent response.
+
+MS. MARYANNA B. THOMASON, Shipment director, DHL Express
+Courier Company-Benin
