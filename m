@@ -2,47 +2,47 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4125A12C14C
-	for <lists+linux-pwm@lfdr.de>; Sun, 29 Dec 2019 09:08:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1AD012C169
+	for <lists+linux-pwm@lfdr.de>; Sun, 29 Dec 2019 09:08:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfL2IGY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 29 Dec 2019 03:06:24 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:38978 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbfL2IGY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 29 Dec 2019 03:06:24 -0500
-Received: by mail-pj1-f66.google.com with SMTP id t101so6880865pjb.4;
-        Sun, 29 Dec 2019 00:06:23 -0800 (PST)
+        id S1727111AbfL2IIK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 29 Dec 2019 03:08:10 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39537 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbfL2IGZ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 29 Dec 2019 03:06:25 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q10so16873309pfs.6;
+        Sun, 29 Dec 2019 00:06:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ANOl3CnPFLyB6riFOKnyBL3T9PtdCr1lGKXikea0YcI=;
-        b=dxj3V1IisuDpq2NL5Q6A8NOvQgKXCeunf/9Z/eimC99L8bNK9plw1/sS7HNjHNf+wF
-         SfErrsxT1W9JLW5PBYinKjKs7zadepUCWoomPrpTxJFyuSfA3Lw3e72l8FeRCLk8R/ho
-         efGwN01DWTe8/K/mFblhsZo8Wm8pU2kGZVBDlD6uyfUF8hrtIiBTrcK/uR2wlxNrT/dL
-         fjDYf647oMz3uNYJHyHdbdA94GeFS7ENvCUnjDKSepsLBdGEijoPzNTGUnN03mAXBOq4
-         vFN3vRczWJwlZ36qw1+X172TkQT0iP4TPYja+ni8K6yKezKzoqShxtN2bKRf8B/RSiHy
-         BaZQ==
+        bh=JTxLwNHfWMCSdl17dQPhCHcE/C0FIExdEqc5ZBEYZfU=;
+        b=USfTeOzMptYKE9gYaoMN2AcaH/T/YEM97jTDKmejVbSSpQ0VRIuSMlgI4iWyJKdyQi
+         TgT9w+oa6HCJV/EbiMSTDznTvHy0o9Vp8Aeh/T6tvJ8fulH7IELjdTO1440DnsBW7Ecm
+         Vz4vqPF74gnUndLkJNSBtRQYtMeOhcuKZyydfYZfkPsH4Sf7OVJT3S/62fwzKN7SAC0a
+         smkyZe6cJlsjW8nzE5cySMMBI0HWlMKH5JEDgxO50BfnBw0Hn5cKB0WTigN/A/SOihJp
+         Np6zIfueMyLZVqllS3iEN64sQ4rjpXubD9ErAEUULvzWV7cNsVjo6lk/euhBZ+ZFH8L3
+         C+oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ANOl3CnPFLyB6riFOKnyBL3T9PtdCr1lGKXikea0YcI=;
-        b=oPTpGnaTraU4FwXbDuoe/NZyXj5b+DAZ3vEeCWtM+IvqMFp7hoDgFNdH/bI4KQmUma
-         WdaLBfeT0SN74xahqFccAZyl6eZfaYVz/WVqtyDnKtLR5ZuSpyGWY3P2oC0TibzOf/MB
-         +q/MqYXAdvPkYlKFiSrgXaGvRPh7ywERIoNvEooX5H2vvvB48ciSOEb+B6i74pfHH4ug
-         0t4dJ+Jgwj9k+9rWSi9YzC+K2bQ3LgY/PEyS791LLjjnp+e+1P0E+u6c+L0hb71gYxF+
-         acPWdemIZNFehRhH0/OeirrRCX4qG8fkFjn9friz1PDC3pbgWuAh5zqSWBvaXo6oTgCH
-         YetQ==
-X-Gm-Message-State: APjAAAWvhhNXuZJDRn2TqOvFt/LYUwHkSV+4aW4Fu6hhx1RK9hLxZY9t
-        tKMMn2v4j8Z8F6C/b1zZoR4=
-X-Google-Smtp-Source: APXvYqzZqQph6OcOb8yEENrkWM/eD0nkMWTrwwYH2jNC+yCIcGe4z4tadg45LLsnTqBcHb5E6WeHXw==
-X-Received: by 2002:a17:90b:3011:: with SMTP id hg17mr37811661pjb.90.1577606783376;
-        Sun, 29 Dec 2019 00:06:23 -0800 (PST)
+        bh=JTxLwNHfWMCSdl17dQPhCHcE/C0FIExdEqc5ZBEYZfU=;
+        b=n5ccC39e6BkZN3NJd2m9kCU2gKjFxVMDUoJCcxQwhVL+hIqnfN+sxSky31hmWm6YTF
+         to+/tYNWe5SgtcEDk93heUPkcxId4zJw5oS/iB7H2SlwZISKYxUbYiwOz0RrgcLnU1HC
+         Eq4WPR+Hr3k8sKrGNKK0jTtZYk+dDtkBPSWE/4xOv1K+vJbyDT3buozzD4YkPIYJcDcl
+         qqkcJS6NUVEy3njCcFKnSD8prKlTRUDF2GQt1NMPyyHzGDQiTvGBahUmTYCyECHAT3Op
+         iqWyA6llOUdFSAm9dlyWpq5uZ6XNk1RSQ8TdAMJq0/+0pX7Cm7JSiIYTmwgdFw5vwnLr
+         HihQ==
+X-Gm-Message-State: APjAAAUqIrDjNMrH40mOqZ2OcI4LAVIjRb7KuCzY8XgA0xbfjEAIFEUp
+        00JIpp1bjOPeqpFqI7LeVc0=
+X-Google-Smtp-Source: APXvYqw0aOEeyRNR1ZSX3UWHpVI83plQz16k8Unv0vX9tNYiTSBj4CWfSoUVyECQTs/4PKYZlIN+yQ==
+X-Received: by 2002:aa7:9115:: with SMTP id 21mr33026878pfh.224.1577606784475;
+        Sun, 29 Dec 2019 00:06:24 -0800 (PST)
 Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id q21sm45775431pff.105.2019.12.29.00.06.22
+        by smtp.gmail.com with ESMTPSA id m45sm20368923pje.32.2019.12.29.00.06.23
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 29 Dec 2019 00:06:22 -0800 (PST)
+        Sun, 29 Dec 2019 00:06:24 -0800 (PST)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     claudiu.beznea@microchip.com, thierry.reding@gmail.com,
         u.kleine-koenig@pengutronix.de, nicolas.ferre@microchip.com,
@@ -62,9 +62,9 @@ To:     claudiu.beznea@microchip.com, thierry.reding@gmail.com,
         linux-rockchip@lists.infradead.org,
         linux-riscv@lists.infradead.org, linux-tegra@vger.kernel.org
 Cc:     Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 07/32] pwm: mediatek: convert to devm_platform_ioremap_resource
-Date:   Sun, 29 Dec 2019 08:05:45 +0000
-Message-Id: <20191229080610.7597-7-tiny.windzz@gmail.com>
+Subject: [PATCH 08/32] pwm: sti: convert to devm_platform_ioremap_resource
+Date:   Sun, 29 Dec 2019 08:05:46 +0000
+Message-Id: <20191229080610.7597-8-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191229080610.7597-1-tiny.windzz@gmail.com>
 References: <20191229080610.7597-1-tiny.windzz@gmail.com>
@@ -77,30 +77,31 @@ Use devm_platform_ioremap_resource() to simplify code.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/pwm/pwm-mediatek.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/pwm/pwm-sti.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index b94e0d09c300..e4a715d3860c 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -207,7 +207,6 @@ static const struct pwm_ops pwm_mediatek_ops = {
- static int pwm_mediatek_probe(struct platform_device *pdev)
- {
- 	struct pwm_mediatek_chip *pc;
+diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
+index 1508616d794c..eaeb38c0c0c7 100644
+--- a/drivers/pwm/pwm-sti.c
++++ b/drivers/pwm/pwm-sti.c
+@@ -540,7 +540,6 @@ static int sti_pwm_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct sti_pwm_compat_data *cdata;
+ 	struct sti_pwm_chip *pc;
 -	struct resource *res;
  	unsigned int i;
- 	int ret;
+ 	int irq, ret;
  
-@@ -217,8 +216,7 @@ static int pwm_mediatek_probe(struct platform_device *pdev)
- 
- 	pc->soc = of_device_get_match_data(&pdev->dev);
+@@ -552,9 +551,7 @@ static int sti_pwm_probe(struct platform_device *pdev)
+ 	if (!cdata)
+ 		return -ENOMEM;
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	pc->regs = devm_ioremap_resource(&pdev->dev, res);
-+	pc->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pc->regs))
- 		return PTR_ERR(pc->regs);
+-
+-	pc->mmio = devm_ioremap_resource(dev, res);
++	pc->mmio = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pc->mmio))
+ 		return PTR_ERR(pc->mmio);
  
 -- 
 2.17.1
