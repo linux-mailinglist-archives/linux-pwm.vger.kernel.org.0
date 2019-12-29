@@ -2,47 +2,47 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EAD712C159
-	for <lists+linux-pwm@lfdr.de>; Sun, 29 Dec 2019 09:08:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42BDC12C15D
+	for <lists+linux-pwm@lfdr.de>; Sun, 29 Dec 2019 09:08:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfL2IGf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 29 Dec 2019 03:06:35 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43840 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbfL2IGf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 29 Dec 2019 03:06:35 -0500
-Received: by mail-pl1-f196.google.com with SMTP id p27so13495811pli.10;
-        Sun, 29 Dec 2019 00:06:34 -0800 (PST)
+        id S1726763AbfL2IHp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 29 Dec 2019 03:07:45 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42095 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726915AbfL2IGg (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 29 Dec 2019 03:06:36 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 4so16875790pfz.9;
+        Sun, 29 Dec 2019 00:06:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=kZ3gmHLUn932Pv1n9lSS5iGXVKswSoxR5qJ685cV264=;
-        b=m0R5ZbYCE1rG+sD3REAsSdJJL8DRTOORWN1u8isuPUFHT6tlqKeKggD5nojJvcFeBW
-         1Qu/2GPoQHU+fY4k0k2Gk+9/uiPU+ftFNHS1jdmTSeWon3aGBQMOw97pxWDhx2JGl6oL
-         cGd39h70HMWU76jCNBM15zRMxSjk3FQM93x7tBOe2+aehplSX/we2SB60+idhNEfSU6F
-         bl7rDhk8OkNWeYnMwtw2nY6ektkLJzpUCXjLIBOwHJNN8SeSKjTZ/3ATuYPNrnc2Bqdd
-         nLfTfEo+A2FeL+QicRgv/WBt8JOVlBSGVNNlRj7dBSK4ZMXkpUleuxvWigumpFjy3Eu6
-         5knA==
+        bh=svnvAUsqbEkFIoMGUER3OWtLIkClDeqzObpr+AXdZkw=;
+        b=t5ALQLYK9lE9EF3GpK75tsx7VA2i2BuOPjCLKDo5sSqg3YRHpO7DWBok2eiPKH6Zsk
+         F+4ncCiS70Pt5DR9KMI0QU6VZBnbwwi54ooU6QkGvSSaxpX+mqIbp8bHsLQX3uO1pv0X
+         OkADBds8TVGjQwtYTls5YZYAaoeItIYmXN6CCE3t5G5fzBfNxf0nS/2zdluXKGdlPK6j
+         Bdq+W9BMNPDJUElctI6Djq4w6tylgT0rlMuDv1+5QKJ6+GZufn33f3/0Iwo0fpr91o9c
+         TTv9uClGVSbigvShKuRQMEvORpLdA6AB3Z6pDDh7u7vttBTxVgOK07T8IyGMQqWlDtpx
+         +wjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=kZ3gmHLUn932Pv1n9lSS5iGXVKswSoxR5qJ685cV264=;
-        b=Ti5j8c87Zn0KbQVi6iuChwLG7b7hXVH+y6mzybim7AdU2sNT0Re2N/C3TmjdYf1EXQ
-         FOLRqOImL++RJ2V0XuKLTHt1Kqh85RMr0LvV/PcxFL7EnAW0LpXf7ObodoPGoNaE/WXo
-         L+Y7RG7NdUm9lddTvHeTxGc9we8EkHdYXhbN33BlPC+M682ONUejqlhx9wmqyn5k6d6L
-         YC8cYG9klx3wuCLA8pHLLtDZKIj1kizpXFoxvu6yM/Qdn3uZrwGkUsqg+xdAyeN1oB6r
-         6OplfFl2TvtpbSkYS6dM3V5bo/r85fQ2u7qrxIQXye4lI6CG/I0n5dN4T3WjHc7RGDcx
-         z9jA==
-X-Gm-Message-State: APjAAAUQXCYRhELXypIZSyFGEzxFWsWpiaib2ZP/WAH44R5rHsi3XiBa
-        vRv7wsqpB77P8MF7XoUJ9jc=
-X-Google-Smtp-Source: APXvYqwa7GnQSwppTBhuTNZ+erZiDBVrdnZa+AqBJPOHWUFyiar+lBUxG2VdqlQ3rau3CwmRIvIfQQ==
-X-Received: by 2002:a17:90a:f314:: with SMTP id ca20mr36411362pjb.112.1577606794577;
-        Sun, 29 Dec 2019 00:06:34 -0800 (PST)
+        bh=svnvAUsqbEkFIoMGUER3OWtLIkClDeqzObpr+AXdZkw=;
+        b=DMPeYQ2TXDsXOtHdSlSR6hZIJmshfB4uwXtwWK/OnjAjwTssD6n3TI2KeEl//rSLF5
+         wrJ3RpX25wsFspWsf/WPI6iNMA6EL9hU6L7sFdr9Zy8KcsgUK/rP/5vuIrQVWuy89oDP
+         SgB5vBnbBbhYSuodncTwjXZ9vA34dwWyLMnHdRVJFyJO6va9vPDTmWM7q1STYuXPKCyw
+         gIvL53IQ2TrafYbR2qDYHpm5HNSPYyIbEoFVs5Lv/ZUHwC0ge1cN2CmlgDS7OXO3UoWT
+         RMpbNS90Q3oJJ1BEDMXbH/YCfBGvancVsleY12r4mHvY1qn+jcC4JkiF3FQR37DJM5zx
+         W0YQ==
+X-Gm-Message-State: APjAAAXHbADlCNemoBem8hxEmUw7Sda+gSma0hJQujsD8S7bcwYyj6qe
+        Srpkgbjynl1LjR97l5rBz40=
+X-Google-Smtp-Source: APXvYqzgqbn3DN4K9PetwsZFudgp9eD/v8wQEKuWIqkJk6/RoGS49GaXiPsLXIZoq9tCD6gTE1NeEA==
+X-Received: by 2002:a62:1a09:: with SMTP id a9mr64684599pfa.64.1577606795644;
+        Sun, 29 Dec 2019 00:06:35 -0800 (PST)
 Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id c18sm22189390pfr.40.2019.12.29.00.06.34
+        by smtp.gmail.com with ESMTPSA id h12sm31640473pfo.12.2019.12.29.00.06.35
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 29 Dec 2019 00:06:34 -0800 (PST)
+        Sun, 29 Dec 2019 00:06:35 -0800 (PST)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     claudiu.beznea@microchip.com, thierry.reding@gmail.com,
         u.kleine-koenig@pengutronix.de, nicolas.ferre@microchip.com,
@@ -62,9 +62,9 @@ To:     claudiu.beznea@microchip.com, thierry.reding@gmail.com,
         linux-rockchip@lists.infradead.org,
         linux-riscv@lists.infradead.org, linux-tegra@vger.kernel.org
 Cc:     Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 17/32] pwm: samsung: convert to devm_platform_ioremap_resource
-Date:   Sun, 29 Dec 2019 08:05:55 +0000
-Message-Id: <20191229080610.7597-17-tiny.windzz@gmail.com>
+Subject: [PATCH 18/32] pwm: tiehrpwm: convert to devm_platform_ioremap_resource
+Date:   Sun, 29 Dec 2019 08:05:56 +0000
+Message-Id: <20191229080610.7597-18-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191229080610.7597-1-tiny.windzz@gmail.com>
 References: <20191229080610.7597-1-tiny.windzz@gmail.com>
@@ -77,30 +77,30 @@ Use devm_platform_ioremap_resource() to simplify code.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/pwm/pwm-samsung.c | 4 +---
+ drivers/pwm/pwm-tiehrpwm.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pwm/pwm-samsung.c b/drivers/pwm/pwm-samsung.c
-index 87a886f7dc2f..645d0066ff0a 100644
---- a/drivers/pwm/pwm-samsung.c
-+++ b/drivers/pwm/pwm-samsung.c
-@@ -510,7 +510,6 @@ static int pwm_samsung_probe(struct platform_device *pdev)
+diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
+index 7b4c770ce9d6..3a1313caa5fe 100644
+--- a/drivers/pwm/pwm-tiehrpwm.c
++++ b/drivers/pwm/pwm-tiehrpwm.c
+@@ -421,7 +421,6 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
  {
- 	struct device *dev = &pdev->dev;
- 	struct samsung_pwm_chip *chip;
--	struct resource *res;
- 	unsigned int chan;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct ehrpwm_pwm_chip *pc;
+-	struct resource *r;
+ 	struct clk *clk;
  	int ret;
  
-@@ -541,8 +540,7 @@ static int pwm_samsung_probe(struct platform_device *pdev)
- 							sizeof(chip->variant));
- 	}
+@@ -455,8 +454,7 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
+ 	pc->chip.base = -1;
+ 	pc->chip.npwm = NUM_PWM_CHANNEL;
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	chip->base = devm_ioremap_resource(&pdev->dev, res);
-+	chip->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(chip->base))
- 		return PTR_ERR(chip->base);
+-	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pc->mmio_base = devm_ioremap_resource(&pdev->dev, r);
++	pc->mmio_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pc->mmio_base))
+ 		return PTR_ERR(pc->mmio_base);
  
 -- 
 2.17.1
