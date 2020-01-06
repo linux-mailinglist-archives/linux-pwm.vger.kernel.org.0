@@ -2,40 +2,40 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B2B1130B09
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Jan 2020 01:48:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E0FF130B11
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Jan 2020 01:48:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbgAFAsl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 5 Jan 2020 19:48:41 -0500
+        id S1727256AbgAFAso (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 5 Jan 2020 19:48:44 -0500
 Received: from mail-bn7nam10on2068.outbound.protection.outlook.com ([40.107.92.68]:6166
         "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726526AbgAFAsl (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sun, 5 Jan 2020 19:48:41 -0500
+        id S1726526AbgAFAso (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sun, 5 Jan 2020 19:48:44 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nt7p5Gtev7iW0LQ7fulrIC82bj8nsFxPEu9/SV1zsX9fV6pzQzZxbebT8AZjpENdV5m2CWFNhWByN8jEfDB7teW+Zss8RthbMW5qAX5wQMF4I9KRFSbEOHQq2fYevZhUhIvOqNMPIBs7S73L7nMLxVop2eWEBCG+s5S0qTPk6AoqJ8JNinCRt9DftraCH50TdXnABvbE/WWFiVdqpLo63vMpCepc6GGaB+ruqnU5kjCvAPmlS9laPBQJvPQIowsAoUKIGhBqfiEJw4G31VZyWmjt7Ai0Bepb3plzf+dciDR9UVaj5XxWzqnjzS0GZUUDh7kJuw8LXrS+Xtc+bBz0Nw==
+ b=jVTitPyFrEGM40veNZneDsB0MhxUrNLqy72Y8rBw3xV9HMhUHaL77MQZWetoyXd1yyyOVRASkJ1CHALzEItCRm1Bx9UE1qRigMNRfHHAN6RZNrsvD8kallHznW9m1POmeqPdkgjjIAtN1s+hO7nc5NzfEdbgefj4Y3+mJJ+WsSUUNNWi2Gl4bAqdCXXpRJ30pQbkGra9p51YVECOV188CjtkI7wMSW2cTKLn8X8DedKCF+8fQi87K/bsUFpcEjhGMaxI5t/Z68pNkXbAZvDh9IfYbygC+nYkV9A7yByEvVaJ92iYMI51VHhy5Z/C229Hq79WGU8rIAkLjjQUVh4aOg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Li827rvCjFoukrwEuJCYFzKDpwnBcdSnmR/hT+FlhKk=;
- b=HbhImZJh0qQiO6jVoyMrVd+AKYv75jB1P45OmPfgzMFOh9J36FcgzCAa76+9Bz4BR9+JF//UMDuBvLlBVvmhoS6p+JW5sjTqfBMV9HBhLFmdTFNgzMcILw8Nalcty3+tuJhcGIVNsYhlPwO2qaW1ZQpfvmjVXcmZ99l6pFQNeQVwprCuigjeJ0awaCX6APgxmOxnYsPZJdAb1HrGdyg5D0qywXz2RxVcbqxO47RL95P6HsPQzVLFtJcCvkOt0ydA8Pjt7GMW+ufzJXuftPkcAsAJboQVxpLlAGNhZhM6sQnOqxOnGL9FqXexszrp2Pg9KuWReTBNhqS4Wd7GVFN//Q==
+ bh=e/fHvtpsQEIg51WOGAxxBkkGfgR7CRVroD1x+Aj1ffk=;
+ b=VEtJFvG1L/x0ZbGQAulCxnbWaweg1t0DWiZlsUDHoqHIvyIdtyJAfA2I0sch7oPEwQ641zBvmQ3qv3Q2AOLqKflkJ1R+lpPcg2gMOHfUr2kNoHx+pxx5F55nNx8XWEOxltUG08zzqHhxTH7b19T0gJgfIRuZht01EGieR9Tp4kQylHxzAjbTILZEym5ZcuqhYhlwUtNWtKqIp/EsugJXanFF17RXGFWBTddMUsRA2GP1rZd7Jk5WlnvGP/RBtAiRat68q9WwVpf3TboSgVBD4tLTopVa+clzIO5uveZV4LmbR6kvZR1iX9WI9cyiiCnuypvqhL+Wm+B5QLxNH/X3Zg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
  dkim=pass header.d=labundy.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Li827rvCjFoukrwEuJCYFzKDpwnBcdSnmR/hT+FlhKk=;
- b=Ko6xbLyAT0p4oEhw6LocgV7AwIntFxMken4SiXqP8S01djjnPREWYWT2ucYCfHiXW10lUi2uKKS4AD5VJt5M2xrUeQ52pbgqbCVgFGhKo8EhR3d8a135cMIPFY5SoTYrlxYTGUs/jf1TSGS4EFhm6s8D1YwHIZ/YwAel+J/8EHA=
+ bh=e/fHvtpsQEIg51WOGAxxBkkGfgR7CRVroD1x+Aj1ffk=;
+ b=daVVQOBEnFdLfLyTq/ZcLn6icANbLDsu/5Y42vX8gUGVB9wRJiDWPYJxxRBugEODSOdEINH7sp5/v0CnzoP1BHLfLSgfbtzYDBlES/5Q10U+4TEPYJxvtPktV4nqo0u/kF1AVlUooiJMSu10KehQscLj0zs/ek4SFMr4LLwhe2I=
 Received: from SN6PR08MB5053.namprd08.prod.outlook.com (52.135.107.153) by
  SN6PR08MB4175.namprd08.prod.outlook.com (52.135.69.156) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.12; Mon, 6 Jan 2020 00:48:02 +0000
+ 15.20.2602.12; Mon, 6 Jan 2020 00:48:06 +0000
 Received: from SN6PR08MB5053.namprd08.prod.outlook.com
  ([fe80::7c80:2b62:5d9a:2139]) by SN6PR08MB5053.namprd08.prod.outlook.com
  ([fe80::7c80:2b62:5d9a:2139%4]) with mapi id 15.20.2602.015; Mon, 6 Jan 2020
- 00:48:02 +0000
-Received: from localhost.localdomain (136.49.227.119) by SN4PR0701CA0020.namprd07.prod.outlook.com (2603:10b6:803:28::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2602.13 via Frontend Transport; Mon, 6 Jan 2020 00:48:01 +0000
+ 00:48:06 +0000
+Received: from localhost.localdomain (136.49.227.119) by SN4PR0701CA0020.namprd07.prod.outlook.com (2603:10b6:803:28::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2602.13 via Frontend Transport; Mon, 6 Jan 2020 00:48:03 +0000
 From:   Jeff LaBundy <jeff@labundy.com>
 To:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
         "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
@@ -52,13 +52,13 @@ CC:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "mark.rutland@arm.com" <mark.rutland@arm.com>,
         Jeff LaBundy <jeff@labundy.com>
-Subject: [PATCH v3 3/7] input: keyboard: Add support for Azoteq
- IQS620A/621/622/624/625
-Thread-Topic: [PATCH v3 3/7] input: keyboard: Add support for Azoteq
- IQS620A/621/622/624/625
-Thread-Index: AQHVxCryRi1p6AWP10yXqEUZq0D5Iw==
-Date:   Mon, 6 Jan 2020 00:48:02 +0000
-Message-ID: <1578271620-2159-4-git-send-email-jeff@labundy.com>
+Subject: [PATCH v3 5/7] iio: temperature: Add support for Azoteq IQS620AT
+ temperature sensor
+Thread-Topic: [PATCH v3 5/7] iio: temperature: Add support for Azoteq IQS620AT
+ temperature sensor
+Thread-Index: AQHVxCrzaUNk+i1RRk+ClxiQZe1edw==
+Date:   Mon, 6 Jan 2020 00:48:03 +0000
+Message-ID: <1578271620-2159-6-git-send-email-jeff@labundy.com>
 References: <1578271620-2159-1-git-send-email-jeff@labundy.com>
 In-Reply-To: <1578271620-2159-1-git-send-email-jeff@labundy.com>
 Accept-Language: en-US
@@ -74,440 +74,198 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.7.4
 x-originating-ip: [136.49.227.119]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3c5ee51d-6872-4f8a-cb47-08d792421546
+x-ms-office365-filtering-correlation-id: 7999fc40-a38b-4ed7-d6c4-08d792421658
 x-ms-traffictypediagnostic: SN6PR08MB4175:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR08MB4175B2F5739D5561ED2119A8D33C0@SN6PR08MB4175.namprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-microsoft-antispam-prvs: <SN6PR08MB4175E623964CDA457592EEF4D33C0@SN6PR08MB4175.namprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
 x-forefront-prvs: 0274272F87
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(39830400003)(136003)(376002)(346002)(34096005)(199004)(189003)(36756003)(107886003)(2616005)(956004)(316002)(69590400006)(5660300002)(86362001)(6486002)(508600001)(2906002)(4326008)(6506007)(81166006)(110136005)(6512007)(54906003)(16526019)(26005)(8676002)(186003)(7416002)(8936002)(66476007)(71200400001)(52116002)(66946007)(30864003)(66446008)(66556008)(64756008)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR08MB4175;H:SN6PR08MB5053.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(39830400003)(136003)(376002)(346002)(34096005)(199004)(189003)(36756003)(107886003)(2616005)(956004)(316002)(69590400006)(5660300002)(86362001)(6486002)(508600001)(2906002)(4326008)(6506007)(81166006)(110136005)(6512007)(54906003)(16526019)(26005)(8676002)(186003)(7416002)(8936002)(66476007)(71200400001)(52116002)(66946007)(66446008)(66556008)(64756008)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR08MB4175;H:SN6PR08MB5053.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: labundy.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: X/eQ2guczIpmkIFjcXeVmCxx9/8nlGYsl409iMGwI+4SJmdHckrfCwLVDx6kvcfJHKVjXnEPVVj41zXSsssholrRWjZ+4GTcDjhRcau2vtHHfWO8slXsdZI4R6fMrxmBAmRi/RqMy2C7LvlOil1J32WHehu4zpyAoP3nUIGaWMEvRFghZDgg4cs/hISaprlXDn6gyX5P+s6Swg0mQR5MwD1IPO1b7lXPnfCN4CchHb83Rv6zLtZ0hfoOUfxTTIUxAlL4JEVfJyaKDBE+CIxZw5KgN/6A2LX9QxsrZiw9hMP0qFOM8NiiO5vKsKYXdOFHYXTKyolslOBDZbWMBEa2hc+BOCXolx96MJU5fJGq3shi1YxMsE91VU8BZYfQlQ8rsWEVO8b0mxxkre+uH1cwNGfaqy+b9qnhS14Mj8Qd3mIRhHslnUXAQIt2sugUbE6KaAY55q1K7BD8W6hYJKzdzNHt3juLiltD1wccTCo3EP0cji2DA75dl3H6o2WFru1u
+x-microsoft-antispam-message-info: +ePViaqf+L2cSYnoVlx+08BQOBKvknmuJsT8ay1i5mfRPGmkq97ujuC6pE7iqYpvnFHv27OkL6U+OsCCxQIRZnOUeb+kAaMav62EJeiZ9Em4tMBeIUDm8WzK8Fiujwlvd1cfx/UsuoVw9U9rVETAlmkKggYL/1NK77+p5KWo0O9cvRWi4eip0bEgFiAZVTvuK1u6LCHfvi2XhRDhiUKgo9WotrvasRK5Z0oRVsRD/Gr3MdJu4fNJOb5FHgcIPkNHVxh6X1mUAmLo3pN5aywn2ikWfJ/L9O83lQajD9Hth0V1im92k9dBKBsjNfz73wk1F7tHtu8NLgrA3o5FeECUN6oWDDD8a3TA/sDqFJcFLuNemKvOKRNsc1xn/poOydOs9mu8dpewDk59YY5DM7PCwCaVrNlcK/8Iv29075kGSwibeLBvt8OVzw6GlVHvh09D3xTHh4U0xf2e/m4BdreNh1xg82nv5YEQKPHQehNj7xI4ZT22q2zniHN/5gMh65JD
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: labundy.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c5ee51d-6872-4f8a-cb47-08d792421546
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 00:48:02.0531
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7999fc40-a38b-4ed7-d6c4-08d792421658
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 00:48:04.0310
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3ngHQ8b+nmvu3rT9XAi8AGEFwTfdupAUx5inpWQ+EjPv/Mjf1Uoji7JIT7fZcOnYbw/eh50BISvcfpMlGa59bQ==
+X-MS-Exchange-CrossTenant-userprincipalname: pWz2hJt23eGz/dhu9EH7wuVYt8ieEMIbyUTsd3RGfxAbLKr04IiEMuBYeBaOg6Q5rrfoGz17JyNtFPTN0ScsdA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR08MB4175
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This patch adds key and switch support for the Azoteq IQS620A,
-IQS621, IQS622, IQS624 and IQS625 multi-function sensors.
+This patch adds support for the Azoteq IQS620AT temperature sensor,
+capable of reporting its absolute die temperature.
 
 Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
 Changes in v3:
-  - None
+  - Added Reviewed-by trailer
 
 Changes in v2:
+  - Moved the driver from hwmon to iio
   - Merged 'Copyright' and 'Author' lines into one in introductory comments
   - Replaced 'error' with 'ret' throughout
-  - Updated iqs62x_keys_parse_prop to use unified device property interface
-  - Clarified the comment in iqs62x_keys_notifier to state that wheel up or
-    down events elicit an emulated release cycle
   - Eliminated tabbed alignment of platform_driver struct members
+  - Changed Kconfig "depends on" logic to MFD_IQS62X || COMPILE_TEST
 
- drivers/input/keyboard/Kconfig       |  10 ++
- drivers/input/keyboard/Makefile      |   1 +
- drivers/input/keyboard/iqs62x-keys.c | 340 +++++++++++++++++++++++++++++++=
+ drivers/iio/temperature/Kconfig         | 10 ++++
+ drivers/iio/temperature/Makefile        |  1 +
+ drivers/iio/temperature/iqs620at-temp.c | 97 +++++++++++++++++++++++++++++=
 ++++
- 3 files changed, 351 insertions(+)
- create mode 100644 drivers/input/keyboard/iqs62x-keys.c
+ 3 files changed, 108 insertions(+)
+ create mode 100644 drivers/iio/temperature/iqs620at-temp.c
 
-diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfi=
-g
-index 4706ff0..28de965 100644
---- a/drivers/input/keyboard/Kconfig
-+++ b/drivers/input/keyboard/Kconfig
-@@ -663,6 +663,16 @@ config KEYBOARD_IPAQ_MICRO
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called ipaq-micro-keys.
+diff --git a/drivers/iio/temperature/Kconfig b/drivers/iio/temperature/Kcon=
+fig
+index e1ccb40..f1f2a14 100644
+--- a/drivers/iio/temperature/Kconfig
++++ b/drivers/iio/temperature/Kconfig
+@@ -4,6 +4,16 @@
+ #
+ menu "Temperature sensors"
 
-+config KEYBOARD_IQS62X
-+	tristate "Azoteq IQS620A/621/622/624/625 keys and switches"
-+	depends on MFD_IQS62X
++config IQS620AT_TEMP
++	tristate "Azoteq IQS620AT temperature sensor"
++	depends on MFD_IQS62X || COMPILE_TEST
 +	help
-+	  Say Y here to enable key and switch support for the Azoteq IQS620A,
-+	  IQS621, IQS622, IQS624 and IQS625 multi-function sensors.
++	  Say Y here if you want to build support for the Azoteq IQS620AT
++	  temperature sensor.
 +
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called iqs62x-keys.
++	  To compile this driver as a module, choose M here: the module
++	  will be called iqs620at-temp.
 +
- config KEYBOARD_OMAP
- 	tristate "TI OMAP keypad support"
- 	depends on ARCH_OMAP1
-diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makef=
-ile
-index f5b1752..1d689fd 100644
---- a/drivers/input/keyboard/Makefile
-+++ b/drivers/input/keyboard/Makefile
-@@ -28,6 +28,7 @@ obj-$(CONFIG_KEYBOARD_TCA8418)		+=3D tca8418_keypad.o
- obj-$(CONFIG_KEYBOARD_HIL)		+=3D hil_kbd.o
- obj-$(CONFIG_KEYBOARD_HIL_OLD)		+=3D hilkbd.o
- obj-$(CONFIG_KEYBOARD_IPAQ_MICRO)	+=3D ipaq-micro-keys.o
-+obj-$(CONFIG_KEYBOARD_IQS62X)		+=3D iqs62x-keys.o
- obj-$(CONFIG_KEYBOARD_IMX)		+=3D imx_keypad.o
- obj-$(CONFIG_KEYBOARD_IMX_SC_KEY)	+=3D imx_sc_key.o
- obj-$(CONFIG_KEYBOARD_HP6XX)		+=3D jornada680_kbd.o
-diff --git a/drivers/input/keyboard/iqs62x-keys.c b/drivers/input/keyboard/=
-iqs62x-keys.c
+ config LTC2983
+ 	tristate "Analog Devices Multi-Sensor Digital Temperature Measurement Sys=
+tem"
+ 	depends on SPI
+diff --git a/drivers/iio/temperature/Makefile b/drivers/iio/temperature/Mak=
+efile
+index d6b850b..90c1131 100644
+--- a/drivers/iio/temperature/Makefile
++++ b/drivers/iio/temperature/Makefile
+@@ -3,6 +3,7 @@
+ # Makefile for industrial I/O temperature drivers
+ #
+
++obj-$(CONFIG_IQS620AT_TEMP) +=3D iqs620at-temp.o
+ obj-$(CONFIG_LTC2983) +=3D ltc2983.o
+ obj-$(CONFIG_HID_SENSOR_TEMP) +=3D hid-sensor-temperature.o
+ obj-$(CONFIG_MAXIM_THERMOCOUPLE) +=3D maxim_thermocouple.o
+diff --git a/drivers/iio/temperature/iqs620at-temp.c b/drivers/iio/temperat=
+ure/iqs620at-temp.c
 new file mode 100644
-index 0000000..b477334
+index 0000000..d20cb6ad
 --- /dev/null
-+++ b/drivers/input/keyboard/iqs62x-keys.c
-@@ -0,0 +1,340 @@
++++ b/drivers/iio/temperature/iqs620at-temp.c
+@@ -0,0 +1,97 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * Azoteq IQS620A/621/622/624/625 Keys and Switches
++ * Azoteq IQS620AT Temperature Sensor
 + *
 + * Copyright (C) 2019 Jeff LaBundy <jeff@labundy.com>
 + */
 +
 +#include <linux/device.h>
-+#include <linux/input.h>
++#include <linux/iio/iio.h>
 +#include <linux/kernel.h>
 +#include <linux/mfd/iqs62x.h>
 +#include <linux/module.h>
-+#include <linux/notifier.h>
 +#include <linux/platform_device.h>
-+#include <linux/property.h>
 +#include <linux/regmap.h>
-+#include <linux/slab.h>
 +
-+enum {
-+	IQS62X_SW_HALL_N,
-+	IQS62X_SW_HALL_S,
-+};
++#define IQS620_TEMP_UI_OUT			0x1A
 +
-+static const char * const iqs62x_switch_names[] =3D {
-+	[IQS62X_SW_HALL_N] =3D "hall-switch-north",
-+	[IQS62X_SW_HALL_S] =3D "hall-switch-south",
-+};
++#define IQS620_TEMP_SCALE			1000
++#define IQS620_TEMP_OFFSET			(-100)
 +
-+struct iqs62x_switch_desc {
-+	enum iqs62x_event_flag flag;
-+	unsigned int code;
-+	bool enabled;
-+};
-+
-+struct iqs62x_keys_private {
-+	struct iqs62x_core *iqs62x;
-+	struct input_dev *input;
-+	struct notifier_block notifier;
-+	struct iqs62x_switch_desc switches[ARRAY_SIZE(iqs62x_switch_names)];
-+	unsigned int keycode[IQS62X_NUM_KEYS];
-+	unsigned int keycodemax;
-+	u8 interval;
-+};
-+
-+static int iqs62x_keys_parse_prop(struct platform_device *pdev,
-+				  struct iqs62x_keys_private *iqs62x_keys)
++static int iqs620_temp_read_raw(struct iio_dev *indio_dev,
++				struct iio_chan_spec const *chan,
++				int *val, int *val2, long mask)
 +{
-+	struct fwnode_handle *child;
-+	unsigned int val;
-+	int ret, i;
++	struct iqs62x_core *iqs62x =3D iio_device_get_drvdata(indio_dev);
++	int ret;
++	__le16 val_buf;
 +
-+	ret =3D device_property_read_u32_array(&pdev->dev, "linux,keycodes",
-+					     NULL, 0);
-+	if (ret > IQS62X_NUM_KEYS) {
-+		dev_err(&pdev->dev, "Too many keycodes present\n");
-+		return -EINVAL;
-+	} else if (ret < 0) {
-+		dev_err(&pdev->dev, "Failed to count keycodes: %d\n", ret);
-+		return ret;
-+	}
-+	iqs62x_keys->keycodemax =3D ret;
-+
-+	ret =3D device_property_read_u32_array(&pdev->dev, "linux,keycodes",
-+					     iqs62x_keys->keycode,
-+					     iqs62x_keys->keycodemax);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to read keycodes: %d\n", ret);
-+		return ret;
-+	}
-+
-+	for (i =3D 0; i < ARRAY_SIZE(iqs62x_keys->switches); i++) {
-+		child =3D device_get_named_child_node(&pdev->dev,
-+						    iqs62x_switch_names[i]);
-+		if (!child)
-+			continue;
-+
-+		ret =3D fwnode_property_read_u32(child, "linux,code", &val);
-+		if (ret) {
-+			dev_err(&pdev->dev, "Failed to read switch code: %d\n",
-+				ret);
-+			return ret;
-+		}
-+		iqs62x_keys->switches[i].code =3D val;
-+		iqs62x_keys->switches[i].enabled =3D true;
-+
-+		if (fwnode_property_present(child, "azoteq,use-prox"))
-+			iqs62x_keys->switches[i].flag =3D (i =3D=3D IQS62X_SW_HALL_N ?
-+							 IQS62X_EVENT_HALL_N_P :
-+							 IQS62X_EVENT_HALL_S_P);
-+		else
-+			iqs62x_keys->switches[i].flag =3D (i =3D=3D IQS62X_SW_HALL_N ?
-+							 IQS62X_EVENT_HALL_N_T :
-+							 IQS62X_EVENT_HALL_S_T);
-+	}
-+
-+	return 0;
-+}
-+
-+static int iqs62x_keys_init(struct iqs62x_keys_private *iqs62x_keys)
-+{
-+	struct iqs62x_core *iqs62x =3D iqs62x_keys->iqs62x;
-+	enum iqs62x_event_flag flag;
-+	unsigned int event_mask_reg;
-+	unsigned int event_mask =3D 0;
-+	unsigned int val;
-+	int ret, i;
-+
-+	switch (iqs62x->dev_desc->prod_num) {
-+	case IQS620_PROD_NUM:
-+	case IQS621_PROD_NUM:
-+	case IQS622_PROD_NUM:
-+		event_mask_reg =3D IQS620_GLBL_EVENT_MASK;
-+
-+		/*
-+		 * Discreet button, hysteresis and SAR UI flags represent keys
-+		 * and are unmasked if mapped to a valid keycode.
-+		 */
-+		for (i =3D 0; i < iqs62x_keys->keycodemax; i++) {
-+			if (iqs62x_keys->keycode[i] =3D=3D KEY_RESERVED)
-+				continue;
-+
-+			if (iqs62x_events[i].reg =3D=3D IQS62X_EVENT_PROX)
-+				event_mask |=3D iqs62x->dev_desc->prox_mask;
-+			else if (iqs62x_events[i].reg =3D=3D IQS62X_EVENT_HYST)
-+				event_mask |=3D (iqs62x->dev_desc->hyst_mask |
-+					       iqs62x->dev_desc->sar_mask);
-+		}
-+
-+		ret =3D regmap_read(iqs62x->map, iqs62x->dev_desc->hall_flags,
-+				  &val);
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		ret =3D regmap_raw_read(iqs62x->map, IQS620_TEMP_UI_OUT, &val_buf,
++				      sizeof(val_buf));
 +		if (ret)
 +			return ret;
 +
-+		/*
-+		 * Hall UI flags represent switches and are unmasked if their
-+		 * corresponding child nodes are present.
-+		 */
-+		for (i =3D 0; i < ARRAY_SIZE(iqs62x_keys->switches); i++) {
-+			if (!(iqs62x_keys->switches[i].enabled))
-+				continue;
++		*val =3D le16_to_cpu(val_buf);
++		return IIO_VAL_INT;
 +
-+			flag =3D iqs62x_keys->switches[i].flag;
++	case IIO_CHAN_INFO_SCALE:
++		*val =3D IQS620_TEMP_SCALE;
++		return IIO_VAL_INT;
 +
-+			if (iqs62x_events[flag].reg !=3D IQS62X_EVENT_HALL)
-+				continue;
-+
-+			event_mask |=3D iqs62x->dev_desc->hall_mask;
-+
-+			input_report_switch(iqs62x_keys->input,
-+					    iqs62x_keys->switches[i].code,
-+					    (val & iqs62x_events[flag].mask) =3D=3D
-+					    iqs62x_events[flag].val);
-+		}
-+
-+		input_sync(iqs62x_keys->input);
-+		break;
-+
-+	case IQS624_PROD_NUM:
-+		event_mask_reg =3D IQS624_HALL_UI;
-+
-+		/*
-+		 * Interval change events represent keys and are unmasked if
-+		 * either wheel movement flag is mapped to a valid keycode.
-+		 */
-+		if (iqs62x_keys->keycode[IQS62X_EVENT_WHEEL_UP] !=3D KEY_RESERVED)
-+			event_mask |=3D IQS624_HALL_UI_INT_EVENT;
-+
-+		if (iqs62x_keys->keycode[IQS62X_EVENT_WHEEL_DN] !=3D KEY_RESERVED)
-+			event_mask |=3D IQS624_HALL_UI_INT_EVENT;
-+
-+		ret =3D regmap_read(iqs62x->map, iqs62x->dev_desc->interval,
-+				  &val);
-+		if (ret)
-+			return ret;
-+
-+		iqs62x_keys->interval =3D val;
-+		break;
++	case IIO_CHAN_INFO_OFFSET:
++		*val =3D IQS620_TEMP_OFFSET;
++		return IIO_VAL_INT;
 +
 +	default:
-+		return 0;
++		return -EINVAL;
 +	}
-+
-+	return regmap_update_bits(iqs62x->map, event_mask_reg, event_mask, 0);
 +}
 +
-+static int iqs62x_keys_notifier(struct notifier_block *notifier,
-+				unsigned long event_flags, void *context)
-+{
-+	struct iqs62x_event_data *event_data =3D context;
-+	struct iqs62x_keys_private *iqs62x_keys;
-+	int ret, i;
++static const struct iio_info iqs620_temp_info =3D {
++	.read_raw =3D &iqs620_temp_read_raw,
++};
 +
-+	iqs62x_keys =3D container_of(notifier, struct iqs62x_keys_private,
-+				   notifier);
++static const struct iio_chan_spec iqs620_temp_channels[] =3D {
++	{
++		.type =3D IIO_TEMP,
++		.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) |
++				      BIT(IIO_CHAN_INFO_SCALE) |
++				      BIT(IIO_CHAN_INFO_OFFSET),
++	},
++};
 +
-+	if (event_flags & BIT(IQS62X_EVENT_SYS_RESET)) {
-+		ret =3D iqs62x_keys_init(iqs62x_keys);
-+		if (ret) {
-+			dev_err(iqs62x_keys->input->dev.parent,
-+				"Failed to re-initialize device: %d\n", ret);
-+			return NOTIFY_BAD;
-+		}
-+
-+		return NOTIFY_OK;
-+	}
-+
-+	for (i =3D 0; i < iqs62x_keys->keycodemax; i++) {
-+		if (iqs62x_events[i].reg =3D=3D IQS62X_EVENT_WHEEL &&
-+		    event_data->interval =3D=3D iqs62x_keys->interval)
-+			continue;
-+
-+		input_report_key(iqs62x_keys->input, iqs62x_keys->keycode[i],
-+				 event_flags & BIT(i));
-+	}
-+
-+	for (i =3D 0; i < ARRAY_SIZE(iqs62x_keys->switches); i++)
-+		if (iqs62x_keys->switches[i].enabled)
-+			input_report_switch(iqs62x_keys->input,
-+					    iqs62x_keys->switches[i].code,
-+					    event_flags &
-+					    BIT(iqs62x_keys->switches[i].flag));
-+
-+	input_sync(iqs62x_keys->input);
-+
-+	if (event_data->interval =3D=3D iqs62x_keys->interval)
-+		return NOTIFY_OK;
-+
-+	/*
-+	 * Each frame contains at most one wheel event (up or down), in which
-+	 * case a complementary release cycle is emulated.
-+	 */
-+	if (event_flags & BIT(IQS62X_EVENT_WHEEL_UP)) {
-+		input_report_key(iqs62x_keys->input,
-+				 iqs62x_keys->keycode[IQS62X_EVENT_WHEEL_UP],
-+				 0);
-+		input_sync(iqs62x_keys->input);
-+	} else if (event_flags & BIT(IQS62X_EVENT_WHEEL_DN)) {
-+		input_report_key(iqs62x_keys->input,
-+				 iqs62x_keys->keycode[IQS62X_EVENT_WHEEL_DN],
-+				 0);
-+		input_sync(iqs62x_keys->input);
-+	}
-+
-+	iqs62x_keys->interval =3D event_data->interval;
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int iqs62x_keys_probe(struct platform_device *pdev)
++static int iqs620_temp_probe(struct platform_device *pdev)
 +{
 +	struct iqs62x_core *iqs62x =3D dev_get_drvdata(pdev->dev.parent);
-+	struct iqs62x_keys_private *iqs62x_keys;
-+	struct input_dev *input;
-+	int ret, i;
++	struct iio_dev *indio_dev;
 +
-+	iqs62x_keys =3D devm_kzalloc(&pdev->dev, sizeof(*iqs62x_keys),
-+				   GFP_KERNEL);
-+	if (!iqs62x_keys)
++	indio_dev =3D devm_iio_device_alloc(&pdev->dev, 0);
++	if (!indio_dev)
 +		return -ENOMEM;
 +
-+	platform_set_drvdata(pdev, iqs62x_keys);
++	iio_device_set_drvdata(indio_dev, iqs62x);
 +
-+	ret =3D iqs62x_keys_parse_prop(pdev, iqs62x_keys);
-+	if (ret)
-+		return ret;
++	indio_dev->modes =3D INDIO_DIRECT_MODE;
++	indio_dev->dev.parent =3D &pdev->dev;
++	indio_dev->channels =3D iqs620_temp_channels;
++	indio_dev->num_channels =3D ARRAY_SIZE(iqs620_temp_channels);
++	indio_dev->name =3D iqs62x->dev_desc->dev_name;
++	indio_dev->info =3D &iqs620_temp_info;
 +
-+	input =3D devm_input_allocate_device(&pdev->dev);
-+	if (!input)
-+		return -ENOMEM;
-+
-+	input->keycodemax =3D iqs62x_keys->keycodemax;
-+	input->keycode =3D iqs62x_keys->keycode;
-+	input->keycodesize =3D sizeof(*iqs62x_keys->keycode);
-+
-+	input->name =3D iqs62x->dev_desc->dev_name;
-+	input->id.bustype =3D BUS_I2C;
-+
-+	__set_bit(EV_KEY, input->evbit);
-+
-+	for (i =3D 0; i < iqs62x_keys->keycodemax; i++)
-+		__set_bit(iqs62x_keys->keycode[i], input->keybit);
-+
-+	__clear_bit(KEY_RESERVED, input->keybit);
-+
-+	for (i =3D 0; i < ARRAY_SIZE(iqs62x_keys->switches); i++)
-+		if (iqs62x_keys->switches[i].enabled) {
-+			__set_bit(EV_SW, input->evbit);
-+			__set_bit(iqs62x_keys->switches[i].code, input->swbit);
-+		}
-+
-+	iqs62x_keys->iqs62x =3D iqs62x;
-+	iqs62x_keys->input =3D input;
-+
-+	ret =3D iqs62x_keys_init(iqs62x_keys);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to initialize device: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret =3D input_register_device(iqs62x_keys->input);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to register device: %d\n", ret);
-+		return ret;
-+	}
-+
-+	iqs62x_keys->notifier.notifier_call =3D iqs62x_keys_notifier;
-+	ret =3D blocking_notifier_chain_register(&iqs62x_keys->iqs62x->nh,
-+					       &iqs62x_keys->notifier);
-+	if (ret)
-+		dev_err(&pdev->dev, "Failed to register notifier: %d\n", ret);
-+
-+	return ret;
++	return devm_iio_device_register(&pdev->dev, indio_dev);
 +}
 +
-+static int iqs62x_keys_remove(struct platform_device *pdev)
-+{
-+	struct iqs62x_keys_private *iqs62x_keys =3D platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret =3D blocking_notifier_chain_unregister(&iqs62x_keys->iqs62x->nh,
-+						 &iqs62x_keys->notifier);
-+	if (ret)
-+		dev_err(&pdev->dev, "Failed to unregister notifier: %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static struct platform_driver iqs62x_keys_platform_driver =3D {
++static struct platform_driver iqs620_temp_platform_driver =3D {
 +	.driver =3D {
-+		.name =3D IQS62X_DRV_NAME_KEYS,
++		.name =3D IQS620_DRV_NAME_TEMP,
 +	},
-+	.probe =3D iqs62x_keys_probe,
-+	.remove =3D iqs62x_keys_remove,
++	.probe =3D iqs620_temp_probe,
 +};
-+module_platform_driver(iqs62x_keys_platform_driver);
++module_platform_driver(iqs620_temp_platform_driver);
 +
 +MODULE_AUTHOR("Jeff LaBundy <jeff@labundy.com>");
-+MODULE_DESCRIPTION("Azoteq IQS620A/621/622/624/625 Keys and Switches");
++MODULE_DESCRIPTION("Azoteq IQS620AT Temperature Sensor");
 +MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:" IQS62X_DRV_NAME_KEYS);
++MODULE_ALIAS("platform:" IQS620_DRV_NAME_TEMP);
 --
 2.7.4
 
