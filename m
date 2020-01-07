@@ -2,136 +2,112 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A4A671323F5
-	for <lists+linux-pwm@lfdr.de>; Tue,  7 Jan 2020 11:42:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E0F7E132430
+	for <lists+linux-pwm@lfdr.de>; Tue,  7 Jan 2020 11:55:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbgAGKmr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 7 Jan 2020 05:42:47 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33925 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgAGKmr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 Jan 2020 05:42:47 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iomJn-0005TW-KM; Tue, 07 Jan 2020 11:42:35 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iomJm-0004iE-4c; Tue, 07 Jan 2020 11:42:34 +0100
-Date:   Tue, 7 Jan 2020 11:42:34 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
+        id S1727605AbgAGKzB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 7 Jan 2020 05:55:01 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58114 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727273AbgAGKzB (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 7 Jan 2020 05:55:01 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3E7A7AD05;
+        Tue,  7 Jan 2020 10:54:58 +0000 (UTC)
+Message-ID: <9fde9b416b281648e99b3ce430229e89c5b1a653.camel@suse.de>
+Subject: Re: [PATCH 25/32] pwm: brcmstb: convert to
+ devm_platform_ioremap_resource
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Yangtao Li <tiny.windzz@gmail.com>, claudiu.beznea@microchip.com,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        ludovic.desroches@microchip.com, rjui@broadcom.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        f.fainelli@gmail.com, shc_work@mail.ru, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, vz@mleia.com, slemieux.tyco@gmail.com,
+        khilman@baylibre.com, matthias.bgg@gmail.com, heiko@sntech.de,
+        palmer@dabbelt.com, paul.walmsley@sifive.com, mripard@kernel.org,
+        wens@csie.org, jonathanh@nvidia.com, linux@prisktech.co.nz,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org,
         linux-mediatek@lists.infradead.org,
         linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org, kernel@pengutronix.de,
-        Richard Weinberger <richard@nod.at>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] pwm: Enable compile testing for some of drivers
-Message-ID: <20200107104234.wq74fska3szrg4ii@pengutronix.de>
-References: <20191230172113.17222-1-krzk@kernel.org>
- <20191230172113.17222-2-krzk@kernel.org>
- <20200107072645.ko247bwhh3ibdu73@pengutronix.de>
- <20200107082539.GA31827@pi3>
+        linux-riscv@lists.infradead.org, linux-tegra@vger.kernel.org
+Date:   Tue, 07 Jan 2020 11:54:53 +0100
+In-Reply-To: <20191229080610.7597-25-tiny.windzz@gmail.com>
+References: <20191229080610.7597-1-tiny.windzz@gmail.com>
+         <20191229080610.7597-25-tiny.windzz@gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-PicWM6Keq9fqFpxdhA9f"
+User-Agent: Evolution 3.34.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200107082539.GA31827@pi3>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Krzysztof,
 
-On Tue, Jan 07, 2020 at 09:25:39AM +0100, Krzysztof Kozlowski wrote:
-> On Tue, Jan 07, 2020 at 08:26:45AM +0100, Uwe Kleine-König wrote:
-> > On Mon, Dec 30, 2019 at 06:21:13PM +0100, Krzysztof Kozlowski wrote:
-> > > Some of the PWM drivers can be compile tested to increase build
-> > > coverage.
-> > > 
-> > > The Meson PWM driver requires COMMON_CLK dependency.
-> > 
-> > I'm surprised that there are not more that need this. Is HAVE_CLK not
-> > enough?
-> 
-> Nope. E.g. for alpha architecture, HAVE_CLK is not set and without
-> COMMON_CLK:
-> 
-> drivers/pwm/pwm-meson.o: In function `meson_pwm_init_channels':
-> (.text+0x244): undefined reference to `devm_clk_register'
+--=-PicWM6Keq9fqFpxdhA9f
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I see. devm_clk_register() only exists in include/linux/clk-provider.h.
+On Sun, 2019-12-29 at 08:06 +0000, Yangtao Li wrote:
+> Use devm_platform_ioremap_resource() to simplify code.
+>=20
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
 
-> I guess other solution would be to add stubs for few clk functions...
-> 
-> > Also HAS_IOMEM is a typical requirement, but I tested with an ARCH=um
-> > config (which does't have HAS_IOMEM) and they all compile fine.
-> 
-> Because of !HAS_IOMEM, since some time ARCH=um does not support
-> COMPILE_TEST. Therefore HAS_IOMEM dependency is not needed for compile
-> testing (and for regular build it is selected by ARCH).
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-Hehe, I didn't notice because for testing I just dropped the "depends on
-..." lines in Kconfig instead of adding "|| COMPILE_TEST" :-) Still they
-compile fine on UML.
+Thanks!
 
-Ah, since bc083a64b6c0 ("init/Kconfig: make COMPILE_TEST depend on
-!UML") == v4.8-rc1~52^2~83 COMPILE_TEST cannot be enabled on UML, but
-later 1bcbfbfdeb00 ("um: add dummy ioremap and iounmap functions")
-== v4.13-rc1~8^2~6 UM got a dummy implementation. So maybe we could
-revert bc083a64b6c0 today? (And if not, a comment about why near the
-"depends on !UML" in init/Kconfig would be great.)
+>  drivers/pwm/pwm-brcmstb.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-brcmstb.c b/drivers/pwm/pwm-brcmstb.c
+> index fea612c45f20..8b66f9d2f589 100644
+> --- a/drivers/pwm/pwm-brcmstb.c
+> +++ b/drivers/pwm/pwm-brcmstb.c
+> @@ -234,7 +234,6 @@ MODULE_DEVICE_TABLE(of, brcmstb_pwm_of_match);
+>  static int brcmstb_pwm_probe(struct platform_device *pdev)
+>  {
+>  	struct brcmstb_pwm *p;
+> -	struct resource *res;
+>  	int ret;
+> =20
+>  	p =3D devm_kzalloc(&pdev->dev, sizeof(*p), GFP_KERNEL);
+> @@ -262,8 +261,7 @@ static int brcmstb_pwm_probe(struct platform_device *=
+pdev)
+>  	p->chip.base =3D -1;
+>  	p->chip.npwm =3D 2;
+> =20
+> -	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	p->base =3D devm_ioremap_resource(&pdev->dev, res);
+> +	p->base =3D devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(p->base)) {
+>  		ret =3D PTR_ERR(p->base);
+>  		goto out_clk;
 
-Orthogonal to that, I wonder if depending on HAS_IOMEM is right even
-though the compile testers won't notice it missing. Or should HAS_IOMEM
-be dropped?
 
-> > > @@ -318,7 +319,7 @@ config PWM_MEDIATEK
-> > >  
-> > >  config PWM_MXS
-> > >  	tristate "Freescale MXS PWM support"
-> > > -	depends on ARCH_MXS && OF
-> > > +	depends on (ARCH_MXS && OF) || COMPILE_TEST
-> > >  	select STMP_DEVICE
-> > >  	help
-> > >  	  Generic PWM framework driver for Freescale MXS.
-> > > @@ -328,7 +329,8 @@ config PWM_MXS
-> > >  
-> > >  config PWM_OMAP_DMTIMER
-> > >  	tristate "OMAP Dual-Mode Timer PWM support"
-> > > -	depends on OF && ARCH_OMAP && OMAP_DM_TIMER
-> > > +	depends on (ARCH_OMAP && OMAP_DM_TIMER) || COMPILE_TEST
-> > > +	depends on OF
-> > 
-> > I'm surprised that OF isn't required for PWM_MXS but is is for
-> > PWM_OMAP_DMTIMER. pwm-mxs compiles without CONFIG_OF, didn't test
-> > pwm-omap-dmtimer.
-> 
-> Since some time !OF has all necessary stubs so OF is actually needed
-> only for binding, not compiling.
+--=-PicWM6Keq9fqFpxdhA9f
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-That doesn't explain why you handle PWM_MXS and PWM_OMAP_DMTIMER
-differently though.
+-----BEGIN PGP SIGNATURE-----
 
-Best regards
-Uwe
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl4UY30ACgkQlfZmHno8
+x/7/aAf7BW2itFl3TLtG03hnquQwqo+DGR4GEFXlXS0y7tCwQNw/r7LWRi5SHWqI
+Fq6j3OYwhEhv1zZNfDN+lUmZdX10MHKOrnk6wdu89kgT1ebWaQ2Pwf6TCqZtwWia
+y/2eh5++1G9168GQTuyG3BjaSaVFwwVKe4+gbtIMc6RPU9xWbQSC6LsIq+a66EvW
+3sXdIQJUp0WcQuFcnQhD9OUgVRZedCRpu7rj7Tezr5Ks+lL91fItKsOwdSKyTfWh
+ZLbQ3yaz45FUSkZVP9388WNvi2lUIEn2VaX9QX3PrmhyKlwlyhfioTTj47wDotkU
+KLQMm16Gyns5z+15tvGm5+m8oZ61FA==
+=Sn4O
+-----END PGP SIGNATURE-----
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+--=-PicWM6Keq9fqFpxdhA9f--
+
