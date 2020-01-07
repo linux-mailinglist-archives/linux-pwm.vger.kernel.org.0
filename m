@@ -2,91 +2,103 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D21C61325D3
-	for <lists+linux-pwm@lfdr.de>; Tue,  7 Jan 2020 13:15:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 30F33132633
+	for <lists+linux-pwm@lfdr.de>; Tue,  7 Jan 2020 13:31:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgAGMPR convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Tue, 7 Jan 2020 07:15:17 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:46382 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbgAGMPR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 Jan 2020 07:15:17 -0500
-Received: by mail-ed1-f68.google.com with SMTP id m8so50129815edi.13;
-        Tue, 07 Jan 2020 04:15:15 -0800 (PST)
+        id S1727834AbgAGMbS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 7 Jan 2020 07:31:18 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45433 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbgAGMbS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 Jan 2020 07:31:18 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 203so38690461lfa.12
+        for <linux-pwm@vger.kernel.org>; Tue, 07 Jan 2020 04:31:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9EebLSaihLU2tARTr8IPQ7uxTqO1LTm4gAhmzGy3UgE=;
+        b=FlGvyvi2QPBrqo2r4Jue30+UaktwLcp+KLUSPcvRGN/2BaMLLxQCzspsz8Eq3GmLzd
+         Nrv0IdyDSVVeZeRJza4UCzrDBLsJO3WK4lS8sWpZsaGTKZYL+exCo2xkiSf4lMrGxS3V
+         O/HXc2S8gz3bmtLmHzxaW/sJdAR+nUuSDVQSB2asPTwuEA0IbNHvqBPIchofCxdcHcKS
+         OEEy/3pGWuFBbaL7Ok/BcVMSr/M6v3ePO5J4A8TwSB4RBOQCo4bFWBIWtLcYJ9N6M89O
+         Dyi019Lv6vQkQdGdoa8pwBQzbkx7n8LfuHI9rALcG/Fr6NzydOKxKMgMB7a4JajaCs9Y
+         ydvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=dkoKwK15oscs3r0V8scapeKxlP48dhvoGFKEGuBFTog=;
-        b=HXISdLqOXCi/RY0dBfCTadWPxJnegmXUMqSxRGe42iY3pi8cxb8rZbpZSwvcgnrAFf
-         rwgszkKeJ18N/gITwyfHV6kEc/vLTbnfoy/TN14I6ftssHKesjXWpAsOHKKWiU7vt+9Y
-         WCzrPaEIkDsOAhv0NftJ57trlAAeTUcGoxdEXMm0AM6hGD72Go0f6JEa3x0iJaFSCbOM
-         v1sA1a7RPPko6uJ470BeueTPTGbQ9DNQ7fgmal0ow61SD9nFdOnhLtzXLg/nbW6KxWNO
-         zFQh8p+avU+PozbeYJ9Ff1qcie3dfq0XoGrsas0HbNTtGPaNwjnBi7YB8bmf/6DlaNkU
-         mdlA==
-X-Gm-Message-State: APjAAAW2qPasWz1A/X+jNNH83mzzfNkrJNS/TDMj8MdvZ2gTvZEk+7wl
-        snpUeEKEQDI0dvFtjcyoAjo=
-X-Google-Smtp-Source: APXvYqwW9wXBZpzOMfTBS/kbOe4ZNckfdL5+6WOz5BazFgA1mugpFZqXKx0VrM2wxvGj7bgEnT9msA==
-X-Received: by 2002:a17:906:eda9:: with SMTP id sa9mr109435185ejb.297.1578399315230;
-        Tue, 07 Jan 2020 04:15:15 -0800 (PST)
-Received: from pi3 ([194.230.155.149])
-        by smtp.googlemail.com with ESMTPSA id f9sm7382215edr.66.2020.01.07.04.15.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 04:15:14 -0800 (PST)
-Date:   Tue, 7 Jan 2020 13:15:12 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, kernel@pengutronix.de,
-        linux-tegra@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] pwm: Enable compile testing for some of drivers
-Message-ID: <20200107121512.GA319@pi3>
-References: <20191230172113.17222-1-krzk@kernel.org>
- <20191230172113.17222-2-krzk@kernel.org>
- <20200107072645.ko247bwhh3ibdu73@pengutronix.de>
- <20200107082539.GA31827@pi3>
- <20200107104234.wq74fska3szrg4ii@pengutronix.de>
- <20200107110359.GA32423@pi3>
- <20200107113354.ggq6zarewq5ip354@pengutronix.de>
- <20200107115429.GA32632@pi3>
- <20200107120926.cgrxk6b4rchf6i42@pengutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9EebLSaihLU2tARTr8IPQ7uxTqO1LTm4gAhmzGy3UgE=;
+        b=Pbr1a+EX0BGtL9dr8z7+Ulj5px30YAZtFkjIX9VPaSZtfteDOm8H/UesKAwHzm3LIQ
+         V5MkHqM2Ih7yR0OJhpw/y+mN/TeDfLc4ra+A002hiKXOUk9576xPgSplD+8Cq3jy7Xpn
+         CRD5ZvJrj6V+6s1bt01LrPYUiubIc3vOM2GOKyRqPDQmS+fnkeML2WnRarM37OZbpSp9
+         SsL+WfEfLQUKJIMfuLklwR9BY+35C5kOG3P66H99boz/ppq9NWQ95M/mN5DGG9a+2WEb
+         x/KWlrC61rEA2mo804b0whIyHBZGLAGT+l0b7JMLrHSD6257JnDyDCXNsrldwlpTsYs3
+         kclg==
+X-Gm-Message-State: APjAAAVOWYzIGKgz4Aj9UFox0UDs5tBYUbvkPZCNEfUh2zxCPyG27tXs
+        7QTXO0AuqUfP2v4wJOo4Vk7OuS0sB6ss9y3bhrEUWQ==
+X-Google-Smtp-Source: APXvYqyBuRwxF96vFYNvlrUvjUjmWThDAJPetB+s1J0E1Mz7v2ejmMMutsemtESFHjYL7jQnTSsmSoWiKAwaDs6P7Qs=
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr58501816lfi.93.1578400276043;
+ Tue, 07 Jan 2020 04:31:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200107120926.cgrxk6b4rchf6i42@pengutronix.de>
+References: <20191129191023.2209-1-miquel.raynal@bootlin.com> <CAHp75VeJNZWz_Cv=dozAwt74OBu8TgyYe5bNU3sHreRMdqxR8A@mail.gmail.com>
+In-Reply-To: <CAHp75VeJNZWz_Cv=dozAwt74OBu8TgyYe5bNU3sHreRMdqxR8A@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jan 2020 13:31:04 +0100
+Message-ID: <CACRpkdYsE8e4LfYkiaYyqdcPsgg6r4pqzHKwqUBveoLou_hSnw@mail.gmail.com>
+Subject: Re: [PATCH v4] gpio: pca953x: Add Maxim MAX7313 PWM support
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 01:09:26PM +0100, Uwe Kleine-König wrote:
-> > > (Oh, HAS_DMA is defined using "depends on !NO_DMA" + "default y".
-> > > NO_DMA has three different definitions. Two of them (in
-> > > drivers/crypto/ccree/cc_hw_queue_defs.h and arch/arm/include/asm/dma.h)
-> > > unrelated.)
-> > 
-> > Yes, HAS_DMA is the second missing piece for UM.
-> 
-> So something like:
-> 
-> 	# Usermode linux doesn't provide HAS_DMA and HAS_IOMEM.  To not have to
-> 	# clutter most dependencies with these just exclude UML from compile
-> 	# testing.
-> 
-> as comment for COMPILE_TEST's depend line should be fine, right?
-> 
+On Mon, Dec 16, 2019 at 10:51 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Fri, Nov 29, 2019 at 9:13 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-I think yes.
+> > The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> > functions but can also manage the intensity on each of its ports with
+> > PWM. Each output is independent and may be tuned with 16 values (4
+> > bits per output). The period is always 32kHz, only the duty-cycle may
+> > be changed. One can use any output as GPIO or PWM.
+>
+> Thanks for an update!
+>
+> Still I think it's wrong approach. What should be done is:
+>  - adding a pin configuration type of PWM (when, for example, argument
+> defines duty cycle and period)
+>  - conversion to pin control of this driver
+>  - enabling pin configuration PWM for it.
+>
+> For now it looks like a custom way of doing it.
+> If GPIO maintainers are okay with it, I'll not object, just want to
+> have than something like TODO updated for the matter.
 
-Best regards,
-Krzysztof
+Yeah well that is a possible way, it pretty much lies with the PWM
+maintainer, I have one guiding stanza "rough consensus and running
+code". Making big upfront code conversions just to get a small piece
+of hardware going is just too much from me as subsystem maintainer,
+a dual sub-system driver is perfectly fine in my opinion.
+
+That said contributors are encouraged to extend scope and be
+ambitious and set precedents for others to follow by going the extra
+mile.
+
+(That sounds like corporate management!)
+
+But that must be voluntary work outside the scope of just hardware
+enablement.
+
+Yours,
+Linus Walleij
