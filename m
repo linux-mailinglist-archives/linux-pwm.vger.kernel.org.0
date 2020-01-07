@@ -2,144 +2,113 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0517813246C
-	for <lists+linux-pwm@lfdr.de>; Tue,  7 Jan 2020 12:04:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E7131324B2
+	for <lists+linux-pwm@lfdr.de>; Tue,  7 Jan 2020 12:19:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbgAGLEE convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Tue, 7 Jan 2020 06:04:04 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45639 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727211AbgAGLEE (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 Jan 2020 06:04:04 -0500
-Received: by mail-ed1-f65.google.com with SMTP id v28so49948890edw.12;
-        Tue, 07 Jan 2020 03:04:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ptBtaLfSefXKIlF4+ATcVDfD9CqQtKSIYDSRdZx4Dts=;
-        b=eVXkihyWBjCuraKu083wbSrBVI9yMv26kq3qNMgx+p0Ci+wCVx9J+zeYmJ84MBirIL
-         Juv4yHoaO2UPzphKzbWeXgpxLdOK58FA/TBZLwrI2mxlqYC+h5EOvrzOri01tMEk9JlO
-         EBvifdogEquBi9YohbYNuCbMG5gSw6+iJc3P1sU8e5zJGA/PRVHZ2iCy8THl1L7JUlJ5
-         ZkHJ3zzAROMyMgYS3vqRcrDSDYKuKOO6VcLeAQEdkdUuqz4DWAL4OFDqol6ZzXSd/YqZ
-         JsZC7BS2lJZ8bb0QtAxy55UB2mYSma7jd+gKnjl/fajF0q1F2XtLYE4mPFE3AAR/Lmgd
-         o+Ew==
-X-Gm-Message-State: APjAAAVw2yqKVwUjuXUkVEymj30KX9c+G/4erhwMG4/qDtUITiwGPR+y
-        g08bHUQda60MNSsvSjRd5p8=
-X-Google-Smtp-Source: APXvYqzKoAnAzDFoVmt8WsrTLEo61oVGbLtxhYn9w1G9R8M+n/U0qKkIJnksdqHSF0YmF+wOzkLZyQ==
-X-Received: by 2002:a17:906:c4d:: with SMTP id t13mr112159727ejf.198.1578395042449;
-        Tue, 07 Jan 2020 03:04:02 -0800 (PST)
-Received: from pi3 ([194.230.155.149])
-        by smtp.googlemail.com with ESMTPSA id x8sm7492342eds.88.2020.01.07.03.04.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 03:04:01 -0800 (PST)
-Date:   Tue, 7 Jan 2020 12:03:59 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org, kernel@pengutronix.de,
-        Richard Weinberger <richard@nod.at>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] pwm: Enable compile testing for some of drivers
-Message-ID: <20200107110359.GA32423@pi3>
-References: <20191230172113.17222-1-krzk@kernel.org>
- <20191230172113.17222-2-krzk@kernel.org>
- <20200107072645.ko247bwhh3ibdu73@pengutronix.de>
- <20200107082539.GA31827@pi3>
- <20200107104234.wq74fska3szrg4ii@pengutronix.de>
+        id S1726937AbgAGLTt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 7 Jan 2020 06:19:49 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:52259 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727589AbgAGLTt (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 Jan 2020 06:19:49 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iomti-0001FG-Ne; Tue, 07 Jan 2020 12:19:42 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iomtg-0007Ek-DM; Tue, 07 Jan 2020 12:19:40 +0100
+Date:   Tue, 7 Jan 2020 12:19:40 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Jeff LaBundy <jeff@labundy.com>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>
+Subject: Re: [PATCH v2 4/7] pwm: Add support for Azoteq IQS620A PWM generator
+Message-ID: <20200107111940.ymiey7npx6rrppqz@pengutronix.de>
+References: <20191209073206.6pftsak5v25jdepz@pengutronix.de>
+ <20191210000252.GA6361@labundy.com>
+ <20191210072227.434hyv5wl3rwztqx@pengutronix.de>
+ <20191215203607.GA31390@labundy.com>
+ <20191216091912.r4onikojbkbmguag@pengutronix.de>
+ <20191220031924.GA2658@labundy.com>
+ <20191220085948.iagsdpjqd6ixdo7j@pengutronix.de>
+ <20191221032755.GA3051@labundy.com>
+ <20191222214851.kapsro6b6qylke43@pengutronix.de>
+ <20200101223933.GB14339@labundy.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200107104234.wq74fska3szrg4ii@pengutronix.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200101223933.GB14339@labundy.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 11:42:34AM +0100, Uwe Kleine-KÃ¶nig wrote:
-> > I guess other solution would be to add stubs for few clk functions...
+Hi Jeff,
+
+On Wed, Jan 01, 2020 at 10:39:36PM +0000, Jeff LaBundy wrote:
+> On Sun, Dec 22, 2019 at 10:48:51PM +0100, Uwe Kleine-König wrote:
+> > On Sat, Dec 21, 2019 at 03:28:01AM +0000, Jeff LaBundy wrote:
+> > > Based on your other feedback, I'm moving forward under the impression that
+> > > you'll still accept option (2); please let me know if I have misunderstood
+> > > (thank you for being flexible).
 > > 
-> > > Also HAS_IOMEM is a typical requirement, but I tested with an ARCH=um
-> > > config (which does't have HAS_IOMEM) and they all compile fine.
-> > 
-> > Because of !HAS_IOMEM, since some time ARCH=um does not support
-> > COMPILE_TEST. Therefore HAS_IOMEM dependency is not needed for compile
-> > testing (and for regular build it is selected by ARCH).
+> > Yeah, that's fine. If in the end it shows that this is a bad idea we can
+> > still change to (3).
 > 
-> Hehe, I didn't notice because for testing I just dropped the "depends on
-> ..." lines in Kconfig instead of adding "|| COMPILE_TEST" :-) Still they
-> compile fine on UML.
+> Sounds great. As soon as 5.5-rc5 lands this weekend, I'll rebase v3 and
+> send it out.
 > 
-> Ah, since bc083a64b6c0 ("init/Kconfig: make COMPILE_TEST depend on
-> !UML") == v4.8-rc1~52^2~83 COMPILE_TEST cannot be enabled on UML, but
-> later 1bcbfbfdeb00 ("um: add dummy ioremap and iounmap functions")
-> == v4.13-rc1~8^2~6 UM got a dummy implementation. So maybe we could
-> revert bc083a64b6c0 today? (And if not, a comment about why near the
-> "depends on !UML" in init/Kconfig would be great.)
+> I failed to catch this in my previous reply, but the comment I've added
+> to iqs620_pwm_get_state actually reads as follows:
 > 
-> Orthogonal to that, I wonder if depending on HAS_IOMEM is right even
-> though the compile testers won't notice it missing. Or should HAS_IOMEM
-> be dropped?
-
-I think yes, it can be dropped, but this would require:
-1. Fixing any dependencies on HAS_IOMEM, e.g.:
-    WARNING: unmet direct dependencies detected for MFD_SYSCON
-      Depends on [n]: HAS_IOMEM [=n]
-      Selected by [y]:
-      - PHY_DA8XX_USB [=y] && (ARCH_DAVINCI_DA8XX || COMPILE_TEST [=y])
-
-2. Checking if all of stubs are implemented (not only IOMEM but maybe
-   DMA as well). Also 1bcbfbfdeb00 brought only few stubs. Still we
-   need devm_ioremap_resource() and others.
-
-Quick test shows mentioned "unmet direct dependencies" and:
-    phy-pxa-usb.c:(.text+0x2f5): undefined reference to `devm_ioremap_resource'
-    dma-iommu.c:(.text+0x179): undefined reference to `dma_pgprot'
-
+> /*
+>  * Since the device cannot generate a 0% duty cycle, requests to do so
+>  * force subsequent calls to iqs620_pwm_get_state to report the output
+>  * as disabled with duty cycle equal to that which was in use prior to
+>  * the request. This is not ideal, but is the best compromise based on
+>  * the capabilities of the device.
+>  */
 > 
-> > > > @@ -318,7 +319,7 @@ config PWM_MEDIATEK
-> > > >  
-> > > >  config PWM_MXS
-> > > >  	tristate "Freescale MXS PWM support"
-> > > > -	depends on ARCH_MXS && OF
-> > > > +	depends on (ARCH_MXS && OF) || COMPILE_TEST
-> > > >  	select STMP_DEVICE
-> > > >  	help
-> > > >  	  Generic PWM framework driver for Freescale MXS.
-> > > > @@ -328,7 +329,8 @@ config PWM_MXS
-> > > >  
-> > > >  config PWM_OMAP_DMTIMER
-> > > >  	tristate "OMAP Dual-Mode Timer PWM support"
-> > > > -	depends on OF && ARCH_OMAP && OMAP_DM_TIMER
-> > > > +	depends on (ARCH_OMAP && OMAP_DM_TIMER) || COMPILE_TEST
-> > > > +	depends on OF
-> > > 
-> > > I'm surprised that OF isn't required for PWM_MXS but is is for
-> > > PWM_OMAP_DMTIMER. pwm-mxs compiles without CONFIG_OF, didn't test
-> > > pwm-omap-dmtimer.
-> > 
-> > Since some time !OF has all necessary stubs so OF is actually needed
-> > only for binding, not compiling.
-> 
-> That doesn't explain why you handle PWM_MXS and PWM_OMAP_DMTIMER
-> differently though.
+> This matches the present implementation, not your proposed comment that
+> claims duty cycle is clamped to 1 / 256 ms following a request for a 0%
+> duty cycle.
 
-You're right, I missed this. None of them require OF for building so
-separate "depends on OF" makes sense only for readability of this.  Let
-me send v2 to make it similar to PWM_MXS.
+Yeah, if that's the mechanism that is actually implemented, that's fine
+of course.
 
+> This seems OK since the concept of a duty cycle or period aren't really
+> relevant if the output is disabled in my opinion. However if you prefer
+> I update iqs620_pwm_apply to clamp duty cycle to 1 / 256 ms (instead of
+> leaving it untouched) in this case, please let me know.
 
-Best regards,
-Krzysztof
+For a disabled PWM the duty_cycle and period are not relevant, for an
+enabled PWM running with 0% the period matters (at least in theory)
+however.
 
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
