@@ -2,64 +2,70 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B2BCA134337
-	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jan 2020 14:02:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60AC4134338
+	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jan 2020 14:02:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgAHNAa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 8 Jan 2020 08:00:30 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45474 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbgAHNA3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Jan 2020 08:00:29 -0500
-Received: by mail-wr1-f65.google.com with SMTP id j42so3214190wrj.12
-        for <linux-pwm@vger.kernel.org>; Wed, 08 Jan 2020 05:00:29 -0800 (PST)
+        id S1727119AbgAHNA4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 8 Jan 2020 08:00:56 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39253 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbgAHNA4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Jan 2020 08:00:56 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y11so3283644wrt.6;
+        Wed, 08 Jan 2020 05:00:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Vu/TEPKi3gH8supR1Fm33b81xSnPq5jh2aLIJG+pAp8=;
-        b=C38VsHkaSiTnMp8oEqik2sQ+UdujLVRJBOZhWNt4HwDT8TYYXUfc63GaVwY5Bm1w9C
-         l1wjcqYxCFc4z5QuoCYAByJVCEomoXceMFWonezy3nkqwlFOVaQtUzOMEjcSI1Gqndrq
-         PwCGeih3fbaQqS/TdXBE0iIUpYSKxkmOmnOc7cWU47OH5VHIXcTwa2YBK3zXz0eWEA9k
-         zHctIPV5y0jf0OR4wDs4zphKIonZ8+snGFwIaWWURmlXByQoWBXh7/Mz2/I5AV4+eouP
-         hOVz3Jf+EF58eqmBJBljqNoiroJzL/84XqKfiH7SXJgg/ez26ejE9IxJHfZFbjZmwl/R
-         66hw==
+        bh=8s6MBY17dmKuqB1spd1Y2svCKY1mGBybzjzWrguhdKw=;
+        b=gE1Ze7d22HE5Q5vnTBA9TJ3sklMoxYoqc4qi5fHipRECxI0AbbTe7yOGYletjJPSmG
+         +ni93Xnu1tzfiZFnXRrNN7/9U4sSHQNRhWB3u0H5/5LgIBx8y6JZ2dvG6K9UzFfeIs+t
+         ucmWMwc34F1bCjWif80BBpDX+NigheLltnGLMjReolPZ5SDW/DH4dUm+wUq5r/jUmJ7s
+         e2m0AP/4myXBS3YYO7G6r3U33CARN3WLrhMxJEK0ZB3mfe/XXCblny9ZEPEACVa0kLmj
+         3U+hwLGgcCpRcrE4b/ohDwhGIOeoYtr9t3UJp9qpLX3nPDKIaslKdYClYnIKHOhib/Rq
+         UFDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Vu/TEPKi3gH8supR1Fm33b81xSnPq5jh2aLIJG+pAp8=;
-        b=nbj9CqLGVtPVQA1tS241BMMzMl7St5DVUDiF5l+VR+a8X/JhDClRMRw2BF54pqrQA2
-         wfZv8iGnNQUpeUGxKq3xvo+N2o/K29tR0g5QqcrW1M8clLDDN3R22mhUJWeOEjzyZBrV
-         zCKrJZV6/CNM/rOKx9c6/XIK2AqIFOWKqMLzkXWgPjx5DvFadpoux1cNANsycpxDnAjV
-         yPiBJU1p9Mr+tit7y/w4tvsgYCPAchCQBLUm0+y3JCG0mwNvbVmf5l4WmllR0or7D2Ko
-         40eeelA2kgd7cUnSC9AsZ4dnSaqGhbULZkmGU9trHgjAWqVY7q49xzXFqvK5J4jTuOG8
-         JvPw==
-X-Gm-Message-State: APjAAAUckixjyPEq4/6t2dEtL9Ir65JTbO6pY0qxO3osuy+bta4BNeAV
-        Qw8IaZ+9VVkPEAtFW8MQ2BI=
-X-Google-Smtp-Source: APXvYqxfk6AD/hSdePxpW2VxHPJad/imk9QQ8DFlIIefqzAfODMxbLf89oGNQR1D54/rKDHPVZzaTQ==
-X-Received: by 2002:a5d:4386:: with SMTP id i6mr4444474wrq.63.1578488428368;
-        Wed, 08 Jan 2020 05:00:28 -0800 (PST)
+        bh=8s6MBY17dmKuqB1spd1Y2svCKY1mGBybzjzWrguhdKw=;
+        b=WLRDx7XdT8aISbMtxkGJiGKOLQzF5MLWtzeGKcl0LB0TePAZpkDVsbmQ0Ggm9uiw9i
+         QmRAheHtCZYATd1+48okNROIuuPDrts7uad/AR4/JUWzg1VoGKmI/qyE0uQsRi5qnPGG
+         6MBst1df5+qg6sJOQzYC0bvDAn5WVLmUA4TvCbjulvGzwE78XZHkjJRGue07r089GQTP
+         h9EI7krNuV3XZwlYXkAdK5N8kZlj/WshjYj/XSHJ+fJcJWC/3Mlv0CzjBKa2KCa/WyQ/
+         sK9VmxQWG1C3lDkFJOjeJzHA9Hn8fDPUfppXi2RPDlL4gA17WF73vtrGqZPubDfJFohx
+         50Og==
+X-Gm-Message-State: APjAAAUmgnelRaGlVdwrhxjPtS9t0crHGwc5pU8m7tM3WeenmmvRSpQt
+        ObPKcIRGhXdwC7AK69MwIb3zJcd6
+X-Google-Smtp-Source: APXvYqyiUk9DjLJLQC9p0jB9yqPCOOzRwx8SecHw6EXXSg6lP6Y/JDhW00O/AZmFm6lHLnBCa9UkDg==
+X-Received: by 2002:a05:6000:cf:: with SMTP id q15mr4321652wrx.393.1578488454567;
+        Wed, 08 Jan 2020 05:00:54 -0800 (PST)
 Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id g9sm4228133wro.67.2020.01.08.05.00.26
+        by smtp.gmail.com with ESMTPSA id x7sm3931711wrq.41.2020.01.08.05.00.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 05:00:27 -0800 (PST)
-Date:   Wed, 8 Jan 2020 14:00:26 +0100
+        Wed, 08 Jan 2020 05:00:53 -0800 (PST)
+Date:   Wed, 8 Jan 2020 14:00:52 +0100
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] Updates for the atmel PWM driver
-Message-ID: <20200108130026.GE1993114@ulmo>
-References: <20190824001041.11007-1-uwe@kleine-koenig.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 1/2] pwm: Fix minor Kconfig whitespace issues
+Message-ID: <20200108130052.GF1993114@ulmo>
+References: <20191230172113.17222-1-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7LkOrbQMr4cezO2T"
+        protocol="application/pgp-signature"; boundary="+jhVVhN62yS6hEJ8"
 Content-Disposition: inline
-In-Reply-To: <20190824001041.11007-1-uwe@kleine-koenig.org>
+In-Reply-To: <20191230172113.17222-1-krzk@kernel.org>
 User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
@@ -67,60 +73,41 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---7LkOrbQMr4cezO2T
-Content-Type: text/plain; charset=utf-8
+--+jhVVhN62yS6hEJ8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Aug 24, 2019 at 02:10:35AM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> Hello,
+On Mon, Dec 30, 2019 at 06:21:12PM +0100, Krzysztof Kozlowski wrote:
+> Remove double whitespace after "config" keyword.
 >=20
-> this is v2 of my series to update the atmel PWM driver. (Implicit) v1
-> was sent on Aug 15, starting with Message-Id:
-> 20190815214133.11134-1-uwe@kleine-koenig.org.
->=20
-> I updated the patches from the feedback I got in v1, see the individual
-> patches for the details.
->=20
-> Best regards
-> Uwe
->=20
-> Uwe Kleine-K=C3=B6nig (6):
->   pwm: atmel: Add a hint where to find hardware documentation
->   pwm: atmel: use a constant for maximum prescale value
->   pwm: atmel: replace loop in prescale calculation by ad-hoc calculation
->   pwm: atmel: document known weaknesses of both hardware and software
->   pwm: atmel: use atmel_pwm_writel in atmel_pwm_ch_writel; ditto for
->     readl
->   pwm: atmel: implement .get_state()
->=20
->  drivers/pwm/pwm-atmel.c | 86 ++++++++++++++++++++++++++++++++++-------
->  1 file changed, 73 insertions(+), 13 deletions(-)
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/pwm/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-There were two patches in this that were not reviewed or acked, but they
-seem trivial enough, so I've just applied the whole series.
+Applied, thanks.
 
-Thanks,
 Thierry
 
---7LkOrbQMr4cezO2T
+--+jhVVhN62yS6hEJ8
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4V0mgACgkQ3SOs138+
-s6GwPxAAi8QbyZuxjXTyrcwXhceTZn1UkH51OaRD7myFIQ8A/sanP7QV2f4jKug8
-TbrVlK9dpSj96Ne9UfXBW3+5+JvNpVshrqsc/IcIq6i+honBrJz9upJMKxt0+YRB
-wNMO5dM/XEzr93hAilRGrzW/63rPsqkP/Vj14Gf3lOo/qW9WoCbWx+3/1bupYwm2
-2ih1zLbDrR6d8PZ2mFkTl7WRXqOVcTpk/pyauBy2R/sq+7iK92lL4dugjlgtLO/W
-mwW1g/hswT2D0FQ7QYBgApRUIsKsaSjjcLairZFTTmYvYvGSzyAsSbWPkQfMrh/T
-qmMrL6TP49Ba0Ce1X7sff1hIeGsMMuhveg1viKbXDwPV0pvuT0ANejXHoPsW0Dum
-6iB9xNSGyYupsbFq+Wn2LXO6dkVNCAsMVoMnxTzgAMvxoxQ7erpktjOKl5vi2dna
-MHid3SqGo4kdRmGyKbGPATocpC/+A4f5fqx36Wo2sixGFpfsZhfoh2uXB9jo2bNx
-b1zVcUfHxjzckt3QJPgYALNtkv5cYqbfE5nayz2m14oJDzYd8LCBloEsqak3+RMm
-I4xoip1+vrA8c9qF30qHJTz4ef9s0sVB25GPd/rtOEduWvRm2rAPRmpij2u326su
-N4tqKheeJJ8vscS8j+9t+WYdAOVFECuCO6YHC9wikPuZ+o6PoPA=
-=opLK
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4V0oQACgkQ3SOs138+
+s6GW+RAAqt7l9DVUT1XZy2TgE7UeLRkeCbnVtYRqr1q4kqqjW1uRyRc2gbd6Q15a
+Orl53tUGiuE+Fr/t+UpQSLOmsc93zRIqkhbyMdfyTXJRGhzU5UCx2BuBDkelvmZ/
+ZcTgvi8IkXRVh7SJx6E2i956iFXifCQQKd/pbS3oPZbUCeRPJuhCTgmfD7NAKvCR
+YsaDo4MWHuuulx05CCLeZ+g915YEGXCV5nKr5RdY9/uf1ifS1waeUZK8+C+uwAy6
+17J7Ee4+27mydyVzsutgTLAWfnNf3wcwDzbYaR61G4dKZXHWZBlzjq1hAlyfLrfI
+Ue9fAv71KPfLULXpotqvoVkzKeTzW5SSnbtsi22wLJfmu5RI2ZCS2gXdRN0Z5f8y
+9M59CBmSSOvoQ7b/nBbOCxxlUqZTXGjnlJCXqrqGmomCMQvKZIJBNBILlFoQDDtZ
+wCVV+XXEHq3j4qvgsjgkAHLGyxkjmryg6fOFe9mqCGwk1huV5NYbI4aP1xiSCmTt
+00wLZMd67PnKuPv1GAgvRW+BLif97N1U7g2OP5ewhYXPj7cd1DVQHsgwbKnKkz1H
+UWG3gn+7n3KcstFfKsgS3X8fhKQ2+HalnX9hBfeORhPef5cCtIURILtOU/sS/pvZ
+f30UWoLal+Aylqbsc01nUJmxg27i/m0q4+v7waQmAJlE0L+1c6o=
+=p5N4
 -----END PGP SIGNATURE-----
 
---7LkOrbQMr4cezO2T--
+--+jhVVhN62yS6hEJ8--
