@@ -2,128 +2,85 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A5203138919
-	for <lists+linux-pwm@lfdr.de>; Mon, 13 Jan 2020 01:40:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 44A3E1389DE
+	for <lists+linux-pwm@lfdr.de>; Mon, 13 Jan 2020 04:43:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387519AbgAMAkI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 12 Jan 2020 19:40:08 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:34766 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387514AbgAMAkH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 12 Jan 2020 19:40:07 -0500
-Received: by mail-yw1-f66.google.com with SMTP id b186so4875947ywc.1
-        for <linux-pwm@vger.kernel.org>; Sun, 12 Jan 2020 16:40:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WabAjrSzUiDu1CmRicqBS8U4GR3RBwbP81ffSSwow40=;
-        b=TxCHv299Sm/bUuj7k4G7GGjq1ij84ttb4AuTnFcQARVQNaRYF90Tl0u1u3ATclzN5K
-         dAYqoyCa7oU29h8vU1DoAhdLCKaMjfEYFeroQoJXHyEtCDXs0kp7NfsjuLNtzGpJJ98u
-         T3wVlbApYXRT81QRLd6inrLOe+QsQUTQsiUfgjFeDAayGP55r1Qxf+H/WP0ibEMwQjTk
-         5pqmgqwylH9xQf75VHWALMr+fpUgKfMm0YS7yDQXEiwO0v0SVcF0scRM0ZFGxAz1VxAe
-         O8UH+CW/ExT6XcPeMpQJL3BlOEshz6gyDL3cbDiK8BkOxONtFNenvt/tf2opzKpDGr9I
-         tvDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WabAjrSzUiDu1CmRicqBS8U4GR3RBwbP81ffSSwow40=;
-        b=jWoixU4SxAAZkO/58diFe+0xLyX19LgMlh7FvycZWUtVj0VyU3BOX18wbXjL2uhk8P
-         Nf+Vjahqmor7fqmH2geHm6eRmlW6yCJj6dPyJ66TgrG/TvwiTp8U8DG3+EIFCGa6BGap
-         cB0OAx7ztaAF6Q5wyZ6zomAlYhHDxIWfzt2TaWzHJiSEyIqu5gcX414plPksITc7jOcf
-         sZQlXPeV3jsnOvAzey35F36yaGmFasBaaxaOdTN7YpOlwvmifHa5xWQWRY2/rPmwMRJd
-         1YPnhnRB1XGZ5pJFXb1xIZedyqhcAlAtKvIVwjT2tkvRdVlwSU2m2wDw1wBWhzlQrUqG
-         l0hA==
-X-Gm-Message-State: APjAAAUR9WG7ry9A7BRg+6ra9uq92ELIsbPiei3Ouq4az0noRWrYwtn6
-        wX2ef7O/qj272sDcQRzbwLgvRDVDkwKw9vUb/L/bqPa2
-X-Google-Smtp-Source: APXvYqzYfBnSxhzMeYhjwjq3ePB6rAWQRUB53+XUYzPcHedj1y7f+9B6BBZcaMJ/yGll/TCAjpi9y+TTaR//LaeNFao=
-X-Received: by 2002:a25:90b:: with SMTP id 11mr12082242ybj.0.1578876006988;
- Sun, 12 Jan 2020 16:40:06 -0800 (PST)
+        id S2387417AbgAMDn5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 12 Jan 2020 22:43:57 -0500
+Received: from mail02.vodafone.es ([217.130.24.81]:46508 "EHLO
+        mail02.vodafone.es" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387415AbgAMDn5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 12 Jan 2020 22:43:57 -0500
+IronPort-SDR: VYdwgyOk8E84b9IR1/gPJWQTO1mxQ7L9r4evwxpKQsVo7cWl/WVLZSwl2ZeDUrdqJq+zFS00bP
+ bfiegvIruqnw==
+IronPort-PHdr: =?us-ascii?q?9a23=3A/0r/bxcdzUeKgEeHAOWkmZLclGMj4u6mDksu8p?=
+ =?us-ascii?q?Mizoh2WeGdxcSyYx7h7PlgxGXEQZ/co6odzbaP6Oa6Bz1Lv83JmUtBWaQEbw?=
+ =?us-ascii?q?UCh8QSkl5oK+++Imq/EsTXaTcnFt9JTl5v8iLzG0FUHMHjew+a+SXqvnYdFR?=
+ =?us-ascii?q?rlKAV6OPn+FJLMgMSrzeCy/IDYbxlViDanbr5+MRu7oR/PusQXhYZuJac8xx?=
+ =?us-ascii?q?XUqXZUZupawn9lK0iOlBjm/Mew+5Bj8yVUu/0/8sNLTLv3caclQ7FGFToqK2?=
+ =?us-ascii?q?866tHluhnFVguP+2ATUn4KnRpSAgjK9w/1U5HsuSbnrOV92S2aPcrrTbAoXD?=
+ =?us-ascii?q?mp8qlmRAP0hCoBKjU19mbbhNFsg61BpRKgpwVzzpDTYIGPLPp+ebndcskGRW?=
+ =?us-ascii?q?VfR8peSSpBDpqgYosTE+oOJ/pXr4njqFsLsxS+AxWsCPrxxT9On3P42qo60+?=
+ =?us-ascii?q?I/HgDGxQAvAdQOu2nQoNj7KKseTeW5wa/VxjvBcvxWwy/w5obIfBA7v/+CXq?=
+ =?us-ascii?q?9+fsXNxkcgDA7FkledppD5Mz+JyugBrW6W5PdgW+K1jG4nrhl8rCKxyccwlI?=
+ =?us-ascii?q?bJnJ8exVDD9SV/z4Y+ONq1SFZlbt64DpRQrS+bN4xwQsMtWGxouD06xaYatp?=
+ =?us-ascii?q?KhYCcKz5EnywTfa/yEaoWF5A/oWuWJITpgmn5pZbCyiwyv/UWu1uHwTNe43V?=
+ =?us-ascii?q?lQoidLktTBsG0G2QbJ5cidUPR9+1+s2TOI1w/O9O5JOVs0la/HK545xb4wi4?=
+ =?us-ascii?q?YTvVzDHiDonEX2i7ebdkA+9eip7+TneKvpppuAO4J7kA3+LKMuldGlDuQ2NQ?=
+ =?us-ascii?q?gOWXaU9f6i27345UH5QbNKgeMqkqTBrpzWOMYWqrSkDwJbzoov8QizAji83N?=
+ =?us-ascii?q?kWnXQLNFdFdwiGj4jtNVHOOvf4DfKnjlS0jjhr2+7JPqfvA5XKKHjDn6zsfb?=
+ =?us-ascii?q?Zm60FH1AU/18xQ55VRCr0bIPLzWVf9tMbEAR8hLwy03+HnBc151oMfX2KPH6?=
+ =?us-ascii?q?CYPLrKsV6G4+IiOPeMZIALtzbnMfQl5ODhjWU/mVADeamlx5wXaGq3HqcuH0?=
+ =?us-ascii?q?LMZXvqn8dECXgPlhQxQfasi1CYVzNXIXGoUPEG6yk/Gb6hWL/OWo23yIOG2i?=
+ =?us-ascii?q?jzSoVbem1cFVeKHnfrd56OUN8DbSuTJolqlTlSBpa7TIp07RyyuRWy9L1hIa?=
+ =?us-ascii?q?KA4iAEuIj80956z+3Inxp0/jtxScSehTLeB1pol38FEmZllJt0plZwnwzbia?=
+ =?us-ascii?q?U=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2GUIwDe5htemCMYgtlNGBoBAQEBAQE?=
+ =?us-ascii?q?BAQEDAQEBAREBAQECAgEBAQGBewIBGAEBgS6BTVIgEpNQgU0fg0OLY4EAgx4?=
+ =?us-ascii?q?VhggTDIFbDQEBAQEBNQIBAYRATgEXgQ8kOgQNAgMNAQEFAQEBAQEFBAEBAhA?=
+ =?us-ascii?q?BAQEBAQYNCwYphUqCHQweAQQBAQEBAwMDAQEMAYNdBxkPOUpMAQ4BU4MEgks?=
+ =?us-ascii?q?BATOcdAGNBA0NAoUdgjwECoEJgRojgTYBjBgagUE/gSMhgisIAYIBgn8BEgF?=
+ =?us-ascii?q?sgkiCWQSNQhIhgQeIKZgXgkEEdolMjAKCNwEPiAGEMQMQgkUPgQmIA4ROgX2?=
+ =?us-ascii?q?jN1eBDA16cTMagiYagSBPGA2IG44tQIEWEAJPiS6CMgEB?=
+X-IPAS-Result: =?us-ascii?q?A2GUIwDe5htemCMYgtlNGBoBAQEBAQEBAQEDAQEBAREBA?=
+ =?us-ascii?q?QECAgEBAQGBewIBGAEBgS6BTVIgEpNQgU0fg0OLY4EAgx4VhggTDIFbDQEBA?=
+ =?us-ascii?q?QEBNQIBAYRATgEXgQ8kOgQNAgMNAQEFAQEBAQEFBAEBAhABAQEBAQYNCwYph?=
+ =?us-ascii?q?UqCHQweAQQBAQEBAwMDAQEMAYNdBxkPOUpMAQ4BU4MEgksBATOcdAGNBA0NA?=
+ =?us-ascii?q?oUdgjwECoEJgRojgTYBjBgagUE/gSMhgisIAYIBgn8BEgFsgkiCWQSNQhIhg?=
+ =?us-ascii?q?QeIKZgXgkEEdolMjAKCNwEPiAGEMQMQgkUPgQmIA4ROgX2jN1eBDA16cTMag?=
+ =?us-ascii?q?iYagSBPGA2IG44tQIEWEAJPiS6CMgEB?=
+X-IronPort-AV: E=Sophos;i="5.69,427,1571695200"; 
+   d="scan'208";a="323735105"
+Received: from mailrel04.vodafone.es ([217.130.24.35])
+  by mail02.vodafone.es with ESMTP; 13 Jan 2020 04:43:55 +0100
+Received: (qmail 24487 invoked from network); 12 Jan 2020 05:00:21 -0000
+Received: from unknown (HELO 192.168.1.3) (quesosbelda@[217.217.179.17])
+          (envelope-sender <peterwong@hsbc.com.hk>)
+          by mailrel04.vodafone.es (qmail-ldap-1.03) with SMTP
+          for <linux-pwm@vger.kernel.org>; 12 Jan 2020 05:00:21 -0000
+Date:   Sun, 12 Jan 2020 06:00:20 +0100 (CET)
+From:   Peter Wong <peterwong@hsbc.com.hk>
+Reply-To: Peter Wong <peterwonghkhsbc@gmail.com>
+To:     linux-pwm@vger.kernel.org
+Message-ID: <7424959.460816.1578805221500.JavaMail.cash@217.130.24.55>
+Subject: Investment opportunity
 MIME-Version: 1.0
-References: <20200109233106.17060-1-peron.clem@gmail.com>
-In-Reply-To: <20200109233106.17060-1-peron.clem@gmail.com>
-From:   Alexander <alex.mobigo@gmail.com>
-Date:   Sun, 12 Jan 2020 21:39:55 -0300
-Message-ID: <CAGfOxi2vUVLv1_PGynu_53=DvuMBKFE6UTFUoTPTqjW1VvotLg@mail.gmail.com>
-Subject: Re: [PATCH] [RFC] pwm: sun4i: Move pwm_calculate out of spin_lock
-To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Vasily Khoruzhick <anarsoul@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 8:31 PM Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.co=
-m> wrote:
->
-> pwm_calculate calls clk_get_rate while holding a spin_lock.
->
-> This create an issue as clk_get_rate() may sleep.
->
-> Move pwm_calculate out of this spin_lock.
->
-> Fixes: c32c5c50d4fe ("pwm: sun4i: Switch to atomic PWM")
-> Reported-by: Alex Mobigo <alex.mobigo@gmail.com>
-> Suggested-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> ---
->
-> Hi,
->
-> this issue has been reported on linux-sunxi Google groups.
->
-> I don't have a board with PWM to confirm it.
->
-> Please wait a tested-by.
->
-> Thanks,
-> Cl=C3=A9ment
->
->  drivers/pwm/pwm-sun4i.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> index 1afd41ebd3fd..6b230029dc49 100644
-> --- a/drivers/pwm/pwm-sun4i.c
-> +++ b/drivers/pwm/pwm-sun4i.c
-> @@ -248,19 +248,18 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, s=
-truct pwm_device *pwm,
->                 }
->         }
->
-> -       spin_lock(&sun4i_pwm->ctrl_lock);
-> -       ctrl =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
-> -
->         ret =3D sun4i_pwm_calculate(sun4i_pwm, state, &duty, &period, &pr=
-escaler,
->                                   &bypass);
->         if (ret) {
->                 dev_err(chip->dev, "period exceeds the maximum value\n");
-> -               spin_unlock(&sun4i_pwm->ctrl_lock);
->                 if (!cstate.enabled)
->                         clk_disable_unprepare(sun4i_pwm->clk);
->                 return ret;
->         }
->
-> +       spin_lock(&sun4i_pwm->ctrl_lock);
-> +       ctrl =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
-> +
->         if (sun4i_pwm->data->has_direct_mod_clk_output) {
->                 if (bypass) {
->                         ctrl |=3D BIT_CH(PWM_BYPASS, pwm->hwpwm);
-> --
-> 2.20.1
->
-"""""""""""""""""
-Tested on my board Pine64+, problems occurs before the patch but not after.=
-..
+Greetings,
+Please read the attached investment proposal and reply for more details.
+Are you interested in loan?
+Sincerely: Peter Wong
 
-Tested-By: Alexander Finger <alex.mobigo@gmail.com>
-"""""""""""""""
+
+
+
+----------------------------------------------------
+This email was sent by the shareware version of Postman Professional.
+
