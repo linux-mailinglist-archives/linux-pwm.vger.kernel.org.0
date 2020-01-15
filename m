@@ -2,90 +2,71 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 64EB513C2BA
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jan 2020 14:26:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C0BE13C6FE
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jan 2020 16:08:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgAON06 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 15 Jan 2020 08:26:58 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40630 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgAON04 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Jan 2020 08:26:56 -0500
-Received: by mail-lj1-f196.google.com with SMTP id u1so18552894ljk.7
-        for <linux-pwm@vger.kernel.org>; Wed, 15 Jan 2020 05:26:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IveF9K9ZvQHL0XCm0NhMK8V0t0Mh/Q+IVIFeaL32PDg=;
-        b=Vid4ORIFzRzRLvESZpBs3Ah4aXP8I9dQvIMEoJ2abQEipxzFgRbq9cgs9qV9tZo8dG
-         r+ALUOnRFW2hAYj80mACUV0tm2AUq+uiOJAz+mpLJtu+HvdKUdsgrIMqP81AttT6bPAo
-         1iHOwyHySY/4v/351X1jQCrAfvgaejUZBV4oWitZ86TuNguKyKPqrdRsNH9EEYJIu+ke
-         53zqhsRIr0ZRuBjgFtn1h2jzcpYaaDdvzuXzBv5EnJgleDjRzLUmBMOFTxPgCbwigVIN
-         P4Fga4cDvP8gNm3KESwycpE4VyKfdY23u3ZtYMFvsV+t2rXJZt0ViTH6zsxGQsNoh/A/
-         pmPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IveF9K9ZvQHL0XCm0NhMK8V0t0Mh/Q+IVIFeaL32PDg=;
-        b=scKcFBcKsGy9a2/wFceKv5RYokrf6JKi1RVTE+diNGFio9LNQsOG2b5/nIhorzUey1
-         xy7yZQVTW0SI4bXed43S6V+gxNfBcF1xtFIJMHUVzc2NFMrydIva7z1u7r7z3xY/aCwg
-         a/qhXse5YmcHdrBFmxx4fPGQsPUJVZTcEufnrGhU4li/us7dvFqlB6upg/AF27veLKNK
-         3uQ1gUgpufsgLOP7Ya+/Qqcm62e1zbBv1rD0ZjQmnFGgN3HrfEHy8Ii5RLkc5zGZXp45
-         8vpD0xL32Rt23GAGvGlcrbB7H85jx6hOzPkYL2x2W3Ng6WVqy76KDQFWTWeEux63lEVa
-         VHZQ==
-X-Gm-Message-State: APjAAAV96f1mIkmiYMl3Lkcotn/ko0ENfDL2duwdHKsvoGk/we+Nhfbm
-        2adwWKgJGDSjiOdukgSqMqv/alaP+qZOtHdAI3ulRw==
-X-Google-Smtp-Source: APXvYqzEhjenLEHzG+AYX+BQqoKY2hyu8eJGNOhb1pcFBkrZR5Ijv0RrNHTx/pnJ+SIgH09JhG4jxqIioUO98aLqqnc=
-X-Received: by 2002:a2e:3609:: with SMTP id d9mr1649272lja.188.1579094814272;
- Wed, 15 Jan 2020 05:26:54 -0800 (PST)
-MIME-Version: 1.0
-References: <20200115073811.24438-1-bigunclemax@gmail.com>
-In-Reply-To: <20200115073811.24438-1-bigunclemax@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 15 Jan 2020 14:26:43 +0100
-Message-ID: <CACRpkdbefJsH2km3p433NN2koNck7hgNqLWpD3q4r=Um75GZEw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mvebu: clear irq in edge cause register before
- unmask edge irq
-To:     Maxim <bigunclemax@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        id S1729138AbgAOPIx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 15 Jan 2020 10:08:53 -0500
+Received: from mga17.intel.com ([192.55.52.151]:37691 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729137AbgAOPIw (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 15 Jan 2020 10:08:52 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 07:08:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,322,1574150400"; 
+   d="scan'208";a="220030500"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga008.fm.intel.com with ESMTP; 15 Jan 2020 07:08:51 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 3361D1E0; Wed, 15 Jan 2020 17:08:50 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
         linux-pwm@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] pwm: lpss: Use positive condition in pwm_lpss_prepare()
+Date:   Wed, 15 Jan 2020 17:08:49 +0200
+Message-Id: <20200115150849.74036-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 8:40 AM Maxim <bigunclemax@gmail.com> wrote:
+For better readability and maintenance use positive condition
+in pwm_lpss_prepare(). No functional change intended.
 
-> From: Maxim Kiselev <bigunclemax@gmail.com>
->
-> When input GPIO set from 0 to 1, the interrupt bit asserted in the GPIO
-> Interrupt Cause Register (ICR) even if the corresponding interrupt
-> masked in the GPIO Interrupt Mask Register.
->
-> Because interrupt mask register only affects assertion of the interrupt
-> bits in Main Interrupt Cause Register and it does not affect the
-> setting of bits in the GPIO ICR.
->
-> So, there is problem, when we unmask interrupt with already
-> asserted bit in the GPIO ICR, then false interrupt immediately occurs
-> even if GPIO don't change their value since last unmask.
->
-> Signed-off-by: Maxim Kiselev <bigunclemax@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pwm/pwm-lpss.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-This looks correct to me, a review from the MVEBU maintainers
-would be appreciated.
+diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
+index 75bbfe5f3bc2..6930a1d99860 100644
+--- a/drivers/pwm/pwm-lpss.c
++++ b/drivers/pwm/pwm-lpss.c
+@@ -109,10 +109,11 @@ static void pwm_lpss_prepare(struct pwm_lpss_chip *lpwm, struct pwm_device *pwm,
+ 	ctrl |= (u32) base_unit << PWM_BASE_UNIT_SHIFT;
+ 	ctrl |= on_time_div;
+ 
+-	if (orig_ctrl != ctrl) {
+-		pwm_lpss_write(pwm, ctrl);
+-		pwm_lpss_write(pwm, ctrl | PWM_SW_UPDATE);
+-	}
++	if (orig_ctrl == ctrl)
++		return;
++
++	pwm_lpss_write(pwm, ctrl);
++	pwm_lpss_write(pwm, ctrl | PWM_SW_UPDATE);
+ }
+ 
+ static inline void pwm_lpss_cond_enable(struct pwm_device *pwm, bool cond)
+-- 
+2.24.1
 
-- Should it be applied to fixes as a regression fix?
-
-- Should it be tagged for stable?
-
-Yours.
-Linus Walleij
