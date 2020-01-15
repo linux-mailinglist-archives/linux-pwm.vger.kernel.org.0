@@ -2,87 +2,79 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 62D1013C875
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jan 2020 16:54:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDB8713C95C
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jan 2020 17:31:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgAOPy3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 15 Jan 2020 10:54:29 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47821 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbgAOPy3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Jan 2020 10:54:29 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1irkzy-0000MJ-PR; Wed, 15 Jan 2020 16:54:26 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1irkzx-0002bh-TZ; Wed, 15 Jan 2020 16:54:25 +0100
-Date:   Wed, 15 Jan 2020 16:54:25 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        id S1726248AbgAOQbh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 15 Jan 2020 11:31:37 -0500
+Received: from mga17.intel.com ([192.55.52.151]:46420 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbgAOQbh (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 15 Jan 2020 11:31:37 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 08:31:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
+   d="scan'208";a="213760996"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 15 Jan 2020 08:31:35 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1irlZw-0007i7-RO; Wed, 15 Jan 2020 18:31:36 +0200
+Date:   Wed, 15 Jan 2020 18:31:36 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         linux-pwm@vger.kernel.org
 Subject: Re: [PATCH v1] pwm: lpss: Use positive condition in
  pwm_lpss_prepare()
-Message-ID: <20200115155425.n6nt7srrh4kxuczg@pengutronix.de>
+Message-ID: <20200115163136.GE32742@smile.fi.intel.com>
 References: <20200115150849.74036-1-andriy.shevchenko@linux.intel.com>
+ <20200115155425.n6nt7srrh4kxuczg@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200115150849.74036-1-andriy.shevchenko@linux.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20200115155425.n6nt7srrh4kxuczg@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 05:08:49PM +0200, Andy Shevchenko wrote:
-> For better readability and maintenance use positive condition
-> in pwm_lpss_prepare(). No functional change intended.
+On Wed, Jan 15, 2020 at 04:54:25PM +0100, Uwe Kleine-König wrote:
+> On Wed, Jan 15, 2020 at 05:08:49PM +0200, Andy Shevchenko wrote:
+
+...
+
+> > -	if (orig_ctrl != ctrl) {
+> > -		pwm_lpss_write(pwm, ctrl);
+> > -		pwm_lpss_write(pwm, ctrl | PWM_SW_UPDATE);
+> > -	}
+> > +	if (orig_ctrl == ctrl)
+> > +		return;
+> > +
+> > +	pwm_lpss_write(pwm, ctrl);
+> > +	pwm_lpss_write(pwm, ctrl | PWM_SW_UPDATE);
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/pwm/pwm-lpss.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+> I personally don't think that readability improved much and think that
+> the old code is more intuitive. ("If the wanted register value doesn't
+> match the actual value, write the value out.")
 > 
-> diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
-> index 75bbfe5f3bc2..6930a1d99860 100644
-> --- a/drivers/pwm/pwm-lpss.c
-> +++ b/drivers/pwm/pwm-lpss.c
-> @@ -109,10 +109,11 @@ static void pwm_lpss_prepare(struct pwm_lpss_chip *lpwm, struct pwm_device *pwm,
->  	ctrl |= (u32) base_unit << PWM_BASE_UNIT_SHIFT;
->  	ctrl |= on_time_div;
->  
-> -	if (orig_ctrl != ctrl) {
-> -		pwm_lpss_write(pwm, ctrl);
-> -		pwm_lpss_write(pwm, ctrl | PWM_SW_UPDATE);
-> -	}
-> +	if (orig_ctrl == ctrl)
-> +		return;
-> +
-> +	pwm_lpss_write(pwm, ctrl);
-> +	pwm_lpss_write(pwm, ctrl | PWM_SW_UPDATE);
+> But I agree that the patch doesn't introduce a semantic difference.
+> 
+> What made you create that patch? Is it really that you read through the
+> driver and thought "Huh, this is more complicated than necessary."?
 
-I personally don't think that readability improved much and think that
-the old code is more intuitive. ("If the wanted register value doesn't
-match the actual value, write the value out.")
-
-But I agree that the patch doesn't introduce a semantic difference.
-
-What made you create that patch? Is it really that you read through the
-driver and thought "Huh, this is more complicated than necessary."?
-
-Best regards
-Uwe
+My personal preferable style. So, I can survive with the current code.
+Thanks for review!
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+With Best Regards,
+Andy Shevchenko
+
+
