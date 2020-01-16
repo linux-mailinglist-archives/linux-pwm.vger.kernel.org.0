@@ -2,41 +2,39 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C579213E494
-	for <lists+linux-pwm@lfdr.de>; Thu, 16 Jan 2020 18:09:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8BD013E5FA
+	for <lists+linux-pwm@lfdr.de>; Thu, 16 Jan 2020 18:18:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389654AbgAPRJS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 16 Jan 2020 12:09:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44864 "EHLO mail.kernel.org"
+        id S2391248AbgAPRRh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 16 Jan 2020 12:17:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389646AbgAPRJS (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:18 -0500
+        id S2391242AbgAPRRg (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:17:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FDEB205F4;
-        Thu, 16 Jan 2020 17:09:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F0D32051A;
+        Thu, 16 Jan 2020 17:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194557;
-        bh=Us2oXtdbboe0sr3+v+28oDWDxQ0tEGkRNRlLlWzXMIM=;
+        s=default; t=1579195055;
+        bh=bH2Qc2xCK/qCMgBfXfFwb99YTiO2dHrcA5sxfHP6jLY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KjAwXYZcaI0IjcJ9iLeNmboVk2M+YaDOVs0WQY9T89RJMoZssIxvY8W8iA4+fJDfb
-         MQ/p7/kz8CHV+oIheNInIqcYbpMR18r4ZcVNUuV6pey4Ts/XCbUQuy5vYY3L5RYBlL
-         oZuvDfOfYbG07RyeCx5anifSrxIMIxhb439B9CAU=
+        b=gjZpEV+udAD4zUjXnZU25etOZFmOxmNrg/FJlKOUcahroNH5ZznO1/Ow013K55I1s
+         +TOkFmUdL7p9Vf2+ffTPdbANWbrbOq3z+wWjxoPv7BciFbkFE6LbwIfqnnJusTkgh1
+         hy7m8lK1T4dkNmGuGSgfjSjwBe5puDezqxGctZUU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 438/671] backlight: pwm_bl: Fix heuristic to determine number of brightness levels
-Date:   Thu, 16 Jan 2020 12:01:16 -0500
-Message-Id: <20200116170509.12787-175-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 012/371] pwm: lpss: Release runtime-pm reference from the driver's remove callback
+Date:   Thu, 16 Jan 2020 12:11:20 -0500
+Message-Id: <20200116171719.16965-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
-References: <20200116170509.12787-1-sashal@kernel.org>
+In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
+References: <20200116171719.16965-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -46,85 +44,42 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Matthias Kaehlcke <mka@chromium.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 73fbfc499448455f1e1c77717040e09e25f1d976 ]
+[ Upstream commit 42885551cedb45961879d2fc3dc3c4dc545cc23e ]
 
-With commit 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of
-LED linearly to human eye") the number of set bits (aka hweight())
-in the PWM period is used in the heuristic to determine the number
-of brightness levels, when the brightness table isn't specified in
-the DT. The number of set bits doesn't provide a reliable clue about
-the length of the period, instead change the heuristic to:
+For each pwm output which gets enabled through pwm_lpss_apply(), we do a
+pm_runtime_get_sync().
 
- nlevels = period / fls(period)
+This commit adds pm_runtime_put() calls to pwm_lpss_remove() to balance
+these when the driver gets removed with some of the outputs still enabled.
 
-Also limit the maximum number of brightness levels to 4096 to avoid
-excessively large tables.
-
-With this the number of levels increases monotonically with the PWM
-period, until the maximum of 4096 levels is reached:
-
-period (ns)    # levels
-
-100    	       16
-500	       62
-1000	       111
-5000	       416
-10000	       769
-50000	       3333
-100000	       4096
-
-Fixes: 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED linearly to human eye")
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fixes: f080be27d7d9 ("pwm: lpss: Add support for runtime PM")
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/pwm_bl.c | 24 ++++++------------------
- 1 file changed, 6 insertions(+), 18 deletions(-)
+ drivers/pwm/pwm-lpss.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 7ddc0930e98c..3a3098d4873b 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -199,29 +199,17 @@ int pwm_backlight_brightness_default(struct device *dev,
- 				     struct platform_pwm_backlight_data *data,
- 				     unsigned int period)
+diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
+index 1e69c1c9ec09..7a4a6406cf69 100644
+--- a/drivers/pwm/pwm-lpss.c
++++ b/drivers/pwm/pwm-lpss.c
+@@ -216,6 +216,12 @@ EXPORT_SYMBOL_GPL(pwm_lpss_probe);
+ 
+ int pwm_lpss_remove(struct pwm_lpss_chip *lpwm)
  {
--	unsigned int counter = 0;
--	unsigned int i, n;
-+	unsigned int i;
- 	u64 retval;
- 
- 	/*
--	 * Count the number of bits needed to represent the period number. The
--	 * number of bits is used to calculate the number of levels used for the
--	 * brightness-levels table, the purpose of this calculation is have a
--	 * pre-computed table with enough levels to get linear brightness
--	 * perception. The period is divided by the number of bits so for a
--	 * 8-bit PWM we have 255 / 8 = 32 brightness levels or for a 16-bit PWM
--	 * we have 65535 / 16 = 4096 brightness levels.
--	 *
--	 * Note that this method is based on empirical testing on different
--	 * devices with PWM of 8 and 16 bits of resolution.
-+	 * Once we have 4096 levels there's little point going much higher...
-+	 * neither interactive sliders nor animation benefits from having
-+	 * more values in the table.
- 	 */
--	n = period;
--	while (n) {
--		counter += n % 2;
--		n >>= 1;
--	}
-+	data->max_brightness =
-+		min((int)DIV_ROUND_UP(period, fls(period)), 4096);
- 
--	data->max_brightness = DIV_ROUND_UP(period, counter);
- 	data->levels = devm_kcalloc(dev, data->max_brightness,
- 				    sizeof(*data->levels), GFP_KERNEL);
- 	if (!data->levels)
++	int i;
++
++	for (i = 0; i < lpwm->info->npwm; i++) {
++		if (pwm_is_enabled(&lpwm->chip.pwms[i]))
++			pm_runtime_put(lpwm->chip.dev);
++	}
+ 	return pwmchip_remove(&lpwm->chip);
+ }
+ EXPORT_SYMBOL_GPL(pwm_lpss_remove);
 -- 
 2.20.1
 
