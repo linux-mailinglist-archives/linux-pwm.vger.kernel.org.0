@@ -2,152 +2,85 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 23F7D13F75D
-	for <lists+linux-pwm@lfdr.de>; Thu, 16 Jan 2020 20:11:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB27D13F80C
+	for <lists+linux-pwm@lfdr.de>; Thu, 16 Jan 2020 20:17:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404884AbgAPTLY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 16 Jan 2020 14:11:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49726 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387721AbgAPRAQ (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:00:16 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 520C120730;
-        Thu, 16 Jan 2020 17:00:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194015;
-        bh=XJsT8yuWRar5rcW9ic8cnSGX4AC8Y2NbaaCWvpdk/dw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0my1jBkrH9fyXVNW+PH7DtzMBsDo7AEI1BBZWZhxw0UtnNLhALnkWfAWJDwyjqtIS
-         1Hlsj41IwDfa5IuH/fcBXBN48OBS6f7Xn0yGr8vtxJZDb+am50Fopzj9TqI/x0WZxH
-         xgTt4lRmLBQaQwYlXr/mfNjsUwqLchEgbnv3TYLI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
+        id S1733224AbgAPTOm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 16 Jan 2020 14:14:42 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42541 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733214AbgAPQ4U (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 16 Jan 2020 11:56:20 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1is8RL-0003ja-2D; Thu, 16 Jan 2020 17:56:15 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1is8RK-0003vs-9c; Thu, 16 Jan 2020 17:56:14 +0100
+Date:   Thu, 16 Jan 2020 17:56:14 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Ondrej Jirman <megous@megous.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 137/671] bus: ti-sysc: Fix timer handling with drop pm_runtime_irq_safe()
-Date:   Thu, 16 Jan 2020 11:50:46 -0500
-Message-Id: <20200116165940.10720-20-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
-References: <20200116165940.10720-1-sashal@kernel.org>
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH AUTOSEL 5.4 053/205] pwm: sun4i: Fix incorrect
+ calculation of duty_cycle/period
+Message-ID: <20200116165614.a3u5x7g4qxxrm6s4@pengutronix.de>
+References: <20200116164300.6705-1-sashal@kernel.org>
+ <20200116164300.6705-53-sashal@kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200116164300.6705-53-sashal@kernel.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+On Thu, Jan 16, 2020 at 11:40:28AM -0500, Sasha Levin wrote:
+> From: Ondrej Jirman <megous@megous.com>
+> 
+> [ Upstream commit 50cc7e3e4f26e3bf5ed74a8d061195c4d2161b8b ]
+> 
+> Since 5.4-rc1, pwm_apply_state calls ->get_state after ->apply
+> if available, and this revealed an issue with integer precision
+> when calculating duty_cycle and period for the currently set
+> state in ->get_state callback.
+> 
+> This issue manifested in broken backlight on several Allwinner
+> based devices.
+> 
+> Previously this worked, because ->apply updated the passed state
+> directly.
+> 
+> Fixes: deb9c462f4e53 ("pwm: sun4i: Don't update the state for the caller of pwm_apply_state")
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-[ Upstream commit 9bd34c63f5536c490c152833c77fa47f59aeade3 ]
+Note that while the patch is still correct, the problem isn't that bad
+any more since commit 01ccf903edd65f6421612321648fa5a7f4b7cb10 was
+reverted.
 
-Commit 84badc5ec5fc ("ARM: dts: omap4: Move l4 child devices to probe
-them with ti-sysc") started producing a warning for pwm-omap-dmtimer:
+So .get_state is only called once during boot where the breakage doesn't
+hurt that much.
 
-WARNING: CPU: 0 PID: 77 at drivers/bus/omap_l3_noc.c:147
-l3_interrupt_handler+0x2f8/0x388
-44000000.ocp:L3 Custom Error: MASTER MPU TARGET L4PER2 (Idle):
-Data Access in Supervisor mode during Functional access
-...
-__pm_runtime_idle
-omap_dm_timer_disable
-pwm_omap_dmtimer_start
-pwm_omap_dmtimer_enable
-pwm_apply_state
-pwm_vibrator_start
-pwm_vibrator_play_work
+I let you decide if you still want to apply this patch.
 
-This is because the timer that pwm-omap-dmtimer is using is now being
-probed with ti-sysc interconnect target module instead of omap_device
-and the ti-sysc quirk for SYSC_QUIRK_LEGACY_IDLE is not fully
-compatible with what omap_device has been doing.
+Best regards
+Uwe
 
-We could fix this by reverting the timer changes and have the timer
-probe again with omap_device. Or we could add more quirk handling to
-ti-sysc driver. But as these options don't work nicely as longer term
-solutions, let's just make timers probe with ti-sysc without any
-quirks.
-
-To do this, all we need to do is remove quirks for timers for ti-sysc,
-and drop the bogus pm_runtime_irq_safe() flag for timer-ti-dm.
-
-We should not use pm_runtime_irq_safe() anyways for drivers as it will
-take a permanent use count on the parent device blocking the parent
-devices from idling and has been forcing ti-sysc driver to use a
-quirk flag.
-
-Note that we will move the timer data to DEBUG section later on in
-clean-up patches.
-
-Fixes: 84badc5ec5fc ("ARM: dts: omap4: Move l4 child devices to probe them with ti-sysc")
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Ladislav Michl <ladis@linux-mips.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: Tero Kristo <t-kristo@ti.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-Tested-By: Andreas Kemnade <andreas@kemnade.info>
-Tested-By: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/bus/ti-sysc.c             | 4 ++--
- drivers/clocksource/timer-ti-dm.c | 1 -
- 2 files changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index 926c83398b27..2813f9ed57c0 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -888,10 +888,10 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	SYSC_QUIRK("smartreflex", 0, -1, 0x38, -1, 0x00000000, 0xffffffff,
- 		   SYSC_QUIRK_LEGACY_IDLE),
- 	SYSC_QUIRK("timer", 0, 0, 0x10, 0x14, 0x00000015, 0xffffffff,
--		   SYSC_QUIRK_LEGACY_IDLE),
-+		   0),
- 	/* Some timers on omap4 and later */
- 	SYSC_QUIRK("timer", 0, 0, 0x10, -1, 0x4fff1301, 0xffffffff,
--		   SYSC_QUIRK_LEGACY_IDLE),
-+		   0),
- 	SYSC_QUIRK("uart", 0, 0x50, 0x54, 0x58, 0x00000052, 0xffffffff,
- 		   SYSC_QUIRK_LEGACY_IDLE),
- 	/* Uarts on omap4 and later */
-diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
-index 3ecf84706640..23414dddc3ba 100644
---- a/drivers/clocksource/timer-ti-dm.c
-+++ b/drivers/clocksource/timer-ti-dm.c
-@@ -868,7 +868,6 @@ static int omap_dm_timer_probe(struct platform_device *pdev)
- 	timer->pdev = pdev;
- 
- 	pm_runtime_enable(dev);
--	pm_runtime_irq_safe(dev);
- 
- 	if (!timer->reserved) {
- 		ret = pm_runtime_get_sync(dev);
 -- 
-2.20.1
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
