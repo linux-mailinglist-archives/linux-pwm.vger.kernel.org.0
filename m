@@ -2,39 +2,42 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CBB513EF52
-	for <lists+linux-pwm@lfdr.de>; Thu, 16 Jan 2020 19:14:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E98DC13EE2F
+	for <lists+linux-pwm@lfdr.de>; Thu, 16 Jan 2020 19:07:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395239AbgAPSOT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 16 Jan 2020 13:14:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48924 "EHLO mail.kernel.org"
+        id S2393412AbgAPRjC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 16 Jan 2020 12:39:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393050AbgAPRe4 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:34:56 -0500
+        id S2390428AbgAPRjC (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:39:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F19B246CC;
-        Thu, 16 Jan 2020 17:34:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ACEC246D3;
+        Thu, 16 Jan 2020 17:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196096;
-        bh=5SFjfnnlGX9OravrgxsRQnyQQhbFT+ySXxAv4R06kdM=;
+        s=default; t=1579196341;
+        bh=o3C1UqRWBfZVIx0bzO1LlqfFxxEUFh+GSgJl8fNvMHs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qhw2WEuhvPks/bWva2i0V9lrQiy5iKjM9ztgVkkpwvRSupsN+2tzgd60c1BEWIw1K
-         jU3FQYNciSxj33mDR9whUomQLs2iX2/U3MOWU5AXZ/CEiYJmAtZFj+aa6s0ixzwrRZ
-         KnsNdZXqRLfF4W+oBUeZWydU7hBjkBalNQwlwZ9w=
+        b=fZm6Szib2cphewupuzqjmmVY6NbK5TKE2x12bp5cGAtlZTTVwBnP60a/foaoT9Nx1
+         YYuRY5c9ZAtKMl7/j4CAHW0qfzAfCn3MKhM4rhut0wcEoszE0iNtWMsCbkutl6bdhp
+         CIbW7Mp7Rk7AGaj8juApiT1HnzmI+H2uofL1QkLc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc:     Bichao Zheng <bichao.zheng@amlogic.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 008/251] pwm: lpss: Release runtime-pm reference from the driver's remove callback
-Date:   Thu, 16 Jan 2020 12:30:42 -0500
-Message-Id: <20200116173445.21385-8-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 138/251] pwm: meson: Don't disable PWM when setting duty repeatedly
+Date:   Thu, 16 Jan 2020 12:34:47 -0500
+Message-Id: <20200116173641.22137-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116173445.21385-1-sashal@kernel.org>
-References: <20200116173445.21385-1-sashal@kernel.org>
+In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
+References: <20200116173641.22137-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,42 +47,41 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Bichao Zheng <bichao.zheng@amlogic.com>
 
-[ Upstream commit 42885551cedb45961879d2fc3dc3c4dc545cc23e ]
+[ Upstream commit a279345807e1e0ae79567a52cfdd9d30c9174a3c ]
 
-For each pwm output which gets enabled through pwm_lpss_apply(), we do a
-pm_runtime_get_sync().
+There is an abnormally low about 20ms,when setting duty repeatedly.
+Because setting the duty will disable PWM and then enable. Delete
+this operation now.
 
-This commit adds pm_runtime_put() calls to pwm_lpss_remove() to balance
-these when the driver gets removed with some of the outputs still enabled.
-
-Fixes: f080be27d7d9 ("pwm: lpss: Add support for runtime PM")
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Fixes: 211ed630753d2f ("pwm: Add support for Meson PWM Controller")
+Signed-off-by: Bichao Zheng <bichao.zheng@amlogic.com>
+[ Dropped code instead of hiding it behind a comment ]
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-lpss.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/pwm/pwm-meson.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
-index 5208b3f80ad8..239003807c08 100644
---- a/drivers/pwm/pwm-lpss.c
-+++ b/drivers/pwm/pwm-lpss.c
-@@ -205,6 +205,12 @@ EXPORT_SYMBOL_GPL(pwm_lpss_probe);
- 
- int pwm_lpss_remove(struct pwm_lpss_chip *lpwm)
- {
-+	int i;
-+
-+	for (i = 0; i < lpwm->info->npwm; i++) {
-+		if (pwm_is_enabled(&lpwm->chip.pwms[i]))
-+			pm_runtime_put(lpwm->chip.dev);
-+	}
- 	return pwmchip_remove(&lpwm->chip);
- }
- EXPORT_SYMBOL_GPL(pwm_lpss_remove);
+diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+index f58a4867b519..a196439ee14c 100644
+--- a/drivers/pwm/pwm-meson.c
++++ b/drivers/pwm/pwm-meson.c
+@@ -320,11 +320,6 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	if (state->period != channel->state.period ||
+ 	    state->duty_cycle != channel->state.duty_cycle ||
+ 	    state->polarity != channel->state.polarity) {
+-		if (channel->state.enabled) {
+-			meson_pwm_disable(meson, pwm->hwpwm);
+-			channel->state.enabled = false;
+-		}
+-
+ 		if (state->polarity != channel->state.polarity) {
+ 			if (state->polarity == PWM_POLARITY_NORMAL)
+ 				meson->inverter_mask |= BIT(pwm->hwpwm);
 -- 
 2.20.1
 
