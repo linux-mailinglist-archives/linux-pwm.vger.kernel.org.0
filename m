@@ -2,83 +2,92 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A09D213D5A3
-	for <lists+linux-pwm@lfdr.de>; Thu, 16 Jan 2020 09:07:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DE0613E197
+	for <lists+linux-pwm@lfdr.de>; Thu, 16 Jan 2020 17:50:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726082AbgAPIGi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 16 Jan 2020 03:06:38 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52893 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbgAPIGi (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 16 Jan 2020 03:06:38 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1is0Ak-0000yK-5r; Thu, 16 Jan 2020 09:06:34 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1is0Aj-0007Jm-Ej; Thu, 16 Jan 2020 09:06:33 +0100
-Date:   Thu, 16 Jan 2020 09:06:33 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     linux-pwm@vger.kernel.org,
+        id S1729290AbgAPQr2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 16 Jan 2020 11:47:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57326 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729464AbgAPQrY (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:47:24 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24CA32073A;
+        Thu, 16 Jan 2020 16:47:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579193244;
+        bh=TxwKOVFcE2pzmB8eSzLGTN684D6ahhL2WTGB0irJpMc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PzMZa/1uCMHSCpC8q61Q87mU/WI8XW++I8IRZK8R6OG6M/fjAnHH1DtNvJ7RhNO77
+         YUZCPYnFwehTxKJeHrLefpglJ9eVT9fn98CPCzcXf7p1qRaMX+YqCU314Eli8w3H/z
+         /HNCLxLp8g8mIAeLtTBjpSYVdTPSFJ253T+i254I=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ondrej Jirman <megous@megous.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] pwm: Convert period and duty cycle to u64
-Message-ID: <20200116080633.nikynj7jguu3c2br@pengutronix.de>
-References: <cover.1578959442.git.gurus@codeaurora.org>
- <21a1431edfa86e061528b80021351c25c76976a9.1578959442.git.gurus@codeaurora.org>
- <20200114074710.kxkz4664oap3r752@pengutronix.de>
- <20200116005503.GA8559@codeaurora.org>
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 053/205] pwm: sun4i: Fix incorrect calculation of duty_cycle/period
+Date:   Thu, 16 Jan 2020 11:40:28 -0500
+Message-Id: <20200116164300.6705-53-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
+References: <20200116164300.6705-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200116005503.GA8559@codeaurora.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
+From: Ondrej Jirman <megous@megous.com>
 
-[added linux-pwm to Cc:]
+[ Upstream commit 50cc7e3e4f26e3bf5ed74a8d061195c4d2161b8b ]
 
-On Wed, Jan 15, 2020 at 04:55:03PM -0800, Guru Das Srinagesh wrote:
-> On Tue, Jan 14, 2020 at 08:47:10AM +0100, Uwe Kleine-König wrote:
-> > I didn't thought about that much, but it would be great if we could
-> > prepare the affected drivers to work with both, int and u64 and switch
-> > in a separate commit. Reverting would then become cheaper.
-> > The conversion to 64-bit division macros could be done even without
-> > actually converting period and duty cycle, couldn't it?
-> 
-> I do agree that with such a two-step process the reverting (should the
-> need arise) would be much cheaper. I tried out your suggestion and saw
-> that this is not possible as the patch stands currently due to
-> compilation warning and errors that arise for various architectures:
-> 
-> warning: comparison of distinct pointer types lacks a cast
-> warning: right shift count >= width of type [-Wshift-count-overflow]
-> error: passing argument 1 of '__div64_32' from incompatible pointer type [-Werror=incompatible-pointer-types]
-> note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'unsigned int *'
-> warning: format '%llu' expects argument of type 'long long unsigned int', but argument 4 has type 'unsigned int' [-Wformat=]
+Since 5.4-rc1, pwm_apply_state calls ->get_state after ->apply
+if available, and this revealed an issue with integer precision
+when calculating duty_cycle and period for the currently set
+state in ->get_state callback.
 
-This should be managable with appropriate casting. Maybe it's also a
-good idea to add a greppable keyword (e.g. "PWM-TYPE-CONVERSION") and a
-short comment at the places that are expected to be touched again after
-the conversion is known to last. (e.g. to remuch such casts).
+This issue manifested in broken backlight on several Allwinner
+based devices.
 
-Best regards
-Uwe
+Previously this worked, because ->apply updated the passed state
+directly.
 
+Fixes: deb9c462f4e53 ("pwm: sun4i: Don't update the state for the caller of pwm_apply_state")
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Acked-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pwm/pwm-sun4i.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+index 6f5840a1a82d..05273725a9ff 100644
+--- a/drivers/pwm/pwm-sun4i.c
++++ b/drivers/pwm/pwm-sun4i.c
+@@ -137,10 +137,10 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
+ 
+ 	val = sun4i_pwm_readl(sun4i_pwm, PWM_CH_PRD(pwm->hwpwm));
+ 
+-	tmp = prescaler * NSEC_PER_SEC * PWM_REG_DTY(val);
++	tmp = (u64)prescaler * NSEC_PER_SEC * PWM_REG_DTY(val);
+ 	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
+ 
+-	tmp = prescaler * NSEC_PER_SEC * PWM_REG_PRD(val);
++	tmp = (u64)prescaler * NSEC_PER_SEC * PWM_REG_PRD(val);
+ 	state->period = DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
+ }
+ 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.20.1
+
