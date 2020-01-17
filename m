@@ -2,40 +2,40 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 976621401F1
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2020 03:35:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 589AC1401F4
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2020 03:35:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388969AbgAQCfV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 16 Jan 2020 21:35:21 -0500
-Received: from mail-dm6nam12on2048.outbound.protection.outlook.com ([40.107.243.48]:6188
+        id S2388973AbgAQCf2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 16 Jan 2020 21:35:28 -0500
+Received: from mail-dm6nam12on2055.outbound.protection.outlook.com ([40.107.243.55]:11154
         "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729113AbgAQCfV (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 16 Jan 2020 21:35:21 -0500
+        id S1729113AbgAQCf1 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 16 Jan 2020 21:35:27 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ePelwc/DIRGnZcOi1gxIixKyRyrYqCXDjITIob5ymGAWTPQsAssLuIBZlCX2V+uQWdAZCcr52RLO8SNEFhrESY6FbmUPMGplr9SjkYqkSLI7/+RbnUZ3jdvJvlQOrZUoZXVEeSuCENbYWvpu7g6Jql+aH7zikJzeSNMrwbs9DhNNgKRBS0ipAibER8/62UyVK9XagXSv6dONzRiguWqR927qSb4fWkpl/habkDMs/ElGluu6GXtZ3qDXc/OjKVaKHRZ5f+xdi3cnJ/A/LB7Y8nWo5f9GWsiv3y1i6bmYk5tojtEvHh3tkeVlXM5y7j81dz0saJzVHaN2oIt4CsZBWw==
+ b=COhN77LKqUtQkmT6+15kd9R0Amse4UXDun6u8++1OkXeejTY5vMfRl9kxjEy5BQHDwkvohhNUx2VgvmpKrTEnKbZ6gpSsEWZNAi+ntK8wxhzDe7y0eajDHL6hN/HmUakVsahAfCfgbgkcO12sc21fAFXbrk22RY0SDG54Q8DcoWNG82nVsgc50NqGOutwj8SPjwFlnOHqAiFu5y9bych3pJiaySZzlAkGGmw3QNuboZhdada7cGUrBgBcUJ4ho4jUGTC4xtrjFy+Gl4DBYGzsDI+C0FBG/Miywiv7KF6oG1v9NaqvevWJrBWZiaCJB5yjx006zPZSwfS3pCywTDRIg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bwO+8/jyIJXNnzpn/zI9FQHdsNfrhez2aV2FaP1T+AM=;
- b=Pf7zn01VCU0NR6kMyIWQ0UoFK6i7Y0lRDfUYYxvyF5r7h9H5QyrjWkRyNg4mM+UsCQzp6zfP9HGVRwfphTe6o1nfAOtVS30YTpLUNo2N3ezDsaSKHFsPFQUjmWZLO8woG4UqA4Qde6CE3JDu5+gEYzt2nNKaoGY8a0EP9Hqm4UxzjrUG0YIk6aAmIdR0SOLLNI7+gCvJF00Z1xk8S2eAZJG+J3tmORcvwP+1wPXVpLJtF92a55DaGvVRJj0vU/9w725tv7GoHgwDU4V+DWLl0D2MN1Zjt3zlmOz9LYmZCfd/x494jUf99/B+XNnaLkwJRE1I0hV0arXhMtd0gUMO0A==
+ bh=2MhdkyNSkbfourqU82chJm/iDvT486HEEhLdTi18dnY=;
+ b=m/M8nuOFin1VfXeFgUXBQUq2HBPlpZu51XV+1NSCx37sWtPFTfVWMeH0rfJ9N4kopX6WnFZ8KmR7yKUU4UbaATbkmT3gFBjSUR50A3Tjn1zskakeyC6MoavJ86ADzQLc1w1SPoBZPyIKuNc59OMQ73w8UoOvtUSiqNl9Apl5cO49aTypLcBxFFix49ncim7o96+6bDfWn4Bfed7MT17ysiqpAds995OFR+7osTKeUWTV7zkKVUQuxkPbj4tAwv/ExFt7YH7i7YTYMOfciu0hpWe49/o4sCEoiXTVaNBT+7b12/IS2KKRXXzhJUi82qMi7rK2+eTtIdwabyMuYcGaQw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
  dkim=pass header.d=labundy.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bwO+8/jyIJXNnzpn/zI9FQHdsNfrhez2aV2FaP1T+AM=;
- b=jbXIennWtZCj+5/QVdM1ZNnseIcuTtMkoe0llXL8QkxUh8VNpLsSgRHMczJ/2+EOU3qiAkCA42KkCel6ihfaurLQkQ3KUDAVxxG+Km/uD7+yA5CYpUT79OAEHiup0yOvt012usSvp3yM38m6MI2zLmY1P72rK4fTRtOfo58NMvA=
+ bh=2MhdkyNSkbfourqU82chJm/iDvT486HEEhLdTi18dnY=;
+ b=lzhueQegxTpxnW4/cvVJONI4jynH70qQ5QSdMIzOrrgn0NsGFKUhiXtVY2FWgWLntukK9cRRVEmRXUDMyNx1tanlBl4E6kIfol9GGaxpQl/FmSloC7SLPxq/KiqY5rgN4nm4PtHe160t5ByJxqGZO00KrlPEBdBK7T9utcLqGbk=
 Received: from SN6PR08MB5053.namprd08.prod.outlook.com (52.135.107.153) by
  SN6PR08MB6029.namprd08.prod.outlook.com (20.178.6.161) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.10; Fri, 17 Jan 2020 02:35:17 +0000
+ 15.20.2623.10; Fri, 17 Jan 2020 02:35:25 +0000
 Received: from SN6PR08MB5053.namprd08.prod.outlook.com
  ([fe80::7c80:2b62:5d9a:2139]) by SN6PR08MB5053.namprd08.prod.outlook.com
  ([fe80::7c80:2b62:5d9a:2139%4]) with mapi id 15.20.2644.023; Fri, 17 Jan 2020
- 02:35:17 +0000
-Received: from localhost.localdomain (136.49.227.119) by SN6PR05CA0010.namprd05.prod.outlook.com (2603:10b6:805:de::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2644.6 via Frontend Transport; Fri, 17 Jan 2020 02:35:07 +0000
+ 02:35:25 +0000
+Received: from localhost.localdomain (136.49.227.119) by SN6PR05CA0010.namprd05.prod.outlook.com (2603:10b6:805:de::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2644.6 via Frontend Transport; Fri, 17 Jan 2020 02:35:17 +0000
 From:   Jeff LaBundy <jeff@labundy.com>
 To:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
         "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
@@ -52,11 +52,15 @@ CC:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "mark.rutland@arm.com" <mark.rutland@arm.com>,
         Jeff LaBundy <jeff@labundy.com>
-Subject: [PATCH v4 0/7] Add support for Azoteq IQS620A/621/622/624/625
-Thread-Topic: [PATCH v4 0/7] Add support for Azoteq IQS620A/621/622/624/625
-Thread-Index: AQHVzN7AiHhOY9JL506kbCakEUdXpA==
-Date:   Fri, 17 Jan 2020 02:35:16 +0000
-Message-ID: <1579228475-6681-1-git-send-email-jeff@labundy.com>
+Subject: [PATCH v4 1/7] dt-bindings: Add bindings for Azoteq
+ IQS620A/621/622/624/625
+Thread-Topic: [PATCH v4 1/7] dt-bindings: Add bindings for Azoteq
+ IQS620A/621/622/624/625
+Thread-Index: AQHVzN7FRaEUM9fuoUya23+TVDktwg==
+Date:   Fri, 17 Jan 2020 02:35:25 +0000
+Message-ID: <1579228475-6681-2-git-send-email-jeff@labundy.com>
+References: <1579228475-6681-1-git-send-email-jeff@labundy.com>
+In-Reply-To: <1579228475-6681-1-git-send-email-jeff@labundy.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -70,111 +74,496 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.7.4
 x-originating-ip: [136.49.227.119]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 00592a24-5966-4c4f-9098-08d79af5e30e
+x-ms-office365-filtering-correlation-id: 66dbcd8b-f5c9-412d-113e-08d79af5e7cf
 x-ms-traffictypediagnostic: SN6PR08MB6029:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR08MB60297EC18FBDB2B92532E514D3310@SN6PR08MB6029.namprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-microsoft-antispam-prvs: <SN6PR08MB6029DF3020CE901F44ACE621D3310@SN6PR08MB6029.namprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
 x-forefront-prvs: 0285201563
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(39830400003)(396003)(376002)(34096005)(366004)(189003)(199004)(36756003)(66556008)(107886003)(66946007)(4326008)(64756008)(66476007)(956004)(54906003)(52116002)(6666004)(110136005)(66446008)(2616005)(6506007)(69590400006)(86362001)(26005)(316002)(16526019)(186003)(81166006)(2906002)(6486002)(8676002)(81156014)(508600001)(5660300002)(71200400001)(7416002)(8936002)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR08MB6029;H:SN6PR08MB5053.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(39830400003)(396003)(376002)(34096005)(366004)(189003)(199004)(36756003)(66556008)(107886003)(66946007)(4326008)(64756008)(66476007)(956004)(54906003)(52116002)(6666004)(110136005)(66446008)(2616005)(30864003)(966005)(6506007)(69590400006)(86362001)(26005)(316002)(16526019)(186003)(81166006)(2906002)(6486002)(8676002)(81156014)(508600001)(5660300002)(71200400001)(7416002)(8936002)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR08MB6029;H:SN6PR08MB5053.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: labundy.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UQG4WWOVQDmcDg5nrACbDEF1XYukPo0lDAKmxGWwlLoaFlFCcQCaYo0WIH0uHCtwxuCZ9NzrECyLTTGkAYFntvuNb8AG9OZjhZrh4oKUKLT21Vu77d0C0ZrAI/6uKIB1KMBXCLGw/ALivaoGQnYEzal1Y/0bmDp0A1towb7RbTtra9jns7VMLCSWPMFbXiDumL0f5sHFiB4v3KQdlKRhg5lJU8hsfj6Zpczj74tgMjtRzQ9Lz2N0uLwTsS0DVJ+6RkD1Z4qd+mLlzeBkqIwNDgljHRVvLQZQvdH7Xf7IQjvsCYoUhsN4lVzfppqWTgTfOxdY/H0eRjWtEFekThNz7z4Hf28Bh7GjosX+Z15t8XUdFMrym/g1rsqzra6wzIErinOmN8OvyHx+pcgtxYg+Kg2QxPhbWf4JQqJS/rkvwN86479Mei7Ya42xShRpD3aYaXbnZJGya1xnqktue4NEuZTsyQ9UF3zuMDh8UV1Dyyo41pZ5nv0mhVsGUS0lIUj9
+x-microsoft-antispam-message-info: ogLD5BdV5MSDO82rsxk3AjrxS4NDeNzJDSYAG3gJK14qZlsGQqPrlB2Dt+ComoUzTNytR3H9JPQ0ao/aAYTxiEzY6et8UjmXOoGXCG/ohL48rPFzlu1ehdb9o7vskv+qnNCGYFvJu97oXMm/GM1E9KLeFKpAhDkBq1uO73C84RftSbdJmImQQaCjjCg7gkVPbyzkiuKfVe7PpQbA7DnM8QzBHLgkwu33bTyoCXNmZ0BLMCnniswe3uiEfPB2G/KWcdCuk96RWoGSAxiWi9pWImkkbRlx0gLzuvd98R0l9xqGyr9TAtOKzmDfpAAo0A9I1KAoJFspgBCcXfj88V6A7W3ejqhgi3rcDx95gTgvbJuq6fc07ZVFx7L/nP/KOC2O2jk+1QkmkQSb4MFbInSfDUOtav8aJOCVNTMQsFQOwSGvHGLSZMoiq84FAFv0IzfcGiwmnyTtfYyETzJ5BCyS7OsPDFD5KEarUuJ0oRUMjhrK9twloVpDioKPRfCLWHeXmKuTg8xpDDG54T/ePeznUJgPwEz0azhs7EFj0FxhiRjVRNz7nLR2iIJ8xyww1pwG2TSoWp1OsUVGDvlgHAU0hg==
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: labundy.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00592a24-5966-4c4f-9098-08d79af5e30e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jan 2020 02:35:16.8958
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66dbcd8b-f5c9-412d-113e-08d79af5e7cf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jan 2020 02:35:25.1232
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cRqxkT0h7SaszMJwPYCyR+pXpK8SSssnB347Z5Ahwwhu9KU8dONHsYDpySRHEJbRw1s1uC7+pVNWrgYUTArQZw==
+X-MS-Exchange-CrossTenant-userprincipalname: untYUKukNMQ5CL89ZnqeWEKJI0D6ut+LNgFAHVmq9LDrAsQ9pf5PRhmCd3bsO04nhHzhQalQYvmt2Ndmrix9Vw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR08MB6029
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This series adds support for the Azoteq IQS620A, IQS621, IQS622, IQS624 and
-IQS625 multi-function sensors. Each device integrates numerous sensing tech=
--
-nologies in a single package.
+This patch adds device tree bindings for the Azoteq IQS620A, IQS621,
+IQS622, IQS624 and IQS625 multi-function sensors.
 
-A multi-function device (MFD) driver supports core functions common to all
-devices, including device identification, firmware, interrupt handling and
-runtime power management. The MFD driver is also responsible for adding all
-product-specific sub-devices.
+A total of three bindings are presented (one MFD and two child nodes);
+they are submitted as a single patch because the child node bindings
+have no meaning in the absence of the MFD binding.
 
-Each device supports self-capacitive, Hall-effect, and (in some cases) mutu=
-al-
-inductive sensing. These functions represent keys or switches and are suppo=
-rted
-by an input driver that covers all five devices. An assortment of pwm and i=
-io
-drivers supports device-specific functions including ambient light and angu=
-lar
-position sensing.
+Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes in v4:
+  - None
 
-This series was tested using the following development hardware: IQS620AEV0=
-4,
-IQS621EV04, IQS622EV04 and IQS624/5EV04.
+Changes in v3:
+  - Specified 'additionalProperties: false' within the parent MFD node and =
+all
+    child nodes ("keys", "hall-switch-north/south" and "pwm")
+  - Defined the "hall-switch-north/south" child nodes unconditionally and t=
+hen
+    inverted the subsequent if/then to filter them from devices for which t=
+hat
+    functionality is unavailable
+  - Added Reviewed-by trailer
 
-Jeff LaBundy (7):
-  dt-bindings: Add bindings for Azoteq IQS620A/621/622/624/625
-  mfd: Add support for Azoteq IQS620A/621/622/624/625
-  input: keyboard: Add support for Azoteq IQS620A/621/622/624/625
-  pwm: Add support for Azoteq IQS620A PWM generator
-  iio: temperature: Add support for Azoteq IQS620AT temperature sensor
-  iio: light: Add support for Azoteq IQS621/622 ambient light sensors
-  iio: position: Add support for Azoteq IQS624/625 angle sensors
+Changes in v2:
+  - Removed "prox" child node and moved "keys" and "pwm" child nodes to the=
+ir
+    own bindings
+  - Replaced linux,fw-file property with more common firmware-name property
+  - Converted all bindings to YAML
 
- .../devicetree/bindings/input/iqs62x-keys.yaml     | 132 +++++
- Documentation/devicetree/bindings/mfd/iqs62x.yaml  | 179 ++++++
- .../devicetree/bindings/pwm/iqs620a-pwm.yaml       |  32 ++
- drivers/iio/Kconfig                                |   1 +
- drivers/iio/Makefile                               |   1 +
- drivers/iio/light/Kconfig                          |  10 +
- drivers/iio/light/Makefile                         |   1 +
- drivers/iio/light/iqs621-als.c                     | 614 +++++++++++++++++=
-+++
- drivers/iio/position/Kconfig                       |  19 +
- drivers/iio/position/Makefile                      |   7 +
- drivers/iio/position/iqs624-pos.c                  | 284 +++++++++
- drivers/iio/temperature/Kconfig                    |  10 +
- drivers/iio/temperature/Makefile                   |   1 +
- drivers/iio/temperature/iqs620at-temp.c            |  97 ++++
- drivers/input/keyboard/Kconfig                     |  10 +
- drivers/input/keyboard/Makefile                    |   1 +
- drivers/input/keyboard/iqs62x-keys.c               | 340 +++++++++++
- drivers/mfd/Kconfig                                |  13 +
- drivers/mfd/Makefile                               |   3 +
- drivers/mfd/iqs62x-core.c                          | 639 +++++++++++++++++=
+ .../devicetree/bindings/input/iqs62x-keys.yaml     | 132 +++++++++++++++
+ Documentation/devicetree/bindings/mfd/iqs62x.yaml  | 179 +++++++++++++++++=
 ++++
- drivers/mfd/iqs62x-tables.c                        | 438 ++++++++++++++
- drivers/pwm/Kconfig                                |  10 +
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/pwm-iqs620a.c                          | 258 +++++++++
- include/linux/mfd/iqs62x.h                         | 146 +++++
- 25 files changed, 3247 insertions(+)
+ .../devicetree/bindings/pwm/iqs620a-pwm.yaml       |  32 ++++
+ 3 files changed, 343 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/input/iqs62x-keys.yam=
 l
  create mode 100644 Documentation/devicetree/bindings/mfd/iqs62x.yaml
  create mode 100644 Documentation/devicetree/bindings/pwm/iqs620a-pwm.yaml
- create mode 100644 drivers/iio/light/iqs621-als.c
- create mode 100644 drivers/iio/position/Kconfig
- create mode 100644 drivers/iio/position/Makefile
- create mode 100644 drivers/iio/position/iqs624-pos.c
- create mode 100644 drivers/iio/temperature/iqs620at-temp.c
- create mode 100644 drivers/input/keyboard/iqs62x-keys.c
- create mode 100644 drivers/mfd/iqs62x-core.c
- create mode 100644 drivers/mfd/iqs62x-tables.c
- create mode 100644 drivers/pwm/pwm-iqs620a.c
- create mode 100644 include/linux/mfd/iqs62x.h
 
+diff --git a/Documentation/devicetree/bindings/input/iqs62x-keys.yaml b/Doc=
+umentation/devicetree/bindings/input/iqs62x-keys.yaml
+new file mode 100644
+index 0000000..5625c22
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/iqs62x-keys.yaml
+@@ -0,0 +1,132 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/iqs62x-keys.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Azoteq IQS620A/621/622/624/625 Keys and Switches
++
++maintainers:
++  - Jeff LaBundy <jeff@labundy.com>
++
++description: |
++  The Azoteq IQS620A, IQS621, IQS622, IQS624 and IQS625 multi-function sen=
+sors
++  feature a variety of self-capacitive, mutual-inductive and Hall-effect s=
+ens-
++  ing capabilities that can facilitate a variety of contactless key and sw=
+itch
++  applications.
++
++  These functions are collectively represented by a "keys" child node from=
+ the
++  parent MFD driver. See Documentation/devicetree/bindings/mfd/iqs62x.yaml=
+ for
++  further details and examples. Sensor hardware configuration (self-capaci=
+tive
++  vs. mutual-inductive, etc.) is selected based on the device's firmware.
++
++properties:
++  compatible:
++    enum:
++      - azoteq,iqs620a-keys
++      - azoteq,iqs621-keys
++      - azoteq,iqs622-keys
++      - azoteq,iqs624-keys
++      - azoteq,iqs625-keys
++
++  linux,keycodes:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++      - minItems: 1
++        maxItems: 16
++    description: |
++      Specifies the numeric keycodes associated with each available touch =
+or
++      proximity event according to the following table. An 'x' indicates t=
+he
++      event is supported for a given device. Specify 0 for unused events.
++
++      --------------------------------------------------------------------=
+-----
++      | #  | Event              | IQS620A | IQS621 | IQS622 | IQS624 | IQS=
+625 |
++      --------------------------------------------------------------------=
+-----
++      | 0  | CH0 Touch          |    x    |    x   |    x   |    x   |    =
+x   |
++      |    | Antenna 1 Touch*   |    x    |        |        |        |    =
+    |
++      --------------------------------------------------------------------=
+-----
++      | 1  | CH0 Proximity      |    x    |    x   |    x   |    x   |    =
+x   |
++      |    | Antenna 1 Prox.*   |    x    |        |        |        |    =
+    |
++      --------------------------------------------------------------------=
+-----
++      | 2  | CH1 Touch          |    x    |    x   |    x   |    x   |    =
+x   |
++      |    | Ant. 1 Deep Touch* |    x    |        |        |        |    =
+    |
++      --------------------------------------------------------------------=
+-----
++      | 3  | CH1 Proximity      |    x    |    x   |    x   |    x   |    =
+x   |
++      --------------------------------------------------------------------=
+-----
++      | 4  | CH2 Touch          |    x    |        |        |        |    =
+    |
++      --------------------------------------------------------------------=
+-----
++      | 5  | CH2 Proximity      |    x    |        |        |        |    =
+    |
++      |    | Antenna 2 Prox.*   |    x    |        |        |        |    =
+    |
++      --------------------------------------------------------------------=
+-----
++      | 6  | Metal (+) Touch**  |    x    |    x   |        |        |    =
+    |
++      |    | Ant. 2 Deep Touch* |    x    |        |        |        |    =
+    |
++      --------------------------------------------------------------------=
+-----
++      | 7  | Metal (+) Prox.**  |    x    |    x   |        |        |    =
+    |
++      |    | Antenna 2 Touch*   |    x    |        |        |        |    =
+    |
++      --------------------------------------------------------------------=
+-----
++      | 8  | Metal (-) Touch**  |    x    |    x   |        |        |    =
+    |
++      --------------------------------------------------------------------=
+-----
++      | 9  | Metal (-) Prox.**  |    x    |    x   |        |        |    =
+    |
++      --------------------------------------------------------------------=
+-----
++      | 10 | SAR Active***      |    x    |        |    x   |        |    =
+    |
++      --------------------------------------------------------------------=
+-----
++      | 11 | SAR Quick Rel.***  |    x    |        |    x   |        |    =
+    |
++      --------------------------------------------------------------------=
+-----
++      | 12 | SAR Movement***    |    x    |        |    x   |        |    =
+    |
++      --------------------------------------------------------------------=
+-----
++      | 13 | SAR Filter Halt*** |    x    |        |    x   |        |    =
+    |
++      --------------------------------------------------------------------=
+-----
++      | 14 | Wheel Up           |         |        |        |    x   |    =
+    |
++      --------------------------------------------------------------------=
+-----
++      | 15 | Wheel Down         |         |        |        |    x   |    =
+    |
++      --------------------------------------------------------------------=
+-----
++      *   Two-channel SAR. Replaces CH0-2 plus metal touch and proximity e=
+vents
++          if enabled via firmware.
++      **  "+" and "-" refer to the polarity of a channel's delta (LTA - co=
+unts),
++          where "LTA" is defined as the channel's long-term average.
++      *** One-channel SAR. Replaces CH0-2 touch and proximity events if en=
+abled
++          via firmware.
++
++patternProperties:
++  "^hall-switch-(north|south)$":
++    type: object
++    description:
++      Represents north/south-field Hall-effect sensor touch or proximity
++      events. Note that north/south-field orientation is reversed on the
++      IQS620AXzCSR device due to its flip-chip package.
++
++    properties:
++      linux,code:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description: Numeric switch code associated with the event.
++
++      azoteq,use-prox:
++        $ref: /schemas/types.yaml#/definitions/flag
++        description:
++          If present, specifies that Hall-effect sensor reporting should
++          use the device's wide-range proximity threshold instead of its
++          close-range touch threshold (default).
++
++    required:
++      - linux,code
++
++    additionalProperties: false
++
++if:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - azoteq,iqs624-keys
++          - azoteq,iqs625-keys
++then:
++  patternProperties:
++    "^hall-switch-(north|south)$": false
++
++required:
++  - compatible
++  - linux,keycodes
++
++additionalProperties: false
++
++...
+diff --git a/Documentation/devicetree/bindings/mfd/iqs62x.yaml b/Documentat=
+ion/devicetree/bindings/mfd/iqs62x.yaml
+new file mode 100644
+index 0000000..46b7272
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/iqs62x.yaml
+@@ -0,0 +1,179 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/iqs62x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Azoteq IQS620A/621/622/624/625 Multi-Function Sensors
++
++maintainers:
++  - Jeff LaBundy <jeff@labundy.com>
++
++description: |
++  The Azoteq IQS620A, IQS621, IQS622, IQS624 and IQS625 multi-function sen=
+sors
++  integrate multiple sensing technologies in a single package.
++
++  Link to data sheets: https://www.azoteq.com/
++
++properties:
++  compatible:
++    enum:
++      - azoteq,iqs620a
++      - azoteq,iqs621
++      - azoteq,iqs622
++      - azoteq,iqs624
++      - azoteq,iqs625
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  firmware-name:
++    $ref: /schemas/types.yaml#/definitions/string
++    description:
++      Specifies the name of the calibration and configuration file selecte=
+d by
++      the driver. If this property is omitted, the name is chosen based on=
+ the
++      device name with ".bin" as the extension (e.g. iqs620a.bin for IQS62=
+0A).
++
++  keys:
++    $ref: ../input/iqs62x-keys.yaml
++
++  pwm:
++    $ref: ../pwm/iqs620a-pwm.yaml
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    /*
++     * Dual capacitive buttons with additional "air button," unipolar lid
++     * switch and panel-mounted LED.
++     */
++    #include <dt-bindings/input/input.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++            #address-cells =3D <1>;
++            #size-cells =3D <0>;
++
++            iqs620a@44 {
++                    compatible =3D "azoteq,iqs620a";
++                    reg =3D <0x44>;
++                    interrupt-parent =3D <&gpio>;
++                    interrupts =3D <17 IRQ_TYPE_LEVEL_LOW>;
++
++                    keys {
++                            compatible =3D "azoteq,iqs620a-keys";
++
++                            linux,keycodes =3D <KEY_SELECT>,
++                                             <KEY_MENU>,
++                                             <KEY_OK>,
++                                             <KEY_MENU>;
++
++                            hall-switch-south {
++                                    linux,code =3D <SW_LID>;
++                                    azoteq,use-prox;
++                            };
++                    };
++
++                    iqs620a_pwm: pwm {
++                            compatible =3D "azoteq,iqs620a-pwm";
++                            #pwm-cells =3D <2>;
++                    };
++            };
++    };
++
++    pwmleds {
++            compatible =3D "pwm-leds";
++
++            panel {
++                    pwms =3D <&iqs620a_pwm 0 1000000>;
++                    max-brightness =3D <255>;
++            };
++    };
++
++  - |
++    /* Single inductive button with bipolar dock/tablet-mode switch. */
++    #include <dt-bindings/input/input.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++            #address-cells =3D <1>;
++            #size-cells =3D <0>;
++
++            iqs620a@44 {
++                    compatible =3D "azoteq,iqs620a";
++                    reg =3D <0x44>;
++                    interrupt-parent =3D <&gpio>;
++                    interrupts =3D <17 IRQ_TYPE_LEVEL_LOW>;
++
++                    firmware-name =3D "iqs620a_coil.bin";
++
++                    keys {
++                            compatible =3D "azoteq,iqs620a-keys";
++
++                            linux,keycodes =3D <0>,
++                                             <0>,
++                                             <0>,
++                                             <0>,
++                                             <0>,
++                                             <0>,
++                                             <KEY_MUTE>;
++
++                            hall-switch-north {
++                                    linux,code =3D <SW_DOCK>;
++                            };
++
++                            hall-switch-south {
++                                    linux,code =3D <SW_TABLET_MODE>;
++                            };
++                    };
++            };
++    };
++
++  - |
++    /* Dual capacitive buttons with volume knob. */
++    #include <dt-bindings/input/input.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++            #address-cells =3D <1>;
++            #size-cells =3D <0>;
++
++            iqs624@44 {
++                    compatible =3D "azoteq,iqs624";
++                    reg =3D <0x44>;
++                    interrupt-parent =3D <&gpio>;
++                    interrupts =3D <17 IRQ_TYPE_LEVEL_LOW>;
++
++                    keys {
++                            compatible =3D "azoteq,iqs624-keys";
++
++                            linux,keycodes =3D <BTN_0>,
++                                             <0>,
++                                             <BTN_1>,
++                                             <0>,
++                                             <0>,
++                                             <0>,
++                                             <0>,
++                                             <0>,
++                                             <0>,
++                                             <0>,
++                                             <0>,
++                                             <0>,
++                                             <0>,
++                                             <0>,
++                                             <KEY_VOLUMEUP>,
++                                             <KEY_VOLUMEDOWN>;
++                    };
++            };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/pwm/iqs620a-pwm.yaml b/Docum=
+entation/devicetree/bindings/pwm/iqs620a-pwm.yaml
+new file mode 100644
+index 0000000..1d7c27b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/iqs620a-pwm.yaml
+@@ -0,0 +1,32 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/iqs620a-pwm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Azoteq IQS620A PWM Generator
++
++maintainers:
++  - Jeff LaBundy <jeff@labundy.com>
++
++description: |
++  The Azoteq IQS620A multi-function sensor generates a fixed-frequency PWM
++  output represented by a "pwm" child node from the parent MFD driver. See
++  Documentation/devicetree/bindings/mfd/iqs62x.yaml for further details as
++  well as an example.
++
++properties:
++  compatible:
++    enum:
++      - azoteq,iqs620a-pwm
++
++  "#pwm-cells":
++    const: 2
++
++required:
++  - compatible
++  - "#pwm-cells"
++
++additionalProperties: false
++
++...
 --
 2.7.4
 
