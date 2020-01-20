@@ -2,94 +2,102 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BA4F143261
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 Jan 2020 20:32:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DC67143285
+	for <lists+linux-pwm@lfdr.de>; Mon, 20 Jan 2020 20:40:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgATTcs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 20 Jan 2020 14:32:48 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34811 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728596AbgATTcn (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 20 Jan 2020 14:32:43 -0500
-Received: by mail-ed1-f65.google.com with SMTP id l8so632822edw.1
-        for <linux-pwm@vger.kernel.org>; Mon, 20 Jan 2020 11:32:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=z7I/Kq2V0EnXiuoACdRbnwoAql3KZ080nwyXVjlruyU=;
-        b=I1roYPqxBJzWtUK/EbeI6Kt4sZi+JdSJm6qJbGHrPRZYvHUSh5jIrCeNC6L/G/f0o1
-         SOUBr7y32ZptFoyqXLV46mqkCVXIPksz6dHNenBfKH5ZmZaxgtbXfnD4DPiQngFU9XCO
-         yyR3xavKr41v/xLWwuSw91WJb2uX+wjZFxyyrAuDZ+hvXvCheAMdiLqD+HrlaysRfXCL
-         GNNQRcxyOsqzXo4wRH2J/upuPpeDO5ZRhzNY4HfuYgHfElCshp5fZYHSWkrBX0jAzQvX
-         wM9NfRj8QHz6JxUFOI+rZ3wcUi7Ikp+pHr28kaxr4n7py/KC1H5pYclpR4JTvoTIZ7Jv
-         h8rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=z7I/Kq2V0EnXiuoACdRbnwoAql3KZ080nwyXVjlruyU=;
-        b=GAoeYArHhB/2Sf6ir26V+juqSP6u+ww6jJmK0Ci3PQnd3NLyOikrddcx33VyUmySuB
-         7NBajykiAkWmlsZ/OsgccQCf7P9ZDRIVFfp6VGMpPDtUBM9JCLOMAkqHpbzRvlQ0zTZZ
-         rXyCFYQneP4+TJujcvR6VQnXVSPxfEgbbmYUf8vwS/SVQW2Zn3XCcDWqZUfO1p2/P/uq
-         9juTNpMKvW+rTMxkvlD7XEGATFvsyFUFlYD8398MDEO+CerTby5H045GFoqH+0ZYOi9U
-         X4QREojs1vKClygUyG5NO8M+YpT/+e1P77ghKcbkH0ZonSK5HeWq198OD2fvInAkz/Tv
-         jP2w==
-X-Gm-Message-State: APjAAAUXnvwkLPT3tjpcZuhOXTD4YDh2tdSNxEoJOrj6094TkkAoBQhf
-        S+dCWkswVY5InDPVsHYN13CxkrD4riabCRNtsMw=
-X-Google-Smtp-Source: APXvYqwKjCT5QnfvXWtJkO29cRmoOGR1uhIhw9Ol6eYz9VuYzVaqX/o8Ejt2WLDxZ+bl2CebXLO8AWZ4Emn93SBTQws=
-X-Received: by 2002:a17:906:1fcd:: with SMTP id e13mr898516ejt.333.1579548761316;
- Mon, 20 Jan 2020 11:32:41 -0800 (PST)
+        id S1726899AbgATTkN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 20 Jan 2020 14:40:13 -0500
+Received: from antares.kleine-koenig.org ([94.130.110.236]:40204 "EHLO
+        antares.kleine-koenig.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726816AbgATTkM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 20 Jan 2020 14:40:12 -0500
+X-Greylist: delayed 398 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Jan 2020 14:40:11 EST
+Received: by antares.kleine-koenig.org (Postfix, from userid 1000)
+        id C09B98C57CE; Mon, 20 Jan 2020 20:33:32 +0100 (CET)
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: [PATCH] ARM: s3c24xx/rx1950: switch to atomic pwm API
+Date:   Mon, 20 Jan 2020 20:33:28 +0100
+Message-Id: <20200120193328.17007-1-uwe@kleine-koenig.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Received: by 2002:a05:6402:22dc:0:0:0:0 with HTTP; Mon, 20 Jan 2020 11:32:40
- -0800 (PST)
-Reply-To: mcclainejohn.13@gmail.com
-From:   "Prof, William Roberts" <eco.bank1204@gmail.com>
-Date:   Mon, 20 Jan 2020 20:32:40 +0100
-Message-ID: <CAOE+jABpcHQWZWhtskhDFbtTqfBe7h065WE2kC1G+jQD+tQiTA@mail.gmail.com>
-Subject: Contact Diplomatic Agent, Mr. Mcclaine John to receive your ATM CARD
- valued the sum of $12.8Million United States Dollars
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Attn: Dear Beneficiary,
+Stop using the legacy PWM API which only still exists because there are
+some users left.
 
-I wish to inform you that the diplomatic agent conveying your ATM CARD
-valued the sum of $12.8Million United States Dollars has misplaced
-your address and he is currently stranded at (George Bush
-International Airport) Houston Texas USA now
-We required you to reconfirm the following information's below to him
-so that he can deliver your Payment CARD to you today or tomorrow
-morning as information provided with open communications via email and
-telephone for security reasons.
-HERE IS THE DETAILS  HE NEED FROM YOU URGENT
-YOUR FULL NAME:========
-ADDRESS:========
-MOBILE NO:========
-NAME OF YOUR NEAREST AIRPORT:========
-A COPY OF YOUR IDENTIFICATION :========
+Note this change make use of the fact that the value of struct
+pwm_state::duty_cycle doesn't matter for a disabled PWM and so its value
+can stay constant simplifying the code a bit.
 
-Note; do contact the diplomatic agent immediately through the
-information's listed below
-Contact Person: Diplomatic Agent, Mr. Mcclaine John
-EMAIL: mcclainejohn.13@gmail.com
-Tel:(223) 777-7518
+A side effect of the conversion is that the pwm isn't stopped in
+rx1950_backlight_init() by the call to pwm_apply_args() just before
+reenabling it when rx1950_lcd_power(1) is called.
 
-Contact the diplomatic agent immediately
-because he is waiting to hear from you today with the needed information's.
+Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
+---
+ arch/arm/mach-s3c24xx/mach-rx1950.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-NOTE: The Diplomatic agent does not know that the content of the
-consignment box is $12.800,000,00 Million United States Dollars and on
-no circumstances should you let him know the content. The consignment
-was moved from here as family treasures, so never allow him to open
-the box. Please I have paid delivery fees for you but the only money
-you must send to Mcclaine John is your ATM CARD delivery fee $25.00
-only. text Him as you contact Him Immediately
+diff --git a/arch/arm/mach-s3c24xx/mach-rx1950.c b/arch/arm/mach-s3c24xx/mach-rx1950.c
+index 29f9b345a531..03d8f27cdc32 100644
+--- a/arch/arm/mach-s3c24xx/mach-rx1950.c
++++ b/arch/arm/mach-s3c24xx/mach-rx1950.c
+@@ -377,6 +377,7 @@ static struct pwm_lookup rx1950_pwm_lookup[] = {
+ };
+ 
+ static struct pwm_device *lcd_pwm;
++static struct pwm_state lcd_pwm_state;
+ 
+ static void rx1950_lcd_power(int enable)
+ {
+@@ -429,15 +430,16 @@ static void rx1950_lcd_power(int enable)
+ 
+ 		/* GPB1->OUTPUT, GPB1->0 */
+ 		gpio_direction_output(S3C2410_GPB(1), 0);
+-		pwm_config(lcd_pwm, 0, LCD_PWM_PERIOD);
+-		pwm_disable(lcd_pwm);
++
++		lcd_pwm_state.enabled = false;
++		pwm_apply_state(lcd_pwm, &lcd_pwm_state);
+ 
+ 		/* GPC0->0, GPC10->0 */
+ 		gpio_direction_output(S3C2410_GPC(0), 0);
+ 		gpio_direction_output(S3C2410_GPC(10), 0);
+ 	} else {
+-		pwm_config(lcd_pwm, LCD_PWM_DUTY, LCD_PWM_PERIOD);
+-		pwm_enable(lcd_pwm);
++		lcd_pwm_state.enabled = true;
++		pwm_apply_state(lcd_pwm, &lcd_pwm_state);
+ 
+ 		gpio_direction_output(S3C2410_GPC(0), 1);
+ 		gpio_direction_output(S3C2410_GPC(5), 1);
+@@ -493,10 +495,13 @@ static int rx1950_backlight_init(struct device *dev)
+ 	}
+ 
+ 	/*
+-	 * FIXME: pwm_apply_args() should be removed when switching to
+-	 * the atomic PWM API.
++	 * This is only required to initialize .polarity; all other values are
++	 * fixed in this driver.
+ 	 */
+-	pwm_apply_args(lcd_pwm);
++	pwm_init_state(lcd_pwm, &lcd_pwm_state);
++
++	lcd_pwm_state.period = LCD_PWM_PERIOD;
++	lcd_pwm_state.duty_cycle = LCD_PWM_DUTY;
+ 
+ 	rx1950_lcd_power(1);
+ 	rx1950_bl_power(1);
+-- 
+2.24.0
 
-Thanks,
-with Regards.
-Prof, William Roberts
-Director DHL COURIER SERVICES-Benin
