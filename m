@@ -2,87 +2,86 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DF9E144C3E
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Jan 2020 08:02:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EF5F146BE5
+	for <lists+linux-pwm@lfdr.de>; Thu, 23 Jan 2020 15:53:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725924AbgAVHCf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 22 Jan 2020 02:02:35 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33415 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgAVHCf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 22 Jan 2020 02:02:35 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iuA1w-0001M8-Db; Wed, 22 Jan 2020 08:02:24 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iuA1t-0007cM-Si; Wed, 22 Jan 2020 08:02:21 +0100
-Date:   Wed, 22 Jan 2020 08:02:21 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH v4 4/7] pwm: Add support for Azoteq IQS620A PWM generator
-Message-ID: <20200122070221.mq6a5lejsepnajgf@pengutronix.de>
-References: <1579228475-6681-1-git-send-email-jeff@labundy.com>
- <1579228475-6681-5-git-send-email-jeff@labundy.com>
- <20200117073427.ufrduwagvppeasgr@pengutronix.de>
- <20200119233234.GB28865@labundy.com>
- <20200120072739.sixr5e76uckrugvu@pengutronix.de>
- <20200122035608.GA1455@labundy.com>
+        id S1728205AbgAWOxq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 23 Jan 2020 09:53:46 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35932 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729187AbgAWOxq (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 23 Jan 2020 09:53:46 -0500
+Received: by mail-lj1-f196.google.com with SMTP id r19so3777475ljg.3
+        for <linux-pwm@vger.kernel.org>; Thu, 23 Jan 2020 06:53:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tP2rc3sKgqYT9el7f1WHPuLRZRmFlraniNcLzRTh1pc=;
+        b=IoZ+hHh9hNTkHT2YdnouTrYjcsSt8gBQuva/8HSDudsOjNdpBl4/AY6qjsAHBlriLV
+         nTHyHpV+MwD85kPFu8T95GN+dtKdP69SnHaFGu9mMcuxKzDrxWNde1TNydE3OP+B1pDi
+         YdKXnPtMUKfYQz+qEHDPX1SXImBIn5SKSC5ld3HA4mRE8mwoPRm2KAblSga8TJUt8lEV
+         HUCMahOwnl0Qgb5YsPjJK+Uf3STpWDbV5hPuSUlPye0aJKEqyc5myrXRWOe/3odRhFVy
+         gF8bxp2wwGmuv/sSJ77ptgBBO+GfpuXC/w9pS0s942Qk6Q5hbrRW5/BrbI+px+OdoBA5
+         ddQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tP2rc3sKgqYT9el7f1WHPuLRZRmFlraniNcLzRTh1pc=;
+        b=ukjrtrqzsMr4P3sBXY4FVEl2YBWQYZF9MBSncS/pk8sQhIBvaaOSHnMU9WoZIhw1rV
+         R/JZqaaAnK/Y+++92owpw0xPxOoDEdbHoixNRwdKkxLlcCFziiQpCL4bxJ3fJwYIjDh/
+         iHnpuvtRSbjjaCVxHbJNNXB4FGIXN78IOCyq5cT6uqcEqieIe+VjlyJcx54YssprXV5t
+         jctnnCxvU5UF40SVGbAsaVhbooHn6n0mxsd+NH/tIf5M69aYy/F6NbdtEO72coanv98X
+         e30J2Qp2BJolDdG1JtufglZhZS5J8+11EtwNoVDLn+roRIe+Xtj8kg6akKuMgxehlPtG
+         z7jg==
+X-Gm-Message-State: APjAAAUpH/5aCSZXiDrSnp7Td/3sywTGxJl6ldgAH3g1RZnh5+1EEe3w
+        o09zmsqIYgllQfYEmlE5fq6QhDt1diyXNsddSrXZDw==
+X-Google-Smtp-Source: APXvYqwfj7WWn0juBVOB8AF0fnjeeNkmI+4iRvbuJD3XjPlxz72XbJT6NEb8X5O+9ai22dAUSazBreWyIu9u9mNdGqM=
+X-Received: by 2002:a2e:98c4:: with SMTP id s4mr23335397ljj.102.1579791224055;
+ Thu, 23 Jan 2020 06:53:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200122035608.GA1455@labundy.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+References: <20200115073811.24438-1-bigunclemax@gmail.com>
+In-Reply-To: <20200115073811.24438-1-bigunclemax@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 23 Jan 2020 15:53:33 +0100
+Message-ID: <CACRpkdYqTCmG1=HM0QphPou43HFSXBNB5HH1R8xH0KEb=zxC1Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mvebu: clear irq in edge cause register before
+ unmask edge irq
+To:     Maxim <bigunclemax@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-pwm@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Jeff,
+On Wed, Jan 15, 2020 at 8:40 AM Maxim <bigunclemax@gmail.com> wrote:
 
-On Wed, Jan 22, 2020 at 03:56:14AM +0000, Jeff LaBundy wrote:
-> > > The only problem is that leds-pwm disables the pwm at start-up, so the end
-> > > result is the same anyway. Regardless of the behavior of any one consumer,
-> > > however, I'm slightly inclined to go with the second option as it seems to
-> > > be less restrictive and more maintainable. Let me know if you disagree.
-> > 
-> > With
-> > 
-> > 	default-state = "keep";
-> > 
-> > in your dt the LED shouldn't get disabled.
-> 
-> I see default-state defined as a common LED property, but leds-pwm doesn't
-> seem to use it unfortunately. Looking through its code, brightness is just
-> initialized to zero unconditionally.
+> From: Maxim Kiselev <bigunclemax@gmail.com>
+>
+> When input GPIO set from 0 to 1, the interrupt bit asserted in the GPIO
+> Interrupt Cause Register (ICR) even if the corresponding interrupt
+> masked in the GPIO Interrupt Mask Register.
+>
+> Because interrupt mask register only affects assertion of the interrupt
+> bits in Main Interrupt Cause Register and it does not affect the
+> setting of bits in the GPIO ICR.
+>
+> So, there is problem, when we unmask interrupt with already
+> asserted bit in the GPIO ICR, then false interrupt immediately occurs
+> even if GPIO don't change their value since last unmask.
+>
+> Signed-off-by: Maxim Kiselev <bigunclemax@gmail.com>
 
-Sounds like a bug.
+Since there is no feedback from the MVEBU maintainers I have
+tentatively applied the patch for v5.6 so it gets some testing.
 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Yours,
+Linus Walleij
