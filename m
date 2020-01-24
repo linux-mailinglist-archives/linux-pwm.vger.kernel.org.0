@@ -2,69 +2,86 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B8B93148C8E
-	for <lists+linux-pwm@lfdr.de>; Fri, 24 Jan 2020 17:54:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 800C3148F7D
+	for <lists+linux-pwm@lfdr.de>; Fri, 24 Jan 2020 21:43:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387670AbgAXQyT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 24 Jan 2020 11:54:19 -0500
-Received: from antares.kleine-koenig.org ([94.130.110.236]:38354 "EHLO
-        antares.kleine-koenig.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387674AbgAXQyS (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 24 Jan 2020 11:54:18 -0500
-Received: by antares.kleine-koenig.org (Postfix, from userid 1000)
-        id 4510C8CCA34; Fri, 24 Jan 2020 17:54:17 +0100 (CET)
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>
-Cc:     Jeff LaBundy <jeff@labundy.com>, Dan Murphy <dmurphy@ti.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: [PATCH 3/3] leds: pwm: don't set the brightness during .probe
-Date:   Fri, 24 Jan 2020 17:54:09 +0100
-Message-Id: <20200124165409.12422-4-uwe@kleine-koenig.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200124165409.12422-1-uwe@kleine-koenig.org>
-References: <20200124165409.12422-1-uwe@kleine-koenig.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S2387634AbgAXUnD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 24 Jan 2020 15:43:03 -0500
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:23203 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387633AbgAXUnD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 24 Jan 2020 15:43:03 -0500
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 24 Jan 2020 12:43:02 -0800
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg05-sd.qualcomm.com with ESMTP; 24 Jan 2020 12:43:00 -0800
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 4275D48C4; Fri, 24 Jan 2020 12:43:02 -0800 (PST)
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     linux-pwm@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        Guru Das Srinagesh <gurus@codeaurora.org>
+Subject: [PATCH v5 0/2] Convert period and duty cycle to u64
+Date:   Fri, 24 Jan 2020 12:42:58 -0800
+Message-Id: <cover.1579896984.git.gurus@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The explicit call to led_pwm_set() prevents that the led's state can
-stay as configured by the bootloader.
+Reworked the change pushed upstream earlier [1] so as to not add an extension
+to an obsolete API. With this change, pwm_ops->apply() can be used to set
+pwm_state parameters as usual.
 
-Note that brightness is always 0 here as the led_pwm driver doesn't
-provide a .brightness_get() callback and so the LED was disabled
-unconditionally.
+[1] https://lore.kernel.org/lkml/20190916140048.GB7488@ulmo/
 
-Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
----
- drivers/leds/leds-pwm.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Changes from v1:
+  - Fixed compilation errors seen when compiling for different archs.
 
-diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-index 9111cdede0ee..de74e1c8d234 100644
---- a/drivers/leds/leds-pwm.c
-+++ b/drivers/leds/leds-pwm.c
-@@ -83,13 +83,11 @@ static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
- 		led_data->pwmstate.period = led->pwm_period_ns;
- 
- 	ret = devm_led_classdev_register(dev, &led_data->cdev);
--	if (ret == 0) {
-+	if (ret == 0)
- 		priv->num_leds++;
--		led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
--	} else {
-+	else
- 		dev_err(dev, "failed to register PWM led for %s: %d\n",
- 			led->name, ret);
--	}
- 
- 	return ret;
- }
+Changes from v2:
+  - Fixed %u -> %llu in a dev_dbg in pwm-stm32-lp.c, thanks to kbuild test robot
+  - Added a couple of fixes to pwm-imx-tpm.c and pwm-sifive.c
+
+Changes from v3:
+  - Rebased to current tip of for-next.
+
+Changes from v4:
+  - Split the patch into two: one for changes to the drivers, and the actual
+    switch to u64 for ease of reverting should the need arise.
+  - Re-examined the patch and made the following corrections:
+      * intel_panel.c:
+	DIV64_U64_ROUND_UP -> DIV_ROUND_UP_ULL (as only the numerator would be
+	64-bit in this case).
+      * pwm-sti.c:
+	do_div -> div_u64 (do_div is optimized only for x86 architectures, and
+	div_u64's comment block suggests to use this as much as possible).
+
+Guru Das Srinagesh (2):
+  pwm: Convert drivers to use 64-bit period and duty cycle
+  pwm: core: Convert period and duty cycle to u64
+
+ drivers/clk/clk-pwm.c                      |  2 +-
+ drivers/gpu/drm/i915/display/intel_panel.c |  2 +-
+ drivers/hwmon/pwm-fan.c                    |  2 +-
+ drivers/media/rc/ir-rx51.c                 |  3 ++-
+ drivers/pwm/core.c                         |  4 ++--
+ drivers/pwm/pwm-clps711x.c                 |  2 +-
+ drivers/pwm/pwm-imx-tpm.c                  |  2 +-
+ drivers/pwm/pwm-imx27.c                    |  5 ++---
+ drivers/pwm/pwm-sifive.c                   |  2 +-
+ drivers/pwm/pwm-sti.c                      |  5 +++--
+ drivers/pwm/pwm-stm32-lp.c                 |  2 +-
+ drivers/pwm/pwm-sun4i.c                    |  2 +-
+ drivers/pwm/sysfs.c                        | 10 +++++-----
+ drivers/video/backlight/pwm_bl.c           |  3 ++-
+ include/linux/pwm.h                        | 16 ++++++++--------
+ 15 files changed, 32 insertions(+), 30 deletions(-)
+
 -- 
-2.24.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
