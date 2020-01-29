@@ -2,112 +2,66 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F40614B18B
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Jan 2020 10:10:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C52514C7F9
+	for <lists+linux-pwm@lfdr.de>; Wed, 29 Jan 2020 10:24:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725971AbgA1JKd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 28 Jan 2020 04:10:33 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2314 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725848AbgA1JKd (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 28 Jan 2020 04:10:33 -0500
-Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 0892BE338C1271D8C824;
-        Tue, 28 Jan 2020 09:10:31 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- LHREML711-CAH.china.huawei.com (10.201.108.34) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 28 Jan 2020 09:10:14 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 28 Jan
- 2020 09:10:13 +0000
-Date:   Tue, 28 Jan 2020 09:10:01 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jeff LaBundy <jeff@labundy.com>
-CC:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 5/7] iio: temperature: Add support for Azoteq
- IQS620AT temperature sensor
-Message-ID: <20200128091001.00001e1d@Huawei.com>
-In-Reply-To: <20200122032821.GA29969@labundy.com>
-References: <1579228475-6681-1-git-send-email-jeff@labundy.com>
-        <1579228475-6681-6-git-send-email-jeff@labundy.com>
-        <20200122032821.GA29969@labundy.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S1726067AbgA2JYU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 29 Jan 2020 04:24:20 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:37659 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgA2JYT (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 29 Jan 2020 04:24:19 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iwja6-0007pI-Kw; Wed, 29 Jan 2020 10:24:18 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iwja6-0007kA-BI; Wed, 29 Jan 2020 10:24:18 +0100
+Date:   Wed, 29 Jan 2020 10:24:18 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH 2/2] docs: pwm: rework documentation for the framework
+Message-ID: <20200129092418.a7vbz37uzloyfmdc@pengutronix.de>
+References: <20191209213233.29574-1-u.kleine-koenig@pengutronix.de>
+ <20191209213233.29574-2-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml724-chm.china.huawei.com (10.201.108.75) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191209213233.29574-2-u.kleine-koenig@pengutronix.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 22 Jan 2020 03:28:28 +0000
-Jeff LaBundy <jeff@labundy.com> wrote:
+Hello Thierry,
 
-> Hi Jonathan,
+On Mon, Dec 09, 2019 at 10:32:33PM +0100, Uwe Kleine-König wrote:
+> Rewrite most of the documentation to have the focus on the atomic API
+> and mention the legacy stuff only shortly.
 > 
-> I just wanted to give a heads up that I'm making a couple of very minor
-> changes to the lot of IIO patches in this series in response to changes
-> to include/linux/mfd/iqs62x.h for v5, namely:
+> The paragraphs about Locking and Helpers is dropped as they mostly
+> describe development outlooks which didn't happen yet (since the promise
+> to fix stuff "soon" was introduced in 2011).
 > 
-> - Replaced iqs62x->map with iqs62x->regmap
-> - Dropped #defines for platform_driver name and alias in favor of the
->   actual string names (e.g. IQS620_DRV_NAME_TEMP --> "iqs620at-temp")
-> 
-> For small changes like these, I plan to retain your Reviewed-by trailer
-> when I send out v5 even though the file would have changed slightly. If
-> you would prefer I let you re-review first, please let me know.
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-I'm fine with you keeping it.  Thanks for checking though.
+Do you have feedback for this patch? IMHO it's a good improvement as it
+discards the stuff about the legacy API (only mentioning it at the end)
+and concentrates about the stuff that is currently the way to go.
 
-Jonathan
-> 
-> On Thu, Jan 16, 2020 at 08:36:08PM -0600, Jeff LaBundy wrote:
-> > This patch adds support for the Azoteq IQS620AT temperature sensor,
-> > capable of reporting its absolute die temperature.
-> > 
-> > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---
-> > Changes in v4:
-> >   - None
-> > 
-> > Changes in v3:
-> >   - Added Reviewed-by trailer
-> > 
-> > Changes in v2:
-> >   - Moved the driver from hwmon to iio
-> >   - Merged 'Copyright' and 'Author' lines into one in introductory comments
-> >   - Replaced 'error' with 'ret' throughout
-> >   - Eliminated tabbed alignment of platform_driver struct members
-> >   - Changed Kconfig "depends on" logic to MFD_IQS62X || COMPILE_TEST
-> > 
-> >  drivers/iio/temperature/Kconfig         | 10 ++++
-> >  drivers/iio/temperature/Makefile        |  1 +
-> >  drivers/iio/temperature/iqs620at-temp.c | 97 +++++++++++++++++++++++++++++++++
-> >  3 files changed, 108 insertions(+)
-> >  create mode 100644 drivers/iio/temperature/iqs620at-temp.c
-> >   
-> 
-> Kind regards,
-> Jeff LaBundy
+Best regards
+Uwe
 
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
