@@ -2,95 +2,75 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A5CE151205
-	for <lists+linux-pwm@lfdr.de>; Mon,  3 Feb 2020 22:43:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 765C615161B
+	for <lists+linux-pwm@lfdr.de>; Tue,  4 Feb 2020 07:47:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbgBCVnK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 3 Feb 2020 16:43:10 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34441 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbgBCVnK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 3 Feb 2020 16:43:10 -0500
-Received: by mail-pf1-f193.google.com with SMTP id i6so8286789pfc.1;
-        Mon, 03 Feb 2020 13:43:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=4utvhxtA7zvr4Iu+DFpm/vNXzWR8TFP5LHSqSIJBCWo=;
-        b=AjF/en/PwCT4W2EHQ5+3AviOlyIo9uYNWYWol1vasV9sf8IdjnbhX0VVoyzxvrEf/D
-         GFZdJygPyQAUvAfYJcknUmlv/ZtEEyBxTFc9ZsL0fnmwF2hX+u7HoCsDurh8jvMg1FWI
-         ZWHACVb5FbOXuB2KNwYM0j5X+9+pI30sBWK2io4DQOsjatvjLtJ3k8LvU5jD6h+0bApj
-         nji7QoFrpIa/EfyS9aE1H8PnCdnd46+Bv/wWa0lI/yY3MRhmscM5HAz8FUe4N0GHhpMf
-         AblamewqllV4aFJNX9rqC38Bfrua5qSGpBXfEvK4rxqB8uDXrzrhq3DbRWcLI4ZsALte
-         Lfjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4utvhxtA7zvr4Iu+DFpm/vNXzWR8TFP5LHSqSIJBCWo=;
-        b=kaYy9bn6CiQJOQv9VcSKd6kZQoVT9NL3NbS85qC2V8bRe/69zKYV5SV6I7SMfcKJA/
-         X4JDPrs5idQaw0W+jtGWtXrkcTnD6ZQUV2syvh0qr04N3q13CxKgaq2IYh+geFUa40nH
-         INHMv6ED2YVf+Yj27ZQJE65TRmF5aCfp/pmsFYsrDv12N9RBT9wfBtpvuCSE/vx3r2tI
-         2UUVHjcj9J0+jeDJNf/UNGBlJ75z6J4jXdIhqb3+eUZyK1SkQgPhKuv58CbyTaFSNvtU
-         CASOdC/6X6NFSYmqzphxoTdMoP/P+a5zPl+EfASS4QihMdd7Dtc7Sj7UqyoTXI+eN6up
-         W8qA==
-X-Gm-Message-State: APjAAAUEZSn4dHuHz2AAVFyZHTcrPXGsLfnPs50ux/Pw1Mjg2LQPAPUk
-        nSjGth1wSFk6dLPRC2andZlYyNzo
-X-Google-Smtp-Source: APXvYqzqvmjhjyfBbCiXK6ubgSKYGKoWsiXrEE1FSXHo7/8RTwhszxSZmlrQQ8mbNKUBQU48ZmIo+A==
-X-Received: by 2002:a63:6c82:: with SMTP id h124mr27098458pgc.328.1580766189626;
-        Mon, 03 Feb 2020 13:43:09 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id c26sm2947558pfj.8.2020.02.03.13.43.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 13:43:08 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        id S1727247AbgBDGrB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 4 Feb 2020 01:47:01 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53841 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbgBDGrA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 4 Feb 2020 01:47:00 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iyrz3-00065e-8W; Tue, 04 Feb 2020 07:46:53 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iyrz1-000841-JM; Tue, 04 Feb 2020 07:46:51 +0100
+Date:   Tue, 4 Feb 2020 07:46:51 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Ray Jui <rjui@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>,
         Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
-        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Bart Tanghe <bart.tanghe@thomasmore.be>,
         Stephen Warren <swarren@wwwdotorg.org>,
-        linux-pwm@vger.kernel.org (open list:PWM SUBSYSTEM),
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE)
-Subject: [PATCH] pwm: bcm2835: Dynamically allocate base
-Date:   Mon,  3 Feb 2020 13:35:35 -0800
-Message-Id: <20200203213536.32226-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] pwm: bcm2835: Dynamically allocate base
+Message-ID: <20200204064651.jaxyftjj346xrdml@pengutronix.de>
+References: <20200203213536.32226-1-f.fainelli@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200203213536.32226-1-f.fainelli@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The newer 2711 and 7211 chips have two PWM controllers and failure to
-dynamically allocate the PWM base would prevent the second PWM
-controller instance being probed for succeeding with an -EEXIST error
-from alloc_pwms().
+Hallo Florian,
 
-Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/pwm/pwm-bcm2835.c | 1 +
- 1 file changed, 1 insertion(+)
+On Mon, Feb 03, 2020 at 01:35:35PM -0800, Florian Fainelli wrote:
+> The newer 2711 and 7211 chips have two PWM controllers and failure to
+> dynamically allocate the PWM base would prevent the second PWM
+> controller instance being probed for succeeding with an -EEXIST error
+> from alloc_pwms().
+> 
+> Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
-index 91e24f01b54e..d78f86f8e462 100644
---- a/drivers/pwm/pwm-bcm2835.c
-+++ b/drivers/pwm/pwm-bcm2835.c
-@@ -166,6 +166,7 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
- 
- 	pc->chip.dev = &pdev->dev;
- 	pc->chip.ops = &bcm2835_pwm_ops;
-+	pc->chip.base = -1;
- 	pc->chip.npwm = 2;
- 	pc->chip.of_xlate = of_pwm_xlate_with_flags;
- 	pc->chip.of_pwm_n_cells = 3;
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+
+Best regards
+Uwe
+
 -- 
-2.17.1
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
