@@ -2,160 +2,78 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C7BE21532C7
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2020 15:25:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6FA91535DC
+	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2020 18:03:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgBEOZP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 5 Feb 2020 09:25:15 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38649 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbgBEOZP (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 5 Feb 2020 09:25:15 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y17so2971662wrh.5;
-        Wed, 05 Feb 2020 06:25:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qhXaXnj7gj/UHklOFLVC+u57GTsIaZTNIrcJnG9KwhE=;
-        b=fdGw10ukTIsbS2IUVXIBEXDsk9f1aqfr64xNDeQWjMSCOeqW7Dnd8t0aiFkXZM6/Er
-         Xe7xgLe4QfDWWneBciDvkyQWsNC+khv4RYeT7nGoTptdMg/55rxqqoVEfPrG0bNdWUlp
-         iN4SSMlEaESmaY8C7gxXiS7cIc/VcnqQuOAQrIdvMgGJKRMvmxPRQTGIDhRwy+sBo2gM
-         QwRioT3VjASh7CUqlUdkRD68+lkTslQWU6my8Siu0GAWicZ5CPasCBkS6JgYa9wHtkGj
-         S8FWa5Q/OI9mOE8NzeNbDogcHvqeKQ5thc80jYEF2QiYK/3JThwzaJtvko2Xts1HXRr0
-         sq2w==
+        id S1727079AbgBERD3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 5 Feb 2020 12:03:29 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50956 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbgBERD3 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 5 Feb 2020 12:03:29 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a5so3300457wmb.0;
+        Wed, 05 Feb 2020 09:03:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qhXaXnj7gj/UHklOFLVC+u57GTsIaZTNIrcJnG9KwhE=;
-        b=cWN4P0UKOHIjJ4M5LFSJymkztjOL4nqm2NLVKiGiQuIe3qCd02A4tDJ6v+MxQcGIrK
-         xpeswsBV4fBilx6s7w9qrN4csZq3w8X7x6xBBUS28hiKWXbX3HQL2UHNtu2I+9HANJne
-         veHf+UY6l/WaoP9TQjEKJO7vgYEjqZHCDefBiPhHrMqm2qOSMPvaq73X08XSvn9pOWcR
-         8S0QH6kPvqs/9j2cty6ctfHUZFg+SLULNkMZT9cVcdAK6E+FlFF5t8F3xDk8c0Hl3OJX
-         xrX5qQomqsgTFsihID2ysCTCoEyScWS0ovMOqXWGqOMerVK84yNn/+gF53DSJjUm1DNK
-         gBzQ==
-X-Gm-Message-State: APjAAAUci8USNyhyqBTfIatxetuQMtFvled3k+SKq1jPzDHn4slf9ajs
-        Bn9fzAygqyMJv672GIxQjbc=
-X-Google-Smtp-Source: APXvYqx6w55XElDxgPBTYbaClZFgVcTjDyhPQxSHuYzRC0KycfMhsXQ7RV3nUG6/jMgm6hWBAntEAg==
-X-Received: by 2002:adf:f8c4:: with SMTP id f4mr27352188wrq.243.1580912713282;
-        Wed, 05 Feb 2020 06:25:13 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id e18sm33846336wrw.70.2020.02.05.06.25.12
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fRIQiMPnzfOfDPSTsa46DUjk5WLP3W3ziTqGF6fOQ3o=;
+        b=S5J9k33glQ5y83L8pkaqZh/vyykT77Y26BHIvrbuwm0jPJYKvdtIKwzss/Jebcv57n
+         f1HwhAIqxK6rv/iaCTW8dNpcbK1yTOWWfjPC2nXrKHKRF7hgrWD3QiZXMn8l7JqOJcv5
+         1nkbmNo8Zr+A/YK8n8f4xc3Jg3b9MMxQViNd/TS0hIzlJ/szAuFb1bTqoOPl1afMbuHM
+         zTiKOLBNx3rE/4KXNrFs8fnAEwtVle3qvNBktflDkMtpFPmQVXkO9CQMcpoxonKPSaLm
+         F2GPyWSTTAIt/bgaPhhCBUwgR4/kDgjP9Ev3Rqfn0+EEfGiXdoU4QZEKhDS9HA6Ria8y
+         F1Cw==
+X-Gm-Message-State: APjAAAVsp7/vOHPZFutAgW5xlOLFvGUeoTZVsbSKpeVbJK6pHUUHEzFe
+        u9URDWO1dm6ZyE49Id9tvw==
+X-Google-Smtp-Source: APXvYqzv/UDVHl5gkQROxHuLAIfZru2WQcfHUc076e5lTJSilhpuQmDeQl259nyCa8fC1tWGkA83Uw==
+X-Received: by 2002:a1c:688a:: with SMTP id d132mr7176382wmc.189.1580922207661;
+        Wed, 05 Feb 2020 09:03:27 -0800 (PST)
+Received: from rob-hp-laptop ([212.187.182.166])
+        by smtp.gmail.com with ESMTPSA id i204sm189506wma.44.2020.02.05.09.03.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 06:25:12 -0800 (PST)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] pwm: Changes for v5.6-rc1
-Date:   Wed,  5 Feb 2020 15:25:11 +0100
-Message-Id: <20200205142511.2172050-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Wed, 05 Feb 2020 09:03:27 -0800 (PST)
+Received: (nullmailer pid 19258 invoked by uid 1000);
+        Wed, 05 Feb 2020 17:03:25 -0000
+Date:   Wed, 5 Feb 2020 17:03:25 +0000
+From:   Rob Herring <robh@kernel.org>
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, robh+dt@kernel.org,
+        mark.rutland@arm.com, bleung@chromium.org,
+        enric.balletbo@collabora.com, groeck@chromium.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dafna.hirschfeld@collabora.com, helen.koike@collabora.com,
+        ezequiel@collabora.com, kernel@collabora.com, dafna3@gmail.com
+Subject: Re: [PATCH] dt-bindings: convert google,cros-ec-pwm.txt to yaml
+ format
+Message-ID: <20200205170325.GA19200@bogus>
+References: <20200127103441.4618-1-dafna.hirschfeld@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127103441.4618-1-dafna.hirschfeld@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Linus,
+On Mon, 27 Jan 2020 11:34:41 +0100, Dafna Hirschfeld wrote:
+> Convert the binding file google,cros-ec-pwm.txt to yaml format.
+> 
+> This was tested and verified on ARM64 with:
+> 
+> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
+> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
+> 
+> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> ---
+>  .../bindings/pwm/google,cros-ec-pwm.txt       | 23 -----------
+>  .../bindings/pwm/google,cros-ec-pwm.yaml      | 40 +++++++++++++++++++
+>  2 files changed, 40 insertions(+), 23 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
+> 
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.6-rc1
-
-for you to fetch changes up to 9871abffc81048e20f02e15d6aa4558a44ad53ea:
-
-  pwm: Remove set but not set variable 'pwm' (2020-01-20 15:40:49 +0100)
-
-Thanks,
-Thierry
-
-----------------------------------------------------------------
-pwm: Changes for v5.6-rc1
-
-This set of changes are mostly cleanups and minor improvements with some
-new chip support for some drivers.
-
-----------------------------------------------------------------
-Anson Huang (1):
-      pwm: imx27: Eliminate error message for defer probe
-
-Clément Péron (3):
-      pwm: sun4i: Prefer "mod" clock to unnamed
-      pwm: sun4i: Always calculate params when applying new parameters
-      pwm: sun4i: Move pwm_calculate() out of spin_lock()
-
-Fabrice Gasnier (1):
-      pwm: stm32: Remove automatic output enable
-
-Florian Fainelli (1):
-      pwm: bcm2835: Allow building for ARCH_BRCMSTB
-
-Gustavo A. R. Silva (1):
-      pwm: sun4i: Fix inconsistent IS_ERR and PTR_ERR
-
-Jernej Skrabec (4):
-      pwm: sun4i: Add an optional probe for reset line
-      pwm: sun4i: Add an optional probe for bus clock
-      pwm: sun4i: Add support to output source clock directly
-      pwm: sun4i: Add support for H6 PWM
-
-Krzysztof Kozlowski (1):
-      pwm: Fix minor Kconfig whitespace issues
-
-Rasmus Villemoes (5):
-      pwm: mxs: Implement ->apply()
-      pwm: mxs: Remove legacy methods
-      pwm: mxs: Add support for inverse polarity
-      dt-bindings: pwm: mxs-pwm: Increase #pwm-cells
-      pwm: mxs: Avoid a division in mxs_pwm_apply()
-
-Thierry Reding (5):
-      pwm: Read initial hardware state at request time
-      pwm: cros-ec: Cache duty cycle value
-      pwm: imx27: Cache duty cycle register value
-      pwm: imx27: Unconditionally write state to hardware
-      pwm: sun4i: Initialize variables before use
-
-Uwe Kleine-König (14):
-      pwm: atmel: Add a hint where to find hardware documentation
-      pwm: atmel: Use a constant for maximum prescale value
-      pwm: atmel: Replace loop in prescale calculation by ad-hoc calculation
-      pwm: atmel: Document known weaknesses of both hardware and software
-      pwm: atmel: Use register accessors for channels
-      pwm: atmel: Implement .get_state()
-      pwm: rcar: Drop useless call to pwm_get_state()
-      pwm: rcar: Document inability to set duty_cycle = 0
-      pwm: Implement tracing for .get_state() and .apply_state()
-      pwm: omap-dmtimer: Remove PWM chip in .remove before making it unfunctional
-      pwm: omap-dmtimer: Simplify error handling
-      pwm: omap-dmtimer: put_device() after of_find_device_by_node()
-      pwm: omap-dmtimer: Allow compiling with COMPILE_TEST
-      pwm: sun4i: Narrow scope of local variable
-
-yu kuai (1):
-      pwm: Remove set but not set variable 'pwm'
-
- Documentation/devicetree/bindings/pwm/mxs-pwm.txt |   4 +-
- drivers/pwm/Kconfig                               |   9 +-
- drivers/pwm/core.c                                |  13 +-
- drivers/pwm/pwm-atmel.c                           |  87 ++++++++--
- drivers/pwm/pwm-cros-ec.c                         |  58 ++++++-
- drivers/pwm/pwm-imx27.c                           | 147 +++++++++-------
- drivers/pwm/pwm-mxs.c                             | 101 ++++++-----
- drivers/pwm/pwm-omap-dmtimer.c                    |  54 ++++--
- drivers/pwm/pwm-pca9685.c                         |   4 -
- drivers/pwm/pwm-rcar.c                            |   5 +-
- drivers/pwm/pwm-stm32.c                           |   4 +-
- drivers/pwm/pwm-sun4i.c                           | 194 ++++++++++++++++++----
- include/trace/events/pwm.h                        |  58 +++++++
- 13 files changed, 539 insertions(+), 199 deletions(-)
- create mode 100644 include/trace/events/pwm.h
+Reviewed-by: Rob Herring <robh@kernel.org>
