@@ -2,257 +2,165 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D9641595F5
-	for <lists+linux-pwm@lfdr.de>; Tue, 11 Feb 2020 18:07:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B4C9C15A1FF
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Feb 2020 08:29:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbgBKRH5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 11 Feb 2020 12:07:57 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:47654 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728288AbgBKRH5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 11 Feb 2020 12:07:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581440875; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xgItvpCNbJDz/UIiVzhMMM+Wb3DBs+yQ6k5XOrz0yAY=;
-        b=fZIoonsKnuQM1ClAig2NvI/hbDcQJYCagXnvXi27ti9MpHX/x+3BSflXeoKglhxCRFZg2P
-        Ag/FC/hlO0CyxaRf9cqSixexNdJCV+xWitSykp0nijvJfbNVjmNvgO7jzOjA3KqcdavarJ
-        xBPWyqq5tutzwQG0F6LQSr6xeBx6mGo=
-Date:   Tue, 11 Feb 2020 14:07:39 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3 1/3] pwm: jz4740: Use clocks from TCU driver
-To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
+        id S1728279AbgBLH3T (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Feb 2020 02:29:19 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41247 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728192AbgBLH3S (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Feb 2020 02:29:18 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j1mSO-00025W-Fu; Wed, 12 Feb 2020 08:29:12 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j1mSN-0001bJ-3P; Wed, 12 Feb 2020 08:29:11 +0100
+Date:   Wed, 12 Feb 2020 08:29:11 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
         linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Message-Id: <1581440859.3.2@crapouillou.net>
-In-Reply-To: <20200211164625.2z4i5w6gp23eiszx@pengutronix.de>
-References: <20191210152734.39588-1-paul@crapouillou.net>
-        <20200211164625.2z4i5w6gp23eiszx@pengutronix.de>
+        Artur Rojek <contact@artur-rojek.eu>, kernel@pengutronix.de,
+        linux-clk@vger.kernel.org
+Subject: About rounding in the clk framework [Was: Re: [PATCH 4/7] pwm:
+ jz4740: Improve algorithm of clock calculation]
+Message-ID: <20200212072911.nstwj7dgpvceebpy@pengutronix.de>
+References: <20190812214838.e5hyhnlcyykjfvsb@pengutronix.de>
+ <1565648183.2007.3@crapouillou.net>
+ <20190813052726.g37upws5rlvrszc4@pengutronix.de>
+ <1565694066.1856.1@crapouillou.net>
+ <20190813123331.m4ttfhcgt6wyrcfi@pengutronix.de>
+ <1565700448.1856.2@crapouillou.net>
+ <20190813140903.rdwy7p3mhwetmlnt@pengutronix.de>
+ <1565799035.1984.0@crapouillou.net>
+ <20190814173218.zhg4se3pppano5m3@pengutronix.de>
+ <1571662077.3.1@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1571662077.3.1@crapouillou.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
+Hello Stephen, hello Michael,
 
+first some words about the context for the newcomers in this thread (or
+those who already got the earlier mails some time ago and obliterated the
+details):
 
-Le mar., f=E9vr. 11, 2020 at 17:46, Uwe Kleine-K=F6nig=20
-<u.kleine-koenig@pengutronix.de> a =E9crit :
-> hello Paul,
->=20
-> thanks for the ping, I lost your series from my radar.
->=20
-> On Tue, Dec 10, 2019 at 04:27:32PM +0100, Paul Cercueil wrote:
->>  The ingenic-timer "TCU" driver provides us with clocks, that can be
->>  (un)gated, reparented or reclocked from devicetree, instead of=20
->> having
->>  these settings hardcoded in this driver.
->>=20
->>  Each PWM channel's clk pointer is stored in PWM chip data to keep
->>  the code simple. The calls to arch-specific timer code is replaced=20
->> with
->>  standard clock API calls to start and stop each channel's clock.
->>=20
->>  While this driver is devicetree-compatible, it is never (as of now)
->>  probed from devicetree, so this change does not introduce a ABI=20
->> problem
->>  with current devicetree files.
->>=20
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  Tested-by: Mathieu Malaterre <malat@debian.org>
->>  Tested-by: Artur Rojek <contact@artur-rojek.eu>
->>  ---
->>=20
->>  Notes:
->>      v2: This patch is now before the patch introducing regmap, so=20
->> the code
->>      	has changed a bit.
->>      v3: - Use %pe printf specifier to print error
->>      	- Update commit message
->>      	- Removed call to jz4740_timer_set_ctrl() in jz4740_pwm_free()=20
->> which
->>      	  was reseting the clock's parent.
->>=20
->>   drivers/pwm/Kconfig      |  1 +
->>   drivers/pwm/pwm-jz4740.c | 53=20
->> +++++++++++++++++++++++++++++-----------
->>   2 files changed, 40 insertions(+), 14 deletions(-)
->>=20
->>  diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->>  index bd21655c37a6..15d3816341f3 100644
->>  --- a/drivers/pwm/Kconfig
->>  +++ b/drivers/pwm/Kconfig
->>  @@ -225,6 +225,7 @@ config PWM_IMX_TPM
->>   config PWM_JZ4740
->>   	tristate "Ingenic JZ47xx PWM support"
->>   	depends on MACH_INGENIC
->>  +	depends on COMMON_CLK
->>   	help
->>   	  Generic PWM framework driver for Ingenic JZ47xx based
->>   	  machines.
->>  diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
->>  index 9d78cc21cb12..ee50ac5fabb6 100644
->>  --- a/drivers/pwm/pwm-jz4740.c
->>  +++ b/drivers/pwm/pwm-jz4740.c
->>  @@ -24,7 +24,6 @@
->>=20
->>   struct jz4740_pwm_chip {
->>   	struct pwm_chip chip;
->>  -	struct clk *clk;
->>   };
->>=20
->>   static inline struct jz4740_pwm_chip *to_jz4740(struct pwm_chip=20
->> *chip)
->>  @@ -34,6 +33,11 @@ static inline struct jz4740_pwm_chip=20
->> *to_jz4740(struct pwm_chip *chip)
->>=20
->>   static int jz4740_pwm_request(struct pwm_chip *chip, struct=20
->> pwm_device *pwm)
->>   {
->>  +	struct jz4740_pwm_chip *jz =3D to_jz4740(chip);
->>  +	struct clk *clk;
->>  +	char clk_name[16];
->>  +	int ret;
->>  +
->>   	/*
->>   	 * Timers 0 and 1 are used for system tasks, so they are=20
->> unavailable
->>   	 * for use as PWMs.
->>  @@ -41,16 +45,32 @@ static int jz4740_pwm_request(struct pwm_chip=20
->> *chip, struct pwm_device *pwm)
->>   	if (pwm->hwpwm < 2)
->>   		return -EBUSY;
->>=20
->>  -	jz4740_timer_start(pwm->hwpwm);
->>  +	snprintf(clk_name, sizeof(clk_name), "timer%u", pwm->hwpwm);
->>  +
->>  +	clk =3D clk_get(chip->dev, clk_name);
->>  +	if (IS_ERR(clk)) {
->>  +		if (PTR_ERR(clk) !=3D -EPROBE_DEFER)
->>  +			dev_err(chip->dev, "Failed to get clock: %pe", clk);
->>  +		return PTR_ERR(clk);
->>  +	}
->>  +
->>  +	ret =3D clk_prepare_enable(clk);
->>  +	if (ret) {
->>  +		clk_put(clk);
->>  +		return ret;
->>  +	}
->>  +
->>  +	pwm_set_chip_data(pwm, clk);
->>=20
->>   	return 0;
->>   }
->>=20
->>   static void jz4740_pwm_free(struct pwm_chip *chip, struct=20
->> pwm_device *pwm)
->>   {
->>  -	jz4740_timer_set_ctrl(pwm->hwpwm, 0);
->>  +	struct clk *clk =3D pwm_get_chip_data(pwm);
->>=20
->>  -	jz4740_timer_stop(pwm->hwpwm);
->>  +	clk_disable_unprepare(clk);
->>  +	clk_put(clk);
->>   }
->>=20
->>   static int jz4740_pwm_enable(struct pwm_chip *chip, struct=20
->> pwm_device *pwm)
->>  @@ -91,17 +111,22 @@ static int jz4740_pwm_apply(struct pwm_chip=20
->> *chip, struct pwm_device *pwm,
->>   			    const struct pwm_state *state)
->>   {
->>   	struct jz4740_pwm_chip *jz4740 =3D to_jz4740(pwm->chip);
->>  +	struct clk *clk =3D pwm_get_chip_data(pwm),
->>  +		   *parent_clk =3D clk_get_parent(clk);
->>  +	unsigned long rate, period, duty;
->>   	unsigned long long tmp;
->>  -	unsigned long period, duty;
->>   	unsigned int prescaler =3D 0;
->>   	uint16_t ctrl;
->>  +	int err;
->>=20
->>  -	tmp =3D (unsigned long long)clk_get_rate(jz4740->clk) *=20
->> state->period;
->>  +	rate =3D clk_get_rate(parent_clk);
->>  +	tmp =3D (unsigned long long)rate * state->period;
->>   	do_div(tmp, 1000000000);
->>   	period =3D tmp;
->>=20
->>   	while (period > 0xffff && prescaler < 6) {
->>   		period >>=3D 2;
->>  +		rate >>=3D 2;
->>   		++prescaler;
->>   	}
->>=20
->>  @@ -117,14 +142,18 @@ static int jz4740_pwm_apply(struct pwm_chip=20
->> *chip, struct pwm_device *pwm,
->>=20
->>   	jz4740_pwm_disable(chip, pwm);
->>=20
->>  +	err =3D clk_set_rate(clk, rate);
->>  +	if (err) {
->>  +		dev_err(chip->dev, "Unable to set rate: %d", err);
->>  +		return err;
->>  +	}
->=20
-> What I don't like here is that you use internal knowledge about the
-> clock to set a specific rate. Given this is a 1:1 conversion to hide=20
-> the
-> previously contained register accesses behind the clk API (which is a
-> fine move) this is ok. But IMHO this should be cleaned up to rely on=20
-> the
-> clk code. The more natural thing to do here would be to calculate the
-> rate you can work with and request that. Maybe add a todo-comment to
-> clean this up?
+The task at hand is to set the frequency of a parent clock to be able to
+setup a PWM to yield a certain period and duty cycle. For that there is
+an upper limit of the frequency and otherwise we want the clock to run
+as fast as possible[1].
 
-Yes, I am very aware of that - I had a patch to clean it up but we=20
-disagreed on the algorithm, so I left it for later, since these three=20
-patches are much more important for now. Not sure it needs a TODO, I=20
-plan to submit the cleanup patch once these are merged, but I can send=20
-a v4 if you prefer.
+On Mon, Oct 21, 2019 at 02:47:57PM +0200, Paul Cercueil wrote:
+> Le mer., août 14, 2019 at 19:32, Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> a écrit :
+> > On Wed, Aug 14, 2019 at 06:10:35PM +0200, Paul Cercueil wrote:
+> > > Le mar. 13 août 2019 à 16:09, Uwe =?iso-8859-1?q?Kleine-K=F6nig?= a écrit :
+> > > > On Tue, Aug 13, 2019 at 02:47:28PM +0200, Paul Cercueil wrote:
+> > > > > Le mar. 13 août 2019 à 14:33, Uwe Kleine-König a écrit :
+> > > > > > Using clk_round_rate correctly without additional knowledge is hard. If
+> > > > > > you assume at least some sane behaviour you'd still have to call it
+> > > > > > multiple times. Assuming maxrate is the maximal rate you can handle
+> > > > > > without overflowing your PWM registers you have to do:
+> > > > > >
+> > > > > > 	rate = maxrate;
+> > > > > > 	rounded_rate = clk_round_rate(clk, rate);
+> > > > > > 	while (rounded_rate > rate) {
+> > > > > > 		if (rate < rounded_rate - rate) {
+> > > > > > 			/*
+> > > > > > 			 * clk doesn't support a rate smaller than
+> > > > > > 			 * maxrate (or the round_rate callback doesn't
+> > > > > > 			 * round consistently).
+> > > > > > 			 */
+> > > > > > 			 return -ESOMETHING;
+> > > > > > 		}
+> > > > > > 		rate = rate - (rounded_rate - rate)
+> > > > > > 		rounded_rate = clk_round_rate(clk, rate);
+> > > > > > 	}
+> > > > > >
+> > > > > > 	return rate;
+> > > > > >
+> > > > > > Probably it would be sensible to put that in a function provided by the
+> > > > > > clk framework (maybe call it clk_round_rate_down and maybe with
+> > > > > > additional checks).
+> > > > >
+> > > > > clk_round_rate_down() has been refused multiple times in the past for
+> > > > > reasons that Stephen can explain.
+> > > >
+> > > > I'd be really interested in these reasons as I think the clk framework
+> > > > should make it easy to solve common tasks related to clocks. And finding
+> > > > out the biggest supported rate not bigger than a given maxrate is
+> > > > something I consider such a common task.
+> > > >
+> > > > The first hit I found when searching was
+> > > > https://lkml.org/lkml/2010/7/14/260 . In there Stephen suggested that
+> > > > clk_round_rate with the current semantic is hardly useful and suggested
+> > > > clk_round_rate_up() and clk_round_rate_down() himself.
+> > > 
+> > > That's from 2010, though.
+> > 
+> > If you have a better link please tell me.
+> > 
+> > > I agree that clk_round_rate_up() and clk_round_rate_down() should exist.
+> > > Even if they return -ENOSYS if it's not implemented for a given clock
+> > > controller.
+> > 
+> > ack.
 
->=20
->>  +
->>   	jz4740_timer_set_count(pwm->hwpwm, 0);
->>   	jz4740_timer_set_duty(pwm->hwpwm, duty);
->>   	jz4740_timer_set_period(pwm->hwpwm, period);
->>=20
->>  -	ctrl =3D JZ_TIMER_CTRL_PRESCALER(prescaler) | JZ_TIMER_CTRL_SRC_EXT=20
->> |
->>  -		JZ_TIMER_CTRL_PWM_ABBRUPT_SHUTDOWN;
->>  -
->>  -	jz4740_timer_set_ctrl(pwm->hwpwm, ctrl);
->>  +	ctrl =3D jz4740_timer_get_ctrl(pwm->hwpwm);
->>  +	ctrl |=3D JZ_TIMER_CTRL_PWM_ABBRUPT_SHUTDOWN;
->>=20
->>   	switch (state->polarity) {
->>   	case PWM_POLARITY_NORMAL:
->>  @@ -158,10 +187,6 @@ static int jz4740_pwm_probe(struct=20
->> platform_device *pdev)
->>   	if (!jz4740)
->>   		return -ENOMEM;
->>=20
->>  -	jz4740->clk =3D devm_clk_get(&pdev->dev, "ext");
->>  -	if (IS_ERR(jz4740->clk))
->>  -		return PTR_ERR(jz4740->clk);
->=20
-> Huh, jz4740->clk was never enabled?
+Can you please explain what is the reason why clk_round_rate_up/down()
+is a bad idea? Would it help to create a patch that introduces these
+functions to get the discussion going?
 
-Correct. The "ext" clock is an external oscillator that is always=20
-enabled, so the code just didn't bother calling clk_enable (but it's a=20
-bug of course).
+> > > > > > > I came up with a much smarter alternative, that doesn't rely on the rounding
+> > > > > > > method of clk_round_rate, and which is better overall (no loop needed). It
+> > > > > > > sounds to me like you're bashing the code without making the effort to
+> > > > > > > understand what it does.
+> > > > > > >
+> > > > > > > Thierry called it a "neat trick"
+> > > > > > > (https://patchwork.kernel.org/patch/10836879/) so it cannot be as bad as you
+> > > > > > > say.
+> > > > > > [...]
+> > > > > [...]
+> > > >
+> > > > So I think the code works indeed, but it feels like abusing
+> > > > clk_set_max_rate. So I'd like to see some words from Stephen about this
+> > > > procedure.
 
-Cheers,
--Paul
+The approach here was as follows:
 
-=
+	clk_set_rate(clk, parentrate);
+	clk_set_max_rate(clk, maxfreq);
 
+I don't know what the exact purpose of clk_set_max_rate() is, but it
+seems questionable to me if it is supposed to be used like that. (As a
+side note: According to the FIXME in clk_set_rate_range() it doesn't even
+guarantee that the rate of clk is <= maxfreq after the call.
+clk_round_rate_down() would help here, too ...)
+
+Best regards
+Uwe
+
+[1] This isn't necessarily the best clk freq, but a reasonable to work
+    with.
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
