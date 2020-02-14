@@ -2,40 +2,39 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EE91415F063
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Feb 2020 18:55:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A8F615EEA9
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Feb 2020 18:42:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388405AbgBNP5z (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 14 Feb 2020 10:57:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41386 "EHLO mail.kernel.org"
+        id S1729490AbgBNRmD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 14 Feb 2020 12:42:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388398AbgBNP5y (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:54 -0500
+        id S2389671AbgBNQDd (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5E6224682;
-        Fri, 14 Feb 2020 15:57:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 340C32187F;
+        Fri, 14 Feb 2020 16:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695873;
-        bh=y2KdCYZvWSq0h8YAq2s31CMB/GuJJswO/YD0CnIzWXQ=;
+        s=default; t=1581696213;
+        bh=IuS2CtTqepTc4chmTYqBB1uenb3nV/CDnvFzzHUVADM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E2Wmqvwz2gvVlP/c9xE0Q1blRG+pmpV94oeZAHc3w/Fu06awQZcAkYQtRUg7NvcLz
-         mBs6RInDiHw+kzRVw4Da2isWq1mKG9G7SprxaSdn3TMo2PWw9iik+FShPFtJqk7rZJ
-         lsoz9C2w4YZymQtKV+Sl+lBYWjs94tRJnrpzlVMk=
+        b=RYuWh1GvweCmS22pLM61U4ofQBCr2O/FfWhq6JUQ8sZ4K/sVSPyw3lVX/beOk3Sr7
+         KQCCMCSDtSc/00ab85LvkbxuB46dx03zs59ueZ/v1Trl2/OvLt2IBIhgdEKd28J5dB
+         HY0zOGc3xopfVY/jtT1S8fTIoJfS7z0GfbuyXku8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 418/542] pwm: Remove set but not set variable 'pwm'
-Date:   Fri, 14 Feb 2020 10:46:50 -0500
-Message-Id: <20200214154854.6746-418-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 077/459] pwm: omap-dmtimer: Simplify error handling
+Date:   Fri, 14 Feb 2020 10:55:27 -0500
+Message-Id: <20200214160149.11681-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -46,46 +45,80 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit 9871abffc81048e20f02e15d6aa4558a44ad53ea ]
+[ Upstream commit c4cf7aa57eb83b108d2d9c6c37c143388fee2a4d ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Instead of doing error handling in the middle of ->probe(), move error
+handling and freeing the reference to timer to the end.
 
-	drivers/pwm/pwm-pca9685.c: In function ‘pca9685_pwm_gpio_free’:
-	drivers/pwm/pwm-pca9685.c:162:21: warning: variable ‘pwm’ set but not used [-Wunused-but-set-variable]
+This fixes a resource leak as dm_timer wasn't freed when allocating
+*omap failed.
 
-It is never used, and so can be removed. In that case, hold and release
-the lock 'pca->lock' can be removed since nothing will be done between
-them.
+Implementation note: The put: label was never reached without a goto and
+ret being unequal to 0, so the removed return statement is fine.
 
-Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Fixes: 6604c6556db9 ("pwm: Add PWM driver for OMAP using dual-mode timers")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-pca9685.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/pwm/pwm-omap-dmtimer.c | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-index 168684b02ebce..b07bdca3d510d 100644
---- a/drivers/pwm/pwm-pca9685.c
-+++ b/drivers/pwm/pwm-pca9685.c
-@@ -159,13 +159,9 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
- static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
- {
- 	struct pca9685 *pca = gpiochip_get_data(gpio);
--	struct pwm_device *pwm;
+diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+index 00772fc534906..6cfeb0e1cc679 100644
+--- a/drivers/pwm/pwm-omap-dmtimer.c
++++ b/drivers/pwm/pwm-omap-dmtimer.c
+@@ -298,15 +298,10 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
+ 		goto put;
+ 	}
  
- 	pca9685_pwm_gpio_set(gpio, offset, 0);
- 	pm_runtime_put(pca->chip.dev);
--	mutex_lock(&pca->lock);
--	pwm = &pca->chip.pwms[offset];
--	mutex_unlock(&pca->lock);
+-put:
+-	of_node_put(timer);
+-	if (ret < 0)
+-		return ret;
+-
+ 	omap = devm_kzalloc(&pdev->dev, sizeof(*omap), GFP_KERNEL);
+ 	if (!omap) {
+-		pdata->free(dm_timer);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto err_alloc_omap;
+ 	}
+ 
+ 	omap->pdata = pdata;
+@@ -339,13 +334,28 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
+ 	ret = pwmchip_add(&omap->chip);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "failed to register PWM\n");
+-		omap->pdata->free(omap->dm_timer);
+-		return ret;
++		goto err_pwmchip_add;
+ 	}
+ 
++	of_node_put(timer);
++
+ 	platform_set_drvdata(pdev, omap);
+ 
+ 	return 0;
++
++err_pwmchip_add:
++
++	/*
++	 * *omap is allocated using devm_kzalloc,
++	 * so no free necessary here
++	 */
++err_alloc_omap:
++
++	pdata->free(dm_timer);
++put:
++	of_node_put(timer);
++
++	return ret;
  }
  
- static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
+ static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
 -- 
 2.20.1
 
