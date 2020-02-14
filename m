@@ -2,153 +2,101 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04C1715F6BB
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Feb 2020 20:22:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CE2A15F91E
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Feb 2020 22:55:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387867AbgBNTWY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 14 Feb 2020 14:22:24 -0500
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:15902 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387781AbgBNTWX (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 14 Feb 2020 14:22:23 -0500
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 14 Feb 2020 11:22:23 -0800
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 14 Feb 2020 11:22:23 -0800
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 3E17E4A82; Fri, 14 Feb 2020 11:22:23 -0800 (PST)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v6 2/2] pwm: core: Convert period and duty cycle to u64
-Date:   Fri, 14 Feb 2020 11:22:17 -0800
-Message-Id: <2458595b274728b7ab46d4e397040f9d4d10fabc.1581706694.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1581706694.git.gurus@codeaurora.org>
-References: <cover.1581706694.git.gurus@codeaurora.org>
-In-Reply-To: <cover.1581706694.git.gurus@codeaurora.org>
-References: <cover.1581706694.git.gurus@codeaurora.org>
+        id S2389159AbgBNVzF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 14 Feb 2020 16:55:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59432 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730578AbgBNVyb (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 14 Feb 2020 16:54:31 -0500
+Received: from localhost (unknown [65.119.211.164])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 648D32081E;
+        Fri, 14 Feb 2020 21:54:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581717270;
+        bh=KC2EqCX36rIaa4NQzM328X7fLfPVUdGEtFfLUuvTpbw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BW+jrXjButL3uDsrITGfSweEsGLI98mjkB4OM1FQXUSDM3aCqWYAq0SBqTkJW/MJG
+         0gu6XycEZYffr55KhFzmj+dhPoEi3A+VsBhG4Dm0sc9BTfpC1n8tdc4GX8ul13Jd8k
+         AIejd/6ZF/UKNaL4U0pDDpoWOIzaMQYMul/eXRl4=
+Date:   Fri, 14 Feb 2020 16:46:00 -0500
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, yu kuai <yukuai3@huawei.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.5 418/542] pwm: Remove set but not set variable
+ 'pwm'
+Message-ID: <20200214214600.GB4193448@kroah.com>
+References: <20200214154854.6746-1-sashal@kernel.org>
+ <20200214154854.6746-418-sashal@kernel.org>
+ <20200214174014.lfnhsl6d7nyfkfbm@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200214174014.lfnhsl6d7nyfkfbm@pengutronix.de>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Because period and duty cycle are defined as ints with units of
-nanoseconds, the maximum time duration that can be set is limited to
-~2.147 seconds. Change their definitions to u64 in the structs of the
-PWM framework so that higher durations may be set.
+On Fri, Feb 14, 2020 at 06:40:14PM +0100, Uwe Kleine-König wrote:
+> Hello Sasha,
+> 
+> On Fri, Feb 14, 2020 at 10:46:50AM -0500, Sasha Levin wrote:
+> > From: yu kuai <yukuai3@huawei.com>
+> > 
+> > [ Upstream commit 9871abffc81048e20f02e15d6aa4558a44ad53ea ]
+> > 
+> > Fixes gcc '-Wunused-but-set-variable' warning:
+> > 
+> > 	drivers/pwm/pwm-pca9685.c: In function ‘pca9685_pwm_gpio_free’:
+> > 	drivers/pwm/pwm-pca9685.c:162:21: warning: variable ‘pwm’ set but not used [-Wunused-but-set-variable]
+> > 
+> > It is never used, and so can be removed. In that case, hold and release
+> > the lock 'pca->lock' can be removed since nothing will be done between
+> > them.
+> > 
+> > Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
+> > Signed-off-by: yu kuai <yukuai3@huawei.com>
+> > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > ---
+> >  drivers/pwm/pwm-pca9685.c | 4 ----
+> >  1 file changed, 4 deletions(-)
+> > 
+> > diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+> > index 168684b02ebce..b07bdca3d510d 100644
+> > --- a/drivers/pwm/pwm-pca9685.c
+> > +++ b/drivers/pwm/pwm-pca9685.c
+> > @@ -159,13 +159,9 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
+> >  static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
+> >  {
+> >  	struct pca9685 *pca = gpiochip_get_data(gpio);
+> > -	struct pwm_device *pwm;
+> >  
+> >  	pca9685_pwm_gpio_set(gpio, offset, 0);
+> >  	pm_runtime_put(pca->chip.dev);
+> > -	mutex_lock(&pca->lock);
+> > -	pwm = &pca->chip.pwms[offset];
+> > -	mutex_unlock(&pca->lock);
+> 
+> Even though I bet this change won't introduce a regression, it only
+> fixes a harmless warning. So I wonder if it objectively qualifies to be
+> applied for stable.
 
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
----
- drivers/pwm/core.c  |  4 ++--
- drivers/pwm/sysfs.c |  8 ++++----
- include/linux/pwm.h | 12 ++++++------
- 3 files changed, 12 insertions(+), 12 deletions(-)
+See my response to another one of these types of patches.  In order
+words, I agree, these aren't needed unless they are prereqs for other
+real fixes.
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 5a7f659..81aa3c2 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -1163,8 +1163,8 @@ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
- 		if (state.enabled)
- 			seq_puts(s, " enabled");
- 
--		seq_printf(s, " period: %u ns", state.period);
--		seq_printf(s, " duty: %u ns", state.duty_cycle);
-+		seq_printf(s, " period: %llu ns", state.period);
-+		seq_printf(s, " duty: %llu ns", state.duty_cycle);
- 		seq_printf(s, " polarity: %s",
- 			   state.polarity ? "inverse" : "normal");
- 
-diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-index 2389b86..449dbc0 100644
---- a/drivers/pwm/sysfs.c
-+++ b/drivers/pwm/sysfs.c
-@@ -42,7 +42,7 @@ static ssize_t period_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.period);
-+	return sprintf(buf, "%llu\n", state.period);
- }
- 
- static ssize_t period_store(struct device *child,
-@@ -52,10 +52,10 @@ static ssize_t period_store(struct device *child,
- 	struct pwm_export *export = child_to_pwm_export(child);
- 	struct pwm_device *pwm = export->pwm;
- 	struct pwm_state state;
--	unsigned int val;
-+	u64 val;
- 	int ret;
- 
--	ret = kstrtouint(buf, 0, &val);
-+	ret = kstrtou64(buf, 0, &val);
- 	if (ret)
- 		return ret;
- 
-@@ -77,7 +77,7 @@ static ssize_t duty_cycle_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.duty_cycle);
-+	return sprintf(buf, "%llu\n", state.duty_cycle);
- }
- 
- static ssize_t duty_cycle_store(struct device *child,
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 0ef808d..b53f13d 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -39,7 +39,7 @@ enum pwm_polarity {
-  * current PWM hardware state.
-  */
- struct pwm_args {
--	unsigned int period;
-+	u64 period;
- 	enum pwm_polarity polarity;
- };
- 
-@@ -56,8 +56,8 @@ enum {
-  * @enabled: PWM enabled status
-  */
- struct pwm_state {
--	unsigned int period;
--	unsigned int duty_cycle;
-+	u64 period;
-+	u64 duty_cycle;
- 	enum pwm_polarity polarity;
- 	bool enabled;
- };
-@@ -105,13 +105,13 @@ static inline bool pwm_is_enabled(const struct pwm_device *pwm)
- 	return state.enabled;
- }
- 
--static inline void pwm_set_period(struct pwm_device *pwm, unsigned int period)
-+static inline void pwm_set_period(struct pwm_device *pwm, u64 period)
- {
- 	if (pwm)
- 		pwm->state.period = period;
- }
- 
--static inline unsigned int pwm_get_period(const struct pwm_device *pwm)
-+static inline u64 pwm_get_period(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
-@@ -126,7 +126,7 @@ static inline void pwm_set_duty_cycle(struct pwm_device *pwm, unsigned int duty)
- 		pwm->state.duty_cycle = duty;
- }
- 
--static inline unsigned int pwm_get_duty_cycle(const struct pwm_device *pwm)
-+static inline u64 pwm_get_duty_cycle(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+thanks,
 
+greg k-h
