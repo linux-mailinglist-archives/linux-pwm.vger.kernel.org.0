@@ -2,36 +2,37 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 41EFD15E1C3
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Feb 2020 17:20:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 219C415E1C5
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Feb 2020 17:20:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405170AbgBNQUQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 14 Feb 2020 11:20:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53840 "EHLO mail.kernel.org"
+        id S2405197AbgBNQUU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 14 Feb 2020 11:20:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404796AbgBNQUP (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:20:15 -0500
+        id S2405195AbgBNQUU (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:20:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFB282473A;
-        Fri, 14 Feb 2020 16:20:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E93352472C;
+        Fri, 14 Feb 2020 16:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697214;
-        bh=OjlB9AVcPer6GvN/IsZeDID4gRoeRc0i8+HUSWT00wc=;
+        s=default; t=1581697219;
+        bh=Wt3NAeACM4K4qNvn/QVuLHb67CRV4buzK2nKtMV9C+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zwKKq5qeAXoMKrX2OlDi/7/7ZA9VXmbP6GpFNgdUc3DjpRUVUHSpjWOSWiGOwM7P1
-         Jsbc07QsxkrtQM0SvHwidiB9UfW1883hukIPgeZ8VQHyvcPS19LDQtiaIgMguXhCc6
-         RFsQXEBwqkyLYnt3F3EGmG2b6jzzWzS9jx1QpeDE=
+        b=crNLKs3WcGdSvFC88YyXvGbk0YrQoX/hQtxgBBlwHPgMIRvAocFW3WnG2susfkRcS
+         0VFXLAnhXpu2bVdSDw0vqEr8o3zpDuReoMJdKK83NyEhkQvLwNhtdGwP0kkV0ZvNbI
+         wLERTA7JUun2YxEj4rzwWaHno2Z3EMXh9c9enKMM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+Cc:     yu kuai <yukuai3@huawei.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 139/186] pwm: omap-dmtimer: Remove PWM chip in .remove before making it unfunctional
-Date:   Fri, 14 Feb 2020 11:16:28 -0500
-Message-Id: <20200214161715.18113-139-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 143/186] pwm: Remove set but not set variable 'pwm'
+Date:   Fri, 14 Feb 2020 11:16:32 -0500
+Message-Id: <20200214161715.18113-143-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -45,47 +46,46 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit 43efdc8f0e6d7088ec61bd55a73bf853f002d043 ]
+[ Upstream commit 9871abffc81048e20f02e15d6aa4558a44ad53ea ]
 
-In the old code (e.g.) mutex_destroy() was called before
-pwmchip_remove(). Between these two calls it is possible that a PWM
-callback is used which tries to grab the mutex.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Fixes: 6604c6556db9 ("pwm: Add PWM driver for OMAP using dual-mode timers")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+	drivers/pwm/pwm-pca9685.c: In function ‘pca9685_pwm_gpio_free’:
+	drivers/pwm/pwm-pca9685.c:162:21: warning: variable ‘pwm’ set but not used [-Wunused-but-set-variable]
+
+It is never used, and so can be removed. In that case, hold and release
+the lock 'pca->lock' can be removed since nothing will be done between
+them.
+
+Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-omap-dmtimer.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/pwm/pwm-pca9685.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-index 5ad42f33e70c1..2e15acf13893d 100644
---- a/drivers/pwm/pwm-omap-dmtimer.c
-+++ b/drivers/pwm/pwm-omap-dmtimer.c
-@@ -337,6 +337,11 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
- static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
+diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+index 567f5e2771c47..e1e5dfcb16f36 100644
+--- a/drivers/pwm/pwm-pca9685.c
++++ b/drivers/pwm/pwm-pca9685.c
+@@ -170,13 +170,9 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
+ static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
  {
- 	struct pwm_omap_dmtimer_chip *omap = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&omap->chip);
-+	if (ret)
-+		return ret;
+ 	struct pca9685 *pca = gpiochip_get_data(gpio);
+-	struct pwm_device *pwm;
  
- 	if (pm_runtime_active(&omap->dm_timer_pdev->dev))
- 		omap->pdata->stop(omap->dm_timer);
-@@ -345,7 +350,7 @@ static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
- 
- 	mutex_destroy(&omap->mutex);
- 
--	return pwmchip_remove(&omap->chip);
-+	return 0;
+ 	pca9685_pwm_gpio_set(gpio, offset, 0);
+ 	pm_runtime_put(pca->chip.dev);
+-	mutex_lock(&pca->lock);
+-	pwm = &pca->chip.pwms[offset];
+-	mutex_unlock(&pca->lock);
  }
  
- static const struct of_device_id pwm_omap_dmtimer_of_match[] = {
+ static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
 -- 
 2.20.1
 
