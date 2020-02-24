@@ -2,51 +2,51 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3469816A4A2
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 Feb 2020 12:13:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9259816A4A8
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 Feb 2020 12:14:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbgBXLNy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 24 Feb 2020 06:13:54 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33470 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727185AbgBXLNy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Feb 2020 06:13:54 -0500
-Received: by mail-wr1-f68.google.com with SMTP id u6so9926237wrt.0
-        for <linux-pwm@vger.kernel.org>; Mon, 24 Feb 2020 03:13:52 -0800 (PST)
+        id S1727252AbgBXLOV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 24 Feb 2020 06:14:21 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33511 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727197AbgBXLOV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Feb 2020 06:14:21 -0500
+Received: by mail-wm1-f65.google.com with SMTP id m10so10446417wmc.0
+        for <linux-pwm@vger.kernel.org>; Mon, 24 Feb 2020 03:14:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=Mh1d0aGZXBcGpL9RuplRZdSm3AVkRnYe3oS1toATjYE=;
-        b=tL8VJS4ob05hCQrgIx8wpD7rln8HVS80aBRN3zNf1hHjE5+2uwPcKZQD4kpRNRUzVw
-         y2HNshaAjNmGi7Sov6ebNaGRnmUuoFACFUBstueEhotMxvTvqQP6CzX4Zyo8FSbAuDv7
-         QFlK9ZOzujld6GYBDPa5xRg/5EYIRSZAA3fBy+2iVGLWMDfS3nb+faUGolfyc32UvgH7
-         fOzaRlXd8bsTSYUCHK0fvC4P4jRXkI/34JtDLW7OdDztGP0OEEChAL70D0tjb+ufFEUK
-         rLsnnXpGZsCfYYm/lo66E9zepWp7JS8qnQUEY+oX7MA8c390zjk+EDH5IkBdp0bACXEq
-         fbVw==
+        bh=rEL57opEJN8/M1hHG6RBhacoGA9dbpZI+caSv19yBPg=;
+        b=Y2SB6Ot1NpA4yEtYlNlGVS6WbbYy62GylUKjUPQ9jAQ5GDwkSw/7FzCVsSoKPfcCsg
+         VgStUYDM9NJEfKHihK4r/mgnsJtAhKNvw8ImGDx1p+kW1l7PWONzHMwtcK0p04PnOI+k
+         DYBtasmbocFV3+GWMMUwzLg5E39R6/neBgial1l2jN5cMSC6aUNPmaGb7ytsYwEMOenL
+         sXCVQtR42MbPQgo811lhsruXf2x84ZVoVB4C20djzpEc1k9amNtHyLK60FArjQ0TjLcl
+         egt2/DenXPKPfCl9gWypKExnmSXDTJ/bBABMEWP2jBIvWDY1IfnF/JOlFG5PMLg1wHG8
+         ZWAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=Mh1d0aGZXBcGpL9RuplRZdSm3AVkRnYe3oS1toATjYE=;
-        b=dwsQ6qDUTFEHeJNWRUckTBZYYldkQudjGFaymptlaPMLZoEdhfXMPfRSkANISFmyDw
-         0lDHy0tYAyRfF0BP/xZ9SCz6yuFgvD5hOe1lwHH0tsGgbtOj3ScC3DZgMmboDqFOoPPr
-         M+5P+oJzmyABSApHOGE9vZMxWVrFlPOl68UtBndikJtpDwJvUQ4bYmCGVK3flNCVzbvr
-         II2Hl24gJPrkF0V8h5mE1TI0JoNBg20rT5UvBm8XndKQTCtb8712Kg++BToFZuyFHDUH
-         rdlQPbymF+8yS9AqKzGMaEk4WMy1/duajt6jE9TsGqKiUICFThLKSUugBc6WsxT2S6Kj
-         BiMg==
-X-Gm-Message-State: APjAAAWihT24+Cuk3UhcVilA8TsPi8LyISWCVVMu4b26Kbk8FsOt/HOz
-        iCLDAzX/K7MW/LaFpVHcEFKfIw==
-X-Google-Smtp-Source: APXvYqzSwHgv7l1zqhx5avrCHp4FE1Qp8CaMgplZWJajrSVOxXJtGoOGvCDqGgzPuchDv1c+GXos3w==
-X-Received: by 2002:a5d:5381:: with SMTP id d1mr65289586wrv.259.1582542832122;
-        Mon, 24 Feb 2020 03:13:52 -0800 (PST)
+        bh=rEL57opEJN8/M1hHG6RBhacoGA9dbpZI+caSv19yBPg=;
+        b=DOpOEwCZgrfVKspdK1BwBhxdD0FABdmX+NYch1QqnHycOT4uRWclCQc9LppMZ18MGF
+         YGK4ZKMkQ8dr/R8WLsUQWJHO89JUASHiq4uSnbgHhj4dPGX9Oucz22/kWEMeYaIm0Jqr
+         lJpIzyBNoKbxQnvOCzuq76KBwzicsU45NSOqh22PUq57g+ubBEiMDHZ/SeuimiovBA5q
+         rz1y4qZxp9mC6iG21xldD/DstxheSf7/xR72Ig9FRX5Kix+9qjZU/sCj/7v8hJPegUEs
+         sAKjPTKmdA+ZUcQH/wDQhzlPjPgYcgIzCYYP9q/O0amrAx/q/U1kLzVVkRdYQlE3jn5k
+         +z6A==
+X-Gm-Message-State: APjAAAWgUJL3RXAxuBhyGM74p9y4a8GhJCdnvNByPqawpsh30ASBK2oG
+        b3hXUk+Lx7mi98EIAKkEXkj9yQ==
+X-Google-Smtp-Source: APXvYqyYDybLl6oJArR1E7Ob1XgcUlj3eWE/hkbMJ5C6QLsbf6VZzxRxzRyzLqwVHI9YWmytlHTlxw==
+X-Received: by 2002:a1c:44d:: with SMTP id 74mr22455122wme.53.1582542858178;
+        Mon, 24 Feb 2020 03:14:18 -0800 (PST)
 Received: from dell ([2.31.163.122])
-        by smtp.gmail.com with ESMTPSA id d17sm12802127wmb.36.2020.02.24.03.13.51
+        by smtp.gmail.com with ESMTPSA id r5sm17483330wrt.43.2020.02.24.03.14.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 03:13:51 -0800 (PST)
-Date:   Mon, 24 Feb 2020 11:14:22 +0000
+        Mon, 24 Feb 2020 03:14:17 -0800 (PST)
+Date:   Mon, 24 Feb 2020 11:14:48 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Jeff LaBundy <jeff@labundy.com>
 Cc:     dmitry.torokhov@gmail.com, thierry.reding@gmail.com,
@@ -55,16 +55,16 @@ Cc:     dmitry.torokhov@gmail.com, thierry.reding@gmail.com,
         linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
         pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
         mark.rutland@arm.com
-Subject: Re: [PATCH v5 1/7] dt-bindings: Add bindings for Azoteq
+Subject: Re: [PATCH v5 2/7] mfd: Add support for Azoteq
  IQS620A/621/622/624/625
-Message-ID: <20200224111422.GR3494@dell>
+Message-ID: <20200224111448.GS3494@dell>
 References: <1581895931-6056-1-git-send-email-jeff@labundy.com>
- <1581895931-6056-2-git-send-email-jeff@labundy.com>
+ <1581895931-6056-3-git-send-email-jeff@labundy.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1581895931-6056-2-git-send-email-jeff@labundy.com>
+In-Reply-To: <1581895931-6056-3-git-send-email-jeff@labundy.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
@@ -73,45 +73,80 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 On Sun, 16 Feb 2020, Jeff LaBundy wrote:
 
-> This patch adds device tree bindings for the Azoteq IQS620A, IQS621,
-> IQS622, IQS624 and IQS625 multi-function sensors.
-> 
-> A total of three bindings are presented (one MFD and two child nodes);
-> they are submitted as a single patch because the child node bindings
-> have no meaning in the absence of the MFD binding.
+> This patch adds core support for the Azoteq IQS620A, IQS621, IQS622,
+> IQS624 and IQS625 multi-function sensors.
 > 
 > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
 > Changes in v5:
->   - Corrected spelling of "data sheets" to "datasheets"
->   - Replaced words "additional air button" with "proximity-activated function"
->     in comment above first example
+>   - Merged iqs62x-core.c and iqs62x-tables.c into a single iqs62x.c
+>   - Corrected spelling of "data sheet" to "datasheet"
+>   - Added one line of whitespace in various places to improve readability
+>   - Replaced iqs62x->map with iqs62x->regmap throughout
+>   - Added the prox_settings member to the iqs62x_dev_desc struct and eliminated
+>     the ternary operator in iqs62x_dev_init to determine SAR UI enable register
+>     address
+>   - Added a comment in iqs62x_dev_init to explain the background for the bounds
+>     checking done on the IQS624/625 interval divider
+>   - Added #defines for the delays used within iqs62x_dev_init
+>   - Renamed iqs62x_fw_prs and iqs62x_fw_cb to iqs62x_firmware_parse and
+>     iqs62x_firmware_load, respectively
+>   - Updated the call to devm_mfd_add_devices to use PLATFORM_DEVID_NONE instead
+>     of -1 and printed "sub-devices" instead of "devices" in the error message
+>   - Dropped #defines for mfd_cell names in favor of the actual string names and
+>     collapsed mfd_cells with no other members into one line
+>   - Demoted iqs62x_devs to a static array as it is not used by any sub-devices
+>   - Removed unnecessary { IQS620A_DEV, ... } enum and IQS62X_NUM_DEV #define
+>   - Removed the soft reset and associated delay in iqs62x_probe to preserve any
+>     PWM-related changes made by a bootloader
+>   - Updated the comments in iqs62x_probe to highlight the significance of blank
+>     calibration registers and why the outer loop may be exited early
+>   - Made the first call to regmap_update_bits in iqs62x_suspend consistent with
+>     other instances in the series that set a single bit by passing all ones for
+>     the value instead of the mask
 > 
 > Changes in v4:
 >   - None
 > 
 > Changes in v3:
->   - Specified 'additionalProperties: false' within the parent MFD node and all
->     child nodes ("keys", "hall-switch-north/south" and "pwm")
->   - Defined the "hall-switch-north/south" child nodes unconditionally and then
->     inverted the subsequent if/then to filter them from devices for which that
->     functionality is unavailable
->   - Added Reviewed-by trailer
+>   - None
 > 
 > Changes in v2:
->   - Removed "prox" child node and moved "keys" and "pwm" child nodes to their
->     own bindings
->   - Replaced linux,fw-file property with more common firmware-name property
->   - Converted all bindings to YAML
+>   - Merged 'Copyright' and 'Author' lines into one in introductory comments
+>   - Replaced 'error' with 'ret' throughout
+>   - Updated iqs62x_dev_init to account for 4/8/16-MHz clock divider in start-up
+>     delays and replaced ATI timeout routine with regmap_read_poll_timeout
+>   - Added an error message to iqs62x_irq in case device status fails to be read
+>   - Replaced sw_num member of iqs62x_core with a local variable in iqs62x_probe
+>     as the former was unused anywhere else
+>   - Added comments throughout iqs62x_probe to clarify how devices are matched
+>     based on the presence of calibration data
+>   - Inverted the product and software number comparison logic in iqs62x_probe
+>     to avoid an else...continue branch
+>   - Changed iqs62x_probe from .probe callback to .probe_new callback, thereby
+>     eliminating the otherwise unused iqs62x_id array
+>   - Moved iqs62x_suspend and iqs62x_resume below iqs62x_remove
+>   - Eliminated tabbed alignment of regmap_config and i2c_driver struct members
+>   - Added register definitions for register addresses used in iqs621_cal_regs,
+>     iqs620at_cal_regs and iqs62x_devs arrays
+>   - Removed of_compatible string from IQS622 mfd_cell struct as its proximity
+>     (now ambient light) sensing functionality need not be represented using a
+>     child node
+>   - Dissolved union in iqs62x_event_data to allow simultaneous use of ir_flags
+>     and als_flags
+>   - Removed temp_flags member of iqs62x_event_data, IQS62X_EVENT_TEMP register
+>     enumeration and IQS62X_EVENT_UI_HI/LO from iqs620a_event_regs (thereby re-
+>     ducing IQS62X_EVENT_SIZE to 10) as they were unused
 > 
->  .../devicetree/bindings/input/iqs62x-keys.yaml     | 132 +++++++++++++++
->  Documentation/devicetree/bindings/mfd/iqs62x.yaml  | 179 +++++++++++++++++++++
->  .../devicetree/bindings/pwm/iqs620a-pwm.yaml       |  32 ++++
->  3 files changed, 343 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/iqs62x-keys.yaml
->  create mode 100644 Documentation/devicetree/bindings/mfd/iqs62x.yaml
->  create mode 100644 Documentation/devicetree/bindings/pwm/iqs620a-pwm.yaml
+>  drivers/mfd/Kconfig        |   13 +
+>  drivers/mfd/Makefile       |    1 +
+>  drivers/mfd/iqs62x.c       | 1063 ++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/iqs62x.h |  139 ++++++
+>  4 files changed, 1216 insertions(+)
+>  create mode 100644 drivers/mfd/iqs62x.c
+>  create mode 100644 include/linux/mfd/iqs62x.h
+
+Well done Jeff.  Good job.
 
 Applied, thanks.
 
