@@ -2,150 +2,90 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B4964171724
-	for <lists+linux-pwm@lfdr.de>; Thu, 27 Feb 2020 13:27:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FBD5171741
+	for <lists+linux-pwm@lfdr.de>; Thu, 27 Feb 2020 13:33:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgB0M1P (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 27 Feb 2020 07:27:15 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:55127 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728964AbgB0M1O (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 27 Feb 2020 07:27:14 -0500
-X-UUID: 34554e276c634975987a568c4faeb39c-20200227
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=plFDIzF9Fiu17fvO7G8TQ5xnG/gODrXfeoiTH6REiis=;
-        b=D84JCObwWnm6BqBtYz9XsjSVsOr/T3dleSOq9/R6oJGFpPi5RnwqW91jfR3pBqM0kb2yVNl7iwiLo3dJIZXpmWQKklKgXuQlQeDVpWsQkSSFfiZAnSM1QCVDDX6a+2x0GmmwkoZrp1vbgs9k+jaxbI0UsRq+X0coIaWIm0ei5MM=;
-X-UUID: 34554e276c634975987a568c4faeb39c-20200227
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 853755653; Thu, 27 Feb 2020 20:27:09 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkexhb01.mediatek.inc (172.21.101.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 27 Feb 2020 20:27:20 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 27 Feb 2020 20:27:10 +0800
-Message-ID: <1582806427.27775.1.camel@mtksdccf07>
-Subject: Re: [PATCH 1/1] pwm: mediatek: add longer period support
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        id S1728994AbgB0MdQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 27 Feb 2020 07:33:16 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43955 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728964AbgB0MdQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 27 Feb 2020 07:33:16 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j7ILr-00083D-5Z; Thu, 27 Feb 2020 13:33:15 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j7ILq-0005l7-Ir; Thu, 27 Feb 2020 13:33:14 +0100
+Date:   Thu, 27 Feb 2020 13:33:14 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-CC:     <linux-pwm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+To:     Sam Shih <sam.shih@mediatek.com>
+Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
-        <linux-mediatek@lists.infradead.org>,
-        "John Crispin" <john@phrozen.org>,
+        linux-mediatek@lists.infradead.org,
+        John Crispin <john@phrozen.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 27 Feb 2020 20:27:07 +0800
-In-Reply-To: <20200227105244.orwitjst3wzoqcsq@pengutronix.de>
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/1] pwm: mediatek: add longer period support
+Message-ID: <20200227123314.mkg6jqai64b3paxw@pengutronix.de>
 References: <1582789610-23133-1-git-send-email-sam.shih@mediatek.com>
-         <1582789610-23133-2-git-send-email-sam.shih@mediatek.com>
-         <20200227080450.rkvwfjx6vikn5ls3@pengutronix.de>
-         <1582797590.25607.10.camel@mtksdccf07>
-         <20200227105244.orwitjst3wzoqcsq@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+ <1582789610-23133-2-git-send-email-sam.shih@mediatek.com>
+ <20200227080450.rkvwfjx6vikn5ls3@pengutronix.de>
+ <1582797590.25607.10.camel@mtksdccf07>
+ <20200227105244.orwitjst3wzoqcsq@pengutronix.de>
+ <1582806427.27775.1.camel@mtksdccf07>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1582806427.27775.1.camel@mtksdccf07>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-SGVsbG8sDQoNCj4gDQo+IE9uIFRodSwgRmViIDI3LCAyMDIwIGF0IDA1OjU5OjUwUE0gKzA4MDAs
-IFNhbSBTaGloIHdyb3RlOg0KPiA+IE9uIFRodSwgMjAyMC0wMi0yNyBhdCAwOTowNCArMDEwMCwg
-VXdlIEtsZWluZS1Lw7ZuaWcgd3JvdGU6DQo+ID4gT24gVGh1LCBGZWIgMjcsIDIwMjAgYXQgMDM6
-NDY6NTBQTSArMDgwMCwgU2FtIFNoaWggd3JvdGU6DQo+ID4gPiA+IFRoZSBwd20gY2xvY2sgc291
-cmNlIGNvdWxkIGJlIGRpdmlkZWQgYnkgMTYyNSB3aXRoIFBXTV9DT04NCj4gPiA+ID4gQklUKDMp
-IHNldHRpbmcgaW4gbWVkaWF0ZWsgaGFyZHdhcmUuDQo+ID4gPiA+IA0KPiA+ID4gPiBUaGlzIHBh
-dGNoIGFkZCBzdXBwb3J0IGZvciBsb25nZXIgcHdtIHBlcmlvZCBjb25maWd1cmF0aW9uLA0KPiA+
-ID4gPiB3aGljaCBhbGxvd2luZyBibGlua2luZyBMRURzIHZpYSBwd20gaW50ZXJmYWNlLg0KPiA+
-ID4gPiANCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogU2FtIFNoaWggPHNhbS5zaGloQG1lZGlhdGVr
-LmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+ICBkcml2ZXJzL3B3bS9wd20tbWVkaWF0ZWsuYyB8
-IDIxICsrKysrKysrKysrKysrKysrLS0tLQ0KPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDE3IGlu
-c2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+ID4gPiA+IA0KPiA+ID4gPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9wd20vcHdtLW1lZGlhdGVrLmMNCmIvZHJpdmVycy9wd20vcHdtLW1lZGlhdGVr
-LmMNCj4gPiA+ID4gaW5kZXggYjk0ZTBkMDljMzAwLi45YWYzMDliZWEwMWEgMTAwNjQ0DQo+ID4g
-PiA+IC0tLSBhL2RyaXZlcnMvcHdtL3B3bS1tZWRpYXRlay5jDQo+ID4gPiA+ICsrKyBiL2RyaXZl
-cnMvcHdtL3B3bS1tZWRpYXRlay5jDQo+ID4gPiA+IEBAIC0xMjEsOCArMTIxLDggQEAgc3RhdGlj
-IGludCBwd21fbWVkaWF0ZWtfY29uZmlnKHN0cnVjdA0KcHdtX2NoaXANCj4gPiAqY2hpcCwgc3Ry
-dWN0IHB3bV9kZXZpY2UgKnB3bSwNCj4gPiA+ID4gIAkJCSAgICAgICBpbnQgZHV0eV9ucywgaW50
-IHBlcmlvZF9ucykNCj4gPiA+ID4gIHsNCj4gPiA+ID4gIAlzdHJ1Y3QgcHdtX21lZGlhdGVrX2No
-aXAgKnBjID0gdG9fcHdtX21lZGlhdGVrX2NoaXAoY2hpcCk7DQo+ID4gPiA+IC0JdTMyIGNsa2Rp
-diA9IDAsIGNudF9wZXJpb2QsIGNudF9kdXR5LCByZWdfd2lkdGggPSBQV01EV0lEVEgsDQo+ID4g
-PiA+IC0JICAgIHJlZ190aHJlcyA9IFBXTVRIUkVTOw0KPiA+ID4gPiArCXUzMiBjbGtkaXYgPSAw
-LCBjbGtzZWwgPSAwLCBjbnRfcGVyaW9kLCBjbnRfZHV0eSwNCj4gPiA+ID4gKwkgICAgcmVnX3dp
-ZHRoID0gUFdNRFdJRFRILCByZWdfdGhyZXMgPSBQV01USFJFUzsNCj4gPiA+ID4gIAl1NjQgcmVz
-b2x1dGlvbjsNCj4gPiA+ID4gIAlpbnQgcmV0Ow0KPiA+ID4gPiAgDQo+ID4gPiBBZGRpbmcgc29t
-ZSBtb3JlIGNvbnRleHQ6DQo+ID4gPiANCj4gPiANCj4gPiArIC8qIFRoZSBwd20gc291cmNlIGNs
-b2NrIGNhbiBiZSBkaXZpZGVkIGJ5IDJeY2xrZGl2LiBXaGVuIHRoZQ0KY2xrc2VsICArDQo+ID4g
-KiBiaXQgaXMgc2V0IHRvIDEsIFRoZSBmaW5hbCBjbG9jayBvdXRwdXQgbmVlZHMgdG8gYmUgZGl2
-aWRlZCBieSBhbg0KKyAgKg0KPiA+IGV4dHJhIDE2MjUuDQo+ID4gKyAgKi8NCj4gDQo+IEknZCB3
-cml0ZToNCj4gDQo+IFRoZSBzb3VyY2UgY2xvY2sgaXMgZGl2aWRlZCBieSAyXmNsa2RpdiBvciBp
-ZmYgdGhlIGNsa3NlbCBiaXQgaXMgc2V0DQpieQ0KPiAyXmNsa2RpdiArIDE2MjUuDQo+IA0KDQpH
-cmVhdCwgdGhlIGNvbW1lbnQgaXMgc2hvcnQgYW5kIGNsZWFyLiANCkJ1dCBtYXliZSBjaGFuZ2Ug
-4oCcMl5jbGtkaXYgKyAxNjI14oCdIHRvIOKAnHRoZSBwcm9kdWN0IG9mIDJeY2xrZGl2IGFuZCAx
-NjI14oCdDQppcyBjbGVhcmVyID8NCg0KPiA+IA0KPiA+IElzIHRoaXMgb2sgPw0KPiA+IA0KPiA+
-IA0KPiA+ID4gPiBAQCAtMTM5LDExICsxMzksMjAgQEAgc3RhdGljIGludCBwd21fbWVkaWF0ZWtf
-Y29uZmlnKHN0cnVjdA0KcHdtX2NoaXANCj4gPiAqY2hpcCwgc3RydWN0IHB3bV9kZXZpY2UgKnB3
-bSwNCj4gPiA+ID4gCXdoaWxlIChjbnRfcGVyaW9kID4gODE5MSkgew0KPiA+ID4gPiAgCQlyZXNv
-bHV0aW9uICo9IDI7DQo+ID4gPiA+ICAJCWNsa2RpdisrOw0KPiA+ID4gPiAgCQljbnRfcGVyaW9k
-ID0gRElWX1JPVU5EX0NMT1NFU1RfVUxMKCh1NjQpcGVyaW9kX25zICogMTAwMCwNCj4gPiA+ID4g
-IAkJCQkJCSAgIHJlc29sdXRpb24pOw0KPiA+ID4gPiArCQlpZiAoY2xrZGl2ID4gUFdNX0NMS19E
-SVZfTUFYICYmICFjbGtzZWwpIHsNCj4gPiA+ID4gKwkJCWNsa3NlbCA9IDE7DQo+ID4gPiA+ICsJ
-CQljbGtkaXYgPSAwOw0KPiA+ID4gPiArCQkJcmVzb2x1dGlvbiA9ICh1NjQpTlNFQ19QRVJfU0VD
-ICogMTAwMCAqIDE2MjU7DQo+ID4gPiA+ICsJCQlkb19kaXYocmVzb2x1dGlvbiwNCj4gPiA+ID4g
-KwkJCQljbGtfZ2V0X3JhdGUocGMtPmNsa19wd21zW3B3bS0+aHdwd21dKSk7DQo+ID4gPiA+ICsJ
-CQljbnRfcGVyaW9kID0gRElWX1JPVU5EX0NMT1NFU1RfVUxMKA0KPiA+ID4gPiArCQkJCQkodTY0
-KXBlcmlvZF9ucyAqIDEwMDAsIHJlc29sdXRpb24pOw0KPiA+ID4gDQo+ID4gPiBUaGUgYXNzaWdu
-bWVudCBpcyBhIHJlcGV0aXRpb24gZnJvbSBqdXN0IGFib3ZlIHRoZSBpZi4gTWF5YmUganVzdA0K
-cHV0DQo+ID4gaXQNCj4gPiA+IG9uY2UgYWZ0ZXIgdGhpcyBpZiBibG9jaz8NCj4gPiANCj4gPiBU
-aGUgY250X3BlcmlvZCByZXByZXNlbnRzIHRoZSBlZmZlY3RpdmUgcmFuZ2Ugb2YgdGhlIFBXTSBw
-ZXJpb2QNCmNvdW50ZXIsDQo+ID4gd2hlbiB3ZSBuZWVkIGNoYW5naW5nIHRoZSBwd20gb3V0cHV0
-IHBlcmlvZCB0byBhIGxvbmdlciB2YWx1ZSBhdCB0aGUNCj4gPiBzYW1lIGNsb2NrIGZyZXF1ZW5j
-eSwgd2UgY2FuIHNldHRpbmcgYSBsYXJnZXIgY250X3BlcmlvZCwgYnV0IHRoZQ0Kd2lkdGgNCj4g
-PiBvZiB0aGUgY250X3Blcm9pZCByZWdpc3RlciBpcyAxMiBiaXRzLA0KPiA+IFdoZW4gdGhlIHJl
-cXVlc3QgcGVyaW9kIGlzIHRvbyBsb25nLCB3ZSBuZWVkIHRvIGRpdmlkZSB0aGUgY2xvY2sNCnNv
-dXJjZQ0KPiA+IGFuZCB0aGVuIHJlY2FsY3VsYXRlIGNudF9wZXJpb2Qgb3V0cHV0cyB0aGUgY29y
-cmVjdCB3YXZlZm9ybS4NCj4gPiBBcyBtZW50aW9uZWQgYWJvdmUsIHdoZW4gY2hhbmdpbmcgY2xr
-ZGl2LCB3ZSBuZWVkIHRvIHJlY2FsY3VsYXRlDQo+ID4gY250X3BlcmlvZCBpbW1lZGlhdGVseS4N
-Cj4gPiANCj4gPiBJZiB0aGUgcmVxdWVzdCBwZXJpb2QgaXMgdmVyeSBsb25nIChmb3IgZXhhbXBs
-ZSwgTEVEIGJsaW5raW5nKSwNCmNsa2Rpdg0KPiA+IG1heSBiZSBpbnN1ZmZpY2llbnQuIA0KPiA+
-IEluIHRoaXMgY2FzZSwgd2Ugd2lsbCB1c2UgY2xrc2VsIHRvIGRpdmlkZSB0aGUgcHdtIHNvdXJj
-ZSBjbG9jayBieQ0KYW4NCj4gPiBhZGRpdGlvbmFsIDE2MjUsIGFuZCByZWNhbGN1bGF0ZSBjbGtk
-aXYgYW5kIGNudF9wZXJpb2QuDQo+ID4gDQo+ID4gSSBkb24ndCB0aGluayB3ZSBjYW4ganVzdCBw
-bGFjZSBhc3NpZ25tZW50cyBhZnRlciB0aGUgaWYgYmxvY2suDQo+IA0KPiBJIGRpZG4ndCBjYXJl
-IGVub3VnaCB0byByZWFkIHlvdXIgcmVhc29uaW5nIGFuZCByZXRyeSB0byBjb252aW5jZSB5b3UN
-Cj4gd2l0aCBtaW5lOg0KPiANCj4gV2l0aCB5b3VyIHBhdGNoIHlvdSBoYXZlOg0KPiANCj4gCWNu
-dF9wZXJpb2QgPSBzb21lZXhwcmVzc2lvbjsNCj4gDQo+IAlpZiAoc29tZWNvbmRpdGlvbikgew0K
-PiAJCS4uLg0KPiAJCWNudF9wZXJpb2QgPSBzb21lZXhwcmVzc2lvbjsNCj4gCX0NCj4gDQo+IEFz
-IHNvbWVjb25kaXRpb24gZG9lc24ndCBtYWtlIHVzZSBvZiBjbnRfcGVyaW9kIHRoaXMgaXMgZXF1
-aXZhbGVudCB0bzoNCj4gDQo+IAlpZiAoc29tZWNvbmRpdGlvbikgew0KPiAJCS4uLg0KPiAJfQ0K
-PiAJY250X3BlcmlvZCA9IHNvbWVleHByZXNzaW9uOw0KPiANCj4gaXNuJ3QgaXQ/DQo+IA0KDQpZ
-ZXMsIHlvdSdyZSByaWdodCwgSSBtaXN1bmRlcnN0b29kLiANCllvdXIgY29kZSBjbGVhcmx5IHJl
-bWluZGVkIG1lLg0KDQpJIGp1c3Qgd2FudCB0byBleHBsYWluIHRoYXQgdGhlIHJlLWNhbGN1bGF0
-aW9uIG9mIHRoZSBjbnRfcGVyaW9kIGlzDQppbXBvcnRhbnQuDQpIb3dldmVyLCBhZnRlciByZWFk
-aW5nIHlvdXIgY29kZSwgSSB0aGluayB0aGUgcHJvZ3JhbSBsb2dpYyB3aWxsIG5vdCBiZQ0KYnJl
-YWsgYW5kIHRoZSBkdXBsaWNhdGVzIGNhbiBiZSByZW1vdmVkLg0KDQo+ID4gPiBUaGUgY29kZSBp
-cyBoYXJkIHRvIGZvbGxvdywgSSB3b25kZXIgaWYgdGhpcyBjb3VsZCBiZSBjbGVhbmVkIHVwDQp3
-aXRoDQo+ID4gPiBzb21lIGNvbW1lbnRzIGFkZGVkIHRoYXQgZXhwbGFpbiB0aGUgaGFyZHdhcmUg
-ZGV0YWlscyBlbm91Z2ggdG8gYmUNCmFibGUNCj4gPiA+IHRvIGFjdHVhbGx5IHVuZGVyc3RhbmQg
-dGhlIGNvZGUgd2l0aG91dCBoYXZpbmcgdGhlIGhhcmR3YXJlDQpyZWZlcmVuY2UNCj4gPiA+IG1h
-bnVhbCBoYW5keS4NCj4gPiANCj4gPiBJcyBpdCBzdWZmaWNpZW50IHRvIGFkZCBzb21lIGNvbnRl
-eHQgaW50byBjb21tZW50IGxpa2UgdGhlIHJlc3BvbnNlDQpvZg0KPiA+IHRoZSBzZWNvbmQgcXVl
-c3Rpb24/DQo+IA0KPiBJIGRpZG4ndCBjaGVjayBidXQgSSB3b3VsZG4ndCBiZSBzdXJwcmlzZWQg
-aWYgdGhlIGNvZGUgaXMgbW9yZQ0KPiBjb21wbGljYXRlZCB0aGFuIG5lY2Vzc2FyeS4gSWYgeW91
-IGRvbid0IHNlZSBzb21ldGhpbmcgdG8gc2ltcGxpZnksIGdvDQo+IGZvciBhZGRpbmcgYW4gZXhw
-bGFuYXRpb24gYXMgc3VnZ2VzdGVkIGFuZCBJIHdpbGwgdGFrZSBhIGxvb2sgaW4gYQ0KcXVpZXQN
-Cj4gbW9tZW50Lg0KPg0KDQpJIHdpbGwgc2VuZCB2MiBwYXRjaCB0byByZW1vdmUgdGhlIHJlcGV0
-aXRpb24gb2Yg4oCcY250X3BlcmlvZCA9DQpzb21lZXhwcmVzc2lvbuKAnSwgYW5kIGFkZCBzb21l
-IGNvbW1lbnQgdG8gY2xrc2VsIGFuZCBjbnRfcGVyaW9kLg0KIA0KPiBOb3Qgc3VyZSBJIGFscmVh
-ZHkgcG9pbnRlZCBvdXQgdGhhdCBoYXZpbmcgYSBsaW5rIHRvIGEgcHVibGljbHkNCj4gYXZhaWxh
-YmxlIHJlZmVyZW5jZSBtYW51YWwgaW4gdGhlIGRyaXZlcidzIGhlYWRlciBpcyB1c2VmdWwuIElm
-IHRoZXJlDQppcw0KPiBzdWNoIGEgbWFudWFsLCBwbGVhc2UgYWRkIGEgbGluayB0aGVyZS4gWW91
-ciBiZW5lZml0IGlzIHRoYXQgeW91DQo+IHNpbXBsaWZ5IG90aGVycyB0byBpbXByb3ZlIHlvdXIg
-ZHJpdmVyLg0KPg0KPiANCj4gQmVzdCByZWdhcmRzDQo+IFV3ZQ0KPiANCj4NCg0KQmVzdCBSZWdh
-cmRzLg0KU2FtDQoNCg==
+Hello Sam,
 
+On Thu, Feb 27, 2020 at 08:27:07PM +0800, Sam Shih wrote:
+> > > 
+> > > + /* The pwm source clock can be divided by 2^clkdiv. When the clksel  +
+> > > * bit is set to 1, The final clock output needs to be divided by an +  *
+> > > extra 1625.
+> > > +  */
+> > 
+> > I'd write:
+> > 
+> > The source clock is divided by 2^clkdiv or iff the clksel bit is set by
+> > 2^clkdiv + 1625.
+> > 
+> 
+> Great, the comment is short and clear. 
+> But maybe change “2^clkdiv + 1625” to “the product of 2^clkdiv and 1625”
+> is clearer ?
+
+Writing a formula in words isn't helpful. If my formula was wrong use
+the right one. I wrote
+
+	2^clkdiv + 1625
+
+(which implicitly means (2^clkdiv) + 1625), if this is wrong write
+
+	2^clkdiv * 1625
+
+or whatever is the right one then. And use parenthesis if you doubt
+clearness.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
