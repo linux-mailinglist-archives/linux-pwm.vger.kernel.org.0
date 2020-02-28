@@ -2,39 +2,40 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 47638173488
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Feb 2020 10:54:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1C5F17348C
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Feb 2020 10:55:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgB1Jy6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 28 Feb 2020 04:54:58 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:34120 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbgB1Jy6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Feb 2020 04:54:58 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01S9sfTU043736;
-        Fri, 28 Feb 2020 03:54:41 -0600
+        id S1726805AbgB1JzA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 28 Feb 2020 04:55:00 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47636 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgB1JzA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Feb 2020 04:55:00 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01S9sjFl118338;
+        Fri, 28 Feb 2020 03:54:45 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582883681;
-        bh=tFNbyFSls0cIg9yQLf3YdifxAAy1SK7224z71RMQhnw=;
-        h=From:To:CC:Subject:Date;
-        b=oSjk+T18dNQNCcmcua4xxEqLbfPz7vn3n/UgqCMunet4Ag+0TbiP8da8pqRBFB2bA
-         phTDioT37escKJusSn4USUlThzWJQtfmC5tnxqaYhxL7Eu23H5n/iNXavjp9C6Ka0P
-         IF6EiTIfjbvEoDGsug++rTSeT0jF9t51jOeAHD/E=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01S9sfQo101177;
-        Fri, 28 Feb 2020 03:54:41 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+        s=ti-com-17Q1; t=1582883685;
+        bh=nCfJ7gq59b6fMw9yLraYegIW8rAh45KRsQksbPtVU0A=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=mdZGSXcTYM2t2cB6ldzXnzxX9wr0PNYEH4fLIM6hdOC01R/B+YXRaH94ppbtvKKiI
+         Y6ForDiwRNtssA0E10w1bvRIk/d/NwyOau8Oe52qlhFNKqSMOESkTwXI9gvz7Xnxn7
+         PufpiGqq8IR3SxaLL6X8EgeSTdtebVvx4OW2wGzo=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01S9sjDM042119
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 28 Feb 2020 03:54:45 -0600
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
- Feb 2020 03:54:41 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2020 03:54:45 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 28 Feb 2020 03:54:41 -0600
+ Frontend Transport; Fri, 28 Feb 2020 03:54:45 -0600
 Received: from uda0131933.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01S9sbB3125348;
-        Fri, 28 Feb 2020 03:54:38 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01S9sbB4125348;
+        Fri, 28 Feb 2020 03:54:42 -0600
 From:   Lokesh Vutla <lokeshvutla@ti.com>
 To:     Tony Lindgren <tony@atomide.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
@@ -46,10 +47,12 @@ CC:     Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
         <u.kleine-koenig@pengutronix.de>, <linux-pwm@vger.kernel.org>,
         Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>,
         Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v2 0/5] clocksource: timer-ti-dm: Prepare for dynamic pwm period updates
-Date:   Fri, 28 Feb 2020 15:23:41 +0530
-Message-ID: <20200228095346.32177-1-lokeshvutla@ti.com>
+Subject: [PATCH v2 1/5] clocksource: timer-ti-dm: Convert to SPDX identifier
+Date:   Fri, 28 Feb 2020 15:23:42 +0530
+Message-ID: <20200228095346.32177-2-lokeshvutla@ti.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200228095346.32177-1-lokeshvutla@ti.com>
+References: <20200228095346.32177-1-lokeshvutla@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -59,30 +62,47 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This series fixes dm_timer_ops used for enabling the pwm and enables
-cpu_pm notifier for context save and restore. This acts as a preparatory
-series for enabling dynamic period updates for pwm omap dm timer driver.
+Use SPDX-License-Identifier instead of a verbose license text.
 
-Changes since v1:
-- Updated License header to use SPDX identifier
-- Implemented cpu_pm notfier
-- Added support for getting pwm current status
-- Extended set_pwm functionality.
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+---
+ drivers/clocksource/timer-ti-dm.c | 19 +------------------
+ 1 file changed, 1 insertion(+), 18 deletions(-)
 
-Lokesh Vutla (5):
-  clocksource: timer-ti-dm: Convert to SPDX identifier
-  clocksource: timer-ti-dm: Implement cpu_pm notifier for context save
-    and restore
-  clocksource: timer-ti-dm: Do not update counter on updating the period
-  clocksource: timer-ti-dm: Add support to get pwm current status
-  clocksource: timer-ti-dm: Enable autoreload in set_pwm
-
- drivers/clocksource/timer-ti-dm.c          | 136 ++++++++++-----------
- drivers/pwm/pwm-omap-dmtimer.c             |   8 +-
- include/clocksource/timer-ti-dm.h          |   3 +-
- include/linux/platform_data/dmtimer-omap.h |   6 +-
- 4 files changed, 75 insertions(+), 78 deletions(-)
-
+diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
+index d8637a60a7eb..bf132d321ecc 100644
+--- a/drivers/clocksource/timer-ti-dm.c
++++ b/drivers/clocksource/timer-ti-dm.c
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * linux/arch/arm/plat-omap/dmtimer.c
+  *
+@@ -15,24 +16,6 @@
+  *
+  * Copyright (C) 2009 Texas Instruments
+  * Added OMAP4 support - Santosh Shilimkar <santosh.shilimkar@ti.com>
+- *
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms of the GNU General Public License as published by the
+- * Free Software Foundation; either version 2 of the License, or (at your
+- * option) any later version.
+- *
+- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+- * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+- *
+- * You should have received a copy of the  GNU General Public License along
+- * with this program; if not, write  to the Free Software Foundation, Inc.,
+- * 675 Mass Ave, Cambridge, MA 02139, USA.
+  */
+ 
+ #include <linux/clk.h>
 -- 
 2.23.0
 
