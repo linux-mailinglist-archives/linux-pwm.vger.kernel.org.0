@@ -2,407 +2,209 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B84321734B9
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Feb 2020 10:58:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 41577173848
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Feb 2020 14:27:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgB1J6M (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 28 Feb 2020 04:58:12 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:46498 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgB1J6L (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Feb 2020 04:58:11 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01S9w59E095153;
-        Fri, 28 Feb 2020 03:58:05 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582883885;
-        bh=P1tsxqr0QMD5sxrl7+EuVAz75XyDXJ8Harn3lNaUHL8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=aUNzPKxNM2vXk6hZTN+KIZ46SpuKg39LyaQAeGc+YW57N7J4F9Nq/5Fw4yXXCyqvS
-         otWmTD4TmXoMbcpPwrftPMYVBKCJ0QtLVo6VeaiuE6xVXJGI5ZEiB3dKAabWd4cWKR
-         Jl0FlvDS2qyVXnw6NtatGNEBhUa1vSuTrDF0iEzQ=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01S9w5Il046244
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Feb 2020 03:58:05 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
- Feb 2020 03:58:05 -0600
-Received: from localhost.localdomain (10.64.41.19) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 28 Feb 2020 03:58:05 -0600
-Received: from uda0131933.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01S9vhLK115767;
-        Fri, 28 Feb 2020 03:58:02 -0600
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        id S1726838AbgB1N05 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 28 Feb 2020 08:26:57 -0500
+Received: from mx1.tq-group.com ([62.157.118.193]:52777 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726673AbgB1N05 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 28 Feb 2020 08:26:57 -0500
+IronPort-SDR: XOPpaeBNeTzozFGsYiPqCIOKkf5giIjyyTeFjQ/yBOBmOJ9LdFsjOBJyBJwO4mmF1mS9/OAHtM
+ FTHL7yeIbgmrL1THuX/CK96bjW1vRF2juN3VRJiY3Kz4iDKgwVlAUY2EHfYGZc94a5ZvhxhWJQ
+ G1IdktYwFEWk12+TZ/BAMVqaIGDjpDIOx8xFdWyibxEZ0CBZoFpJVkwBcJa9CEacvViLwS5AOH
+ t7PMN1bvfomWboVfC0Tr0BWnM4+WuUSOtkSKD76pNAZ1nypyuyPBuN2ouwCRN5glfzfHGwqLVo
+ ORA=
+X-IronPort-AV: E=Sophos;i="5.70,496,1574118000"; 
+   d="scan'208";a="11157171"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 28 Feb 2020 14:26:55 +0100
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Fri, 28 Feb 2020 14:26:55 +0100
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Fri, 28 Feb 2020 14:26:55 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1582896415; x=1614432415;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=7y5bI79HEJXh1PgG/zHqrk8tD2vnb6fquG3FliyVWMY=;
+  b=XJgLJvBa4jLoF14Kwlrbd/2N4USaktu8Zxj6KNu2nKxBzSPprjZEVx1T
+   /PNmew1Z3J/3BNtdOWXcUwZZx/7tOOcYbz/gnjgTgXGBbOg/xO1HvAwBF
+   cg7XUJKrehh/ynzKqt1I6YSPdvo/t1U81fnsNFUh720lG/qmyqczYZ7mc
+   BDJqTYpWepvt5bJ4BsUat42mZU8wVaQ5j+c3O63kJB8HOXaM7z98O/XCs
+   iehcjr8nDPeByA0d+UeR57vmd5sa09v9JjBbl1BSew0tLRlcrQyg4rT70
+   QWYuer0AyY7c3pL1QE19L6s6xT9CvhzewnRqBFPtnLgWWwiBrjgOPiavs
+   Q==;
+IronPort-SDR: D2bOJmLuTR8ZhZ+KEh+Jmvr7rt9otbDN4djc3ixeqEfiFm36SQVabQUP/ArnfI4LWCZgaPjkcv
+ io3xmxewNjkz0egwiXBdgRX/0AoYcmG4UGbFYmBahvhrWES1ZgcqKQzfjfJqSfHC0dExqeJRu0
+ /VcmHiYdo1Tuz1pk6oMU+EYqRZFdvIiV6XOr3GeCW6ec/Ylv1a4inGjh/x6DraT6npBalxhnoy
+ KnZkJ334d4Ctvw91UsDXzNh3B1pcJx1UAxKKr+FaVuFnZ/YzZv+bOPN/hSWD7EDCXmhhBfgCFa
+ 9qE=
+X-IronPort-AV: E=Sophos;i="5.70,496,1574118000"; 
+   d="scan'208";a="11157170"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 28 Feb 2020 14:26:55 +0100
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id DDD67280065;
+        Fri, 28 Feb 2020 14:27:03 +0100 (CET)
+Message-ID: <23144d65d94460d70fd66d67d1f9875303c7bce8.camel@ew.tq-group.com>
+Subject: Re: (EXT) Re: (EXT) Re: [PATCH 1/4] pwm: pca9685: remove unused
+ duty_cycle struct element
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-CC:     Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v2 6/6] pwm: omap-dmtimer: Implement .apply callback
-Date:   Fri, 28 Feb 2020 15:26:51 +0530
-Message-ID: <20200228095651.32464-7-lokeshvutla@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200228095651.32464-1-lokeshvutla@ti.com>
-References: <20200228095651.32464-1-lokeshvutla@ti.com>
-MIME-Version: 1.0
+Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 28 Feb 2020 14:26:52 +0100
+In-Reply-To: <20200226192103.bodplhjson7drvgm@pengutronix.de>
+References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
+         <20200226151034.7i3h5blmrwre2yzg@pengutronix.de>
+         <32ec35c2b3da119dd2c7bc09742796a0d8a9607e.camel@ew.tq-group.com>
+         <20200226192103.bodplhjson7drvgm@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Implement .apply callback and drop the legacy callbacks(enable, disable,
-config, set_polarity). In .apply() check for the current hardware status
-before changing the pwm configuration.
+On Wed, 2020-02-26 at 20:21 +0100, Uwe Kleine-König wrote:
+> On Wed, Feb 26, 2020 at 06:03:02PM +0100, Matthias Schiffer wrote:
+> > On Wed, 2020-02-26 at 16:10 +0100, Uwe Kleine-König wrote:
+> > > Hello Matthias,
+> > > 
+> > > as you seem to have this hardware on your desk, it would be great
+> > > if
+> > > you
+> > > could answer the following questions:
+> > > 
+> > >  - Does the hardware complete the currently running period before
+> > >    applying a new setting?
+> > 
+> > The datasheet claims:
+> > 
+> > > Because the loading of the LEDn_ON and LEDn_OFF registers is via
+> > > the
+> > > I 2 C-bus, and
+> > > asynchronous to the internal oscillator, we want to ensure that
+> > > we do
+> > > not see any visual
+> > > artifacts of changing the ON and OFF values. This is achieved by
+> > > updating the changes at
+> > > the end of the LOW cycle.
+> > 
+> > My interpretation is that the hardware will complete its period
+> > before
+> > applying the new settings. I might check with a scope tomorrow-ish.
+> 
+> I agree given that you can update duty_cycle and period in a single
+> write as you considered below. Maybe it is worth playing with small
+> periods and a slow i2c bus speed (or hijack the bus by simulating a
+> clock stretch).
+>  
+> > >  - Is this racy somehow (i.e. can it happen that when going from
+> > >    duty_cycle/period = 1000/5000 to duty_cycle/period =
+> > > 4000/10000 the
+> > >    output is 1000/10000 (or 4000/5000) for one cycle)?
+> > 
+> > It currently is racy. It should be possible to fix that either by
+> > updating all 4 registers in a single I2C write, or by using the
+> > "update
+> > on ACK" mode which requires all 4 registers to be updated before
+> > the
+> > new setting is applied (I'm not sure if this mode would require
+> > using a
+> > single I2C write as well though).
+> 
+> I can offer a second pair of eyeballs to interpret the datasheet.
+> Will
+> take a look tomorrow.
+> 
+> > >  - Does the hardware complete the currently running period before
+> > >    .enabled = false is configured?
+> > 
+> > As my interpretation is that new settings are applied
+> > asynchronously, I
+> > assume that the final running period is completed after .enabled is
+> > set
+> > to false.
+> > 
+> > >  - How does the output pin behave on a disabled PWM. (Usual
+> > > candidates
+> > >    are: freeze where is just happens to be, constant inactive and
+> > >    High-Z).
+> > 
+> > Constant inactive. This is also the case when the chip is put into
+> > sleep mode. Note that the interpretation of "inactive" depends in
+> > the
+> > invert flag in the MODE2 register.
+> 
+> This is optimal.
+> 
+> > As it turns out, this driver is broken in yet another way I didn't
+> > find
+> > before: For changing the global prescaler the chip needs to be put
+> > into
+> > sleep mode, but the driver doesn't follow the restart sequence
+> > described in the datasheet when waking it back up. In consequence,
+> > changing the period of one PWM does not only modify the period of
+> > all
+> > PWMs (which is bad enough, but can't be avoided with this
+> > hardware),
+> > but it also leaves all PWMs disabled...
+> > 
+> > As this hardware only has a single prescaler for all PWMs, should
+> > changing the period for individual PWMs even be allowed at all?
+> > Maybe
+> > only when all other PWMs are inactive?
+> 
+> yes, that is the general approach. Please document this in a
+> Limitiations: paragraph. See drivers/pwm/pwm-imx-tpm.c which has a
+> similar problem.
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
- drivers/pwm/pwm-omap-dmtimer.c | 215 ++++++++++++++++++++++++---------
- 1 file changed, 158 insertions(+), 57 deletions(-)
+This raises the question what to do about the GPIO mode supported by
+the driver: While the period does not affect GPIO usage of PWMs,
+changing the period would put the chip in sleep mode and thus briefly
+disable active GPIOs. I assume that this should preclude changing the
+period when there are any PWMs requsted as GPIOs, but now the order in
+which things are initialized becomes crucial:
 
-diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-index e7487ceed0a3..5c86b1e02209 100644
---- a/drivers/pwm/pwm-omap-dmtimer.c
-+++ b/drivers/pwm/pwm-omap-dmtimer.c
-@@ -24,6 +24,11 @@
-  *   can get updated as below based on the current timer counter:
-  *   	- period for current cycle =  current_period + new period
-  *   	- duty_cycle for current period = current period + new duty_cycle.
-+ * - PWM OMAP DM timer cannot change the polarity when pwm is active. When
-+ *   user requests a change in polarity when in active state:
-+ *	- PWM is stopped abruptly(without completing the current cycle)
-+ *	- Polarity is changed
-+ *	- A fresh cycle is started.
-  */
- 
- #include <linux/clk.h>
-@@ -44,8 +49,18 @@
- #define DM_TIMER_LOAD_MIN 0xfffffffe
- #define DM_TIMER_MAX      0xffffffff
- 
-+/**
-+ * struct pwm_omap_dmtimer_chip - Structure representing a pwm chip
-+ *				  corresponding to omap dmtimer.
-+ * @chip:		PWM chip structure representing PWM controller
-+ * @mutex:		Mutex to protect pwm apply state
-+ * @dm_timer:		Pointer to omap dm timer.
-+ * @pdata:		Pointer to omap dm timer ops.
-+ * dm_timer_pdev:	Pointer to omap dm timer platform device
-+ */
- struct pwm_omap_dmtimer_chip {
- 	struct pwm_chip chip;
-+	/* Mutex to protect pwm apply state */
- 	struct mutex mutex;
- 	struct omap_dm_timer *dm_timer;
- 	const struct omap_dm_timer_ops *pdata;
-@@ -58,11 +73,22 @@ to_pwm_omap_dmtimer_chip(struct pwm_chip *chip)
- 	return container_of(chip, struct pwm_omap_dmtimer_chip, chip);
- }
- 
-+/**
-+ * pwm_omap_dmtimer_get_clock_cycles() - Get clock cycles in a time frame
-+ * @clk_rate:	pwm timer clock rate
-+ * @ns:		time frame in nano seconds.
-+ *
-+ * Return number of clock cycles in a given period(ins ns).
-+ */
- static u32 pwm_omap_dmtimer_get_clock_cycles(unsigned long clk_rate, int ns)
- {
- 	return DIV_ROUND_CLOSEST_ULL((u64)clk_rate * ns, NSEC_PER_SEC);
- }
- 
-+/**
-+ * pwm_omap_dmtimer_start() - Start the pwm omap dm timer in pwm mode
-+ * @omap:	Pointer to pwm omap dm timer chip
-+ */
- static void pwm_omap_dmtimer_start(struct pwm_omap_dmtimer_chip *omap)
- {
- 	/*
-@@ -80,41 +106,70 @@ static void pwm_omap_dmtimer_start(struct pwm_omap_dmtimer_chip *omap)
- 	omap->pdata->start(omap->dm_timer);
- }
- 
--static int pwm_omap_dmtimer_enable(struct pwm_chip *chip,
--				   struct pwm_device *pwm)
-+/**
-+ * pwm_omap_dmtimer_is_enabled() -  Detect if the pwm is enabled.
-+ * @omap:	Pointer to pwm omap dm timer chip
-+ *
-+ * Note: PWM is considered as enabled only when timer is counting and
-+ *	 auto-reload feature is enabled.
-+ *
-+ * Return true if pwm is enabled else false.
-+ */
-+static bool pwm_omap_dmtimer_is_enabled(struct pwm_omap_dmtimer_chip *omap)
- {
--	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
-+	u32 status;
- 
--	mutex_lock(&omap->mutex);
--	omap->pdata->set_pwm(omap->dm_timer,
--			     pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
--			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE,
--			     true);
-+	status = omap->pdata->get_pwm_status(omap->dm_timer);
- 
--	pwm_omap_dmtimer_start(omap);
--	mutex_unlock(&omap->mutex);
-+	return !!(status & OMAP_TIMER_CTRL_ST) &&
-+	       !!(status & OMAP_TIMER_CTRL_AR);
-+}
- 
--	return 0;
-+/**
-+ * pwm_omap_dmtimer_is_completing() -  Detect if the pwm is completing the
-+ *				       last cycle.
-+ * @omap:	Pointer to pwm omap dm timer chip
-+ *
-+ * Note: PWM is considered as completing only when timer is counting and
-+ *	 auto-reload feature is disabled.
-+ *
-+ * Return true if pwm is completing the last cycle else false.
-+ */
-+static bool pwm_omap_dmtimer_is_completing(struct pwm_omap_dmtimer_chip *omap)
-+{
-+	u32 status;
-+
-+	status = omap->pdata->get_pwm_status(omap->dm_timer);
-+
-+	return !!(status & OMAP_TIMER_CTRL_ST) &&
-+	       !(status & OMAP_TIMER_CTRL_AR);
- }
- 
--static void pwm_omap_dmtimer_disable(struct pwm_chip *chip,
--				     struct pwm_device *pwm)
-+/**
-+ * pwm_omap_dmtimer_polarity() -  Detect the polarity of pwm.
-+ * @omap:	Pointer to pwm omap dm timer chip
-+ *
-+ * Return the polarity of pwm.
-+ */
-+static int pwm_omap_dmtimer_polarity(struct pwm_omap_dmtimer_chip *omap)
- {
--	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
-+	u32 status;
- 
--	/*
--	 * Disable auto reload so that the current cycle gets completed and
--	 * then the counter stops.
--	 */
--	mutex_lock(&omap->mutex);
--	omap->pdata->set_pwm(omap->dm_timer,
--			     pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
--			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE,
--			     false);
-+	status = omap->pdata->get_pwm_status(omap->dm_timer);
- 
--	mutex_unlock(&omap->mutex);
-+	return !!(status & OMAP_TIMER_CTRL_SCPWM);
- }
- 
-+/**
-+ * pwm_omap_dmtimer_config() - Update the configuration of pwm omap dm timer
-+ * @chip:	Pointer to PWM controller
-+ * @pwm:	Pointer to PWM channel
-+ * @duty_ns:	New duty cycle in nano seconds
-+ * @period_ns:	New period in nano seconds
-+ *
-+ * Return 0 if successfully changed the period/duty_cycle else appropriate
-+ * error.
-+ */
- static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
- 				   struct pwm_device *pwm,
- 				   int duty_ns, int period_ns)
-@@ -122,30 +177,26 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
- 	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
- 	u32 period_cycles, duty_cycles;
- 	u32 load_value, match_value;
--	struct clk *fclk;
- 	unsigned long clk_rate;
-+	struct clk *fclk;
- 
- 	dev_dbg(chip->dev, "requested duty cycle: %d ns, period: %d ns\n",
- 		duty_ns, period_ns);
- 
--	mutex_lock(&omap->mutex);
- 	if (duty_ns == pwm_get_duty_cycle(pwm) &&
--	    period_ns == pwm_get_period(pwm)) {
--		/* No change - don't cause any transients. */
--		mutex_unlock(&omap->mutex);
-+	    period_ns == pwm_get_period(pwm))
- 		return 0;
--	}
- 
- 	fclk = omap->pdata->get_fclk(omap->dm_timer);
- 	if (!fclk) {
- 		dev_err(chip->dev, "invalid pmtimer fclk\n");
--		goto err_einval;
-+		return -EINVAL;
- 	}
- 
- 	clk_rate = clk_get_rate(fclk);
- 	if (!clk_rate) {
- 		dev_err(chip->dev, "invalid pmtimer fclk rate\n");
--		goto err_einval;
-+		return -EINVAL;
- 	}
- 
- 	dev_dbg(chip->dev, "clk rate: %luHz\n", clk_rate);
-@@ -173,7 +224,7 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
- 		dev_info(chip->dev,
- 			 "period %d ns too short for clock rate %lu Hz\n",
- 			 period_ns, clk_rate);
--		goto err_einval;
-+		return -EINVAL;
- 	}
- 
- 	if (duty_cycles < 1) {
-@@ -205,55 +256,104 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
- 	dev_dbg(chip->dev, "load value: %#08x (%d), match value: %#08x (%d)\n",
- 		load_value, load_value,	match_value, match_value);
- 
--	mutex_unlock(&omap->mutex);
--
- 	return 0;
--
--err_einval:
--	mutex_unlock(&omap->mutex);
--
--	return -EINVAL;
- }
- 
--static int pwm_omap_dmtimer_set_polarity(struct pwm_chip *chip,
--					 struct pwm_device *pwm,
--					 enum pwm_polarity polarity)
-+/**
-+ * pwm_omap_dmtimer_set_polarity() - Changes the polarity of the pwm dm timer.
-+ * @chip:	Pointer to PWM controller
-+ * @pwm:	Pointer to PWM channel
-+ * @polarity:	New pwm polarity to be set
-+ */
-+static void pwm_omap_dmtimer_set_polarity(struct pwm_chip *chip,
-+					  struct pwm_device *pwm,
-+					  enum pwm_polarity polarity)
- {
- 	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
-+	bool enabled;
-+
-+	/* Disable the PWM before changing the polarity. */
-+	enabled = pwm_omap_dmtimer_is_enabled(omap);
-+	if (enabled || pwm_omap_dmtimer_is_completing(omap))
-+		omap->pdata->stop(omap->dm_timer);
- 
--	/*
--	 * PWM core will not call set_polarity while PWM is enabled so it's
--	 * safe to reconfigure the timer here without stopping it first.
--	 */
--	mutex_lock(&omap->mutex);
- 	omap->pdata->set_pwm(omap->dm_timer,
- 			     polarity == PWM_POLARITY_INVERSED,
- 			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE,
- 			     true);
-+
-+	if (enabled)
-+		pwm_omap_dmtimer_start(omap);
-+}
-+
-+/**
-+ * pwm_omap_dmtimer_apply() - Changes the state of the pwm omap dm timer.
-+ * @chip:	Pointer to PWM controller
-+ * @pwm:	Pointer to PWM channel
-+ * @state:	New state to apply
-+ *
-+ * Return 0 if successfully changed the state else appropriate error.
-+ */
-+static int pwm_omap_dmtimer_apply(struct pwm_chip *chip,
-+				  struct pwm_device *pwm,
-+				  const struct pwm_state *state)
-+{
-+	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
-+	int ret = 0;
-+
-+	mutex_lock(&omap->mutex);
-+
-+	if (pwm_omap_dmtimer_is_enabled(omap) && !state->enabled) {
-+		/*
-+		 * Disable auto reload so that the current cycle gets completed
-+		 * and then the counter stops.
-+		 */
-+		omap->pdata->set_pwm(omap->dm_timer,
-+				pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
-+				true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE,
-+				false);
-+		goto unlock_mutex;
-+	}
-+
-+	if (pwm_omap_dmtimer_polarity(omap) != state->polarity)
-+		pwm_omap_dmtimer_set_polarity(chip, pwm, state->polarity);
-+
-+	ret = pwm_omap_dmtimer_config(chip, pwm, state->duty_cycle,
-+				      state->period);
-+	if (ret)
-+		goto unlock_mutex;
-+
-+	if (!pwm_omap_dmtimer_is_enabled(omap) && state->enabled) {
-+		omap->pdata->set_pwm(omap->dm_timer,
-+				     state->polarity == PWM_POLARITY_INVERSED,
-+				     true,
-+				     OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE,
-+				     true);
-+		pwm_omap_dmtimer_start(omap);
-+	}
-+
-+unlock_mutex:
- 	mutex_unlock(&omap->mutex);
- 
--	return 0;
-+	return ret;
- }
- 
- static const struct pwm_ops pwm_omap_dmtimer_ops = {
--	.enable	= pwm_omap_dmtimer_enable,
--	.disable = pwm_omap_dmtimer_disable,
--	.config	= pwm_omap_dmtimer_config,
--	.set_polarity = pwm_omap_dmtimer_set_polarity,
-+	.apply = pwm_omap_dmtimer_apply,
- 	.owner = THIS_MODULE,
- };
- 
- static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
--	struct device_node *timer;
--	struct platform_device *timer_pdev;
--	struct pwm_omap_dmtimer_chip *omap;
- 	struct dmtimer_platform_data *timer_pdata;
- 	const struct omap_dm_timer_ops *pdata;
-+	struct platform_device *timer_pdev;
-+	struct pwm_omap_dmtimer_chip *omap;
- 	struct omap_dm_timer *dm_timer;
--	u32 v;
-+	struct device_node *timer;
- 	int ret = 0;
-+	u32 v;
- 
- 	timer = of_parse_phandle(np, "ti,timers", 0);
- 	if (!timer)
-@@ -286,6 +386,7 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
- 	    !pdata->set_load ||
- 	    !pdata->set_match ||
- 	    !pdata->set_pwm ||
-+	    !pdata->get_pwm_status ||
- 	    !pdata->set_prescaler ||
- 	    !pdata->write_counter) {
- 		dev_err(&pdev->dev, "Incomplete dmtimer pdata structure\n");
--- 
-2.23.0
+- All references to PWMs of the same PCA9685 must specify the same
+period
+- When requesting a PWM as GPIO, no period can be specified
+=> When a PWM referenced as GPIO is requested before the first actual
+PWM, setting the correct period becomes impossible.
+
+I can't think of a nice solution that doesn't require serious rework -
+maybe we need at least an optional period property in DTS to support
+this case? This could either be implemented as a default period or a
+fixed period.
+
+A more elaborate solution could be to remove the GPIO code from PCA9685
+and implement a generic GPIO-PWM driver instead that could be
+configured in DTS (again, I have no idea how to support non-DTS
+platforms). Unfortunately, I assume I won't have time to realize such a
+solution myself.
+
+Matthias
+
+
+>  
+> > I could imagine setting it in DTS instead (but I'm not sure what to
+> > do
+> > about non-OF users of this driver, for example when configured via
+> > ACPI).
+> 
+> I don't like fixing the period in the device tree. This isn't a
+> hardware
+> property and it is less flexible than possible.
+> 
+> Best regards
+> Uwe
+> 
 
