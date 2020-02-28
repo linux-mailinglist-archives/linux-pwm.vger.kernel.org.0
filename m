@@ -2,67 +2,87 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F41951733C2
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Feb 2020 10:22:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47638173488
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Feb 2020 10:54:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbgB1JWq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 28 Feb 2020 04:22:46 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:57525 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgB1JWq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Feb 2020 04:22:46 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j7bqv-0004Iz-EA; Fri, 28 Feb 2020 10:22:37 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j7bqs-0005Tm-LD; Fri, 28 Feb 2020 10:22:34 +0100
-Date:   Fri, 28 Feb 2020 10:22:34 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     lee.jones@linaro.org, dmitry.torokhov@gmail.com,
-        thierry.reding@gmail.com, jic23@kernel.org,
-        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Subject: Re: [PATCH v5 4/7] pwm: Add support for Azoteq IQS620A PWM generator
-Message-ID: <20200228092234.owlqvpuwu4hk3vog@pengutronix.de>
-References: <1581895931-6056-1-git-send-email-jeff@labundy.com>
- <1581895931-6056-5-git-send-email-jeff@labundy.com>
+        id S1726563AbgB1Jy6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 28 Feb 2020 04:54:58 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34120 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgB1Jy6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Feb 2020 04:54:58 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01S9sfTU043736;
+        Fri, 28 Feb 2020 03:54:41 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582883681;
+        bh=tFNbyFSls0cIg9yQLf3YdifxAAy1SK7224z71RMQhnw=;
+        h=From:To:CC:Subject:Date;
+        b=oSjk+T18dNQNCcmcua4xxEqLbfPz7vn3n/UgqCMunet4Ag+0TbiP8da8pqRBFB2bA
+         phTDioT37escKJusSn4USUlThzWJQtfmC5tnxqaYhxL7Eu23H5n/iNXavjp9C6Ka0P
+         IF6EiTIfjbvEoDGsug++rTSeT0jF9t51jOeAHD/E=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01S9sfQo101177;
+        Fri, 28 Feb 2020 03:54:41 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
+ Feb 2020 03:54:41 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 28 Feb 2020 03:54:41 -0600
+Received: from uda0131933.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01S9sbB3125348;
+        Fri, 28 Feb 2020 03:54:38 -0600
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+To:     Tony Lindgren <tony@atomide.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC:     Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, <linux-pwm@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH v2 0/5] clocksource: timer-ti-dm: Prepare for dynamic pwm period updates
+Date:   Fri, 28 Feb 2020 15:23:41 +0530
+Message-ID: <20200228095346.32177-1-lokeshvutla@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1581895931-6056-5-git-send-email-jeff@labundy.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Jeff,
+This series fixes dm_timer_ops used for enabling the pwm and enables
+cpu_pm notifier for context save and restore. This acts as a preparatory
+series for enabling dynamic period updates for pwm omap dm timer driver.
 
-On Sun, Feb 16, 2020 at 05:32:08PM -0600, Jeff LaBundy wrote:
-> This patch adds support for the Azoteq IQS620A, capable of generating
-> a 1-kHz PWM output with duty cycle between ~0.4% and 100% (inclusive).
-> 
-> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+Changes since v1:
+- Updated License header to use SPDX identifier
+- Implemented cpu_pm notfier
+- Added support for getting pwm current status
+- Extended set_pwm functionality.
 
-I like it,
+Lokesh Vutla (5):
+  clocksource: timer-ti-dm: Convert to SPDX identifier
+  clocksource: timer-ti-dm: Implement cpu_pm notifier for context save
+    and restore
+  clocksource: timer-ti-dm: Do not update counter on updating the period
+  clocksource: timer-ti-dm: Add support to get pwm current status
+  clocksource: timer-ti-dm: Enable autoreload in set_pwm
 
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-
-Best regards
-Uwe
+ drivers/clocksource/timer-ti-dm.c          | 136 ++++++++++-----------
+ drivers/pwm/pwm-omap-dmtimer.c             |   8 +-
+ include/clocksource/timer-ti-dm.h          |   3 +-
+ include/linux/platform_data/dmtimer-omap.h |   6 +-
+ 4 files changed, 75 insertions(+), 78 deletions(-)
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.23.0
+
