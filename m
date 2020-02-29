@@ -2,209 +2,257 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 41577173848
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Feb 2020 14:27:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9419A174407
+	for <lists+linux-pwm@lfdr.de>; Sat, 29 Feb 2020 01:59:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgB1N05 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 28 Feb 2020 08:26:57 -0500
-Received: from mx1.tq-group.com ([62.157.118.193]:52777 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726673AbgB1N05 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 28 Feb 2020 08:26:57 -0500
-IronPort-SDR: XOPpaeBNeTzozFGsYiPqCIOKkf5giIjyyTeFjQ/yBOBmOJ9LdFsjOBJyBJwO4mmF1mS9/OAHtM
- FTHL7yeIbgmrL1THuX/CK96bjW1vRF2juN3VRJiY3Kz4iDKgwVlAUY2EHfYGZc94a5ZvhxhWJQ
- G1IdktYwFEWk12+TZ/BAMVqaIGDjpDIOx8xFdWyibxEZ0CBZoFpJVkwBcJa9CEacvViLwS5AOH
- t7PMN1bvfomWboVfC0Tr0BWnM4+WuUSOtkSKD76pNAZ1nypyuyPBuN2ouwCRN5glfzfHGwqLVo
- ORA=
-X-IronPort-AV: E=Sophos;i="5.70,496,1574118000"; 
-   d="scan'208";a="11157171"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 28 Feb 2020 14:26:55 +0100
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Fri, 28 Feb 2020 14:26:55 +0100
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Fri, 28 Feb 2020 14:26:55 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1582896415; x=1614432415;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=7y5bI79HEJXh1PgG/zHqrk8tD2vnb6fquG3FliyVWMY=;
-  b=XJgLJvBa4jLoF14Kwlrbd/2N4USaktu8Zxj6KNu2nKxBzSPprjZEVx1T
-   /PNmew1Z3J/3BNtdOWXcUwZZx/7tOOcYbz/gnjgTgXGBbOg/xO1HvAwBF
-   cg7XUJKrehh/ynzKqt1I6YSPdvo/t1U81fnsNFUh720lG/qmyqczYZ7mc
-   BDJqTYpWepvt5bJ4BsUat42mZU8wVaQ5j+c3O63kJB8HOXaM7z98O/XCs
-   iehcjr8nDPeByA0d+UeR57vmd5sa09v9JjBbl1BSew0tLRlcrQyg4rT70
-   QWYuer0AyY7c3pL1QE19L6s6xT9CvhzewnRqBFPtnLgWWwiBrjgOPiavs
-   Q==;
-IronPort-SDR: D2bOJmLuTR8ZhZ+KEh+Jmvr7rt9otbDN4djc3ixeqEfiFm36SQVabQUP/ArnfI4LWCZgaPjkcv
- io3xmxewNjkz0egwiXBdgRX/0AoYcmG4UGbFYmBahvhrWES1ZgcqKQzfjfJqSfHC0dExqeJRu0
- /VcmHiYdo1Tuz1pk6oMU+EYqRZFdvIiV6XOr3GeCW6ec/Ylv1a4inGjh/x6DraT6npBalxhnoy
- KnZkJ334d4Ctvw91UsDXzNh3B1pcJx1UAxKKr+FaVuFnZ/YzZv+bOPN/hSWD7EDCXmhhBfgCFa
- 9qE=
-X-IronPort-AV: E=Sophos;i="5.70,496,1574118000"; 
-   d="scan'208";a="11157170"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 28 Feb 2020 14:26:55 +0100
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id DDD67280065;
-        Fri, 28 Feb 2020 14:27:03 +0100 (CET)
-Message-ID: <23144d65d94460d70fd66d67d1f9875303c7bce8.camel@ew.tq-group.com>
-Subject: Re: (EXT) Re: (EXT) Re: [PATCH 1/4] pwm: pca9685: remove unused
- duty_cycle struct element
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 28 Feb 2020 14:26:52 +0100
-In-Reply-To: <20200226192103.bodplhjson7drvgm@pengutronix.de>
-References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
-         <20200226151034.7i3h5blmrwre2yzg@pengutronix.de>
-         <32ec35c2b3da119dd2c7bc09742796a0d8a9607e.camel@ew.tq-group.com>
-         <20200226192103.bodplhjson7drvgm@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726561AbgB2A73 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 28 Feb 2020 19:59:29 -0500
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.112]:52443 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726046AbgB2A73 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Feb 2020 19:59:29 -0500
+Received: from [100.113.5.69] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-1.bemta.az-b.eu-central-1.aws.symcld.net id 45/28-62111-A67B95E5; Sat, 29 Feb 2020 00:59:22 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA1WTfUxTVxjGOb23vRdozaXY9VgBk266zdla2Id
+  3Q+aymHmD0c1kc1GHrpVKq6WFfriybIpS2BwQUUYi5UsBJ2MsSAFBgh9jUqWAENAOBoVFihkQ
+  PlIHwkDcbW9123+/932e857nnJyDI/wSTIQrzUalXivXiDlBqGojXyNRN+zZL5uxbCL/KnKg5
+  K+lfwIyrayaQw7PtgKy3zPHJnubCjmky1UJyNmlRYz8pqaATZ4umGCTUx2jGPm0uREj2zPZZK
+  0tDyEXmopRcuBMLniPoKb70jHqqtWFUbbKUxxq0NnMoabu3sWo4rZd1I2iKoy62BdKnX4io0b
+  nryHUI1sE1ZExiX7E3ctWaxU68+ds1XJhRJJHZM6afTkVZAu+A0E4IC4i0NE0gjGFHYUnW0rZ
+  TFEL4GL2AsdboMQdBP4y2o54Cz5xhgVnsidRphgG0HIli14TiHOIDfBBfjXLyyuJZDgx2OUzI
+  YSdDbtODPhMoUQ0PHe+32/aDEsa3BjD78DZ8VbEyyixFi7ln0O9zCPiYMNNi3+3egDbL9T5Bg
+  USMXAus5sWcDptOLzvDPO2EUIIf3eX+OZDgoDlzV0IwwI4NrLsWwqIAzB1vNDf3wA7f3MDhtf
+  A3oxFjOFw2FOS6e/vgJ5bNzkMr4cN1la/h4Tlmem+CJB4CS63pDBtDZyatPot6+B9TyvKcBh0
+  F5UD71EgUY/CBWs/kgNk1v/EZlgK+/K+5zD8GvzhwgRi9V1FCGzLd6PnAVoJNin06gSVMVGu1
+  kgiZTJJZOTrkrckpFT+pUQhVZokB5Vao15Oa1L5FwapISXxoCZeqlUabYB+q/HJHLwR9Fyalr
+  aAVThLLODZvt2zn79CoYtPUckNqgN6k0ZpaAFhOC6GvNw6WgvRKxOU5kNqDf3in8kQ54pX8sK
+  raZlnSJInGtQJjOQAEjxnrKgU4aNanVYpEvLm6mkT4TWpTNrnI579mx4QLgrlgYCAAD43SalP
+  VBv/r48DIQ7EobyzV+gpXLXW+HyncToEiw6h83zqDWGU/yuJUlkxxYLhxScFd2rU4/vuRTlfG
+  DJcirCcrBqLu7FDmPHiQO7Pu2Mvmzs3jkUG3y6O+iD6+NfWmMPOrg8thXj67m09wjfsPzrTio
+  9FLQlr9NvXDI1c08U5HvNCQq9nPUQKVlV0mGNUjviK2M25vDLu5cdby1yiVwsmHT1bPVW2s7v
+  yzD9tq9MsGgfrsHCnvfswP7l/y+17cemr5+ddD6JHLb0zr1w9HqAKdCj+NoE3WWNbbr3/aF3Q
+  Ie3Ril5XVM70J436pI+PJVx3VDmWjW17Wdsfev6wC1Z3LpXHpmXve3vUunwqm7vzs+ngr2rTu
+  3VHZEdPvCtSBxf2iWeOlAyvMInd8U/nh8SoQSWPXI/oDfJ/ALJQh4KyBAAA
+X-Env-Sender: roy.im.opensource@diasemi.com
+X-Msg-Ref: server-27.tower-249.messagelabs.com!1582937961!3178764!1
+X-Originating-IP: [104.47.18.108]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.25; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 13785 invoked from network); 29 Feb 2020 00:59:21 -0000
+Received: from mail-am6eur05lp2108.outbound.protection.outlook.com (HELO EUR05-AM6-obe.outbound.protection.outlook.com) (104.47.18.108)
+  by server-27.tower-249.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 29 Feb 2020 00:59:21 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nwHWHAvvwQ2ntNVqkbMadrZP6y/jfv05Qav576vSJwKSySR5d3OQLeBTIB/Kq9LoHVObs/8WqGGcJdl3nVlU9p23Djj5nB0NXOpNELCavxIKj96MgqD7kEcdmu4y97dTbP5gszWmOcdmcmj0rRlDm5xSREy8E9W9jId0hH4+szJwn2yWDl2zmeBGxvwShediW/h+H/YTbxzsLRFROIfjmHVDZs+Tn9N2reAODtrCT7Knrr+jgc+Y5CqDY5ZikVYFB08W+G9B8Hui2Wp0QbT4LHUFHHvkJAmNGuFFIuuWebH7qdVvscH3y9qVtc6pPHFkQ8Be7DObEBckmfDtg9X0bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xKu6LTWwdlU3LVv9ok60hzW6Dt4saynPzP6Ks8ARz5k=;
+ b=VcciatglA2jKeU4uu2SAZFVRzqoHIPK4Al7fIAZzBoA2rHeAF3aDu3BeGx+JfrABCPWZX0d3C7EAY+Xk1GgasISS7rZe+hGXvU15wYAuIKp2xIDioCYtKUY1bCimuK1JDE1+GGDWbb7AQDeDYwENKjIrU8C6bE7Jx5tIQrySU/feZg9pYUsgYOmOopg0BwitXfLcn5h4VwkgitGHucIw+D9Zpe35Iluxq+wJvQsoNs+vkmROAlA6ThAXbSHWDJvRY/kfY5F8YofCQ6yia+qrKFCn1izoVVJMsFCsZYIlU0+eSVaXSoLdFYfZN8o5AsenCZfQQjjFNd7c3k67ivYnSQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xKu6LTWwdlU3LVv9ok60hzW6Dt4saynPzP6Ks8ARz5k=;
+ b=JhWchhaT93m0PgmNzSSKLva7o4hc1pPccUsm1CyrXHbWnsJK2VSNySPGz/+GtNF55l2N9j2HpEnVQHFuXTS18xHsVm20t2bqR2cg/hZIt4pCaFCr1Jr6/zHCLfUDtTdnJQUari2saqJVI2fzlUXUOTFCp8kaZD4fAnrS74rdWUM=
+Received: from VE1PR10MB3085.EURPRD10.PROD.OUTLOOK.COM (20.179.30.210) by
+ VE1PR10MB3950.EURPRD10.PROD.OUTLOOK.COM (20.180.116.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.18; Sat, 29 Feb 2020 00:59:20 +0000
+Received: from VE1PR10MB3085.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::502e:bd5d:4232:4034]) by VE1PR10MB3085.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::502e:bd5d:4232:4034%3]) with mapi id 15.20.2750.024; Sat, 29 Feb 2020
+ 00:59:20 +0000
+From:   Roy Im <roy.im.opensource@diasemi.com>
+To:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Roy Im <roy.im.opensource@diasemi.com>
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Subject: RE: [PATCH V9 3/3] Input: new da7280 haptic driver
+Thread-Topic: [PATCH V9 3/3] Input: new da7280 haptic driver
+Thread-Index: AQHV6JB2B7xCrQY5cUWkQsJbkeg5B6gtriKAgAMA54A=
+Date:   Sat, 29 Feb 2020 00:59:20 +0000
+Message-ID: <VE1PR10MB30859CB04A6F9DB58D921F7485E90@VE1PR10MB3085.EURPRD10.PROD.OUTLOOK.COM>
+References: <cover.1582270025.git.Roy.Im@diasemi.com>
+ <1569958274d409298695cf86184c7b67aaf19bef.1582270025.git.Roy.Im@diasemi.com>
+ <20200226161307.6tv5q2yh62cp7vk6@pengutronix.de>
+In-Reply-To: <20200226161307.6tv5q2yh62cp7vk6@pengutronix.de>
+Accept-Language: ko-KR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [1.234.57.62]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6b08c3c3-a197-49b9-b35f-08d7bcb29bfa
+x-ms-traffictypediagnostic: VE1PR10MB3950:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR10MB3950BE4C7CA2DD29D7796D82A2E90@VE1PR10MB3950.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 03283976A6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(376002)(39850400004)(136003)(366004)(199004)(189003)(81156014)(8936002)(81166006)(8676002)(7696005)(26005)(71200400001)(7416002)(55016002)(53546011)(6506007)(316002)(110136005)(86362001)(9686003)(54906003)(186003)(33656002)(4326008)(64756008)(66556008)(966005)(76116006)(5660300002)(66446008)(66946007)(478600001)(52536014)(2906002)(66476007)(66574012);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR10MB3950;H:VE1PR10MB3085.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Rn2YHCeByHU4Fel0t8m1GKqXq3/upPJrgpzntv3vZs+WeJPetnVIiHQt4+kljYgP8G2yGcMlLMdoAys88ZzlBcla+M+Gs6NiyNPxRw088DMs9MgjUTj0686k9kqVqmcfAkBlEJStVBR6s2dOiVNYSirobqLPgM0tDUMdKrEPkX9mMjQ8V1esF3Kdoozn53qB6nbuUfHJW2Qp3/H0gr41esYVkgruCRLGX6d3Nxjdu1RcQqx6FgtDkt5B/cLj9c2ytUJSDcDqlJM1Oqlx/FPjw50r/51/QsbVqVl0cFFt1fXblJolmq4V5pdKnA4i0vqYuQv5XE969W2eYWnIp9wV/TM5caSWnDl+0fOXX/BGSmndNytHqDs04zF7s7ut593FgO6oz3KHJy//yrd2hwH43c7tytWsHspBORfPiBFkj62U7/ShInly8YxzC9AVAxqc7uV8hL0O6wFruCzo0+iSdxEGH4EKx0aKc5Kozd22IuQJSbAvlsNPaR/99G5ufMLsO9EgqD0CHmWWb4ZDmUslNA==
+x-ms-exchange-antispam-messagedata: 7OEn82nAW8EajD15XbOkvFysT70oVL6gf3aAps4Rq1cCFcPveJPxgeZ08irzSSVPO6OyKeqxeXxxTiqokFK4bo7G+3iUhRXhyWDwZIsf/AfNTqIWudLTx4aknW2pgTnXqhAhzn6N2FOdr25yKJl1GQ==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b08c3c3-a197-49b9-b35f-08d7bcb29bfa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Feb 2020 00:59:20.1744
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lXpdGfX+HLYCYi8J8+OpLWXFmEVmV4S6BX5ln3bR3lAcLoK0TZSN7Mg0DskwB+KzmkySbfxDMFXVWterMOZ97w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR10MB3950
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 2020-02-26 at 20:21 +0100, Uwe Kleine-König wrote:
-> On Wed, Feb 26, 2020 at 06:03:02PM +0100, Matthias Schiffer wrote:
-> > On Wed, 2020-02-26 at 16:10 +0100, Uwe Kleine-König wrote:
-> > > Hello Matthias,
-> > > 
-> > > as you seem to have this hardware on your desk, it would be great
-> > > if
-> > > you
-> > > could answer the following questions:
-> > > 
-> > >  - Does the hardware complete the currently running period before
-> > >    applying a new setting?
-> > 
-> > The datasheet claims:
-> > 
-> > > Because the loading of the LEDn_ON and LEDn_OFF registers is via
-> > > the
-> > > I 2 C-bus, and
-> > > asynchronous to the internal oscillator, we want to ensure that
-> > > we do
-> > > not see any visual
-> > > artifacts of changing the ON and OFF values. This is achieved by
-> > > updating the changes at
-> > > the end of the LOW cycle.
-> > 
-> > My interpretation is that the hardware will complete its period
-> > before
-> > applying the new settings. I might check with a scope tomorrow-ish.
-> 
-> I agree given that you can update duty_cycle and period in a single
-> write as you considered below. Maybe it is worth playing with small
-> periods and a slow i2c bus speed (or hijack the bus by simulating a
-> clock stretch).
->  
-> > >  - Is this racy somehow (i.e. can it happen that when going from
-> > >    duty_cycle/period = 1000/5000 to duty_cycle/period =
-> > > 4000/10000 the
-> > >    output is 1000/10000 (or 4000/5000) for one cycle)?
-> > 
-> > It currently is racy. It should be possible to fix that either by
-> > updating all 4 registers in a single I2C write, or by using the
-> > "update
-> > on ACK" mode which requires all 4 registers to be updated before
-> > the
-> > new setting is applied (I'm not sure if this mode would require
-> > using a
-> > single I2C write as well though).
-> 
-> I can offer a second pair of eyeballs to interpret the datasheet.
-> Will
-> take a look tomorrow.
-> 
-> > >  - Does the hardware complete the currently running period before
-> > >    .enabled = false is configured?
-> > 
-> > As my interpretation is that new settings are applied
-> > asynchronously, I
-> > assume that the final running period is completed after .enabled is
-> > set
-> > to false.
-> > 
-> > >  - How does the output pin behave on a disabled PWM. (Usual
-> > > candidates
-> > >    are: freeze where is just happens to be, constant inactive and
-> > >    High-Z).
-> > 
-> > Constant inactive. This is also the case when the chip is put into
-> > sleep mode. Note that the interpretation of "inactive" depends in
-> > the
-> > invert flag in the MODE2 register.
-> 
-> This is optimal.
-> 
-> > As it turns out, this driver is broken in yet another way I didn't
-> > find
-> > before: For changing the global prescaler the chip needs to be put
-> > into
-> > sleep mode, but the driver doesn't follow the restart sequence
-> > described in the datasheet when waking it back up. In consequence,
-> > changing the period of one PWM does not only modify the period of
-> > all
-> > PWMs (which is bad enough, but can't be avoided with this
-> > hardware),
-> > but it also leaves all PWMs disabled...
-> > 
-> > As this hardware only has a single prescaler for all PWMs, should
-> > changing the period for individual PWMs even be allowed at all?
-> > Maybe
-> > only when all other PWMs are inactive?
-> 
-> yes, that is the general approach. Please document this in a
-> Limitiations: paragraph. See drivers/pwm/pwm-imx-tpm.c which has a
-> similar problem.
+On Thursday, Feb 27, 2020 at 1:13 AM, Uwe Kleine-K=F6nig wrote:=20
 
-This raises the question what to do about the GPIO mode supported by
-the driver: While the period does not affect GPIO usage of PWMs,
-changing the period would put the chip in sleep mode and thus briefly
-disable active GPIOs. I assume that this should preclude changing the
-period when there are any PWMs requsted as GPIOs, but now the order in
-which things are initialized becomes crucial:
+> On Fri, Feb 21, 2020 at 04:27:05PM +0900, Roy Im wrote:
+> > Adds support for the Dialog DA7280 LRA/ERM Haptic Driver with multiple
+> > mode and integrated waveform memory and wideband support.
+> > It communicates via an I2C bus to the device.
+> >
+> > Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
+> >
+> > ---
+> > v9:
+> > 	- Removed the header file and put the definitions into the c file.
+> > 	- Updated the pwm code and error logs with %pE
+> > +
+> > +struct da7280_haptic {
+> > +	struct regmap *regmap;
+> > +	struct input_dev *input_dev;
+> > +	struct device *dev;
+> > +	struct i2c_client *client;
+> > +	struct pwm_device *pwm_dev;
+> > +
+> > +	bool legacy;
+> > +	int pwm_id;
+>=20
+> pwm_id is unused?
 
-- All references to PWMs of the same PCA9685 must specify the same
-period
-- When requesting a PWM as GPIO, no period can be specified
-=> When a PWM referenced as GPIO is requested before the first actual
-PWM, setting the correct period becomes impossible.
+Okay, I will remove this.
 
-I can't think of a nice solution that doesn't require serious rework -
-maybe we need at least an optional period property in DTS to support
-this case? This could either be implemented as a default period or a
-fixed period.
+[...]
+> > +static int da7280_haptic_set_pwm(struct da7280_haptic *haptics, bool
+> > +enabled) {
+> > +	struct pwm_state state;
+> > +	u64 period_mag_multi;
+> > +	int error;
+> > +
+> > +	if (!haptics->gain) {
+> > +		dev_err(haptics->dev,
+> > +			"Please set the gain first for the pwm mode\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	pwm_get_state(haptics->pwm_dev, &state);
+> > +	state.enabled =3D enabled;
+> > +	period_mag_multi =3D enabled ? state.period * haptics->gain : 0;
+>=20
+> if .enabled is false .duty_cycle has no effect on the output. So there is=
+ no good reason for setting the duty_cyle to
+> something different for a disabled PWM.
 
-A more elaborate solution could be to remove the GPIO code from PCA9685
-and implement a generic GPIO-PWM driver instead that could be
-configured in DTS (again, I have no idea how to support non-DTS
-platforms). Unfortunately, I assume I won't have time to realize such a
-solution myself.
+Okay, I will add a condition for this.
 
-Matthias
+> > +	state.duty_cycle  =3D (haptics->acc_en) ?
+> > +		(unsigned int)(period_mag_multi >> 15) :
+> > +		(unsigned int)((period_mag_multi >> 15)
+> > +			+ state.period) / 2;
+>=20
+> This can be written in a more readable way:
+>=20
+> 	/* would be great to have a symbolic name for 15 */
+> 	period_mag_multi >>=3D 15;
+>=20
+> 	/* comment with a rational here */
+> 	if (!haptics->acc_en) {
+> 		period_mag_multi +=3D state.period;
+> 		period_mag_multi /=3D 2;
+> 	}
+>=20
+> 	state.duty_cycle =3D period_mag_multi;
 
+Okay, thanks. I have tried to update that as below.
+Could I get your comment if you still see anything on this?
 
->  
-> > I could imagine setting it in DTS instead (but I'm not sure what to
-> > do
-> > about non-OF users of this driver, for example when configured via
-> > ACPI).
-> 
-> I don't like fixing the period in the device tree. This isn't a
-> hardware
-> property and it is less flexible than possible.
-> 
+	/* Maximum gain is 0x7fff for PWM mode */
+	#define MAX_MAGNITUDE_SHIFT		15
+       [...]
+	period_mag_multi >>=3D MAX_MAGNITUDE_SHIFT;
+
+	/* The interpretation of duty cycle depends on the acc_en,
+	* it should be from 50% to 100% for acc_en =3D 0.
+	* See datasheet 'PWM mode' section for more details.
+	*/
+	if (!haptics->acc_en) {
+		period_mag_multi +=3D state.period;
+		period_mag_multi /=3D 2;
+	}
+
+> > [...]
+> > +		pwm_init_state(haptics->pwm_dev, &state);
+> > +		state.enabled =3D false;
+> > +		error =3D pwm_apply_state(haptics->pwm_dev, &state);
+> > +		if (error) {
+> > +			dev_err(dev,
+> > +				"failed to apply initial PWM state: %pE\n",
+> > +				ERR_PTR(error));
+> > +			return error;
+> > +		}
+> > +
+> > +		/* Check PWM Period, it must be in 10k ~ 250kHz */
+> > +		period2freq =3D 1000000 / pwm_get_period(haptics->pwm_dev);
+>=20
+> You already know the return value of pwm_get_period(), it's state.period.
+
+Right, I will replace that to state.period.
+
+> > +		if (period2freq < DA7280_MIN_PWM_FREQ_KHZ ||
+> > +		    period2freq > DA7280_MAX_PWM_FREQ_KHZ) {
+> > [...]
+>=20
 > Best regards
 > Uwe
-> 
+>=20
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=F6nig          =
+  |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
 
+Hi Uwe,
+
+Thanks a lot for your comments.
+
+Best regards,
+Roy
