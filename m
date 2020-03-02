@@ -2,88 +2,92 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E4F58175CAC
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Mar 2020 15:14:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E479175CE8
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Mar 2020 15:23:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgCBOOe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 2 Mar 2020 09:14:34 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:6298 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbgCBOOe (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 2 Mar 2020 09:14:34 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e5d14bc0000>; Mon, 02 Mar 2020 06:14:20 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 02 Mar 2020 06:14:33 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 02 Mar 2020 06:14:33 -0800
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 2 Mar
- 2020 14:14:33 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 2 Mar 2020 14:14:33 +0000
-Received: from thunderball.nvidia.com (Not Verified[10.21.140.91]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e5d14c70003>; Mon, 02 Mar 2020 06:14:32 -0800
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH V2] regulator: pwm: Don't warn on probe deferral
-Date:   Mon, 2 Mar 2020 14:14:28 +0000
-Message-ID: <20200302141428.14119-1-jonathanh@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-X-NVConfidentiality: public
+        id S1727306AbgCBOXr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 2 Mar 2020 09:23:47 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48913 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727304AbgCBOXr (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 2 Mar 2020 09:23:47 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j8lys-0006BU-0S; Mon, 02 Mar 2020 15:23:38 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j8lyo-0005zd-PI; Mon, 02 Mar 2020 15:23:34 +0100
+Date:   Mon, 2 Mar 2020 15:23:34 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Jeff LaBundy <jeff@labundy.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, dmitry.torokhov@gmail.com,
+        thierry.reding@gmail.com, jic23@kernel.org,
+        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH v5 2/7] mfd: Add support for Azoteq
+ IQS620A/621/622/624/625
+Message-ID: <20200302142334.orvi7aqbsbnfspy5@pengutronix.de>
+References: <1581895931-6056-1-git-send-email-jeff@labundy.com>
+ <1581895931-6056-3-git-send-email-jeff@labundy.com>
+ <20200224111448.GS3494@dell>
+ <20200228034220.GA3510@labundy.com>
+ <20200302120458.GY3494@dell>
+ <20200302141117.GA11787@labundy.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1583158460; bh=0GatP6vVf/seOlgH+tfmFyiVZODDdF0j2nUvSd2GwHU=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=T9+3w88XNgfhfSvSGfpdhaifYMwZ8orawBGaaKlHYKNYnAXqoUS0OJgQY6JlCLbTt
-         Jf/6IcaD1OOChMycsXp0ICSct1vjmhIuMWfWYV3LRyrHkJEkhdsViqY34HiSwf56yg
-         ORZU+x+sZI1VpK0WHgbJRLqGpZkgSvtRKdc56H4mmWjCxJMC7b44QpWO53/8vZG5D4
-         AlkTwe6eJNO1Z7MaK2epDSlDSoJkzL+5RlEfwAKE2HChW28eVSS1p6F7Oo2VR1OTwq
-         xrC3LMst2HZP7OfP68rW8US6VCSvAKyAsI6cfIYWpku1UTZ0gpiOApYz0tXIVRriPH
-         RfyPb8BoaLXiw==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200302141117.GA11787@labundy.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Deferred probe is an expected return value for devm_pwm_get(). Given
-that the driver deals with it properly, rather than warn on probe
-deferral, only output a message on probe deferral if debug level
-prints are enabled.
+Hello,
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
-Changes since V1:
-- Update change to add a debug print for probe deferral
+On Mon, Mar 02, 2020 at 08:11:17AM -0600, Jeff LaBundy wrote:
+> On Mon, Mar 02, 2020 at 12:04:58PM +0000, Lee Jones wrote:
+> > On Thu, 27 Feb 2020, Jeff LaBundy wrote:
+> > 
+> > > Hi Lee,
+> > > 
+> > > On Mon, Feb 24, 2020 at 11:14:48AM +0000, Lee Jones wrote:
+> > > 
+> > > [...]
+> > > 
+> > > > 
+> > > > Well done Jeff.  Good job.
+> > > > 
+> > > > Applied, thanks.
+> > > > 
+> > > 
+> > > Thank you for your kind words as well as your support in fleshing out this
+> > > series.
+> > > 
+> > > Just to confirm, does your offer to take the remainder (once everything is
+> > > approved) through immutable branches still stand?
+> > 
+> > Depends how quickly you can get the other drivers turned around.
+> 
+> With Uwe's approval from Friday, all five drivers are complete.
 
- drivers/regulator/pwm-regulator.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Note that I'm "only" reviewer of the PWM stuff and Thierry is the one
+responsible for the pwm-tree. So you need his ack to take the pwm patch
+through a different tree.
 
-diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
-index e74e11101fc1..638329bd0745 100644
---- a/drivers/regulator/pwm-regulator.c
-+++ b/drivers/regulator/pwm-regulator.c
-@@ -354,7 +354,11 @@ static int pwm_regulator_probe(struct platform_device *pdev)
- 	drvdata->pwm = devm_pwm_get(&pdev->dev, NULL);
- 	if (IS_ERR(drvdata->pwm)) {
- 		ret = PTR_ERR(drvdata->pwm);
--		dev_err(&pdev->dev, "Failed to get PWM: %d\n", ret);
-+		if (ret == -EPROBE_DEFER)
-+			dev_dbg(&pdev->dev,
-+				"Failed to get PWM, deferring probe\n");
-+		else
-+			dev_err(&pdev->dev, "Failed to get PWM: %d\n", ret);
- 		return ret;
- 	}
- 
+Best regards
+Uwe
+
 -- 
-2.17.1
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
