@@ -2,105 +2,119 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 23D0D1773D8
-	for <lists+linux-pwm@lfdr.de>; Tue,  3 Mar 2020 11:19:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 55B59177BF7
+	for <lists+linux-pwm@lfdr.de>; Tue,  3 Mar 2020 17:33:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbgCCKT1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 3 Mar 2020 05:19:27 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:8670 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726661AbgCCKT0 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 3 Mar 2020 05:19:26 -0500
-X-UUID: 117aaee898884524a57a71c695fb40cc-20200303
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=kNo7DFj3b9HktV/9EBruUcLqKxjTBFu6uKwuH9eM2VA=;
-        b=fStkvVGfdODZUFXguzcaSao361mDB+EW3bBusAbnaUlGGE/VqKZLS5KuAaEyBY9TUxIXZXS5weqU0adXCsNkx6rOzkyQYQmMquvB2VF3631lmuQE71qIba/YVbK+YKby1XTp4ukN2F+CcXHcwjVWne3RcKqaERgSJw5JrlcgMCQ=;
-X-UUID: 117aaee898884524a57a71c695fb40cc-20200303
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2000101293; Tue, 03 Mar 2020 18:19:20 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 3 Mar 2020 18:18:18 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 3 Mar 2020 18:19:16 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v2 1/1] pwm: mediatek: add longer period support
-Date:   Tue, 3 Mar 2020 18:19:15 +0800
-Message-ID: <1583230755-25986-2-git-send-email-sam.shih@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1583230755-25986-1-git-send-email-sam.shih@mediatek.com>
-References: <1583230755-25986-1-git-send-email-sam.shih@mediatek.com>
+        id S1729417AbgCCQdE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 3 Mar 2020 11:33:04 -0500
+Received: from muru.com ([72.249.23.125]:58612 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727989AbgCCQdE (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 3 Mar 2020 11:33:04 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 86D4180EE;
+        Tue,  3 Mar 2020 16:33:47 +0000 (UTC)
+Date:   Tue, 3 Mar 2020 08:32:59 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Keerthy <j-keerthy@ti.com>, Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH v2 2/5] clocksource: timer-ti-dm: Implement cpu_pm
+ notifier for context save and restore
+Message-ID: <20200303163259.GU37466@atomide.com>
+References: <20200228095346.32177-1-lokeshvutla@ti.com>
+ <20200228095346.32177-3-lokeshvutla@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228095346.32177-3-lokeshvutla@ti.com>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-VGhlIHB3bSBjbG9jayBzb3VyY2UgY291bGQgYmUgZGl2aWRlZCBieSAxNjI1IHdpdGggUFdNX0NP
-Tg0KQklUKDMpIHNldHRpbmcgaW4gbWVkaWF0ZWsgaGFyZHdhcmUuDQoNClRoaXMgcGF0Y2ggYWRk
-IHN1cHBvcnQgZm9yIGxvbmdlciBwd20gcGVyaW9kIGNvbmZpZ3VyYXRpb24sDQp3aGljaCBhbGxv
-d2luZyBibGlua2luZyBMRURzIHZpYSBwd20gaW50ZXJmYWNlLg0KDQpTaWduZWQtb2ZmLWJ5OiBT
-YW0gU2hpaCA8c2FtLnNoaWhAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9wd20vcHdtLW1l
-ZGlhdGVrLmMgfCAzNCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tDQogMSBmaWxl
-IGNoYW5nZWQsIDMwIGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQg
-YS9kcml2ZXJzL3B3bS9wd20tbWVkaWF0ZWsuYyBiL2RyaXZlcnMvcHdtL3B3bS1tZWRpYXRlay5j
-DQppbmRleCBiOTRlMGQwOWMzMDAuLmM2NGVjZmY2YzU1MCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMv
-cHdtL3B3bS1tZWRpYXRlay5jDQorKysgYi9kcml2ZXJzL3B3bS9wd20tbWVkaWF0ZWsuYw0KQEAg
-LTEyMSw4ICsxMjEsMTEgQEAgc3RhdGljIGludCBwd21fbWVkaWF0ZWtfY29uZmlnKHN0cnVjdCBw
-d21fY2hpcCAqY2hpcCwgc3RydWN0IHB3bV9kZXZpY2UgKnB3bSwNCiAJCQkgICAgICAgaW50IGR1
-dHlfbnMsIGludCBwZXJpb2RfbnMpDQogew0KIAlzdHJ1Y3QgcHdtX21lZGlhdGVrX2NoaXAgKnBj
-ID0gdG9fcHdtX21lZGlhdGVrX2NoaXAoY2hpcCk7DQotCXUzMiBjbGtkaXYgPSAwLCBjbnRfcGVy
-aW9kLCBjbnRfZHV0eSwgcmVnX3dpZHRoID0gUFdNRFdJRFRILA0KLQkgICAgcmVnX3RocmVzID0g
-UFdNVEhSRVM7DQorCS8qIFRoZSBzb3VyY2UgY2xvY2sgaXMgZGl2aWRlZCBieSAyXmNsa2RpdiBv
-ciBpZmYgdGhlIGNsa3NlbCBiaXQNCisJICogaXMgc2V0IGJ5ICgyXmNsa2RpdioxNjI1KQ0KKwkg
-Ki8NCisJdTMyIGNsa2RpdiA9IDAsIGNsa3NlbCA9IDAsIGNudF9wZXJpb2QsIGNudF9kdXR5LA0K
-KwkgICAgcmVnX3dpZHRoID0gUFdNRFdJRFRILCByZWdfdGhyZXMgPSBQV01USFJFUzsNCiAJdTY0
-IHJlc29sdXRpb247DQogCWludCByZXQ7DQogDQpAQCAtMTMzLDEyICsxMzYsMzAgQEAgc3RhdGlj
-IGludCBwd21fbWVkaWF0ZWtfY29uZmlnKHN0cnVjdCBwd21fY2hpcCAqY2hpcCwgc3RydWN0IHB3
-bV9kZXZpY2UgKnB3bSwNCiANCiAJLyogVXNpbmcgcmVzb2x1dGlvbiBpbiBwaWNvc2Vjb25kIGdl
-dHMgYWNjdXJhY3kgaGlnaGVyICovDQogCXJlc29sdXRpb24gPSAodTY0KU5TRUNfUEVSX1NFQyAq
-IDEwMDA7DQorCS8qIENhbGN1bGF0ZSByZXNvbHV0aW9uIGJhc2VkIG9uIGN1cnJlbnQgY2xvY2sg
-ZnJlcXVlbmN5ICovDQogCWRvX2RpdihyZXNvbHV0aW9uLCBjbGtfZ2V0X3JhdGUocGMtPmNsa19w
-d21zW3B3bS0+aHdwd21dKSk7DQotDQorCS8qIFVzaW5nIHJlc29sdXRpb24gdG8gY2FsY3VsYXRl
-IGNudF9wZXJpb2Qgd2hpY2ggcmVwcmVzZW50cw0KKwkgKiB0aGUgZWZmZWN0aXZlIHJhbmdlIG9m
-IHRoZSBQV00gcGVyaW9kIGNvdW50ZXINCisJICovDQogCWNudF9wZXJpb2QgPSBESVZfUk9VTkRf
-Q0xPU0VTVF9VTEwoKHU2NClwZXJpb2RfbnMgKiAxMDAwLCByZXNvbHV0aW9uKTsNCiAJd2hpbGUg
-KGNudF9wZXJpb2QgPiA4MTkxKSB7DQorCQkvKiBVc2luZyBjbGtkaXYgdG8gcmVkdWNlIGNsb2Nr
-IGZyZXF1ZW5jeSBhbmQgY2FsY3VsYXRlDQorCQkgKiBuZXcgcmVzb2x1dGlvbiBiYXNlZCBvbiBu
-ZXcgY2xvY2sgc3BlZWQNCisJCSAqLw0KIAkJcmVzb2x1dGlvbiAqPSAyOw0KIAkJY2xrZGl2Kys7
-DQorCQlpZiAoY2xrZGl2ID4gUFdNX0NMS19ESVZfTUFYICYmICFjbGtzZWwpIHsNCisJCQkvKiBV
-c2luZyBjbGtzZWwgdG8gZGl2aWRlIHRoZSBwd20gc291cmNlIGNsb2NrIGJ5DQorCQkJICogYW4g
-YWRkaXRpb25hbCAxNjI1LCBhbmQgcmVjYWxjdWxhdGUgbmV3IGNsa2Rpdg0KKwkJCSAqIGFuZCBy
-ZXNvbHV0aW9uDQorCQkJICovDQorCQkJY2xrc2VsID0gMTsNCisJCQljbGtkaXYgPSAwOw0KKwkJ
-CXJlc29sdXRpb24gPSAodTY0KU5TRUNfUEVSX1NFQyAqIDEwMDAgKiAxNjI1Ow0KKwkJCWRvX2Rp
-dihyZXNvbHV0aW9uLA0KKwkJCQljbGtfZ2V0X3JhdGUocGMtPmNsa19wd21zW3B3bS0+aHdwd21d
-KSk7DQorCQl9DQorCQkvKiBDYWxjdWxhdGUgY250X3BlcmlvZCBiYXNlZCBvbiByZXNvbHV0aW9u
-ICovDQogCQljbnRfcGVyaW9kID0gRElWX1JPVU5EX0NMT1NFU1RfVUxMKCh1NjQpcGVyaW9kX25z
-ICogMTAwMCwNCiAJCQkJCQkgICByZXNvbHV0aW9uKTsNCiAJfQ0KQEAgLTE1OCw4ICsxNzksMTMg
-QEAgc3RhdGljIGludCBwd21fbWVkaWF0ZWtfY29uZmlnKHN0cnVjdCBwd21fY2hpcCAqY2hpcCwg
-c3RydWN0IHB3bV9kZXZpY2UgKnB3bSwNCiAJCXJlZ190aHJlcyA9IFBXTTQ1VEhSRVNfRklYVVA7
-DQogCX0NCiANCisJLyogQ2FsY3VsYXRlIGNudF9kdXR5IGJhc2VkIG9uIHJlc29sdXRpb24gKi8N
-CiAJY250X2R1dHkgPSBESVZfUk9VTkRfQ0xPU0VTVF9VTEwoKHU2NClkdXR5X25zICogMTAwMCwg
-cmVzb2x1dGlvbik7DQotCXB3bV9tZWRpYXRla193cml0ZWwocGMsIHB3bS0+aHdwd20sIFBXTUNP
-TiwgQklUKDE1KSB8IGNsa2Rpdik7DQorCWlmIChjbGtzZWwpDQorCQlwd21fbWVkaWF0ZWtfd3Jp
-dGVsKHBjLCBwd20tPmh3cHdtLCBQV01DT04sIEJJVCgxNSkgfCBCSVQoMykgfA0KKwkJCQkgICAg
-Y2xrZGl2KTsNCisJZWxzZQ0KKwkJcHdtX21lZGlhdGVrX3dyaXRlbChwYywgcHdtLT5od3B3bSwg
-UFdNQ09OLCBCSVQoMTUpIHwgY2xrZGl2KTsNCiAJcHdtX21lZGlhdGVrX3dyaXRlbChwYywgcHdt
-LT5od3B3bSwgcmVnX3dpZHRoLCBjbnRfcGVyaW9kKTsNCiAJcHdtX21lZGlhdGVrX3dyaXRlbChw
-YywgcHdtLT5od3B3bSwgcmVnX3RocmVzLCBjbnRfZHV0eSk7DQogDQotLSANCjIuMTcuMQ0K
+Hi,
 
+* Lokesh Vutla <lokeshvutla@ti.com> [200228 09:55]:
+> omap_dm_timer_enable() restores the entire context(including counter)
+> based on 2 conditions:
+> - If get_context_loss_count is populated and context is lost.
+> - If get_context_loss_count is not populated update unconditionally.
+> 
+> Case2 has a side effect of updating the counter register even though
+> context is not lost. When timer is configured in pwm mode, this is
+> causing undesired behaviour in the pwm period.
+> 
+> Instead of using get_context_loss_count call back, implement cpu_pm
+> notifier with context save and restore support. And delete the
+> get_context_loss_count callback all together.
+
+Thanks for getting this going.
+
+I noticed system timers are not working properly now though. Not
+sure what might cause that, but I spotted few issues below.
+
+> --- a/drivers/clocksource/timer-ti-dm.c
+> +++ b/drivers/clocksource/timer-ti-dm.c
+...
+> +static void omap_timer_save_context(struct omap_dm_timer *timer)
+> +{
+> +	pm_runtime_get_sync(&timer->pdev->dev);
+> +	timer->context.tclr =
+> +			omap_dm_timer_read_reg(timer, OMAP_TIMER_CTRL_REG);
+> +	timer->context.twer =
+> +			omap_dm_timer_read_reg(timer, OMAP_TIMER_WAKEUP_EN_REG);
+> +	timer->context.tldr =
+> +			omap_dm_timer_read_reg(timer, OMAP_TIMER_LOAD_REG);
+> +	timer->context.tmar =
+> +			omap_dm_timer_read_reg(timer, OMAP_TIMER_MATCH_REG);
+> +	timer->context.tier = readl_relaxed(timer->irq_ena);
+> +	timer->context.tsicr =
+> +			omap_dm_timer_read_reg(timer, OMAP_TIMER_IF_CTRL_REG);
+> +	pm_runtime_put_sync(&timer->pdev->dev);
+> +}
+
+We must not use pm_runtime functions here, these notifiers run
+at a point when runtime PM is out of the picture already. And
+we really don't want to tag any modules with pm_runtime_irq_safe()
+as it takes a permanent use count on the parent device.
+
+Instead, just add atomic_t awake that runtime_resume sets at the end,
+and runtime_suspend clears first thing. Then you can check for awake
+here, and there's nothing to do here if !awake.
+
+And then runtime_suspend should save the context too and
+runtime_resume restore it :)
+
+> @@ -827,6 +830,8 @@ static int omap_dm_timer_remove(struct platform_device *pdev)
+>  	list_for_each_entry(timer, &omap_timer_list, node)
+>  		if (!strcmp(dev_name(&timer->pdev->dev),
+>  			    dev_name(&pdev->dev))) {
+> +			if (!(timer->capability & OMAP_TIMER_ALWON))
+> +				cpu_pm_unregister_notifier(&timer->nb);
+>  			list_del(&timer->node);
+>  			ret = 0;
+>  			break;
+
+For the OMAP_TIMER_ALWON checks, I believe am335x and am437x have
+OMAP_TIMER_ALWON set for timers but will still have context lost
+in deeper idle states as only the PMIC is enabled.
+
+For those cases, at least runtime_suspend and resume functions
+need to save and restore context based on setting some flag
+maybe based on of_machine_is_compatible() or soc_device_match().
+
+I guess with recent cpuidle patches, this needs to be also done
+during runtime for am335x and am437x. Maybe Dave or Keerthy have
+more comments on that part?
+
+Regards,
+
+Tony
