@@ -2,58 +2,116 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FADC17A4D6
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Mar 2020 13:03:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6181B17A653
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Mar 2020 14:26:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbgCEMDy convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Thu, 5 Mar 2020 07:03:54 -0500
-Received: from mail.11d02.mspz7.gob.ec ([181.211.254.254]:45182 "EHLO
-        mail.11d02.mspz7.gob.ec" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727112AbgCEMDy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Mar 2020 07:03:54 -0500
-X-Greylist: delayed 4048 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Mar 2020 07:03:54 EST
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.11d02.mspz7.gob.ec (Postfix) with ESMTP id 64EA514A03E;
-        Thu,  5 Mar 2020 05:50:33 -0500 (-05)
-Received: from mail.11d02.mspz7.gob.ec ([127.0.0.1])
-        by localhost (mail.11d02.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id VnkudWSbYQOq; Thu,  5 Mar 2020 05:50:33 -0500 (-05)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.11d02.mspz7.gob.ec (Postfix) with ESMTP id 2E5F8147279;
-        Thu,  5 Mar 2020 04:46:25 -0500 (-05)
-X-Virus-Scanned: amavisd-new at 11d02.mspz7.gob.ec
-Received: from mail.11d02.mspz7.gob.ec ([127.0.0.1])
-        by localhost (mail.11d02.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id ddfCcYn-D2rM; Thu,  5 Mar 2020 04:46:25 -0500 (-05)
-Received: from [10.22.221.193] (unknown [105.0.4.26])
-        by mail.11d02.mspz7.gob.ec (Postfix) with ESMTPSA id 0E441146B24;
-        Thu,  5 Mar 2020 04:33:40 -0500 (-05)
-Content-Type: text/plain; charset="utf-8"
+        id S1725912AbgCEN0I (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 5 Mar 2020 08:26:08 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37774 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbgCEN0I (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Mar 2020 08:26:08 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a141so5717448wme.2
+        for <linux-pwm@vger.kernel.org>; Thu, 05 Mar 2020 05:26:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:organization:mime-version
+         :content-transfer-encoding;
+        bh=NzJlwBLu2PMXJhvFCCamBP6u57AQ/SuSFKrWPDuWILQ=;
+        b=a697x9HiNkVQHItHTfxnttcSwWbaOhPz9ubP9b7NU9x/EP2Y2QUzX3zhaQVac6U4OL
+         nteXZTLu5Z+SoZQm73w7R7oMIW9uuBa8Z1p5uqOE+RWUmjk0Px932a3MQMZAacBtTB8p
+         AgWpqtFPPbqkbHLv9n9Xxsl4md9xcvfa0sPGg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:organization
+         :mime-version:content-transfer-encoding;
+        bh=NzJlwBLu2PMXJhvFCCamBP6u57AQ/SuSFKrWPDuWILQ=;
+        b=UHDZrqCzY4sPbzBvR6x9BlbbRonw/08KeuUq5kOA361UNMq66tLs/F0Oq/mwM10k2C
+         AamsyQBI3BxShyjztMb0429fohrsun/wygt0dkN7jAW2Mqq6t7CkUxYwdTGD3RzFo8rG
+         vC9lLWa/erEPzFkya7Px/QZxgq/XZV6MqebsISkjTLOC/PGCWlLcEw1oSI1h8FP0eydT
+         SGTscvLSzCh+MaGWN/e+3NPRbFSFi7vJVIlN3rNRq/JT6nUkG9GeWSOiwtrwRIPe+Fx9
+         tvv1b7poYEbHT5yHh/2GbyyLCbKoVxEHqOCs1pSU6Tz4OoOIaK8bVabiLpzeU8MIRUT1
+         Q9+w==
+X-Gm-Message-State: ANhLgQ0IsyU+6Eq4jeXkH0LnhYXWuf5/RQERJSyeWYVdvvI/MQGzcX8V
+        KKtmm925CNRYpwhDodh6CxGlCacx0uTxI1Yg
+X-Google-Smtp-Source: ADFU+vu/gQ9srOP39BIyg7ghYVlTbTb3qRklu4tSmUPv6SYBuqzYJ8pXCVAKp9igdxtEx8MyKa6QPQ==
+X-Received: by 2002:a1c:a4c4:: with SMTP id n187mr9982366wme.10.1583414764858;
+        Thu, 05 Mar 2020 05:26:04 -0800 (PST)
+Received: from ub1910 ([213.48.11.149])
+        by smtp.gmail.com with ESMTPSA id j20sm9477139wmj.46.2020.03.05.05.26.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 05:26:04 -0800 (PST)
+Date:   Thu, 5 Mar 2020 13:22:32 +0000
+From:   Paul Barker <pbarker@konsulko.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        "Uwe =?UTF-8?B?S2xlaW5lLUs=?= =?UTF-8?B?w7ZuaWc=?=" 
+        <u.kleine-koenig@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Inverted PWM output on iMX6
+Message-ID: <20200305132232.1aced378@ub1910>
+Organization: Konsulko Group
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000_Millionen_Euro?=
-To:     Recipients <alex.zari@11d02.mspz7.gob.ec>
-From:   ''Michael Weirsky'' <alex.zari@11d02.mspz7.gob.ec>
-Date:   Thu, 05 Mar 2020 11:26:41 +0200
-Reply-To: mikeweirskyspende@gmail.com
-Message-Id: <20200305093344.0E441146B24@mail.11d02.mspz7.gob.ec>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Lieber Freund,
+Hi folks,
 
-Ich bin Herr Mike Weirsky, New Jersey, Vereinigte Staaten von Amerika, der Mega-Gewinner von $ 273million In Mega Millions Jackpot, spende ich an 5 zufällige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Mail nach einem Spinball ausgewählt.Ich habe den größten Teil meines Vermögens auf eine Reihe von Wohltätigkeitsorganisationen und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die Summe von € 2.000.000,00 an Sie als eine der ausgewählten 5 zu spenden, um meine Gewinne zu überprüfen.
-Das ist dein Spendencode: [MW530342019]
-www.youtube.com/watch?v=un8yRTmrYMY
+I recently ran into an issue using the pwm-fan driver with an inverted
+PWM output on iMX6.
 
-Antworten Sie mit dem SPENDE-CODE an diese 
+The fan is defined in the device tree as follows:
 
-E-Mail:mikeweirskyspende@gmail.com
+	fan0: pwm-fan {
+		compatible = "pwm-fan";
+		pwms = <&pwm2 0 25000 PWM_POLARITY_INVERTED>;
+		...
+	}
 
-Ich hoffe, Sie und Ihre Familie glücklich zu machen.
+In pwm_imx27_probe() the support for a third `flags` argument in a pwm
+reference is enabled:
 
-Grüße
-Herr Mike Weirsky
+	imx->chip.of_xlate = of_pwm_xlate_with_flags;
+	imx->chip.of_pwm_n_cells = 3;
+
+However, the flag is ignored and the output is not inverted.
+
+By adding some prints I saw that when of_pwm_xlate_with_flags() is
+called, args->args_count is 2 instead of 3.
+
+Looking at the definition of the pwm device itself in imx6qdl.dtsi I
+can see that the number of cells in a pwm reference is set to 2 not 3:
+
+	pwm2: pwm@2084000 {
+		#pwm-cells = <2>;
+		...
+	};
+
+That seems to be preventing a third argument from being passed.
+
+I can change `#pwm-cells` to <3> and then everything works for my
+device but I'm not sure that is the correct solution for everyone. That
+would require all pwm references on iMX6 devices to use 3 cells. The
+code in of_pwm_xlate_with_flags() seems to be built to handle either 2
+or 3 argument cells but I can't see any way to allow this choice in the
+device tree.
+
+If the solution is to set `#pwm-cells` to <3> I'm happy to send a patch
+which does this and updates all pwm references in device trees which
+include `imx6dql.dtsi`. Before I do that I'd like to know that it's the
+correct approach though.
+
+For context I've confirmed this is the case in Linux 5.4 and that the
+relevant files haven't changed between that release and 5.6.0-rc4.
+
+Thanks,
+
+-- 
+Paul Barker
+Konsulko Group
