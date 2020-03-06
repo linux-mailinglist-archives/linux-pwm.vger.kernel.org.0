@@ -2,89 +2,89 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AB69317B7BD
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Mar 2020 08:51:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 453D917B8ED
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Mar 2020 10:03:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbgCFHvg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 6 Mar 2020 02:51:36 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43007 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbgCFHvf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Mar 2020 02:51:35 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jA7lZ-0001YG-Vh; Fri, 06 Mar 2020 08:51:29 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jA7lZ-0004WQ-EO; Fri, 06 Mar 2020 08:51:29 +0100
-Date:   Fri, 6 Mar 2020 08:51:29 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] regulator: pwm: Don't warn on probe deferral
-Message-ID: <20200306075129.mzs22yjitkmgrthh@pengutronix.de>
-References: <20200224144048.6587-1-jonathanh@nvidia.com>
- <20200224165859.GJ6215@sirena.org.uk>
- <20200226161757.idpzbs3jmayt7ya6@pengutronix.de>
- <20200226163905.GH4136@sirena.org.uk>
+        id S1726413AbgCFJDp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 6 Mar 2020 04:03:45 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15809 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbgCFJDp (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Mar 2020 04:03:45 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e6211990007>; Fri, 06 Mar 2020 01:02:17 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 06 Mar 2020 01:03:44 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 06 Mar 2020 01:03:44 -0800
+Received: from [10.19.64.157] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Mar
+ 2020 09:03:41 +0000
+Subject: Re: [PATCH] pwm: tegra: Add support for Tegra194
+To:     Sandipan Patra <spatra@nvidia.com>, <treding@nvidia.com>,
+        <robh+dt@kernel.org>, <u.kleine-koenig@pengutronix.de>,
+        <jonathanh@nvidia.com>
+References: <1583407653-30059-1-git-send-email-spatra@nvidia.com>
+CC:     <bbasu@nvidia.com>, <linux-pwm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+From:   Laxman Dewangan <ldewangan@nvidia.com>
+Message-ID: <cc4daacd-c9fb-8057-dad3-7411476e4757@nvidia.com>
+Date:   Fri, 6 Mar 2020 14:33:02 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200226163905.GH4136@sirena.org.uk>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <1583407653-30059-1-git-send-email-spatra@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1583485338; bh=vzioGjXD1IUumga+3XM/dUEThHitYjhisxYt6UDi4fk=;
+        h=X-PGP-Universal:Subject:To:References:CC:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding;
+        b=UWX8JX+xbXvTj+Ob23BujOnEyiFtcPUAG7A2WX+W2NmeJxE23xXYhug9LwFbj7DX0
+         1uwdFYLQLMUtN2vozAEjzRNNql/5hla1B4Ym7glTI+SW5X2ruL3qDnCXUZQcTJainN
+         g1TTOYxPvLv7py8zLLWc0A+NHzA2OnYuCWDkzRXKEDGqYftA7ziHhC0+BhhwsVSokK
+         uof2WppWcN8u3UvSJ7fx5KESnk3pluHEY83HDwCaFOqypL1OE0/k7UG1RYWuJZHSX9
+         FFnb3ELBac8jsK7xbAOfcfwhL3RjK1jJw25b3npGt3tnWSgSzPqttxlwUd+Fruj6Hi
+         KxB2medoPXObQ==
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 04:39:05PM +0000, Mark Brown wrote:
-> On Wed, Feb 26, 2020 at 05:17:57PM +0100, Uwe Kleine-König wrote:
-> > On Mon, Feb 24, 2020 at 04:58:59PM +0000, Mark Brown wrote:
-> 
-> > > This then means that there's no way for users to determine why the
-> > > driver has failed to instantiate which can be frustrating.  It'd be
-> > > better to at least have some dev_dbg() output when deferring so that
-> > > there's something for people to go on without having to instrument the
-> > > code.
-> 
-> > Not printing an error message is quite usual however. I think a generic
-> 
-> Usual yet also frustraing.
-> 
-> > approach that for example makes the list of devices that should be
-> > retried to probe on the next opportunity inspectable would be nice.
-> 
-> That's not really the issue, the bigger issue is trying to figure out
-> why things are stuck - what exactly caused things to fail to
-> instantiate.
 
-I wonder if we should do something like:
 
-	ret = some_call(some, args);
-	if (ret) {
-		if (emit_errmsg_for_err(ret))
-			dev_err(dev, "some_call failed: %pE\n", ERR_PTR(ret));
-		return ret;
-	}
+On Thursday 05 March 2020 04:57 PM, Sandipan Patra wrote:
+> Tegra194 has multiple PWM controllers with each having only one output.
+>
+> Also the maxmimum frequency is higher than earlier SoCs.
+>
+> Add support for Tegra194 and specify the number of PWM outputs and
+> maximum supported frequency using device tree match data.
+>
+> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
+> ---
+>   Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt | 1 +
+>   drivers/pwm/pwm-tegra.c                                      | 6 ++++++
+>   2 files changed, 7 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
+> index 0a69ead..74c41e3 100644
+> --- a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
+> +++ b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
+> @@ -9,6 +9,7 @@ Required properties:
+>     - "nvidia,tegra132-pwm", "nvidia,tegra20-pwm": for Tegra132
+>     - "nvidia,tegra210-pwm", "nvidia,tegra20-pwm": for Tegra210
+>     - "nvidia,tegra186-pwm": for Tegra186
+> +  - "nvidia,tegra194-pwm": for Tegra194
+>   - reg: physical base address and length of the controller's registers
+>   - #pwm-cells: should be 2. See pwm.yaml in this directory for a description of
+>     the cells format.
+>
 
-and have emit_errmsg_for_err return true if ret != -EPROBE_DEFER or some
-kernel parameter is given.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Acked-by: Laxman Dewangan <ldewangan@nvidia.com>
