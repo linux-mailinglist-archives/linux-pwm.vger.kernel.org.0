@@ -2,41 +2,43 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 727CA17B7AD
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Mar 2020 08:44:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB69317B7BD
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Mar 2020 08:51:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725934AbgCFHop (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 6 Mar 2020 02:44:45 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55167 "EHLO
+        id S1726108AbgCFHvg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 6 Mar 2020 02:51:36 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43007 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725853AbgCFHop (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Mar 2020 02:44:45 -0500
+        with ESMTP id S1726107AbgCFHvf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Mar 2020 02:51:35 -0500
 Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
         by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1jA7ez-0000q2-1k; Fri, 06 Mar 2020 08:44:41 +0100
+        id 1jA7lZ-0001YG-Vh; Fri, 06 Mar 2020 08:51:29 +0100
 Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
         (envelope-from <ukl@pengutronix.de>)
-        id 1jA7ey-0004Fd-KA; Fri, 06 Mar 2020 08:44:40 +0100
-Date:   Fri, 6 Mar 2020 08:44:40 +0100
+        id 1jA7lZ-0004WQ-EO; Fri, 06 Mar 2020 08:51:29 +0100
+Date:   Fri, 6 Mar 2020 08:51:29 +0100
 From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     linux-pwm@vger.kernel.org,
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [RESEND v6 1/2] pwm: Convert drivers to use 64-bit period and
- duty cycle
-Message-ID: <20200306074440.ykekwwlvnbodxkjc@pengutronix.de>
-References: <cover.1583177501.git.gurus@codeaurora.org>
- <28090aef9900ad483cbfbe77883e5ffcd8745907.1583177501.git.gurus@codeaurora.org>
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] regulator: pwm: Don't warn on probe deferral
+Message-ID: <20200306075129.mzs22yjitkmgrthh@pengutronix.de>
+References: <20200224144048.6587-1-jonathanh@nvidia.com>
+ <20200224165859.GJ6215@sirena.org.uk>
+ <20200226161757.idpzbs3jmayt7ya6@pengutronix.de>
+ <20200226163905.GH4136@sirena.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <28090aef9900ad483cbfbe77883e5ffcd8745907.1583177501.git.gurus@codeaurora.org>
+In-Reply-To: <20200226163905.GH4136@sirena.org.uk>
 User-Agent: NeoMutt/20170113 (1.7.2)
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
 X-SA-Exim-Mail-From: ukl@pengutronix.de
@@ -47,54 +49,38 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello,
+On Wed, Feb 26, 2020 at 04:39:05PM +0000, Mark Brown wrote:
+> On Wed, Feb 26, 2020 at 05:17:57PM +0100, Uwe Kleine-König wrote:
+> > On Mon, Feb 24, 2020 at 04:58:59PM +0000, Mark Brown wrote:
+> 
+> > > This then means that there's no way for users to determine why the
+> > > driver has failed to instantiate which can be frustrating.  It'd be
+> > > better to at least have some dev_dbg() output when deferring so that
+> > > there's something for people to go on without having to instrument the
+> > > code.
+> 
+> > Not printing an error message is quite usual however. I think a generic
+> 
+> Usual yet also frustraing.
+> 
+> > approach that for example makes the list of devices that should be
+> > retried to probe on the next opportunity inspectable would be nice.
+> 
+> That's not really the issue, the bigger issue is trying to figure out
+> why things are stuck - what exactly caused things to fail to
+> instantiate.
 
-On Mon, Mar 02, 2020 at 11:34:22AM -0800, Guru Das Srinagesh wrote:
-> Because period and duty cycle are defined in the PWM framework structs
-> as ints with units of nanoseconds, the maximum time duration that can be
-> set is limited to ~2.147 seconds. Redefining them as u64 values will
-> enable larger time durations to be set.
-> 
-> As a first step, prepare drivers to handle the switch to u64 period and
-> duty_cycle by making the relevant fixes to those drivers that use the
-> period and duty_cycle pwm struct members in division operations, viz.
-> replacing the division operations with 64-bit division macros as
-> appropriate. The actual switch to u64 period and duty_cycle follows as a
-> separate patch.
-> 
-> Where the dividend is 64-bit but the divisor is 32-bit, use *_ULL
-> macros:
-> - DIV_ROUND_UP_ULL
-> - DIV_ROUND_CLOSEST_ULL
-> - div_u64
-> 
-> Where the divisor is 64-bit (dividend may be 32-bit or 64-bit), use
-> DIV64_* macros:
-> - DIV64_U64_ROUND_CLOSEST
-> - div64_u64
-> 
-> The kbuild test robot helped to improve this patch by catching a couple
-> of code sites that had to be adapted.
-> 
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> ---
->  drivers/clk/clk-pwm.c                      | 2 +-
->  drivers/gpu/drm/i915/display/intel_panel.c | 2 +-
->  drivers/hwmon/pwm-fan.c                    | 2 +-
->  drivers/media/rc/ir-rx51.c                 | 3 ++-
->  drivers/pwm/pwm-clps711x.c                 | 2 +-
->  drivers/pwm/pwm-imx-tpm.c                  | 2 +-
->  drivers/pwm/pwm-imx27.c                    | 5 ++---
->  drivers/pwm/pwm-sifive.c                   | 2 +-
->  drivers/pwm/pwm-sti.c                      | 5 +++--
->  drivers/pwm/pwm-stm32-lp.c                 | 2 +-
->  drivers/pwm/pwm-sun4i.c                    | 2 +-
->  drivers/video/backlight/pwm_bl.c           | 3 ++-
+I wonder if we should do something like:
 
-I guess we need acks from the affected maintainers. While I think the
-changes are fine I think you won't evade having to expand the audience
-of your patch and (depending on feedback) maybe split this patch up
-further.
+	ret = some_call(some, args);
+	if (ret) {
+		if (emit_errmsg_for_err(ret))
+			dev_err(dev, "some_call failed: %pE\n", ERR_PTR(ret));
+		return ret;
+	}
+
+and have emit_errmsg_for_err return true if ret != -EPROBE_DEFER or some
+kernel parameter is given.
 
 Best regards
 Uwe
