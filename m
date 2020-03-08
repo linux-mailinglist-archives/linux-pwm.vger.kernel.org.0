@@ -2,21 +2,25 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BDBB17DB56
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Mar 2020 09:41:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BF2617DF48
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Mar 2020 13:01:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgCIIll (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 9 Mar 2020 04:41:41 -0400
-Received: from [104.211.176.144] ([104.211.176.144]:57787 "EHLO
-        INMUDMS02.bharucha.in" rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgCIIlk (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 Mar 2020 04:41:40 -0400
-Received: from User ([23.106.124.229]) by INMUDMS02.bharucha.in with Microsoft SMTPSVC(10.0.14393.0);
-         Mon, 9 Mar 2020 14:11:33 +0530
-Reply-To: <abulkareem461@gmail.com>
-From:   "Abdul Kareem" <admin@supply.org>
-Subject: BUSINESS PROPOSAL !!!
-Date:   Mon, 9 Mar 2020 01:41:33 -0700
+        id S1726742AbgCIMBY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 9 Mar 2020 08:01:24 -0400
+Received: from [61.60.216.169] ([61.60.216.169]:58554 "EHLO oa.philio-tech.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1726465AbgCIMBW (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 9 Mar 2020 08:01:22 -0400
+X-Greylist: delayed 66464 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Mar 2020 08:01:13 EDT
+Received: from User ([156.96.45.188])
+        (authenticated bits=0)
+        by oa.philio-tech.com (8.13.8/8.13.1) with ESMTP id 028HOHlG005868;
+        Mon, 9 Mar 2020 01:24:19 +0800
+Message-Id: <202003081724.028HOHlG005868@oa.philio-tech.com>
+Reply-To: <francoispiniault@gmail.com>
+From:   "Francois Pinault" <francioispinaul@gmail.com>
+Subject: Re:
+Date:   Sun, 8 Mar 2020 13:33:12 -0400
 MIME-Version: 1.0
 Content-Type: text/plain;
         charset="Windows-1251"
@@ -25,19 +29,10 @@ X-Priority: 3
 X-MSMail-Priority: Normal
 X-Mailer: Microsoft Outlook Express 6.00.2600.0000
 X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-ID: <INMUDMS02X0nmR1sjVf000011e1@INMUDMS02.bharucha.in>
-X-OriginalArrivalTime: 09 Mar 2020 08:41:33.0232 (UTC) FILETIME=[89544300:01D5F5EE]
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Dearest Friend
-
-I am Mr Abdul Kareem working with Emirate NBD Bank Dubai,United Arab Emirate as Finance Manager.
-I have a very profitable Business that relate to you and will benefit both of us after completion.
-Kindly get back to me for more details.
-Awaiting your response.
-Regards
-Abdul Kareem
+A donation was made in your favour by Francois Pinault, reply for more details.
