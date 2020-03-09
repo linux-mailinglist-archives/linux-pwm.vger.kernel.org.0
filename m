@@ -2,21 +2,21 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 299C317E8AA
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Mar 2020 20:36:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C60517E897
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Mar 2020 20:36:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbgCITfm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 9 Mar 2020 15:35:42 -0400
+        id S1726487AbgCITfW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 9 Mar 2020 15:35:22 -0400
 Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:22361 "EHLO
         alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726610AbgCITfZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 Mar 2020 15:35:25 -0400
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 09 Mar 2020 12:35:22 -0700
+        by vger.kernel.org with ESMTP id S1726461AbgCITfW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 Mar 2020 15:35:22 -0400
+Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 09 Mar 2020 12:35:21 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 09 Mar 2020 12:35:21 -0700
+  by ironmsg01-sd.qualcomm.com with ESMTP; 09 Mar 2020 12:35:21 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id EDA49463E; Mon,  9 Mar 2020 12:35:20 -0700 (PDT)
+        id F3EF04973; Mon,  9 Mar 2020 12:35:20 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -24,13 +24,10 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         linux-kernel@vger.kernel.org,
         Guru Das Srinagesh <gurus@codeaurora.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org, Yash Shah <yash.shah@sifive.com>,
-        Atish Patra <atish.patra@wdc.com>
-Subject: [PATCH v7 08/13] pwm: sifive: Use 64-bit division macros for period and duty cycle
-Date:   Mon,  9 Mar 2020 12:35:11 -0700
-Message-Id: <4212f82b8711b2b33f0e71142526d5a7575564e9.1583782035.git.gurus@codeaurora.org>
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v7 09/13] pwm: sti: Use 64-bit division macros for period and duty cycle
+Date:   Mon,  9 Mar 2020 12:35:12 -0700
+Message-Id: <c3e233828023833744a69c75eb03f72885ee59d5.1583782035.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1583782035.git.gurus@codeaurora.org>
 References: <cover.1583782035.git.gurus@codeaurora.org>
@@ -62,29 +59,30 @@ DIV64_* macros:
 - DIV64_U64_ROUND_CLOSEST
 - div64_u64
 
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: linux-riscv@lists.infradead.org
-Cc: Yash Shah <yash.shah@sifive.com>
-Cc: Atish Patra <atish.patra@wdc.com>
+Cc: Lee Jones <lee.jones@linaro.org>
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 ---
- drivers/pwm/pwm-sifive.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pwm/pwm-sti.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index cc63f9b..62de0bb 100644
---- a/drivers/pwm/pwm-sifive.c
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -181,7 +181,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 * consecutively
- 	 */
- 	num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
--	frac = DIV_ROUND_CLOSEST_ULL(num, state->period);
-+	frac = DIV64_U64_ROUND_CLOSEST(num, state->period);
- 	/* The hardware cannot generate a 100% duty cycle */
- 	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
+diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
+index 1508616..5a7f337 100644
+--- a/drivers/pwm/pwm-sti.c
++++ b/drivers/pwm/pwm-sti.c
+@@ -371,10 +371,11 @@ static int sti_pwm_capture(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		effective_ticks = clk_get_rate(pc->cpt_clk);
+ 
+ 		result->period = (high + low) * NSEC_PER_SEC;
+-		result->period /= effective_ticks;
++		result->period = div_u64(result->period, effective_ticks);
+ 
+ 		result->duty_cycle = high * NSEC_PER_SEC;
+-		result->duty_cycle /= effective_ticks;
++		result->duty_cycle = div_u64(result->duty_cycle,
++				effective_ticks);
+ 
+ 		break;
  
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
