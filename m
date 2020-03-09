@@ -2,115 +2,109 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EB4217E63B
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Mar 2020 19:01:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CC8217E898
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Mar 2020 20:36:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgCISB2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 9 Mar 2020 14:01:28 -0400
-Received: from muru.com ([72.249.23.125]:59418 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbgCISB2 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:01:28 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id A5E9C80FA;
-        Mon,  9 Mar 2020 18:02:12 +0000 (UTC)
-Date:   Mon, 9 Mar 2020 11:01:23 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
+        id S1726466AbgCITfW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 9 Mar 2020 15:35:22 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:22361 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726115AbgCITfW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 Mar 2020 15:35:22 -0400
+Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 09 Mar 2020 12:35:20 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg01-sd.qualcomm.com with ESMTP; 09 Mar 2020 12:35:20 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 5F2304A19; Mon,  9 Mar 2020 12:35:20 -0700 (PDT)
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
-        Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v2 4/6] pwm: omap-dmtimer: Fix pwm disabling sequence
-Message-ID: <20200309180123.GP37466@atomide.com>
-References: <20200228095651.32464-1-lokeshvutla@ti.com>
- <20200228095651.32464-5-lokeshvutla@ti.com>
- <20200306181443.GJ37466@atomide.com>
- <9129d4fe-a17e-2fa6-764c-6a746fa5096d@ti.com>
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        Guru Das Srinagesh <gurus@codeaurora.org>
+Subject: [PATCH v7 00/13] Convert period and duty cycle to u64
+Date:   Mon,  9 Mar 2020 12:35:03 -0700
+Message-Id: <cover.1583782035.git.gurus@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9129d4fe-a17e-2fa6-764c-6a746fa5096d@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-* Lokesh Vutla <lokeshvutla@ti.com> [200309 04:53]:
-> Hi Tony,
-> 
-> On 06/03/20 11:44 PM, Tony Lindgren wrote:
-> > * Lokesh Vutla <lokeshvutla@ti.com> [200228 09:58]:
-> >> pwm_omap_dmtimer_disable() calls .stop callback which abruptly stops the
-> >> timer counter. This doesn't complete the current pwm cycle and
-> >> immediately disables the pwm. Instead disable the auto reload
-> >> functionality which allows to complete the current pwm cycle and then
-> >> disables the timer.
-> >>
-> >> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> >> ---
-> >>  drivers/pwm/pwm-omap-dmtimer.c | 10 +++++++++-
-> >>  1 file changed, 9 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-> >> index bc338619232d..89b3c25d02b8 100644
-> >> --- a/drivers/pwm/pwm-omap-dmtimer.c
-> >> +++ b/drivers/pwm/pwm-omap-dmtimer.c
-> >> @@ -93,8 +93,16 @@ static void pwm_omap_dmtimer_disable(struct pwm_chip *chip,
-> >>  {
-> >>  	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
-> >>  
-> >> +	/*
-> >> +	 * Disable auto reload so that the current cycle gets completed and
-> >> +	 * then the counter stops.
-> >> +	 */
-> >>  	mutex_lock(&omap->mutex);
-> >> -	omap->pdata->stop(omap->dm_timer);
-> >> +	omap->pdata->set_pwm(omap->dm_timer,
-> >> +			     pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
-> >> +			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE,
-> >> +			     false);
-> >> +
-> >>  	mutex_unlock(&omap->mutex);
-> >>  }
-> > 
-> > I'm seeing an issue with this patch where after use something is
-> > left on and power consumption stays higher by about 30 mW after
-> > use.
-> 
-> Interesting...What is the PWM period and duty cycle in the test case?
-> Can you dump the following registers before and after disabling:
-> - TLDR
-> - TMAR
-> - TCLR
+Changes from v6:
+  - Split out the driver changes out into separate patches, one patch per file
+    for ease of reviewing.
 
-Here's the state dumped before and after in omap_dm_timer_set_pwm():
+Changes from v5:
+  - Dropped the conversion of struct pwm_capture to u64 for reasons mentioned
+    in https://www.spinics.net/lists/linux-pwm/msg11541.html
 
-omap_timer 4803e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00000040
-omap_timer 4803e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001842
-omap_timer 4013e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00000040
-omap_timer 4013e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001842
-omap_timer 4013e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00001843
-omap_timer 4013e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001841
-omap_timer 4803e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00001843
-omap_timer 4803e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001841
+Changes from v4:
+  - Split the patch into two: one for changes to the drivers, and the actual
+    switch to u64 for ease of reverting should the need arise.
+  - Re-examined the patch and made the following corrections:
+      * intel_panel.c:
+	DIV64_U64_ROUND_UP -> DIV_ROUND_UP_ULL (as only the numerator would be
+	64-bit in this case).
+      * pwm-sti.c:
+	do_div -> div_u64 (do_div is optimized only for x86 architectures, and
+	div_u64's comment block suggests to use this as much as possible).
 
-So looks like the start bit is still enabled after use?
+Changes from v3:
+  - Rebased to current tip of for-next.
 
-I think the duty cycle depends on the strength set for rumble-test.c.
+Changes from v2:
+  - Fixed %u -> %llu in a dev_dbg in pwm-stm32-lp.c, thanks to kbuild test robot
+  - Added a couple of fixes to pwm-imx-tpm.c and pwm-sifive.c
 
-> > I can reproduce this easily on droid4 with Sebastian's rumble-test
-> > app[0]. After use, I sometimes also hear the vibrator keep chirping
-> > quietly, so there seems to be some pwm still happening after disable :)
-> 
-> hmm..The line clearly goes down on the scope after the current pwm duty cycle is
-> done and never comes back.
+Changes from v1:
+  - Fixed compilation errors seen when compiling for different archs.
 
-OK
+Reworked the change pushed upstream earlier [1] so as to not add an extension
+to an obsolete API. With this change, pwm_ops->apply() can be used to set
+pwm_state parameters as usual.
 
-Regards,
+[1] https://lore.kernel.org/lkml/20190916140048.GB7488@ulmo/
 
-Tony
+Guru Das Srinagesh (13):
+  clk: pwm: Use 64-bit division macros for period and duty cycle
+  drm/i915: Use 64-bit division macros for period and duty cycle
+  hwmon: pwm-fan: Use 64-bit division macros for period and duty cycle
+  ir-rx51: Use 64-bit division macros for period and duty cycle
+  pwm: clps711x: Use 64-bit division macros for period and duty cycle
+  pwm: pwm-imx-tpm: Use 64-bit division macros for period and duty cycle
+  pwm: imx27: Use 64-bit division macros for period and duty cycle
+  pwm: sifive: Use 64-bit division macros for period and duty cycle
+  pwm: sti: Use 64-bit division macros for period and duty cycle
+  pwm: stm32-lp: Use %llu format specifier for period
+  pwm: sun4i: Use 64-bit division macros for period and duty cycle
+  backlight: pwm_bl: Use 64-bit division macros for period and duty
+    cycle
+  pwm: core: Convert period and duty cycle to u64
+
+ drivers/clk/clk-pwm.c                      |  2 +-
+ drivers/gpu/drm/i915/display/intel_panel.c |  2 +-
+ drivers/hwmon/pwm-fan.c                    |  2 +-
+ drivers/media/rc/ir-rx51.c                 |  3 ++-
+ drivers/pwm/core.c                         |  4 ++--
+ drivers/pwm/pwm-clps711x.c                 |  2 +-
+ drivers/pwm/pwm-imx-tpm.c                  |  2 +-
+ drivers/pwm/pwm-imx27.c                    |  5 ++---
+ drivers/pwm/pwm-sifive.c                   |  2 +-
+ drivers/pwm/pwm-sti.c                      |  5 +++--
+ drivers/pwm/pwm-stm32-lp.c                 |  2 +-
+ drivers/pwm/pwm-sun4i.c                    |  2 +-
+ drivers/pwm/sysfs.c                        |  8 ++++----
+ drivers/video/backlight/pwm_bl.c           |  3 ++-
+ include/linux/pwm.h                        | 12 ++++++------
+ 15 files changed, 29 insertions(+), 27 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
