@@ -2,21 +2,21 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C60517E897
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Mar 2020 20:36:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68C8B17E8A2
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Mar 2020 20:36:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgCITfW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 9 Mar 2020 15:35:22 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:22361 "EHLO
+        id S1726641AbgCITfZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 9 Mar 2020 15:35:25 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:22384 "EHLO
         alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726461AbgCITfW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 Mar 2020 15:35:22 -0400
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 09 Mar 2020 12:35:21 -0700
+        by vger.kernel.org with ESMTP id S1726582AbgCITfZ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 Mar 2020 15:35:25 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 09 Mar 2020 12:35:22 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg01-sd.qualcomm.com with ESMTP; 09 Mar 2020 12:35:21 -0700
+  by ironmsg03-sd.qualcomm.com with ESMTP; 09 Mar 2020 12:35:21 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id F3EF04973; Mon,  9 Mar 2020 12:35:20 -0700 (PDT)
+        id 148F94973; Mon,  9 Mar 2020 12:35:21 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -24,10 +24,12 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         linux-kernel@vger.kernel.org,
         Guru Das Srinagesh <gurus@codeaurora.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v7 09/13] pwm: sti: Use 64-bit division macros for period and duty cycle
-Date:   Mon,  9 Mar 2020 12:35:12 -0700
-Message-Id: <c3e233828023833744a69c75eb03f72885ee59d5.1583782035.git.gurus@codeaurora.org>
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: [PATCH v7 10/13] pwm: stm32-lp: Use %llu format specifier for period
+Date:   Mon,  9 Mar 2020 12:35:13 -0700
+Message-Id: <20ac22dbeb9e41bdcb594ee82f6ccd609c3426c6.1583782035.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1583782035.git.gurus@codeaurora.org>
 References: <cover.1583782035.git.gurus@codeaurora.org>
@@ -43,46 +45,32 @@ as ints with units of nanoseconds, the maximum time duration that can be
 set is limited to ~2.147 seconds. Redefining them as u64 values will
 enable larger time durations to be set.
 
-As a first step, prepare drivers to handle the switch to u64 period and
-duty_cycle by replacing division operations involving pwm period and duty cycle
-with their 64-bit equivalents as appropriate. The actual switch to u64 period
-and duty_cycle follows as a separate patch.
+As a first step, prepare this driver to handle the switch to u64 period
+and duty_cycle by updating the format specifier in this dev_dbg message.
+The actual switch to u64 period and duty_cycle follows as a separate
+patch.
 
-Where the dividend is 64-bit but the divisor is 32-bit, use *_ULL
-macros:
-- DIV_ROUND_UP_ULL
-- DIV_ROUND_CLOSEST_ULL
-- div_u64
-
-Where the divisor is 64-bit (dividend may be 32-bit or 64-bit), use
-DIV64_* macros:
-- DIV64_U64_ROUND_CLOSEST
-- div64_u64
-
-Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 ---
- drivers/pwm/pwm-sti.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/pwm/pwm-stm32-lp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
-index 1508616..5a7f337 100644
---- a/drivers/pwm/pwm-sti.c
-+++ b/drivers/pwm/pwm-sti.c
-@@ -371,10 +371,11 @@ static int sti_pwm_capture(struct pwm_chip *chip, struct pwm_device *pwm,
- 		effective_ticks = clk_get_rate(pc->cpt_clk);
- 
- 		result->period = (high + low) * NSEC_PER_SEC;
--		result->period /= effective_ticks;
-+		result->period = div_u64(result->period, effective_ticks);
- 
- 		result->duty_cycle = high * NSEC_PER_SEC;
--		result->duty_cycle /= effective_ticks;
-+		result->duty_cycle = div_u64(result->duty_cycle,
-+				effective_ticks);
- 
- 		break;
+diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
+index 67fca62..134c146 100644
+--- a/drivers/pwm/pwm-stm32-lp.c
++++ b/drivers/pwm/pwm-stm32-lp.c
+@@ -61,7 +61,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	do_div(div, NSEC_PER_SEC);
+ 	if (!div) {
+ 		/* Clock is too slow to achieve requested period. */
+-		dev_dbg(priv->chip.dev, "Can't reach %u ns\n",	state->period);
++		dev_dbg(priv->chip.dev, "Can't reach %llu ns\n", state->period);
+ 		return -EINVAL;
+ 	}
  
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
