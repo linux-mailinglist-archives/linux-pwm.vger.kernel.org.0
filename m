@@ -2,163 +2,115 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B37317E5D6
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Mar 2020 18:35:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EB4217E63B
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Mar 2020 19:01:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727416AbgCIRfL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 9 Mar 2020 13:35:11 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:58492 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727257AbgCIRfL (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 Mar 2020 13:35:11 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 742452D2;
-        Mon,  9 Mar 2020 18:35:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1583775309;
-        bh=cNUG21AIQuWguIWMaWR0YrR815lsN6eSpuJ61vHjccE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pwDX0z9my3G+PmEboLgi8ZHMgeZx+YHPn6ToJ92tqo7GblbmTlxQ5XwkaC4slZY7Q
-         fdhVuJQ5X0ep91xIiGUiws73S9kb7cr/9O4Coxx9KbyvygVJBJul2oUekh/DIeuW+4
-         1CzqNckNv3cg2jPv0X+BTwG0fBfsteONmWXYhysw=
-Date:   Mon, 9 Mar 2020 19:35:06 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "pbarker@konsulko.com" <pbarker@konsulko.com>,
-        "pantelis.antoniou@konsulko.com" <pantelis.antoniou@konsulko.com>,
-        "laurent.pinchart+renesas@ideasonboard.com" 
-        <laurent.pinchart+renesas@ideasonboard.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "matt.ranostay@konsulko.com" <matt.ranostay@konsulko.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-Subject: Re: [PATCH] dts: imx6: Allow flags argument in pwms reference
-Message-ID: <20200309173506.GA4916@pendragon.ideasonboard.com>
-References: <20200309145558.16098-1-pbarker@konsulko.com>
- <d1c950a83d3aa0520df696033bb0a038e2de1f66.camel@toradex.com>
- <20200309170751.vzffq5gmsaw3tsbp@pengutronix.de>
+        id S1726295AbgCISB2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 9 Mar 2020 14:01:28 -0400
+Received: from muru.com ([72.249.23.125]:59418 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726170AbgCISB2 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 9 Mar 2020 14:01:28 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id A5E9C80FA;
+        Mon,  9 Mar 2020 18:02:12 +0000 (UTC)
+Date:   Mon, 9 Mar 2020 11:01:23 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
+        Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v2 4/6] pwm: omap-dmtimer: Fix pwm disabling sequence
+Message-ID: <20200309180123.GP37466@atomide.com>
+References: <20200228095651.32464-1-lokeshvutla@ti.com>
+ <20200228095651.32464-5-lokeshvutla@ti.com>
+ <20200306181443.GJ37466@atomide.com>
+ <9129d4fe-a17e-2fa6-764c-6a746fa5096d@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200309170751.vzffq5gmsaw3tsbp@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <9129d4fe-a17e-2fa6-764c-6a746fa5096d@ti.com>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 06:07:51PM +0100, Uwe Kleine-König wrote:
-> On Mon, Mar 09, 2020 at 04:45:05PM +0000, Philippe Schenker wrote:
-> > On Mon, 2020-03-09 at 14:55 +0000, Paul Barker wrote:
-> >> The pwm-imx27 driver supports a third argument in a pwms reference to
-> >> provide flags. However #pwm-cells needs to be set to <3> in the pwm
-> >> node
-> >> so that these flags can be passed through to the driver. Once #pwm-
-> >> cells
-> >> is <3>, all pwms references need to use the 3-cell form.
-> >> 
-> >> Signed-off-by: Paul Barker <pbarker@konsulko.com>
-> >> 
-> >> Cc: Matt Ranostay <matt.ranostay@konsulko.com>
-> >> Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> >> Cc: Rob Herring robh+dt@kernel.org
-> >> Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> >> Cc: Thierry Reding <thierry.reding@gmail.com>
-> >> Cc: Shawn Guo <shawnguo@kernel.org>
+* Lokesh Vutla <lokeshvutla@ti.com> [200309 04:53]:
+> Hi Tony,
+> 
+> On 06/03/20 11:44 PM, Tony Lindgren wrote:
+> > * Lokesh Vutla <lokeshvutla@ti.com> [200228 09:58]:
+> >> pwm_omap_dmtimer_disable() calls .stop callback which abruptly stops the
+> >> timer counter. This doesn't complete the current pwm cycle and
+> >> immediately disables the pwm. Instead disable the auto reload
+> >> functionality which allows to complete the current pwm cycle and then
+> >> disables the timer.
+> >>
+> >> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 > >> ---
-> >>  arch/arm/boot/dts/imx6dl-aristainetos_4.dts      |  2 +-
-> >>  arch/arm/boot/dts/imx6dl-aristainetos_7.dts      |  2 +-
-> >>  arch/arm/boot/dts/imx6dl-mamoj.dts               |  2 +-
-> >>  arch/arm/boot/dts/imx6dl-yapp4-common.dtsi       |  1 -
-> >>  arch/arm/boot/dts/imx6q-ba16.dtsi                |  2 +-
-> >>  arch/arm/boot/dts/imx6q-display5.dtsi            |  1 -
-> >>  arch/arm/boot/dts/imx6q-kp.dtsi                  |  4 ++--
-> >>  arch/arm/boot/dts/imx6q-logicpd.dts              |  2 +-
-> >>  arch/arm/boot/dts/imx6q-mccmon6.dts              |  1 -
-> >>  arch/arm/boot/dts/imx6q-novena.dts               |  2 +-
-> >>  arch/arm/boot/dts/imx6q-pistachio.dts            |  2 +-
-> >>  arch/arm/boot/dts/imx6q-var-dt6customboard.dts   |  2 +-
-> >>  arch/arm/boot/dts/imx6qdl-apalis.dtsi            |  2 +-
-> >>  arch/arm/boot/dts/imx6qdl-apf6dev.dtsi           |  2 +-
-> >>  arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi     |  2 +-
-> >>  arch/arm/boot/dts/imx6qdl-colibri.dtsi           |  2 +-
-> >>  arch/arm/boot/dts/imx6qdl-cubox-i.dtsi           |  2 +-
-> >>  arch/arm/boot/dts/imx6qdl-emcon.dtsi             |  6 +++---
-> >>  arch/arm/boot/dts/imx6qdl-gw52xx.dtsi            |  2 +-
-> >>  arch/arm/boot/dts/imx6qdl-gw53xx.dtsi            |  2 +-
-> >>  arch/arm/boot/dts/imx6qdl-gw54xx.dtsi            |  2 +-
-> >>  arch/arm/boot/dts/imx6qdl-gw560x.dtsi            |  2 +-
-> >>  arch/arm/boot/dts/imx6qdl-gw5903.dtsi            |  2 +-
-> >>  arch/arm/boot/dts/imx6qdl-gw5904.dtsi            |  2 +-
-> >>  arch/arm/boot/dts/imx6qdl-icore.dtsi             |  2 +-
-> >>  arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi    |  2 +-
-> >>  arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi         |  4 ++--
-> >>  arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi     |  6 +++---
-> >>  arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi    |  4 ++--
-> >>  arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi        |  4 ++--
-> >>  arch/arm/boot/dts/imx6qdl-phytec-mira.dtsi       |  2 +-
-> >>  arch/arm/boot/dts/imx6qdl-sabreauto.dtsi         |  2 +-
-> >>  arch/arm/boot/dts/imx6qdl-sabrelite.dtsi         |  6 +++---
-> >>  arch/arm/boot/dts/imx6qdl-sabresd.dtsi           |  2 +-
-> >>  arch/arm/boot/dts/imx6qdl-savageboard.dtsi       |  2 +-
-> >>  arch/arm/boot/dts/imx6qdl-tx6.dtsi               |  2 --
-> >>  arch/arm/boot/dts/imx6qdl.dtsi                   |  8 ++++----
-> >>  arch/arm/boot/dts/imx6sl-evk.dts                 |  2 +-
-> >>  arch/arm/boot/dts/imx6sl.dtsi                    |  8 ++++----
-> >>  arch/arm/boot/dts/imx6sll-evk.dts                |  2 +-
-> >>  arch/arm/boot/dts/imx6sll.dtsi                   |  8 ++++----
-> >>  arch/arm/boot/dts/imx6sx-nitrogen6sx.dts         |  2 +-
-> >>  arch/arm/boot/dts/imx6sx-sdb.dtsi                |  2 +-
-> >>  arch/arm/boot/dts/imx6sx-softing-vining-2000.dts |  6 +++---
-> >>  arch/arm/boot/dts/imx6sx.dtsi                    | 16 ++++++++-------
-> >> -
-> >>  arch/arm/boot/dts/imx6ul-14x14-evk.dtsi          |  2 +-
-> >>  arch/arm/boot/dts/imx6ul-ccimx6ulsbcpro.dts      |  2 +-
-> >>  arch/arm/boot/dts/imx6ul-geam.dts                |  2 +-
-> >>  arch/arm/boot/dts/imx6ul-imx6ull-opos6uldev.dtsi |  2 +-
-> >>  arch/arm/boot/dts/imx6ul-isiot.dtsi              |  2 +-
-> >>  arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts  |  2 +-
-> >>  arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi    |  2 +-
-> >>  arch/arm/boot/dts/imx6ul-pico.dtsi               |  2 +-
-> >>  arch/arm/boot/dts/imx6ul-tx6ul.dtsi              |  1 -
-> >>  arch/arm/boot/dts/imx6ul.dtsi                    | 16 ++++++++-------
-> >> -
-> >>  arch/arm/boot/dts/imx6ull-colibri.dtsi           |  4 ----
-> >>  56 files changed, 85 insertions(+), 95 deletions(-)
-> >> 
-> >> diff --git a/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
-> >> b/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
-> >> index 37f80ab8ccd0..f87ac95b70bc 100644
-> >> --- a/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
-> >> +++ b/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
-> >> @@ -14,7 +14,7 @@
+> >>  drivers/pwm/pwm-omap-dmtimer.c | 10 +++++++++-
+> >>  1 file changed, 9 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+> >> index bc338619232d..89b3c25d02b8 100644
+> >> --- a/drivers/pwm/pwm-omap-dmtimer.c
+> >> +++ b/drivers/pwm/pwm-omap-dmtimer.c
+> >> @@ -93,8 +93,16 @@ static void pwm_omap_dmtimer_disable(struct pwm_chip *chip,
+> >>  {
+> >>  	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
 > >>  
-> >>  	backlight {
-> >>  		compatible = "pwm-backlight";
-> >> -		pwms = <&pwm1 0 5000000>;
-> >> +		pwms = <&pwm1 0 5000000 0>;
+> >> +	/*
+> >> +	 * Disable auto reload so that the current cycle gets completed and
+> >> +	 * then the counter stops.
+> >> +	 */
+> >>  	mutex_lock(&omap->mutex);
+> >> -	omap->pdata->stop(omap->dm_timer);
+> >> +	omap->pdata->set_pwm(omap->dm_timer,
+> >> +			     pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
+> >> +			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE,
+> >> +			     false);
+> >> +
+> >>  	mutex_unlock(&omap->mutex);
+> >>  }
 > > 
-> > There is a header file existing that has PWM_POLARITY_INVERTED defined
-> > in include/dt-bindings/pwm/pwm.h. I feel we should add there a
-> > PWM_POLARITY_NORMAL instead of just using 0.
+> > I'm seeing an issue with this patch where after use something is
+> > left on and power consumption stays higher by about 30 mW after
+> > use.
 > 
-> ack.
-> 
-> > But then I'm asking myself if we can't get rid of the file include/dt-
-> > bindings/pwm/pwm.h and instead use include/linux/pwm.h everywhere.
-> > 
-> > Or shouldn't we use defines in devicetrees from there?
-> 
-> devicetrees are supposed to be stand-alone. So yes indeed, no linux
-> includes in device tree files.
+> Interesting...What is the PWM period and duty cycle in the test case?
+> Can you dump the following registers before and after disabling:
+> - TLDR
+> - TMAR
+> - TCLR
 
-Correct. I don't mind adding PWM_POLARITY_NORMAL to
-include/dt-bindings/pwm/pwm.h, I think it would increase readability.
+Here's the state dumped before and after in omap_dm_timer_set_pwm():
 
--- 
+omap_timer 4803e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00000040
+omap_timer 4803e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001842
+omap_timer 4013e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00000040
+omap_timer 4013e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001842
+omap_timer 4013e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00001843
+omap_timer 4013e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001841
+omap_timer 4803e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00001843
+omap_timer 4803e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001841
+
+So looks like the start bit is still enabled after use?
+
+I think the duty cycle depends on the strength set for rumble-test.c.
+
+> > I can reproduce this easily on droid4 with Sebastian's rumble-test
+> > app[0]. After use, I sometimes also hear the vibrator keep chirping
+> > quietly, so there seems to be some pwm still happening after disable :)
+> 
+> hmm..The line clearly goes down on the scope after the current pwm duty cycle is
+> done and never comes back.
+
+OK
+
 Regards,
 
-Laurent Pinchart
+Tony
