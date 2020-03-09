@@ -2,21 +2,21 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6254517E8B1
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Mar 2020 20:36:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 299C317E8AA
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Mar 2020 20:36:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgCITf6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 9 Mar 2020 15:35:58 -0400
+        id S1726269AbgCITfm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 9 Mar 2020 15:35:42 -0400
 Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:22361 "EHLO
         alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726462AbgCITfX (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 Mar 2020 15:35:23 -0400
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 09 Mar 2020 12:35:21 -0700
+        by vger.kernel.org with ESMTP id S1726610AbgCITfZ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 Mar 2020 15:35:25 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 09 Mar 2020 12:35:22 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 09 Mar 2020 12:35:20 -0700
+  by ironmsg03-sd.qualcomm.com with ESMTP; 09 Mar 2020 12:35:21 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id D6E53463E; Mon,  9 Mar 2020 12:35:20 -0700 (PDT)
+        id EDA49463E; Mon,  9 Mar 2020 12:35:20 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -24,14 +24,13 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         linux-kernel@vger.kernel.org,
         Guru Das Srinagesh <gurus@codeaurora.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH v7 07/13] pwm: imx27: Use 64-bit division macros for period and duty cycle
-Date:   Mon,  9 Mar 2020 12:35:10 -0700
-Message-Id: <cc36c14cffe64d12897d4e7ad0de4c85ae9fbef0.1583782035.git.gurus@codeaurora.org>
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org, Yash Shah <yash.shah@sifive.com>,
+        Atish Patra <atish.patra@wdc.com>
+Subject: [PATCH v7 08/13] pwm: sifive: Use 64-bit division macros for period and duty cycle
+Date:   Mon,  9 Mar 2020 12:35:11 -0700
+Message-Id: <4212f82b8711b2b33f0e71142526d5a7575564e9.1583782035.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1583782035.git.gurus@codeaurora.org>
 References: <cover.1583782035.git.gurus@codeaurora.org>
@@ -63,40 +62,30 @@ DIV64_* macros:
 - DIV64_U64_ROUND_CLOSEST
 - div64_u64
 
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: linux-riscv@lists.infradead.org
+Cc: Yash Shah <yash.shah@sifive.com>
+Cc: Atish Patra <atish.patra@wdc.com>
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 ---
- drivers/pwm/pwm-imx27.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/pwm/pwm-sifive.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-index 35a7ac42..b7d38d0 100644
---- a/drivers/pwm/pwm-imx27.c
-+++ b/drivers/pwm/pwm-imx27.c
-@@ -208,7 +208,7 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
- 	sr = readl(imx->mmio_base + MX3_PWMSR);
- 	fifoav = FIELD_GET(MX3_PWMSR_FIFOAV, sr);
- 	if (fifoav == MX3_PWMSR_FIFOAV_4WORDS) {
--		period_ms = DIV_ROUND_UP(pwm_get_period(pwm),
-+		period_ms = DIV_ROUND_UP_ULL(pwm_get_period(pwm),
- 					 NSEC_PER_MSEC);
- 		msleep(period_ms);
+diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+index cc63f9b..62de0bb 100644
+--- a/drivers/pwm/pwm-sifive.c
++++ b/drivers/pwm/pwm-sifive.c
+@@ -181,7 +181,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	 * consecutively
+ 	 */
+ 	num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
+-	frac = DIV_ROUND_CLOSEST_ULL(num, state->period);
++	frac = DIV64_U64_ROUND_CLOSEST(num, state->period);
+ 	/* The hardware cannot generate a 100% duty cycle */
+ 	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
  
-@@ -240,8 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	period_cycles /= prescale;
- 	c = (unsigned long long)period_cycles * state->duty_cycle;
--	do_div(c, state->period);
--	duty_cycles = c;
-+	duty_cycles = div64_u64(c, state->period);
- 
- 	/*
- 	 * according to imx pwm RM, the real period value should be PERIOD
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
