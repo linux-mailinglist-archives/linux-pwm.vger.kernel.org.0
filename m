@@ -2,99 +2,127 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BC07B17EB83
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Mar 2020 22:48:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6504517F0E7
+	for <lists+linux-pwm@lfdr.de>; Tue, 10 Mar 2020 08:05:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgCIVs1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 9 Mar 2020 17:48:27 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:36819 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgCIVs0 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 Mar 2020 17:48:26 -0400
-Received: by mail-pj1-f67.google.com with SMTP id l41so503224pjb.1;
-        Mon, 09 Mar 2020 14:48:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=M+Yc5KaBBvqlUu6IX9+jhdSvvYBrtTQ1N/+uZrTujAY=;
-        b=EnAOLY3lknQn3MrFOnTG47rE/msuLtkHcwI9CiqqLxAphICFFDtZpSmVBdHY1gjaT1
-         nF3ZgHtiuEflpauwpjHLTa11NmOBCgIGoRnB/lC61GeUFJGTQUhR7M5jhLKEkVom/atE
-         rGNK46z/+EJGKYmexGaRptMczx6WalQZ7vm1+hnINGCorC4R+/lDj28HCN2YFObBXibf
-         TbBc8ktb/3tvgKvbKZYVuXQFQ1jCh7q5i2kNRpO8mDbWAxKJ4bf2OPG8x6COaosxKY5L
-         JbUlwomEzIjo5YEQYdlVnYLt8bnVg32QPMRPbi/wBzdkVbfsh8Q61ZV2waG0vTF+9vHY
-         Rdwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=M+Yc5KaBBvqlUu6IX9+jhdSvvYBrtTQ1N/+uZrTujAY=;
-        b=mm7w3L8jqlQIB8Lu2kEgJxyj37wTFyz2EXsB840lnf6J2Wfio0xEfHjW201sfChTZr
-         bjFAuPv5mC1gn1ux0eEJKc0qQimcpXBxZZ5ivDC7wgnc6sVqBYGIuduMOeqhG8qlErOy
-         RjP926mWRMhXUVFWVOOOJdGskqAVJ8PTOYrDmeKZWjCNEKkrdPHQ0KFZi27D7l2XyA3K
-         os0kSgnol6L/ha9RlAtqDD6+rcQlfjiOhZ42NVMvx19h+vXdU+MAPE3YOeNlOyvWwRop
-         ntPccf2Q92sAXrCFu0XijIeg/64JgHKrB+k0pXPAwfy3q5WGocl8lKxZ8Q3fi1tSCFcr
-         h6fA==
-X-Gm-Message-State: ANhLgQ0bbrk3KOLcIuUyShwCSv7CT+iQh+iyEZ/GhN8VctyhYwSkfVDH
-        3V9O0t6TCjsx6N/jj/XCZOo=
-X-Google-Smtp-Source: ADFU+vspwoKFKjFMDUf9nlAvLvUHioLAIIAwk15+/ODm/1HJWpwGZy4//EuoLeQ1SRiulbB+FAF01Q==
-X-Received: by 2002:a17:90a:ba89:: with SMTP id t9mr1352540pjr.93.1583790503831;
-        Mon, 09 Mar 2020 14:48:23 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q15sm9321748pgn.68.2020.03.09.14.48.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 09 Mar 2020 14:48:23 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 14:48:22 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v7 03/13] hwmon: pwm-fan: Use 64-bit division macros for
- period and duty cycle
-Message-ID: <20200309214822.GA19773@roeck-us.net>
-References: <cover.1583782035.git.gurus@codeaurora.org>
- <b503833e0f58bd6dd9fe84d866124e7c457e099e.1583782035.git.gurus@codeaurora.org>
+        id S1726199AbgCJHFe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 10 Mar 2020 03:05:34 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59288 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbgCJHFe (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 10 Mar 2020 03:05:34 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02A75O6Q020066;
+        Tue, 10 Mar 2020 02:05:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583823924;
+        bh=HXSncGp7iCXQUqa3Y4kMAHAsnOMNjDVmmPi3JxHsHAw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=goK7G1wvD66F881UeJL6Zj/tCmMn5TFWn2FERNEOuxPQbYmj7rLM14pDbEjM/t8fA
+         b4ePIpPM2qlZUORjfKE+VsPTcnJrciuDNJBhClHTmQm76lzzhU9SH+JDrBZXUBFWWE
+         II6Zj/MQKecUvReh7auhoaLC+/LBwDMH0t6kUAag=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02A75OnI096753
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 10 Mar 2020 02:05:24 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 10
+ Mar 2020 02:05:23 -0500
+Received: from localhost.localdomain (10.64.41.19) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 10 Mar 2020 02:05:23 -0500
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02A75K9T071982;
+        Tue, 10 Mar 2020 02:05:21 -0500
+Subject: Re: [PATCH v2 4/6] pwm: omap-dmtimer: Fix pwm disabling sequence
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
+        Sebastian Reichel <sre@kernel.org>
+References: <20200228095651.32464-1-lokeshvutla@ti.com>
+ <20200228095651.32464-5-lokeshvutla@ti.com>
+ <20200306181443.GJ37466@atomide.com>
+ <9129d4fe-a17e-2fa6-764c-6a746fa5096d@ti.com>
+ <20200309180123.GP37466@atomide.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <666dbb7a-db98-d16a-ee73-27d353d2a317@ti.com>
+Date:   Tue, 10 Mar 2020 12:34:26 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b503833e0f58bd6dd9fe84d866124e7c457e099e.1583782035.git.gurus@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200309180123.GP37466@atomide.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 12:35:06PM -0700, Guru Das Srinagesh wrote:
-> Because period and duty cycle are defined in the PWM framework structs
-> as ints with units of nanoseconds, the maximum time duration that can be
-> set is limited to ~2.147 seconds. Redefining them as u64 values will
-> enable larger time durations to be set.
-> 
-> As a first step, prepare drivers to handle the switch to u64 period and
-> duty_cycle by replacing division operations involving pwm period and duty cycle
-> with their 64-bit equivalents as appropriate. The actual switch to u64 period
-> and duty_cycle follows as a separate patch.
-> 
-> Where the dividend is 64-bit but the divisor is 32-bit, use *_ULL
-> macros:
-> - DIV_ROUND_UP_ULL
-> - DIV_ROUND_CLOSEST_ULL
-> - div_u64
-> 
-> Where the divisor is 64-bit (dividend may be 32-bit or 64-bit), use
-> DIV64_* macros:
-> - DIV64_U64_ROUND_CLOSEST
-> - div64_u64
-> 
-There is no explanation why this is necessary. What is the use case ?
-It is hard to imagine a real-world use case with a duty cycle of more
-than 2 seconds.
+Hi Tony,
 
-Guenter
+[...snip...]
+
+>>>>  
+>>>> +	/*
+>>>> +	 * Disable auto reload so that the current cycle gets completed and
+>>>> +	 * then the counter stops.
+>>>> +	 */
+>>>>  	mutex_lock(&omap->mutex);
+>>>> -	omap->pdata->stop(omap->dm_timer);
+>>>> +	omap->pdata->set_pwm(omap->dm_timer,
+>>>> +			     pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
+>>>> +			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE,
+>>>> +			     false);
+>>>> +
+>>>>  	mutex_unlock(&omap->mutex);
+>>>>  }
+>>>
+>>> I'm seeing an issue with this patch where after use something is
+>>> left on and power consumption stays higher by about 30 mW after
+>>> use.
+>>
+>> Interesting...What is the PWM period and duty cycle in the test case?
+>> Can you dump the following registers before and after disabling:
+>> - TLDR
+>> - TMAR
+>> - TCLR
+> 
+> Here's the state dumped before and after in omap_dm_timer_set_pwm():
+> 
+> omap_timer 4803e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00000040
+> omap_timer 4803e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001842
+> omap_timer 4013e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00000040
+> omap_timer 4013e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001842
+> omap_timer 4013e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00001843
+> omap_timer 4013e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001841
+> omap_timer 4803e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00001843
+> omap_timer 4803e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001841
+> 
+
+Looking at the registers:
+period = 327 *(1000/clk_freq in MHz) ns
+duty_cycle =  perioid.
+
+I did simulate this behavior on BeagleBoneBlack on timer7. PWM is going down
+after disabling.
+
+> So looks like the start bit is still enabled after use?
+
+Right, that is expected. The start bit gets disabled automatically once the pwm
+period completes. This is because auto reload bit is off. That's the main idea
+of this patch so that PWM period is completed after disabling, else PWM is
+stopped abruptly.
+
+Not sure why it is not happening in your case. If you think it is not needed, I
+can drop this patch and add a limitation saying that PWM gets disabled
+immediately without completing the current cycle.
+
+Thanks and regards,
+Lokesh
