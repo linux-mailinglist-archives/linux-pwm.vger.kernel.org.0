@@ -2,100 +2,81 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A68B7181C92
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Mar 2020 16:44:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 84A7E181CE3
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Mar 2020 16:52:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730050AbgCKPoA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 11 Mar 2020 11:44:00 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39505 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729848AbgCKPoA (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Mar 2020 11:44:00 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w65so1556924pfb.6;
-        Wed, 11 Mar 2020 08:43:59 -0700 (PDT)
+        id S1729846AbgCKPwe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 11 Mar 2020 11:52:34 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41642 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729841AbgCKPwe (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Mar 2020 11:52:34 -0400
+Received: by mail-pg1-f193.google.com with SMTP id b1so1427073pgm.8;
+        Wed, 11 Mar 2020 08:52:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=7w1RxHtdaVcThI+BPwF+YlKMi5kQNW2IRPbbioSlIoQ=;
-        b=cuZCB0wPKfaINm8GuI4Nvjqwn16Y/MLwhz74fH2UCzG9+BQD1xu1yWLd4NFwLi/zwH
-         g+mk6CL1rAuuDewPwdOU/Embv3au9a322GRmJdKselwvmpOsXK7Y4TobX8I6I/AgM+z4
-         ofQAxRJKc+sjUGM0+fgWTKv0E47QdDnruel00N2CKhO0vA9Bq7gdUtAzgF4y0fQeAIxJ
-         ArwGRza31Wec5R0xUQJBLh9fekmfH6smqX7TuCRf8SBf5sQnLJykXe7IapPzMsokX93s
-         vdAZiNm+rEHFLoHZt8CtDnQXn9lrTVBV9rNnjb0Aj5XgEFiqR9N9SUH51NISGSEgtUHP
-         rvfQ==
+        bh=YF/1cXUmQGWs9vSHKbzj30xb9Qf0cIfVSbu0+Qxd3G8=;
+        b=ssizjqaE8LNQ4GalJXJFUG+g9GGx66za4SuJU32ftKXnpfxnJ9z3wYHQPMB9j89nJr
+         /h9mI6bBmUwfVW5vhlNm2aa7cq4hBpPvTdJZvz1WyWIw7QQeCP6GsjGlhSQIZ2Gwygur
+         pcUcfos/aVZkG106C/snkGidsvKTOjfCKwkkXZMtHVAhut/UBGqJ3kBYMY9U9sLW24TP
+         7y8XB41E4TfRQ/Q8iDIen1UgoyFOGdsJKrGhQinJARq/8BIiJm/uL75S8vksfLtUnFQu
+         LtO0pUhlPBD1vE2yDrX+k4JIfD1zuKZT/3c8EkO4E8euUHtuaR9ZYKNynOhzAxBQW+3j
+         Siwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=7w1RxHtdaVcThI+BPwF+YlKMi5kQNW2IRPbbioSlIoQ=;
-        b=OvvveDxrwBRGSvbJZAyPESebleNWM0pt+KjfRnIFQJ2aGX0Bx97FtLiszWis0dlf7u
-         wFoOoxgVKcIDhb1n06piUsiTWiFZAnjy1eNOcglAuAYlD/jLqOuzDLExVLVw4m9x3yvd
-         5HCICVwjCZxNCxc24lEo8MRVprlP0Jxln32hSHjjZpnEHGrz6UmvlSlfJl6oNQ+7SP9B
-         IWBGosbkWw2aBKSFEn2tGj4EYiv4YT4J9Yedz4ry0S2DgqYAAZybW1n2jxLblG/86vJG
-         mxM/lFRR1avpeRouY5f+xkmXPWp0PNviRnZ8cpqmh97YFYzVdcicNKpi+cuFwAJegb4g
-         pHOA==
-X-Gm-Message-State: ANhLgQ0whiAhffDbBPA4gdkdb2VdzUeUyAHEUEK46cWrEwDFWk3AhddG
-        QqpOMZ62/th+5RjzqIdH1492awWc
-X-Google-Smtp-Source: ADFU+vvZJA05C5Hwe83t4vj/tHRjjx06YJItfDu2bqSzhb7kDXGmMY1ekFS4QfFKov8K8d5SUQmJAw==
-X-Received: by 2002:a62:18cf:: with SMTP id 198mr1410237pfy.277.1583941439259;
-        Wed, 11 Mar 2020 08:43:59 -0700 (PDT)
+        bh=YF/1cXUmQGWs9vSHKbzj30xb9Qf0cIfVSbu0+Qxd3G8=;
+        b=hT8/jz9qZ8/wDWKPIkmUVcwwYm32BLnWXDBikxYAlIa3o62eLLbphQ23Wg6NqzvZ27
+         UN5lTJAWRbs1h9Pwd5HoJsgG6OntzC45ze18qzRbu8SCFNhwvJ9Ewd5Cm/s6jQ/fgtev
+         GeTPOGllxyJGhERbSCSQcDK2yjXAdjoprkwPikv5cgjHXabdC61nMw6xoearbYNlYpys
+         h8Ng1oDoN0yH1V9NGgce6eoLYKQFxb+HPMRC1kCSPODqHJbz+jbdBMnRO6t1LUHn2hKF
+         m1S8lvnESDr2U8nn/uwMAJVZWkYJ6kQQzHCynBxaENA4NZ4HOECfLI1dPPr5Q8TR5NXV
+         vE0A==
+X-Gm-Message-State: ANhLgQ33+AfM0xxP2Ku0ahR6OQg8ZfcQdMxlMSebY1dO+wWV+8US2naW
+        /56cVP4+PsLqU8NlQ0z3rcu5eIrZ
+X-Google-Smtp-Source: ADFU+vu0tbtYyRZAcpfr8ob41eF4QASNAVe0pQU7kmdtHAsBLa4Dvm5DERimhttpO/IMJ/0r7on6qQ==
+X-Received: by 2002:a62:1b12:: with SMTP id b18mr3538762pfb.258.1583941951979;
+        Wed, 11 Mar 2020 08:52:31 -0700 (PDT)
 Received: from localhost.localdomain ([106.51.109.105])
-        by smtp.gmail.com with ESMTPSA id b133sm50903760pga.43.2020.03.11.08.43.56
+        by smtp.gmail.com with ESMTPSA id d13sm5805564pjs.44.2020.03.11.08.52.29
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 11 Mar 2020 08:43:58 -0700 (PDT)
+        Wed, 11 Mar 2020 08:52:31 -0700 (PDT)
 From:   Rishi Gupta <gupt21@gmail.com>
 To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
         s.trumtrar@pengutronix.de
 Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Rishi Gupta <gupt21@gmail.com>
-Subject: [PATCH 1/1] pwm: pca9685: replace CONFIG_PM with __maybe_unused to prevent build issues
-Date:   Wed, 11 Mar 2020 21:13:49 +0530
-Message-Id: <1583941429-10921-1-git-send-email-gupt21@gmail.com>
+Subject: [PATCH 1/1] pwm: pca9685: use gpio core provided macro GPIO_LINE_DIRECTION_OUT
+Date:   Wed, 11 Mar 2020 21:22:20 +0530
+Message-Id: <1583941940-17194-1-git-send-email-gupt21@gmail.com>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The __maybe_unused attribute is preferred over CONFIG_PM
-to prevent build time issues. This commit replaces CONFIG_PM
-with this attribute.
+GPIO core recently added macro to uniformly specify direction
+of a GPIO Line, so use it.
 
 Signed-off-by: Rishi Gupta <gupt21@gmail.com>
 ---
- drivers/pwm/pwm-pca9685.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/pwm/pwm-pca9685.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-index b07bdca..b2a9e77 100644
+index b2a9e77..e2bac1e 100644
 --- a/drivers/pwm/pwm-pca9685.c
 +++ b/drivers/pwm/pwm-pca9685.c
-@@ -512,8 +512,7 @@ static int pca9685_pwm_remove(struct i2c_client *client)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM
--static int pca9685_pwm_runtime_suspend(struct device *dev)
-+static int __maybe_unused pca9685_pwm_runtime_suspend(struct device *dev)
+@@ -168,7 +168,7 @@ static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
+ 					  unsigned int offset)
  {
- 	struct i2c_client *client = to_i2c_client(dev);
- 	struct pca9685 *pca = i2c_get_clientdata(client);
-@@ -522,7 +521,7 @@ static int pca9685_pwm_runtime_suspend(struct device *dev)
- 	return 0;
+ 	/* Always out */
+-	return 0;
++	return GPIO_LINE_DIRECTION_OUT;
  }
  
--static int pca9685_pwm_runtime_resume(struct device *dev)
-+static int __maybe_unused pca9685_pwm_runtime_resume(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
- 	struct pca9685 *pca = i2c_get_clientdata(client);
-@@ -530,7 +529,6 @@ static int pca9685_pwm_runtime_resume(struct device *dev)
- 	pca9685_set_sleep_mode(pca, false);
- 	return 0;
- }
--#endif
- 
- static const struct i2c_device_id pca9685_id[] = {
- 	{ "pca9685", 0 },
+ static int pca9685_pwm_gpio_direction_input(struct gpio_chip *gpio,
 -- 
 2.7.4
 
