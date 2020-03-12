@@ -2,92 +2,105 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 55C941826F7
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Mar 2020 03:09:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CA2A1827AE
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Mar 2020 05:23:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387585AbgCLCJm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 11 Mar 2020 22:09:42 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:28050 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387501AbgCLCJm (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Mar 2020 22:09:42 -0400
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 11 Mar 2020 19:09:41 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 11 Mar 2020 19:09:40 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id BF0874B66; Wed, 11 Mar 2020 19:09:40 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 19:09:40 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH v8 01/12] clk: pwm: Use 64-bit division function
-Message-ID: <20200312020938.GA14827@codeaurora.org>
-References: <cover.1583889178.git.gurus@codeaurora.org>
- <338966686a673c241905716c90049993e7bb7d6a.1583889178.git.gurus@codeaurora.org>
- <7506bc2972324fd286dac6327ec73a3a@AcuMS.aculab.com>
+        id S1727150AbgCLEXL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 12 Mar 2020 00:23:11 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:55496 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgCLEXL (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Mar 2020 00:23:11 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02C4N1dM104202;
+        Wed, 11 Mar 2020 23:23:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583986981;
+        bh=jkK+KRwj12OUckK9FWpu1twNQ2nA5hS5XjMeKgX19HE=;
+        h=From:To:CC:Subject:Date;
+        b=RcUp0pY+vKmJxs7OE+59Y6ajjYsNmpbzBDPyKuqKwkFswuatDYGLBgEZowefXF/LI
+         V7KJc+IH60umDldvDEIRh8mn3I9z8i+ipMf+1sX5UHBsAM+4cxYbPVnD15oG2VfVxt
+         /RmnsVBK70Ot9iF5PZxCUzu9P0zjz/vDufPmtc0A=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02C4N16w079129
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 11 Mar 2020 23:23:01 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
+ Mar 2020 23:23:00 -0500
+Received: from localhost.localdomain (10.64.41.19) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 11 Mar 2020 23:23:01 -0500
+Received: from uda0131933.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02C4Mvgg065984;
+        Wed, 11 Mar 2020 23:22:58 -0500
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH v3 0/5] pwm: omap-dmtimer: Allow for dynamic pwm period updates
+Date:   Thu, 12 Mar 2020 09:52:05 +0530
+Message-ID: <20200312042210.17344-1-lokeshvutla@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7506bc2972324fd286dac6327ec73a3a@AcuMS.aculab.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 04:58:24PM +0000, David Laight wrote:
-> From: Guru Das Srinagesh
-> > Sent: 11 March 2020 01:41
-> > 
-> > Since the PWM framework is switching struct pwm_args.period's datatype
-> > to u64, prepare for this transition by using div64_u64 to handle a
-> > 64-bit divisor.
-> > 
-> > Cc: Michael Turquette <mturquette@baylibre.com>
-> > Cc: Stephen Boyd <sboyd@kernel.org>
-> > Cc: linux-clk@vger.kernel.org
-> > 
-> > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> > ---
-> >  drivers/clk/clk-pwm.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
-> > index 87fe0b0e..7b1f7a0 100644
-> > --- a/drivers/clk/clk-pwm.c
-> > +++ b/drivers/clk/clk-pwm.c
-> > @@ -89,7 +89,7 @@ static int clk_pwm_probe(struct platform_device *pdev)
-> >  	}
-> > 
-> >  	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
-> > -		clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
-> > +		clk_pwm->fixed_rate = div64_u64(NSEC_PER_SEC, pargs.period);
-> 
-> That cannot be needed, a 32 bit division is fine.
+This series fixes minor issues in config callback and allows for on the
+fly updates for pwm period and duty cycle. This is mainly intended to
+allow pwm omap dmtimer to be used for generating a 1PPS signal that can be
+syncronized to PTP clock in CPTS module available in AM335x and AM57xx SoCs.
 
-Could you please explain why? I think the use of this function is
-warranted in order to handle the division properly with a 64-bit
-divisor.
+Series depends on the following series:
+- https://patchwork.kernel.org/patch/11379875/
+- https://patchwork.kernel.org/project/linux-omap/list/?series=251691
 
-> More interesting would be whether pargs.period is sane (eg not zero).
+Full dependencies can be seen here:
+https://github.com/lokeshvutla/linux/tree/devel/pwm-dynamic-period-updates-v3
 
-There is a non-zero check for pargs.period just prior to this line, so
-the code is handling this case already.
+Changes since v2:
+- Restored the existing behavior on pwm stop. PWM stops immediately when
+  .stop is called as timer counter stops immediately. If just the
+  autoreload is disabled as in v2, there is a possibility that pwm is
+  never stopped.
+- Added the above limitation in the driver description
+- Rebased on top of v5.6-rc5
 
-> I'd assign pargs.period to an 'unsigned int' variable
-> prior to the division (I hate casts - been bitten by them in the past.).
+Changes since v1:
+- Updated commit description in PATCH 1
+- Added a brief about PWM generation using OMAP DM timer.
+- Updated the pwm stop callback to allow for completing the current pwm
+  cycle.
+- Added the limitaitons of hardware.
+- Used hw status instead of relying on pwm framework for state update.
 
-Wouldn't this truncate the 64-bit value? The intention behind this patch
-is to allow the processing of 64-bit values in full.
 
-Thank you.
+Lokesh Vutla (5):
+  pwm: omap-dmtimer: Drop unused header file
+  pwm: omap-dmtimer: Update description for pwm omap dm timer
+  pwm: omap-dmtimer: Fix pwm enabling sequence
+  pwm: omap-dmtimer: Do not disable pwm before changing
+    period/duty_cycle
+  pwm: omap-dmtimer: Implement .apply callback
 
-Guru Das.
+ drivers/pwm/pwm-omap-dmtimer.c                | 219 ++++++++++++------
+ include/clocksource/timer-ti-dm.h             |   3 +-
+ .../linux/platform_data/pwm_omap_dmtimer.h    |  90 -------
+ 3 files changed, 149 insertions(+), 163 deletions(-)
+ delete mode 100644 include/linux/platform_data/pwm_omap_dmtimer.h
+
+-- 
+2.23.0
+
