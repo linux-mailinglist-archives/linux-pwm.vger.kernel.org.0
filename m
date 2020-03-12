@@ -2,100 +2,128 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 221E2182C23
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Mar 2020 10:14:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1F44182E16
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Mar 2020 11:45:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgCLJOO convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Thu, 12 Mar 2020 05:14:14 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:23334 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726000AbgCLJOO (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Mar 2020 05:14:14 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id uk-mta-9-6SWbZ0TDPPuNfXXMJ3Jmdw-1;
- Thu, 12 Mar 2020 09:14:10 +0000
-X-MC-Unique: 6SWbZ0TDPPuNfXXMJ3Jmdw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 12 Mar 2020 09:14:09 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 12 Mar 2020 09:14:09 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Guru Das Srinagesh' <gurus@codeaurora.org>
-CC:     "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Subject: RE: [PATCH v8 01/12] clk: pwm: Use 64-bit division function
-Thread-Topic: [PATCH v8 01/12] clk: pwm: Use 64-bit division function
-Thread-Index: AQHV90YvPG+mI4RpM0Wy3POJxK2r86hDnJdAgACbbwCAAHWSkA==
-Date:   Thu, 12 Mar 2020 09:14:09 +0000
-Message-ID: <fea86a43b28f4493abe0826654369513@AcuMS.aculab.com>
-References: <cover.1583889178.git.gurus@codeaurora.org>
- <338966686a673c241905716c90049993e7bb7d6a.1583889178.git.gurus@codeaurora.org>
- <7506bc2972324fd286dac6327ec73a3a@AcuMS.aculab.com>
- <20200312020938.GA14827@codeaurora.org>
-In-Reply-To: <20200312020938.GA14827@codeaurora.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        id S1726725AbgCLKpc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 12 Mar 2020 06:45:32 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46766 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgCLKpc (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Mar 2020 06:45:32 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02CAjNee065463;
+        Thu, 12 Mar 2020 05:45:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584009923;
+        bh=KD36+jDsPV+sll5Mg8prcB177U8BNxBxUQWZLYSafHM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=cRhj9sRnb/wglP9uwXWbBQ/rcA1CeNDcHfyICtFboyzkWasnZlNE1ON46uDl9r7t0
+         MoMGDwzPiJc4zaeYld0hnAvuSc4r0b9MBKdYKsyt23pIpB29PiUrcT/f7BF/hhkwex
+         CzuuOp99gej9niGzqHuXfBmiJ4ez4SVVJJnw2r7Q=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02CAjNUi076794
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 12 Mar 2020 05:45:23 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
+ Mar 2020 05:45:23 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 12 Mar 2020 05:45:23 -0500
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02CAjKuZ044598;
+        Thu, 12 Mar 2020 05:45:20 -0500
+Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
+ changing period/duty_cycle
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
+        <kernel@pengutronix.de>
+References: <20200312042210.17344-1-lokeshvutla@ti.com>
+ <20200312042210.17344-5-lokeshvutla@ti.com>
+ <20200312064042.p7himm3odxjyzroi@pengutronix.de>
+ <f250549f-1e7c-06d6-b2a4-7ae01c06725b@ti.com>
+ <20200312084739.isixgdo3txr6rjzg@pengutronix.de>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <2a5a06cd-7aca-c450-b048-33329d058eca@ti.com>
+Date:   Thu, 12 Mar 2020 16:14:34 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200312084739.isixgdo3txr6rjzg@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Guru Das Srinagesh
-> Sent: 12 March 2020 02:10
-> On Wed, Mar 11, 2020 at 04:58:24PM +0000, David Laight wrote:
-> > From: Guru Das Srinagesh
-> > > Sent: 11 March 2020 01:41
-> > >
-> > > Since the PWM framework is switching struct pwm_args.period's datatype
-> > > to u64, prepare for this transition by using div64_u64 to handle a
-> > > 64-bit divisor.
-> > >
-...
-> > > --- a/drivers/clk/clk-pwm.c
-> > > +++ b/drivers/clk/clk-pwm.c
-> > > @@ -89,7 +89,7 @@ static int clk_pwm_probe(struct platform_device *pdev)
-> > >  	}
-> > >
-> > >  	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
-> > > -		clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
-> > > +		clk_pwm->fixed_rate = div64_u64(NSEC_PER_SEC, pargs.period);
-> >
-> > That cannot be needed, a 32 bit division is fine.
+Hi Uwe,
+
+On 12/03/20 2:17 PM, Uwe Kleine-König wrote:
+> On Thu, Mar 12, 2020 at 01:35:32PM +0530, Lokesh Vutla wrote:
+>> On 12/03/20 12:10 PM, Uwe Kleine-König wrote:
+>>> On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
+>>>> Only the Timer control register(TCLR) cannot be updated when the timer
+>>>> is running. Registers like Counter register(TCRR), loader register(TLDR),
+>>>> match register(TMAR) can be updated when the counter is running. Since
+>>>> TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
+>>>> timer for period/duty_cycle update.
+>>>
+>>> I'm not sure what is sensible here. Stopping the PWM for a short period
+>>> is bad, but maybe emitting a wrong period isn't better. You can however
+>>> optimise it if only one of period or duty_cycle changes.
+>>>
+>>> @Thierry, what is your position here? I tend to say a short stop is
+>>> preferable.
+>>
+>> Short stop has side effects especially in the case where 1PPS is generated using
+>> this PWM. In this case where PWM period is continuously synced with PTP clock,
+>> cannot expect any breaks in PWM. This doesn't fall in the above limitations as
+>> well. as duty_cycle is not a worry and only the rising edge is all that matters.
+>>
+>> Also any specific reason why you wanted to stop rather than having the mentioned
+>> limitation? it is just a corner anyway and doesn't happen all the time.
 > 
-> Could you please explain why? I think the use of this function is
-> warranted in order to handle the division properly with a 64-bit
-> divisor.
-...
-> > I'd assign pargs.period to an 'unsigned int' variable
-> > prior to the division (I hate casts - been bitten by them in the past.).
+> I'm a bit torn here. Which of the two steps out of line is worse depends
+> on what is driven by the PWM in question. And also I think ignoring
+> "just corner cases" is a reliable way into trouble.
+
+I do agree that corner cases should not be ignored. But in this particular
+driver, just trying to explain the effect of this corner case. On dynamic pwm
+period update, the current pwm cycle might generate a period with mixed
+settings. IMHO, it is okay to live with it and mark it as a limitation as you
+pointed out in case of sifive driver[0].
+
+
 > 
-> Wouldn't this truncate the 64-bit value? The intention behind this patch
-> is to allow the processing of 64-bit values in full.
+> The usual PWM contributer (understandably) cares mostly about their own
+> problem they have to solve. If however you take a step back and care
+> about the PWM framework as a whole to be capable to solve problems in
+> general, such that any consumer just has to know that there is a PWM and
+> start requesting specific settings for their work to get done, it gets
+> obvious that you want some kind of uniform behaviour of each hardware
+> driver. And then a short inactive break between two periods is more
+> common and better understandable than a mixed period.
 
-You are dividing a 32bit constant by a value.
-If pargs.period is greater than 2^32 the result is zero.
-I think you divide by 'fixed_rate' a bit later on - better not be zero.
+But the problem here is that inactive breaks between two periods is not desired.
+Because the pwm is used to generate a 1PPS signal and is continuously
+synchronized with PTP clock.
 
-	David
+I am up if this can be solved generically. But updating period is very specific
+to hardware implementation. Not sure what generic solution can be brought out of
+this. Please correct me if I am wrong.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+[0]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pwm/pwm-sifive.c#n7
 
+Thanks and regards,
+Lokesh
