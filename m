@@ -2,96 +2,113 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 61DB71832BC
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Mar 2020 15:21:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 28646183413
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Mar 2020 16:06:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbgCLOVa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 12 Mar 2020 10:21:30 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:39706 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727340AbgCLOVa (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Mar 2020 10:21:30 -0400
-Received: by mail-pj1-f67.google.com with SMTP id d8so2721711pje.4;
-        Thu, 12 Mar 2020 07:21:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xA6hYZYQHhZOK5w4gl5vlgvd5UjngUj1HWav2zK4YIE=;
-        b=elAvbo1K35UXfjiU7s7C6Fr9ny3r+zuq45aGb0obKM6MUmebz83Om5sR5EldQ2SDgz
-         Og0VcNpXOI9i+t4VR3d7CMdNkJus2nXmDWCBFyVCIl4V8DrooAAFnWMis1sxuv53Y0B+
-         ku1ZKLsP0J8dg8z3MBUH+p1Q1SxXHFZXQ6PdsRVVhAAMSF0Uf9EnvNeh0bYSu4Rrom8i
-         UhZMG8hOG8pEczd9Ogd+3+Q8DE0JK3rn8ERKhEgv03HyVQ7oaawEy0Afd2Chbmdhb53W
-         QeJQh4lX+sN6H2dX6bUnRWq8OJmv+OV+m3ZmAdSqDwq0awnF2/tMa9LC60qbWSBqG+EG
-         5kwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xA6hYZYQHhZOK5w4gl5vlgvd5UjngUj1HWav2zK4YIE=;
-        b=Co1KgQkYuoQZkghdr6t2Wc0ivrIWtxAM3QaxC527cfPov27oj1/jjsFyQjP2EbIDLj
-         94Or81YhHE62q57LJhdsj5TqRQcQK2td+JaFpew6DIjfXDHtsZQ0ZxLkEazU52ZBFLi6
-         b5ZEWHNsdUgsrUDHNR5Dr0gtPGa+NLUMnjDZZxczq9dWjw1+F4OY6aSrGssznQgWNEYJ
-         +Gb0NirMg6LnFVKu+8rJDm6HpQsly31qlleG+Dr0GKWxWk+ggLncyslKGONWtsE1X14n
-         Wn+37tnrr85W3nIgMANc0QPW6HGEguO7e58ZfYx6WAta4/BoYfkEmvufPdtAu6Nfg4Mf
-         qzVw==
-X-Gm-Message-State: ANhLgQ0uhAZX19MuB85vJNyEqt4GWRAm6XQumrAz8k7NbxRRNY75bvhc
-        SbBsQkFkIGAqd6Q0erMF0HoNQ5wI
-X-Google-Smtp-Source: ADFU+vsTQyN4Pfu6NQPzwD6SbwLEp4VXwcjudj3agC6kETt85Aq0K0JBWrXCGhcDemgNyIORo3UffQ==
-X-Received: by 2002:a17:902:bcc5:: with SMTP id o5mr8187811pls.174.1584022889113;
-        Thu, 12 Mar 2020 07:21:29 -0700 (PDT)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id 15sm49441428pfp.125.2020.03.12.07.21.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 07:21:28 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 07:21:26 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-Message-ID: <20200312142126.GB2466@localhost>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
- <20200312042210.17344-5-lokeshvutla@ti.com>
- <20200312064042.p7himm3odxjyzroi@pengutronix.de>
- <f250549f-1e7c-06d6-b2a4-7ae01c06725b@ti.com>
- <20200312084739.isixgdo3txr6rjzg@pengutronix.de>
- <2a5a06cd-7aca-c450-b048-33329d058eca@ti.com>
+        id S1727680AbgCLPGU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 12 Mar 2020 11:06:20 -0400
+Received: from web0081.zxcs.nl ([185.104.29.10]:56548 "EHLO web0081.zxcs.nl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727133AbgCLPGU (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 12 Mar 2020 11:06:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=pascalroeleven.nl; s=x; h=Message-ID:References:In-Reply-To:Subject:Cc:To:
+        From:Date:Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:Reply-To
+        :Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=J6aDQGjkdfrS52YkEz3ek5dt906Ty2Nt38vKTDhn80w=; b=hG2lKuGOULLVa42qYNnOMiU+E+
+        1fF6zxRYgwLngJMFHPGArXhjerUxJQ3plKRZCO5TSTnVi+2Q8tQ6C+C6aNn40pyjspW7YwCzKMQpp
+        syAzO2hUtLaflC0V1kUwjCmFDeZWQlAgJ7edx0xUiyAyRK6Ve3MXMeFoqm/8SuhsGbjvvflanRDwi
+        uJZM+RCzqt5AIQOpws1Wm09byjKK1YZDLkylSTk29ub38ToQxSkCbjKk9IDDgGd0OfMXuFUP4xsVe
+        79E3bHRr3rpcvkxTdxEe+saXneBo447d07pKSoi/9Akj0hMmJk75kVHMFuA+GZIae8997/r68Trkv
+        7nt7VLxQ==;
+Received: from spamrelay.zxcs.nl ([185.104.28.12]:47086 helo=mail-slave02.zxcs.nl)
+        by web0081.zxcs.nl with esmtp (Exim 4.92.3)
+        (envelope-from <dev@pascalroeleven.nl>)
+        id 1jCPPT-002SyE-RZ; Thu, 12 Mar 2020 16:06:07 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2a5a06cd-7aca-c450-b048-33329d058eca@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Thu, 12 Mar 2020 16:06:07 +0100
+From:   Pascal Roeleven <dev@pascalroeleven.nl>
+To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: pwm: sun4i: pwm-backlight not working since 5.6-rc1
+In-Reply-To: <20200312132942.2kfspvmoc3mxkdx4@pengutronix.de>
+References: <6185b5540ca082d887d7d13330c9d938@pascalroeleven.nl>
+ <20200312132942.2kfspvmoc3mxkdx4@pengutronix.de>
+User-Agent: Roundcube Webmail/1.4.2
+Message-ID: <6e995c4c22c4e6c93acb1f491e5aa109@pascalroeleven.nl>
+X-Sender: dev@pascalroeleven.nl
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 04:14:34PM +0530, Lokesh Vutla wrote:
-> But the problem here is that inactive breaks between two periods is not desired.
-> Because the pwm is used to generate a 1PPS signal and is continuously
-> synchronized with PTP clock.
+On 2020-03-12 14:29, Uwe Kleine-König wrote:
+> On Thu, Mar 12, 2020 at 01:22:13PM +0100, Pascal Roeleven wrote:
+>> Hi all,
+>> 
+>> I am working on adding an old A10 device to mainline and noticed an 
+>> issue
+>> when testing on 5.5.8 vs master.
+>> 
+>> Since 5.6-rc1, I can't control the brightness of my LCD backlight 
+>> anymore.
+>> The backlight stays on full brightness instead. I am controlling the
+>> brightness value via sysfs for testing.
+>> 
+>> I am not sure if this is a general pwm-sun4i issue or if it is related 
+>> to
+>> the backlight. However I narrowed it down to one commit for pwm-sun4i:
+>> 
+>> fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
+>> 
+>> If I use pwm-sun4i.c from 5b090b430d750961305030232314b6acdb0102aa on
+>> master, the backlight works fine. Unfortunately, due to my lack of 
+>> kernel
+>> experience, I can't see how the commit above broke it.
+> 
+> Hmm, I cannot see how fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 breaks
+> this. Looking at the output of
+> 
+> 	git show -b fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
+> 
+> (i.e. ignoring whitespace changes) I don't see how the behaviour you're
+> reporting can be explained.
+> 
+> Are you sure that fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 is the bad
+> commit?
+> 
+> Can you install a tool to inspect register values and check how the
+> affected registers change if you switch kernel versions and/or pwm
+> settings?
+> 
+> (e.g.
+> 	memtool md 0x1c20e00+0xc
+> )
+> 
+> Best regards
+> Uwe
 
-The 1-PPS case is the "easy" one.  If the PWM is adjustable on the
-fly, then people will use it with higher frequency signals.
- 
-> I am up if this can be solved generically. But updating period is very specific
-> to hardware implementation. Not sure what generic solution can be brought out of
-> this. Please correct me if I am wrong.
+Thanks for your response.
 
-What happens today when the PWM frequency or duty cycle are changed
-while the signal is enabled?
+Yes I am sure that is the commit. If I am on master, and replace 
+pwm-sun4i.c with the one from 5b090b43, everything works. If I then 
+apply fa4d8178, it stops working.
 
-Do different PWM devices/drivers behave the same way?
+And strangely the output of the registers is exactly the same before and 
+after fa4d8178:
 
-Does this series change the behavior of the am335x and friends?
+01c20e00: 00000050 00130014 00000000 (full brightness)
+01c20e00: 00000050 00130006 00000000 (min brightness)
 
-Thanks,
-Richard
+Even when I'm on 5b090b43 and cherry-pick fa4d8178 can I reproduce the 
+issue.
