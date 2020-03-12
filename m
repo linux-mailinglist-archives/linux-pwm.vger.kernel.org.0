@@ -2,67 +2,97 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D6BC0183766
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Mar 2020 18:27:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DF1318393B
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Mar 2020 20:09:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgCLR1E (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 12 Mar 2020 13:27:04 -0400
-Received: from muru.com ([72.249.23.125]:59944 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726328AbgCLR1E (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 12 Mar 2020 13:27:04 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id BDF7380BF;
-        Thu, 12 Mar 2020 17:27:48 +0000 (UTC)
-Date:   Thu, 12 Mar 2020 10:26:59 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
+        id S1726523AbgCLTJN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 12 Mar 2020 15:09:13 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:59557 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725268AbgCLTJN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Mar 2020 15:09:13 -0400
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 12 Mar 2020 12:09:12 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg02-sd.qualcomm.com with ESMTP; 12 Mar 2020 12:09:12 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 8E90D4B3B; Thu, 12 Mar 2020 12:09:12 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 12:09:12 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v3 0/6] clocksource: timer-ti-dm: Prepare for dynamic pwm
- period updates
-Message-ID: <20200312172659.GZ37466@atomide.com>
-References: <20200305082715.15861-1-lokeshvutla@ti.com>
- <20200306171917.GF37466@atomide.com>
- <f40cd563-c05b-90b6-c526-196fcd4fa146@linaro.org>
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Subject: Re: [PATCH v8 01/12] clk: pwm: Use 64-bit division function
+Message-ID: <20200312190859.GA19605@codeaurora.org>
+References: <cover.1583889178.git.gurus@codeaurora.org>
+ <338966686a673c241905716c90049993e7bb7d6a.1583889178.git.gurus@codeaurora.org>
+ <7506bc2972324fd286dac6327ec73a3a@AcuMS.aculab.com>
+ <20200312020938.GA14827@codeaurora.org>
+ <fea86a43b28f4493abe0826654369513@AcuMS.aculab.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f40cd563-c05b-90b6-c526-196fcd4fa146@linaro.org>
+In-Reply-To: <fea86a43b28f4493abe0826654369513@AcuMS.aculab.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
-
-* Daniel Lezcano <daniel.lezcano@linaro.org> [200312 11:11]:
-> On 06/03/2020 18:19, Tony Lindgren wrote:
-> > * Lokesh Vutla <lokeshvutla@ti.com> [200305 08:29]:
-> >> This series fixes dm_timer_ops used for enabling the pwm and enables
-> >> cpu_pm notifier for context save and restore. This acts as a preparatory
-> >> series for enabling dynamic period updates for pwm omap dm timer driver.
-> >>
-> >> Changes since v2:
-> >> - Incorporated changes from Tony
+On Thu, Mar 12, 2020 at 09:14:09AM +0000, David Laight wrote:
+> From: Guru Das Srinagesh
+> > Sent: 12 March 2020 02:10
+> > On Wed, Mar 11, 2020 at 04:58:24PM +0000, David Laight wrote:
+> > > From: Guru Das Srinagesh
+> > > > Sent: 11 March 2020 01:41
+> > > >
+> > > > Since the PWM framework is switching struct pwm_args.period's datatype
+> > > > to u64, prepare for this transition by using div64_u64 to handle a
+> > > > 64-bit divisor.
+> > > >
+> ...
+> > > > --- a/drivers/clk/clk-pwm.c
+> > > > +++ b/drivers/clk/clk-pwm.c
+> > > > @@ -89,7 +89,7 @@ static int clk_pwm_probe(struct platform_device *pdev)
+> > > >  	}
+> > > >
+> > > >  	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
+> > > > -		clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
+> > > > +		clk_pwm->fixed_rate = div64_u64(NSEC_PER_SEC, pargs.period);
+> > >
+> > > That cannot be needed, a 32 bit division is fine.
 > > 
-> > I just gave this series another try here and it still works
-> > for me just fine and is good to go as far as I'm concerned.
+> > Could you please explain why? I think the use of this function is
+> > warranted in order to handle the division properly with a 64-bit
+> > divisor.
+> ...
+> > > I'd assign pargs.period to an 'unsigned int' variable
+> > > prior to the division (I hate casts - been bitten by them in the past.).
+> > 
+> > Wouldn't this truncate the 64-bit value? The intention behind this patch
+> > is to allow the processing of 64-bit values in full.
 > 
-> How do you want this series to be merged?
-> 
-> Shall I pick the patches falling under drivers/clocksource or ack them?
+> You are dividing a 32bit constant by a value.
+> If pargs.period is greater than 2^32 the result is zero.
 
-I think best would be if you picked them and applied them into
-an immutable branch against v5.6-rc1 that can also be merged
-into pwm driver branch as needed.
+Thanks for the explanation. 
 
-Regards,
+> I think you divide by 'fixed_rate' a bit later on - better not be zero.
 
-Tony
+Good point, but this issue exists with or without this patch, and fixing
+it is beyond this patch's scope.
+
+Just to check if this patch can be dropped, I tested out compilation
+with this patch reverted and there were no errors, so I'm leaning
+towards dropping this patch unless you have any further comments on how
+to proceed.
+
+Thank you.
+
+Guru Das.
