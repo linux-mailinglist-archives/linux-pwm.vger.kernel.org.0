@@ -2,82 +2,68 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A8E6183FC4
-	for <lists+linux-pwm@lfdr.de>; Fri, 13 Mar 2020 04:42:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 902401840EB
+	for <lists+linux-pwm@lfdr.de>; Fri, 13 Mar 2020 07:45:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgCMDmw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 12 Mar 2020 23:42:52 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:37054 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgCMDmw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Mar 2020 23:42:52 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id A4BD08365A;
-        Fri, 13 Mar 2020 16:42:49 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1584070969;
-        bh=jiMFXGvBhCI5xK4iuBLsegdABOplq4HGKYU6z5QIHQ0=;
-        h=From:To:Cc:Subject:Date;
-        b=oZng4u7mbjanyfvvbVMxgRn36M0EK+F19nclv9E1iLkTJzBqhjryAFiVZdtD2bA5K
-         c4cjOKED4cnG4wBxEzOZ6giitHAaURPpNOZIPg104yfb/gQPoAWXu6i8gl88tgzMOx
-         V40BsAIxvVX7dcExkN170vWWv+dJTOiG5WCcJfgRLxWx2humBzvmbQ6udyD8ON41av
-         95fHQLrFbz6qd0tcpMhsgvTF68+35gVDrhxFMWdoUbtKj91xw8wRy4zKG7Hu3JIBvD
-         Xq0BVNXkjfEm0tUBOIVPUzp4nIg5mpdmuTO7vMSeA1iu9Q4VWkRxr3KTjRjKMhmuhg
-         n25ZiKgPpNQsg==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e6b01370000>; Fri, 13 Mar 2020 16:42:49 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 1F15C13EED5;
-        Fri, 13 Mar 2020 16:42:47 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 2F9A628006E; Fri, 13 Mar 2020 16:42:47 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] gpio: mvebu: avoid error message for optional IRQ
-Date:   Fri, 13 Mar 2020 16:42:44 +1300
-Message-Id: <20200313034244.26336-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.25.1
+        id S1726331AbgCMGpO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 13 Mar 2020 02:45:14 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58141 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbgCMGpO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 13 Mar 2020 02:45:14 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jCe4D-00078K-5C; Fri, 13 Mar 2020 07:45:09 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jCe45-0002pC-Ep; Fri, 13 Mar 2020 07:45:01 +0100
+Date:   Fri, 13 Mar 2020 07:45:01 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     thierry.reding@gmail.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, linux-pwm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: mvebu: avoid error message for optional IRQ
+Message-ID: <20200313064501.43h5htrebbgceudj@pengutronix.de>
+References: <20200313034244.26336-1-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200313034244.26336-1-chris.packham@alliedtelesis.co.nz>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-platform_get_irq() will generate an error message if the requested irq
-is not present
+Hello,
 
-  mvebu-gpio f1010140.gpio: IRQ index 3 not found
+On Fri, Mar 13, 2020 at 04:42:44PM +1300, Chris Packham wrote:
+> platform_get_irq() will generate an error message if the requested irq
+> is not present
+> 
+>   mvebu-gpio f1010140.gpio: IRQ index 3 not found
+> 
+> use platform_get_irq_optional() to avoid the error message being
+> generated.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-use platform_get_irq_optional() to avoid the error message being
-generated.
+LGTM
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- drivers/gpio/gpio-mvebu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index d2b999c7987f..3c9f4fb3d5a2 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -1247,7 +1247,7 @@ static int mvebu_gpio_probe(struct platform_device =
-*pdev)
- 	 * pins.
- 	 */
- 	for (i =3D 0; i < 4; i++) {
--		int irq =3D platform_get_irq(pdev, i);
-+		int irq =3D platform_get_irq_optional(pdev, i);
-=20
- 		if (irq < 0)
- 			continue;
---=20
-2.25.1
+Best regards
+Uwe
 
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
