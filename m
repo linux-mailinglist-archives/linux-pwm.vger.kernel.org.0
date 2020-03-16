@@ -2,318 +2,183 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29EED1869CC
-	for <lists+linux-pwm@lfdr.de>; Mon, 16 Mar 2020 12:16:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF764186B44
+	for <lists+linux-pwm@lfdr.de>; Mon, 16 Mar 2020 13:41:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730743AbgCPLQE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 16 Mar 2020 07:16:04 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:42432 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730560AbgCPLQE (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 16 Mar 2020 07:16:04 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02GBFkXO027347;
-        Mon, 16 Mar 2020 06:15:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584357346;
-        bh=5GFR0zmTtB7qSbEnCC6j5jEJTCXk+OZE/p83GzR6PJQ=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=eO7Wz6cg9RtqHU4eSTTl+7OiAVCh7XhPDGansi/weo5P9ZxSv4AElNGHENOziIoBk
-         eYlZzKio9pkcYd3GVBmPCxblCuobDjPFzWe8YjPp00NvlP8rodmAHjGtSfqg7x3WpY
-         ZiRURLDb4ei3hqYVoFwnLTUXzDOzszZpMiPd6kI4=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02GBFkik011371
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 16 Mar 2020 06:15:46 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
- Mar 2020 06:15:46 -0500
-Received: from localhost.localdomain (10.64.41.19) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 16 Mar 2020 06:15:46 -0500
-Received: from uda0131933.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02GBFgS5074628;
-        Mon, 16 Mar 2020 06:15:43 -0500
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-To:     Tony Lindgren <tony@atomide.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-CC:     Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
+        id S1731026AbgCPMlj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 16 Mar 2020 08:41:39 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35411 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730878AbgCPMli (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 16 Mar 2020 08:41:38 -0400
+Received: by mail-wm1-f68.google.com with SMTP id m3so17865820wmi.0
+        for <linux-pwm@vger.kernel.org>; Mon, 16 Mar 2020 05:41:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ybx9jSfrTP8lWPjjCwz4tyUmEYpUNhki88OZ3n/5GKg=;
+        b=UJJQf5folUi7SgooO/JhWbed+treeJRj8Ys5lDcRf6c+v3vDAkiRScd4eTxX4dtmMD
+         7KDZ07BV1MVOix4HdjL3fQre9HO9g1P0PAW4TCxYzJP7DcpkhIzMmu+uzAuROO8cbama
+         9JUPzEonfnOHEuDQWeLeoNskVVpZoDDz1j+IddlGwjAUaOUnOwL3Csc7EjdWbDOWr5zX
+         h/5IYr/T86gqwwcMF0O0J2jbRhKxuxQXRaPDZRhYDAMXLvRShcehm0hV/GJ8uZHW4w7/
+         torhKspDiHgrnRCQtHVWBC9i2WL7JIp35e6Z1RyD3h6NoF+MgJ3tUVf8SAP7KFw7atON
+         PoBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Ybx9jSfrTP8lWPjjCwz4tyUmEYpUNhki88OZ3n/5GKg=;
+        b=U5aRg/A8VhgVPgMIZ+BvJS80icwNtrvQeblaWBQ/jFGWaWYCCC9nJP5Bhrji0nfnbo
+         p4ktPFgxPr/hWhqtqXdYd2pP7QKjMyQNoppEMI7if5jPABT2t/0I2+ZpSbif2YDpC/MV
+         em+ZQH3jmIGX1VGxv6cwxJ0ekontNdoMbvzaOR6Xfa0VtHM+YiLou/3n/yGLHLtglp/h
+         efxU//zvWf+sgTK53W9JGFawjBaXSrzGI8ttfiUOLIWwGHVaLHUb3WdWu8HtFKa5z7af
+         RMFtixZSj1Lh/wzLcY3yiY5kW8sAmJZrifQRKva51Sc+WXMO6J+zhQjtbWZLUaAVek24
+         MPsg==
+X-Gm-Message-State: ANhLgQ0Hg2pFpGiNVSHgwyVJ3fN+z8X2Ctuea9T5GjPQ4Ko5cepeXgfI
+        J68GAjtFpHuC4rZzP7JTwovLnQ==
+X-Google-Smtp-Source: ADFU+vvyHCBd1/yHoiyVgkSDxOo4rIeanQdshVN7LtMWJCJVsAO6Vejck8FKvL8EkaKwNytQ++v9bw==
+X-Received: by 2002:a7b:cd0e:: with SMTP id f14mr24130346wmj.21.1584362496679;
+        Mon, 16 Mar 2020 05:41:36 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:f835:499f:9553:971a? ([2a01:e34:ed2f:f020:f835:499f:9553:971a])
+        by smtp.googlemail.com with ESMTPSA id w19sm29057020wmc.22.2020.03.16.05.41.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Mar 2020 05:41:36 -0700 (PDT)
+Subject: Re: [PATCH v3 0/6] clocksource: timer-ti-dm: Prepare for dynamic pwm
+ period updates
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, <linux-pwm@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH v4 3/6] clocksource: timer-ti-dm: Implement cpu_pm notifier for context save and restore
-Date:   Mon, 16 Mar 2020 16:44:53 +0530
-Message-ID: <20200316111453.15441-1-lokeshvutla@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200305082715.15861-4-lokeshvutla@ti.com>
-References: <20200305082715.15861-4-lokeshvutla@ti.com>
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        linux-pwm@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>,
+        Tero Kristo <t-kristo@ti.com>
+References: <20200305082715.15861-1-lokeshvutla@ti.com>
+ <20200306171917.GF37466@atomide.com>
+ <f40cd563-c05b-90b6-c526-196fcd4fa146@linaro.org>
+ <20200312172659.GZ37466@atomide.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <c931549a-6bc1-454d-ca2f-c5d977727f01@linaro.org>
+Date:   Mon, 16 Mar 2020 13:41:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200312172659.GZ37466@atomide.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-omap_dm_timer_enable() restores the entire context(including counter)
-based on 2 conditions:
-- If get_context_loss_count is populated and context is lost.
-- If get_context_loss_count is not populated update unconditionally.
 
-Case2 has a side effect of updating the counter register even though
-context is not lost. When timer is configured in pwm mode, this is
-causing undesired behaviour in the pwm period.
+Hi Tony,
 
-Instead of using get_context_loss_count call back, implement cpu_pm
-notifier with context save and restore support. And delete the
-get_context_loss_count callback all together.
+On 12/03/2020 18:26, Tony Lindgren wrote:
+> Hi,
+> 
+> * Daniel Lezcano <daniel.lezcano@linaro.org> [200312 11:11]:
+>> On 06/03/2020 18:19, Tony Lindgren wrote:
+>>> * Lokesh Vutla <lokeshvutla@ti.com> [200305 08:29]:
+>>>> This series fixes dm_timer_ops used for enabling the pwm and enables
+>>>> cpu_pm notifier for context save and restore. This acts as a preparatory
+>>>> series for enabling dynamic period updates for pwm omap dm timer driver.
+>>>>
+>>>> Changes since v2:
+>>>> - Incorporated changes from Tony
+>>>
+>>> I just gave this series another try here and it still works
+>>> for me just fine and is good to go as far as I'm concerned.
+>>
+>> How do you want this series to be merged?
+>>
+>> Shall I pick the patches falling under drivers/clocksource or ack them?
+> 
+> I think best would be if you picked them and applied them into
+> an immutable branch against v5.6-rc1 that can also be merged
+> into pwm driver branch as needed.
 
-Suggested-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-[tony@atomide.com: removed pm_runtime calls from cpuidle calls]
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
-Changes since v3:
-- Fixed checkpatch warnings.
+Immutable branch based on v5.6-rc1:
 
- drivers/clocksource/timer-ti-dm.c | 97 ++++++++++++++++++-------------
- include/clocksource/timer-ti-dm.h |  3 +-
- 2 files changed, 58 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
-index dae91969018d..cf4f30df99c2 100644
---- a/drivers/clocksource/timer-ti-dm.c
-+++ b/drivers/clocksource/timer-ti-dm.c
-@@ -20,6 +20,7 @@
- 
- #include <linux/clk.h>
- #include <linux/clk-provider.h>
-+#include <linux/cpu_pm.h>
- #include <linux/module.h>
- #include <linux/io.h>
- #include <linux/device.h>
-@@ -92,6 +93,47 @@ static void omap_timer_restore_context(struct omap_dm_timer *timer)
- 				timer->context.tclr);
- }
- 
-+static void omap_timer_save_context(struct omap_dm_timer *timer)
-+{
-+	timer->context.tclr =
-+			omap_dm_timer_read_reg(timer, OMAP_TIMER_CTRL_REG);
-+	timer->context.twer =
-+			omap_dm_timer_read_reg(timer, OMAP_TIMER_WAKEUP_EN_REG);
-+	timer->context.tldr =
-+			omap_dm_timer_read_reg(timer, OMAP_TIMER_LOAD_REG);
-+	timer->context.tmar =
-+			omap_dm_timer_read_reg(timer, OMAP_TIMER_MATCH_REG);
-+	timer->context.tier = readl_relaxed(timer->irq_ena);
-+	timer->context.tsicr =
-+			omap_dm_timer_read_reg(timer, OMAP_TIMER_IF_CTRL_REG);
-+}
-+
-+static int omap_timer_context_notifier(struct notifier_block *nb,
-+				       unsigned long cmd, void *v)
-+{
-+	struct omap_dm_timer *timer;
-+
-+	timer = container_of(nb, struct omap_dm_timer, nb);
-+
-+	switch (cmd) {
-+	case CPU_CLUSTER_PM_ENTER:
-+		if ((timer->capability & OMAP_TIMER_ALWON) ||
-+		    !atomic_read(&timer->enabled))
-+			break;
-+		omap_timer_save_context(timer);
-+		break;
-+	case CPU_CLUSTER_PM_ENTER_FAILED:
-+	case CPU_CLUSTER_PM_EXIT:
-+		if ((timer->capability & OMAP_TIMER_ALWON) ||
-+		    !atomic_read(&timer->enabled))
-+			break;
-+		omap_timer_restore_context(timer);
-+		break;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
- static int omap_dm_timer_reset(struct omap_dm_timer *timer)
- {
- 	u32 l, timeout = 100000;
-@@ -179,21 +221,7 @@ static int omap_dm_timer_set_source(struct omap_dm_timer *timer, int source)
- 
- static void omap_dm_timer_enable(struct omap_dm_timer *timer)
- {
--	int c;
--
- 	pm_runtime_get_sync(&timer->pdev->dev);
--
--	if (!(timer->capability & OMAP_TIMER_ALWON)) {
--		if (timer->get_context_loss_count) {
--			c = timer->get_context_loss_count(&timer->pdev->dev);
--			if (c != timer->ctx_loss_count) {
--				omap_timer_restore_context(timer);
--				timer->ctx_loss_count = c;
--			}
--		} else {
--			omap_timer_restore_context(timer);
--		}
--	}
- }
- 
- static void omap_dm_timer_disable(struct omap_dm_timer *timer)
-@@ -484,8 +512,6 @@ static int omap_dm_timer_start(struct omap_dm_timer *timer)
- 		omap_dm_timer_write_reg(timer, OMAP_TIMER_CTRL_REG, l);
- 	}
- 
--	/* Save the context */
--	timer->context.tclr = l;
- 	return 0;
- }
- 
-@@ -501,13 +527,6 @@ static int omap_dm_timer_stop(struct omap_dm_timer *timer)
- 
- 	__omap_dm_timer_stop(timer, timer->posted, rate);
- 
--	/*
--	 * Since the register values are computed and written within
--	 * __omap_dm_timer_stop, we need to use read to retrieve the
--	 * context.
--	 */
--	timer->context.tclr =
--			omap_dm_timer_read_reg(timer, OMAP_TIMER_CTRL_REG);
- 	omap_dm_timer_disable(timer);
- 	return 0;
- }
-@@ -530,9 +549,6 @@ static int omap_dm_timer_set_load(struct omap_dm_timer *timer, int autoreload,
- 	omap_dm_timer_write_reg(timer, OMAP_TIMER_LOAD_REG, load);
- 
- 	omap_dm_timer_write_reg(timer, OMAP_TIMER_TRIGGER_REG, 0);
--	/* Save the context */
--	timer->context.tclr = l;
--	timer->context.tldr = load;
- 	omap_dm_timer_disable(timer);
- 	return 0;
- }
-@@ -554,9 +570,6 @@ static int omap_dm_timer_set_match(struct omap_dm_timer *timer, int enable,
- 	omap_dm_timer_write_reg(timer, OMAP_TIMER_MATCH_REG, match);
- 	omap_dm_timer_write_reg(timer, OMAP_TIMER_CTRL_REG, l);
- 
--	/* Save the context */
--	timer->context.tclr = l;
--	timer->context.tmar = match;
- 	omap_dm_timer_disable(timer);
- 	return 0;
- }
-@@ -580,8 +593,6 @@ static int omap_dm_timer_set_pwm(struct omap_dm_timer *timer, int def_on,
- 	l |= trigger << 10;
- 	omap_dm_timer_write_reg(timer, OMAP_TIMER_CTRL_REG, l);
- 
--	/* Save the context */
--	timer->context.tclr = l;
- 	omap_dm_timer_disable(timer);
- 	return 0;
- }
-@@ -603,8 +614,6 @@ static int omap_dm_timer_set_prescaler(struct omap_dm_timer *timer,
- 	}
- 	omap_dm_timer_write_reg(timer, OMAP_TIMER_CTRL_REG, l);
- 
--	/* Save the context */
--	timer->context.tclr = l;
- 	omap_dm_timer_disable(timer);
- 	return 0;
- }
-@@ -618,9 +627,6 @@ static int omap_dm_timer_set_int_enable(struct omap_dm_timer *timer,
- 	omap_dm_timer_enable(timer);
- 	__omap_dm_timer_int_enable(timer, value);
- 
--	/* Save the context */
--	timer->context.tier = value;
--	timer->context.twer = value;
- 	omap_dm_timer_disable(timer);
- 	return 0;
- }
-@@ -648,9 +654,6 @@ static int omap_dm_timer_set_int_disable(struct omap_dm_timer *timer, u32 mask)
- 	l = omap_dm_timer_read_reg(timer, OMAP_TIMER_WAKEUP_EN_REG) & ~mask;
- 	omap_dm_timer_write_reg(timer, OMAP_TIMER_WAKEUP_EN_REG, l);
- 
--	/* Save the context */
--	timer->context.tier &= ~mask;
--	timer->context.twer &= ~mask;
- 	omap_dm_timer_disable(timer);
- 	return 0;
- }
-@@ -725,6 +728,11 @@ static int __maybe_unused omap_dm_timer_runtime_suspend(struct device *dev)
- 
- 	atomic_set(&timer->enabled, 0);
- 
-+	if (timer->capability & OMAP_TIMER_ALWON || !timer->func_base)
-+		return 0;
-+
-+	omap_timer_save_context(timer);
-+
- 	return 0;
- }
- 
-@@ -732,6 +740,9 @@ static int __maybe_unused omap_dm_timer_runtime_resume(struct device *dev)
- {
- 	struct omap_dm_timer *timer = dev_get_drvdata(dev);
- 
-+	if (!(timer->capability & OMAP_TIMER_ALWON) && timer->func_base)
-+		omap_timer_restore_context(timer);
-+
- 	atomic_set(&timer->enabled, 1);
- 
- 	return 0;
-@@ -798,7 +809,11 @@ static int omap_dm_timer_probe(struct platform_device *pdev)
- 		timer->id = pdev->id;
- 		timer->capability = pdata->timer_capability;
- 		timer->reserved = omap_dm_timer_reserved_systimer(timer->id);
--		timer->get_context_loss_count = pdata->get_context_loss_count;
-+	}
-+
-+	if (!(timer->capability & OMAP_TIMER_ALWON)) {
-+		timer->nb.notifier_call = omap_timer_context_notifier;
-+		cpu_pm_register_notifier(&timer->nb);
- 	}
- 
- 	if (pdata)
-@@ -852,6 +867,8 @@ static int omap_dm_timer_remove(struct platform_device *pdev)
- 	list_for_each_entry(timer, &omap_timer_list, node)
- 		if (!strcmp(dev_name(&timer->pdev->dev),
- 			    dev_name(&pdev->dev))) {
-+			if (!(timer->capability & OMAP_TIMER_ALWON))
-+				cpu_pm_unregister_notifier(&timer->nb);
- 			list_del(&timer->node);
- 			ret = 0;
- 			break;
-diff --git a/include/clocksource/timer-ti-dm.h b/include/clocksource/timer-ti-dm.h
-index eef5de300731..25f05235866e 100644
---- a/include/clocksource/timer-ti-dm.h
-+++ b/include/clocksource/timer-ti-dm.h
-@@ -110,13 +110,12 @@ struct omap_dm_timer {
- 	unsigned reserved:1;
- 	unsigned posted:1;
- 	struct timer_regs context;
--	int (*get_context_loss_count)(struct device *);
--	int ctx_loss_count;
- 	int revision;
- 	u32 capability;
- 	u32 errata;
- 	struct platform_device *pdev;
- 	struct list_head node;
-+	struct notifier_block nb;
- };
- 
- int omap_dm_timer_reserve_systimer(int id);
+https://git.linaro.org/people/dlezcano/linux.git/log/?h=timers/drivers/timer-ti-dm
+
+and merged to timers/drivers/next:
+
+
+https://git.linaro.org/people/dlezcano/linux.git/log/?h=timers/drivers/next
+
+with a small conflict (fixed) with:
+
+
+https://git.linaro.org/people/dlezcano/linux.git/commit/?h=timers/drivers/next&id=6ce4fcb015a1a1290ffafcf3554901b40f9322df
+
+Regards
+
+  -- Daniel
+
 -- 
-2.23.0
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
