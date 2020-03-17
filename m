@@ -2,128 +2,141 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D8D5B188AF4
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Mar 2020 17:46:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E963188C26
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Mar 2020 18:32:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgCQQqM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 17 Mar 2020 12:46:12 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34917 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgCQQqM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Mar 2020 12:46:12 -0400
-Received: by mail-ot1-f65.google.com with SMTP id k26so22422435otr.2;
-        Tue, 17 Mar 2020 09:46:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5eJQW9u/oqLF6BZRfUiV1G5G6DviGGlWCr2b1498xxQ=;
-        b=LMRx7nwWe7cMHMOWNUg05zRuPgY6DofzFHMhj1gQnEGael6LRUmB87NFm94a/wAfQX
-         qykah79BwhO1P0ntFvhaKtyeXHgmlW5N/BGaWP5tIlIMKLhnE+3K5J8zhdQEUNxGgANf
-         mXgbeSIOtdcNdJ2mSwcAt00z0uL/hD3bOfgu7xKu2E8K4MYFOKF5f/4rqd54WT8p+4JU
-         Gzt//MblJ65rZBgIlXAHxF4Riy/dM6uPNIerdGo5NXG0RHt9RJHKUdWeTrkrfGrEMpeP
-         U9ixsy97/bDAWsXfWP/01XRU5DVl8ZcLaF4BgdJ2y7RJ4bx/dRXjPBaFxBoG5mN/5vsB
-         z+YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5eJQW9u/oqLF6BZRfUiV1G5G6DviGGlWCr2b1498xxQ=;
-        b=RfpjAdih189gR1m9EytlEdi4rmNm3i6BvpNSS5Z8Fvl/NeACW0/hXfxFXRKYVb4VD5
-         A65CDR9/G+AjO1cBZb3I4ctwra+yTbTZNp7Ntt1c2y7J/yD6a5B/6LalZ2MuSjbpnMjl
-         zIzmSm+6Gwjws3Ezj7XlrtCfBjlhgcO68ew+jrh60thGIzmu0Ps7FPBF2DrZu6HKOziv
-         oWDcGJHyh0pfoh6f0QQwdpoUaMCd2cRqYaZKuQSQfr17803CI/Dj2b6LEEZE2Tz+mQ/4
-         mftaMMUF8hydG/a9mXPah6Mflz9h25NJSZ3KSuCcI4MGIrdLy4xmDeUUDsrwOnJgzHsV
-         A3IA==
-X-Gm-Message-State: ANhLgQ35rZVu1xRGN0xqC6ylF1+GTpyYTqvW9gmbvWR1eleQaWl/zv73
-        stiXmaCYHnp52oo7dLN39HuXGleMW136HHG70A0=
-X-Google-Smtp-Source: ADFU+vvntK56sIrmvkmT/qpvgh4Fm7v80qV219/QCLI53RZ9n5flRN/sXMIpPVYkFqh99ZsVYYoAnS05cZQy56ytVHY=
-X-Received: by 2002:a9d:560b:: with SMTP id e11mr116304oti.226.1584463569050;
- Tue, 17 Mar 2020 09:46:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200317155906.31288-1-dev@pascalroeleven.nl>
-In-Reply-To: <20200317155906.31288-1-dev@pascalroeleven.nl>
-From:   Emil Lenngren <emil.lenngren@gmail.com>
-Date:   Tue, 17 Mar 2020 17:45:58 +0100
-Message-ID: <CAO1O6sccq7c_S8ZMsChBKcVcCn-DDv6awZzNr2BEnh8TH6ZxGg@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/4] pwm: sun4i: Properly turn pwm off and fix stuck
- output state
+        id S1726148AbgCQRcQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 17 Mar 2020 13:32:16 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:34871 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgCQRcQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Mar 2020 13:32:16 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEG4Y-0008Oe-4d; Tue, 17 Mar 2020 18:32:10 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEG4W-0005Tl-OS; Tue, 17 Mar 2020 18:32:08 +0100
+Date:   Tue, 17 Mar 2020 18:32:08 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
 To:     Pascal Roeleven <dev@pascalroeleven.nl>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
         Maxime Ripard <mripard@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: pwm: sun4i: pwm-backlight not working since 5.6-rc1
+Message-ID: <20200317173208.t5s63pfz3byxsgzi@pengutronix.de>
+References: <6185b5540ca082d887d7d13330c9d938@pascalroeleven.nl>
+ <20200312132942.2kfspvmoc3mxkdx4@pengutronix.de>
+ <6e995c4c22c4e6c93acb1f491e5aa109@pascalroeleven.nl>
+ <20200316072613.37lnjfloac4npudf@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200316072613.37lnjfloac4npudf@pengutronix.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi all,
+Hello Pascal,
 
-Den tis 17 mars 2020 kl 17:00 skrev Pascal Roeleven <dev@pascalroeleven.nl>:
->
-> Hi all,
->
-> For the last few days I've been debugging a lot to get pwm working again since
-> recent changes in 5.6-rc1 broke it for me.
->
-> Testing shows the pwm controller crashes (or the output gets stuck) when the
-> period register is written when the channel is disabled while the clock gate is
-> still on. Usually after multiple writes, but one write can also lead to
-> unpredictable behaviour. Patch 3 and 4 fix this.
->
-> Patch 2 contains a fix which wouldn't completely turn off the pwm if the
-> output is disabled. The clock gate needs to stay on for at least one more
-> period to ensure the output is properly disabled. This issue has been around
-> for a long time but has probably stayed unnoticed because if the duty_cycle is
-> also changed to 0, you can't tell the difference.
->
-> Patch 1 removes some leftovers which aren't needed anymore.
->
-> Obviously these patches work for my device, but I'd like to hear your opinion
-> if any of these changes make sense. After days, this one is a bit blurry for me.
->
-> Thanks to Uwe for some help with debugging.
->
-> Pascal.
->
-> Pascal Roeleven (4):
->   pwm: sun4i: Remove redundant needs_delay
->   pwm: sun4i: Disable pwm before turning off clock gate
->   pwm: sun4i: Move delay to function
->   pwm: sun4i: Delay after writing the period
->
->  drivers/pwm/pwm-sun4i.c | 53 ++++++++++++++++++++---------------------
->  1 file changed, 26 insertions(+), 27 deletions(-)
->
-> --
-> 2.20.1
->
+On Mon, Mar 16, 2020 at 08:26:13AM +0100, Uwe Kleine-König wrote:
+> On Thu, Mar 12, 2020 at 04:06:07PM +0100, Pascal Roeleven wrote:
+> > On 2020-03-12 14:29, Uwe Kleine-König wrote:
+> > > On Thu, Mar 12, 2020 at 01:22:13PM +0100, Pascal Roeleven wrote:
+> > > > Hi all,
+> > > > 
+> > > > I am working on adding an old A10 device to mainline and noticed an
+> > > > issue
+> > > > when testing on 5.5.8 vs master.
+> > > > 
+> > > > Since 5.6-rc1, I can't control the brightness of my LCD backlight
+> > > > anymore.
+> > > > The backlight stays on full brightness instead. I am controlling the
+> > > > brightness value via sysfs for testing.
+> > > > 
+> > > > I am not sure if this is a general pwm-sun4i issue or if it is
+> > > > related to
+> > > > the backlight. However I narrowed it down to one commit for pwm-sun4i:
+> > > > 
+> > > > fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
+> > > > 
+> > > > If I use pwm-sun4i.c from 5b090b430d750961305030232314b6acdb0102aa on
+> > > > master, the backlight works fine. Unfortunately, due to my lack of
+> > > > kernel
+> > > > experience, I can't see how the commit above broke it.
+> > > 
+> > > Hmm, I cannot see how fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 breaks
+> > > this. Looking at the output of
+> > > 
+> > > 	git show -b fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5
+> > > 
+> > > (i.e. ignoring whitespace changes) I don't see how the behaviour you're
+> > > reporting can be explained.
+> > > 
+> > > Are you sure that fa4d81784681a26bcf7d2a43c6ac5cf991ef28f5 is the bad
+> > > commit?
+> > > 
+> > > Can you install a tool to inspect register values and check how the
+> > > affected registers change if you switch kernel versions and/or pwm
+> > > settings?
+> > > 
+> > > (e.g.
+> > > 	memtool md 0x1c20e00+0xc
+> > > )
+> > > 
+> > > Best regards
+> > > Uwe
+> > 
+> > Thanks for your response.
+> > 
+> > Yes I am sure that is the commit. If I am on master, and replace pwm-sun4i.c
+> > with the one from 5b090b43, everything works. If I then apply fa4d8178, it
+> > stops working.
+> > 
+> > And strangely the output of the registers is exactly the same before and
+> > after fa4d8178:
+> > 
+> > 01c20e00: 00000050 00130014 00000000 (full brightness)
+> > 01c20e00: 00000050 00130006 00000000 (min brightness)
+> > 
+> > Even when I'm on 5b090b43 and cherry-pick fa4d8178 can I reproduce the
+> > issue.
+> 
+> Very strange. I'm out of sensible ideas. The remaining ones are:
+> 
+> - enable tracing in the kernel and boot with
+> 
+> 	trace_event=pwm
+> 
+>   And then check after the problem occurred in
+>   /sys/kernel/debug/tracing/trace if something sticks out.
+> 
+> - Try modifying the registers using memtool. E.g.
+> 
+> 	memtool mw 0x01c20e04 0x00130012
+> 
+> - Do you have equipment to check the actual output of the PWM hardware?
+>   If so, what do you see?
 
-I also worked on sun4i-pwm some time ago, fixing a bunch of issues.
-One was that disabling the pwm sometimes didn't turn off the signal,
-because the gate and enable bit were modified in the same clock cycle.
-Another was that the current code used an unnecessary sleep of a whole
-period length (or more?) in case of an update to the period, which
-could be very time-consuming if it's a very long interval, like 2
-seconds.
+I assume the sun4i-series you sent earlier today resolves the problems
+you reported here?
 
-Note that the behaviour is not unpredictable, if you know how it works ;)
-I fiddled around a long time with devmem2, an oscilloscope and the
-prescaler set to max to figure out how works internally.
+Best regards
+Uwe
 
-Please try my version I just posted at https://pastebin.com/GWrhWzPJ.
-It is based on this version from May 28, 2019:
-https://github.com/torvalds/linux/blob/f50a7f3d9225dd374455f28138f79ae3074a7a3d/drivers/pwm/pwm-sun4i.c.
-Sorry for not posting it inline, but GMail would break the formatting.
-It contains quite many comments about how it works internally. I also
-wrote a section at http://linux-sunxi.org/PWM_Controller, but it might
-be a bit old (two years), so please rather look at the code and the
-comments.
-
-/Emil
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
