@@ -2,148 +2,128 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59AD1188A99
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Mar 2020 17:41:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8D5B188AF4
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Mar 2020 17:46:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbgCQQlB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 17 Mar 2020 12:41:01 -0400
-Received: from mail-eopbgr80092.outbound.protection.outlook.com ([40.107.8.92]:51215
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726130AbgCQQlB (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:41:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mrvvEqP2ygVb+Sd0YTwao/vWLbzJGQWL01F0VwUM1XQdNghGuIhfKBa6eXHje/eP6z1wsAP0E+MQox2YP4a//kQcATTduGfZzMYkUIhkyi+a3AX+4wV+vAB55VzXGb07bXFRemJ3eqhZk9Oqlfp+71NqVDmopUZbIvx6LFrk/okwpQ7JcxOTvijIrubpFmAtMkXdpQj/TXb6sftsBGP238c9Fn5ufR9d2UebaQCAPvm+VGyfnJ6MNNyjciPB94/YZcfejUrEaeD2VyYSbZ5bd1CB/t8l45rNy+4bTpLIrnRZY46r8C93Nr1x8cA6H3gqQbm/aCNTIRUHxd/JtSg+Dw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Gm6ch8xR8b3H1sbgs0W8m2O59cJyjN8XfUoPDBtfv7w=;
- b=O4y0g0MRXbJl2AkAE17pnwznX25xU6lSF91G+rB4/JZmo40rDb/ObCBraJhzpCPiRPQSFVpsCjLpsCNMh6pchdePBgJtl8d8jMNTDhaL11v0jsrmST/5xjWNhm6fpNC4qa6feovaBMJvY0FQqcXoFLNIgWeJJQiCjae7gekciOO02P1ZgAP+ZF4S5biFwLzSN7XRUQK/e3blQGUuLF9qko/YQOoL+55h44enn8fG66qAa/XzuVZg+9x5Ocz94SHvHDqhzUe/0m+Zwc9FQNIpovAt6ogwJ6Cu8hw61yp33g9rPNN39PdGtTW2h5lXMY1bIodBkU9RG+eR/3oJZm2VJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Gm6ch8xR8b3H1sbgs0W8m2O59cJyjN8XfUoPDBtfv7w=;
- b=CZnXsEPPC1j7crjvgwSuh0B0u8sCzbMPoIlCRc7SuySkxI3zFW411zkDGg0kpneFRTEB9eBlzEAiD2MYVi1N3v+k9DiZX0eMDSFTWlkIN+eFLqeZ87dDjELcQC1ihdParMqlJ1frxB7h/ZBeo5FHLilUmy2nKh7fZ9gLjhQpKSI=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=oleksandr.suvorov@toradex.com; 
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
- VI1PR05MB7101.eurprd05.prod.outlook.com (10.141.234.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.21; Tue, 17 Mar 2020 16:40:17 +0000
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::7cdd:4feb:a8b6:a6d2]) by VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::7cdd:4feb:a8b6:a6d2%7]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
- 16:40:17 +0000
-X-Gm-Message-State: ANhLgQ2UDUmCImpKz+G1wvx2PfnsmodoXgrbSmtRzzIAUloDLXZvK/ar
-        5r8VjTqNFGhKTjojz4I9TXO6OUfATlOcsHiMwTc=
-X-Google-Smtp-Source: ADFU+vs5IiH5xOxAVk1tazaO0nIxfpUiMfX+F2pIOjfJJXHSK1Aww98AZOBwwAUZz85BhDppVfRRsQImlnrWq2Voyv0=
-X-Received: by 2002:a0c:c389:: with SMTP id o9mr5577qvi.232.1584463209922;
- Tue, 17 Mar 2020 09:40:09 -0700 (PDT)
-References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
- <20200317123231.2843297-2-oleksandr.suvorov@toradex.com> <f281a6a0-a150-514d-ef02-4e51192031d7@microchip.com>
-In-Reply-To: <f281a6a0-a150-514d-ef02-4e51192031d7@microchip.com>
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Date:   Tue, 17 Mar 2020 18:39:58 +0200
-X-Gmail-Original-Message-ID: <CAGgjyvE9+fHDKiua=BWBaTRGaChsOvnUnG6RGA9Q4V4uPuPEhQ@mail.gmail.com>
-Message-ID: <CAGgjyvE9+fHDKiua=BWBaTRGaChsOvnUnG6RGA9Q4V4uPuPEhQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
-To:     Claudiu.Beznea@microchip.com
-Cc:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Paul Barker <pbarker@konsulko.com>,
+        id S1726388AbgCQQqM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 17 Mar 2020 12:46:12 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34917 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbgCQQqM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Mar 2020 12:46:12 -0400
+Received: by mail-ot1-f65.google.com with SMTP id k26so22422435otr.2;
+        Tue, 17 Mar 2020 09:46:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5eJQW9u/oqLF6BZRfUiV1G5G6DviGGlWCr2b1498xxQ=;
+        b=LMRx7nwWe7cMHMOWNUg05zRuPgY6DofzFHMhj1gQnEGael6LRUmB87NFm94a/wAfQX
+         qykah79BwhO1P0ntFvhaKtyeXHgmlW5N/BGaWP5tIlIMKLhnE+3K5J8zhdQEUNxGgANf
+         mXgbeSIOtdcNdJ2mSwcAt00z0uL/hD3bOfgu7xKu2E8K4MYFOKF5f/4rqd54WT8p+4JU
+         Gzt//MblJ65rZBgIlXAHxF4Riy/dM6uPNIerdGo5NXG0RHt9RJHKUdWeTrkrfGrEMpeP
+         U9ixsy97/bDAWsXfWP/01XRU5DVl8ZcLaF4BgdJ2y7RJ4bx/dRXjPBaFxBoG5mN/5vsB
+         z+YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5eJQW9u/oqLF6BZRfUiV1G5G6DviGGlWCr2b1498xxQ=;
+        b=RfpjAdih189gR1m9EytlEdi4rmNm3i6BvpNSS5Z8Fvl/NeACW0/hXfxFXRKYVb4VD5
+         A65CDR9/G+AjO1cBZb3I4ctwra+yTbTZNp7Ntt1c2y7J/yD6a5B/6LalZ2MuSjbpnMjl
+         zIzmSm+6Gwjws3Ezj7XlrtCfBjlhgcO68ew+jrh60thGIzmu0Ps7FPBF2DrZu6HKOziv
+         oWDcGJHyh0pfoh6f0QQwdpoUaMCd2cRqYaZKuQSQfr17803CI/Dj2b6LEEZE2Tz+mQ/4
+         mftaMMUF8hydG/a9mXPah6Mflz9h25NJSZ3KSuCcI4MGIrdLy4xmDeUUDsrwOnJgzHsV
+         A3IA==
+X-Gm-Message-State: ANhLgQ35rZVu1xRGN0xqC6ylF1+GTpyYTqvW9gmbvWR1eleQaWl/zv73
+        stiXmaCYHnp52oo7dLN39HuXGleMW136HHG70A0=
+X-Google-Smtp-Source: ADFU+vvntK56sIrmvkmT/qpvgh4Fm7v80qV219/QCLI53RZ9n5flRN/sXMIpPVYkFqh99ZsVYYoAnS05cZQy56ytVHY=
+X-Received: by 2002:a9d:560b:: with SMTP id e11mr116304oti.226.1584463569050;
+ Tue, 17 Mar 2020 09:46:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200317155906.31288-1-dev@pascalroeleven.nl>
+In-Reply-To: <20200317155906.31288-1-dev@pascalroeleven.nl>
+From:   Emil Lenngren <emil.lenngren@gmail.com>
+Date:   Tue, 17 Mar 2020 17:45:58 +0100
+Message-ID: <CAO1O6sccq7c_S8ZMsChBKcVcCn-DDv6awZzNr2BEnh8TH6ZxGg@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/4] pwm: sun4i: Properly turn pwm off and fix stuck
+ output state
+To:     Pascal Roeleven <dev@pascalroeleven.nl>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        alexandre.belloni@bootlin.com, wens@csie.org,
-        Fabio Estevam <festevam@gmail.com>, f.fainelli@gmail.com,
-        heiko@sntech.de, khilman@baylibre.com,
-        Ludovic.Desroches@microchip.com, mripard@kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Nicolas.Ferre@microchip.com, palmer@dabbelt.com,
-        paul@crapouillou.net, paul.walmsley@sifive.com,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        rjui@broadcom.com, Sascha Hauer <s.hauer@pengutronix.de>,
-        sbranden@broadcom.com, Shawn Guo <shawnguo@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux@prisktech.co.nz, bcm-kernel-feedback-list@broadcom.com,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-X-ClientProxiedBy: MN2PR11CA0013.namprd11.prod.outlook.com
- (2603:10b6:208:23b::18) To VI1PR05MB3279.eurprd05.prod.outlook.com
- (2603:10a6:802:1c::24)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mail-qv1-f52.google.com (209.85.219.52) by MN2PR11CA0013.namprd11.prod.outlook.com (2603:10b6:208:23b::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15 via Frontend Transport; Tue, 17 Mar 2020 16:40:14 +0000
-Received: by mail-qv1-f52.google.com with SMTP id a10so11202300qvq.8;        Tue, 17 Mar 2020 09:40:14 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2UDUmCImpKz+G1wvx2PfnsmodoXgrbSmtRzzIAUloDLXZvK/ar
-        5r8VjTqNFGhKTjojz4I9TXO6OUfATlOcsHiMwTc=
-X-Google-Smtp-Source: ADFU+vs5IiH5xOxAVk1tazaO0nIxfpUiMfX+F2pIOjfJJXHSK1Aww98AZOBwwAUZz85BhDppVfRRsQImlnrWq2Voyv0=
-X-Received: by 2002:a0c:c389:: with SMTP id o9mr5577qvi.232.1584463209922;
- Tue, 17 Mar 2020 09:40:09 -0700 (PDT)
-X-Gmail-Original-Message-ID: <CAGgjyvE9+fHDKiua=BWBaTRGaChsOvnUnG6RGA9Q4V4uPuPEhQ@mail.gmail.com>
-X-Originating-IP: [209.85.219.52]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2b32262c-ff35-40e3-18d5-08d7ca91de3a
-X-MS-TrafficTypeDiagnostic: VI1PR05MB7101:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB71016734F68EB3F2E7B76F18F9F60@VI1PR05MB7101.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0345CFD558
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(39850400004)(136003)(396003)(376002)(199004)(478600001)(5660300002)(54906003)(53546011)(55236004)(2906002)(186003)(8676002)(4326008)(9686003)(450100002)(34206002)(52116002)(66476007)(42186006)(81156014)(81166006)(66556008)(55446002)(8936002)(66946007)(316002)(26005)(4744005)(86362001)(6666004)(44832011)(107886003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB7101;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zKonuMXz290BY/UAKJq1oktF/Sh42olr7dwIOB900dPUAE97wYMFkcwAE9hTksr6NQRTHE8f3Zq5pJsC7v2qu8JdSExxN0icQt3syG869ZU3WcXf7eZzZ6HIPTY057dIkrvlri4mCVbA8Rx2Rpt47O24bnkccUarL9/t1XI0ZsaWp1RecHqZcXUf5k62fKUYe+hYOmIFIGLNYIknunn/cqFEqceGoIXeQzNcJd1s+oscuOfToqYBsTpCcma4GsUJlhsezGsiHQz18jnBvDEk0+1lG0+edflK+bhtGNeUasHnhtyqcWRU9tqk8V3hrxjYfihedRaSPmTku9IkM4s3b0hHlMVM2dJI7aK7iWSvk1OBrQU+gNmbs8H4lMKql1bTFrVIF0XoGmIEJsubpt6c9nIUX4577bn+zzMZYQlS7ajsVWw1Ls4rvaCDBs1HUV8h
-X-MS-Exchange-AntiSpam-MessageData: 06hGgKckLzQdv2qssAkipI6IqTjRAqBpLIi2NrVZCwnI6XJervvvaa1QlGtaSVX5IBPxlFC0Qfuo4LpnWt9K4wprIM0K2zP4Z7ql2PBmiTZnuwb+dcZvf4x1XzTaCSv4tOuDJUwSRvWciuIcO/vfNQ==
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b32262c-ff35-40e3-18d5-08d7ca91de3a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2020 16:40:14.5231
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2B8kwDZoLDKWVoyukFtVS0S9wg4dewXtpJCt932lxOvp9CGsc5t5HGAqMGocBpqDv3fywqT5lf6A9yzeE7grjvzI+glpaDy+pR1fBQlyciA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB7101
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 6:27 PM <Claudiu.Beznea@microchip.com> wrote:
+Hi all,
+
+Den tis 17 mars 2020 kl 17:00 skrev Pascal Roeleven <dev@pascalroeleven.nl>:
 >
+> Hi all,
 >
+> For the last few days I've been debugging a lot to get pwm working again since
+> recent changes in 5.6-rc1 broke it for me.
 >
-> On 17.03.2020 14:32, Oleksandr Suvorov wrote:
-> > @@ -187,7 +187,7 @@ static ssize_t polarity_store(struct device *child,
-> >         if (sysfs_streq(buf, "normal"))
-> >                 polarity = PWM_POLARITY_NORMAL;
-> >         else if (sysfs_streq(buf, "inversed"))
+> Testing shows the pwm controller crashes (or the output gets stuck) when the
+> period register is written when the channel is disabled while the clock gate is
+> still on. Usually after multiple writes, but one write can also lead to
+> unpredictable behaviour. Patch 3 and 4 fix this.
 >
-> You may also consider this string     ^
+> Patch 2 contains a fix which wouldn't completely turn off the pwm if the
+> output is disabled. The clock gate needs to stay on for at least one more
+> period to ensure the output is properly disabled. This issue has been around
+> for a long time but has probably stayed unnoticed because if the duty_cycle is
+> also changed to 0, you can't tell the difference.
+>
+> Patch 1 removes some leftovers which aren't needed anymore.
+>
+> Obviously these patches work for my device, but I'd like to hear your opinion
+> if any of these changes make sense. After days, this one is a bit blurry for me.
+>
+> Thanks to Uwe for some help with debugging.
+>
+> Pascal.
+>
+> Pascal Roeleven (4):
+>   pwm: sun4i: Remove redundant needs_delay
+>   pwm: sun4i: Disable pwm before turning off clock gate
+>   pwm: sun4i: Move delay to function
+>   pwm: sun4i: Delay after writing the period
+>
+>  drivers/pwm/pwm-sun4i.c | 53 ++++++++++++++++++++---------------------
+>  1 file changed, 26 insertions(+), 27 deletions(-)
+>
+> --
+> 2.20.1
+>
 
-Thanks for the feedback, Claudiu.
+I also worked on sun4i-pwm some time ago, fixing a bunch of issues.
+One was that disabling the pwm sometimes didn't turn off the signal,
+because the gate and enable bit were modified in the same clock cycle.
+Another was that the current code used an unnecessary sleep of a whole
+period length (or more?) in case of an update to the period, which
+could be very time-consuming if it's a very long interval, like 2
+seconds.
 
-I thought about it and decided not to change the ABI, as this change
-can impact lots of user-land applications.
-As a minimum, I can push this change as a separate patch to be able to
-revert the change of ABI only.
-What do you think?
+Note that the behaviour is not unpredictable, if you know how it works ;)
+I fiddled around a long time with devmem2, an oscilloscope and the
+prescaler set to max to figure out how works internally.
 
-> > -               polarity = PWM_POLARITY_INVERSED;
-> > +               polarity = PWM_POLARITY_INVERTED;
+Please try my version I just posted at https://pastebin.com/GWrhWzPJ.
+It is based on this version from May 28, 2019:
+https://github.com/torvalds/linux/blob/f50a7f3d9225dd374455f28138f79ae3074a7a3d/drivers/pwm/pwm-sun4i.c.
+Sorry for not posting it inline, but GMail would break the formatting.
+It contains quite many comments about how it works internally. I also
+wrote a section at http://linux-sunxi.org/PWM_Controller, but it might
+be a bit old (two years), so please rather look at the code and the
+comments.
 
-
-
--- 
-Best regards
-Oleksandr Suvorov
-
-Toradex AG
-Ebenaustrasse 10 | 6048 Horw | Switzerland | T: +41 41 500 48 00
+/Emil
