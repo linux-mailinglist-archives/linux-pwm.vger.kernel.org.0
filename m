@@ -2,153 +2,177 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 397E2188EA2
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Mar 2020 21:06:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A979188FBD
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Mar 2020 21:52:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgCQUGA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 17 Mar 2020 16:06:00 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:3661 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726810AbgCQUFh (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Mar 2020 16:05:37 -0400
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 17 Mar 2020 13:05:35 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 17 Mar 2020 13:05:35 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 3346D4B9F; Tue, 17 Mar 2020 13:05:35 -0700 (PDT)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v9 11/11] pwm: core: Convert period and duty cycle to u64
-Date:   Tue, 17 Mar 2020 13:05:26 -0700
-Message-Id: <ecc35a71d489baa0dd46d1a583edafa8399a0a64.1584473399.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1584473399.git.gurus@codeaurora.org>
-References: <cover.1584473399.git.gurus@codeaurora.org>
-In-Reply-To: <cover.1584473399.git.gurus@codeaurora.org>
-References: <cover.1584473399.git.gurus@codeaurora.org>
+        id S1726875AbgCQUuv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 17 Mar 2020 16:50:51 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:57217 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbgCQUuv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Mar 2020 16:50:51 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 0D1DA23E3C;
+        Tue, 17 Mar 2020 21:50:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1584478246;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=9s1oQ4jq4pc56CEahZRpEbRnFk8T32v+b2fT2eRreEE=;
+        b=qce08iWXtRajtnoSLXDjM1QKGpUAFHSDUgGSEcHGW3Cj/PC34Uaf4/Vo5xxlHtQ8P6BNYg
+        lEHg2dwzb2isgJtP0nuBHmcX3ASQiJeZI0CBXD8U3ZTPh7fb/MXg0ksEIlJD3bFFu3dKEM
+        DpgRvvwPFbSDcOfN9eADOSPG9Xbhg6U=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Michael Walle <michael@walle.cc>
+Subject: [PATCH 00/18] Add support for Kontron sl28cpld
+Date:   Tue, 17 Mar 2020 21:49:59 +0100
+Message-Id: <20200317205017.28280-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Spam-Level: ******
+X-Rspamd-Server: web
+X-Spam-Status: Yes, score=6.40
+X-Spam-Score: 6.40
+X-Rspamd-Queue-Id: 0D1DA23E3C
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         NEURAL_SPAM(0.00)[0.662];
+         DKIM_SIGNED(0.00)[];
+         DBL_PROHIBIT(0.00)[0.0.0.1:email,0.0.0.0:email];
+         RCPT_COUNT_TWELVE(0.00)[22];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
+         FREEMAIL_CC(0.00)[linaro.org,baylibre.com,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,walle.cc];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Because period and duty cycle are defined as ints with units of
-nanoseconds, the maximum time duration that can be set is limited to
-~2.147 seconds. Change their definitions to u64 in the structs of the
-PWM framework so that higher durations may be set.
+The Kontron sl28cpld is a board management chip providing gpio, pwm, fan
+monitoring and an interrupt controller. For now this controller is used on
+the Kontron SMARC-sAL28 board. But because of its flexible nature, it
+might also be used on other boards in the future. The individual blocks
+(like gpio, pwm, etc) are kept intentionally small. The MFD core driver
+then instantiates different (or multiple of the same) blocks. It also
+provides the register layout so it might be updated in the future without a
+device tree change; and support other boards with a different layout or
+functionalities.
 
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
----
- drivers/pwm/core.c  |  4 ++--
- drivers/pwm/sysfs.c |  8 ++++----
- include/linux/pwm.h | 12 ++++++------
- 3 files changed, 12 insertions(+), 12 deletions(-)
+See also [1] for more information.
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 5a7f659..81aa3c2 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -1163,8 +1163,8 @@ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
- 		if (state.enabled)
- 			seq_puts(s, " enabled");
- 
--		seq_printf(s, " period: %u ns", state.period);
--		seq_printf(s, " duty: %u ns", state.duty_cycle);
-+		seq_printf(s, " period: %llu ns", state.period);
-+		seq_printf(s, " duty: %llu ns", state.duty_cycle);
- 		seq_printf(s, " polarity: %s",
- 			   state.polarity ? "inverse" : "normal");
- 
-diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-index 2389b86..449dbc0 100644
---- a/drivers/pwm/sysfs.c
-+++ b/drivers/pwm/sysfs.c
-@@ -42,7 +42,7 @@ static ssize_t period_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.period);
-+	return sprintf(buf, "%llu\n", state.period);
- }
- 
- static ssize_t period_store(struct device *child,
-@@ -52,10 +52,10 @@ static ssize_t period_store(struct device *child,
- 	struct pwm_export *export = child_to_pwm_export(child);
- 	struct pwm_device *pwm = export->pwm;
- 	struct pwm_state state;
--	unsigned int val;
-+	u64 val;
- 	int ret;
- 
--	ret = kstrtouint(buf, 0, &val);
-+	ret = kstrtou64(buf, 0, &val);
- 	if (ret)
- 		return ret;
- 
-@@ -77,7 +77,7 @@ static ssize_t duty_cycle_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.duty_cycle);
-+	return sprintf(buf, "%llu\n", state.duty_cycle);
- }
- 
- static ssize_t duty_cycle_store(struct device *child,
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 0ef808d..b53f13d 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -39,7 +39,7 @@ enum pwm_polarity {
-  * current PWM hardware state.
-  */
- struct pwm_args {
--	unsigned int period;
-+	u64 period;
- 	enum pwm_polarity polarity;
- };
- 
-@@ -56,8 +56,8 @@ enum {
-  * @enabled: PWM enabled status
-  */
- struct pwm_state {
--	unsigned int period;
--	unsigned int duty_cycle;
-+	u64 period;
-+	u64 duty_cycle;
- 	enum pwm_polarity polarity;
- 	bool enabled;
- };
-@@ -105,13 +105,13 @@ static inline bool pwm_is_enabled(const struct pwm_device *pwm)
- 	return state.enabled;
- }
- 
--static inline void pwm_set_period(struct pwm_device *pwm, unsigned int period)
-+static inline void pwm_set_period(struct pwm_device *pwm, u64 period)
- {
- 	if (pwm)
- 		pwm->state.period = period;
- }
- 
--static inline unsigned int pwm_get_period(const struct pwm_device *pwm)
-+static inline u64 pwm_get_period(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
-@@ -126,7 +126,7 @@ static inline void pwm_set_duty_cycle(struct pwm_device *pwm, unsigned int duty)
- 		pwm->state.duty_cycle = duty;
- }
- 
--static inline unsigned int pwm_get_duty_cycle(const struct pwm_device *pwm)
-+static inline u64 pwm_get_duty_cycle(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
+There is one problem though:
+
+Documentation/devicetree/bindings/mfd/kontron,sl28cpld.example.dts:32.24-41.19: Warning (unique_unit_address): /example-0/i2c/sl28cpld@4a/gpio@0: duplicate unit-address (also used in node /example-0/i2c/sl28cpld@4a/pwm@0)
+Documentation/devicetree/bindings/mfd/kontron,sl28cpld.example.dts:43.24-52.19: Warning (unique_unit_address): /example-0/i2c/sl28cpld@4a/gpio@1: duplicate unit-address (also used in node /example-0/i2c/sl28cpld@4a/pwm@1)
+
+This is because the reg property is used to match multiple MFD cells which
+has the same devicetree compatible string. See patch 3. So only the (reg,
+compatible string) is unique. Maybe I should use a different property but
+reg?
+
+This is my first take of a MFD driver. I don't know wether the subsystem
+maintainers should only be CCed on the patches which affect the subsystem
+or on all patches for this series. I've chosen the latter so you can get a
+more complete picture.
+
+[1] https://lore.kernel.org/linux-devicetree/0e3e8204ab992d75aa07fc36af7e4ab2@walle.cc/
+
+Michael Walle (18):
+  include/linux/ioport.h: add helper to define REG resource constructs
+  mfd: mfd-core: Don't overwrite the dma_mask of the child device
+  mfd: mfd-core: match device tree node against reg property
+  dt-bindings: mfd: Add bindings for sl28cpld
+  mfd: Add support for Kontron sl28cpld management controller
+  irqchip: add sl28cpld interrupt controller support
+  dt-bindings: watchdog: Add bindings for sl28cpld watchdog
+  watchdog: add support for sl28cpld watchdog
+  dt-bindings: pwm: Add bindings for sl28cpld PWM controller
+  pwm: add support for sl28cpld PWM controller
+  dt-bindings: gpio: Add bindings for sl28cpld GPIO controller
+  gpio: add support for the sl28cpld GPIO controller
+  dt-bindings: hwmon: Add bindings for sl28cpld hardware monitoring
+  hwmon: add support for the sl28cpld hardware monitoring controller
+  arm64: dts: freescale: sl28: enable sl28cpld
+  arm64: dts: freescale: sl28: map GPIOs to input events
+  arm64: dts: freescale: sl28: enable LED support
+  arm64: dts: freescale: sl28: enable fan support
+
+ .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  52 +++
+ .../hwmon/kontron,sl28cpld-hwmon.yaml         |  28 ++
+ .../bindings/mfd/kontron,sl28cpld.yaml        | 146 ++++++++
+ .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  33 ++
+ .../watchdog/kontron,sl28cpld-wdt.yaml        |  30 ++
+ .../fsl-ls1028a-kontron-kbox-a-230-ls.dts     |  14 +
+ .../fsl-ls1028a-kontron-sl28-var3-ads2.dts    |   9 +
+ .../freescale/fsl-ls1028a-kontron-sl28.dts    | 119 +++++++
+ drivers/gpio/Kconfig                          |  11 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-sl28cpld.c                  | 332 ++++++++++++++++++
+ drivers/hwmon/Kconfig                         |  10 +
+ drivers/hwmon/Makefile                        |   1 +
+ drivers/hwmon/sl28cpld-hwmon.c                | 146 ++++++++
+ drivers/irqchip/Kconfig                       |   3 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-sl28cpld.c                |  92 +++++
+ drivers/mfd/Kconfig                           |  21 ++
+ drivers/mfd/Makefile                          |   2 +
+ drivers/mfd/mfd-core.c                        |  28 +-
+ drivers/mfd/sl28cpld.c                        | 155 ++++++++
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-sl28cpld.c                    | 192 ++++++++++
+ drivers/watchdog/Kconfig                      |  11 +
+ drivers/watchdog/Makefile                     |   1 +
+ drivers/watchdog/sl28cpld_wdt.c               | 238 +++++++++++++
+ include/linux/ioport.h                        |   5 +
+ 28 files changed, 1682 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+ create mode 100644 Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+ create mode 100644 Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
+ create mode 100644 Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
+ create mode 100644 drivers/gpio/gpio-sl28cpld.c
+ create mode 100644 drivers/hwmon/sl28cpld-hwmon.c
+ create mode 100644 drivers/irqchip/irq-sl28cpld.c
+ create mode 100644 drivers/mfd/sl28cpld.c
+ create mode 100644 drivers/pwm/pwm-sl28cpld.c
+ create mode 100644 drivers/watchdog/sl28cpld_wdt.c
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.20.1
 
