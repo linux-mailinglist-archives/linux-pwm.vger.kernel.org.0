@@ -2,24 +2,24 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0950A188FF2
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Mar 2020 22:01:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8A88189057
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Mar 2020 22:31:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbgCQVBZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 17 Mar 2020 17:01:25 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46209 "EHLO
+        id S1726549AbgCQVbJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 17 Mar 2020 17:31:09 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50237 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbgCQVBZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Mar 2020 17:01:25 -0400
+        with ESMTP id S1726388AbgCQVbJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Mar 2020 17:31:09 -0400
 Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
         by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1jEJKW-00039f-Bg; Tue, 17 Mar 2020 22:00:52 +0100
+        id 1jEJnd-0005vE-6Z; Tue, 17 Mar 2020 22:30:57 +0100
 Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
         (envelope-from <ukl@pengutronix.de>)
-        id 1jEJKM-0003eU-V8; Tue, 17 Mar 2020 22:00:42 +0100
-Date:   Tue, 17 Mar 2020 22:00:42 +0100
+        id 1jEJnc-0004oR-3H; Tue, 17 Mar 2020 22:30:56 +0100
+Date:   Tue, 17 Mar 2020 22:30:56 +0100
 From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>
@@ -30,40 +30,17 @@ Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
         Marcel Ziswiler <marcel.ziswiler@toradex.com>,
         Igor Opaniuk <igor.opaniuk@toradex.com>,
         Philippe Schenker <philippe.schenker@toradex.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Scott Branden <sbranden@broadcom.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
-Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
-Message-ID: <20200317210042.ryrof3amr7fxp4w5@pengutronix.de>
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/7] dt-bindings: pwm: document the PWM polarity flag
+Message-ID: <20200317213056.futfiwn4qgr2njye@pengutronix.de>
 References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
- <20200317123231.2843297-2-oleksandr.suvorov@toradex.com>
- <20200317174043.GA1464607@ulmo>
+ <20200317123231.2843297-3-oleksandr.suvorov@toradex.com>
+ <20200317174344.GB1464607@ulmo>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200317174043.GA1464607@ulmo>
+In-Reply-To: <20200317174344.GB1464607@ulmo>
 User-Agent: NeoMutt/20170113 (1.7.2)
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
 X-SA-Exim-Mail-From: ukl@pengutronix.de
@@ -74,49 +51,53 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello,
+Hello Thierry,
 
-On Tue, Mar 17, 2020 at 06:40:43PM +0100, Thierry Reding wrote:
-> On Tue, Mar 17, 2020 at 02:32:25PM +0200, Oleksandr Suvorov wrote:
-> > The polarity enum definition PWM_POLARITY_INVERSED is misspelled.
-> > Rename it to PWM_POLARITY_INVERTED.
+On Tue, Mar 17, 2020 at 06:43:44PM +0100, Thierry Reding wrote:
+> On Tue, Mar 17, 2020 at 02:32:26PM +0200, Oleksandr Suvorov wrote:
+> > Add the description of PWM_POLARITY_NORMAL flag.
+> > 
+> > Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> > ---
+> > 
+> >  Documentation/devicetree/bindings/pwm/pwm.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Documentation/devicetree/bindings/pwm/pwm.txt
+> > index 084886bd721e..440c6b9a6a4e 100644
+> > --- a/Documentation/devicetree/bindings/pwm/pwm.txt
+> > +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
+> > @@ -46,6 +46,7 @@ period in nanoseconds.
+> >  Optionally, the pwm-specifier can encode a number of flags (defined in
+> >  <dt-bindings/pwm/pwm.h>) in a third cell:
+> >  - PWM_POLARITY_INVERTED: invert the PWM signal polarity
+> > +- PWM_POLARITY_NORMAL: don't invert the PWM signal polarity
 > 
-> It isn't misspelled. "inversed" is a synonym for "inverted". Both
-> spellings are correct.
+> This doesn't make sense. PWM_POLARITY_NORMAL is not part of the DT ABI.
 
-Some time ago I stumbled about "inversed", too. My spell checker doesn't
-know it and I checked some dictionaries and none of them knew that word:
+"is not part of the DT ABI" is hardly a good reason. If it's sensible to
+be used, it is sensible to define it.
 
-https://www.lexico.com/search?utf8=%E2%9C%93&filter=dictionary&dictionary=en&query=inversed
-https://de.pons.com/%C3%BCbersetzung/englisch-deutsch/inversed
-https://dictionary.cambridge.org/spellcheck/english-german/?q=inversed
+(And as far as I understand it, the term PWM_POLARITY_INVERTED isn't
+part of the DT ABI either. Only the value 1 has a meaning (for some PWM
+controlers).)
 
-https://en.wiktionary.org/wiki/inverse#Verb mentions "inverse" as a verb
-having "inversed" as past participle.
+> The third cell of the specifier is a bitmask of flags.
+> 
+> PWM_POLARITY_NORMAL is an enumeration value that evaluates to 0, so it
+> makes absolutely no sense as a flag.
 
-Having said this I think (independent of the question if "inversed"
-exists) using two similar terms for the same thing just results in
-confusion. I hit that in the past already and I like it being addressed.
+Using 0 or PWM_POLARITY_NORMAL doesn't have an effect on the compiled
+device tree, that's true. But having the term PWM_POLARITY_NORMAL (in
+contrast to a plain 0) in a dts file is useful in my eyes for human
+readers.
 
-> And as you noted in the cover letter, there's a conflict between the
-> macro defined in dt-bindings/pwm/pwm.txt. If they end up being included
-> in the wrong order you'll get a compile error.
+> PWM signals are considered to be "normal" by default, so no flag is
+> necessary to specify that.
 
-There are also other symbols that exist twice (GPIO_ACTIVE_HIGH was the
-first to come to my mind). I'm not aware of any problems related to
-these. What am I missing?
- 
-> The enum was named this way on purpose to make it separate from the
-> definition for the DT bindings.
-
-Then please let's make it different by picking a different prefix or
-something like that.
-
-> Note that DT bindings are an ABI and can
-> never change, whereas the enum pwm_polarity is part of a Linux internal
-> API and doesn't have the same restrictions as an ABI.
-
-I thought only binary device trees (dtb) are supposed to be ABI.
+GPIOs are considered to be active high by default, still there is
+GPIO_ACTIVE_HIGH (which also evaluates to 0). Also there is
+IRQ_TYPE_NONE.
 
 Best regards
 Uwe
