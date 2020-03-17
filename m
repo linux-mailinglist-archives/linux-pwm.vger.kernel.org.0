@@ -2,70 +2,61 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D507187000
-	for <lists+linux-pwm@lfdr.de>; Mon, 16 Mar 2020 17:27:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A686188318
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Mar 2020 13:09:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732012AbgCPQ1w (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 16 Mar 2020 12:27:52 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38741 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731884AbgCPQ1w (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 16 Mar 2020 12:27:52 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jDsaj-0008Kh-J1; Mon, 16 Mar 2020 17:27:49 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jDsai-0002UY-Cq; Mon, 16 Mar 2020 17:27:48 +0100
-Date:   Mon, 16 Mar 2020 17:27:48 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 3/3] pwm: renesas-tpu: Drop confusing registered message
-Message-ID: <20200316162748.cdafk2ghuw7zcqgd@pengutronix.de>
-References: <20200316103216.29383-1-geert+renesas@glider.be>
- <20200316103216.29383-4-geert+renesas@glider.be>
+        id S1726926AbgCQMJp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 17 Mar 2020 08:09:45 -0400
+Received: from sonic308-2.consmr.mail.ne1.yahoo.com ([66.163.187.121]:41611
+        "EHLO sonic308-2.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726917AbgCQMJo (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Mar 2020 08:09:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1584446983; bh=kcevCRoll2+Bsa3FDERpIV72LVcB1A4YV1b5N2AWYBk=; h=Date:From:Reply-To:Subject:References:From:Subject; b=Y5EVuw/rLgZWRMyXdYT50zJetJc6qxTaFtkDUd61yC67972Pv8BafoOYY5PpfFzHkhB66Bg4rtcMSXoq8A7BL5IIgjK9SJC8mxZMQRlRszKv6bj9MOQPdyR95GfO4fmEMbXi94ih/l1RXHAKAecbkLgb7E2jzk98FO+oKrElObmAlhaNIBdqAwP4X5M/wIs5btVaU9rpX2/LYk0A5ti2YrPZfCG30sXdz3iJZlGWvqkRf/8ofp7KEmaugfrBD9+fheWe5dd8wMA0fEsTW3+x/Z0bOHPIrt9VT3GhnXsUoqgqwXBjD6HuTC7XSQAlw6k4FMj1kCDmySakb8tto9ElPw==
+X-YMail-OSG: G42Kh.gVM1knbTm_ea7wDoC40E6mWcHxSA9L_Bt_wnpBVmL882rMq9bJ2rg9qeQ
+ hGJsKP6ixdHr58L4tqUtrrFYe4Ow4blICkwYwQX_Ue4k_yt6aioGE8t4rs2GJ09La4RlaQeUVAP5
+ I1B1JU8Bxt1YqGQu8ncZ.Xd6id0PE4.SYHek8aBYxFevAgCoWKBWgIhrsG7iVN_ZshTI_sI1UOl8
+ S.HbmHQFVHj7iYn9OiFSZfkbtsmJ80KcIxr.5wpySaW5p09F_pPeb5LdneUAKtwPvavTm1o_9O18
+ isTXNqESksVG_I_Zn8QONuM7sPvR.nvbJgUv_0wykTVYMOOAPG1pRXNI5bmFKc2ouhHWS85iNubW
+ qzLmd8XGPCS1K.D6Cm.8LNtrbQLw6N_6d2LLN7Mn0kJQuMiUc6bm2zZG8_mUpU6Enw.JqWMPbxn1
+ _kx5M8vf8Ujp9B3sbTuXIxYiieWVRHXtf.cudBqDMsrNFMxouW4hvbOZkUaP9tlQbDxSq8BS01mH
+ dGH7EPFC071LXSNqiG3msjeprMWww1FIEdtvxguemtkFWwqNBkhi6mynLkUJ3tXL7eos3VVBC5GC
+ 2T.gNA2mB3d5JOWMyRf5vKOGieqwKRURZJrYFdXZfLgBIi.ctJPp8PTNZWbVJZPvFLspXzbiYOAM
+ _tjWurYsHFh.nj4awKT22f7RY6I2QetZp_gEug.5EG0eF05mw6ALEmZkyGEbYDwAWHIV_HrUkk4Q
+ 7x0FYgxRLUV7A7Pf9.j.Qv8eCr3WOfcH6fzugui36LKhqED0SiEJHpkDtre.e9ZMd90ikBoDt9FV
+ B8j35JQHGGO5vYLnQXpPleh3MsSF7ELpoT_j_6IWp.wX.yUiwMa4ajOOmQhWItdMC0BPjiLrYMay
+ YFE.jtyXFSXWlJHCNNo84.nVn25Ek5Y1AZ9xnRFVUUhqwa0BWgSENaDaql4kxOeQx9L8OdOCmFU6
+ FZjaFneQdZDPnY_zzvHSWcM3OAvmc7ZM0iaVkqk.GQrka8Twl1K91Us9UJ0frPlmKBcEMLKCg2t2
+ 2OArVmvWH9WkilexAh2vN09fZtIZHEDSNe5mJNyK4gr6CDjUyxCGKWLXYOn4Xr09h0q75kY8B6U_
+ BH75yA0JaBM80xTEJU2l8j9lFLEQA6TOIRHuG5weoYFzlsA6AqHUnYpnLdFw8FsRq1Jt4RP0rXfC
+ iMpWfmp1bpcFbGJtrrD7.7T2.yzzZmwPeGg4eL5YmF.wfuAAu9L.8uYv_8B3.WCWSQZRc.m_lK_g
+ 3sOnlkGM78WG5tUzqKtrD2IGaT1bFCAMoLFQh3vemnklC4pBz7_MMntFoMmjjSpxlS1bTG3a_Kxs
+ 6nu1WXFPK4e0mTIR8w1L1eRXn5lg-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.ne1.yahoo.com with HTTP; Tue, 17 Mar 2020 12:09:43 +0000
+Date:   Tue, 17 Mar 2020 12:07:42 +0000 (UTC)
+From:   Stephen Li <stenn7@gabg.net>
+Reply-To: stephli947701@gmail.com
+Message-ID: <608201144.1808131.1584446862432@mail.yahoo.com>
+Subject: REF
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200316103216.29383-4-geert+renesas@glider.be>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <608201144.1808131.1584446862432.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.15342 YMailNodin Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 11:32:16AM +0100, Geert Uytterhoeven wrote:
-> During device probe, the message
-> 
->     TPU PWM -1 registered
-> 
-> is printed.
-> 
-> While the "-1" looks suspicious, it is perfectly normal for a device
-> instantiated from DT.
-> 
-> Remove the message, as there are no non-DT users left, and other drivers
-> don't print such messages neither.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Thanks
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Greetings,
+I was searching through a local business directory when I found your
+profile. I am Soliciting On-Behalf of my private client who is
+interested in having a serious business investment in your country. If
+you have a valid business, investment or project he can invest
+back to me for more details. Your swift response is highly needed.
+Sincerely
+Stephen Li
+Please response back to me with is my private email below for more details
+stephli947701@gmail.com
