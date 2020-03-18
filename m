@@ -2,51 +2,52 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B1DA18945C
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Mar 2020 04:18:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D982518946A
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Mar 2020 04:27:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbgCRDRi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 17 Mar 2020 23:17:38 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33892 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbgCRDRh (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Mar 2020 23:17:37 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 23so13113865pfj.1;
-        Tue, 17 Mar 2020 20:17:36 -0700 (PDT)
+        id S1726553AbgCRD1V (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 17 Mar 2020 23:27:21 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40591 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbgCRD1V (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Mar 2020 23:27:21 -0400
+Received: by mail-pl1-f193.google.com with SMTP id h11so10541700plk.7;
+        Tue, 17 Mar 2020 20:27:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:to:cc:references:from:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=BQpN5gwQ9Pni7mIRi1IxJySWLMfNLsPgNCigMN7KRto=;
-        b=lQ2lv92+R/G5Ea/zXcdigQMx/8y8BGvTQ8XvYk3mtH0kt3LYlyrxcjKZLEGs79WNJR
-         M8bLAyh4dA0Wt8XGdK8qdrtgQZlxdIBMpBcvrFgmVN4F1RD/mHPKU+pco8hUqZNqkT1Z
-         pe24nnyOmg2fUpbZ9qqM3RhlQAXpQfzHTGOAJs5YbU8AkNafzzrIG822vUxCYM1m1/dU
-         FFyO3G9+7xOXC0BWsR24UEADRhkLvQQhfDz28fe8RH1Y7/88kHYNAVK09IDX0SbkhRLN
-         fndUMpNEwKQIgRaBdhj+/rHKmAHS2nmb97/JtRuOtVe3OMeVosRNAcypaZjRJlTZ1JFn
-         5T1w==
+        bh=famkI3hno7KZXTrvwWBMRYQiftA+3wDNqSrv5TQiosw=;
+        b=s3W2023EwlwkIVfaLfOMBUbgRUoZ2LXssBduY20TQ/8bdm2TE4Sa7Mzhzu8McZutwl
+         Bs/uVKNqIKYsWLJLy/kAK9AqX89YcLCaY4/ATFhDoPJrulsTeT3RPMSHeAlSeVlcWDeK
+         V1UDYnR1yeu7JURcTab0aQWYc1Xu4CDVWrycnVoT6bJ5TCQu4dQsnRSgxoYowJe5Mq7g
+         zJ8Ir/cNqFoeHAuG50nCfV4X5RbkBdVWgzEfbqK0S9NQgdq6o072CFLRh6wfowzCesUW
+         eB8YBhs13bgZy0Tlf+HyWHhSKVll3j/EuTPW534XiuTzE0XDFbvu2fxeVccn12Fkiz5w
+         8oaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=BQpN5gwQ9Pni7mIRi1IxJySWLMfNLsPgNCigMN7KRto=;
-        b=LpKkloVN5NbjiBV2H9hsOuMTmK5Zo0efOHODgIuyScmQoBWDu5/225GV1hyzxVqtKj
-         vzL/Gqmyu3/5iVKDn8iHKk0WT8ojTPrcFRqrY3QRagR76jrQgYXmal3t8BlU+/oB50fd
-         yxbjF0GLjUac+xUk3vue59j53LJ6TtWAIvSsIlwGmB3xQPfbvB9tx0Tt0Li9hDJIM4fx
-         hRccYWYx75KKE/ZavLqK8tq55UcCUrj4lnPwKF+qqPZamvtltAmlPWrqeYCmNheANSA2
-         OzSiHu5V6wTHszmx1zp2oWT18wet0S+eKBbRYuJuGMMAaA2xARl8QdmNCZQooYx6c4Uo
-         cpnQ==
-X-Gm-Message-State: ANhLgQ2Q2vien5h7iEqU96Jyr4/n0rLJFyuQPU5D3UyH1sL1aV0tuvgX
-        nXvoTBRpW8rY6D/IA8L6nGM=
-X-Google-Smtp-Source: ADFU+vuwEafdq1XlC1xIsngjrJ5FMvcZhPADN5x/5jrrdLN6pcmUGzCj6PvzZZOxOhJo1j1YcuugZA==
-X-Received: by 2002:aa7:8659:: with SMTP id a25mr2049195pfo.95.1584501455356;
-        Tue, 17 Mar 2020 20:17:35 -0700 (PDT)
+        bh=famkI3hno7KZXTrvwWBMRYQiftA+3wDNqSrv5TQiosw=;
+        b=q5t4tbO12sfqIbyV8B+B70IW92SyHGJTDvOH6SlOQZt4b82gjW5sZlmOTAFuInR39H
+         VP+L3u8aHpTiEEgWWQXcinLqa6Sh4GFKQii0VOfeMvjJqarC+QtLL3EMIFgO3WJCc5tF
+         sEA4VF97AKPgdv2TnFsQRwqUCP7HiwTdn99d91f4vdEhhYG2H9p3wi77nieB5jrA9VOW
+         3sA06GHJd8zi0Q2nDpsWuOKhSr4B1O9SQ93j7y89iRRwNtq+1cEG2N2hWmvu+cPUuiIJ
+         /qlYhjcoKxt5wgbn9jERkBL//JAibBytUdWknENDPX+JQWibtjoHkAiG5Px9vBrEth4H
+         r3YQ==
+X-Gm-Message-State: ANhLgQ1O17Lzl8HW7BwTZ/7mR+U5CslcFbcdN5p0J04ovUUBTrbJPC+h
+        0x5W5xGkmXCpg+5veWYYIPs=
+X-Google-Smtp-Source: ADFU+vv9pl7AVgQk4Gtwa9o4zMFtd2PO2UWEXO/u0Kmva3biTu9yXhSQHkfKWgER7jXQyVIf6QURXw==
+X-Received: by 2002:a17:90a:e7c8:: with SMTP id kb8mr2399221pjb.79.1584502039376;
+        Tue, 17 Mar 2020 20:27:19 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m12sm646096pjk.20.2020.03.17.20.17.33
+        by smtp.gmail.com with ESMTPSA id j19sm4417468pfe.102.2020.03.17.20.27.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2020 20:17:34 -0700 (PDT)
-Subject: Re: [PATCH 08/18] watchdog: add support for sl28cpld watchdog
+        Tue, 17 Mar 2020 20:27:18 -0700 (PDT)
+Subject: Re: [PATCH 14/18] hwmon: add support for the sl28cpld hardware
+ monitoring controller
 To:     Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
@@ -65,7 +66,7 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>
 References: <20200317205017.28280-1-michael@walle.cc>
- <20200317205017.28280-9-michael@walle.cc>
+ <20200317205017.28280-15-michael@walle.cc>
 From:   Guenter Roeck <linux@roeck-us.net>
 Autocrypt: addr=linux@roeck-us.net; keydata=
  xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
@@ -110,315 +111,227 @@ Autocrypt: addr=linux@roeck-us.net; keydata=
  WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
  HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
  mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <943270c6-970a-1552-5547-c30aea597b4a@roeck-us.net>
-Date:   Tue, 17 Mar 2020 20:17:32 -0700
+Message-ID: <11700297-affd-8bdc-2414-3dc7f2b62798@roeck-us.net>
+Date:   Tue, 17 Mar 2020 20:27:16 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200317205017.28280-9-michael@walle.cc>
+In-Reply-To: <20200317205017.28280-15-michael@walle.cc>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 On 3/17/20 1:50 PM, Michael Walle wrote:
-> This adds support for the watchdog of the sl28cpld board management
-> controller. This is part of a multi-function device driver.
+> This adds support for the hardware monitoring controller of the sl28cpld
+> board management controller. This driver is part of a multi-function
+> device.
 > 
 > Signed-off-by: Michael Walle <michael@walle.cc>
 > ---
->  drivers/watchdog/Kconfig        |  11 ++
->  drivers/watchdog/Makefile       |   1 +
->  drivers/watchdog/sl28cpld_wdt.c | 238 ++++++++++++++++++++++++++++++++
->  3 files changed, 250 insertions(+)
->  create mode 100644 drivers/watchdog/sl28cpld_wdt.c
+>  drivers/hwmon/Kconfig          |  10 +++
+>  drivers/hwmon/Makefile         |   1 +
+>  drivers/hwmon/sl28cpld-hwmon.c | 146 +++++++++++++++++++++++++++++++++
+
+Please also provide Documentation/hwmon/sl28cpld.
+
+>  3 files changed, 157 insertions(+)
+>  create mode 100644 drivers/hwmon/sl28cpld-hwmon.c
 > 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 9ea2b43d4b01..c78b90ccc8cf 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -340,6 +340,17 @@ config MLX_WDT
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called mlx-wdt.
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 05a30832c6ba..c98716f78cfa 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -1412,6 +1412,16 @@ config SENSORS_RASPBERRYPI_HWMON
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called raspberrypi-hwmon.
 >  
-> +config SL28CPLD_WATCHDOG
-> +	tristate "Kontron sl28 watchdog"
+> +config SENSORS_SL28CPLD
+> +	tristate "Kontron's SMARC-sAL28 hardware monitoring driver"
 > +	depends on MFD_SL28CPLD
-> +	select WATCHDOG_CORE
 > +	help
-> +	  Say Y here to include support for the watchdog timer
-> +	  on the Kontron sl28 CPLD.
+> +	  If you say yes here you get support for a fan connected to the
+> +	  input of the SMARC connector of Kontron's SMARC-sAL28 module.
 > +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called sl28cpld_wdt.
+> +	  This driver can also be built as a module.  If so, the module
+> +	  will be called sl28cpld-hwmon.
 > +
->  # ALPHA Architecture
->  
->  # ARM Architecture
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index 2ee352bf3372..060e2f895fe8 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -223,3 +223,4 @@ obj-$(CONFIG_MENF21BMC_WATCHDOG) += menf21bmc_wdt.o
->  obj-$(CONFIG_MENZ069_WATCHDOG) += menz69_wdt.o
->  obj-$(CONFIG_RAVE_SP_WATCHDOG) += rave-sp-wdt.o
->  obj-$(CONFIG_STPMIC1_WATCHDOG) += stpmic1_wdt.o
-> +obj-$(CONFIG_SL28CPLD_WATCHDOG) += sl28cpld_wdt.o
-> diff --git a/drivers/watchdog/sl28cpld_wdt.c b/drivers/watchdog/sl28cpld_wdt.c
+>  config SENSORS_SHT15
+>  	tristate "Sensiron humidity and temperature sensors. SHT15 and compat."
+>  	depends on GPIOLIB || COMPILE_TEST
+> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> index b0b9c8e57176..dfb0f8cda2dd 100644
+> --- a/drivers/hwmon/Makefile
+> +++ b/drivers/hwmon/Makefile
+> @@ -155,6 +155,7 @@ obj-$(CONFIG_SENSORS_S3C)	+= s3c-hwmon.o
+>  obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
+>  obj-$(CONFIG_SENSORS_SCH5627)	+= sch5627.o
+>  obj-$(CONFIG_SENSORS_SCH5636)	+= sch5636.o
+> +obj-$(CONFIG_SENSORS_SL28CPLD)	+= sl28cpld-hwmon.o
+>  obj-$(CONFIG_SENSORS_SHT15)	+= sht15.o
+>  obj-$(CONFIG_SENSORS_SHT21)	+= sht21.o
+>  obj-$(CONFIG_SENSORS_SHT3x)	+= sht3x.o
+> diff --git a/drivers/hwmon/sl28cpld-hwmon.c b/drivers/hwmon/sl28cpld-hwmon.c
 > new file mode 100644
-> index 000000000000..5927b7ad0be4
+> index 000000000000..7ac42bb0a48c
 > --- /dev/null
-> +++ b/drivers/watchdog/sl28cpld_wdt.c
-> @@ -0,0 +1,238 @@
+> +++ b/drivers/hwmon/sl28cpld-hwmon.c
+> @@ -0,0 +1,146 @@
 > +// SPDX-License-Identifier: GPL-2.0-only
 > +/*
-> + * SMARC-sAL28 Watchdog driver.
+> + * SMARC-sAL28 fan hardware monitoring driver.
 > + *
 > + * Copyright 2019 Kontron Europe GmbH
 > + */
 > +
 > +#include <linux/kernel.h>
 > +#include <linux/module.h>
+> +#include <linux/bitfield.h>
 > +#include <linux/of.h>
+> +#include <linux/of_device.h>
 > +#include <linux/of_address.h>
 > +#include <linux/regmap.h>
 > +#include <linux/platform_device.h>
-> +#include <linux/watchdog.h>
+> +#include <linux/hwmon.h>
 > +
-> +/*
-> + * Watchdog timer block registers.
-> + */
-> +#define SL28CPLD_WDT_CTRL	0
-> +#define  WDT_CTRL_EN		BIT(0)
-> +#define  WDT_CTRL_LOCK		BIT(2)
-> +#define SL28CPLD_WDT_TIMEOUT	1
-> +#define SL28CPLD_WDT_KICK	2
-> +#define  WDT_KICK_VALUE		0x6b
-> +#define SL28CPLD_WDT_COUNT	3
+Alphabetic order of include files, please.
+
+> +#define FAN_INPUT		0
+> +#define   FAN_SCALE_X8		BIT(7)
+> +#define   FAN_VALUE_MASK	GENMASK(6, 0)
 > +
-> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> +module_param(nowayout, bool, 0);
-> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
-> +				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> +
-> +static int timeout;
-> +module_param(timeout, int, 0);
-> +MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
-> +
-> +struct sl28cpld_wdt {
-> +	struct watchdog_device wdd;
+> +struct sl28cpld_hwmon {
 > +	struct regmap *regmap;
 > +	u32 offset;
 > +};
 > +
-> +static int sl28cpld_wdt_ping(struct watchdog_device *wdd)
+> +static umode_t sl28cpld_hwmon_is_visible(const void *data,
+> +					 enum hwmon_sensor_types type,
+> +					 u32 attr, int channel)
 > +{
-> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	return regmap_write(wdt->regmap, wdt->offset + SL28CPLD_WDT_KICK,
-> +			    WDT_KICK_VALUE);
+> +	return 0444;
 > +}
 > +
-> +static int sl28cpld_wdt_start(struct watchdog_device *wdd)
+> +static int sl28cpld_hwmon_read(struct device *dev,
+> +			       enum hwmon_sensor_types type, u32 attr,
+> +			       int channel, long *input)
 > +{
-> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-> +	unsigned int val;
-> +
-> +	val = WDT_CTRL_EN;
-> +	if (nowayout)
-> +		val |= WDT_CTRL_LOCK;
-> +
-> +	return regmap_update_bits(wdt->regmap, wdt->offset + SL28CPLD_WDT_CTRL,
-> +				  val, val);
-> +}
-> +
-> +static int sl28cpld_wdt_stop(struct watchdog_device *wdd)
-> +{
-> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	return regmap_update_bits(wdt->regmap, wdt->offset + SL28CPLD_WDT_CTRL,
-> +				  WDT_CTRL_EN, 0);
-> +}
-> +
-> +static unsigned int sl28cpld_wdt_status(struct watchdog_device *wdd)
-> +{
-> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-> +	unsigned int status;
+> +	struct sl28cpld_hwmon *hwmon = dev_get_drvdata(dev);
+> +	unsigned int value;
 > +	int ret;
 > +
-> +	ret = regmap_read(wdt->regmap, wdt->offset + SL28CPLD_WDT_CTRL,
-> +			  &status);
-> +	if (ret < 0)
-> +		return 0;
+> +	switch (attr) {
+> +	case hwmon_fan_input:
+> +		ret = regmap_read(hwmon->regmap, hwmon->offset + FAN_INPUT,
+> +				  &value);
+> +		if (ret)
+> +			return ret;
+> +		/*
+> +		 * The register has a 7 bit value and 1 bit which indicates the
+> +		 * scale. If the MSB is set, then the lower 7 bit has to be
+> +		 * multiplied by 8, to get the correct reading.
+> +		 */
+> +		if (value & FAN_SCALE_X8)
+> +			value = FIELD_GET(FAN_VALUE_MASK, value) << 3;
 > +
-> +	/* is the watchdog timer running? */
-> +	return (status & WDT_CTRL_EN) << WDOG_ACTIVE;
+> +		/*
+> +		 * The counter period is 1000ms and the sysfs specification
+> +		 * says we should asssume 2 pulses per revolution.
+> +		 */
+> +		value *= 60 / 2;
+> +
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	*input = value;
+> +	return 0;
 > +}
 > +
-> +static unsigned int sl28cpld_wdt_get_timeleft(struct watchdog_device *wdd)
-> +{
-> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-> +	int ret;
-> +	unsigned int val;
-> +
-> +	ret = regmap_read(wdt->regmap, wdt->offset + SL28CPLD_WDT_COUNT, &val);
-> +	if (ret < 0)
-> +		return 0;
-> +
-> +	return val;
-> +}
-> +
-> +static int sl28cpld_wdt_set_timeout(struct watchdog_device *wdd,
-> +				  unsigned int timeout)
-> +{
-> +	int ret;
-> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	ret = regmap_write(wdt->regmap, wdt->offset + SL28CPLD_WDT_TIMEOUT,
-> +			   timeout);
-> +	if (ret == 0)
-> +		wdd->timeout = timeout;
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct watchdog_info sl28cpld_wdt_info = {
-> +	.options = WDIOF_MAGICCLOSE | WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
-> +	.identity = "SMARC-sAL28 CPLD watchdog",
+> +static const u32 sl28cpld_hwmon_fan_config[] = {
+> +	HWMON_F_INPUT,
+> +	0
 > +};
 > +
-> +static struct watchdog_ops sl28cpld_wdt_ops = {
-> +	.owner = THIS_MODULE,
-> +	.start = sl28cpld_wdt_start,
-> +	.stop = sl28cpld_wdt_stop,
-> +	.status = sl28cpld_wdt_status,
-> +	.ping = sl28cpld_wdt_ping,
-> +	.set_timeout = sl28cpld_wdt_set_timeout,
-> +	.get_timeleft = sl28cpld_wdt_get_timeleft,
+> +static const struct hwmon_channel_info sl28cpld_hwmon_fan = {
+> +	.type = hwmon_fan,
+> +	.config = sl28cpld_hwmon_fan_config,
 > +};
 > +
-> +static int sl28cpld_wdt_locked(struct sl28cpld_wdt *wdt)
+> +static const struct hwmon_channel_info *sl28cpld_hwmon_info[] = {
+> +	&sl28cpld_hwmon_fan,
+> +	NULL
+> +};
+> +
+> +static const struct hwmon_ops sl28cpld_hwmon_ops = {
+> +	.is_visible = sl28cpld_hwmon_is_visible,
+> +	.read = sl28cpld_hwmon_read,
+> +};
+> +
+> +static const struct hwmon_chip_info sl28cpld_hwmon_chip_info = {
+> +	.ops = &sl28cpld_hwmon_ops,
+> +	.info = sl28cpld_hwmon_info,
+> +};
+> +
+> +static int sl28cpld_hwmon_probe(struct platform_device *pdev)
 > +{
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	ret = regmap_read(wdt->regmap, wdt->offset + SL28CPLD_WDT_CTRL, &val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return val & WDT_CTRL_LOCK;
-> +}
-> +
-> +static int sl28cpld_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct sl28cpld_wdt *wdt;
-> +	struct watchdog_device *wdd;
+> +	struct device *hwmon_dev;
+> +	struct sl28cpld_hwmon *hwmon;
 > +	struct resource *res;
-> +	unsigned int val;
-> +	int ret;
 > +
-> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-> +	if (!wdt)
+> +	hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
+> +	if (!hwmon)
 > +		return -ENOMEM;
 > +
 > +	if (!pdev->dev.parent)
 > +		return -ENODEV;
 > +
-> +	wdt->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> +	if (!wdt->regmap)
+Maybe do this first ?
+
+> +	hwmon->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!hwmon->regmap)
 > +		return -ENODEV;
 > +
 > +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
-> +	if (res == NULL)
+> +	if (!res)
 > +		return -EINVAL;
-> +	wdt->offset = res->start;
+> +	hwmon->offset = res->start;
 > +
-> +	/* initialize struct watchdog_device */
-> +	wdd = &wdt->wdd;
-> +	wdd->parent = &pdev->dev;
-> +	wdd->info = &sl28cpld_wdt_info;
-> +	wdd->ops = &sl28cpld_wdt_ops;
-> +	wdd->min_timeout = 1;
-> +	wdd->max_timeout = 255;
-> +
-> +	watchdog_set_drvdata(wdd, wdt);
-> +
-> +	/* if the watchdog is locked, we set nowayout to true */
-> +	ret = sl28cpld_wdt_locked(wdt);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (ret)
-> +		nowayout = true;
-> +	watchdog_set_nowayout(wdd, nowayout);
-> +
-> +	/*
-> +	 * Initial timeout value, can either be set by kernel parameter or by
-> +	 * the device tree. If both are not given the current value is used.
-> +	 */
-> +	watchdog_init_timeout(wdd, timeout, &pdev->dev);
-> +	if (wdd->timeout) {
-> +		sl28cpld_wdt_set_timeout(wdd, wdd->timeout);
-> +	} else {
-> +		ret = regmap_read(wdt->regmap,
-> +				  wdt->offset + SL28CPLD_WDT_TIMEOUT, &val);
-> +		if (ret < 0)
-> +			return ret;
-> +		wdd->timeout = val;
+> +	hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
+> +							 "sl28cpld_hwmon",
+> +							 hwmon,
+> +							 &sl28cpld_hwmon_chip_info,
+> +							 NULL);
+> +	if (IS_ERR(hwmon_dev)) {
+> +		dev_err(&pdev->dev, "failed to register as hwmon device");
+> +		return PTR_ERR(hwmon_dev);
 > +	}
-> +
-> +	ret = watchdog_register_device(wdd);
-
-Please use devm_watchdog_register_device().
-
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "failed to register watchdog device\n");
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, wdt);
-> +
-> +	dev_info(&pdev->dev, "CPLD watchdog: initial timeout %d sec%s\n",
-> +		wdd->timeout, nowayout ? ", nowayout" : "");
 > +
 > +	return 0;
 > +}
 > +
-> +static int sl28cpld_wdt_remove(struct platform_device *pdev)
-> +{
-> +	struct sl28cpld_wdt *wdt = platform_get_drvdata(pdev);
+> +static const struct platform_device_id sl28cpld_hwmon_id_table[] = {
+> +	{"sl28cpld-fan", 0},
+> +};
+> +MODULE_DEVICE_TABLE(platform, sl28cpld_hwmon_id_table);
 > +
-> +	watchdog_unregister_device(&wdt->wdd);
-> +
-> +	return 0;
-> +}
-> +
-> +static void sl28cpld_wdt_shutdown(struct platform_device *pdev)
+> +static struct platform_driver sl28cpld_hwmon_driver = {
+> +	.probe = sl28cpld_hwmon_probe,
+> +	.id_table = sl28cpld_hwmon_id_table,
 
-Please use watchdog_stop_on_reboot().
+I'd have expected an of_match_table.
 
-Thanks,
-Guenter
-
-> +{
-> +	struct sl28cpld_wdt *wdt = platform_get_drvdata(pdev);
-> +
-> +	sl28cpld_wdt_stop(&wdt->wdd);
-> +}
-> +
-> +static struct platform_driver sl28cpld_wdt_driver = {
-> +	.probe = sl28cpld_wdt_probe,
-> +	.remove = sl28cpld_wdt_remove,
-> +	.shutdown = sl28cpld_wdt_shutdown,
 > +	.driver = {
-> +		.name = "sl28cpld-wdt",
+> +		.name = "sl28cpld-hwmon",
 > +	},
 > +};
-> +module_platform_driver(sl28cpld_wdt_driver);
+> +module_platform_driver(sl28cpld_hwmon_driver);
 > +
-> +MODULE_DESCRIPTION("sl28cpld Watchdog Driver");
+> +MODULE_DESCRIPTION("sl28cpld Hardware Monitoring Driver");
 > +MODULE_LICENSE("GPL");
 > 
 
