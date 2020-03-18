@@ -2,49 +2,49 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C359818A8F1
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Mar 2020 00:06:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7184D18A923
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Mar 2020 00:19:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbgCRXG1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Mar 2020 19:06:27 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:32810 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbgCRXG1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Mar 2020 19:06:27 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r7so3437816wmg.0;
-        Wed, 18 Mar 2020 16:06:24 -0700 (PDT)
+        id S1727415AbgCRXTQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Mar 2020 19:19:16 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37397 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgCRXTP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Mar 2020 19:19:15 -0400
+Received: by mail-wm1-f66.google.com with SMTP id d1so86075wmb.2;
+        Wed, 18 Mar 2020 16:19:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=eXqEATx1cHCE6b1YUNmz27V8QulAkcDr6NsFEVWEUTs=;
-        b=I6fd3oWk7eCeslO37Pf3NgBc40F0lpZdb8bFpohRDG+92ohbjxeemlC6tnQY68z7W0
-         +iwvd9O8KbJbFl/2cWf/ihcaGZPimfCYtFl1Uvlioh/B2o3FuZz0pX2BEyi/B+end7+s
-         3K0dRLTdskv1kij93NliSjpQDJp0yXVRjTD/bcZ6KoAd60Fs7Erk+5zSmpZ36FVfwkHK
-         9wMv3YWk/NVyjHli6KBwgRJ4ePhEBCW4EWbrWqGENyyzRGntlE5yMT4/r5V16RZkZWH/
-         ChiHdr/YJT2OKsn0rWhI3iLxI+peaT6i3NmhDk8s1STyhmxyra6xn5lN8mx8chYicJRk
-         PRog==
+        bh=wk9Jes33zSj3Kw2yVreKxXzV9X49Jzg3gDaEC7oofOE=;
+        b=tr/MLtrzi/TDBPB81G6Q/H4lrfUMirPjp0B7c1ghxiTk2Z9CgwIWrQ9KMwDOqpAnUG
+         W4CZ1accbRYoVC4PAfByNG/8OIsl1KftiqIXAd+g34tSvDXPBNP5ZF2c3F9DqMl9OFyo
+         lu3OhnqENIzK2GE58Nz51Jbvc3KmMtVQF4rEk2QdsrTYVSsntWJStH8RW91GknqdUHe6
+         MlLjbL9D+sxMRJlkP3os2gTGdg0UczkwNNDFl6P1wFGC8FR+kdhjznKHC9ZsgRvDiMUQ
+         9rEIJN/377iehSPx+gKUT405yfYEFMIePbAbt4l69HoADxJWm0xshF32RiQMOlwjcFJn
+         /9Tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eXqEATx1cHCE6b1YUNmz27V8QulAkcDr6NsFEVWEUTs=;
-        b=S1ZnSZb0T3LFdOgrCyGsdf6qedUdNR8SzChvurdJXz/4ucw5//9MgS7balorurl5Or
-         Rmbj4xJ4RWhPt0zMWWD3sW6A2F/pLiA99rgCDoIZAcZ3OpEipRs7TyG9xOOqTjIoenBo
-         UjFpsGwx9ZvH3rt0nYzK4yY3/LJ5+EHLCzYaQUw6Q0bChg5ZZrRF5AGr5vZClze0CXxo
-         m13RyTtNti/nsRuQz4WV10omjC72fKrpLqMlk2yBgxwvgTcN4jCrxokiGlIPcI0+EvsY
-         Yy+2Gzvr9+5BOpWfKy0hrjUafYG6t2xRh4h1DI0yFVFjX0ygis+V2ORVrSOFaZzICfOi
-         vdOA==
-X-Gm-Message-State: ANhLgQ10vOiObwPBHQLFfqN2AZ5N3Y7vwrSNyeuH3nrbM4oh5ay//svh
-        oRgRt3E9ewq6vh6+xy7vZfI=
-X-Google-Smtp-Source: ADFU+vt/J0MYwlO9CPUQgByfWWXH5b7TgrL+z3Wh4tAoRPqpG7gQho9plNNs3gagJ7PuIsG9jNVx7Q==
-X-Received: by 2002:a1c:b4c6:: with SMTP id d189mr46558wmf.132.1584572783705;
-        Wed, 18 Mar 2020 16:06:23 -0700 (PDT)
-Received: from localhost (p2E5BEE6C.dip0.t-ipconnect.de. [46.91.238.108])
-        by smtp.gmail.com with ESMTPSA id l5sm476370wro.15.2020.03.18.16.06.21
+        bh=wk9Jes33zSj3Kw2yVreKxXzV9X49Jzg3gDaEC7oofOE=;
+        b=uLdQXRjHYmQhUHGf7zAk1d9gj6TNwQNv86QoqVimUiSx+1NELKdq+DPfdwXz0V4Vut
+         cSJyrzN1xUtkNSPFJb8IuKGqHmUqz1k8RnjozxtxdSH4+3WyNcWqiVdTb0t3eW51Sa0i
+         91LXoLzyk83mGSxRJ1TuWr1FjigAT3sirtSbvxlXtjPgK4ZXDDqCDvROTkwRGjcfrtA+
+         8tfDk24MsosCt+MdjjVC61nkd38j6k08qZRPDLtPmQc83+i35BSVoiaZWEQT3FbjO24W
+         uW0IY5o4cF3Zl/miv+0HIWD1kH6zlaixf1fUO/eCcxsUsLFZDe8hj26IvCKp4Hoj1lXB
+         mNbg==
+X-Gm-Message-State: ANhLgQ0tjs5cyCD9urMAn7sGWgHgNNYTFR5YNx4p0XI3BriC51DRELou
+        VKAZ7IbDeMtFB3q9aIq4mXs=
+X-Google-Smtp-Source: ADFU+vvTdDD6+HPKBLWOKIIiTQzUvgDQ+DaK6FP3mTVRqybt+Soq0hm0RUZ+tq0cLd1rxtGj2M8Jmw==
+X-Received: by 2002:a1c:7207:: with SMTP id n7mr89228wmc.138.1584573553118;
+        Wed, 18 Mar 2020 16:19:13 -0700 (PDT)
+Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
+        by smtp.gmail.com with ESMTPSA id q8sm588893wrc.8.2020.03.18.16.19.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 16:06:22 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 00:05:39 +0100
+        Wed, 18 Mar 2020 16:19:11 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 00:19:10 +0100
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
@@ -56,14 +56,14 @@ Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
         Philippe Schenker <philippe.schenker@toradex.com>,
         Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 Subject: Re: [RFC PATCH 2/7] dt-bindings: pwm: document the PWM polarity flag
-Message-ID: <20200318230539.GB2874972@ulmo>
+Message-ID: <20200318231910.GA2885069@ulmo>
 References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
  <20200317123231.2843297-3-oleksandr.suvorov@toradex.com>
  <20200317174344.GB1464607@ulmo>
  <20200317213056.futfiwn4qgr2njye@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="H+4ONPRPur6+Ovig"
+        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
 Content-Disposition: inline
 In-Reply-To: <20200317213056.futfiwn4qgr2njye@pengutronix.de>
 User-Agent: Mutt/1.13.1 (2019-12-14)
@@ -73,7 +73,7 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---H+4ONPRPur6+Ovig
+--J/dobhs11T7y2rNN
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -117,10 +117,8 @@ which doesn't make sense. What's more, it impossible for the code to
 even notice that you're being silly because | PWM_POLARITY_NORMAL is
 just | 0 and that's just a nop.
 
-> (And as far as I understand it, the term PWM_POLARITY_INVERTED isn't
-> part of the DT ABI either. Only the value 1 has a meaning (for some PWM
-> controlers).)
->=20
+Thierry
+
 > > The third cell of the specifier is a bitmask of flags.
 > >=20
 > > PWM_POLARITY_NORMAL is an enumeration value that evaluates to 0, so it
@@ -130,7 +128,9 @@ just | 0 and that's just a nop.
 > device tree, that's true. But having the term PWM_POLARITY_NORMAL (in
 > contrast to a plain 0) in a dts file is useful in my eyes for human
 > readers.
->=20
+
+Yes, I suppose that's true.
+
 > > PWM signals are considered to be "normal" by default, so no flag is
 > > necessary to specify that.
 >=20
@@ -138,29 +138,40 @@ just | 0 and that's just a nop.
 > GPIO_ACTIVE_HIGH (which also evaluates to 0). Also there is
 > IRQ_TYPE_NONE.
 
-I'm aware of those. That doesn't mean that everything needs to have
-symbolic names.
+I'm aware of these. They carry the same risks as I mentioned above,
+though. You can easily make mistakes that no software will be able to
+detect. If you make a GPIO GPIO_ACTIVE_HIGH | GPIO_ACTIVE_LOW, it
+becomes really confusing as to what that means. It really means that the
+GPIO will be active-low because GPIO_ACTIVE_HIGH doesn't do anything.
+But just reading that may make you think that perhaps HIGH is better
+(because, well, it's high, or perhaps because it is listed first).
+Having both may also be interpreted as "don't care".
+
+In my opinion things become much easier when you don't have any of the
+alternatives. If you don't specify PWM_POLARITY_INVERTED, well, it's
+just not going to be inverted, it's going to be normal. No need to be
+extra verbose about that.
 
 Thierry
 
---H+4ONPRPur6+Ovig
+--J/dobhs11T7y2rNN
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5yqUMACgkQ3SOs138+
-s6GPcg/+N73P7VPsn68ABt9OMpT62+RvFprrJJFPeRfRvnxjtQfvnfdV5KblV8Z2
-Cq2KKBVSeFkWWLLXWQHsBZYJ9oXXgkBHfIU4vdlkW55L8DWMyAztCu+0gob8tufk
-u9AoYhvAfZN4hWa03WweDIFpX7jfbqeQCQ5LOygJDAcRb426xowyzNwGtMtXpHo4
-Sl4KI08IN5WUFqG78ywvGIcogQ7Y4YTVYmU/wbPDrN2I65kqEn4YIZLWRes0t2gp
-CF8DaJfUXPMPiutTpCqiq19Tvr95RbrIPaYCAOW9jdH6oo51q148ghg/03WuDuxD
-Q3Q/B7ElsGw5Pw19jBGcVVXVOs60iZbkkMqtRWRGAvM+HKbADDYNyl1dVLH0yG9U
-6Ac912W/rhdGsT6wSgZk3k+ecl4QhKfvxGrDqKzZ9zuVs8qDMYIiUPWzLxLolljG
-bScb9XRW0O2ToPjGSQKZlKJj7vdC9eHwP3EM1/84oetS5AOajIL7DXhPtjtnOhhP
-1T8sI2JT6uLoy9kQ5X9jQRi1yAkGfXGlHH8MyM5lr6kUFkoe2KBrV5hp6wDhi81b
-AvYpL1vUilGov/jpaap4Z5Kx1KupIFvKmWWkGwsxFtCec5Onpvs9dpEOSXU7HWTE
-rpN4N0KeMiUqd+NTCK3OV9R/OidbZMy5ewERSyxPVR7oGL3JpM8=
-=VpZF
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5yrGsACgkQ3SOs138+
+s6GzIg//UvHOxZqlcH1vZ9Mk4woahJF0Ehmg2m0b721XHppS/6hPoiKUnJfZqdbm
+Hu5rFUsxIo01XT33yNQtyojogLEvT1JHAaBCxkcBlVc43Dee/2nsf5SehFBtUE7z
+suJ7rZVOQpC73QYpLTrDgHcexR4KDjqS2Lxiv9PcY+VCAYW+M2GruTmjKfTB87hU
+ApZRs24AfFywg8hX48tsPRQwNA3SkOO8sl2gsDKeSRlwFMTtL4aTCIGKXmQyYydv
+Eyjz9NR1GIt95FPh5MeKR5SwrzIrau3qZm1KAcvUydrkP908H28/plRG0/I2FJCa
+7bqlsavzrQFeFlal70N/+lPtnsB2SXVVPjCxa3yD5x4a+Gm0CGT3F2wXLdWhXP/T
+Wpw9NoQi4SwzBiobOv+TgqjOU5eb7kJ5a+AHU58PCz1bIQZq4jMExU9pCb9N9KAz
+SDSsKHX9GrLLuTf6xO/sbctvo8vnoUS2pxWxhWnxCoNP04TzJzjewWRu/wLpnzPC
++R4QaSeEJOBLORqA9skXqqLPY3hD/s1vU0au54a+S2nEZtZCNjdMevQd3pisLghX
+pm2htChiGjHBCvrZhc4GeW1BHHZ1qdLuSzPAZdYiz8Tl9/BJ2PvIwgrsj2ejmtPI
+9mKe9+bB4fAK1MvN+N7hFEkNKPdyK2dPaoV4NGULSwJEoHcGSSU=
+=CkUz
 -----END PGP SIGNATURE-----
 
---H+4ONPRPur6+Ovig--
+--J/dobhs11T7y2rNN--
