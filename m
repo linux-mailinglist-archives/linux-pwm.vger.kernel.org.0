@@ -2,52 +2,52 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D982518946A
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Mar 2020 04:27:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 61C96189477
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Mar 2020 04:29:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbgCRD1V (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 17 Mar 2020 23:27:21 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40591 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgCRD1V (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Mar 2020 23:27:21 -0400
-Received: by mail-pl1-f193.google.com with SMTP id h11so10541700plk.7;
-        Tue, 17 Mar 2020 20:27:20 -0700 (PDT)
+        id S1726646AbgCRD3B (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 17 Mar 2020 23:29:01 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:34229 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgCRD3A (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Mar 2020 23:29:00 -0400
+Received: by mail-pj1-f65.google.com with SMTP id q16so610454pje.1;
+        Tue, 17 Mar 2020 20:28:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:to:cc:references:from:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=famkI3hno7KZXTrvwWBMRYQiftA+3wDNqSrv5TQiosw=;
-        b=s3W2023EwlwkIVfaLfOMBUbgRUoZ2LXssBduY20TQ/8bdm2TE4Sa7Mzhzu8McZutwl
-         Bs/uVKNqIKYsWLJLy/kAK9AqX89YcLCaY4/ATFhDoPJrulsTeT3RPMSHeAlSeVlcWDeK
-         V1UDYnR1yeu7JURcTab0aQWYc1Xu4CDVWrycnVoT6bJ5TCQu4dQsnRSgxoYowJe5Mq7g
-         zJ8Ir/cNqFoeHAuG50nCfV4X5RbkBdVWgzEfbqK0S9NQgdq6o072CFLRh6wfowzCesUW
-         eB8YBhs13bgZy0Tlf+HyWHhSKVll3j/EuTPW534XiuTzE0XDFbvu2fxeVccn12Fkiz5w
-         8oaw==
+        bh=GiXuvKb0HLa/6CPxbR7nTzAdgqyD7OsjsZ7DuW4XA4A=;
+        b=Fw2YEZ0ohw2GP1aEtEpH0aF0uBLcA33Iu5Sk5RUO8icmWfheQKdS+pSHpWabKusCbK
+         2rhUDSv4/DshmB8aFE/Ccjk1nIxJDlUKNGpc4ba5QhF7732S2QECukEVxPe5eGFf16Eu
+         HOK1PToDFa54fQohyW2TozdJqBpjxI1C1LnRLkF6h3GlEZV1krlrEtPT+w6gB0PxqSui
+         D9gBllp+xGXvoAbtDIB+iO6bvXuN1jtZONHd6fsrynd4aREIUzNhNVIivQv5fansoZih
+         jwYFERHrd6z45ffrxDw1CCxWZ3BqRkJQQa/ZYJKUJ2ZQD+xnkEZ6ZDFB3Za1PvrkjHrz
+         vnAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=famkI3hno7KZXTrvwWBMRYQiftA+3wDNqSrv5TQiosw=;
-        b=q5t4tbO12sfqIbyV8B+B70IW92SyHGJTDvOH6SlOQZt4b82gjW5sZlmOTAFuInR39H
-         VP+L3u8aHpTiEEgWWQXcinLqa6Sh4GFKQii0VOfeMvjJqarC+QtLL3EMIFgO3WJCc5tF
-         sEA4VF97AKPgdv2TnFsQRwqUCP7HiwTdn99d91f4vdEhhYG2H9p3wi77nieB5jrA9VOW
-         3sA06GHJd8zi0Q2nDpsWuOKhSr4B1O9SQ93j7y89iRRwNtq+1cEG2N2hWmvu+cPUuiIJ
-         /qlYhjcoKxt5wgbn9jERkBL//JAibBytUdWknENDPX+JQWibtjoHkAiG5Px9vBrEth4H
-         r3YQ==
-X-Gm-Message-State: ANhLgQ1O17Lzl8HW7BwTZ/7mR+U5CslcFbcdN5p0J04ovUUBTrbJPC+h
-        0x5W5xGkmXCpg+5veWYYIPs=
-X-Google-Smtp-Source: ADFU+vv9pl7AVgQk4Gtwa9o4zMFtd2PO2UWEXO/u0Kmva3biTu9yXhSQHkfKWgER7jXQyVIf6QURXw==
-X-Received: by 2002:a17:90a:e7c8:: with SMTP id kb8mr2399221pjb.79.1584502039376;
-        Tue, 17 Mar 2020 20:27:19 -0700 (PDT)
+        bh=GiXuvKb0HLa/6CPxbR7nTzAdgqyD7OsjsZ7DuW4XA4A=;
+        b=iOj1mD+5ngykjNkTzF3wBXi4qxqI6ehscgnQ/OpNwDlLnYtHvQsjyr05Rz2ljpwnXP
+         SLEh1DDVjXVaONqaFK1xcsWudGXa6wzW2pi/ncfwyIrWTCe/0gao8M1TYK14N+tBGvp6
+         o7PLhzoC6NO7gwFkWZhB7s/dAP72U9rXvwvTXJYdxTIPWV8QRUwL99AbamLvH7XslzmZ
+         w94sJMkUtdr2hLa7Ca0O1wJK8BtKxARozRBo+Vhfn1rDIEjk0GU5M6iTOXu7WjQfpks5
+         Y/g2fQPePtWAzlQjXB6Sdj00r/Op/QQArWEF27VaE+cgHHR1QwGa/QXNVEfhnMibrJ/8
+         wPPg==
+X-Gm-Message-State: ANhLgQ2WLZQKv/Ag/shFOD9RcWgoLf/8532f4kCdEel10CePBMYCgFjf
+        RWFGGY8AVf2d/wKQYEXWdKg=
+X-Google-Smtp-Source: ADFU+vvnxuas9L2UuJtC23tNT/S1LM+25rtOQXfHSKBgPSpPRGH3KahUe8pqpzaO/7/qTif3avIlUA==
+X-Received: by 2002:a17:90a:bd86:: with SMTP id z6mr2455805pjr.15.1584502138444;
+        Tue, 17 Mar 2020 20:28:58 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j19sm4417468pfe.102.2020.03.17.20.27.17
+        by smtp.gmail.com with ESMTPSA id j38sm3883958pgi.51.2020.03.17.20.28.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2020 20:27:18 -0700 (PDT)
-Subject: Re: [PATCH 14/18] hwmon: add support for the sl28cpld hardware
- monitoring controller
+        Tue, 17 Mar 2020 20:28:57 -0700 (PDT)
+Subject: Re: [PATCH 05/18] mfd: Add support for Kontron sl28cpld management
+ controller
 To:     Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
@@ -66,7 +66,7 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>
 References: <20200317205017.28280-1-michael@walle.cc>
- <20200317205017.28280-15-michael@walle.cc>
+ <20200317205017.28280-6-michael@walle.cc>
 From:   Guenter Roeck <linux@roeck-us.net>
 Autocrypt: addr=linux@roeck-us.net; keydata=
  xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
@@ -111,227 +111,243 @@ Autocrypt: addr=linux@roeck-us.net; keydata=
  WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
  HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
  mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <11700297-affd-8bdc-2414-3dc7f2b62798@roeck-us.net>
-Date:   Tue, 17 Mar 2020 20:27:16 -0700
+Message-ID: <1ea0ae38-c91d-810b-1474-71f17b66fbd0@roeck-us.net>
+Date:   Tue, 17 Mar 2020 20:28:56 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200317205017.28280-15-michael@walle.cc>
+In-Reply-To: <20200317205017.28280-6-michael@walle.cc>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 On 3/17/20 1:50 PM, Michael Walle wrote:
-> This adds support for the hardware monitoring controller of the sl28cpld
-> board management controller. This driver is part of a multi-function
-> device.
+> This patch adds core support for the board management controller found
+> on the SMARC-sAL28 board. It consists of the following functions:
+>  - watchdog
+>  - GPIO controller
+>  - PWM controller
+>  - fan sensor
+>  - interrupt controller
+> 
+> At the moment, this controller is used on the Kontron SMARC-sAL28 board.
 > 
 > Signed-off-by: Michael Walle <michael@walle.cc>
 > ---
->  drivers/hwmon/Kconfig          |  10 +++
->  drivers/hwmon/Makefile         |   1 +
->  drivers/hwmon/sl28cpld-hwmon.c | 146 +++++++++++++++++++++++++++++++++
-
-Please also provide Documentation/hwmon/sl28cpld.
-
->  3 files changed, 157 insertions(+)
->  create mode 100644 drivers/hwmon/sl28cpld-hwmon.c
+>  drivers/mfd/Kconfig    |  21 ++++++
+>  drivers/mfd/Makefile   |   2 +
+>  drivers/mfd/sl28cpld.c | 155 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 178 insertions(+)
+>  create mode 100644 drivers/mfd/sl28cpld.c
 > 
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 05a30832c6ba..c98716f78cfa 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -1412,6 +1412,16 @@ config SENSORS_RASPBERRYPI_HWMON
->  	  This driver can also be built as a module. If so, the module
->  	  will be called raspberrypi-hwmon.
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 3c547ed575e6..01588c366476 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -2059,5 +2059,26 @@ config SGI_MFD_IOC3
+>  	  If you have an SGI Origin, Octane, or a PCI IOC3 card,
+>  	  then say Y. Otherwise say N.
 >  
-> +config SENSORS_SL28CPLD
-> +	tristate "Kontron's SMARC-sAL28 hardware monitoring driver"
-> +	depends on MFD_SL28CPLD
+> +config MFD_SL28CPLD
+> +	tristate "Kontron sl28 core driver"
+> +	depends on I2C=y
+
+Why I2C=y and not just I2C ?
+
+> +	depends on OF
+> +	select REGMAP_I2C
+> +	select REGMAP_IRQ
+> +	select SL28CPLD_IRQ
+> +	select MFD_CORE
 > +	help
-> +	  If you say yes here you get support for a fan connected to the
-> +	  input of the SMARC connector of Kontron's SMARC-sAL28 module.
+> +	  This option enables support for the board management controller
+> +	  found on the Kontron sl28 CPLD. You have to select individual
+> +	  functions, such as watchdog, GPIO, etc, under the corresponding menus
+> +	  in order to enable them.
 > +
-> +	  This driver can also be built as a module.  If so, the module
-> +	  will be called sl28cpld-hwmon.
+> +	  Currently supported boards are:
 > +
->  config SENSORS_SHT15
->  	tristate "Sensiron humidity and temperature sensors. SHT15 and compat."
->  	depends on GPIOLIB || COMPILE_TEST
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index b0b9c8e57176..dfb0f8cda2dd 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -155,6 +155,7 @@ obj-$(CONFIG_SENSORS_S3C)	+= s3c-hwmon.o
->  obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
->  obj-$(CONFIG_SENSORS_SCH5627)	+= sch5627.o
->  obj-$(CONFIG_SENSORS_SCH5636)	+= sch5636.o
-> +obj-$(CONFIG_SENSORS_SL28CPLD)	+= sl28cpld-hwmon.o
->  obj-$(CONFIG_SENSORS_SHT15)	+= sht15.o
->  obj-$(CONFIG_SENSORS_SHT21)	+= sht21.o
->  obj-$(CONFIG_SENSORS_SHT3x)	+= sht3x.o
-> diff --git a/drivers/hwmon/sl28cpld-hwmon.c b/drivers/hwmon/sl28cpld-hwmon.c
+> +		Kontron SMARC-sAL28
+> +
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called sl28cpld.
+> +
+>  endmenu
+>  endif
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index f935d10cbf0f..9bc38863b9c7 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -259,3 +259,5 @@ obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
+>  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+>  
+>  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+> +
+> +obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
+> diff --git a/drivers/mfd/sl28cpld.c b/drivers/mfd/sl28cpld.c
 > new file mode 100644
-> index 000000000000..7ac42bb0a48c
+> index 000000000000..789f21f90752
 > --- /dev/null
-> +++ b/drivers/hwmon/sl28cpld-hwmon.c
-> @@ -0,0 +1,146 @@
+> +++ b/drivers/mfd/sl28cpld.c
+> @@ -0,0 +1,155 @@
 > +// SPDX-License-Identifier: GPL-2.0-only
 > +/*
-> + * SMARC-sAL28 fan hardware monitoring driver.
+> + * MFD core for the CPLD on a SMARC-sAL28 board.
 > + *
 > + * Copyright 2019 Kontron Europe GmbH
 > + */
 > +
 > +#include <linux/kernel.h>
 > +#include <linux/module.h>
-> +#include <linux/bitfield.h>
 > +#include <linux/of.h>
-> +#include <linux/of_device.h>
 > +#include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/i2c.h>
 > +#include <linux/regmap.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/hwmon.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/mfd/core.h>
 > +
-Alphabetic order of include files, please.
-
-> +#define FAN_INPUT		0
-> +#define   FAN_SCALE_X8		BIT(7)
-> +#define   FAN_VALUE_MASK	GENMASK(6, 0)
+> +#define SL28CPLD_VERSION 0x03
+> +#define SL28CPLD_WATCHDOG_BASE 0x4
+> +#define SL28CPLD_HWMON_FAN_BASE 0xb
+> +#define SL28CPLD_PWM0_BASE 0xc
+> +#define SL28CPLD_PWM1_BASE 0xe
+> +#define SL28CPLD_GPIO0_BASE 0x10
+> +#define SL28CPLD_GPIO1_BASE 0x15
+> +#define SL28CPLD_GPO_BASE 0x1a
+> +#define SL28CPLD_GPI_BASE 0x1b
+> +#define SL28CPLD_INTC_BASE 0x1c
 > +
-> +struct sl28cpld_hwmon {
+> +/* all subdevices share the same IRQ */
+> +#define SL28CPLD_IRQ 0
+> +
+> +#define SL28CPLD_MIN_REQ_VERSION 14
+> +
+> +struct sl28cpld {
+> +	struct device *dev;
 > +	struct regmap *regmap;
-> +	u32 offset;
 > +};
 > +
-> +static umode_t sl28cpld_hwmon_is_visible(const void *data,
-> +					 enum hwmon_sensor_types type,
-> +					 u32 attr, int channel)
-> +{
-> +	return 0444;
-> +}
+> +static const struct regmap_config sl28cpld_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.reg_stride = 1,
+> +};
 > +
-> +static int sl28cpld_hwmon_read(struct device *dev,
-> +			       enum hwmon_sensor_types type, u32 attr,
-> +			       int channel, long *input)
+> +static struct resource sl28cpld_watchdog_resources[] = {
+> +	DEFINE_RES_REG(SL28CPLD_WATCHDOG_BASE, 1),
+> +};
+> +
+> +static struct resource sl28cpld_hwmon_fan_resources[] = {
+> +	DEFINE_RES_REG(SL28CPLD_HWMON_FAN_BASE, 1),
+> +};
+> +
+> +static struct resource sl28cpld_pwm0_resources[] = {
+> +	DEFINE_RES_REG(SL28CPLD_PWM0_BASE, 1),
+> +};
+> +
+> +static struct resource sl28cpld_pwm1_resources[] = {
+> +	DEFINE_RES_REG(SL28CPLD_PWM1_BASE, 1),
+> +};
+> +
+> +static struct resource sl28cpld_gpio0_resources[] = {
+> +	DEFINE_RES_REG(SL28CPLD_GPIO0_BASE, 1),
+> +	DEFINE_RES_IRQ(SL28CPLD_IRQ),
+> +};
+> +
+> +static struct resource sl28cpld_gpio1_resources[] = {
+> +	DEFINE_RES_REG(SL28CPLD_GPIO1_BASE, 1),
+> +	DEFINE_RES_IRQ(SL28CPLD_IRQ),
+> +};
+> +
+> +static struct resource sl28cpld_gpo_resources[] = {
+> +	DEFINE_RES_REG(SL28CPLD_GPO_BASE, 1),
+> +};
+> +
+> +static struct resource sl28cpld_gpi_resources[] = {
+> +	DEFINE_RES_REG(SL28CPLD_GPI_BASE, 1),
+> +};
+> +
+> +static struct resource sl28cpld_intc_resources[] = {
+> +	DEFINE_RES_REG(SL28CPLD_INTC_BASE, 1),
+> +	DEFINE_RES_IRQ(SL28CPLD_IRQ),
+> +};
+> +
+> +static const struct mfd_cell sl28cpld_devs[] = {
+> +	OF_MFD_CELL("sl28cpld-wdt", sl28cpld_watchdog_resources, NULL, 0, 0,
+> +		    "kontron,sl28cpld-wdt"),
+> +	OF_MFD_CELL("sl28cpld-fan", sl28cpld_hwmon_fan_resources, NULL, 0, 0,
+> +		    "kontron,sl28cpld-fan"),
+> +	OF_MFD_CELL("sl28cpld-pwm", sl28cpld_pwm0_resources, NULL, 0, 0,
+> +		    "kontron,sl28cpld-pwm"),
+> +	OF_MFD_CELL("sl28cpld-pwm", sl28cpld_pwm1_resources, NULL, 0, 1,
+> +		    "kontron,sl28cpld-pwm"),
+> +	OF_MFD_CELL("sl28cpld-gpio", sl28cpld_gpio0_resources, NULL, 0, 0,
+> +		    "kontron,sl28cpld-gpio"),
+> +	OF_MFD_CELL("sl28cpld-gpio", sl28cpld_gpio1_resources, NULL, 0, 1,
+> +		    "kontron,sl28cpld-gpio"),
+> +	OF_MFD_CELL("sl28cpld-gpo", sl28cpld_gpo_resources, NULL, 0, 0,
+> +		    "kontron,sl28cpld-gpo"),
+> +	OF_MFD_CELL("sl28cpld-gpi", sl28cpld_gpi_resources, NULL, 0, 0,
+> +		    "kontron,sl28cpld-gpi"),
+> +	OF_MFD_CELL("sl28cpld-intc", sl28cpld_intc_resources, NULL, 0, 0,
+> +		    "kontron,sl28cpld-intc"),
+> +};
+> +
+> +static int sl28cpld_probe(struct i2c_client *i2c)
 > +{
-> +	struct sl28cpld_hwmon *hwmon = dev_get_drvdata(dev);
-> +	unsigned int value;
+> +	struct sl28cpld *sl28cpld;
+> +	struct device *dev = &i2c->dev;
+> +	unsigned int cpld_version;
 > +	int ret;
 > +
-> +	switch (attr) {
-> +	case hwmon_fan_input:
-> +		ret = regmap_read(hwmon->regmap, hwmon->offset + FAN_INPUT,
-> +				  &value);
-> +		if (ret)
-> +			return ret;
-> +		/*
-> +		 * The register has a 7 bit value and 1 bit which indicates the
-> +		 * scale. If the MSB is set, then the lower 7 bit has to be
-> +		 * multiplied by 8, to get the correct reading.
-> +		 */
-> +		if (value & FAN_SCALE_X8)
-> +			value = FIELD_GET(FAN_VALUE_MASK, value) << 3;
-> +
-> +		/*
-> +		 * The counter period is 1000ms and the sysfs specification
-> +		 * says we should asssume 2 pulses per revolution.
-> +		 */
-> +		value *= 60 / 2;
-> +
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	*input = value;
-> +	return 0;
-> +}
-> +
-> +static const u32 sl28cpld_hwmon_fan_config[] = {
-> +	HWMON_F_INPUT,
-> +	0
-> +};
-> +
-> +static const struct hwmon_channel_info sl28cpld_hwmon_fan = {
-> +	.type = hwmon_fan,
-> +	.config = sl28cpld_hwmon_fan_config,
-> +};
-> +
-> +static const struct hwmon_channel_info *sl28cpld_hwmon_info[] = {
-> +	&sl28cpld_hwmon_fan,
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_ops sl28cpld_hwmon_ops = {
-> +	.is_visible = sl28cpld_hwmon_is_visible,
-> +	.read = sl28cpld_hwmon_read,
-> +};
-> +
-> +static const struct hwmon_chip_info sl28cpld_hwmon_chip_info = {
-> +	.ops = &sl28cpld_hwmon_ops,
-> +	.info = sl28cpld_hwmon_info,
-> +};
-> +
-> +static int sl28cpld_hwmon_probe(struct platform_device *pdev)
-> +{
-> +	struct device *hwmon_dev;
-> +	struct sl28cpld_hwmon *hwmon;
-> +	struct resource *res;
-> +
-> +	hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
-> +	if (!hwmon)
+> +	sl28cpld = devm_kzalloc(dev, sizeof(*sl28cpld), GFP_KERNEL);
+> +	if (!sl28cpld)
 > +		return -ENOMEM;
 > +
-> +	if (!pdev->dev.parent)
+> +	sl28cpld->regmap = devm_regmap_init_i2c(i2c, &sl28cpld_regmap_config);
+> +	if (IS_ERR(sl28cpld->regmap))
+> +		return PTR_ERR(sl28cpld->regmap);
+> +
+> +	ret = regmap_read(sl28cpld->regmap, SL28CPLD_VERSION, &cpld_version);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (cpld_version < SL28CPLD_MIN_REQ_VERSION) {
+> +		dev_err(dev, "unsupported CPLD version %d\n", cpld_version);
 > +		return -ENODEV;
-> +
-Maybe do this first ?
-
-> +	hwmon->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> +	if (!hwmon->regmap)
-> +		return -ENODEV;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
-> +	if (!res)
-> +		return -EINVAL;
-> +	hwmon->offset = res->start;
-> +
-> +	hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
-> +							 "sl28cpld_hwmon",
-> +							 hwmon,
-> +							 &sl28cpld_hwmon_chip_info,
-> +							 NULL);
-> +	if (IS_ERR(hwmon_dev)) {
-> +		dev_err(&pdev->dev, "failed to register as hwmon device");
-> +		return PTR_ERR(hwmon_dev);
 > +	}
 > +
-> +	return 0;
+> +	sl28cpld->dev = dev;
+> +	i2c_set_clientdata(i2c, sl28cpld);
+> +
+> +	dev_info(dev, "successfully probed. CPLD version %d\n", cpld_version);
+> +
+> +	return devm_mfd_add_devices(dev, -1, sl28cpld_devs,
+> +				    ARRAY_SIZE(sl28cpld_devs), NULL,
+> +				    i2c->irq, NULL);
 > +}
 > +
-> +static const struct platform_device_id sl28cpld_hwmon_id_table[] = {
-> +	{"sl28cpld-fan", 0},
+> +static const struct of_device_id sl28cpld_of_match[] = {
+> +	{ .compatible = "kontron,sl28cpld", },
+> +	{}
 > +};
-> +MODULE_DEVICE_TABLE(platform, sl28cpld_hwmon_id_table);
+> +MODULE_DEVICE_TABLE(of, sl28cpld_of_match);
 > +
-> +static struct platform_driver sl28cpld_hwmon_driver = {
-> +	.probe = sl28cpld_hwmon_probe,
-> +	.id_table = sl28cpld_hwmon_id_table,
-
-I'd have expected an of_match_table.
-
+> +static struct i2c_driver sl28cpld_driver = {
+> +	.probe_new = sl28cpld_probe,
 > +	.driver = {
-> +		.name = "sl28cpld-hwmon",
+> +		.name = "sl28cpld",
+> +		.of_match_table = of_match_ptr(sl28cpld_of_match),
 > +	},
 > +};
-> +module_platform_driver(sl28cpld_hwmon_driver);
+> +module_i2c_driver(sl28cpld_driver);
 > +
-> +MODULE_DESCRIPTION("sl28cpld Hardware Monitoring Driver");
+> +MODULE_DESCRIPTION("sl28cpld MFD Core Driver");
 > +MODULE_LICENSE("GPL");
 > 
 
