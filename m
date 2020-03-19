@@ -2,21 +2,21 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 352F818C1BF
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Mar 2020 21:50:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22F6D18C1B7
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Mar 2020 21:50:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbgCSUul (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Mar 2020 16:50:41 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:14468 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727244AbgCSUuV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Mar 2020 16:50:21 -0400
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 19 Mar 2020 13:50:19 -0700
+        id S1727141AbgCSUub (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 19 Mar 2020 16:50:31 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:27920 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727297AbgCSUuW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Mar 2020 16:50:22 -0400
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 19 Mar 2020 13:50:19 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 19 Mar 2020 13:50:19 -0700
+  by ironmsg04-sd.qualcomm.com with ESMTP; 19 Mar 2020 13:50:19 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 273284B82; Thu, 19 Mar 2020 13:50:19 -0700 (PDT)
+        id 2D6D74B48; Thu, 19 Mar 2020 13:50:19 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -24,14 +24,12 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         linux-kernel@vger.kernel.org,
         Guru Das Srinagesh <gurus@codeaurora.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH v10 10/12] backlight: pwm_bl: Use 64-bit division function
-Date:   Thu, 19 Mar 2020 13:50:13 -0700
-Message-Id: <3790b021beaa6b780636bfbcd47ca30f02eacef5.1584650604.git.gurus@codeaurora.org>
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        David Laight <David.Laight@ACULAB.COM>
+Subject: [PATCH v10 11/12] clk: pwm: Assign u64 divisor to unsigned int before use
+Date:   Thu, 19 Mar 2020 13:50:14 -0700
+Message-Id: <2009030fe415c02cc92f0189d3e79de34982536c.1584650604.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1584650604.git.gurus@codeaurora.org>
 References: <cover.1584650604.git.gurus@codeaurora.org>
@@ -42,37 +40,46 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Since the PWM framework is switching struct pwm_state.period's datatype
-to u64, prepare for this transition by using div_u64 to handle a 64-bit
-dividend instead of a straight division operation.
+Since the PWM framework is switching struct pwm_args.period's datatype
+to u64, prepare for this transition by assigning the 64-bit divisor to
+an unsigned int variable to use as the divisor. This is being done
+because the divisor is a 32-bit constant and the quotient will be zero
+if the divisor exceeds 2^32.
 
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: linux-pwm@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-fbdev@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-clk@vger.kernel.org
+Cc: David Laight <David.Laight@ACULAB.COM>
 
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 ---
- drivers/video/backlight/pwm_bl.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/clk-pwm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index efb4efc..3e5dbcf 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -625,7 +625,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 		pb->scale = data->max_brightness;
+diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
+index 87fe0b0e..c0b5da3 100644
+--- a/drivers/clk/clk-pwm.c
++++ b/drivers/clk/clk-pwm.c
+@@ -72,6 +72,7 @@ static int clk_pwm_probe(struct platform_device *pdev)
+ 	struct pwm_device *pwm;
+ 	struct pwm_args pargs;
+ 	const char *clk_name;
++	unsigned int period;
+ 	int ret;
+ 
+ 	clk_pwm = devm_kzalloc(&pdev->dev, sizeof(*clk_pwm), GFP_KERNEL);
+@@ -88,8 +89,9 @@ static int clk_pwm_probe(struct platform_device *pdev)
+ 		return -EINVAL;
  	}
  
--	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
-+	pb->lth_brightness = data->lth_brightness * (div_u64(state.period,
-+				pb->scale));
++	period = pargs.period;
+ 	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
+-		clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
++		clk_pwm->fixed_rate = NSEC_PER_SEC / period;
  
- 	props.type = BACKLIGHT_RAW;
- 	props.max_brightness = data->max_brightness;
+ 	if (pargs.period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
+ 	    pargs.period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
