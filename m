@@ -2,153 +2,98 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CE4E18C1B5
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Mar 2020 21:50:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B34C18C1D5
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Mar 2020 21:51:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbgCSUuW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Mar 2020 16:50:22 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:27946 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727275AbgCSUuW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Mar 2020 16:50:22 -0400
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 19 Mar 2020 13:50:19 -0700
+        id S1727297AbgCSUvS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 19 Mar 2020 16:51:18 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:14562 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727141AbgCSUvS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Mar 2020 16:51:18 -0400
+Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 19 Mar 2020 13:51:17 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 19 Mar 2020 13:50:19 -0700
+  by ironmsg01-sd.qualcomm.com with ESMTP; 19 Mar 2020 13:51:17 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 422F84BBC; Thu, 19 Mar 2020 13:50:19 -0700 (PDT)
+        id 6A02F4B82; Thu, 19 Mar 2020 13:51:17 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 13:51:17 -0700
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
         Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v10 12/12] pwm: core: Convert period and duty cycle to u64
-Date:   Thu, 19 Mar 2020 13:50:15 -0700
-Message-Id: <c7ba391b189cce7c85790cee37e99f02e44e78cf.1584650604.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1584650604.git.gurus@codeaurora.org>
-References: <cover.1584650604.git.gurus@codeaurora.org>
-In-Reply-To: <cover.1584650604.git.gurus@codeaurora.org>
-References: <cover.1584650604.git.gurus@codeaurora.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexander Shiyan <shc_work@mail.ru>
+Subject: Re: [PATCH v9 04/11] pwm: clps711x: Use 64-bit division macro
+Message-ID: <20200319205117.GA17255@codeaurora.org>
+References: <cover.1584473399.git.gurus@codeaurora.org>
+ <587f9ccae68ad7e1ce97fa8da6037292af1a5095.1584473399.git.gurus@codeaurora.org>
+ <CAK8P3a2Hi_AoRC3g7qKth4e_Y1jZrbBDhWUb3YPZm10FWMu-ig@mail.gmail.com>
+ <20200317233003.GA11350@codeaurora.org>
+ <CAK8P3a2a-QEwFfDE5FbFCVdDS+t9jirgbHWJQQv0i5_OMCYXJg@mail.gmail.com>
+ <20200318170010.GA26509@codeaurora.org>
+ <CAK8P3a2A3RuRu3bOSvq58Unb=vpnYnkxKsxJdLqkS=hPFDgM2Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2A3RuRu3bOSvq58Unb=vpnYnkxKsxJdLqkS=hPFDgM2Q@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Because period and duty cycle are defined as ints with units of
-nanoseconds, the maximum time duration that can be set is limited to
-~2.147 seconds. Change their definitions to u64 in the structs of the
-PWM framework so that higher durations may be set.
+On Wed, Mar 18, 2020 at 08:38:29PM +0100, Arnd Bergmann wrote:
+> On Wed, Mar 18, 2020 at 6:00 PM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
+> >
+> > On Wed, Mar 18, 2020 at 10:49:34AM +0100, Arnd Bergmann wrote:
+> > > On Wed, Mar 18, 2020 at 12:30 AM Guru Das Srinagesh
+> > > <gurus@codeaurora.org> wrote:
+> > > >
+> > > > On Tue, Mar 17, 2020 at 11:22:06PM +0100, Arnd Bergmann wrote:
+> > > > > > diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
+> > > > > > index 924d39a..ba9500a 100644
+> > > > > > --- a/drivers/pwm/pwm-clps711x.c
+> > > > > > +++ b/drivers/pwm/pwm-clps711x.c
+> > > > > > @@ -43,7 +43,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
+> > > > > >  static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
+> > > > > >  {
+> > > > > >         /* Duty cycle 0..15 max */
+> > > > > > -       return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
+> > > > > > +       return DIV64_U64_ROUND_CLOSEST(v * 0xf, pwm->args.period);
+> > > > > >  }
+> > > > >
+> > > > > Is it actually going to exceed U32_MAX? If not, a type cast may be
+> > > > > more appropriate here than the expensive 64-bit division.
+> > > >
+> > > > With the final change in this patch series, the framework will support
+> > > > periods that exceed U32_MAX. My concern is that using a typecast would
+> > > > mean that in those cases, this driver will not support > U32_MAX values.
+> > > > Using DIV64_U64_ROUND_CLOSEST makes the driver future proof and able to
+> > > > handle > U32_MAX values correctly. What do you think?
+> > >
+> > > Ah, so if the period can actually be larger than U32_MAX, you need to
+> > > handle that case. However, I see that the divident in this code (v * 0xf)
+> > > is still a 32-bit number, so a correct and efficient implementation could be
+> > >
+> > >    if (pwm->args.period > (UINT_MAX / 0xf))
+> >
+> > Shouldn't the if condition be the following? Or am I missing
+> > something here?
+> >
+> >      if (pwm->args.period > (UINT_MAX / (v * 0xf)))
+> >                                         ^^^^^^^^^
+> 
+> That would require performing a division, which is an external function
+> call on ARMv4. My version just checks for an upper bound and completely
+> avoids the division. You could also just check for ">UINT_MAX" if you
+> find that clearer.
 
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
----
- drivers/pwm/core.c  |  4 ++--
- drivers/pwm/sysfs.c |  8 ++++----
- include/linux/pwm.h | 12 ++++++------
- 3 files changed, 12 insertions(+), 12 deletions(-)
+Thanks, have checked for UINT_MAX in v10 of my patchset that I just
+uploaded. Could you please review it?
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 5a7f659..81aa3c2 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -1163,8 +1163,8 @@ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
- 		if (state.enabled)
- 			seq_puts(s, " enabled");
- 
--		seq_printf(s, " period: %u ns", state.period);
--		seq_printf(s, " duty: %u ns", state.duty_cycle);
-+		seq_printf(s, " period: %llu ns", state.period);
-+		seq_printf(s, " duty: %llu ns", state.duty_cycle);
- 		seq_printf(s, " polarity: %s",
- 			   state.polarity ? "inverse" : "normal");
- 
-diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-index 2389b86..449dbc0 100644
---- a/drivers/pwm/sysfs.c
-+++ b/drivers/pwm/sysfs.c
-@@ -42,7 +42,7 @@ static ssize_t period_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.period);
-+	return sprintf(buf, "%llu\n", state.period);
- }
- 
- static ssize_t period_store(struct device *child,
-@@ -52,10 +52,10 @@ static ssize_t period_store(struct device *child,
- 	struct pwm_export *export = child_to_pwm_export(child);
- 	struct pwm_device *pwm = export->pwm;
- 	struct pwm_state state;
--	unsigned int val;
-+	u64 val;
- 	int ret;
- 
--	ret = kstrtouint(buf, 0, &val);
-+	ret = kstrtou64(buf, 0, &val);
- 	if (ret)
- 		return ret;
- 
-@@ -77,7 +77,7 @@ static ssize_t duty_cycle_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.duty_cycle);
-+	return sprintf(buf, "%llu\n", state.duty_cycle);
- }
- 
- static ssize_t duty_cycle_store(struct device *child,
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 0ef808d..b53f13d 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -39,7 +39,7 @@ enum pwm_polarity {
-  * current PWM hardware state.
-  */
- struct pwm_args {
--	unsigned int period;
-+	u64 period;
- 	enum pwm_polarity polarity;
- };
- 
-@@ -56,8 +56,8 @@ enum {
-  * @enabled: PWM enabled status
-  */
- struct pwm_state {
--	unsigned int period;
--	unsigned int duty_cycle;
-+	u64 period;
-+	u64 duty_cycle;
- 	enum pwm_polarity polarity;
- 	bool enabled;
- };
-@@ -105,13 +105,13 @@ static inline bool pwm_is_enabled(const struct pwm_device *pwm)
- 	return state.enabled;
- }
- 
--static inline void pwm_set_period(struct pwm_device *pwm, unsigned int period)
-+static inline void pwm_set_period(struct pwm_device *pwm, u64 period)
- {
- 	if (pwm)
- 		pwm->state.period = period;
- }
- 
--static inline unsigned int pwm_get_period(const struct pwm_device *pwm)
-+static inline u64 pwm_get_period(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
-@@ -126,7 +126,7 @@ static inline void pwm_set_duty_cycle(struct pwm_device *pwm, unsigned int duty)
- 		pwm->state.duty_cycle = duty;
- }
- 
--static inline unsigned int pwm_get_duty_cycle(const struct pwm_device *pwm)
-+static inline u64 pwm_get_duty_cycle(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thank you.
 
+Guru Das.
