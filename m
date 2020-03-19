@@ -2,59 +2,52 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B23FA18B3D5
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Mar 2020 14:03:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B25A18BCB0
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Mar 2020 17:37:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgCSNDM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Mar 2020 09:03:12 -0400
-Received: from mail-eopbgr10094.outbound.protection.outlook.com ([40.107.1.94]:28933
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726793AbgCSNDL (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:03:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X8JxkgFYn6ejoYvL14Bknc/3taLDqAPVhRnHqFM9+Add67LApRwjLGLZVcspMAEXkgc+m05fx3SA4TcZY6hXyz9oyPItDowa4LT1F97c1PuzgilIxLOEo0WZ4LwkIWXlI0wPmJwuTAY2MYSi+cppVXFGNvvn6VtRzzkwqFo2oV2gjLnnSe0Ce2anlbskLRVuJlq9Dw9ikoFdWD2QWV52QoK2Gp2qxEKbKcp+KR+EF+bhu7Y7J0BPd1uwsx+ropsVDqwFVdW72+KBxKQgMdz669qz53mtprrBPVk5vM4rFeVsRvJ8P8w1A6wLKkcU2KGcmnK424XyEU4FBf0787bzYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ct/vC+pyknaapJ/kjDeMGgchdOUlt5aZcJZO1q8mKtw=;
- b=WyWChx4rwOPq+eOV0RJC/SR68bWq2r6Ab4pChpN34R67Gp0RxQ98o64zmhFWBoUn700pQY3zXc9VRb+qsz1RP7790TJBoP4tnJoQ93Rpy85B4N0cMBbaXuJpoPyhQkyVPLRUN7bifax3oqZiZ3qewjY5dLkuMgIx2oEcHp5nkdlqu99BqgnE/BPgT3AdcN9BrhQOs1gVvQgzWmqIUSCRwv3vDAURwWUYTBq8bUtdMWEnB0NzusKMWbY071sWRaqsmijtDu+8W3IYKoazGD/YMO15U2hK3z4G0gb2O1eES1gcv0akURteq9bvgQEUnbJZQ0gLq4BjUwxuZdathXHKCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ct/vC+pyknaapJ/kjDeMGgchdOUlt5aZcJZO1q8mKtw=;
- b=tU0XZSw8e4Ws6iZOGfhACAY0qOFB6LptP/wiQNm3bDY4LOdL/QsmUpuSVGfc5wxLWtX2MZxhcdXBwQnXrZoOMtwYJFlToj4VF4qWVgsGTuEeMPTbAKCbRCLJ8Y1sIUEPxA5HEQeUUFZf0E3g777xw/ytCIkXIRggsMXi5DlPnqQ=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=oleksandr.suvorov@toradex.com; 
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
- VI1PR05MB6189.eurprd05.prod.outlook.com (20.178.123.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.14; Thu, 19 Mar 2020 13:03:06 +0000
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::7cdd:4feb:a8b6:a6d2]) by VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::7cdd:4feb:a8b6:a6d2%7]) with mapi id 15.20.2814.021; Thu, 19 Mar 2020
- 13:03:06 +0000
-X-Gm-Message-State: ANhLgQ0w7ngJPBJlFvOZsFY38uEFn9v1eGmnZjLsNEhxYSDJLnNpIZjH
-        nMLOtsFkywVwXEWGRxGj1mlUyo1z80a65uxbUDY=
-X-Google-Smtp-Source: ADFU+vv7UiYjMyQD/4E12h86CR7/cYPU2WKNtIqkeDfie1uanDVnCD4QjGal5pFHF/ZOfpjDVMav8J/uvLvFUH2D2Ko=
-X-Received: by 2002:ac8:554a:: with SMTP id o10mr2778015qtr.224.1584622638973;
- Thu, 19 Mar 2020 05:57:18 -0700 (PDT)
-References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
- <20200317123231.2843297-2-oleksandr.suvorov@toradex.com> <20200317174043.GA1464607@ulmo>
- <20200317210042.ryrof3amr7fxp4w5@pengutronix.de> <20200318225953.GA2874972@ulmo>
- <CAGgjyvGd4y8M0L1sFMvQ1=gPcKfUPoR13dVS7F5WZx=333KG6g@mail.gmail.com> <20200319121026.3rzcxdknfyhtkryi@pengutronix.de>
-In-Reply-To: <20200319121026.3rzcxdknfyhtkryi@pengutronix.de>
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Date:   Thu, 19 Mar 2020 14:57:07 +0200
-X-Gmail-Original-Message-ID: <CAGgjyvFebxXaKkhy-UR1-kaYWozpP67YtVf5mp4mTHFQRhsjKg@mail.gmail.com>
-Message-ID: <CAGgjyvFebxXaKkhy-UR1-kaYWozpP67YtVf5mp4mTHFQRhsjKg@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        id S1727867AbgCSQhF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 19 Mar 2020 12:37:05 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44283 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727222AbgCSQhF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Mar 2020 12:37:05 -0400
+Received: by mail-wr1-f67.google.com with SMTP id o12so3380321wrh.11;
+        Thu, 19 Mar 2020 09:37:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NMueQiP9jz9O+z3rNtEF0OHXn/KJHT1fioATarE40G8=;
+        b=kRFKQKfEBEqihNIaveyPStDvKrgGhFdZYXEgGipYSaA/2qb6vfhLO+/QfXCyCFXgSF
+         4F9OSwGjKC73SFYPFCirtCRMbpEEoDU3RUq+OjredkiZDGPLh5a47GO0D6W+wOc90ph7
+         VF9FDlcb17/e3+Ta1efGon4YAfa5fgDS4iEpV+0BmBtdIA1z6lRAepOpcej3xMKWo/ux
+         Vg8pKnGn9tr2cb5/j+Mc193lHK4mxDTwsK+cC3L/LI6irZpb0ZVA50uMqMMR//1l7yZB
+         kun/1ogBpRNi9sP3YX7gPc3nz4ngJ4FX5E4UnQvyiQODgPw0LbfZxDr7lHa2ya6glUVd
+         PhUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NMueQiP9jz9O+z3rNtEF0OHXn/KJHT1fioATarE40G8=;
+        b=AcyMOZrdTQTy5dMCUVEFJ4VbqiPCISGFTdevkAZz8OambaAV4PAcYEt5zgPiJb2/gi
+         affR6OYLy392mhxhxHzFd/4ptYbxw6R/Ag3qbnGM/TQMTpS7mNQCPWz3PycI0/I+NGJz
+         DIqr7+bCcZtlLmAWNUNcI3T75aqv2dKxDCVxW6hHNvNaa++U2LqcrRntHST1Lq0P6mEY
+         a/3Kfscmkq/gDNM7RCFmOZP72Eh8aGzp2JHJEwGs6V9hD8ik+/u8oX3qd9qMAM/6T2lZ
+         FHYySG8MUqyedAULFuBlq70scU1XTHsiEKKk9MxoAcAesqFR372mc79fCEupMCpqCsOI
+         /ZPg==
+X-Gm-Message-State: ANhLgQ287A/YJkkbRmZdUEC9TSH1gJYKAoej/7n1nYn8ayC6+MWVG8+e
+        fzUCFTpWQNEeGwdaGc1Y38w=
+X-Google-Smtp-Source: ADFU+vtoxuuyxX+HT1GPJKiSCaAgThQGtgPWSsP45bIWCEbkNowuDDd0U3X4oTdHznURld4tZlgyhg==
+X-Received: by 2002:a05:6000:d0:: with SMTP id q16mr5551345wrx.71.1584635822900;
+        Thu, 19 Mar 2020 09:37:02 -0700 (PDT)
+Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
+        by smtp.gmail.com with ESMTPSA id z22sm3851524wmi.1.2020.03.19.09.37.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 09:37:01 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 17:37:00 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
         devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
         Paul Barker <pbarker@konsulko.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
@@ -84,107 +77,227 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: DM3PR12CA0088.namprd12.prod.outlook.com
- (2603:10b6:0:57::32) To VI1PR05MB3279.eurprd05.prod.outlook.com
- (2603:10a6:802:1c::24)
+Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
+Message-ID: <20200319163700.GA3354541@ulmo>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-2-oleksandr.suvorov@toradex.com>
+ <20200317174043.GA1464607@ulmo>
+ <20200317210042.ryrof3amr7fxp4w5@pengutronix.de>
+ <20200318225953.GA2874972@ulmo>
+ <20200319065039.szhh5dm6v3ejwijd@pengutronix.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mail-io1-f44.google.com (209.85.166.44) by DM3PR12CA0088.namprd12.prod.outlook.com (2603:10b6:0:57::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15 via Frontend Transport; Thu, 19 Mar 2020 13:03:06 +0000
-Received: by mail-io1-f44.google.com with SMTP id c19so2135218ioo.6;        Thu, 19 Mar 2020 06:03:06 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0w7ngJPBJlFvOZsFY38uEFn9v1eGmnZjLsNEhxYSDJLnNpIZjH
-        nMLOtsFkywVwXEWGRxGj1mlUyo1z80a65uxbUDY=
-X-Google-Smtp-Source: ADFU+vv7UiYjMyQD/4E12h86CR7/cYPU2WKNtIqkeDfie1uanDVnCD4QjGal5pFHF/ZOfpjDVMav8J/uvLvFUH2D2Ko=
-X-Received: by 2002:ac8:554a:: with SMTP id o10mr2778015qtr.224.1584622638973;
- Thu, 19 Mar 2020 05:57:18 -0700 (PDT)
-X-Gmail-Original-Message-ID: <CAGgjyvFebxXaKkhy-UR1-kaYWozpP67YtVf5mp4mTHFQRhsjKg@mail.gmail.com>
-X-Originating-IP: [209.85.166.44]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6b21bc9d-2c8a-49fb-be61-08d7cc05ddb8
-X-MS-TrafficTypeDiagnostic: VI1PR05MB6189:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB618992448139681499764DD5F9F40@VI1PR05MB6189.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 0347410860
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(199004)(26005)(5660300002)(54906003)(44832011)(52116002)(2906002)(42186006)(498600001)(81166006)(81156014)(8676002)(55446002)(966005)(53546011)(86362001)(66476007)(8936002)(6862004)(107886003)(186003)(450100002)(66556008)(4326008)(9686003)(66946007);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB6189;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: v0DJZn8OCp3LrljOxY0Gktju6cKZJFXe9un6szgTWEwcRydwt6haxnRNXvWZ67kRLwJKnJ9uS5YIdzW7cIAtdN+nSGE0NwgB0ZTIMHwiN2MljCDmCswjN8JsWrd5FC9Jx1YkRYuL7THh2S8njbqqstrFPtTlbCnpOE+29OHBMHApVsPdX5rDlzhV+MZ4ZAFnHPNB8sEO7F2wsCJeQEnCIguCqcGTjB2gccsRqoggCRNulVb59SXx6KZ7Ie8yNh30bTVVTlpN3vK1fh2kSQXZZm1WMFEJwkzcS4PULfXz/ORBuWPHpMm4sDDbc8Pv+9bacVeSBpYRIQGKCFBX1wnLhZFwpHLt5BCbIGjQWZZa0GXTaz1g2jIuhPc3P2lbJ8rPcuFuniAJPx7GThIPi6q9nvn8jKOkPhU+vrBjn6KvC91mpYLCExbOfE0U23ZU55V+tKZPJ6k+kp3r3FKHnPogBN81INHEqBYzbiPmjAxe6G4LXnnhMcVB60uPmIyX/MiLEto1L4PbHpR6677h4Pt+tA==
-X-MS-Exchange-AntiSpam-MessageData: j2cE6DVaiBnQJlVcjGyGGW2MYrFyajBAo+7rG1kUA4dRI8GlyrzNUNWyI8MzXms/zTeiWRMQ2lmGXN88eB3wk3ClDDdBaKeiIjt90YlqgSoxFkGhqbb3iudK39/HVn98wjqDz21Tv0QV5Xx/aoywfw==
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b21bc9d-2c8a-49fb-be61-08d7cc05ddb8
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2020 13:03:06.5697
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hN04Tsy9Rb3otdnYZo+UM9fwsaVcuJpiWK8Dl8WdIzZ0FVbvbsAyh6RRzv1ycqmk6cpbJn9LkZwMFSJj5FVtW+TpaVGxGZJ4edzeUJwfoPs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6189
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+Content-Disposition: inline
+In-Reply-To: <20200319065039.szhh5dm6v3ejwijd@pengutronix.de>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 2:11 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
+
+--LZvS9be/3tNcYl/X
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Mar 19, 2020 at 07:50:39AM +0100, Uwe Kleine-K=C3=B6nig wrote:
+>=20
+> [Dropped Tony Prisk from recipients as the address bounces]
+>=20
 > Hello,
->
-> [dropping Tony Prisk <linux@prisktech.co.nz> from recipients]
->
-> On Thu, Mar 19, 2020 at 01:40:28PM +0200, Oleksandr Suvorov wrote:
-> > Thierry, I see the PWM core converts the bit field "third cell" into
-> > the polarity variable.
-> > Now I probably understand your sight and agree that we shouldn't give
-> > the same names to bits in bitfield (dts) and values of a variable.
-> >
-> > But there are lots of useless "0" values of third cell of "pwms"
-> > option in dts files.
-> >
-> > I see 2 ways now:
-> > - just remove all "0" "third cell" from "pwms" options in dts files. I
-> > see this "0" confuses some people.
->
-> Then you have to overwrite pwm-cells of the provider. If there are two
-> PWMs used from the same provider and only one is inverted this won't
-> work. (Not entirely sure I understood your suggestion.) So I don't like
-> this suggestion.
+>=20
+> On Wed, Mar 18, 2020 at 11:59:53PM +0100, Thierry Reding wrote:
+> > On Tue, Mar 17, 2020 at 10:00:42PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> > > Hello,
+> > >=20
+> > > On Tue, Mar 17, 2020 at 06:40:43PM +0100, Thierry Reding wrote:
+> > > > On Tue, Mar 17, 2020 at 02:32:25PM +0200, Oleksandr Suvorov wrote:
+> > > > > The polarity enum definition PWM_POLARITY_INVERSED is misspelled.
+> > > > > Rename it to PWM_POLARITY_INVERTED.
+> > > >=20
+> > > > It isn't misspelled. "inversed" is a synonym for "inverted". Both
+> > > > spellings are correct.
+> > >=20
+> > > Some time ago I stumbled about "inversed", too. My spell checker does=
+n't
+> > > know it and I checked some dictionaries and none of them knew that wo=
+rd:
+> > >=20
+> > > https://www.lexico.com/search?utf8=3D%E2%9C%93&filter=3Ddictionary&di=
+ctionary=3Den&query=3Dinversed
+> > > https://de.pons.com/%C3%BCbersetzung/englisch-deutsch/inversed
+> > > https://dictionary.cambridge.org/spellcheck/english-german/?q=3Dinver=
+sed
+> > >=20
+> > > https://en.wiktionary.org/wiki/inverse#Verb mentions "inverse" as a v=
+erb
+> > > having "inversed" as past participle.
+> >=20
+> > Here are the first three results from a Google query:
+> >=20
+> > 	https://www.yourdictionary.com/inversed
+>=20
+> There is something fishy. In the Verb section it says indeed, that it is
+> the past participle and simple past of inverse. The entry for inverse
+> however only has sections that identify this word as adjective or noun;
+> not a verb.
+>=20
+> > 	https://www.dictionary.com/browse/inversed
+>=20
+> Not sure I'd count this as hint that inversed exists. The entry shown to
+> me under this URL is about "inverse" and it has
+>=20
+> 	verb (used with object), in=C2=B7versed, in=C2=B7vers=C2=B7ing.
+> 		? to invert.
+>=20
+> Does this mean: "Did you mean invert instead?"
+>=20
+> > 	https://en.wiktionary.org/wiki/inversed
+>=20
+> Yeah, that's the one I found, too.
+>=20
+> I still have the impression that "inversed" is in use because people
+> don't know better and understand the intended meaning. And this results
+> in leaking of this word into the references.
+>=20
+> > > Having said this I think (independent of the question if "inversed"
+> > > exists) using two similar terms for the same thing just results in
+> > > confusion. I hit that in the past already and I like it being address=
+ed.
+> >=20
+> > I don't know. It's pretty common to use different words for the same
+> > thing. They're called synonyms.
+>=20
+> In literature yes, I agree. In a novel it is annoying to repeat the same
+> words over and over again and some variation is good. In programming
+> however the goal is a different one. There the goal should be to be
+> precise and consistent.
 
-Good point, agree. But we still have the unnamed "0".
+We also need to make sure that things don't break. It's a very bad idea
+to have a macro with the same name as an enum value for reasons I stated
+before. I think that's the most important thing here.
 
-What about renaming the dt-bindings macro PWM_POLARITY_INVERTED
-and add the new one for the normal polarity?
-Like PWM_FLAG_POLARITY_NORMAL / PWM_FLAG_POLARITY_INVERTED or
-DT_PWM_POLARITY_NORMAL / DT_PWM_POLARITY_INVERTED?
+Also, if inversed is a synonym of inverted, we don't loose any precision
+at all. All you have to remember is that you're dealing with a device
+tree constant in one case and an API enumeration in the other.
 
-Using different prefix will prevent interfering names of enum and
-macros in the future
-and will allow using the named nop-flag PWM_FLAG_POLARITY_NORMAL in dts.
+So I think the current form is actually more precise, though I guess it
+could be confusing if you don't care about the difference.
 
-> And also in my eyes this isn't clearer, just more complicated to use.
->
-> > - convert pwm_state.polarity into pwm_state.flags and use bitfield
-> >   directly from dtb.
-> >   It simplifies the parsing logic and makes adding new flags easier.
->
-> *shrug*, I don't care much.
->
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
-|
+> > > > And as you noted in the cover letter, there's a conflict between the
+> > > > macro defined in dt-bindings/pwm/pwm.txt. If they end up being incl=
+uded
+> > > > in the wrong order you'll get a compile error.
+> > >=20
+> > > There are also other symbols that exist twice (GPIO_ACTIVE_HIGH was t=
+he
+> > > first to come to my mind). I'm not aware of any problems related to
+> > > these. What am I missing?
+> >=20
+> > There's currently no problem, obviously. But if for some reason the
+> > include files end up being included in a different order (i.e. the
+> > dt-bindings header is included before linux/pwm.h) then the macro will
+> > be evaluated and result in something like:
+> >=20
+> > 	enum pwm_polarity {
+> > 		PWM_POLARITY_NORMAL,
+> > 		1,
+> > 	};
+> >=20
+> > and that's not valid C, so will cause a build error.
+>=20
+> I admit I didn't look closely here and I assume you are right. If I
+> understand Oleksandr right this is only an intermediate step and when
+> the series is applied completely this issue is gone. Still it might be
+> worth to improve the series here.
 
+	$ gcc -o /dev/null -x c - <<- EOF
+	>     #define PWM_POLARITY_INVERTED (1 << 0)
+	>
+	>     enum pwm_polarity {
+	>         PWM_POLARITY_NORMAL,
+	>         PWM_POLARITY_INVERTED,
+	>     };
+	> EOF
+	<stdin>:1:35: error: expected identifier before =E2=80=98(=E2=80=99 token
+	<stdin>:5:9: note: in expansion of macro =E2=80=98PWM_POLARITY_INVERTED=E2=
+=80=99
 
+Q.E.D.
 
---=20
-Best regards
-Oleksandr Suvorov
+> My original question was about similar problems with GPIO_ACTIVE_HIGH.
+> Are you aware of problems there?
 
-Toradex AG
-Ebenaustrasse 10 | 6048 Horw | Switzerland | T: +41 41 500 48 00
+The problem exists there equally. We're probably not running into it
+because drivers don't end up including dt-bindings/gpio/gpio.h and
+include/linux/gpio/machine.h at the same time. Or they end up always
+including them in the right order.
+
+For PWM the situation is slightly more complicated because we only have
+one header for the kernel API, so the likelihood of including it along
+with the dt-bindings header is increased compared to GPIO.
+
+> > > > Note that DT bindings are an ABI and can
+> > > > never change, whereas the enum pwm_polarity is part of a Linux inte=
+rnal
+> > > > API and doesn't have the same restrictions as an ABI.
+> > >=20
+> > > I thought only binary device trees (dtb) are supposed to be ABI.
+> >=20
+> > Yes, the DTB is the ABI. dt-bindings/pwm/pwm.h is used to generate DTBs,
+> > which basically makes it ABI as well.
+>=20
+> We disagree here. With this argument you could fix quite some things as
+> ABI.
+
+I don't understand what you're trying to say.
+
+> > Yes, the symbol name may not be part of the ABI, but changing the
+> > symbol becomes very inconvenient because everyone that depends on it
+> > would have to change.
+>=20
+> Oleksandr adapted all in-tree users, so it only affects out-of-tree
+> users. In my book this is fine.
+
+There used to be a time when it was assumed that eventually device tree
+sources would live outside of the kernel tree. Given that they are a HW
+description, they really ought not to be relying on the Linux kernel
+tree as a way of keeping them consistent. That's really only out of
+convenience.
+
+> > Why bother?
+>=20
+> To make the API more precise and consistent. That's a good goal in my
+> eyes.
+
+PWM_POLARITY_INVERTED is not part of the API. It doesn't exist for
+anything other than to make the device tree more readable.
+
+I now regret that we ever introduced this in the first place. Perhaps it
+would've been better to just deal with raw numbers instead.
+
+Thierry
+
+--LZvS9be/3tNcYl/X
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5zn6kACgkQ3SOs138+
+s6G0qA//TRbmBTBaIgA8loJnEh1oNwlzPblJdiH8lXKLSVxfyTXfaFGDQcOzMyBg
+DkLtpO51Rah1o+3yB/j6b8TXA9amdpD65SP2FBL2dFLyBn8K5Ot5ZWuvTapyclcz
+2TI8cG1Du/xLWxMDDX+Rylj+9XTlQxu3lGssuCM56hF0VXmhyvEzD3/aLlA/MjeY
+QQky3apxaRT+lnGsAzRLGbLHZufTV+OaZ9ZYZZGTlsXR1VAUsyR44TGM+290Ut6p
+Ds8bLPjI3xTa6uy66MlsUcYAAo1/jCQMAS+Nr/B0XGRPJdtK2G+MY3vtTZENSvqr
+VKDulCTAEGE/uP+7qZVOmxOZIhX7n1zBdwSdZS5FgjCok6QjfOUa9SlT77O4bGAM
+lGaeG9h8gBYpE2wk+9Wd6V9vm8UoJXPujpsyJXRHpQa5nJhgqr/VNYCeHlYhKXuQ
+ymd6V9cwXRk/0xoRKR8WnRl5ZgfZtTYDfh/dGD7CdUBcyfCFZVcYEI01iO54m5Dr
+/kakaDhUXRLv+xBGk4CocrSgo92DQeFUWyb2QnoW/5yYbHEOYEsfz+pWUicxin/y
+Yf9ZNfDh5MPRidZyJ5b/wy3xz2OHEkyGKGGIb2em5E5AwvDZiDXhQkjhf5hzb2fD
+xgjBAa+LbbBZYCs2a4Y85i+tpsJpp72cE4Xamu4rr3Pz7URiAnw=
+=VES6
+-----END PGP SIGNATURE-----
+
+--LZvS9be/3tNcYl/X--
