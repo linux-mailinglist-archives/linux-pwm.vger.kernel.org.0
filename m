@@ -2,33 +2,33 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EA17B18D561
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Mar 2020 18:09:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7050518D56C
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Mar 2020 18:12:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgCTRJ7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 20 Mar 2020 13:09:59 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:57535 "EHLO
+        id S1726912AbgCTRMB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 20 Mar 2020 13:12:01 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:51599 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbgCTRJ7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 20 Mar 2020 13:09:59 -0400
-Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MwQKr-1jVudM1jCn-00sPyn; Fri, 20 Mar 2020 18:09:57 +0100
-Received: by mail-qk1-f178.google.com with SMTP id h14so7629762qke.5;
-        Fri, 20 Mar 2020 10:09:57 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3AjeCqF4eQedqqGLmc+BY9C1BRfVZznlpS/H8qbeC3Zle6nKq9
-        xjNsm0S3VDZykFS1rqvrzGG38jJwKuXUceWVtFE=
-X-Google-Smtp-Source: ADFU+vtjyO+ehLTD66pkWeXkdjTj4/yy0U6UhFzBOixds9km8+MN7n37hhenmQD129d14NVa+I+huaC/oF0GQuuVinA=
-X-Received: by 2002:a37:a4d6:: with SMTP id n205mr9299331qke.352.1584724196159;
- Fri, 20 Mar 2020 10:09:56 -0700 (PDT)
+        with ESMTP id S1726855AbgCTRMB (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 20 Mar 2020 13:12:01 -0400
+Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MLi4c-1ixfmK03g8-00Hekv; Fri, 20 Mar 2020 18:12:00 +0100
+Received: by mail-qk1-f177.google.com with SMTP id d11so7635489qko.3;
+        Fri, 20 Mar 2020 10:11:59 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0gyI7RLssROPQbrDBTAn9ptg+hCClBtDDiCaZmiTO95e66qysq
+        poI/UDmbo6ov7h2735uX8Vs1c7MOhGTcbKWXuus=
+X-Google-Smtp-Source: ADFU+vuTYNwVuJguhjzyHCuhUFNGAgsZlJ6L/zCdvZ31pFGtIywmjBS6Hofw9ebST4uDNGjv5IkCOSYkx89n56+FxCA=
+X-Received: by 2002:a37:6455:: with SMTP id y82mr9138019qkb.286.1584724318696;
+ Fri, 20 Mar 2020 10:11:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1584667964.git.gurus@codeaurora.org> <5aae102e21c0e63ad2588ae1e174b48b06d25e96.1584667964.git.gurus@codeaurora.org>
-In-Reply-To: <5aae102e21c0e63ad2588ae1e174b48b06d25e96.1584667964.git.gurus@codeaurora.org>
+References: <cover.1584667964.git.gurus@codeaurora.org> <3dc95ebc6539066cc58bc44c0e6e53ac979fe9a9.1584667964.git.gurus@codeaurora.org>
+In-Reply-To: <3dc95ebc6539066cc58bc44c0e6e53ac979fe9a9.1584667964.git.gurus@codeaurora.org>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 20 Mar 2020 18:09:39 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0qUMMMDmbp2FM-7D-U0Ys_zv0paYguFeyifafZurndEw@mail.gmail.com>
-Message-ID: <CAK8P3a0qUMMMDmbp2FM-7D-U0Ys_zv0paYguFeyifafZurndEw@mail.gmail.com>
-Subject: Re: [PATCH v11 06/12] pwm: imx27: Use 64-bit division macro and function
+Date:   Fri, 20 Mar 2020 18:11:42 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0ueOXLFPd_C4nbqHwEmVOa5eFfSivbsMPKNCmjMiWF1Q@mail.gmail.com>
+Message-ID: <CAK8P3a0ueOXLFPd_C4nbqHwEmVOa5eFfSivbsMPKNCmjMiWF1Q@mail.gmail.com>
+Subject: Re: [PATCH v11 04/12] pwm: clps711x: Cast period to u32 before use as divisor
 To:     Guru Das Srinagesh <gurus@codeaurora.org>
 Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -36,54 +36,43 @@ Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
         <u.kleine-koenig@pengutronix.de>,
         Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
+        Alexander Shiyan <shc_work@mail.ru>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:NT1QCBoJeAxayaviYjMCvNEQL3IYVL2LhtzFKOtdqS2IV0XjZa3
- wWW5chAgDpZ3YlZiAEunuXIMrORfU6DGtU3m6f3NpQn8z+7TRq+D5UQ2vxc0k8MvdT7smdY
- P6JgLiP+NviVJg4iv3gWtF9hMF5qM78kT4G8a2p6hCOBhbmDOAy/YOg86FgCCiHrTAIILiJ
- v3A65uoScg2fWVlqqgd5g==
+X-Provags-ID: V03:K1:0U8GQp3km2ZJiFaPar3epPUHYGwejvDlD6kTLCBx98NAiXNoeZf
+ 5+64Xo9SF4PUX0UC5mF0GOo3asD9+3wKCip1dMYtCwoojIMoGgM1AYPfds9y5RocWV6jCK1
+ E0l5BO0lBir4269DSljTmbNYMhSSQi67lyEqSwnys8q+BgSziR3ltOfOmd7ybWcP0znpeuU
+ Ypn3KezyH/rblgikeSkKg==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OBUSs1wKTYM=:uNmjh1lUYwUMomH/yU/kca
- y5KrySbLrEVfWmoFzAPv8r6OYcJKLNbEpw8jsnSChMIVM6SlO9MomD4glOZjrlimSW1XdsbSy
- OdH+GzYXuW/cmSDeB2y7p8Rc8XZ9qHPXcGOa0HlNDIgZ9ZIWgS4mUTHRjwNaihi/c+yoAZFX2
- HlYxkuqdbv04Lcu+/xQwdFcJ8hiuLkR/zYB2tpfxS7MAmZrTMIpTc44v/GpeHOtf2bIxTnSsS
- GRy+YNuoj6fMVh8Jhy01mtV1ZkNasY/++aDx0jtpFXP8PM8xU1HchXu8WZ4I41qemS4HcxGfT
- 0yXXGmlm/5rnHY8zgo46ADAPV4NgS+SJwu/5bCuF3JONkq5oXYLEPuEgWBJZxYs1fX1RnbdUI
- Lu3O/YIZboJ98fhSx6aRBYlzWaR4/xGgiOenIrAy3evjFJNrsF+jT/Kx6GuAZwR5mTYGnoAPv
- UG1gEXzdFQWfvlimucx+7TIRqMto3Bi2XhL7TACvifjHLtWCQ5DiGgwJ/hyLVXCYc6XrH5PBk
- kwRgVtYGB/xpn1CqktxKbWdzbZR4PrG8Q8wLRcpjXg71KIf3AZwMyJqz/w8tWVqgfI3maDZ6R
- YQ8J1jaWo7SKpwW7uDfWm6Rxj2x74gWhzudY+kkihrVoX9CKN3SXZRj4xemwrQcLk36pTwkj0
- O6PLhvmvessXcqMLM1kay+eRfxprkC+TpxrO4Vrq5NZ5XgcMJWX4XVXaP1YX642AjyxQSBUmh
- vh6Wie9lAV+r7XRSH1FXFuH+P/jkGrliM4KHf3Ca4TN+cqKePxXgwVRNrP5CXxl4HSRUxjdWF
- 70YRjzKWkbaV78eiHWOgrRwd7s35djMxif/rpr7M7DtCK5fRiE=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:PrW3MYUJLXk=:gYXvSJ19Gr9XGEU7eaLiST
+ fkLaaoeSgiv5BOXPeexHdc+RUdyoQQE/Ivo0DTXfmPV9UjkejlSwUP4kRKJpR5pGERhbLv19R
+ S2iZ1CNyCnAs6BhYil0mJkCY9MHBu4gu4F1kLKW+mIViAuB7O3jMT2mHfAB0LBNcect2V3NSl
+ rw6+dnwZses8gjz3LujydUgpDbaEp8OczlgTgAbOfcXjkVsHYjgKVDuKTsXtZscBmc6psy1F+
+ PgUQfiSutCVdTEPZs5VXO8ywSq7tVZciLvhZSs4UIgnKwjodnQJZ97v6evgYUtSzLnyz3Q/QD
+ jTpjuCwbHFQHtYun3YKvEuUlwdpe4ecK/BKdVozn970QsKQRshVCucG03tl/Xm6LqH0Hod/rH
+ yMWiWsE8oxGN612f+g5OBX3VvVxETltnjIk2AmftrvvVodC2JQpWk7sreV26L2WT5sOsL7FuF
+ 66vhxhTkPas2Y7eoI25HtzDs4l7HZOJGmFnETzbtKbHBj8fgWxqeTCsbjyguUq7arRD9q+rrj
+ SzviY+hTDJ3R3HEifp+/NXgGP2OwzOXACC7+A/l8Ef2EVKryix7CGaw9O01RDU451BbpdH7eb
+ W0PQCOLcopVleesQY6OyeSftlb+kzyoBvhYDpwyTr4Es5GmzmcnOPhbZH77pOe3d4kUCB1AIk
+ Ujsa4+oynU/m2X9A/N0E1exhnf4UbGNdZ8D9ke/cxE9hbJhHW73wgNBPT6I0tQ6rsHd0bfz5+
+ 23xBHRoWu2J5mI4wjSpdDGVI4E4it5gv+FsNirTToQGx7kXgBRyRJVck0bLe8g8QwXycReBJX
+ fGr3YRbhKddMWbHK2XMb2lRuDekSIzUf7a8ZyN7bLWAzg0N8jM=
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
-
-> @@ -240,8 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+On Fri, Mar 20, 2020 at 2:41 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
 >
->         period_cycles /= prescale;
->         c = (unsigned long long)period_cycles * state->duty_cycle;
-> -       do_div(c, state->period);
-> -       duty_cycles = c;
-> +       duty_cycles = div64_u64(c, state->period);
+> Since the PWM framework is switching struct pwm_args.period's datatype
+> to u64, prepare for this transition by typecasting it to u32.
 >
+> Also, since the dividend is still a 32-bit number, any divisor greater
+> than UINT_MAX will cause the quotient to be zero, so return 0 in that
+> case to efficiently skip the division.
+>
+> Cc: Alexander Shiyan <shc_work@mail.ru>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+>
+> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 
-This change looks fine, but I wonder if the code directly above it
-
-        c = clk_get_rate(imx->clk_per);
-        c *= state->period;
-        do_div(c, 1000000000);
-        period_cycles = c;
-
-might run into an overflow when both the clock rate and the period
-are large numbers.
-
-      Arnd
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
