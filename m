@@ -2,21 +2,21 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C7C118C4BD
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Mar 2020 02:41:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D02F218C4C7
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Mar 2020 02:41:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbgCTBld (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Mar 2020 21:41:33 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:61073 "EHLO
+        id S1727542AbgCTBlc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 19 Mar 2020 21:41:32 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:61050 "EHLO
         alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727509AbgCTBlc (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Mar 2020 21:41:32 -0400
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+        by vger.kernel.org with ESMTP id S1727526AbgCTBlb (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Mar 2020 21:41:31 -0400
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
   by alexa-out-sd-01.qualcomm.com with ESMTP; 19 Mar 2020 18:41:26 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 19 Mar 2020 18:41:26 -0700
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 19 Mar 2020 18:41:26 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 048F04559; Thu, 19 Mar 2020 18:41:25 -0700 (PDT)
+        id 111E723CD; Thu, 19 Mar 2020 18:41:26 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -25,14 +25,12 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         linux-kernel@vger.kernel.org,
         Guru Das Srinagesh <gurus@codeaurora.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH v11 10/12] backlight: pwm_bl: Use 64-bit division function
-Date:   Thu, 19 Mar 2020 18:41:21 -0700
-Message-Id: <17fc1dcf8b9b392d1e37dc7e3e67409e3c502840.1584667964.git.gurus@codeaurora.org>
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        David Laight <David.Laight@ACULAB.COM>
+Subject: [PATCH v11 11/12] clk: pwm: Assign u64 divisor to unsigned int before use
+Date:   Thu, 19 Mar 2020 18:41:22 -0700
+Message-Id: <ab7b568b1d287949276b3b1c9efdb1cad1f92004.1584667964.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1584667964.git.gurus@codeaurora.org>
 References: <cover.1584667964.git.gurus@codeaurora.org>
@@ -43,38 +41,46 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Since the PWM framework is switching struct pwm_state.period's datatype
-to u64, prepare for this transition by using div_u64 to handle a 64-bit
-dividend instead of a straight division operation.
+Since the PWM framework is switching struct pwm_args.period's datatype
+to u64, prepare for this transition by assigning the 64-bit divisor to
+an unsigned int variable to use as the divisor. This is being done
+because the divisor is a 32-bit constant and the quotient will be zero
+if the divisor exceeds 2^32.
 
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: linux-pwm@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-fbdev@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-clk@vger.kernel.org
+Cc: David Laight <David.Laight@ACULAB.COM>
 
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 ---
- drivers/video/backlight/pwm_bl.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/clk-pwm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index efb4efc..3e5dbcf 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -625,7 +625,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 		pb->scale = data->max_brightness;
+diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
+index 87fe0b0e..c0b5da3 100644
+--- a/drivers/clk/clk-pwm.c
++++ b/drivers/clk/clk-pwm.c
+@@ -72,6 +72,7 @@ static int clk_pwm_probe(struct platform_device *pdev)
+ 	struct pwm_device *pwm;
+ 	struct pwm_args pargs;
+ 	const char *clk_name;
++	unsigned int period;
+ 	int ret;
+ 
+ 	clk_pwm = devm_kzalloc(&pdev->dev, sizeof(*clk_pwm), GFP_KERNEL);
+@@ -88,8 +89,9 @@ static int clk_pwm_probe(struct platform_device *pdev)
+ 		return -EINVAL;
  	}
  
--	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
-+	pb->lth_brightness = data->lth_brightness * (div_u64(state.period,
-+				pb->scale));
++	period = pargs.period;
+ 	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
+-		clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
++		clk_pwm->fixed_rate = NSEC_PER_SEC / period;
  
- 	props.type = BACKLIGHT_RAW;
- 	props.max_brightness = data->max_brightness;
+ 	if (pargs.period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
+ 	    pargs.period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
