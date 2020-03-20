@@ -2,115 +2,116 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2006C18CEDD
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Mar 2020 14:30:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9C7018D52D
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Mar 2020 18:01:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgCTNan (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 20 Mar 2020 09:30:43 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52790 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727133AbgCTNam (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 20 Mar 2020 09:30:42 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 11so6515340wmo.2
-        for <linux-pwm@vger.kernel.org>; Fri, 20 Mar 2020 06:30:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=s6NlNBz5JabYM7cmGqE8XzWKbyl9fJfmEfdQ5l/oU3Q=;
-        b=s09Wp38Yl9D/BXm38cmJgGPi0UqMy1rBmBFtHIfPgWs3qOVc4KyCW68gFgC6sqGOlB
-         jz/2CgAIG4Z86LceTEe+1zjlO/Fo1IECFE5A+avANLmx8T9hSj8HpV1PNp0HJ4nkbvr9
-         w/6J0RX5hWBJZHJkXMqtDVmhO7Oi3GPGv8l+Mw9OcKAQNTXnBhNgE65/RtWoz2KBhGCo
-         T6SZZwu/9P54Us9BE+P3EeQ4kpcOe+/TxL5F+jeppKCmwyECfpUfo9D+5HwthNn+XOZQ
-         2/+ahfHQtav6UCiN/qtcm9rOmsdcm1rRpK/30JxrAvC2jNt6WBWPBDuSuypXAshrAOCU
-         j4vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=s6NlNBz5JabYM7cmGqE8XzWKbyl9fJfmEfdQ5l/oU3Q=;
-        b=pyxHeQyF77JoMxCJmUixuIpwtUwozIes/RqOeMMY78FtoCnifwomq6NWGhYGKKQ8I0
-         cJs9RqamVHSd6v+yKzNOSyWHuBLtXQGCf5sG5O0sIZr/HTZp169yA0Z3PrPrHiLs6j66
-         seJEmKuHkOn/gvvDr0sfwRKET+M4pfeL8hnBeGlOmwYxTI4gyHvhOSMIeuldecTUwlIz
-         RmRgwMVjkqSOKmiKD5GKTDaGRswk+I3zzH9m23rkNX0hThumRCeCeD1F8Q1ZmaIsR+yG
-         EP5wku7kmeLyQTunSsPF4ccdDsto7FWUpl6FRXflGQEdatsXbYIsi8dI+GGhrnpQJNPI
-         BYXw==
-X-Gm-Message-State: ANhLgQ1UW2czYZv6LHzt0vg+7HDfh3uDsInP3T3ArSX6F/ZErfeV2geT
-        CmYO9qY6DbjkRlJMstx2883tUg==
-X-Google-Smtp-Source: ADFU+vvlGfEGMnbI0JopCMtHtW1bL0mgS+eqdDxppBiwUxn2gHI7t8tKpw60msVbIuQpZZ91pK0jiA==
-X-Received: by 2002:a7b:cf03:: with SMTP id l3mr10440117wmg.139.1584711038190;
-        Fri, 20 Mar 2020 06:30:38 -0700 (PDT)
-Received: from dell ([2.27.35.213])
-        by smtp.gmail.com with ESMTPSA id i4sm8758565wrm.32.2020.03.20.06.30.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 06:30:37 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 13:31:23 +0000
-From:   Lee Jones <lee.jones@linaro.org>
+        id S1726983AbgCTRBL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 20 Mar 2020 13:01:11 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:56023 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727323AbgCTRBK (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 20 Mar 2020 13:01:10 -0400
+Received: from mail-lf1-f51.google.com ([209.85.167.51]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MX0TX-1imu6v25lJ-00XPP7; Fri, 20 Mar 2020 18:01:08 +0100
+Received: by mail-lf1-f51.google.com with SMTP id c20so5140092lfb.0;
+        Fri, 20 Mar 2020 10:01:08 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1rHK5rlQjWw/XySbV+sZ/2LoVXs1uOeUHnh6FBsZzawPnhnek0
+        iVwoQ2S0bthTqczRidse38AWaJbRiuHsnhnMBSE=
+X-Google-Smtp-Source: ADFU+vs11pX+reUDgLeQDaNz7AxXUjMOz6ru7xtpyHb1hOnhmeTTSEtRFhdxQ1s9xNp2TquEQ7Y9zb6/vWld8Xi/00c=
+X-Received: by 2002:a19:224f:: with SMTP id i76mr775476lfi.123.1584723667933;
+ Fri, 20 Mar 2020 10:01:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1584667964.git.gurus@codeaurora.org> <ab7b568b1d287949276b3b1c9efdb1cad1f92004.1584667964.git.gurus@codeaurora.org>
+In-Reply-To: <ab7b568b1d287949276b3b1c9efdb1cad1f92004.1584667964.git.gurus@codeaurora.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 20 Mar 2020 18:00:51 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0XrYGYBQ_hTKF4fVBr7DDZsLnR+8o=09cig_gAje=v3w@mail.gmail.com>
+Message-ID: <CAK8P3a0XrYGYBQ_hTKF4fVBr7DDZsLnR+8o=09cig_gAje=v3w@mail.gmail.com>
+Subject: Re: [PATCH v11 11/12] clk: pwm: Assign u64 divisor to unsigned int
+ before use
 To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     linux-pwm@vger.kernel.org,
+Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v11 10/12] backlight: pwm_bl: Use 64-bit division function
-Message-ID: <20200320133123.GD5477@dell>
-References: <cover.1584667964.git.gurus@codeaurora.org>
- <17fc1dcf8b9b392d1e37dc7e3e67409e3c502840.1584667964.git.gurus@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <17fc1dcf8b9b392d1e37dc7e3e67409e3c502840.1584667964.git.gurus@codeaurora.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        David Laight <David.Laight@aculab.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:FkWxRtsVpntOKqotl01jYTid96TMvDAWVWKuR5UA91jb0xTVbDb
+ FNkpLE4G+ia2YeYF+6+51lQ9owsRaxLCkfyrXCxDTV7P7EYu/3sbZjx3b9vo1bJkHfd+J1G
+ 4tvsjPQ1dp/nEIkTN9bFVGjfGpGzO5Y/EpmQc43W54XSNPyX4uxqbfX8nLlUFUemSe28piK
+ qcaFY3Y0+Ib2UTw5sB9rw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vfeYetgxPG8=:ADg2pdzcsVuv8wCU6KA12o
+ HQqGWuHott0KDj9TEgeU0SUSpeJDudJuQv6WUrwNlDf1oiV6P+254GiDP8CiQ5AXK7DsYJw2c
+ fkGNf/6cnKFhluvIIF/+La7XP4L8ci8IJmJ9ryQ2edS//jJ7vLW0GkW5L9JZ1CAB5dO5C1chl
+ wxA7eiI/fVRKrM14IqIROOnlwS/xrdMeokZZJlEurZOL0dC3sMpsdGqDPs7JlOi/lqMtXmhvh
+ k/Zy+CV3zJi0EaImSl62sMctDmTSd4RK5wbCWOKCkixJjIL1nL9ZVw1I+4E11ZyYPe1B3CYl4
+ nkNlr8HVgGS3PdoGrMBdb+iT85/kBFGujoItLaNJFeW7nnApeEkY39CPQWl6cXhlsMpLA6dfH
+ iVgSSsG+LLpTbKS7T95mmjvncs4/BF16PAyoNly8dqmpo5Cn9zhbe4koWetgVPayYgzAXTmdo
+ Ee+kjmchKimyjQ5i4u4S/WibTcIy1j+lim/uCKd3lBB1P8KK92jpmpp9LIbYynFEoMoV0gAHL
+ 56odaasQ7PH5NgX7oVFTbLJx/DU8KQBFyE+4d5+AXC2pQ6PpSauRwULLfXdHK4qFZZaIzNxjg
+ 2ze8HztDupH+D4S9ZJ/q+Ck2SaHFgUo9FWuYgBp8X2eyhu7GvR5Jgeza2maUquPzsAbZxeJsA
+ ZILigSq9xL36WtSr/V4oHYcr/6OgpxyWf83bdtTAOiHQrR1calg6Cv9rXM43zrMB+a2aFT9OB
+ FbBcskHOwxiIE1FbyeJp8Ym/5FVEtGypXiN44/7GSMqbuGZLf/IfJ9c4sSlibvOiwVrPuX83H
+ 25BZ/5rbkFV+StU4fQPeMDNzp7DF47R1wrvkNzDrJMlofTZFxs=
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, 19 Mar 2020, Guru Das Srinagesh wrote:
-
-> Since the PWM framework is switching struct pwm_state.period's datatype
-> to u64, prepare for this transition by using div_u64 to handle a 64-bit
-> dividend instead of a straight division operation.
-> 
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Daniel Thompson <daniel.thompson@linaro.org>
-> Cc: Jingoo Han <jingoohan1@gmail.com>
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Cc: linux-pwm@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-fbdev@vger.kernel.org
-> 
+On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
+>
+> Since the PWM framework is switching struct pwm_args.period's datatype
+> to u64, prepare for this transition by assigning the 64-bit divisor to
+> an unsigned int variable to use as the divisor. This is being done
+> because the divisor is a 32-bit constant and the quotient will be zero
+> if the divisor exceeds 2^32.
+>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Cc: David Laight <David.Laight@ACULAB.COM>
+>
+> Reported-by: kbuild test robot <lkp@intel.com>
 > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 > ---
->  drivers/video/backlight/pwm_bl.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/clk/clk-pwm.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
+> index 87fe0b0e..c0b5da3 100644
+> --- a/drivers/clk/clk-pwm.c
+> +++ b/drivers/clk/clk-pwm.c
+> @@ -72,6 +72,7 @@ static int clk_pwm_probe(struct platform_device *pdev)
+>         struct pwm_device *pwm;
+>         struct pwm_args pargs;
+>         const char *clk_name;
+> +       unsigned int period;
+>         int ret;
+>
+>         clk_pwm = devm_kzalloc(&pdev->dev, sizeof(*clk_pwm), GFP_KERNEL);
+> @@ -88,8 +89,9 @@ static int clk_pwm_probe(struct platform_device *pdev)
+>                 return -EINVAL;
+>         }
+>
+> +       period = pargs.period;
+>         if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
+> -               clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
+> +               clk_pwm->fixed_rate = NSEC_PER_SEC / period;
+>
+>         if (pargs.period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
+>             pargs.period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
 
-Can this patch be taken on its own?
+Doesn't this one need a check for "pargs.period>UINT_MAX" or
+"pargs.period > NSEC_PER_SEC"?
 
-> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> index efb4efc..3e5dbcf 100644
-> --- a/drivers/video/backlight/pwm_bl.c
-> +++ b/drivers/video/backlight/pwm_bl.c
-> @@ -625,7 +625,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
->  		pb->scale = data->max_brightness;
->  	}
->  
-> -	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
-> +	pb->lth_brightness = data->lth_brightness * (div_u64(state.period,
-> +				pb->scale));
->  
->  	props.type = BACKLIGHT_RAW;
->  	props.max_brightness = data->max_brightness;
+It looks like truncating the 64-bit value to a 32-bit type can result in
+unexpected behavior.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+       Arnd
