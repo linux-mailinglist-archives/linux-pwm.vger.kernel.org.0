@@ -2,106 +2,89 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1965318D782
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Mar 2020 19:42:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C7E818DE3B
+	for <lists+linux-pwm@lfdr.de>; Sat, 21 Mar 2020 06:56:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgCTSmo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 20 Mar 2020 14:42:44 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:47312 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726953AbgCTSmo (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 20 Mar 2020 14:42:44 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-175-Rpihu1x7PlGFiVtSHu5gzQ-1; Fri, 20 Mar 2020 18:42:40 +0000
-X-MC-Unique: Rpihu1x7PlGFiVtSHu5gzQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 20 Mar 2020 18:42:39 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 20 Mar 2020 18:42:39 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Arnd Bergmann' <arnd@arndb.de>,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-CC:     Linux PWM List <linux-pwm@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Subject: RE: [PATCH v11 11/12] clk: pwm: Assign u64 divisor to unsigned int
- before use
-Thread-Topic: [PATCH v11 11/12] clk: pwm: Assign u64 divisor to unsigned int
- before use
-Thread-Index: AQHV/tkrw1kYAaX6uEKWXuZ3TfBb1KhR0DSQ
-Date:   Fri, 20 Mar 2020 18:42:39 +0000
-Message-ID: <9943d663c74046d798f4614343f25187@AcuMS.aculab.com>
-References: <cover.1584667964.git.gurus@codeaurora.org>
- <ab7b568b1d287949276b3b1c9efdb1cad1f92004.1584667964.git.gurus@codeaurora.org>
- <CAK8P3a0XrYGYBQ_hTKF4fVBr7DDZsLnR+8o=09cig_gAje=v3w@mail.gmail.com>
-In-Reply-To: <CAK8P3a0XrYGYBQ_hTKF4fVBr7DDZsLnR+8o=09cig_gAje=v3w@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        id S1727824AbgCUF4s (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 21 Mar 2020 01:56:48 -0400
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:43804 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbgCUF4s (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 21 Mar 2020 01:56:48 -0400
+Received: by mail-qv1-f65.google.com with SMTP id c28so4307747qvb.10;
+        Fri, 20 Mar 2020 22:56:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gL2GEMsXemYZsa0NeenT8VlKPdt54oVv6YA/Geb5fnw=;
+        b=dukvGv+XIqHXHQt9Yk0j9eS73UJGWYqaJ8tFLiTgcvcLLwGp0zblPsnnepuYHS/gb5
+         q3/vZhch1WRgqTSUY9nCk/J+60SvQAdmg32AAU+H5y4peGHqeonUyISnJtodhqpGXWal
+         lgL+Ht0qhZc8a/Bun39rxvKh2Eoddmi0V9WrKxB1P3ZpkIS+O1mQCtvGuCW0bEI9eisS
+         r4ZEw2vq0dmnmcVCrGLKTMMGqWpRPdopXNS5S6CGbfYxXjTUlGaic3KkpH7FgOuHrcan
+         GW2zv8kqxOjwMlukTdhpCbZ7rdITF8Ee3jqtHx9tEijDRUyt3mzqaoLVEASGtIjCDJEf
+         yXlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gL2GEMsXemYZsa0NeenT8VlKPdt54oVv6YA/Geb5fnw=;
+        b=WNKW1DQiQP0KAVFkE+CUeOPoVzWANvIlHqkqGkLVnzlnAVMywi2yMZraZKrFx1uTNw
+         xm9vZ1zNyrZFx//B15nfBM6/4T8Q5zOR7AZGChOp7pk+8ysXD7rJg2p0w24Yt4dYjJvZ
+         5ZwwwkP6F6aqD55rZMsYa5hHGclysGcJBcqbR6W9GoKA6pAHLl33wAGpzRiPQfb16Iou
+         hTsD2Vfa0r2fcZaYcVZmHVXti/aX4EKm6bJvl3vdO3mB5+iUYnJ+ppQg3+bnLm09CSzX
+         /GcIkt+ZMEUj831G3YQxZPiU1HsS42cdZvgq3BMqWVheH54P61256EgHg9SXwjYoTA7I
+         Wd6g==
+X-Gm-Message-State: ANhLgQ1dgYt5F4Cpp6scRMohvxlwE8f2P9pP7Ze7evvQwVCwPxDrp/4O
+        wz85ODKm40Z85zGDF9xRwKTF4op9fRsQFoI8xbY=
+X-Google-Smtp-Source: ADFU+vtZBBSKHrJoh/ot15q6PnKl8Rv7vhzUPgeK4z50oabID5E2A9tLdVH8n2Ah02O7BA/vWhx9NqsxbOkFG3JXpEQ=
+X-Received: by 2002:a0c:d601:: with SMTP id c1mr7174390qvj.164.1584770207173;
+ Fri, 20 Mar 2020 22:56:47 -0700 (PDT)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <1583941429-10921-1-git-send-email-gupt21@gmail.com>
+ <20200311164449.flzzwxqqhcxisil3@pengutronix.de> <CALUj-guwTDR=WMz6KKADFjfFfdS3_aijfrTRCFzh9iPnFAaG6A@mail.gmail.com>
+ <20200311195528.iplmlcuvp2jjaecn@pengutronix.de>
+In-Reply-To: <20200311195528.iplmlcuvp2jjaecn@pengutronix.de>
+From:   rishi gupta <gupt21@gmail.com>
+Date:   Sat, 21 Mar 2020 11:26:35 +0530
+Message-ID: <CALUj-gs4=OP3qZEyZx_VahCTXQn7gcxAkvnc7Fb6UsaRzCLOig@mail.gmail.com>
+Subject: Re: [PATCH 1/1] pwm: pca9685: replace CONFIG_PM with __maybe_unused
+ to prevent build issues
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     thierry.reding@gmail.com, s.trumtrar@pengutronix.de,
+        linux-pwm@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-RnJvbTogQXJuZCBCZXJnbWFubg0KPiBTZW50OiAyMCBNYXJjaCAyMDIwIDE3OjAxDQo+IE9uIEZy
-aSwgTWFyIDIwLCAyMDIwIGF0IDI6NDIgQU0gR3VydSBEYXMgU3JpbmFnZXNoIDxndXJ1c0Bjb2Rl
-YXVyb3JhLm9yZz4gd3JvdGU6DQo+ID4NCj4gPiBTaW5jZSB0aGUgUFdNIGZyYW1ld29yayBpcyBz
-d2l0Y2hpbmcgc3RydWN0IHB3bV9hcmdzLnBlcmlvZCdzIGRhdGF0eXBlDQo+ID4gdG8gdTY0LCBw
-cmVwYXJlIGZvciB0aGlzIHRyYW5zaXRpb24gYnkgYXNzaWduaW5nIHRoZSA2NC1iaXQgZGl2aXNv
-ciB0bw0KPiA+IGFuIHVuc2lnbmVkIGludCB2YXJpYWJsZSB0byB1c2UgYXMgdGhlIGRpdmlzb3Iu
-IFRoaXMgaXMgYmVpbmcgZG9uZQ0KPiA+IGJlY2F1c2UgdGhlIGRpdmlzb3IgaXMgYSAzMi1iaXQg
-Y29uc3RhbnQgYW5kIHRoZSBxdW90aWVudCB3aWxsIGJlIHplcm8NCj4gPiBpZiB0aGUgZGl2aXNv
-ciBleGNlZWRzIDJeMzIuDQo+ID4NCj4gPiBDYzogTWljaGFlbCBUdXJxdWV0dGUgPG10dXJxdWV0
-dGVAYmF5bGlicmUuY29tPg0KPiA+IENjOiBTdGVwaGVuIEJveWQgPHNib3lkQGtlcm5lbC5vcmc+
-DQo+ID4gQ2M6IGxpbnV4LWNsa0B2Z2VyLmtlcm5lbC5vcmcNCj4gPiBDYzogRGF2aWQgTGFpZ2h0
-IDxEYXZpZC5MYWlnaHRAQUNVTEFCLkNPTT4NCj4gPg0KPiA+IFJlcG9ydGVkLWJ5OiBrYnVpbGQg
-dGVzdCByb2JvdCA8bGtwQGludGVsLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBHdXJ1IERhcyBT
-cmluYWdlc2ggPGd1cnVzQGNvZGVhdXJvcmEub3JnPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2Ns
-ay9jbGstcHdtLmMgfCA0ICsrKy0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygr
-KSwgMSBkZWxldGlvbigtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2Nsay1w
-d20uYyBiL2RyaXZlcnMvY2xrL2Nsay1wd20uYw0KPiA+IGluZGV4IDg3ZmUwYjBlLi5jMGI1ZGEz
-IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvY2xrL2Nsay1wd20uYw0KPiA+ICsrKyBiL2RyaXZl
-cnMvY2xrL2Nsay1wd20uYw0KPiA+IEBAIC03Miw2ICs3Miw3IEBAIHN0YXRpYyBpbnQgY2xrX3B3
-bV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICAgICAgICAgc3RydWN0
-IHB3bV9kZXZpY2UgKnB3bTsNCj4gPiAgICAgICAgIHN0cnVjdCBwd21fYXJncyBwYXJnczsNCj4g
-PiAgICAgICAgIGNvbnN0IGNoYXIgKmNsa19uYW1lOw0KPiA+ICsgICAgICAgdW5zaWduZWQgaW50
-IHBlcmlvZDsNCj4gPiAgICAgICAgIGludCByZXQ7DQo+ID4NCj4gPiAgICAgICAgIGNsa19wd20g
-PSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCpjbGtfcHdtKSwgR0ZQX0tFUk5FTCk7
-DQo+ID4gQEAgLTg4LDggKzg5LDkgQEAgc3RhdGljIGludCBjbGtfcHdtX3Byb2JlKHN0cnVjdCBw
-bGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gICAgICAgICAgICAgICAgIHJldHVybiAtRUlOVkFM
-Ow0KPiA+ICAgICAgICAgfQ0KPiA+DQo+ID4gKyAgICAgICBwZXJpb2QgPSBwYXJncy5wZXJpb2Q7
-DQo+ID4gICAgICAgICBpZiAob2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImNsb2NrLWZyZXF1
-ZW5jeSIsICZjbGtfcHdtLT5maXhlZF9yYXRlKSkNCj4gPiAtICAgICAgICAgICAgICAgY2xrX3B3
-bS0+Zml4ZWRfcmF0ZSA9IE5TRUNfUEVSX1NFQyAvIHBhcmdzLnBlcmlvZDsNCj4gPiArICAgICAg
-ICAgICAgICAgY2xrX3B3bS0+Zml4ZWRfcmF0ZSA9IE5TRUNfUEVSX1NFQyAvIHBlcmlvZDsNCj4g
-Pg0KPiA+ICAgICAgICAgaWYgKHBhcmdzLnBlcmlvZCAhPSBOU0VDX1BFUl9TRUMgLyBjbGtfcHdt
-LT5maXhlZF9yYXRlICYmDQo+ID4gICAgICAgICAgICAgcGFyZ3MucGVyaW9kICE9IERJVl9ST1VO
-RF9VUChOU0VDX1BFUl9TRUMsIGNsa19wd20tPmZpeGVkX3JhdGUpKSB7DQo+IA0KPiBEb2Vzbid0
-IHRoaXMgb25lIG5lZWQgYSBjaGVjayBmb3IgInBhcmdzLnBlcmlvZD5VSU5UX01BWCIgb3INCj4g
-InBhcmdzLnBlcmlvZCA+IE5TRUNfUEVSX1NFQyI/DQo+IA0KPiBJdCBsb29rcyBsaWtlIHRydW5j
-YXRpbmcgdGhlIDY0LWJpdCB2YWx1ZSB0byBhIDMyLWJpdCB0eXBlIGNhbiByZXN1bHQgaW4NCj4g
-dW5leHBlY3RlZCBiZWhhdmlvci4NCg0KSSBhbHNvIHN1c3BlY3QgdGhlIGxhc3QgdHdvIGxpbmVz
-IG91Z2h0IHRvIHVzZSB0aGUgMzJiaXQgY29weS4NCkFuZCB0aGVyZSBpcyBhIGNoYW5jZSB0aGF0
-IHRoZSBkaXZpc2lvbiB3aWxsIGV4cGxvZGUuDQoNClRoaXMgd2hvbGUgc2VyaWVzIGlzIGZhaWxp
-bmcgdG8gZGlmZmVyZW50aWF0ZSBiZXR3ZWVuIHRoZSB0eXBlIG9mDQp0aGUgdmFyaWFibGVzIGFu
-ZCB0aGUgZG9tYWluIG9uIHRoZSB2YWxpZCB2YWx1ZXMuDQoNCglEYXZpZA0KDQotDQpSZWdpc3Rl
-cmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtl
-eW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+Tested again and found one gerrit was missing in my local build.
+Both __maybe_unused and CONFIG_PM are working fine.
 
+So it is your choice to apply or not apply this patch.
+
+Regards,
+Rishi
+
+On Thu, Mar 12, 2020 at 1:25 AM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> On Thu, Mar 12, 2020 at 01:16:28AM +0530, rishi gupta wrote:
+> > These 2 links contains more details:
+> > https://lore.kernel.org/patchwork/patch/732981
+> > https://lkml.org/lkml/2019/1/17/437
+>
+> These are both about SIMPLE_DEV_PM_OPS which doesn't apply to
+> pwm-pca9685.
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
