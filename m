@@ -2,49 +2,49 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0839E18F165
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Mar 2020 10:05:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A70918F17E
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Mar 2020 10:13:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbgCWJFl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Mar 2020 05:05:41 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40846 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727567AbgCWJFl (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Mar 2020 05:05:41 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 19so13604297ljj.7
-        for <linux-pwm@vger.kernel.org>; Mon, 23 Mar 2020 02:05:39 -0700 (PDT)
+        id S1727649AbgCWJN7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 23 Mar 2020 05:13:59 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42324 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727325AbgCWJN7 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Mar 2020 05:13:59 -0400
+Received: by mail-lf1-f67.google.com with SMTP id t21so9579964lfe.9
+        for <linux-pwm@vger.kernel.org>; Mon, 23 Mar 2020 02:13:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=UeQUAcdMZxn26RtbUmldtq49KvGfHbMzwTxg6ahzu8Q=;
-        b=gj67rIhc9xmtkaXHqF2aKuKpPzYsq6nRprfC6gX/IIfe2bFxncqRx4LENZfh1WRp3Q
-         OD6IItiqpkArFZmgK3PCQKt0vuhkduXH9aRT1J30TeWACtsHmjVjB+jefTtkmyXe/svS
-         IUOwswoEXf+4gP8/NR1KJqeG6PZs1vnX1Q6KI=
+        bh=wWs92IouvEIpZgtyLlUCar33wlELXd5YoEyPXlLiTro=;
+        b=QbDeCI7dYNFzd6fyHyqfAHAq63bQLRiJHT19fT4MkRi6jTMuI0QC28e9a4Pak1jEUa
+         s11EYGMPEm6ADD5Mq5hQuV9351l3yGYjAbg+dzzd7aio3ISGAIuswd0yNbbHR9YIu30S
+         M+ZYpecb4mDH7vTudL1qV/c8X68h61ZfXm89Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UeQUAcdMZxn26RtbUmldtq49KvGfHbMzwTxg6ahzu8Q=;
-        b=jv8LRKlOuClgoa1HtGjfYTCCSIAVyY7v/WEpi/G41p9gJGmDKk601JZixDkOt++F3Y
-         S125mw9OtzL9BGlxmzc4+lg0Olx7DpR8Ks2ibZZk/Hx4xpUDGX19S8Sd2dc7RllkjUZS
-         PcZurwRBIbjpsTHG9soseUZdNGL7M7M2cfDdugxm59tyc+HOpUVRtNEJOg2XDJFBg/8H
-         2RagXNWEVI7eoDdrQ3jGC+cEcKiEhAr/p+8ezieumOGvwFrHvMFjGw9/3Mc3s9y6Ek6H
-         +4Y4lM9tC/DduTcd5sWBhip8Vv/r5oJXstNjjfp+JyqjEvk8Cnp8PZ71WR3uzbxq5Vdi
-         KX6A==
-X-Gm-Message-State: ANhLgQ0cqgvv1waNwoKpy1jKGanh1bRQoSj5kD4C3bC3SIxkfIF0r6io
-        +tb6rxzVEwlU25G0tTReGOJ4lEdkSPreP2zRnR8Pxw==
-X-Google-Smtp-Source: ADFU+vsThDf7qqsHDVU9kt7C92bwqzK+m2HTPz3VsgWRN3a2xVl/c7U7hQNsOxfPHdo8nHSIOPur05m8x4B3/bbbdgs=
-X-Received: by 2002:a2e:a483:: with SMTP id h3mr8739201lji.264.1584954338871;
- Mon, 23 Mar 2020 02:05:38 -0700 (PDT)
+        bh=wWs92IouvEIpZgtyLlUCar33wlELXd5YoEyPXlLiTro=;
+        b=Wtg6+AV8YUepIBAs/729DpHNScDAGM2Y9lNLPl1cxtOVRz5VDkAjObhAUVxvgksAAt
+         uiAnHbnLc81HQMG4+lIGe2v0i0S2d6LLz+rA95tf+G+ObZpWkVzPEF8Eod2zxDVOZd4M
+         Nf98D/eP27+xfbGJb47ibm+awhv/gLKKAaKitw46XowD6bnKqccSkiqLNU1lqeT0I+za
+         DGHWLhYImZtfpiyPPq+K3wTkPQpTioVMjHT0RAg/L/iuSRWyH3el2vDpnaovNJCTuWNq
+         1FAe11c3S0HazbI7LQgRT0LfzDeoWpQMOkfnSTPaPe42/SILzH6z490HLMYqWCoJx0Lx
+         +LPg==
+X-Gm-Message-State: ANhLgQ0Kp9y60WuCBSrMuh9kCV2dGdcAXz4RFSj4dPmcbJyF9cFLE/ZK
+        glCCEjqB+PxkZYRxC4teFR9ZEQW4kbv0TR4rrPF8Gw==
+X-Google-Smtp-Source: ADFU+vvx8jnLhfOgnWnseH4FTxIWcdY7WQsK5Ay/qiqPamQPGqpt4kJFOWL+guGHsaQwYq7XlwwWqRibftYmyeWIuKk=
+X-Received: by 2002:a05:6512:3041:: with SMTP id b1mr12674571lfb.167.1584954837051;
+ Mon, 23 Mar 2020 02:13:57 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200323065318.16533-1-rayagonda.kokatanur@broadcom.com>
- <20200323065318.16533-2-rayagonda.kokatanur@broadcom.com> <20200323082540.2gvbbxtwadvzeeos@pengutronix.de>
-In-Reply-To: <20200323082540.2gvbbxtwadvzeeos@pengutronix.de>
+ <20200323065318.16533-3-rayagonda.kokatanur@broadcom.com> <20200323082823.twvpagq7tvrt76ws@pengutronix.de>
+In-Reply-To: <20200323082823.twvpagq7tvrt76ws@pengutronix.de>
 From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Date:   Mon, 23 Mar 2020 14:35:27 +0530
-Message-ID: <CAHO=5PFBcgmnpA8D6prEo4WCu235Mr9jh8=_Y6pdM8R9=ShfXw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] pwm: bcm-iproc: handle clk_get_rate() return
+Date:   Mon, 23 Mar 2020 14:43:45 +0530
+Message-ID: <CAHO=5PHUPy=2_HZg26Akogv3Hbic7JPydGpz0j3QfA=3TUgCJw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] pwm: bcm-iproc: remove unnecessary check of 'duty'
 To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -62,71 +62,41 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 1:55 PM Uwe Kleine-K=C3=B6nig
+On Mon, Mar 23, 2020 at 1:58 PM Uwe Kleine-K=C3=B6nig
 <u.kleine-koenig@pengutronix.de> wrote:
 >
-> On Mon, Mar 23, 2020 at 12:23:17PM +0530, Rayagonda Kokatanur wrote:
-> > Handle clk_get_rate() returning <=3D 0 condition to avoid
-> > possible division by zero.
+> On Mon, Mar 23, 2020 at 12:23:18PM +0530, Rayagonda Kokatanur wrote:
+> > Variable 'duty' is u32. Hence the less-than zero
+> > comparison is never true, remove the check.
 >
-> Was this noticed during a review and is more theoretic. Or does this
-> (depending on pre-boot state) result in a kernel crash?
-
-This is reported by internal coverity tool.
+> How did you find that one? I assume it was a compiler warning you fixed
+> here? In this case quoting the warning improves the commit log.
+Its reported by internal coverity tool.
+>
+> Also the commit log suggests that IPROC_PWM_DUTY_CYCLE_MIN is zero.
+> Maybe mentioning that explicitly is a nice addition, too.
+Okay, will add this to commit message. Thanks.
 >
 > > Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controlle=
 r")
 > > Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 > > ---
-> >  drivers/pwm/pwm-bcm-iproc.c | 32 +++++++++++++++++++-------------
-> >  1 file changed, 19 insertions(+), 13 deletions(-)
+> >  drivers/pwm/pwm-bcm-iproc.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
 > >
 > > diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
-> > index 1f829edd8ee7..8bbd2a04fead 100644
+> > index 8bbd2a04fead..1bb66721f985 100644
 > > --- a/drivers/pwm/pwm-bcm-iproc.c
 > > +++ b/drivers/pwm/pwm-bcm-iproc.c
-> > @@ -99,19 +99,25 @@ static void iproc_pwmc_get_state(struct pwm_chip *c=
-hip, struct pwm_device *pwm,
-> >       else
-> >               state->polarity =3D PWM_POLARITY_INVERSED;
+> > @@ -149,8 +149,7 @@ static int iproc_pwmc_apply(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+> >               value =3D rate * state->duty_cycle;
+> >               duty =3D div64_u64(value, div);
 > >
-> > -     value =3D readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
-> > -     prescale =3D value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm);
-> > -     prescale &=3D IPROC_PWM_PRESCALE_MAX;
-> > -
-> > -     multi =3D NSEC_PER_SEC * (prescale + 1);
-> > -
-> > -     value =3D readl(ip->base + IPROC_PWM_PERIOD_OFFSET(pwm->hwpwm));
-> > -     tmp =3D (value & IPROC_PWM_PERIOD_MAX) * multi;
-> > -     state->period =3D div64_u64(tmp, rate);
-> > -
-> > -     value =3D readl(ip->base + IPROC_PWM_DUTY_CYCLE_OFFSET(pwm->hwpwm=
-));
-> > -     tmp =3D (value & IPROC_PWM_PERIOD_MAX) * multi;
-> > -     state->duty_cycle =3D div64_u64(tmp, rate);
-> > +     if (rate =3D=3D 0) {
-> > +             state->period =3D 0;
-> > +             state->duty_cycle =3D 0;
-> > +     } else {
-> > +             value =3D readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
-> > +             prescale =3D value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm=
-);
-> > +             prescale &=3D IPROC_PWM_PRESCALE_MAX;
-> > +
-> > +             multi =3D NSEC_PER_SEC * (prescale + 1);
-> > +
-> > +             value =3D readl(ip->base + IPROC_PWM_PERIOD_OFFSET(pwm->h=
-wpwm));
-> > +             tmp =3D (value & IPROC_PWM_PERIOD_MAX) * multi;
-> > +             state->period =3D div64_u64(tmp, rate);
-> > +
-> > +             value =3D readl(ip->base +
-> > +                           IPROC_PWM_DUTY_CYCLE_OFFSET(pwm->hwpwm));
-> > +             tmp =3D (value & IPROC_PWM_PERIOD_MAX) * multi;
-> > +             state->duty_cycle =3D div64_u64(tmp, rate);
-> > +     }
->
-> The change looks fine.
+> > -             if (period < IPROC_PWM_PERIOD_MIN ||
+> > -                 duty < IPROC_PWM_DUTY_CYCLE_MIN)
+> > +             if (period < IPROC_PWM_PERIOD_MIN)
+> >                       return -EINVAL;
 >
 > Best regards
 > Uwe
