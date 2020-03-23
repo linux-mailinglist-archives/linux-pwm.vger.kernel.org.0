@@ -2,67 +2,81 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C6C8918F1E7
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Mar 2020 10:35:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3882218F3AB
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Mar 2020 12:30:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbgCWJfX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Mar 2020 05:35:23 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41037 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727695AbgCWJfX (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Mar 2020 05:35:23 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jGJUO-0003Th-GA; Mon, 23 Mar 2020 10:35:20 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jGJUN-0002CU-Fr; Mon, 23 Mar 2020 10:35:19 +0100
-Date:   Mon, 23 Mar 2020 10:35:19 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Yendapally Reddy Dhananjaya Reddy 
-        <yendapally.reddy@broadcom.com>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] pwm: bcm-iproc: handle clk_get_rate() return
-Message-ID: <20200323093519.krno3znzqbptrwxj@pengutronix.de>
-References: <20200323092424.22664-1-rayagonda.kokatanur@broadcom.com>
- <20200323092424.22664-2-rayagonda.kokatanur@broadcom.com>
+        id S1728115AbgCWLaa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 23 Mar 2020 07:30:30 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51426 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727658AbgCWLaa (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Mar 2020 07:30:30 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02NBULbc122352;
+        Mon, 23 Mar 2020 06:30:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584963021;
+        bh=SvZEk0kF+xXLC23PlsMzzjUziFI9pRar16wxl8TII6g=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Zo1yalVtoEaB5tFIsjBmAkmnkpzZnGj5w6Rkk1p55dm58UeyWqHwIYII/MIfAgRYx
+         elzBMBWoQa67uJE61S7LWn6QkG7VbcV3xOf4sTuw8U1rRboFR2jJtLdUIPtuckw5hK
+         LBC6p/FqcTxsR01FV3Vn4d68bXOpr5hxXPVPaeAE=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02NBUKpY087302
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 23 Mar 2020 06:30:20 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
+ Mar 2020 06:30:16 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 23 Mar 2020 06:30:16 -0500
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02NBUDtI076876;
+        Mon, 23 Mar 2020 06:30:14 -0500
+Subject: Re: [PATCH v3 0/5] pwm: omap-dmtimer: Allow for dynamic pwm period
+ updates
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+CC:     Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
+References: <20200312042210.17344-1-lokeshvutla@ti.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <09dac13d-44b0-80c6-fdbb-54bfc6f48e36@ti.com>
+Date:   Mon, 23 Mar 2020 17:00:13 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200323092424.22664-2-rayagonda.kokatanur@broadcom.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20200312042210.17344-1-lokeshvutla@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 02:54:23PM +0530, Rayagonda Kokatanur wrote:
-> Handle clk_get_rate() returning <= 0 condition to avoid
-> possible division by zero.
+Hi All,
 
-The idea I wanted to transport with my question about how this problem
-was found is that the commit log is amended with this information. This
-is important information as it helps people having to decide if this
-change should be backported. Also it would be great to know if this can
-really make the kernel crash or if (e.g.) said clock cannot be off in
-practise.
+On 12/03/20 9:52 AM, Lokesh Vutla wrote:
+> This series fixes minor issues in config callback and allows for on the
+> fly updates for pwm period and duty cycle. This is mainly intended to
+> allow pwm omap dmtimer to be used for generating a 1PPS signal that can be
+> syncronized to PTP clock in CPTS module available in AM335x and AM57xx SoCs.
+> 
+> Series depends on the following series:
+> - https://patchwork.kernel.org/patch/11379875/
+> - https://patchwork.kernel.org/project/linux-omap/list/?series=251691
 
-Best regards
-Uwe
+Gentle ping on this series :) The above dependencies are merged into timer tree
+and below is the immutable branch:
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+https://git.linaro.org/people/dlezcano/linux.git/log/?h=timers/drivers/timer-ti-dm
+
+Thanks and regards,
+Lokesh
