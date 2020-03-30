@@ -2,79 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EF07198472
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2020 21:30:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AC9619854B
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2020 22:19:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbgC3TaK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 30 Mar 2020 15:30:10 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:56673 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727437AbgC3TaJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 Mar 2020 15:30:09 -0400
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 30 Mar 2020 12:30:09 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 30 Mar 2020 12:30:08 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id A28B34BC4; Mon, 30 Mar 2020 12:30:08 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 12:30:08 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        id S1728370AbgC3UT1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 30 Mar 2020 16:19:27 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33337 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbgC3UT1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 Mar 2020 16:19:27 -0400
+Received: by mail-io1-f66.google.com with SMTP id o127so19276059iof.0;
+        Mon, 30 Mar 2020 13:19:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4+B5KPfmqHi4jL+IOh4GSbmNe+HhynnKacqo47ghy28=;
+        b=P+m+x/ileLseCPwrm5z9HtMmH2vIjmCSBx60Eo2G5ybGGY762XpyL64AMKh84HVHty
+         RKmEh8bUqyFSNgEbkAuqdcBswQi6MTtiru9kgMTzKbU+F/7+5hesXJ89cXuNt1suze44
+         C3tFpcAWvvi0TRTHocWIPFgdTSJjJTbid6hb+z9hLmwQ3dIAXh97HCl4LysMEHcuJ8iK
+         XFrwG4HaCycSXrV+dIqpMBpyGRcmm26lHRJ7lITspiifaotaDki/X8HMctWgXfPfuKEr
+         hA3aAaRuozZc5ITQhnIU0KnaPMLLWQZXbcth2/ziSq4b1FWLigLtYv5aWqqudulZ8KKZ
+         ISUA==
+X-Gm-Message-State: ANhLgQ2G5OmCPqIhpzUA0V42ZfyA6OCeNH7izlvsL9KS32RKfbLorgRY
+        jePBRN305a9E4K1smOjLmg==
+X-Google-Smtp-Source: ADFU+vsaH8Pv63jLoRKaCrDwfKhRCRjRZ+DrReAXWpjE1MVKJ4jLGzqYS6HC6HvOPgJN5qW6RrSkmQ==
+X-Received: by 2002:a5e:8703:: with SMTP id y3mr12021465ioj.119.1585599566348;
+        Mon, 30 Mar 2020 13:19:26 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id s69sm5157579ild.70.2020.03.30.13.19.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 13:19:25 -0700 (PDT)
+Received: (nullmailer pid 8985 invoked by uid 1000);
+        Mon, 30 Mar 2020 20:19:23 -0000
+Date:   Mon, 30 Mar 2020 14:19:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v11 08/12] pwm: stm32-lp: Use %llu format specifier for
- period
-Message-ID: <20200330193008.GA5107@codeaurora.org>
-References: <cover.1584667964.git.gurus@codeaurora.org>
- <5ea1fa27dd036ce732c1c7a1a5d84362752a911f.1584667964.git.gurus@codeaurora.org>
- <f957b11abb70457e7bd8c2652d41e7f07024e301.camel@perches.com>
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH] dt-bindings: pwm: renesas-tpu: Document more R-Car Gen2
+ support
+Message-ID: <20200330201923.GA8929@bogus>
+References: <20200316101453.27745-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f957b11abb70457e7bd8c2652d41e7f07024e301.camel@perches.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200316101453.27745-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 03:45:35AM -0700, Joe Perches wrote:
-> On Thu, 2020-03-19 at 18:41 -0700, Guru Das Srinagesh wrote:
-> > Since the PWM framework is switching struct pwm_args.period's
-> > datatype to u64, prepare for this transition by using the right
-> > specifier for printing a 64-bit value.
-> []
-> > diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-> []
-> > @@ -61,7 +61,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> >  	do_div(div, NSEC_PER_SEC);
-> >  	if (!div) {
-> >  		/* Clock is too slow to achieve requested period. */
-> > -		dev_dbg(priv->chip.dev, "Can't reach %u ns\n",	state->period);
-> > +		dev_dbg(priv->chip.dev, "Can't reach %llu ns\n", state->period);
-> >  		return -EINVAL;
-> >  	}
+On Mon, 16 Mar 2020 11:14:53 +0100, Geert Uytterhoeven wrote:
+> All R-Car Gen2 SoCs have a Renesas Timer Pulse Unit.
+> Document support for the missing variants.
 > 
-> Doesn't this introduce a warning now without the
-> actual change to the type of state->period?
+> No driver change is needed due to the fallback compatible string.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Tested on R-Car M2-W.
+> ---
+>  Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
 
-You're right, it does.
+Applied, thanks.
 
-> Likely these patches should either not be separated
-> or this should also use a cast to avoid introducing
-> intermediate compilation warnings.
-
-Only this patch has this specific issue, so I'll squish it with the
-final patch in this series ("pwm: core: Convert period and duty cycle to
-u64") that modifies the framework structs. Thanks for pointing this out.
-
-Thank you.
-
-Guru Das.
+Rob
