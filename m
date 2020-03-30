@@ -2,106 +2,88 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 41E09198099
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2020 18:10:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21BD0198169
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2020 18:41:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbgC3QK0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 30 Mar 2020 12:10:26 -0400
-Received: from mail.pqgruber.com ([52.59.78.55]:57760 "EHLO mail.pqgruber.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727148AbgC3QK0 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 30 Mar 2020 12:10:26 -0400
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id A4A47C028FA;
-        Mon, 30 Mar 2020 18:10:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1585584624;
-        bh=Ug8mBrPlKF543RZ8sR6Q6TNcmwMek15XaS9pShMe5Lg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hl8a5i/GOobgt5mtISonW4wH1WoljqGYHnIKalPg2zsL7pxz8LD9g+Guijw7kXe2J
-         2j5ANtCJNSWTn4a052SACp82F2aEYilyBnagl+uaUuyRRcMxJk6ftwrqowhV+NZNQZ
-         sgL5PI86twlYk1BBgtoFUT2aQujvgV2CUj8s4Cfc=
-Date:   Mon, 30 Mar 2020 18:10:23 +0200
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
+        id S1729069AbgC3QlU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 30 Mar 2020 12:41:20 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:53590 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbgC3QlU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 Mar 2020 12:41:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1585586476; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rQAjpeP0ttna+M7acg2Qd2oZ1ja9i8Cn7x068Tgta1w=;
+        b=G/ImTS8808q+pnxeBUdAY668zG/YSSC3Fbif0jFMowpr/KK3vToUvBogUe8tLsGR3OfNAd
+        7Vg7p2w5OQT44xLd0onL4f7NRr0Bs3jaqK6kqduYRCJ4kBsjZv2tqVL68JqxHMHfGUE713
+        GJ2wkAfqyIaxDFxztQQ5apUF0k1jQ7I=
+Date:   Mon, 30 Mar 2020 18:41:04 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v4 3/4] pwm: jz4740: Obtain regmap from parent node
 To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] pwm: pca9685: remove unused duty_cycle struct element
-Message-ID: <20200330161023.GB777@workstation.tuxnet>
-References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
- <20200330130743.GB2431644@ulmo>
- <CAHp75Vc_=czuRtyqgnmnYfie50gDnzrNqq3Bt+Gp_42MikX6VA@mail.gmail.com>
- <20200330160238.GD2817345@ulmo>
+Cc:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>
+Message-Id: <GCM08Q.D2GF67F5O2R03@crapouillou.net>
+In-Reply-To: <20200330143716.GI2431644@ulmo>
+References: <20200323142421.42817-1-paul@crapouillou.net>
+        <20200323142421.42817-3-paul@crapouillou.net>
+        <20200330143716.GI2431644@ulmo>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330160238.GD2817345@ulmo>
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 06:02:38PM +0200, Thierry Reding wrote:
-> On Mon, Mar 30, 2020 at 04:18:22PM +0300, Andy Shevchenko wrote:
-> > On Mon, Mar 30, 2020 at 4:09 PM Thierry Reding <thierry.reding@gmail.com> wrote:
-> > >
-> > > On Wed, Feb 26, 2020 at 02:52:26PM +0100, Matthias Schiffer wrote:
-> > > > duty_cycle was only set, never read.
-> > > >
-> > > > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> > > > ---
-> > > >  drivers/pwm/pwm-pca9685.c | 4 ----
-> > > >  1 file changed, 4 deletions(-)
-> > >
-> > > Applied, thanks.
-> > 
-> > I'm not sure this patch is correct.
-> 
-> What makes you say that? If you look at the code, the driver sets this
-> field to either 0 or some duty cycle value but ends up never using it.
-> Why would it be wrong to remove that code?
-> 
-> > We already have broken GPIO in this driver. Do we need more breakage?
-> 
-> My understanding is that nobody was able to pinpoint exactly when this
-> regressed, or if this only worked by accident to begin with. It sounds
-> like Clemens has a way of testing this driver, so perhaps we can solve
-> that GPIO issue while we're at it.
-> 
-> The last discussion on this seems to have been around the time when you
-> posted a fix for it:
-> 
->     https://patchwork.ozlabs.org/patch/1156012/
-> 
-> But then Sven had concerns that that also wasn't guaranteed to work:
-> 
->     https://lkml.org/lkml/2019/6/2/73
-> 
-> So I think we could either apply your patch to restore the old behaviour
-> which I assume you tested, so at least it seems to work in practice,
-> even if there's still a potential race that Sven pointed out in the
-> above link.
-> 
-> I'd prefer something alternative because it's obviously confusing and
-> completely undocumented. Mika had already proposed something that's a
-> little bit better, though still somewhat confusing.
-> 
-> Oh... actually reading further through those threads there seems to be a
-> patch from Sven that was reviewed by Mika but then nothing happened:
-> 
-> 	https://lkml.org/lkml/2019/6/4/1039
-> 
-> with the corresponding patchwork URL:
-> 
-> 	https://patchwork.ozlabs.org/patch/1110083/
-> 
-> Andy, Clemens, do you have a way of testing the GPIO functionality of
-> this driver? If so, it'd be great if you could check the above patch
-> from Sven to fix PWM/GPIO interop.
+Hi Thierry,
 
-Yes. I'll have a look and report back in a few days.
+Le lun. 30 mars 2020 =E0 16:37, Thierry Reding=20
+<thierry.reding@gmail.com> a =E9crit :
+> On Mon, Mar 23, 2020 at 03:24:20PM +0100, Paul Cercueil wrote:
+> [...]
+>>  diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+> [...]
+>>  @@ -196,12 +208,19 @@ static const struct pwm_ops jz4740_pwm_ops =3D {
+>>   static int jz4740_pwm_probe(struct platform_device *pdev)
+>>   {
+>>   	struct jz4740_pwm_chip *jz4740;
+>>  +	struct device *dev =3D &pdev->dev;
+>>=20
+>>  -	jz4740 =3D devm_kzalloc(&pdev->dev, sizeof(*jz4740), GFP_KERNEL);
+>>  +	jz4740 =3D devm_kzalloc(dev, sizeof(*jz4740), GFP_KERNEL);
+>>   	if (!jz4740)
+>>   		return -ENOMEM;
+>>=20
+>>  -	jz4740->chip.dev =3D &pdev->dev;
+>>  +	jz4740->map =3D device_node_to_regmap(dev->parent->of_node);
+>>  +	if (!jz4740->map) {
+>=20
+> This seems wrong. According to the code, device_node_to_regmap()=20
+> returns
+> an ERR_PTR()-encoded error code on failure, so I think this should be:
+>=20
+> 	if (IS_ERR(jz4740->map)) {
+> 		...
+> 		return PTR_ERR(jz4740->map);
+> 	}
+>=20
+> No need to resend for that, I can take care of that when applying. Let
+> me know if that doesn't work.
 
-Clemens
+Yes, that works for me. Good catch.
+
+Thanks,
+-Paul
+
+>=20
+> Thierry
+
+
