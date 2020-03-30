@@ -2,119 +2,67 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CFCEB196F40
-	for <lists+linux-pwm@lfdr.de>; Sun, 29 Mar 2020 20:22:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 169411979D1
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2020 12:52:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728636AbgC2SWv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 29 Mar 2020 14:22:51 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:40694 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728467AbgC2SWu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 29 Mar 2020 14:22:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ul5mPuoITZiwsLENljEvGuoEiNdCieYNeoF+CgVtynY=; b=fazfmfEZAjksByCU8DCpoS9F+
-        Nr90jbUdAi42KYu8HacKRPIMwtSxS8gPV08oocVVKktH55e304YKnr90bFNgyYt2QdC6Xo/x1JCLe
-        MeRgQnh2C3QeyvqYQ8+L1rm2X7XpkYeZf2LSddGAxZZwyi/MC5qfNUH7IICpLRcznIUswY/hP9LbD
-        G4Sr5nykVqVuGxItgtmgYImpYs/uMsRUiZ77JSOE+KLbqGB6hWPDdTpsOER/1oj+L3kuk1YV4S2MR
-        F37blPxMy0YhqGydl4ZS6VnWEQ9q7PCOx7sAvRpULKz8Nt04SRvjE0A+hPeGf4wkCK6cklh8gZUlC
-        etqkiKGaA==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:59598)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jIca0-0006Mb-Bc; Sun, 29 Mar 2020 19:22:40 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jIcZw-0006QA-JB; Sun, 29 Mar 2020 19:22:36 +0100
-Date:   Sun, 29 Mar 2020 19:22:36 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
-        Jason Cooper <jason@lakedaemon.net>,
-        devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-pwm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-gpio@vger.kernel.org,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH RFC 2/6] gpio: mvebu: honour EPROBE_DEFER for
- devm_clk_get()
-Message-ID: <20200329182236.GC25745@shell.armlinux.org.uk>
-References: <20200329104549.GX25745@shell.armlinux.org.uk>
- <E1jIVU9-0005h4-QU@rmk-PC.armlinux.org.uk>
- <20200329131659.4hbshjst4ccvje2n@pengutronix.de>
- <20200329133400.GA25745@shell.armlinux.org.uk>
- <20200329180056.cwju3zqviwnwwjd6@pengutronix.de>
+        id S1729723AbgC3Kwq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 30 Mar 2020 06:52:46 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41161 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729636AbgC3Kwq (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 Mar 2020 06:52:46 -0400
+Received: by mail-pg1-f193.google.com with SMTP id b1so8470421pgm.8
+        for <linux-pwm@vger.kernel.org>; Mon, 30 Mar 2020 03:52:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=82B0OONv9gwbZlPp43NzThDz2fRV+KRFwafOQ16joDw=;
+        b=I2bZK+Edwp7f1bl38ZDsYZ8gkHoLOp7N+SgwKjOSdbsqnWhmYlKKFyWTTwwdBuA4Vg
+         rwBHnP7ed1EksF/Uo6wi0daOtai1jA53B5b9RrMCwInP8fTj6xlf+N87Jxy7Sxa+QbUF
+         l2GP0Lv6JzwuZiPJAzgKXNfvaR6mAHzPBfBvakflfZ8B4h5bL4zPFQy+qXgn4TFvbTXz
+         A1ohkR077EumDiarvC1dhS/fXXyUHKbnnxfkdMVlwSlZiAQJvL50ZQklv05R+GT0yrBC
+         3q/4vjuGZ1FGpK3Ogg0O4Ce18OqauZECfFoMpKCzkd0qt9LKtlmIkWUwZqPjuntycFFN
+         I7DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=82B0OONv9gwbZlPp43NzThDz2fRV+KRFwafOQ16joDw=;
+        b=Z+i8vx4hlUr54URsNBmAaqmniLRJulVpDldTxwt+vRwsyEjfQY2kZ8cdW7HQhBZYli
+         uIvlPvXEgY1k6WdaThvn/vhA8WsOu7a0WPq1NFY/ZbcUGL54fHJ03LxMlTnZi2EG3ONk
+         870TGIi9x0I3IVWNfAnP662VdQbs8xjXZnUWkZl35/44IYKPaZIFuzngqN3WG1LHrGIg
+         bwwlUc8639FPenttyBnymIlMm8evYMSmfIwanX0UuGPJP48vlFizBNxncqE+iHmcFhVr
+         KMx8iYKQo6QUUFqIR5ajyMIOzmqblEFevjSTJmzXsi9acQxz+PF8pwTJ4hhTPkgRNfzg
+         E6mw==
+X-Gm-Message-State: ANhLgQ3LVR+RPmllFktowxzabdZYA5m0Fsr86iVIKCMMIz7Wna6P+Ubc
+        V3Y/8FTikyS5kEfrCOY5ewTs40kLonmpBeTUPNxP4X2B
+X-Google-Smtp-Source: APiQypIWKERkhJyfw3nllppwlKx4Kg5tACX7YV91IKVmdYpKGJw8tan3l05zjbxOy64C+jzvYjD6e0YtF987t4KsIjw=
+X-Received: by 2002:a67:e24c:: with SMTP id w12mr8442912vse.153.1585565563772;
+ Mon, 30 Mar 2020 03:52:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200329180056.cwju3zqviwnwwjd6@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: by 2002:a67:c005:0:0:0:0:0 with HTTP; Mon, 30 Mar 2020 03:52:43
+ -0700 (PDT)
+Reply-To: maryalice00.12@postribe.com
+From:   Maryalice Williams <maryalicewilliams730@gmail.com>
+Date:   Mon, 30 Mar 2020 08:52:43 -0200
+Message-ID: <CAKwdjsr+YKgJk7z-UHX7Zo55cx5RUN3-bw03sWcArP4vbM2B5g@mail.gmail.com>
+Subject: Reply For More Details.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 08:00:56PM +0200, Uwe Kleine-König wrote:
-> Hello Russell,
-> 
-> On Sun, Mar 29, 2020 at 02:34:00PM +0100, Russell King - ARM Linux admin wrote:
-> > On Sun, Mar 29, 2020 at 03:16:59PM +0200, Uwe Kleine-König wrote:
-> > > On Sun, Mar 29, 2020 at 11:48:09AM +0100, Russell King wrote:
-> > > > diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> > > > index fa5641615db6..ee13b11c5298 100644
-> > > > --- a/drivers/gpio/gpio-mvebu.c
-> > > > +++ b/drivers/gpio/gpio-mvebu.c
-> > > > @@ -1132,6 +1132,9 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
-> > > >  	}
-> > > >  
-> > > >  	mvchip->clk = devm_clk_get(&pdev->dev, NULL);
-> > > > +	if (mvchip->clk == ERR_PTR(-EPROBE_DEFER))
-> > > > +		return -EPROBE_DEFER;
-> > > > +
-> > > >  	/* Not all SoCs require a clock.*/
-> > > >  	if (!IS_ERR(mvchip->clk))
-> > > >  		clk_prepare_enable(mvchip->clk);
-> > > 
-> > > I'd say the following is the right thing to do here:
-> > > 
-> > > 	mvchip->clk = devm_clk_get_optional(...);
-> > > 	if (IS_ERR(mvchip->clk))
-> > > 		return ...
-> > 
-> > It's not that simple.  The clock is required for Armada 370, and is
-> > optional for Armada 8040.
-> 
-> I'd say it is still the right approach here. On Armada 370 the dtb then
-> has a clk and on Armada 8040 it doesn't. So if with
-> devm_clk_get_optional() something goes wrong that's because the dtb is
-> wrong. And in fact the handling is even better than with your suggested
-> patch as every error (but EPROBE_DEFER) is ignored instead of passed to
-> the caller with your (and the existing) approach.
-
-Sort of.  Every error is currently treated as "no clock", and only
-later does such an error become fatal in the driver _if_ PWM is
-configured into the kernel and we're running on Armada 370.  If PWM
-is disabled in the kernel, or on some other SoC, then the driver
-doesn't care whether getting the clock reported any kind of error.
-
-Your proposal is to always treat any error getting the clock,
-irrespective of whether there is PWM or not, as a fatal error for
-the driver.
-
-That is an entirely seperate functional change.
-
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+My dear,
+
+I am Mrs Maryalice Williams, I want to send you donation of two
+million seven hundred thousand Dollars ($2.7M) for volunteer projects
+in your country due to my ill health that could not permit me. Kindly
+reply for more details, and also send me the following details, as per
+below, your full Name ..........,  Address...........,
+Age...............,  Occupation ...............
+
+Remain blessed,
+Mrs. Maryalice Williams.
