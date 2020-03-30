@@ -2,115 +2,79 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4401B19840E
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2020 21:17:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EF07198472
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2020 21:30:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728317AbgC3TRB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 30 Mar 2020 15:17:01 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53979 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbgC3TQ7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 Mar 2020 15:16:59 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jIzu3-0005Tx-LK; Mon, 30 Mar 2020 21:16:55 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jIzu2-00066n-JR; Mon, 30 Mar 2020 21:16:54 +0200
-Date:   Mon, 30 Mar 2020 21:16:54 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-Message-ID: <20200330191654.waoocllctanh5nk5@pengutronix.de>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
- <20200312042210.17344-5-lokeshvutla@ti.com>
- <20200312064042.p7himm3odxjyzroi@pengutronix.de>
- <20200330141436.GG2431644@ulmo>
+        id S1728096AbgC3TaK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 30 Mar 2020 15:30:10 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:56673 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727437AbgC3TaJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 Mar 2020 15:30:09 -0400
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 30 Mar 2020 12:30:09 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg05-sd.qualcomm.com with ESMTP; 30 Mar 2020 12:30:08 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id A28B34BC4; Mon, 30 Mar 2020 12:30:08 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 12:30:08 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v11 08/12] pwm: stm32-lp: Use %llu format specifier for
+ period
+Message-ID: <20200330193008.GA5107@codeaurora.org>
+References: <cover.1584667964.git.gurus@codeaurora.org>
+ <5ea1fa27dd036ce732c1c7a1a5d84362752a911f.1584667964.git.gurus@codeaurora.org>
+ <f957b11abb70457e7bd8c2652d41e7f07024e301.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200330141436.GG2431644@ulmo>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <f957b11abb70457e7bd8c2652d41e7f07024e301.camel@perches.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Thierry,
-
-On Mon, Mar 30, 2020 at 04:14:36PM +0200, Thierry Reding wrote:
-> On Thu, Mar 12, 2020 at 07:40:42AM +0100, Uwe Kleine-König wrote:
-> > On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
-> > > Only the Timer control register(TCLR) cannot be updated when the timer
-> > > is running. Registers like Counter register(TCRR), loader register(TLDR),
-> > > match register(TMAR) can be updated when the counter is running. Since
-> > > TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
-> > > timer for period/duty_cycle update.
-> > 
-> > I'm not sure what is sensible here. Stopping the PWM for a short period
-> > is bad, but maybe emitting a wrong period isn't better. You can however
-> > optimise it if only one of period or duty_cycle changes.
-> > 
-> > @Thierry, what is your position here? I tend to say a short stop is
-> > preferable.
+On Fri, Mar 20, 2020 at 03:45:35AM -0700, Joe Perches wrote:
+> On Thu, 2020-03-19 at 18:41 -0700, Guru Das Srinagesh wrote:
+> > Since the PWM framework is switching struct pwm_args.period's
+> > datatype to u64, prepare for this transition by using the right
+> > specifier for printing a 64-bit value.
+> []
+> > diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
+> []
+> > @@ -61,7 +61,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> >  	do_div(div, NSEC_PER_SEC);
+> >  	if (!div) {
+> >  		/* Clock is too slow to achieve requested period. */
+> > -		dev_dbg(priv->chip.dev, "Can't reach %u ns\n",	state->period);
+> > +		dev_dbg(priv->chip.dev, "Can't reach %llu ns\n", state->period);
+> >  		return -EINVAL;
+> >  	}
 > 
-> It's not clear to me from the above description how exactly the device
-> behaves, but I suspect that it may latch the values in those registers
-> and only update the actual signal output once a period has finished. I
-> know of a couple of other devices that do that, so it wouldn't be
-> surprising.
-> 
-> Even if that was not the case, I think this is just the kind of thing
-> that we have to live with. Sometimes it just isn't possible to have all
-> supported devices adhere strictly to an API. So I think the best we can
-> do is have an API that loosely defines what's supposed to happen and
-> make a best effort to implement those semantics. If a device deviates
-> slightly from those expectations, we can always cross fingers and hope
-> that things still work. And it looks like they are.
-> 
-> So I think if Lokesh and Tony agree that this is the right thing to do
-> and have verified that things still work after this, that's about as
-> good as it's going to get.
+> Doesn't this introduce a warning now without the
+> actual change to the type of state->period?
 
-I'd say this isn't for the platform people to decide. My position here
-is that the PWM drivers should behave as uniform as possible to minimize
-surprises for consumers. And so it's a "PWM decision" that is to be made
-here, not an "omap decision".
+You're right, it does.
 
-> I know this is perhaps cheating a little, or turning a blind eye, but I
-> don't know what the alternative would be. Do we want to tell people that
-> a given PWM controller can't be used if it doesn't work according to our
-> expectations? That's hard to argue if that controller works just fine
-> for all known use-cases.
+> Likely these patches should either not be separated
+> or this should also use a cast to avoid introducing
+> intermediate compilation warnings.
 
-I'd like have some official policy here which of the alternatives is the
-preferred cheat.
+Only this patch has this specific issue, so I'll squish it with the
+final patch in this series ("pwm: core: Convert period and duty cycle to
+u64") that modifies the framework structs. Thanks for pointing this out.
 
-The situation here is that period and duty_cycle cannot be updated
-atomically. So the two options are:
+Thank you.
 
- - stop shortly
- - update with hardware running and maybe emit a broken period
-
-I tend to say "stop shortly" is the better alternative.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Guru Das.
