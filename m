@@ -2,67 +2,65 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 75779197E32
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2020 16:17:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF3A4197E9B
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2020 16:37:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbgC3ORC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 30 Mar 2020 10:17:02 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33689 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728009AbgC3ORC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 Mar 2020 10:17:02 -0400
-Received: by mail-wr1-f65.google.com with SMTP id a25so21889354wrd.0;
-        Mon, 30 Mar 2020 07:17:01 -0700 (PDT)
+        id S1727848AbgC3OhV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 30 Mar 2020 10:37:21 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35247 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728091AbgC3OhV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 Mar 2020 10:37:21 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d5so21994280wrn.2;
+        Mon, 30 Mar 2020 07:37:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=pBQqZVEq9iQY3TkOskST4uSFuna+gg54Ys7RpapkQWM=;
-        b=lujtqJdPJb/psrSlD2NuWhPp2R7EnCRb96e3qZY71byvANMzufsCgACW8htq/HTCNw
-         q0qQGFneoyuYvJ17HsXw/bBpOcHGlCHJok2zU+eoZo509R++/5sqTQ58Sd2L9eODY1bF
-         4g6b5WYlbADl5u6U7OsvEXy4AtNSNH4vOifUzBZYTsWPJtL0XlFMcXJYMDFlwixmkdy5
-         TStl8BrOSoXRHfXSWLTAg1MEVzRWEb/21Gi826VIVxddtDh8kQ/3ccceI2zRYNQ+Si1r
-         EWzyox7gf1XVfJVlJJlToMXN06+cDec+KhNbqgpH4KzBKRVrGjtkABoTVx4XhF80ICL5
-         d0nQ==
+        bh=idGSNlS5foegWcbeejyLCNUnDarAVKTDXcWKaPEeNjY=;
+        b=EfHxTcq91OwU4aGBf3mn/lXFRiymTz25QWi/lC+RlEazQjaizplkmUOMesFd5VwfNR
+         jcRVvu74XNAd/D9DgB9myBaC4LnhqX81TlUg1VQnw1zUGPh8OM97YnnM4SrFPGbx2YsM
+         wj0wzL3PrwqIc30cwNMT59QVxkLMQnty57ocUsXjzq04NZEI04oFvkr7DV9HSpOiqQ2b
+         MvvhzdBDwrv2O66jjiP35L2sNRSVwhSqg2p0TIpTL7kwsi8f1/C6SNitfvKAMCiztbuW
+         YA1VOM/2sMBAcUqQojBnF595rmTinbkNYUzpDWQB8+Cu0AFjkKotFRLEmYIDN435ivZj
+         t5BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pBQqZVEq9iQY3TkOskST4uSFuna+gg54Ys7RpapkQWM=;
-        b=Onhb5981oZqjrrssveMe2G/vpTFYARqAQoidQxSGpaTfzMKmC5+66fnlJ3iUMDR6iH
-         EhJK68hJHC8Oq/GYQp0MKqKhDDI84d6BSvviz6zX42hm2feWU1UlrqP4BzNKfghoxCXb
-         579LHqR0o3whJPTTdQlTq0GFuEUEXFBewHwE0YBtrhC29ARkUwQ3RD+lhcUkO840Ge+1
-         oBRF4UZ/hPekv7M4g5SVETU7hDuD5X6Tod4YeuymqLGs7waCEB1HxLnAkjOAHdN7W+Ui
-         VWLEUb8WGP6vDs845QTDGSZalSEgcZaWkrg9kl8mhbNH5kzLmNrKAs0DjpPgnUhCjex7
-         5l6A==
-X-Gm-Message-State: ANhLgQ3G4HFixb8BNq2f2aaUuSUz2AoOljPmkixs+sBdx6hhXOJmL4IJ
-        kuOamV/gKaccvAIRsfjxoxo=
-X-Google-Smtp-Source: ADFU+vtKQ6aYSmXN4bQziwMlCpsmcaXBaCgjvE5/V9oWoSrehpWwu/MsMEXXPUfNybIGUJX+7pY0Zg==
-X-Received: by 2002:adf:f8cd:: with SMTP id f13mr14712693wrq.119.1585577820845;
-        Mon, 30 Mar 2020 07:17:00 -0700 (PDT)
+        bh=idGSNlS5foegWcbeejyLCNUnDarAVKTDXcWKaPEeNjY=;
+        b=O3Q0wJOFLiMWcusEglv8kigN+Zv39M67qEFkA0DX3ClyrmLhTJf2LroUoOTe3zi4Fh
+         wFbn02iB8HUvOxPJ9jSEgSvkde0ecSnFp9yk7V4pAFSe9hXMUe/b+JMWae8yL16LhKtq
+         hil7Eu+Ca522k0iCbzBThSFOjuABFTmYCJUasRrjiwfH71EG8IFDzgd+yp0y9BmYxDYf
+         Mz8kuZEdfo8lgXw12VSqWyI8rodt9cBkYWEegkaJfb9KKUQtLYT7HG1MDbSRo/MSsMcs
+         eS40k7AaCdYhKuuT/+mig9xKRTwMDPKl3zWn8QH5LOVhJ3cukSC94dDfw58PMJm1cAVC
+         6aXw==
+X-Gm-Message-State: ANhLgQ2Ufhc4NLeDVpF/6qm/F7V97rpJvKDmLAL3sDlujSWSmF1fWt9a
+        fkUQC6S2M31BAcvabt0mg9M=
+X-Google-Smtp-Source: ADFU+vuGy0osZv8T/LTlZUt4uQO6ueplH8KLCZHQM7oEygq3//5A2Tt8k66SXvZguiDmrQK5CqcuGg==
+X-Received: by 2002:a5d:6109:: with SMTP id v9mr15810962wrt.203.1585579038704;
+        Mon, 30 Mar 2020 07:37:18 -0700 (PDT)
 Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
-        by smtp.gmail.com with ESMTPSA id v26sm23272574wra.7.2020.03.30.07.16.58
+        by smtp.gmail.com with ESMTPSA id p10sm18043238wre.15.2020.03.30.07.37.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 07:16:59 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 16:16:57 +0200
+        Mon, 30 Mar 2020 07:37:17 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 16:37:16 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Pascal Roeleven <dev@pascalroeleven.nl>
+To:     Paul Cercueil <paul@crapouillou.net>
 Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [RFC PATCH 1/4] pwm: sun4i: Remove redundant needs_delay
-Message-ID: <20200330141657.GH2431644@ulmo>
-References: <20200317155906.31288-1-dev@pascalroeleven.nl>
- <20200317155906.31288-2-dev@pascalroeleven.nl>
+        <u.kleine-koenig@pengutronix.de>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH v4 3/4] pwm: jz4740: Obtain regmap from parent node
+Message-ID: <20200330143716.GI2431644@ulmo>
+References: <20200323142421.42817-1-paul@crapouillou.net>
+ <20200323142421.42817-3-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="v2Uk6McLiE8OV1El"
+        protocol="application/pgp-signature"; boundary="5uO961YFyoDlzFnP"
 Content-Disposition: inline
-In-Reply-To: <20200317155906.31288-2-dev@pascalroeleven.nl>
+In-Reply-To: <20200323142421.42817-3-paul@crapouillou.net>
 User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
@@ -70,44 +68,61 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---v2Uk6McLiE8OV1El
+--5uO961YFyoDlzFnP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 17, 2020 at 04:59:03PM +0100, Pascal Roeleven wrote:
-> 'needs_delay' does now always evaluate to true, so remove all
-> occurrences.
->=20
-> Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
-> ---
->  drivers/pwm/pwm-sun4i.c | 13 ++-----------
->  1 file changed, 2 insertions(+), 11 deletions(-)
+On Mon, Mar 23, 2020 at 03:24:20PM +0100, Paul Cercueil wrote:
+[...]
+> diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+[...]
+> @@ -196,12 +208,19 @@ static const struct pwm_ops jz4740_pwm_ops =3D {
+>  static int jz4740_pwm_probe(struct platform_device *pdev)
+>  {
+>  	struct jz4740_pwm_chip *jz4740;
+> +	struct device *dev =3D &pdev->dev;
+> =20
+> -	jz4740 =3D devm_kzalloc(&pdev->dev, sizeof(*jz4740), GFP_KERNEL);
+> +	jz4740 =3D devm_kzalloc(dev, sizeof(*jz4740), GFP_KERNEL);
+>  	if (!jz4740)
+>  		return -ENOMEM;
+> =20
+> -	jz4740->chip.dev =3D &pdev->dev;
+> +	jz4740->map =3D device_node_to_regmap(dev->parent->of_node);
+> +	if (!jz4740->map) {
 
-I've applied this one since it's obviously correct. I'll hold off on the
-others until it can be more broadly tested. Hopefully Maxime or Chen-Yu
-can help review the remainder of this series as well.
+This seems wrong. According to the code, device_node_to_regmap() returns
+an ERR_PTR()-encoded error code on failure, so I think this should be:
+
+	if (IS_ERR(jz4740->map)) {
+		...
+		return PTR_ERR(jz4740->map);
+	}
+
+No need to resend for that, I can take care of that when applying. Let
+me know if that doesn't work.
 
 Thierry
 
---v2Uk6McLiE8OV1El
+--5uO961YFyoDlzFnP
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6B/1kACgkQ3SOs138+
-s6FuiA//cx1ke/G8okfRZ3jdGF2EHHZNYra6C9bHQDNUFuqoqfLNoWCZ2vGlYDpm
-gpE9BAX7AWFq5BkD41Im+NeWH5Z63iQaR3H/+aMW/yiyaR0+bt8wlbmQzFLzUltZ
-HP/nEIeM3weYrlNLMJx2t9UGXH7m+jjR9/d/rmfweJPNMfxgWl2b4bbq4nnQFUDN
-KQMds94x3Hrzn04CzB+00E7TYIUh75bxBYQnTAnRfASN+F/Tg1tSrCgCamz3WjF8
-ry8LFyg3WT/pbZaI+Yv3dq6C5NT04VuJC3qyhQaqH+vHbOK5iIUBUWCsJbkBybXY
-+ZguKG2/07rMx6wC/e/NzL/7ChmPVym/O5di3TTtf6T5f8ZkuVwTqacf0V6etOxJ
-tYWFG6Yxf97olwc4MhdUqK1SgT3D+0HsKaEZ2R9FCQvSMNByWesHjan7ZpldHjU7
-I/xJqQlP6jahCEQYR2sWDw1bcpY4X251V6Mp/07jvks4JWvU2fHDy/CqJKIOWynO
-tv2tr0GssCK3ZHt5Olv3mI3wHfkvHIKfI2LWF4kYkkpVcEkVRL2joQuUL0x70Miv
-KcickysSrgI9DW24l1NGJe5ZUq6EE/18QETvurlORS7S087RHcwUwXu2Vg7G4s7V
-CFTY/EHKeRL638QPV+MvSMudI9DhDRBiCwmGdOVYy7B6rVImsdM=
-=LA4s
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6CBBkACgkQ3SOs138+
+s6HtCw/+ObsrCeW3Qpro0kEkUAgc55EE8fppGxsicDBZs+p64q4N3XCH0iduAZuc
+3yeXxtv5jLhz5x9/kwq+h61+UzAqrPbCOWBOBOTq5s2srhrr6WSi9zCYUR6AaTjv
+Ooq6wm0rNJzuIvfWp/+EoLl/MTuJOD/WauAT01rvygN9b7i+fgSORlsDkoKptiJ2
+C7KwuvhqGlHRcAoHtOfgLub6jca/kWwifSWQ1gBkc312IcKuW6ZLHfu7ijLf8+bc
+oH8C/FNuC++mjT13lLJoqc1yIB1y0h1asX2VYUgsQPQGT1ioKjNsgUFqdEKIq49S
+HVzvpIGMsQKiDyO9ka++tMItvLz/L8oMBCCYgHp0zNX8FiSqWqsK/RliMZSHiQFj
+WMyYMbJZPp1Bbxjy4lz8bQz2pQQMbC9dSKlU4PI/hG9JVo/GsM/m1Eu7iUKW7+KB
+P1yJKlG5PqOlPpumyb+vkNOysYbAV4hiSAQt440ga7+SkObdUK+sh6vv7zHMsa2T
+ULjANwIcBiyFR4C0jicNqehIqCql4u/GvNpY2plagzm8kIt7woyTHkWNF12utnJO
+rgAUY75J6QWWmXmzetmVMiqg2fVyzIyrJwhS8xt8SoJM/XWnSf4AuHAkpIBaXuGb
+eQ/hGqkwSHcs+KHgVoyvN9Yu5uIUS2Vtq46NthNGHFMphaxR0fc=
+=SgmS
 -----END PGP SIGNATURE-----
 
---v2Uk6McLiE8OV1El--
+--5uO961YFyoDlzFnP--
