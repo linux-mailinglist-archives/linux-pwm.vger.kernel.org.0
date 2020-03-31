@@ -2,122 +2,127 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 51C731999AC
-	for <lists+linux-pwm@lfdr.de>; Tue, 31 Mar 2020 17:30:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5D92199B7F
+	for <lists+linux-pwm@lfdr.de>; Tue, 31 Mar 2020 18:29:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730589AbgCaPaB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 31 Mar 2020 11:30:01 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52150 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727703AbgCaPaB (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 31 Mar 2020 11:30:01 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02VFTppm040271;
-        Tue, 31 Mar 2020 10:29:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585668591;
-        bh=kM4Ax6d+vhrMhW72KR5b85pDK4TnudTARv3wYwyWrtg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tetMq0tknzzZpVvEwpJLvt4eXavNQsnpk/tPWI8gD2HeuFdcRq8B90HPDd0c9AnUo
-         r5y3L2uK91IUR5AUITDe58qprFonipy2yxgkfjwTD9IsxULnl2jGE+CzTng/PEaW6y
-         jLwhD37QPmY68GG+AmWAF/RRa89c8JV1QzJMptOo=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02VFTpW0060517;
-        Tue, 31 Mar 2020 10:29:51 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 31
- Mar 2020 10:29:50 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 31 Mar 2020 10:29:50 -0500
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02VFTm1v121414;
-        Tue, 31 Mar 2020 10:29:48 -0500
-Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-CC:     Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
- <20200312042210.17344-5-lokeshvutla@ti.com>
- <20200312064042.p7himm3odxjyzroi@pengutronix.de>
- <20200330141436.GG2431644@ulmo>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <638d7136-6a74-8069-5331-b2248c948ed4@ti.com>
-Date:   Tue, 31 Mar 2020 20:59:47 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1731230AbgCaQ32 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 31 Mar 2020 12:29:28 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58069 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731238AbgCaQ32 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 31 Mar 2020 12:29:28 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jJJlN-0007Xk-7h; Tue, 31 Mar 2020 18:29:17 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jJJlK-0005tF-Br; Tue, 31 Mar 2020 18:29:14 +0200
+Date:   Tue, 31 Mar 2020 18:29:14 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
+        Jason Cooper <jason@lakedaemon.net>,
+        devicetree@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-pwm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-gpio@vger.kernel.org,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH RFC 2/6] gpio: mvebu: honour EPROBE_DEFER for
+ devm_clk_get()
+Message-ID: <20200331162914.h65jnclbsmlzpzti@pengutronix.de>
+References: <20200329104549.GX25745@shell.armlinux.org.uk>
+ <E1jIVU9-0005h4-QU@rmk-PC.armlinux.org.uk>
+ <20200329131659.4hbshjst4ccvje2n@pengutronix.de>
+ <20200329133400.GA25745@shell.armlinux.org.uk>
+ <20200329180056.cwju3zqviwnwwjd6@pengutronix.de>
+ <20200329182236.GC25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200330141436.GG2431644@ulmo>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200329182236.GC25745@shell.armlinux.org.uk>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Thierry,
+Hello Russell,
 
-On 30/03/20 7:44 PM, Thierry Reding wrote:
-> On Thu, Mar 12, 2020 at 07:40:42AM +0100, Uwe Kleine-KÃ¶nig wrote:
->> On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
->>> Only the Timer control register(TCLR) cannot be updated when the timer
->>> is running. Registers like Counter register(TCRR), loader register(TLDR),
->>> match register(TMAR) can be updated when the counter is running. Since
->>> TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
->>> timer for period/duty_cycle update.
->>
->> I'm not sure what is sensible here. Stopping the PWM for a short period
->> is bad, but maybe emitting a wrong period isn't better. You can however
->> optimise it if only one of period or duty_cycle changes.
->>
->> @Thierry, what is your position here? I tend to say a short stop is
->> preferable.
+On Sun, Mar 29, 2020 at 07:22:36PM +0100, Russell King - ARM Linux admin wrote:
+> On Sun, Mar 29, 2020 at 08:00:56PM +0200, Uwe Kleine-König wrote:
+> > On Sun, Mar 29, 2020 at 02:34:00PM +0100, Russell King - ARM Linux admin wrote:
+> > > On Sun, Mar 29, 2020 at 03:16:59PM +0200, Uwe Kleine-König wrote:
+> > > > On Sun, Mar 29, 2020 at 11:48:09AM +0100, Russell King wrote:
+> > > > > diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+> > > > > index fa5641615db6..ee13b11c5298 100644
+> > > > > --- a/drivers/gpio/gpio-mvebu.c
+> > > > > +++ b/drivers/gpio/gpio-mvebu.c
+> > > > > @@ -1132,6 +1132,9 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+> > > > >  	}
+> > > > >  
+> > > > >  	mvchip->clk = devm_clk_get(&pdev->dev, NULL);
+> > > > > +	if (mvchip->clk == ERR_PTR(-EPROBE_DEFER))
+> > > > > +		return -EPROBE_DEFER;
+> > > > > +
+> > > > >  	/* Not all SoCs require a clock.*/
+> > > > >  	if (!IS_ERR(mvchip->clk))
+> > > > >  		clk_prepare_enable(mvchip->clk);
+> > > > 
+> > > > I'd say the following is the right thing to do here:
+> > > > 
+> > > > 	mvchip->clk = devm_clk_get_optional(...);
+> > > > 	if (IS_ERR(mvchip->clk))
+> > > > 		return ...
+> > > 
+> > > It's not that simple.  The clock is required for Armada 370, and is
+> > > optional for Armada 8040.
+> > 
+> > I'd say it is still the right approach here. On Armada 370 the dtb then
+> > has a clk and on Armada 8040 it doesn't. So if with
+> > devm_clk_get_optional() something goes wrong that's because the dtb is
+> > wrong. And in fact the handling is even better than with your suggested
+> > patch as every error (but EPROBE_DEFER) is ignored instead of passed to
+> > the caller with your (and the existing) approach.
 > 
-> It's not clear to me from the above description how exactly the device
-> behaves, but I suspect that it may latch the values in those registers
-> and only update the actual signal output once a period has finished. I
-> know of a couple of other devices that do that, so it wouldn't be
-> surprising.
+> Sort of.  Every error is currently treated as "no clock", and only
+> later does such an error become fatal in the driver _if_ PWM is
+> configured into the kernel and we're running on Armada 370.  If PWM
+> is disabled in the kernel, or on some other SoC, then the driver
+> doesn't care whether getting the clock reported any kind of error.
 > 
-> Even if that was not the case, I think this is just the kind of thing
-> that we have to live with. Sometimes it just isn't possible to have all
-> supported devices adhere strictly to an API. So I think the best we can
-> do is have an API that loosely defines what's supposed to happen and
-> make a best effort to implement those semantics. If a device deviates
-> slightly from those expectations, we can always cross fingers and hope
-> that things still work. And it looks like they are.
-> 
-> So I think if Lokesh and Tony agree that this is the right thing to do
-> and have verified that things still work after this, that's about as
-> good as it's going to get.
+> Your proposal is to always treat any error getting the clock,
+> irrespective of whether there is PWM or not, as a fatal error for
+> the driver.
 
-Yes this is needed especially in the use-case[0] that I am trying to enable
-using PWM. In this case PWM cannot be stopped in between and needs to be updated
-dynamically. Also hardware doesn't provide any restrictions on updating the
-period. So IMHO, this might be the right thing to do.
+Is this clock (assuming it's available) needed for GPIO operation? If
+not, I'd say the call to devm_clk_get should go into mvebu_pwm_probe().
+And if yes, then use devm_clk_get_optional in mvebu_gpio_probe() and
+either request it once more in mvebu_pwm_probe() (without _optional) or
+test for mvchip->clk == NULL. (Or maybe just don't check and let the
+driver fail when clk_get_rate(mvchip->clk) returns zero.)
 
-Tony did provide tested-by and I measured PWM signals on scope with these
-changes. Let me know if any thing else is required?
+> That is an entirely seperate functional change.
 
-[0] https://sourceforge.net/p/linuxptp/mailman/message/36943248/
+This is still different to what you do, but it is (IMHO) cleaner and
+fixes the problem you want to solve en passant.
 
-Thanks and regards,
-Lokesh
+Best regards
+Uwe
 
-> 
-> I know this is perhaps cheating a little, or turning a blind eye, but I
-> don't know what the alternative would be. Do we want to tell people that
-> a given PWM controller can't be used if it doesn't work according to our
-> expectations? That's hard to argue if that controller works just fine
-> for all known use-cases.
-> 
-> Thierry
-> 
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
