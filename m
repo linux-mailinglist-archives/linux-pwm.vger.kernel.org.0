@@ -2,69 +2,76 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 625D319A00D
-	for <lists+linux-pwm@lfdr.de>; Tue, 31 Mar 2020 22:46:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 535E019A025
+	for <lists+linux-pwm@lfdr.de>; Tue, 31 Mar 2020 22:49:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgCaUqG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 31 Mar 2020 16:46:06 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52094 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727852AbgCaUqG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 31 Mar 2020 16:46:06 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z7so1404480wmk.1;
-        Tue, 31 Mar 2020 13:46:03 -0700 (PDT)
+        id S1727937AbgCaUtj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 31 Mar 2020 16:49:39 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37638 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727852AbgCaUtj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 31 Mar 2020 16:49:39 -0400
+Received: by mail-wm1-f65.google.com with SMTP id j19so4539598wmi.2;
+        Tue, 31 Mar 2020 13:49:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=6pGGh8thrIa0GryZbGioyjh/cLiHar/6v6kxCJ7Zax4=;
-        b=tp4B9kbTY+DY7WRWdxUebMQhc5iVzxM/nBNMZdJZgSanztCKmkrLkwesVyyFXJD7Y2
-         QRzxoTzMgYD2E0zEL7mraezeBGqaQR9TAKQecOqu4rB0F5wf/FlyCLWdj9B8supSralv
-         HIYmcun11E3veBznvyUNEq2hDbj29Rzx0sUZANBXDWng+bdbCFdSWpylFyfKktq5oR5k
-         oa4ViAaGIVzyJA8aIlae5Fddo6vKhGxU3r8lNgIqqALYg2Sbcjh+lAQ9g12OGZCZQRMA
-         HlxyRCLyuw+8yvI4DlvAnOTTf4xPaGO2IQ9H+6q56AnNmSxQRAhTabkGMCCdr2w8LoHB
-         LG/g==
+        bh=X2GGUtuqPV80x5b5ujQqCYnpRIHjyJKm9Pub6eW25UY=;
+        b=KgNI6YSOTCOMSyctOP/WId8uQxhFnY81WYm/UyoylUkWXdRWYswu073xDZ/VJvuYkC
+         ZRmPLPqvJh1uH7Wj9r3B36fh0oPexN2HByev8izzhSzaYLrJewWUi4WXii/9rfydQwOy
+         EfeomR0eDDw+wXcV03aJXHz8NxVp0FR9M99MP9YBmvM8ZpaKsziRrtVKtQ3h4nCOY5wy
+         ml0/Pr5roUkxLdacGfvDDElt+vwG/Vcx+t1U057WMzW4qii9/nfXeP1p9SMai/IbCo78
+         FuzbnZEVQek52TIj32M2AbY0NRhSmjU1NbzO0qxAKiaiOLqmF+F94Z+80Meh2j6uVr3Z
+         c+8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6pGGh8thrIa0GryZbGioyjh/cLiHar/6v6kxCJ7Zax4=;
-        b=AUMZpdxDgyJsdlzkR7RN9nCCng1xbepZ6KAG5AbdqGzfGwuc62oigAtddjKPdc/rlg
-         qdLqx2+kWpLDzufQAb8J9xAJGMhkZBiXepX7S9fm/bWyMvk+ephk68W2fNNHPEr15Zi/
-         zKfWuHpirlxTPmz+0euuxQ+D1hYqWM8t//AM8ayvsrLShz4fZ4h/lnbg2fvPQHrHIZQ0
-         M+fLSJnUe7nlChb2aOMdUBPFjCBIdPKiZ0k3TaCjY/857jd2AIhScMVGbiPM/Pg3W8fd
-         +GB7Yh1FJfVsZrGrPnM10YbLRbDmIoWtYis4MovWK6RBwj7Wch0QN/anrcLkvVxyl6Qu
-         uzDg==
-X-Gm-Message-State: AGi0PuaKfIpiG99ofzdQ+VjOthuWDI8wqMM61ErAu4CkK2ttxWtwuIpn
-        xUDAOuX+VLJQLaGj4x483F4=
-X-Google-Smtp-Source: APiQypLXxc5GJ5smoVD6fqviuHe2EI83IiRgBkix7kBU2greUpKrR2xVr1FFtcHilgljIJ2tD9hjvQ==
-X-Received: by 2002:a1c:a78a:: with SMTP id q132mr688282wme.107.1585687562586;
-        Tue, 31 Mar 2020 13:46:02 -0700 (PDT)
-Received: from localhost (p200300E41F4A9B0076D02BFFFE273F51.dip0.t-ipconnect.de. [2003:e4:1f4a:9b00:76d0:2bff:fe27:3f51])
-        by smtp.gmail.com with ESMTPSA id x6sm5065715wmi.2.2020.03.31.13.46.00
+        bh=X2GGUtuqPV80x5b5ujQqCYnpRIHjyJKm9Pub6eW25UY=;
+        b=YI7lTGyK9hxgokJSbOqYn3YcyVcw50XEoGUMudcxFO1VbhrmJDA7kgp5jDB5yfaex0
+         +zGd3qK42LSojVtIY0AM4IuIpsPb59NOLxMkdl1BJBhXHO9bNDxbzNvDTShiZiP77DLu
+         D4PQ+M3vzlnbwgVMLWVRuj1jwaRf9wsGRWKLWmhyHRnd6cmXbVrWe4NATMrfjZacuSDj
+         0HTQ1NYvCaBvrPEMp7NwWLnocMEcfeCCG5P8A6v5NX9XLE8n4KtwVR63NhAUZyd3ty6L
+         zqfGXH+ovstPFqWlJCZrS29hTGBscBaOYGILHs2UaH/epypVF9eyNkNsj7bK2sXLHdWO
+         jd0g==
+X-Gm-Message-State: AGi0Pub4nvAHDwxSoZ4p77cxemI27385THufKw4t/VzFKx81ch+uKtUv
+        FSg+yoQFzQfQMh+LSHQPLbs=
+X-Google-Smtp-Source: APiQypKFgpXradD7Y/oeeIl8Qd75lgtfcDe3ZaaJBMJFR1mcRlrBcuch5uNeJOFa1ZvxT9koqqvepg==
+X-Received: by 2002:a1c:80d3:: with SMTP id b202mr733124wmd.8.1585687775099;
+        Tue, 31 Mar 2020 13:49:35 -0700 (PDT)
+Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
+        by smtp.gmail.com with ESMTPSA id r3sm28241814wrm.35.2020.03.31.13.49.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 13:46:00 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 22:45:59 +0200
+        Tue, 31 Mar 2020 13:49:30 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 22:49:29 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-Message-ID: <20200331204559.GB2954599@ulmo>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
- <20200312042210.17344-5-lokeshvutla@ti.com>
- <20200312064042.p7himm3odxjyzroi@pengutronix.de>
- <20200330141436.GG2431644@ulmo>
- <20200330191654.waoocllctanh5nk5@pengutronix.de>
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Subject: Re: [PATCH v11 06/12] pwm: imx27: Use 64-bit division macro and
+ function
+Message-ID: <20200331204929.GC2954599@ulmo>
+References: <cover.1584667964.git.gurus@codeaurora.org>
+ <5aae102e21c0e63ad2588ae1e174b48b06d25e96.1584667964.git.gurus@codeaurora.org>
+ <CAK8P3a0qUMMMDmbp2FM-7D-U0Ys_zv0paYguFeyifafZurndEw@mail.gmail.com>
+ <20200330204359.GB5107@codeaurora.org>
+ <CAK8P3a1VC6+0Tydm=BoK2NvHB1ZCPjE1Gfi-sTE5O-xnu3Ya3A@mail.gmail.com>
+ <20200331202058.GB25781@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3uo+9/B/ebqu+fSQ"
+        protocol="application/pgp-signature"; boundary="PuGuTyElPB9bOcsM"
 Content-Disposition: inline
-In-Reply-To: <20200330191654.waoocllctanh5nk5@pengutronix.de>
+In-Reply-To: <20200331202058.GB25781@codeaurora.org>
 User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
@@ -72,158 +79,88 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---3uo+9/B/ebqu+fSQ
-Content-Type: text/plain; charset=utf-8
+--PuGuTyElPB9bOcsM
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 30, 2020 at 09:16:54PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Thierry,
->=20
-> On Mon, Mar 30, 2020 at 04:14:36PM +0200, Thierry Reding wrote:
-> > On Thu, Mar 12, 2020 at 07:40:42AM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > > On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
-> > > > Only the Timer control register(TCLR) cannot be updated when the ti=
-mer
-> > > > is running. Registers like Counter register(TCRR), loader register(=
-TLDR),
-> > > > match register(TMAR) can be updated when the counter is running. Si=
-nce
-> > > > TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
-> > > > timer for period/duty_cycle update.
-> > >=20
-> > > I'm not sure what is sensible here. Stopping the PWM for a short peri=
-od
-> > > is bad, but maybe emitting a wrong period isn't better. You can howev=
-er
-> > > optimise it if only one of period or duty_cycle changes.
-> > >=20
-> > > @Thierry, what is your position here? I tend to say a short stop is
-> > > preferable.
+On Tue, Mar 31, 2020 at 01:20:58PM -0700, Guru Das Srinagesh wrote:
+> On Tue, Mar 31, 2020 at 05:24:52PM +0200, Arnd Bergmann wrote:
+> > On Mon, Mar 30, 2020 at 10:44 PM Guru Das Srinagesh
+> > <gurus@codeaurora.org> wrote:
+> > >
+> > > On Fri, Mar 20, 2020 at 06:09:39PM +0100, Arnd Bergmann wrote:
+> > > > On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeauror=
+a.org> wrote:
+> > > >
+> > > > > @@ -240,8 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *c=
+hip, struct pwm_device *pwm,
+> > > > >
+> > > > >         period_cycles /=3D prescale;
+> > > > >         c =3D (unsigned long long)period_cycles * state->duty_cyc=
+le;
+> > > > > -       do_div(c, state->period);
+> > > > > -       duty_cycles =3D c;
+> > > > > +       duty_cycles =3D div64_u64(c, state->period);
+> > > > >
+> > > >
+> > > > This change looks fine, but I wonder if the code directly above it
+> > > >
+> > > >         c =3D clk_get_rate(imx->clk_per);
+> > > >         c *=3D state->period;
+> > > >         do_div(c, 1000000000);
+> > > >         period_cycles =3D c;
+> > > >
+> > > > might run into an overflow when both the clock rate and the period
+> > > > are large numbers.
+> > >
+> > > Hmm. Seems to me like addressing this would be outside the scope of t=
+his
+> > > patch series.
 > >=20
-> > It's not clear to me from the above description how exactly the device
-> > behaves, but I suspect that it may latch the values in those registers
-> > and only update the actual signal output once a period has finished. I
-> > know of a couple of other devices that do that, so it wouldn't be
-> > surprising.
-> >=20
-> > Even if that was not the case, I think this is just the kind of thing
-> > that we have to live with. Sometimes it just isn't possible to have all
-> > supported devices adhere strictly to an API. So I think the best we can
-> > do is have an API that loosely defines what's supposed to happen and
-> > make a best effort to implement those semantics. If a device deviates
-> > slightly from those expectations, we can always cross fingers and hope
-> > that things still work. And it looks like they are.
-> >=20
-> > So I think if Lokesh and Tony agree that this is the right thing to do
-> > and have verified that things still work after this, that's about as
-> > good as it's going to get.
+> > I think it should be part of the same series, addressing bugs that
+> > were introduced
+> > by the change to 64-bit period. If it's not getting fixed along with
+> > the other regressions,
+> > I fear nobody is going to go back and fix it later.
 >=20
-> I'd say this isn't for the platform people to decide. My position here
-> is that the PWM drivers should behave as uniform as possible to minimize
-> surprises for consumers. And so it's a "PWM decision" that is to be made
-> here, not an "omap decision".
-
-I think there's a fine line to be walked here. I agree that we should
-aim to have as much consistency between drivers as possible. At the same
-time I think we need to be pragmatic. As Lokesh said, the particular use
-case here requires this type of on-the-fly adjustment of the PWM period
-without stopping and restarting the PWM. It doesn't work otherwise. So
-th alternative that you're proposing is to say that we don't support
-that use-case, even though it works just fine given this particular
-hardware. That's not really an option.
-
-> > I know this is perhaps cheating a little, or turning a blind eye, but I
-> > don't know what the alternative would be. Do we want to tell people that
-> > a given PWM controller can't be used if it doesn't work according to our
-> > expectations? That's hard to argue if that controller works just fine
-> > for all known use-cases.
+> Makes sense, I agree. Would this be an acceptable fix?
 >=20
-> I'd like have some official policy here which of the alternatives is the
-> preferred cheat.
+> Instead of multiplying c and state->period first and then dividing by
+> 10^9, first divide state->period by 10^9 and then multiply the quotient
+> of that division with c and assign it to period_cycles. Like so:
 >=20
-> The situation here is that period and duty_cycle cannot be updated
-> atomically. So the two options are:
+> 	c =3D clk_get_rate(imx->clk_per);
+> 	c *=3D div_u64(state->period, 1000000000);
+> 	period_cycles =3D c;
 >=20
->  - stop shortly
->  - update with hardware running and maybe emit a broken period
+> This should take care of overflow not happening because state->period is
+> converted from nanoseconds to seconds early on and so becomes a small
+> number.
 
-I think we can already support both of those with the existing API. If
-a consumer wants to stop the PWM while reconfiguring, they should be
-able to do pwm_enable(), pwm_config(), pwm_enable() (or the atomic
-equivalent) and for the second case they can just do pwm_config() (or
-the atomic equivalent).
-
-Some hardware may actually require the PWM to be disabled before
-reconfiguring, so they won't be able to strictly adhere to the second
-use-case.
-
-But as discussed above, I don't want to strive for a lowest common
-denominator that would preclude some more specific use-cases from
-working if the hardware supports it.
-
-So I think we should aim for drivers to implement the semantics as
-closely as possible. If the hardware doesn't support some of these
-requirements strictly while a particular use-case depends on that, then
-that just means that the hardware isn't compatible with that use-case.
-Chances are that the system just isn't going to be designed to support
-that use-case in the first place if the hardware can't do it.
-
-The sysfs interface is a bit of a special case here because it isn't
-possible to know what use-cases people are going to come up with. It's
-most likely that they'll try something and if it doesn't work they can
-see if a driver patch can improve things. If not, perhaps the hardware
-just isn't up to the task and that'll be the end of it.
-
-I haven't yet come across a case where things actually fail because we
-are too flexible in what the API permits, so I don't see a need to add
-arbitrary restrictions.
-
-> I tend to say "stop shortly" is the better alternative.
-
-That's clearly subjective. In this particular case it's certainly not
-the case. If the API had that assumption baked in there'd be no way to
-support this use-case, even though hardware evidently supports it.
-
-So I certainly think that there are areas where we need to find common
-ground for abstraction, but I think being overly restrictive can make an
-API completely useless.
-
-One possible extension that I can imagine would be to introduce some
-sort of capability structure that drivers can fill in to describe the
-behaviour of the hardware. Drivers like pwm-omap-dmtimer, for example,
-could describe that they are able to change the period and/or duty cycle
-while the PWM is on. There could be another capability bit that says
-that the current period will finish before new settings are applied. Yet
-another capability could describe that duty-cycle and period can be
-applied atomically. Consumers could then check those capabilities to see
-if they match their requirements.
-
-But then again, I think that would just make things overly complicated.
-None of the existing consumers need that, so it doesn't seem like there
-is much demand for that feature. In practice I suspect most consumers
-work fine despite potentially small deviations in how the PWM behaves.
+Doesn't that mean that anything below a 1 second period will be clamped
+to just 0?
 
 Thierry
 
---3uo+9/B/ebqu+fSQ
+--PuGuTyElPB9bOcsM
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6DrAUACgkQ3SOs138+
-s6HeQQ/+NgM/YuaCE72oyuDDrK2bui7Ix20v0pnyIjTlTiNMrI1ExZcTqB7AbiBu
-UILX8+0IWjMHZrvB0l7QHQcOeTIyOCVhzSkRSsiPskbXEb+zg+hOuXvSwR483/bI
-UcIowFSxFAF+cGoGgGtl+PbrCUNwiD4h9NONzX9NiLAzsxpwDQuMrTlje1JcWlhu
-+rOco2QZLGCfiakzxim/sovv1ALF5G2aAYK9bTkrjnY05Ko98/EjMG4vrMHj5Olc
-Gj3kKB4Z16hhq44igzLjq3afLAb4JuV8vZQ0aamh0Ob6jvQ8NuDw/b+mAuTbmCZY
-qUVAud5gJHCABecxfFav5WXSSF8sKPlh5vpAJvYQ5o/I/s5QNOSpLPdhUSuHOsbE
-6cfCWNXXwRDR5xTKlRqEw/pA56ttGlqjPfLvx/nKW99cQKoKY5IjznefWXhqnnXd
-Ev6vTfRgtXphJQLcW1EPfAmG1ZOWtUaUlAgn1tGYsQFJRjjAZqyAnKC0JDAye8TJ
-ujAS2pDhMQpSn9m62NNW5+kb4+7Yyxdc82NbBgCqBiJFwbB/bV5quk3VepwVfOje
-pGJsxHBiSv0JseKwZldEXSjVeeeE8QANAMnWzGIkYniWxd16WfXOPMjBQzqAKXUO
-mitq6V6Ax52gh/k5qHuxHmeRrc2Qji6oOfNNeeyjEcBHeCJAoug=
-=byzS
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6DrNkACgkQ3SOs138+
+s6F2rRAArLSEhXAhgvFqFz7p1Jyl3a2QkW2gk0K5vu5cqJQzOMB/CGTnJlkpte4r
+OPEsS/IrnNJjMNvLMLZQ/92OqmWdK1ve0y8aFlhLAhGn5KdelcOcnf8Id/rxV2YJ
+BV7oMSVS9dZa5+gNJaFARNkYs+5dWAFQoKKvSxpaTMBMMMzN9TgoKZKa0W7xZQmh
+CbJve7ZWx/MsubZTneoudgf3Vi+SYak6kFEHhw/rqE9lFWb5pfKXwyVxpPHqW0uk
+ooJ1g5VkQxKPnaUtz3N2EK4+K4gUlh87myfPiH0k35FCJ9N+ENOIe9vtepJ33+u9
+UFD/GJUtPimSBDHKAcZyc0Gtvw4Cka4dmDeAgIMe+QviRjEd/pvI4MS+s8KCAYKk
+kn4AG2KDeC0w5bufJQnlXuziYw95gUYQ2nrRPFgI0yJMtdwvd+Pch5skoklz6GSZ
+2Q7Ao5wGRoRpV/cXb28lBNOgD4w0R1upufK/7I4lSwTRMBWXzBK57ItEXfeTO7V7
+2HEiAXYXt6oqM27RxedshqKGe9d5gwvdGLIy6NjfnQkJ4QySu13nLTas4yPlz3Lx
+ZTv+Cl8EElQnC7n2erxOjTcCPQaM14MslHRFhk+wtacQ3+Escb2lPndAzD8lQinS
+ncFajYcMWrIYy3l0rK0o6juMpEqV2vxl7Y8x04xvV/vr88q9OKY=
+=Ht11
 -----END PGP SIGNATURE-----
 
---3uo+9/B/ebqu+fSQ--
+--PuGuTyElPB9bOcsM--
