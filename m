@@ -2,155 +2,102 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C7AE319972F
-	for <lists+linux-pwm@lfdr.de>; Tue, 31 Mar 2020 15:14:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 352D9199989
+	for <lists+linux-pwm@lfdr.de>; Tue, 31 Mar 2020 17:25:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730562AbgCaNO4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 31 Mar 2020 09:14:56 -0400
-Received: from mail.pqgruber.com ([52.59.78.55]:43248 "EHLO mail.pqgruber.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730543AbgCaNO4 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:14:56 -0400
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id DBD62C63E20;
-        Tue, 31 Mar 2020 15:14:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1585660494;
-        bh=KYSATk71pJk6+doq/qSuxOdl/3paQs7CI/Dv0CuLfIU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f5XXO1WfibTi27ZwQixsdR01AyS9C7i8UMmwSOJ10R2wZ8t7Ld8rPtSky+h/eEWIu
-         8SI+msTqXidjZrtr9JtPVh0OU8UiqugqcY10Nx75+5M/V1FipCWy9PsnbpKhUD76Gd
-         DdZAW8ypwyKiAd1EvphKBHMhRSuRuiazwO7xuVaw=
-Date:   Tue, 31 Mar 2020 15:14:52 +0200
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com
-Subject: Re: (EXT) Re: [PATCH 2/4] pwm: pca9685: remove ALL_LED PWM channel
-Message-ID: <20200331131452.GA6448@workstation.tuxnet>
-References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
- <20200226135229.24929-2-matthias.schiffer@ew.tq-group.com>
- <20200330130757.GC2431644@ulmo>
- <20200330133450.GA1530@workstation.tuxnet>
- <20200330154036.GB2817345@ulmo>
- <20200330160744.GA777@workstation.tuxnet>
- <452f4e03cc2a998c7a903251f99931935b1f872f.camel@ew.tq-group.com>
+        id S1730541AbgCaPZN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 31 Mar 2020 11:25:13 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:52749 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730521AbgCaPZM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 31 Mar 2020 11:25:12 -0400
+Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M9Ezx-1jO07V3KvH-006PYC; Tue, 31 Mar 2020 17:25:11 +0200
+Received: by mail-qt1-f178.google.com with SMTP id 10so18660145qtp.1;
+        Tue, 31 Mar 2020 08:25:10 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0WvgddEofi/sD9iSTFdZf1ZFrD+ydZJuI4bP2SBrbgWfC8yZ3s
+        hFDTb+CTcOLkthkc8EdLpwBg3fWU7jGPNLh+SAw=
+X-Google-Smtp-Source: ADFU+vuGxItc+BDKGw2bG/q+aGH1FiI4EuHE9CVQ5PM1NsMHPuQM0rEiioydqcPcPPcfUQl0MjAMFe5xwohyA60jNJM=
+X-Received: by 2002:aed:20e3:: with SMTP id 90mr5499597qtb.142.1585668309499;
+ Tue, 31 Mar 2020 08:25:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <452f4e03cc2a998c7a903251f99931935b1f872f.camel@ew.tq-group.com>
+References: <cover.1584667964.git.gurus@codeaurora.org> <5aae102e21c0e63ad2588ae1e174b48b06d25e96.1584667964.git.gurus@codeaurora.org>
+ <CAK8P3a0qUMMMDmbp2FM-7D-U0Ys_zv0paYguFeyifafZurndEw@mail.gmail.com> <20200330204359.GB5107@codeaurora.org>
+In-Reply-To: <20200330204359.GB5107@codeaurora.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 31 Mar 2020 17:24:52 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1VC6+0Tydm=BoK2NvHB1ZCPjE1Gfi-sTE5O-xnu3Ya3A@mail.gmail.com>
+Message-ID: <CAK8P3a1VC6+0Tydm=BoK2NvHB1ZCPjE1Gfi-sTE5O-xnu3Ya3A@mail.gmail.com>
+Subject: Re: [PATCH v11 06/12] pwm: imx27: Use 64-bit division macro and function
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:GSzAx50iyDLxh24eDIM6aDFhYcEePjipAkmPSKNmdEFbfhwY1GY
+ CGIDdmp+iJOiD90sOyAX2dgQqrmdft4JfTkzwj+kvaeRKetaWW/zxUFso7eY9V9etgWa2bo
+ OkJwLNHNEAGM9qq5zfPJosG4kjZiASYMmpveypIvRqhNsF72jhYoMO28jZcYurWWfV/Y/ju
+ 9IkPVEL2i49Ttnk2mJGBA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:GFnIVILSpSI=:WmWVTmzCRM9vjQAnPaDqIZ
+ wYK+GA/Ltn1HLg/5JMw7S8xfF6ki4Vd/fHdv93vGa3ySkHI2uL6cgv48TGHc/eukBax4tsEsD
+ 7QwNaBeuRl0mHymKFGxo9BafQPj25FyJrmm2nC/6x5KRI5Ove/jte01yjDSuBxXWpuXIsFO3w
+ gZIvfMi3Fm34dZjbKg/OLKEtoBUd6d8Rg2k/h483bEHeB/0VRYrGeU6ynb2pgiHGcIWWVEVh8
+ nTJ169BMm7zWb+oa3sXyZhyvf2iRfvzhPHxCaHltVjAIfYx0+JxHwrGGaW3V7BZ5Xys0ILubF
+ +6P5fuLIK39wVIbAvbKYiCFf384d/fV6O22Y3gZ4A7LO0yesWcvvOcoGx777WKHks205+iXsH
+ J83/a+mAFJ/S7VSuU+y8+f3YC8mjodrF/Wv0Z1eoX9cIVioG7ik1owAMRZz6VDmHxHucVnHje
+ rbSLefNJrc3TmVehhWjO0V4So7mDhViq0cNs+7GmtXTAP65HulG/L0eLn9XB6FC8iIj7zlqmH
+ R6/7UE5Em48nLw+l+5wjxzKFiXOVkmBinAncup/1BoDllI26CNiImVQvrkm5jYYGjcT8Dj2hr
+ xEbxZb2NrtyBhx/sNoZlFetiAkXrXvIgc4wZb1HvT799hCUqgu8lB7P8RXcKrF2fB/LWjT7Dt
+ 0e4+P1+zmrgHAxID9cKp6ptvwhXCL658puMxglrGpwJ3qk5OoIEVPm/2D9soptmqmuT6tiCyz
+ IAAC8M23tR8s+BnfSB7Y20cze0fFMRlbhXbriV6VxISyEzKE95JyRWBYxpqRimwPlJhMXWDyM
+ brn6yrm5gqFkXUlFiLU+XW4u6LclSZxC9TtFILcYoPpYqJDjeo=
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 02:09:37PM +0200, Matthias Schiffer wrote:
-> On Mon, 2020-03-30 at 18:07 +0200, Clemens Gruber wrote:
-> > On Mon, Mar 30, 2020 at 05:40:36PM +0200, Thierry Reding wrote:
-> > > On Mon, Mar 30, 2020 at 03:34:50PM +0200, Clemens Gruber wrote:
-> > > > Hi,
-> > > > 
-> > > > On Mon, Mar 30, 2020 at 03:07:57PM +0200, Thierry Reding wrote:
-> > > > > On Wed, Feb 26, 2020 at 02:52:27PM +0100, Matthias Schiffer
-> > > > > wrote:
-> > > > > > The interaction of the ALL_LED PWM channel with the other
-> > > > > > channels was
-> > > > > > not well-defined. As the ALL_LED feature does not seem very
-> > > > > > useful and
-> > > > > > it was making the code significantly more complex, simply
-> > > > > > remove it.
-> > > > > > 
-> > > > > > Signed-off-by: Matthias Schiffer <
-> > > > > > matthias.schiffer@ew.tq-group.com>
-> > > > > > ---
-> > > > > >  drivers/pwm/pwm-pca9685.c | 115 ++++++--------------------
-> > > > > > ------------
-> > > > > >  1 file changed, 17 insertions(+), 98 deletions(-)
-> > > > > 
-> > > > > Applied, thanks.
-> > > > > 
-> > > > > Thierry
-> > > > 
-> > > > I was not reading the mailing list in the last weeks, so I only
-> > > > saw the
-> > > > patch today.
-> > > > 
-> > > > We are using the ALL_LED channel in production to reduce the
-> > > > delay when
-> > > > all 16 PWM outputs need to be set to the same duty cycle.
-> > > > 
-> > > > I am not sure it is a good idea to remove this feature.
-> > > 
-> > > Can you specify what platform this is and where the code is that
-> > > does
-> > > this. I can't really find any device tree users of this and I don't
-> > > know
-> > > if there's a good way to find out what other users there are, but
-> > > this
-> > > isn't the first time this driver has created confusion, so please
-> > > help
-> > > collect some more information about it's use so we can avoid this
-> > > in the
-> > > future.
-> > 
-> > The platform is ARM, it's a custom board with an NXP i.MX6. The
-> > device
-> > tree is not upstreamed. As there are multiple companies involved
-> > in changes to this driver, I assume that it is in use, even though
-> > there
-> > are no in-tree users.
-> > Also: As you can set the ALL channel from userspace, it will be very
-> > difficult to find out how often the ALL feature is being used
-> > somewhere.
-> > 
-> > > 
-> > > I'll back out this particular patch since you're using it. Can you
-> > > give
-> > > the other three patches a try to see if they work for you?
-> > 
-> > Thanks! I saw your other mail. Patch 1 looks good to me. I will look
-> > at
-> > the new version of patches 3 and 4 and test them when they appear on
-> > the
-> > list.
-> > 
-> > Clemens
-> 
-> Thanks for the feedback, I'll have to respin my cleanup patches without
-> removing this feature.
-> 
-> I wonder if we can come up with a sane semantics of how ALL_LED is
-> supposed to interact with the individual channels? Optimally, changes
-> made via ALL_LED should be reflected in the state of the other channels
-> including their sysfs files, but I'm not sure if current APIs can
-> support this cleanly. It might make sense to make requesting/exporting
-> individual channels and ALL_LED mutually exclusive, so the state of a
-> requested PWM can't change when it's supposed to be under exclusive
-> control of one user. Of course, such a change can break existing users
-> as well...
+On Mon, Mar 30, 2020 at 10:44 PM Guru Das Srinagesh
+<gurus@codeaurora.org> wrote:
+>
+> On Fri, Mar 20, 2020 at 06:09:39PM +0100, Arnd Bergmann wrote:
+> > On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
+> >
+> > > @@ -240,8 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > >
+> > >         period_cycles /= prescale;
+> > >         c = (unsigned long long)period_cycles * state->duty_cycle;
+> > > -       do_div(c, state->period);
+> > > -       duty_cycles = c;
+> > > +       duty_cycles = div64_u64(c, state->period);
+> > >
+> >
+> > This change looks fine, but I wonder if the code directly above it
+> >
+> >         c = clk_get_rate(imx->clk_per);
+> >         c *= state->period;
+> >         do_div(c, 1000000000);
+> >         period_cycles = c;
+> >
+> > might run into an overflow when both the clock rate and the period
+> > are large numbers.
+>
+> Hmm. Seems to me like addressing this would be outside the scope of this
+> patch series.
 
-I agree that it would be a good idea to make this exclusive. This change
-would at least not break our application, because we unexport the
-ALL_LED channel before requesting an individual channel.
-Not sure about other users, but using both individual and ALL channels
-at the same time is probably not a reasonable/sane usecase..
+I think it should be part of the same series, addressing bugs that
+were introduced
+by the change to 64-bit period. If it's not getting fixed along with
+the other regressions,
+I fear nobody is going to go back and fix it later.
 
-> And what about state propagation in the other direction - how should
-> the ALL_LED state reflect changes made to the other channels' settings?
-> On the hardware side, the ALL_LED registers are write-only, as there
-> aren't any sane values that could be returned.
-
-According to the datashet (7.3.4) the individual registers are filled if
-the ALL_LED channel is used. However, in .disable, the OFF registers are
-reset to 0. (And the ON registers are not used, except for the FULL_ON
-bit)
-So there should not be any side effects, as long as the access to the
-ALL_LED channel is made exclusive and the user has to free it before he
-can request individual channels.
-
-Another quirk is the same prescaler/period for all channels. But I am
-not sure what we can do about that. Applications might already depend on
-the fact that the last set period wins.
-
-Clemens
+      Arnd
