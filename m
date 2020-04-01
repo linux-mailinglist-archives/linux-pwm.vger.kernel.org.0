@@ -2,231 +2,119 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07CB719AB13
-	for <lists+linux-pwm@lfdr.de>; Wed,  1 Apr 2020 13:48:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C53FE19B386
+	for <lists+linux-pwm@lfdr.de>; Wed,  1 Apr 2020 18:52:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732360AbgDALri (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 1 Apr 2020 07:47:38 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53053 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbgDALrh (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Apr 2020 07:47:37 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jJbqH-0005t0-Ev; Wed, 01 Apr 2020 13:47:33 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jJbqG-0007Yi-HE; Wed, 01 Apr 2020 13:47:32 +0200
-Date:   Wed, 1 Apr 2020 13:47:32 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-Message-ID: <20200401114732.cxy3fsluzag7pxff@pengutronix.de>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
- <20200312042210.17344-5-lokeshvutla@ti.com>
- <20200312064042.p7himm3odxjyzroi@pengutronix.de>
- <20200330141436.GG2431644@ulmo>
- <20200330191654.waoocllctanh5nk5@pengutronix.de>
- <20200331204559.GB2954599@ulmo>
- <20200401082227.sxtarbttsmmhs2of@pengutronix.de>
- <c1785cf8-4231-feb5-9a54-2374df85c33b@ti.com>
+        id S1732396AbgDAQv6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 1 Apr 2020 12:51:58 -0400
+Received: from mail.pqgruber.com ([52.59.78.55]:57474 "EHLO mail.pqgruber.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388555AbgDAQgo (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:36:44 -0400
+Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
+        by mail.pqgruber.com (Postfix) with ESMTPSA id C530EC425A3;
+        Wed,  1 Apr 2020 18:36:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
+        s=mail; t=1585759002;
+        bh=IPYAP+Th3gWr6c1GcWqNIip3jHxnwVBTe6y78MvI8lk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ugZWMCyav4coGCw7rKKWrZ9FiyO4+kuMLcOtv4VI+dX6Ydn8s6iUO/XwnBHf9iBW7
+         0ZpFzHUamm3Ku5foVMNFg4SZOHqzxnK7n+KcwmIRZFzBRHw2CCtMGFAs3+8DHwACGl
+         btyHxOyEQhQSKy+IH63DzU4cwLr8YFpWW7ENiLYk=
+Date:   Wed, 1 Apr 2020 18:36:40 +0200
+From:   Clemens Gruber <clemens.gruber@pqgruber.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sven Van Asbroeck <TheSven73@gmail.com>
+Subject: Re: [PATCH 1/4] pwm: pca9685: remove unused duty_cycle struct element
+Message-ID: <20200401163640.GA91358@workstation.tuxnet>
+References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
+ <20200330130743.GB2431644@ulmo>
+ <CAHp75Vc_=czuRtyqgnmnYfie50gDnzrNqq3Bt+Gp_42MikX6VA@mail.gmail.com>
+ <20200330160238.GD2817345@ulmo>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c1785cf8-4231-feb5-9a54-2374df85c33b@ti.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20200330160238.GD2817345@ulmo>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 03:52:21PM +0530, Lokesh Vutla wrote:
-> Hi Uwe,
+On Mon, Mar 30, 2020 at 06:02:38PM +0200, Thierry Reding wrote:
+> On Mon, Mar 30, 2020 at 04:18:22PM +0300, Andy Shevchenko wrote:
+> > On Mon, Mar 30, 2020 at 4:09 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+> > >
+> > > On Wed, Feb 26, 2020 at 02:52:26PM +0100, Matthias Schiffer wrote:
+> > > > duty_cycle was only set, never read.
+> > > >
+> > > > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> > > > ---
+> > > >  drivers/pwm/pwm-pca9685.c | 4 ----
+> > > >  1 file changed, 4 deletions(-)
+> > >
+> > > Applied, thanks.
+> > 
+> > I'm not sure this patch is correct.
 > 
-> On 01/04/20 1:52 PM, Uwe Kleine-König wrote:
-> > Hello Thierry,
-> > 
-> > On Tue, Mar 31, 2020 at 10:45:59PM +0200, Thierry Reding wrote:
-> >> On Mon, Mar 30, 2020 at 09:16:54PM +0200, Uwe Kleine-König wrote:
-> >>> On Mon, Mar 30, 2020 at 04:14:36PM +0200, Thierry Reding wrote:
-> >>>> On Thu, Mar 12, 2020 at 07:40:42AM +0100, Uwe Kleine-König wrote:
-> >>>>> On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
-> >>>>>> Only the Timer control register(TCLR) cannot be updated when the timer
-> >>>>>> is running. Registers like Counter register(TCRR), loader register(TLDR),
-> >>>>>> match register(TMAR) can be updated when the counter is running. Since
-> >>>>>> TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
-> >>>>>> timer for period/duty_cycle update.
-> >>>>>
-> >>>>> I'm not sure what is sensible here. Stopping the PWM for a short period
-> >>>>> is bad, but maybe emitting a wrong period isn't better. You can however
-> >>>>> optimise it if only one of period or duty_cycle changes.
-> >>>>>
-> >>>>> @Thierry, what is your position here? I tend to say a short stop is
-> >>>>> preferable.
-> >>>>
-> >>>> It's not clear to me from the above description how exactly the device
-> >>>> behaves, but I suspect that it may latch the values in those registers
-> >>>> and only update the actual signal output once a period has finished. I
-> >>>> know of a couple of other devices that do that, so it wouldn't be
-> >>>> surprising.
-> >>>>
-> >>>> Even if that was not the case, I think this is just the kind of thing
-> >>>> that we have to live with. Sometimes it just isn't possible to have all
-> >>>> supported devices adhere strictly to an API. So I think the best we can
-> >>>> do is have an API that loosely defines what's supposed to happen and
-> >>>> make a best effort to implement those semantics. If a device deviates
-> >>>> slightly from those expectations, we can always cross fingers and hope
-> >>>> that things still work. And it looks like they are.
-> >>>>
-> >>>> So I think if Lokesh and Tony agree that this is the right thing to do
-> >>>> and have verified that things still work after this, that's about as
-> >>>> good as it's going to get.
-> >>>
-> >>> I'd say this isn't for the platform people to decide. My position here
-> >>> is that the PWM drivers should behave as uniform as possible to minimize
-> >>> surprises for consumers. And so it's a "PWM decision" that is to be made
-> >>> here, not an "omap decision".
-> >>
-> >> I think there's a fine line to be walked here. I agree that we should
-> >> aim to have as much consistency between drivers as possible. At the same
-> >> time I think we need to be pragmatic. As Lokesh said, the particular use
-> >> case here requires this type of on-the-fly adjustment of the PWM period
-> >> without stopping and restarting the PWM. It doesn't work otherwise. So
-> >> th alternative that you're proposing is to say that we don't support
-> >> that use-case, even though it works just fine given this particular
-> >> hardware. That's not really an option.
-> > 
-> > I understand your opinion here. The situation now is that in current
-> > mainline the driver stops the hardware for reconfiguration and it
-> > doesn't fit Lokesh's use case so he changed to on-the-fly update
-> > (accepting that maybe a wrong period is emitted). What if someone relies
-> > on the old behaviour? What if in a year someone comes and claims the
-> > wrong period is bad for their usecase and changes back to
-> > stop-to-update?
-> > 
-> > When I write a consumer driver, do I have a chance to know how the PWM,
-> > that I happen to use, behaves? To be able to get my consumer driver
-> > reliable I might need to know that however.
-> > 
-> >>>> I know this is perhaps cheating a little, or turning a blind eye, but I
-> >>>> don't know what the alternative would be. Do we want to tell people that
-> >>>> a given PWM controller can't be used if it doesn't work according to our
-> >>>> expectations? That's hard to argue if that controller works just fine
-> >>>> for all known use-cases.
-> >>>
-> >>> I'd like have some official policy here which of the alternatives is the
-> >>> preferred cheat.
-> >>>
-> >>> The situation here is that period and duty_cycle cannot be updated
-> >>> atomically. So the two options are:
-> >>>
-> >>>  - stop shortly
-> >>>  - update with hardware running and maybe emit a broken period
-> >>
-> >> I think we can already support both of those with the existing API. If
-> >> a consumer wants to stop the PWM while reconfiguring, they should be
-> >> able to do pwm_enable(), pwm_config(), pwm_enable() (or the atomic
-> >> equivalent) and for the second case they can just do pwm_config() (or
-> >> the atomic equivalent).
-> > 
-> > Yes, the consumer can force the stop and update. But assume I'm "only" a
-> > consumer driver author and I want: atomic update and if this is not
-> > possible I prefer "stop-to-update" over "on-the-fly-and-maybe-faulty".
-> > So I cannot benefit from a good driver/hardware that can do atomic
-> > updates? Or I have to patch each driver that I actually use to use
-> > stop-to-update?
-> > 
-> >> Some hardware may actually require the PWM to be disabled before
-> >> reconfiguring, so they won't be able to strictly adhere to the second
-> >> use-case.
-> >>
-> >> But as discussed above, I don't want to strive for a lowest common
-> >> denominator that would preclude some more specific use-cases from
-> >> working if the hardware supports it.
-> >>
-> >> So I think we should aim for drivers to implement the semantics as
-> >> closely as possible. If the hardware doesn't support some of these
-> >> requirements strictly while a particular use-case depends on that, then
-> >> that just means that the hardware isn't compatible with that use-case.
-> >> Chances are that the system just isn't going to be designed to support
-> >> that use-case in the first place if the hardware can't do it.
-> >>
-> >> The sysfs interface is a bit of a special case here because it isn't
-> >> possible to know what use-cases people are going to come up with.
-> > 
-> > In my eyes the sysfs interface isn't special here. You also don't know
-> > what the OMAP PWM hardware is used for.
-> > 
-> >> It's most likely that they'll try something and if it doesn't work
-> >> they can see if a driver patch can improve things.
-> > 
-> > So either the group who prefers "stop-to-update" or the group who
-> > prefers "on-the-fly-and-maybe-faulty" has to carry a system specific
-> > driver patch?
-> > 
-> >> One possible extension that I can imagine would be to introduce some
-> >> sort of capability structure that drivers can fill in to describe the
-> >> behaviour of the hardware. Drivers like pwm-omap-dmtimer, for example,
-> >> could describe that they are able to change the period and/or duty cycle
-> >> while the PWM is on. There could be another capability bit that says
-> >> that the current period will finish before new settings are applied. Yet
-> >> another capability could describe that duty-cycle and period can be
-> >> applied atomically. Consumers could then check those capabilities to see
-> >> if they match their requirements.
-> >>
-> >> But then again, I think that would just make things overly complicated.
-> >> None of the existing consumers need that, so it doesn't seem like there
-> >> is much demand for that feature. In practice I suspect most consumers
-> >> work fine despite potentially small deviations in how the PWM behaves.
-> > 
-> > I think the status quo is what I asked about above: People use sysfs and
-> > if the PWM behaves different than needed, the driver is patched and most
-> > of the time not mainlined. If your focus is to support a certain
-> > industrial system with a defined use case, this is fine. If however you
-> > target for an universal framework that works for any combination of
-> > consumer + lowlevel driver without patching (that at least is able to
-> > diagnose: This PWM cannot provide what my consumer needs), this is bad.
-> > Also this means that whenever a system designer changes something on
-> > their machine (kernel update, different hardware, an new usecase for a
-> > PWM) they might have to reverify if the given PWM driver behaves as
-> > needed.
-> > 
-> > My suggestion for now is to start documenting how the drivers behave
-> > expanding how limitations are documented in some drivers. So maybe
-> > change from "Limitations" to "Implementation and Hardware Details"?
+> What makes you say that? If you look at the code, the driver sets this
+> field to either 0 or some duty cycle value but ends up never using it.
+> Why would it be wrong to remove that code?
 > 
-> Does it help if a new DT property is introduced across PWM subsystem,
-> representing dynamic period/duty-cycle updates. Based on this property driver
-> can handle the updates. If the property is not present existing behaviour can be
-> restored. This way based on the use-case things can be changed and need not
-> patch the driver :). Does this sound good or you have other thoughts?
+> > We already have broken GPIO in this driver. Do we need more breakage?
+> 
+> My understanding is that nobody was able to pinpoint exactly when this
+> regressed, or if this only worked by accident to begin with. It sounds
+> like Clemens has a way of testing this driver, so perhaps we can solve
+> that GPIO issue while we're at it.
+> 
+> The last discussion on this seems to have been around the time when you
+> posted a fix for it:
+> 
+>     https://patchwork.ozlabs.org/patch/1156012/
+> 
+> But then Sven had concerns that that also wasn't guaranteed to work:
+> 
+>     https://lkml.org/lkml/2019/6/2/73
+> 
+> So I think we could either apply your patch to restore the old behaviour
+> which I assume you tested, so at least it seems to work in practice,
+> even if there's still a potential race that Sven pointed out in the
+> above link.
+> 
+> I'd prefer something alternative because it's obviously confusing and
+> completely undocumented. Mika had already proposed something that's a
+> little bit better, though still somewhat confusing.
+> 
+> Oh... actually reading further through those threads there seems to be a
+> patch from Sven that was reviewed by Mika but then nothing happened:
+> 
+> 	https://lkml.org/lkml/2019/6/4/1039
+> 
+> with the corresponding patchwork URL:
+> 
+> 	https://patchwork.ozlabs.org/patch/1110083/
+> 
+> Andy, Clemens, do you have a way of testing the GPIO functionality of
+> this driver? If so, it'd be great if you could check the above patch
+> from Sven to fix PWM/GPIO interop.
 
-That's something that I'd rather see in the pwm API. (Either by a rule
-that drivers should prefer one or the other, or by making it
-configurable.) IMHO this property doesn't belong into the hardware
-description as it is a software property.
+Looks good. Tested it today and I can no longer reproduce the issues
+when switching between PWM and GPIO modes.
+It did not apply cleanly on the current mainline or for-next branch, so
+I'll send a fixed up version of the patch with my Tested-by tag shortly.
 
-That's not constructive though as I don't have an idea how to map this
-into the API.
+I noticed an unrelated issue when disabling and enabling the channel
+though, for which I will either send a patch or maybe try to convert the
+driver to the atomic API first and then look if it is still a problem.
+(Issue is that if you disable the channel, the LED_OFF counter is
+cleared, which means you have to reconfigure the duty cycle after
+reenabling. It's probably better if only the FULL_OFF bit is toggled in
+enable/disable as it has precedence over the others anyway and then the
+previous state would not be changed..?)
 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Clemens
