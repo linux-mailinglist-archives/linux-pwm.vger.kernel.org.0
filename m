@@ -2,31 +2,31 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE50E19CB55
-	for <lists+linux-pwm@lfdr.de>; Thu,  2 Apr 2020 22:37:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C27E719CB85
+	for <lists+linux-pwm@lfdr.de>; Thu,  2 Apr 2020 22:38:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389939AbgDBUhU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 2 Apr 2020 16:37:20 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:49933 "EHLO
+        id S2389830AbgDBUh7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 2 Apr 2020 16:37:59 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:43695 "EHLO
         ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389646AbgDBUhT (ORCPT
+        with ESMTP id S2389651AbgDBUhT (ORCPT
         <rfc822;linux-pwm@vger.kernel.org>); Thu, 2 Apr 2020 16:37:19 -0400
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 2B32023E21;
-        Thu,  2 Apr 2020 22:37:15 +0200 (CEST)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 4EF6323E25;
+        Thu,  2 Apr 2020 22:37:16 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1585859835;
+        t=1585859836;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2BCNRqIuUKwOGISLET/oBBcU7zrunGEC7nYi+9zMSag=;
-        b=CbLPKsA1HlR3qZnwwIA408iUz6vbqE+6/3sdoucOJT7CfD+0eEozxUuO/lWykn+R9lHeig
-        cW9dUX6mnZ55kZIOmA8fAxrkOxQQKIdNllS/4CrEQp8ZiKIM3anpqRv7TsdBl+4uqQ+NnQ
-        tE1J00i2oqZdQOF2Co0Mf1SYHEdnIqY=
+        bh=JvYoNQ4vYXa7PEuB0qIntxPYyqileIK/r/q7Cu1/J5A=;
+        b=ZOkEjTm+yEGMmGkmb/7ooVQcA3UNk8ElExjwpU089P0LjkBSYfKdmndlvjX1Na8KWxWFzT
+        1wSn/pokAfsjKU1uGrjZ0IFsMsiDfGk3Wp+oRMm4kUdNrXz5NkGcSl2pA+05kjWynFkmKZ
+        Nz9uZ53BHw5RC0/Ws0bIiXfAxu+Yat4=
 From:   Michael Walle <michael@walle.cc>
 To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
@@ -48,9 +48,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Michael Walle <michael@walle.cc>
-Subject: [PATCH v2 09/16] pwm: add support for sl28cpld PWM controller
-Date:   Thu,  2 Apr 2020 22:36:49 +0200
-Message-Id: <20200402203656.27047-10-michael@walle.cc>
+Subject: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using regmap
+Date:   Thu,  2 Apr 2020 22:36:50 +0200
+Message-Id: <20200402203656.27047-11-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200402203656.27047-1-michael@walle.cc>
 References: <20200402203656.27047-1-michael@walle.cc>
@@ -61,7 +61,7 @@ X-Spam-Level: ******
 X-Rspamd-Server: web
 X-Spam-Status: Yes, score=6.40
 X-Spam-Score: 6.40
-X-Rspamd-Queue-Id: 2B32023E21
+X-Rspamd-Queue-Id: 4EF6323E25
 X-Spamd-Result: default: False [6.40 / 15.00];
          FROM_HAS_DN(0.00)[];
          TO_DN_SOME(0.00)[];
@@ -74,7 +74,7 @@ X-Spamd-Result: default: False [6.40 / 15.00];
          DKIM_SIGNED(0.00)[];
          RCPT_COUNT_TWELVE(0.00)[24];
          MID_CONTAINS_FROM(1.00)[];
-         NEURAL_HAM(-0.00)[-0.165];
+         NEURAL_HAM(-0.00)[-0.182];
          RCVD_COUNT_ZERO(0.00)[0];
          FROM_EQ_ENVFROM(0.00)[];
          MIME_TRACE(0.00)[0:+];
@@ -87,259 +87,480 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This adds support for the PWM controller of the sl28cpld board
-management controller. This is part of a multi-function device driver.
+There are quite a lot simple GPIO controller which are using regmap to
+access the hardware. This driver tries to be a base to unify existing
+code into one place. This won't cover everything but it should be a good
+starting point.
+
+It does not implement its own irq_chip because there is already a
+generic one for regmap based devices. Instead, the irq_chip will be
+instanciated in the parent driver and its irq domain will be associate
+to this driver.
+
+For now it consists of the usual registers, like set (and an optional
+clear) data register, an input register and direction registers.
+Out-of-the-box, it supports consecutive register mappings and mappings
+where the registers have gaps between them with a linear mapping between
+GPIO offset and bit position. For weirder mappings the user can register
+its own .xlate().
 
 Signed-off-by: Michael Walle <michael@walle.cc>
 ---
- drivers/pwm/Kconfig        |  10 ++
- drivers/pwm/Makefile       |   1 +
- drivers/pwm/pwm-sl28cpld.c | 203 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 214 insertions(+)
- create mode 100644 drivers/pwm/pwm-sl28cpld.c
+ drivers/gpio/Kconfig        |   4 +
+ drivers/gpio/Makefile       |   1 +
+ drivers/gpio/gpio-regmap.c  | 320 ++++++++++++++++++++++++++++++++++++
+ include/linux/gpio-regmap.h |  88 ++++++++++
+ 4 files changed, 413 insertions(+)
+ create mode 100644 drivers/gpio/gpio-regmap.c
+ create mode 100644 include/linux/gpio-regmap.h
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index eebbc917ac97..5673e5e8b0c3 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -427,6 +427,16 @@ config PWM_SIFIVE
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-sifive.
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 1b96169d84f7..a8e148f4b2e0 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -73,6 +73,10 @@ config GPIO_GENERIC
+ 	depends on HAS_IOMEM # Only for IOMEM drivers
+ 	tristate
  
-+config PWM_SL28CPLD
-+	tristate "Kontron sl28 PWM support"
-+	depends on MFD_SL28CPLD
-+	help
-+	  Generic PWM framework driver for board management controller
-+	  found on the Kontron sl28 CPLD.
++config GPIO_REGMAP
++	depends on REGMAP
++	tristate
 +
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-sl28cpld.
-+
- config PWM_SPEAR
- 	tristate "STMicroelectronics SPEAr PWM support"
- 	depends on PLAT_SPEAR || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 9a475073dafc..2c2b569dcde9 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -40,6 +40,7 @@ obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
- obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
- obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
- obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
-+obj-$(CONFIG_PWM_SL28CPLD)	+= pwm-sl28cpld.o
- obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
- obj-$(CONFIG_PWM_SPRD)		+= pwm-sprd.o
- obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
-diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
+ # put drivers in the right section, in alphabetical order
+ 
+ # This symbol is selected by both I2C and SPI expanders
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index b2cfc21a97f3..93e139fdfa57 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -12,6 +12,7 @@ obj-$(CONFIG_GPIO_SYSFS)	+= gpiolib-sysfs.o
+ obj-$(CONFIG_GPIO_ACPI)		+= gpiolib-acpi.o
+ 
+ # Device drivers. Generally keep list sorted alphabetically
++obj-$(CONFIG_GPIO_REGMAP)	+= gpio-regmap.o
+ obj-$(CONFIG_GPIO_GENERIC)	+= gpio-generic.o
+ 
+ # directly supported by gpio-generic
+diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
 new file mode 100644
-index 000000000000..c6b372bf45fa
+index 000000000000..cc4437dc0521
 --- /dev/null
-+++ b/drivers/pwm/pwm-sl28cpld.c
-@@ -0,0 +1,203 @@
++++ b/drivers/gpio/gpio-regmap.c
+@@ -0,0 +1,320 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * sl28cpld PWM driver.
++ * regmap based generic GPIO driver
 + *
-+ * Copyright 2019 Kontron Europe GmbH
++ * Copyright 2019 Michael Walle <michael@walle.cc>
 + */
 +
-+#include <linux/bitfield.h>
++#include <linux/gpio/driver.h>
++#include <linux/gpio-regmap.h>
 +#include <linux/kernel.h>
 +#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
 +#include <linux/regmap.h>
 +
-+/*
-+ * PWM timer block registers.
++struct gpio_regmap_data {
++	struct gpio_chip gpio_chip;
++	struct gpio_regmap *gpio;
++};
++
++/**
++ * gpio_regmap_simple_xlate() - translate base/offset to reg/mask
++ *
++ * Use a simple linear mapping to translate the offset to the bitmask.
 + */
-+#define PWM_CTRL		0x00
-+#define   PWM_ENABLE		BIT(7)
-+#define   PWM_MODE_250HZ	0
-+#define   PWM_MODE_500HZ	1
-+#define   PWM_MODE_1KHZ		2
-+#define   PWM_MODE_2KHZ		3
-+#define   PWM_MODE_MASK		GENMASK(1, 0)
-+#define PWM_CYCLE		0x01
-+#define   PWM_CYCLE_MAX		0x7f
-+
-+struct sl28cpld_pwm {
-+	struct pwm_chip pwm_chip;
-+	struct regmap *regmap;
-+	u32 offset;
-+};
-+
-+struct sl28cpld_pwm_periods {
-+	u8 ctrl;
-+	unsigned long duty_cycle;
-+};
-+
-+struct sl28cpld_pwm_config {
-+	unsigned long period_ns;
-+	u8 max_duty_cycle;
-+};
-+
-+static struct sl28cpld_pwm_config sl28cpld_pwm_config[] = {
-+	[PWM_MODE_250HZ] = { .period_ns = 4000000, .max_duty_cycle = 0x80 },
-+	[PWM_MODE_500HZ] = { .period_ns = 2000000, .max_duty_cycle = 0x40 },
-+	[PWM_MODE_1KHZ] = { .period_ns = 1000000, .max_duty_cycle = 0x20 },
-+	[PWM_MODE_2KHZ] = { .period_ns =  500000, .max_duty_cycle = 0x10 },
-+};
-+
-+static inline struct sl28cpld_pwm *to_sl28cpld_pwm(struct pwm_chip *chip)
++int gpio_regmap_simple_xlate(struct gpio_regmap *gpio, unsigned int base,
++			     unsigned int offset,
++			     unsigned int *reg, unsigned int *mask)
 +{
-+	return container_of(chip, struct sl28cpld_pwm, pwm_chip);
-+}
++	unsigned int line = offset % gpio->ngpio_per_reg;
++	unsigned int stride = offset / gpio->ngpio_per_reg;
 +
-+static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
-+				   struct pwm_device *pwm,
-+				   struct pwm_state *state)
-+{
-+	struct sl28cpld_pwm *spc = to_sl28cpld_pwm(chip);
-+	static struct sl28cpld_pwm_config *config;
-+	unsigned int reg;
-+	unsigned long cycle;
-+	unsigned int mode;
-+
-+	regmap_read(spc->regmap, spc->offset + PWM_CTRL, &reg);
-+
-+	state->enabled = reg & PWM_ENABLE;
-+
-+	mode = FIELD_GET(PWM_MODE_MASK, reg);
-+	config = &sl28cpld_pwm_config[mode];
-+	state->period = config->period_ns;
-+
-+	regmap_read(spc->regmap, spc->offset + PWM_CYCLE, &reg);
-+	cycle = reg * config->period_ns;
-+	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(cycle,
-+						  config->max_duty_cycle);
-+}
-+
-+static int sl28cpld_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      const struct pwm_state *state)
-+{
-+	struct sl28cpld_pwm *spc = to_sl28cpld_pwm(chip);
-+	struct sl28cpld_pwm_config *config;
-+	unsigned long long cycle;
-+	int ret;
-+	int mode;
-+	u8 ctrl;
-+
-+	/* update config, first search best matching period */
-+	for (mode = 0; mode < ARRAY_SIZE(sl28cpld_pwm_config); mode++) {
-+		config = &sl28cpld_pwm_config[mode];
-+		if (state->period == config->period_ns)
-+			break;
-+	}
-+
-+	if (mode == ARRAY_SIZE(sl28cpld_pwm_config))
-+		return -EINVAL;
-+
-+	ctrl = FIELD_PREP(PWM_MODE_MASK, mode);
-+	if (state->enabled)
-+		ctrl |= PWM_ENABLE;
-+
-+	cycle = state->duty_cycle * config->max_duty_cycle;
-+	do_div(cycle, state->period);
-+
-+	/*
-+	 * The hardware doesn't allow to set max_duty_cycle if the
-+	 * 250Hz mode is enabled. But since this is "all-high" output
-+	 * just use the 500Hz mode with the duty cycle to max value.
-+	 */
-+	if (cycle == config->max_duty_cycle) {
-+		ctrl &= ~PWM_MODE_MASK;
-+		ctrl |= FIELD_PREP(PWM_MODE_MASK, PWM_MODE_500HZ);
-+		cycle = PWM_CYCLE_MAX;
-+	}
-+
-+	ret = regmap_write(spc->regmap, spc->offset + PWM_CTRL, ctrl);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_write(spc->regmap, spc->offset + PWM_CYCLE, (u8)cycle);
-+}
-+
-+static const struct pwm_ops sl28cpld_pwm_ops = {
-+	.apply = sl28cpld_pwm_apply,
-+	.get_state = sl28cpld_pwm_get_state,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int sl28cpld_pwm_probe(struct platform_device *pdev)
-+{
-+	struct sl28cpld_pwm *pwm;
-+	struct pwm_chip *chip;
-+	struct resource *res;
-+	int ret;
-+
-+	if (!pdev->dev.parent)
-+		return -ENODEV;
-+
-+	pwm = devm_kzalloc(&pdev->dev, sizeof(*pwm), GFP_KERNEL);
-+	if (!pwm)
-+		return -ENOMEM;
-+
-+	pwm->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!pwm->regmap)
-+		return -ENODEV;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
-+	if (!res)
-+		return -EINVAL;
-+	pwm->offset = res->start;
-+
-+	/* initialize struct gpio_chip */
-+	chip = &pwm->pwm_chip;
-+	chip->dev = &pdev->dev;
-+	chip->ops = &sl28cpld_pwm_ops;
-+	chip->base = -1;
-+	chip->npwm = 1;
-+
-+	ret = pwmchip_add(&pwm->pwm_chip);
-+	if (ret < 0)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, pwm);
++	*reg = base + stride * gpio->reg_stride;
++	*mask = BIT(line);
 +
 +	return 0;
 +}
++EXPORT_SYMBOL_GPL(gpio_regmap_simple_xlate);
 +
-+static int sl28cpld_pwm_remove(struct platform_device *pdev)
++static int gpio_regmap_get(struct gpio_chip *chip, unsigned int offset)
 +{
-+	struct sl28cpld_pwm *pwm = platform_get_drvdata(pdev);
++	struct gpio_regmap_data *data = gpiochip_get_data(chip);
++	struct gpio_regmap *gpio = data->gpio;
++	unsigned int base;
++	unsigned int val, reg, mask;
++	int ret;
 +
-+	return pwmchip_remove(&pwm->pwm_chip);
++	/* we might not have an output register if we are input only */
++	if (gpio->reg_dat_base.valid)
++		base = gpio->reg_dat_base.addr;
++	else
++		base = gpio->reg_set_base.addr;
++
++	ret = gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
++	if (ret)
++		return ret;
++
++	ret = regmap_read(gpio->regmap, reg, &val);
++	if (ret)
++		return ret;
++
++	return (val & mask) ? 1 : 0;
 +}
 +
-+static const struct of_device_id sl28cpld_pwm_of_match[] = {
-+	{ .compatible = "kontron,sl28cpld-pwm" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, sl28cpld_pwm_of_match);
++static void gpio_regmap_set(struct gpio_chip *chip, unsigned int offset,
++			    int val)
++{
++	struct gpio_regmap_data *data = gpiochip_get_data(chip);
++	struct gpio_regmap *gpio = data->gpio;
++	unsigned int base = gpio->reg_set_base.addr;
++	unsigned int reg, mask;
 +
-+static const struct platform_device_id sl28cpld_pwm_id_table[] = {
-+	{"sl28cpld-gpio"},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(platform, sl28cpld_pwm_id_table);
++	gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
++	if (val)
++		regmap_update_bits(gpio->regmap, reg, mask, mask);
++	else
++		regmap_update_bits(gpio->regmap, reg, mask, 0);
++}
 +
-+static struct platform_driver sl28cpld_pwm_driver = {
-+	.probe = sl28cpld_pwm_probe,
-+	.remove	= sl28cpld_pwm_remove,
-+	.id_table = sl28cpld_pwm_id_table,
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+		.of_match_table = sl28cpld_pwm_of_match,
-+	},
-+};
-+module_platform_driver(sl28cpld_pwm_driver);
++static void gpio_regmap_set_with_clear(struct gpio_chip *chip,
++				       unsigned int offset, int val)
++{
++	struct gpio_regmap_data *data = gpiochip_get_data(chip);
++	struct gpio_regmap *gpio = data->gpio;
++	unsigned int base;
++	unsigned int reg, mask;
 +
-+MODULE_DESCRIPTION("sl28cpld PWM Driver");
++	if (val)
++		base = gpio->reg_set_base.addr;
++	else
++		base = gpio->reg_clr_base.addr;
++
++	gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
++	regmap_write(gpio->regmap, reg, mask);
++}
++
++static int gpio_regmap_get_direction(struct gpio_chip *chip,
++				     unsigned int offset)
++{
++	struct gpio_regmap_data *data = gpiochip_get_data(chip);
++	struct gpio_regmap *gpio = data->gpio;
++	unsigned int val, reg, mask;
++	unsigned int base;
++	int invert;
++	int ret;
++
++	if (gpio->reg_dir_out_base.valid) {
++		base = gpio->reg_dir_out_base.addr;
++		invert = 0;
++	} else if (gpio->reg_dir_in_base.valid) {
++		base = gpio->reg_dir_in_base.addr;
++		invert = 1;
++	} else {
++		return GPIO_LINE_DIRECTION_IN;
++	}
++
++	ret = gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
++	if (ret)
++		return ret;
++
++	ret = regmap_read(gpio->regmap, reg, &val);
++	if (ret)
++		return ret;
++
++	if (!!(val & mask) ^ invert)
++		return GPIO_LINE_DIRECTION_OUT;
++	else
++		return GPIO_LINE_DIRECTION_IN;
++}
++
++static int gpio_regmap_set_direction(struct gpio_chip *chip,
++				     unsigned int offset, bool output)
++{
++	struct gpio_regmap_data *data = gpiochip_get_data(chip);
++	struct gpio_regmap *gpio = data->gpio;
++	unsigned int val, reg, mask;
++	unsigned int base;
++	int invert;
++	int ret;
++
++	if (gpio->reg_dir_out_base.valid) {
++		base = gpio->reg_dir_out_base.addr;
++		invert = 0;
++	} else if (gpio->reg_dir_in_base.valid) {
++		base = gpio->reg_dir_in_base.addr;
++		invert = 1;
++	} else {
++		return 0;
++	}
++
++	ret = gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
++	if (ret)
++		return ret;
++
++	if (!invert)
++		val = (output) ? mask : 0;
++	else
++		val = (output) ? 0 : mask;
++
++	return regmap_update_bits(gpio->regmap, reg, mask, val);
++}
++
++static int gpio_regmap_direction_input(struct gpio_chip *chip,
++				       unsigned int offset)
++{
++	return gpio_regmap_set_direction(chip, offset, false);
++}
++
++static int gpio_regmap_direction_output(struct gpio_chip *chip,
++					unsigned int offset, int value)
++{
++	gpio_regmap_set(chip, offset, value);
++	return gpio_regmap_set_direction(chip, offset, true);
++}
++
++static int gpio_regmap_to_irq(struct gpio_chip *chip, unsigned int offset)
++{
++	struct gpio_regmap_data *data = gpiochip_get_data(chip);
++	struct gpio_regmap *gpio = data->gpio;
++
++	/* the user might have its own .to_irq callback */
++	if (gpio->to_irq)
++		return gpio->to_irq(gpio, offset);
++
++	return irq_create_mapping(gpio->irq_domain, offset);
++}
++
++/**
++ * gpio_regmap_register() - Register a generic regmap GPIO controller
++ *
++ * @gpio: gpio_regmap device to register
++ *
++ * Returns 0 on success or an errno on failure.
++ */
++int gpio_regmap_register(struct gpio_regmap *gpio)
++{
++	struct gpio_regmap_data *d;
++	struct gpio_chip *chip;
++	int ret;
++
++	if (!gpio->parent)
++		return -EINVAL;
++
++	if (!gpio->ngpio)
++		return -EINVAL;
++
++	/* we need at least one */
++	if (!gpio->reg_dat_base.valid && !gpio->reg_set_base.valid)
++		return -EINVAL;
++
++	/* we don't support having both registers simulaniously for now */
++	if (gpio->reg_dir_out_base.valid && gpio->reg_dir_in_base.valid)
++		return -EINVAL;
++
++	/* if not set, assume they are consecutive */
++	if (!gpio->reg_stride)
++		gpio->reg_stride = 1;
++
++	/* if not set, assume there is only one register */
++	if (!gpio->ngpio_per_reg)
++		gpio->ngpio_per_reg = gpio->ngpio;
++
++	if (!gpio->reg_mask_xlate)
++		gpio->reg_mask_xlate = gpio_regmap_simple_xlate;
++
++	d = kzalloc(sizeof(*d), GFP_KERNEL);
++	if (!d)
++		return -ENOMEM;
++
++	gpio->data = d;
++	d->gpio = gpio;
++
++	chip = &d->gpio_chip;
++	chip->parent = gpio->parent;
++	chip->label = gpio->label;
++	chip->base = -1;
++	chip->ngpio = gpio->ngpio;
++	chip->can_sleep = true;
++	chip->get = gpio_regmap_get;
++
++	if (!chip->label)
++		chip->label = dev_name(gpio->parent);
++
++	if (gpio->reg_set_base.valid && gpio->reg_clr_base.valid)
++		chip->set = gpio_regmap_set_with_clear;
++	else if (gpio->reg_set_base.valid)
++		chip->set = gpio_regmap_set;
++
++	if (gpio->reg_dir_in_base.valid || gpio->reg_dir_out_base.valid) {
++		chip->get_direction = gpio_regmap_get_direction;
++		chip->direction_input = gpio_regmap_direction_input;
++		chip->direction_output = gpio_regmap_direction_output;
++	}
++
++	if (gpio->irq_domain)
++		chip->to_irq = gpio_regmap_to_irq;
++
++	ret = gpiochip_add_data(chip, d);
++	if (ret < 0)
++		goto err_alloc;
++
++	return 0;
++
++err_alloc:
++	kfree(d);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(gpio_regmap_register);
++
++/**
++ * gpio_regmap_unregister() - Unregister a generic regmap GPIO controller
++ *
++ * @gpio: gpio_regmap device to unregister
++ */
++void gpio_regmap_unregister(struct gpio_regmap *gpio)
++{
++	gpiochip_remove(&gpio->data->gpio_chip);
++	kfree(gpio->data);
++}
++EXPORT_SYMBOL_GPL(gpio_regmap_unregister);
++
++static void devm_gpio_regmap_unregister(struct device *dev, void *res)
++{
++	gpio_regmap_unregister(*(struct gpio_regmap **)res);
++}
++
++/**
++ * devm_gpio_regmap_register() - resource managed gpio_regmap_register()
++ *
++ * @dev: device that is registering this GPIO device
++ * @gpio: gpio_regmap device to register
++ *
++ * Managed gpio_regmap_register(). For generic regmap GPIO device registered by
++ * this function, gpio_regmap_unregister() is automatically called on driver
++ * detach. See gpio_regmap_register() for more information.
++ */
++int devm_gpio_regmap_register(struct device *dev, struct gpio_regmap *gpio)
++{
++	struct gpio_regmap **ptr;
++	int ret;
++
++	ptr = devres_alloc(devm_gpio_regmap_unregister, sizeof(*ptr),
++			   GFP_KERNEL);
++	if (!ptr)
++		return -ENOMEM;
++
++	ret = gpio_regmap_register(gpio);
++	if (ret) {
++		devres_free(ptr);
++		return ret;
++	}
++
++	*ptr = gpio;
++	devres_add(dev, ptr);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(devm_gpio_regmap_register);
++
 +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
++MODULE_DESCRIPTION("GPIO generic regmap driver core");
 +MODULE_LICENSE("GPL");
+diff --git a/include/linux/gpio-regmap.h b/include/linux/gpio-regmap.h
+new file mode 100644
+index 000000000000..ad63955e0e43
+--- /dev/null
++++ b/include/linux/gpio-regmap.h
+@@ -0,0 +1,88 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++#ifndef _LINUX_GPIO_REGMAP_H
++#define _LINUX_GPIO_REGMAP_H
++
++struct gpio_regmap_addr {
++	unsigned int addr;
++	bool valid;
++};
++#define GPIO_REGMAP_ADDR(_addr) \
++	((struct gpio_regmap_addr) { .addr = _addr, .valid = true })
++
++/**
++ * struct gpio_regmap - Description of a generic regmap gpio_chip.
++ *
++ * @parent:		The parent device
++ * @regmap:		The regmap use to access the registers
++ *			given, the name of the device is used
++ * @label:		(Optional) Descriptive name for GPIO controller.
++ *			If not given, the name of the device is used.
++ * @ngpio:		Number of GPIOs
++ * @reg_dat_base:	(Optional) (in) register base address
++ * @reg_set_base:	(Optional) set register base address
++ * @reg_clr_base:	(Optional) clear register base address
++ * @reg_dir_in_base:	(Optional) out setting register base address
++ * @reg_dir_out_base:	(Optional) in setting register base address
++ * @reg_stride:		(Optional) May be set if the registers (of the
++ *			same type, dat, set, etc) are not consecutive.
++ * @ngpio_per_reg:	Number of GPIOs per register
++ * @irq_domain:		(Optional) IRQ domain if the controller is
++ *			interrupt-capable
++ * @reg_mask_xlate:     (Optional) Translates base address and GPIO
++ *			offset to a register/bitmask pair. If not
++ *			given the default gpio_regmap_simple_xlate()
++ *			is used.
++ * @to_irq:		(Optional) Maps GPIO offset to a irq number.
++ *			By default assumes a linear mapping of the
++ *			given irq_domain.
++ * @driver_data:	Pointer to the drivers private data. Not used by
++ *			gpio-regmap.
++ *
++ * The reg_mask_xlate translates a given base address and GPIO offset to
++ * register and mask pair. The base address is one of the given reg_*_base.
++ */
++struct gpio_regmap {
++	struct device *parent;
++	struct regmap *regmap;
++	struct gpio_regmap_data *data;
++
++	const char *label;
++	int ngpio;
++
++	struct gpio_regmap_addr reg_dat_base;
++	struct gpio_regmap_addr reg_set_base;
++	struct gpio_regmap_addr reg_clr_base;
++	struct gpio_regmap_addr reg_dir_in_base;
++	struct gpio_regmap_addr reg_dir_out_base;
++	int reg_stride;
++	int ngpio_per_reg;
++	struct irq_domain *irq_domain;
++
++	int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base,
++			      unsigned int offset, unsigned int *reg,
++			      unsigned int *mask);
++	int (*to_irq)(struct gpio_regmap *gpio, unsigned int offset);
++
++	void *driver_data;
++};
++
++static inline void gpio_regmap_set_drvdata(struct gpio_regmap *gpio,
++					   void *data)
++{
++	gpio->driver_data = data;
++}
++
++static inline void *gpio_regmap_get_drvdata(struct gpio_regmap *gpio)
++{
++	return gpio->driver_data;
++}
++
++int gpio_regmap_register(struct gpio_regmap *gpio);
++void gpio_regmap_unregister(struct gpio_regmap *gpio);
++int devm_gpio_regmap_register(struct device *dev, struct gpio_regmap *gpio);
++int gpio_regmap_simple_xlate(struct gpio_regmap *gpio, unsigned int base,
++			     unsigned int offset,
++			     unsigned int *reg, unsigned int *mask);
++
++#endif /* _LINUX_GPIO_REGMAP_H */
 -- 
 2.20.1
 
