@@ -2,31 +2,31 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE53A19CB5D
-	for <lists+linux-pwm@lfdr.de>; Thu,  2 Apr 2020 22:37:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF30519CB75
+	for <lists+linux-pwm@lfdr.de>; Thu,  2 Apr 2020 22:38:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390028AbgDBUhX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 2 Apr 2020 16:37:23 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:53827 "EHLO
+        id S2389995AbgDBUhr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 2 Apr 2020 16:37:47 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:49933 "EHLO
         ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389950AbgDBUhW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 2 Apr 2020 16:37:22 -0400
+        with ESMTP id S2389988AbgDBUhX (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 2 Apr 2020 16:37:23 -0400
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 1725F23E3C;
-        Thu,  2 Apr 2020 22:37:19 +0200 (CEST)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 4E5F923E4D;
+        Thu,  2 Apr 2020 22:37:20 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1585859839;
+        t=1585859840;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=cDPSFl3DhXa9lr6ftolj/RdcksSf5WhA1OyJSQnsQT0=;
-        b=E28VyFxO60baTwkam22hu8NfEuUbrYyIhpeI5/qDk9GR0WR4/xTZ/WsqDgX8Uf+UXYMk5j
-        WveRx3DnYnoW1VPQJXaXn7Y0/HWF8Z5lPYkui470MM2dE/g0WzzCNT5ICCeOvYixcT99qz
-        cH0EThbPKtg9a5Z0flfTHXDKYdAz3a0=
+        bh=kd33CN6cAdmGLTS1IKaKGLQEu25YdHUdM8D7Vve44tE=;
+        b=Wt3OBFNS5kzqcvqXP1yxoca3RYtN0N1YwIJ6PqHDA8a6QokZljD5+MD548WN/Cv2eNkjvT
+        R/g3+NRIah3fVcptj0aLqO1n2ox7PpehhwaKwL/tTmVRPRwKzzPkwkVsiY14Rk638lQY1u
+        FOY2grhMKz5aT1GIzKG1G2nFPzJbXbo=
 From:   Michael Walle <michael@walle.cc>
 To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
@@ -48,9 +48,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Michael Walle <michael@walle.cc>
-Subject: [PATCH v2 13/16] arm64: dts: freescale: sl28: enable sl28cpld
-Date:   Thu,  2 Apr 2020 22:36:53 +0200
-Message-Id: <20200402203656.27047-14-michael@walle.cc>
+Subject: [PATCH v2 14/16] arm64: dts: freescale: sl28: map GPIOs to input events
+Date:   Thu,  2 Apr 2020 22:36:54 +0200
+Message-Id: <20200402203656.27047-15-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200402203656.27047-1-michael@walle.cc>
 References: <20200402203656.27047-1-michael@walle.cc>
@@ -61,7 +61,7 @@ X-Spam-Level: ******
 X-Rspamd-Server: web
 X-Spam-Status: Yes, score=6.40
 X-Spam-Score: 6.40
-X-Rspamd-Queue-Id: 1725F23E3C
+X-Rspamd-Queue-Id: 4E5F923E4D
 X-Spamd-Result: default: False [6.40 / 15.00];
          FROM_HAS_DN(0.00)[];
          TO_DN_SOME(0.00)[];
@@ -71,11 +71,10 @@ X-Spamd-Result: default: False [6.40 / 15.00];
          MIME_GOOD(-0.10)[text/plain];
          BROKEN_CONTENT_TYPE(1.50)[];
          TO_MATCH_ENVRCPT_ALL(0.00)[];
-         NEURAL_SPAM(0.00)[0.081];
          DKIM_SIGNED(0.00)[];
-         DBL_PROHIBIT(0.00)[0.0.0.3:email,0.0.0.6:email,0.0.0.2:email,0.0.0.4:email,0.0.0.1:email,0.0.0.0:email,0.0.0.5:email,0.0.0.50:email];
          RCPT_COUNT_TWELVE(0.00)[24];
          MID_CONTAINS_FROM(1.00)[];
+         NEURAL_HAM(-0.00)[-0.119];
          RCVD_COUNT_ZERO(0.00)[0];
          FROM_EQ_ENVFROM(0.00)[];
          MIME_TRACE(0.00)[0:+];
@@ -88,123 +87,67 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add the board management controller node.
+Now that we have support for GPIO lines of the SMARC connector, map the
+sleep, power and lid switch signals to the corresponding keys using the
+gpio-keys and gpio-keys-polled drivers. The power and sleep signals have
+dedicated interrupts, thus we use these ones. The lid switch is just
+mapped to a GPIO input and needs polling.
 
 Signed-off-by: Michael Walle <michael@walle.cc>
 ---
- .../freescale/fsl-ls1028a-kontron-sl28.dts    | 92 +++++++++++++++++++
- 1 file changed, 92 insertions(+)
+ .../freescale/fsl-ls1028a-kontron-sl28.dts    | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
-index 41ba38adc906..b73794d57db4 100644
+index b73794d57db4..263ce50b0b79 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
-@@ -8,6 +8,7 @@
- 
+@@ -9,6 +9,8 @@
  /dts-v1/;
  #include "fsl-ls1028a.dtsi"
-+#include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
  
  / {
  	model = "Kontron SMARC-sAL28";
-@@ -174,6 +175,97 @@
- 		reg = <0x32>;
+@@ -23,6 +25,36 @@
+ 		spi1 = &dspi2;
  	};
  
-+	sl28cpld: sl28cpld@4a {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "kontron,sl28cpld";
-+		reg = <0x4a>;
-+		interrupts-extended = <&gpio2 6 IRQ_TYPE_EDGE_FALLING>;
++	buttons0 {
++		compatible = "gpio-keys";
 +
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+
-+		watchdog@0 {
-+			compatible = "kontron,sl28cpld-wdt";
-+			reg = <0>;
-+			kontron,assert-wdt-timeout-pin;
++		power-button {
++			interrupts-extended = <&sl28cpld
++					       4 IRQ_TYPE_EDGE_BOTH>;
++			linux,code = <KEY_POWER>;
++			label = "Power";
 +		};
 +
-+		hwmon@4 {
-+			compatible = "kontron,sl28cpld-fan";
-+			reg = <1>;
-+		};
-+
-+		sl28cpld_pwm0: pwm@5 {
-+			#pwm-cells = <2>;
-+			compatible = "kontron,sl28cpld-pwm";
-+			reg = <2>;
-+		};
-+
-+		sl28cpld_pwm1: pwm@6 {
-+			#pwm-cells = <2>;
-+			compatible = "kontron,sl28cpld-pwm";
-+			reg = <3>;
-+		};
-+
-+		sl28cpld_gpio0: gpio@0 {
-+			compatible = "kontron,sl28cpld-gpio";
-+			reg = <4>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-line-names =
-+				"GPIO0_CAM0_PWR_N", "GPIO1_CAM1_PWR_N",
-+				"GPIO2_CAM0_RST_N", "GPIO3_CAM1_RST_N",
-+				"GPIO4_HDA_RST_N", "GPIO5_PWM_OUT",
-+				"GPIO6_TACHIN", "GPIO7";
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		sl28cpld_gpio1: gpio@1 {
-+			compatible = "kontron,sl28cpld-gpio";
-+			reg = <5>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-line-names =
-+				"GPIO8", "GPIO9", "GPIO10", "GPIO11",
-+				"", "", "", "";
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		sl28cpld_gpio2: gpio@2 {
-+			compatible = "kontron,sl28cpld-gpo";
-+			reg = <6>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-line-names =
-+				"LCD0 voltage enable",
-+				"LCD0 backlight enable",
-+				"eMMC reset", "LVDS bridge reset",
-+				"LVDS bridge power-down",
-+				"SDIO power enable",
-+				"", "";
-+		};
-+
-+		sl28cpld_gpio3: gpio@3 {
-+			compatible = "kontron,sl28cpld-gpi";
-+			reg = <7>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-line-names =
-+				"Power button", "Force recovery", "Sleep",
-+				"Battery low", "Lid state", "Charging",
-+				"Charger present", "";
++		sleep-button {
++			interrupts-extended = <&sl28cpld
++					       5 IRQ_TYPE_EDGE_BOTH>;
++			linux,code = <KEY_SLEEP>;
++			label = "Sleep";
 +		};
 +	};
 +
- 	eeprom@50 {
- 		compatible = "atmel,24c32";
- 		reg = <0x50>;
++	buttons1 {
++		compatible = "gpio-keys-polled";
++		poll-interval = <200>;
++
++		lid-switch {
++			linux,input-type = <EV_SW>;
++			linux,code = <SW_LID>;
++			gpios = <&sl28cpld_gpio3 4 GPIO_ACTIVE_LOW>;
++			label = "Lid";
++		};
++	};
++
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
 -- 
 2.20.1
 
