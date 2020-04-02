@@ -2,151 +2,338 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 883F219CC3F
-	for <lists+linux-pwm@lfdr.de>; Thu,  2 Apr 2020 23:16:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BD9019CC63
+	for <lists+linux-pwm@lfdr.de>; Thu,  2 Apr 2020 23:31:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729549AbgDBVQl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 2 Apr 2020 17:16:41 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:52329 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbgDBVQl (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 2 Apr 2020 17:16:41 -0400
-Received: from mail-qv1-f50.google.com ([209.85.219.50]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MKbwg-1jckY00eB2-00KuMS; Thu, 02 Apr 2020 23:16:40 +0200
-Received: by mail-qv1-f50.google.com with SMTP id g4so2530578qvo.12;
-        Thu, 02 Apr 2020 14:16:39 -0700 (PDT)
-X-Gm-Message-State: AGi0PubW960BbOYGA+eCL/BGLcnc4bI5yp2vWsrxMCKd/gUbcFctl7hQ
-        fw3HCFhXGnHMvPvzMNwyeNHAzY5mQMPlLFN+IP0=
-X-Google-Smtp-Source: APiQypJGA8+k1W79tcyerK0UIap1gN48lClpbItZKUsRTQsWMzf1R1BJyzlohgyMqPgn9cM9EZAnuMgggZ49T4oS3UY=
-X-Received: by 2002:a0c:ec49:: with SMTP id n9mr5282512qvq.197.1585862198851;
- Thu, 02 Apr 2020 14:16:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1584667964.git.gurus@codeaurora.org> <5aae102e21c0e63ad2588ae1e174b48b06d25e96.1584667964.git.gurus@codeaurora.org>
- <CAK8P3a0qUMMMDmbp2FM-7D-U0Ys_zv0paYguFeyifafZurndEw@mail.gmail.com>
- <20200330204359.GB5107@codeaurora.org> <CAK8P3a1VC6+0Tydm=BoK2NvHB1ZCPjE1Gfi-sTE5O-xnu3Ya3A@mail.gmail.com>
- <20200331202058.GB25781@codeaurora.org> <20200331204929.GC2954599@ulmo> <20200402201654.GA9191@codeaurora.org>
-In-Reply-To: <20200402201654.GA9191@codeaurora.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 2 Apr 2020 23:16:22 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3mc_sYczyKiaDoQLTTwDj2odwHJ5LFNAOb4RaRyh0YLQ@mail.gmail.com>
-Message-ID: <CAK8P3a3mc_sYczyKiaDoQLTTwDj2odwHJ5LFNAOb4RaRyh0YLQ@mail.gmail.com>
-Subject: Re: [PATCH v11 06/12] pwm: imx27: Use 64-bit division macro and function
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        id S2388635AbgDBVa4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 2 Apr 2020 17:30:56 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:36382 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbgDBVa4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 2 Apr 2020 17:30:56 -0400
+Received: by mail-pj1-f68.google.com with SMTP id nu11so2027207pjb.1;
+        Thu, 02 Apr 2020 14:30:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UUPOa3XdCHYcoLx/8Rv7jexCWtPWMH0y/BtvQy0KvdE=;
+        b=Osr4o8aHTJp+wpPLX6iRSAfZZFYcURj2YXurTPtrrGopI9GgL09N58zNW5yiUzQ6lh
+         c+VTP115iCVVfBIMcGoSfmdMaiYMYGyRA4Mrf5XFQGewHOz+cwGrgrvhndDpm13smzLA
+         Ho2SOHxfzDoCTRD1p+FfemjenJnCXoTL5sqif8IU5iN0NDcRbXRQU7AA5E2nntEuLZBE
+         yQrl2SSJ0SoeHVLbyVr8nHiMy6ZhWEDtkPzo09w1aPoHmm88WQ4ZfjIy0kQ04/rf+RsI
+         Xate3bhRXxD6BJic2DAyP6KWtyCcT4bqeIGOxivC5zlLSyW7/fRolQGsNwXKb+63i27G
+         f3nA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UUPOa3XdCHYcoLx/8Rv7jexCWtPWMH0y/BtvQy0KvdE=;
+        b=rgO9tJ8iMr+MV4YZIk8x0UTgl0RAQVPHZwqjHvTvW0CgVVSNPBb0XK9au50RQ8KO1J
+         fwykCuJpK3rxv4AbrZSSEZ3bHzL9dtIgVuIkNzsomToToC/Odgc8kQ7CGZAo3vdMy960
+         1i8klBTvSS6cszmjotOGZ1ZSZRuEbsJUjxcKXm1ZC/P5W5S8RnDf1Dz7rb+/OzVpKvMr
+         cXmd59cEl3yEWIl0ZHHvQ4lcpjMNvi6XcIosXfnPnxBH7k9ntatr+qLG/+EiBnn/P5zr
+         HUpz2d1qcyY/UFAcIhfRsHBnOihmLWar67X7vY6rHPnU1Sn+Ec6BNCHWEEF6XuIKMeIC
+         u50A==
+X-Gm-Message-State: AGi0PuaDZpK7uJ8sWHiHIujicC7vsh30AQDAdNV78KyTAwEFqnuet5hZ
+        DQKAp0lgLTW/RN+Wl3Vy49Q=
+X-Google-Smtp-Source: APiQypKypSVnD6UnnrTZinEFkK2Xx8fadJPwB459UiNAc04C+ERmDX3ifauRzwJEo71PQoblfxnGhQ==
+X-Received: by 2002:a17:90a:f48c:: with SMTP id bx12mr5896086pjb.64.1585863053480;
+        Thu, 02 Apr 2020 14:30:53 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 3sm699454pfd.140.2020.04.02.14.30.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 02 Apr 2020 14:30:52 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 14:30:51 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        David Collins <collinsd@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:xEGTmJejjOhevVW+LS3wPVrxEq9GUWLio507mu2afaZHP1sMEhE
- Ucfjy9sio/Rl8gyi91sw29MzHc5gRRGOwjmkwC2nKaOULSOm9k2lsYJ+Qc0HVmtqJMnZIvH
- +YAwGsOG1JGGIeN76PGxBIOTkLXFVjChuDzrqC9SmMB5LGiALJnNVhSuxdkyTVr38Nu4cHL
- PdlVHh8qMGVIZHutZCl/w==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xBQCXjWELaM=:X+fZoPAw8rfvW0h8IvN7HV
- w0jWj2O2rk0zJiEDk4OsYR/6gnWZLg/lHXcu+8DEH+aAL0qByNtGFw8TOt3AvIKq++2A2frQW
- +DGS4DQWZCit3TzkGuEtqU/f4v5IWX65cnXDmDsW03VI1Pk2qbX1I9BRwLvojIsroaRiNBPii
- jcHEXdYGdxfCizUi3IPJQhk9KOrskKbItWS9dZsTWm1qcE5XFa0ydRy+GKhDY9jKBnxsHjfHy
- RKOP+qnPbZ1A1135v6Jr029/L5dEcAfhGasNGZ0xkzAOVMXMVmhCcSLaUxyxGRpa/DwLaVoLN
- CQG4Rp4JJLurZOwPNe1XEgeXWrep6gTnCu+bzUrnDp5gEJb38o8hDjYnBdLEE7mZvCqfA0Q1F
- 8nWGGgHCq39IK0/Jda/eLAhy+ZMEKqTphfEhXFsmUh7hriA9d16Sv8F0ykdva6rDw3g6o+9ja
- 7CcPLjmSv+SuqsLKwczity5807vLwr6nTevPmGDsIeSVWcsh86PkP1qXtL4dB8oDohElOa6Uw
- dVZ4bPbWNzm59jGU5+nQY7lay3qW93y9vxZ5wShss4u1613/xvazpaJwG77gwY6Ga8cI7p7IJ
- PfpxuYJ+0Dy3jylSc6qigs1k7fmMCaUK3mbyNzuHtQGQE+xQuJq4xuO9JNV5YMpnhnIO/k+iV
- KPMuT1P6u3OZbD2QVbZqlYGrk/+jMIZcPmFAsdDmiOdOSNtH+R292+AiAv74GWrKWb/PW8fpe
- FfNygJQjdzeovTpfBx/A/kvceNlc28+2sX08p90eHB4tWHzGg5eG9pIaPUPLiHjsJSOq5PG3W
- 1J3wneLlC/ICLRPFvYfS8qNP3qb/nD6Z9sfHzagewug4y1COqo=
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 12/16] hwmon: add support for the sl28cpld hardware
+ monitoring controller
+Message-ID: <20200402213051.GA129260@roeck-us.net>
+References: <20200402203656.27047-1-michael@walle.cc>
+ <20200402203656.27047-13-michael@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402203656.27047-13-michael@walle.cc>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 10:16 PM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
-> On Tue, Mar 31, 2020 at 10:49:29PM +0200, Thierry Reding wrote:
-> > Doesn't that mean that anything below a 1 second period will be clamped
-> > to just 0?
->
-> True. How about this then?
->
-> int pwm_imx27_calc_period_cycles(struct pwm_state state,
->                                  unsigned long clk_rate,
->                                  unsigned long *period_cycles)
-> {
->         u64 c1, c2;
->
->         c1 = clk_rate;
->         c2 = state->period;
->         if (c2 > c1) {
->                 c2 = c1;
->                 c1 = state->period;
->         }
->
->         if (!c1 || !c2) {
->                 pr_err("clk rate and period should be nonzero\n");
->                 return -EINVAL;
->         }
->
->         if (c2 <= div64_u64(U64_MAX, c1)) {
->                 c = c1 * c2;
->                 do_div(c, 1000000000);
->         } else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000))) {
->                 do_div(c1, 1000);
->                 c = c1 * c2;
->                 do_div(c, 1000000);
->         } else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000000))) {
->                 do_div(c1, 1000000);
->                 c = c1 * c2;
->                 do_div(c, 1000);
->         } else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000000000))) {
->                 do_div(c1, 1000000000);
->                 c = c1 * c2;
->         }
->
->         *period_cycles = c;
->
->         return 0;
-> }
->
-> ...
->
-> ret = pwm_imx27_calc_period_cycles(state, clk_get_rate(imx->clk_per),
->                                    &period_cycles);
-> if (ret)
->         return ret;
->
-> I unit tested this logic out by calculating period_cycles using both the
-> existing logic and the proposed one, and the results are as below.
->
-> --------------------------------------------------------------------------------
->  clk_rate               period            existing            proposed
-> --------------------------------------------------------------------------------
-> 1000000000      18446744073709551615     18446744072    18446744073000000000
->                       (U64_MAX)
-> --------------------------------------------------------------------------------
-> 1000000000           4294967291          4294967291         4294967291
-> --------------------------------------------------------------------------------
->
-> Overflow occurs in the first case with the existing logic, whereas the
-> proposed logic handles it correctly. As for the second case where there are
-> more typical values of period, the proposed logic handles that correctly
-> too.
+On Thu, Apr 02, 2020 at 10:36:52PM +0200, Michael Walle wrote:
+> This adds support for the hardware monitoring controller of the sl28cpld
+> board management controller. This driver is part of a multi-function
+> device.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  Documentation/hwmon/sl28cpld.rst |  36 ++++++++
 
-This looks correct, but very expensive, and you don't really have to
-go this far, given that c1 is guaranteed to be a 32-bit number, and
-you divide by a constant in the end.
+Needs to be added to Documentation.hwmon/index.rst.
+Otherwise looks good. With that fixed, please feel free to add
 
-Why not do something like
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-#define SHIFT 41 /* arbitrarily picked, not too big, not too small */
-#define MUL 2199 /* 2^SHIFT / NSEC_PER_SEC */
-period_cycles = clk_get_rate(imx->clk_per) * ((state->period * MUL) >> SHIFT);
+in the next version.
 
-        Arnd
+Guenter
+
+>  drivers/hwmon/Kconfig            |  10 ++
+>  drivers/hwmon/Makefile           |   1 +
+>  drivers/hwmon/sl28cpld-hwmon.c   | 151 +++++++++++++++++++++++++++++++
+>  4 files changed, 198 insertions(+)
+>  create mode 100644 Documentation/hwmon/sl28cpld.rst
+>  create mode 100644 drivers/hwmon/sl28cpld-hwmon.c
+> 
+> diff --git a/Documentation/hwmon/sl28cpld.rst b/Documentation/hwmon/sl28cpld.rst
+> new file mode 100644
+> index 000000000000..7ed65f78250c
+> --- /dev/null
+> +++ b/Documentation/hwmon/sl28cpld.rst
+> @@ -0,0 +1,36 @@
+> +.. SPDX-License-Identifier: GPL-2.0-only
+> +
+> +Kernel driver sl28cpld
+> +======================
+> +
+> +Supported chips:
+> +
+> +   * Kontron sl28cpld
+> +
+> +     Prefix: 'sl28cpld'
+> +
+> +     Datasheet: not available
+> +
+> +Authors: Michael Walle <michael@walle.cc>
+> +
+> +Description
+> +-----------
+> +
+> +The sl28cpld is a board management controller which also exposes a hardware
+> +monitoring controller. At the moment this controller supports a single fan
+> +supervisor. In the future there might be other flavours and additional
+> +hardware monitoring might be supported.
+> +
+> +The fan supervisor has a 7 bit counter register and a counter period of 1
+> +second. If the 7 bit counter overflows, the supervisor will automatically
+> +switch to x8 mode to support a wider input range at the loss of
+> +granularity.
+> +
+> +Sysfs entries
+> +-------------
+> +
+> +The following attributes are supported.
+> +
+> +======================= ========================================================
+> +fan1_input		Fan RPM. Assuming 2 pulses per revolution.
+> +======================= ========================================================
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 05a30832c6ba..c98716f78cfa 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -1412,6 +1412,16 @@ config SENSORS_RASPBERRYPI_HWMON
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called raspberrypi-hwmon.
+>  
+> +config SENSORS_SL28CPLD
+> +	tristate "Kontron's SMARC-sAL28 hardware monitoring driver"
+> +	depends on MFD_SL28CPLD
+> +	help
+> +	  If you say yes here you get support for a fan connected to the
+> +	  input of the SMARC connector of Kontron's SMARC-sAL28 module.
+> +
+> +	  This driver can also be built as a module.  If so, the module
+> +	  will be called sl28cpld-hwmon.
+> +
+>  config SENSORS_SHT15
+>  	tristate "Sensiron humidity and temperature sensors. SHT15 and compat."
+>  	depends on GPIOLIB || COMPILE_TEST
+> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> index b0b9c8e57176..dfb0f8cda2dd 100644
+> --- a/drivers/hwmon/Makefile
+> +++ b/drivers/hwmon/Makefile
+> @@ -155,6 +155,7 @@ obj-$(CONFIG_SENSORS_S3C)	+= s3c-hwmon.o
+>  obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
+>  obj-$(CONFIG_SENSORS_SCH5627)	+= sch5627.o
+>  obj-$(CONFIG_SENSORS_SCH5636)	+= sch5636.o
+> +obj-$(CONFIG_SENSORS_SL28CPLD)	+= sl28cpld-hwmon.o
+>  obj-$(CONFIG_SENSORS_SHT15)	+= sht15.o
+>  obj-$(CONFIG_SENSORS_SHT21)	+= sht21.o
+>  obj-$(CONFIG_SENSORS_SHT3x)	+= sht3x.o
+> diff --git a/drivers/hwmon/sl28cpld-hwmon.c b/drivers/hwmon/sl28cpld-hwmon.c
+> new file mode 100644
+> index 000000000000..c79bdfed8332
+> --- /dev/null
+> +++ b/drivers/hwmon/sl28cpld-hwmon.c
+> @@ -0,0 +1,151 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * sl28cpld hardware monitoring driver.
+> + *
+> + * Copyright 2019 Kontron Europe GmbH
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#define FAN_INPUT		0x00
+> +#define   FAN_SCALE_X8		BIT(7)
+> +#define   FAN_VALUE_MASK	GENMASK(6, 0)
+> +
+> +struct sl28cpld_hwmon {
+> +	struct regmap *regmap;
+> +	u32 offset;
+> +};
+> +
+> +static umode_t sl28cpld_hwmon_is_visible(const void *data,
+> +					 enum hwmon_sensor_types type,
+> +					 u32 attr, int channel)
+> +{
+> +	return 0444;
+> +}
+> +
+> +static int sl28cpld_hwmon_read(struct device *dev,
+> +			       enum hwmon_sensor_types type, u32 attr,
+> +			       int channel, long *input)
+> +{
+> +	struct sl28cpld_hwmon *hwmon = dev_get_drvdata(dev);
+> +	unsigned int value;
+> +	int ret;
+> +
+> +	switch (attr) {
+> +	case hwmon_fan_input:
+> +		ret = regmap_read(hwmon->regmap, hwmon->offset + FAN_INPUT,
+> +				  &value);
+> +		if (ret)
+> +			return ret;
+> +		/*
+> +		 * The register has a 7 bit value and 1 bit which indicates the
+> +		 * scale. If the MSB is set, then the lower 7 bit has to be
+> +		 * multiplied by 8, to get the correct reading.
+> +		 */
+> +		if (value & FAN_SCALE_X8)
+> +			value = FIELD_GET(FAN_VALUE_MASK, value) << 3;
+> +
+> +		/*
+> +		 * The counter period is 1000ms and the sysfs specification
+> +		 * says we should asssume 2 pulses per revolution.
+> +		 */
+> +		value *= 60 / 2;
+> +
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	*input = value;
+> +	return 0;
+> +}
+> +
+> +static const u32 sl28cpld_hwmon_fan_config[] = {
+> +	HWMON_F_INPUT,
+> +	0
+> +};
+> +
+> +static const struct hwmon_channel_info sl28cpld_hwmon_fan = {
+> +	.type = hwmon_fan,
+> +	.config = sl28cpld_hwmon_fan_config,
+> +};
+> +
+> +static const struct hwmon_channel_info *sl28cpld_hwmon_info[] = {
+> +	&sl28cpld_hwmon_fan,
+> +	NULL
+> +};
+> +
+> +static const struct hwmon_ops sl28cpld_hwmon_ops = {
+> +	.is_visible = sl28cpld_hwmon_is_visible,
+> +	.read = sl28cpld_hwmon_read,
+> +};
+> +
+> +static const struct hwmon_chip_info sl28cpld_hwmon_chip_info = {
+> +	.ops = &sl28cpld_hwmon_ops,
+> +	.info = sl28cpld_hwmon_info,
+> +};
+> +
+> +static int sl28cpld_hwmon_probe(struct platform_device *pdev)
+> +{
+> +	struct device *hwmon_dev;
+> +	struct sl28cpld_hwmon *hwmon;
+> +	struct resource *res;
+> +
+> +	if (!pdev->dev.parent)
+> +		return -ENODEV;
+> +
+> +	hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
+> +	if (!hwmon)
+> +		return -ENOMEM;
+> +
+> +	hwmon->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!hwmon->regmap)
+> +		return -ENODEV;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
+> +	if (!res)
+> +		return -EINVAL;
+> +	hwmon->offset = res->start;
+> +
+> +	hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
+> +				"sl28cpld_hwmon", hwmon,
+> +				&sl28cpld_hwmon_chip_info, NULL);
+> +	if (IS_ERR(hwmon_dev)) {
+> +		dev_err(&pdev->dev, "failed to register as hwmon device");
+> +		return PTR_ERR(hwmon_dev);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id sl28cpld_hwmon_of_match[] = {
+> +	{ .compatible = "kontron,sl28cpld-fan" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, sl28cpld_hwmon_of_match);
+> +
+> +static const struct platform_device_id sl28cpld_hwmon_id_table[] = {
+> +	{ "sl28cpld-fan" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(platform, sl28cpld_hwmon_id_table);
+> +
+> +static struct platform_driver sl28cpld_hwmon_driver = {
+> +	.probe = sl28cpld_hwmon_probe,
+> +	.id_table = sl28cpld_hwmon_id_table,
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+> +		.of_match_table = sl28cpld_hwmon_of_match,
+> +	},
+> +};
+> +module_platform_driver(sl28cpld_hwmon_driver);
+> +
+> +MODULE_DESCRIPTION("sl28cpld Hardware Monitoring Driver");
+> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
+> +MODULE_LICENSE("GPL");
