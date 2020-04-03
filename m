@@ -2,50 +2,50 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 89ACC19DA07
-	for <lists+linux-pwm@lfdr.de>; Fri,  3 Apr 2020 17:24:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8558E19DA19
+	for <lists+linux-pwm@lfdr.de>; Fri,  3 Apr 2020 17:30:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404011AbgDCPYN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 3 Apr 2020 11:24:13 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42023 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403989AbgDCPYN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 3 Apr 2020 11:24:13 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z5so7596327oth.9;
-        Fri, 03 Apr 2020 08:24:12 -0700 (PDT)
+        id S2404096AbgDCPav (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 3 Apr 2020 11:30:51 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36917 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728203AbgDCPav (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 3 Apr 2020 11:30:51 -0400
+Received: by mail-oi1-f196.google.com with SMTP id u20so6433338oic.4;
+        Fri, 03 Apr 2020 08:30:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+zrV6aMoQP0OG/C0OJzaZF+AdqvWLaIPf/wEdTNZQRU=;
-        b=Summv8/x73AjqUwMRxLplgt7uLutXeavNAmS1VxZDngJe6tfl9XJjRH2FT5lQv0R8d
-         q7NtekvE7pxAiPcdeg9Z7HOe9HngcaREXDHF122svG77okJ6fhmIVX0y2XWj1Q+Fms5E
-         lZP2AsCpfqZPb0lKcMBDKKHIpO6BU023IdFJrIEqUEPLPqUcU6eEdd18YkGqcNhP7GhB
-         5QRrpvSO5J/+iGNYZ2dF30TG3fqxbqopERyFuFWWG1+YBXOGZov6wCpWksxU5gOzSNAo
-         vca03xelo0gPV6h8heH4SkC27P50kXhiYKVrGbWTU0BXZLXqEJL0XGHXz23D7U9maa0+
-         f2Dw==
+        bh=uo/s3g2M9m8e4JRBF9iXkTq11nxfJs4YNqOuK0g635s=;
+        b=HwzTvOxKFbg1Nzxrq8vUyWts33+FbCcwLokJcdRvNaXKqErhG2dXIAtKvLxgG/aHez
+         +hv8xB/7//Dbm/Zhmw5+OnUMdnntE0JiRYjRTMXIpD/2mwRPUXI6Zs0JXbt1nq+b7rk7
+         ym+veq5DBylx1+j2ThMJRjNLl/Rm3cFjtKPHmJGNO9uiPa1EwEHpnk4q+gUXJzeFWkFT
+         R1C+bhvARxZ/UIcsvJIq5KbYt8Zuytu+xxGxWiiCifJRM321Vb5EbvUGLH1rEZ1H5O8q
+         HJ3E9lHC8Qzx/GgGDDYd+U3eODbMU01qEDPAEuMRX1mOq8bh+kqTnRFUURO2Nb03Jqra
+         DUVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+zrV6aMoQP0OG/C0OJzaZF+AdqvWLaIPf/wEdTNZQRU=;
-        b=JcdkfPtmMcaEQIFX5n0X+p7+aRen3P2eomj4VcNfVhX+LsIUgwu+gObervpZDsAMmM
-         Zf6MiAAz5bkZuMLKd+HUDsavsf8+CMNwKim0yg0JP5asitD8yW5WNtdpwz9QCUOCZ1s+
-         ThvvjrwS/Dccu1Xf3MyK3LzYx8elfYu66x31Zp26YOYhbmakB4r2tdth/mMXz2o++FRT
-         NSx2IPwaqq0+4KjQ0sysw330BGdN1tTpN/1DDPQPK2NrTrgl9fuDwy4h27Vu+TxC40eV
-         0kv/ARrlsDe+CsxIwQlC7HKSpZNhMKFoIZTQU1kiNntlpPZsf6tEWgEWmmvowFIC3bgO
-         s0Fw==
-X-Gm-Message-State: AGi0PuZR+Lb+XANkefe0/yd7lnzMOlYLikqPBT6N/mvFuirZU9qfESj1
-        IwIc/Lfvi2WIDcYyoOQAsFdeb4oza36lPE88xm8=
-X-Google-Smtp-Source: APiQypJdYCI5EAAkXsrAsNjxBuDc16qdH+HQrgehiNnmqRR0fcrX95nUqIvu3W2IMeNvDZ9Q/Mjv+FMPCY7pUANhFaw=
-X-Received: by 2002:a9d:19ca:: with SMTP id k68mr6986713otk.232.1585927452403;
- Fri, 03 Apr 2020 08:24:12 -0700 (PDT)
+        bh=uo/s3g2M9m8e4JRBF9iXkTq11nxfJs4YNqOuK0g635s=;
+        b=sHlXZ+iYzT40lgkvwc96I7B0jSnAQcjN74PVVP3B0rfICJF0jaPY96Opedm3e68d88
+         3OizYSngcrKcQGnEk3VlByqzxN+4SExNcStHnJzyhtikgt1LHpFOK8mBdUiYmFp+D/Dq
+         W8YQYgb5JeviflxEUzIJ8MNtGt58z8RBe6orNLJkPyRP+0ScHKMBHNJu8x04JJZALt4G
+         OwdZn8zgBcvz/wAGRjop4hPnjEjq04DWiN7tZ3GWCKB5DzYcZSMt0pMLSOaTxe0cZYyP
+         8Qrwd52Nvz2Y/mrvB4g54jFnPcNyAEYeaoS/cctzYXDv7DE4LlkThxNZvjmTqaTfD5h+
+         49Ug==
+X-Gm-Message-State: AGi0PuZzG3GsIz3TaFSm9LcxuwfLk6Si1up+LYbZtqKjlou1XVAExt0Z
+        /WvBeXRLRHmyGxUuhdGRKqpAUOkKJ4NTqrV0oFo=
+X-Google-Smtp-Source: APiQypJ7cD+pwX0/P2wdrT1+MMVyWXdLAxFwYHg2POSGg74nohO0TPq4/RAfSM2lHxhXIIs7mpaPEkf0RJ05d0WUul4=
+X-Received: by 2002:aca:b803:: with SMTP id i3mr3363192oif.92.1585927850037;
+ Fri, 03 Apr 2020 08:30:50 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200401170106.134037-1-clemens.gruber@pqgruber.com>
 In-Reply-To: <20200401170106.134037-1-clemens.gruber@pqgruber.com>
 From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Fri, 3 Apr 2020 11:24:01 -0400
-Message-ID: <CAGngYiXy5-REGTnUgrFDHdbskX7FkkO2UBkGok8NOSc14RQf5Q@mail.gmail.com>
+Date:   Fri, 3 Apr 2020 11:30:39 -0400
+Message-ID: <CAGngYiXR7pPJ4kTXtzmL1T_yrbr_gs0RVFo5yufmJGc08xgeMg@mail.gmail.com>
 Subject: Re: [PATCH v2 REBASED] pwm: pca9685: fix pwm/gpio inter-operation
 To:     Clemens Gruber <clemens.gruber@pqgruber.com>
 Cc:     linux-pwm@vger.kernel.org,
@@ -63,16 +63,7 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 1:01 PM Clemens Gruber
-<clemens.gruber@pqgruber.com> wrote:
->
-> From: Sven Van Asbroeck <TheSven73@gmail.com>
->
-> Tested-by: Clemens Gruber <clemens.gruber@pqgruber.com>
-> [cg: Tested on an i.MX6Q board with two NXP PCA9685 chips]
+PS perhaps you could also include a link to the mailing list
+discussion which prompted the revival of this patch?
 
-Thank you Clemens for testing and rebasing this patch, much appreciated !
-
-The synchronization method introduced here still looks correct to me. So:
-
-Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com> # cg's rebase
+Link: https://lore.kernel.org/lkml/20200330160238.GD2817345@ulmo/
