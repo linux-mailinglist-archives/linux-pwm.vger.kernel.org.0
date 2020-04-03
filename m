@@ -2,108 +2,106 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC48719DE66
-	for <lists+linux-pwm@lfdr.de>; Fri,  3 Apr 2020 21:13:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EAE519DEA2
+	for <lists+linux-pwm@lfdr.de>; Fri,  3 Apr 2020 21:43:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbgDCTNj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 3 Apr 2020 15:13:39 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:47575 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728352AbgDCTNj (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 3 Apr 2020 15:13:39 -0400
-Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MlwO3-1it7Pn3N5f-00j5R7; Fri, 03 Apr 2020 21:13:37 +0200
-Received: by mail-qk1-f176.google.com with SMTP id z15so3054076qki.7;
-        Fri, 03 Apr 2020 12:13:36 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaL4luxDuENPbnTJrl+ErrJtKPg1sZ4PfUqKarrDt6PzGTAnMdk
-        gMCTQ1XjT7f2tFwPw3vwGnKxypMjBhtvig2Nph0=
-X-Google-Smtp-Source: APiQypImXcWILk8psZ1HbQ+URsHm2HQvUCoXZxFfG8y4E1K8GXE0CD5ruo9/1xtIjmfts83SW1YI3czSBgpBBLrTAhs=
-X-Received: by 2002:a37:8707:: with SMTP id j7mr10525965qkd.394.1585941215318;
- Fri, 03 Apr 2020 12:13:35 -0700 (PDT)
+        id S1727993AbgDCTng (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 3 Apr 2020 15:43:36 -0400
+Received: from mail-wm1-f50.google.com ([209.85.128.50]:35729 "EHLO
+        mail-wm1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727792AbgDCTng (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 3 Apr 2020 15:43:36 -0400
+Received: by mail-wm1-f50.google.com with SMTP id i19so9021492wmb.0
+        for <linux-pwm@vger.kernel.org>; Fri, 03 Apr 2020 12:43:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Z5ImpcTwqakFfE/7PPdklfuWQUdS2NOjWVCZLSkiWYQ=;
+        b=Cpgwisebq0ciPNLcXZ6gC7q08aP2MRUOaEyxhu6TEsAWJ+KQywo+6oxN4YZZV2JuvN
+         AgpK2R9z/R1TYrnz2oQ6JOzzz/Dmd3oFDrIxRVen0LOa5bCmqcCxUE0qCNUDeUGJGmlv
+         nVptrR+fddYDyMqQ6KfRuMuC3v8Yd0WvR9HhvmXyD//0Olz+82xorpFehou1AihW7PFO
+         YXkHhoA7M4Cx+GWfOdmoVNYD33IoAXO1lUGAB3kVPl9pnFC7gSNLH7VFkrgKkIKlUuwF
+         TtExSGqxxbdydn0QiYVg5TfNC2QjP6wl7KD4vTqAqrZyIjIgwNFTCJzPVZO7cRlar+Th
+         punw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Z5ImpcTwqakFfE/7PPdklfuWQUdS2NOjWVCZLSkiWYQ=;
+        b=Ts63jzlvVl4Y/SWB+THq+wIsI7i6X7MivCiarMrQr1wse7vk0iomgvtDWSAjHXmMeS
+         BhNsxpRpQWe9lQNXHWjwtZMy0q5krZFh732bVZ4hlaEucN4560x5bYpDyn9kJbA/osof
+         TysivdEz2i+KvsOoHPToX0/cwHrCMhCoATGQkFDdw07uWovzP9X0RlEwm8DxPrbiXnuu
+         M1kbdSTur/gcPNMnezStd8vTG7UoKJs+XIPQ3mmKH91f92x1jOuc7a8Khqmc/YGndJBc
+         2e7ny9u6Ul/2OpoKT0UL8MpQoMnkumyHXbI51ZW9pxcMDVH2Dd2VnrGOar+SzElYLbqL
+         z9Tg==
+X-Gm-Message-State: AGi0PubTaO4/AXJM5iRmB1zagK/fEx3uPEH1mcSwLdVqhB9CNjxLT4VQ
+        xMLnqT3UYklxbvBIV4BOebo=
+X-Google-Smtp-Source: APiQypK4zd6DIX5ClJOPkUzmViespBHwUitg+1ZDe27MSVA++Q+nUNmML/c2d9NrchQfFxvCzuNP+Q==
+X-Received: by 2002:a7b:c445:: with SMTP id l5mr7469548wmi.61.1585943013445;
+        Fri, 03 Apr 2020 12:43:33 -0700 (PDT)
+Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
+        by smtp.gmail.com with ESMTPSA id a2sm4044998wra.71.2020.04.03.12.43.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 12:43:32 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 21:43:31 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH -next] pwm: make pwm_apply_state_debug static
+Message-ID: <20200403194331.GA201060@ulmo>
+References: <20200402065718.32433-1-yanaijie@huawei.com>
 MIME-Version: 1.0
-References: <cover.1584667964.git.gurus@codeaurora.org> <5aae102e21c0e63ad2588ae1e174b48b06d25e96.1584667964.git.gurus@codeaurora.org>
- <CAK8P3a0qUMMMDmbp2FM-7D-U0Ys_zv0paYguFeyifafZurndEw@mail.gmail.com>
- <20200330204359.GB5107@codeaurora.org> <CAK8P3a1VC6+0Tydm=BoK2NvHB1ZCPjE1Gfi-sTE5O-xnu3Ya3A@mail.gmail.com>
- <20200331202058.GB25781@codeaurora.org> <20200331204929.GC2954599@ulmo>
- <20200402201654.GA9191@codeaurora.org> <CAK8P3a3mc_sYczyKiaDoQLTTwDj2odwHJ5LFNAOb4RaRyh0YLQ@mail.gmail.com>
- <20200403173719.GA6169@codeaurora.org>
-In-Reply-To: <20200403173719.GA6169@codeaurora.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 3 Apr 2020 21:13:18 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2Ua5v67vLLzQxsLPZfX9z5D7o-sfFpurQVWVykRK8sEQ@mail.gmail.com>
-Message-ID: <CAK8P3a2Ua5v67vLLzQxsLPZfX9z5D7o-sfFpurQVWVykRK8sEQ@mail.gmail.com>
-Subject: Re: [PATCH v11 06/12] pwm: imx27: Use 64-bit division macro and function
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        David Collins <collinsd@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:mY5hMDk2oGkHhn3FEaOf3l2YiuPpE+jbgloYAV8BK3QwCBHgX+G
- D/F79J+PUTgTEEyAtIa6MKy01EgzNpOoP3x+M36Ovemr5J61A78qKyF3cOUuUqaSPpiczz9
- OAohAFI308mxuISAW22YxD4UAEerQySl3MReMvsNsWLX/IhrbxWjeWZYV+x67OfOw66YLcD
- Y16+pQQagfjcwJArMy5OQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:BteBetvnX/E=:pi9W/I8o0q00Dg8x8fAMbi
- JlveBaHhqnkPudt87h2i3WOhxOc/xeJW3A9bXdrONYad6YRd/469L7mX2AI5/VDwRZLsedZUX
- hgN9EiVKADgL4xNrlJm7SRhE7kTBdFCRqTYhz046erXpnpls8aRJcNg6MVrZ9vtd3CYNCF7Uw
- UgKzqpX0XFlWBxIfUEKg3cTJguf4Fick6UDlRHC8Mjc09HzVn4GlWZjq2/yrjPaYvo0oco0q+
- HwvigSSLUg3ebquM+z03EkYrLnHXX6a8JNC7vEGrPgjN+0l1jpMgjTcqS9AQze7UlEIiyxLgY
- E4UT48STKeDYdirl/iS/se6FzMLrwxOe+UoBzrL1zdXbDH/kFfRNPRm6Rr7Y5oRUE9WzpaZxv
- Q+VyaHnjeP5+dHaSav9SAk3lNmBG5FCMBCqwP8X8kj1GIB+cRzHcfXWW3ZZ4vUvdqIWwUugkA
- S2v8wJ24mohqk/fE2/pH82L2oeK7h/3E8ksMxkSiRl9T1Jq6JW1K8gFibvqAoohLCDBrk2Lcx
- 6DhzEpQuWW2kPU5SKwQ29rbQd+4HnWcnSlsnVkLsxw0SqhhM+tc9YVn6tJ6eIxfaLd8mBewWP
- HZqVfnFIVyVX2CjnhrDrEk79vpa0SSKjwUVT2sxZetjhGYafJlNqhmrWWc/wLKNEcEZuBJ99h
- jQpP/+dzMImDEgDtVZ2LOXSBzctChJRN1WYaTEFNCtD2XV3fzw4KTmGdEk+q8c90omgLXFqSy
- E9cx9HVMXAWBqI/E7bs65cyqndTYNaKOiXXdB2kSligTRP/z2la4oKum+T7e5LwAI2pFB4Azo
- YIJpHnLbAe2qt3OT4cpfSSiAQtCffgL6g5ommyYsiwMvhsD2WY=
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
+Content-Disposition: inline
+In-Reply-To: <20200402065718.32433-1-yanaijie@huawei.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Apr 3, 2020 at 7:37 PM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
->
-> On Thu, Apr 02, 2020 at 11:16:22PM +0200, Arnd Bergmann wrote:
-> > This looks correct, but very expensive, and you don't really have to
-> > go this far, given that c1 is guaranteed to be a 32-bit number, and
-> > you divide by a constant in the end.
-> >
-> > Why not do something like
-> >
-> > #define SHIFT 41 /* arbitrarily picked, not too big, not too small */
-> > #define MUL 2199 /* 2^SHIFT / NSEC_PER_SEC */
-> > period_cycles = clk_get_rate(imx->clk_per) * ((state->period * MUL) >> SHIFT);
->
-> I have two concerns with this:
->
-> 1. This actually results in the division by 1000010575.5125057 instead
->    of NSECS_PER_SEC whereas both the existing as well as the proposed logic
->    divide exactly by NSECS_PER_SEC.
-> 2. What method shall be used to pick the SHIFT value? How is this to be
->    chosen?
 
-I picked one that would result in a fairly accurate rounding and did not
-seem too likely to overflow.
+--YiEDa0DAkWCtVeE4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Also, this seems sort of similar to my initial attempt at this
-> problem, where period was being pre-divided prior to the multiplication,
-> which was (rightly) NACKed.
->
->         c *= div_u64(state->period, 1000000000);
+On Thu, Apr 02, 2020 at 02:57:18PM +0800, Jason Yan wrote:
+> Fix the following gcc warning:
+>=20
+> drivers/pwm/core.c:467:6: warning: symbol 'pwm_apply_state_debug' was
+> not declared. Should it be static?
+>=20
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>  drivers/pwm/core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Ah, right, I did make the same mistake here. What I actually indended
-was to do two separate shifts that add up to 41. I suppose there is also still
-the fundamental problem that without bounds checking the calculation can
-always overflow for large inputs.
+Applied, thanks.
 
-       Arnd
+Thierry
+
+--YiEDa0DAkWCtVeE4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6HkeAACgkQ3SOs138+
+s6HyVBAAtZfqkAbBTNmDItMz7Hg9MfpiGTj9ySzWgkyJXEG97AdvuIxvsvv64MyL
+nu/bTHnvCti5d024RGET7ymfgkmrBF/jt4WDWUE0tSsFNc2Bh9LtLZDB8L5Mqqtd
+YufpMDVhr4VRDLDtS8/APGiK7Wwlhlx6OKphC2JSMWOxXaZOxZ95oqHxgt6S4Y4K
+z4PxEI86eDmg9BGEdQLCI7adxASKMpbobkRIe9GrIMq8tl00LICRgm4F5nauXOSA
+scFl25EmcTrbCPEmOrjQpHrXZsw26aUKgK7Ch6uwAfMA44aCtccKx1SOEcex8IrX
+NfF0c0wg1kwQ1JZ0sgPgIWcO8lhiyntzOzORgcofNAeV5gk4EiN4ViuLyARYcVKD
+mrs9OkOwQJJL876tug6BR7Cc5KHFNJYW5+XD37pdPgnXDDa2ixwbkzme/7m8a+9b
+WdUkzRoyjDvTZAa/XHaLDF2PAOn8gfLhPTmWkahPDesFNugpd+DIeqW3MeY3bt06
+6iMsxjKGaEl+NsUS8JYDLE4o787tnQoF4ky1Qmvj/LbE0ZJdYrTYvDGBk8mqIEPi
+rgQjCTIkPBnRkoyCKEDLoj1I7FZpb2mMkfDpN9lQ61pVsQXQzO0Ve4JxkPmKg9r9
+FOSVGtXLJ1aCRYcjvPWjO7w4ETSvDJ87hqMol7Mzq2G3AzM9EaQ=
+=ZJEc
+-----END PGP SIGNATURE-----
+
+--YiEDa0DAkWCtVeE4--
