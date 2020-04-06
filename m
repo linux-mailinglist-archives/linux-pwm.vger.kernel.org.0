@@ -2,182 +2,579 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2614A19F2EB
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Apr 2020 11:51:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D5BD19F315
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Apr 2020 11:58:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbgDFJv3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Apr 2020 05:51:29 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50556 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbgDFJv3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Apr 2020 05:51:29 -0400
-Received: by mail-wm1-f66.google.com with SMTP id x25so2918602wmc.0;
-        Mon, 06 Apr 2020 02:51:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5VM8BXPopEtF/vWMO6fH4OBxYXzchIKT+rdSCRSo1hE=;
-        b=ETEKmsikJ7lNFax7fOsUxRzi5ybSvI9m3Ia2HjDWRVIYXlCGjP17IanQ/eOg4VQyfC
-         +0PzrRtw7jpxn+SgX+OHxqGwHNWAqSXvFzGqXlfElOdSYgVVZNxVJNS9nFXHYAu/GhEc
-         63xlMnvUvT0jHUipg9GgKYJICFjQhb7LVSQ/tnFSx9CJ/StAXxaZEaw5vel+g0lrSBWg
-         Ghj1nA41ky3OBPjP+Feqb64MYrhWafhhchC2ltvwaror65/IpDUEWSOTeobsnsWSBbQw
-         mPgVuaUmASzy4/oGLPsEDJWJwFzCECmkmIbFR44sAYChgQJt15tbQaeqAvXkVgFOwn9S
-         cSpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5VM8BXPopEtF/vWMO6fH4OBxYXzchIKT+rdSCRSo1hE=;
-        b=oCz/DSJYkwPk+6XEeasoxgDreMK5yGfFLCi8bl/R00c3EoL/kyjjdXGljiw6HRtTcY
-         f4RakM1cpm6rpq3pY6rdl8atYX1iJvKCymMvqF0IwZJ5QYO/GBhWp4BIdBypY5+68yRf
-         js+kWOACTSG36xaHE/vj2fKEk9buZOesl7uZs3Gtru9euYMII/fHtoovNOhQZuM6AheA
-         GW0D5oWNMeUzb/rmWIHbhJoZ8UPmAhizbRS5y6wWvSA98H/9dxKBS9w3NoJH9N7y+Tts
-         Nac5J/t0RrlT8yfgWMmUCT7yO/fzprqR2G6u+3hYt6SNrwd8dYpzwMYnGUAQ7mCiqDt2
-         XHaQ==
-X-Gm-Message-State: AGi0PuatCpQF88QiWyBI+sHqqCpbLqSywkGyxpu2GoCaQ4ZYk7jKwteC
-        IsiXYy2LIYj/7MMTVnBePNs=
-X-Google-Smtp-Source: APiQypKHLa6tX6IVcch/Q0+KCyUEc5LV6iQn8Mv+dkUDCEh4ACEjxzAq5d5bMU9TnSMpsN6uBZoH3w==
-X-Received: by 2002:a7b:c24a:: with SMTP id b10mr21808723wmj.84.1586166686663;
-        Mon, 06 Apr 2020 02:51:26 -0700 (PDT)
-Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
-        by smtp.gmail.com with ESMTPSA id l185sm24394718wml.44.2020.04.06.02.51.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 02:51:25 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 11:51:24 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Clemens Gruber <clemens.gruber@pqgruber.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: (EXT) Re: [PATCH 1/4] pwm: pca9685: remove unused duty_cycle
- struct element
-Message-ID: <20200406095124.GA475759@ulmo>
-References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
- <20200226151034.7i3h5blmrwre2yzg@pengutronix.de>
- <32ec35c2b3da119dd2c7bc09742796a0d8a9607e.camel@ew.tq-group.com>
- <20200330151231.GA1650@workstation.tuxnet>
- <CAGngYiUe-tihBJUcXQ738_5aA9pzgp_-NSs4iCrz3eWO6rMukA@mail.gmail.com>
- <20200404173546.GA55833@workstation.tuxnet>
- <CAGngYiWpO_N+t74k-==RNaXkZcp6TZvVOJzXPOi84cpQ6PHbhw@mail.gmail.com>
+        id S1726788AbgDFJ63 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Apr 2020 05:58:29 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:18149 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbgDFJ63 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Apr 2020 05:58:29 -0400
+X-Originating-IP: 78.193.40.249
+Received: from kb-xps (unknown [78.193.40.249])
+        (Authenticated sender: kamel.bouhara@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 09626240004;
+        Mon,  6 Apr 2020 09:58:25 +0000 (UTC)
+Date:   Mon, 6 Apr 2020 11:58:24 +0200
+From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
+To:     Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 02/11] pwm: atmel-tcb: switch to new binding
+Message-ID: <20200406095824.GA1035413@kb-xps>
+References: <20200406092801.1014489-1-kamel.bouhara@bootlin.com>
+ <20200406092801.1014489-3-kamel.bouhara@bootlin.com>
+ <20200406094545.GF3628@piout.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGngYiWpO_N+t74k-==RNaXkZcp6TZvVOJzXPOi84cpQ6PHbhw@mail.gmail.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <20200406094545.GF3628@piout.net>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Mon, Apr 06, 2020 at 11:45:45AM +0200, Alexandre Belloni wrote:
+> Hi,
+>
+> This patch should not have been sent now.
+>
 
---OgqxwSJOaUobr8KG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Sat, Apr 04, 2020 at 04:17:00PM -0400, Sven Van Asbroeck wrote:
-> On Sat, Apr 4, 2020 at 1:35 PM Clemens Gruber
-> <clemens.gruber@pqgruber.com> wrote:
+Yes, just ignore please.
+
+Thanks.
+
+> On 06/04/2020 11:27:52+0200, Kamel Bouhara wrote:
+> > From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 > >
-> > As the user is setting the duty cycle in nanoseconds, it makes sense
-> > that the relative duty cycle decreases in an absolute period increase.
-> > As for the behavior that the other channels remain at the same relative
-> > duty cycle: Not sure how we can avoid this, other than reprogramming all
-> > 15 other channels if one of them is changed and that's not really
-> > acceptable, I think.
->=20
-> Thank you for the explanation, Clemens.
->=20
-> Yes, it does make sense that the relative duty cycle changes when we chan=
-ge
-> the period. A relative duty cycle of duty_cycle / period is what the user=
- would
-> expect to see.
->=20
-> It also kind-of makes sense that the relative duty cycles of the other
-> pwm channels
-> do not change: after all, the user is not touching them, so would not exp=
-ect
-> them to change.
->=20
-> However, the following does not make sense to me. Imagine pwm0 and pwm1
-> are both active and at 50%: period=3D5000000, duty_cycle=3D2500000. Then,=
- change
-> the period on pwm0:
->=20
-> $ echo 10000000 > pwm0/period
->=20
-> Then pwm0 gets dimmer (makes sense) and pwm1 keeps the same relative duty
-> cycle (makes sense). However, if we now read out sysfs for pwm1, we get:
->=20
-> $ echo pwm1/period
-> 5000000 (wrong!)
-> $ echo pwm1/duty_cycle
-> 2500000 (wrong! although relative duty cycle is correct)
->=20
-> Although the pwm1 period has changed, the API calls do not reflect this.
-> This makes it next to impossible for users to know what the current period
-> is set to.
->=20
-> Moving to the atomic API won't help, because .get_state is called only
-> once, when the chip is registered.
+> > The PWM is now a subnode of the used TCB. This is cleaner and it mainly
+> > allows to stop wasting TCB channels when only 2 or 4 PWMs are used.
+> >
+> > This also removes the atmel_tclib dependency
+> >
+> > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > Cc: linux-pwm@vger.kernel.org
+> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > ---
+> >  drivers/pwm/Kconfig         |   3 +-
+> >  drivers/pwm/pwm-atmel-tcb.c | 241 ++++++++++++++++++++----------------
+> >  2 files changed, 137 insertions(+), 107 deletions(-)
+> >
+> > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> > index 30190beeb6e9..1cf5a5d672c8 100644
+> > --- a/drivers/pwm/Kconfig
+> > +++ b/drivers/pwm/Kconfig
+> > @@ -65,7 +65,8 @@ config PWM_ATMEL_HLCDC_PWM
+> >
+> >  config PWM_ATMEL_TCB
+> >  	tristate "Atmel TC Block PWM support"
+> > -	depends on ATMEL_TCLIB && OF
+> > +	depends on OF
+> > +	select REGMAP_MMIO
+> >  	help
+> >  	  Generic PWM framework driver for Atmel Timer Counter Block.
+> >
+> > diff --git a/drivers/pwm/pwm-atmel-tcb.c b/drivers/pwm/pwm-atmel-tcb.c
+> > index 85c53701958c..82edb44fbbd8 100644
+> > --- a/drivers/pwm/pwm-atmel-tcb.c
+> > +++ b/drivers/pwm/pwm-atmel-tcb.c
+> > @@ -16,13 +16,16 @@
+> >  #include <linux/err.h>
+> >  #include <linux/ioport.h>
+> >  #include <linux/io.h>
+> > +#include <linux/mfd/syscon.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/pwm.h>
+> >  #include <linux/of_device.h>
+> > +#include <linux/of_irq.h>
+> > +#include <linux/regmap.h>
+> >  #include <linux/slab.h>
+> >  #include <soc/at91/atmel_tcb.h>
+> >
+> > -#define NPWM	6
+> > +#define NPWM	2
+> >
+> >  #define ATMEL_TC_ACMR_MASK	(ATMEL_TC_ACPA | ATMEL_TC_ACPC |	\
+> >  				 ATMEL_TC_AEEVT | ATMEL_TC_ASWTRG)
+> > @@ -48,11 +51,17 @@ struct atmel_tcb_channel {
+> >  struct atmel_tcb_pwm_chip {
+> >  	struct pwm_chip chip;
+> >  	spinlock_t lock;
+> > -	struct atmel_tc *tc;
+> > +	u8 channel;
+> > +	u8 width;
+> > +	struct regmap *regmap;
+> > +	struct clk *clk;
+> > +	struct clk *slow_clk;
+> >  	struct atmel_tcb_pwm_device *pwms[NPWM];
+> > -	struct atmel_tcb_channel bkup[NPWM / 2];
+> > +	struct atmel_tcb_channel bkup;
+> >  };
+> >
+> > +const u8 atmel_tcb_divisors[] = { 2, 8, 32, 128, 0, };
+> > +
+> >  static inline struct atmel_tcb_pwm_chip *to_tcb_chip(struct pwm_chip *chip)
+> >  {
+> >  	return container_of(chip, struct atmel_tcb_pwm_chip, chip);
+> > @@ -74,10 +83,6 @@ static int atmel_tcb_pwm_request(struct pwm_chip *chip,
+> >  {
+> >  	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
+> >  	struct atmel_tcb_pwm_device *tcbpwm;
+> > -	struct atmel_tc *tc = tcbpwmc->tc;
+> > -	void __iomem *regs = tc->regs;
+> > -	unsigned group = pwm->hwpwm / 2;
+> > -	unsigned index = pwm->hwpwm % 2;
+> >  	unsigned cmr;
+> >  	int ret;
+> >
+> > @@ -85,7 +90,7 @@ static int atmel_tcb_pwm_request(struct pwm_chip *chip,
+> >  	if (!tcbpwm)
+> >  		return -ENOMEM;
+> >
+> > -	ret = clk_prepare_enable(tc->clk[group]);
+> > +	ret = clk_prepare_enable(tcbpwmc->clk);
+> >  	if (ret) {
+> >  		devm_kfree(chip->dev, tcbpwm);
+> >  		return ret;
+> > @@ -98,28 +103,31 @@ static int atmel_tcb_pwm_request(struct pwm_chip *chip,
+> >  	tcbpwm->div = 0;
+> >
+> >  	spin_lock(&tcbpwmc->lock);
+> > -	cmr = __raw_readl(regs + ATMEL_TC_REG(group, CMR));
+> > +	regmap_read(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CMR), &cmr);
+> >  	/*
+> >  	 * Get init config from Timer Counter registers if
+> >  	 * Timer Counter is already configured as a PWM generator.
+> >  	 */
+> >  	if (cmr & ATMEL_TC_WAVE) {
+> > -		if (index == 0)
+> > -			tcbpwm->duty =
+> > -				__raw_readl(regs + ATMEL_TC_REG(group, RA));
+> > +		if (pwm->hwpwm == 0)
+> > +			regmap_read(tcbpwmc->regmap,
+> > +				    ATMEL_TC_REG(tcbpwmc->channel, RA),
+> > +				    &tcbpwm->duty);
+> >  		else
+> > -			tcbpwm->duty =
+> > -				__raw_readl(regs + ATMEL_TC_REG(group, RB));
+> > +			regmap_read(tcbpwmc->regmap,
+> > +				    ATMEL_TC_REG(tcbpwmc->channel, RB),
+> > +				    &tcbpwm->duty);
+> >
+> >  		tcbpwm->div = cmr & ATMEL_TC_TCCLKS;
+> > -		tcbpwm->period = __raw_readl(regs + ATMEL_TC_REG(group, RC));
+> > +		regmap_read(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, RC),
+> > +			    &tcbpwm->period);
+> >  		cmr &= (ATMEL_TC_TCCLKS | ATMEL_TC_ACMR_MASK |
+> >  			ATMEL_TC_BCMR_MASK);
+> >  	} else
+> >  		cmr = 0;
+> >
+> >  	cmr |= ATMEL_TC_WAVE | ATMEL_TC_WAVESEL_UP_AUTO | ATMEL_TC_EEVT_XC0;
+> > -	__raw_writel(cmr, regs + ATMEL_TC_REG(group, CMR));
+> > +	regmap_write(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CMR), cmr);
+> >  	spin_unlock(&tcbpwmc->lock);
+> >
+> >  	tcbpwmc->pwms[pwm->hwpwm] = tcbpwm;
+> > @@ -131,9 +139,8 @@ static void atmel_tcb_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+> >  {
+> >  	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
+> >  	struct atmel_tcb_pwm_device *tcbpwm = pwm_get_chip_data(pwm);
+> > -	struct atmel_tc *tc = tcbpwmc->tc;
+> >
+> > -	clk_disable_unprepare(tc->clk[pwm->hwpwm / 2]);
+> > +	clk_disable_unprepare(tcbpwmc->clk);
+> >  	tcbpwmc->pwms[pwm->hwpwm] = NULL;
+> >  	devm_kfree(chip->dev, tcbpwm);
+> >  }
+> > @@ -142,10 +149,6 @@ static void atmel_tcb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+> >  {
+> >  	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
+> >  	struct atmel_tcb_pwm_device *tcbpwm = pwm_get_chip_data(pwm);
+> > -	struct atmel_tc *tc = tcbpwmc->tc;
+> > -	void __iomem *regs = tc->regs;
+> > -	unsigned group = pwm->hwpwm / 2;
+> > -	unsigned index = pwm->hwpwm % 2;
+> >  	unsigned cmr;
+> >  	enum pwm_polarity polarity = tcbpwm->polarity;
+> >
+> > @@ -161,10 +164,10 @@ static void atmel_tcb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+> >  		polarity = !polarity;
+> >
+> >  	spin_lock(&tcbpwmc->lock);
+> > -	cmr = __raw_readl(regs + ATMEL_TC_REG(group, CMR));
+> > +	regmap_read(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CMR), &cmr);
+> >
+> >  	/* flush old setting and set the new one */
+> > -	if (index == 0) {
+> > +	if (pwm->hwpwm == 0) {
+> >  		cmr &= ~ATMEL_TC_ACMR_MASK;
+> >  		if (polarity == PWM_POLARITY_INVERSED)
+> >  			cmr |= ATMEL_TC_ASWTRG_CLEAR;
+> > @@ -178,20 +181,22 @@ static void atmel_tcb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+> >  			cmr |= ATMEL_TC_BSWTRG_SET;
+> >  	}
+> >
+> > -	__raw_writel(cmr, regs + ATMEL_TC_REG(group, CMR));
+> > +	regmap_write(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CMR), cmr);
+> >
+> >  	/*
+> >  	 * Use software trigger to apply the new setting.
+> >  	 * If both PWM devices in this group are disabled we stop the clock.
+> >  	 */
+> >  	if (!(cmr & (ATMEL_TC_ACPC | ATMEL_TC_BCPC))) {
+> > -		__raw_writel(ATMEL_TC_SWTRG | ATMEL_TC_CLKDIS,
+> > -			     regs + ATMEL_TC_REG(group, CCR));
+> > -		tcbpwmc->bkup[group].enabled = 1;
+> > +		regmap_write(tcbpwmc->regmap,
+> > +			     ATMEL_TC_REG(tcbpwmc->channel, CCR),
+> > +			     ATMEL_TC_SWTRG | ATMEL_TC_CLKDIS);
+> > +		tcbpwmc->bkup.enabled = 1;
+> >  	} else {
+> > -		__raw_writel(ATMEL_TC_SWTRG, regs +
+> > -			     ATMEL_TC_REG(group, CCR));
+> > -		tcbpwmc->bkup[group].enabled = 0;
+> > +		regmap_write(tcbpwmc->regmap,
+> > +			     ATMEL_TC_REG(tcbpwmc->channel, CCR),
+> > +			     ATMEL_TC_SWTRG);
+> > +		tcbpwmc->bkup.enabled = 0;
+> >  	}
+> >
+> >  	spin_unlock(&tcbpwmc->lock);
+> > @@ -201,10 +206,6 @@ static int atmel_tcb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> >  {
+> >  	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
+> >  	struct atmel_tcb_pwm_device *tcbpwm = pwm_get_chip_data(pwm);
+> > -	struct atmel_tc *tc = tcbpwmc->tc;
+> > -	void __iomem *regs = tc->regs;
+> > -	unsigned group = pwm->hwpwm / 2;
+> > -	unsigned index = pwm->hwpwm % 2;
+> >  	u32 cmr;
+> >  	enum pwm_polarity polarity = tcbpwm->polarity;
+> >
+> > @@ -220,12 +221,12 @@ static int atmel_tcb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> >  		polarity = !polarity;
+> >
+> >  	spin_lock(&tcbpwmc->lock);
+> > -	cmr = __raw_readl(regs + ATMEL_TC_REG(group, CMR));
+> > +	regmap_read(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CMR), &cmr);
+> >
+> >  	/* flush old setting and set the new one */
+> >  	cmr &= ~ATMEL_TC_TCCLKS;
+> >
+> > -	if (index == 0) {
+> > +	if (pwm->hwpwm == 0) {
+> >  		cmr &= ~ATMEL_TC_ACMR_MASK;
+> >
+> >  		/* Set CMR flags according to given polarity */
+> > @@ -248,7 +249,7 @@ static int atmel_tcb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> >  	 * this config till next config call.
+> >  	 */
+> >  	if (tcbpwm->duty != tcbpwm->period && tcbpwm->duty > 0) {
+> > -		if (index == 0) {
+> > +		if (pwm->hwpwm == 0) {
+> >  			if (polarity == PWM_POLARITY_INVERSED)
+> >  				cmr |= ATMEL_TC_ACPA_SET | ATMEL_TC_ACPC_CLEAR;
+> >  			else
+> > @@ -263,19 +264,24 @@ static int atmel_tcb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> >
+> >  	cmr |= (tcbpwm->div & ATMEL_TC_TCCLKS);
+> >
+> > -	__raw_writel(cmr, regs + ATMEL_TC_REG(group, CMR));
+> > +	regmap_write(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CMR), cmr);
+> >
+> > -	if (index == 0)
+> > -		__raw_writel(tcbpwm->duty, regs + ATMEL_TC_REG(group, RA));
+> > +	if (pwm->hwpwm == 0)
+> > +		regmap_write(tcbpwmc->regmap,
+> > +			     ATMEL_TC_REG(tcbpwmc->channel, RA),
+> > +			     tcbpwm->duty);
+> >  	else
+> > -		__raw_writel(tcbpwm->duty, regs + ATMEL_TC_REG(group, RB));
+> > +		regmap_write(tcbpwmc->regmap,
+> > +			     ATMEL_TC_REG(tcbpwmc->channel, RB),
+> > +			     tcbpwm->duty);
+> >
+> > -	__raw_writel(tcbpwm->period, regs + ATMEL_TC_REG(group, RC));
+> > +	regmap_write(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, RC),
+> > +		     tcbpwm->period);
+> >
+> >  	/* Use software trigger to apply the new setting */
+> > -	__raw_writel(ATMEL_TC_CLKEN | ATMEL_TC_SWTRG,
+> > -		     regs + ATMEL_TC_REG(group, CCR));
+> > -	tcbpwmc->bkup[group].enabled = 1;
+> > +	regmap_write(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CCR),
+> > +		     ATMEL_TC_SWTRG | ATMEL_TC_CLKEN);
+> > +	tcbpwmc->bkup.enabled = 1;
+> >  	spin_unlock(&tcbpwmc->lock);
+> >  	return 0;
+> >  }
+> > @@ -285,15 +291,12 @@ static int atmel_tcb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> >  {
+> >  	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
+> >  	struct atmel_tcb_pwm_device *tcbpwm = pwm_get_chip_data(pwm);
+> > -	unsigned group = pwm->hwpwm / 2;
+> > -	unsigned index = pwm->hwpwm % 2;
+> >  	struct atmel_tcb_pwm_device *atcbpwm = NULL;
+> > -	struct atmel_tc *tc = tcbpwmc->tc;
+> >  	int i;
+> >  	int slowclk = 0;
+> >  	unsigned period;
+> >  	unsigned duty;
+> > -	unsigned rate = clk_get_rate(tc->clk[group]);
+> > +	unsigned rate = clk_get_rate(tcbpwmc->clk);
+> >  	unsigned long long min;
+> >  	unsigned long long max;
+> >
+> > @@ -301,13 +304,13 @@ static int atmel_tcb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> >  	 * Find best clk divisor:
+> >  	 * the smallest divisor which can fulfill the period_ns requirements.
+> >  	 */
+> > -	for (i = 0; i < 5; ++i) {
+> > -		if (atmel_tc_divisors[i] == 0) {
+> > +	for (i = 0; i < ARRAY_SIZE(atmel_tcb_divisors); ++i) {
+> > +		if (atmel_tcb_divisors[i] == 0) {
+> >  			slowclk = i;
+> >  			continue;
+> >  		}
+> > -		min = div_u64((u64)NSEC_PER_SEC * atmel_tc_divisors[i], rate);
+> > -		max = min << tc->tcb_config->counter_width;
+> > +		min = div_u64((u64)NSEC_PER_SEC * atmel_tcb_divisors[i], rate);
+> > +		max = min << tcbpwmc->width;
+> >  		if (max >= period_ns)
+> >  			break;
+> >  	}
+> > @@ -316,11 +319,11 @@ static int atmel_tcb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> >  	 * If none of the divisor are small enough to represent period_ns
+> >  	 * take slow clock (32KHz).
+> >  	 */
+> > -	if (i == 5) {
+> > +	if (i == ARRAY_SIZE(atmel_tcb_divisors)) {
+> >  		i = slowclk;
+> > -		rate = clk_get_rate(tc->slow_clk);
+> > +		rate = clk_get_rate(tcbpwmc->slow_clk);
+> >  		min = div_u64(NSEC_PER_SEC, rate);
+> > -		max = min << tc->tcb_config->counter_width;
+> > +		max = min << tcbpwmc->width;
+> >
+> >  		/* If period is too big return ERANGE error */
+> >  		if (max < period_ns)
+> > @@ -330,17 +333,13 @@ static int atmel_tcb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> >  	duty = div_u64(duty_ns, min);
+> >  	period = div_u64(period_ns, min);
+> >
+> > -	if (index == 0)
+> > -		atcbpwm = tcbpwmc->pwms[pwm->hwpwm + 1];
+> > +	if (pwm->hwpwm == 0)
+> > +		atcbpwm = tcbpwmc->pwms[1];
+> >  	else
+> > -		atcbpwm = tcbpwmc->pwms[pwm->hwpwm - 1];
+> > +		atcbpwm = tcbpwmc->pwms[0];
+> >
+> >  	/*
+> > -	 * PWM devices provided by TCB driver are grouped by 2:
+> > -	 * - group 0: PWM 0 & 1
+> > -	 * - group 1: PWM 2 & 3
+> > -	 * - group 2: PWM 4 & 5
+> > -	 *
+> > +	 * PWM devices provided by the TCB driver are grouped by 2.
+> >  	 * PWM devices in a given group must be configured with the
+> >  	 * same period_ns.
+> >  	 *
+> > @@ -376,32 +375,63 @@ static const struct pwm_ops atmel_tcb_pwm_ops = {
+> >  	.owner = THIS_MODULE,
+> >  };
+> >
+> > +static struct atmel_tcb_config tcb_rm9200_config = {
+> > +	.counter_width = 16,
+> > +};
+> > +
+> > +static struct atmel_tcb_config tcb_sam9x5_config = {
+> > +	.counter_width = 32,
+> > +};
+> > +
+> > +static const struct of_device_id atmel_tcb_of_match[] = {
+> > +	{ .compatible = "atmel,at91rm9200-tcb", .data = &tcb_rm9200_config, },
+> > +	{ .compatible = "atmel,at91sam9x5-tcb", .data = &tcb_sam9x5_config, },
+> > +	{ /* sentinel */ }
+> > +};
+> > +
+> >  static int atmel_tcb_pwm_probe(struct platform_device *pdev)
+> >  {
+> > +	const struct of_device_id *match;
+> >  	struct atmel_tcb_pwm_chip *tcbpwm;
+> > +	const struct atmel_tcb_config *config;
+> >  	struct device_node *np = pdev->dev.of_node;
+> > -	struct atmel_tc *tc;
+> > +	struct regmap *regmap;
+> > +	struct clk *clk;
+> > +	struct clk *slow_clk;
+> > +	char clk_name[] = "t0_clk";
+> >  	int err;
+> > -	int tcblock;
+> > +	int channel;
+> >
+> > -	err = of_property_read_u32(np, "tc-block", &tcblock);
+> > +	err = of_property_read_u32(np, "reg", &channel);
+> >  	if (err < 0) {
+> >  		dev_err(&pdev->dev,
+> > -			"failed to get Timer Counter Block number from device tree (error: %d)\n",
+> > +			"failed to get Timer Counter Block channel from device tree (error: %d)\n",
+> >  			err);
+> >  		return err;
+> >  	}
+> >
+> > -	tc = atmel_tc_alloc(tcblock);
+> > -	if (tc == NULL) {
+> > -		dev_err(&pdev->dev, "failed to allocate Timer Counter Block\n");
+> > -		return -ENOMEM;
+> > -	}
+> > +	regmap = syscon_node_to_regmap(np->parent);
+> > +	if (IS_ERR(regmap))
+> > +		return PTR_ERR(regmap);
+> > +
+> > +	slow_clk = of_clk_get_by_name(np->parent, "slow_clk");
+> > +	if (IS_ERR(slow_clk))
+> > +		return PTR_ERR(slow_clk);
+> > +
+> > +	clk_name[1] += channel;
+> > +	clk = of_clk_get_by_name(np->parent, clk_name);
+> > +	if (IS_ERR(clk))
+> > +		clk = of_clk_get_by_name(np->parent, "t0_clk");
+> > +	if (IS_ERR(clk))
+> > +		return PTR_ERR(clk);
+> > +
+> > +	match = of_match_node(atmel_tcb_of_match, np->parent);
+> > +	config = match->data;
+> >
+> >  	tcbpwm = devm_kzalloc(&pdev->dev, sizeof(*tcbpwm), GFP_KERNEL);
+> >  	if (tcbpwm == NULL) {
+> >  		err = -ENOMEM;
+> > -		goto err_free_tc;
+> > +		goto err_slow_clk;
+> >  	}
+> >
+> >  	tcbpwm->chip.dev = &pdev->dev;
+> > @@ -410,11 +440,15 @@ static int atmel_tcb_pwm_probe(struct platform_device *pdev)
+> >  	tcbpwm->chip.of_pwm_n_cells = 3;
+> >  	tcbpwm->chip.base = -1;
+> >  	tcbpwm->chip.npwm = NPWM;
+> > -	tcbpwm->tc = tc;
+> > +	tcbpwm->channel = channel;
+> > +	tcbpwm->regmap = regmap;
+> > +	tcbpwm->clk = clk;
+> > +	tcbpwm->slow_clk = slow_clk;
+> > +	tcbpwm->width = config->counter_width;
+> >
+> > -	err = clk_prepare_enable(tc->slow_clk);
+> > +	err = clk_prepare_enable(slow_clk);
+> >  	if (err)
+> > -		goto err_free_tc;
+> > +		goto err_slow_clk;
+> >
+> >  	spin_lock_init(&tcbpwm->lock);
+> >
+> > @@ -427,10 +461,10 @@ static int atmel_tcb_pwm_probe(struct platform_device *pdev)
+> >  	return 0;
+> >
+> >  err_disable_clk:
+> > -	clk_disable_unprepare(tcbpwm->tc->slow_clk);
+> > +	clk_disable_unprepare(tcbpwm->slow_clk);
+> >
+> > -err_free_tc:
+> > -	atmel_tc_free(tc);
+> > +err_slow_clk:
+> > +	clk_put(slow_clk);
+> >
+> >  	return err;
+> >  }
+> > @@ -440,14 +474,14 @@ static int atmel_tcb_pwm_remove(struct platform_device *pdev)
+> >  	struct atmel_tcb_pwm_chip *tcbpwm = platform_get_drvdata(pdev);
+> >  	int err;
+> >
+> > -	clk_disable_unprepare(tcbpwm->tc->slow_clk);
+> > +	clk_disable_unprepare(tcbpwm->slow_clk);
+> > +	clk_put(tcbpwm->slow_clk);
+> > +	clk_put(tcbpwm->clk);
+> >
+> >  	err = pwmchip_remove(&tcbpwm->chip);
+> >  	if (err < 0)
+> >  		return err;
+> >
+> > -	atmel_tc_free(tcbpwm->tc);
+> > -
+> >  	return 0;
+> >  }
+> >
+> > @@ -461,38 +495,33 @@ MODULE_DEVICE_TABLE(of, atmel_tcb_pwm_dt_ids);
+> >  static int atmel_tcb_pwm_suspend(struct device *dev)
+> >  {
+> >  	struct atmel_tcb_pwm_chip *tcbpwm = dev_get_drvdata(dev);
+> > -	void __iomem *base = tcbpwm->tc->regs;
+> > -	int i;
+> > +	struct atmel_tcb_channel *chan = &tcbpwm->bkup;
+> > +	unsigned int channel = tcbpwm->channel;
+> >
+> > -	for (i = 0; i < (NPWM / 2); i++) {
+> > -		struct atmel_tcb_channel *chan = &tcbpwm->bkup[i];
+> > +	regmap_read(tcbpwm->regmap, ATMEL_TC_REG(channel, CMR), &chan->cmr);
+> > +	regmap_read(tcbpwm->regmap, ATMEL_TC_REG(channel, RA), &chan->ra);
+> > +	regmap_read(tcbpwm->regmap, ATMEL_TC_REG(channel, RB), &chan->rb);
+> > +	regmap_read(tcbpwm->regmap, ATMEL_TC_REG(channel, RC), &chan->rc);
+> >
+> > -		chan->cmr = readl(base + ATMEL_TC_REG(i, CMR));
+> > -		chan->ra = readl(base + ATMEL_TC_REG(i, RA));
+> > -		chan->rb = readl(base + ATMEL_TC_REG(i, RB));
+> > -		chan->rc = readl(base + ATMEL_TC_REG(i, RC));
+> > -	}
+> >  	return 0;
+> >  }
+> >
+> >  static int atmel_tcb_pwm_resume(struct device *dev)
+> >  {
+> >  	struct atmel_tcb_pwm_chip *tcbpwm = dev_get_drvdata(dev);
+> > -	void __iomem *base = tcbpwm->tc->regs;
+> > -	int i;
+> > +	struct atmel_tcb_channel *chan = &tcbpwm->bkup;
+> > +	unsigned int channel = tcbpwm->channel;
+> >
+> > -	for (i = 0; i < (NPWM / 2); i++) {
+> > -		struct atmel_tcb_channel *chan = &tcbpwm->bkup[i];
+> > +	regmap_write(tcbpwm->regmap, ATMEL_TC_REG(channel, CMR), chan->cmr);
+> > +	regmap_write(tcbpwm->regmap, ATMEL_TC_REG(channel, RA), chan->ra);
+> > +	regmap_write(tcbpwm->regmap, ATMEL_TC_REG(channel, RB), chan->rb);
+> > +	regmap_write(tcbpwm->regmap, ATMEL_TC_REG(channel, RC), chan->rc);
+> > +
+> > +	if (chan->enabled)
+> > +		regmap_write(tcbpwm->regmap,
+> > +			     ATMEL_TC_CLKEN | ATMEL_TC_SWTRG,
+> > +			     ATMEL_TC_REG(channel, CCR));
+> >
+> > -		writel(chan->cmr, base + ATMEL_TC_REG(i, CMR));
+> > -		writel(chan->ra, base + ATMEL_TC_REG(i, RA));
+> > -		writel(chan->rb, base + ATMEL_TC_REG(i, RB));
+> > -		writel(chan->rc, base + ATMEL_TC_REG(i, RC));
+> > -		if (chan->enabled) {
+> > -			writel(ATMEL_TC_CLKEN | ATMEL_TC_SWTRG,
+> > -				base + ATMEL_TC_REG(i, CCR));
+> > -		}
+> > -	}
+> >  	return 0;
+> >  }
+> >  #endif
+> > --
+> > 2.25.0
+> >
+>
+> --
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
-The .get_state() callback is actually called when the PWM is requested,
-which could be much later than when the chip is registered. That doesn't
-change the fact that it would be useless for this case, though.
-
-> It does look like we have a square peg (this chip) in a round hole (the
-> standard assumptions the pwm core makes) ?
-
-There are other chips where a single period is shared across multiple
-PWM channels. Typically what we do there is once a period is configured
-for a given channel, all subsequent PWM channel configurations must use
-the same period, or otherwise the driver will return an error code.
-
-See for example:
-
-  - stm32_pwm_config() in drivers/pwm/pwm-stm32.c
-  - lpc18xx_pwm_config() in drivers/pwm/pwm-lpc18xx-sct.c
-  - pwm_imx_tpm_apply_hw() in drivers/pwm/pwm-imx-tpm.c
-  - fsl_pwm_apply_config() in drivers/pwm/pwm-fsl-ftm.c
-
-The rationale behind that is that we must not change a PWM configuration
-without a consumer having explicitly requested it.
-
-It seems like PCA9685 is somewhere halfway between in that it will
-actually keep the same duty-cycle/period ratio, but that doesn't mean it
-is automatically okay to do this. The problem is that the duty-cycle to
-period ratio is only relevant in some cases. If all you care about is
-the power output of the PWM signal, which admittedly seems to be about
-95% of all cases, then yes, this behaviour would be okay. But what if we
-have a consumer that relies on a particular width of the PWM pulse in
-absolute terms rather than relative to the period?
-
-Thierry
-
---OgqxwSJOaUobr8KG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6K+5kACgkQ3SOs138+
-s6HhFA/+PEiXL6s/Cq43Hd4WNCKlr04FsvoDJM6O5IuLU1Juh8TT2IZImpKY/BKD
-J6xXeqCkuOHbeWNpV4w8TM/ZD8UJ4JLM95l9fVs363tFZ/+UG34Oem3pSzLAv793
-gtGz5gQXgCBWcoe3dvKXdADVwuhhveigg/W0dINZJ90lwW+nfYTQKRveQTa73+EG
-1J/D7vHORq7d3Lmfa6clKNTuz/mtZ+OizAZK02a9YUJiZ9ZTB9T2UItNIZBJzjsg
-B00O/NE7siC/un37QUYgb68fryLCcRfDnuVkZGTAjx1lIXPMWID162oGhlyHqaKC
-s6rD1f7VwGOZZDaXmlj6a+gnkoGdArnOhTc4NzNiLOl5opuJjMXWTarxsP411oW5
-v31nksb37+Nr2rTbyvhUEqmeCbqiNoYFvFXsleJsF2LIrroYGTU0GrucCzXh5v7U
-Z+phxutOZMAW0OrhVS26/kNr8oOKgyVX2UHi2KI+c6n9/ccwv7LBDtgVC7/1/r0B
-ZChU1ymVrBNLSyDgclBc5DnR4FTYYiOBE5Mh/jRkccHu8HMUHCdpw6DPerrcIMil
-hxkz9CPn6tgVUgXdMNxDM/J8zn5t6IY27PP0S96ZejCZZqot7SzyxnuF25UaMeqL
-xmuRlJjDF0X2yCn/+6FflGG4Rm3RfIMfj+Zo6v5iYMtj7CmXCpo=
-=0CGN
------END PGP SIGNATURE-----
-
---OgqxwSJOaUobr8KG--
+--
+Kamel Bouhara, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
