@@ -2,34 +2,34 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FDC919F1E3
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Apr 2020 10:56:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4C7219F1E6
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Apr 2020 10:58:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgDFI4K (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Apr 2020 04:56:10 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:40675 "EHLO
+        id S1726705AbgDFI6p (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Apr 2020 04:58:45 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:57405 "EHLO
         relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgDFI4K (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Apr 2020 04:56:10 -0400
+        with ESMTP id S1726622AbgDFI6o (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Apr 2020 04:58:44 -0400
 X-Originating-IP: 78.193.40.249
 Received: from localhost (unknown [78.193.40.249])
         (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 15DC4C0022;
-        Mon,  6 Apr 2020 08:56:07 +0000 (UTC)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id CF30DC0002;
+        Mon,  6 Apr 2020 08:58:41 +0000 (UTC)
 From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
 Cc:     Alexandre Belloni <alexandre.belloni@free-electrons.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org
+        linux-pwm@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
 Subject: [PATCH 02/11] pwm: atmel-tcb: switch to new binding
-Date:   Mon,  6 Apr 2020 10:55:49 +0200
-Message-Id: <20200406085558.990617-3-kamel.bouhara@bootlin.com>
+Date:   Mon,  6 Apr 2020 10:58:25 +0200
+Message-Id: <20200406085834.992521-3-kamel.bouhara@bootlin.com>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200406085558.990617-1-kamel.bouhara@bootlin.com>
-References: <20200406085558.990617-1-kamel.bouhara@bootlin.com>
+In-Reply-To: <20200406085834.992521-1-kamel.bouhara@bootlin.com>
+References: <20200406085834.992521-1-kamel.bouhara@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
