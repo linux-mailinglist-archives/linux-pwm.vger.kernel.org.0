@@ -2,603 +2,556 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6173919F128
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Apr 2020 09:48:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FDC919F1E3
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Apr 2020 10:56:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgDFHsH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Apr 2020 03:48:07 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39532 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgDFHsG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Apr 2020 03:48:06 -0400
-Received: by mail-qt1-f193.google.com with SMTP id f20so12107123qtq.6
-        for <linux-pwm@vger.kernel.org>; Mon, 06 Apr 2020 00:48:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=amAF0/6ZAlncZUHeVlhe3w2Ki3z4fhffTcU8qEplQgI=;
-        b=TGEztmhV4iB7KyI5BPf8WoTfqW3RCZUlDikAjrf1SR+nN1ZsXwXw2LRG86FQfm7Vmk
-         yf7DjN8owLtSCpXTYmdNKugl6ddHr5UviVK0DWckTC+8BSgi4oKm2WkuR1cOfxw1ejTk
-         b0sfFieGzMsxgNCHBn7I9YXMZL/47t1Rr/Wh6WRw/08nhG+/naUtTien/aMtfPkJvEp2
-         +JSy8a8tR3cOr7obFkgvuGtURmTRVYq++sadK9pcZtZVhgd3ah+/FCTiT6bOhVdZ9R7T
-         sJOW+IFFQBDi9XJCU/Wf11AQfeluJniuWM0IZhDfPafDVPHlY5jdVrW1kFw060cL6RgB
-         EjRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=amAF0/6ZAlncZUHeVlhe3w2Ki3z4fhffTcU8qEplQgI=;
-        b=kEiT4l9rUkrv0QdrqZxPtE8v6MKzacKTJy4+GSqcA2YaaEjGYuDlyjmdnzk/t9NHPV
-         QDGBDQA/U/EmV69CsrpU3Ltbr9vc6Wnuut0npsZtAzZJdKll+Q7skd8E39IEXWeRh+le
-         kKoNbhUtCVwvey7jdddvBLSNCGeQYgkkvd4ceN0n2iootMk8zdVVQD8lhCNRnlQBEbuW
-         gyDgq9s4kmgoXKY3XnnUnJ6hzhmfy90a+AHfOAme9nwujZeK9A4ozzbbjLWk7L2OJhaN
-         j4LwB2Ku+jw44DRwDC1xa+Mj+ZpIb5LVqc4nUk8NojsIMopyQXL+ogoNqxp2k8yZjDWs
-         qQAA==
-X-Gm-Message-State: AGi0PubYKyRtcHuc/Ge43c/AuF9VQgw8+xHQS/2tLqcY0nana0gohuKC
-        H/SLKwCikCwR9O4rxlLAaCE9DC5ulAvcz3AdCPusxQ==
-X-Google-Smtp-Source: APiQypIZh9O39IoVlyPxAsvhWgOsBERW3TzNwd/djolltb8HgtlAHalS0On8dowlQ6zkrSLVBqEdY6ashXn19IuDVN0=
-X-Received: by 2002:ac8:5318:: with SMTP id t24mr3914516qtn.208.1586159284935;
- Mon, 06 Apr 2020 00:48:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200402203656.27047-1-michael@walle.cc> <20200402203656.27047-11-michael@walle.cc>
-In-Reply-To: <20200402203656.27047-11-michael@walle.cc>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 6 Apr 2020 09:47:54 +0200
-Message-ID: <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com>
-Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using regmap
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
+        id S1726533AbgDFI4K (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Apr 2020 04:56:10 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:40675 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbgDFI4K (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Apr 2020 04:56:10 -0400
+X-Originating-IP: 78.193.40.249
+Received: from localhost (unknown [78.193.40.249])
+        (Authenticated sender: kamel.bouhara@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 15DC4C0022;
+        Mon,  6 Apr 2020 08:56:07 +0000 (UTC)
+From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Alexandre Belloni <alexandre.belloni@free-electrons.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-pwm@vger.kernel.org
+Subject: [PATCH 02/11] pwm: atmel-tcb: switch to new binding
+Date:   Mon,  6 Apr 2020 10:55:49 +0200
+Message-Id: <20200406085558.990617-3-kamel.bouhara@bootlin.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200406085558.990617-1-kamel.bouhara@bootlin.com>
+References: <20200406085558.990617-1-kamel.bouhara@bootlin.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-czw., 2 kwi 2020 o 22:37 Michael Walle <michael@walle.cc> napisa=C5=82(a):
->
-> There are quite a lot simple GPIO controller which are using regmap to
-> access the hardware. This driver tries to be a base to unify existing
-> code into one place. This won't cover everything but it should be a good
-> starting point.
->
-> It does not implement its own irq_chip because there is already a
-> generic one for regmap based devices. Instead, the irq_chip will be
-> instanciated in the parent driver and its irq domain will be associate
-> to this driver.
->
-> For now it consists of the usual registers, like set (and an optional
-> clear) data register, an input register and direction registers.
-> Out-of-the-box, it supports consecutive register mappings and mappings
-> where the registers have gaps between them with a linear mapping between
-> GPIO offset and bit position. For weirder mappings the user can register
-> its own .xlate().
->
-> Signed-off-by: Michael Walle <michael@walle.cc>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 
-Hi Michael,
+The PWM is now a subnode of the used TCB. This is cleaner and it mainly
+allows to stop wasting TCB channels when only 2 or 4 PWMs are used.
 
-Thanks for doing this! When looking at other generic drivers:
-gpio-mmio and gpio-reg I can see there are some corner-cases and more
-specific configuration options we could add but it's not a blocker,
-we'll probably be extending this one as we convert more drivers to
-using it. Personally I'd love to see gpio-mmio and gpio-reg removed
-and replaced by a single, generic regmap interface eventually.
+This also removes the atmel_tclib dependency
 
-> ---
->  drivers/gpio/Kconfig        |   4 +
->  drivers/gpio/Makefile       |   1 +
->  drivers/gpio/gpio-regmap.c  | 320 ++++++++++++++++++++++++++++++++++++
->  include/linux/gpio-regmap.h |  88 ++++++++++
->  4 files changed, 413 insertions(+)
->  create mode 100644 drivers/gpio/gpio-regmap.c
->  create mode 100644 include/linux/gpio-regmap.h
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 1b96169d84f7..a8e148f4b2e0 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -73,6 +73,10 @@ config GPIO_GENERIC
->         depends on HAS_IOMEM # Only for IOMEM drivers
->         tristate
->
-> +config GPIO_REGMAP
-> +       depends on REGMAP
-> +       tristate
-> +
->  # put drivers in the right section, in alphabetical order
->
->  # This symbol is selected by both I2C and SPI expanders
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index b2cfc21a97f3..93e139fdfa57 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -12,6 +12,7 @@ obj-$(CONFIG_GPIO_SYSFS)      +=3D gpiolib-sysfs.o
->  obj-$(CONFIG_GPIO_ACPI)                +=3D gpiolib-acpi.o
->
->  # Device drivers. Generally keep list sorted alphabetically
-> +obj-$(CONFIG_GPIO_REGMAP)      +=3D gpio-regmap.o
->  obj-$(CONFIG_GPIO_GENERIC)     +=3D gpio-generic.o
->
->  # directly supported by gpio-generic
-> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-> new file mode 100644
-> index 000000000000..cc4437dc0521
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-regmap.c
-> @@ -0,0 +1,320 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * regmap based generic GPIO driver
-> + *
-> + * Copyright 2019 Michael Walle <michael@walle.cc>
-> + */
-> +
-> +#include <linux/gpio/driver.h>
-> +#include <linux/gpio-regmap.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +
-> +struct gpio_regmap_data {
-> +       struct gpio_chip gpio_chip;
-> +       struct gpio_regmap *gpio;
-> +};
-> +
-> +/**
-> + * gpio_regmap_simple_xlate() - translate base/offset to reg/mask
-> + *
-> + * Use a simple linear mapping to translate the offset to the bitmask.
-> + */
-> +int gpio_regmap_simple_xlate(struct gpio_regmap *gpio, unsigned int base=
-,
-> +                            unsigned int offset,
-> +                            unsigned int *reg, unsigned int *mask)
-> +{
-> +       unsigned int line =3D offset % gpio->ngpio_per_reg;
-> +       unsigned int stride =3D offset / gpio->ngpio_per_reg;
-> +
-> +       *reg =3D base + stride * gpio->reg_stride;
-> +       *mask =3D BIT(line);
-> +
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(gpio_regmap_simple_xlate);
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-pwm@vger.kernel.org
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/pwm/Kconfig         |   3 +-
+ drivers/pwm/pwm-atmel-tcb.c | 241 ++++++++++++++++++++----------------
+ 2 files changed, 137 insertions(+), 107 deletions(-)
 
-Why does this need to be exported?
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 30190beeb6e9..1cf5a5d672c8 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -65,7 +65,8 @@ config PWM_ATMEL_HLCDC_PWM
+ 
+ config PWM_ATMEL_TCB
+ 	tristate "Atmel TC Block PWM support"
+-	depends on ATMEL_TCLIB && OF
++	depends on OF
++	select REGMAP_MMIO
+ 	help
+ 	  Generic PWM framework driver for Atmel Timer Counter Block.
+ 
+diff --git a/drivers/pwm/pwm-atmel-tcb.c b/drivers/pwm/pwm-atmel-tcb.c
+index 85c53701958c..82edb44fbbd8 100644
+--- a/drivers/pwm/pwm-atmel-tcb.c
++++ b/drivers/pwm/pwm-atmel-tcb.c
+@@ -16,13 +16,16 @@
+ #include <linux/err.h>
+ #include <linux/ioport.h>
+ #include <linux/io.h>
++#include <linux/mfd/syscon.h>
+ #include <linux/platform_device.h>
+ #include <linux/pwm.h>
+ #include <linux/of_device.h>
++#include <linux/of_irq.h>
++#include <linux/regmap.h>
+ #include <linux/slab.h>
+ #include <soc/at91/atmel_tcb.h>
+ 
+-#define NPWM	6
++#define NPWM	2
+ 
+ #define ATMEL_TC_ACMR_MASK	(ATMEL_TC_ACPA | ATMEL_TC_ACPC |	\
+ 				 ATMEL_TC_AEEVT | ATMEL_TC_ASWTRG)
+@@ -48,11 +51,17 @@ struct atmel_tcb_channel {
+ struct atmel_tcb_pwm_chip {
+ 	struct pwm_chip chip;
+ 	spinlock_t lock;
+-	struct atmel_tc *tc;
++	u8 channel;
++	u8 width;
++	struct regmap *regmap;
++	struct clk *clk;
++	struct clk *slow_clk;
+ 	struct atmel_tcb_pwm_device *pwms[NPWM];
+-	struct atmel_tcb_channel bkup[NPWM / 2];
++	struct atmel_tcb_channel bkup;
+ };
+ 
++const u8 atmel_tcb_divisors[] = { 2, 8, 32, 128, 0, };
++
+ static inline struct atmel_tcb_pwm_chip *to_tcb_chip(struct pwm_chip *chip)
+ {
+ 	return container_of(chip, struct atmel_tcb_pwm_chip, chip);
+@@ -74,10 +83,6 @@ static int atmel_tcb_pwm_request(struct pwm_chip *chip,
+ {
+ 	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
+ 	struct atmel_tcb_pwm_device *tcbpwm;
+-	struct atmel_tc *tc = tcbpwmc->tc;
+-	void __iomem *regs = tc->regs;
+-	unsigned group = pwm->hwpwm / 2;
+-	unsigned index = pwm->hwpwm % 2;
+ 	unsigned cmr;
+ 	int ret;
+ 
+@@ -85,7 +90,7 @@ static int atmel_tcb_pwm_request(struct pwm_chip *chip,
+ 	if (!tcbpwm)
+ 		return -ENOMEM;
+ 
+-	ret = clk_prepare_enable(tc->clk[group]);
++	ret = clk_prepare_enable(tcbpwmc->clk);
+ 	if (ret) {
+ 		devm_kfree(chip->dev, tcbpwm);
+ 		return ret;
+@@ -98,28 +103,31 @@ static int atmel_tcb_pwm_request(struct pwm_chip *chip,
+ 	tcbpwm->div = 0;
+ 
+ 	spin_lock(&tcbpwmc->lock);
+-	cmr = __raw_readl(regs + ATMEL_TC_REG(group, CMR));
++	regmap_read(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CMR), &cmr);
+ 	/*
+ 	 * Get init config from Timer Counter registers if
+ 	 * Timer Counter is already configured as a PWM generator.
+ 	 */
+ 	if (cmr & ATMEL_TC_WAVE) {
+-		if (index == 0)
+-			tcbpwm->duty =
+-				__raw_readl(regs + ATMEL_TC_REG(group, RA));
++		if (pwm->hwpwm == 0)
++			regmap_read(tcbpwmc->regmap,
++				    ATMEL_TC_REG(tcbpwmc->channel, RA),
++				    &tcbpwm->duty);
+ 		else
+-			tcbpwm->duty =
+-				__raw_readl(regs + ATMEL_TC_REG(group, RB));
++			regmap_read(tcbpwmc->regmap,
++				    ATMEL_TC_REG(tcbpwmc->channel, RB),
++				    &tcbpwm->duty);
+ 
+ 		tcbpwm->div = cmr & ATMEL_TC_TCCLKS;
+-		tcbpwm->period = __raw_readl(regs + ATMEL_TC_REG(group, RC));
++		regmap_read(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, RC),
++			    &tcbpwm->period);
+ 		cmr &= (ATMEL_TC_TCCLKS | ATMEL_TC_ACMR_MASK |
+ 			ATMEL_TC_BCMR_MASK);
+ 	} else
+ 		cmr = 0;
+ 
+ 	cmr |= ATMEL_TC_WAVE | ATMEL_TC_WAVESEL_UP_AUTO | ATMEL_TC_EEVT_XC0;
+-	__raw_writel(cmr, regs + ATMEL_TC_REG(group, CMR));
++	regmap_write(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CMR), cmr);
+ 	spin_unlock(&tcbpwmc->lock);
+ 
+ 	tcbpwmc->pwms[pwm->hwpwm] = tcbpwm;
+@@ -131,9 +139,8 @@ static void atmel_tcb_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+ 	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
+ 	struct atmel_tcb_pwm_device *tcbpwm = pwm_get_chip_data(pwm);
+-	struct atmel_tc *tc = tcbpwmc->tc;
+ 
+-	clk_disable_unprepare(tc->clk[pwm->hwpwm / 2]);
++	clk_disable_unprepare(tcbpwmc->clk);
+ 	tcbpwmc->pwms[pwm->hwpwm] = NULL;
+ 	devm_kfree(chip->dev, tcbpwm);
+ }
+@@ -142,10 +149,6 @@ static void atmel_tcb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+ 	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
+ 	struct atmel_tcb_pwm_device *tcbpwm = pwm_get_chip_data(pwm);
+-	struct atmel_tc *tc = tcbpwmc->tc;
+-	void __iomem *regs = tc->regs;
+-	unsigned group = pwm->hwpwm / 2;
+-	unsigned index = pwm->hwpwm % 2;
+ 	unsigned cmr;
+ 	enum pwm_polarity polarity = tcbpwm->polarity;
+ 
+@@ -161,10 +164,10 @@ static void atmel_tcb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 		polarity = !polarity;
+ 
+ 	spin_lock(&tcbpwmc->lock);
+-	cmr = __raw_readl(regs + ATMEL_TC_REG(group, CMR));
++	regmap_read(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CMR), &cmr);
+ 
+ 	/* flush old setting and set the new one */
+-	if (index == 0) {
++	if (pwm->hwpwm == 0) {
+ 		cmr &= ~ATMEL_TC_ACMR_MASK;
+ 		if (polarity == PWM_POLARITY_INVERSED)
+ 			cmr |= ATMEL_TC_ASWTRG_CLEAR;
+@@ -178,20 +181,22 @@ static void atmel_tcb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 			cmr |= ATMEL_TC_BSWTRG_SET;
+ 	}
+ 
+-	__raw_writel(cmr, regs + ATMEL_TC_REG(group, CMR));
++	regmap_write(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CMR), cmr);
+ 
+ 	/*
+ 	 * Use software trigger to apply the new setting.
+ 	 * If both PWM devices in this group are disabled we stop the clock.
+ 	 */
+ 	if (!(cmr & (ATMEL_TC_ACPC | ATMEL_TC_BCPC))) {
+-		__raw_writel(ATMEL_TC_SWTRG | ATMEL_TC_CLKDIS,
+-			     regs + ATMEL_TC_REG(group, CCR));
+-		tcbpwmc->bkup[group].enabled = 1;
++		regmap_write(tcbpwmc->regmap,
++			     ATMEL_TC_REG(tcbpwmc->channel, CCR),
++			     ATMEL_TC_SWTRG | ATMEL_TC_CLKDIS);
++		tcbpwmc->bkup.enabled = 1;
+ 	} else {
+-		__raw_writel(ATMEL_TC_SWTRG, regs +
+-			     ATMEL_TC_REG(group, CCR));
+-		tcbpwmc->bkup[group].enabled = 0;
++		regmap_write(tcbpwmc->regmap,
++			     ATMEL_TC_REG(tcbpwmc->channel, CCR),
++			     ATMEL_TC_SWTRG);
++		tcbpwmc->bkup.enabled = 0;
+ 	}
+ 
+ 	spin_unlock(&tcbpwmc->lock);
+@@ -201,10 +206,6 @@ static int atmel_tcb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+ 	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
+ 	struct atmel_tcb_pwm_device *tcbpwm = pwm_get_chip_data(pwm);
+-	struct atmel_tc *tc = tcbpwmc->tc;
+-	void __iomem *regs = tc->regs;
+-	unsigned group = pwm->hwpwm / 2;
+-	unsigned index = pwm->hwpwm % 2;
+ 	u32 cmr;
+ 	enum pwm_polarity polarity = tcbpwm->polarity;
+ 
+@@ -220,12 +221,12 @@ static int atmel_tcb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 		polarity = !polarity;
+ 
+ 	spin_lock(&tcbpwmc->lock);
+-	cmr = __raw_readl(regs + ATMEL_TC_REG(group, CMR));
++	regmap_read(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CMR), &cmr);
+ 
+ 	/* flush old setting and set the new one */
+ 	cmr &= ~ATMEL_TC_TCCLKS;
+ 
+-	if (index == 0) {
++	if (pwm->hwpwm == 0) {
+ 		cmr &= ~ATMEL_TC_ACMR_MASK;
+ 
+ 		/* Set CMR flags according to given polarity */
+@@ -248,7 +249,7 @@ static int atmel_tcb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	 * this config till next config call.
+ 	 */
+ 	if (tcbpwm->duty != tcbpwm->period && tcbpwm->duty > 0) {
+-		if (index == 0) {
++		if (pwm->hwpwm == 0) {
+ 			if (polarity == PWM_POLARITY_INVERSED)
+ 				cmr |= ATMEL_TC_ACPA_SET | ATMEL_TC_ACPC_CLEAR;
+ 			else
+@@ -263,19 +264,24 @@ static int atmel_tcb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 
+ 	cmr |= (tcbpwm->div & ATMEL_TC_TCCLKS);
+ 
+-	__raw_writel(cmr, regs + ATMEL_TC_REG(group, CMR));
++	regmap_write(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CMR), cmr);
+ 
+-	if (index == 0)
+-		__raw_writel(tcbpwm->duty, regs + ATMEL_TC_REG(group, RA));
++	if (pwm->hwpwm == 0)
++		regmap_write(tcbpwmc->regmap,
++			     ATMEL_TC_REG(tcbpwmc->channel, RA),
++			     tcbpwm->duty);
+ 	else
+-		__raw_writel(tcbpwm->duty, regs + ATMEL_TC_REG(group, RB));
++		regmap_write(tcbpwmc->regmap,
++			     ATMEL_TC_REG(tcbpwmc->channel, RB),
++			     tcbpwm->duty);
+ 
+-	__raw_writel(tcbpwm->period, regs + ATMEL_TC_REG(group, RC));
++	regmap_write(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, RC),
++		     tcbpwm->period);
+ 
+ 	/* Use software trigger to apply the new setting */
+-	__raw_writel(ATMEL_TC_CLKEN | ATMEL_TC_SWTRG,
+-		     regs + ATMEL_TC_REG(group, CCR));
+-	tcbpwmc->bkup[group].enabled = 1;
++	regmap_write(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CCR),
++		     ATMEL_TC_SWTRG | ATMEL_TC_CLKEN);
++	tcbpwmc->bkup.enabled = 1;
+ 	spin_unlock(&tcbpwmc->lock);
+ 	return 0;
+ }
+@@ -285,15 +291,12 @@ static int atmel_tcb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ {
+ 	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
+ 	struct atmel_tcb_pwm_device *tcbpwm = pwm_get_chip_data(pwm);
+-	unsigned group = pwm->hwpwm / 2;
+-	unsigned index = pwm->hwpwm % 2;
+ 	struct atmel_tcb_pwm_device *atcbpwm = NULL;
+-	struct atmel_tc *tc = tcbpwmc->tc;
+ 	int i;
+ 	int slowclk = 0;
+ 	unsigned period;
+ 	unsigned duty;
+-	unsigned rate = clk_get_rate(tc->clk[group]);
++	unsigned rate = clk_get_rate(tcbpwmc->clk);
+ 	unsigned long long min;
+ 	unsigned long long max;
+ 
+@@ -301,13 +304,13 @@ static int atmel_tcb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	 * Find best clk divisor:
+ 	 * the smallest divisor which can fulfill the period_ns requirements.
+ 	 */
+-	for (i = 0; i < 5; ++i) {
+-		if (atmel_tc_divisors[i] == 0) {
++	for (i = 0; i < ARRAY_SIZE(atmel_tcb_divisors); ++i) {
++		if (atmel_tcb_divisors[i] == 0) {
+ 			slowclk = i;
+ 			continue;
+ 		}
+-		min = div_u64((u64)NSEC_PER_SEC * atmel_tc_divisors[i], rate);
+-		max = min << tc->tcb_config->counter_width;
++		min = div_u64((u64)NSEC_PER_SEC * atmel_tcb_divisors[i], rate);
++		max = min << tcbpwmc->width;
+ 		if (max >= period_ns)
+ 			break;
+ 	}
+@@ -316,11 +319,11 @@ static int atmel_tcb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	 * If none of the divisor are small enough to represent period_ns
+ 	 * take slow clock (32KHz).
+ 	 */
+-	if (i == 5) {
++	if (i == ARRAY_SIZE(atmel_tcb_divisors)) {
+ 		i = slowclk;
+-		rate = clk_get_rate(tc->slow_clk);
++		rate = clk_get_rate(tcbpwmc->slow_clk);
+ 		min = div_u64(NSEC_PER_SEC, rate);
+-		max = min << tc->tcb_config->counter_width;
++		max = min << tcbpwmc->width;
+ 
+ 		/* If period is too big return ERANGE error */
+ 		if (max < period_ns)
+@@ -330,17 +333,13 @@ static int atmel_tcb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	duty = div_u64(duty_ns, min);
+ 	period = div_u64(period_ns, min);
+ 
+-	if (index == 0)
+-		atcbpwm = tcbpwmc->pwms[pwm->hwpwm + 1];
++	if (pwm->hwpwm == 0)
++		atcbpwm = tcbpwmc->pwms[1];
+ 	else
+-		atcbpwm = tcbpwmc->pwms[pwm->hwpwm - 1];
++		atcbpwm = tcbpwmc->pwms[0];
+ 
+ 	/*
+-	 * PWM devices provided by TCB driver are grouped by 2:
+-	 * - group 0: PWM 0 & 1
+-	 * - group 1: PWM 2 & 3
+-	 * - group 2: PWM 4 & 5
+-	 *
++	 * PWM devices provided by the TCB driver are grouped by 2.
+ 	 * PWM devices in a given group must be configured with the
+ 	 * same period_ns.
+ 	 *
+@@ -376,32 +375,63 @@ static const struct pwm_ops atmel_tcb_pwm_ops = {
+ 	.owner = THIS_MODULE,
+ };
+ 
++static struct atmel_tcb_config tcb_rm9200_config = {
++	.counter_width = 16,
++};
++
++static struct atmel_tcb_config tcb_sam9x5_config = {
++	.counter_width = 32,
++};
++
++static const struct of_device_id atmel_tcb_of_match[] = {
++	{ .compatible = "atmel,at91rm9200-tcb", .data = &tcb_rm9200_config, },
++	{ .compatible = "atmel,at91sam9x5-tcb", .data = &tcb_sam9x5_config, },
++	{ /* sentinel */ }
++};
++
+ static int atmel_tcb_pwm_probe(struct platform_device *pdev)
+ {
++	const struct of_device_id *match;
+ 	struct atmel_tcb_pwm_chip *tcbpwm;
++	const struct atmel_tcb_config *config;
+ 	struct device_node *np = pdev->dev.of_node;
+-	struct atmel_tc *tc;
++	struct regmap *regmap;
++	struct clk *clk;
++	struct clk *slow_clk;
++	char clk_name[] = "t0_clk";
+ 	int err;
+-	int tcblock;
++	int channel;
+ 
+-	err = of_property_read_u32(np, "tc-block", &tcblock);
++	err = of_property_read_u32(np, "reg", &channel);
+ 	if (err < 0) {
+ 		dev_err(&pdev->dev,
+-			"failed to get Timer Counter Block number from device tree (error: %d)\n",
++			"failed to get Timer Counter Block channel from device tree (error: %d)\n",
+ 			err);
+ 		return err;
+ 	}
+ 
+-	tc = atmel_tc_alloc(tcblock);
+-	if (tc == NULL) {
+-		dev_err(&pdev->dev, "failed to allocate Timer Counter Block\n");
+-		return -ENOMEM;
+-	}
++	regmap = syscon_node_to_regmap(np->parent);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	slow_clk = of_clk_get_by_name(np->parent, "slow_clk");
++	if (IS_ERR(slow_clk))
++		return PTR_ERR(slow_clk);
++
++	clk_name[1] += channel;
++	clk = of_clk_get_by_name(np->parent, clk_name);
++	if (IS_ERR(clk))
++		clk = of_clk_get_by_name(np->parent, "t0_clk");
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
++
++	match = of_match_node(atmel_tcb_of_match, np->parent);
++	config = match->data;
+ 
+ 	tcbpwm = devm_kzalloc(&pdev->dev, sizeof(*tcbpwm), GFP_KERNEL);
+ 	if (tcbpwm == NULL) {
+ 		err = -ENOMEM;
+-		goto err_free_tc;
++		goto err_slow_clk;
+ 	}
+ 
+ 	tcbpwm->chip.dev = &pdev->dev;
+@@ -410,11 +440,15 @@ static int atmel_tcb_pwm_probe(struct platform_device *pdev)
+ 	tcbpwm->chip.of_pwm_n_cells = 3;
+ 	tcbpwm->chip.base = -1;
+ 	tcbpwm->chip.npwm = NPWM;
+-	tcbpwm->tc = tc;
++	tcbpwm->channel = channel;
++	tcbpwm->regmap = regmap;
++	tcbpwm->clk = clk;
++	tcbpwm->slow_clk = slow_clk;
++	tcbpwm->width = config->counter_width;
+ 
+-	err = clk_prepare_enable(tc->slow_clk);
++	err = clk_prepare_enable(slow_clk);
+ 	if (err)
+-		goto err_free_tc;
++		goto err_slow_clk;
+ 
+ 	spin_lock_init(&tcbpwm->lock);
+ 
+@@ -427,10 +461,10 @@ static int atmel_tcb_pwm_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ err_disable_clk:
+-	clk_disable_unprepare(tcbpwm->tc->slow_clk);
++	clk_disable_unprepare(tcbpwm->slow_clk);
+ 
+-err_free_tc:
+-	atmel_tc_free(tc);
++err_slow_clk:
++	clk_put(slow_clk);
+ 
+ 	return err;
+ }
+@@ -440,14 +474,14 @@ static int atmel_tcb_pwm_remove(struct platform_device *pdev)
+ 	struct atmel_tcb_pwm_chip *tcbpwm = platform_get_drvdata(pdev);
+ 	int err;
+ 
+-	clk_disable_unprepare(tcbpwm->tc->slow_clk);
++	clk_disable_unprepare(tcbpwm->slow_clk);
++	clk_put(tcbpwm->slow_clk);
++	clk_put(tcbpwm->clk);
+ 
+ 	err = pwmchip_remove(&tcbpwm->chip);
+ 	if (err < 0)
+ 		return err;
+ 
+-	atmel_tc_free(tcbpwm->tc);
+-
+ 	return 0;
+ }
+ 
+@@ -461,38 +495,33 @@ MODULE_DEVICE_TABLE(of, atmel_tcb_pwm_dt_ids);
+ static int atmel_tcb_pwm_suspend(struct device *dev)
+ {
+ 	struct atmel_tcb_pwm_chip *tcbpwm = dev_get_drvdata(dev);
+-	void __iomem *base = tcbpwm->tc->regs;
+-	int i;
++	struct atmel_tcb_channel *chan = &tcbpwm->bkup;
++	unsigned int channel = tcbpwm->channel;
+ 
+-	for (i = 0; i < (NPWM / 2); i++) {
+-		struct atmel_tcb_channel *chan = &tcbpwm->bkup[i];
++	regmap_read(tcbpwm->regmap, ATMEL_TC_REG(channel, CMR), &chan->cmr);
++	regmap_read(tcbpwm->regmap, ATMEL_TC_REG(channel, RA), &chan->ra);
++	regmap_read(tcbpwm->regmap, ATMEL_TC_REG(channel, RB), &chan->rb);
++	regmap_read(tcbpwm->regmap, ATMEL_TC_REG(channel, RC), &chan->rc);
+ 
+-		chan->cmr = readl(base + ATMEL_TC_REG(i, CMR));
+-		chan->ra = readl(base + ATMEL_TC_REG(i, RA));
+-		chan->rb = readl(base + ATMEL_TC_REG(i, RB));
+-		chan->rc = readl(base + ATMEL_TC_REG(i, RC));
+-	}
+ 	return 0;
+ }
+ 
+ static int atmel_tcb_pwm_resume(struct device *dev)
+ {
+ 	struct atmel_tcb_pwm_chip *tcbpwm = dev_get_drvdata(dev);
+-	void __iomem *base = tcbpwm->tc->regs;
+-	int i;
++	struct atmel_tcb_channel *chan = &tcbpwm->bkup;
++	unsigned int channel = tcbpwm->channel;
+ 
+-	for (i = 0; i < (NPWM / 2); i++) {
+-		struct atmel_tcb_channel *chan = &tcbpwm->bkup[i];
++	regmap_write(tcbpwm->regmap, ATMEL_TC_REG(channel, CMR), chan->cmr);
++	regmap_write(tcbpwm->regmap, ATMEL_TC_REG(channel, RA), chan->ra);
++	regmap_write(tcbpwm->regmap, ATMEL_TC_REG(channel, RB), chan->rb);
++	regmap_write(tcbpwm->regmap, ATMEL_TC_REG(channel, RC), chan->rc);
++
++	if (chan->enabled)
++		regmap_write(tcbpwm->regmap,
++			     ATMEL_TC_CLKEN | ATMEL_TC_SWTRG,
++			     ATMEL_TC_REG(channel, CCR));
+ 
+-		writel(chan->cmr, base + ATMEL_TC_REG(i, CMR));
+-		writel(chan->ra, base + ATMEL_TC_REG(i, RA));
+-		writel(chan->rb, base + ATMEL_TC_REG(i, RB));
+-		writel(chan->rc, base + ATMEL_TC_REG(i, RC));
+-		if (chan->enabled) {
+-			writel(ATMEL_TC_CLKEN | ATMEL_TC_SWTRG,
+-				base + ATMEL_TC_REG(i, CCR));
+-		}
+-	}
+ 	return 0;
+ }
+ #endif
+-- 
+2.25.0
 
-> +
-> +static int gpio_regmap_get(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       struct gpio_regmap_data *data =3D gpiochip_get_data(chip);
-> +       struct gpio_regmap *gpio =3D data->gpio;
-> +       unsigned int base;
-> +       unsigned int val, reg, mask;
-
-This can fit on a single line with base. Same elsewhere.
-
-> +       int ret;
-> +
-> +       /* we might not have an output register if we are input only */
-> +       if (gpio->reg_dat_base.valid)
-> +               base =3D gpio->reg_dat_base.addr;
-> +       else
-> +               base =3D gpio->reg_set_base.addr;
-> +
-> +       ret =3D gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret =3D regmap_read(gpio->regmap, reg, &val);
-> +       if (ret)
-> +               return ret;
-> +
-> +       return (val & mask) ? 1 : 0;
-> +}
-> +
-> +static void gpio_regmap_set(struct gpio_chip *chip, unsigned int offset,
-> +                           int val)
-> +{
-> +       struct gpio_regmap_data *data =3D gpiochip_get_data(chip);
-> +       struct gpio_regmap *gpio =3D data->gpio;
-> +       unsigned int base =3D gpio->reg_set_base.addr;
-> +       unsigned int reg, mask;
-> +
-> +       gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
-> +       if (val)
-> +               regmap_update_bits(gpio->regmap, reg, mask, mask);
-> +       else
-> +               regmap_update_bits(gpio->regmap, reg, mask, 0);
-> +}
-> +
-> +static void gpio_regmap_set_with_clear(struct gpio_chip *chip,
-> +                                      unsigned int offset, int val)
-> +{
-> +       struct gpio_regmap_data *data =3D gpiochip_get_data(chip);
-> +       struct gpio_regmap *gpio =3D data->gpio;
-> +       unsigned int base;
-> +       unsigned int reg, mask;
-> +
-> +       if (val)
-> +               base =3D gpio->reg_set_base.addr;
-> +       else
-> +               base =3D gpio->reg_clr_base.addr;
-> +
-> +       gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
-> +       regmap_write(gpio->regmap, reg, mask);
-> +}
-> +
-> +static int gpio_regmap_get_direction(struct gpio_chip *chip,
-> +                                    unsigned int offset)
-> +{
-> +       struct gpio_regmap_data *data =3D gpiochip_get_data(chip);
-> +       struct gpio_regmap *gpio =3D data->gpio;
-> +       unsigned int val, reg, mask;
-> +       unsigned int base;
-> +       int invert;
-> +       int ret;
-> +
-> +       if (gpio->reg_dir_out_base.valid) {
-> +               base =3D gpio->reg_dir_out_base.addr;
-> +               invert =3D 0;
-> +       } else if (gpio->reg_dir_in_base.valid) {
-> +               base =3D gpio->reg_dir_in_base.addr;
-> +               invert =3D 1;
-> +       } else {
-> +               return GPIO_LINE_DIRECTION_IN;
-> +       }
-> +
-> +       ret =3D gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret =3D regmap_read(gpio->regmap, reg, &val);
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (!!(val & mask) ^ invert)
-> +               return GPIO_LINE_DIRECTION_OUT;
-> +       else
-> +               return GPIO_LINE_DIRECTION_IN;
-> +}
-> +
-> +static int gpio_regmap_set_direction(struct gpio_chip *chip,
-> +                                    unsigned int offset, bool output)
-> +{
-> +       struct gpio_regmap_data *data =3D gpiochip_get_data(chip);
-> +       struct gpio_regmap *gpio =3D data->gpio;
-> +       unsigned int val, reg, mask;
-> +       unsigned int base;
-> +       int invert;
-> +       int ret;
-> +
-> +       if (gpio->reg_dir_out_base.valid) {
-> +               base =3D gpio->reg_dir_out_base.addr;
-> +               invert =3D 0;
-> +       } else if (gpio->reg_dir_in_base.valid) {
-> +               base =3D gpio->reg_dir_in_base.addr;
-> +               invert =3D 1;
-> +       } else {
-> +               return 0;
-> +       }
-> +
-> +       ret =3D gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (!invert)
-> +               val =3D (output) ? mask : 0;
-> +       else
-> +               val =3D (output) ? 0 : mask;
-> +
-> +       return regmap_update_bits(gpio->regmap, reg, mask, val);
-> +}
-> +
-> +static int gpio_regmap_direction_input(struct gpio_chip *chip,
-> +                                      unsigned int offset)
-> +{
-> +       return gpio_regmap_set_direction(chip, offset, false);
-> +}
-> +
-> +static int gpio_regmap_direction_output(struct gpio_chip *chip,
-> +                                       unsigned int offset, int value)
-> +{
-> +       gpio_regmap_set(chip, offset, value);
-> +       return gpio_regmap_set_direction(chip, offset, true);
-> +}
-> +
-> +static int gpio_regmap_to_irq(struct gpio_chip *chip, unsigned int offse=
-t)
-> +{
-> +       struct gpio_regmap_data *data =3D gpiochip_get_data(chip);
-> +       struct gpio_regmap *gpio =3D data->gpio;
-> +
-> +       /* the user might have its own .to_irq callback */
-> +       if (gpio->to_irq)
-> +               return gpio->to_irq(gpio, offset);
-> +
-> +       return irq_create_mapping(gpio->irq_domain, offset);
-> +}
-> +
-> +/**
-> + * gpio_regmap_register() - Register a generic regmap GPIO controller
-> + *
-> + * @gpio: gpio_regmap device to register
-> + *
-> + * Returns 0 on success or an errno on failure.
-> + */
-> +int gpio_regmap_register(struct gpio_regmap *gpio)
-> +{
-> +       struct gpio_regmap_data *d;
-> +       struct gpio_chip *chip;
-> +       int ret;
-> +
-> +       if (!gpio->parent)
-> +               return -EINVAL;
-> +
-> +       if (!gpio->ngpio)
-> +               return -EINVAL;
-> +
-> +       /* we need at least one */
-> +       if (!gpio->reg_dat_base.valid && !gpio->reg_set_base.valid)
-> +               return -EINVAL;
-> +
-> +       /* we don't support having both registers simulaniously for now *=
-/
-> +       if (gpio->reg_dir_out_base.valid && gpio->reg_dir_in_base.valid)
-> +               return -EINVAL;
-> +
-> +       /* if not set, assume they are consecutive */
-> +       if (!gpio->reg_stride)
-> +               gpio->reg_stride =3D 1;
-> +
-> +       /* if not set, assume there is only one register */
-> +       if (!gpio->ngpio_per_reg)
-> +               gpio->ngpio_per_reg =3D gpio->ngpio;
-> +
-> +       if (!gpio->reg_mask_xlate)
-> +               gpio->reg_mask_xlate =3D gpio_regmap_simple_xlate;
-> +
-> +       d =3D kzalloc(sizeof(*d), GFP_KERNEL);
-> +       if (!d)
-> +               return -ENOMEM;
-> +
-> +       gpio->data =3D d;
-> +       d->gpio =3D gpio;
-> +
-> +       chip =3D &d->gpio_chip;
-> +       chip->parent =3D gpio->parent;
-> +       chip->label =3D gpio->label;
-> +       chip->base =3D -1;
-> +       chip->ngpio =3D gpio->ngpio;
-> +       chip->can_sleep =3D true;
-> +       chip->get =3D gpio_regmap_get;
-> +
-> +       if (!chip->label)
-> +               chip->label =3D dev_name(gpio->parent);
-> +
-> +       if (gpio->reg_set_base.valid && gpio->reg_clr_base.valid)
-> +               chip->set =3D gpio_regmap_set_with_clear;
-> +       else if (gpio->reg_set_base.valid)
-> +               chip->set =3D gpio_regmap_set;
-> +
-> +       if (gpio->reg_dir_in_base.valid || gpio->reg_dir_out_base.valid) =
-{
-> +               chip->get_direction =3D gpio_regmap_get_direction;
-> +               chip->direction_input =3D gpio_regmap_direction_input;
-> +               chip->direction_output =3D gpio_regmap_direction_output;
-> +       }
-> +
-> +       if (gpio->irq_domain)
-> +               chip->to_irq =3D gpio_regmap_to_irq;
-> +
-> +       ret =3D gpiochip_add_data(chip, d);
-> +       if (ret < 0)
-> +               goto err_alloc;
-> +
-> +       return 0;
-> +
-> +err_alloc:
-> +       kfree(d);
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(gpio_regmap_register);
-> +
-> +/**
-> + * gpio_regmap_unregister() - Unregister a generic regmap GPIO controlle=
-r
-> + *
-> + * @gpio: gpio_regmap device to unregister
-> + */
-> +void gpio_regmap_unregister(struct gpio_regmap *gpio)
-> +{
-> +       gpiochip_remove(&gpio->data->gpio_chip);
-> +       kfree(gpio->data);
-> +}
-> +EXPORT_SYMBOL_GPL(gpio_regmap_unregister);
-> +
-> +static void devm_gpio_regmap_unregister(struct device *dev, void *res)
-> +{
-> +       gpio_regmap_unregister(*(struct gpio_regmap **)res);
-> +}
-> +
-> +/**
-> + * devm_gpio_regmap_register() - resource managed gpio_regmap_register()
-> + *
-> + * @dev: device that is registering this GPIO device
-> + * @gpio: gpio_regmap device to register
-> + *
-> + * Managed gpio_regmap_register(). For generic regmap GPIO device regist=
-ered by
-> + * this function, gpio_regmap_unregister() is automatically called on dr=
-iver
-> + * detach. See gpio_regmap_register() for more information.
-> + */
-> +int devm_gpio_regmap_register(struct device *dev, struct gpio_regmap *gp=
-io)
-> +{
-> +       struct gpio_regmap **ptr;
-> +       int ret;
-> +
-> +       ptr =3D devres_alloc(devm_gpio_regmap_unregister, sizeof(*ptr),
-> +                          GFP_KERNEL);
-> +       if (!ptr)
-> +               return -ENOMEM;
-> +
-> +       ret =3D gpio_regmap_register(gpio);
-> +       if (ret) {
-> +               devres_free(ptr);
-> +               return ret;
-> +       }
-> +
-> +       *ptr =3D gpio;
-> +       devres_add(dev, ptr);
-> +
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(devm_gpio_regmap_register);
-> +
-> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
-> +MODULE_DESCRIPTION("GPIO generic regmap driver core");
-> +MODULE_LICENSE("GPL");
-> diff --git a/include/linux/gpio-regmap.h b/include/linux/gpio-regmap.h
-> new file mode 100644
-> index 000000000000..ad63955e0e43
-> --- /dev/null
-> +++ b/include/linux/gpio-regmap.h
-> @@ -0,0 +1,88 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +
-> +#ifndef _LINUX_GPIO_REGMAP_H
-> +#define _LINUX_GPIO_REGMAP_H
-> +
-> +struct gpio_regmap_addr {
-> +       unsigned int addr;
-> +       bool valid;
-> +};
-
-I'm not quite sure what the meaning behind the valid field here is.
-When would we potentially set it to false?
-
-> +#define GPIO_REGMAP_ADDR(_addr) \
-> +       ((struct gpio_regmap_addr) { .addr =3D _addr, .valid =3D true })
-> +
-> +/**
-> + * struct gpio_regmap - Description of a generic regmap gpio_chip.
-> + *
-> + * @parent:            The parent device
-> + * @regmap:            The regmap use to access the registers
-
-s/use/used/
-
-> + *                     given, the name of the device is used
-> + * @label:             (Optional) Descriptive name for GPIO controller.
-> + *                     If not given, the name of the device is used.
-> + * @ngpio:             Number of GPIOs
-> + * @reg_dat_base:      (Optional) (in) register base address
-> + * @reg_set_base:      (Optional) set register base address
-> + * @reg_clr_base:      (Optional) clear register base address
-> + * @reg_dir_in_base:   (Optional) out setting register base address
-> + * @reg_dir_out_base:  (Optional) in setting register base address
-> + * @reg_stride:                (Optional) May be set if the registers (o=
-f the
-> + *                     same type, dat, set, etc) are not consecutive.
-> + * @ngpio_per_reg:     Number of GPIOs per register
-> + * @irq_domain:                (Optional) IRQ domain if the controller i=
-s
-> + *                     interrupt-capable
-> + * @reg_mask_xlate:     (Optional) Translates base address and GPIO
-> + *                     offset to a register/bitmask pair. If not
-> + *                     given the default gpio_regmap_simple_xlate()
-> + *                     is used.
-> + * @to_irq:            (Optional) Maps GPIO offset to a irq number.
-> + *                     By default assumes a linear mapping of the
-> + *                     given irq_domain.
-> + * @driver_data:       Pointer to the drivers private data. Not used by
-> + *                     gpio-regmap.
-> + *
-> + * The reg_mask_xlate translates a given base address and GPIO offset to
-> + * register and mask pair. The base address is one of the given reg_*_ba=
-se.
-> + */
-> +struct gpio_regmap {
-
-I'd prefer to follow a pattern seen in other such APIs of calling this
-structure gpio_regmap_config and creating another private structure
-called gpio_regmap used in callbacks that would only contain necessary
-fields.
-
-> +       struct device *parent;
-> +       struct regmap *regmap;
-> +       struct gpio_regmap_data *data;
-> +
-> +       const char *label;
-> +       int ngpio;
-> +
-> +       struct gpio_regmap_addr reg_dat_base;
-> +       struct gpio_regmap_addr reg_set_base;
-> +       struct gpio_regmap_addr reg_clr_base;
-> +       struct gpio_regmap_addr reg_dir_in_base;
-> +       struct gpio_regmap_addr reg_dir_out_base;
-> +       int reg_stride;
-> +       int ngpio_per_reg;
-> +       struct irq_domain *irq_domain;
-> +
-> +       int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base=
-,
-> +                             unsigned int offset, unsigned int *reg,
-> +                             unsigned int *mask);
-> +       int (*to_irq)(struct gpio_regmap *gpio, unsigned int offset);
-> +
-> +       void *driver_data;
-> +};
-> +
-> +static inline void gpio_regmap_set_drvdata(struct gpio_regmap *gpio,
-> +                                          void *data)
-> +{
-> +       gpio->driver_data =3D data;
-> +}
-> +
-> +static inline void *gpio_regmap_get_drvdata(struct gpio_regmap *gpio)
-> +{
-> +       return gpio->driver_data;
-> +}
-> +
-> +int gpio_regmap_register(struct gpio_regmap *gpio);
-> +void gpio_regmap_unregister(struct gpio_regmap *gpio);
-> +int devm_gpio_regmap_register(struct device *dev, struct gpio_regmap *gp=
-io);
-> +int gpio_regmap_simple_xlate(struct gpio_regmap *gpio, unsigned int base=
-,
-> +                            unsigned int offset,
-> +                            unsigned int *reg, unsigned int *mask);
-> +
-> +#endif /* _LINUX_GPIO_REGMAP_H */
-> --
-> 2.20.1
->
-
-Overall looks really nice. I'm happy we'll have it in v5.8.
-
-Best regards,
-Bartosz Golaszewski
