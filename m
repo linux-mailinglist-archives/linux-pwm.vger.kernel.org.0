@@ -2,126 +2,80 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 87A711A04FE
-	for <lists+linux-pwm@lfdr.de>; Tue,  7 Apr 2020 04:40:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FF3E1A066D
+	for <lists+linux-pwm@lfdr.de>; Tue,  7 Apr 2020 07:15:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgDGCkQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Apr 2020 22:40:16 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:6109 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726353AbgDGCkP (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Apr 2020 22:40:15 -0400
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 06 Apr 2020 19:40:14 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg01-sd.qualcomm.com with ESMTP; 06 Apr 2020 19:40:13 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 8A2DF4BBC; Mon,  6 Apr 2020 19:40:13 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 19:40:13 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Arnd Bergmann' <arnd@arndb.de>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH v11 11/12] clk: pwm: Assign u64 divisor to unsigned int
- before use
-Message-ID: <20200407024013.GB7019@codeaurora.org>
-References: <cover.1584667964.git.gurus@codeaurora.org>
- <ab7b568b1d287949276b3b1c9efdb1cad1f92004.1584667964.git.gurus@codeaurora.org>
- <CAK8P3a0XrYGYBQ_hTKF4fVBr7DDZsLnR+8o=09cig_gAje=v3w@mail.gmail.com>
- <9943d663c74046d798f4614343f25187@AcuMS.aculab.com>
+        id S1727136AbgDGFPV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 7 Apr 2020 01:15:21 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:37589 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbgDGFPP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 Apr 2020 01:15:15 -0400
+Received: by mail-vs1-f66.google.com with SMTP id o3so1434749vsd.4
+        for <linux-pwm@vger.kernel.org>; Mon, 06 Apr 2020 22:15:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=38NlpNEbzNFWb7RFQtfvRASB+B576yw7dNc7pozf3pc=;
+        b=MfHDvIBIt69xqysjTBYVVNc0kV20i2uh+5pM5bA0kgqzaY38Y8DWEj01Pvo2lprKBQ
+         GeMPmsDw8mI8JPS3USlc7fo909SxPcbTvuuO8fmlDj3Epr1eVDtR360WKQPQyhZWRFR1
+         e2AVs/X8xmnpyFeBVbEpWkW/7xUX6BkoKcBNjhVPYru9i1s3MQXqsGzojyz2OPT8Gzuk
+         eAsRgBBtJfCcoxVL23nq2mmza5GNfLtG1Vewilonxc/7to20Va10m3hSWyxvaqvjeUuq
+         +R1bw/nay987q2JQWtF8qmoAYape5iyXc2fGu9oueeJmEOdg+02io2ZWkJnJglNvfVbH
+         fVHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=38NlpNEbzNFWb7RFQtfvRASB+B576yw7dNc7pozf3pc=;
+        b=eLWKGh9UY6vPUJpw+U3Y2m5K07dV3+wRtkEseHYtmZpbqB3xb7EgWPcOue/I8pCQ90
+         XJX97NkT2rTKDSbz0HKo/GtU1BU8aBxVSAXA+ztsRhdXZsZ8XnoorTnO2Q/O3kMmqv2B
+         bXrazPvEuLeg9NtyZMA+bSyYJDkrRylP9invvybL2JcsfVpx6uWghcCSxeRq04G8KjNO
+         GjxIZ0W4GolptyU4xHglSldQ69sght37aZduUm4eoZKCP+KNv1ItlA7y1dh97rOhNCO9
+         abH6vLc9C6UkI7xH2IilefgIafqyS2/JUzxN2nT8aWr0wE9L/J+UjtI2MqIGDPS/756o
+         cSug==
+X-Gm-Message-State: AGi0PuZ8y4K899OAFMBZ+PDKSIW4JltgLH92aKPlsFjDcq0F6DxkkT+S
+        hJPhhJVHZSVFzl/rV56iZJ/z1QB3bTioprY0UiM=
+X-Google-Smtp-Source: APiQypL+ArhsKP1HCJpJZSuqqOKzmqGe03VSBcvbyU5XLwMdkDIdNu0ELlIqojTyqMNnJA6AEodSyvd4rSFXD4DVz/E=
+X-Received: by 2002:a67:fa85:: with SMTP id f5mr495699vsq.65.1586236514277;
+ Mon, 06 Apr 2020 22:15:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9943d663c74046d798f4614343f25187@AcuMS.aculab.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Received: by 2002:ab0:254a:0:0:0:0:0 with HTTP; Mon, 6 Apr 2020 22:15:12 -0700 (PDT)
+From:   SANDRA DEWI <sdewisandra@gmail.com>
+Date:   Tue, 7 Apr 2020 05:15:12 +0000
+Message-ID: <CALe9-EdG2aBp2yBY=t79ZuBObzzfY6nuVfAsra6+wc2BAYMhcg@mail.gmail.com>
+Subject: whether this is your correct email address or not
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 06:42:39PM +0000, David Laight wrote:
-> From: Arnd Bergmann
-> > Sent: 20 March 2020 17:01
-> > On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
-> > >
-> > > Since the PWM framework is switching struct pwm_args.period's datatype
-> > > to u64, prepare for this transition by assigning the 64-bit divisor to
-> > > an unsigned int variable to use as the divisor. This is being done
-> > > because the divisor is a 32-bit constant and the quotient will be zero
-> > > if the divisor exceeds 2^32.
+Dear ,Pastor
 
-Correction: The quotient will be zero when the denominator exceeds the
-numerator, i.e. NSECS_PER_SEC, and not U32_MAX. For this to happen, the
-property "clock-frequency" must be specified to be more than
-NSEC_PER_SEC, i.e. 1 GHz. Just observed that currently in the device
-tree, all instances of this driver (compatible string "pwm-clock") are
-setting this property to values within that limit.
 
-> > >
-> > > Cc: Michael Turquette <mturquette@baylibre.com>
-> > > Cc: Stephen Boyd <sboyd@kernel.org>
-> > > Cc: linux-clk@vger.kernel.org
-> > > Cc: David Laight <David.Laight@ACULAB.COM>
-> > >
-> > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> > > ---
-> > >  drivers/clk/clk-pwm.c | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
-> > > index 87fe0b0e..c0b5da3 100644
-> > > --- a/drivers/clk/clk-pwm.c
-> > > +++ b/drivers/clk/clk-pwm.c
-> > > @@ -72,6 +72,7 @@ static int clk_pwm_probe(struct platform_device *pdev)
-> > >         struct pwm_device *pwm;
-> > >         struct pwm_args pargs;
-> > >         const char *clk_name;
-> > > +       unsigned int period;
-> > >         int ret;
-> > >
-> > >         clk_pwm = devm_kzalloc(&pdev->dev, sizeof(*clk_pwm), GFP_KERNEL);
-> > > @@ -88,8 +89,9 @@ static int clk_pwm_probe(struct platform_device *pdev)
-> > >                 return -EINVAL;
-> > >         }
-> > >
-> > > +       period = pargs.period;
-> > >         if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
-> > > -               clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
-> > > +               clk_pwm->fixed_rate = NSEC_PER_SEC / period;
-> > >
-> > >         if (pargs.period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
-> > >             pargs.period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
-> > 
-> > Doesn't this one need a check for "pargs.period>UINT_MAX" or
-> > "pargs.period > NSEC_PER_SEC"?
-> > 
 
-With the assignment of period to unsigned int, wouldn't doing
-s/pargs.period/period suffice?
+I have a client who is an oil business man and he made a fixed deposit
+of $26 million USD in my bank, where I am the director of the branch,
+My client died with his entire family in Jordanian
 
-Also, will add a check to ensure that clk_pwm->fixed_rate is non-zero. If it
-is zero, fail probe.
+50% of the fund will be for the church  for the work of God,the
+balance 50% we share it in the ratio of 50/50. Meaning 50% to you and
+50% for me
 
-> > It looks like truncating the 64-bit value to a 32-bit type can result in
-> > unexpected behavior.
-> 
-> I also suspect the last two lines ought to use the 32bit copy.
-> And there is a chance that the division will explode.
+intervention in the Syrian Civil War 2014 leaving behind no next of
+kin. I Propose to present you as next of kin to claim the funds, if
+interested reply me for full details and how we are to
 
-The check mentioned above will ensure that the division will not
-explode.
 
-What do you guys think?
 
-Thank you.
+proceed to close this deal.
 
-Guru Das.
+
+
+
+Mrs. Sandra Dewi
+
+
+
+Email  mrsdewi@gmx.com
