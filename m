@@ -2,21 +2,21 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 95A891A2F81
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 Apr 2020 08:52:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC2951A2F8F
+	for <lists+linux-pwm@lfdr.de>; Thu,  9 Apr 2020 08:53:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725881AbgDIGwz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 9 Apr 2020 02:52:55 -0400
+        id S1726571AbgDIGw4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 9 Apr 2020 02:52:56 -0400
 Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:42559 "EHLO
         alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725783AbgDIGwz (ORCPT
+        by vger.kernel.org with ESMTP id S1726470AbgDIGwz (ORCPT
         <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Apr 2020 02:52:55 -0400
-Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
   by alexa-out-sd-01.qualcomm.com with ESMTP; 08 Apr 2020 23:52:54 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg02-sd.qualcomm.com with ESMTP; 08 Apr 2020 23:52:54 -0700
+  by ironmsg05-sd.qualcomm.com with ESMTP; 08 Apr 2020 23:52:54 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 2DBEC4C4D; Wed,  8 Apr 2020 23:52:54 -0700 (PDT)
+        id 3A6844C4A; Wed,  8 Apr 2020 23:52:54 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -26,11 +26,14 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         David Collins <collinsd@codeaurora.org>,
         linux-kernel@vger.kernel.org,
         Guru Das Srinagesh <gurus@codeaurora.org>,
-        Alexander Shiyan <shc_work@mail.ru>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v12 04/11] pwm: clps711x: Cast period to u32 before use as divisor
-Date:   Wed,  8 Apr 2020 23:52:33 -0700
-Message-Id: <c3619bdd4856e881d6bdfd936c5f903be0c3ff57.1586414867.git.gurus@codeaurora.org>
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Subject: [PATCH v12 05/11] pwm: pwm-imx-tpm: Use 64-bit division macro
+Date:   Wed,  8 Apr 2020 23:52:34 -0700
+Message-Id: <49c4849ed363ffbbf0d89005ab1e77dd5458e862.1586414867.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1586414867.git.gurus@codeaurora.org>
 References: <cover.1586414867.git.gurus@codeaurora.org>
@@ -41,37 +44,34 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Since the PWM framework is switching struct pwm_args.period's datatype
-to u64, prepare for this transition by typecasting it to u32.
+Since the PWM framework is switching struct pwm_state.period's datatype
+to u64, prepare for this transition by using DIV64_U64_ROUND_CLOSEST to
+handle a 64-bit divisor.
 
-Also, since the dividend is still a 32-bit number, any divisor greater
-than the numerator will cause the quotient to be zero, so return 0 in
-that case to efficiently skip the division.
-
-Cc: Alexander Shiyan <shc_work@mail.ru>
-Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 ---
- drivers/pwm/pwm-clps711x.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/pwm/pwm-imx-tpm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
-index 924d39a..0d368ac 100644
---- a/drivers/pwm/pwm-clps711x.c
-+++ b/drivers/pwm/pwm-clps711x.c
-@@ -43,7 +43,10 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
- static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
- {
- 	/* Duty cycle 0..15 max */
--	return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
-+	if ((u32)pwm->args.period > (v * 0xf))
-+		return 0;
-+
-+	return DIV_ROUND_CLOSEST(v * 0xf, (u32)pwm->args.period);
- }
+diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
+index 5f3d7f7..fcdf6be 100644
+--- a/drivers/pwm/pwm-imx-tpm.c
++++ b/drivers/pwm/pwm-imx-tpm.c
+@@ -124,7 +124,7 @@ static int pwm_imx_tpm_round_state(struct pwm_chip *chip,
+ 		real_state->duty_cycle = state->duty_cycle;
  
- static int clps711x_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	tmp = (u64)p->mod * real_state->duty_cycle;
+-	p->val = DIV_ROUND_CLOSEST_ULL(tmp, real_state->period);
++	p->val = DIV64_U64_ROUND_CLOSEST(tmp, real_state->period);
+ 
+ 	real_state->polarity = state->polarity;
+ 	real_state->enabled = state->enabled;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
