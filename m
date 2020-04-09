@@ -2,223 +2,112 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A5101A2F88
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 Apr 2020 08:53:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A86071A2FC1
+	for <lists+linux-pwm@lfdr.de>; Thu,  9 Apr 2020 09:09:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725987AbgDIGw6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 9 Apr 2020 02:52:58 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:47369 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726626AbgDIGw6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Apr 2020 02:52:58 -0400
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 08 Apr 2020 23:52:55 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg01-sd.qualcomm.com with ESMTP; 08 Apr 2020 23:52:54 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 8756A4C4D; Wed,  8 Apr 2020 23:52:54 -0700 (PDT)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org
+        id S1725783AbgDIHJf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 9 Apr 2020 03:09:35 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33694 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgDIHJf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Apr 2020 03:09:35 -0400
+Received: by mail-lf1-f65.google.com with SMTP id h6so7152509lfc.0
+        for <linux-pwm@vger.kernel.org>; Thu, 09 Apr 2020 00:09:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=dw2g+Rcie247VAtOj8hXWu0+p4yENHERtLxJGVmYzHc=;
+        b=QnpyEdEjTn93ZF/GV44ThpydZMyNvoo15dEBCanYGKiGXdKvQ8v+pihThorf9Ur2pG
+         cXG5VZPt/muMi5rRCPPnqhlIf72Q47k2g+yxUoVYKKaUrS+gjYFtYvMFE7onoSNP0haV
+         s/ypQHa3U28gShWcbkVEizNdOC5RvApC/u3TK82ySvulJJmsJ0xCsyqJm4Jwxx0P91MS
+         XDmUUbDrIYqCnDKwpfhHNJE8FbSHhizf4d7MkAPuvUKJvm8azAVe+M1nxwzvM1Xpcpl9
+         W1rMxGau68eXAk1qmyT8tNvcCOkkZebhT4unqUPUHo+6+9K9EeCYBWk5l8qt+0zFbJgX
+         WiYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=dw2g+Rcie247VAtOj8hXWu0+p4yENHERtLxJGVmYzHc=;
+        b=hkp46U+nj/fbBkuRb/oWD/2Xhcp8TerSZrQFPQlMmBTEoXDD2BCMNsEZuwhOc91Byr
+         u0mbfaaJsZyyofqscs7lVUL4KnXYFqgPFmdzx/sW3Nt5XhuqdLPyJceClV0tbPwrk2Pk
+         8LGyI9CMQGCj2DjPV8jKd1COY2KbyZdWEMwROw/LgyLqgKRxpFZ8Ur2i2ge98DxQl36I
+         w6Cffk6113X8rS4c4s57elGcJiZF5n0RhET8xzyQyY9jqgI8OuB5pvimN0wZrh8xwSSD
+         8ByhsrmXlFmwVv5Ikv4rmhlAQ+DeWgrZLO1lyGMbh7sdK6RAkeUngPAD5B+Fmh6T1iEk
+         SEew==
+X-Gm-Message-State: AGi0PubsCgg9Ebn37y+4XN3FULgyBCIq13bHfgsnu6kSZpl9G3ByXTPv
+        kihexSaW0EMNC5gY6rLUkus=
+X-Google-Smtp-Source: APiQypLMm+D76CWTy/qzlS0V1t0QQ6g+Zwek/qDUzM8QrNYQZM3hTME+dnlnSl6eKjAnBxO0jmKhMg==
+X-Received: by 2002:a19:7411:: with SMTP id v17mr6978885lfe.27.1586416173186;
+        Thu, 09 Apr 2020 00:09:33 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id g13sm653526ljn.82.2020.04.09.00.09.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 Apr 2020 00:09:32 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        Uwe =?utf-8?Q?Kleine-K?= =?utf-8?Q?=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Joe Perches <joe@perches.com>
-Subject: [PATCH v12 11/11] pwm: core: Convert period and duty cycle to u64
-Date:   Wed,  8 Apr 2020 23:52:40 -0700
-Message-Id: <96799e3fe4bdd20c18afc738dfe1c8a74cf137ce.1586414867.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1586414867.git.gurus@codeaurora.org>
-References: <cover.1586414867.git.gurus@codeaurora.org>
-In-Reply-To: <cover.1586414867.git.gurus@codeaurora.org>
-References: <cover.1586414867.git.gurus@codeaurora.org>
+        Raymond Tan <raymond.tan@intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: Re: [PATCH] pwm: Add DesignWare PWM Controller Driver
+In-Reply-To: <20200408125404.527090-1-jarkko.nikula@linux.intel.com>
+References: <20200408125404.527090-1-jarkko.nikula@linux.intel.com>
+Date:   Thu, 09 Apr 2020 10:09:27 +0300
+Message-ID: <87k12pgmoo.fsf@kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Because period and duty cycle are defined as ints with units of
-nanoseconds, the maximum time duration that can be set is limited to
-~2.147 seconds. Change their definitions to u64 in the structs of the
-PWM framework so that higher durations may be set.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Also use the right format specifiers in debug prints in both core.c as
-well as pwm-stm32-lp.c.
 
-Cc: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Joe Perches <joe@perches.com>
+Hi Jarkko,
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
----
- drivers/pwm/core.c         | 14 +++++++-------
- drivers/pwm/pwm-stm32-lp.c |  2 +-
- drivers/pwm/sysfs.c        |  8 ++++----
- include/linux/pwm.h        | 12 ++++++------
- 4 files changed, 18 insertions(+), 18 deletions(-)
+Jarkko Nikula <jarkko.nikula@linux.intel.com> writes:
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 9973c44..b6c5f9f 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -510,12 +510,12 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
- 	    last->period > s2.period &&
- 	    last->period <= state->period)
- 		dev_warn(chip->dev,
--			 ".apply didn't pick the best available period (requested: %u, applied: %u, possible: %u)\n",
-+			 ".apply didn't pick the best available period (requested: %llu, applied: %llu, possible: %llu)\n",
- 			 state->period, s2.period, last->period);
- 
- 	if (state->enabled && state->period < s2.period)
- 		dev_warn(chip->dev,
--			 ".apply is supposed to round down period (requested: %u, applied: %u)\n",
-+			 ".apply is supposed to round down period (requested: %llu, applied: %llu)\n",
- 			 state->period, s2.period);
- 
- 	if (state->enabled &&
-@@ -524,14 +524,14 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
- 	    last->duty_cycle > s2.duty_cycle &&
- 	    last->duty_cycle <= state->duty_cycle)
- 		dev_warn(chip->dev,
--			 ".apply didn't pick the best available duty cycle (requested: %u/%u, applied: %u/%u, possible: %u/%u)\n",
-+			 ".apply didn't pick the best available duty cycle (requested: %llu/%llu, applied: %llu/%llu, possible: %llu/%llu)\n",
- 			 state->duty_cycle, state->period,
- 			 s2.duty_cycle, s2.period,
- 			 last->duty_cycle, last->period);
- 
- 	if (state->enabled && state->duty_cycle < s2.duty_cycle)
- 		dev_warn(chip->dev,
--			 ".apply is supposed to round down duty_cycle (requested: %u/%u, applied: %u/%u)\n",
-+			 ".apply is supposed to round down duty_cycle (requested: %llu/%llu, applied: %llu/%llu)\n",
- 			 state->duty_cycle, state->period,
- 			 s2.duty_cycle, s2.period);
- 
-@@ -558,7 +558,7 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
- 	    (s1.enabled && s1.period != last->period) ||
- 	    (s1.enabled && s1.duty_cycle != last->duty_cycle)) {
- 		dev_err(chip->dev,
--			".apply is not idempotent (ena=%d pol=%d %u/%u) -> (ena=%d pol=%d %u/%u)\n",
-+			".apply is not idempotent (ena=%d pol=%d %llu/%llu) -> (ena=%d pol=%d %llu/%llu)\n",
- 			s1.enabled, s1.polarity, s1.duty_cycle, s1.period,
- 			last->enabled, last->polarity, last->duty_cycle,
- 			last->period);
-@@ -1284,8 +1284,8 @@ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
- 		if (state.enabled)
- 			seq_puts(s, " enabled");
- 
--		seq_printf(s, " period: %u ns", state.period);
--		seq_printf(s, " duty: %u ns", state.duty_cycle);
-+		seq_printf(s, " period: %llu ns", state.period);
-+		seq_printf(s, " duty: %llu ns", state.duty_cycle);
- 		seq_printf(s, " polarity: %s",
- 			   state.polarity ? "inverse" : "normal");
- 
-diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-index 67fca62..134c146 100644
---- a/drivers/pwm/pwm-stm32-lp.c
-+++ b/drivers/pwm/pwm-stm32-lp.c
-@@ -61,7 +61,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	do_div(div, NSEC_PER_SEC);
- 	if (!div) {
- 		/* Clock is too slow to achieve requested period. */
--		dev_dbg(priv->chip.dev, "Can't reach %u ns\n",	state->period);
-+		dev_dbg(priv->chip.dev, "Can't reach %llu ns\n", state->period);
- 		return -EINVAL;
- 	}
- 
-diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-index 2389b86..449dbc0 100644
---- a/drivers/pwm/sysfs.c
-+++ b/drivers/pwm/sysfs.c
-@@ -42,7 +42,7 @@ static ssize_t period_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.period);
-+	return sprintf(buf, "%llu\n", state.period);
- }
- 
- static ssize_t period_store(struct device *child,
-@@ -52,10 +52,10 @@ static ssize_t period_store(struct device *child,
- 	struct pwm_export *export = child_to_pwm_export(child);
- 	struct pwm_device *pwm = export->pwm;
- 	struct pwm_state state;
--	unsigned int val;
-+	u64 val;
- 	int ret;
- 
--	ret = kstrtouint(buf, 0, &val);
-+	ret = kstrtou64(buf, 0, &val);
- 	if (ret)
- 		return ret;
- 
-@@ -77,7 +77,7 @@ static ssize_t duty_cycle_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.duty_cycle);
-+	return sprintf(buf, "%llu\n", state.duty_cycle);
- }
- 
- static ssize_t duty_cycle_store(struct device *child,
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 2635b2a..a13ff38 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -39,7 +39,7 @@ enum pwm_polarity {
-  * current PWM hardware state.
-  */
- struct pwm_args {
--	unsigned int period;
-+	u64 period;
- 	enum pwm_polarity polarity;
- };
- 
-@@ -56,8 +56,8 @@ enum {
-  * @enabled: PWM enabled status
-  */
- struct pwm_state {
--	unsigned int period;
--	unsigned int duty_cycle;
-+	u64 period;
-+	u64 duty_cycle;
- 	enum pwm_polarity polarity;
- 	bool enabled;
- };
-@@ -107,13 +107,13 @@ static inline bool pwm_is_enabled(const struct pwm_device *pwm)
- 	return state.enabled;
- }
- 
--static inline void pwm_set_period(struct pwm_device *pwm, unsigned int period)
-+static inline void pwm_set_period(struct pwm_device *pwm, u64 period)
- {
- 	if (pwm)
- 		pwm->state.period = period;
- }
- 
--static inline unsigned int pwm_get_period(const struct pwm_device *pwm)
-+static inline u64 pwm_get_period(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
-@@ -128,7 +128,7 @@ static inline void pwm_set_duty_cycle(struct pwm_device *pwm, unsigned int duty)
- 		pwm->state.duty_cycle = duty;
- }
- 
--static inline unsigned int pwm_get_duty_cycle(const struct pwm_device *pwm)
-+static inline u64 pwm_get_duty_cycle(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> Introduce driver for Synopsys DesignWare PWM Controller used on Intel
+> Elkhart Lake.
+>
+> Initial implementation is done by Felipe Balbi while he was working at
+> Intel with later changes from Raymond Tan and me.
+>
+> Co-developed-by: Raymond Tan <raymond.tan@intel.com>
+> Signed-off-by: Raymond Tan <raymond.tan@intel.com>
+> Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
 
+Thanks for sending this. FWIW:
+
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6OyicACgkQzL64meEa
+mQbpjg//evPIzO34GFt9Fosbe23C3xoa6XP4xIwIKOAeoDnTJsgEA5fDjjlysbP0
+g85gtb2CklkiEIbXtbT5cDIkCwGE6otxg9fudUMfjEfDxRRuYn94YdycYe5fMPkk
+t0I45tehq7McnJTtDV7XfuOrzXlKonphLoobxoopbQ/DwZi461g5Gu4rRLOpwzJG
+AKesWhXSzZ6NzXpQwVBH7Tf+dDpCv0HFkB0E+R2bsQdrDPbE5Qk+ClPSCOcK/cnp
+qFfv1cgo7GVW0rrN6kg0VehUmBEN8d5Hd/NZ/O+WYx9JzApkab+oicaIxYSxN4Ij
+yp4juc/xsiixktj5qLzqLtSmlfGdjnQ4S0E0exPZvSGL0DavmhHLwZiD2/kO/1kB
+Me7GMPpo1rRAYcCRiHsULJIY7lv5bdJqRe6v7UhWK4aTK3aOZH/bZjbsDzHe4nfk
+tii30QnNOG+K9jz61XcegE4wnm1v0qVw65cBiovn8ciUJOS8dkK2FQyDqpYgiDrD
+QPYlPrLG8AcrxveOF21CNOye3s/fle61lywe9OMzdGiTmrE1uMpKvocHbsI8y9Yb
+P4PXmtdrHjqeqdlfijZnf/PNVsGpE7Vqkg0hHkxUycxpkM+wcUfBLBK8nNQD0hWE
+6FGkyx07/EUgSSjplegkWCITdtpfmDBvtahoaZf0nRXgL1dyZE8=
+=CKGr
+-----END PGP SIGNATURE-----
+--=-=-=--
