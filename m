@@ -2,50 +2,50 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B5C81A36D4
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 Apr 2020 17:20:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 516281A36D6
+	for <lists+linux-pwm@lfdr.de>; Thu,  9 Apr 2020 17:20:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgDIPUO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 9 Apr 2020 11:20:14 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46297 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727736AbgDIPUO (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Apr 2020 11:20:14 -0400
-Received: by mail-ed1-f67.google.com with SMTP id dk4so87090edb.13;
-        Thu, 09 Apr 2020 08:20:13 -0700 (PDT)
+        id S1728083AbgDIPU2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 9 Apr 2020 11:20:28 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39059 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727736AbgDIPU1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Apr 2020 11:20:27 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a43so164071edf.6;
+        Thu, 09 Apr 2020 08:20:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4T/yNw7Oi6CyzIIjkIvIk0WZLkoS1PM8XtkC6qecQpw=;
-        b=Rd4Hq+2tWp1D5xZlbEF7k3mWfg93I28KWIiMG+/MUKvJmmk/NfAGJWWn3ZWb88g44i
-         bGFkQm2qHfI/JXf9YCc6/YvGav8daVwEX7Cy9YzjIYhBmlYAS601AAxqIxQpOQEo0FXl
-         qyiP3oYGdcDKCpFCySfAV5G1TDIrXUfFr40T7QpzVe7wr9fRIju5b4hwOhUjtTE7sMK2
-         4Y8niK/VW4cKFmYhxIgyshYeip8UUA96BKFZ6Fw/F+aQx+V2nw2TGTkkzwcBMENVTz3Q
-         ZOIu54YI7HzwqiD0/DNasFo5ThK2AcnGKS72f2MXFc7oezs1aIBx4ku9X9m0PxhCVfLi
-         79ew==
-X-Gm-Message-State: AGi0PuZnVAXHS5KcBywAUYAwetUIqDX5oHNXnfAoVZPtX1pnh/yH9jJp
-        ZN4BhGgppaNJz3ZH4Z6pwo5zsY5+jfs=
-X-Google-Smtp-Source: APiQypLzhOk9igLGVjMXkxH/DSVCCMzI03tU371UYoJDa/NnEpxvHALpHL3oty0t0v+vVGWWjK8C0w==
-X-Received: by 2002:aa7:c0d4:: with SMTP id j20mr516713edp.288.1586445611793;
-        Thu, 09 Apr 2020 08:20:11 -0700 (PDT)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
-        by smtp.gmail.com with ESMTPSA id y23sm328621eju.85.2020.04.09.08.20.10
+        bh=T94ek2P1vYjI/992XAZLBRMZNsTOICz9I5cPd7mOb1Y=;
+        b=mzrZjMkRW/o5NoomEAwXZwJ5KxzaRRqj60MUgloLMKFMNpFnqGcS5YIml+AT8NlH6V
+         X0Od1hFTxiSQk0D4dKCTOPZ380wsiSJGXVbmpq3CEB14be6Az0VGbmzVMSYl6iZ6jo+Y
+         sBhHPHKVX09zrO/d9Tpusy19Tq+BKwsFAXsYPhVr+wQQFdqkhhb91akUf1PhVukEOUYK
+         m9CpXyANp1/sOKefcCRhy7tK+VVadWp+LWW1TP9iqpuxOazDdkGCDvIB/Q0Vdo2vHowY
+         +T6/WnxQxJrp1mgJPaLSrRdWmGmuy19DBybQ/GjcCxBMuv4KqCLHKfUX8RF4t6Kaj0oy
+         OfqQ==
+X-Gm-Message-State: AGi0PuYQo7H6WLYmeYT7Sya1CINWPlJCGebWdjk/j4e8PoRxXcTi3Qi1
+        uhSc9Nl547xmdaffW8clp/rUfAbpkxw=
+X-Google-Smtp-Source: APiQypK8drmw0Q19H5k5r1DrvIBs1ZGn+eskzRrhqGIrb9EuNXVSNRon4wLxA6w0TLjvGRXZzYzCYw==
+X-Received: by 2002:a05:6402:3118:: with SMTP id dc24mr553164edb.40.1586445624055;
+        Thu, 09 Apr 2020 08:20:24 -0700 (PDT)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com. [209.85.221.53])
+        by smtp.gmail.com with ESMTPSA id e10sm152239eds.2.2020.04.09.08.20.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 08:20:11 -0700 (PDT)
-Received: by mail-wr1-f47.google.com with SMTP id g3so12405660wrx.2;
-        Thu, 09 Apr 2020 08:20:10 -0700 (PDT)
-X-Received: by 2002:a5d:4011:: with SMTP id n17mr12170370wrp.104.1586445610677;
- Thu, 09 Apr 2020 08:20:10 -0700 (PDT)
+        Thu, 09 Apr 2020 08:20:23 -0700 (PDT)
+Received: by mail-wr1-f53.google.com with SMTP id 65so12401477wrl.1;
+        Thu, 09 Apr 2020 08:20:23 -0700 (PDT)
+X-Received: by 2002:a5d:670f:: with SMTP id o15mr14577113wru.120.1586445622945;
+ Thu, 09 Apr 2020 08:20:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200317155906.31288-1-dev@pascalroeleven.nl> <20200317155906.31288-3-dev@pascalroeleven.nl>
-In-Reply-To: <20200317155906.31288-3-dev@pascalroeleven.nl>
+References: <20200317155906.31288-1-dev@pascalroeleven.nl> <20200317155906.31288-4-dev@pascalroeleven.nl>
+In-Reply-To: <20200317155906.31288-4-dev@pascalroeleven.nl>
 From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Thu, 9 Apr 2020 23:19:59 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67LajWuoYChYhKtnf6fhd+uafyL-14_B0LHSS63NZbVJQ@mail.gmail.com>
-Message-ID: <CAGb2v67LajWuoYChYhKtnf6fhd+uafyL-14_B0LHSS63NZbVJQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/4] pwm: sun4i: Disable pwm before turning off clock gate
-To:     Pascal Roeleven <dev@pascalroeleven.nl>
+Date:   Thu, 9 Apr 2020 23:20:12 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65X3QoopHn11K48UbRMfTH2b9SseOR8U4jWWprGTTQB2A@mail.gmail.com>
+Message-ID: <CAGb2v65X3QoopHn11K48UbRMfTH2b9SseOR8U4jWWprGTTQB2A@mail.gmail.com>
+Subject: Re: [linux-sunxi] [RFC PATCH 3/4] pwm: sun4i: Move delay to function
+To:     dev@pascalroeleven.nl
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
@@ -63,8 +63,7 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 On Wed, Mar 18, 2020 at 12:00 AM Pascal Roeleven <dev@pascalroeleven.nl> wrote:
 >
-> The clock gate must stay on when disabling to ensure proper turning off.
-> After one period it will still be disabled anyway.
+> Move the delay to a function so we can reuse it.
 >
 > Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
 
