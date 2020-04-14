@@ -2,32 +2,38 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 306351A89CB
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Apr 2020 20:39:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B063D1A89DE
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Apr 2020 20:42:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504117AbgDNSjZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 14 Apr 2020 14:39:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33860 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504116AbgDNSjY (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:39:24 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S2504154AbgDNSl4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 14 Apr 2020 14:41:56 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:42151 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729777AbgDNSlw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 14 Apr 2020 14:41:52 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 030CD2076C;
-        Tue, 14 Apr 2020 18:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586889563;
-        bh=P4rgnvp+ubvr6gQQwx96f5n8r83/w0mRlcAt7NxMf1Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ww0nYJB4QPCYiyCRxxrz3MhjaV8MiazOYKP+JMlOoHG2mbl+ChLoBBcrOipv2bynr
-         B20L1Mj7Hi2EyxZG0mfBSrEA+lwtlYNctnTC7UWNAjwpWou1DgNqwMLKtwb2+q7N60
-         usjUjbY8yBBBG0upAxAMQXtDr65r+D74Qk8q/NYI=
-Date:   Tue, 14 Apr 2020 19:39:21 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 02BB72222E;
+        Tue, 14 Apr 2020 20:41:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1586889706;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=l8iSoKOFISTm7e3WSV4reMrghBve1U8G6s6rKNmMUNA=;
+        b=rtveXxXS06F/NYmV9F2bGS5feXtMfE9gJBoboXZn8qEe9Lv/Pdw+PkB3WYbQaCUuxLEI6I
+        01s6XbVlOTMD8dnUpTguXYKOq3sSaQOCnztQCPF9doXoASZlztSVASr7gO1ILou1R9B2WC
+        mzBh5hFIxbe65adMWQoMX24W8N21isE=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 14 Apr 2020 20:41:45 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
         linux-devicetree <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
         linux-pwm@vger.kernel.org,
@@ -39,78 +45,91 @@ Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Lee Jones <lee.jones@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using
  regmap
-Message-ID: <20200414183921.GN5412@sirena.org.uk>
+In-Reply-To: <CAMpxmJW1x4Orh1BZ4TUoCsYeaAAZ4NBUNvoMG9JgP0iLvXTOtg@mail.gmail.com>
 References: <20200402203656.27047-1-michael@walle.cc>
  <20200402203656.27047-11-michael@walle.cc>
  <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com>
  <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc>
  <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
  <e0388a2137e23d76b2415a7549c01dd1@walle.cc>
- <20200414172129.GJ5412@sirena.org.uk>
- <fa605af3aee48f0bc62133f398ed7c5d@walle.cc>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uWbmMdDzzl2TXAgx"
-Content-Disposition: inline
-In-Reply-To: <fa605af3aee48f0bc62133f398ed7c5d@walle.cc>
-X-Cookie: I've only got 12 cards.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+ <CAMpxmJW1x4Orh1BZ4TUoCsYeaAAZ4NBUNvoMG9JgP0iLvXTOtg@mail.gmail.com>
+Message-ID: <62d157198a75a59ada15c496deeab49b@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Spam-Level: *
+X-Rspamd-Server: web
+X-Spam-Status: No, score=1.40
+X-Spam-Score: 1.40
+X-Rspamd-Queue-Id: 02BB72222E
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[23];
+         NEURAL_HAM(-0.00)[-1.082];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,linaro.org,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Am 2020-04-14 19:00, schrieb Bartosz Golaszewski:
+> wt., 14 kwi 2020 o 12:07 Michael Walle <michael@walle.cc> napisał(a):
+>> >>
+>> >> So the best from a user perspective I've could come up with was:
+>> >>
+>> >>    ->base_reg = GPIO_REGMAP_ADDR(addr);
+>> >>
+>> >> I'm open for suggestions.
+>> >>
+>> >
+>> > Maybe setting the pointer to ERR_PTR(-ENOENT) which will result in
+>> > IS_ERR() returning true?
+>> 
+>> Unfortunatly, its not a pointer, but only a regular unsigned int (ie
+>> the type the regmap API has for its "reg" property). It could be a
+>> pointer of course but then the user would have to allocate additional
+>> memory.
+>> 
+>> -michael
+>> 
+> 
+> Eek, of course it's not a pointer. If possible I'd like to avoid this
+> GPIO_REGMAP_ADDR() macro, so how about having some separate field for
+> invalid offsets making every offset 'valid' by default?
 
---uWbmMdDzzl2TXAgx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+IMHO this has the same problems as mentioned in the response to Mark's
+idea. Normally, the user sets only some addresses, thus he has to mark
+all other as invalid. And if you add another address, you have to touch
+all the drivers to mark it as invalid.
 
-On Tue, Apr 14, 2020 at 08:36:23PM +0200, Michael Walle wrote:
-> Am 2020-04-14 19:21, schrieb Mark Brown:
+We could add some force bits like the "use_ack" flag in the bgpio 
+driver,
+where you can force the use of the value 0. But I'd really like to find
+a better way..
 
-> > You could define REGMAP_INVALID_ADDR to be (unsigned int)(-1) or some
-> > other suitably implausible address and use that as a value.  It's
-> > possible that there might be a collision with a real address on some
-> > device but it should be sufficiently unlikely to be useful, especially
-> > if it's not something regmap in general goes and evaluates.  For extra
-> > safety we could have an API for allowing users to query the register
-> > validity information regmap has (or can be given) and gpiolib could then
-> > use that to figure out if the value was actually a dummy value but
-> > that's probably overdoing it.
+-michael
 
-> If possible, I'd like to have the opposite logic. That is, if it is not
-> set it should be invalid. If we have a magic macro like
-> REGMAP_INVALID_ADDR, we must assign it to all the unused addresses. Thus
-> every driver would have to assign all addresses and if in the future
-> there will be some added, we'd have to touch all the drivers which use
-> gpio_regmap.
-
-Sure, for that you'd need a separate flag since zero is such a commonly
-valid address.
-
---uWbmMdDzzl2TXAgx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6WA1gACgkQJNaLcl1U
-h9BAjwf/bIsieXPSNQdoyPsGYQ4OjkmRX200mVnxW9V8WW1aT87hmD5XwdcUz27T
-0oXCpdsy7VDE5l4T7iDCXzXW1++aQW/mOE7MW7fgfDLWe212XUBcKluVTQ77+1wo
-z8FEPPjTRReUzy4LyvEtOuPv8S/wEeHOaPxuyOhhNacw5Sa/Wrmoj3UJRsUzB/MG
-Cm0W3nRmAIw1VeyMwP89BNeTXYdbqUojlBRj5DZRhXziF7L6YyLe8nMH3ZN+JOq7
-Od3cD4VROPQ3xfDaeCEG8QsoHSwZXYG+2kF7DjgWvC7zliuISkElPje0uK2KEHHJ
-aaGR4e5qeBL5Nha6oy2QwhRMN1Fezw==
-=I4w+
------END PGP SIGNATURE-----
-
---uWbmMdDzzl2TXAgx--
+> 
+> Linus: do you have a better idea?
+> 
+> Bart
