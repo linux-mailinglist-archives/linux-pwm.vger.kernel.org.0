@@ -2,109 +2,112 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E75001A8682
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Apr 2020 19:01:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA2181A872B
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Apr 2020 19:12:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390547AbgDNRBA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 14 Apr 2020 13:01:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732396AbgDNRAn (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 14 Apr 2020 13:00:43 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F34DFC061A10
-        for <linux-pwm@vger.kernel.org>; Tue, 14 Apr 2020 10:00:42 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id o19so6722865qkk.5
-        for <linux-pwm@vger.kernel.org>; Tue, 14 Apr 2020 10:00:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GIN7IF6qYtKF4gSfr/AeRIvPX7/eCFsh4TApVUETWoE=;
-        b=WJK29o3K5MXm6p3VWzbGrHsk0KBRUyWWpDHcGXG/HUX36uIXx5JyvHKhiu1s3JtLtU
-         V7gkFI/q1KmdLMhMMUxBqFlgpBaa0ZkNYnWmTKON4gWBw5jxIE0XBUAq91eeIGYap3zZ
-         OYhvWUkFkEL5+ErE8/pYC7Unq7WRkY9b6ox3OTtr13DORJy7fe4UWueM3dLYCpcH+haM
-         7s83titQwzbdrha9nbAnzXASShQuNXplRRlunOROJBdfg3Qf8CHG61pH9bI8Yw4wFfA2
-         c4dSOcHuk/T/b5dEH1oSwrARzE52d5vcmU9CxIdgyuhRNmOaqHvCyIjmpsCkx6zA/Qs+
-         xdOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GIN7IF6qYtKF4gSfr/AeRIvPX7/eCFsh4TApVUETWoE=;
-        b=Q/Aotz8yPU8n+/cqGbz+VDuzJlv5HdQOvgL1r46ctnXW6/Sd5q1DMNUAR43IvDDwqh
-         S4mo5NP8ZcCrSPTPeSpSLJd/ZqOOEGGXo5qs7irCrNPj68+T5XaZcemDShsI3HR1WxoV
-         7LQVpjIkS2Wf1OVCZCJ3IokU4CqEKtHMDovW84PmdFBLTOCb4+N7IrgZbpPLhoh3wOca
-         FugZccys7hTa91RIsTqUAKqBnmmO4iONIvNP8WnhJeSiDZPcZsO9SXIB4ab9krb6OPt5
-         wC8i/A4g4GPY0yYLaKvSb7wySJovTO37fLoUpvfymWBw1JCQ7NL4gzqTheF+e1a7HNmO
-         o8IA==
-X-Gm-Message-State: AGi0PuZ9Z2bUFUvobmDi00pRy/SWNLLr/vaDQ9dPabU33BFns9sT4lQY
-        P6uCzZkDrXV6Tej3iYxbW3pA/yMzys79lKbMbyoPdg==
-X-Google-Smtp-Source: APiQypJAVUbx87PMTgMxPYPAUoh9xIaPNebw3vKNOCwEq+Xku6Borru68lB1wY/XGBsCVLhWsPFHE8/a8s5sITgt6DA=
-X-Received: by 2002:a05:620a:5f1:: with SMTP id z17mr18160792qkg.21.1586883642039;
- Tue, 14 Apr 2020 10:00:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200402203656.27047-1-michael@walle.cc> <20200402203656.27047-11-michael@walle.cc>
- <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com>
- <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc> <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
- <e0388a2137e23d76b2415a7549c01dd1@walle.cc>
-In-Reply-To: <e0388a2137e23d76b2415a7549c01dd1@walle.cc>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 14 Apr 2020 19:00:30 +0200
-Message-ID: <CAMpxmJW1x4Orh1BZ4TUoCsYeaAAZ4NBUNvoMG9JgP0iLvXTOtg@mail.gmail.com>
-Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using regmap
+        id S2407567AbgDNRMr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 14 Apr 2020 13:12:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41624 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407517AbgDNRMq (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 14 Apr 2020 13:12:46 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6937C20767;
+        Tue, 14 Apr 2020 17:12:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586884366;
+        bh=+qcyIZF6Y3PyicvWS4ejyY0zwsK0szUsXLI7l22j8W0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PbluDEd8klbe4xkNX9xFsE670ESHTTOhjhaQFVoprnCTaU4ZEjH5UTUWLd+mTSI+6
+         DSQqhWkIQPD3yBIeAJU1asNH6AEgt5USvO7Kqa+X6ECZCi+OKRLsnOvTCTR+BmFAPw
+         EQDmo85zc+VWDvUZDPnadGVNgStkGN6AM/MaH5iQ=
+Date:   Tue, 14 Apr 2020 18:12:43 +0100
+From:   Mark Brown <broonie@kernel.org>
 To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
         Jean Delvare <jdelvare@suse.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Lee Jones <lee.jones@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 04/16] regmap-irq: make it possible to add irq_chip do
+ a specific device node
+Message-ID: <20200414171243.GI5412@sirena.org.uk>
+References: <20200402203656.27047-1-michael@walle.cc>
+ <20200402203656.27047-5-michael@walle.cc>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Q59ABw34pTSIagmi"
+Content-Disposition: inline
+In-Reply-To: <20200402203656.27047-5-michael@walle.cc>
+X-Cookie: I've only got 12 cards.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-wt., 14 kwi 2020 o 12:07 Michael Walle <michael@walle.cc> napisa=C5=82(a):
-> >>
-> >> So the best from a user perspective I've could come up with was:
-> >>
-> >>    ->base_reg =3D GPIO_REGMAP_ADDR(addr);
-> >>
-> >> I'm open for suggestions.
-> >>
-> >
-> > Maybe setting the pointer to ERR_PTR(-ENOENT) which will result in
-> > IS_ERR() returning true?
->
-> Unfortunatly, its not a pointer, but only a regular unsigned int (ie
-> the type the regmap API has for its "reg" property). It could be a
-> pointer of course but then the user would have to allocate additional
-> memory.
->
-> -michael
->
 
-Eek, of course it's not a pointer. If possible I'd like to avoid this
-GPIO_REGMAP_ADDR() macro, so how about having some separate field for
-invalid offsets making every offset 'valid' by default?
+--Q59ABw34pTSIagmi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Linus: do you have a better idea?
+On Thu, Apr 02, 2020 at 10:36:44PM +0200, Michael Walle wrote:
+> Add a new function regmap_add_irq_chip_np() with its corresponding
+> devm_regmap_add_irq_chip_np() variant. Sometimes one want to register
+> the IRQ domain on a different device node that the one of the regmap
 
-Bart
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-irq-np
+
+for you to fetch changes up to 12479382877dcf6623af4676caa8d3c647469a1b:
+
+  regmap-irq: make it possible to add irq_chip do a specific device node (2020-04-14 16:21:37 +0100)
+
+----------------------------------------------------------------
+regmap: Allow an irqchip to be created for a specific DT node
+
+----------------------------------------------------------------
+Michael Walle (1):
+      regmap-irq: make it possible to add irq_chip do a specific device node
+
+ drivers/base/regmap/regmap-irq.c | 84 ++++++++++++++++++++++++++++++++--------
+ include/linux/regmap.h           | 10 +++++
+ 2 files changed, 78 insertions(+), 16 deletions(-)
+
+--Q59ABw34pTSIagmi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6V7woACgkQJNaLcl1U
+h9BuQQf/an0mQWAm5vrM5ORmT03qy9aVeFZm3VBOD6lyBwl1SqzPsYPgdbPBk75U
+DQv+FyWG5Qq1BmPfR4oE8pimSb+pt0UE1LO6zLTHt8WvYmRh+xj6UwLfO0WVEJ06
++xdRzkrGLVScCsrlYGfx1RtjmpgvwRCKZVw39nPYTr57mRndNqlTCAtVtYoL8bX0
+I1ryrYEBvOcjJKTpWRKkm5LzVB67bpyYHEdmA5X6Xn1EwxcNrsfbJ5Eou9rlYmPI
+c1ehw1CrspXGb28+phVkDRaTYRzv4QhOZ/m7Rj1nTMemSL5++ew7GBtMQYqyh+T4
+x9u6Aa5UCcrOyLUoWRLaA3drz6EgbA==
+=lV/N
+-----END PGP SIGNATURE-----
+
+--Q59ABw34pTSIagmi--
