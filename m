@@ -2,134 +2,87 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B063D1A89DE
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Apr 2020 20:42:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7ABE1A8A30
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Apr 2020 20:50:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504154AbgDNSl4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 14 Apr 2020 14:41:56 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:42151 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729777AbgDNSlw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 14 Apr 2020 14:41:52 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 02BB72222E;
-        Tue, 14 Apr 2020 20:41:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1586889706;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=l8iSoKOFISTm7e3WSV4reMrghBve1U8G6s6rKNmMUNA=;
-        b=rtveXxXS06F/NYmV9F2bGS5feXtMfE9gJBoboXZn8qEe9Lv/Pdw+PkB3WYbQaCUuxLEI6I
-        01s6XbVlOTMD8dnUpTguXYKOq3sSaQOCnztQCPF9doXoASZlztSVASr7gO1ILou1R9B2WC
-        mzBh5hFIxbe65adMWQoMX24W8N21isE=
+        id S2504429AbgDNSuF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 14 Apr 2020 14:50:05 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:44224 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504407AbgDNStx (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 14 Apr 2020 14:49:53 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EIeAUR125070;
+        Tue, 14 Apr 2020 18:49:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=q4qne1W5zGbbsc7dFpIdBBMnXKX3IuZywtcs1GLXfAk=;
+ b=AEUBmdw5FvchfI0MAffJp5KIT5P8nawjMtj2+vu0SSs2fyMVNPkQKhs+9E2nvpcygU9d
+ eJPWCPoP4EEtZ/Xm8zRIhmOCeiqhX5GrfR4Y8cIwgoF+Z7C+Wfky70YmUBDdtNnWRfzN
+ mLKOB+OF7VoHYojZEdjeCuhEAAb74n4AJQE/tWtJkZBYxxKGVcW29q+uosslRPh6no7L
+ lWRgeC4fYHVg//FEnvHkwHXtkpPBBkjTa3HdMFJSZ/wMUoqF59sHjH3Dh/N9x6o+A8GV
+ tmssRsqcYhSS3dUkf71nDK4vEfucSbVeRC3k93ye47JRQT0wgiysZSmefCCVZRJlu4QF jA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 30b5um6q6q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 18:49:35 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03EIc7PK008702;
+        Tue, 14 Apr 2020 18:49:35 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 30bqphh50g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 18:49:35 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03EInXgC004751;
+        Tue, 14 Apr 2020 18:49:33 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 Apr 2020 11:49:32 -0700
+Date:   Tue, 14 Apr 2020 21:49:25 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, paul@crapouillou.net,
+        Joe Perches <joe@perches.com>, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] pwm: Add missing '\n' in log messages
+Message-ID: <20200414184925.GA12862@kadam>
+References: <20200411153528.30130-1-christophe.jaillet@wanadoo.fr>
+ <20200414135827.GB3593749@ulmo>
+ <f13a8754-3866-d3d2-eaff-29cb6d14ff8d@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 14 Apr 2020 20:41:45 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using
- regmap
-In-Reply-To: <CAMpxmJW1x4Orh1BZ4TUoCsYeaAAZ4NBUNvoMG9JgP0iLvXTOtg@mail.gmail.com>
-References: <20200402203656.27047-1-michael@walle.cc>
- <20200402203656.27047-11-michael@walle.cc>
- <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com>
- <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc>
- <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
- <e0388a2137e23d76b2415a7549c01dd1@walle.cc>
- <CAMpxmJW1x4Orh1BZ4TUoCsYeaAAZ4NBUNvoMG9JgP0iLvXTOtg@mail.gmail.com>
-Message-ID: <62d157198a75a59ada15c496deeab49b@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Spam-Level: *
-X-Rspamd-Server: web
-X-Spam-Status: No, score=1.40
-X-Spam-Score: 1.40
-X-Rspamd-Queue-Id: 02BB72222E
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[23];
-         NEURAL_HAM(-0.00)[-1.082];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,linaro.org,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f13a8754-3866-d3d2-eaff-29cb6d14ff8d@wanadoo.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=864 malwarescore=0
+ adultscore=0 bulkscore=0 spamscore=0 suspectscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004140132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 bulkscore=0 mlxscore=0
+ mlxlogscore=939 lowpriorityscore=0 impostorscore=0 adultscore=0
+ phishscore=0 spamscore=0 suspectscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004140132
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Am 2020-04-14 19:00, schrieb Bartosz Golaszewski:
-> wt., 14 kwi 2020 o 12:07 Michael Walle <michael@walle.cc> napisał(a):
->> >>
->> >> So the best from a user perspective I've could come up with was:
->> >>
->> >>    ->base_reg = GPIO_REGMAP_ADDR(addr);
->> >>
->> >> I'm open for suggestions.
->> >>
->> >
->> > Maybe setting the pointer to ERR_PTR(-ENOENT) which will result in
->> > IS_ERR() returning true?
->> 
->> Unfortunatly, its not a pointer, but only a regular unsigned int (ie
->> the type the regmap API has for its "reg" property). It could be a
->> pointer of course but then the user would have to allocate additional
->> memory.
->> 
->> -michael
->> 
-> 
-> Eek, of course it's not a pointer. If possible I'd like to avoid this
-> GPIO_REGMAP_ADDR() macro, so how about having some separate field for
-> invalid offsets making every offset 'valid' by default?
+Huh...
 
-IMHO this has the same problems as mentioned in the response to Mark's
-idea. Normally, the user sets only some addresses, thus he has to mark
-all other as invalid. And if you add another address, you have to touch
-all the drivers to mark it as invalid.
+If you look at dev_vprintk_emit().  It looks like if
+create_syslog_header() returns a string then vprintk_store() will add
+a newline.
 
-We could add some force bits like the "use_ack" flag in the bgpio 
-driver,
-where you can force the use of the value 0. But I'd really like to find
-a better way..
+I guess that means that dev_printk() can't be used to pr_cont().  And
+probably that's deliberate because using pr_cont() after boot is racy
+anyway.
 
--michael
+regards,
+dan carpenter
 
-> 
-> Linus: do you have a better idea?
-> 
-> Bart
