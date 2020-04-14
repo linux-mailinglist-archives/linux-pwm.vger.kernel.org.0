@@ -2,68 +2,152 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF25C1A8AB7
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Apr 2020 21:29:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FC361A8BA7
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Apr 2020 21:57:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504754AbgDNT26 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 14 Apr 2020 15:28:58 -0400
-Received: from smtprelay0211.hostedemail.com ([216.40.44.211]:41858 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2504730AbgDNT25 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 14 Apr 2020 15:28:57 -0400
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave05.hostedemail.com (Postfix) with ESMTP id 2B1CF18064C30;
-        Tue, 14 Apr 2020 19:12:00 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 032BF100E7B45;
-        Tue, 14 Apr 2020 19:12:00 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:960:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1539:1593:1594:1711:1730:1747:1777:1792:2393:2559:2562:2693:2828:3138:3139:3140:3141:3142:3352:3622:3867:3868:3871:3872:3873:3874:4321:5007:6691:10004:10400:11026:11232:11658:11914:12296:12297:12438:12740:12760:12895:13069:13161:13229:13311:13357:13439:14659:14721:21080:21212:21627:21660:21939:21990:30054:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:1,LUA_SUMMARY:none
-X-HE-Tag: rain29_4b79cd438ab50
-X-Filterd-Recvd-Size: 1707
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf20.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 14 Apr 2020 19:11:58 +0000 (UTC)
-Message-ID: <19df87f5d093a6c2721316811aca1c90d287bf1d.camel@perches.com>
-Subject: Re: [PATCH] pwm: Add missing '\n' in log messages
-From:   Joe Perches <joe@perches.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, paul@crapouillou.net,
-        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Date:   Tue, 14 Apr 2020 12:09:49 -0700
-In-Reply-To: <20200414184925.GA12862@kadam>
-References: <20200411153528.30130-1-christophe.jaillet@wanadoo.fr>
-         <20200414135827.GB3593749@ulmo>
-         <f13a8754-3866-d3d2-eaff-29cb6d14ff8d@wanadoo.fr>
-         <20200414184925.GA12862@kadam>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        id S2505310AbgDNT5x (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 14 Apr 2020 15:57:53 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:38619 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505301AbgDNT53 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 14 Apr 2020 15:57:29 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 6B92922FEC;
+        Tue, 14 Apr 2020 21:57:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1586894236;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=c1MxhBoeYs71xwy2H0AJkghL+7Y+1QwLOd9ofZWf8mY=;
+        b=oYyi/K9Wgv1J8oUv562gbV/e/cxfMAv1K6H8unRKColnTKhwpm+o2zuVXXywnycQemE920
+        49lVQd/oeC++cP1U8UAjd2wqxmRkE+CsXw4zAXo8aqoBXwRTVNIy+ObJKwMDB2s3LXJS0A
+        SUYA2YwD+G6uEd0VIP7BN8x0gr1wjC0=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 14 Apr 2020 21:57:15 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using
+ regmap
+In-Reply-To: <62d157198a75a59ada15c496deeab49b@walle.cc>
+References: <20200402203656.27047-1-michael@walle.cc>
+ <20200402203656.27047-11-michael@walle.cc>
+ <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com>
+ <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc>
+ <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
+ <e0388a2137e23d76b2415a7549c01dd1@walle.cc>
+ <CAMpxmJW1x4Orh1BZ4TUoCsYeaAAZ4NBUNvoMG9JgP0iLvXTOtg@mail.gmail.com>
+ <62d157198a75a59ada15c496deeab49b@walle.cc>
+Message-ID: <eab972adf53bbac20b5a9e613fcfb5b0@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Spam-Level: *
+X-Rspamd-Server: web
+X-Spam-Status: No, score=1.40
+X-Spam-Score: 1.40
+X-Rspamd-Queue-Id: 6B92922FEC
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[23];
+         NEURAL_HAM(-0.00)[-0.400];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,linaro.org,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 2020-04-14 at 21:49 +0300, Dan Carpenter wrote:
-> Huh...
+Hi Mark, Hi Bartosz, Hi Linus,
+
+Am 2020-04-14 20:41, schrieb Michael Walle:
+> Am 2020-04-14 19:00, schrieb Bartosz Golaszewski:
+>> wt., 14 kwi 2020 o 12:07 Michael Walle <michael@walle.cc> napisał(a):
+>>> >>
+>>> >> So the best from a user perspective I've could come up with was:
+>>> >>
+>>> >>    ->base_reg = GPIO_REGMAP_ADDR(addr);
+>>> >>
+>>> >> I'm open for suggestions.
+>>> >>
+>>> >
+>>> > Maybe setting the pointer to ERR_PTR(-ENOENT) which will result in
+>>> > IS_ERR() returning true?
+>>> 
+>>> Unfortunatly, its not a pointer, but only a regular unsigned int (ie
+>>> the type the regmap API has for its "reg" property). It could be a
+>>> pointer of course but then the user would have to allocate additional
+>>> memory.
+>>> 
+>>> -michael
+>>> 
+>> 
+>> Eek, of course it's not a pointer. If possible I'd like to avoid this
+>> GPIO_REGMAP_ADDR() macro, so how about having some separate field for
+>> invalid offsets making every offset 'valid' by default?
 > 
-> If you look at dev_vprintk_emit().  It looks like if
-> create_syslog_header() returns a string then vprintk_store() will add
-> a newline.
+> IMHO this has the same problems as mentioned in the response to Mark's
+> idea. Normally, the user sets only some addresses, thus he has to mark
+> all other as invalid. And if you add another address, you have to touch
+> all the drivers to mark it as invalid.
 > 
-> I guess that means that dev_printk() can't be used to pr_cont().  And
-> probably that's deliberate because using pr_cont() after boot is racy
-> anyway.
+> We could add some force bits like the "use_ack" flag in the bgpio 
+> driver,
+> where you can force the use of the value 0. But I'd really like to find
+> a better way..
 
-Perhaps that's true, it didn't used to be.
+So what about the following:
 
-There are couple dozen or so KERN_CONT uses after a dev_<level>
-without a newline, so those _might_ be broken, but I don't thinks so.
+#define GPIO_REGMAP_ADDR_ZERO (unsigned int)(-1)
 
-$ git grep -P -A10 '\bdev_\w+\s*\(' | \
-  grep -P -B10 "KERN_CONT|pr_cont"
+So this way the user might assign the base addresses the normal way
+except when he wants to use zero, in that case he has to use
 
+   ->base_adr = GPIO_REGMAP_ADDR_ZERO;
+
+gpio-regmap.c could use then:
+
+if (base_addr)
+   something_useful(gpio_regmap_addr(base_addr));
+
+unsigned int gpio_regmap_addr(unsigned int addr)
+{
+   return (addr == GPIO_REGMAP_ADDR_ZERO) ? 0 : addr;
+}
+
+-michael
