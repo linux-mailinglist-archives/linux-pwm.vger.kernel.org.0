@@ -2,200 +2,289 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F28631A7F3D
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Apr 2020 16:10:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C8161A8334
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Apr 2020 17:38:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389204AbgDNOKQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 14 Apr 2020 10:10:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389201AbgDNOKO (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 14 Apr 2020 10:10:14 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB1EC061A0C
-        for <linux-pwm@vger.kernel.org>; Tue, 14 Apr 2020 07:10:14 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k1so7264722wrx.4
-        for <linux-pwm@vger.kernel.org>; Tue, 14 Apr 2020 07:10:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DZdXyroSeiVaAxe3IAS67vO3tIcLGaIAwlq/aeAVLbU=;
-        b=htS5CFyzu/jZZPkA00PkpwVKELX5oEUiRcVEFTTdDVfNhjzPDnc1mRVmsQCVWaRsbC
-         WDukAkJ8U86icP/24QqVKJKC06SSt8EDTFIyTOr6+Oj7jLmLkW5Cpg92EaXm8mffiUHH
-         XY3uX3IJNrriazk4FLX0glpGozkvRYs0lrDYKn0FgZPt9owHsqsPRgIH8ircQcJ8IXXi
-         shRAvwYQczEJsKrdYJdreKLXHx42ldz7mGGPF+NhmE8O/exZBbUOOcW/pxJxEysIt/S3
-         Jr6gABWc3XfXM9uwQel4s9fChDd9yxwS7ZLxcBM3WZV9qoqtmGWGGYOcN41lY+GUryES
-         WURg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DZdXyroSeiVaAxe3IAS67vO3tIcLGaIAwlq/aeAVLbU=;
-        b=aibH1BlLOsqVNALbCoJOX/Nd0tuoRILQfXRmQlrsm0c7R2ruH3Y8YJnGssBUyGobkD
-         j5YSZBdvhoJtKaanzmESt7hkf5fcJ6k7wHdJuw3gnittjbZm5V4GKgIQXZrvruHwwkzS
-         5baonZfWUDZx1jZ/2uklytInZZe7lMPSkUoIUv+2BfC/u5fMW/1IUr9jBG9YyDs3B7cL
-         NbAydX9BcrgBljHKgFESQmf5I/nGHWTBd9VXtZXh7WWpMVdVUJuOlmgCJZvxy9DPnkmS
-         uYHX4sOpxouWIBeC1bk109wUSuQuMPHXkO+I1q3GebBZyepO9/DHdolGHfaICNin4RdJ
-         HFIQ==
-X-Gm-Message-State: AGi0PuYhI7635QHv+9o0m5MSlzdtLBzKpcgJ7nip98kRCoKqnkLqDqfs
-        zbACjMKgViHKp585GIk2Yzwkbnaa
-X-Google-Smtp-Source: APiQypKx0FPuNcHU4ld63LJrh+D7OKsR1GU04hYLvyChOlJknbyw5Rgry/Q/2ZhZJPLKLRcOVgx9mQ==
-X-Received: by 2002:a5d:5150:: with SMTP id u16mr1397520wrt.371.1586873413003;
-        Tue, 14 Apr 2020 07:10:13 -0700 (PDT)
-Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
-        by smtp.gmail.com with ESMTPSA id l5sm19618046wrm.66.2020.04.14.07.10.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 07:10:11 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 16:10:10 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
-Subject: Re: [RESEND v5] pwm: Add support for Azoteq IQS620A PWM generator
-Message-ID: <20200414141010.GD3593749@ulmo>
-References: <1586744116-14157-1-git-send-email-jeff@labundy.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="W5WqUoFLvi1M7tJE"
-Content-Disposition: inline
-In-Reply-To: <1586744116-14157-1-git-send-email-jeff@labundy.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+        id S2440541AbgDNPiB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 14 Apr 2020 11:38:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2440529AbgDNPhx (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:37:53 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 217052075E;
+        Tue, 14 Apr 2020 15:37:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586878671;
+        bh=wsnp91rcwdxYBpYao46YELhWn6oIvD6jIFh28S6ADA8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=eaPNXm0eBthNtlwBsPDfapYe+Lln6DcD+Fs92BFAyuuJ6c8XZ+IMegeGcMfBWcPOf
+         UaMKwqoNjvUXSXYI/GatTtDnNYZ+Q8guQSDr701azEr1WhvnRDeT9uDU0typ7VXcna
+         P3BXeGoNg2eXfaGm6h9+Q0lnYCMLyknBkMBDsiTo=
+Date:   Tue, 14 Apr 2020 16:37:49 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Jean Delvare <jdelvare@suse.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Li Yang <leoyang.li@nxp.com>, Marc Zyngier <maz@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Subject: Applied "regmap-irq: make it possible to add irq_chip do a specific device node" to the regmap tree
+In-Reply-To:  <20200402203656.27047-5-michael@walle.cc>
+Message-Id:  <applied-20200402203656.27047-5-michael@walle.cc>
+X-Patchwork-Hint: ignore
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+The patch
 
---W5WqUoFLvi1M7tJE
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+   regmap-irq: make it possible to add irq_chip do a specific device node
 
-On Sun, Apr 12, 2020 at 09:15:16PM -0500, Jeff LaBundy wrote:
-> This patch adds support for the Azoteq IQS620A, capable of generating
-> a 1-kHz PWM output with duty cycle between ~0.4% and 100% (inclusive).
->=20
-> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-> Reviewed-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
-> Note: This patch was originally part of a series that was intended to be =
-taken
->       through mfd in its entirety. However, attempts to elicit an Ack for=
- this
->       patch went unanswered, so it was dropped in order to unblock the se=
-ries.
->=20
->       The remainder of the series (including pwm bindings) landed in 5.7-=
-rc1,
->       so this patch is being sent on its own so that it may be taken thro=
-ugh
->       pwm during the next merge window.
->=20
-> Changes in v5:
->   - Replaced iqs62x->map with iqs62x->regmap throughout
->   - Updated iqs620_pwm_probe to read the values of IQS620_PWR_SETTINGS_PW=
-M_OUT
->     and IQS620_PWM_DUTY_CYCLE so that iqs620_pwm_get_state reflects the a=
-ctual
->     state of the device following any changes made by a bootloader
->   - Dropped #defines for platform_driver name and alias in favor of the a=
-ctual
->     string names
->=20
-> Changes in v4:
->   - Updated iqs620_pwm_apply and iqs620_pwm_get_state to hold the lock ar=
-ound
->     only the minimum necessary code
->   - Removed the completion protecting against early use of chip->pwms[0] =
-=66rom
->     inside iqs620_pwm_notifier in favor of cached register values
->   - Updated iqs620_pwm_get_state to use the cached register values instea=
-d of
->     reading IQS620_PWR_SETTINGS_PWM_OUT and IQS620_PWM_DUTY_CYCLE (both e=
-qual
->     to zero by default)
->   - Added a comment in iqs620_pwm_notifier to note that the parent MFD dr=
-iver
->     prints an error message in the event of a device reset
->=20
-> Changes in v3:
->   - Updated the commit message to say "~0.4%" instead of "0.4%"
->   - Clarified the effect of duty cycle and state changes in the 'Limitati=
-ons'
->     section and added a restriction regarding 0% duty cycle
->   - Added a comment in iqs620_pwm_apply to explain how duty cycle is deri=
-ved
->   - Updated iqs620_pwm_apply to disable the output first and enable it la=
-st to
->     prevent temporarily driving a stale duty cycle
->   - Rounded the calculation for duty cycle up and down in iqs620_pwm_get_=
-state
->     and iqs620_pwm_apply, respectively
->   - Added a comment in iqs620_pwm_get_state to explain what it reports fo=
-llow-
->     ing requests to set duty cycle to 0%
->   - Added a lock to prevent back-to-back access of IQS620_PWR_SETTINGS_PW=
-M_OUT
->     and IQS620_PWM_DUTY_CYCLE from being interrupted
->   - Updated iqs620_pwm_notifier to reference pwm->state directly as oppos=
-ed to
->     calling pwm_get_state
->   - Moved notifier unregistration back to a device-managed action
->   - Added a completion to prevent iqs620_pwm_notifier from referencing the
->     pwm_chip structure until it has been initialized by pwmchip_add
->=20
-> Changes in v2:
->   - Merged 'Copyright' and 'Author' lines into one in introductory commen=
-ts
->   - Added 'Limitations' section to introductory comments
->   - Replaced 'error' with 'ret' throughout
->   - Added const qualifier to state argument of iqs620_pwm_apply and remov=
-ed all
->     modifications to the variable's contents
->   - Updated iqs620_pwm_apply to return -ENOTSUPP or -EINVAL if the reques=
-ted
->     polarity is inverted or the requested period is below 1 ms, respectiv=
-ely
->   - Updated iqs620_pwm_apply to disable the PWM output if duty cycle is z=
-ero
->   - Added iqs620_pwm_get_state
->   - Eliminated tabbed alignment of pwm_ops and platform_driver struct mem=
-bers
->   - Moved notifier unregistration to already present iqs620_pwm_remove, w=
-hich
->     eliminated the need for a device-managed action and ready flag
->   - Added a comment in iqs620_pwm_probe to explain the order of operations
->   - Changed Kconfig "depends on" logic to MFD_IQS62X || COMPILE_TEST
->=20
->  drivers/pwm/Kconfig       |  10 ++
->  drivers/pwm/Makefile      |   1 +
->  drivers/pwm/pwm-iqs620a.c | 270 ++++++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 281 insertions(+)
->  create mode 100644 drivers/pwm/pwm-iqs620a.c
+has been applied to the regmap tree at
 
-Applied, thanks.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git 
 
-Thierry
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
---W5WqUoFLvi1M7tJE
-Content-Type: application/pgp-signature; name="signature.asc"
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
------BEGIN PGP SIGNATURE-----
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6VxEAACgkQ3SOs138+
-s6GrJBAAjCtLnttEO5NbHOAnDjf5PoFx3biAjFxfaDTpWWmMnhZbPPzFJ0JrPzRU
-XTMgZqZLygHqYvM6uWQlvf7zdKL0ALetXyLTAGwEGa/BjMJW0YXAilpDSrlYJDIR
-yN2zvdBNLAvu7XBaW3CL1FkEQ0ttK5wACjnGcrVo9qGVCtmEidQIVBQKHAjfp5CX
-pqaanNHdX6GWhGdFxFCoEr7UR7XGXKsam5NQ7IxmIFNu/MN/GTgCA6hMccbAxXho
-qbRZUzpB0nwH13ahdl+JTDZJsbrSMK/MCm+eJS3DGYdmsRNZjNcLVqP13hYCuEL4
-ERhTRse5O/chnBzpr5XOXAhReLOr6ujGzxE41H4IOLNJp73EBXpTsgFH5yVM+VOR
-FShi1/o9JNRfNXuOSiaZ7aucGNSC0ffL/0rGe9qBQlK13Fm1K6hrQS9JaeJ16ApX
-xL5sam3WIxKzEDoVrqvE7dvKpqf2GdfdwEBQsDGWVryARAL9OewWublBcVNumGkY
-ABGos053lHmRADgcYF0Gr5fuaYt4fm8gS6sGg9UPD2UmJkpDFXehT4xo5iLIF7ar
-MRYfs2vIqZJiy05kJ/mph3qDUfXsEaWQbRHTiIaJy0rm88EZR4eeRjS5Ut6zVqrX
-zEVK9oaeu5XL0Vf0KQxglXkGAJ9FvSjPY6peVkC1/7eeypUk5kg=
-=yyTn
------END PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---W5WqUoFLvi1M7tJE--
+Thanks,
+Mark
+
+From 12479382877dcf6623af4676caa8d3c647469a1b Mon Sep 17 00:00:00 2001
+From: Michael Walle <michael@walle.cc>
+Date: Thu, 2 Apr 2020 22:36:44 +0200
+Subject: [PATCH] regmap-irq: make it possible to add irq_chip do a specific
+ device node
+
+Add a new function regmap_add_irq_chip_np() with its corresponding
+devm_regmap_add_irq_chip_np() variant. Sometimes one want to register
+the IRQ domain on a different device node that the one of the regmap
+node. For example when using a MFD where there are different interrupt
+controllers and particularly for the generic regmap gpio_chip/irq_chip
+driver. In this case it is not desireable to have the IRQ domain on
+the parent node.
+
+Signed-off-by: Michael Walle <michael@walle.cc>
+Link: https://lore.kernel.org/r/20200402203656.27047-5-michael@walle.cc
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/base/regmap/regmap-irq.c | 84 ++++++++++++++++++++++++++------
+ include/linux/regmap.h           | 10 ++++
+ 2 files changed, 78 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/base/regmap/regmap-irq.c b/drivers/base/regmap/regmap-irq.c
+index 3d64c9331a82..4340e1d268b6 100644
+--- a/drivers/base/regmap/regmap-irq.c
++++ b/drivers/base/regmap/regmap-irq.c
+@@ -541,8 +541,9 @@ static const struct irq_domain_ops regmap_domain_ops = {
+ };
+ 
+ /**
+- * regmap_add_irq_chip() - Use standard regmap IRQ controller handling
++ * regmap_add_irq_chip_np() - Use standard regmap IRQ controller handling
+  *
++ * @np: The device_node where the IRQ domain should be added to.
+  * @map: The regmap for the device.
+  * @irq: The IRQ the device uses to signal interrupts.
+  * @irq_flags: The IRQF_ flags to use for the primary interrupt.
+@@ -556,9 +557,10 @@ static const struct irq_domain_ops regmap_domain_ops = {
+  * register cache.  The chip driver is responsible for restoring the
+  * register values used by the IRQ controller over suspend and resume.
+  */
+-int regmap_add_irq_chip(struct regmap *map, int irq, int irq_flags,
+-			int irq_base, const struct regmap_irq_chip *chip,
+-			struct regmap_irq_chip_data **data)
++int regmap_add_irq_chip_np(struct device_node *np, struct regmap *map, int irq,
++			   int irq_flags, int irq_base,
++			   const struct regmap_irq_chip *chip,
++			   struct regmap_irq_chip_data **data)
+ {
+ 	struct regmap_irq_chip_data *d;
+ 	int i;
+@@ -769,12 +771,10 @@ int regmap_add_irq_chip(struct regmap *map, int irq, int irq_flags,
+ 	}
+ 
+ 	if (irq_base)
+-		d->domain = irq_domain_add_legacy(map->dev->of_node,
+-						  chip->num_irqs, irq_base, 0,
+-						  &regmap_domain_ops, d);
++		d->domain = irq_domain_add_legacy(np, chip->num_irqs, irq_base,
++						  0, &regmap_domain_ops, d);
+ 	else
+-		d->domain = irq_domain_add_linear(map->dev->of_node,
+-						  chip->num_irqs,
++		d->domain = irq_domain_add_linear(np, chip->num_irqs,
+ 						  &regmap_domain_ops, d);
+ 	if (!d->domain) {
+ 		dev_err(map->dev, "Failed to create IRQ domain\n");
+@@ -808,6 +808,30 @@ int regmap_add_irq_chip(struct regmap *map, int irq, int irq_flags,
+ 	kfree(d);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(regmap_add_irq_chip_np);
++
++/**
++ * regmap_add_irq_chip() - Use standard regmap IRQ controller handling
++ *
++ * @map: The regmap for the device.
++ * @irq: The IRQ the device uses to signal interrupts.
++ * @irq_flags: The IRQF_ flags to use for the primary interrupt.
++ * @irq_base: Allocate at specific IRQ number if irq_base > 0.
++ * @chip: Configuration for the interrupt controller.
++ * @data: Runtime data structure for the controller, allocated on success.
++ *
++ * Returns 0 on success or an errno on failure.
++ *
++ * This is the same as regmap_add_irq_chip_np, except that the device
++ * node of the regmap is used.
++ */
++int regmap_add_irq_chip(struct regmap *map, int irq, int irq_flags,
++			int irq_base, const struct regmap_irq_chip *chip,
++			struct regmap_irq_chip_data **data)
++{
++	return regmap_add_irq_chip_np(map->dev->of_node, map, irq, irq_flags,
++				      irq_base, chip, data);
++}
+ EXPORT_SYMBOL_GPL(regmap_add_irq_chip);
+ 
+ /**
+@@ -875,9 +899,10 @@ static int devm_regmap_irq_chip_match(struct device *dev, void *res, void *data)
+ }
+ 
+ /**
+- * devm_regmap_add_irq_chip() - Resource manager regmap_add_irq_chip()
++ * devm_regmap_add_irq_chip_np() - Resource manager regmap_add_irq_chip_np()
+  *
+  * @dev: The device pointer on which irq_chip belongs to.
++ * @np: The device_node where the IRQ domain should be added to.
+  * @map: The regmap for the device.
+  * @irq: The IRQ the device uses to signal interrupts
+  * @irq_flags: The IRQF_ flags to use for the primary interrupt.
+@@ -890,10 +915,11 @@ static int devm_regmap_irq_chip_match(struct device *dev, void *res, void *data)
+  * The &regmap_irq_chip_data will be automatically released when the device is
+  * unbound.
+  */
+-int devm_regmap_add_irq_chip(struct device *dev, struct regmap *map, int irq,
+-			     int irq_flags, int irq_base,
+-			     const struct regmap_irq_chip *chip,
+-			     struct regmap_irq_chip_data **data)
++int devm_regmap_add_irq_chip_np(struct device *dev, struct device_node *np,
++				struct regmap *map, int irq, int irq_flags,
++				int irq_base,
++				const struct regmap_irq_chip *chip,
++				struct regmap_irq_chip_data **data)
+ {
+ 	struct regmap_irq_chip_data **ptr, *d;
+ 	int ret;
+@@ -903,8 +929,8 @@ int devm_regmap_add_irq_chip(struct device *dev, struct regmap *map, int irq,
+ 	if (!ptr)
+ 		return -ENOMEM;
+ 
+-	ret = regmap_add_irq_chip(map, irq, irq_flags, irq_base,
+-				  chip, &d);
++	ret = regmap_add_irq_chip_np(np, map, irq, irq_flags, irq_base,
++				     chip, &d);
+ 	if (ret < 0) {
+ 		devres_free(ptr);
+ 		return ret;
+@@ -915,6 +941,32 @@ int devm_regmap_add_irq_chip(struct device *dev, struct regmap *map, int irq,
+ 	*data = d;
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(devm_regmap_add_irq_chip_np);
++
++/**
++ * devm_regmap_add_irq_chip() - Resource manager regmap_add_irq_chip()
++ *
++ * @dev: The device pointer on which irq_chip belongs to.
++ * @map: The regmap for the device.
++ * @irq: The IRQ the device uses to signal interrupts
++ * @irq_flags: The IRQF_ flags to use for the primary interrupt.
++ * @irq_base: Allocate at specific IRQ number if irq_base > 0.
++ * @chip: Configuration for the interrupt controller.
++ * @data: Runtime data structure for the controller, allocated on success
++ *
++ * Returns 0 on success or an errno on failure.
++ *
++ * The &regmap_irq_chip_data will be automatically released when the device is
++ * unbound.
++ */
++int devm_regmap_add_irq_chip(struct device *dev, struct regmap *map, int irq,
++			     int irq_flags, int irq_base,
++			     const struct regmap_irq_chip *chip,
++			     struct regmap_irq_chip_data **data)
++{
++	return devm_regmap_add_irq_chip_np(dev, map->dev->of_node, map, irq,
++					   irq_flags, irq_base, chip, data);
++}
+ EXPORT_SYMBOL_GPL(devm_regmap_add_irq_chip);
+ 
+ /**
+diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+index 40b07168fd8e..ae5034b2d7c3 100644
+--- a/include/linux/regmap.h
++++ b/include/linux/regmap.h
+@@ -21,6 +21,7 @@
+ struct module;
+ struct clk;
+ struct device;
++struct device_node;
+ struct i2c_client;
+ struct i3c_device;
+ struct irq_domain;
+@@ -1310,12 +1311,21 @@ struct regmap_irq_chip_data;
+ int regmap_add_irq_chip(struct regmap *map, int irq, int irq_flags,
+ 			int irq_base, const struct regmap_irq_chip *chip,
+ 			struct regmap_irq_chip_data **data);
++int regmap_add_irq_chip_np(struct device_node *np, struct regmap *map, int irq,
++			   int irq_flags, int irq_base,
++			   const struct regmap_irq_chip *chip,
++			   struct regmap_irq_chip_data **data);
+ void regmap_del_irq_chip(int irq, struct regmap_irq_chip_data *data);
+ 
+ int devm_regmap_add_irq_chip(struct device *dev, struct regmap *map, int irq,
+ 			     int irq_flags, int irq_base,
+ 			     const struct regmap_irq_chip *chip,
+ 			     struct regmap_irq_chip_data **data);
++int devm_regmap_add_irq_chip_np(struct device *dev, struct device_node *np,
++				struct regmap *map, int irq, int irq_flags,
++				int irq_base,
++				const struct regmap_irq_chip *chip,
++				struct regmap_irq_chip_data **data);
+ void devm_regmap_del_irq_chip(struct device *dev, int irq,
+ 			      struct regmap_irq_chip_data *data);
+ 
+-- 
+2.20.1
+
