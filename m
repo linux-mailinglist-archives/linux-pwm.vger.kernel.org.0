@@ -2,33 +2,57 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84DD51AB8BD
-	for <lists+linux-pwm@lfdr.de>; Thu, 16 Apr 2020 08:53:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94E201AB9A6
+	for <lists+linux-pwm@lfdr.de>; Thu, 16 Apr 2020 09:21:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437368AbgDPGxQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 16 Apr 2020 02:53:16 -0400
-Received: from smtprelay0116.hostedemail.com ([216.40.44.116]:37100 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2436919AbgDPGwq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 16 Apr 2020 02:52:46 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 0A616100E7B43;
-        Thu, 16 Apr 2020 06:51:59 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:973:982:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1539:1593:1594:1711:1730:1747:1777:1792:2393:2559:2562:2828:2911:3138:3139:3140:3141:3142:3352:3622:3865:3866:3867:3868:3870:3871:3872:3874:4321:4425:5007:6742:6743:7903:10004:10400:10903:11232:11658:11914:12297:12346:12740:12760:12895:13069:13311:13357:13439:14096:14097:14659:14721:21080:21433:21627:21740:30054:30070:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:1,LUA_SUMMARY:none
-X-HE-Tag: wheel34_84bb3b9f86d3c
-X-Filterd-Recvd-Size: 3344
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 16 Apr 2020 06:51:52 +0000 (UTC)
-Message-ID: <d93f90bbcc99967ed5ba458ba99d7e73de12e3b2.camel@perches.com>
-Subject: Re: [PATCH 2/2] dt-bindings: Remove cases of 'allOf' containing a
- '$ref'
-From:   Joe Perches <joe@perches.com>
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        id S2438742AbgDPHTi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 16 Apr 2020 03:19:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54478 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2439104AbgDPHT1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 16 Apr 2020 03:19:27 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CBFAC03C1AD
+        for <linux-pwm@vger.kernel.org>; Thu, 16 Apr 2020 00:19:20 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a25so3603481wrd.0
+        for <linux-pwm@vger.kernel.org>; Thu, 16 Apr 2020 00:19:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=3AEaWn5XeJ7hcX74F4NzwZbogUqZr77xLF5d73BlBfw=;
+        b=x+7x1SRD1y/LTZJxHdO7NBoPBhyXEErUVgwIai9Txb2aqME7MbBYVN8PkA7MmFMlG/
+         +PTNeDQuJeOieuyql513BpDrE+TR0fX/mGtYOkCA4N6z7VRTvWgnydlKHHjdN1pHbDi6
+         FcrLT7q9Xm6W6XF2DKy+sVxRvrx2e8zXuCLbQfQ8d2nPd/iJ34SsziQVe8hgIZhAVDz1
+         X39oeCEgZoTyWJybNtbP4u4Ik4a22WiM6sS1Gf+7ektT/jxfmy4EaiaU+raISKCA976c
+         DL5uziLMISTg53DG/aGMYXA9DS9lwHatzi8LUvPjSHKrnZk+uf82Nr0GKjoaC8YAX62l
+         Ovyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=3AEaWn5XeJ7hcX74F4NzwZbogUqZr77xLF5d73BlBfw=;
+        b=CQd5iJy0sLv3tKnF8i4w4gQ9gZyKQPExZcNnGdUA5AHasRi59AiDhUqunDNT/78Hdx
+         gmaUroXewiCoE9RTS4ZNsC4XUJsBcPA+NHXwhGFuiO86jnyr6e0BdyV0ETkxqLYboMaC
+         YqM1D3zqMuh/q8zHi0uztA9oJ1IIxtLU46F98b2h+7JDEMtwwq2umKjZm7UTCGNIZ8tr
+         Q//MLF2jNvFnbVjFtEyyTPJcib7+wz8BiUBolagwoVM2BfuNUnzC+7doBMeEj/QWLIwD
+         W6oq0jCRLrawBe96DewYu9gbgCuXWfgKF//4ioreD7b1RrmhR+UgeuzaN5sH9Pwoc/EF
+         OBqQ==
+X-Gm-Message-State: AGi0PuZyiLlkdqAV6gPE0zjXfpkgL98tK5AqNiPZlJhquFTzAEFFV4ww
+        l9Ytc0cyjSytk13hFQDxkel0VA==
+X-Google-Smtp-Source: APiQypLCNVZBL4RMlNf7UZFX5oU2xDT6SF7MjxuD7BsWZie9pUbnFA9tcL+f+7W6lePE+UdiJ1fBjg==
+X-Received: by 2002:adf:e4cc:: with SMTP id v12mr8967305wrm.106.1587021558557;
+        Thu, 16 Apr 2020 00:19:18 -0700 (PDT)
+Received: from dell ([95.149.164.124])
+        by smtp.gmail.com with ESMTPSA id p16sm19943946wro.21.2020.04.16.00.19.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 00:19:17 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 08:20:18 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Maxime Ripard <mripard@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>,
         Alexandre Torgue <alexandre.torgue@st.com>,
@@ -41,7 +65,6 @@ Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
         Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Pavel Machek <pavel@ucw.cz>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -64,34 +87,113 @@ Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
         linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
         alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
-Date:   Wed, 15 Apr 2020 23:49:40 -0700
-In-Reply-To: <20200416005549.9683-2-robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: Clean-up schema indentation formatting
+Message-ID: <20200416072018.GS2167633@dell>
 References: <20200416005549.9683-1-robh@kernel.org>
-         <20200416005549.9683-2-robh@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200416005549.9683-1-robh@kernel.org>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 2020-04-15 at 19:55 -0500, Rob Herring wrote:
-> json-schema versions draft7 and earlier have a weird behavior in that
-> any keywords combined with a '$ref' are ignored (silently). The correct
-> form was to put a '$ref' under an 'allOf'. This behavior is now changed
-> in the 2019-09 json-schema spec and '$ref' can be mixed with other
-> keywords. The json-schema library doesn't yet support this, but the
-> tooling now does a fixup for this and either way works.
+On Wed, 15 Apr 2020, Rob Herring wrote:
+
+> Fix various inconsistencies in schema indentation. Most of these are
+> list indentation which should be 2 spaces more than the start of the
+> enclosing keyword. This doesn't matter functionally, but affects running
+> scripts which do transforms on the schema files.
 > 
-> This has been a constant source of review comments, so let's change this
-> treewide so everyone copies the simpler syntax.
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/arm/altera.yaml       |  6 +-
+>  .../amlogic/amlogic,meson-gx-ao-secure.yaml   |  2 +-
+>  .../devicetree/bindings/arm/bitmain.yaml      |  2 +-
+>  .../devicetree/bindings/arm/nxp/lpc32xx.yaml  |  9 ++-
+>  .../bindings/arm/socionext/uniphier.yaml      | 26 ++++----
+>  .../bindings/arm/stm32/st,mlahb.yaml          |  2 +-
+>  .../bindings/arm/stm32/st,stm32-syscon.yaml   |  6 +-
+>  .../bindings/ata/faraday,ftide010.yaml        |  4 +-
+>  .../bindings/bus/allwinner,sun8i-a23-rsb.yaml |  4 +-
+>  .../clock/allwinner,sun4i-a10-gates-clk.yaml  |  8 +--
+>  .../devicetree/bindings/clock/fsl,plldig.yaml | 17 +++--
+>  .../devicetree/bindings/clock/qcom,mmcc.yaml  | 16 ++---
+>  .../bindings/connector/usb-connector.yaml     |  6 +-
+>  .../crypto/allwinner,sun4i-a10-crypto.yaml    | 14 ++--
+>  .../bindings/crypto/allwinner,sun8i-ce.yaml   | 16 ++---
+>  .../bindings/crypto/amlogic,gxl-crypto.yaml   |  2 +-
+>  .../display/allwinner,sun4i-a10-hdmi.yaml     | 40 ++++++------
+>  .../display/allwinner,sun4i-a10-tcon.yaml     | 58 ++++++++---------
+>  .../display/allwinner,sun6i-a31-mipi-dsi.yaml | 28 ++++----
+>  .../display/allwinner,sun8i-a83t-dw-hdmi.yaml | 10 +--
+>  .../bindings/display/bridge/lvds-codec.yaml   | 18 +++---
+>  .../display/panel/sony,acx424akp.yaml         |  2 +-
+>  .../display/panel/xinpeng,xpp055c272.yaml     |  4 +-
+>  .../bindings/display/renesas,cmm.yaml         | 16 ++---
+>  .../devicetree/bindings/dma/ti/k3-udma.yaml   |  8 +--
+>  .../bindings/gpio/brcm,xgs-iproc-gpio.yaml    |  2 +-
+>  .../bindings/gpu/arm,mali-midgard.yaml        | 18 +++---
+>  .../devicetree/bindings/gpu/vivante,gc.yaml   |  2 +-
+>  .../devicetree/bindings/i2c/i2c-rk3x.yaml     | 10 +--
+>  .../bindings/iio/adc/adi,ad7124.yaml          |  4 +-
+>  .../bindings/iio/adc/lltc,ltc2496.yaml        |  6 +-
+>  .../input/allwinner,sun4i-a10-lradc-keys.yaml |  4 +-
+>  .../bindings/input/touchscreen/goodix.yaml    |  2 +-
+>  .../bindings/interconnect/qcom,msm8916.yaml   |  4 +-
+>  .../bindings/interconnect/qcom,msm8974.yaml   |  4 +-
+>  .../bindings/interconnect/qcom,qcs404.yaml    |  4 +-
+>  .../allwinner,sun7i-a20-sc-nmi.yaml           | 12 ++--
+>  .../intel,ixp4xx-interrupt.yaml               |  8 +--
+>  .../interrupt-controller/st,stm32-exti.yaml   | 12 ++--
+>  .../bindings/iommu/samsung,sysmmu.yaml        | 10 +--
+>  .../bindings/mailbox/st,stm32-ipcc.yaml       |  2 +-
+>  .../media/allwinner,sun4i-a10-csi.yaml        | 28 ++++----
+>  .../bindings/media/amlogic,gx-vdec.yaml       | 14 ++--
+>  .../bindings/media/renesas,ceu.yaml           | 28 ++++----
+>  .../bindings/media/renesas,vin.yaml           |  8 +--
+>  .../devicetree/bindings/media/ti,vpe.yaml     |  2 +-
+>  .../memory-controllers/fsl/imx8m-ddrc.yaml    |  6 +-
 
-This is a large change.
+>  .../bindings/mfd/st,stm32-lptimer.yaml        |  4 +-
+>  .../bindings/mfd/st,stm32-timers.yaml         |  4 +-
+>  .../devicetree/bindings/mfd/syscon.yaml       | 12 ++--
 
-Was this done manually or by some script?
-If it was done manually, how likely is it there are defects
-in the conversion?
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
+>  .../devicetree/bindings/mmc/cdns,sdhci.yaml   |  2 +-
+>  .../bindings/mmc/rockchip-dw-mshc.yaml        | 16 ++---
+>  .../bindings/mmc/socionext,uniphier-sd.yaml   | 14 ++--
+>  .../devicetree/bindings/mtd/denali,nand.yaml  |  4 +-
+>  .../net/allwinner,sun8i-a83t-emac.yaml        |  4 +-
+>  .../bindings/net/can/bosch,m_can.yaml         | 52 +++++++--------
+>  .../bindings/net/renesas,ether.yaml           |  4 +-
+>  .../bindings/net/ti,cpsw-switch.yaml          | 12 ++--
+>  .../bindings/net/ti,davinci-mdio.yaml         | 27 ++++----
+>  .../bindings/phy/intel,lgm-emmc-phy.yaml      |  2 +-
+>  .../devicetree/bindings/pwm/pwm-samsung.yaml  | 16 ++---
+>  .../bindings/remoteproc/st,stm32-rproc.yaml   |  2 +-
+>  .../reset/brcm,bcm7216-pcie-sata-rescal.yaml  |  4 +-
+>  .../devicetree/bindings/rtc/st,stm32-rtc.yaml | 38 +++++------
+>  .../bindings/serial/amlogic,meson-uart.yaml   | 16 ++---
+>  .../devicetree/bindings/serial/rs485.yaml     | 17 ++---
+>  .../bindings/soc/amlogic/amlogic,canvas.yaml  | 10 +--
+>  .../bindings/sound/renesas,fsi.yaml           | 16 ++---
+>  .../bindings/spi/qcom,spi-qcom-qspi.yaml      | 10 +--
+>  .../devicetree/bindings/spi/renesas,hspi.yaml |  4 +-
+>  .../devicetree/bindings/spi/spi-pl022.yaml    |  2 +-
+>  .../bindings/spi/st,stm32-qspi.yaml           |  4 +-
+>  .../allwinner,sun4i-a10-system-control.yaml   | 64 +++++++++----------
+>  .../bindings/thermal/amlogic,thermal.yaml     | 10 +--
+>  .../bindings/timer/arm,arch_timer.yaml        |  4 +-
+>  .../bindings/timer/arm,arch_timer_mmio.yaml   |  4 +-
+>  .../devicetree/bindings/usb/dwc2.yaml         |  8 +--
+>  77 files changed, 450 insertions(+), 450 deletions(-)
 
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
