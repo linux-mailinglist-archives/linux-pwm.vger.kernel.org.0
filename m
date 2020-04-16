@@ -2,126 +2,110 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9449A1ABBD8
-	for <lists+linux-pwm@lfdr.de>; Thu, 16 Apr 2020 10:57:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB1831ABCAD
+	for <lists+linux-pwm@lfdr.de>; Thu, 16 Apr 2020 11:21:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502995AbgDPI5A (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 16 Apr 2020 04:57:00 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:38605 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502875AbgDPI4D (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 16 Apr 2020 04:56:03 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id E19F222F53;
-        Thu, 16 Apr 2020 10:55:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587027354;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6knnTYd0SD0a2gjJU3xQbFJUgo1WzPpSFmhjfIQyUcY=;
-        b=M9q2RMUFDQVW4SbouNkFNdJPzvQSvOQC+FhQtrDgr+5/mkydRI7TAhGXO0tbJzmPNNyyHX
-        L7gLiTb5PDKWNrrSnrCdEZyt6jYVPk3HsLMtzmSAX0AXDADeVgSzEhGLRf7b5MFNZM8a6g
-        TAZ0ODC6jxTAJEZd8Mh17RprqqBe0Lw=
+        id S2440193AbgDPJUz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 16 Apr 2020 05:20:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2392127AbgDPJUy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 16 Apr 2020 05:20:54 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD230C061BD3
+        for <linux-pwm@vger.kernel.org>; Thu, 16 Apr 2020 02:20:51 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id m2so5024445lfo.6
+        for <linux-pwm@vger.kernel.org>; Thu, 16 Apr 2020 02:20:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iuZQPq25LlhzAjymFw6DX/CB5GWOdpk6lIwmaoZu2BE=;
+        b=hkTtnz2DkVpj5FadPidho1Yi0E3E7wBAIYmB61/Kj4lK/X8UrCLL81x5xmrcWGWc+H
+         azS6fkmcowWvwOnDXcI9l4y6Ucno0mzyziNpLxV9Mthz8Y0YUdXq82D8FzhAITXPdDF8
+         3tFd/DXFS5Ty+STvGvcwXllNt8lFNMCiTuvCiXYSz2PukY3ig/gTtCqCjuJHHyXpd1A3
+         QDfx/KUMUCLzLxrTqLoSlNd+gU4YBuAYH/DvcY6yoeUzHZc1o3NaKorVY+VcrIzkfObd
+         u7uovSiNsexRzNZk8c0flO0ZydCK1WaSDd1IcMQT71DefMnE/zm8iho+FD/0QJcA2MJG
+         wMcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iuZQPq25LlhzAjymFw6DX/CB5GWOdpk6lIwmaoZu2BE=;
+        b=M2XS8lu2Qo5Vf7ClWf9IgDtQ8P8U/QmH79GdUrLCFXyAzU7W8I2TNMrih/JOGJdsNg
+         3THwe1Ap70AFtUAzC0uxHkouhBmer7VVrYuBfJa+ip7Id2e8tc0EDq+lkv2uuqVcPbWD
+         P0ImuXIKKVq2xYQWrwHjlRQhpqaNX/RoV76ejWCiQiWnPyn0dG7S77N35RtT5sGT8tWr
+         SlqA+hLhByIPxHX28Pf0NvSl6XIhgS6Bx7TYs075n2Dh+HXD9uIblE1RFUwWvIu0MV3l
+         DnEvdZXrMbmjX6mhnJIu2/AtYTnjQy9HAaEocdL/fvalS+AJowvt60lr0gzNoOZ3hgZn
+         pVtA==
+X-Gm-Message-State: AGi0Pub3S7ppsstxUn9+fCS0RuHF2FsYOH+FfHaeAZNf2o6ux/a84bhA
+        ox4CUkXkYQQus5SalzhfXKbcREIv7b7Vj18WmIcsNA==
+X-Google-Smtp-Source: APiQypJvAs9P0NYlc+VDp3QIFWPUjuxP+cKRiyTPcwcbTngB4Tr+zwZ10UYlTO8u+2AsTbbibFkxTpAAASs25r3y/l8=
+X-Received: by 2002:a05:6512:52c:: with SMTP id o12mr5352302lfc.217.1587028850060;
+ Thu, 16 Apr 2020 02:20:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 16 Apr 2020 10:55:46 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+References: <20200402203656.27047-1-michael@walle.cc> <20200402203656.27047-11-michael@walle.cc>
+ <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com>
+ <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc> <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
+ <e0388a2137e23d76b2415a7549c01dd1@walle.cc> <CAMpxmJW1x4Orh1BZ4TUoCsYeaAAZ4NBUNvoMG9JgP0iLvXTOtg@mail.gmail.com>
+ <62d157198a75a59ada15c496deeab49b@walle.cc> <eab972adf53bbac20b5a9e613fcfb5b0@walle.cc>
+In-Reply-To: <eab972adf53bbac20b5a9e613fcfb5b0@walle.cc>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 Apr 2020 11:20:38 +0200
+Message-ID: <CACRpkdZPZ4nFQ6B3tGG9wvceoTWqAkfY0r1UKs2pf_c=ZNBG=w@mail.gmail.com>
+Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using regmap
+To:     Michael Walle <michael@walle.cc>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
         LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
         Rob Herring <robh+dt@kernel.org>,
         Jean Delvare <jdelvare@suse.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Lee Jones <lee.jones@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 11/16] gpio: add support for the sl28cpld GPIO
- controller
-In-Reply-To: <CACRpkdbANL_W3gcTwue5VUCWT95boMXjFSqTeFDZvJ6iSeNpJg@mail.gmail.com>
-References: <20200402203656.27047-1-michael@walle.cc>
- <20200402203656.27047-12-michael@walle.cc>
- <CACRpkdbANL_W3gcTwue5VUCWT95boMXjFSqTeFDZvJ6iSeNpJg@mail.gmail.com>
-Message-ID: <46eb76699a76b3feedccc70f1d1da1de@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Spam-Level: *
-X-Rspamd-Server: web
-X-Spam-Status: No, score=1.40
-X-Spam-Score: 1.40
-X-Rspamd-Queue-Id: E19F222F53
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[23];
-         NEURAL_HAM(-0.00)[-0.402];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,baylibre.com,kernel.org,suse.com,roeck-us.net,linaro.org,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Tue, Apr 14, 2020 at 9:57 PM Michael Walle <michael@walle.cc> wrote:
 
-Hi Linus,
+> So what about the following:
+>
+> #define GPIO_REGMAP_ADDR_ZERO (unsigned int)(-1)
 
-Am 2020-04-16 10:34, schrieb Linus Walleij:
-> Hi Michael,
-> 
-> this is looking good provided we can get the generic GPIO regmap
-> helper reviewed and merged. Thanks!
-> 
-> On Thu, Apr 2, 2020 at 10:37 PM Michael Walle <michael@walle.cc> wrote:
-> 
->> This adds support for the GPIO controller of the sl28 board management
->> controller. This driver is part of a multi-function device.
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
-> 
->> +       depends on MFD_SL28CPLD
-> 
-> Apart from this depends it seems the patch is compile-time
-> independent of the other patches
+Yeah with regmap explicitly using int I guess we can't use
+S32_MAX, so that is fair.
 
-correct. There are no common mfd headers or something like that.
+> So this way the user might assign the base addresses the normal way
+> except when he wants to use zero, in that case he has to use
+>
+>    ->base_adr = GPIO_REGMAP_ADDR_ZERO;
+>
+> gpio-regmap.c could use then:
+>
+> if (base_addr)
+>    something_useful(gpio_regmap_addr(base_addr));
+>
+> unsigned int gpio_regmap_addr(unsigned int addr)
+> {
+>    return (addr == GPIO_REGMAP_ADDR_ZERO) ? 0 : addr;
+> }
 
-> so I'd suggest we just merge
-> the generic regmap driver and this driver to the GPIO tree once
-> we feel finished with them, optimistically assuming that the MFD
-> driver will land and that we will not need any fundamental
-> changes in the GPIO driver.
-> 
-> Worst case we have to revert the driver and that is no disaster.
+That's reasonably clean.
 
-Sure. One major thing I'm waiting for is the decision/new ideas on
-how to handle the "register is not set or zero" problem, see the
-other thread on the generic regmap gpio. Then I'd respin an update
-of this whole series.
-
--michael
+Yours,
+Linus Walleij
