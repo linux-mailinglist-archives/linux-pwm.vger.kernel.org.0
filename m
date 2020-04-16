@@ -2,141 +2,122 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A567E1ABCE2
-	for <lists+linux-pwm@lfdr.de>; Thu, 16 Apr 2020 11:36:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38C171ABD1F
+	for <lists+linux-pwm@lfdr.de>; Thu, 16 Apr 2020 11:44:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503730AbgDPJek (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 16 Apr 2020 05:34:40 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:55287 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503587AbgDPJee (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 16 Apr 2020 05:34:34 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 135AA22F53;
-        Thu, 16 Apr 2020 11:34:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587029666;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Wl0AyceV1HH2Bd5JaxMdDxBcxIXT6A+UuSLy9IcpOs4=;
-        b=fdSgq9LvNOGqIy0gUfMq93deaPw6BZqZHdv+a38XnNPqqltZFNASH8ql6fitG2O9ld7Fhd
-        89CCvLeW9VQPPWsn6QhIAbe2kDBbC8GjtJta3+KazM2VUze0Fpwb1G7AZsv7C/L7/DB79C
-        HBuO5V1WWdBRNC5k1tGvQI1iyeMkQhA=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 16 Apr 2020 11:34:26 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
+        id S2503847AbgDPJnZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 16 Apr 2020 05:43:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2503701AbgDPJnX (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 16 Apr 2020 05:43:23 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBDD1C061A41
+        for <linux-pwm@vger.kernel.org>; Thu, 16 Apr 2020 02:43:21 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id x4so3873458wmj.1
+        for <linux-pwm@vger.kernel.org>; Thu, 16 Apr 2020 02:43:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=HGxQAf4jzO0Y72QET7kmxlzHV6ZBerU4O88zy1fdfpU=;
+        b=MF93gO4SxOKB+qMBCapHcHMZU0uM5bpS0SLZlRWzKz2vzZa6uzWpvbbHmobJw6Axls
+         QFbr4PiLPQVCBaA283wChwtst2isWHpmYZCkMdabMfE5kIfxyqwTGzA0Oh3gLfQ7+qht
+         Gr+qzkKMNCKQBYc4xDFiFXf+bN+ljZmDJTXOSbEbkin7y9u1t1lVjadCyGVDT7u3Qlvg
+         MLFFL50zXCqauyOmSnhvmXGHAU4QsZNR56g0QGsGJk1OJc37DNYzZ8A0B7v53rZEave3
+         +dAJT6Hw1W5aJbccuFdyz7QCBJGawOEsWCQtES9T5+pEJd3hRu7iNIcAQh12pLwlmDF5
+         pajw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=HGxQAf4jzO0Y72QET7kmxlzHV6ZBerU4O88zy1fdfpU=;
+        b=Pd4lbk/KN4YdiYI6xOVJDOO7DGTtdt91OxcBIxR+bdx553Fb4wER/YWkQwMmtSDjPy
+         PK7sIC0J9KmTqdBHCp9F96cHGs9TpOm/jZNyu6RdB3roDvharqcR+alkfx/VVhJr7pht
+         0ReIItFXoH8BAubgMcb02CY6OdtkzxEm/R6DUXZbZNNDQFwv+4CsjA6BWljmdrXD+FGf
+         mzgSBkn7nzA9ExMxUAwY4mvP39MqnfkUaFS3IlYxkFfzWFWhkWugwfm3NOlNb0VprebZ
+         0k0v3zG7wkHkt2KxKslu79LmfJpXlZTaJzLi8TB33Gryj9aR26GEIkSA/h1HE5HSBGwg
+         6s4g==
+X-Gm-Message-State: AGi0PuZ7lcDSo57hu78bEo0NcyqzMOwWtYoYZwZ3U/ht5sN1vFZo19f8
+        LuUtSoFY7o5WOEzEU6iwHGW1HA==
+X-Google-Smtp-Source: APiQypJ76t5SrWztUDY3rBe8WJkYQzpZ53gL1ZUvzn8pvMoGaJezCgphDoFggL9MkZuivZ/hxX5NFA==
+X-Received: by 2002:a7b:c941:: with SMTP id i1mr3721926wml.132.1587030200692;
+        Thu, 16 Apr 2020 02:43:20 -0700 (PDT)
+Received: from dell ([95.149.164.124])
+        by smtp.gmail.com with ESMTPSA id z15sm14612513wrs.47.2020.04.16.02.43.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 02:43:19 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 10:44:20 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using
- regmap
-In-Reply-To: <CACRpkdZPZ4nFQ6B3tGG9wvceoTWqAkfY0r1UKs2pf_c=ZNBG=w@mail.gmail.com>
-References: <20200402203656.27047-1-michael@walle.cc>
- <20200402203656.27047-11-michael@walle.cc>
- <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com>
- <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc>
- <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
- <e0388a2137e23d76b2415a7549c01dd1@walle.cc>
- <CAMpxmJW1x4Orh1BZ4TUoCsYeaAAZ4NBUNvoMG9JgP0iLvXTOtg@mail.gmail.com>
- <62d157198a75a59ada15c496deeab49b@walle.cc>
- <eab972adf53bbac20b5a9e613fcfb5b0@walle.cc>
- <CACRpkdZPZ4nFQ6B3tGG9wvceoTWqAkfY0r1UKs2pf_c=ZNBG=w@mail.gmail.com>
-Message-ID: <576a6244fa3b996327c49023fe953215@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Spam-Level: *
-X-Rspamd-Server: web
-X-Spam-Status: No, score=1.40
-X-Spam-Score: 1.40
-X-Rspamd-Queue-Id: 135AA22F53
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[23];
-         NEURAL_HAM(-0.00)[-0.404];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[baylibre.com,vger.kernel.org,lists.infradead.org,kernel.org,suse.com,roeck-us.net,linaro.org,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH v12 09/11] backlight: pwm_bl: Use 64-bit division function
+Message-ID: <20200416094420.GB2167633@dell>
+References: <cover.1586414867.git.gurus@codeaurora.org>
+ <e2139a83008e9f301889f9384487c55de475a6a2.1586414867.git.gurus@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e2139a83008e9f301889f9384487c55de475a6a2.1586414867.git.gurus@codeaurora.org>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Am 2020-04-16 11:20, schrieb Linus Walleij:
-> On Tue, Apr 14, 2020 at 9:57 PM Michael Walle <michael@walle.cc> wrote:
+On Wed, 08 Apr 2020, Guru Das Srinagesh wrote:
+
+> Since the PWM framework is switching struct pwm_state.period's datatype
+> to u64, prepare for this transition by using div_u64 to handle a 64-bit
+> dividend instead of a straight division operation.
 > 
->> So what about the following:
->> 
->> #define GPIO_REGMAP_ADDR_ZERO (unsigned int)(-1)
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Cc: linux-pwm@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-fbdev@vger.kernel.org
 > 
-> Yeah with regmap explicitly using int I guess we can't use
-> S32_MAX, so that is fair.
-> 
->> So this way the user might assign the base addresses the normal way
->> except when he wants to use zero, in that case he has to use
->> 
->>    ->base_adr = GPIO_REGMAP_ADDR_ZERO;
->> 
->> gpio-regmap.c could use then:
->> 
->> if (base_addr)
->>    something_useful(gpio_regmap_addr(base_addr));
->> 
->> unsigned int gpio_regmap_addr(unsigned int addr)
->> {
->>    return (addr == GPIO_REGMAP_ADDR_ZERO) ? 0 : addr;
->> }
-> 
-> That's reasonably clean.
+> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> ---
+>  drivers/video/backlight/pwm_bl.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-Ok, at least on that side. For my sl28 gpio driver I then have
-the problem that depending on 'base' I might have to use
-GPIO_REGMAP_ADDR_ZERO:
+I see that this is part of a large set, but the remainder of the
+patches have been hidden from me.
 
-   #define GPIO_REG_DIR 0
-   config.reg_dir_out_base = base + GPIO_REG_DIR;
+Does this mean I can apply this patch on its own?
 
-So there is still a convenience macro:
-   #define GPIO_REGMAP_ADDR(addr) ((addr) ? addr : GPIO_REGMAP_ADDR_ZERO)
+> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> index efb4efc..3e5dbcf 100644
+> --- a/drivers/video/backlight/pwm_bl.c
+> +++ b/drivers/video/backlight/pwm_bl.c
+> @@ -625,7 +625,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+>  		pb->scale = data->max_brightness;
+>  	}
+>  
+> -	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
+> +	pb->lth_brightness = data->lth_brightness * (div_u64(state.period,
+> +				pb->scale));
+>  
+>  	props.type = BACKLIGHT_RAW;
+>  	props.max_brightness = data->max_brightness;
 
-which you can use if you can't be sure that the address is not non-zero.
-So the code in my sl28 gpio driver looks like:
-
-  config.reg_dir_out_base = GPIO_REGMAP_ADDR(base + GPIO_REG_DIR);
-
-I'll respin the patch with the current remarks.
-
--michael
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
