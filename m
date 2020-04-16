@@ -2,86 +2,123 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 476011ABA52
-	for <lists+linux-pwm@lfdr.de>; Thu, 16 Apr 2020 09:54:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D5151ABAC1
+	for <lists+linux-pwm@lfdr.de>; Thu, 16 Apr 2020 10:03:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439761AbgDPHvy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 16 Apr 2020 03:51:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59586 "EHLO
+        id S2439837AbgDPIDF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 16 Apr 2020 04:03:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2439430AbgDPHvu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 16 Apr 2020 03:51:50 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FE5CC061A0C
-        for <linux-pwm@vger.kernel.org>; Thu, 16 Apr 2020 00:51:50 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id k21so6794152ljh.2
-        for <linux-pwm@vger.kernel.org>; Thu, 16 Apr 2020 00:51:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=loMCxNASFvkfTDCyeUmtP2u+gte7x5OtiG/cQmRKcuQ=;
-        b=xMUW3PGeSrw4ARkL9VDfzWDbSGxC6xcX4Ki7j9FBIb94zY/nyX3c8swn8+2K2eXQWf
-         u5I0kwTaOMKF60tm8Ybb4RI83J/5chP+BKkJGzpCt4Njp+d5eKgO+RHGsvNhseRCUr0A
-         kxzkYeOwrVdKr3ln53f3UvwS5CL7sp7ao9UeUyT58VwwdOmE7hQ8XnRCvvbD0t3FKapJ
-         oJRfgQsGirpJkwaZ7IV8kGn4+8QNBvxXn8FYrLA5QKLO3da7dEJHYdfloWOUGYngvefF
-         kPv4d618uycUv1TdFu4hKJ4ZeXV264Nmr2hjONIdx1CDO9GlIQy4qphT6PWNZXnRrTaf
-         KZjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=loMCxNASFvkfTDCyeUmtP2u+gte7x5OtiG/cQmRKcuQ=;
-        b=oF+OYMtcnhFpyBhtdTyW8J6p/jAXcG1p9Tnl+2aOeI30R0Z+NMQal8e4EX5yuXEJ2K
-         72MTydHBjIFsD8hX3nL6CH68H5ZN8uZ2RV5bUYXpFq5LZj3LeP9YgHD7FQmQRjTi/1A+
-         qFuzCu8EVN2a/aAIjQT6aAEZttUDe2tnkytQWkeLwmb3kMtYphRts9b7HR7dAjtmAqrl
-         OnmUG0NlOHowTyyoCJuADR5cFhWLXDUhsxSvfydFBYIQUWdE75xzAaPTAQTSn8aVBkWN
-         Iv/TWw5h20ZVFrgInU1lhEXE0Des7DPJ7CSDfNwwRnoieG0+kyc7LM6uGBHrpiK29ZGY
-         euxg==
-X-Gm-Message-State: AGi0PuZdCLlpc+EEXgqjnIGKLMWDbgNSodAbgjdlXDdheZVzQz27OAyQ
-        LDoImQIZOPt2XuDp2WJFGr3QiRJsCZoRfK6zCLKgqg==
-X-Google-Smtp-Source: APiQypJ3hmhHjH4xlCLoz3/xbW/q0EWD5I/m1MGIq4yanefRacOTieYBUa0MrvrxoWyMyTHM8e3D7N8MbRBPt6Mds40=
-X-Received: by 2002:a05:651c:32e:: with SMTP id b14mr731003ljp.277.1587023508445;
- Thu, 16 Apr 2020 00:51:48 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S2439759AbgDPIC6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 16 Apr 2020 04:02:58 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98CB3C061A0C
+        for <linux-pwm@vger.kernel.org>; Thu, 16 Apr 2020 01:02:58 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jOzU6-0005Pu-Ox; Thu, 16 Apr 2020 10:02:54 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jOzU5-0005D8-Ge; Thu, 16 Apr 2020 10:02:53 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] pwm: imx27: Fix rounding behavior
+Date:   Thu, 16 Apr 2020 10:02:45 +0200
+Message-Id: <20200416080245.3203-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.26.0.rc2
 MIME-Version: 1.0
-References: <20200329104549.GX25745@shell.armlinux.org.uk>
-In-Reply-To: <20200329104549.GX25745@shell.armlinux.org.uk>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Apr 2020 09:51:37 +0200
-Message-ID: <CACRpkdaL4-Z36aKOVW4o2MtCG9fbqm4gxZN3QjejVRPBZrzxxA@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/6] PWM fan support on Clearfog gt8k
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 12:46 PM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
+To not trigger the warnings provided by CONFIG_PWM_DEBUG
 
-> This series adds support for the fan PWM output on the Clearfog GT8K
-> platform, and can potentially be extended to the Macchiatobin.
+ - use up-rounding in .get_state()
+ - don't divide by the result of a division
+ - don't use the rounded counter value for the period length to calculate
+   the counter value for the duty cycle
 
-The gpio changes all look fine to me +/- fixes for review comments.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/pwm/pwm-imx27.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-Could the MVEBU maintainers provide some feedback?
-Curiously the file is only listed as a PWM driver in MAINTAINERS
-so formally Thierry & Uwe review it (and Uwe did), but surely
-the MVEBU platform maintainers should take a look too.
+diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+index a6e40d4c485f..732a6f3701e8 100644
+--- a/drivers/pwm/pwm-imx27.c
++++ b/drivers/pwm/pwm-imx27.c
+@@ -150,13 +150,12 @@ static void pwm_imx27_get_state(struct pwm_chip *chip,
+ 
+ 	prescaler = MX3_PWMCR_PRESCALER_GET(val);
+ 	pwm_clk = clk_get_rate(imx->clk_per);
+-	pwm_clk = DIV_ROUND_CLOSEST_ULL(pwm_clk, prescaler);
+ 	val = readl(imx->mmio_base + MX3_PWMPR);
+ 	period = val >= MX3_PWMPR_MAX ? MX3_PWMPR_MAX : val;
+ 
+ 	/* PWMOUT (Hz) = PWMCLK / (PWMPR + 2) */
+-	tmp = NSEC_PER_SEC * (u64)(period + 2);
+-	state->period = DIV_ROUND_CLOSEST_ULL(tmp, pwm_clk);
++	tmp = NSEC_PER_SEC * (u64)(period + 2) * prescaler;
++	state->period = DIV_ROUND_UP_ULL(tmp, pwm_clk);
+ 
+ 	/*
+ 	 * PWMSAR can be read only if PWM is enabled. If the PWM is disabled,
+@@ -167,8 +166,8 @@ static void pwm_imx27_get_state(struct pwm_chip *chip,
+ 	else
+ 		val = imx->duty_cycle;
+ 
+-	tmp = NSEC_PER_SEC * (u64)(val);
+-	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, pwm_clk);
++	tmp = NSEC_PER_SEC * (u64)(val) * prescaler;
++	state->duty_cycle = DIV_ROUND_UP_ULL(tmp, pwm_clk);
+ 
+ 	pwm_imx27_clk_disable_unprepare(imx);
+ }
+@@ -220,22 +219,23 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
+ 	struct pwm_state cstate;
+ 	unsigned long long c;
++	unsigned long long clkrate;
+ 	int ret;
+ 	u32 cr;
+ 
+ 	pwm_get_state(pwm, &cstate);
+ 
+-	c = clk_get_rate(imx->clk_per);
+-	c *= state->period;
++	clkrate = clk_get_rate(imx->clk_per);
++	c = clkrate * state->period;
+ 
+-	do_div(c, 1000000000);
++	do_div(c, NSEC_PER_SEC);
+ 	period_cycles = c;
+ 
+ 	prescale = period_cycles / 0x10000 + 1;
+ 
+ 	period_cycles /= prescale;
+-	c = (unsigned long long)period_cycles * state->duty_cycle;
+-	do_div(c, state->period);
++	c = clkrate * state->duty_cycle;
++	do_div(c, NSEC_PER_SEC * prescale);
+ 	duty_cycles = c;
+ 
+ 	/*
+-- 
+2.26.0.rc2
 
-Yours,
-Linus Walleij
