@@ -2,38 +2,40 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57F6E1AF047
-	for <lists+linux-pwm@lfdr.de>; Sat, 18 Apr 2020 16:49:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B873D1AEF84
+	for <lists+linux-pwm@lfdr.de>; Sat, 18 Apr 2020 16:44:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbgDROtF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 18 Apr 2020 10:49:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54838 "EHLO mail.kernel.org"
+        id S1728688AbgDROnx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 18 Apr 2020 10:43:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728619AbgDROnh (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:43:37 -0400
+        id S1728674AbgDROnu (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:43:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1141422245;
-        Sat, 18 Apr 2020 14:43:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4FE422244;
+        Sat, 18 Apr 2020 14:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221016;
-        bh=PvYa5LNueK2pgmAse7CL4CXr3u4/vJXsWPDdgOf1QS8=;
+        s=default; t=1587221029;
+        bh=3jyXQNdliyg0/srm3l5j7/EEi4rqjhuFR4BLL/s0Di0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rqA9NVEEpC3NoWSVdSclXZYsCeEznQPA2tQm+5RM672f1+YInOHmI0DNX+uTCfOWv
-         AO2hH2KAtS6rTlmBVRAQF865KruKTfoGHk/ZHyoTYURjl81r7dEzFjwIp6+t78VR/L
-         3oYsaYdtBMUMUdD6RbqeSNCvNZKF+mGXxvNkvzQg=
+        b=2cjSiZYUKSjQHzDaGsNEpyyZX7nmptve8cq+SfDKH/QQzS4pjEHxy5v0rXjFbhWIo
+         tmBxIOTF5GYzAI/xDepFzBX07yvcmUSBWeldMVqNzSmLBOBxS+s46bTmRH4lH9g0DK
+         qN2LqvC2NXEgyZZhaiSeghBFw1akt0vhZQa2EDOs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+Cc:     Sven Van Asbroeck <TheSven73@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Clemens Gruber <clemens.gruber@pqgruber.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/28] pwm: rcar: Fix late Runtime PM enablement
-Date:   Sat, 18 Apr 2020 10:43:07 -0400
-Message-Id: <20200418144328.10265-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 16/28] pwm: pca9685: Fix PWM/GPIO inter-operation
+Date:   Sat, 18 Apr 2020 10:43:16 -0400
+Message-Id: <20200418144328.10265-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144328.10265-1-sashal@kernel.org>
 References: <20200418144328.10265-1-sashal@kernel.org>
@@ -47,61 +49,203 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Sven Van Asbroeck <TheSven73@gmail.com>
 
-[ Upstream commit 1451a3eed24b5fd6a604683f0b6995e0e7e16c79 ]
+[ Upstream commit 9cc5f232a4b6a0ef6e9b57876d61b88f61bdd7c2 ]
 
-Runtime PM should be enabled before calling pwmchip_add(), as PWM users
-can appear immediately after the PWM chip has been added.
-Likewise, Runtime PM should be disabled after the removal of the PWM
-chip.
+This driver allows pwms to be requested as gpios via gpiolib. Obviously,
+it should not be allowed to request a GPIO when its corresponding PWM is
+already requested (and vice versa). So it requires some exclusion code.
 
-Fixes: ed6c1476bf7f16d5 ("pwm: Add support for R-Car PWM Timer")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Given that the PWMm and GPIO cores are not synchronized with respect to
+each other, this exclusion code will also require proper
+synchronization.
+
+Such a mechanism was in place, but was inadvertently removed by Uwe's
+clean-up in commit e926b12c611c ("pwm: Clear chip_data in pwm_put()").
+
+Upon revisiting the synchronization mechanism, we found that
+theoretically, it could allow two threads to successfully request
+conflicting PWMs/GPIOs.
+
+Replace with a bitmap which tracks PWMs in-use, plus a mutex. As long as
+PWM and GPIO's respective request/free functions modify the in-use
+bitmap while holding the mutex, proper synchronization will be
+guaranteed.
+
+Reported-by: YueHaibing <yuehaibing@huawei.com>
+Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Link: https://lkml.org/lkml/2019/5/31/963
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+[cg: Tested on an i.MX6Q board with two NXP PCA9685 chips]
+Tested-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com> # cg's rebase
+Link: https://lore.kernel.org/lkml/20200330160238.GD2817345@ulmo/
 Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-rcar.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/pwm/pwm-pca9685.c | 85 ++++++++++++++++++++++-----------------
+ 1 file changed, 48 insertions(+), 37 deletions(-)
 
-diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
-index 0fcf94ffad321..c298bec25a90a 100644
---- a/drivers/pwm/pwm-rcar.c
-+++ b/drivers/pwm/pwm-rcar.c
-@@ -236,24 +236,28 @@ static int rcar_pwm_probe(struct platform_device *pdev)
- 	rcar_pwm->chip.base = -1;
- 	rcar_pwm->chip.npwm = 1;
+diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+index e1e5dfcb16f36..259fd58812aed 100644
+--- a/drivers/pwm/pwm-pca9685.c
++++ b/drivers/pwm/pwm-pca9685.c
+@@ -31,6 +31,7 @@
+ #include <linux/slab.h>
+ #include <linux/delay.h>
+ #include <linux/pm_runtime.h>
++#include <linux/bitmap.h>
  
-+	pm_runtime_enable(&pdev->dev);
-+
- 	ret = pwmchip_add(&rcar_pwm->chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to register PWM chip: %d\n", ret);
-+		pm_runtime_disable(&pdev->dev);
- 		return ret;
- 	}
+ /*
+  * Because the PCA9685 has only one prescaler per chip, changing the period of
+@@ -85,6 +86,7 @@ struct pca9685 {
+ #if IS_ENABLED(CONFIG_GPIOLIB)
+ 	struct mutex lock;
+ 	struct gpio_chip gpio;
++	DECLARE_BITMAP(pwms_inuse, PCA9685_MAXCHAN + 1);
+ #endif
+ };
  
--	pm_runtime_enable(&pdev->dev);
--
- 	return 0;
+@@ -94,51 +96,51 @@ static inline struct pca9685 *to_pca(struct pwm_chip *chip)
  }
  
- static int rcar_pwm_remove(struct platform_device *pdev)
+ #if IS_ENABLED(CONFIG_GPIOLIB)
+-static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
++static bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca, int pwm_idx)
  {
- 	struct rcar_pwm_chip *rcar_pwm = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&rcar_pwm->chip);
+-	struct pca9685 *pca = gpiochip_get_data(gpio);
+-	struct pwm_device *pwm;
++	bool is_inuse;
  
- 	pm_runtime_disable(&pdev->dev);
- 
--	return pwmchip_remove(&rcar_pwm->chip);
-+	return ret;
+ 	mutex_lock(&pca->lock);
+-
+-	pwm = &pca->chip.pwms[offset];
+-
+-	if (pwm->flags & (PWMF_REQUESTED | PWMF_EXPORTED)) {
+-		mutex_unlock(&pca->lock);
+-		return -EBUSY;
++	if (pwm_idx >= PCA9685_MAXCHAN) {
++		/*
++		 * "all LEDs" channel:
++		 * pretend already in use if any of the PWMs are requested
++		 */
++		if (!bitmap_empty(pca->pwms_inuse, PCA9685_MAXCHAN)) {
++			is_inuse = true;
++			goto out;
++		}
++	} else {
++		/*
++		 * regular channel:
++		 * pretend already in use if the "all LEDs" channel is requested
++		 */
++		if (test_bit(PCA9685_MAXCHAN, pca->pwms_inuse)) {
++			is_inuse = true;
++			goto out;
++		}
+ 	}
+-
+-	pwm_set_chip_data(pwm, (void *)1);
+-
++	is_inuse = test_and_set_bit(pwm_idx, pca->pwms_inuse);
++out:
+ 	mutex_unlock(&pca->lock);
+-	pm_runtime_get_sync(pca->chip.dev);
+-	return 0;
++	return is_inuse;
  }
  
- static const struct of_device_id rcar_pwm_of_table[] = {
+-static bool pca9685_pwm_is_gpio(struct pca9685 *pca, struct pwm_device *pwm)
++static void pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
+ {
+-	bool is_gpio = false;
+-
+ 	mutex_lock(&pca->lock);
++	clear_bit(pwm_idx, pca->pwms_inuse);
++	mutex_unlock(&pca->lock);
++}
+ 
+-	if (pwm->hwpwm >= PCA9685_MAXCHAN) {
+-		unsigned int i;
+-
+-		/*
+-		 * Check if any of the GPIOs are requested and in that case
+-		 * prevent using the "all LEDs" channel.
+-		 */
+-		for (i = 0; i < pca->gpio.ngpio; i++)
+-			if (gpiochip_is_requested(&pca->gpio, i)) {
+-				is_gpio = true;
+-				break;
+-			}
+-	} else if (pwm_get_chip_data(pwm)) {
+-		is_gpio = true;
+-	}
++static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
++{
++	struct pca9685 *pca = gpiochip_get_data(gpio);
+ 
+-	mutex_unlock(&pca->lock);
+-	return is_gpio;
++	if (pca9685_pwm_test_and_set_inuse(pca, offset))
++		return -EBUSY;
++	pm_runtime_get_sync(pca->chip.dev);
++	return 0;
+ }
+ 
+ static int pca9685_pwm_gpio_get(struct gpio_chip *gpio, unsigned int offset)
+@@ -173,6 +175,7 @@ static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
+ 
+ 	pca9685_pwm_gpio_set(gpio, offset, 0);
+ 	pm_runtime_put(pca->chip.dev);
++	pca9685_pwm_clear_inuse(pca, offset);
+ }
+ 
+ static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
+@@ -224,12 +227,17 @@ static int pca9685_pwm_gpio_probe(struct pca9685 *pca)
+ 	return devm_gpiochip_add_data(dev, &pca->gpio, pca);
+ }
+ #else
+-static inline bool pca9685_pwm_is_gpio(struct pca9685 *pca,
+-				       struct pwm_device *pwm)
++static inline bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca,
++						  int pwm_idx)
+ {
+ 	return false;
+ }
+ 
++static inline void
++pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
++{
++}
++
+ static inline int pca9685_pwm_gpio_probe(struct pca9685 *pca)
+ {
+ 	return 0;
+@@ -413,7 +421,7 @@ static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+ 	struct pca9685 *pca = to_pca(chip);
+ 
+-	if (pca9685_pwm_is_gpio(pca, pwm))
++	if (pca9685_pwm_test_and_set_inuse(pca, pwm->hwpwm))
+ 		return -EBUSY;
+ 	pm_runtime_get_sync(chip->dev);
+ 
+@@ -422,8 +430,11 @@ static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ 
+ static void pca9685_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
++	struct pca9685 *pca = to_pca(chip);
++
+ 	pca9685_pwm_disable(chip, pwm);
+ 	pm_runtime_put(chip->dev);
++	pca9685_pwm_clear_inuse(pca, pwm->hwpwm);
+ }
+ 
+ static const struct pwm_ops pca9685_pwm_ops = {
 -- 
 2.20.1
 
