@@ -2,103 +2,83 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2F401AEAD5
-	for <lists+linux-pwm@lfdr.de>; Sat, 18 Apr 2020 10:23:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B13101AED96
+	for <lists+linux-pwm@lfdr.de>; Sat, 18 Apr 2020 15:53:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725887AbgDRIXS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 18 Apr 2020 04:23:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59766 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbgDRIXR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 18 Apr 2020 04:23:17 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8543CC061A0C
-        for <linux-pwm@vger.kernel.org>; Sat, 18 Apr 2020 01:23:17 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jPikf-0005Wz-ET; Sat, 18 Apr 2020 10:23:01 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jPike-0006bn-RM; Sat, 18 Apr 2020 10:23:00 +0200
-Date:   Sat, 18 Apr 2020 10:23:00 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Sandipan Patra <spatra@nvidia.com>
-Cc:     Thierry Reding <treding@nvidia.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Bibek Basu <bbasu@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pwm: tegra: dynamic clk freq configuration by PWM driver
-Message-ID: <20200418082300.mucrg2srysvvjbfn@pengutronix.de>
-References: <1585917303-10573-1-git-send-email-spatra@nvidia.com>
- <20200403151050.nh2mrffkqdqtkozq@pengutronix.de>
- <BYAPR12MB3014C0178A7360662C6FA8B7ADDB0@BYAPR12MB3014.namprd12.prod.outlook.com>
- <20200415141856.ck3w3gtae4bsxyfl@pengutronix.de>
- <BYAPR12MB30149D2715DC575A030A7F59ADD90@BYAPR12MB3014.namprd12.prod.outlook.com>
- <20200417135027.wkj6bxiplnehsa5s@pengutronix.de>
- <BYAPR12MB3014041BFFC43AF5EB3BC27CADD90@BYAPR12MB3014.namprd12.prod.outlook.com>
+        id S1726468AbgDRNwt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 18 Apr 2020 09:52:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54810 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726432AbgDRNse (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:48:34 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2607C22251;
+        Sat, 18 Apr 2020 13:48:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587217713;
+        bh=e50X4MmtkJexI4QRd79cP3skCvlBuDS3y6zV+tBhyIc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=P0JxDMtShXU4WvQsEJdvws8FtQqr4LySdJENHGgnXyTKGX9ZxCVeiiOj2mS5hKsXS
+         yQjuivrWnrweXEV8CKACQTZAJ5MBwSKw7rbSXcQ/1hCzHtCxkbGNMHQOa52XgNPRFm
+         SP4GGqgOEnhdf3C3wtW6zTG4SbrD/Fif/cfKXuQY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 15/73] pwm: imx27: Fix clock handling in pwm_imx27_apply()
+Date:   Sat, 18 Apr 2020 09:47:17 -0400
+Message-Id: <20200418134815.6519-15-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
+References: <20200418134815.6519-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <BYAPR12MB3014041BFFC43AF5EB3BC27CADD90@BYAPR12MB3014.namprd12.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello,
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-On Fri, Apr 17, 2020 at 02:53:22PM +0000, Sandipan Patra wrote:
-> > To put my expression in words: pick the maximum of the possible periods that
-> > are less or equal to the requested value.  Maybe this is better
-> > understandable:
-> > 
-> >         max { x ∊ implementablePeriods | x <= requestedPeriod }
-> > 
-> > ?
-> 
-> I think I got your question.
-> Should tegra_pwm_config() not return error (EINVAL) when the requested period is
-> invalid but it should configure to a nearest possible value?
+[ Upstream commit 15d4dbd601591858611184f9ddeb5bf21569159c ]
 
-If you cannot configure according to the above rule, yes, return an
-error code. EINVAL is the usual one I think (some also return ERANGE).
+pwm_imx27_apply() enables the clocks if the previous PWM state was
+disabled. Given that the clocks are supposed to be left on iff the PWM
+is running, the decision to disable the clocks at the end of the
+function must not depend on the previous state.
 
-> > > Yes, the output stops as soon as the PWM_ENABLE bit is cleared in
-> > > hardware. Then The output is set to 0 (which is inactive).
-> > > Once .disable() => tegra_pwm_disable() gets invoked, enable bit is
-> > > cleared and hence PWM will possess no output signal.
-> > > tegra_pwm_config() will be invoked for any new configuration request.
-> > 
-> > Some drivers already have a "Limitations" section in their header.
-> > Please take a look at the existing examples and provide something similar. (Note
-> > you still didn't answer "How does a running PWM behave when the register is
-> > updated? Does it complete the currently running period?". I assume the answer
-> > to the second question is "No" (and the first is only there for rhetoric reasons).)
-> >
->  
-> 1. I will add the below comments as Limitations:
-> -	When PWM is disabled, the output is driven to 0 and
+Without this fix the enable count of the two affected clocks increases
+by one whenever ->apply() changes from one disabled state to another.
 
-In fact, this is a good property. So the only problem is, that for both
-stop and reconfiguration the currently running period isn't completed.
+Fixes: bd88d319abe9 ("pwm: imx27: Unconditionally write state to hardware")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pwm/pwm-imx27.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best regards
-Uwe
-
+diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+index 35a7ac42269c2..7e5ed01529773 100644
+--- a/drivers/pwm/pwm-imx27.c
++++ b/drivers/pwm/pwm-imx27.c
+@@ -289,7 +289,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 
+ 	writel(cr, imx->mmio_base + MX3_PWMCR);
+ 
+-	if (!state->enabled && cstate.enabled)
++	if (!state->enabled)
+ 		pwm_imx27_clk_disable_unprepare(chip);
+ 
+ 	return 0;
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.20.1
+
