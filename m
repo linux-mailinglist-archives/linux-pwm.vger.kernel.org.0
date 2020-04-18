@@ -2,43 +2,39 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 911701AF007
-	for <lists+linux-pwm@lfdr.de>; Sat, 18 Apr 2020 16:49:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84B9A1AEFFD
+	for <lists+linux-pwm@lfdr.de>; Sat, 18 Apr 2020 16:48:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728785AbgDROrN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 18 Apr 2020 10:47:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55812 "EHLO mail.kernel.org"
+        id S1728148AbgDROqs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 18 Apr 2020 10:46:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728753AbgDROoN (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:44:13 -0400
+        id S1728799AbgDROoY (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:44:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DEB821D7E;
-        Sat, 18 Apr 2020 14:44:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F6F521D7E;
+        Sat, 18 Apr 2020 14:44:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587221053;
-        bh=PvYa5LNueK2pgmAse7CL4CXr3u4/vJXsWPDdgOf1QS8=;
+        s=default; t=1587221064;
+        bh=gvckD+08zbGS7Exmtd6V1EEAPXF8knBKNzJ+PEUIKx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p7pkA9fYa+PI0+RVSyoxDaH4Y3aIR6wLS4A0HrYKvkhiOUfSr3iibLqlWmLz+eZPM
-         v3sAd+CHzw7mYiYRiqQah850OWyeP9wza5aToezLu6b6/gq0SKgDspspRIu+9OfYwC
-         ulUpka/2FIDeGuH9vHpWpzYmymrwhr6UeksY9aEU=
+        b=U/eKKVD2zP8DXUGbQ3jo0FAmjBz+HfVDqhDTdyaoitqojKiecTV1gL9qXK4E1qU6m
+         73bemNz9Lw2+HRwYY7rJ7ZI8DU/qJBTQm2Hvjg0OAlWkE8pVXzwEOG8Z8HqFG9w+qT
+         KsieMVnOMXgPQfihJAvzitvmxiST4WHCrLx6nLKo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 06/23] pwm: rcar: Fix late Runtime PM enablement
-Date:   Sat, 18 Apr 2020 10:43:48 -0400
-Message-Id: <20200418144405.10565-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 14/23] pwm: renesas-tpu: Fix late Runtime PM enablement
+Date:   Sat, 18 Apr 2020 10:43:56 -0400
+Message-Id: <20200418144405.10565-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144405.10565-1-sashal@kernel.org>
 References: <20200418144405.10565-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -49,59 +45,59 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 1451a3eed24b5fd6a604683f0b6995e0e7e16c79 ]
+[ Upstream commit d5a3c7a4536e1329a758e14340efd0e65252bd3d ]
 
 Runtime PM should be enabled before calling pwmchip_add(), as PWM users
 can appear immediately after the PWM chip has been added.
-Likewise, Runtime PM should be disabled after the removal of the PWM
-chip.
+Likewise, Runtime PM should always be disabled after the removal of the
+PWM chip, even if the latter failed.
 
-Fixes: ed6c1476bf7f16d5 ("pwm: Add support for R-Car PWM Timer")
+Fixes: 99b82abb0a35b073 ("pwm: Add Renesas TPU PWM driver")
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-rcar.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/pwm/pwm-renesas-tpu.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
-index 0fcf94ffad321..c298bec25a90a 100644
---- a/drivers/pwm/pwm-rcar.c
-+++ b/drivers/pwm/pwm-rcar.c
-@@ -236,24 +236,28 @@ static int rcar_pwm_probe(struct platform_device *pdev)
- 	rcar_pwm->chip.base = -1;
- 	rcar_pwm->chip.npwm = 1;
+diff --git a/drivers/pwm/pwm-renesas-tpu.c b/drivers/pwm/pwm-renesas-tpu.c
+index 075c1a764ba29..6247a956cc089 100644
+--- a/drivers/pwm/pwm-renesas-tpu.c
++++ b/drivers/pwm/pwm-renesas-tpu.c
+@@ -423,16 +423,17 @@ static int tpu_probe(struct platform_device *pdev)
+ 	tpu->chip.base = -1;
+ 	tpu->chip.npwm = TPU_CHANNEL_MAX;
  
 +	pm_runtime_enable(&pdev->dev);
 +
- 	ret = pwmchip_add(&rcar_pwm->chip);
+ 	ret = pwmchip_add(&tpu->chip);
  	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to register PWM chip: %d\n", ret);
+ 		dev_err(&pdev->dev, "failed to register PWM chip\n");
 +		pm_runtime_disable(&pdev->dev);
  		return ret;
  	}
+ 
+ 	dev_info(&pdev->dev, "TPU PWM %d registered\n", tpu->pdev->id);
  
 -	pm_runtime_enable(&pdev->dev);
 -
  	return 0;
  }
  
- static int rcar_pwm_remove(struct platform_device *pdev)
- {
- 	struct rcar_pwm_chip *rcar_pwm = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&rcar_pwm->chip);
+@@ -442,12 +443,10 @@ static int tpu_remove(struct platform_device *pdev)
+ 	int ret;
+ 
+ 	ret = pwmchip_remove(&tpu->chip);
+-	if (ret)
+-		return ret;
  
  	pm_runtime_disable(&pdev->dev);
  
--	return pwmchip_remove(&rcar_pwm->chip);
+-	return 0;
 +	return ret;
  }
  
- static const struct of_device_id rcar_pwm_of_table[] = {
+ #ifdef CONFIG_OF
 -- 
 2.20.1
 
