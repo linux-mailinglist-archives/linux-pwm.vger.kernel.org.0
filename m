@@ -2,223 +2,126 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E07481B354B
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Apr 2020 04:57:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1135F1B35AA
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Apr 2020 05:43:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgDVC5h (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 21 Apr 2020 22:57:37 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:35428 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726468AbgDVC5a (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 21 Apr 2020 22:57:30 -0400
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 21 Apr 2020 19:57:27 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 21 Apr 2020 19:57:27 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 2DF8A4CB2; Tue, 21 Apr 2020 19:57:27 -0700 (PDT)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Joe Perches <joe@perches.com>
-Subject: [PATCH v13 11/11] pwm: core: Convert period and duty cycle to u64
-Date:   Tue, 21 Apr 2020 19:57:23 -0700
-Message-Id: <0ff7cc052b38411cba050d7066f17c9062a9101a.1587523702.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1587523702.git.gurus@codeaurora.org>
-References: <cover.1587523702.git.gurus@codeaurora.org>
-In-Reply-To: <cover.1587523702.git.gurus@codeaurora.org>
-References: <cover.1587523702.git.gurus@codeaurora.org>
+        id S1726377AbgDVDnl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 21 Apr 2020 23:43:41 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:54909 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726294AbgDVDnl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 21 Apr 2020 23:43:41 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 12B025C008C;
+        Tue, 21 Apr 2020 23:43:40 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Tue, 21 Apr 2020 23:43:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        subject:to:cc:references:from:message-id:date:mime-version
+        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=2
+        pJX7Yg+sQ/AyYD6L8gjHh63yS93sxWkwLxkCvnI+ek=; b=SUr/qn7fhubwORw6r
+        1SR1sDofmVTFUbL2y0aluMDxkSGyAp1JV9NqfoBrmMZEAev+b7/MxxOFbt9w7orK
+        lUq1CGofBI93ZRVKcgJ0X+4czDPtNhntXkWz8azKX7Mq34PtY5GwhgB5ukVTSO94
+        y83SC6XxnrVsNt9vxoD0DxbwdLOlh0sCGhrxFY/6qndn1uecSkUStY1AxkcH4esY
+        PlxOjFHQVsEytDwCu8IWG8jKNOrRARJ2zU5t+hjIj8OItQZMXbQFKn3959Lf3Knx
+        7NOxuYQJFsPR8K5mNS4FBrYiKQn/wGSggYfQNHatsjiCLcFFeLXGnjbHJl+XMnTO
+        C6USw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=2pJX7Yg+sQ/AyYD6L8gjHh63yS93sxWkwLxkCvnI+
+        ek=; b=pEDjSUE1KhTlyS+psV8vjg4C1Tyf6w6G+iTzSvAiQ1Pu/GPPmA/Wpxju4
+        SkMwqtzAf4viQKZBKvxTYN4EuXT+Kz2lzCCMt74s04/G8tW0aLfqCryiy6/J1WUC
+        yuCprfcsr9Hh7Bye9JhgzEv6qBx3QjMNBq6u31+5pPVLuqr5rKJZC1VzSFv8cI4q
+        SgJ9wc8ZU5DkTJzQ39hfI9feYy2RTSQ4g8VIYx3kQe6lXOAjvSd/fwQECz8B+q2y
+        mWVGYHwM6jkRumlYmRu3/1QFHITmhvBnueLN19+NXkSWmXEwprHM8zpsZ125KPy7
+        Gv48rfuu8YIG63gWjkYU+IoTsWqGg==
+X-ME-Sender: <xms:a72fXl1iQLl-hxurLDCJOq4UcTOlYCAoULamXhs92wLvx1UZo5cZig>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeeigdejfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefuvfhfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghmuhgv
+    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
+    epjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
+    rghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
+X-ME-Proxy: <xmx:a72fXtYgV6rQfSAYqart0nvBnVlL9KjQo39zrgU259M2Cu6-FzEpog>
+    <xmx:a72fXqhDEEPTT-D7lKYImMPPJhMgHl8famBhYC3lucKX_t8_AtQuSA>
+    <xmx:a72fXlhmUeT3Q19ZdBKOazxMRNHTnYt6lWWuhtkSFKAdaMiibpkwMg>
+    <xmx:bL2fXlphHTNRxzMA5Dni2eoELwMRrM5WNxGoeXAN_SWRsCeie_Atug>
+Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5921B3065CB0;
+        Tue, 21 Apr 2020 23:43:38 -0400 (EDT)
+Subject: Re: [linux-sunxi] [RFC PATCH 4/4] pwm: sun4i: Delay after writing the
+ period
+To:     dev@pascalroeleven.nl, Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     linux-sunxi@googlegroups.com
+References: <20200317155906.31288-1-dev@pascalroeleven.nl>
+ <20200317155906.31288-5-dev@pascalroeleven.nl>
+From:   Samuel Holland <samuel@sholland.org>
+Message-ID: <f1d9a17e-df9e-dc12-603d-84e908a04b81@sholland.org>
+Date:   Tue, 21 Apr 2020 22:43:37 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200317155906.31288-5-dev@pascalroeleven.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Because period and duty cycle are defined as ints with units of
-nanoseconds, the maximum time duration that can be set is limited to
-~2.147 seconds. Change their definitions to u64 in the structs of the
-PWM framework so that higher durations may be set.
+Hello Pascal,
 
-Also use the right format specifiers in debug prints in both core.c as
-well as pwm-stm32-lp.c.
+On 3/17/20 10:59 AM, Pascal Roeleven wrote:
+> When disabling, ensure the period write is complete before continuing.
+> This fixes an issue on some devices when the write isn't complete before
+> the panel is turned off but the clock gate is still on.
+> 
+> Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
+> ---
+>  drivers/pwm/pwm-sun4i.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> index a11d00f96..75250fd4c 100644
+> --- a/drivers/pwm/pwm-sun4i.c
+> +++ b/drivers/pwm/pwm-sun4i.c
+> @@ -299,6 +299,10 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
+>  	next_period = jiffies + usecs_to_jiffies(cstate.period / 1000 + 1);
+>  
+> +	/* When disabling, make sure the period register is written first */
+> +	if (!state->enabled && cstate.enabled)
+> +		sun4i_pwm_wait(next_period);
+> +
 
-Cc: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Joe Perches <joe@perches.com>
+It is not visible from the context of this patch, but this call to
+sun4i_pwm_wait() ends up calling msleep() inside a spinlock, which isn't
+allowed. The spinlock should probably be converted to a mutex, considering that
+sun4i_pwm_apply() already sleeps and takes mutexes.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
----
- drivers/pwm/core.c         | 14 +++++++-------
- drivers/pwm/pwm-stm32-lp.c |  2 +-
- drivers/pwm/sysfs.c        |  8 ++++----
- include/linux/pwm.h        | 12 ++++++------
- 4 files changed, 18 insertions(+), 18 deletions(-)
+Regards,
+Samuel
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index bca0496..a2ff6dd 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -510,12 +510,12 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
- 	    last->period > s2.period &&
- 	    last->period <= state->period)
- 		dev_warn(chip->dev,
--			 ".apply didn't pick the best available period (requested: %u, applied: %u, possible: %u)\n",
-+			 ".apply didn't pick the best available period (requested: %llu, applied: %llu, possible: %llu)\n",
- 			 state->period, s2.period, last->period);
- 
- 	if (state->enabled && state->period < s2.period)
- 		dev_warn(chip->dev,
--			 ".apply is supposed to round down period (requested: %u, applied: %u)\n",
-+			 ".apply is supposed to round down period (requested: %llu, applied: %llu)\n",
- 			 state->period, s2.period);
- 
- 	if (state->enabled &&
-@@ -524,14 +524,14 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
- 	    last->duty_cycle > s2.duty_cycle &&
- 	    last->duty_cycle <= state->duty_cycle)
- 		dev_warn(chip->dev,
--			 ".apply didn't pick the best available duty cycle (requested: %u/%u, applied: %u/%u, possible: %u/%u)\n",
-+			 ".apply didn't pick the best available duty cycle (requested: %llu/%llu, applied: %llu/%llu, possible: %llu/%llu)\n",
- 			 state->duty_cycle, state->period,
- 			 s2.duty_cycle, s2.period,
- 			 last->duty_cycle, last->period);
- 
- 	if (state->enabled && state->duty_cycle < s2.duty_cycle)
- 		dev_warn(chip->dev,
--			 ".apply is supposed to round down duty_cycle (requested: %u/%u, applied: %u/%u)\n",
-+			 ".apply is supposed to round down duty_cycle (requested: %llu/%llu, applied: %llu/%llu)\n",
- 			 state->duty_cycle, state->period,
- 			 s2.duty_cycle, s2.period);
- 
-@@ -558,7 +558,7 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
- 	    (s1.enabled && s1.period != last->period) ||
- 	    (s1.enabled && s1.duty_cycle != last->duty_cycle)) {
- 		dev_err(chip->dev,
--			".apply is not idempotent (ena=%d pol=%d %u/%u) -> (ena=%d pol=%d %u/%u)\n",
-+			".apply is not idempotent (ena=%d pol=%d %llu/%llu) -> (ena=%d pol=%d %llu/%llu)\n",
- 			s1.enabled, s1.polarity, s1.duty_cycle, s1.period,
- 			last->enabled, last->polarity, last->duty_cycle,
- 			last->period);
-@@ -1284,8 +1284,8 @@ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
- 		if (state.enabled)
- 			seq_puts(s, " enabled");
- 
--		seq_printf(s, " period: %u ns", state.period);
--		seq_printf(s, " duty: %u ns", state.duty_cycle);
-+		seq_printf(s, " period: %llu ns", state.period);
-+		seq_printf(s, " duty: %llu ns", state.duty_cycle);
- 		seq_printf(s, " polarity: %s",
- 			   state.polarity ? "inverse" : "normal");
- 
-diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-index 67fca62..134c146 100644
---- a/drivers/pwm/pwm-stm32-lp.c
-+++ b/drivers/pwm/pwm-stm32-lp.c
-@@ -61,7 +61,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	do_div(div, NSEC_PER_SEC);
- 	if (!div) {
- 		/* Clock is too slow to achieve requested period. */
--		dev_dbg(priv->chip.dev, "Can't reach %u ns\n",	state->period);
-+		dev_dbg(priv->chip.dev, "Can't reach %llu ns\n", state->period);
- 		return -EINVAL;
- 	}
- 
-diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-index 2389b86..449dbc0 100644
---- a/drivers/pwm/sysfs.c
-+++ b/drivers/pwm/sysfs.c
-@@ -42,7 +42,7 @@ static ssize_t period_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.period);
-+	return sprintf(buf, "%llu\n", state.period);
- }
- 
- static ssize_t period_store(struct device *child,
-@@ -52,10 +52,10 @@ static ssize_t period_store(struct device *child,
- 	struct pwm_export *export = child_to_pwm_export(child);
- 	struct pwm_device *pwm = export->pwm;
- 	struct pwm_state state;
--	unsigned int val;
-+	u64 val;
- 	int ret;
- 
--	ret = kstrtouint(buf, 0, &val);
-+	ret = kstrtou64(buf, 0, &val);
- 	if (ret)
- 		return ret;
- 
-@@ -77,7 +77,7 @@ static ssize_t duty_cycle_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.duty_cycle);
-+	return sprintf(buf, "%llu\n", state.duty_cycle);
- }
- 
- static ssize_t duty_cycle_store(struct device *child,
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 2635b2a..a13ff38 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -39,7 +39,7 @@ enum pwm_polarity {
-  * current PWM hardware state.
-  */
- struct pwm_args {
--	unsigned int period;
-+	u64 period;
- 	enum pwm_polarity polarity;
- };
- 
-@@ -56,8 +56,8 @@ enum {
-  * @enabled: PWM enabled status
-  */
- struct pwm_state {
--	unsigned int period;
--	unsigned int duty_cycle;
-+	u64 period;
-+	u64 duty_cycle;
- 	enum pwm_polarity polarity;
- 	bool enabled;
- };
-@@ -107,13 +107,13 @@ static inline bool pwm_is_enabled(const struct pwm_device *pwm)
- 	return state.enabled;
- }
- 
--static inline void pwm_set_period(struct pwm_device *pwm, unsigned int period)
-+static inline void pwm_set_period(struct pwm_device *pwm, u64 period)
- {
- 	if (pwm)
- 		pwm->state.period = period;
- }
- 
--static inline unsigned int pwm_get_period(const struct pwm_device *pwm)
-+static inline u64 pwm_get_period(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
-@@ -128,7 +128,7 @@ static inline void pwm_set_duty_cycle(struct pwm_device *pwm, unsigned int duty)
- 		pwm->state.duty_cycle = duty;
- }
- 
--static inline unsigned int pwm_get_duty_cycle(const struct pwm_device *pwm)
-+static inline u64 pwm_get_duty_cycle(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>  	if (state->polarity != PWM_POLARITY_NORMAL)
+>  		ctrl &= ~BIT_CH(PWM_ACT_STATE, pwm->hwpwm);
+>  	else
+> @@ -320,6 +324,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  		return 0;
+>  
+>  	/* We need a full period to elapse before disabling the channel. */
+> +	next_period = jiffies + usecs_to_jiffies(cstate.period / 1000 + 1);
+>  	sun4i_pwm_wait(next_period);
+>  
+>  	spin_lock(&sun4i_pwm->ctrl_lock);
+> 
 
