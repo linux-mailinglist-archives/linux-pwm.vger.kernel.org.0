@@ -2,25 +2,25 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79F031BA28B
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Apr 2020 13:40:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 686531BA2CD
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 Apr 2020 13:42:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbgD0Lkj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 27 Apr 2020 07:40:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35912 "EHLO
+        id S1727079AbgD0LmV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 27 Apr 2020 07:42:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbgD0Lkj (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 Apr 2020 07:40:39 -0400
+        with ESMTP id S1727045AbgD0LmV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 Apr 2020 07:42:21 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A343C0610D5;
-        Mon, 27 Apr 2020 04:40:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AAF8C0610D5;
+        Mon, 27 Apr 2020 04:42:21 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jT27W-0001FM-LG; Mon, 27 Apr 2020 13:40:18 +0200
+        id 1jT29J-0001JG-W7; Mon, 27 Apr 2020 13:42:10 +0200
 Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 118A3100606; Mon, 27 Apr 2020 13:40:18 +0200 (CEST)
+        id 66B12100606; Mon, 27 Apr 2020 13:42:09 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Michael Walle <michael@walle.cc>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -43,11 +43,11 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH v3 06/16] irqchip: add sl28cpld interrupt controller support
-In-Reply-To: <20200423174543.17161-7-michael@walle.cc>
-References: <20200423174543.17161-1-michael@walle.cc> <20200423174543.17161-7-michael@walle.cc>
-Date:   Mon, 27 Apr 2020 13:40:18 +0200
-Message-ID: <87pnbtqhr1.fsf@nanos.tec.linutronix.de>
+Subject: Re: [PATCH v3 09/16] gpiolib: Introduce gpiochip_irqchip_add_domain()
+In-Reply-To: <20200423174543.17161-10-michael@walle.cc>
+References: <20200423174543.17161-1-michael@walle.cc> <20200423174543.17161-10-michael@walle.cc>
+Date:   Mon, 27 Apr 2020 13:42:09 +0200
+Message-ID: <87mu6xqhny.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Linutronix-Spam-Score: -1.0
@@ -59,54 +59,47 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 Michael Walle <michael@walle.cc> writes:
+> This connects an IRQ domain to a gpiochip and reuses
+> gpiochip_to_irq().
 
-> This patch adds support for the interrupt controller inside the sl28
+A little bit more context and explanation why this function is useful
+would be appreciated.
 
-git grep 'This patch' Documentation/process/
-
-> CPLD management controller.
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  drivers/gpio/gpiolib.c      | 20 ++++++++++++++++++++
+>  include/linux/gpio/driver.h |  3 +++
+>  2 files changed, 23 insertions(+)
 >
-> +static int sl28cpld_intc_probe(struct platform_device *pdev)
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 40f2d7f69be2..7b3d7f496b9a 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -2722,6 +2722,26 @@ int gpiochip_irqchip_add_key(struct gpio_chip *gc,
+>  }
+>  EXPORT_SYMBOL_GPL(gpiochip_irqchip_add_key);
+>  
+> +/**
+> + * gpiochip_irqchip_add_key() - adds an irqdomain to a gpiochip
+
+Copy & paste is wonderful
+
+> + * @gc: the gpiochip to add the irqchip to
+> + * @domain: the irqdomain to add to the gpiochip
+> + *
+> + * This function adds an IRQ domain to the gpiochip.
+> + */
+> +int gpiochip_irqchip_add_domain(struct gpio_chip *gc,
+> +				struct irq_domain *domain)
 > +{
-> +	struct sl28cpld_intc *irqchip;
-> +	struct resource *res;
-> +	unsigned int irq;
-> +	int ret;
-> +
-> +	if (!pdev->dev.parent)
-> +		return -ENODEV;
-> +
-> +	irqchip = devm_kzalloc(&pdev->dev, sizeof(*irqchip), GFP_KERNEL);
-> +	if (!irqchip)
-> +		return -ENOMEM;
-> +
-> +	irqchip->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> +	if (!irqchip->regmap)
-> +		return -ENODEV;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0)
-> +		return irq;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
-> +	if (!res)
+> +	if (!domain)
 > +		return -EINVAL;
 > +
-> +	irqchip->chip.name = "sl28cpld-intc";
-> +	irqchip->chip.irqs = sl28cpld_irqs;
-> +	irqchip->chip.num_irqs = ARRAY_SIZE(sl28cpld_irqs);
-> +	irqchip->chip.num_regs = 1;
-> +	irqchip->chip.status_base = res->start + INTC_IP;
-> +	irqchip->chip.mask_base = res->start + INTC_IE;
-> +	irqchip->chip.mask_invert = true,
-> +	irqchip->chip.ack_base = res->start + INTC_IP;
+> +	gc->to_irq = gpiochip_to_irq;
+> +	gc->irq.domain = domain;
 > +
-> +	ret = devm_regmap_add_irq_chip(&pdev->dev, irqchip->regmap, irq,
-> +				       IRQF_SHARED | IRQF_ONESHOT, 0,
-
-What's the point of IRQF_SHARED | IRQF_ONESHOT here?
-
-> +				       &irqchip->chip, &irqchip->irq_data);
+> +	return 0;
+> +}
 
 Thanks,
 
