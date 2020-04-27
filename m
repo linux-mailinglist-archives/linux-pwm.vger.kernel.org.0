@@ -2,41 +2,32 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85DE71BAB79
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Apr 2020 19:40:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7A211BAB92
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 Apr 2020 19:44:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgD0RkS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 27 Apr 2020 13:40:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35924 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726189AbgD0RkS (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 Apr 2020 13:40:18 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C56D2C0610D5;
-        Mon, 27 Apr 2020 10:40:17 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        id S1726309AbgD0Roa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 27 Apr 2020 13:44:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726252AbgD0Roa (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 27 Apr 2020 13:44:30 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id A316B2305C;
-        Mon, 27 Apr 2020 19:40:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1588009213;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Mb7wOIhi91zTa7OdCwnok2RD4/Y3FAeCxF/iMp7nN6o=;
-        b=jZOn6q/jxrjwYNn4nj3d83zoUJgdzvpe11GNFG7mRNPqsDk605zmppuXrjG6DwI9lToeYu
-        hv+XTWKczoGnq1p/Vnvk/7ctIF/9ikivCHAneUAnz7kw7CjEkx+6UB5FgdL5xAtJTg6voE
-        R4T413P+f5UjxDP86b2VwSVDn779YB4=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 27 Apr 2020 19:40:11 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E43321556;
+        Mon, 27 Apr 2020 17:44:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588009470;
+        bh=ZaQ6rn/s8Kxlhe/QZALln6lZXSTb4k8n2GRkZCZBmgc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jMFO2+XnqLry1pIniBTURC2gvN/tKbjFoUkcjrP4kTyckpzL63R1QvPw+LlJzAsjM
+         w9RmIa3QOhKcAnm8ydbtxKubMmPAJjc6+x8mIKbBK7Ys5H3bbIXR5BhxaixwpfZg0m
+         RK1NeLYmU2ZSqu0FlSlslEJG3G0I0IOuMbScRvwg=
+Date:   Mon, 27 Apr 2020 18:44:27 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
@@ -48,119 +39,63 @@ Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Lee Jones <lee.jones@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Subject: Re: [PATCH v3 06/16] irqchip: add sl28cpld interrupt controller
  support
-In-Reply-To: <87pnbtqhr1.fsf@nanos.tec.linutronix.de>
+Message-ID: <20200427174427.GE4383@sirena.org.uk>
 References: <20200423174543.17161-1-michael@walle.cc>
  <20200423174543.17161-7-michael@walle.cc>
  <87pnbtqhr1.fsf@nanos.tec.linutronix.de>
-Message-ID: <87f141bce0a4fda04b550647306be296@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Spam-Level: *
-X-Rspamd-Server: web
-X-Spam-Status: No, score=1.40
-X-Spam-Score: 1.40
-X-Rspamd-Queue-Id: A316B2305C
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[24];
-         NEURAL_HAM(-0.00)[-0.766];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[linux.intel.com,vger.kernel.org,lists.infradead.org,linaro.org,baylibre.com,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,lakedaemon.net,linuxfoundation.org];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+ <87f141bce0a4fda04b550647306be296@walle.cc>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nHwqXXcoX0o6fKCv"
+Content-Disposition: inline
+In-Reply-To: <87f141bce0a4fda04b550647306be296@walle.cc>
+X-Cookie: If your bread is stale, make toast.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Thomas,
 
-thanks for the review.
+--nHwqXXcoX0o6fKCv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Am 2020-04-27 13:40, schrieb Thomas Gleixner:
-> Michael Walle <michael@walle.cc> writes:
-> 
->> This patch adds support for the interrupt controller inside the sl28
-> 
-> git grep 'This patch' Documentation/process/
+On Mon, Apr 27, 2020 at 07:40:11PM +0200, Michael Walle wrote:
 
-ok.
+> IRQF_ONESHOT, because its is a threaded interrupt with no primary
+> handler. But I just noticed, that regmap-irq will also set the
+> IRQF_ONESHOT. But that the commit 09cadf6e088b ("regmap-irq:
+> set IRQF_ONESHOT flag to ensure IRQ request") reads like it is
+> just there to be sure. So I don't know if it should also be set
+> here.
 
-> 
->> CPLD management controller.
->> 
->> +static int sl28cpld_intc_probe(struct platform_device *pdev)
->> +{
->> +	struct sl28cpld_intc *irqchip;
->> +	struct resource *res;
->> +	unsigned int irq;
->> +	int ret;
->> +
->> +	if (!pdev->dev.parent)
->> +		return -ENODEV;
->> +
->> +	irqchip = devm_kzalloc(&pdev->dev, sizeof(*irqchip), GFP_KERNEL);
->> +	if (!irqchip)
->> +		return -ENOMEM;
->> +
->> +	irqchip->regmap = dev_get_regmap(pdev->dev.parent, NULL);
->> +	if (!irqchip->regmap)
->> +		return -ENODEV;
->> +
->> +	irq = platform_get_irq(pdev, 0);
->> +	if (irq < 0)
->> +		return irq;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
->> +	if (!res)
->> +		return -EINVAL;
->> +
->> +	irqchip->chip.name = "sl28cpld-intc";
->> +	irqchip->chip.irqs = sl28cpld_irqs;
->> +	irqchip->chip.num_irqs = ARRAY_SIZE(sl28cpld_irqs);
->> +	irqchip->chip.num_regs = 1;
->> +	irqchip->chip.status_base = res->start + INTC_IP;
->> +	irqchip->chip.mask_base = res->start + INTC_IE;
->> +	irqchip->chip.mask_invert = true,
->> +	irqchip->chip.ack_base = res->start + INTC_IP;
->> +
->> +	ret = devm_regmap_add_irq_chip(&pdev->dev, irqchip->regmap, irq,
->> +				       IRQF_SHARED | IRQF_ONESHOT, 0,
-> 
-> What's the point of IRQF_SHARED | IRQF_ONESHOT here?
+Looking at the changelog there the "we can't be sure" bit is that
+coccinelle couldn't follow the flags through from the caller to make
+sure that IRQF_ONESHOT is set so we're just oring it in unconditionally.
 
-IRQF_SHARED because this interrupt is shared with all the blocks
-which can generate interrupts, i.e. the GPIO contollers.
+--nHwqXXcoX0o6fKCv
+Content-Type: application/pgp-signature; name="signature.asc"
 
-IRQF_ONESHOT, because its is a threaded interrupt with no primary
-handler. But I just noticed, that regmap-irq will also set the
-IRQF_ONESHOT. But that the commit 09cadf6e088b ("regmap-irq:
-set IRQF_ONESHOT flag to ensure IRQ request") reads like it is
-just there to be sure. So I don't know if it should also be set
-here.
+-----BEGIN PGP SIGNATURE-----
 
--michael
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6nGfoACgkQJNaLcl1U
+h9Bhuwf+MMHsfmI2RDYY6qZJmxPEgyN6UpeiPwIpozVnZsA0/TQuDxAvV7Iu9PfO
++h9DTbgF3GzRsw9kiWlFgxriyJsdUwvxpYGjS3Rdr2HEWv275fEurdRRXceeeSHZ
+w5PoR+ALv2rs+6UVVekmkK3Ht9/eJlVGJyLEYOfddcXTjTs/eezYWZrFNKaLfETD
+fP1XXLYorJDv1ovH/P6R6zK+3aunlvBdBHIoQCSh5GoHkAAyNNhayWdKZX1BsIqA
+2bc5gQ2WCk83As3jtjwuDiPJRhETrcQT3y/1F7KDxn+SqRE5V51fQiwvbpLtGHsc
+XKfax9UH35Ornk7702asjugdC5kd9g==
+=+BYw
+-----END PGP SIGNATURE-----
 
-> 
->> +				       &irqchip->chip, &irqchip->irq_data);
-> 
-> Thanks,
-> 
->         tglx
+--nHwqXXcoX0o6fKCv--
