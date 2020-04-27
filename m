@@ -2,59 +2,59 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CE671B976F
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Apr 2020 08:26:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AEF71BA699
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 Apr 2020 16:39:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgD0G0q (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 27 Apr 2020 02:26:46 -0400
-Received: from mail1.bemta25.messagelabs.com ([46.226.52.116]:31026 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726594AbgD0G0p (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 Apr 2020 02:26:45 -0400
-Received: from [100.112.198.136] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-5.bemta.az-b.eu-west-1.aws.symcld.net id 1F/FC-40486-71B76AE5; Mon, 27 Apr 2020 06:26:31 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBKsWRWlGSWpSXmKPExsVy8MN7XV2x6mV
-  xBj/+GVh8mXuKxeLwoheMFs2L17NZ3P96lNHi5qdvrBaXd81hs7h7dxWjxdc/v9kt2jfOZrXo
-  n/2a1eLdmafsFv/37GC3ON3NarF501Rmi5+75rFY3J44mdFBwOP9jVZ2j52z7rJ7bFrVyeZx5
-  9oeNo93586xe8w7Geixf+4ado+lN4Q9+v8aeDz9sZfZ4/MmOY8zbW9ZAniiWDPzkvIrElgzLk
-  2byVzQN5u54vuPB6wNjF8vMnUxcnEICaxllNiwaAtrFyMnkFMpcfZcNwuIzSsQIfF75zWwOKe
-  AmcSKda+ZIGpMJbbf2sAOYrMJ6Eg8mrkeLM4ioCrx7eIusLiwgL3Eh1+rmUEWiAj0sEh8uPsf
-  bBuzwFRGiQ+vfrFBbBCUODnzCdg2ZgEJiYMvXjBDbNCSOLdmFeMERt5ZSMpmISlbwMgEDMKko
-  sz0jJLcxMwcXUMDA11DQyNdQ0tLXUNTE73EKt0kvdRS3fLU4hJdQ73E8mK94src5JwUvbzUkk
-  2MwAhLKTg+awfjsbXv9Q4xSnIwKYny6sUuixPiS8pPqcxILM6ILyrNSS0+xCjDwaEkwfu6Eig
-  nWJSanlqRlpkDjHaYtAQHj5IIbylImre4IDG3ODMdInWKUVFKnFe5CighAJLIKM2Da4MlmEuM
-  slLCvIwMDAxCPAWpRbmZJajyrxjFORiVhHkngYznycwrgZv+CmgxE9DiKvnFIItLEhFSUg1MN
-  s1fuatNO3kiT2b1ZG1Un/8yWt9p6vHKGbzrHO4FvnGQEnzxoKpz+ZelL5OiJ2qY/Nmve3j5/2
-  2nDqaeLj2zTsBX6oL1tJKtJ1WN7JzVbryseaPXxP6/fI3RvoQO3g3b/A+452ednz2L5dk32dB
-  z8fY8YjeOF7ubrdhx/Je4pxGz4+Rpk21aRL3KL79fuOZX9IslTDwT97Z4HmXn77E+ql3j4BAV
-  m8VV/SywerFADnec8HTGMon95xuSmF8FRv/Z/th7ne3Lhu3ax812Hr95b7a5YuXnbr5X2b9WM
-  G6aJGlUsD3QI+CI+Iz0m0YCV19YPHfaPaMpZV+KecGRX9bbrh1X2czyLMLp5f4i+5NlSizFGY
-  mGWsxFxYkAWIv8V6sDAAA=
+        id S1728099AbgD0Oit (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 27 Apr 2020 10:38:49 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.5]:57798 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727834AbgD0Ois (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 Apr 2020 10:38:48 -0400
+Received: from [100.113.0.171] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-5.bemta.az-a.eu-central-1.aws.symcld.net id BF/D4-40388-17EE6AE5; Mon, 27 Apr 2020 14:38:41 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOKsWRWlGSWpSXmKPExsVy8MN7Xd2Cd8v
+  iDFZMUrL4MvcUi8XhRS8YLZoXr2ezuP/1KKPFzU/fWC0u75rDZnH37ipGi69/frNbtG+czWrR
+  P/s1q8W7M0/ZLf7v2cFucbqb1WLzpqnMFj93zWOxuD1xMqODgMf7G63sHjtn3WX32LSqk83jz
+  rU9bB7vzp1j95h3MtBj/9w17B5Lbwh79P818Hj6Yy+zx+dNch5n2t6yBPBEsWbmJeVXJLBm/F
+  s/l62gfTZzxY0r/g2M7y8ydTFycQgJrGWUaGhqYeli5ARyKiX6jr1hA7F5BSIkLnUfZAexOQX
+  MJJbdWgbUwAFUYyrxs98MJMwmoCPxaOZ6JhCbRUBV4vTiXawgtrCAhUTvxH0sIPNFBPpYJN5N
+  Pw22jFlgKqPEh1e/oBYISpyc+QRsMbOAhMTBFy+YIY7Qkji3ZhXjBEbeWUjKZiEpW8DItIrRM
+  qkoMz2jJDcxM0fX0MBA19DQWNdQ18jARC+xSjdRL7VUNzk1r6QoESirl1herFdcmZuck6KXl1
+  qyiREYXymFjGd2MO5a/l7vEKMkB5OSKO/J1cvihPiS8lMqMxKLM+KLSnNSiw8xynBwKEnwsr8
+  FygkWpaanVqRl5gBjHSYtwcGjJMJb9wYozVtckJhbnJkOkTrFqCglzpsFkhAASWSU5sG1wdLL
+  JUZZKWFeRgYGBiGegtSi3MwSVPlXjOIcjErCvHIg23ky80rgpr8CWswEtLhKfjHI4pJEhJRUA
+  1NbccWzSb4MPQUNXJ8KHqVb5h+Su32xaHvlvKzGovv88z7Xedm9KllWPCnf7jazzL43/1e9bD
+  OsKvaqjmiUKXrOs2zh5s9M5+6ItG0x8HAI4D6Y2amxf4pY5kH+gJZfJfvqWiTPJwg2pRg0Wpy
+  Yzvbx4znuDypFu35qPPOq7C3XPB+k4qyY8PyvzdlNmzaz/02Ved/Fzq+f+fPjNufgXZb/JG+I
+  MCgqGjkosU/e8jdf4C1z0tbPAVlsbF46Jh8rswWyLh8pss8RfKl5TLhlveXqCdHSu/69ExE9Z
+  Wec9z3sZcDh7OXWvOol8c496Y1XBLw93JPXbH9dfaHLjKHxYsC2yJg9f49KJjheOVekxFKckW
+  ioxVxUnAgAMwqlY6oDAAA=
 X-Env-Sender: roy.im.opensource@diasemi.com
-X-Msg-Ref: server-19.tower-292.messagelabs.com!1587968789!3549008!3
+X-Msg-Ref: server-9.tower-223.messagelabs.com!1587998319!3025129!4
 X-Originating-IP: [193.240.239.45]
 X-SYMC-ESS-Client-Auth: outbound-route-from=pass
 X-StarScan-Received: 
 X-StarScan-Version: 9.50.1; banners=-,-,-
 X-VirusChecked: Checked
-Received: (qmail 23445 invoked from network); 27 Apr 2020 06:26:30 -0000
+Received: (qmail 12906 invoked from network); 27 Apr 2020 14:38:40 -0000
 Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
-  by server-19.tower-292.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 27 Apr 2020 06:26:30 -0000
+  by server-9.tower-223.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 27 Apr 2020 14:38:40 -0000
 Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
  NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
- 14.3.468.0; Mon, 27 Apr 2020 08:26:29 +0200
+ 14.3.468.0; Mon, 27 Apr 2020 16:38:37 +0200
 Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
- E147B13F674; Mon, 27 Apr 2020 15:26:27 +0900 (KST)
-Message-ID: <eb301aa028c877a71e60dc7493ee712e4599e8d9.1587949032.git.Roy.Im@diasemi.com>
-In-Reply-To: <cover.1587949032.git.Roy.Im@diasemi.com>
-References: <cover.1587949032.git.Roy.Im@diasemi.com>
+ 7CF9A13F674; Mon, 27 Apr 2020 23:38:36 +0900 (KST)
+Message-ID: <f02c09fa596a76bdebad27939a7920de4c60918b.1587975654.git.Roy.Im@diasemi.com>
+In-Reply-To: <cover.1587975654.git.Roy.Im@diasemi.com>
+References: <cover.1587975654.git.Roy.Im@diasemi.com>
 From:   Roy Im <roy.im.opensource@diasemi.com>
-Date:   Mon, 27 Apr 2020 09:57:12 +0900
-Subject: [RESEND PATCH V11 3/3] Input: new da7280 haptic driver
+Date:   Mon, 27 Apr 2020 17:20:54 +0900
+Subject: [PATCH V12 3/3] Input: new da7280 haptic driver
 To:     Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Brian Masney <masneyb@onstation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
         Greg KH <gregkh@linuxfoundation.org>,
         Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
         Maximilian Luz <luzmaximilian@gmail.com>,
@@ -2047,5 +2047,5 @@ index 0000000..2dd76d2
 +MODULE_AUTHOR("Roy Im <Roy.Im.Opensource@diasemi.com>");
 +MODULE_LICENSE("GPL");
 -- 
-end-of-patch for RESEND PATCH V11
+end-of-patch for PATCH V12
 
