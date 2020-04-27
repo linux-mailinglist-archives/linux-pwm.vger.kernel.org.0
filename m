@@ -2,35 +2,38 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E8B91BABAA
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Apr 2020 19:49:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 340291BABCE
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 Apr 2020 19:58:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgD0Rt1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 27 Apr 2020 13:49:27 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:58467 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726223AbgD0Rt1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 Apr 2020 13:49:27 -0400
+        id S1726344AbgD0R6Z (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 27 Apr 2020 13:58:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725963AbgD0R6Z (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 Apr 2020 13:58:25 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED110C0610D5;
+        Mon, 27 Apr 2020 10:58:24 -0700 (PDT)
 Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id AAEB72305C;
-        Mon, 27 Apr 2020 19:49:21 +0200 (CEST)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 0E4E323060;
+        Mon, 27 Apr 2020 19:58:22 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1588009761;
+        t=1588010302;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=uIPaAmEQWo9UFG1wdCdYNeEuiFocSYDqyKIO62bAJso=;
-        b=daZ1yQbt+ly5oR4B23djB/+U8nDAtnXWozzanckjgsxqNTdrrDaqv34hlVayGoqj6wvrCn
-        lZ7cJuj41ddvRap8LThkKzVCsf0BhUEWdgnuLK7CWaxscOMUAMPxKJGTC7MHCqeoDAmplb
-        t/DjgF9AP9YXkde3zaURA5KQJxay3oM=
+        bh=kuXxMU3XohLcLuj7G8DbEK61wsli0t56ftpqdXv6gHs=;
+        b=BjqUDFiMiUoB5EOzeIikHKwr+tp8SxHEsoerjHtd9z1THx0O4KAwF9vKQGIZctvLq394Cg
+        ZpkQkrazePtHUKwyrY7KH/9H83n+AlCdAMH/NkZoOBMnT6SQN0SX+Zl3tAux8l44NobQ7y
+        mqZnPqIvvbmtL/bpsPNDTUrXK6rmzLQ=
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 27 Apr 2020 19:49:21 +0200
+Date:   Mon, 27 Apr 2020 19:58:22 +0200
 From:   Michael Walle <michael@walle.cc>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -51,12 +54,13 @@ Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 09/16] gpiolib: Introduce gpiochip_irqchip_add_domain()
-In-Reply-To: <87mu6xqhny.fsf@nanos.tec.linutronix.de>
+Subject: Re: [PATCH v3 11/16] gpio: add support for the sl28cpld GPIO
+ controller
+In-Reply-To: <87k121qhj7.fsf@nanos.tec.linutronix.de>
 References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-10-michael@walle.cc>
- <87mu6xqhny.fsf@nanos.tec.linutronix.de>
-Message-ID: <43af0bff6fee64687ac4e0d1ded14c4d@walle.cc>
+ <20200423174543.17161-12-michael@walle.cc>
+ <87k121qhj7.fsf@nanos.tec.linutronix.de>
+Message-ID: <8acfbefeb9d7f59329f2899176059600@walle.cc>
 X-Sender: michael@walle.cc
 User-Agent: Roundcube Webmail/1.3.10
 X-Spamd-Bar: +
@@ -64,7 +68,7 @@ X-Spam-Level: *
 X-Rspamd-Server: web
 X-Spam-Status: No, score=1.40
 X-Spam-Score: 1.40
-X-Rspamd-Queue-Id: AAEB72305C
+X-Rspamd-Queue-Id: 0E4E323060
 X-Spamd-Result: default: False [1.40 / 15.00];
          FROM_HAS_DN(0.00)[];
          TO_DN_SOME(0.00)[];
@@ -74,7 +78,7 @@ X-Spamd-Result: default: False [1.40 / 15.00];
          MIME_GOOD(-0.10)[text/plain];
          DKIM_SIGNED(0.00)[];
          RCPT_COUNT_TWELVE(0.00)[24];
-         NEURAL_HAM(-0.00)[-0.777];
+         NEURAL_HAM(-0.00)[-0.765];
          RCVD_COUNT_ZERO(0.00)[0];
          FROM_EQ_ENVFROM(0.00)[];
          MIME_TRACE(0.00)[0:+];
@@ -86,68 +90,67 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Am 2020-04-27 13:42, schrieb Thomas Gleixner:
+Am 2020-04-27 13:45, schrieb Thomas Gleixner:
 > Michael Walle <michael@walle.cc> writes:
->> This connects an IRQ domain to a gpiochip and reuses
->> gpiochip_to_irq().
+>> +struct sl28cpld_gpio {
+>> +	struct regmap_irq_chip irq_chip;
+>> +	struct regmap_irq_chip_data *irq_data;
+>> +};
+>> +
+>> +static const struct regmap_irq sl28cpld_gpio_irqs[] = {
+>> +	REGMAP_IRQ_REG_LINE(0, 8),
+>> +	REGMAP_IRQ_REG_LINE(1, 8),
+>> +	REGMAP_IRQ_REG_LINE(2, 8),
+>> +	REGMAP_IRQ_REG_LINE(3, 8),
+>> +	REGMAP_IRQ_REG_LINE(4, 8),
+>> +	REGMAP_IRQ_REG_LINE(5, 8),
+>> +	REGMAP_IRQ_REG_LINE(6, 8),
+>> +	REGMAP_IRQ_REG_LINE(7, 8),
+>> +};
 > 
-> A little bit more context and explanation why this function is useful
-> would be appreciated.
+> This is exactly the same as the one in the irq chip patch.
 
-Ok I'll try to be a bit more elaborate the in the next version, (if
-this function is still there).
+To my knowledge this boilerplate is just to describe this
+irqchip has 8 different IRQs.
 
-For now:
-
-gpiochip_irqchip_add_domain() allows to use reqmap-irq, which exports
-an irqdomain, with gpiolib while reusing gpiochip_to_irq(). Both
-gpiochip_irqchip_* and regmap_irq partially provides the same
-functionality. The new function will help to connect just the
-minimal functionality of the gpiochip_irqchip which is needed to
-work together with regmap-irq.
-
+>> +static int sl28cpld_gpio_irq_init(struct device *dev,
+>> +				  struct sl28cpld_gpio *gpio,
+>> +				  struct regmap *regmap, unsigned int base,
+>> +				  int irq)
+>> +{
+>> +	struct regmap_irq_chip *irq_chip = &gpio->irq_chip;
+>> +
+>> +	irq_chip->name = "sl28cpld-gpio-irq",
+>> +	irq_chip->irqs = sl28cpld_gpio_irqs;
+>> +	irq_chip->num_irqs = ARRAY_SIZE(sl28cpld_gpio_irqs);
+>> +	irq_chip->num_regs = 1;
+>> +	irq_chip->status_base = base + GPIO_REG_IP;
+>> +	irq_chip->mask_base = base + GPIO_REG_IE;
+>> +	irq_chip->mask_invert = true,
+>> +	irq_chip->ack_base = base + GPIO_REG_IP;
+>> +
+>> +	return devm_regmap_add_irq_chip_np(dev, dev_of_node(dev), regmap,
+>> +					   irq, IRQF_SHARED | IRQF_ONESHOT, 0,
+>> +					   irq_chip, &gpio->irq_data);
+>> +}
 > 
->> Signed-off-by: Michael Walle <michael@walle.cc>
->> ---
->>  drivers/gpio/gpiolib.c      | 20 ++++++++++++++++++++
->>  include/linux/gpio/driver.h |  3 +++
->>  2 files changed, 23 insertions(+)
->> 
->> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
->> index 40f2d7f69be2..7b3d7f496b9a 100644
->> --- a/drivers/gpio/gpiolib.c
->> +++ b/drivers/gpio/gpiolib.c
->> @@ -2722,6 +2722,26 @@ int gpiochip_irqchip_add_key(struct gpio_chip 
->> *gc,
->>  }
->>  EXPORT_SYMBOL_GPL(gpiochip_irqchip_add_key);
->> 
->> +/**
->> + * gpiochip_irqchip_add_key() - adds an irqdomain to a gpiochip
-> 
-> Copy & paste is wonderful
+> And this looks pretty familiar as well. What's the point of duplicating
+> that code?
 
-whoops.
+this is also just boilerplate to configure the irqchip. But there are 
+two
+distinct blocks inside the board management controller:
+  - an interrupt controller (which has 8 interrupts)
+  - and gpio controllers which also happen to have 8 interrupts and
+    both have some shared semantics for now. But the GPIO building block
+    might be extended to provide interrupt type settings, i.e. falling/
+    rising/level triggered interrupts.
+
+So yes both look similar, but they are two different blocks, they use
+different registers and they might drift apart in the future.
 
 -michael
 
-> 
->> + * @gc: the gpiochip to add the irqchip to
->> + * @domain: the irqdomain to add to the gpiochip
->> + *
->> + * This function adds an IRQ domain to the gpiochip.
->> + */
->> +int gpiochip_irqchip_add_domain(struct gpio_chip *gc,
->> +				struct irq_domain *domain)
->> +{
->> +	if (!domain)
->> +		return -EINVAL;
->> +
->> +	gc->to_irq = gpiochip_to_irq;
->> +	gc->irq.domain = domain;
->> +
->> +	return 0;
->> +}
 > 
 > Thanks,
 > 
