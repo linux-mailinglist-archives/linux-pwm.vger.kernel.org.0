@@ -2,38 +2,35 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 339881BC180
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2020 16:39:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBCCD1BC18A
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2020 16:43:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgD1Ojt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 28 Apr 2020 10:39:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726868AbgD1Ojs (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Apr 2020 10:39:48 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92726C03C1AB;
-        Tue, 28 Apr 2020 07:39:48 -0700 (PDT)
+        id S1727825AbgD1On1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 28 Apr 2020 10:43:27 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:41983 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727124AbgD1On1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Apr 2020 10:43:27 -0400
 Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id DD1D322FE6;
-        Tue, 28 Apr 2020 16:39:44 +0200 (CEST)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id D244A23E35;
+        Tue, 28 Apr 2020 16:43:24 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1588084785;
+        t=1588085004;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VljnFWRje4D0ru9e1R32t4AeXBUBPd+3TTh0NdwxNg0=;
-        b=toML35UXiuO/pHVOeK9HR/DC0PB0wxQEVGlm7qwqQIB7OAAjl0JywWe+p3OUN++VwB0caY
-        iHa060chUra4KIS7CwEXRsTp17tZkdr1ZKXj1F6sKZ2TR8DcvHK/1RPnJ8Yc/6mdVhb3nO
-        nm0qRY5Ks5FPSrPFg82RuwiH4jv90tI=
+        bh=xV8UmXfmKOCo8rfAL1DHuYOW1sEqi/rRvTk8GPWV4YM=;
+        b=dD/b1QybujEq1dnyH/G+lR91pdkgakvlBONpoZS6Xx7NNwYvvX3uFX0eVIbX5Ds7xdM5UZ
+        RxA4N3EXfDOCrKes3GUVj3mPYLA/re4CjAOlkJReUFK95YBLArORW9GADSg5lD02r7drlK
+        3LJQ0MRP5dWCdxqidl4b8Nj4TampY60=
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Apr 2020 16:39:44 +0200
+Date:   Tue, 28 Apr 2020 16:43:24 +0200
 From:   Michael Walle <michael@walle.cc>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
@@ -54,12 +51,13 @@ Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 04/16] dt-bindings: mfd: Add bindings for sl28cpld
-In-Reply-To: <20200428124825.GT185537@smile.fi.intel.com>
+Subject: Re: [PATCH v3 05/16] mfd: Add support for Kontron sl28cpld management
+ controller
+In-Reply-To: <20200428125049.GU185537@smile.fi.intel.com>
 References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-5-michael@walle.cc>
- <20200428124825.GT185537@smile.fi.intel.com>
-Message-ID: <8cc4a2bd3fcaf836d7f393ce2425c872@walle.cc>
+ <20200423174543.17161-6-michael@walle.cc>
+ <20200428125049.GU185537@smile.fi.intel.com>
+Message-ID: <5e2d486077f9e2ce8bd9b171cf806fd9@walle.cc>
 X-Sender: michael@walle.cc
 User-Agent: Roundcube Webmail/1.3.10
 X-Spamd-Bar: +
@@ -67,7 +65,7 @@ X-Spam-Level: *
 X-Rspamd-Server: web
 X-Spam-Status: No, score=1.40
 X-Spam-Score: 1.40
-X-Rspamd-Queue-Id: DD1D322FE6
+X-Rspamd-Queue-Id: D244A23E35
 X-Spamd-Result: default: False [1.40 / 15.00];
          FROM_HAS_DN(0.00)[];
          TO_DN_SOME(0.00)[];
@@ -77,7 +75,7 @@ X-Spamd-Result: default: False [1.40 / 15.00];
          MIME_GOOD(-0.10)[text/plain];
          DKIM_SIGNED(0.00)[];
          RCPT_COUNT_TWELVE(0.00)[24];
-         NEURAL_HAM(-0.00)[-0.787];
+         NEURAL_HAM(-0.00)[-0.819];
          RCVD_COUNT_ZERO(0.00)[0];
          FROM_EQ_ENVFROM(0.00)[];
          MIME_TRACE(0.00)[0:+];
@@ -89,24 +87,42 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Am 2020-04-28 14:48, schrieb Andy Shevchenko:
-> On Thu, Apr 23, 2020 at 07:45:31PM +0200, Michael Walle wrote:
->> This adds device tree bindings for the board management controller 
->> found
->> on the Kontron SMARC-sAL28 board.
+Am 2020-04-28 14:50, schrieb Andy Shevchenko:
+> On Thu, Apr 23, 2020 at 07:45:32PM +0200, Michael Walle wrote:
+>> This patch adds core support for the board management controller found
+>> on the SMARC-sAL28 board. It consists of the following functions:
+>>  - watchdog
+>>  - GPIO controller
+>>  - PWM controller
+>>  - fan sensor
+>>  - interrupt controller
 > 
-> I think it should be independent patches (same way as you do for 
-> drivers).
+> ...
+> 
+>>  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+>> 
+>>  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+>> +
+>> +obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
+> 
+> Perhaps keep an order?
 
-It used to be several patches but Rob suggested to put it into one:
-https://lore.kernel.org/linux-devicetree/20200330223535.GA31402@bogus/
+I don't see any order in that makefile. Looked to me like every new
+file was added at the end.
 
+> 
+> ...
+> 
+>> +	return devm_mfd_add_devices(dev, -1, sl28cpld_devs,
+> 
+> -1 has its own definition.
+
+ok, I'll replace that by PLATFORM_DEVID_NONE.
+
+Thanks,
 -michael
 
 > 
->>  .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  51 ++++++
->>  .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 +++
->>  .../bindings/mfd/kontron,sl28cpld.yaml        | 162 
->> ++++++++++++++++++
->>  .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
->>  .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
+>> +				    ARRAY_SIZE(sl28cpld_devs), NULL,
+>> +				    i2c->irq, NULL);
+>> +}
