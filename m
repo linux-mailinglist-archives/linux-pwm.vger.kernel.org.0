@@ -2,37 +2,35 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31DFA1BC1CA
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2020 16:50:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5CF01BC36A
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2020 17:25:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbgD1OuE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 28 Apr 2020 10:50:04 -0400
-Received: from mga18.intel.com ([134.134.136.126]:62133 "EHLO mga18.intel.com"
+        id S1728551AbgD1PZr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 28 Apr 2020 11:25:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728094AbgD1OuD (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:50:03 -0400
-IronPort-SDR: PR1dPZPySpVR2UiMRdyxMDS84NGYYsCxM1YD0cWj/jJG5dbDURJvGlN9g49tzp9R9uYMhYT1v5
- pv2Wcq0c2iDQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 07:50:02 -0700
-IronPort-SDR: TIm9BnP5eTWiaT9SoCeMc1+yPT6amVcHlv8tmFBZ2L8njNT66dS/UjZGIRiR3nyY1Lyov1WfuY
- QLWN1Mr2JzFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
-   d="scan'208";a="292873815"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 28 Apr 2020 07:49:56 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jTRYc-003Zjk-TU; Tue, 28 Apr 2020 17:49:58 +0300
-Date:   Tue, 28 Apr 2020 17:49:58 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        id S1728487AbgD1PZr (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 28 Apr 2020 11:25:47 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4838206D8;
+        Tue, 28 Apr 2020 15:25:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588087546;
+        bh=th3tqv11ZgZgj8E96bFG6ckng9nKhzjnFA3FZBoCqDM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UlWrbndNBYw9f/3rJZ9vWhuiMI9bols+NUpDrkpb6nMDPcIB+exm9thHsajcNMv2s
+         zF8ons1G+Tu9b/RtEzHyR4oERYHCJhNFS7iYENen9Yfm5zJskPzV8YzecKgzoPwIBB
+         YihdZq8p8AkIueprECGqpetiJGVIrRNXwJ4Om4/8=
+Date:   Tue, 28 Apr 2020 16:25:43 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -47,53 +45,62 @@ Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 05/16] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200428144958.GZ185537@smile.fi.intel.com>
+Subject: Re: [PATCH v3 02/16] mfd: mfd-core: Don't overwrite the dma_mask of
+ the child device
+Message-ID: <20200428152543.GI5677@sirena.org.uk>
 References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-6-michael@walle.cc>
- <20200428125049.GU185537@smile.fi.intel.com>
- <5e2d486077f9e2ce8bd9b171cf806fd9@walle.cc>
+ <20200423174543.17161-3-michael@walle.cc>
+ <20200428124548.GS185537@smile.fi.intel.com>
+ <3cd3705a-4f48-6a46-e869-3ee11dc17323@arm.com>
+ <20200428142938.GX185537@smile.fi.intel.com>
+ <6ccad285-7b5f-3037-d4d5-ff4d9571b612@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="LYw3s/afESlflPpp"
 Content-Disposition: inline
-In-Reply-To: <5e2d486077f9e2ce8bd9b171cf806fd9@walle.cc>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <6ccad285-7b5f-3037-d4d5-ff4d9571b612@arm.com>
+X-Cookie: Eschew obfuscation.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 04:43:24PM +0200, Michael Walle wrote:
-> Am 2020-04-28 14:50, schrieb Andy Shevchenko:
-> > On Thu, Apr 23, 2020 at 07:45:32PM +0200, Michael Walle wrote:
-> > > This patch adds core support for the board management controller found
-> > > on the SMARC-sAL28 board. It consists of the following functions:
-> > >  - watchdog
-> > >  - GPIO controller
-> > >  - PWM controller
-> > >  - fan sensor
-> > >  - interrupt controller
-> > 
-> > ...
-> > 
-> > >  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
-> > > 
-> > >  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
-> > > +
-> > > +obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
-> > 
-> > Perhaps keep an order?
-> 
-> I don't see any order in that makefile. Looked to me like every new
-> file was added at the end.
 
-Okay, just didn't note from above context.
+--LYw3s/afESlflPpp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-With Best Regards,
-Andy Shevchenko
+On Tue, Apr 28, 2020 at 03:49:49PM +0100, Robin Murphy wrote:
 
+> For better or worse, the platform bus is the dumping ground for random crap,
+> so we just have to deal with all the abstraction breakage that leaks out of
+> that.
 
+The reason we're using the platform bus for this is that historically
+people were creating buses which were essentially carbon copies of the
+platform bus with the name changed and it was felt that rather than
+duplicate code it was better to just use platform devices with no MMIO
+ranges defined.  If there's some assumptions about DMA for platform
+devices floating about somewhere it might be reasonable to revisit this
+and create a non-DMA variant of platform devices since there is a
+meaningful difference.
+
+--LYw3s/afESlflPpp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6oSvYACgkQJNaLcl1U
+h9Bs4Qf/RCa5JW+qq8H0nchlRU4JeR7TBiAfPi1/fksL+W8k+qMkV0/KwPSMqloA
+CaWErSXTzc1Mk3WKIT7UxNlcK1QsuUfNZnyA3JhFXAg39xjWpt2vSM7A/zY5mnOm
+ZkujuFzw0NzNuBoxG+8OaBH1Ltitu/KpgCPJgrmwT09V5WuZ5uf8b3mjnEo0reaN
+DYcUgV/u3XkUeSbMd1iljqd8bt+jHFHoFlVOVtcw+xh20cKvQ6kOzIPYlDbuz9rM
+tGPZwlyojrQeFd8YYTh1hqSzqeB6E19JgdPEi9P34gi7rIctOcI6b9PwFO9er5fW
+ov2hgkFJC60dI+z5f9j70bLBQfMw/w==
+=hzNB
+-----END PGP SIGNATURE-----
+
+--LYw3s/afESlflPpp--
