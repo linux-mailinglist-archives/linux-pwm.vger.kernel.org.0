@@ -2,37 +2,28 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07E4A1BC1AE
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2020 16:49:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C94501BC1C7
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2020 16:50:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgD1OtY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 28 Apr 2020 10:49:24 -0400
-Received: from mga14.intel.com ([192.55.52.115]:44321 "EHLO mga14.intel.com"
+        id S1728109AbgD1Ot4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 28 Apr 2020 10:49:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:53152 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727803AbgD1OtX (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:49:23 -0400
-IronPort-SDR: M3/Xyic/5VujCElqY7alBgdPsNTdir4yfb6nDoNiZpXT+E/oAmiAYl+JnmDRaOsL6piQC0Umky
- ZcwH0rCPLpEg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 07:49:23 -0700
-IronPort-SDR: M7Q2JOL2/2WVi2KG81PKTMYYXt/g2OLOYqwoQAXN4maj5NEy50tqiPlW0IWJuQk3HXmy2PCj+g
- JaFrFUEwuzTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
-   d="scan'208";a="404712385"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 28 Apr 2020 07:49:17 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jTRXz-003ZjC-A2; Tue, 28 Apr 2020 17:49:19 +0300
-Date:   Tue, 28 Apr 2020 17:49:19 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        id S1727930AbgD1Otz (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 28 Apr 2020 10:49:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D0A331B;
+        Tue, 28 Apr 2020 07:49:54 -0700 (PDT)
+Received: from [10.57.33.170] (unknown [10.57.33.170])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 92DCD3F305;
+        Tue, 28 Apr 2020 07:49:50 -0700 (PDT)
+Subject: Re: [PATCH v3 02/16] mfd: mfd-core: Don't overwrite the dma_mask of
+ the child device
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -41,47 +32,95 @@ Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         Guenter Roeck <linux@roeck-us.net>,
         Lee Jones <lee.jones@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 04/16] dt-bindings: mfd: Add bindings for sl28cpld
-Message-ID: <20200428144919.GY185537@smile.fi.intel.com>
 References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-5-michael@walle.cc>
- <20200428124825.GT185537@smile.fi.intel.com>
- <8cc4a2bd3fcaf836d7f393ce2425c872@walle.cc>
+ <20200423174543.17161-3-michael@walle.cc>
+ <20200428124548.GS185537@smile.fi.intel.com>
+ <3cd3705a-4f48-6a46-e869-3ee11dc17323@arm.com>
+ <20200428142938.GX185537@smile.fi.intel.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <6ccad285-7b5f-3037-d4d5-ff4d9571b612@arm.com>
+Date:   Tue, 28 Apr 2020 15:49:49 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8cc4a2bd3fcaf836d7f393ce2425c872@walle.cc>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200428142938.GX185537@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 04:39:44PM +0200, Michael Walle wrote:
-> Am 2020-04-28 14:48, schrieb Andy Shevchenko:
-> > On Thu, Apr 23, 2020 at 07:45:31PM +0200, Michael Walle wrote:
-> > > This adds device tree bindings for the board management controller
-> > > found
-> > > on the Kontron SMARC-sAL28 board.
-> > 
-> > I think it should be independent patches (same way as you do for
-> > drivers).
+On 2020-04-28 3:29 pm, Andy Shevchenko wrote:
+> On Tue, Apr 28, 2020 at 02:06:20PM +0100, Robin Murphy wrote:
+>> On 2020-04-28 1:45 pm, Andy Shevchenko wrote:
+>>> On Thu, Apr 23, 2020 at 07:45:29PM +0200, Michael Walle wrote:
+>>>> Commit cdfee5623290 ("driver core: initialize a default DMA mask for
+>>>> platform device") initialize the DMA of a platform device. But if the
+>>>> parent doesn't have a dma_mask set, for example if it's an I2C device,
+>>>> the dma_mask of the child platform device will be set to zero again.
+>>>> Which leads to many "DMA mask not set" warnings, if the MFD cell has the
+>>>> of_compatible property set.
+>>>
+>>> I'm wondering why parent doesn't have it.
+>>
+>> Because the parent isn't on a DMA-capable bus, and thus really shouldn't
+>> have a valid DMA configuration ever.
 > 
-> It used to be several patches but Rob suggested to put it into one:
-> https://lore.kernel.org/linux-devicetree/20200330223535.GA31402@bogus/
+> Then how come a child is DMA capable?
 
-Ah, okay.
+Because it's a platform device, and thanks to decades of legacy we have 
+to assume that any platform devices *is* DMA capable.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> MFD takes a physical device node as a
+> parent and creates one of several children with that device as a parent. DMA
+> mask is a property of the device which *does DMA*. Obviously a child is not
+> correct device for that.
+> 
+> Where am I mistaken?
 
+In theory you're not, however in practice the driver model doesn't 
+really give us a nice way to express the necessary subtle distinctions 
+between this and other similar-looking but fundamentally different 
+parent-child relationships - if it did, we probably wouldn't need the 
+whole MFD layer in the first place. The logical ideal would be to create 
+the children on the same bus as the parent, but as it is doing that 
+would likely lead to the I2C/SPI/whatever bus code assuming they are 
+first-class devices and open up a whole new world of problems.
 
+For better or worse, the platform bus is the dumping ground for random 
+crap, so we just have to deal with all the abstraction breakage that 
+leaks out of that.
+
+Robin.
+
+>>> I remember we have explicit patches in the past for buses such as PCI and AMBA
+>>> to set default DMA mask for all physical devices on the respective bus, of
+>>> course they can individually override it later.
+>>>
+>>> So, this seems to me a paper over the real issue (absence of default DMA mask
+>>> where it's needed) and devices should explicitly define it if they disagree
+>>> with default.
+>>>
+>>> If I'm wrong, you really need elaborate commit message much better.
+>>
+>> The problem here is that MFD children are created as platform devices
+>> (regardless of what their parent is) and assigned an of_node, at which point
+>> they look pretty much indistinguishable from SoC devices created by the
+>> of_platform code, that *do* have to be assumed to be DMA-capable to prevent
+>> ~90% of existing devicetrees from breaking.
+>>
+>> Of course the real fundamental issue is the platform bus itself, but it's
+>> way too late to fix that :(
+> 
+> I don't think it's an issue, rather in model you are describing. Or I miss
+> something not so obvious.
+> 
