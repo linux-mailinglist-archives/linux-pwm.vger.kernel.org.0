@@ -2,38 +2,43 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A8F2A1BC13E
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2020 16:29:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 339881BC180
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2020 16:39:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgD1O3n (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 28 Apr 2020 10:29:43 -0400
-Received: from mga06.intel.com ([134.134.136.31]:4285 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727108AbgD1O3n (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:29:43 -0400
-IronPort-SDR: kOZrIelPDgOUC3aJDJW9H80ah7VC/S2GDIWbHQz354UeEUlk3/wUSs6TRvijBEJrgEMrqAkN+V
- kbTVQZESG98A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 07:29:42 -0700
-IronPort-SDR: vGnHmY/BqlTIl3FGa5R64rDdkwKbnMHUnpT0wYGLkHb05hlF7l+pQ52NbGLIPzbFCXoyvBDAUH
- qkiQUfkvunvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
-   d="scan'208";a="432201423"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 28 Apr 2020 07:29:36 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jTREw-003ZVU-6Y; Tue, 28 Apr 2020 17:29:38 +0300
-Date:   Tue, 28 Apr 2020 17:29:38 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
+        id S1727896AbgD1Ojt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 28 Apr 2020 10:39:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35698 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726868AbgD1Ojs (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Apr 2020 10:39:48 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92726C03C1AB;
+        Tue, 28 Apr 2020 07:39:48 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id DD1D322FE6;
+        Tue, 28 Apr 2020 16:39:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1588084785;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VljnFWRje4D0ru9e1R32t4AeXBUBPd+3TTh0NdwxNg0=;
+        b=toML35UXiuO/pHVOeK9HR/DC0PB0wxQEVGlm7qwqQIB7OAAjl0JywWe+p3OUN++VwB0caY
+        iHa060chUra4KIS7CwEXRsTp17tZkdr1ZKXj1F6sKZ2TR8DcvHK/1RPnJ8Yc/6mdVhb3nO
+        nm0qRY5Ks5FPSrPFg82RuwiH4jv90tI=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 28 Apr 2020 16:39:44 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -42,77 +47,66 @@ Cc:     Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
         Guenter Roeck <linux@roeck-us.net>,
         Lee Jones <lee.jones@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 02/16] mfd: mfd-core: Don't overwrite the dma_mask of
- the child device
-Message-ID: <20200428142938.GX185537@smile.fi.intel.com>
+Subject: Re: [PATCH v3 04/16] dt-bindings: mfd: Add bindings for sl28cpld
+In-Reply-To: <20200428124825.GT185537@smile.fi.intel.com>
 References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-3-michael@walle.cc>
- <20200428124548.GS185537@smile.fi.intel.com>
- <3cd3705a-4f48-6a46-e869-3ee11dc17323@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3cd3705a-4f48-6a46-e869-3ee11dc17323@arm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+ <20200423174543.17161-5-michael@walle.cc>
+ <20200428124825.GT185537@smile.fi.intel.com>
+Message-ID: <8cc4a2bd3fcaf836d7f393ce2425c872@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Spam-Level: *
+X-Rspamd-Server: web
+X-Spam-Status: No, score=1.40
+X-Spam-Score: 1.40
+X-Rspamd-Queue-Id: DD1D322FE6
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[24];
+         NEURAL_HAM(-0.00)[-0.787];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,linaro.org,baylibre.com,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 02:06:20PM +0100, Robin Murphy wrote:
-> On 2020-04-28 1:45 pm, Andy Shevchenko wrote:
-> > On Thu, Apr 23, 2020 at 07:45:29PM +0200, Michael Walle wrote:
-> > > Commit cdfee5623290 ("driver core: initialize a default DMA mask for
-> > > platform device") initialize the DMA of a platform device. But if the
-> > > parent doesn't have a dma_mask set, for example if it's an I2C device,
-> > > the dma_mask of the child platform device will be set to zero again.
-> > > Which leads to many "DMA mask not set" warnings, if the MFD cell has the
-> > > of_compatible property set.
-> > 
-> > I'm wondering why parent doesn't have it.
+Am 2020-04-28 14:48, schrieb Andy Shevchenko:
+> On Thu, Apr 23, 2020 at 07:45:31PM +0200, Michael Walle wrote:
+>> This adds device tree bindings for the board management controller 
+>> found
+>> on the Kontron SMARC-sAL28 board.
 > 
-> Because the parent isn't on a DMA-capable bus, and thus really shouldn't
-> have a valid DMA configuration ever.
+> I think it should be independent patches (same way as you do for 
+> drivers).
 
-Then how come a child is DMA capable? MFD takes a physical device node as a
-parent and creates one of several children with that device as a parent. DMA
-mask is a property of the device which *does DMA*. Obviously a child is not
-correct device for that.
+It used to be several patches but Rob suggested to put it into one:
+https://lore.kernel.org/linux-devicetree/20200330223535.GA31402@bogus/
 
-Where am I mistaken?
+-michael
 
-> > I remember we have explicit patches in the past for buses such as PCI and AMBA
-> > to set default DMA mask for all physical devices on the respective bus, of
-> > course they can individually override it later.
-> > 
-> > So, this seems to me a paper over the real issue (absence of default DMA mask
-> > where it's needed) and devices should explicitly define it if they disagree
-> > with default.
-> > 
-> > If I'm wrong, you really need elaborate commit message much better.
 > 
-> The problem here is that MFD children are created as platform devices
-> (regardless of what their parent is) and assigned an of_node, at which point
-> they look pretty much indistinguishable from SoC devices created by the
-> of_platform code, that *do* have to be assumed to be DMA-capable to prevent
-> ~90% of existing devicetrees from breaking.
-> 
-> Of course the real fundamental issue is the platform bus itself, but it's
-> way too late to fix that :(
-
-I don't think it's an issue, rather in model you are describing. Or I miss
-something not so obvious.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>>  .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  51 ++++++
+>>  .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 +++
+>>  .../bindings/mfd/kontron,sl28cpld.yaml        | 162 
+>> ++++++++++++++++++
+>>  .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
+>>  .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
