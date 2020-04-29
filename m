@@ -2,106 +2,124 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A51EB1BC578
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2020 18:42:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C9AE1BD496
+	for <lists+linux-pwm@lfdr.de>; Wed, 29 Apr 2020 08:27:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbgD1QmD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 28 Apr 2020 12:42:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55020 "EHLO
+        id S1726381AbgD2G1a (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 29 Apr 2020 02:27:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728037AbgD1QmC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Apr 2020 12:42:02 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B470C03C1AB;
-        Tue, 28 Apr 2020 09:42:02 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k1so25488302wrx.4;
-        Tue, 28 Apr 2020 09:42:02 -0700 (PDT)
+        with ESMTP id S1726181AbgD2G1a (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 29 Apr 2020 02:27:30 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A82C9C03C1AD
+        for <linux-pwm@vger.kernel.org>; Tue, 28 Apr 2020 23:27:29 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j2so1011543wrs.9
+        for <linux-pwm@vger.kernel.org>; Tue, 28 Apr 2020 23:27:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qRo9LWbuou3yJZOIzHh11HBE37Wj9pVnE6w0Sos6lqI=;
-        b=nJ7X9rHGbqzZIvtWJKjlCCPW+lT1YtHO+ynJD2B2EPajWD87a1ZnleRB+6nOPMLT57
-         f/yUl3yZVMm2CGJRWx9Ra+7Gq6EvIUgkPMQMthdzer26UCM6554zCGxBv8i5D84WE4JG
-         L8YHBRMhJawEEU4js5QW5rvmS7399lDciOETHnJRf8ATXGeOM/b0Ji3rPdCy4gQ7FidA
-         DXHq5kY6M2bKap1YNpKopG2xpHoVBWEcN5WKNxrwjjNaVdNwBIPBrSqYomV5TDuECM8W
-         SJr42LJCK6gXrjpRsIzkDnv1xRd5a1ZtajlXRFbv8NXwGWTbiYyV75mU0XBobGDal3j2
-         6CFA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=wv05h1X7qRrPjYPf9y0VD7+PHwezUYitVP0Fh0igQuY=;
+        b=I4vZV4PACb5f7K2uxifM99GPqkcfyrpLc74PzSrCUF61KrqkAGgKNBFNHr+XiC1Zzr
+         XqIjNrgmZ91TIAda8FEWPq1gg3Xaa84/0qQWu5Ae3sW4csU35iEp2O/nwCWdMpbr7El6
+         eoZD/tvPP5RteAWgnhbWIY/PMqJ+ssDOZvekrrEimOB3ENhCiVutsoNIJ5zLGgynqmXb
+         8Rc5rpcdAkqbshwzs7C11AcGOjJ9hcJFu+NIFlqEadlAtAupqh+9vJ50K1QkhtgQmjWR
+         R9djt4X9WtAHl95Nhhfz3sSbWTT0MATduTJ2F9hJdP0sNOI+tsziWlYROFDtUt7Fy1Op
+         uYQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=qRo9LWbuou3yJZOIzHh11HBE37Wj9pVnE6w0Sos6lqI=;
-        b=sVQ0If091ZcDAw2U6nUm5am0TPTMtr4Tf0e/Y4xzFrMfWP3SvKFm58q2JoiUiTNjrX
-         7xG//KqXxwoNQkWVbUn6tBPPT2YQcvtaARCYFcXY5ifM5nmlahxUtco6JFMDDqWHwCnL
-         v2S7VhSPYyYttqlYKDA0PJgpTOsU1Iewd2wXQ47CHT418Og+zTQPVr/OZdq1ejq4MJax
-         ymh3y1VnBco2gHEaLdJ9odnIMRg4MW8wlT7DQMBq5pxPK9CEMcUP/aIK0OYqiHFGVMjP
-         PjFGqXKYTkHqRVLmueRYfTVE5s3syuwhSSv1sQUFfthcbsOrYsB6JcNAdg8GbZOPxo0P
-         3SQA==
-X-Gm-Message-State: AGi0PuYUpx7yLPw5O2e/l2moQ5emHqZdz0+rWTHQ/KshImW8FQS/xHIs
-        FuVvm8jeRYbiu60+7hof76U=
-X-Google-Smtp-Source: APiQypJer/N7KP+o+gVoSro1HbuyKQWeY1aRmnHVGT3Ex0udIyz0jTQVI0nf81Iy+vPLOVJsybLaYQ==
-X-Received: by 2002:adf:fe45:: with SMTP id m5mr36497044wrs.124.1588092120747;
-        Tue, 28 Apr 2020 09:42:00 -0700 (PDT)
-Received: from localhost (89-104-3-59.customer.bnet.at. [89.104.3.59])
-        by smtp.gmail.com with ESMTPSA id i6sm28271829wrc.82.2020.04.28.09.41.59
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=wv05h1X7qRrPjYPf9y0VD7+PHwezUYitVP0Fh0igQuY=;
+        b=kxa0e8i9rgO0vrfgLwb4uJcrhNBcWXKjiE9do9TDAW0bR/qumbvlIj86sStHzxkXsi
+         WsRv55WuLV5G/sWdfR5gdhGjcYmi+Kv0yg1f2ck9tspKulJglVhEpLps1V3nu66Xz+To
+         5IpozfDit9h7noedQsSC8lkyeTBTgzYK5BVwekkj4poQcafR+zX2k1lU1+43h55oLijI
+         37kdtp2Rd5/Bvq9XTsa3qwFg0nW6qDuNzMOAgCl8O4bvfCLJxwV5Uxt2Rspiu/dNbYbx
+         j4e9q0Q2SfcY1wR6LhImCX0E5caOJZ7BWdy0bL5kZ1VmC86oIJTUDH28D0he621aaAes
+         oB2w==
+X-Gm-Message-State: AGi0PubtMs9kpp+v4fiv1vKhoJvLqwQQvDGY9307hbQXpgGDuHJ7Jq/e
+        1xUjhBnpFrV1a0d6eEynM+XoKA==
+X-Google-Smtp-Source: APiQypKTqIt46QQB2nB/SSJZXWRFVeB9A294fdRkNMgBYLOeiiFcpBnVXBSKVh/jOHoB1iCbHHyjSA==
+X-Received: by 2002:adf:f187:: with SMTP id h7mr37818290wro.331.1588141648280;
+        Tue, 28 Apr 2020 23:27:28 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id t17sm27729510wro.2.2020.04.28.23.27.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 09:41:59 -0700 (PDT)
-From:   Peter Vasil <peter.vasil@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        Tue, 28 Apr 2020 23:27:27 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 07:27:25 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     peter.vasil@gmail.com, nightwolf@relghuar.net
-Subject: [PATCH v2] pwm: sun4i: direct clock output support for Allwinner A64
-Date:   Tue, 28 Apr 2020 18:41:50 +0200
-Message-Id: <20200428164150.366966-1-peter.vasil@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 05/16] mfd: Add support for Kontron sl28cpld
+ management controller
+Message-ID: <20200429062725.GU3559@dell>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-6-michael@walle.cc>
+ <20200428125049.GU185537@smile.fi.intel.com>
+ <5e2d486077f9e2ce8bd9b171cf806fd9@walle.cc>
+ <20200428144958.GZ185537@smile.fi.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200428144958.GZ185537@smile.fi.intel.com>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Allwinner A64 is capable of a direct clock output on PWM (see A64
-User Manual chapter 3.10). Add support for this in the sun4i PWM
-driver.
+On Tue, 28 Apr 2020, Andy Shevchenko wrote:
 
-Signed-off-by: Peter Vasil <peter.vasil@gmail.com>
----
- drivers/pwm/pwm-sun4i.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> On Tue, Apr 28, 2020 at 04:43:24PM +0200, Michael Walle wrote:
+> > Am 2020-04-28 14:50, schrieb Andy Shevchenko:
+> > > On Thu, Apr 23, 2020 at 07:45:32PM +0200, Michael Walle wrote:
+> > > > This patch adds core support for the board management controller found
+> > > > on the SMARC-sAL28 board. It consists of the following functions:
+> > > >  - watchdog
+> > > >  - GPIO controller
+> > > >  - PWM controller
+> > > >  - fan sensor
+> > > >  - interrupt controller
+> > > 
+> > > ...
+> > > 
+> > > >  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+> > > > 
+> > > >  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+> > > > +
+> > > > +obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
+> > > 
+> > > Perhaps keep an order?
+> > 
+> > I don't see any order in that makefile. Looked to me like every new
+> > file was added at the end.
+> 
+> Okay, just didn't note from above context.
 
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 5c677c563349..18fbbe3277d0 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -352,6 +352,12 @@ static const struct sun4i_pwm_data sun4i_pwm_single_bypass = {
- 	.npwm = 1,
- };
- 
-+static const struct sun4i_pwm_data sun50i_a64_pwm_data = {
-+	.has_prescaler_bypass = true,
-+	.has_direct_mod_clk_output = true,
-+	.npwm = 1,
-+};
-+
- static const struct sun4i_pwm_data sun50i_h6_pwm_data = {
- 	.has_prescaler_bypass = true,
- 	.has_direct_mod_clk_output = true,
-@@ -374,6 +380,9 @@ static const struct of_device_id sun4i_pwm_dt_ids[] = {
- 	}, {
- 		.compatible = "allwinner,sun8i-h3-pwm",
- 		.data = &sun4i_pwm_single_bypass,
-+	}, {
-+		.compatible = "allwinner,sun50i-a64-pwm",
-+		.data = &sun50i_a64_pwm_data,
- 	}, {
- 		.compatible = "allwinner,sun50i-h6-pwm",
- 		.data = &sun50i_h6_pwm_data,
+Yes, this is historical.  I've been meaning to visit this for ~7 years!
+
 -- 
-2.25.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
