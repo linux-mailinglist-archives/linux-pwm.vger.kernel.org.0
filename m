@@ -2,219 +2,321 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F3021C465A
-	for <lists+linux-pwm@lfdr.de>; Mon,  4 May 2020 20:51:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 349651C47B3
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 May 2020 22:11:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgEDSum (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 4 May 2020 14:50:42 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:7667 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727953AbgEDSuY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 4 May 2020 14:50:24 -0400
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 04 May 2020 11:50:20 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 04 May 2020 11:50:20 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 913B8DBF; Mon,  4 May 2020 11:50:20 -0700 (PDT)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        id S1726334AbgEDULu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 4 May 2020 16:11:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49410 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgEDULt (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 4 May 2020 16:11:49 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFEACC061A0E
+        for <linux-pwm@vger.kernel.org>; Mon,  4 May 2020 13:11:49 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jVhR6-0002Pb-1u; Mon, 04 May 2020 22:11:32 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jVhR5-0007po-DD; Mon, 04 May 2020 22:11:31 +0200
+Date:   Mon, 4 May 2020 22:11:31 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [RESEND PATCH v14 11/11] pwm: core: Convert period and duty cycle to u64
-Date:   Mon,  4 May 2020 11:50:17 -0700
-Message-Id: <cfffc119f1a6364593b80a3ed09e326ae6d235e8.1588616856.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1588616856.git.gurus@codeaurora.org>
-References: <cover.1588616856.git.gurus@codeaurora.org>
-In-Reply-To: <cover.1588616856.git.gurus@codeaurora.org>
-References: <cover.1588616856.git.gurus@codeaurora.org>
+To:     Sandipan Patra <spatra@nvidia.com>
+Cc:     treding@nvidia.com, robh+dt@kernel.org, jonathanh@nvidia.com,
+        bbasu@nvidia.com, ldewangan@nvidia.com, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] pwm: tegra: dynamic clk freq configuration by PWM
+ driver
+Message-ID: <20200504201131.l5ofxem3owrl5siv@pengutronix.de>
+References: <1587398043-18767-1-git-send-email-spatra@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1587398043-18767-1-git-send-email-spatra@nvidia.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Because period and duty cycle are defined as ints with units of
-nanoseconds, the maximum time duration that can be set is limited to
-~2.147 seconds. Change their definitions to u64 in the structs of the
-PWM framework so that higher durations may be set.
+Hello,
 
-Also use the right format specifiers in debug prints in both core.c as
-well as pwm-stm32-lp.c.
+On Mon, Apr 20, 2020 at 09:24:03PM +0530, Sandipan Patra wrote:
+> Added support for dynamic clock freq configuration in pwm kernel driver.
+> Earlier the pwm driver used to cache boot time clock rate by pwm clock
+> parent during probe. Hence dynamically changing pwm frequency was not
+> possible for all the possible ranges. With this change, dynamic calculation
+> is enabled and it is able to set the requested period from sysfs knob
+> provided the value is supported by clock source.
+> 
+> Changes mainly have 2 parts:
+>   - T186 and later chips [1]
+>   - T210 and prior chips [2]
+> 
+> For [1] - Changes implemented to set pwm period dynamically and
+>           also checks added to allow only if requested period(ns) is
+>           below or equals to higher range.
+> 
+> For [2] - Only checks if the requested period(ns) is below or equals
+>           to higher range defined by max clock limit. The limitation
+>           in T210 or prior chips are due to the reason of having only
+>           one pwm-controller supporting multiple channels. But later
+>           chips have multiple pwm controller instances each having
+> 	  single channel support.
+> 
+> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
+> ---
+> V2:
+> 1. Min period_ns calculation is moved to probe.
+> 2. Added descriptioins for PWM register bits and regarding behaviour
+>    of the controller when new configuration is applied or pwm is disabled.
+> 3. Setting period with possible value when supplied period is below limit.
+> 4. Corrected the earlier code comment:
+>    plus 1 instead of minus 1 during pwm calculation
+> 
+>  drivers/pwm/pwm-tegra.c | 110 +++++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 94 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+> index d26ed8f..7a36325 100644
+> --- a/drivers/pwm/pwm-tegra.c
+> +++ b/drivers/pwm/pwm-tegra.c
+> @@ -4,8 +4,39 @@
+>   *
+>   * Tegra pulse-width-modulation controller driver
+>   *
+> - * Copyright (c) 2010, NVIDIA Corporation.
+> - * Based on arch/arm/plat-mxc/pwm.c by Sascha Hauer <s.hauer@pengutronix.de>
+> + * Copyright (c) 2010-2020, NVIDIA Corporation.
+> + *
+> + * Overview of Tegra Pulse Width Modulator Register:
+> + * 1. 13-bit: Frequency division (SCALE)
+> + * 2. 8-bit : Puls division (DUTY)
+> + * 3. 1-bit : Enable bit
+> + *
+> + * The PWM clock frequency is divided by 256 before subdividing it based
+> + * on the programmable frequency division value to generate the required
+> + * frequency for PWM output. The maximum output frequency that can be
+> + * achieved is (max rate of source clock) / 256.
+> + * i.e. if source clock rate is 408 MHz, maximum output frequency cab be:
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
----
- drivers/pwm/core.c         | 14 +++++++-------
- drivers/pwm/pwm-stm32-lp.c |  2 +-
- drivers/pwm/sysfs.c        |  8 ++++----
- include/linux/pwm.h        | 12 ++++++------
- 4 files changed, 18 insertions(+), 18 deletions(-)
+s/i.e./e.g./, s/cab/can/
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index bca0496..a2ff6dd 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -510,12 +510,12 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
- 	    last->period > s2.period &&
- 	    last->period <= state->period)
- 		dev_warn(chip->dev,
--			 ".apply didn't pick the best available period (requested: %u, applied: %u, possible: %u)\n",
-+			 ".apply didn't pick the best available period (requested: %llu, applied: %llu, possible: %llu)\n",
- 			 state->period, s2.period, last->period);
- 
- 	if (state->enabled && state->period < s2.period)
- 		dev_warn(chip->dev,
--			 ".apply is supposed to round down period (requested: %u, applied: %u)\n",
-+			 ".apply is supposed to round down period (requested: %llu, applied: %llu)\n",
- 			 state->period, s2.period);
- 
- 	if (state->enabled &&
-@@ -524,14 +524,14 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
- 	    last->duty_cycle > s2.duty_cycle &&
- 	    last->duty_cycle <= state->duty_cycle)
- 		dev_warn(chip->dev,
--			 ".apply didn't pick the best available duty cycle (requested: %u/%u, applied: %u/%u, possible: %u/%u)\n",
-+			 ".apply didn't pick the best available duty cycle (requested: %llu/%llu, applied: %llu/%llu, possible: %llu/%llu)\n",
- 			 state->duty_cycle, state->period,
- 			 s2.duty_cycle, s2.period,
- 			 last->duty_cycle, last->period);
- 
- 	if (state->enabled && state->duty_cycle < s2.duty_cycle)
- 		dev_warn(chip->dev,
--			 ".apply is supposed to round down duty_cycle (requested: %u/%u, applied: %u/%u)\n",
-+			 ".apply is supposed to round down duty_cycle (requested: %llu/%llu, applied: %llu/%llu)\n",
- 			 state->duty_cycle, state->period,
- 			 s2.duty_cycle, s2.period);
- 
-@@ -558,7 +558,7 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
- 	    (s1.enabled && s1.period != last->period) ||
- 	    (s1.enabled && s1.duty_cycle != last->duty_cycle)) {
- 		dev_err(chip->dev,
--			".apply is not idempotent (ena=%d pol=%d %u/%u) -> (ena=%d pol=%d %u/%u)\n",
-+			".apply is not idempotent (ena=%d pol=%d %llu/%llu) -> (ena=%d pol=%d %llu/%llu)\n",
- 			s1.enabled, s1.polarity, s1.duty_cycle, s1.period,
- 			last->enabled, last->polarity, last->duty_cycle,
- 			last->period);
-@@ -1284,8 +1284,8 @@ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
- 		if (state.enabled)
- 			seq_puts(s, " enabled");
- 
--		seq_printf(s, " period: %u ns", state.period);
--		seq_printf(s, " duty: %u ns", state.duty_cycle);
-+		seq_printf(s, " period: %llu ns", state.period);
-+		seq_printf(s, " duty: %llu ns", state.duty_cycle);
- 		seq_printf(s, " polarity: %s",
- 			   state.polarity ? "inverse" : "normal");
- 
-diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-index 67fca62..134c146 100644
---- a/drivers/pwm/pwm-stm32-lp.c
-+++ b/drivers/pwm/pwm-stm32-lp.c
-@@ -61,7 +61,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	do_div(div, NSEC_PER_SEC);
- 	if (!div) {
- 		/* Clock is too slow to achieve requested period. */
--		dev_dbg(priv->chip.dev, "Can't reach %u ns\n",	state->period);
-+		dev_dbg(priv->chip.dev, "Can't reach %llu ns\n", state->period);
- 		return -EINVAL;
- 	}
- 
-diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-index 2389b86..449dbc0 100644
---- a/drivers/pwm/sysfs.c
-+++ b/drivers/pwm/sysfs.c
-@@ -42,7 +42,7 @@ static ssize_t period_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.period);
-+	return sprintf(buf, "%llu\n", state.period);
- }
- 
- static ssize_t period_store(struct device *child,
-@@ -52,10 +52,10 @@ static ssize_t period_store(struct device *child,
- 	struct pwm_export *export = child_to_pwm_export(child);
- 	struct pwm_device *pwm = export->pwm;
- 	struct pwm_state state;
--	unsigned int val;
-+	u64 val;
- 	int ret;
- 
--	ret = kstrtouint(buf, 0, &val);
-+	ret = kstrtou64(buf, 0, &val);
- 	if (ret)
- 		return ret;
- 
-@@ -77,7 +77,7 @@ static ssize_t duty_cycle_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.duty_cycle);
-+	return sprintf(buf, "%llu\n", state.duty_cycle);
- }
- 
- static ssize_t duty_cycle_store(struct device *child,
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 2635b2a..a13ff38 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -39,7 +39,7 @@ enum pwm_polarity {
-  * current PWM hardware state.
-  */
- struct pwm_args {
--	unsigned int period;
-+	u64 period;
- 	enum pwm_polarity polarity;
- };
- 
-@@ -56,8 +56,8 @@ enum {
-  * @enabled: PWM enabled status
-  */
- struct pwm_state {
--	unsigned int period;
--	unsigned int duty_cycle;
-+	u64 period;
-+	u64 duty_cycle;
- 	enum pwm_polarity polarity;
- 	bool enabled;
- };
-@@ -107,13 +107,13 @@ static inline bool pwm_is_enabled(const struct pwm_device *pwm)
- 	return state.enabled;
- }
- 
--static inline void pwm_set_period(struct pwm_device *pwm, unsigned int period)
-+static inline void pwm_set_period(struct pwm_device *pwm, u64 period)
- {
- 	if (pwm)
- 		pwm->state.period = period;
- }
- 
--static inline unsigned int pwm_get_period(const struct pwm_device *pwm)
-+static inline u64 pwm_get_period(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
-@@ -128,7 +128,7 @@ static inline void pwm_set_duty_cycle(struct pwm_device *pwm, unsigned int duty)
- 		pwm->state.duty_cycle = duty;
- }
- 
--static inline unsigned int pwm_get_duty_cycle(const struct pwm_device *pwm)
-+static inline u64 pwm_get_duty_cycle(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
+> + * 408 MHz/256 = 1.6 MHz.
+> + * This 1.6 MHz frequency can further be divided using SCALE value in PWM.
+> + *
+> + * PWM pulse width: 8 bits are usable [23:16] for varying pulse width.
+> + * To achieve 100% duty cycle, program Bit [24] of this register to
+> + * 1’b1. In which case the other bits [23:16] are set to don't care.
+> + *
+> + * Limitations and known facts:
+
+Please use "Limitations:" here to make this easier greppable.
+
+> + * -	When PWM is disabled, the output is driven to 0.
+
+0 or inactive?
+
+> + * -	It does not allow the current PWM period to complete and
+> + *	stops abruptly.
+> + *
+> + * -	If the register is reconfigured while pwm is running,
+
+s/pwm/PWM/
+
+> + *	It does not let the currently running period to complete.
+
+s/It/it/; s/let/complete/; s/ to complete//
+
+> + *
+> + * -	Pulse width of the pwm can never be out of bound.
+
+I don't understand that one.
+
+> + *	It's taken care at HW and SW
+> + * -	If the user input duty is below limit, then driver sets it to
+> + *	minimum possible value.
+
+that is 0? Do you mean "input period"? If so, better refuse the request.
+
+> + * -	If anything else goes wrong for setting duty or period,
+> + *	-EINVAL is returned.
+
+I wouldn't state this, too trivial. Instead the following are
+interesting:
+
+ - The driver doesn't implement the right rounding rules
+ - The driver needs updating to the atomic API
+
+>   */
+>  
+>  #include <linux/clk.h>
+> @@ -41,6 +72,7 @@ struct tegra_pwm_chip {
+>  	struct reset_control*rst;
+>  
+>  	unsigned long clk_rate;
+> +	unsigned long min_period_ns;
+>  
+>  	void __iomem *regs;
+>  
+> @@ -67,8 +99,9 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>  			    int duty_ns, int period_ns)
+>  {
+>  	struct tegra_pwm_chip *pc = to_tegra_pwm_chip(chip);
+> -	unsigned long long c = duty_ns, hz;
+> -	unsigned long rate;
+> +	unsigned long long p_width = duty_ns, period_hz;
+> +	unsigned long rate, required_clk_rate;
+> +	unsigned long pfm; /* Frequency divider */
+>  	u32 val = 0;
+>  	int err;
+>  
+> @@ -77,37 +110,77 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	 * per (1 << PWM_DUTY_WIDTH) cycles and make sure to round to the
+>  	 * nearest integer during division.
+>  	 */
+> -	c *= (1 << PWM_DUTY_WIDTH);
+> -	c = DIV_ROUND_CLOSEST_ULL(c, period_ns);
+> +	p_width *= (1 << PWM_DUTY_WIDTH);
+> +	p_width = DIV_ROUND_CLOSEST_ULL(p_width, period_ns);
+>  
+> -	val = (u32)c << PWM_DUTY_SHIFT;
+> +	val = (u32)p_width << PWM_DUTY_SHIFT;
+> +
+> +	/*
+> +	 *  Period in nano second has to be <= highest allowed period
+> +	 *  based on max clock rate of the pwm controller.
+> +	 *
+> +	 *  higher limit = max clock limit >> PWM_DUTY_WIDTH
+> +	 *  lower limit = min clock limit >> PWM_DUTY_WIDTH >> PWM_SCALE_WIDTH
+> +	 */
+> +	if (period_ns < pc->min_period_ns) {
+> +		period_ns = pc->min_period_ns;
+> +		pr_warn("Period is adjusted to allowed value (%d ns)\n",
+> +				period_ns);
+
+That pr_warn is a bad idea as it spams the kernel log when the
+configuration is changed frequently. Wouldn't it be easier to calculate
+the frequency that is needed to achieve period_ns and check that against
+max_frequency?
+
+> +	}
+>  
+>  	/*
+>  	 * Compute the prescaler value for which (1 << PWM_DUTY_WIDTH)
+>  	 * cycles at the PWM clock rate will take period_ns nanoseconds.
+>  	 */
+> -	rate = pc->clk_rate >> PWM_DUTY_WIDTH;
+> +	if (pc->soc->num_channels == 1) {
+
+required_clk_rate could be defined here, which is better as it narrows
+its scope.
+
+> +		/*
+> +		 * Rate is multiplied with 2^PWM_DUTY_WIDTH so that it matches
+> +		 * with the hieghest applicable rate that the controller can
+
+s/hieghest/highest/
+
+> +		 * provide. Any further lower value can be derived by setting
+> +		 * PFM bits[0:12].
+> +		 * Higher mark is taken since BPMP has round-up mechanism
+> +		 * implemented.
+
+I don't understand the part with the round-up mechanism.
+
+> +		 */
+> +		required_clk_rate =
+> +			(NSEC_PER_SEC / period_ns) << PWM_DUTY_WIDTH;
+> +
+> +		err = clk_set_rate(pc->clk, required_clk_rate);
+> +		if (err < 0)
+> +			return -EINVAL;
+
+What happens if clk_set_rate configures a higher rate than requested?
+
+> +
+> +		rate = clk_get_rate(pc->clk) >> PWM_DUTY_WIDTH;
+> +	} else {
+> +		/*
+> +		 * This is the case for SoCs who support multiple channels:
+
+s/who/that/
+
+> +		 *
+> +		 * clk_set_rate() can not be called again in config because
+> +		 * T210 or any prior chip supports one pwm-controller and
+> +		 * multiple channels. Hence in this case cached clock rate
+> +		 * will be considered which was stored during probe.
+> +		 */
+> +		rate = pc->clk_rate >> PWM_DUTY_WIDTH;
+> +	}
+>  
+>  	/* Consider precision in PWM_SCALE_WIDTH rate calculation */
+> -	hz = DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
+> -	rate = DIV_ROUND_CLOSEST_ULL(100ULL * rate, hz);
+> +	period_hz = DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
+> +	pfm = DIV_ROUND_CLOSEST_ULL(100ULL * rate, period_hz);
+>  
+>  	/*
+>  	 * Since the actual PWM divider is the register's frequency divider
+> -	 * field minus 1, we need to decrement to get the correct value to
+> +	 * field plus 1, we need to decrement to get the correct value to
+>  	 * write to the register.
+>  	 */
+> -	if (rate > 0)
+> -		rate--;
+> +	if (pfm > 0)
+> +		pfm--;
+>  
+>  	/*
+> -	 * Make sure that the rate will fit in the register's frequency
+> +	 * Make sure that pfm will fit in the register's frequency
+>  	 * divider field.
+>  	 */
+> -	if (rate >> PWM_SCALE_WIDTH)
+> +	if (pfm >> PWM_SCALE_WIDTH)
+>  		return -EINVAL;
+>  
+> -	val |= rate << PWM_SCALE_SHIFT;
+> +	val |= pfm << PWM_SCALE_SHIFT;
+>  
+>  	/*
+>  	 * If the PWM channel is disabled, make sure to turn on the clock
+> @@ -205,6 +278,10 @@ static int tegra_pwm_probe(struct platform_device *pdev)
+>  	 */
+>  	pwm->clk_rate = clk_get_rate(pwm->clk);
+>  
+> +	/* Set minimum limit of PWM period for the IP */
+> +	pwm->min_period_ns =
+> +	    (NSEC_PER_SEC / (pwm->soc->max_frequency >> PWM_DUTY_WIDTH)) + 1;
+
+With my suggestion above, you can drop the min_period_ns field.
+
+> +
+>  	pwm->rst = devm_reset_control_get_exclusive(&pdev->dev, "pwm");
+>  	if (IS_ERR(pwm->rst)) {
+>  		ret = PTR_ERR(pwm->rst);
+> @@ -313,4 +390,5 @@ module_platform_driver(tegra_pwm_driver);
+>  
+>  MODULE_LICENSE("GPL");
+>  MODULE_AUTHOR("NVIDIA Corporation");
+> +MODULE_AUTHOR("Sandipan Patra <spatra@nvidia.com>");
+>  MODULE_ALIAS("platform:tegra-pwm");
+
+Best regards
+Uwe
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
