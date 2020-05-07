@@ -2,2053 +2,368 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E00411C8E03
-	for <lists+linux-pwm@lfdr.de>; Thu,  7 May 2020 16:11:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBFC01C8463
+	for <lists+linux-pwm@lfdr.de>; Thu,  7 May 2020 10:09:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbgEGOLP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 7 May 2020 10:11:15 -0400
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.4]:16905 "EHLO
-        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726767AbgEGOLK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 7 May 2020 10:11:10 -0400
-Received: from [100.113.2.173] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-4.bemta.az-a.eu-central-1.aws.symcld.net id 87/12-37389-5F614BE5; Thu, 07 May 2020 14:11:01 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprGKsWRWlGSWpSXmKPExsVy8MN7Xd0vYlv
-  iDN4fNbH4MvcUi8XhRS8YLZoXr2ezuP/1KKPFzU/fWC0u75rDZnH37ipGi69/frNbtG+czWrR
-  P/s1q8W7M0/ZLf7v2cFucbqb1WLzpqnMFj93zWOxuD1xMqODgMf7G63sHjtn3WX32LSqk83jz
-  rU9bB7vzp1j95h3MtBj/9w17B5Lbwh79P818Hj6Yy+zx+dNch5n2t6yBPBEsWbmJeVXJLBmvF
-  rLWnB4NnPF12VLmRoYF1xi6mLk4hASWMMosfvJHpYuRk4gp1Li/4XDTCA2r0CExKrbVxhBbE4
-  BM4n9t9axdzFyANWYSlxeqggSZhPQkXg0cz1YOYuAisSNvxCtwgIWEr/6f7KDzBcR6GGR+HD3
-  P9gyZoGpjBIfXv1ig1ggKHFy5hOwxcwCEhIHX7xghjhCS+LcmlWMExh5ZyEpm4WkbAEjEzAAk
-  4oy0zNKchMzc3QNDQx0DQ2NdQ11TS30Eqt0E/VSS3WTU/NKihKBknqJ5cV6xZW5yTkpenmpJZ
-  sYgdGVUshotYNx69r3eocYJTmYlER5l3zeHCfEl5SfUpmRWJwRX1Sak1p8iFGGg0NJgne/yJY
-  4IcGi1PTUirTMHGCkw6QlOHiURHitgdEuxFtckJhbnJkOkTrFqCglzpsJkhAASWSU5sG1wZLL
-  JUZZKWFeRgYGBiGegtSi3MwSVPlXjOIcjErCvEdFgabwZOaVwE1/BbSYCWjx50+bQBaXJCKkp
-  BqY+P0CrnsdfPCTYcND86lXSz9lFU0SYzPTC+N2q9vPP/v7lGz5P8s/3XBNeuL5qrKpZbrSRa
-  Gp6/4zK79MXZPI6vYz9myLQ//EqtwwravXDylotbxdFBluMW+twkl9P59LfBaVj18VqRxeVMp
-  eyBF8uUFVIqBlzpKps9TyFcoFlf9NZ5Carrjc60LGniCfnDCvIzMOvn0oGhfMV6T99EMfj+vy
-  /NQytiVH6gotV7PPvs+5em7NNueP7uaeBSe9uPm6+lvm280V4fy/YvbKqW/FNv4XUufX/MqTN
-  v1yKu+30zt2zTdq9DpTJPIvjCNZ9P6TbO8HVbz6Zq+nWP1wn7t2UZusXPPiU/FXRWdeZbJXYi
-  nOSDTUYi4qTgQAMNxYgKkDAAA=
-X-Env-Sender: roy.im.opensource@diasemi.com
-X-Msg-Ref: server-19.tower-223.messagelabs.com!1588860659!2836654!4
-X-Originating-IP: [193.240.239.45]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.50.1; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 13133 invoked from network); 7 May 2020 14:11:00 -0000
-Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
-  by server-19.tower-223.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 7 May 2020 14:11:00 -0000
-Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
- NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
- 14.3.468.0; Thu, 7 May 2020 16:10:58 +0200
-Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
- 1C21813F674; Thu,  7 May 2020 23:10:57 +0900 (KST)
-Message-ID: <568a1b9972c2b38ec2311d7bdde0d9e2344dec8a.1588781316.git.Roy.Im@diasemi.com>
-In-Reply-To: <cover.1588781316.git.Roy.Im@diasemi.com>
-References: <cover.1588781316.git.Roy.Im@diasemi.com>
-From:   Roy Im <roy.im.opensource@diasemi.com>
-Date:   Thu, 7 May 2020 01:08:36 +0900
-Subject: [PATCH V13 3/3] Input: new da7280 haptic driver
-To:     Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Samuel Ortiz <sameo@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-CC:     Support Opensource <support.opensource@diasemi.com>,
-        <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>
+        id S1726531AbgEGIJ5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 7 May 2020 04:09:57 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1359 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbgEGIJ4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 7 May 2020 04:09:56 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eb3c2460006>; Thu, 07 May 2020 01:09:42 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 07 May 2020 01:09:55 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 07 May 2020 01:09:55 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 7 May
+ 2020 08:09:54 +0000
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.177)
+ by HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Thu, 7 May 2020 08:09:54 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dVic3SZeYDT9D9yuxRfzI2Gls1p7iRmOfX7UATeDkgiMBO6uve/HPet3S8EKYdKwco+QnkkXf9y43nPsqjwSU9mShCmJ+cQMQuXpFIPo82s6hiOgD6Q2Q0BLet+keIF4VZEh+V7G6A6sFsYcShRDUAF/I2zNZeSxadRsGbkRnBy9J9E8pG084Yu74Hho0PXO4j780ovbNlAHcwd80P/9zfU6PbO6oypJqvUh5ObF5ufNdxLxSuYRWVz2+bdKb4Teyd5J1s5ilCQgwMM2lR0TGjdPPLLuawS55d3YEM5gPaVzhMxrAsnd6pS0jg9yZxwKfITum8f1X6jMrZGCkEwoKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7T2hAAZ02txGk27NOSEOlKLmnUivynRGmEFPW5ytRog=;
+ b=VVI7VGnnQ4KSPM7O0wmEq9mcWqRxX8bNjdZQxluCJjS6bhhPevDdKUgPlcOZ4xPXrKSMCC76ZOyMMB3Dir+/PlYi92tSGxJP8t/QLEGeIlVPrkbVR9U3SHRNMeiPQ9QijAJZEWz20TyzDBNoA5nKmnJPLzedgSgRqDMsIA5od/CnvsQyfGsOsm2amPoCv9qrqelOkqreKucxBr16fcnsMxK53lmIfdcAk04bcdKE/Cd/ABeQVdBrteFc/ARWStwUhMar6eGOeJGz6CnWKvPXhHrPNA8hgyN7wV+HZlDNPeSfvjyK4fT5hgBveqfWGtUXIQyauiaiXpSz7bbCSabP7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from MN2PR12MB3021.namprd12.prod.outlook.com (2603:10b6:208:c2::30)
+ by MN2PR12MB3152.namprd12.prod.outlook.com (2603:10b6:208:ca::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Thu, 7 May
+ 2020 08:09:53 +0000
+Received: from MN2PR12MB3021.namprd12.prod.outlook.com
+ ([fe80::ac63:f89b:4d9f:1a15]) by MN2PR12MB3021.namprd12.prod.outlook.com
+ ([fe80::ac63:f89b:4d9f:1a15%5]) with mapi id 15.20.2958.030; Thu, 7 May 2020
+ 08:09:53 +0000
+From:   Sandipan Patra <spatra@nvidia.com>
+To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     Thierry Reding <treding@nvidia.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Bibek Basu <bbasu@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH V2] pwm: tegra: dynamic clk freq configuration by PWM
+ driver
+Thread-Topic: [PATCH V2] pwm: tegra: dynamic clk freq configuration by PWM
+ driver
+Thread-Index: AQHWFyvoq08xOVZ7CEyiLUoNVdLvP6iYcg+AgAPH20A=
+Date:   Thu, 7 May 2020 08:09:53 +0000
+Message-ID: <MN2PR12MB3021278ADEBD123D56B91D1CADA50@MN2PR12MB3021.namprd12.prod.outlook.com>
+References: <1587398043-18767-1-git-send-email-spatra@nvidia.com>
+ <20200504201131.l5ofxem3owrl5siv@pengutronix.de>
+In-Reply-To: <20200504201131.l5ofxem3owrl5siv@pengutronix.de>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Enabled=True;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SiteId=43083d15-7273-40c1-b7db-39efd9ccc17a;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Owner=spatra@nvidia.com;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2020-05-07T08:09:48.5793452Z;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Name=Unrestricted;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_ActionId=1a6fc9a9-6fb9-41b3-ba22-74d17e344270;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Extended_MSFT_Method=Automatic
+authentication-results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=nvidia.com;
+x-originating-ip: [124.123.72.26]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ea5005f3-9613-4e45-ed91-08d7f25e05c7
+x-ms-traffictypediagnostic: MN2PR12MB3152:|MN2PR12MB3152:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR12MB31522C410BDD463AB8A4CC4EADA50@MN2PR12MB3152.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 03965EFC76
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: yIMZEAjZF/sdJ3ojhOBxOCKaQm4KmH/1Z8syGlgXtaW0WZo39z3fE0doj8ttTgKnZZqKSuZVOsdd7sRH764Q96Bo7QzIL3ShPMB2oOk08yVmHTED/BgYo08BnycsTl7rPIPCqQO32z9Z/KDWozP52gJc19Ee8Eqc2eMcvzg+orLjkDPVnIi/HUtkWlM4Lxsgan8Tg7q2OL/moqkPObU+51Ks5gzPygtLb1fDBhmWIGUCapf9VUDOX044wDZK3xumVLUoA0o/CVx2oiplKKKXDMpSnSx1KrtD4mv4SwTPVzEnp9MdJTf80IQxJKG+5Y6XMZZjnRnZj01GIRfPgULB2JeP+mEExX3d2mgvkKbO1h5D7e3pXGZpsGc0DoxAMhTopXx/mQ1vGghBVBe3yT6ZnkfuNHEDgnrqHFp9RU8QiLWYpVTMcasbjNIK/dtoWT31/KpBubsGQTySxnd9YUP5sP2SFXrMJ/YyQVsXI9fJu5EqJhJkklDWxd3MyaBzLqi6qp1Pq//kk3gmx8Ay5IU9OhXfr7pfP3Rk2fAHh9sK+66Gv4wNSdEJAPagI7EidJZRT9jAjl1JirT/GeaBVG4XPYffxv9OywSmBt6XG3Q1TQo=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3021.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(396003)(136003)(366004)(39860400002)(33430700001)(83080400001)(186003)(478600001)(9686003)(33656002)(55016002)(6916009)(2906002)(8936002)(52536014)(86362001)(8676002)(76116006)(4326008)(26005)(316002)(66574014)(66476007)(64756008)(33440700001)(7696005)(71200400001)(83280400001)(6506007)(5660300002)(54906003)(966005)(30864003)(83320400001)(66556008)(66446008)(83300400001)(83290400001)(66946007)(83310400001)(53546011);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: rr3OlVO0AnNuchOqgaFm3S5HB0fLJFpzrglsXPZMTGg2C7SFmD+NG71jUFTMXa9pfB9WHC0vOZSFE81GSeYIH8fEwarRCDh403v+Q4kIfJubUFlyNppB/DXasNaS1zvwRtfRedmk+72YXW+zZPva6Pwp8rYICpR/aiogbdKyCENyxj0En8IP5exzXeCOp9vQRbRlGsrqwaqdZ2/ePVxuRNA6vscGAdFeCgnDq5nUUjvbQjb+e2PoG/DJ+lkJy67inyfAUeTxp98hQNHKOo4DcjTzWZ1BYU+BOwj4Px/fqZPj2Fqr6oqDSZMKjqSyR/0sjm27mJ/Qw/cdQRwAVzsoWUmtoPsX6uDLDk7yRAe6HfRF/dRb+aTNslyEqKztl1rIaBAiizpboFoQtIt3EZ3Ct1RW14pRRjkgFvMpGbPiiy5CEGUlChDSCU01RSGQarqPBNm+R0SJxvEs5Wcc3BV3BeFpsvJ5QkAu4iwiBmKXXC02V+SWZCHEsatr+HigUor5CJimFY6CGPwaCEk5PSd64+IYmNPFUeJh/NkUyuCCeokoDi/9r5IJKUG9/1xfBqfQemVjxPIQbjrWANpDJrBdRAV1BZYwV185dO7gpg2ZJiNCFEmzh1e+3N72f9OZezF1CJna1JPPgtvltli6S8N/3Zw0GbmvDhiB617GN4w81ftIKS+W0I/KG7SYqXrvRtSNhxjchAKZx8P06WnQBw+qRj/1rSEuJ+B7Jl95XfHmdTG0DrmxDp7kTa/63aeAHYBlk/5oZ9hjguXVfBYYIbZUOol8cPI2XHn6llk/SJ6aVs8=
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea5005f3-9613-4e45-ed91-08d7f25e05c7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2020 08:09:53.1851
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aTpqPwUNgJH4VJJ3929ROwobBXbOJ4lQuDKNleigaBLQudT94KH8BFZGXrLVDlw3sSvLNtXVdgZV8sVss+DH5Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3152
+X-OriginatorOrg: Nvidia.com
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588838982; bh=7T2hAAZ02txGk27NOSEOlKLmnUivynRGmEFPW5ytRog=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
+         Thread-Index:Date:Message-ID:References:In-Reply-To:
+         Accept-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:msip_labels:
+         authentication-results:x-originating-ip:x-ms-publictraffictype:
+         x-ms-office365-filtering-correlation-id:x-ms-traffictypediagnostic:
+         x-ms-exchange-transport-forked:x-microsoft-antispam-prvs:
+         x-ms-oob-tlc-oobclassifiers:x-forefront-prvs:
+         x-ms-exchange-senderadcheck:x-microsoft-antispam:
+         x-microsoft-antispam-message-info:x-forefront-antispam-report:
+         x-ms-exchange-antispam-messagedata:MIME-Version:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-originalarrivaltime:
+         X-MS-Exchange-CrossTenant-fromentityheader:
+         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
+         X-MS-Exchange-CrossTenant-userprincipalname:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
+         Content-Language:Content-Type:Content-Transfer-Encoding;
+        b=MKsGuKvKz97cRzzhd0e3vUh1DN2YwRzUSquYYJaEhd/CYniKHQl5t+cXrdvKTUfZD
+         kccveu2r/OM7Auf1sxRtt3jcHb6Yrm7yQq13ry8EYGT/fgdfQeAi1yz5EHjx4Dk9H4
+         cox2xBKWEVZS+TFm5ZZtwJH0xujQJ+EajEKAC4m0x/e0UtdUxd+nS+YM1GMJyqUd16
+         8ZMhURUXbAG/5XbDGCO5r/HT3HjtCqpe0k6wPIbpb/+4ZMA2hVNAbUPJAwfY+c+LyP
+         iDzm3DFZn9KgXvUQfGJeBalPzqqlObriOvK1Vs7Gd+bC4kCNN34ySCMPgkyp/Kp2e+
+         sotKSHbuFuz/w==
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Adds support for the Dialog DA7280 LRA/ERM Haptic Driver with
-multiple mode and integrated waveform memory and wideband support.
-It communicates via an I2C bus to the device.
-
-Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
-
----
-v13:
-	- Updated some conditions in pwm function and alignments.
-v12: No changes.
-v11: 
-	- Updated the pwm related code, comments and typo.
-v10: 
-	- Updated the pwm related function and added some comments.
-v9: 
-	- Removed the header file and put the definitions into the c file.
-	- Updated the pwm code and error logs with %pE
-v8: 
-	- Added changes to support FF_PERIODIC/FF_CUSTOM and FF_CONSTANT.
-	- Updated the dt-related code.
-	- Removed memless related functions.
-v7: 
-	- Added more attributes to handle one value per file.
-	- Replaced and updated the dt-related code and functions called.
-	- Fixed error/functions.
-v6: No changes.
-v5: Fixed errors in Kconfig file.
-v4: Updated code as dt-bindings are changed.
-v3: No changes.
-v2: Fixed kbuild error/warning
-
-
- drivers/input/misc/Kconfig  |   13 +
- drivers/input/misc/Makefile |    1 +
- drivers/input/misc/da7280.c | 1898 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 1912 insertions(+)
- create mode 100644 drivers/input/misc/da7280.c
-
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index 7e2e658..e2bf442 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -879,4 +879,17 @@ config INPUT_STPMIC1_ONKEY
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called stpmic1_onkey.
- 
-+config INPUT_DA7280_HAPTICS
-+	tristate "Dialog Semiconductor DA7280 haptics support"
-+	depends on INPUT && I2C
-+	select INPUT_FF_MEMLESS
-+	select REGMAP_I2C
-+	help
-+	  Say Y to enable support for the Dialog DA7280 haptics driver.
-+	  The haptics can be controlled by i2c communication,
-+	  or by PWM input, or by GPI.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called da7280.
-+
- endif
-diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-index 8fd187f..71dc381 100644
---- a/drivers/input/misc/Makefile
-+++ b/drivers/input/misc/Makefile
-@@ -25,6 +25,7 @@ obj-$(CONFIG_INPUT_CMA3000)		+= cma3000_d0x.o
- obj-$(CONFIG_INPUT_CMA3000_I2C)		+= cma3000_d0x_i2c.o
- obj-$(CONFIG_INPUT_COBALT_BTNS)		+= cobalt_btns.o
- obj-$(CONFIG_INPUT_CPCAP_PWRBUTTON)	+= cpcap-pwrbutton.o
-+obj-$(CONFIG_INPUT_DA7280_HAPTICS)	+= da7280.o
- obj-$(CONFIG_INPUT_DA9052_ONKEY)	+= da9052_onkey.o
- obj-$(CONFIG_INPUT_DA9055_ONKEY)	+= da9055_onkey.o
- obj-$(CONFIG_INPUT_DA9063_ONKEY)	+= da9063_onkey.o
-diff --git a/drivers/input/misc/da7280.c b/drivers/input/misc/da7280.c
-new file mode 100644
-index 0000000..05ec1abd3
---- /dev/null
-+++ b/drivers/input/misc/da7280.c
-@@ -0,0 +1,1898 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * DA7280 Haptic device driver
-+ *
-+ * Copyright (c) 2020 Dialog Semiconductor.
-+ * Author: Roy Im <Roy.Im.Opensource@diasemi.com>
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/input.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+#include <linux/workqueue.h>
-+#include <linux/uaccess.h>
-+#include <linux/bitops.h>
-+
-+/* Registers */
-+#define DA7280_IRQ_EVENT1                     0x03
-+#define DA7280_IRQ_EVENT_WARNING_DIAG         0x04
-+#define DA7280_IRQ_EVENT_SEQ_DIAG             0x05
-+#define DA7280_IRQ_STATUS1                    0x06
-+#define DA7280_IRQ_MASK1                      0x07
-+#define DA7280_FRQ_LRA_PER_H                  0x0A
-+#define DA7280_FRQ_LRA_PER_L                  0x0B
-+#define DA7280_ACTUATOR1                      0x0C
-+#define DA7280_ACTUATOR2                      0x0D
-+#define DA7280_ACTUATOR3                      0x0E
-+#define DA7280_CALIB_V2I_H                    0x0F
-+#define DA7280_CALIB_V2I_L                    0x10
-+#define DA7280_TOP_CFG1                       0x13
-+#define DA7280_TOP_CFG2                       0x14
-+#define DA7280_TOP_CFG4                       0x16
-+#define DA7280_TOP_INT_CFG1                   0x17
-+#define DA7280_TOP_CTL1                       0x22
-+#define DA7280_TOP_CTL2                       0x23
-+#define DA7280_SEQ_CTL2                       0x28
-+#define DA7280_GPI_0_CTL                      0x29
-+#define DA7280_GPI_1_CTL                      0x2A
-+#define DA7280_GPI_2_CTL                      0x2B
-+#define DA7280_MEM_CTL1                       0x2C
-+#define DA7280_MEM_CTL2                       0x2D
-+#define DA7280_TOP_CFG5                       0x6E
-+#define DA7280_IRQ_MASK2                      0x83
-+#define DA7280_SNP_MEM_99                     0xE7
-+
-+/* Register field */
-+
-+/* DA7280_IRQ_EVENT1 (Address 0x03) */
-+#define DA7280_E_SEQ_CONTINUE_SHIFT		0
-+#define DA7280_E_SEQ_CONTINUE_MASK		BIT(0)
-+#define DA7280_E_UVLO_SHIFT			1
-+#define DA7280_E_UVLO_MASK			BIT(1)
-+#define DA7280_E_SEQ_DONE_SHIFT			2
-+#define DA7280_E_SEQ_DONE_MASK			BIT(2)
-+#define DA7280_E_OVERTEMP_CRIT_SHIFT		3
-+#define DA7280_E_OVERTEMP_CRIT_MASK		BIT(3)
-+#define DA7280_E_SEQ_FAULT_SHIFT		4
-+#define DA7280_E_SEQ_FAULT_MASK			BIT(4)
-+#define DA7280_E_WARNING_SHIFT			5
-+#define DA7280_E_WARNING_MASK			BIT(5)
-+#define DA7280_E_ACTUATOR_FAULT_SHIFT		6
-+#define DA7280_E_ACTUATOR_FAULT_MASK		BIT(6)
-+#define DA7280_E_OC_FAULT_SHIFT			7
-+#define DA7280_E_OC_FAULT_MASK			BIT(7)
-+
-+/* DA7280_IRQ_EVENT_WARNING_DIAG (Address 0x04) */
-+#define DA7280_E_OVERTEMP_WARN_SHIFT            3
-+#define DA7280_E_OVERTEMP_WARN_MASK             BIT(3)
-+#define DA7280_E_MEM_TYPE_SHIFT                 4
-+#define DA7280_E_MEM_TYPE_MASK                  BIT(4)
-+#define DA7280_E_LIM_DRIVE_ACC_SHIFT            6
-+#define DA7280_E_LIM_DRIVE_ACC_MASK             BIT(6)
-+#define DA7280_E_LIM_DRIVE_SHIFT                7
-+#define DA7280_E_LIM_DRIVE_MASK                 BIT(7)
-+
-+/* DA7280_IRQ_EVENT_PAT_DIAG (Address 0x05) */
-+#define DA7280_E_PWM_FAULT_SHIFT		5
-+#define DA7280_E_PWM_FAULT_MASK			BIT(5)
-+#define DA7280_E_MEM_FAULT_SHIFT		6
-+#define DA7280_E_MEM_FAULT_MASK			BIT(6)
-+#define DA7280_E_SEQ_ID_FAULT_SHIFT		7
-+#define DA7280_E_SEQ_ID_FAULT_MASK		BIT(7)
-+
-+/* DA7280_IRQ_STATUS1 (Address 0x06) */
-+#define DA7280_STA_SEQ_CONTINUE_SHIFT		0
-+#define DA7280_STA_SEQ_CONTINUE_MASK		BIT(0)
-+#define DA7280_STA_UVLO_VBAT_OK_SHIFT		1
-+#define DA7280_STA_UVLO_VBAT_OK_MASK		BIT(1)
-+#define DA7280_STA_SEQ_DONE_SHIFT		2
-+#define DA7280_STA_SEQ_DONE_MASK		BIT(2)
-+#define DA7280_STA_OVERTEMP_CRIT_SHIFT		3
-+#define DA7280_STA_OVERTEMP_CRIT_MASK		BIT(3)
-+#define DA7280_STA_SEQ_FAULT_SHIFT		4
-+#define DA7280_STA_SEQ_FAULT_MASK		BIT(4)
-+#define DA7280_STA_WARNING_SHIFT		5
-+#define DA7280_STA_WARNING_MASK			BIT(5)
-+#define DA7280_STA_ACTUATOR_SHIFT		6
-+#define DA7280_STA_ACTUATOR_MASK		BIT(6)
-+#define DA7280_STA_OC_SHIFT			7
-+#define DA7280_STA_OC_MASK			BIT(7)
-+
-+/* DA7280_IRQ_MASK1 (Address 0x07) */
-+#define DA7280_SEQ_CONTINUE_M_SHIFT		0
-+#define DA7280_SEQ_CONTINUE_M_MASK		BIT(0)
-+#define DA7280_E_UVLO_M_SHIFT			1
-+#define DA7280_E_UVLO_M_MASK			BIT(1)
-+#define DA7280_SEQ_DONE_M_SHIFT			2
-+#define DA7280_SEQ_DONE_M_MASK			BIT(2)
-+#define DA7280_OVERTEMP_CRIT_M_SHIFT		3
-+#define DA7280_OVERTEMP_CRIT_M_MASK		BIT(3)
-+#define DA7280_SEQ_FAULT_M_SHIFT		4
-+#define DA7280_SEQ_FAULT_M_MASK			BIT(4)
-+#define DA7280_WARNING_M_SHIFT			5
-+#define DA7280_WARNING_M_MASK			BIT(5)
-+#define DA7280_ACTUATOR_M_SHIFT			6
-+#define DA7280_ACTUATOR_M_MASK			BIT(6)
-+#define DA7280_OC_M_SHIFT			7
-+#define DA7280_OC_M_MASK			BIT(7)
-+
-+/* DA7280_ACTUATOR3 (Address 0x0e) */
-+#define DA7280_IMAX_MASK			(31 << 0)
-+
-+/* DA7280_TOP_CFG1 (Address 0x13) */
-+#define DA7280_AMP_PID_EN_SHIFT			0
-+#define DA7280_AMP_PID_EN_MASK			BIT(0)
-+#define DA7280_RAPID_STOP_EN_SHIFT		1
-+#define DA7280_RAPID_STOP_EN_MASK		BIT(1)
-+#define DA7280_ACCELERATION_EN_SHIFT		2
-+#define DA7280_ACCELERATION_EN_MASK		BIT(2)
-+#define DA7280_FREQ_TRACK_EN_SHIFT		3
-+#define DA7280_FREQ_TRACK_EN_MASK		BIT(3)
-+#define DA7280_BEMF_SENSE_EN_SHIFT		 4
-+#define DA7280_BEMF_SENSE_EN_MASK		BIT(4)
-+#define DA7280_ACTUATOR_TYPE_SHIFT		5
-+#define DA7280_ACTUATOR_TYPE_MASK		BIT(5)
-+
-+/* DA7280_TOP_CFG2 (Address 0x14) */
-+#define DA7280_FULL_BRAKE_THR_SHIFT		0
-+#define DA7280_FULL_BRAKE_THR_MASK		(15 << 0)
-+#define DA7280_MEM_DATA_SIGNED_SHIFT		4
-+#define DA7280_MEM_DATA_SIGNED_MASK		BIT(4)
-+
-+/* DA7280_TOP_CFG4 (Address 0x16) */
-+#define DA7280_TST_CALIB_IMPEDANCE_DIS_SHIFT	6
-+#define DA7280_TST_CALIB_IMPEDANCE_DIS_MASK	BIT(6)
-+#define DA7280_V2I_FACTOR_FREEZE_SHIFT		7
-+#define DA7280_V2I_FACTOR_FREEZE_MASK		BIT(7)
-+
-+/* DA7280_TOP_INT_CFG1 (Address 0x17) */
-+#define DA7280_BEMF_FAULT_LIM_SHIFT		0
-+#define DA7280_BEMF_FAULT_LIM_MASK		(3 << 0)
-+
-+/* DA7280_TOP_CTL1 (Address 0x22) */
-+#define DA7280_OPERATION_MODE_SHIFT		0
-+#define DA7280_OPERATION_MODE_MASK		(7 << 0)
-+#define DA7280_STANDBY_EN_SHIFT			3
-+#define DA7280_STANDBY_EN_MASK			BIT(3)
-+#define DA7280_SEQ_START_SHIFT			4
-+#define DA7280_SEQ_START_MASK			BIT(4)
-+
-+/* DA7280_SEQ_CTL2 (Address 0x28) */
-+#define DA7280_PS_SEQ_ID_SHIFT			0
-+#define DA7280_PS_SEQ_ID_MASK			(15 << 0)
-+#define DA7280_PS_SEQ_LOOP_SHIFT		4
-+#define DA7280_PS_SEQ_LOOP_MASK			(15 << 4)
-+
-+/* DA7280_GPIO_0_CTL (Address 0x29) */
-+#define DA7280_GPI0_POLARITY_SHIFT		0
-+#define DA7280_GPI0_MODE_SHIFT			2
-+#define DA7280_GPI0_SEQUENCE_ID_SHIFT		3
-+#define DA7280_GPI0_SEQUENCE_ID_MASK		(15 << 3)
-+
-+/* DA7280_GPIO_1_CTL (Address 0x2a) */
-+#define DA7280_GPI1_SEQUENCE_ID_SHIFT		3
-+#define DA7280_GPI1_SEQUENCE_ID_MASK		(15 << 3)
-+
-+/* DA7280_GPIO_2_CTL (Address 0x2b) */
-+#define DA7280_GPI2_SEQUENCE_ID_SHIFT		3
-+#define DA7280_GPI2_SEQUENCE_ID_MASK		(15 << 3)
-+
-+/* DA7280_MEM_CTL2 (Address 0x2d) */
-+#define DA7280_WAV_MEM_LOCK_MASK		BIT(7)
-+
-+/* DA7280_TOP_CFG5 (Address 0x6e) */
-+#define DA7280_V2I_FACTOR_OFFSET_EN_MASK	BIT(0)
-+
-+/* DA7280_IRQ_MASK2 (Address 0x83) */
-+#define DA7280_ADC_SAT_M_MASK			BIT(7)
-+
-+/* Controls */
-+
-+#define DA7280_VOLTAGE_RATE_MAX		6000000
-+#define DA7280_VOLTAGE_RATE_STEP	23400
-+#define DA7280_NOMMAX_DFT		0x6B
-+#define DA7280_ABSMAX_DFT		0x78
-+
-+#define DA7280_IMPD_MAX			1500000000
-+#define DA7280_IMPD_DEFAULT		22000000
-+
-+#define DA7280_IMAX_DEFAULT		0x0E
-+#define DA7280_IMAX_STEP		7200
-+#define DA7280_IMAX_LIMIT		252000
-+
-+#define DA7280_RESONT_FREQH_DFT		0x39
-+#define DA7280_RESONT_FREQL_DFT		0x32
-+#define DA7280_MIN_RESONAT_FREQ_HZ	50
-+#define DA7280_MAX_RESONAT_FREQ_HZ	300
-+#define DA7280_MIN_PWM_FREQ_KHZ		10
-+#define DA7280_MAX_PWM_FREQ_KHZ		250
-+
-+#define DA7280_SEQ_ID_MAX		15
-+#define DA7280_SEQ_LOOP_MAX		15
-+#define DA7280_GPI_SEQ_ID_DFT		0x0
-+
-+#define DA7280_SNP_MEM_SIZE		100
-+#define DA7280_SNP_MEM_MAX		DA7280_SNP_MEM_99
-+
-+#define IRQ_NUM				3
-+
-+#define DA7280_SKIP_INIT		0x100
-+
-+#define DA7280_FF_EFFECT_COUNT_MAX	15
-+
-+/* Maximum gain is 0x7fff for PWM mode */
-+#define MAX_MAGNITUDE_SHIFT		15
-+
-+enum da7280_haptic_dev_t {
-+	DA7280_LRA	= 0,
-+	DA7280_ERM_BAR	= 1,
-+	DA7280_ERM_COIN	= 2,
-+	DA7280_DEV_MAX,
-+};
-+
-+enum da7280_op_mode {
-+	DA7280_INACTIVE		= 0,
-+	DA7280_DRO_MODE		= 1,
-+	DA7280_PWM_MODE		= 2,
-+	DA7280_RTWM_MODE	= 3,
-+	DA7280_ETWM_MODE	= 4,
-+	DA7280_OPMODE_MAX,
-+};
-+
-+#define DA7280_FF_CONSTANT_DRO	1
-+#define DA7280_FF_PERIODIC_PWM	2
-+#define DA7280_FF_PERIODIC_RTWM	1
-+#define DA7280_FF_PERIODIC_ETWM	2
-+
-+#define DA7280_FF_PERIODIC_MODE	DA7280_RTWM_MODE
-+#define DA7280_FF_CONSTANT_MODE	DA7280_DRO_MODE
-+
-+enum da7280_custom_effect_param {
-+	DA7280_CUSTOM_DATA_SEQ_ID_IDX   = 0,
-+	DA7280_CUSTOM_DATA_SEQ_LOOP_IDX = 1,
-+	DA7280_CUSTOM_DATA_LEN          = 2,
-+};
-+
-+struct da7280_gpi_ctl {
-+	u8 seq_id;
-+	u8 mode;
-+	u8 polarity;
-+};
-+
-+struct da7280_haptic {
-+	struct regmap *regmap;
-+	struct input_dev *input_dev;
-+	struct device *dev;
-+	struct i2c_client *client;
-+	struct pwm_device *pwm_dev;
-+
-+	bool legacy;
-+	struct delayed_work work_duration;
-+	struct work_struct work_playback;
-+	struct work_struct work_setgain;
-+	int val;
-+	u16 gain;
-+	u16 new_gain;
-+
-+	s16 level;
-+
-+	u8 dev_type;
-+	u8 op_mode;
-+	u8 const_op_mode;
-+	u8 periodic_op_mode;
-+	u16 nommax;
-+	u16 absmax;
-+	u32 imax;
-+	u32 impd;
-+	u32 resonant_freq_h;
-+	u32 resonant_freq_l;
-+	bool bemf_sense_en;
-+	bool freq_track_en;
-+	bool acc_en;
-+	bool rapid_stop_en;
-+	bool amp_pid_en;
-+	u8 ps_seq_id;
-+	u8 ps_seq_loop;
-+	struct da7280_gpi_ctl gpi_ctl[3];
-+	bool mem_update;
-+	u8 snp_mem[DA7280_SNP_MEM_SIZE];
-+	u8 enabled;
-+	int length_ms;
-+};
-+
-+static bool da7280_volatile_register(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case DA7280_IRQ_EVENT1:
-+	case DA7280_IRQ_EVENT_WARNING_DIAG:
-+	case DA7280_IRQ_EVENT_SEQ_DIAG:
-+	case DA7280_IRQ_STATUS1:
-+	case DA7280_TOP_CTL1:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static const struct regmap_config da7280_haptic_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = DA7280_SNP_MEM_MAX,
-+	.volatile_reg = da7280_volatile_register,
-+};
-+
-+static int da7280_haptic_mem_update(struct da7280_haptic *haptics)
-+{
-+	int error;
-+	unsigned int val;
-+
-+	/* The patterns should be updated when haptic is not working */
-+	error = regmap_read(haptics->regmap, DA7280_IRQ_STATUS1, &val);
-+	if (error)
-+		return error;
-+	if (val & DA7280_STA_WARNING_MASK) {
-+		dev_warn(haptics->dev,
-+			 "Warning! Please check HAPTIC status.\n");
-+		return -EBUSY;
-+	}
-+
-+	/* Patterns are not updated if the lock bit is enabled */
-+	val = 0;
-+	error = regmap_read(haptics->regmap, DA7280_MEM_CTL2, &val);
-+	if (error)
-+		return error;
-+	if (~val & DA7280_WAV_MEM_LOCK_MASK) {
-+		dev_warn(haptics->dev,
-+			 "Please unlock the bit first\n");
-+		return -EACCES;
-+	}
-+
-+	/* Set to Inactive mode to make sure safety */
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_TOP_CTL1,
-+				   DA7280_OPERATION_MODE_MASK,
-+				   0);
-+	if (error)
-+		return error;
-+
-+	error = regmap_read(haptics->regmap, DA7280_MEM_CTL1, &val);
-+	if (error)
-+		return error;
-+
-+	return regmap_bulk_write(haptics->regmap, val,
-+			haptics->snp_mem, DA7280_SNP_MEM_MAX - val + 1);
-+}
-+
-+static int da7280_haptic_set_pwm(struct da7280_haptic *haptics, bool enabled)
-+{
-+	struct pwm_state state;
-+	u64 period_mag_multi;
-+	int error;
-+
-+	if (!haptics->gain && enabled) {
-+		dev_err(haptics->dev,
-+			"Please set the gain first for the pwm mode\n");
-+		return -EINVAL;
-+	}
-+
-+	pwm_get_state(haptics->pwm_dev, &state);
-+	state.enabled = enabled;
-+	if (enabled) {
-+		period_mag_multi = state.period * haptics->gain;
-+		period_mag_multi >>= MAX_MAGNITUDE_SHIFT;
-+
-+		/* The interpretation of duty cycle depends on the acc_en,
-+		 * it should be between 50% and 100% for acc_en = 0.
-+		 * See datasheet 'PWM mode' section.
-+		 */
-+		if (!haptics->acc_en) {
-+			period_mag_multi += state.period;
-+			period_mag_multi /= 2;
-+		}
-+
-+		state.duty_cycle = period_mag_multi;
-+	}
-+
-+	error = pwm_apply_state(haptics->pwm_dev, &state);
-+	if (error)
-+		dev_err(haptics->dev,
-+			"failed to apply pwm state: %pE\n",
-+			ERR_PTR(error));
-+
-+	return error;
-+}
-+
-+static void da7280_haptic_enable(struct da7280_haptic *haptics)
-+{
-+	int error = 0;
-+
-+	if (haptics->enabled)
-+		return;
-+
-+	switch (haptics->op_mode) {
-+	case DA7280_DRO_MODE:
-+		/* the valid range check when acc_en is enabled */
-+		if (haptics->acc_en && haptics->level > 0x7F)
-+			haptics->level = 0x7F;
-+		else if (haptics->level > 0xFF)
-+			haptics->level = 0xFF;
-+
-+		/* Set driver level
-+		 * as a % of ACTUATOR_NOMMAX(nommax)
-+		 */
-+		error = regmap_write(haptics->regmap,
-+				     DA7280_TOP_CTL2,
-+				     haptics->level);
-+		if (error) {
-+			dev_err(haptics->dev,
-+				"i2c err %pE for driving level (%d)\n",
-+				ERR_PTR(error), haptics->level);
-+			return;
-+		}
-+		break;
-+	case DA7280_PWM_MODE:
-+		if (da7280_haptic_set_pwm(haptics, true))
-+			return;
-+		break;
-+	case DA7280_RTWM_MODE:
-+		/* The pattern will be played by
-+		 *  the PS_SEQ_ID and the PS_SEQ_LOOP
-+		 */
-+	case DA7280_ETWM_MODE:
-+		/* The pattern will be played by
-+		 * the GPI[N] state, GPI(N)_SEQUENCE_ID
-+		 * and the PS_SEQ_LOOP.
-+		 * please see the datasheet for the details.
-+		 */
-+		break;
-+	default:
-+		dev_err(haptics->dev,
-+			"Invalid Mode(%d)\n", haptics->op_mode);
-+		return;
-+	}
-+
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_TOP_CTL1,
-+				   DA7280_OPERATION_MODE_MASK,
-+				   haptics->op_mode);
-+	if (error) {
-+		dev_err(haptics->dev,
-+			"i2c err for op_mode setting : %pE\n",
-+			ERR_PTR(error));
-+		return;
-+	}
-+
-+	if (haptics->op_mode == DA7280_PWM_MODE ||
-+	    haptics->op_mode == DA7280_RTWM_MODE) {
-+		error = regmap_update_bits(haptics->regmap,
-+					   DA7280_TOP_CTL1,
-+					   DA7280_SEQ_START_MASK,
-+					   DA7280_SEQ_START_MASK);
-+		if (error) {
-+			dev_err(haptics->dev,
-+				"i2c err for sequence triggering : %pE\n",
-+				ERR_PTR(error));
-+			return;
-+		}
-+	}
-+
-+	haptics->enabled = true;
-+	if (haptics->length_ms && haptics->op_mode <= DA7280_PWM_MODE)
-+		schedule_delayed_work(&haptics->work_duration,
-+				      msecs_to_jiffies(haptics->length_ms));
-+}
-+
-+static void da7280_haptic_disable(struct da7280_haptic *haptics)
-+{
-+	int error;
-+
-+	if (!haptics->enabled)
-+		return;
-+
-+	/* Set to Inactive mode */
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_TOP_CTL1,
-+				   DA7280_OPERATION_MODE_MASK, 0);
-+	if (error) {
-+		dev_err(haptics->dev,
-+			"i2c err for op_mode off : %pE\n", ERR_PTR(error));
-+		return;
-+	}
-+
-+	switch (haptics->op_mode) {
-+	case DA7280_DRO_MODE:
-+		error = regmap_write(haptics->regmap,
-+				     DA7280_TOP_CTL2, 0);
-+		if (error) {
-+			dev_err(haptics->dev,
-+				"i2c err for DRO mode off : %pE\n",
-+				ERR_PTR(error));
-+			return;
-+		}
-+		break;
-+	case DA7280_PWM_MODE:
-+		if (da7280_haptic_set_pwm(haptics, false))
-+			return;
-+		break;
-+	case DA7280_RTWM_MODE:
-+	case DA7280_ETWM_MODE:
-+		error = regmap_update_bits(haptics->regmap,
-+					   DA7280_TOP_CTL1,
-+					   DA7280_SEQ_START_MASK, 0);
-+		if (error) {
-+			dev_err(haptics->dev,
-+				"i2c err for RTWM or ETWM mode off: %pE\n",
-+				ERR_PTR(error));
-+			return;
-+		}
-+		break;
-+	default:
-+		dev_err(haptics->dev,
-+			"Invalid Mode(%d)\n", haptics->op_mode);
-+		return;
-+	}
-+
-+	haptics->enabled = false;
-+}
-+
-+static void da7280_haptic_work_duration(struct work_struct *work)
-+{
-+	struct da7280_haptic *haptics =
-+		container_of(work, struct da7280_haptic, work_duration.work);
-+
-+	da7280_haptic_disable(haptics);
-+}
-+
-+static void da7280_haptic_work_playback(struct work_struct *work)
-+{
-+	struct da7280_haptic *haptics =
-+		container_of(work, struct da7280_haptic, work_playback);
-+	int val = haptics->val;
-+
-+	if (!!val)
-+		da7280_haptic_enable(haptics);
-+	else
-+		da7280_haptic_disable(haptics);
-+}
-+
-+static void da7280_haptic_work_setgain(struct work_struct *work)
-+{
-+	struct da7280_haptic *haptics =
-+		container_of(work, struct da7280_haptic, work_setgain);
-+	u16 gain = haptics->new_gain;
-+	int error = 0;
-+
-+	if (gain == 0)
-+		return;
-+
-+	/* DRO and PWM modes support set_gain feature
-+	 */
-+	switch (haptics->op_mode) {
-+	case DA7280_DRO_MODE:
-+		if (haptics->acc_en == 1) {
-+			haptics->level = (u8)(gain * 0x7F / 0x7fff);
-+		} else if (haptics->acc_en == 0) {
-+			haptics->level = (u8)(gain * 0xFF / 0x7fff);
-+
-+			if (gain <= 0x3FFF)
-+				haptics->level = haptics->level + 0x80;
-+			else if (gain > 0x3FFF)
-+				haptics->level = haptics->level - 0x80;
-+		} else {
-+			dev_err(haptics->dev, "Invalid acc_en %d.\n",
-+				haptics->acc_en);
-+		}
-+
-+		/* Set driver level
-+		 * as a % of ACTUATOR_NOMMAX(nommax)
-+		 */
-+		error = regmap_write(haptics->regmap,
-+				     DA7280_TOP_CTL2,
-+				     haptics->level);
-+		if (error) {
-+			dev_err(haptics->dev,
-+				"i2c err for driving level set: %pE\n",
-+				ERR_PTR(error));
-+			return;
-+		}
-+		break;
-+	case DA7280_PWM_MODE:
-+		haptics->gain = gain;
-+		if (haptics->enabled) {
-+			if (da7280_haptic_set_pwm(haptics, true))
-+				return;
-+		}
-+		break;
-+	default:
-+		dev_err(haptics->dev,
-+			"Invalid Mode(%d). Change to DRM (Constant) mode.\n",
-+			haptics->op_mode);
-+		break;
-+	}
-+}
-+
-+static int da7280_haptics_upload_effect(struct input_dev *dev,
-+					struct ff_effect *effect,
-+					struct ff_effect *old)
-+{
-+	struct da7280_haptic *haptics = input_get_drvdata(dev);
-+	int error;
-+	int tmp, i;
-+	unsigned int val;
-+	s16 data[DA7280_SNP_MEM_SIZE] = {0,};
-+
-+	switch (effect->type) {
-+	/* DRO/PWM modes support this type */
-+	case FF_CONSTANT:
-+		haptics->op_mode = haptics->const_op_mode;
-+		/* effect->replay.length should be ms base */
-+		haptics->length_ms = effect->replay.length;
-+		if (haptics->op_mode == DA7280_DRO_MODE) {
-+			tmp = effect->u.constant.level * 254;
-+			haptics->level = tmp / 0x7FFF;
-+			break;
-+		}
-+
-+		haptics->gain =	(effect->u.constant.level <= 0) ?
-+			0 : effect->u.constant.level;
-+		break;
-+
-+	/* RTWM/ETWM modes support this type */
-+	case FF_PERIODIC:
-+		if (effect->u.periodic.waveform != FF_CUSTOM) {
-+			dev_err(haptics->dev,
-+				"Only accept FF_CUSTOM type\n");
-+			return -EINVAL;
-+		}
-+
-+		/*
-+		 * Load the data and check the length.
-+		 * the data will be patterns in this case: 3 < X <= 100,
-+		 * and will be saved into the waveform memory inside DA728x.
-+		 * If X = 2, the data will be PS_SEQ_ID and PS_SEQ_LOOP .
-+		 */
-+		if (effect->u.periodic.custom_len == DA7280_CUSTOM_DATA_LEN)
-+			goto set_id_loop;
-+
-+		if (effect->u.periodic.custom_len < DA7280_CUSTOM_DATA_LEN ||
-+		    effect->u.periodic.custom_len > DA7280_SNP_MEM_SIZE) {
-+			dev_err(haptics->dev, "Invalid data size\n");
-+			return -EINVAL;
-+		}
-+
-+		if (copy_from_user(data, effect->u.periodic.custom_data,
-+				   sizeof(s16) *
-+				   effect->u.periodic.custom_len)) {
-+			dev_err(haptics->dev,
-+				"custom data load error\n");
-+			return -EFAULT;
-+		}
-+
-+		memset(haptics->snp_mem, 0, DA7280_SNP_MEM_SIZE);
-+
-+		for (i = 0; i < effect->u.periodic.custom_len; i++) {
-+			if (data[i] <= 0xff) {
-+				haptics->snp_mem[i] = (u8)data[i];
-+			} else {
-+				dev_err(haptics->dev,
-+					"Invalid data in the custom data\n");
-+				return -EINVAL;
-+			}
-+		}
-+
-+		error = da7280_haptic_mem_update(haptics);
-+		if (error) {
-+			dev_err(haptics->dev,
-+				"mem update error: %pE\n",
-+				ERR_PTR(error));
-+			return error;
-+		}
-+		break;
-+
-+set_id_loop:
-+		if (copy_from_user(data, effect->u.periodic.custom_data,
-+				   sizeof(s16) * DA7280_CUSTOM_DATA_LEN)) {
-+			dev_err(haptics->dev,
-+				"custom id/loop load error\n");
-+			return -EFAULT;
-+		}
-+
-+		haptics->ps_seq_id =
-+			data[DA7280_CUSTOM_DATA_SEQ_ID_IDX] <=
-+			DA7280_SEQ_ID_MAX ?
-+				data[DA7280_CUSTOM_DATA_SEQ_ID_IDX] : 0;
-+
-+		haptics->ps_seq_loop =
-+			data[DA7280_CUSTOM_DATA_SEQ_LOOP_IDX] <=
-+			DA7280_SEQ_LOOP_MAX ?
-+				data[DA7280_CUSTOM_DATA_SEQ_LOOP_IDX] : 0;
-+
-+		haptics->op_mode = haptics->periodic_op_mode;
-+
-+		val = haptics->ps_seq_id << DA7280_PS_SEQ_ID_SHIFT |
-+			haptics->ps_seq_loop << DA7280_PS_SEQ_LOOP_SHIFT;
-+		error = regmap_write(haptics->regmap,
-+				     DA7280_SEQ_CTL2, val);
-+		if (error) {
-+			dev_err(haptics->dev,
-+				"i2c err for driving level set: %pE\n",
-+				ERR_PTR(error));
-+			return error;
-+		}
-+		break;
-+
-+	default:
-+		dev_err(haptics->dev, "Unsupported effect type: %d\n",
-+			effect->type);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int da7280_haptics_playback(struct input_dev *dev,
-+				   int effect_id, int val)
-+{
-+	struct da7280_haptic *haptics = input_get_drvdata(dev);
-+
-+	if (!haptics->op_mode) {
-+		dev_warn(haptics->dev,
-+			 "Any effects are not uploaded yet\n");
-+		return -EPERM;
-+	}
-+
-+	haptics->val = val;
-+	schedule_work(&haptics->work_playback);
-+
-+	return 0;
-+}
-+
-+static void da7280_haptics_set_gain(struct input_dev *dev, u16 gain)
-+{
-+	struct da7280_haptic *haptics = input_get_drvdata(dev);
-+
-+	if (gain > 0x7fff)
-+		gain = 0x7fff;
-+
-+	haptics->new_gain = gain;
-+
-+	schedule_work(&haptics->work_setgain);
-+}
-+
-+static int da7280_haptic_open(struct input_dev *dev)
-+{
-+	struct da7280_haptic *haptics = input_get_drvdata(dev);
-+	int error;
-+
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_TOP_CTL1,
-+				   DA7280_STANDBY_EN_MASK,
-+				   DA7280_STANDBY_EN_MASK);
-+	if (error)
-+		dev_err(haptics->dev,
-+			"Failed to open haptic, i2c error : %pE\n",
-+			ERR_PTR(error));
-+
-+	return error;
-+}
-+
-+static void da7280_haptic_close(struct input_dev *dev)
-+{
-+	struct da7280_haptic *haptics = input_get_drvdata(dev);
-+	int error;
-+
-+	cancel_delayed_work_sync(&haptics->work_duration);
-+	cancel_work_sync(&haptics->work_playback);
-+	cancel_work_sync(&haptics->work_setgain);
-+
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_TOP_CTL1,
-+				   DA7280_OPERATION_MODE_MASK, 0);
-+	if (error)
-+		goto error_i2c;
-+
-+	if (haptics->op_mode == DA7280_DRO_MODE) {
-+		error = regmap_write(haptics->regmap,
-+				     DA7280_TOP_CTL2, 0);
-+
-+		if (error)
-+			goto error_i2c;
-+	}
-+
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_TOP_CTL1,
-+				   DA7280_STANDBY_EN_MASK, 0);
-+	if (error)
-+		goto error_i2c;
-+
-+	return;
-+
-+error_i2c:
-+	dev_err(haptics->dev, "DA7280-haptic i2c error : %pE\n",
-+		ERR_PTR(error));
-+}
-+
-+static u8 da7280_haptic_of_mode_str(struct device *dev,
-+				    const char *str)
-+{
-+	if (!strcmp(str, "LRA"))
-+		return DA7280_LRA;
-+	else if (!strcmp(str, "ERM-bar"))
-+		return DA7280_ERM_BAR;
-+	else if (!strcmp(str, "ERM-coin"))
-+		return DA7280_ERM_COIN;
-+
-+	dev_warn(dev, "Invalid string - set to default\n");
-+	return DA7280_LRA;
-+}
-+
-+static u8 da7280_haptic_of_gpi_mode_str(struct device *dev,
-+					const char *str)
-+{
-+	if (!strcmp(str, "Single-pattern"))
-+		return 0;
-+	else if (!strcmp(str, "Multi-pattern"))
-+		return 1;
-+
-+	dev_warn(dev, "Invalid string - set to default\n");
-+	return 0;
-+}
-+
-+static u8 da7280_haptic_of_gpi_pol_str(struct device *dev,
-+				       const char *str)
-+{
-+	if (!strcmp(str, "Rising-edge"))
-+		return 0;
-+	else if (!strcmp(str, "Falling-edge"))
-+		return 1;
-+	else if (!strcmp(str, "Both-edge"))
-+		return 2;
-+
-+	dev_warn(dev, "Invalid string - set to default\n");
-+	return 0;
-+}
-+
-+static u8 da7280_haptic_of_volt_rating_set(u32 val)
-+{
-+	u32 voltage;
-+
-+	voltage = val / DA7280_VOLTAGE_RATE_STEP + 1;
-+
-+	if (voltage > 0xFF)
-+		return 0xFF;
-+	return (u8)voltage;
-+}
-+
-+static void da7280_parse_properties(struct device *dev,
-+				    struct da7280_haptic *haptics)
-+{
-+	char gpi_str1[] = "dlg,gpi0-seq-id";
-+	char gpi_str2[] = "dlg,gpi0-mode";
-+	char gpi_str3[] = "dlg,gpi0-polarity";
-+	unsigned int i, mem[DA7280_SNP_MEM_SIZE];
-+	const char *str;
-+	u32 val;
-+
-+	if (!device_property_read_string(dev, "dlg,actuator-type", &str))
-+		haptics->dev_type =
-+			da7280_haptic_of_mode_str(dev, str);
-+	else /* if no property, then use the mode inside chip */
-+		haptics->dev_type = DA7280_DEV_MAX;
-+
-+	if (device_property_read_u32(dev, "dlg,const-op-mode", &val) >= 0)
-+		if (val == DA7280_FF_PERIODIC_PWM)
-+			haptics->const_op_mode = DA7280_PWM_MODE;
-+		else
-+			haptics->const_op_mode = DA7280_DRO_MODE;
-+	else
-+		haptics->const_op_mode = DA7280_DRO_MODE;
-+
-+	if (device_property_read_u32(dev, "dlg,periodic-op-mode", &val) >= 0)
-+		if (val == DA7280_FF_PERIODIC_ETWM)
-+			haptics->periodic_op_mode = DA7280_ETWM_MODE;
-+		else
-+			haptics->periodic_op_mode = DA7280_RTWM_MODE;
-+	else
-+		haptics->periodic_op_mode = DA7280_RTWM_MODE;
-+
-+	if (device_property_read_u32(dev, "dlg,nom-microvolt", &val) >= 0)
-+		if (val < DA7280_VOLTAGE_RATE_MAX)
-+			haptics->nommax =
-+				da7280_haptic_of_volt_rating_set(val);
-+		else
-+			haptics->nommax = DA7280_SKIP_INIT;
-+	else /* if no property, then use the value inside chip */
-+		haptics->nommax = DA7280_SKIP_INIT;
-+
-+	if (device_property_read_u32(dev, "dlg,abs-max-microvolt",
-+				     &val) >= 0)
-+		if (val < DA7280_VOLTAGE_RATE_MAX)
-+			haptics->absmax =
-+				da7280_haptic_of_volt_rating_set(val);
-+		else
-+			haptics->absmax = DA7280_SKIP_INIT;
-+	else
-+		haptics->absmax = DA7280_SKIP_INIT;
-+
-+	if (device_property_read_u32(dev, "dlg,imax-microamp", &val) >= 0)
-+		if (val < DA7280_IMAX_LIMIT)
-+			haptics->imax = (val - 28600)
-+					/ DA7280_IMAX_STEP + 1;
-+		else
-+			haptics->imax = DA7280_IMAX_DEFAULT;
-+	else
-+		haptics->imax = DA7280_IMAX_DEFAULT;
-+
-+	if (device_property_read_u32(dev, "dlg,impd-micro-ohms", &val) >= 0)
-+		if (val <= DA7280_IMPD_MAX)
-+			haptics->impd = val;
-+		else
-+			haptics->impd = DA7280_IMPD_DEFAULT;
-+	else
-+		haptics->impd = DA7280_IMPD_DEFAULT;
-+
-+	if (device_property_read_u32(dev, "dlg,resonant-freq-hz",
-+				     &val) >= 0) {
-+		if (val < DA7280_MAX_RESONAT_FREQ_HZ &&
-+		    val > DA7280_MIN_RESONAT_FREQ_HZ) {
-+			haptics->resonant_freq_h =
-+				((1000000000 / (val * 1333)) >> 7) & 0xFF;
-+			haptics->resonant_freq_l =
-+				(1000000000 / (val * 1333)) & 0x7F;
-+		} else {
-+			haptics->resonant_freq_h =
-+				DA7280_RESONT_FREQH_DFT;
-+			haptics->resonant_freq_l =
-+				DA7280_RESONT_FREQL_DFT;
-+		}
-+	} else {
-+		haptics->resonant_freq_h = DA7280_SKIP_INIT;
-+		haptics->resonant_freq_l = DA7280_SKIP_INIT;
-+	}
-+
-+	if (device_property_read_u32(dev, "dlg,ps-seq-id", &val) >= 0)
-+		if (val <= DA7280_SEQ_ID_MAX)
-+			haptics->ps_seq_id = val;
-+		else
-+			haptics->ps_seq_id = 0;
-+	else /* if no property, set to zero as a default do nothing */
-+		haptics->ps_seq_id = 0;
-+
-+	if (device_property_read_u32(dev, "dlg,ps-seq-loop", &val) >= 0)
-+		if (val <= DA7280_SEQ_LOOP_MAX)
-+			haptics->ps_seq_loop = val;
-+		else
-+			haptics->ps_seq_loop = 0;
-+	else /* if no property, then do nothing */
-+		haptics->ps_seq_loop = 0;
-+
-+	/* GPI0~2 Control */
-+	for (i = 0; i < 3; i++) {
-+		gpi_str1[7] = '0' + i;
-+		if (device_property_read_u32 (dev, gpi_str1, &val) >= 0)
-+			if (val <= DA7280_SEQ_ID_MAX)
-+				haptics->gpi_ctl[i].seq_id = val;
-+			else
-+				haptics->gpi_ctl[i].seq_id =
-+					DA7280_GPI_SEQ_ID_DFT + i;
-+		else /* if no property, then do nothing */
-+			haptics->gpi_ctl[i].seq_id =
-+				DA7280_GPI_SEQ_ID_DFT + i;
-+
-+		gpi_str2[7] = '0' + i;
-+		if (!device_property_read_string(dev, gpi_str2, &str))
-+			haptics->gpi_ctl[i].mode =
-+				da7280_haptic_of_gpi_mode_str(dev, str);
-+		else
-+			haptics->gpi_ctl[i].mode = 0;
-+
-+		gpi_str3[7] = '0' + i;
-+		if (!device_property_read_string(dev, gpi_str3, &str))
-+			haptics->gpi_ctl[i].polarity =
-+				da7280_haptic_of_gpi_pol_str(dev, str);
-+		else
-+			haptics->gpi_ctl[i].polarity = 0;
-+	}
-+
-+	haptics->bemf_sense_en =
-+		device_property_read_bool(dev, "dlg,bemf-sens-enable");
-+	haptics->freq_track_en =
-+		device_property_read_bool(dev, "dlg,freq-track-enable");
-+	haptics->acc_en =
-+		device_property_read_bool(dev, "dlg,acc-enable");
-+	haptics->rapid_stop_en =
-+		device_property_read_bool(dev, "dlg,rapid-stop-enable");
-+	haptics->amp_pid_en =
-+		device_property_read_bool(dev, "dlg,amp-pid-enable");
-+
-+	if (device_property_read_u32_array(dev, "dlg,mem-array",
-+					   &mem[0],
-+					   DA7280_SNP_MEM_SIZE) >= 0) {
-+		haptics->mem_update = true;
-+		memset(haptics->snp_mem, 0, DA7280_SNP_MEM_SIZE);
-+		for (i = 0; i < DA7280_SNP_MEM_SIZE; i++) {
-+			if (mem[i] <= 0xff) {
-+				haptics->snp_mem[i] = (u8)mem[i];
-+			} else {
-+				dev_err(haptics->dev,
-+					"Invalid data in mem-array\n");
-+				haptics->mem_update = false;
-+				break;
-+			}
-+		}
-+	} else {
-+		haptics->mem_update = false;
-+	}
-+}
-+
-+static irqreturn_t da7280_irq_handler(int irq, void *data)
-+{
-+	struct da7280_haptic *haptics = data;
-+	struct device *dev = haptics->dev;
-+	u8 events[IRQ_NUM];
-+	int error;
-+
-+	/* Check what events have happened */
-+	error = regmap_bulk_read(haptics->regmap,
-+				 DA7280_IRQ_EVENT1,
-+				 events, IRQ_NUM);
-+	if (error)
-+		goto error_i2c;
-+
-+	/* Clear events */
-+	error = regmap_write(haptics->regmap,
-+			     DA7280_IRQ_EVENT1, events[0]);
-+	if (error)
-+		goto error_i2c;
-+
-+	if (events[0] & DA7280_E_SEQ_FAULT_MASK) {
-+		/* Stop first if Haptic is working
-+		 * Otherwise, the fault may happen continually
-+		 * even though the bit is cleared.
-+		 */
-+		error = regmap_update_bits(haptics->regmap,
-+					   DA7280_TOP_CTL1,
-+					   DA7280_OPERATION_MODE_MASK, 0);
-+		if (error)
-+			goto error_i2c;
-+	}
-+
-+	if (events[0] & DA7280_E_SEQ_DONE_MASK)
-+		haptics->enabled = false;
-+
-+	if (events[0] & DA7280_E_WARNING_MASK) {
-+		if (events[1] & DA7280_E_LIM_DRIVE_MASK ||
-+		    events[1] & DA7280_E_LIM_DRIVE_ACC_MASK)
-+			dev_warn(dev, "Please reduce the driver level\n");
-+		if (events[1] & DA7280_E_MEM_TYPE_MASK)
-+			dev_warn(dev, "Please check the mem data format\n");
-+		if (events[1] & DA7280_E_OVERTEMP_WARN_MASK)
-+			dev_warn(dev, "Over-temperature warning\n");
-+	}
-+
-+	if (events[0] & DA7280_E_SEQ_FAULT_MASK) {
-+		if (events[2] & DA7280_E_SEQ_ID_FAULT_MASK)
-+			dev_info(dev, "Please reload PS_SEQ_ID & mem data\n");
-+		if (events[2] & DA7280_E_MEM_FAULT_MASK)
-+			dev_info(dev, "Please reload the mem data\n");
-+		if (events[2] & DA7280_E_PWM_FAULT_MASK)
-+			dev_info(dev, "Please restart PWM interface\n");
-+	}
-+
-+	return IRQ_HANDLED;
-+
-+error_i2c:
-+	dev_err(dev, "da7280 i2c error : %pE\n", ERR_PTR(error));
-+	return IRQ_NONE;
-+}
-+
-+static int da7280_init(struct da7280_haptic *haptics)
-+{
-+	int error, i;
-+	unsigned int val = 0;
-+	u32 v2i_factor;
-+	u8 mask = 0;
-+
-+	/* If device type is DA7280_DEV_MAX,
-+	 * then just use default value inside chip.
-+	 */
-+	if (haptics->dev_type == DA7280_DEV_MAX) {
-+		error = regmap_read(haptics->regmap, DA7280_TOP_CFG1, &val);
-+		if (error)
-+			goto error_i2c;
-+		if (val & DA7280_ACTUATOR_TYPE_MASK)
-+			haptics->dev_type = DA7280_ERM_COIN;
-+		else
-+			haptics->dev_type = DA7280_LRA;
-+	}
-+
-+	/* Apply user settings */
-+	if (haptics->dev_type == DA7280_LRA) {
-+		if (haptics->resonant_freq_l != DA7280_SKIP_INIT) {
-+			error = regmap_write(haptics->regmap,
-+					     DA7280_FRQ_LRA_PER_H,
-+					     haptics->resonant_freq_h);
-+			if (error)
-+				goto error_i2c;
-+			error = regmap_write(haptics->regmap,
-+					     DA7280_FRQ_LRA_PER_L,
-+					     haptics->resonant_freq_l);
-+			if (error)
-+				goto error_i2c;
-+		}
-+	} else if (haptics->dev_type == DA7280_ERM_COIN) {
-+		error = regmap_update_bits(haptics->regmap,
-+					   DA7280_TOP_INT_CFG1,
-+					   DA7280_BEMF_FAULT_LIM_MASK, 0);
-+		if (error)
-+			goto error_i2c;
-+
-+		mask = DA7280_TST_CALIB_IMPEDANCE_DIS_MASK |
-+			DA7280_V2I_FACTOR_FREEZE_MASK;
-+		val = DA7280_TST_CALIB_IMPEDANCE_DIS_MASK |
-+			DA7280_V2I_FACTOR_FREEZE_MASK;
-+		error = regmap_update_bits(haptics->regmap,
-+					   DA7280_TOP_CFG4,
-+					   mask, val);
-+		if (error)
-+			goto error_i2c;
-+
-+		haptics->acc_en = false;
-+		haptics->rapid_stop_en = false;
-+		haptics->amp_pid_en = false;
-+	}
-+
-+	mask = DA7280_ACTUATOR_TYPE_MASK |
-+			DA7280_BEMF_SENSE_EN_MASK |
-+			DA7280_FREQ_TRACK_EN_MASK |
-+			DA7280_ACCELERATION_EN_MASK |
-+			DA7280_RAPID_STOP_EN_MASK |
-+			DA7280_AMP_PID_EN_MASK;
-+
-+	val = (haptics->dev_type ? 1 : 0)
-+			<< DA7280_ACTUATOR_TYPE_SHIFT |
-+		(haptics->bemf_sense_en ? 1 : 0)
-+			<< DA7280_BEMF_SENSE_EN_SHIFT |
-+		(haptics->freq_track_en ? 1 : 0)
-+			<< DA7280_FREQ_TRACK_EN_SHIFT |
-+		(haptics->acc_en ? 1 : 0)
-+			<< DA7280_ACCELERATION_EN_SHIFT |
-+		(haptics->rapid_stop_en ? 1 : 0)
-+			<< DA7280_RAPID_STOP_EN_SHIFT |
-+		(haptics->amp_pid_en ? 1 : 0)
-+			<< DA7280_AMP_PID_EN_SHIFT;
-+
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_TOP_CFG1, mask, val);
-+	if (error)
-+		goto error_i2c;
-+
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_TOP_CFG5,
-+				   DA7280_V2I_FACTOR_OFFSET_EN_MASK,
-+				   haptics->acc_en ?
-+				   DA7280_V2I_FACTOR_OFFSET_EN_MASK : 0);
-+	if (error)
-+		goto error_i2c;
-+
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_TOP_CFG2,
-+				   DA7280_MEM_DATA_SIGNED_MASK,
-+				   haptics->acc_en ?
-+				   0 : DA7280_MEM_DATA_SIGNED_MASK);
-+	if (error)
-+		goto error_i2c;
-+
-+	if (haptics->nommax != DA7280_SKIP_INIT) {
-+		error = regmap_write(haptics->regmap,
-+				     DA7280_ACTUATOR1,
-+				     haptics->nommax);
-+		if (error)
-+			goto error_i2c;
-+	}
-+
-+	if (haptics->absmax != DA7280_SKIP_INIT) {
-+		error = regmap_write(haptics->regmap, DA7280_ACTUATOR2,
-+				     haptics->absmax);
-+		if (error)
-+			goto error_i2c;
-+	}
-+
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_ACTUATOR3,
-+				   DA7280_IMAX_MASK,
-+				   haptics->imax);
-+	if (error)
-+		goto error_i2c;
-+
-+	v2i_factor =
-+		haptics->impd * (haptics->imax + 4) / 1610400;
-+	error = regmap_write(haptics->regmap,
-+			     DA7280_CALIB_V2I_L,
-+			     v2i_factor & 0xff);
-+	if (error)
-+		goto error_i2c;
-+	error = regmap_write(haptics->regmap,
-+			     DA7280_CALIB_V2I_H,
-+			     v2i_factor >> 8);
-+	if (error)
-+		goto error_i2c;
-+
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_TOP_CTL1,
-+				   DA7280_STANDBY_EN_MASK,
-+				   DA7280_STANDBY_EN_MASK);
-+	if (error)
-+		goto error_i2c;
-+
-+	if (haptics->mem_update) {
-+		error = da7280_haptic_mem_update(haptics);
-+		if (error)
-+			goto error_i2c;
-+	}
-+
-+	/* Set  PS_SEQ_ID and PS_SEQ_LOOP */
-+	val = haptics->ps_seq_id << DA7280_PS_SEQ_ID_SHIFT |
-+		haptics->ps_seq_loop << DA7280_PS_SEQ_LOOP_SHIFT;
-+	error = regmap_write(haptics->regmap,
-+			     DA7280_SEQ_CTL2, val);
-+	if (error)
-+		goto error_i2c;
-+
-+	/* GPI(N) CTL */
-+	for (i = 0; i < 3; i++) {
-+		val = haptics->gpi_ctl[i].seq_id
-+				<< DA7280_GPI0_SEQUENCE_ID_SHIFT |
-+			haptics->gpi_ctl[i].mode
-+				<< DA7280_GPI0_MODE_SHIFT |
-+			haptics->gpi_ctl[i].polarity
-+				<< DA7280_GPI0_POLARITY_SHIFT;
-+		error = regmap_write(haptics->regmap,
-+				     DA7280_GPI_0_CTL + i, val);
-+		if (error)
-+			goto error_i2c;
-+	}
-+
-+	/* Mask ADC_SAT_M bit as default */
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_IRQ_MASK2,
-+				   DA7280_ADC_SAT_M_MASK,
-+				   DA7280_ADC_SAT_M_MASK);
-+	if (error)
-+		goto error_i2c;
-+
-+	/* Clear Interrupts */
-+	error = regmap_write(haptics->regmap, DA7280_IRQ_EVENT1, 0xff);
-+	if (error)
-+		goto error_i2c;
-+
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_IRQ_MASK1,
-+				   DA7280_SEQ_FAULT_M_MASK
-+				   | DA7280_SEQ_DONE_M_MASK, 0);
-+	if (error)
-+		goto error_i2c;
-+
-+	haptics->enabled = false;
-+	return 0;
-+
-+error_i2c:
-+	dev_err(haptics->dev,
-+		"haptic init - I2C error : %pE\n", ERR_PTR(error));
-+	return error;
-+}
-+
-+/* Valid format for ps_seq_id
-+ * echo X > ps_seq_id
-+ * ex) echo 2 > /sys/class/..../ps_seq_id
-+ * 0 <= X <= 15.
-+ */
-+static ssize_t ps_seq_id_store(struct device *dev,
-+			       struct device_attribute *attr,
-+			       const char *buf,
-+			       size_t count)
-+{
-+	struct da7280_haptic *haptics = dev_get_drvdata(dev);
-+	long val = 0xff;
-+	int error;
-+
-+	if (haptics->enabled)
-+		return -EBUSY;
-+
-+	if (kstrtol(&buf[0], 0, &val) < 0)
-+		goto err;
-+
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_SEQ_CTL2,
-+				   DA7280_PS_SEQ_ID_MASK,
-+				   (val & 0xf) >> DA7280_PS_SEQ_ID_SHIFT);
-+	if (error) {
-+		dev_err(haptics->dev,
-+			"failed to update register : %pE\n",
-+			ERR_PTR(error));
-+		return error;
-+	}
-+
-+	haptics->ps_seq_id = val & 0xf;
-+
-+	return count;
-+
-+err:
-+	dev_err(dev, "Invalid input\n");
-+	return count;
-+}
-+
-+static ssize_t ps_seq_id_show(struct device *dev,
-+			      struct device_attribute *attr,
-+			      char *buf)
-+{
-+	struct da7280_haptic *haptics = dev_get_drvdata(dev);
-+	int error;
-+	unsigned int val;
-+
-+	error = regmap_read(haptics->regmap, DA7280_SEQ_CTL2, &val);
-+	if (error) {
-+		dev_err(haptics->dev,
-+			"failed to read register : %pE\n",
-+			ERR_PTR(error));
-+		return error;
-+	}
-+	val = (val & DA7280_PS_SEQ_ID_MASK)
-+		>> DA7280_PS_SEQ_ID_SHIFT;
-+
-+	return sprintf(buf, "ps_seq_id is %d\n", val);
-+}
-+
-+/* Valid format for ps_seq_loop
-+ * echo X > ps_seq_loop
-+ * ex) echo 2 > /sys/class/..../ps_seq_loop
-+ * 0 <= X <= 15.
-+ */
-+static ssize_t ps_seq_loop_store(struct device *dev,
-+				 struct device_attribute *attr,
-+				 const char *buf,
-+				 size_t count)
-+{
-+	struct da7280_haptic *haptics = dev_get_drvdata(dev);
-+	long val = 0xff;
-+	int error;
-+
-+	if (haptics->enabled)
-+		return -EBUSY;
-+
-+	if (kstrtol(&buf[0], 0, &val) < 0)
-+		goto err;
-+
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_SEQ_CTL2,
-+				   DA7280_PS_SEQ_LOOP_MASK,
-+				   (val & 0xF) << DA7280_PS_SEQ_LOOP_SHIFT);
-+	if (error) {
-+		dev_err(haptics->dev,
-+			"failed to update register : %pE\n",
-+			ERR_PTR(error));
-+		return error;
-+	}
-+
-+	haptics->ps_seq_loop = (val & 0xF);
-+
-+	return count;
-+err:
-+	dev_err(dev, "Invalid input value!\n");
-+	return count;
-+}
-+
-+static ssize_t ps_seq_loop_show(struct device *dev,
-+				struct device_attribute *attr,
-+				char *buf)
-+{
-+	struct da7280_haptic *haptics = dev_get_drvdata(dev);
-+	int error;
-+	unsigned int val;
-+
-+	error = regmap_read(haptics->regmap, DA7280_SEQ_CTL2, &val);
-+	if (error) {
-+		dev_err(haptics->dev,
-+			"failed to read register : %pE\n",
-+			ERR_PTR(error));
-+		return error;
-+	}
-+	val = (val & DA7280_PS_SEQ_LOOP_MASK)
-+				>> DA7280_PS_SEQ_LOOP_SHIFT;
-+
-+	return sprintf(buf, "ps_seq_loop is %d\n", val);
-+}
-+
-+/* Valid format for GPIx_SEQUENCE_ID
-+ * echo X > ./gpi_seq_id0
-+ * Range of X: 0 <= X <= 15
-+ * ex)
-+ *	echo 1 > /sys/class/..../gpi_seq_id0
-+ *	echo 2 > /sys/class/..../gpi_seq_id1
-+ *	echo 3 > /sys/class/..../gpi_seq_id2
-+ */
-+static ssize_t gpi_seq_id0_store(struct device *dev,
-+				 struct device_attribute *attr,
-+				 const char *buf,
-+				 size_t count)
-+{
-+	struct da7280_haptic *haptics = dev_get_drvdata(dev);
-+	long val = 0xff;
-+	int error;
-+
-+	if (haptics->enabled)
-+		return -EBUSY;
-+
-+	if (kstrtol(&buf[0], 0, &val) < 0)
-+		goto err;
-+
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_GPI_0_CTL,
-+				   DA7280_GPI0_SEQUENCE_ID_MASK,
-+				   (val & 0xf)
-+				   << DA7280_GPI0_SEQUENCE_ID_SHIFT);
-+	if (error) {
-+		dev_err(haptics->dev,
-+			"failed to update register : %pE\n",
-+			ERR_PTR(error));
-+		return error;
-+	}
-+
-+	haptics->gpi_ctl[0].seq_id = val & 0xf;
-+
-+	return count;
-+
-+err:
-+	dev_err(dev, "Invalid input\n");
-+	return count;
-+}
-+
-+static ssize_t gpi_seq_id0_show(struct device *dev,
-+				struct device_attribute *attr,
-+				char *buf)
-+{
-+	struct da7280_haptic *haptics = dev_get_drvdata(dev);
-+	int error;
-+	unsigned int val;
-+
-+	error = regmap_read(haptics->regmap, DA7280_GPI_0_CTL, &val);
-+	if (error) {
-+		dev_err(haptics->dev,
-+			"failed to read register : %pE\n",
-+			ERR_PTR(error));
-+		return error;
-+	}
-+	val = (val & DA7280_GPI0_SEQUENCE_ID_MASK)
-+		>> DA7280_GPI0_SEQUENCE_ID_SHIFT;
-+
-+	return sprintf(buf, "gpi_seq_id0 is %d\n", val);
-+}
-+
-+static ssize_t gpi_seq_id1_store(struct device *dev,
-+				 struct device_attribute *attr,
-+				 const char *buf,
-+				 size_t count)
-+{
-+	struct da7280_haptic *haptics = dev_get_drvdata(dev);
-+	long val = 0xff;
-+	int error;
-+
-+	if (haptics->enabled)
-+		return -EBUSY;
-+
-+	if (kstrtol(&buf[0], 0, &val) < 0)
-+		goto err;
-+
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_GPI_1_CTL,
-+				   DA7280_GPI1_SEQUENCE_ID_MASK,
-+				   (val & 0xf)
-+				   << DA7280_GPI1_SEQUENCE_ID_SHIFT);
-+	if (error) {
-+		dev_err(haptics->dev,
-+			"failed to update register : %pE\n",
-+			ERR_PTR(error));
-+		return error;
-+	}
-+
-+	haptics->gpi_ctl[1].seq_id = val & 0xf;
-+
-+	return count;
-+
-+err:
-+	dev_err(dev, "Invalid input\n");
-+	return count;
-+}
-+
-+static ssize_t gpi_seq_id1_show(struct device *dev,
-+				struct device_attribute *attr,
-+				char *buf)
-+{
-+	struct da7280_haptic *haptics = dev_get_drvdata(dev);
-+	int error;
-+	unsigned int val;
-+
-+	error = regmap_read(haptics->regmap, DA7280_GPI_1_CTL, &val);
-+	if (error) {
-+		dev_err(haptics->dev,
-+			"failed to read register : %pE\n",
-+			ERR_PTR(error));
-+		return error;
-+	}
-+	val = (val & DA7280_GPI1_SEQUENCE_ID_MASK)
-+		>> DA7280_GPI1_SEQUENCE_ID_SHIFT;
-+
-+	return sprintf(buf, "gpi_seq_id1 is %d\n", val);
-+}
-+
-+static ssize_t gpi_seq_id2_store(struct device *dev,
-+				 struct device_attribute *attr,
-+				 const char *buf,
-+				 size_t count)
-+{
-+	struct da7280_haptic *haptics = dev_get_drvdata(dev);
-+	long val = 0xff;
-+	int error;
-+
-+	if (haptics->enabled)
-+		return -EBUSY;
-+
-+	if (kstrtol(&buf[0], 0, &val) < 0)
-+		goto err;
-+
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_GPI_2_CTL,
-+				   DA7280_GPI2_SEQUENCE_ID_MASK,
-+				   (val & 0xf)
-+				   << DA7280_GPI2_SEQUENCE_ID_SHIFT);
-+	if (error) {
-+		dev_err(haptics->dev,
-+			"failed to update register : %pE\n",
-+			ERR_PTR(error));
-+		return error;
-+	}
-+
-+	haptics->gpi_ctl[2].seq_id = val & 0xf;
-+
-+	return count;
-+
-+err:
-+	dev_err(dev, "Invalid input\n");
-+	return count;
-+}
-+
-+static ssize_t gpi_seq_id2_show(struct device *dev,
-+				struct device_attribute *attr,
-+				char *buf)
-+{
-+	struct da7280_haptic *haptics = dev_get_drvdata(dev);
-+	int error;
-+	unsigned int val;
-+
-+	error = regmap_read(haptics->regmap, DA7280_GPI_2_CTL, &val);
-+	if (error) {
-+		dev_err(haptics->dev,
-+			"failed to read register : %pE\n",
-+			ERR_PTR(error));
-+		return error;
-+	}
-+	val = (val & DA7280_GPI2_SEQUENCE_ID_MASK)
-+		>> DA7280_GPI2_SEQUENCE_ID_SHIFT;
-+
-+	return sprintf(buf, "gpi_seq_id2 is %d\n", val);
-+}
-+
-+#define MAX_PTN_REGS DA7280_SNP_MEM_SIZE
-+#define MAX_USER_INPUT_LEN (5 * DA7280_SNP_MEM_SIZE)
-+struct parse_data_t {
-+	int len;
-+	u8 val[MAX_PTN_REGS];
-+};
-+
-+static int da7280_parse_args(struct device *dev,
-+			     char *cmd, struct parse_data_t *ptn)
-+{
-+	struct da7280_haptic *haptics = dev_get_drvdata(dev);
-+	char *tok;		/* used to separate tokens */
-+	static const char ct[] = " \t"; /* space or tab delimits the tokens */
-+	int tok_count = 0;	/* total number of tokens parsed */
-+	int i = 0, val;
-+
-+	ptn->len = 0;
-+
-+	/* parse the input string */
-+	while ((tok = strsep(&cmd, ct)) != NULL) {
-+		/* this is a value to be written to the register */
-+		if (kstrtouint(tok, 0, &val) < 0) {
-+			dev_err(haptics->dev,
-+				"failed to read from %s\n", tok);
-+			break;
-+		}
-+
-+		if (i < MAX_PTN_REGS) {
-+			ptn->val[i] = val;
-+			i++;
-+		}
-+		tok_count++;
-+	}
-+
-+	/* decide whether it is a read or write operation based on the
-+	 * value of tok_count and count_flag.
-+	 * tok_count = 0: no inputs, invalid case.
-+	 * tok_count = 1: write one value.
-+	 * tok_count > 1: write multiple values/patterns.
-+	 */
-+	switch (tok_count) {
-+	case 0:
-+		return -EINVAL;
-+	case 1:
-+		ptn->len = 1;
-+		break;
-+	default:
-+		ptn->len = i;
-+	}
-+	return 0;
-+}
-+
-+static ssize_t
-+patterns_store(struct device *dev,
-+	       struct device_attribute *attr,
-+	       const char *buf,
-+	       size_t count)
-+{
-+	struct da7280_haptic *haptics = dev_get_drvdata(dev);
-+	struct parse_data_t mem;
-+	char cmd[MAX_USER_INPUT_LEN];
-+	unsigned int val;
-+	int error;
-+
-+	error = regmap_read(haptics->regmap, DA7280_MEM_CTL1, &val);
-+	if (error)
-+		return error;
-+
-+	if (count > MAX_USER_INPUT_LEN)
-+		memcpy(cmd, buf, MAX_USER_INPUT_LEN);
-+	else
-+		memcpy(cmd, buf, count);
-+
-+	/* chop of '\n' introduced by echo at the end of the input */
-+	if (cmd[count - 1] == '\n')
-+		cmd[count - 1] = '\0';
-+
-+	if (da7280_parse_args(dev, cmd, &mem) < 0)
-+		return -EINVAL;
-+
-+	memset(haptics->snp_mem, 0, DA7280_SNP_MEM_SIZE);
-+	memcpy(haptics->snp_mem, mem.val, mem.len);
-+
-+	error = da7280_haptic_mem_update(haptics);
-+	if (error)
-+		return error;
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(ps_seq_id);
-+static DEVICE_ATTR_RW(ps_seq_loop);
-+static DEVICE_ATTR_RW(gpi_seq_id0);
-+static DEVICE_ATTR_RW(gpi_seq_id1);
-+static DEVICE_ATTR_RW(gpi_seq_id2);
-+static DEVICE_ATTR_WO(patterns);
-+static struct attribute *da7280_sysfs_attr[] = {
-+	&dev_attr_ps_seq_id.attr,
-+	&dev_attr_ps_seq_loop.attr,
-+	&dev_attr_gpi_seq_id0.attr,
-+	&dev_attr_gpi_seq_id1.attr,
-+	&dev_attr_gpi_seq_id2.attr,
-+	&dev_attr_patterns.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group da7280_attr_group = {
-+	.attrs = da7280_sysfs_attr,
-+};
-+
-+static int da7280_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
-+{
-+	struct device *dev = &client->dev;
-+	struct da7280_haptic *haptics;
-+	struct input_dev *input_dev;
-+	struct ff_device *ff;
-+	struct pwm_state state;
-+	int error;
-+
-+	haptics = devm_kzalloc(dev, sizeof(*haptics), GFP_KERNEL);
-+	if (!haptics)
-+		return -ENOMEM;
-+	haptics->dev = dev;
-+
-+	if (!client->irq) {
-+		dev_err(dev, "No IRQ configured\n");
-+		return -EINVAL;
-+	}
-+
-+	da7280_parse_properties(dev, haptics);
-+
-+	if (haptics->const_op_mode == DA7280_PWM_MODE) {
-+		unsigned int period2freq;
-+
-+		haptics->pwm_dev = devm_pwm_get(dev, NULL);
-+		if (IS_ERR(haptics->pwm_dev)) {
-+			error = PTR_ERR(haptics->pwm_dev);
-+			if (error != -EPROBE_DEFER)
-+				dev_err(dev, "unable to request PWM: %pE\n",
-+					ERR_PTR(error));
-+			return error;
-+		}
-+
-+		/* Sync up PWM state and ensure it is off. */
-+		pwm_init_state(haptics->pwm_dev, &state);
-+		state.enabled = false;
-+		error = pwm_apply_state(haptics->pwm_dev, &state);
-+		if (error) {
-+			dev_err(dev,
-+				"failed to apply initial PWM state: %pE\n",
-+				ERR_PTR(error));
-+			return error;
-+		}
-+
-+		/* Check PWM Period, it must be in 10k ~ 250kHz */
-+		period2freq = 1000000 / state.period;
-+		if (period2freq < DA7280_MIN_PWM_FREQ_KHZ ||
-+		    period2freq > DA7280_MAX_PWM_FREQ_KHZ) {
-+			dev_err(dev, "Not supported PWM frequency(%d)\n",
-+				period2freq);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	INIT_DELAYED_WORK(&haptics->work_duration, da7280_haptic_work_duration);
-+	INIT_WORK(&haptics->work_playback, da7280_haptic_work_playback);
-+	INIT_WORK(&haptics->work_setgain, da7280_haptic_work_setgain);
-+
-+	haptics->client = client;
-+	i2c_set_clientdata(client, haptics);
-+
-+	haptics->regmap =
-+		devm_regmap_init_i2c(client, &da7280_haptic_regmap_config);
-+	if (IS_ERR(haptics->regmap)) {
-+		error = PTR_ERR(haptics->regmap);
-+		dev_err(dev, "Failed to allocate register map : %pE\n",
-+			ERR_PTR(error));
-+		return error;
-+	}
-+
-+	error = da7280_init(haptics);
-+	if (error) {
-+		dev_err(dev, "failed to initialize device\n");
-+		return error;
-+	}
-+
-+	/* Initialize input device for haptic device */
-+	input_dev = devm_input_allocate_device(dev);
-+	if (!input_dev) {
-+		dev_err(dev, "failed to allocate input device\n");
-+		return -ENOMEM;
-+	}
-+
-+	input_dev->name = "da7280-haptic";
-+	input_dev->dev.parent = client->dev.parent;
-+	input_dev->open = da7280_haptic_open;
-+	input_dev->close = da7280_haptic_close;
-+	input_set_drvdata(input_dev, haptics);
-+	haptics->input_dev = input_dev;
-+
-+	input_set_capability(haptics->input_dev, EV_FF, FF_PERIODIC);
-+	input_set_capability(haptics->input_dev, EV_FF, FF_CUSTOM);
-+	input_set_capability(haptics->input_dev, EV_FF, FF_CONSTANT);
-+	input_set_capability(haptics->input_dev, EV_FF, FF_GAIN);
-+
-+	error = input_ff_create(haptics->input_dev, DA7280_FF_EFFECT_COUNT_MAX);
-+	if (error) {
-+		dev_err(dev, "create FF input device failed: %pE\n",
-+			ERR_PTR(error));
-+		return error;
-+	}
-+
-+	ff = input_dev->ff;
-+	ff->upload = da7280_haptics_upload_effect;
-+	ff->playback = da7280_haptics_playback;
-+	ff->set_gain = da7280_haptics_set_gain;
-+
-+	error = input_register_device(input_dev);
-+	if (error) {
-+		dev_err(dev, "failed to register input device\n");
-+		return error;
-+	}
-+
-+	error = devm_device_add_group(dev, &da7280_attr_group);
-+	if (error) {
-+		dev_err(dev, "Failed to create sysfs attributes: %pE\n",
-+			ERR_PTR(error));
-+		return error;
-+	}
-+
-+	error = devm_request_threaded_irq(dev, client->irq, NULL,
-+					  da7280_irq_handler,
-+					  IRQF_ONESHOT,
-+					  "da7280-haptics", haptics);
-+	if (error)
-+		dev_err(dev, "Failed to request IRQ: %pE\n",
-+			ERR_PTR(error));
-+
-+	return error;
-+}
-+
-+static int __maybe_unused da7280_suspend(struct device *dev)
-+{
-+	struct da7280_haptic *haptics = dev_get_drvdata(dev);
-+	int error = 0;
-+
-+	mutex_lock(&haptics->input_dev->mutex);
-+
-+	da7280_haptic_disable(haptics);
-+
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_TOP_CTL1,
-+				   DA7280_STANDBY_EN_MASK, 0);
-+	if (error)
-+		dev_err(haptics->dev,
-+			"I2C error : %pE\n", ERR_PTR(error));
-+
-+	mutex_unlock(&haptics->input_dev->mutex);
-+	return error;
-+}
-+
-+static int __maybe_unused da7280_resume(struct device *dev)
-+{
-+	struct da7280_haptic *haptics = dev_get_drvdata(dev);
-+	int error = 0;
-+
-+	mutex_lock(&haptics->input_dev->mutex);
-+
-+	error = regmap_update_bits(haptics->regmap,
-+				   DA7280_TOP_CTL1,
-+				   DA7280_STANDBY_EN_MASK,
-+				   DA7280_STANDBY_EN_MASK);
-+	if (error)
-+		dev_err(haptics->dev,
-+			"i2c error : %pE\n", ERR_PTR(error));
-+
-+	mutex_unlock(&haptics->input_dev->mutex);
-+	return error;
-+}
-+
-+static const struct of_device_id da7280_of_match[] = {
-+	{ .compatible = "dlg,da7280", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, da7280_of_match);
-+
-+static const struct i2c_device_id da7280_i2c_id[] = {
-+	{ "da7280", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, da7280_i2c_id);
-+
-+static SIMPLE_DEV_PM_OPS(da7280_pm_ops,
-+		 da7280_suspend, da7280_resume);
-+
-+static struct i2c_driver da7280_driver = {
-+	.driver	= {
-+		.name		= "da7280",
-+		.of_match_table	= of_match_ptr(da7280_of_match),
-+		.pm		= &da7280_pm_ops,
-+	},
-+	.probe	  = da7280_probe,
-+	.id_table = da7280_i2c_id,
-+};
-+module_i2c_driver(da7280_driver);
-+
-+MODULE_DESCRIPTION("DA7280 haptics driver");
-+MODULE_AUTHOR("Roy Im <Roy.Im.Opensource@diasemi.com>");
-+MODULE_LICENSE("GPL");
--- 
-end-of-patch for PATCH V13
-
+SGVsbG8sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogVXdlIEtsZWlu
+ZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5kZT4NCj4gU2VudDogVHVlc2Rh
+eSwgTWF5IDUsIDIwMjAgMTo0MiBBTQ0KPiBUbzogU2FuZGlwYW4gUGF0cmEgPHNwYXRyYUBudmlk
+aWEuY29tPg0KPiBDYzogVGhpZXJyeSBSZWRpbmcgPHRyZWRpbmdAbnZpZGlhLmNvbT47IHJvYmgr
+ZHRAa2VybmVsLm9yZzsgSm9uYXRoYW4NCj4gSHVudGVyIDxqb25hdGhhbmhAbnZpZGlhLmNvbT47
+IEJpYmVrIEJhc3UgPGJiYXN1QG52aWRpYS5jb20+OyBMYXhtYW4NCj4gRGV3YW5nYW4gPGxkZXdh
+bmdhbkBudmlkaWEuY29tPjsgbGludXgtcHdtQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJl
+ZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXRlZ3JhQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+
+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWMl0gcHdtOiB0
+ZWdyYTogZHluYW1pYyBjbGsgZnJlcSBjb25maWd1cmF0aW9uIGJ5IFBXTQ0KPiBkcml2ZXINCj4g
+DQo+IEV4dGVybmFsIGVtYWlsOiBVc2UgY2F1dGlvbiBvcGVuaW5nIGxpbmtzIG9yIGF0dGFjaG1l
+bnRzDQo+IA0KPiANCj4gSGVsbG8sDQo+IA0KPiBPbiBNb24sIEFwciAyMCwgMjAyMCBhdCAwOToy
+NDowM1BNICswNTMwLCBTYW5kaXBhbiBQYXRyYSB3cm90ZToNCj4gPiBBZGRlZCBzdXBwb3J0IGZv
+ciBkeW5hbWljIGNsb2NrIGZyZXEgY29uZmlndXJhdGlvbiBpbiBwd20ga2VybmVsIGRyaXZlci4N
+Cj4gPiBFYXJsaWVyIHRoZSBwd20gZHJpdmVyIHVzZWQgdG8gY2FjaGUgYm9vdCB0aW1lIGNsb2Nr
+IHJhdGUgYnkgcHdtIGNsb2NrDQo+ID4gcGFyZW50IGR1cmluZyBwcm9iZS4gSGVuY2UgZHluYW1p
+Y2FsbHkgY2hhbmdpbmcgcHdtIGZyZXF1ZW5jeSB3YXMgbm90DQo+ID4gcG9zc2libGUgZm9yIGFs
+bCB0aGUgcG9zc2libGUgcmFuZ2VzLiBXaXRoIHRoaXMgY2hhbmdlLCBkeW5hbWljDQo+ID4gY2Fs
+Y3VsYXRpb24gaXMgZW5hYmxlZCBhbmQgaXQgaXMgYWJsZSB0byBzZXQgdGhlIHJlcXVlc3RlZCBw
+ZXJpb2QgZnJvbQ0KPiA+IHN5c2ZzIGtub2IgcHJvdmlkZWQgdGhlIHZhbHVlIGlzIHN1cHBvcnRl
+ZCBieSBjbG9jayBzb3VyY2UuDQo+ID4NCj4gPiBDaGFuZ2VzIG1haW5seSBoYXZlIDIgcGFydHM6
+DQo+ID4gICAtIFQxODYgYW5kIGxhdGVyIGNoaXBzIFsxXQ0KPiA+ICAgLSBUMjEwIGFuZCBwcmlv
+ciBjaGlwcyBbMl0NCj4gPg0KPiA+IEZvciBbMV0gLSBDaGFuZ2VzIGltcGxlbWVudGVkIHRvIHNl
+dCBwd20gcGVyaW9kIGR5bmFtaWNhbGx5IGFuZA0KPiA+ICAgICAgICAgICBhbHNvIGNoZWNrcyBh
+ZGRlZCB0byBhbGxvdyBvbmx5IGlmIHJlcXVlc3RlZCBwZXJpb2QobnMpIGlzDQo+ID4gICAgICAg
+ICAgIGJlbG93IG9yIGVxdWFscyB0byBoaWdoZXIgcmFuZ2UuDQo+ID4NCj4gPiBGb3IgWzJdIC0g
+T25seSBjaGVja3MgaWYgdGhlIHJlcXVlc3RlZCBwZXJpb2QobnMpIGlzIGJlbG93IG9yIGVxdWFs
+cw0KPiA+ICAgICAgICAgICB0byBoaWdoZXIgcmFuZ2UgZGVmaW5lZCBieSBtYXggY2xvY2sgbGlt
+aXQuIFRoZSBsaW1pdGF0aW9uDQo+ID4gICAgICAgICAgIGluIFQyMTAgb3IgcHJpb3IgY2hpcHMg
+YXJlIGR1ZSB0byB0aGUgcmVhc29uIG9mIGhhdmluZyBvbmx5DQo+ID4gICAgICAgICAgIG9uZSBw
+d20tY29udHJvbGxlciBzdXBwb3J0aW5nIG11bHRpcGxlIGNoYW5uZWxzLiBCdXQgbGF0ZXINCj4g
+PiAgICAgICAgICAgY2hpcHMgaGF2ZSBtdWx0aXBsZSBwd20gY29udHJvbGxlciBpbnN0YW5jZXMg
+ZWFjaCBoYXZpbmcNCj4gPiAgICAgICAgIHNpbmdsZSBjaGFubmVsIHN1cHBvcnQuDQo+ID4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBTYW5kaXBhbiBQYXRyYSA8c3BhdHJhQG52aWRpYS5jb20+DQo+ID4g
+LS0tDQo+ID4gVjI6DQo+ID4gMS4gTWluIHBlcmlvZF9ucyBjYWxjdWxhdGlvbiBpcyBtb3ZlZCB0
+byBwcm9iZS4NCj4gPiAyLiBBZGRlZCBkZXNjcmlwdGlvaW5zIGZvciBQV00gcmVnaXN0ZXIgYml0
+cyBhbmQgcmVnYXJkaW5nIGJlaGF2aW91cg0KPiA+ICAgIG9mIHRoZSBjb250cm9sbGVyIHdoZW4g
+bmV3IGNvbmZpZ3VyYXRpb24gaXMgYXBwbGllZCBvciBwd20gaXMgZGlzYWJsZWQuDQo+ID4gMy4g
+U2V0dGluZyBwZXJpb2Qgd2l0aCBwb3NzaWJsZSB2YWx1ZSB3aGVuIHN1cHBsaWVkIHBlcmlvZCBp
+cyBiZWxvdyBsaW1pdC4NCj4gPiA0LiBDb3JyZWN0ZWQgdGhlIGVhcmxpZXIgY29kZSBjb21tZW50
+Og0KPiA+ICAgIHBsdXMgMSBpbnN0ZWFkIG9mIG1pbnVzIDEgZHVyaW5nIHB3bSBjYWxjdWxhdGlv
+bg0KPiA+DQo+ID4gIGRyaXZlcnMvcHdtL3B3bS10ZWdyYS5jIHwgMTEwDQo+ID4gKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tDQo+ID4gIDEgZmlsZSBjaGFu
+Z2VkLCA5NCBpbnNlcnRpb25zKCspLCAxNiBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL3B3bS9wd20tdGVncmEuYyBiL2RyaXZlcnMvcHdtL3B3bS10ZWdyYS5jIGlu
+ZGV4DQo+ID4gZDI2ZWQ4Zi4uN2EzNjMyNSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3B3bS9w
+d20tdGVncmEuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcHdtL3B3bS10ZWdyYS5jDQo+ID4gQEAgLTQs
+OCArNCwzOSBAQA0KPiA+ICAgKg0KPiA+ICAgKiBUZWdyYSBwdWxzZS13aWR0aC1tb2R1bGF0aW9u
+IGNvbnRyb2xsZXIgZHJpdmVyDQo+ID4gICAqDQo+ID4gLSAqIENvcHlyaWdodCAoYykgMjAxMCwg
+TlZJRElBIENvcnBvcmF0aW9uLg0KPiA+IC0gKiBCYXNlZCBvbiBhcmNoL2FybS9wbGF0LW14Yy9w
+d20uYyBieSBTYXNjaGEgSGF1ZXINCj4gPiA8cy5oYXVlckBwZW5ndXRyb25peC5kZT4NCj4gPiAr
+ICogQ29weXJpZ2h0IChjKSAyMDEwLTIwMjAsIE5WSURJQSBDb3Jwb3JhdGlvbi4NCj4gPiArICoN
+Cj4gPiArICogT3ZlcnZpZXcgb2YgVGVncmEgUHVsc2UgV2lkdGggTW9kdWxhdG9yIFJlZ2lzdGVy
+Og0KPiA+ICsgKiAxLiAxMy1iaXQ6IEZyZXF1ZW5jeSBkaXZpc2lvbiAoU0NBTEUpDQo+ID4gKyAq
+IDIuIDgtYml0IDogUHVscyBkaXZpc2lvbiAoRFVUWSkNCj4gPiArICogMy4gMS1iaXQgOiBFbmFi
+bGUgYml0DQo+ID4gKyAqDQo+ID4gKyAqIFRoZSBQV00gY2xvY2sgZnJlcXVlbmN5IGlzIGRpdmlk
+ZWQgYnkgMjU2IGJlZm9yZSBzdWJkaXZpZGluZyBpdA0KPiA+ICsgYmFzZWQNCj4gPiArICogb24g
+dGhlIHByb2dyYW1tYWJsZSBmcmVxdWVuY3kgZGl2aXNpb24gdmFsdWUgdG8gZ2VuZXJhdGUgdGhl
+DQo+ID4gKyByZXF1aXJlZA0KPiA+ICsgKiBmcmVxdWVuY3kgZm9yIFBXTSBvdXRwdXQuIFRoZSBt
+YXhpbXVtIG91dHB1dCBmcmVxdWVuY3kgdGhhdCBjYW4gYmUNCj4gPiArICogYWNoaWV2ZWQgaXMg
+KG1heCByYXRlIG9mIHNvdXJjZSBjbG9jaykgLyAyNTYuDQo+ID4gKyAqIGkuZS4gaWYgc291cmNl
+IGNsb2NrIHJhdGUgaXMgNDA4IE1IeiwgbWF4aW11bSBvdXRwdXQgZnJlcXVlbmN5IGNhYiBiZToN
+Cj4gDQo+IHMvaS5lLi9lLmcuLywgcy9jYWIvY2FuLw0KDQpOb3RlZCwgY29ycmVjdGlvbiBpbiBu
+ZXh0IHBhdGNoLg0KDQo+IA0KPiA+ICsgKiA0MDggTUh6LzI1NiA9IDEuNiBNSHouDQo+ID4gKyAq
+IFRoaXMgMS42IE1IeiBmcmVxdWVuY3kgY2FuIGZ1cnRoZXIgYmUgZGl2aWRlZCB1c2luZyBTQ0FM
+RSB2YWx1ZSBpbiBQV00uDQo+ID4gKyAqDQo+ID4gKyAqIFBXTSBwdWxzZSB3aWR0aDogOCBiaXRz
+IGFyZSB1c2FibGUgWzIzOjE2XSBmb3IgdmFyeWluZyBwdWxzZSB3aWR0aC4NCj4gPiArICogVG8g
+YWNoaWV2ZSAxMDAlIGR1dHkgY3ljbGUsIHByb2dyYW0gQml0IFsyNF0gb2YgdGhpcyByZWdpc3Rl
+ciB0bw0KPiA+ICsgKiAx4oCZYjEuIEluIHdoaWNoIGNhc2UgdGhlIG90aGVyIGJpdHMgWzIzOjE2
+XSBhcmUgc2V0IHRvIGRvbid0IGNhcmUuDQo+ID4gKyAqDQo+ID4gKyAqIExpbWl0YXRpb25zIGFu
+ZCBrbm93biBmYWN0czoNCj4gDQo+IFBsZWFzZSB1c2UgIkxpbWl0YXRpb25zOiIgaGVyZSB0byBt
+YWtlIHRoaXMgZWFzaWVyIGdyZXBwYWJsZS4NCg0KV2lsbCB1cGRhdGUgaW4gbmV4dCBwYXRjaC4N
+Cg0KPiANCj4gPiArICogLSBXaGVuIFBXTSBpcyBkaXNhYmxlZCwgdGhlIG91dHB1dCBpcyBkcml2
+ZW4gdG8gMC4NCj4gDQo+IDAgb3IgaW5hY3RpdmU/DQoNClllcywgSW5hY3RpdmUuIFdoZW4gaXQg
+aXMgMCwgaXQgaXMgZGlzYWJsZWQuDQpXaWxsIHVwZGF0ZSBpdCB0byAiaW5hY3RpdmUiLg0KDQo+
+IA0KPiA+ICsgKiAtIEl0IGRvZXMgbm90IGFsbG93IHRoZSBjdXJyZW50IFBXTSBwZXJpb2QgdG8g
+Y29tcGxldGUgYW5kDQo+ID4gKyAqICAgc3RvcHMgYWJydXB0bHkuDQo+ID4gKyAqDQo+ID4gKyAq
+IC0gSWYgdGhlIHJlZ2lzdGVyIGlzIHJlY29uZmlndXJlZCB3aGlsZSBwd20gaXMgcnVubmluZywN
+Cj4gDQo+IHMvcHdtL1BXTS8NCiANCk5vdGVkLCBjb3JyZWN0aW9uIGluIG5leHQgcGF0Y2guDQoN
+Cj4gDQo+ID4gKyAqICAgSXQgZG9lcyBub3QgbGV0IHRoZSBjdXJyZW50bHkgcnVubmluZyBwZXJp
+b2QgdG8gY29tcGxldGUuDQo+IA0KPiBzL0l0L2l0Lzsgcy9sZXQvY29tcGxldGUvOyBzLyB0byBj
+b21wbGV0ZS8vDQo+DQoNCk5vdGVkLCBjb3JyZWN0aW9uIGluIG5leHQgcGF0Y2gNCiANCj4gPiAr
+ICoNCj4gPiArICogLSBQdWxzZSB3aWR0aCBvZiB0aGUgcHdtIGNhbiBuZXZlciBiZSBvdXQgb2Yg
+Ym91bmQuDQo+IA0KPiBJIGRvbid0IHVuZGVyc3RhbmQgdGhhdCBvbmUuDQoNCkFzIEkgdW5kZXJz
+dGFuZDoNClB1bHNlIHdpZHRoIGlzIGNvbmZpZ3VyZWQgb24gYml0cyBbMjM6MTZdLiBTbyBhbnkg
+bWlzY29uZmlndXJhdGlvbiBvciBvdmVyZmxvdyBmcm9tDQpTb2Z0d2FyZSB3aWxsIGJlIHJlc3Ry
+aWN0ZWQgYnkgdGhlIGhhcmR3YXJlIGFuZCBvbmx5IHRoZSByZXNwZWN0aXZlIGJpdHMgd2lsbCBi
+ZSBjb25zaWRlcmVkLg0KQWxzbyB0aGUgZXhwbGFuYXRpb24gaXMgYWRkZWQgYWJvdmUgZHVyaW5n
+IHJlZ2lzdGVyIGJpdCBmaWVsZCBkZXNjcmlwdGlvbnMuDQpQbGVhc2UgYWR2aXNlIGlmIHRoYXQg
+ZG9lc24ndCBoZWxwLg0KIA0KPiANCj4gPiArICogICBJdCdzIHRha2VuIGNhcmUgYXQgSFcgYW5k
+IFNXDQo+ID4gKyAqIC0gSWYgdGhlIHVzZXIgaW5wdXQgZHV0eSBpcyBiZWxvdyBsaW1pdCwgdGhl
+biBkcml2ZXIgc2V0cyBpdCB0bw0KPiA+ICsgKiAgIG1pbmltdW0gcG9zc2libGUgdmFsdWUuDQo+
+IA0KPiB0aGF0IGlzIDA/IERvIHlvdSBtZWFuICJpbnB1dCBwZXJpb2QiPyBJZiBzbywgYmV0dGVy
+IHJlZnVzZSB0aGUgcmVxdWVzdC4NCg0KVGhpcyBpcyBmb3IgcHdtIGR1dHkuIElmIHVzZXIgcmVx
+dWVzdGVkIGR1dHkgaXMgYmVsb3cgbG93ZXIgYm91bmQsIHRoZW4NCnB3bSBkcml2ZXIgY29uZmln
+dXJlcyB0byB0aGUgbWluIHBvc3NpYmxlIGR1dHkuDQpMb3dlciBib3VuZCBhbmQgdXBwZXIgYm91
+bmQgdmFsdWVzIGFyZSBkZXJpdmVkIGJhc2VkIG9uIG1pbiBhbmQNCm1heCBjbG9jayByYXRlcyBy
+ZXNwZWN0aXZlbHkuDQoNCj4gDQo+ID4gKyAqIC0gSWYgYW55dGhpbmcgZWxzZSBnb2VzIHdyb25n
+IGZvciBzZXR0aW5nIGR1dHkgb3IgcGVyaW9kLA0KPiA+ICsgKiAgIC1FSU5WQUwgaXMgcmV0dXJu
+ZWQuDQo+IA0KPiBJIHdvdWxkbid0IHN0YXRlIHRoaXMsIHRvbyB0cml2aWFsLiBJbnN0ZWFkIHRo
+ZSBmb2xsb3dpbmcgYXJlDQo+IGludGVyZXN0aW5nOg0KPiANCj4gIC0gVGhlIGRyaXZlciBkb2Vz
+bid0IGltcGxlbWVudCB0aGUgcmlnaHQgcm91bmRpbmcgcnVsZXMNCj4gIC0gVGhlIGRyaXZlciBu
+ZWVkcyB1cGRhdGluZyB0byB0aGUgYXRvbWljIEFQSQ0KPiANCj4gPiAgICovDQo+ID4NCj4gPiAg
+I2luY2x1ZGUgPGxpbnV4L2Nsay5oPg0KPiA+IEBAIC00MSw2ICs3Miw3IEBAIHN0cnVjdCB0ZWdy
+YV9wd21fY2hpcCB7DQo+ID4gICAgICAgc3RydWN0IHJlc2V0X2NvbnRyb2wqcnN0Ow0KPiA+DQo+
+ID4gICAgICAgdW5zaWduZWQgbG9uZyBjbGtfcmF0ZTsNCj4gPiArICAgICB1bnNpZ25lZCBsb25n
+IG1pbl9wZXJpb2RfbnM7DQo+ID4NCj4gPiAgICAgICB2b2lkIF9faW9tZW0gKnJlZ3M7DQo+ID4N
+Cj4gPiBAQCAtNjcsOCArOTksOSBAQCBzdGF0aWMgaW50IHRlZ3JhX3B3bV9jb25maWcoc3RydWN0
+IHB3bV9jaGlwICpjaGlwLA0KPiBzdHJ1Y3QgcHdtX2RldmljZSAqcHdtLA0KPiA+ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgaW50IGR1dHlfbnMsIGludCBwZXJpb2RfbnMpICB7DQo+ID4gICAg
+ICAgc3RydWN0IHRlZ3JhX3B3bV9jaGlwICpwYyA9IHRvX3RlZ3JhX3B3bV9jaGlwKGNoaXApOw0K
+PiA+IC0gICAgIHVuc2lnbmVkIGxvbmcgbG9uZyBjID0gZHV0eV9ucywgaHo7DQo+ID4gLSAgICAg
+dW5zaWduZWQgbG9uZyByYXRlOw0KPiA+ICsgICAgIHVuc2lnbmVkIGxvbmcgbG9uZyBwX3dpZHRo
+ID0gZHV0eV9ucywgcGVyaW9kX2h6Ow0KPiA+ICsgICAgIHVuc2lnbmVkIGxvbmcgcmF0ZSwgcmVx
+dWlyZWRfY2xrX3JhdGU7DQo+ID4gKyAgICAgdW5zaWduZWQgbG9uZyBwZm07IC8qIEZyZXF1ZW5j
+eSBkaXZpZGVyICovDQo+ID4gICAgICAgdTMyIHZhbCA9IDA7DQo+ID4gICAgICAgaW50IGVycjsN
+Cj4gPg0KPiA+IEBAIC03NywzNyArMTEwLDc3IEBAIHN0YXRpYyBpbnQgdGVncmFfcHdtX2NvbmZp
+ZyhzdHJ1Y3QgcHdtX2NoaXAgKmNoaXAsDQo+IHN0cnVjdCBwd21fZGV2aWNlICpwd20sDQo+ID4g
+ICAgICAgICogcGVyICgxIDw8IFBXTV9EVVRZX1dJRFRIKSBjeWNsZXMgYW5kIG1ha2Ugc3VyZSB0
+byByb3VuZCB0byB0aGUNCj4gPiAgICAgICAgKiBuZWFyZXN0IGludGVnZXIgZHVyaW5nIGRpdmlz
+aW9uLg0KPiA+ICAgICAgICAqLw0KPiA+IC0gICAgIGMgKj0gKDEgPDwgUFdNX0RVVFlfV0lEVEgp
+Ow0KPiA+IC0gICAgIGMgPSBESVZfUk9VTkRfQ0xPU0VTVF9VTEwoYywgcGVyaW9kX25zKTsNCj4g
+PiArICAgICBwX3dpZHRoICo9ICgxIDw8IFBXTV9EVVRZX1dJRFRIKTsNCj4gPiArICAgICBwX3dp
+ZHRoID0gRElWX1JPVU5EX0NMT1NFU1RfVUxMKHBfd2lkdGgsIHBlcmlvZF9ucyk7DQo+ID4NCj4g
+PiAtICAgICB2YWwgPSAodTMyKWMgPDwgUFdNX0RVVFlfU0hJRlQ7DQo+ID4gKyAgICAgdmFsID0g
+KHUzMilwX3dpZHRoIDw8IFBXTV9EVVRZX1NISUZUOw0KPiA+ICsNCj4gPiArICAgICAvKg0KPiA+
+ICsgICAgICAqICBQZXJpb2QgaW4gbmFubyBzZWNvbmQgaGFzIHRvIGJlIDw9IGhpZ2hlc3QgYWxs
+b3dlZCBwZXJpb2QNCj4gPiArICAgICAgKiAgYmFzZWQgb24gbWF4IGNsb2NrIHJhdGUgb2YgdGhl
+IHB3bSBjb250cm9sbGVyLg0KPiA+ICsgICAgICAqDQo+ID4gKyAgICAgICogIGhpZ2hlciBsaW1p
+dCA9IG1heCBjbG9jayBsaW1pdCA+PiBQV01fRFVUWV9XSURUSA0KPiA+ICsgICAgICAqICBsb3dl
+ciBsaW1pdCA9IG1pbiBjbG9jayBsaW1pdCA+PiBQV01fRFVUWV9XSURUSCA+Pg0KPiBQV01fU0NB
+TEVfV0lEVEgNCj4gPiArICAgICAgKi8NCj4gPiArICAgICBpZiAocGVyaW9kX25zIDwgcGMtPm1p
+bl9wZXJpb2RfbnMpIHsNCj4gPiArICAgICAgICAgICAgIHBlcmlvZF9ucyA9IHBjLT5taW5fcGVy
+aW9kX25zOw0KPiA+ICsgICAgICAgICAgICAgcHJfd2FybigiUGVyaW9kIGlzIGFkanVzdGVkIHRv
+IGFsbG93ZWQgdmFsdWUgKCVkIG5zKVxuIiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBwZXJpb2RfbnMpOw0KPiANCj4gVGhhdCBwcl93YXJuIGlzIGEgYmFkIGlkZWEgYXMgaXQg
+c3BhbXMgdGhlIGtlcm5lbCBsb2cgd2hlbiB0aGUgY29uZmlndXJhdGlvbiBpcw0KPiBjaGFuZ2Vk
+IGZyZXF1ZW50bHkuIFdvdWxkbid0IGl0IGJlIGVhc2llciB0byBjYWxjdWxhdGUgdGhlIGZyZXF1
+ZW5jeSB0aGF0IGlzDQo+IG5lZWRlZCB0byBhY2hpZXZlIHBlcmlvZF9ucyBhbmQgY2hlY2sgdGhh
+dCBhZ2FpbnN0IG1heF9mcmVxdWVuY3k/DQoNCkkgdGhpbmsgeW91IGFyZSBzdWdnZXN0aW5nIHdo
+aWNoIGlzIGRvbmUganVzdCBuZXh0Og0KcmVxdWlyZWRfY2xrX3JhdGUgPSAoTlNFQ19QRVJfU0VD
+IC8gcGVyaW9kX25zKSA8PCBQV01fRFVUWV9XSURUSDsNCmNsa19zZXRfcmF0ZShwYy0+Y2xrLCBy
+ZXF1aXJlZF9jbGtfcmF0ZSk7DQpQbGVhc2UgbGV0IG1lIGtub3cgaWYgSSBtaXNzZWQgd2hhdCB5
+b3UgbWVhbnQuDQoNCj4gDQo+ID4gKyAgICAgfQ0KPiA+DQo+ID4gICAgICAgLyoNCj4gPiAgICAg
+ICAgKiBDb21wdXRlIHRoZSBwcmVzY2FsZXIgdmFsdWUgZm9yIHdoaWNoICgxIDw8IFBXTV9EVVRZ
+X1dJRFRIKQ0KPiA+ICAgICAgICAqIGN5Y2xlcyBhdCB0aGUgUFdNIGNsb2NrIHJhdGUgd2lsbCB0
+YWtlIHBlcmlvZF9ucyBuYW5vc2Vjb25kcy4NCj4gPiAgICAgICAgKi8NCj4gPiAtICAgICByYXRl
+ID0gcGMtPmNsa19yYXRlID4+IFBXTV9EVVRZX1dJRFRIOw0KPiA+ICsgICAgIGlmIChwYy0+c29j
+LT5udW1fY2hhbm5lbHMgPT0gMSkgew0KPiANCj4gcmVxdWlyZWRfY2xrX3JhdGUgY291bGQgYmUg
+ZGVmaW5lZCBoZXJlLCB3aGljaCBpcyBiZXR0ZXIgYXMgaXQgbmFycm93cyBpdHMgc2NvcGUuDQo+
+IA0KDQpOb3RlZCwgd2lsbCBkZWZpbmUgaGVyZSB0byBsaW1pdCBpdHMgc2NvcGUuDQoNCj4gPiAr
+ICAgICAgICAgICAgIC8qDQo+ID4gKyAgICAgICAgICAgICAgKiBSYXRlIGlzIG11bHRpcGxpZWQg
+d2l0aCAyXlBXTV9EVVRZX1dJRFRIIHNvIHRoYXQgaXQgbWF0Y2hlcw0KPiA+ICsgICAgICAgICAg
+ICAgICogd2l0aCB0aGUgaGllZ2hlc3QgYXBwbGljYWJsZSByYXRlIHRoYXQgdGhlIGNvbnRyb2xs
+ZXINCj4gPiArIGNhbg0KPiANCj4gcy9oaWVnaGVzdC9oaWdoZXN0Lw0KDQpOb3RlZCwgY29ycmVj
+dGlvbiBpbiBuZXh0IHBhdGNoDQoNCj4gDQo+ID4gKyAgICAgICAgICAgICAgKiBwcm92aWRlLiBB
+bnkgZnVydGhlciBsb3dlciB2YWx1ZSBjYW4gYmUgZGVyaXZlZCBieSBzZXR0aW5nDQo+ID4gKyAg
+ICAgICAgICAgICAgKiBQRk0gYml0c1swOjEyXS4NCj4gPiArICAgICAgICAgICAgICAqIEhpZ2hl
+ciBtYXJrIGlzIHRha2VuIHNpbmNlIEJQTVAgaGFzIHJvdW5kLXVwIG1lY2hhbmlzbQ0KPiA+ICsg
+ICAgICAgICAgICAgICogaW1wbGVtZW50ZWQuDQo+IA0KPiBJIGRvbid0IHVuZGVyc3RhbmQgdGhl
+IHBhcnQgd2l0aCB0aGUgcm91bmQtdXAgbWVjaGFuaXNtLg0KDQpVbmRlcnN0b29kLiBUaGlzIGNv
+bW1lbnQgaXMgbWlzbGVhZGluZy4NCkkgdGhpbmsgaXQgY2FuIGJlIHVwZGF0ZWQgYXMgYmVsb3c6
+DQoicmVxdWlyZWRfY2xrX3JhdGUiIGlzIGEgcmVmZXJlbmNlIHJhdGUgZm9yIHNvdXJjZSBjbG9j
+ayBhbmQgaXQgaXMgZGVyaXZlZA0KYmFzZWQgb24gdXNlciByZXF1ZXN0ZWQgcGVyaW9kLg0KQnkg
+c3VjY2Vzc2Z1bGx5IHNldHRpbmcgdGhlIHNvdXJjZSBjbG9jayByYXRlIHRvIHJlcXVpcmVkX2Ns
+a19yYXRlLA0KcHdtIGNvbnRyb2xsZXIgY2FuIGNvbmZpZ3VyZSB0aGUgcmVxdWVzdGVkIHBlcmlv
+ZC4NCg0KPiANCj4gPiArICAgICAgICAgICAgICAqLw0KPiA+ICsgICAgICAgICAgICAgcmVxdWly
+ZWRfY2xrX3JhdGUgPQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAoTlNFQ19QRVJfU0VDIC8g
+cGVyaW9kX25zKSA8PCBQV01fRFVUWV9XSURUSDsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICBl
+cnIgPSBjbGtfc2V0X3JhdGUocGMtPmNsaywgcmVxdWlyZWRfY2xrX3JhdGUpOw0KPiA+ICsgICAg
+ICAgICAgICAgaWYgKGVyciA8IDApDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgIHJldHVybiAt
+RUlOVkFMOw0KPiANCj4gV2hhdCBoYXBwZW5zIGlmIGNsa19zZXRfcmF0ZSBjb25maWd1cmVzIGEg
+aGlnaGVyIHJhdGUgdGhhbiByZXF1ZXN0ZWQ/DQoNClRoZSBjbG9jayBjb25maWd1cmF0aW9uIGlz
+IHRha2VuIGNhcmUgaW4gYSBzZXBhcmF0ZSBSNSBjYWxsZWQgQlBNUC4NCkJQTVAtRlcgZG9lcyBu
+b3Qgcm91bmQgdXAgdGhlIHJhdGUgb2YgUFdNIGNvbnRyb2xsZXIgY2xvY2suDQpJdCByb3VuZHMg
+ZG93biB0aGUgY2xvY2sgZGl2aWRlciB2YWx1ZSB0aGF0IGdlbmVyYXRlcyBQV00gY29udHJvbGxl
+ciBjbG9jay4NCiANCj4gDQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgcmF0ZSA9IGNsa19nZXRf
+cmF0ZShwYy0+Y2xrKSA+PiBQV01fRFVUWV9XSURUSDsNCj4gPiArICAgICB9IGVsc2Ugew0KPiA+
+ICsgICAgICAgICAgICAgLyoNCj4gPiArICAgICAgICAgICAgICAqIFRoaXMgaXMgdGhlIGNhc2Ug
+Zm9yIFNvQ3Mgd2hvIHN1cHBvcnQgbXVsdGlwbGUgY2hhbm5lbHM6DQo+IA0KPiBzL3doby90aGF0
+Lw0KDQpOb3RlZCwgY29ycmVjdGlvbiBpbiBuZXh0IHBhdGNoLg0KIA0KPiANCj4gPiArICAgICAg
+ICAgICAgICAqDQo+ID4gKyAgICAgICAgICAgICAgKiBjbGtfc2V0X3JhdGUoKSBjYW4gbm90IGJl
+IGNhbGxlZCBhZ2FpbiBpbiBjb25maWcgYmVjYXVzZQ0KPiA+ICsgICAgICAgICAgICAgICogVDIx
+MCBvciBhbnkgcHJpb3IgY2hpcCBzdXBwb3J0cyBvbmUgcHdtLWNvbnRyb2xsZXIgYW5kDQo+ID4g
+KyAgICAgICAgICAgICAgKiBtdWx0aXBsZSBjaGFubmVscy4gSGVuY2UgaW4gdGhpcyBjYXNlIGNh
+Y2hlZCBjbG9jayByYXRlDQo+ID4gKyAgICAgICAgICAgICAgKiB3aWxsIGJlIGNvbnNpZGVyZWQg
+d2hpY2ggd2FzIHN0b3JlZCBkdXJpbmcgcHJvYmUuDQo+ID4gKyAgICAgICAgICAgICAgKi8NCj4g
+PiArICAgICAgICAgICAgIHJhdGUgPSBwYy0+Y2xrX3JhdGUgPj4gUFdNX0RVVFlfV0lEVEg7DQo+
+ID4gKyAgICAgfQ0KPiA+DQo+ID4gICAgICAgLyogQ29uc2lkZXIgcHJlY2lzaW9uIGluIFBXTV9T
+Q0FMRV9XSURUSCByYXRlIGNhbGN1bGF0aW9uICovDQo+ID4gLSAgICAgaHogPSBESVZfUk9VTkRf
+Q0xPU0VTVF9VTEwoMTAwVUxMICogTlNFQ19QRVJfU0VDLCBwZXJpb2RfbnMpOw0KPiA+IC0gICAg
+IHJhdGUgPSBESVZfUk9VTkRfQ0xPU0VTVF9VTEwoMTAwVUxMICogcmF0ZSwgaHopOw0KPiA+ICsg
+ICAgIHBlcmlvZF9oeiA9IERJVl9ST1VORF9DTE9TRVNUX1VMTCgxMDBVTEwgKiBOU0VDX1BFUl9T
+RUMsDQo+IHBlcmlvZF9ucyk7DQo+ID4gKyAgICAgcGZtID0gRElWX1JPVU5EX0NMT1NFU1RfVUxM
+KDEwMFVMTCAqIHJhdGUsIHBlcmlvZF9oeik7DQo+ID4NCj4gPiAgICAgICAvKg0KPiA+ICAgICAg
+ICAqIFNpbmNlIHRoZSBhY3R1YWwgUFdNIGRpdmlkZXIgaXMgdGhlIHJlZ2lzdGVyJ3MgZnJlcXVl
+bmN5IGRpdmlkZXINCj4gPiAtICAgICAgKiBmaWVsZCBtaW51cyAxLCB3ZSBuZWVkIHRvIGRlY3Jl
+bWVudCB0byBnZXQgdGhlIGNvcnJlY3QgdmFsdWUgdG8NCj4gPiArICAgICAgKiBmaWVsZCBwbHVz
+IDEsIHdlIG5lZWQgdG8gZGVjcmVtZW50IHRvIGdldCB0aGUgY29ycmVjdCB2YWx1ZQ0KPiA+ICsg
+dG8NCj4gPiAgICAgICAgKiB3cml0ZSB0byB0aGUgcmVnaXN0ZXIuDQo+ID4gICAgICAgICovDQo+
+ID4gLSAgICAgaWYgKHJhdGUgPiAwKQ0KPiA+IC0gICAgICAgICAgICAgcmF0ZS0tOw0KPiA+ICsg
+ICAgIGlmIChwZm0gPiAwKQ0KPiA+ICsgICAgICAgICAgICAgcGZtLS07DQo+ID4NCj4gPiAgICAg
+ICAvKg0KPiA+IC0gICAgICAqIE1ha2Ugc3VyZSB0aGF0IHRoZSByYXRlIHdpbGwgZml0IGluIHRo
+ZSByZWdpc3RlcidzIGZyZXF1ZW5jeQ0KPiA+ICsgICAgICAqIE1ha2Ugc3VyZSB0aGF0IHBmbSB3
+aWxsIGZpdCBpbiB0aGUgcmVnaXN0ZXIncyBmcmVxdWVuY3kNCj4gPiAgICAgICAgKiBkaXZpZGVy
+IGZpZWxkLg0KPiA+ICAgICAgICAqLw0KPiA+IC0gICAgIGlmIChyYXRlID4+IFBXTV9TQ0FMRV9X
+SURUSCkNCj4gPiArICAgICBpZiAocGZtID4+IFBXTV9TQ0FMRV9XSURUSCkNCj4gPiAgICAgICAg
+ICAgICAgIHJldHVybiAtRUlOVkFMOw0KPiA+DQo+ID4gLSAgICAgdmFsIHw9IHJhdGUgPDwgUFdN
+X1NDQUxFX1NISUZUOw0KPiA+ICsgICAgIHZhbCB8PSBwZm0gPDwgUFdNX1NDQUxFX1NISUZUOw0K
+PiA+DQo+ID4gICAgICAgLyoNCj4gPiAgICAgICAgKiBJZiB0aGUgUFdNIGNoYW5uZWwgaXMgZGlz
+YWJsZWQsIG1ha2Ugc3VyZSB0byB0dXJuIG9uIHRoZQ0KPiA+IGNsb2NrIEBAIC0yMDUsNiArMjc4
+LDEwIEBAIHN0YXRpYyBpbnQgdGVncmFfcHdtX3Byb2JlKHN0cnVjdA0KPiBwbGF0Zm9ybV9kZXZp
+Y2UgKnBkZXYpDQo+ID4gICAgICAgICovDQo+ID4gICAgICAgcHdtLT5jbGtfcmF0ZSA9IGNsa19n
+ZXRfcmF0ZShwd20tPmNsayk7DQo+ID4NCj4gPiArICAgICAvKiBTZXQgbWluaW11bSBsaW1pdCBv
+ZiBQV00gcGVyaW9kIGZvciB0aGUgSVAgKi8NCj4gPiArICAgICBwd20tPm1pbl9wZXJpb2RfbnMg
+PQ0KPiA+ICsgICAgICAgICAoTlNFQ19QRVJfU0VDIC8gKHB3bS0+c29jLT5tYXhfZnJlcXVlbmN5
+ID4+IFBXTV9EVVRZX1dJRFRIKSkNCj4gPiArICsgMTsNCj4gDQo+IFdpdGggbXkgc3VnZ2VzdGlv
+biBhYm92ZSwgeW91IGNhbiBkcm9wIHRoZSBtaW5fcGVyaW9kX25zIGZpZWxkLg0KDQpJIGhhdmUg
+YWRkZWQgc29tZSBjb21tZW50cyBhYm92ZS4gUGxlYXNlIGhlbHAgbWUgdW5kZXJzdGFuZCBpZiB0
+aGV5IGFyZSBub3QNCmFsaWduZWQgd2l0aCB3aGF0IHlvdSBtZWFudC4NCiANCj4gDQo+ID4gKw0K
+PiA+ICAgICAgIHB3bS0+cnN0ID0gZGV2bV9yZXNldF9jb250cm9sX2dldF9leGNsdXNpdmUoJnBk
+ZXYtPmRldiwgInB3bSIpOw0KPiA+ICAgICAgIGlmIChJU19FUlIocHdtLT5yc3QpKSB7DQo+ID4g
+ICAgICAgICAgICAgICByZXQgPSBQVFJfRVJSKHB3bS0+cnN0KTsgQEAgLTMxMyw0ICszOTAsNSBA
+QA0KPiA+IG1vZHVsZV9wbGF0Zm9ybV9kcml2ZXIodGVncmFfcHdtX2RyaXZlcik7DQo+ID4NCj4g
+PiAgTU9EVUxFX0xJQ0VOU0UoIkdQTCIpOw0KPiA+ICBNT0RVTEVfQVVUSE9SKCJOVklESUEgQ29y
+cG9yYXRpb24iKTsNCj4gPiArTU9EVUxFX0FVVEhPUigiU2FuZGlwYW4gUGF0cmEgPHNwYXRyYUBu
+dmlkaWEuY29tPiIpOw0KPiA+ICBNT0RVTEVfQUxJQVMoInBsYXRmb3JtOnRlZ3JhLXB3bSIpOw0K
+PiANCj4gQmVzdCByZWdhcmRzDQo+IFV3ZQ0KPiANCj4gLS0NCj4gUGVuZ3V0cm9uaXggZS5LLiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHwgVXdlIEtsZWluZS1Lw7ZuaWcgICAgICAgICAgICB8
+DQo+IEluZHVzdHJpYWwgTGludXggU29sdXRpb25zICAgICAgICAgICAgICAgICB8IGh0dHBzOi8v
+d3d3LnBlbmd1dHJvbml4LmRlLyB8DQo=
