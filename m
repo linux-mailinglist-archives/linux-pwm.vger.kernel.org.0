@@ -2,51 +2,51 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F2BD1D3CD3
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 May 2020 21:16:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD0461D3CD0
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 May 2020 21:16:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730288AbgENTKY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 14 May 2020 15:10:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51170 "EHLO
+        id S1728654AbgENTKX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 14 May 2020 15:10:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729256AbgENTKS (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 May 2020 15:10:18 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9D07C061A0C;
-        Thu, 14 May 2020 12:10:17 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id h4so4713301ljg.12;
-        Thu, 14 May 2020 12:10:17 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1730283AbgENTKU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 May 2020 15:10:20 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0C22C061A0E;
+        Thu, 14 May 2020 12:10:19 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id 188so3568903lfa.10;
+        Thu, 14 May 2020 12:10:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=J916F81BKXSH1NRVPofwjNX6i7ySZukl1DQn7KOtjRY=;
-        b=KhTkE42CZnDvo5d4tHCxFOUM/fdSLjbFY/mCcZEoAqhx8J5I7dtrJTI2Of9JD9wiu0
-         ngMdA6sgzjKks/LuuWupwhrnbv0fh8R8+mCxe3sgMOguRjwh0ICfRqPYYWmcgIa3lC7g
-         FBfd2sqHT3rlSOxo0Cxx+Hm1wuzoIfTuu/KKlkM+IiANb9Zi/DwYnj67dlZMXQsylTDo
-         xtQrkDqz8Hu+5hloVAHFN6cGpn221+2SDJ20D8qtErm9fpIeca5I8w2u7Y2752HehSqu
-         ou4r2diGpibjXDuFwwLJEI5+nxyHYBkMKCk9mQQEK0neEE7PlBJ4KB7iEZL2pPb+AWOQ
-         xIwg==
+        bh=iALLuERW1McwN1PgISrEqSKRl+DwcpATFhkrhtmrlJY=;
+        b=OrqDrsx57GbIKMFC5gURmUlwlXbmOqs7a3uuD/o3zYSUdLnKOrLToMPE2u3vlFpT5V
+         IeWIeABYAjFRkBDUmkWSD7Zo0BHCtMufMofSC4wm+JJX15TjGKcS3I3/DFmzqZ4/A838
+         r8Xx7r7Fq+bAYTtUVfvDWLP0yqUSXEhYUytoyezBaSvjJ+EBiqNTid/xv2f3u0p10FLp
+         6guun3D6rhS65c3eG0fOvGkSRCLYI4XT0HjP6EclM79x2NS4ZsRjkFsTes6d35P7D3rC
+         FN9FegLPZAjO9n9n2+a9YTTfdgJDRL127KOe/jD+CtixSxlf4DJ02r/tSSxLWw9SOppY
+         7ZXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=J916F81BKXSH1NRVPofwjNX6i7ySZukl1DQn7KOtjRY=;
-        b=Zosx+3H4Xhb/lLF1uWvxChqGOham2w11sS6ishCiYq3vIJRbVIuOoE1z8+dWb83mRS
-         Q5DaO5YfuY+/lX3LA3T5wTdtBRH/upvRvbOjx0VomQ7tscav25EO/aUJ2oWYDV/Ch/xI
-         qaDBqDoCwHXth1EPEwB048B9KKrm3O7FhcVuDyEl8xZyv6F7mo3kaxULYR3vdcwxVBBu
-         ZF7+uXpTucUNg/KHSWWmMc1jHnhh43gaS4Q5I7yTjrDrIgtNVHTsGb1i3k4VFJzLw6iI
-         DNbfuOiV4p/vSeMv6PGFLKMcH1Nf/XdvpzWqy8FPRnpBPkrMuJGtVxa1e/egA6oadZHZ
-         Dahw==
-X-Gm-Message-State: AOAM530+FE8jdxyrVL3Kj0WG0l8ZeEkX4Z3aF06xaDomUMJINy9++TYR
-        dOX5axR+BUCekK9M1wlEDEU=
-X-Google-Smtp-Source: ABdhPJzmOnNVIJlWDEc/Vi8Cs/lkpqkVwdrbcdNjtNuimAeT/PfHkeObjIoyXMQnn9rV3ILgNFk0Hw==
-X-Received: by 2002:a2e:860a:: with SMTP id a10mr3924004lji.20.1589483416265;
-        Thu, 14 May 2020 12:10:16 -0700 (PDT)
+        bh=iALLuERW1McwN1PgISrEqSKRl+DwcpATFhkrhtmrlJY=;
+        b=ew5tl8ZLOQ5l8CmMoGxCm7Pi005zHbDiV9nqnuH67edjJH9WoQxrzWYQiy8PZTLK+q
+         rQzJcPgQuKQ9yBlPtZXFtiq9ifwdg8BChznIN9ryp6kwsnIf69eIx1LV9+sJQpZyvo3u
+         pVIikhr6PQp9Gl/yy41rJ03OaNKeqSDynJ2DhsBhptRDSR8rja2dEGgIif+Ryxq1XIPK
+         KtKRDz07+UbGQ6ndEDbmPvF+uD3UCkR76m4j4MmvJc+pCKnEF/MTScsxdjhJ5fp5HVrn
+         KTuqonTaore+2ObTUp+6AExPvVPR6Db+5soUlTzwlkPoS7xsYUiAswR09XlWBBzdogEe
+         OJlg==
+X-Gm-Message-State: AOAM531F0GSNwtNGtMPXU8WH2lJpIShylBN2qnLFjyKoQ9cZdNgr0Lgg
+        idyd0QDqRpZE3vlADNUK0IE=
+X-Google-Smtp-Source: ABdhPJxtOgNHrWlT1g6kVCkaO7bY7+x7AvNWUz2afNrA3i5zMlrlrAvEYJLlXd6AdF/rD1Dg4wHqew==
+X-Received: by 2002:ac2:4304:: with SMTP id l4mr4314956lfh.87.1589483418267;
+        Thu, 14 May 2020 12:10:18 -0700 (PDT)
 Received: from saturn.lan ([2a00:fd00:805f:db00:8d23:71d:e677:1c7c])
-        by smtp.gmail.com with ESMTPSA id q30sm2362958lfd.32.2020.05.14.12.10.14
+        by smtp.gmail.com with ESMTPSA id q30sm2362958lfd.32.2020.05.14.12.10.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 12:10:15 -0700 (PDT)
+        Thu, 14 May 2020 12:10:17 -0700 (PDT)
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
@@ -79,9 +79,9 @@ Cc:     Allison Randal <allison@lohutok.net>,
         Tomi Valkeinen <tomi.valkeinen@ti.com>,
         Uwe Kleine Konig <u.kleine-koenig@pengutronix.de>,
         Zheng Bin <zhengbin13@huawei.com>
-Subject: [PATCH v1 01/18] drm/omap: display: use devm_of_find_backlight
-Date:   Thu, 14 May 2020 21:09:44 +0200
-Message-Id: <20200514191001.457441-2-sam@ravnborg.org>
+Subject: [PATCH v1 02/18] drm/tilcdc: use devm_of_find_backlight
+Date:   Thu, 14 May 2020 21:09:45 +0200
+Message-Id: <20200514191001.457441-3-sam@ravnborg.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200514191001.457441-1-sam@ravnborg.org>
 References: <20200514191001.457441-1-sam@ravnborg.org>
@@ -97,57 +97,47 @@ This simplifies the code and prevents us from hardcoding
 the node name in the driver.
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Cc: Jyri Sarha <jsarha@ti.com>
 Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Zheng Bin <zhengbin13@huawei.com>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: Enrico Weigelt <info@metux.net>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>
 ---
- .../gpu/drm/omapdrm/displays/panel-dsi-cm.c    | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/tilcdc/tilcdc_panel.c | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c b/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c
-index 3484b5d4a91c..faca5c873bde 100644
---- a/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c
-+++ b/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c
-@@ -1163,7 +1163,7 @@ static const struct omap_dss_driver dsicm_dss_driver = {
- static int dsicm_probe_of(struct platform_device *pdev)
- {
- 	struct device_node *node = pdev->dev.of_node;
--	struct device_node *backlight;
-+	struct backlight_device *backlight;
- 	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
- 	struct display_timing timing;
- 	int err;
-@@ -1216,17 +1216,15 @@ static int dsicm_probe_of(struct platform_device *pdev)
- 		ddata->vddi = NULL;
- 	}
+diff --git a/drivers/gpu/drm/tilcdc/tilcdc_panel.c b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
+index 12823d60c4e8..b207b2f19d42 100644
+--- a/drivers/gpu/drm/tilcdc/tilcdc_panel.c
++++ b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
+@@ -299,7 +299,8 @@ static struct tilcdc_panel_info *of_get_panel_info(struct device_node *np)
  
--	backlight = of_parse_phandle(node, "backlight", 0);
--	if (backlight) {
--		ddata->extbldev = of_find_backlight_by_node(backlight);
--		of_node_put(backlight);
+ static int panel_probe(struct platform_device *pdev)
+ {
+-	struct device_node *bl_node, *node = pdev->dev.of_node;
++	struct device_node *node = pdev->dev.of_node;
++	struct backlight_device *backlight;
+ 	struct panel_module *panel_mod;
+ 	struct tilcdc_module *mod;
+ 	struct pinctrl *pinctrl;
+@@ -315,16 +316,10 @@ static int panel_probe(struct platform_device *pdev)
+ 	if (!panel_mod)
+ 		return -ENOMEM;
+ 
+-	bl_node = of_parse_phandle(node, "backlight", 0);
+-	if (bl_node) {
+-		panel_mod->backlight = of_find_backlight_by_node(bl_node);
+-		of_node_put(bl_node);
+-
+-		if (!panel_mod->backlight)
+-			return -EPROBE_DEFER;
+-
+-		dev_info(&pdev->dev, "found backlight\n");
+-	}
 +	backlight = devm_of_find_backlight(&pdev->dev);
 +	if (IS_ERR(backlight))
 +		return PTR_ERR(backlight);
++	panel_mod->backlight = backlight;
  
--		if (!ddata->extbldev)
--			return -EPROBE_DEFER;
--	} else {
--		/* assume native backlight support */
-+	/* If no backlight device is found assume native backlight support */
-+	if (backlight)
-+		ddata->extbldev = backlight;
-+	else
- 		ddata->use_dsi_backlight = true;
--	}
- 
- 	/* TODO: ulps */
- 
+ 	panel_mod->enable_gpio = devm_gpiod_get_optional(&pdev->dev, "enable",
+ 							 GPIOD_OUT_LOW);
 -- 
 2.25.1
 
