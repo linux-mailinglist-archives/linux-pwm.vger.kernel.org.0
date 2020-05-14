@@ -2,51 +2,51 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD50E1D3CCC
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 May 2020 21:16:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F2BD1D3CD3
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 May 2020 21:16:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730281AbgENTKS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 14 May 2020 15:10:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51162 "EHLO
+        id S1730288AbgENTKY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 14 May 2020 15:10:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729893AbgENTKQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 May 2020 15:10:16 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F34C061A0C;
-        Thu, 14 May 2020 12:10:16 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id h26so3591151lfg.6;
-        Thu, 14 May 2020 12:10:15 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1729256AbgENTKS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 May 2020 15:10:18 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9D07C061A0C;
+        Thu, 14 May 2020 12:10:17 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id h4so4713301ljg.12;
+        Thu, 14 May 2020 12:10:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IAfqMKSnJtIb4fNmt4augkqWT66BiC7XJZ5A9JCXvs4=;
-        b=oxsBeLSdgQOS6MRl095JBSHOAfKwHeO7wwuftnEBEhzfK068erkSPeqPTGh/e6j7pL
-         e7kwmhg6rWrKVGNIx7gCl7N2XRfDeS4JKiN4NcE+9Cox1nZsGA8OvFb2Gz4/i/nlTWhz
-         F/ctVjBKAVfj7F6KpOJMMHUxebl9awYK86pHTqnCY7ZDX7NwAPPFcJbsultH8r7Syn4v
-         Lg02v2d6sH3DsXSCLZKHzli0OSHOtwgI4XpBplkYUkgZ6fhg3wQ+WOwG4kun1t1iq/9B
-         actUfLcY/fr8Gww3Jf9xCMfOTuAB7nOuebu7k2xkGWsIg2VJTTRqjoP/EHj/iNy/vqXi
-         xw8w==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=J916F81BKXSH1NRVPofwjNX6i7ySZukl1DQn7KOtjRY=;
+        b=KhTkE42CZnDvo5d4tHCxFOUM/fdSLjbFY/mCcZEoAqhx8J5I7dtrJTI2Of9JD9wiu0
+         ngMdA6sgzjKks/LuuWupwhrnbv0fh8R8+mCxe3sgMOguRjwh0ICfRqPYYWmcgIa3lC7g
+         FBfd2sqHT3rlSOxo0Cxx+Hm1wuzoIfTuu/KKlkM+IiANb9Zi/DwYnj67dlZMXQsylTDo
+         xtQrkDqz8Hu+5hloVAHFN6cGpn221+2SDJ20D8qtErm9fpIeca5I8w2u7Y2752HehSqu
+         ou4r2diGpibjXDuFwwLJEI5+nxyHYBkMKCk9mQQEK0neEE7PlBJ4KB7iEZL2pPb+AWOQ
+         xIwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=IAfqMKSnJtIb4fNmt4augkqWT66BiC7XJZ5A9JCXvs4=;
-        b=DnCJzElasrrHxKjs7Z12RD2C4LP1JOTbwsn4jSk73ZbdJImzA/miNvBTJFvF358Lsz
-         ehKOF6ppzLzB8vy2HQLoZ2U2U8oM8n4j2O97qCU22riRHCQxRnH8u8AOuR4UkiR6iRo4
-         v969Dx7VLU7ohgRNlbkrhOm36KxB1n/WXmBMS+lyaBVFLmYHKdRC28NfbXsD54tpxHe7
-         ORU6GMqS0rOa/i/Z3ZtSlpz0d7FugVdEOcPEMPMyZmXm1UlT0Ecmc84RDP+bO0ijqq9C
-         gzdcKukdCYfB29dQENIXnnREH/g2eR88+FgMVWLy8rOj95uc6UdMxIb4TyOyf9dSK787
-         wb8w==
-X-Gm-Message-State: AOAM530nk/CrpBO+aG5zIjSNsn5n9JDFFXsPCTYgulHA79uPFK0T5OC1
-        pvgVw1eoI12Cn3lFgtUZeSg=
-X-Google-Smtp-Source: ABdhPJyPKXZJER042IijHbVEeNT5dPMCnTzHjzehTNfpBkMkXytgSCvIlTYGGbO/DbW3EzrMjPvisg==
-X-Received: by 2002:ac2:5496:: with SMTP id t22mr4364239lfk.0.1589483414392;
-        Thu, 14 May 2020 12:10:14 -0700 (PDT)
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=J916F81BKXSH1NRVPofwjNX6i7ySZukl1DQn7KOtjRY=;
+        b=Zosx+3H4Xhb/lLF1uWvxChqGOham2w11sS6ishCiYq3vIJRbVIuOoE1z8+dWb83mRS
+         Q5DaO5YfuY+/lX3LA3T5wTdtBRH/upvRvbOjx0VomQ7tscav25EO/aUJ2oWYDV/Ch/xI
+         qaDBqDoCwHXth1EPEwB048B9KKrm3O7FhcVuDyEl8xZyv6F7mo3kaxULYR3vdcwxVBBu
+         ZF7+uXpTucUNg/KHSWWmMc1jHnhh43gaS4Q5I7yTjrDrIgtNVHTsGb1i3k4VFJzLw6iI
+         DNbfuOiV4p/vSeMv6PGFLKMcH1Nf/XdvpzWqy8FPRnpBPkrMuJGtVxa1e/egA6oadZHZ
+         Dahw==
+X-Gm-Message-State: AOAM530+FE8jdxyrVL3Kj0WG0l8ZeEkX4Z3aF06xaDomUMJINy9++TYR
+        dOX5axR+BUCekK9M1wlEDEU=
+X-Google-Smtp-Source: ABdhPJzmOnNVIJlWDEc/Vi8Cs/lkpqkVwdrbcdNjtNuimAeT/PfHkeObjIoyXMQnn9rV3ILgNFk0Hw==
+X-Received: by 2002:a2e:860a:: with SMTP id a10mr3924004lji.20.1589483416265;
+        Thu, 14 May 2020 12:10:16 -0700 (PDT)
 Received: from saturn.lan ([2a00:fd00:805f:db00:8d23:71d:e677:1c7c])
-        by smtp.gmail.com with ESMTPSA id q30sm2362958lfd.32.2020.05.14.12.10.11
+        by smtp.gmail.com with ESMTPSA id q30sm2362958lfd.32.2020.05.14.12.10.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 12:10:13 -0700 (PDT)
+        Thu, 14 May 2020 12:10:15 -0700 (PDT)
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
@@ -79,10 +79,12 @@ Cc:     Allison Randal <allison@lohutok.net>,
         Tomi Valkeinen <tomi.valkeinen@ti.com>,
         Uwe Kleine Konig <u.kleine-koenig@pengutronix.de>,
         Zheng Bin <zhengbin13@huawei.com>
-Subject: [PATCH v1 0/18] backlight updates
-Date:   Thu, 14 May 2020 21:09:43 +0200
-Message-Id: <20200514191001.457441-1-sam@ravnborg.org>
+Subject: [PATCH v1 01/18] drm/omap: display: use devm_of_find_backlight
+Date:   Thu, 14 May 2020 21:09:44 +0200
+Message-Id: <20200514191001.457441-2-sam@ravnborg.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200514191001.457441-1-sam@ravnborg.org>
+References: <20200514191001.457441-1-sam@ravnborg.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
@@ -90,98 +92,62 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The following series touches a lot of backlight things.
+Look up backlight device using devm_of_find_backlight().
+This simplifies the code and prevents us from hardcoding
+the node name in the driver.
 
-It starts by migrating users of of_find_backlight_by_node()
-over to devm_of_find_backlight() to simplify code and to
-use the preferred way to register backlight.
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Zheng Bin <zhengbin13@huawei.com>
+Cc: Kate Stewart <kstewart@linuxfoundation.org>
+Cc: Enrico Weigelt <info@metux.net>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+---
+ .../gpu/drm/omapdrm/displays/panel-dsi-cm.c    | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
-All the functions in the backlight core that is no longer
-used by any drivers are then marked static to avoid
-adding new users.
-
-Then a new helper backlight_is_blank() is added.
-This helper will simplify the implementation of update_status()
-in almost all backlight drivers.
-
-While surfing the code I really missed some documentation.
-So I got a bit carried away and updated the documentation
-for the backlight core and added it to kernel-doc.
-The documentation express my current understanding.
-Everything from spelling errors to outright wrong content
-shall be anticipated - so please review!
-We are all best helped if the documentation is correct
-and up-to-date and it is readable.
-
-In this process I identified that the backlight_bl driver
-was no longer is use - so drop it.
-
-The last patch is for now just an RFC patch that shows
-the potential simplifications by introducing the
-use of the backlight_is_blank() helper.
-I may split it up later.
-
-I have local patches to introduce backlight_is_blank()
-in the remaining backlight drivers.
-But they will await that this patch set matures a bit.
-
-Everything builds, but so far no run-time testing.
-
-	Sam
-
-Sam Ravnborg (18):
-      drm/omap: display: use devm_of_find_backlight
-      drm/tilcdc: use devm_of_find_backlight
-      video: amba-clcd: use devm_of_find_backlight
-      backlight: make of_find_backlight static
-      backlight: drop backlight_put()
-      backlight: make of_find_backlight_by_node() static
-      backlight: refactor fb_notifier_callback()
-      backlight: add backlight_is_blank()
-      backlight: improve backlight_ops documentation
-      backlight: improve backlight_properties documentation
-      backlight: improve backlight_device documentation
-      backlight: document inline functions in backlight.h
-      backlight: document enums in backlight.h
-      backlight: remove the unused backlight_bl driver
-      backlight: drop extern from prototypes
-      backlight: add overview and update doc
-      backlight: wire up kernel-doc documentation
-      backlight: use backlight_is_blank() in all backlight drivers
-
- Documentation/gpu/backlight.rst                 |  12 +
- Documentation/gpu/index.rst                     |   1 +
- drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c |  18 +-
- drivers/gpu/drm/tilcdc/tilcdc_panel.c           |  17 +-
- drivers/video/backlight/88pm860x_bl.c           |   8 +-
- drivers/video/backlight/Kconfig                 |   8 -
- drivers/video/backlight/Makefile                |   1 -
- drivers/video/backlight/adp5520_bl.c            |   5 +-
- drivers/video/backlight/adp8860_bl.c            |   5 +-
- drivers/video/backlight/adp8870_bl.c            |   5 +-
- drivers/video/backlight/as3711_bl.c             |   8 +-
- drivers/video/backlight/backlight.c             | 237 ++++++++------
- drivers/video/backlight/bd6107.c                |   4 +-
- drivers/video/backlight/corgi_lcd.c             |   5 +-
- drivers/video/backlight/cr_bllcd.c              |  22 +-
- drivers/video/backlight/da903x_bl.c             |   8 +-
- drivers/video/backlight/ep93xx_bl.c             |   3 +-
- drivers/video/backlight/generic_bl.c            | 110 -------
- drivers/video/backlight/gpio_backlight.c        |   4 +-
- drivers/video/backlight/hp680_bl.c              |   4 +-
- drivers/video/backlight/jornada720_bl.c         |   2 +-
- drivers/video/backlight/kb3886_bl.c             |   4 +-
- drivers/video/backlight/led_bl.c                |   4 +-
- drivers/video/backlight/lm3533_bl.c             |   4 +-
- drivers/video/backlight/locomolcd.c             |   4 +-
- drivers/video/backlight/lv5207lp.c              |   4 +-
- drivers/video/backlight/max8925_bl.c            |   8 +-
- drivers/video/backlight/pwm_bl.c                |   4 +-
- drivers/video/backlight/qcom-wled.c             |   4 +-
- drivers/video/backlight/tps65217_bl.c           |   4 +-
- drivers/video/backlight/wm831x_bl.c             |   8 +-
- drivers/video/fbdev/amba-clcd.c                 |  19 +-
- include/linux/backlight.h                       | 415 +++++++++++++++++++-----
- 33 files changed, 536 insertions(+), 433 deletions(-)
-
+diff --git a/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c b/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c
+index 3484b5d4a91c..faca5c873bde 100644
+--- a/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c
++++ b/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c
+@@ -1163,7 +1163,7 @@ static const struct omap_dss_driver dsicm_dss_driver = {
+ static int dsicm_probe_of(struct platform_device *pdev)
+ {
+ 	struct device_node *node = pdev->dev.of_node;
+-	struct device_node *backlight;
++	struct backlight_device *backlight;
+ 	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
+ 	struct display_timing timing;
+ 	int err;
+@@ -1216,17 +1216,15 @@ static int dsicm_probe_of(struct platform_device *pdev)
+ 		ddata->vddi = NULL;
+ 	}
+ 
+-	backlight = of_parse_phandle(node, "backlight", 0);
+-	if (backlight) {
+-		ddata->extbldev = of_find_backlight_by_node(backlight);
+-		of_node_put(backlight);
++	backlight = devm_of_find_backlight(&pdev->dev);
++	if (IS_ERR(backlight))
++		return PTR_ERR(backlight);
+ 
+-		if (!ddata->extbldev)
+-			return -EPROBE_DEFER;
+-	} else {
+-		/* assume native backlight support */
++	/* If no backlight device is found assume native backlight support */
++	if (backlight)
++		ddata->extbldev = backlight;
++	else
+ 		ddata->use_dsi_backlight = true;
+-	}
+ 
+ 	/* TODO: ulps */
+ 
+-- 
+2.25.1
 
