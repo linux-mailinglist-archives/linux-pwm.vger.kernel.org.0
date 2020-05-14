@@ -2,123 +2,186 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 051061D2EC2
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 May 2020 13:51:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD50E1D3CCC
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 May 2020 21:16:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725955AbgENLuq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 14 May 2020 07:50:46 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:35176 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725925AbgENLup (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 14 May 2020 07:50:45 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7E9E91A0300;
-        Thu, 14 May 2020 13:50:43 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8992A1A02D1;
-        Thu, 14 May 2020 13:50:38 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3CCD540245;
-        Thu, 14 May 2020 19:50:32 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] dt-bindings: pwm: Convert mxs pwm to json-schema
-Date:   Thu, 14 May 2020 19:41:10 +0800
-Message-Id: <1589456470-2658-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1730281AbgENTKS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 14 May 2020 15:10:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729893AbgENTKQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 May 2020 15:10:16 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F34C061A0C;
+        Thu, 14 May 2020 12:10:16 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id h26so3591151lfg.6;
+        Thu, 14 May 2020 12:10:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IAfqMKSnJtIb4fNmt4augkqWT66BiC7XJZ5A9JCXvs4=;
+        b=oxsBeLSdgQOS6MRl095JBSHOAfKwHeO7wwuftnEBEhzfK068erkSPeqPTGh/e6j7pL
+         e7kwmhg6rWrKVGNIx7gCl7N2XRfDeS4JKiN4NcE+9Cox1nZsGA8OvFb2Gz4/i/nlTWhz
+         F/ctVjBKAVfj7F6KpOJMMHUxebl9awYK86pHTqnCY7ZDX7NwAPPFcJbsultH8r7Syn4v
+         Lg02v2d6sH3DsXSCLZKHzli0OSHOtwgI4XpBplkYUkgZ6fhg3wQ+WOwG4kun1t1iq/9B
+         actUfLcY/fr8Gww3Jf9xCMfOTuAB7nOuebu7k2xkGWsIg2VJTTRqjoP/EHj/iNy/vqXi
+         xw8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=IAfqMKSnJtIb4fNmt4augkqWT66BiC7XJZ5A9JCXvs4=;
+        b=DnCJzElasrrHxKjs7Z12RD2C4LP1JOTbwsn4jSk73ZbdJImzA/miNvBTJFvF358Lsz
+         ehKOF6ppzLzB8vy2HQLoZ2U2U8oM8n4j2O97qCU22riRHCQxRnH8u8AOuR4UkiR6iRo4
+         v969Dx7VLU7ohgRNlbkrhOm36KxB1n/WXmBMS+lyaBVFLmYHKdRC28NfbXsD54tpxHe7
+         ORU6GMqS0rOa/i/Z3ZtSlpz0d7FugVdEOcPEMPMyZmXm1UlT0Ecmc84RDP+bO0ijqq9C
+         gzdcKukdCYfB29dQENIXnnREH/g2eR88+FgMVWLy8rOj95uc6UdMxIb4TyOyf9dSK787
+         wb8w==
+X-Gm-Message-State: AOAM530nk/CrpBO+aG5zIjSNsn5n9JDFFXsPCTYgulHA79uPFK0T5OC1
+        pvgVw1eoI12Cn3lFgtUZeSg=
+X-Google-Smtp-Source: ABdhPJyPKXZJER042IijHbVEeNT5dPMCnTzHjzehTNfpBkMkXytgSCvIlTYGGbO/DbW3EzrMjPvisg==
+X-Received: by 2002:ac2:5496:: with SMTP id t22mr4364239lfk.0.1589483414392;
+        Thu, 14 May 2020 12:10:14 -0700 (PDT)
+Received: from saturn.lan ([2a00:fd00:805f:db00:8d23:71d:e677:1c7c])
+        by smtp.gmail.com with ESMTPSA id q30sm2362958lfd.32.2020.05.14.12.10.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 12:10:13 -0700 (PDT)
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Allison Randal <allison@lohutok.net>,
+        Andy Gross <agross@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enrico Weigelt <info@metux.net>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>, Jyri Sarha <jsarha@ti.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        patches@opensource.cirrus.com,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Uwe Kleine Konig <u.kleine-koenig@pengutronix.de>,
+        Zheng Bin <zhengbin13@huawei.com>
+Subject: [PATCH v1 0/18] backlight updates
+Date:   Thu, 14 May 2020 21:09:43 +0200
+Message-Id: <20200514191001.457441-1-sam@ravnborg.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Convert the mxs pwm binding to DT schema format using json-schema.
+The following series touches a lot of backlight things.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- Documentation/devicetree/bindings/pwm/mxs-pwm.txt  | 17 ---------
- Documentation/devicetree/bindings/pwm/mxs-pwm.yaml | 43 ++++++++++++++++++++++
- 2 files changed, 43 insertions(+), 17 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pwm/mxs-pwm.txt
- create mode 100644 Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
+It starts by migrating users of of_find_backlight_by_node()
+over to devm_of_find_backlight() to simplify code and to
+use the preferred way to register backlight.
 
-diff --git a/Documentation/devicetree/bindings/pwm/mxs-pwm.txt b/Documentation/devicetree/bindings/pwm/mxs-pwm.txt
-deleted file mode 100644
-index a1b8a48..0000000
---- a/Documentation/devicetree/bindings/pwm/mxs-pwm.txt
-+++ /dev/null
-@@ -1,17 +0,0 @@
--Freescale MXS PWM controller
--
--Required properties:
--- compatible: should be "fsl,imx23-pwm"
--- reg: physical base address and length of the controller's registers
--- #pwm-cells: should be 3. See pwm.yaml in this directory for a description of
--  the cells format.
--- fsl,pwm-number: the number of PWM devices
--
--Example:
--
--pwm: pwm@80064000 {
--	compatible = "fsl,imx28-pwm", "fsl,imx23-pwm";
--	reg = <0x80064000 0x2000>;
--	#pwm-cells = <3>;
--	fsl,pwm-number = <8>;
--};
-diff --git a/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml b/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
-new file mode 100644
-index 0000000..da68f4a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
-@@ -0,0 +1,43 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/mxs-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale MXS PWM controller
-+
-+maintainers:
-+  - Shawn Guo <shawn.guo@linaro.org>
-+  - Anson Huang <anson.huang@nxp.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx23-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#pwm-cells":
-+    const: 3
-+
-+  fsl,pwm-number:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: u32 value representing the number of PWM devices
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#pwm-cells"
-+  - fsl,pwm-number
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pwm@80064000 {
-+        compatible = "fsl,imx23-pwm";
-+        reg = <0x80064000 0x2000>;
-+        #pwm-cells = <3>;
-+        fsl,pwm-number = <8>;
-+    };
--- 
-2.7.4
+All the functions in the backlight core that is no longer
+used by any drivers are then marked static to avoid
+adding new users.
+
+Then a new helper backlight_is_blank() is added.
+This helper will simplify the implementation of update_status()
+in almost all backlight drivers.
+
+While surfing the code I really missed some documentation.
+So I got a bit carried away and updated the documentation
+for the backlight core and added it to kernel-doc.
+The documentation express my current understanding.
+Everything from spelling errors to outright wrong content
+shall be anticipated - so please review!
+We are all best helped if the documentation is correct
+and up-to-date and it is readable.
+
+In this process I identified that the backlight_bl driver
+was no longer is use - so drop it.
+
+The last patch is for now just an RFC patch that shows
+the potential simplifications by introducing the
+use of the backlight_is_blank() helper.
+I may split it up later.
+
+I have local patches to introduce backlight_is_blank()
+in the remaining backlight drivers.
+But they will await that this patch set matures a bit.
+
+Everything builds, but so far no run-time testing.
+
+	Sam
+
+Sam Ravnborg (18):
+      drm/omap: display: use devm_of_find_backlight
+      drm/tilcdc: use devm_of_find_backlight
+      video: amba-clcd: use devm_of_find_backlight
+      backlight: make of_find_backlight static
+      backlight: drop backlight_put()
+      backlight: make of_find_backlight_by_node() static
+      backlight: refactor fb_notifier_callback()
+      backlight: add backlight_is_blank()
+      backlight: improve backlight_ops documentation
+      backlight: improve backlight_properties documentation
+      backlight: improve backlight_device documentation
+      backlight: document inline functions in backlight.h
+      backlight: document enums in backlight.h
+      backlight: remove the unused backlight_bl driver
+      backlight: drop extern from prototypes
+      backlight: add overview and update doc
+      backlight: wire up kernel-doc documentation
+      backlight: use backlight_is_blank() in all backlight drivers
+
+ Documentation/gpu/backlight.rst                 |  12 +
+ Documentation/gpu/index.rst                     |   1 +
+ drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c |  18 +-
+ drivers/gpu/drm/tilcdc/tilcdc_panel.c           |  17 +-
+ drivers/video/backlight/88pm860x_bl.c           |   8 +-
+ drivers/video/backlight/Kconfig                 |   8 -
+ drivers/video/backlight/Makefile                |   1 -
+ drivers/video/backlight/adp5520_bl.c            |   5 +-
+ drivers/video/backlight/adp8860_bl.c            |   5 +-
+ drivers/video/backlight/adp8870_bl.c            |   5 +-
+ drivers/video/backlight/as3711_bl.c             |   8 +-
+ drivers/video/backlight/backlight.c             | 237 ++++++++------
+ drivers/video/backlight/bd6107.c                |   4 +-
+ drivers/video/backlight/corgi_lcd.c             |   5 +-
+ drivers/video/backlight/cr_bllcd.c              |  22 +-
+ drivers/video/backlight/da903x_bl.c             |   8 +-
+ drivers/video/backlight/ep93xx_bl.c             |   3 +-
+ drivers/video/backlight/generic_bl.c            | 110 -------
+ drivers/video/backlight/gpio_backlight.c        |   4 +-
+ drivers/video/backlight/hp680_bl.c              |   4 +-
+ drivers/video/backlight/jornada720_bl.c         |   2 +-
+ drivers/video/backlight/kb3886_bl.c             |   4 +-
+ drivers/video/backlight/led_bl.c                |   4 +-
+ drivers/video/backlight/lm3533_bl.c             |   4 +-
+ drivers/video/backlight/locomolcd.c             |   4 +-
+ drivers/video/backlight/lv5207lp.c              |   4 +-
+ drivers/video/backlight/max8925_bl.c            |   8 +-
+ drivers/video/backlight/pwm_bl.c                |   4 +-
+ drivers/video/backlight/qcom-wled.c             |   4 +-
+ drivers/video/backlight/tps65217_bl.c           |   4 +-
+ drivers/video/backlight/wm831x_bl.c             |   8 +-
+ drivers/video/fbdev/amba-clcd.c                 |  19 +-
+ include/linux/backlight.h                       | 415 +++++++++++++++++++-----
+ 33 files changed, 536 insertions(+), 433 deletions(-)
+
 
