@@ -2,244 +2,151 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E07B1D4AEB
-	for <lists+linux-pwm@lfdr.de>; Fri, 15 May 2020 12:29:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6D8C1D5ACE
+	for <lists+linux-pwm@lfdr.de>; Fri, 15 May 2020 22:43:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbgEOK2y (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 15 May 2020 06:28:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728179AbgEOK2x (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 15 May 2020 06:28:53 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21EE2C05BD0B
-        for <linux-pwm@vger.kernel.org>; Fri, 15 May 2020 03:28:53 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id i15so2876775wrx.10
-        for <linux-pwm@vger.kernel.org>; Fri, 15 May 2020 03:28:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=xpA4uoROidais1iNpnkNzF9vq5C6X235V0wZ35uHdEI=;
-        b=CXEYEEqcvkty6QbjHU8IC9+4m00nYkEX+SNv9RcxVR5/SFF+YXke+BvJ6oVoOabQdZ
-         zNfD971SDDWzHM8i6tMy7Ide1qyTwoimukooCDQG010KoMF5GvG2qiwCDrJzTOJ/ST1J
-         prbm8Ynnzt8vqseddRKMMZbinTDqtdohbq4rUwGgpc6TUwZFSsD+mzok7VbjTnaA+NPE
-         7SxmiCj38OP6B2dbzDqJc0ZqywE58/rTxvAnd+HOSQ/e7PuK5vIet7N3V1P5fBuJTFqx
-         810hQ3AwpINxJ1EOF2q5K54I50ZckVeqd/fsfxWyzTJVbsxau3rGuKWQxQF/tGuS+Hp3
-         egGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=xpA4uoROidais1iNpnkNzF9vq5C6X235V0wZ35uHdEI=;
-        b=Ggh+5NhDa1hZplv01VTlK4ShyWprC86Anur6qbbj5mJP91AgNWebv6/id2ro7xMwVk
-         1ui0mOY0X3Xora+pGwpHGANeb9AeGAInPhghKU06+mMPNIuyCY2UtmvuWCBlXLzTtnet
-         QIEJ3g2NTdcELAndUWZGcZAiorz0vkl37flgZgI5DuhgXmwq+qPVdDmVvdU45Nvj6/AA
-         Qr4BQXqFMAB6WHwv0m5/emCy0KStQ4Sc7QDnDl/4iUDAYYvlCSLiyIhAghQSTy92R/t7
-         w3IUJVX4cOvYXiSIAJn58VseJOtpvjXGpcyt1lhk9ots3gP7w0Dt44scct3naKDq+Bwo
-         4Hfg==
-X-Gm-Message-State: AOAM533+9gfScgQqxYICXn4pWy/f5VKrywbu0J0+NZQsuCYwk2Wu6sko
-        5CduXUId/myBZGeScgwgCgeXug==
-X-Google-Smtp-Source: ABdhPJxTv+9YnkgoMuYBGuW3wQDNEiVk0bNzw09WJsjwgIV7JP0J+YUnU47dJL1yqsEb92xCMVOBXw==
-X-Received: by 2002:adf:a1d7:: with SMTP id v23mr3514719wrv.155.1589538531500;
-        Fri, 15 May 2020 03:28:51 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id j16sm2878629wru.13.2020.05.15.03.28.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 03:28:50 -0700 (PDT)
-Date:   Fri, 15 May 2020 11:28:48 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        id S1726247AbgEOUm7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 15 May 2020 16:42:59 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:40020 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbgEOUm6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 15 May 2020 16:42:58 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 61A66804E6;
+        Fri, 15 May 2020 22:42:47 +0200 (CEST)
+Date:   Fri, 15 May 2020 22:42:45 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Allison Randal <allison@lohutok.net>,
+        Andy Gross <agross@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enrico Weigelt <info@metux.net>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>, Jyri Sarha <jsarha@ti.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        patches@opensource.cirrus.com,
+        Russell King <linux@armlinux.org.uk>,
+        Support Opensource <support.opensource@diasemi.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
- reg property
-Message-ID: <20200515102848.GH271301@dell>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-4-michael@walle.cc>
- <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Uwe Kleine Konig <u.kleine-koenig@pengutronix.de>,
+        Zheng Bin <zhengbin13@huawei.com>
+Subject: Re: [PATCH v1 06/18] backlight: make of_find_backlight_by_node()
+ static
+Message-ID: <20200515204245.GA543522@ravnborg.org>
+References: <20200514191001.457441-1-sam@ravnborg.org>
+ <20200514191001.457441-7-sam@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
+In-Reply-To: <20200514191001.457441-7-sam@ravnborg.org>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=KKAkSRfTAAAA:8 a=pGLkceISAAAA:8
+        a=7mnRyIj4PDRz4dp46dkA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=cvBusfyB2V15izCimMoJ:22
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, 30 Apr 2020, Michael Walle wrote:
+Hi myself and others.
 
-> Hi Lee,
+On Thu, May 14, 2020 at 09:09:49PM +0200, Sam Ravnborg wrote:
+> There are no external users of of_find_backlight_by_node().
+> Make it static so we keep it that way.
 > 
-> Am 2020-04-23 19:45, schrieb Michael Walle:
-> > There might be multiple children with the device tree compatible, for
-> > example if a MFD has multiple instances of the same function. In this
-> > case only the first is matched and the other children get a wrong
-> > of_node reference.
-> > Add a new option to match also against the unit address of the child
-> > node. Additonally, a new helper OF_MFD_CELL_REG is added.
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> ---
+>  drivers/video/backlight/backlight.c | 22 +++++++++-------------
+>  include/linux/backlight.h           | 10 ----------
+>  2 files changed, 9 insertions(+), 23 deletions(-)
 > 
-> 
-> Do you think this is feasible? I guess this is the biggest uncertainty
-> for me at the moment in this patch series.
+> diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
+> index 547aa3e1a03a..91dfcf4a2087 100644
+> --- a/drivers/video/backlight/backlight.c
+> +++ b/drivers/video/backlight/backlight.c
+> @@ -577,19 +577,9 @@ static int of_parent_match(struct device *dev, const void *data)
+>  	return dev->parent && dev->parent->of_node == data;
+>  }
+>  
+> -/**
+> - * of_find_backlight_by_node() - find backlight device by device-tree node
+> - * @node: device-tree node of the backlight device
+> - *
+> - * Returns a pointer to the backlight device corresponding to the given DT
+> - * node or NULL if no such backlight device exists or if the device hasn't
+> - * been probed yet.
+> - *
+> - * This function obtains a reference on the backlight device and it is the
+> - * caller's responsibility to drop the reference by calling put_device() on
+> - * the backlight device's .dev field.
+> - */
+> -struct backlight_device *of_find_backlight_by_node(struct device_node *node)
+> +/* Find backlight device by device-tree node */
+> +static struct backlight_device *
+> +of_find_backlight_by_node(struct device_node *node)
+>  {
+>  	struct device *dev;
+>  
+> @@ -598,6 +588,12 @@ struct backlight_device *of_find_backlight_by_node(struct device_node *node)
+>  	return dev ? to_backlight_device(dev) : NULL;
+>  }
+>  EXPORT_SYMBOL(of_find_backlight_by_node);
+Dropped this EXPORT in v2.
 
-I think it sounds fine in principle.  So long as it doesn't change the
-existing behaviour when of_reg isn't set.
+	Sam
 
-> > Signed-off-by: Michael Walle <michael@walle.cc>
-> > ---
-> >  drivers/mfd/mfd-core.c   | 29 ++++++++++++++++++++---------
-> >  include/linux/mfd/core.h | 26 ++++++++++++++++++++------
-> >  2 files changed, 40 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> > index e735565969b3..4ecb376338f7 100644
-> > --- a/drivers/mfd/mfd-core.c
-> > +++ b/drivers/mfd/mfd-core.c
-> > @@ -117,6 +117,7 @@ static int mfd_add_device(struct device *parent, int
-> > id,
-> >  	struct device_node *np = NULL;
-> >  	int ret = -ENOMEM;
-> >  	int platform_id;
-> > +	u32 of_reg;
-> >  	int r;
-> > 
-> >  	if (id == PLATFORM_DEVID_AUTO)
-> > @@ -151,16 +152,26 @@ static int mfd_add_device(struct device *parent,
-> > int id,
-> > 
-> >  	if (parent->of_node && cell->of_compatible) {
-> >  		for_each_child_of_node(parent->of_node, np) {
-> > -			if (of_device_is_compatible(np, cell->of_compatible)) {
-> > -				if (!of_device_is_available(np)) {
-> > -					/* Ignore disabled devices error free */
-> > -					ret = 0;
-> > -					goto fail_alias;
-> > -				}
-> > -				pdev->dev.of_node = np;
-> > -				pdev->dev.fwnode = &np->fwnode;
-> > -				break;
-> > +			if (!of_device_is_compatible(np, cell->of_compatible))
-> > +				continue;
-> > +
-> > +			/* also match the unit address if set */
-
-Please use correct grammar in comments (leaving off the full-stop).
-
-> > +			if (cell->of_reg & MFD_OF_REG_VALID) {
-> > +				if (of_property_read_u32(np, "reg", &of_reg))
-> > +					continue;
-> > +				if ((cell->of_reg & MFD_OF_REG_MASK) != of_reg)
-> > +					continue;
-> >  			}
-> > +
-> > +			if (!of_device_is_available(np)) {
-> > +				/* Ignore disabled devices error free */
-> > +				ret = 0;
-> > +				goto fail_alias;
-> > +			}
-> > +
-> > +			pdev->dev.of_node = np;
-> > +			pdev->dev.fwnode = &np->fwnode;
-> > +			break;
-> >  		}
-> >  	}
-> > 
-> > diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-> > index d01d1299e49d..c2c0ad6b14f3 100644
-> > --- a/include/linux/mfd/core.h
-> > +++ b/include/linux/mfd/core.h
-> > @@ -13,8 +13,11 @@
-> >  #include <linux/platform_device.h>
-> > 
-> >  #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
-> > +#define MFD_OF_REG_VALID	BIT(31)
-
-What about 64bit platforms?
-
-> > +#define MFD_OF_REG_MASK		GENMASK(30, 0)
-> > 
-> > -#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,
-> > _match)\
-> > +#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
-> > +		     _of_reg, _match)					\
-> >  	{								\
-> >  		.name = (_name),					\
-> >  		.resources = (_res),					\
-> > @@ -22,24 +25,32 @@
-> >  		.platform_data = (_pdata),				\
-> >  		.pdata_size = (_pdsize),				\
-> >  		.of_compatible = (_compat),				\
-> > +		.of_reg = (_of_reg),					\
-> >  		.acpi_match = (_match),					\
-> >  		.id = (_id),						\
-> >  	}
-> > 
-> > +#define OF_MFD_CELL_REG(_name, _res, _pdata, _pdsize, _id, _compat,	\
-> > +			_of_reg)					\
-> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
-> > +		     ((_of_reg) | MFD_OF_REG_VALID), NULL)		\
-> > +
-> >  #define OF_MFD_CELL(_name, _res, _pdata, _pdsize,_id, _compat)		\
-> > -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, NULL)	\
-> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
-> > +		     0, NULL)						\
-> > 
-> >  #define ACPI_MFD_CELL(_name, _res, _pdata, _pdsize, _id, _match)	\
-> > -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, _match)	\
-> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0,	\
-> > +		     _match)						\
-> > 
-> >  #define MFD_CELL_BASIC(_name, _res, _pdata, _pdsize, _id)		\
-> > -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, NULL)	\
-> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0, NULL) \
-> > 
-> >  #define MFD_CELL_RES(_name, _res)					\
-> > -	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, NULL)		\
-> > +	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, 0, NULL)		\
-> > 
-> >  #define MFD_CELL_NAME(_name)						\
-> > -	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, NULL)		\
-> > +	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, 0, NULL)		\
-> > 
-> >  struct irq_domain;
-> >  struct property_entry;
-> > @@ -78,6 +89,9 @@ struct mfd_cell {
-> >  	 */
-> >  	const char		*of_compatible;
-> > 
-> > +	/* matching the reg property if set */
-
-Proper grammar please.
-
-"OF unit address for device matching"
-
-> > +	unsigned int		of_reg;
-> > +
-> >  	/* Matches ACPI */
-> >  	const struct mfd_cell_acpi_match	*acpi_match;
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> +#else
+> +static struct backlight_device *
+> +of_find_backlight_by_node(struct device_node *node)
+> +{
+> +	return NULL;
+> +}
+>  #endif
+>  
+>  static struct backlight_device *of_find_backlight(struct device *dev)
+> diff --git a/include/linux/backlight.h b/include/linux/backlight.h
+> index 3d757a850b88..b7839ea9d00a 100644
+> --- a/include/linux/backlight.h
+> +++ b/include/linux/backlight.h
+> @@ -198,16 +198,6 @@ struct generic_bl_info {
+>  	void (*kick_battery)(void);
+>  };
+>  
+> -#ifdef CONFIG_OF
+> -struct backlight_device *of_find_backlight_by_node(struct device_node *node);
+> -#else
+> -static inline struct backlight_device *
+> -of_find_backlight_by_node(struct device_node *node)
+> -{
+> -	return NULL;
+> -}
+> -#endif
+> -
+>  #if IS_ENABLED(CONFIG_BACKLIGHT_CLASS_DEVICE)
+>  struct backlight_device *devm_of_find_backlight(struct device *dev);
+>  #else
+> -- 
+> 2.25.1
