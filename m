@@ -2,96 +2,79 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E83071D680C
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2020 14:58:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 541531D684D
+	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2020 15:56:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgEQM6e (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 17 May 2020 08:58:34 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:40530 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbgEQM6e (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 17 May 2020 08:58:34 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id E5C302004D;
-        Sun, 17 May 2020 14:58:29 +0200 (CEST)
-Date:   Sun, 17 May 2020 14:58:28 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Andy Gross <agross@kernel.org>,
-        Uwe Kleine Konig <u.kleine-koenig@pengutronix.de>,
-        linux-pwm@vger.kernel.org,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        linux-arm-msm@vger.kernel.org, Jyri Sarha <jsarha@ti.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Support Opensource <support.opensource@diasemi.com>,
-        patches@opensource.cirrus.com,
-        Douglas Anderson <dianders@chromium.org>,
-        Zheng Bin <zhengbin13@huawei.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Enrico Weigelt <info@metux.net>
-Subject: Re: [PATCH v1 02/18] drm/tilcdc: use devm_of_find_backlight
-Message-ID: <20200517125828.GB620358@ravnborg.org>
-References: <20200514191001.457441-1-sam@ravnborg.org>
- <20200514191001.457441-3-sam@ravnborg.org>
- <9e234824-3cf6-ead4-561b-70c1966ac5fd@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9e234824-3cf6-ead4-561b-70c1966ac5fd@ti.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=ULXz4hXy c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=sozttTNsAAAA:8 a=e5mUnYsNAAAA:8
-        a=j9Ekg0ZhKnyfv64AlhwA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=aeg5Gbbo78KNqacMgKqU:22 a=Vxmtnl_E_bksehYqCbjh:22
+        id S1727957AbgEQN4D (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 17 May 2020 09:56:03 -0400
+Received: from mga02.intel.com ([134.134.136.20]:63618 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727943AbgEQN4D (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sun, 17 May 2020 09:56:03 -0400
+IronPort-SDR: CU+EtcS1DoJnk+8ugqV450wLVH//Bdd4y2+kI9hUs141m2STbDhW9eq2GEtP5pjJbfpedF0Tmh
+ dAigure5TdCw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2020 06:56:03 -0700
+IronPort-SDR: RbAfMFj4QyfRkwLIr5TJrLOo4xkqStD7QqRTDuZFx3Y516R+N+m0dJfyJWPicM8CGtg1TBsJVd
+ YLp3aZJ+F3/Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,403,1583222400"; 
+   d="scan'208";a="263694146"
+Received: from vgjayaku-ilbpg7.png.intel.com ([10.88.227.96])
+  by orsmga003.jf.intel.com with ESMTP; 17 May 2020 06:56:01 -0700
+From:   vineetha.g.jaya.kumaran@intel.com
+To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        robh+dt@kernel.org
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        wan.ahmad.zainie.wan.mohamad@intel.com,
+        andriy.shevchenko@intel.com, vineetha.g.jaya.kumaran@intel.com
+Subject: [PATCH 0/3] Add PWM support for Intel Keem Bay SoC
+Date:   Sun, 17 May 2020 21:52:37 +0800
+Message-Id: <1589723560-5734-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, May 15, 2020 at 11:25:47AM +0300, Tomi Valkeinen wrote:
-> On 14/05/2020 22:09, Sam Ravnborg wrote:
-> > Look up backlight device using devm_of_find_backlight().
-> > This simplifies the code and prevents us from hardcoding
-> > the node name in the driver.
-> > 
-> > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> > Cc: Jyri Sarha <jsarha@ti.com>
-> > Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > ---
-> >   drivers/gpu/drm/tilcdc/tilcdc_panel.c | 17 ++++++-----------
-> >   1 file changed, 6 insertions(+), 11 deletions(-)
-> 
-> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
 
-Thanks, pushed to drm-misc-next.
+Hi,
 
-        Sam
+This patch set enables support for PWM on the Intel Keem Bay SoC.
+Keem Bay is an ARM based SoC, and the GPIO module allows
+configuration of 6 PWM outputs. Patch 1 adds a new count attribute to
+the sysfs, Patch 2 adds the PWM driver and Patch 3 is for the
+required Device Tree bindings documentation.
 
-> 
->  Tomi
-> 
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+This driver was tested on the Keem Bay evaluation module board.
+
+Thank you.
+
+Best regards,
+Vineetha
+
+Lai, Poey Seng (2):
+  pwm: Add count attribute in sysfs for Intel Keem Bay
+  pwm: Add PWM driver for Intel Keem Bay
+
+Vineetha G. Jaya Kumaran (1):
+  dt-bindings: pwm: keembay: Add bindings for Intel Keem Bay PWM
+
+ Documentation/ABI/testing/sysfs-class-pwm          |   9 +
+ .../devicetree/bindings/pwm/pwm-keembay.yaml       |  39 +++
+ drivers/pwm/Kconfig                                |   9 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/core.c                                 |   3 +-
+ drivers/pwm/pwm-keembay.c                          | 308 +++++++++++++++++++++
+ drivers/pwm/sysfs.c                                |  37 +++
+ include/linux/pwm.h                                |   2 +
+ 8 files changed, 407 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-keembay.yaml
+ create mode 100644 drivers/pwm/pwm-keembay.c
+
+-- 
+1.9.1
+
