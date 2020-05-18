@@ -2,52 +2,52 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BEB301D7BE5
-	for <lists+linux-pwm@lfdr.de>; Mon, 18 May 2020 16:55:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 388A21D7C23
+	for <lists+linux-pwm@lfdr.de>; Mon, 18 May 2020 17:01:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgEROzC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 18 May 2020 10:55:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33446 "EHLO
+        id S1728097AbgERPBB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 18 May 2020 11:01:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbgEROzB (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 18 May 2020 10:55:01 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7929CC061A0C
-        for <linux-pwm@vger.kernel.org>; Mon, 18 May 2020 07:55:01 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id s8so12222375wrt.9
-        for <linux-pwm@vger.kernel.org>; Mon, 18 May 2020 07:55:01 -0700 (PDT)
+        with ESMTP id S1726958AbgERPBB (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 18 May 2020 11:01:01 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8402C05BD09
+        for <linux-pwm@vger.kernel.org>; Mon, 18 May 2020 08:01:00 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id z4so8462294wmi.2
+        for <linux-pwm@vger.kernel.org>; Mon, 18 May 2020 08:01:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=sc8LZw1aFYMl/7VH0/CKYrILiudqiq2KGCatolX/Vlo=;
-        b=xb+BHHLf1Tatfi2MNt/KTxXmOAgaTICpK/MatIHpslOb28JgiBQOS8/48GvZygyiOj
-         gG4DOvymcf097FXDlRqK6LcZXodUXX202ht8WWJpqSJdUywvnzW9UwTh2L1SoER+d5KK
-         qgIklbC6gwPC/eR3BYYS/F+cSbuMupDwpIbJlKBIPXhP9Apy+ZDZug4OQdT9y2e+alpN
-         eyoR0GEuTULmbFUpZFsmvKYomsAxk7DRB1E2VMEVtq1HHKIJSNnIeWxaQr3W6J3QBILv
-         jgnE4DBHlxfJNHfC/nZIeMCL3qAOnBpAVy9f2neAj3jFAvnfuzjCy4AbWAg72r/DdUG/
-         k2cg==
+        bh=8++mCf4jSObKvczsPrCihMEuKhSX0mbSobsPe+OlqoE=;
+        b=b1KoRPzh9KeASUfJshq63jbOp9jg3g/1rpHNd1w/o+KQuz4BhUdHMX05yfqVsWYET4
+         HWW1Mpp4YrWFk67arh4A2bp+D+x9YrUAJr/tgsIAjZJUb6vepsGF6L3fMH55zsUrFIJJ
+         0mSRpAxHlAsHOcYM7awxP5nAJX3vNXuaewFgbEE/Hvb/P6FI263krXKqG4gsb/p58602
+         4K8Vm/tZRVERoDDdHDD4wyRS1FQHHf2xLhg532Qj8v0QFQpgmlSBqNl6gRqp2Yf+6yyv
+         4yJ79yABAK+WKH83YZfPZ9vmS3WqBCP17g2A7bVa+J/erzwnI8YSkmsnjUUgCuiCKS2S
+         jqLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=sc8LZw1aFYMl/7VH0/CKYrILiudqiq2KGCatolX/Vlo=;
-        b=VNarfmdKsQKgnraAgF30svormaiRFeHn0vop7lFEhw+HnzNCaFS7TbuAXGRCpEn99R
-         KImbHPG79WZuk6ZSDH+V95ku9XfEuLvIBFK5RnQFYtb03CGm196gjohCCOUKZ546ISzI
-         cJ4yyB91+mIgk1WpCIZuEaQiQ7ttQgNxq+K/2nhNjVnpW9oc+6qSMxfYRmCi+HiqqYfs
-         wyZARTyMGoS/oLfKZ79PRCh0Q7pvmB+8LFMWtV3DbAWW9VoOk9PIApTjPM+0z++EGLcD
-         dQ9aR9amaTpZ7DgVsa+5pD6BZKMQbsyp0glEyKlXF2UPwTfIDcLN8RpnknOvcEL35yln
-         rQ1A==
-X-Gm-Message-State: AOAM533vYP18B5BZ/jkhvACxHaFQbfSob+NLxoADXeLez3hSvmUtE5/g
-        Jlb+4ZBvfPhcC1H1yr3n14g2uA==
-X-Google-Smtp-Source: ABdhPJyQ+pvcK3hqQHdj+Yb7Twm2o3yI6kGnwEAvQE9nHPKDkHS5qu1gqYNSErT5DehDyzyl1UAQCA==
-X-Received: by 2002:a5d:5607:: with SMTP id l7mr20630988wrv.370.1589813700229;
-        Mon, 18 May 2020 07:55:00 -0700 (PDT)
+        bh=8++mCf4jSObKvczsPrCihMEuKhSX0mbSobsPe+OlqoE=;
+        b=KXKJ+8fThc+ZMVEsh2gxmFVhTrbiql8KDy3TUXzkBWmKApnsPDJ4WJQAZNsZK/Tv6K
+         zZ3WpxGA2SHNeRIDzdpIwisNJULoWFAlVXvFOt6zZjniYfK5YXdv+HeFqwuGkCaCsCjm
+         sEi3ikHX9DHhP5j4WGJErIh5DwpJM1jl0BqlG8OILjEuRmnHz+OBvgDWCw+VZ0F/HwlI
+         Ls7Bov9q2HgS7/WoCFdWjv6I/Rs+7YH2n8FdNW5V5yVs9oOuBU20s6oBiiXUaikxNqKu
+         d0U0mlym+0XD1X2EZePhIJsjBYzgTy5K0iEr1Q0lrzfk0s7IRXTY76KnaJWGhibekq/P
+         wjkA==
+X-Gm-Message-State: AOAM530RRiCDOJucX1xSom4EBNGTdIFVtE0aw5OkouYTJsQwh/Q8bj3W
+        CSdX4vR97qmL1eDX2VXZB/UnhQ==
+X-Google-Smtp-Source: ABdhPJwVYyW+g2DU5vF2SFs8kROpaXsS+0st9Moezr7mqbpA2jZeUyxRLI/bkAyeZ7mLDzH+DnX7+w==
+X-Received: by 2002:a1c:770e:: with SMTP id t14mr20423003wmi.86.1589814058651;
+        Mon, 18 May 2020 08:00:58 -0700 (PDT)
 Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id l19sm17377481wmj.14.2020.05.18.07.54.58
+        by smtp.gmail.com with ESMTPSA id j2sm16678993wrp.47.2020.05.18.08.00.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 07:54:59 -0700 (PDT)
-Date:   Mon, 18 May 2020 15:54:57 +0100
+        Mon, 18 May 2020 08:00:57 -0700 (PDT)
+Date:   Mon, 18 May 2020 16:00:55 +0100
 From:   Daniel Thompson <daniel.thompson@linaro.org>
 To:     Sam Ravnborg <sam@ravnborg.org>
 Cc:     dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>,
@@ -73,25 +73,42 @@ Cc:     dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 02/16] backlight: refactor fb_notifier_callback()
-Message-ID: <20200518145457.zonqhzkeybxdrq6b@holly.lan>
+Subject: Re: [PATCH v2 03/16] backlight: add backlight_is_blank()
+Message-ID: <20200518150055.2vaaoucf4nodwoz5@holly.lan>
 References: <20200517190139.740249-1-sam@ravnborg.org>
- <20200517190139.740249-3-sam@ravnborg.org>
+ <20200517190139.740249-4-sam@ravnborg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200517190139.740249-3-sam@ravnborg.org>
+In-Reply-To: <20200517190139.740249-4-sam@ravnborg.org>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun, May 17, 2020 at 09:01:25PM +0200, Sam Ravnborg wrote:
-> Increase readability of fb_notifier_callback() by removing
-> a few indent levels.
-> No functional change.
+On Sun, May 17, 2020 at 09:01:26PM +0200, Sam Ravnborg wrote:
+> The backlight support has two properties that express the state:
+> - power
+> - state
+> 
+> It is un-documented and easy to get wrong.
+> Add backlight_is_blank() helper to make it simpler for drivers
+> to get the check of the state correct.
+> 
+> A lot of drivers also includes checks for fb_blank.
+> This check is redundant when the state is checked
+> and thus not needed in this helper function.
+> But added anyway to avoid introducing subtle bug
+> due to the creative use in some drivers.
+> 
+> Rolling out this helper to all relevant backlight drivers
+> will eliminate almost all accesses to fb_blank.
+> 
+> v2:
+>   - Added fb_blank condition (Daniel)
 > 
 > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
 > Cc: Lee Jones <lee.jones@linaro.org>
 > Cc: Daniel Thompson <daniel.thompson@linaro.org>
 > Cc: Jingoo Han <jingoohan1@gmail.com>
@@ -100,64 +117,39 @@ Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 
 
 > ---
->  drivers/video/backlight/backlight.c | 43 +++++++++++++++--------------
->  1 file changed, 22 insertions(+), 21 deletions(-)
+>  include/linux/backlight.h | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 > 
-> diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
-> index cac3e35d7630..17f04cff50ab 100644
-> --- a/drivers/video/backlight/backlight.c
-> +++ b/drivers/video/backlight/backlight.c
-> @@ -58,28 +58,29 @@ static int fb_notifier_callback(struct notifier_block *self,
->  
->  	bd = container_of(self, struct backlight_device, fb_notif);
->  	mutex_lock(&bd->ops_lock);
-> -	if (bd->ops)
-> -		if (!bd->ops->check_fb ||
-> -		    bd->ops->check_fb(bd, evdata->info)) {
-> -			fb_blank = *(int *)evdata->data;
-> -			if (fb_blank == FB_BLANK_UNBLANK &&
-> -			    !bd->fb_bl_on[node]) {
-> -				bd->fb_bl_on[node] = true;
-> -				if (!bd->use_count++) {
-> -					bd->props.state &= ~BL_CORE_FBBLANK;
-> -					bd->props.fb_blank = FB_BLANK_UNBLANK;
-> -					backlight_update_status(bd);
-> -				}
-> -			} else if (fb_blank != FB_BLANK_UNBLANK &&
-> -				   bd->fb_bl_on[node]) {
-> -				bd->fb_bl_on[node] = false;
-> -				if (!(--bd->use_count)) {
-> -					bd->props.state |= BL_CORE_FBBLANK;
-> -					bd->props.fb_blank = fb_blank;
-> -					backlight_update_status(bd);
-> -				}
-> -			}
-> +
-> +	if (!bd->ops)
-> +		goto out;
-> +	if (bd->ops->check_fb && !bd->ops->check_fb(bd, evdata->info))
-> +		goto out;
-> +
-> +	fb_blank = *(int *)evdata->data;
-> +	if (fb_blank == FB_BLANK_UNBLANK && !bd->fb_bl_on[node]) {
-> +		bd->fb_bl_on[node] = true;
-> +		if (!bd->use_count++) {
-> +			bd->props.state &= ~BL_CORE_FBBLANK;
-> +			bd->props.fb_blank = FB_BLANK_UNBLANK;
-> +			backlight_update_status(bd);
-> +		}
-> +	} else if (fb_blank != FB_BLANK_UNBLANK && bd->fb_bl_on[node]) {
-> +		bd->fb_bl_on[node] = false;
-> +		if (!(--bd->use_count)) {
-> +			bd->props.state |= BL_CORE_FBBLANK;
-> +			bd->props.fb_blank = fb_blank;
-> +			backlight_update_status(bd);
->  		}
-> +	}
-> +out:
->  	mutex_unlock(&bd->ops_lock);
->  	return 0;
+> diff --git a/include/linux/backlight.h b/include/linux/backlight.h
+> index c7d6b2e8c3b5..a0a083b35c47 100644
+> --- a/include/linux/backlight.h
+> +++ b/include/linux/backlight.h
+> @@ -175,6 +175,25 @@ static inline void backlight_put(struct backlight_device *bd)
+>  		put_device(&bd->dev);
 >  }
+>  
+> +/**
+> + * backlight_is_blank - Return true if display is expected to be blank
+> + * @bd: the backlight device
+> + *
+> + * Display is expected to be blank if any of these is true::
+> + *
+> + *   1) if power in not UNBLANK
+> + *   2) if fb_blank is not UNBLANK
+> + *   3) if state indicate BLANK or SUSPENDED
+> + *
+> + * Returns true if display is expected to be blank, false otherwise.
+> + */
+> +static inline bool backlight_is_blank(struct backlight_device *bd)
+> +{
+> +	return bd->props.power != FB_BLANK_UNBLANK ||
+> +	       bd->props.fb_blank != FB_BLANK_UNBLANK ||
+> +	       bd->props.state & (BL_CORE_SUSPENDED | BL_CORE_FBBLANK);
+> +}
+> +
+>  extern struct backlight_device *backlight_device_register(const char *name,
+>  	struct device *dev, void *devdata, const struct backlight_ops *ops,
+>  	const struct backlight_properties *props);
 > -- 
 > 2.25.1
 > 
