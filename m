@@ -2,129 +2,162 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 830E81D7B00
-	for <lists+linux-pwm@lfdr.de>; Mon, 18 May 2020 16:21:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEB301D7BE5
+	for <lists+linux-pwm@lfdr.de>; Mon, 18 May 2020 16:55:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgEROVp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 18 May 2020 10:21:45 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45278 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbgEROVp (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 18 May 2020 10:21:45 -0400
-Received: by mail-io1-f68.google.com with SMTP id w25so10672488iol.12;
-        Mon, 18 May 2020 07:21:45 -0700 (PDT)
+        id S1727005AbgEROzC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 18 May 2020 10:55:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726918AbgEROzB (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 18 May 2020 10:55:01 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7929CC061A0C
+        for <linux-pwm@vger.kernel.org>; Mon, 18 May 2020 07:55:01 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id s8so12222375wrt.9
+        for <linux-pwm@vger.kernel.org>; Mon, 18 May 2020 07:55:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=sc8LZw1aFYMl/7VH0/CKYrILiudqiq2KGCatolX/Vlo=;
+        b=xb+BHHLf1Tatfi2MNt/KTxXmOAgaTICpK/MatIHpslOb28JgiBQOS8/48GvZygyiOj
+         gG4DOvymcf097FXDlRqK6LcZXodUXX202ht8WWJpqSJdUywvnzW9UwTh2L1SoER+d5KK
+         qgIklbC6gwPC/eR3BYYS/F+cSbuMupDwpIbJlKBIPXhP9Apy+ZDZug4OQdT9y2e+alpN
+         eyoR0GEuTULmbFUpZFsmvKYomsAxk7DRB1E2VMEVtq1HHKIJSNnIeWxaQr3W6J3QBILv
+         jgnE4DBHlxfJNHfC/nZIeMCL3qAOnBpAVy9f2neAj3jFAvnfuzjCy4AbWAg72r/DdUG/
+         k2cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nw3uL0prCIhvjDfJQqiTECtacq4+z7dFJzYGHhmiGAg=;
-        b=rDhGJnp80LLMqV1MScErNl2UUFphDShzob34opdIz8l/BLeK/MJesFgA/T/YdqJnjK
-         JxivT1zZ96KHxcwvzp/ChP0wd5TZg9KGLAg0iHKq0bRnVT/jPUt+7pn8fx5o7luunTSd
-         6Yre3QQUsdXk7e3riYgBk2bj5Bdljl46M8sq+lcs6+SRrUjO0KeV5bwmMdYg7Ujy2Mht
-         G5t0U94FSSxZb4i/NJIF6UE0Q5wqBgtqLX4YyQs1g3BZOviZ+uXqeQImzo40lNyfo7rV
-         XpGZR3hvMpJBPcx23UIXXMR8RumBbwEKEKRW6Hwu7ZhIO5OkEut9ora2FujT/F4TDNOV
-         Ki1A==
-X-Gm-Message-State: AOAM533Z2SzRvmXqAsoPhMxLtWRABZHBaXyMvsWkXT9LgC9UISmO+MEh
-        D1AoAr1s8ZNNkl4WvN6nqQ==
-X-Google-Smtp-Source: ABdhPJyGUG7N7QD3iSv9jBNJrMrdAvkR+mi7qnLgIzeyksOsexqkUipe1pBU1VDBeFTg0/COJSU2jg==
-X-Received: by 2002:a02:cf13:: with SMTP id q19mr14639139jar.42.1589811704654;
-        Mon, 18 May 2020 07:21:44 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id r8sm3870863iob.15.2020.05.18.07.21.43
+         :mime-version:content-disposition:in-reply-to;
+        bh=sc8LZw1aFYMl/7VH0/CKYrILiudqiq2KGCatolX/Vlo=;
+        b=VNarfmdKsQKgnraAgF30svormaiRFeHn0vop7lFEhw+HnzNCaFS7TbuAXGRCpEn99R
+         KImbHPG79WZuk6ZSDH+V95ku9XfEuLvIBFK5RnQFYtb03CGm196gjohCCOUKZ546ISzI
+         cJ4yyB91+mIgk1WpCIZuEaQiQ7ttQgNxq+K/2nhNjVnpW9oc+6qSMxfYRmCi+HiqqYfs
+         wyZARTyMGoS/oLfKZ79PRCh0Q7pvmB+8LFMWtV3DbAWW9VoOk9PIApTjPM+0z++EGLcD
+         dQ9aR9amaTpZ7DgVsa+5pD6BZKMQbsyp0glEyKlXF2UPwTfIDcLN8RpnknOvcEL35yln
+         rQ1A==
+X-Gm-Message-State: AOAM533vYP18B5BZ/jkhvACxHaFQbfSob+NLxoADXeLez3hSvmUtE5/g
+        Jlb+4ZBvfPhcC1H1yr3n14g2uA==
+X-Google-Smtp-Source: ABdhPJyQ+pvcK3hqQHdj+Yb7Twm2o3yI6kGnwEAvQE9nHPKDkHS5qu1gqYNSErT5DehDyzyl1UAQCA==
+X-Received: by 2002:a5d:5607:: with SMTP id l7mr20630988wrv.370.1589813700229;
+        Mon, 18 May 2020 07:55:00 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id l19sm17377481wmj.14.2020.05.18.07.54.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 07:21:44 -0700 (PDT)
-Received: (nullmailer pid 8829 invoked by uid 1000);
-        Mon, 18 May 2020 14:21:43 -0000
-Date:   Mon, 18 May 2020 08:21:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     vineetha.g.jaya.kumaran@intel.com
-Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        wan.ahmad.zainie.wan.mohamad@intel.com, andriy.shevchenko@intel.com
-Subject: Re: [PATCH 3/3] dt-bindings: pwm: keembay: Add bindings for Intel
- Keem Bay PWM
-Message-ID: <20200518142143.GB3594@bogus>
-References: <1589723560-5734-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
- <1589723560-5734-4-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+        Mon, 18 May 2020 07:54:59 -0700 (PDT)
+Date:   Mon, 18 May 2020 15:54:57 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Andy Gross <agross@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        patches@opensource.cirrus.com,
+        Russell King <linux@armlinux.org.uk>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2 02/16] backlight: refactor fb_notifier_callback()
+Message-ID: <20200518145457.zonqhzkeybxdrq6b@holly.lan>
+References: <20200517190139.740249-1-sam@ravnborg.org>
+ <20200517190139.740249-3-sam@ravnborg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589723560-5734-4-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200517190139.740249-3-sam@ravnborg.org>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun, May 17, 2020 at 09:52:40PM +0800, vineetha.g.jaya.kumaran@intel.com wrote:
-> From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
+On Sun, May 17, 2020 at 09:01:25PM +0200, Sam Ravnborg wrote:
+> Increase readability of fb_notifier_callback() by removing
+> a few indent levels.
+> No functional change.
 > 
-> Add PWM Device Tree bindings documentation for the Intel Keem Bay SoC.
-> 
-> Signed-off-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+
+
 > ---
->  .../devicetree/bindings/pwm/pwm-keembay.yaml       | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-keembay.yaml
-
-Use compatible string for filename: intel,keembay-pwn.yaml
-
+>  drivers/video/backlight/backlight.c | 43 +++++++++++++++--------------
+>  1 file changed, 22 insertions(+), 21 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-keembay.yaml b/Documentation/devicetree/bindings/pwm/pwm-keembay.yaml
-> new file mode 100644
-> index 0000000..00968d7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-keembay.yaml
-> @@ -0,0 +1,39 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-Dual license new bindings:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +# Copyright (C) 2020 Intel Corporation
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/pwm-keembay.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
+> index cac3e35d7630..17f04cff50ab 100644
+> --- a/drivers/video/backlight/backlight.c
+> +++ b/drivers/video/backlight/backlight.c
+> @@ -58,28 +58,29 @@ static int fb_notifier_callback(struct notifier_block *self,
+>  
+>  	bd = container_of(self, struct backlight_device, fb_notif);
+>  	mutex_lock(&bd->ops_lock);
+> -	if (bd->ops)
+> -		if (!bd->ops->check_fb ||
+> -		    bd->ops->check_fb(bd, evdata->info)) {
+> -			fb_blank = *(int *)evdata->data;
+> -			if (fb_blank == FB_BLANK_UNBLANK &&
+> -			    !bd->fb_bl_on[node]) {
+> -				bd->fb_bl_on[node] = true;
+> -				if (!bd->use_count++) {
+> -					bd->props.state &= ~BL_CORE_FBBLANK;
+> -					bd->props.fb_blank = FB_BLANK_UNBLANK;
+> -					backlight_update_status(bd);
+> -				}
+> -			} else if (fb_blank != FB_BLANK_UNBLANK &&
+> -				   bd->fb_bl_on[node]) {
+> -				bd->fb_bl_on[node] = false;
+> -				if (!(--bd->use_count)) {
+> -					bd->props.state |= BL_CORE_FBBLANK;
+> -					bd->props.fb_blank = fb_blank;
+> -					backlight_update_status(bd);
+> -				}
+> -			}
 > +
-> +title: Intel Keem Bay PWM Device Tree Bindings
+> +	if (!bd->ops)
+> +		goto out;
+> +	if (bd->ops->check_fb && !bd->ops->check_fb(bd, evdata->info))
+> +		goto out;
 > +
-> +maintainers:
-> +  - Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
-> +
-> +allOf:
-> +  - $ref: pwm.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - intel,keembay-pwm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description:
-> +        phandle to the reference clock.
-
-How many clocks? (maxItems: 1?)
-
-You can drop the description.
-
-> +
-> +required:
-> + - compatible
-> + - reg
-> + - clocks
-> +
-> +examples:
-> +  - |
-> +    pwm@203200a0 {
-> +      compatible = "intel,keembay-pwm";
-> +      reg = <0x0 0x203200a0 0x0 0xe8>;
-> +      clocks = <&scmi_clk KEEM_BAY_A53_GPIO>;
-> +    };
+> +	fb_blank = *(int *)evdata->data;
+> +	if (fb_blank == FB_BLANK_UNBLANK && !bd->fb_bl_on[node]) {
+> +		bd->fb_bl_on[node] = true;
+> +		if (!bd->use_count++) {
+> +			bd->props.state &= ~BL_CORE_FBBLANK;
+> +			bd->props.fb_blank = FB_BLANK_UNBLANK;
+> +			backlight_update_status(bd);
+> +		}
+> +	} else if (fb_blank != FB_BLANK_UNBLANK && bd->fb_bl_on[node]) {
+> +		bd->fb_bl_on[node] = false;
+> +		if (!(--bd->use_count)) {
+> +			bd->props.state |= BL_CORE_FBBLANK;
+> +			bd->props.fb_blank = fb_blank;
+> +			backlight_update_status(bd);
+>  		}
+> +	}
+> +out:
+>  	mutex_unlock(&bd->ops_lock);
+>  	return 0;
+>  }
 > -- 
-> 1.9.1
+> 2.25.1
 > 
