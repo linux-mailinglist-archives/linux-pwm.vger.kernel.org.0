@@ -2,55 +2,23 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F31761D728A
-	for <lists+linux-pwm@lfdr.de>; Mon, 18 May 2020 10:10:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F1BF1D74F5
+	for <lists+linux-pwm@lfdr.de>; Mon, 18 May 2020 12:16:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbgERIK0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 18 May 2020 04:10:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbgERIKZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 18 May 2020 04:10:25 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83775C05BD09
-        for <linux-pwm@vger.kernel.org>; Mon, 18 May 2020 01:10:25 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id w10so8827935ljo.0
-        for <linux-pwm@vger.kernel.org>; Mon, 18 May 2020 01:10:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=em2U7B8TyUf30bEUcMzbKLuDgDBEeuKa70ZTt7cbEvc=;
-        b=m1FCdPoToBswJghU2vv7XgNi/QYDpr6H1HoZ8l66YdZB6QB8h78vyCPO/e0/UGxjP6
-         ZZ9EIgnMMJomAK4cszeOzFycO84gRnDipsqV03FiSgCmau5uUwee47aNVA7b3+VPi4ki
-         Bgb2OQym51ongcbux98NBFutl7ayLusleUKtnyW0cJzZCeitLERQVbEOKXlyCpR3mIcf
-         YhEPxn98P/gy/dhY47yCDz99uDc6z9IZswOJ99IUoNYcs33mWpgKi6C9dh932hxLWt22
-         kO1po+jMFgfWYzMjO/iN1RAqobkw+LnxY7Q/1aaThEIvvI83HggVrqEHhquOQwfpTPH7
-         GDlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=em2U7B8TyUf30bEUcMzbKLuDgDBEeuKa70ZTt7cbEvc=;
-        b=TuIDsoe3bavqlSih3aFkMR2S/DJjRtvNKQA+zh9CX1xc6KSpH24kcnUXWescqRN3M+
-         TRRsAIKHEj49OiZJi9KEfvm6J36di5HV7cvzLKOiDJQm1mS97+7SY9oLLw5GMAK3KMm6
-         vKLg4ffTd4MhUojSyru4BVqQ4UbaWGDQEHDn6ZvjlSGev4hPILzN6tQConM0RcDrKodi
-         S9EDjJxVKwv5NDIa5xMIV6l6rMDxaYdymAdymObpKJzTz11HkrqBKcmtad/9O5dCBH9j
-         166xSHdYJi2g7JHyaCAoV/aT6FPs9gmLha9S/FzOaPzodMmLSgybu8VBFkmygqfhFeiD
-         0LjA==
-X-Gm-Message-State: AOAM533clsUCDFBRDpUbiQVmjbYS9pJACs1AFANVHP8FbidgaiwWV53i
-        d7iT7Lqtt6MqoYm/IHCd7O8kNtoTueqKVp3F3ug7sg==
-X-Google-Smtp-Source: ABdhPJzmyKywKnrt+mhTCQKuNKDH+mnRR3odpUAZzgZQXdX7WCuZf65U7KFkVSK7USoDQJabCtlLvrEg8KE48wcD13A=
-X-Received: by 2002:a2e:980d:: with SMTP id a13mr9750278ljj.277.1589789423940;
- Mon, 18 May 2020 01:10:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200517190139.740249-1-sam@ravnborg.org> <20200517190139.740249-2-sam@ravnborg.org>
-In-Reply-To: <20200517190139.740249-2-sam@ravnborg.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 18 May 2020 10:10:12 +0200
-Message-ID: <CACRpkdbogVA=12Xzh6jC0AaE7DrH8Z7iVuG3s_gS4MQBYF61Dw@mail.gmail.com>
-Subject: Re: [PATCH v2 01/16] video: amba-clcd: use devm_of_find_backlight
-To:     Sam Ravnborg <sam@ravnborg.org>
+        id S1726274AbgERKQX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 18 May 2020 06:16:23 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:39208 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgERKQX (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 18 May 2020 06:16:23 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 55002804CE;
+        Mon, 18 May 2020 12:16:13 +0200 (CEST)
+Date:   Mon, 18 May 2020 12:16:09 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
         Jingoo Han <jingoohan1@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
@@ -75,32 +43,55 @@ Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v2 01/16] video: amba-clcd: use devm_of_find_backlight
+Message-ID: <20200518101609.GA759699@ravnborg.org>
+References: <20200517190139.740249-1-sam@ravnborg.org>
+ <20200517190139.740249-2-sam@ravnborg.org>
+ <CACRpkdbogVA=12Xzh6jC0AaE7DrH8Z7iVuG3s_gS4MQBYF61Dw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbogVA=12Xzh6jC0AaE7DrH8Z7iVuG3s_gS4MQBYF61Dw@mail.gmail.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=PHq6YzTAAAAA:8 a=hD80L64hAAAA:8
+        a=sozttTNsAAAA:8 a=KKAkSRfTAAAA:8 a=QyXUC8HyAAAA:8 a=cm27Pg_UAAAA:8
+        a=RYpW3c0wQFxx2xuxHgkA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=ZKzU8r6zoKMcqsNulkmm:22 a=aeg5Gbbo78KNqacMgKqU:22
+        a=cvBusfyB2V15izCimMoJ:22 a=xmb-EsYY8bH0VWELuYED:22
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun, May 17, 2020 at 9:01 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+Hi Linus.
 
-> Look up backlight device using devm_of_find_backlight().
-> This simplifies the code and prevents us from hardcoding
-> the node name in the driver.
->
-> v2:
->   - Added Cc: Peter Ujfalusi
->
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Jani Nikula <jani.nikula@intel.com>
-> Cc: Douglas Anderson <dianders@chromium.org>
+On Mon, May 18, 2020 at 10:10:12AM +0200, Linus Walleij wrote:
+> On Sun, May 17, 2020 at 9:01 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+> 
+> > Look up backlight device using devm_of_find_backlight().
+> > This simplifies the code and prevents us from hardcoding
+> > the node name in the driver.
+> >
+> > v2:
+> >   - Added Cc: Peter Ujfalusi
+> >
+> > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> > Cc: Russell King <linux@armlinux.org.uk>
+> > Cc: Sam Ravnborg <sam@ravnborg.org>
+> > Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> > Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> > Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Jani Nikula <jani.nikula@intel.com>
+> > Cc: Douglas Anderson <dianders@chromium.org>
+> 
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Thanks. I went ahead and applied this now, so we could kill
+the last user of of_find_backlight_by_node().
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+I hope we can make of_find_backlight_by_node() static after the merge window
+so no new users appears.
 
-Yours,
-Linus Walleij
+	Sam
