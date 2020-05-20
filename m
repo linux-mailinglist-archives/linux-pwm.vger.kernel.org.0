@@ -2,123 +2,179 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77CBE1D8893
-	for <lists+linux-pwm@lfdr.de>; Mon, 18 May 2020 21:57:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C45281DB072
+	for <lists+linux-pwm@lfdr.de>; Wed, 20 May 2020 12:44:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728617AbgERT5C (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 18 May 2020 15:57:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52764 "EHLO
+        id S1726452AbgETKon (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 20 May 2020 06:44:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbgERT5B (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 18 May 2020 15:57:01 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FF17C061A0C
-        for <linux-pwm@vger.kernel.org>; Mon, 18 May 2020 12:57:01 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id k12so721202wmj.3
-        for <linux-pwm@vger.kernel.org>; Mon, 18 May 2020 12:57:01 -0700 (PDT)
+        with ESMTP id S1726436AbgETKon (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 20 May 2020 06:44:43 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC73EC061A0E;
+        Wed, 20 May 2020 03:44:42 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id u2so1501233vsi.13;
+        Wed, 20 May 2020 03:44:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PbdRyg5kcd//DX8aThqSi8QmNWbORlgHp5rh1J6SqIY=;
-        b=kA7beYhILj0prjYk3znsZ8vtZ7ZDrlQiKMA8sojxIRQXdGFCC8xIgp5oYZcsv/epOa
-         z+WwumTl1Z5l7ZX9B/eSRrqY5mx549cQYP//s64DW4RKuMRcjPBWW5fQi5fAZlenSkZJ
-         Nt1WvnhlH1BgUXRpg/hIsSY/DfNuQGXGDvjHA4ulU45A3PQ10l2Ii7oIjU1ZrqUblkDo
-         NA0ch0kHTUl/VyMp6QdehDNFFaESotNNxJsywuZFaJQrnp3f1uIg+jX+nk1vK3Ecm+b4
-         P6xmu/BErHxodXVZt88F3zAeY0oXRqfODvYoE6KNDpKet9iKSLYq8FddTeCPBpnQTVNX
-         KOyw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z8Ed4esVyLwxGK/ed6iQzqE+rcqzfGB1NnWxeSSQtK0=;
+        b=LMo7BXsekhXmrXHuaiP1G2MkQ1j914Wla5i0ywG6W9XT0iquGvIPV3BliE8K0E5xc7
+         NObMTM0aP22cwtd5HNWPz44lIo1j0IKbRsKmQqMAAiBhyugOEVfLTeZriyknUuhst1Ib
+         fx9nFEbo1NA1tz0ATqqVuLzPfI2ztMG3B0zGQgLtsW1xw+goXzOjiE4TPiP88S/wPoi9
+         gRb+vlVisdLUGuRyE3URXw+fgu0YrgTPd0KSBTSmjBbpy1M8ii1Shg86dpUc2T3qAL4F
+         upyAOzqhccKkVDERI8W7zS4G9haYdfwLAPfz0WvsIT2UJbhwrfv4Zl3Y5PB6Iobxa2OM
+         B/PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PbdRyg5kcd//DX8aThqSi8QmNWbORlgHp5rh1J6SqIY=;
-        b=bA/uZBaFDLkugCrE4p+A+Z2whjz/4SgBGR72PuPZCoN8L+D3xPPbmNPT0jbz+DbYGh
-         AijasN+EA8cMcwwVb5uzYVxtasdE9TDJW86c2DAlGf1p5CSrB9wOO8Bsk6zijD6E7zGC
-         2NjbmsxfI1/LgUd9LwIlq1RY+WH4A1vDo7xtVrIIGQJaNjTQK8xtg/zUbgqWYQIeXzff
-         xyCORfnoycX1EegUT9YF0EZcR+kptX30Z29qNugChtHQAEy1ukAxAgFVyzh17tOdlz5o
-         qa/z8UT0b87bD+YUzvGjPDwL/8tyRdTQfZ7bv6kgcYSkzk7Z/hExnzb34pWdXIIOWo3y
-         czlQ==
-X-Gm-Message-State: AOAM533CgSagV8NERLddRTfkHRsQj8i4qLCEV6Vp5i2c7nvBgf/1zSpr
-        e3HbPNH7nj8pWrn+93YUKCURYA==
-X-Google-Smtp-Source: ABdhPJzoU8qbbvxxC3cizf6NI6NFIEqaKyHByjJ4SgRZLqqZ0f2ZQseTGjC1Xa9OdZep5QtoO5pCtw==
-X-Received: by 2002:a1c:3b87:: with SMTP id i129mr1150807wma.38.1589831819961;
-        Mon, 18 May 2020 12:56:59 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id u10sm769695wmc.31.2020.05.18.12.56.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 12:56:59 -0700 (PDT)
-Date:   Mon, 18 May 2020 20:56:56 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z8Ed4esVyLwxGK/ed6iQzqE+rcqzfGB1NnWxeSSQtK0=;
+        b=eU7vD3ttGPDqs0X4LZhagqWZD2KjRu7i9Vl5Y1CEOjTRdoPb0kbGOdgtUuMf7HPIsf
+         4ubk7LU3gnIB1AooIMs8l92+QSWti8GNGd5+4M2wAAOT2Dd3Lju1BtAwci2E0HcYq0SS
+         5EuXunTZQaJgqPg0GuPVSsLJX6gLF3eRDTykehztEH1ieRA23HK7n3kr5AUQ5aYJTHLO
+         A+GUiFukmHM4QfdcDqY4uaKckypzIVAQ6AhnZ+95s0SgmXOkPY75GOstcI58TTbNg/UE
+         eDqcYGIWEtzccOLtM8KbBwz9UR5Cfuq6P6nIq7sakUJK/RPXoMo4jb3ULa2VD0LGNXOf
+         kImA==
+X-Gm-Message-State: AOAM533jXsjHzTBO3Yw9T5e8LtsuijBcVAxpPaq2a06drj0Bpd94A1hR
+        gjg06hLoEg4nxMTOAWC6G27oYSaBBbKHLR+A5kA=
+X-Google-Smtp-Source: ABdhPJyuWRsi6C3bfq5M4MOyQ9byWY9bxWsctP/KplOAKui4DADof0x9My3MNA1jStEseX1SLxjQp7LPJ3e6/IGtfGI=
+X-Received: by 2002:a67:ff14:: with SMTP id v20mr2696940vsp.118.1589971481760;
+ Wed, 20 May 2020 03:44:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200517190139.740249-1-sam@ravnborg.org> <20200517190139.740249-3-sam@ravnborg.org>
+In-Reply-To: <20200517190139.740249-3-sam@ravnborg.org>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Wed, 20 May 2020 11:41:46 +0100
+Message-ID: <CACvgo50p6M59C-cdwCUFYNE7pWBA-oTwa9EN90yrkOkW2S-BKA@mail.gmail.com>
+Subject: Re: [PATCH v2 02/16] backlight: refactor fb_notifier_callback()
 To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andy Gross <agross@kernel.org>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
         linux-pwm@vger.kernel.org,
+        Support Opensource <support.opensource@diasemi.com>,
         Michael Hennerich <michael.hennerich@analog.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        linux-arm-msm@vger.kernel.org,
-        Support Opensource <support.opensource@diasemi.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jonathan Corbet <corbet@lwn.net>,
         Douglas Anderson <dianders@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Thomas Zimmermann <tzimmermann@suse.de>,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH v2 15/16] backlight: make of_find_backlight_by_node()
- static
-Message-ID: <20200518195656.z2wag34mbr3e2hip@holly.lan>
-References: <20200517190139.740249-1-sam@ravnborg.org>
- <20200517190139.740249-16-sam@ravnborg.org>
- <20200518165648.ltgtofjsteyyse4j@holly.lan>
- <20200518181227.GC770425@ravnborg.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518181227.GC770425@ravnborg.org>
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        patches@opensource.cirrus.com,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, May 18, 2020 at 08:12:27PM +0200, Sam Ravnborg wrote:
-> On Mon, May 18, 2020 at 05:56:48PM +0100, Daniel Thompson wrote:
-> > On Sun, May 17, 2020 at 09:01:38PM +0200, Sam Ravnborg wrote:
-> > > There are no external users of of_find_backlight_by_node().
-> > > Make it static so we keep it that way.
-> > > 
-> > > v2:
-> > >   - drop EXPORT of of_find_backlight_by_node
-> > > 
-> > > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> > > Cc: Lee Jones <lee.jones@linaro.org>
-> > > Cc: Daniel Thompson <daniel.thompson@linaro.org>
-> > > Cc: Jingoo Han <jingoohan1@gmail.com>
-> > 
-> > Assuming the 0day-ci comments are because some of the patches have
-> > already been sucked up in a different tree then:
-> Correct. For now only drm-misc-next have no users of
-> of_find_backlight_by_node() which is why the other trees failed.
-> 
->  
-> > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> Thanks for all your reviews!
-> I will shortly (within a few days) address the comments and send out a v3.
-> 
-> Is is correct that I assume you or Lee or Jingoo will apply the patches
-> to a backlight tree somewhere when they are ready?
-> If you have a tree you use for backlight patches I can base v3 on that,
-> given that I get a link and have access to pull from it.
+Hi Sam,
 
-Absent holidays and the like, Lee usually does that actual patch
-hoovering.
+On Sun, 17 May 2020 at 20:02, Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Increase readability of fb_notifier_callback() by removing
+> a few indent levels.
+> No functional change.
+>
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> ---
+>  drivers/video/backlight/backlight.c | 43 +++++++++++++++--------------
+>  1 file changed, 22 insertions(+), 21 deletions(-)
+>
+> diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
+> index cac3e35d7630..17f04cff50ab 100644
+> --- a/drivers/video/backlight/backlight.c
+> +++ b/drivers/video/backlight/backlight.c
+> @@ -58,28 +58,29 @@ static int fb_notifier_callback(struct notifier_block *self,
+>
+>         bd = container_of(self, struct backlight_device, fb_notif);
+>         mutex_lock(&bd->ops_lock);
+> -       if (bd->ops)
+> -               if (!bd->ops->check_fb ||
+> -                   bd->ops->check_fb(bd, evdata->info)) {
+> -                       fb_blank = *(int *)evdata->data;
+> -                       if (fb_blank == FB_BLANK_UNBLANK &&
+> -                           !bd->fb_bl_on[node]) {
+> -                               bd->fb_bl_on[node] = true;
+> -                               if (!bd->use_count++) {
+> -                                       bd->props.state &= ~BL_CORE_FBBLANK;
+> -                                       bd->props.fb_blank = FB_BLANK_UNBLANK;
+> -                                       backlight_update_status(bd);
+> -                               }
+> -                       } else if (fb_blank != FB_BLANK_UNBLANK &&
+> -                                  bd->fb_bl_on[node]) {
+> -                               bd->fb_bl_on[node] = false;
+> -                               if (!(--bd->use_count)) {
+> -                                       bd->props.state |= BL_CORE_FBBLANK;
+> -                                       bd->props.fb_blank = fb_blank;
+> -                                       backlight_update_status(bd);
+> -                               }
+> -                       }
+> +
+> +       if (!bd->ops)
+> +               goto out;
+> +       if (bd->ops->check_fb && !bd->ops->check_fb(bd, evdata->info))
+Mildly related: Would be a nice to define which ops are mandatory and
+which aren't.
+That plus enforcement in backlight_device_register.
 
+But that's for another patchset.
 
-Daniel.
+> +               goto out;
+> +
+> +       fb_blank = *(int *)evdata->data;
+> +       if (fb_blank == FB_BLANK_UNBLANK && !bd->fb_bl_on[node]) {
+> +               bd->fb_bl_on[node] = true;
+> +               if (!bd->use_count++) {
+> +                       bd->props.state &= ~BL_CORE_FBBLANK;
+> +                       bd->props.fb_blank = FB_BLANK_UNBLANK;
+> +                       backlight_update_status(bd);
+> +               }
+> +       } else if (fb_blank != FB_BLANK_UNBLANK && bd->fb_bl_on[node]) {
+> +               bd->fb_bl_on[node] = false;
+> +               if (!(--bd->use_count)) {
+> +                       bd->props.state |= BL_CORE_FBBLANK;
+> +                       bd->props.fb_blank = fb_blank;
+> +                       backlight_update_status(bd);
+>                 }
+Something like the following reads better, plus one could simplify it
+with follow-on patch.
+
+if (fb_blank == FB_BLANK_UNBLANK)
+    if (!bd->fb_bl_on[node] && !bd->use_count++) {
+        bd->props.state &= ~BL_CORE_FBBLANK;
+        bd->props.fb_blank = FB_BLANK_UNBLANK;
+        backlight_update_status(bd);
+        // above is backlight_enable()
+    }
+    bd->fb_bl_on[node] = true;
+} else {
+    if (bd->fb_bl_on[node] && !(--bd->use_count)) {
+        bd->props.state |= BL_CORE_FBBLANK;
+        bd->props.fb_blank = fb_blank;
+        backlight_update_status(bd);
+        // above is backlight_disable()
+   }
+    bd->fb_bl_on[node] = false;
+}
+
+As-is, one cannot use the backlight helpers indicated, since it
+touches .power. First one should ensure the drivers honour .power - by
+using the helper introduced later.
+
+-Emil
