@@ -2,232 +2,119 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C2111DC26D
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2020 00:56:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 867C31DC2B7
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2020 01:15:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbgETW4L (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 20 May 2020 18:56:11 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:18672 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728684AbgETW4K (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 20 May 2020 18:56:10 -0400
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 20 May 2020 15:56:07 -0700
+        id S1728573AbgETXPK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 20 May 2020 19:15:10 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:55831 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728462AbgETXPK (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 20 May 2020 19:15:10 -0400
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 20 May 2020 16:15:09 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 20 May 2020 15:56:06 -0700
+  by ironmsg02-sd.qualcomm.com with ESMTP; 20 May 2020 16:15:09 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id ED3D84D8D; Wed, 20 May 2020 15:56:06 -0700 (PDT)
+        id 14D2A4D8D; Wed, 20 May 2020 16:15:09 -0700 (PDT)
+Date:   Wed, 20 May 2020 16:15:09 -0700
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org,
+To:     Lee Jones <lee.jones@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+Cc:     linux-pwm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: [RESEND PATCH v14 11/11] pwm: core: Convert period and duty cycle to u64
-Date:   Wed, 20 May 2020 15:56:04 -0700
-Message-Id: <6e5d54bd655b044c41062805bedb043de4ea06ef.1589330178.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1589330178.git.gurus@codeaurora.org>
-References: <cover.1589330178.git.gurus@codeaurora.org>
-In-Reply-To: <cover.1589330178.git.gurus@codeaurora.org>
-References: <cover.1589330178.git.gurus@codeaurora.org>
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v13 00/11] Convert PWM period and duty cycle to u64
+Message-ID: <20200520231508.GA29437@codeaurora.org>
+Mail-Followup-To: Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        linux-pwm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Guenter Roeck <linux@roeck-us.net>, Joe Perches <joe@perches.com>
+References: <cover.1587523702.git.gurus@codeaurora.org>
+ <20200423114857.GG3612@dell>
+ <20200423215306.GA8670@codeaurora.org>
+ <20200424064303.GJ3612@dell>
+ <20200424221422.GA31118@codeaurora.org>
+ <20200427064434.GA3559@dell>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427064434.GA3559@dell>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Because period and duty cycle are defined as ints with units of
-nanoseconds, the maximum time duration that can be set is limited to
-~2.147 seconds. Change their definitions to u64 in the structs of the
-PWM framework so that higher durations may be set.
+On Mon, Apr 27, 2020 at 07:44:34AM +0100, Lee Jones wrote:
+> On Fri, 24 Apr 2020, Guru Das Srinagesh wrote:
+> 
+> > On Fri, Apr 24, 2020 at 07:43:03AM +0100, Lee Jones wrote:
+> > > A great deal of mailing lists contain numerous protections against
+> > > things like flooding and spamming.  One of those protections is a
+> > > check for "Too many recipients to the message".  Most of the time this
+> > > simply requires moderator intervention by way of review and approval,
+> > > but this ultimately depends on the ML's configuration.
+> > > 
+> > > The first thing to ascertain is why your recipients list is so large.
+> > > Have you added every reviewer, subsystem-maintainer, maintainer and
+> > > contributor suggested by get-maintainer.pl?  If so, consider pruning
+> > > that a little.  Contributors do not tend to care about subsequent
+> > > changes to a file.  As someone who receives a lot of patches, I tend
+> > > to get fed-up when receiving patches simply because I made a change X
+> > > years ago.  Stick to listed maintainers/reviewers in the first
+> > > instance and see how far that takes you.
+> > 
+> > Thank you for the detailed reply. I did this in the first few patchsets
+> > and then when a few patches didn't get any attention, expanded the
+> > audience thus. Still, around 50% of the patches in this series remain
+> > unreviewed by anyone.
+> 
+> This isn't a reason to add more recipients (who are likely to care
+> even less than your original group).  However it *is* a good argument
+> for including all of the specified maintainers/reviewers in on all of
+> the patches.
+> 
+> > > If your recipients list is as succinct as reasonably possible, maybe
+> > > just accept that every version isn't going to be archived by every
+> > > ML.  It's still much more useful for the correct people to have
+> > > visibility into the set than for it to be archived multiple times.
+> > 
+> > Thank you, will prune the list and remove past contributors from the
+> > Cc-list and add all parties to all patches.
+> 
+> Great.  Once you've done that, we can start to help you acquire the
+> Acks you need on your remaining patches.
 
-Also use the right format specifiers in debug prints in both core.c as
-well as pwm-stm32-lp.c.
+Hi Lee, Thierry, Uwe,
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
----
- drivers/pwm/core.c         | 14 +++++++-------
- drivers/pwm/pwm-stm32-lp.c |  2 +-
- drivers/pwm/sysfs.c        |  8 ++++----
- include/linux/pwm.h        | 12 ++++++------
- 4 files changed, 18 insertions(+), 18 deletions(-)
+In v14 of this patchset I've pruned the list of contributors, removed
+past contributors from the cc-list, and added all parties to all patches
+(except for the patches that are yet to reviewed, for which I've added
+what get_maintainer.pl showed me). I've also resent v14 a couple of
+times already, with around a week's time interval between resends, and
+somehow it seems like this set has lost traction.
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index bca0496..a2ff6dd 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -510,12 +510,12 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
- 	    last->period > s2.period &&
- 	    last->period <= state->period)
- 		dev_warn(chip->dev,
--			 ".apply didn't pick the best available period (requested: %u, applied: %u, possible: %u)\n",
-+			 ".apply didn't pick the best available period (requested: %llu, applied: %llu, possible: %llu)\n",
- 			 state->period, s2.period, last->period);
- 
- 	if (state->enabled && state->period < s2.period)
- 		dev_warn(chip->dev,
--			 ".apply is supposed to round down period (requested: %u, applied: %u)\n",
-+			 ".apply is supposed to round down period (requested: %llu, applied: %llu)\n",
- 			 state->period, s2.period);
- 
- 	if (state->enabled &&
-@@ -524,14 +524,14 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
- 	    last->duty_cycle > s2.duty_cycle &&
- 	    last->duty_cycle <= state->duty_cycle)
- 		dev_warn(chip->dev,
--			 ".apply didn't pick the best available duty cycle (requested: %u/%u, applied: %u/%u, possible: %u/%u)\n",
-+			 ".apply didn't pick the best available duty cycle (requested: %llu/%llu, applied: %llu/%llu, possible: %llu/%llu)\n",
- 			 state->duty_cycle, state->period,
- 			 s2.duty_cycle, s2.period,
- 			 last->duty_cycle, last->period);
- 
- 	if (state->enabled && state->duty_cycle < s2.duty_cycle)
- 		dev_warn(chip->dev,
--			 ".apply is supposed to round down duty_cycle (requested: %u/%u, applied: %u/%u)\n",
-+			 ".apply is supposed to round down duty_cycle (requested: %llu/%llu, applied: %llu/%llu)\n",
- 			 state->duty_cycle, state->period,
- 			 s2.duty_cycle, s2.period);
- 
-@@ -558,7 +558,7 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
- 	    (s1.enabled && s1.period != last->period) ||
- 	    (s1.enabled && s1.duty_cycle != last->duty_cycle)) {
- 		dev_err(chip->dev,
--			".apply is not idempotent (ena=%d pol=%d %u/%u) -> (ena=%d pol=%d %u/%u)\n",
-+			".apply is not idempotent (ena=%d pol=%d %llu/%llu) -> (ena=%d pol=%d %llu/%llu)\n",
- 			s1.enabled, s1.polarity, s1.duty_cycle, s1.period,
- 			last->enabled, last->polarity, last->duty_cycle,
- 			last->period);
-@@ -1284,8 +1284,8 @@ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
- 		if (state.enabled)
- 			seq_puts(s, " enabled");
- 
--		seq_printf(s, " period: %u ns", state.period);
--		seq_printf(s, " duty: %u ns", state.duty_cycle);
-+		seq_printf(s, " period: %llu ns", state.period);
-+		seq_printf(s, " duty: %llu ns", state.duty_cycle);
- 		seq_printf(s, " polarity: %s",
- 			   state.polarity ? "inverse" : "normal");
- 
-diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-index 67fca62..134c146 100644
---- a/drivers/pwm/pwm-stm32-lp.c
-+++ b/drivers/pwm/pwm-stm32-lp.c
-@@ -61,7 +61,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	do_div(div, NSEC_PER_SEC);
- 	if (!div) {
- 		/* Clock is too slow to achieve requested period. */
--		dev_dbg(priv->chip.dev, "Can't reach %u ns\n",	state->period);
-+		dev_dbg(priv->chip.dev, "Can't reach %llu ns\n", state->period);
- 		return -EINVAL;
- 	}
- 
-diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-index 2389b86..449dbc0 100644
---- a/drivers/pwm/sysfs.c
-+++ b/drivers/pwm/sysfs.c
-@@ -42,7 +42,7 @@ static ssize_t period_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.period);
-+	return sprintf(buf, "%llu\n", state.period);
- }
- 
- static ssize_t period_store(struct device *child,
-@@ -52,10 +52,10 @@ static ssize_t period_store(struct device *child,
- 	struct pwm_export *export = child_to_pwm_export(child);
- 	struct pwm_device *pwm = export->pwm;
- 	struct pwm_state state;
--	unsigned int val;
-+	u64 val;
- 	int ret;
- 
--	ret = kstrtouint(buf, 0, &val);
-+	ret = kstrtou64(buf, 0, &val);
- 	if (ret)
- 		return ret;
- 
-@@ -77,7 +77,7 @@ static ssize_t duty_cycle_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.duty_cycle);
-+	return sprintf(buf, "%llu\n", state.duty_cycle);
- }
- 
- static ssize_t duty_cycle_store(struct device *child,
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 2635b2a..a13ff38 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -39,7 +39,7 @@ enum pwm_polarity {
-  * current PWM hardware state.
-  */
- struct pwm_args {
--	unsigned int period;
-+	u64 period;
- 	enum pwm_polarity polarity;
- };
- 
-@@ -56,8 +56,8 @@ enum {
-  * @enabled: PWM enabled status
-  */
- struct pwm_state {
--	unsigned int period;
--	unsigned int duty_cycle;
-+	u64 period;
-+	u64 duty_cycle;
- 	enum pwm_polarity polarity;
- 	bool enabled;
- };
-@@ -107,13 +107,13 @@ static inline bool pwm_is_enabled(const struct pwm_device *pwm)
- 	return state.enabled;
- }
- 
--static inline void pwm_set_period(struct pwm_device *pwm, unsigned int period)
-+static inline void pwm_set_period(struct pwm_device *pwm, u64 period)
- {
- 	if (pwm)
- 		pwm->state.period = period;
- }
- 
--static inline unsigned int pwm_get_period(const struct pwm_device *pwm)
-+static inline u64 pwm_get_period(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
-@@ -128,7 +128,7 @@ static inline void pwm_set_duty_cycle(struct pwm_device *pwm, unsigned int duty)
- 		pwm->state.duty_cycle = duty;
- }
- 
--static inline unsigned int pwm_get_duty_cycle(const struct pwm_device *pwm)
-+static inline u64 pwm_get_duty_cycle(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Could you please indicate what next steps I should take to have more
+eyes on the unreviewed patches? Only 4 out of 11 patches remain
+unreviewed.
 
+Thank you.
+
+Guru Das.
