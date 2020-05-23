@@ -2,98 +2,65 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 617741DF9B4
-	for <lists+linux-pwm@lfdr.de>; Sat, 23 May 2020 19:44:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FD1A1DFA09
+	for <lists+linux-pwm@lfdr.de>; Sat, 23 May 2020 20:00:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387543AbgEWRo3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 23 May 2020 13:44:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53250 "EHLO
+        id S2388213AbgEWSAy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 23 May 2020 14:00:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387515AbgEWRo3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 23 May 2020 13:44:29 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00201C061A0E
-        for <linux-pwm@vger.kernel.org>; Sat, 23 May 2020 10:44:28 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jcYBo-0004nX-LL; Sat, 23 May 2020 19:44:04 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jcYBl-0005dS-0l; Sat, 23 May 2020 19:44:01 +0200
-Date:   Sat, 23 May 2020 19:44:00 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Yangtao Li <tiny.windzz@gmail.com>, thierry.reding@gmail.com
-Cc:     claudiu.beznea@microchip.com, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, f.fainelli@gmail.com,
-        nsaenzjulienne@suse.de, shc_work@mail.ru, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, vz@mleia.com, slemieux.tyco@gmail.com,
-        khilman@baylibre.com, matthias.bgg@gmail.com, heiko@sntech.de,
-        palmer@dabbelt.com, paul.walmsley@sifive.com, mripard@kernel.org,
-        wens@csie.org, jonathanh@nvidia.com, linux@prisktech.co.nz,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 30/32] pwm: hibvt: do some cleanup
-Message-ID: <20200523174400.tzptmraqyn3uqrvf@pengutronix.de>
-References: <20191229080610.7597-1-tiny.windzz@gmail.com>
- <20191229080610.7597-30-tiny.windzz@gmail.com>
- <20200220204152.p6rublsssifvvnvk@pengutronix.de>
+        with ESMTP id S2388205AbgEWSAl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 23 May 2020 14:00:41 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45BAAC02A198
+        for <linux-pwm@vger.kernel.org>; Sat, 23 May 2020 11:00:39 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id z18so10993471qto.2
+        for <linux-pwm@vger.kernel.org>; Sat, 23 May 2020 11:00:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=F3NMDrR9dummcUXdRfruEEfbIS6yB2vx68nB8Asq/5Q=;
+        b=vhvRG4iP0p/cCM0/gHqK0xx0MaMNF3/azTtn5P0fCT1b4XLjGRAoR85FXgvwYtowP6
+         J1ev3dPiedOMtPyOzUYmKFEqsj6BkIi2lR8s0YRNLylOZ8MbeWQpwNTWDXPX57LUrKeO
+         FLL54WToKnc9WyFCTQNZdn8yjuqVF61dsdwJrbIWn1f8+mXNgwQXd1Xox425XdFJLCTr
+         UNYtD5Mkr7J8HytQpl125rrGiBWdOVTtdeDic18s2v1Ex5H4EMrCDseWe8z8QJUA2DPl
+         pMcmWf9nM5lni1dYRbVMyTKtLHSFCzrJM5oRvB7Hp9K31CMWsqtaG47ZQbJG6ZEre6uU
+         kwNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=F3NMDrR9dummcUXdRfruEEfbIS6yB2vx68nB8Asq/5Q=;
+        b=QjEzrotYMWLTI0h/ABzJay0iUK7S2goR6WWyPcQVRIVKJ0V2AWhk+A/fVvmEJKAcQv
+         2AmpuDASAra4XVGbe6JvAmdid8C4xB//UFjYuw3o2lbkQadSni8OmJqDbdtz9IHktglD
+         xKOZURunLSgX2jqsE2UC0X5CTBy1m5ZRTSRpNehW91jhB/9HKOG8MgXqKjTFrTbs3iZY
+         rHZYyhQQqwDV7gWyJQZ0HvdG6FdCGdTiHDbMuWdy5O48wlhqGS5KrVe5ET9u4LfVj3bh
+         jSOO3fQrH47Jn1d/fdgU574ZM6FjMYdizncHV3V+p9F9K39hfgdEnKkDn5Br/4iPt6xs
+         jz0Q==
+X-Gm-Message-State: AOAM533C8GPuGbxn+L4K5ueoC/mZMzqMSrVHmoe7JFNahIkS+bgbMlYE
+        pvee+8BlhCzhPhB4JlGkj9RZadVxsDtgMlZDl/U=
+X-Google-Smtp-Source: ABdhPJw4JSLl4s8hKmdikxPHOZTjp7LuShJQWo5DKJXfhdyHNpRWrWLXX1iWw/azZwGF2Nz0kU5bTrWvyq5YmK6naS0=
+X-Received: by 2002:ac8:1e16:: with SMTP id n22mr21502226qtl.78.1590256838401;
+ Sat, 23 May 2020 11:00:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200220204152.p6rublsssifvvnvk@pengutronix.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Received: by 2002:a37:9fd3:0:0:0:0:0 with HTTP; Sat, 23 May 2020 11:00:37
+ -0700 (PDT)
+Reply-To: mrs.chantala2055@gmail.com
+From:   mrs chantal <mrs.chantalas1@gmail.com>
+Date:   Sat, 23 May 2020 18:00:37 +0000
+Message-ID: <CAMdkyyDY_0O7YgysHCjgRTJ=8-B7XurK7o1razRHDVOjgr2V2g@mail.gmail.com>
+Subject: jjCompliment
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 09:41:52PM +0100, Uwe Kleine-König wrote:
-> On Sun, Dec 29, 2019 at 08:06:08AM +0000, Yangtao Li wrote:
-> > Use devm_platform_ioremap_resource() to simplify code.
-> > 'i' and 'ret' are variables of the same type and there is no
-> > need to use two lines.
-> 
-> I think I wouldn't have merged these two lines, but I don't feel strong
-> here. The other 31 patches are clean replacements.
-> 
-> But I also don't think respining just for this minor thing is worth the
-> effort, so:
-> 
-> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> 
-> for the whole series. (Not sure it is sensible to ack each patch
-> individually, @Thierry, tell me if this simplifies things for you.)
-
-I took a deeper look now and added Reviewed-by for all other patches to
-ease application. So doing the same here:
-
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-
-FTR: I'd do the following now:
-
-	for patch in 1216003 1216065 1216063 1216005 1216062 1216061 1216059 1216057 1216054 1216056 1216051 1216050 1216048 1216010 1216044 1216046 1216042 1216041 1216036 1216037 1216034 1216032 1216030 1216013 1216029 1216025 1216026 1216024 1216015 1216021 1216017 1216019; do
-
-		pwclient git-am -m -s $patch && pwclient update -s "Accepted" -c "$(git rev-parse HEAD)" $patch || break
-	done
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+     Compliment of the day to you. I am Mrs.CHANTAL I am sending this brief
+    letter to solicit your partnership to transfer $13.5 Million US
+    Dollars.I shall send you more information and procedures when I receive
+    positive response From you. Please send me a message in My private
+    email address is ( mrschantal066@gmail.com  )
+    Best Regards
+    MrS.Chantal
