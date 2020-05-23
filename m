@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EA711DF94B
-	for <lists+linux-pwm@lfdr.de>; Sat, 23 May 2020 19:25:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA1DE1DF952
+	for <lists+linux-pwm@lfdr.de>; Sat, 23 May 2020 19:25:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387998AbgEWRZa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 23 May 2020 13:25:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50274 "EHLO
+        id S2387507AbgEWRZr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 23 May 2020 13:25:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387507AbgEWRZa (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 23 May 2020 13:25:30 -0400
+        with ESMTP id S2388240AbgEWRZq (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 23 May 2020 13:25:46 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70EF9C061A0E
-        for <linux-pwm@vger.kernel.org>; Sat, 23 May 2020 10:25:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69D32C061A0E
+        for <linux-pwm@vger.kernel.org>; Sat, 23 May 2020 10:25:46 -0700 (PDT)
 Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
         by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1jcXtQ-0002YH-Sa; Sat, 23 May 2020 19:25:04 +0200
+        id 1jcXtg-0002eQ-Kw; Sat, 23 May 2020 19:25:20 +0200
 Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
         (envelope-from <ukl@pengutronix.de>)
-        id 1jcXtQ-00058u-AB; Sat, 23 May 2020 19:25:04 +0200
-Date:   Sat, 23 May 2020 19:25:04 +0200
+        id 1jcXtg-00059k-3e; Sat, 23 May 2020 19:25:20 +0200
+Date:   Sat, 23 May 2020 19:25:20 +0200
 From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Yangtao Li <tiny.windzz@gmail.com>
@@ -43,16 +43,16 @@ Cc:     claudiu.beznea@microchip.com, thierry.reding@gmail.com,
         linux-mediatek@lists.infradead.org,
         linux-rockchip@lists.infradead.org,
         linux-riscv@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 15/32] pwm: rockchip: convert to
+Subject: Re: [PATCH 14/32] pwm: meson: convert to
  devm_platform_ioremap_resource
-Message-ID: <20200523172504.fguhss43azqmh5vl@pengutronix.de>
+Message-ID: <20200523172520.w7ltdn4ac2vcdzbg@pengutronix.de>
 References: <20191229080610.7597-1-tiny.windzz@gmail.com>
- <20191229080610.7597-15-tiny.windzz@gmail.com>
+ <20191229080610.7597-14-tiny.windzz@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191229080610.7597-15-tiny.windzz@gmail.com>
+In-Reply-To: <20191229080610.7597-14-tiny.windzz@gmail.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
 X-SA-Exim-Mail-From: ukl@pengutronix.de
@@ -65,7 +65,7 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 Hello,
 
-On Sun, Dec 29, 2019 at 08:05:53AM +0000, Yangtao Li wrote:
+On Sun, Dec 29, 2019 at 08:05:52AM +0000, Yangtao Li wrote:
 > Use devm_platform_ioremap_resource() to simplify code.
 > 
 > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
