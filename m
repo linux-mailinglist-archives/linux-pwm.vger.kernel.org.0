@@ -2,247 +2,173 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD7F71E0965
-	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2020 10:54:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09CD41E09A1
+	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2020 11:06:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388935AbgEYIyN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 25 May 2020 04:54:13 -0400
-Received: from a27-33.smtp-out.us-west-2.amazonses.com ([54.240.27.33]:56198
-        "EHLO a27-33.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388437AbgEYIyN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 25 May 2020 04:54:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=7jvkchcrhflv7qhbkgrcypyraifp65wy; d=rt.linuxfoundation.org;
-        t=1590396852;
-        h=Subject:From:Reply-To:In-Reply-To:References:Message-ID:To:CC:Content-Type:Date:MIME-Version:Content-Transfer-Encoding;
-        bh=evOjFRhYzwtJjo037ycsXYyDWxvcOrF+19NU88sQW5c=;
-        b=VN8CKeYavtqP3CbbTBsR54UioKoUaG1OacYkHZYg57dInYYDr47oUPAKyeHV9XZU
-        YFT8Egigm0YMtPl/XvXxdd4t8uhih6ovM9HAiY7u2SlYfiEo3K1HNYQAnWPL50X/u7K
-        MDoTv6FSKNOZaIKh++1jcNvJ7NNp419OEIffxl7E=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1590396852;
-        h=Subject:From:Reply-To:In-Reply-To:References:Message-ID:To:CC:Content-Type:Date:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-        bh=evOjFRhYzwtJjo037ycsXYyDWxvcOrF+19NU88sQW5c=;
-        b=ZKmWvHLdWFt6iK11FlbkncBKF9M5tMhl+8JAgcGtsXpRsr++whHNa1saQ+w62DPN
-        s8LiBRKQAMBs3LzINychFbCs1IV/1IMz6X9/Cz4PGHXRc6SXLRShECyrP7x+5jF0ycx
-        scGy02ovxDmMhccwzvoEqrxiJVzATSm35Z8TeKt0=
-Subject: [Kernel.org Helpdesk #89942] [linuxfoundation.org #89942] Re: adding linux-pwm archives to lore.kernel.org?
-From:   "thierry.reding@gmail.com via RT" 
-        <kernel-helpdesk@rt.linuxfoundation.org>
-Reply-To: kernel-helpdesk@rt.linuxfoundation.org
-In-Reply-To: <20200525085402.GD2382769@ulmo>
-References: <RT-Ticket-89942@linuxfoundation>
- <20200213102618.x5j6kfvqmdbx2pr2@pengutronix.de>
- <20200523170558.h2brqlf2jx4kee6y@pengutronix.de>
- <20200525085402.GD2382769@ulmo>
-Message-ID: <010101724b0a15af-98dc6a7d-d813-409a-baa5-991867888687-000000@us-west-2.amazonses.com>
-X-RT-Loop-Prevention: linuxfoundation.org
-X-RT-Ticket: linuxfoundation.org #89942
-X-Managed-BY: RT 4.4.0 (http://www.bestpractical.com/rt/)
-X-RT-Originator: thierry.reding@gmail.com
-To:     u.kleine-koenig@pengutronix.de
-CC:     linux-pwm@vger.kernel.org
-X-RT-Original-Encoding: utf-8
-Content-Type: multipart/mixed; boundary="----------=_1590396851-8119-23"
-Date:   Mon, 25 May 2020 08:54:11 +0000
+        id S2389207AbgEYJGF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 25 May 2020 05:06:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389198AbgEYJGF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 25 May 2020 05:06:05 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB982C08C5C2
+        for <linux-pwm@vger.kernel.org>; Mon, 25 May 2020 02:06:03 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id q8so449864qkm.12
+        for <linux-pwm@vger.kernel.org>; Mon, 25 May 2020 02:06:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dPuZPyJHL9y310jCMBab1+wUqEyxBpL9sxzRpIMUcDw=;
+        b=nO2zcmFBdCWzlGqLw1pR2ThUuz31GiwsX9FmLMPWXkIRbISIRdArAGzOKpkV7Qzv10
+         5VetiQSFGmqqkEyKB7+SGACaU0qLz2m+9iyUgPiDy2IDRCPxhwFx8/5DMtWUHYRsjtlL
+         0atWQF/ahgFhsYQYAzdXXs0aRQhob0wySOVyDYs2DXpouokBCqB6slqb/TvDM+I33ev8
+         yk0brFmDMsprGHiwBPRLvyh/NVcy/OCFMiVYdFYc4bQaZFP6VvDRpzKRyp0zTf5FOVWN
+         aSAJO9abuoljXUYQUaIMlrcVwRxlonf00RVbuDaEI1E+vkonNYosmqgXcWB0HgzUmBS7
+         NMpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dPuZPyJHL9y310jCMBab1+wUqEyxBpL9sxzRpIMUcDw=;
+        b=CCXNWxzvo30vy54gH6H5ObA8TliqRs/2vXFnAMz12i+jU9qSh1nLbl5PbXHP5f6S9C
+         DiqXaMGVtNtX8rizzdfuGaHXVqEmrgR2irx4YElJj1F2mgjYhoIMkgIdJ1zbeD+9/PBB
+         AF01mQhptkvhdzvMI8kH9ChhnYpJ0VzDGnSefeEqNeIZqz2yzeFjEQG7LGu6/WA4WHFT
+         7b8O+4Xpd2vKPvR9nvJWRDjBCifw5WUfRWajQsy5idZtBrGii37qVKQlV1XUJo/vBgW2
+         1WnRML6LqbbEtZ/Rvw1tv3m7KOzFXRbQlwek0IYF2Zjfvee6Pypvce5qdF3Zp/O8ilCg
+         p2hw==
+X-Gm-Message-State: AOAM530hCAf/81EANhyDPYwOmp44/SWK9GPuiW3BWE1zsoeeEhgACa7k
+        xW7IB9q0AeaH2AuLlKDeCfgW4yfnUi/g0bse/2QOUg==
+X-Google-Smtp-Source: ABdhPJwwogx5lD1d892oBsZ0UV12gKR+k0N+3QkhwPrACB1IANnU5OS7w1qWs680sMYLIO0JDYTSL1iYK1byj+QAdpM=
+X-Received: by 2002:a37:5b47:: with SMTP id p68mr26336785qkb.120.1590397562647;
+ Mon, 25 May 2020 02:06:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SES-Outgoing: 2020.05.25-54.240.27.33
-Feedback-ID: 1.us-west-2.3ULHQnc20aILdVzjlbQ8UqO1WRWzA1U01b2uFAcT62w=:AmazonSES
+References: <20200423174543.17161-1-michael@walle.cc> <20200423174543.17161-11-michael@walle.cc>
+ <CAMpxmJV3XTOxuoKeV-z2d75qWqHkgvV9419tfe3idDeKwoeoLA@mail.gmail.com> <75bff2917be1badd36af9f980cf59d2c@walle.cc>
+In-Reply-To: <75bff2917be1badd36af9f980cf59d2c@walle.cc>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 25 May 2020 11:05:51 +0200
+Message-ID: <CAMpxmJXctc5cbrjSeJxa7DfmjiVsbyhqAbEKt-gtayKhQj0Cnw@mail.gmail.com>
+Subject: Re: [PATCH v3 10/16] gpio: add a reusable generic gpio_chip using regmap
+To:     Michael Walle <michael@walle.cc>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This is a multi-part message in MIME format...
+wt., 12 maj 2020 o 16:41 Michael Walle <michael@walle.cc> napisa=C5=82(a):
+>
+> >> +
+> >> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
+> >> +MODULE_DESCRIPTION("GPIO generic regmap driver core");
+> >> +MODULE_LICENSE("GPL");
+> >> diff --git a/include/linux/gpio-regmap.h b/include/linux/gpio-regmap.h
+> >> new file mode 100644
+> >> index 000000000000..a868cbcde6e9
+> >> --- /dev/null
+> >> +++ b/include/linux/gpio-regmap.h
+> >> @@ -0,0 +1,69 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0-only */
+> >> +
+> >> +#ifndef _LINUX_GPIO_REGMAP_H
+> >> +#define _LINUX_GPIO_REGMAP_H
+> >> +
+> >> +struct gpio_regmap;
+> >> +
+> >> +#define GPIO_REGMAP_ADDR_ZERO ((unsigned long)(-1))
+> >> +#define GPIO_REGMAP_ADDR(addr) ((addr) ? : GPIO_REGMAP_ADDR_ZERO)
+> >> +
+> >
+> > What if the addr is actually 0?
+>
+> Then the driver has to set GPIO_REGMAP_ADDR_ZERO or use the convenience
+> macro GPIO_REGMAP_ADDR.
+>
+> So you can have
+>
+>    struct gpio_regmap_config config =3D { 0 };
+>    config.reg_dat_base =3D 0x10;
+>    config.reg_dir_out_base =3D 0x20;
+>
+> or
+>
+>    config.reg_dat_base =3D GPIO_REGMAP_ADDR_ZERO;
+>
+> or if you can't be sure if the RHS value might be zero:
+>
+>    config.reg_dat_base =3D GPIO_REGMAP_ADDR(reg);
+>
+>
+> > Maybe drop GPIO_REGMAP_ADDR and require users to set unused registers
+> > to GPIO_REGMAP_ADDR_ZERO?
+>
+> Thats bad because:
+>   * you'd have to set plenty of unused base registers for a simple driver
+>   * if there will be additional properties in the future, you have to
+> touch
+>     all other drivers, because they are initialized as 0 (ie. valid reg
+> 0).
+>
+> >> +/**
+> >> + * struct gpio_regmap_config - Description of a generic regmap
+> >> gpio_chip.
+> >> + *
+> >> + * @parent:            The parent device
+> >> + * @regmap:            The regmap used to access the registers
+> >> + *                     given, the name of the device is used
+> >> + * @label:             (Optional) Descriptive name for GPIO
+> >> controller.
+> >> + *                     If not given, the name of the device is used.
+> >> + * @ngpio:             Number of GPIOs
+> >> + * @reg_dat_base:      (Optional) (in) register base address
+> >> + * @reg_set_base:      (Optional) set register base address
+> >> + * @reg_clr_base:      (Optional) clear register base address
+> >> + * @reg_dir_in_base:   (Optional) out setting register base address
+> >> + * @reg_dir_out_base:  (Optional) in setting register base address
+> >
+> > The two above are inverted I think?
+> good catch.
+>
+> > Also: why the limitation of only supporting one at a time?
+>
+> they should be exclusive, either you have a register where you set the
+> output bits to one, or the input bits. Maybe this need a bit more
+> context
+> above. in gpio-mmio.c you can set both and both are used in
+> set_direction(), but only one is read in get_direction().
+>
+> That being said, I have no strong opinion wether they should be
+> exclusive
+> or not, besides the symmetry of set_/get_direction().
+>
+> -michael
+>
 
-------------=_1590396851-8119-23
-Content-Type: text/plain; charset="utf-8"
+Sorry for the late response, your comments make sense to me. Are you
+going to submit a v4 before the v5.8 merge window?
 
-On Sat, May 23, 2020 at 07:05:58PM +0200, Uwe Kleine-König wrote:
-> Hello Konstantin,
-> 
-> On Thu, Feb 13, 2020 at 11:26:18AM +0100, Uwe Kleine-König wrote:
-> > I consider the archives on lore.kernel.org very useful and would like to
-> > see the linux-pwm list archived there, too.
-> > 
-> > Assuming you agree (or at least don't disagree) we'd need to follow
-> > https://korg.wiki.kernel.org/userdoc/lore. Therefor we need an archive
-> > of the already sent mails. My personal archive only goes back to Oct
-> > 2018, so I guess I'm not in the best position to provide it. But I can
-> > nevertheless care for the buerocratics and start with my archive given
-> > that I get some support from someone with a more complete archive.
-> > 
-> > What do you think?
-> 
-> I didn't get feedback from Thierry (= linux-pwm maintainer) but I still
-> think adding linux-pwm to kernel.org's public-inbox instance is
-> valuable. (And if it's only to experiment with b4.)
-
-Sorry, I recall reading this and thinking it was a good idea, but then
-must've gotten side-tracked.
-
-> Given that there is an archive on spinics.net, do you know who to
-> contact there to ask for a copy to fill lore with it?
-
-My Gmail has archives going back as far as 2013, which is around the
-time that I started maintaining PWM. I'll follow the steps in the
-documentation to prepare an archive.
-
-Thierry
-
-
-------------=_1590396851-8119-23
-Content-Type: application/x-rt-original-message
-Content-Disposition: inline
-Content-Transfer-Encoding: base64
-RT-Attachment: 89942/1955776/1640431
-
-RnJvbSBTUlMwPWxtMlQ9N0g9Z21haWwuY29tPXRoaWVycnkucmVkaW5nQGtl
-cm5lbC5vcmcgIE1vbiBNYXkgMjUgMDg6NTQ6MDYgMjAyMApSZXR1cm4tUGF0
-aDogPFNSUzA9bG0yVD03SD1nbWFpbC5jb209dGhpZXJyeS5yZWRpbmdAa2Vy
-bmVsLm9yZz4KWC1PcmlnaW5hbC1Ubzoga2VybmVsLWhlbHBkZXNrQHJ0Lmxp
-bnV4Zm91bmRhdGlvbi5vcmcKRGVsaXZlcmVkLVRvOiBrZXJuZWwtaGVscGRl
-c2tAcnQubGludXhmb3VuZGF0aW9uLm9yZwpSZWNlaXZlZDogZnJvbSBtYWls
-Lmtlcm5lbC5vcmcgKG1haWwua2VybmVsLm9yZyBbMTk4LjE0NS4yOS45OV0p
-CglieSBhd3MtdXMtd2VzdC0yLWxmaXQtcnQtMS53ZWIuY29kZWF1cm9yYS5v
-cmcgKFBvc3RmaXgpIHdpdGggRVNNVFAgaWQgNzBFNDRDNDMzRTkKCWZvciA8
-a2VybmVsLWhlbHBkZXNrQHJ0LmxpbnV4Zm91bmRhdGlvbi5vcmc+OyBNb24s
-IDI1IE1heSAyMDIwIDA4OjU0OjA2ICswMDAwIChVVEMpClJlY2VpdmVkOiBi
-eSBtYWlsLmtlcm5lbC5vcmcgKFBvc3RmaXgpCglpZCAzNEE1OTIwNzg3OyBN
-b24sIDI1IE1heSAyMDIwIDA4OjU0OjA2ICswMDAwIChVVEMpCkRlbGl2ZXJl
-ZC1UbzogaGVscGRlc2tAa2VybmVsLm9yZwpSZWNlaXZlZDogZnJvbSBtYWls
-LWVqMS1mNjYuZ29vZ2xlLmNvbSAobWFpbC1lajEtZjY2Lmdvb2dsZS5jb20g
-WzIwOS44NS4yMTguNjZdKQoJKHVzaW5nIFRMU3YxLjIgd2l0aCBjaXBoZXIg
-RUNESEUtUlNBLUFFUzEyOC1HQ00tU0hBMjU2ICgxMjgvMTI4IGJpdHMpKQoJ
-KE5vIGNsaWVudCBjZXJ0aWZpY2F0ZSByZXF1ZXN0ZWQpCglieSBtYWlsLmtl
-cm5lbC5vcmcgKFBvc3RmaXgpIHdpdGggRVNNVFBTIGlkIEUzNUVCMjA2RDUK
-CWZvciA8aGVscGRlc2tAa2VybmVsLm9yZz47IE1vbiwgMjUgTWF5IDIwMjAg
-MDg6NTQ6MDUgKzAwMDAgKFVUQykKQXV0aGVudGljYXRpb24tUmVzdWx0czog
-bWFpbC5rZXJuZWwub3JnOwoJZGtpbT1wYXNzICgyMDQ4LWJpdCBrZXkpIGhl
-YWRlci5kPWdtYWlsLmNvbSBoZWFkZXIuaT1AZ21haWwuY29tIGhlYWRlci5i
-PSJQNVoxeEdUVSIKRE1BUkMtRmlsdGVyOiBPcGVuRE1BUkMgRmlsdGVyIHYx
-LjMuMiBtYWlsLmtlcm5lbC5vcmcgRTM1RUIyMDZENQpBdXRoZW50aWNhdGlv
-bi1SZXN1bHRzOiBtYWlsLmtlcm5lbC5vcmc7IGRtYXJjPXBhc3MgKHA9bm9u
-ZSBkaXM9bm9uZSkgaGVhZGVyLmZyb209Z21haWwuY29tCkF1dGhlbnRpY2F0
-aW9uLVJlc3VsdHM6IG1haWwua2VybmVsLm9yZzsgc3BmPXBhc3Mgc210cC5t
-YWlsZnJvbT10aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20KUmVjZWl2ZWQ6IGJ5
-IG1haWwtZWoxLWY2Ni5nb29nbGUuY29tIHdpdGggU01UUCBpZCBoMjFzbzE5
-NzIzMDcxZWpxLjUKICAgICAgICBmb3IgPGhlbHBkZXNrQGtlcm5lbC5vcmc+
-OyBNb24sIDI1IE1heSAyMDIwIDAxOjU0OjA1IC0wNzAwIChQRFQpCkRLSU0t
-U2lnbmF0dXJlOiB2PTE7IGE9cnNhLXNoYTI1NjsgYz1yZWxheGVkL3JlbGF4
-ZWQ7CiAgICAgICAgZD1nbWFpbC5jb207IHM9MjAxNjEwMjU7CiAgICAgICAg
-aD1kYXRlOmZyb206dG86Y2M6c3ViamVjdDptZXNzYWdlLWlkOnJlZmVyZW5j
-ZXM6bWltZS12ZXJzaW9uCiAgICAgICAgIDpjb250ZW50LWRpc3Bvc2l0aW9u
-OmluLXJlcGx5LXRvOnVzZXItYWdlbnQ7CiAgICAgICAgYmg9UmZHbkZxU2p2
-bXNjVjVuckQzczYwbG1xcTY2Rm9EU1R0ZnRrSUhoZlIrZz07CiAgICAgICAg
-Yj1QNVoxeEdUVWNQSEwvNmNtYlVYaTkxSzkwYXcyOGxoOC91ekhBVW9NT2pP
-VWNBQjV5Zm1td0FRMVQydnZQQXJ3MVUKICAgICAgICAgcUZKTzBMVUF5RzQ4
-a2NOaUhhY2RLMFZVak52ZjE2U0l4cW5qWDAxSTl3aHZ6elF3clpCZHl6VlZU
-aHZyc0k3K2E0anAKICAgICAgICAgdVYyNGk1ekh5cVhLQnFzV3JBWi9oaHlZ
-Y3o3dElrZ1V1amsrajBYN09iWlkwWk1hcnkrSlhQVkZjSEl4TGVjV09hbnAK
-ICAgICAgICAgdEpuVmlSc3I1Ymx5NVN1Qkp6MmJCTmNFb3dSQVBSSVd4MkR1
-N1FLR3htTFd0N0tGanZFT3A1UjF6NEZMdlJtTUpIWlEKICAgICAgICAgaWJX
-TnlDWTg3dFk5amx3VzlNTjByQXJmaGYvc1NFZURLL3Z3U1hCQVpZYXhNaUc0
-cHBiNmhYWUxTclZaZkpWcWY4cUMKICAgICAgICAgbWhwZz09ClgtR29vZ2xl
-LURLSU0tU2lnbmF0dXJlOiB2PTE7IGE9cnNhLXNoYTI1NjsgYz1yZWxheGVk
-L3JlbGF4ZWQ7CiAgICAgICAgZD0xZTEwMC5uZXQ7IHM9MjAxNjEwMjU7CiAg
-ICAgICAgaD14LWdtLW1lc3NhZ2Utc3RhdGU6ZGF0ZTpmcm9tOnRvOmNjOnN1
-YmplY3Q6bWVzc2FnZS1pZDpyZWZlcmVuY2VzCiAgICAgICAgIDptaW1lLXZl
-cnNpb246Y29udGVudC1kaXNwb3NpdGlvbjppbi1yZXBseS10bzp1c2VyLWFn
-ZW50OwogICAgICAgIGJoPVJmR25GcVNqdm1zY1Y1bnJEM3M2MGxtcXE2NkZv
-RFNUdGZ0a0lIaGZSK2c9OwogICAgICAgIGI9UWFTSnJ0R2V0Q3RDcUFnV1gv
-NEZ4cFJiWVA4OHB0ZndtaXU1TFVwTExyOUpLSEFvTkFaTGVaajBubDkxbWVp
-YXZECiAgICAgICAgIFIxOEF6emh4L2Qyc3M4L2tLYndXN1Y2MCtTUTJCYVhr
-L0ozRmZzdDF3dnE3VUVlNmo1NncxRVJwVTRnbDUzd1d0VGpoCiAgICAgICAg
-IEdqV2lqOTBoRitwK2IyRlJMbVRJbGI0c001UWRGV1hhM2hxTlNLOXZNQnBp
-V1lpa25DNFZJTFVqQ1BVci9XRVlwOFZHCiAgICAgICAgIGdtM3FYc2xKb09m
-dXV4R25NSTF3NC9zTUplSHVlYnQvNC9yNVFuNnNKUTk0d3lHNVlZSzV1aThr
-SS9jeGtNU2dycUZpCiAgICAgICAgIFB3SmorQjZRQ3ZrN0VDcHpRekpLYUh4
-VEc0blNCQmlMSjhuTExrVGR0QStudW5FajRJT29KUFExNGtyL0hwY2ZQV3lM
-CiAgICAgICAgIGpiZVE9PQpYLUdtLU1lc3NhZ2UtU3RhdGU6IEFPQU01MzJl
-TzlwVDBOWUxJdG14SW9ucGZoWVBuNi95c0VUeFRPeXl5ekI4cS81cUxLcmZL
-OExFCgl4Q2JSVWR5Y3VndDVrMjBud1oxb2NMRT0KWC1Hb29nbGUtU210cC1T
-b3VyY2U6IEFCZGhQSnd2alM2a1o2djZNU0FBaUVieXZlOGhnZE5RU2c1R0ZC
-cTdObEFvaUxmSTgzTjBUOCs0WEVoMVE3S2xiMGIwZTlubXZxa1dSZz09Clgt
-UmVjZWl2ZWQ6IGJ5IDIwMDI6YTE3OjkwNjoxNDRlOjogd2l0aCBTTVRQIGlk
-IHExNG1yMTgzMjAzMDllamMuNDUwLjE1OTAzOTY4NDQzMTE7CiAgICAgICAg
-TW9uLCAyNSBNYXkgMjAyMCAwMTo1NDowNCAtMDcwMCAoUERUKQpSZWNlaXZl
-ZDogZnJvbSBsb2NhbGhvc3QgKHBkOWU1MTA3OS5kaXAwLnQtaXBjb25uZWN0
-LmRlLiBbMjE3LjIyOS4xNi4xMjFdKQogICAgICAgIGJ5IHNtdHAuZ21haWwu
-Y29tIHdpdGggRVNNVFBTQSBpZCBhMTNzbTE0Nzk4MzQwZWRzLjYuMjAyMC4w
-NS4yNS4wMS41NC4wMgogICAgICAgICh2ZXJzaW9uPVRMUzFfMyBjaXBoZXI9
-VExTX0FFU18yNTZfR0NNX1NIQTM4NCBiaXRzPTI1Ni8yNTYpOwogICAgICAg
-IE1vbiwgMjUgTWF5IDIwMjAgMDE6NTQ6MDMgLTA3MDAgKFBEVCkKRGF0ZTog
-TW9uLCAyNSBNYXkgMjAyMCAxMDo1NDowMiArMDIwMApGcm9tOiBUaGllcnJ5
-IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPgpUbzogVXdlID0/
-dXRmLTg/UT9LbGVpbmUtSz1DMz1CNm5pZz89IDx1LmtsZWluZS1rb2VuaWdA
-cGVuZ3V0cm9uaXguZGU+CkNjOiBoZWxwZGVza0BrZXJuZWwub3JnLCBsaW51
-eC1wd21Admdlci5rZXJuZWwub3JnClN1YmplY3Q6IFJlOiBhZGRpbmcgbGlu
-dXgtcHdtIGFyY2hpdmVzIHRvIGxvcmUua2VybmVsLm9yZz8KTWVzc2FnZS1J
-RDogPDIwMjAwNTI1MDg1NDAyLkdEMjM4Mjc2OUB1bG1vPgpSZWZlcmVuY2Vz
-OiA8MjAyMDAyMTMxMDI2MTgueDVqNmtmdnFtZGJ4MnByMkBwZW5ndXRyb25p
-eC5kZT4KIDwyMDIwMDUyMzE3MDU1OC5oMmJycWxmMmp4NGtlZTZ5QHBlbmd1
-dHJvbml4LmRlPgpNSU1FLVZlcnNpb246IDEuMApDb250ZW50LVR5cGU6IG11
-bHRpcGFydC9zaWduZWQ7IG1pY2FsZz1wZ3Atc2hhMjU2OwoJcHJvdG9jb2w9
-ImFwcGxpY2F0aW9uL3BncC1zaWduYXR1cmUiOyBib3VuZGFyeT0iOWRnamlV
-NE1tV1BWYXBNVSIKQ29udGVudC1EaXNwb3NpdGlvbjogaW5saW5lCkluLVJl
-cGx5LVRvOiA8MjAyMDA1MjMxNzA1NTguaDJicnFsZjJqeDRrZWU2eUBwZW5n
-dXRyb25peC5kZT4KVXNlci1BZ2VudDogTXV0dC8xLjEzLjEgKDIwMTktMTIt
-MTQpCgoKLS05ZGdqaVU0TW1XUFZhcE1VCkNvbnRlbnQtVHlwZTogdGV4dC9w
-bGFpbjsgY2hhcnNldD11dGYtOApDb250ZW50LURpc3Bvc2l0aW9uOiBpbmxp
-bmUKQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogcXVvdGVkLXByaW50YWJs
-ZQoKT24gU2F0LCBNYXkgMjMsIDIwMjAgYXQgMDc6MDU6NThQTSArMDIwMCwg
-VXdlIEtsZWluZS1LPUMzPUI2bmlnIHdyb3RlOgo+IEhlbGxvIEtvbnN0YW50
-aW4sCj49MjAKPiBPbiBUaHUsIEZlYiAxMywgMjAyMCBhdCAxMToyNjoxOEFN
-ICswMTAwLCBVd2UgS2xlaW5lLUs9QzM9QjZuaWcgd3JvdGU6Cj4gPiBJIGNv
-bnNpZGVyIHRoZSBhcmNoaXZlcyBvbiBsb3JlLmtlcm5lbC5vcmcgdmVyeSB1
-c2VmdWwgYW5kIHdvdWxkIGxpa2UgdG8KPiA+IHNlZSB0aGUgbGludXgtcHdt
-IGxpc3QgYXJjaGl2ZWQgdGhlcmUsIHRvby4KPiA+PTIwCj4gPiBBc3N1bWlu
-ZyB5b3UgYWdyZWUgKG9yIGF0IGxlYXN0IGRvbid0IGRpc2FncmVlKSB3ZSdk
-IG5lZWQgdG8gZm9sbG93Cj4gPiBodHRwczovL2tvcmcud2lraS5rZXJuZWwu
-b3JnL3VzZXJkb2MvbG9yZS4gVGhlcmVmb3Igd2UgbmVlZCBhbiBhcmNoaXZl
-Cj4gPiBvZiB0aGUgYWxyZWFkeSBzZW50IG1haWxzLiBNeSBwZXJzb25hbCBh
-cmNoaXZlIG9ubHkgZ29lcyBiYWNrIHRvIE9jdAo+ID4gMjAxOCwgc28gSSBn
-dWVzcyBJJ20gbm90IGluIHRoZSBiZXN0IHBvc2l0aW9uIHRvIHByb3ZpZGUg
-aXQuIEJ1dCBJIGNhbgo+ID4gbmV2ZXJ0aGVsZXNzIGNhcmUgZm9yIHRoZSBi
-dWVyb2NyYXRpY3MgYW5kIHN0YXJ0IHdpdGggbXkgYXJjaGl2ZSBnaXZlbgo+
-ID4gdGhhdCBJIGdldCBzb21lIHN1cHBvcnQgZnJvbSBzb21lb25lIHdpdGgg
-YSBtb3JlIGNvbXBsZXRlIGFyY2hpdmUuCj4gPj0yMAo+ID4gV2hhdCBkbyB5
-b3UgdGhpbms/Cj49MjAKPiBJIGRpZG4ndCBnZXQgZmVlZGJhY2sgZnJvbSBU
-aGllcnJ5ICg9M0QgbGludXgtcHdtIG1haW50YWluZXIpIGJ1dCBJIHN0aWxs
-Cj4gdGhpbmsgYWRkaW5nIGxpbnV4LXB3bSB0byBrZXJuZWwub3JnJ3MgcHVi
-bGljLWluYm94IGluc3RhbmNlIGlzCj4gdmFsdWFibGUuIChBbmQgaWYgaXQn
-cyBvbmx5IHRvIGV4cGVyaW1lbnQgd2l0aCBiNC4pCgpTb3JyeSwgSSByZWNh
-bGwgcmVhZGluZyB0aGlzIGFuZCB0aGlua2luZyBpdCB3YXMgYSBnb29kIGlk
-ZWEsIGJ1dCB0aGVuCm11c3QndmUgZ290dGVuIHNpZGUtdHJhY2tlZC4KCj4g
-R2l2ZW4gdGhhdCB0aGVyZSBpcyBhbiBhcmNoaXZlIG9uIHNwaW5pY3MubmV0
-LCBkbyB5b3Uga25vdyB3aG8gdG8KPiBjb250YWN0IHRoZXJlIHRvIGFzayBm
-b3IgYSBjb3B5IHRvIGZpbGwgbG9yZSB3aXRoIGl0PwoKTXkgR21haWwgaGFz
-IGFyY2hpdmVzIGdvaW5nIGJhY2sgYXMgZmFyIGFzIDIwMTMsIHdoaWNoIGlz
-IGFyb3VuZCB0aGUKdGltZSB0aGF0IEkgc3RhcnRlZCBtYWludGFpbmluZyBQ
-V00uIEknbGwgZm9sbG93IHRoZSBzdGVwcyBpbiB0aGUKZG9jdW1lbnRhdGlv
-biB0byBwcmVwYXJlIGFuIGFyY2hpdmUuCgpUaGllcnJ5CgotLTlkZ2ppVTRN
-bVdQVmFwTVUKQ29udGVudC1UeXBlOiBhcHBsaWNhdGlvbi9wZ3Atc2lnbmF0
-dXJlOyBuYW1lPSJzaWduYXR1cmUuYXNjIgoKLS0tLS1CRUdJTiBQR1AgU0lH
-TkFUVVJFLS0tLS0KCmlRSXpCQUFCQ0FBZEZpRUVpT3JEQ0FGSnpQZkFqY2lm
-M1NPczEzOCtzNkVGQWw3TGg2b0FDZ2tRM1NPczEzOCsKczZFdFV3LytJZXpK
-SnE0WVFOdXVrZEJHdDJFT3IrbzNiN1VIeHg3YWpFY01rRDROYmloL0tHRUhM
-NEcwZGVIVwprdkxQM3NWc3E2MW0wcmdnSjdMc0FSd0hzRTNzNnE3MmdIK3lh
-dDBVSktLM2UvQzlmeGtjQ3dmS2hMY25haU5XCmt0TVQ5TTRHSWJEZVdJZTlm
-WVJnaDBraVR6Qm1XaEdFZlJIWXVmTHB4Y3pzeDN6OXpGeUVGMldxZDBLb0JR
-cm0Kay9vZHMzVWRUQUNxVWVOU0NtOEZPcnFHV3Rhb25Va1U0UXptVHhQYW04
-QnNna2dVdTVWRm5rSDQxdTZPZ0lrVAo3QkRXUUgvT3oxSFFocDNtSXVwdkJ3
-S2VnSmhxM2toSWdSNWVSR0tBOFVDZldpbUVlZjF6ZFUyTnQ0dzVsUFlxCjVU
-VjZ6T0NNb1BFaHUzUHhRNjFZRW14ejIvRXMyV3hzVHI4bjBMOGFzZGtzRzh0
-V0hHQWdlYmJORUxuQzJWTGYKcTQrQzQyeDFGRkxoV0F6eHRUVWVPeDFmRWYy
-b0RuSy9IOWNDLzVsNXhLeStUVnU0RG1EQ0tqaWZ6ZmNiRUFHVwpQZFU1VkhV
-clFFUnhzdWdZS3pJZGJ1ZWhDanZXL09IMy9GV1RtQ3NYWlFpRElTckpOeFlC
-bXF1SEg0QkN3dzR2ClhtQkRBcTlxSUpYd0txMGFGOVdUVHdPZitxelM2Y0pY
-emhOWkNYOXhQUm9pS3JOdjlXbXNvYWczOTJtaGw3V1cKN3ZyZllMbE9EVkFz
-N010d2dvVklyZkFzeTJjanNiN3JTZmpuQXlma2VZTk5wR2JQMVI2WS9uZEhX
-dzlNUnhXQwpTcmFVRUl4WTB1eCtNbEdEcnJvMUlWeXZUZEJ5SGpIUHpaQ3Az
-a01aWGVmUEhJd0NuL289Cj1YRTZ4Ci0tLS0tRU5EIFBHUCBTSUdOQVRVUkUt
-LS0tLQoKLS05ZGdqaVU0TW1XUFZhcE1VLS0K
-
-------------=_1590396851-8119-23--
+Bart
