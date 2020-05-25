@@ -2,119 +2,92 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E88361E0EDA
-	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2020 14:58:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DC491E0EE6
+	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2020 14:59:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390702AbgEYM6F (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 25 May 2020 08:58:05 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:47098 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388757AbgEYM6F (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 25 May 2020 08:58:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1590411463; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/WFOWEN1ti8Lx5TR61l9OKcQbG4xLwEV/xsVMKKB+2c=;
-        b=fMBgPcy34EZrBn+ns0odMFqwVPtiW+UaagyCNbc94iuoMe6aYPESOobYcRKddGILtuP552
-        wNKn+mspwHIRW3ov2KBr5lgBFkBdGciFDJ/gGIsrvEm+2gcPlKBpd4V3tcxL+ObXoINIep
-        djgzhRz4ziS1S1jInUjSvg8xULMLkDA=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     od@zcrc.me, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 4/4] pwm: jz4740: Add support for the JZ4725B
-Date:   Mon, 25 May 2020 14:57:22 +0200
-Message-Id: <20200525125722.36447-4-paul@crapouillou.net>
-In-Reply-To: <20200525125722.36447-1-paul@crapouillou.net>
-References: <20200525125722.36447-1-paul@crapouillou.net>
+        id S2390624AbgEYM7t (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 25 May 2020 08:59:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390609AbgEYM7s (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 25 May 2020 08:59:48 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BB13C08C5C3
+        for <linux-pwm@vger.kernel.org>; Mon, 25 May 2020 05:59:48 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id u16so8708262lfl.8
+        for <linux-pwm@vger.kernel.org>; Mon, 25 May 2020 05:59:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EXtqB8Wun/tgjNkBpbPrNbEYBqWbgFsLrLS2OmL1m/M=;
+        b=JqXkjdW/TwAhV/+ZstLcQDiGkcnh2vaThxK4UuXw1ZT4EbewRbqEMxF8cLo9srENSG
+         y2bzMe8eVT4GRDrV5lIfGsLezcWERXdbNA0we0XcZSk7s/wgI/0Bg36o+Q5s+WrQwFnR
+         9Ezeei8Zk5ZuBxczU7luJMzFJL4NWTdRSEvpgnxSVbeH3cK/DSXlN9Tdbn/KKHl0ElRF
+         1c79At+nt2Qv3ftKSagmriY4yHRJuT3SfL5MLqCGu+N67fiYVIz6F+xk123QNykV4Ed1
+         Wi4Uy6bedneHNi7QQrkTEzS6GmgrbN7iai2K6CwtEDX6745b9xMfceJdYvhJEE/s2F96
+         nJvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EXtqB8Wun/tgjNkBpbPrNbEYBqWbgFsLrLS2OmL1m/M=;
+        b=uVhxyaV3o+VVRdm+Z4qlFHG/JzXaW5EYd/Jfj3ZTOXDa6bWmFZe/mX3OdIYj97tUtC
+         6sOKh76PB0AKxyg/w+yUjvRxLJo8bfTmgQ9nVz5YuKbNGdxgw+ciWB7PVBLvY5Al+Ro/
+         94ami5pkrY5Cc264FtxKQXDYxXcmj6N3swNDxiN4rkoryb3gfQ3khdDGKUHlwSWcOSAO
+         hbOcNKEoJFQvkclrOEr8yTnO+xYl457kr0Uo846qx/rx+py809UtNKd0UeM4AbCp4vuu
+         Yjv5CMhrqcHmtIEXFc6SwkbiZe/nRAZb+Nqg3fnVxGKDL7R8pi0rP+IpFfPiZSpbpbKs
+         UY1w==
+X-Gm-Message-State: AOAM5300/8w0vt6ywxlIgkp1qBY5F/m9ELS6w3roZjqMi/ZGHfZIta6L
+        RG+m4Lx99dU6PD86Ig6IxwBQdDG06oG6YFzDScrpWg==
+X-Google-Smtp-Source: ABdhPJxD2+KgVOK9WTwoquq8HqW2c21+zgJ2wXOdh5XtNRaWnyUiVdw++6s8JUaftb7+v3ytf4RuSWtwx/6fIhWUhyk=
+X-Received: by 2002:ac2:5a07:: with SMTP id q7mr14490822lfn.77.1590411586745;
+ Mon, 25 May 2020 05:59:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200423174543.17161-1-michael@walle.cc> <20200423174543.17161-11-michael@walle.cc>
+ <CAMpxmJV3XTOxuoKeV-z2d75qWqHkgvV9419tfe3idDeKwoeoLA@mail.gmail.com>
+ <75bff2917be1badd36af9f980cf59d2c@walle.cc> <CAMpxmJXctc5cbrjSeJxa7DfmjiVsbyhqAbEKt-gtayKhQj0Cnw@mail.gmail.com>
+ <951244aab2ff553a463f7431ba09bf27@walle.cc>
+In-Reply-To: <951244aab2ff553a463f7431ba09bf27@walle.cc>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 25 May 2020 14:59:36 +0200
+Message-ID: <CACRpkdZYEZk7o+Y2-AqnHGsY8N7KGGmPGSuSS=H7YY8VLZ3jZw@mail.gmail.com>
+Subject: Re: [PATCH v3 10/16] gpio: add a reusable generic gpio_chip using regmap
+To:     Michael Walle <michael@walle.cc>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The PWM hardware in the JZ4725B works the same as in the JZ4740, but has
-only six channels available.
+On Mon, May 25, 2020 at 12:20 PM Michael Walle <michael@walle.cc> wrote:
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+> If you like I could submit this patch on its own. But then there
+> wouldn't be a user for it.
 
-Notes:
-    v2: Simply return -EINVAL if we can't get match data
+I'm pretty much fine with that, we do merge code that has no
+users if we anticipate they will be around the corner.
 
- drivers/pwm/pwm-jz4740.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
-index fe06ca8ce30f..5830ac2bdf6a 100644
---- a/drivers/pwm/pwm-jz4740.c
-+++ b/drivers/pwm/pwm-jz4740.c
-@@ -20,7 +20,9 @@
- #include <linux/pwm.h>
- #include <linux/regmap.h>
- 
--#define NUM_PWM 8
-+struct soc_info {
-+	unsigned int num_pwms;
-+};
- 
- struct jz4740_pwm_chip {
- 	struct pwm_chip chip;
-@@ -36,7 +38,7 @@ static bool jz4740_pwm_can_use_chn(struct jz4740_pwm_chip *jz,
- 				   unsigned int channel)
- {
- 	/* Enable all TCU channels for PWM use by default except channels 0/1 */
--	u32 pwm_channels_mask = GENMASK(NUM_PWM - 1, 2);
-+	u32 pwm_channels_mask = GENMASK(jz->chip.npwm - 1, 2);
- 
- 	device_property_read_u32(jz->chip.dev->parent,
- 				 "ingenic,pwm-channels-mask",
-@@ -226,6 +228,11 @@ static int jz4740_pwm_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct jz4740_pwm_chip *jz4740;
-+	const struct soc_info *info;
-+
-+	info = device_get_match_data(dev);
-+	if (!info)
-+		return -EINVAL;
- 
- 	jz4740 = devm_kzalloc(dev, sizeof(*jz4740), GFP_KERNEL);
- 	if (!jz4740)
-@@ -239,7 +246,7 @@ static int jz4740_pwm_probe(struct platform_device *pdev)
- 
- 	jz4740->chip.dev = dev;
- 	jz4740->chip.ops = &jz4740_pwm_ops;
--	jz4740->chip.npwm = NUM_PWM;
-+	jz4740->chip.npwm = info->num_pwms;
- 	jz4740->chip.base = -1;
- 	jz4740->chip.of_xlate = of_pwm_xlate_with_flags;
- 	jz4740->chip.of_pwm_n_cells = 3;
-@@ -256,9 +263,18 @@ static int jz4740_pwm_remove(struct platform_device *pdev)
- 	return pwmchip_remove(&jz4740->chip);
- }
- 
-+static const struct soc_info __maybe_unused jz4740_soc_info = {
-+	.num_pwms = 8,
-+};
-+
-+static const struct soc_info __maybe_unused jz4725b_soc_info = {
-+	.num_pwms = 6,
-+};
-+
- #ifdef CONFIG_OF
- static const struct of_device_id jz4740_pwm_dt_ids[] = {
--	{ .compatible = "ingenic,jz4740-pwm", },
-+	{ .compatible = "ingenic,jz4740-pwm", .data = &jz4740_soc_info },
-+	{ .compatible = "ingenic,jz4725b-pwm", .data = &jz4725b_soc_info },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, jz4740_pwm_dt_ids);
--- 
-2.26.2
-
+Yours,
+Linus Walleij
