@@ -2,73 +2,68 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BB531E0C60
-	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2020 13:01:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 906B91E0ED1
+	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2020 14:57:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389998AbgEYLBU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 25 May 2020 07:01:20 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:60998 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389484AbgEYLBU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 25 May 2020 07:01:20 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 65BAA804FC;
-        Mon, 25 May 2020 13:01:12 +0200 (CEST)
-Date:   Mon, 25 May 2020 13:01:11 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Andy Gross <agross@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        MSM <linux-arm-msm@vger.kernel.org>, linux-pwm@vger.kernel.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        patches@opensource.cirrus.com,
-        Russell King <linux@armlinux.org.uk>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 01/16] video: amba-clcd: use devm_of_find_backlight
-Message-ID: <20200525110111.GA14873@ravnborg.org>
-References: <20200517190139.740249-1-sam@ravnborg.org>
- <20200517190139.740249-2-sam@ravnborg.org>
- <CACRpkdbogVA=12Xzh6jC0AaE7DrH8Z7iVuG3s_gS4MQBYF61Dw@mail.gmail.com>
- <20200518101609.GA759699@ravnborg.org>
- <CACRpkdY=ROLjHb70=tckOPUDBoinT4XtcUvZSaNxND7HZD5H+g@mail.gmail.com>
+        id S2388770AbgEYM5m (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 25 May 2020 08:57:42 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:47036 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388757AbgEYM5m (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 25 May 2020 08:57:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1590411460; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=/Q75lx02I6xKeY/GhhcVzLlrl3kcuPBLFA4ncLPA0XY=;
+        b=IEqSruIgaGkefkXzDAAFPbvGbsghryiobeirC62/xGVQFX3a6UTMexweuE9H7GDpjACpVK
+        7dpMrZeI0TvfP49dRauORiWkYGoXW+iu+hqVx7oxfcQ0KbP7HNltqglOJjO7RkR64IuZ/K
+        5mXW3MyDaUHtb9XOIDN2HCsD+yeOLPk=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     od@zcrc.me, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 1/4] pwm: jz4740: Drop dependency on MACH_INGENIC
+Date:   Mon, 25 May 2020 14:57:19 +0200
+Message-Id: <20200525125722.36447-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdY=ROLjHb70=tckOPUDBoinT4XtcUvZSaNxND7HZD5H+g@mail.gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=C88sFdJymdwTI9A7Av8A:9 a=CjuIK1q_8ugA:10
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Linus.
+Depending on MACH_INGENIC prevent us from creating a generic kernel that
+works on more than one MIPS board. Instead, we just depend on MIPS being
+set.
 
-> For this driver (drivers/video/fbdev/amba-clcd.c) there are zero
-> users after the merge window (all users moved over to DRM) so
-> I plan to retire it completely.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
 
-Sounds like a brilliant plan.
+Notes:
+    v2: No change
 
-	Sam
+ drivers/pwm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index eebbc917ac97..7814e5b2cad7 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -234,7 +234,7 @@ config PWM_IMX_TPM
+ 
+ config PWM_JZ4740
+ 	tristate "Ingenic JZ47xx PWM support"
+-	depends on MACH_INGENIC
++	depends on MIPS
+ 	depends on COMMON_CLK
+ 	select MFD_SYSCON
+ 	help
+-- 
+2.26.2
+
