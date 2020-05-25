@@ -2,90 +2,79 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 823841E0F6F
-	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2020 15:25:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C27A1E11D2
+	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2020 17:33:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390784AbgEYNZ0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 25 May 2020 09:25:26 -0400
-Received: from mga04.intel.com ([192.55.52.120]:30274 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388685AbgEYNZ0 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 25 May 2020 09:25:26 -0400
-IronPort-SDR: rObcf0Q+uMIrYGvWdq4suARQfM082pAeOrZ9MwQauxJR1VgRNk69YlABge4Fay0XfQHVWih/d4
- a755zuDuo7bw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 06:25:25 -0700
-IronPort-SDR: 2+jbuk/O7v+ofuIpI3sxz4UMMXRzsN+jsUGJhAsU1ZG1GsQPSA1cVKS5b9oU+XZSwuMIBZqQtN
- c4lQR60f+phA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,433,1583222400"; 
-   d="scan'208";a="441730138"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 25 May 2020 06:25:19 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jdD6X-008nCW-92; Mon, 25 May 2020 16:25:21 +0300
-Date:   Mon, 25 May 2020 16:25:21 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Pierre-louis Bossart <pierre-louis.bossart@intel.com>
-Cc:     Michael Walle <michael@walle.cc>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 10/16] gpio: add a reusable generic gpio_chip using
- regmap
-Message-ID: <20200525132521.GZ1634618@smile.fi.intel.com>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-11-michael@walle.cc>
- <CAMpxmJV3XTOxuoKeV-z2d75qWqHkgvV9419tfe3idDeKwoeoLA@mail.gmail.com>
- <75bff2917be1badd36af9f980cf59d2c@walle.cc>
- <CAMpxmJXctc5cbrjSeJxa7DfmjiVsbyhqAbEKt-gtayKhQj0Cnw@mail.gmail.com>
- <951244aab2ff553a463f7431ba09bf27@walle.cc>
- <CACRpkdZYEZk7o+Y2-AqnHGsY8N7KGGmPGSuSS=H7YY8VLZ3jZw@mail.gmail.com>
+        id S2404205AbgEYPdi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 25 May 2020 11:33:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404201AbgEYPdh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 25 May 2020 11:33:37 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91E57C061A0E
+        for <linux-pwm@vger.kernel.org>; Mon, 25 May 2020 08:33:37 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jdF6c-0003kT-CK; Mon, 25 May 2020 17:33:34 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jdF6b-0008AX-Ev; Mon, 25 May 2020 17:33:33 +0200
+Date:   Mon, 25 May 2020 17:33:33 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] pwm: jz4740: Drop dependency on MACH_INGENIC
+Message-ID: <20200525153333.4wsm3dhkdzjjq6pc@pengutronix.de>
+References: <20200525125722.36447-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZYEZk7o+Y2-AqnHGsY8N7KGGmPGSuSS=H7YY8VLZ3jZw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200525125722.36447-1-paul@crapouillou.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, May 25, 2020 at 02:59:36PM +0200, Linus Walleij wrote:
-> On Mon, May 25, 2020 at 12:20 PM Michael Walle <michael@walle.cc> wrote:
-> 
-> > If you like I could submit this patch on its own. But then there
-> > wouldn't be a user for it.
-> 
-> I'm pretty much fine with that, we do merge code that has no
-> users if we anticipate they will be around the corner.
+Hello,
 
-I remember we discussed with Pierre to use it for his ASoC work.
-Pierre, does it sound useful for you?
+On Mon, May 25, 2020 at 02:57:19PM +0200, Paul Cercueil wrote:
+> Depending on MACH_INGENIC prevent us from creating a generic kernel that
+> works on more than one MIPS board. Instead, we just depend on MIPS being
+> set.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+
+Nitpick: Your S-o-B should come last. So if you added my Ack the
+resulting commit then has (after being picked up by a maintainer):
+
+ .	Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+ .	Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+ .	Signed-off-by: Peter Maintainer <...>
+
+(quoted to not let patchwork pick up tags) while when the Ack is added
+by the maintainer the result is
+
+ .	Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+ .	Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+ .	Signed-off-by: Peter Maintainer <...>
+
+. So the order tells the reader who added a tag.
+
+Best regards
+Uwe
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
