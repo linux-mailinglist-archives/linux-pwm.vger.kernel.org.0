@@ -2,173 +2,73 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A17BD1E0BAA
-	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2020 12:20:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BB531E0C60
+	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2020 13:01:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389781AbgEYKUj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 25 May 2020 06:20:39 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:55171 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389356AbgEYKUj (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 25 May 2020 06:20:39 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        id S2389998AbgEYLBU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 25 May 2020 07:01:20 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:60998 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389484AbgEYLBU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 25 May 2020 07:01:20 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id B2E8E224C1;
-        Mon, 25 May 2020 12:20:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1590402035;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DaBHew0vxxdSiEHFxN0/9/jK/7HdYOSYbRfKY5g0cf4=;
-        b=ea1g/amuAFXkMGyk8b01UJ7SrnTfSaaC0mLpqaKs3JWGpnTuJMhPFxCjrOrj5hGTBW8g1t
-        mYu/alo7xbuCw9vBpCPuDGeqDHA+jdYpRLceu125oZwEWGtTah1zfrAEd2LfXjKMyULS3n
-        5CBwJkAWm0vxbZD5i+M/5MsdB4Z8DEI=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 25 May 2020 12:20:25 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 65BAA804FC;
+        Mon, 25 May 2020 13:01:12 +0200 (CEST)
+Date:   Mon, 25 May 2020 13:01:11 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Andy Gross <agross@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        MSM <linux-arm-msm@vger.kernel.org>, linux-pwm@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        patches@opensource.cirrus.com,
+        Russell King <linux@armlinux.org.uk>,
+        Support Opensource <support.opensource@diasemi.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 10/16] gpio: add a reusable generic gpio_chip using
- regmap
-In-Reply-To: <CAMpxmJXctc5cbrjSeJxa7DfmjiVsbyhqAbEKt-gtayKhQj0Cnw@mail.gmail.com>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-11-michael@walle.cc>
- <CAMpxmJV3XTOxuoKeV-z2d75qWqHkgvV9419tfe3idDeKwoeoLA@mail.gmail.com>
- <75bff2917be1badd36af9f980cf59d2c@walle.cc>
- <CAMpxmJXctc5cbrjSeJxa7DfmjiVsbyhqAbEKt-gtayKhQj0Cnw@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <951244aab2ff553a463f7431ba09bf27@walle.cc>
-X-Sender: michael@walle.cc
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2 01/16] video: amba-clcd: use devm_of_find_backlight
+Message-ID: <20200525110111.GA14873@ravnborg.org>
+References: <20200517190139.740249-1-sam@ravnborg.org>
+ <20200517190139.740249-2-sam@ravnborg.org>
+ <CACRpkdbogVA=12Xzh6jC0AaE7DrH8Z7iVuG3s_gS4MQBYF61Dw@mail.gmail.com>
+ <20200518101609.GA759699@ravnborg.org>
+ <CACRpkdY=ROLjHb70=tckOPUDBoinT4XtcUvZSaNxND7HZD5H+g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdY=ROLjHb70=tckOPUDBoinT4XtcUvZSaNxND7HZD5H+g@mail.gmail.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=C88sFdJymdwTI9A7Av8A:9 a=CjuIK1q_8ugA:10
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Am 2020-05-25 11:05, schrieb Bartosz Golaszewski:
-> wt., 12 maj 2020 o 16:41 Michael Walle <michael@walle.cc> napisał(a):
->> 
->> >> +
->> >> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
->> >> +MODULE_DESCRIPTION("GPIO generic regmap driver core");
->> >> +MODULE_LICENSE("GPL");
->> >> diff --git a/include/linux/gpio-regmap.h b/include/linux/gpio-regmap.h
->> >> new file mode 100644
->> >> index 000000000000..a868cbcde6e9
->> >> --- /dev/null
->> >> +++ b/include/linux/gpio-regmap.h
->> >> @@ -0,0 +1,69 @@
->> >> +/* SPDX-License-Identifier: GPL-2.0-only */
->> >> +
->> >> +#ifndef _LINUX_GPIO_REGMAP_H
->> >> +#define _LINUX_GPIO_REGMAP_H
->> >> +
->> >> +struct gpio_regmap;
->> >> +
->> >> +#define GPIO_REGMAP_ADDR_ZERO ((unsigned long)(-1))
->> >> +#define GPIO_REGMAP_ADDR(addr) ((addr) ? : GPIO_REGMAP_ADDR_ZERO)
->> >> +
->> >
->> > What if the addr is actually 0?
->> 
->> Then the driver has to set GPIO_REGMAP_ADDR_ZERO or use the 
->> convenience
->> macro GPIO_REGMAP_ADDR.
->> 
->> So you can have
->> 
->>    struct gpio_regmap_config config = { 0 };
->>    config.reg_dat_base = 0x10;
->>    config.reg_dir_out_base = 0x20;
->> 
->> or
->> 
->>    config.reg_dat_base = GPIO_REGMAP_ADDR_ZERO;
->> 
->> or if you can't be sure if the RHS value might be zero:
->> 
->>    config.reg_dat_base = GPIO_REGMAP_ADDR(reg);
->> 
->> 
->> > Maybe drop GPIO_REGMAP_ADDR and require users to set unused registers
->> > to GPIO_REGMAP_ADDR_ZERO?
->> 
->> Thats bad because:
->>   * you'd have to set plenty of unused base registers for a simple 
->> driver
->>   * if there will be additional properties in the future, you have to
->> touch
->>     all other drivers, because they are initialized as 0 (ie. valid 
->> reg
->> 0).
->> 
->> >> +/**
->> >> + * struct gpio_regmap_config - Description of a generic regmap
->> >> gpio_chip.
->> >> + *
->> >> + * @parent:            The parent device
->> >> + * @regmap:            The regmap used to access the registers
->> >> + *                     given, the name of the device is used
->> >> + * @label:             (Optional) Descriptive name for GPIO
->> >> controller.
->> >> + *                     If not given, the name of the device is used.
->> >> + * @ngpio:             Number of GPIOs
->> >> + * @reg_dat_base:      (Optional) (in) register base address
->> >> + * @reg_set_base:      (Optional) set register base address
->> >> + * @reg_clr_base:      (Optional) clear register base address
->> >> + * @reg_dir_in_base:   (Optional) out setting register base address
->> >> + * @reg_dir_out_base:  (Optional) in setting register base address
->> >
->> > The two above are inverted I think?
->> good catch.
->> 
->> > Also: why the limitation of only supporting one at a time?
->> 
->> they should be exclusive, either you have a register where you set the
->> output bits to one, or the input bits. Maybe this need a bit more
->> context
->> above. in gpio-mmio.c you can set both and both are used in
->> set_direction(), but only one is read in get_direction().
->> 
->> That being said, I have no strong opinion wether they should be
->> exclusive
->> or not, besides the symmetry of set_/get_direction().
->> 
->> -michael
->> 
-> 
-> Sorry for the late response, your comments make sense to me. Are you
-> going to submit a v4 before the v5.8 merge window?
+Hi Linus.
 
-I'm currently stuck with how to handle the MFD part. Ie. Rob doesn't
-seem to like the logicial device numbering - or at least there wasn't
-an answer to that one anymore, see patch 5/16.
+> For this driver (drivers/video/fbdev/amba-clcd.c) there are zero
+> users after the merge window (all users moved over to DRM) so
+> I plan to retire it completely.
 
-If you like I could submit this patch on its own. But then there
-wouldn't be a user for it.
+Sounds like a brilliant plan.
 
--michael
+	Sam
