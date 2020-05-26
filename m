@@ -2,21 +2,21 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 243731E2903
-	for <lists+linux-pwm@lfdr.de>; Tue, 26 May 2020 19:37:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 340DA1E28FF
+	for <lists+linux-pwm@lfdr.de>; Tue, 26 May 2020 19:37:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388949AbgEZRfR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 26 May 2020 13:35:17 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:65094 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388906AbgEZRfQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 26 May 2020 13:35:16 -0400
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 26 May 2020 10:35:14 -0700
+        id S2388837AbgEZRfP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 26 May 2020 13:35:15 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:5422 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728594AbgEZRfO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 26 May 2020 13:35:14 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 26 May 2020 10:35:13 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg01-sd.qualcomm.com with ESMTP; 26 May 2020 10:35:13 -0700
+  by ironmsg03-sd.qualcomm.com with ESMTP; 26 May 2020 10:35:13 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id A97A44C9C; Tue, 26 May 2020 10:35:13 -0700 (PDT)
+        id B7F494CA0; Tue, 26 May 2020 10:35:13 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -34,9 +34,9 @@ Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         linux-arm-kernel@lists.infradead.org,
         Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v15 09/11] backlight: pwm_bl: Use 64-bit division function
-Date:   Tue, 26 May 2020 10:35:09 -0700
-Message-Id: <11eebb18b4d97e91a76266d328488c47b5541c75.1590514331.git.gurus@codeaurora.org>
+Subject: [PATCH v15 10/11] clk: pwm: Use 64-bit division function
+Date:   Tue, 26 May 2020 10:35:10 -0700
+Message-Id: <7257652ba154624466f2170ab4baf9bf4ba5f33a.1590514331.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1590514331.git.gurus@codeaurora.org>
 References: <cover.1590514331.git.gurus@codeaurora.org>
@@ -47,31 +47,37 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Since the PWM framework is switching struct pwm_state.period's datatype
-to u64, prepare for this transition by using div_u64 to handle a 64-bit
-dividend instead of a straight division operation.
+Since the PWM framework is switching struct pwm_args.period's datatype
+to u64, prepare for this transition by using div64_u64() to handle a
+64-bit divisor.
+
+Also ensure that divide-by-zero (with fixed_rate as denominator) does
+not happen with an explicit check with probe failure as a consequence.
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/video/backlight/pwm_bl.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/clk-pwm.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 82b8d75..464baad 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -606,7 +606,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 		pb->scale = data->max_brightness;
+diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
+index 87fe0b0e..86f2e2d 100644
+--- a/drivers/clk/clk-pwm.c
++++ b/drivers/clk/clk-pwm.c
+@@ -89,7 +89,12 @@ static int clk_pwm_probe(struct platform_device *pdev)
  	}
  
--	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
-+	pb->lth_brightness = data->lth_brightness * (div_u64(state.period,
-+				pb->scale));
+ 	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
+-		clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
++		clk_pwm->fixed_rate = div64_u64(NSEC_PER_SEC, pargs.period);
++
++	if (!clk_pwm->fixed_rate) {
++		dev_err(&pdev->dev, "fixed_rate cannot be zero\n");
++		return -EINVAL;
++	}
  
- 	props.type = BACKLIGHT_RAW;
- 	props.max_brightness = data->max_brightness;
+ 	if (pargs.period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
+ 	    pargs.period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
