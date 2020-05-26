@@ -2,21 +2,21 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CB781E2905
-	for <lists+linux-pwm@lfdr.de>; Tue, 26 May 2020 19:37:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 243731E2903
+	for <lists+linux-pwm@lfdr.de>; Tue, 26 May 2020 19:37:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389025AbgEZRfU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 26 May 2020 13:35:20 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:5439 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388765AbgEZRfR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 26 May 2020 13:35:17 -0400
-Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 26 May 2020 10:35:15 -0700
+        id S2388949AbgEZRfR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 26 May 2020 13:35:17 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:65094 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388906AbgEZRfQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 26 May 2020 13:35:16 -0400
+Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 26 May 2020 10:35:14 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg02-sd.qualcomm.com with ESMTP; 26 May 2020 10:35:13 -0700
+  by ironmsg01-sd.qualcomm.com with ESMTP; 26 May 2020 10:35:13 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 94BEC4C97; Tue, 26 May 2020 10:35:13 -0700 (PDT)
+        id A97A44C9C; Tue, 26 May 2020 10:35:13 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -34,9 +34,9 @@ Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         linux-arm-kernel@lists.infradead.org,
         Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v15 08/11] pwm: sun4i: Use nsecs_to_jiffies to avoid a division
-Date:   Tue, 26 May 2020 10:35:08 -0700
-Message-Id: <73a3e90f5a5a4fe4fb0f0412c7425effc338036b.1590514331.git.gurus@codeaurora.org>
+Subject: [PATCH v15 09/11] backlight: pwm_bl: Use 64-bit division function
+Date:   Tue, 26 May 2020 10:35:09 -0700
+Message-Id: <11eebb18b4d97e91a76266d328488c47b5541c75.1590514331.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1590514331.git.gurus@codeaurora.org>
 References: <cover.1590514331.git.gurus@codeaurora.org>
@@ -48,28 +48,30 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 Since the PWM framework is switching struct pwm_state.period's datatype
-to u64, prepare for this transition by using nsecs_to_jiffies() which
-does away with the need for a division operation.
+to u64, prepare for this transition by using div_u64 to handle a 64-bit
+dividend instead of a straight division operation.
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Acked-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/pwm/pwm-sun4i.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/video/backlight/pwm_bl.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 5c677c5..1694e69 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -285,7 +285,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	val = (duty & PWM_DTY_MASK) | PWM_PRD(period);
- 	sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
- 	sun4i_pwm->next_period[pwm->hwpwm] = jiffies +
--		usecs_to_jiffies(cstate.period / 1000 + 1);
-+		nsecs_to_jiffies(cstate.period + 1000);
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index 82b8d75..464baad 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -606,7 +606,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+ 		pb->scale = data->max_brightness;
+ 	}
  
- 	if (state->polarity != PWM_POLARITY_NORMAL)
- 		ctrl &= ~BIT_CH(PWM_ACT_STATE, pwm->hwpwm);
+-	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
++	pb->lth_brightness = data->lth_brightness * (div_u64(state.period,
++				pb->scale));
+ 
+ 	props.type = BACKLIGHT_RAW;
+ 	props.max_brightness = data->max_brightness;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
