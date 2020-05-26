@@ -2,93 +2,182 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 652BB1E2659
-	for <lists+linux-pwm@lfdr.de>; Tue, 26 May 2020 18:03:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F9F31E2909
+	for <lists+linux-pwm@lfdr.de>; Tue, 26 May 2020 19:37:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731378AbgEZQDo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 26 May 2020 12:03:44 -0400
-Received: from mga14.intel.com ([192.55.52.115]:3709 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728337AbgEZQDn (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 26 May 2020 12:03:43 -0400
-IronPort-SDR: mwE+zKzxthCAzlElbMsdbrEix9w1GWoocQYgYeopfTuaSTmuzg0Syqcx2OXBwNvNxuz96zdkbm
- W3eRM3qismhw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 09:03:42 -0700
-IronPort-SDR: 2xWlNCFO2LxbbSXeaNDSvwyvAro0gZEgkG/jybusID3x9qZ0i5pNXqeWg4zF5nMHdyMUhCGsL6
- GmBbwzkspemg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
-   d="scan'208";a="255452739"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 26 May 2020 09:03:34 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jdc3E-0091nj-Af; Tue, 26 May 2020 19:03:36 +0300
-Date:   Tue, 26 May 2020 19:03:36 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        id S2389091AbgEZRf1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 26 May 2020 13:35:27 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:5422 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388834AbgEZRfQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 26 May 2020 13:35:16 -0400
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 26 May 2020 10:35:14 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg02-sd.qualcomm.com with ESMTP; 26 May 2020 10:35:13 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 21B674C99; Tue, 26 May 2020 10:35:13 -0700 (PDT)
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
- reg property
-Message-ID: <20200526160336.GV1634618@smile.fi.intel.com>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-4-michael@walle.cc>
- <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
- <20200515102848.GH271301@dell>
- <159e68b4ce53630ef906b2fcbca925bd@walle.cc>
- <20200526072427.GC3628@dell>
- <f5704ce5a3e280f63c81fe35efb08234@walle.cc>
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Guru Das Srinagesh <gurus@codeaurora.org>
+Subject: [PATCH v15 00/11] Convert PWM period and duty cycle to u64
+Date:   Tue, 26 May 2020 10:35:00 -0700
+Message-Id: <cover.1590514331.git.gurus@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f5704ce5a3e280f63c81fe35efb08234@walle.cc>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, May 26, 2020 at 05:54:38PM +0200, Michael Walle wrote:
-> Am 2020-05-26 09:24, schrieb Lee Jones:
+Because period and duty cycle are defined in the PWM framework structs as ints
+with units of nanoseconds, the maximum time duration that can be set is limited
+to ~2.147 seconds. Consequently, applications desiring to set greater time
+periods via the PWM framework are not be able to do so - like, for instance,
+causing an LED to blink at an interval of 5 seconds.
 
-...
+Redefining the period and duty cycle struct members in the core PWM framework
+structs as u64 values will enable larger time durations to be set and solve
+this problem. Such a change to the framework mandates that drivers using these
+struct members (and corresponding helper functions) also be modified correctly
+in order to prevent compilation errors.
 
-> Like I said, in the long term I would like to have support for
-> different versions of the board management controller
+This patch series introduces the changes to all the drivers first, followed by
+the framework change at the very end so that when the latter is applied, all
+the drivers are in good shape and there are no compilation errors.
 
-> without having to change the device tree and have device tree bindings for the
-> subdevices at the same time.
+Changes from v14:
+  - Collected Uwe's Acked-by for the pwm core patch.
+  - Addressed comments in pwm-clps711x.c.
 
-But isn't device tree to describe *very specific platform* rather than *class
-of platforms*?
+Changes from v13:
+  - Pruned cc-list and added same (reduced) set of reviewers to all patches.
+  - Added Lee Jones' Acked-by to the pwm_bl.c patch.
+  - Added Jani Nikula's Acked-by to intel-panel.c patch.
+  - Added Stephen Boyd's Acked-by to pwm-clk.c patch.
+  - Addressed Geert's review comments in clps711x.c patch.
 
-> But it seems, that this is not possible
-> and I guess I have to bite the bullet and may need to provide another
-> device tree if the controller might be updated.
+Changes from v12:
+  - Rebased to tip of for-next
+  - Collected Acked-by for sun4i
+  - Reworked patch for intel-panel.c due to rebase, dropped Jani's Acked-by as
+    a result
+
+Changes from v11:
+  - Rebased to tip of for-next.
+  - Collected "Acked-by:" for v7 (unchanged) of pwm: sifive: [4]
+  - Squished stm32-lp.c change with final patch in series
+  - sun4i: Used nsecs_to_jiffies()
+  - imx27: Added overflow handling logic
+  - clps711x: Corrected the if condition for skipping the division
+  - clk: pwm: Reverted to v8 version, added check to prevent division-by-zero
+
+Changes from v10:
+  - Carefully added back all the "Reviewed-by: " and "Acked-by: " tags received
+    so far that had gotten missed in v9. No other changes.
+
+Changes from v9:
+  - Gathered the received "Reviewed-by: " tag
+  - Added back the clk-pwm.c patch because kbuild test robot complained [3]
+    and addressed received review comments.
+  - clps711x: Addressed review comments.
+
+Changes from v8:
+  - Gathered all received "Acked-by: " and "Reviewed-by: " tags
+  - Dropped patch to clk-pwm.c for reasons mentiond in [2]
+  - Expanded audience of unreviewed patches
+
+Changes from v7:
+  - Changed commit messages of all patches to be brief and to the point.
+  - Added explanation of change in cover letter.
+  - Dropped change to pwm-sti.c as upon review it was unnecessary as struct
+    pwm_capture is not being modified in the PWM core.
+
+Changes from v6:
+  - Split out the driver changes out into separate patches, one patch per file
+    for ease of reviewing.
+
+Changes from v5:
+  - Dropped the conversion of struct pwm_capture to u64 for reasons mentioned
+    in https://www.spinics.net/lists/linux-pwm/msg11541.html
+
+Changes from v4:
+  - Split the patch into two: one for changes to the drivers, and the actual
+    switch to u64 for ease of reverting should the need arise.
+  - Re-examined the patch and made the following corrections:
+      * intel_panel.c:
+	DIV64_U64_ROUND_UP -> DIV_ROUND_UP_ULL (as only the numerator would be
+	64-bit in this case).
+      * pwm-sti.c:
+	do_div -> div_u64 (do_div is optimized only for x86 architectures, and
+	div_u64's comment block suggests to use this as much as possible).
+
+Changes from v3:
+  - Rebased to current tip of for-next.
+
+Changes from v2:
+  - Fixed %u -> %llu in a dev_dbg in pwm-stm32-lp.c, thanks to kbuild test robot
+  - Added a couple of fixes to pwm-imx-tpm.c and pwm-sifive.c
+
+Changes from v1:
+  - Fixed compilation errors seen when compiling for different archs.
+
+v1:
+  - Reworked the change pushed upstream earlier [1] so as to not add an
+    extension to an obsolete API. With this change, pwm_ops->apply() can be
+    used to set pwm_state parameters as usual.
+
+[1] https://lore.kernel.org/lkml/20190916140048.GB7488@ulmo/
+[2] https://lore.kernel.org/lkml/20200312190859.GA19605@xxxxxxxxxxxxxx/
+[3] https://www.spinics.net/lists/linux-pwm/msg11906.html
+[4] https://www.spinics.net/lists/linux-pwm/msg11986.html
+
+Guru Das Srinagesh (11):
+  drm/i915: Use 64-bit division macro
+  hwmon: pwm-fan: Use 64-bit division macro
+  ir-rx51: Use 64-bit division macro
+  pwm: clps711x: Use 64-bit division macro
+  pwm: pwm-imx-tpm: Use 64-bit division macro
+  pwm: imx27: Use 64-bit division macro and function
+  pwm: sifive: Use 64-bit division macro
+  pwm: sun4i: Use nsecs_to_jiffies to avoid a division
+  backlight: pwm_bl: Use 64-bit division function
+  clk: pwm: Use 64-bit division function
+  pwm: core: Convert period and duty cycle to u64
+
+ drivers/clk/clk-pwm.c                      |  7 +++-
+ drivers/gpu/drm/i915/display/intel_panel.c |  2 +-
+ drivers/hwmon/pwm-fan.c                    |  2 +-
+ drivers/media/rc/ir-rx51.c                 |  3 +-
+ drivers/pwm/core.c                         | 14 ++++----
+ drivers/pwm/pwm-clps711x.c                 |  2 +-
+ drivers/pwm/pwm-imx-tpm.c                  |  2 +-
+ drivers/pwm/pwm-imx27.c                    | 53 +++++++++++++++++++++++++-----
+ drivers/pwm/pwm-sifive.c                   |  2 +-
+ drivers/pwm/pwm-stm32-lp.c                 |  2 +-
+ drivers/pwm/pwm-sun4i.c                    |  2 +-
+ drivers/pwm/sysfs.c                        |  8 ++---
+ drivers/video/backlight/pwm_bl.c           |  3 +-
+ include/linux/pwm.h                        | 12 +++----
+ 14 files changed, 79 insertions(+), 35 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
