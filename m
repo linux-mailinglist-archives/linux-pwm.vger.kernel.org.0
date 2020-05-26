@@ -2,62 +2,72 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B40A1E2111
-	for <lists+linux-pwm@lfdr.de>; Tue, 26 May 2020 13:42:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 013321E2124
+	for <lists+linux-pwm@lfdr.de>; Tue, 26 May 2020 13:45:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731464AbgEZLmV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 26 May 2020 07:42:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48768 "EHLO
+        id S2388927AbgEZLpb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 26 May 2020 07:45:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731446AbgEZLmU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 26 May 2020 07:42:20 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF9AAC03E97E;
-        Tue, 26 May 2020 04:42:20 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id bg4so3290824plb.3;
-        Tue, 26 May 2020 04:42:20 -0700 (PDT)
+        with ESMTP id S1728148AbgEZLpa (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 26 May 2020 07:45:30 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72CAAC03E97E;
+        Tue, 26 May 2020 04:45:29 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id e11so9122605pfn.3;
+        Tue, 26 May 2020 04:45:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:to:cc:references:from:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=0KbdXDZ60w99BOdUqDW8OeczOgVguCNs3xmodhMqij0=;
-        b=YeTf0oyQbfuNobEmaT0G+JfvhdSR59et4jwI+xEzEyEv2mcxorw5TsaSp59e00qdk5
-         fY9adbWlnHXxo47r2s2NUlxSf1f6JZPbRyFyLD970Otx+C+OuipskNfTPO9M2sCoohPX
-         wF2s0bO/ugME5/RBXAKRyHwmPXbGygmvGLhrtJVbIo9ZdqOF8Tx4vzIK626oyYgLq6+J
-         PZQ3XXmZSgwy4yDM4VaTWuM8+p8bOfZBFvPaK9LQp/OF9jju0hso2Hu6sKdGym5nnAha
-         LM6oRcXLVWHVQoSfEwUgPQZ6ohyy663WfPrrjdjHIcdaLxwPMXWqulolRcp9aSENRKg4
-         4NMA==
+        bh=VSjBKQ188VN+osbdQoX9ee2yKdR3xSpQdFMBIIS2iRo=;
+        b=FDAuPnwkXQ6PjDDsg3dF3rfJsYtyhBmdzJZcWcf2N7P7BIjuao5N1E4wJRa+iweALY
+         P0zpqEm0W9PmgSJnmCwkEm48Wk5KmZJ30ZSi3FHRBmr9nOBQcjwTWT1C6U+KmlZUGA0D
+         geIq5A+hykN9R2zpgj3T4/oWZQZOIj9HpKIaRjAf5ZIsmqVzazUgVgn0aOdfezzS0GB1
+         ODbcjpnlT9XVd9l2nWBkDIGOHVyAjuqV0G0C0c3A4UdiA4CCaXE0r35BNBJBk7+zhOjY
+         TvHXYOSAladLy7SGRJ+9UXvlZR0bDY2fAPy1wst+ff+4OS8oJUpFqTQFlRpSmOArJ85S
+         VXJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=0KbdXDZ60w99BOdUqDW8OeczOgVguCNs3xmodhMqij0=;
-        b=AuUWmoD+J9Lam5YoWnSvXRb55nlA9djLEhzMo+1fLARlK8zeeSYDLuuJVii/fCrjLQ
-         tbIDMRWTkmgcJIdhh6VjjSPwAvlg9ZwOGCG5dMBkOvrwHyNkkgYAR10YZMvFw7T9RyUN
-         WgNFn2wIBNWn5eoTzP4FtLPcCbWPhLzdr4tj2ftlDWD0rm9X3HnU5+gHZXDuiELoOqsh
-         YE62cjC0oMnY9vKgfA1VxKO0D8uK2TkmZCFDQ1SZvClYUO/QCRVXHpjTxrsKCeqsrgcE
-         AFJUz4ADIifhfQLDusgEN90ldxT2IzWGzReBx5iATvPQNceSLNa+dlD4stYday12SN3P
-         Y3qQ==
-X-Gm-Message-State: AOAM5323BbNZv2Cc/imOMwYMDnx3eA01tHo8duNQoDqSugT1MMNFbqdT
-        STwkh1dhRZLF7jrPx2WlcxcstQA2
-X-Google-Smtp-Source: ABdhPJwugSGVJtC/Tp/DSeFSxYWv+Rt6utgvtWt9esxUgmz2ihJKza0En6mww8XwJQemz22e4INQfw==
-X-Received: by 2002:a17:90a:8a08:: with SMTP id w8mr26604070pjn.53.1590493340274;
-        Tue, 26 May 2020 04:42:20 -0700 (PDT)
+        bh=VSjBKQ188VN+osbdQoX9ee2yKdR3xSpQdFMBIIS2iRo=;
+        b=K8bqp00LlCKzA3MH0SQdkIMARnIKdE6UxySOn+y7pDjuK4XwU/QHiucxMulP2qwnBD
+         YWc9MoMZY8NV/q3ygNRYxLWAzAe+nLBRN3TGvaYSd0sBZ8x+3pzD0ZF7yDxMjxWmtUdG
+         uneDiafkldvYbSbFHyD7JtGzJPKBzcVv2WtXtBTio3gpQqRhsQH7x7Mls0+7imCr+ktG
+         fYImzFvk4uIyjb5NX8MMLeC5VCaaOQBz9WPDq5Q14azEH6UzIZYMeJluEn036as5kkaO
+         wU5W88Uh7GeqWCc8E3grkQW6luuVwUAxAFGx8UYbemHFVVf7+6WEcImk3ULB7Fr3me8k
+         6v+w==
+X-Gm-Message-State: AOAM5338WZCBU5BnWjx9s3XvpeMJtP5IEfUXaOLxFim6l/QF341Ml6+0
+        rToMGIHGmrNiV95wzpYUCo675xmR
+X-Google-Smtp-Source: ABdhPJwVqN+H4XXugQ8p/6ZMKiDtuAPAJExv30hpTBw882wb5HKSh3024bTqf8FurnTxwDA7hcJQmg==
+X-Received: by 2002:a62:770f:: with SMTP id s15mr5385129pfc.121.1590493528810;
+        Tue, 26 May 2020 04:45:28 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a2sm15139192pfi.208.2020.05.26.04.42.18
+        by smtp.gmail.com with ESMTPSA id n10sm15495902pfd.192.2020.05.26.04.45.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2020 04:42:19 -0700 (PDT)
+        Tue, 26 May 2020 04:45:28 -0700 (PDT)
 Subject: Re: [PATCH 1/2] hwmon: pwm-fan: Add profile support and add remove
  module support
-To:     Sandipan Patra <spatra@nvidia.com>, treding@nvidia.com,
-        jonathanh@nvidia.com, u.kleine-koenig@pengutronix.de,
-        kamil@wypas.org, jdelvare@suse.com, robh+dt@kernel.org
-Cc:     bbasu@nvidia.com, bbiswas@nvidia.com, linux-pwm@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Sandipan Patra <spatra@nvidia.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "kamil@wypas.org" <kamil@wypas.org>,
+        "jdelvare@suse.com" <jdelvare@suse.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Bibek Basu <bbasu@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 References: <1590469565-14953-1-git-send-email-spatra@nvidia.com>
+ <20200526070450.sackolk6m3qv7omy@pengutronix.de>
+ <BYAPR12MB30140CD3D7C7263594FD4F30ADB00@BYAPR12MB3014.namprd12.prod.outlook.com>
 From:   Guenter Roeck <linux@roeck-us.net>
 Autocrypt: addr=linux@roeck-us.net; keydata=
  xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
@@ -102,64 +112,246 @@ Autocrypt: addr=linux@roeck-us.net; keydata=
  WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
  HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
  mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <53619c02-8c0f-3eec-cccc-16e779b8c425@roeck-us.net>
-Date:   Tue, 26 May 2020 04:42:17 -0700
+Message-ID: <bfd4525f-65cc-4887-43a0-feef36dedd48@roeck-us.net>
+Date:   Tue, 26 May 2020 04:45:26 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <1590469565-14953-1-git-send-email-spatra@nvidia.com>
+In-Reply-To: <BYAPR12MB30140CD3D7C7263594FD4F30ADB00@BYAPR12MB3014.namprd12.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 5/25/20 10:06 PM, Sandipan Patra wrote:
-> This change has 2 parts:
-> 1. Add support for profiles mode settings.
->     This allows different fan settings for trip point temp/hyst/pwm.
->     T194 has multiple fan-profiles support.
+On 5/26/20 2:05 AM, Sandipan Patra wrote:
+> Hi Uwe,
 > 
-> 2. Add pwm-fan remove support. This is essential since the config is
->     tristate capable.
 > 
-> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
-> ---
->  drivers/hwmon/pwm-fan.c | 112 ++++++++++++++++++++++++++++++++++++++++++------
->  1 file changed, 100 insertions(+), 12 deletions(-)
 > 
-> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-> index 30b7b3e..26db589 100644
-> --- a/drivers/hwmon/pwm-fan.c
-> +++ b/drivers/hwmon/pwm-fan.c
+>> -----Original Message-----
+>> From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+>> Sent: Tuesday, May 26, 2020 12:35 PM
+>> To: Sandipan Patra <spatra@nvidia.com>
+>> Cc: Thierry Reding <treding@nvidia.com>; Jonathan Hunter
+>> <jonathanh@nvidia.com>; kamil@wypas.org; jdelvare@suse.com; linux@roeck-
+>> us.net; robh+dt@kernel.org; Bibek Basu <bbasu@nvidia.com>; Bitan Biswas
+>> <bbiswas@nvidia.com>; linux-pwm@vger.kernel.org; linux-
+>> hwmon@vger.kernel.org; devicetree@vger.kernel.org; linux-
+>> tegra@vger.kernel.org; linux-kernel@vger.kernel.org
+>> Subject: Re: [PATCH 1/2] hwmon: pwm-fan: Add profile support and add remove
+>> module support
+>>
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> On Tue, May 26, 2020 at 10:36:04AM +0530, Sandipan Patra wrote:
+>>> This change has 2 parts:
+>>> 1. Add support for profiles mode settings.
+>>>     This allows different fan settings for trip point temp/hyst/pwm.
+>>>     T194 has multiple fan-profiles support.
+>>>
+>>> 2. Add pwm-fan remove support. This is essential since the config is
+>>>     tristate capable.
+>>
+>> These two are orthogonal, aren't they? So they belong in two patches.
+>>
+>> You have to expand the binding documentation.
+>>
+>>> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
+>>> ---
+>>>  drivers/hwmon/pwm-fan.c | 112
+>>> ++++++++++++++++++++++++++++++++++++++++++------
+>>>  1 file changed, 100 insertions(+), 12 deletions(-)
+>>>
+>>> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c index
+>>> 30b7b3e..26db589 100644
+>>> --- a/drivers/hwmon/pwm-fan.c
+>>> +++ b/drivers/hwmon/pwm-fan.c
+>>> @@ -3,8 +3,10 @@
+>>>   * pwm-fan.c - Hwmon driver for fans connected to PWM lines.
+>>>   *
+>>>   * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+>>> + * Copyright (c) 2020, NVIDIA Corporation.
+>>>   *
+>>>   * Author: Kamil Debski <k.debski@samsung.com>
+>>> + * Author: Sandipan Patra <spatra@nvidia.com>
+>>>   */
+>>>
+>>>  #include <linux/hwmon.h>
+>>> @@ -21,6 +23,8 @@
+>>>  #include <linux/timer.h>
+>>>
+>>>  #define MAX_PWM 255
+>>> +/* Based on OF max device tree node name length */
+>>> +#define MAX_PROFILE_NAME_LENGTH      31
+>>>
+>>>  struct pwm_fan_ctx {
+>>>       struct mutex lock;
+>>> @@ -38,6 +42,12 @@ struct pwm_fan_ctx {
+>>>       unsigned int pwm_fan_state;
+>>>       unsigned int pwm_fan_max_state;
+>>>       unsigned int *pwm_fan_cooling_levels;
+>>> +
+>>> +     unsigned int pwm_fan_profiles;
+>>> +     const char **fan_profile_names;
+>>> +     unsigned int **fan_profile_cooling_levels;
+>>> +     unsigned int fan_current_profile;
+>>> +
+>>>       struct thermal_cooling_device *cdev;  };
+>>>
+>>> @@ -227,28 +237,86 @@ static int pwm_fan_of_get_cooling_data(struct
+>> device *dev,
+>>>                                      struct pwm_fan_ctx *ctx)  {
+>>>       struct device_node *np = dev->of_node;
+>>> +     struct device_node *base_profile = NULL;
+>>> +     struct device_node *profile_np = NULL;
+>>> +     const char *default_profile = NULL;
+>>>       int num, i, ret;
+>>>
+>>> -     if (!of_find_property(np, "cooling-levels", NULL))
+>>> -             return 0;
+>>> +     num = of_property_count_u32_elems(np, "cooling-levels");
+>>> +     if (num <= 0) {
+>>> +             base_profile = of_get_child_by_name(np, "profiles");
+>>> +             if (!base_profile) {
+>>> +                     dev_err(dev, "Wrong Data\n");
+>>> +                     return -EINVAL;
+>>> +             }
+>>> +     }
+>>> +
+>>> +     if (base_profile) {
+>>> +             ctx->pwm_fan_profiles =
+>>> +                     of_get_available_child_count(base_profile);
+>>> +
+>>> +             if (ctx->pwm_fan_profiles <= 0) {
+>>> +                     dev_err(dev, "Profiles used but not defined\n");
+>>> +                     return -EINVAL;
+>>> +             }
+>>>
+>>> -     ret = of_property_count_u32_elems(np, "cooling-levels");
+>>> -     if (ret <= 0) {
+>>> -             dev_err(dev, "Wrong data!\n");
+>>> -             return ret ? : -EINVAL;
+>>> +             ctx->fan_profile_names = devm_kzalloc(dev,
+>>> +                     sizeof(const char *) * ctx->pwm_fan_profiles,
+>>> +                                                     GFP_KERNEL);
+>>> +             ctx->fan_profile_cooling_levels = devm_kzalloc(dev,
+>>> +                     sizeof(int *) * ctx->pwm_fan_profiles,
+>>> +                                                     GFP_KERNEL);
+>>> +
+>>> +             if (!ctx->fan_profile_names
+>>> +                             || !ctx->fan_profile_cooling_levels)
+>>> +                     return -ENOMEM;
+>>> +
+>>> +             ctx->fan_current_profile = 0;
+>>> +             i = 0;
+>>> +             for_each_available_child_of_node(base_profile, profile_np) {
+>>> +                     num = of_property_count_u32_elems(profile_np,
+>>> +                                                     "cooling-levels");
+>>> +                     if (num <= 0) {
+>>> +                             dev_err(dev, "No data in cooling-levels inside profile
+>> node!\n");
+>>> +                             return -EINVAL;
+>>> +                     }
+>>> +
+>>> +                     of_property_read_string(profile_np, "name",
+>>> +                                             &ctx->fan_profile_names[i]);
+>>> +                     if (default_profile &&
+>>> +                             !strncmp(default_profile,
+>>> +                             ctx->fan_profile_names[i],
+>>> +                             MAX_PROFILE_NAME_LENGTH))
+>>> +                             ctx->fan_current_profile = i;
+>>> +
+>>> +                     ctx->fan_profile_cooling_levels[i] =
+>>> +                             devm_kzalloc(dev, sizeof(int) * num,
+>>> +                                                     GFP_KERNEL);
+>>> +                     if (!ctx->fan_profile_cooling_levels[i])
+>>> +                             return -ENOMEM;
+>>> +
+>>> +                     of_property_read_u32_array(profile_np, "cooling-levels",
+>>> +                             ctx->fan_profile_cooling_levels[i], num);
+>>> +                     i++;
+>>> +             }
+>>>       }
+>>>
+>>> -     num = ret;
+>>>       ctx->pwm_fan_cooling_levels = devm_kcalloc(dev, num, sizeof(u32),
+>>>                                                  GFP_KERNEL);
+>>>       if (!ctx->pwm_fan_cooling_levels)
+>>>               return -ENOMEM;
+>>>
+>>> -     ret = of_property_read_u32_array(np, "cooling-levels",
+>>> -                                      ctx->pwm_fan_cooling_levels, num);
+>>> -     if (ret) {
+>>> -             dev_err(dev, "Property 'cooling-levels' cannot be read!\n");
+>>> -             return ret;
+>>> +     if (base_profile) {
+>>> +             memcpy(ctx->pwm_fan_cooling_levels,
+>>> +               ctx->fan_profile_cooling_levels[ctx->fan_current_profile],
+>>> +                                             num);
+>>> +     } else {
+>>> +             ret = of_property_read_u32_array(np, "cooling-levels",
+>>> +                             ctx->pwm_fan_cooling_levels, num);
+>>> +             if (ret) {
+>>> +                     dev_err(dev, "Property 'cooling-levels' cannot be read!\n");
+>>> +                     return -EINVAL;
+>>> +             }
+>>>       }
+>>>
+>>>       for (i = 0; i < num; i++) {
+>>> @@ -390,6 +458,25 @@ static int pwm_fan_probe(struct platform_device
+>> *pdev)
+>>>       return 0;
+>>>  }
+>>>
+>>> +static int pwm_fan_remove(struct platform_device *pdev) {
+>>> +     struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
+>>> +     struct pwm_args args;
+>>> +
+>>> +     if (!ctx)
+>>> +             return -EINVAL;
+>>> +
+>>> +     if (IS_ENABLED(CONFIG_THERMAL))
+>>> +             thermal_cooling_device_unregister(ctx->cdev);
+>>> +
+>>> +     pwm_get_args(ctx->pwm, &args);
+>>> +     pwm_config(ctx->pwm, 0, args.period);
+>>> +     pwm_disable(ctx->pwm);
+>>
+>> What is what you really here? Is it only that the PWM stops oscillating, or is it
+>> crucial that the output goes to its inactive level?
+>>
+>> (The intended semantic of pwm_disable includes that the output goes low, but
+>> not all implementations enforce this.)
+>>
+>> Also please don't introduce new users of pwm_config() and pwm_disable() use
+>> pwm_apply() instead.
+>>
+>> I wonder if this unregistration is "safe". When the driver is in use I'd expect that
+>> the hwmon device doesn't go away and so the devm unregistration callback that
+>> belongs to
+>> devm_hwmon_device_register_with_groups() blocks. But at this time the PWM
+>> is already stopped and so the device stops functioning earlier.
+>>
+>> Best regards
+>> Uwe
+>>
+> 
+> Thanks for reviewing the changes.
+> 
+> I see that pwm_fan_shutdown() which has got merged recently, can also be used for
+> module remove functionality. May be it will need a little bit of tweak in the code.
+> However I should have not made both multiple profiles support and fan remove functionality on
+> same patch.
+> 
 
-[ ... ]
+Pointing out explicitly:
 
->  
-> +static int pwm_fan_remove(struct platform_device *pdev)
-> +{
-> +	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
-> +	struct pwm_args args;
-> +
-> +	if (!ctx)
-> +		return -EINVAL;
-> +
-> +	if (IS_ENABLED(CONFIG_THERMAL))
-> +		thermal_cooling_device_unregister(ctx->cdev);
-> +
-> +	pwm_get_args(ctx->pwm, &args);
-> +	pwm_config(ctx->pwm, 0, args.period);
-> +	pwm_disable(ctx->pwm);
-> +
-> +	return 0;
-> +}
-> +
+ret = devm_add_action_or_reset(dev, pwm_fan_pwm_disable, ctx);
 
-I don't think you actually tested this. I would suggest to make
-yourself familiar with 'devm' functions and their use, and
-then resubmit.
+cdev = devm_thermal_of_cooling_device_register(dev, ...)
 
-Thanks,
 Guenter
