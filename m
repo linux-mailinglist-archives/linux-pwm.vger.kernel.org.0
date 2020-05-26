@@ -2,101 +2,245 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5FD31E1BAC
-	for <lists+linux-pwm@lfdr.de>; Tue, 26 May 2020 09:01:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA0911E1BDF
+	for <lists+linux-pwm@lfdr.de>; Tue, 26 May 2020 09:05:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731358AbgEZHAv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 26 May 2020 03:00:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33520 "EHLO
+        id S1731286AbgEZHFT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 26 May 2020 03:05:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731366AbgEZHAs (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 26 May 2020 03:00:48 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A1FFC061A0E
-        for <linux-pwm@vger.kernel.org>; Tue, 26 May 2020 00:00:47 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id h4so2081147wmb.4
-        for <linux-pwm@vger.kernel.org>; Tue, 26 May 2020 00:00:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=L8TiiDzdqmM1LGFjKPSxipAC4aAv2ZlXxCOvAA34JO4=;
-        b=WNVjoKCn/BXMVwd6ksjhylPSLlzdBMSDeZqC3XO1UNGE6o1d+WJ/qAszePgebMrpDw
-         H0tbDceixrx0YHSneKhw+c9J0OWOkX16dvjlrC6FOTJUQrSlh7v6jBDzY+ExHepeahwk
-         vJSEC85PXUFpYl54FFDgtX9A5EXacawUsLdK4sJIKRZfTfNItosXhylloe4zq05Xa5Cc
-         vyO9cpU+O+ZPSYbHeZW3ksaveqxljOV0jr3qjLSuu3x+PB5+S3HmOHqIQ2kJLWsicvFh
-         kn0gCbeoDhDHodCvYDYJtxLkZgajDlQbr2nOXdBHbG+rf5XSQxq8yWZYUrcBTFodS2sB
-         0vvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=L8TiiDzdqmM1LGFjKPSxipAC4aAv2ZlXxCOvAA34JO4=;
-        b=Juw2OZW3ievDMVgOiukhHAmUvczKnzYS8KIdLGdscD67vo6K1OSOOd0wXgEEB7Ef3q
-         9VfZU7drRI8oWJFIZYrC+LqdbkKfccwjBA2K/fnGKz/yNCODB0vZWtqDKD/mu509p2Ij
-         vefLCfDkyYEzhSflJ4x++0hXWaA88WbewDT6gZ5tUgIPTiovfqSLDetwXgxukOdXcHbT
-         2RxcPs/XK2h9W+5q6pAjGtZLrTa4H1VIUeOrY42k0tKFyBS+NbHt1dsDuJ3lb5amXwpW
-         47Ol2a6iKeDMpz99ELyTOBLpGDvPQUSXIGp+njaVMIoQL58EimBg9K06yykajDY6KS4i
-         e5PQ==
-X-Gm-Message-State: AOAM53213/rUqLI4aBodLmAILzVLICloDVKBJcrWodtU2Uc+tQyETo/O
-        aAXaCoKflpOqRoK37wbySlRhIaepBU0=
-X-Google-Smtp-Source: ABdhPJzdpWRMgGjTIcUg1QCmJz9zkoVDiBzpCYl6ODlrd+6sOxBl3vFTH+nPkYAMXFbO2wsi95nKLg==
-X-Received: by 2002:a7b:cf2c:: with SMTP id m12mr16587245wmg.70.1590476446197;
-        Tue, 26 May 2020 00:00:46 -0700 (PDT)
-Received: from dell ([95.149.164.102])
-        by smtp.gmail.com with ESMTPSA id a16sm5852484wrx.8.2020.05.26.00.00.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 00:00:45 -0700 (PDT)
-Date:   Tue, 26 May 2020 08:00:44 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v13 09/11] backlight: pwm_bl: Use 64-bit division function
-Message-ID: <20200526070044.GB3628@dell>
-References: <cover.1587523702.git.gurus@codeaurora.org>
- <429c18e1e1461d7cd3ccb93f9093a6719744f6b0.1587523702.git.gurus@codeaurora.org>
+        with ESMTP id S1730279AbgEZHFT (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 26 May 2020 03:05:19 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3ACDC061A0E
+        for <linux-pwm@vger.kernel.org>; Tue, 26 May 2020 00:05:18 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jdTds-00010S-GX; Tue, 26 May 2020 09:04:52 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jdTdq-0006Xy-U8; Tue, 26 May 2020 09:04:50 +0200
+Date:   Tue, 26 May 2020 09:04:50 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Sandipan Patra <spatra@nvidia.com>
+Cc:     treding@nvidia.com, jonathanh@nvidia.com, kamil@wypas.org,
+        jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
+        bbasu@nvidia.com, bbiswas@nvidia.com, linux-pwm@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] hwmon: pwm-fan: Add profile support and add remove
+ module support
+Message-ID: <20200526070450.sackolk6m3qv7omy@pengutronix.de>
+References: <1590469565-14953-1-git-send-email-spatra@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <429c18e1e1461d7cd3ccb93f9093a6719744f6b0.1587523702.git.gurus@codeaurora.org>
+In-Reply-To: <1590469565-14953-1-git-send-email-spatra@nvidia.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 21 Apr 2020, Guru Das Srinagesh wrote:
-
-> Since the PWM framework is switching struct pwm_state.period's datatype
-> to u64, prepare for this transition by using div_u64 to handle a 64-bit
-> dividend instead of a straight division operation.
+On Tue, May 26, 2020 at 10:36:04AM +0530, Sandipan Patra wrote:
+> This change has 2 parts:
+> 1. Add support for profiles mode settings.
+>     This allows different fan settings for trip point temp/hyst/pwm.
+>     T194 has multiple fan-profiles support.
 > 
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Daniel Thompson <daniel.thompson@linaro.org>
-> Cc: Jingoo Han <jingoohan1@gmail.com>
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Cc: linux-pwm@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-fbdev@vger.kernel.org
-> 
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> 2. Add pwm-fan remove support. This is essential since the config is
+>     tristate capable.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+These two are orthogonal, aren't they? So they belong in two patches.
+
+You have to expand the binding documentation.
+
+> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
+> ---
+>  drivers/hwmon/pwm-fan.c | 112 ++++++++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 100 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> index 30b7b3e..26db589 100644
+> --- a/drivers/hwmon/pwm-fan.c
+> +++ b/drivers/hwmon/pwm-fan.c
+> @@ -3,8 +3,10 @@
+>   * pwm-fan.c - Hwmon driver for fans connected to PWM lines.
+>   *
+>   * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+> + * Copyright (c) 2020, NVIDIA Corporation.
+>   *
+>   * Author: Kamil Debski <k.debski@samsung.com>
+> + * Author: Sandipan Patra <spatra@nvidia.com>
+>   */
+>  
+>  #include <linux/hwmon.h>
+> @@ -21,6 +23,8 @@
+>  #include <linux/timer.h>
+>  
+>  #define MAX_PWM 255
+> +/* Based on OF max device tree node name length */
+> +#define MAX_PROFILE_NAME_LENGTH	31
+>  
+>  struct pwm_fan_ctx {
+>  	struct mutex lock;
+> @@ -38,6 +42,12 @@ struct pwm_fan_ctx {
+>  	unsigned int pwm_fan_state;
+>  	unsigned int pwm_fan_max_state;
+>  	unsigned int *pwm_fan_cooling_levels;
+> +
+> +	unsigned int pwm_fan_profiles;
+> +	const char **fan_profile_names;
+> +	unsigned int **fan_profile_cooling_levels;
+> +	unsigned int fan_current_profile;
+> +
+>  	struct thermal_cooling_device *cdev;
+>  };
+>  
+> @@ -227,28 +237,86 @@ static int pwm_fan_of_get_cooling_data(struct device *dev,
+>  				       struct pwm_fan_ctx *ctx)
+>  {
+>  	struct device_node *np = dev->of_node;
+> +	struct device_node *base_profile = NULL;
+> +	struct device_node *profile_np = NULL;
+> +	const char *default_profile = NULL;
+>  	int num, i, ret;
+>  
+> -	if (!of_find_property(np, "cooling-levels", NULL))
+> -		return 0;
+> +	num = of_property_count_u32_elems(np, "cooling-levels");
+> +	if (num <= 0) {
+> +		base_profile = of_get_child_by_name(np, "profiles");
+> +		if (!base_profile) {
+> +			dev_err(dev, "Wrong Data\n");
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	if (base_profile) {
+> +		ctx->pwm_fan_profiles =
+> +			of_get_available_child_count(base_profile);
+> +
+> +		if (ctx->pwm_fan_profiles <= 0) {
+> +			dev_err(dev, "Profiles used but not defined\n");
+> +			return -EINVAL;
+> +		}
+>  
+> -	ret = of_property_count_u32_elems(np, "cooling-levels");
+> -	if (ret <= 0) {
+> -		dev_err(dev, "Wrong data!\n");
+> -		return ret ? : -EINVAL;
+> +		ctx->fan_profile_names = devm_kzalloc(dev,
+> +			sizeof(const char *) * ctx->pwm_fan_profiles,
+> +							GFP_KERNEL);
+> +		ctx->fan_profile_cooling_levels = devm_kzalloc(dev,
+> +			sizeof(int *) * ctx->pwm_fan_profiles,
+> +							GFP_KERNEL);
+> +
+> +		if (!ctx->fan_profile_names
+> +				|| !ctx->fan_profile_cooling_levels)
+> +			return -ENOMEM;
+> +
+> +		ctx->fan_current_profile = 0;
+> +		i = 0;
+> +		for_each_available_child_of_node(base_profile, profile_np) {
+> +			num = of_property_count_u32_elems(profile_np,
+> +							"cooling-levels");
+> +			if (num <= 0) {
+> +				dev_err(dev, "No data in cooling-levels inside profile node!\n");
+> +				return -EINVAL;
+> +			}
+> +
+> +			of_property_read_string(profile_np, "name",
+> +						&ctx->fan_profile_names[i]);
+> +			if (default_profile &&
+> +				!strncmp(default_profile,
+> +				ctx->fan_profile_names[i],
+> +				MAX_PROFILE_NAME_LENGTH))
+> +				ctx->fan_current_profile = i;
+> +
+> +			ctx->fan_profile_cooling_levels[i] =
+> +				devm_kzalloc(dev, sizeof(int) * num,
+> +							GFP_KERNEL);
+> +			if (!ctx->fan_profile_cooling_levels[i])
+> +				return -ENOMEM;
+> +
+> +			of_property_read_u32_array(profile_np, "cooling-levels",
+> +				ctx->fan_profile_cooling_levels[i], num);
+> +			i++;
+> +		}
+>  	}
+>  
+> -	num = ret;
+>  	ctx->pwm_fan_cooling_levels = devm_kcalloc(dev, num, sizeof(u32),
+>  						   GFP_KERNEL);
+>  	if (!ctx->pwm_fan_cooling_levels)
+>  		return -ENOMEM;
+>  
+> -	ret = of_property_read_u32_array(np, "cooling-levels",
+> -					 ctx->pwm_fan_cooling_levels, num);
+> -	if (ret) {
+> -		dev_err(dev, "Property 'cooling-levels' cannot be read!\n");
+> -		return ret;
+> +	if (base_profile) {
+> +		memcpy(ctx->pwm_fan_cooling_levels,
+> +		  ctx->fan_profile_cooling_levels[ctx->fan_current_profile],
+> +						num);
+> +	} else {
+> +		ret = of_property_read_u32_array(np, "cooling-levels",
+> +				ctx->pwm_fan_cooling_levels, num);
+> +		if (ret) {
+> +			dev_err(dev, "Property 'cooling-levels' cannot be read!\n");
+> +			return -EINVAL;
+> +		}
+>  	}
+>  
+>  	for (i = 0; i < num; i++) {
+> @@ -390,6 +458,25 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int pwm_fan_remove(struct platform_device *pdev)
+> +{
+> +	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
+> +	struct pwm_args args;
+> +
+> +	if (!ctx)
+> +		return -EINVAL;
+> +
+> +	if (IS_ENABLED(CONFIG_THERMAL))
+> +		thermal_cooling_device_unregister(ctx->cdev);
+> +
+> +	pwm_get_args(ctx->pwm, &args);
+> +	pwm_config(ctx->pwm, 0, args.period);
+> +	pwm_disable(ctx->pwm);
+
+What is what you really here? Is it only that the PWM stops oscillating,
+or is it crucial that the output goes to its inactive level?
+
+(The intended semantic of pwm_disable includes that the output goes low,
+but not all implementations enforce this.)
+
+Also please don't introduce new users of pwm_config() and pwm_disable()
+use pwm_apply() instead.
+
+I wonder if this unregistration is "safe". When the driver is in use I'd
+expect that the hwmon device doesn't go away and so the devm
+unregistration callback that belongs to
+devm_hwmon_device_register_with_groups() blocks. But at this time the
+PWM is already stopped and so the device stops functioning earlier.
+
+Best regards
+Uwe
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Pengutronix e.K.                           | Uwe Kleine-K�nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
