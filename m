@@ -2,114 +2,117 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DEAC31E393D
-	for <lists+linux-pwm@lfdr.de>; Wed, 27 May 2020 08:29:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 424611E39B3
+	for <lists+linux-pwm@lfdr.de>; Wed, 27 May 2020 08:54:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgE0G26 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 27 May 2020 02:28:58 -0400
-Received: from mga01.intel.com ([192.55.52.88]:3448 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726487AbgE0G26 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Wed, 27 May 2020 02:28:58 -0400
-IronPort-SDR: WPnP6rejn/oFiZ0aBVouUEBbdfcAvNtRWk7ARNfavpoxqFZ6xXQ88wU95uiObMAsESqNRjJS6D
- LQL7o7riYZ8g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 23:28:57 -0700
-IronPort-SDR: bkCRZ90oJrkR7iPFP9fBSIOLyx9V59salad5X/SdN71GDSH/5LcbXt5XaArMm10zU8nXqhN0h+
- rpKrqE4ImG8A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,440,1583222400"; 
-   d="scan'208";a="255386847"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 26 May 2020 23:28:57 -0700
-Received: from [10.214.150.18] (rtanwar-mobl.gar.corp.intel.com [10.214.150.18])
-        by linux.intel.com (Postfix) with ESMTP id 72BAC580101;
-        Tue, 26 May 2020 23:28:54 -0700 (PDT)
-Subject: Re: [PATCH v1 2/2] Add PWM driver for LGM
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        linux-pwm@vger.kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-References: <cover.1590132733.git.rahul.tanwar@linux.intel.com>
- <3c1d2343b034325dbc185ccd23a35b40a62a4e7b.1590132733.git.rahul.tanwar@linux.intel.com>
- <20200522085613.ktb2ruw2virj337v@pengutronix.de>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <3a1f1e83-2d9d-ddbf-e2e6-9c8bab87372b@linux.intel.com>
-Date:   Wed, 27 May 2020 14:28:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        id S1728884AbgE0Gxt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 27 May 2020 02:53:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58432 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728724AbgE0Gxs (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 27 May 2020 02:53:48 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4020CC03E979
+        for <linux-pwm@vger.kernel.org>; Tue, 26 May 2020 23:53:48 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id v19so1982127wmj.0
+        for <linux-pwm@vger.kernel.org>; Tue, 26 May 2020 23:53:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=KaQOkQA7F9aEmTtrQs4AHoVIEVINLPeKbMlE71dR8YI=;
+        b=cPWisZ+A4SR3iQJ6RsEDeDne0OUCVjnfpAGxMjkPrCxzFO71csUJv0xmdBRl7npeZh
+         AeFPi1ZmAv1VwihKmOwSRiZrJsJ1i6kwIn8Nkt2Ls6PrSh4pmaZSr97snzWfE0Tn5x79
+         bn5tQlmvjopqjhhwA+8717mpKH4FIRbM2wsps9Yaybn+1Sbdk7PQ6e6xPJok7tTW3hQT
+         6R8cBzso9tSPzo2k0UZJPVj9XZDBCfP717btD4AxbyDHH0f/x517SgR/trJkcSQlO6BB
+         UekgSoUHoJVz0M2m9h5Iu/ibOmd2JCvlYeh977CW4E0Cm+pKuCkVczG89O4X7pFde+o4
+         gPzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=KaQOkQA7F9aEmTtrQs4AHoVIEVINLPeKbMlE71dR8YI=;
+        b=U5k6ZT/1j7JtknSxQbglgbH6HqmTMLJ+FuA+mSbMFJ1lQoLqBp9Alrjz1DiXzMP2HW
+         J+25k/jyXya1OvFwrzOfPwg8UieW0bYnK+s/EeeadTT/is8fgCk6UKCT4SuZ3g9YzQBw
+         ElzOWpWBhZkD/ptNloR8kC8H0P7fUj1StIq+Q3MCVqzkwutjrFdfZucbWp0DM/+rKGIe
+         tZArXGhDRYbXRbFlDXeu8XNzfUG88xmVWlufn+moqwpbwE9xaA+04C14gc+BhdzllIPA
+         5VEtDO6FrteClB8gZUV9R9aGFmmC+Edw+TazlNTsRM63TmQdPv7KNwaHDbUTNHElrlfZ
+         mXGA==
+X-Gm-Message-State: AOAM533IW+oX4KRcZSPJqSFNM5dm9J4z38xicV6BYYysUNZkZ/J5LfIY
+        RaIkx02pQslKqcz1LqTPp1UXXQ==
+X-Google-Smtp-Source: ABdhPJzEz2uP3oWCohWVrLCnTYgAhvZIGv77IRU3z+lWX42qdjUmDcj2EC+NMT9wwZk7n/CATpsnBg==
+X-Received: by 2002:a1c:25c3:: with SMTP id l186mr2814857wml.103.1590562426704;
+        Tue, 26 May 2020 23:53:46 -0700 (PDT)
+Received: from dell ([95.149.164.102])
+        by smtp.gmail.com with ESMTPSA id p23sm1900743wma.17.2020.05.26.23.53.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 23:53:46 -0700 (PDT)
+Date:   Wed, 27 May 2020 07:53:44 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Michael Walle <michael@walle.cc>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
+ reg property
+Message-ID: <20200527065344.GP3628@dell>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-4-michael@walle.cc>
+ <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
+ <20200515102848.GH271301@dell>
+ <159e68b4ce53630ef906b2fcbca925bd@walle.cc>
+ <20200526072427.GC3628@dell>
+ <f5704ce5a3e280f63c81fe35efb08234@walle.cc>
+ <20200526160336.GV1634618@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200522085613.ktb2ruw2virj337v@pengutronix.de>
 Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <20200526160336.GV1634618@smile.fi.intel.com>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Tue, 26 May 2020, Andy Shevchenko wrote:
 
-Hi Uwe,
+> On Tue, May 26, 2020 at 05:54:38PM +0200, Michael Walle wrote:
+> > Am 2020-05-26 09:24, schrieb Lee Jones:
+> 
+> ...
+> 
+> > Like I said, in the long term I would like to have support for
+> > different versions of the board management controller
+> 
+> > without having to change the device tree and have device tree bindings for the
+> > subdevices at the same time.
+> 
+> But isn't device tree to describe *very specific platform* rather than *class
+> of platforms*?
 
-Thanks for review.
+Yes.  Device Tree describes the hardware.
 
-On 22/5/2020 4:56 pm, Uwe Kleine-König wrote:
-> Hello,
->
-> On Fri, May 22, 2020 at 03:41:59PM +0800, Rahul Tanwar wrote:
->> Add PWM controller driver for Intel's Lightning Mountain(LGM) SoC.
->>
->> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
->> ---
->>  drivers/pwm/Kconfig         |   9 ++
->>  drivers/pwm/Makefile        |   1 +
->>  drivers/pwm/pwm-intel-lgm.c | 356 ++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 366 insertions(+)
->>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
->>
->> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->> index eebbc917ac97..a582214f50b2 100644
->> --- a/drivers/pwm/Kconfig
->> +++ b/drivers/pwm/Kconfig
->> @@ -232,6 +232,15 @@ config PWM_IMX_TPM
->>  	  To compile this driver as a module, choose M here: the module
->>  	  will be called pwm-imx-tpm.
->>  
->> +config PWM_INTEL_LGM
->> +	tristate "Intel LGM PWM support"
->> +	depends on X86 || COMPILE_TEST
->> +	help
->> +	  Generic PWM framework driver for LGM SoC.
-[...]
->> +};
->> +
->> +static void tach_work(struct work_struct *work)
->> +{
->> +	struct intel_pwm_chip *pc = container_of(work, struct intel_pwm_chip,
->> +						 work.work);
->> +	struct regmap *regmap = pc->regmap;
->> +	u32 fan_tach, fan_dc, val;
->> +	s32 diff;
->> +	static u32 fanspeed_err_cnt, time_window, delta_dc;
->> +
->> +	/*
->> +	 * Fan speed is tracked by reading the active duty cycle of PWM output
->> +	 * from the active duty cycle register. Some variance in the duty cycle
->> +	 * register value is expected. So we set a time window of 30 seconds and
->> +	 * if we detect inaccurate fan speed 6 times within 30 seconds then we
->> +	 * mark it as fan speed problem and fix it by readjusting the duty cycle.
->> +	 */
-> I'm a unhappy to have this in the PWM driver. The PWM driver is supposed
-> to be generic and I think this belongs into a dedicated driver.
+If the hardware changes, so must the Device Tree.
 
-Well noted about all other review concerns. I will rework the driver in v2.
-However, i am not very sure about the above point - of having a separate
-dedicated driver for tach_work because its logic is tightly coupled with
-this driver.
-
-Regards,
-Rahul
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
