@@ -2,92 +2,70 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68B181E6430
-	for <lists+linux-pwm@lfdr.de>; Thu, 28 May 2020 16:41:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C13201E65C5
+	for <lists+linux-pwm@lfdr.de>; Thu, 28 May 2020 17:18:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725795AbgE1OlG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 28 May 2020 10:41:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44546 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbgE1OlE (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 28 May 2020 10:41:04 -0400
-Received: from localhost (unknown [137.135.114.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF7C12089D;
-        Thu, 28 May 2020 14:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590676864;
-        bh=JFAlvbWtfvhpvXNlQlGB5602eAoQ0rPEgFXVACZtkms=;
-        h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:From;
-        b=aB1uKaxF3f6XtY0coeNB/1DA/nr8g0PS0gXPJS6vsdWuiroFwLZhyXlZrpsI34Trq
-         68/B69fP0spg0gYr4y4+JRvcPpTilxguSsoCpUMgkwnWf0VHpnip59ygowwFf66rrK
-         DP/bZKP+M/nPmBgM84QT+xqBK/azxMxKJTnc60T8=
-Date:   Thu, 28 May 2020 14:41:03 +0000
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     od@zcrc.me, linux-pwm@vger.kernel.org
-Cc:     <stable@vger.kernel.org>
-Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] pwm: jz4740: Enhance precision in calculation of duty cycle
-In-Reply-To: <20200527115225.10069-2-paul@crapouillou.net>
-References: <20200527115225.10069-2-paul@crapouillou.net>
-Message-Id: <20200528144103.BF7C12089D@mail.kernel.org>
+        id S2404174AbgE1PSD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 28 May 2020 11:18:03 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:39661 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403988AbgE1PSC (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 28 May 2020 11:18:02 -0400
+Received: by mail-il1-f195.google.com with SMTP id c20so490596ilk.6;
+        Thu, 28 May 2020 08:18:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=W7JmnXWUA2/w+QHNp/eqEXBvmT29Vv/u+hNrqukjKRk=;
+        b=PdLYU4KF3vk/uK/91E0dqxZGbnl5+ijaUl1RIydfoW+VaieP47YZuhppMf3XOEU26w
+         n/IcVZ67+5t0gl9e/o23vhij7qw3bNUTSkO13PRcm/38sHfSvW3W9zQyzZ5LucTrgjvR
+         v5WrZDvIK1rJtqBok2Bm2vqMrBABpIrno++ILfXgO6Gk3SPu6ffCvFwJJTY0TLKnLs2a
+         nQrFiSzSIm4RFQTHYwmpWV9gFkCmwJ1jq1LBMicYe052+ZPdDjVkWx61fsbpVacwuI0I
+         b6XcmtdG00VjjLwZTOcLVWUPBrWb+oEpYJFEaMndx6JIngHzrRfXdxMCgDao7VBJWf8p
+         k5cw==
+X-Gm-Message-State: AOAM532sshpvdnZREpuRHm8ON/7ukkuXK0SY5X+D0cYrw+fMokBnNOf0
+        9tOVlEHfIQzBRLI6iY4CHA==
+X-Google-Smtp-Source: ABdhPJy17QiQkvGntGRPHg1QXf6YjP6QEce0EoeS5H/2FJ/lRag/QSP6MsKOWiaBQklm+VwqeLG28w==
+X-Received: by 2002:a92:c88b:: with SMTP id w11mr3179656ilo.244.1590679081204;
+        Thu, 28 May 2020 08:18:01 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id o12sm2612140iob.6.2020.05.28.08.17.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 08:18:00 -0700 (PDT)
+Received: (nullmailer pid 91846 invoked by uid 1000);
+        Thu, 28 May 2020 15:17:59 -0000
+Date:   Thu, 28 May 2020 09:17:59 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        Linux-imx@nxp.com, u.kleine-koenig@pengutronix.de,
+        festevam@gmail.com, devicetree@vger.kernel.org,
+        s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, shawnguo@kernel.org
+Subject: Re: [PATCH] dt-bindings: pwm: Convert mxs pwm to json-schema
+Message-ID: <20200528151759.GA91686@bogus>
+References: <1589456470-2658-1-git-send-email-Anson.Huang@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589456470-2658-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi
+On Thu, 14 May 2020 19:41:10 +0800, Anson Huang wrote:
+> Convert the mxs pwm binding to DT schema format using json-schema.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/mxs-pwm.txt  | 17 ---------
+>  Documentation/devicetree/bindings/pwm/mxs-pwm.yaml | 43 ++++++++++++++++++++++
+>  2 files changed, 43 insertions(+), 17 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/mxs-pwm.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
+> 
 
-[This is an automated email]
-
-This commit has been processed because it contains a "Fixes:" tag
-fixing commit: f6b8a5700057 ("pwm: Add Ingenic JZ4740 support").
-
-The bot has tested the following trees: v5.6.14, v5.4.42, v4.19.124, v4.14.181, v4.9.224, v4.4.224.
-
-v5.6.14: Failed to apply! Possible dependencies:
-    485b56f08f33 ("pwm: jz4740: Improve algorithm of clock calculation")
-    ce1f9cece057 ("pwm: jz4740: Use clocks from TCU driver")
-
-v5.4.42: Failed to apply! Possible dependencies:
-    485b56f08f33 ("pwm: jz4740: Improve algorithm of clock calculation")
-    ce1f9cece057 ("pwm: jz4740: Use clocks from TCU driver")
-
-v4.19.124: Failed to apply! Possible dependencies:
-    1ac99c58bda9 ("pwm: jz4740: Apply configuration atomically")
-    485b56f08f33 ("pwm: jz4740: Improve algorithm of clock calculation")
-    ce1f9cece057 ("pwm: jz4740: Use clocks from TCU driver")
-
-v4.14.181: Failed to apply! Possible dependencies:
-    174dcc8eaec5 ("pwm: jz4740: Implement ->set_polarity()")
-    1ac99c58bda9 ("pwm: jz4740: Apply configuration atomically")
-    485b56f08f33 ("pwm: jz4740: Improve algorithm of clock calculation")
-    b419006275db ("pwm: jz4740: Enable for all Ingenic SoCs")
-    ce1f9cece057 ("pwm: jz4740: Use clocks from TCU driver")
-
-v4.9.224: Failed to apply! Possible dependencies:
-    174dcc8eaec5 ("pwm: jz4740: Implement ->set_polarity()")
-    1ac99c58bda9 ("pwm: jz4740: Apply configuration atomically")
-    485b56f08f33 ("pwm: jz4740: Improve algorithm of clock calculation")
-    b419006275db ("pwm: jz4740: Enable for all Ingenic SoCs")
-    ce1f9cece057 ("pwm: jz4740: Use clocks from TCU driver")
-
-v4.4.224: Failed to apply! Possible dependencies:
-    174dcc8eaec5 ("pwm: jz4740: Implement ->set_polarity()")
-    1ac99c58bda9 ("pwm: jz4740: Apply configuration atomically")
-    485b56f08f33 ("pwm: jz4740: Improve algorithm of clock calculation")
-    b419006275db ("pwm: jz4740: Enable for all Ingenic SoCs")
-    ce1f9cece057 ("pwm: jz4740: Use clocks from TCU driver")
-
-
-NOTE: The patch will not be queued to stable trees until it is upstream.
-
-How should we proceed with this patch?
-
--- 
-Thanks
-Sasha
+Applied, thanks!
