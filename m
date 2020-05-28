@@ -2,70 +2,82 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C13201E65C5
-	for <lists+linux-pwm@lfdr.de>; Thu, 28 May 2020 17:18:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30F391E6C9A
+	for <lists+linux-pwm@lfdr.de>; Thu, 28 May 2020 22:33:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404174AbgE1PSD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 28 May 2020 11:18:03 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:39661 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403988AbgE1PSC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 28 May 2020 11:18:02 -0400
-Received: by mail-il1-f195.google.com with SMTP id c20so490596ilk.6;
-        Thu, 28 May 2020 08:18:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=W7JmnXWUA2/w+QHNp/eqEXBvmT29Vv/u+hNrqukjKRk=;
-        b=PdLYU4KF3vk/uK/91E0dqxZGbnl5+ijaUl1RIydfoW+VaieP47YZuhppMf3XOEU26w
-         n/IcVZ67+5t0gl9e/o23vhij7qw3bNUTSkO13PRcm/38sHfSvW3W9zQyzZ5LucTrgjvR
-         v5WrZDvIK1rJtqBok2Bm2vqMrBABpIrno++ILfXgO6Gk3SPu6ffCvFwJJTY0TLKnLs2a
-         nQrFiSzSIm4RFQTHYwmpWV9gFkCmwJ1jq1LBMicYe052+ZPdDjVkWx61fsbpVacwuI0I
-         b6XcmtdG00VjjLwZTOcLVWUPBrWb+oEpYJFEaMndx6JIngHzrRfXdxMCgDao7VBJWf8p
-         k5cw==
-X-Gm-Message-State: AOAM532sshpvdnZREpuRHm8ON/7ukkuXK0SY5X+D0cYrw+fMokBnNOf0
-        9tOVlEHfIQzBRLI6iY4CHA==
-X-Google-Smtp-Source: ABdhPJy17QiQkvGntGRPHg1QXf6YjP6QEce0EoeS5H/2FJ/lRag/QSP6MsKOWiaBQklm+VwqeLG28w==
-X-Received: by 2002:a92:c88b:: with SMTP id w11mr3179656ilo.244.1590679081204;
-        Thu, 28 May 2020 08:18:01 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id o12sm2612140iob.6.2020.05.28.08.17.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 08:18:00 -0700 (PDT)
-Received: (nullmailer pid 91846 invoked by uid 1000);
-        Thu, 28 May 2020 15:17:59 -0000
-Date:   Thu, 28 May 2020 09:17:59 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
-        Linux-imx@nxp.com, u.kleine-koenig@pengutronix.de,
-        festevam@gmail.com, devicetree@vger.kernel.org,
-        s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, shawnguo@kernel.org
-Subject: Re: [PATCH] dt-bindings: pwm: Convert mxs pwm to json-schema
-Message-ID: <20200528151759.GA91686@bogus>
-References: <1589456470-2658-1-git-send-email-Anson.Huang@nxp.com>
+        id S2407092AbgE1Udn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 28 May 2020 16:33:43 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:47667 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2407020AbgE1Udm (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 28 May 2020 16:33:42 -0400
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 28 May 2020 13:33:42 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg05-sd.qualcomm.com with ESMTP; 28 May 2020 13:33:41 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 40EB24CCF; Thu, 28 May 2020 13:33:41 -0700 (PDT)
+Date:   Thu, 28 May 2020 13:33:41 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v15 04/11] pwm: clps711x: Use 64-bit division macro
+Message-ID: <20200528203341.GA8065@codeaurora.org>
+References: <cover.1590514331.git.gurus@codeaurora.org>
+ <dd03cc467ac3fc470826aef523822b32e15dc929.1590514331.git.gurus@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589456470-2658-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <dd03cc467ac3fc470826aef523822b32e15dc929.1590514331.git.gurus@codeaurora.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, 14 May 2020 19:41:10 +0800, Anson Huang wrote:
-> Convert the mxs pwm binding to DT schema format using json-schema.
+On Tue, May 26, 2020 at 10:35:04AM -0700, Guru Das Srinagesh wrote:
+> Since the PWM framework is switching struct pwm_args.period's datatype
+> to u64, prepare for this transition by using DIV64_U64_ROUND_CLOSEST to
+> handle a 64-bit divisor.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/pwm/mxs-pwm.txt  | 17 ---------
->  Documentation/devicetree/bindings/pwm/mxs-pwm.yaml | 43 ++++++++++++++++++++++
->  2 files changed, 43 insertions(+), 17 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pwm/mxs-pwm.txt
->  create mode 100644 Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
+>  drivers/pwm/pwm-clps711x.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
+> index 924d39a..ba9500a 100644
+> --- a/drivers/pwm/pwm-clps711x.c
+> +++ b/drivers/pwm/pwm-clps711x.c
+> @@ -43,7 +43,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
+>  static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
+>  {
+>  	/* Duty cycle 0..15 max */
+> -	return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
+> +	return DIV64_U64_ROUND_CLOSEST(v * 0xf, pwm->args.period);
+>  }
+>  
+>  static int clps711x_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+> -- 
 
-Applied, thanks!
+Hi Daniel,
+
+Could you please review this patch when you get a chance to?
+
+Thank you.
+
+Guru Das.
