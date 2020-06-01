@@ -2,128 +2,115 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FEF71EA1E9
-	for <lists+linux-pwm@lfdr.de>; Mon,  1 Jun 2020 12:35:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77C6F1EA2B1
+	for <lists+linux-pwm@lfdr.de>; Mon,  1 Jun 2020 13:33:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725973AbgFAKfa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 1 Jun 2020 06:35:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51180 "EHLO
+        id S1725974AbgFALdd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 1 Jun 2020 07:33:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgFAKf3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 1 Jun 2020 06:35:29 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E477C061A0E
-        for <linux-pwm@vger.kernel.org>; Mon,  1 Jun 2020 03:35:28 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id j10so10936082wrw.8
-        for <linux-pwm@vger.kernel.org>; Mon, 01 Jun 2020 03:35:28 -0700 (PDT)
+        with ESMTP id S1725935AbgFALdc (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 1 Jun 2020 07:33:32 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351ABC03E97C
+        for <linux-pwm@vger.kernel.org>; Mon,  1 Jun 2020 04:33:32 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id r7so11211585wro.1
+        for <linux-pwm@vger.kernel.org>; Mon, 01 Jun 2020 04:33:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=3yMprJOB6nqOhrN9jr1CF0yapMmZvuaPTqFeKcrw+2Y=;
-        b=fsw1L05Qz/4FDV8NzCwmgd24FTeN28K+QoS34P7sLlUDVcWvQzTF46QJ8D54tpZ+pK
-         Zqru6wXiRVK45evrX8qENtf06g41rzGGo/nZeEobKUEe30CKm8I7EU4CbGx/ZEhbpRvR
-         bnw7PX2ghTL7/gm7A3+DKDOCuFuxMWaKILZpTbWFeCrKIbr/hSd9LkAdZAcKb+l29KI9
-         AQ6s7mglmQKCN6Us6VPNjmp8KvzLsRSMOMvO96k4bjlyfTc2VFdd7EJwbr4fTeunD47s
-         5rVP4836MSuKRtKApwBdvlfDrWXWbgvbffz7Ntxi5Fehbr1btqKhIIdhHxMB9HRA51i+
-         KspA==
+        bh=Nd0MJv58FOzwtHGzKOAQUQrfp095J8UPcRViDxSn4NY=;
+        b=W1cq8qUfXNb0j4Lq6BuNFnrIp53KOB8jyeE6rYZeTI51f51hwvHIG8BMXCMp30BfcV
+         Kz/SCbb6ETAHq3dGo029IWxUjmMkUz9Max3D/z1jlGGo9qVQX5MaQ0y+BgRt/DHvwxo0
+         RdVUU7GjYR/htIut780K5s1uKUZ3OK2iZVbmowEjMjE7GOiArJCYEkC6vgo9QPYK8nZO
+         Lqab5QsLwiu8GkCE/AA07HEeFEaNoSkx5MwfuSlQJmGmLDy4JWZJBCDOv5WRJQzgVlwo
+         r3zCmmu3iuz7KlkftwAHmjHe7lGtZDZgMfBzSIVGGV85FYemiKmMRx050a7sYfAPJPUW
+         IkkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=3yMprJOB6nqOhrN9jr1CF0yapMmZvuaPTqFeKcrw+2Y=;
-        b=k5MYEwyLfotZTNky4QOnNRGFkV8pgDsnTwbBYWk1D4IJBP0jaP5Ya2E9OpYzCMnkg+
-         NJxkv55zlJJDQCM2oCC4eOWSUK29/jqYaL0z2W6YFYdygmnrkhjDMRQ6GFQyF4pXiWv1
-         Vc1nz4edYoAj7SvllYaXVPf4iRcSEy/ODU+LjP37VPiWjn+CglUzZ6B1sVMxA+UkMo37
-         I0dAvcPyVKPSlXHFd856KpENCOjPg4mJGQ9AFTuD7Xu0hTp3Q7DIg6BQsx6mqkRJ8Eme
-         lRwx18n4+ddCFJm36YVBkZi3yF2Plyhc8pUdTfyS2mLDxNCVFefOtcdfddlDadJ3J5l8
-         Gt5Q==
-X-Gm-Message-State: AOAM532M7KwOR9mV4e4Jr4Y1d95e3hiJEGQF94zTTJDCPsKC+qyhPV2S
-        /kUuyz7qMHaCVisDXXQsFoYb5g==
-X-Google-Smtp-Source: ABdhPJz1z5Xyl0EPe0FMzDrgOajVzdCQh/7ByOZrzFwdH9HFfHFURa8zQ834mH8R2xVkmWzkakVlyw==
-X-Received: by 2002:a5d:4390:: with SMTP id i16mr20377364wrq.186.1591007727070;
-        Mon, 01 Jun 2020 03:35:27 -0700 (PDT)
+        bh=Nd0MJv58FOzwtHGzKOAQUQrfp095J8UPcRViDxSn4NY=;
+        b=G/k4Y6lLZM0SA3Y8Hu938j9Ovhxz9wwD38hT7VBD8TyKsSVrqW4Lixu5GSUKkfpdKB
+         G2VeVKCFU/moudlzlnfuRCstxJmzqs68+KbCWqawpixxRyKS4EQXOU0+ZPv8az9+GMxa
+         MmT5J5IWpqvKiXhfRFxyjJpdtyZzf0/MwzF9dZ+mPfqTM23HDrmzz/CV5HkKEqxrU0NY
+         UJe2ch/Ol6yoCHPW1kylI57aFX1fPd/zRV2DMNbUAH1ik/1+1khugYfkrvZ19ANLgPEV
+         XLaw7NYIJFdc9eSoiCMXLJeG7gFifhdYgRH11XcD7HSlBVBhBL/dKDTgQCHAsfxm3Dea
+         izvQ==
+X-Gm-Message-State: AOAM531PqkasPWMZnqOFPcL/jB2NoJ57bKI+8B4oUHJ4DdJq5GpTCCEU
+        ZoTsunQyZYPWMmtBKd1XGbuoSQ==
+X-Google-Smtp-Source: ABdhPJznm2NwADIlcTttzQpXZsKob+NEyXiM45iR0TXFLhl9xhARzjwzu6BQz/MCHNd4RCDBIowhrg==
+X-Received: by 2002:a5d:4e88:: with SMTP id e8mr22527436wru.188.1591011210824;
+        Mon, 01 Jun 2020 04:33:30 -0700 (PDT)
 Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id i10sm4557577wrw.51.2020.06.01.03.35.25
+        by smtp.gmail.com with ESMTPSA id n23sm10731794wmc.0.2020.06.01.04.33.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 03:35:26 -0700 (PDT)
-Date:   Mon, 1 Jun 2020 11:35:24 +0100
+        Mon, 01 Jun 2020 04:33:30 -0700 (PDT)
+Date:   Mon, 1 Jun 2020 12:33:28 +0100
 From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        patches@opensource.cirrus.com,
-        Support Opensource <support.opensource@diasemi.com>,
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v3 12/13] backlight: as3711_bl: introduce
- backlight_is_blank()
-Message-ID: <20200601103524.7s6523ijpfqcolrm@holly.lan>
-References: <20200601065207.492614-1-sam@ravnborg.org>
- <20200601065207.492614-13-sam@ravnborg.org>
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v15 04/11] pwm: clps711x: Use 64-bit division macro
+Message-ID: <20200601113328.oyhxosbtlfeaqytq@holly.lan>
+References: <cover.1590514331.git.gurus@codeaurora.org>
+ <dd03cc467ac3fc470826aef523822b32e15dc929.1590514331.git.gurus@codeaurora.org>
+ <20200528203341.GA8065@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200601065207.492614-13-sam@ravnborg.org>
+In-Reply-To: <20200528203341.GA8065@codeaurora.org>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 08:52:06AM +0200, Sam Ravnborg wrote:
-> Replaces the open-coded checks of the state, with the
-> backlight_is_blank() helper. This increases readability
-> of the code and aling the functionality across the drivers.
+On Thu, May 28, 2020 at 01:33:41PM -0700, Guru Das Srinagesh wrote:
+> On Tue, May 26, 2020 at 10:35:04AM -0700, Guru Das Srinagesh wrote:
+> > Since the PWM framework is switching struct pwm_args.period's datatype
+> > to u64, prepare for this transition by using DIV64_U64_ROUND_CLOSEST to
+> > handle a 64-bit divisor.
+> > 
+> > Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> > ---
+> >  drivers/pwm/pwm-clps711x.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
+> > index 924d39a..ba9500a 100644
+> > --- a/drivers/pwm/pwm-clps711x.c
+> > +++ b/drivers/pwm/pwm-clps711x.c
+> > @@ -43,7 +43,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
+> >  static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
+> >  {
+> >  	/* Duty cycle 0..15 max */
+> > -	return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
+> > +	return DIV64_U64_ROUND_CLOSEST(v * 0xf, pwm->args.period);
+> >  }
+> >  
+> >  static int clps711x_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+> > -- 
 > 
-> Futhermore drop the debug prints in update_status().
-> If we need debug printing then we can add it to the backlight core.
+> Hi Daniel,
 > 
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Could you please review this patch when you get a chance to?
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+I don't normally review PWM patches... but this no longer has the bug
+there was there when I first read this patch.
 
 
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Daniel Thompson <daniel.thompson@linaro.org>
-> Cc: Jingoo Han <jingoohan1@gmail.com>
-> Cc: Emil Velikov <emil.l.velikov@gmail.com>
-> ---
->  drivers/video/backlight/as3711_bl.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/as3711_bl.c b/drivers/video/backlight/as3711_bl.c
-> index 33f0f0f2e8b3..cc5628beaffd 100644
-> --- a/drivers/video/backlight/as3711_bl.c
-> +++ b/drivers/video/backlight/as3711_bl.c
-> @@ -107,13 +107,7 @@ static int as3711_bl_update_status(struct backlight_device *bl)
->  	int brightness = bl->props.brightness;
->  	int ret = 0;
->  
-> -	dev_dbg(&bl->dev, "%s(): brightness %u, pwr %x, blank %x, state %x\n",
-> -		__func__, bl->props.brightness, bl->props.power,
-> -		bl->props.fb_blank, bl->props.state);
-> -
-> -	if (bl->props.power != FB_BLANK_UNBLANK ||
-> -	    bl->props.fb_blank != FB_BLANK_UNBLANK ||
-> -	    bl->props.state & (BL_CORE_SUSPENDED | BL_CORE_FBBLANK))
-> +	if (backlight_is_blank(bl))
->  		brightness = 0;
->  
->  	if (data->type == AS3711_BL_SU1) {
-> -- 
-> 2.25.1
-> 
+Daniel.
