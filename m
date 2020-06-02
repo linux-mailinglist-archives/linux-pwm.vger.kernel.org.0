@@ -2,68 +2,68 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18CED1EBC05
-	for <lists+linux-pwm@lfdr.de>; Tue,  2 Jun 2020 14:48:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DC791EBC0A
+	for <lists+linux-pwm@lfdr.de>; Tue,  2 Jun 2020 14:48:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbgFBMsC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 2 Jun 2020 08:48:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43398 "EHLO
+        id S1725958AbgFBMsj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 2 Jun 2020 08:48:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbgFBMsC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 2 Jun 2020 08:48:02 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95E68C061A0E;
-        Tue,  2 Jun 2020 05:48:01 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id w7so6294595edt.1;
-        Tue, 02 Jun 2020 05:48:01 -0700 (PDT)
+        with ESMTP id S1725940AbgFBMsi (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 2 Jun 2020 08:48:38 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B7D4C061A0E
+        for <linux-pwm@vger.kernel.org>; Tue,  2 Jun 2020 05:48:38 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id y13so12633307eju.2
+        for <linux-pwm@vger.kernel.org>; Tue, 02 Jun 2020 05:48:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Yf4GXAhEWn+sWFUgRmxvX5UkbgRsnK6CDYcGHL39uUU=;
-        b=tHuHJ+gtmpVUv5nKezqAI3B3fgx2P1v6opMTGb6Z6CQHHePqzNFdea0SIogb6aPN3Y
-         ZWqRLmLKpsbGDCXY/SIxVtcU0BZjdOMGT8u5VLnQBkoO04uCozfZGlJLrVkqWyxUW5W3
-         xKdKeOQQxJtiL033ZG8U0xrq2d7QE4gdvTB6vBo89nJ8U3yMjTJnMPFvKBFjlXvRqny6
-         8b3TiYI7PLAsPUPayF4Qe/4gGbFMu36q5YPnl7EvEX9J3SSS9Mau7HqWZBk7fZ9VWjxy
-         KM7anBc/SXUEc28F1/I/eF1YKEBrvqIZsE/AzEBFn4En6922ts9t4WM+VGjAIVwLfLGl
-         425g==
+        bh=D8ASqWdJAv4t2zLF3N0AUOlU0jAxJ7ZIdD5NPQNHjtQ=;
+        b=q5BiBMm6LBcsZZl6y+QtTB8QMD09UkwOycxWIv8vTm+sOTvKN7AnH4f5Dbb4ihlc0T
+         hjZO8PZKG6NCuSHlJQMKMe7adp3yh0QoO+G8PoGz++SYakN6EU/I47tc6LtpGpLLojON
+         349dPRDJttaotizfuNqo2/ktYHgJm6hK18mJtUPkk5ZSnF8BOc2Rv6lQWiuzgXpFm+KD
+         X47bmmhC4lr1SiHhb1oCsPpgVI5wETtOUVtKSfSZ3mIQLx+Wm7PqqaXwC6dPN5+bo0Wr
+         pIPQY2V1/d7z2tgVw0WjtnlIb17ymUZA3uzua0FOWjqIV5S1bcvKSwhep78wkTC3+PtS
+         E7Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Yf4GXAhEWn+sWFUgRmxvX5UkbgRsnK6CDYcGHL39uUU=;
-        b=RJP3H2hiKzmqjOt/5qdCYi+INISmvq2tt7SVPQsvtJKuhXdJONIa4PsBZlJcGYqejj
-         fix0s5IynL3Ea5B7vGA5KLQu7WAG+F5bHDq8iQ/FplIcKp3v/hB1pKOTtWDZL1vfpG5N
-         P/NIZHrVTg2WmQqmC2+KuXV1zP7b7PSFuPR4AHhRmhcse2YvDMyhnX/okMkfQEOkuz87
-         ESDiNEZ5T+yKcdk0sZymWzg802psNEttuVCoxBxBklLlBfff3Q14ioxRmF2d7GM0dFQH
-         TvbX8/223J/TZ2ehXc5IwAqynB74lN1oEnkYzdMXN0Oxy5dmB/eMwTulrOt15XblT93y
-         24ww==
-X-Gm-Message-State: AOAM533lXjFM4A7OMUhYxrbyYN4t6JI/Io7TTOLan4HeJP9/QOgjogQX
-        qQdq0Suh4MXpo6CbKKYUs3k=
-X-Google-Smtp-Source: ABdhPJzLNH6sjpsVM2MZNCAKxy0ZLIgGrIFfO3a5ZPLwC/X1e/HaDzhllSyC6liBrnFy340xlskkuQ==
-X-Received: by 2002:a50:af85:: with SMTP id h5mr18954583edd.86.1591102080350;
-        Tue, 02 Jun 2020 05:48:00 -0700 (PDT)
+        bh=D8ASqWdJAv4t2zLF3N0AUOlU0jAxJ7ZIdD5NPQNHjtQ=;
+        b=VLe9CQv8h+HrI4hHHspJ4YHsyVu0W6BQiVqtHu0bVHObz4d2pv+ON0kwLlIfE86IyC
+         yp1UDamALVf1kw1tpJ+6qq50bhOPiwjMKc+qOmerUWcsmkp8M9t0RnGhLlXe+b/nFL4u
+         UNxdaETPvFlYeYjZERrKq6aEeVrNvE7S+w0hiN+iPCFcZH1ysyac6gfca5s834L6hMJJ
+         xCJkhQJ40RcgZjzRjsMoCrwU8C8+cFP6XqtN1kOtm6ySvaCCioENrlEVRFX/ArxDl1y5
+         amh6tv88/mSLmO4JIAwWySg9u7FKseZukfTSUpbGoWDc1k6lGzdOS819+GLd0zL9x618
+         tbxQ==
+X-Gm-Message-State: AOAM531IkG2bByrlJMxhtxte/st8GsATr2D0HpMZ6XtiR1Gk+t/+LQRn
+        eoS2nCUwm8HPrEQl5ycM1s5/2C3G
+X-Google-Smtp-Source: ABdhPJz9TSeTycfAnFGOX7r1nw8BJ3WU0LAiYCUi9qQB1y/48Xus0YdiirnXPJDYCzGQ/fZvyc+wmA==
+X-Received: by 2002:a17:906:77c4:: with SMTP id m4mr14353047ejn.246.1591102117237;
+        Tue, 02 Jun 2020 05:48:37 -0700 (PDT)
 Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
-        by smtp.gmail.com with ESMTPSA id u23sm1498694eds.73.2020.06.02.05.47.58
+        by smtp.gmail.com with ESMTPSA id sa19sm1621550ejb.15.2020.06.02.05.48.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 05:47:58 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 14:47:58 +0200
+        Tue, 02 Jun 2020 05:48:35 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 14:48:35 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sandipan Patra <spatra@nvidia.com>
-Cc:     treding@nvidia.com, jonathanh@nvidia.com,
-        u.kleine-koenig@pengutronix.de, bbasu@nvidia.com,
-        ldewangan@nvidia.com, kyarlagadda@nvidia.com,
-        linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4] pwm: tegra: dynamic clk freq configuration by PWM
- driver
-Message-ID: <20200602124758.GE3360525@ulmo>
-References: <1590988836-11308-1-git-send-email-spatra@nvidia.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] pwm: imx27: Fix rounding behavior
+Message-ID: <20200602124835.GF3360525@ulmo>
+References: <20200416080245.3203-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="k3qmt+ucFURmlhDS"
+        protocol="application/pgp-signature"; boundary="IvGM3kKqwtniy32b"
 Content-Disposition: inline
-In-Reply-To: <1590988836-11308-1-git-send-email-spatra@nvidia.com>
+In-Reply-To: <20200416080245.3203-1-u.kleine-koenig@pengutronix.de>
 User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
@@ -71,80 +71,46 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---k3qmt+ucFURmlhDS
-Content-Type: text/plain; charset=us-ascii
+--IvGM3kKqwtniy32b
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 01, 2020 at 10:50:36AM +0530, Sandipan Patra wrote:
-> Added support for dynamic clock freq configuration in pwm kernel driver.
-> Earlier the pwm driver used to cache boot time clock rate by pwm clock
-> parent during probe. Hence dynamically changing pwm frequency was not
-> possible for all the possible ranges. With this change, dynamic calculati=
-on
-> is enabled and it is able to set the requested period from sysfs knob
-> provided the value is supported by clock source.
+On Thu, Apr 16, 2020 at 10:02:45AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> To not trigger the warnings provided by CONFIG_PWM_DEBUG
 >=20
-> Changes mainly have 2 parts:
->   - T186 and later chips [1]
->   - T210 and prior chips [2]
+>  - use up-rounding in .get_state()
+>  - don't divide by the result of a division
+>  - don't use the rounded counter value for the period length to calculate
+>    the counter value for the duty cycle
 >=20
-> For [1] - Changes implemented to set pwm period dynamically and
->           also checks added to allow only if requested period(ns) is
->           below or equals to higher range.
->=20
-> For [2] - Only checks if the requested period(ns) is below or equals
->           to higher range defined by max clock limit. The limitation
->           in T210 or prior chips are due to the reason of having only
->           one pwm-controller supporting multiple channels. But later
->           chips have multiple pwm controller instances each having
-> 	  single channel support.
->=20
-> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 > ---
-> PATCH V4:
-> 1. Code comments fixes
->=20
-> PATCH V3:
-> 1. Return -EINVAL if requested period does not fall inside limit.
-> 2. Store the new clock rate for further references.
-> 3. Variable name change reverted.
-> 4. Comments corrected and new comments are added.
->=20
-> PATCH V2:
-> 1. Maximum frequency calculation is moved to probe.
-> 2. Added descriptions for PWM register bits and functional behavior
->    of the controller when new configuration is applied.
-> 3. Setting period with possible value when supplied period is below limit.
-> 4. Corrected the earlier code comment:
->    plus 1 instead of minus 1 during pwm calculation
->=20
->  drivers/pwm/pwm-tegra.c | 80 +++++++++++++++++++++++++++++++++++++++++++=
-+++---
->  1 file changed, 76 insertions(+), 4 deletions(-)
+>  drivers/pwm/pwm-imx27.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
 
 Applied, thanks.
 
 Thierry
 
---k3qmt+ucFURmlhDS
+--IvGM3kKqwtniy32b
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7WSn0ACgkQ3SOs138+
-s6Gs2hAAuKnY8XRGX2cCIMv6LUK/mMn655EzVcw8MBN6IjTjqWgPbkQf590CXT0E
-/YdjXLEMaijZhzvsffpkUZpRfQJkbmUqQ1fTLM1ag+6Y6NKWZrrz2XRE8HAmwjef
-2Vz7qxFXPofe6KblDH6hdpMt0GiYgGKNr2SMPd/Mr8nGIcTFHjSz1J2jdXjHKi7d
-3yrKgXH1/3YjjiYLuVqoritQlnwFVWELGargD4o7pDgu/9untwWLrCAVs7QH1ST2
-6vZwChEsC9lHvg0GbA9Lz0QLXuFG89FDlpYGOnik96R3/8Lpq8hvXDlmn0ttJn6H
-9SBzAWQpyMdz4GW0/a09o79YmzOLB4hH20du8s0nzB0i6QphMkZGjOeXNPkxHGU2
-e2ga6dbvDFLHvN61xii91hMEwH1DvhL0uWgwwXmNq4Bsz205fjhubE6SptVQ6c6q
-lNPh5JJuhKYyuWjRTWZyW8hx0VImqE89IAFkmLrEzeiasAPc/frvo3uCqrn46s+B
-YouYpYk2STWRs9NiFTh5FRso86BSOovFqWS35DagLFcTHw7gGcbuzQMl3ZTfJKdQ
-+29iq/Dx1U43IEA4YQj0zoGfnTglk+c/W91D69AicdbLVT5yScRpefmu9on654Lh
-cjvAU1Yx5zgM5dXhdLw1dN5IVbcNIoR/rs4SmGORb4XpS0XKqyw=
-=ZV5c
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7WSqMACgkQ3SOs138+
+s6H0Ew//dg1D7NOYsebYUxn1ebbp1eH/F2Xg1HwYxqcR0QKh+xVcdEHbVEVqPkKL
+Fn1HM0l8qe/Und4p8CvS36PyTTGn4X/c3O3+l0wXYvsbTMCwlQctBbcWMvafAgIj
+xcjfweYrjXZUwNM9KYiNIZCASt5pI3lfTbnxp+vLQhnGgkL8ZmZUmBmspVTLsSOy
+yYn50/FlqSFCFWfiFK/WE8UZWo5rAFO5KubXsJKKMipyJuKTa5tumLj8ic30E9g6
+HRHqPuBS/BoIZ4ZzxfgDZo6qyHHvnlFx3ZAXxEFwVGiHj2gy2LH9XpIW/unZLxwq
+kW5ydvr+ynOZhKqWNHP3g2080+tM+nm/G6PUeh4tws85qANHcFYge5HhjF+NDunP
+oI1ZOgIaqBcRnBRooDJ4Zn/JQHmpQ0X4pwJdNeKAR2pFq0wp5w+UeQbNpRMxJho1
+ia+KawFNTWTFCTLFgvzP2GY0yZ+BL5Kx6820khlcQtdq6zqNz0EWS4dJ5pN84VB9
+qkpAOpMiP0Mvx8cnaDdLzEFZ0LAE8wIIlUZvS4xo+PzMglH51F3HzHjYMpJ45rEP
+dlAXS7W2tswYlUK89IrpEdZv5dcT4t1FeXtLRfZF0bv6RUGW35uTUw8sWgvqk3KT
+dkpcXxfpRNkifF63NKULxHq8wrEAbwqZDdYzlVLweJMRpAW+/TI=
+=YRtJ
 -----END PGP SIGNATURE-----
 
---k3qmt+ucFURmlhDS--
+--IvGM3kKqwtniy32b--
