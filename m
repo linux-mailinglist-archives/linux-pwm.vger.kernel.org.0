@@ -2,108 +2,243 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 32B181EBDA8
-	for <lists+linux-pwm@lfdr.de>; Tue,  2 Jun 2020 16:08:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04F151EBE1C
+	for <lists+linux-pwm@lfdr.de>; Tue,  2 Jun 2020 16:28:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726069AbgFBOH6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 2 Jun 2020 10:07:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55798 "EHLO
+        id S1726647AbgFBO2R (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 2 Jun 2020 10:28:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgFBOH6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 2 Jun 2020 10:07:58 -0400
-Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E2CC08C5C0;
-        Tue,  2 Jun 2020 07:07:57 -0700 (PDT)
-Received: by mail-vk1-xa42.google.com with SMTP id n22so919146vkm.7;
-        Tue, 02 Jun 2020 07:07:57 -0700 (PDT)
+        with ESMTP id S1726112AbgFBO2R (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 2 Jun 2020 10:28:17 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB0BEC08C5C0;
+        Tue,  2 Jun 2020 07:28:15 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id p30so5137479pgl.11;
+        Tue, 02 Jun 2020 07:28:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J8xPMI/J/UPiXjoWDiiyg6o8zpJPhJIt2b5WwcEF9E0=;
-        b=dS1zX8fJi2B1vGF2Z5dg/Gx4V391ld67f0FTyxNDhlDDuArCZJ7dR/CMWc8nQXlkPJ
-         6QSmlKw9CzGJ22ICtkEjVn0Ti6FQTkYb+6YkuhnObJfvnxPidiFSz+cpvySh6QYh7UWs
-         zv8BeeWiAgBOoeMsb/7vNfOZFhaaPhuoyIOEtu3Fse7SRwZcuXWSa3ebqVjSK+UDEFd7
-         nHU/cEShh0nbPvA3oDTELijVKITZR0hj9aUz458PtQlDSbL6jWcqUCU1ZjvPz8Vsdxqd
-         pCqhM29P4ETdxzVY28IlXgiBOw8ACfNNAnLYFp4kcQ5J8mf/wjJBm7XfDfELRgRJatxk
-         cRug==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=s2IOnX3zKkXIUT6wUoKoBXlyqx0Y+I+17VfSpIhvk84=;
+        b=lMybFZ4lq31Vu+6iGZMhjnJdfelS+yMicHgS9k6rcFyDPcksw+cB0dMB4GMD5Rtzos
+         z+RE+5kq7GhE/2LqSrle2ePeoLu/y6yEi9z0K+Wu8cNxxW+IFWiFwYR55S2ZUwOe+hYn
+         ZKUCCWVyKgSOjPFcudx4Z6tl9nf4ucxnXZw8H0uD9TbNTFylXVeshDsf+vXafH9b825r
+         deOUQ9Ph1GEuA7O8TuIbWhuYACyKpFjlfFvfmOKoMlh32u9F6v2+W90SCV5KGwzt3qtj
+         g+qN8Z7zNdsLH6DLgTET56UExItKTKczu+Cs+GEIavBGETYXGztfwjtuOwTJAr9sUVG0
+         3GJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J8xPMI/J/UPiXjoWDiiyg6o8zpJPhJIt2b5WwcEF9E0=;
-        b=P4MFJ8CtVervWLiC16Sw4kRo4JYz5lwGKATyZ0mymXbfwWnSueihiqjoeRKsAXc0p5
-         sexR4Gmu9Sv703/LJBa4A/fwH//l8D/y4OBN/qfk/gcFsl/yEAcyqwAUe/0W6ZJcurRn
-         9kJX3DXZp7/Jrc7+8oy4bnnP93+/i3powAXcddjFmMZGLZiyq+PA5MXowKWCIphlwPVu
-         AIYU7pRiOHB8Ul4YrWKoyUwl9caeEiQejCOwckTFRyTNmjVka8f8bNjbyxV7af8AIvYs
-         JeXI01adbdAijPN8a0nWui72p4kF4H7JoI/5W6enaOZojchME9BI0oc8seR+cykgBiiR
-         x+ew==
-X-Gm-Message-State: AOAM531N6DEhq4dvVOY1/UbrgktoVrekIWV7AnuI0gOcrfttv4/XxHYk
-        goumw+GyBYQHO33EPkytwcnnmEPU0bW+bG+Iq00=
-X-Google-Smtp-Source: ABdhPJypGS0oJ4fntkWSo49y5zTssL01yfKEkKGKx4k68oGS4ds8TIfxu0kGhHn0bPQ1u5aluLkGq0H7LniVF+rQA2k=
-X-Received: by 2002:a1f:2ac6:: with SMTP id q189mr9323002vkq.28.1591106876436;
- Tue, 02 Jun 2020 07:07:56 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=s2IOnX3zKkXIUT6wUoKoBXlyqx0Y+I+17VfSpIhvk84=;
+        b=BBY0lOLgGmpcM6e3r69lvlMm3o/7kHGR3/HsGUcmM8EzMs1Yvx0dvTbmD3bAOI50yF
+         5d8x2Jul+1fwVco6pmpsJJ+4/NuC/JQFxOvAw3wWSyG3Dwrq/9DQV5tJLYA59bw0uLBv
+         YjBroiHurgy8x1e+6P+pxrwMOiL11N0OVi37No31A8IE/nxvVcINWHODs2040dXsJsVf
+         mR7/AWg7Bb4TaAyax8BlApcX1D36vSVEeEhDe2jH4eFuWlO5ZY1ClOnzSzJXXDFzCeDk
+         uxeyV95mbN2Qh43lK8qoFf0M63fqXq5qRT9MCSeld43LH1r3JkXwKuKDMp9zj1EtzPWz
+         6VBQ==
+X-Gm-Message-State: AOAM530rjTuQNaLAp5zfjIRe3CyDcB8eLq9mDP1dRIkQ6j9Qz+NHMZa9
+        hA5W2QsIHi+zVwwudYTttks=
+X-Google-Smtp-Source: ABdhPJxnY5n/XEXbe6QNCKZgfgv/GfeUAJ7hPqaxvxWT3ckpmGAVELrBYpUF9lWr0W/v4lw+qIlctw==
+X-Received: by 2002:a63:b95a:: with SMTP id v26mr24029030pgo.196.1591108095140;
+        Tue, 02 Jun 2020 07:28:15 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x2sm2562982pfj.142.2020.06.02.07.28.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Jun 2020 07:28:14 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 07:28:13 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Sandipan Patra <spatra@nvidia.com>
+Cc:     treding@nvidia.com, jonathanh@nvidia.com, kamil@wypas.org,
+        jdelvare@suse.com, robh+dt@kernel.org,
+        u.kleine-koenig@pengutronix.de, bbasu@nvidia.com,
+        bbiswas@nvidia.com, kyarlagadda@nvidia.com,
+        linux-pwm@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 1/2] hwmon: pwm-fan: Add profile support and add
+ remove module support
+Message-ID: <20200602142813.GA54592@roeck-us.net>
+References: <1590992354-12623-1-git-send-email-spatra@nvidia.com>
 MIME-Version: 1.0
-References: <20200601065207.492614-1-sam@ravnborg.org>
-In-Reply-To: <20200601065207.492614-1-sam@ravnborg.org>
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Tue, 2 Jun 2020 15:04:39 +0100
-Message-ID: <CACvgo51z0Vvz9LkfqePmuwx19+NhaMEBHe9r5=uYWqhEdnia_Q@mail.gmail.com>
-Subject: Re: [PATCH v3 0/16] backlight updates
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        patches@opensource.cirrus.com,
-        Support Opensource <support.opensource@diasemi.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590992354-12623-1-git-send-email-spatra@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Sam,
+On Mon, Jun 01, 2020 at 11:49:13AM +0530, Sandipan Patra wrote:
+> Add support for profiles mode settings.
+> This allows different fan settings for trip point temp/hyst/pwm.
+> Tegra194 has multiple fan-profiles support.
+> 
+> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
 
-On Mon, 1 Jun 2020 at 07:52, Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> v3:
->  - Dropped video patch that was reviewd and thus applied
->  - Updated kernel-doc so all fields now have a short intro
->  - Improved readability in a lot of places, thanks to review
->    feedback from Daniel - thanks!
->  - Added better intro to backlight
->  - Added acks
->
->    Several other smaller changes documented in the
->    patches.
->    I left out patches to make functions static as
->    there are dependencies to drm-misc-next for these.
->    When this is landed I have a pile of follow-up patches waiting,
->    mostly introducing backlight_is_blank() all over.
->
-What happened with my suggestion to use backlight_is_blank() in fbdev
-core itself?
-It effectively makes 13/13 and the above mentioned follow-up series obsolete.
+The subject says "remove module support". What is this supposed to be
+about ?
 
-That said, series look spot on. With the documentation fixed (pointer
-by Daniel) patches 1-12 are:
-Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+The code adds support for multiple cooling "profiles" but, unless I am
+really missing something, no means to actually select a profile.
+This adds a lot of complexity to the code with zero value.
 
--Emil
+Either case, and I may have mentioned this before, functionality like this
+should really reside in the thermal core and not in individual drivers.
+
+> ---
+> 
+> PATCH V2:
+> 	Cleaned pwm_fan_remove support as it is not required.
+> 
+>  drivers/hwmon/pwm-fan.c | 92 ++++++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 80 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> index 30b7b3e..1d2a416 100644
+> --- a/drivers/hwmon/pwm-fan.c
+> +++ b/drivers/hwmon/pwm-fan.c
+> @@ -3,8 +3,10 @@
+>   * pwm-fan.c - Hwmon driver for fans connected to PWM lines.
+>   *
+>   * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+> + * Copyright (c) 2020, NVIDIA Corporation.
+>   *
+>   * Author: Kamil Debski <k.debski@samsung.com>
+> + * Author: Sandipan Patra <spatra@nvidia.com>
+
+You can not claim authorship for a driver by adding a few lines of code
+to it.
+
+>   */
+>  
+>  #include <linux/hwmon.h>
+> @@ -21,6 +23,8 @@
+>  #include <linux/timer.h>
+>  
+>  #define MAX_PWM 255
+> +/* Based on OF max device tree node name length */
+> +#define MAX_PROFILE_NAME_LENGTH	31
+>  
+>  struct pwm_fan_ctx {
+>  	struct mutex lock;
+> @@ -38,6 +42,12 @@ struct pwm_fan_ctx {
+>  	unsigned int pwm_fan_state;
+>  	unsigned int pwm_fan_max_state;
+>  	unsigned int *pwm_fan_cooling_levels;
+> +
+> +	unsigned int pwm_fan_profiles;
+> +	const char **fan_profile_names;
+> +	unsigned int **fan_profile_cooling_levels;
+> +	unsigned int fan_current_profile;
+> +
+>  	struct thermal_cooling_device *cdev;
+>  };
+>  
+> @@ -227,28 +237,86 @@ static int pwm_fan_of_get_cooling_data(struct device *dev,
+>  				       struct pwm_fan_ctx *ctx)
+>  {
+>  	struct device_node *np = dev->of_node;
+> +	struct device_node *base_profile = NULL;
+> +	struct device_node *profile_np = NULL;
+> +	const char *default_profile = NULL;
+>  	int num, i, ret;
+>  
+> -	if (!of_find_property(np, "cooling-levels", NULL))
+> -		return 0;
+> +	num = of_property_count_u32_elems(np, "cooling-levels");
+> +	if (num <= 0) {
+> +		base_profile = of_get_child_by_name(np, "profiles");
+
+You can not just add new properties like this without documenting it
+and getting approval by devicetree maintainers.
+
+Guenter
+
+> +		if (!base_profile) {
+> +			dev_err(dev, "Wrong Data\n");
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	if (base_profile) {
+> +		ctx->pwm_fan_profiles =
+> +			of_get_available_child_count(base_profile);
+>  
+> -	ret = of_property_count_u32_elems(np, "cooling-levels");
+> -	if (ret <= 0) {
+> -		dev_err(dev, "Wrong data!\n");
+> -		return ret ? : -EINVAL;
+> +		if (ctx->pwm_fan_profiles <= 0) {
+> +			dev_err(dev, "Profiles used but not defined\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		ctx->fan_profile_names = devm_kzalloc(dev,
+> +			sizeof(const char *) * ctx->pwm_fan_profiles,
+> +							GFP_KERNEL);
+> +		ctx->fan_profile_cooling_levels = devm_kzalloc(dev,
+> +			sizeof(int *) * ctx->pwm_fan_profiles,
+> +							GFP_KERNEL);
+> +
+> +		if (!ctx->fan_profile_names
+> +				|| !ctx->fan_profile_cooling_levels)
+> +			return -ENOMEM;
+> +
+> +		ctx->fan_current_profile = 0;
+> +		i = 0;
+> +		for_each_available_child_of_node(base_profile, profile_np) {
+> +			num = of_property_count_u32_elems(profile_np,
+> +							"cooling-levels");
+> +			if (num <= 0) {
+> +				dev_err(dev, "No data in cooling-levels inside profile node!\n");
+> +				return -EINVAL;
+> +			}
+> +
+> +			of_property_read_string(profile_np, "name",
+> +						&ctx->fan_profile_names[i]);
+> +			if (default_profile &&
+> +				!strncmp(default_profile,
+> +				ctx->fan_profile_names[i],
+> +				MAX_PROFILE_NAME_LENGTH))
+> +				ctx->fan_current_profile = i;
+> +
+> +			ctx->fan_profile_cooling_levels[i] =
+> +				devm_kzalloc(dev, sizeof(int) * num,
+> +							GFP_KERNEL);
+> +			if (!ctx->fan_profile_cooling_levels[i])
+> +				return -ENOMEM;
+> +
+> +			of_property_read_u32_array(profile_np, "cooling-levels",
+> +				ctx->fan_profile_cooling_levels[i], num);
+> +			i++;
+> +		}
+>  	}
+>  
+> -	num = ret;
+>  	ctx->pwm_fan_cooling_levels = devm_kcalloc(dev, num, sizeof(u32),
+>  						   GFP_KERNEL);
+>  	if (!ctx->pwm_fan_cooling_levels)
+>  		return -ENOMEM;
+>  
+> -	ret = of_property_read_u32_array(np, "cooling-levels",
+> -					 ctx->pwm_fan_cooling_levels, num);
+> -	if (ret) {
+> -		dev_err(dev, "Property 'cooling-levels' cannot be read!\n");
+> -		return ret;
+> +	if (base_profile) {
+> +		memcpy(ctx->pwm_fan_cooling_levels,
+> +		  ctx->fan_profile_cooling_levels[ctx->fan_current_profile],
+> +						num);
+> +	} else {
+> +		ret = of_property_read_u32_array(np, "cooling-levels",
+> +				ctx->pwm_fan_cooling_levels, num);
+> +		if (ret) {
+> +			dev_err(dev, "Property 'cooling-levels' cannot be read!\n");
+> +			return -EINVAL;
+> +		}
+>  	}
+>  
+>  	for (i = 0; i < num; i++) {
