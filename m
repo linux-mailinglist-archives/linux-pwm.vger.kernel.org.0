@@ -2,66 +2,69 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E27F91EBBD6
-	for <lists+linux-pwm@lfdr.de>; Tue,  2 Jun 2020 14:39:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 101371EBBDB
+	for <lists+linux-pwm@lfdr.de>; Tue,  2 Jun 2020 14:40:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbgFBMjS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 2 Jun 2020 08:39:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42046 "EHLO
+        id S1726185AbgFBMkJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 2 Jun 2020 08:40:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbgFBMjR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 2 Jun 2020 08:39:17 -0400
+        with ESMTP id S1725940AbgFBMkI (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 2 Jun 2020 08:40:08 -0400
 Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C07C061A0E;
-        Tue,  2 Jun 2020 05:39:17 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id e2so12565814eje.13;
-        Tue, 02 Jun 2020 05:39:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E876C061A0E;
+        Tue,  2 Jun 2020 05:40:08 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id n24so12610137ejd.0;
+        Tue, 02 Jun 2020 05:40:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=F1vjzv7szM2SvYyH6cUhGI5pKgsWnnEULj32MB0yFS4=;
-        b=WYnvAJWjcIH5V3n93yd+hBCgHBYATbMf4IhCsfwQ9Oy1ZM9Z6rPS+WbFRPRAFWV/bF
-         g8NVrkY1eAE3itDiEE0aGbFh82DXnCYGwNCAVEFB9InkZi2h89PET4FN6iEgxXtQf0uv
-         Tx1pit9Jd6xv3AdFKIWO7ZejWVHuRhkC878hAEFOiQFDje52U6ZlKNLeqXVPUoQX4T4e
-         GB7+N4Vxwux1TDzFrN8dajdxWthW3Hz1N2MRMmG9WVU48aO+F4QH0DSedqbufQ+5ESWw
-         ZkycrkFkAvLKMSlCKPX3yzohcyD9cGBxC439RRXOlwZ/WsIsfF6eXyxeDckOKQLJ9FRJ
-         WJtA==
+        bh=pnkbE2uBubmbsQ93vSdhuAVLA29ePPmsNN07Qt9DHJ4=;
+        b=dYsfrN7LwYJdkBm0nZ1qPQHkUNeGceflDzI5C5NUoLIiZvmiZpWFc/mmvz6qM3A546
+         /5G/DdfN6Fg7pJ/64PoBkDDacuYGmPLFyoa4RbNvSIoU7w8rWqRVJ3lxBvGe+S/i0UYD
+         6iliy99FeqPecrqyPhTWDxi57Bh0r7g21U11O5jYSVleisF4GZ0k9xl02xK5uf+FAIuO
+         +UH2SEnaIXNdaGfuINUDDJ2CSi8JhQnS5Um2aqFgmbbPy5RE1fxA+70wAVhFoo7t0KfN
+         saJOvarvOlt/HnlsrlRRlvB9tcD9bYWuRv3vYg08ILqVox2Iyxml5oYoM8QCFsvyPI1G
+         8ZhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=F1vjzv7szM2SvYyH6cUhGI5pKgsWnnEULj32MB0yFS4=;
-        b=BB14d8SyuMFwGhoajjNKDuiPWim1rAEeDZDpvIgcFSNy9BBXt1gN0KY8BticqwPm5q
-         YS5QmpjD9FvwkaP+YVP5xaM4F8PPLAORGf++kXhmHk2OrUEFySZnpmxtFTySwV0XPpna
-         K2uEKTRK+7kT2cYPsDSqfoRqYpg+nePLspO4LypWyz3s5EVMu0PMo7d6vonH5xueXsrI
-         e+fwR0YV9vSk+g/kHr/+h0aCfCJ4gzzJ1sgO/drawwC1eqJWG2q3yEUN469rtrmyvIc3
-         3wA1m14/qUF1EOZMpSSrcBEHguTLLQ+ZsRveFkMT1KEYs0kPKUmc0lF63DvKOsDvfS7K
-         W6jQ==
-X-Gm-Message-State: AOAM530MRXOy8JEtVMlYmXmdtQws+Pze+iWfC0RLSPAV1cZppN5SIUad
-        ZomhbtDaBwcHEOXnGleicesgGxXZ
-X-Google-Smtp-Source: ABdhPJy0URsgXsVIryc33w0XdDF5+UsNv9pCt38qFg7zKESxBcV+HSUzFeWuuPBLGmUt+XridHj6UQ==
-X-Received: by 2002:a17:906:7ad3:: with SMTP id k19mr22505707ejo.464.1591101556221;
-        Tue, 02 Jun 2020 05:39:16 -0700 (PDT)
+        bh=pnkbE2uBubmbsQ93vSdhuAVLA29ePPmsNN07Qt9DHJ4=;
+        b=djjKYeVuLKGy2NfqlTMUfx6EcQ8xqFEFqxLIYLrKgXrNiDiEaBI4GYbvgBZ1Vbw/74
+         GO0ntF7f8ypY9va3efRksgFC+phmvZCxG6JqmgrFFrTtjPYeiTnf7zjhnzuVQ/LXtKTv
+         U7Fc4MbJd4bTqanUijFp+Zj/mFp3kYGw+MGpGMZ+5mthqquXf5T2X6aI9X1DMO1Ve6wS
+         cKH4hR/SH2iCtkflYZD7zecONYeT9L0LMY6pUpnmOtg/0QIpJyTryY/aqJ70YFdRklIZ
+         46QGVV8kzTCPDuBd0m6XKc6uFYysPF6MTBD9Y8BznzugNliNIUTJfKXMAljJRiboGSRm
+         mosA==
+X-Gm-Message-State: AOAM530crT94CJEbL5OK5SKzvOgjqXrV+88T/Q7oaasVpe93SMgyGpYp
+        e0Mjl/h/drF1nGIwDhzX5g4=
+X-Google-Smtp-Source: ABdhPJz4LZjAT+sYrMfbdPxp8PF2QaCCD5/7pLVxD/qNvvvB/GiZeB2y1VMgWBQYjIBc3hOGpR7vVQ==
+X-Received: by 2002:a17:906:4d04:: with SMTP id r4mr22460219eju.317.1591101607207;
+        Tue, 02 Jun 2020 05:40:07 -0700 (PDT)
 Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
-        by smtp.gmail.com with ESMTPSA id dc8sm1522400edb.10.2020.06.02.05.39.14
+        by smtp.gmail.com with ESMTPSA id cb6sm620637edb.18.2020.06.02.05.40.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 05:39:14 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 14:39:14 +0200
+        Tue, 02 Jun 2020 05:40:05 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 14:40:04 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        David Wu <david.wu@rock-chips.com>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: rockchip: simplify rockchip_pwm_get_state()
-Message-ID: <20200602123914.GA3360525@ulmo>
-References: <20190919091728.24756-1-linux@rasmusvillemoes.dk>
+To:     Peter Vasil <peter.vasil@gmail.com>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        nightwolf@relghuar.net
+Subject: Re: [PATCH v2] pwm: sun4i: direct clock output support for Allwinner
+ A64
+Message-ID: <20200602124004.GB3360525@ulmo>
+References: <20200428164150.366966-1-peter.vasil@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
+        protocol="application/pgp-signature"; boundary="+pHx0qQiF2pBVqBT"
 Content-Disposition: inline
-In-Reply-To: <20190919091728.24756-1-linux@rasmusvillemoes.dk>
+In-Reply-To: <20200428164150.366966-1-peter.vasil@gmail.com>
 User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
@@ -69,50 +72,43 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---IJpNTDwzlM2Ie8A6
+--+pHx0qQiF2pBVqBT
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 19, 2019 at 11:17:27AM +0200, Rasmus Villemoes wrote:
-> The way state->enabled is computed is rather convoluted and hard to
-> read - both branches of the if() actually do the exact same thing. So
-> remove the if(), and further simplify "<boolean condition> ? true :
-> false" to "<boolean condition>".
+On Tue, Apr 28, 2020 at 06:41:50PM +0200, Peter Vasil wrote:
+> Allwinner A64 is capable of a direct clock output on PWM (see A64
+> User Manual chapter 3.10). Add support for this in the sun4i PWM
+> driver.
 >=20
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Signed-off-by: Peter Vasil <peter.vasil@gmail.com>
 > ---
-> I stumbled on this while trying to understand how the pwm subsystem
-> works. This patch is a semantic no-op, but it's also possible that,
-> say, the first branch simply contains a "double negative" so either
-> the !=3D should be =3D=3D or the "false : true" should be "true : false".
->=20
->  drivers/pwm/pwm-rockchip.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
+>  drivers/pwm/pwm-sun4i.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 
-I've applied this. Irrespective of any feedback David would have this is
-correct and a nice simplification.
+Applied, thanks.
 
 Thierry
 
---IJpNTDwzlM2Ie8A6
+--+pHx0qQiF2pBVqBT
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7WSHEACgkQ3SOs138+
-s6EIvA//U+YBcRa/yOWyp3jhnv0UxhIHPIk4tcP1l5N4cNtnj23Y4VCdv7baJM4M
-k2OKqKanjnp0AROTYeu150CEqI+xXuND8W7PKRIcCTLkS2Gy7WBXh1ezlCRupzyH
-uYRPi+PY5ZkX/owSFRy+2Ii5o5ywzPc5aH6hqsLfKGzkUrJA/wFsTH85JfmEwwTu
-8WOYkvO8zGqaA32B5Orx42x4jH020aa/PorZsl1WXjEnqN7zc0Ke5CZxZN/puoE+
-YuTAqG9NDMFiZzkeN2vHbuafUyBk0zSRiz+/1KTkKPnubJ0bLncbCZRonghCCCNV
-3hWEB8Fm5pP9mo5Ht4q6Z4or2JkuWbcu3IwyE9SrerLtcTbkbCqaU3kkvKFm72Gy
-QN2iUJiGHk4i7PYqNEAWfQ9i16U7+2nbb6rroHiHcKR8G1boWJcwyg6dwVto5uUN
-47k4J8HTAZBsDysAH4GVavggIig9WwMMqprGhVRA7CLhMtp5i/g+9fyN6OmxmwAO
-9N4Sxs/ScWdReU63b0DbWRdEQa9OVK0BWz13uoESETZcfeH9ggZpY2EDBQ96KRY5
-cG9Ka88WfHJJ7qth/PcHsu94fFnbcPkZeca16guCWoYIi5SdCJeDuPVfbjV1xn9T
-Fu/bhyvbAecyGACpTbIwZb5DhtT4HYr0IX4Q4mJ8PfM8b0BdR4o=
-=OaiW
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7WSKQACgkQ3SOs138+
+s6EaEhAAm/NQGeJ/IOWtqrbF6KZ1hxhFv6kLldfbKchk0A0Rhnebp1FqHYMkQBwu
+/KzAQl8/ZLrQMM3oXqYeKEWW+sSowB/KyICk7Ynx/RRJjAQiBsdOjfANNvONeF56
+4VOWkiC12fHm7l+vOFWtQttg8ShAIoKQQM/XQ+Gj259BfdAeSs+Gv+7FL9ue8pTI
+n6iM9g68mr88CP2XkWMPsMhaSAE21o7UEgMI6y4BpHXETnb2bmbaIHPoWJB2jx/E
+rLpCN6iQTkxrgtV/mU8sXggejhRDqTWdq9aueNt3dEDj4o2eAayIJy4Rba4zbyb/
+l1C+6qiuT9MQglKbmY4of4FXWt339nfgtgXJL6aHRJob1ROu/OH0hVmW/jDfJV64
+C73+XaNUyfNUqgNc2Q+5B/xNCuRa7cENLhA8j3vu+gKFIlSMHVpD35ISBr/DSQwR
+qEBPZ2ZDW6TmqUxr2ZLuirW3SXV6jVngsMJhDqAFSWEaLc49MjIi3LG9ItEQdj6h
+h2OTJPS+IE3JSTKkX90e9BA/QEsi+f/SP3sQBpxetXYn19eUliLXMzIKv0V/rWUc
+L85/oyvgT1n8PVbc7O0hMEgqoRxwth9R/EOtozadIlceBw9zdpRy3lp+aO4DL8NR
+5mOiC5GtWuBmP2/l8/edwhneBVDCQQP2AYVZ6vm29XVX5Glklvs=
+=FM1x
 -----END PGP SIGNATURE-----
 
---IJpNTDwzlM2Ie8A6--
+--+pHx0qQiF2pBVqBT--
