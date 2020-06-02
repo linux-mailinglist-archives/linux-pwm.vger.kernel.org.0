@@ -2,67 +2,65 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D5FC1EBBE3
-	for <lists+linux-pwm@lfdr.de>; Tue,  2 Jun 2020 14:40:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5E391EBBE8
+	for <lists+linux-pwm@lfdr.de>; Tue,  2 Jun 2020 14:41:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgFBMkt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 2 Jun 2020 08:40:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42284 "EHLO
+        id S1727798AbgFBMlb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 2 Jun 2020 08:41:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbgFBMkt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 2 Jun 2020 08:40:49 -0400
+        with ESMTP id S1725940AbgFBMlb (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 2 Jun 2020 08:41:31 -0400
 Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00308C061A0E;
-        Tue,  2 Jun 2020 05:40:48 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id x1so12572357ejd.8;
-        Tue, 02 Jun 2020 05:40:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF17C061A0E;
+        Tue,  2 Jun 2020 05:41:31 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id mb16so12601864ejb.4;
+        Tue, 02 Jun 2020 05:41:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=niT9jOzFuN2NCfZ/IUmRYMI3ZZ7HW1svqTzOyKem/GY=;
-        b=Sa6V5cmom+EpKHaXLrGQ3G9oDNXjY7kjwghMmGcidLLrX9Nlei2ZPspqTL3y6DRlRd
-         //STw6jNoNcLyfU7V+pU7jFL70EMOqltF7ZB4WBZ+39UgExPcCjkaLUdlPff8dQA4JlK
-         +PMexbmuiaGMRobAI0fbErMxQJ9izCV7rymAtQhnBEsPjSweK4z/NkfJqlfPzrYRdAxn
-         RZHFqWH82+Dh1GfMs1cXGlsLOb1O+cFGD6nUv1bsKnkbfRkinwNsnMUTxHBdNEBpTG0K
-         fANURxqU3KYa2tF+artQcL47ZXH//f3wn9NJFqdt+wGfQTS/WbEDIfTBr/FvoJmvwi+C
-         JLGw==
+        bh=GHFMqUa98wqBWHtS9xjIzjQXZSVDldKjF1cbC0g4d08=;
+        b=tnvwpLObLrEDtNs8U5Vl8qkSnTyyeCPMkkSaR3Kg9eUoRH3Hgn29or2fGpv7zHGk8M
+         C8BNQ2tcJTDdzu1SUcIWaS2WWq0PO2v/NovoDLSOeqaMWAvipZKAHJuLY5TfkoE6gPzx
+         CsfZW5NJUgYv/Gpqeioq6eumh/VelsnRuMOy9Ka5zXfPEnT+Fgdi2+ubHc36B7AGq72t
+         oFD67tSFDwndvtWTXeSBI/QEeGD8j62j/uGgQwGDqHz9qRdfcBPtr40KKF0l37G94Q8J
+         pgM27p0AeY4NlJcZX2uf2eEfgi8jr8pbWdUH64icu+Di8w8IYurTjt6RYRW74uVc8mFF
+         w4jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=niT9jOzFuN2NCfZ/IUmRYMI3ZZ7HW1svqTzOyKem/GY=;
-        b=uEgpNBqs+E5Ouz6Pue+5cWn4V/0BuKNa36fIBUICpRE+XZcz5oJFFMCvcXfnX+9YCY
-         i7x+a/Edn61JXeJMfjTwSxrz3910sei5ZvmSczHqJv4JhmQEeMZ/whPpiBycI3s9EgUf
-         uNkjKRaBv0ztOHIvVTUh7EQ566Bd+WH1BR5HIYHHAPkeeCQ5YqNK56a6b8oCxykQuvQ/
-         zp0uk4dbSJwGgXdwkVQHL9smouhwXUAstT/vWGMfVLCiggkadaBmgwZKre3RjOJ36SZU
-         nxN5L25Q5pEE1jXcau8HEgoA4MFjfrxXf5Y2lfa1K7U9HE/feX/PyUu06dx8B3fTkZtL
-         3Ylg==
-X-Gm-Message-State: AOAM532U79gu3v2NUabJ734nbXaew24qZUd1U2nzWIgBk4Bk94MPOXWt
-        6D5BoXJuZEbWyGMsHJ2FYrg=
-X-Google-Smtp-Source: ABdhPJzBbhcNiGzmplFsbJ8iJ8Dkkme6+Cro2wO3XrtzvMNtp+XeDCtwuUl8d2UMk4gI27laekECAQ==
-X-Received: by 2002:a17:906:7746:: with SMTP id o6mr9012036ejn.75.1591101647750;
-        Tue, 02 Jun 2020 05:40:47 -0700 (PDT)
+        bh=GHFMqUa98wqBWHtS9xjIzjQXZSVDldKjF1cbC0g4d08=;
+        b=b+YxKp+6yw4mTHmj5wPw9GhPI9a60J4gB2Fy5ulOJX3ifKxZOoMKLAt3g/c7ZbHTq1
+         fDJ0H3k3sG/hlWDLHjRsyBSgp0rw9UESNHvyR/5IUYzULUad3w6R0CvwwCmjmMRyP1ST
+         cswQ0HYqcqeNyqIY8OBD7hd1vwylGZSj8mqHC0b4tHvvS4l/c5wMxQBeIUqRiO9Ue1kP
+         z1ah4UyxyZspS1/OUQV9D8qNsmT85dHqna1X7EFroxapFagxh2F++dFAlPrHdJMTh4TV
+         mQs+08bARY5od+nvSdMoWfC7DPOtA/yQKyJrCyUIhSwvKPGCoS/rfSK492zF90ibQwHk
+         +oKg==
+X-Gm-Message-State: AOAM533Q82ocuzYMdJRRCGWrGi0nwlBnH91NVysLlBrhcbmUvRqYsyEc
+        JN+LIxEItSm5D1XUfHnMSQY=
+X-Google-Smtp-Source: ABdhPJzyy7UvAUoIvRp6qrIztSS8RZHsRj3KwPTHNmzsC88Iv7frGG2V8KfjWdulFq5S2YkCi9eGig==
+X-Received: by 2002:a17:906:2e50:: with SMTP id r16mr22811025eji.305.1591101689995;
+        Tue, 02 Jun 2020 05:41:29 -0700 (PDT)
 Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
-        by smtp.gmail.com with ESMTPSA id ch14sm1499331edb.33.2020.06.02.05.40.46
+        by smtp.gmail.com with ESMTPSA id f4sm1572869ejk.17.2020.06.02.05.41.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 05:40:46 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 14:40:45 +0200
+        Tue, 02 Jun 2020 05:41:27 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 14:41:26 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
+To:     Paul Cercueil <paul@crapouillou.net>
 Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-pwm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] pwm: lpss: Fix get_state runtime-pm reference handling
-Message-ID: <20200602124045.GC3360525@ulmo>
-References: <20200512110044.95984-1-hdegoede@redhat.com>
+        <u.kleine-koenig@pengutronix.de>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] pwm: jz4740: Drop dependency on MACH_INGENIC
+Message-ID: <20200602124126.GD3360525@ulmo>
+References: <20200527115225.10069-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="WplhKdTI2c8ulnbP"
+        protocol="application/pgp-signature"; boundary="VMt1DrMGOVs3KQwf"
 Content-Disposition: inline
-In-Reply-To: <20200512110044.95984-1-hdegoede@redhat.com>
+In-Reply-To: <20200527115225.10069-1-paul@crapouillou.net>
 User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
@@ -70,71 +68,52 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---WplhKdTI2c8ulnbP
-Content-Type: text/plain; charset=us-ascii
+--VMt1DrMGOVs3KQwf
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 12, 2020 at 01:00:44PM +0200, Hans de Goede wrote:
-> Before commit cfc4c189bc70 ("pwm: Read initial hardware state at request
-> time"), a driver's get_state callback would get called once per PWM from
-> pwmchip_add().
+On Wed, May 27, 2020 at 01:52:22PM +0200, Paul Cercueil wrote:
+> Depending on MACH_INGENIC prevent us from creating a generic kernel that
+> works on more than one MIPS board. Instead, we just depend on MIPS being
+> set.
 >=20
-> pwm-lpss' runtime-pm code was relying on this, getting a runtime-pm ref f=
-or
-> PWMs which are enabled at probe time from within its get_state callback,
-> before enabling runtime-pm.
->=20
-> The change to calling get_state at request time causes a number of
-> problems:
->=20
-> 1. PWMs enabled at probe time may get runtime suspended before they are
-> requested, causing e.g. a LCD backlight controlled by the PWM to turn off.
->=20
-> 2. When the request happens when the PWM has been runtime suspended, the
-> ctrl register will read all 1 / 0xffffffff, causing get_state to store
-> bogus values in the pwm_state.
->=20
-> 3. get_state was using an async pm_runtime_get() call, because it assumed
-> that runtime-pm has not been enabled yet. If shortly after the request an
-> apply call is made, then the pwm_lpss_is_updating() check may trigger
-> because the resume triggered by the pm_runtime_get() call is not complete
-> yet, so the ctrl register still reads all 1 / 0xffffffff.
->=20
-> This commit fixes these issues by moving the initial pm_runtime_get() call
-> for PWMs which are enabled at probe time to the pwm_lpss_probe() function;
-> and by making get_state take a runtime-pm ref before reading the ctrl reg.
->=20
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=3D1828927
-> Fixes: cfc4c189bc70 ("pwm: Read initial hardware state at request time")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  drivers/pwm/pwm-lpss.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
+>=20
+> Notes:
+>     v2: New patch. I don't consider this a fix but an enhancement, since =
+the old
+>     	behaviour was in place since the driver was born in ~2010, so no Fix=
+es tag.
+>     v3: Commit message changes (invert Acked-by / Signed-off-by)
+>=20
+>  drivers/pwm/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied, thanks.
+All four patches applied, thanks.
 
 Thierry
 
---WplhKdTI2c8ulnbP
+--VMt1DrMGOVs3KQwf
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7WSM0ACgkQ3SOs138+
-s6FhRRAAuvaWzzTcka9pbQE9E0+InpTkaaM4jW+gV5eJAwbFAH/ggDepZsNJpRRy
-H1c3PubRZFR3XPJFMcrJKDOvCAZC2pkChaeTqjtwBBForNIt+AoRhF3hgmr3bhMZ
-Q7S3rahk9eDABzTNXWemesQfoyoNjnYAKqqRvPHG+rDIewOVBc6zY8lnQ3SS6Dy/
-HY1oQopujNaub1T2aKfufdLGlPzCzIG/ZxuMmx5i2hG7SMVnS/Z//tKNhLrIPxt4
-6fOun1F+2GgScUyjRz6tNIflHJ0B9emCZH6sc8J5vWtnXNtQ3XHft0YT7EQRpu7n
-h6A9434xaPSblA/FLXTGxdW2qwPvrxFQ4ZAA43CdGYka9Ibd8A7T3jQMYdQs6vr0
-r7z1s6dSVTQ+ai2+jds7GwU6v6TfQvlFb21nXz2cAbJBh0ZM9WrpFdaiXG//odXt
-HNGNn6O3XcsSThigBk+j+RmJ2MSeGsUiTVD9w3TBknyrpPOdaMikeVtDjaD6dnbA
-De9cIubENvTmEdsOp1MN2meImbPx9IrKYr/dPo+PSx01L6U550PiYg7L05rsulB1
-15qEC0FRjtxypAjDXKcu1ovYM8749OnXskMmW4Ybq1aEvJROwYXfQiiBbU6RrwWZ
-FBf5LQdD9ELqscfR70bcE/S0hrEgQ+jLAEdsr3OtpIXqrJuxN1s=
-=oZB2
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7WSPYACgkQ3SOs138+
+s6FaCRAAnn+U7/uQz3zkEYTEbfnxMr8kVUv6gVcGH3Ix8HVWYWXpWh753iKyp8AP
+vwfWWrO1oy5hh5JuygD21z+Ax5Q80jdohC5q88WMX9XrGuxxtk0ZdU/vXUKr1Jq8
+XF9QGH6AyFVqqTmQb0vZfYpMqMIPmV2xOIosKvHr30MfxnzWgijcAQyCzqHDKKtn
+nZVMeZXwOzwfGM3ZFGy27z4o2CqFepCzwtqdFBkGLM3pHASuI36M8luC64dYgRzq
+/G4JRz22p2+0AJ1MurJmb7jTvujJbdBYKtm5hMJoDxjxONFqKEgfMPXbnVdSGWFW
+eBuQpws8toP4Rzd5VTJAZ2deC8cd4gWvKCHLip9EtuWqHgIwPrVSLmRw/DiVSVif
+r/Wex9A1iPHKAuo9yUAwph41N0qX6UegVSUV3yen9PZwduHGY2eJ0xhHsYQdlSLW
+xqdDga5hvavcrg62EPWAHch1z1vrRKC7tO+DbRSnaQV/mJEqhnf7+jM0dB8723F5
+9zirSWPQkWojhNPBE1dbMqeaitDoFOqHZ/U/OlMY6NHDFincfxk2jDQF32ehMfrm
+c4iDIaarl73UlGCtgNYO1/9SFrRcdKXeBLhFaLJyU/5+J+eSO/LOCdcHVKDXXTuM
+iGhac5iTre7gSZlU4CfS58AglrjmNMMbEbkt1Mh4PhxW++f20A4=
+=yUQX
 -----END PGP SIGNATURE-----
 
---WplhKdTI2c8ulnbP--
+--VMt1DrMGOVs3KQwf--
