@@ -2,124 +2,240 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2C251ED44A
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jun 2020 18:25:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5A561ED45C
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jun 2020 18:29:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726027AbgFCQZT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 3 Jun 2020 12:25:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46240 "EHLO
+        id S1726032AbgFCQ3T (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 3 Jun 2020 12:29:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbgFCQZT (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 Jun 2020 12:25:19 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8E7BC08C5C0
-        for <linux-pwm@vger.kernel.org>; Wed,  3 Jun 2020 09:25:18 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id p5so3009616wrw.9
-        for <linux-pwm@vger.kernel.org>; Wed, 03 Jun 2020 09:25:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=YMEw1+MtRCGZkmgn+Usn7TWAQhA9MgW+een02J0qmK8=;
-        b=MJmnDlCBNWOi6w2ZsS99qao5rUdMfwKOfJPecxeOskXJNTNStWdYOGADQ5qaNxCcF1
-         viqNIp/3577z5TWxiZ39nsG/K+IgYCd6CbW40wL4zOpw201gXgaA5FmElfm1u/1kV1a4
-         zLhaDsvg5nodK6COdAZmFYKmE6i/L3NwOaVFFh2AS+i+4TMVGFWhPTMY9k5wBkz9bELp
-         X6TW65hebK8oZ2u8cxs6TbldDOvCxZgrd4XYL7prvt4rjGvJdrsCQQyiSegLCpPUZSf9
-         Aa6fZjo9zECRiGw+NuyU18vFjKUs7uixQuU8rHIHY9Q1JAeweJxN1avAR6K83xEnB34l
-         c+PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=YMEw1+MtRCGZkmgn+Usn7TWAQhA9MgW+een02J0qmK8=;
-        b=XsUL27kxSw1pbqJGq42QKV6M9fxWPGQDBk2moKeEt5H2nfuROAnWObqqJ1bj0WTrwx
-         0ZzkVVU91uQkQK2Viu3AcSYd9FOMrSqwfsflLXZbR65O8lDoQtlff9DepM7ITnitWnY0
-         2aQWq41lVimRMqMOdlWJlSwaY8IVXercBEg3ijp1oFQAiodrBmSTV/KAUu5BGdn703LB
-         fZF8n3JER8ws9jlzNuzLRBg6+9M/iLwDnyz7UPkXp/B9UYP3Al1zhQR/heZGIZmkN99y
-         jLzid09grGIjvjKTez/Mw5k3gYeQW2Q5838z4hNP0s7vbkI0NuRWC2FqRXA/amln9mCB
-         0CGQ==
-X-Gm-Message-State: AOAM530Mx6pnT6f76nY4OmTKSa+yvkMc0GbUfWDx7S0kgZKHPcCFuoC2
-        BwayKA/JbWjCgZzK0F3QIulxgmtF1Jw=
-X-Google-Smtp-Source: ABdhPJwJd+KWFFKbZ6Ey2JsNsRWwzjHpsUxFPiQ+cDs750BuWAqkTUF3wybInCk3glKi7yUteixWPA==
-X-Received: by 2002:a5d:690b:: with SMTP id t11mr256722wru.213.1591201517633;
-        Wed, 03 Jun 2020 09:25:17 -0700 (PDT)
-Received: from dell ([95.147.198.92])
-        by smtp.gmail.com with ESMTPSA id u14sm3692472wmd.0.2020.06.03.09.25.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 09:25:16 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 17:25:15 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Add Lee Jones as reviewer for the PWM
- subsystem
-Message-ID: <20200603162515.GP3714@dell>
-References: <20200602123241.3363904-1-thierry.reding@gmail.com>
- <20200603123718.6fwsbpnkbjlpq2bz@taurus.defre.kleine-koenig.org>
- <20200603144224.GC3478467@ulmo>
- <20200603162204.GO3714@dell>
+        with ESMTP id S1725904AbgFCQ3T (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 Jun 2020 12:29:19 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1324CC08C5C0
+        for <linux-pwm@vger.kernel.org>; Wed,  3 Jun 2020 09:29:19 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jgWGJ-0006lc-9a; Wed, 03 Jun 2020 18:29:07 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jgWGI-0003qv-Km; Wed, 03 Jun 2020 18:29:06 +0200
+Date:   Wed, 3 Jun 2020 18:29:06 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Sandipan Patra <spatra@nvidia.com>
+Cc:     treding@nvidia.com, jonathanh@nvidia.com, bbasu@nvidia.com,
+        ldewangan@nvidia.com, kyarlagadda@nvidia.com,
+        linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4] pwm: tegra: dynamic clk freq configuration by PWM
+ driver
+Message-ID: <20200603162906.vyfynqtxa7mpjxxv@taurus.defre.kleine-koenig.org>
+References: <1590988836-11308-1-git-send-email-spatra@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="aolxn5mvfn62f3oc"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200603162204.GO3714@dell>
+In-Reply-To: <1590988836-11308-1-git-send-email-spatra@nvidia.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 03 Jun 2020, Lee Jones wrote:
 
-> On Wed, 03 Jun 2020, Thierry Reding wrote:
-> 
-> > On Wed, Jun 03, 2020 at 02:37:18PM +0200, Uwe Kleine-König wrote:
-> > > On Tue, Jun 02, 2020 at 02:32:41PM +0200, Thierry Reding wrote:
-> > > > Lee has kindly offered his help in sharing the patch review workload for
-> > > > the PWM subsystem. If this works out well between Lee, Uwe and myself it
-> > > > may be a good idea to maintain the subsystem as a group.
-> > > > 
-> > > > Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-> > > > ---
-> > > >  MAINTAINERS | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > > 
-> > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > > index e64e5db31497..b8889bed5d1e 100644
-> > > > --- a/MAINTAINERS
-> > > > +++ b/MAINTAINERS
-> > > > @@ -13736,6 +13736,7 @@ F:	drivers/media/rc/pwm-ir-tx.c
-> > > >  PWM SUBSYSTEM
-> > > >  M:	Thierry Reding <thierry.reding@gmail.com>
-> > > >  R:	Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > > > +M:	Lee Jones <lee.jones@linaro.org>
-> > > 
-> > > I'm bit surprised that Lee got M: which I have a R:. The commit log
-> > > talks about reviewer not maintainer.
-> > > 
-> > > While I'm not sure that there is a practical difference it makes me a
-> > > bit sad.
-> > 
-> > That was not the intention. According to the notes at the top of the
-> > MAINTAINERS file, recipients on M: lines will be added in the To:
-> > header, while R: lines will be added in the Cc: header. That's really
-> > the only difference.
-> > 
-> > In practical terms this may be helpful for filtering where email where
-> > you are on the To: line can be prioritized over those where you are on
-> > the Cc: line.
-> 
-> Exactly right.
-> 
-> It's a common misconception that M: means 'Maintainer'.  It doesn't.
-> M: simply means "Mail-to".  It has nothing to do with maintainership
-> levels/hierarchy and everything to do with mail filtering.
+--aolxn5mvfn62f3oc
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Although maybe someone should tell scripts/get_maintainer.pl that!
+Hello,
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+On Mon, Jun 01, 2020 at 10:50:36AM +0530, Sandipan Patra wrote:
+> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+> index d26ed8f..1daf591 100644
+> --- a/drivers/pwm/pwm-tegra.c
+> +++ b/drivers/pwm/pwm-tegra.c
+> @@ -4,8 +4,36 @@
+>   *
+>   * Tegra pulse-width-modulation controller driver
+>   *
+> - * Copyright (c) 2010, NVIDIA Corporation.
+> + * Copyright (c) 2010-2020, NVIDIA Corporation.
+>   * Based on arch/arm/plat-mxc/pwm.c by Sascha Hauer <s.hauer@pengutronix=
+=2Ede>
+> + *
+> + * Overview of Tegra Pulse Width Modulator Register:
+> + * 1. 13-bit: Frequency division (SCALE)
+> + * 2. 8-bit : Pulse division (DUTY)
+> + * 3. 1-bit : Enable bit
+> + *
+> + * The PWM clock frequency is divided by 256 before subdividing it based
+> + * on the programmable frequency division value to generate the required
+> + * frequency for PWM output. The maximum output frequency that can be
+> + * achieved is (max rate of source clock) / 256.
+> + * e.g. if source clock rate is 408 MHz, maximum output frequency can be:
+> + * 408 MHz/256 =3D 1.6 MHz.
+> + * This 1.6 MHz frequency can further be divided using SCALE value in PW=
+M.
+> + *
+> + * PWM pulse width: 8 bits are usable [23:16] for varying pulse width.
+> + * To achieve 100% duty cycle, program Bit [24] of this register to
+> + * 1=E2=80=99b1. In which case the other bits [23:16] are set to don't c=
+are.
+> + *
+> + * Limitations:
+> + * -	When PWM is disabled, the output is driven to inactive.
+> + * -	It does not allow the current PWM period to complete and
+> + *	stops abruptly.
+> + *
+
+I'd prefer to have no empty lines in the in Limitations paragraph to be
+able to get all infos using something like:
+
+	sed -rn '/\* Limitations:/,/^ \*\/?$/p' drivers/pwm/pwm-tegra.c
+
+> + * -	If the register is reconfigured while PWM is running,
+> + *	it does not complete the currently running period.
+> + *
+> + * -	If the user input duty is beyond acceptible limits,
+> + *	-EINVAL is returned.
+
+s/acceptible/acceptable/ (but in fact this isn't a limitation, so I'd
+drop this here, as pointed out in v2).
+
+In v2 I mentioned a few things to add here.
+
+>   */
+> =20
+>  #include <linux/clk.h>
+> @@ -41,6 +69,7 @@ struct tegra_pwm_chip {
+>  	struct reset_control*rst;
+> =20
+>  	unsigned long clk_rate;
+> +	unsigned long min_period_ns;
+> =20
+>  	void __iomem *regs;
+> =20
+> @@ -68,7 +97,7 @@ static int tegra_pwm_config(struct pwm_chip *chip, stru=
+ct pwm_device *pwm,
+>  {
+>  	struct tegra_pwm_chip *pc =3D to_tegra_pwm_chip(chip);
+>  	unsigned long long c =3D duty_ns, hz;
+> -	unsigned long rate;
+> +	unsigned long rate, required_clk_rate;
+
+In v2 I requested to move this into the if block below. You replied to
+want to move it accordingly.
+
+>  	u32 val =3D 0;
+>  	int err;
+> =20
+> @@ -83,9 +112,47 @@ static int tegra_pwm_config(struct pwm_chip *chip, st=
+ruct pwm_device *pwm,
+>  	val =3D (u32)c << PWM_DUTY_SHIFT;
+> =20
+>  	/*
+> +	 *  min period =3D max clock limit >> PWM_DUTY_WIDTH
+> +	 */
+> +	if (period_ns < pc->min_period_ns)
+> +		return -EINVAL;
+> +
+> +	/*
+>  	 * Compute the prescaler value for which (1 << PWM_DUTY_WIDTH)
+>  	 * cycles at the PWM clock rate will take period_ns nanoseconds.
+> +	 *
+> +	 * num_channels: If single instance of PWM controller has multiple
+> +	 * channels (e.g. Tegra210 or older) then it is not possible to
+> +	 * configure separate clock rates to each of the channels, in such
+> +	 * case the value stored during probe will be referred.
+> +	 *
+> +	 * If every PWM controller instance has one channel respectively, i.e.
+> +	 * nums_channels =3D=3D 1 then only the clock rate can be modified
+> +	 * dynamically (e.g. Tegra186 or Tegra194).
+>  	 */
+> +	if (pc->soc->num_channels =3D=3D 1) {
+> +		/*
+> +		 * Rate is multiplied with 2^PWM_DUTY_WIDTH so that it matches
+> +		 * with the maximum possible rate that the controller can
+> +		 * provide. Any further lower value can be derived by setting
+> +		 * PFM bits[0:12].
+
+It looks a bit strange that the algorithm to calculate the clock
+settings depends on the number of channels. Looks like a wrong
+abstraction.
+
+> +		 *
+> +		 * required_clk_rate is a reference rate for source clock and
+> +		 * it is derived based on user requested period. By setting the
+> +		 * source clock rate as required_clk_rate, PWM controller will
+> +		 * be able to configure the requested period.
+> +		 */
+> +		required_clk_rate =3D
+> +			(NSEC_PER_SEC / period_ns) << PWM_DUTY_WIDTH;
+> +
+> +		err =3D clk_set_rate(pc->clk, required_clk_rate);
+> +		if (err < 0)
+> +			return -EINVAL;
+> +
+> +		/* Store the new rate for further references */
+> +		pc->clk_rate =3D clk_get_rate(pc->clk);
+> +	}
+> +
+>  	rate =3D pc->clk_rate >> PWM_DUTY_WIDTH;
+> =20
+>  	/* Consider precision in PWM_SCALE_WIDTH rate calculation */
+> @@ -94,7 +161,7 @@ static int tegra_pwm_config(struct pwm_chip *chip, str=
+uct pwm_device *pwm,
+> =20
+>  	/*
+>  	 * Since the actual PWM divider is the register's frequency divider
+> -	 * field minus 1, we need to decrement to get the correct value to
+> +	 * field plus 1, we need to decrement to get the correct value to
+
+I would have put this in a separate change.
+
+>  	 * write to the register.
+>  	 */
+>  	if (rate > 0)
+> @@ -205,6 +272,10 @@ static int tegra_pwm_probe(struct platform_device *p=
+dev)
+>  	 */
+>  	pwm->clk_rate =3D clk_get_rate(pwm->clk);
+> =20
+> +	/* Set minimum limit of PWM period for the IP */
+> +	pwm->min_period_ns =3D
+> +	    (NSEC_PER_SEC / (pwm->soc->max_frequency >> PWM_DUTY_WIDTH)) + 1;
+
+To ensure that required_clk_rate in tegra_pwm_config doesn't get bigger
+than pwm->soc->max_frequency this isn't the right formula I think. I'd
+use
+
+	pwm->min_period_ns =3D DIV_ROUNDUP(NSEC_PER_SEC, pwm->soc->max_frequency >=
+> PWM_DUTY_WIDTH);
+
+=2E Can you confirm?
+
+Best regards
+Uwe
+
+--aolxn5mvfn62f3oc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl7Xz88ACgkQwfwUeK3K
+7AlrAAf/aYBSEFxW/wXZ2OQi20KmCo1gebNdYjqppcGWBHFcslo+Zy//4zemJatL
+/zx40sFn60GynifMqDb3vGsgAtt3DCZsb9+MC3H8PQLXa70yaWeJ1n9oEapQ5UIk
+tD5GGH8Pa/dBdM7cH5bWjcziQ1elZZXDV8q7X5G/IJF79hHvoDYTnSJbeO1RVxG6
+XBopnHUquZladbAMRLK6mXUdiU1d0dRVcDCdMGqoypAkFbUNgVWXnVq6SpQqvice
+m+BUzT7ekqJ/0vE54NRJeudBnGkjmkuGMuX14+GJJqbO0NZVKPyi5XREm+eqlzvq
+1rD4TCb2n45vagAbws+IpFaRWueWkg==
+=t6tJ
+-----END PGP SIGNATURE-----
+
+--aolxn5mvfn62f3oc--
