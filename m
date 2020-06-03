@@ -2,75 +2,87 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2825D1EC520
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jun 2020 00:36:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90DF51EC7BC
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jun 2020 05:18:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgFBWgY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 2 Jun 2020 18:36:24 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:7122 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726373AbgFBWgY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 2 Jun 2020 18:36:24 -0400
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 02 Jun 2020 15:36:23 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 02 Jun 2020 15:36:22 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id F3B494D82; Tue,  2 Jun 2020 15:36:22 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 15:36:22 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] pwm: imx27: Fix rounding behavior
-Message-ID: <20200602223622.GB470@codeaurora.org>
-References: <20200416080245.3203-1-u.kleine-koenig@pengutronix.de>
- <20200602124835.GF3360525@ulmo>
- <20200602204211.GA1693@codeaurora.org>
+        id S1725854AbgFCDSE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 2 Jun 2020 23:18:04 -0400
+Received: from regular1.263xmail.com ([211.150.70.195]:43316 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbgFCDSD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 2 Jun 2020 23:18:03 -0400
+X-Greylist: delayed 446 seconds by postgrey-1.27 at vger.kernel.org; Tue, 02 Jun 2020 23:18:02 EDT
+Received: from localhost (unknown [192.168.167.235])
+        by regular1.263xmail.com (Postfix) with ESMTP id 022B71325;
+        Wed,  3 Jun 2020 11:10:28 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [192.168.0.122] (unknown [103.29.142.67])
+        by smtp.263.net (postfix) whith ESMTP id P31254T139913132439296S1591153826661362_;
+        Wed, 03 Jun 2020 11:10:27 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <57c229d03dbe2bff381c71644df05028>
+X-RL-SENDER: david.wu@rock-chips.com
+X-SENDER: wdc@rock-chips.com
+X-LOGIN-NAME: david.wu@rock-chips.com
+X-FST-TO: linux-kernel@vger.kernel.org
+X-SENDER-IP: 103.29.142.67
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+Subject: Re: [PATCH] pwm: rockchip: simplify rockchip_pwm_get_state()
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Heiko Stuebner <heiko@sntech.de>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190919091728.24756-1-linux@rasmusvillemoes.dk>
+ <20200602123914.GA3360525@ulmo>
+From:   David Wu <david.wu@rock-chips.com>
+Message-ID: <2f860dba-26c7-c670-58e2-9ef502881522@rock-chips.com>
+Date:   Wed, 3 Jun 2020 11:10:26 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20200602123914.GA3360525@ulmo>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200602204211.GA1693@codeaurora.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 01:42:12PM -0700, Guru Das Srinagesh wrote:
-> On Tue, Jun 02, 2020 at 02:48:35PM +0200, Thierry Reding wrote:
-> > On Thu, Apr 16, 2020 at 10:02:45AM +0200, Uwe Kleine-König wrote:
-> > > To not trigger the warnings provided by CONFIG_PWM_DEBUG
-> > > 
-> > >  - use up-rounding in .get_state()
-> > >  - don't divide by the result of a division
-> > >  - don't use the rounded counter value for the period length to calculate
-> > >    the counter value for the duty cycle
-> > > 
-> > > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > > ---
-> > >  drivers/pwm/pwm-imx27.c | 20 ++++++++++----------
-> > >  1 file changed, 10 insertions(+), 10 deletions(-)
-> > 
-> > Applied, thanks.
-> > 
-> > Thierry
-> 
-> Hi Thierry,
-> 
-> Just FYI, This change conflicts with one of my patches [1] in the "Convert
-> PWM period and duty cycle to u64" series.
-> 
-> [1]: https://patchwork.ozlabs.org/project/linux-pwm/patch/848494725fd1240ed877d0a1471dd11ccea01ff5.1590514331.git.gurus@codeaurora.org/
+This change is very good, thank you. The code continues from the 
+original code(get_state_v1 and get_state_v2), didn’t make any changes at 
+that time, and sorry I have not seen linux-rockchip@lists.infradead.org 
+mail recently.
 
-Uploaded v16 that resolves this issue.
+在 2020/6/2 下午8:39, Thierry Reding 写道:
+> On Thu, Sep 19, 2019 at 11:17:27AM +0200, Rasmus Villemoes wrote:
+>> The way state->enabled is computed is rather convoluted and hard to
+>> read - both branches of the if() actually do the exact same thing. So
+>> remove the if(), and further simplify "<boolean condition> ? true :
+>> false" to "<boolean condition>".
+>>
+>> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+>> ---
+>> I stumbled on this while trying to understand how the pwm subsystem
+>> works. This patch is a semantic no-op, but it's also possible that,
+>> say, the first branch simply contains a "double negative" so either
+>> the != should be == or the "false : true" should be "true : false".
+>>
+>>   drivers/pwm/pwm-rockchip.c | 7 +------
+>>   1 file changed, 1 insertion(+), 6 deletions(-)
+> 
+> I've applied this. Irrespective of any feedback David would have this is
+> correct and a nice simplification.
+> 
+> Thierry
+> 
 
-Thank you.
 
-Guru Das.
