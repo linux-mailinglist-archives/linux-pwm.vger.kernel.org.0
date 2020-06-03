@@ -2,101 +2,133 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7481F1ED149
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jun 2020 15:49:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F28521ED242
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jun 2020 16:42:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbgFCNtE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 3 Jun 2020 09:49:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50132 "EHLO
+        id S1725884AbgFCOma (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 3 Jun 2020 10:42:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbgFCNsv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 Jun 2020 09:48:51 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9558C00863F
-        for <linux-pwm@vger.kernel.org>; Wed,  3 Jun 2020 06:48:49 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id j12so1372405lfh.0
-        for <linux-pwm@vger.kernel.org>; Wed, 03 Jun 2020 06:48:49 -0700 (PDT)
+        with ESMTP id S1725810AbgFCOma (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 Jun 2020 10:42:30 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 832A7C08C5C0
+        for <linux-pwm@vger.kernel.org>; Wed,  3 Jun 2020 07:42:28 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id l1so1954848ede.11
+        for <linux-pwm@vger.kernel.org>; Wed, 03 Jun 2020 07:42:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=H8rDQEJouwBJIElP/Vpqq+PrvTZxQQy2H7A/MvyMMB0=;
-        b=LImzFWfFZ5MGhzJT1qzCsgEXVo7xW37sUIdrDLCKiXHQE0/Tq0rYX6Af/ld5dvlhmE
-         opFt8B8vUrhAfyxGIRs7eIQZmnu+cHCt7Dz4gEu/fnBWHDlMa8iVHDbM7XgqJUtNcgor
-         I4Oj1yGJ3ygOniFn6Dr+FHDS5BV48N/ldz+eBwWbR5/ADnYCL6KuztRZu9mrKJOxMODU
-         fmVICwwGmTYXXsgICTxE6unupuMdGq6+YZvkWKysZVLYK3Wwxrg7U2ecMo3WGycHWcU1
-         w35jxyjuynpm30G3kj/I18A4vO2Y2WN0kfTajUkGc1Xe9t84eQuWhnB4AGlAS8dbrawc
-         iC3A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rSWlscV0KHmcMmcin1dKcavEzlhk4tJyI9f5EHtp8Ec=;
+        b=nFuq/OBgBZlLFT6JEjabuxVh9/NnJ8MXUGrXlI4ByBt5kl1+4kEQgppdn1dZ+rrUJ2
+         hIZK3pUF/M1lW53Z4UPlsvN316N5EADwg8uu1vYS0luC9/wFzrkg+YRK4Qtrf5dKoR/d
+         bJPHAk8ssipH4pvt43DGUClx87bM0m5qB3q5N8ojZ32Q4ifhob81TKKhAvxJM48/HqqS
+         VlUX0t5h8tt4/kb0OqtS0TDc/vcjcPR0BI8Cjz99nOsViC7SLNhrT2cYmF4EujN0tRMG
+         tBzYTcwmO05orohDFh6cZypCbV0Czf5Tdbx0L49RnkulB/eIMAaUKKslLG84DptCTbPI
+         M8Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=H8rDQEJouwBJIElP/Vpqq+PrvTZxQQy2H7A/MvyMMB0=;
-        b=EKYOMNzT+FRFR2B7VTK3GqA9jp5PP2pM+0egbyfNalY86RWxbiOTFw/4j/nTUNyO4v
-         bEQKF1otg43Q5+NOOxmOB3PXYyUTyQak+F5YlpqzxTq7tS/is0WpKNyZgi4DwDZEA3n2
-         Z8JY4oe94JQEemWr1h4MCvAKm3IQS6VXXIXJ1pxHLim7/RJBr8aEGw760gT9vNg8pZFZ
-         Iuat8RaHhtKkjqlqXsQ3V45FvMVjA5axwW+HWIyfuDW6VMeoHrRH74uB8wfywrHXo3s4
-         bYKSH2TzfnV/5U7PcH2quqWdC9m08jKfhxoe8VYFSAoTSGgIl87NZ+2vjEXCNN9oyYUP
-         Fc/w==
-X-Gm-Message-State: AOAM530LZV6r758uXDxJ3P8IzG7WjDQyYSZpw+n0n1ihk34xYIx3XVdc
-        g3hCFWzFT4/+L6GZzmq1uSv6GwH3VDJdMJMh8aFfJ/XoeTU=
-X-Google-Smtp-Source: ABdhPJzc66PsPJ7uf2JiXrqj7zfh07Ra5BpBms0TPKeexmxkWkfXYY+ch/Os+E85wJbdOE6Lm+0ANdybV/7KRG4HAcU=
-X-Received: by 2002:a05:6512:308e:: with SMTP id z14mr2566308lfd.29.1591192127287;
- Wed, 03 Jun 2020 06:48:47 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rSWlscV0KHmcMmcin1dKcavEzlhk4tJyI9f5EHtp8Ec=;
+        b=PbDuXGKej0sOEf1AJQaExE1b4FQl6pbP+5SxVba8sp3PogifsrPOH1UOXwydJtibz5
+         eaW552bdOOROZbbt4JrLlavZ5TjPLDACFo4ZL0iJGtN7ZTq1jcL8ccXcUalRPzcghW0o
+         NfcJUAV9gWo/cHQYJy7fToMsa7ENIaqetGUWFjTBANJPFOQ0CQDC3G9FZ/hBZH1PbSkw
+         /b2b9THOOyON80peWSM3GSUfwfcNYuGJNta5ZdLPHnuWKaa6AOrLLvE6cu3UqP1yLvpY
+         2vOgJaFld5D+0h3eyV15Wys7/wPVaGuMGwLSerktEJ4QRVJezXDS7Cr7GsdylPrrl8HA
+         5+eg==
+X-Gm-Message-State: AOAM532o3XWXdOIwivWaTel0nIVbBMkmRRJiNHNotKPs6sHe5M7r+rDQ
+        m32yX2/g7NDFzcDh5MXJvpUmUhr+
+X-Google-Smtp-Source: ABdhPJxC3O5nk333FZAppzp9UxwIhYzM8TlXQLbozGDSewJDETbcMogJLIelTm9B6gEujyRZGX3AuA==
+X-Received: by 2002:a50:c359:: with SMTP id q25mr11679482edb.123.1591195347221;
+        Wed, 03 Jun 2020 07:42:27 -0700 (PDT)
+Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
+        by smtp.gmail.com with ESMTPSA id m30sm1297727eda.16.2020.06.03.07.42.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 07:42:25 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 16:42:24 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Add Lee Jones as reviewer for the PWM
+ subsystem
+Message-ID: <20200603144224.GC3478467@ulmo>
+References: <20200602123241.3363904-1-thierry.reding@gmail.com>
+ <20200603123718.6fwsbpnkbjlpq2bz@taurus.defre.kleine-koenig.org>
 MIME-Version: 1.0
-Reply-To: susanjones.wife@gmail.com
-Received: by 2002:a19:a405:0:0:0:0:0 with HTTP; Wed, 3 Jun 2020 06:48:46 -0700 (PDT)
-From:   "Mrs.Susan Jones" <joneswife.susan@gmail.com>
-Date:   Wed, 3 Jun 2020 14:48:46 +0100
-X-Google-Sender-Auth: aH2vam-ZraP3yG1gz3ryctMgTE4
-Message-ID: <CALBhdBfusXWup1N4iFuTS3D1AZxWbZbTDS_qa-wA3FkbkE7MrQ@mail.gmail.com>
-Subject: HELLO: I AM MRS SUSAN JONES
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="da4uJneut+ArUgXk"
+Content-Disposition: inline
+In-Reply-To: <20200603123718.6fwsbpnkbjlpq2bz@taurus.defre.kleine-koenig.org>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
--- 
-OUR GOLDEN OPPORTUNITY
 
-Hello Dear Friend,
+--da4uJneut+ArUgXk
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Complement of the day, i hope you are doing great today. However, I am
-Mrs.Susan Jones, an auditor with one of the new generation banks here
-in Burkina Faso.
+On Wed, Jun 03, 2020 at 02:37:18PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> On Tue, Jun 02, 2020 at 02:32:41PM +0200, Thierry Reding wrote:
+> > Lee has kindly offered his help in sharing the patch review workload for
+> > the PWM subsystem. If this works out well between Lee, Uwe and myself it
+> > may be a good idea to maintain the subsystem as a group.
+> >=20
+> > Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+> > ---
+> >  MAINTAINERS | 1 +
+> >  1 file changed, 1 insertion(+)
+> >=20
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index e64e5db31497..b8889bed5d1e 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -13736,6 +13736,7 @@ F:	drivers/media/rc/pwm-ir-tx.c
+> >  PWM SUBSYSTEM
+> >  M:	Thierry Reding <thierry.reding@gmail.com>
+> >  R:	Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> > +M:	Lee Jones <lee.jones@linaro.org>
+>=20
+> I'm bit surprised that Lee got M: which I have a R:. The commit log
+> talks about reviewer not maintainer.
+>=20
+> While I'm not sure that there is a practical difference it makes me a
+> bit sad.
 
-I am writing you this letter based on the latest development at my
-Department. i discovered some abandoned huge amount of money, Ten
-Million, Five hundred thousand  United States Dollars.($10.500.000).
-Now I am only contacting you as a foreigner because this money cannot
-be approved to a local bank account here, but can only be approved to
-any foreign account and foreign beneficiary because the money is in US
-dollars
+That was not the intention. According to the notes at the top of the
+MAINTAINERS file, recipients on M: lines will be added in the To:
+header, while R: lines will be added in the Cc: header. That's really
+the only difference.
 
-This will be  a legitimate transaction once you accept to build trust
-with me and follow simple instruction doing the transfer process,
-until the total sum transfer out of the bank here to your own bank
-account any where in the world, and I agreed to share the total money
-50/50 with you once you successful confirmed it in your bank account.
-But any expenses doing the transfer process will be deduct from the
-amount before sharing, If you are interested to work with me and
-provide a good receiving bank account, get back to me as soon as
-possible with the following details below.
+In practical terms this may be helpful for filtering where email where
+you are on the To: line can be prioritized over those where you are on
+the Cc: line.
 
-Your full name
-Your Profession
-Your direct mobile phone number
-Your Scanned International passport or any of your identity
+Thierry
 
-NOTE: PLEASE IT YOU ARE NOT INTERESTED DON'T BORDER TO RESPOND BACK TO
-AVOID TIME WASTED.
+--da4uJneut+ArUgXk
+Content-Type: application/pgp-signature; name="signature.asc"
 
-As soon as I receive these data's, I will forward to you the
-application form which you will send to the bank for the claim and
-transfer of the fund into your bank account as the  new beneficial.
+-----BEGIN PGP SIGNATURE-----
 
-I am waiting to hear from you soon
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7Xts4ACgkQ3SOs138+
+s6H5yxAAmYmqQwuGzDPqrkstA5uFYK1PpEb/Rwl0I72v0EBXWO7yGhjPLUKZxV/S
+hC89YYptJO25e4Nb1Q4/DlLBaE2KY3sfwOJzZAE8/jNsetz08qvsCUQNsVz0pPPz
+PbYMY+ZyfyuWtM1mQKg1ELQtIQaMEUqaBAmf2ET+9ofB4zpFHLhP+LV/CSX4eBjo
+O7y676kzt6Myyk7YaGtj+AwK2duG7MGM71ZLuEyE3ftQS1otd7Fk3Ieitv5uaBJZ
+/RUzE6ZmdNbmR9K2xLLLn6TrCxz5LnMEyQletOliwH+Pszsxx+4n8lzMJEB9tHie
+nmRXqQvOZBw4zoG8JEH8ASmaUGb332wVGYqW7Y+m0U4/iDvC1brsp6h1fBGYPl8N
+TJdz52OUO4tsEtex0s53AgbMViq62Dexsvm0BHxHlkLjfJ76lqcCj6BU/fzmLXrw
+SNxpr74tdbjKO/eG+hoRYx9A7cE440GrMa5M6FcMRszavf/EzJE8/1V+FOHtlqg7
+qWBmwh44daW+lrWGW/xnbZ+o6fKxInFvPkROQVC3vK9kb/8vH+oTeY1WS+p309QW
+VJRv5h2o3H1V2ef2Sjv6BMHGdSAb5vLwhqQQMaAe6s1idUbZvaMtpf+VS4ojJqb9
+NVhmJGS5yjSnHLZY6mGtzBK7Lrp/ccxmSuhgUl+MksiylwYnVN4=
+=3aFz
+-----END PGP SIGNATURE-----
 
-Yours
-Mrs.Susan Jones
+--da4uJneut+ArUgXk--
