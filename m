@@ -2,54 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C82E11EF2BD
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jun 2020 10:07:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FCE71EF2DE
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jun 2020 10:14:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbgFEIHt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 5 Jun 2020 04:07:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47202 "EHLO
+        id S1726024AbgFEIOf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 5 Jun 2020 04:14:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbgFEIHt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 Jun 2020 04:07:49 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 441F1C08C5C2;
-        Fri,  5 Jun 2020 01:07:49 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id m2so2404756pjv.2;
-        Fri, 05 Jun 2020 01:07:49 -0700 (PDT)
+        with ESMTP id S1725986AbgFEIOf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 Jun 2020 04:14:35 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DEDAC08C5C2;
+        Fri,  5 Jun 2020 01:14:34 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ga6so2280958pjb.1;
+        Fri, 05 Jun 2020 01:14:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mh4Ou1kljVhmduS90PzlDrAXnymKkFPOJ7HMxIuD1Kw=;
-        b=ooV6D/FPWvYy0szimNsEbMVLx4ELEjsAq6byLimowmFrpxqQOOnGvbGhMR9bBWXX+H
-         rsS/Z/gP8h2jLc7FvWubJLY4ouB+hb7PbdRl3uqWatLg1z9wjEOhfekVDH3u0+GYkp4b
-         mNUVgP3DzqQ5ipr3hMG4iWbNbaA0zmL08KVHfWfQiDMT/In9+o3QfSgQ8ScQPPCkNqlZ
-         WuPaBoCowYeyAHNhrYJ4euXf0b8vKiOtJtwO6Wj+w2sdFw8VgkF+Qmzz0rT5TktKtUeB
-         C6lCJCvuk3uPzweD1gpoHmpODgP2ppvphW7rJMppm2pyjDNMpZ+fLlrLc6g22StiXcA9
-         7dxw==
+        bh=dep05XtC6CuktEauurS07Sy6QGbgqiv3E+ii3Ovb+Ls=;
+        b=DtPDLU5uvgVYNSLmyiKoOVclyfKzq/LadYhfYsydWTd6wNLn9WXOeNCQZ1eiRcsqpR
+         eM+UfKM607A27ZS4k9+lPQo7wLpshrnQmdyy6M0YBnJNJB92lKYWsICiQ2QqDFyV2uuP
+         mVmeaA7d2/jp9aUsu3rYaJnq2Nl9XtTb+Cm6x0hdWWSGxryrnI8gdVK8Ek+iQH8lpXnM
+         sWKr4BOYZ/6PfVnuj1aa8yhI82S6X9Ifg9IgmLIIGZx3FhgRgITl0KKSBScv8VHg7Y2J
+         iSbdP8PDzD4ZGltMHRLeHWEdsWOCm5HZzz7yODflx/bVmvni10eBB/Q6H+cMfcwqURca
+         LIKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mh4Ou1kljVhmduS90PzlDrAXnymKkFPOJ7HMxIuD1Kw=;
-        b=dMk8Qx0edR84yIg+wpzgyR0F3MgoTL3Dbnd2+jRHH7lJ7DNo3ZoZ1cIR4eTl0lhbHu
-         9rgDg0G7BTxkGmfhxz4tVnTlIzNJwPaPKlocoGN3l2iQOkGkRhCmbf7jrxEJCCG6yZco
-         Lz935zdR9pnymshzgXc0aF3aX2xF7RGCRYYkhEX1jAti+VW4ak54cSOp33p9BAo7Qno3
-         P5bttYvukyyTdyiK0JoD9+aPG6y4PaCVfHTqrIXEJ/gnxawc/Of+eXjU8Pn0xU1cN8uT
-         lGLOXG+hixI2LD5VOFyUjgYzWhQCA1X0nm5hE5GJ+mcfh1ZY9U38kEXZTRrO85I1DTar
-         5qiA==
-X-Gm-Message-State: AOAM531cWFhT4NspKMxJu9bTePYEsWyU6k4YYPZCdHMc+93gfR5Xo+fO
-        1OGZ+MFI3Tz156eyAdqjsg6rp3gwho/FHkNh8oQ=
-X-Google-Smtp-Source: ABdhPJyxNexTfAEaebDSZO4i7E1Zrn1WbnacURd4rREtFFQ7AxnFLe4wpe5cp8So8FlFIxnRiJLHBWwprn7jbMq6GlQ=
-X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr1570669pjd.181.1591344468760;
- Fri, 05 Jun 2020 01:07:48 -0700 (PDT)
+        bh=dep05XtC6CuktEauurS07Sy6QGbgqiv3E+ii3Ovb+Ls=;
+        b=T9f9K2WC1Jc92gyRyc5mYxpSQ5fPtUFWb1/wfbbjxwskeGMTs4iJWdiEGigA0ASAXQ
+         jTFO2cXe0R9qCmaIm+eV41hCVt+7OfK+SoTEN0CftEYvf37SHMNV1NmhKoCpgjhn/T9j
+         02RvA9W2vII2WnFIb4voH0IrMhonEWRE793X2W3TUyI7vntCT4uLMHF6vrvKzMKnHemq
+         V+MeDUxjvlwqssBPKI1Qi7xZEiI657SLAlXnM+7udDYSSVL3K7rQqRBNUlRCF3bCy0qr
+         +zTPi1J4aVZfxup+osX3aToWnAXdbwJ2HTatOldTbz2NK/dzkT0sJ74mayjVr4u5FE6Z
+         j8kQ==
+X-Gm-Message-State: AOAM530pEUsS+/F1qBjoeIoQDsDG53FfXjm8EvdSwJw75/fHmiJ1ynqe
+        dzxcoDjBi5vwLH4ljw54aSF+y0sQctAiFN1NgGg=
+X-Google-Smtp-Source: ABdhPJy6V7rCbEiJe15C6DeQ4diyGwP3W+IH+3LGFcotcY4Lzpv76z0aCO0s2xeMP6Sc/HpdiVeb+XHZ7d/jwbWAe/g=
+X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr1713137pjq.228.1591344873732;
+ Fri, 05 Jun 2020 01:14:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-4-michael@walle.cc>
-In-Reply-To: <20200604211039.12689-4-michael@walle.cc>
+References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-5-michael@walle.cc>
+In-Reply-To: <20200604211039.12689-5-michael@walle.cc>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 5 Jun 2020 11:07:32 +0300
-Message-ID: <CAHp75VfMSbAMPg2ZLO6kE-9vkQCt0a+=Lji8V5ngY7xdUbfiMQ@mail.gmail.com>
-Subject: Re: [PATCH v4 03/11] irqchip: add sl28cpld interrupt controller support
+Date:   Fri, 5 Jun 2020 11:14:17 +0300
+Message-ID: <CAHp75VdeD6zDc--R4NPHsiqQerzfNGwUikLN+WHMiZZVsQ8QSA@mail.gmail.com>
+Subject: Re: [PATCH v4 04/11] watchdog: add support for sl28cpld watchdog
 To:     Michael Walle <michael@walle.cc>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         devicetree <devicetree@vger.kernel.org>,
@@ -79,33 +79,98 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 12:13 AM Michael Walle <michael@walle.cc> wrote:
+On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
 >
-> Add support for the interrupt controller inside the sl28 CPLD management
-> controller.
->
-> The interrupt controller can handle at most 8 interrupts and is really
-> simplistic and consists only of an interrupt mask and an interrupt
-> pending register.
+> Add support for the watchdog of the sl28cpld board management
+> controller. This is part of a multi-function device driver.
 
 ...
 
-> +config SL28CPLD_INTC
-> +       bool
+> +#include <linux/of_device.h>
 
-Same Q: Why not module?
+Didn't find a user of this.
 
 ...
 
-> +static const struct of_device_id sl28cpld_intc_of_match[] = {
-> +       { .compatible = "kontron,sl28cpld-intc" },
+> +static bool nowayout = WATCHDOG_NOWAYOUT;
+> +module_param(nowayout, bool, 0);
+> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+> +                               __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+> +
+> +static int timeout;
+> +module_param(timeout, int, 0);
+> +MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
+
+Guenter ACKed this, but I'm wondering why we still need module parameters...
+
+...
+
+> +       int ret;
+> +
+> +       ret = regmap_read(wdt->regmap, wdt->offset + WDT_COUNT, &val);
+> +
+> +       return (ret < 0) ? 0 : val;
+
+Besides extra parentheses and questionable ' < 0' part, the following
+would look better I think
+
+ret = ...
+if (ret)
+  return 0;
+
+return val;
+
+...
+
+> +       int ret;
+> +
+> +       ret = regmap_write(wdt->regmap, wdt->offset + WDT_TIMEOUT, timeout);
+> +       if (!ret)
+> +               wdd->timeout = timeout;
+> +
+> +       return ret;
+
+Similar story here:
+
+ret = ...
+if (ret)
+  return ret;
+
+wdd->... = ...
+return 0;
+
+...
+
+> +       ret = regmap_read(wdt->regmap, wdt->offset + WDT_CTRL, &status);
+
+> +       if (ret < 0)
+
+What ' < 0' means? Do we have some positive return values?
+Ditto for all your code.
+
+> +               return ret;
+
+...
+
+> +       if (status & WDT_CTRL_EN) {
+> +               sl28cpld_wdt_start(wdd);
+
+> +               set_bit(WDOG_HW_RUNNING, &wdd->status);
+
+Do you need atomic op here? Why?
+
+> +       }
+
+...
+
+> +static const struct of_device_id sl28cpld_wdt_of_match[] = {
+> +       { .compatible = "kontron,sl28cpld-wdt" },
 
 > +       {},
 
-There is no point to have comma in terminator line.
+No comma.
 
 > +};
-
 
 -- 
 With Best Regards,
