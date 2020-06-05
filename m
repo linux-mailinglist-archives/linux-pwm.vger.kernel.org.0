@@ -2,130 +2,112 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D3341EF5A5
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jun 2020 12:48:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61C711EF5B2
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jun 2020 12:50:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgFEKsj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 5 Jun 2020 06:48:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbgFEKsj (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 Jun 2020 06:48:39 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55140C08C5C2;
-        Fri,  5 Jun 2020 03:48:39 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id nm22so2436911pjb.4;
-        Fri, 05 Jun 2020 03:48:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hT5EtYTIJL/7KK1ErJ4XuTZSMU98O4NGYES7BTZShfU=;
-        b=gUKniJAYthQYiCeLiJbQxp6vsgIMrYFTG3Tn0ztGQdAgJJ5SIzW9Qq+1WYjhN7yVaR
-         dqPLJ6u8EPjvcsgOjNTxo0b6um16kDUcqfOuHSlYC0SJku2U0ceSI9Em09ln4GUbFpph
-         kvSRDrMrLoPz0APi14wENlVfArV0pT3I/24PCyUfjYagBh1sTwgvy1kuLA9mVFd7eZ8u
-         UCNaiWg/sKwjqaA+PU4vDlTyu64d24et0BTHPfF25369Vb/euo3Q0WtQ4cbeWcZ6S9Uj
-         d6X7vp1YGXR6zxgqI4DmlTY86u6lNf5+TOFVpXVzPF2q/ePDeJZABOF3KAJD9Fg23qY/
-         +I5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hT5EtYTIJL/7KK1ErJ4XuTZSMU98O4NGYES7BTZShfU=;
-        b=FRA8QDzfdJnC4uIS2DVn6L1IWOjf36Sq12DKVn9dJykZjX3wzo6tKKvC9UapxDOYOD
-         4OrKPUM6M1pUdOADUU7+1jD4RBZi0RlCKrBvq5j5A0yYy4TOL++2rSr38krSlYStsC41
-         0XL2dgutsAOaBIxwueCaP26BetJ23QJUhThJT7kmw0IRAFe/8CatG8WZxmIwZVd+DZ9d
-         a/Y7R3I0rqdjMEMkCzo6b5vbA9UP5+NcFAjkfDRaOfWroD5JSbojx6j0TiBoFfkJDrCZ
-         fskRGrQKyB4qFdnD8US9KcrMcHZLG3CIQN6FL5DpGxnD89aON/Z08iBJ8FC0d7yabKXe
-         Pncg==
-X-Gm-Message-State: AOAM5303MifNn6hhyEJHg5Deobmzy7CEPHJRHS56wYy2FP3edaoZggUW
-        QWBfV3uGNEmINh9I5S7dTz8ePwPRIJfBM78M8dY=
-X-Google-Smtp-Source: ABdhPJxJO5Y4Qm5YMH+m2+d6tv9L1OTX95vElklp0iU6q2z5TlX53tziLrdZX6T1mwhQ2rSUj09xKWtdLeKZgYN0Lsw=
-X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr2258157pjd.181.1591354118825;
- Fri, 05 Jun 2020 03:48:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-3-michael@walle.cc>
- <CAHp75Vd-R3yqhq88-whY6vdDhESpzvFCsbi-ygSTjfXfUzOrtg@mail.gmail.com> <8ed988b3e0bc48ea9219d0847c1b1b8e@walle.cc>
-In-Reply-To: <8ed988b3e0bc48ea9219d0847c1b1b8e@walle.cc>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 5 Jun 2020 13:48:27 +0300
-Message-ID: <CAHp75Vf00w_UUvXULVd=OgSVM+p_pmNMJRPVnf8GNZW10c_j5w@mail.gmail.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management controller
-To:     Michael Walle <michael@walle.cc>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        id S1726827AbgFEKu3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 5 Jun 2020 06:50:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726465AbgFEKu3 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 5 Jun 2020 06:50:29 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A76F020772;
+        Fri,  5 Jun 2020 10:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591354228;
+        bh=ZkmdIlShUAFHW0pi3QVcOWNFuQmL8jmheacHFvaENQw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GLcE760t5aG1mrGcTjrY4oXPhQP87W9f9FHSm2jzdENswX23N78yJytXBV9GNzkbR
+         HeuVUKObU3X3hnvgtT8mG7IFX03o5feVM1EquN4xEo/fghn9zFIRczyA+hbjD+dXba
+         9nY+/TtMcuy1enmXJQ+j+FTTmmFZ/Qpp2ep9hZCM=
+Date:   Fri, 5 Jun 2020 11:50:26 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
         linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-kernel@lists.infradead.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
         Jean Delvare <jdelvare@suse.com>,
         Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
+ management controller
+Message-ID: <20200605105026.GC5413@sirena.org.uk>
+References: <20200604211039.12689-1-michael@walle.cc>
+ <20200604211039.12689-3-michael@walle.cc>
+ <20200605065709.GD3714@dell>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="s9fJI615cBHmzTOP"
+Content-Disposition: inline
+In-Reply-To: <20200605065709.GD3714@dell>
+X-Cookie: Air is water with holes in it.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 1:09 PM Michael Walle <michael@walle.cc> wrote:
-> Am 2020-06-05 10:01, schrieb Andy Shevchenko:
-> > On Fri, Jun 5, 2020 at 12:16 AM Michael Walle <michael@walle.cc> wrote:
 
-...
+--s9fJI615cBHmzTOP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> >> +       bool "Kontron sl28 core driver"
-> >> +       depends on I2C=y
-> >
-> > Why not module?
->
-> There are users of the interupt lines provided by the interrupt
-> controller.
-> For example, the gpio-button driver. If this is compiled into the kernel
-> (which it is by default in the arm64 defconfig), probing will fail
-> because
-> the interrupt is not found. Is there a better way for that? I guess the
-> same
-> is true for the GPIO driver.
+On Fri, Jun 05, 2020 at 07:57:09AM +0100, Lee Jones wrote:
+> On Thu, 04 Jun 2020, Michael Walle wrote:
 
-And GPIO nicely handles this via deferred probe mechanism. Why it
-can't be used here?
-So, we really need to have a strong argument to limit module nowadays
-to be only builtin.
+> > +	sl28cpld->regmap = devm_regmap_init_i2c(i2c, &sl28cpld_regmap_config);
+> > +	if (IS_ERR(sl28cpld->regmap))
+> > +		return PTR_ERR(sl28cpld->regmap);
 
-...
+> This is now a shared memory allocator and not an MFD at all.
 
-> >> +       depends on OF
-> >
-> > I didn't find an evidence this is needed.
+> I'm clamping down on these type of drivers!
 
-> >> +#include <linux/of_platform.h>
-> >
-> > No evidence of user of this.
-> > I think you meant mod_devicetable.h.
->
-> devm_of_platform_populate(), so I need CONFIG_OF, too right?
+> Please find a better way to accomplish this.
 
-Ah, this explains header, thanks!
-But it doesn't explain depends OF.
+What is the concern with this?  Looking at the patch I'm guessing the
+concern would be that the driver isn't instantiating any MFD children
+and instead requiring them to be put in the DT?
 
-So, perhaps,
+> Potentially using "simple-mfd" and "simple-regmap".
 
-depends OF || COMPILE_TEST will be more informative, i.e.
-tells "okay, this driver can be compiled w/o OF, but won't be functional".
+> The former already exists and does what you want.  The latter doesn't
+> yet exist, but could solve your and lots of other contributor's
+> issues.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I have no idea what you are thinking of when you say "simple-regmap" so
+it is difficult to comment.
+
+--s9fJI615cBHmzTOP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7aI3EACgkQJNaLcl1U
+h9A7hQf8CDFQ5iLpXTLY4zeynMxyWKwNzkV4jtp9HDi0METL6K488ki/EvosVeJx
+URGVB1pt6HfuZ+wo9eI4viS324oVbqB+OLEP2C2JT9IueDFeFAVv/ZID0FjrKlB8
+3L1IaFXplUYVhcSJGxL+9p6BB2RpY2jKupLmYwudJ2RKDIT/sf011ENofTZR2i/7
+mHJQsYGSN/zKTcrZm9cmx10BOmpL5aSq0hwcOM1qYqPn/tlSs09ErRh1+Tisxg+U
+3ZTBCjG5cDlPj0KIBfoZkJapLQ3YklicCzY2LTKFvP1bxloxYa4iyyy0O5oHdBaK
+vL9TOwYXvPCnUOSIH1toNvcVphaLDg==
+=gwiS
+-----END PGP SIGNATURE-----
+
+--s9fJI615cBHmzTOP--
