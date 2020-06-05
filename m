@@ -2,40 +2,56 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 996661EF545
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jun 2020 12:24:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D3341EF5A5
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jun 2020 12:48:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726507AbgFEKY5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 5 Jun 2020 06:24:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40172 "EHLO
+        id S1726733AbgFEKsj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 5 Jun 2020 06:48:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbgFEKY5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 Jun 2020 06:24:57 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4838C08C5C2;
-        Fri,  5 Jun 2020 03:24:56 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 83D3C22EE4;
-        Fri,  5 Jun 2020 12:24:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1591352694;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ILwM29qMSYKcVIWPmdUtNbrZy37LKLfK7PaTLUSzfUU=;
-        b=f4MCEfYDpsR0K+oXpcdSTqRG43PxCzYJmSlibPHE6ofdGUuZ0CvMgQcaoPasbcub3jyhG3
-        T7/ZANjnNC6nRvAdE8mYArlV8+FVqCiV8I5Nf5F6LoVxDZEw+Y5qeiGxMLUXrNUBgbBTSn
-        EEQf07mVqq8+OrOiS2L2exaQBCw7f7o=
+        with ESMTP id S1726465AbgFEKsj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 Jun 2020 06:48:39 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55140C08C5C2;
+        Fri,  5 Jun 2020 03:48:39 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id nm22so2436911pjb.4;
+        Fri, 05 Jun 2020 03:48:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hT5EtYTIJL/7KK1ErJ4XuTZSMU98O4NGYES7BTZShfU=;
+        b=gUKniJAYthQYiCeLiJbQxp6vsgIMrYFTG3Tn0ztGQdAgJJ5SIzW9Qq+1WYjhN7yVaR
+         dqPLJ6u8EPjvcsgOjNTxo0b6um16kDUcqfOuHSlYC0SJku2U0ceSI9Em09ln4GUbFpph
+         kvSRDrMrLoPz0APi14wENlVfArV0pT3I/24PCyUfjYagBh1sTwgvy1kuLA9mVFd7eZ8u
+         UCNaiWg/sKwjqaA+PU4vDlTyu64d24et0BTHPfF25369Vb/euo3Q0WtQ4cbeWcZ6S9Uj
+         d6X7vp1YGXR6zxgqI4DmlTY86u6lNf5+TOFVpXVzPF2q/ePDeJZABOF3KAJD9Fg23qY/
+         +I5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hT5EtYTIJL/7KK1ErJ4XuTZSMU98O4NGYES7BTZShfU=;
+        b=FRA8QDzfdJnC4uIS2DVn6L1IWOjf36Sq12DKVn9dJykZjX3wzo6tKKvC9UapxDOYOD
+         4OrKPUM6M1pUdOADUU7+1jD4RBZi0RlCKrBvq5j5A0yYy4TOL++2rSr38krSlYStsC41
+         0XL2dgutsAOaBIxwueCaP26BetJ23QJUhThJT7kmw0IRAFe/8CatG8WZxmIwZVd+DZ9d
+         a/Y7R3I0rqdjMEMkCzo6b5vbA9UP5+NcFAjkfDRaOfWroD5JSbojx6j0TiBoFfkJDrCZ
+         fskRGrQKyB4qFdnD8US9KcrMcHZLG3CIQN6FL5DpGxnD89aON/Z08iBJ8FC0d7yabKXe
+         Pncg==
+X-Gm-Message-State: AOAM5303MifNn6hhyEJHg5Deobmzy7CEPHJRHS56wYy2FP3edaoZggUW
+        QWBfV3uGNEmINh9I5S7dTz8ePwPRIJfBM78M8dY=
+X-Google-Smtp-Source: ABdhPJxJO5Y4Qm5YMH+m2+d6tv9L1OTX95vElklp0iU6q2z5TlX53tziLrdZX6T1mwhQ2rSUj09xKWtdLeKZgYN0Lsw=
+X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr2258157pjd.181.1591354118825;
+ Fri, 05 Jun 2020 03:48:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 05 Jun 2020 12:24:54 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-3-michael@walle.cc>
+ <CAHp75Vd-R3yqhq88-whY6vdDhESpzvFCsbi-ygSTjfXfUzOrtg@mail.gmail.com> <8ed988b3e0bc48ea9219d0847c1b1b8e@walle.cc>
+In-Reply-To: <8ed988b3e0bc48ea9219d0847c1b1b8e@walle.cc>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 5 Jun 2020 13:48:27 +0300
+Message-ID: <CAHp75Vf00w_UUvXULVd=OgSVM+p_pmNMJRPVnf8GNZW10c_j5w@mail.gmail.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management controller
+To:     Michael Walle <michael@walle.cc>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         devicetree <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -49,7 +65,8 @@ Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Guenter Roeck <linux@roeck-us.net>,
         Lee Jones <lee.jones@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -57,138 +74,58 @@ Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 04/11] watchdog: add support for sl28cpld watchdog
-In-Reply-To: <CAHp75VdeD6zDc--R4NPHsiqQerzfNGwUikLN+WHMiZZVsQ8QSA@mail.gmail.com>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-5-michael@walle.cc>
- <CAHp75VdeD6zDc--R4NPHsiqQerzfNGwUikLN+WHMiZZVsQ8QSA@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <8f042c2442852c29519c381833f3d289@walle.cc>
-X-Sender: michael@walle.cc
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Am 2020-06-05 10:14, schrieb Andy Shevchenko:
-> On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
->> 
->> Add support for the watchdog of the sl28cpld board management
->> controller. This is part of a multi-function device driver.
-> 
-> ...
-> 
->> +#include <linux/of_device.h>
-> 
-> Didn't find a user of this.
+On Fri, Jun 5, 2020 at 1:09 PM Michael Walle <michael@walle.cc> wrote:
+> Am 2020-06-05 10:01, schrieb Andy Shevchenko:
+> > On Fri, Jun 5, 2020 at 12:16 AM Michael Walle <michael@walle.cc> wrote:
 
-I guess mod_devicetable.h then.
+...
 
-> 
-> ...
-> 
->> +static bool nowayout = WATCHDOG_NOWAYOUT;
->> +module_param(nowayout, bool, 0);
->> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started 
->> (default="
->> +                               __MODULE_STRING(WATCHDOG_NOWAYOUT) 
->> ")");
->> +
->> +static int timeout;
->> +module_param(timeout, int, 0);
->> +MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
-> 
-> Guenter ACKed this, but I'm wondering why we still need module 
-> parameters...
+> >> +       bool "Kontron sl28 core driver"
+> >> +       depends on I2C=y
+> >
+> > Why not module?
+>
+> There are users of the interupt lines provided by the interrupt
+> controller.
+> For example, the gpio-button driver. If this is compiled into the kernel
+> (which it is by default in the arm64 defconfig), probing will fail
+> because
+> the interrupt is not found. Is there a better way for that? I guess the
+> same
+> is true for the GPIO driver.
 
-How would a user change the nowayout or the timeout? For the latter 
-there is
-a device tree entry, but thats not easy changable by the user.
+And GPIO nicely handles this via deferred probe mechanism. Why it
+can't be used here?
+So, we really need to have a strong argument to limit module nowadays
+to be only builtin.
 
-> 
-> ...
-> 
->> +       int ret;
->> +
->> +       ret = regmap_read(wdt->regmap, wdt->offset + WDT_COUNT, &val);
->> +
->> +       return (ret < 0) ? 0 : val;
-> 
-> Besides extra parentheses and questionable ' < 0' part, the following
-> would look better I think
-> 
-> ret = ...
-> if (ret)
->   return 0;
-> 
-> return val;
+...
 
-yes, you're right.
+> >> +       depends on OF
+> >
+> > I didn't find an evidence this is needed.
 
-> 
-> ...
-> 
->> +       int ret;
->> +
->> +       ret = regmap_write(wdt->regmap, wdt->offset + WDT_TIMEOUT, 
->> timeout);
->> +       if (!ret)
->> +               wdd->timeout = timeout;
->> +
->> +       return ret;
-> 
-> Similar story here:
-> 
-> ret = ...
-> if (ret)
->   return ret;
-> 
-> wdd->... = ...
-> return 0;
-> 
-> ...
+> >> +#include <linux/of_platform.h>
+> >
+> > No evidence of user of this.
+> > I think you meant mod_devicetable.h.
+>
+> devm_of_platform_populate(), so I need CONFIG_OF, too right?
 
-ok
+Ah, this explains header, thanks!
+But it doesn't explain depends OF.
 
-> 
->> +       ret = regmap_read(wdt->regmap, wdt->offset + WDT_CTRL, 
->> &status);
-> 
->> +       if (ret < 0)
-> 
-> What ' < 0' means? Do we have some positive return values?
-> Ditto for all your code.
+So, perhaps,
 
-probably not, I'll go over all return values and change them.
-
->> +               return ret;
-> 
-> ...
-> 
->> +       if (status & WDT_CTRL_EN) {
->> +               sl28cpld_wdt_start(wdd);
-> 
->> +               set_bit(WDOG_HW_RUNNING, &wdd->status);
-> 
-> Do you need atomic op here? Why?
-
-I'd say consistency, all watchdog drivers do it like that. I just
-had a look at where this is used, but it looks like access from
-userspace is protected by a lock.
-
-> 
->> +       }
-> 
-> ...
-> 
->> +static const struct of_device_id sl28cpld_wdt_of_match[] = {
->> +       { .compatible = "kontron,sl28cpld-wdt" },
-> 
->> +       {},
-> 
-> No comma.
-
-yeah ;)
+depends OF || COMPILE_TEST will be more informative, i.e.
+tells "okay, this driver can be compiled w/o OF, but won't be functional".
 
 -- 
--michael
+With Best Regards,
+Andy Shevchenko
