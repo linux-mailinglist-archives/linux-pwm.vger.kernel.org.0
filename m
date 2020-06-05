@@ -2,54 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FCE71EF2DE
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jun 2020 10:14:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 444E81EF2F2
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jun 2020 10:16:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbgFEIOf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 5 Jun 2020 04:14:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48246 "EHLO
+        id S1726186AbgFEIQM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 5 Jun 2020 04:16:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725986AbgFEIOf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 Jun 2020 04:14:35 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DEDAC08C5C2;
-        Fri,  5 Jun 2020 01:14:34 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ga6so2280958pjb.1;
-        Fri, 05 Jun 2020 01:14:34 -0700 (PDT)
+        with ESMTP id S1726072AbgFEIQL (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 Jun 2020 04:16:11 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72F82C08C5C2;
+        Fri,  5 Jun 2020 01:16:11 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id q24so2413756pjd.1;
+        Fri, 05 Jun 2020 01:16:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dep05XtC6CuktEauurS07Sy6QGbgqiv3E+ii3Ovb+Ls=;
-        b=DtPDLU5uvgVYNSLmyiKoOVclyfKzq/LadYhfYsydWTd6wNLn9WXOeNCQZ1eiRcsqpR
-         eM+UfKM607A27ZS4k9+lPQo7wLpshrnQmdyy6M0YBnJNJB92lKYWsICiQ2QqDFyV2uuP
-         mVmeaA7d2/jp9aUsu3rYaJnq2Nl9XtTb+Cm6x0hdWWSGxryrnI8gdVK8Ek+iQH8lpXnM
-         sWKr4BOYZ/6PfVnuj1aa8yhI82S6X9Ifg9IgmLIIGZx3FhgRgITl0KKSBScv8VHg7Y2J
-         iSbdP8PDzD4ZGltMHRLeHWEdsWOCm5HZzz7yODflx/bVmvni10eBB/Q6H+cMfcwqURca
-         LIKQ==
+        bh=kXdVxsGQNpOmqOgFOL5sHVJSy+udx7MLTpgYocPDlMI=;
+        b=CmWf+Q1LPKkZFcz/UUCEbKgiD4xwszew0h0vP1mFw1Sri5IdNxgZoMooG8JO0czgk6
+         atcXFR84tLy0cvzPKI1nKeJQl/vjaYcYzjMDSAFElp+J7NDj3DshbpW/Rhz5NrrC7aYS
+         O2YT8xyZueQZsiPAZTU0ehVKvGYNpyJSsnWfcrrkGPazVl716JM4yAUWpHi2ZHkCdZEY
+         10SeHCEghYnDA5rb2wk5xvQvGg4u/RGKrojjyJ2MeuMhogLguXaZuVi7sJnnMxLgrvG6
+         oNepqfXmK4Hl6cDCyeYIch7viNWooW+94utqoB6gZ2sMx+YGxt2qmVONoin9lNo4LhWK
+         g2EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dep05XtC6CuktEauurS07Sy6QGbgqiv3E+ii3Ovb+Ls=;
-        b=T9f9K2WC1Jc92gyRyc5mYxpSQ5fPtUFWb1/wfbbjxwskeGMTs4iJWdiEGigA0ASAXQ
-         jTFO2cXe0R9qCmaIm+eV41hCVt+7OfK+SoTEN0CftEYvf37SHMNV1NmhKoCpgjhn/T9j
-         02RvA9W2vII2WnFIb4voH0IrMhonEWRE793X2W3TUyI7vntCT4uLMHF6vrvKzMKnHemq
-         V+MeDUxjvlwqssBPKI1Qi7xZEiI657SLAlXnM+7udDYSSVL3K7rQqRBNUlRCF3bCy0qr
-         +zTPi1J4aVZfxup+osX3aToWnAXdbwJ2HTatOldTbz2NK/dzkT0sJ74mayjVr4u5FE6Z
-         j8kQ==
-X-Gm-Message-State: AOAM530pEUsS+/F1qBjoeIoQDsDG53FfXjm8EvdSwJw75/fHmiJ1ynqe
-        dzxcoDjBi5vwLH4ljw54aSF+y0sQctAiFN1NgGg=
-X-Google-Smtp-Source: ABdhPJy6V7rCbEiJe15C6DeQ4diyGwP3W+IH+3LGFcotcY4Lzpv76z0aCO0s2xeMP6Sc/HpdiVeb+XHZ7d/jwbWAe/g=
-X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr1713137pjq.228.1591344873732;
- Fri, 05 Jun 2020 01:14:33 -0700 (PDT)
+        bh=kXdVxsGQNpOmqOgFOL5sHVJSy+udx7MLTpgYocPDlMI=;
+        b=pGZs/41jR7Xhl5C+3mQH7AgaOS4NWOCila0QTucMi2V3L/o1hAVhuWcfzcFnc5OuLi
+         VxAwAbuUKZbCukHkesAcwO4i+Si8f+VLRnw1ZvzPAQ+ZMRtkg8kFzNq7A5AaBheINgS5
+         D3P6fSFarQkYLF2aOURCdD3k7IvHCxgSPYGYhlSha/qIAxdBGlavMgasQZZyWFng2QJU
+         YbIiCSj5kN/HkSCxx4PQyN/LaZueRxGxj+rVSgZcko5wk8gbsm/Vbtg3P5JWkyHR0V4z
+         EDd6V/b39vzj8eOHDNOq01aLQV3b2oXfrzkN/B9TV4jf70TrKzxUorxVQXW9Jdhih7wg
+         t1Zg==
+X-Gm-Message-State: AOAM531Q5l58rWSDtychxv7aeb9Up2yj0Bd1DKZPAXrwsB3JVayPGzio
+        MOr+m60g4pF8cXW7CIXdYYTCDGTRRisuiJQYoPE=
+X-Google-Smtp-Source: ABdhPJy3i2DiYiciOYsCGwbkuo32YvAjkeb6+tWaO1KQxza8n48SGhUI9qlNJgafRWk9Ki7WXIN2lLq/PTS+WyN/su0=
+X-Received: by 2002:a17:902:b206:: with SMTP id t6mr8185421plr.262.1591344970979;
+ Fri, 05 Jun 2020 01:16:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-5-michael@walle.cc>
-In-Reply-To: <20200604211039.12689-5-michael@walle.cc>
+References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-6-michael@walle.cc>
+In-Reply-To: <20200604211039.12689-6-michael@walle.cc>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 5 Jun 2020 11:14:17 +0300
-Message-ID: <CAHp75VdeD6zDc--R4NPHsiqQerzfNGwUikLN+WHMiZZVsQ8QSA@mail.gmail.com>
-Subject: Re: [PATCH v4 04/11] watchdog: add support for sl28cpld watchdog
+Date:   Fri, 5 Jun 2020 11:15:54 +0300
+Message-ID: <CAHp75VdMSoj2+jKkA=oais2QAWBmvgzE6PLJdm6rebooubLCcw@mail.gmail.com>
+Subject: Re: [PATCH v4 05/11] pwm: add support for sl28cpld PWM controller
 To:     Michael Walle <michael@walle.cc>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         devicetree <devicetree@vger.kernel.org>,
@@ -79,98 +79,16 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
+On Fri, Jun 5, 2020 at 12:16 AM Michael Walle <michael@walle.cc> wrote:
 >
-> Add support for the watchdog of the sl28cpld board management
+> Add support for the PWM controller of the sl28cpld board management
 > controller. This is part of a multi-function device driver.
+>
+> The controller has one PWM channel and can just generate four distinct
+> frequencies.
 
-...
-
-> +#include <linux/of_device.h>
-
-Didn't find a user of this.
-
-...
-
-> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> +module_param(nowayout, bool, 0);
-> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
-> +                               __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> +
-> +static int timeout;
-> +module_param(timeout, int, 0);
-> +MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
-
-Guenter ACKed this, but I'm wondering why we still need module parameters...
-
-...
-
-> +       int ret;
-> +
-> +       ret = regmap_read(wdt->regmap, wdt->offset + WDT_COUNT, &val);
-> +
-> +       return (ret < 0) ? 0 : val;
-
-Besides extra parentheses and questionable ' < 0' part, the following
-would look better I think
-
-ret = ...
-if (ret)
-  return 0;
-
-return val;
-
-...
-
-> +       int ret;
-> +
-> +       ret = regmap_write(wdt->regmap, wdt->offset + WDT_TIMEOUT, timeout);
-> +       if (!ret)
-> +               wdd->timeout = timeout;
-> +
-> +       return ret;
-
-Similar story here:
-
-ret = ...
-if (ret)
-  return ret;
-
-wdd->... = ...
-return 0;
-
-...
-
-> +       ret = regmap_read(wdt->regmap, wdt->offset + WDT_CTRL, &status);
-
-> +       if (ret < 0)
-
-What ' < 0' means? Do we have some positive return values?
-Ditto for all your code.
-
-> +               return ret;
-
-...
-
-> +       if (status & WDT_CTRL_EN) {
-> +               sl28cpld_wdt_start(wdd);
-
-> +               set_bit(WDOG_HW_RUNNING, &wdd->status);
-
-Do you need atomic op here? Why?
-
-> +       }
-
-...
-
-> +static const struct of_device_id sl28cpld_wdt_of_match[] = {
-> +       { .compatible = "kontron,sl28cpld-wdt" },
-
-> +       {},
-
-No comma.
-
-> +};
+So same comments (extra comma, cargo cult headers, etc) are applied
+here and perhaps to all other patches in the series.
 
 -- 
 With Best Regards,
