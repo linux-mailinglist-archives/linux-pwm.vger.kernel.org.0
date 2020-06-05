@@ -2,177 +2,175 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 661131EF997
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jun 2020 15:49:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46A601EF9A6
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jun 2020 15:52:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbgFENtH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 5 Jun 2020 09:49:07 -0400
-Received: from mga11.intel.com ([192.55.52.93]:43354 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727049AbgFENtG (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 5 Jun 2020 09:49:06 -0400
-IronPort-SDR: dj1Fqqvh0uxHFvjexo+hRKYVJGssAuxvT5L5t+Y8ebIpMSRit9BguUQENWPPMO3kNbNsUpIUpJ
- 2pW6IBF1noGw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 06:49:05 -0700
-IronPort-SDR: 8DDomgTBZ242f0sFIvOEXFj7cJDJBFhVLeOPBWS3Xxogs6AU01GhkzFdigllMmNLLV018ELpNk
- VXFMPcrGp/Lw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,476,1583222400"; 
-   d="scan'208";a="294695736"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by fmsmga004.fm.intel.com with ESMTP; 05 Jun 2020 06:49:05 -0700
-Received: from orsmsx157.amr.corp.intel.com (10.22.240.23) by
- ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 5 Jun 2020 06:49:05 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- ORSMSX157.amr.corp.intel.com (10.22.240.23) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 5 Jun 2020 06:49:04 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (104.47.37.55) by
- edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Fri, 5 Jun 2020 06:49:04 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h+lrP59x/l1LCIW0IEkhc8MbYD2+jf2Uuxr0FhhtjNXC5VbFgwLiY0pjOhpjpxCsQB24tqJ4o+Hh+rgpzji49nTt6Zel6s5w/8sVrkto0sVZ33Yv5FjLjd+AOqIHCunK9QT5KqzLxKwmjNSKBY7qMZVK82xhM8V5DW/N+89iqEY8BaExT7V8bUMW5vy5trxF9XZjcwAtJFgASJP00ZelC+BicD8g8BRNz+w+2rf/OYA3hMcq5stMsDDe7lQXB2uRCTp2kuK4s3hPohCCbXasSu94N0t6YtTspp5InE1N9gC6KHz0G+Q3II14y9t564pZVEoFGXE/agyDrBD79xbw/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mu/eMgqIKCwMcSCUYlCMzFRrVevxGn8YEyJubcAtx28=;
- b=Zhwv8Nyklwe4unFnH3kPoUeFfvEN5iYr7egIK1AoWxlzhOA8MfrCfi8WB/XEXnIxH+OdTh6L+vFkt20+g8T3odJMXIwUe852QextDiCafdpsFTOJM6k1wYeT1OAfNLTZVGRzPPictPX81YZRv9Ufr08UpOO9u5gdREhsUKvh+1trCLPSCAcVIPdyaFHX0EwdQOZdTZqnRy86F5b42ZnCH2QF5WPSD9iCmvKLNvVD60auehZl7vq1Q2pA1tZ+O0ohpXy+zVL8T8MvchOI5VCKUN85C1Hfn1C28fuujqVYYbhzOADLymcEBHjX4L8davTa3noRONdLatfYvjCLgUUW4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mu/eMgqIKCwMcSCUYlCMzFRrVevxGn8YEyJubcAtx28=;
- b=Wst0X7lkL/PPOP0ux15PapT44am4JRllxgnWcVCNggrCxA/VxKX/NZsP4rOpeQWyeywsyPHpH4EYfEH2IOQx3uSEx1G8RlIvCIkr9fBVVAtvdFgtKRnyfxTO6iyl9ScPXT/flYBy10NfAYHyG3uM7JT58g2Iec4UzkrN20v/GBI=
-Received: from SN6PR11MB2575.namprd11.prod.outlook.com (2603:10b6:805:57::20)
- by SN6PR11MB3197.namprd11.prod.outlook.com (2603:10b6:805:c5::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Fri, 5 Jun
- 2020 13:49:03 +0000
-Received: from SN6PR11MB2575.namprd11.prod.outlook.com
- ([fe80::24f3:9231:b6e0:a13d]) by SN6PR11MB2575.namprd11.prod.outlook.com
- ([fe80::24f3:9231:b6e0:a13d%4]) with mapi id 15.20.3066.019; Fri, 5 Jun 2020
- 13:49:03 +0000
-From:   "G Jaya Kumaran, Vineetha" <vineetha.g.jaya.kumaran@intel.com>
-To:     "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Wan Mohamad, Wan Ahmad Zainie" 
-        <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-Subject: RE: [PATCH 1/3] pwm: Add count attribute in sysfs for Intel Keem Bay
-Thread-Topic: [PATCH 1/3] pwm: Add count attribute in sysfs for Intel Keem Bay
-Thread-Index: AQHWLFMz69MGEF4tMUSIKv62Av4Rmai2MxuAgBCecTA=
-Date:   Fri, 5 Jun 2020 13:49:02 +0000
-Message-ID: <SN6PR11MB257550F64750773C039956ECF6860@SN6PR11MB2575.namprd11.prod.outlook.com>
-References: <1589723560-5734-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
- <1589723560-5734-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
- <20200523210525.5ciw3lyafbwr26qn@pengutronix.de>
-In-Reply-To: <20200523210525.5ciw3lyafbwr26qn@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.212]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c3d24b80-374f-461a-5757-08d809573528
-x-ms-traffictypediagnostic: SN6PR11MB3197:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR11MB3197434263B6492760675C68F6860@SN6PR11MB3197.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1265;
-x-forefront-prvs: 0425A67DEF
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0R+OnOmybzXcIEReAzzT8vorjLQajrmGhEGtTYoYBELaGVQfSDrOy9u+kmzGPOA26tXeRsi3HGHXss1Onzvl1Q645GFb+D6izf/wUzPky1DFL+ZOjawnBqvaHePdozBDYnya1l2R4Tb5yPj123Yh0GYq+Dfo4RKCKwzWocOr2TXPY9nD6yWWQbITDS3f1I6Vf5KTFjQTbzTvDRC1IW2truwJ4Psv1oLqsNYazVp7T8uijw1tnkGxLTrUugICByzaUvimwDL3crov+7msw9pN4Pn1iTG/bVpK4g06bco9Y6IaT31X7FP6noFu+JWsSkWFoU7sCoPM5WcnA382gk0GbVpTt94CsaUZ1YL2KPUlVXAx4oQ63p+eISeG3CdEiF9ob92xX9XKpdK/bX0nnfdeSg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2575.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(39860400002)(376002)(346002)(396003)(136003)(8936002)(83380400001)(8676002)(316002)(76116006)(66946007)(71200400001)(478600001)(54906003)(66476007)(66446008)(4326008)(64756008)(66556008)(2906002)(966005)(55016002)(7696005)(186003)(86362001)(66574014)(26005)(33656002)(53546011)(83080400001)(9686003)(6506007)(5660300002)(6916009)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: pExUh17mUKxPXm+Sgv7hb0NWYYFg5QqyX6AWUdz+5erepUj6rJ3/HaESfuXHaPiVbnQm8qVjw1QpcZVy+1jc25B4wTky8sbmQMNdoKm/0BU9jP2wr2rHAG9kqzHmSK3e8XDBsWNpip7wG9PCOsMGDZ8hPLoa004MBtf4ifp7dTzsSS/h5Zg6yECEAR8bHyAsPuEyH64XOAzoO86siBuOA3c7HWBSk8V5IDCBHi2gw8K+81f6UcbnW9qfayCW4n4O7K3P7fRt5+NFNvw+ds5m98UCpESlV25nNtflhx1btjhphQR9HD1DtrlonvjXQJ0h2o2aqjAKN6HPrVV1TNGnyMr6Mo+y7ITPLmN9zWCPNbNlYGFF5SbPQ8Z2JY67vhrLi8qthtu053rHzBZVQpC4oC4qldaThHd+p+hdHDByzq4qH+ptPw4fY+/RqqMulvDvvjDd4qyip2J61IA2L2ZYtY8DfmQrBcFWC5rDCUvARaT9fSj13R1klWPi4ymAatBD
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S1726981AbgFENwG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 5 Jun 2020 09:52:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44520 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726970AbgFENwF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 Jun 2020 09:52:05 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD9A1C08C5C2;
+        Fri,  5 Jun 2020 06:52:05 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id p30so5133304pgl.11;
+        Fri, 05 Jun 2020 06:52:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1c1Fa5JK2FIhvXkHtUNumIdcwZb8mbKECr3UL3wLbyM=;
+        b=o9uX2gzOqPayrnO3IKS3ZcmPHJDP5LLzmFT6M9yTG+uC0wXhJqJVlQFegBDZeVYTA4
+         siwpxaDWc1p/tgSuyeLITt7ct2iHjuXOEXpFAZJJ/NoPo/IdM5foR+2NlST+nB+gXrv9
+         cU2Q/ApfGiBUizPsKUGyRddJoBHv/Z/vGfxsdK35te5cQvSyY1Xx0mrZ381Mltyg1S0B
+         YoKr3Xb72Ieu7nyRlICieZfvuE6G43t5IgQ77Kd/JbwM8W5ZDIy79qKu53Aq4bQqu3Hu
+         jxcIuCuo5o6QYezcYb6U+ju02avQjscnVcT08Zc8Cl6wO/JESVq0VDht5Oe0zS68DcmF
+         3Nug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=1c1Fa5JK2FIhvXkHtUNumIdcwZb8mbKECr3UL3wLbyM=;
+        b=kOCnMUVmvM1pkftRT2Dd5yK0DKpSt2DJxmHUz+fTlCGCN9W7tnENGZFR5AMtSeXj8M
+         1cSUBJiaVB2DcePMMlB7NM8LBFh3NOr5HFAEMRO6/0oKbshLhKumJ12rXEZhYMyyaEyC
+         9zCiqQDxws+qvGE6jLjH1/gm14F4EEkbqqUdeUCsuVYfZI2DF21cKe29r5M8SV74QuMb
+         /KfhA8P8lD+2ads6LCAOjn9reCi2Wv3X00WOzp4jQlMdcN+94+RL+nzgbyM0UQ8SD3VO
+         g9WgntdCSvtBU9Or2K1vb2z3/LL8T5CW0syVGfuESKyXE5jmlzaxfrv4W9MWAiJ+KK7m
+         jRFg==
+X-Gm-Message-State: AOAM531rd19AxJ+2746Omwh3yRxoDyzf1HA5p7gO+8ayg3uX8jS/6g7h
+        IusQzMP7xtmbfHqJec6R0Ns=
+X-Google-Smtp-Source: ABdhPJwOWZUD2JYn3kIVqPaWWb3ESGXJ5aZicVcn0c+DmT4McsNsmpCMJQ9NThHrGer0VB9Sl5jG+g==
+X-Received: by 2002:a63:1312:: with SMTP id i18mr9716740pgl.142.1591365125365;
+        Fri, 05 Jun 2020 06:52:05 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y23sm8483948pje.3.2020.06.05.06.52.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jun 2020 06:52:03 -0700 (PDT)
+Subject: Re: [PATCH v4 04/11] watchdog: add support for sl28cpld watchdog
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Michael Walle <michael@walle.cc>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20200604211039.12689-1-michael@walle.cc>
+ <20200604211039.12689-5-michael@walle.cc>
+ <CAHp75VdeD6zDc--R4NPHsiqQerzfNGwUikLN+WHMiZZVsQ8QSA@mail.gmail.com>
+ <8f042c2442852c29519c381833f3d289@walle.cc>
+ <CAHp75VfY0BD4CFu6Thx1wE-U0Zt1q8uTOLxkWTMdFk0MBuhYFQ@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <871a4990-5b94-3a17-01d4-74998375f08b@roeck-us.net>
+Date:   Fri, 5 Jun 2020 06:52:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3d24b80-374f-461a-5757-08d809573528
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2020 13:49:02.9787
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0cZIt0o0H1HW6a8V8KDKLQxKMisFBPQ1qVr5B0lQvv4Gyf2NWMsq4lk4EG9/oocChm6qwKq+5ONWKJLh6MYnZtOdeIdyTqmHBYPxzeaMyeyPxBIiBHPyJBFi6t8hFDlY
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3197
-X-OriginatorOrg: intel.com
+In-Reply-To: <CAHp75VfY0BD4CFu6Thx1wE-U0Zt1q8uTOLxkWTMdFk0MBuhYFQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 6/5/20 3:50 AM, Andy Shevchenko wrote:
+> On Fri, Jun 5, 2020 at 1:24 PM Michael Walle <michael@walle.cc> wrote:
+>> Am 2020-06-05 10:14, schrieb Andy Shevchenko:
+>>> On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
+> 
+> ...
+> 
+>>>> +static bool nowayout = WATCHDOG_NOWAYOUT;
+>>>> +module_param(nowayout, bool, 0);
+>>>> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started
+>>>> (default="
+>>>> +                               __MODULE_STRING(WATCHDOG_NOWAYOUT)
+>>>> ")");
+>>>> +
+>>>> +static int timeout;
+>>>> +module_param(timeout, int, 0);
+>>>> +MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
+>>>
+>>> Guenter ACKed this, but I'm wondering why we still need module
+>>> parameters...
+>>
+>> How would a user change the nowayout or the timeout? For the latter
+>> there is
+>> a device tree entry, but thats not easy changable by the user.
+> 
+> Yes, it's more question to VIm and Guenter than to you.
+> 
 
-> -----Original Message-----
-> From: linux-pwm-owner@vger.kernel.org <linux-pwm-owner@vger.kernel.org>
-> On Behalf Of Uwe Kleine-K=F6nig
-> Sent: Sunday, May 24, 2020 5:05 AM
-> To: G Jaya Kumaran, Vineetha <vineetha.g.jaya.kumaran@intel.com>
-> Cc: thierry.reding@gmail.com; robh+dt@kernel.org; linux-
-> pwm@vger.kernel.org; devicetree@vger.kernel.org; Wan Mohamad, Wan
-> Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>; Shevchenko,
-> Andriy <andriy.shevchenko@intel.com>
-> Subject: Re: [PATCH 1/3] pwm: Add count attribute in sysfs for Intel Keem=
- Bay
->=20
-> On Sun, May 17, 2020 at 09:52:38PM +0800,
-> vineetha.g.jaya.kumaran@intel.com wrote:
-> > From: "Lai, Poey Seng" <poey.seng.lai@intel.com>
-> >
-> > In Keem Bay, the number of repetitions for the period/waveform can be
-> > configured from userspace. This requires addition of a sysfs attribute
-> > to get/set the repetition count. Setting this value to 0 will result
-> > in continuous repetition of the waveform until the channel is disabled
-> > or reconfigured.
->=20
-> There is nothing specific for Keem Bay in this patch, the only special th=
-ing here is
-> that this driver is the first implementor.
->=20
-> IMHO all drivers that don't support count should be changed to fail if a =
-count > 0
-> is passed and introducing support in the sysfs interface should be a sepa=
-rate
-> change.
->=20
-> Having said that I'm not convinced this is a good idea given that only ve=
-ry few
-> driver can support this interface. Also this needs documentation, e.g. wh=
-at is
-> expected from .get_state().
->=20
-> You should also motivate what this functionality is used for in the commi=
-t log
-> and I'd prefer to see an in-tree user (apart from sysfs which I don't cou=
-nt as
-> such).
->=20
+Has support for providing module parameters with the kernel command line
+been discontinued/deprecated, or did it run out of favor ? Sorry if I
+missed that.
 
-Agreed, the wording used here is not accurate as this is not specific for K=
-eem Bay.
-Before submitting v2, I will cross-check about the use-case for this functi=
-onality, and if it=20
-can be implemented in some other less intrusive way to the framework (perha=
-ps via a DT property?)
+nowayout has a configuration default. A module parameter is sometimes
+provided by drivers to be able to override it. The timeout provided
+via devicetree or on the command line is only the initial/default
+timeout, and the watchdog daemon can change it after opening the
+watchdog device as it sees fit.
 
-> Best regards
-> Uwe
->=20
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig          =
-  |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
-|
+Guenter
