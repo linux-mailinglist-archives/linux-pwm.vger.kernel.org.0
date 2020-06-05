@@ -2,35 +2,38 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A2DB1EF50A
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jun 2020 12:09:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 996661EF545
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jun 2020 12:24:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725955AbgFEKJW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 5 Jun 2020 06:09:22 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:33177 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgFEKJT (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 Jun 2020 06:09:19 -0400
+        id S1726507AbgFEKY5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 5 Jun 2020 06:24:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbgFEKY5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 Jun 2020 06:24:57 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4838C08C5C2;
+        Fri,  5 Jun 2020 03:24:56 -0700 (PDT)
 Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id C88EF22EE4;
-        Fri,  5 Jun 2020 12:09:15 +0200 (CEST)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 83D3C22EE4;
+        Fri,  5 Jun 2020 12:24:54 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1591351756;
+        t=1591352694;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=MsgwKzto2IoOJjvjTzGrigwCXuk4v4Z5kvEN1IzyNVY=;
-        b=YOz7DoaZopOBIiCVRhTaDmoHMSotqFUD1klTT5xzP/DYKwRApaTqVpxiFqUj62wQlkCeso
-        rmShm/jyM0iW0HJQFp/yx0Rrr4/4YkFrd+I1dZGiEUATTJIfds6yt2ig9EK80aeePTx5yV
-        JdQmMvjA6eyQ/Ls2P9eum9CkF6m0QN0=
+        bh=ILwM29qMSYKcVIWPmdUtNbrZy37LKLfK7PaTLUSzfUU=;
+        b=f4MCEfYDpsR0K+oXpcdSTqRG43PxCzYJmSlibPHE6ofdGUuZ0CvMgQcaoPasbcub3jyhG3
+        T7/ZANjnNC6nRvAdE8mYArlV8+FVqCiV8I5Nf5F6LoVxDZEw+Y5qeiGxMLUXrNUBgbBTSn
+        EEQf07mVqq8+OrOiS2L2exaQBCw7f7o=
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 05 Jun 2020 12:09:15 +0200
+Date:   Fri, 05 Jun 2020 12:24:54 +0200
 From:   Michael Walle <michael@walle.cc>
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -54,97 +57,138 @@ Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management
- controller
-In-Reply-To: <CAHp75Vd-R3yqhq88-whY6vdDhESpzvFCsbi-ygSTjfXfUzOrtg@mail.gmail.com>
+Subject: Re: [PATCH v4 04/11] watchdog: add support for sl28cpld watchdog
+In-Reply-To: <CAHp75VdeD6zDc--R4NPHsiqQerzfNGwUikLN+WHMiZZVsQ8QSA@mail.gmail.com>
 References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-3-michael@walle.cc>
- <CAHp75Vd-R3yqhq88-whY6vdDhESpzvFCsbi-ygSTjfXfUzOrtg@mail.gmail.com>
+ <20200604211039.12689-5-michael@walle.cc>
+ <CAHp75VdeD6zDc--R4NPHsiqQerzfNGwUikLN+WHMiZZVsQ8QSA@mail.gmail.com>
 User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <8ed988b3e0bc48ea9219d0847c1b1b8e@walle.cc>
+Message-ID: <8f042c2442852c29519c381833f3d289@walle.cc>
 X-Sender: michael@walle.cc
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Andy,
-
-Am 2020-06-05 10:01, schrieb Andy Shevchenko:
-> On Fri, Jun 5, 2020 at 12:16 AM Michael Walle <michael@walle.cc> wrote:
+Am 2020-06-05 10:14, schrieb Andy Shevchenko:
+> On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
 >> 
->> Add the core support for the board management controller found on the
->> SMARC-sAL28 board. It consists of the following functions:
->>  - watchdog
->>  - GPIO controller
->>  - PWM controller
->>  - fan sensor
->>  - interrupt controller
->> 
->> At the moment, this controller is used on the Kontron SMARC-sAL28 
->> board.
->> 
->> Please note that the MFD driver is defined as bool in the Kconfig
->> because the next patch will add interrupt support.
+>> Add support for the watchdog of the sl28cpld board management
+>> controller. This is part of a multi-function device driver.
 > 
 > ...
 > 
->> +config MFD_SL28CPLD
->> +       bool "Kontron sl28 core driver"
->> +       depends on I2C=y
+>> +#include <linux/of_device.h>
 > 
-> Why not module?
+> Didn't find a user of this.
 
-There are users of the interupt lines provided by the interrupt 
-controller.
-For example, the gpio-button driver. If this is compiled into the kernel
-(which it is by default in the arm64 defconfig), probing will fail 
-because
-the interrupt is not found. Is there a better way for that? I guess the 
-same
-is true for the GPIO driver.
+I guess mod_devicetable.h then.
 
-> 
->> +       depends on OF
-> 
-> I didn't find an evidence this is needed.
-
-see below.
-
-> 
-> No Compile Test?
-
-ok
-
->> +       select REGMAP_I2C
->> +       select MFD_CORE
 > 
 > ...
 > 
->> +#include <linux/of_platform.h>
+>> +static bool nowayout = WATCHDOG_NOWAYOUT;
+>> +module_param(nowayout, bool, 0);
+>> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started 
+>> (default="
+>> +                               __MODULE_STRING(WATCHDOG_NOWAYOUT) 
+>> ")");
+>> +
+>> +static int timeout;
+>> +module_param(timeout, int, 0);
+>> +MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
 > 
-> No evidence of user of this.
-> I think you meant mod_devicetable.h.
+> Guenter ACKed this, but I'm wondering why we still need module 
+> parameters...
 
-devm_of_platform_populate(), so I need CONFIG_OF, too right?
+How would a user change the nowayout or the timeout? For the latter 
+there is
+a device tree entry, but thats not easy changable by the user.
 
-
->> +static struct i2c_driver sl28cpld_driver = {
->> +       .probe_new = sl28cpld_probe,
->> +       .driver = {
->> +               .name = "sl28cpld",
->> +               .of_match_table = of_match_ptr(sl28cpld_of_match),
 > 
-> Drop of_match_ptr(). It has a little sense in this context (depends 
-> OF).
-> It will have a little sense even if you drop depends OF b/c you will
-> introduce a compiler warning.
+> ...
+> 
+>> +       int ret;
+>> +
+>> +       ret = regmap_read(wdt->regmap, wdt->offset + WDT_COUNT, &val);
+>> +
+>> +       return (ret < 0) ? 0 : val;
+> 
+> Besides extra parentheses and questionable ' < 0' part, the following
+> would look better I think
+> 
+> ret = ...
+> if (ret)
+>   return 0;
+> 
+> return val;
+
+yes, you're right.
+
+> 
+> ...
+> 
+>> +       int ret;
+>> +
+>> +       ret = regmap_write(wdt->regmap, wdt->offset + WDT_TIMEOUT, 
+>> timeout);
+>> +       if (!ret)
+>> +               wdd->timeout = timeout;
+>> +
+>> +       return ret;
+> 
+> Similar story here:
+> 
+> ret = ...
+> if (ret)
+>   return ret;
+> 
+> wdd->... = ...
+> return 0;
+> 
+> ...
 
 ok
 
 > 
->> +       },
->> +};
+>> +       ret = regmap_read(wdt->regmap, wdt->offset + WDT_CTRL, 
+>> &status);
+> 
+>> +       if (ret < 0)
+> 
+> What ' < 0' means? Do we have some positive return values?
+> Ditto for all your code.
+
+probably not, I'll go over all return values and change them.
+
+>> +               return ret;
+> 
+> ...
+> 
+>> +       if (status & WDT_CTRL_EN) {
+>> +               sl28cpld_wdt_start(wdd);
+> 
+>> +               set_bit(WDOG_HW_RUNNING, &wdd->status);
+> 
+> Do you need atomic op here? Why?
+
+I'd say consistency, all watchdog drivers do it like that. I just
+had a look at where this is used, but it looks like access from
+userspace is protected by a lock.
+
+> 
+>> +       }
+> 
+> ...
+> 
+>> +static const struct of_device_id sl28cpld_wdt_of_match[] = {
+>> +       { .compatible = "kontron,sl28cpld-wdt" },
+> 
+>> +       {},
+> 
+> No comma.
+
+yeah ;)
 
 -- 
 -michael
