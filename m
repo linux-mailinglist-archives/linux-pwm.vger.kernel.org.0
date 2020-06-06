@@ -2,36 +2,37 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C8AB1F0885
-	for <lists+linux-pwm@lfdr.de>; Sat,  6 Jun 2020 22:26:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5505D1F0887
+	for <lists+linux-pwm@lfdr.de>; Sat,  6 Jun 2020 22:26:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbgFFU0M (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 6 Jun 2020 16:26:12 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43706 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728350AbgFFU0M (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 6 Jun 2020 16:26:12 -0400
+        id S1728884AbgFFU0Q (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 6 Jun 2020 16:26:16 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22472 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728873AbgFFU0P (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 6 Jun 2020 16:26:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591475171;
+        s=mimecast20190719; t=1591475174;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=xTqw3kVnB8v3sRhZ7VbObD+yMIguMk4i/LcXMpFqEhQ=;
-        b=FeoUY5OFL792Uh0bBYUxAfCinet0gyf5ffzPBHMrmxUTPwTSDsHnYcvTarjw2QIvfPfqMl
-        2wrbdPKowHruCUnN/LxprmZFDyd0VJLHcsJZYSpK8P1PxGe0cB6VsUMWcy7KUAmarJC8p+
-        r+Vpsplx3HBz1z71VMiVnFbVACH1/7w=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HFSbgw+jMLXkeGeVQko9oA8LjxZw2ty0U8jf3NzNvyw=;
+        b=LTil8TGVx3JYC/qXdlam9jlRxxZX+I2o2nReFmDy5yI14z02d9ncLdgSRrBXOk/XFOMF1r
+        FFHBUZIiAg3LviBr9wCajm8oMDZlkTBVO/ZQcfIS8Igp2YTzxvroyFtCKQ9mTPdT7J2j0G
+        ZSe5jft4l0pMnjWk8ZBLzicTWauehQA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-136-nzGiU4zhPGC6e83HQDwwyA-1; Sat, 06 Jun 2020 16:26:07 -0400
-X-MC-Unique: nzGiU4zhPGC6e83HQDwwyA-1
+ us-mta-8-yfoI-trrOVuyI2u1DDXtvQ-1; Sat, 06 Jun 2020 16:26:10 -0400
+X-MC-Unique: yfoI-trrOVuyI2u1DDXtvQ-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 900127BAC;
-        Sat,  6 Jun 2020 20:26:05 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 58C15107ACF2;
+        Sat,  6 Jun 2020 20:26:08 +0000 (UTC)
 Received: from x1.localdomain.com (ovpn-112-50.ams2.redhat.com [10.36.112.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BE3045C557;
-        Sat,  6 Jun 2020 20:26:02 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D81075C57D;
+        Sat,  6 Jun 2020 20:26:05 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -48,9 +49,11 @@ Cc:     Hans de Goede <hdegoede@redhat.com>, linux-pwm@vger.kernel.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org
-Subject: pwm/i915: Convert pwm-crc and i915 driver's PWM code to use the atomic PWM API
-Date:   Sat,  6 Jun 2020 22:25:45 +0200
-Message-Id: <20200606202601.48410-1-hdegoede@redhat.com>
+Subject: [PATCH 01/16] ACPI / LPSS: Resume Cherry Trail PWM controller in no-irq phase
+Date:   Sat,  6 Jun 2020 22:25:46 +0200
+Message-Id: <20200606202601.48410-2-hdegoede@redhat.com>
+In-Reply-To: <20200606202601.48410-1-hdegoede@redhat.com>
+References: <20200606202601.48410-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
@@ -59,52 +62,61 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi All,
+The DSDTs on most Cherry Trail devices have an ugly clutch where the PWM
+controller gets poked from the _PS0 method of the graphics-card device:
 
-This patch series converts the i915 driver's cpde for controlling the
-panel's backlight with an external PWM controller to use the atomic PWM API.
+	Local0 = PSAT /* \_SB_.PCI0.GFX0.PSAT */
+	If (((Local0 & 0x03) == 0x03))
+	{
+	    PSAT &= 0xFFFFFFFC
+	    Local1 = PSAT /* \_SB_.PCI0.GFX0.PSAT */
+	    RSTA = Zero
+	    RSTF = Zero
+	    RSTA = One
+	    RSTF = One
+	    PWMB |= 0xC0000000
+	    PWMC = PWMB /* \_SB_.PCI0.GFX0.PWMB */
+	}
 
-Initially the plan was for this series to consist of 2 parts:
-1. convert the pwm-crc driver to support the atomic PWM API and
-2. convert the i915 driver's PWM code to use the atomic PWM API.
+Where PSAT is the power-status register of the PWM controller, so if it
+is in D3 when the GFX0 device's PS0 method runs then it will turn it on
+and restore the PWM ctrl register value it saved from its PS3 handler.
+Note not only does it restore it, it ors it with 0xC0000000 turning it
+on at a time where we may not want it to get turned on at all.
 
-But during testing I've found a number of bugs in the pwm-lpss and I
-found that the acpi_lpss code needs some special handling because of
-some ugliness found in most Cherry Trail DSDTs.
+The pwm_get call which the i915 driver does to get a reference to the
+PWM controller, already adds a device-link making the GFX0 device a
+consumer of the PWM device. So it should already have been resumed when
+the above AML runs and the AML should thus not do its undesirable poking
+of the PWM controller register.
 
-So now this series has grown somewhat large and consists of 4 parts:
+But the PCI core powers on PCI devices in the no-irq resume phase and
+thus calls the troublesome PS0 method in the no-irq resume phase.
+Where as LPSS devices by default are resumed in the early resume phase.
 
-1. acpi_lpss fixes workarounds for Cherry Trail DSTD nastiness
-2. various fixes to the pwm-lpss driver
-3. convert the pwm-crc driver to support the atomic PWM API and
-4. convert the i915 driver's PWM code to use the atomic PWM API
+This commit sets the resume_from_noirq flag in the bsw_pwm_dev_desc
+struct, so that Cherry Trail PWM controllers will be resumed in the
+no-irq phase. Together with the device-link added by the pwm-get this
+ensures that the PWM controller will be on when the troublesome PS0
+method runs, which stops it from poking the PWM controller.
 
-So we need to discuss how to merge this (once it passes review).
-Although the inter-dependencies are only runtime I still think we should
-make sure that 1-3 are in the drm-intel-next-queued (dinq) tree before
-merging the i915 changes. Both to make sure that the intel-gfx CI system
-does not become unhappy and for bisecting reasons.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/acpi/acpi_lpss.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-The involved acpi_lpss and pwm drivers do not see a whole lot of churn,
-so we could just merge everything through dinq, or we could use immutable
-branch and merge those into dinq.
-
-So Rafael and Thierry, can I either get your Acked-by for directly merging
-this into dinq, or can you provide an immutable branch with these patches?
-
-This series has been tested (and re-tested after adding various bug-fixes)
-extensively. It has been tested on the following devices:
-
--Asus T100TA		BYT + CRC-PMIC PWM
--Toshiba WT8-A		BYT + CRC-PMIC PWM
--Thundersoft TS178	BYT + CRC-PMIC PWM, inverse PWM
--Asus T100HA		CHT + CRC-PMIC PWM
--Terra Pad 1061		BYT + LPSS PWM
--Trekstor Twin 10.1	BYT + LPSS PWM
--Asus T101HA		CHT + CRC-PMIC PWM
--GPD Pocket		CHT + CRC-PMIC PWM
-
-Regards,
-
-Hans
+diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
+index 5e2bfbcf526f..67892fc0b822 100644
+--- a/drivers/acpi/acpi_lpss.c
++++ b/drivers/acpi/acpi_lpss.c
+@@ -257,6 +257,7 @@ static const struct lpss_device_desc bsw_pwm_dev_desc = {
+ 	.flags = LPSS_SAVE_CTX | LPSS_NO_D3_DELAY,
+ 	.prv_offset = 0x800,
+ 	.setup = bsw_pwm_setup,
++	.resume_from_noirq = true,
+ };
+ 
+ static const struct lpss_device_desc byt_uart_dev_desc = {
+-- 
+2.26.2
 
