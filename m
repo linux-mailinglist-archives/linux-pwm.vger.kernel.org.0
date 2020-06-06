@@ -2,37 +2,37 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 718291F08A6
-	for <lists+linux-pwm@lfdr.de>; Sat,  6 Jun 2020 22:26:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 347EE1F08A0
+	for <lists+linux-pwm@lfdr.de>; Sat,  6 Jun 2020 22:26:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbgFFU0l (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 6 Jun 2020 16:26:41 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36781 "EHLO
+        id S1728916AbgFFU0e (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 6 Jun 2020 16:26:34 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55369 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728906AbgFFU0k (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 6 Jun 2020 16:26:40 -0400
+        by vger.kernel.org with ESMTP id S1728906AbgFFU0e (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 6 Jun 2020 16:26:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591475199;
+        s=mimecast20190719; t=1591475193;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=OyDeV0Z/UvojkUctUmW3EntL3TMpO41rrKpUP7M6VZg=;
-        b=TG3X8I8oEYLK5o9grFONQamXCQsWiM25nVx9nmoWsLq77amGOEan0JDS9fYSyfXB0Nas42
-        7YuD23X2yIrDA8IgThQNeGrvUjHxlUs74Ims2zpFlMdRJ/Vt0nT3D7FV3L1ymqNOmcDS/B
-        1xKbN7FqcqUXHWgRc3gLx/cOXG+sn3E=
+        bh=enDmigKPZ6hGhbnIXLCk/1+mW1SDxZUvwf02x4z1WGI=;
+        b=BCftdV50ALhoeHN0wrkTq2Cbh18kaQImRku830E0zxR5RSpFqaU7r+YUt0Q7HfwQhHG4WW
+        1+Tw3jLynULef2qlW3ofyangmS3tWaVGH5jMMEVi4ImpLetR/VnZghb6OrX9cMXw+YDnsZ
+        WON/BR+fvV89SmB6eSbdnuDU5z3dYQA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-YakesdgHOR6dhfC8jZVQYw-1; Sat, 06 Jun 2020 16:26:26 -0400
-X-MC-Unique: YakesdgHOR6dhfC8jZVQYw-1
+ us-mta-44-7YYIbBAIOxmBDR0HiDxK_g-1; Sat, 06 Jun 2020 16:26:29 -0400
+X-MC-Unique: 7YYIbBAIOxmBDR0HiDxK_g-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D436B1853578;
-        Sat,  6 Jun 2020 20:26:24 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 99C3C1005510;
+        Sat,  6 Jun 2020 20:26:27 +0000 (UTC)
 Received: from x1.localdomain.com (ovpn-112-50.ams2.redhat.com [10.36.112.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6081D5C557;
-        Sat,  6 Jun 2020 20:26:22 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 273615C557;
+        Sat,  6 Jun 2020 20:26:25 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -49,9 +49,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>, linux-pwm@vger.kernel.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org
-Subject: [PATCH 07/16] pwm: crc: Fix period / duty_cycle times being off by a factor of 256
-Date:   Sat,  6 Jun 2020 22:25:52 +0200
-Message-Id: <20200606202601.48410-8-hdegoede@redhat.com>
+Subject: [PATCH 08/16] pwm: crc: Fix off-by-one error in the clock-divider calculations
+Date:   Sat,  6 Jun 2020 22:25:53 +0200
+Message-Id: <20200606202601.48410-9-hdegoede@redhat.com>
 In-Reply-To: <20200606202601.48410-1-hdegoede@redhat.com>
 References: <20200606202601.48410-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -62,67 +62,48 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-While looking into adding atomic-pwm support to the pwm-crc driver I
-noticed something odd, there is a PWM_BASE_CLK define of 6 MHz and
-there is a clock-divider which divides this with a value between 1-128,
-and there are 256 duty-cycle steps.
+The CRC PWM controller has a clock-divider which divides the clock with
+a value between 1-128. But as can seen from the PWM_DIV_CLK_xxx
+defines, this range maps to a register value of 0-127.
 
-The pwm-crc code before this commit assumed that a clock-divider
-setting of 1 means that the PWM output is running at 6 MHZ, if that
-is true, where do these 256 duty-cycle steps come from?
+So after calculating the clock-divider we must subtract 1 to get the
+register value, unless the requested frequency was so high that the
+calculation has already resulted in a (rounded) divider value of 0.
 
-This would require an internal frequency of 256 * 6 MHz = 1.5 GHz, that
-seems unlikely for a PMIC which is using a silicon process optimized for
-power-switching transistors. It is way more likely that there is an 8
-bit counter for the duty cycle which acts as an extra fixed divider
-wrt the PWM output frequency.
-
-The main user of the pwm-crc driver is the i915 GPU driver which uses it
-for backlight control. Lets compare the PWM register values set by the
-video-BIOS (the GOP), assuming the extra fixed divider is present versus
-the PWM frequency specified in the Video-BIOS-Tables:
-
-Device:		PWM Hz set by BIOS	PWM Hz specified in VBT
-Asus T100TA 	200			200
-Asus T100HA 	200			200
-Lenovo Miix 2 8	23437			20000
-Toshiba WT8-A	23437			20000
-
-So as we can see if we assume the extra division by 256 then the register
-values set by the GOP are an exact match for the VBT values, where as
-otherwise the values would be of by a factor of 256.
-
-This commit fixes the period / duty_cycle calculations to take the
-extra division by 256 into account.
+Note that before this fix, setting a period of PWM_MAX_PERIOD_NS which
+corresponds to the max. divider value of 128 could have resulted in a
+bug where the code would use 128 as divider-register value which would
+have resulted in an actual divider value of 0 (and the enable bit being
+set). A rounding error stopped this bug from actually happen. This
+same rounding error means that after the subtraction of 1 it is impossible
+to set the divider to 128. Also bump PWM_MAX_PERIOD_NS by 1 ns to allow
+setting a divider of 128 (register-value 127).
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/pwm/pwm-crc.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/pwm/pwm-crc.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pwm/pwm-crc.c b/drivers/pwm/pwm-crc.c
-index 272eeb071147..43fc912c1fe9 100644
+index 43fc912c1fe9..5ba2a65c524c 100644
 --- a/drivers/pwm/pwm-crc.c
 +++ b/drivers/pwm/pwm-crc.c
-@@ -21,8 +21,10 @@
- 
+@@ -22,7 +22,7 @@
  #define PWM_MAX_LEVEL		0xFF
  
--#define PWM_BASE_CLK		6000000  /* 6 MHz */
--#define PWM_MAX_PERIOD_NS	21333    /* 46.875KHz */
-+#define PWM_BASE_CLK_MHZ	6	/* 6 MHz */
-+#define PWM_MAX_PERIOD_NS	5461333	/* 183 Hz */
-+
-+#define NSEC_PER_MHZ		1000
+ #define PWM_BASE_CLK_MHZ	6	/* 6 MHz */
+-#define PWM_MAX_PERIOD_NS	5461333	/* 183 Hz */
++#define PWM_MAX_PERIOD_NS	5461334	/* 183 Hz */
  
- /**
-  * struct crystalcove_pwm - Crystal Cove PWM controller
-@@ -72,7 +74,7 @@ static int crc_pwm_config(struct pwm_chip *c, struct pwm_device *pwm,
+ #define NSEC_PER_MHZ		1000
  
+@@ -75,6 +75,9 @@ static int crc_pwm_config(struct pwm_chip *c, struct pwm_device *pwm,
  		/* changing the clk divisor, need to disable fisrt */
  		crc_pwm_disable(c, pwm);
--		clk_div = PWM_BASE_CLK * period_ns / NSEC_PER_SEC;
-+		clk_div = PWM_BASE_CLK_MHZ * period_ns / (256 * NSEC_PER_MHZ);
+ 		clk_div = PWM_BASE_CLK_MHZ * period_ns / (256 * NSEC_PER_MHZ);
++		/* clk_div 1 - 128, maps to register values 0-127 */
++		if (clk_div > 0)
++			clk_div--;
  
  		regmap_write(crc_pwm->regmap, PWM0_CLK_DIV,
  					clk_div | PWM_OUTPUT_ENABLE);
