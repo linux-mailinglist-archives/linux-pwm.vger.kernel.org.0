@@ -2,228 +2,213 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 44A251F08C4
-	for <lists+linux-pwm@lfdr.de>; Sat,  6 Jun 2020 22:26:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6FE21F0D3D
+	for <lists+linux-pwm@lfdr.de>; Sun,  7 Jun 2020 19:03:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbgFFU07 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 6 Jun 2020 16:26:59 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28773 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728902AbgFFU06 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 6 Jun 2020 16:26:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591475216;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jyZxXAN/50odynkuGcRyQRxDg+34tQTkyTc3TZVLI8I=;
-        b=XLPl8Jfuf2H6CRqnpflVxs/pT3BHySI3kvAx2Jxk7LvsqDU6mbnYinqLoxthLrIy8M1BGL
-        9caN+3ZhJTfWUWEeQioCEKT6/Olf4gWGxoFnMS2mHhJohLG3+ceX2C6vxJoiq6B+cAE0va
-        5LYwfCwxGqzpl4qWlzD+qtq4e8PHPgA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-291-gwRwxUoaOf6A49FdjzD0Jg-1; Sat, 06 Jun 2020 16:26:51 -0400
-X-MC-Unique: gwRwxUoaOf6A49FdjzD0Jg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BBBE01853562;
-        Sat,  6 Jun 2020 20:26:49 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-112-50.ams2.redhat.com [10.36.112.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E9705C557;
-        Sat,  6 Jun 2020 20:26:47 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        id S1726720AbgFGRDn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 7 Jun 2020 13:03:43 -0400
+Received: from mga03.intel.com ([134.134.136.65]:6161 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726661AbgFGRDm (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sun, 7 Jun 2020 13:03:42 -0400
+IronPort-SDR: 9X38aPlJgl0lWfua0fgmSxVTkqcFC/fcRBJIz6c9/8oUl2bLL+PQDecDVSA7tiKawgIoNZ5Ipr
+ dQtJizV4NKaw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2020 10:03:38 -0700
+IronPort-SDR: 0dFrGoFzh8BbQ3dyiLNKbR3AxLmFYZJG6/gjbDzxXgIk5uKomSN4tK10fMiwIarC8v0DR5nR63
+ ZPi7cp+noQFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,485,1583222400"; 
+   d="scan'208";a="472343710"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 07 Jun 2020 10:03:35 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jhyht-00BUOf-Iw; Sun, 07 Jun 2020 20:03:37 +0300
+Date:   Sun, 7 Jun 2020 20:03:37 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Jani Nikula <jani.nikula@linux.intel.com>,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
         <ville.syrjala@linux.intel.com>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-pwm@vger.kernel.org,
+        Len Brown <lenb@kernel.org>, linux-pwm@vger.kernel.org,
         intel-gfx <intel-gfx@lists.freedesktop.org>,
         dri-devel@lists.freedesktop.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org
-Subject: [PATCH 16/16] drm/i915: panel: Use atomic PWM API for devs with an external PWM controller
-Date:   Sat,  6 Jun 2020 22:26:01 +0200
-Message-Id: <20200606202601.48410-17-hdegoede@redhat.com>
-In-Reply-To: <20200606202601.48410-1-hdegoede@redhat.com>
+Subject: Re: [PATCH 02/16] ACPI / LPSS: Save Cherry Trail PWM ctx registers
+ only once (at activation)
+Message-ID: <20200607170337.GY2428291@smile.fi.intel.com>
 References: <20200606202601.48410-1-hdegoede@redhat.com>
+ <20200606202601.48410-3-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200606202601.48410-3-hdegoede@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Now that the PWM drivers which we use have been converted to the atomic
-PWM API, we can move the i915 panel code over to using the atomic PWM API.
+On Sat, Jun 06, 2020 at 10:25:47PM +0200, Hans de Goede wrote:
+> The DSDTs on most Cherry Trail devices have an ugly clutch where the PWM
+> controller gets turned off from the _PS3 method of the graphics-card dev:
+> 
+>             Method (_PS3, 0, Serialized)  // _PS3: Power State 3
+>             {
+>                 ...
+>                             PWMB = PWMC /* \_SB_.PCI0.GFX0.PWMC */
+>                             PSAT |= 0x03
+>                             Local0 = PSAT /* \_SB_.PCI0.GFX0.PSAT */
+>                 ...
+>             }
+> 
+> Where PSAT is the power-status register of the PWM controller.
+> 
+> Since the i915 driver will do a pwm_get on the pwm device as it uses it to
+> control the LCD panel backlight, there is a device-link marking the i915
+> device as a consumer of the pwm device. So that the PWM controller will
+> always be suspended after the i915 driver suspends (which is the right
+> thing to do). This causes the above GFX0 PS3 AML code to run before
+> acpi_lpss.c calls acpi_lpss_save_ctx().
+> 
+> So on these devices the PWM controller will already be off when
+> acpi_lpss_save_ctx() runs. This causes it to read/save all 1-s (0xffffffff)
+> as ctx register values.
+> 
+> When these bogus values get restored on resume the PWM controller actually
+> keeps working, since most bits are reserved, but this does set bit 3 of
+> the LPSS General purpose register, which for the PWM controller has the
+> following function: "This bit is re-used to support 32kHz slow mode.
+> Default is 19.2MHz as PWM source clock".
+> 
+> This causes the clock of the PWM controller to switch from 19.2MHz to
+> 32KHz, which is a slow-down of a factor 600. Suprisingly enough so far
+> there have been few bug reports about this. This is likely because the
+> i915 driver was hardcoding the PWM frequency to 46 KHz, which divided
+> by 600 would result in a PWM frequency of aprox. 78 Hz, which mostly
+> still works fine. There are some bug reports about the LCD backlight
+> flickering after suspend/resume which are likely caused by this issue.
+> 
+> But with the upcoming patch-series to finally switch the i915 drivers
+> code for external PWM controllers to use the atomic API and to honor
+> the PWM frequency specified in the video BIOS (VBT), this becomes a much
+> bigger problem. On most cases the VBT specifies either 200 Hz or 20
+> KHz as PWM frequency, which with the mentioned issue ends up being either
+> 1/3 Hz, where the backlight actually visible blinks on and off every 3s,
+> or in 33 Hz and horrible flickering of the backlight.
+> 
+> There are a number of possible solutions to this problem:
+> 
+> 1. Make acpi_lpss_save_ctx() run before GFX0._PS3
+>  Pro: Clean solution from pov of not medling with save/restore ctx code
+>  Con: As mentioned the current ordering is the right thing to do
+>  Con: Requires assymmetry in at what suspend/resume phase we do the save vs
+>       restore, requiring more suspend/resume ordering hacks in already
+>       convoluted acpi_lpss.c suspend/resume code.
+> 2. Do some sort of save once mode for the LPSS ctx
+>  Pro: Reasonably clean
+>  Con: Needs a new LPSS flag + code changes to handle the flag
+> 3. Detect we have failed to save the ctx registers and do not restore them
+>  Pro: Not PWM specific, might help with issues on other LPSS devices too
+>  Con: If we can get away with not restoring the ctx why bother with it at
+>       all?
+> 4. Do not save the ctx for CHT PWM controllers
+>  Pro: Clean, as simple as dropping a flag?
+>  Con: Not so simple as dropping a flag, needs a new flag to ensure that
+>       we still do lpss_deassert_reset() on device activation.
+> 5. Make the pwm-lpss code fixup the LPSS-context registers
+>  Pro: Keeps acpi_lpss.c code clean
+>  Con: Moves knowledge of LPSS-context into the pwm-lpss.c code
+> 
+> 1 and 5 both do not seem to be a desirable way forward.
+> 
+> 3 and 4 seem ok, but they both assume that restoring the LPSS-context
+> registers is not necessary. I have done a couple of test and those do
+> show that restoring the LPSS-context indeed does not seem to be necessary
+> on devices using s2idle suspend (and successfully reaching S0i3). But I
+> have no hardware to test deep / S3 suspend. So I'm not sure that not
+> restoring the context is safe.
+> 
+> That leaves solution 2, which is about as simple / clean as 3 and 4,
+> so this commit fixes the described problem by implementing a new
+> LPSS_SAVE_CTX_ONCE flag and setting that for the CHT PWM controllers.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/acpi/acpi_lpss.c | 19 ++++++++++++++++---
+>  1 file changed, 16 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
+> index 67892fc0b822..26933e6b7b8c 100644
+> --- a/drivers/acpi/acpi_lpss.c
+> +++ b/drivers/acpi/acpi_lpss.c
+> @@ -68,6 +68,14 @@ ACPI_MODULE_NAME("acpi_lpss");
+>  #define LPSS_LTR			BIT(3)
+>  #define LPSS_SAVE_CTX			BIT(4)
+>  #define LPSS_NO_D3_DELAY		BIT(5)
+> +/*
+> + * For some devices the DSDT AML code for another device turns off the device
+> + * before our suspend handler runs, causing us to read/save all 1-s (0xffffffff)
+> + * as ctx register values.
+> + * Luckily these devices always use the same ctx register values, so we can
+> + * work around this by saving the ctx registers once on activation.
+> + */
+> +#define LPSS_SAVE_CTX_ONCE		BIT(6)
 
-The removes a long standing FIXME and this removes a flicker where
-the backlight brightness would jump to 100% when i915 loads even if
-using the fastset path.
+A nit: I would group SAVE_CTX and CTX_ONCE in the list, i.e. make this BIT(5)
+and move NO_D3_DELAY to BIT(6).
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- .../drm/i915/display/intel_display_types.h    |  3 +-
- drivers/gpu/drm/i915/display/intel_panel.c    | 73 +++++++++----------
- 2 files changed, 37 insertions(+), 39 deletions(-)
+>  struct lpss_private_data;
+>  
+> @@ -254,7 +262,7 @@ static const struct lpss_device_desc byt_pwm_dev_desc = {
+>  };
+>  
+>  static const struct lpss_device_desc bsw_pwm_dev_desc = {
+> -	.flags = LPSS_SAVE_CTX | LPSS_NO_D3_DELAY,
+> +	.flags = LPSS_SAVE_CTX_ONCE | LPSS_NO_D3_DELAY,
+>  	.prv_offset = 0x800,
+>  	.setup = bsw_pwm_setup,
+>  	.resume_from_noirq = true,
+> @@ -885,9 +893,14 @@ static int acpi_lpss_activate(struct device *dev)
+>  	 * we have to deassert reset line to be sure that ->probe() will
+>  	 * recognize the device.
+>  	 */
+> -	if (pdata->dev_desc->flags & LPSS_SAVE_CTX)
+> +	if (pdata->dev_desc->flags & (LPSS_SAVE_CTX | LPSS_SAVE_CTX_ONCE))
+>  		lpss_deassert_reset(pdata);
+>  
+> +#ifdef CONFIG_PM
+> +	if (pdata->dev_desc->flags & LPSS_SAVE_CTX_ONCE)
+> +		acpi_lpss_save_ctx(dev, pdata);
+> +#endif
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1031,7 +1044,7 @@ static int acpi_lpss_resume(struct device *dev)
+>  
+>  	acpi_lpss_d3_to_d0_delay(pdata);
+>  
+> -	if (pdata->dev_desc->flags & LPSS_SAVE_CTX)
+> +	if (pdata->dev_desc->flags & (LPSS_SAVE_CTX | LPSS_SAVE_CTX_ONCE))
+>  		acpi_lpss_restore_ctx(dev, pdata);
+>  
+>  	return 0;
+> -- 
+> 2.26.2
+> 
 
-diff --git a/drivers/gpu/drm/i915/display/intel_display_types.h b/drivers/gpu/drm/i915/display/intel_display_types.h
-index 24ea4a7b6dde..48afb2925271 100644
---- a/drivers/gpu/drm/i915/display/intel_display_types.h
-+++ b/drivers/gpu/drm/i915/display/intel_display_types.h
-@@ -28,6 +28,7 @@
- 
- #include <linux/async.h>
- #include <linux/i2c.h>
-+#include <linux/pwm.h>
- #include <linux/sched/clock.h>
- 
- #include <drm/drm_atomic.h>
-@@ -223,7 +224,7 @@ struct intel_panel {
- 		bool util_pin_active_low;	/* bxt+ */
- 		u8 controller;		/* bxt+ only */
- 		struct pwm_device *pwm;
--		int pwm_period_ns;
-+		struct pwm_state pwm_state;
- 
- 		/* DPCD backlight */
- 		u8 pwmgen_bit_count;
-diff --git a/drivers/gpu/drm/i915/display/intel_panel.c b/drivers/gpu/drm/i915/display/intel_panel.c
-index cb28b9908ca4..a0f76343f381 100644
---- a/drivers/gpu/drm/i915/display/intel_panel.c
-+++ b/drivers/gpu/drm/i915/display/intel_panel.c
-@@ -592,10 +592,11 @@ static u32 bxt_get_backlight(struct intel_connector *connector)
- static u32 pwm_get_backlight(struct intel_connector *connector)
- {
- 	struct intel_panel *panel = &connector->panel;
--	int duty_ns;
-+	int duty_ns, period_ns;
- 
- 	duty_ns = pwm_get_duty_cycle(panel->backlight.pwm);
--	return DIV_ROUND_UP(duty_ns * 100, panel->backlight.pwm_period_ns);
-+	period_ns = pwm_get_period(panel->backlight.pwm);
-+	return DIV_ROUND_UP(duty_ns * 100, period_ns);
- }
- 
- static void lpt_set_backlight(const struct drm_connector_state *conn_state, u32 level)
-@@ -669,10 +670,10 @@ static void bxt_set_backlight(const struct drm_connector_state *conn_state, u32
- static void pwm_set_backlight(const struct drm_connector_state *conn_state, u32 level)
- {
- 	struct intel_panel *panel = &to_intel_connector(conn_state->connector)->panel;
--	int duty_ns = DIV_ROUND_UP(level * panel->backlight.pwm_period_ns, 100);
- 
--	pwm_config(panel->backlight.pwm, duty_ns,
--		   panel->backlight.pwm_period_ns);
-+	panel->backlight.pwm_state.duty_cycle =
-+		DIV_ROUND_UP(level * panel->backlight.pwm_state.period, 100);
-+	pwm_apply_state(panel->backlight.pwm, &panel->backlight.pwm_state);
- }
- 
- static void
-@@ -841,10 +842,8 @@ static void pwm_disable_backlight(const struct drm_connector_state *old_conn_sta
- 	struct intel_connector *connector = to_intel_connector(old_conn_state->connector);
- 	struct intel_panel *panel = &connector->panel;
- 
--	/* Disable the backlight */
--	intel_panel_actually_set_backlight(old_conn_state, 0);
--	usleep_range(2000, 3000);
--	pwm_disable(panel->backlight.pwm);
-+	panel->backlight.pwm_state.enabled = false;
-+	pwm_apply_state(panel->backlight.pwm, &panel->backlight.pwm_state);
- }
- 
- void intel_panel_disable_backlight(const struct drm_connector_state *old_conn_state)
-@@ -1176,9 +1175,14 @@ static void pwm_enable_backlight(const struct intel_crtc_state *crtc_state,
- {
- 	struct intel_connector *connector = to_intel_connector(conn_state->connector);
- 	struct intel_panel *panel = &connector->panel;
-+	int level = panel->backlight.level;
- 
--	pwm_enable(panel->backlight.pwm);
--	intel_panel_actually_set_backlight(conn_state, panel->backlight.level);
-+	level = intel_panel_compute_brightness(connector, level);
-+
-+	panel->backlight.pwm_state.duty_cycle =
-+		DIV_ROUND_UP(level * panel->backlight.pwm_state.period, 100);
-+	panel->backlight.pwm_state.enabled = true;
-+	pwm_apply_state(panel->backlight.pwm, &panel->backlight.pwm_state);
- }
- 
- static void __intel_panel_enable_backlight(const struct intel_crtc_state *crtc_state,
-@@ -1897,8 +1901,7 @@ static int pwm_setup_backlight(struct intel_connector *connector,
- 	struct drm_i915_private *dev_priv = to_i915(dev);
- 	struct intel_panel *panel = &connector->panel;
- 	const char *desc;
--	u32 level, ns;
--	int retval;
-+	u32 level;
- 
- 	/* Get the right PWM chip for DSI backlight according to VBT */
- 	if (dev_priv->vbt.dsi.config->pwm_blc == PPS_BLC_PMIC) {
-@@ -1916,36 +1919,30 @@ static int pwm_setup_backlight(struct intel_connector *connector,
- 		return -ENODEV;
- 	}
- 
--	panel->backlight.pwm_period_ns = NSEC_PER_SEC /
--					 get_vbt_pwm_freq(dev_priv);
--
--	/*
--	 * FIXME: pwm_apply_args() should be removed when switching to
--	 * the atomic PWM API.
--	 */
--	pwm_apply_args(panel->backlight.pwm);
--
- 	panel->backlight.max = 100; /* 100% */
- 	panel->backlight.min = get_backlight_min_vbt(connector);
--	level = intel_panel_compute_brightness(connector, 100);
--	ns = DIV_ROUND_UP(level * panel->backlight.pwm_period_ns, 100);
- 
--	retval = pwm_config(panel->backlight.pwm, ns,
--			    panel->backlight.pwm_period_ns);
--	if (retval < 0) {
--		drm_err(&dev_priv->drm, "Failed to configure the pwm chip\n");
--		pwm_put(panel->backlight.pwm);
--		panel->backlight.pwm = NULL;
--		return retval;
-+	if (pwm_is_enabled(panel->backlight.pwm) &&
-+	    pwm_get_period(panel->backlight.pwm)) {
-+		/* PWM is already enabled, use existing settings */
-+		pwm_get_state(panel->backlight.pwm, &panel->backlight.pwm_state);
-+
-+		level = DIV_ROUND_UP(panel->backlight.pwm_state.duty_cycle *
-+					100, panel->backlight.pwm_state.period);
-+		level = intel_panel_compute_brightness(connector, level);
-+		panel->backlight.level = clamp(level, panel->backlight.min,
-+					       panel->backlight.max);
-+		panel->backlight.enabled = true;
-+
-+		drm_dbg_kms(&dev_priv->drm, "PWM already enabled at freq %ld, VBT freq %d, level %d\n",
-+			    NSEC_PER_SEC / panel->backlight.pwm_state.period,
-+			    get_vbt_pwm_freq(dev_priv), level);
-+	} else {
-+		/* Set period from VBT frequency, leave other setting at 0. */
-+		panel->backlight.pwm_state.period =
-+			NSEC_PER_SEC / get_vbt_pwm_freq(dev_priv);
- 	}
- 
--	level = DIV_ROUND_UP(pwm_get_duty_cycle(panel->backlight.pwm) * 100,
--			     panel->backlight.pwm_period_ns);
--	level = intel_panel_compute_brightness(connector, level);
--	panel->backlight.level = clamp(level, panel->backlight.min,
--				       panel->backlight.max);
--	panel->backlight.enabled = panel->backlight.level != 0;
--
- 	drm_info(&dev_priv->drm, "Using %s PWM for LCD backlight control\n",
- 		 desc);
- 	return 0;
 -- 
-2.26.2
+With Best Regards,
+Andy Shevchenko
+
 
