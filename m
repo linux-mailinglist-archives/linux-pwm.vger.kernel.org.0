@@ -2,30 +2,31 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14CBA1F6F83
-	for <lists+linux-pwm@lfdr.de>; Thu, 11 Jun 2020 23:38:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08E761F6FC1
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jun 2020 00:12:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726159AbgFKVh7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 11 Jun 2020 17:37:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41412 "EHLO
+        id S1726153AbgFKWM5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 11 Jun 2020 18:12:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbgFKVh7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 11 Jun 2020 17:37:59 -0400
+        with ESMTP id S1725869AbgFKWM5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 11 Jun 2020 18:12:57 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B3F3C08C5C1
-        for <linux-pwm@vger.kernel.org>; Thu, 11 Jun 2020 14:37:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFD81C03E96F
+        for <linux-pwm@vger.kernel.org>; Thu, 11 Jun 2020 15:12:56 -0700 (PDT)
 Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
         by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1jjUtQ-0006Nh-Qd; Thu, 11 Jun 2020 23:37:48 +0200
+        id 1jjVRF-0000vZ-JC; Fri, 12 Jun 2020 00:12:45 +0200
 Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
         (envelope-from <ukl@pengutronix.de>)
-        id 1jjUtP-0005wH-Ot; Thu, 11 Jun 2020 23:37:47 +0200
-Date:   Thu, 11 Jun 2020 23:37:44 +0200
+        id 1jjVRE-0007M8-Nk; Fri, 12 Jun 2020 00:12:44 +0200
+Date:   Fri, 12 Jun 2020 00:12:42 +0200
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Jani Nikula <jani.nikula@linux.intel.com>,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
         Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
@@ -33,18 +34,20 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Len Brown <lenb@kernel.org>, linux-pwm@vger.kernel.org,
         intel-gfx <intel-gfx@lists.freedesktop.org>,
         dri-devel@lists.freedesktop.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2 11/15] pwm: crc: Implement get_state() method
-Message-ID: <20200611213744.6gg2oy45cende6ba@taurus.defre.kleine-koenig.org>
+Subject: Re: [PATCH v2 03/15] pwm: lpss: Add range limit check for the
+ base_unit register value
+Message-ID: <20200611221242.3bjqvnhcwwxaocxy@taurus.defre.kleine-koenig.org>
 References: <20200607181840.13536-1-hdegoede@redhat.com>
- <20200607181840.13536-12-hdegoede@redhat.com>
+ <20200607181840.13536-4-hdegoede@redhat.com>
+ <20200608035023.GZ2428291@smile.fi.intel.com>
+ <90769dc0-3174-195b-34e0-ef4bb9d9b982@redhat.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zx4xnht5tvc5agd3"
+        protocol="application/pgp-signature"; boundary="hp7kq6gze6fyafh7"
 Content-Disposition: inline
-In-Reply-To: <20200607181840.13536-12-hdegoede@redhat.com>
+In-Reply-To: <90769dc0-3174-195b-34e0-ef4bb9d9b982@redhat.com>
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -55,68 +58,44 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---zx4xnht5tvc5agd3
+--hp7kq6gze6fyafh7
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-On Sun, Jun 07, 2020 at 08:18:36PM +0200, Hans de Goede wrote:
-> Implement the pwm_ops.get_state() method to complete the support for the
-> new atomic PWM API.
+On Mon, Jun 08, 2020 at 01:07:12PM +0200, Hans de Goede wrote:
+> Hi,
 >=20
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/pwm/pwm-crc.c | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
+> On 6/8/20 5:50 AM, Andy Shevchenko wrote:
+> > On Sun, Jun 07, 2020 at 08:18:28PM +0200, Hans de Goede wrote:
+> > > When the user requests a high enough period ns value, then the
+> > > calculations in pwm_lpss_prepare() might result in a base_unit value =
+of 0.
+> > >=20
+> > > But according to the data-sheet the way the PWM controller works is t=
+hat
+> > > each input clock-cycle the base_unit gets added to a N bit counter and
+> > > that counter overflowing determines the PWM output frequency. Adding 0
+> > > to the counter is a no-op. The data-sheet even explicitly states that
+> > > writing 0 to the base_unit bits will result in the PWM outputting a
+> > > continuous 0 signal.
+> >=20
+> > So, and why it's a problem?
 >=20
-> diff --git a/drivers/pwm/pwm-crc.c b/drivers/pwm/pwm-crc.c
-> index 58c7e9ef7278..6c75a3470bc8 100644
-> --- a/drivers/pwm/pwm-crc.c
-> +++ b/drivers/pwm/pwm-crc.c
-> @@ -114,8 +114,37 @@ static int crc_pwm_apply(struct pwm_chip *chip, stru=
-ct pwm_device *pwm,
->  	return 0;
->  }
-> =20
-> +static void crc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *=
-pwm,
-> +			       struct pwm_state *state)
-> +{
-> +	struct crystalcove_pwm *crc_pwm =3D to_crc_pwm(chip);
-> +	struct device *dev =3D crc_pwm->chip.dev;
-> +	unsigned int clk_div, clk_div_reg, duty_cycle_reg;
-> +	int error;
-> +
-> +	error =3D regmap_read(crc_pwm->regmap, PWM0_CLK_DIV, &clk_div_reg);
-> +	if (error) {
-> +		dev_err(dev, "Error reading PWM0_CLK_DIV %d\n", error);
-> +		return;
-> +	}
-> +
-> +	error =3D regmap_read(crc_pwm->regmap, PWM0_DUTY_CYCLE, &duty_cycle_reg=
-);
-> +	if (error) {
-> +		dev_err(dev, "Error reading PWM0_DUTY_CYCLE %d\n", error);
-> +		return;
-> +	}
+> Lets sya the user requests a PWM output frequency of 100Hz on Cherry Trail
+> which has a 19200000 Hz clock this will result in 100 * 65536 / 19200000 =
+=3D
+> 0.3 -> 0 as base-unit value. So instead of getting 100 Hz the user will
+> now get a pin which is always outputting low.
 
-I assume that duty_cycle_reg cannot be bigger than 0xff? Would it make
-sense to mask the value accordingly to get more robust code?
+I didn't follow the complete discussion but note that the general rule
+is:
 
-> +	clk_div =3D (clk_div_reg & ~PWM_OUTPUT_ENABLE) + 1;
-> +
-> +	state->period     =3D clk_div * NSEC_PER_MHZ * 256 / PWM_BASE_CLK_MHZ;
-> +	state->duty_cycle =3D duty_cycle_reg * state->period / PWM_MAX_LEVEL;
-> +	state->polarity   =3D PWM_POLARITY_NORMAL;
-> +	state->enabled    =3D !!(clk_div_reg & PWM_OUTPUT_ENABLE);
+	round period down to the next possible implementable period
+	round duty_cycle down to the next possible implementable duty_cycle
 
-These aligned =3D look strange (IMHO). If you don't feel strong here I'd
-like to see a single space before a =3D.
-
-Unrelated to your series I think we should change .get_state() to return
-an error indication.
+so if a small enough period (and so a small duty_cycle) is requested it
+is expected that duty_cycle will be zero.
 
 Best regards
 Uwe
@@ -125,19 +104,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---zx4xnht5tvc5agd3
+--hp7kq6gze6fyafh7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl7ipCQACgkQwfwUeK3K
-7AkDQQgAhCr0b+oxbYjfh2z4WfLZOGF5W1hB1COjpmxeKaGL8xpCEc/dnjT7fxJX
-uB0sF9bAF8OAVNpkrIOrnZtw7aBK3SFynWAOpXf98Z8Kb9FodW8FL6C/a27ZVGqc
-byX4ZUKbU66PyWFa7yT/s+lmc8l5aANu/apc+QQtEiARmRtPSQ8lzXdoZ8Am7zXw
-empFZFcffWxK/ZoCPr5Mf+d6edogPrj5o11QGhNS6RqNl6tvC5kEmq6mkYEelu6f
-eM5q33YnGKgMaAiwZMPmSGNoYsaK2ZkDnMK5MMw7tCtJs5c6BfwVni1oHAiuYPl9
-jGebXYXjKp8HsebBbbotUcspHgxMIg==
-=Ox3L
+iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl7irFUACgkQwfwUeK3K
+7AnMUQf/aHewf+zp0iswwki725rW1yDFIDBTEXn8BJGshdgTgK7jVxnmeAnp68jL
+GrJUDVL2PD9tInqZkJmgQXpXDKJ2hToPm3qePnpFWRKsZX+wxIg5fJ/lOOnDzwYU
+xeh6Y5vp2nhtK7e9u+YhN9C77/SqmjOW9hYPuwlFSs5jTxFQZruS8AHnGw+//F5V
+KC2HwNoHwfUpiBIiUdITW3ZYHLotXRcqwI0wPZLCuOTIMAEqEWNH6WAtrHGU1BTn
+KMmpuHs8Q5Z+hM+pcZGiL09cI4wEhatYCPCFhik1wXOAwwAtxsowNnIpbFgftPFS
+e3MUGd4aKKhhexrR4pk5ODSfs2zhzA==
+=p0QV
 -----END PGP SIGNATURE-----
 
---zx4xnht5tvc5agd3--
+--hp7kq6gze6fyafh7--
