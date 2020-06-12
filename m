@@ -2,123 +2,104 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33B751F7413
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jun 2020 08:47:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC1F51F7791
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jun 2020 13:57:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgFLGrY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 12 Jun 2020 02:47:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbgFLGrY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 12 Jun 2020 02:47:24 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D94C03E96F;
-        Thu, 11 Jun 2020 23:47:22 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id q11so8556220wrp.3;
-        Thu, 11 Jun 2020 23:47:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bEDPE0wLH9mbIJMf0kGvWOirp0WuDO4dvBhX04ygBLA=;
-        b=PDnKhcR2OKWwop1uvkMULWT6i/7vk+O9RNJihHhNTy6RkG3AMx2zlkW11DMKdLgtTb
-         ac5XQSh1LuUTTDbsN6AyZ11+Fv/KwLCXeDP03o/hkjb6656V2MGNVkRUf2sHcwPIOTv7
-         5OGCY77qTnoulvA/7h4BirLJ9RCSdxXQeldgZF+nkwW37WboQDU6OVdgJvq7yM0jvjjh
-         qEm8DUGQQumSiU4mG0+ZBYRA5GmpaDmD9GWhvm+Q/cm6HQcOtSLNPI597bX3P1mJWNwy
-         hoJcNrPXAo02glX3D5Q2yU7jsE936IfX9Q2UlzfjuzsucwJPUdrZ5XlYk6hyIop6OXee
-         IPhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bEDPE0wLH9mbIJMf0kGvWOirp0WuDO4dvBhX04ygBLA=;
-        b=S00WYaDNlipxNcH1Px5zVjkW5/t6StRvpAjaj1rbl3PqvzWL0jSjUhTaXqeN7CIPu4
-         GF7FEsIksm7rNGxGdsyxNLgFdWmkjzVboTUrj3pwHFDFI2+OgeI84iNbduWRvGRGNlL2
-         k5+Hz1tRbXlSkp3fEP4f72Eoe5n4UgpDptgn3bbDszhosmmIHZdch6WRwHXes1oUb+Pl
-         X3HGupUmDL9J4n5nfXKLKSxagTZebRGDsD2v+06S1jOMcGYRLnbIFgjNlZtzP+BJ3+sh
-         VKz5wilamvemgdyanOVuuZopMjrLXIsUTp9jpwQ/sucj/1M98H7oR3AvVCLdv6bLttHC
-         BtkA==
-X-Gm-Message-State: AOAM5301TIbyo/JsJrqVSdJvt4RcDBHJEI5++wgpOMrisNfyHeZEsek8
-        runtni+C0KxYr61LE9dLBDSYYPkr
-X-Google-Smtp-Source: ABdhPJwJAOei45XC0j5S56zzU0K7jY8wa+9ImMnUqdJ5h6skzOSWjMqam59s69hL/DHXMXwE5cdlXA==
-X-Received: by 2002:a05:6000:100e:: with SMTP id a14mr13202217wrx.349.1591944441631;
-        Thu, 11 Jun 2020 23:47:21 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id s8sm8514759wrm.96.2020.06.11.23.47.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 23:47:20 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 08:47:19 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Anson Huang <Anson.Huang@nxp.com>, linux-clk@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Remove redundant 'maxItems'
-Message-ID: <20200612064719.GA2295929@ulmo>
-References: <20200611194738.1480393-1-robh@kernel.org>
+        id S1726108AbgFLL5f (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 12 Jun 2020 07:57:35 -0400
+Received: from mga14.intel.com ([192.55.52.115]:8570 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726024AbgFLL5e (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 12 Jun 2020 07:57:34 -0400
+IronPort-SDR: JPCMpBjJsIC4SUFCRaBZXw10CM/OpSo2aT+sWsmOTtWOvwfBgSMefVKMPx6lo4YGC/dLKAMjIk
+ aTeByTOk6Wcw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 04:57:33 -0700
+IronPort-SDR: ABSPo+JBvBU79vQhZigciL7kR9UOM6gudQ79a9E/eot+fTbjWJoQC0Uc00I99Okq50ZXR+JZHs
+ +RV39hC8Hnhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,503,1583222400"; 
+   d="scan'208";a="296922866"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Jun 2020 04:57:30 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jjiJQ-00CYBT-2r; Fri, 12 Jun 2020 14:57:32 +0300
+Date:   Fri, 12 Jun 2020 14:57:32 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-pwm@vger.kernel.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 03/15] pwm: lpss: Add range limit check for the
+ base_unit register value
+Message-ID: <20200612115732.GC2428291@smile.fi.intel.com>
+References: <20200607181840.13536-1-hdegoede@redhat.com>
+ <20200607181840.13536-4-hdegoede@redhat.com>
+ <20200608035023.GZ2428291@smile.fi.intel.com>
+ <90769dc0-3174-195b-34e0-ef4bb9d9b982@redhat.com>
+ <20200611221242.3bjqvnhcwwxaocxy@taurus.defre.kleine-koenig.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zYM0uCDKw75PZbzx"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200611194738.1480393-1-robh@kernel.org>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200611221242.3bjqvnhcwwxaocxy@taurus.defre.kleine-koenig.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Fri, Jun 12, 2020 at 12:12:42AM +0200, Uwe Kleine-König wrote:
+> On Mon, Jun 08, 2020 at 01:07:12PM +0200, Hans de Goede wrote:
+> > On 6/8/20 5:50 AM, Andy Shevchenko wrote:
+> > > On Sun, Jun 07, 2020 at 08:18:28PM +0200, Hans de Goede wrote:
+> > > > When the user requests a high enough period ns value, then the
+> > > > calculations in pwm_lpss_prepare() might result in a base_unit value of 0.
+> > > > 
+> > > > But according to the data-sheet the way the PWM controller works is that
+> > > > each input clock-cycle the base_unit gets added to a N bit counter and
+> > > > that counter overflowing determines the PWM output frequency. Adding 0
+> > > > to the counter is a no-op. The data-sheet even explicitly states that
+> > > > writing 0 to the base_unit bits will result in the PWM outputting a
+> > > > continuous 0 signal.
+> > > 
+> > > So, and why it's a problem?
+> > 
+> > Lets sya the user requests a PWM output frequency of 100Hz on Cherry Trail
+> > which has a 19200000 Hz clock this will result in 100 * 65536 / 19200000 =
+> > 0.3 -> 0 as base-unit value. So instead of getting 100 Hz the user will
+> > now get a pin which is always outputting low.
+> 
+> I didn't follow the complete discussion but note that the general rule
+> is:
+> 
+> 	round period down to the next possible implementable period
+> 	round duty_cycle down to the next possible implementable duty_cycle
+> 
+> so if a small enough period (and so a small duty_cycle) is requested it
+> is expected that duty_cycle will be zero.
 
---zYM0uCDKw75PZbzx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+...which brings me an idea that PWM framework should expose API to get a
+capabilities, like DMA Engine has.
 
-On Thu, Jun 11, 2020 at 01:47:38PM -0600, Rob Herring wrote:
-> There's no need to specify 'maxItems' with the same value as the number
-> of entries in 'items'. A meta-schema update will catch future cases.
->=20
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Anson Huang <Anson.Huang@nxp.com>
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-pwm@vger.kernel.org
-> Cc: linux-usb@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/clock/imx6q-clock.yaml     | 1 -
->  Documentation/devicetree/bindings/clock/imx6sl-clock.yaml    | 1 -
->  Documentation/devicetree/bindings/clock/imx6sll-clock.yaml   | 1 -
->  Documentation/devicetree/bindings/clock/imx6sx-clock.yaml    | 1 -
->  Documentation/devicetree/bindings/clock/imx6ul-clock.yaml    | 1 -
->  Documentation/devicetree/bindings/pwm/imx-pwm.yaml           | 2 --
->  Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml | 2 --
->  7 files changed, 9 deletions(-)
+In such capabilities, in particular, caller can get ranges of the correct
+frequencies of the underneath hardware.
 
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
+-- 
+With Best Regards,
+Andy Shevchenko
 
---zYM0uCDKw75PZbzx
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7jJPQACgkQ3SOs138+
-s6HL2g//ZoscfSZkpDxD3dW2jxtxiLW+++f387MavWHS9QM8PYT+3MexQxkUWyjo
-MAxhB4FCLFjHaMCl2sD1vH/FkkfIMPzdV8TEtEGlIm+YO/pDci2EYfHOUHsmZe/A
-Dnn+e7XBzuJ2P9DwUaqszRXB1oO6zb32T9tklAN3qeF/W8Z44kNWE1C5AzlM7Ivw
-q1AoGUYx47iq0Wcqwq/DYATIc1BxT8OGl+rEUGnXXWbLS+NYVT4wi7ML6heNqdBl
-+2KbtWFzbdF3DyA1/b+3XVCGHGrGAnsLMjcNqJiLNnnbIS3v9I+HvzCGNGDDQiM1
-Ld8CfrsPzbKqMWYXhAcFTDtf7oyHrjPt/t1FiTok6i7yQNZ2waHpPF1GKbQ5SXe2
-ITA1XWnSaLJEIqXZMllgQ6cZtxIJmb9rjmbGtzq+YjjNTBWn2Us8K4hDGdx65ILl
-vL8fZd6DPHTyJF3CwK+D7ObJBWqjaZjNf+ViQRGzXTIsRufnA9xR3hNDMeAETJKX
-TGxOheAe1S9O0Rma6V0G1g0nbqX8V45/z1Tpd5L3rp9/ZRrg2RK+70+hBtbR2Jc4
-vLdDpb/4lyskRTU+DKgNtReVD2DP9okNErL5eGTXO81URug5Kr1mZB5+RqKjelnI
-mV/2sKfFnSX33cg3hbP/sDwDxMB+sjjGP+K1JXWxVj9Ez6osPPU=
-=WSuJ
------END PGP SIGNATURE-----
-
---zYM0uCDKw75PZbzx--
