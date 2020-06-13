@@ -2,209 +2,370 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF7011F83A6
-	for <lists+linux-pwm@lfdr.de>; Sat, 13 Jun 2020 16:15:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 028FE1F8434
+	for <lists+linux-pwm@lfdr.de>; Sat, 13 Jun 2020 18:04:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726280AbgFMOPr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 13 Jun 2020 10:15:47 -0400
-Received: from a27-23.smtp-out.us-west-2.amazonses.com ([54.240.27.23]:60462
-        "EHLO a27-23.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726132AbgFMOPr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 13 Jun 2020 10:15:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=7jvkchcrhflv7qhbkgrcypyraifp65wy; d=rt.linuxfoundation.org;
-        t=1592057745;
-        h=Subject:From:Reply-To:In-Reply-To:References:Message-ID:CC:Content-Type:Date:MIME-Version:Content-Transfer-Encoding;
-        bh=S3ZCFDWXKOT7/mmjCpPJc5VmTrE8+V5Macg9hSjNpkg=;
-        b=S1BTsyIGrnuJpcdsrSSc3IjExrja2YMTBrORN/JQlSyZivgSYrjTg+6DVyq5oXwB
-        WXbSzRGeYDVwGErsaHHt5Le7oyfES5t61SN+6lox+AJQF0seYVU5ujZTZgcK6vCbNB0
-        sp1BejNkY6hQhvaD/cc1cnXn4mD/vX/+bd609OqQ=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1592057745;
-        h=Subject:From:Reply-To:In-Reply-To:References:Message-ID:CC:Content-Type:Date:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-        bh=S3ZCFDWXKOT7/mmjCpPJc5VmTrE8+V5Macg9hSjNpkg=;
-        b=ZFuIT3V0FSXBWWunqLM7kRwaFu5FShrBEYKHW+heX9NR5vMFdwm9b7d9/t4tdXTN
-        AJ775gJgOxNeh/5PW8iA20US8akoA/964kEXpUBR21reYfx/7QM+eXT0nT3ksG69ZOC
-        F0hKAQBT69Rcho+rTjgshU9bX3HEl6N5VMxDxlSE=
-Subject: [Kernel.org Helpdesk #89942] [linuxfoundation.org #89942] Re: adding linux-pwm archives to lore.kernel.org?
-From:   "=?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= via RT" 
-        <kernel-helpdesk@rt.linuxfoundation.org>
-Reply-To: kernel-helpdesk@rt.linuxfoundation.org
-In-Reply-To: <20200613141533.ak3nyo5hu636evwq@taurus.defre.kleine-koenig.org>
-References: <RT-Ticket-89942@linuxfoundation>
- <20200213102618.x5j6kfvqmdbx2pr2@pengutronix.de>
- <20200523170558.h2brqlf2jx4kee6y@pengutronix.de>
- <20200613141533.ak3nyo5hu636evwq@taurus.defre.kleine-koenig.org>
-Message-ID: <01010172ae094ffd-ea4dd80a-69fa-482a-9a9b-bce6fcb2d612-000000@us-west-2.amazonses.com>
-X-RT-Loop-Prevention: linuxfoundation.org
-X-RT-Ticket: linuxfoundation.org #89942
-X-Managed-BY: RT 4.4.0 (http://www.bestpractical.com/rt/)
-X-RT-Originator: u.kleine-koenig@pengutronix.de
-CC:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com
-X-RT-Original-Encoding: utf-8
-Content-Type: multipart/mixed; boundary="----------=_1592057745-21854-8"
-Date:   Sat, 13 Jun 2020 14:15:45 +0000
+        id S1726361AbgFMQER (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 13 Jun 2020 12:04:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35998 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbgFMQER (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 13 Jun 2020 12:04:17 -0400
+X-Greylist: delayed 383 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 13 Jun 2020 09:04:16 PDT
+Received: from antares.kleine-koenig.org (antares.kleine-koenig.org [IPv6:2a01:4f8:c0c:3a97::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8464C03E96F
+        for <linux-pwm@vger.kernel.org>; Sat, 13 Jun 2020 09:04:15 -0700 (PDT)
+Received: by antares.kleine-koenig.org (Postfix, from userid 1000)
+        id 0ADDF9AC32B; Sat, 13 Jun 2020 17:57:48 +0200 (CEST)
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     linux-pwm@vger.kernel.org
+Subject: [PATCH] pwm: add a config symbol for legacy drivers
+Date:   Sat, 13 Jun 2020 17:57:42 +0200
+Message-Id: <20200613155742.31528-1-uwe@kleine-koenig.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SES-Outgoing: 2020.06.13-54.240.27.23
-Feedback-ID: 1.us-west-2.3ULHQnc20aILdVzjlbQ8UqO1WRWzA1U01b2uFAcT62w=:AmazonSES
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This is a multi-part message in MIME format...
+This (slightly) simplifies the core, reduces the size of the pwm_ops
+struct, and makes it more obvious for driver authors to not add new drivers
+relying on the old set of callbacks.
 
-------------=_1592057745-21854-8
-Content-Type: text/plain; charset="utf-8"
+Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
+---
+ drivers/pwm/Kconfig | 36 ++++++++++++++++++++++++++++++++++++
+ drivers/pwm/core.c  |  6 +++++-
+ include/linux/pwm.h |  2 ++
+ 3 files changed, 43 insertions(+), 1 deletion(-)
 
-Hello,
-
-On Sat, May 23, 2020 at 07:05:58PM +0200, Uwe Kleine-König wrote:
-> On Thu, Feb 13, 2020 at 11:26:18AM +0100, Uwe Kleine-König wrote:
-> > I consider the archives on lore.kernel.org very useful and would like to
-> > see the linux-pwm list archived there, too.
-> > 
-> > Assuming you agree (or at least don't disagree) we'd need to follow
-> > https://korg.wiki.kernel.org/userdoc/lore. Therefor we need an archive
-> > of the already sent mails. My personal archive only goes back to Oct
-> > 2018, so I guess I'm not in the best position to provide it. But I can
-> > nevertheless care for the buerocratics and start with my archive given
-> > that I get some support from someone with a more complete archive.
-> > 
-> > What do you think?
-> 
-> I didn't get feedback from Thierry (= linux-pwm maintainer) but I still
-> think adding linux-pwm to kernel.org's public-inbox instance is
-> valuable. (And if it's only to experiment with b4.)
-
-In the meantime Thierry said to support the idea to get the linux-pwm
-list archived on lore.kernel.org and also provide his archive for the
-initial population.
-
-I assume you're OK in principle to archive linux-pwm and it's "just" a
-matter of lacking time to work on getting this list up and running on
-lore.k.o? Is there anything we can do to simplify the things for you?
-
-Best reagards
-Uwe
-
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index cb8d739067d2..70f21b5d3fc7 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -33,6 +33,12 @@ config PWM_SYSFS
+ 	bool
+ 	default y if SYSFS
+ 
++config PWM_LEGACY_DRIVERS
++	bool
++	help
++	  This enables the needed infrastructure to support legacy drivers that
++	  still implement .config(), .enable(), .disable() and .set_polarity().
++
+ config PWM_DEBUG
+ 	bool "PWM lowlevel drivers additional checks and debug messages"
+ 	depends on DEBUG_KERNEL
+@@ -45,6 +51,7 @@ config PWM_DEBUG
+ config PWM_AB8500
+ 	tristate "AB8500 PWM support"
+ 	depends on AB8500_CORE && ARCH_U8500
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for Analog Baseband AB8500.
+ 
+@@ -76,6 +83,7 @@ config PWM_ATMEL_HLCDC_PWM
+ config PWM_ATMEL_TCB
+ 	tristate "Atmel TC Block PWM support"
+ 	depends on ATMEL_TCLIB && OF
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for Atmel Timer Counter Block.
+ 
+@@ -101,6 +109,7 @@ config PWM_BCM_KONA
+ 	tristate "Kona PWM support"
+ 	depends on ARCH_BCM_MOBILE || ARCH_BCM_CYGNUS || COMPILE_TEST
+ 	depends on HAVE_CLK && HAS_IOMEM
++	select PWM_LEGACY_DRIVERS
+ 	default ARCH_BCM_MOBILE || ARCH_BCM_CYGNUS
+ 	help
+ 	  Generic PWM framework driver for Broadcom Kona PWM block.
+@@ -111,6 +120,7 @@ config PWM_BCM_KONA
+ config PWM_BCM2835
+ 	tristate "BCM2835 PWM support"
+ 	depends on ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  PWM framework driver for BCM2835 controller (Raspberry Pi)
+ 
+@@ -120,6 +130,7 @@ config PWM_BCM2835
+ config PWM_BERLIN
+ 	tristate "Marvell Berlin PWM support"
+ 	depends on ARCH_BERLIN || COMPILE_TEST
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  PWM framework driver for Marvell Berlin SoCs.
+ 
+@@ -129,6 +140,7 @@ config PWM_BERLIN
+ config PWM_BRCMSTB
+ 	tristate "Broadcom STB PWM support"
+ 	depends on ARCH_BRCMSTB || BMIPS_GENERIC || COMPILE_TEST
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for the Broadcom Set-top-Box
+ 	  SoCs (BCM7xxx).
+@@ -140,6 +152,7 @@ config PWM_CLPS711X
+ 	tristate "CLPS711X PWM support"
+ 	depends on ARCH_CLPS711X || COMPILE_TEST
+ 	depends on HAS_IOMEM
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for Cirrus Logic CLPS711X.
+ 
+@@ -149,6 +162,7 @@ config PWM_CLPS711X
+ config PWM_CRC
+ 	bool "Intel Crystalcove (CRC) PWM support"
+ 	depends on X86 && INTEL_SOC_PMIC
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for Crystalcove (CRC) PMIC based PWM
+ 	  control.
+@@ -163,6 +177,7 @@ config PWM_CROS_EC
+ config PWM_EP93XX
+ 	tristate "Cirrus Logic EP93xx PWM support"
+ 	depends on ARCH_EP93XX || COMPILE_TEST
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for Cirrus Logic EP93xx.
+ 
+@@ -196,6 +211,7 @@ config PWM_IMG
+ 	depends on MFD_SYSCON
+ 	depends on COMMON_CLK
+ 	depends on MIPS || COMPILE_TEST
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for Imagination Technologies
+ 	  PWM block which supports 4 channels.
+@@ -206,6 +222,7 @@ config PWM_IMG
+ config PWM_IMX1
+ 	tristate "i.MX1 PWM support"
+ 	depends on ARCH_MXC || COMPILE_TEST
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for i.MX1 and i.MX21
+ 
+@@ -257,6 +274,7 @@ config PWM_JZ4740
+ config PWM_LP3943
+ 	tristate "TI/National Semiconductor LP3943 PWM support"
+ 	depends on MFD_LP3943
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for LP3943 which supports two PWM
+ 	  channels.
+@@ -267,6 +285,7 @@ config PWM_LP3943
+ config PWM_LPC18XX_SCT
+ 	tristate "LPC18xx/43xx PWM/SCT support"
+ 	depends on ARCH_LPC18XX || COMPILE_TEST
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for NXP LPC18xx PWM/SCT which
+ 	  supports 16 channels.
+@@ -279,6 +298,7 @@ config PWM_LPC18XX_SCT
+ config PWM_LPC32XX
+ 	tristate "LPC32XX PWM support"
+ 	depends on ARCH_LPC32XX || COMPILE_TEST
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for LPC32XX. The LPC32XX SOC has two
+ 	  PWM controllers.
+@@ -323,6 +343,7 @@ config PWM_MTK_DISP
+ 	tristate "MediaTek display PWM driver"
+ 	depends on ARCH_MEDIATEK || COMPILE_TEST
+ 	depends on HAS_IOMEM
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for MediaTek disp-pwm device.
+ 	  The PWM is used to control the backlight brightness for display.
+@@ -333,6 +354,7 @@ config PWM_MTK_DISP
+ config PWM_MEDIATEK
+ 	tristate "MediaTek PWM support"
+ 	depends on ARCH_MEDIATEK || RALINK || COMPILE_TEST
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for Mediatek ARM SoC.
+ 
+@@ -364,6 +386,7 @@ config PWM_PCA9685
+ 	tristate "NXP PCA9685 PWM driver"
+ 	depends on I2C
+ 	select REGMAP_I2C
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for NXP PCA9685 LED controller.
+ 
+@@ -373,6 +396,7 @@ config PWM_PCA9685
+ config PWM_PUV3
+ 	tristate "PKUnity NetBook-0916 PWM support"
+ 	depends on ARCH_PUV3
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for PKUnity NetBook-0916.
+ 
+@@ -382,6 +406,7 @@ config PWM_PUV3
+ config PWM_PXA
+ 	tristate "PXA PWM support"
+ 	depends on ARCH_PXA || COMPILE_TEST
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for PXA.
+ 
+@@ -403,6 +428,7 @@ config PWM_RENESAS_TPU
+ 	tristate "Renesas TPU PWM support"
+ 	depends on ARCH_RENESAS || COMPILE_TEST
+ 	depends on HAS_IOMEM
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  This driver exposes the Timer Pulse Unit (TPU) PWM controller found
+ 	  in Renesas chips through the PWM API.
+@@ -420,6 +446,7 @@ config PWM_ROCKCHIP
+ config PWM_SAMSUNG
+ 	tristate "Samsung PWM support"
+ 	depends on PLAT_SAMSUNG || ARCH_EXYNOS || COMPILE_TEST
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for Samsung.
+ 
+@@ -441,6 +468,7 @@ config PWM_SPEAR
+ 	tristate "STMicroelectronics SPEAr PWM support"
+ 	depends on PLAT_SPEAR || COMPILE_TEST
+ 	depends on OF
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for the PWM controller on ST
+ 	  SPEAr SoCs.
+@@ -463,6 +491,7 @@ config PWM_STI
+ 	tristate "STiH4xx PWM support"
+ 	depends on ARCH_STI || COMPILE_TEST
+ 	depends on OF
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for STiH4xx SoCs.
+ 
+@@ -491,6 +520,7 @@ config PWM_STM32_LP
+ config PWM_STMPE
+ 	bool "STMPE expander PWM export"
+ 	depends on MFD_STMPE
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  This enables support for the PWMs found in the STMPE I/O
+ 	  expanders.
+@@ -508,6 +538,7 @@ config PWM_SUN4I
+ config PWM_TEGRA
+ 	tristate "NVIDIA Tegra PWM support"
+ 	depends on ARCH_TEGRA || COMPILE_TEST
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for the PWFM controller found on NVIDIA
+ 	  Tegra SoCs.
+@@ -518,6 +549,7 @@ config PWM_TEGRA
+ config PWM_TIECAP
+ 	tristate "ECAP PWM support"
+ 	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  PWM driver support for the ECAP APWM controller found on TI SOCs
+ 
+@@ -527,6 +559,7 @@ config PWM_TIECAP
+ config PWM_TIEHRPWM
+ 	tristate "EHRPWM PWM support"
+ 	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_K3 || COMPILE_TEST
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  PWM driver support for the EHRPWM controller found on TI SOCs
+ 
+@@ -536,6 +569,7 @@ config PWM_TIEHRPWM
+ config PWM_TWL
+ 	tristate "TWL4030/6030 PWM support"
+ 	depends on TWL4030_CORE
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for TWL4030/6030.
+ 
+@@ -545,6 +579,7 @@ config PWM_TWL
+ config PWM_TWL_LED
+ 	tristate "TWL4030/6030 PWM support for LED drivers"
+ 	depends on TWL4030_CORE
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for TWL4030/6030 LED terminals.
+ 
+@@ -554,6 +589,7 @@ config PWM_TWL_LED
+ config PWM_VT8500
+ 	tristate "vt8500 PWM support"
+ 	depends on ARCH_VT8500 || COMPILE_TEST
++	select PWM_LEGACY_DRIVERS
+ 	help
+ 	  Generic PWM framework driver for vt8500.
+ 
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 004b2ea9b5fd..488f90484d00 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -240,6 +240,7 @@ static bool pwm_ops_check(const struct pwm_chip *chip)
+ 
+ 	const struct pwm_ops *ops = chip->ops;
+ 
++#ifdef CONFIG_PWM_LEGACY_DRIVERS
+ 	/* driver supports legacy, non-atomic operation */
+ 	if (ops->config && ops->enable && ops->disable) {
+ 		if (IS_ENABLED(CONFIG_PWM_DEBUG))
+@@ -248,6 +249,7 @@ static bool pwm_ops_check(const struct pwm_chip *chip)
+ 
+ 		return true;
+ 	}
++#endif
+ 
+ 	if (!ops->apply)
+ 		return false;
+@@ -587,7 +589,7 @@ int pwm_apply_state(struct pwm_device *pwm, const struct pwm_state *state)
+ 	    state->enabled == pwm->state.enabled)
+ 		return 0;
+ 
+-	if (chip->ops->apply) {
++	if (!IS_ENABLED(CONFIG_PWM_LEGACY_DRIVERS) || chip->ops->apply) {
+ 		err = chip->ops->apply(chip, pwm, state);
+ 		if (err)
+ 			return err;
+@@ -601,6 +603,7 @@ int pwm_apply_state(struct pwm_device *pwm, const struct pwm_state *state)
+ 		 * implementations of .get_state depend on this
+ 		 */
+ 		pwm_apply_state_debug(pwm, state);
++#ifdef CONFIG_PWM_LEGACY_DRIVERS
+ 	} else {
+ 		/*
+ 		 * FIXME: restore the initial state in case of error.
+@@ -650,6 +653,7 @@ int pwm_apply_state(struct pwm_device *pwm, const struct pwm_state *state)
+ 
+ 			pwm->state.enabled = state->enabled;
+ 		}
++#endif
+ 	}
+ 
+ 	return 0;
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index 2635b2a55090..f5970b0a1df9 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -266,6 +266,7 @@ struct pwm_ops {
+ 			  struct pwm_state *state);
+ 	struct module *owner;
+ 
++#ifdef CONFIG_PWM_LEGACY_DRIVERS
+ 	/* Only used by legacy drivers */
+ 	int (*config)(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		      int duty_ns, int period_ns);
+@@ -273,6 +274,7 @@ struct pwm_ops {
+ 			    enum pwm_polarity polarity);
+ 	int (*enable)(struct pwm_chip *chip, struct pwm_device *pwm);
+ 	void (*disable)(struct pwm_chip *chip, struct pwm_device *pwm);
++#endif
+ };
+ 
+ /**
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.27.0
 
-
-------------=_1592057745-21854-8
-Content-Type: application/x-rt-original-message
-Content-Disposition: inline
-Content-Transfer-Encoding: base64
-RT-Attachment: 89942/1975529/1655478
-
-RnJvbSBTUlMwPVZlOG89NzI9cGVuZ3V0cm9uaXguZGU9dWtsQGtlcm5lbC5v
-cmcgIFNhdCBKdW4gMTMgMTQ6MTU6MzkgMjAyMApSZXR1cm4tUGF0aDogPFNS
-UzA9VmU4bz03Mj1wZW5ndXRyb25peC5kZT11a2xAa2VybmVsLm9yZz4KWC1P
-cmlnaW5hbC1Ubzoga2VybmVsLWhlbHBkZXNrQHJ0LmxpbnV4Zm91bmRhdGlv
-bi5vcmcKRGVsaXZlcmVkLVRvOiBrZXJuZWwtaGVscGRlc2tAcnQubGludXhm
-b3VuZGF0aW9uLm9yZwpSZWNlaXZlZDogZnJvbSBtYWlsLmtlcm5lbC5vcmcg
-KG1haWwua2VybmVsLm9yZyBbMTk4LjE0NS4yOS45OV0pCglieSBhd3MtdXMt
-d2VzdC0yLWxmaXQtcnQtMS53ZWIuY29kZWF1cm9yYS5vcmcgKFBvc3RmaXgp
-IHdpdGggRVNNVFAgaWQgREY0MThDMDA0NEUKCWZvciA8a2VybmVsLWhlbHBk
-ZXNrQHJ0LmxpbnV4Zm91bmRhdGlvbi5vcmc+OyBTYXQsIDEzIEp1biAyMDIw
-IDE0OjE1OjM5ICswMDAwIChVVEMpClJlY2VpdmVkOiBieSBtYWlsLmtlcm5l
-bC5vcmcgKFBvc3RmaXgpCglpZCA5NDU1OTIwNzREOyBTYXQsIDEzIEp1biAy
-MDIwIDE0OjE1OjM5ICswMDAwIChVVEMpCkRlbGl2ZXJlZC1UbzogaGVscGRl
-c2tAa2VybmVsLm9yZwpSZWNlaXZlZDogZnJvbSBtZXRpcy5leHQucGVuZ3V0
-cm9uaXguZGUgKG1ldGlzLmV4dC5wZW5ndXRyb25peC5kZSBbODUuMjIwLjE2
-NS43MV0pCgkodXNpbmcgVExTdjEuMiB3aXRoIGNpcGhlciBFQ0RIRS1SU0Et
-QUVTMjU2LUdDTS1TSEEzODQgKDI1Ni8yNTYgYml0cykpCgkoTm8gY2xpZW50
-IGNlcnRpZmljYXRlIHJlcXVlc3RlZCkKCWJ5IG1haWwua2VybmVsLm9yZyAo
-UG9zdGZpeCkgd2l0aCBFU01UUFMgaWQgRTJFQkIyMDZCNwoJZm9yIDxoZWxw
-ZGVza0BrZXJuZWwub3JnPjsgU2F0LCAxMyBKdW4gMjAyMCAxNDoxNTozOCAr
-MDAwMCAoVVRDKQpETUFSQy1GaWx0ZXI6IE9wZW5ETUFSQyBGaWx0ZXIgdjEu
-My4yIG1haWwua2VybmVsLm9yZyBFMkVCQjIwNkI3CkF1dGhlbnRpY2F0aW9u
-LVJlc3VsdHM6IG1haWwua2VybmVsLm9yZzsgZG1hcmM9bm9uZSAocD1ub25l
-IGRpcz1ub25lKSBoZWFkZXIuZnJvbT1wZW5ndXRyb25peC5kZQpBdXRoZW50
-aWNhdGlvbi1SZXN1bHRzOiBtYWlsLmtlcm5lbC5vcmc7IHNwZj1wYXNzIHNt
-dHAubWFpbGZyb209dWtsQHBlbmd1dHJvbml4LmRlClJlY2VpdmVkOiBmcm9t
-IHB0eS5oaS5wZW5ndXRyb25peC5kZSAoWzIwMDE6NjdjOjY3MDoxMDA6MWQ6
-OmM1XSkKCWJ5IG1ldGlzLmV4dC5wZW5ndXRyb25peC5kZSB3aXRoIGVzbXRw
-cyAoVExTMS4yOkVDREhFX1JTQV9BRVNfMjU2X0dDTV9TSEEzODQ6MjU2KQoJ
-KEV4aW0gNC45MikKCShlbnZlbG9wZS1mcm9tIDx1a2xAcGVuZ3V0cm9uaXgu
-ZGU+KQoJaWQgMWprNndiLTAwMDFVbi0xeTsgU2F0LCAxMyBKdW4gMjAyMCAx
-NjoxNTozNyArMDIwMApSZWNlaXZlZDogZnJvbSB1a2wgYnkgcHR5LmhpLnBl
-bmd1dHJvbml4LmRlIHdpdGggbG9jYWwgKEV4aW0gNC44OSkKCShlbnZlbG9w
-ZS1mcm9tIDx1a2xAcGVuZ3V0cm9uaXguZGU+KQoJaWQgMWprNndhLTAwMDVP
-Ty1MYzsgU2F0LCAxMyBKdW4gMjAyMCAxNjoxNTozNiArMDIwMApEYXRlOiBT
-YXQsIDEzIEp1biAyMDIwIDE2OjE1OjMzICswMjAwCkZyb206IFV3ZSA9P3V0
-Zi04P1E/S2xlaW5lLUs9QzM9QjZuaWc/PSA8dS5rbGVpbmUta29lbmlnQHBl
-bmd1dHJvbml4LmRlPgpUbzogaGVscGRlc2tAa2VybmVsLm9yZwpDYzogbGlu
-dXgtcHdtQHZnZXIua2VybmVsLm9yZywgVGhpZXJyeSBSZWRpbmcgPHRoaWVy
-cnkucmVkaW5nQGdtYWlsLmNvbT4KU3ViamVjdDogUmU6IGFkZGluZyBsaW51
-eC1wd20gYXJjaGl2ZXMgdG8gbG9yZS5rZXJuZWwub3JnPwpNZXNzYWdlLUlE
-OiA8MjAyMDA2MTMxNDE1MzMuYWszbnlvNWh1NjM2ZXZ3cUB0YXVydXMuZGVm
-cmUua2xlaW5lLWtvZW5pZy5vcmc+ClJlZmVyZW5jZXM6IDwyMDIwMDIxMzEw
-MjYxOC54NWo2a2Z2cW1kYngycHIyQHBlbmd1dHJvbml4LmRlPgogPDIwMjAw
-NTIzMTcwNTU4LmgyYnJxbGYyang0a2VlNnlAcGVuZ3V0cm9uaXguZGU+Ck1J
-TUUtVmVyc2lvbjogMS4wCkNvbnRlbnQtVHlwZTogbXVsdGlwYXJ0L3NpZ25l
-ZDsgbWljYWxnPXBncC1zaGE1MTI7Cglwcm90b2NvbD0iYXBwbGljYXRpb24v
-cGdwLXNpZ25hdHVyZSI7IGJvdW5kYXJ5PSJzM3Fyd3d1aXh3bzNrYXRmIgpD
-b250ZW50LURpc3Bvc2l0aW9uOiBpbmxpbmUKSW4tUmVwbHktVG86IDwyMDIw
-MDUyMzE3MDU1OC5oMmJycWxmMmp4NGtlZTZ5QHBlbmd1dHJvbml4LmRlPgpY
-LVNBLUV4aW0tQ29ubmVjdC1JUDogMjAwMTo2N2M6NjcwOjEwMDoxZDo6YzUK
-WC1TQS1FeGltLU1haWwtRnJvbTogdWtsQHBlbmd1dHJvbml4LmRlClgtU0Et
-RXhpbS1TY2FubmVkOiBObyAob24gbWV0aXMuZXh0LnBlbmd1dHJvbml4LmRl
-KTsgU0FFeGltUnVuQ29uZCBleHBhbmRlZCB0byBmYWxzZQpYLVBUWC1Pcmln
-aW5hbC1SZWNpcGllbnQ6IGhlbHBkZXNrQGtlcm5lbC5vcmcKCgotLXMzcXJ3
-d3VpeHdvM2thdGYKQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluOyBjaGFyc2V0
-PWlzby04ODU5LTEKQ29udGVudC1EaXNwb3NpdGlvbjogaW5saW5lCkNvbnRl
-bnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUKCkhlbGxv
-LAoKT24gU2F0LCBNYXkgMjMsIDIwMjAgYXQgMDc6MDU6NThQTSArMDIwMCwg
-VXdlIEtsZWluZS1LPUY2bmlnIHdyb3RlOgo+IE9uIFRodSwgRmViIDEzLCAy
-MDIwIGF0IDExOjI2OjE4QU0gKzAxMDAsIFV3ZSBLbGVpbmUtSz1GNm5pZyB3
-cm90ZToKPiA+IEkgY29uc2lkZXIgdGhlIGFyY2hpdmVzIG9uIGxvcmUua2Vy
-bmVsLm9yZyB2ZXJ5IHVzZWZ1bCBhbmQgd291bGQgbGlrZSB0bwo+ID4gc2Vl
-IHRoZSBsaW51eC1wd20gbGlzdCBhcmNoaXZlZCB0aGVyZSwgdG9vLgo+ID49
-MjAKPiA+IEFzc3VtaW5nIHlvdSBhZ3JlZSAob3IgYXQgbGVhc3QgZG9uJ3Qg
-ZGlzYWdyZWUpIHdlJ2QgbmVlZCB0byBmb2xsb3cKPiA+IGh0dHBzOi8va29y
-Zy53aWtpLmtlcm5lbC5vcmcvdXNlcmRvYy9sb3JlLiBUaGVyZWZvciB3ZSBu
-ZWVkIGFuIGFyY2hpdmUKPiA+IG9mIHRoZSBhbHJlYWR5IHNlbnQgbWFpbHMu
-IE15IHBlcnNvbmFsIGFyY2hpdmUgb25seSBnb2VzIGJhY2sgdG8gT2N0Cj4g
-PiAyMDE4LCBzbyBJIGd1ZXNzIEknbSBub3QgaW4gdGhlIGJlc3QgcG9zaXRp
-b24gdG8gcHJvdmlkZSBpdC4gQnV0IEkgY2FuCj4gPiBuZXZlcnRoZWxlc3Mg
-Y2FyZSBmb3IgdGhlIGJ1ZXJvY3JhdGljcyBhbmQgc3RhcnQgd2l0aCBteSBh
-cmNoaXZlIGdpdmVuCj4gPiB0aGF0IEkgZ2V0IHNvbWUgc3VwcG9ydCBmcm9t
-IHNvbWVvbmUgd2l0aCBhIG1vcmUgY29tcGxldGUgYXJjaGl2ZS4KPiA+PTIw
-Cj4gPiBXaGF0IGRvIHlvdSB0aGluaz8KPj0yMAo+IEkgZGlkbid0IGdldCBm
-ZWVkYmFjayBmcm9tIFRoaWVycnkgKD0zRCBsaW51eC1wd20gbWFpbnRhaW5l
-cikgYnV0IEkgc3RpbGwKPiB0aGluayBhZGRpbmcgbGludXgtcHdtIHRvIGtl
-cm5lbC5vcmcncyBwdWJsaWMtaW5ib3ggaW5zdGFuY2UgaXMKPiB2YWx1YWJs
-ZS4gKEFuZCBpZiBpdCdzIG9ubHkgdG8gZXhwZXJpbWVudCB3aXRoIGI0LikK
-CkluIHRoZSBtZWFudGltZSBUaGllcnJ5IHNhaWQgdG8gc3VwcG9ydCB0aGUg
-aWRlYSB0byBnZXQgdGhlIGxpbnV4LXB3bQpsaXN0IGFyY2hpdmVkIG9uIGxv
-cmUua2VybmVsLm9yZyBhbmQgYWxzbyBwcm92aWRlIGhpcyBhcmNoaXZlIGZv
-ciB0aGUKaW5pdGlhbCBwb3B1bGF0aW9uLgoKSSBhc3N1bWUgeW91J3JlIE9L
-IGluIHByaW5jaXBsZSB0byBhcmNoaXZlIGxpbnV4LXB3bSBhbmQgaXQncyAi
-anVzdCIgYQptYXR0ZXIgb2YgbGFja2luZyB0aW1lIHRvIHdvcmsgb24gZ2V0
-dGluZyB0aGlzIGxpc3QgdXAgYW5kIHJ1bm5pbmcgb24KbG9yZS5rLm8/IElz
-IHRoZXJlIGFueXRoaW5nIHdlIGNhbiBkbyB0byBzaW1wbGlmeSB0aGUgdGhp
-bmdzIGZvciB5b3U/CgpCZXN0IHJlYWdhcmRzClV3ZQoKLS09MjAKUGVuZ3V0
-cm9uaXggZS5LLiAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgVXdlIEts
-ZWluZS1LPUY2bmlnICAgICAgICAgICAgfApJbmR1c3RyaWFsIExpbnV4IFNv
-bHV0aW9ucyAgICAgICAgICAgICAgICAgfCBodHRwczovL3d3dy5wZW5ndXRy
-b25peC5kZS8gfAoKLS1zM3Fyd3d1aXh3bzNrYXRmCkNvbnRlbnQtVHlwZTog
-YXBwbGljYXRpb24vcGdwLXNpZ25hdHVyZTsgbmFtZT0ic2lnbmF0dXJlLmFz
-YyIKCi0tLS0tQkVHSU4gUEdQIFNJR05BVFVSRS0tLS0tCgppUUV6QkFFQkNn
-QWRGaUVFZm5JcUZwQVlyUDgrZEtRTHdmd1VlSzNLN0FrRkFsN2szNElBQ2dr
-UXdmd1VlSzNLCjdBa1RNUWdBbFBtMGVrNk13bjdydWtOemdHdGhSRjdJcEtQ
-SktaYUVIQXBadXBqYklBSUpreVRaUlorbDZpSWMKNHZDZjhSUWEycXMxVGhR
-NEhLWldIME8rcUI1ZCt2cnp4eWdPbnpHRmZ0NlVXRFp4bUtCWEFzeUxnNkJK
-dkRPUgp4a2owQUJXUjh0bERVSXliVCtRaTJSZXhuMWE2Q1ZhajVLUVczNnM1
-YmxkOG1WMDlkWU9wWTgzeFNVcFpXQXB5ClBaYWlwbXdQdlkvaWU2RVlUbXRy
-bW1PbHRIcVVzUW9uS2s4dXljVGhuR3NHeGx5MWRTTDlncmY5RlZWQ2UyQ2oK
-MWhMVDAyclpMTDJURXpzeGYvckNKMVBkOTkvVnA1Rk03b2VuZjVxUmhSd0x2
-OHoybEoyMHZ2SFBxYU13cnNRMwoyTDZJakFUcW93Y1pGa2ZQQlU5UmtOWERP
-RDEwSXc9PQo9eVJrNAotLS0tLUVORCBQR1AgU0lHTkFUVVJFLS0tLS0KCi0t
-czNxcnd3dWl4d28za2F0Zi0tCg==
-
-------------=_1592057745-21854-8--
