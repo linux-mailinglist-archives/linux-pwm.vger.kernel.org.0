@@ -2,90 +2,86 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C09C1FA983
-	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jun 2020 09:07:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC04C1FC715
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Jun 2020 09:18:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgFPHG7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 16 Jun 2020 03:06:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50416 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbgFPHG6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 16 Jun 2020 03:06:58 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72E9DC03E96A
-        for <linux-pwm@vger.kernel.org>; Tue, 16 Jun 2020 00:06:58 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b6so402470wrs.11
-        for <linux-pwm@vger.kernel.org>; Tue, 16 Jun 2020 00:06:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=S6Wt2049xOyn9uDBo8RtO0TmdMtlWUY24rAkQY/ouSI=;
-        b=jH5zB2sl5+QcbiTOlHEBYBJ5vMNw9h/Hu8/Q/WEvwbj4Xt+SONwj0Ppd7fh90BM0tT
-         Hp3sfHy3IVyWzMSLyGu+k1OIJ6ma1DlcfUSDapcAbZeSUH9tyVMMA8SQzqMulzp1Kt3d
-         fvQz79e35Zb+AzwR0jFx8+bCiM6L9/rWBZhlCy0Rb2ZaUY7FKU1tY3oC+qgcODyEqvxo
-         DcHJFVViyExCkxevk0UEBlUOHoAblTD3Rkc6pL0QvjGA0QoWnaO1KIbUWByQ0JgPixsX
-         CzLA+ByKo8IhJysdlKawbnk+SPhUyylISdd+xf8uicFILiScM4a9RY6qVrhbplhLgOf1
-         ZZOA==
+        id S1725901AbgFQHSr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 17 Jun 2020 03:18:47 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45569 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgFQHSq (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 17 Jun 2020 03:18:46 -0400
+Received: by mail-oi1-f193.google.com with SMTP id p70so881530oic.12;
+        Wed, 17 Jun 2020 00:18:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=S6Wt2049xOyn9uDBo8RtO0TmdMtlWUY24rAkQY/ouSI=;
-        b=SjbYf77otGBR+QR6wm98j+Z/J71hovvcMHjUIkKBx2d/NZvno9gykry0ZBgFsZUJSW
-         VDhmjXFXLDgcFmADnildM0aZ8GEwJlM7MMiEEjCs5+NA5sLif9S3Myj00mncmm25AK/R
-         asJSPVcUKDdLXX8VrXk6qAQhTyTqL26va6P62IywmcKB7gq0SzsZ+x1ODEXItadSfqSe
-         E+AhXPM6gSPWtdvgot3loyySlhQOgpTzSuocd6ZR1KDkAfKv2nRPP+K8iAbYxJyJPIhS
-         /GiTlGbju3G9tX7FwN4ePaBUrUIBQ4dNPD/OseG4iWbvXk513J355Zvu99Ajvcoq0Wnk
-         z9cg==
-X-Gm-Message-State: AOAM531iOYv/tFsMTs7IVC41HxnUUqgzfH7W+vtx4OX7tHwEkIPjucX8
-        AEBC+p0B21nkN4tH6aPZ/Rqakg==
-X-Google-Smtp-Source: ABdhPJxTcyWzB10Tj4UoI0tMy/u3LqUlapmPnhWb4IqpH0dhk1/y3mG9xdwdxvPulRAXR8aBPGJpnQ==
-X-Received: by 2002:a5d:4a45:: with SMTP id v5mr1425261wrs.223.1592291217037;
-        Tue, 16 Jun 2020 00:06:57 -0700 (PDT)
-Received: from dell ([109.180.115.156])
-        by smtp.gmail.com with ESMTPSA id a81sm2809160wmd.25.2020.06.16.00.06.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 00:06:56 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 08:06:54 +0100
-From:   Lee Jones <lee.jones@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rbNjBfQChq86KCqMUr/PrecFByo1h6xqIQX3C8q/kck=;
+        b=M5MzLtCL+GbFcqDPsSaW+l0ywkmX+pqSMG1hSoUoYkGFrOe/4ZpZ/6Z9fbQJhDVaR+
+         Oee8mcqylWMrUhBZNPNlAuQbsw/b8i02/TRRUFnyl21XIhPPvZu4D4d7xhTj+yAgGafH
+         q4gGOZdEKkDy5XycOMftdP2QXVf5TmPoRLPn2wdZpi+L73uGGkUayoFq8g9H0V4R1v/4
+         sS7a/8cEkr4UKU0dYv8AEqA98gZSfefkhn4wf1YWBA4czNqBrdYyMIBOO9oa4UpcFeTq
+         Ex4rexyWW4y0inybMYWHV5WJAIW+8oBN/e6foA9pQqtO27IA5EeJdvRkVo8lhkc8MuUe
+         dFMA==
+X-Gm-Message-State: AOAM532KOTjlqo2djycUfoGF2FZoph5UYMZB0HHsXL1r+sbFHsDQOJfG
+        N2mPTz0EeRIw5VTDUQZJVw06owXD0xAnPxkiDGc=
+X-Google-Smtp-Source: ABdhPJy2BJl8lH7KWshHjFs2QyMUqtCXHxi/voSfLuUWyFefGalG6ul8iDspOWJlZF5Q8XoTbLrAz6CFfpwp4GQnVjI=
+X-Received: by 2002:aca:849:: with SMTP id 70mr6140466oii.153.1592378325516;
+ Wed, 17 Jun 2020 00:18:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200615141606.2814208-1-thierry.reding@gmail.com> <20200615141606.2814208-2-thierry.reding@gmail.com>
+In-Reply-To: <20200615141606.2814208-2-thierry.reding@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 17 Jun 2020 09:18:34 +0200
+Message-ID: <CAMuHMdWaKgNOz02eVXkFnGRpsjdNNGVtuCf0setigH31-9aXQg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] video: ssd1307fb: Print PWM period using 64-bit
+ format specifier
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
         Guru Das Srinagesh <gurus@codeaurora.org>,
-        linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] pwm: iqs620a: Use 64-bit division
-Message-ID: <20200616070654.GC2608702@dell>
-References: <20200615141606.2814208-1-thierry.reding@gmail.com>
- <20200615141606.2814208-3-thierry.reding@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200615141606.2814208-3-thierry.reding@gmail.com>
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 15 Jun 2020, Thierry Reding wrote:
+Hi Thierry,
 
-> The PWM framework is going to change the PWM period and duty cycles to
-> be 64-bit unsigned integers. To avoid build errors on platforms that do
-> not natively support 64-bit division, use explicity 64-bit division.
-> 
+On Mon, Jun 15, 2020 at 4:17 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+> The PWM core will soon change the duty cycle and period of PWMs to 64
+> bits to allow for a broader range of values. Use a 64-bit format
+> specifier to avoid a warning when that change is made.
+>
 > Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-> ---
->  drivers/pwm/pwm-iqs620a.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+> --- a/drivers/video/fbdev/ssd1307fb.c
+> +++ b/drivers/video/fbdev/ssd1307fb.c
+> @@ -312,7 +312,7 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
+>                 /* Enable the PWM */
+>                 pwm_enable(par->pwm);
+>
+> -               dev_dbg(&par->client->dev, "Using PWM%d with a %dns period.\n",
+> +               dev_dbg(&par->client->dev, "Using PWM%d with a %lluns period.\n",
+>                         par->pwm->pwm, pwm_get_period(par->pwm));
+>         }
+
+This change must be done together with changing the return type of
+pwm_get_period(), else you will get a compiler warning, and will print a
+bogus value.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
