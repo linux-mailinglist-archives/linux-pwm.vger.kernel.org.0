@@ -2,26 +2,26 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 10A60202722
-	for <lists+linux-pwm@lfdr.de>; Sun, 21 Jun 2020 00:43:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63C23202713
+	for <lists+linux-pwm@lfdr.de>; Sun, 21 Jun 2020 00:43:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729063AbgFTWnj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 20 Jun 2020 18:43:39 -0400
-Received: from mout.gmx.net ([212.227.15.19]:36951 "EHLO mout.gmx.net"
+        id S1728428AbgFTWnV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 20 Jun 2020 18:43:21 -0400
+Received: from mout.gmx.net ([212.227.15.15]:46107 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728892AbgFTWnf (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sat, 20 Jun 2020 18:43:35 -0400
+        id S1728401AbgFTWnU (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sat, 20 Jun 2020 18:43:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1592692955;
-        bh=ndIbgrYQmb2subu3Oe9fLJNTph0wDs4Jgr3O6ddsGCs=;
+        s=badeba3b8450; t=1592692957;
+        bh=SdBTcHanE6ZbSETuw4jjAPlmlGZ23qUH4Z8rV7FhLqQ=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=J+FgROFFQ3bRtxN3HX8GAAM80SYvrFVum3jbjkMuDoZv82bbzd7p4v2lwUObmvi9U
-         RKKkU7ABlhhOf3ucQr/YoDYi2VelWwIOv4bta+W+0QX2BbXRhXfTtTs9zySXTLu11L
-         7T1AUf5LhLDeDqYz6VADvdNbwPyJo8wPvWSJhok8=
+        b=YxTuL3n+V481rorkdamPXRDikXiZ4sMt+CjKxF7N/98UoosFo6tpOzlGWFGEWX8LQ
+         FrAgzp+7ELpv2f3k2RR5PgS5R1JGO7IZDTFM43JWT9mCYGGt8pEr2Gf4fw/nUtyMQ2
+         Q+DpRzkhb3wal/Nxdl4tv8ABsVmOslJKe86GEpyQ=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from longitude ([5.146.194.186]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mzhj9-1j0ZJq0foH-00vh75; Sun, 21
- Jun 2020 00:42:35 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mdeb5-1jDiUW2ILp-00Zk6L; Sun, 21
+ Jun 2020 00:42:37 +0200
 From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
@@ -49,139 +49,239 @@ Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Heiko Stuebner <heiko@sntech.de>,
         Josua Mayer <josua.mayer@jm0.eu>,
         Andreas Kemnade <andreas@kemnade.info>
-Subject: [RFC PATCH 05/10] dt-bindings: pwm: Add bindings for PWM function in Netronix EC
-Date:   Sun, 21 Jun 2020 00:42:16 +0200
-Message-Id: <20200620224222.1312520-4-j.neuschaefer@gmx.net>
+Subject: [RFC PATCH 06/10] pwm: ntxec: Add driver for PWM function in Netronix EC
+Date:   Sun, 21 Jun 2020 00:42:17 +0200
+Message-Id: <20200620224222.1312520-5-j.neuschaefer@gmx.net>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
 References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:cHtrETJXmtzDsxaAmeos/P2xE+50CNmj6sgaAzFuUOlSUWq/6Ys
- cqIg7vWmvwXLCa21o6GeBXwf7oIpciGmMqEZBvyiohhFZM1XVsvYPlRTVOpG6EouIIfpHjN
- oRsfkw7/ClzqOiL+Ze+SJxfetrwj8+i5loPqfXmdK6ge0n7fr6C0p4UdWe8JtrynlkTEetf
- o6hOJXw2ktAxvqog9HAtw==
+X-Provags-ID: V03:K1:eUueW2vxa2QRAe4bcVFkBFTG7+5ALMF64PP7ISg/TUL89veAYiC
+ zNUGbINCeiB6/qRtz4KAMnR3JUw7xGXKew+ZBUrBM10Q0UeTbHaaKg3U1aQSCDiw7aJ75Za
+ BBGTWP6sb28uRrD0BeaGVgXJeGRFse0w/cyOUT9B79R1CPGIMv/z+IPZ0GlEQrMP7b2QryO
+ ZibNSqbrHPhHazAKutaLg==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:U9UJEZBhzvM=:b/45FR0hRI3CJbRxSnghbs
- 4CVZ30R7wRT0hf/CVO3qu1lLPiL64OTe48LZB7taUb79jr8YtYz3PoP4kXOOJ7ly9HJYTV5Zc
- LgKtHTFsqYIQ3Go2aeby/iy3BgsvbCEcLEaMAGpNs2w0ICbZCNkB5Nfs/r6NcyWCrr2T8eTXs
- pk+5MnFTiweecLuDjO8tMwlItb4ERwxiReHLzWhIW+SGwLQO1br+3BDyWYilMsZmFECvPIXy7
- R8PTNl0Pp0XAS+VJJ8FETabtlYYJPyYzrm/sf4FxwfkNH8WmG7GQrKqSU/hE2kruPsomsJgbz
- VylHazUogB7jLAuVfvJRvOoTeBk/IhRxX8Wdu88H3NjVCM4NI3nEE5H4tmhnWtZsrMHj3P46J
- X2VwLnEIjtMvaRZauEtnc3Lk6f1e2EwKKjSmZra5J9wM8Zws9gFoU9Np5I9fsMyMS4DtVscHm
- iQST7d2sMiChWnmRRxzJqlXCtZLeJFK+ntFKVpupt/UAv0bJshq1daszb0BzPm0F6u0Qg3wtH
- Opt9xdEDU0G21u/025dZrOwyjdHl5VdwsscVUCkGlw5cOi1RsiOTY7gLP6CVlfOO+Fnr3ZUD6
- pB2BOCPTjKq6F13nAMl9erVGVBGcbjlp2VgFiajIgVQPWHVeGFI2CO0wU5hZ5UynxOcg8ekI4
- dHL8mcmn2v2Pr55i+kuNomAuiaPbfgMhqnGyafvkmxq0MPH2wvdUSs1SDAtaVdV6OY3rEEjnq
- iarr91l9VRFmF0XsEMKFC92gjt2XeM4Hzej52q0W38s6jVc9AaWx1aMYusxnObCZPeTAwFQbE
- 5g3U/ZxPlApbj67/DauJBq7BdZ8/NLQmOGCLMQVp2MAXAFFgtzYasDZZZWjOX/Th2kUcaDN+I
- /4je8CQoaIG0UGtbZsAkFLy/1LMvLLPS3RZnSBbBgeyqEUOKmMbV1QwweQvoxrDoyxrHMi7Gy
- f0CXDruLnA9KezIt5srHTBpDD/s8cnyqpoIMkRwLzNo6vntAGe4flze443K5S0lvoeTaE/Lhg
- FK6WurPDfcgGo7nc0XLaWxFV23mCGRplOl0wIVexTiT7P5ZX+0/H2CBUg1iNb/gUgsUz/OvYr
- NHO8JLR/iMAhn7YqXEib1JicjAFSXpl7DZCkiwZlBCf0qq3sZ9SQZ65/6ZdcYN44uMkx2/tSr
- JUicJiTDBAVIjZFgVdM/hOgF2/wViONZSXF3ZCMfWDTBXZHst1/sSne2cl0mqYQKVr5KeVl9W
- 4L+uoGkI98FY33KXZ
+X-UI-Out-Filterresults: notjunk:1;V03:K0:PnzBkUcOKAY=:V/ttZBJ1+lucSMD75nMnsM
+ NcaH7eRcrfkSiMMtNRhBRb6dlxCaJNWhZcOHwJE4pvBxci7QR13NHaI5rVXfJKKRKipsRueQr
+ pu+xkoqWqQQWc8MlcQlssPJHG7Lwp6w8J6FSyG3ADFOfyz9Mn2ojGY4JWyJ6yAKVRAOy5rfUf
+ 4lqBNnCswq7wBvemfMX6tz0+N1NkFLcrm6bFGEDe06ZIhD85zKWQo2pDWEairDkxk8YTQ3ngd
+ uXeWAeHAP6nziJ3D3URuKszcZc1YipjlrcKNybiM/LMKL6iqg8JvHCGRQNZPeGtuF0Smq8zw/
+ 9fn0zfYMLuu7bFTzUgHXpDQwcH+0olIbLlXTLIdZIOJEYokEyRxZdXe9uBOXx+9FUriGIzI6v
+ 7wIC73OJU43mjtR7t9iPn0I+dVW8vFbnMllgBkqUvHA0puZhbjkkueXoJUDOvkZNWacAvpKMK
+ 6brbCfpeI7ev3ItssXpNBpZj0HgX2pC/bmYQAdxLuvjR/qt/7l1iC/uzGcgX8vFM3xFC8+ZnG
+ coYL7eTXJ7Y8WAn5wKSab5t/KhscnJFOslx8clj3k3Q1wjZQib1Zt7nLs981UHZQQGq+9M5Ej
+ bJSlZiKjmcJvhc4HMb0tRsAhvqcRl7ZAEw3KuIJLlrrZGhYcGwIZt7lRfOG7dwL0Bf3DlYOkz
+ xNFunhlzcgHK0YudeDBnlZYRW2I6ta2niX90haz+Ey2NilqYpqASSfhOoDyruBIS8R5Nk2jFo
+ pYyscau9KBBCnfFkJ7fU45z+F99AAzH8p19xLqSJfLKwCsJvlxng3889fpOL8TVKXo0x/da8k
+ lxoUu18wG6+D14kTz+Z1nOM0t23I+vFXkDOXPuQD80LLBO840c/djV/zHu+wU6JcMqw+KFRn0
+ 0u65/B84cQqih5Yx8a7xOtriEWAhHpfv3ZHeI9JMTHH8M1k/NP0DL+8Km0UzXzk6JeQVW7knk
+ jF5oAgSsPW/zIMcGLkZ9AEOFE8yT9a5TIbt3DR0psuqpGDr5PZE02aIsPJsD/7vDGTrvak8Vf
+ tZUl7nvsY4ZTUEAFNuqt3IYNu5iW72E7hUUc0uNnWlL5roX0EbiAvzwUd4xq8xY2dXGLylqf1
+ ihgWpydBZJmc7tNGYNVVnq7qR/TXMrVcC/N33Cm5PT/0FSFUyAcP+iNDzoK/AHvRF8vo5KIM0
+ Z3i9Evmup2f6fATU3TCUE57JimLZ8AQ+egNfAs8lJZyQdojNsC4jM97SsQ1pjQyDwg4uxzE6K
+ P28bc+lylSvUrFUxi
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The Netronix embedded controller as found in Kobo Aura and Tolino Shine
-supports one PWM channel, which is used to control the frontlight
-brightness on these devices.
-
-Known problems:
-- `make dt_binding_check` shows the following warnings:
-  Documentation/devicetree/bindings/mfd/netronix,ntxec.example.dts:49.17-4=
-2:
-  Warning (pwms_property): /example-0/backlight:pwms: cell 2 is not a
-  phandle reference
-  Documentation/devicetree/bindings/mfd/netronix,ntxec.example.dts:49.17-4=
-2:
-  Warning (pwms_property): /example-0/backlight:pwms: Could not get
-  phandle node for (cell 2)
+The Netronix EC provides a PWM output, which is used for the backlight
+on ebook readers. This patches adds a driver for the PWM output.
 
 Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 =2D--
- .../bindings/mfd/netronix,ntxec.yaml          | 13 ++++++++
- .../bindings/pwm/netronix,ntxec-pwm.yaml      | 33 +++++++++++++++++++
- 2 files changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/netronix,ntxec-p=
-wm.yaml
+ drivers/pwm/Kconfig     |   4 ++
+ drivers/pwm/Makefile    |   1 +
+ drivers/pwm/pwm-ntxec.c | 148 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 153 insertions(+)
+ create mode 100644 drivers/pwm/pwm-ntxec.c
 
-diff --git a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml b/D=
-ocumentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-index 596df460f98eb..6562c41c5a9a9 100644
-=2D-- a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-+++ b/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-@@ -31,6 +31,9 @@ properties:
-     description:
-       The EC can signal interrupts via a GPIO line
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index cb8d739067d2f..147d6629e662c 100644
+=2D-- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -350,6 +350,10 @@ config PWM_MXS
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-mxs.
 
-+  pwm:
-+    $ref: ../pwm/netronix,ntxec-pwm.yaml
++config PWM_NTXEC
++	tristate "Netronix embedded controller PWM support"
++	depends on MFD_NTXEC && OF
 +
- required:
-   - compatible
-   - reg
-@@ -53,5 +56,15 @@ examples:
-                     interrupts =3D <11 IRQ_TYPE_EDGE_FALLING>;
-                     interrupt-controller;
-                     #interrupt-cells =3D <1>;
-+
-+                    ec_pwm: pwm {
-+                            compatible =3D "netronix,ntxec-pwm";
-+                            #pwm-cells =3D <1>;
-+                    };
-             };
-     };
-+
-+    backlight {
-+            compatible =3D "pwm-backlight";
-+            pwms =3D <&ec_pwm 0 50000>;
-+    };
-diff --git a/Documentation/devicetree/bindings/pwm/netronix,ntxec-pwm.yaml=
- b/Documentation/devicetree/bindings/pwm/netronix,ntxec-pwm.yaml
+ config PWM_OMAP_DMTIMER
+ 	tristate "OMAP Dual-Mode Timer PWM support"
+ 	depends on OF
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index a59c710e98c76..15507a6d9ca12 100644
+=2D-- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -32,6 +32,7 @@ obj-$(CONFIG_PWM_MESON)		+=3D pwm-meson.o
+ obj-$(CONFIG_PWM_MEDIATEK)	+=3D pwm-mediatek.o
+ obj-$(CONFIG_PWM_MTK_DISP)	+=3D pwm-mtk-disp.o
+ obj-$(CONFIG_PWM_MXS)		+=3D pwm-mxs.o
++obj-$(CONFIG_PWM_NTXEC)		+=3D pwm-ntxec.o
+ obj-$(CONFIG_PWM_OMAP_DMTIMER)	+=3D pwm-omap-dmtimer.o
+ obj-$(CONFIG_PWM_PCA9685)	+=3D pwm-pca9685.o
+ obj-$(CONFIG_PWM_PUV3)		+=3D pwm-puv3.o
+diff --git a/drivers/pwm/pwm-ntxec.c b/drivers/pwm/pwm-ntxec.c
 new file mode 100644
-index 0000000000000..1dc1b1aba081c
+index 0000000000000..eca305d8e915b
 =2D-- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/netronix,ntxec-pwm.yaml
-@@ -0,0 +1,33 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/netronix,ntxec-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/pwm/pwm-ntxec.c
+@@ -0,0 +1,148 @@
++// SPDX-License-Identifier: GPL-2.0-only
++// Copyright 2020 Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
++//
++// PWM driver for Netronix embedded controller.
 +
-+title: PWM functionality in Netronix embedded controller
++#include <linux/mfd/ntxec.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++#include <linux/of_device.h>
++#include <linux/types.h>
 +
-+maintainers:
-+  - Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
++struct ntxec_pwm {
++	struct device *dev;
++	struct ntxec *ec;
++	struct pwm_chip chip;
++};
 +
-+description: |
-+  See also Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
++static struct ntxec_pwm *pwmchip_to_pwm(struct pwm_chip *chip)
++{
++	return container_of(chip, struct ntxec_pwm, chip);
++}
 +
-+  The Netronix EC contains PWM functionality, which is usually used to dr=
-ive
-+  the backlight LED.
++#define NTXEC_UNK_A		0xa1
++#define NTXEC_UNK_B		0xa2
++#define NTXEC_ENABLE		0xa3
++#define NTXEC_PERIOD_LOW	0xa4
++#define NTXEC_PERIOD_HIGH	0xa5
++#define NTXEC_DUTY_LOW		0xa6
++#define NTXEC_DUTY_HIGH		0xa7
 +
-+  The following PWM channels are supported:
-+    - 0: The PWM channel controlled by registers 0xa1-0xa7
++/*
++ * The time base used in the EC is 8MHz, or 125ns. Period and duty cycle =
+are
++ * measured in this unit.
++ */
++static int ntxec_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm=
+_dev,
++				 int duty_ns, int period_ns)
++{
++	struct ntxec_pwm *pwm =3D pwmchip_to_pwm(chip);
++	uint64_t duty =3D duty_ns;
++	uint64_t period =3D period_ns;
++	int res =3D 0;
 +
-+allOf:
-+  - $ref: pwm.yaml#
++	do_div(period, 125);
++	if (period > 0xffff) {
++		dev_warn(pwm->dev,
++			 "Period is not representable in 16 bits: %llu\n", period);
++		return -ERANGE;
++	}
 +
-+properties:
-+  compatible:
-+    const: netronix,ntxec-pwm
++	do_div(duty, 125);
++	if (duty > 0xffff) {
++		dev_warn(pwm->dev, "Duty cycle is not representable in 16 bits: %llu\n"=
+,
++			duty);
++		return -ERANGE;
++	}
 +
-+  "#pwm-cells":
-+    const: 1
++	res |=3D ntxec_write8(pwm->ec, NTXEC_PERIOD_HIGH, period >> 8);
++	res |=3D ntxec_write8(pwm->ec, NTXEC_PERIOD_LOW, period);
++	res |=3D ntxec_write8(pwm->ec, NTXEC_DUTY_HIGH, duty >> 8);
++	res |=3D ntxec_write8(pwm->ec, NTXEC_DUTY_LOW, duty);
 +
-+required:
-+  - compatible
-+  - "#pwm-cells"
++	return (res < 0) ? -EIO : 0;
++}
++
++static int ntxec_pwm_enable(struct pwm_chip *chip,
++				 struct pwm_device *pwm_dev)
++{
++	struct ntxec_pwm *pwm =3D pwmchip_to_pwm(chip);
++
++	return ntxec_write8(pwm->ec, NTXEC_ENABLE, 1);
++}
++
++static void ntxec_pwm_disable(struct pwm_chip *chip,
++				   struct pwm_device *pwm_dev)
++{
++	struct ntxec_pwm *pwm =3D pwmchip_to_pwm(chip);
++
++	ntxec_write8(pwm->ec, NTXEC_ENABLE, 0);
++}
++
++static struct pwm_ops ntxec_pwm_ops =3D {
++	.config		=3D ntxec_pwm_config,
++	.enable		=3D ntxec_pwm_enable,
++	.disable	=3D ntxec_pwm_disable,
++	.owner		=3D THIS_MODULE,
++};
++
++static int ntxec_pwm_probe(struct platform_device *pdev)
++{
++	struct ntxec *ec =3D dev_get_drvdata(pdev->dev.parent);
++	struct ntxec_pwm *pwm;
++	struct pwm_chip *chip;
++	int res;
++
++	pwm =3D devm_kzalloc(&pdev->dev, sizeof(*pwm), GFP_KERNEL);
++	if (!pwm)
++		return -ENOMEM;
++
++	pwm->ec =3D ec;
++	pwm->dev =3D &pdev->dev;
++
++	chip =3D &pwm->chip;
++	chip->dev =3D &pdev->dev;
++	chip->ops =3D &ntxec_pwm_ops;
++	chip->base =3D -1;
++	chip->npwm =3D 1;
++
++	res =3D pwmchip_add(chip);
++	if (res < 0)
++		return res;
++
++	platform_set_drvdata(pdev, pwm);
++
++	res |=3D ntxec_write8(pwm->ec, NTXEC_ENABLE, 0);
++	res |=3D ntxec_write8(pwm->ec, NTXEC_UNK_A, 0xff);
++	res |=3D ntxec_write8(pwm->ec, NTXEC_UNK_B, 0xff);
++
++	return (res < 0) ? -EIO : 0;
++}
++
++static int ntxec_pwm_remove(struct platform_device *pdev)
++{
++	struct ntxec_pwm *pwm =3D platform_get_drvdata(pdev);
++	struct pwm_chip *chip =3D &pwm->chip;
++
++	return pwmchip_remove(chip);
++}
++
++static const struct of_device_id ntxec_pwm_of_match[] =3D {
++	{ .compatible =3D "netronix,ntxec-pwm" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, ntxec_pwm_of_match);
++
++static struct platform_driver ntxec_pwm_driver =3D {
++	.driver =3D {
++		.name =3D "ntxec-pwm",
++		.of_match_table =3D ntxec_pwm_of_match,
++	},
++	.probe =3D ntxec_pwm_probe,
++	.remove =3D ntxec_pwm_remove,
++};
++module_platform_driver(ntxec_pwm_driver);
++
++MODULE_AUTHOR("Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>");
++MODULE_DESCRIPTION("PWM driver for Netronix EC");
++MODULE_LICENSE("GPL");
 =2D-
 2.27.0
 
