@@ -2,37 +2,37 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 65CA1202394
-	for <lists+linux-pwm@lfdr.de>; Sat, 20 Jun 2020 14:18:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67134202397
+	for <lists+linux-pwm@lfdr.de>; Sat, 20 Jun 2020 14:19:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbgFTMS6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 20 Jun 2020 08:18:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56502 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728085AbgFTMS5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 20 Jun 2020 08:18:57 -0400
+        id S1728103AbgFTMTB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 20 Jun 2020 08:19:01 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45951 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728051AbgFTMTA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 20 Jun 2020 08:19:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592655536;
+        s=mimecast20190719; t=1592655539;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=UgxYU9BxtdMLnih7A4hfdL8tZUI9yTjPbVqz0uvNpdY=;
-        b=UHPkRBI3IsolL1kmVoDOy6TFdBVhzowFLVOAs5KP5tCQR70GhfuSsoh795fdUc/Gb6AvVT
-        MeE8zXuqq3kKIKVUM1jAz6l0myu3E/fAZCbj/GFYaaGLR2Z4MKzslejdliwLoYiR3qh9Q4
-        M2IYqxxubeNW7X1vURMW9QXpza4lDXw=
+        bh=aMEAQ1K28IcwheGcPcbAGTXILoPdfisVvobXNqzUOek=;
+        b=eVFm6lXDOii11pN21N+xkM7Vwi7CT/0b68GmMHcyIg0YjMzpGBNzoG87g/VZPM5dHqcIzu
+        KyS3RUUPNHOAB4RTL24/AuWJZxxXhdRdi7W76n7MUVyornXRqjlOHNY7sCQm+KQTeNC4tk
+        RL9BDgP2EQHH8cWOEf0ZRkL2MDylSAU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-472-lRZUycAwP1q_n2lSohsfDQ-1; Sat, 20 Jun 2020 08:18:52 -0400
-X-MC-Unique: lRZUycAwP1q_n2lSohsfDQ-1
+ us-mta-200-HF1UW7LVOaKtcg5iM-q6-w-1; Sat, 20 Jun 2020 08:18:55 -0400
+X-MC-Unique: HF1UW7LVOaKtcg5iM-q6-w-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D2338018D9;
-        Sat, 20 Jun 2020 12:18:50 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2D57181CBE1;
+        Sat, 20 Jun 2020 12:18:53 +0000 (UTC)
 Received: from x1.localdomain.com (ovpn-112-42.ams2.redhat.com [10.36.112.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ED4821001E91;
-        Sat, 20 Jun 2020 12:18:47 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B46A310021B3;
+        Sat, 20 Jun 2020 12:18:50 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -49,9 +49,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>, linux-pwm@vger.kernel.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org
-Subject: [PATCH v3 04/15] pwm: lpss: Add range limit check for the base_unit register value
-Date:   Sat, 20 Jun 2020 14:17:47 +0200
-Message-Id: <20200620121758.14836-5-hdegoede@redhat.com>
+Subject: [PATCH v3 05/15] pwm: lpss: Use pwm_lpss_apply() when restoring state on resume
+Date:   Sat, 20 Jun 2020 14:17:48 +0200
+Message-Id: <20200620121758.14836-6-hdegoede@redhat.com>
 In-Reply-To: <20200620121758.14836-1-hdegoede@redhat.com>
 References: <20200620121758.14836-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -62,63 +62,160 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-When the user requests a high enough period ns value, then the
-calculations in pwm_lpss_prepare() might result in a base_unit value of 0.
+Before this commit a suspend + resume of the LPSS PWM controller
+would result in the controller being reset to its defaults of
+output-freq = clock/256, duty-cycle=100%, until someone changes
+to the output-freq and/or duty-cycle are made.
 
-But according to the data-sheet the way the PWM controller works is that
-each input clock-cycle the base_unit gets added to a N bit counter and
-that counter overflowing determines the PWM output frequency. Adding 0
-to the counter is a no-op. The data-sheet even explicitly states that
-writing 0 to the base_unit bits will result in the PWM outputting a
-continuous 0 signal.
+This problem has been masked so far because the main consumer
+(the i915 driver) was always making duty-cycle changes on resume.
+With the conversion of the i915 driver to the atomic PWM API the
+driver now only disables/enables the PWM on suspend/resume leaving
+the output-freq and duty as is, triggering this problem.
 
-When the user requestes a low enough period ns value, then the
-calculations in pwm_lpss_prepare() might result in a base_unit value
-which is bigger then base_unit_range - 1. Currently the codes for this
-deals with this by applying a mask:
+The LPSS PWM controller has a mechanism where the ctrl register value
+and the actual base-unit and on-time-div values used are latched. When
+software sets the SW_UPDATE bit then at the end of the current PWM cycle,
+the new values from the ctrl-register will be latched into the actual
+registers, and the SW_UPDATE bit will be cleared.
 
-	base_unit &= (base_unit_range - 1);
+The problem is that before this commit our suspend/resume handling
+consisted of simply saving the PWM ctrl register on suspend and
+restoring it on resume, without setting the PWM_SW_UPDATE bit.
+When the controller has lost its state over a suspend/resume and thus
+has been reset to the defaults, just restoring the register is not
+enough. We must also set the SW_UPDATE bit to tell the controller to
+latch the restored values into the actual registers.
 
-But this means that we let the value overflow the range, we throw away the
-higher bits and store whatever value is left in the lower bits into the
-register leading to a random output frequency, rather then clamping the
-output frequency to the highest frequency which the hardware can do.
+Fixing this problem is not as simple as just or-ing in the value which
+is being restored with SW_UPDATE. If the PWM was enabled before we must
+write the new settings + PWM_SW_UPDATE before setting PWM_ENABLE.
+We must also wait for PWM_SW_UPDATE to become 0 again and depending on the
+model we must do this either before or after the setting of PWM_ENABLE.
 
-This commit fixes both issues by clamping the base_unit value to be
-between 1 and (base_unit_range - 1).
+All the necessary logic for doing this is already present inside
+pwm_lpss_apply(), so instead of duplicating this inside the resume
+handler, this commit makes the resume handler use pwm_lpss_apply() to
+restore the settings when necessary. This fixes the output-freq and
+duty-cycle being reset to their defaults on resume.
 
-Fixes: 684309e5043e ("pwm: lpss: Avoid potential overflow of base_unit")
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
 Changes in v3:
-- Change upper limit of clamp to (base_unit_range - 1)
-- Add Fixes tag
+- This replaces the "pwm: lpss: Set SW_UPDATE bit when enabling the PWM"
+  patch from previous versions of this patch-set, which really was a hack
+  working around the resume issue which this patch fixes properly.
 ---
- drivers/pwm/pwm-lpss.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/pwm/pwm-lpss.c | 62 ++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 53 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
-index 43b1fc634af1..80d0f9c64f9d 100644
+index 80d0f9c64f9d..4f3d60ce9929 100644
 --- a/drivers/pwm/pwm-lpss.c
 +++ b/drivers/pwm/pwm-lpss.c
-@@ -97,6 +97,9 @@ static void pwm_lpss_prepare(struct pwm_lpss_chip *lpwm, struct pwm_device *pwm,
- 	freq *= base_unit_range;
+@@ -123,25 +123,31 @@ static inline void pwm_lpss_cond_enable(struct pwm_device *pwm, bool cond)
+ 		pwm_lpss_write(pwm, pwm_lpss_read(pwm) | PWM_ENABLE);
+ }
  
- 	base_unit = DIV_ROUND_CLOSEST_ULL(freq, c);
-+	/* base_unit must not be 0 and we also want to avoid overflowing it */
-+	base_unit = clamp_t(unsigned long long, base_unit, 1,
-+			    base_unit_range - 1);
+-static int pwm_lpss_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+-			  const struct pwm_state *state)
++static int __pwm_lpss_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			    const struct pwm_state *state, bool from_resume)
+ {
+ 	struct pwm_lpss_chip *lpwm = to_lpwm(chip);
+ 	int ret;
  
- 	on_time_div = 255ULL * duty_ns;
- 	do_div(on_time_div, period_ns);
-@@ -105,7 +108,6 @@ static void pwm_lpss_prepare(struct pwm_lpss_chip *lpwm, struct pwm_device *pwm,
- 	orig_ctrl = ctrl = pwm_lpss_read(pwm);
- 	ctrl &= ~PWM_ON_TIME_DIV_MASK;
- 	ctrl &= ~((base_unit_range - 1) << PWM_BASE_UNIT_SHIFT);
--	base_unit &= (base_unit_range - 1);
- 	ctrl |= (u32) base_unit << PWM_BASE_UNIT_SHIFT;
- 	ctrl |= on_time_div;
+ 	if (state->enabled) {
+ 		if (!pwm_is_enabled(pwm)) {
+-			pm_runtime_get_sync(chip->dev);
++			if (!from_resume)
++				pm_runtime_get_sync(chip->dev);
++
+ 			ret = pwm_lpss_is_updating(pwm);
+ 			if (ret) {
+-				pm_runtime_put(chip->dev);
++				if (!from_resume)
++					pm_runtime_put(chip->dev);
++
+ 				return ret;
+ 			}
+ 			pwm_lpss_prepare(lpwm, pwm, state->duty_cycle, state->period);
+ 			pwm_lpss_cond_enable(pwm, lpwm->info->bypass == false);
+ 			ret = pwm_lpss_wait_for_update(pwm);
+ 			if (ret) {
+-				pm_runtime_put(chip->dev);
++				if (!from_resume)
++					pm_runtime_put(chip->dev);
++
+ 				return ret;
+ 			}
+ 			pwm_lpss_cond_enable(pwm, lpwm->info->bypass == true);
+@@ -154,12 +160,20 @@ static int pwm_lpss_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		}
+ 	} else if (pwm_is_enabled(pwm)) {
+ 		pwm_lpss_write(pwm, pwm_lpss_read(pwm) & ~PWM_ENABLE);
+-		pm_runtime_put(chip->dev);
++
++		if (!from_resume)
++			pm_runtime_put(chip->dev);
+ 	}
  
+ 	return 0;
+ }
+ 
++static int pwm_lpss_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			  const struct pwm_state *state)
++{
++	return __pwm_lpss_apply(chip, pwm, state, false);
++}
++
+ static void pwm_lpss_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			       struct pwm_state *state)
+ {
+@@ -272,10 +286,40 @@ EXPORT_SYMBOL_GPL(pwm_lpss_suspend);
+ int pwm_lpss_resume(struct device *dev)
+ {
+ 	struct pwm_lpss_chip *lpwm = dev_get_drvdata(dev);
+-	int i;
++	struct pwm_state saved_state;
++	struct pwm_device *pwm;
++	int i, ret;
++	u32 ctrl;
+ 
+-	for (i = 0; i < lpwm->info->npwm; i++)
+-		writel(lpwm->saved_ctrl[i], lpwm->regs + i * PWM_SIZE + PWM);
++	for (i = 0; i < lpwm->info->npwm; i++) {
++		pwm = &lpwm->chip.pwms[i];
++
++		ctrl = pwm_lpss_read(pwm);
++		/* If we did not reach S0i3/S3 the controller keeps its state */
++		if (ctrl == lpwm->saved_ctrl[i])
++			continue;
++
++		/*
++		 * We cannot just blindly restore the old value here. Since we
++		 * are changing the settings we must set SW_UPDATE and if the
++		 * PWM was enabled before we must write the new settings +
++		 * PWM_SW_UPDATE before setting PWM_ENABLE. We must also wait
++		 * for PWM_SW_UPDATE to become 0 again and depending on the
++		 * model we must do this either before or after the setting of
++		 * PWM_ENABLE.
++		 * So instead of reproducing all the code from pwm_apply() here,
++		 * we just reapply the state as stored in pwm->state.
++		 */
++		saved_state = pwm->state;
++		/*
++		 * Update enabled to its actual setting for the
++		 * enabled<->disabled transitions inside apply().
++		 */
++		pwm->state.enabled = !!(ctrl & PWM_ENABLE);
++		ret = __pwm_lpss_apply(&lpwm->chip, pwm, &saved_state, true);
++		if (ret)
++			dev_err(dev, "Error restoring state on resume\n");
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.26.2
 
