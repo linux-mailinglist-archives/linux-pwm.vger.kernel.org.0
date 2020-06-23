@@ -2,104 +2,65 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F304920504D
-	for <lists+linux-pwm@lfdr.de>; Tue, 23 Jun 2020 13:15:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAC682051D8
+	for <lists+linux-pwm@lfdr.de>; Tue, 23 Jun 2020 14:08:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732481AbgFWLPf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 23 Jun 2020 07:15:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52526 "EHLO
+        id S1732583AbgFWMIs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 23 Jun 2020 08:08:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732245AbgFWLPd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 23 Jun 2020 07:15:33 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4601C061796
-        for <linux-pwm@vger.kernel.org>; Tue, 23 Jun 2020 04:15:32 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g75so2589552wme.5
-        for <linux-pwm@vger.kernel.org>; Tue, 23 Jun 2020 04:15:32 -0700 (PDT)
+        with ESMTP id S1732333AbgFWMIr (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 23 Jun 2020 08:08:47 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8956C061755
+        for <linux-pwm@vger.kernel.org>; Tue, 23 Jun 2020 05:08:47 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id g11so9512450qvs.2
+        for <linux-pwm@vger.kernel.org>; Tue, 23 Jun 2020 05:08:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=D7l/Y2nU4ivOXB3kYNarWKNDy1SUWuawPt7q4q/Bhv4=;
-        b=PJKPxXqTINZvTfqWI/Nyh/TJOhvqGB/OhABtFT4nbzPDCiGF+D4/JVs6KFWqW2iLYE
-         w2ZMCF3GVXyRhHVxTn9Gq7+AztzdSAkqbpEQ6uqocHrwy1HSJq7m/KhY9BUJRArBsIIf
-         wXLyMPqoAtg+3chnNmgB61aeszpKGM/ynCpLJxuBfXSBIaEoz2ZSRdy2MWdUkqU987iD
-         qDYbEZ5c60vfWKKdxii9EImLLhoSNhp4CNF7Pc37EN+/7gHXIMHbcroJenD3wpDCfoIn
-         SuAvQBPHgZ4OfhgbDCBPf83GD7HtTrFolp5XCNvAQHJIWS5tLSteGzRV1f5shE9gJ5aR
-         Wm8g==
+        bh=7fNnQnFssZCc2Jtw2cUlJB4v7zrpRiQS682aXMZO9+Q=;
+        b=WxSKFmkqk4j7SN5KKsw6Y5QkEdw9VyestNG9AOLHcOWVeyCXrkXBksIPSY2oHjqhlK
+         d/KO3mYiNmhGGXwWzKrz41LTax0GAUSRnMMfZfoob4Rcd+YPuKaxROtKDs36a0nZ6Frx
+         DI0pP/pS021KINZbu5QWrtzn321ix3BmPtMtnbHqfJq2qQHgGxbbsHyAbYkGuq/+zwax
+         h0U10+ZuEte9AYgQFwdQ47cWJcb05QLcLHz3ym/2A4pMUbzhorbJApdyBxgObDu0Yw1v
+         YmNI+XbckmETAVoJangCKiENFNbH7R6O4YaOYZQi7T0KRhjjQJEghxMbk2/QUWuUZbGM
+         gQsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:reply-to:from:date:message-id
          :subject:to;
-        bh=D7l/Y2nU4ivOXB3kYNarWKNDy1SUWuawPt7q4q/Bhv4=;
-        b=laZEYssxyde+Y8iS2t3UGMjARLevU1LHmiKZ5IanGzDC9SX0Brt/MFDd/1go+AJew0
-         IYRveZB8Ymo4q7pjWgH5TPJ1dx0sY5nqTyiO5aQQHx+r79KE/kl3xsjkG6X6kBe6odqE
-         nv8MXVMHWR8fyLhYCCC++R5O8525rJnr3AB7rw0salpfXFjsGnI1L9/2zK3gM2RNmh1Q
-         THEL9Uz2+j31KOhOax5QHlraUIBTCZKn5DA6qBJN4PgPH6fpV9IvXmFnyUox2eu1wN77
-         /aI/i+FOxAnNIqUezRu9UMOnVT9FcZ/cZSSVgQpULEGYBmMqwDsTQAal2nyiTrpcvU9z
-         SMgA==
-X-Gm-Message-State: AOAM531TBhSpzDTcK+ywAKCCUAyT3FxgkzZcfxPwlVGSNvUoSJAMIcXy
-        N5cPV0j6Wh8WqTdPAVqrZ3wvV7EPuNzMNRzxLzI=
-X-Google-Smtp-Source: ABdhPJx/cjVcTDE9H2tlgA8DPdiIaM7na0b4h/BT34AezyhA9x4rdyJOUISGW2x5t/JhTK/gG+Qi/wg5t6yBtE6heh8=
-X-Received: by 2002:a1c:4e10:: with SMTP id g16mr22644952wmh.98.1592910931527;
- Tue, 23 Jun 2020 04:15:31 -0700 (PDT)
+        bh=7fNnQnFssZCc2Jtw2cUlJB4v7zrpRiQS682aXMZO9+Q=;
+        b=PJAGLPmTPtkPNQULYxqCB8TJf2Q6bKOZ+EgfeQrTfUbJYHpnIvBH8c7mnKOHTou+PU
+         9WFahjeo3sVLGiN1bhmyKpA4i2cUEsyde7HxXyaVM2aF0tn29u0FlkTiuehlVYrJZJLd
+         zaYWWmIHYKvFXJZ+weGHd1Pvg6Sf4qvw1xHeQhUZkI7KIQyiezb9QBUp4h2eSYrINM4o
+         xDFmyXMIEG+Rh695lk5q795fosG+j4Ecpl0Ow2VgV+PvZ0lEmc2TfqQGrzYbXfAY+fBX
+         QvljvaBSucLusIl9D6HszNj7bpHTLUMG/1NN6Dj5IP5imeX+FISYtObU/LGcGwTe/Hbl
+         tGrA==
+X-Gm-Message-State: AOAM5319F/XAoXbEM1qYMLTF1WxHu0f3t9WVN4XQL/DA54ydiUR6iaTs
+        WYycCMgSauLjkGUMQymFLzxdIVW2fDhLfrFO3VI=
+X-Google-Smtp-Source: ABdhPJx50ApXEZNb3AeLGHpd0Jilbu4P68HCHGtrFcOpBPXyGIdE8Uhp3UUBruLh0ZtywdbXz/yDsxdEYtlP31OEqYU=
+X-Received: by 2002:a0c:f949:: with SMTP id i9mr25631790qvo.75.1592914127089;
+ Tue, 23 Jun 2020 05:08:47 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a1c:f002:0:0:0:0:0 with HTTP; Tue, 23 Jun 2020 04:15:30
+Received: by 2002:ac8:47c2:0:0:0:0:0 with HTTP; Tue, 23 Jun 2020 05:08:46
  -0700 (PDT)
-Reply-To: sarahkoffi389@yahoo.co.jp
-From:   Sarah Koffi <paulwiliam782@gmail.com>
-Date:   Tue, 23 Jun 2020 12:15:30 +0100
-Message-ID: <CAHqcnY3uztg=hnF-RE7HUkdLHGJjnU94LpTkHp23AV2ruu=Rcg@mail.gmail.com>
-Subject: Greetings From Mrs. Sarah Koffi
-To:     sarahkoffi389@yahoo.co.jp
+Reply-To: bektery@outlook.com
+From:   YAVUZ BEKTER <bakert.jg@gmail.com>
+Date:   Tue, 23 Jun 2020 05:08:46 -0700
+Message-ID: <CAAUSuTX7XcyzvNs6dUHSQo+tqg8k-FaST5fTtZtS-WP+pw6CSg@mail.gmail.com>
+Subject: Hello.
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Greetings From Mrs. Sarah Koffi
-
-I'm contacting you based on your good profiles I read and for a good
-reasons, I am in search of a property to buy in your country as I
-intended to come over to your
-country for investment, Though I have not meet with you before but I
-believe that one has to risk confiding in someone to succeed sometimes
-in life.
-
-My name is Mrs. Sarah Koffi. My late husband deals on Crude Oil with
-Federal Government of Sudan and he has a personal Oil firm in Bentiu
-Oil zone town and Upper
-Nile city. What I have experience physically, I don't wish to
-experience it again in my life due to the recent civil Ethnic war
-cause by our President Mr. Salva Kiir
-and the rebel leader Mr Riek Machar, I have been Under United Nation
-refuge camp in chad to save my life and that of my little daughter.
-
-Though, I do not know how you will feel to my proposal, but the truth
-is that I sneaked into Chad our neighboring country where I am living
-now as a refugee.
-I escaped with my little daughter when the rebels bust into our house
-and killed my husband as one of the big oil dealers in the country,
-ever since then, I have being on the run.
-
-I left my country and move to Chad our neighboring country with the
-little ceasefire we had, due to the face to face peace meeting accord
-coordinated by the US Secretary of State, Mr John Kerry and United
-Nations in Ethiopia (Addis Ababa) between our President Mr Salva Kiir
-and the rebel leader Mr Riek Machar to stop this war.
-
-I want to solicit for your partnership with trust to invest the $8
-million dollars deposited by my late husband in Bank because my life
-is no longer safe in our country, since the rebels are looking for the
-families of all the oil business men in the country to kill, saying
-that they are they one that is milking the country dry.
-
-I will offer you 20% of the total fund for your help while I will
-partner with you for the investment in your country.
-If I get your reply.
-
-I will wait to hear from you so as to give you details.With love from
-
- i need you to contact me here sarahkoffi389@yahoo.co.jp
-
-Mrs. Sarah Koffi
+I am the foreign operations director of Bank of Turkey.
+My name is Mr, Yavuz. I have a sensitive investment project to discuss
+with you, please reply now.
+________________________
+Ik ben de directeur buitenlandse activiteiten van de Bank of Turkey.
+Mijn naam is meneer Yavuz. Ik moet een gevoelig investeringsproject bespreken
+met u, antwoord dan nu.
