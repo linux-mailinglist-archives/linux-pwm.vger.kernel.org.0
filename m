@@ -2,33 +2,39 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 304FF20BD61
-	for <lists+linux-pwm@lfdr.de>; Sat, 27 Jun 2020 02:09:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DDE420C016
+	for <lists+linux-pwm@lfdr.de>; Sat, 27 Jun 2020 10:18:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbgF0AIz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 26 Jun 2020 20:08:55 -0400
-Received: from mout.gmx.net ([212.227.15.15]:50603 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbgF0AIz (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 26 Jun 2020 20:08:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1593216484;
-        bh=4otcmsUcuNIHrWB18fGLT23iJsc5+XpSSQ0JeZZP6Zg=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=HTaDkR4TLueDwQwa+k8Nk8k2q0pKnY4Ma1CAZEE4qmOb/zK1GqpD4bD9XyaLRiBct
-         ZyGQ2mM84Qge+E5mhQrGU//SK2gpdIp/BuedMicYSqbSkEI3T6wnxTNHWr0IAlJizT
-         YapRz4BwOu/GQNecTMjc2C/RGQI3470aMre54r8g=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.194.186]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MJmGZ-1jZuLV2EH3-00K8kO; Sat, 27
- Jun 2020 02:08:04 +0200
-Date:   Sat, 27 Jun 2020 02:07:57 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        id S1726132AbgF0ISQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 27 Jun 2020 04:18:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbgF0ISQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 27 Jun 2020 04:18:16 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A0CBC03E979;
+        Sat, 27 Jun 2020 01:18:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=4UusXWVmeZslLL0YrXwQifqLxTB7fqL/8w++bVpT1Ek=; b=CdYOFiAmCvnKTyLHBvYOAYYd2F
+        uF2ipBdlMVzJkU/F9iSYsdZ0gtf75hcaUruY15yoJC0DSXLa1aIvjbQ2xUMIKrQB7x3JJ0O3fUqzT
+        rRQTziuSZ7Wc5h91mcUSS9Shp8uDaPOQYAzzCCFemo2attCrUfXoqe7vfD0bdh7wO7Mo=;
+Received: from p5dcc3098.dip0.t-ipconnect.de ([93.204.48.152] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jp61s-0007Tj-7u; Sat, 27 Jun 2020 10:17:44 +0200
+Date:   Sat, 27 Jun 2020 10:17:38 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
+Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
         <u.kleine-koenig@pengutronix.de>,
         Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
@@ -48,91 +54,261 @@ Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
         devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
         linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [RFC PATCH 01/10] DT bindings in plain text format
-Message-ID: <20200627000757.GA2699@latitude>
-References: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
- <20200620223915.1311485-2-j.neuschaefer@gmx.net>
- <20200622103243.GT954398@dell>
+        Josua Mayer <josua.mayer@jm0.eu>
+Subject: Re: [RFC PATCH 04/10] mfd: Add base driver for Netronix embedded
+ controller
+Message-ID: <20200627101738.2fe4abc3@aktux>
+In-Reply-To: <20200620224222.1312520-3-j.neuschaefer@gmx.net>
+References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
+        <20200620224222.1312520-3-j.neuschaefer@gmx.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
-Content-Disposition: inline
-In-Reply-To: <20200622103243.GT954398@dell>
-X-Provags-ID: V03:K1:eMxhCUYGNR4xIz4Sxup0XWxxmE2BA6MUjV6y9nWg0dsf9ecoPNS
- lxhlxzKJ91a38+Xstg0rmg0QvGMBTMUXw7+mODQZa5hsY7rXVAnTegVmqFI+h+0KRtOjzDK
- RdXYKyjLsp2kNP5li/2ImKjJfU3KC38/6bL6iF1vJ3brlZjGrkDn+R/s3onxLSykyGlvCXQ
- PvLh7ovJrIPGhWLzr12Zw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yTY0aGX6+xA=:n1YGoNm1wZM8bRWdZQ5KWN
- 2vmVtaa84gmspzZFGB6cgGfbHXkhUNaOwk49+bz1FSFH0O32RzLEEdFui+wxIW+L7mkxAtUyv
- stazEJyrBs5tBZ5HaPnZ0JvKs6GDDl7gDjglrRJXYBm/TxkSGsLJd/ycvDwek/Q1eN9NbA5YR
- 7HsgO52xG3Wo44jiTR4T2wjiPlwNNgpC1ibiSakBCTdCrip2V41okqzfib9BajOx8hR/XsAnh
- O+2bFYWTmThzt1MFHSEbB/a1B+rBO7g7EF6tLMMxoAVpe4VVDzDfQKKOeKRzi+i4YCrHuJltD
- POAVNOVlJE1oWwEanBJacXd5DmHOe+oK5VzqfMYne9fBEI7auOe6J8B0Og6hlcn/GHX3UKUaG
- W1XAKN7JX/otVDpnxzv2WhgCFI09zlu7RNlPT0VgrJa35Hg6DSgF9Lp176YPixBEy32205WQx
- 9HKpJ8ZBEz0/6K8/A+Xi3R24PXkLKtxT+LPyhmU1plVmdnnJPlynCCBQUJBLG/8RLk+0CCOCz
- qz9uYqqS7iLs1NR7djVDjR7TLTa3PvnheSsPZT1v3dcUGJFY081UzWHGgT6uM6d+rLKXKvKTX
- 3vkiwfs87Zpxu7t2K+ChPapBrG+8oCxPtFKODAaNTNW50RYQU5lrjWoTLplLJMvWSZwuGnz2E
- Cl+s99vWylMu7bJOVreGeVZRXgKiAUXM8pTdUhYJWQoDdVgSSnl2x34jYqdSw7XGc4eSgMqYq
- OqLOnfPqgZcksh64OEU9sk18lRdhd9UAvqYjjZavW4wxkGLq7kLQ4fg74EvIqhZQV+FuMCVT3
- 3UG6otqEnhOk3R0sXsqjbMJtVzGuw+msuLfixtoiiXyyZw8Wyz0ZNx2Gozh0c7+EoTiIAtlFg
- XS/y4CD/6HI5MkmjLSaN6ElotLylvrAmIQlQn/hHjNj42nQOp4DFw2UGIC+W7BxxT9nICBBso
- h9Kp+bikfQ2XILGPiRUUEnrL4+qBavuspMeTtBrCDkIr80QxqghF/ldNbnDTLDhPUfxg7F9mM
- Bsdmi5UGKQR2QCTtKxh36M4n6E8F3xUS+6IbQRph4Xe2DVpXJcoje3YnZWg0jbu7rfDspp4B4
- CYhmP6wN+GfhP4lThpzR2Ld6dESwNzKmMz0es6Z5yS9p0h4mC463elpnYg37G4Typv85Zr0CA
- NkTt9Bmmx2ThMbLqeAFkCWHx3utn01TSkShVZYWstL7lY3RUpxGvO5b+3aB76dNnBG8cMtHJA
- VLEmYDbiP22ZpOXaU
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Score: -1.0 (-)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Sun, 21 Jun 2020 00:42:15 +0200
+Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
 
---ikeVEW9yuYc//A+q
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jun 22, 2020 at 11:32:43AM +0100, Lee Jones wrote:
-> On Sun, 21 Jun 2020, Jonathan Neusch=C3=A4fer wrote:
+> Third-party hardware documentation is available at
+> https://github.com/neuschaefer/linux/wiki/Netronix-MSP430-embedded-contro=
+ller
 >=20
-> > For reference, here are the devicetree bindings in plaintext format.
-> > (Not for merge.)
+> The EC supports interrupts, but the driver doesn't make use of them so
+> far.
 >=20
-> This would be better placed inside the relevant patch(es), rather than
-> in a separate non-mergeable extra/superfluous patch.
+> Known problems:
+> - The reboot handler is installed in such a way that it directly calls
+>   into the i2c subsystem to send the reboot command to the EC. This
+>   means that the reboot handler may sleep, which is not allowed.
+>=20
+see
+https://patchwork.ozlabs.org/project/linux-i2c/patch/20190415213432.8972-3-=
+contact@stefanchrist.eu/
 
-Ok, I'll put it in the patch descriptions (as long as the plaintext DT
-bindings are relevant for review).
+for a fix of such problems.=20
 
-Thanks,
-Jonathan Neusch=C3=A4fer
+> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> ---
+>  drivers/mfd/Kconfig       |   7 ++
+>  drivers/mfd/Makefile      |   1 +
+>  drivers/mfd/ntxec.c       | 188 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/ntxec.h |  30 ++++++
+>  4 files changed, 226 insertions(+)
+>  create mode 100644 drivers/mfd/ntxec.c
+>  create mode 100644 include/linux/mfd/ntxec.h
+>=20
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index a37d7d1713820..78410b928648e 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -978,6 +978,13 @@ config MFD_VIPERBOARD
+>  	  You need to select the mfd cell drivers separately.
+>  	  The drivers do not support all features the board exposes.
+>=20
+> +config MFD_NTXEC
+> +	bool "Netronix Embedded Controller"
+> +	depends on I2C && OF
+> +	help
+> +	  Say yes here if you want to support the embedded controller of
+> +	  certain e-book readers designed by the ODM Netronix.
+> +
+>  config MFD_RETU
+>  	tristate "Nokia Retu and Tahvo multi-function device"
+>  	select MFD_CORE
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 9367a92f795a6..19d9391ed6f32 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -218,6 +218,7 @@ obj-$(CONFIG_MFD_INTEL_MSIC)	+=3D intel_msic.o
+>  obj-$(CONFIG_MFD_INTEL_PMC_BXT)	+=3D intel_pmc_bxt.o
+>  obj-$(CONFIG_MFD_PALMAS)	+=3D palmas.o
+>  obj-$(CONFIG_MFD_VIPERBOARD)    +=3D viperboard.o
+> +obj-$(CONFIG_MFD_NTXEC)		+=3D ntxec.o
+>  obj-$(CONFIG_MFD_RC5T583)	+=3D rc5t583.o rc5t583-irq.o
+>  obj-$(CONFIG_MFD_RK808)		+=3D rk808.o
+>  obj-$(CONFIG_MFD_RN5T618)	+=3D rn5t618.o
+> diff --git a/drivers/mfd/ntxec.c b/drivers/mfd/ntxec.c
+> new file mode 100644
+> index 0000000000000..82adea34ea746
+> --- /dev/null
+> +++ b/drivers/mfd/ntxec.c
+> @@ -0,0 +1,188 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +// Copyright 2020 Jonathan Neusch=C3=A4fer
+> +//
+> +// MFD driver for the usually MSP430-based embedded controller used in c=
+ertain
+> +// Netronix ebook reader board designs
+> +
+> +#include <asm/unaligned.h>
+> +#include <linux/delay.h>
+> +#include <linux/errno.h>
+> +#include <linux/i2c.h>
+> +#include <linux/mfd/ntxec.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/pm.h>
+> +#include <linux/reboot.h>
+> +#include <linux/types.h>
+> +
+> +
+> +#define NTXEC_VERSION		0x00
+> +#define NTXEC_POWEROFF		0x50
+> +#define NTXEC_POWERKEEP		0x70
+> +#define NTXEC_RESET		0x90
+> +
+> +
+> +/* Register access */
+> +
+> +int ntxec_read16(struct ntxec *ec, u8 addr)
+> +{
+> +	u8 request[1] =3D { addr };
+> +	u8 response[2];
+> +	int res;
+> +
+> +	struct i2c_msg msgs[] =3D {
+> +		{
+> +			.addr =3D ec->client->addr,
+> +			.flags =3D ec->client->flags,
+> +			.len =3D sizeof(request),
+> +			.buf =3D request
+> +		}, {
+> +			.addr =3D ec->client->addr,
+> +			.flags =3D ec->client->flags | I2C_M_RD,
+> +			.len =3D sizeof(response),
+> +			.buf =3D response
+> +		}
+> +	};
+> +
+> +	res =3D i2c_transfer(ec->client->adapter, msgs, ARRAY_SIZE(msgs));
+> +	if (res < 0)
+> +		return res;
+> +	if (res !=3D ARRAY_SIZE(msgs))
+> +		return -EIO;
+> +
+> +	return get_unaligned_be16(response);
+> +}
+> +EXPORT_SYMBOL(ntxec_read16);
+> +
+> +int ntxec_write16(struct ntxec *ec, u8 addr, u16 value)
+> +{
+> +	u8 request[3] =3D { addr, };
+> +	int res;
+> +
+> +	put_unaligned_be16(value, request + 1);
+> +
+> +	res =3D i2c_transfer_buffer_flags(ec->client, request, sizeof(request),
+> +					ec->client->flags);
+> +	if (res < 0)
+> +		return res;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(ntxec_write16);
+> +
+> +int ntxec_read8(struct ntxec *ec, u8 addr)
+> +{
+> +	int res =3D ntxec_read16(ec, addr);
+> +
+> +	if (res < 0)
+> +		return res;
+> +
+> +	return (res >> 8) & 0xff;
+> +}
+> +EXPORT_SYMBOL(ntxec_read8);
+> +
+> +int ntxec_write8(struct ntxec *ec, u8 addr, u8 value)
+> +{
+> +	return ntxec_write16(ec, addr, value << 8);
+> +}
+> +EXPORT_SYMBOL(ntxec_write8);
+> +
 
+do we really need both 16bit and 8bit accessors? If not,
+then simply use regmap_i2c_init and set val_bits accordingly.
+Maybe just doing the << 8 in the constants?
 
-> >  .../bindings/mfd/netronix,ntxec.txt           | 58 +++++++++++++++++++
-> >  .../bindings/pwm/netronix,ntxec-pwm.txt       | 27 +++++++++
-> >  .../bindings/rtc/netronix,ntxec-rtc.txt       | 17 ++++++
+> +
+> +/* Reboot/poweroff handling */
+> +
+> +static struct ntxec *poweroff_restart_instance;
+> +
+> +static void ntxec_poweroff(void)
+> +{
+> +	ntxec_write8(poweroff_restart_instance, NTXEC_POWEROFF, 0x01);
+> +	msleep(5000);
+> +}
+> +
+> +static int ntxec_restart(struct notifier_block *nb,
+> +		unsigned long action, void *data)
+> +{
+> +	/* FIXME: The I2C driver sleeps, but restart handlers may not sleep */
+> +	ntxec_write8(poweroff_restart_instance, NTXEC_RESET, 0xff);
+> +	/* TODO: delay? */
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block ntxec_restart_handler =3D {
+> +	.notifier_call =3D ntxec_restart,
+> +	.priority =3D 128
+> +};
+> +
+> +
+> +/* Driver setup */
+> +
+> +static int ntxec_probe(struct i2c_client *client,
+> +			    const struct i2c_device_id *ids)
+> +{
+> +	struct ntxec *ec;
+> +	int res;
+> +
+> +	ec =3D devm_kmalloc(&client->dev, sizeof(*ec), GFP_KERNEL);
+> +	if (!ec)
+> +		return -ENOMEM;
+> +
+> +	ec->dev =3D &client->dev;
+> +	ec->client =3D client;
+> +
+> +	/* Determine the firmware version */
+> +	res =3D ntxec_read16(ec, NTXEC_VERSION);
+> +	if (res < 0) {
+> +		dev_dbg(ec->dev, "Failed to read firmware version number\n");
+> +		return res;
+> +	}
+> +	ec->version =3D res;
+> +
+> +	dev_info(ec->dev,
+> +		 "Netronix embedded controller version %04x detected.\n",
+> +		 ec->version);
+> +
+> +	/* For now, we don't support the new register layout. */
+> +	if (ntxec_has_new_layout(ec))
+> +		return -EOPNOTSUPP;
+> +
+> +	if (of_device_is_system_power_controller(ec->dev->of_node)) {
+> +		/*
+> +		 * Set the 'powerkeep' bit. This is necessary on some boards
+> +		 * in order to keep the system running.
+> +		 */
+> +		res =3D ntxec_write8(ec, NTXEC_POWERKEEP, 0x08);
+> +		if (res < 0)
+> +			return res;
+> +
+> +		/* Install poweroff handler */
+> +		WARN_ON(poweroff_restart_instance);
+> +		poweroff_restart_instance =3D ec;
+> +		if (pm_power_off !=3D NULL)
+> +			/* TODO: Refactor among all poweroff drivers */
+> +			dev_err(ec->dev, "pm_power_off already assigned\n");
+> +		else
+> +			pm_power_off =3D ntxec_poweroff;
+> +
+common pattern, across drivers, so I think doing something else would
+be a separate cleanup issue.
 
---ikeVEW9yuYc//A+q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl72jdUACgkQCDBEmo7z
-X9sVSQ//dO2mmSQ8irQcGq+ghniFyM5T/oE/AuJByz+DeR8rIh6vaaPtz9ECq8If
-BKOOwgL5IBJE2dUEYXjVwFy+jvW7dMUvPkOm7WOuzjGj1Rs3I4QvzcyhrPyeKinE
-CAi8mxQsggvq0ntaevbtvbgOBU/FQVmv58DKpkUOW0JIMpplDyne2tSUCSYjjZro
-czdeMhbA6Sd2UzK/2tuxgmF6n05KqgObgVQKUG7tiToAj9IuoS8OPn62MD9xm8Vv
-M4EO57heoLmtUDQl08ObZJ0esnsC5RyjcZgNruEKXta8f6BSik25/Z7w9aZcVybm
-8QqcX13GsM5DYJpmNZ6I/56BuxderNnrBsuLjaqnmBbXUgCugl6PYEAPPZ0MJKBK
-GFFimgrzG/H8p3Cy/Vp6yY5d9+Yb0DGhpl+XQnZRzwabKV18LwCmlgeb/m0fm/aB
-G09odAz3tZbMdeaU7aBRVIHctK/CAQb1O6LH/7IKLQNT0Lus+55amD4Fm6+gx+O4
-g0U74dcxrm3dAGD+bp3IVjPV09ZoNm0l+1Vl+83Qq6P0NE+y0lXnoRAUM5xSHaye
-srcAe6UJglI4qqu22unvkzv+uhMcZ0AqY65wGBA+LKazcCmZ6UnpwhcWdWrI5pva
-PWf8gqk3BXCySDeN+fVpPDidwrYr/r9DI4MGxZf/dnWJStmbgl4=
-=h4Re
------END PGP SIGNATURE-----
-
---ikeVEW9yuYc//A+q--
+Regards,
+Andreas
