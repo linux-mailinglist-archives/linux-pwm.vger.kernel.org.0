@@ -2,46 +2,36 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D5A520BBFD
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jun 2020 23:56:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 304FF20BD61
+	for <lists+linux-pwm@lfdr.de>; Sat, 27 Jun 2020 02:09:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725861AbgFZV4j (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 26 Jun 2020 17:56:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgFZV4i (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 26 Jun 2020 17:56:38 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54467C03E979;
-        Fri, 26 Jun 2020 14:56:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7IHCsdnoUmmfDZldhAWNkEIt+lt8DWXAOajFIarz2tE=; b=kKEbfSWnL3KXAAUyV5RJhsMkFq
-        R168LUlj+Kwcx5NqFvReQe4AX2Yqvt/2oLFrlX6nD9Zezq3YWFwNXbSl3N2TlQIk84oxLkxYuPFiN
-        h5g7fLxL176wH380RcqVwdrXjNXgn9mf8ETlFXyCl3iFQQgwvZDhqOjS8UZGEtDiLwNo=;
-Received: from p200300ccff124000e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff12:4000:e2ce:c3ff:fe93:fc31] helo=eeepc)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jowK9-00029R-MS; Fri, 26 Jun 2020 23:56:00 +0200
-Received: from [::1] (helo=localhost)
-        by localhost with esmtp (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jowK8-0005Gb-RO; Fri, 26 Jun 2020 23:55:52 +0200
-Date:   Fri, 26 Jun 2020 23:55:52 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Jonathan =?ISO-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        id S1726101AbgF0AIz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 26 Jun 2020 20:08:55 -0400
+Received: from mout.gmx.net ([212.227.15.15]:50603 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726079AbgF0AIz (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 26 Jun 2020 20:08:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1593216484;
+        bh=4otcmsUcuNIHrWB18fGLT23iJsc5+XpSSQ0JeZZP6Zg=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=HTaDkR4TLueDwQwa+k8Nk8k2q0pKnY4Ma1CAZEE4qmOb/zK1GqpD4bD9XyaLRiBct
+         ZyGQ2mM84Qge+E5mhQrGU//SK2gpdIp/BuedMicYSqbSkEI3T6wnxTNHWr0IAlJizT
+         YapRz4BwOu/GQNecTMjc2C/RGQI3470aMre54r8g=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.194.186]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MJmGZ-1jZuLV2EH3-00K8kO; Sat, 27
+ Jun 2020 02:08:04 +0200
+Date:   Sat, 27 Jun 2020 02:07:57 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
@@ -58,71 +48,91 @@ Cc:     Jonathan =?ISO-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
         devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
         linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>
-Subject: Re: [RFC PATCH 07/10] dt-bindings: rtc: Add bindings for Netronix
- embedded controller RTC
-Message-ID: <20200626235552.7820a999@kemnade.info>
-In-Reply-To: <20200621000220.GB131826@piout.net>
-References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
-        <20200620224222.1312520-6-j.neuschaefer@gmx.net>
-        <20200621000220.GB131826@piout.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
+        Josua Mayer <josua.mayer@jm0.eu>,
+        Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [RFC PATCH 01/10] DT bindings in plain text format
+Message-ID: <20200627000757.GA2699@latitude>
+References: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
+ <20200620223915.1311485-2-j.neuschaefer@gmx.net>
+ <20200622103243.GT954398@dell>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Score: -1.0 (-)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
+Content-Disposition: inline
+In-Reply-To: <20200622103243.GT954398@dell>
+X-Provags-ID: V03:K1:eMxhCUYGNR4xIz4Sxup0XWxxmE2BA6MUjV6y9nWg0dsf9ecoPNS
+ lxhlxzKJ91a38+Xstg0rmg0QvGMBTMUXw7+mODQZa5hsY7rXVAnTegVmqFI+h+0KRtOjzDK
+ RdXYKyjLsp2kNP5li/2ImKjJfU3KC38/6bL6iF1vJ3brlZjGrkDn+R/s3onxLSykyGlvCXQ
+ PvLh7ovJrIPGhWLzr12Zw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yTY0aGX6+xA=:n1YGoNm1wZM8bRWdZQ5KWN
+ 2vmVtaa84gmspzZFGB6cgGfbHXkhUNaOwk49+bz1FSFH0O32RzLEEdFui+wxIW+L7mkxAtUyv
+ stazEJyrBs5tBZ5HaPnZ0JvKs6GDDl7gDjglrRJXYBm/TxkSGsLJd/ycvDwek/Q1eN9NbA5YR
+ 7HsgO52xG3Wo44jiTR4T2wjiPlwNNgpC1ibiSakBCTdCrip2V41okqzfib9BajOx8hR/XsAnh
+ O+2bFYWTmThzt1MFHSEbB/a1B+rBO7g7EF6tLMMxoAVpe4VVDzDfQKKOeKRzi+i4YCrHuJltD
+ POAVNOVlJE1oWwEanBJacXd5DmHOe+oK5VzqfMYne9fBEI7auOe6J8B0Og6hlcn/GHX3UKUaG
+ W1XAKN7JX/otVDpnxzv2WhgCFI09zlu7RNlPT0VgrJa35Hg6DSgF9Lp176YPixBEy32205WQx
+ 9HKpJ8ZBEz0/6K8/A+Xi3R24PXkLKtxT+LPyhmU1plVmdnnJPlynCCBQUJBLG/8RLk+0CCOCz
+ qz9uYqqS7iLs1NR7djVDjR7TLTa3PvnheSsPZT1v3dcUGJFY081UzWHGgT6uM6d+rLKXKvKTX
+ 3vkiwfs87Zpxu7t2K+ChPapBrG+8oCxPtFKODAaNTNW50RYQU5lrjWoTLplLJMvWSZwuGnz2E
+ Cl+s99vWylMu7bJOVreGeVZRXgKiAUXM8pTdUhYJWQoDdVgSSnl2x34jYqdSw7XGc4eSgMqYq
+ OqLOnfPqgZcksh64OEU9sk18lRdhd9UAvqYjjZavW4wxkGLq7kLQ4fg74EvIqhZQV+FuMCVT3
+ 3UG6otqEnhOk3R0sXsqjbMJtVzGuw+msuLfixtoiiXyyZw8Wyz0ZNx2Gozh0c7+EoTiIAtlFg
+ XS/y4CD/6HI5MkmjLSaN6ElotLylvrAmIQlQn/hHjNj42nQOp4DFw2UGIC+W7BxxT9nICBBso
+ h9Kp+bikfQ2XILGPiRUUEnrL4+qBavuspMeTtBrCDkIr80QxqghF/ldNbnDTLDhPUfxg7F9mM
+ Bsdmi5UGKQR2QCTtKxh36M4n6E8F3xUS+6IbQRph4Xe2DVpXJcoje3YnZWg0jbu7rfDspp4B4
+ CYhmP6wN+GfhP4lThpzR2Ld6dESwNzKmMz0es6Z5yS9p0h4mC463elpnYg37G4Typv85Zr0CA
+ NkTt9Bmmx2ThMbLqeAFkCWHx3utn01TSkShVZYWstL7lY3RUpxGvO5b+3aB76dNnBG8cMtHJA
+ VLEmYDbiP22ZpOXaU
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun, 21 Jun 2020 02:02:20 +0200
-Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
 
-> Hi,
->=20
-> On 21/06/2020 00:42:18+0200, Jonathan Neusch=E4fer wrote:
-> > The Netronix EC implements an RTC with the following functionality:
-> >=20
-> > - Calendar-based time keeping with single-second resolution
-> > - Automatic power-on with single-minute resolution
-> > - Alarm at single-second resolution
-> >=20
-> > This binding only supports timekeeping for now.
-> >=20
-> > Signed-off-by: Jonathan Neusch=E4fer <j.neuschaefer@gmx.net>
-> > ---
-> >  .../bindings/mfd/netronix,ntxec.yaml          |  7 +++++
-> >  .../bindings/rtc/netronix,ntxec-rtc.yaml      | 27 +++++++++++++++++++
-> >  2 files changed, 34 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/rtc/netronix,ntxe=
-c-rtc.yaml
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml =
-b/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-> > index 6562c41c5a9a9..f6a32f46f47bb 100644
-> > --- a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-> > +++ b/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-> > @@ -34,6 +34,9 @@ properties:
-> >    pwm:
-> >      $ref: ../pwm/netronix,ntxec-pwm.yaml
-> >=20
-> > +  rtc:
-> > +    $ref: ../rtc/netronix,ntxec-rtc.yaml
-> > + =20
->=20
-> Shouldn't the node simply be documented here?
->=20
-> Also, do you really need a compatible string to be able to proe the
-> driver? What are the chances that you'll get a similar EC without an
-> RTC?
->=20
-Tolino Shine 2 HD has the mentioned EC but the vendor kernel does not use
-its RTC (not checked whether it is present or functional).
-As a key for grepping in the vendor sources:=20
-gptNtxHwCfg->m_val.bPCB =3D 0x50
+--ikeVEW9yuYc//A+q
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tolino Shine 3  and Kobo Clara HD do not have that EC.
+On Mon, Jun 22, 2020 at 11:32:43AM +0100, Lee Jones wrote:
+> On Sun, 21 Jun 2020, Jonathan Neusch=C3=A4fer wrote:
+>=20
+> > For reference, here are the devicetree bindings in plaintext format.
+> > (Not for merge.)
+>=20
+> This would be better placed inside the relevant patch(es), rather than
+> in a separate non-mergeable extra/superfluous patch.
 
-Regrads,
-Andreas
+Ok, I'll put it in the patch descriptions (as long as the plaintext DT
+bindings are relevant for review).
+
+Thanks,
+Jonathan Neusch=C3=A4fer
+
+
+> >  .../bindings/mfd/netronix,ntxec.txt           | 58 +++++++++++++++++++
+> >  .../bindings/pwm/netronix,ntxec-pwm.txt       | 27 +++++++++
+> >  .../bindings/rtc/netronix,ntxec-rtc.txt       | 17 ++++++
+
+--ikeVEW9yuYc//A+q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl72jdUACgkQCDBEmo7z
+X9sVSQ//dO2mmSQ8irQcGq+ghniFyM5T/oE/AuJByz+DeR8rIh6vaaPtz9ECq8If
+BKOOwgL5IBJE2dUEYXjVwFy+jvW7dMUvPkOm7WOuzjGj1Rs3I4QvzcyhrPyeKinE
+CAi8mxQsggvq0ntaevbtvbgOBU/FQVmv58DKpkUOW0JIMpplDyne2tSUCSYjjZro
+czdeMhbA6Sd2UzK/2tuxgmF6n05KqgObgVQKUG7tiToAj9IuoS8OPn62MD9xm8Vv
+M4EO57heoLmtUDQl08ObZJ0esnsC5RyjcZgNruEKXta8f6BSik25/Z7w9aZcVybm
+8QqcX13GsM5DYJpmNZ6I/56BuxderNnrBsuLjaqnmBbXUgCugl6PYEAPPZ0MJKBK
+GFFimgrzG/H8p3Cy/Vp6yY5d9+Yb0DGhpl+XQnZRzwabKV18LwCmlgeb/m0fm/aB
+G09odAz3tZbMdeaU7aBRVIHctK/CAQb1O6LH/7IKLQNT0Lus+55amD4Fm6+gx+O4
+g0U74dcxrm3dAGD+bp3IVjPV09ZoNm0l+1Vl+83Qq6P0NE+y0lXnoRAUM5xSHaye
+srcAe6UJglI4qqu22unvkzv+uhMcZ0AqY65wGBA+LKazcCmZ6UnpwhcWdWrI5pva
+PWf8gqk3BXCySDeN+fVpPDidwrYr/r9DI4MGxZf/dnWJStmbgl4=
+=h4Re
+-----END PGP SIGNATURE-----
+
+--ikeVEW9yuYc//A+q--
