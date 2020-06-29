@@ -2,98 +2,102 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92BE020D620
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2020 22:04:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C990320D6BC
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2020 22:06:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730661AbgF2TRy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 29 Jun 2020 15:17:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44314 "EHLO
+        id S1729531AbgF2TXb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 29 Jun 2020 15:23:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731954AbgF2TRn (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jun 2020 15:17:43 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA3FC030F31;
-        Mon, 29 Jun 2020 09:50:55 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id o1so746758plk.1;
-        Mon, 29 Jun 2020 09:50:55 -0700 (PDT)
+        with ESMTP id S1732288AbgF2TWp (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jun 2020 15:22:45 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A1B5C030F33
+        for <linux-pwm@vger.kernel.org>; Mon, 29 Jun 2020 09:54:26 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id a6so14134130wmm.0
+        for <linux-pwm@vger.kernel.org>; Mon, 29 Jun 2020 09:54:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=epjZAavl8OTnrmj035AkLkdZa01IVf7hDefQw4XclfM=;
-        b=qfyP5RxgxAmyq6gPs73byd3YoUOiLlNFQvfce7YA6ZsR4onyELxfCTqCWi9/zFOy9v
-         7ispQlUC7C62ftj66FOnsAaCx06Splb36D3NXxPefaLlEexM+/GJp5SzYtsGakl+mL8B
-         eiPo23Xf8b/PqiyIqGS164oGgDUWUvPrIGy1sBMgspA0aqQBkcHfxRXfE3/2dFsV6dAW
-         k11LT22CZUqLUqGH2Em2PSrz5m+H6cJgWvUB96mb2oPQvs7VGaO1I4H9d6J/iOgaigXr
-         4af3bgasPy59TzF+5e2A/5fHzziw2TWZci3cAFqTzHOYBESugR9IwZ0F6+uS9vE1IZyq
-         e9DQ==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=X9rfAlOxfe38VMX/oL2KWbXJmMAccAeFpKeQ6kbgS5I=;
+        b=UZ6FVKc7frhOr+27BqHpUSAAlW/b6bGMLjuQl7IYNjpAn9UP9nwBkgtlMucNWw5P0M
+         YTRq3+LIylKWY1EpNL4FD5Vuwel8piO0VIk6nUxpzG9Ls450pSl99qLEi2KfmUEV4fC3
+         Q0HMPnnWRd7jZFkfC02SLQXuTxIeg1aAPTOqI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=epjZAavl8OTnrmj035AkLkdZa01IVf7hDefQw4XclfM=;
-        b=Ds++611FQtbDfwjmK0Ja4x9B58g+eThFp+aRwufbE2vjFMIxtgfGgWbB+qHZSOJdKh
-         5VsnBo8MQ/e2H3mNtffXUFLD2Ps4AcN9kHr36iYHIPL5ntx1ioOcUOHmT6F6ORvvbgW+
-         poPI0MMFucKV5HvwCURQH1raQjhOBVlulKj3W3r64sSU5qp/4vN+IRns1HuxGBDd5vk0
-         VWXkVyIEkbIQ9GQBHDI+CRTJo2gxuzAHOwZAjSdctc8LX2KFUTwCUmAD5MY6EKwcENhb
-         5HYFoGRr8/QMhmeS9C0i0JeRg+HEKWW381w6z2lIqX7+WFSzLSFvzpCqCxMNdjinfH9T
-         dvig==
-X-Gm-Message-State: AOAM531qr4mxBjjAKaoH7SAMxSn+Ci3wz8LYyEKVulMaeNx020qu7ULY
-        UQQkgwlPJjfciCCmyTDkTgvQAjzZORLlKmh1mmg=
-X-Google-Smtp-Source: ABdhPJwK8VIW73nkc0kipwx1fUf9LlTusE2dlg042QQH/vsyXg7aXQu6OoBfFkAIfefdmaXBT/ZOhM4ezkR0DNBgt9w=
-X-Received: by 2002:a17:902:8491:: with SMTP id c17mr6807522plo.262.1593449454975;
- Mon, 29 Jun 2020 09:50:54 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=X9rfAlOxfe38VMX/oL2KWbXJmMAccAeFpKeQ6kbgS5I=;
+        b=ZGx9ttpMIL7sh8R72YtI0BSfbdHGY/m66kqfb7YRsgkwedFiFJgN/eK7F7LELfOVfC
+         0mtfjQ22oYGcejhSrQ2xpN7/Na4xusHyjMp8MV22Hze0wk3aFhyCoXqflnCBApJ88D2u
+         y5pyF+AI2dkVsCDwUIQV3iP/l4rmkyp4QMAkqHj8QbFbF+0lBySh4zH5kiIIGOTX7Tq9
+         /5IC/UaszIWnRyrQZ7KITg5j4Fs6Lg41pllp/zJtHrKLgkHX8S4zG0atZJpXndS/Bo0k
+         biCnOGBVtoL+FKwtVunL3xITGK82o+XOebXjWAatySm/9yl9Nn5ovLx7/Bt2fCbav7Rx
+         tonw==
+X-Gm-Message-State: AOAM531qlnb9ArjP+yR+HUXjlX8KS95+GRNDbhPqG+HZX8uZpd2AMaIy
+        NH9PkE19JHaBzJMplqyiLey72w==
+X-Google-Smtp-Source: ABdhPJzEBOnJbI3F9fbCTkykHuYski3xJ+b+DkSQKsgVaDyTwA3/2FplB6F5M/HjmK7MhPF+FIuGjw==
+X-Received: by 2002:a05:600c:c1:: with SMTP id u1mr17895281wmm.48.1593449664783;
+        Mon, 29 Jun 2020 09:54:24 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id e8sm396022wrp.26.2020.06.29.09.54.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 09:54:24 -0700 (PDT)
+Subject: Re: [PATCH 1/4] pwm: bcm-iproc: Remove impossible comparison when
+ validating duty cycle
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Yendapally Reddy Dhananjaya Reddy 
+        <yendapally.reddy@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+References: <20200629124752.1018358-1-lee.jones@linaro.org>
+ <20200629124752.1018358-2-lee.jones@linaro.org>
+ <3470e941-aa86-11a8-674b-5258a08fedb1@gmail.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <76a657ca-d30e-c5f2-f057-1c1bb7c8e1bf@broadcom.com>
+Date:   Mon, 29 Jun 2020 09:54:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200503105453.23658-1-miquel.raynal@bootlin.com> <20200629160844.6ecf79c1@xps13>
-In-Reply-To: <20200629160844.6ecf79c1@xps13>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 29 Jun 2020 19:50:41 +0300
-Message-ID: <CAHp75Vehv_Cp1AhMPhk8ktyp-uHSkgweqnhhSq_7w2Kf9y=7XQ@mail.gmail.com>
-Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3470e941-aa86-11a8-674b-5258a08fedb1@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 5:08 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote on Sun,  3 May 2020
-> 12:54:53 +0200:
+
+
+On 2020-06-29 9:45 a.m., Florian Fainelli wrote:
 >
-> > The MAX7313 chip is fully compatible with the PCA9535 on its basic
-> > functions but can also manage the intensity on each of its ports with
-> > PWM. Each output is independent and may be tuned with 16 values (4
-> > bits per output). The period is always 32kHz, only the duty-cycle may
-> > be changed. One can use any output as GPIO or PWM.
-
-> Can I have a status on this patch please?
+> On 6/29/2020 5:47 AM, Lee Jones wrote:
+>> 'duty' here is an unsigned int, thus checking for <0 will always
+>> evaluate to false.
+>>
+>> Fixes the following W=1 warning:
+>>
+>>   drivers/pwm/pwm-bcm-iproc.c:147:12: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+>>
+>> Cc: Ray Jui <rjui@broadcom.com>
+>> Cc: Scott Branden <sbranden@broadcom.com>
+>> Cc: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+>> Cc: bcm-kernel-feedback-list@broadcom.com
+>> Cc: linux-pwm@vger.kernel.org
+>> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> And IPROC_PWM_DUTY_CYCLE_MIN is unused after remove this single use of
+> the define, if you also remove it you can add:
 >
-> If it was forgotten, I would be good to have it queued now, otherwise,
-> may I know the reason?
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+We actually made this same change internally recently but hadn't 
+upstreamed it yet.
 
-TWIMC, just my 2 cents about this patch.
-I don't like it in this form. On the constructive side I can propose
-at least two ways to solve:
-a) introduce a PWM as a pin mode; move pca953x to pin control; use
-this mode with PWM driver being separated from the pin control;
-b) introduce an MFD that provides two parts for this GPIO & PWM.
+Tested-by: Scott Branden <scott.branden@broadcom.com>
 
-Personally I would go with a) as I know at least one more pin
-controller which will get an advantage of this (and it's definitely
-not an MFD).
-
-If GPIO / pin control maintainers consider this okay, I will rest my
-case, but see above...
-
--- 
-With Best Regards,
-Andy Shevchenko
