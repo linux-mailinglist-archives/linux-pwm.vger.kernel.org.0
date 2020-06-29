@@ -2,120 +2,103 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3931C20D1E2
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2020 20:50:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4EE920D11E
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2020 20:41:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgF2Soh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 29 Jun 2020 14:44:37 -0400
-Received: from mga02.intel.com ([134.134.136.20]:40916 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726051AbgF2SoC (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:44:02 -0400
-IronPort-SDR: a+SOZ1NxVd3QEdWfn5A05yR/TJuFoBHoE9aq3qKb8KsLSD0o9HyPlbe9rqsP48BQO7HN2ErI5I
- ww7XNEoKknqA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="134249545"
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="134249545"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 02:04:00 -0700
-IronPort-SDR: STrvPj96RlAD7lPaaBOdSDyKih7aU1PdIQXeqvI1m6nWdHjjGCQy8LCHSPGJCI3J/c8s9USQH+
- Sn2Hajo4qAZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="294829170"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga002.jf.intel.com with ESMTP; 29 Jun 2020 02:03:56 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
-Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v3 1/2] Add DT bindings YAML schema for PWM fan controller of LGM SoC
-Date:   Mon, 29 Jun 2020 17:03:46 +0800
-Message-Id: <cd0692812e7f1bce365a7594b076ae0ed19d2b37.1593420979.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
-References: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
-References: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
+        id S1726046AbgF2Sir (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 29 Jun 2020 14:38:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37590 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727968AbgF2SiB (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jun 2020 14:38:01 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5433C00F834
+        for <linux-pwm@vger.kernel.org>; Mon, 29 Jun 2020 05:47:59 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id o11so16408507wrv.9
+        for <linux-pwm@vger.kernel.org>; Mon, 29 Jun 2020 05:47:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=NEV6hYDCbFsvfJQmVY8SdLZWAEKAYJLZhNHaqOLyTQ0=;
+        b=g/qvooMn7EGa6fcqc2kWnU2ojwrJqK2KiizeQeRVmrzZNiW+BuWl/MFpjCt7ykkfQi
+         /WtES5WG4855eTikHYrDxPwhnzNevMFtUE0Uw1T+XtYmxeAV8nlDXMIZbpC8slMDFM9b
+         l9bvKnHs6tD4Q+fAd/GrCSLSCZP6CxvRyfcX6949iBxHUkpeHaZwBbPTNuRkN2DUXVrk
+         mP9eGbJLxI2Rw5zbVk4RDUM6LbadMulN+A0LYyqtETOkhIAfq01WPOQj+rNpoGAZlBtH
+         lMLvIy6r1baqcRuN0MQg0hhdEQriJtNufm8KwQDDs6uM4b1C2n1dXb2jm04IZyUV4x5S
+         7m+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=NEV6hYDCbFsvfJQmVY8SdLZWAEKAYJLZhNHaqOLyTQ0=;
+        b=r/9hkkXj9gy+gWDsLDNAcUtoR8vHv9JgYgxbrSuqji8XnlcSFPqR8/zwXi3hCq8KZt
+         HgoIfKVOzSA6K6OUlwSqCanyWGU8HiEeSBInRBa6HlDtGPGEN+L4XW6WfgDzBxGqdMt8
+         dlhE4TgMLw2YsbgqmXZhlrCxLSkbjdDBONgWhRR0/mfJiHu/Le0u2GjlYA5DSuIxoiz2
+         v3yEvX0ZuJX+lvu0OxORxKKf8c+vS91wAXgGeIAhuUcxSYq9Wswb/gxUti6Zca/fS4/j
+         v3L4k3LXqJTRzJ2mB4eqHP98MjnFTVJxQfSwyD2Mqvf9xys8+NnM0idQpEN+U1VXKOgM
+         0Pfg==
+X-Gm-Message-State: AOAM533/y4HJ5RmTwUHfP8ufAxw87lhNY7HIDWgUQRz4YXg5wXNlbpt0
+        IL81LMA19vi2DEBnnCYOawGRLw==
+X-Google-Smtp-Source: ABdhPJydHemsKTs48wiPVgEp/Hc461CvZjxrU2X87Xf1dlr2h8v+7RF5f+XgVLw3AkYxwWDmRNEYFw==
+X-Received: by 2002:adf:edc6:: with SMTP id v6mr16990851wro.413.1593434878504;
+        Mon, 29 Jun 2020 05:47:58 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id e17sm12995924wrr.88.2020.06.29.05.47.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 05:47:57 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <blogic@openwrt.org>,
+        Zhi Mao <zhi.mao@mediatek.com>,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH 3/4] pwm: mediatek: Provide missing kerneldoc description for 'soc' arg
+Date:   Mon, 29 Jun 2020 13:47:51 +0100
+Message-Id: <20200629124752.1018358-4-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629124752.1018358-1-lee.jones@linaro.org>
+References: <20200629124752.1018358-1-lee.jones@linaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Intel's LGM(Lightning Mountain) SoC contains a PWM fan controller
-which is only used to control the fan attached to the system. This
-PWM controller does not have any other consumer other than fan.
-Add DT bindings documentation for this PWM fan controller.
+Kerneldoc syntax is used, but not complete.
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Descriptions are required for all arguments.
+
+Fixes the following W=1 build warning:
+
+ drivers/pwm/pwm-mediatek.c:57: warning: Function parameter or member 'soc' not described in 'pwm_mediatek_chip'
+
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: John Crispin <blogic@openwrt.org>
+Cc: Zhi Mao <zhi.mao@mediatek.com>
+Cc: linux-pwm@vger.kernel.org
+Cc: linux-mediatek@lists.infradead.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     | 51 ++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+ drivers/pwm/pwm-mediatek.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
-new file mode 100644
-index 000000000000..bc3fbc46ec5c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/intel,lgm-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: LGM SoC PWM fan controller
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@intel.com>
-+
-+properties:
-+  compatible:
-+    const: intel,lgm-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  intel,fan-wire:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: Specifies fan mode. Default when unspecified is 2.
-+
-+  intel,max-rpm:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description:
-+      Specifies maximum RPM of fan attached to the system.
-+      Default when unspecified is 4000.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - resets
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pwm: pwm@e0d00000 {
-+        compatible = "intel,lgm-pwm";
-+        reg = <0xe0d00000 0x30>;
-+        #pwm-cells = <2>;
-+        clocks = <&cgu0 126>;
-+        resets = <&rcu0 0x30 21>;
-+    };
+diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+index b94e0d09c300f..ab001ce55178e 100644
+--- a/drivers/pwm/pwm-mediatek.c
++++ b/drivers/pwm/pwm-mediatek.c
+@@ -46,6 +46,7 @@ struct pwm_mediatek_of_data {
+  * @clk_main: the clock used by PWM core
+  * @clk_pwms: the clock used by each PWM channel
+  * @clk_freq: the fix clock frequency of legacy MIPS SoC
++ * @soc: pointer to chip's platform data
+  */
+ struct pwm_mediatek_chip {
+ 	struct pwm_chip chip;
 -- 
-2.11.0
+2.25.1
 
