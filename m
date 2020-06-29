@@ -2,108 +2,99 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 211E820DAA5
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2020 22:14:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8C9220E1AF
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2020 23:59:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731968AbgF2T7S (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 29 Jun 2020 15:59:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51070 "EHLO
+        id S1730878AbgF2U6l (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 29 Jun 2020 16:58:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732370AbgF2T6w (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jun 2020 15:58:52 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0972FC061755
-        for <linux-pwm@vger.kernel.org>; Mon, 29 Jun 2020 12:58:52 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jpzvT-0001Px-Tj; Mon, 29 Jun 2020 21:58:47 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jpzvS-0005io-8i; Mon, 29 Jun 2020 21:58:46 +0200
-Date:   Mon, 29 Jun 2020 21:58:46 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-Subject: Re: [PATCH v3 2/2] Add PWM fan controller driver for LGM SoC
-Message-ID: <20200629195846.6fonhke5d2rs4mna@pengutronix.de>
-References: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
- <df22a642083474e71f9f8274c033a6ef9757af5f.1593420979.git.rahul.tanwar@linux.intel.com>
+        with ESMTP id S1731250AbgF2TNC (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jun 2020 15:13:02 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27BCAC030F2D;
+        Mon, 29 Jun 2020 09:45:23 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id r12so17156687wrj.13;
+        Mon, 29 Jun 2020 09:45:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=u9fUuABIS2EcFjNrVGvmrkgcrL3UypNwy9u+b06+fm8=;
+        b=RXfK6rQ+SzRHAAVPuZgSCcwjrzUnceasBHQrhHMlYQ5I1SwpWIBR7DK1d9z7HkvSKk
+         MEVg1EeIlqmjYTk5OsFBriXDewcGgPjdcNafq5kaZpPfePyEgRPZ9KR/zL8lyFUCczsQ
+         fiExr9g3JvIkRHCN4gf/kV7o6tI1lGDyqRUhkanPryvVXw1bR3kmf0rsFUEju8am7/2o
+         acuoJOCiMPtfkQ7D4wkqcUG6x3gCNCcsrnehQs1HTEiitZpPTqeKgDEHzc4SsrmYh7qT
+         V8kuot39HNtGZAe2xXp6kdzpSV1Fyy0OAUiP6MDKv4mmLUHNtkngmP/upBmbE0yXLUev
+         PKRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=u9fUuABIS2EcFjNrVGvmrkgcrL3UypNwy9u+b06+fm8=;
+        b=ctbcJyWcYp9E2dElxV6cbbkwCnyGNzhb0PprjSBjlMZg1P9RrEZgHtqB8TyEJtxyF6
+         sfT6CHXiCWoKEWgotJs8AeZHvkvW/C1P/yGDsen9I7lJwXbCQzqgXcqQiqR7U0GX3hZz
+         1v97sQlNGFWndu0bH4eVNeG/BGKIKJN0hDk/oIJR490ITX5GKAp9or7Go6e0e+ZgwUo0
+         julmu6Ap0NdH7PPp8GJvcj1jxehu0WZRBatozVkhhrQKTOAWP+G/tQwkGw++qsLUDfVF
+         ws7Ww1LLKTivRLsZfHoRKN2Q8sDMVfZsyYppN3/Hl2VCOZ7rcyALlSvMVZqfyevwpmas
+         M2lA==
+X-Gm-Message-State: AOAM532h0um9XRLkGswTxYbxI1WEP0uG3V4dPG1j3F9yjhyz/XxGZLsM
+        G3sfccVvsWk2UCzjVzz6ke8=
+X-Google-Smtp-Source: ABdhPJwgDtmaZGJrtNa0zEf2BklM+msP3P7Rk7sYX4yUbVAN3Av14f+0EZj5nhMLZ6sMh6IJblncLA==
+X-Received: by 2002:adf:f608:: with SMTP id t8mr18108260wrp.308.1593449121909;
+        Mon, 29 Jun 2020 09:45:21 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id p29sm438013wmi.43.2020.06.29.09.45.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 09:45:21 -0700 (PDT)
+Subject: Re: [PATCH 1/4] pwm: bcm-iproc: Remove impossible comparison when
+ validating duty cycle
+To:     Lee Jones <lee.jones@linaro.org>, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Yendapally Reddy Dhananjaya Reddy 
+        <yendapally.reddy@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+References: <20200629124752.1018358-1-lee.jones@linaro.org>
+ <20200629124752.1018358-2-lee.jones@linaro.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <3470e941-aa86-11a8-674b-5258a08fedb1@gmail.com>
+Date:   Mon, 29 Jun 2020 09:45:17 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kjvrp6vjwce3kmbh"
-Content-Disposition: inline
-In-Reply-To: <df22a642083474e71f9f8274c033a6ef9757af5f.1593420979.git.rahul.tanwar@linux.intel.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20200629124752.1018358-2-lee.jones@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---kjvrp6vjwce3kmbh
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On 6/29/2020 5:47 AM, Lee Jones wrote:
+> 'duty' here is an unsigned int, thus checking for <0 will always
+> evaluate to false.
+> 
+> Fixes the following W=1 warning:
+> 
+>  drivers/pwm/pwm-bcm-iproc.c:147:12: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+> 
+> Cc: Ray Jui <rjui@broadcom.com>
+> Cc: Scott Branden <sbranden@broadcom.com>
+> Cc: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+> Cc: bcm-kernel-feedback-list@broadcom.com
+> Cc: linux-pwm@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-On Mon, Jun 29, 2020 at 05:03:47PM +0800, Rahul Tanwar wrote:
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index cb8d739067d2..a3303e22d5fa 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -232,6 +232,15 @@ config PWM_IMX_TPM
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-imx-tpm.
-> =20
-> +config PWM_INTEL_LGM
-> +	tristate "Intel LGM PWM support"
-> +	depends on X86 || COMPILE_TEST
+And IPROC_PWM_DUTY_CYCLE_MIN is unused after remove this single use of
+the define, if you also remove it you can add:
 
-Another thing I just noticed: You're using regmap, so I think you should
-have
-
-	select REGMAP_MMIO
-
-here.
-
-> +	help
-> +	  Generic PWM fan controller driver for LGM SoC.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-intel-lgm.
-> +
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---kjvrp6vjwce3kmbh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl76R/IACgkQwfwUeK3K
-7AnSIwgAioBKgOURNuZlj2ZaOEbNv0Asga+afCAc5eCL1G1zoFg3nIUlLLtz0EUT
-MGLMD63sjZHvB3kkMZYwA5DZFs6prNaWoI2HxN6LA2SCNalwjIQvbxQMvwUh9vwD
-9sJfzQaubgGEawID/xOniJyuTOf66HFXQ9moU0VEf3NwTm2pfrapFrOzsKQP8a/K
-8VPsgHGCWrIchyhSyw+zOM36XccSSl/TXLWEspAoPh5dOLKKxlcpPsgAe37v7JGJ
-QXg09RtvP+ipfWdrPSrt/+2tOj2b5AgatzgBh0Gdt0JEO0SMprMwkl+8PIv7mqhF
-LrDM55V72Emp+3WPOdTJUwrR7zN+iQ==
-=J0cp
------END PGP SIGNATURE-----
-
---kjvrp6vjwce3kmbh--
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
