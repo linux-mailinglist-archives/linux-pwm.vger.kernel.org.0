@@ -2,103 +2,91 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4EE920D11E
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2020 20:41:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A40120D454
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2020 21:14:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbgF2Sir (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 29 Jun 2020 14:38:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37590 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727968AbgF2SiB (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jun 2020 14:38:01 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5433C00F834
-        for <linux-pwm@vger.kernel.org>; Mon, 29 Jun 2020 05:47:59 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id o11so16408507wrv.9
-        for <linux-pwm@vger.kernel.org>; Mon, 29 Jun 2020 05:47:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NEV6hYDCbFsvfJQmVY8SdLZWAEKAYJLZhNHaqOLyTQ0=;
-        b=g/qvooMn7EGa6fcqc2kWnU2ojwrJqK2KiizeQeRVmrzZNiW+BuWl/MFpjCt7ykkfQi
-         /WtES5WG4855eTikHYrDxPwhnzNevMFtUE0Uw1T+XtYmxeAV8nlDXMIZbpC8slMDFM9b
-         l9bvKnHs6tD4Q+fAd/GrCSLSCZP6CxvRyfcX6949iBxHUkpeHaZwBbPTNuRkN2DUXVrk
-         mP9eGbJLxI2Rw5zbVk4RDUM6LbadMulN+A0LYyqtETOkhIAfq01WPOQj+rNpoGAZlBtH
-         lMLvIy6r1baqcRuN0MQg0hhdEQriJtNufm8KwQDDs6uM4b1C2n1dXb2jm04IZyUV4x5S
-         7m+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NEV6hYDCbFsvfJQmVY8SdLZWAEKAYJLZhNHaqOLyTQ0=;
-        b=r/9hkkXj9gy+gWDsLDNAcUtoR8vHv9JgYgxbrSuqji8XnlcSFPqR8/zwXi3hCq8KZt
-         HgoIfKVOzSA6K6OUlwSqCanyWGU8HiEeSBInRBa6HlDtGPGEN+L4XW6WfgDzBxGqdMt8
-         dlhE4TgMLw2YsbgqmXZhlrCxLSkbjdDBONgWhRR0/mfJiHu/Le0u2GjlYA5DSuIxoiz2
-         v3yEvX0ZuJX+lvu0OxORxKKf8c+vS91wAXgGeIAhuUcxSYq9Wswb/gxUti6Zca/fS4/j
-         v3L4k3LXqJTRzJ2mB4eqHP98MjnFTVJxQfSwyD2Mqvf9xys8+NnM0idQpEN+U1VXKOgM
-         0Pfg==
-X-Gm-Message-State: AOAM533/y4HJ5RmTwUHfP8ufAxw87lhNY7HIDWgUQRz4YXg5wXNlbpt0
-        IL81LMA19vi2DEBnnCYOawGRLw==
-X-Google-Smtp-Source: ABdhPJydHemsKTs48wiPVgEp/Hc461CvZjxrU2X87Xf1dlr2h8v+7RF5f+XgVLw3AkYxwWDmRNEYFw==
-X-Received: by 2002:adf:edc6:: with SMTP id v6mr16990851wro.413.1593434878504;
-        Mon, 29 Jun 2020 05:47:58 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id e17sm12995924wrr.88.2020.06.29.05.47.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 05:47:57 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        linux-pwm@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <blogic@openwrt.org>,
-        Zhi Mao <zhi.mao@mediatek.com>,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH 3/4] pwm: mediatek: Provide missing kerneldoc description for 'soc' arg
-Date:   Mon, 29 Jun 2020 13:47:51 +0100
-Message-Id: <20200629124752.1018358-4-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629124752.1018358-1-lee.jones@linaro.org>
-References: <20200629124752.1018358-1-lee.jones@linaro.org>
+        id S1729133AbgF2TH0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 29 Jun 2020 15:07:26 -0400
+Received: from mga17.intel.com ([192.55.52.151]:62620 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730502AbgF2TG3 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:06:29 -0400
+IronPort-SDR: lXLlsiyBLxFrrdh6m5nEbpukwALCQwYGdSBa60m+AnJjcsH8h6N4Sx1L/EjS5V6Nwhz2pQVMXx
+ ZbZFvrrZZWpg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="126073966"
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="126073966"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 02:03:54 -0700
+IronPort-SDR: MZhnpP0pf2VFgb3b6QVjSS5RQR+MAR2w6scdr+baj26AvOvJbZ1qMyqYScOr3zZjjoytDrcjPN
+ fSCyVzcsx7MQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="386338695"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Jun 2020 02:03:51 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
+Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v3 0/2] pwm: intel: Add PWM driver for a new SoC
+Date:   Mon, 29 Jun 2020 17:03:45 +0800
+Message-Id: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Kerneldoc syntax is used, but not complete.
+Patch 1 adds dt binding document in YAML format.
+Patch 2 add PWM fan controller driver for LGM SoC.
 
-Descriptions are required for all arguments.
+Patch series is baselined on linux 5.8-rc2.
 
-Fixes the following W=1 build warning:
+v3:
+- Address below review concerns from Uwe Kleine-König.
+  * Remove fan rpm calibration task from the driver.
+  * Modify apply op as per the review feedback.
+  * Add roundup & round down where necessary.
+  * Address other misc code quality related review concerns.
+  * Use devm_reset_control_get_exclusive(). (Philipp Zabel)
+  * Improve dt binding document.
 
- drivers/pwm/pwm-mediatek.c:57: warning: Function parameter or member 'soc' not described in 'pwm_mediatek_chip'
+v2:
+- Address below review concerns from Uwe Kleine-König.
+  * Add notes and limitations about PWM HW.
+  * Rename all functions and structure to lgm_pwm_* 
+  * Readjust space aligninment in structure fields to single space.
+  * Switch to using apply instead of config/enable/disable.
+  * Address other code quality related concerns.
+  * Rebase to 5.8-rc1.
+- Address review concerns in dt binding YAML from Rob Herring.
 
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: John Crispin <blogic@openwrt.org>
-Cc: Zhi Mao <zhi.mao@mediatek.com>
-Cc: linux-pwm@vger.kernel.org
-Cc: linux-mediatek@lists.infradead.org
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/pwm/pwm-mediatek.c | 1 +
- 1 file changed, 1 insertion(+)
+v1:
+- Initial version.
 
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index b94e0d09c300f..ab001ce55178e 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -46,6 +46,7 @@ struct pwm_mediatek_of_data {
-  * @clk_main: the clock used by PWM core
-  * @clk_pwms: the clock used by each PWM channel
-  * @clk_freq: the fix clock frequency of legacy MIPS SoC
-+ * @soc: pointer to chip's platform data
-  */
- struct pwm_mediatek_chip {
- 	struct pwm_chip chip;
+
+Rahul Tanwar (2):
+  Add DT bindings YAML schema for PWM fan controller of LGM SoC
+  Add PWM fan controller driver for LGM SoC
+
+ .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     |  51 ++++
+ drivers/pwm/Kconfig                                |   9 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-intel-lgm.c                        | 265 +++++++++++++++++++++
+ 4 files changed, 326 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-intel-lgm.c
+
 -- 
-2.25.1
+2.11.0
 
