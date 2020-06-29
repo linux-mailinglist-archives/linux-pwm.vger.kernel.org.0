@@ -2,97 +2,84 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD96E20E180
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2020 23:59:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E57F20E5DF
+	for <lists+linux-pwm@lfdr.de>; Tue, 30 Jun 2020 00:08:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389861AbgF2U4f (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 29 Jun 2020 16:56:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43376 "EHLO
+        id S2403941AbgF2Vm3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 29 Jun 2020 17:42:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731278AbgF2TNJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jun 2020 15:13:09 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00429C030F2E;
-        Mon, 29 Jun 2020 09:45:36 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f7so14214215wrw.1;
-        Mon, 29 Jun 2020 09:45:36 -0700 (PDT)
+        with ESMTP id S1727911AbgF2Sh4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jun 2020 14:37:56 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74A9EC00F82E
+        for <linux-pwm@vger.kernel.org>; Mon, 29 Jun 2020 05:47:56 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id j18so15256821wmi.3
+        for <linux-pwm@vger.kernel.org>; Mon, 29 Jun 2020 05:47:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Y9LuaHpAJp7j99mylhwwTrgsG7QR6yXOEQqHPjHK9qA=;
-        b=YG1iZpScR2fnD/Dg0q0W5hkPvmMrLbNo9xlP1cqrwH2mupcSdQTr4LZR+9nZIKBkhS
-         vNxlDaGanRq87QIVN4EIae1EoO1LKEPYH5/TT7VqNi3dm09PLW5A18bwk8y2bP0I19Dp
-         7amp7MNjaIvmjbUVxgBphis8bQqS+Cgq4t+mDKgU46afrmUTLt1XhOjJSJj9RnUaBGVS
-         ygj++98OzqCSrPQ3NwRlILzhK+xS+zrrGXYuf8xJehhPVJI6DErMknEW/s2CXDG+9jUJ
-         FK73oiZ8EUmGLsRotn44ygJAd1jKxyLIhwh73uooLRa7ZgXTWD0Som4EYsuGKhwxeaUL
-         wFDw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rudM74e1Pgb+dgRXbno543NZk9dhJh2T8QURDAwNqxo=;
+        b=MMrJypktX2dGwbWK2WJwHSZlgTCxBvMicf8S6HeV+IEHyBd/BsMsD7DMpdBDI83MMv
+         QyiPxbAJaQSWycHKbp7oaNquqzwC+4IpMBeTWunKJygLXDTtCouHG6kwzAS2WB0rfUvL
+         5sUUgJlP/7u5hxVJQ8kkalGly7nDzvinuu1S6Ow2rv0xN+jughtx7Ou23KzkI16t7Y9X
+         ir8XBS6MkFgqtdbkxyPOsNQN/TqvwoD+BQGpXSohEbzVF7hCKT5WgnGh6cM9H9htgNKl
+         UqFX7dMSyrL855EudgAl3ujqkL8MW+azJAKRg4/RN+dpJ51bk5lqXzd0ImdK4NFYM5cI
+         F/Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Y9LuaHpAJp7j99mylhwwTrgsG7QR6yXOEQqHPjHK9qA=;
-        b=jvQILgQd4+Bg1f5MIOHkaUezSJ/cEF1Jb1IsWjjj74YDRGEmmKnuz9MCRz0IJpKA3B
-         Nrv/Y24LXxUvQB6vfp+fDPRO56slUNxKh9KwbDfZf7DUJXjadGJZ3IVrcwP4cVOhcd4n
-         mS0kCrLhrbpytwAUd8IMqwpleIehufaFba5nE7RSHBVbqsZ/fg07muBMht9IrRzuv+vW
-         87ovKFgueySPTAQpGaOwG7hR9iIqN7YvsCms/LTqmMuBngnDgJhA/bQXSjxGt68EG1/3
-         4PxhzpyUhQy77+2l0UKEvNpH4hcVdR15VeX4rgSFA5jde5mtq+AVE+SbUY4YA9VEHdGI
-         G8cQ==
-X-Gm-Message-State: AOAM532CkdQ9p1Gb1YN0cQTpvVenWFCJ/1pqAly4fHdYhSKcRu2DnS+u
-        udO4w6rj/7v0k8yOND92aZM=
-X-Google-Smtp-Source: ABdhPJyO9Vl/0aowtNg2HaFwebZPM9zO5kDm6GzEIHIzbBOeZOCT+P6YXcPb6Z5tEMB0sRox55sZ8g==
-X-Received: by 2002:adf:e8ce:: with SMTP id k14mr17120164wrn.93.1593449135758;
-        Mon, 29 Jun 2020 09:45:35 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id x11sm371016wmc.26.2020.06.29.09.45.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 09:45:35 -0700 (PDT)
-Subject: Re: [PATCH 2/4] pwm: bcm-kona: Remove impossible comparison when
- validating duty cycle
-To:     Lee Jones <lee.jones@linaro.org>, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
+        bh=rudM74e1Pgb+dgRXbno543NZk9dhJh2T8QURDAwNqxo=;
+        b=fE3jLSkW5oYlWRPsZXTjtHcHzirqxPNhjzgLwMk8tJt3B/mfrN5c/ViopfGsHz/PEp
+         bv3L50vN1478FM3pZ9c+jh7RPT7OwycIptzKjI7zguZEleYbFoUc+BXfv00rpb+grl1v
+         cwVdUS6cjLFZJE+tktwxBfkoGUBbVHLAwabt+bJlTflQ8F2vKB9FPbuqplHNBIDpjzPg
+         4bgg+jO8gDAwLD/I7hODJ+0J8Stz3N8VIsXPgdcxo0Ns0xC+45VM1mEjKH46KLaMaghg
+         ekYnc44V3fGK7lobuqK6rf8M8WzjllWgirLdMey7U5oxm3ACiPUA+sBRLTTmGKSJzFtX
+         JOsA==
+X-Gm-Message-State: AOAM531PtFTJMtz2aivYb7twqBSDDVUOzEfpwpT/i9wd3XNe+7achW/c
+        bty4UF2iblwS/2WB6saVjnhKkg==
+X-Google-Smtp-Source: ABdhPJymTdB7uYUnNxNAvBDg/jFPSHnhR3EKfJTDqrjBJtflMfvEKlNxtCKuRryFRR89Pu116D8EKw==
+X-Received: by 2002:a1c:3142:: with SMTP id x63mr16024940wmx.62.1593434875113;
+        Mon, 29 Jun 2020 05:47:55 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id e17sm12995924wrr.88.2020.06.29.05.47.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 05:47:54 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-References: <20200629124752.1018358-1-lee.jones@linaro.org>
- <20200629124752.1018358-3-lee.jones@linaro.org>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <0db8ebc7-b75b-a74c-8852-b235daedaf82@gmail.com>
-Date:   Mon, 29 Jun 2020 09:45:31 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 0/4] Fix a bunch of W=1 warnings in PWM
+Date:   Mon, 29 Jun 2020 13:47:48 +0100
+Message-Id: <20200629124752.1018358-1-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200629124752.1018358-3-lee.jones@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Attempting to clean-up W=1 kernel builds, which are currently
+overwhelmingly riddled with niggly little warnings.
 
+Lee Jones (4):
+  pwm: bcm-iproc: Remove impossible comparison when validating duty
+    cycle
+  pwm: bcm-kona: Remove impossible comparison when validating duty cycle
+  pwm: mediatek: Provide missing kerneldoc description for 'soc' arg
+  pwm: omap-dmtimer: Repair pwm_omap_dmtimer_chip's broken kerneldoc
+    header
 
-On 6/29/2020 5:47 AM, Lee Jones wrote:
-> 'dc' here is an unsigned long, thus checking for <0 will always
-> evaluate to false.
-> 
-> Fixes the following W=1 warning:
-> 
->  drivers/pwm/pwm-bcm-kona.c:141:35: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
-> 
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Ray Jui <rjui@broadcom.com>
-> Cc: Scott Branden <sbranden@broadcom.com>
-> Cc: bcm-kernel-feedback-list@broadcom.com
-> Cc: linux-pwm@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+ drivers/pwm/pwm-bcm-iproc.c    | 3 +--
+ drivers/pwm/pwm-bcm-kona.c     | 2 +-
+ drivers/pwm/pwm-mediatek.c     | 1 +
+ drivers/pwm/pwm-omap-dmtimer.c | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-And similar to patch #1, DUTY_CYCLE_HIGH_MIN now gets unused, so if you
-remove it as well, you can add:
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-Florian
+2.25.1
+
