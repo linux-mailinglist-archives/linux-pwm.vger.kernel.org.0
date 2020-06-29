@@ -2,102 +2,120 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C990320D6BC
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2020 22:06:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CBF920D88D
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2020 22:09:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729531AbgF2TXb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 29 Jun 2020 15:23:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45098 "EHLO
+        id S1733090AbgF2TkD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 29 Jun 2020 15:40:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732288AbgF2TWp (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jun 2020 15:22:45 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A1B5C030F33
-        for <linux-pwm@vger.kernel.org>; Mon, 29 Jun 2020 09:54:26 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id a6so14134130wmm.0
-        for <linux-pwm@vger.kernel.org>; Mon, 29 Jun 2020 09:54:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=X9rfAlOxfe38VMX/oL2KWbXJmMAccAeFpKeQ6kbgS5I=;
-        b=UZ6FVKc7frhOr+27BqHpUSAAlW/b6bGMLjuQl7IYNjpAn9UP9nwBkgtlMucNWw5P0M
-         YTRq3+LIylKWY1EpNL4FD5Vuwel8piO0VIk6nUxpzG9Ls450pSl99qLEi2KfmUEV4fC3
-         Q0HMPnnWRd7jZFkfC02SLQXuTxIeg1aAPTOqI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=X9rfAlOxfe38VMX/oL2KWbXJmMAccAeFpKeQ6kbgS5I=;
-        b=ZGx9ttpMIL7sh8R72YtI0BSfbdHGY/m66kqfb7YRsgkwedFiFJgN/eK7F7LELfOVfC
-         0mtfjQ22oYGcejhSrQ2xpN7/Na4xusHyjMp8MV22Hze0wk3aFhyCoXqflnCBApJ88D2u
-         y5pyF+AI2dkVsCDwUIQV3iP/l4rmkyp4QMAkqHj8QbFbF+0lBySh4zH5kiIIGOTX7Tq9
-         /5IC/UaszIWnRyrQZ7KITg5j4Fs6Lg41pllp/zJtHrKLgkHX8S4zG0atZJpXndS/Bo0k
-         biCnOGBVtoL+FKwtVunL3xITGK82o+XOebXjWAatySm/9yl9Nn5ovLx7/Bt2fCbav7Rx
-         tonw==
-X-Gm-Message-State: AOAM531qlnb9ArjP+yR+HUXjlX8KS95+GRNDbhPqG+HZX8uZpd2AMaIy
-        NH9PkE19JHaBzJMplqyiLey72w==
-X-Google-Smtp-Source: ABdhPJzEBOnJbI3F9fbCTkykHuYski3xJ+b+DkSQKsgVaDyTwA3/2FplB6F5M/HjmK7MhPF+FIuGjw==
-X-Received: by 2002:a05:600c:c1:: with SMTP id u1mr17895281wmm.48.1593449664783;
-        Mon, 29 Jun 2020 09:54:24 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id e8sm396022wrp.26.2020.06.29.09.54.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 09:54:24 -0700 (PDT)
-Subject: Re: [PATCH 1/4] pwm: bcm-iproc: Remove impossible comparison when
- validating duty cycle
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Yendapally Reddy Dhananjaya Reddy 
-        <yendapally.reddy@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
+        with ESMTP id S2387478AbgF2TkC (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Jun 2020 15:40:02 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7EE3C03E979
+        for <linux-pwm@vger.kernel.org>; Mon, 29 Jun 2020 12:40:01 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jpzdH-0006Hf-Lb; Mon, 29 Jun 2020 21:39:59 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jpzdG-0005D9-HF; Mon, 29 Jun 2020 21:39:58 +0200
+Date:   Mon, 29 Jun 2020 21:39:58 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Tony Lindgren <tony@atomide.com>, NeilBrown <neilb@suse.de>,
+        Grant Erickson <marathon96@gmail.com>
+Subject: Re: [PATCH 4/4] pwm: omap-dmtimer: Repair pwm_omap_dmtimer_chip's
+ broken kerneldoc header
+Message-ID: <20200629193958.dasxmmkcexfxorfq@pengutronix.de>
 References: <20200629124752.1018358-1-lee.jones@linaro.org>
- <20200629124752.1018358-2-lee.jones@linaro.org>
- <3470e941-aa86-11a8-674b-5258a08fedb1@gmail.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <76a657ca-d30e-c5f2-f057-1c1bb7c8e1bf@broadcom.com>
-Date:   Mon, 29 Jun 2020 09:54:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ <20200629124752.1018358-5-lee.jones@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <3470e941-aa86-11a8-674b-5258a08fedb1@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ktwuwrjs6xawhva4"
+Content-Disposition: inline
+In-Reply-To: <20200629124752.1018358-5-lee.jones@linaro.org>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
+--ktwuwrjs6xawhva4
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2020-06-29 9:45 a.m., Florian Fainelli wrote:
->
-> On 6/29/2020 5:47 AM, Lee Jones wrote:
->> 'duty' here is an unsigned int, thus checking for <0 will always
->> evaluate to false.
->>
->> Fixes the following W=1 warning:
->>
->>   drivers/pwm/pwm-bcm-iproc.c:147:12: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
->>
->> Cc: Ray Jui <rjui@broadcom.com>
->> Cc: Scott Branden <sbranden@broadcom.com>
->> Cc: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
->> Cc: bcm-kernel-feedback-list@broadcom.com
->> Cc: linux-pwm@vger.kernel.org
->> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> And IPROC_PWM_DUTY_CYCLE_MIN is unused after remove this single use of
-> the define, if you also remove it you can add:
->
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-We actually made this same change internally recently but hadn't 
-upstreamed it yet.
+Hello,
 
-Tested-by: Scott Branden <scott.branden@broadcom.com>
+[dropped Joachim Eastwood <manabian@gmail.com> from recipents as his
+address bounces]
 
+On Mon, Jun 29, 2020 at 01:47:52PM +0100, Lee Jones wrote:
+> Argument descriptions must be prepended with a '@' to be understood
+> by the kerneldoc tooling/parsers/validators.
+>=20
+> Fixes the following W=3D1 warning:
+>=20
+>   drivers/pwm/pwm-omap-dmtimer.c:70: warning: Function parameter or membe=
+r 'dm_timer_pdev' not described in 'pwm_omap_dmtimer_chip'
+>=20
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: Joachim Eastwood <manabian@gmail.com>
+> Cc: NeilBrown <neilb@suse.de>
+> Cc: Grant Erickson <marathon96@gmail.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/pwm/pwm-omap-dmtimer.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtime=
+r.c
+> index 0d31833db2e2c..75cea7f2aff5e 100644
+> --- a/drivers/pwm/pwm-omap-dmtimer.c
+> +++ b/drivers/pwm/pwm-omap-dmtimer.c
+> @@ -58,7 +58,7 @@
+>   * @mutex:		Mutex to protect pwm apply state
+>   * @dm_timer:		Pointer to omap dm timer.
+>   * @pdata:		Pointer to omap dm timer ops.
+> - * dm_timer_pdev:	Pointer to omap dm timer platform device
+> + * @dm_timer_pdev:	Pointer to omap dm timer platform device
+>   */
+>  struct pwm_omap_dmtimer_chip {
+>  	struct pwm_chip chip;
+
+LGTM,
+
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ktwuwrjs6xawhva4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl76Q4sACgkQwfwUeK3K
+7AmzWAf/Zj9Hhj4s99PZArypybzk5l2H7shVDnUei4T1aCiVqD9rL+QJitW3TzTZ
+HyhCa7plxP9BHXDPcQKagFjgnj/zj/tNPSst12WGmX6rc2omP5DHpzzMqAkCCAb+
+Iw3YHQPmQQOdFNYIgQ2CsIIJs4Yo+pkm+XswLVR7pRJpuHu8omfiK6BhklqjJ/IG
+nskRKoHfPpzmay1PlTmhDytmtpT6wlb67xbEzLv59kZlYabgWjTClYN14fHRpELe
+AgWX0v3tdwPZLcVRuRcv2aPWuayBGSnLUi4H8h42WpxuveHjkWJql/2ETbSqCaP3
+6rtluenkb9KLsjjeLxIatc3UjArhYg==
+=3KKv
+-----END PGP SIGNATURE-----
+
+--ktwuwrjs6xawhva4--
