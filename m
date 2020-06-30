@@ -2,31 +2,31 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E7D3F20EFF2
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 Jun 2020 09:55:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C71220EFF4
+	for <lists+linux-pwm@lfdr.de>; Tue, 30 Jun 2020 09:55:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbgF3Hzj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 30 Jun 2020 03:55:39 -0400
-Received: from mga18.intel.com ([134.134.136.126]:26494 "EHLO mga18.intel.com"
+        id S1730011AbgF3Hzo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 30 Jun 2020 03:55:44 -0400
+Received: from mga01.intel.com ([192.55.52.88]:11631 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726899AbgF3Hzj (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 30 Jun 2020 03:55:39 -0400
-IronPort-SDR: F/WCORCbHsYToXu0cjlPfYWRw1v/H6D+Un8K0ldjI1Lc0IO0vFeBkSrQqKBc0OLo86e3DLE6zW
- a5Yn1w0seE6g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="133621230"
+        id S1726899AbgF3Hzo (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 30 Jun 2020 03:55:44 -0400
+IronPort-SDR: QXV0+9Xu+ntc85sYZo3AfxI7e9zFAoDgko0hGqZ9r/VpooC4rxzPTsJOSXilIYQn64u/sUMp9f
+ d03gnJzSRR6A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="164181318"
 X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="133621230"
+   d="scan'208";a="164181318"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 00:55:38 -0700
-IronPort-SDR: YL7j7LeLDbD6VaBAZ03EkwVPhCL8bkR2Hp6qVzGtFqB3DYOY8QSez5tpSZxj1WCASFsIQnxUxi
- 8fq7gd5jJ95A==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 00:55:44 -0700
+IronPort-SDR: etVdrMc7UBySrIWzt8zCoMe9MGGNKCdTsbWV+/KIV2yKD/AFn5FPaURfqhzcnQzV7N5gw0PFFS
+ MPSZVTKc9tOg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="386626068"
+   d="scan'208";a="295133629"
 Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by fmsmga001.fm.intel.com with ESMTP; 30 Jun 2020 00:55:35 -0700
+  by orsmga002.jf.intel.com with ESMTP; 30 Jun 2020 00:55:40 -0700
 From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
 To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
 Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
@@ -35,68 +35,86 @@ Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
         songjun.Wu@intel.com, cheol.yong.kim@intel.com,
         qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
         Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v4 0/2] pwm: intel: Add PWM driver for a new SoC
-Date:   Tue, 30 Jun 2020 15:55:30 +0800
-Message-Id: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
+Subject: [PATCH v4 1/2] Add DT bindings YAML schema for PWM fan controller of LGM SoC
+Date:   Tue, 30 Jun 2020 15:55:31 +0800
+Message-Id: <cfef33c19b97a9cfbb8ecc0c6a122f3c9a5b46dd.1593503228.git.rahul.tanwar@linux.intel.com>
 X-Mailer: git-send-email 2.11.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
+References: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
+References: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Patch 1 adds dt binding document in YAML format.
-Patch 2 add PWM fan controller driver for LGM SoC.
+Intel's LGM(Lightning Mountain) SoC contains a PWM fan controller
+which is only used to control the fan attached to the system. This
+PWM controller does not have any other consumer other than fan.
+Add DT bindings documentation for this PWM fan controller.
 
-Patch series is baselined on linux 5.8-rc2.
-
-v3:
-- Address below review concerns from Uwe Kleine-König.
-  * Improve notes and limitations comments.
-  * Add common prefixes for all #defines.
-  * Modify/Improve logic in .apply & .get_state ops as advised.
-  * Skip error messages in probe when error is -EPROBE_DEFER.
-  * Add dependencies in Kconfig (OF & HAS_IOMEM) and add select REGMAP_MMIO.
-  * Address other code quality related review concerns.
-- Fix make dt_binding_check reported error in YAML file.
-
-v3:
-- Address below review concerns from Uwe Kleine-König.
-  * Remove fan rpm calibration task from the driver.
-  * Modify apply op as per the review feedback.
-  * Add roundup & round down where necessary.
-  * Address other misc code quality related review concerns.
-  * Use devm_reset_control_get_exclusive(). (Philipp Zabel)
-  * Improve dt binding document.
-
-v2:
-- Address below review concerns from Uwe Kleine-König.
-  * Add notes and limitations about PWM HW.
-  * Rename all functions and structure to lgm_pwm_* 
-  * Readjust space aligninment in structure fields to single space.
-  * Switch to using apply instead of config/enable/disable.
-  * Address other code quality related concerns.
-  * Rebase to 5.8-rc1.
-- Address review concerns in dt binding YAML from Rob Herring.
-
-v1:
-- Initial version.
-
-
-Rahul Tanwar (2):
-  Add DT bindings YAML schema for PWM fan controller of LGM SoC
-  Add PWM fan controller driver for LGM SoC
-
- .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     |  50 ++++
- drivers/pwm/Kconfig                                |  11 +
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/pwm-intel-lgm.c                        | 266 +++++++++++++++++++++
- 4 files changed, 328 insertions(+)
+Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+---
+ .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
- create mode 100644 drivers/pwm/pwm-intel-lgm.c
 
+diff --git a/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+new file mode 100644
+index 000000000000..120bf3d85a24
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/intel,lgm-pwm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: LGM SoC PWM fan controller
++
++maintainers:
++  - Rahul Tanwar <rahul.tanwar@intel.com>
++
++properties:
++  compatible:
++    const: intel,lgm-pwm
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  intel,fan-wire:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: Specifies fan mode. Default when unspecified is 2.
++
++  intel,max-rpm:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description:
++      Specifies maximum RPM of fan attached to the system.
++      Default when unspecified is 4000.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - resets
++
++additionalProperties: false
++
++examples:
++  - |
++    pwm: pwm@e0d00000 {
++        compatible = "intel,lgm-pwm";
++        reg = <0xe0d00000 0x30>;
++        clocks = <&cgu0 126>;
++        resets = <&rcu0 0x30 21>;
++    };
 -- 
 2.11.0
 
