@@ -2,33 +2,33 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A247E20FCA8
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 Jun 2020 21:22:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7500B20FD7E
+	for <lists+linux-pwm@lfdr.de>; Tue, 30 Jun 2020 22:15:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgF3TWg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 30 Jun 2020 15:22:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42364 "EHLO
+        id S1729313AbgF3UPO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 30 Jun 2020 16:15:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgF3TWg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 Jun 2020 15:22:36 -0400
+        with ESMTP id S1726642AbgF3UPN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 Jun 2020 16:15:13 -0400
 Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3F54C061755;
-        Tue, 30 Jun 2020 12:22:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54218C061755;
+        Tue, 30 Jun 2020 13:15:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
         MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Z50zmfnBPo2u0p8708BAruvf3MnDJq1nng3tchC4BxM=; b=CSRw4qA3mqrXDXC30pTR66alas
-        v8/PTBq36Esj+PKN5s/rhns+lUf5KGCaFmEjZLDjCMief1m4AzpfaSpc4pou2l0sWIOxlI1pDg654
-        1hCURAZCV5U5z0PapH1RKgrrIwNB7wug4UAaLLNjuNBQINiSr99qYZPe67P4DDMxbpTc=;
+        bh=1Ui03MDnvSSEH+dE2r4HpklkE7If5x4CxWOyDT8PhmU=; b=Wh3csM/nQp3I5ofBzGGjZDfmYj
+        LX+B7MD3aD8f2k/+PYmWZyZyyKgybka3XZb1BjeE+VsEA7Qlt9iqw7xVB7nMnpjojxCgaAPsSYXMY
+        LI5lCGwSDCA0+UYZx5CisLClLFp+EK/oo6qg8DTzrqz6BsPpGlDpHipOKimQdSNybo/4=;
 Received: from p200300ccff14dd001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff14:dd00:1a3d:a2ff:febf:d33a] helo=aktux)
         by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <andreas@kemnade.info>)
-        id 1jqLpZ-0001r0-AN; Tue, 30 Jun 2020 21:22:09 +0200
-Date:   Tue, 30 Jun 2020 21:22:07 +0200
+        id 1jqMeX-0002Ca-6r; Tue, 30 Jun 2020 22:14:49 +0200
+Date:   Tue, 30 Jun 2020 22:14:47 +0200
 From:   Andreas Kemnade <andreas@kemnade.info>
 To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
 Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
@@ -57,7 +57,7 @@ Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Josua Mayer <josua.mayer@jm0.eu>
 Subject: Re: [RFC PATCH 00/10] Netronix embedded controller driver for Kobo
  and Tolino ebook readers
-Message-ID: <20200630212207.018ad355@aktux>
+Message-ID: <20200630221447.3e03ae28@aktux>
 In-Reply-To: <20200630071523.GA2983@latitude>
 References: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
         <20200630084051.66feadea@aktux>
@@ -91,30 +91,60 @@ ered as rtc0
 wm failed with error -5 =20
 >=20
 > Hmm, -EIO from the PWM driver.
->
-Weird...
-IOMUXC_SW_PAD_CTL_PAD_I2C1_SDA/SCL is identical between
-vendor kernel (heavily patched 3.0.35) and patched mainline.
-                       =20
-MX6SL_PAD_I2C1_SCL__I2C1_SCL     0x4001f8b1
-MX6SL_PAD_I2C1_SDA__I2C1_SDA     0x4001f8b1
+>=20
+turing debugging on:
 
-root@tolino2:~# i2cset -f 0 0x43 0xa3 0x0001 w
-WARNING! This program can confuse your I2C bus, cause data loss and worse!
-I will write to device file /dev/i2c-0, chip address 0x43, data address
-0xa3, data 0x01, mode word.
-Continue? [Y/n]=20
-Error: Write failed
-root@tolino2:~# i2cset -f 0 0x43 0xa3 0x0000 w
-WARNING! This program can confuse your I2C bus, cause data loss and worse!
-I will write to device file /dev/i2c-0, chip address 0x43, data address
-0xa3, data 0x00, mode word.
-Continue? [Y/n]=20
-Error: Write failed
-
-but backlight gets toggled. Same behavior on vendor kernel and
-in vendor uboot.
-That smells.
+[  330.330599] i2c i2c-0: <i2c_imx_xfer_common>
+[  330.330621] i2c i2c-0: <i2c_imx_start>
+[  330.332927] i2c i2c-0: <i2c_imx_bus_busy>
+[  330.332953] i2c i2c-0: <i2c_imx_xfer_common> transfer message: 0
+[  330.332971] i2c i2c-0: <i2c_imx_write> write slave address: addr=3D0x86
+[  330.334365] i2c i2c-0: <i2c_imx_trx_complete> TRX complete
+[  330.334386] i2c i2c-0: <i2c_imx_acked> ACK received
+[  330.334402] i2c i2c-0: <i2c_imx_write> write data
+[  330.334420] i2c i2c-0: <i2c_imx_write> write byte: B0=3D0xA3
+[  330.334756] i2c i2c-0: <i2c_imx_trx_complete> TRX complete
+[  330.334774] i2c i2c-0: <i2c_imx_acked> ACK received
+[  330.334790] i2c i2c-0: <i2c_imx_write> write byte: B1=3D0x0
+[  330.351573] i2c i2c-0: <i2c_imx_trx_complete> TRX complete
+[  330.351598] i2c i2c-0: <i2c_imx_acked> No ACK
+[  330.351613] i2c i2c-0: <i2c_imx_stop>
+[  330.351629] i2c i2c-0: <i2c_imx_bus_busy>
+[  330.351648] i2c i2c-0: <i2c_imx_xfer_common> exit with: error: -6
+[  330.351690] i2c i2c-0: <i2c_imx_xfer_common>
+[  330.351704] i2c i2c-0: <i2c_imx_start>
+[  330.352297] i2c i2c-0: <i2c_imx_bus_busy>
+[  330.352321] i2c i2c-0: <i2c_imx_xfer_common> transfer message: 0
+[  330.352339] i2c i2c-0: <i2c_imx_write> write slave address: addr=3D0x86
+[  330.362152] i2c i2c-0: <i2c_imx_trx_complete> TRX complete
+[  330.362176] i2c i2c-0: <i2c_imx_acked> ACK received
+[  330.362191] i2c i2c-0: <i2c_imx_write> write data
+[  330.362208] i2c i2c-0: <i2c_imx_write> write byte: B0=3D0xA1
+[  330.362442] i2c i2c-0: <i2c_imx_trx_complete> TRX complete
+[  330.362461] i2c i2c-0: <i2c_imx_acked> ACK received
+[  330.362479] i2c i2c-0: <i2c_imx_write> write byte: B1=3D0xFF
+[  330.362686] i2c i2c-0: <i2c_imx_trx_complete> TRX complete
+[  330.362705] i2c i2c-0: <i2c_imx_acked> No ACK
+[  330.362720] i2c i2c-0: <i2c_imx_stop>
+[  330.362735] i2c i2c-0: <i2c_imx_bus_busy>
+[  330.362753] i2c i2c-0: <i2c_imx_xfer_common> exit with: error: -6
+[  330.362794] i2c i2c-0: <i2c_imx_xfer_common>
+[  330.362808] i2c i2c-0: <i2c_imx_start>
+[  330.363071] i2c i2c-0: <i2c_imx_bus_busy>
+[  330.363094] i2c i2c-0: <i2c_imx_xfer_common> transfer message: 0
+[  330.363112] i2c i2c-0: <i2c_imx_write> write slave address: addr=3D0x86
+[  330.363313] i2c i2c-0: <i2c_imx_trx_complete> TRX complete
+[  330.363331] i2c i2c-0: <i2c_imx_acked> ACK received
+[  330.363346] i2c i2c-0: <i2c_imx_write> write data
+[  330.363362] i2c i2c-0: <i2c_imx_write> write byte: B0=3D0xA2
+[  330.363572] i2c i2c-0: <i2c_imx_trx_complete> TRX complete
+[  330.363591] i2c i2c-0: <i2c_imx_acked> ACK received
+[  330.363608] i2c i2c-0: <i2c_imx_write> write byte: B1=3D0xFF
+[  330.363822] i2c i2c-0: <i2c_imx_trx_complete> TRX complete
+[  330.363841] i2c i2c-0: <i2c_imx_acked> No ACK
+[  330.363854] i2c i2c-0: <i2c_imx_stop>
+[  330.363869] i2c i2c-0: <i2c_imx_bus_busy>
+[  330.363886] i2c i2c-0: <i2c_imx_xfer_common> exit with: error: -6
 
 Regards,
 Andreas
