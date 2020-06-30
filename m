@@ -2,138 +2,89 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 21FDC20EEAB
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 Jun 2020 08:41:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DA9620EEE4
+	for <lists+linux-pwm@lfdr.de>; Tue, 30 Jun 2020 08:58:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730386AbgF3Gl1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 30 Jun 2020 02:41:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730190AbgF3Gl1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 Jun 2020 02:41:27 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC320C061755;
-        Mon, 29 Jun 2020 23:41:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=dqdqP9RRgNiXtHwuMESvsYqArYSjsXn6hYwLSXg9Z+E=; b=kMxKmpbGA6gEpK5aXTTnvAWOIn
-        aJE8zIQ54SyYGKsa11ofbBkJH+aaExjMqYDyRiaDklgGG2rE7Og+YI8cTnmEDr4LNXeDxyzaICYFe
-        Mx67qtcLaPRekFa4PhhKpSEIkrDkwNeHwhkGiVynpoKPdQUkr3nHf/bY9gBk84xwHseQ=;
-Received: from p200300ccff14dd001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff14:dd00:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jq9wq-0004vi-W6; Tue, 30 Jun 2020 08:40:53 +0200
-Date:   Tue, 30 Jun 2020 08:40:51 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
+        id S1730463AbgF3G6d convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Tue, 30 Jun 2020 02:58:33 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:46569 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbgF3G6d (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 Jun 2020 02:58:33 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id D812D6000A;
+        Tue, 30 Jun 2020 06:58:29 +0000 (UTC)
+Date:   Tue, 30 Jun 2020 08:58:28 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>
-Subject: Re: [RFC PATCH 00/10] Netronix embedded controller driver for Kobo
- and Tolino ebook readers
-Message-ID: <20200630084051.66feadea@aktux>
-In-Reply-To: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
-References: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20200630085828.1aebdf99@xps13>
+In-Reply-To: <20200629195044.uvgma53cajiko3gf@pengutronix.de>
+References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
+        <20200629160844.6ecf79c1@xps13>
+        <20200629195044.uvgma53cajiko3gf@pengutronix.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Score: -1.0 (-)
+Content-Transfer-Encoding: 8BIT
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
+Hi Uwe,
 
-On Sun, 21 Jun 2020 00:39:04 +0200
-Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
+Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote on Mon, 29 Jun
+2020 21:50:44 +0200:
 
-> Hi,
->=20
-> This patchset adds basic support for the embedded controller found on
-> older ebook reader boards designed by/with the ODM Netronix Inc.[1] and
-> sold by Kobo or Tolino, for example the Kobo Aura and the Tolino Shine.
-> These drivers are based on the vendor kernel sources, but in order to
-> all information in a single place, I documented the register interface
-> of the EC on GitHub[4].
->=20
-> A few things still needs to be ironed out, hence the RFC tag:
->  - The reboot/reset handler in patch 3/10 calls into I2C code, which may
->    sleep, but reboot handlers are apparently not allowed to sleep.
->  - I'm not sure I got the YAML DT bindings right. I have also included
->    the plain text DT bindings for reference.
->=20
->=20
-got a chance to test it on a Tolino Shine 2 HD.
-It uses the RTC from the RC5T619 but backlight seems to go via MSP430
-EC.
+> On Mon, Jun 29, 2020 at 04:08:44PM +0200, Miquel Raynal wrote:
+> > Hello Uwe, Thierry,
+> > 
+> > Miquel Raynal <miquel.raynal@bootlin.com> wrote on Sun,  3 May 2020
+> > 12:54:53 +0200:
+> >   
+> > > The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> > > functions but can also manage the intensity on each of its ports with
+> > > PWM. Each output is independent and may be tuned with 16 values (4
+> > > bits per output). The period is always 32kHz, only the duty-cycle may
+> > > be changed. One can use any output as GPIO or PWM.
+> > > 
+> > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > > ---  
+> > 
+> > Can I have a status on this patch please?
+> > 
+> > If it was forgotten, I would be good to have it queued now, otherwise,
+> > may I know the reason?  
+> 
+> You could reply to my feedback ... If you could say there: "What you
+> want isn't possible" I'd count this as a strong indication to not ask to
+> implement Andy's suggestion. (Even if this would be possible, I'm not
+> sure this is a good idea, but still ...)
 
-I got this.
+Sorry for the misunderstanding, but I already replied twice to Andy
+about this. Once in October, again in November, then I gave a shot to
+the idea of splitting the drivers (GPIO vs. PWM) in January. So I
+thought you were sharing your thoughts out loud but was not expecting
+any specific feedback on it.
 
-[    1.453603] ntxec 0-0043: Netronix embedded controller version f110 dete=
-cted.
-[   10.723638] ntxec-rtc 21a0000.i2c:embedded-controller@43:rtc: registered=
- as rtc0
-[   10.775276] ntxec-pwm: probe of 21a0000.i2c:embedded-controller@43:pwm f=
-ailed with error -5
-[   10.850597] ntxec-rtc 21a0000.i2c:embedded-controller@43:rtc: hctosys: u=
-nable to read the hardware clock
+So, no, even if the idea might make sense, it is not doable in a
+reasonable amount of time. I am not saying it is impossible, but someone
+has to think about it deeper and propose a core structure to handle it
+in a generic and clean way so that other drivers sharing the same
+properties can rely on it. I am not qualified enough to do it the proper
+way in a reasonable time frame.
 
-version number matchess with what the vendor kernel reports. Maybe we
-should document which version is running on which devices?
-
-&i2c1 {
-        pinctrl-names =3D "default","sleep";
-        pinctrl-0 =3D <&pinctrl_i2c1>;
-        pinctrl-1 =3D <&pinctrl_i2c1_sleep>;
-        status =3D "okay";
-
-        embedded-controller@43 {
-//              pinctrl-names =3D "default";
-//              pinctrl-0 =3D <&pinctrl_ec>;
-                compatible =3D "netronix,ntxec";
-                reg =3D <0x43>;
-                interrupts-extended =3D <&gpio5 11 IRQ_TYPE_EDGE_FALLING>;
-                interrupt-controller;
-                #interrupt-cells =3D <1>;
-
-                ec_pwm: pwm {
-                        compatible =3D "netronix,ntxec-pwm";
-                        #pwm-cells =3D <2>;
-                };
-
-                rtc {
-                        compatible =3D "netronix,ntxec-rtc";
-                };
-        };
-};
-
-Regards,
-Andreas
+Thanks,
+Miquèl
