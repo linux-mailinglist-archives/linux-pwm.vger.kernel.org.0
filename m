@@ -2,169 +2,602 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C71CA212BD6
-	for <lists+linux-pwm@lfdr.de>; Thu,  2 Jul 2020 20:02:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EEE64212DEB
+	for <lists+linux-pwm@lfdr.de>; Thu,  2 Jul 2020 22:34:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgGBSB7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 2 Jul 2020 14:01:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727968AbgGBSB7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 2 Jul 2020 14:01:59 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF21C08C5C1;
-        Thu,  2 Jul 2020 11:01:58 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id h23so22015340qtr.0;
-        Thu, 02 Jul 2020 11:01:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=C0N6ebTMTdJ8oNLRoYmc25ksVK6daob4tarO6KDoNoM=;
-        b=pZx9UUs/2utdw+dFgEsECyNd+QMs4v4zfhQ4s37feSgKuHvsxSSfFoE1tVQz9h16A6
-         UlGSvKN4XxGvaIdzvXRbZe4aUpCghTw2k7mmo5xUPHbJhFfazyhl/AU3LALIqCZxanyT
-         lFGP1STuAWF3Yp5NMdu+lzzx5RF+Z7m3hmmk8doAOtTEKTkhQ4kaVF3jcrl4mX2CRAQ7
-         4eMhuN0/amQVrVZz9VzknE/+LeVa8TItTtTn4+Zp9GLpd9Locu49GFtmofd0IWfq9+eN
-         NoNQ0GVnYyQ/Q/CdOt2cDzXHEY2IThZYfJFHw7HaYhy9XSmT+/tMA1PeiNiCqoZsNXbx
-         gXng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=C0N6ebTMTdJ8oNLRoYmc25ksVK6daob4tarO6KDoNoM=;
-        b=J+GRtza+lpSbkTpxieNmiJUuDETEgDZgMCpqJMc5MW8iJE4ohfKRbewap3b8CBHhjR
-         xXshezurbyu7Y13EgSBUvoLC1I1IsRKtxSItJ2yOkgkTuYoY5UcZ8kndoMgLoKmQWkZw
-         ZAXkh7Aq+am5RLlvOOD3ShIDWfPt0hz1NmTsazmt2fl+oB//hiN4WSOOcKFP0SyR+/F/
-         mrUX8qvUpkiPVu27yZqjny6L9fDpXYFWKgo9GnmUKTZoZqcTIFrzmAJI2Rzc+M49UZz9
-         /+4mELPcBn92rvWhrhPhN6xJXqLIMfbaJVmwGgguRpa7YlVhEZ4OGrHc9cjCfjXf6XfL
-         hYiA==
-X-Gm-Message-State: AOAM533zaiX8+PJ5noeNVQpcvvmVtTKuhoMEk5Al+3QZNNaqy9GI8N4p
-        KaqP0FjR9bUv39WBxrO0H5EsRvex0jU=
-X-Google-Smtp-Source: ABdhPJz/ekMX8q4eOLJuDaTVvmxmrF/8nMPr96S4Z+gyQ8eRjnmAQPDHgXqLXM9JMhNmifTrB/J3OQ==
-X-Received: by 2002:ac8:409d:: with SMTP id p29mr32646851qtl.369.1593712917358;
-        Thu, 02 Jul 2020 11:01:57 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c0a8:11d1::10e2? ([2620:10d:c091:480::1:e927])
-        by smtp.gmail.com with ESMTPSA id o10sm8992256qtq.71.2020.07.02.11.01.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 11:01:56 -0700 (PDT)
-From:   Jes Sorensen <jes.sorensen@gmail.com>
-X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
-Subject: Re: [PATCH v15 3/3] Input: new da7280 haptic driver
-To:     Roy Im <roy.im.opensource@diasemi.com>,
-        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Samuel Ortiz <sameo@linux.intel.com>,
+        id S1726048AbgGBUeV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 2 Jul 2020 16:34:21 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:53948 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbgGBUeU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 2 Jul 2020 16:34:20 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200702203417euoutp0160e06596ce4ff62fbf647c874d4e4783~eCcR_PQMR0733307333euoutp01X
+        for <linux-pwm@vger.kernel.org>; Thu,  2 Jul 2020 20:34:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200702203417euoutp0160e06596ce4ff62fbf647c874d4e4783~eCcR_PQMR0733307333euoutp01X
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593722057;
+        bh=F4Q9XhygBokPI3cCCxSxLMLJKoc/u8WErcqeoikqdC4=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=WvKJLSgD+f4uctkXhWJkGgYJvzU1UZfs/YwsD32tzkFJggS1OOfjlJuPizNhbz90s
+         gD6Fv+/vv0XOjEsaMC5ziEZaj/PKOpPDlHX4dMTKIaeQbK1OeMGJKA4J39MCdZRWtK
+         6WJyvp69QpjtwjKcb9JEGE6TQbO3VReKjbiasHpQ=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200702203416eucas1p2c6940acf003a255f05b579227c2ac1f6~eCcQ-qCUy0283902839eucas1p2Y;
+        Thu,  2 Jul 2020 20:34:16 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id E8.C0.05997.8C44EFE5; Thu,  2
+        Jul 2020 21:34:16 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200702203415eucas1p1ebec4f5e3559a41ff6791b327c68aea9~eCcP3nXgI0693206932eucas1p1b;
+        Thu,  2 Jul 2020 20:34:15 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200702203415eusmtrp2164b2cd894c3cf53a586980192cc5954~eCcP24ra23270132701eusmtrp2U;
+        Thu,  2 Jul 2020 20:34:15 +0000 (GMT)
+X-AuditID: cbfec7f4-65dff7000000176d-a1-5efe44c8db6f
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 82.02.06314.7C44EFE5; Thu,  2
+        Jul 2020 21:34:15 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200702203414eusmtip253239c5cf77a3938c92b56b0b12261e8~eCcO-qCES1934119341eusmtip2G;
+        Thu,  2 Jul 2020 20:34:14 +0000 (GMT)
+Subject: Re: [PATCH v2 5/8] ARM: dts: exynos: Remove DMA controller bus node
+ name to fix dtschema warnings
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Support Opensource <support.opensource@diasemi.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-References: <cover.1593435662.git.Roy.Im@diasemi.com>
- <c7b8cb993abe7bb771108bb94e5d9edbeb4f7103.1593435662.git.Roy.Im@diasemi.com>
-Message-ID: <31377d96-3e6d-e7b6-30de-0c7e9e6f9364@gmail.com>
-Date:   Thu, 2 Jul 2020 14:01:55 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <11b9adcf-251f-81ad-2559-9d96c0a3ad78@samsung.com>
+Date:   Thu, 2 Jul 2020 22:34:14 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <c7b8cb993abe7bb771108bb94e5d9edbeb4f7103.1593435662.git.Roy.Im@diasemi.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200702155149.12854-5-krzk@kernel.org>
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe3fO2TmOZse18smiaEZR4S2NXlKkImEQRdmHRMtaeVBpztq8
+        FpSX7LIkbx+awzRWdlnpdPNSdkFNnaa51LAoV4ZGmEgXt0BLy3Wy/Pb7v//nef7PAy9DSN5T
+        Xky8KolTqxRKmVBE1rVN2Hzat09H+z/OlOHB0johrtaZKPzS8ZHCZS3dFM4bGiWwzVZF43fO
+        VoTNQ/0U7msoEWK73YiwzvZYgA21DhrnPGqh8bkPIwSeaCgl8ZuCIrSFld/X22m52XhBKB/o
+        fyiUW66fludN+csv1RiRfNy8fDcdKQqJ4ZTxKZzaL/SQKO6a1Ukfs6SmNessggz0I0KL3Bhg
+        g+DLk8+0FokYCXsLwYPcqr/CgWCwPY/ixTiCzBs3hbMtA7p6xBs3EZSXNxK8+Iygp62JcFUt
+        ZJXQYRolXYaULSfAMmGgXAbB2hHkF8a7WMgGgHZM+2esmA2Frv5K2sUkuwqelmWRLl7ERoNp
+        pF7A13hAR/Hwn3c3diNMXqwU8DNXQP1YCcGzJ7weLhO4goHNYaB89BfJ770dSqtv/+WF8Mla
+        Q/O8DH7dn23IRvC+u4LmRS6Cviwd4quCYaB7cmZVZiZiLZga/FwI7FaoLlrMozu8GvPgd3CH
+        wrrLBP8shvNnJfyM1aC3Vv5LbXreS+QjmX7OZfo51+jnXKP/H3sVkUbkySVrEmI5zQYVl+qr
+        USRoklWxvkcSE8xo5uN1Tlsd91DDz8PNiGWQbL443zoVLaEUKZr0hGYEDCGTirc964yWiGMU
+        6Sc4deJBdbKS0zSjpQwp8xQHGkYOSNhYRRJ3lOOOcepZV8C4eWWgYGfX0m9hxuzs3oJaj4cC
+        br+0KnkwzLSp6as0NDfxrdF7Mxk1UX1ypTNtwZ0rp7zUnfavMXct0oyIiuECb+WJ9cWOzlpz
+        DbXnRa1PijPEfdvO4Z7w8zlrLpQU7+qNmrf3rKooaMmZth1TjMigfRn4Pbw1V27YKdiHIxtt
+        xkNix3EZqYlTBKwj1BrFb3VrRx10AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrCIsWRmVeSWpSXmKPExsVy+t/xe7rHXf7FGRx8KmTxYN42NouNM9az
+        Wlz/8pzVYv6Rc6wW/Y9fM1ucP7+B3eL+16OMFpseX2O1uLxrDpvF3burGC1mnN/HZLFo6xd2
+        i9a9R9gt2p++ZLb4uWsei8XtiZMZHQQ8ds66y+6xaVUnm8eda3vYPDYvqffo/2vg0bdlFaPH
+        501yAexRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJ
+        ehmLj39lL9hcXnFoxmamBsbfEV2MnBwSAiYSd2ZsZ+xi5OIQEljKKHF1/28miISMxMlpDawQ
+        trDEn2tdbCC2kMBbRok3vbUgtrBAjsTJ9a9ZQJpFBJYySzxc/5YNxGEWuM8ocb7tJzvE2M2M
+        Eh0r34ONZRMwlOh6CzGKV8BO4sy1dewgNouAisSp+U0sILaoQJzE8i3z2SFqBCVOznwCFucU
+        MJX41b0ObA6zgJnEvM0PmSFseYntb+dA2eISt57MZ5rAKDQLSfssJC2zkLTMQtKygJFlFaNI
+        amlxbnpusaFecWJucWleul5yfu4mRmCMbzv2c/MOxksbgw8xCnAwKvHwTjj+N06INbGsuDL3
+        EKMEB7OSCK/T2dNxQrwpiZVVqUX58UWlOanFhxhNgZ6byCwlmpwPTD95JfGGpobmFpaG5sbm
+        xmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoYw6v0WmMn7731gi/9Tva6qorc6v5jm/2/
+        5SSa3lBLFZl36OzMa4UaWy9/vf7rzcmbQUp5FZJrY4Jz2zq3lQtwvnlm+/5zyb0tQm1GPD6W
+        XQ+mbJ185llH+72yi7827b38WK/dZdf0jrAT3XqZOu4uK91LlI/sOrEh4nTcA0cRmWNRrxa0
+        Bp1wV2Ipzkg01GIuKk4EAMeebagHAwAA
+X-CMS-MailID: 20200702203415eucas1p1ebec4f5e3559a41ff6791b327c68aea9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200702155216eucas1p2424c5998e09d73e3b758e4cd8ba27157
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200702155216eucas1p2424c5998e09d73e3b758e4cd8ba27157
+References: <20200702155149.12854-1-krzk@kernel.org>
+        <CGME20200702155216eucas1p2424c5998e09d73e3b758e4cd8ba27157@eucas1p2.samsung.com>
+        <20200702155149.12854-5-krzk@kernel.org>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 6/29/20 9:01 AM, Roy Im wrote:
-> Adds support for the Dialog DA7280 LRA/ERM Haptic Driver with
-> multiple mode and integrated waveform memory and wideband support.
-> It communicates via an I2C bus to the device.
-> 
-> Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
+On 02.07.2020 17:51, Krzysztof Kozlowski wrote:
+> There is no need to keep DMA controller nodes under AMBA bus node.
+> Remove the "amba" node to fix dtschema warnings like:
+>
+>      amba: $nodename:0: 'amba' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>
 > ---
-> v15:
-> 	- Removed some defines and updated some comments.
-> v14:
-> 	- Updated pwm related code, alignments and comments.
-> v13:
-> 	- Updated some conditions in pwm function and alignments.
-> v12: No changes.
-> v11: 
-> 	- Updated the pwm related code, comments and typo.
-> v10: 
-> 	- Updated the pwm related function and added some comments.
-> v9: 
-> 	- Removed the header file and put the definitions into the c file.
-> 	- Updated the pwm code and error logs with %pE
-> v8: 
-> 	- Added changes to support FF_PERIODIC/FF_CUSTOM and FF_CONSTANT.
-> 	- Updated the dt-related code.
-> 	- Removed memless related functions.
-> v7: 
-> 	- Added more attributes to handle one value per file.
-> 	- Replaced and updated the dt-related code and functions called.
-> 	- Fixed error/functions.
-> v6: No changes.
-> v5: Fixed errors in Kconfig file.
-> v4: Updated code as dt-bindings are changed.
-> v3: No changes.
-> v2: Fixed kbuild error/warning
-> 
-> 
->  drivers/input/misc/Kconfig  |   13 +
->  drivers/input/misc/Makefile |    1 +
->  drivers/input/misc/da7280.c | 1838 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 1852 insertions(+)
->  create mode 100644 drivers/input/misc/da7280.c
-
-[snip]
-
-> +static ssize_t
-> +patterns_store(struct device *dev,
-> +	       struct device_attribute *attr,
-> +	       const char *buf,
-> +	       size_t count)
-> +{
-> +	struct da7280_haptic *haptics = dev_get_drvdata(dev);
-> +	char cmd[MAX_USER_INPUT_LEN];
-> +	struct parse_data_t mem;
-> +	unsigned int val;
-> +	int error;
+>
+> Changes since v1:
+> 1. Remove the bus, as suggested by Marek
+> ---
+>   arch/arm/boot/dts/exynos3250.dtsi             |  47 +++----
+>   arch/arm/boot/dts/exynos4.dtsi                |  70 +++++-----
+>   .../boot/dts/exynos4210-universal_c210.dts    |   2 +-
+>   arch/arm/boot/dts/exynos5250.dtsi             |  92 ++++++-------
+>   arch/arm/boot/dts/exynos5410.dtsi             |  46 +++----
+>   arch/arm/boot/dts/exynos5420.dtsi             | 130 ++++++++----------
+>   6 files changed, 174 insertions(+), 213 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+> index 044e5da64a76..d3fb45a56527 100644
+> --- a/arch/arm/boot/dts/exynos3250.dtsi
+> +++ b/arch/arm/boot/dts/exynos3250.dtsi
+> @@ -418,33 +418,26 @@
+>   			status = "disabled";
+>   		};
+>   
+> -		amba {
+> -			compatible = "simple-bus";
+> -			#address-cells = <1>;
+> -			#size-cells = <1>;
+> -			ranges;
+> -
+> -			pdma0: pdma@12680000 {
+> -				compatible = "arm,pl330", "arm,primecell";
+> -				reg = <0x12680000 0x1000>;
+> -				interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&cmu CLK_PDMA0>;
+> -				clock-names = "apb_pclk";
+> -				#dma-cells = <1>;
+> -				#dma-channels = <8>;
+> -				#dma-requests = <32>;
+> -			};
+> -
+> -			pdma1: pdma@12690000 {
+> -				compatible = "arm,pl330", "arm,primecell";
+> -				reg = <0x12690000 0x1000>;
+> -				interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&cmu CLK_PDMA1>;
+> -				clock-names = "apb_pclk";
+> -				#dma-cells = <1>;
+> -				#dma-channels = <8>;
+> -				#dma-requests = <32>;
+> -			};
+> +		pdma0: pdma@12680000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x12680000 0x1000>;
+> +			interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cmu CLK_PDMA0>;
+> +			clock-names = "apb_pclk";
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <32>;
+> +		};
 > +
-> +	error = regmap_read(haptics->regmap, DA7280_MEM_CTL1, &val);
-> +	if (error)
-> +		return error;
+> +		pdma1: pdma@12690000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x12690000 0x1000>;
+> +			interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cmu CLK_PDMA1>;
+> +			clock-names = "apb_pclk";
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <32>;
+>   		};
+>   
+>   		adc: adc@126c0000 {
+> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+> index d2779a790ce3..a1e54449f33f 100644
+> --- a/arch/arm/boot/dts/exynos4.dtsi
+> +++ b/arch/arm/boot/dts/exynos4.dtsi
+> @@ -669,45 +669,37 @@
+>   			status = "disabled";
+>   		};
+>   
+> -		amba: amba {
+> -			#address-cells = <1>;
+> -			#size-cells = <1>;
+> -			compatible = "simple-bus";
+> -			interrupt-parent = <&gic>;
+> -			ranges;
+> -
+> -			pdma0: pdma@12680000 {
+> -				compatible = "arm,pl330", "arm,primecell";
+> -				reg = <0x12680000 0x1000>;
+> -				interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clock CLK_PDMA0>;
+> -				clock-names = "apb_pclk";
+> -				#dma-cells = <1>;
+> -				#dma-channels = <8>;
+> -				#dma-requests = <32>;
+> -			};
+> -
+> -			pdma1: pdma@12690000 {
+> -				compatible = "arm,pl330", "arm,primecell";
+> -				reg = <0x12690000 0x1000>;
+> -				interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clock CLK_PDMA1>;
+> -				clock-names = "apb_pclk";
+> -				#dma-cells = <1>;
+> -				#dma-channels = <8>;
+> -				#dma-requests = <32>;
+> -			};
+> -
+> -			mdma1: mdma@12850000 {
+> -				compatible = "arm,pl330", "arm,primecell";
+> -				reg = <0x12850000 0x1000>;
+> -				interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clock CLK_MDMA>;
+> -				clock-names = "apb_pclk";
+> -				#dma-cells = <1>;
+> -				#dma-channels = <8>;
+> -				#dma-requests = <1>;
+> -			};
+> +		pdma0: pdma@12680000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x12680000 0x1000>;
+> +			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clock CLK_PDMA0>;
+> +			clock-names = "apb_pclk";
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <32>;
+> +		};
 > +
-> +	if (count > MAX_USER_INPUT_LEN)
-> +		memcpy(cmd, buf, MAX_USER_INPUT_LEN);
-> +	else
-> +		memcpy(cmd, buf, count);
+> +		pdma1: pdma@12690000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x12690000 0x1000>;
+> +			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clock CLK_PDMA1>;
+> +			clock-names = "apb_pclk";
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <32>;
+> +		};
 > +
-> +	/* chop of '\n' introduced by echo at the end of the input */
-> +	if (cmd[count - 1] == '\n')
-> +		cmd[count - 1] = '\0';
+> +		mdma1: mdma@12850000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x12850000 0x1000>;
+> +			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clock CLK_MDMA>;
+> +			clock-names = "apb_pclk";
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <1>;
+>   		};
+>   
+>   		fimd: fimd@11c00000 {
+> diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+> index 02fde1a75ebd..e07aa3aa93bd 100644
+> --- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
+> +++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+> @@ -181,7 +181,7 @@
+>   	};
+>   };
+>   
+> -&amba {
+> +&soc {
 
-You have a potential memory corruption bug here for the case where
- count > MAX_USER_INPUT_LEN. The code correctly clamps the memcpy()
-length, but it still is at risk of writing beyond the end of the cmd
-buffer when doing the \0 termination.
 
-If you change the code above to say
+What about the alphabetical order of the labels here?
 
-	if (count > MAX_USER_INPUT_LEN)
-		count = MAX_USER_INPUT_LEN
-	memcpy(cmd, buf, count);
 
-it should take care of it, and it will also return the actual count
-written to the caller.
+>   	mdma0: mdma@12840000 {
+>   		compatible = "arm,pl330", "arm,primecell";
+>   		reg = <0x12840000 0x1000>;
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+> index b6135af7ef39..e3dbe4166836 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -679,56 +679,48 @@
+>   			samsung,pmureg-phandle = <&pmu_system_controller>;
+>   		};
+>   
+> -		amba {
+> -			#address-cells = <1>;
+> -			#size-cells = <1>;
+> -			compatible = "simple-bus";
+> -			interrupt-parent = <&gic>;
+> -			ranges;
+> -
+> -			pdma0: pdma@121a0000 {
+> -				compatible = "arm,pl330", "arm,primecell";
+> -				reg = <0x121A0000 0x1000>;
+> -				interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clock CLK_PDMA0>;
+> -				clock-names = "apb_pclk";
+> -				#dma-cells = <1>;
+> -				#dma-channels = <8>;
+> -				#dma-requests = <32>;
+> -			};
+> -
+> -			pdma1: pdma@121b0000 {
+> -				compatible = "arm,pl330", "arm,primecell";
+> -				reg = <0x121B0000 0x1000>;
+> -				interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clock CLK_PDMA1>;
+> -				clock-names = "apb_pclk";
+> -				#dma-cells = <1>;
+> -				#dma-channels = <8>;
+> -				#dma-requests = <32>;
+> -			};
+> -
+> -			mdma0: mdma@10800000 {
+> -				compatible = "arm,pl330", "arm,primecell";
+> -				reg = <0x10800000 0x1000>;
+> -				interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clock CLK_MDMA0>;
+> -				clock-names = "apb_pclk";
+> -				#dma-cells = <1>;
+> -				#dma-channels = <8>;
+> -				#dma-requests = <1>;
+> -			};
+> -
+> -			mdma1: mdma@11c10000 {
+> -				compatible = "arm,pl330", "arm,primecell";
+> -				reg = <0x11C10000 0x1000>;
+> -				interrupts = <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clock CLK_MDMA1>;
+> -				clock-names = "apb_pclk";
+> -				#dma-cells = <1>;
+> -				#dma-channels = <8>;
+> -				#dma-requests = <1>;
+> -			};
+> +		pdma0: pdma@121a0000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x121A0000 0x1000>;
+> +			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clock CLK_PDMA0>;
+> +			clock-names = "apb_pclk";
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <32>;
+> +		};
+> +
+> +		pdma1: pdma@121b0000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x121B0000 0x1000>;
+> +			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clock CLK_PDMA1>;
+> +			clock-names = "apb_pclk";
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <32>;
+> +		};
+> +
+> +		mdma0: mdma@10800000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x10800000 0x1000>;
+> +			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clock CLK_MDMA0>;
+> +			clock-names = "apb_pclk";
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <1>;
+> +		};
+> +
+> +		mdma1: mdma@11c10000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x11C10000 0x1000>;
+> +			interrupts = <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clock CLK_MDMA1>;
+> +			clock-names = "apb_pclk";
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <1>;
+>   		};
+>   
+>   		gsc_0:  gsc@13e00000 {
+> diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
+> index 2eab80bf5f3a..abe75b9e39f5 100644
+> --- a/arch/arm/boot/dts/exynos5410.dtsi
+> +++ b/arch/arm/boot/dts/exynos5410.dtsi
+> @@ -189,34 +189,26 @@
+>   			interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
+>   		};
+>   
+> -		amba {
+> -			#address-cells = <1>;
+> -			#size-cells = <1>;
+> -			compatible = "simple-bus";
+> -			interrupt-parent = <&gic>;
+> -			ranges;
+> -
+> -			pdma0: pdma@121a0000 {
+> -				compatible = "arm,pl330", "arm,primecell";
+> -				reg = <0x121a0000 0x1000>;
+> -				interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clock CLK_PDMA0>;
+> -				clock-names = "apb_pclk";
+> -				#dma-cells = <1>;
+> -				#dma-channels = <8>;
+> -				#dma-requests = <32>;
+> -			};
+> +		pdma0: pdma@121a0000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x121a0000 0x1000>;
+> +			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clock CLK_PDMA0>;
+> +			clock-names = "apb_pclk";
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <32>;
+> +		};
+>   
+> -			pdma1: pdma@121b0000 {
+> -				compatible = "arm,pl330", "arm,primecell";
+> -				reg = <0x121b0000 0x1000>;
+> -				interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clock CLK_PDMA1>;
+> -				clock-names = "apb_pclk";
+> -				#dma-cells = <1>;
+> -				#dma-channels = <8>;
+> -				#dma-requests = <32>;
+> -			};
+> +		pdma1: pdma@121b0000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x121b0000 0x1000>;
+> +			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clock CLK_PDMA1>;
+> +			clock-names = "apb_pclk";
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <32>;
+>   		};
+>   
+>   		audi2s0: i2s@3830000 {
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index b672080e7469..c76460b70532 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -433,76 +433,68 @@
+>   			power-domains = <&mau_pd>;
+>   		};
+>   
+> -		amba {
+> -			#address-cells = <1>;
+> -			#size-cells = <1>;
+> -			compatible = "simple-bus";
+> -			interrupt-parent = <&gic>;
+> -			ranges;
+> -
+> -			adma: adma@3880000 {
+> -				compatible = "arm,pl330", "arm,primecell";
+> -				reg = <0x03880000 0x1000>;
+> -				interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clock_audss EXYNOS_ADMA>;
+> -				clock-names = "apb_pclk";
+> -				#dma-cells = <1>;
+> -				#dma-channels = <6>;
+> -				#dma-requests = <16>;
+> -				power-domains = <&mau_pd>;
+> -			};
+> -
+> -			pdma0: pdma@121a0000 {
+> -				compatible = "arm,pl330", "arm,primecell";
+> -				reg = <0x121A0000 0x1000>;
+> -				interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clock CLK_PDMA0>;
+> -				clock-names = "apb_pclk";
+> -				#dma-cells = <1>;
+> -				#dma-channels = <8>;
+> -				#dma-requests = <32>;
+> -			};
+> -
+> -			pdma1: pdma@121b0000 {
+> -				compatible = "arm,pl330", "arm,primecell";
+> -				reg = <0x121B0000 0x1000>;
+> -				interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clock CLK_PDMA1>;
+> -				clock-names = "apb_pclk";
+> -				#dma-cells = <1>;
+> -				#dma-channels = <8>;
+> -				#dma-requests = <32>;
+> -			};
+> -
+> -			mdma0: mdma@10800000 {
+> -				compatible = "arm,pl330", "arm,primecell";
+> -				reg = <0x10800000 0x1000>;
+> -				interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clock CLK_MDMA0>;
+> -				clock-names = "apb_pclk";
+> -				#dma-cells = <1>;
+> -				#dma-channels = <8>;
+> -				#dma-requests = <1>;
+> -			};
+> +		adma: adma@3880000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x03880000 0x1000>;
+> +			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clock_audss EXYNOS_ADMA>;
+> +			clock-names = "apb_pclk";
+> +			#dma-cells = <1>;
+> +			#dma-channels = <6>;
+> +			#dma-requests = <16>;
+> +			power-domains = <&mau_pd>;
+> +		};
+>   
+> -			mdma1: mdma@11c10000 {
+> -				compatible = "arm,pl330", "arm,primecell";
+> -				reg = <0x11C10000 0x1000>;
+> -				interrupts = <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clock CLK_MDMA1>;
+> -				clock-names = "apb_pclk";
+> -				#dma-cells = <1>;
+> -				#dma-channels = <8>;
+> -				#dma-requests = <1>;
+> -				/*
+> -				 * MDMA1 can support both secure and non-secure
+> -				 * AXI transactions. When this is enabled in
+> -				 * the kernel for boards that run in secure
+> -				 * mode, we are getting imprecise external
+> -				 * aborts causing the kernel to oops.
+> -				 */
+> -				status = "disabled";
+> -			};
+> +		pdma0: pdma@121a0000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x121A0000 0x1000>;
+> +			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clock CLK_PDMA0>;
+> +			clock-names = "apb_pclk";
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <32>;
+> +		};
+> +
+> +		pdma1: pdma@121b0000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x121B0000 0x1000>;
+> +			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clock CLK_PDMA1>;
+> +			clock-names = "apb_pclk";
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <32>;
+> +		};
+> +
+> +		mdma0: mdma@10800000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x10800000 0x1000>;
+> +			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clock CLK_MDMA0>;
+> +			clock-names = "apb_pclk";
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <1>;
+> +		};
+> +
+> +		mdma1: mdma@11c10000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x11C10000 0x1000>;
+> +			interrupts = <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clock CLK_MDMA1>;
+> +			clock-names = "apb_pclk";
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <1>;
+> +			/*
+> +			 * MDMA1 can support both secure and non-secure
+> +			 * AXI transactions. When this is enabled in
+> +			 * the kernel for boards that run in secure
+> +			 * mode, we are getting imprecise external
+> +			 * aborts causing the kernel to oops.
+> +			 */
+> +			status = "disabled";
+>   		};
+>   
+>   		i2s0: i2s@3830000 {
 
-Cheers,
-Jes
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
