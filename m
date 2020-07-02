@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9A78212891
-	for <lists+linux-pwm@lfdr.de>; Thu,  2 Jul 2020 17:52:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFFC2212897
+	for <lists+linux-pwm@lfdr.de>; Thu,  2 Jul 2020 17:52:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726082AbgGBPwG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 2 Jul 2020 11:52:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33530 "EHLO mail.kernel.org"
+        id S1726120AbgGBPwL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 2 Jul 2020 11:52:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726120AbgGBPwF (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 2 Jul 2020 11:52:05 -0400
+        id S1726081AbgGBPwJ (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 2 Jul 2020 11:52:09 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2A7A20885;
-        Thu,  2 Jul 2020 15:52:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 706F520771;
+        Thu,  2 Jul 2020 15:52:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593705125;
-        bh=hLE/WHG614Fqr+65rEXe8Hvb8MiKmdRH/OazfRBiUqc=;
+        s=default; t=1593705128;
+        bh=rZcMyW7K8GPI7NAMM95uy9U0ekWtlscAh24Mfbuxev0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bc4cWwuDlpi17h/NZ4Bi5hKhxXyZQJSkRb892K8RYu5oCcCd1CN7MS0DLcPyBFBFA
-         f4w/C9z1SxT7WGLJiDwLfCp2+HlHO4zAi7ZjyTjUVDerduiZ4LqyZH0HuWD08SucfJ
-         /X2MCf7Jjxs/y06XWcStlhdkWhF0Pd9AD6b2h3Co=
+        b=nj+jvoX/97OIVT1xk/TbSlFCz6fyvpJVqqcu6af/5TC/y7lraBgPmPadrP7h/1e3C
+         qC5rrORsyoef3nydtUl7+rp5ceTK6n6V9l7gSxzxkHskDVIhKqbbCq6/TrIvEjpPWa
+         XbHMU26st/Rq8+8CxJDScQ4lJ22vdGLXl7+aF9hM=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -39,9 +39,9 @@ Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Alim Akhtar <alim.akhtar@samsung.com>,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: [PATCH v2 3/8] arm64: dts: exynos: Remove generic arm,armv8-pmuv3 compatible
-Date:   Thu,  2 Jul 2020 17:51:44 +0200
-Message-Id: <20200702155149.12854-3-krzk@kernel.org>
+Subject: [PATCH v2 4/8] arm64: dts: exynos: Remove DMA controller bus node name to fix dtschema warnings
+Date:   Thu,  2 Jul 2020 17:51:45 +0200
+Message-Id: <20200702155149.12854-4-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200702155149.12854-1-krzk@kernel.org>
 References: <20200702155149.12854-1-krzk@kernel.org>
@@ -50,60 +50,138 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The ARM PMU node is described enough with first compatible so remove the
-arm,armv8-pmuv3 to fix dtschema warnings like:
+There is no need to keep DMA controller nodes under AMBA bus node.
+Remove the "amba" node to fix dtschema warnings like:
 
-    arm-pmu: compatible: Additional items are not allowed ('arm,armv8-pmuv3' was unexpected)
-    arm-pmu: compatible: ['arm,cortex-a57-pmu', 'arm,armv8-pmuv3'] is too long
+    amba: $nodename:0: 'amba' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
 ---
 
 Changes since v1:
-1. None
-
-Not tested although no effect expected.
+1. Remove the bus, as suggested by Marek
 ---
- arch/arm64/boot/dts/exynos/exynos5433.dtsi | 4 ++--
- arch/arm64/boot/dts/exynos/exynos7.dtsi    | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi | 47 +++++++++-------------
+ arch/arm64/boot/dts/exynos/exynos7.dtsi    | 47 +++++++++-------------
+ 2 files changed, 40 insertions(+), 54 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-index ebe089469b5f..57b433a1c900 100644
+index 57b433a1c900..74ac4ac75865 100644
 --- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
 +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-@@ -24,7 +24,7 @@
- 	interrupt-parent = <&gic>;
+@@ -1756,33 +1756,26 @@
+ 			status = "disabled";
+ 		};
  
- 	arm_a53_pmu {
--		compatible = "arm,cortex-a53-pmu", "arm,armv8-pmuv3";
-+		compatible = "arm,cortex-a53-pmu";
- 		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
-@@ -33,7 +33,7 @@
- 	};
+-		amba {
+-			compatible = "simple-bus";
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			ranges;
+-
+-			pdma0: pdma@15610000 {
+-				compatible = "arm,pl330", "arm,primecell";
+-				reg = <0x15610000 0x1000>;
+-				interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&cmu_fsys CLK_PDMA0>;
+-				clock-names = "apb_pclk";
+-				#dma-cells = <1>;
+-				#dma-channels = <8>;
+-				#dma-requests = <32>;
+-			};
+-
+-			pdma1: pdma@15600000 {
+-				compatible = "arm,pl330", "arm,primecell";
+-				reg = <0x15600000 0x1000>;
+-				interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&cmu_fsys CLK_PDMA1>;
+-				clock-names = "apb_pclk";
+-				#dma-cells = <1>;
+-				#dma-channels = <8>;
+-				#dma-requests = <32>;
+-			};
++		pdma0: pdma@15610000 {
++			compatible = "arm,pl330", "arm,primecell";
++			reg = <0x15610000 0x1000>;
++			interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cmu_fsys CLK_PDMA0>;
++			clock-names = "apb_pclk";
++			#dma-cells = <1>;
++			#dma-channels = <8>;
++			#dma-requests = <32>;
++		};
++
++		pdma1: pdma@15600000 {
++			compatible = "arm,pl330", "arm,primecell";
++			reg = <0x15600000 0x1000>;
++			interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cmu_fsys CLK_PDMA1>;
++			clock-names = "apb_pclk";
++			#dma-cells = <1>;
++			#dma-channels = <8>;
++			#dma-requests = <32>;
+ 		};
  
- 	arm_a57_pmu {
--		compatible = "arm,cortex-a57-pmu", "arm,armv8-pmuv3";
-+		compatible = "arm,cortex-a57-pmu";
- 		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
+ 		audio-subsystem@11400000 {
 diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-index 709742b98c9c..c0b63b0d39ab 100644
+index c0b63b0d39ab..b9ed6a33e290 100644
 --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
 +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-@@ -29,7 +29,7 @@
- 	};
+@@ -105,33 +105,26 @@
+ 				<0x11006000 0x2000>;
+ 		};
  
- 	arm-pmu {
--		compatible = "arm,cortex-a57-pmu", "arm,armv8-pmuv3";
-+		compatible = "arm,cortex-a57-pmu";
- 		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
+-		amba {
+-			compatible = "simple-bus";
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			ranges;
+-
+-			pdma0: pdma@10e10000 {
+-				compatible = "arm,pl330", "arm,primecell";
+-				reg = <0x10E10000 0x1000>;
+-				interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clock_fsys0 ACLK_PDMA0>;
+-				clock-names = "apb_pclk";
+-				#dma-cells = <1>;
+-				#dma-channels = <8>;
+-				#dma-requests = <32>;
+-			};
+-
+-			pdma1: pdma@10eb0000 {
+-				compatible = "arm,pl330", "arm,primecell";
+-				reg = <0x10EB0000 0x1000>;
+-				interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clock_fsys0 ACLK_PDMA1>;
+-				clock-names = "apb_pclk";
+-				#dma-cells = <1>;
+-				#dma-channels = <8>;
+-				#dma-requests = <32>;
+-			};
++		pdma0: pdma@10e10000 {
++			compatible = "arm,pl330", "arm,primecell";
++			reg = <0x10E10000 0x1000>;
++			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clock_fsys0 ACLK_PDMA0>;
++			clock-names = "apb_pclk";
++			#dma-cells = <1>;
++			#dma-channels = <8>;
++			#dma-requests = <32>;
++		};
++
++		pdma1: pdma@10eb0000 {
++			compatible = "arm,pl330", "arm,primecell";
++			reg = <0x10EB0000 0x1000>;
++			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clock_fsys0 ACLK_PDMA1>;
++			clock-names = "apb_pclk";
++			#dma-cells = <1>;
++			#dma-channels = <8>;
++			#dma-requests = <32>;
+ 		};
+ 
+ 		clock_topc: clock-controller@10570000 {
 -- 
 2.17.1
 
