@@ -2,49 +2,49 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61D2E213E45
-	for <lists+linux-pwm@lfdr.de>; Fri,  3 Jul 2020 19:10:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F286213E6E
+	for <lists+linux-pwm@lfdr.de>; Fri,  3 Jul 2020 19:18:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgGCRKW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 3 Jul 2020 13:10:22 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:58748 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbgGCRKV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 3 Jul 2020 13:10:21 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200703171019epoutp011c7968bf6a018a70ef1b0148891f79c7~eTTeO73bX0630506305epoutp01R
-        for <linux-pwm@vger.kernel.org>; Fri,  3 Jul 2020 17:10:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200703171019epoutp011c7968bf6a018a70ef1b0148891f79c7~eTTeO73bX0630506305epoutp01R
+        id S1726715AbgGCRSK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 3 Jul 2020 13:18:10 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:54193 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgGCRSJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 3 Jul 2020 13:18:09 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200703171806epoutp04836f9391ad24095ab1c454ffc66057f6~eTaRdbE632886328863epoutp04j
+        for <linux-pwm@vger.kernel.org>; Fri,  3 Jul 2020 17:18:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200703171806epoutp04836f9391ad24095ab1c454ffc66057f6~eTaRdbE632886328863epoutp04j
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593796219;
-        bh=HcAGD6B1JnP2lDnlKdtr6p7vH/7+xhr07urK3N8AbhQ=;
+        s=mail20170921; t=1593796686;
+        bh=J7FW8uqGQ+2qBx2BdC0fWOsDhWY5aJoCeobM23mdcDk=;
         h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=itr9zMrpC0E5t5bisOhAlIc7t/aMmQaNOQjllqp0AKZD/0F8nmbWz2SH0I1Y0LxI2
-         AVfmsPRTsZCSaxPTmW2k08rdxBzIjfA5bg6W1oZj8WiZThQ5WfGBUKkokGVEYsQaSo
-         +qUiXKTMsi0KUejzHw2ULPdJEkiyb0CPRLAUKdQk=
+        b=q2vA71KeeJPNMIc8t50SmZJCAYPjKagax7CsxzcxeSY/LeHcQP4b9VFYHgqJnDed7
+         18iEUfZC6WXxOF2rfmC7bnBk3a+0wk1WnaJR4tctG3HPShsxvbL+8eFDy2O/Xla6Zj
+         OHPwKr+FfzWhCNHNuZGhjGDv9s3PW/mAjjbrYXrQ=
 Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
         epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20200703171017epcas5p2e5662ec53557a62454d057d28b893d61~eTTcRzvND0205102051epcas5p2I;
-        Fri,  3 Jul 2020 17:10:17 +0000 (GMT)
+        20200703171805epcas5p2adb88dc394dd9c62a10b462b44ac2d35~eTaQsXYp30797807978epcas5p2W;
+        Fri,  3 Jul 2020 17:18:05 +0000 (GMT)
 Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
         epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        27.DB.09703.8766FFE5; Sat,  4 Jul 2020 02:10:16 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200703171015epcas5p38d1995e1ba086fde1f8eee79dccc47db~eTTazyHSK0671706717epcas5p3X;
-        Fri,  3 Jul 2020 17:10:15 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200703171015epsmtrp1efffc6882f6ca01d3aab3a296b1f8249~eTTay68810607506075epsmtrp1k;
-        Fri,  3 Jul 2020 17:10:15 +0000 (GMT)
-X-AuditID: b6c32a4a-4cbff700000025e7-f7-5eff66780bd1
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        57.87.08303.7766FFE5; Sat,  4 Jul 2020 02:10:15 +0900 (KST)
+        5B.3C.09703.D486FFE5; Sat,  4 Jul 2020 02:18:05 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200703171804epcas5p1ac30858d631f2c79dd64d0a9ea8cf384~eTaPg9pCe1618216182epcas5p1z;
+        Fri,  3 Jul 2020 17:18:04 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200703171804epsmtrp2084fa6e33101021dbd43a7277af77537~eTaPgFbEc1141011410epsmtrp2k;
+        Fri,  3 Jul 2020 17:18:04 +0000 (GMT)
+X-AuditID: b6c32a4a-4cbff700000025e7-cb-5eff684dbc8a
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        67.F4.08382.C486FFE5; Sat,  4 Jul 2020 02:18:04 +0900 (KST)
 Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200703171011epsmtip2e6bc5aa70a6e5b90b86f4d723b439512~eTTXJO5uG3195631956epsmtip2L;
-        Fri,  3 Jul 2020 17:10:11 +0000 (GMT)
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200703171800epsmtip1ea2a6b56847555fc36a9615eb7617675~eTaL4rH9E0836808368epsmtip1G;
+        Fri,  3 Jul 2020 17:18:00 +0000 (GMT)
 From:   "Alim Akhtar" <alim.akhtar@samsung.com>
 To:     "'Krzysztof Kozlowski'" <krzk@kernel.org>,
         "'Thierry Reding'" <thierry.reding@gmail.com>,
@@ -61,62 +61,62 @@ Cc:     "'Marek Szyprowski'" <m.szyprowski@samsung.com>,
         "'Sylwester Nawrocki'" <snawrocki@kernel.org>,
         "'Chanwoo Choi'" <cw00.choi@samsung.com>,
         "'Pankaj Dubey'" <pankaj.dubey@samsung.com>
-In-Reply-To: <20200702155149.12854-2-krzk@kernel.org>
-Subject: RE: [PATCH v2 2/8] arm64: dts: exynos: Describe PWM interrupts on
- Exynos7
-Date:   Fri, 3 Jul 2020 22:40:09 +0530
-Message-ID: <000001d6515c$d19f7de0$74de79a0$@samsung.com>
+In-Reply-To: <20200702155149.12854-3-krzk@kernel.org>
+Subject: RE: [PATCH v2 3/8] arm64: dts: exynos: Remove generic
+ arm,armv8-pmuv3 compatible
+Date:   Fri, 3 Jul 2020 22:47:58 +0530
+Message-ID: <000101d6515d$e91f2870$bb5d7950$@samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFJ6dR4UxNy2lAmU1YfvCM6WVVcaQEv8itqAud1DcWp7UV0UA==
+Thread-Index: AQFJ6dR4UxNy2lAmU1YfvCM6WVVcaQJtI6A3AnaElvKp58le8A==
 Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMKsWRmVeSWpSXmKPExsWy7bCmum5F2v84g/VHLC02zljPanH9y3NW
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMKsWRmVeSWpSXmKPExsWy7bCmuq5vxv84gzdXFC02zljPanH9y3NW
         i/lHzrFa9D9+zWxx/vwGdov7X48yWmx6fI3V4vKuOWwWd++uYrSYcX4fk8XaI3fZLRZt/cJu
         0br3CLtF+9OXzBY/d81jsbg9cTKjg4DHzll32T02repk87hzbQ+bx+Yl9R79fw08+rasYvT4
-        vEkugD2KyyYlNSezLLVI3y6BK+PXl1ksBbPFK47NPsvYwLhVrIuRk0NCwERixq5Wti5GLg4h
-        gd2MEm2/Z7CAJIQEPjFKrP3nDZH4zCjxcM1MJpiOnTv2sEMkdjFKHLj8iBXCecMosf/DZrB2
-        NgFdiR2L28DmiggcZZbo+7oMzGEW+Mko0bThICtIFaeAqcTaDZvAOoQFQiSmr3/MCGKzCKhI
-        PPlxkxnE5hWwlFjx5i4LhC0ocXLmEzCbWUBbYtnC18wQNylI/Hy6DGymiICTxJxDvcwQNeIS
-        R3/2QNU84ZA4PUWni5EDyHaROL3DDyIsLPHq+BZ2CFtK4mV/GztESbZEzy5jiHCNxNJ5x1gg
-        bHuJA1fmsICUMAtoSqzfpQ+xiE+i9/cTJohOXomONiGIalWJ5ndXoTqlJSZ2d7NC2B4SH9Y2
-        ME5gVJyF5K1ZSN6aheT8WQjLFjCyrGKUTC0ozk1PLTYtMMpLLdcrTswtLs1L10vOz93ECE53
-        Wl47GB8++KB3iJGJg/EQowQHs5IIb4Lqvzgh3pTEyqrUovz4otKc1OJDjNIcLErivEo/zsQJ
-        CaQnlqRmp6YWpBbBZJk4OKUamMLqN/73i5j06UfFkU8fJN/xdiiLcaidOPN6+c5LpfvyGpZd
-        Dog5enHxDe6VJpNj4i5Oebf5xOO9Zremczbuz576QKpZ8xAf34MUjaddChc4rS9nx2q4RB0y
-        W9j5RmBj6iO7ZT0sj5jP/n0VtF+CtSVhz8kjx7mjbnQya2gyqhc+mmYlf7LzdVNbBsPTOuUj
-        jwSXuHLHGrGtfdSVv2TOjJkWf4VmyATJ5/S9V8wudLbzO6f7KDDl4v/NZZcFF7BFz19juEZT
-        b2+Q4ouQoozqez9CIm5s+Hih1laQnaNpO0OGjszhO+vWvj93V/rfv7UFLQoaTWqbOSsW8e0u
-        OFnVG922iE3y5Kdz1Z+7tNV8O5VYijMSDbWYi4oTAac9isfmAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNIsWRmVeSWpSXmKPExsWy7bCSvG552v84g4vN4hYbZ6xntbj+5Tmr
+        vEkugD2KyyYlNSezLLVI3y6BK+Nx6yT2ggUCFTPmtLI3MF7g72Lk5JAQMJF4fvEncxcjF4eQ
+        wG5GiX89zYwgCSGBT4wSz56JQCS+MUp872hkgunonH4DqmMvo8S3pe3sEB1vGCW+zI0HsdkE
+        dCV2LG5jAykSETjKLNH3dRmYwyzwk1GiacNBVpAqTgFTid07LzGD2MIC0RInl9wDKuLgYBFQ
+        kTg02RwkzCtgKfHr3llWCFtQ4uTMJywgNrOAtsSyha+ZIS5SkPj5dBlYjYiAk0Tzjg4miBpx
+        iaM/e8AulRB4wyHxddskNogGF4kJyzdB2cISr45vYYewpSQ+v9sLdoOEQLZEzy5jiHCNxNJ5
+        x1ggbHuJA1fmsICUMAtoSqzfpQ+xik+i9/cTJohOXomONiGIalWJ5ndXoTqlJSZ2d7NC2B4S
+        E24cZprAqDgLyWOzkDw2C8kDsxCWLWBkWcUomVpQnJueWmxaYJSXWq5XnJhbXJqXrpecn7uJ
+        EZzutLx2MD588EHvECMTB+MhRgkOZiUR3gTVf3FCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeZV+
+        nIkTEkhPLEnNTk0tSC2CyTJxcEo1MO1TS+KawcXklDEjrHepdnuKEb95xadSWxfvxfWH0m5l
+        vGzf7FBsvmp5mMpZ3u7D9y4vl9CLqjzp5fPm0xtD94nRewybw7ROGj45/aq9NdxYYGnl+eJ7
+        t6bXp86b+ylz1sKvjrtfN1o1B+9btPb7fnFZsbIjNiw+0X8DWz4k2mzclW7EVtkoa7/X8L2N
+        0YUs2R3OjibnzA0PWWTlN5yUfia2rrL48frQ3DOTVzMUlUVtZr5vkaMl1i+70u3KSzHzm3MM
+        KmwlriR+FDrK8Y+hIjE2jGOOw/fDoXMF1qxfGPTyefmWyFv+ZWXxJ0z7RHZddLW5VPdFIlB2
+        X7TPyprnPDMMjRPuLjll26d55+VGJZbijERDLeai4kQAG0Sqr+YDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJIsWRmVeSWpSXmKPExsWy7bCSnK5Pxv84g94tQhYbZ6xntbj+5Tmr
         xfwj51gt+h+/ZrY4f34Du8X9r0cZLTY9vsZqcXnXHDaLu3dXMVrMOL+PyWLtkbvsFou2fmG3
         aN17hN2i/elLZoufu+axWNyeOJnRQcBj56y77B6bVnWyedy5tofNY/OSeo/+vwYefVtWMXp8
-        3iQXwB7FZZOSmpNZllqkb5fAlbH743zWgm8CFde/LGZvYGzj62Lk5JAQMJHYuWMPexcjF4eQ
-        wA5Gid45yxkhEtIS1zdOYIewhSVW/nsOVfSKUeL2gQ3MIAk2AV2JHYvb2EASIgJnmSXaDqxm
-        AXGYBX4zSjy9eIEVomU9o8TzlztZQFo4BUwl1m7YBGYLCwRJ3GifBzaKRUBF4smPm2A2r4Cl
-        xIo3d1kgbEGJkzOfgNnMAtoST28+hbOXLXzNDHGfgsTPp8tYQWwRASeJOYd6mSFqxCWO/uxh
-        nsAoPAvJqFlIRs1CMmoWkpYFjCyrGCVTC4pz03OLDQuM8lLL9YoTc4tL89L1kvNzNzGC41dL
-        awfjnlUf9A4xMnEwHmKU4GBWEuFNUP0XJ8SbklhZlVqUH19UmpNafIhRmoNFSZz366yFcUIC
-        6YklqdmpqQWpRTBZJg5OqQamjk8fgt6UN//KSlseV5Eloa56fcN56eCgotx876nKMkaiSY7H
-        PtWc7dONeRnFs7jtwpGkYwp/S7zbykoW+r/TCjY44NddeE6lw9B+51f2a71KC9snXWldeGSv
-        5PRSv7C9hnvEeveU+wt+/Gxeofdhk2lY9NXL7M8YH95Vn3Zv+otVysvuRV8Jes0eKBfweq5b
-        ocf+OTY1zr1cCYfLfGPk7B6+bP188WQI27LpafPZOVTZjzwOnZC5avLmdotVKW2xHz5t2mRc
-        YPb68qoPSpO4e7e9FSxa6d6wdu12s2TWpElr72ztmSq3+OKfVad8asT/77+yOtzvHqtfyNwt
-        1jGik6p3i3lKuE/e8OCs8JoTSizFGYmGWsxFxYkA1W6Mhk4DAAA=
-X-CMS-MailID: 20200703171015epcas5p38d1995e1ba086fde1f8eee79dccc47db
+        3iQXwB7FZZOSmpNZllqkb5fAlbF823Gmgm08FVMmvGJsYDzK1cXIySEhYCLROf0GcxcjF4eQ
+        wG5Gibat5xkhEtIS1zdOYIewhSVW/nvODlH0ilHi6IsOVpAEm4CuxI7FbWwgCRGBs8wSbQdW
+        s4A4zAK/GSWeXrwAViUksJ5RYvsWsFGcAqYSu3deYgaxhQUiJU4/egnUwMHBIqAicWiyOUiY
+        V8BS4te9s6wQtqDEyZlPWEBsZgFtiac3n8LZyxa+Zoa4TkHi59NlYPUiAk4SzTs6mCBqxCWO
+        /uxhnsAoPAvJqFlIRs1CMmoWkpYFjCyrGCVTC4pz03OLDQsM81LL9YoTc4tL89L1kvNzNzGC
+        Y1dLcwfj9lUf9A4xMnEwHmKU4GBWEuFNUP0XJ8SbklhZlVqUH19UmpNafIhRmoNFSZz3RuHC
+        OCGB9MSS1OzU1ILUIpgsEwenVAOT8Tz12XKrOY/XnQgTfVq1vJTV1v3S/qUZCjdfX7p/0yTG
+        f+VUpaNXZp2t/zG3dvPHxS3B4St0rqg8PXd0+9MJP062SgrfddayvR7Jtf9/atb8c5fmnObn
+        FFaJf3y/IM32+meNmbybu1MlF1cpMzpn7Zqof1jx95Nl5TErVvHzrfho9FXsk+Ry8T1fzq9b
+        trTn4I5TsrKFb1k4dz1fuOQu+xebKJfwy11Wyt+Xci/lPzZNfsa9q9/mhy7tPle7wsLiyaL5
+        eYWrJ0XG9/31Ws74L1JxXsHXmdmP2mfGN9Z/dMkJmS5Wmt50xKPHwpifPyDqy0Lv1U92Tq/g
+        +sXTpJx2ijvQ1dXoTvyPF8+a/+3+uU6JpTgj0VCLuag4EQC6XUTTTAMAAA==
+X-CMS-MailID: 20200703171804epcas5p1ac30858d631f2c79dd64d0a9ea8cf384
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 CMS-TYPE: 105P
-X-CMS-RootMailID: 20200702155204epcas5p34d7635968376b68fc243e8887cf16388
+X-CMS-RootMailID: 20200702155208epcas5p3b392837ed0d7183aa8d8724b1ccac9aa
 References: <20200702155149.12854-1-krzk@kernel.org>
-        <CGME20200702155204epcas5p34d7635968376b68fc243e8887cf16388@epcas5p3.samsung.com>
-        <20200702155149.12854-2-krzk@kernel.org>
+        <CGME20200702155208epcas5p3b392837ed0d7183aa8d8724b1ccac9aa@epcas5p3.samsung.com>
+        <20200702155149.12854-3-krzk@kernel.org>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Krzysztof,
+HI Krzysztof
 
 > -----Original Message-----
 > From: Krzysztof Kozlowski <krzk=40kernel.org>
@@ -132,29 +132,18 @@ yprowski=20<m.szyprowski=40samsung.com>;=20Bartlomiej=20Zolnierkiewicz=0D=
 =0A>=20<b.zolnierkie=40samsung.com>;=20Sylwester=20Nawrocki=20<snawrocki=40=
 kernel.org>;=0D=0A>=20Alim=20Akhtar=20<alim.akhtar=40samsung.com>;=20Chanwo=
 o=20Choi=0D=0A>=20<cw00.choi=40samsung.com>;=20Pankaj=20Dubey=20<pankaj.dub=
-ey=40samsung.com>=0D=0A>=20Subject:=20=5BPATCH=20v2=202/8=5D=20arm64:=20dts=
-:=20exynos:=20Describe=20PWM=20interrupts=20on=0D=0A>=20Exynos7=0D=0A>=20=
-=0D=0A>=20Add=20interrupts=20property=20to=20PWM=20node=20on=20Exynos7=20to=
-=20describe=20the=20hardware=0D=0A>=20fully.=20=20No=20functional=20change=
-=20as=20the=20interrupts=20are=20not=20used=20by=20drivers.=0D=0A>=20=0D=0A=
->=20Signed-off-by:=20Krzysztof=20Kozlowski=20<krzk=40kernel.org>=0D=0A>=20=
+ey=40samsung.com>=0D=0A>=20Subject:=20=5BPATCH=20v2=203/8=5D=20arm64:=20dts=
+:=20exynos:=20Remove=20generic=20arm,armv8-pmuv3=0D=0A>=20compatible=0D=0A>=
+=20=0D=0A>=20The=20ARM=20PMU=20node=20is=20described=20enough=20with=20firs=
+t=20compatible=20so=20remove=20the=0D=0A>=20arm,armv8-pmuv3=20to=20fix=20dt=
+schema=20warnings=20like:=0D=0A>=20=0D=0A>=20=20=20=20=20arm-pmu:=20compati=
+ble:=20Additional=20items=20are=20not=20allowed=20('arm,armv8-pmuv3'=0D=0A>=
+=20was=20unexpected)=0D=0A>=20=20=20=20=20arm-pmu:=20compatible:=20=5B'arm,=
+cortex-a57-pmu',=20'arm,armv8-pmuv3'=5D=20is=20too=20long=0D=0A>=20=0D=0A>=
+=20Signed-off-by:=20Krzysztof=20Kozlowski=20<krzk=40kernel.org>=0D=0A>=20=
 =0D=0AReviewed-by:=20Alim=20Akhtar=20<alim.akhtar=40samsung.com>=0D=0A>=20-=
---=0D=0A>=20=0D=0A>=20Changes=20since=20v1:=0D=0A>=201.=20Correct=20the=20i=
-nterrupts,=20change=20message.=0D=0A>=20=0D=0A>=20Not=20tested=0D=0A>=20---=
-=0D=0A>=20=20arch/arm64/boot/dts/exynos/exynos7.dtsi=20=7C=205=20+++++=0D=
-=0A>=20=201=20file=20changed,=205=20insertions(+)=0D=0A>=20=0D=0A>=20diff=
-=20--git=20a/arch/arm64/boot/dts/exynos/exynos7.dtsi=0D=0A>=20b/arch/arm64/=
-boot/dts/exynos/exynos7.dtsi=0D=0A>=20index=20f590891efe25..709742b98c9c=20=
-100644=0D=0A>=20---=20a/arch/arm64/boot/dts/exynos/exynos7.dtsi=0D=0A>=20++=
-+=20b/arch/arm64/boot/dts/exynos/exynos7.dtsi=0D=0A>=20=40=40=20-581,6=20+5=
-81,11=20=40=40=0D=0A>=20=20=09=09pwm:=20pwm=40136c0000=20=7B=0D=0A>=20=20=
-=09=09=09compatible=20=3D=20=22samsung,exynos4210-pwm=22;=0D=0A>=20=20=09=
-=09=09reg=20=3D=20<0x136c0000=200x100>;=0D=0A>=20+=09=09=09interrupts=20=3D=
-=20<GIC_SPI=20449=20IRQ_TYPE_LEVEL_HIGH>,=0D=0A>=20+=09=09=09=09=20=20=20=
-=20=20<GIC_SPI=20450=20IRQ_TYPE_LEVEL_HIGH>,=0D=0A>=20+=09=09=09=09=20=20=
-=20=20=20<GIC_SPI=20451=20IRQ_TYPE_LEVEL_HIGH>,=0D=0A>=20+=09=09=09=09=20=
-=20=20=20=20<GIC_SPI=20452=20IRQ_TYPE_LEVEL_HIGH>,=0D=0A>=20+=09=09=09=09=
-=20=20=20=20=20<GIC_SPI=20453=20IRQ_TYPE_LEVEL_HIGH>;=0D=0A>=20=20=09=09=09=
-samsung,pwm-outputs=20=3D=20<0>,=20<1>,=20<2>,=20<3>;=0D=0A>=20=20=09=09=09=
-=23pwm-cells=20=3D=20<3>;=0D=0A>=20=20=09=09=09clocks=20=3D=20<&clock_peric=
-0=20PCLK_PWM>;=0D=0A>=20--=0D=0A>=202.17.1=0D=0A=0D=0A=0D=0A
+--=0D=0A>=20=0D=0A>=20Changes=20since=20v1:=0D=0A>=201.=20None=0D=0A>=20=0D=
+=0A>=20Not=20tested=20although=20no=20effect=20expected.=0D=0A>=20---=0D=0A=
+Booted=20on=20exynos7=20board=20and=20see=20arm=20PMU=20still=20gets=20regi=
+stered=0D=0ATested-by:=20Alim=20Akhtar=20<alim.akhtar=40samsung.com>=0D=0A=
+=0D=0A=0D=0A
