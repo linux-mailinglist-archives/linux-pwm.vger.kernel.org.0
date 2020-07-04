@@ -2,29 +2,29 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95A81214859
-	for <lists+linux-pwm@lfdr.de>; Sat,  4 Jul 2020 21:24:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D3DE2148C7
+	for <lists+linux-pwm@lfdr.de>; Sat,  4 Jul 2020 22:59:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgGDTYZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 4 Jul 2020 15:24:25 -0400
-Received: from mout.gmx.net ([212.227.15.15]:32847 "EHLO mout.gmx.net"
+        id S1727835AbgGDU7H (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 4 Jul 2020 16:59:07 -0400
+Received: from mout.gmx.net ([212.227.15.19]:59715 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726153AbgGDTYZ (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sat, 4 Jul 2020 15:24:25 -0400
+        id S1726953AbgGDU7H (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sat, 4 Jul 2020 16:59:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1593890611;
-        bh=WAD5QQlP0LCkmso8s+gKUS7M0lXvNdxkqPNyUPummWA=;
+        s=badeba3b8450; t=1593896291;
+        bh=2oIii+dEa/rMktNI0QfrGboAftGZ7VgeERC+pMMVvCE=;
         h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=Hudxi7lVx6oLzZwzuX2yubzy4m0dv217JY7GzTM9Dqbb2BEzYtC/6cUs+6tUEy6Kk
-         CcNSwucrKEXJooD1rf39qLnXKqxqGGzPokbCPJAqBPN1bVCrcIVCJpkryahKUQSc2h
-         2nLFmBYSIXgxXbf07YjRAeL/ix3Quwc+W8Azs3s4=
+        b=ByrU0MPgzX7+FsB601UMpEA8PlbebAisHyU5yAukxRrqU+PS2Kha9xu89nXXvmhDk
+         FEsvGG9hanZlY4xWNVi0P+XqW8lqcWtp7/swGM//2UwkOwAdUx1jlgm1p+27rJdYw7
+         i3trPvNW+wUq2JZU/4r7A68uM6Gk2YndeQioCe1E=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from longitude ([5.146.195.26]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MWih0-1kOkyA3Zvs-00X0R7; Sat, 04
- Jul 2020 21:23:31 +0200
-Date:   Sat, 4 Jul 2020 21:23:23 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M8hV5-1jwW4Q2HFx-004mOY; Sat, 04
+ Jul 2020 22:58:11 +0200
+Date:   Sat, 4 Jul 2020 22:58:08 +0200
 From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Andreas Kemnade <andreas@kemnade.info>
 Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
         linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -32,6 +32,7 @@ Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
         Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
@@ -48,205 +49,123 @@ Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
         devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
         linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [RFC PATCH 08/10] rtc: New driver for RTC in Netronix embedded
- controller
-Message-ID: <20200704192323.GC2578@latitude>
-References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
- <20200620224222.1312520-7-j.neuschaefer@gmx.net>
- <20200621001106.GC131826@piout.net>
+        Josua Mayer <josua.mayer@jm0.eu>
+Subject: Re: [RFC PATCH 00/10] Netronix embedded controller driver for Kobo
+ and Tolino ebook readers
+Message-ID: <20200704205808.GD2578@latitude>
+References: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
+ <20200630084051.66feadea@aktux>
+ <20200630071523.GA2983@latitude>
+ <20200630221447.3e03ae28@aktux>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="eRtJSFbw+EEWtPj3"
+        protocol="application/pgp-signature"; boundary="d01dLTUuW90fS44H"
 Content-Disposition: inline
-In-Reply-To: <20200621001106.GC131826@piout.net>
-X-Provags-ID: V03:K1:DMqWrUZO9WvfwP5GHEh60ZFeADf5FrliknlidT+JUvSoso7C0AO
- 7MW0Tsc9rRZy85HRmMyausOcHHg5ACqV3x2iHCabh8I85A6vvvw+nQZNqTwQ8KwSFyvd3DY
- qADu0PJkUy9H+ni38N2KVI3fhPnR6KEBZ9eTOiyHnsujTpSxcrQpTa6UayqX+6ezHFvxPy1
- ceSsoyvzbC3cSZqkmvszA==
+In-Reply-To: <20200630221447.3e03ae28@aktux>
+X-Provags-ID: V03:K1:55puWQ+2GGyp7xcFFLkgMg7nkitQvyCSK5CCeExXNQutjzBzOIO
+ vOWLHCUn89dwzlDLbv07iW8fG/Rzs6Y6iEj6IFAtgcy/ImnrcMnMPhm5BVSsrqc8fOv5zgU
+ JLB+V6JL3G03CFL+MN9xGbxb3NBHFJ9S8wudrcml8m642V0u7SCEaLsS0IKObqSwkePjNsy
+ VYCWd9xclZmIdnQaLD0FQ==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:QK83j4q2tNY=:+A0whngEeVTzV/tycO7gcI
- bI5ICj/isg0sLLNIvbg3VNB8/JY8pD1LY6qjM1djcWYsE9AzhDA9mvM0WhVbxqceofDwrMMfi
- 8XL1iwuq7ThouwscRhBxeQ2bS8QTqBdllaskx7ZSi7kXSe38XMnjIqQtu8Egk8S7AaS9BkG++
- jF+7DlEMXsATRtEMrask0IqgP1vMfaBnGVAycYQDA3/f7oLZwS+U7wU6tu31oFvEkP1QKCWqZ
- mqEnpIzwVYyVjbGG2J+o8kW8yIq9DWiuHih0xF/4mLWXvV8jmERpDifnoYdr1KrOHqBFy3RSC
- tk5Y8IS2+UMyaK9q2jgfSPQynu8SGRAxzvlH6a9quT1odKzNsxbIJZ4K05wBIIVB3Gk6zvl2V
- XU5roBWYrAR7zw5xAzZxo+LlHPKL8+I+sxg09R0KDlWFlWPTOTwCfuGgcvd9li1w72E8pO2D9
- h5AoTym78JKPCS/XBattrKrXDNxWUsNhhJ0uiPkMuVafPel2oxD+lghGTc6GE+T32a71yIXiA
- YtC53K5Tm2uR5j0dmqXUi9nvIOtKhQRl9OEL/WhFvaluCc2NF7IAcw3KogMEcGWuFEvJJ4qcR
- Pl+haqEKHh708fbZyRQfPu8yDJZTxPheSDmOZkgflGF6hRklJ25bvvxQmFGAa9vID0vvX6ij4
- VxVCJJe5Ns5VptVwbbbIJy5ZfcptsMK1j7BtvT0VDwOn/8RgntYPByHsMsc6lPZuAwyA3x+Cn
- ixvQUZUCId6tBJCBlhaakvhcGVergkOOSVn+dsQcZbFkbMM+QRh3U2uldv/mKKkH4djVwRQpp
- JD8EHu7UGyItm0iN1cRRCJtn/cdanQscBwQRzuO26qVOp27Guq7AIn8LCPEhOLsjCweVHRQCG
- niJ6QiUfjuc3y5+egOzgOSOWxBktK7zB19QoDle81LjRz4njn7U9dS6AvOo+13u2gu7TOQ760
- zSZjPiEIBP7m02IusqJMD622oH7F8TjBwNQxc0UKoppdEQsqd8F+bv32+fR8l8575h1YbEuNS
- Q4DoCfjrOwvEuVZDou/1b5b1aEgWuK9gQ9gBQVP7Tc9S0qo7cQcUSOGVzyfjyjDaFPq/kOFhL
- PgegdZDvPtt2s+bnkVyqVwVMOvz5lPg0ccPRu96unD5Mlm8odgTUrBGX3LCX7bqOD50TXDc1R
- c6O2P7aiCxAlcX9FmqMaYVbWUBhiMuNWjT4mm3nxo0NB3Nl2DoH5RmdilUzLhItHJ1/+0lQcE
- +wmd9s/cZ/ItJZFW1
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fSQkFQE/W9w=:ZWejvBXNg5xft6J5wnpJac
+ VDhhL9IJ7Pin6I4EPyt1gURfyfbptpVJcGfHJdfws3PP2Jyccm94PKShpQgBIwjA/NBsu54xt
+ YhBfVDRbdEWqsZs5tmiErelLJP9qmL9ZztVuTqUTpQy8BnnCohzL3KWpi7MDzhbWVSG9+RuQN
+ PqFI1LvbbLgBXw54JBBkskfzvsqD9n2Svw4nzgUWNboHVwu30bPfHLW29eYWP430GNcf08xa3
+ yKc7wwlwC2fzrQsa64dVYznbSfmFCUixkRnpsDAQ6GXVWW/8pbwlMlvKEoCxvmfgvCIzDrEQ5
+ MZtKaO2FI87Xw4lxcX0y4/zbelglRjnsAZGMz8ImCuzgx9dNZ41PHUOm7ynay1mTpCJpLgzeZ
+ NzFxZKapgWrUwZTqxfzrjEeSbgypVs44w7/bGujRrfbZFVSrqP8PQDqiSNIpN0HWYmudRY7z/
+ HYhXKB8xx1OZQCl97TOpiDMzZhrTRk5UBT8oa/cWDQzWl38H8ZsAZ/fAtUgAhc/Cm2nR4Mlf0
+ Hl1EUC4NYow2uUIO5lvFKmb3TJWlO+I0dATzjQJZ7yLjkic03hPMfhpZyMcISV7deBEBfatNf
+ ly3ZPhdBs4LuNy0ZStO99FfBUnG0eUVBRRE1v3VBVnyC+HOsoU4rpXJR1qCTLTovicbHIT3nK
+ U1/fwQxeka6vC39P5mHyQ6Z3kyhQBX3KQBZgogo9LEy+mvn+POmft4eUR/IX1vsCWvp6m0BlO
+ pCso8pYTXi345NvykPwFu6BEEQ38ocXGaIRJ1Ou/1S430YBJl3OZ1Ts8YA5LRyRxIBxIgBIGn
+ TOdlDpd2+jFChmJMrdj0MnGv0O7t8vzyohXpoUDnyiono1VDCB7yiGMsMCAkROdjO6H5j5tHL
+ d/09xbzcBFKarDu0v0xeThRaaHDaUAuW+f3qnwqp5ecMaE30qOAbphcFyeOld6/aMI8TkAvNq
+ ezZGGFofFUfaZ0amT0QnPnvT5RUvKZCGa7d9z4TbANXbGaM1Y6kcRnTpLgLbE9/FHMKBkL6en
+ oLtdPfWDI6Xc6ofxpZoix6HK70UsmIe9mbLJeaTM5P3Ssy/+9hed5nBHkqGm4ajl65k8zZRoZ
+ 2HMNo9iiloTmMj9GDRSoaMDfFxzyklcnwHaOVlk/6jL2h1p0ZMXreDrtDZlbqJzdkDaC5n5S4
+ wOxfH5GDXLTFbHvJOF8waKgRVEAjVfFwjI+hodgmQyWB5orZtQNIDL3jYNiWC6eGe3uX8qz2A
+ 6YY4cm2NYj+kA23uL
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---eRtJSFbw+EEWtPj3
+--d01dLTUuW90fS44H
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Sun, Jun 21, 2020 at 02:11:06AM +0200, Alexandre Belloni wrote:
-> On 21/06/2020 00:42:19+0200, Jonathan Neusch=C3=A4fer wrote:
-> > With this driver, mainline Linux can keep its time and date in sync with
-> > the vendor kernel.
+On Tue, Jun 30, 2020 at 10:14:47PM +0200, Andreas Kemnade wrote:
+> On Tue, 30 Jun 2020 09:15:23 +0200
+> Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
+>=20
+> > On Tue, Jun 30, 2020 at 08:40:51AM +0200, Andreas Kemnade wrote:
+> > [...]
+> > > got a chance to test it on a Tolino Shine 2 HD.
+> > > It uses the RTC from the RC5T619 but backlight seems to go via MSP430
+> > > EC.
+> > >=20
+> > > I got this.
+> > >=20
+> > > [    1.453603] ntxec 0-0043: Netronix embedded controller version f11=
+0 detected.
+> > > [   10.723638] ntxec-rtc 21a0000.i2c:embedded-controller@43:rtc: regi=
+stered as rtc0
+> > > [   10.775276] ntxec-pwm: probe of 21a0000.i2c:embedded-controller@43=
+:pwm failed with error -5 =20
 > >=20
-> > Advanced functionality like alarm and automatic power-on is not yet
-> > supported.
+> > Hmm, -EIO from the PWM driver.
 > >=20
->=20
-> Please report the results of rtctest (from the kernel tree) [...]
+> turing debugging on:
 
-  # ./rtctest
-  [=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D] Running 7 tests from 2 test cases.
-  [ RUN      ] rtc.date_read
-  ../../tools/testing/selftests/rtc/rtctest.c:49:date_read:Current RTC date=
-/time is 11/04/2006 23:11:23.
-  [       OK ] rtc.date_read
-  [ RUN      ] rtc.uie_read
-  [  180.651355] random: crng init done
-  uie_read: Test terminated by timeout
-  [     FAIL ] rtc.uie_read
-  [ RUN      ] rtc.uie_select
-  ../../tools/testing/selftests/rtc/rtctest.c:98:uie_select:Expected 0 (0) =
-!=3D rc (0)
-  uie_select: Test terminated by assertion
-  [     FAIL ] rtc.uie_select
-  [ RUN      ] rtc.alarm_alm_set
-  ../../tools/testing/selftests/rtc/rtctest.c:129:alarm_alm_set:skip alarms=
- are not supported.
-  [       OK ] rtc.alarm_alm_set
-  [ RUN      ] rtc.alarm_wkalm_set
-  ../../tools/testing/selftests/rtc/rtctest.c:185:alarm_wkalm_set:skip alar=
-ms are not supported.
-  [       OK ] rtc.alarm_wkalm_set
-  [ RUN      ] rtc.alarm_alm_set_minute
-  ../../tools/testing/selftests/rtc/rtctest.c:231:alarm_alm_set_minute:skip=
- alarms are not supported.
-  [       OK ] rtc.alarm_alm_set_minute
-  [ RUN      ] rtc.alarm_wkalm_set_minute
-  ../../tools/testing/selftests/rtc/rtctest.c:287:alarm_wkalm_set_minute:sk=
-ip alarms are not supported.
-  [       OK ] rtc.alarm_wkalm_set_minute
-  [=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D] 5 / 7 tests passed.
-  [  FAILED  ]
+(edited for compactness:)
+> [  330.332971] i2c i2c-0: write slave address: addr=3D0x86   ACK received
+> [  330.334420] i2c i2c-0: write byte: B0=3D0xA3              ACK received
+> [  330.334790] i2c i2c-0: write byte: B1=3D0x0               No ACK
 
-> [...] and rtc-range
-> (https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/rtc-tools.git/t=
-ree/rtc-range.c)
+> [  330.352339] i2c i2c-0: write slave address: addr=3D0x86   ACK received
+> [  330.362208] i2c i2c-0: write byte: B0=3D0xA1              ACK received
+> [  330.362479] i2c i2c-0: write byte: B1=3D0xFF              No ACK
 
-  # ./rtc-range
- =20
-  Testing 1970-01-01 00:00:00.
-  KO  Read back 2226-01-01 00:01:00.
- =20
-  Testing 2000-02-28 23:59:59.
-  KO  Read back 2000-02-28 23:28:23.
- =20
-  Testing 2020-02-28 23:59:59.
-  KO  Read back 2020-02-28 23:28:23.
- =20
-  Testing 2038-01-19 03:14:07.
-  KO  Read back 2038-01-19 03:19:03.
- =20
-  Testing 2069-12-31 23:59:59.
-  KO  Read back 2069-12-31 23:31:23.
- =20
-  Testing 2079-12-31 23:59:59.
-  KO  Read back 2079-12-31 23:31:23.
- =20
-  Testing 2099-12-31 23:59:59.
-  KO  Read back 2099-12-31 23:31:23.
- =20
-  Testing 2255-12-31 23:59:59.
-  KO  Read back 2255-12-31 23:31:23.
- =20
-  Testing 2100-02-28 23:59:59.
-  KO  Read back 2100-02-28 23:28:23.
- =20
-  Testing 2106-02-07 06:28:15.
-  KO  Read back 2106-02-07 06:07:06.
- =20
-  Testing 2262-04-11 23:47:16.
-  KO  Read back 2006-04-11 23:11:23.
+> [  330.363112] i2c i2c-0: write slave address: addr=3D0x86   ACK received
+> [  330.363362] i2c i2c-0: write byte: B0=3D0xA2              ACK received
+> [  330.363608] i2c i2c-0: write byte: B1=3D0xFF              No ACK
+
+Hmm, it doesn't ack the writes to 0xA3, 0xA1 and 0xA2, which should
+disable the PWM output and then disable the auto-off timer (according to
+the vendor kernel).
+
+And you said in your other mail that you can actually toggle the light
+with writes to 0xA3, so I suspect a bug in the EC firmware here (which
+may have gone unnoticed because the vendor kernel doesn't check if the
+i2c transfers succeed). :/
+
+IMHO we should get this driver merged first, and perhaps add a quirk to
+deal with the missing ACKs later (unless a better solution is found).
 
 
-Something is very wrong here.
+Jonathan
 
-I'll try to fix the failures in rtctest and the problems in rtc-range
-before version 2 of the patchset.
-
-(The 2255 date was my addition, because I suspect this to be the upper
-limit of the RTC's range.)
-
-
-[...]
-> > +config RTC_DRV_NTXEC
-> > +	tristate "Netronix embedded controller RTC driver"
-> > +	depends on MFD_NTXEC
-> > +
->=20
-> This should get an help section.
-
-Ok, I'll add one.
-
-
-[...]
-> > +#include <linux/rtc.h>
-> > +#include <linux/mfd/ntxec.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/types.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_device.h>
->=20
-> Please sort the includes.
-
-Will do.
-
-
-[...]
-> > +	rtcdev =3D devm_rtc_device_register(&pdev->dev, "ntxec-rtc",
-> > +					  &ntxec_rtc_ops, THIS_MODULE);
->=20
-> Please use devm_rtc_allocate_device and rtc_register_device. Also, set
-> the supported range (->range_min and ->range_max).
-
-Ok, will do.
-
-
-Thanks for the review and the testing tips.
-Jonathan Neusch=C3=A4fer
-
---eRtJSFbw+EEWtPj3
+--d01dLTUuW90fS44H
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl8A1yAACgkQCDBEmo7z
-X9tNnA/9H+BT9wwk5LCwgYRQGaCp/1zm7d962UhBAu5F59rAP2Ho8ioQNoJcCc0/
-xwAaeJYaRm7iOWjVdlL0wfnv8kJRDjYs4ml0arpTPFW4dmz4+zvFoZfIVIlUHy+1
-t/cY1k/KCTXqAXUmyVMMZ6b3Q7/mwjKYLQV2nRgW3sHiBoQI2q6cV69XQZM1JVo0
-NV+m7HGvL5AmPZGjLmbSC8PiOMlS35Tm6v0IKrYXHt3ASOF7ukMqTMT3+1aRCrzs
-zqtZHJdUfGA3DpkZTiLK+m8t5L4t6qsiyd+QX9jFg1KaSXapVF5nV+wNYgdebcqQ
-UqeA5ylgENA6WaYv5N8xl1MO6UZhYiH5Qw/mJZ0rG4pyf0Ad6nZJxd+l8eWseMFX
-LCOtTqRIKC6Oa2sKPUI/TN56GafA1cK+ZHljn/FjpI5CUQfHlcAz/QEkACPIs1S8
-WtMdsBfP3cjqGPapGbknlBi8KGnyL/qFj42PCOApXdNOczJAXMRfvvXYHfdnVxUx
-9pw9oAc06PijFOB72FUMYA3U2aiNz5Qk+zMmmsTFDAnRJmsnFc8hhooewHn4Ha3I
-AiJVhLvGrzVlSS8Yq7O2jm1SsRYKAO93YctBIxMfRJvd2a+72++4X7oPc1qKxCkQ
-U5YIMEbe4JyTCq0Bj6rbOd1k4+36LVMRT/jyGg7DK66PUgfB2dI=
-=jCx0
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl8A7VcACgkQCDBEmo7z
+X9vtUBAApZaMG6edUQzNMvP9gVMXHNm96Rk1KQowxkW4xF6zOnil/x4PcUwgqfKV
+tA1xaZMavflayrHqj1wKuLPWnrJ1xdulK/PnULdnXalCJSVqGHjwyKf3/+onibzr
+o6rS+U9ToxbkTeTdV8DjcGz2qmNeJjpaExuZTlvXHQxH7a6SUwK23JVuiChwe2M3
+ycD3RQp/jvAOEW4+e/y6iGat1skMV+dUglcitX6pYBoYu8u4FoSfZ3v/O6JTqqS3
+IeLfBc0IMjGuYbEn+RRkHbnLTNidHt+ptsNl6Q+p7eaRGCeGXIaCeeFPbBp1LXMf
+C559niYKdWD+MQV6diLUHGMO5s4WrQiQ/qP4K+R9qQHKXyD84XYPXJX+QO+up2qb
+jDyutjtILNt5YFUKNbvimcWy/rlDa1sdVaFK8Dt9o0zdkT25FATE8SU0eRFwf396
+vqwWeGF2b9mNRPzWzbpQYhEDvIR+OCuDfi085F0sYtBuPBY1vcy4mbVDjDGU0ulT
+T90dH/DU7C7DJwA7w6sxeb+8MZ5VGTHLsGZ+tB84pMaKJOlvTdRLD7J1+aUpqBmh
+BiSTJlIZeiiR04ip4vNYgsuHM79LlEapJuhJbYLMk3oBWtRAkrToyZEjWTDfp3Ik
+JzLHmXz38TYOeGG7A2vWQTIQb1eAw9Alh4Gu2OdzWW0fmR8NWCI=
+=5RFu
 -----END PGP SIGNATURE-----
 
---eRtJSFbw+EEWtPj3--
+--d01dLTUuW90fS44H--
