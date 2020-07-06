@@ -2,31 +2,31 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41CBA215D8F
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Jul 2020 19:57:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2C16215D9C
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Jul 2020 19:58:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729751AbgGFR5j (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Jul 2020 13:57:39 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:37877 "EHLO
+        id S1729786AbgGFR5u (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Jul 2020 13:57:50 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:44823 "EHLO
         ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729741AbgGFR5j (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Jul 2020 13:57:39 -0400
+        with ESMTP id S1729632AbgGFR5k (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Jul 2020 13:57:40 -0400
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id EFC0C23068;
-        Mon,  6 Jul 2020 19:57:36 +0200 (CEST)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id A1DB423076;
+        Mon,  6 Jul 2020 19:57:37 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1594058257;
+        t=1594058258;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=McyLerbYDTMc0xi5ah8PbveqbubtEMh5NcDYySStluU=;
-        b=k7ecYdoQCTfL167kVbu2PoEuZbRTsxtSYe9Api92GRLrYfxVIp5veb44R2oBwkeETYvYfG
-        /Fw3KIGyydmMdaF3OHKQt4AglYdctbnnORl7fKGwR+0EgWI6Pd/kDz3f8sq0qcsvMGXEnr
-        W64koF572L6hG0QrU5Tja2ibeBQwa4k=
+        bh=uaJTib0El6RuCqem4ff+qm2uIBnrMR78QamdeJxxetg=;
+        b=PI1rsLYwJehgdpqwbXSJvkqoSb4GMDxGR1x7/ZwKjFv8gBuqW1sw/K2jh96pWheyBUBBrg
+        ZEkesL1gLIHlvrwSJRW81iIJ2x8Vqqq7vTbQM+KNsdKlE9jHY2pU4/gftpIl3hW3d0xua2
+        dNR72mAuUB33kOJTaVcn40vms8emoE8=
 From:   Michael Walle <michael@walle.cc>
 To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
@@ -49,9 +49,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Michael Walle <michael@walle.cc>
-Subject: [PATCH v5 11/13] arm64: dts: freescale: sl28: map GPIOs to input events
-Date:   Mon,  6 Jul 2020 19:53:51 +0200
-Message-Id: <20200706175353.16404-12-michael@walle.cc>
+Subject: [PATCH v5 12/13] arm64: dts: freescale: sl28: enable LED support
+Date:   Mon,  6 Jul 2020 19:53:52 +0200
+Message-Id: <20200706175353.16404-13-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200706175353.16404-1-michael@walle.cc>
 References: <20200706175353.16404-1-michael@walle.cc>
@@ -63,11 +63,12 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Now that we have support for GPIO lines of the SMARC connector, map the
-sleep, power and lid switch signals to the corresponding keys using the
-gpio-keys and gpio-keys-polled drivers. The power and sleep signals have
-dedicated interrupts, thus we use these ones. The lid switch is just
-mapped to a GPIO input and needs polling.
+Now that we have support for GPIO lines of the SMARC connector, enable
+LED support on the KBox A-230-LS. There are two LEDs without fixed
+functions, one is yellow and one is green. Unfortunately, it is just one
+multi-color LED, thus while it is possible to enable both at the same
+time it is hard to tell the difference between "yellow only" and "yellow
+and green".
 
 Signed-off-by: Michael Walle <michael@walle.cc>
 ---
@@ -77,59 +78,34 @@ Changes since v4:
 Changes since v3:
  - see cover letter
 
- .../freescale/fsl-ls1028a-kontron-sl28.dts    | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ .../fsl-ls1028a-kontron-kbox-a-230-ls.dts          | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
-index 8712fe82727b..c4fd99efdbba 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
-@@ -9,6 +9,8 @@
- /dts-v1/;
- #include "fsl-ls1028a.dtsi"
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
- 
- / {
- 	model = "Kontron SMARC-sAL28";
-@@ -23,6 +25,36 @@
- 		spi1 = &dspi2;
- 	};
- 
-+	buttons0 {
-+		compatible = "gpio-keys";
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
+index 4b4cc6a1573d..49cf4fe05c80 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
+@@ -16,6 +16,20 @@
+ 	model = "Kontron KBox A-230-LS";
+ 	compatible = "kontron,kbox-a-230-ls", "kontron,sl28-var4",
+ 		     "kontron,sl28", "fsl,ls1028a";
 +
-+		power-button {
-+			interrupts-extended = <&sl28cpld_intc
-+					       4 IRQ_TYPE_EDGE_BOTH>;
-+			linux,code = <KEY_POWER>;
-+			label = "Power";
++	leds {
++		compatible = "gpio-leds";
++
++		user_yellow {
++			label = "s1914:yellow:user";
++			gpios = <&sl28cpld_gpio0 0 0>;
 +		};
 +
-+		sleep-button {
-+			interrupts-extended = <&sl28cpld_intc
-+					       5 IRQ_TYPE_EDGE_BOTH>;
-+			linux,code = <KEY_SLEEP>;
-+			label = "Sleep";
++		user_green {
++			label = "s1914:green:user";
++			gpios = <&sl28cpld_gpio1 3 0>;
 +		};
 +	};
-+
-+	buttons1 {
-+		compatible = "gpio-keys-polled";
-+		poll-interval = <200>;
-+
-+		lid-switch {
-+			linux,input-type = <EV_SW>;
-+			linux,code = <SW_LID>;
-+			gpios = <&sl28cpld_gpio3 4 GPIO_ACTIVE_LOW>;
-+			label = "Lid";
-+		};
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
+ };
+ 
+ &enetc_mdio_pf3 {
 -- 
 2.20.1
 
