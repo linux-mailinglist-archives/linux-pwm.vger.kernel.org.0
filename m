@@ -2,34 +2,31 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CBD58215DC0
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Jul 2020 19:58:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4845215DA7
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Jul 2020 19:58:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729828AbgGFR6O (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Jul 2020 13:58:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729718AbgGFR5g (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Jul 2020 13:57:36 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BED75C061794;
-        Mon,  6 Jul 2020 10:57:35 -0700 (PDT)
+        id S1729797AbgGFR55 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Jul 2020 13:57:57 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:41113 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729717AbgGFR5i (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Jul 2020 13:57:38 -0400
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id ABF0622FEB;
-        Mon,  6 Jul 2020 19:57:33 +0200 (CEST)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 8026422FEC;
+        Mon,  6 Jul 2020 19:57:34 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1594058254;
+        t=1594058255;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=NHl1Tc7aOvXirXfgGGWl8EwtNqd6E5CLj8vfFb2yY3g=;
-        b=mg771PBZKgAHlINc3ltwnUEF7MXmdgIPYHHgwI0osEyyLpUzsoJxvAXAb+FeW6RHvIYWXb
-        9a67BNfhvj4ssNhnZ1GemB9gehM/gtRNXj9lHcSZTcA0IyNyl/FTMbEayzJeTqq3Fo2vDW
-        JpfZhOvjf2ql4v6LAMokTblogcFgusA=
+        bh=N/9SGWmUu71Nb2Tl05GmgY408Hfm6ZeSiQCcUW7vyKE=;
+        b=eXR/RyP0wDh2XogZhjnhCg3C7YT7znw6Bk9a3eIwdsNNgnXlJ0A/Et8vnQqGojLZ4iquov
+        rdT4FMsageiqTrgSRrUPrSspqfS6S6s0BPLlIc6ULsoMVawsPcQCZlE/JVFG6eSpvFbXLc
+        x/D+XHCnxQ3SSeN+ANEyoRAnns0Z45U=
 From:   Michael Walle <michael@walle.cc>
 To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
@@ -52,9 +49,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Michael Walle <michael@walle.cc>
-Subject: [PATCH v5 07/13] pwm: add support for sl28cpld PWM controller
-Date:   Mon,  6 Jul 2020 19:53:47 +0200
-Message-Id: <20200706175353.16404-8-michael@walle.cc>
+Subject: [PATCH v5 08/13] gpio: add support for the sl28cpld GPIO controller
+Date:   Mon,  6 Jul 2020 19:53:48 +0200
+Message-Id: <20200706175353.16404-9-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200706175353.16404-1-michael@walle.cc>
 References: <20200706175353.16404-1-michael@walle.cc>
@@ -66,263 +63,235 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add support for the PWM controller of the sl28cpld board management
-controller. This is part of a multi-function device driver.
+Add support for the GPIO controller of the sl28 board management
+controller. This driver is part of a multi-function device.
 
-The controller has one PWM channel and can just generate four distinct
-frequencies.
+A controller has 8 lines. There are three different flavors:
+full-featured GPIO with interrupt support, input-only and output-only.
 
 Signed-off-by: Michael Walle <michael@walle.cc>
 ---
 Changes since v4:
  - update copyright year
  - remove #include <linux/of_device.h>, suggested by Andy.
- - make the pwm mode table look nicer, suggested by Lee.
- - use dev_get_drvdata(chip->dev) instead of container_of(), suggested by
-   Lee.
- - use whole sentence in comments, suggested by Lee.
- - renamed the local "struct sl28cpld_pwm" variable to "priv" everywhere,
-   suggested by Lee.
- - use pwm_{get,set}_relative_duty_cycle(), suggested by Andy.
- - make the comment about the 250Hz hardware limitation clearer
- - don't use "if (ret < 0)", but only "if (ret)", suggested by Andy.
- - don't use KBUID_MODNAME
- - remove comma in terminator line of the compatible strings list
+ - use device_get_match_data(), suggested by Andy.
+ - drop the irq_support variable, instead call _init_irq() directly,
+   suggested by Andy.
+ - also move the irq code a bit around to make it look nicer
+ - drop "struct sl28cpld_gpio". We don't need to actually store the
+   irq_chip and irq_chip_data, everything is device resource managed.
+ - use 100 chars line limit, suggested by Andy.
  - remove the platform device table
+ - don't use KBUID_MODNAME
 
 Changes since v3:
  - see cover letter
 
- drivers/pwm/Kconfig        |  10 ++
- drivers/pwm/Makefile       |   1 +
- drivers/pwm/pwm-sl28cpld.c | 187 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 198 insertions(+)
- create mode 100644 drivers/pwm/pwm-sl28cpld.c
+ drivers/gpio/Kconfig         |  11 +++
+ drivers/gpio/Makefile        |   1 +
+ drivers/gpio/gpio-sl28cpld.c | 161 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 173 insertions(+)
+ create mode 100644 drivers/gpio/gpio-sl28cpld.c
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 7dbcf6973d33..a0d50d70c3b9 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -428,6 +428,16 @@ config PWM_SIFIVE
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-sifive.
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 05e0801c6a78..f67df2b02de4 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1215,6 +1215,17 @@ config GPIO_RC5T583
+ 	  This driver provides the support for driving/reading the gpio pins
+ 	  of RC5T583 device through standard gpio library.
  
-+config PWM_SL28CPLD
-+	tristate "Kontron sl28cpld PWM support"
++config GPIO_SL28CPLD
++	tristate "Kontron sl28cpld GPIO support"
 +	select MFD_SIMPLE_MFD_I2C
++	select GPIO_REGMAP
++	select GPIOLIB_IRQCHIP
 +	help
-+	  Generic PWM framework driver for board management controller
-+	  found on the Kontron sl28 CPLD.
++	  This enables support for the GPIOs found on the Kontron sl28 CPLD.
 +
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-sl28cpld.
++	  This driver can also be built as a module. If so, the module will be
++	  called gpio-sl28cpld.
 +
- config PWM_SPEAR
- 	tristate "STMicroelectronics SPEAr PWM support"
- 	depends on PLAT_SPEAR || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 2c2ba0a03557..cbdcd55d69ee 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -40,6 +40,7 @@ obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
- obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
- obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
- obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
-+obj-$(CONFIG_PWM_SL28CPLD)	+= pwm-sl28cpld.o
- obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
- obj-$(CONFIG_PWM_SPRD)		+= pwm-sprd.o
- obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
-diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
+ config GPIO_STMPE
+ 	bool "STMPE GPIOs"
+ 	depends on MFD_STMPE
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index ef666cfef9d0..cb8ed4463265 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -131,6 +131,7 @@ obj-$(CONFIG_GPIO_SCH311X)		+= gpio-sch311x.o
+ obj-$(CONFIG_GPIO_SCH)			+= gpio-sch.o
+ obj-$(CONFIG_GPIO_SIFIVE)		+= gpio-sifive.o
+ obj-$(CONFIG_GPIO_SIOX)			+= gpio-siox.o
++obj-$(CONFIG_GPIO_SL28CPLD)		+= gpio-sl28cpld.o
+ obj-$(CONFIG_GPIO_SODAVILLE)		+= gpio-sodaville.o
+ obj-$(CONFIG_GPIO_SPEAR_SPICS)		+= gpio-spear-spics.o
+ obj-$(CONFIG_GPIO_SPRD)			+= gpio-sprd.o
+diff --git a/drivers/gpio/gpio-sl28cpld.c b/drivers/gpio/gpio-sl28cpld.c
 new file mode 100644
-index 000000000000..8ee286b605bf
+index 000000000000..889b8f5622c2
 --- /dev/null
-+++ b/drivers/pwm/pwm-sl28cpld.c
-@@ -0,0 +1,187 @@
++++ b/drivers/gpio/gpio-sl28cpld.c
+@@ -0,0 +1,161 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * sl28cpld PWM driver
++ * sl28cpld GPIO driver
 + *
-+ * Copyright 2020 Kontron Europe GmbH
++ * Copyright 2020 Michael Walle <michael@walle.cc>
 + */
 +
-+#include <linux/bitfield.h>
++#include <linux/device.h>
++#include <linux/gpio/driver.h>
++#include <linux/gpio/regmap.h>
++#include <linux/interrupt.h>
 +#include <linux/kernel.h>
 +#include <linux/mod_devicetable.h>
 +#include <linux/module.h>
 +#include <linux/platform_device.h>
-+#include <linux/pwm.h>
 +#include <linux/regmap.h>
 +
-+/*
-+ * PWM timer block registers.
-+ */
-+#define PWM_CTRL		0x00
-+#define   PWM_ENABLE		BIT(7)
-+#define   PWM_MODE_250HZ	0
-+#define   PWM_MODE_500HZ	1
-+#define   PWM_MODE_1KHZ		2
-+#define   PWM_MODE_2KHZ		3
-+#define   PWM_MODE_MASK		GENMASK(1, 0)
-+#define PWM_CYCLE		0x01
-+#define   PWM_CYCLE_MAX		0x7f
++/* GPIO flavor */
++#define GPIO_REG_DIR	0x00
++#define GPIO_REG_OUT	0x01
++#define GPIO_REG_IN	0x02
++#define GPIO_REG_IE	0x03
++#define GPIO_REG_IP	0x04
 +
-+struct sl28cpld_pwm {
-+	struct pwm_chip pwm_chip;
-+	struct regmap *regmap;
-+	u32 offset;
++/* input-only flavor */
++#define GPI_REG_IN	0x00
++
++/* output-only flavor */
++#define GPO_REG_OUT	0x00
++
++enum sl28cpld_gpio_type {
++	SL28CPLD_GPIO = 1,
++	SL28CPLD_GPI,
++	SL28CPLD_GPO,
 +};
 +
-+struct sl28cpld_pwm_periods {
-+	u8 ctrl;
-+	unsigned long duty_cycle;
++static const struct regmap_irq sl28cpld_gpio_irqs[] = {
++	REGMAP_IRQ_REG_LINE(0, 8),
++	REGMAP_IRQ_REG_LINE(1, 8),
++	REGMAP_IRQ_REG_LINE(2, 8),
++	REGMAP_IRQ_REG_LINE(3, 8),
++	REGMAP_IRQ_REG_LINE(4, 8),
++	REGMAP_IRQ_REG_LINE(5, 8),
++	REGMAP_IRQ_REG_LINE(6, 8),
++	REGMAP_IRQ_REG_LINE(7, 8),
 +};
 +
-+struct sl28cpld_pwm_config {
-+	unsigned long period_ns;
-+	u8 max_duty_cycle;
-+};
-+
-+static struct sl28cpld_pwm_config sl28cpld_pwm_config[] = {
-+	[PWM_MODE_250HZ] = { .period_ns = 4000000, .max_duty_cycle = 0x80 },
-+	[PWM_MODE_500HZ] = { .period_ns = 2000000, .max_duty_cycle = 0x40 },
-+	[PWM_MODE_1KHZ]  = { .period_ns = 1000000, .max_duty_cycle = 0x20 },
-+	[PWM_MODE_2KHZ]  = { .period_ns =  500000, .max_duty_cycle = 0x10 },
-+};
-+
-+static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
-+				   struct pwm_device *pwm,
-+				   struct pwm_state *state)
++static int sl28cpld_gpio_irq_init(struct platform_device *pdev,
++				  unsigned int base,
++				  struct gpio_regmap_config *config)
 +{
-+	struct sl28cpld_pwm *priv = dev_get_drvdata(chip->dev);
-+	static struct sl28cpld_pwm_config *config;
-+	unsigned int reg;
-+	unsigned int mode;
++	struct regmap_irq_chip_data *irq_data;
++	struct regmap_irq_chip *irq_chip;
++	struct device *dev = &pdev->dev;
++	int irq, ret;
 +
-+	regmap_read(priv->regmap, priv->offset + PWM_CTRL, &reg);
++	if (!device_property_read_bool(dev, "interrupt-controller"))
++		return 0;
 +
-+	state->enabled = reg & PWM_ENABLE;
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0)
++		return irq;
 +
-+	mode = FIELD_GET(PWM_MODE_MASK, reg);
-+	config = &sl28cpld_pwm_config[mode];
-+	state->period = config->period_ns;
++	irq_chip = devm_kzalloc(dev, sizeof(*irq_chip), GFP_KERNEL);
++	if (!irq_chip)
++		return -ENOMEM;
 +
-+	regmap_read(priv->regmap, priv->offset + PWM_CYCLE, &reg);
-+	pwm_set_relative_duty_cycle(state, reg, config->max_duty_cycle);
-+}
++	irq_chip->name = "sl28cpld-gpio-irq",
++	irq_chip->irqs = sl28cpld_gpio_irqs;
++	irq_chip->num_irqs = ARRAY_SIZE(sl28cpld_gpio_irqs);
++	irq_chip->num_regs = 1;
++	irq_chip->status_base = base + GPIO_REG_IP;
++	irq_chip->mask_base = base + GPIO_REG_IE;
++	irq_chip->mask_invert = true,
++	irq_chip->ack_base = base + GPIO_REG_IP;
 +
-+static int sl28cpld_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      const struct pwm_state *state)
-+{
-+	struct sl28cpld_pwm *priv = dev_get_drvdata(chip->dev);
-+	struct sl28cpld_pwm_config *config;
-+	unsigned int cycle;
-+	int ret;
-+	int mode;
-+	u8 ctrl;
-+
-+	/* Get the configuration by comparing the period */
-+	for (mode = 0; mode < ARRAY_SIZE(sl28cpld_pwm_config); mode++) {
-+		config = &sl28cpld_pwm_config[mode];
-+		if (state->period == config->period_ns)
-+			break;
-+	}
-+
-+	if (mode == ARRAY_SIZE(sl28cpld_pwm_config))
-+		return -EINVAL;
-+
-+	ctrl = FIELD_PREP(PWM_MODE_MASK, mode);
-+	if (state->enabled)
-+		ctrl |= PWM_ENABLE;
-+
-+	cycle = pwm_get_relative_duty_cycle(state, config->max_duty_cycle);
-+
-+	/*
-+	 * The hardware doesn't allow to set max_duty_cycle if the
-+	 * 250Hz mode is enabled, thus we have to trap that here.
-+	 * But because a 100% duty cycle is equal on all modes, i.e.
-+	 * it is just a "all-high" output, we trap any case with a
-+	 * 100% duty cycle and use the 500Hz mode.
-+	 */
-+	if (cycle == config->max_duty_cycle) {
-+		ctrl &= ~PWM_MODE_MASK;
-+		ctrl |= FIELD_PREP(PWM_MODE_MASK, PWM_MODE_500HZ);
-+		cycle = PWM_CYCLE_MAX;
-+	}
-+
-+	ret = regmap_write(priv->regmap, priv->offset + PWM_CTRL, ctrl);
++	ret = devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev),
++					      config->regmap, irq,
++					      IRQF_SHARED | IRQF_ONESHOT,
++					      0, irq_chip, &irq_data);
 +	if (ret)
 +		return ret;
 +
-+	return regmap_write(priv->regmap, priv->offset + PWM_CYCLE, (u8)cycle);
++	config->irq_domain = regmap_irq_get_domain(irq_data);
++
++	return 0;
 +}
 +
-+static const struct pwm_ops sl28cpld_pwm_ops = {
-+	.apply = sl28cpld_pwm_apply,
-+	.get_state = sl28cpld_pwm_get_state,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int sl28cpld_pwm_probe(struct platform_device *pdev)
++static int sl28cpld_gpio_probe(struct platform_device *pdev)
 +{
-+	struct sl28cpld_pwm *priv;
-+	struct pwm_chip *chip;
++	struct gpio_regmap_config config = {0};
++	enum sl28cpld_gpio_type type;
++	struct regmap *regmap;
++	u32 base;
 +	int ret;
 +
 +	if (!pdev->dev.parent)
 +		return -ENODEV;
 +
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!priv->regmap)
++	type = (uintptr_t)device_get_match_data(&pdev->dev);
++	if (!type)
 +		return -ENODEV;
 +
-+	ret = device_property_read_u32(&pdev->dev, "reg", &priv->offset);
++	ret = device_property_read_u32(&pdev->dev, "reg", &base);
 +	if (ret)
 +		return -EINVAL;
 +
-+	/* Initialize the pwm_chip structure */
-+	chip = &priv->pwm_chip;
-+	chip->dev = &pdev->dev;
-+	chip->ops = &sl28cpld_pwm_ops;
-+	chip->base = -1;
-+	chip->npwm = 1;
++	regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	if (!regmap)
++		return -ENODEV;
 +
-+	ret = pwmchip_add(&priv->pwm_chip);
-+	if (ret)
-+		return ret;
++	config.regmap = regmap;
++	config.parent = &pdev->dev;
++	config.ngpio = 8;
 +
-+	platform_set_drvdata(pdev, priv);
++	switch (type) {
++	case SL28CPLD_GPIO:
++		config.reg_dat_base = base + GPIO_REG_IN;
++		config.reg_set_base = base + GPIO_REG_OUT;
++		/* reg_dir_out_base might be zero */
++		config.reg_dir_out_base = GPIO_REGMAP_ADDR(base + GPIO_REG_DIR);
 +
-+	return 0;
++		/* This type supports interrupts */
++		ret = sl28cpld_gpio_irq_init(pdev, base, &config);
++		if (ret)
++			return ret;
++		break;
++	case SL28CPLD_GPO:
++		config.reg_set_base = base + GPO_REG_OUT;
++		break;
++	case SL28CPLD_GPI:
++		config.reg_dat_base = base + GPI_REG_IN;
++		break;
++	default:
++		dev_err(&pdev->dev, "unknown type %d\n", type);
++		return -ENODEV;
++	}
++
++	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(&pdev->dev, &config));
 +}
 +
-+static int sl28cpld_pwm_remove(struct platform_device *pdev)
-+{
-+	struct sl28cpld_pwm *priv = platform_get_drvdata(pdev);
-+
-+	return pwmchip_remove(&priv->pwm_chip);
-+}
-+
-+static const struct of_device_id sl28cpld_pwm_of_match[] = {
-+	{ .compatible = "kontron,sl28cpld-pwm" },
++static const struct of_device_id sl28cpld_gpio_of_match[] = {
++	{ .compatible = "kontron,sl28cpld-gpio", .data = (void *)SL28CPLD_GPIO },
++	{ .compatible = "kontron,sl28cpld-gpi", .data = (void *)SL28CPLD_GPI },
++	{ .compatible = "kontron,sl28cpld-gpo", .data = (void *)SL28CPLD_GPO },
 +	{}
 +};
-+MODULE_DEVICE_TABLE(of, sl28cpld_pwm_of_match);
++MODULE_DEVICE_TABLE(of, sl28cpld_gpio_of_match);
 +
-+static struct platform_driver sl28cpld_pwm_driver = {
-+	.probe = sl28cpld_pwm_probe,
-+	.remove	= sl28cpld_pwm_remove,
++static struct platform_driver sl28cpld_gpio_driver = {
++	.probe = sl28cpld_gpio_probe,
 +	.driver = {
-+		.name = "sl28cpld-pwm",
-+		.of_match_table = sl28cpld_pwm_of_match,
++		.name = "sl28cpld-gpio",
++		.of_match_table = sl28cpld_gpio_of_match,
 +	},
 +};
-+module_platform_driver(sl28cpld_pwm_driver);
++module_platform_driver(sl28cpld_gpio_driver);
 +
-+MODULE_DESCRIPTION("sl28cpld PWM Driver");
++MODULE_DESCRIPTION("sl28cpld GPIO Driver");
 +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
 +MODULE_LICENSE("GPL");
 -- 
