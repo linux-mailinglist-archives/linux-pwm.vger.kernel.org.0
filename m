@@ -2,31 +2,31 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2C16215D9C
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Jul 2020 19:58:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E83F5215D98
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Jul 2020 19:58:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729786AbgGFR5u (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Jul 2020 13:57:50 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:44823 "EHLO
+        id S1729768AbgGFR5m (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Jul 2020 13:57:42 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:44029 "EHLO
         ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729632AbgGFR5k (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Jul 2020 13:57:40 -0400
+        with ESMTP id S1729746AbgGFR5l (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Jul 2020 13:57:41 -0400
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id A1DB423076;
-        Mon,  6 Jul 2020 19:57:37 +0200 (CEST)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 575C223078;
+        Mon,  6 Jul 2020 19:57:38 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
         t=1594058258;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=uaJTib0El6RuCqem4ff+qm2uIBnrMR78QamdeJxxetg=;
-        b=PI1rsLYwJehgdpqwbXSJvkqoSb4GMDxGR1x7/ZwKjFv8gBuqW1sw/K2jh96pWheyBUBBrg
-        ZEkesL1gLIHlvrwSJRW81iIJ2x8Vqqq7vTbQM+KNsdKlE9jHY2pU4/gftpIl3hW3d0xua2
-        dNR72mAuUB33kOJTaVcn40vms8emoE8=
+        bh=c5LF50IP0lsdbsBcvX/jwWXNVBRMCu+k4mhHhigwj2o=;
+        b=VeiNdRNCumveFMkOVh5JNpW6CruwMpZaitMljx4kAz+pf8jWPy9hDyd06U3fiysDvRuGFV
+        BbUZB534Xnufy/LDDGmNDpaTVvD3VQLMYgWuWY9u6gVIaotXmrdlXo83e6zDnVQLCZFk0K
+        r6etfy1jd5BbY6oPWCRYpr4P4QkN468=
 From:   Michael Walle <michael@walle.cc>
 To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
@@ -49,9 +49,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Michael Walle <michael@walle.cc>
-Subject: [PATCH v5 12/13] arm64: dts: freescale: sl28: enable LED support
-Date:   Mon,  6 Jul 2020 19:53:52 +0200
-Message-Id: <20200706175353.16404-13-michael@walle.cc>
+Subject: [PATCH v5 13/13] arm64: dts: freescale: sl28: enable fan support
+Date:   Mon,  6 Jul 2020 19:53:53 +0200
+Message-Id: <20200706175353.16404-14-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200706175353.16404-1-michael@walle.cc>
 References: <20200706175353.16404-1-michael@walle.cc>
@@ -63,12 +63,8 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Now that we have support for GPIO lines of the SMARC connector, enable
-LED support on the KBox A-230-LS. There are two LEDs without fixed
-functions, one is yellow and one is green. Unfortunately, it is just one
-multi-color LED, thus while it is possible to enable both at the same
-time it is hard to tell the difference between "yellow only" and "yellow
-and green".
+Add a pwm-fan mapped to the PWM channel 0 which is connected to the
+fan connector of the carrier.
 
 Signed-off-by: Michael Walle <michael@walle.cc>
 ---
@@ -78,34 +74,29 @@ Changes since v4:
 Changes since v3:
  - see cover letter
 
- .../fsl-ls1028a-kontron-kbox-a-230-ls.dts          | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ .../dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
-index 4b4cc6a1573d..49cf4fe05c80 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
-@@ -16,6 +16,20 @@
- 	model = "Kontron KBox A-230-LS";
- 	compatible = "kontron,kbox-a-230-ls", "kontron,sl28-var4",
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts
+index 0973a6a45217..c45d7b40e374 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts
+@@ -15,6 +15,15 @@
+ 	compatible = "kontron,sl28-var3-ads2", "kontron,sl28-var3",
  		     "kontron,sl28", "fsl,ls1028a";
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		user_yellow {
-+			label = "s1914:yellow:user";
-+			gpios = <&sl28cpld_gpio0 0 0>;
-+		};
-+
-+		user_green {
-+			label = "s1914:green:user";
-+			gpios = <&sl28cpld_gpio1 3 0>;
-+		};
-+	};
- };
  
- &enetc_mdio_pf3 {
++	pwm-fan {
++		compatible = "pwm-fan";
++		cooling-min-state = <0>;
++		cooling-max-state = <3>;
++		#cooling-cells = <2>;
++		pwms = <&sl28cpld_pwm0 0 4000000>;
++		cooling-levels = <1 128 192 255>;
++	};
++
+ 	sound {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
 -- 
 2.20.1
 
