@@ -2,31 +2,34 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B4845215DA7
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Jul 2020 19:58:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C74F2215DB4
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Jul 2020 19:58:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbgGFR55 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Jul 2020 13:57:57 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:41113 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729717AbgGFR5i (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Jul 2020 13:57:38 -0400
+        id S1729717AbgGFR6G (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Jul 2020 13:58:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729736AbgGFR5h (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Jul 2020 13:57:37 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE46C08C5DF;
+        Mon,  6 Jul 2020 10:57:37 -0700 (PDT)
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 8026422FEC;
-        Mon,  6 Jul 2020 19:57:34 +0200 (CEST)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 53CA422FF5;
+        Mon,  6 Jul 2020 19:57:35 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
         t=1594058255;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=N/9SGWmUu71Nb2Tl05GmgY408Hfm6ZeSiQCcUW7vyKE=;
-        b=eXR/RyP0wDh2XogZhjnhCg3C7YT7znw6Bk9a3eIwdsNNgnXlJ0A/Et8vnQqGojLZ4iquov
-        rdT4FMsageiqTrgSRrUPrSspqfS6S6s0BPLlIc6ULsoMVawsPcQCZlE/JVFG6eSpvFbXLc
-        x/D+XHCnxQ3SSeN+ANEyoRAnns0Z45U=
+        bh=abigKT6vSoaCMmMVX8Selgz0p7omR+PZcfHMX9L+UUY=;
+        b=JzMmkf0hey+rDNTuM8obE3gQFAr8q2EV2nPz2nsXhJPswtaH30VTzwUDr3Gp+tI2bFnLdD
+        yenNAOtiodX+M6PL50G63PCrNzrtyh3l+2Cl6vjPBYu2dyVH0ai/M8D5/sU+W11qLLaT9V
+        n39X+hV+/MgUBk+Pazakn8kURTu9mhQ=
 From:   Michael Walle <michael@walle.cc>
 To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
@@ -49,9 +52,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Michael Walle <michael@walle.cc>
-Subject: [PATCH v5 08/13] gpio: add support for the sl28cpld GPIO controller
-Date:   Mon,  6 Jul 2020 19:53:48 +0200
-Message-Id: <20200706175353.16404-9-michael@walle.cc>
+Subject: [PATCH v5 09/13] hwmon: add support for the sl28cpld hardware monitoring controller
+Date:   Mon,  6 Jul 2020 19:53:49 +0200
+Message-Id: <20200706175353.16404-10-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200706175353.16404-1-michael@walle.cc>
 References: <20200706175353.16404-1-michael@walle.cc>
@@ -63,235 +66,264 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add support for the GPIO controller of the sl28 board management
-controller. This driver is part of a multi-function device.
-
-A controller has 8 lines. There are three different flavors:
-full-featured GPIO with interrupt support, input-only and output-only.
+Add support for the hardware monitoring controller of the sl28cpld board
+management controller. This driver is part of a multi-function device.
 
 Signed-off-by: Michael Walle <michael@walle.cc>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 ---
 Changes since v4:
  - update copyright year
  - remove #include <linux/of_device.h>, suggested by Andy.
- - use device_get_match_data(), suggested by Andy.
- - drop the irq_support variable, instead call _init_irq() directly,
-   suggested by Andy.
- - also move the irq code a bit around to make it look nicer
- - drop "struct sl28cpld_gpio". We don't need to actually store the
-   irq_chip and irq_chip_data, everything is device resource managed.
- - use 100 chars line limit, suggested by Andy.
+ - use PTR_ERR_OR_ZERO(), suggested by Andy.
  - remove the platform device table
  - don't use KBUID_MODNAME
 
 Changes since v3:
  - see cover letter
 
- drivers/gpio/Kconfig         |  11 +++
- drivers/gpio/Makefile        |   1 +
- drivers/gpio/gpio-sl28cpld.c | 161 +++++++++++++++++++++++++++++++++++
- 3 files changed, 173 insertions(+)
- create mode 100644 drivers/gpio/gpio-sl28cpld.c
+ Documentation/hwmon/index.rst    |   1 +
+ Documentation/hwmon/sl28cpld.rst |  36 ++++++++
+ drivers/hwmon/Kconfig            |  10 +++
+ drivers/hwmon/Makefile           |   1 +
+ drivers/hwmon/sl28cpld-hwmon.c   | 142 +++++++++++++++++++++++++++++++
+ 5 files changed, 190 insertions(+)
+ create mode 100644 Documentation/hwmon/sl28cpld.rst
+ create mode 100644 drivers/hwmon/sl28cpld-hwmon.c
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 05e0801c6a78..f67df2b02de4 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1215,6 +1215,17 @@ config GPIO_RC5T583
- 	  This driver provides the support for driving/reading the gpio pins
- 	  of RC5T583 device through standard gpio library.
- 
-+config GPIO_SL28CPLD
-+	tristate "Kontron sl28cpld GPIO support"
-+	select MFD_SIMPLE_MFD_I2C
-+	select GPIO_REGMAP
-+	select GPIOLIB_IRQCHIP
-+	help
-+	  This enables support for the GPIOs found on the Kontron sl28 CPLD.
-+
-+	  This driver can also be built as a module. If so, the module will be
-+	  called gpio-sl28cpld.
-+
- config GPIO_STMPE
- 	bool "STMPE GPIOs"
- 	depends on MFD_STMPE
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index ef666cfef9d0..cb8ed4463265 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -131,6 +131,7 @@ obj-$(CONFIG_GPIO_SCH311X)		+= gpio-sch311x.o
- obj-$(CONFIG_GPIO_SCH)			+= gpio-sch.o
- obj-$(CONFIG_GPIO_SIFIVE)		+= gpio-sifive.o
- obj-$(CONFIG_GPIO_SIOX)			+= gpio-siox.o
-+obj-$(CONFIG_GPIO_SL28CPLD)		+= gpio-sl28cpld.o
- obj-$(CONFIG_GPIO_SODAVILLE)		+= gpio-sodaville.o
- obj-$(CONFIG_GPIO_SPEAR_SPICS)		+= gpio-spear-spics.o
- obj-$(CONFIG_GPIO_SPRD)			+= gpio-sprd.o
-diff --git a/drivers/gpio/gpio-sl28cpld.c b/drivers/gpio/gpio-sl28cpld.c
+diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+index 55ff4b7c5349..1f4beb7449c7 100644
+--- a/Documentation/hwmon/index.rst
++++ b/Documentation/hwmon/index.rst
+@@ -153,6 +153,7 @@ Hardware Monitoring Kernel Drivers
+    sht3x
+    shtc1
+    sis5595
++   sl28cpld
+    smm665
+    smsc47b397
+    smsc47m192
+diff --git a/Documentation/hwmon/sl28cpld.rst b/Documentation/hwmon/sl28cpld.rst
 new file mode 100644
-index 000000000000..889b8f5622c2
+index 000000000000..7ed65f78250c
 --- /dev/null
-+++ b/drivers/gpio/gpio-sl28cpld.c
-@@ -0,0 +1,161 @@
++++ b/Documentation/hwmon/sl28cpld.rst
+@@ -0,0 +1,36 @@
++.. SPDX-License-Identifier: GPL-2.0-only
++
++Kernel driver sl28cpld
++======================
++
++Supported chips:
++
++   * Kontron sl28cpld
++
++     Prefix: 'sl28cpld'
++
++     Datasheet: not available
++
++Authors: Michael Walle <michael@walle.cc>
++
++Description
++-----------
++
++The sl28cpld is a board management controller which also exposes a hardware
++monitoring controller. At the moment this controller supports a single fan
++supervisor. In the future there might be other flavours and additional
++hardware monitoring might be supported.
++
++The fan supervisor has a 7 bit counter register and a counter period of 1
++second. If the 7 bit counter overflows, the supervisor will automatically
++switch to x8 mode to support a wider input range at the loss of
++granularity.
++
++Sysfs entries
++-------------
++
++The following attributes are supported.
++
++======================= ========================================================
++fan1_input		Fan RPM. Assuming 2 pulses per revolution.
++======================= ========================================================
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index 288ae9f63588..af2823f09bd1 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -1459,6 +1459,16 @@ config SENSORS_RASPBERRYPI_HWMON
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called raspberrypi-hwmon.
+ 
++config SENSORS_SL28CPLD
++	tristate "Kontron sl28cpld hardware monitoring driver"
++	select MFD_SIMPLE_MFD_I2C
++	help
++	  If you say yes here you get support for the fan supervisor of the
++	  sl28cpld board management controller.
++
++	  This driver can also be built as a module.  If so, the module
++	  will be called sl28cpld-hwmon.
++
+ config SENSORS_SHT15
+ 	tristate "Sensiron humidity and temperature sensors. SHT15 and compat."
+ 	depends on GPIOLIB || COMPILE_TEST
+diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+index 3e32c21f5efe..03822f6bf970 100644
+--- a/drivers/hwmon/Makefile
++++ b/drivers/hwmon/Makefile
+@@ -158,6 +158,7 @@ obj-$(CONFIG_SENSORS_S3C)	+= s3c-hwmon.o
+ obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
+ obj-$(CONFIG_SENSORS_SCH5627)	+= sch5627.o
+ obj-$(CONFIG_SENSORS_SCH5636)	+= sch5636.o
++obj-$(CONFIG_SENSORS_SL28CPLD)	+= sl28cpld-hwmon.o
+ obj-$(CONFIG_SENSORS_SHT15)	+= sht15.o
+ obj-$(CONFIG_SENSORS_SHT21)	+= sht21.o
+ obj-$(CONFIG_SENSORS_SHT3x)	+= sht3x.o
+diff --git a/drivers/hwmon/sl28cpld-hwmon.c b/drivers/hwmon/sl28cpld-hwmon.c
+new file mode 100644
+index 000000000000..e48f58ec5b9c
+--- /dev/null
++++ b/drivers/hwmon/sl28cpld-hwmon.c
+@@ -0,0 +1,142 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * sl28cpld GPIO driver
++ * sl28cpld hardware monitoring driver
 + *
-+ * Copyright 2020 Michael Walle <michael@walle.cc>
++ * Copyright 2020 Kontron Europe GmbH
 + */
 +
-+#include <linux/device.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/gpio/regmap.h>
-+#include <linux/interrupt.h>
++#include <linux/bitfield.h>
++#include <linux/hwmon.h>
 +#include <linux/kernel.h>
 +#include <linux/mod_devicetable.h>
 +#include <linux/module.h>
 +#include <linux/platform_device.h>
++#include <linux/property.h>
 +#include <linux/regmap.h>
 +
-+/* GPIO flavor */
-+#define GPIO_REG_DIR	0x00
-+#define GPIO_REG_OUT	0x01
-+#define GPIO_REG_IN	0x02
-+#define GPIO_REG_IE	0x03
-+#define GPIO_REG_IP	0x04
++#define FAN_INPUT		0x00
++#define   FAN_SCALE_X8		BIT(7)
++#define   FAN_VALUE_MASK	GENMASK(6, 0)
 +
-+/* input-only flavor */
-+#define GPI_REG_IN	0x00
-+
-+/* output-only flavor */
-+#define GPO_REG_OUT	0x00
-+
-+enum sl28cpld_gpio_type {
-+	SL28CPLD_GPIO = 1,
-+	SL28CPLD_GPI,
-+	SL28CPLD_GPO,
++struct sl28cpld_hwmon {
++	struct regmap *regmap;
++	u32 offset;
 +};
 +
-+static const struct regmap_irq sl28cpld_gpio_irqs[] = {
-+	REGMAP_IRQ_REG_LINE(0, 8),
-+	REGMAP_IRQ_REG_LINE(1, 8),
-+	REGMAP_IRQ_REG_LINE(2, 8),
-+	REGMAP_IRQ_REG_LINE(3, 8),
-+	REGMAP_IRQ_REG_LINE(4, 8),
-+	REGMAP_IRQ_REG_LINE(5, 8),
-+	REGMAP_IRQ_REG_LINE(6, 8),
-+	REGMAP_IRQ_REG_LINE(7, 8),
-+};
-+
-+static int sl28cpld_gpio_irq_init(struct platform_device *pdev,
-+				  unsigned int base,
-+				  struct gpio_regmap_config *config)
++static umode_t sl28cpld_hwmon_is_visible(const void *data,
++					 enum hwmon_sensor_types type,
++					 u32 attr, int channel)
 +{
-+	struct regmap_irq_chip_data *irq_data;
-+	struct regmap_irq_chip *irq_chip;
-+	struct device *dev = &pdev->dev;
-+	int irq, ret;
++	return 0444;
++}
 +
-+	if (!device_property_read_bool(dev, "interrupt-controller"))
-+		return 0;
++static int sl28cpld_hwmon_read(struct device *dev,
++			       enum hwmon_sensor_types type, u32 attr,
++			       int channel, long *input)
++{
++	struct sl28cpld_hwmon *hwmon = dev_get_drvdata(dev);
++	unsigned int value;
++	int ret;
 +
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
++	switch (attr) {
++	case hwmon_fan_input:
++		ret = regmap_read(hwmon->regmap, hwmon->offset + FAN_INPUT,
++				  &value);
++		if (ret)
++			return ret;
++		/*
++		 * The register has a 7 bit value and 1 bit which indicates the
++		 * scale. If the MSB is set, then the lower 7 bit has to be
++		 * multiplied by 8, to get the correct reading.
++		 */
++		if (value & FAN_SCALE_X8)
++			value = FIELD_GET(FAN_VALUE_MASK, value) << 3;
 +
-+	irq_chip = devm_kzalloc(dev, sizeof(*irq_chip), GFP_KERNEL);
-+	if (!irq_chip)
-+		return -ENOMEM;
++		/*
++		 * The counter period is 1000ms and the sysfs specification
++		 * says we should asssume 2 pulses per revolution.
++		 */
++		value *= 60 / 2;
 +
-+	irq_chip->name = "sl28cpld-gpio-irq",
-+	irq_chip->irqs = sl28cpld_gpio_irqs;
-+	irq_chip->num_irqs = ARRAY_SIZE(sl28cpld_gpio_irqs);
-+	irq_chip->num_regs = 1;
-+	irq_chip->status_base = base + GPIO_REG_IP;
-+	irq_chip->mask_base = base + GPIO_REG_IE;
-+	irq_chip->mask_invert = true,
-+	irq_chip->ack_base = base + GPIO_REG_IP;
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
 +
-+	ret = devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev),
-+					      config->regmap, irq,
-+					      IRQF_SHARED | IRQF_ONESHOT,
-+					      0, irq_chip, &irq_data);
-+	if (ret)
-+		return ret;
-+
-+	config->irq_domain = regmap_irq_get_domain(irq_data);
-+
++	*input = value;
 +	return 0;
 +}
 +
-+static int sl28cpld_gpio_probe(struct platform_device *pdev)
++static const u32 sl28cpld_hwmon_fan_config[] = {
++	HWMON_F_INPUT,
++	0
++};
++
++static const struct hwmon_channel_info sl28cpld_hwmon_fan = {
++	.type = hwmon_fan,
++	.config = sl28cpld_hwmon_fan_config,
++};
++
++static const struct hwmon_channel_info *sl28cpld_hwmon_info[] = {
++	&sl28cpld_hwmon_fan,
++	NULL
++};
++
++static const struct hwmon_ops sl28cpld_hwmon_ops = {
++	.is_visible = sl28cpld_hwmon_is_visible,
++	.read = sl28cpld_hwmon_read,
++};
++
++static const struct hwmon_chip_info sl28cpld_hwmon_chip_info = {
++	.ops = &sl28cpld_hwmon_ops,
++	.info = sl28cpld_hwmon_info,
++};
++
++static int sl28cpld_hwmon_probe(struct platform_device *pdev)
 +{
-+	struct gpio_regmap_config config = {0};
-+	enum sl28cpld_gpio_type type;
-+	struct regmap *regmap;
-+	u32 base;
++	struct sl28cpld_hwmon *hwmon;
++	struct device *hwmon_dev;
 +	int ret;
 +
 +	if (!pdev->dev.parent)
 +		return -ENODEV;
 +
-+	type = (uintptr_t)device_get_match_data(&pdev->dev);
-+	if (!type)
++	hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
++	if (!hwmon)
++		return -ENOMEM;
++
++	hwmon->regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	if (!hwmon->regmap)
 +		return -ENODEV;
 +
-+	ret = device_property_read_u32(&pdev->dev, "reg", &base);
++	ret = device_property_read_u32(&pdev->dev, "reg", &hwmon->offset);
 +	if (ret)
 +		return -EINVAL;
 +
-+	regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!regmap)
-+		return -ENODEV;
++	hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
++				"sl28cpld_hwmon", hwmon,
++				&sl28cpld_hwmon_chip_info, NULL);
++	if (IS_ERR(hwmon_dev))
++		dev_err(&pdev->dev, "failed to register as hwmon device");
 +
-+	config.regmap = regmap;
-+	config.parent = &pdev->dev;
-+	config.ngpio = 8;
-+
-+	switch (type) {
-+	case SL28CPLD_GPIO:
-+		config.reg_dat_base = base + GPIO_REG_IN;
-+		config.reg_set_base = base + GPIO_REG_OUT;
-+		/* reg_dir_out_base might be zero */
-+		config.reg_dir_out_base = GPIO_REGMAP_ADDR(base + GPIO_REG_DIR);
-+
-+		/* This type supports interrupts */
-+		ret = sl28cpld_gpio_irq_init(pdev, base, &config);
-+		if (ret)
-+			return ret;
-+		break;
-+	case SL28CPLD_GPO:
-+		config.reg_set_base = base + GPO_REG_OUT;
-+		break;
-+	case SL28CPLD_GPI:
-+		config.reg_dat_base = base + GPI_REG_IN;
-+		break;
-+	default:
-+		dev_err(&pdev->dev, "unknown type %d\n", type);
-+		return -ENODEV;
-+	}
-+
-+	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(&pdev->dev, &config));
++	return PTR_ERR_OR_ZERO(hwmon_dev);
 +}
 +
-+static const struct of_device_id sl28cpld_gpio_of_match[] = {
-+	{ .compatible = "kontron,sl28cpld-gpio", .data = (void *)SL28CPLD_GPIO },
-+	{ .compatible = "kontron,sl28cpld-gpi", .data = (void *)SL28CPLD_GPI },
-+	{ .compatible = "kontron,sl28cpld-gpo", .data = (void *)SL28CPLD_GPO },
++static const struct of_device_id sl28cpld_hwmon_of_match[] = {
++	{ .compatible = "kontron,sl28cpld-fan" },
 +	{}
 +};
-+MODULE_DEVICE_TABLE(of, sl28cpld_gpio_of_match);
++MODULE_DEVICE_TABLE(of, sl28cpld_hwmon_of_match);
 +
-+static struct platform_driver sl28cpld_gpio_driver = {
-+	.probe = sl28cpld_gpio_probe,
++static struct platform_driver sl28cpld_hwmon_driver = {
++	.probe = sl28cpld_hwmon_probe,
 +	.driver = {
-+		.name = "sl28cpld-gpio",
-+		.of_match_table = sl28cpld_gpio_of_match,
++		.name = "sl28cpld-fan",
++		.of_match_table = sl28cpld_hwmon_of_match,
 +	},
 +};
-+module_platform_driver(sl28cpld_gpio_driver);
++module_platform_driver(sl28cpld_hwmon_driver);
 +
-+MODULE_DESCRIPTION("sl28cpld GPIO Driver");
++MODULE_DESCRIPTION("sl28cpld Hardware Monitoring Driver");
 +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
 +MODULE_LICENSE("GPL");
 -- 
