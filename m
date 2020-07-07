@@ -2,145 +2,172 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 43B6C2160CD
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Jul 2020 23:05:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFB042165EF
+	for <lists+linux-pwm@lfdr.de>; Tue,  7 Jul 2020 07:42:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgGFVF3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Jul 2020 17:05:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25768 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725860AbgGFVF2 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Jul 2020 17:05:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594069526;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=joj3ugB6R/6J+5A0HiLDzW8Xgi+NkTicU2Iuhf30mzk=;
-        b=QDhWnSXHkVrHin56tz9Yv0Ih8g/ngYa0UD5fYSpcxusPIem2dxv/VYoVUvJ5y6wLz1b1d7
-        Cr71b5LfNIgVWsvayoAzkMOvvG684RE4NdP9K1hBfDC/d1B1VhDOCuIQzhPpPxak0dQShF
-        qPavwX7i2OoIpMzNC/IcN3j+Zrgu5IE=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-462-adWKYAmxOyuEi1ufNXbX6g-1; Mon, 06 Jul 2020 17:05:23 -0400
-X-MC-Unique: adWKYAmxOyuEi1ufNXbX6g-1
-Received: by mail-ed1-f71.google.com with SMTP id x20so50867640edr.20
-        for <linux-pwm@vger.kernel.org>; Mon, 06 Jul 2020 14:05:23 -0700 (PDT)
+        id S1727120AbgGGFmW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 7 Jul 2020 01:42:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727928AbgGGFmV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 Jul 2020 01:42:21 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56A3FC061794
+        for <linux-pwm@vger.kernel.org>; Mon,  6 Jul 2020 22:42:21 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id a6so934058wmm.0
+        for <linux-pwm@vger.kernel.org>; Mon, 06 Jul 2020 22:42:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WHUZR2EXdhW5czPcHt04KOGgCe/6SbN/TGw1pfVyle4=;
+        b=aTHuMDpSIuntpboIlpD3+77prmvJYYBBCxxD8NinelcUFG+j+dj3KN9GoisfRWfdS5
+         8DT2xsmwMpRRwEGaZffv128mMoXufFWvGv/mGoFtuO8pHa5b2EaJRMF60gQCwpnnCuqf
+         wX8vfS3h5dhWybSyzG9dP/DbtH+U1M75DY9HY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=joj3ugB6R/6J+5A0HiLDzW8Xgi+NkTicU2Iuhf30mzk=;
-        b=r9Ts3pNizE82mJgCgPD07FHor1kX9G78xARfXEHwuBvSJud8s+teaoWu0ll0VMNcwC
-         t0WLKBHYWFZA1fGzdWHvxUKh1+liKSobCBsflS2/CQVTCNUQCZtV6iLVRs5xSZQzUBtg
-         GFbfyc4mHwWID7cbepy+riWfqMBefuICiPLHcsJSPYpkYZZcxIfLTtpqvYoZANaodl3W
-         1oxoLcYsH/lX9tyIepWUStKMs2btHf3OkhsAclU24iqyVJ4+46m6OSLkXkgR+QamMDOs
-         W3ySgWG1vSQukuOJ5r6CWEsL7p8ne+hWwkIV9+baWidJpCtE6eAcY33A488HGC3k6xQ7
-         U6vA==
-X-Gm-Message-State: AOAM532yOimlwnsYwx9ZDunxFLNjx2wJ0II4Q3E80+cfqFbzRiXyC9ov
-        4WZISX54YBTAdzdCwATCPHkQqCzIRuGLlxn6WRwePr2vv38zypu/7zQuy+v3US7N2PO9dMEWUkw
-        u81a/RHn+tbTMA9W6uQfJ
-X-Received: by 2002:a17:906:fa92:: with SMTP id lt18mr33000426ejb.534.1594069522020;
-        Mon, 06 Jul 2020 14:05:22 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyK9F8LwD6ImPYy5wRucrWx7eh1AqEMfwqNCkCL/l8TpHT/un27SnONteRcUHtIlD5wblFxWA==
-X-Received: by 2002:a17:906:fa92:: with SMTP id lt18mr33000405ejb.534.1594069521782;
-        Mon, 06 Jul 2020 14:05:21 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id y11sm16560013ejw.63.2020.07.06.14.05.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2020 14:05:21 -0700 (PDT)
-Subject: Re: [PATCH v3 11/15] pwm: crc: Implement get_state() method
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-pwm@vger.kernel.org,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org
-References: <20200620121758.14836-1-hdegoede@redhat.com>
- <20200620121758.14836-12-hdegoede@redhat.com>
- <20200622075730.lenaflptqnemagff@taurus.defre.kleine-koenig.org>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <59babd32-9421-0b31-187f-ceff7c003f54@redhat.com>
-Date:   Mon, 6 Jul 2020 23:05:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WHUZR2EXdhW5czPcHt04KOGgCe/6SbN/TGw1pfVyle4=;
+        b=g/7+R2PvwDUAzNGvObkK1ZpTuWl4qmKKSNMytP8IzVuZ6j6wLzx3ojrmDqtfp+z50v
+         hjbZuetbCJWXxpAGqs2XMsX3ZrrD288TMTDh/kEkBMl20LId+0WpUeRMUZ8q1WW5ueuW
+         0EiwjqIBbonDnJ/DoOi+vkgYIYJFQ0WcEnBIwANoIZ+Bmk9AS0Z1I1oKOqw+r8TjMDtU
+         +bZiDrh+4ffsFC0W6ieIfF22UhIrtn2c5US7R+jgpALcT5lnNJD0cmzkJ7OO0XC9peuW
+         GKl/E1XHSVl7cSsz9bL7yVu4SKRyK2FfcOdpL6wXYIqVT0Gt3ySdjR4A44HX1ILsS1cx
+         qOWQ==
+X-Gm-Message-State: AOAM5333g65SMReRokJM6BSP2Qjt1GG+11XrzzAFxgDNmuWttJh/+GcE
+        sK/O24tay+X72C0owC/bCYT1JQ==
+X-Google-Smtp-Source: ABdhPJxkzyQbd3f6f/x660/A1DZO543mIEmlw2oJzEFOVcvYB/zIx1BH7NEm8rYT7UByGGvzuOEFfw==
+X-Received: by 2002:a1c:3954:: with SMTP id g81mr2297120wma.73.1594100539918;
+        Mon, 06 Jul 2020 22:42:19 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id 65sm2051126wma.48.2020.07.06.22.42.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 22:42:19 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 07:42:16 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        patches@opensource.cirrus.com,
+        Support Opensource <support.opensource@diasemi.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v4 02/20] backlight: add backlight_is_blank()
+Message-ID: <20200707054216.GE3278063@phenom.ffwll.local>
+References: <20200703184546.144664-1-sam@ravnborg.org>
+ <20200703184546.144664-3-sam@ravnborg.org>
 MIME-Version: 1.0
-In-Reply-To: <20200622075730.lenaflptqnemagff@taurus.defre.kleine-koenig.org>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200703184546.144664-3-sam@ravnborg.org>
+X-Operating-System: Linux phenom 5.6.0-1-amd64 
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
+On Fri, Jul 03, 2020 at 08:45:28PM +0200, Sam Ravnborg wrote:
+> The backlight support has two properties that express the state:
+> - power
+> - state
 
-On 6/22/20 9:57 AM, Uwe Kleine-König wrote:
-> On Sat, Jun 20, 2020 at 02:17:54PM +0200, Hans de Goede wrote:
->> Implement the pwm_ops.get_state() method to complete the support for the
->> new atomic PWM API.
->>
->> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->> Changes in v3:
->> - Add Andy's Reviewed-by tag
->> - Remove extra whitespace to align some code after assignments (requested by
->>    Uwe Kleine-König)
->> ---
->>   drivers/pwm/pwm-crc.c | 29 +++++++++++++++++++++++++++++
->>   1 file changed, 29 insertions(+)
->>
->> diff --git a/drivers/pwm/pwm-crc.c b/drivers/pwm/pwm-crc.c
->> index 8a7f4707279c..b311354d40a3 100644
->> --- a/drivers/pwm/pwm-crc.c
->> +++ b/drivers/pwm/pwm-crc.c
->> @@ -119,8 +119,37 @@ static int crc_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->>   	return 0;
->>   }
->>   
->> +static void crc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->> +			       struct pwm_state *state)
->> +{
->> +	struct crystalcove_pwm *crc_pwm = to_crc_pwm(chip);
->> +	struct device *dev = crc_pwm->chip.dev;
->> +	unsigned int clk_div, clk_div_reg, duty_cycle_reg;
->> +	int error;
->> +
->> +	error = regmap_read(crc_pwm->regmap, PWM0_CLK_DIV, &clk_div_reg);
->> +	if (error) {
->> +		dev_err(dev, "Error reading PWM0_CLK_DIV %d\n", error);
->> +		return;
->> +	}
->> +
->> +	error = regmap_read(crc_pwm->regmap, PWM0_DUTY_CYCLE, &duty_cycle_reg);
->> +	if (error) {
->> +		dev_err(dev, "Error reading PWM0_DUTY_CYCLE %d\n", error);
->> +		return;
->> +	}
->> +
->> +	clk_div = (clk_div_reg & ~PWM_OUTPUT_ENABLE) + 1;
->> +
->> +	state->period = clk_div * NSEC_PER_USEC * 256 / PWM_BASE_CLK_MHZ;
->> +	state->duty_cycle = duty_cycle_reg * state->period / PWM_MAX_LEVEL;
+Tiny nit, but please add "fb_blank" here too, commit message doesn't match
+the code anymore. With that:
+
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+
 > 
-> Please round up here.
+> It is un-documented and easy to get wrong.
+> Add backlight_is_blank() helper to make it simpler
+> for drivers to get the check of the state correct.
+> 
+> A lot of drivers also includes checks for fb_blank.
+> This check is redundant when the state is checked
+> and thus not needed in this helper function.
+> But added anyway to avoid introducing subtle bugs
+> due to the creative use of fb_blank in some drivers.
+> Introducing this helper will for some drivers results in
+> added support for fb_blank. This will be a change in
+> functionality, which will improve the backlight driver.
+> 
+> Rolling out this helper to all relevant backlight drivers
+> will eliminate almost all accesses to fb_blank.
+> 
+> v4:
+>   - struct backlight_device * is now const
+> 
+> v3:
+>   - Clarified that the fb_blank support in
+>     backlight_is_blank() may result in functionality
+>     changes for the users (Emil)
+> 
+> v2:
+>   - Added fb_blank condition (Daniel)
+> 
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+> Cc: Emil Velikov <emil.l.velikov@gmail.com>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> ---
+>  include/linux/backlight.h | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/include/linux/backlight.h b/include/linux/backlight.h
+> index 56e4580d4f55..56e51ebab740 100644
+> --- a/include/linux/backlight.h
+> +++ b/include/linux/backlight.h
+> @@ -175,6 +175,25 @@ static inline void backlight_put(struct backlight_device *bd)
+>  		put_device(&bd->dev);
+>  }
+>  
+> +/**
+> + * backlight_is_blank - Return true if display is expected to be blank
+> + * @bd: the backlight device
+> + *
+> + * Display is expected to be blank if any of these is true::
+> + *
+> + *   1) if power in not UNBLANK
+> + *   2) if fb_blank is not UNBLANK
+> + *   3) if state indicate BLANK or SUSPENDED
+> + *
+> + * Returns true if display is expected to be blank, false otherwise.
+> + */
+> +static inline bool backlight_is_blank(const struct backlight_device *bd)
+> +{
+> +	return bd->props.power != FB_BLANK_UNBLANK ||
+> +	       bd->props.fb_blank != FB_BLANK_UNBLANK ||
+> +	       bd->props.state & (BL_CORE_SUSPENDED | BL_CORE_FBBLANK);
+> +}
+> +
+>  extern struct backlight_device *backlight_device_register(const char *name,
+>  	struct device *dev, void *devdata, const struct backlight_ops *ops,
+>  	const struct backlight_properties *props);
+> -- 
+> 2.25.1
+> 
 
-Ok, I can fix that for the next version of this patch-set. Before I
-post a new version of this patch-set, you have only responded to
-some of the PWM patches in this set. Do you have any remarks on the
-other PWM patches ?
-
-Regards,
-
-Hans
-
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
