@@ -2,116 +2,137 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5608C218F62
-	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jul 2020 19:59:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CB6B2191FB
+	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jul 2020 23:14:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725937AbgGHR7j (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 8 Jul 2020 13:59:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54590 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgGHR7h (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Jul 2020 13:59:37 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0A1BC061A0B;
-        Wed,  8 Jul 2020 10:59:36 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 8E52DBC0EE;
-        Wed,  8 Jul 2020 17:59:33 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        lee.jones@linaro.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] Replace HTTP links with HTTPS ones: PWM SUBSYSTEM
-Date:   Wed,  8 Jul 2020 19:59:24 +0200
-Message-Id: <20200708175924.15554-1-grandmaster@al2klimov.de>
+        id S1726065AbgGHVOm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 8 Jul 2020 17:14:42 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37483 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725915AbgGHVOm (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Jul 2020 17:14:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594242880;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=1RhdEjamtv4d5zxvXmjlDsO9oFtiIZCK461hvTVAcEw=;
+        b=VeVU7cO0YhHkFt/We77nG6+10x7IVkkAHbtFw7dxe3MuUFMG+tpRosPnSN7u/hIUK61Xth
+        w0vyvQF7+7vzHAm/G5sn4AxOD+fQ4Iwk+2F6hcEXej00WlrpXtfRrotQxnFG1b84u/uA5z
+        LemIqvTrXvs1FwDu8zL6IpcvjuUDi0g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-335-VKXkUGzSMLaTBQjmHYQklg-1; Wed, 08 Jul 2020 17:14:38 -0400
+X-MC-Unique: VKXkUGzSMLaTBQjmHYQklg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8CEE91005510;
+        Wed,  8 Jul 2020 21:14:36 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-112-5.ams2.redhat.com [10.36.112.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DE4B979220;
+        Wed,  8 Jul 2020 21:14:33 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-pwm@vger.kernel.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH v4 00/15] acpi/pwm/i915: Convert pwm-crc and i915 driver's PWM code to use the atomic PWM API
+Date:   Wed,  8 Jul 2020 23:14:16 +0200
+Message-Id: <20200708211432.28612-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Spam-Level: ******
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+Hi All,
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Here is v4 of my patch series converting the i915 driver's code for
+controlling the panel's backlight with an external PWM controller to
+use the atomic PWM API. See below for the changelog.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+Initially the plan was for this series to consist of 2 parts:
+1. convert the pwm-crc driver to support the atomic PWM API and
+2. convert the i915 driver's PWM code to use the atomic PWM API.
 
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+But during testing I've found a number of bugs in the pwm-lpss and I
+found that the acpi_lpss code needs some special handling because of
+some ugliness found in most Cherry Trail DSDTs.
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+So now this series has grown somewhat large and consists of 4 parts:
 
- If you apply the patch, please let me know.
+1. acpi_lpss fixes workarounds for Cherry Trail DSTD nastiness
+2. various fixes to the pwm-lpss driver
+3. convert the pwm-crc driver to support the atomic PWM API and
+4. convert the i915 driver's PWM code to use the atomic PWM API
 
+The involved acpi_lpss and pwm drivers do not see a whole lot of churn,
+so the plan is to merge this all through drm-intel-next-queued (dinq)
+once all the patches are reviewed / have acks.
 
- drivers/pwm/pwm-omap-dmtimer.c | 2 +-
- drivers/pwm/pwm-tiecap.c       | 2 +-
- drivers/pwm/pwm-tiehrpwm.c     | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+In v4 the ACPI patches have been Acked by Rafael and the i915 patches
+have been acked by Jani. So that just leaves the PWM patches.
 
-diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-index 0d31833db2e2..344c78f72051 100644
---- a/drivers/pwm/pwm-omap-dmtimer.c
-+++ b/drivers/pwm/pwm-omap-dmtimer.c
-@@ -14,7 +14,7 @@
-  *   with a timer counter that goes up. When it overflows it gets
-  *   reloaded with the load value and the pwm output goes up.
-  *   When counter matches with match register, the output goes down.
-- *   Reference Manual: http://www.ti.com/lit/ug/spruh73q/spruh73q.pdf
-+ *   Reference Manual: https://www.ti.com/lit/ug/spruh73q/spruh73q.pdf
-  *
-  * Limitations:
-  * - When PWM is stopped, timer counter gets stopped immediately. This
-diff --git a/drivers/pwm/pwm-tiecap.c b/drivers/pwm/pwm-tiecap.c
-index ab38c8203b79..683804c7d26c 100644
---- a/drivers/pwm/pwm-tiecap.c
-+++ b/drivers/pwm/pwm-tiecap.c
-@@ -2,7 +2,7 @@
- /*
-  * ECAP PWM driver
-  *
-- * Copyright (C) 2012 Texas Instruments, Inc. - http://www.ti.com/
-+ * Copyright (C) 2012 Texas Instruments, Inc. - https://www.ti.com/
-  */
- 
- #include <linux/module.h>
-diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-index 7b4c770ce9d6..0846917ff2d2 100644
---- a/drivers/pwm/pwm-tiehrpwm.c
-+++ b/drivers/pwm/pwm-tiehrpwm.c
-@@ -2,7 +2,7 @@
- /*
-  * EHRPWM PWM driver
-  *
-- * Copyright (C) 2012 Texas Instruments, Inc. - http://www.ti.com/
-+ * Copyright (C) 2012 Texas Instruments, Inc. - https://www.ti.com/
-  */
- 
- #include <linux/module.h>
--- 
-2.27.0
+Uwe can I get your ok / ack for merging this through the dinq branch
+once you have acked al the PWM patches ?
+
+This series has been tested (and re-tested after adding various bug-fixes)
+extensively. It has been tested on the following devices:
+
+-Asus T100TA  BYT + CRC-PMIC PWM
+-Toshiba WT8-A  BYT + CRC-PMIC PWM
+-Thundersoft TS178 BYT + CRC-PMIC PWM, inverse PWM
+-Asus T100HA  CHT + CRC-PMIC PWM
+-Terra Pad 1061  BYT + LPSS PWM
+-Trekstor Twin 10.1 BYT + LPSS PWM
+-Asus T101HA  CHT + CRC-PMIC PWM
+-GPD Pocket  CHT + CRC-PMIC PWM
+
+Changelog:
+
+Changes in v2:
+- Fix coverletter subject
+- Drop accidentally included debugging patch
+- "[PATCH v3 02/15] ACPI / LPSS: Save Cherry Trail PWM ctx registers only once (
+  - Move #define LPSS_SAVE_CTX_ONCE define to group it with LPSS_SAVE_CTX
+
+Changes in v3:
+- "[PATCH v3 04/15] pwm: lpss: Add range limit check for the base_unit register value"
+  - Use base_unit_range - 1 as maximum value for the clamp()
+- "[PATCH v3 05/15] pwm: lpss: Use pwm_lpss_apply() when restoring state on resume"
+  - This replaces the "pwm: lpss: Set SW_UPDATE bit when enabling the PWM"
+    patch from previous versions of this patch-set, which really was a hack
+    working around the resume issue which this patch fixes properly.
+- PATCH v3 6 - 11 pwm-crc changes:
+  - Various small changes resulting from the reviews by Andy and Uwe,
+    including some refactoring of the patches to reduce the amount of churn
+    in the patch-set
+
+Changes in v4:
+- "[PATCH v4 06/16] pwm: lpss: Correct get_state result for base_unit == 0"
+  - This is a new patch in v4 of this patchset
+- "[PATCH v4 12/16] pwm: crc: Implement get_state() method"
+  - Use DIV_ROUND_UP when calculating the period and duty_cycle values
+- "[PATCH v4 16/16] drm/i915: panel: Use atomic PWM API for devs with an external PWM controller"
+  - Add a note to the commit message about the changes in pwm_disable_backlight()
+  - Use the pwm_set/get_relative_duty_cycle() helpers
+
+Regards,
+
+Hans
 
