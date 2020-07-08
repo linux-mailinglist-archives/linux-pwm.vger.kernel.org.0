@@ -2,52 +2,52 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 32578218585
-	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jul 2020 13:06:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D11A9218588
+	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jul 2020 13:07:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgGHLGc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 8 Jul 2020 07:06:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46464 "EHLO
+        id S1728560AbgGHLHV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 8 Jul 2020 07:07:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728507AbgGHLGc (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Jul 2020 07:06:32 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F54AC08E6DC
-        for <linux-pwm@vger.kernel.org>; Wed,  8 Jul 2020 04:06:31 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a6so48472833wrm.4
-        for <linux-pwm@vger.kernel.org>; Wed, 08 Jul 2020 04:06:31 -0700 (PDT)
+        with ESMTP id S1728507AbgGHLHV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Jul 2020 07:07:21 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4ACFC08C5DC
+        for <linux-pwm@vger.kernel.org>; Wed,  8 Jul 2020 04:07:20 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id j18so2468306wmi.3
+        for <linux-pwm@vger.kernel.org>; Wed, 08 Jul 2020 04:07:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=ImpRCPSvgLqMxrUg0iAeiMjdkq4+obVp/Tu68Rhv9qc=;
-        b=dzg63SjeULrmJhDxL8oKzRPZhWxj3EwrGLCJkdfVGWK3+eDZAcBkKKcNi7FhyOsJmR
-         R0bT/qSyr/oLnAnTpD7VGWPScsbm6+Tvu71v7v+YL3pHIZnJEH3A1gD7B9DPbkjQ9wPR
-         ZzcMGiVya0YZHlGZ40/3T/tYDZLcEWW24sHvnyFrbnuxX379TdFv3OYzLjnU2h2OUCnx
-         0l0Y3bkv27deB8KlLWt6wUsz/Nd9Ts5UL+ztgChIt2H7ws+el4VzasVuk0iibQnmX8aZ
-         gcYagZ/ED1P+e07pyBdGwMf34U6BPCJvlmQknI7bsFa08ARh+Jtyxbm8EtYa4x9+npH2
-         EPfw==
+        bh=D3AIqKAC7WmKPj2+3TyOKcuKXPxkDzQZQxQTNoRIip4=;
+        b=Zsmq3p2O8CDTh2JBxYietiIf1X/JeoMYQfrO8bH/zhTk2c6c0q87B7jTQ9BJQ1SNMa
+         z4QbljZQhml4oeQzeuCYz7DDkaBgRHTYXOZOQcnUGFUzi+c9I+tz3DMV3/UAzF7uJs32
+         oI9Z4p8B0OX0UNk57Q0KPuXBcV49Ric7fC7RsA7rre4Huj7nMxAruJLkHmKPLaPADxFn
+         pT26/T2ODexcvcgUhBmfQCqlPuewJtjJzsGhkrwfUFitEL9qVoh5ZnkkzL/u8VoOs2gu
+         VlB/+zk/v0XCrbtzHBYOkBMtRTITtKml9qbjyF92TO0TGXdjvEe6ati1M8uda8lm+YkP
+         iq2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ImpRCPSvgLqMxrUg0iAeiMjdkq4+obVp/Tu68Rhv9qc=;
-        b=BrwmhuvBgfYSvs3vKGyiK6R+JYY7ypWU5EHyMH3ASqXRGy4BO9YD6x8M4URqUQNYJj
-         k59jLeSudh/1iIrkwhXvIZiBMJlAO1taIf/2caPUfXoz5Bb41DQ4xRh+QVwTJQQgNaXW
-         thQ6lTj5gcBLuP4FMK7bnXh70xHiDDg+rUNp17f7BbznCCTOwOB3xj8BBsqC5HF4Cnpx
-         KL1wI79Y3Bo5BAGullxcWmyMB9W7Rw+epRSc/bysl2uJYhJUMgmAuj8ZLxAR7SBb5BEQ
-         nfnvFiEdL23mPgzi/ez4umnDDC4p+kdRSpMHusR/XELsvApxETTCytKFB4spj3AxcHYj
-         HBQw==
-X-Gm-Message-State: AOAM5324m4qO5xHzRkwtjF+WjWFNdnYFcgkhzEvNq4NPT7QO4kIz8eRY
-        IMg+WuHfnnOiMM11QHthtop2LQ==
-X-Google-Smtp-Source: ABdhPJxi7daTZkwF42cpVndoj6tcyAW+kTFLSAwZxlk89Uel0hIhqGsVN4LZGU6LdRiIBXikdzafbw==
-X-Received: by 2002:adf:c542:: with SMTP id s2mr31759067wrf.132.1594206390255;
-        Wed, 08 Jul 2020 04:06:30 -0700 (PDT)
+        bh=D3AIqKAC7WmKPj2+3TyOKcuKXPxkDzQZQxQTNoRIip4=;
+        b=UIcSKytrL9y8eXyTWSHlco4+0XupJKbzYFh+3uBFQY+eN+juuCf79JkHPEkYrhw/kQ
+         wo8XwjOBNmDwgualxQDYsydMNwZwKbFDNBaX6NNqbUmy12NdDE+vCVwgStItCD9w9ItK
+         OmoBmkh7l7fORJIWekL79kojnX18pOHeKtc0U00QVXlVF3VJe/TJzaM4mQrBGfhhWOxn
+         wXHvYVwQatSbOJgsH2bM29OVcH/D1HvjHysID2l3MjxuTX+4aiWZfuvF/7rFc8414G0A
+         77eHyYdCfiOo/53ZAOB8qnkAuhL5gSvWKeILA8lVyx3vZh5L5cEXGNkSScFDm0xHfeut
+         qYVw==
+X-Gm-Message-State: AOAM533BLxW57rOj7aek+hBEpOSKPbOHhCwjHr3Ha9i3sV3lrp9+Imf8
+        d/E4iga0rdgSZ4gM1pEb+AlNUg==
+X-Google-Smtp-Source: ABdhPJyzUcSnzwndQ5uj4ZqTICfcftsD4XVNdp7Zn+6g19c8oHbGDWXjBfPfdP19gVRbBXXRQl119A==
+X-Received: by 2002:a7b:cf18:: with SMTP id l24mr8670972wmg.116.1594206439431;
+        Wed, 08 Jul 2020 04:07:19 -0700 (PDT)
 Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id c25sm5221919wml.46.2020.07.08.04.06.28
+        by smtp.gmail.com with ESMTPSA id 22sm6045568wmb.11.2020.07.08.04.07.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 04:06:29 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 12:06:27 +0100
+        Wed, 08 Jul 2020 04:07:18 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 12:07:16 +0100
 From:   Daniel Thompson <daniel.thompson@linaro.org>
 To:     Sam Ravnborg <sam@ravnborg.org>
 Cc:     dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>,
@@ -70,87 +70,29 @@ Cc:     dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>,
         Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v4 14/20] backlight: cr_bllcd: introduce
- backlight_is_blank()
-Message-ID: <20200708110627.z5ofexh4llk66jey@holly.lan>
+Subject: Re: [PATCH v4 15/20] backlight: gpio_backlight: simplify
+ update_status()
+Message-ID: <20200708110716.2ujel24lqjcudu5f@holly.lan>
 References: <20200703184546.144664-1-sam@ravnborg.org>
- <20200703184546.144664-15-sam@ravnborg.org>
+ <20200703184546.144664-16-sam@ravnborg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200703184546.144664-15-sam@ravnborg.org>
+In-Reply-To: <20200703184546.144664-16-sam@ravnborg.org>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 08:45:40PM +0200, Sam Ravnborg wrote:
-> The cr_bllcd uses the FB_BLANK states as brightness.
-> This results in brightness value equals 0 that turn on
-> the display and 4 that turn off the display.
-
-max_brightness is 0 which makes it impossible to set the brightness to
-4.
-
-
-> Simplify the logic but keep current behaviour
-> as userspace may expect brightness set to 0 to turn on the display.
-
-I don't deny the possibility but we'd be talking about a userspace
-custom enough to explicitly configure the module loader (otherwise
-the module wouldn't load and the backlight would be inherited from
-the BIOS) and that also contains an explicit write to the brightness
-property that sets it to what is already the default (and only
-possible) value.
-
-In other words I'm very sceptical such a userspace exists and would be
-happy to see this driver modified to use the new helpers and behave
-like gpio-backlight (which can be regarded as our reference 1-bit
-backlight driver).
-
-
-Daniel.
-
+On Fri, Jul 03, 2020 at 08:45:41PM +0200, Sam Ravnborg wrote:
+> Introduce the use of backlight_get_brightness() to simplify
+> the update_status() operation.
+> With the simpler implementation drop the gpio_backlight_get_next_brightness()
+> helper as it was now a one-liner.
 > 
 > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
 > Cc: Lee Jones <lee.jones@linaro.org>
 > Cc: Daniel Thompson <daniel.thompson@linaro.org>
 > Cc: Jingoo Han <jingoohan1@gmail.com>
-> ---
->  drivers/video/backlight/cr_bllcd.c | 14 ++++----------
->  1 file changed, 4 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/cr_bllcd.c b/drivers/video/backlight/cr_bllcd.c
-> index 4624b7b7c6a6..edca5fee9689 100644
-> --- a/drivers/video/backlight/cr_bllcd.c
-> +++ b/drivers/video/backlight/cr_bllcd.c
-> @@ -63,22 +63,16 @@ static int cr_backlight_set_intensity(struct backlight_device *bd)
->  	u32 addr = gpio_bar + CRVML_PANEL_PORT;
->  	u32 cur = inl(addr);
->  
-> -	if (bd->props.power == FB_BLANK_UNBLANK)
-> -		intensity = FB_BLANK_UNBLANK;
-> -	if (bd->props.fb_blank == FB_BLANK_UNBLANK)
-> -		intensity = FB_BLANK_UNBLANK;
-> -	if (bd->props.power == FB_BLANK_POWERDOWN)
-> -		intensity = FB_BLANK_POWERDOWN;
-> -	if (bd->props.fb_blank == FB_BLANK_POWERDOWN)
-> +	if (backlight_is_blank(bd))
->  		intensity = FB_BLANK_POWERDOWN;
->  
-> -	if (intensity == FB_BLANK_UNBLANK) { /* FULL ON */
-> +	if (intensity != FB_BLANK_POWERDOWN) { /* FULL ON */
->  		cur &= ~CRVML_BACKLIGHT_OFF;
->  		outl(cur, addr);
-> -	} else if (intensity == FB_BLANK_POWERDOWN) { /* OFF */
-> +	} else { /* OFF */
->  		cur |= CRVML_BACKLIGHT_OFF;
->  		outl(cur, addr);
-> -	} /* anything else, don't bother */
-> +	}
->  
->  	return 0;
->  }
-> -- 
-> 2.25.1
-> 
+
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
