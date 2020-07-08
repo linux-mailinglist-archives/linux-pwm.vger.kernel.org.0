@@ -2,37 +2,37 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 070D2219219
-	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jul 2020 23:15:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93618219210
+	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jul 2020 23:15:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbgGHVPI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 8 Jul 2020 17:15:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26406 "EHLO
+        id S1726171AbgGHVPD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 8 Jul 2020 17:15:03 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30796 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726187AbgGHVPI (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Jul 2020 17:15:08 -0400
+        with ESMTP id S1726169AbgGHVPC (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Jul 2020 17:15:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594242907;
+        s=mimecast20190719; t=1594242901;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=/dGCo/xXzz/hMUGVIpBuI4CpNY9zSoguT4eSJC9/WpQ=;
-        b=WL8UKZ9BiNhOguWOmBJZlnpKRs/khvWNBXjXzZRU4uzuP7anxP6GAwY10R2wfwqJIVAvMZ
-        0/kBYPK0SU/mvk5KZUDvQhh8lheJHEL9gzpfBWdWFuAc7LIZutCxvfThrSQyqEwmWiPKj3
-        e32CVTSNQbKn9ZSP12lc4Ym/qsXuYto=
+        bh=N/xQY2ndEh9mW9MwVPKpVHE1H/7u+wSTzv3ok3js0g0=;
+        b=FIS59O356rZPzBGo44428ZOcl9QMqbkuzFdnmVxkA4YD+RD0HSkD/bjYugmWYHN+rBuHhw
+        SyG9j/RNUexz36M5kVNmLPhi79W8OfU7KKoS95UQI3GKwT0QdGHDfXdFcuoGY7ZLihr3pN
+        nNfclLrLUf9XSVID72MkGBlmFcEakZw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-478-t1CZuCdVPDGVw2Klnw34nQ-1; Wed, 08 Jul 2020 17:14:55 -0400
-X-MC-Unique: t1CZuCdVPDGVw2Klnw34nQ-1
+ us-mta-273-19y8WGWLN02ld0J7Wx2r2A-1; Wed, 08 Jul 2020 17:14:58 -0400
+X-MC-Unique: 19y8WGWLN02ld0J7Wx2r2A-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B46B3E918;
-        Wed,  8 Jul 2020 21:14:53 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F8FC80BCA3;
+        Wed,  8 Jul 2020 21:14:56 +0000 (UTC)
 Received: from x1.localdomain.com (ovpn-112-5.ams2.redhat.com [10.36.112.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 26CD179220;
-        Wed,  8 Jul 2020 21:14:51 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 07380797F2;
+        Wed,  8 Jul 2020 21:14:53 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -50,13 +50,12 @@ Cc:     Hans de Goede <hdegoede@redhat.com>, linux-pwm@vger.kernel.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org
-Subject: [PATCH v4 06/16] pwm: lpss: Correct get_state result for base_unit == 0
-Date:   Wed,  8 Jul 2020 23:14:22 +0200
-Message-Id: <20200708211432.28612-7-hdegoede@redhat.com>
+Subject: [PATCH v4 07/16] pwm: crc: Fix period / duty_cycle times being off by a factor of 256
+Date:   Wed,  8 Jul 2020 23:14:23 +0200
+Message-Id: <20200708211432.28612-8-hdegoede@redhat.com>
 In-Reply-To: <20200708211432.28612-1-hdegoede@redhat.com>
 References: <20200708211432.28612-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-pwm-owner@vger.kernel.org
@@ -64,49 +63,71 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The datasheet specifies that programming the base_unit part of the
-ctrl register to 0 results in a contineous low signal.
+While looking into adding atomic-pwm support to the pwm-crc driver I
+noticed something odd, there is a PWM_BASE_CLK define of 6 MHz and
+there is a clock-divider which divides this with a value between 1-128,
+and there are 256 duty-cycle steps.
 
-Adjust the get_state method to reflect this by setting pwm_state.period
-to 1 and duty_cycle to 0.
+The pwm-crc code before this commit assumed that a clock-divider
+setting of 1 means that the PWM output is running at 6 MHZ, if that
+is true, where do these 256 duty-cycle steps come from?
 
-Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+This would require an internal frequency of 256 * 6 MHz = 1.5 GHz, that
+seems unlikely for a PMIC which is using a silicon process optimized for
+power-switching transistors. It is way more likely that there is an 8
+bit counter for the duty cycle which acts as an extra fixed divider
+wrt the PWM output frequency.
+
+The main user of the pwm-crc driver is the i915 GPU driver which uses it
+for backlight control. Lets compare the PWM register values set by the
+video-BIOS (the GOP), assuming the extra fixed divider is present versus
+the PWM frequency specified in the Video-BIOS-Tables:
+
+Device:		PWM Hz set by BIOS	PWM Hz specified in VBT
+Asus T100TA 	200			200
+Asus T100HA 	200			200
+Lenovo Miix 2 8	23437			20000
+Toshiba WT8-A	23437			20000
+
+So as we can see if we assume the extra division by 256 then the register
+values set by the GOP are an exact match for the VBT values, where as
+otherwise the values would be of by a factor of 256.
+
+This commit fixes the period / duty_cycle calculations to take the
+extra division by 256 into account.
+
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v4:
-- This is a new patch in v4 of this patchset
+Changes in v3:
+- Use NSEC_PER_USEC instead of adding a new (non-sensical) NSEC_PER_MHZ define
 ---
- drivers/pwm/pwm-lpss.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/pwm/pwm-crc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
-index 4f3d60ce9929..4d4de45cf99b 100644
---- a/drivers/pwm/pwm-lpss.c
-+++ b/drivers/pwm/pwm-lpss.c
-@@ -192,14 +192,16 @@ static void pwm_lpss_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+diff --git a/drivers/pwm/pwm-crc.c b/drivers/pwm/pwm-crc.c
+index 272eeb071147..c056eb9b858c 100644
+--- a/drivers/pwm/pwm-crc.c
++++ b/drivers/pwm/pwm-crc.c
+@@ -21,8 +21,8 @@
  
- 	freq = base_unit * lpwm->info->clk_rate;
- 	do_div(freq, base_unit_range);
--	if (freq == 0)
--		state->period = NSEC_PER_SEC;
--	else
-+	if (freq == 0) {
-+		/* In this case the PWM outputs a continous low signal */
-+		state->period = 1;
-+		state->duty_cycle = 0;
-+	} else {
- 		state->period = NSEC_PER_SEC / (unsigned long)freq;
--
--	on_time_div *= state->period;
--	do_div(on_time_div, 255);
--	state->duty_cycle = on_time_div;
-+		on_time_div *= state->period;
-+		do_div(on_time_div, 255);
-+		state->duty_cycle = on_time_div;
-+	}
+ #define PWM_MAX_LEVEL		0xFF
  
- 	state->polarity = PWM_POLARITY_NORMAL;
- 	state->enabled = !!(ctrl & PWM_ENABLE);
+-#define PWM_BASE_CLK		6000000  /* 6 MHz */
+-#define PWM_MAX_PERIOD_NS	21333    /* 46.875KHz */
++#define PWM_BASE_CLK_MHZ	6	/* 6 MHz */
++#define PWM_MAX_PERIOD_NS	5461333	/* 183 Hz */
+ 
+ /**
+  * struct crystalcove_pwm - Crystal Cove PWM controller
+@@ -72,7 +72,7 @@ static int crc_pwm_config(struct pwm_chip *c, struct pwm_device *pwm,
+ 
+ 		/* changing the clk divisor, need to disable fisrt */
+ 		crc_pwm_disable(c, pwm);
+-		clk_div = PWM_BASE_CLK * period_ns / NSEC_PER_SEC;
++		clk_div = PWM_BASE_CLK_MHZ * period_ns / (256 * NSEC_PER_USEC);
+ 
+ 		regmap_write(crc_pwm->regmap, PWM0_CLK_DIV,
+ 					clk_div | PWM_OUTPUT_ENABLE);
 -- 
 2.26.2
 
