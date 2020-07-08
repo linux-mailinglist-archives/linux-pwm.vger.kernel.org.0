@@ -2,37 +2,37 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 696D2219228
-	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jul 2020 23:15:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A955521922C
+	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jul 2020 23:15:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgGHVPh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 8 Jul 2020 17:15:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22888 "EHLO
+        id S1725848AbgGHVPj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 8 Jul 2020 17:15:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40326 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726006AbgGHVPg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Jul 2020 17:15:36 -0400
+        with ESMTP id S1726006AbgGHVPj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Jul 2020 17:15:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594242935;
+        s=mimecast20190719; t=1594242937;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=rsgaSScqfqS4PRyzzf5oPN1LM95C1kF5r/jgzFwdEWU=;
-        b=I9ItalgxbD0Tz9Odv8jLyAje/xdJtmJNHaf3fm5Bxb8SPdVkLppOWiFKMf+iU9ySbxpfYG
-        235I+AjtPp0OvS8bAHQgxI5zEPhJfW+M4R3q2/n4VJWmTYnyROCgR2tBPtvh6jCkm8HEcv
-        wj4KGHHYdkN1Zz2oAok7ZmKBpWTvIPw=
+        bh=SL1iJkgudXbiRt+5sdrta73DHy47gF0CgIrRX8IsQec=;
+        b=NU7lpJXM87W+8ItGvbG4f2KoQFuEw2foeP8CGjmzWO0hI71ivX2aS65cIvd5pAzWY21TXh
+        UQTndsjHkX962CqREwkwBQXV6LfSnY1XryPtnSsImymbEcNf/IYSU4kwOOA4G7DJw6ul24
+        8K/BPFaXn2CtvEZxPs15PXR3UKE1c2k=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-206-0k9nNlDkP8-PHMMbRtmHdQ-1; Wed, 08 Jul 2020 17:15:31 -0400
-X-MC-Unique: 0k9nNlDkP8-PHMMbRtmHdQ-1
+ us-mta-211-Ml043AWOPZ-gl2emQgT6AA-1; Wed, 08 Jul 2020 17:15:33 -0400
+X-MC-Unique: Ml043AWOPZ-gl2emQgT6AA-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1BFF9E91A;
-        Wed,  8 Jul 2020 21:15:29 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5D3F802780;
+        Wed,  8 Jul 2020 21:15:31 +0000 (UTC)
 Received: from x1.localdomain.com (ovpn-112-5.ams2.redhat.com [10.36.112.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8CA8D797F2;
-        Wed,  8 Jul 2020 21:15:26 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 614B9797F2;
+        Wed,  8 Jul 2020 21:15:29 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -50,12 +50,13 @@ Cc:     Hans de Goede <hdegoede@redhat.com>, linux-pwm@vger.kernel.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org
-Subject: [PATCH v4 11/16] pwm: crc: Implement apply() method to support the new atomic PWM API
-Date:   Wed,  8 Jul 2020 23:14:27 +0200
-Message-Id: <20200708211432.28612-12-hdegoede@redhat.com>
+Subject: [PATCH v4 12/16] pwm: crc: Implement get_state() method
+Date:   Wed,  8 Jul 2020 23:14:28 +0200
+Message-Id: <20200708211432.28612-13-hdegoede@redhat.com>
 In-Reply-To: <20200708211432.28612-1-hdegoede@redhat.com>
 References: <20200708211432.28612-1-hdegoede@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-pwm-owner@vger.kernel.org
@@ -63,131 +64,65 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Replace the enable, disable and config pwm_ops with an apply op,
-to support the new atomic PWM API.
+Implement the pwm_ops.get_state() method to complete the support for the
+new atomic PWM API.
 
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
+Changes in v4:
+- Use DIV_ROUND_UP when calculating the period and duty_cycle from the
+  controller's register values
+
 Changes in v3:
-- Keep crc_pwm_calc_clk_div() helper to avoid needless churn
+- Add Andy's Reviewed-by tag
+- Remove extra whitespace to align some code after assignments (requested by
+  Uwe Kleine-König)
 ---
- drivers/pwm/pwm-crc.c | 89 ++++++++++++++++++++++++++-----------------
- 1 file changed, 53 insertions(+), 36 deletions(-)
+ drivers/pwm/pwm-crc.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
 diff --git a/drivers/pwm/pwm-crc.c b/drivers/pwm/pwm-crc.c
-index b72008c9b072..8a7f4707279c 100644
+index 8a7f4707279c..e58b0979d708 100644
 --- a/drivers/pwm/pwm-crc.c
 +++ b/drivers/pwm/pwm-crc.c
-@@ -51,59 +51,76 @@ static int crc_pwm_calc_clk_div(int period_ns)
- 	return clk_div;
- }
- 
--static int crc_pwm_enable(struct pwm_chip *c, struct pwm_device *pwm)
-+static int crc_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			 const struct pwm_state *state)
- {
--	struct crystalcove_pwm *crc_pwm = to_crc_pwm(c);
--	int div = crc_pwm_calc_clk_div(pwm_get_period(pwm));
--
--	regmap_write(crc_pwm->regmap, PWM0_CLK_DIV, div | PWM_OUTPUT_ENABLE);
--	regmap_write(crc_pwm->regmap, BACKLIGHT_EN, 1);
--
--	return 0;
--}
--
--static void crc_pwm_disable(struct pwm_chip *c, struct pwm_device *pwm)
--{
--	struct crystalcove_pwm *crc_pwm = to_crc_pwm(c);
--	int div = crc_pwm_calc_clk_div(pwm_get_period(pwm));
--
--	regmap_write(crc_pwm->regmap, BACKLIGHT_EN, 0);
--	regmap_write(crc_pwm->regmap, PWM0_CLK_DIV, div);
--}
--
--static int crc_pwm_config(struct pwm_chip *c, struct pwm_device *pwm,
--			  int duty_ns, int period_ns)
--{
--	struct crystalcove_pwm *crc_pwm = to_crc_pwm(c);
-+	struct crystalcove_pwm *crc_pwm = to_crc_pwm(chip);
- 	struct device *dev = crc_pwm->chip.dev;
--	int level;
-+	int err;
- 
--	if (period_ns > PWM_MAX_PERIOD_NS) {
-+	if (state->period > PWM_MAX_PERIOD_NS) {
- 		dev_err(dev, "un-supported period_ns\n");
- 		return -EINVAL;
- 	}
- 
--	if (pwm_get_period(pwm) != period_ns) {
--		int clk_div = crc_pwm_calc_clk_div(period_ns);
-+	if (state->polarity != PWM_POLARITY_NORMAL)
-+		return -EOPNOTSUPP;
-+
-+	if (pwm_is_enabled(pwm) && !state->enabled) {
-+		err = regmap_write(crc_pwm->regmap, BACKLIGHT_EN, 0);
-+		if (err) {
-+			dev_err(dev, "Error writing BACKLIGHT_EN %d\n", err);
-+			return err;
-+		}
-+	}
-+
-+	if (pwm_get_duty_cycle(pwm) != state->duty_cycle ||
-+	    pwm_get_period(pwm) != state->period) {
-+		int level = state->duty_cycle * PWM_MAX_LEVEL / state->period;
- 
-+		err = regmap_write(crc_pwm->regmap, PWM0_DUTY_CYCLE, level);
-+		if (err) {
-+			dev_err(dev, "Error writing PWM0_DUTY_CYCLE %d\n", err);
-+			return err;
-+		}
-+	}
-+
-+	if (pwm_is_enabled(pwm) && state->enabled &&
-+	    pwm_get_period(pwm) != state->period) {
- 		/* changing the clk divisor, clear PWM_OUTPUT_ENABLE first */
--		regmap_write(crc_pwm->regmap, PWM0_CLK_DIV, 0);
-+		err = regmap_write(crc_pwm->regmap, PWM0_CLK_DIV, 0);
-+		if (err) {
-+			dev_err(dev, "Error writing PWM0_CLK_DIV %d\n", err);
-+			return err;
-+		}
-+	}
- 
--		regmap_write(crc_pwm->regmap, PWM0_CLK_DIV,
--					clk_div | PWM_OUTPUT_ENABLE);
-+	if (pwm_get_period(pwm) != state->period ||
-+	    pwm_is_enabled(pwm) != state->enabled) {
-+		int clk_div = crc_pwm_calc_clk_div(state->period);
-+		int pwm_output_enable = state->enabled ? PWM_OUTPUT_ENABLE : 0;
-+
-+		err = regmap_write(crc_pwm->regmap, PWM0_CLK_DIV,
-+				   clk_div | pwm_output_enable);
-+		if (err) {
-+			dev_err(dev, "Error writing PWM0_CLK_DIV %d\n", err);
-+			return err;
-+		}
- 	}
- 
--	/* change the pwm duty cycle */
--	level = duty_ns * PWM_MAX_LEVEL / period_ns;
--	regmap_write(crc_pwm->regmap, PWM0_DUTY_CYCLE, level);
-+	if (!pwm_is_enabled(pwm) && state->enabled) {
-+		err = regmap_write(crc_pwm->regmap, BACKLIGHT_EN, 1);
-+		if (err) {
-+			dev_err(dev, "Error writing BACKLIGHT_EN %d\n", err);
-+			return err;
-+		}
-+	}
- 
+@@ -119,8 +119,39 @@ static int crc_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
  	return 0;
  }
  
++static void crc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++			       struct pwm_state *state)
++{
++	struct crystalcove_pwm *crc_pwm = to_crc_pwm(chip);
++	struct device *dev = crc_pwm->chip.dev;
++	unsigned int clk_div, clk_div_reg, duty_cycle_reg;
++	int error;
++
++	error = regmap_read(crc_pwm->regmap, PWM0_CLK_DIV, &clk_div_reg);
++	if (error) {
++		dev_err(dev, "Error reading PWM0_CLK_DIV %d\n", error);
++		return;
++	}
++
++	error = regmap_read(crc_pwm->regmap, PWM0_DUTY_CYCLE, &duty_cycle_reg);
++	if (error) {
++		dev_err(dev, "Error reading PWM0_DUTY_CYCLE %d\n", error);
++		return;
++	}
++
++	clk_div = (clk_div_reg & ~PWM_OUTPUT_ENABLE) + 1;
++
++	state->period =
++		DIV_ROUND_UP(clk_div * NSEC_PER_USEC * 256, PWM_BASE_CLK_MHZ);
++	state->duty_cycle =
++		DIV_ROUND_UP(duty_cycle_reg * state->period, PWM_MAX_LEVEL);
++	state->polarity = PWM_POLARITY_NORMAL;
++	state->enabled = !!(clk_div_reg & PWM_OUTPUT_ENABLE);
++}
++
  static const struct pwm_ops crc_pwm_ops = {
--	.config = crc_pwm_config,
--	.enable = crc_pwm_enable,
--	.disable = crc_pwm_disable,
-+	.apply = crc_pwm_apply,
+ 	.apply = crc_pwm_apply,
++	.get_state = crc_pwm_get_state,
  };
  
  static int crystalcove_pwm_probe(struct platform_device *pdev)
