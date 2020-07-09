@@ -2,58 +2,58 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15FD921A22D
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 Jul 2020 16:33:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EFE2821A24F
+	for <lists+linux-pwm@lfdr.de>; Thu,  9 Jul 2020 16:41:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbgGIOd6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 9 Jul 2020 10:33:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20689 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726353AbgGIOd5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Jul 2020 10:33:57 -0400
+        id S1727902AbgGIOlR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 9 Jul 2020 10:41:17 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57129 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726617AbgGIOlQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Jul 2020 10:41:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594305235;
+        s=mimecast20190719; t=1594305675;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=BhGLIk7C2NMc6JM40F6DvWPFT3QT/gthp+F60/ml+CQ=;
-        b=Ypr7dpYWTUR45jl1MKwg4SN4TOac2h3k/1vYa8by4cFghWDU+sjMAVd4+VAx4d/X8E4cGj
-        khotR+SrYu3R5XX9bZ/A1/n0V85X2p5DcwIOi5pCfhFQsp3iGmLIboNXIKAGGXQqcJN3+R
-        vEXESOUlhnj3H/qK4vAYRfSd8nDKy/A=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-206-REYzvIYcNIeqEK57kykv-w-1; Thu, 09 Jul 2020 10:33:54 -0400
-X-MC-Unique: REYzvIYcNIeqEK57kykv-w-1
-Received: by mail-wm1-f70.google.com with SMTP id g187so2348926wme.0
-        for <linux-pwm@vger.kernel.org>; Thu, 09 Jul 2020 07:33:53 -0700 (PDT)
+        bh=xtGo37WFcbzrM1ZvQh+IMQbh1Z4M0Wk13pfOcRFcm88=;
+        b=Lirb8rDVcKNobS4w4IbFl6IOfhOSIuhZrrnws97gUaVwrDc0DjuRsxtS7bQWofSIZ4gltk
+        v3D+HA3ELocn3+mMvjZuCnfDwmUhfMLShMdiqmM1AQt+MqxiqfJ8tWY33aP0YD1Zra+buc
+        UpR82zONPfdfmiUOjl6lOvUJct46lAE=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-264-q9PN6_VpNPuIPbjXwh3dPw-1; Thu, 09 Jul 2020 10:41:01 -0400
+X-MC-Unique: q9PN6_VpNPuIPbjXwh3dPw-1
+Received: by mail-wm1-f72.google.com with SMTP id l5so2332279wml.7
+        for <linux-pwm@vger.kernel.org>; Thu, 09 Jul 2020 07:41:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=BhGLIk7C2NMc6JM40F6DvWPFT3QT/gthp+F60/ml+CQ=;
-        b=oOYgZG8rNJ9g7jdaEFXDz30xlqImAhOVCW9jcpHg6h/McEgub1GgetgL+wUsp3eYuj
-         zvgkmaq1E670WzKNDpj7UEdsHS/faASmwQqfj4q7f+6El8QmfVtaH+FQjWlVaYm6zqT0
-         qi/Lk7Mb+5F+cUyxZHhLO+QS/owmbDyeQ73SB8drpLkMqGuYRtMYgiZnODU48znVsXcw
-         oglE03+Zl5OwvADxQoF26HN116TNb0WLZ0dz9R7AabQlvT0+liXa5jexoSmSzTkdVWMd
-         fUMeCCQdYS49ktn3KgXNzWqs6YZF9z2ed0YvzVBZvS8GgRkdTpoda4FDqxJvC/L99Cef
-         W+AA==
-X-Gm-Message-State: AOAM533f2X9oFfTr+iAH5Qpg74nKVnEwGJ0jfQkOm4JkiEeLvk7OzxkP
-        HGpteh81e6awsr+H9VtCXhEhq+ZiY9ys1S05XJel23q93qBy6CVxGTm2g07xpwp8Tgp7JAW+S+2
-        EOayeSbnkRH28a3ZOddiA
-X-Received: by 2002:adf:f18c:: with SMTP id h12mr61184461wro.375.1594305232734;
-        Thu, 09 Jul 2020 07:33:52 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzGEsPZnHHhwmfS2MVpRo8wpZaIsfNr3HWz/ZZ8+t7FND0PUlyny7kubq5HJplNXnekokhZRw==
-X-Received: by 2002:adf:f18c:: with SMTP id h12mr61184441wro.375.1594305232476;
-        Thu, 09 Jul 2020 07:33:52 -0700 (PDT)
+        bh=xtGo37WFcbzrM1ZvQh+IMQbh1Z4M0Wk13pfOcRFcm88=;
+        b=OV5cdb27oAeDSlKLkQL/sO+6DWSNQPP+UcuVrefX6f26wmkBOhh0c0hXFOg7MyGHUe
+         G+3NhIwm7Asz4ZOgL1sUtp+4P4b33yypU4mi0zPUjSM8CFohr3mV+gvdNiET4I7gZwYi
+         h3AsJIn+iocVORrtuqR/+GevJQzpIq6F/I6iwS+x50P7ySGdZEUPp+VlmHNJzAi01q+i
+         GkFSzD8cCLod8P+tcfV/tY/xJyHyPvmofEr+W/oiw1JJbauLdQoF8rwCsevphCVMEj37
+         nAipl729eGLT423YSN2kcspZfsxONO8YHc6YlzwHb8kNcmZvqBVdw5X05RzBPTtD1qPd
+         uHfA==
+X-Gm-Message-State: AOAM533Vi9reCqQWRYhCbIXbNOD8o+ho/gY1HoLME0MGYysxF025kJBp
+        Lu0BM6nKTh9v85JyQPivCx0jSchRL6usgT3yHreoLR01G/LXUOkTLkQ6fg1wrCjvErxGz2P7h34
+        tx+pdatxFwgnGUy7aORWc
+X-Received: by 2002:adf:82a1:: with SMTP id 30mr68204938wrc.210.1594305659643;
+        Thu, 09 Jul 2020 07:40:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyC8Qx1lqmqv5eBOWYGriOdRymqExqIMuGFeC+1LPMcpYaZ1AsqSB9SUbO9rPu7uEL1sgHSQQ==
+X-Received: by 2002:adf:82a1:: with SMTP id 30mr68204858wrc.210.1594305658678;
+        Thu, 09 Jul 2020 07:40:58 -0700 (PDT)
 Received: from x1.localdomain ([2a0e:5700:4:11:334c:7e36:8d57:40cb])
-        by smtp.gmail.com with ESMTPSA id o205sm5393490wme.24.2020.07.09.07.33.51
+        by smtp.gmail.com with ESMTPSA id j6sm5217876wma.25.2020.07.09.07.40.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 07:33:51 -0700 (PDT)
-Subject: Re: [PATCH v4 04/16] pwm: lpss: Add range limit check for the
- base_unit register value
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        Thu, 09 Jul 2020 07:40:57 -0700 (PDT)
+Subject: Re: [PATCH v4 00/15] acpi/pwm/i915: Convert pwm-crc and i915 driver's
+ PWM code to use the atomic PWM API
+To:     Sam Ravnborg <sam@ravnborg.org>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         Jani Nikula <jani.nikula@linux.intel.com>,
@@ -62,25 +62,23 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>, linux-pwm@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
         intel-gfx <intel-gfx@lists.freedesktop.org>,
         dri-devel@lists.freedesktop.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
 References: <20200708211432.28612-1-hdegoede@redhat.com>
- <20200708211432.28612-5-hdegoede@redhat.com>
- <20200709125342.GX3703480@smile.fi.intel.com>
- <4ff9dc18-fa59-d9a3-c7bf-9f95c62fc356@redhat.com>
- <20200709142136.GZ3703480@smile.fi.intel.com>
+ <20200709141407.GA226971@ravnborg.org>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c7925c63-9187-f89f-3a01-2ff252012615@redhat.com>
-Date:   Thu, 9 Jul 2020 16:33:50 +0200
+Message-ID: <fb370663-9efe-a820-2e57-d43d3af7828c@redhat.com>
+Date:   Thu, 9 Jul 2020 16:40:56 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200709142136.GZ3703480@smile.fi.intel.com>
+In-Reply-To: <20200709141407.GA226971@ravnborg.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
@@ -88,129 +86,111 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 Hi,
 
-On 7/9/20 4:21 PM, Andy Shevchenko wrote:
-> On Thu, Jul 09, 2020 at 03:23:13PM +0200, Hans de Goede wrote:
->> On 7/9/20 2:53 PM, Andy Shevchenko wrote:
->>> On Wed, Jul 08, 2020 at 11:14:20PM +0200, Hans de Goede wrote:
->>>> When the user requests a high enough period ns value, then the
->>>> calculations in pwm_lpss_prepare() might result in a base_unit value of 0.
->>>>
->>>> But according to the data-sheet the way the PWM controller works is that
->>>> each input clock-cycle the base_unit gets added to a N bit counter and
->>>> that counter overflowing determines the PWM output frequency. Adding 0
->>>> to the counter is a no-op. The data-sheet even explicitly states that
->>>> writing 0 to the base_unit bits will result in the PWM outputting a
->>>> continuous 0 signal.
->>>
->>> And I don't see how you can get duty 100% / 0% (I don't remember which one is
->>> equivalent to 0 in base unit) after this change. IIRC the problem here that
->>> base unit when non-zero is always being added to the counter and it will
->>> trigger the change of output at some point which is not what we want for 100% /
->>> 0% cases.
+On 7/9/20 4:14 PM, Sam Ravnborg wrote:
+> Hi Hans.
+> 
+> On Wed, Jul 08, 2020 at 11:14:16PM +0200, Hans de Goede wrote:
+>> Hi All,
 >>
->> The base_unit controls the output frequency, not the duty-cycle. So clamping
->> the base_unit, as calculated from the period here, which also only configures
->> output-frequency does not impact the duty-cycle at all.
->>
->> note that AFAICT currently no (in kernel) users actually try to set a period value
->> which would hit the clamp, so for existing users the clamp is a no-op. I just
->> added it to this patch-set for correctness sake and because userspace
->> (sysfs interface) users could in theory set out of range values.
->>
->> As for the duty-cycle thing, first of all let me say that that is a
->> question / issue which is completely orthogonal to this patch, this
->> patch only impacts the period/output frequency NOT the duty-cycle,
+>> Here is v4 of my patch series converting the i915 driver's code for
+>> controlling the panel's backlight with an external PWM controller to
+>> use the atomic PWM API. See below for the changelog.
 > 
-> Unfortunately the base unit settings affects duty cycle.
-> 
-> Documentation says about integer part and fractional, where integer is
-> 8 bit and this what's being compared to on time divisor. Thus, if on time
-> divisor is 255 and base unit is 1 (in integer part) or 0.25, we can't get 0%.
-> (It looks like if 'on time divisor MOD base unit == 0' we won't get 0%)
-> 
->> With that said, the documentation is not really helpful here,
->> we need to set the on_time_div to 255 to get a duty-cycle close to 0
->> (and to 0 to get a duty cycle of 100%) but if setting this to 255 gives
->> us a duty-cycle of really really 0%, or just close to 0% is uncleaer.
-> 
-> It depends on base unit value.
-> 
->> We could do a separate patch add ing a hack where if the user asks for
->> 0% duty-cycle we program the base_unit to 0, but that seems like a bad
->> idea for 2 reasons:
-> 
->> 1. If the user really wants the output to be constantly 0 the user should
->> just disable the pwm
-> 
-> I can't take this as an argument. Disabling PWM is orthogonal to what duty cycle is.
-> 
->> 2. New base_unit values are latched and not applied until the counter
->> overflows, with a base_unit of 0 the counter never overflows. I have
->> not tested this but I would not be surprised if after programming a
->> base_unit value of 0, we are unable to ever change the value again
->> through any other means then power-cycling the PWM controller.
->> Even if I could test this on some revisions, we already know that
->> not all revisions work the same wrt the latching. So it is best to
->> just never set base_unit to 0, that is just a recipe asking for trouble.
-> 
-> This what doc says about zeros:
-> • Programming either the PWM_base_unit value or the PWM_on_time_divisor to ‘0’
-> will generate an always zero output.
-> 
-> So, what I'm talking seems about correlation between base unit and on time
-> divisor rather than zeros.
-> 
-> I agree with this patch.
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Why is it that i915 cannot use the pwm_bl driver for backlight?
+> I have not studied the code - just wondering.
 
-Thank you.
+The intel_panel.c code deals with 7 different types of PWM controllers
+which are built into the GPU + support for external PWM controllers
+through the kernel's PWM subsystem.
 
->>>> When the user requestes a low enough period ns value, then the
->>>> calculations in pwm_lpss_prepare() might result in a base_unit value
->>>> which is bigger then base_unit_range - 1. Currently the codes for this
->>>> deals with this by applying a mask:
->>>>
->>>> 	base_unit &= (base_unit_range - 1);
->>>>
->>>> But this means that we let the value overflow the range, we throw away the
->>>> higher bits and store whatever value is left in the lower bits into the
->>>> register leading to a random output frequency, rather then clamping the
->>>> output frequency to the highest frequency which the hardware can do.
->>>
->>> It would be nice to have an example of calculus here.
->>>
->>>> This commit fixes both issues by clamping the base_unit value to be
->>>> between 1 and (base_unit_range - 1).
->>>
->>> Eventually I sat and wrote all this on paper. I see now that the problem
->>> is in out of range of the period. And strongly we should clamp rather period
->>> to the supported range, but your solution is an equivalent.
->>
->> Right, the advantage of doing the clamping on the register value is that we
->> avoid some tricky math with possible rounding errors and which is different
->> per controller revision because the number of bits in the base unit being
->> different per controller revision.
-> 
-> ...
-> 
->>>> +	base_unit = clamp_t(unsigned long long, base_unit, 1,
->>>> +			    base_unit_range - 1);
->>>
->>> A nit: one line.
->>
->> Doesn't fit in 80 chars, I guess we could make this one line now with the new 100 chars
->> limit, but that does make it harder to read for people using standard terminal widths
->> and a terminal based editors. So I would prefer to keep this as is.
-> 
-> You can use clamp_val().
-
-I did not know about that, that will work nicely I will switch to clamp_val
-for the next version. I assume it is ok to keep your Reviewed-by with this
-very minor change?
+pwm_bl will work for the external PWM controller case, but not for
+the others. On top of that the intel_panel code integrates which
+the video BIOS, getting things like frequency, minimum value
+and if the range is inverted (0% duty == backlight brightness max).
+I'm not even sure if pwm_bl supports all of this, but even if it
+does the intel_panel code handles this in a unified manner for
+all supported PWM controllers, including the ones which are
+an integral part of the GPU.
 
 Regards,
 
 Hans
 
+
+
+>> Initially the plan was for this series to consist of 2 parts:
+>> 1. convert the pwm-crc driver to support the atomic PWM API and
+>> 2. convert the i915 driver's PWM code to use the atomic PWM API.
+>>
+>> But during testing I've found a number of bugs in the pwm-lpss and I
+>> found that the acpi_lpss code needs some special handling because of
+>> some ugliness found in most Cherry Trail DSDTs.
+>>
+>> So now this series has grown somewhat large and consists of 4 parts:
+>>
+>> 1. acpi_lpss fixes workarounds for Cherry Trail DSTD nastiness
+>> 2. various fixes to the pwm-lpss driver
+>> 3. convert the pwm-crc driver to support the atomic PWM API and
+>> 4. convert the i915 driver's PWM code to use the atomic PWM API
+>>
+>> The involved acpi_lpss and pwm drivers do not see a whole lot of churn,
+>> so the plan is to merge this all through drm-intel-next-queued (dinq)
+>> once all the patches are reviewed / have acks.
+>>
+>> In v4 the ACPI patches have been Acked by Rafael and the i915 patches
+>> have been acked by Jani. So that just leaves the PWM patches.
+>>
+>> Uwe can I get your ok / ack for merging this through the dinq branch
+>> once you have acked al the PWM patches ?
+>>
+>> This series has been tested (and re-tested after adding various bug-fixes)
+>> extensively. It has been tested on the following devices:
+>>
+>> -Asus T100TA  BYT + CRC-PMIC PWM
+>> -Toshiba WT8-A  BYT + CRC-PMIC PWM
+>> -Thundersoft TS178 BYT + CRC-PMIC PWM, inverse PWM
+>> -Asus T100HA  CHT + CRC-PMIC PWM
+>> -Terra Pad 1061  BYT + LPSS PWM
+>> -Trekstor Twin 10.1 BYT + LPSS PWM
+>> -Asus T101HA  CHT + CRC-PMIC PWM
+>> -GPD Pocket  CHT + CRC-PMIC PWM
+>>
+>> Changelog:
+>>
+>> Changes in v2:
+>> - Fix coverletter subject
+>> - Drop accidentally included debugging patch
+>> - "[PATCH v3 02/15] ACPI / LPSS: Save Cherry Trail PWM ctx registers only once (
+>>    - Move #define LPSS_SAVE_CTX_ONCE define to group it with LPSS_SAVE_CTX
+>>
+>> Changes in v3:
+>> - "[PATCH v3 04/15] pwm: lpss: Add range limit check for the base_unit register value"
+>>    - Use base_unit_range - 1 as maximum value for the clamp()
+>> - "[PATCH v3 05/15] pwm: lpss: Use pwm_lpss_apply() when restoring state on resume"
+>>    - This replaces the "pwm: lpss: Set SW_UPDATE bit when enabling the PWM"
+>>      patch from previous versions of this patch-set, which really was a hack
+>>      working around the resume issue which this patch fixes properly.
+>> - PATCH v3 6 - 11 pwm-crc changes:
+>>    - Various small changes resulting from the reviews by Andy and Uwe,
+>>      including some refactoring of the patches to reduce the amount of churn
+>>      in the patch-set
+>>
+>> Changes in v4:
+>> - "[PATCH v4 06/16] pwm: lpss: Correct get_state result for base_unit == 0"
+>>    - This is a new patch in v4 of this patchset
+>> - "[PATCH v4 12/16] pwm: crc: Implement get_state() method"
+>>    - Use DIV_ROUND_UP when calculating the period and duty_cycle values
+>> - "[PATCH v4 16/16] drm/i915: panel: Use atomic PWM API for devs with an external PWM controller"
+>>    - Add a note to the commit message about the changes in pwm_disable_backlight()
+>>    - Use the pwm_set/get_relative_duty_cycle() helpers
+>>
+>> Regards,
+>>
+>> Hans
+>>
+>> _______________________________________________
+>> dri-devel mailing list
+>> dri-devel@lists.freedesktop.org
+>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 > 
 
