@@ -2,115 +2,95 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FDFD21B37F
-	for <lists+linux-pwm@lfdr.de>; Fri, 10 Jul 2020 12:51:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8A1121BE0E
+	for <lists+linux-pwm@lfdr.de>; Fri, 10 Jul 2020 21:48:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgGJKvr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 10 Jul 2020 06:51:47 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:10090 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbgGJKvq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 10 Jul 2020 06:51:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1594378304;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=35ZUWAb3rlQutkZQ6lYuI6RvsV6D5cDyRIaUgYu1kBQ=;
-        b=Ws4I3wucJ7aWzZ4XH/nYtw+AeUvfn69/HAp6nAtCj77NOZ0nFFfvL0uNEU5eMpJwcr
-        H5sYrRvm+ORxlEvCDsU9HsO8GGTHK18SRnQ5ZihqSiSz2hmMoTAe00qromiqSFt2f7HD
-        cg4049JGhfFr1VN2kSB/QZVstFX7qhlojmmm2+DKM5HG92oiJWfUznebZCENobZD8812
-        4b+mrPs6clwjikkS6tCt6cHhNDbb9KOB6Yz+AlSeCqweN4unTtffXfYxxYVs4qOgfM48
-        xVOQ/d9MpXxGitXyM3Tb3YqZBau9WB6RW5CnTe/5Ndly30o5fKTmAa/Z9f12cGEr3gwC
-        0brw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAvw4TuZw=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
-        with ESMTPSA id V07054w6AAmb7rG
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 10 Jul 2020 12:48:37 +0200 (CEST)
-Subject: Re: [PATCH] [stable v5.4.x] pwm: jz4740: Fix build failure
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200710102758.8341-1-u.kleine-koenig@pengutronix.de>
-Date:   Fri, 10 Jul 2020 12:48:36 +0200
+        id S1728376AbgGJTrI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 10 Jul 2020 15:47:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728374AbgGJTrH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 10 Jul 2020 15:47:07 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A535C08C5DC
+        for <linux-pwm@vger.kernel.org>; Fri, 10 Jul 2020 12:47:07 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jtyz9-0006yQ-Bx; Fri, 10 Jul 2020 21:47:03 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jtyz8-0004JW-8a; Fri, 10 Jul 2020 21:47:02 +0200
+Date:   Fri, 10 Jul 2020 21:47:02 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
 Cc:     stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
         Thierry Reding <thierry.reding@gmail.com>,
         linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
         letux-kernel@openphoenux.org, linux-mips@vger.kernel.org,
         tsbogend@alpha.franken.de
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DB8C7C01-0FBB-4A9F-B068-15C06BBC0873@goldelico.com>
+Subject: Re: [PATCH] [stable v5.4.x] pwm: jz4740: Fix build failure
+Message-ID: <20200710194702.ire4deel2zn7mnxk@pengutronix.de>
 References: <20200710102758.8341-1-u.kleine-koenig@pengutronix.de>
-To:     =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-X-Mailer: Apple Mail (2.3124)
+ <DB8C7C01-0FBB-4A9F-B068-15C06BBC0873@goldelico.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="i5nxag3vhy7nqukt"
+Content-Disposition: inline
+In-Reply-To: <DB8C7C01-0FBB-4A9F-B068-15C06BBC0873@goldelico.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
-> Am 10.07.2020 um 12:27 schrieb Uwe Kleine-K=C3=B6nig =
-<u.kleine-koenig@pengutronix.de>:
->=20
-> When commit 9017dc4fbd59 ("pwm: jz4740: Enhance precision in =
-calculation
-> of duty cycle") from v5.8-rc1 was backported to v5.4.x its dependency =
-on
-> commit ce1f9cece057 ("pwm: jz4740: Use clocks from TCU driver") was =
-not
-> noticed which made the pwm-jz4740 driver fail to build.
+--i5nxag3vhy7nqukt
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please can you add my "reported by?"
+On Fri, Jul 10, 2020 at 12:48:36PM +0200, H. Nikolaus Schaller wrote:
+>=20
+> > Am 10.07.2020 um 12:27 schrieb Uwe Kleine-K=F6nig <u.kleine-koenig@peng=
+utronix.de>:
+> >=20
+> > When commit 9017dc4fbd59 ("pwm: jz4740: Enhance precision in calculation
+> > of duty cycle") from v5.8-rc1 was backported to v5.4.x its dependency on
+> > commit ce1f9cece057 ("pwm: jz4740: Use clocks from TCU driver") was not
+> > noticed which made the pwm-jz4740 driver fail to build.
+>=20
+> Please can you add my "reported by?"
 
-> As ce1f9cece057 depends on still more rework, just backport a small =
-part
-> of this commit to make the driver build again. (There is no dependency
-> on the functionality introduced in ce1f9cece057, just the rate =
-variable
-> is needed.)
+Greg, can you please add this while applying? (Assuming you're ok with
+this change and ideally Paul can confirm the change is fine.)
 
-BR and thanks,
-Nikolaus
+Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
 
->=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
-> Hello,
->=20
-> @Paul: Can you please check this is correct? I only build-tested this
-> change.
->=20
-> Best regards
-> Uwe
->=20
-> drivers/pwm/pwm-jz4740.c | 5 +++--
-> 1 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
-> index d0f5c69930d0..77c28313e95f 100644
-> --- a/drivers/pwm/pwm-jz4740.c
-> +++ b/drivers/pwm/pwm-jz4740.c
-> @@ -92,11 +92,12 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, =
-struct pwm_device *pwm,
-> {
-> 	struct jz4740_pwm_chip *jz4740 =3D to_jz4740(pwm->chip);
-> 	unsigned long long tmp;
-> -	unsigned long period, duty;
-> +	unsigned long rate, period, duty;
-> 	unsigned int prescaler =3D 0;
-> 	uint16_t ctrl;
->=20
-> -	tmp =3D (unsigned long long)clk_get_rate(jz4740->clk) * =
-state->period;
-> +	rate =3D clk_get_rate(jz4740->clk);
-> +	tmp =3D rate * state->period;
-> 	do_div(tmp, 1000000000);
-> 	period =3D tmp;
->=20
-> --=20
-> 2.27.0
->=20
+Best regards
+Uwe
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--i5nxag3vhy7nqukt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8IxbIACgkQwfwUeK3K
+7Annsgf5ASCw9N+4nsVPlurKYW/tl+25A2JMt+u3ASGqGMGwcayAvQw5rQ8X47W3
+gwdmGGV7IlwvktVkhICGhTWAMYEJmH3amOYNjJWYhrdBv6jSh/84UVHF6VSDBqPv
+DbxdosDUpYptJsiv5ABrFpYdkWfp4hguU6vJhth5fYaE8N4qnpIliWL4RGDanNFc
+lGpdw6CrVdmAtJNgfOj/ocMr/rTEsKdzWeNgZ5uWTS95hGHvXqj9h1tOOi3tAGBb
+HKIosCI+UOyJZt1bL8hJbi5M8WO1DbZfMOZmvN/IMgaSOY4A3yIvqFWyKlX9pzEX
+YPmEoNW6huLwU4fpTP/J1rfXVRcklg==
+=fuWC
+-----END PGP SIGNATURE-----
+
+--i5nxag3vhy7nqukt--
