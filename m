@@ -2,298 +2,156 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64CB821C28D
-	for <lists+linux-pwm@lfdr.de>; Sat, 11 Jul 2020 08:32:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CD3F21C476
+	for <lists+linux-pwm@lfdr.de>; Sat, 11 Jul 2020 15:47:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgGKGck (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 11 Jul 2020 02:32:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbgGKGck (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 11 Jul 2020 02:32:40 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF20C08C5DD
-        for <linux-pwm@vger.kernel.org>; Fri, 10 Jul 2020 23:32:40 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ju93i-0005t5-0o; Sat, 11 Jul 2020 08:32:26 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ju93f-0005IS-VH; Sat, 11 Jul 2020 08:32:23 +0200
-Date:   Sat, 11 Jul 2020 08:32:23 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        id S1728330AbgGKNrD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 11 Jul 2020 09:47:03 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27104 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726281AbgGKNrD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 11 Jul 2020 09:47:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594475221;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ypJLZNaMeKtGfv3TVsmWUfAoJ1cM0/nyBbZwCNLwYBE=;
+        b=guVjGdZEHPe2nFdRwRfyXsYS/++OynnjaWVR2v7+wgnCqY792PKdCksvrqDQ3N/6JFWKQ0
+        bck/fu6HbXm08GZ+mqg7kHVyknmZGzauibg8SA3Rf3LtIzQF0nxr0QvH0Ulmx6JIaklU8+
+        M08WMgpt/mSQKb5PzwTHg25Qad8B3VA=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-184-h6KvIJZLMGKQeZO9LTdv0w-1; Sat, 11 Jul 2020 09:46:59 -0400
+X-MC-Unique: h6KvIJZLMGKQeZO9LTdv0w-1
+Received: by mail-ej1-f70.google.com with SMTP id e7so10346367ejj.10
+        for <linux-pwm@vger.kernel.org>; Sat, 11 Jul 2020 06:46:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ypJLZNaMeKtGfv3TVsmWUfAoJ1cM0/nyBbZwCNLwYBE=;
+        b=ME1wf8m90Rrn6ViwuQAMMKUnTN5t5KSMdPxdr6DLbfF2SzzwpGhPQ2s1VclduO76ev
+         PT625L0rAh7cQPlkQg2i7DjtK3pcdfAW/bk+pLzA8T0MMcakXqiFFl0GT2D9DtDSOjih
+         xOuEXnajCS7eo3Exb+rW8ZBQdi8mgPsxZfSFA8uP8CN/R/UuoI9+VnV7yMCAWtxJjU20
+         FPU6/SIpMjGX4x7AtQFltO2cWj8xh0xNyI/SMTaxM1R7wbixOEbxLaKzG0CucZeE8rzM
+         SJOO7pRlLmSGifdW35LJsAo10dNbP3tDM+7QgWqnTBL/daEW/NuwOBmTV38xZA6IDao9
+         Jv0A==
+X-Gm-Message-State: AOAM530gu8dxhsXThaGuj2b+sNlMcLrWSJ0szuy7khDVjdN/lA9Y3tc2
+        8TrvrDdwcVvU93VmfI3CkJ3Lr/iEWFI6JISNlqUi2tu/LnhcCWSOnKBA/jaR88dSgv1hLq4wvHu
+        ZiIg2KvJLDSCA10cIEuEl
+X-Received: by 2002:a17:906:6442:: with SMTP id l2mr63973648ejn.383.1594475218123;
+        Sat, 11 Jul 2020 06:46:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzcDIT5JUOvQ8Y96Gig/aI8F/ZHtJpqKvkvPxprUQyKyKFjT1eV0H1cE4/1/UPdyq8qGvVKjA==
+X-Received: by 2002:a17:906:6442:: with SMTP id l2mr63973627ejn.383.1594475217866;
+        Sat, 11 Jul 2020 06:46:57 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id y24sm5521015ejj.97.2020.07.11.06.46.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 11 Jul 2020 06:46:57 -0700 (PDT)
+Subject: Re: [PATCH v4 00/15] acpi/pwm/i915: Convert pwm-crc and i915 driver's
+ PWM code to use the atomic PWM API
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Jani Nikula <jani.nikula@linux.intel.com>,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>, linux-pwm@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
         intel-gfx <intel-gfx@lists.freedesktop.org>,
         dri-devel@lists.freedesktop.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org, Jani Nikula <jani.nikula@intel.com>
-Subject: Re: [PATCH v4 16/16] drm/i915: panel: Use atomic PWM API for devs
- with an external PWM controller
-Message-ID: <20200711063223.czly2ftjraomuxz6@pengutronix.de>
+        Mika Westerberg <mika.westerberg@linux.intel.com>
 References: <20200708211432.28612-1-hdegoede@redhat.com>
- <20200708211432.28612-17-hdegoede@redhat.com>
+ <20200709141407.GA226971@ravnborg.org>
+ <fb370663-9efe-a820-2e57-d43d3af7828c@redhat.com>
+ <20200711061901.njwx3xofo4awcflg@pengutronix.de>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <d9079987-1c98-7542-8900-b2cc7b17446f@redhat.com>
+Date:   Sat, 11 Jul 2020 15:46:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5toxfcg27avm6ah7"
-Content-Disposition: inline
-In-Reply-To: <20200708211432.28612-17-hdegoede@redhat.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20200711061901.njwx3xofo4awcflg@pengutronix.de>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi,
 
---5toxfcg27avm6ah7
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 7/11/20 8:19 AM, Uwe Kleine-König wrote:
+> Hi Hans,
+> 
+> On Thu, Jul 09, 2020 at 04:40:56PM +0200, Hans de Goede wrote:
+>> On 7/9/20 4:14 PM, Sam Ravnborg wrote:
+>>> On Wed, Jul 08, 2020 at 11:14:16PM +0200, Hans de Goede wrote:
+>>>> Here is v4 of my patch series converting the i915 driver's code for
+>>>> controlling the panel's backlight with an external PWM controller to
+>>>> use the atomic PWM API. See below for the changelog.
+>>>
+>>> Why is it that i915 cannot use the pwm_bl driver for backlight?
+>>> I have not studied the code - just wondering.
+>>
+>> The intel_panel.c code deals with 7 different types of PWM controllers
+>> which are built into the GPU + support for external PWM controllers
+>> through the kernel's PWM subsystem.
+>>
+>> pwm_bl will work for the external PWM controller case, but not for
+>> the others. On top of that the intel_panel code integrates which
+>> the video BIOS, getting things like frequency, minimum value
+>> and if the range is inverted (0% duty == backlight brightness max).
+>> I'm not even sure if pwm_bl supports all of this, but even if it
+>> does the intel_panel code handles this in a unified manner for
+>> all supported PWM controllers, including the ones which are
+>> an integral part of the GPU.
+> 
+> pwm_bl handles inverted PWM just fine. I'm unsure what "integrates which
+> the video BIOS" means,
 
-On Wed, Jul 08, 2020 at 11:14:32PM +0200, Hans de Goede wrote:
-> Now that the PWM drivers which we use have been converted to the atomic
-> PWM API, we can move the i915 panel code over to using the atomic PWM API.
->=20
-> The removes a long standing FIXME and this removes a flicker where
-> the backlight brightness would jump to 100% when i915 loads even if
-> using the fastset path.
->=20
-> Note that this commit also simplifies pwm_disable_backlight(), by dropping
-> the intel_panel_actually_set_backlight(..., 0) call. This call sets the
-> PWM to 0% duty-cycle. I believe that this call was only present as a
-> workaround for a bug in the pwm-crc.c driver where it failed to clear the
-> PWM_OUTPUT_ENABLE bit. This is fixed by an earlier patch in this series.
->=20
-> After the dropping of this workaround, the usleep call, which seems
-> unnecessary to begin with, has no useful effect anymore, so drop that too.
->=20
-> Acked-by: Jani Nikula <jani.nikula@intel.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v4:
-> - Add a note to the commit message about the dropping of the
->   intel_panel_actually_set_backlight() and usleep() calls from
->   pwm_disable_backlight()
-> - Use the pwm_set/get_relative_duty_cycle() helpers instead of using DIY =
-code
->   for this
-> ---
->  .../drm/i915/display/intel_display_types.h    |  3 +-
->  drivers/gpu/drm/i915/display/intel_panel.c    | 71 +++++++++----------
->  2 files changed, 34 insertions(+), 40 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/i915/display/intel_display_types.h b/drivers=
-/gpu/drm/i915/display/intel_display_types.h
-> index de32f9efb120..4bd9981e70a1 100644
-> --- a/drivers/gpu/drm/i915/display/intel_display_types.h
-> +++ b/drivers/gpu/drm/i915/display/intel_display_types.h
-> @@ -28,6 +28,7 @@
-> =20
->  #include <linux/async.h>
->  #include <linux/i2c.h>
-> +#include <linux/pwm.h>
->  #include <linux/sched/clock.h>
-> =20
->  #include <drm/drm_atomic.h>
-> @@ -223,7 +224,7 @@ struct intel_panel {
->  		bool util_pin_active_low;	/* bxt+ */
->  		u8 controller;		/* bxt+ only */
->  		struct pwm_device *pwm;
-> -		int pwm_period_ns;
-> +		struct pwm_state pwm_state;
-> =20
->  		/* DPCD backlight */
->  		u8 pwmgen_bit_count;
-> diff --git a/drivers/gpu/drm/i915/display/intel_panel.c b/drivers/gpu/drm=
-/i915/display/intel_panel.c
-> index cb28b9908ca4..3d97267c8238 100644
-> --- a/drivers/gpu/drm/i915/display/intel_panel.c
-> +++ b/drivers/gpu/drm/i915/display/intel_panel.c
-> @@ -592,10 +592,10 @@ static u32 bxt_get_backlight(struct intel_connector=
- *connector)
->  static u32 pwm_get_backlight(struct intel_connector *connector)
->  {
->  	struct intel_panel *panel =3D &connector->panel;
-> -	int duty_ns;
-> +	struct pwm_state state;
-> =20
-> -	duty_ns =3D pwm_get_duty_cycle(panel->backlight.pwm);
-> -	return DIV_ROUND_UP(duty_ns * 100, panel->backlight.pwm_period_ns);
-> +	pwm_get_state(panel->backlight.pwm, &state);
-> +	return pwm_get_relative_duty_cycle(&state, 100);
+Integrating with the video BIOS means reading the VBT (Video BIOS Tables)
+and extracting info about which PWM controller to use, what frequency
+to program the output at, minimum allowed duty-cycle and if the scale
+is inverted.
 
-Here you introduce a slight difference: pwm_get_relative_duty_cycle uses
-round-closest while you replace a round-up. Is this relevant?
+> but I don't see how "handling 7 different types
+> of PWM controllers explicitly and others using the PWM API" can be seen
+> as "unified manner" compared to "provide a pwm driver for whatever might
+> be in the GPU and then use generic code (PWM API, pwm_bl) to drive it".
 
->  }
-> =20
->  static void lpt_set_backlight(const struct drm_connector_state *conn_sta=
-te, u32 level)
-> @@ -669,10 +669,9 @@ static void bxt_set_backlight(const struct drm_conne=
-ctor_state *conn_state, u32
->  static void pwm_set_backlight(const struct drm_connector_state *conn_sta=
-te, u32 level)
->  {
->  	struct intel_panel *panel =3D &to_intel_connector(conn_state->connector=
-)->panel;
-> -	int duty_ns =3D DIV_ROUND_UP(level * panel->backlight.pwm_period_ns, 10=
-0);
-> =20
-> -	pwm_config(panel->backlight.pwm, duty_ns,
-> -		   panel->backlight.pwm_period_ns);
-> +	pwm_set_relative_duty_cycle(&panel->backlight.pwm_state, level, 100);
-> +	pwm_apply_state(panel->backlight.pwm, &panel->backlight.pwm_state);
+Part of this is historical, the main x86 GPU drivers have always treated
+backlight control as integral part of the display pipeline and in some
+cases it really is, e.g. for eDP panels in some cases the backlight
+is controlled through the DP aux channel, there is no PWM controller
+(visible to the kernel involved). So the intel_panel.c code really
+is a backlight-control de-multiplexer, picking the right "plugin"
+to control the backlight, which may also be the eDP backlight control
+code. Using a PWM controller supported by the PWM-core/class is just
+one of the many supported "plugins".
 
-Similar here: The function used to use round-up but
-pwm_set_relative_duty_cycle() used round-closest.
+Also the GPU currently is treated as a single device, not as a MFD
+device, so we cannot have an isolated PWM driver. We could have code
+inside the GPU driver which exports a PWM-controller to the PWM-core,
+to then get a reference to the exported PWM-controller but that would
+be very roundabout.
 
->  }
-> =20
->  static void
-> @@ -841,10 +840,8 @@ static void pwm_disable_backlight(const struct drm_c=
-onnector_state *old_conn_sta
->  	struct intel_connector *connector =3D to_intel_connector(old_conn_state=
-->connector);
->  	struct intel_panel *panel =3D &connector->panel;
-> =20
-> -	/* Disable the backlight */
-> -	intel_panel_actually_set_backlight(old_conn_state, 0);
-> -	usleep_range(2000, 3000);
-> -	pwm_disable(panel->backlight.pwm);
-> +	panel->backlight.pwm_state.enabled =3D false;
-> +	pwm_apply_state(panel->backlight.pwm, &panel->backlight.pwm_state);
->  }
-> =20
->  void intel_panel_disable_backlight(const struct drm_connector_state *old=
-_conn_state)
-> @@ -1176,9 +1173,12 @@ static void pwm_enable_backlight(const struct inte=
-l_crtc_state *crtc_state,
->  {
->  	struct intel_connector *connector =3D to_intel_connector(conn_state->co=
-nnector);
->  	struct intel_panel *panel =3D &connector->panel;
-> +	int level =3D panel->backlight.level;
-> =20
-> -	pwm_enable(panel->backlight.pwm);
-> -	intel_panel_actually_set_backlight(conn_state, panel->backlight.level);
-> +	level =3D intel_panel_compute_brightness(connector, level);
-> +	pwm_set_relative_duty_cycle(&panel->backlight.pwm_state, level, 100);
-> +	panel->backlight.pwm_state.enabled =3D true;
-> +	pwm_apply_state(panel->backlight.pwm, &panel->backlight.pwm_state);
->  }
-> =20
->  static void __intel_panel_enable_backlight(const struct intel_crtc_state=
- *crtc_state,
-> @@ -1897,8 +1897,7 @@ static int pwm_setup_backlight(struct intel_connect=
-or *connector,
->  	struct drm_i915_private *dev_priv =3D to_i915(dev);
->  	struct intel_panel *panel =3D &connector->panel;
->  	const char *desc;
-> -	u32 level, ns;
-> -	int retval;
-> +	u32 level;
-> =20
->  	/* Get the right PWM chip for DSI backlight according to VBT */
->  	if (dev_priv->vbt.dsi.config->pwm_blc =3D=3D PPS_BLC_PMIC) {
-> @@ -1916,36 +1915,30 @@ static int pwm_setup_backlight(struct intel_conne=
-ctor *connector,
->  		return -ENODEV;
->  	}
-> =20
-> -	panel->backlight.pwm_period_ns =3D NSEC_PER_SEC /
-> -					 get_vbt_pwm_freq(dev_priv);
-> -
-> -	/*
-> -	 * FIXME: pwm_apply_args() should be removed when switching to
-> -	 * the atomic PWM API.
-> -	 */
-> -	pwm_apply_args(panel->backlight.pwm);
-> -
->  	panel->backlight.max =3D 100; /* 100% */
->  	panel->backlight.min =3D get_backlight_min_vbt(connector);
-> -	level =3D intel_panel_compute_brightness(connector, 100);
-> -	ns =3D DIV_ROUND_UP(level * panel->backlight.pwm_period_ns, 100);
-> =20
-> -	retval =3D pwm_config(panel->backlight.pwm, ns,
-> -			    panel->backlight.pwm_period_ns);
-> -	if (retval < 0) {
-> -		drm_err(&dev_priv->drm, "Failed to configure the pwm chip\n");
-> -		pwm_put(panel->backlight.pwm);
-> -		panel->backlight.pwm =3D NULL;
-> -		return retval;
-> +	if (pwm_is_enabled(panel->backlight.pwm) &&
-> +	    pwm_get_period(panel->backlight.pwm)) {
+The devices which are using an external PWM controller are actually
+the exception here, 99.9% of all devices use the GPU integrated PWM
+controller.
 
-What would pwm_is_enabled(panel->backlight.pwm) =3D=3D true &&
-pwm_get_period(panel->backlight.pwm) =3D=3D 0 mean? I hope this doesn't
-happen?!
+Anyways changing over the other PWM-like controllers support by
+the intel-panel code falls way outside of the scope of this
+patch-set.
 
-> +		/* PWM is already enabled, use existing settings */
-> +		pwm_get_state(panel->backlight.pwm, &panel->backlight.pwm_state);
-> +
-> +		level =3D pwm_get_relative_duty_cycle(&panel->backlight.pwm_state,
-> +						    100);
-> +		level =3D intel_panel_compute_brightness(connector, level);
-> +		panel->backlight.level =3D clamp(level, panel->backlight.min,
-> +					       panel->backlight.max);
-> +		panel->backlight.enabled =3D true;
-> +
-> +		drm_dbg_kms(&dev_priv->drm, "PWM already enabled at freq %ld, VBT freq=
- %d, level %d\n",
-> +			    NSEC_PER_SEC / panel->backlight.pwm_state.period,
+Regards,
 
-=2Eperiod becomes a u64 soon, so be prepared to fixup here.
+Hans
 
-> +			    get_vbt_pwm_freq(dev_priv), level);
-> +	} else {
-> +		/* Set period from VBT frequency, leave other settings at 0. */
-> +		panel->backlight.pwm_state.period =3D
-> +			NSEC_PER_SEC / get_vbt_pwm_freq(dev_priv);
->  	}
-> =20
-> -	level =3D DIV_ROUND_UP(pwm_get_duty_cycle(panel->backlight.pwm) * 100,
-> -			     panel->backlight.pwm_period_ns);
-> -	level =3D intel_panel_compute_brightness(connector, level);
-> -	panel->backlight.level =3D clamp(level, panel->backlight.min,
-> -				       panel->backlight.max);
-> -	panel->backlight.enabled =3D panel->backlight.level !=3D 0;
-> -
->  	drm_info(&dev_priv->drm, "Using %s PWM for LCD backlight control\n",
->  		 desc);
->  	return 0;
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---5toxfcg27avm6ah7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8JXPQACgkQwfwUeK3K
-7AmARgf/Yqf9yllKAKgBwSL+hvteJGX6FSkCgkGUsjLUFVOlHpiQPwc7pcXEj1Qi
-uVBpgJ5V2va8/qdPxHAzX2VySzwg15FSOezxtLbXjpETnZYPKnLEqVGXJ2JXU1vw
-6CiMBFCtqvYpDtF0sA1EWtM/tqZw9o3yXy3YIqYtGH+I6VaoU1BWpHxUFy3PquRA
-JCJQ38L5hlpdnabIVEmXLMX+XHRF+liYlkOGVXMMYJ3Y/hDHL2WUza1fzB4d94vk
-xhQT80cFvgw9QWWTapn6Y+gywQCCGEXuKgQk+44yIwfR7yUJZMvfPqYU15PWL0IK
-0xyyoFbTHR6D4+HwoNaXi17GKVwDUg==
-=QXcV
------END PGP SIGNATURE-----
-
---5toxfcg27avm6ah7--
