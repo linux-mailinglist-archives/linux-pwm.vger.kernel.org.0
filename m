@@ -2,102 +2,116 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3308021DB26
-	for <lists+linux-pwm@lfdr.de>; Mon, 13 Jul 2020 18:04:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 003FC21DDCE
+	for <lists+linux-pwm@lfdr.de>; Mon, 13 Jul 2020 18:46:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729644AbgGMQEb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 13 Jul 2020 12:04:31 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44876 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729027AbgGMQEb (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 13 Jul 2020 12:04:31 -0400
-Received: by mail-io1-f65.google.com with SMTP id i4so14006285iov.11;
-        Mon, 13 Jul 2020 09:04:30 -0700 (PDT)
+        id S1730258AbgGMQqD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 13 Jul 2020 12:46:03 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38476 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729593AbgGMQqD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 13 Jul 2020 12:46:03 -0400
+Received: by mail-io1-f67.google.com with SMTP id l1so14201573ioh.5;
+        Mon, 13 Jul 2020 09:46:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=0sunnV9kDrUsUSO/lW1Logo3b4p4WNuGPhwv9k+yy78=;
-        b=CDL5Dt3PPhI0ChMjEqhu/vdu8NqDoXjUnaVcNafdkb7GsgpKiR9B2Iw6IxEu+30s0U
-         8BICW3ode1gsiUVC4U8z4rWVZl28QM/wCwynWO+PoRnVc5KUyZv49AZdwvvs9PG5rm8j
-         Z/5cglDvhd38abiRrqzxVeY2cd/m6lw35wV1EPlH1kIrV+wEqmtKMquKKXaN8KDur9pQ
-         O9nNAUe2hdRIbj3AhnHxAjsyerUa0I0Jt23ts3E3ofA8qVvLPbaGXKHpwSBQEpVvxPw0
-         ouzG0Qz85L574ekv4qM7251yIBVjKBrADU3M93vUIK2G9ytEzu+hq5l+VVimwdlSSb9K
-         e5jA==
-X-Gm-Message-State: AOAM531ILEb7cDrzlGt8qdXtRZPFk2upAsHCMqpPF7bjkaIMmGjsCNft
-        MtjQS+CYYs5nyGtqjy6g3w==
-X-Google-Smtp-Source: ABdhPJxD7uq5WmIrqpNMEk2ms+CZADoNvoKAM2eqWWrJFaO+FKRn2p5bDlePNgpedl3T+/Pf63xtTg==
-X-Received: by 2002:a6b:d31a:: with SMTP id s26mr429334iob.48.1594656270186;
-        Mon, 13 Jul 2020 09:04:30 -0700 (PDT)
+        bh=H1m/Teq+x/ilTIvfbGsXt4itCdaLyvafzNxPOtFihBg=;
+        b=ELHmd2f2MdsNZSQGC+F6YlXmesAdgvPRey3aYo6+j1becm7KT+crvC0E7pKd+ry2t5
+         4WItXeeyeNxiie9Zpp4C3i7pjnKaD61r/m4+vXDsdfSB6DbmenYKKvpJD8KPdJFVeNLP
+         4IZCAzIE/eklIUqfSG2Wbe537F85jtFGb/wdwMswpZG8LXv6FDoejBD3fTni7n5rHb7N
+         lq4iH0FvtZcHLVb6YY6lXjfo127T6eumcnAQwwOKyhDkDFZAQsQS9H18er+FfYxGqhRu
+         TLWMa5c4aWynqeCvC/aRuvdBu3vDvey0eDrh9lmX0SX/BfAENOIrJQKks/59fLLdvm+/
+         LxCw==
+X-Gm-Message-State: AOAM530/5wyD5qTTIPUd29ZGjZHUcSLZKcSLM+E9yUYr0OYkGoFzBwN+
+        0+bqZO7LpyuQyHNArAiU/A==
+X-Google-Smtp-Source: ABdhPJxrujumDriuqPPBU6YyvN7fQLld9rwVoqG6+j8iuptKd1wORLde6EnsrYNYBwaOdB0cQ7qrew==
+X-Received: by 2002:a02:cf12:: with SMTP id q18mr1034219jar.3.1594658762332;
+        Mon, 13 Jul 2020 09:46:02 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id w15sm8941248ila.65.2020.07.13.09.04.28
+        by smtp.gmail.com with ESMTPSA id y12sm5627632iot.49.2020.07.13.09.46.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 09:04:29 -0700 (PDT)
-Received: (nullmailer pid 303717 invoked by uid 1000);
-        Mon, 13 Jul 2020 16:04:27 -0000
-Date:   Mon, 13 Jul 2020 10:04:27 -0600
+        Mon, 13 Jul 2020 09:46:01 -0700 (PDT)
+Received: (nullmailer pid 364057 invoked by uid 1000);
+        Mon, 13 Jul 2020 16:46:00 -0000
+Date:   Mon, 13 Jul 2020 10:46:00 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Li Yang <leoyang.li@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pwm@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        devicetree@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v5 03/13] dt-bindings: mfd: Add bindings for sl28cpld
-Message-ID: <20200713160427.GA303616@bogus>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-4-michael@walle.cc>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar.linux@gmail.com
+Subject: Re: [PATCH v4 1/2] Add DT bindings YAML schema for PWM fan
+ controller of LGM SoC
+Message-ID: <20200713164600.GA359372@bogus>
+References: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
+ <cfef33c19b97a9cfbb8ecc0c6a122f3c9a5b46dd.1593503228.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200706175353.16404-4-michael@walle.cc>
+In-Reply-To: <cfef33c19b97a9cfbb8ecc0c6a122f3c9a5b46dd.1593503228.git.rahul.tanwar@linux.intel.com>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 06 Jul 2020 19:53:43 +0200, Michael Walle wrote:
-> Add a device tree bindings for the board management controller found on
-> the Kontron SMARC-sAL28 board.
+On Tue, Jun 30, 2020 at 03:55:31PM +0800, Rahul Tanwar wrote:
+> Intel's LGM(Lightning Mountain) SoC contains a PWM fan controller
+> which is only used to control the fan attached to the system. This
+> PWM controller does not have any other consumer other than fan.
+> Add DT bindings documentation for this PWM fan controller.
 > 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
 > ---
-> Changes since v4:
->  - fix the regex of the unit-address
+>  .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
 > 
-> Changes since v3:
->  - see cover letter
-> 
->  .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  54 +++++++
->  .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 ++++
->  .../kontron,sl28cpld-intc.yaml                |  54 +++++++
->  .../bindings/mfd/kontron,sl28cpld.yaml        | 153 ++++++++++++++++++
->  .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
->  .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
->  6 files changed, 358 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
->  create mode 100644 Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
->  create mode 100644 Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
->  create mode 100644 Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
->  create mode 100644 Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
-> 
+> diff --git a/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+> new file mode 100644
+> index 000000000000..120bf3d85a24
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+> @@ -0,0 +1,50 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/intel,lgm-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: LGM SoC PWM fan controller
+> +
+> +maintainers:
+> +  - Rahul Tanwar <rahul.tanwar@intel.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: intel,lgm-pwm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  intel,fan-wire:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> +    description: Specifies fan mode. Default when unspecified is 2.
+> +
+> +  intel,max-rpm:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> +    description:
+> +      Specifies maximum RPM of fan attached to the system.
+> +      Default when unspecified is 4000.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+These are properties of the fan, not the PWM. And probably if you 
+need these properties then others would too, so they should be 
+common. Look at the pwm-fan.txt binding.
+
+Rob
