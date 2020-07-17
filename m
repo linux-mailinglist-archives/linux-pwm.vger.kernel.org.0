@@ -2,37 +2,37 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CC3A223D11
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jul 2020 15:40:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8825223D15
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jul 2020 15:40:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgGQNjF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 17 Jul 2020 09:39:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59398 "EHLO
+        id S1726528AbgGQNjW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 17 Jul 2020 09:39:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60126 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726210AbgGQNjF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Jul 2020 09:39:05 -0400
+        with ESMTP id S1726079AbgGQNjT (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Jul 2020 09:39:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594993144;
+        s=mimecast20190719; t=1594993158;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1V2c/64RZn70JrVNqYPs5uTiS7MghLouOUSREBgE3zw=;
-        b=E/ENw540ORZ4zIs1aNsrp62ak//Z3Ml7c6z+70/bJxAGsCrHpRbulxZXYa4TgUENfkGJwo
-        WTJXUf5bwNrYeclycFjv+4lzNY+f6Jq1vNwbBUjUj59+TfBZ9igb6UfMAgBWlAJA9S5JXq
-        AQ39AKNcE4XVRDTfOmrczgGxxJ63yv8=
+        bh=0E358gUSBhGTotJA8GEwcHbmCx7Te/Sih/QfnaV6xJs=;
+        b=dzkluc6mghKVCbtJLiC7Gl851H6If6reuJ6Zc+Aea8y4737nTYXB6CXxOSvlLEdEvVToiB
+        Is5j7DdQjyHt6HI5v2eRH/7novbxVd8i9opQ+Mq0uPwLZy6tL2V+l+NUjwEdL90SpIs7x1
+        EckVF+9MWRZCOFJHPbeA718NL0DyZRE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-38-NlhfjF17PvqhAKI_cKxcvA-1; Fri, 17 Jul 2020 09:39:02 -0400
-X-MC-Unique: NlhfjF17PvqhAKI_cKxcvA-1
+ us-mta-412-E5p5wfHEMOWmvwGIQj0xbQ-1; Fri, 17 Jul 2020 09:39:13 -0400
+X-MC-Unique: E5p5wfHEMOWmvwGIQj0xbQ-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B892D14A49;
-        Fri, 17 Jul 2020 13:38:53 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3259580BCCB;
+        Fri, 17 Jul 2020 13:39:00 +0000 (UTC)
 Received: from x1.localdomain.com (ovpn-112-162.ams2.redhat.com [10.36.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EA2CE8FA27;
-        Fri, 17 Jul 2020 13:38:50 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 089428FA3C;
+        Fri, 17 Jul 2020 13:38:53 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -49,14 +49,13 @@ Cc:     Hans de Goede <hdegoede@redhat.com>, linux-pwm@vger.kernel.org,
         dri-devel@lists.freedesktop.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH v5 12/16] pwm: crc: Implement get_state() method
-Date:   Fri, 17 Jul 2020 15:37:49 +0200
-Message-Id: <20200717133753.127282-13-hdegoede@redhat.com>
+        linux-acpi@vger.kernel.org, Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH v5 13/16] drm/i915: panel: Add get_vbt_pwm_freq() helper
+Date:   Fri, 17 Jul 2020 15:37:50 +0200
+Message-Id: <20200717133753.127282-14-hdegoede@redhat.com>
 In-Reply-To: <20200717133753.127282-1-hdegoede@redhat.com>
 References: <20200717133753.127282-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-pwm-owner@vger.kernel.org
@@ -64,71 +63,66 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Implement the pwm_ops.get_state() method to complete the support for the
-new atomic PWM API.
+Factor the code which checks and drm_dbg_kms-s the VBT PWM frequency
+out of get_backlight_max_vbt().
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This is a preparation patch for honering the VBT PWM frequency for
+devices which use an external PWM controller (devices using
+pwm_setup_backlight()).
+
+Acked-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v5:
-- Fix an indentation issue
+ drivers/gpu/drm/i915/display/intel_panel.c | 27 ++++++++++++++--------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
-Changes in v4:
-- Use DIV_ROUND_UP when calculating the period and duty_cycle from the
-  controller's register values
-
-Changes in v3:
-- Add Andy's Reviewed-by tag
-- Remove extra whitespace to align some code after assignments (requested by
-  Uwe Kleine-König)
----
- drivers/pwm/pwm-crc.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
-
-diff --git a/drivers/pwm/pwm-crc.c b/drivers/pwm/pwm-crc.c
-index 8a7f4707279c..370ab826a20b 100644
---- a/drivers/pwm/pwm-crc.c
-+++ b/drivers/pwm/pwm-crc.c
-@@ -119,8 +119,39 @@ static int crc_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	return 0;
+diff --git a/drivers/gpu/drm/i915/display/intel_panel.c b/drivers/gpu/drm/i915/display/intel_panel.c
+index 3c5056dbf607..8efdd9f08a08 100644
+--- a/drivers/gpu/drm/i915/display/intel_panel.c
++++ b/drivers/gpu/drm/i915/display/intel_panel.c
+@@ -1543,18 +1543,9 @@ static u32 vlv_hz_to_pwm(struct intel_connector *connector, u32 pwm_freq_hz)
+ 	return DIV_ROUND_CLOSEST(clock, pwm_freq_hz * mul);
  }
  
-+static void crc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      struct pwm_state *state)
-+{
-+	struct crystalcove_pwm *crc_pwm = to_crc_pwm(chip);
-+	struct device *dev = crc_pwm->chip.dev;
-+	unsigned int clk_div, clk_div_reg, duty_cycle_reg;
-+	int error;
-+
-+	error = regmap_read(crc_pwm->regmap, PWM0_CLK_DIV, &clk_div_reg);
-+	if (error) {
-+		dev_err(dev, "Error reading PWM0_CLK_DIV %d\n", error);
-+		return;
-+	}
-+
-+	error = regmap_read(crc_pwm->regmap, PWM0_DUTY_CYCLE, &duty_cycle_reg);
-+	if (error) {
-+		dev_err(dev, "Error reading PWM0_DUTY_CYCLE %d\n", error);
-+		return;
-+	}
-+
-+	clk_div = (clk_div_reg & ~PWM_OUTPUT_ENABLE) + 1;
-+
-+	state->period =
-+		DIV_ROUND_UP(clk_div * NSEC_PER_USEC * 256, PWM_BASE_CLK_MHZ);
-+	state->duty_cycle =
-+		DIV_ROUND_UP(duty_cycle_reg * state->period, PWM_MAX_LEVEL);
-+	state->polarity = PWM_POLARITY_NORMAL;
-+	state->enabled = !!(clk_div_reg & PWM_OUTPUT_ENABLE);
+-static u32 get_backlight_max_vbt(struct intel_connector *connector)
++static u16 get_vbt_pwm_freq(struct drm_i915_private *dev_priv)
+ {
+-	struct drm_i915_private *dev_priv = to_i915(connector->base.dev);
+-	struct intel_panel *panel = &connector->panel;
+ 	u16 pwm_freq_hz = dev_priv->vbt.backlight.pwm_freq_hz;
+-	u32 pwm;
+-
+-	if (!panel->backlight.hz_to_pwm) {
+-		drm_dbg_kms(&dev_priv->drm,
+-			    "backlight frequency conversion not supported\n");
+-		return 0;
+-	}
+ 
+ 	if (pwm_freq_hz) {
+ 		drm_dbg_kms(&dev_priv->drm,
+@@ -1567,6 +1558,22 @@ static u32 get_backlight_max_vbt(struct intel_connector *connector)
+ 			    pwm_freq_hz);
+ 	}
+ 
++	return pwm_freq_hz;
 +}
 +
- static const struct pwm_ops crc_pwm_ops = {
- 	.apply = crc_pwm_apply,
-+	.get_state = crc_pwm_get_state,
- };
- 
- static int crystalcove_pwm_probe(struct platform_device *pdev)
++static u32 get_backlight_max_vbt(struct intel_connector *connector)
++{
++	struct drm_i915_private *dev_priv = to_i915(connector->base.dev);
++	struct intel_panel *panel = &connector->panel;
++	u16 pwm_freq_hz = get_vbt_pwm_freq(dev_priv);
++	u32 pwm;
++
++	if (!panel->backlight.hz_to_pwm) {
++		drm_dbg_kms(&dev_priv->drm,
++			    "backlight frequency conversion not supported\n");
++		return 0;
++	}
++
+ 	pwm = panel->backlight.hz_to_pwm(connector, pwm_freq_hz);
+ 	if (!pwm) {
+ 		drm_dbg_kms(&dev_priv->drm,
 -- 
 2.26.2
 
