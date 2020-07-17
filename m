@@ -2,88 +2,107 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2E8A2246D1
-	for <lists+linux-pwm@lfdr.de>; Sat, 18 Jul 2020 01:13:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CC692246E4
+	for <lists+linux-pwm@lfdr.de>; Sat, 18 Jul 2020 01:20:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgGQXLr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 17 Jul 2020 19:11:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40140 "EHLO
+        id S1727916AbgGQXUG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 17 Jul 2020 19:20:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgGQXLq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Jul 2020 19:11:46 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66FDFC0619D2
-        for <linux-pwm@vger.kernel.org>; Fri, 17 Jul 2020 16:11:46 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z2so12760624wrp.2
-        for <linux-pwm@vger.kernel.org>; Fri, 17 Jul 2020 16:11:46 -0700 (PDT)
+        with ESMTP id S1726204AbgGQXUF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Jul 2020 19:20:05 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64879C0619D2
+        for <linux-pwm@vger.kernel.org>; Fri, 17 Jul 2020 16:20:05 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id dp18so12528190ejc.8
+        for <linux-pwm@vger.kernel.org>; Fri, 17 Jul 2020 16:20:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=rzjn/eYPwCM6Moj4rlObmsEsReunmRsAEC0/KZLwCVg=;
-        b=Lov4sdCnWQ+sBRfBNL+0G/LP/iK7IUI/22PUpseUjsRwmSVhhsKTNfh0HcvxTeEmYl
-         WlrmebPlQiavtHDYNLWRQrcXG3ccPYoROmr6vd19HtI9mp/KlnVdNkMIF9k2IAnlC3pu
-         9XoT04HEBib/De7FxRLtlPObMGBXc1ddRgK8Q=
+        h=from:to:cc:subject:date:message-id;
+        bh=IVJhKu+Gp3LFHGjQOw8PatWF56LYveANRBsfi3RUZ5Q=;
+        b=OnhsRGNmVZDhGNNrNKkJ3qUL/Z4HPDbWsDxx1SWXQzR0Adyl8HZKMHTorIIGW9B+NP
+         GdFUuANZ60TLcSe9p19DsazMK4Ni1GrYFMOzG36v/rMXPO5xErDoodh2uKDk56EXPbOF
+         Cu9zDXABX/VVZxE2IOk+Wllt3voMXXqKHXhXk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=rzjn/eYPwCM6Moj4rlObmsEsReunmRsAEC0/KZLwCVg=;
-        b=r4yJ10C/riqRw4E6eUgvU1cPWgLz31VKYqwzF28uG8f4KLsxOD/BFpASRls3oNttrK
-         Rbt84LNwDf5avzbbS6ubV/JU6jK2/jzQMR8NtXlameBhRtU3PjpAJxWA0wKeZL4JLca5
-         TOel1dy5d12+eZBftgfC38G9KBjW/z2f2L79MAgEFts+lF/qMSAqOFOoBQn/I3Vc7H8W
-         +f05aog+kxsJZyhikWP79uEt6l7U+Ux+Ltq5SEblYSs4JCuK1xHcJVVmaZV3sPgnPkGJ
-         VAxBwNsuHYC5UEXmNXe+61NOP3PtLfUQKkS0EtMKPE49JI8fKu6yo8/crB76UT0X7wCq
-         NcsQ==
-X-Gm-Message-State: AOAM5316SDhHDfwYNkeLXY11uj0WrM8j3SuyhnGYp2cDrlTRvrURvKxt
-        Ld7jhlMyzVkogl9Ctqq8MXNytQ==
-X-Google-Smtp-Source: ABdhPJxIeTbByBtvJPFBWtoEQwfx1aw0jKUYoGevVA/FgRszcMTAzmlm2Y25dEQktbQ/CvQGb+K4Pw==
-X-Received: by 2002:adf:80c7:: with SMTP id 65mr12694318wrl.246.1595027504036;
-        Fri, 17 Jul 2020 16:11:44 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id c3sm4296419wrx.5.2020.07.17.16.11.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 16:11:43 -0700 (PDT)
-Subject: Re: [PATCH v2] pwm: bcm-iproc: handle clk_get_rate() return
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=IVJhKu+Gp3LFHGjQOw8PatWF56LYveANRBsfi3RUZ5Q=;
+        b=mUY2YGUI68+zoPb4OcMtezny9YO5+G79g8qkpsR/xfRXSMs2Nl3mWswT4tg9eTsYb8
+         phtbbpN7UwwubCadvornG4pkyJzztadvNAINoP8iw9bNV90xm6ImcslBpw8IA4Ekk+Ca
+         idtXyOzG80Yp8nmLr2rBRUrhtp50K9VNXHFzEXdZBoK8fnZbfKzIzG+dHy2A+g27LFAq
+         yF8etiwnzQAeeOPtCAtu3uLW+tPau/iDyaonyaH66ILQOWMdkRrmroJ/9+a73t7iGPmT
+         324RFAnTxlt6BbJmtquYfSYUYojozTb9rRkArTOeiMWiopVCI9+jHQMdumxiyPDC0NL6
+         nY/g==
+X-Gm-Message-State: AOAM5320nJ51HsjW0WsaGEGu5yRw8shK6rBZ5n+FiyDvqXfzx98gxDFJ
+        +xMtcNJ9vsjyCE4n1v1t2Jtw6BFbC32dMw==
+X-Google-Smtp-Source: ABdhPJwdBaBHYKfugz8zuvk0G6zHnB4TwuV69YU6wyOAEVVWulh+am5y0KaMTj8EfN6DKOnSFcXEDQ==
+X-Received: by 2002:a17:906:fcba:: with SMTP id qw26mr10599993ejb.112.1595028003947;
+        Fri, 17 Jul 2020 16:20:03 -0700 (PDT)
+Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id v11sm9074093eja.113.2020.07.17.16.20.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 16:20:03 -0700 (PDT)
+From:   Scott Branden <scott.branden@broadcom.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
         linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-References: <20200717182512.26001-1-scott.branden@broadcom.com>
- <20200717230431.4oj44cfnkhkd2o6z@pengutronix.de>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <61a62404-6a44-53c3-6d17-89fa7a4c8551@broadcom.com>
-Date:   Fri, 17 Jul 2020 16:11:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200717230431.4oj44cfnkhkd2o6z@pengutronix.de>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Scott Branden <scott.branden@broadcom.com>
+Subject: [PATCH v3] pwm: bcm-iproc: handle clk_get_rate() return
+Date:   Fri, 17 Jul 2020 16:19:54 -0700
+Message-Id: <20200717231954.11695-1-scott.branden@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
+Handle clk_get_rate() returning 0 to avoid possible division by zero.
 
-On 2020-07-17 4:04 p.m., Uwe Kleine-König wrote:
-> On Fri, Jul 17, 2020 at 11:25:12AM -0700, Scott Branden wrote:
->> From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
->>
->> Handle clk_get_rate() returning <= 0 condition to avoid
->> possible division by zero.
-> You advertise handling <= 0, but in the code only == 0 is checked. One
-> of the two is wrong ...
-I checked - clk_get_rate can't return negative values.
-I'll update the commit message from <= to ==.
->
-> Best regards
-> Uwe
->
-Thanks,
-  Scott
+Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+Reviewed-off-by: Ray Jui <ray.jui@broadcom.com>
+
+---
+Changes from v2: update commit message to remove <= condition
+as clk_get_rate only returns value >= 0
+---
+ drivers/pwm/pwm-bcm-iproc.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
+index 1f829edd8ee7..d392a828fc49 100644
+--- a/drivers/pwm/pwm-bcm-iproc.c
++++ b/drivers/pwm/pwm-bcm-iproc.c
+@@ -85,8 +85,6 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	u64 tmp, multi, rate;
+ 	u32 value, prescale;
+ 
+-	rate = clk_get_rate(ip->clk);
+-
+ 	value = readl(ip->base + IPROC_PWM_CTRL_OFFSET);
+ 
+ 	if (value & BIT(IPROC_PWM_CTRL_EN_SHIFT(pwm->hwpwm)))
+@@ -99,6 +97,13 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	else
+ 		state->polarity = PWM_POLARITY_INVERSED;
+ 
++	rate = clk_get_rate(ip->clk);
++	if (rate == 0) {
++		state->period = 0;
++		state->duty_cycle = 0;
++		return;
++	}
++
+ 	value = readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
+ 	prescale = value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm);
+ 	prescale &= IPROC_PWM_PRESCALE_MAX;
+-- 
+2.17.1
+
