@@ -2,103 +2,122 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F891224603
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jul 2020 23:54:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D198522463C
+	for <lists+linux-pwm@lfdr.de>; Sat, 18 Jul 2020 00:27:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgGQVyu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 17 Jul 2020 17:54:50 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:37007 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbgGQVyu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Jul 2020 17:54:50 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id BE8012304C;
-        Fri, 17 Jul 2020 23:54:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1595022887;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CGb6zPojzWptr9RntI9Q3NPEKDFmlMY+j6ZpL+FsLqc=;
-        b=lXUBPhprMxuWRTGWj9ooCq/GJ4mduBqqCqkYMgu/pDyDfu75YE4/ef2ZgJ+fQ3e7CL1Tl9
-        MRG/bXe1GHq2w8n/hrhFFsoN+fiFgxupsc0LkwpgnlFow0FVYgv4Qq4LQRjSeokbD6WD9N
-        nh2GUUA2A7+CA/NgsN+TkqLnuF/u2tk=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 17 Jul 2020 23:54:42 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
+        id S1726546AbgGQW11 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 17 Jul 2020 18:27:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726512AbgGQW10 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Jul 2020 18:27:26 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32729C0619D3
+        for <linux-pwm@vger.kernel.org>; Fri, 17 Jul 2020 15:27:26 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id b6so12590785wrs.11
+        for <linux-pwm@vger.kernel.org>; Fri, 17 Jul 2020 15:27:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EvZfM7tSlBvQupdfYs+4sQhtafmRlnSnH6RQB9/57lE=;
+        b=BALRBWDK3OFtn2VmJ5nZHTR9pM51ksljccFyTBcyyX7bpgsd19EjLqCBWtl9kKUX0Y
+         4w8epWV9R2HFpGWlCx1dzLRDdnLdYREVQM8r6L74qPC44o8FZH2+Bc+XQEumOKfBQ7qB
+         8SffiaN/Prgk7fuWau8BRzfpotRm4p67pf/zw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EvZfM7tSlBvQupdfYs+4sQhtafmRlnSnH6RQB9/57lE=;
+        b=qj+I83OzXB2vLtpXZ5AFGDQlvr6B4QX41XC58o/lRz5w/gXhY6l0rCvHjF7+5jXfmX
+         v07tcQsSf+NWpfsWYoPChYYlEooGE82VqAzvlhGiImwjTY/ktG5KN1bSVedWZHxHIzqy
+         LFKkuuduuWhJUESmehzQKgZEQL4EgZSlP2uBKvGoMOSPjG5XRK9DwM1iI6EjAXWdMaPz
+         EqxLtkN1LzSBtiqvtlaZwUDFbd1JyJ16CSzgX6oAnDuSa4f/LGQrlkmNzj3FeOMXRCE2
+         OY1jDo/G3g553Fy1bvXYh4C4AONOomdEyvBkb+6/A2CwBOVqdGkIPflMFLHgiRjwksFC
+         Ywvw==
+X-Gm-Message-State: AOAM530ac164XRR17nG/R5AtdjbLG1GSjJHWlAFp5GJb/7XOQEcw91kf
+        qPGn0Axiwzs3LFPnzhuSKMb7tg==
+X-Google-Smtp-Source: ABdhPJx0qOnDdZN6gx4AvHIXjO6Am9+EduH4EbfKF2bXMV+Mc2rxaCL6YsZxoJ/EKxkzWy2AC+xdbA==
+X-Received: by 2002:a5d:4b4f:: with SMTP id w15mr11924497wrs.84.1595024844553;
+        Fri, 17 Jul 2020 15:27:24 -0700 (PDT)
+Received: from [10.230.182.181] ([192.19.224.250])
+        by smtp.gmail.com with ESMTPSA id c17sm821888wrc.42.2020.07.17.15.27.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 15:27:23 -0700 (PDT)
+Subject: Re: [PATCH v2] pwm: bcm-iproc: handle clk_get_rate() return
+To:     Scott Branden <scott.branden@broadcom.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe Kleine-K??nig <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 12/13] arm64: dts: freescale: sl28: enable LED support
-In-Reply-To: <20200717083610.GC1027@bug>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-13-michael@walle.cc> <20200717083610.GC1027@bug>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <af0584da0f43cb6cfffeb8fcf2235acb@walle.cc>
-X-Sender: michael@walle.cc
+        Lee Jones <lee.jones@linaro.org>
+Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+References: <20200717182512.26001-1-scott.branden@broadcom.com>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <c4f5cb1a-c94e-9b05-b8ad-c9eecd7e70e3@broadcom.com>
+Date:   Fri, 17 Jul 2020 15:27:19 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200717182512.26001-1-scott.branden@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Pavel,
 
-Am 2020-07-17 10:36, schrieb Pavel Machek:
-> Hi!
-> 
->> Now that we have support for GPIO lines of the SMARC connector, enable
->> LED support on the KBox A-230-LS. There are two LEDs without fixed
->> functions, one is yellow and one is green. Unfortunately, it is just 
->> one
->> multi-color LED, thus while it is possible to enable both at the same
->> time it is hard to tell the difference between "yellow only" and 
->> "yellow
->> and green".
-> 
->> +		user_yellow {
->> +			label = "s1914:yellow:user";
->> +			gpios = <&sl28cpld_gpio0 0 0>;
->> +		};
->> +
->> +		user_green {
->> +			label = "s1914:green:user";
->> +			gpios = <&sl28cpld_gpio1 3 0>;
->> +		};
-> 
-> This is not suitable label for such LEDs... there's zero chance 
-> userland will
-> know what to do with these.
-> 
-> Do they have some kind of "usual" function?
 
-Unfortunately, they do not. I guess the green one could be something 
-like
-"application ready" and the yellow one could be an indication that some
-fault occurred.
+On 7/17/2020 11:25 AM, Scott Branden wrote:
+> From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> 
+> Handle clk_get_rate() returning <= 0 condition to avoid
+> possible division by zero.
+> 
+> Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> 
+> ---
+> Changes from v1: ensure  'polarity' and 'enabled' are populated
+> when clk_get_rate is 0.
+> ---
+>  drivers/pwm/pwm-bcm-iproc.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
+> index 1f829edd8ee7..d392a828fc49 100644
+> --- a/drivers/pwm/pwm-bcm-iproc.c
+> +++ b/drivers/pwm/pwm-bcm-iproc.c
+> @@ -85,8 +85,6 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	u64 tmp, multi, rate;
+>  	u32 value, prescale;
+>  
+> -	rate = clk_get_rate(ip->clk);
+> -
+>  	value = readl(ip->base + IPROC_PWM_CTRL_OFFSET);
+>  
+>  	if (value & BIT(IPROC_PWM_CTRL_EN_SHIFT(pwm->hwpwm)))
+> @@ -99,6 +97,13 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	else
+>  		state->polarity = PWM_POLARITY_INVERSED;
+>  
+> +	rate = clk_get_rate(ip->clk);
+> +	if (rate == 0) {
+> +		state->period = 0;
+> +		state->duty_cycle = 0;
+> +		return;
+> +	}
+> +
+>  	value = readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
+>  	prescale = value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm);
+>  	prescale &= IPROC_PWM_PRESCALE_MAX;
+> 
 
-Do you have any suggestions?
+This patch looks good to me. Thanks!
 
--michael
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+
