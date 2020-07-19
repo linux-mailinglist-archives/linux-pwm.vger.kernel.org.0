@@ -2,51 +2,51 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F367E22509E
-	for <lists+linux-pwm@lfdr.de>; Sun, 19 Jul 2020 10:08:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 546C52250A1
+	for <lists+linux-pwm@lfdr.de>; Sun, 19 Jul 2020 10:08:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbgGSIIW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 19 Jul 2020 04:08:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59506 "EHLO
+        id S1726403AbgGSIIY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 19 Jul 2020 04:08:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgGSIIW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 19 Jul 2020 04:08:22 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEF88C0619D2;
-        Sun, 19 Jul 2020 01:08:21 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id h22so17035245lji.9;
-        Sun, 19 Jul 2020 01:08:21 -0700 (PDT)
+        with ESMTP id S1725836AbgGSIIX (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 19 Jul 2020 04:08:23 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68C55C0619D2;
+        Sun, 19 Jul 2020 01:08:23 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id q4so17106049lji.2;
+        Sun, 19 Jul 2020 01:08:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OJDKBzM5WCM/wOabtI6YcckSIiYQMrhs/j9cUZtSyfE=;
-        b=ke0IBpPTuBlyL2cszAZT9C9ayT7fVfvVzC6OVH3QBVUidZxNtMEqCBCq0s6HPGBv11
-         gXWEqvswIX9DA5Xter6f8TUidX6LiV6GRtUhdh2SY0CWmxVl8cYs9CWI08MAB4nJYF4v
-         J/UCP/A6eLnvH3XyzxH9hR8I0ZJbrB/LatKBwvGdnTK5AI06N63kiVytCbqnzJtvNL67
-         roPN+b6GObh6hOHmeMW/FixrnYeylnz5e1P5jPNTaDKnhPBKLkBLXfFp2TOCPvVu1Z6R
-         X60dHm+H+0bghNBCCYLWQXetFC1paWcfrV/Pn+lw9QH28Ygvk/O9Dite+bT3jJbfT75K
-         hp1A==
+        bh=cuNmp2Y8twclxYeBZp9lqPlgdVdohaDn7/kP95qzQpY=;
+        b=dt0gJHZiY7ngqE3Aru5QIDfzR/4WGSTSyw/onfx1owTURKpd8/LZItKX/EmdKaKww6
+         hEY+0zYkVbTNplOGw96iVnVRNjbZWHPDFljhBoUh92L+g8R3zKPSCXN/FlSrE0ZrMQjL
+         flVgCJgIHMHSllEEwnLlNoj5rphgeaU/JtmSmf30aDPkRG1UsPQDIXC5AHtRe/ec4dgi
+         6j8DGlmB4suQ+Zb6MIlniulvpsxURfSw431sQ8R77cVRxVq/hvOa/CPcLxEbVGpJSnNN
+         Ig5KaCsrzH4eiJ7xwYAcyxRQC0geH0KiJ9u8rcjpokzamfO3VgZqFfy0nuIwC3Ivi/aK
+         KGFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=OJDKBzM5WCM/wOabtI6YcckSIiYQMrhs/j9cUZtSyfE=;
-        b=Z9TIeMU1grGxeMA27RZP4xaG6jTfDav0Z1WWrvRrEPO9LVZK33zIQGwscXDI3Ut54z
-         +5OQbzKW236CqfR3MHnbWV88jMREmfywZAQ08FIjAc8Wh+ukWoxSXQx/9rB+hdOMVTcU
-         /Gv1yg2YJd5vVIEHaT+EiqYbHxlpOse29Mxo+auwACEOwUSa45NZarUkTdDPARMI7JNe
-         DlDTn+Y/ptY2424GlD81Im4agTWkfVb0slI8+RwBwUvvkRnGi0LdqlXXB+ktNGPIBx5X
-         9EZOa4wgUfDpjaBNyGIMN502YODRYK3nROC3AzWGBTCtmedRlfO4zDHpBWkVFR3oZQ/1
-         gARg==
-X-Gm-Message-State: AOAM531RjgDgnNxsuorKRsEEi0mDMSnsMaHaWUZ3kyK3s6cM6BIF7JaK
-        BSnCL9XVZeeCVNsbBZrtW4A=
-X-Google-Smtp-Source: ABdhPJw6MoGAA6/OzdTbDIA16nVyRjHatL9PcGdLBKA3q4XDBNcAWImwR5+k5f9pz7bIALWGu643sg==
-X-Received: by 2002:a2e:9908:: with SMTP id v8mr7603333lji.186.1595146100487;
-        Sun, 19 Jul 2020 01:08:20 -0700 (PDT)
+        bh=cuNmp2Y8twclxYeBZp9lqPlgdVdohaDn7/kP95qzQpY=;
+        b=mgCJ99XL3M66YSxkumFS1TJ4JpMSJHuKcUZeeU6C15bVRKu0NcfTk/z0latTujJz9S
+         C++BTp7BFGNB6Aavv2xL48mJhTJK8I3qZy+JANRkpbnjPNN7csw9Nnc+briKzM2u7jyQ
+         jCwbRMsMV4ahn/j/76cYYul6MKA37/DbL3RX6xd39qJaTCir2s3lS2jIT33LLrYXomg3
+         soSD74zUdUiyJKTbNlfGruqfDGDNPPyi7Ss3SwYXCPDudEMHjw8y78rx96CIMjejPXD0
+         qvvhU5IP3WHtY78NyOPA0kZbusJMA8xJW7noe76GCRsAWPoICJfADyK0dl8ob/OuTknz
+         73oA==
+X-Gm-Message-State: AOAM531HYx+1v1+5zQwwE21aiRTQtOQoGJaGYdgMJGQg5v6zAYB1erCe
+        oHOLqqXYl0h115eQfz+Gca8=
+X-Google-Smtp-Source: ABdhPJxZxOr0snHuWFqr6G4SGAfzIJ3mgEFuX4BaVmV7mFdW770Cwt5XaQ0uxyD0rDUWC5CdQtyriA==
+X-Received: by 2002:a2e:800b:: with SMTP id j11mr7692089ljg.105.1595146101920;
+        Sun, 19 Jul 2020 01:08:21 -0700 (PDT)
 Received: from saturn.lan ([2a00:fd00:805f:db00:d5fe:fe9c:fc06:b74c])
-        by smtp.gmail.com with ESMTPSA id 72sm732407lfh.97.2020.07.19.01.08.19
+        by smtp.gmail.com with ESMTPSA id 72sm732407lfh.97.2020.07.19.01.08.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jul 2020 01:08:20 -0700 (PDT)
+        Sun, 19 Jul 2020 01:08:21 -0700 (PDT)
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
@@ -70,9 +70,9 @@ Cc:     Andy Gross <agross@kernel.org>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Tomi Valkeinen <tomi.valkeinen@ti.com>,
         Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH v5 12/19] backlight: introduce backlight_get_brightness()
-Date:   Sun, 19 Jul 2020 10:07:36 +0200
-Message-Id: <20200719080743.8560-13-sam@ravnborg.org>
+Subject: [PATCH v5 13/19] backlight: as3711_bl: simplify update_status
+Date:   Sun, 19 Jul 2020 10:07:37 +0200
+Message-Id: <20200719080743.8560-14-sam@ravnborg.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200719080743.8560-1-sam@ravnborg.org>
 References: <20200719080743.8560-1-sam@ravnborg.org>
@@ -83,53 +83,50 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Based on an idea from Emil Velikov <emil.l.velikov@gmail.com>
-add a helper that checks backlight_is_blank() and return 0 as brightness
-if display is blank or the property value if not.
+Replaces the open-coded checks of the state, with the
+backlight_get_brightness() helper. This increases readability
+of the code and align the functionality across the drivers.
 
-This allows us to simplify the update_status() implementation
-in most of the backlight drivers.
+Futhermore drop the debug prints in update_status().
+If we need debug printing then we can add it to the backlight core.
+
+v2:
+  - Use backlight_get_brightness()
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
 Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Emil Velikov <emil.l.velikov@gmail.com>
 Cc: Lee Jones <lee.jones@linaro.org>
 Cc: Daniel Thompson <daniel.thompson@linaro.org>
 Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Emil Velikov <emil.l.velikov@gmail.com>
 ---
- include/linux/backlight.h | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/video/backlight/as3711_bl.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/backlight.h b/include/linux/backlight.h
-index c6ac4cbb9ddb..38db67588b16 100644
---- a/include/linux/backlight.h
-+++ b/include/linux/backlight.h
-@@ -417,6 +417,25 @@ static inline bool backlight_is_blank(const struct backlight_device *bd)
- 	       bd->props.state & (BL_CORE_SUSPENDED | BL_CORE_FBBLANK);
- }
+diff --git a/drivers/video/backlight/as3711_bl.c b/drivers/video/backlight/as3711_bl.c
+index 33f0f0f2e8b3..3b60019cdc2b 100644
+--- a/drivers/video/backlight/as3711_bl.c
++++ b/drivers/video/backlight/as3711_bl.c
+@@ -104,17 +104,10 @@ static int as3711_bl_update_status(struct backlight_device *bl)
+ 	struct as3711_bl_data *data = bl_get_data(bl);
+ 	struct as3711_bl_supply *supply = to_supply(data);
+ 	struct as3711 *as3711 = supply->as3711;
+-	int brightness = bl->props.brightness;
++	int brightness;
+ 	int ret = 0;
  
-+/**
-+ * backlight_get_brightness - Returns the current brightness value
-+ * @bd: the backlight device
-+ *
-+ * Returns the current brightness value, taking in consideration the current
-+ * state. If backlight_is_blank() returns true then return 0 as brightness
-+ * otherwise return the current brightness property value.
-+ *
-+ * Backlight drivers are expected to use this function in their update_status()
-+ * operation to get the brightness value.
-+ */
-+static inline int backlight_get_brightness(const struct backlight_device *bd)
-+{
-+	if (backlight_is_blank(bd))
-+		return 0;
-+	else
-+		return bd->props.brightness;
-+}
-+
- struct backlight_device *
- backlight_device_register(const char *name, struct device *dev, void *devdata,
- 			  const struct backlight_ops *ops,
+-	dev_dbg(&bl->dev, "%s(): brightness %u, pwr %x, blank %x, state %x\n",
+-		__func__, bl->props.brightness, bl->props.power,
+-		bl->props.fb_blank, bl->props.state);
+-
+-	if (bl->props.power != FB_BLANK_UNBLANK ||
+-	    bl->props.fb_blank != FB_BLANK_UNBLANK ||
+-	    bl->props.state & (BL_CORE_SUSPENDED | BL_CORE_FBBLANK))
+-		brightness = 0;
++	brightness = backlight_get_brightness(bl);
+ 
+ 	if (data->type == AS3711_BL_SU1) {
+ 		ret = as3711_set_brightness_v(as3711, brightness,
 -- 
 2.25.1
 
