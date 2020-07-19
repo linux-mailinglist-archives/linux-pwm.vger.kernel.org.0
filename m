@@ -2,51 +2,51 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B9AC22509B
-	for <lists+linux-pwm@lfdr.de>; Sun, 19 Jul 2020 10:08:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F367E22509E
+	for <lists+linux-pwm@lfdr.de>; Sun, 19 Jul 2020 10:08:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbgGSIIV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 19 Jul 2020 04:08:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59504 "EHLO
+        id S1726397AbgGSIIW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 19 Jul 2020 04:08:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgGSIIU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 19 Jul 2020 04:08:20 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D3B9C0619D2;
-        Sun, 19 Jul 2020 01:08:20 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id b30so5883458lfj.12;
-        Sun, 19 Jul 2020 01:08:20 -0700 (PDT)
+        with ESMTP id S1725836AbgGSIIW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 19 Jul 2020 04:08:22 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEF88C0619D2;
+        Sun, 19 Jul 2020 01:08:21 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id h22so17035245lji.9;
+        Sun, 19 Jul 2020 01:08:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wW63XUx9iwsgo3sF+eLJ1EmI31rAQ/9VoQVVmqYGrJA=;
-        b=HuW3STOjnm+5nA7TKFdrHyzBWygB7TYqPWMehFXq2MvpLMqQEL0KGAe5sg2xHurSL7
-         yTEvfW8rP3bsTWPpPulplN7Wb7PBEHud8WVBnoIB/GPMUQk23NvL3VU4zJ6moNHIDeFl
-         VqJFEgbISll+a9tCrHRVmVtdv8v8aanuM9QJCi4qsjrHtdaWn/5M2/pa6BHxOfK4UZlV
-         V2+3LWiCOLWdJhmAFNRu74uELktGOPi1wf6XpnzVHs1rnwEQ4fiFRa5tUk+9NzAuwFIM
-         +sVPLJJYBc73HiorGIirrriC+eL9Cd7R9NPUpSANVeOFwLamC83wwOcm5BK+h4lHwra7
-         GfSw==
+        bh=OJDKBzM5WCM/wOabtI6YcckSIiYQMrhs/j9cUZtSyfE=;
+        b=ke0IBpPTuBlyL2cszAZT9C9ayT7fVfvVzC6OVH3QBVUidZxNtMEqCBCq0s6HPGBv11
+         gXWEqvswIX9DA5Xter6f8TUidX6LiV6GRtUhdh2SY0CWmxVl8cYs9CWI08MAB4nJYF4v
+         J/UCP/A6eLnvH3XyzxH9hR8I0ZJbrB/LatKBwvGdnTK5AI06N63kiVytCbqnzJtvNL67
+         roPN+b6GObh6hOHmeMW/FixrnYeylnz5e1P5jPNTaDKnhPBKLkBLXfFp2TOCPvVu1Z6R
+         X60dHm+H+0bghNBCCYLWQXetFC1paWcfrV/Pn+lw9QH28Ygvk/O9Dite+bT3jJbfT75K
+         hp1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=wW63XUx9iwsgo3sF+eLJ1EmI31rAQ/9VoQVVmqYGrJA=;
-        b=sP9byqGmAjH18OJvzmbYS0hjZkaD5yTX9FETLRWqUkYVyY/sgco5BhZwUaKzZ9EYss
-         28vjs4qWxpvlnVL6+ViSdih5peyjiZaIt+r2UbaOSlBEtdDBwvZIqtdSmGVm4bfxVeTJ
-         tw5/nBBBhh8XcEZOHOflrHVhnE7jLBGnpYvtoOvFBhaz9CBxxRkNhWq7JGQm7QFAapJ3
-         p3+CR7GnkrUoUY33YfH5MlIaPgk1rP1aTKXhrrqaxVqQ33oZOOUa7SGp/pglqLiy+mlC
-         ikLQ7/7zhI6ZgXhMENnH53dbfNrB9VwWPVTni3tjHMEQsOrLr/y32oVZpnwnMevAtl9N
-         bCVg==
-X-Gm-Message-State: AOAM531RORHKbX64nYS9yHS/OC0PXIqlUgWiSjNP1u+iRYFbfWd8DL/y
-        +/0EqijqCN5nrO3qCB54TZ4=
-X-Google-Smtp-Source: ABdhPJwLvz2z9lmHimCaJxwSbfMyBaB/B0JnKaQ3Wdhc/h602Hub6VMpVFeHlh9jZTqOOYVvZJdHpg==
-X-Received: by 2002:a19:c1d6:: with SMTP id r205mr484342lff.141.1595146098916;
-        Sun, 19 Jul 2020 01:08:18 -0700 (PDT)
+        bh=OJDKBzM5WCM/wOabtI6YcckSIiYQMrhs/j9cUZtSyfE=;
+        b=Z9TIeMU1grGxeMA27RZP4xaG6jTfDav0Z1WWrvRrEPO9LVZK33zIQGwscXDI3Ut54z
+         +5OQbzKW236CqfR3MHnbWV88jMREmfywZAQ08FIjAc8Wh+ukWoxSXQx/9rB+hdOMVTcU
+         /Gv1yg2YJd5vVIEHaT+EiqYbHxlpOse29Mxo+auwACEOwUSa45NZarUkTdDPARMI7JNe
+         DlDTn+Y/ptY2424GlD81Im4agTWkfVb0slI8+RwBwUvvkRnGi0LdqlXXB+ktNGPIBx5X
+         9EZOa4wgUfDpjaBNyGIMN502YODRYK3nROC3AzWGBTCtmedRlfO4zDHpBWkVFR3oZQ/1
+         gARg==
+X-Gm-Message-State: AOAM531RjgDgnNxsuorKRsEEi0mDMSnsMaHaWUZ3kyK3s6cM6BIF7JaK
+        BSnCL9XVZeeCVNsbBZrtW4A=
+X-Google-Smtp-Source: ABdhPJw6MoGAA6/OzdTbDIA16nVyRjHatL9PcGdLBKA3q4XDBNcAWImwR5+k5f9pz7bIALWGu643sg==
+X-Received: by 2002:a2e:9908:: with SMTP id v8mr7603333lji.186.1595146100487;
+        Sun, 19 Jul 2020 01:08:20 -0700 (PDT)
 Received: from saturn.lan ([2a00:fd00:805f:db00:d5fe:fe9c:fc06:b74c])
-        by smtp.gmail.com with ESMTPSA id 72sm732407lfh.97.2020.07.19.01.08.17
+        by smtp.gmail.com with ESMTPSA id 72sm732407lfh.97.2020.07.19.01.08.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jul 2020 01:08:18 -0700 (PDT)
+        Sun, 19 Jul 2020 01:08:20 -0700 (PDT)
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
@@ -69,11 +69,10 @@ Cc:     Andy Gross <agross@kernel.org>,
         Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v5 11/19] backlight: wire up kernel-doc documentation
-Date:   Sun, 19 Jul 2020 10:07:35 +0200
-Message-Id: <20200719080743.8560-12-sam@ravnborg.org>
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH v5 12/19] backlight: introduce backlight_get_brightness()
+Date:   Sun, 19 Jul 2020 10:07:36 +0200
+Message-Id: <20200719080743.8560-13-sam@ravnborg.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200719080743.8560-1-sam@ravnborg.org>
 References: <20200719080743.8560-1-sam@ravnborg.org>
@@ -84,54 +83,53 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Include backlight so the documentation is now generated
-with make htmldocs and friends.
+Based on an idea from Emil Velikov <emil.l.velikov@gmail.com>
+add a helper that checks backlight_is_blank() and return 0 as brightness
+if display is blank or the property value if not.
+
+This allows us to simplify the update_status() implementation
+in most of the backlight drivers.
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
 Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Emil Velikov <emil.l.velikov@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>
 ---
- Documentation/gpu/backlight.rst | 12 ++++++++++++
- Documentation/gpu/index.rst     |  1 +
- 2 files changed, 13 insertions(+)
- create mode 100644 Documentation/gpu/backlight.rst
+ include/linux/backlight.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/Documentation/gpu/backlight.rst b/Documentation/gpu/backlight.rst
-new file mode 100644
-index 000000000000..9ebfc9d0aced
---- /dev/null
-+++ b/Documentation/gpu/backlight.rst
-@@ -0,0 +1,12 @@
-+=================
-+Backlight support
-+=================
+diff --git a/include/linux/backlight.h b/include/linux/backlight.h
+index c6ac4cbb9ddb..38db67588b16 100644
+--- a/include/linux/backlight.h
++++ b/include/linux/backlight.h
+@@ -417,6 +417,25 @@ static inline bool backlight_is_blank(const struct backlight_device *bd)
+ 	       bd->props.state & (BL_CORE_SUSPENDED | BL_CORE_FBBLANK);
+ }
+ 
++/**
++ * backlight_get_brightness - Returns the current brightness value
++ * @bd: the backlight device
++ *
++ * Returns the current brightness value, taking in consideration the current
++ * state. If backlight_is_blank() returns true then return 0 as brightness
++ * otherwise return the current brightness property value.
++ *
++ * Backlight drivers are expected to use this function in their update_status()
++ * operation to get the brightness value.
++ */
++static inline int backlight_get_brightness(const struct backlight_device *bd)
++{
++	if (backlight_is_blank(bd))
++		return 0;
++	else
++		return bd->props.brightness;
++}
 +
-+.. kernel-doc:: drivers/video/backlight/backlight.c
-+   :doc: overview
-+
-+.. kernel-doc:: include/linux/backlight.h
-+   :internal:
-+
-+.. kernel-doc:: drivers/video/backlight/backlight.c
-+   :export:
-diff --git a/Documentation/gpu/index.rst b/Documentation/gpu/index.rst
-index 1fcf8e851e15..c9a51e3bfb5a 100644
---- a/Documentation/gpu/index.rst
-+++ b/Documentation/gpu/index.rst
-@@ -12,6 +12,7 @@ Linux GPU Driver Developer's Guide
-    drm-uapi
-    drm-client
-    drivers
-+   backlight
-    vga-switcheroo
-    vgaarbiter
-    todo
+ struct backlight_device *
+ backlight_device_register(const char *name, struct device *dev, void *devdata,
+ 			  const struct backlight_ops *ops,
 -- 
 2.25.1
 
