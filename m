@@ -2,147 +2,109 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B0042258D8
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 Jul 2020 09:43:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C94E225A4F
+	for <lists+linux-pwm@lfdr.de>; Mon, 20 Jul 2020 10:48:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbgGTHnS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 20 Jul 2020 03:43:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49274 "EHLO
+        id S1726492AbgGTIsc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 20 Jul 2020 04:48:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbgGTHnR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 20 Jul 2020 03:43:17 -0400
+        with ESMTP id S1726030AbgGTIsb (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 20 Jul 2020 04:48:31 -0400
 Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79C6AC0619D5
-        for <linux-pwm@vger.kernel.org>; Mon, 20 Jul 2020 00:43:17 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id f18so24094433wml.3
-        for <linux-pwm@vger.kernel.org>; Mon, 20 Jul 2020 00:43:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18653C061794
+        for <linux-pwm@vger.kernel.org>; Mon, 20 Jul 2020 01:48:31 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id w3so24296716wmi.4
+        for <linux-pwm@vger.kernel.org>; Mon, 20 Jul 2020 01:48:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=m6yytUMdKpAiiKF/+CcuV8LMm9NpXNcKGc9Sb6F7cqo=;
-        b=IVK09e1ld+9cwoXx1bqDODaFImU/E8BERDq0mWlu1Dh3gZ8IilQ3NLb5AgUJs2EZ6A
-         DOpTQs9i1N8ia2cP2g7Hb9P6XoaJ7E0SsvqJvP109FQdN1+ZnJhAs2U+kTjtokXyi7kX
-         KZWHKc+5M16aNSA+dKO3bVZQ3Ch6eBOqPwHOhmW6ZcCXCA9lkNv0mus2J2Dg295523dN
-         wlMsuRQmfpFIbc8P/E473L2Usu9r1pSH6N0HzqC+VSRl0++AZtaLlfi6afz/RKsfOi1+
-         pBDqXeB4fWSWXBmqduD5AQBaV8vSZx9hm2B0U5J2k7sG/cAbFhzBStssMGIksHjKYPH5
-         ApOA==
+         :content-disposition:in-reply-to;
+        bh=3Mvv6V7aL0bS8bLhb+v9J48PYxr/jDUQbWZDKJ3of4k=;
+        b=GPZr4RzzAiGFrXA4Lc2u8SHFw4nz+8LttAOAp071b1HN8JGHbq8hJeNnFyFnZfQNpI
+         wfvmIupf6FmdZMHcWDZ0RGgfmR6/UkXw1Ry9fxlPWa55mXeOllJIylslp/fcTX1P5tpX
+         X4PGv9AY4r+UTZ4ZUwjPhWtlHUj2YMSTGaYw/KHK8TwLdyFW4hiMT8Iz731WhgUcs+Rb
+         yoVZvTLCdpKiKVYTxaGVMCUqMrf8WZjC1zVmAwKexn5OhhWEN+kFygPDdy0g1OcaX5tg
+         Tdc2WARpJx4H5rlw2EUN8LdK4kBj/RkauWc0R3XCvaYw6Oo12LBLFN0aPNKxOJUEsnJ7
+         RQGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=m6yytUMdKpAiiKF/+CcuV8LMm9NpXNcKGc9Sb6F7cqo=;
-        b=pk3H1nBzLRpJ2EfikeAq7qWF2CMoJEO1rR9M50UlPFJZ9AMvNbgEFt0ZXNO1fJVeev
-         QFWKrR2gcI1Fffjiip4KvJqJM/YDyaGVMQchr4b76w/n49Kn2VMNB+0Gb3I357ZQPcSo
-         DafccDbplMOQ/nw1dpjpx3JCRlggiHJlM4JOyK0QykphIdtFwyKY8MKFDh3hLL12Edzw
-         dyzyX4BFg2Rkas22KYhTqRpr5EJxUKg6wp/RxmbELJtr2u/nIVQP84ajQ3r6xGUw5RH5
-         PuLmVlMDhWr5Ir06yFr/1qKEVEaSbXPArbqMhrcimZPJYUuAdnhU/OgptJmZ3KIVImug
-         wiEQ==
-X-Gm-Message-State: AOAM5339Ffk9kansvzOyykHgKYta1MCC+BUtVRYKqCOZVISrOaJFXtiK
-        hCzl5uyTS0/S+qG0bNP/2UyozQ==
-X-Google-Smtp-Source: ABdhPJzdJSdBbBWM2quCXUnipLg3+n/33qPK8Rxd7dlcJHIfTbXk90f6awCJz9w28J/D1s9VK8ooPw==
-X-Received: by 2002:a1c:408b:: with SMTP id n133mr20209577wma.88.1595230995865;
-        Mon, 20 Jul 2020 00:43:15 -0700 (PDT)
-Received: from dell ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id o7sm17531643wrv.50.2020.07.20.00.43.14
+         :mime-version:content-disposition:in-reply-to;
+        bh=3Mvv6V7aL0bS8bLhb+v9J48PYxr/jDUQbWZDKJ3of4k=;
+        b=F3DOpfuS0cD/H3UISnOVsdlgn9MiBJR1j88toroMkdR/jugMii06fLg2vB76qhVB0/
+         R4TY60al+aHpe+7HhLARItnfH/ZYUOWoOds1Oc2aR/BIoRY3wzrLd5EyI5F4tkwG4ctM
+         7Ho6YFSUxDNwYGWXa/glwk/ShlAtLsN8X5+ps9fcraEKMEYeX5G+K7k6k0dWGBi3VNUy
+         ZLLRyPTgMf0LqDvJh36DjWvR+4lfZnac7SGENIHeEszz6bcGdEuq60QNhaxa7x2CItWP
+         aPVrq1qOY/+P89pKEYxN/qGpB5lkQTM7d79/qFdBBDmXpB+0pJP7BAfL8GdhbsQLRkmB
+         aazA==
+X-Gm-Message-State: AOAM533oLbjvX5o7DNWZ2Dusc0d4orJ904nd+JQyIc/c05IhmEStm6SZ
+        cq8n/t9GX+QexK2bDX+rrNPGpA==
+X-Google-Smtp-Source: ABdhPJzE0VX+v4xxb0yfbr3uIHhTnBrDiWh9q2HaxcqnvtD/UybPjPxZBEj8tuo6izQM73ENIq/qcA==
+X-Received: by 2002:a1c:a74c:: with SMTP id q73mr19955891wme.96.1595234909650;
+        Mon, 20 Jul 2020 01:48:29 -0700 (PDT)
+Received: from holly.lan (82-132-214-103.dab.02.net. [82.132.214.103])
+        by smtp.gmail.com with ESMTPSA id l15sm30561453wro.33.2020.07.20.01.48.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 00:43:15 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 08:43:12 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        Mon, 20 Jul 2020 01:48:28 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 09:48:22 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        patches@opensource.cirrus.com,
+        Support Opensource <support.opensource@diasemi.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 02/13] mfd: add simple regmap based I2C driver
-Message-ID: <20200720074312.GL3165313@dell>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-3-michael@walle.cc>
- <20200717090656.GF3165313@dell>
- <52d85ea1ddc488762df547168e2001e9@walle.cc>
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v5 14/19] backlight: cr_bllcd: introduce gpio-backlight
+ semantics
+Message-ID: <20200720084822.wt5guzetkrgbgdcc@holly.lan>
+References: <20200719080743.8560-1-sam@ravnborg.org>
+ <20200719080743.8560-15-sam@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <52d85ea1ddc488762df547168e2001e9@walle.cc>
+In-Reply-To: <20200719080743.8560-15-sam@ravnborg.org>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 20 Jul 2020, Michael Walle wrote:
-
-> Am 2020-07-17 11:06, schrieb Lee Jones:
-> > On Mon, 06 Jul 2020, Michael Walle wrote:
-> > 
-> > > There are I2C devices which contain several different functions but
-> > > doesn't require any special access functions. For these kind of
-> > > drivers
-> > > an I2C regmap should be enough.
-> > > 
-> > > Create an I2C driver which creates an I2C regmap and enumerates its
-> > > children. If a device wants to use this as its MFD core driver, it has
-> > > to add an individual compatible string. It may provide its own regmap
-> > > configuration.
-> > > 
-> > > Subdevices can use dev_get_regmap() on the parent to get their regmap
-> > > instance.
-> > > 
-> > > Signed-off-by: Michael Walle <michael@walle.cc>
-> > > ---
-> > > Changes since v4:
-> > >  - new patch. Lee, please bear with me. I didn't want to delay the
-> > >    new version (where a lot of remarks on the other patches were
-> > >    addressed) even more, just because we haven't figured out how
-> > >    to deal with the MFD part. So for now, I've included this one.
-> > > 
-> > >  drivers/mfd/Kconfig          |  9 +++++++
-> > >  drivers/mfd/Makefile         |  1 +
-> > >  drivers/mfd/simple-mfd-i2c.c | 50
-> > > ++++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 60 insertions(+)
-> > >  create mode 100644 drivers/mfd/simple-mfd-i2c.c
-> > > 
-> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > > index 33df0837ab41..f1536a710aca 100644
-> > > --- a/drivers/mfd/Kconfig
-> > > +++ b/drivers/mfd/Kconfig
-> > > @@ -1162,6 +1162,15 @@ config MFD_SI476X_CORE
-> > >  	  To compile this driver as a module, choose M here: the
-> > >  	  module will be called si476x-core.
-> > > 
-> > > +config MFD_SIMPLE_MFD_I2C
-> > > +	tristate "Simple regmap based I2C devices"
-> > 
-> > Doesn't look like tristate to me.
-> > 
-> > Haven't you made this builtin only?
+On Sun, Jul 19, 2020 at 10:07:38AM +0200, Sam Ravnborg wrote:
+> cr_bllcd can turn backlight ON or OFF.
+> Fix semantitics so they equals what we know from gpio-backlight.
+> brightness == 0   => backlight off
+> brightness == 1   => backlight on
 > 
-> Mh yeah, I forgot to change it to module in the driver. I don't
-> know whats better though, have it tristate or just offer a boolean
-> option because it should be small anyway. What do you think?
-> My interrupt driver will force it to boolean anyway.
+> Use the backlight_get_brightness() helper to simplify the code.
+> 
+> v2:
+>   - reworked to introduce gpio-backlight semantics (Daniel)
 
-Better to give consumers the choice I think.
+Wasn't this added for v5? However, I spotted this change amoung the
+other patches so no worries...
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+
+
+Daniel.
