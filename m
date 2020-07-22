@@ -2,384 +2,198 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB66A227B6B
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 Jul 2020 11:13:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 030B8229B47
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Jul 2020 17:23:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbgGUJNt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 21 Jul 2020 05:13:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33580 "EHLO
+        id S1732391AbgGVPXu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 22 Jul 2020 11:23:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgGUJNs (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 21 Jul 2020 05:13:48 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8259FC061794
-        for <linux-pwm@vger.kernel.org>; Tue, 21 Jul 2020 02:13:48 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jxoLK-0007cc-KB; Tue, 21 Jul 2020 11:13:46 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jxoLI-000544-SG; Tue, 21 Jul 2020 11:13:44 +0200
-Date:   Tue, 21 Jul 2020 11:13:44 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     vineetha.g.jaya.kumaran@intel.com
-Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        wan.ahmad.zainie.wan.mohamad@intel.com, andriy.shevchenko@intel.com
-Subject: Re: [PATCH v2 1/2] pwm: Add PWM driver for Intel Keem Bay
-Message-ID: <20200721091344.eka44xmkwmqbchm6@pengutronix.de>
-References: <1595083628-20734-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
- <1595083628-20734-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+        with ESMTP id S1728812AbgGVPXt (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 22 Jul 2020 11:23:49 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A1D7C0619DC;
+        Wed, 22 Jul 2020 08:23:49 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id e7so2111096qti.1;
+        Wed, 22 Jul 2020 08:23:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=szq1EIALXI1InaxXczbdpSUPUkPqU/Qn6lzK/O+OxWc=;
+        b=CAEQLD0OIy3i76OKUVUS9iV+HfgTRqQh4zszhLDC4LN7XC5ZyA0o6CufBfhJxn4HO8
+         rH2qq5xY5Ex9GAc6mWgK1ej2k75dsWoGhYOwOvcT1chpP4OzZQ1/xAfEje5rEuEcgXXr
+         l4Q8QC6jP3o3uok4YZMv4sNc4v9bZzljJaj47Xi1leBMAiZwN8hUV37/luAgXoQbdgMX
+         GC7TS4nwFR79LtFHFQ2rcpFXYuBF8CWcYw3ZBrK7J5JWmfzpA0eGwaS00W/Es/iHZ8YF
+         lqi8H3YxWX7fTaZxvuFLKRwzi9sXVvNFt+YRzZio29P+RxmqIqbSKN3vnf07XH0X3bvu
+         DcPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=szq1EIALXI1InaxXczbdpSUPUkPqU/Qn6lzK/O+OxWc=;
+        b=VG2Y4Kqz/2RMKYYEpt/e2hH11p4o0iAr6tlm/iPC0G8+Xmo8q388cTtYjjY7oVoe6P
+         EX4IexiNuCm+sM0NLhmQA5WrVNT0sbPiS7piKEil0H7smRyRJ+MshYfDZgnU+/KBsmJX
+         o13hQB2GBpFIB14MyaTbjZfCRoZjs/9B36Ly1oay/ojWIaHMRu+OM0V0FC2lkMApwDR4
+         acOK98AnB56zrGC4gKhdhLbWDcyFwgH5ryqeRbdWkguOTo+xCyshGs7eDUpEmrX7aRjg
+         wCy2MIqBDkYRmdcMxl+N0lJsObBpIuPRbK+UdrCNeZsCNLgLxEJmiIzxpSdMrngrgUPB
+         4oMg==
+X-Gm-Message-State: AOAM5300//bfKV6AS5anhT68IxglKuP+UpWrFK3HgW0IFWWL4mjEHuAb
+        BO4NK9HbKYDDtZ+Vkm/I5TI=
+X-Google-Smtp-Source: ABdhPJyzsK6HT8/HMfmXsVfQBXHE3dyaA10OKIOIE/mnJ3TL4vgh3TQyfKIKhLOQA5bCg8/9sOPv5Q==
+X-Received: by 2002:ac8:41c6:: with SMTP id o6mr33903563qtm.292.1595431428291;
+        Wed, 22 Jul 2020 08:23:48 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a8:11e1::10da? ([2620:10d:c091:480::1:4a2])
+        by smtp.gmail.com with ESMTPSA id d8sm6953qtr.12.2020.07.22.08.23.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2020 08:23:46 -0700 (PDT)
+From:   Jes Sorensen <jes.sorensen@gmail.com>
+X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
+Subject: Re: [PATCH v16 3/3] Input: new da7280 haptic driver
+To:     Roy Im <roy.im.opensource@diasemi.com>,
+        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Support Opensource <support.opensource@diasemi.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+References: <cover.1594279649.git.Roy.Im@diasemi.com>
+ <b02ba5b5dbd3d58f27440ba639d32e4405061df3.1594279649.git.Roy.Im@diasemi.com>
+Message-ID: <bdc76da9-9223-b6d9-1fc1-2ef6e3b7afa7@gmail.com>
+Date:   Wed, 22 Jul 2020 11:23:45 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="n2tquz4ug3774r33"
-Content-Disposition: inline
-In-Reply-To: <1595083628-20734-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <b02ba5b5dbd3d58f27440ba639d32e4405061df3.1594279649.git.Roy.Im@diasemi.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
---n2tquz4ug3774r33
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello,
-
-On Sat, Jul 18, 2020 at 10:47:07PM +0800, vineetha.g.jaya.kumaran@intel.com=
- wrote:
-> From: "Lai, Poey Seng" <poey.seng.lai@intel.com>
->=20
-> Enable PWM support for the Intel Keem Bay SoC.
->=20
-> Signed-off-by: Lai, Poey Seng <poey.seng.lai@intel.com>
-> Signed-off-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.co=
-m>
+On 7/9/20 3:27 AM, Roy Im wrote:
+> Adds support for the Dialog DA7280 LRA/ERM Haptic Driver with
+> multiple mode and integrated waveform memory and wideband support.
+> It communicates via an I2C bus to the device.
+> 
+> Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
 > ---
->  drivers/pwm/Kconfig       |   9 ++
->  drivers/pwm/Makefile      |   1 +
->  drivers/pwm/pwm-keembay.c | 239 ++++++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 249 insertions(+)
->  create mode 100644 drivers/pwm/pwm-keembay.c
->=20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index cb8d739..2b0419b 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -569,4 +569,13 @@ config PWM_ZX
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-zx.
-> =20
-> +config PWM_KEEMBAY
-> +	tristate "Intel Keem Bay PWM driver"
-> +	depends on ARM64 || COMPILE_TEST
-> +	help
-> +	  The platform driver for Intel Keem Bay PWM controller.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-keembay.
-> +
->  endif
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index a59c710..0c84ff2 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -55,3 +55,4 @@ obj-$(CONFIG_PWM_TWL)		+=3D pwm-twl.o
->  obj-$(CONFIG_PWM_TWL_LED)	+=3D pwm-twl-led.o
->  obj-$(CONFIG_PWM_VT8500)	+=3D pwm-vt8500.o
->  obj-$(CONFIG_PWM_ZX)		+=3D pwm-zx.o
-> +obj-$(CONFIG_PWM_KEEMBAY)	+=3D pwm-keembay.o
-> diff --git a/drivers/pwm/pwm-keembay.c b/drivers/pwm/pwm-keembay.c
+> v16:
+> 	- Corrected some code and updated description in Kconfig.
+> v15:
+> 	- Removed some defines and updated some comments.
+> v14:
+> 	- Updated pwm related code, alignments and comments.
+> v13:
+> 	- Updated some conditions in pwm function and alignments.
+> v12: No changes.
+> v11: 
+> 	- Updated the pwm related code, comments and typo.
+> v10: 
+> 	- Updated the pwm related function and added some comments.
+> v9: 
+> 	- Removed the header file and put the definitions into the c file.
+> 	- Updated the pwm code and error logs with %pE
+> v8: 
+> 	- Added changes to support FF_PERIODIC/FF_CUSTOM and FF_CONSTANT.
+> 	- Updated the dt-related code.
+> 	- Removed memless related functions.
+> v7: 
+> 	- Added more attributes to handle one value per file.
+> 	- Replaced and updated the dt-related code and functions called.
+> 	- Fixed error/functions.
+> v6: No changes.
+> v5: Fixed errors in Kconfig file.
+> v4: Updated code as dt-bindings are changed.
+> v3: No changes.
+> v2: Fixed kbuild error/warning
+> 
+> 
+>  drivers/input/misc/Kconfig  |   13 +
+>  drivers/input/misc/Makefile |    1 +
+>  drivers/input/misc/da7280.c | 1840 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1854 insertions(+)
+>  create mode 100644 drivers/input/misc/da7280.c
+
+Hi Roy,
+
+Overall the driver looks pretty good now. I did find one issue, see
+below. If you fix that I am happy to add a Reviewed-by line.
+
+Reviewed-By: Jes Sorensen <Jes.Sorensen@gmail.com>
+
+> diff --git a/drivers/input/misc/da7280.c b/drivers/input/misc/da7280.c
 > new file mode 100644
-> index 00000000..fa5fe95
+> index 0000000..c8c42ac
 > --- /dev/null
-> +++ b/drivers/pwm/pwm-keembay.c
-> @@ -0,0 +1,239 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Intel Keem Bay PWM driver
-> + *
-> + * Copyright (C) 2020 Intel Corporation
-> + * Authors: Lai Poey Seng <poey.seng.lai@intel.com>
-> + *          Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
-> + */
+> +++ b/drivers/input/misc/da7280.c
 
-If possible, please add a link here to documentation for this chip.
+[snip]
 
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +
-> +#define KMB_TOTAL_PWM_CHANNELS		6
-> +#define KMB_PWM_COUNT_MAX		65535
-
-If you write this as hexadecimal constant it is more obvious.
-
-> +#define KMB_PWM_EN_BIT			BIT(31)
-> +
-> +/* Mask */
-> +#define KMB_PWM_HIGH_MASK		GENMASK(31, 16)
-> +#define KMB_PWM_LOW_MASK		GENMASK(15, 0)
-> +#define KMB_PWM_COUNT_MASK		GENMASK(31, 0)
-> +
-> +/* PWM Register offset */
-> +#define KMB_PWM_LEADIN0_OFFSET		0x00
-> +#define KMB_PWM_LEADIN1_OFFSET		0x04
-> +#define KMB_PWM_LEADIN2_OFFSET		0x08
-> +#define KMB_PWM_LEADIN3_OFFSET		0x0c
-> +#define KMB_PWM_LEADIN4_OFFSET		0x10
-> +#define KMB_PWM_LEADIN5_OFFSET		0x14
-
-All but ..LEADIN0.. are unused. Is this maybe more useful to write as:
-
-	#define KMB_PWM_LEADIN_OFFSET(ch)	(0x00 + 4 * (ch))
-
-?
-
-> +#define KMB_PWM_HIGHLOW0_OFFSET		0x20
-> +#define KMB_PWM_HIGHLOW1_OFFSET		0x24
-> +#define KMB_PWM_HIGHLOW2_OFFSET		0x28
-> +#define KMB_PWM_HIGHLOW3_OFFSET		0x2c
-> +#define KMB_PWM_HIGHLOW4_OFFSET		0x30
-> +#define KMB_PWM_HIGHLOW5_OFFSET		0x34
-
-ditto.
-
-> +struct keembay_pwm {
-> +	struct pwm_chip chip;
-> +	struct device *dev;
-> +	struct clk *clk;
-> +	void __iomem *base;
-> +};
-> +
-> +static inline struct keembay_pwm *to_keembay_pwm_dev(struct pwm_chip *ch=
-ip)
+> +static int da7280_haptic_set_pwm(struct da7280_haptic *haptics, bool enabled)
 > +{
-> +	return container_of(chip, struct keembay_pwm, chip);
-> +}
+> +	struct pwm_state state;
+> +	u64 period_mag_multi;
+> +	int error;
 > +
-> +static inline void keembay_pwm_update_bits(struct keembay_pwm *priv, u32=
- mask,
-> +					   u32 val, u32 reg, int ch)
-> +{
-> +	u32 buff, offset, tmp;
-> +	void __iomem *address;
-> +
-> +	offset =3D reg + ch * 4;
-> +	address =3D priv->base + offset;
-> +	buff =3D readl(address);
-> +	tmp =3D buff & ~mask;
-> +	tmp |=3D FIELD_PREP(mask, val);
-> +	writel(tmp, address);
-> +}
-> +
-> +static void keembay_pwm_enable(struct keembay_pwm *priv, int ch)
-> +{
-> +	keembay_pwm_update_bits(priv, KMB_PWM_EN_BIT, 1,
-> +				KMB_PWM_LEADIN0_OFFSET, ch);
-> +}
-> +
-> +static void keembay_pwm_disable(struct keembay_pwm *priv, int ch)
-> +{
-> +	keembay_pwm_update_bits(priv, KMB_PWM_EN_BIT, 0,
-> +				KMB_PWM_LEADIN0_OFFSET, ch);
-> +}
-> +
-> +static void keembay_pwm_get_state(struct pwm_chip *chip, struct pwm_devi=
-ce *pwm,
-> +				  struct pwm_state *state)
-> +{
-> +	struct keembay_pwm *priv =3D to_keembay_pwm_dev(chip);
-> +	unsigned long long pwm_h_count, pwm_l_count;
-> +	unsigned long clk_rate;
-> +	u32 buff;
-> +
-> +	clk_rate =3D clk_get_rate(priv->clk);
-> +
-> +	/* Read channel enabled status */
-> +	buff =3D readl(priv->base + KMB_PWM_LEADIN0_OFFSET + pwm->hwpwm * 4);
-> +	if (buff & KMB_PWM_EN_BIT)
-> +		state->enabled =3D true;
-> +	else
-> +		state->enabled =3D false;
-> +
-> +	/* Read period and duty cycle*/
-
-Missing ' ' before closing */
-
-> +	buff =3D readl(priv->base + KMB_PWM_HIGHLOW0_OFFSET + pwm->hwpwm * 4);
-> +	pwm_l_count =3D (buff & KMB_PWM_LOW_MASK) * NSEC_PER_SEC;
-> +	pwm_h_count =3D ((buff & KMB_PWM_HIGH_MASK) >> 16) * NSEC_PER_SEC;
-
-pwm_h_count =3D FIELD_GET(KMB_PWM_HIGH_MASK, buff) * NSEC_PER_SEC
-
-> +	state->duty_cycle =3D pwm_h_count / clk_rate;
-> +	state->period =3D (pwm_h_count + pwm_l_count) / clk_rate;
-
-Please round up both values.
-
-> +}
-> +
-> +static int keembay_pwm_apply(struct pwm_chip *chip, struct pwm_device *p=
-wm,
-> +			     const struct pwm_state *state)
-> +{
-> +	struct keembay_pwm *priv =3D to_keembay_pwm_dev(chip);
-> +	struct pwm_state current_state;
-> +	u16 pwm_h_count, pwm_l_count;
-> +	unsigned long long div;
-> +	unsigned long clk_rate;
-> +	u32 pwm_count =3D 0;
-> +
-> +	pwm_get_state(pwm, &current_state);
-
-Please check the hardware state, not the value cached in the PWM
-framework.
-
-> +	if (!state->enabled && current_state.enabled) {
-> +		keembay_pwm_disable(priv, pwm->hwpwm);
-> +		return 0;
+> +	if (!haptics->gain && enabled) {
+> +		dev_err(haptics->dev,
+> +			"Please set the gain first for the pwm mode\n");
+> +		return -EINVAL;
 > +	}
 > +
-> +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
-> +		return -ENOSYS;
+> +	pwm_get_state(haptics->pwm_dev, &state);
+> +	state.enabled = enabled;
+> +	if (enabled) {
+> +		period_mag_multi = state.period * haptics->gain;
 
-This must be checked before .enabled. That's because the expectation on
+You are multiplying an unsigned int to a u16 and storing it in a u64.
+However, C doesn't promote the types, so you'll end up with an
+unexpected result here. You can fix it by promoting state.period to u64, ie:
 
-	.enabled =3D false
-	.polarity =3D PWM_POLARITY_INVERSED
+		period_mage_multi = (u64)state.period * haptics->gain;
 
-is that the output gets constant high.
+See the following example code which demonstrates the problem.
 
-> +	/*
-> +	 * The upper 16 bits of the KMB_PWM_HIGHLOWx_OFFSET register contain
-> +	 * the high time of the waveform, while the last 16 bits contain
-> +	 * the low time of the waveform, in terms of clock cycles.
+#include <stdio.h>
+#include <stdint.h>
 
-Just to be sure: Each period starts with the high time, right?
+uint64_t foo(unsigned int a, uint16_t b)
+{
+	uint64_t tmp = a * b;
+	return tmp;
+}
 
-> +	 * high time =3D clock rate * duty cycle / NSEC_PER_SEC
-> +	 * low time =3D  clock rate * (period - duty cycle) / NSEC_PER_SEC
-> +	 *
-> +	 * e.g. For period 50000ns, duty cycle 30000ns, and clock rate 500MHz:
-> +	 * high time =3D (500000000 * 30000) / 1000000000 =3D 0x3A98
-> +	 * low time =3D (500000000 * 20000) / 1000000000 =3D 0x2710
-> +	 * Value written to KMB_PWM_HIGHLOWx_OFFSET =3D 0x3A982710
+uint64_t bar(unsigned int a, uint16_t b)
+{
+	uint64_t tmp = (uint64_t)a * b;
+	return tmp;
+}
 
-For period =3D 50000ns, duty_cycle =3D 30000ns and clock rate 266666666 Hz =
-you
-have to configure:
+int main()
+{
+	uint64_t val;
+	unsigned int a = 0xff00ff00;
+	uint16_t b = 0x200;
 
-	high =3D 7999
-	low =3D 5334
+	val = foo(a, b);
+	printf("result(%0x, %0x) = %0llx\n", a, b, val);
 
-> +	 */
-> +
-> +	clk_rate =3D clk_get_rate(priv->clk);
-> +
-> +	/* Configure waveform high time */
-> +	div =3D clk_rate * state->duty_cycle;
-> +	do_div(div, NSEC_PER_SEC);
+	val = bar(a, b);
+	printf("result(%0x, %0x) = %0llx\n", a, b, val);
+}
 
-Can this overflow?
-
-> +	if (div > KMB_PWM_COUNT_MAX)
-> +		return -ERANGE;
-> +
-> +	pwm_h_count =3D (u16)div;
-
-No need for this cast.
-
-> +	/* Configure waveform low time */
-> +	div =3D clk_rate * (state->period - state->duty_cycle);
-> +	do_div(div, NSEC_PER_SEC);
-
-Here the rounding is wrong. (See above example, currently you use
-low =3D 5333 here)
-
-> +	if (div > KMB_PWM_COUNT_MAX)
-> +		return -ERANGE;
-> +
-> +	pwm_l_count =3D (u16)div;
-> +
-> +	pwm_count |=3D pwm_h_count << 16;
-> +	pwm_count |=3D pwm_l_count;
-
-pwm_count =3D FIELD_PREP(KMB_PWM_HIGH_MASK, pwm_h_count) | FIELD_PREP(KMB_P=
-WM_LOW_MASK, pwm_l_count);
-
-> +
-> +	keembay_pwm_update_bits(priv, KMB_PWM_COUNT_MASK,
-> +				pwm_count, KMB_PWM_HIGHLOW0_OFFSET, pwm->hwpwm);
-
-here the rwm-procedure is not necessary as all 32 bits are written
-anyhow.
-
-> +	if (state->enabled && !current_state.enabled)
-> +		keembay_pwm_enable(priv, pwm->hwpwm);
-> +
-> +	return 0;
-> +}
-> [...]
-> +MODULE_ALIAS("platform:keembay");
-
-This has to match your driver's name, so use:
-
-	MODULE_ALIAS("platform:pwm-keembay");
-=09
-> +MODULE_DESCRIPTION("Intel Keem Bay PWM driver");
-> +MODULE_LICENSE("GPL v2");
-
-In v1 you told that on reconfiguration the hardware completes the
-currently running period. Please document this in the driver, similar to
-e.g. pwm-sifive.c.
-
-You only ever write the enable bit in the leadin register. If there is
-something !=3D 0 at boot this influences the correct behaviour of the
-driver, right?
-
-Further things to note there:
-
- - What is the behaviour on disable (usual candidates: freezes at
-   current value, completes period and emits low, changes to High-Z)?
-
- - Can it do 0% and 100% duty ratio?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---n2tquz4ug3774r33
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8WscUACgkQwfwUeK3K
-7Ak4ygf/YqRbBmAufohPKRkRj0nh8H/9JALK13fYvDdTIr5iof+5Md7t5732w5h2
-SQu8TPgSYhUl9VhdvneDXbueBb6K9CQ80/SENBP2vgMNe1BEO8Bp1VUVK54aYTAK
-Mw26NJKMeV6jfHDJ4a39VcicTLWT/i50t2EiFMJaaSdsCBuHz0u3evjWRkYZPtws
-CSpDPcEOkAKK//+nosIqjlvDiUr8CKfeHhd1Km1dT1mwFpAT+Z7g1/fVxNLq63E2
-tyjbuNAsBOCoq5YgDlbUTqg4piwlBkUqJRlektxF0fa8Lb9qaf/C5Pol5v9TyyqF
-/bNP4Uvf6Tdz3+Fn86aiLeqCmXYZ4A==
-=X2vE
------END PGP SIGNATURE-----
-
---n2tquz4ug3774r33--
+Cheers,
+Jes
