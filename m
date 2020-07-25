@@ -2,34 +2,34 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5040622DA83
-	for <lists+linux-pwm@lfdr.de>; Sun, 26 Jul 2020 01:19:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E69422DA8E
+	for <lists+linux-pwm@lfdr.de>; Sun, 26 Jul 2020 01:20:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbgGYXTE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 25 Jul 2020 19:19:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41302 "EHLO
+        id S1727789AbgGYXTx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 25 Jul 2020 19:19:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727978AbgGYXTE (ORCPT
+        with ESMTP id S1728092AbgGYXTE (ORCPT
         <rfc822;linux-pwm@vger.kernel.org>); Sat, 25 Jul 2020 19:19:04 -0400
 Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0191C08C5C0;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC044C08C5CE;
         Sat, 25 Jul 2020 16:19:03 -0700 (PDT)
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 9ECEB23E40;
-        Sun, 26 Jul 2020 01:18:59 +0200 (CEST)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 213CF23E42;
+        Sun, 26 Jul 2020 01:19:01 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1595719140;
+        t=1595719142;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=L1UADNJtfY19n1D4ai/YTAoIWOOZ5WFFaX6JGzp/f94=;
-        b=oRTdPI3rCiJrVnCY9/i7z3Qttf37uorwbIVDNQBzi8AZ5zWzAAm+SnRxdkoi46a+PpjPAZ
-        XfxnAGjP9VcTwo8beaYU8jQ4hdIaT0gOFJvphFflOmB3rJCmyq8YdpJLgYYcDMsszys038
-        yrF+OKIhAGuxKDncj53CtzQ/NDLeERg=
+        bh=f9QZpl3KYSoHhNPksCFN8JYkTGbbOAg1wSmhz7xom8k=;
+        b=C9vhaQ++L+qJKTGBKkF+QhiFwo7LwaMNqHcA5WSnTQ+65ploTjOEZsQfh5Y3ZA23BpXVs8
+        ElwT2mNOtQPav5SsPtoe+2McR0ZHknyZ618S4q3XxkxRx3Y0PPnigTNRvUmb5fBoybJ6Rj
+        oTEsxzUrrtiJ0XxZ8R32a8VVv1JtNjM=
 From:   Michael Walle <michael@walle.cc>
 To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
@@ -54,9 +54,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
         Michael Walle <michael@walle.cc>
-Subject: [PATCH v6 04/13] irqchip: add sl28cpld interrupt controller support
-Date:   Sun, 26 Jul 2020 01:18:25 +0200
-Message-Id: <20200725231834.25642-5-michael@walle.cc>
+Subject: [PATCH v6 05/13] watchdog: add support for sl28cpld watchdog
+Date:   Sun, 26 Jul 2020 01:18:26 +0200
+Message-Id: <20200725231834.25642-6-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200725231834.25642-1-michael@walle.cc>
 References: <20200725231834.25642-1-michael@walle.cc>
@@ -68,167 +68,298 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add support for the interrupt controller inside the sl28 CPLD management
-controller.
-
-The interrupt controller can handle at most 8 interrupts and is really
-simplistic and consists only of an interrupt mask and an interrupt
-pending register.
+Add support for the watchdog of the sl28cpld board management
+controller. This is part of a multi-function device driver.
 
 Signed-off-by: Michael Walle <michael@walle.cc>
-Acked-by: Marc Zyngier <maz@kernel.org>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 ---
 Changes since v5:
  - none
 
 Changes since v4:
  - update copyright year
- - don't use "int irq" instead of "unsigne int irq", because
-   platform_get_irq() might return a negative error code. Found by "kernel
-   test robot <lkp@intel.com>
- - remove comma in terminator line of the compatible strings list,
-   suggested by Andy
- - use newer devm_regmap_add_irq_chip_fwnode()
- - don't use KBUID_MODNAME, suggested by Andy
+ - remove #include <linux/of_device.h>, suggested by Andy.
+ - slightly reworked the error code handling (only style), suggested by
+   Andy.
+ - Don't use "if (ret < 0)", but only "if (ret)", suggested by Andy.
+ - remove comma in terminator line of the compatible strings list
+ - don't use KBUID_MODNAME
  - remove the platform device table
 
 Changes since v3:
  - see cover letter
 
- drivers/irqchip/Kconfig        |  8 +++
- drivers/irqchip/Makefile       |  1 +
- drivers/irqchip/irq-sl28cpld.c | 96 ++++++++++++++++++++++++++++++++++
- 3 files changed, 105 insertions(+)
- create mode 100644 drivers/irqchip/irq-sl28cpld.c
+ drivers/watchdog/Kconfig        |  11 ++
+ drivers/watchdog/Makefile       |   1 +
+ drivers/watchdog/sl28cpld_wdt.c | 229 ++++++++++++++++++++++++++++++++
+ 3 files changed, 241 insertions(+)
+ create mode 100644 drivers/watchdog/sl28cpld_wdt.c
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 216b3b8392b5..b23d23eed3a5 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -246,6 +246,14 @@ config RENESAS_RZA1_IRQC
- 	  Enable support for the Renesas RZ/A1 Interrupt Controller, to use up
- 	  to 8 external interrupts with configurable sense select.
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 4f4687c46d38..c4115ea0d3f8 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -340,6 +340,17 @@ config MLX_WDT
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called mlx-wdt.
  
-+config SL28CPLD_INTC
-+	bool "Kontron sl28cpld IRQ controller"
++config SL28CPLD_WATCHDOG
++	tristate "Kontron sl28cpld Watchdog"
 +	select MFD_SIMPLE_MFD_I2C
-+	select REGMAP_IRQ
++	select WATCHDOG_CORE
 +	help
-+	  Interrupt controller driver for the board management controller
-+	  found on the Kontron sl28 CPLD.
++	  Say Y here to include support for the watchdog timer
++	  on the Kontron sl28 CPLD.
 +
- config ST_IRQCHIP
- 	bool
- 	select REGMAP
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 133f9c45744a..39af7d89204d 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -111,3 +111,4 @@ obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
- obj-$(CONFIG_LOONGSON_HTVEC)		+= irq-loongson-htvec.o
- obj-$(CONFIG_LOONGSON_PCH_PIC)		+= irq-loongson-pch-pic.o
- obj-$(CONFIG_LOONGSON_PCH_MSI)		+= irq-loongson-pch-msi.o
-+obj-$(CONFIG_SL28CPLD_INTC)		+= irq-sl28cpld.o
-diff --git a/drivers/irqchip/irq-sl28cpld.c b/drivers/irqchip/irq-sl28cpld.c
++	  To compile this driver as a module, choose M here: the
++	  module will be called sl28cpld_wdt.
++
+ # ALPHA Architecture
+ 
+ # ARM Architecture
+diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+index 97bed1d3d97c..aa6e41126901 100644
+--- a/drivers/watchdog/Makefile
++++ b/drivers/watchdog/Makefile
+@@ -225,3 +225,4 @@ obj-$(CONFIG_MENF21BMC_WATCHDOG) += menf21bmc_wdt.o
+ obj-$(CONFIG_MENZ069_WATCHDOG) += menz69_wdt.o
+ obj-$(CONFIG_RAVE_SP_WATCHDOG) += rave-sp-wdt.o
+ obj-$(CONFIG_STPMIC1_WATCHDOG) += stpmic1_wdt.o
++obj-$(CONFIG_SL28CPLD_WATCHDOG) += sl28cpld_wdt.o
+diff --git a/drivers/watchdog/sl28cpld_wdt.c b/drivers/watchdog/sl28cpld_wdt.c
 new file mode 100644
-index 000000000000..0aa50d025ef6
+index 000000000000..a45047d8d9ab
 --- /dev/null
-+++ b/drivers/irqchip/irq-sl28cpld.c
-@@ -0,0 +1,96 @@
++++ b/drivers/watchdog/sl28cpld_wdt.c
+@@ -0,0 +1,229 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * sl28cpld interrupt controller driver
++ * sl28cpld watchdog driver
 + *
 + * Copyright 2020 Kontron Europe GmbH
 + */
 +
-+#include <linux/interrupt.h>
 +#include <linux/kernel.h>
 +#include <linux/mod_devicetable.h>
 +#include <linux/module.h>
 +#include <linux/platform_device.h>
 +#include <linux/property.h>
 +#include <linux/regmap.h>
++#include <linux/watchdog.h>
 +
-+#define INTC_IE 0x00
-+#define INTC_IP 0x01
++/*
++ * Watchdog timer block registers.
++ */
++#define WDT_CTRL			0x00
++#define  WDT_CTRL_EN			BIT(0)
++#define  WDT_CTRL_LOCK			BIT(2)
++#define  WDT_CTRL_ASSERT_SYS_RESET	BIT(6)
++#define  WDT_CTRL_ASSERT_WDT_TIMEOUT	BIT(7)
++#define WDT_TIMEOUT			0x01
++#define WDT_KICK			0x02
++#define  WDT_KICK_VALUE			0x6b
++#define WDT_COUNT			0x03
 +
-+static const struct regmap_irq sl28cpld_irqs[] = {
-+	REGMAP_IRQ_REG_LINE(0, 8),
-+	REGMAP_IRQ_REG_LINE(1, 8),
-+	REGMAP_IRQ_REG_LINE(2, 8),
-+	REGMAP_IRQ_REG_LINE(3, 8),
-+	REGMAP_IRQ_REG_LINE(4, 8),
-+	REGMAP_IRQ_REG_LINE(5, 8),
-+	REGMAP_IRQ_REG_LINE(6, 8),
-+	REGMAP_IRQ_REG_LINE(7, 8),
-+};
++#define WDT_DEFAULT_TIMEOUT		10
 +
-+struct sl28cpld_intc {
++static bool nowayout = WATCHDOG_NOWAYOUT;
++module_param(nowayout, bool, 0);
++MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
++				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
++
++static int timeout;
++module_param(timeout, int, 0);
++MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
++
++struct sl28cpld_wdt {
++	struct watchdog_device wdd;
 +	struct regmap *regmap;
-+	struct regmap_irq_chip chip;
-+	struct regmap_irq_chip_data *irq_data;
++	u32 offset;
++	bool assert_wdt_timeout;
 +};
 +
-+static int sl28cpld_intc_probe(struct platform_device *pdev)
++static int sl28cpld_wdt_ping(struct watchdog_device *wdd)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct sl28cpld_intc *irqchip;
-+	int irq;
-+	u32 base;
++	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
++
++	return regmap_write(wdt->regmap, wdt->offset + WDT_KICK,
++			    WDT_KICK_VALUE);
++}
++
++static int sl28cpld_wdt_start(struct watchdog_device *wdd)
++{
++	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
++	unsigned int val;
++
++	val = WDT_CTRL_EN | WDT_CTRL_ASSERT_SYS_RESET;
++	if (wdt->assert_wdt_timeout)
++		val |= WDT_CTRL_ASSERT_WDT_TIMEOUT;
++	if (nowayout)
++		val |= WDT_CTRL_LOCK;
++
++	return regmap_update_bits(wdt->regmap, wdt->offset + WDT_CTRL,
++				  val, val);
++}
++
++static int sl28cpld_wdt_stop(struct watchdog_device *wdd)
++{
++	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
++
++	return regmap_update_bits(wdt->regmap, wdt->offset + WDT_CTRL,
++				  WDT_CTRL_EN, 0);
++}
++
++static unsigned int sl28cpld_wdt_get_timeleft(struct watchdog_device *wdd)
++{
++	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
++	unsigned int val;
 +	int ret;
 +
-+	if (!dev->parent)
++	ret = regmap_read(wdt->regmap, wdt->offset + WDT_COUNT, &val);
++	if (ret)
++		return 0;
++
++	return val;
++}
++
++static int sl28cpld_wdt_set_timeout(struct watchdog_device *wdd,
++				    unsigned int timeout)
++{
++	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
++	int ret;
++
++	ret = regmap_write(wdt->regmap, wdt->offset + WDT_TIMEOUT, timeout);
++	if (ret)
++		return ret;
++
++	wdd->timeout = timeout;
++
++	return 0;
++}
++
++static const struct watchdog_info sl28cpld_wdt_info = {
++	.options = WDIOF_MAGICCLOSE | WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
++	.identity = "sl28cpld watchdog",
++};
++
++static struct watchdog_ops sl28cpld_wdt_ops = {
++	.owner = THIS_MODULE,
++	.start = sl28cpld_wdt_start,
++	.stop = sl28cpld_wdt_stop,
++	.ping = sl28cpld_wdt_ping,
++	.set_timeout = sl28cpld_wdt_set_timeout,
++	.get_timeleft = sl28cpld_wdt_get_timeleft,
++};
++
++static int sl28cpld_wdt_probe(struct platform_device *pdev)
++{
++	struct watchdog_device *wdd;
++	struct sl28cpld_wdt *wdt;
++	unsigned int status;
++	unsigned int val;
++	int ret;
++
++	if (!pdev->dev.parent)
 +		return -ENODEV;
 +
-+	irqchip = devm_kzalloc(dev, sizeof(*irqchip), GFP_KERNEL);
-+	if (!irqchip)
++	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
++	if (!wdt)
 +		return -ENOMEM;
 +
-+	irqchip->regmap = dev_get_regmap(dev->parent, NULL);
-+	if (!irqchip->regmap)
++	wdt->regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	if (!wdt->regmap)
 +		return -ENODEV;
 +
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	ret = device_property_read_u32(&pdev->dev, "reg", &base);
++	ret = device_property_read_u32(&pdev->dev, "reg", &wdt->offset);
 +	if (ret)
 +		return -EINVAL;
 +
-+	irqchip->chip.name = "sl28cpld-intc";
-+	irqchip->chip.irqs = sl28cpld_irqs;
-+	irqchip->chip.num_irqs = ARRAY_SIZE(sl28cpld_irqs);
-+	irqchip->chip.num_regs = 1;
-+	irqchip->chip.status_base = base + INTC_IP;
-+	irqchip->chip.mask_base = base + INTC_IE;
-+	irqchip->chip.mask_invert = true,
-+	irqchip->chip.ack_base = base + INTC_IP;
++	wdt->assert_wdt_timeout = device_property_read_bool(&pdev->dev,
++							    "kontron,assert-wdt-timeout-pin");
 +
-+	return devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev),
-+					       irqchip->regmap, irq,
-+					       IRQF_SHARED | IRQF_ONESHOT, 0,
-+					       &irqchip->chip,
-+					       &irqchip->irq_data);
++	/* initialize struct watchdog_device */
++	wdd = &wdt->wdd;
++	wdd->parent = &pdev->dev;
++	wdd->info = &sl28cpld_wdt_info;
++	wdd->ops = &sl28cpld_wdt_ops;
++	wdd->min_timeout = 1;
++	wdd->max_timeout = 255;
++
++	watchdog_set_drvdata(wdd, wdt);
++	watchdog_stop_on_reboot(wdd);
++
++	/*
++	 * Read the status early, in case of an error, we haven't modified the
++	 * hardware.
++	 */
++	ret = regmap_read(wdt->regmap, wdt->offset + WDT_CTRL, &status);
++	if (ret)
++		return ret;
++
++	/*
++	 * Initial timeout value, may be overwritten by device tree or module
++	 * parmeter in watchdog_init_timeout().
++	 *
++	 * Reading a zero here means that either the hardware has a default
++	 * value of zero (which is very unlikely and definitely a hardware
++	 * bug) or the bootloader set it to zero. In any case, we handle
++	 * this case gracefully and set out own timeout.
++	 */
++	ret = regmap_read(wdt->regmap, wdt->offset + WDT_TIMEOUT, &val);
++	if (ret)
++		return ret;
++
++	if (val)
++		wdd->timeout = val;
++	else
++		wdd->timeout = WDT_DEFAULT_TIMEOUT;
++
++	watchdog_init_timeout(wdd, timeout, &pdev->dev);
++	sl28cpld_wdt_set_timeout(wdd, wdd->timeout);
++
++	/* if the watchdog is locked, we set nowayout */
++	if (status & WDT_CTRL_LOCK)
++		nowayout = true;
++	watchdog_set_nowayout(wdd, nowayout);
++
++	/*
++	 * If watchdog is already running, keep it enabled, but make
++	 * sure its mode is set correctly.
++	 */
++	if (status & WDT_CTRL_EN) {
++		sl28cpld_wdt_start(wdd);
++		set_bit(WDOG_HW_RUNNING, &wdd->status);
++	}
++
++	ret = devm_watchdog_register_device(&pdev->dev, wdd);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to register watchdog device\n");
++		return ret;
++	}
++
++	dev_info(&pdev->dev, "initial timeout %d sec%s\n",
++		 wdd->timeout, nowayout ? ", nowayout" : "");
++
++	return 0;
 +}
 +
-+static const struct of_device_id sl28cpld_intc_of_match[] = {
-+	{ .compatible = "kontron,sl28cpld-intc" },
++static const struct of_device_id sl28cpld_wdt_of_match[] = {
++	{ .compatible = "kontron,sl28cpld-wdt" },
 +	{}
 +};
-+MODULE_DEVICE_TABLE(of, sl28cpld_intc_of_match);
++MODULE_DEVICE_TABLE(of, sl28cpld_wdt_of_match);
 +
-+static struct platform_driver sl28cpld_intc_driver = {
-+	.probe = sl28cpld_intc_probe,
++static struct platform_driver sl28cpld_wdt_driver = {
++	.probe = sl28cpld_wdt_probe,
 +	.driver = {
-+		.name = "sl28cpld-intc",
-+		.of_match_table = sl28cpld_intc_of_match,
-+	}
++		.name = "sl28cpld-wdt",
++		.of_match_table = sl28cpld_wdt_of_match,
++	},
 +};
-+module_platform_driver(sl28cpld_intc_driver);
++module_platform_driver(sl28cpld_wdt_driver);
 +
-+MODULE_DESCRIPTION("sl28cpld Interrupt Controller Driver");
++MODULE_DESCRIPTION("sl28cpld Watchdog Driver");
 +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
 +MODULE_LICENSE("GPL");
 -- 
