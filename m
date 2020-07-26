@@ -2,50 +2,50 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A9ED22E2F1
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Jul 2020 00:01:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6ECD822E2EF
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 Jul 2020 00:01:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgGZWBM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        id S1727111AbgGZWBM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
         Sun, 26 Jul 2020 18:01:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54942 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgGZWBL (ORCPT
+        with ESMTP id S1727046AbgGZWBL (ORCPT
         <rfc822;linux-pwm@vger.kernel.org>); Sun, 26 Jul 2020 18:01:11 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50BAFC0619D2;
-        Sun, 26 Jul 2020 15:01:10 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id w17so7025552ply.11;
-        Sun, 26 Jul 2020 15:01:10 -0700 (PDT)
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 955A7C0619D4;
+        Sun, 26 Jul 2020 15:01:11 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id gc9so8060300pjb.2;
+        Sun, 26 Jul 2020 15:01:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=p2ZGaEvqbBo3caD5sMA/QnrK4wKw7E7gyzjsO5Ns6y0=;
-        b=lZIAhLjLmirYDu8HeccJ5MDOHmQHenXob0dzJmZAaNgjBzX9AJfPp/L8TNC3fKDjQq
-         vWViEXVNEJqJdnv5bkDfYQvF2D/LVThVUH4jtorm03bW3Qf3XV1soMh6OuCraCZ+FlEQ
-         +SfghS1kCSBLwXhjTC5BYTDNQb6K+SKriJpDZ57FiZXohRbUJX+qXNkR+TQUpfo/FCGG
-         yuCa5mF2O3VBrMRL0TLzUqYW+9nhOaDUTpM+mtCDy6hMwrM786A8AAwBLwDwKegj0v2h
-         kV1AiZdRJfDrHR+8amqAJ/eYyvzxNrU+gZte3cuaNdDqaxctYUx2vM6vy48X9NAUzLV1
-         g9BQ==
+        bh=D0FjvCBud6M7Ooa+U2QMuqNklPJEapjHDwZLoN3fzsg=;
+        b=SStpM4mXtSymgmbKrWmgXmcYAzQ/gVEImp2FEvTvkoYqPuk4JkwT+Q1mhtVK/RKMTb
+         6P3Fj4Qx/T900X8dAeIVgtJt3BdIWNntgS9zL8Pvv/58TBe0wrd0evDTaNRhqmy3wLnP
+         udmMg9CsohZni6zaWs9kBTS3+xiP5DUcw74Wop9Xl6AiWHl5EBt7RPEDGFLkW9QQ8xUH
+         MQpYwY6YMZtmko8LuI+7eYEft0YkMlZ0IIvZJ3ddCWR8Chwj9k6EXW2hcP/YJ6F0kc2/
+         U3ZkNJDwNUaQmcFrhsAwWjePvXmptjZr4BeJ9HNd0b1DhpafOxVjD/K6QtOx0xMWVLYc
+         1yUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=p2ZGaEvqbBo3caD5sMA/QnrK4wKw7E7gyzjsO5Ns6y0=;
-        b=oOXgXvsM7QJtRxY2lwY2e9ZlAWCrEHUn9t1rKi9zrGFTlpn7wCmBjcGezJ7kD6AONE
-         fPE7sgrtcKfaXK95bWQek4gkK/b2lkxdddUEzYRCIDjMuY99sRGV+cs97LohvHl1V6Pk
-         ASOA3bMP68YoL5/SYngHQ3r9dZ6b1OTTyMJ3VuCHDAIWxw3uATtVpM/1ZDuQwWO4PhW7
-         xN1NGV+G+AYJH3FZ3RjpsnvV2RLke7f6+QMk+mcAaNcv6sEszYTIWlfO+72w71rbhD4z
-         h08X1UHu8pI9Eavv+X1KMK2KznGicisC6OnZGdljmLD0jNrV61j23J3APyrOQbjXGbdc
-         QK7w==
-X-Gm-Message-State: AOAM530CLuVEQ0GuXdm71Rp1kKqwWPiNu1WJii9Zb3YZnS3SU+iVj4mu
-        y35jNw3BYNO9z0wP43N/osU=
-X-Google-Smtp-Source: ABdhPJzQhsWHwHIFLQVZNcXrpBs7Ty5n/9Rh3z/f/4DCVt5kvNDUdml+X9+STWqMiPbzGP4KB+zJeA==
-X-Received: by 2002:a17:90a:c207:: with SMTP id e7mr15997035pjt.49.1595800869857;
-        Sun, 26 Jul 2020 15:01:09 -0700 (PDT)
+        bh=D0FjvCBud6M7Ooa+U2QMuqNklPJEapjHDwZLoN3fzsg=;
+        b=OYYUjTWySN5OpqLqkxs6b6qj99R7hAyp3fQycLTT8NeBPcrLPNTmxVxUamRp/OUsOy
+         p2vynS8kkJPXOj10yooj0rysZlGhOGsA5qmKbMR3tdnTXBRr59bOfmUNO4K01WG23zI1
+         QO6KoVAuD1oaDYxyEj/HvKlvwHRMP95DUGUVhqvSm/T7aP6uzknQoD3Y2Qd9bU3TuZzn
+         su0PKzqoljozcxDsiO//b+qcmEm7gIMUVwmabAKkXyo4EdE4bCv3uPasIFTwbOGYkLNX
+         VXilVC7jE+CML8TjrlY876ENFGGmz2yJuCV17rycNDHBQTRAlqF4iQU+auGZ/3QRrd/k
+         9/5w==
+X-Gm-Message-State: AOAM532ZA9hok3xZ6bppH7IwSK+Cr8OJjxmNnyDsBamBOtLafwq+lhFu
+        dAZCaxcA3Oe2Vg+G6pRxC7Q=
+X-Google-Smtp-Source: ABdhPJzq+9qhsdckOyjPbghpzvMnaavEGMu1FVqsHODnd4JiT+U5oG/8c3ApvsP3xBIXL/S7Rrf0LQ==
+X-Received: by 2002:a17:90a:2dcb:: with SMTP id q11mr15838703pjm.135.1595800871199;
+        Sun, 26 Jul 2020 15:01:11 -0700 (PDT)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a9sm12654566pfr.103.2020.07.26.15.01.09
+        by smtp.gmail.com with ESMTPSA id p1sm5861033pjp.10.2020.07.26.15.01.10
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 26 Jul 2020 15:01:09 -0700 (PDT)
+        Sun, 26 Jul 2020 15:01:10 -0700 (PDT)
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Cc:     Jonathan Cameron <jic23@kernel.org>,
@@ -61,9 +61,9 @@ Cc:     Jonathan Cameron <jic23@kernel.org>,
         Guenter Roeck <linux@roeck-us.net>,
         Yu-Hsuan Hsu <yuhsuan@chromium.org>,
         Prashant Malani <pmalani@chromium.org>
-Subject: [PATCH v3 2/6] cros_ec_lightbar: Accept more error codes from cros_ec_cmd_xfer_status
-Date:   Sun, 26 Jul 2020 15:00:57 -0700
-Message-Id: <20200726220101.29059-3-linux@roeck-us.net>
+Subject: [PATCH v3 3/6] platform/chrome: cros_ec_sysfs: Report range of error codes from EC
+Date:   Sun, 26 Jul 2020 15:00:58 -0700
+Message-Id: <20200726220101.29059-4-linux@roeck-us.net>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200726220101.29059-1-linux@roeck-us.net>
 References: <20200726220101.29059-1-linux@roeck-us.net>
@@ -78,10 +78,8 @@ reports -EPROTO for all errors returned by the EC itself. A follow-up
 patch will change cros_ec_cmd_xfer_status() to report additional errors
 reported by the EC as distinguished Linux error codes.
 
-Handle this change by no longer assuming that -EPROTO is used to report
-all errors returned by the EC itself. Since errors reported by the EC are
-already reported in text form through sysfs attributes, extend this form
-of error reporting to all errors reported by cros_ec_cmd_xfer_status().
+Prepare for this change by always reporting both the Linux error code
+and the EC error code in sysfs attributes.
 
 Cc: Gwendal Grignou <gwendal@chromium.org>
 Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
@@ -93,36 +91,60 @@ Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 v3: No change
 v2: Added patch
 
- drivers/platform/chrome/cros_ec_lightbar.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/platform/chrome/cros_ec_sysfs.c | 24 +++++++++---------------
+ 1 file changed, 9 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
-index b59180bff5a3..8445cda57927 100644
---- a/drivers/platform/chrome/cros_ec_lightbar.c
-+++ b/drivers/platform/chrome/cros_ec_lightbar.c
-@@ -117,7 +117,7 @@ static int get_lightbar_version(struct cros_ec_dev *ec,
- 	param = (struct ec_params_lightbar *)msg->data;
- 	param->cmd = LIGHTBAR_CMD_VERSION;
- 	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
--	if (ret < 0) {
-+	if (ret < 0 && ret != -EINVAL) {
- 		ret = 0;
- 		goto exit;
- 	}
-@@ -298,11 +298,9 @@ static ssize_t sequence_show(struct device *dev,
- 		goto exit;
- 
+diff --git a/drivers/platform/chrome/cros_ec_sysfs.c b/drivers/platform/chrome/cros_ec_sysfs.c
+index d45ea5d5bfa4..9c1e0998a721 100644
+--- a/drivers/platform/chrome/cros_ec_sysfs.c
++++ b/drivers/platform/chrome/cros_ec_sysfs.c
+@@ -150,12 +150,10 @@ static ssize_t version_show(struct device *dev,
+ 	msg->command = EC_CMD_GET_BUILD_INFO + ec->cmd_offset;
+ 	msg->insize = EC_HOST_PARAM_SIZE;
  	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
 -	if (ret == -EPROTO) {
--		ret = scnprintf(buf, PAGE_SIZE,
--				"ERROR: EC returned %d\n", msg->result);
--		goto exit;
+-		count += scnprintf(buf + count, PAGE_SIZE - count,
+-				   "Build info:    EC error %d\n", msg->result);
 -	} else if (ret < 0) {
 +	if (ret < 0) {
-+		ret = scnprintf(buf, PAGE_SIZE, "XFER / EC ERROR %d / %d\n",
-+				ret, msg->result);
- 		goto exit;
- 	}
+ 		count += scnprintf(buf + count, PAGE_SIZE - count,
+-				   "Build info:    XFER ERROR %d\n", ret);
++				   "Build info:    XFER / EC ERROR %d / %d\n",
++				   ret, msg->result);
+ 	} else {
+ 		msg->data[EC_HOST_PARAM_SIZE - 1] = '\0';
+ 		count += scnprintf(buf + count, PAGE_SIZE - count,
+@@ -166,12 +164,10 @@ static ssize_t version_show(struct device *dev,
+ 	msg->command = EC_CMD_GET_CHIP_INFO + ec->cmd_offset;
+ 	msg->insize = sizeof(*r_chip);
+ 	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+-	if (ret == -EPROTO) {
+-		count += scnprintf(buf + count, PAGE_SIZE - count,
+-				   "Chip info:     EC error %d\n", msg->result);
+-	} else if (ret < 0) {
++	if (ret < 0) {
+ 		count += scnprintf(buf + count, PAGE_SIZE - count,
+-				   "Chip info:     XFER ERROR %d\n", ret);
++				   "Chip info:     XFER / EC ERROR %d / %d\n",
++				   ret, msg->result);
+ 	} else {
+ 		r_chip = (struct ec_response_get_chip_info *)msg->data;
+ 
+@@ -190,12 +186,10 @@ static ssize_t version_show(struct device *dev,
+ 	msg->command = EC_CMD_GET_BOARD_VERSION + ec->cmd_offset;
+ 	msg->insize = sizeof(*r_board);
+ 	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+-	if (ret == -EPROTO) {
+-		count += scnprintf(buf + count, PAGE_SIZE - count,
+-				   "Board version: EC error %d\n", msg->result);
+-	} else if (ret < 0) {
++	if (ret < 0) {
+ 		count += scnprintf(buf + count, PAGE_SIZE - count,
+-				   "Board version: XFER ERROR %d\n", ret);
++				   "Board version: XFER / EC ERROR %d / %d\n",
++				   ret, msg->result);
+ 	} else {
+ 		r_board = (struct ec_response_board_version *)msg->data;
  
 -- 
 2.17.1
