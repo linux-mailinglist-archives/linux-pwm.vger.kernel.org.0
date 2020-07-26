@@ -2,56 +2,57 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3748122DD74
-	for <lists+linux-pwm@lfdr.de>; Sun, 26 Jul 2020 11:04:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77DE722DD8C
+	for <lists+linux-pwm@lfdr.de>; Sun, 26 Jul 2020 11:13:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbgGZJEf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 26 Jul 2020 05:04:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48552 "EHLO
+        id S1726857AbgGZJNF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 26 Jul 2020 05:13:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgGZJEf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 26 Jul 2020 05:04:35 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF266C0619D2;
-        Sun, 26 Jul 2020 02:04:34 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id k27so7751796pgm.2;
-        Sun, 26 Jul 2020 02:04:34 -0700 (PDT)
+        with ESMTP id S1725794AbgGZJNF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 26 Jul 2020 05:13:05 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28943C0619D2;
+        Sun, 26 Jul 2020 02:13:05 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id o10so294355edh.6;
+        Sun, 26 Jul 2020 02:13:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aHrlTd85XWK3pOyfmvZVnMsTMYRkRM8sEaTNqMrlEeE=;
-        b=EiWMvIYCNZgUKEDR7GpvZnnTJeeR7ZjPdWr8N1i8AoOH7JGkF8PT+QofBwapvlO8dv
-         6hnoUmoHjdjfRXtLJJCo+pHnYu3InarkFRdO/uDqc5c98Jdq07D8sG9/JqTRsGUoZ5s8
-         2PFEIfeDDU3b0y3FTYlKwL1x0ZEV+X0SD8mWE/KWYci1QlbCTRq0BIB5TmKqt08n7Qt4
-         QBubCt8GTHUwAkN1uza4fnADPYGc1pxnPmFDjPUFgLQjbW1ZlN0p2Gqw4zFoKZAVX7Fr
-         hT4dZwdYIiHkfyNEtN4au4s1LpNUsOwQ5STEld5fyAfxxQdz8ze2Mce12kGxOJE3gQir
-         vO1Q==
+        bh=O2+h3+87LaFJxbNS7QjYPeIj+UjU50oEwIWii9HZknM=;
+        b=p+hEz1ItYIQQ2yioLM3bSE8t+EGfUj4kEXTeaUUwa+9qs/XLOP8Uci3EydPEwzgi8m
+         pbI4IdHmXZ37enJvXWY1u/E7Ec9dl5uJq+gku4an9F6YX1qw+7l+eWPz/+m45uwtfniU
+         0QFcc/WqOm81e0MxsxlmNBypWgM+HUjBTPmdh6VWnFhYhw0aOaudOEXwgDxE+pEsp4tG
+         x+n1niyetYG5vunaTYUMs0YAMbHYgA6gKwnQrK3NZBc8eicz31JEctRh/zYQYzuB60gW
+         sn51ppioOlpLSMqT0O5EduLs9+x/eWY2Kxu6HGNBNLzbbvSyut890uy+hRj0SoC552UK
+         4zoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aHrlTd85XWK3pOyfmvZVnMsTMYRkRM8sEaTNqMrlEeE=;
-        b=Yf3ItFlPJoSPw0KlwbMjBFOwfzH8O5DIwkKPOImVUP06yB45umGuRx+SvuhwRxJ02X
-         KlfTIbEc/jzROu4UbCM8xjnnsQF12/azsY0OxY8fnpiBEnYMjCQmMTsDcznIGDQblUQU
-         YXgn0/eHCJhAtnnVed8tU35A02pHiKZDGEhcooU0UYfbnYHw1ZnAlxxTcHRopiOcbkIx
-         rSKbpWYiqDrgLbknRQGkejtTQoG+S+E81XOdSQb0/ELczM/CURdsrGvvLvvrg0VTtAq4
-         HKrJ93+3PZEbdXq23Zt7/yy8b7tbYSj8nqFqMtXgVTjkZgGqAaweD8L7bMjkkee44akl
-         2lGQ==
-X-Gm-Message-State: AOAM532cmVqYPg/kLeKb4M5urVi6MCASpDwyZdTzCOKDN0cLhUOemUW8
-        UUDPX9qojDOgsJv/uQe6zLLQYFZ1dAM4lXUMzGpY8axa5eY=
-X-Google-Smtp-Source: ABdhPJx44ZrFZhNwXvgVe5Vd2Tea/ss8TkWcGSr7Z4Vl0BaVUKWkQCX6jehzcWJuvlQufdTtdrXtQWmbeKdaJx7L/2A=
-X-Received: by 2002:aa7:8bcb:: with SMTP id s11mr15288366pfd.170.1595754274348;
- Sun, 26 Jul 2020 02:04:34 -0700 (PDT)
+        bh=O2+h3+87LaFJxbNS7QjYPeIj+UjU50oEwIWii9HZknM=;
+        b=bPsuoLFooUaIa04ja07prbd5M+OqOuZVrO1YJgq6H9kYm6R/QosnnlTdQ/Dd/enskk
+         +tn3Mm80lOyHm3HlSKBaMDzP5KvBy6mWg/VeWUv030I4xKGIgWoSwP+Gx1xm9SBRqRWP
+         7mQ3XLIHMvS+KCuFifbf/9/UzBkKHLM4a5cM91aJL9/I9BG4CJ+wsSQkFj+zYJvtFFnU
+         AI8BgA0HlljMVDqkMnTw4oz6ONBBfZpukBSmcxBAQEhHn/xY3RO2Anhs4+jgsBYYHYmd
+         ZUa/xPr7AHlGPloKzub3O+/FxzAhcRKTFDv3gjNZjCOcBqx144Z0T0qX4XPYyemWgzbs
+         GlLA==
+X-Gm-Message-State: AOAM532tzMVOJO6Xovj4e6l2cHTb+BaCOR7syhwZ2cLlBQvt2AuBqLW/
+        1xT/DsLtQGJK3wv+3g3AQOIuBXJ/W/r3cJu11Rk=
+X-Google-Smtp-Source: ABdhPJyanvpC5G6K9EGy3sPcpR5eDP+Vp4msDGDK+Czg6cstj5s3pOZVk9ZbzWmWSVYWDBxRL72yZkcufdss2fyWLB4=
+X-Received: by 2002:a50:a125:: with SMTP id 34mr16535885edj.306.1595754783926;
+ Sun, 26 Jul 2020 02:13:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200724213659.273599-1-martin.botka1@gmail.com> <20200724213659.273599-3-martin.botka1@gmail.com>
-In-Reply-To: <20200724213659.273599-3-martin.botka1@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 26 Jul 2020 12:04:18 +0300
-Message-ID: <CAHp75VdJ14p+_+XqxrgRrjXF7m6L4nGr5vB03NTM=0xjgw4c7Q@mail.gmail.com>
+References: <20200724213659.273599-1-martin.botka1@gmail.com>
+ <20200724213659.273599-3-martin.botka1@gmail.com> <CAHp75VdJ14p+_+XqxrgRrjXF7m6L4nGr5vB03NTM=0xjgw4c7Q@mail.gmail.com>
+In-Reply-To: <CAHp75VdJ14p+_+XqxrgRrjXF7m6L4nGr5vB03NTM=0xjgw4c7Q@mail.gmail.com>
+From:   Martin Botka <martin.botka1@gmail.com>
+Date:   Sun, 26 Jul 2020 11:12:27 +0200
+Message-ID: <CADQ2G_HkiAZx8OhfQ_jeizveMaB-QN9dfN6Tcwfk9XuF97rmOg@mail.gmail.com>
 Subject: Re: [PATCH RFC 2/6] pwm: core: Add option to config PWM duty/period
  with u64 data length
-To:     Martin Botka <martin.botka1@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
         Konrad Dybcio <konradybcio@gmail.com>,
         Jacek Anaszewski <jacek.anaszewski@gmail.com>,
@@ -70,20 +71,21 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 12:40 AM Martin Botka <martin.botka1@gmail.com> wrote:
->
-> From: Fenglin Wu <fenglinw@codeaurora.org>
->
-> Currently, PWM core driver provides interfaces for configuring PWM
-> period and duty length in nanoseconds with an integer data type, so
-> the max period can be only set to ~2.147 seconds. Add interfaces which
-> can set PWM period and duty with u64 data type to remove this
-> limitation.
+> And all divisions go mad on 32-bit CPU, right?
+> Please, if you thought about it carefully, update a commit message to
+> clarify that.
 
-And all divisions go mad on 32-bit CPU, right?
-Please, if you thought about it carefully, update a commit message to
-clarify that.
+Hello,
+This patch will be dropped in V2 since another series already made these u64.
+See a9d887dc1c60ed67f2271d66560cdcf864c4a578 in linux-next.
+I have not tested compiling that commit in linux-next on 32 bit arch
+but if it fails i can replace this commit with fix for that.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Also  I'm not the author of this commit.
+Konrad Dybcio fast forwarded it to 5.8 from 4.14.
+Fenglin Wu is the author and also created that commit message.
+
+Thank you.
+
+Best regards
+Martin
