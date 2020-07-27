@@ -2,121 +2,103 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D60322E7B7
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Jul 2020 10:29:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5ED1522E7CC
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 Jul 2020 10:34:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726247AbgG0I31 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 27 Jul 2020 04:29:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38490 "EHLO
+        id S1726362AbgG0IeS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 27 Jul 2020 04:34:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgG0I30 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 Jul 2020 04:29:26 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF316C061794;
-        Mon, 27 Jul 2020 01:29:25 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id g11so4394031ejr.0;
-        Mon, 27 Jul 2020 01:29:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kTvFHWIgSGjnFCLXvF/yM/fZKWRBifqnvOHS6nXZY60=;
-        b=rhBWZ8UZfJnc/0LDqRq1hvkXo3Y/bKWD9uXPbt5ZdJCJL7MPyacKwMj8uZl1LoIx+t
-         JJBPVDfd7U0T8YGwhhCJZBJRhG0dHWshYxK6BiKXvS39U3Jw7WixJpP1+v2N11/KeHpD
-         6HRq0M47ZM+dxh2MLcWdc83LoqK0WnCPn57cLleZTUTRKoZmnpBKdymAOnGspTpzafp5
-         gb1bUilnrQWaQ0abFXdY7bDQVaOHvhDYjHZxAnWcDYHv3vdQN/3joHxoMLjitYb5lnF8
-         6pZBf228xQ3KVpJs+dn+U/NOv9hndoHDYa9Anl8xVsk+VTOR4KNJh3UTq35soi/MYg42
-         Qxzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kTvFHWIgSGjnFCLXvF/yM/fZKWRBifqnvOHS6nXZY60=;
-        b=KOef3x0qMsuz+UKNeEULY64JzHMEeLdPx8sYTEty4wK3A6IDrQJUkqK8LX5kb3ELhl
-         WX0/u9Rv5onN9X0I9m2RPGlIYPwPB3HGC3AIGUM/nfLTe6aGhldGuIQpKmh/+YWNQAyx
-         E9r/1LX5CCsRGUXMses2hCGw02ZtZ53KsEYuYyqQMztzMaW0OG5EYZC/q6PI8FXlv09m
-         ZcSHBqv5b8DkAOEODE+y3e090DwIwDnD5puDlsT9nwN2B+k2X/cqATaEuPguSawdI+uE
-         aCdsAbdDTzlZP48IaAM8NpUHRxNIeMirMSi2MS2GU4uczekrmRZzg/hy6e4iWTN0t5Jm
-         2V/w==
-X-Gm-Message-State: AOAM530eLenRNnoV6D3a7WkiMOwUR2LoBLswUiDTU4DFTvrQJVZAIUPj
-        G1LQ6wONXxoEEK47tOCVVvU=
-X-Google-Smtp-Source: ABdhPJxBJ61Af8cchsQdC/QftI94zMlte4qABD6xZOGp0SVf0126WE3jJmOlPkHbPFHUG5f9p+9U8A==
-X-Received: by 2002:a17:907:2119:: with SMTP id qn25mr1249847ejb.278.1595838564540;
-        Mon, 27 Jul 2020 01:29:24 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id o9sm6972837edz.81.2020.07.27.01.29.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 01:29:23 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 10:29:22 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Subject: Re: [PATCH v4] pwm: bcm-iproc: handle clk_get_rate() return
-Message-ID: <20200727082922.GE2781612@ulmo>
-References: <20200718044606.18739-1-scott.branden@broadcom.com>
+        with ESMTP id S1726265AbgG0IeS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 27 Jul 2020 04:34:18 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F224FC061794
+        for <linux-pwm@vger.kernel.org>; Mon, 27 Jul 2020 01:34:17 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jzyaI-0000ik-4Y; Mon, 27 Jul 2020 10:34:10 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jzyaG-0001dX-V7; Mon, 27 Jul 2020 10:34:08 +0200
+Date:   Mon, 27 Jul 2020 10:34:08 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Martin Botka <martin.botka1@gmail.com>
+Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
+        Konrad Dybcio <konradybcio@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH RFC 2/6] pwm: core: Add option to config PWM duty/period
+ with u64 data length
+Message-ID: <20200727083408.jqm72hty62w7kxdc@pengutronix.de>
+References: <20200724213659.273599-1-martin.botka1@gmail.com>
+ <20200724213659.273599-3-martin.botka1@gmail.com>
+ <CAHp75VdJ14p+_+XqxrgRrjXF7m6L4nGr5vB03NTM=0xjgw4c7Q@mail.gmail.com>
+ <CADQ2G_HkiAZx8OhfQ_jeizveMaB-QN9dfN6Tcwfk9XuF97rmOg@mail.gmail.com>
+ <CADQ2G_HYTE6cd=PM2JzCTadkPe2DDb8dxObPdPJtz1626ktE9Q@mail.gmail.com>
+ <20200727075243.cjkxblsivgnn6jsk@pengutronix.de>
+ <CADQ2G_GcYh13CGbApCqvi3xcHU-Ur2ej98VccKFOUSOZPrQZnQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="sfyO1m2EN8ZOtJL6"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lvdzfpf3t7glasbo"
 Content-Disposition: inline
-In-Reply-To: <20200718044606.18739-1-scott.branden@broadcom.com>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+In-Reply-To: <CADQ2G_GcYh13CGbApCqvi3xcHU-Ur2ej98VccKFOUSOZPrQZnQ@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---sfyO1m2EN8ZOtJL6
-Content-Type: text/plain; charset=us-ascii
+--lvdzfpf3t7glasbo
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 17, 2020 at 09:46:06PM -0700, Scott Branden wrote:
-> From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
->=20
-> Handle clk_get_rate() returning 0 to avoid possible division by zero.
->=20
-> Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
->=20
-> ---
-> Changes from v3: fixed typo in commit message: Reviewed-off-by.
-> Hopefully everything clean now.
-> Changes from v2: update commit message to remove <=3D condition
-> as clk_get_rate only returns value >=3D 0
-> ---
->  drivers/pwm/pwm-bcm-iproc.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+Hello Martin,
 
-Applied, thanks.
+On Mon, Jul 27, 2020 at 09:58:01AM +0200, Martin Botka wrote:
+> > I hit "reply-to-all" and the mail only was sent to you because you wrote
+> > to only me.
+>=20
+> Yes my reply was only to you. But your original message was sent only to =
+me too.
+> So when i clicked reply to all it was only you as you sent it only to me.
 
-Thierry
+Oh indeed. Bummer, and I was so sure to always reply to all :-|
 
---sfyO1m2EN8ZOtJL6
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--lvdzfpf3t7glasbo
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8ekGEACgkQ3SOs138+
-s6E9NQ/8DRh+Uofx9uOez18XOB5EXMG+bglfBoTGCIZtSqn9NLcVnGNpM37XVEhU
-F1rSljb4082n2YzA5yGXz5CPR0IMWldexngcbyrH1HOKYruiP/tjI5ndl7qE3s1v
-UfMeqw0EOx8Jp7lUGEQcHB4w2tMFY/5LVJJqdVdIU9b4ddmIZkXnxpIpUFN+FTfR
-FZ7+ZkCGFAHPH0OEWQ6H8SjwTS1t+iqoB4FbV22xXUYe9BCg7JxT55pMfoz3Ktke
-lfTKrwT1cA0tPLww9G0pd5MiI4+9L2p3imzyVLQ0ZC4evYi09S1cmSFlQbfuI3xC
-6+caPgkKJl96zbK0zlR9immVgzZ+ZFQKhFa7iP7GqTJMfnAtN0B0rukctzmTTq1Y
-UeG2QZO3KO39Kow7UOaVKNTdJ74tjzphJSJsbDRTL70c7sm2FxsodTBGmqs29EFb
-DdJ8Pq81mLI1y+TWyN3PCqHXm+AJNzWQuXMBQBpGVfSYIquaFuNsX2CZtuLVS2kR
-eu5WoN+Oh9mGJxjNNLIHHsl+U4V7qm+vNnsA5a17QKkps+5oUz1qeduy/0/PHqkm
-Mk1IFbX7lQRZjiAJt2IUMypYOS9IP9nGCdqUYeEh44dkSgzLV7o8OjO5V2BXMC6I
-6wki2OpMXEs2wJWjit5PWynQJQIEugfEiLjFyHSJ1pnBrV45+Fo=
-=qIz5
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8ekX0ACgkQwfwUeK3K
+7AnF8Af/auMYk0XSqHjSdH6o5BpdaRw4k2nwyrLlpPbA1EAo1doDPo+5qggDDEEI
+Hhasvj30vEfKAP5PHmRcwHSacAYoUrLgzL9vrO3VLDrSfq1+xPoR2oZNyvEwyNjY
+ORMuV/aXEqcOgjfqciLl/qjMouS5RFyMryESdDULaQTPtIPNJGtFAL63cWibRVB2
+jh8JDB9F/rijp8QsmEDDqEMVSyjbLoGWHdQJvbbd3N9Xy8Rke6Iob+AUXulnFzaC
+q1sOJT3ypUjDhMhvxNBUSMVto8pKUUPZfuJosWBWDpWmAA1Bqi93FvTNyAGKeo4E
+D7Ne9+lzuKLmtH6bwgskg/LCNtlsRA==
+=VGmX
 -----END PGP SIGNATURE-----
 
---sfyO1m2EN8ZOtJL6--
+--lvdzfpf3t7glasbo--
