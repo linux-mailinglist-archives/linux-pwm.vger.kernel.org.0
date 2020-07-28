@@ -2,56 +2,57 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AE4A231311
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Jul 2020 21:49:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FE60231336
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Jul 2020 21:55:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgG1Ttm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 28 Jul 2020 15:49:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33498 "EHLO
+        id S1728708AbgG1Tz3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 28 Jul 2020 15:55:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58161 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728186AbgG1Ttm (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Jul 2020 15:49:42 -0400
+        with ESMTP id S1727824AbgG1Tz3 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Jul 2020 15:55:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595965780;
+        s=mimecast20190719; t=1595966127;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=qGvTzT8NM7IHgswr1ardDnnF8Kc5Lio2kQPzsmWgHR8=;
-        b=B8CmtYfEc94X1H0UxG5Hp74e+NQSHc4X8+dRUL36we3aBRIJeQP/+0BQp47OZWlHuwrBd6
-        0QxnHlEMH4robhwxS5+BGKCX6jMswLOZZ9bEPL6wYWtEdxn5yrqsBG1/20kZff/dBx53f3
-        Xp2Z+77lBFT80YBM0lIZcGtPL6KI8xM=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-335-ssXWWNZzP1qAZh5mLrqscQ-1; Tue, 28 Jul 2020 15:49:38 -0400
-X-MC-Unique: ssXWWNZzP1qAZh5mLrqscQ-1
-Received: by mail-ed1-f70.google.com with SMTP id w19so7464093edx.0
-        for <linux-pwm@vger.kernel.org>; Tue, 28 Jul 2020 12:49:38 -0700 (PDT)
+        bh=SH5q26piEln6+brQgUs5QwIsRcXrNMf3SmQsNLqi3Vo=;
+        b=UYfilLVKDrhPFkwbUjbUwKB9dHYCcNO6POKlj2HYzhXK7f1PKt6J2Y6YS4mAruYoOblLRH
+        zXcfeWtJ0gI+YCwpSNQB9CmyRRa54pxTsGrNOFuot94XTPHC41WPZlepFw39zHiHgM3yNP
+        U/xw2+DJbsvVBjv70oC2Or7eAIbMxHs=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-192-qxNl7pNKPd6aVzVpREKxNw-1; Tue, 28 Jul 2020 15:55:25 -0400
+X-MC-Unique: qxNl7pNKPd6aVzVpREKxNw-1
+Received: by mail-ej1-f72.google.com with SMTP id cf15so7617292ejb.6
+        for <linux-pwm@vger.kernel.org>; Tue, 28 Jul 2020 12:55:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=qGvTzT8NM7IHgswr1ardDnnF8Kc5Lio2kQPzsmWgHR8=;
-        b=DPp1Mo8LFWUkYyjFug2ilm0z/FKOHWVbbyWuR7DEtqgS/PtviNtsqM7zdFhiAd2hhB
-         uL+J74ydzTbmapHYnfw6qYA1axizK9c7JOOh4gtSDtmz//h4R1/jnmGnxtICrHkrka3I
-         7AjajlVp+556gIW1nhksCTvzr1DOTIMYXipQee2nlSJkbFT11ZT8pRzgLxnlHYzM5PB0
-         FGShk+X5LCAd9BhlTv+sfppANNPysXowwI0Txw/AJ4whhrebi27eCeEvqDRK+v8YiTQq
-         u1zFT1hC/g52BAhOKXf7sBtnENhwp3qiGWYyX4+Ch/Ehkvzz5Oc8M8HmBc1sjOqr0w77
-         Jktg==
-X-Gm-Message-State: AOAM531zZj+SeEucYSaBzIxTcu9vpQqsZgRH2QJRm7bjOjTnwpN7ybAB
-        kQu7VD5BUPY2k1/0APhQlv8UH/JBHAGRmEzYonWfA6t74SO1nTMY76RcwtrRzY7UFGqT000af7b
-        v83+1ELZHe32MuL7ksrre
-X-Received: by 2002:a17:906:2816:: with SMTP id r22mr3236525ejc.215.1595965777423;
-        Tue, 28 Jul 2020 12:49:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyST52qxA4L/r7rRNNQhsCVnQBD9xfOfW4Zv8ngTpgqQ7I6PmsbCzOTgI7uEiR84fie460aPA==
-X-Received: by 2002:a17:906:2816:: with SMTP id r22mr3236509ejc.215.1595965777212;
-        Tue, 28 Jul 2020 12:49:37 -0700 (PDT)
+        bh=SH5q26piEln6+brQgUs5QwIsRcXrNMf3SmQsNLqi3Vo=;
+        b=rg9TqhFkAQ5jac/Yyibb7C9wYPR7BZ8VMVpN1vmR5Ik2ZZJ8bu9+saw6wy+WXaKJFS
+         ef3hu+iQ4aP6BTwpUbjvYB0wLnBC0lbSbYsdRX0I24llooQ7Dy4CY25gdYgwk/LKVkEi
+         7qZDYgkDAyMbm5VLm6qCKVi97ZxuzT9mjVEX/++XtfxD7tDCnHaa3nSh2RaOX3coafN9
+         wg2GUhnKLg38IWHCdI2NYU2S7qBtoyhEiXV8DSnR3064f6nt1gZoE7PR0YJXtJ6jBM34
+         YJ43js4LAOYVY/MjumsF7gx6j3m7B0lvBVXqJP5MXyEZyvlIfbJlyG2XSnkUMvrFmySX
+         zd4g==
+X-Gm-Message-State: AOAM530cno/yL4RHfgpTBKo/0djHsQggA2dy03ZFlIeKUKz+4ReksbHg
+        fd4eoN6j+qZMj3qqYPC07AvdB/PlMUj/mgIdM0QXg9Ul+AIlx0Czq8u1NhIQcDQl2DP3EU5DId0
+        gEZWfWWsH1Mnb7/YZn3rv
+X-Received: by 2002:aa7:c655:: with SMTP id z21mr27771980edr.330.1595966123728;
+        Tue, 28 Jul 2020 12:55:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxwya90PeANkl56GbLL/sAAQgT++JcBuCdnZPXxsUt2lGBGTS4oefB9O+jlvr2TwUYPoNeYaw==
+X-Received: by 2002:aa7:c655:: with SMTP id z21mr27771962edr.330.1595966123458;
+        Tue, 28 Jul 2020 12:55:23 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id yj16sm9921523ejb.122.2020.07.28.12.49.36
+        by smtp.gmail.com with ESMTPSA id gh25sm4295031ejb.109.2020.07.28.12.55.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jul 2020 12:49:36 -0700 (PDT)
-Subject: Re: [PATCH v5 05/16] pwm: lpss: Add pwm_lpss_prepare_enable() helper
+        Tue, 28 Jul 2020 12:55:22 -0700 (PDT)
+Subject: Re: [PATCH v5 06/16] pwm: lpss: Use pwm_lpss_apply() when restoring
+ state on resume
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
@@ -66,15 +67,15 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org
 References: <20200717133753.127282-1-hdegoede@redhat.com>
- <20200717133753.127282-6-hdegoede@redhat.com>
- <20200728184553.GZ3703480@smile.fi.intel.com>
+ <20200717133753.127282-7-hdegoede@redhat.com>
+ <20200728185703.GA3703480@smile.fi.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <e4517382-b294-c7ab-b587-21ed67b5dde9@redhat.com>
-Date:   Tue, 28 Jul 2020 21:49:35 +0200
+Message-ID: <1e19e31f-cf68-5607-3027-3b963ce53c39@redhat.com>
+Date:   Tue, 28 Jul 2020 21:55:22 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200728184553.GZ3703480@smile.fi.intel.com>
+In-Reply-To: <20200728185703.GA3703480@smile.fi.intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -85,121 +86,140 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 Hi,
 
-On 7/28/20 8:45 PM, Andy Shevchenko wrote:
-> On Fri, Jul 17, 2020 at 03:37:42PM +0200, Hans de Goede wrote:
->> In the not-enabled -> enabled path pwm_lpss_apply() needs to get a
->> runtime-pm reference; and then on any errors it needs to release it
->> again.
+On 7/28/20 8:57 PM, Andy Shevchenko wrote:
+> On Fri, Jul 17, 2020 at 03:37:43PM +0200, Hans de Goede wrote:
+>> Before this commit a suspend + resume of the LPSS PWM controller
+>> would result in the controller being reset to its defaults of
+>> output-freq = clock/256, duty-cycle=100%, until someone changes
+>> to the output-freq and/or duty-cycle are made.
 >>
->> This leads to somewhat hard to read code. This commit introduces a new
->> pwm_lpss_prepare_enable() helper and moves all the steps necessary for
->> the not-enabled -> enabled transition there, so that we can error check
->> the entire transition in a single place and only have one pm_runtime_put()
->> on failure call site.
+>> This problem has been masked so far because the main consumer
+>> (the i915 driver) was always making duty-cycle changes on resume.
+>> With the conversion of the i915 driver to the atomic PWM API the
+>> driver now only disables/enables the PWM on suspend/resume leaving
+>> the output-freq and duty as is, triggering this problem.
 >>
->> While working on this I noticed that the enabled -> enabled (update
->> settings) path was quite similar, so I've added an enable parameter to
->> the new pwm_lpss_prepare_enable() helper, which allows using it in that
->> path too.
+>> The LPSS PWM controller has a mechanism where the ctrl register value
+>> and the actual base-unit and on-time-div values used are latched. When
+>> software sets the SW_UPDATE bit then at the end of the current PWM cycle,
+>> the new values from the ctrl-register will be latched into the actual
+>> registers, and the SW_UPDATE bit will be cleared.
+>>
+>> The problem is that before this commit our suspend/resume handling
+>> consisted of simply saving the PWM ctrl register on suspend and
+>> restoring it on resume, without setting the PWM_SW_UPDATE bit.
+>> When the controller has lost its state over a suspend/resume and thus
+>> has been reset to the defaults, just restoring the register is not
+>> enough. We must also set the SW_UPDATE bit to tell the controller to
+>> latch the restored values into the actual registers.
+>>
+>> Fixing this problem is not as simple as just or-ing in the value which
+>> is being restored with SW_UPDATE. If the PWM was enabled before we must
+>> write the new settings + PWM_SW_UPDATE before setting PWM_ENABLE.
+>> We must also wait for PWM_SW_UPDATE to become 0 again and depending on the
+>> model we must do this either before or after the setting of PWM_ENABLE.
+>>
+>> All the necessary logic for doing this is already present inside
+>> pwm_lpss_apply(), so instead of duplicating this inside the resume
+>> handler, this commit makes the resume handler use pwm_lpss_apply() to
+>> restore the settings when necessary. This fixes the output-freq and
+>> duty-cycle being reset to their defaults on resume.
 > 
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> But see below.
+> ...
 > 
->> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>   drivers/pwm/pwm-lpss.c | 45 ++++++++++++++++++++++++------------------
->>   1 file changed, 26 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
->> index da9bc3d10104..8a136ba2a583 100644
->> --- a/drivers/pwm/pwm-lpss.c
->> +++ b/drivers/pwm/pwm-lpss.c
->> @@ -122,41 +122,48 @@ static inline void pwm_lpss_cond_enable(struct pwm_device *pwm, bool cond)
->>   		pwm_lpss_write(pwm, pwm_lpss_read(pwm) | PWM_ENABLE);
->>   }
->>   
->> +static int pwm_lpss_prepare_enable(struct pwm_lpss_chip *lpwm,
->> +				   struct pwm_device *pwm,
->> +				   const struct pwm_state *state,
->> +				   bool enable)
->> +{
->> +	int ret;
->> +
->> +	ret = pwm_lpss_is_updating(pwm);
->> +	if (ret)
->> +		return ret;
->> +
->> +	pwm_lpss_prepare(lpwm, pwm, state->duty_cycle, state->period);
->> +	pwm_lpss_cond_enable(pwm, enable && lpwm->info->bypass == false);
->> +	ret = pwm_lpss_wait_for_update(pwm);
->> +	if (ret)
->> +		return ret;
->> +
->> +	pwm_lpss_cond_enable(pwm, enable && lpwm->info->bypass == true);
->> +	return 0;
->> +}
->> +
->>   static int pwm_lpss_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->>   			  const struct pwm_state *state)
+>> -static int pwm_lpss_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>> -			  const struct pwm_state *state)
+>> +static int __pwm_lpss_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>> +			    const struct pwm_state *state, bool from_resume)
 >>   {
 >>   	struct pwm_lpss_chip *lpwm = to_lpwm(chip);
->> -	int ret;
-> 
->> +	int ret = 0;
-> 
-> We can avoid this change...
-> 
+>>   	int ret = 0;
+>>   
 >>   	if (state->enabled) {
 >>   		if (!pwm_is_enabled(pwm)) {
->>   			pm_runtime_get_sync(chip->dev);
->> -			ret = pwm_lpss_is_updating(pwm);
->> -			if (ret) {
->> -				pm_runtime_put(chip->dev);
->> -				return ret;
->> -			}
->> -			pwm_lpss_prepare(lpwm, pwm, state->duty_cycle, state->period);
->> -			pwm_lpss_cond_enable(pwm, lpwm->info->bypass == false);
->> -			ret = pwm_lpss_wait_for_update(pwm);
->> -			if (ret) {
->> +			ret = pwm_lpss_prepare_enable(lpwm, pwm, state, true);
->> +			if (ret)
->>   				pm_runtime_put(chip->dev);
->> -				return ret;
->> -			}
->> -			pwm_lpss_cond_enable(pwm, lpwm->info->bypass == true);
->>   		} else {
->> -			ret = pwm_lpss_is_updating(pwm);
+>> -			pm_runtime_get_sync(chip->dev);
+>> +			if (!from_resume)
+>> +				pm_runtime_get_sync(chip->dev);
+>> +
+>>   			ret = pwm_lpss_prepare_enable(lpwm, pwm, state, true);
 >> -			if (ret)
->> -				return ret;
->> -			pwm_lpss_prepare(lpwm, pwm, state->duty_cycle, state->period);
->> -			return pwm_lpss_wait_for_update(pwm);
+>> +			if (ret && !from_resume)
+>>   				pm_runtime_put(chip->dev);
+>>   		} else {
+>>   			ret = pwm_lpss_prepare_enable(lpwm, pwm, state, false);
+>>   		}
+>>   	} else if (pwm_is_enabled(pwm)) {
+>>   		pwm_lpss_write(pwm, pwm_lpss_read(pwm) & ~PWM_ENABLE);
+>> -		pm_runtime_put(chip->dev);
+>> +
+>> +		if (!from_resume)
+>> +			pm_runtime_put(chip->dev);
+>>   	}
+>>   
+>>   	return ret;
+>>   }
 > 
->> +			ret = pwm_lpss_prepare_enable(lpwm, pwm, state, false);
+> Maybe I'm too picky, but I would go even further and split apply to two versions
 > 
-> ...by simple return directly from here. But I admit I haven't seen the next patch yet.
+> static int pwm_lpss_apply_on_resume(struct pwm_chip *chip, struct pwm_device *pwm,
+> 			  const struct pwm_state *state)
+>>   {
+>>   	struct pwm_lpss_chip *lpwm = to_lpwm(chip);
+>>   
+>>   	if (state->enabled)
+>>   		return pwm_lpss_prepare_enable(lpwm, pwm, state, !pwm_is_enabled(pwm));
+>>   	if (pwm_is_enabled(pwm)) {
+>>   		pwm_lpss_write(pwm, pwm_lpss_read(pwm) & ~PWM_ENABLE);
+>>   	return 0;
+>>   }
+> 
+> and another one for !from_resume.
 
-True, but I'm not a big fan of earlier returns except for errors.
+It is a bit picky :) But that is actually not a bad idea, although I would write
+it like this for more symmetry with the normal (not on_resume) apply version,
+while at it I also renamed the function:
+
+/*
+  * This is a mirror of pwm_lpss_apply() without pm_runtime reference handling
+  * for restoring the PWM state on resume.
+  */
+static int pwm_lpss_restore_state(struct pwm_chip *chip, struct pwm_device *pwm,
+                                   const struct pwm_state *state)
+{
+    	struct pwm_lpss_chip *lpwm = to_lpwm(chip);
+	int ret = 0;
+
+    	if (state->enabled)
+    		ret = pwm_lpss_prepare_enable(lpwm, pwm, state, !pwm_is_enabled(pwm));
+    	else if (pwm_is_enabled(pwm))
+    		pwm_lpss_write(pwm, pwm_lpss_read(pwm) & ~PWM_ENABLE);
+
+    	return ret;
+}
+
+Would that work for you?
+
+>> +static int pwm_lpss_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>> +			  const struct pwm_state *state)
+>> +{
+>> +	return __pwm_lpss_apply(chip, pwm, state, false);
+>> +}
+> 
+> ...
+> 
+>> +		ret = __pwm_lpss_apply(&lpwm->chip, pwm, &saved_state, true);
+>> +		if (ret)
+>> +			dev_err(dev, "Error restoring state on resume\n");
+> 
+> I'm wondering if it's a real error why we do not bail out?
+> Otherwise dev_warn() ?
+
+It is a real error, but a single PWM chip might have multiple controllers
+and bailing out early would mean not even trying to restore the state on
+the other controllers.  As for propagating the error, AFAIK the pm framework
+does not do anything with resume errors other then log an extra error.
 
 Regards,
 
 Hans
-
-
-> 
->>   		}
->>   	} else if (pwm_is_enabled(pwm)) {
->>   		pwm_lpss_write(pwm, pwm_lpss_read(pwm) & ~PWM_ENABLE);
->>   		pm_runtime_put(chip->dev);
->>   	}
->>   
->> -	return 0;
->> +	return ret;
->>   }
->>   
->>   static void pwm_lpss_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->> -- 
->> 2.26.2
->>
-> 
 
