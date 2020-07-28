@@ -2,55 +2,40 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B54D7230509
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Jul 2020 10:15:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8840230534
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Jul 2020 10:21:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgG1IPM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 28 Jul 2020 04:15:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34190 "EHLO
+        id S1728091AbgG1IVZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 28 Jul 2020 04:21:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727871AbgG1IPM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Jul 2020 04:15:12 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB475C0619D4
-        for <linux-pwm@vger.kernel.org>; Tue, 28 Jul 2020 01:15:11 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b6so17353975wrs.11
-        for <linux-pwm@vger.kernel.org>; Tue, 28 Jul 2020 01:15:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=HvwG2XGS6BDybxzaDD/+TuGAKBON3irqrqJCB9747RQ=;
-        b=xlfx3HvuSB0z5GqSk3Qy6MOhKencPFggfCX8hujwu/RDWI/B7jZFJe06PSK7DC1Ssx
-         dEepVkCzLe6s8V+lH6GirW/mRTJKmhk6c2/3CEefSxa1CHXXvTMtYWGTVsITPhwpBdyC
-         WJNtfWmkqvyaKoi3YA6pcFiJ07zI7lOAij4CpBfYTMN9v0amx/QgmB2ZMmTx7ka9M8Ul
-         XWsw7ELJwLkLs8POxJOA5yZjZHraPZpoR1/5p8Kq+dIS1ikdFR6g4ru3FNnb8WZf9m2m
-         9boRgLly3U5/fL5YqILefz1/moUHuZkSfLiE4f8IvsC3wdMHg1ixjCMqK+NfGRm/FPu4
-         aoLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=HvwG2XGS6BDybxzaDD/+TuGAKBON3irqrqJCB9747RQ=;
-        b=mHiG21WF06nhdvtZHoMInEHgcPUxqi5BrGokZ+jX6mTcFzwJQh4SdWVJgyDPxhNBe3
-         gDwg2nDLYUzzjoXVwazLF+du0twRuajekXYuu/Cm9lnXGu9lRJdb6ZW0cFFC7o7cNl0s
-         6nkhgcayA8E8+oqztWG2VZ0vtIIVIoViu15YzkhhX1B6FrsbEYO02RUWUXZxzpy4PSqv
-         Jj0yKj/sePo8WgQBMaKdy1JhjqfVZJJ2qKOH8irbwf3ChAsJb5dae80zOQqwuvIVeMvB
-         Wc6bVFM9+Ycb2B26RkQdbQvReZ1qjglZhGXGVz2ojOTuEk2vdRQTpKLg9AUdi3D8N0go
-         Jy2w==
-X-Gm-Message-State: AOAM533sTHy9HIsgZRha2/2zvuwd4gyLUOxGFHh5emRuIzbqNeEn1CaV
-        0UL1z+65TnW7KMkKHF0s7HrLOg==
-X-Google-Smtp-Source: ABdhPJyEBmzjP5p5bqlnkhXS1LyF2jze2TsaWelEULtD2Qvk55SkGf3FY3CVzhFz57n6yU7y/EsR2A==
-X-Received: by 2002:adf:eccc:: with SMTP id s12mr26590888wro.157.1595924108740;
-        Tue, 28 Jul 2020 01:15:08 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id p6sm2982576wmg.0.2020.07.28.01.15.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 01:15:08 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 09:15:06 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
+        with ESMTP id S1727878AbgG1IVZ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Jul 2020 04:21:25 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE3D9C061794;
+        Tue, 28 Jul 2020 01:21:24 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 64C7C22F00;
+        Tue, 28 Jul 2020 10:21:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1595924482;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dvrp+yGmGW+ZNzAnBXqLG8eW0AGgkG7TdBQt7cBEsrc=;
+        b=tzGvI8hDZhf5Z0n9rfs5U8/C8qymnrdoiivp7muYDtC+/8fj8ujBIYmVxkVHAOWGS7k4CC
+        pWnd3TpXVvMFkS/2P+ja2mg/DusixLrVUxqqVyh3iMQ3cIL04PAlDaOjQEXysN/WFDdtuQ
+        7R09CX1617DoC2vpgDEhkN13M/m6yaE=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 28 Jul 2020 10:21:22 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
@@ -60,9 +45,8 @@ Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
         Jean Delvare <jdelvare@suse.com>,
         Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -72,166 +56,302 @@ Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 01/13] mfd: add simple regmap based I2C driver
-Message-ID: <20200728081506.GA2419169@dell>
+Subject: Re: [PATCH v6 06/13] pwm: add support for sl28cpld PWM controller
+In-Reply-To: <20200728074352.ckyfso5zwsfgupjx@pengutronix.de>
 References: <20200725231834.25642-1-michael@walle.cc>
- <20200725231834.25642-2-michael@walle.cc>
- <20200728071949.GE1850026@dell>
- <23a9ecf5fe4f15b9b20a91cc292aca80@walle.cc>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <23a9ecf5fe4f15b9b20a91cc292aca80@walle.cc>
+ <20200725231834.25642-7-michael@walle.cc>
+ <20200728074352.ckyfso5zwsfgupjx@pengutronix.de>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <58b53cacc5289f17f669159beeeada03@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 28 Jul 2020, Michael Walle wrote:
+Hi,
 
-> Am 2020-07-28 09:19, schrieb Lee Jones:
-> > On Sun, 26 Jul 2020, Michael Walle wrote:
-> > 
-> > > There are I2C devices which contain several different functions but
-> > > doesn't require any special access functions. For these kind of
-> > > drivers
-> > > an I2C regmap should be enough.
-> > > 
-> > > Create an I2C driver which creates an I2C regmap and enumerates its
-> > > children. If a device wants to use this as its MFD core driver, it has
-> > > to add an individual compatible string. It may provide its own regmap
-> > > configuration.
-> > > 
-> > > Subdevices can use dev_get_regmap() on the parent to get their regmap
-> > > instance.
-> > > 
-> > > Signed-off-by: Michael Walle <michael@walle.cc>
-> > > ---
-> > > Changes since v5:
-> > >  - removed "select MFD_CORE" in Kconfig
-> > >  - removed help text in Kconfig, we assume that the users of this
-> > 
-> > That's the opposite of what I asked for.
+Am 2020-07-28 09:43, schrieb Uwe Kleine-König:
+> Hello,
 > 
-> What is the use to describe the symbol, if it is not user selectable?
-> I'm not aware this is done anywhere in the kernel, am I missing
-> something?
+> just a few minor issues left:
 
-You mean in menuconfig?
+thanks for the review.
 
-I find 'help's helpful even outside of menuconfig.
-
-Surely I'm not the only one who reads them 'raw'?
-
-> > >    driver will have a "select MFD_SIMPLE_MFD_I2C". Instead added
-> > >    a small description to the driver itself.
-> > >  - removed "struct simple_mfd_i2c_config" and use regmap_config
-> > >    directly
-> > >  - changed builtin_i2c_driver() to module_i2c_driver(), added
-> > >    MODULE_ boilerplate
-> > >  - cleaned up the included files
-> > > 
-> > > Changes since v4:
-> > >  - new patch. Lee, please bear with me. I didn't want to delay the
-> > >    new version (where a lot of remarks on the other patches were
-> > >    addressed) even more, just because we haven't figured out how
-> > >    to deal with the MFD part. So for now, I've included this one.
-> > > 
-> > >  drivers/mfd/Kconfig          |  5 ++++
-> > >  drivers/mfd/Makefile         |  1 +
-> > >  drivers/mfd/simple-mfd-i2c.c | 55
-> > > ++++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 61 insertions(+)
-> > >  create mode 100644 drivers/mfd/simple-mfd-i2c.c
-> > > 
-> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > > index 33df0837ab41..c08539c7a166 100644
-> > > --- a/drivers/mfd/Kconfig
-> > > +++ b/drivers/mfd/Kconfig
-> > > @@ -1162,6 +1162,11 @@ config MFD_SI476X_CORE
-> > >  	  To compile this driver as a module, choose M here: the
-> > >  	  module will be called si476x-core.
-> > > 
-> > > +config MFD_SIMPLE_MFD_I2C
-> > > +	tristate
-> > > +	depends on I2C
-> > > +	select REGMAP_I2C
-> > 
-> > Please provide a full help.
 > 
-> See above.
+> On Sun, Jul 26, 2020 at 01:18:27AM +0200, Michael Walle wrote:
+>> diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
+>> new file mode 100644
+>> index 000000000000..956fa09f3aba
+>> --- /dev/null
+>> +++ b/drivers/pwm/pwm-sl28cpld.c
+>> @@ -0,0 +1,223 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * sl28cpld PWM driver
+>> + *
+>> + * Copyright (c) 2020 Michael Walle <michael@walle.cc>
+>> + *
+>> + * There is no public datasheet available for this PWM core. But it 
+>> is easy
+>> + * enough to be briefly explained. It consists of one 8-bit counter. 
+>> The PWM
+>> + * supports four distinct frequencies by selecting when to reset the 
+>> counter.
+>> + * With the prescaler setting you can select which bit of the counter 
+>> is used
+>> + * to reset it. This implies that the higher the frequency the less 
+>> remaining
+>> + * bits are available for the actual counter.
+>> + *
+>> + * Let cnt[7:0] be the counter, clocked at 32kHz:
+>> + * +-----------+--------+--------------+-----------+
+>> + * | prescaler |  reset | counter bits | frequency |
+>> + * +-----------+--------+--------------+-----------+
+>> + * |         0 | cnt[7] |     cnt[6:0] |     250Hz |
+>> + * |         1 | cnt[6] |     cnt[5:0] |     500Hz |
+>> + * |         2 | cnt[5] |     cnt[4:0] |      1kHz |
+>> + * |         3 | cnt[4] |     cnt[3:0] |      2kHz |
+>> + * +-----------+--------+--------------+-----------+
 > 
-> > 
-> > >  config MFD_SM501
-> > >  	tristate "Silicon Motion SM501"
-> > >  	depends on HAS_DMA
-> > > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> > > index a60e5f835283..78d24a3e7c9e 100644
-> > > --- a/drivers/mfd/Makefile
-> > > +++ b/drivers/mfd/Makefile
-> > > @@ -264,3 +264,4 @@ obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
-> > >  obj-$(CONFIG_MFD_KHADAS_MCU) 	+= khadas-mcu.o
-> > > 
-> > >  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
-> > > +obj-$(CONFIG_MFD_SIMPLE_MFD_I2C)	+= simple-mfd-i2c.o
-> > > diff --git a/drivers/mfd/simple-mfd-i2c.c
-> > > b/drivers/mfd/simple-mfd-i2c.c
-> > > new file mode 100644
-> > > index 000000000000..45090ddad104
-> > > --- /dev/null
-> > > +++ b/drivers/mfd/simple-mfd-i2c.c
-> > > @@ -0,0 +1,55 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +/*
-> > > + * A very simple I2C MFD driver
-> > 
-> > Simple MFD - I2C
+> Very nice. I'd add a "period length" column, as this is what the PWM
+> core uses.
 > 
-> ok.
+> For your convenience (and as I created that table anyhow for further
+> checking of the formulas below):
 > 
-> > > + * The driver enumerates its children and registers a common
-> > > regmap. Use
-> > > + * dev_get_regmap(pdev->dev.parent, NULL) in the child nodes to
-> > > fetch that
-> > > + * regmap instance.
-> > 
-> > This driver creates a single register map with the intention for it to
-> > be shared by all sub-devices.  Children can use their parent's device
-> > structure (dev.parent) in order reference it.
+>  * +-----------+--------+--------------+-----------+--------+
+>  * | prescaler |  reset | counter bits | frequency | period |
+>  * |           |        |              |           | length |
+>  * +-----------+--------+--------------+-----------+--------+
+>  * |         0 | cnt[7] |     cnt[6:0] |     250Hz | 4000ns |
+>  * |         1 | cnt[6] |     cnt[5:0] |     500Hz | 2000ns |
+>  * |         2 | cnt[5] |     cnt[4:0] |      1kHz | 1000ns |
+>  * |         3 | cnt[4] |     cnt[3:0] |      2kHz |  500ns |
+>  * +-----------+--------+--------------+-----------+--------+
+
+sure :)
+
 > 
-> Should this be appended or should it replace my paragraph? If its the
-> latter,
-> the "enumeration of the children" is missing.
-
-If you want to keep that part, try:
-
-This driver creates a single register map with the intention for it to
-be shared by all sub-devices.  Children can use their parent's device
-structure (dev.parent) in order reference it.
-
-Once the register map has been successfully initialised, any
-sub-devices represented by child nodes in Device Tree will be
-subsequently registered.
-
-> > > + * In the future this driver might be extended to support also
-> > > other interfaces
-> > > + * like SPI etc.
-> > 
-> > Remove this please.
+>> + *
+>> + * Limitations:
+>> + * - The hardware cannot generate a 100% duty cycle if the prescaler 
+>> is 0.
+>> + * - The hardware cannot atomically set the prescaler and the counter 
+>> value,
+>> + *   which might lead to glitches and inconsistent states if a write 
+>> fails.
+>> + * - The counter is not reset if you switch the prescaler which leads
+>> + *   to glitches, too.
+>> + * - The duty cycle will switch immediately and not after a complete 
+>> cycle.
+>> + * - Depending on the actual implementation, disabling the PWM might 
+>> have
+>> + *   side effects. For example, if the output pin is shared with a 
+>> GPIO pin
+>> + *   it will automatically switch back to GPIO mode.
+>> + */
+>> +
+>> +#include <linux/bitfield.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/mod_devicetable.h>
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pwm.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +/*
+>> + * PWM timer block registers.
+>> + */
+>> +#define SL28CPLD_PWM_CTRL			0x00
+>> +#define   SL28CPLD_PWM_CTRL_ENABLE		BIT(7)
+>> +#define   SL28CPLD_PWM_CTRL_PRESCALER_MASK	GENMASK(1, 0)
+>> +#define SL28CPLD_PWM_CYCLE			0x01
+>> +#define   SL28CPLD_PWM_CYCLE_MAX		GENMASK(6, 0)
+>> +
+>> +#define SL28CPLD_PWM_CLK			32000 /* 32 kHz */
+>> +#define SL28CPLD_PWM_MAX_DUTY_CYCLE(prescaler)	(1 << (7 - 
+>> (prescaler)))
+>> +#define SL28CPLD_PWM_PERIOD(prescaler) \
+>> +	(NSEC_PER_SEC / SL28CPLD_PWM_CLK * 
+>> SL28CPLD_PWM_MAX_DUTY_CYCLE(prescaler))
+>> +
+>> +/*
+>> + * We calculate the duty cycle like this:
+>> + *   duty_cycle_ns = pwm_cycle_reg * max_period_ns / max_duty_cycle
+>> + *
+>> + * With
+>> + *   max_period_ns = (1 << 7 - prescaler) / pwm_clk * NSEC_PER_SEC
+>> + *   max_duty_cycle = 1 << (7 - prescaler)
 > 
-> Why would you remove information about the intention of this driver? If
-> someone
-> looks for a place to implement its SPI/I3C/Slimbus MFD driver this might
-> come
-> in handy.
+> If you don't need parenthesis in the max_period_ns around 7 - 
+> prescaler,
+> you don't need them either in the max_duty_cycle line.
 
-By all means put something similar in the commit log, but it has no
-place in the driver itself.  Besides, if we were to add support for
-SPI, it is likely to be a completely separate/unrelated driver.
+mhh this should be "1 << (7 - prescaler)" in both cases. So
+max_period_ns is wrong:
+   max_period_ns = 1 << (7 - prescaler) / pwm_clk * NSEC_PER_SEC
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+
+>> + * this then simplifies to:
+>> + *   duty_cycle_ns = pwm_cycle_reg / pwm_clk * NSEC_PER_SEC
+>> + */
+>> +#define SL28CPLD_PWM_TO_DUTY_CYCLE(reg) \
+>> +	(NSEC_PER_SEC / SL28CPLD_PWM_CLK * (reg))
+> 
+> For those who copy from your driver maybe add a comment like:
+> 
+>  * NSEC_PER_SEC / SL28CPLD_PWM_CLK is integer here, so we're not 
+> loosing
+>  * precision by doing the division first.
+
+ok.
+
+>> +#define SL28CPLD_PWM_FROM_DUTY_CYCLE(duty_cycle) \
+>> +	(DIV_ROUND_DOWN_ULL((duty_cycle), NSEC_PER_SEC / SL28CPLD_PWM_CLK))
+>> +
+>> +struct sl28cpld_pwm {
+>> +	struct pwm_chip pwm_chip;
+>> +	struct regmap *regmap;
+>> +	u32 offset;
+>> +};
+>> +
+>> +static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
+>> +				   struct pwm_device *pwm,
+>> +				   struct pwm_state *state)
+>> +{
+>> +	struct sl28cpld_pwm *priv = dev_get_drvdata(chip->dev);
+>> +	unsigned int reg;
+>> +	int prescaler;
+>> +
+>> +	regmap_read(priv->regmap, priv->offset + SL28CPLD_PWM_CTRL, &reg);
+> 
+> Would it make sense to hide this using e.g.:
+> 
+> 	#define sl28cpkd_pwm_read(priv, reg, val)	regmap_read((priv)->regmap,
+> (priv)->offset + (reg), val)
+> 
+> The line would then become:
+> 
+> 	sl28cpkd_pwm_read(priv, SL28CPLD_PWM_CTRL, &reg);
+> 
+> which is a bit prettier. Up to you to decide. If you do it, please do
+> the same for write
+
+
+I don't have a strong opinion on that. I can change it. Although there
+will be checkpatch warning about multiple uses of the macro argument,
+I'd presume.
+
+>> +	state->enabled = reg & SL28CPLD_PWM_CTRL_ENABLE;
+>> +
+>> +	prescaler = FIELD_GET(SL28CPLD_PWM_CTRL_PRESCALER_MASK, reg);
+>> +	state->period = SL28CPLD_PWM_PERIOD(prescaler);
+>> +
+>> +	regmap_read(priv->regmap, priv->offset + SL28CPLD_PWM_CYCLE, &reg);
+>> +	state->duty_cycle = SL28CPLD_PWM_TO_DUTY_CYCLE(reg);
+>> +	state->polarity = PWM_POLARITY_NORMAL;
+>> +}
+>> +
+>> +static int sl28cpld_pwm_apply(struct pwm_chip *chip, struct 
+>> pwm_device *pwm,
+>> +			      const struct pwm_state *state)
+>> +{
+>> +	struct sl28cpld_pwm *priv = dev_get_drvdata(chip->dev);
+>> +	unsigned int cycle, prescaler;
+>> +	int ret;
+>> +	u8 ctrl;
+>> +
+>> +	/* Polarity inversion is not supported */
+>> +	if (state->polarity != PWM_POLARITY_NORMAL)
+>> +		return -EINVAL;
+>> +
+>> +	/*
+>> +	 * Calculate the prescaler. Pick the the biggest period that isn't
+>> +	 * bigger than the requested period.
+>> +	 */
+>> +	prescaler = DIV_ROUND_UP_ULL(SL28CPLD_PWM_PERIOD(0), state->period);
+>> +	prescaler = order_base_2(prescaler);
+>> +
+>> +	if (prescaler > field_max(SL28CPLD_PWM_CTRL_PRESCALER_MASK))
+>> +		return -ERANGE;
+> 
+> The calculation looks right.
+> Did you check the generated code? Maybe using an if or switch here is
+> more effective? (optional task for bonus points :-)
+
+I varied between this and some if/switch. This hard to read IMHO (as
+was your your ilog(n+1)+1), but you could easily change the range
+of the prescaler without having to change this. Also if/switch
+looked ugly too *g*. I'll check again.
+
+> 
+>> +	ctrl = FIELD_PREP(SL28CPLD_PWM_CTRL_PRESCALER_MASK, prescaler);
+>> +	if (state->enabled)
+>> +		ctrl |= SL28CPLD_PWM_CTRL_ENABLE;
+>> +
+>> +	cycle = SL28CPLD_PWM_FROM_DUTY_CYCLE(state->duty_cycle);
+>> +	cycle = min_t(unsigned int, cycle, 
+>> SL28CPLD_PWM_MAX_DUTY_CYCLE(prescaler));
+>> +
+>> +	/*
+>> +	 * Work around the hardware limitation. See also above. Trap 100% 
+>> duty
+>> +	 * cycle if the prescaler is 0. Set prescaler to 1 instead. We don't
+>> +	 * care about the frequency because its "all-one" in either case.
+>> +	 *
+>> +	 * We don't need to check the actual prescaler setting, because only
+>> +	 * if the prescaler is 0 we can have this particular value.
+>> +	 */
+>> +	if (cycle == SL28CPLD_PWM_MAX_DUTY_CYCLE(0)) {
+>> +		ctrl &= ~SL28CPLD_PWM_CTRL_PRESCALER_MASK;
+>> +		ctrl |= FIELD_PREP(SL28CPLD_PWM_CTRL_PRESCALER_MASK, 1);
+>> +		cycle = SL28CPLD_PWM_MAX_DUTY_CYCLE(1);
+>> +	}
+>> +
+>> +	ret = regmap_write(priv->regmap, priv->offset + SL28CPLD_PWM_CTRL, 
+>> ctrl);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return regmap_write(priv->regmap, priv->offset + SL28CPLD_PWM_CYCLE, 
+>> (u8)cycle);
+> 
+> This cast isn't needed, is it?
+
+Due to the clamping, it is not, correct. I'll remove it.
+
+>> +}
+>> +
+>> +static const struct pwm_ops sl28cpld_pwm_ops = {
+>> +	.apply = sl28cpld_pwm_apply,
+>> +	.get_state = sl28cpld_pwm_get_state,
+>> +	.owner = THIS_MODULE,
+>> +};
+>> +
+>> +static int sl28cpld_pwm_probe(struct platform_device *pdev)
+>> +{
+>> +	struct sl28cpld_pwm *priv;
+>> +	struct pwm_chip *chip;
+>> +	int ret;
+>> +
+>> +	if (!pdev->dev.parent)
+>> +		return -ENODEV;
+>> +
+>> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+>> +	if (!priv)
+>> +		return -ENOMEM;
+>> +
+>> +	priv->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+>> +	if (!priv->regmap)
+> 
+> Error message here?
+
+This shouldn't really happen and I put it into the same category
+as the two above and report no error. But I can add it.
+
+Generally, it looked to me that more and more drivers don't
+really report errors anymore, but just return with an -EWHATEVER.
+So if someone can shed some light here, I'm all ears.
+
+-michael
