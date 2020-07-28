@@ -2,207 +2,238 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0157E23037F
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Jul 2020 09:08:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D95922303EA
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Jul 2020 09:19:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbgG1HIP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 28 Jul 2020 03:08:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52040 "EHLO
+        id S1727873AbgG1HT4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 28 Jul 2020 03:19:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726981AbgG1HIO (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Jul 2020 03:08:14 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA47AC0619D2
-        for <linux-pwm@vger.kernel.org>; Tue, 28 Jul 2020 00:08:14 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k0JiV-0003di-9B; Tue, 28 Jul 2020 09:08:03 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k0JiT-0004YI-RR; Tue, 28 Jul 2020 09:08:01 +0200
-Date:   Tue, 28 Jul 2020 09:08:01 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Martin Botka <martin.botka1@gmail.com>
-Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        with ESMTP id S1727969AbgG1HTz (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Jul 2020 03:19:55 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91748C0619D5
+        for <linux-pwm@vger.kernel.org>; Tue, 28 Jul 2020 00:19:53 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z18so13640958wrm.12
+        for <linux-pwm@vger.kernel.org>; Tue, 28 Jul 2020 00:19:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=A6d3Z8kZUGC925O1zWNYM0bo3uk23MCvzFLEsbquiGg=;
+        b=JXEuNNcHl2rzr+ED0k+nl9svIqEnZlG4uG4Ljc30XUWAj7SnsAlzcGFXU0TA0qySQp
+         2hN8vHtrdyO41dqHRHbNgoPQzccQFeCCY6lxquSVVAhovTXq6dPgHYkQUkx8svw4D+R0
+         S4BMdFPVl/rUzIVO23T1URDRTzQGmFn9sx0zrNCH204f4ED8wjuqjvMVBZi6Ppsks+19
+         hQ7s7EkaKV6A5zuNCyrLunYI0x5kEFw4WpSbXhjth3EzCbft0KrRwaTWixEGNYRb6VuB
+         tNNZE8QWXi5j313UCjrpXPViIvmQh52nbvxLtzHyVIeCG53hZNdFNx7NVcKvUdxb0ZLk
+         0Vug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=A6d3Z8kZUGC925O1zWNYM0bo3uk23MCvzFLEsbquiGg=;
+        b=bywDg50/nD2n6MxLtqbe51Yv1OUV/ePYjcTFH0ujXFKv+daBUJ5lgDQI8C8dpZwlrT
+         OWxZtYbVxTo5YsZ4TuHpironmv9qdJMKNqYG/29XYaT98Ut5sSMPvRgJd7hzN+SM2x3H
+         +dswUI47lrfsJZESJJsfVQs4BPIr/E/eS5i5fotM9qfh3LlE8OFy+gW/TWJLVwAIOO/a
+         FaPvhmnoV6zCyQplfC8LrYCjvf79hCiRu9wh4jVUXQHDYM5vuOiZZXdY+M5ywhwvDyGj
+         tcPW6K1PaO/oElbOLFxiBA6E8jbRH7ETDTOwDFEmZaqJeKBNsNHFblRd9qMYGKLnC3hT
+         30bQ==
+X-Gm-Message-State: AOAM531QT+pKSutc+6BgL6UWYAVg+7+4vNW1/e3EgH47FzljS4+N5KsP
+        5ILLrGznsvNP/1XphOuszU16Og==
+X-Google-Smtp-Source: ABdhPJz+8EDiCF+tZuc+BFokpxg7sLtYNmRW3CW3BfMrYAARno5y9fdOlWpYou7Mu+g++TZQFZ/NPw==
+X-Received: by 2002:adf:f289:: with SMTP id k9mr24097714wro.203.1595920792029;
+        Tue, 28 Jul 2020 00:19:52 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id j11sm15809923wrq.69.2020.07.28.00.19.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 00:19:51 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 08:19:49 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH RFC 3/6] pwm: pwm-qti-lpg: Add PWM driver for QTI LPG
- module
-Message-ID: <20200728070801.evcfnq25a2f5d55r@pengutronix.de>
-References: <20200724213659.273599-1-martin.botka1@gmail.com>
- <20200724213659.273599-4-martin.botka1@gmail.com>
- <20200727200954.pzw6swdboa65474i@pengutronix.de>
- <CADQ2G_EMUdf2BEwjDOCyz_ccMTsjMBM3GmpRe+n6V9-DJGr-Kg@mail.gmail.com>
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 01/13] mfd: add simple regmap based I2C driver
+Message-ID: <20200728071949.GE1850026@dell>
+References: <20200725231834.25642-1-michael@walle.cc>
+ <20200725231834.25642-2-michael@walle.cc>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="65wsexfumroshxqm"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CADQ2G_EMUdf2BEwjDOCyz_ccMTsjMBM3GmpRe+n6V9-DJGr-Kg@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200725231834.25642-2-michael@walle.cc>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Sun, 26 Jul 2020, Michael Walle wrote:
 
---65wsexfumroshxqm
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> There are I2C devices which contain several different functions but
+> doesn't require any special access functions. For these kind of drivers
+> an I2C regmap should be enough.
+> 
+> Create an I2C driver which creates an I2C regmap and enumerates its
+> children. If a device wants to use this as its MFD core driver, it has
+> to add an individual compatible string. It may provide its own regmap
+> configuration.
+> 
+> Subdevices can use dev_get_regmap() on the parent to get their regmap
+> instance.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+> Changes since v5:
+>  - removed "select MFD_CORE" in Kconfig
+>  - removed help text in Kconfig, we assume that the users of this
 
-Hello Martin,
+That's the opposite of what I asked for.
 
-On Mon, Jul 27, 2020 at 11:16:57PM +0200, Martin Botka wrote:
-> Mo 27. 7. 2020 at 22:10 Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.d=
-e> wrote:
-> >
-> > On Fri, Jul 24, 2020 at 11:36:53PM +0200, Martin Botka wrote:
-> > > From: Fenglin Wu <fenglinw@codeaurora.org>
-> > >
-> > > Add pwm_chip to support QTI LPG module and export LPG channels as
-> > > PWM devices for consumer drivers' usage.
-> > >
-> > > Signed-off-by: Fenglin Wu <fenglinw@codeaurora.org>
-> > > [martin.botka1@gmail.com: Fast-forward the driver from kernel 4.14 to=
- 5.8]
-> > > Signed-off-by: Martin Botka <martin.botka1@gmail.com>
-> > > ---
-> > >  drivers/pwm/Kconfig       |   10 +
-> > >  drivers/pwm/Makefile      |    1 +
-> > >  drivers/pwm/pwm-qti-lpg.c | 1284 +++++++++++++++++++++++++++++++++++=
-++
-> > >  3 files changed, 1295 insertions(+)
-> > >  create mode 100644 drivers/pwm/pwm-qti-lpg.c
-> > >
-> > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> > > index cb8d739067d2..8a52d6884a9a 100644
-> > > --- a/drivers/pwm/Kconfig
-> > > +++ b/drivers/pwm/Kconfig
-> > > @@ -399,6 +399,16 @@ config PWM_RCAR
-> > >         To compile this driver as a module, choose M here: the module
-> > >         will be called pwm-rcar.
-> > >
-> > > +config PWM_QTI_LPG
-> > > +     tristate "Qualcomm Technologies, Inc. LPG driver"
-> > > +     depends on  MFD_SPMI_PMIC && OF
-> > > +     help
-> > > +       This driver supports the LPG (Light Pulse Generator) module f=
-ound in
-> > > +       Qualcomm Technologies, Inc. PMIC chips. Each LPG channel can =
-be
-> > > +       configured to operate in PWM mode to output a fixed amplitude=
- with
-> > > +       variable duty cycle or in LUT (Look up table) mode to output =
-PWM
-> > > +       signal with a modulated amplitude.
-> > > +
-> > >  config PWM_RENESAS_TPU
-> > >       tristate "Renesas TPU PWM support"
-> > >       depends on ARCH_RENESAS || COMPILE_TEST
-> > > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> > > index a59c710e98c7..3555a6aa3f33 100644
-> > > --- a/drivers/pwm/Makefile
-> > > +++ b/drivers/pwm/Makefile
-> > > @@ -37,6 +37,7 @@ obj-$(CONFIG_PWM_PCA9685)   +=3D pwm-pca9685.o
-> > >  obj-$(CONFIG_PWM_PUV3)               +=3D pwm-puv3.o
-> > >  obj-$(CONFIG_PWM_PXA)                +=3D pwm-pxa.o
-> > >  obj-$(CONFIG_PWM_RCAR)               +=3D pwm-rcar.o
-> > > +obj-$(CONFIG_PWM_QTI_LPG)    +=3D pwm-qti-lpg.o
-> >
-> > Please keep this list alphabetically sorted.
->=20
-> OK
->=20
-> >
-> > >  obj-$(CONFIG_PWM_RENESAS_TPU)        +=3D pwm-renesas-tpu.o
-> > >  obj-$(CONFIG_PWM_ROCKCHIP)   +=3D pwm-rockchip.o
-> > >  obj-$(CONFIG_PWM_SAMSUNG)    +=3D pwm-samsung.o
-> > > diff --git a/drivers/pwm/pwm-qti-lpg.c b/drivers/pwm/pwm-qti-lpg.c
-> > > new file mode 100644
-> > > index 000000000000..d24c3b3a3d8c
-> > > --- /dev/null
-> > > +++ b/drivers/pwm/pwm-qti-lpg.c
-> > > @@ -0,0 +1,1284 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +/*
-> > > + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> > > + */
-> > > +
-> > > +#define pr_fmt(fmt) "%s: " fmt, __func__
-> >
-> > This smells like debug stuff. Please drop this.
->=20
-> What do you mean ?
-> The #define pr_fmt(fmt) or the tons of REG definitions ?
+>    driver will have a "select MFD_SIMPLE_MFD_I2C". Instead added
+>    a small description to the driver itself.
+>  - removed "struct simple_mfd_i2c_config" and use regmap_config
+>    directly
+>  - changed builtin_i2c_driver() to module_i2c_driver(), added
+>    MODULE_ boilerplate
+>  - cleaned up the included files
+> 
+> Changes since v4:
+>  - new patch. Lee, please bear with me. I didn't want to delay the
+>    new version (where a lot of remarks on the other patches were
+>    addressed) even more, just because we haven't figured out how
+>    to deal with the MFD part. So for now, I've included this one.
+> 
+>  drivers/mfd/Kconfig          |  5 ++++
+>  drivers/mfd/Makefile         |  1 +
+>  drivers/mfd/simple-mfd-i2c.c | 55 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 61 insertions(+)
+>  create mode 100644 drivers/mfd/simple-mfd-i2c.c
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 33df0837ab41..c08539c7a166 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1162,6 +1162,11 @@ config MFD_SI476X_CORE
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called si476x-core.
+>  
+> +config MFD_SIMPLE_MFD_I2C
+> +	tristate
+> +	depends on I2C
+> +	select REGMAP_I2C
 
-Either drop pr_fmt or at least don't have __func__ in it. This doesn't
-belong into the kernel log (in the non-debug case at least).
-(For debugging I like:
+Please provide a full help.
 
-	#define pr_fmt(fmt) "%s:%d: " fmt, __func__, __LINE__
+>  config MFD_SM501
+>  	tristate "Silicon Motion SM501"
+>  	depends on HAS_DMA
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index a60e5f835283..78d24a3e7c9e 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -264,3 +264,4 @@ obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+>  obj-$(CONFIG_MFD_KHADAS_MCU) 	+= khadas-mcu.o
+>  
+>  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+> +obj-$(CONFIG_MFD_SIMPLE_MFD_I2C)	+= simple-mfd-i2c.o
+> diff --git a/drivers/mfd/simple-mfd-i2c.c b/drivers/mfd/simple-mfd-i2c.c
+> new file mode 100644
+> index 000000000000..45090ddad104
+> --- /dev/null
+> +++ b/drivers/mfd/simple-mfd-i2c.c
+> @@ -0,0 +1,55 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * A very simple I2C MFD driver
 
-which helps finding the right printk line in the code from a given
-output in functions with many printks.)
+Simple MFD - I2C
 
-I don't mind the REG definitions, though aligning the values vertically
-is common.
+> + * The driver enumerates its children and registers a common regmap. Use
+> + * dev_get_regmap(pdev->dev.parent, NULL) in the child nodes to fetch that
+> + * regmap instance.
 
-> > > +static const struct pwm_ops qpnp_lpg_pwm_ops =3D {
-> > > +     .config =3D qpnp_lpg_pwm_config,
-> > > +     .config_extend =3D qpnp_lpg_pwm_config_extend,
-> > > +     .get_output_type_supported =3D qpnp_lpg_pwm_output_types_suppor=
-ted,
-> > > +     .set_output_type =3D qpnp_lpg_pwm_set_output_type,
-> > > +     .set_output_pattern =3D qpnp_lpg_pwm_set_output_pattern,
-> > > +     .enable =3D qpnp_lpg_pwm_enable,
-> > > +     .disable =3D qpnp_lpg_pwm_disable,
-> >
-> > As already noted in the former patch: Please implement .apply() and
-> > .get_state().
->=20
-> So drop:
->     .get_output_type_supported =3D qpnp_lpg_pwm_output_types_supported,
->     .set_output_type =3D qpnp_lpg_pwm_set_output_type,
->     .set_output_pattern =3D qpnp_lpg_pwm_set_output_pattern,
->=20
-> Ad implement implement .apply and .get_state if i understood you correctl=
-y.
-> Right ?
+This driver creates a single register map with the intention for it to
+be shared by all sub-devices.  Children can use their parent's device
+structure (dev.parent) in order reference it. 
 
-ack
+> + * In the future this driver might be extended to support also other interfaces
+> + * like SPI etc.
 
-Best regards
-Uwe
+Remove this please.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> + */
 
---65wsexfumroshxqm
-Content-Type: application/pgp-signature; name="signature.asc"
+'\n' here.
 
------BEGIN PGP SIGNATURE-----
+> +#include <linux/i2c.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/regmap.h>
+> +
+> +static const struct regmap_config simple_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +};
+> +
+> +static int simple_mfd_i2c_probe(struct i2c_client *i2c)
+> +{
+> +	const struct regmap_config *config;
+> +	struct regmap *regmap;
+> +
+> +	config = device_get_match_data(&i2c->dev);
+> +	if (!config)
+> +		config = &simple_regmap_config;
+> +
+> +	regmap = devm_regmap_init_i2c(i2c, config);
+> +	if (IS_ERR(regmap))
+> +		return PTR_ERR(regmap);
+> +
+> +	return devm_of_platform_populate(&i2c->dev);
+> +}
+> +
+> +static const struct of_device_id simple_mfd_i2c_of_match[] = {
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, simple_mfd_i2c_of_match);
+> +
+> +static struct i2c_driver simple_mfd_i2c_driver = {
+> +	.probe_new = simple_mfd_i2c_probe,
+> +	.driver = {
+> +		.name = "simple-mfd-i2c",
+> +		.of_match_table = simple_mfd_i2c_of_match,
+> +	},
+> +};
+> +module_i2c_driver(simple_mfd_i2c_driver);
+> +
+> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
+> +MODULE_DESCRIPTION("Simple I2C MFD driver");
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8fzs4ACgkQwfwUeK3K
-7Ak/YAf9FSlak+4n7XI61g7I4xuJ3J9+gwsKT9NvQ5nPGRpTWMcpgRBLUtTN7hQe
-bsJTuOqQwYX7F2tIZOUXHfED/EB5maLbAlMEVvsukBc9Igmt1SZktjnL/XZWiVKK
-auVqqp1q30K1Sq+rbZPkrhRjzY0PZkE9/UqE0TDEuwAg8FjZfbsg4MummLiQfWuk
-FH7Z94j5Q/CcoGq/pDaK8/fur2Z0s1ea2UDh+GIGjoLHnMz5i5CcqYg5MrdfzTKn
-3u/42Jy60r2SWDGkF7F1ghfoxsTlKPc2Auv40DFo+D448mNm//j0nQ6/ilF+wGFf
-jcUQdplt8Pdx+VfXcAMAd6IJ95p3QQ==
-=WSc0
------END PGP SIGNATURE-----
+Simple MFD - I2C driver
 
---65wsexfumroshxqm--
+> +MODULE_LICENSE("GPL v2");
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
