@@ -2,40 +2,55 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8840230534
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Jul 2020 10:21:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07487230550
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Jul 2020 10:27:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgG1IVZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 28 Jul 2020 04:21:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35152 "EHLO
+        id S1727978AbgG1I1M (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 28 Jul 2020 04:27:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727878AbgG1IVZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Jul 2020 04:21:25 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE3D9C061794;
-        Tue, 28 Jul 2020 01:21:24 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 64C7C22F00;
-        Tue, 28 Jul 2020 10:21:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1595924482;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dvrp+yGmGW+ZNzAnBXqLG8eW0AGgkG7TdBQt7cBEsrc=;
-        b=tzGvI8hDZhf5Z0n9rfs5U8/C8qymnrdoiivp7muYDtC+/8fj8ujBIYmVxkVHAOWGS7k4CC
-        pWnd3TpXVvMFkS/2P+ja2mg/DusixLrVUxqqVyh3iMQ3cIL04PAlDaOjQEXysN/WFDdtuQ
-        7R09CX1617DoC2vpgDEhkN13M/m6yaE=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 28 Jul 2020 10:21:22 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+        with ESMTP id S1727940AbgG1I1M (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Jul 2020 04:27:12 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92C91C0619D7
+        for <linux-pwm@vger.kernel.org>; Tue, 28 Jul 2020 01:27:11 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 3so10363616wmi.1
+        for <linux-pwm@vger.kernel.org>; Tue, 28 Jul 2020 01:27:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=uGdSTLXzLPoQW4Vv8n7QiN3IXRkY2j1N9K5+wvpg67A=;
+        b=Qhg6T58aAmKWjza2llHFtcN/M5ktqlCBTRyY1BmuOUBUdpKwrXhpz5iTJ+7+tiz7Z8
+         V7n08jcrpM9bhjhsNch1R3b8038XgvDYN4L4lofGSiCZro7bCM2IEHqIlGck39tEouUZ
+         A4r3xC4z/eB4g2zUV7A83vu3lTrDaA9wh5L6Z1W2fU8ATi/A5bBKcqTmWGXnlGh0Nf6y
+         GQYntzxG6o4GCGfR+Ozuy99qbQ1co4mdt+HUnTWNGpXgu3F2G7sBHTHUUfYhG4gEfXtG
+         vCSiH0h4kn4XTvDSo8UU0KwWmMz++xzcD+srqkyl4/3SY3U3JJRBkzLPQ5tjvgVw0sIS
+         Dgwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=uGdSTLXzLPoQW4Vv8n7QiN3IXRkY2j1N9K5+wvpg67A=;
+        b=pz1O06pYaAZP4e/rTMnwcghVqMnTuE0dtF+2eTYMVzhg6mgZURg7Js+CC+qvvn6uZF
+         u4OJ7+Ka9a/ATIYcPitDTzNIBHRmqfySOG/APvkjGl+/lwezowUP/U5dNEKhFrU9c2kA
+         8U6p69rQlJNQuPlkn8Zk2parr0vvtjIl+4bj3vMFEM2XAu3X+Z7zkgPxVVqsDc5Y87p5
+         HtEOPm6ZRoWeLXmKhWFzPT1exl0/MyNer35gOTFPIlDQGanGXkRUUS65EHt2RWOt+2Gf
+         4UKIlcza4SO9tvb13CIJdOvKsbO43KzJy74eOYaahKLhTqWqWnljYbHbaCVo1Ubq42Tz
+         ybKw==
+X-Gm-Message-State: AOAM53182cFaDRyPzdpqqhDKYESN7PIFBXAw8wnLAlPgpnQH4lFX7yV/
+        xzcivIuBAN8NCDmn/XFOgLGsfQ==
+X-Google-Smtp-Source: ABdhPJxOdhDnn+eNqujllDon1GsS0dEIq8GDpDLR1DsQSiCtVl87rdAMEtcC8WUAdFNx/vl1MVi7VA==
+X-Received: by 2002:a1c:b007:: with SMTP id z7mr2792839wme.37.1595924829954;
+        Tue, 28 Jul 2020 01:27:09 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id s205sm3405256wme.7.2020.07.28.01.27.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 01:27:09 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 09:27:07 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
 Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
@@ -45,8 +60,9 @@ Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
         Jean Delvare <jdelvare@suse.com>,
         Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -55,303 +71,158 @@ Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 06/13] pwm: add support for sl28cpld PWM controller
-In-Reply-To: <20200728074352.ckyfso5zwsfgupjx@pengutronix.de>
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 02/13] dt-bindings: mfd: Add bindings for sl28cpld
+Message-ID: <20200728082707.GB2419169@dell>
 References: <20200725231834.25642-1-michael@walle.cc>
- <20200725231834.25642-7-michael@walle.cc>
- <20200728074352.ckyfso5zwsfgupjx@pengutronix.de>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <58b53cacc5289f17f669159beeeada03@walle.cc>
-X-Sender: michael@walle.cc
+ <20200725231834.25642-3-michael@walle.cc>
+ <20200728072422.GF1850026@dell>
+ <1065b0107ce6fd88b2bdd704bf45346b@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1065b0107ce6fd88b2bdd704bf45346b@walle.cc>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
+On Tue, 28 Jul 2020, Michael Walle wrote:
 
-Am 2020-07-28 09:43, schrieb Uwe Kleine-König:
-> Hello,
+> Am 2020-07-28 09:24, schrieb Lee Jones:
+> > On Sun, 26 Jul 2020, Michael Walle wrote:
+> > 
+> > > Add a device tree bindings for the board management controller found
+> > > on
+> > > the Kontron SMARC-sAL28 board.
+> > > 
+> > > Signed-off-by: Michael Walle <michael@walle.cc>
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > > Changes since v5:
+> > >  - none
+> > > 
+> > > Changes since v4:
+> > >  - fix the regex of the unit-address
+> > > 
+> > > Changes since v3:
+> > >  - see cover letter
+> > > 
+> > >  .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  54 +++++++
+> > >  .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 ++++
+> > >  .../kontron,sl28cpld-intc.yaml                |  54 +++++++
+> > >  .../bindings/mfd/kontron,sl28cpld.yaml        | 153
+> > > ++++++++++++++++++
+> > >  .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
+> > >  .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
+> > >  6 files changed, 358 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
+> > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
+> > > 
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+> > > b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+> > > new file mode 100644
+> > > index 000000000000..9a63a158a796
+> > > --- /dev/null
+> > > +++
+> > > b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+> > > @@ -0,0 +1,54 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/gpio/kontron,sl28cpld-gpio.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: GPIO driver for the sl28cpld board management controller
+> > > +
+> > > +maintainers:
+> > > +  - Michael Walle <michael@walle.cc>
+> > > +
+> > > +description: |
+> > > +  This module is part of the sl28cpld multi-function device. For more
+> > > +  details see
+> > > Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
+> > 
+> > Paths are normally relative.
 > 
-> just a few minor issues left:
-
-thanks for the review.
-
+> grep Documentation/ Documentation
 > 
-> On Sun, Jul 26, 2020 at 01:18:27AM +0200, Michael Walle wrote:
->> diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
->> new file mode 100644
->> index 000000000000..956fa09f3aba
->> --- /dev/null
->> +++ b/drivers/pwm/pwm-sl28cpld.c
->> @@ -0,0 +1,223 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * sl28cpld PWM driver
->> + *
->> + * Copyright (c) 2020 Michael Walle <michael@walle.cc>
->> + *
->> + * There is no public datasheet available for this PWM core. But it 
->> is easy
->> + * enough to be briefly explained. It consists of one 8-bit counter. 
->> The PWM
->> + * supports four distinct frequencies by selecting when to reset the 
->> counter.
->> + * With the prescaler setting you can select which bit of the counter 
->> is used
->> + * to reset it. This implies that the higher the frequency the less 
->> remaining
->> + * bits are available for the actual counter.
->> + *
->> + * Let cnt[7:0] be the counter, clocked at 32kHz:
->> + * +-----------+--------+--------------+-----------+
->> + * | prescaler |  reset | counter bits | frequency |
->> + * +-----------+--------+--------------+-----------+
->> + * |         0 | cnt[7] |     cnt[6:0] |     250Hz |
->> + * |         1 | cnt[6] |     cnt[5:0] |     500Hz |
->> + * |         2 | cnt[5] |     cnt[4:0] |      1kHz |
->> + * |         3 | cnt[4] |     cnt[3:0] |      2kHz |
->> + * +-----------+--------+--------------+-----------+
+> I know there are a lot false positives (esp in the first one)..
 > 
-> Very nice. I'd add a "period length" column, as this is what the PWM
-> core uses.
+> $ grep -r "\.\./" Documentation | wc -l
+> 1826
+> $ grep -r "Documentation/" Documentation|wc -l
+> 2862
+
+I actually meant just for Device Tree bindings, but it does appear
+that 'Documentation' is used a bunch there too.
+
+My reasons for not liking full paths is that the intention was always
+to move 'Documentation/devicetree' to a new location outside of the
+kernel source tree.
+
+[...]
+
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Kontron's sl28cpld board management controller
+> > 
+> > "S128CPLD" ?
 > 
-> For your convenience (and as I created that table anyhow for further
-> checking of the formulas below):
+> still not, its sl28cpld, think of a project/code name, not the product
+> appended with CPLD.
 > 
->  * +-----------+--------+--------------+-----------+--------+
->  * | prescaler |  reset | counter bits | frequency | period |
->  * |           |        |              |           | length |
->  * +-----------+--------+--------------+-----------+--------+
->  * |         0 | cnt[7] |     cnt[6:0] |     250Hz | 4000ns |
->  * |         1 | cnt[6] |     cnt[5:0] |     500Hz | 2000ns |
->  * |         2 | cnt[5] |     cnt[4:0] |      1kHz | 1000ns |
->  * |         3 | cnt[4] |     cnt[3:0] |      2kHz |  500ns |
->  * +-----------+--------+--------------+-----------+--------+
-
-sure :)
-
+> > "Board Management Controller (BMC)" ?
 > 
->> + *
->> + * Limitations:
->> + * - The hardware cannot generate a 100% duty cycle if the prescaler 
->> is 0.
->> + * - The hardware cannot atomically set the prescaler and the counter 
->> value,
->> + *   which might lead to glitches and inconsistent states if a write 
->> fails.
->> + * - The counter is not reset if you switch the prescaler which leads
->> + *   to glitches, too.
->> + * - The duty cycle will switch immediately and not after a complete 
->> cycle.
->> + * - Depending on the actual implementation, disabling the PWM might 
->> have
->> + *   side effects. For example, if the output pin is shared with a 
->> GPIO pin
->> + *   it will automatically switch back to GPIO mode.
->> + */
->> +
->> +#include <linux/bitfield.h>
->> +#include <linux/kernel.h>
->> +#include <linux/mod_devicetable.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pwm.h>
->> +#include <linux/regmap.h>
->> +
->> +/*
->> + * PWM timer block registers.
->> + */
->> +#define SL28CPLD_PWM_CTRL			0x00
->> +#define   SL28CPLD_PWM_CTRL_ENABLE		BIT(7)
->> +#define   SL28CPLD_PWM_CTRL_PRESCALER_MASK	GENMASK(1, 0)
->> +#define SL28CPLD_PWM_CYCLE			0x01
->> +#define   SL28CPLD_PWM_CYCLE_MAX		GENMASK(6, 0)
->> +
->> +#define SL28CPLD_PWM_CLK			32000 /* 32 kHz */
->> +#define SL28CPLD_PWM_MAX_DUTY_CYCLE(prescaler)	(1 << (7 - 
->> (prescaler)))
->> +#define SL28CPLD_PWM_PERIOD(prescaler) \
->> +	(NSEC_PER_SEC / SL28CPLD_PWM_CLK * 
->> SL28CPLD_PWM_MAX_DUTY_CYCLE(prescaler))
->> +
->> +/*
->> + * We calculate the duty cycle like this:
->> + *   duty_cycle_ns = pwm_cycle_reg * max_period_ns / max_duty_cycle
->> + *
->> + * With
->> + *   max_period_ns = (1 << 7 - prescaler) / pwm_clk * NSEC_PER_SEC
->> + *   max_duty_cycle = 1 << (7 - prescaler)
+> sounds like IPMI, which I wanted to avoid.
+
+Is there a datasheet?
+
+> > > +maintainers:
+> > > +  - Michael Walle <michael@walle.cc>
+> > > +
+> > > +description: |
+> > > +  The board management controller may contain different IP blocks
+> > > like
+> > > +  watchdog, fan monitoring, PWM controller, interrupt controller
+> > > and a
+> > > +  GPIO controller.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: kontron,sl28cpld-r1
+> > 
+> > We don't usually code revision numbers in compatible strings.
+> > 
+> > Is there any way to pull this from the H/W?
 > 
-> If you don't need parenthesis in the max_period_ns around 7 - 
-> prescaler,
-> you don't need them either in the max_duty_cycle line.
+> No, unfortunately you can't. And I really want to keep that, in case
+> in the future there are some backwards incompatible changes.
 
-mhh this should be "1 << (7 - prescaler)" in both cases. So
-max_period_ns is wrong:
-   max_period_ns = 1 << (7 - prescaler) / pwm_clk * NSEC_PER_SEC
+Rob,
 
-
->> + * this then simplifies to:
->> + *   duty_cycle_ns = pwm_cycle_reg / pwm_clk * NSEC_PER_SEC
->> + */
->> +#define SL28CPLD_PWM_TO_DUTY_CYCLE(reg) \
->> +	(NSEC_PER_SEC / SL28CPLD_PWM_CLK * (reg))
-> 
-> For those who copy from your driver maybe add a comment like:
-> 
->  * NSEC_PER_SEC / SL28CPLD_PWM_CLK is integer here, so we're not 
-> loosing
->  * precision by doing the division first.
-
-ok.
-
->> +#define SL28CPLD_PWM_FROM_DUTY_CYCLE(duty_cycle) \
->> +	(DIV_ROUND_DOWN_ULL((duty_cycle), NSEC_PER_SEC / SL28CPLD_PWM_CLK))
->> +
->> +struct sl28cpld_pwm {
->> +	struct pwm_chip pwm_chip;
->> +	struct regmap *regmap;
->> +	u32 offset;
->> +};
->> +
->> +static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
->> +				   struct pwm_device *pwm,
->> +				   struct pwm_state *state)
->> +{
->> +	struct sl28cpld_pwm *priv = dev_get_drvdata(chip->dev);
->> +	unsigned int reg;
->> +	int prescaler;
->> +
->> +	regmap_read(priv->regmap, priv->offset + SL28CPLD_PWM_CTRL, &reg);
-> 
-> Would it make sense to hide this using e.g.:
-> 
-> 	#define sl28cpkd_pwm_read(priv, reg, val)	regmap_read((priv)->regmap,
-> (priv)->offset + (reg), val)
-> 
-> The line would then become:
-> 
-> 	sl28cpkd_pwm_read(priv, SL28CPLD_PWM_CTRL, &reg);
-> 
-> which is a bit prettier. Up to you to decide. If you do it, please do
-> the same for write
+I know you reviewed this already, but you can give your opinion on
+this specifically please?  I know that we have pushed back on this in
+the past.
 
 
-I don't have a strong opinion on that. I can change it. Although there
-will be checkpatch warning about multiple uses of the macro argument,
-I'd presume.
-
->> +	state->enabled = reg & SL28CPLD_PWM_CTRL_ENABLE;
->> +
->> +	prescaler = FIELD_GET(SL28CPLD_PWM_CTRL_PRESCALER_MASK, reg);
->> +	state->period = SL28CPLD_PWM_PERIOD(prescaler);
->> +
->> +	regmap_read(priv->regmap, priv->offset + SL28CPLD_PWM_CYCLE, &reg);
->> +	state->duty_cycle = SL28CPLD_PWM_TO_DUTY_CYCLE(reg);
->> +	state->polarity = PWM_POLARITY_NORMAL;
->> +}
->> +
->> +static int sl28cpld_pwm_apply(struct pwm_chip *chip, struct 
->> pwm_device *pwm,
->> +			      const struct pwm_state *state)
->> +{
->> +	struct sl28cpld_pwm *priv = dev_get_drvdata(chip->dev);
->> +	unsigned int cycle, prescaler;
->> +	int ret;
->> +	u8 ctrl;
->> +
->> +	/* Polarity inversion is not supported */
->> +	if (state->polarity != PWM_POLARITY_NORMAL)
->> +		return -EINVAL;
->> +
->> +	/*
->> +	 * Calculate the prescaler. Pick the the biggest period that isn't
->> +	 * bigger than the requested period.
->> +	 */
->> +	prescaler = DIV_ROUND_UP_ULL(SL28CPLD_PWM_PERIOD(0), state->period);
->> +	prescaler = order_base_2(prescaler);
->> +
->> +	if (prescaler > field_max(SL28CPLD_PWM_CTRL_PRESCALER_MASK))
->> +		return -ERANGE;
-> 
-> The calculation looks right.
-> Did you check the generated code? Maybe using an if or switch here is
-> more effective? (optional task for bonus points :-)
-
-I varied between this and some if/switch. This hard to read IMHO (as
-was your your ilog(n+1)+1), but you could easily change the range
-of the prescaler without having to change this. Also if/switch
-looked ugly too *g*. I'll check again.
-
-> 
->> +	ctrl = FIELD_PREP(SL28CPLD_PWM_CTRL_PRESCALER_MASK, prescaler);
->> +	if (state->enabled)
->> +		ctrl |= SL28CPLD_PWM_CTRL_ENABLE;
->> +
->> +	cycle = SL28CPLD_PWM_FROM_DUTY_CYCLE(state->duty_cycle);
->> +	cycle = min_t(unsigned int, cycle, 
->> SL28CPLD_PWM_MAX_DUTY_CYCLE(prescaler));
->> +
->> +	/*
->> +	 * Work around the hardware limitation. See also above. Trap 100% 
->> duty
->> +	 * cycle if the prescaler is 0. Set prescaler to 1 instead. We don't
->> +	 * care about the frequency because its "all-one" in either case.
->> +	 *
->> +	 * We don't need to check the actual prescaler setting, because only
->> +	 * if the prescaler is 0 we can have this particular value.
->> +	 */
->> +	if (cycle == SL28CPLD_PWM_MAX_DUTY_CYCLE(0)) {
->> +		ctrl &= ~SL28CPLD_PWM_CTRL_PRESCALER_MASK;
->> +		ctrl |= FIELD_PREP(SL28CPLD_PWM_CTRL_PRESCALER_MASK, 1);
->> +		cycle = SL28CPLD_PWM_MAX_DUTY_CYCLE(1);
->> +	}
->> +
->> +	ret = regmap_write(priv->regmap, priv->offset + SL28CPLD_PWM_CTRL, 
->> ctrl);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return regmap_write(priv->regmap, priv->offset + SL28CPLD_PWM_CYCLE, 
->> (u8)cycle);
-> 
-> This cast isn't needed, is it?
-
-Due to the clamping, it is not, correct. I'll remove it.
-
->> +}
->> +
->> +static const struct pwm_ops sl28cpld_pwm_ops = {
->> +	.apply = sl28cpld_pwm_apply,
->> +	.get_state = sl28cpld_pwm_get_state,
->> +	.owner = THIS_MODULE,
->> +};
->> +
->> +static int sl28cpld_pwm_probe(struct platform_device *pdev)
->> +{
->> +	struct sl28cpld_pwm *priv;
->> +	struct pwm_chip *chip;
->> +	int ret;
->> +
->> +	if (!pdev->dev.parent)
->> +		return -ENODEV;
->> +
->> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
->> +	if (!priv)
->> +		return -ENOMEM;
->> +
->> +	priv->regmap = dev_get_regmap(pdev->dev.parent, NULL);
->> +	if (!priv->regmap)
-> 
-> Error message here?
-
-This shouldn't really happen and I put it into the same category
-as the two above and report no error. But I can add it.
-
-Generally, it looked to me that more and more drivers don't
-really report errors anymore, but just return with an -EWHATEVER.
-So if someone can shed some light here, I'm all ears.
-
--michael
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
