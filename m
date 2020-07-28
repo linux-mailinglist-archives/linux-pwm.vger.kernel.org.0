@@ -2,55 +2,40 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07487230550
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Jul 2020 10:27:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BCD6230557
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Jul 2020 10:27:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgG1I1M (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 28 Jul 2020 04:27:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36050 "EHLO
+        id S1728109AbgG1I1P (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 28 Jul 2020 04:27:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727940AbgG1I1M (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Jul 2020 04:27:12 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92C91C0619D7
-        for <linux-pwm@vger.kernel.org>; Tue, 28 Jul 2020 01:27:11 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 3so10363616wmi.1
-        for <linux-pwm@vger.kernel.org>; Tue, 28 Jul 2020 01:27:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=uGdSTLXzLPoQW4Vv8n7QiN3IXRkY2j1N9K5+wvpg67A=;
-        b=Qhg6T58aAmKWjza2llHFtcN/M5ktqlCBTRyY1BmuOUBUdpKwrXhpz5iTJ+7+tiz7Z8
-         V7n08jcrpM9bhjhsNch1R3b8038XgvDYN4L4lofGSiCZro7bCM2IEHqIlGck39tEouUZ
-         A4r3xC4z/eB4g2zUV7A83vu3lTrDaA9wh5L6Z1W2fU8ATi/A5bBKcqTmWGXnlGh0Nf6y
-         GQYntzxG6o4GCGfR+Ozuy99qbQ1co4mdt+HUnTWNGpXgu3F2G7sBHTHUUfYhG4gEfXtG
-         vCSiH0h4kn4XTvDSo8UU0KwWmMz++xzcD+srqkyl4/3SY3U3JJRBkzLPQ5tjvgVw0sIS
-         Dgwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=uGdSTLXzLPoQW4Vv8n7QiN3IXRkY2j1N9K5+wvpg67A=;
-        b=pz1O06pYaAZP4e/rTMnwcghVqMnTuE0dtF+2eTYMVzhg6mgZURg7Js+CC+qvvn6uZF
-         u4OJ7+Ka9a/ATIYcPitDTzNIBHRmqfySOG/APvkjGl+/lwezowUP/U5dNEKhFrU9c2kA
-         8U6p69rQlJNQuPlkn8Zk2parr0vvtjIl+4bj3vMFEM2XAu3X+Z7zkgPxVVqsDc5Y87p5
-         HtEOPm6ZRoWeLXmKhWFzPT1exl0/MyNer35gOTFPIlDQGanGXkRUUS65EHt2RWOt+2Gf
-         4UKIlcza4SO9tvb13CIJdOvKsbO43KzJy74eOYaahKLhTqWqWnljYbHbaCVo1Ubq42Tz
-         ybKw==
-X-Gm-Message-State: AOAM53182cFaDRyPzdpqqhDKYESN7PIFBXAw8wnLAlPgpnQH4lFX7yV/
-        xzcivIuBAN8NCDmn/XFOgLGsfQ==
-X-Google-Smtp-Source: ABdhPJxOdhDnn+eNqujllDon1GsS0dEIq8GDpDLR1DsQSiCtVl87rdAMEtcC8WUAdFNx/vl1MVi7VA==
-X-Received: by 2002:a1c:b007:: with SMTP id z7mr2792839wme.37.1595924829954;
-        Tue, 28 Jul 2020 01:27:09 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id s205sm3405256wme.7.2020.07.28.01.27.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 01:27:09 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 09:27:07 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
+        with ESMTP id S1727975AbgG1I1O (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Jul 2020 04:27:14 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7E65C061794;
+        Tue, 28 Jul 2020 01:27:13 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id BABB022FEB;
+        Tue, 28 Jul 2020 10:27:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1595924832;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JGvmLpKj0ffDloszsViH51AGCWvtowTnXfF4m9p9DV4=;
+        b=S7DRFmHqAOU4Aw0NYgpfjw2EwxtpDc+xcMvnw1SLY9z6TFskN0zmgh0siOklM9wv9T/KB6
+        D6kMjXefyUR2FBBy95WnBCWEK+I3+iFsebjr+F74Loiw56yyTRivb6WSHHd2SCtZipzg/B
+        l3VEVUks9QZVgKwOTuTD7nYV2Y9GIz8=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 28 Jul 2020 10:27:11 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
 Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
@@ -61,8 +46,7 @@ Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         Jean Delvare <jdelvare@suse.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -71,158 +55,172 @@ Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 02/13] dt-bindings: mfd: Add bindings for sl28cpld
-Message-ID: <20200728082707.GB2419169@dell>
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 01/13] mfd: add simple regmap based I2C driver
+In-Reply-To: <20200728081506.GA2419169@dell>
 References: <20200725231834.25642-1-michael@walle.cc>
- <20200725231834.25642-3-michael@walle.cc>
- <20200728072422.GF1850026@dell>
- <1065b0107ce6fd88b2bdd704bf45346b@walle.cc>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1065b0107ce6fd88b2bdd704bf45346b@walle.cc>
+ <20200725231834.25642-2-michael@walle.cc> <20200728071949.GE1850026@dell>
+ <23a9ecf5fe4f15b9b20a91cc292aca80@walle.cc> <20200728081506.GA2419169@dell>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <5de219e973e9d3c1455f1a09b4ce4177@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 28 Jul 2020, Michael Walle wrote:
-
-> Am 2020-07-28 09:24, schrieb Lee Jones:
-> > On Sun, 26 Jul 2020, Michael Walle wrote:
-> > 
-> > > Add a device tree bindings for the board management controller found
-> > > on
-> > > the Kontron SMARC-sAL28 board.
-> > > 
-> > > Signed-off-by: Michael Walle <michael@walle.cc>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > > Changes since v5:
-> > >  - none
-> > > 
-> > > Changes since v4:
-> > >  - fix the regex of the unit-address
-> > > 
-> > > Changes since v3:
-> > >  - see cover letter
-> > > 
-> > >  .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  54 +++++++
-> > >  .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 ++++
-> > >  .../kontron,sl28cpld-intc.yaml                |  54 +++++++
-> > >  .../bindings/mfd/kontron,sl28cpld.yaml        | 153
-> > > ++++++++++++++++++
-> > >  .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
-> > >  .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
-> > >  6 files changed, 358 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
-> > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
-> > > 
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
-> > > b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
-> > > new file mode 100644
-> > > index 000000000000..9a63a158a796
-> > > --- /dev/null
-> > > +++
-> > > b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
-> > > @@ -0,0 +1,54 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/gpio/kontron,sl28cpld-gpio.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: GPIO driver for the sl28cpld board management controller
-> > > +
-> > > +maintainers:
-> > > +  - Michael Walle <michael@walle.cc>
-> > > +
-> > > +description: |
-> > > +  This module is part of the sl28cpld multi-function device. For more
-> > > +  details see
-> > > Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
-> > 
-> > Paths are normally relative.
+Am 2020-07-28 10:15, schrieb Lee Jones:
+> On Tue, 28 Jul 2020, Michael Walle wrote:
 > 
-> grep Documentation/ Documentation
+>> Am 2020-07-28 09:19, schrieb Lee Jones:
+>> > On Sun, 26 Jul 2020, Michael Walle wrote:
+>> >
+>> > > There are I2C devices which contain several different functions but
+>> > > doesn't require any special access functions. For these kind of
+>> > > drivers
+>> > > an I2C regmap should be enough.
+>> > >
+>> > > Create an I2C driver which creates an I2C regmap and enumerates its
+>> > > children. If a device wants to use this as its MFD core driver, it has
+>> > > to add an individual compatible string. It may provide its own regmap
+>> > > configuration.
+>> > >
+>> > > Subdevices can use dev_get_regmap() on the parent to get their regmap
+>> > > instance.
+>> > >
+>> > > Signed-off-by: Michael Walle <michael@walle.cc>
+>> > > ---
+>> > > Changes since v5:
+>> > >  - removed "select MFD_CORE" in Kconfig
+>> > >  - removed help text in Kconfig, we assume that the users of this
+>> >
+>> > That's the opposite of what I asked for.
+>> 
+>> What is the use to describe the symbol, if it is not user selectable?
+>> I'm not aware this is done anywhere in the kernel, am I missing
+>> something?
 > 
-> I know there are a lot false positives (esp in the first one)..
+> You mean in menuconfig?
 > 
-> $ grep -r "\.\./" Documentation | wc -l
-> 1826
-> $ grep -r "Documentation/" Documentation|wc -l
-> 2862
-
-I actually meant just for Device Tree bindings, but it does appear
-that 'Documentation' is used a bunch there too.
-
-My reasons for not liking full paths is that the intention was always
-to move 'Documentation/devicetree' to a new location outside of the
-kernel source tree.
-
-[...]
-
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Kontron's sl28cpld board management controller
-> > 
-> > "S128CPLD" ?
+> I find 'help's helpful even outside of menuconfig.
 > 
-> still not, its sl28cpld, think of a project/code name, not the product
-> appended with CPLD.
+> Surely I'm not the only one who reads them 'raw'?
+
+Its already available in the header of the file. But sure, I can
+copy it.
+
+>> > >    driver will have a "select MFD_SIMPLE_MFD_I2C". Instead added
+>> > >    a small description to the driver itself.
+>> > >  - removed "struct simple_mfd_i2c_config" and use regmap_config
+>> > >    directly
+>> > >  - changed builtin_i2c_driver() to module_i2c_driver(), added
+>> > >    MODULE_ boilerplate
+>> > >  - cleaned up the included files
+>> > >
+>> > > Changes since v4:
+>> > >  - new patch. Lee, please bear with me. I didn't want to delay the
+>> > >    new version (where a lot of remarks on the other patches were
+>> > >    addressed) even more, just because we haven't figured out how
+>> > >    to deal with the MFD part. So for now, I've included this one.
+>> > >
+>> > >  drivers/mfd/Kconfig          |  5 ++++
+>> > >  drivers/mfd/Makefile         |  1 +
+>> > >  drivers/mfd/simple-mfd-i2c.c | 55
+>> > > ++++++++++++++++++++++++++++++++++++
+>> > >  3 files changed, 61 insertions(+)
+>> > >  create mode 100644 drivers/mfd/simple-mfd-i2c.c
+>> > >
+>> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> > > index 33df0837ab41..c08539c7a166 100644
+>> > > --- a/drivers/mfd/Kconfig
+>> > > +++ b/drivers/mfd/Kconfig
+>> > > @@ -1162,6 +1162,11 @@ config MFD_SI476X_CORE
+>> > >  	  To compile this driver as a module, choose M here: the
+>> > >  	  module will be called si476x-core.
+>> > >
+>> > > +config MFD_SIMPLE_MFD_I2C
+>> > > +	tristate
+>> > > +	depends on I2C
+>> > > +	select REGMAP_I2C
+>> >
+>> > Please provide a full help.
+>> 
+>> See above.
+>> 
+>> >
+>> > >  config MFD_SM501
+>> > >  	tristate "Silicon Motion SM501"
+>> > >  	depends on HAS_DMA
+>> > > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>> > > index a60e5f835283..78d24a3e7c9e 100644
+>> > > --- a/drivers/mfd/Makefile
+>> > > +++ b/drivers/mfd/Makefile
+>> > > @@ -264,3 +264,4 @@ obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+>> > >  obj-$(CONFIG_MFD_KHADAS_MCU) 	+= khadas-mcu.o
+>> > >
+>> > >  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+>> > > +obj-$(CONFIG_MFD_SIMPLE_MFD_I2C)	+= simple-mfd-i2c.o
+>> > > diff --git a/drivers/mfd/simple-mfd-i2c.c
+>> > > b/drivers/mfd/simple-mfd-i2c.c
+>> > > new file mode 100644
+>> > > index 000000000000..45090ddad104
+>> > > --- /dev/null
+>> > > +++ b/drivers/mfd/simple-mfd-i2c.c
+>> > > @@ -0,0 +1,55 @@
+>> > > +// SPDX-License-Identifier: GPL-2.0-only
+>> > > +/*
+>> > > + * A very simple I2C MFD driver
+>> >
+>> > Simple MFD - I2C
+>> 
+>> ok.
+>> 
+>> > > + * The driver enumerates its children and registers a common
+>> > > regmap. Use
+>> > > + * dev_get_regmap(pdev->dev.parent, NULL) in the child nodes to
+>> > > fetch that
+>> > > + * regmap instance.
+>> >
+>> > This driver creates a single register map with the intention for it to
+>> > be shared by all sub-devices.  Children can use their parent's device
+>> > structure (dev.parent) in order reference it.
+>> 
+>> Should this be appended or should it replace my paragraph? If its the
+>> latter,
+>> the "enumeration of the children" is missing.
 > 
-> > "Board Management Controller (BMC)" ?
+> If you want to keep that part, try:
 > 
-> sounds like IPMI, which I wanted to avoid.
-
-Is there a datasheet?
-
-> > > +maintainers:
-> > > +  - Michael Walle <michael@walle.cc>
-> > > +
-> > > +description: |
-> > > +  The board management controller may contain different IP blocks
-> > > like
-> > > +  watchdog, fan monitoring, PWM controller, interrupt controller
-> > > and a
-> > > +  GPIO controller.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: kontron,sl28cpld-r1
-> > 
-> > We don't usually code revision numbers in compatible strings.
-> > 
-> > Is there any way to pull this from the H/W?
+> This driver creates a single register map with the intention for it to
+> be shared by all sub-devices.  Children can use their parent's device
+> structure (dev.parent) in order reference it.
 > 
-> No, unfortunately you can't. And I really want to keep that, in case
-> in the future there are some backwards incompatible changes.
+> Once the register map has been successfully initialised, any
+> sub-devices represented by child nodes in Device Tree will be
+> subsequently registered.
+> 
+>> > > + * In the future this driver might be extended to support also
+>> > > other interfaces
+>> > > + * like SPI etc.
+>> >
+>> > Remove this please.
+>> 
+>> Why would you remove information about the intention of this driver? 
+>> If
+>> someone
+>> looks for a place to implement its SPI/I3C/Slimbus MFD driver this 
+>> might
+>> come
+>> in handy.
+> 
+> By all means put something similar in the commit log, but it has no
+> place in the driver itself.  Besides, if we were to add support for
+> SPI, it is likely to be a completely separate/unrelated driver.
 
-Rob,
+Why would that be another driver? It would be 90% copy paste with
+regmap_init_i2c() replaced by regmap_init_spi() and i2c_driver replaced
+by spi_driver.
 
-I know you reviewed this already, but you can give your opinion on
-this specifically please?  I know that we have pushed back on this in
-the past.
+But I don't care. I'll remove it.
 
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+-michael
