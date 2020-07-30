@@ -2,55 +2,30 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D257232B2D
-	for <lists+linux-pwm@lfdr.de>; Thu, 30 Jul 2020 07:10:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 701F6232BD5
+	for <lists+linux-pwm@lfdr.de>; Thu, 30 Jul 2020 08:16:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgG3FKS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 30 Jul 2020 01:10:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53912 "EHLO
+        id S1728674AbgG3GQr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 30 Jul 2020 02:16:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgG3FKS (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 30 Jul 2020 01:10:18 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C7CC061794;
-        Wed, 29 Jul 2020 22:10:17 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id d1so13135960plr.8;
-        Wed, 29 Jul 2020 22:10:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3Vkw/8crPqmhVB2Zcyh0SoqmwjZCclFsRnwB76cJQ0w=;
-        b=vfT1P3WGIsMFyWgzAeDSPjrX3k6/wgMcQwpcVeG1XYoe0HNZd2ApnUmvCtIFQVnZLE
-         yVQKnl4GVlnw4vOAD8rU+EWGf95i9xhoG1u1r/LYJ5Hwnd0oyGDVpfkOnGDH3cvkYy5r
-         MjAcpE4QijWE0Owfvj2X9a9IPLIFTkhiuOFPmzwlUrpyj3Dle8u0i2Raq2wvKm6XGSTz
-         zVFm+qKk88/axVw/ktK2phYFMf7eSRgjVI4hakDITkJt3FKSuK142npj/oAU0DRhZAxu
-         LNrJpCJOkAiRA2cxjVpRl57JGlb1OCyrGJoeqMP96M8F8ya6k5NDGsPLX1UUNjBMNpSx
-         EiUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3Vkw/8crPqmhVB2Zcyh0SoqmwjZCclFsRnwB76cJQ0w=;
-        b=aXzdvExFUeWY+OZypaqx1enJUK9GkxJuOmayX4etSR5QjlJEEo4HSuynhaqjhmHaym
-         ay2XdXTsVujmE1TrYfxP46xzbT1KjmnImVbkvmboK5koYJU2wylP+cr6yN8Z6ubjB/SE
-         FOZcqSZqn3c4h5cJoBVVNTuRGcq9nz/i+s2MA8D6AR+JMdIlaGO97f59h2GDGX/mvHPJ
-         lgkJaXWmRZdvdRY6n1Bj4Q9LEYvJk2iOO2FvKWjiNSg0lDAjCM/t7P/NtqpZwIoQV1Cw
-         +68JQTZtcCX/eBxDPMxK4LBsJKvE1n684I1JsYUlTCtzCC+Fg/X8l5y+MVUpOd7qbQB5
-         vl1w==
-X-Gm-Message-State: AOAM533BdgQb+NvzRLfGqkJXus29P/dghxlhJRvk0jQFHffarZX2knaR
-        pK5GxVIcSNs1flTueOhVroA=
-X-Google-Smtp-Source: ABdhPJy/OSW+dLeCrvdE5RnhZsyNUlaL3ioZOOHibWlEKYG66uBPyf4XO7AGHhFtcSZUCWm3c09W2Q==
-X-Received: by 2002:a17:90a:3c8f:: with SMTP id g15mr1328728pjc.215.1596085816692;
-        Wed, 29 Jul 2020 22:10:16 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id f27sm415310pfk.217.2020.07.29.22.10.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 22:10:16 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 22:10:13 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Roy Im <roy.im.opensource@diasemi.com>
-Cc:     Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+        with ESMTP id S1728528AbgG3GQr (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 30 Jul 2020 02:16:47 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C82F3C061794
+        for <linux-pwm@vger.kernel.org>; Wed, 29 Jul 2020 23:16:46 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k11ro-00032m-Hv; Thu, 30 Jul 2020 08:16:36 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k11rj-0006Ev-DC; Thu, 30 Jul 2020 08:16:31 +0200
+Date:   Thu, 30 Jul 2020 08:16:31 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Roy Im <roy.im.opensource@diasemi.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Brian Masney <masneyb@onstation.org>,
         Greg KH <gregkh@linuxfoundation.org>,
@@ -61,79 +36,113 @@ Cc:     Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
         Samuel Ortiz <sameo@linux.intel.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+        Support Opensource <support.opensource@diasemi.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Subject: Re: [PATCH v18 3/3] Input: new da7280 haptic driver
-Message-ID: <20200730051013.GB1665100@dtor-ws>
+Message-ID: <20200730061631.y4r4s6v3xepktj54@pengutronix.de>
 References: <cover.1595991580.git.Roy.Im@diasemi.com>
  <23b3470401ec5cf525add8e1227cb67586b9f294.1595991580.git.Roy.Im@diasemi.com>
  <20200729063638.GY1665100@dtor-ws>
- <DB8PR10MB3436EF37E1F1581BDB7996C785700@DB8PR10MB3436.EURPRD10.PROD.OUTLOOK.COM>
+ <20200729072145.ifzoe656sjpxdior@pengutronix.de>
+ <20200730050653.GA1665100@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fz3lejizyldfimsi"
 Content-Disposition: inline
-In-Reply-To: <DB8PR10MB3436EF37E1F1581BDB7996C785700@DB8PR10MB3436.EURPRD10.PROD.OUTLOOK.COM>
+In-Reply-To: <20200730050653.GA1665100@dtor-ws>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 02:09:48PM +0000, Roy Im wrote:
-> Hello Dmitry and Uwe,
-> 
-> Wednesday, July 29, 2020 3:37 PM, Dmitry Torokhov wrote: 
-> 
-> > On Wed, Jul 29, 2020 at 11:59:40AM +0900, Roy Im wrote:
-> > > Adds support for the Dialog DA7280 LRA/ERM Haptic Driver with multiple
-> > > mode and integrated waveform memory and wideband support.
-> > > It communicates via an I2C bus to the device.
-> > 
-> > A few questions/suggestions...
-> > 
-> > >
-> > > Reviewed-by: Jes Sorensen <Jes.Sorensen@gmail.com>.
-> > >
-> > > Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
-> > >
-> > > ---
-> > > v18:
-> > > 	- Corrected comments in Kconfig
-> > > 	- Updated to preferred style for multi line comments in c file.
-> > > v17:
-> > > 	- fixed an issue.
-> > > v16:
-> > > 	- Corrected some code and updated description in Kconfig.
-> > > v15:
-> > > 	- Removed some defines and updated some comments.
-> > > v14:
-> > > 	- Updated pwm related code, alignments and comments.
-> > > v13:
-> > > 	- Updated some conditions in pwm function and alignments.
-> > > v12: No changes.
-> > > v11:
-> > > 	- Updated the pwm related code, comments and typo.
-> > > v10:
-> > > 	- Updated the pwm related function and added some comments.
-> > > v9:
-> > > 	- Removed the header file and put the definitions into the c file.
-> > > 	- Updated the pwm code and error logs with %pE
-> > 
-> > I believe the %pE is to format an escaped buffer, you probably want to %pe (lowercase) to print errors. I am also not quite sure
-> > if we want to use it in cases when we have non-pointer error, or we should stick with %d as most of the kernel does.
-> 
-> Right, it should be %pe as you and Uwe said, Uwe suggested %pe to understand easier.. do you still prefer to stick with %d?
 
-Depends on the situation. If you already have ERR_PTR-encoded error
-there is no reason for not using %pe, but if you have integer error, or
-you have already converted pointer to integer I'd prefer we stick with
-%d.
+--fz3lejizyldfimsi
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-As I mentioned in another message maybe we should consider adding '%de'
-or similar for formatting integer errors.
+[Adding vsprintf maintainers to Cc:]
 
-Thanks.
+Hello,
 
--- 
-Dmitry
+On Wed, Jul 29, 2020 at 10:06:53PM -0700, Dmitry Torokhov wrote:
+> On Wed, Jul 29, 2020 at 09:21:45AM +0200, Uwe Kleine-K=F6nig wrote:
+> > Hello,
+> >=20
+> > On Tue, Jul 28, 2020 at 11:36:38PM -0700, Dmitry Torokhov wrote:
+> > > > v9:=20
+> > > > 	- Removed the header file and put the definitions into the c file.
+> > > > 	- Updated the pwm code and error logs with %pE
+> > >=20
+> > > I believe the %pE is to format an escaped buffer, you probably want to
+> > > %pe (lowercase) to print errors. I am also not quite sure if we want =
+to
+> > > use it in cases when we have non-pointer error, or we should stick wi=
+th
+> > > %d as most of the kernel does.
+> >=20
+> > compared with %d %pe is easier to understand as it emits "-ETIMEOUT"
+> > instead of "-110". And yes, %pE is wrong.
+>=20
+> While I can see that symbolic name instead of a numeric constant might
+> be appealing, I do not believe that we want fragments like this with
+> endless conversions between integer and pointer errors:
+>=20
+> 	if (haptics->const_op_mode =3D=3D DA7280_PWM_MODE) {
+> 		haptics->pwm_dev =3D devm_pwm_get(dev, NULL);
+> 		if (IS_ERR(haptics->pwm_dev)) {
+> 			error =3D PTR_ERR(haptics->pwm_dev);
+> 			if (error !=3D -EPROBE_DEFER)
+> 				dev_err(dev, "unable to request PWM: %pE\n",
+> 					ERR_PTR(error));
+> 			return error;
+> 		}
+>=20
+> Maybe we should introduce something like '%de' for the integer error
+> case?
+
+I suggested that some time ago with limited success, see
+https://lore.kernel.org/lkml/20200129115516.zsvxu56e6h7gheiw@pathway.suse.c=
+z/
+=2E
+
+> In the meantime I would prefer using %d when we have integer
+> error. We should not see these error messages anyway ;)
+
+I don't agree. Error messages are supposed to be helpful and I prefer
+some casting between error pointer and error int over emitting bare
+numbers to the kernel log. (And additionally the uglyness might help to
+convince the vsprintf guys that %de might be a good idea after all :-)
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--fz3lejizyldfimsi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8iZbwACgkQwfwUeK3K
+7Alqgwf/QhPTWri/aJ6aKC1Qf4GZICrCZy5Xn1coDwtnUcU/daCkeA6gtX4fGffV
+pAVA/5PJ/H2T0urdRlwPynwLunhL0FVKOlFB3ta+Ir7aiI8r8V7joD0Eqbb56gCh
+yJCowGmV4Pz1BmkjlZqo9c2BFAxqLMOePENs85PfgMrcayhsuG55kNtFb7ZyXzvW
+QMJ5tuaOeesM/5iAjUKSGQneGXYvJPOLGkwmPxER+ACeWIqCWaXSeNIeU/d22wCT
+a2csqlFa6SG3J8D8lcWa+9xH80VmvF60ROr5BjQWah5ccbO7zwH9nc9hY5rdg+Ub
+tFmojQ9HJW32hSFz2olina/eIgV39g==
+=9HiY
+-----END PGP SIGNATURE-----
+
+--fz3lejizyldfimsi--
