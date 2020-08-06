@@ -2,128 +2,283 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B28423D378
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 Aug 2020 23:11:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E5F823D814
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 Aug 2020 10:40:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgHEVLk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 5 Aug 2020 17:11:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59906 "EHLO
+        id S1728968AbgHFIkN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 6 Aug 2020 04:40:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725139AbgHEVLj (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 5 Aug 2020 17:11:39 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6A49C061575
-        for <linux-pwm@vger.kernel.org>; Wed,  5 Aug 2020 14:11:38 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id t23so25813700ljc.3
-        for <linux-pwm@vger.kernel.org>; Wed, 05 Aug 2020 14:11:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V2PZXILdefiTwwzfO5OUUQBgzK17xy7UQ4vY/f0A1uM=;
-        b=aPqJee4+/II1pDeHm6YJT9N8szJtyfH8/u0a/mb/rUh0XKwrO9/lI6mAKg/YUjZsap
-         p0B7nL/zuMyT3EsRGWbvq29/0Lc9irQLp5boKwUO0dgr7wICe4bQ/VVNo2zfxFQFtKUF
-         aTAuAP1cEHDioLUgDXQmFNnV10RJlUC2CPrZI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V2PZXILdefiTwwzfO5OUUQBgzK17xy7UQ4vY/f0A1uM=;
-        b=dvgwOICDC+O+Q6VtjNh89WVYoIVxDiSWX6r0HndpTZ9uNRTK87zgpXZTEBrY5GpnHm
-         FEX7em1krGC455WrVPTM+Wy9Eb1qgmpjQWA8xVf0aoNt3qs4E0Mpw2VBue/WiiiVMcJI
-         4+FV3XT6EYj0Px6QY2bRgIgdmZ5vcI7VSTcesudy9M+7l7J6/hcQO96+gfmcPmgWGrtb
-         xVXR59Rg6g02kueNfoz/ylXj8c60XuPfi1Wptksu/0G55Krmk/HppVttGyN4zbwpGPr+
-         20var0YYQuyVWRlQQMeJNFU+PfNhUvqRft1O05e9gTY0KfRNpY7+t+UtRdE+CPYzYd6z
-         fTCA==
-X-Gm-Message-State: AOAM531bfxCB41t4CKwjcxLxxxPCUh0RE+fYkTuXfXb1QqIlWAc8fEOU
-        Lsy5aqkxTpQyhzZxd2Nku/W7B5l9tHlxRA==
-X-Google-Smtp-Source: ABdhPJxq8512WZgDidqQKmM6hJz+cW15Hzqt+wjfUa8xpuul4nTBF2E3Con1haOwvmR9iAmklC2CMw==
-X-Received: by 2002:a2e:8853:: with SMTP id z19mr2512472ljj.267.1596661897151;
-        Wed, 05 Aug 2020 14:11:37 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id e12sm1366621ljk.74.2020.08.05.14.11.37
-        for <linux-pwm@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 14:11:37 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id c15so7704809lfi.3
-        for <linux-pwm@vger.kernel.org>; Wed, 05 Aug 2020 14:11:37 -0700 (PDT)
-X-Received: by 2002:a05:6402:28f:: with SMTP id l15mr1118783edv.233.1596661486208;
- Wed, 05 Aug 2020 14:04:46 -0700 (PDT)
+        with ESMTP id S1728957AbgHFIkM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Aug 2020 04:40:12 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E15CC061575
+        for <linux-pwm@vger.kernel.org>; Thu,  6 Aug 2020 01:40:12 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k3bRW-0002CC-GQ; Thu, 06 Aug 2020 10:40:06 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k3bRQ-0007rq-G1; Thu, 06 Aug 2020 10:40:00 +0200
+Date:   Thu, 6 Aug 2020 10:40:00 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v7 06/13] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200806084000.k3aj5nmqdodmb35v@pengutronix.de>
+References: <20200803093559.12289-1-michael@walle.cc>
+ <20200803093559.12289-7-michael@walle.cc>
 MIME-Version: 1.0
-References: <20200721042522.2403410-1-amstan@chromium.org>
-In-Reply-To: <20200721042522.2403410-1-amstan@chromium.org>
-From:   Alexandru M Stan <amstan@chromium.org>
-Date:   Wed, 5 Aug 2020 14:04:09 -0700
-X-Gmail-Original-Message-ID: <CAHNYxRzwQ2jx99M0oyNv8CDE4h051jcdAdYFjRd8mhNjB19FgA@mail.gmail.com>
-Message-ID: <CAHNYxRzwQ2jx99M0oyNv8CDE4h051jcdAdYFjRd8mhNjB19FgA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] PWM backlight interpolation adjustments
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vgnlsgd3pefacvw3"
+Content-Disposition: inline
+In-Reply-To: <20200803093559.12289-7-michael@walle.cc>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 9:27 PM Alexandru Stan <amstan@chromium.org> wrote:
->
-> I was trying to adjust the brightness for a new chromebook:
-> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/2291209
-> Like a lot of panels, the low end needs to be cropped,
-> and now that we have the interpolation stuff I wanted to make use of it
-> and bake in even the curve.
->
-> I found the behavior a little unintuitive and non-linear. See patch 1
-> for a suggested fix for this.
->
-> Unfortunatelly a few veyron dts files were relying on this
-> (perhaps weird) behavior. Those devices also want a minimum brightness.
-> The issue is that they also want the 0% point for turning off the
-> display.
-> https://github.com/torvalds/linux/commit/6233269bce47bd450196a671ab28eb1ec5eb88d9#diff-e401ae20091bbfb311a062c464f4f47fL23
->
-> So the idea here is to change those dts files to only say <3 255> (patch
-> 3), and add in a virtual 0% point at the bottom of the scale (patch 2).
->
-> We have to do this conditionally because it seems some devices like to
-> have the scale inverted:
->   % git grep "brightness-levels\s*=\s*<\s*[1-9]"|cat
->   arch/arm/boot/dts/tegra124-apalis-eval.dts:             brightness-levels = <255 231 223 207 191 159 127 0>;
->
->
-> Alexandru Stan (3):
->   backlight: pwm_bl: Fix interpolation
->   backlight: pwm_bl: Artificially add 0% during interpolation
->   ARM: dts: rockchip: Remove 0 point in backlight
->
->  arch/arm/boot/dts/rk3288-veyron-jaq.dts    |  2 +-
->  arch/arm/boot/dts/rk3288-veyron-minnie.dts |  2 +-
->  arch/arm/boot/dts/rk3288-veyron-tiger.dts  |  2 +-
->  drivers/video/backlight/pwm_bl.c           | 78 +++++++++++-----------
->  4 files changed, 42 insertions(+), 42 deletions(-)
->
-> --
-> 2.27.0
->
 
-Hello,
+--vgnlsgd3pefacvw3
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Friendly ping.
-Let me know if you would like me to make any changes to my patches.
+Hello Michael,
 
-Thanks,
-Alexandru M Stan
+I'm nearly happy now; see below.
+
+On Mon, Aug 03, 2020 at 11:35:52AM +0200, Michael Walle wrote:
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 7dbcf6973d33..a0d50d70c3b9 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -428,6 +428,16 @@ config PWM_SIFIVE
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-sifive.
+> =20
+> +config PWM_SL28CPLD
+> +	tristate "Kontron sl28cpld PWM support"
+> +	select MFD_SIMPLE_MFD_I2C
+
+Is it sensible to present this option to everyone? Maybe
+
+	depends on SOME_SYMBOL_ONLY_TRUE_ON_SL28CPLD || COMPILE_TEST
+
+=2E
+
+> +	help
+> +	  Generic PWM framework driver for board management controller
+> +	  found on the Kontron sl28 CPLD.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-sl28cpld.
+> +
+>  config PWM_SPEAR
+>  	tristate "STMicroelectronics SPEAr PWM support"
+>  	depends on PLAT_SPEAR || COMPILE_TEST
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 2c2ba0a03557..cbdcd55d69ee 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -40,6 +40,7 @@ obj-$(CONFIG_PWM_RENESAS_TPU)	+=3D pwm-renesas-tpu.o
+>  obj-$(CONFIG_PWM_ROCKCHIP)	+=3D pwm-rockchip.o
+>  obj-$(CONFIG_PWM_SAMSUNG)	+=3D pwm-samsung.o
+>  obj-$(CONFIG_PWM_SIFIVE)	+=3D pwm-sifive.o
+> +obj-$(CONFIG_PWM_SL28CPLD)	+=3D pwm-sl28cpld.o
+>  obj-$(CONFIG_PWM_SPEAR)		+=3D pwm-spear.o
+>  obj-$(CONFIG_PWM_SPRD)		+=3D pwm-sprd.o
+>  obj-$(CONFIG_PWM_STI)		+=3D pwm-sti.o
+> diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
+> new file mode 100644
+> index 000000000000..bb298af36f0b
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-sl28cpld.c
+> @@ -0,0 +1,235 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * sl28cpld PWM driver
+> + *
+> + * Copyright (c) 2020 Michael Walle <michael@walle.cc>
+> + *
+> + * There is no public datasheet available for this PWM core. But it is e=
+asy
+> + * enough to be briefly explained. It consists of one 8-bit counter. The=
+ PWM
+> + * supports four distinct frequencies by selecting when to reset the cou=
+nter.
+> + * With the prescaler setting you can select which bit of the counter is=
+ used
+> + * to reset it. This implies that the higher the frequency the less rema=
+ining
+> + * bits are available for the actual counter.
+> + *
+> + * Let cnt[7:0] be the counter, clocked at 32kHz:
+> + * +-----------+--------+--------------+-----------+---------------+
+> + * | prescaler |  reset | counter bits | frequency | period length |
+> + * +-----------+--------+--------------+-----------+---------------+
+> + * |         0 | cnt[7] |     cnt[6:0] |    250 Hz |    4000000 ns |
+> + * |         1 | cnt[6] |     cnt[5:0] |    500 Hz |    2000000 ns |
+> + * |         2 | cnt[5] |     cnt[4:0] |     1 kHz |    1000000 ns |
+> + * |         3 | cnt[4] |     cnt[3:0] |     2 kHz |     500000 ns |
+> + * +-----------+--------+--------------+-----------+---------------+
+> + *
+> + * Limitations:
+> + * - The hardware cannot generate a 100% duty cycle if the prescaler is =
+0.
+> + * - The hardware cannot atomically set the prescaler and the counter va=
+lue,
+> + *   which might lead to glitches and inconsistent states if a write fai=
+ls.
+> + * - The counter is not reset if you switch the prescaler which leads
+> + *   to glitches, too.
+> + * - The duty cycle will switch immediately and not after a complete cyc=
+le.
+> + * - Depending on the actual implementation, disabling the PWM might have
+> + *   side effects. For example, if the output pin is shared with a GPIO =
+pin
+> + *   it will automatically switch back to GPIO mode.
+
+Very nice.
+
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
+> +
+> +/*
+> + * PWM timer block registers.
+> + */
+> +#define SL28CPLD_PWM_CTRL			0x00
+> +#define   SL28CPLD_PWM_CTRL_ENABLE		BIT(7)
+> +#define   SL28CPLD_PWM_CTRL_PRESCALER_MASK	GENMASK(1, 0)
+> +#define SL28CPLD_PWM_CYCLE			0x01
+> +#define   SL28CPLD_PWM_CYCLE_MAX		GENMASK(6, 0)
+> +
+> +#define SL28CPLD_PWM_CLK			32000 /* 32 kHz */
+> +#define SL28CPLD_PWM_MAX_DUTY_CYCLE(prescaler)	(1 << (7 - (prescaler)))
+> +#define SL28CPLD_PWM_PERIOD(prescaler) \
+> +	(NSEC_PER_SEC / SL28CPLD_PWM_CLK * SL28CPLD_PWM_MAX_DUTY_CYCLE(prescale=
+r))
+> +
+> +/*
+> + * We calculate the duty cycle like this:
+> + *   duty_cycle_ns =3D pwm_cycle_reg * max_period_ns / max_duty_cycle
+> + *
+> + * With
+> + *   max_period_ns =3D 1 << (7 - prescaler) / pwm_clk * NSEC_PER_SEC
+> + *   max_duty_cycle =3D 1 << (7 - prescaler)
+> + * this then simplifies to:
+> + *   duty_cycle_ns =3D pwm_cycle_reg / pwm_clk * NSEC_PER_SEC
+> + *
+> + * NSEC_PER_SEC and SL28CPLD_PWM_CLK is integer here, so we're not losing
+> + * precision by doing the divison first.
+
+Apart from the grammatical issue (s/is/are/) this is not the relevant
+fact. The relevant thing is that NSEC_PER_SEC / SL28CPLD_PWM_CLK is
+integer.
+
+(In case this is not clear, assume SL28CPLD_PWM_CLK to be 30000 and reg
+0x12345.
+
+Then we have:=20
+
+	NSEC_PER_SEC / SL28CPLD_PWM_CLK * (reg) -> 0x94255749
+	NSEC_PER_SEC * (reg) / SL28CPLD_PWM_CLK -> 0x9425b860
+
+=2E)
+
+> + */
+> +#define SL28CPLD_PWM_TO_DUTY_CYCLE(reg) \
+> +	(NSEC_PER_SEC / SL28CPLD_PWM_CLK * (reg))
+> +#define SL28CPLD_PWM_FROM_DUTY_CYCLE(duty_cycle) \
+> +	(DIV_ROUND_DOWN_ULL((duty_cycle), NSEC_PER_SEC / SL28CPLD_PWM_CLK))
+> +
+> +#define sl28cpld_pwm_read(priv, reg, val) \
+> +	regmap_read((priv)->regmap, (priv)->offset + (reg), (val))
+> +#define sl28cpld_pwm_write(priv, reg, val) \
+> +	regmap_write((priv)->regmap, (priv)->offset + (reg), (val))
+> +
+> +struct sl28cpld_pwm {
+> +	struct pwm_chip pwm_chip;
+> +	struct regmap *regmap;
+> +	u32 offset;
+> +};
+> +
+> +static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
+> +				   struct pwm_device *pwm,
+> +				   struct pwm_state *state)
+> +{
+> +	struct sl28cpld_pwm *priv =3D dev_get_drvdata(chip->dev);
+> +	unsigned int reg;
+> +	int prescaler;
+> +
+> +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CTRL, &reg);
+> +
+> +	state->enabled =3D reg & SL28CPLD_PWM_CTRL_ENABLE;
+> +
+> +	prescaler =3D FIELD_GET(SL28CPLD_PWM_CTRL_PRESCALER_MASK, reg);
+> +	state->period =3D SL28CPLD_PWM_PERIOD(prescaler);
+> +
+> +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CYCLE, &reg);
+> +	state->duty_cycle =3D SL28CPLD_PWM_TO_DUTY_CYCLE(reg);
+
+Should reg be masked to SL28CPLD_PWM_CYCLE_MAX, or is it guaranteed that
+the upper bits are zero?
+
+> +	state->polarity =3D PWM_POLARITY_NORMAL;
+> +}
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--vgnlsgd3pefacvw3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8rwd0ACgkQwfwUeK3K
+7AmfeAf9Gjs6d6RYl4cHjGm5WtyaW7dy/H/ZhBTXazWZi9T2vSKNCbP7eDdMWVqK
+mGWH4KuK60xZp0FN7GcX1LLw98U3NVz6SQGyQJKe9YbvFCX8mHsUI3L2R/vPprgb
+xLa89BSlnoaUd/KovXXGa++KHFfEqQ/9jTxBYqiLBnHhKK2TEL9QWVwLnzGo0b9T
+N4xzqBfInTCN10AaDNURikxMx1EmP9DaOp2X2LSLlBIkB47mt9jfsQiUy8SHcoF1
+xAx+Ryx0g3t3iXvbv6y9AbuUxaEteZQ8bn+2hP3PHaAo4NyvnaqPM/BFj/SL6RKj
+7d0IxQE5ptk05VI2zx0zwpDFPjk3ow==
+=OBgf
+-----END PGP SIGNATURE-----
+
+--vgnlsgd3pefacvw3--
