@@ -2,50 +2,50 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8336B23DC5D
-	for <lists+linux-pwm@lfdr.de>; Thu,  6 Aug 2020 18:51:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9316423DC87
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 Aug 2020 18:53:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbgHFQvc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 6 Aug 2020 12:51:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43402 "EHLO
+        id S1729524AbgHFQxX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 6 Aug 2020 12:53:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729491AbgHFQvB (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Aug 2020 12:51:01 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38C18C0086B5;
-        Thu,  6 Aug 2020 08:33:21 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id l60so6885280pjb.3;
-        Thu, 06 Aug 2020 08:33:21 -0700 (PDT)
+        with ESMTP id S1729365AbgHFQu7 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Aug 2020 12:50:59 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1E6FC0086B7;
+        Thu,  6 Aug 2020 08:33:22 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id o13so26959041pgf.0;
+        Thu, 06 Aug 2020 08:33:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=WjNGcySxRcaRcYcgPeVnxcihqjmgxQQKoyRxNRcejbY=;
-        b=HKa7pqONCRww+Pym08+/wilDVmxt8tFBK3SU1VngGvM2DtkUaCMf+tVVr+JF2AfGIV
-         JEP+aewH66rxzRomgohQzNlUClubnE1zNvjviZaf7wmNTEx+sXwPdo+5b9OjN+VlT9/4
-         CWVUn/AHhlr3GsdD387h7ffAKwBFeh3nlq7WepukH2iZIBWIZ8B06smfNCYXmPYIo66/
-         9gtymJbAptkIhXR7KUJOUxXzUTEjZbWRZ+dAYDWsYDwH83MPOYxqZMhVnltXTlU/Xk3n
-         Vt84AEX8hJkv/UptQ88VL/GJQrTasMuIN1iI35WO0QZ+0Vbp0/75FQ75vj4peOrlQ+P5
-         LwmQ==
+        bh=NXM7oKIqExo6jQUCEcqG7gsdReCWsat1fidWX99SIu0=;
+        b=qtmrG/B/x58Madbk7LLC7WKbj2mBIkC1GmyA7WafBLX+ZoV6WYIRo1bU1eavNX5Odx
+         H7cx7siSu0FEcpEG2ucdbQh8uMSgyJr3m/zq34an/vJzcmGC7ug1STJRw2wYoPazPWX3
+         TBZCJdqoyqyzJhoHsFQkqguml/jS1jLMWrcpfXAo1/LjQZa9WLmgoCG77PRUFZw8W8k1
+         A/MAfASV7jEhnvtYzFzzxlanVOh+iy0XW5b/BflcA14wgsmEFuXTkzOWpE74LxS4I4BL
+         gwRxBfJbn5omiFoDDdm1r7IJHL8wf2cKCRw1mKh8WRS+dagMNRS1v5jr6fOWnfWBq/8t
+         1zhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=WjNGcySxRcaRcYcgPeVnxcihqjmgxQQKoyRxNRcejbY=;
-        b=gpXMK1e+i4PTjsWydhP2BugWoIyq1pd4+XNT/GX2WP3HR0gqFIytfR3eDYgdgLBQrc
-         5A39GajaWMvy+Xn4gt8VvHRYEsCq/itLJs/DwuWpLfl4vjRLNqrf6iVSe44YDQelM8f5
-         o9cWcHPx34h/oNieQgZiScRfctOcYKWWndQJiWcWgmXyas1zcqd8X3RpjNgS1UkF9Yaj
-         AvCCVynJHHjecQtLfyTuP0UdpprvBgjugmoCqPTQkG/WQSQkj56gcjVw1/UFTj8FRTbQ
-         ciOQm3vfWZBJp2oJYi7F2fsCVssi7bhQtcoMGzd+REAzTmXxTcIT90Yfj1shAVjCWhRT
-         O+aw==
-X-Gm-Message-State: AOAM530DB9I1hgsbDhZcJUAyZ9+QwMh0Xrtv1LSc6pL2+jqxXW7lSNxl
-        SmiEE+8Mlzkd8b1VRAtq55Q=
-X-Google-Smtp-Source: ABdhPJyAk+h5y35gNsqwwwFGNm8e3OHM/Chrw1Kie32e0jvdY0BXQJ9AbnDAsazimg4SL9OE7qshuw==
-X-Received: by 2002:a17:902:b20e:: with SMTP id t14mr8675313plr.58.1596728000737;
-        Thu, 06 Aug 2020 08:33:20 -0700 (PDT)
+        bh=NXM7oKIqExo6jQUCEcqG7gsdReCWsat1fidWX99SIu0=;
+        b=dVf//0zjvqXYIg6M0m+pXTnQGf6rRBpRFoXxc1ye615zEoKj17MtWKMd0HMYBFBwt8
+         IgYwjOyzRA24hBWiRPPCW3N4IgjcvTxXiA1pdHVI3E/vgZAXvVd/F4Jzo/oTxYN/bzy3
+         TNV4u1Pcu3Y7TIxe/on3KEKwe48TZgp99pk/Cpca2HmGaOT7kUsIqOzeeUOGni8f98B4
+         OZhoa5ZrBzbzAczuOh8C6l44/r3AEiG+VbxIGCSOWaPrrJIuLxRVNWQV08+7D67gGc0y
+         eIOfJQEsSdwxG/ZfgzW9ynmB1kxqSEZ4B84Jng5Ib8F/LzuCkVp1VNNemnjgBm44dKoe
+         AsUw==
+X-Gm-Message-State: AOAM531vWQ8K+/fV/tqgitgQE93kMwMGOmIr6NIsV7vkod+qV9lEXZD6
+        EzM6YLr8cYD55zmuEvNis6k=
+X-Google-Smtp-Source: ABdhPJxPgUkkRVp7LsuLLycjHy7G09Nd7fR2ySbGBe+ceuVccLylbMsZBpLGEhRshGy64Vbl4JwA2A==
+X-Received: by 2002:a63:d143:: with SMTP id c3mr7775779pgj.306.1596728002409;
+        Thu, 06 Aug 2020 08:33:22 -0700 (PDT)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 27sm7471068pgk.89.2020.08.06.08.33.20
+        by smtp.gmail.com with ESMTPSA id 12sm8379264pfn.173.2020.08.06.08.33.21
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Aug 2020 08:33:20 -0700 (PDT)
+        Thu, 06 Aug 2020 08:33:21 -0700 (PDT)
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Cc:     Jonathan Cameron <jic23@kernel.org>,
@@ -61,9 +61,9 @@ Cc:     Jonathan Cameron <jic23@kernel.org>,
         linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH v4 6/7] platform/chrome: cros_ec_proto: Convert EC error codes to Linux error codes
-Date:   Thu,  6 Aug 2020 08:33:07 -0700
-Message-Id: <20200806153308.204605-7-linux@roeck-us.net>
+Subject: [PATCH v4 7/7] pwm: cros-ec: Simplify EC error handling
+Date:   Thu,  6 Aug 2020 08:33:08 -0700
+Message-Id: <20200806153308.204605-8-linux@roeck-us.net>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200806153308.204605-1-linux@roeck-us.net>
 References: <20200806153308.204605-1-linux@roeck-us.net>
@@ -72,109 +72,80 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The EC reports a variety of error codes. Most of those, with the exception
-of EC_RES_INVALID_VERSION, are converted to -EPROTO. As result, the actual
-EC error code gets lost. Introduce cros_ec_map_error() to map EC error
-codes to Linux error codes, and use it in cros_ec_cmd_xfer_status() to
-report more meaningful errors to the caller. With this change, callers of
-cros_ec_cmd_xfer_status() can implement a more distinguished action without
-having to rely on the EC error code. At the same time, debugging is improved
-in situations where the Linux error code is reported to userspace and/or in
-the kernel log.
+With enhanced error reporting from cros_ec_cmd_xfer_status() in place,
+we can fully use it and no longer rely on EC error codes.
 
-Cc: Gwendal Grignou <gwendal@chromium.org>
-Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Cc: Prashant Malani <pmalani@chromium.org>
-Cc: Brian Norris <briannorris@chromium.org>
-Reviewed-by: Brian Norris <briannorris@chromium.org>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
-v4: Added Brian's Reviewed-by: tag
-v3: Use -ENOPROTOOPT for EC_RES_INVALID_VERSION
-    Implement function to convert error codes
-v2: No change
+ drivers/pwm/pwm-cros-ec.c | 26 ++++----------------------
+ 1 file changed, 4 insertions(+), 22 deletions(-)
 
- drivers/platform/chrome/cros_ec_proto.c | 52 ++++++++++++++++++++-----
- 1 file changed, 42 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-index e5bbec979a2a..a081b8245682 100644
---- a/drivers/platform/chrome/cros_ec_proto.c
-+++ b/drivers/platform/chrome/cros_ec_proto.c
-@@ -15,6 +15,43 @@
- 
- #define EC_COMMAND_RETRIES	50
- 
-+static const int cros_ec_error_map[] = {
-+	[EC_RES_INVALID_COMMAND] = -EOPNOTSUPP,
-+	[EC_RES_ERROR] = -EIO,
-+	[EC_RES_INVALID_PARAM] = -EINVAL,
-+	[EC_RES_ACCESS_DENIED] = -EACCES,
-+	[EC_RES_INVALID_RESPONSE] = -EPROTO,
-+	[EC_RES_INVALID_VERSION] = -ENOPROTOOPT,
-+	[EC_RES_INVALID_CHECKSUM] = -EBADMSG,
-+	[EC_RES_IN_PROGRESS] = -EINPROGRESS,
-+	[EC_RES_UNAVAILABLE] = -ENODATA,
-+	[EC_RES_TIMEOUT] = -ETIMEDOUT,
-+	[EC_RES_OVERFLOW] = -EOVERFLOW,
-+	[EC_RES_INVALID_HEADER] = -EBADR,
-+	[EC_RES_REQUEST_TRUNCATED] = -EBADR,
-+	[EC_RES_RESPONSE_TOO_BIG] = -EFBIG,
-+	[EC_RES_BUS_ERROR] = -EFAULT,
-+	[EC_RES_BUSY] = -EBUSY,
-+	[EC_RES_INVALID_HEADER_VERSION] = -EBADMSG,
-+	[EC_RES_INVALID_HEADER_CRC] = -EBADMSG,
-+	[EC_RES_INVALID_DATA_CRC] = -EBADMSG,
-+	[EC_RES_DUP_UNAVAILABLE] = -ENODATA,
-+};
-+
-+static int cros_ec_map_error(uint32_t result)
-+{
-+	int ret = 0;
-+
-+	if (result != EC_RES_SUCCESS) {
-+		if (result < ARRAY_SIZE(cros_ec_error_map) && cros_ec_error_map[result])
-+			ret = cros_ec_error_map[result];
-+		else
-+			ret = -EPROTO;
-+	}
-+
-+	return ret;
-+}
-+
- static int prepare_packet(struct cros_ec_device *ec_dev,
- 			  struct cros_ec_command *msg)
- {
-@@ -555,8 +592,7 @@ EXPORT_SYMBOL(cros_ec_cmd_xfer);
-  *
-  * Return:
-  * >=0 - The number of bytes transferred
-- * -ENOPROTOOPT - Operation not supported
-- * -EPROTO - Protocol error
-+ * <0 - Linux error code
-  */
- int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
- 			    struct cros_ec_command *msg)
-@@ -566,15 +602,11 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
- 	ret = cros_ec_cmd_xfer(ec_dev, msg);
- 	if (ret < 0) {
- 		dev_err(ec_dev->dev, "Command xfer error (err:%d)\n", ret);
--	} else if (msg->result == EC_RES_INVALID_VERSION) {
--		dev_dbg(ec_dev->dev, "Command invalid version (err:%d)\n",
--			msg->result);
--		return -ENOPROTOOPT;
--	} else if (msg->result != EC_RES_SUCCESS) {
--		dev_dbg(ec_dev->dev, "Command result (err: %d)\n", msg->result);
--		return -EPROTO;
-+	} else {
-+		ret = cros_ec_map_error(msg->result);
-+		if (ret)
-+			dev_dbg(ec_dev->dev, "Command result (err: %d [%d])\n", msg->result, ret);
- 	}
--
- 	return ret;
+diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
+index 94d3dff9b0e5..c1c337969e4e 100644
+--- a/drivers/pwm/pwm-cros-ec.c
++++ b/drivers/pwm/pwm-cros-ec.c
+@@ -81,8 +81,7 @@ static int cros_ec_pwm_set_duty(struct cros_ec_device *ec, u8 index, u16 duty)
+ 	return cros_ec_cmd_xfer_status(ec, msg);
  }
- EXPORT_SYMBOL(cros_ec_cmd_xfer_status);
+ 
+-static int __cros_ec_pwm_get_duty(struct cros_ec_device *ec, u8 index,
+-				  u32 *result)
++static int cros_ec_pwm_get_duty(struct cros_ec_device *ec, u8 index)
+ {
+ 	struct {
+ 		struct cros_ec_command msg;
+@@ -107,19 +106,12 @@ static int __cros_ec_pwm_get_duty(struct cros_ec_device *ec, u8 index,
+ 	params->index = index;
+ 
+ 	ret = cros_ec_cmd_xfer_status(ec, msg);
+-	if (result)
+-		*result = msg->result;
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	return resp->duty;
+ }
+ 
+-static int cros_ec_pwm_get_duty(struct cros_ec_device *ec, u8 index)
+-{
+-	return __cros_ec_pwm_get_duty(ec, index, NULL);
+-}
+-
+ static int cros_ec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			     const struct pwm_state *state)
+ {
+@@ -215,28 +207,18 @@ static int cros_ec_num_pwms(struct cros_ec_device *ec)
+ 
+ 	/* The index field is only 8 bits */
+ 	for (i = 0; i <= U8_MAX; i++) {
+-		u32 result = 0;
+-
+-		ret = __cros_ec_pwm_get_duty(ec, i, &result);
++		ret = cros_ec_pwm_get_duty(ec, i);
+ 		/*
+ 		 * We look for SUCCESS, INVALID_COMMAND, or INVALID_PARAM
+ 		 * responses; everything else is treated as an error.
+-		 * The EC error codes either map to -EOPNOTSUPP / -EINVAL,
+-		 * or -EPROTO is returned and the EC error is in the result
+-		 * field. Check for both.
++		 * The EC error codes map to -EOPNOTSUPP and -EINVAL,
++		 * so check for those.
+ 		 */
+ 		switch (ret) {
+ 		case -EOPNOTSUPP:	/* invalid command */
+ 			return -ENODEV;
+ 		case -EINVAL:		/* invalid parameter */
+ 			return i;
+-		case -EPROTO:
+-			/* Old or new error return code: Handle both */
+-			if (result == EC_RES_INVALID_COMMAND)
+-				return -ENODEV;
+-			else if (result == EC_RES_INVALID_PARAM)
+-				return i;
+-			return -EPROTO;
+ 		default:
+ 			if (ret < 0)
+ 				return ret;
 -- 
 2.17.1
 
