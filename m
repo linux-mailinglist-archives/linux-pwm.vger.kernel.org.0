@@ -2,49 +2,49 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6830223DC8D
-	for <lists+linux-pwm@lfdr.de>; Thu,  6 Aug 2020 18:53:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65E3023DCA5
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 Aug 2020 18:54:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729690AbgHFQxe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 6 Aug 2020 12:53:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43372 "EHLO
+        id S1729783AbgHFQys (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 6 Aug 2020 12:54:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729402AbgHFQuu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Aug 2020 12:50:50 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1994C0086AD;
-        Thu,  6 Aug 2020 08:32:50 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id mw10so3007121pjb.2;
-        Thu, 06 Aug 2020 08:32:50 -0700 (PDT)
+        with ESMTP id S1729557AbgHFQuN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Aug 2020 12:50:13 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A5FCC0086AF;
+        Thu,  6 Aug 2020 08:33:10 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id q17so27722716pls.9;
+        Thu, 06 Aug 2020 08:33:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id;
         bh=TA50xo6IgAS3A5s1Mvlt9oYR8AHuJvVW3cujvShV5qo=;
-        b=AF76D/rBG8KAyZp1De3suMFBK6mnuxEvXmyhdAehl49Q0sq7qWHM9e3yYvbR8gfDtj
-         BrtGeThHmyP29/lyc21TwqLBWzgMJEFyfnbeWWuiyt/Nvg2wiha8yIr04qU8aFKQC4RV
-         d0BZ8HXsRJSpYL1QjZy1H1HJJsRuGwykKvFMsuC8b9RD3Jc2ThYvTCaAZsVy3+Yl3ENP
-         8C1NCaVfp0yxiSJ/Rlm9kSBKHBfP+raHoq5cBTjZ7UEDI9r/uQah/NMFeHEMmmMNqk8b
-         OXa+INZ2ENgVF/Ow+dNPZZEHQhbPKB/5ueyO9JpzUPMHPOMYwJ39x7vlFuhQP8R2GtNz
-         Em6w==
+        b=ilW+et5q4do3rnqHcfn4dodyp8p68vxF5XtEr6dtTGJsgefedL8UWq/Qlo6mg7h0Bn
+         w9t2OaShgDXkK1V00XT1XfxNrjwmYMzLZjFAZrmzuDeBA3Qso3G1e1gGmzAzhBnEiZ7C
+         yqFU+1fx0IJC/n0S8QJ+kriZ+rqPJNchtbWuvjFs0DgxS+YwDDJvfQvf/M7FLCVYwQVy
+         QTUqoozqDWKjgo0OLVREsUejwa11NW3t5yQiuQa5zCPxswr5vfqky1jR38opkgbKad2a
+         RSmoCqPzvqHnwBwFeYjjf2WKJuHFobbRHoTY+b1DiCV1tDKzLfzTFPTTdq3f7gfT6Fkc
+         EQmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
         bh=TA50xo6IgAS3A5s1Mvlt9oYR8AHuJvVW3cujvShV5qo=;
-        b=ATgnz02f9/MhOP2YqZZh0NGYO8dFjM5TTqgl36nr12Gc6F+eqZtWgIqeGH+m507yYN
-         7b0FUhPTkLAmRf3qlvmDx715iWrPtXuWtYkqsN3IiuDG/0SDGYvol6ks0RFL55pZwuWj
-         an5z2qaXZ93usBnBStsKeUPncZwtnIna3w3So/pxK73yCLUgH5AntSL2UrU34SPvtltS
-         uFnKbcQZ5DATTGkWSqqPNYbDfcly1kTIbX3urI/YwItM8dYLGfgaz4rSRQPrtCAImpX2
-         Z4jvetVV2KK6YEXhld5lswAcz3WqQtI2R3REfeobhkaW0Hklt/h8j+3hYtK625fNfLm5
-         t23Q==
-X-Gm-Message-State: AOAM532qeqhzUy/NfS65/WY4mhqpnqQMO/9ayxqTG5IeHyIXLPcBiQ1s
-        PnuUuKCBE0WVoTAxw6+tbCQ=
-X-Google-Smtp-Source: ABdhPJzELnDpP7L4kB4ehiFjawnYmMEaF+rejP80WmAuYNwcvNXiUwZgXEiCwBOh/AutXRzar4/2zA==
-X-Received: by 2002:a17:902:40a:: with SMTP id 10mr8567502ple.260.1596727970094;
-        Thu, 06 Aug 2020 08:32:50 -0700 (PDT)
+        b=FNR+nhfmzDmTzpOEwySjjZ18E3djLKIXMXgnbMRvswtGoBAaJVj6A6Z3Maiv0VspLj
+         HGa5KR32OVRKiBzefGFWPB1StTKwprfYCfgQe1WdHsXuq5RqCj6n53KqaappUoysoqIE
+         QJT1eN5ea0zcHgZseXQbQwgyxZYUqIa0DnBew9MhRdQKgelij3buQIvxoK35E9dxmudr
+         OdVxnjxnIdxdhZQoV3ib+Rtk2SK4UgEcWTKfPL++wI/4FXhVMtQYCF2TQ3hrGPah2Wwb
+         LgTP52dmQfR4l3gasSuCGf99VsllzvO/HQPqPO2dlhNHtr4lDHQds3jxTnLLViJh5wta
+         WjAg==
+X-Gm-Message-State: AOAM5333cAA/92O/vePkHiLiP2Xqa3Sdl9rucvymaI42r8Rw60rkFQG7
+        UeETo221CuialjtFwketwtQ=
+X-Google-Smtp-Source: ABdhPJwbyxgGfTHFyyc9OLeOYww6J9oVuKfCR/uomTBYf69xrCEOZb9n7VvxlE4wCUtF5IWu/Bpf0w==
+X-Received: by 2002:a17:90a:d56:: with SMTP id 22mr9080012pju.58.1596727990104;
+        Thu, 06 Aug 2020 08:33:10 -0700 (PDT)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id h19sm3576741pjv.41.2020.08.06.08.32.48
+        by smtp.gmail.com with ESMTPSA id 2sm4783536pfv.27.2020.08.06.08.33.09
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Aug 2020 08:32:49 -0700 (PDT)
+        Thu, 06 Aug 2020 08:33:09 -0700 (PDT)
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Cc:     Jonathan Cameron <jic23@kernel.org>,
@@ -60,8 +60,8 @@ Cc:     Jonathan Cameron <jic23@kernel.org>,
         linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: [PATCH v4 0/7] platform/chrome: cros_ec_proto: Convert EC error codes to Linux error codes
-Date:   Thu,  6 Aug 2020 08:32:41 -0700
-Message-Id: <20200806153248.204310-1-linux@roeck-us.net>
+Date:   Thu,  6 Aug 2020 08:33:01 -0700
+Message-Id: <20200806153308.204605-1-linux@roeck-us.net>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
