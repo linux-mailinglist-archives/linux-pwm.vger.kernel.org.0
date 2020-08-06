@@ -2,76 +2,93 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7274423E068
-	for <lists+linux-pwm@lfdr.de>; Thu,  6 Aug 2020 20:33:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 615AC23E07B
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 Aug 2020 20:35:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbgHFSdD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 6 Aug 2020 14:33:03 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:9539 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728664AbgHFScO (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Aug 2020 14:32:14 -0400
-X-IronPort-AV: E=Sophos;i="5.75,441,1589209200"; 
-   d="scan'208";a="54073247"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 07 Aug 2020 03:32:13 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 5B91240062A0;
-        Fri,  7 Aug 2020 03:32:10 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        id S1728472AbgHFSex (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 6 Aug 2020 14:34:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728117AbgHFSe2 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Aug 2020 14:34:28 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85CF0C06138E
+        for <linux-pwm@vger.kernel.org>; Thu,  6 Aug 2020 11:34:18 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k3kiN-00043O-ME; Thu, 06 Aug 2020 20:34:07 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k3kiM-0007Yl-En; Thu, 06 Aug 2020 20:34:06 +0200
+Date:   Thu, 6 Aug 2020 20:34:06 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        linux-renesas-soc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 5/5] ARM: dts: r8a7742: Add TPU support
-Date:   Thu,  6 Aug 2020 19:31:52 +0100
-Message-Id: <20200806183152.11809-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200806183152.11809-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200806183152.11809-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Lee Jones <lee.jones@linaro.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>,
+        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 7/7] pwm: cros-ec: Simplify EC error handling
+Message-ID: <20200806183406.avejgcuxaolea2pz@pengutronix.de>
+References: <20200806153308.204605-1-linux@roeck-us.net>
+ <20200806153308.204605-8-linux@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="yaf2rliyowjjwr36"
+Content-Disposition: inline
+In-Reply-To: <20200806153308.204605-8-linux@roeck-us.net>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add TPU support to R8A7742 SoC DT.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
----
- arch/arm/boot/dts/r8a7742.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+--yaf2rliyowjjwr36
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/r8a7742.dtsi b/arch/arm/boot/dts/r8a7742.dtsi
-index 41c89e04cf17..4a8d27dff9f7 100644
---- a/arch/arm/boot/dts/r8a7742.dtsi
-+++ b/arch/arm/boot/dts/r8a7742.dtsi
-@@ -328,6 +328,17 @@
- 			reg = <0 0xe6060000 0 0x250>;
- 		};
- 
-+		tpu: pwm@e60f0000 {
-+			compatible = "renesas,tpu-r8a7742", "renesas,tpu";
-+			reg = <0 0xe60f0000 0 0x148>;
-+			interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 304>;
-+			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
-+			resets = <&cpg 304>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
- 		cpg: clock-controller@e6150000 {
- 			compatible = "renesas,r8a7742-cpg-mssr";
- 			reg = <0 0xe6150000 0 0x1000>;
--- 
-2.17.1
+On Thu, Aug 06, 2020 at 08:33:08AM -0700, Guenter Roeck wrote:
+> With enhanced error reporting from cros_ec_cmd_xfer_status() in place,
+> we can fully use it and no longer rely on EC error codes.
+>=20
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--yaf2rliyowjjwr36
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8sTRsACgkQwfwUeK3K
+7AljKgf+NqWAUswdLzLgjqhYVOCid4+Uol5gqvLd1PWPzFcBLjYn4qhp9zCcu9IJ
+AzY555m9cXLChHqkEScDlUleoaOE0SjOlW4eabwKO3BakLm5S+xaiu1ak7RcxW8O
+Bz9qlW1S+9lAm+fG5jxdHnJkk9RJ5isJQl7s0XdzDYvACgGjh5oLHnm5pjbwH+Gk
+u8tFgy0xLsm6MdURY7gEaIveEUiD4Pcn+Kh13Z3RArmF5hJqoRFi0qxxszaQyZF4
+p2FozkPNOBxKOVr1hKtXQqU/q0yrFWh4Wlokh+POqnNiS5U9uO1+i/r563VbKJyZ
+5PtUqpdOjmjZR0c+LuqFEHYBaDr8vg==
+=AiFP
+-----END PGP SIGNATURE-----
+
+--yaf2rliyowjjwr36--
