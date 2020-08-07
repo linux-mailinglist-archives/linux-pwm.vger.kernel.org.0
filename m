@@ -2,155 +2,140 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B0E723E867
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Aug 2020 09:55:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80D6F23E8C7
+	for <lists+linux-pwm@lfdr.de>; Fri,  7 Aug 2020 10:21:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726577AbgHGHzW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 7 Aug 2020 03:55:22 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:41057 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgHGHzW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 7 Aug 2020 03:55:22 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 5027E22FB3;
-        Fri,  7 Aug 2020 09:55:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1596786919;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9hGDTBt2ohvP3pUFxiEGsGVDkqzJeiARNsYJ4DVt4ic=;
-        b=u39k1Rd23VOdMiahzF9mq8/jsjpib0To7In1fCUzBkkWL17xPN7KaDC+EL1l93vqOYcZBT
-        NxUKPSCQfIzb4SqFruG6nRYIqqFGi7m3f1Fnum9p3JKoy3JDc4+lgMXX4s0Zg/TaXQmtWt
-        wQder17jiWE4ifABm6jgXktAfN0Ev6c=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 07 Aug 2020 09:55:19 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
+        id S1726936AbgHGIVT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 7 Aug 2020 04:21:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbgHGIVS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 7 Aug 2020 04:21:18 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB463C061756
+        for <linux-pwm@vger.kernel.org>; Fri,  7 Aug 2020 01:21:17 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id p20so869965wrf.0
+        for <linux-pwm@vger.kernel.org>; Fri, 07 Aug 2020 01:21:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UqxiNGL80BLdDN30QUUee1y7IG4JiUdyhB9Ly20qJKI=;
+        b=CIeg/alnrvDZeEY6m+aWi1luGEHJDycuJGQ7nP34JINNUyrrx8SIRKZnydaFDoEYsQ
+         z3du814PWCYyYmKRpLUoCo4OvaLjTx0m5yxc2zFV5qSH9PQU/EOojpREL2YXSlg+Hkuj
+         KaoGNZ5pUETPZShaeI0gLGd8YyADGy4nkkquE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=UqxiNGL80BLdDN30QUUee1y7IG4JiUdyhB9Ly20qJKI=;
+        b=r9TgSraOIRq23Fn+kq5Pz3XYhmZXXjUcrcQmXxQp2qs395ZtN8MdN8yHAFJLTBE+cc
+         7dqy+CdBUVUc/k5gCX/S80FXH3KcULIlY9TM1m0DP+X27cpoKfbqBDXUgZ+ZWft78AZs
+         aAguT9w98PyU4WZjDV9ejQAG4nRFfhER4uvnlM3aaiV8+YWOmQlf7Z60S6o+/JPSZPrW
+         cqE+z8RTxUIEGqyYSgCG3GsvBwPaFtvtsFJdCpsMiiK9H/J1lVRwpyI8+yrznD7C/Xu+
+         wO31nyyxCoHLHQz3oWsJxj1rXLqcr1fmHAM08wtlYN433sA9vDcvK3vQDGy9Q+CTw7uC
+         VQbQ==
+X-Gm-Message-State: AOAM530lTBFO0js2JnyBh4AcoSQg4DdnEIzPEkLpa3mAZ7NsyELCg8in
+        c+t3szrie5pV4pu5hGZQh24J+g==
+X-Google-Smtp-Source: ABdhPJznfPys24FShDvFjWJ2NDzMFWVf+kHqgSLbgWxDZ+J7ylB679aTuEYbnHVK0dLGgOJMTEXglg==
+X-Received: by 2002:a5d:538a:: with SMTP id d10mr11703089wrv.280.1596788476358;
+        Fri, 07 Aug 2020 01:21:16 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id r3sm9649430wro.1.2020.08.07.01.21.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 01:21:15 -0700 (PDT)
+Date:   Fri, 7 Aug 2020 10:21:13 +0200
+From:   daniel@ffwll.ch
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH 2/3] backlight: pwm_bl: Artificially add 0% during
+ interpolation
+Message-ID: <20200807082113.GI6419@phenom.ffwll.local>
+Mail-Followup-To: Alexandru Stan <amstan@chromium.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v7 06/13] pwm: add support for sl28cpld PWM controller
-In-Reply-To: <20200807074543.pfbwlhtegl3oc4zp@pengutronix.de>
-References: <20200803093559.12289-1-michael@walle.cc>
- <20200803093559.12289-7-michael@walle.cc>
- <20200806084000.k3aj5nmqdodmb35v@pengutronix.de>
- <e288ca6cfee819223395712e04159dd9@walle.cc>
- <20200807074543.pfbwlhtegl3oc4zp@pengutronix.de>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <92116be9aa56250becc4019c6c7a1538@walle.cc>
-X-Sender: michael@walle.cc
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+References: <20200721042522.2403410-1-amstan@chromium.org>
+ <20200720212502.2.Iab4d2192e4cf50226e0a58d58df7d90ef92713ce@changeid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720212502.2.Iab4d2192e4cf50226e0a58d58df7d90ef92713ce@changeid>
+X-Operating-System: Linux phenom 5.7.0-1-amd64 
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Am 2020-08-07 09:45, schrieb Uwe Kleine-König:
-> On Fri, Aug 07, 2020 at 09:28:31AM +0200, Michael Walle wrote:
->> Hi Uwe, Hi Lee,
->> 
->> Am 2020-08-06 10:40, schrieb Uwe Kleine-König:
->> > On Mon, Aug 03, 2020 at 11:35:52AM +0200, Michael Walle wrote:
->> > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->> > > index 7dbcf6973d33..a0d50d70c3b9 100644
->> > > --- a/drivers/pwm/Kconfig
->> > > +++ b/drivers/pwm/Kconfig
->> > > @@ -428,6 +428,16 @@ config PWM_SIFIVE
->> > >  	  To compile this driver as a module, choose M here: the module
->> > >  	  will be called pwm-sifive.
->> > >
->> > > +config PWM_SL28CPLD
->> > > +	tristate "Kontron sl28cpld PWM support"
->> > > +	select MFD_SIMPLE_MFD_I2C
->> >
->> > Is it sensible to present this option to everyone? Maybe
->> >
->> > 	depends on SOME_SYMBOL_ONLY_TRUE_ON_SL28CPLD || COMPILE_TEST
->> 
->> Because there is now no real MFD driver anymore, there is also
->> no symbol for that. The closest would be ARCH_ARM64 but I don't
->> think that is a good idea.
->> 
->> Lee, what do you think about adding a symbol to the MFD, which
->> selects MFD_SIMPLE_MFD_I2C but doesn't enable any C modules?
->> 
->> I.e.
->> config MFD_SL28CPLD
->>     tristate "Kontron sl28cpld"
->>     select MFD_SIMPLE_MFD_I2C
->>     help
->>       Say yes here to add support for the Kontron sl28cpld board
->>       management controller.
->> 
->> Then all the other device driver could depend on the MFD_SL28CPLD
->> symbol.
->> 
->> [..]
->> 
->> > > +static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
->> > > +				   struct pwm_device *pwm,
->> > > +				   struct pwm_state *state)
->> > > +{
->> > > +	struct sl28cpld_pwm *priv = dev_get_drvdata(chip->dev);
->> > > +	unsigned int reg;
->> > > +	int prescaler;
->> > > +
->> > > +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CTRL, &reg);
->> > > +
->> > > +	state->enabled = reg & SL28CPLD_PWM_CTRL_ENABLE;
->> > > +
->> > > +	prescaler = FIELD_GET(SL28CPLD_PWM_CTRL_PRESCALER_MASK, reg);
->> > > +	state->period = SL28CPLD_PWM_PERIOD(prescaler);
->> > > +
->> > > +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CYCLE, &reg);
->> > > +	state->duty_cycle = SL28CPLD_PWM_TO_DUTY_CYCLE(reg);
->> >
->> > Should reg be masked to SL28CPLD_PWM_CYCLE_MAX, or is it guaranteed that
->> > the upper bits are zero?
->> 
->> Mh, the hardware guarantees that bit7 is zero. So masking with
->> SL28CPLD_PWM_CYCLE_MAX won't buy us much. But what I could think
->> could go wrong is this: someone set the prescaler to != 0 and the
->> duty cycle to a value greater than the max value for this particular
->> prescaler mode. For the above calculations this would result in a
->> duty_cycle greater than the period, if I'm not mistaken.
->> 
->> The behavior of the hardware is undefined in that case (at the moment
->> it will be always on, I guess). So this isn't a valid setting.
->> Nevertheless it might happen. So what about the following:
->> 
->> state->duty_cycle = min(state->duty_cycle, state->period);
+On Mon, Jul 20, 2020 at 09:25:21PM -0700, Alexandru Stan wrote:
+> Some displays need the low end of the curve cropped in order to make
+> them happy. In that case we still want to have the 0% point, even though
+> anything between 0% and 5%(example) would be skipped.
 > 
-> If you care about this: This can also happen (at least shortly) in
-> sl28cpld_pwm_apply() as you write SL28CPLD_PWM_CTRL before
-> SL28CPLD_PWM_CYCLE there.
+> Signed-off-by: Alexandru Stan <amstan@chromium.org>
+> ---
+> 
+>  drivers/video/backlight/pwm_bl.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> index 5193a72305a2..b24711ddf504 100644
+> --- a/drivers/video/backlight/pwm_bl.c
+> +++ b/drivers/video/backlight/pwm_bl.c
+> @@ -349,6 +349,14 @@ static int pwm_backlight_parse_dt(struct device *dev,
+>  			/* Fill in the last point, since no line starts here. */
+>  			table[x2] = y2;
+>  
+> +			/*
+> +			 * If we don't start at 0 yet we're increasing, assume
+> +			 * the dts wanted to crop the low end of the range, so
+> +			 * insert a 0 to provide a display off mode.
+> +			 */
+> +			if (table[0] > 0 && table[0] < table[num_levels - 1])
+> +				table[0] = 0;
 
-It could also happen if it was the other way around, couldn't it?
-Changing modes might glitch.
+Isn't that what the enable/disable switch in backlights are for? There's
+lots of backligh drivers (mostly the firmware variety) where setting the
+backlight to 0 does not shut it off, it's just the lowest setting.
 
-I care more about returning valid values to the PWM core ;)
+But I've not been involved in the details of these discussions.
+-Daniel
 
--michael
+> +
+>  			/*
+>  			 * As we use interpolation lets remove current
+>  			 * brightness levels table and replace for the
+> -- 
+> 2.27.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
