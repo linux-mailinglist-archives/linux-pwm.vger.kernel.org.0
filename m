@@ -2,140 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80D6F23E8C7
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Aug 2020 10:21:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 879F323E8EF
+	for <lists+linux-pwm@lfdr.de>; Fri,  7 Aug 2020 10:33:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgHGIVT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 7 Aug 2020 04:21:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbgHGIVS (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 7 Aug 2020 04:21:18 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB463C061756
-        for <linux-pwm@vger.kernel.org>; Fri,  7 Aug 2020 01:21:17 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id p20so869965wrf.0
-        for <linux-pwm@vger.kernel.org>; Fri, 07 Aug 2020 01:21:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UqxiNGL80BLdDN30QUUee1y7IG4JiUdyhB9Ly20qJKI=;
-        b=CIeg/alnrvDZeEY6m+aWi1luGEHJDycuJGQ7nP34JINNUyrrx8SIRKZnydaFDoEYsQ
-         z3du814PWCYyYmKRpLUoCo4OvaLjTx0m5yxc2zFV5qSH9PQU/EOojpREL2YXSlg+Hkuj
-         KaoGNZ5pUETPZShaeI0gLGd8YyADGy4nkkquE=
+        id S1726511AbgHGIdK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 7 Aug 2020 04:33:10 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38653 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbgHGIdJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 7 Aug 2020 04:33:09 -0400
+Received: by mail-ot1-f67.google.com with SMTP id q9so1014975oth.5;
+        Fri, 07 Aug 2020 01:33:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=UqxiNGL80BLdDN30QUUee1y7IG4JiUdyhB9Ly20qJKI=;
-        b=r9TgSraOIRq23Fn+kq5Pz3XYhmZXXjUcrcQmXxQp2qs395ZtN8MdN8yHAFJLTBE+cc
-         7dqy+CdBUVUc/k5gCX/S80FXH3KcULIlY9TM1m0DP+X27cpoKfbqBDXUgZ+ZWft78AZs
-         aAguT9w98PyU4WZjDV9ejQAG4nRFfhER4uvnlM3aaiV8+YWOmQlf7Z60S6o+/JPSZPrW
-         cqE+z8RTxUIEGqyYSgCG3GsvBwPaFtvtsFJdCpsMiiK9H/J1lVRwpyI8+yrznD7C/Xu+
-         wO31nyyxCoHLHQz3oWsJxj1rXLqcr1fmHAM08wtlYN433sA9vDcvK3vQDGy9Q+CTw7uC
-         VQbQ==
-X-Gm-Message-State: AOAM530lTBFO0js2JnyBh4AcoSQg4DdnEIzPEkLpa3mAZ7NsyELCg8in
-        c+t3szrie5pV4pu5hGZQh24J+g==
-X-Google-Smtp-Source: ABdhPJznfPys24FShDvFjWJ2NDzMFWVf+kHqgSLbgWxDZ+J7ylB679aTuEYbnHVK0dLGgOJMTEXglg==
-X-Received: by 2002:a5d:538a:: with SMTP id d10mr11703089wrv.280.1596788476358;
-        Fri, 07 Aug 2020 01:21:16 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id r3sm9649430wro.1.2020.08.07.01.21.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 01:21:15 -0700 (PDT)
-Date:   Fri, 7 Aug 2020 10:21:13 +0200
-From:   daniel@ffwll.ch
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org,
-        linux-fbdev@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: Re: [PATCH 2/3] backlight: pwm_bl: Artificially add 0% during
- interpolation
-Message-ID: <20200807082113.GI6419@phenom.ffwll.local>
-Mail-Followup-To: Alexandru Stan <amstan@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-References: <20200721042522.2403410-1-amstan@chromium.org>
- <20200720212502.2.Iab4d2192e4cf50226e0a58d58df7d90ef92713ce@changeid>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z+/ktwd2eq56E+T8xe03p+w5ifPA7UnV2IOtIMqW8Tw=;
+        b=fv4bzrTDx0oB0jw62KQA1A1ejv6tRWLBkhLsT4Bx4qMV+vcCPH3KCaErqKcZJQRCAu
+         vjJw40YcxTQN0Jztt7mBGHL0rGA0czfEzI2I8cN4HreZ6E3xTcPKISJZcRjQAe1/nOoB
+         Mdh3evEnAB2B3qqppm3sDC+LE2F/FVyS3StAPfIBPrsqRGOJjleE9YiJ1FetVb0ICUpv
+         KWRsgVLCFNSbcTTIXyDvBO5w/cF/NYxYJNIoVIfib06zLJ4Vl5V1XxsZZxIT9Z/7Yt8I
+         dD8mcG77R3gMcwvVldGmpWzWA7CfKcfyghJMbyEIMplzRs+FZXyVFppOxDtNUimaZsea
+         ZwXA==
+X-Gm-Message-State: AOAM530wL8JxCApkp4nJkqOp6AVRHBpxj2QuzC1LovrrEdLwrS4cyRyN
+        kJbHrZLs/rPqgztgnDxYTrGXRtNHTCGssf9Pf0dd4Q==
+X-Google-Smtp-Source: ABdhPJxhrUU3Zm9nD9Vm59tFhYzmiYiVHBwgfYK/Pyuq0t61XBmaCQd3tfnTHRBwwLrPvbJwtVh91VunUWGUw0Y5GSM=
+X-Received: by 2002:a9d:1b62:: with SMTP id l89mr121932otl.145.1596789188487;
+ Fri, 07 Aug 2020 01:33:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720212502.2.Iab4d2192e4cf50226e0a58d58df7d90ef92713ce@changeid>
-X-Operating-System: Linux phenom 5.7.0-1-amd64 
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200806183152.11809-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200806183152.11809-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200806183152.11809-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 7 Aug 2020 10:32:56 +0200
+Message-ID: <CAMuHMdUW4gSj_4MaJDVEzRyCjEjWc+h__17hwSxm02megDZF=w@mail.gmail.com>
+Subject: Re: [PATCH 2/5] dt-bindings: pwm: renesas,pwm-rcar: Add r8a7742 support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 09:25:21PM -0700, Alexandru Stan wrote:
-> Some displays need the low end of the curve cropped in order to make
-> them happy. In that case we still want to have the 0% point, even though
-> anything between 0% and 5%(example) would be skipped.
-> 
-> Signed-off-by: Alexandru Stan <amstan@chromium.org>
-> ---
-> 
->  drivers/video/backlight/pwm_bl.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> index 5193a72305a2..b24711ddf504 100644
-> --- a/drivers/video/backlight/pwm_bl.c
-> +++ b/drivers/video/backlight/pwm_bl.c
-> @@ -349,6 +349,14 @@ static int pwm_backlight_parse_dt(struct device *dev,
->  			/* Fill in the last point, since no line starts here. */
->  			table[x2] = y2;
->  
-> +			/*
-> +			 * If we don't start at 0 yet we're increasing, assume
-> +			 * the dts wanted to crop the low end of the range, so
-> +			 * insert a 0 to provide a display off mode.
-> +			 */
-> +			if (table[0] > 0 && table[0] < table[num_levels - 1])
-> +				table[0] = 0;
+On Thu, Aug 6, 2020 at 8:32 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Document RZ/G1H (R8A7742) SoC bindings.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-Isn't that what the enable/disable switch in backlights are for? There's
-lots of backligh drivers (mostly the firmware variety) where setting the
-backlight to 0 does not shut it off, it's just the lowest setting.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-But I've not been involved in the details of these discussions.
--Daniel
+Gr{oetje,eeting}s,
 
-> +
->  			/*
->  			 * As we use interpolation lets remove current
->  			 * brightness levels table and replace for the
-> -- 
-> 2.27.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+                        Geert
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
