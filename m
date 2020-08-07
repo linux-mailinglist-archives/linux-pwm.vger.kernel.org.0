@@ -2,43 +2,42 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 879F323E8EF
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Aug 2020 10:33:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B883E23E943
+	for <lists+linux-pwm@lfdr.de>; Fri,  7 Aug 2020 10:41:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgHGIdK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 7 Aug 2020 04:33:10 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38653 "EHLO
+        id S1727039AbgHGIjW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 7 Aug 2020 04:39:22 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41853 "EHLO
         mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgHGIdJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 7 Aug 2020 04:33:09 -0400
-Received: by mail-ot1-f67.google.com with SMTP id q9so1014975oth.5;
-        Fri, 07 Aug 2020 01:33:08 -0700 (PDT)
+        with ESMTP id S1726936AbgHGIjW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 7 Aug 2020 04:39:22 -0400
+Received: by mail-ot1-f67.google.com with SMTP id a65so1013601otc.8;
+        Fri, 07 Aug 2020 01:39:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Z+/ktwd2eq56E+T8xe03p+w5ifPA7UnV2IOtIMqW8Tw=;
-        b=fv4bzrTDx0oB0jw62KQA1A1ejv6tRWLBkhLsT4Bx4qMV+vcCPH3KCaErqKcZJQRCAu
-         vjJw40YcxTQN0Jztt7mBGHL0rGA0czfEzI2I8cN4HreZ6E3xTcPKISJZcRjQAe1/nOoB
-         Mdh3evEnAB2B3qqppm3sDC+LE2F/FVyS3StAPfIBPrsqRGOJjleE9YiJ1FetVb0ICUpv
-         KWRsgVLCFNSbcTTIXyDvBO5w/cF/NYxYJNIoVIfib06zLJ4Vl5V1XxsZZxIT9Z/7Yt8I
-         dD8mcG77R3gMcwvVldGmpWzWA7CfKcfyghJMbyEIMplzRs+FZXyVFppOxDtNUimaZsea
-         ZwXA==
-X-Gm-Message-State: AOAM530wL8JxCApkp4nJkqOp6AVRHBpxj2QuzC1LovrrEdLwrS4cyRyN
-        kJbHrZLs/rPqgztgnDxYTrGXRtNHTCGssf9Pf0dd4Q==
-X-Google-Smtp-Source: ABdhPJxhrUU3Zm9nD9Vm59tFhYzmiYiVHBwgfYK/Pyuq0t61XBmaCQd3tfnTHRBwwLrPvbJwtVh91VunUWGUw0Y5GSM=
-X-Received: by 2002:a9d:1b62:: with SMTP id l89mr121932otl.145.1596789188487;
- Fri, 07 Aug 2020 01:33:08 -0700 (PDT)
+        bh=vKfgGnjXRpTaiAEIZ5vtKn7CB7zEFKghH7Cgz6HwfSg=;
+        b=bfT4mi20W9DGvBITOhaBmgDEieFceoKvqyCriWDQCYxZG1w1fyrNunIwxTAyvdClrv
+         xLwulZzRNs1qjnx4RQh4aruM30Rw2fJ30L3BJqlCdfKX6vrKrbvwv3DwjoHxVY1I9Nxt
+         kWJBVwAuTbY1Q22khcWiXEwmxVKqNMydP5R3MORHF65N9quXoVV6hdb/5fmNSTekhK8k
+         J9UHkyuzUKk3B8IEGGWIwtgX3KXS8P3KX5lmUBYxXidOl0Ts+Wu4G2+x4NapypZrdTnc
+         0z/sf7+NIz0B+tGd3X+3o3ig5R159wehyM8+Dha+OWChJ8Il/kzXpyeVUWuzwqr3NiOs
+         Eckw==
+X-Gm-Message-State: AOAM533mW7yvzuKEUfUrhZSxVC9Spp2vdfSKzNBhS3F5+oGstBwQKVQ9
+        JaX9Ohj7g+vM8ePy+xU2FMpOu4JceNorSNGMc7k=
+X-Google-Smtp-Source: ABdhPJzxabCXC24U/rTq2tBqlEz/WWYILzDohzuiG2HrpUTh6ZjgHU3FAKFNGT0WWLpgTg2BdtVX6Yst1SGXEZif/t8=
+X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr10192558ote.107.1596789561162;
+ Fri, 07 Aug 2020 01:39:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200806183152.11809-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200806183152.11809-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200806183152.11809-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200806183152.11809-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200806183152.11809-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200806183152.11809-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 7 Aug 2020 10:32:56 +0200
-Message-ID: <CAMuHMdUW4gSj_4MaJDVEzRyCjEjWc+h__17hwSxm02megDZF=w@mail.gmail.com>
-Subject: Re: [PATCH 2/5] dt-bindings: pwm: renesas,pwm-rcar: Add r8a7742 support
+Date:   Fri, 7 Aug 2020 10:39:09 +0200
+Message-ID: <CAMuHMdXK1mfmYjCMWYNqMVy7jJ9Hh7kBZMBbzyD-pkwrHB6Pjw@mail.gmail.com>
+Subject: Re: [PATCH 4/5] dt-bindings: pwm: renesas,tpu-pwm: Document r8a7742 support
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thierry Reding <thierry.reding@gmail.com>,
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -59,7 +58,9 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 On Thu, Aug 6, 2020 at 8:32 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document RZ/G1H (R8A7742) SoC bindings.
+> Document r8a7742 specific compatible strings. No driver change is
+> needed as the fallback compatible string "renesas,tpu" activates the
+> right code in the driver.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
