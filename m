@@ -2,40 +2,40 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B883E23E943
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Aug 2020 10:41:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AA8923E95B
+	for <lists+linux-pwm@lfdr.de>; Fri,  7 Aug 2020 10:42:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgHGIjW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 7 Aug 2020 04:39:22 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41853 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbgHGIjW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 7 Aug 2020 04:39:22 -0400
-Received: by mail-ot1-f67.google.com with SMTP id a65so1013601otc.8;
-        Fri, 07 Aug 2020 01:39:21 -0700 (PDT)
+        id S1727022AbgHGIlr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 7 Aug 2020 04:41:47 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42896 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbgHGIlr (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 7 Aug 2020 04:41:47 -0400
+Received: by mail-oi1-f195.google.com with SMTP id j7so1247007oij.9;
+        Fri, 07 Aug 2020 01:41:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vKfgGnjXRpTaiAEIZ5vtKn7CB7zEFKghH7Cgz6HwfSg=;
-        b=bfT4mi20W9DGvBITOhaBmgDEieFceoKvqyCriWDQCYxZG1w1fyrNunIwxTAyvdClrv
-         xLwulZzRNs1qjnx4RQh4aruM30Rw2fJ30L3BJqlCdfKX6vrKrbvwv3DwjoHxVY1I9Nxt
-         kWJBVwAuTbY1Q22khcWiXEwmxVKqNMydP5R3MORHF65N9quXoVV6hdb/5fmNSTekhK8k
-         J9UHkyuzUKk3B8IEGGWIwtgX3KXS8P3KX5lmUBYxXidOl0Ts+Wu4G2+x4NapypZrdTnc
-         0z/sf7+NIz0B+tGd3X+3o3ig5R159wehyM8+Dha+OWChJ8Il/kzXpyeVUWuzwqr3NiOs
-         Eckw==
-X-Gm-Message-State: AOAM533mW7yvzuKEUfUrhZSxVC9Spp2vdfSKzNBhS3F5+oGstBwQKVQ9
-        JaX9Ohj7g+vM8ePy+xU2FMpOu4JceNorSNGMc7k=
-X-Google-Smtp-Source: ABdhPJzxabCXC24U/rTq2tBqlEz/WWYILzDohzuiG2HrpUTh6ZjgHU3FAKFNGT0WWLpgTg2BdtVX6Yst1SGXEZif/t8=
-X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr10192558ote.107.1596789561162;
- Fri, 07 Aug 2020 01:39:21 -0700 (PDT)
+        bh=BwyADCKf5mmqBEeNJLdW13ewX7urPDOSehGQsA3CvSo=;
+        b=Ul0ZpYncie77uzrDplWSgzwvwntBLxqPK6Te2rSn/trPpueHHKoectie8bcRlwlRGB
+         01683Z/uGfVYiLORM5cwFKsqkxsKIbTIQdZyY6tXH4JjKxpslXS62LlZswIcnYzLeSrP
+         o01o8ZvvtadcYYfk5vjqKzP9+VM6t/ovsM5jbhUxbZ4Ob0am+Qns/57WHBR7gK7ZKGEe
+         Bx7rgKmIxcx1cXF0vasJHiQ4ToIKzDOz+E+Q+MGyiJpPU2GJjhpa87sHo/mQDC6lJqm3
+         LtkJ1rx/jj55bbFFC6DAu08YdioBOQeM2QBuXUPxORHMcengLiBm+dqoRn8ITcZQz4k1
+         T26Q==
+X-Gm-Message-State: AOAM531x7LiIngvmp+aPiRByO8wCEL0EeUpAULOtSY7ADH7sCiLoiPxk
+        B5LD1sbW8h875u2K/BmWmYO2JL1KGzpdKzH3gzg=
+X-Google-Smtp-Source: ABdhPJwO0HhS+ygyeQp5gCWMXwgPNODcLEhDyw5+l47YRQFuX8K1Yzx4Ge3KI3tAKQv8i7gINlqIvMKG8WQ/ihyBGVA=
+X-Received: by 2002:aca:b742:: with SMTP id h63mr9851770oif.148.1596789706388;
+ Fri, 07 Aug 2020 01:41:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200806183152.11809-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200806183152.11809-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200806183152.11809-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200806183152.11809-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200806183152.11809-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200806183152.11809-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 7 Aug 2020 10:39:09 +0200
-Message-ID: <CAMuHMdXK1mfmYjCMWYNqMVy7jJ9Hh7kBZMBbzyD-pkwrHB6Pjw@mail.gmail.com>
-Subject: Re: [PATCH 4/5] dt-bindings: pwm: renesas,tpu-pwm: Document r8a7742 support
+Date:   Fri, 7 Aug 2020 10:41:34 +0200
+Message-ID: <CAMuHMdVJU+M_vDAVViWUPsde8cgOo6VZGOdqFFDKLO2=MpN0pA@mail.gmail.com>
+Subject: Re: [PATCH 5/5] ARM: dts: r8a7742: Add TPU support
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
@@ -58,14 +58,13 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 On Thu, Aug 6, 2020 at 8:32 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document r8a7742 specific compatible strings. No driver change is
-> needed as the fallback compatible string "renesas,tpu" activates the
-> right code in the driver.
+> Add TPU support to R8A7742 SoC DT.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.10.
 
 Gr{oetje,eeting}s,
 
