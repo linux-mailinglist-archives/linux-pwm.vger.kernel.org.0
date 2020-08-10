@@ -2,90 +2,137 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B06023EC9E
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Aug 2020 13:35:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89097240246
+	for <lists+linux-pwm@lfdr.de>; Mon, 10 Aug 2020 09:13:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbgHGLfx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 7 Aug 2020 07:35:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbgHGLfx (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 7 Aug 2020 07:35:53 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CE2522C9F;
-        Fri,  7 Aug 2020 11:35:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596800152;
-        bh=tB44LrcAJ3NxEYYWCxVL/xdN1g4mPUOLKmrBE/LmCZI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=adPdvx7BNkN3vzleYgFgdh5QTP1V3DG3dm6nNmuWVM8gkbIiTTFCE48YedudEmH4P
-         X6lzhSZuMMswEMloGb/39wFETPqu1rkcW6m5xnQg/jknYdA3B25xVAZg4N6Mc5/AfX
-         fSwa0ZcfFidwfuu3qxrr1xB0vJ7CvrA1LEk8tSfo=
-Date:   Fri, 7 Aug 2020 12:35:28 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        id S1726406AbgHJHNe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 10 Aug 2020 03:13:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgHJHNd (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 10 Aug 2020 03:13:33 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4326C061756
+        for <linux-pwm@vger.kernel.org>; Mon, 10 Aug 2020 00:13:32 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id 88so7113808wrh.3
+        for <linux-pwm@vger.kernel.org>; Mon, 10 Aug 2020 00:13:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=+TUd9JRbZ1pyZaCnuclZ/AO9DW45PgvoNIXxTZ6zZrE=;
+        b=xQ1R7jn546DiRqc42dCW1K0GBZinc8U+spujkwGvBUURTctIhYaWn2QdhGZfToWnw/
+         5WaTr1uaqsnHbcqicFNMbrOXBvK3DRuOoa97gNdCZ3P/jMkT5DMw8Oqxo1o+rrdWnycB
+         F1Cmwbw50K8AsHAmU5ovD0YutO27HrbG0f5BRd7XGL/5CQdplPTOe43ukzJHgt0QJuIM
+         D49YXIRmo8bTF+TIGOxUn4gLC+4NkqpjzL3XxxmadY2k4VEgAi1B7xaQTHPeVPo2lVZS
+         qyQZU1p/vIReqk4RRLfGi8wx+XfFdG1W58Ic/CLzzZfCQ4+MaAjNBW4DYLLJJNqNd9tS
+         kRWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+TUd9JRbZ1pyZaCnuclZ/AO9DW45PgvoNIXxTZ6zZrE=;
+        b=ok3wB8OY+ryCKIFwqVP5iGMiCuJR5++tVDJFxOvaHhLvQXEWluULnua3GGFIYlpbSp
+         Q7IcQ9ZQuXzz/WxQIHf9VHICm/5uCLiUqwprka1HTR1MFJAhmiZPhKisvFR79Cx2D7D/
+         f37FBF7bIhSuwFiY2MxYjnOwMOUX/jEFMS8btc3tRvZ94cUrmy3lGPvfvG88dM9AYgCA
+         9WOawsdElwF61YyCQ/CnZT1e2bnChZAZ5p/hA2nWZPx4EknKCcQBPPJmuDNPLedE4Y2e
+         mBF9zTr1qUkSpwo8amWttuGWnX3ITAQZjYjQGE27R0+qKj8zOq813nOKS+cz7rYA/MJC
+         USGA==
+X-Gm-Message-State: AOAM530xnF2YBBg18+Ufc5FZGSXtBp+JnQHdlOt8d0Fa81z/scQqhVWa
+        0jTCpeLkUp7+U3DXzqXYRHUAxg==
+X-Google-Smtp-Source: ABdhPJyqMpwZFIytM3dip4yb9zg/T5q+SVei4Y+VdZ3uIDP/QBRxHBX79zX6kLVNBEQ3N66zTYZL3w==
+X-Received: by 2002:a5d:51c3:: with SMTP id n3mr23689763wrv.104.1597043611405;
+        Mon, 10 Aug 2020 00:13:31 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id t3sm3850812wrx.5.2020.08.10.00.13.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 00:13:30 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 08:13:28 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH v2 18/41] ARM: s5pv210: don't imply CONFIG_PLAT_SAMSUNG
-Message-ID: <20200807113528.GE5435@sirena.org.uk>
-References: <20200806181932.2253-1-krzk@kernel.org>
- <20200806182059.2431-18-krzk@kernel.org>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v7 06/13] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200810071328.GB4411@dell>
+References: <20200803093559.12289-1-michael@walle.cc>
+ <20200803093559.12289-7-michael@walle.cc>
+ <20200806084000.k3aj5nmqdodmb35v@pengutronix.de>
+ <e288ca6cfee819223395712e04159dd9@walle.cc>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2qXFWqzzG3v1+95a"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200806182059.2431-18-krzk@kernel.org>
-X-Cookie: Disposable, use only once.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e288ca6cfee819223395712e04159dd9@walle.cc>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Fri, 07 Aug 2020, Michael Walle wrote:
 
---2qXFWqzzG3v1+95a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Hi Uwe, Hi Lee,
+> 
+> Am 2020-08-06 10:40, schrieb Uwe Kleine-König:
+> > On Mon, Aug 03, 2020 at 11:35:52AM +0200, Michael Walle wrote:
+> > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> > > index 7dbcf6973d33..a0d50d70c3b9 100644
+> > > --- a/drivers/pwm/Kconfig
+> > > +++ b/drivers/pwm/Kconfig
+> > > @@ -428,6 +428,16 @@ config PWM_SIFIVE
+> > >  	  To compile this driver as a module, choose M here: the module
+> > >  	  will be called pwm-sifive.
+> > > 
+> > > +config PWM_SL28CPLD
+> > > +	tristate "Kontron sl28cpld PWM support"
+> > > +	select MFD_SIMPLE_MFD_I2C
+> > 
+> > Is it sensible to present this option to everyone? Maybe
+> > 
+> > 	depends on SOME_SYMBOL_ONLY_TRUE_ON_SL28CPLD || COMPILE_TEST
+> 
+> Because there is now no real MFD driver anymore, there is also
+> no symbol for that. The closest would be ARCH_ARM64 but I don't
+> think that is a good idea.
+> 
+> Lee, what do you think about adding a symbol to the MFD, which
+> selects MFD_SIMPLE_MFD_I2C but doesn't enable any C modules?
+> 
+> I.e.
+> config MFD_SL28CPLD
+>     tristate "Kontron sl28cpld"
+>     select MFD_SIMPLE_MFD_I2C
+>     help
+>       Say yes here to add support for the Kontron sl28cpld board
+>       management controller.
+> 
+> Then all the other device driver could depend on the MFD_SL28CPLD
+> symbol.
 
-On Thu, Aug 06, 2020 at 08:20:35PM +0200, Krzysztof Kozlowski wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
->=20
-> The plat-samsung directory and mach-s5pv210 can be build
-> completely independently, so split the two Kconfig symbols
-> CONFIG_PLAT_SAMSUNG and CONFIG_ARCH_S5PV210.
+You want to add a virtual symbol to prevent having to present a real
+one?  How is that a reasonable solution?
 
-Acked-by: Mark Brown <broonie@kernel.org>
-
---2qXFWqzzG3v1+95a
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8tPH8ACgkQJNaLcl1U
-h9AKhQf/R7RK8Hp7GiOARjjdjgAtgRwwe6zGtME1BaY4sl5QjQX3lbKLy27zSN8g
-oIS4rQz7hiHTbEPAYejiOFvzEWdxiiJCwsb4LoUYmS7z5ZHh1hkymZNMNxkh03k5
-OtD206PpuFlkRBy5mQmvNSpCLcAZ933xTyhdUDH00eAg5/09+FEqq4z84afijimH
-EDgvn6dXYA8Zqd+w7Kx0fiERDK0Ygo1jl85OEsLKFbPZefjx9wUKqqNlm9Oz+s+k
-C6yb2uPrkc2t8FqW0jBc/nR+ky0+VBkW3duO0CCP1Sag3U2HLi5GZ2wdtQrXLXu+
-ZDfJfLruyTaIkzFFcfZgPsjk6niMXQ==
-=qNw4
------END PGP SIGNATURE-----
-
---2qXFWqzzG3v1+95a--
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
