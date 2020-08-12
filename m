@@ -2,153 +2,110 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F9742426EA
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Aug 2020 10:47:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F39424276F
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Aug 2020 11:25:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbgHLIrz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Aug 2020 04:47:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50432 "EHLO
+        id S1726965AbgHLJZn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Aug 2020 05:25:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbgHLIrz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Aug 2020 04:47:55 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4354C06174A
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Aug 2020 01:47:54 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id k20so1152734wmi.5
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Aug 2020 01:47:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=HEmqqaN3Cptn/L0IIb8kkOMEzBZVzXOJaGYzubXHWzw=;
-        b=bDwl1W60RUfxSBU1CsOOzrdayBpOEeVukAihfKDvYdaEbs9bwfNzoF+yG3bLOv+d5b
-         4qLz31JZlxUFScwGi7Y12FISatc3Iy+Z8ZLzbM0ee2Kfd7WCsE8ki0ORp/2Mx3E36eBn
-         OaRL5dwf6rTj7R80QjAmyUYE+qQFas43N+YXq5js1qZ3lzyjCVPt3CwDT9rQDudPRwxP
-         VeKiVsjl7h8AKMnh+61Q7Qi0Ys/THfBCG0/0qZMO0yITgOIEa2BKE0/VdaOgKdbTmA72
-         xP3hs6N4DR4ZdSQD4Z5y1vo04uforaPHmc09dL9VZot3bPBtqYN84unQLR1Px/UWgZgA
-         /Dmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=HEmqqaN3Cptn/L0IIb8kkOMEzBZVzXOJaGYzubXHWzw=;
-        b=d/BA7847a3iKbYfM5LkVZjK5xmw2fFyGAxWNgXJO9rbvP1eRD94H+MZuXHSFrDIaVA
-         qfVg0ade/4PF4hANGZ1ZaFR1SlAsmlyM2oxuWtyMP3vctCciVnfk7XFQv12WbZY50zmi
-         3uqzoA2tY9YHb7ga1ABlJV0+z+PtFPRoV3LUe7DzyOBi2TFRjcZRrdmPranO31xID1nZ
-         Q2Rz7V2iru2VRK+xXTDF5xECrORaK9hJ9HzZIwj4gX1HI+HWFoGRhA/Gy5VGRnX0jPtt
-         4gP8IdrNn9rSrznonNuB9UPDHm8X2pOmoZTkZd1mU7qRJgvyFqBL9NaLx8kdNPmI/5JO
-         Uy/g==
-X-Gm-Message-State: AOAM532c4ToAxb6BBWo+ZZbdLV4QMQ9mraztWxYwizl22/KoBQ5CshUS
-        9h16NolToACndCdOxWdHb0n1Sw==
-X-Google-Smtp-Source: ABdhPJyh37vQVUgd85vM81zAQaFrcRnGbXt1MJT0w5ezPWRgNGrnuOzi78A4o5HB6maWF9QDX6DFGA==
-X-Received: by 2002:a1c:65d6:: with SMTP id z205mr7294055wmb.2.1597222073634;
-        Wed, 12 Aug 2020 01:47:53 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id c17sm3099796wrc.42.2020.08.12.01.47.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 01:47:53 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 09:47:51 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
+        with ESMTP id S1726409AbgHLJZn (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Aug 2020 05:25:43 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E282AC06174A
+        for <linux-pwm@vger.kernel.org>; Wed, 12 Aug 2020 02:25:42 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k5n0v-0007hK-GJ; Wed, 12 Aug 2020 11:25:41 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k5n0t-0005kC-Ko; Wed, 12 Aug 2020 11:25:39 +0200
+Date:   Wed, 12 Aug 2020 11:25:39 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
 Cc:     linux-pwm@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Nicolas Ferre <nicolas.ferre@microchip.com>,
         Ludovic Desroches <ludovic.desroches@microchip.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        kernel@pengutronix.de,
+        kernel@pengutronix.de, Lee Jones <lee.jones@linaro.org>,
         Claudiu Beznea <claudiu.beznea@microchip.com>,
         linux-arm-kernel@lists.infradead.org
 Subject: Re: [PATCH] pwm: atmel: Make use of dev_err_probe()
-Message-ID: <20200812084751.GE4354@dell>
+Message-ID: <20200812092539.fbpapvrwxbmzfi65@pengutronix.de>
 References: <20200812080259.4431-1-u.kleine-koenig@pengutronix.de>
  <20200812082002.GD4354@dell>
  <20200812083204.kktnid63j6vefsky@pengutronix.de>
+ <20200812084728.GI3448@piout.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lmu2wukc77c5bv4a"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200812083204.kktnid63j6vefsky@pengutronix.de>
+In-Reply-To: <20200812084728.GI3448@piout.net>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 12 Aug 2020, Uwe Kleine-König wrote:
 
-> On Wed, Aug 12, 2020 at 09:20:02AM +0100, Lee Jones wrote:
-> > On Wed, 12 Aug 2020, Uwe Kleine-König wrote:
-> > 
-> > > Add an error message for failure points that currently lack a message
-> > > and convert dev_err to dev_err_probe() which does the right thing for
-> > > -EPROBE_DEFER. Also slightly simplify the error handling.
-> > > 
-> > > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > > ---
-> > >  drivers/pwm/pwm-atmel.c | 24 +++++++++++-------------
-> > >  1 file changed, 11 insertions(+), 13 deletions(-)
-> > > 
-> > > diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-> > > index 6161e7e3e9ac..aa0b36695dc7 100644
-> > > --- a/drivers/pwm/pwm-atmel.c
-> > > +++ b/drivers/pwm/pwm-atmel.c
-> > > @@ -415,17 +415,18 @@ static int atmel_pwm_probe(struct platform_device *pdev)
-> > >  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > >  	atmel_pwm->base = devm_ioremap_resource(&pdev->dev, res);
-> > >  	if (IS_ERR(atmel_pwm->base))
-> > > -		return PTR_ERR(atmel_pwm->base);
-> > > +		return dev_err_probe(&pdev->dev, PTR_ERR(atmel_pwm->base),
-> > > +				     "Failed to remap register space\n");
-> > 
-> > This is a regression.
-> > 
-> > devm_ioremap_resource() already emits and error message for !-ENOMEM.
-> > 
-> > -ENOMEM cases should fail silently.
-> 
-> ah right. Maybe dev_err_probe() should do this right, too?
+--lmu2wukc77c5bv4a
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Maybe, but you're still adding an unnecessary string to the kernel's
-binary.  There was a bit push a little while back to cut down on
-these.
+Hello Alexandre,
 
-> > >  	atmel_pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> > >  	if (IS_ERR(atmel_pwm->clk))
-> > > -		return PTR_ERR(atmel_pwm->clk);
-> > > +		return dev_err_probe(&pdev->dev, PTR_ERR(atmel_pwm->clk),
-> > > +				     "Failed to get clock\n");
-> > 
-> > Isn't dev_err_probe() only useful for drivers handling -EPROBE_DEFER?
-> 
-> devm_clk_get() might return -EPROBE_DEFER.
+On Wed, Aug 12, 2020 at 10:47:28AM +0200, Alexandre Belloni wrote:
+> On 12/08/2020 10:32:04+0200, Uwe Kleine-K=F6nig wrote:
+> > On Wed, Aug 12, 2020 at 09:20:02AM +0100, Lee Jones wrote:
+> > > On Wed, 12 Aug 2020, Uwe Kleine-K=F6nig wrote:
+> > > >  	atmel_pwm->clk =3D devm_clk_get(&pdev->dev, NULL);
+> > > >  	if (IS_ERR(atmel_pwm->clk))
+> > > > -		return PTR_ERR(atmel_pwm->clk);
+> > > > +		return dev_err_probe(&pdev->dev, PTR_ERR(atmel_pwm->clk),
+> > > > +				     "Failed to get clock\n");
+> > >=20
+> > > Isn't dev_err_probe() only useful for drivers handling -EPROBE_DEFER?
+> >=20
+> > devm_clk_get() might return -EPROBE_DEFER.
+>=20
+> If it did, you wouldn't be able to print this message.
 
-Perhaps, but the author has chosen not to handle it specifically.
+Why that? It probably won't make it to the console immediately, but once
+the clk is available the log buffer should be pushed out, shouldn't it?
 
-It's my understanding that dev_err_probe() was designed to simplify
-error handling in .probe() whereas this patch seems to do the polar
-opposite.
+> I' not sure it is worth adding so many checks for errors that will
+> never happen.
 
-> > >  	ret = clk_prepare(atmel_pwm->clk);
-> > > -	if (ret) {
-> > > -		dev_err(&pdev->dev, "failed to prepare PWM clock\n");
-> > > -		return ret;
-> > > -	}
-> > > +	if (ret)
-> > > +		return dev_err_probe(&pdev->dev, ret,
-> > > +				     "Failed to prepare PWM clock\n");
-> > 
-> > As above.
-> 
-> I only checked quickly and didn't find an instance where clk_prepare can
-> return -EPROBE_DEFER, but even if it doesn't it works fine.
+I'm sure this train of thought is unsustainable. And people will copy
+this code to platforms where this assumption might even be more wrong
+than on at91.=20
 
-It's still misleading IMHO.  dev_err_probe()'s header details its
-reason for existence.  This seems to be a square peg in a round hole
-scenario.
+Best regards
+Uwe
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--lmu2wukc77c5bv4a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8ztZAACgkQwfwUeK3K
+7AmMkAf/fPdflKTSmmXNABLeelpHORNhVWUW4mSGG4M8j5GcnX50LilzZnc4D7j1
+Y7nMXt0Idc2W9xwxX+w5vM8sk/PEj+jmXMJSpVw3lKHVBx7f4TTn+eKDgUMNJ9yx
+qdjXdw4xhHuR3eTR8DhLyeEhHpt00rGqGyphLNfTxXVbBr3d3Pgx1sRpOhvigA3a
+GUsrXU2Kfoe7ViL1XBxMzoSjQWaHfIx+2LfgdDbZR2RRsIhtXYcyRImuDunSUoCm
++pHalyKI3WfUGmOMFx5Eacc5/E3GRGTUQnIQrkQYejL0Iy82zvh/Hn+tQ9ejDhRa
+i/R1xNUOFoXhW75o0nwlER41SeVX0Q==
+=NT70
+-----END PGP SIGNATURE-----
+
+--lmu2wukc77c5bv4a--
