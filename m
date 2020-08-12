@@ -2,177 +2,188 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F4E62427C7
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Aug 2020 11:40:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 007C4242E11
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Aug 2020 19:37:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbgHLJko (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Aug 2020 05:40:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58590 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbgHLJko (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Aug 2020 05:40:44 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84E1BC06174A
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Aug 2020 02:40:44 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k5nFT-00014t-2s; Wed, 12 Aug 2020 11:40:43 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k5nFS-00067Z-AH; Wed, 12 Aug 2020 11:40:42 +0200
-Date:   Wed, 12 Aug 2020 11:40:42 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-pwm@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        kernel@pengutronix.de,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] pwm: atmel: Make use of dev_err_probe()
-Message-ID: <20200812094042.oqgrkc3laeis6gxa@pengutronix.de>
-References: <20200812080259.4431-1-u.kleine-koenig@pengutronix.de>
- <20200812082002.GD4354@dell>
- <20200812083204.kktnid63j6vefsky@pengutronix.de>
- <20200812084751.GE4354@dell>
+        id S1726529AbgHLRg7 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Wed, 12 Aug 2020 13:36:59 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:57837 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgHLRg6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Aug 2020 13:36:58 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 7DD121C0004;
+        Wed, 12 Aug 2020 17:36:55 +0000 (UTC)
+Date:   Wed, 12 Aug 2020 19:36:53 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20200812193653.27953c51@xps13>
+In-Reply-To: <20200703145313.vwjsh5crdqx2u76a@pengutronix.de>
+References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
+        <20200703145313.vwjsh5crdqx2u76a@pengutronix.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sgj6g623yav3oqlo"
-Content-Disposition: inline
-In-Reply-To: <20200812084751.GE4354@dell>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hello Uwe,
 
---sgj6g623yav3oqlo
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the review!
 
-Hello Lee,
+Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote on Fri, 3 Jul
+2020 16:53:13 +0200:
 
-On Wed, Aug 12, 2020 at 09:47:51AM +0100, Lee Jones wrote:
-> On Wed, 12 Aug 2020, Uwe Kleine-K=F6nig wrote:
-> > On Wed, Aug 12, 2020 at 09:20:02AM +0100, Lee Jones wrote:
-> > > On Wed, 12 Aug 2020, Uwe Kleine-K=F6nig wrote:
-> > >=20
-> > > > Add an error message for failure points that currently lack a messa=
-ge
-> > > > and convert dev_err to dev_err_probe() which does the right thing f=
-or
-> > > > -EPROBE_DEFER. Also slightly simplify the error handling.
-> > > >=20
-> > > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > > > ---
-> > > >  drivers/pwm/pwm-atmel.c | 24 +++++++++++-------------
-> > > >  1 file changed, 11 insertions(+), 13 deletions(-)
-> > > >=20
-> > > > diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-> > > > index 6161e7e3e9ac..aa0b36695dc7 100644
-> > > > --- a/drivers/pwm/pwm-atmel.c
-> > > > +++ b/drivers/pwm/pwm-atmel.c
-> > > > @@ -415,17 +415,18 @@ static int atmel_pwm_probe(struct platform_de=
-vice *pdev)
-> > > >  	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > >  	atmel_pwm->base =3D devm_ioremap_resource(&pdev->dev, res);
-> > > >  	if (IS_ERR(atmel_pwm->base))
-> > > > -		return PTR_ERR(atmel_pwm->base);
-> > > > +		return dev_err_probe(&pdev->dev, PTR_ERR(atmel_pwm->base),
-> > > > +				     "Failed to remap register space\n");
-> > >=20
-> > > This is a regression.
-> > >=20
-> > > devm_ioremap_resource() already emits and error message for !-ENOMEM.
-> > >=20
-> > > -ENOMEM cases should fail silently.
-> >=20
-> > ah right. Maybe dev_err_probe() should do this right, too?
->=20
-> Maybe, but you're still adding an unnecessary string to the kernel's
-> binary.  There was a bit push a little while back to cut down on
-> these.
+> Hello Miquel,
+> 
+> On Sun, May 03, 2020 at 12:54:53PM +0200, Miquel Raynal wrote:
+> > +static u8 max7313_pwm_get_intensity(struct pca953x_chip *pca_chip,
+> > +				    unsigned int idx)
+> > +{
+> > +	struct device *dev = &pca_chip->client->dev;
+> > +	unsigned int reg, shift, val, output;
+> > +	u8 intensity;
+> > +	bool phase;
+> > +	int ret;
+> > +
+> > +	/* Retrieve the intensity */
+> > +	reg = MAX7313_INTENSITY + (idx / PWM_PER_REG);
+> > +	shift = (idx % PWM_PER_REG) ? PWM_BITS_PER_REG : 0;  
+> 
+> I would find
+> 
+> 	shift = (idx % PWM_PER_REG) * PWM_BITS_PER_REG
+> 
+> more natural here as your formula only works for PWM_PER_REG = 2.
 
-Note I agreed to dropping the error message here. Letting
-dev_err_probe() ignore -ENOMEM is an orthogonal thing.
-=20
-> > > >  	atmel_pwm->clk =3D devm_clk_get(&pdev->dev, NULL);
-> > > >  	if (IS_ERR(atmel_pwm->clk))
-> > > > -		return PTR_ERR(atmel_pwm->clk);
-> > > > +		return dev_err_probe(&pdev->dev, PTR_ERR(atmel_pwm->clk),
-> > > > +				     "Failed to get clock\n");
-> > >=20
-> > > Isn't dev_err_probe() only useful for drivers handling -EPROBE_DEFER?
-> >=20
-> > devm_clk_get() might return -EPROBE_DEFER.
->=20
-> Perhaps, but the author has chosen not to handle it specifically.
+Understood.
 
-Perhaps, in my book having a probe call fail without an error message is
-always annoying. So the main advantage of this commit is not the use of
-dev_err_probe(), but that error paths yield some output with an
-indication about the reason.
+> 
+> > +	mutex_lock(&pca_chip->i2c_lock);
+> > +	ret = regmap_read(pca_chip->regmap, reg, &val);
+> > +	mutex_unlock(&pca_chip->i2c_lock);
+> > +	if (ret < 0) {
+> > +		dev_err(dev, "Cannot retrieve PWM intensity (%d)\n", ret);  
+> 
+> Please use %pe for error codes.
 
-> It's my understanding that dev_err_probe() was designed to simplify
-> error handling in .probe() whereas this patch seems to do the polar
-> opposite.
+Fine, fixed at three relevant locations.
 
-Yes, it doesn't get simpler, but it gains a feature and for that uses
-dev_err_probe() because open coding it would be still more complex.
+> 
+> > +		return 0;
+> > +	}
+> > +
+> > +	val >>= shift;
+> > +	val &= PWM_INTENSITY_MASK;
+> > +
+> > +	/* Retrieve the phase */
+> > +	reg = pca953x_recalc_addr(pca_chip, pca_chip->regs->output, idx, 0, 0);
+> > +
+> > +	mutex_lock(&pca_chip->i2c_lock);
+> > +	ret = regmap_read(pca_chip->regmap, reg, &output);
+> > +	mutex_unlock(&pca_chip->i2c_lock);
+> > +	if (ret < 0) {
+> > +		dev_err(dev, "Cannot retrieve PWM phase (%d)\n", ret);
+> > +		return 0;
+> > +	}
+> > +
+> > +	phase = output & BIT(idx % BANK_SZ);  
+> 
+> Would it make sense to cache the phase value to reduce register access
+> and locking here?
 
-> > > >  	ret =3D clk_prepare(atmel_pwm->clk);
-> > > > -	if (ret) {
-> > > > -		dev_err(&pdev->dev, "failed to prepare PWM clock\n");
-> > > > -		return ret;
-> > > > -	}
-> > > > +	if (ret)
-> > > > +		return dev_err_probe(&pdev->dev, ret,
-> > > > +				     "Failed to prepare PWM clock\n");
-> > >=20
-> > > As above.
-> >=20
-> > I only checked quickly and didn't find an instance where clk_prepare can
-> > return -EPROBE_DEFER, but even if it doesn't it works fine.
->=20
-> It's still misleading IMHO.  dev_err_probe()'s header details its
-> reason for existence.  This seems to be a square peg in a round hole
-> scenario.
+I suppose it could be done and would certainly reduce register access a
+little bit but it means refactoring quite some code and as I'm not near
+the board to actually test these changes right now I fear to do
+something wrong. Instead, I'd prefer not to touch that part, and let
+users that would need this enhancement do it themselves if you don't
+mind.
 
-clk_prepare might not benefit from the EPROBE_DEFER logic in
-dev_err_probe(), that's true. But it replaces two statements by a single
-one and adds the error code to the error message. So the driver benefits
-only for two reasons from the conversion to dev_err_probe() while others
-might have three. IMHO still good enough to justify the patch.
+> 
+> > [...]
+> > +static int max7313_pwm_apply(struct pwm_chip *chip,
+> > +			     struct pwm_device *pwm,
+> > +			     const struct pwm_state *state)
+> > +{
+> > +	struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
+> > +	struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
+> > +	unsigned int intensity, active;
+> > +	int ret = 0;
+> > +
+> > +	if (!state->enabled ||
+> > +	    state->period < PWM_PERIOD_NS ||
+> > +	    state->polarity != PWM_POLARITY_NORMAL)
+> > +		return -EINVAL;  
+> 
+> You could simulate state->enabled = false using duty_cycle = 0.
 
-Best regards
-Uwe
+Absolutely!
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> 
+> > +	/* Convert the duty-cycle to be in the [0;16] range */
+> > +	intensity = max7313_pwm_duty_to_intensity(state->duty_cycle);  
+> 
+> This might return a value > 16 if state->duty_cycle > PWM_PERIOD_NS.
+> I suggest to do
+> 
+> 	duty_cycle = min(state->duty_cycle, PWM_PERIOD_NS);
+> 
+> and use that value instead of state->duty_cycle.
 
---sgj6g623yav3oqlo
-Content-Type: application/pgp-signature; name="signature.asc"
+Done.
 
------BEGIN PGP SIGNATURE-----
+> 
+> > +	/*
+> > +	 * The hardware is supposedly glitch-free when changing the intensity,
+> > +	 * unless we need to flip the blink phase to reach an extremity or the
+> > +	 * other of the spectrum (0/16 from phase 1, 16/16 from phase 0).  
+> 
+> s/other of/other end of/. I don't understand the difference between
+> extremity and "other end of the spectrum".
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8zuRcACgkQwfwUeK3K
-7An30gf/Q5jN9xchl2GCx7qdoDwyNvmg7Tw4oSpyZbZ7W962uQp0yZhJxvk8sUbm
-/jjvL6m/SJ672CNmGyfWcMBMzRGIfnMBWYKdN9sVxAGSUk4RVnkzkmDF3KumB2el
-ZWrHla8qaDEQgT/Zp3l0YhuLvCdpGL2axJg+RVPQeZvRWA3vM3zHFj86Z8PBUmB/
-WYwEaXQNhaw5DgobZ56UYVzxcFOc3oAY7igkgBAJ3O6R0N8bJIY9f/ukNRXMTzhB
-E/uoSLGE+/ueqOafOvCDAC7hRuECj9xEhGk8X0b9/QUEHeNfU4jgU0DaINv0rNDV
-kMWf1tyJwNIfiJRGdwtQTZ0tnHZigA==
-=yR0J
------END PGP SIGNATURE-----
+Fixed.
 
---sgj6g623yav3oqlo--
+> 
+> > +	 */
+> > +	return max7313_pwm_set_state(pca_chip, pwm, intensity);
+> > +}
+> > +
+> > +static void max7313_pwm_get_state(struct pwm_chip *chip,
+> > +				  struct pwm_device *pwm,
+> > +				  struct pwm_state *state)
+> > +{
+> > +	struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
+> > +	struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
+> > +	u8 intensity;
+> > +
+> > +	state->enabled = true;
+> > +	state->period = PWM_PERIOD_NS;
+> > +	state->polarity = PWM_POLARITY_NORMAL;
+> > +
+> > +	intensity = max7313_pwm_get_intensity(pca_chip, pwm->hwpwm);
+> > +	state->duty_cycle = max7313_pwm_intensity_to_duty(intensity);  
+> 
+> Please round up the division in max7313_pwm_intensity_to_duty().
+
+I understand the use case, done as well.
+
+I will respin a compile tested version rebased on top of current master
+(which includes Linus-W GPIO-5.9-1 merge request).
+
+Thanks,
+Miquèl
