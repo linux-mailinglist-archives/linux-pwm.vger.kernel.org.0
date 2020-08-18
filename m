@@ -2,78 +2,123 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 692CA247A25
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Aug 2020 00:11:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AB2C247E0A
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Aug 2020 07:49:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbgHQWLF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 17 Aug 2020 18:11:05 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:40099 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728639AbgHQWLD (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 17 Aug 2020 18:11:03 -0400
-Received: by mail-il1-f194.google.com with SMTP id p18so12083190ilm.7;
-        Mon, 17 Aug 2020 15:11:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=w62w5Qx3ojDiNU6oOUvlsJSHzBBTEkBiVAzdZrJuQhQ=;
-        b=OB4K/6creD9rqHTIvj2D+xwJV0WfI4b2guwYJd3hdQuoA/cjcVKYaGDyC731Wy3Xzu
-         6t15DkrcQoicj6+Prv2kUbduwIghgk/UlgUh8aeTmrpO7rblVmdxJWWWwDalQgnZyjEn
-         Uk6zKV+HXmYLo5PRABsubUCTcDwk3ebmw34Io35Fmz4A4eSyfdwGRJ5Fun6GcXDTqIRA
-         wgxktH0+LeMosDCuxlIvOBF6JX/HQKDLTQhCslZa5osEPnyEy+MwkfIP9Ep95gfS+gfb
-         Lc4Lbv6iSpbqPmYJAoHeSA1UcZEBk4RKDuv+EkmszYPjhwMiBFAKFi6OYBZX3e7kWw3U
-         7BtQ==
-X-Gm-Message-State: AOAM5310kfAsBi6WsGAuuEPle3sTXF15PYwKIlgns6+qrXcVpdEZ4YgN
-        3q5gdiiSezyMP++uXAXbTg==
-X-Google-Smtp-Source: ABdhPJwYqU2zPE2WoMlgszKfcIG8MuKYmbxnJLn346n5uKKWlMnMyd9kdgFRyl9qlgus4CVKTRkIOA==
-X-Received: by 2002:a92:d0d:: with SMTP id 13mr15805752iln.109.1597702262390;
-        Mon, 17 Aug 2020 15:11:02 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id v2sm3403307ilh.33.2020.08.17.15.11.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 15:11:01 -0700 (PDT)
-Received: (nullmailer pid 1665242 invoked by uid 1000);
-        Mon, 17 Aug 2020 22:10:59 -0000
-Date:   Mon, 17 Aug 2020 16:10:59 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 4/5] dt-bindings: pwm: renesas,tpu-pwm: Document r8a7742
- support
-Message-ID: <20200817221059.GA1665190@bogus>
-References: <20200806183152.11809-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200806183152.11809-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        id S1726381AbgHRFtP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 18 Aug 2020 01:49:15 -0400
+Received: from mga18.intel.com ([134.134.136.126]:48150 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726343AbgHRFtO (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 18 Aug 2020 01:49:14 -0400
+IronPort-SDR: FxB8RwrW19hl0WaOyfQm+iLHWe386o/1tHoEtsUtfn3wNztn2B1cMcZ+8pV7DrjJ3jqn+Wcc7w
+ e6c00cYrN/Wg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="142474100"
+X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
+   d="scan'208";a="142474100"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 22:49:13 -0700
+IronPort-SDR: 7LFrpTXIbE7VBQNOg+PkBf4RrKVUPE5ldPSHtmlkHidlSm04A9JSkcjDnmZwMaF6qEolZ/c9AF
+ coAs1ei7IuLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
+   d="scan'208";a="319972150"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Aug 2020 22:49:10 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org
+Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com, Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v7 0/2] pwm: intel: Add PWM driver for a new SoC
+Date:   Tue, 18 Aug 2020 13:48:59 +0800
+Message-Id: <cover.1597729246.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200806183152.11809-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, 06 Aug 2020 19:31:51 +0100, Lad Prabhakar wrote:
-> Document r8a7742 specific compatible strings. No driver change is
-> needed as the fallback compatible string "renesas,tpu" activates the
-> right code in the driver.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Patch 1 adds dt binding document in YAML format.
+Patch 2 add PWM fan controller driver for LGM SoC.
 
-Acked-by: Rob Herring <robh@kernel.org>
+v7:
+- Address code quality related review concerns.
+- Rename fan related property to pwm-*.
+- Fix one make dt_binding_check reported error.
+
+v6:
+- Readjust .apply op as per review feedback.
+- Add back pwm-cells property to resolve make dt_binding_check error.
+  pwm-cells is a required property for PWM driver.
+- Add back fan related optional properties.
+
+v5:
+- Address below review concerns from Uwe Kleine-König.
+  * Improve comments about Limitations.
+  * Use return value of regmap_update_bits if container function returns
+    error code.
+  * Modify .apply op to have strict checking for fixed period supported
+    by PWM HW.
+  * Use u64 as type when use min_t for duty_cycle.
+  * Add reset_control_assert() in failure case in probe where it was missing
+    earlier.
+- Remove fan specific optional properties from pwm dt binding document (Rob Herring)
+
+v4:
+- Address below review concerns from Uwe Kleine-König.
+  * Improve notes and limitations comments.
+  * Add common prefixes for all #defines.
+  * Modify/Improve logic in .apply & .get_state ops as advised.
+  * Skip error messages in probe when error is -EPROBE_DEFER.
+  * Add dependencies in Kconfig (OF & HAS_IOMEM) and add select REGMAP_MMIO.
+  * Address other code quality related review concerns.
+- Fix make dt_binding_check reported error in YAML file.
+
+v3:
+- Address below review concerns from Uwe Kleine-König.
+  * Remove fan rpm calibration task from the driver.
+  * Modify apply op as per the review feedback.
+  * Add roundup & round down where necessary.
+  * Address other misc code quality related review concerns.
+  * Use devm_reset_control_get_exclusive(). (Philipp Zabel)
+  * Improve dt binding document.
+
+v2:
+- Address below review concerns from Uwe Kleine-König.
+  * Add notes and limitations about PWM HW.
+  * Rename all functions and structure to lgm_pwm_* 
+  * Readjust space aligninment in structure fields to single space.
+  * Switch to using apply instead of config/enable/disable.
+  * Address other code quality related concerns.
+  * Rebase to 5.8-rc1.
+- Address review concerns in dt binding YAML from Rob Herring.
+
+v1:
+- Initial version.
+
+
+Rahul Tanwar (2):
+  Add DT bindings YAML schema for PWM fan controller of LGM SoC
+  Add PWM fan controller driver for LGM SoC
+
+ .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     |  54 +++++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-intel-lgm.c                        | 267 +++++++++++++++++++++
+ 4 files changed, 333 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-intel-lgm.c
+
+-- 
+2.11.0
+
