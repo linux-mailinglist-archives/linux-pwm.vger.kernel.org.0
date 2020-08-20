@@ -2,126 +2,128 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49EE8249B29
-	for <lists+linux-pwm@lfdr.de>; Wed, 19 Aug 2020 12:52:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC82524AE0D
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Aug 2020 06:50:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgHSKvw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 19 Aug 2020 06:51:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44708 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728023AbgHSKvd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 19 Aug 2020 06:51:33 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CFF2C061344
-        for <linux-pwm@vger.kernel.org>; Wed, 19 Aug 2020 03:51:29 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id y3so21061826wrl.4
-        for <linux-pwm@vger.kernel.org>; Wed, 19 Aug 2020 03:51:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=jkwK21g5VFdynOOGr6pwZT15bIrSzS5HHZUTr6u93Bk=;
-        b=o6wcLOra6wVLGD3LShyd1CcBwNTFU7v/kixPKoLuyTZgV+ErdoUhW0QEJzVNCoPXYI
-         GVMuHyu9mGHZ6da1NSE2yas+EN30VVUhq3LL56yw4TGf4+WrjxxNIvw5MFEoTLEWYBST
-         lOg02JNxd3WiubgOJuCDuousdR/dux4jCBQxh/GETWsGhSCiSfO61Dsjg9Tn4LUgbFNR
-         HUcLGlOZkwm6/Y9xaRLkNSK8y5WRshXuQplnM/0wWDHgHpxVDCBHp46VIcQ++pd3yMp8
-         hK1v+LcPjY5IfmK5noOrvsjPWmOf2sfi23qBLJ8IvJBWayY+TAWD6+Mac7nMjW/5AdZT
-         qtFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=jkwK21g5VFdynOOGr6pwZT15bIrSzS5HHZUTr6u93Bk=;
-        b=tx55FUq3pt/1bhrFEj0BUG64XKm0WwR9sgexSRHbR15SZdwnb4j3Ozifw0++FOvDZK
-         gDmxXwgMqpfcE3Uy1IHptgkuoUBpiSXC6d0YOJbZI5cPu2Xe7qxJw1aKZQjiFgQjEj4g
-         WILgLfVXtqYLz4ntkiqON/YY64YZSJonCdvZYsNCCzjZ7scnWaAQ1AjGvHwK6PhXAKRu
-         nP5lrAs1QufkFmRcNdhhRx2AQ55DzHlQ7w+RBzesKNFjT0jFhYsZqiq4I6b5/YwCzNl6
-         IegrBLr1xEMsyrjoWtGQs9RUBfTO/mKc5KeLvnE4nhnU3MYq+ERsRfkk7rqMCbZECr6n
-         aqrw==
-X-Gm-Message-State: AOAM532/Jr3b5Dpc9qvDN08U/ht7Pow+8KDfOMwjQ/kmaoqYbrW8AxxW
-        FJ5eIriHy9d/MV+/8QsLsI5Xpg==
-X-Google-Smtp-Source: ABdhPJyXRU861CmmXhvzyM0K1yAJtYGdADvkQ1ImIfcucwdx9hjZDkswr6TS7g+o481n48uSjh4ZUQ==
-X-Received: by 2002:a5d:4a0b:: with SMTP id m11mr24001808wrq.407.1597834288094;
-        Wed, 19 Aug 2020 03:51:28 -0700 (PDT)
-Received: from dell ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id q7sm40425011wra.56.2020.08.19.03.51.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 03:51:27 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 11:51:24 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v8 03/13] mfd: simple-mfd-i2c: add sl28cpld support
-Message-ID: <20200819105124.GA3248864@dell>
-References: <20200813124832.17349-1-michael@walle.cc>
- <20200813124832.17349-4-michael@walle.cc>
+        id S1725916AbgHTEuy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 20 Aug 2020 00:50:54 -0400
+Received: from mga12.intel.com ([192.55.52.136]:2971 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725768AbgHTEuw (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 20 Aug 2020 00:50:52 -0400
+IronPort-SDR: tD+hw2Y+QwhATIdnA0F7Dh269z6Slor/fo92Vq9l87PZBC6HnGRm2p7qKyBa9y2Rp0P9RjyWGM
+ 3tjTexWnnxmg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="134756850"
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="134756850"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 21:50:52 -0700
+IronPort-SDR: Rh1t6lmybtEH1Byb+M9kr3MHgeNlXOo006WlHgbajcitS5jq7NdbnpWH7Uw31y4IVWweu6/iWj
+ AkuHYf0u2AlA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="320727641"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga004.fm.intel.com with ESMTP; 19 Aug 2020 21:50:49 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org
+Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com, Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v8 0/2] pwm: intel: Add PWM driver for a new SoC
+Date:   Thu, 20 Aug 2020 12:50:44 +0800
+Message-Id: <cover.1597898872.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=y
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200813124832.17349-4-michael@walle.cc>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, 13 Aug 2020, Michael Walle wrote:
+Patch 1 adds dt binding document in YAML format.
+Patch 2 add PWM fan controller driver for LGM SoC.
 
-> Add the core support for the board management controller found on the
-> SMARC-sAL28 board.
-> 
-> Also add a virtual symbol which pulls in the simple-mfd-i2c driver and
-> provide a common symbol on which the subdevice drivers can depend on.
-> 
-> At the moment, this controller is used on the Kontron SMARC-sAL28 board.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
-> Changes since v7:
->  - added MFD_SL28CPLD virtual Kconfig symbol
->  - Please note, that I intentionally removed the Acked-for-MFD-by
->    because of this change.
-> 
-> Changes since v6:
->  - renamed "sl28cpld-r1" to "sl28cpld"
-> 
-> Changes since v5:
->  - none
-> 
-> Changes since v4:
->  - new patch
-> 
->  drivers/mfd/Kconfig          | 10 ++++++++++
->  drivers/mfd/simple-mfd-i2c.c |  1 +
->  2 files changed, 11 insertions(+)
+v8:
+- Remove fan related optional properties usage, keep
+  them as default. If needed, change pwm-fan driver
+  separately in future to add them as generic properties.
 
-For my own reference (apply this as-is to your sign-off block):
+v7:
+- Address code quality related review concerns.
+- Rename fan related property to pwm-*.
+- Fix one make dt_binding_check reported error.
 
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+v6:
+- Readjust .apply op as per review feedback.
+- Add back pwm-cells property to resolve make dt_binding_check error.
+  pwm-cells is a required property for PWM driver.
+- Add back fan related optional properties.
+
+v5:
+- Address below review concerns from Uwe Kleine-Kˆnig.
+  * Improve comments about Limitations.
+  * Use return value of regmap_update_bits if container function returns
+    error code.
+  * Modify .apply op to have strict checking for fixed period supported
+    by PWM HW.
+  * Use u64 as type when use min_t for duty_cycle.
+  * Add reset_control_assert() in failure case in probe where it was missing
+    earlier.
+- Remove fan specific optional properties from pwm dt binding document (Rob Herring)
+
+v4:
+- Address below review concerns from Uwe Kleine-Kˆnig.
+  * Improve notes and limitations comments.
+  * Add common prefixes for all #defines.
+  * Modify/Improve logic in .apply & .get_state ops as advised.
+  * Skip error messages in probe when error is -EPROBE_DEFER.
+  * Add dependencies in Kconfig (OF & HAS_IOMEM) and add select REGMAP_MMIO.
+  * Address other code quality related review concerns.
+- Fix make dt_binding_check reported error in YAML file.
+
+v3:
+- Address below review concerns from Uwe Kleine-Kˆnig.
+  * Remove fan rpm calibration task from the driver.
+  * Modify apply op as per the review feedback.
+  * Add roundup & round down where necessary.
+  * Address other misc code quality related review concerns.
+  * Use devm_reset_control_get_exclusive(). (Philipp Zabel)
+  * Improve dt binding document.
+
+v2:
+- Address below review concerns from Uwe Kleine-Kˆnig.
+  * Add notes and limitations about PWM HW.
+  * Rename all functions and structure to lgm_pwm_* 
+  * Readjust space aligninment in structure fields to single space.
+  * Switch to using apply instead of config/enable/disable.
+  * Address other code quality related concerns.
+  * Rebase to 5.8-rc1.
+- Address review concerns in dt binding YAML from Rob Herring.
+
+v1:
+- Initial version.
+
+
+Rahul Tanwar (2):
+  Add DT bindings YAML schema for PWM fan controller of LGM SoC
+  Add PWM fan controller driver for LGM SoC
+
+ .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     |  44 ++++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-intel-lgm.c                        | 244 +++++++++++++++++++++
+ 4 files changed, 300 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-intel-lgm.c
 
 -- 
-Lee Jones [ÊùéÁêºÊñØ]
-Senior Technical Lead - Developer Services
-Linaro.org ‚îÇ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.11.0
+
