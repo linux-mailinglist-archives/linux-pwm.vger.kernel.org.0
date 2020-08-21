@@ -2,107 +2,106 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EDA524D075
-	for <lists+linux-pwm@lfdr.de>; Fri, 21 Aug 2020 10:21:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5047B24D098
+	for <lists+linux-pwm@lfdr.de>; Fri, 21 Aug 2020 10:34:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgHUIVe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 21 Aug 2020 04:21:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgHUIVd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 21 Aug 2020 04:21:33 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C218C061385;
-        Fri, 21 Aug 2020 01:21:33 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 5BC6E29AED4
-Subject: Re: [PATCH v4 0/7] platform/chrome: cros_ec_proto: Convert EC error
- codes to Linux error codes
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>,
-        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200806153308.204605-1-linux@roeck-us.net>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <0dfbce79-0413-de27-a2cb-a687ab2fd9d8@collabora.com>
-Date:   Fri, 21 Aug 2020 10:21:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1726661AbgHUIeU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 21 Aug 2020 04:34:20 -0400
+Received: from mga09.intel.com ([134.134.136.24]:56150 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726243AbgHUIeU (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 21 Aug 2020 04:34:20 -0400
+IronPort-SDR: oz4lFG840vQdO0iZnRNzsJd0ltH8DfBihxPBQ89GmQUDn+TVCfZuRlPT/3613hdfpqwQu14qoD
+ 20Qj3qwkNqLQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="156541988"
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="156541988"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 01:34:19 -0700
+IronPort-SDR: yKfxbOr24TelhNRiVvpNppbz77Gv4KCoV1rc0ZILM/dgLDab8B02F0f6uNPu/Nc8mgdTWrLSnl
+ Quk7m2+uwKFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="327705469"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2020 01:34:16 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1k92KV-00AIAJ-Pa; Fri, 21 Aug 2020 11:23:19 +0300
+Date:   Fri, 21 Aug 2020 11:23:19 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com
+Subject: Re: [PATCH v8 2/2] Add PWM fan controller driver for LGM SoC
+Message-ID: <20200821082319.GI1891694@smile.fi.intel.com>
+References: <cover.1597898872.git.rahul.tanwar@linux.intel.com>
+ <b6d0a65625a2bc231c649c970c0a1af1ff3a5dd5.1597898872.git.rahul.tanwar@linux.intel.com>
+ <20200820105255.GB1891694@smile.fi.intel.com>
+ <ae472e72-8727-b62b-4fc7-f62aa41cafbc@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200806153308.204605-1-linux@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ae472e72-8727-b62b-4fc7-f62aa41cafbc@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Guenter et all,
+On Fri, Aug 21, 2020 at 02:07:49PM +0800, Tanwar, Rahul wrote:
+> On 20/8/2020 6:52 pm, Andy Shevchenko wrote:
+> > On Thu, Aug 20, 2020 at 12:50:46PM +0800, Rahul Tanwar wrote:
 
-On 6/8/20 17:33, Guenter Roeck wrote:
-> The EC reports a variety of error codes. Most of those, with the exception
-> of EC_RES_INVALID_VERSION, are converted to -EPROTO. As result, the actual
-> error code gets lost. In cros_ec_cmd_xfer_status(), convert all EC errors
-> to Linux error codes to report a more meaningful error to the caller to aid
-> debugging.
-> 
-> To prepare for this change, handle error codes other than -EPROTO for all
-> callers of cros_ec_cmd_xfer_status(). Specifically, no longer assume that
-> -EPROTO reflects an error from the EC and all other error codes reflect a
-> transfer error.
-> 
-> v2: Add patches 1/4 to 3/4 to handle callers of cros_ec_cmd_xfer_status()
-> v3: Add patches 4/6 and 5/6 to handle additional callers of
-> 	cros_ec_cmd_xfer_status()
->     Use -ENOPROTOOPT for EC_RES_INVALID_VERSION
->     Implement function to convert error codes
-> v4: Add coments describing the functionality of cros_ec_num_pwms().
->     Add patch 7/7 to clean up cros_ec_num_pwms() after the new error code
->     support has been implemented.
->     Rebased series to v5.8.
-> 
-> ----------------------------------------------------------------
-> Guenter Roeck (7):
->       iio: cros_ec: Accept -EOPNOTSUPP as 'not supported' error code
->       cros_ec_lightbar: Accept more error codes from cros_ec_cmd_xfer_status
->       platform/chrome: cros_ec_sysfs: Report range of error codes from EC
->       pwm: cros-ec: Accept more error codes from cros_ec_cmd_xfer_status
->       platform/input: cros_ec: Replace -ENOTSUPP with -ENOPROTOOPT
->       platform/chrome: cros_ec_proto: Convert EC error codes to Linux error codes
->       pwm: cros-ec: Simplify EC error handling
-> 
->  .../iio/common/cros_ec_sensors/cros_ec_sensors.c   |  2 +-
->  drivers/input/keyboard/cros_ec_keyb.c              |  2 +-
->  drivers/platform/chrome/cros_ec_lightbar.c         | 10 ++---
->  drivers/platform/chrome/cros_ec_proto.c            | 52 +++++++++++++++++-----
->  drivers/platform/chrome/cros_ec_sysfs.c            | 24 ++++------
->  drivers/pwm/pwm-cros-ec.c                          | 37 +++++++--------
->  6 files changed, 74 insertions(+), 53 deletions(-)
-> 
+...
 
-The patches LGTM, and if the other maintainers are fine, I'd like to queue all
-these through the chrome-platform tree.
+> >> +	ret = clk_prepare_enable(pc->clk);
+> > Wrap it with devm_add_action_or_reset(). Same for reset_control_deassert().
+> > You probably can even put them under one function.
+> 
+> I did some study and research for using devm_add_action_or_reset(). But
+> still i have some doubts. Below steps is what i intend to do in order to
+> switch to using this API. Please do review and let me know it is ok and
+> i am not missing anything else. Thanks.
+> 
+> 1. Call reset_control_assert()
+> 2. Call clk_prepare_enable()
 
-I noticed, thought, that KernelCI reported a regression on Kevin that I'll try
-to debug at the beginning of next week.
+> 3. Call pwmchip_add()
 
-[    3.821203] cros-ec-spi spi2.0: Wrong size 1/3: 0 != 4
-[    3.827320] cros-ec-keyb ff200000.spi:ec@0:keyboard-controller: cannot
-register non-matrix inputs: -71
-[    3.838506] cros-ec-keyb: probe of ff200000.spi:ec@0:keyboard-controller
-failed with error -71
-[    3.853492] cros-ec-spi spi2.0: Chrome EC device registered
+First of all, I haven't told anything about this.
 
-Thanks,
- Enric
+> 4. Call devm_add_action_or_reset(dev, my_action, pc)
+> 5. Remove explicit calls to unprepare/reset_control_assert from probe in
+> failure cases.
+> 6. static void my_action(void *pc)
+>    {
+>       pwmchip_remove(&pc->chip);
+>       clk_disable_upprepare(pc->clk);
+>       reset_control_assert(pc->rst);
+>    }
+> 7. Remove platform_driver.remove() entirely.
+
+Nope, pwmchip_add() and pwmchip_remove() stay as is now.
+
+Only wrap clock and reset resources.
+
+> >> +	if (ret) {
+> >> +		dev_err(dev, "failed to enable clock\n");
+> >> +		reset_control_assert(pc->rst);
+> >> +		return ret;
+> >> +	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
