@@ -2,108 +2,113 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D522924E6A6
-	for <lists+linux-pwm@lfdr.de>; Sat, 22 Aug 2020 11:23:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0C7224E7E4
+	for <lists+linux-pwm@lfdr.de>; Sat, 22 Aug 2020 16:32:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726904AbgHVJXa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 22 Aug 2020 05:23:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgHVJXa (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 22 Aug 2020 05:23:30 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18DC2C061573;
-        Sat, 22 Aug 2020 02:23:30 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id v15so2134841pgh.6;
-        Sat, 22 Aug 2020 02:23:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aI39wUQrT4gwVKkfiPc/6BrYsBsFxtTiYiQuKGUyQNc=;
-        b=BjRC2XO6ziRv5s9rs7O7otCwVIpQS+qXELx0bfeHcgi7yZMg4ZDjYCKCzeE3cSrn7J
-         h4rt+xfTU7u3rEtLqLTGv/nx/hmTQOJM5YZIJH2l2TP+6Z9sWo6O0X+LDYXWfDrGHZFJ
-         Aha7B53M6BI+GRJorY7VSNxeD7kQ82nnZeclcZICDoVEFKn1GwaFbFkmNZvRVFMWjcLk
-         ygWjIEK/hsHVLQbtAM+aq9UkdYx1spA51nTnAHVL+b+nu1B6VMIIY2vW6F6KkIXUIwfb
-         zzBeU9UXeVKXTAmxcK+hVjZq4b7zZxDNIi/Q55A/2LmnGUHt45k1x0ry0jfeNHoWkAZA
-         RlQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aI39wUQrT4gwVKkfiPc/6BrYsBsFxtTiYiQuKGUyQNc=;
-        b=CgHdDhIh1TS0kOaQCWSKo5f9MMBiPgtCe34Ot5b9FLpy85E60P42c3Ho1ivcEvN91D
-         1VpE3vHAoSGx0dZSsBBK93Ql6tOFuwkHoCSqpyNBJwFhCGgeg5W6T5gYJfoQSKYLBLQQ
-         IUynCCG1hnGubSITmGiqqfD9ckIVHOir9PqexS+rYPNHv/UBN9P8Jj8A996B4Wy36oS5
-         VUfqcfOn/K75uspeAo+z07KFcHeclMI0SpP0/QEQpu9noidie69ZttrQr6TtSkFsiX+9
-         iILXAviE1S9UYRBa42Uq+HCt6YCjqSftcpwzlRSOwnbsyDXg2fa6nvfkqfzgY4ncTv5r
-         UKBA==
-X-Gm-Message-State: AOAM530GjCK3lEzGRl/2h0i12UvH0QXuoh/M21OwH0Eax+WbibpkuHpb
-        mW8Gb9htfwPYzl8BIrQ5U4nTBETIynx/wJRmXlH3svQkzGKsfw==
-X-Google-Smtp-Source: ABdhPJz4qAwL/hficWhPP7/Q7Cn9/sFEW/U3BO4PJc8qZ0j+3vpx+hdgMhcqDNRluDgzEX2ahyveuiGTLzTTJBe0Qco=
-X-Received: by 2002:a62:c319:: with SMTP id v25mr5537864pfg.130.1598088209565;
- Sat, 22 Aug 2020 02:23:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1598001442.git.rahul.tanwar@linux.intel.com>
- <fedf5d1ace7c389a5fc0116865b9b88aa3ddeaa5.1598001442.git.rahul.tanwar@linux.intel.com>
- <20200821105618.GO1891694@smile.fi.intel.com> <d8c85de1-dacf-e8eb-6e49-131d007f3a6b@linux.intel.com>
-In-Reply-To: <d8c85de1-dacf-e8eb-6e49-131d007f3a6b@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 22 Aug 2020 12:23:12 +0300
-Message-ID: <CAHp75Vc1=_SeYHtQvXrV+G-b5t4vWS6ga3s_Zmez7rQPORWr7w@mail.gmail.com>
-Subject: Re: [PATCH v9 2/2] Add PWM fan controller driver for LGM SoC
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com, rtanwar@maxlinear.com
-Content-Type: text/plain; charset="UTF-8"
+        id S1728019AbgHVOcD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 22 Aug 2020 10:32:03 -0400
+Received: from mga03.intel.com ([134.134.136.65]:6683 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727899AbgHVOcD (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sat, 22 Aug 2020 10:32:03 -0400
+IronPort-SDR: CShm0dmIpP6GVrFJRj00YQlo8LgTqR4UrVJXduxzsjNzTzYUUDyABEmjcxbeoTiMRVg5yjwVIL
+ yOwTu7Aun8oA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="155690637"
+X-IronPort-AV: E=Sophos;i="5.76,341,1592895600"; 
+   d="scan'208";a="155690637"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2020 07:32:02 -0700
+IronPort-SDR: EWQbZ4MIuo23j1GJX/BlVcgAy9mtKfCq8mMWQ4+VqDEhbpX9FPqg3pJyzdPI9Na8EFvVHch43+
+ FohSM2k4B+IQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,341,1592895600"; 
+   d="scan'208";a="335569333"
+Received: from vgjayaku-ilbpg7.png.intel.com ([10.88.227.96])
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Aug 2020 07:32:00 -0700
+From:   vineetha.g.jaya.kumaran@intel.com
+To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        robh+dt@kernel.org
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        wan.ahmad.zainie.wan.mohamad@intel.com,
+        andriy.shevchenko@intel.com, lakshmi.bai.raja.subramanian@intel.com
+Subject: [PATCH v4 0/2] Add PWM support for Intel Keem Bay SoC
+Date:   Sat, 22 Aug 2020 22:30:44 +0800
+Message-Id: <1598106646-16595-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 8:25 AM Tanwar, Rahul
-<rahul.tanwar@linux.intel.com> wrote:
-> On 21/8/2020 6:56 pm, Andy Shevchenko wrote:
-> > On Fri, Aug 21, 2020 at 05:32:11PM +0800, Rahul Tanwar wrote:
+From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
 
-...
+Hi,
 
-> >> +#include <linux/bitfield.h>
-> >> +#include <linux/clk.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/of_device.h>
-> > We haven't settle this yet...
->
-> I investigated more about it. I was getting build error because we were
-> relying on of_device.h for including platform_device.h. You are right that
-> we are not using anything from of_device.h. So i removed of_device.h from
-> driver and added include <linux/platform_device.h> & build is ok.
->
-> Regarding mod_devicetable.h header, it gets included indirectly from
-> <linux/pwm.h> which includes of.h which includes mod_devicetable.h. So i
-> think no point including it again in the driver.
+This patch set enables support for PWM on the Intel Keem Bay SoC.
+Keem Bay is an ARM based SoC, and the GPIO module allows
+configuration of 6 PWM outputs. Patch 1 adds the PWM driver and
+Patch 2 is for the required Device Tree bindings documentation.
 
-Ideally you should include all headers you have direct users of.
-mod_devicetable.h is exactly one and I doubt the pwm.h should include
-it, but it's another story.
+This driver was tested on the Keem Bay evaluation module board.
 
-There are, of course, some cases when not all required because there
-is a guarantee that upper one includes lower one. For example, if you
-use bitops.h there is no need to include bits.h.
+Thank you.
 
-> >> +#include <linux/pwm.h>
-> >> +#include <linux/regmap.h>
-> >> +#include <linux/reset.h>
+Best regards,
+Vineetha
+
+Changes since v3:
+-Removed variable for address and calculate in place instead
+-Utilized u32_replace_bits() when updating KMB_PWM_LEADIN_OFFSET
+-Utilized dev_err_probe() for error reporting
+-Updated comments to use physical units
+-Updated error check for pwmchip_add()
+
+Changes since v2:
+-Include documentation about HW limitation/behaviour
+-Use hex values for KMB_PWM_COUNT_MAX
+-Redefine register macros
+-Utilize FIELD_GET/FIELD_PREP for calculating pwm_l/h_count and pwm_count
+-Round up duty cycle/period values
+-Get current hardware state in .apply instead of cached values
+-Do a polarity check before .enabled
+-Round high time/low time to closest value
+-Set enable bit in KMB_PWM_LEADIN_OFFSET to 0 in probe
+-Correct the naming for MODULE_ALIAS
+-Add additionalProperties: false in DT bindings
+
+Changes since v1:
+-Updated licensing info, "clocks" property and example in DT bindings
+-Updated name of DT bindings document to match compatible string
+-Removed 1 patch for addition of new sysfs attribute "count"
+-Added support for COMPILE_TEST in Kconfig
+-Updated naming of defines and regmap attribute
+-Updated calculation of waveform high time and low time
+-Added range checking for waveform high/low time
+-Implemented .get_state
+-Removed register writes for lead-in and count values (left to default)
+-Updated register access to single-access
+-Folded keembay_pwm_enable/disable_channel, keembay_pwm_config_period/duty_cycle,
+ and keembay_pwm_config into keembay_pwm_apply
+-Updated error messages/error codes
+-Removed pwm_disable from keembay_pwm_remove
+-Removed clk_prepare/clk_enable/clk_disable from driver
+
+Lai, Poey Seng (1):
+  pwm: Add PWM driver for Intel Keem Bay
+
+Vineetha G. Jaya Kumaran (1):
+  dt-bindings: pwm: keembay: Add bindings for Intel Keem Bay PWM
+
+ .../devicetree/bindings/pwm/intel,keembay-pwm.yaml |  47 +++++
+ drivers/pwm/Kconfig                                |   9 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-keembay.c                          | 229 +++++++++++++++++++++
+ 4 files changed, 286 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-keembay.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
+1.9.1
+
