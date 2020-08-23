@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D52F824EE3D
-	for <lists+linux-pwm@lfdr.de>; Sun, 23 Aug 2020 18:16:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A36D24EE41
+	for <lists+linux-pwm@lfdr.de>; Sun, 23 Aug 2020 18:17:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgHWQQp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 23 Aug 2020 12:16:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45602 "EHLO mail.kernel.org"
+        id S1728106AbgHWQQ5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 23 Aug 2020 12:16:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728077AbgHWQQn (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sun, 23 Aug 2020 12:16:43 -0400
+        id S1728090AbgHWQQs (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sun, 23 Aug 2020 12:16:48 -0400
 Received: from kozik-lap.proceq-device.com (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CC512072D;
-        Sun, 23 Aug 2020 16:16:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF7222076D;
+        Sun, 23 Aug 2020 16:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598199403;
-        bh=Dm+3LfgmxlFk7lfKGosmt5pRH6F3QaIaaVYrmFBasII=;
+        s=default; t=1598199407;
+        bh=zn6SwQvRqTQI9Av55ZFXzkgJGiEIGN9PfDf4Q2x9mwU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=alxYw3w0Yojxo8jsqF6OWmbny22Aq5p49ceacHXctvdMTGq8lrsNE0znpfK1f+5Oo
-         rLtD7QUVvLsv8msNK0W4qxahHmXsJC3GvITu6EU5tGYRkfxTmX9fLCyEmYsl8mOVZz
-         uPlUjFBDUkJBUddPpfnyPkYarqtGTtofEtSF2PjU=
+        b=WU2RoaJcPkOYCWG3H88Wf9mVI6pdoaJGzjaINJp+gE0Tka89iqCWOu59r4O0cu7IK
+         RjVRixJieVJLRUEee6NA60Ent4ezbm3dToAQyOXK8VLmBjk5WvxnAsvZu2Go3V/Ul5
+         4gdOZCyyM5CwvjCEagYWGLTouKHjaCAuwXX6NyV4=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -40,9 +40,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Anson Huang <Anson.Huang@nxp.com>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 10/22] dt-bindings: reset: fsl,imx7-src: Add i.MX 8M compatibles
-Date:   Sun, 23 Aug 2020 18:15:38 +0200
-Message-Id: <20200823161550.3981-10-krzk@kernel.org>
+Subject: [PATCH 11/22] dt-bindings: thermal: imx8mm-thermal: Add i.MX 8M Nano compatible
+Date:   Sun, 23 Aug 2020 18:15:39 +0200
+Message-Id: <20200823161550.3981-11-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200823161550.3981-1-krzk@kernel.org>
 References: <20200823161550.3981-1-krzk@kernel.org>
@@ -54,48 +54,39 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 DTSes with new i.MX 8M SoCs introduce their own compatibles so add them
 to fix dtbs_check warnings like:
 
-  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: reset-controller@30390000:
-    compatible:0: 'fsl,imx8mm-src' is not one of ['fsl,imx7d-src', 'fsl,imx8mq-src', 'fsl,imx8mp-src']
-    From schema: Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
+  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: tmu@30260000:
+    compatible:0: 'fsl,imx8mn-tmu' is not one of ['fsl,imx8mm-tmu', 'fsl,imx8mp-tmu']
+    From schema: Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
 
-  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: reset-controller@30390000:
-    compatible:1: 'syscon' was expected
+  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: tmu@30260000:
+    compatible: ['fsl,imx8mn-tmu', 'fsl,imx8mm-tmu'] is too long
 
-  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: reset-controller@30390000:
-    compatible: ['fsl,imx8mm-src', 'fsl,imx8mq-src', 'syscon'] is too long
+  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: tmu@30260000:
+    compatible: Additional items are not allowed ('fsl,imx8mm-tmu' was unexpected)
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- .../bindings/reset/fsl,imx7-src.yaml          | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/thermal/imx8mm-thermal.yaml    | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml b/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
-index 569cd3bd3a70..00430e2eabc8 100644
---- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
-+++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
-@@ -22,12 +22,19 @@ description: |
+diff --git a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
+index 38852877b8e3..89c54e08ee61 100644
+--- a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
++++ b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
+@@ -18,9 +18,13 @@ description: |
  
  properties:
    compatible:
--    items:
--      - enum:
--          - fsl,imx7d-src
--          - fsl,imx8mq-src
--          - fsl,imx8mp-src
--      - const: syscon
+-    enum:
+-      - fsl,imx8mm-tmu
+-      - fsl,imx8mp-tmu
 +    oneOf:
++      - enum:
++          - fsl,imx8mm-tmu
++          - fsl,imx8mp-tmu
 +      - items:
-+          - enum:
-+              - fsl,imx7d-src
-+              - fsl,imx8mq-src
-+              - fsl,imx8mp-src
-+          - const: syscon
-+      - items:
-+          - enum:
-+              - fsl,imx8mm-src
-+              - fsl,imx8mn-src
-+          - const: fsl,imx8mq-src
-+          - const: syscon
++          - const: fsl,imx8mn-tmu
++          - const: fsl,imx8mm-tmu
  
    reg:
      maxItems: 1
