@@ -2,37 +2,37 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A78B724FD36
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 Aug 2020 14:02:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9163024FD38
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 Aug 2020 14:02:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbgHXMCA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        id S1727029AbgHXMCA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
         Mon, 24 Aug 2020 08:02:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50835 "EHLO
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32982 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727029AbgHXMB6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Aug 2020 08:01:58 -0400
+        with ESMTP id S1727015AbgHXMB7 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Aug 2020 08:01:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598270513;
+        s=mimecast20190719; t=1598270517;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=3mqN9rDcCqr7nh6Hbhh29SJWkRViinBk1n4ManKQOrs=;
-        b=h1hRkkLTC4gPaDQ64YIlsdo67Dhkjf0HOwKSMd9s0vMbr8UC80YXkVliyvmrpffyIKu4pF
-        8FBsv9duCtBMG+6/JFNLUOa84CVYEckCMsZGX6MRZpIIGSE5t9F8/3j+gvkTTHibNCzN2G
-        h+EXeqwvjdXpzwCiZIxx8EXD9SlJK5k=
+        bh=+iL0S8ORO2sibR8s+wLFkvCJSbjQA2ggoJWqfR/GnX0=;
+        b=V7GArd3h5Fp013fiHuVOO44GjtQOpV1ig9bsduNVBpUwwlk+C0GsMrMdktwPlSJeX2BWZy
+        XSbfjI6zjmKgZbkMPlbSndbGj9xbxjYnIyN7uSayvY5r2B6FvEru8gXBnEZpnPMvwJDkmh
+        a8+8U/1LGOGQ0Yz6W1milkQMbfnni7k=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-63-8wGAtGR8MBGmNoDAfNODMg-1; Mon, 24 Aug 2020 08:01:49 -0400
-X-MC-Unique: 8wGAtGR8MBGmNoDAfNODMg-1
+ us-mta-213-ZDWleKWBNsyyYKe1pttBpQ-1; Mon, 24 Aug 2020 08:01:53 -0400
+X-MC-Unique: ZDWleKWBNsyyYKe1pttBpQ-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EE9F41005E63;
-        Mon, 24 Aug 2020 12:01:46 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA7751005E77;
+        Mon, 24 Aug 2020 12:01:50 +0000 (UTC)
 Received: from x1.localdomain.com (ovpn-113-147.ams2.redhat.com [10.36.113.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0AB115D9DD;
-        Mon, 24 Aug 2020 12:01:43 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 518E15D9E2;
+        Mon, 24 Aug 2020 12:01:47 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -50,9 +50,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>, linux-pwm@vger.kernel.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org
-Subject: [PATCH v6 04/16] pwm: lpss: Add range limit check for the base_unit register value
-Date:   Mon, 24 Aug 2020 14:01:14 +0200
-Message-Id: <20200824120126.7116-5-hdegoede@redhat.com>
+Subject: [PATCH v6 05/16] pwm: lpss: Add pwm_lpss_prepare_enable() helper
+Date:   Mon, 24 Aug 2020 14:01:15 +0200
+Message-Id: <20200824120126.7116-6-hdegoede@redhat.com>
 In-Reply-To: <20200824120126.7116-1-hdegoede@redhat.com>
 References: <20200824120126.7116-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -63,66 +63,100 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-When the user requests a high enough period ns value, then the
-calculations in pwm_lpss_prepare() might result in a base_unit value of 0.
+In the not-enabled -> enabled path pwm_lpss_apply() needs to get a
+runtime-pm reference; and then on any errors it needs to release it
+again.
 
-But according to the data-sheet the way the PWM controller works is that
-each input clock-cycle the base_unit gets added to a N bit counter and
-that counter overflowing determines the PWM output frequency. Adding 0
-to the counter is a no-op. The data-sheet even explicitly states that
-writing 0 to the base_unit bits will result in the PWM outputting a
-continuous 0 signal.
+This leads to somewhat hard to read code. This commit introduces a new
+pwm_lpss_prepare_enable() helper and moves all the steps necessary for
+the not-enabled -> enabled transition there, so that we can error check
+the entire transition in a single place and only have one pm_runtime_put()
+on failure call site.
 
-When the user requestes a low enough period ns value, then the
-calculations in pwm_lpss_prepare() might result in a base_unit value
-which is bigger then base_unit_range - 1. Currently the codes for this
-deals with this by applying a mask:
+While working on this I noticed that the enabled -> enabled (update
+settings) path was quite similar, so I've added an enable parameter to
+the new pwm_lpss_prepare_enable() helper, which allows using it in that
+path too.
 
-	base_unit &= (base_unit_range - 1);
-
-But this means that we let the value overflow the range, we throw away the
-higher bits and store whatever value is left in the lower bits into the
-register leading to a random output frequency, rather then clamping the
-output frequency to the highest frequency which the hardware can do.
-
-This commit fixes both issues by clamping the base_unit value to be
-between 1 and (base_unit_range - 1).
-
-Fixes: 684309e5043e ("pwm: lpss: Avoid potential overflow of base_unit")
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v5:
-- Use clamp_val(... instead of clam_t(unsigned long long, ...
-
-Changes in v3:
-- Change upper limit of clamp to (base_unit_range - 1)
-- Add Fixes tag
----
- drivers/pwm/pwm-lpss.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pwm/pwm-lpss.c | 45 ++++++++++++++++++++++++------------------
+ 1 file changed, 26 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
-index 43b1fc634af1..da9bc3d10104 100644
+index da9bc3d10104..8a136ba2a583 100644
 --- a/drivers/pwm/pwm-lpss.c
 +++ b/drivers/pwm/pwm-lpss.c
-@@ -97,6 +97,8 @@ static void pwm_lpss_prepare(struct pwm_lpss_chip *lpwm, struct pwm_device *pwm,
- 	freq *= base_unit_range;
+@@ -122,41 +122,48 @@ static inline void pwm_lpss_cond_enable(struct pwm_device *pwm, bool cond)
+ 		pwm_lpss_write(pwm, pwm_lpss_read(pwm) | PWM_ENABLE);
+ }
  
- 	base_unit = DIV_ROUND_CLOSEST_ULL(freq, c);
-+	/* base_unit must not be 0 and we also want to avoid overflowing it */
-+	base_unit = clamp_val(base_unit, 1, base_unit_range - 1);
++static int pwm_lpss_prepare_enable(struct pwm_lpss_chip *lpwm,
++				   struct pwm_device *pwm,
++				   const struct pwm_state *state,
++				   bool enable)
++{
++	int ret;
++
++	ret = pwm_lpss_is_updating(pwm);
++	if (ret)
++		return ret;
++
++	pwm_lpss_prepare(lpwm, pwm, state->duty_cycle, state->period);
++	pwm_lpss_cond_enable(pwm, enable && lpwm->info->bypass == false);
++	ret = pwm_lpss_wait_for_update(pwm);
++	if (ret)
++		return ret;
++
++	pwm_lpss_cond_enable(pwm, enable && lpwm->info->bypass == true);
++	return 0;
++}
++
+ static int pwm_lpss_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			  const struct pwm_state *state)
+ {
+ 	struct pwm_lpss_chip *lpwm = to_lpwm(chip);
+-	int ret;
++	int ret = 0;
  
- 	on_time_div = 255ULL * duty_ns;
- 	do_div(on_time_div, period_ns);
-@@ -105,7 +107,6 @@ static void pwm_lpss_prepare(struct pwm_lpss_chip *lpwm, struct pwm_device *pwm,
- 	orig_ctrl = ctrl = pwm_lpss_read(pwm);
- 	ctrl &= ~PWM_ON_TIME_DIV_MASK;
- 	ctrl &= ~((base_unit_range - 1) << PWM_BASE_UNIT_SHIFT);
--	base_unit &= (base_unit_range - 1);
- 	ctrl |= (u32) base_unit << PWM_BASE_UNIT_SHIFT;
- 	ctrl |= on_time_div;
+ 	if (state->enabled) {
+ 		if (!pwm_is_enabled(pwm)) {
+ 			pm_runtime_get_sync(chip->dev);
+-			ret = pwm_lpss_is_updating(pwm);
+-			if (ret) {
+-				pm_runtime_put(chip->dev);
+-				return ret;
+-			}
+-			pwm_lpss_prepare(lpwm, pwm, state->duty_cycle, state->period);
+-			pwm_lpss_cond_enable(pwm, lpwm->info->bypass == false);
+-			ret = pwm_lpss_wait_for_update(pwm);
+-			if (ret) {
++			ret = pwm_lpss_prepare_enable(lpwm, pwm, state, true);
++			if (ret)
+ 				pm_runtime_put(chip->dev);
+-				return ret;
+-			}
+-			pwm_lpss_cond_enable(pwm, lpwm->info->bypass == true);
+ 		} else {
+-			ret = pwm_lpss_is_updating(pwm);
+-			if (ret)
+-				return ret;
+-			pwm_lpss_prepare(lpwm, pwm, state->duty_cycle, state->period);
+-			return pwm_lpss_wait_for_update(pwm);
++			ret = pwm_lpss_prepare_enable(lpwm, pwm, state, false);
+ 		}
+ 	} else if (pwm_is_enabled(pwm)) {
+ 		pwm_lpss_write(pwm, pwm_lpss_read(pwm) & ~PWM_ENABLE);
+ 		pm_runtime_put(chip->dev);
+ 	}
  
+-	return 0;
++	return ret;
+ }
+ 
+ static void pwm_lpss_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 -- 
 2.28.0
 
