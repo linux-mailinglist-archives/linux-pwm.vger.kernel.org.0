@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8685B250239
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 Aug 2020 18:30:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB6CC25022A
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 Aug 2020 18:29:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgHXQaJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 24 Aug 2020 12:30:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58772 "EHLO mail.kernel.org"
+        id S1728120AbgHXQ3c (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 24 Aug 2020 12:29:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728138AbgHXQ3Q (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:29:16 -0400
+        id S1728077AbgHXQ3X (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:29:23 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 215E920866;
-        Mon, 24 Aug 2020 16:29:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 968582072D;
+        Mon, 24 Aug 2020 16:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286556;
-        bh=IcWdUIpZPLrTFhfMFn5K5VkjUKVluLTxZ3P2v5TWsEE=;
+        s=default; t=1598286562;
+        bh=CnRSnps+AJEG/CNxkZZ3JT+RUcAXLf0eIGA4Cov4d+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jyGTA3pl2iZ6iwRTHRYvbqGpkvnk43nFCR8d3W1X2RJu/hO3ZgALLiUgPt8e58Ibx
-         kfvaz4xYS3ZNqva0peuSxSgYny+/X7lvFzweEhN8BcH8LaKhgC47hEq4bwVGeK3yLC
-         5BKfBbu4I0HwGbZ+9otThfJkwOjs9tiFPmxyxcvE=
+        b=nh6hgK7lOgmW9izb+LuDJ5SUOJo34fH/EcIpkU/0ZYG4pF1uo1o36J78/CuG+K+t4
+         qgGmOJjzuiea5OHtVIhlowJCGQvlmsszKFpGttk8lcVH3x6B0kuBekleSS7+IS2r1g
+         7LwXM1sLXEhWcF0hUbBodcOCqYk9umOvq2I1qbyQ=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -50,9 +50,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 18/19] arm64: dts: imx8mq-evk: Add hog suffix to wl-reg-on
-Date:   Mon, 24 Aug 2020 18:26:51 +0200
-Message-Id: <20200824162652.21047-18-krzk@kernel.org>
+Subject: [PATCH v2 19/19] arm64: dts: imx8mq-zii-ultra: Add hog suffixes to GPIO hogs
+Date:   Mon, 24 Aug 2020 18:26:52 +0200
+Message-Id: <20200824162652.21047-19-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200824162652.21047-1-krzk@kernel.org>
 References: <20200824162652.21047-1-krzk@kernel.org>
@@ -63,25 +63,49 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 According to device tree specification, device node names should be
 somewhat generic and reflecting the function of the device so add the
-"hog" suffix to wl-reg-on GPIO hog.
+"hog" suffixes to all GPIO hog nodes.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-index 8aa9cd8e495a..a088831d2e24 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-@@ -157,7 +157,7 @@
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
+index 0d1088dcaa02..fa7a041ffcfd 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
+@@ -229,28 +229,28 @@
  	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_wifi_reset>;
+ 	pinctrl-0 = <&pinctrl_gpio3_hog>;
  
--	wl-reg-on {
-+	wl-reg-on-hog {
+-	usb-emulation {
++	usb-emulation-hog {
  		gpio-hog;
- 		gpios = <29 GPIO_ACTIVE_HIGH>;
+ 		gpios = <10 GPIO_ACTIVE_HIGH>;
+ 		output-low;
+ 		line-name = "usb-emulation";
+ 	};
+ 
+-	usb-mode1 {
++	usb-mode1-hog {
+ 		gpio-hog;
+ 		gpios = <11 GPIO_ACTIVE_HIGH>;
+ 		output-high;
+ 		line-name = "usb-mode1";
+ 	};
+ 
+-	usb-pwr {
++	usb-pwr-hog {
+ 		gpio-hog;
+ 		gpios = <12 GPIO_ACTIVE_LOW>;
+ 		output-high;
+ 		line-name = "usb-pwr-ctrl-en-n";
+ 	};
+ 
+-	usb-mode2 {
++	usb-mode2-hog {
+ 		gpio-hog;
+ 		gpios = <13 GPIO_ACTIVE_HIGH>;
  		output-high;
 -- 
 2.17.1
