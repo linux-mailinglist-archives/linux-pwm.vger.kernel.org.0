@@ -2,142 +2,138 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 430BC24F2EA
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 Aug 2020 09:07:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F2B324F38C
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 Aug 2020 10:03:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726051AbgHXHHL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 24 Aug 2020 03:07:11 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40907 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgHXHHK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Aug 2020 03:07:10 -0400
-Received: by mail-wm1-f68.google.com with SMTP id k20so7114138wmi.5;
-        Mon, 24 Aug 2020 00:07:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jMkESQ6/qDeh8yFOp5ut20DDKvKP8Egt8HrPQWgV3hI=;
-        b=qO1tdIinoFPIXWPm5/19KfBpyFAwq8uKSg7EQU1L8V6ovQx9nJWVqyn3VV5ax8kBxQ
-         pbVqTRVoiDADr0KvqztcBve3TkrN3Fl9lFP1UXt+MjKM+BULUR6gOD7v2Zhusjq4JE6W
-         PzNQzwmCMMpsOIyNMIOA0r7/IZ6GjQyzxV8g4uEdQmkom9Zl5Wc4naHb4zWQicafXGE+
-         ZBZfmBbEr3kyOvrivi2+KJJN9VY4xshpgyieT9qL2aC/lW3Zdm8z3E7U62EPJScgJYHS
-         rZDR3h+FNeOgElnSHLwSH/Qkfq6sJmMvHVFSA1T6JeHKf6x2mv2hDTBPb4P6UFBtA1J4
-         dwpg==
-X-Gm-Message-State: AOAM530XgyTPKsoaliYNEw6PrdoDEeX2dCtCpr8HI1/B5ZGAHNi9rttZ
-        zxzwkG2bBffmUngDYt1gm9g=
-X-Google-Smtp-Source: ABdhPJyU61NszbES0k6p1PAHajV48Erw/hGcjANLVNAFBKqGCzpj1Y19Wb9rD9qlokEO4JMhFKYb8w==
-X-Received: by 2002:a7b:c1c1:: with SMTP id a1mr4297940wmj.137.1598252826663;
-        Mon, 24 Aug 2020 00:07:06 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id m1sm21788437wmc.28.2020.08.24.00.07.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Aug 2020 00:07:06 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 09:07:03 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>
-Subject: Re: [PATCH 02/22] dt-bindings: gpio: fsl-imx-gpio: Add gpio-ranges
- property
-Message-ID: <20200824070703.GA5382@kozik-lap>
-References: <20200823161550.3981-1-krzk@kernel.org>
- <20200823161550.3981-2-krzk@kernel.org>
- <20200824052446.GE13023@pengutronix.de>
- <20200824063806.GA2497@kozik-lap>
- <20200824065801.GH13023@pengutronix.de>
+        id S1726027AbgHXIDx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 24 Aug 2020 04:03:53 -0400
+Received: from mga12.intel.com ([192.55.52.136]:9876 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726225AbgHXIDp (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:03:45 -0400
+IronPort-SDR: P/TR/vsPzETOh+Idt4yNcCRe1t/94fUDzlzQNDP7MP6gOSPBSnGChU0MTQAxeRkIIwSi0DDjRg
+ k1KxLufosl7Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="135399630"
+X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
+   d="scan'208";a="135399630"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 01:03:45 -0700
+IronPort-SDR: nsuW3aUHJ28vqbV5G1i/JloVAVpwBrPSIpnluXRnHUS9A9AnCrkF/0gXwmUrvxpCkC/+vG8buR
+ HEGF2M3fcbIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
+   d="scan'208";a="328410026"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 24 Aug 2020 01:03:42 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kA7Ha-00AzUx-S4; Mon, 24 Aug 2020 10:52:46 +0300
+Date:   Mon, 24 Aug 2020 10:52:46 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     vineetha.g.jaya.kumaran@intel.com
+Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        robh+dt@kernel.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, wan.ahmad.zainie.wan.mohamad@intel.com,
+        lakshmi.bai.raja.subramanian@intel.com
+Subject: Re: [PATCH v4 1/2] pwm: Add PWM driver for Intel Keem Bay
+Message-ID: <20200824075246.GZ1891694@smile.fi.intel.com>
+References: <1598106646-16595-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+ <1598106646-16595-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824065801.GH13023@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1598106646-16595-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 08:58:01AM +0200, Sascha Hauer wrote:
-> On Mon, Aug 24, 2020 at 08:38:06AM +0200, Krzysztof Kozlowski wrote:
-> > On Mon, Aug 24, 2020 at 07:24:46AM +0200, Sascha Hauer wrote:
-> > > On Sun, Aug 23, 2020 at 06:15:30PM +0200, Krzysztof Kozlowski wrote:
-> > > > The GPIO controller node can have gpio-ranges property.  This fixes
-> > > > dtbs_check warnings like:
-> > > > 
-> > > >   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: gpio@30200000: 'gpio-ranges' does not match any of the regexes: 'pinctrl-[0-9]+'
-> > > >     From schema: Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-> > > > 
-> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > > ---
-> > > >  .../devicetree/bindings/gpio/fsl-imx-gpio.yaml    | 15 +++++++++++++++
-> > > >  1 file changed, 15 insertions(+)
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-> > > > index 454db20c2d1a..1fac69573bb9 100644
-> > > > --- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-> > > > +++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-> > > > @@ -51,6 +51,9 @@ properties:
-> > > >  
-> > > >    gpio-controller: true
-> > > >  
-> > > > +  gpio-ranges:
-> > > > +    maxItems: 1
-> > > > +
-> > > >  required:
-> > > >    - compatible
-> > > >    - reg
-> > > > @@ -62,6 +65,18 @@ required:
-> > > >  
-> > > >  additionalProperties: false
-> > > >  
-> > > > +allOf:
-> > > > +  - if:
-> > > > +      properties:
-> > > > +        compatible:
-> > > > +          contains:
-> > > > +            const: fsl,imx8mp-gpio
-> > > > +    then:
-> > > > +      properties:
-> > > > +        gpio-ranges:
-> > > > +          minItems: 1
-> > > > +          maxItems: 2
-> > > 
-> > > Why do you limit this to fsl,imx8mp-gpio? The i.MX5,6,7 dtsi files use
-> > > gpio-ranges as well and other i.MX dtsi files could also use it.
-> > 
-> > All other cases use maximum one element in gpio-ranges, so they are
-> > covered so I assumed they are continuous. But if it not the case, I can
-> > make all them maximum 2.
+On Sat, Aug 22, 2020 at 10:30:45PM +0800, vineetha.g.jaya.kumaran@intel.com wrote:
+> From: "Lai, Poey Seng" <poey.seng.lai@intel.com>
 > 
-> I misread this, I thought you allow gpio-ranges only for imx8mp, but
-> it's only the maxItems you set differently for that SoC. Anyway,
-> arch/arm/boot/dts/imx6dl.dtsi has this:
-> 
-> &gpio1 {
->         gpio-ranges = <&iomuxc  0 131 2>, <&iomuxc  2 137 8>, <&iomuxc 10 189 2>,
->                       <&iomuxc 12 194 1>, <&iomuxc 13 193 1>, <&iomuxc 14 192 1>,
->                       <&iomuxc 15 191 1>, <&iomuxc 16 185 2>, <&iomuxc 18 184 1>,
->                       <&iomuxc 19 187 1>, <&iomuxc 20 183 1>, <&iomuxc 21 188 1>,
->                       <&iomuxc 22 123 3>, <&iomuxc 25 121 1>, <&iomuxc 26 127 1>,
->                       <&iomuxc 27 126 1>, <&iomuxc 28 128 1>, <&iomuxc 29 130 1>,
->                       <&iomuxc 30 129 1>, <&iomuxc 31 122 1>;
-> };
-> 
-> I don't think it makes sense to specify maxItems.
 
-Indeed, I will skip the max limit.
+Side note, please use my @linux.intel.com address in the Cc list.
 
-Best regards,
-Krzysztof
+> Enable PWM support for the Intel Keem Bay SoC.
+
+...
+
+> + * Authors: Lai Poey Seng <poey.seng.lai@intel.com>
+> + *          Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
+
+Seems you missed Co-developed-by in the tag block of commit message.
+
+...
+
+> +#include <linux/bitfield.h>
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+
+> +#include <linux/of.h>
+
+There is no user of this header. But mod_devicetable.h is missing.
+
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
+
+...
+
+> +	/*
+> +	 * The upper 16 bits of the KMB_PWM_HIGHLOW_OFFSET register contain
+> +	 * the high time of the waveform, while the last 16 bits contain
+> +	 * the low time of the waveform, in terms of clock cycles.
+> +	 *
+> +	 * high time = clock rate * duty cycle / NSEC_PER_SEC
+> +	 * low time =  clock rate * (period - duty cycle) / NSEC_PER_SEC
+> +	 *
+> +	 * e.g. For period 50us, duty cycle 30us, and clock rate 500MHz:
+
+> +	 * high time = (500MHz * 30us) / 1000000000 = 0x3A98
+
+10^9 divisor now is redundant. It's school physics about units.
+
+> +	 * low time = (500MHz * 20us) / 1000000000 = 0x2710
+
+Ditto.
+
+> +	 * Value written to KMB_PWM_HIGHLOW_OFFSET = 0x3A982710
+> +	 */
+
+Note, in the code you are operating different units.
+
+...
+
+> +	div = clk_rate * state->duty_cycle;
+> +	div = DIV_ROUND_CLOSEST_ULL(div, NSEC_PER_SEC);
+
+For example, here you have clock rate in Hz, duty cycle in ns, that's why you
+need to use NSEC_PER_SEC divisor here.
+
+...
+
+> +	div = clk_rate * (state->period - state->duty_cycle);
+> +	div = DIV_ROUND_CLOSEST_ULL(div, NSEC_PER_SEC);
+
+Same here.
+
+(Just to be clear, code is okay!)
+
+...
+
+> +	priv->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(priv->clk))
+> +		dev_err_probe(dev, PTR_ERR(priv->clk),
+> +			     "Failed to get clock\n");
+
+First of all, it can be one line, second, it misses something...
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
