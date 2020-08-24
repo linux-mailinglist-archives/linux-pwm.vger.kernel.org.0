@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 826D9250215
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 Aug 2020 18:28:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAF9425021E
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 Aug 2020 18:29:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725999AbgHXQ2o (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 24 Aug 2020 12:28:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57602 "EHLO mail.kernel.org"
+        id S1728072AbgHXQ2q (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 24 Aug 2020 12:28:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728014AbgHXQ2Y (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:28:24 -0400
+        id S1728022AbgHXQ2f (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:28:35 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0930820838;
-        Mon, 24 Aug 2020 16:28:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48A24207CD;
+        Mon, 24 Aug 2020 16:28:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286502;
-        bh=Dm+3LfgmxlFk7lfKGosmt5pRH6F3QaIaaVYrmFBasII=;
+        s=default; t=1598286515;
+        bh=PdacYnFzAXKYzO75jZ6jRptISMDbTeC/IgkjXkml0CM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VuFPn4aT6Te0VuqnnyGE9NWf6d/MsVJ8SAoVWsp+FEq5nuN7uZg7JAMjaFh2ZN5sr
-         wgcFSnsbHu5pDPwRJtFqXjAfECT2kb4jnKO0ebBVXZjf6+xe/ADgbbCyoFMZhLvuAO
-         o7qv9zWX9hBdSdHg6p6Iq+8Za727fqox1S7T6I4g=
+        b=Ym/mKHg/O93t27zPW8xdlsm8lZurF61bz6fwAKw/8jxPmxcGdSWXWq8gNAizCqtJ7
+         hiBF62A+9rlYM4r/FtwJs49Ozpt0uRstEdzlajjZQ9LwUaaztom8lQ/jHUk/b+LSZ6
+         cJUQ5yDqYJ0mL5ZvlxkW4YG0Khiferx573tQ0qQk=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -50,9 +50,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 10/19] dt-bindings: reset: fsl,imx7-src: Add i.MX 8M compatibles
-Date:   Mon, 24 Aug 2020 18:26:43 +0200
-Message-Id: <20200824162652.21047-10-krzk@kernel.org>
+Subject: [PATCH v2 12/19] dt-bindings: mmc: fsl-imx-esdhc: Fix i.MX 8 compatible matching
+Date:   Mon, 24 Aug 2020 18:26:45 +0200
+Message-Id: <20200824162652.21047-12-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200824162652.21047-1-krzk@kernel.org>
 References: <20200824162652.21047-1-krzk@kernel.org>
@@ -61,51 +61,77 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-DTSes with new i.MX 8M SoCs introduce their own compatibles so add them
-to fix dtbs_check warnings like:
+The i.MX 8 DTSes use two compatibles so update the binding to fix
+dtbs_check warnings like:
 
-  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: reset-controller@30390000:
-    compatible:0: 'fsl,imx8mm-src' is not one of ['fsl,imx7d-src', 'fsl,imx8mq-src', 'fsl,imx8mp-src']
-    From schema: Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
+  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: mmc@30b40000:
+    compatible: ['fsl,imx8mn-usdhc', 'fsl,imx7d-usdhc'] is too long
+    From schema: Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
 
-  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: reset-controller@30390000:
-    compatible:1: 'syscon' was expected
+  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: mmc@30b40000:
+    compatible: Additional items are not allowed ('fsl,imx7d-usdhc' was unexpected)
 
-  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: reset-controller@30390000:
-    compatible: ['fsl,imx8mm-src', 'fsl,imx8mq-src', 'syscon'] is too long
+  arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: mmc@30b40000:
+    compatible: ['fsl,imx8mn-usdhc', 'fsl,imx7d-usdhc'] is too long
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- .../bindings/reset/fsl,imx7-src.yaml          | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml b/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
-index 569cd3bd3a70..00430e2eabc8 100644
---- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
-+++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
-@@ -22,12 +22,19 @@ description: |
+---
+
+Changes since v1:
+1. Handle also fsl,imx8mm-usdhc and fsl,imx8qxp-usdhc
+---
+ .../bindings/mmc/fsl-imx-esdhc.yaml           | 40 +++++++++++--------
+ 1 file changed, 23 insertions(+), 17 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+index 10b45966f1b8..54f05e2a4246 100644
+--- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
++++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+@@ -21,23 +21,29 @@ description: |
  
  properties:
    compatible:
--    items:
--      - enum:
--          - fsl,imx7d-src
--          - fsl,imx8mq-src
--          - fsl,imx8mp-src
--      - const: syscon
+-    enum:
+-      - fsl,imx25-esdhc
+-      - fsl,imx35-esdhc
+-      - fsl,imx51-esdhc
+-      - fsl,imx53-esdhc
+-      - fsl,imx6q-usdhc
+-      - fsl,imx6sl-usdhc
+-      - fsl,imx6sx-usdhc
+-      - fsl,imx6ull-usdhc
+-      - fsl,imx7d-usdhc
+-      - fsl,imx7ulp-usdhc
+-      - fsl,imx8mq-usdhc
+-      - fsl,imx8mm-usdhc
+-      - fsl,imx8mn-usdhc
+-      - fsl,imx8mp-usdhc
+-      - fsl,imx8qm-usdhc
+-      - fsl,imx8qxp-usdhc
 +    oneOf:
++      - enum:
++          - fsl,imx25-esdhc
++          - fsl,imx35-esdhc
++          - fsl,imx51-esdhc
++          - fsl,imx53-esdhc
++          - fsl,imx6q-usdhc
++          - fsl,imx6sl-usdhc
++          - fsl,imx6sx-usdhc
++          - fsl,imx6ull-usdhc
++          - fsl,imx7d-usdhc
++          - fsl,imx7ulp-usdhc
++          - fsl,imx8mq-usdhc
++          - fsl,imx8mm-usdhc
++          - fsl,imx8qxp-usdhc
 +      - items:
 +          - enum:
-+              - fsl,imx7d-src
-+              - fsl,imx8mq-src
-+              - fsl,imx8mp-src
-+          - const: syscon
-+      - items:
-+          - enum:
-+              - fsl,imx8mm-src
-+              - fsl,imx8mn-src
-+          - const: fsl,imx8mq-src
-+          - const: syscon
++              - fsl,imx8mm-usdhc
++              - fsl,imx8mn-usdhc
++              - fsl,imx8mp-usdhc
++              - fsl,imx8mq-usdhc
++              - fsl,imx8qxp-usdhc
++          - const: fsl,imx7d-usdhc
  
    reg:
      maxItems: 1
