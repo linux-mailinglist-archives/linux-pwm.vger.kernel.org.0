@@ -2,26 +2,40 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 327CD24F234
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 Aug 2020 07:46:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9280124F2A1
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 Aug 2020 08:38:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgHXFqP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 24 Aug 2020 01:46:15 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35523 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728004AbgHXFqN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Aug 2020 01:46:13 -0400
-Received: from [2001:67c:670:100:1d::c0] (helo=ptx.hi.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1kA5Iw-0004fN-D3; Mon, 24 Aug 2020 07:46:02 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1kA5Iv-0001Wd-F9; Mon, 24 Aug 2020 07:46:01 +0200
-Date:   Mon, 24 Aug 2020 07:46:01 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
+        id S1726056AbgHXGiN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 24 Aug 2020 02:38:13 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34269 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgHXGiN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Aug 2020 02:38:13 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f7so7497024wrw.1;
+        Sun, 23 Aug 2020 23:38:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VYlUOue9weg8rDgB4bx9HK1Y20q59ca+iyWSSQFRXYI=;
+        b=VxyCZz/ldN3JRupiVAt+a0AG/oMnR57uzAkH3KBz5mnf9e8urLJES3Etd6R1rX8RW7
+         tmP6iXBRKqGNxhPIw1RObPmrlQf65QLvMzBgzhc1w4sMK5pdS0iEutu8Og99uqW5gvvN
+         nA0yTh3jwPa2KuaxhT3+JLPCDjBp2pQXJpDwfYEhFfYqPug9tqfO4KRzFmqO1hP1xssf
+         B29dOgAmXtZ6w7XnZQJQTchstYtpcZt21ZOQpu1XKnWZurPKtc+jz5hhYyqDzfggMsYd
+         SQqRa09FyjVyrRIdj7+A2kH+XCVXzm8HWlZbXibfeP8gUVa13eOpn/thTFOA9ye2ROHi
+         aQHw==
+X-Gm-Message-State: AOAM533gxNAIRoRz09oAoouHF/JsHnCGTtXeWOyIuwcqeEN8jEQrEEX1
+        df6Xoy2gTDEjWhHmqZqCmBc=
+X-Google-Smtp-Source: ABdhPJzG3N510Tf3V6Srikm+MUxu5X19cpEEmIR9h3dkveK++/7ys8cBoVMBBR1Rfun7Ww4TZ4WnsQ==
+X-Received: by 2002:adf:ef08:: with SMTP id e8mr4571409wro.164.1598251090024;
+        Sun, 23 Aug 2020 23:38:10 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id 126sm22956165wme.42.2020.08.23.23.38.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 23 Aug 2020 23:38:09 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 08:38:06 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -36,78 +50,72 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
         Anson Huang <Anson.Huang@nxp.com>
-Subject: Re: [PATCH 07/22] dt-bindings: serial: fsl-imx-uart: imx-pwm: Add
- i.MX 8M compatibles
-Message-ID: <20200824054601.GF13023@pengutronix.de>
+Subject: Re: [PATCH 02/22] dt-bindings: gpio: fsl-imx-gpio: Add gpio-ranges
+ property
+Message-ID: <20200824063806.GA2497@kozik-lap>
 References: <20200823161550.3981-1-krzk@kernel.org>
- <20200823161550.3981-7-krzk@kernel.org>
+ <20200823161550.3981-2-krzk@kernel.org>
+ <20200824052446.GE13023@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200823161550.3981-7-krzk@kernel.org>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:44:43 up 186 days, 13:15, 151 users,  load average: 0.94, 0.53,
- 0.26
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20200824052446.GE13023@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Mon, Aug 24, 2020 at 07:24:46AM +0200, Sascha Hauer wrote:
+> On Sun, Aug 23, 2020 at 06:15:30PM +0200, Krzysztof Kozlowski wrote:
+> > The GPIO controller node can have gpio-ranges property.  This fixes
+> > dtbs_check warnings like:
+> > 
+> >   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: gpio@30200000: 'gpio-ranges' does not match any of the regexes: 'pinctrl-[0-9]+'
+> >     From schema: Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  .../devicetree/bindings/gpio/fsl-imx-gpio.yaml    | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> > index 454db20c2d1a..1fac69573bb9 100644
+> > --- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> > +++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> > @@ -51,6 +51,9 @@ properties:
+> >  
+> >    gpio-controller: true
+> >  
+> > +  gpio-ranges:
+> > +    maxItems: 1
+> > +
+> >  required:
+> >    - compatible
+> >    - reg
+> > @@ -62,6 +65,18 @@ required:
+> >  
+> >  additionalProperties: false
+> >  
+> > +allOf:
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            const: fsl,imx8mp-gpio
+> > +    then:
+> > +      properties:
+> > +        gpio-ranges:
+> > +          minItems: 1
+> > +          maxItems: 2
+> 
+> Why do you limit this to fsl,imx8mp-gpio? The i.MX5,6,7 dtsi files use
+> gpio-ranges as well and other i.MX dtsi files could also use it.
 
-The subject contains a "imx-pwm", presumably from the last patch.
+All other cases use maximum one element in gpio-ranges, so they are
+covered so I assumed they are continuous. But if it not the case, I can
+make all them maximum 2.
 
-Sascha
+Best regards,
+Krzysztof
 
-On Sun, Aug 23, 2020 at 06:15:35PM +0200, Krzysztof Kozlowski wrote:
-> DTSes with new i.MX 8M SoCs introduce their own compatibles so add them
-> to fix dtbs_check warnings like:
-> 
->   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
->     compatible:0: 'fsl,imx8mm-pwm' is not one of ['fsl,imx1-pwm', 'fsl,imx27-pwm']
->     From schema: Documentation/devicetree/bindings/pwm/imx-pwm.yaml
-> 
->   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
->     compatible: ['fsl,imx8mm-pwm', 'fsl,imx27-pwm'] is too long
-> 
->   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
->     compatible: Additional items are not allowed ('fsl,imx27-pwm' was unexpected)
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml b/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
-> index cba3f83ccd5f..3d896173b3b0 100644
-> --- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
-> +++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
-> @@ -36,6 +36,10 @@ properties:
->              - fsl,imx6sx-uart
->              - fsl,imx6ul-uart
->              - fsl,imx7d-uart
-> +            - fsl,imx8mm-uart
-> +            - fsl,imx8mn-uart
-> +            - fsl,imx8mp-uart
-> +            - fsl,imx8mq-uart
->            - const: fsl,imx6q-uart
->  
->    reg:
-> -- 
-> 2.17.1
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
