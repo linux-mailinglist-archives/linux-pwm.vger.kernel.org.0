@@ -2,170 +2,162 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE80B24FAD7
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 Aug 2020 12:00:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B00CA24FB1E
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 Aug 2020 12:15:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbgHXKAm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 24 Aug 2020 06:00:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47998 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbgHXKAg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Aug 2020 06:00:36 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63204C061573;
-        Mon, 24 Aug 2020 03:00:35 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id oz20so6136734ejb.5;
-        Mon, 24 Aug 2020 03:00:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Wq5i4qHfu7yzPAz7g/0D7Mody4FjfdyYHDZ2FJMtb1k=;
-        b=YGImFIW/QqX0VtY2y4IDgqNs/BJmalIZ2Dd4Q8hxUYJX9TionAEYCxGa69uT6kkf48
-         TtSTxS+qTYcJ/LFw/HZ86cykFD5QUfQsfYqd4zh4PKnt+E3aE2PcFbZgWUVpoKhPwMc1
-         rG7997c0kwrNKfBs+Bw+mvkEyMBknFfy/N4Mt0vM6oDYstNNzD5sEbDnV0zWkwUmnnT5
-         tgDtCJ/n9a9KX9S7zoDtBD/LC08UM1do9LpviaCIHMt12QByNBcReKmph2KZGE0R7Yk9
-         oMOV3MwC0P9DvjXablSGFfZGU5zr4NqQDNevFgTvgUlapw32d9ImZKwG6QzusIpNptjv
-         vgpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Wq5i4qHfu7yzPAz7g/0D7Mody4FjfdyYHDZ2FJMtb1k=;
-        b=oVWZIPHyUqS5XRXmSX96Rv7E9Ql5OPvfg/bkDBeVKgYYKLglv+9MV973tcoa2uA5uc
-         YQkG19N0XeGeOOniVESNBsojjHYijct3+3Gb1ZhFYegw1EVQKhUroDIsDM+zJnVhhH5F
-         P8n1PIegYzLUtW92SmfgNPlRXgsmxaXNpj3GSNTFDl+3PPgt+9VvbGfT+sSp8W/779sT
-         +jjAkjLDE/2iIEw4I52ADPaZ+ida4divnCUEC1gck2rlvzQKlg8+FuYfqY2cC9ZtuuY0
-         5ranyKxTA/XHqLYZYA01t/m1s+iaAb0wHuV9hXgVQKhERyF9fnctYB6UgmFb+7diw9bE
-         +WfA==
-X-Gm-Message-State: AOAM530fSJeKyIZnwKF4vzACzj1f0eUlV44KCS6QkiX1Ah9esqgcOT1l
-        53nxUbXj4WpZN+yZlRxpkK9bXN/PAmKjwaupbFw=
-X-Google-Smtp-Source: ABdhPJy4bHtBJhH+rU55qeWIWBpWq4c03JJngRVDXW3+ekGgoPQyxrRrrRmtsXz+xOF8t2CfIYckZu3WLWEfMjEgf5s=
-X-Received: by 2002:a17:906:4dd4:: with SMTP id f20mr5077416ejw.170.1598263234026;
- Mon, 24 Aug 2020 03:00:34 -0700 (PDT)
+        id S1726156AbgHXKPC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 24 Aug 2020 06:15:02 -0400
+Received: from mga12.intel.com ([192.55.52.136]:18743 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725906AbgHXKPB (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 24 Aug 2020 06:15:01 -0400
+IronPort-SDR: qBbXJuqGL2q7Plg2GnUr+UxzniZWmEDEdwMX8mE8DDdCzwF2En7mZ/4RTwhAyXXo3j49LUMbi7
+ TFMTTsxHtSiA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="135416480"
+X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
+   d="scan'208";a="135416480"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 03:15:00 -0700
+IronPort-SDR: +1K6+IOcnplflhLmEToWJpcdL/LSAqLYEAscJLX0cLn3OT3K7Ns4k7HWcjTDAUPpuxkru8/RBc
+ jUzt+G+CNW5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
+   d="scan'208";a="328440827"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 24 Aug 2020 03:14:56 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1kA9V8-00B1PV-Oz; Mon, 24 Aug 2020 13:14:54 +0300
+Date:   Mon, 24 Aug 2020 13:14:54 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com
+Subject: Re: [PATCH v10 2/2] Add PWM fan controller driver for LGM SoC
+Message-ID: <20200824101454.GK1891694@smile.fi.intel.com>
+References: <cover.1598240097.git.rahul.tanwar@linux.intel.com>
+ <05b664b961e37c1c35fa7d5d1cfc9ae244bc86bc.1598240097.git.rahul.tanwar@linux.intel.com>
+ <20200824081715.GA1891694@smile.fi.intel.com>
+ <ed7affbb-b95d-cf42-b9bc-71addf908ffc@linux.intel.com>
 MIME-Version: 1.0
-References: <20200823161550.3981-1-krzk@kernel.org> <20200823161550.3981-21-krzk@kernel.org>
- <AM6PR04MB49668B0F67B02B2A33603B4880560@AM6PR04MB4966.eurprd04.prod.outlook.com>
- <20200824091102.GA20819@kozik-lap>
-In-Reply-To: <20200824091102.GA20819@kozik-lap>
-From:   Dong Aisheng <dongas86@gmail.com>
-Date:   Mon, 24 Aug 2020 17:45:19 +0800
-Message-ID: <CAA+hA=S=2SoF8egOq8h-eB9wZGDqrAw66VtW-bU9oBmzFSj9Bw@mail.gmail.com>
-Subject: Re: [PATCH 21/22] arm64: dts: imx8qxp: Remove i.MX7 compatible from USDHC
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        Haibo Chen <haibo.chen@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ed7affbb-b95d-cf42-b9bc-71addf908ffc@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 5:15 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Mon, Aug 24, 2020 at 09:00:19AM +0000, Aisheng Dong wrote:
-> > > From: Krzysztof Kozlowski <krzk@kernel.org>
-> > > Sent: Monday, August 24, 2020 12:16 AM
-> > >
-> > > The USDHC on i.MX 8QXP has its own compatible described in bindings and
-> > > used in the driver (with its own quirks).  Remove additional fsl,imx7d-usdhc
-> > > compatible to fix dtbs_check warnings like:
-> > >
-> > >   arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dt.yaml: mmc@5b010000:
-> > >     compatible: ['fsl,imx8qxp-usdhc', 'fsl,imx7d-usdhc'] is too long
-> > >     From schema:
-> > > /ocumentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
-> > >
-> > >   arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dt.yaml: mmc@5b010000:
-> > >     compatible: Additional items are not allowed ('fsl,imx7d-usdhc' was
-> > > unexpected)
-> > >
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >
-> > For Patch 19-22, I think we should fix dt binding doc.
->
-> Are you sure that these USDHC controllers are compatible with i.MX 7D?
-> Could they really run with fsl,imx7d-usdhc compatible?
+On Mon, Aug 24, 2020 at 05:36:47PM +0800, Tanwar, Rahul wrote:
+> On 24/8/2020 4:17 pm, Andy Shevchenko wrote:
+> > On Mon, Aug 24, 2020 at 11:36:37AM +0800, Rahul Tanwar wrote:
 
-AFAIK uSDHC on QXP is derived from the former platforms with adding a few
-more new features. e.g. HS400ES/CMDQ.
-Let me loop in uSDHC driver owner Haibo Chen to double confirm.
+...
 
-Regards
-Aisheng
+> >> +	ret = reset_control_deassert(pc->rst);
+> >> +	if (ret) {
+> >> +		if (ret != -EPROBE_DEFER)
+> >> +			dev_err_probe(dev, ret, "cannot deassert reset control\n");
+> >> +		return ret;
+> >> +	}
+> > Please, spend a bit of time to understand the changes you are doing. There are
+> > already few examples how to use dev_err_probe() properly.
+> 
+> I guess your point is that the check of (ret !- -EPROBE_DEFER) is not needed
+> when using dev_err_probe() as it encapsulates it.
 
-> The implementation (Linux kernel driver) is different, I guess on
-> purpose...
->
-> Best regards,
-> Krzysztof
->
+It does even more. Look at the existing examples.
+
+> Sorry, i missed it. Will
+> fix it. I am not able to find any other missing point after referring to
+> two driver examples which uses dev_err_probe() ?
+
+There are three drivers that are using it in Linux Next. All of them utilizing
+it correctly, look at them.
+
+> >> +	ret = clk_prepare_enable(pc->clk);
+> >> +	if (ret) {
+> >> +		dev_err(dev, "failed to enable clock\n");
+> >> +		return ret;
+> >> +	}
+> >> +
+> >> +	ret = devm_add_action_or_reset(dev, lgm_pwm_action, pc);
+> >> +	if (ret)
+> >> +		return ret;
+> > You have also ordering issues here.
 > >
-> > Regards
-> > Aisheng
+> > So, what I can see about implementation is that
 > >
-> > > ---
-> > >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 6 +++---
-> > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > > index 61bccb69f09e..26c4fcdfe290 100644
-> > > --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > > @@ -362,7 +362,7 @@
-> > >             };
-> > >
-> > >             usdhc1: mmc@5b010000 {
-> > > -                   compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
-> > > +                   compatible = "fsl,imx8qxp-usdhc";
-> > >                     interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
-> > >                     reg = <0x5b010000 0x10000>;
-> > >                     clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC0_IPG_CLK>, @@
-> > > -374,7 +374,7 @@
-> > >             };
-> > >
-> > >             usdhc2: mmc@5b020000 {
-> > > -                   compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
-> > > +                   compatible = "fsl,imx8qxp-usdhc";
-> > >                     interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH>;
-> > >                     reg = <0x5b020000 0x10000>;
-> > >                     clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC1_IPG_CLK>, @@
-> > > -388,7 +388,7 @@
-> > >             };
-> > >
-> > >             usdhc3: mmc@5b030000 {
-> > > -                   compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
-> > > +                   compatible = "fsl,imx8qxp-usdhc";
-> > >                     interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_HIGH>;
-> > >                     reg = <0x5b030000 0x10000>;
-> > >                     clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC2_IPG_CLK>,
-> > > --
-> > > 2.17.1
 > >
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > 	static void ..._clk_disable(void *data)
+> > 	{
+> > 		clk_disable_unprepare(data);
+> > 	}
+> >
+> > 	static int ..._clk_enable(...)
+> > 	{
+> > 		int ret;
+> >
+> > 		ret = clk_preare_enable(...);
+> > 		if (ret)
+> > 			return ret;
+> > 		return devm_add_action_or_reset(..., ..._clk_disable);
+> > 	}
+> >
+> >
+> > Similar for reset control.
+> >
+> > Then in the ->probe() something like this:
+> >
+> > 	ret = devm_reset_control_get...;
+> > 	if (ret)
+> > 		return ret;
+> >
+> > 	ret = ..._reset_deassert(...);
+> > 	if (ret)
+> > 		return ret;
+> >
+> > followed by similar section for the clock.
+> >
+> 
+> Regarding ordering: In early rounds of review, feedback about ordering was that
+> it is recommended to be reverse of the sequence in probe i.e.
+> if in probe:
+> 1. reset_control_deassert()
+> 2. clk_prepare_enable()
+> then in remove:
+> 1. clk_disable_uprepare()
+> 2. reset_control_assert()
+> 
+> That's the reason i added a generic action() which reverses order.
+
+Yes, and my suggestion follows this.
+
+> I understand your suggested way as explained above but not sure if that would
+> ensure reverse ordering during unwind.
+
+You have:
+ devm r1
+ devm r2
+ enable r1
+ enable r2 (and here you have broken error path)
+
+My suggestion has it like this (and no broken error path):
+ devm r1
+ enable r1
+ devm r2
+ enable r2
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
