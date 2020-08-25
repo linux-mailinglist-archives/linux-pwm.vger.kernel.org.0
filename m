@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B326F252086
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Aug 2020 21:38:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36CD9252090
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Aug 2020 21:38:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgHYThv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 25 Aug 2020 15:37:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43316 "EHLO mail.kernel.org"
+        id S1727116AbgHYTiA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 25 Aug 2020 15:38:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbgHYTht (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:37:49 -0400
+        id S1726149AbgHYTh4 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 25 Aug 2020 15:37:56 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 095A420782;
-        Tue, 25 Aug 2020 19:37:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1000C20825;
+        Tue, 25 Aug 2020 19:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598384268;
-        bh=OoQ624Ud80Jq3oGh656Du4RZ9GVBa/ezQWHcHZ54lfM=;
+        s=default; t=1598384275;
+        bh=6idM7c5GeTkd4WF/BwiDQ4VtDP0G4md0yVL4AgXqZC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KgxVhFe56sAR2ZQl+G0xYXx/WRHuIR47ojXVftzGlLI2EXBsC4NP8YxlZNMv261xd
-         BXaSIIapZ2l3r7SlREhD4MXMzE3gTkNwWqIvESrqsakJievrfm+b3CpHrRBexLlxNM
-         UkcaQJhiOaeoemQdXLac9N2ddgjrH7+WmsMWgwms=
+        b=mKmfdSDG2vq082YwyLlJ8m7u9I6E1jjOvA/Uwz/CqGicy7yQUYyQWkKQ3QlO0PLvV
+         z2pbZFtDKBFbAp0KraAjNZV0eWLG8Auj8PgDnyFz9YCxiGB9b0JXJYm3s7tFo1hJF6
+         tHLZ3reDn5SKa9azGV1BHhg24NBpKVU84tPciRPA=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -45,9 +45,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 13/19] dt-bindings: nvmem: imx-ocotp: Update i.MX 8M compatibles
-Date:   Tue, 25 Aug 2020 21:35:30 +0200
-Message-Id: <20200825193536.7332-14-krzk@kernel.org>
+Subject: [PATCH v3 14/19] dt-bindings: arm: fsl: Fix Toradex Colibri i.MX 8 binding
+Date:   Tue, 25 Aug 2020 21:35:31 +0200
+Message-Id: <20200825193536.7332-15-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200825193536.7332-1-krzk@kernel.org>
 References: <20200825193536.7332-1-krzk@kernel.org>
@@ -56,77 +56,37 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-DTSes with new i.MX 8M SoCs use two compatibles so update the binding to
-fix dtbs_check warnings like:
+The Toradex Colibri i.MX 8 Evaluation board has two Toradex compatibles
+so it needs separate entry.  This fixes dtbs_check warning:
 
-  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: efuse@30350000: compatible:1: 'syscon' was expected
-    From schema: Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
-
-  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: efuse@30350000:
-    compatible: ['fsl,imx8mn-ocotp', 'fsl,imx8mm-ocotp', 'syscon'] is too long
-
-  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: efuse@30350000:
-    compatible: Additional items are not allowed ('syscon' was unexpected)
+  arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dt.yaml: /:
+    compatible: ['toradex,colibri-imx8x-eval-v3', 'toradex,colibri-imx8x', 'fsl,imx8qxp'] is not valid under any of the given schemas (Possible causes of the failure):
+    arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dt.yaml: /: compatible: ['toradex,colibri-imx8x-eval-v3', 'toradex,colibri-imx8x', 'fsl,imx8qxp'] is too long
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Changes since v2:
-1. Remove moved compatibles.
----
- .../devicetree/bindings/nvmem/imx-ocotp.yaml  | 38 +++++++++++--------
- 1 file changed, 23 insertions(+), 15 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml b/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
-index 1c9d7f05f173..5a7284737229 100644
---- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
-@@ -19,21 +19,29 @@ allOf:
- 
- properties:
-   compatible:
--    items:
--      - enum:
--          - fsl,imx6q-ocotp
--          - fsl,imx6sl-ocotp
--          - fsl,imx6sx-ocotp
--          - fsl,imx6ul-ocotp
--          - fsl,imx6ull-ocotp
--          - fsl,imx7d-ocotp
--          - fsl,imx6sll-ocotp
--          - fsl,imx7ulp-ocotp
--          - fsl,imx8mq-ocotp
--          - fsl,imx8mm-ocotp
--          - fsl,imx8mn-ocotp
--          - fsl,imx8mp-ocotp
--      - const: syscon
-+    oneOf:
-+      - items:
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 37592e7bfee9..377fc2a4c159 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -379,7 +379,13 @@ properties:
+               - einfochips,imx8qxp-ai_ml  # i.MX8QXP AI_ML Board
+               - fsl,imx8qxp-mek           # i.MX8QXP MEK Board
+               - toradex,colibri-imx8x         # Colibri iMX8X Module
++          - const: fsl,imx8qxp
++
++      - description: Toradex Colibri i.MX8 Evaluation Board
++        items:
 +          - enum:
-+              - fsl,imx6q-ocotp
-+              - fsl,imx6sl-ocotp
-+              - fsl,imx6sx-ocotp
-+              - fsl,imx6ul-ocotp
-+              - fsl,imx6ull-ocotp
-+              - fsl,imx7d-ocotp
-+              - fsl,imx6sll-ocotp
-+              - fsl,imx7ulp-ocotp
-+              - fsl,imx8mq-ocotp
-+              - fsl,imx8mm-ocotp
-+          - const: syscon
-+      - items:
-+          - enum:
-+              - fsl,imx8mn-ocotp
-+              # i.MX8MP not really compatible with fsl,imx8mm-ocotp, however
-+              # the code for getting SoC revision depends on fsl,imx8mm-ocotp
-+              # compatible.
-+              - fsl,imx8mp-ocotp
-+          - const: fsl,imx8mm-ocotp
-+          - const: syscon
+               - toradex,colibri-imx8x-eval-v3 # Colibri iMX8X Module on Colibri Evaluation Board V3
++          - const: toradex,colibri-imx8x
+           - const: fsl,imx8qxp
  
-   reg:
-     maxItems: 1
+       - description:
 -- 
 2.17.1
 
