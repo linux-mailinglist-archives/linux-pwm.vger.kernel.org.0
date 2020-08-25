@@ -2,377 +2,154 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 624662515D2
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Aug 2020 11:58:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7069D2515EC
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Aug 2020 12:01:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729695AbgHYJ57 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 25 Aug 2020 05:57:59 -0400
-Received: from mga04.intel.com ([192.55.52.120]:54424 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729529AbgHYJ56 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:57:58 -0400
-IronPort-SDR: aUBqgb8qUyOO8IJHvCFMmfGJV0NnAwtd3jhQnAlMq6rx8FblX1zjV4ctUhD8rvRx7g8UlhVIf9
- MXGZs+m80dyQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="153501159"
-X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
-   d="scan'208";a="153501159"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 02:57:43 -0700
-IronPort-SDR: ljnMQfGSIXmJOPPNJq7pRPcnFoVV9qIn3a7a1Rjou1Mcs5MdK6nrkKslC3sOLvMQkOaolBrw5b
- slkYosNjVmnw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
-   d="scan'208";a="328814361"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 25 Aug 2020 02:57:39 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1kAVhx-00BIT3-Cq; Tue, 25 Aug 2020 12:57:37 +0300
-Date:   Tue, 25 Aug 2020 12:57:37 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        lee.jones@linaro.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        rtanwar@maxlinear.com
-Subject: Re: [PATCH v11 2/2] Add PWM fan controller driver for LGM SoC
-Message-ID: <20200825095737.GS1891694@smile.fi.intel.com>
-References: <cover.1598331849.git.rahul.tanwar@linux.intel.com>
- <fb2f7632f79e2aaa99208f7c93cae2de3dee4dff.1598331849.git.rahul.tanwar@linux.intel.com>
+        id S1729687AbgHYKBT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 25 Aug 2020 06:01:19 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:52876 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729601AbgHYKBS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Aug 2020 06:01:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598349676;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=iiDw8dnNYrtrjrgDZ42Ik/8G5uOlM0EnvndO90nC/jE=;
+        b=YWZDzhPnev7WR7MThUlqDXWiY1Yv98EHiEmvZRfyoaZnlZaJvyo4PLRuMYPmhZ3+6/zq2g
+        WcvRuDUSXHkDX/uV+uYAl1/KiKI9Q5K1LcFXVF5IwWJP7oJ0oiYYO9jsE1reCvSqbjE508
+        Y2HHnZ6S2P5KPAFFBE3KzNrdOBfgEMU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-186-phPd5LpzOQyLRX_BqvwNrw-1; Tue, 25 Aug 2020 06:01:12 -0400
+X-MC-Unique: phPd5LpzOQyLRX_BqvwNrw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5212E807354;
+        Tue, 25 Aug 2020 10:01:10 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-114-132.ams2.redhat.com [10.36.114.132])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 87F567D939;
+        Tue, 25 Aug 2020 10:01:07 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-pwm@vger.kernel.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH v7 00/16] acpi/pwm/i915: Convert pwm-crc and i915 driver's PWM code to use the atomic PWM API
+Date:   Tue, 25 Aug 2020 12:00:50 +0200
+Message-Id: <20200825100106.61941-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fb2f7632f79e2aaa99208f7c93cae2de3dee4dff.1598331849.git.rahul.tanwar@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 01:07:06PM +0800, Rahul Tanwar wrote:
-> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
-> This PWM controller does not have any other consumer, it is a
-> dedicated PWM controller for fan attached to the system. Add
-> driver for this PWM fan controller.
+Hi All,
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+I missed on 64-bit divide caused by pwm_state.period and pwm_state.duty_cycle being changed
+to u64-s in 5.9. This new version fixes this, otherwise this is identical to v6:
 
-Uwe, there is still room to improve but it's in category of nit-picks, from my
-point of view code is okay to go.
+Here is v6 of my patch series converting the i915 driver's code for
+controlling the panel's backlight with an external PWM controller to
+use the atomic PWM API. See below for the changelog.
 
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> ---
->  drivers/pwm/Kconfig         |  11 ++
->  drivers/pwm/Makefile        |   1 +
->  drivers/pwm/pwm-intel-lgm.c | 253 ++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 265 insertions(+)
->  create mode 100644 drivers/pwm/pwm-intel-lgm.c
-> 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 7dbcf6973d33..4949c51fe90b 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -232,6 +232,17 @@ config PWM_IMX_TPM
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-imx-tpm.
->  
-> +config PWM_INTEL_LGM
-> +	tristate "Intel LGM PWM support"
-> +	depends on HAS_IOMEM
-> +	depends on (OF && X86) || COMPILE_TEST
-> +	select REGMAP_MMIO
-> +	help
-> +	  Generic PWM fan controller driver for LGM SoC.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-intel-lgm.
-> +
->  config PWM_IQS620A
->  	tristate "Azoteq IQS620A PWM support"
->  	depends on MFD_IQS62X || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 2c2ba0a03557..e9431b151694 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
->  obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
->  obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
->  obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
-> +obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
->  obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
->  obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
->  obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
-> diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
-> new file mode 100644
-> index 000000000000..8e9f8cd3b7fb
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-intel-lgm.c
-> @@ -0,0 +1,253 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2020 Intel Corporation.
-> + *
-> + * Limitations:
-> + * - The hardware supports fixed period which is dependent on 2/3 or 4
-> + *   wire fan mode.
-> + * - Supports normal polarity. Does not support changing polarity.
-> + * - When PWM is disabled, output of PWM will become 0(inactive). It doesn't
-> + *   keep track of running period.
-> + * - When duty cycle is changed, PWM output may be a mix of previous setting
-> + *   and new setting for the first period. From second period, the output is
-> + *   based on new setting.
-> + * - It is a dedicated PWM fan controller. There are no other consumers for
-> + *   this PWM controller.
-> + */
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +
-> +#define LGM_PWM_FAN_CON0		0x0
-> +#define LGM_PWM_FAN_EN_EN		BIT(0)
-> +#define LGM_PWM_FAN_EN_DIS		0x0
-> +#define LGM_PWM_FAN_EN_MSK		BIT(0)
-> +#define LGM_PWM_FAN_MODE_2WIRE		0x0
-> +#define LGM_PWM_FAN_MODE_MSK		BIT(1)
-> +#define LGM_PWM_FAN_DC_MSK		GENMASK(23, 16)
-> +
-> +#define LGM_PWM_FAN_CON1		0x4
-> +#define LGM_PWM_FAN_MAX_RPM_MSK		GENMASK(15, 0)
-> +
-> +#define LGM_PWM_MAX_RPM			(BIT(16) - 1)
-> +#define LGM_PWM_DEFAULT_RPM		4000
-> +#define LGM_PWM_MAX_DUTY_CYCLE		(BIT(8) - 1)
-> +
-> +#define LGM_PWM_DC_BITS			8
-> +
-> +#define LGM_PWM_PERIOD_2WIRE_NS		(40 * NSEC_PER_MSEC)
-> +
-> +struct lgm_pwm_chip {
-> +	struct pwm_chip chip;
-> +	struct regmap *regmap;
-> +	struct clk *clk;
-> +	struct reset_control *rst;
-> +	u32 period;
-> +};
-> +
-> +static inline struct lgm_pwm_chip *to_lgm_pwm_chip(struct pwm_chip *chip)
-> +{
-> +	return container_of(chip, struct lgm_pwm_chip, chip);
-> +}
-> +
-> +static int lgm_pwm_enable(struct pwm_chip *chip, bool enable)
-> +{
-> +	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-> +	struct regmap *regmap = pc->regmap;
-> +
-> +	return regmap_update_bits(regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_EN_MSK,
-> +				  enable ? LGM_PWM_FAN_EN_EN : LGM_PWM_FAN_EN_DIS);
-> +}
-> +
-> +static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			 const struct pwm_state *state)
-> +{
-> +	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-> +	u32 duty_cycle, val;
-> +	int ret;
-> +
-> +	/*
-> +	 * The hardware only supports
-> +	 * normal polarity and fixed period.
-> +	 */
-> +	if (state->polarity != PWM_POLARITY_NORMAL || state->period < pc->period)
-> +		return -EINVAL;
-> +
-> +	if (!state->enabled)
-> +		return lgm_pwm_enable(chip, 0);
-> +
-> +	duty_cycle = min_t(u64, state->duty_cycle, pc->period);
-> +	val = duty_cycle * LGM_PWM_MAX_DUTY_CYCLE / pc->period;
-> +
-> +	ret = regmap_update_bits(pc->regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_DC_MSK,
-> +				 FIELD_PREP(LGM_PWM_FAN_DC_MSK, val));
-> +	if (ret)
-> +		return ret;
-> +
-> +	return lgm_pwm_enable(chip, 1);
-> +}
-> +
-> +static void lgm_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			      struct pwm_state *state)
-> +{
-> +	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-> +	u32 duty, val;
-> +
-> +	state->enabled = regmap_test_bits(pc->regmap, LGM_PWM_FAN_CON0,
-> +					  LGM_PWM_FAN_EN_EN);
-> +	state->polarity = PWM_POLARITY_NORMAL;
-> +	state->period = pc->period; /* fixed period */
-> +
-> +	regmap_read(pc->regmap, LGM_PWM_FAN_CON0, &val);
-> +	duty = FIELD_GET(LGM_PWM_FAN_DC_MSK, val);
-> +	state->duty_cycle = DIV_ROUND_UP(duty * pc->period, LGM_PWM_MAX_DUTY_CYCLE);
-> +}
-> +
-> +static const struct pwm_ops lgm_pwm_ops = {
-> +	.get_state = lgm_pwm_get_state,
-> +	.apply = lgm_pwm_apply,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static void lgm_pwm_init(struct lgm_pwm_chip *pc)
-> +{
-> +	struct regmap *regmap = pc->regmap;
-> +	u32 con0_val;
-> +
-> +	con0_val = FIELD_PREP(LGM_PWM_FAN_MODE_MSK, LGM_PWM_FAN_MODE_2WIRE);
-> +	pc->period = LGM_PWM_PERIOD_2WIRE_NS;
-> +	regmap_update_bits(regmap, LGM_PWM_FAN_CON1, LGM_PWM_FAN_MAX_RPM_MSK,
-> +			   LGM_PWM_DEFAULT_RPM);
-> +	regmap_update_bits(regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_MODE_MSK,
-> +			   con0_val);
-> +}
-> +
-> +static const struct regmap_config lgm_pwm_regmap_config = {
-> +	.reg_bits = 32,
-> +	.reg_stride = 4,
-> +	.val_bits = 32,
-> +};
-> +
-> +static void lgm_clk_disable(void *data)
-> +{
-> +	struct lgm_pwm_chip *pc = data;
-> +
-> +	clk_disable_unprepare(pc->clk);
-> +}
-> +
-> +static int lgm_clk_enable(struct device *dev, struct lgm_pwm_chip *pc)
-> +{
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(pc->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_add_action_or_reset(dev, lgm_clk_disable, pc);
-> +}
-> +
-> +static void lgm_reset_control_assert(void *data)
-> +{
-> +	struct lgm_pwm_chip *pc = data;
-> +
-> +	reset_control_assert(pc->rst);
-> +}
-> +
-> +static int lgm_reset_control_deassert(struct device *dev, struct lgm_pwm_chip *pc)
-> +{
-> +	int ret;
-> +
-> +	ret = reset_control_deassert(pc->rst);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_add_action_or_reset(dev, lgm_reset_control_assert, pc);
-> +}
-> +
-> +static int lgm_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct lgm_pwm_chip *pc;
-> +	void __iomem *io_base;
-> +	int ret;
-> +
-> +	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
-> +	if (!pc)
-> +		return -ENOMEM;
-> +
-> +	io_base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(io_base))
-> +		return PTR_ERR(io_base);
-> +
-> +	pc->regmap = devm_regmap_init_mmio(dev, io_base, &lgm_pwm_regmap_config);
-> +	if (IS_ERR(pc->regmap))
-> +		return dev_err_probe(dev, PTR_ERR(pc->regmap),
-> +				     "failed to init register map\n");
-> +
-> +	pc->rst = devm_reset_control_get_exclusive(dev, NULL);
-> +	if (IS_ERR(pc->rst))
-> +		return dev_err_probe(dev, PTR_ERR(pc->rst),
-> +				     "failed to get reset control\n");
-> +
-> +	ret = lgm_reset_control_deassert(dev, pc);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "cannot deassert reset control\n");
-> +
-> +	pc->clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(pc->clk))
-> +		return dev_err_probe(dev, PTR_ERR(pc->clk), "failed to get clock\n");
-> +
-> +	ret = lgm_clk_enable(dev, pc);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable clock\n");
-> +		return ret;
-> +	}
-> +
-> +	pc->chip.dev = dev;
-> +	pc->chip.ops = &lgm_pwm_ops;
-> +	pc->chip.npwm = 1;
-> +
-> +	lgm_pwm_init(pc);
-> +
-> +	ret = pwmchip_add(&pc->chip);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to add PWM chip: %pe\n", ERR_PTR(ret));
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, pc);
-> +	return 0;
-> +}
-> +
-> +static int lgm_pwm_remove(struct platform_device *pdev)
-> +{
-> +	struct lgm_pwm_chip *pc = platform_get_drvdata(pdev);
-> +	int ret;
-> +
-> +	ret = pwmchip_remove(&pc->chip);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id lgm_pwm_of_match[] = {
-> +	{ .compatible = "intel,lgm-pwm" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, lgm_pwm_of_match);
-> +
-> +static struct platform_driver lgm_pwm_driver = {
-> +	.driver = {
-> +		.name = "intel-pwm",
-> +		.of_match_table = lgm_pwm_of_match,
-> +	},
-> +	.probe = lgm_pwm_probe,
-> +	.remove = lgm_pwm_remove,
-> +};
-> +module_platform_driver(lgm_pwm_driver);
-> -- 
-> 2.11.0
-> 
+This version of the series has been rebased on 5.9-rc1 and has
+a Reviewed-by or Acked-by for all patches.
 
--- 
-With Best Regards,
-Andy Shevchenko
+The main purpose of sending this new version out is to allow the
+intel-gfx CI to play with it.
 
+As discussed before, because of interdependencies of the patches
+I plan to push the entire series to drm-intel-next-queued once it
+has passed CI.
+
+Thierry, I believe from our previous discussion that you are ok with
+pushing the pwm-crc and pwm-lpss patches through the drm-intel tree,
+but you have not given your Acked-by for this. If you are not ok with
+me pushing these out this way please let me now ASAP. If you are ok
+with this an Acked-by would be appreciated.
+
+This series has been tested (and re-tested after adding various bug-fixes)
+extensively. It has been tested on the following devices:
+
+-Asus T100TA  BYT + CRC-PMIC PWM
+-Toshiba WT8-A  BYT + CRC-PMIC PWM
+-Thundersoft TS178 BYT + CRC-PMIC PWM, inverse PWM
+-Asus T100HA  CHT + CRC-PMIC PWM
+-Terra Pad 1061  BYT + LPSS PWM
+-Trekstor Twin 10.1 BYT + LPSS PWM
+-Asus T101HA  CHT + CRC-PMIC PWM
+-GPD Pocket  CHT + CRC-PMIC PWM
+
+Regards,
+
+Hans
+
+
+Changelog:
+
+Changes in v7:
+- Fix a u64 divide leading to undefined reference to `__udivdi3' errors on 32 bit
+  platforms by casting the divisor to an unsigned long
+
+Changes in v6:
+- Rebase on v5.9-rc1
+- Adjust pwm-crc patches for pwm_state.period and .duty_cycle now being u64
+
+Changes in v5:
+- Dropped the "pwm: lpss: Correct get_state result for base_unit == 0"
+  patch. The base_unit == 0 condition should never happen and sofar it is
+  unclear what the proper behavior / correct values to store in the
+  pwm_state should be when this does happen.  Since this patch was added as
+  an extra pwm-lpss fix in v4 of this patch-set and otherwise is orthogonal
+  to the of this patch-set just drop it (again).
+- "[PATCH 04/16] pwm: lpss: Add range limit check for the base_unit register value"
+  - Use clamp_val(... instead of clam_t(unsigned long long, ...
+- "[PATCH 05/16] pwm: lpss: Add pwm_lpss_prepare_enable() helper"
+  - This is a new patch in v5 of this patchset
+- [PATCH 06/16] pwm: lpss: Use pwm_lpss_apply() when restoring state on resume
+  - Use the new pwm_lpss_prepare_enable() helper
+
+Changes in v4:
+- "[PATCH v4 06/16] pwm: lpss: Correct get_state result for base_unit == 0"
+  - This is a new patch in v4 of this patchset
+- "[PATCH v4 12/16] pwm: crc: Implement get_state() method"
+  - Use DIV_ROUND_UP when calculating the period and duty_cycle values
+- "[PATCH v4 16/16] drm/i915: panel: Use atomic PWM API for devs with an external PWM controller"
+  - Add a note to the commit message about the changes in pwm_disable_backlight()
+  - Use the pwm_set/get_relative_duty_cycle() helpers
+
+Changes in v3:
+- "[PATCH v3 04/15] pwm: lpss: Add range limit check for the base_unit register value"
+  - Use base_unit_range - 1 as maximum value for the clamp()
+- "[PATCH v3 05/15] pwm: lpss: Use pwm_lpss_apply() when restoring state on resume"
+  - This replaces the "pwm: lpss: Set SW_UPDATE bit when enabling the PWM"
+    patch from previous versions of this patch-set, which really was a hack
+    working around the resume issue which this patch fixes properly.
+- PATCH v3 6 - 11 pwm-crc changes:
+  - Various small changes resulting from the reviews by Andy and Uwe,
+    including some refactoring of the patches to reduce the amount of churn
+    in the patch-set
+
+Changes in v2:
+- Fix coverletter subject
+- Drop accidentally included debugging patch
+- "[PATCH v3 02/15] ACPI / LPSS: Save Cherry Trail PWM ctx registers only once (
+  - Move #define LPSS_SAVE_CTX_ONCE define to group it with LPSS_SAVE_CTX
 
