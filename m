@@ -2,79 +2,124 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96FE62519B3
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Aug 2020 15:32:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A369252019
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Aug 2020 21:36:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726104AbgHYNcV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 25 Aug 2020 09:32:21 -0400
-Received: from mail-oo1-f68.google.com ([209.85.161.68]:38839 "EHLO
-        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgHYNcU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Aug 2020 09:32:20 -0400
-Received: by mail-oo1-f68.google.com with SMTP id z11so2701465oon.5;
-        Tue, 25 Aug 2020 06:32:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AoPa6tIoCK3whU9pBPzOcV5Uo3NIFh12F5Ac6ptY9h0=;
-        b=esWBPYuF9HYbSZYb8jEJOvte00O/TlqL1NLTlwOPPS2phgFLg4vg/MboaHH6bJ2sDL
-         yDcz646gKiAuHlZ1kDiBeN46mUK1pdkEq2AegPk3tIACBkFftyEbvB0j07d3LOeZeElS
-         sZNBMq/D25swdqtf3yuECW1b1YjDbFO+c06JCLsZVehjhry4HPhmhXChO1EzA954iteR
-         rpbJXwtFWsLemvfKtVRUm7bNZMKgfqI9WfH0JHW4E2rOMgrJ3onikuCC5zb8iryuw3vV
-         iefDq3C/oi3t4bELUTF4ov0zIIzufwyr6u/Cwuri723wFNWqqPNOOA39Znhys7t688va
-         +kzQ==
-X-Gm-Message-State: AOAM531QmEgY66wkH+OMM1hr/RrFmTOhk65t7YwpZnK1GJDAVQ2rPkoq
-        NYSs423cB7ZJP7pyf2x9x0sS0eAIHxD8gVxz8ng=
-X-Google-Smtp-Source: ABdhPJxLl4LjPnUw0osPkN7eyYfOkhZhX2vApW9KSn7zpZVt5FQDuryRNu96u+tAJACetGF/gPNsVbXqowakQy6v1oQ=
-X-Received: by 2002:a4a:275e:: with SMTP id w30mr7058474oow.40.1598362339606;
- Tue, 25 Aug 2020 06:32:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200825104455.18000-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200825104455.18000-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200825104455.18000-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 25 Aug 2020 15:32:08 +0200
-Message-ID: <CAMuHMdWmvcA8x-t=FgNOuMnAtw6j3OAgo8irmD5e2wrB+LfhHg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: renesas: r8a774e1: Add PWM device nodes
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1726713AbgHYTgA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 25 Aug 2020 15:36:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39366 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726149AbgHYTf7 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 25 Aug 2020 15:35:59 -0400
+Received: from localhost.localdomain (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9EB72075E;
+        Tue, 25 Aug 2020 19:35:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598384158;
+        bh=M1J8uZpqgbBk0Tp3JOS/OOQb4fA/JLnQDLU2aYyUXZk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HIS7rlbZC99+PFJ+c8TL3+mAFsePhLupI704uWAszxjjQtUK0rRn26QHhWk51eWPf
+         osIIVZV6O8lT/j7Ew+BLD285VUcGHCFOkYLMR0yuSzUtYuTjxNzMDHDy+Ab3kRUQYC
+         hmdIrv3bnxN73fG1c+3EPyro5Z47zPoDJd5DzXyQ=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v3 00/19] dt-bindings / arm64: Cleanup of i.MX 8 bindings
+Date:   Tue, 25 Aug 2020 21:35:17 +0200
+Message-Id: <20200825193536.7332-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 12:45 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> This patch adds PWM[0123456] device nodes to the RZ/G2H (a.k.a R8A774E1)
-> device tree.
->
-> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Hi,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10.
+This is a v3 of cleanup of i.XM 8 bindings and DTSes.
 
-Gr{oetje,eeting}s,
+It is separate patchset from i.MX 8 pin configuration cleanup, which
+also touch the bindings [1]. No dependencies (although in my tree this
+comes first).
 
-                        Geert
+Merging
+=======
+There are no dependencies, so dt-bindings could go through Rob's tree,
+DTS through SoC. I think there is no point to push dt-bindings changes
+through subsystem maintainers (gpio, pwm, watchdog, mtd etc). Usually
+Rob has been picking them up.
+
+Changes since v2:
+=================
+1. Add Rob's review,
+2. Correct things pointed during review (see individual patches and
+their change logs).
+
+[1] dt-bindings: mtd: gpmi-nand: Fix matching of clocks on different SoC
+
+Best regards,
+Krzysztof
+
+
+Krzysztof Kozlowski (19):
+  dt-bindings: gpio: fsl-imx-gpio: Add i.MX 8 compatibles
+  dt-bindings: gpio: fsl-imx-gpio: Add gpio-ranges property
+  dt-bindings: gpio: fsl-imx-gpio: Add parsing of hogs
+  dt-bindings: gpio: fsl-imx-gpio: Add power-domains
+  dt-bindings: perf: fsl-imx-ddr: Add i.MX 8M compatibles
+  dt-bindings: pwm: imx-pwm: Add i.MX 8M compatibles
+  dt-bindings: serial: fsl-imx-uart: Add i.MX 8M compatibles
+  dt-bindings: watchdog: fsl-imx-wdt: Add i.MX 8M compatibles
+  dt-bindings: mtd: gpmi-nand: Add i.MX 8M compatibles
+  dt-bindings: reset: fsl,imx7-src: Add i.MX 8M compatibles
+  dt-bindings: thermal: imx8mm-thermal: Add i.MX 8M Nano compatible
+  dt-bindings: mmc: fsl-imx-esdhc: Fix i.MX 8 compatible matching
+  dt-bindings: nvmem: imx-ocotp: Update i.MX 8M compatibles
+  dt-bindings: arm: fsl: Fix Toradex Colibri i.MX 8 binding
+  dt-bindings: arm: fsl: Add ZII Ultra boards binding
+  dt-bindings: interrupt-controller: fsl,irqsteer: Fix compatible
+    matching
+  dt-bindings: serial: fsl-lpuart: Fix compatible matching
+  arm64: dts: imx8mq-evk: Add hog suffix to wl-reg-on
+  arm64: dts: imx8mq-zii-ultra: Add hog suffixes to GPIO hogs
+
+ .../devicetree/bindings/arm/fsl.yaml          | 14 ++++++
+ .../bindings/gpio/fsl-imx-gpio.yaml           | 43 ++++++++++++++++---
+ .../interrupt-controller/fsl,irqsteer.yaml    |  8 ++--
+ .../bindings/mmc/fsl-imx-esdhc.yaml           | 37 ++++++++--------
+ .../devicetree/bindings/mtd/gpmi-nand.yaml    | 18 +++++---
+ .../devicetree/bindings/nvmem/imx-ocotp.yaml  | 38 +++++++++-------
+ .../devicetree/bindings/perf/fsl-imx-ddr.yaml | 16 +++++--
+ .../devicetree/bindings/pwm/imx-pwm.yaml      | 14 ++++--
+ .../bindings/reset/fsl,imx7-src.yaml          | 19 +++++---
+ .../bindings/serial/fsl-imx-uart.yaml         |  4 ++
+ .../bindings/serial/fsl-lpuart.yaml           | 17 +++++---
+ .../bindings/thermal/imx8mm-thermal.yaml      | 10 +++--
+ .../bindings/watchdog/fsl-imx-wdt.yaml        | 11 ++++-
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts  |  2 +-
+ .../boot/dts/freescale/imx8mq-zii-ultra.dtsi  |  8 ++--
+ 15 files changed, 182 insertions(+), 77 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
