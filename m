@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A369252019
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Aug 2020 21:36:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C36A252024
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Aug 2020 21:36:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgHYTgA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 25 Aug 2020 15:36:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39366 "EHLO mail.kernel.org"
+        id S1726772AbgHYTgH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 25 Aug 2020 15:36:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbgHYTf7 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:35:59 -0400
+        id S1726149AbgHYTgG (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 25 Aug 2020 15:36:06 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9EB72075E;
-        Tue, 25 Aug 2020 19:35:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F89220825;
+        Tue, 25 Aug 2020 19:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598384158;
-        bh=M1J8uZpqgbBk0Tp3JOS/OOQb4fA/JLnQDLU2aYyUXZk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HIS7rlbZC99+PFJ+c8TL3+mAFsePhLupI704uWAszxjjQtUK0rRn26QHhWk51eWPf
-         osIIVZV6O8lT/j7Ew+BLD285VUcGHCFOkYLMR0yuSzUtYuTjxNzMDHDy+Ab3kRUQYC
-         hmdIrv3bnxN73fG1c+3EPyro5Z47zPoDJd5DzXyQ=
+        s=default; t=1598384166;
+        bh=zp5go9e7i/qv1aP2GIDJh42E7oLFhoX9VV8nN5lMI+k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TUcNYK5rkOGP+ncveeXAiCUst53nEMRE9csWGgktTbJxGw0iTLjjSiEtz7A6E1bnh
+         HJr7hEUoMlmDjsFOoyIfXzHK483LqWn9qcGhP+F4aT/DAb3rC6q1g6qHQWNMbXOuS2
+         rd4o8+VIKBNxDsVQchTRHwIF7u3d56Xe1eaI//BU=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -45,81 +45,68 @@ To:     Rob Herring <robh+dt@kernel.org>,
         linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 00/19] dt-bindings / arm64: Cleanup of i.MX 8 bindings
-Date:   Tue, 25 Aug 2020 21:35:17 +0200
-Message-Id: <20200825193536.7332-1-krzk@kernel.org>
+Subject: [PATCH v3 01/19] dt-bindings: gpio: fsl-imx-gpio: Add i.MX 8 compatibles
+Date:   Tue, 25 Aug 2020 21:35:18 +0200
+Message-Id: <20200825193536.7332-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200825193536.7332-1-krzk@kernel.org>
+References: <20200825193536.7332-1-krzk@kernel.org>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
+DTSes with new i.MX 8 SoCs introduce their own compatibles so add them
+to fix dtbs_check warnings like:
 
-This is a v3 of cleanup of i.XM 8 bindings and DTSes.
+  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: gpio@30200000:
+    compatible:0: 'fsl,imx8mm-gpio' is not one of ['fsl,imx1-gpio', 'fsl,imx21-gpio', 'fsl,imx31-gpio', 'fsl,imx35-gpio', 'fsl,imx7d-gpio']
+    From schema: Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
 
-It is separate patchset from i.MX 8 pin configuration cleanup, which
-also touch the bindings [1]. No dependencies (although in my tree this
-comes first).
+  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: gpio@30200000:
+    compatible: ['fsl,imx8mm-gpio', 'fsl,imx35-gpio'] is too long
 
-Merging
-=======
-There are no dependencies, so dt-bindings could go through Rob's tree,
-DTS through SoC. I think there is no point to push dt-bindings changes
-through subsystem maintainers (gpio, pwm, watchdog, mtd etc). Usually
-Rob has been picking them up.
+  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: gpio@30200000:
+    compatible: Additional items are not allowed ('fsl,imx35-gpio' was unexpected)
 
-Changes since v2:
-=================
-1. Add Rob's review,
-2. Correct things pointed during review (see individual patches and
-their change logs).
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/gpio/fsl-imx-gpio.yaml           | 21 +++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-[1] dt-bindings: mtd: gpmi-nand: Fix matching of clocks on different SoC
-
-Best regards,
-Krzysztof
-
-
-Krzysztof Kozlowski (19):
-  dt-bindings: gpio: fsl-imx-gpio: Add i.MX 8 compatibles
-  dt-bindings: gpio: fsl-imx-gpio: Add gpio-ranges property
-  dt-bindings: gpio: fsl-imx-gpio: Add parsing of hogs
-  dt-bindings: gpio: fsl-imx-gpio: Add power-domains
-  dt-bindings: perf: fsl-imx-ddr: Add i.MX 8M compatibles
-  dt-bindings: pwm: imx-pwm: Add i.MX 8M compatibles
-  dt-bindings: serial: fsl-imx-uart: Add i.MX 8M compatibles
-  dt-bindings: watchdog: fsl-imx-wdt: Add i.MX 8M compatibles
-  dt-bindings: mtd: gpmi-nand: Add i.MX 8M compatibles
-  dt-bindings: reset: fsl,imx7-src: Add i.MX 8M compatibles
-  dt-bindings: thermal: imx8mm-thermal: Add i.MX 8M Nano compatible
-  dt-bindings: mmc: fsl-imx-esdhc: Fix i.MX 8 compatible matching
-  dt-bindings: nvmem: imx-ocotp: Update i.MX 8M compatibles
-  dt-bindings: arm: fsl: Fix Toradex Colibri i.MX 8 binding
-  dt-bindings: arm: fsl: Add ZII Ultra boards binding
-  dt-bindings: interrupt-controller: fsl,irqsteer: Fix compatible
-    matching
-  dt-bindings: serial: fsl-lpuart: Fix compatible matching
-  arm64: dts: imx8mq-evk: Add hog suffix to wl-reg-on
-  arm64: dts: imx8mq-zii-ultra: Add hog suffixes to GPIO hogs
-
- .../devicetree/bindings/arm/fsl.yaml          | 14 ++++++
- .../bindings/gpio/fsl-imx-gpio.yaml           | 43 ++++++++++++++++---
- .../interrupt-controller/fsl,irqsteer.yaml    |  8 ++--
- .../bindings/mmc/fsl-imx-esdhc.yaml           | 37 ++++++++--------
- .../devicetree/bindings/mtd/gpmi-nand.yaml    | 18 +++++---
- .../devicetree/bindings/nvmem/imx-ocotp.yaml  | 38 +++++++++-------
- .../devicetree/bindings/perf/fsl-imx-ddr.yaml | 16 +++++--
- .../devicetree/bindings/pwm/imx-pwm.yaml      | 14 ++++--
- .../bindings/reset/fsl,imx7-src.yaml          | 19 +++++---
- .../bindings/serial/fsl-imx-uart.yaml         |  4 ++
- .../bindings/serial/fsl-lpuart.yaml           | 17 +++++---
- .../bindings/thermal/imx8mm-thermal.yaml      | 10 +++--
- .../bindings/watchdog/fsl-imx-wdt.yaml        | 11 ++++-
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts  |  2 +-
- .../boot/dts/freescale/imx8mq-zii-ultra.dtsi  |  8 ++--
- 15 files changed, 182 insertions(+), 77 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+index 0b223abe8cfb..454db20c2d1a 100644
+--- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+@@ -11,12 +11,21 @@ maintainers:
+ 
+ properties:
+   compatible:
+-    enum:
+-      - fsl,imx1-gpio
+-      - fsl,imx21-gpio
+-      - fsl,imx31-gpio
+-      - fsl,imx35-gpio
+-      - fsl,imx7d-gpio
++    oneOf:
++      - enum:
++          - fsl,imx1-gpio
++          - fsl,imx21-gpio
++          - fsl,imx31-gpio
++          - fsl,imx35-gpio
++          - fsl,imx7d-gpio
++      - items:
++          - enum:
++              - fsl,imx8mm-gpio
++              - fsl,imx8mn-gpio
++              - fsl,imx8mp-gpio
++              - fsl,imx8mq-gpio
++              - fsl,imx8qxp-gpio
++          - const: fsl,imx35-gpio
+ 
+   reg:
+     maxItems: 1
 -- 
 2.17.1
 
