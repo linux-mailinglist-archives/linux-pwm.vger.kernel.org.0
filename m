@@ -2,117 +2,142 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B43402510DF
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Aug 2020 06:47:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8522525114C
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Aug 2020 07:07:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbgHYErn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 25 Aug 2020 00:47:43 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36511 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbgHYErm (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Aug 2020 00:47:42 -0400
-Received: from [2001:67c:670:100:1d::c0] (helo=ptx.hi.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1kAQrH-0004DB-JG; Tue, 25 Aug 2020 06:46:55 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1kAQrF-0004IR-Cn; Tue, 25 Aug 2020 06:46:53 +0200
-Date:   Tue, 25 Aug 2020 06:46:53 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
-        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v2 13/19] dt-bindings: nvmem: imx-ocotp: Update i.MX 8M
- compatibles
-Message-ID: <20200825044653.GK13023@pengutronix.de>
-References: <20200824162652.21047-1-krzk@kernel.org>
- <20200824162652.21047-13-krzk@kernel.org>
+        id S1727097AbgHYFHO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 25 Aug 2020 01:07:14 -0400
+Received: from mga03.intel.com ([134.134.136.65]:61368 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726619AbgHYFHM (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 25 Aug 2020 01:07:12 -0400
+IronPort-SDR: mboV5hj4gJSSAVPp8AnRTwClfsxC1O/OOV2nkC7TuT+pAX7U0TmWd8JDH3YfuWBEvpz02emysT
+ RInsmn4icgjQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="156037450"
+X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
+   d="scan'208";a="156037450"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 22:07:11 -0700
+IronPort-SDR: tpzExRGhkoQqxP5Rctfqoor01FgB+RS41SQ9/FprnaOo2OYBngnuRRdMGioCTFdeYCESQ+FdAQ
+ 3hF7i29NGY1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
+   d="scan'208";a="322617343"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga004.fm.intel.com with ESMTP; 24 Aug 2020 22:07:08 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org
+Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com, Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v11 0/2] pwm: intel: Add PWM driver for a new SoC
+Date:   Tue, 25 Aug 2020 13:07:04 +0800
+Message-Id: <cover.1598331849.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824162652.21047-13-krzk@kernel.org>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 06:38:05 up 187 days, 12:08, 138 users,  load average: 0.13, 0.17,
- 0.18
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 06:26:46PM +0200, Krzysztof Kozlowski wrote:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - fsl,imx6q-ocotp
-> +              - fsl,imx6sl-ocotp
-> +              - fsl,imx6sx-ocotp
-> +              - fsl,imx6ul-ocotp
-> +              - fsl,imx6ull-ocotp
-> +              - fsl,imx7d-ocotp
-> +              - fsl,imx6sll-ocotp
-> +              - fsl,imx7ulp-ocotp
-> +              - fsl,imx8mq-ocotp
-> +              - fsl,imx8mm-ocotp
-> +              - fsl,imx8mn-ocotp
-> +              - fsl,imx8mp-ocotp
-> +          - const: syscon
-> +      - items:
-> +          # The devices are not really compatible with fsl,imx8mm-ocotp, however
-> +          # the code for getting SoC revision depends on fsl,imx8mm-ocotp compatible.
+Patch 1 adds dt binding document in YAML format.
+Patch 2 add PWM fan controller driver for LGM SoC.
 
-Shouldn't this be fixed? It seems strange to justify a binding with
-existing code.
+v11:
+- Address below review concerns (Andy Shevchenko)
+  * Fix a issue with dev_err_probe() usage & improve the usage.
+  * Fix & improve a ordering issue with clk_enable/disable &
+    reset_control assert/deassert.
 
-Sascha
+v10:
+- Removed unused of_device.h and added platform_device.h
+  & mod_devicetable.h
 
-> +          - enum:
-> +              - fsl,imx8mn-ocotp
-> +              - fsl,imx8mp-ocotp
-> +          - const: fsl,imx8mm-ocotp
-> +          - const: syscon
->  
->    reg:
->      maxItems: 1
-> -- 
-> 2.17.1
-> 
-> 
+v9:
+- Address code quality related review concerns (Andy Shevchenko)
+- Use devm_add_action_or_reset() instead of explicit unwind calls.
+
+v8:
+- Remove fan related optional properties usage, keep
+  them as default. If needed, change pwm-fan driver
+  separately in future to add them as generic properties.
+
+v7:
+- Address code quality related review concerns.
+- Rename fan related property to pwm-*.
+- Fix one make dt_binding_check reported error.
+
+v6:
+- Readjust .apply op as per review feedback.
+- Add back pwm-cells property to resolve make dt_binding_check error.
+  pwm-cells is a required property for PWM driver.
+- Add back fan related optional properties.
+
+v5:
+- Address below review concerns from Uwe Kleine-König.
+  * Improve comments about Limitations.
+  * Use return value of regmap_update_bits if container function returns
+    error code.
+  * Modify .apply op to have strict checking for fixed period supported
+    by PWM HW.
+  * Use u64 as type when use min_t for duty_cycle.
+  * Add reset_control_assert() in failure case in probe where it was missing
+    earlier.
+- Remove fan specific optional properties from pwm dt binding document (Rob Herring)
+
+v4:
+- Address below review concerns from Uwe Kleine-König.
+  * Improve notes and limitations comments.
+  * Add common prefixes for all #defines.
+  * Modify/Improve logic in .apply & .get_state ops as advised.
+  * Skip error messages in probe when error is -EPROBE_DEFER.
+  * Add dependencies in Kconfig (OF & HAS_IOMEM) and add select REGMAP_MMIO.
+  * Address other code quality related review concerns.
+- Fix make dt_binding_check reported error in YAML file.
+
+v3:
+- Address below review concerns from Uwe Kleine-König.
+  * Remove fan rpm calibration task from the driver.
+  * Modify apply op as per the review feedback.
+  * Add roundup & round down where necessary.
+  * Address other misc code quality related review concerns.
+  * Use devm_reset_control_get_exclusive(). (Philipp Zabel)
+  * Improve dt binding document.
+
+v2:
+- Address below review concerns from Uwe Kleine-König.
+  * Add notes and limitations about PWM HW.
+  * Rename all functions and structure to lgm_pwm_* 
+  * Readjust space aligninment in structure fields to single space.
+  * Switch to using apply instead of config/enable/disable.
+  * Address other code quality related concerns.
+  * Rebase to 5.8-rc1.
+- Address review concerns in dt binding YAML from Rob Herring.
+
+v1:
+- Initial version.
+
+
+Rahul Tanwar (2):
+  Add DT bindings YAML schema for PWM fan controller of LGM SoC
+  Add PWM fan controller driver for LGM SoC
+
+ .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     |  44 ++++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-intel-lgm.c                        | 253 +++++++++++++++++++++
+ 4 files changed, 309 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-intel-lgm.c
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.11.0
+
