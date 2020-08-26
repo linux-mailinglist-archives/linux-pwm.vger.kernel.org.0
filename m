@@ -2,123 +2,104 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC8202531D7
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Aug 2020 16:48:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B06D02534C0
+	for <lists+linux-pwm@lfdr.de>; Wed, 26 Aug 2020 18:22:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgHZOsh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 26 Aug 2020 10:48:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60112 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbgHZOsf (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:48:35 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6185722BEF;
-        Wed, 26 Aug 2020 14:48:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598453315;
-        bh=35hMooZ97OwQTX5jjyj8bENeQbr8kEyo4eXDZLy1lwI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x3kYit/gvf86y+JFUux3GqCO99SWjnPVlhnZf6IpzDlQZzoEcVsp3YTpc3MDCtbXo
-         oX6eqODelTnXDj3Ju15PdNXcmcEmS0I5a/glLHAAewv0P+Fi0X593uhmfE342tf03u
-         6a1hXYC4ZXLX0yWlT+D4jUbMz7zmLQgVr2KvbukQ=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Paul Cercueil <paul@crapouillou.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        id S1728013AbgHZQWe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 26 Aug 2020 12:22:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbgHZQW1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 26 Aug 2020 12:22:27 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 547AEC061574
+        for <linux-pwm@vger.kernel.org>; Wed, 26 Aug 2020 09:22:27 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p37so1291604pgl.3
+        for <linux-pwm@vger.kernel.org>; Wed, 26 Aug 2020 09:22:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M2pM6oqlNN6MFOKK7t3LmYxIe8hLNoDE+c6Oy6sDbps=;
+        b=0XBaJLdphBcrsfjbCsPV/DnDtCuoTybU7kmvMapFYxXvE3qZVFr9blFuHjPXHdTCei
+         +jJzOZv28p3I5AapTR4ZbPqikFLUJjy4pvnArkspXnEkiY7GYz3ETVp7OVydR5uMTZM2
+         kNbkLJK4XIMHrkChkpj+RwFk29h+27rr1PHt8H2kBjI/enJtfY/WnH80fl+UpX3RP0NU
+         TjeoCU06rYZPWboZIgjOEMBygqnFDHBdvdAXceru+Hk8HcCZNQ/RQ1mTpWbBaGnCmI2z
+         llHFdLKaXFPfd+lmlicsjJx0Gpg8eX+6uxm66QadJ0HlK1kjZ+gq6LrJ+vvmkLGvJN0a
+         UMvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=M2pM6oqlNN6MFOKK7t3LmYxIe8hLNoDE+c6Oy6sDbps=;
+        b=pOmxWZL2J2LZScjrqjKnwk149iKrEbnK+JNjBgR7c6UZTLnWaCn09AdPiWJ8Ncebjr
+         IgiKAA4iN0+1G7sXcSvLUJb38nXolfzrKfeQDWV3dj4lcEi0gSprX6Y/E2eygOasSANj
+         Ui9IFTiq9pMKvBrXuNqob0YYvKHaYeqa8U6AxZHbqi9SvewaVXWLFiv+1McVUWu1cNv5
+         P5wQHEBbWdsuLoUFcepUFRT9o5d39FD+Y5jXx9KwU51nHZs1jJKnnYI8g2LW6E1vO7w5
+         /bIJepM8jE3RSbgpZZkZiHN2FPCUKAr1J51vUj6CVWX/HYOuKUbqB7KZGU3wDxT9Y771
+         ltow==
+X-Gm-Message-State: AOAM5321LNm2PYr3bWmu4EQoQvC03X6AAqI7ZfrzwONw2U8+GPBIOZ8m
+        bopHCHKSrYoNddUNSK5XcHyOGg==
+X-Google-Smtp-Source: ABdhPJxhvy1Fr0y470BQcg3U7zUExK/HTGZMY1TA2Yh1PBJT1AC0z2GSyGYGUWggFbvX+ZwTbRjMWA==
+X-Received: by 2002:a63:4543:: with SMTP id u3mr10396963pgk.398.1598458946525;
+        Wed, 26 Aug 2020 09:22:26 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id j12sm2803760pjd.44.2020.08.26.09.22.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 09:22:24 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 09:22:24 -0700 (PDT)
+X-Google-Original-Date: Wed, 26 Aug 2020 09:22:22 PDT (-0700)
+Subject:     Re: [PATCH 4/6] pwm: sifive: Simplify with dev_err_probe()
+In-Reply-To: <20200826144747.9436-4-krzk@kernel.org>
+CC:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        lee.jones@linaro.org, nsaenzjulienne@suse.de, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, paul@crapouillou.net,
+        heiko@sntech.de, Paul Walmsley <paul.walmsley@sifive.com>,
+        orsonzhai@gmail.com, baolin.wang7@gmail.com, zhang.lyra@gmail.com,
+        mripard@kernel.org, wens@csie.org, linux-pwm@vger.kernel.org,
         linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-riscv@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 6/6] pwm: sun4i: Simplify with dev_err_probe()
-Date:   Wed, 26 Aug 2020 16:47:47 +0200
-Message-Id: <20200826144747.9436-6-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200826144747.9436-1-krzk@kernel.org>
-References: <20200826144747.9436-1-krzk@kernel.org>
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org, krzk@kernel.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     krzk@kernel.org
+Message-ID: <mhng-452a4fec-be33-4b49-a904-edb4b4c81e0c@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and also it prints the error value.
+On Wed, 26 Aug 2020 07:47:45 PDT (-0700), krzk@kernel.org wrote:
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/pwm/pwm-sifive.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+> index 62de0bb85921..2485fbaaead2 100644
+> --- a/drivers/pwm/pwm-sifive.c
+> +++ b/drivers/pwm/pwm-sifive.c
+> @@ -254,11 +254,9 @@ static int pwm_sifive_probe(struct platform_device *pdev)
+>  		return PTR_ERR(ddata->regs);
+>
+>  	ddata->clk = devm_clk_get(dev, NULL);
+> -	if (IS_ERR(ddata->clk)) {
+> -		if (PTR_ERR(ddata->clk) != -EPROBE_DEFER)
+> -			dev_err(dev, "Unable to find controller clock\n");
+> -		return PTR_ERR(ddata->clk);
+> -	}
+> +	if (IS_ERR(ddata->clk))
+> +		return dev_err_probe(dev, PTR_ERR(ddata->clk),
+> +				     "Unable to find controller clock\n");
+>
+>  	ret = clk_prepare_enable(ddata->clk);
+>  	if (ret) {
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/pwm/pwm-sun4i.c | 36 ++++++++++++------------------------
- 1 file changed, 12 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 961c59c99bb3..38a4c5c1317b 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -423,38 +423,26 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 	 * back to the first clock of the PWM.
- 	 */
- 	pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
--	if (IS_ERR(pwm->clk)) {
--		if (PTR_ERR(pwm->clk) != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "get mod clock failed %pe\n",
--				pwm->clk);
--		return PTR_ERR(pwm->clk);
--	}
-+	if (IS_ERR(pwm->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(pwm->clk),
-+				     "get mod clock failed\n");
- 
- 	if (!pwm->clk) {
- 		pwm->clk = devm_clk_get(&pdev->dev, NULL);
--		if (IS_ERR(pwm->clk)) {
--			if (PTR_ERR(pwm->clk) != -EPROBE_DEFER)
--				dev_err(&pdev->dev, "get unnamed clock failed %pe\n",
--					pwm->clk);
--			return PTR_ERR(pwm->clk);
--		}
-+		if (IS_ERR(pwm->clk))
-+			return dev_err_probe(&pdev->dev, PTR_ERR(pwm->clk),
-+					     "get unnamed clock failed\n");
- 	}
- 
- 	pwm->bus_clk = devm_clk_get_optional(&pdev->dev, "bus");
--	if (IS_ERR(pwm->bus_clk)) {
--		if (PTR_ERR(pwm->bus_clk) != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "get bus clock failed %pe\n",
--				pwm->bus_clk);
--		return PTR_ERR(pwm->bus_clk);
--	}
-+	if (IS_ERR(pwm->bus_clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(pwm->bus_clk),
-+				     "get bus clock failed\n");
- 
- 	pwm->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
--	if (IS_ERR(pwm->rst)) {
--		if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "get reset failed %pe\n",
--				pwm->rst);
--		return PTR_ERR(pwm->rst);
--	}
-+	if (IS_ERR(pwm->rst))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(pwm->rst),
-+				     "get reset failed\n");
- 
- 	/* Deassert reset */
- 	ret = reset_control_deassert(pwm->rst);
--- 
-2.17.1
-
+Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
