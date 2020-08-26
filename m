@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AAEE2531CC
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Aug 2020 16:48:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B9F32531CF
+	for <lists+linux-pwm@lfdr.de>; Wed, 26 Aug 2020 16:48:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgHZOsK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 26 Aug 2020 10:48:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59090 "EHLO mail.kernel.org"
+        id S1726734AbgHZOsR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 26 Aug 2020 10:48:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726843AbgHZOsJ (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:48:09 -0400
+        id S1726843AbgHZOsO (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:48:14 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C1FD2078D;
-        Wed, 26 Aug 2020 14:48:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30951221E2;
+        Wed, 26 Aug 2020 14:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598453288;
-        bh=xX8No7Dlt35uVRtG106IwB/R7I/5/jIBaMyqJ0vQmGI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=byy3D3tns5AIyEhsP6N685UlNNM4Np1NcLWi4Kz3mfpU6GO11lchcfMMXlnWKaiEs
-         9caKQ8wIDDAcf43Mj3+RXx/5EJ6cBZLWsieGF3Al7nYik1drYyc5TpkijjP8D8HLN7
-         nVoWPi3D5m0rCkAw+iNI6rwMXuzClgI+P/AaTTVc=
+        s=default; t=1598453294;
+        bh=zQ4wGhgAOWWJNtES+xKHpDaEtICXKkmp2wHN7FL1pdQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gK150X70JBKf+I+P726abOJK3s7iZdBicWHGHWAiFXHp79cZa95M1ZNO87VXY7w2G
+         EF3MQEaAUAItPSSvLpsYnmpVBrNGWmD9awuFTjVM1hn3c1NkrJ3PFp97aZIDMLyuz5
+         ff/rhwwbnEFGMrQriWpK4oac3hlrbbCbgyG9m0YE=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -45,10 +45,12 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-rockchip@lists.infradead.org, linux-riscv@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 1/6] pwm: bcm2835: Simplify with dev_err_probe()
-Date:   Wed, 26 Aug 2020 16:47:42 +0200
-Message-Id: <20200826144747.9436-1-krzk@kernel.org>
+Subject: [PATCH 2/6] pwm: jz4740: Simplify with dev_err_probe()
+Date:   Wed, 26 Aug 2020 16:47:43 +0200
+Message-Id: <20200826144747.9436-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200826144747.9436-1-krzk@kernel.org>
+References: <20200826144747.9436-1-krzk@kernel.org>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
@@ -59,30 +61,29 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/pwm/pwm-bcm2835.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/pwm/pwm-jz4740.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
-index d78f86f8e462..6841dcfe27fc 100644
---- a/drivers/pwm/pwm-bcm2835.c
-+++ b/drivers/pwm/pwm-bcm2835.c
-@@ -152,13 +152,9 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
- 		return PTR_ERR(pc->base);
+diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+index 5830ac2bdf6a..00c642fa2eed 100644
+--- a/drivers/pwm/pwm-jz4740.c
++++ b/drivers/pwm/pwm-jz4740.c
+@@ -60,12 +60,9 @@ static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	snprintf(name, sizeof(name), "timer%u", pwm->hwpwm);
  
- 	pc->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(pc->clk)) {
--		ret = PTR_ERR(pc->clk);
--		if (ret != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "clock not found: %d\n", ret);
+ 	clk = clk_get(chip->dev, name);
+-	if (IS_ERR(clk)) {
+-		if (PTR_ERR(clk) != -EPROBE_DEFER)
+-			dev_err(chip->dev, "Failed to get clock: %pe", clk);
 -
--		return ret;
+-		return PTR_ERR(clk);
 -	}
-+	if (IS_ERR(pc->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(pc->clk),
-+				     "clock not found\n");
++	if (IS_ERR(clk))
++		return dev_err_probe(chip->dev, PTR_ERR(clk),
++				     "Failed to get clock\n");
  
- 	ret = clk_prepare_enable(pc->clk);
- 	if (ret)
+ 	err = clk_prepare_enable(clk);
+ 	if (err < 0) {
 -- 
 2.17.1
 
