@@ -2,109 +2,95 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 616E12559DF
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Aug 2020 14:14:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A036255A9A
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Aug 2020 14:52:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgH1MOm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 28 Aug 2020 08:14:42 -0400
-Received: from protonic.xs4all.nl ([83.163.252.89]:52864 "EHLO
-        protonic.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729155AbgH1MOd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Aug 2020 08:14:33 -0400
-Received: from erd988.prtnl (erd988.prtnl [192.168.224.30])
-        by sparta.prtnl (Postfix) with ESMTP id 385D944ACC1A;
-        Fri, 28 Aug 2020 14:14:30 +0200 (CEST)
-From:   David Jander <david@protonic.nl>
-To:     Steffen Trumtrar <s.trumtrar@pengutronix.de>,
-        Clemens Gruber <clemens.gruber@pqgruber.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        linux-pwm@vger.kernel.org,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        David Jander <david@protonic.nl>
-Subject: [PATCH v2 3/3] drivers: pwm: pwm-pca9685.c: Disable unused alternative addresses
-Date:   Fri, 28 Aug 2020 14:14:15 +0200
-Message-Id: <20200828121415.1292388-4-david@protonic.nl>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200828121415.1292388-1-david@protonic.nl>
-References: <20200828121415.1292388-1-david@protonic.nl>
+        id S1729487AbgH1Mv6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 28 Aug 2020 08:51:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40646 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729490AbgH1Mvg (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Aug 2020 08:51:36 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8AAFC061236
+        for <linux-pwm@vger.kernel.org>; Fri, 28 Aug 2020 05:51:34 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id t23so1178371ljc.3
+        for <linux-pwm@vger.kernel.org>; Fri, 28 Aug 2020 05:51:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RSrvv0FJmitf6q9JxmYipGO4Y6PZy6cFkX1VzqR3xEU=;
+        b=Pf4uaxGE3D9QkcwZ3m7v40UpPYGsLMXlPXzxXdofFxgCOrudLrDJjKqDtapXdZT1me
+         U/qpgdyHur4b2ylpfOmLYfGRbbgioYR4DE8hUX9n3OD1PsJjx4bY6DfOPPLZ+nR7uoPR
+         t2fPwIQzvGmoNipg0tib+zvmAuyzH0asX7NHoXYzOS+c1S9GjWZHK3ZfK4tTEAShELZn
+         UQgYkmIIjXX9+QwSVHsgwAXyE2t1Y98bukfmK6CGzaKFvQbixk0LvK3eWs+XS6UxLeZr
+         H6WwkkQfXpaJarmhsieD/FOJieotOGDuhvpWyJnLOHQ5bvJH2PkEoyOghCRX7loqwBdo
+         Wlxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RSrvv0FJmitf6q9JxmYipGO4Y6PZy6cFkX1VzqR3xEU=;
+        b=OYuOpM1t2aTslDz1EmUBRwCatkeVTcwjK3lLEnCNtGL0/ti/jANSvnH76GpOw99+Md
+         6nHGeeTee9oWC/pKHBYMjGeZL4RvbC8r7nIkrJdnpOP9uTqqAyODAuwZgP6xjSV2wazK
+         zRSWjh4DOM7dESLPcemm3iUHlNekKQR4eiVw2WwZujFi9bUh4Gk9+KWxiRjtdy6Yj0K/
+         bHISz6Yte8SfvwC2HdMkG8beY3U/Nhi3VFGx43lJeqi2/9Wco28Xwxw7FJtJ2e7zPVrm
+         bDFkEMp8hKBrDz8wTJ8CT1MxwcNrOHszfCEsce4HBecq9SURHOKbAqbdjbN7IMyhKiAy
+         giYA==
+X-Gm-Message-State: AOAM5303RKuaWXNZrVSYxf37l5mqrYaF/QP0yBoZDHkkfgJzk/JT/9iF
+        zmuoLPJItElZPALuQqrkgxPDgesxldd3jOlBspsmow==
+X-Google-Smtp-Source: ABdhPJzTyH+jeLvxiBsauaVxTH5hij7/x8BNA+Ly/857QQXdScYFOsf9kjoayIwSsdP0TIKRwlItOzGM4zkgBEGoiX8=
+X-Received: by 2002:a2e:b80b:: with SMTP id u11mr872506ljo.286.1598619091424;
+ Fri, 28 Aug 2020 05:51:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200825193536.7332-1-krzk@kernel.org>
+In-Reply-To: <20200825193536.7332-1-krzk@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 Aug 2020 14:51:20 +0200
+Message-ID: <CACRpkdb4j2kJvpY23G-os9gTktZW5HT287MsvMZxC=ovgn_9LQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/19] dt-bindings / arm64: Cleanup of i.MX 8 bindings
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The PCA9685 supports listening to 1 or more alternative I2C chip addresses
-for some special features that this driver does not support.
-By default the LED ALLCALL address is active (default 0x70), which causes
-this chip to respond to address 0x70 in addition to its main address
-(0x41). This is not desireable if there is another device on the same bus
-that uses this address (like a TMP103 for example).
-Since this feature is not supported by this driver, it is best to disable
-these addresses in the chip to avoid unsuspected bus collisions.
+On Tue, Aug 25, 2020 at 9:35 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-Signed-off-by: David Jander <david@protonic.nl>
----
- drivers/pwm/pwm-pca9685.c | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
+> This is a v3 of cleanup of i.XM 8 bindings and DTSes.
 
-diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-index 9d1d9dece0c0..ca7d205d6130 100644
---- a/drivers/pwm/pwm-pca9685.c
-+++ b/drivers/pwm/pwm-pca9685.c
-@@ -58,6 +58,10 @@
- #define PCA9685_MAXCHAN		0x10
- 
- #define LED_FULL		BIT(4)
-+#define MODE1_ALLCALL		BIT(0)
-+#define MODE1_SUB3		BIT(1)
-+#define MODE1_SUB2		BIT(2)
-+#define MODE1_SUB1		BIT(3)
- #define MODE1_SLEEP		BIT(4)
- #define MODE2_INVRT		BIT(4)
- #define MODE2_OUTDRV		BIT(2)
-@@ -444,7 +448,7 @@ static int pca9685_pwm_probe(struct i2c_client *client,
- {
- 	struct pca9685 *pca;
- 	int ret;
--	int mode2;
-+	int reg;
- 
- 	pca = devm_kzalloc(&client->dev, sizeof(*pca), GFP_KERNEL);
- 	if (!pca)
-@@ -461,19 +465,24 @@ static int pca9685_pwm_probe(struct i2c_client *client,
- 
- 	i2c_set_clientdata(client, pca);
- 
--	regmap_read(pca->regmap, PCA9685_MODE2, &mode2);
-+	regmap_read(pca->regmap, PCA9685_MODE2, &reg);
- 
- 	if (device_property_read_bool(&client->dev, "invert"))
--		mode2 |= MODE2_INVRT;
-+		reg |= MODE2_INVRT;
- 	else
--		mode2 &= ~MODE2_INVRT;
-+		reg &= ~MODE2_INVRT;
- 
- 	if (device_property_read_bool(&client->dev, "open-drain"))
--		mode2 &= ~MODE2_OUTDRV;
-+		reg &= ~MODE2_OUTDRV;
- 	else
--		mode2 |= MODE2_OUTDRV;
-+		reg |= MODE2_OUTDRV;
- 
--	regmap_write(pca->regmap, PCA9685_MODE2, mode2);
-+	regmap_write(pca->regmap, PCA9685_MODE2, reg);
-+
-+	/* Disable all LED ALLCALL and SUBx addresses to avoid bus collisions */
-+	regmap_read(pca->regmap, PCA9685_MODE1, &reg);
-+	reg &= ~(MODE1_ALLCALL | MODE1_SUB1 | MODE1_SUB2 | MODE1_SUB3);
-+	regmap_write(pca->regmap, PCA9685_MODE1, reg);
- 
- 	/* Clear all "full off" bits */
- 	regmap_write(pca->regmap, PCA9685_ALL_LED_OFF_L, 0);
--- 
-2.25.1
+If you are going to be working a lot on Freescale SoC code going forward
+I wouldn't mind if you could add yourself as maintainer for the
+Freescale pin controller and GPIO at least, I already have high trust
+in you in general so if the Freescale maintainers also have that I think you
+should just sign up as maintainer. This makes it easier to do pull requests
+and things like that.
 
+Yours,
+Linus Walleij
