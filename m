@@ -2,249 +2,64 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFF6F256DFD
-	for <lists+linux-pwm@lfdr.de>; Sun, 30 Aug 2020 15:00:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3820C257102
+	for <lists+linux-pwm@lfdr.de>; Mon, 31 Aug 2020 01:27:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbgH3NAs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 30 Aug 2020 09:00:48 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:37686 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728917AbgH3M7I (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 30 Aug 2020 08:59:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598792336;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SbhNPGZV282TeLHWXKEb2sWXfyYtHG5yCs5qSe3JTB8=;
-        b=CrdYsc4ytBxWNowZspweLW4YRAc13nW4DiD2w86B2/ehA2XJx/6lQG/h3/xS4biyuULSnH
-        OM6EPTpFQSYNmvruE3f1KG51rF1EaXrymCpCjwR9xz9W5O1FsIlKTjLZLfOZTgbUSowpgB
-        8+20864Ptv8qwxnm8k9yZNVej6txCDM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-227-IOdW7_AwMFyz62SXq2vzhg-1; Sun, 30 Aug 2020 08:58:54 -0400
-X-MC-Unique: IOdW7_AwMFyz62SXq2vzhg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5EFB51005E5A;
-        Sun, 30 Aug 2020 12:58:51 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-112-77.ams2.redhat.com [10.36.112.77])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D1150171C6;
-        Sun, 30 Aug 2020 12:58:47 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-pwm@vger.kernel.org,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org, Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH v8 17/17] drm/i915: panel: Use atomic PWM API for devs with an external PWM controller
-Date:   Sun, 30 Aug 2020 14:57:53 +0200
-Message-Id: <20200830125753.230420-18-hdegoede@redhat.com>
-In-Reply-To: <20200830125753.230420-1-hdegoede@redhat.com>
-References: <20200830125753.230420-1-hdegoede@redhat.com>
+        id S1726396AbgH3X1F (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 30 Aug 2020 19:27:05 -0400
+Received: from mail.sanclemente.cl ([190.151.67.3]:41683 "EHLO
+        mail.sanclemente.cl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbgH3X1E (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 30 Aug 2020 19:27:04 -0400
+X-Greylist: delayed 567 seconds by postgrey-1.27 at vger.kernel.org; Sun, 30 Aug 2020 19:27:03 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.sanclemente.cl (Postfix) with ESMTP id 0B45014E73BA
+        for <linux-pwm@vger.kernel.org>; Sun, 30 Aug 2020 19:15:36 -0400 (-04)
+Received: from mail.sanclemente.cl ([127.0.0.1])
+        by localhost (mail.sanclemente.cl [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id b3V8SeN26E67 for <linux-pwm@vger.kernel.org>;
+        Sun, 30 Aug 2020 19:15:35 -0400 (-04)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.sanclemente.cl (Postfix) with ESMTP id A31D914E73D8
+        for <linux-pwm@vger.kernel.org>; Sun, 30 Aug 2020 19:15:35 -0400 (-04)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.sanclemente.cl A31D914E73D8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sanclemente.cl;
+        s=CBC9ED7C-267E-11E6-B661-0C5375100FE2; t=1598829335;
+        bh=WInJWThhkgBwKce2Pp3cHW0Vu3Yx1P7wLRVmnDam36I=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=Qtz5cjBB+9xBF9NCQFllohd5GPoByZ6HL/JrAqwzHcZvR/0LFaOK0WjoFi2o42fHw
+         P6kKSOeLShiNMxzC0q+3nhAgD4Hlot7hGlLd7ROIJY7DKKj1wlDNklHFNnu9sB3sFF
+         DTrJ8L+KNBZwGAiVr6NHzolN7CQ7jxjMiyRqIhIE=
+X-Virus-Scanned: amavisd-new at sanclemente.cl
+Received: from mail.sanclemente.cl ([127.0.0.1])
+        by localhost (mail.sanclemente.cl [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id D32J2wGer1Ep for <linux-pwm@vger.kernel.org>;
+        Sun, 30 Aug 2020 19:15:35 -0400 (-04)
+Received: from WIN-C21C35F92VC.openstacklocal (vps-e48f1a8d.vps.ovh.ca [198.245.53.197])
+        by mail.sanclemente.cl (Postfix) with ESMTPSA id 9111814E73BA
+        for <linux-pwm@vger.kernel.org>; Sun, 30 Aug 2020 19:15:31 -0400 (-04)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?q?Herzliche_Gl=C3=BCckw=C3=BCnsche?=
+To:     linux-pwm@vger.kernel.org
+From:   "Jakub" <Promero@sanclemente.cl>
+Date:   Sun, 30 Aug 2020 16:14:32 -0700
+Reply-To: charleswjacksonjuniorw@gmail.com
+Message-Id: <20200830231534.9111814E73BA@mail.sanclemente.cl>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Now that the PWM drivers which we use have been converted to the atomic
-PWM API, we can move the i915 panel code over to using the atomic PWM API.
+Das Geld wurde Ihnen von Herrn Charles W. Jackson Jr. gespendet, der die Su=
+mme von 344,6 Millionen US-Dollar im Power Ball Lottery Jackpot gewonnen ha=
+t. Er hat Sie ausgew=E4hlt, um von seiner laufenden Wohlt=E4tigkeitsorganis=
+ation zu profitieren und einen Teil des Geldes an ausgew=E4hlte Menschen au=
+f der ganzen Welt zu spenden.Kontaktieren Sie ihn einfach mit dieser E-Mail=
+, um weitere Informationen =FCber die Spende zu erhalten.Kontakt E-Mail: ch=
+arleswjacksonjuniorw@gmail.com
 
-The removes a long standing FIXME and this removes a flicker where
-the backlight brightness would jump to 100% when i915 loads even if
-using the fastset path.
 
-Note that this commit also simplifies pwm_disable_backlight(), by dropping
-the intel_panel_actually_set_backlight(..., 0) call. This call sets the
-PWM to 0% duty-cycle. I believe that this call was only present as a
-workaround for a bug in the pwm-crc.c driver where it failed to clear the
-PWM_OUTPUT_ENABLE bit. This is fixed by an earlier patch in this series.
-
-After the dropping of this workaround, the usleep call, which seems
-unnecessary to begin with, has no useful effect anymore, so drop that too.
-
-Acked-by: Jani Nikula <jani.nikula@intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v7:
-- Fix a u64 divide leading to undefined reference to `__udivdi3' errors on 32 bit
-  platforms by casting the divisor to an unsigned long
-
-Changes in v6:
-- Drop the pwm_get_period() check in pwm_setup(), it is now longer needed
-  now that we use pwm_get_relative_duty_cycle()
-
-Changes in v4:
-- Add a note to the commit message about the dropping of the
-  intel_panel_actually_set_backlight() and usleep() calls from
-  pwm_disable_backlight()
-- Use the pwm_set/get_relative_duty_cycle() helpers instead of using DIY code
-  for this
----
- .../drm/i915/display/intel_display_types.h    |  3 +-
- drivers/gpu/drm/i915/display/intel_panel.c    | 70 ++++++++-----------
- 2 files changed, 33 insertions(+), 40 deletions(-)
-
-diff --git a/drivers/gpu/drm/i915/display/intel_display_types.h b/drivers/gpu/drm/i915/display/intel_display_types.h
-index 7171e7c8d928..e3ebe7c313ba 100644
---- a/drivers/gpu/drm/i915/display/intel_display_types.h
-+++ b/drivers/gpu/drm/i915/display/intel_display_types.h
-@@ -28,6 +28,7 @@
- 
- #include <linux/async.h>
- #include <linux/i2c.h>
-+#include <linux/pwm.h>
- #include <linux/sched/clock.h>
- 
- #include <drm/drm_atomic.h>
-@@ -223,7 +224,7 @@ struct intel_panel {
- 		bool util_pin_active_low;	/* bxt+ */
- 		u8 controller;		/* bxt+ only */
- 		struct pwm_device *pwm;
--		int pwm_period_ns;
-+		struct pwm_state pwm_state;
- 
- 		/* DPCD backlight */
- 		u8 pwmgen_bit_count;
-diff --git a/drivers/gpu/drm/i915/display/intel_panel.c b/drivers/gpu/drm/i915/display/intel_panel.c
-index 2b27f9b07403..2eb1a3a93df1 100644
---- a/drivers/gpu/drm/i915/display/intel_panel.c
-+++ b/drivers/gpu/drm/i915/display/intel_panel.c
-@@ -592,10 +592,10 @@ static u32 bxt_get_backlight(struct intel_connector *connector)
- static u32 pwm_get_backlight(struct intel_connector *connector)
- {
- 	struct intel_panel *panel = &connector->panel;
--	int duty_ns;
-+	struct pwm_state state;
- 
--	duty_ns = pwm_get_duty_cycle(panel->backlight.pwm);
--	return DIV_ROUND_UP(duty_ns * 100, panel->backlight.pwm_period_ns);
-+	pwm_get_state(panel->backlight.pwm, &state);
-+	return pwm_get_relative_duty_cycle(&state, 100);
- }
- 
- static void lpt_set_backlight(const struct drm_connector_state *conn_state, u32 level)
-@@ -669,10 +669,9 @@ static void bxt_set_backlight(const struct drm_connector_state *conn_state, u32
- static void pwm_set_backlight(const struct drm_connector_state *conn_state, u32 level)
- {
- 	struct intel_panel *panel = &to_intel_connector(conn_state->connector)->panel;
--	int duty_ns = DIV_ROUND_UP(level * panel->backlight.pwm_period_ns, 100);
- 
--	pwm_config(panel->backlight.pwm, duty_ns,
--		   panel->backlight.pwm_period_ns);
-+	pwm_set_relative_duty_cycle(&panel->backlight.pwm_state, level, 100);
-+	pwm_apply_state(panel->backlight.pwm, &panel->backlight.pwm_state);
- }
- 
- static void
-@@ -841,10 +840,8 @@ static void pwm_disable_backlight(const struct drm_connector_state *old_conn_sta
- 	struct intel_connector *connector = to_intel_connector(old_conn_state->connector);
- 	struct intel_panel *panel = &connector->panel;
- 
--	/* Disable the backlight */
--	intel_panel_actually_set_backlight(old_conn_state, 0);
--	usleep_range(2000, 3000);
--	pwm_disable(panel->backlight.pwm);
-+	panel->backlight.pwm_state.enabled = false;
-+	pwm_apply_state(panel->backlight.pwm, &panel->backlight.pwm_state);
- }
- 
- void intel_panel_disable_backlight(const struct drm_connector_state *old_conn_state)
-@@ -1176,9 +1173,12 @@ static void pwm_enable_backlight(const struct intel_crtc_state *crtc_state,
- {
- 	struct intel_connector *connector = to_intel_connector(conn_state->connector);
- 	struct intel_panel *panel = &connector->panel;
-+	int level = panel->backlight.level;
- 
--	pwm_enable(panel->backlight.pwm);
--	intel_panel_actually_set_backlight(conn_state, panel->backlight.level);
-+	level = intel_panel_compute_brightness(connector, level);
-+	pwm_set_relative_duty_cycle(&panel->backlight.pwm_state, level, 100);
-+	panel->backlight.pwm_state.enabled = true;
-+	pwm_apply_state(panel->backlight.pwm, &panel->backlight.pwm_state);
- }
- 
- static void __intel_panel_enable_backlight(const struct intel_crtc_state *crtc_state,
-@@ -1897,8 +1897,7 @@ static int pwm_setup_backlight(struct intel_connector *connector,
- 	struct drm_i915_private *dev_priv = to_i915(dev);
- 	struct intel_panel *panel = &connector->panel;
- 	const char *desc;
--	u32 level, ns;
--	int retval;
-+	u32 level;
- 
- 	/* Get the right PWM chip for DSI backlight according to VBT */
- 	if (dev_priv->vbt.dsi.config->pwm_blc == PPS_BLC_PMIC) {
-@@ -1916,35 +1915,28 @@ static int pwm_setup_backlight(struct intel_connector *connector,
- 		return -ENODEV;
- 	}
- 
--	panel->backlight.pwm_period_ns = NSEC_PER_SEC /
--					 get_vbt_pwm_freq(dev_priv);
--
--	/*
--	 * FIXME: pwm_apply_args() should be removed when switching to
--	 * the atomic PWM API.
--	 */
--	pwm_apply_args(panel->backlight.pwm);
--
- 	panel->backlight.max = 100; /* 100% */
- 	panel->backlight.min = get_backlight_min_vbt(connector);
--	level = intel_panel_compute_brightness(connector, 100);
--	ns = DIV_ROUND_UP(level * panel->backlight.pwm_period_ns, 100);
- 
--	retval = pwm_config(panel->backlight.pwm, ns,
--			    panel->backlight.pwm_period_ns);
--	if (retval < 0) {
--		drm_err(&dev_priv->drm, "Failed to configure the pwm chip\n");
--		pwm_put(panel->backlight.pwm);
--		panel->backlight.pwm = NULL;
--		return retval;
--	}
-+	if (pwm_is_enabled(panel->backlight.pwm)) {
-+		/* PWM is already enabled, use existing settings */
-+		pwm_get_state(panel->backlight.pwm, &panel->backlight.pwm_state);
- 
--	level = DIV_ROUND_UP_ULL(pwm_get_duty_cycle(panel->backlight.pwm) * 100,
--				 panel->backlight.pwm_period_ns);
--	level = intel_panel_compute_brightness(connector, level);
--	panel->backlight.level = clamp(level, panel->backlight.min,
--				       panel->backlight.max);
--	panel->backlight.enabled = panel->backlight.level != 0;
-+		level = pwm_get_relative_duty_cycle(&panel->backlight.pwm_state,
-+						    100);
-+		level = intel_panel_compute_brightness(connector, level);
-+		panel->backlight.level = clamp(level, panel->backlight.min,
-+					       panel->backlight.max);
-+		panel->backlight.enabled = true;
-+
-+		drm_dbg_kms(&dev_priv->drm, "PWM already enabled at freq %ld, VBT freq %d, level %d\n",
-+			    NSEC_PER_SEC / (unsigned long)panel->backlight.pwm_state.period,
-+			    get_vbt_pwm_freq(dev_priv), level);
-+	} else {
-+		/* Set period from VBT frequency, leave other settings at 0. */
-+		panel->backlight.pwm_state.period =
-+			NSEC_PER_SEC / get_vbt_pwm_freq(dev_priv);
-+	}
- 
- 	drm_info(&dev_priv->drm, "Using %s PWM for LCD backlight control\n",
- 		 desc);
--- 
-2.28.0
-
+Kontakt E-Mail: charleswjacksonjuniorw@gmail.com
