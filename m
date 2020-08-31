@@ -2,481 +2,288 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E1CA2579AF
-	for <lists+linux-pwm@lfdr.de>; Mon, 31 Aug 2020 14:50:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD850257A2D
+	for <lists+linux-pwm@lfdr.de>; Mon, 31 Aug 2020 15:16:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbgHaMuQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 31 Aug 2020 08:50:16 -0400
-Received: from mga12.intel.com ([192.55.52.136]:57782 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726384AbgHaMuL (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 31 Aug 2020 08:50:11 -0400
-IronPort-SDR: RFCV1XGonwqFuA6R8Rb5VkUkyCGQTGzfUc9Ijd5hnEJQ6dVXBaWutdPn+5jrUAfnpiBgaMRsyp
- 6+cdO04jjT8g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="136490184"
-X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
-   d="scan'208";a="136490184"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 05:50:11 -0700
-IronPort-SDR: XAP9e9ZCGj3NDFRpoclYmtIALrsnho/qsgTX/CIkMBeaObmR5xb95cIYltajj7tE90jJw6gSrY
- 0eQMDXi4smhQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
-   d="scan'208";a="340640966"
-Received: from mylly.fi.intel.com (HELO mylly.fi.intel.com.) ([10.237.72.94])
-  by orsmga007.jf.intel.com with ESMTP; 31 Aug 2020 05:50:08 -0700
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-To:     linux-pwm@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Raymond Tan <raymond.tan@intel.com>
-Subject: [PATCH] pwm: Add DesignWare PWM Controller Driver
-Date:   Mon, 31 Aug 2020 15:50:01 +0300
-Message-Id: <20200831125001.1309453-1-jarkko.nikula@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
+        id S1726144AbgHaNPp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 31 Aug 2020 09:15:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgHaNPj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Aug 2020 09:15:39 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5745C061573;
+        Mon, 31 Aug 2020 06:15:37 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id h4so6878434ejj.0;
+        Mon, 31 Aug 2020 06:15:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZN+h3DvckVB0R7Miee9OkAe5hHTT1PL9GADo84XwD34=;
+        b=nI/6zGeXnPbMXWQ2/5R2OyDMxsBXBFaLc5VpXRmiw3zxHbY+fKmZW4RF5J0kw7VkuE
+         sIYnxnS9IpLMlPhKo7ZTgVTE5N3MO8Y1CdVjQsbROLDA+LZHRHQcQ15CclTY5laQF3Au
+         bkrQ2+fVhFslIpcaIeF7e/IyMJHVPol0XIE+qgJAN8R9pSakC9KTKzKrymSOACkYcRM7
+         b4+LpZMHSHM+WQpF0TH6TG0pfaA20ej70+gn5kDO7SztdK2886M3PplxXM5JwS6s0F5u
+         luZ+X+xPw+o5rNm3jPfhSFVd8IDk2uGNco439LIWpTGeq1NKdx2VwkZTOG8rGS37Wxg9
+         QV3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZN+h3DvckVB0R7Miee9OkAe5hHTT1PL9GADo84XwD34=;
+        b=r9fuNDXJUqLsMj6cB+dU1fRI2KxGphTEFlVz2rWHiFmbH+G/Dsk809pHkhE1M3fPZY
+         yV9jwYQypKAfHjB3O/TMGoNgZcT+JprjjN2a3rTNmZ6i6UVGfHJW+TBulGILp/ocpq8E
+         hbBDg7B9cSUkr5+yHdLUFhGEFTV0kOCr9h8ddhJVkbJM0KNhbKsaECfUwXXfElxISiYa
+         av8xMzNRciQp8+H3svOsNKQCWpKZoQhti3BFiUN1GUqzzAvt7hwolU3ZEo38f7dcoe6t
+         EB/AWI+jf3IHXsTlyv0EItl4RdG7bHZ0LmSyudR/FryNa6/vFq7gQjxggwImGsVBffb7
+         z0NA==
+X-Gm-Message-State: AOAM5326nNxEfHR7tlvVVMS/4nKN+GDFqX9LXggXNFpuzyKu8xRwBIEj
+        weiKC2sEldG5K9lp9esxurQ=
+X-Google-Smtp-Source: ABdhPJxjahfl9XxyTAunK8pqkuFaj9sl8K8muHe4E9rhOUMfHucL1KmAZz1uY7PN+gNwyd60GFumFw==
+X-Received: by 2002:a17:906:1c4f:: with SMTP id l15mr1087611ejg.419.1598879736290;
+        Mon, 31 Aug 2020 06:15:36 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id v4sm8176493ejq.91.2020.08.31.06.15.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 06:15:34 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 15:15:33 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-pwm@vger.kernel.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v8 06/17] pwm: lpss: Use pwm_lpss_restore() when
+ restoring state on resume
+Message-ID: <20200831131533.GI1689119@ulmo>
+References: <20200830125753.230420-1-hdegoede@redhat.com>
+ <20200830125753.230420-7-hdegoede@redhat.com>
+ <20200831111006.GD1688464@ulmo>
+ <d63a89d2-84e5-ca05-aa96-a06291503c5f@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vs0rQTeTompTJjtd"
+Content-Disposition: inline
+In-Reply-To: <d63a89d2-84e5-ca05-aa96-a06291503c5f@redhat.com>
+User-Agent: Mutt/1.14.6 (2020-07-11)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Introduce driver for Synopsys DesignWare PWM Controller used on Intel
-Elkhart Lake.
 
-Initial implementation is done by Felipe Balbi while he was working at
-Intel with later changes from Raymond Tan and me.
+--vs0rQTeTompTJjtd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Co-developed-by: Felipe Balbi (Intel) <balbi@kernel.org>
-Signed-off-by: Felipe Balbi (Intel) <balbi@kernel.org>
-Co-developed-by: Raymond Tan <raymond.tan@intel.com>
-Signed-off-by: Raymond Tan <raymond.tan@intel.com>
-Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
----
-v3. Previous version: https://www.spinics.net/lists/linux-pwm/msg12363.html
-Changes:
-- I got confirmation specification is not publicly available
-- HW is actually fixed inversed polarity by the PWM framework
-  conventions: HW cycle begins with a low period. Fixed polarity and
-  low/high period calculation accordingly
-- Added range check to period and duty_cycle
-- Bogus '*' removed from head of the file comment
-- struct dwc_pwm * passed to readl/writel wrappers instead of __iomem *
-- %pe for error code prints
-- clk_period_ns removed from struct dwc_pwm and use DWC_CLK_PERIOD_NS instead
-- Device pointer removed from struct dwc_pwm, it's already carried in
-  struct pwm_chip
-- Added Limitations paragraph and commenting timer usage flow in code
-- duty_cycle and period capping to 32-bit removed from
-  dwc_pwm_get_state() since PWM core has been converted to 64-bit
-- s/DIV_ROUND_CLOSEST/DIV_ROUND_CLOSEST_ULL/ to fix a link error on
-  32-bit ARM and older GCC-9 build. Reported by kernel test robot
-  <lkp@intel.com> on an internal tree
-- Random cleanups, empty line removals etc
-v2. First version here https://www.spinics.net/lists/linux-pwm/msg12122.html
-Thanks to Uwe Kleine-König for good review comments, hopefully I captured
-them all.
-Changes:
-- Added Felipe's Signed-of-by. I added (Intel) to his kernel.org address
-  to highlight contribution was done while working at Intel
-- Version register read removed as result was unused
-- Order of dwc_pwm_writel() arguments changed to match with writel()
-- Structure initializers use one space instead of tab alignment
-- Error messages added to dwc_pwm_probe()
-- MODULE_LICENSE() Updated based on a review comment and commit bf7fbeeae6db
-  ("module: Cure the MODULE_LICENSE "GPL" vs. "GPL v2" bogosity")
-- Polarity handled. HW supports only normal polarity and driver errors
-  out in case of wrong polarity in dwc_pwm_apply() and returns fixed
-  normal polarity in dwc_pwm_get_state()
-- Running timers are not stopped on probe and remove. Those may be set
-  running by a bootloader and driver should leave them runnning
-- pwm_is_enabled() call changed to pwm->state.enabled in wc_pwm_apply()
-- Co-authors added to MODULE_AUTHOR() and comment
-- mutex removed
-- Add struct dwc_pwm_ctx for register save/restore instead of word array
-- suspend prevented in case of active PWM consumers. Please note this
-  checks only PWMs enabled by Linux consumers and not the ones enabled
-  by bootloader
-- Duplicate linux/pm_runtime.h include removed
-- Only once used trivial functions moved to dwc_pwm_get_state()
-- struct dwc_pwm_driver_data removed and used hard coded properties
-  instead since currently driver supports single device type
-- Driver uses internally 64-bit duty and period calculation and caps
-  them to 32-bit ns max value for PWM core. HW supports 32-bit high and
-  low period counters with 10 ns resolution so HW can do ~42,9 s duty and
-  ~85.9 s period at maximum
----
- drivers/pwm/Kconfig   |   9 ++
- drivers/pwm/Makefile  |   1 +
- drivers/pwm/pwm-dwc.c | 321 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 331 insertions(+)
- create mode 100644 drivers/pwm/pwm-dwc.c
+On Mon, Aug 31, 2020 at 01:46:28PM +0200, Hans de Goede wrote:
+> Hi,
+>=20
+> On 8/31/20 1:10 PM, Thierry Reding wrote:
+> > On Sun, Aug 30, 2020 at 02:57:42PM +0200, Hans de Goede wrote:
+> > > Before this commit a suspend + resume of the LPSS PWM controller
+> > > would result in the controller being reset to its defaults of
+> > > output-freq =3D clock/256, duty-cycle=3D100%, until someone changes
+> > > to the output-freq and/or duty-cycle are made.
+> > >=20
+> > > This problem has been masked so far because the main consumer
+> > > (the i915 driver) was always making duty-cycle changes on resume.
+> > > With the conversion of the i915 driver to the atomic PWM API the
+> > > driver now only disables/enables the PWM on suspend/resume leaving
+> > > the output-freq and duty as is, triggering this problem.
+> >=20
+> > Doesn't this imply that there's another bug at play here? At the PWM API
+> > level you're applying a state and it's up to the driver to ensure that
+> > the hardware state after ->apply() is what the software has requested.
+> >=20
+> > If you only switch the enable state and that doesn't cause period and
+> > duty cycle to be updated it means that your driver isn't writing those
+> > registers when it should be.
+>=20
+> Right, the driver was not committing those as it should *on resume*,
+> that and it skips setting the update bit on the subsequent enable,
+> which is an optimization which gets removed in 7/17.
+>=20
+> Before switching the i915 driver over to atomic, when the LPSS-PWM
+> was used for the backlight we got the following order on suspend/resume
+>=20
+> 1. Set duty-cycle to 0%
+> 2. Set enabled to 0
+> 3. Save ctrl reg
+> 4. Power-off PWM controller, it now looses all its state
+> 5. Power-on PWM ctrl
+> 6. Restore ctrl reg (as a single reg write)
+> 7. Set enabled to 1, at this point one would expect the
+> duty/freq from the restored ctrl-reg to apply, but:
+> a) The resume code never sets the update bit (which this commit fixes); a=
+nd
+> b) On applying the pwm_state with enabled=3D1 the code applying the
+> state does this (before setting the enabled bit in the ctrl reg):
+>=20
+> 	if (orig_ctrl !=3D ctrl) {
+> 		pwm_lpss_write(pwm, ctrl);
+> 		pwm_lpss_write(pwm, ctrl | PWM_SW_UPDATE);
+> 	}
+> and since the restore of the ctrl reg set the old duty/freq the
+> writes are skipped, so the update bit never gets set.
+>=20
+> 8. Set duty-cycle to the pre-suspend value (which is not 0)
+> this does cause a change in the ctrl-reg, so now the update flag
+> does get set.
+>=20
+> Note that 1-2 and 7-8 are both done by the non atomic i915 code,
+> when moving the i915 code to atomic I decided that having these
+> 2 separate steps here is non-sense, so the new i915 code just
+> toggles the enable bit. So in essence the new atomic PWM
+> i915 code drops step 1 and 8.
+>=20
+> Dropping steps 8 means that the update bit never gets set and we
+> end up with the PWM running at its power-on-reset duty cycle.
+>=20
+> You are correct in your remark to patch 7/17 that since that removes
+> the if (orig_ctrl !=3D ctrl) for the writes that now step 7 will be
+> sufficient to get the PWM to work again. But that only takes the i915
+> usage into account.
+>=20
+> What if the PWM is used through the sysfs userspace API?
+> Then only steps 3-6 will happen on suspend-resume and without
+> fixing step 6 to properly restore the PWM controller in its
+> pre-resume state (this patch) it will once again be running at
+> its power-on-reset defaults instead of the values from the
+> restored control register.
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 9448e4ca8c73..ab79cb4734f1 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -160,6 +160,15 @@ config PWM_CROS_EC
- 	  PWM driver for exposing a PWM attached to the ChromeOS Embedded
- 	  Controller.
- 
-+config PWM_DWC
-+	tristate "DesignWare PWM Controller"
-+	depends on PCI
-+	help
-+	  PWM driver for Synopsys DWC PWM Controller attached to a PCI bus.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-dwc.
-+
- config PWM_EP93XX
- 	tristate "Cirrus Logic EP93xx PWM support"
- 	depends on ARCH_EP93XX || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 2c2ba0a03557..a1b7098fc4b8 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_PWM_BRCMSTB)	+= pwm-brcmstb.o
- obj-$(CONFIG_PWM_CLPS711X)	+= pwm-clps711x.o
- obj-$(CONFIG_PWM_CRC)		+= pwm-crc.o
- obj-$(CONFIG_PWM_CROS_EC)	+= pwm-cros-ec.o
-+obj-$(CONFIG_PWM_DWC)		+= pwm-dwc.o
- obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
- obj-$(CONFIG_PWM_FSL_FTM)	+= pwm-fsl-ftm.o
- obj-$(CONFIG_PWM_HIBVT)		+= pwm-hibvt.o
-diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
-new file mode 100644
-index 000000000000..e9cc57fc58d6
---- /dev/null
-+++ b/drivers/pwm/pwm-dwc.c
-@@ -0,0 +1,321 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * DesignWare PWM Controller driver
-+ *
-+ * Copyright (C) 2018-2020 Intel Corporation
-+ *
-+ * Author: Felipe Balbi (Intel)
-+ * Author: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-+ * Author: Raymond Tan <raymond.tan@intel.com>
-+ *
-+ * Limitations:
-+ * - The hardware cannot generate a 0 % or 100 % duty cycle. Both high and low
-+ *   periods are one or more input clock periods long.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/export.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pwm.h>
-+
-+#define DWC_TIM_LD_CNT(n)	((n) * 0x14)
-+#define DWC_TIM_LD_CNT2(n)	(((n) * 4) + 0xb0)
-+#define DWC_TIM_CUR_VAL(n)	(((n) * 0x14) + 0x04)
-+#define DWC_TIM_CTRL(n)		(((n) * 0x14) + 0x08)
-+#define DWC_TIM_EOI(n)		(((n) * 0x14) + 0x0c)
-+#define DWC_TIM_INT_STS(n)	(((n) * 0x14) + 0x10)
-+
-+#define DWC_TIMERS_INT_STS	0xa0
-+#define DWC_TIMERS_EOI		0xa4
-+#define DWC_TIMERS_RAW_INT_STS	0xa8
-+#define DWC_TIMERS_COMP_VERSION	0xac
-+
-+#define DWC_TIMERS_TOTAL	8
-+#define DWC_CLK_PERIOD_NS	10
-+
-+/* Timer Control Register */
-+#define DWC_TIM_CTRL_EN		BIT(0)
-+#define DWC_TIM_CTRL_MODE	BIT(1)
-+#define DWC_TIM_CTRL_MODE_FREE	(0 << 1)
-+#define DWC_TIM_CTRL_MODE_USER	(1 << 1)
-+#define DWC_TIM_CTRL_INT_MASK	BIT(2)
-+#define DWC_TIM_CTRL_PWM	BIT(3)
-+
-+struct dwc_pwm_ctx {
-+	u32 cnt;
-+	u32 cnt2;
-+	u32 ctrl;
-+};
-+
-+struct dwc_pwm {
-+	struct pwm_chip chip;
-+	void __iomem *base;
-+	struct dwc_pwm_ctx ctx[DWC_TIMERS_TOTAL];
-+};
-+#define to_dwc_pwm(p)	(container_of((p), struct dwc_pwm, chip))
-+
-+static inline u32 dwc_pwm_readl(struct dwc_pwm *dwc, u32 offset)
-+{
-+	return readl(dwc->base + offset);
-+}
-+
-+static inline void dwc_pwm_writel(struct dwc_pwm *dwc, u32 value, u32 offset)
-+{
-+	writel(value, dwc->base + offset);
-+}
-+
-+static void __dwc_pwm_set_enable(struct dwc_pwm *dwc, int pwm, int enabled)
-+{
-+	u32 reg;
-+
-+	reg = dwc_pwm_readl(dwc, DWC_TIM_CTRL(pwm));
-+
-+	if (enabled)
-+		reg |= DWC_TIM_CTRL_EN;
-+	else
-+		reg &= ~DWC_TIM_CTRL_EN;
-+
-+	dwc_pwm_writel(dwc, reg, DWC_TIM_CTRL(pwm));
-+}
-+
-+static int __dwc_pwm_configure_timer(struct dwc_pwm *dwc,
-+				     struct pwm_device *pwm,
-+				     const struct pwm_state *state)
-+{
-+	u64 tmp;
-+	u32 ctrl;
-+	u32 high;
-+	u32 low;
-+
-+	/*
-+	 * Calculate width of low and high period in terms of input clock
-+	 * periods and check are the result within HW limits between 1 and
-+	 * 2^32 periods.
-+	 */
-+	tmp = DIV_ROUND_CLOSEST_ULL(state->duty_cycle, DWC_CLK_PERIOD_NS);
-+	if (tmp < 1 || tmp > (1ULL << 32))
-+		return -ERANGE;
-+	low = tmp - 1;
-+
-+	tmp = DIV_ROUND_CLOSEST_ULL(state->period - state->duty_cycle,
-+				    DWC_CLK_PERIOD_NS);
-+	if (tmp < 1 || tmp > (1ULL << 32))
-+		return -ERANGE;
-+	high = tmp - 1;
-+
-+	/*
-+	 * Specification says timer usage flow is to disable timer, then
-+	 * program it followed by enable. It also says Load Count is loaded
-+	 * into timer after it is enabled - either after a disable or
-+	 * a reset. Based on measurements it happens also without disable
-+	 * whenever Load Count is updated. But follow the specification.
-+	 */
-+	__dwc_pwm_set_enable(dwc, pwm->hwpwm, false);
-+
-+	/*
-+	 * Write Load Count and Load Count 2 registers. Former defines the
-+	 * width of low period and latter the width of high period in terms
-+	 * multiple of input clock periods:
-+	 * Width = ((Count + 1) * input clock period).
-+	 */
-+	dwc_pwm_writel(dwc, low, DWC_TIM_LD_CNT(pwm->hwpwm));
-+	dwc_pwm_writel(dwc, high, DWC_TIM_LD_CNT2(pwm->hwpwm));
-+
-+	/*
-+	 * Set user-defined mode, timer reloads from Load Count registers
-+	 * when it counts down to 0.
-+	 * Set PWM mode, it makes output to toggle and width of low and high
-+	 * periods are set by Load Count registers.
-+	 */
-+	ctrl = DWC_TIM_CTRL_MODE_USER | DWC_TIM_CTRL_PWM;
-+	dwc_pwm_writel(dwc, ctrl, DWC_TIM_CTRL(pwm->hwpwm));
-+
-+	/*
-+	 * Enable timer. Output starts from low period.
-+	 */
-+	__dwc_pwm_set_enable(dwc, pwm->hwpwm, state->enabled);
-+
-+	return 0;
-+}
-+
-+static int dwc_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			 const struct pwm_state *state)
-+{
-+	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+
-+	if (state->polarity != PWM_POLARITY_INVERSED)
-+		return -EINVAL;
-+
-+	if (state->enabled) {
-+		if (!pwm->state.enabled)
-+			pm_runtime_get_sync(chip->dev);
-+		return __dwc_pwm_configure_timer(dwc, pwm, state);
-+	} else {
-+		if (pwm->state.enabled) {
-+			__dwc_pwm_set_enable(dwc, pwm->hwpwm, false);
-+			pm_runtime_put_sync(chip->dev);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      struct pwm_state *state)
-+{
-+	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+	u64 duty, period;
-+
-+	pm_runtime_get_sync(chip->dev);
-+
-+	state->enabled = !!(dwc_pwm_readl(dwc,
-+				DWC_TIM_CTRL(pwm->hwpwm)) & DWC_TIM_CTRL_EN);
-+
-+	duty = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
-+	duty += 1;
-+	duty *= DWC_CLK_PERIOD_NS;
-+	state->duty_cycle = duty;
-+
-+	period = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(pwm->hwpwm));
-+	period += 1;
-+	period *= DWC_CLK_PERIOD_NS;
-+	period += duty;
-+	state->period = period;
-+
-+	state->polarity = PWM_POLARITY_INVERSED;
-+
-+	pm_runtime_put_sync(chip->dev);
-+}
-+
-+static const struct pwm_ops dwc_pwm_ops = {
-+	.apply = dwc_pwm_apply,
-+	.get_state = dwc_pwm_get_state,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int dwc_pwm_probe(struct pci_dev *pci, const struct pci_device_id *id)
-+{
-+	struct dwc_pwm *dwc;
-+	struct device *dev;
-+	int ret;
-+
-+	dev = &pci->dev;
-+
-+	dwc = devm_kzalloc(&pci->dev, sizeof(*dwc), GFP_KERNEL);
-+	if (!dwc)
-+		return -ENOMEM;
-+
-+	ret = pcim_enable_device(pci);
-+	if (ret) {
-+		dev_err(&pci->dev,
-+			"Failed to enable device (%pe)\n", ERR_PTR(ret));
-+		return ret;
-+	}
-+
-+	pci_set_master(pci);
-+
-+	ret = pcim_iomap_regions(pci, BIT(0), pci_name(pci));
-+	if (ret) {
-+		dev_err(&pci->dev,
-+			"Failed to iomap PCI BAR (%pe)\n", ERR_PTR(ret));
-+		return ret;
-+	}
-+
-+	dwc->base = pcim_iomap_table(pci)[0];
-+	if (!dwc->base) {
-+		dev_err(&pci->dev, "Base address missing\n");
-+		return -ENOMEM;
-+	}
-+
-+	pci_set_drvdata(pci, dwc);
-+
-+	dwc->chip.dev = dev;
-+	dwc->chip.ops = &dwc_pwm_ops;
-+	dwc->chip.npwm = DWC_TIMERS_TOTAL;
-+	dwc->chip.base = -1;
-+
-+	ret = pwmchip_add(&dwc->chip);
-+	if (ret)
-+		return ret;
-+
-+	pm_runtime_put(dev);
-+	pm_runtime_allow(dev);
-+
-+	return 0;
-+}
-+
-+static void dwc_pwm_remove(struct pci_dev *pci)
-+{
-+	struct dwc_pwm *dwc = pci_get_drvdata(pci);
-+
-+	pm_runtime_forbid(&pci->dev);
-+	pm_runtime_get_noresume(&pci->dev);
-+
-+	pwmchip_remove(&dwc->chip);
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int dwc_pwm_suspend(struct device *dev)
-+{
-+	struct pci_dev *pdev = container_of(dev, struct pci_dev, dev);
-+	struct dwc_pwm *dwc = pci_get_drvdata(pdev);
-+	int i;
-+
-+	for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
-+		if (dwc->chip.pwms[i].state.enabled) {
-+			dev_err(dev, "PWM %u in use by consumer (%s)\n",
-+				i, dwc->chip.pwms[i].label);
-+			return -EBUSY;
-+		}
-+		dwc->ctx[i].cnt = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(i));
-+		dwc->ctx[i].cnt2 = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(i));
-+		dwc->ctx[i].ctrl = dwc_pwm_readl(dwc, DWC_TIM_CTRL(i));
-+	}
-+
-+	return 0;
-+}
-+
-+static int dwc_pwm_resume(struct device *dev)
-+{
-+	struct pci_dev *pdev = container_of(dev, struct pci_dev, dev);
-+	struct dwc_pwm *dwc = pci_get_drvdata(pdev);
-+	int i;
-+
-+	for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
-+		dwc_pwm_writel(dwc, dwc->ctx[i].cnt, DWC_TIM_LD_CNT(i));
-+		dwc_pwm_writel(dwc, dwc->ctx[i].cnt2, DWC_TIM_LD_CNT2(i));
-+		dwc_pwm_writel(dwc, dwc->ctx[i].ctrl, DWC_TIM_CTRL(i));
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(dwc_pwm_pm_ops, dwc_pwm_suspend, dwc_pwm_resume);
-+
-+static const struct pci_device_id dwc_pwm_id_table[] = {
-+	{ PCI_VDEVICE(INTEL, 0x4bb7) }, /* Elkhart Lake */
-+	{  }	/* Terminating Entry */
-+};
-+MODULE_DEVICE_TABLE(pci, dwc_pwm_id_table);
-+
-+static struct pci_driver dwc_pwm_driver = {
-+	.name = "pwm-dwc",
-+	.probe = dwc_pwm_probe,
-+	.remove = dwc_pwm_remove,
-+	.id_table = dwc_pwm_id_table,
-+	.driver = {
-+		.pm = &dwc_pwm_pm_ops,
-+	},
-+};
-+
-+module_pci_driver(dwc_pwm_driver);
-+
-+MODULE_AUTHOR("Felipe Balbi (Intel)");
-+MODULE_AUTHOR("Jarkko Nikula <jarkko.nikula@linux.intel.com>");
-+MODULE_AUTHOR("Raymond Tan <raymond.tan@intel.com>");
-+MODULE_DESCRIPTION("DesignWare PWM Controller");
-+MODULE_LICENSE("GPL");
--- 
-2.28.0
+Actually PWM's sysfs code has suspend/resume callbacks that basically
+make sysfs just a regular consumer of PWMs. So they do end up doing a
+pwm_apply_state() on the PWM as well on suspend and restore the state
+=66rom before suspend on resume.
 
+This was done very specifically because the suspend/resume order can be
+unexpected under some circumstances, so for PWM we really want for the
+consumer to always have ultimate control over when precisely the PWM is
+restored on resume.
+
+The reason why we did this was because people observed weird glitches on
+suspend/resume with different severity. In some cases a backlight would
+be resumed before the display controller had had a chance to start
+sending frames, causing on-screen corruption in some cases (such as
+smart displays) and in other cases a PWM-controller regulator would be
+resumed too late or too early, which I think was causing some issue with
+the CPUs not working properly on resume.
+
+So I'd prefer not to have any PWM driver save and restore its own
+context on suspend/resume, because that's inevitably going to cause
+unexpected behaviour at some point. If it's absolutely necessary we can
+of course still do that, but I think in that case we need to at least
+add a comment in the code about why context save/restore is needed in
+this particular case and make it clear that this is not something that
+other drivers should copy because they most likely won't be needing it.
+
+Given the above it also doesn't sound to me like there's a real problem,
+or at least that the bug is somewhere else. A consumer should always be
+responsible for applying the pre-suspend state upon resume and it sounds
+like that would be true after patch 7. Since sysfs is just a regular
+consumer, the same should apply for sysfs-controlled PWMs as well.
+
+> So at step 6, if the PWM was enabled before, we must set the update
+> bit, and then wait for it to clear again so the controller is
+> ready for subsequent updates. The waiting for it to clear again
+> needs to happen before or after setting the enable bit depending
+> on the hw generation, which leads to this patch.
+
+But all of that should be happening as part of the call to
+pwm_apply_state(), right? That path should be taken for all consumers on
+resume, including sysfs.
+
+> I hope that helps explain why this patch is the correct thing
+> to do.
+>=20
+>=20
+> > > The LPSS PWM controller has a mechanism where the ctrl register value
+> > > and the actual base-unit and on-time-div values used are latched. When
+> > > software sets the SW_UPDATE bit then at the end of the current PWM cy=
+cle,
+> > > the new values from the ctrl-register will be latched into the actual
+> > > registers, and the SW_UPDATE bit will be cleared.
+> > >=20
+> > > The problem is that before this commit our suspend/resume handling
+> > > consisted of simply saving the PWM ctrl register on suspend and
+> > > restoring it on resume, without setting the PWM_SW_UPDATE bit.
+> > > When the controller has lost its state over a suspend/resume and thus
+> > > has been reset to the defaults, just restoring the register is not
+> > > enough. We must also set the SW_UPDATE bit to tell the controller to
+> > > latch the restored values into the actual registers.
+> > >=20
+> > > Fixing this problem is not as simple as just or-ing in the value which
+> > > is being restored with SW_UPDATE. If the PWM was enabled before we mu=
+st
+> > > write the new settings + PWM_SW_UPDATE before setting PWM_ENABLE.
+> > > We must also wait for PWM_SW_UPDATE to become 0 again and depending o=
+n the
+> > > model we must do this either before or after the setting of PWM_ENABL=
+E.
+> > >=20
+> > > All the necessary logic for doing this is already present inside
+> > > pwm_lpss_apply(), so instead of duplicating this inside the resume
+> > > handler, this commit adds a new pwm_lpss_restore() helper which mirro=
+rs
+> > > pwm_lpss_apply() minus the runtime-pm reference handling (which we sh=
+ould
+> > > not change on resume).
+> >=20
+> > If this is all already implemented in pwm_lpss_apply(), why isn't it
+> > working for the suspend/resume case? It shouldn't matter that the
+> > consumer only changes the enable/disable state. After ->apply()
+> > successfully returns your hardware should be programmed with exactly
+> > the state that the consumer requested.
+>=20
+> See above, apply() was trying to be smart but the restore of ctrl
+> on resume without setting the update bit was tricking it. That
+> being too smart for its own good is removed in 7/16 as you
+> rightfully point out. But this patch is still necessary for the
+> PWM controller to be in the expected state between resume and the
+> first apply() after resume (which may be quite a long time in
+> the future when using e.g. the sysfs API).
+
+Like I said, the sysfs code should be resuming any exported PWMs on
+resume just like any other consumer.
+
+Obviously it's always up to the consumer to call pwm_apply_state() at
+the right time. If that's "too late" for some reason, then that's a bug
+in the consumer driver. But as I explained above there are a number of
+cases where restoring context in the PWM driver itself doesn't work
+because it can cause sequencing issues.
+
+Thierry
+
+--vs0rQTeTompTJjtd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl9M9/MACgkQ3SOs138+
+s6FoLxAApO88jDIMkfnsdmzPxilvpIXX7GyY3K49Atgw7o6+82FIjm+qwyu1/qz7
+S1uSc8MeZyg5WwfaP/5Q6DlCKanzfBOmXxrY4AbFm7jU1kDx9xrrl6XbE8M2rmH2
+e1UcBuMgcIJZKQyLCWViEYJQQ4euMnc3hhyBH7cd0iuu1XvEteBASXJ/Zst+kMN4
+uYjGQX1ch37/XQSBdaYX94O/pWir8/HVHvdwCLQY0gcvzBXwa/dIVlXgU9luA7cn
+jP66AgRHNvn5ZHeBSdD3ab+tGX8tnG5jI+KU1Ztg2cvKxPKOgmh0S3aPitRwO3md
+DYgh1z0QMgByZnbuROJLcLIUxRTjGQ1oy5irC0OEsYjtDIuXyYApi3BiSyZFK8Sy
+jrJr/UxjorbSvEnq18rHSRMghO67Kwzfka+xlflasZddf1YMJjQhW1ChVd6po4i2
+awom7Lo0b+Yv7sKLARpWWYoccJqHk7uMFfgv/7+PkLmnKVByHP2tCGckTZjqn1zt
+Sp3BJJcpsctgIZ8Q33tTg0mceET7GQOiyHO+IqOwKrlbBVVRCAyZob6KC+RVgofW
+yUVQLJXova1+uwrNLF7jbHcgIRkdl2LvB2LpKaeEMjkt+tokd+9XzT+XlTkhW4dD
+9uXPlXR4jLXrkN85HWpIXZ4AqI1XOh01i14XQeQ1ONtJNB1DDjM=
+=FvFd
+-----END PGP SIGNATURE-----
+
+--vs0rQTeTompTJjtd--
