@@ -2,52 +2,52 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5168725783C
-	for <lists+linux-pwm@lfdr.de>; Mon, 31 Aug 2020 13:24:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9649A257867
+	for <lists+linux-pwm@lfdr.de>; Mon, 31 Aug 2020 13:29:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgHaLYW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 31 Aug 2020 07:24:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44762 "EHLO
+        id S1726312AbgHaL2i (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 31 Aug 2020 07:28:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbgHaLWt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Aug 2020 07:22:49 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FBC4C0619CD;
-        Mon, 31 Aug 2020 04:14:01 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id w1so1408969edr.3;
-        Mon, 31 Aug 2020 04:14:01 -0700 (PDT)
+        with ESMTP id S1726924AbgHaL1e (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Aug 2020 07:27:34 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85ED4C0619D0;
+        Mon, 31 Aug 2020 04:14:28 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id b17so7916585ejq.8;
+        Mon, 31 Aug 2020 04:14:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=FExIKAHJpPJFM3Hd44tazabRIhwd+0VFgHYZYcprPmE=;
-        b=EKtSjKtzv24vUhMxF+gt7LwUCEObaU3gPowz0n9Rvrs8wdxgAIP+QWufXKZujYYBhU
-         Uo3CawjQpfdgFZBlGzpSwcubxyiiNXXVDUdNI9pGzCRScHb+9Bx0Wi6AFSI38OW/MVsW
-         mb5I7dO6ZerK1fHSeLbbvhUX8Mk7s4nXY26gGXR0ddg0f/1pkKMVDJ7n6HCmfyccD01O
-         TznDM/nTvjkVwovGVCCZqGsAi99CkHPtrA75S8+H4pbgxqW7Agw7EvCJ4jPhT3AO0jZR
-         VaBi0zdqGpEtCxJsbI8Y7bMV9TAgfmtiuqHV0OqjC1iMDTIKHeR6L+M0OzsqDwofuF2e
-         eWAQ==
+        bh=X01LvFXFueRcI2ZlU9XeqbPTzDVMYa+4OS/23RAvwKo=;
+        b=FEi57b8RlVkzPZvNuNN7nPhUzXSlgnXhuytyGSPKiFSMVEc9kpojXWHL7SL+APG5vP
+         B0FZmBkP38k2jWlalIGtXGjMhVM+e+Q7Bx/C6RA2DKb1Ki6WVLULMIVWOKCHBWK21OAb
+         1DZyyc25lSAHHfRcLYTHcE3t9AE2W4x3mv7kf5Lin/qpgSxvC6XieHEKuSV7/2GVhx0J
+         aImwsdzkb5kCEfXWUFGQJ1avl0u/1Tty0+9gJ+vQOMUAuLoMa3LXpRV2AN55BnjRHRKa
+         5p2bf1qK09WSl9RGi8DeVSGNM4TZc15yTaHh/pNugf5yU1LPbED6W56FSNF3FCVkxHU0
+         wEmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FExIKAHJpPJFM3Hd44tazabRIhwd+0VFgHYZYcprPmE=;
-        b=fPwR34Ctgons79u596ymLdW3VpmeCHpJLICdaf3VBJ4vITwFgrVsef0b6bUFVKYL+M
-         vT39xWD3WwxOJHmggMsVvtp7P6VlkSakzhVTBOiTLaRWwr+XVmTLe3SUL0eol0aVi62G
-         Q+1/8SadJkM7dXw3ceJPMqs6CplrAs9pnZEioZO9PyfgZJREr0BZ90cLYLj898CYhytW
-         DEFzsHSywk6IhSEHj4mn9iCsHECgfherS94Xg7wP38rgZKagTbH6HNqNlPB7FE01qOwS
-         rfOrSu3BJ/S4hmpb/7i8fFpycQFaAvCWta50AsQNthF0VwfnVrhy83Pg4N4gkN8tq2Yv
-         A9Ug==
-X-Gm-Message-State: AOAM5321OD2yhBESZ0d6rom0AMBzisJ1Gv03sr0fERkvAfx3qkVQuV8s
-        S1TlhcMa8wo0QKodJIwg6ZI=
-X-Google-Smtp-Source: ABdhPJzSou1EakYOIg96I8GnoircE3Vn7kSNmn6F1/7zwYOg6k41dpCvAPKfpjEEd/aEdMlY9skw5w==
-X-Received: by 2002:aa7:d146:: with SMTP id r6mr720807edo.335.1598872440245;
-        Mon, 31 Aug 2020 04:14:00 -0700 (PDT)
+        bh=X01LvFXFueRcI2ZlU9XeqbPTzDVMYa+4OS/23RAvwKo=;
+        b=cT9fRDoQ5Bo3MSiq98O9tlVk+BYAOzv2BWq2Lhyr9ZeGSWwTvBXYk9qc+lhbzjC/xu
+         +BEI4EKFgmclbNmFp6Hly7QAcP2hGrbEOpv3AakusVHKR7FGKqZmfJbKTXNQqwS9WFG4
+         nhJvfNVf/6eEQMcasfgNwqP5Tq18yAuLTQia80Hlqq39ACbPg7Hw2pp4NRgdJYp+TTWW
+         HnklyZAb/prVYIeB3nVAnD8oT4bfXTlVKiODNZuP8cbrqLizGHv05xfzeWOrzGZWw+jg
+         v0uNRQz0olYDK4HcZEMEPRo4SU4iwPrbHtAcyN79okT/mWMTfzAIus5OSR2vhsGCzIAx
+         /K1Q==
+X-Gm-Message-State: AOAM531Az4JwuO/TEnm05xxACmg7ZLzj3K8rEiYqDpQsCs63Kn5d9MQY
+        IDc5d/14a3/6HEUWJId6Ln4=
+X-Google-Smtp-Source: ABdhPJwianpUVafwqpi+1jPvnzk6IyxvTYuhXEJ+rOOom5+IAAvmkMeA6Nv+4Vx0aPY/4m56CcsZ3Q==
+X-Received: by 2002:a17:906:f897:: with SMTP id lg23mr651887ejb.124.1598872467235;
+        Mon, 31 Aug 2020 04:14:27 -0700 (PDT)
 Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id o7sm7165100edq.53.2020.08.31.04.13.58
+        by smtp.gmail.com with ESMTPSA id m24sm7788005eje.80.2020.08.31.04.14.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 04:13:59 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 13:13:58 +0200
+        Mon, 31 Aug 2020 04:14:26 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 13:14:25 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
@@ -65,12 +65,12 @@ Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=
         linux-acpi@vger.kernel.org
 Subject: Re: [PATCH v8 08/17] pwm: crc: Fix period / duty_cycle times being
  off by a factor of 256
-Message-ID: <20200831111358.GF1688464@ulmo>
+Message-ID: <20200831111425.GG1688464@ulmo>
 References: <20200830125753.230420-1-hdegoede@redhat.com>
  <20200830125753.230420-9-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="/QKKmeG/X/bPShih"
+        protocol="application/pgp-signature"; boundary="/Zw+/jwnNHcBRYYu"
 Content-Disposition: inline
 In-Reply-To: <20200830125753.230420-9-hdegoede@redhat.com>
 User-Agent: Mutt/1.14.6 (2020-07-11)
@@ -80,7 +80,7 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---/QKKmeG/X/bPShih
+--/Zw+/jwnNHcBRYYu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -129,26 +129,26 @@ efine
 >  drivers/pwm/pwm-crc.c | 6 +++---
 >  1 file changed, 3 insertions(+), 3 deletions(-)
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
 
---/QKKmeG/X/bPShih
+--/Zw+/jwnNHcBRYYu
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl9M23UACgkQ3SOs138+
-s6FFYg/+Mtzc1XwV7Zl1w99FCSgZyIrsahQ4SvPhVAXHLByxVW0Sgfi/z9K/bDcB
-Fjw3E5MB0XL4UD9DWtdCKefCLe/5kIlbsS/LK7BPplf1GNfctSYQ72L5soS7HKrn
-vBjHnIr5ohFn/EGf3RWeLczkUoFVhfbMYFgor/H1FjXo5OeHQ3Fkr2AVPsnyIYXZ
-Iuc7iGLT8lI57IoxRlJ7ZKu0IXImzrN7YU4a+pfZ77fBAu3B9D9jom+L+U0E+E6q
-Y+ZBnaRVz13j6OSRMtfu13/kATzx1HgJZfjmMiimldrXbucWCovYXK2GWz8RJp5J
-YrXCFi8WdHdxB/JxDSYsswynJtRiSmGTjQmvxy6GYXZe8IvSB3VkpaTkQS5bzA65
-QAYAclX3dnxT46eQ+yiNH4WEWlgL5gxsLeOMCvFWa5Lismv4q2gvxjBTF0RapKaD
-oncskpQfC4HlP1vQieYkUrYQUfAq+Gq2a6OU5qk0HES6N504YLAhS35xqHvWvT+9
-QT50ulvZJVyUzZN9HgmMphXKi0jTeJ5dAZjdf8RbzIXD8hBlFJbObnPl6Xk2VRh2
-kJSwxDm74OT4sD2IydJQQCBnOtf6MZ/HjfLa5M6UP34DyWKg5LTlUbBDjp5+cJcs
-jrZ53SdqyD8MbZ/0meG1wcRvneBbIEKkPtAkowDRt2wkQHEO6nc=
-=4Oyz
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl9M25EACgkQ3SOs138+
+s6GH8xAAjMo/M+ShCe5lfOAZJTXx9VgYTRYj/q1jrMtkTKQI89rLA2vj+RXkHMY3
+Q/vbefQxtubkKj0G85UhahEhAJ4WI03Wg18LxBA4EgkyyYtrWY0BpSa/0HnCOpTL
++1nBBty7TShZZYWDjhS2eRmRuM8kLPVfSG998SJ80Yk5fNpg7lWsih26uVftL2jC
+eOCDl8GxAN6bRn3f2sly5fKH+uhIjHYg5B18pVZ1MdkwpIY7BtYLNWQsd1VXvb+I
+SO0REjIpB8UVzQZ11Ea3sUrZhNMu/x2P6J93VuGxCfkMZMM3BpwDeLAfyM/sW0Ko
+Kc0YiedvxaD10jvTKXbVhZCL3N9sV0eh3zNPOOL/Vxw0OOTafwbyoDrpxQVGJp3A
+LUOsz+5GeuSM/JyEMHAGq/JYxdPyLDX/ZgWEJzUvWwhCJFQ+4K4c10Ri1qITTVSQ
++gn6Rn3pf/SjlrZJ6loA8K/Yi4ndfmrfl/KeJ81TeTOYZVBrma6W6NFFQpUwI+PD
+SDXskyBVU5T8v+rd2AzN5nM1ubFH4p3y5dqzdzX1uz5MC9aRTwFV17g44Q3FY8HL
+qfPoPgeSoA0o7jxf63aTVYgqXcnSJ8Bg9fZ/POn/s/GXAcB+bV0apJYFWwQ/Tgg9
+bZ67o0uSIfAKKR0sNxPHU/Hd/kzQ7W+4zCkxbx377zuSi7wf5yc=
+=JLKH
 -----END PGP SIGNATURE-----
 
---/QKKmeG/X/bPShih--
+--/Zw+/jwnNHcBRYYu--
