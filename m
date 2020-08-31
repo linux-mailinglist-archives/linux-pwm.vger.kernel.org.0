@@ -2,175 +2,149 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 353552575E5
-	for <lists+linux-pwm@lfdr.de>; Mon, 31 Aug 2020 10:57:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CF6725785E
+	for <lists+linux-pwm@lfdr.de>; Mon, 31 Aug 2020 13:27:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbgHaI47 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 31 Aug 2020 04:56:59 -0400
-Received: from mga05.intel.com ([192.55.52.43]:5987 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgHaI44 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 31 Aug 2020 04:56:56 -0400
-IronPort-SDR: 28Z6gUHx1DkRsYuybJS/tGT3eZgvj9GpbVwHcE5kWmoCQm9UHzKHNySOkSqjbVe4WLRcAGVnQo
- 3VdMSSF7+Xjw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="241745504"
-X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
-   d="scan'208";a="241745504"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 01:56:55 -0700
-IronPort-SDR: 9yN/1yUHqKELgGxgDMn4zYS+tfQ0H1S1gvVgEktTHAZNke7hmJJp9nZHec9rRoqP0OkxoPRziL
- nwHRUbc8FLAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
-   d="scan'208";a="330626277"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 31 Aug 2020 01:56:52 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kCfcP-00CvS5-HF; Mon, 31 Aug 2020 11:56:49 +0300
-Date:   Mon, 31 Aug 2020 11:56:49 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        id S1727853AbgHaL1j (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 31 Aug 2020 07:27:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgHaL0o (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Aug 2020 07:26:44 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5E7AC061755;
+        Mon, 31 Aug 2020 04:02:11 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id p9so2166391ejf.6;
+        Mon, 31 Aug 2020 04:02:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=y2QxnqD/1GqUYAZY6NBKUAuDj/nq3iGjxOKV37yba/w=;
+        b=KcY1b2hAsR6BY9OMaCp/0Sm28/cROsMbs1Cgr3ZdYTkegiIzkP1pGDhic1pPB8FRvC
+         pBRwYuya3qddJQ/NLNdhe+C0kcj/vLoW2bATm2j9d5+y1tJvzAv8EQLKto6+kTt/O+xE
+         cjMeZbDJGktxm5YgrYCw8BWmuNM4w05XLpmYoX3pNIfFNF/Pv7Gi8F5p+jJVsnlZDGju
+         tJLDIFBN5E/dT4ls5RRfcWLxqXNVnz6i2LiUfdeOF0vvYwPiAUnP17ILIqNZ50PCsASR
+         6y1g9SLmTx1z5dIIJ6c9CLpn3X+WidNJbo4YssIV/QPcEp+FlT/geWsYD9a27Qr3iiU3
+         /caw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=y2QxnqD/1GqUYAZY6NBKUAuDj/nq3iGjxOKV37yba/w=;
+        b=f0gdRHXKG+KvHlQG2K/egZKpaUhMy1grfwoNfskX9kPEaKSdUZVn1noWWSC01DWtj4
+         erpkr7XKJhSPFz8KulSF1E2Ufrqlk19d8F70KgX3jQB7V6beuNo6kamNOzFiko0KYmE6
+         tOrlfuzVMzu6nQk8NJW6MmmRBdNFZ07VSEUbxmqWlDhv9OGzO6y64WpXCHmB7+0YunIy
+         oXcJrl/PeiQ/VcqVnZj5wAqSsU1qEXTFNGg4fX+cze1pJkPZ8Q69078mkAUyUZsnsQL3
+         ekNuYQMETgHmOd6abs8vCyq0kUDphYP0jcErhL/TNLzooybIB+tfeeJ8PwavUGFG02+i
+         xjtA==
+X-Gm-Message-State: AOAM532ctAOqESRxsJw7do/tccgXpf+NUo3PoLyXDYf4mo1PdwLDCHlt
+        Qh09x4k+dlE3/9wd9kI1gCA=
+X-Google-Smtp-Source: ABdhPJxRwTwdJG8coU1+OFQeCDGe/IHZIporIBSIsMhzEvsSXTEcZbztHAA8FX0DsHxcCx4MpcjJmQ==
+X-Received: by 2002:a17:906:1154:: with SMTP id i20mr565986eja.243.1598871729707;
+        Mon, 31 Aug 2020 04:02:09 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id j1sm5708906edf.44.2020.08.31.04.02.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 04:02:08 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 13:02:07 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Jani Nikula <jani.nikula@linux.intel.com>,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>, linux-pwm@vger.kernel.org,
         intel-gfx <intel-gfx@lists.freedesktop.org>,
         dri-devel@lists.freedesktop.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v8 07/17] pwm: lpss: Always update state and set update
- bit
-Message-ID: <20200831085649.GB1891694@smile.fi.intel.com>
+Subject: Re: [PATCH v8 04/17] pwm: lpss: Add range limit check for the
+ base_unit register value
+Message-ID: <20200831110207.GB1688464@ulmo>
 References: <20200830125753.230420-1-hdegoede@redhat.com>
- <20200830125753.230420-8-hdegoede@redhat.com>
+ <20200830125753.230420-5-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="1LKvkjL3sHcu1TtY"
 Content-Disposition: inline
-In-Reply-To: <20200830125753.230420-8-hdegoede@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200830125753.230420-5-hdegoede@redhat.com>
+User-Agent: Mutt/1.14.6 (2020-07-11)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun, Aug 30, 2020 at 02:57:43PM +0200, Hans de Goede wrote:
-> This commit removes a check where we would skip writing the ctrl register
-> and then setting the update bit in case the ctrl register already contains
-> the correct values.
-> 
-> In a perfect world skipping the update should be fine in these cases, but
-> on Cherry Trail devices the AML code in the GFX0 devices' PS0 and PS3
-> methods messes with the PWM controller.
-> 
-> The "ACPI / LPSS: Resume Cherry Trail PWM controller in no-irq phase" patch
-> earlier in this series stops the GFX0._PS0 method from messing with the PWM
-> controller and on the DSDT-s inspected sofar the _PS3 method only reads
-> from the PWM controller (and turns it off before we get a change to do so):
-> 
->     {
->         PWMB = PWMC /* \_SB_.PCI0.GFX0.PWMC */
->         PSAT |= 0x03
->         Local0 = PSAT /* \_SB_.PCI0.GFX0.PSAT */
->     }
-> 
-> The PWM controller getting turning off before we do this ourselves is
-> a bit annoying but not really an issue.
-> 
-> The problem this patch fixes comes from a new variant of the GFX0._PS3 code
-> messing with the PWM controller found on the Acer One 10 S1003 (1):
-> 
->     {
->         PWMB = PWMC /* \_SB_.PCI0.GFX0.PWMC */
->         PWMT = PWMC /* \_SB_.PCI0.GFX0.PWMC */
->         PWMT &= 0xFF0000FF
->         PWMT |= 0xC0000000
->         PWMC = PWMT /* \_SB_.PCI0.GFX0.PWMT */
->         PWMT = PWMC /* \_SB_.PCI0.GFX0.PWMC */
->         Sleep (0x64)
->         PWMB &= 0x3FFFFFFF
->         PWMC = PWMB /* \_SB_.PCI0.GFX0.PWMB */
->         PSAT |= 0x03
->         Local0 = PSAT /* \_SB_.PCI0.GFX0.PSAT */
->     }
-> 
-> This "beautiful" piece of code clears the base-unit part of the ctrl-reg,
-> which effectively disables the controller, and it sets the update flag
-> to apply this change. Then after this it restores the original ctrl-reg
-> value, so we do not see it has mucked with the controller.
-> 
-> *But* it does not set the update flag when restoring the original value.
-> So the check to see if we can skip writing the ctrl register succeeds
-> but since the update flag was not set, the old base-unit value of 0 is
-> still in use and the PWM controller is effectively disabled.
-> 
-> IOW this PWM controller poking means that we cannot trust the base-unit /
-> on-time-div value we read back from the PWM controller since it may not
-> have been applied/committed. Thus we must always update the ctrl-register
-> and set the update bit.
-> 
-> 1) And once I knew what to look for also in a bunch of other devices
-> including the popular Lenovo Ideapad Miix 310 and 320 models and
-> various Medion models.
 
-Despite the above mentioned issue I'm always in favour of not micro-optimizing I/O.
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+--1LKvkjL3sHcu1TtY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, Aug 30, 2020 at 02:57:40PM +0200, Hans de Goede wrote:
+> When the user requests a high enough period ns value, then the
+> calculations in pwm_lpss_prepare() might result in a base_unit value of 0.
+>=20
+> But according to the data-sheet the way the PWM controller works is that
+> each input clock-cycle the base_unit gets added to a N bit counter and
+> that counter overflowing determines the PWM output frequency. Adding 0
+> to the counter is a no-op. The data-sheet even explicitly states that
+> writing 0 to the base_unit bits will result in the PWM outputting a
+> continuous 0 signal.
+>=20
+> When the user requestes a low enough period ns value, then the
+> calculations in pwm_lpss_prepare() might result in a base_unit value
+> which is bigger then base_unit_range - 1. Currently the codes for this
+> deals with this by applying a mask:
+>=20
+> 	base_unit &=3D (base_unit_range - 1);
+>=20
+> But this means that we let the value overflow the range, we throw away the
+> higher bits and store whatever value is left in the lower bits into the
+> register leading to a random output frequency, rather then clamping the
+> output frequency to the highest frequency which the hardware can do.
+>=20
+> This commit fixes both issues by clamping the base_unit value to be
+> between 1 and (base_unit_range - 1).
+>=20
+> Fixes: 684309e5043e ("pwm: lpss: Avoid potential overflow of base_unit")
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
-> Changes in v8:
-> - New patch in v8 of this patch-set
+> Changes in v5:
+> - Use clamp_val(... instead of clam_t(unsigned long long, ...
+>=20
+> Changes in v3:
+> - Change upper limit of clamp to (base_unit_range - 1)
+> - Add Fixes tag
 > ---
->  drivers/pwm/pwm-lpss.c | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
-> index 9a7400c6fb6e..20f6b6d6f874 100644
-> --- a/drivers/pwm/pwm-lpss.c
-> +++ b/drivers/pwm/pwm-lpss.c
-> @@ -85,7 +85,7 @@ static void pwm_lpss_prepare(struct pwm_lpss_chip *lpwm, struct pwm_device *pwm,
->  	unsigned long long on_time_div;
->  	unsigned long c = lpwm->info->clk_rate, base_unit_range;
->  	unsigned long long base_unit, freq = NSEC_PER_SEC;
-> -	u32 orig_ctrl, ctrl;
-> +	u32 ctrl;
->  
->  	do_div(freq, period_ns);
->  
-> @@ -104,16 +104,14 @@ static void pwm_lpss_prepare(struct pwm_lpss_chip *lpwm, struct pwm_device *pwm,
->  	do_div(on_time_div, period_ns);
->  	on_time_div = 255ULL - on_time_div;
->  
-> -	orig_ctrl = ctrl = pwm_lpss_read(pwm);
-> +	ctrl = pwm_lpss_read(pwm);
->  	ctrl &= ~PWM_ON_TIME_DIV_MASK;
->  	ctrl &= ~((base_unit_range - 1) << PWM_BASE_UNIT_SHIFT);
->  	ctrl |= (u32) base_unit << PWM_BASE_UNIT_SHIFT;
->  	ctrl |= on_time_div;
->  
-> -	if (orig_ctrl != ctrl) {
-> -		pwm_lpss_write(pwm, ctrl);
-> -		pwm_lpss_write(pwm, ctrl | PWM_SW_UPDATE);
-> -	}
-> +	pwm_lpss_write(pwm, ctrl);
-> +	pwm_lpss_write(pwm, ctrl | PWM_SW_UPDATE);
->  }
->  
->  static inline void pwm_lpss_cond_enable(struct pwm_device *pwm, bool cond)
-> -- 
-> 2.28.0
-> 
+>  drivers/pwm/pwm-lpss.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
--- 
-With Best Regards,
-Andy Shevchenko
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
 
+--1LKvkjL3sHcu1TtY
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl9M2K8ACgkQ3SOs138+
+s6FvmhAAidTtMFsrm8acDCUZfp1D48n+LAL/edmqIHFYYgVuC+TyEnpQvACrUc8u
+SMgxqEtVGql7SItwicnNAKo8d1HliKdeQPLxlLVjpWBaNGJisn1c0Pau+X3oB4rq
+7Qnmkfo6qDKJRm0T13JyNB+3GtQkbC2je7/cFu3UN+aaHEVL/MUGJb+NJdrdcWaA
+oSomXdi2RJylkudfQuD4QleIst9pI2N5q1FUz0R15fOx2fagjOQpD6bKXvpCkIeY
+QTUafA1Y7ymd7cpfKV4y38jglJ1KfFvkuxqHhLWJiMmt67v/sOdsuSzzI2PGNkge
+TDLr9/5nfnNBVRZ3W4BUsC0+hsVaENyRdIPUzu/gtpJ1N6eEkLi3YpM7EyeDlA2Z
+yZAj39b0ea5jPd6eQuPuVyDkiZnUypAjmytIwG88ABmuuLlvTnlNKcJ41cM1ZwZr
+VMjy/gosQPaJpnE51W+g1rsjVzFhVy1yxXoWKwVfV+nX+jai3uzZD9dFH+ydYZe4
+PUgsW2/J5p0szzo08PJmXZalfN+e0fhrV1OZMwVZFLLK2Ao6W36rVJzeBZoa+zWL
+Rsuf0YfhFzLDcDH4fCiU3jU4TrDfCycx59B+sggHC0LwpKDP8n3BxRMVuAat+v9p
+BNGzjn/3fs3vtixtQTa7AG0yFuEEPKmrJgVoF9KsquZrNxBg9Qs=
+=zX3v
+-----END PGP SIGNATURE-----
+
+--1LKvkjL3sHcu1TtY--
