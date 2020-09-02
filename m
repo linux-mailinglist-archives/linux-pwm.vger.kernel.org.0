@@ -2,170 +2,71 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75AD125A9A5
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Sep 2020 12:45:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CF9625AADB
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Sep 2020 14:09:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbgIBKpr convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Wed, 2 Sep 2020 06:45:47 -0400
-Received: from protonic.xs4all.nl ([83.163.252.89]:54890 "EHLO
-        protonic.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgIBKpr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 2 Sep 2020 06:45:47 -0400
-Received: from erd988 (erd988.prtnl [192.168.224.30])
-        by sparta.prtnl (Postfix) with ESMTP id 5DE1744AD72C;
-        Wed,  2 Sep 2020 12:45:45 +0200 (CEST)
-Date:   Wed, 2 Sep 2020 12:45:45 +0200
-From:   David Jander <david@protonic.nl>
-To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Steffen Trumtrar <s.trumtrar@pengutronix.de>,
-        Clemens Gruber <clemens.gruber@pqgruber.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
-        Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v2 3/3] drivers: pwm: pwm-pca9685.c: Disable unused
- alternative addresses
-Message-ID: <20200902124545.38997df3@erd988>
-In-Reply-To: <20200902070724.27l64r2ri66srjam@pengutronix.de>
-References: <20200828121415.1292388-1-david@protonic.nl>
-        <20200828121415.1292388-4-david@protonic.nl>
-        <20200902070724.27l64r2ri66srjam@pengutronix.de>
-Organization: Protonic Holland
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726177AbgIBMJC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 2 Sep 2020 08:09:02 -0400
+Received: from smtp2.axis.com ([195.60.68.18]:29633 "EHLO smtp2.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726124AbgIBMJA (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 2 Sep 2020 08:09:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; l=353; q=dns/txt; s=axis-central1;
+  t=1599048540; x=1630584540;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UB9qAVvfs8T192lE6YWu3bE1bQRm/AZr6CQndih6gA8=;
+  b=GjftC+hEqGe9upkSjm/YVvH0QcEd23m9xtIo8CdgThtJvdt8g74EEjOT
+   S3ji/Gki8I4Jiz3XYDJiBrj/c47+OZUjg7FOM+eNgxH5kEyjhmJIHLyHT
+   pBZ4y2uiPwXcSH9enwmjyAAfRZdX4/fc8erRXBrwHw9laMpdSiGAsUSL8
+   HiLVkVyadaSr37Cw4HSiab6Y7bFO6U4B+deDP7THzyfptNZpEZSZ1Fk8O
+   ayEZ6BE+Ub67F0jG4D9za3vjoj3jnEAreD5bT4aNrD79q6DXmBNQZ5nXz
+   cHiT3j2asmNAtsHFsa1V18ol6+WZI19CnZo7jcdd0kzX9n2W+/24E4UO9
+   g==;
+IronPort-SDR: PGNnoDwpTx2+/YnXjlJh2GR6mqYlj2+4sc2D74qVzVml4cyj/dJyxzA9/mFJ4QTZveRoZg/QGv
+ N2RayIypx1XPNfIZ9TnuiTUtZ4UFmA+71vhPsrpK3+1+DEkxCMpmDg7k/9QEtftV0JbAVGPxTS
+ 4ST9syPuS1lhCodHa/lIfkPSxI75sLz/qiO4uZKvLrtytfOKpktRx+J5XRKeg3doLjEuI3i0Ds
+ 0d0aw3m1uxB6SmK53AsCcTw1clkn0Mx6cFSRYb37JGw52IDWNYmGB7jjorJEndVDccW/+Q3M3t
+ ScI=
+X-IronPort-AV: E=Sophos;i="5.76,383,1592863200"; 
+   d="scan'208";a="12124115"
+Date:   Wed, 2 Sep 2020 14:08:57 +0200
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        kernel <kernel@axis.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "oliver@schinagl.nl" <oliver@schinagl.nl>
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: Add pwm-gpio
+Message-ID: <20200902120857.f266ogum6btq2tlq@axis.com>
+References: <20200814155513.31936-1-vincent.whitchurch@axis.com>
+ <20200817193825.GA1416132@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200817193825.GA1416132@bogus>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 2 Sep 2020 09:07:24 +0200
-Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote:
-
-> On Fri, Aug 28, 2020 at 02:14:15PM +0200, David Jander wrote:
-> > The PCA9685 supports listening to 1 or more alternative I2C chip addresses
-> > for some special features that this driver does not support.
-> > By default the LED ALLCALL address is active (default 0x70), which causes
-> > this chip to respond to address 0x70 in addition to its main address
-> > (0x41). This is not desireable if there is another device on the same bus
-> > that uses this address (like a TMP103 for example).
-> > Since this feature is not supported by this driver, it is best to disable
-> > these addresses in the chip to avoid unsuspected bus collisions.  
-> 
-> Is this feature on by default? If the feature is on during boot and the
-> device at address 0x70 is tryed to probe first, this is unfortunate. (In
-> this case you might want to disable this feature in the bootloader, too.)
-
-The situation is indeed a little bit more complex. First off, yes, address
-0x70 is active by default after power-on, so you could theoretically get ACK
-"collisions" before the PCA9685 is probed. But...
-
-While it is considered bad practice to have a PCA9685 and another device that
-responds to address 0x70 on the same bus, my specific case involves a device
-connected to an extension header which is Raspberry-PI GPIO compatible. So the
-I2C bus is not a fixed design, since it can be extended. Drivers are then
-possibly loaded as modules.
-Also, out of reset (power on), the PCA9685 is in sleep mode, so writing to
-address 0x70 will not cause anything to happen to the outputs. Note that 0x70
-is NOT like its main address, and it is NOT possible to get it out of sleep
-mode accidentally, nor interfere with later startup in any way.
-The PCA9685 only ACKs write access to that address, but will never respond to
-a read command. So theoretically another device, such as a TMP103 will function
-without problems with any probe order between the two, as long as the PCA9685
-is NOT woken up before disabling the LED ALLCALL function... which is
-precisely what this patch is about.
-
-If this device was activated and used by the bootloader also, then of course
-it will be necessary to also patch the bootloader to disable the LED ALLCALL
-feature, but that is out of scope for this patch.
-
-Note: The other 3 SUB-addresses are not active by default after power-on. The
-reason this patch disables them also, is just because it is no extra effort
-and if they were enabled before for whatever reason, that reason is not
-relevant since this driver does not support it and either accidentally or
-even intentionally messing with the hardware from another piece of software
-would only cause conflicts, confusion and hard to debug problems. So it is
-safer to disable them also while we are at it.
-
-> > Signed-off-by: David Jander <david@protonic.nl>
-> > ---
-> >  drivers/pwm/pwm-pca9685.c | 23 ++++++++++++++++-------
-> >  1 file changed, 16 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-> > index 9d1d9dece0c0..ca7d205d6130 100644
-> > --- a/drivers/pwm/pwm-pca9685.c
-> > +++ b/drivers/pwm/pwm-pca9685.c
-> > @@ -58,6 +58,10 @@
-> >  #define PCA9685_MAXCHAN		0x10
-> >  
-> >  #define LED_FULL		BIT(4)
-> > +#define MODE1_ALLCALL		BIT(0)
-> > +#define MODE1_SUB3		BIT(1)
-> > +#define MODE1_SUB2		BIT(2)
-> > +#define MODE1_SUB1		BIT(3)
-> >  #define MODE1_SLEEP		BIT(4)
-> >  #define MODE2_INVRT		BIT(4)
-> >  #define MODE2_OUTDRV		BIT(2)
-> > @@ -444,7 +448,7 @@ static int pca9685_pwm_probe(struct i2c_client *client,
-> >  {
-> >  	struct pca9685 *pca;
-> >  	int ret;
-> > -	int mode2;
-> > +	int reg;  
-> 
-> This rename makes the patch considerably bigger. I'd expect you can just
-> add a mode1 variable, use this to access the MODE1 register and still
-> get the same compiler output. If so, I'd prefer this way.
-
-If you insist, I will add a second variable. But I'd like to offer my humble
-opinion about this first in case you want to consider it:
-While introducing a second variable makes this patch a little bit smaller,
-what remains after it is applied, for the rest of all visitors to this piece
-of code, is a situation that is less readable. The more variables are
-introduced, the more a reviewer of the code (not this patch) will have to keep
-track of. For example, you cannot see as easily that the value of "mode2" is
-used only in this scope, and not somewhere later in the code. Re-use of a
-variable explicitly in code, conveys information to the human reading it. Not
-only to the compiler (which of course is smart enough to figure that out).
-
-> >  	pca = devm_kzalloc(&client->dev, sizeof(*pca), GFP_KERNEL);
-> >  	if (!pca)
-> > @@ -461,19 +465,24 @@ static int pca9685_pwm_probe(struct i2c_client *client,
-> >  
-> >  	i2c_set_clientdata(client, pca);
-> >  
-> > -	regmap_read(pca->regmap, PCA9685_MODE2, &mode2);
-> > +	regmap_read(pca->regmap, PCA9685_MODE2, &reg);
-> >  
-> >  	if (device_property_read_bool(&client->dev, "invert"))
-> > -		mode2 |= MODE2_INVRT;
-> > +		reg |= MODE2_INVRT;
-> >  	else
-> > -		mode2 &= ~MODE2_INVRT;
-> > +		reg &= ~MODE2_INVRT;
-> >  
-> >  	if (device_property_read_bool(&client->dev, "open-drain"))
-> > -		mode2 &= ~MODE2_OUTDRV;
-> > +		reg &= ~MODE2_OUTDRV;
-> >  	else
-> > -		mode2 |= MODE2_OUTDRV;
-> > +		reg |= MODE2_OUTDRV;
-> >  
-> > -	regmap_write(pca->regmap, PCA9685_MODE2, mode2);
-> > +	regmap_write(pca->regmap, PCA9685_MODE2, reg);
+On Mon, Aug 17, 2020 at 09:38:25PM +0200, Rob Herring wrote:
+> On Fri, Aug 14, 2020 at 05:55:12PM +0200, Vincent Whitchurch wrote:
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - pwm-gpio
 > > +
-> > +	/* Disable all LED ALLCALL and SUBx addresses to avoid bus collisions */
-> > +	regmap_read(pca->regmap, PCA9685_MODE1, &reg);
-> > +	reg &= ~(MODE1_ALLCALL | MODE1_SUB1 | MODE1_SUB2 | MODE1_SUB3);
-> > +	regmap_write(pca->regmap, PCA9685_MODE1, reg);
-> >  
-> >  	/* Clear all "full off" bits */
-> >  	regmap_write(pca->regmap, PCA9685_ALL_LED_OFF_L, 0);  
+> > +  "#pwm-cells":
+> > +    const: 2
+> > +
+> > +  gpio:
+> 
+> 'gpios' is the preferred form even if singular.
 
-Best regards,
-
--- 
-David Jander
-Protonic Holland.
+Thanks, I've fixed this in v2.
