@@ -2,60 +2,63 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC77025BFF9
-	for <lists+linux-pwm@lfdr.de>; Thu,  3 Sep 2020 13:15:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5F7125C00A
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Sep 2020 13:21:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgICLPk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 3 Sep 2020 07:15:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33634 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728407AbgICLLx (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Sep 2020 07:11:53 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A4F0C061245;
-        Thu,  3 Sep 2020 04:00:16 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id i1so2074845edv.2;
-        Thu, 03 Sep 2020 04:00:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yYnEhusLXt+hTyNwij80s+Gh0oRryAwxqx+BI6vUKbE=;
-        b=gTvX8FwXfFQlpDzzVsS3ip59h/XuerPrvVdnqrG5HcIi0cwxOp/w/0CGVCLZiXunDa
-         Si4JRPhN46mTAW0harbqSN0VL6x4uD/uUbpUahC0z9lIAn9G998blexk8fAo0McVyy2q
-         J7iMSvDdzMXtnMx3ZO3cK9AgTQF1qPFxtYxyEcrDlQTimYuw6VSjxjSwIohmVkPS0jZ7
-         UWyAoP+0ISccomDzz9ok/mpEuW6NAk5wgeSNurjfk2MLkTUQmFUuWZ4jpfKkfyJs5Ff2
-         /oIF3cC7+96yKk25gXRHoMvtIpYK7wy/zEsu2WUrhJqLd1/b5SMEsXneE4qoSShVejDt
-         PT8Q==
+        id S1728464AbgICLSL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 3 Sep 2020 07:18:11 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:46036 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728417AbgICLPk (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Sep 2020 07:15:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599131701;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=efREBgpIuAxc+bnBJ5R3S/pFsZS/Ey21En4F0jCEO9A=;
+        b=DkTuQfrXIjNzJobZILFiPZlFO8O60VfZFVCgROtNwecTFcgUk4LniK/oiyu7yQS4fT7Byy
+        6smTIMnOvUmwb+30ikT406egzOTQlU/GdD3hC/dZExusHccEhf5IBruFGD3XMPucBpYtwY
+        X+sFopp9c95+dRWx0ybCxkq+dSOGjjk=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-319-W5vf7tJVNvOFirayoluYqw-1; Thu, 03 Sep 2020 07:12:34 -0400
+X-MC-Unique: W5vf7tJVNvOFirayoluYqw-1
+Received: by mail-ej1-f71.google.com with SMTP id li24so189297ejb.6
+        for <linux-pwm@vger.kernel.org>; Thu, 03 Sep 2020 04:12:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yYnEhusLXt+hTyNwij80s+Gh0oRryAwxqx+BI6vUKbE=;
-        b=GtYWgLI9im+Wvk8CDgDMtkfSTSxK5/jt3t4puZnW2jj1lZSayEGz7JYc0EBWBrKhgl
-         7idg2cTxv8ZqO7ulPN3NuXmTFNZIp/BMU4hsx7lES7PZ/Sf9JyuEHVAKRr+B7cgXRB7K
-         maXhCRUU8wAhe4j1Kjdx4ZLkJ7uk72/fDUcDOXoYQVU19/CSbT706HHgICK4X0ojFsP9
-         INWKAC4nX6Rryj5Jzz31CXslRv9owaF3sMmHHh3ztywcnDY4NylmG3D2l4A3zJyHSJP8
-         1WsTXijzaTe5cGPeh/HxyB6sHkZzfv0D7wYq4z99NRQyD7ViuLB/dEn00F0IoS5TeU02
-         MyZA==
-X-Gm-Message-State: AOAM5325OzmjtsD+UyLSoHHA8jw59QcUCHHu5NEztXCEAwg7LQP52aEc
-        vcB5XZRfrWxorfJMGwcqS+pauzZto95Osg==
-X-Google-Smtp-Source: ABdhPJwwigy71b9GHpZk/fZqbXWJuk42q2qwbW6hq0JrDrtGYE2aQTX2CZ9GJMutQVQv23fU0NgwLg==
-X-Received: by 2002:aa7:d417:: with SMTP id z23mr2362298edq.62.1599130815291;
-        Thu, 03 Sep 2020 04:00:15 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id c8sm2877359ejp.30.2020.09.03.04.00.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 04:00:14 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 13:00:12 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=efREBgpIuAxc+bnBJ5R3S/pFsZS/Ey21En4F0jCEO9A=;
+        b=d6O/NI8anfgehmu3SheWE8mxVZEiFsb2oiiiF+eMBAYzJRAYycUpSnNKSpuY3mdiq7
+         Q4GJcXwjOwRkKOubKMnAi/sQVroP5iXchXvGn8m67v3em9BCc3tgOgn/M+u/Fg34RKDi
+         ApPizyZij4gJH1tq42oPn38b6DKYw62oL83xRTXUq3R5L3/YxmaRtqRP+N00jTuo+5IE
+         UrUp4kKXhDAUV+/MlBabHzn9Ym+w6izIeAQFmYG3OSkFdSrxt83fcxqVEB/0oc7mHM1t
+         ejIgccD5V3hY5ejQiNVCU9uwZFrgb5bs5w2RbJCE/BALsSQYsKSSDRhRfTQUiIbhrAeV
+         AdSA==
+X-Gm-Message-State: AOAM530lsjHiRPiliJCdOHM8bySlRMjlhCnaLZbgQvoCmBNSUrhDhXQh
+        06AjYVQCgYgqjYTFnJuclonlfFLxP/0nvyKCByV5Qky/c6wvgpdr2O6rz7xzH9I8KCyl7TU01Cr
+        6mVikImSYvInw4kdwverr
+X-Received: by 2002:a17:906:c7da:: with SMTP id dc26mr1490804ejb.491.1599131553463;
+        Thu, 03 Sep 2020 04:12:33 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwz45IHe95vEABByf1/DSG38NFHvqU3XHec96U37Ufe0eGhD/vOjFiqWQ2lkLsAJDGyIGIi4Q==
+X-Received: by 2002:a17:906:c7da:: with SMTP id dc26mr1490775ejb.491.1599131553140;
+        Thu, 03 Sep 2020 04:12:33 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id r16sm2909233ejb.110.2020.09.03.04.12.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Sep 2020 04:12:32 -0700 (PDT)
+Subject: Re: [PATCH v9 06/17] pwm: lpss: Make pwm_lpss_apply() not rely on
+ existing hardware state
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         Jani Nikula <jani.nikula@linux.intel.com>,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>, linux-pwm@vger.kernel.org,
         intel-gfx <intel-gfx@lists.freedesktop.org>,
@@ -63,71 +66,90 @@ Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v9 07/17] pwm: lpss: Remove suspend/resume handlers
-Message-ID: <20200903110012.GB3756465@ulmo>
 References: <20200903105114.9969-1-hdegoede@redhat.com>
- <20200903105114.9969-8-hdegoede@redhat.com>
+ <20200903105114.9969-7-hdegoede@redhat.com> <20200903105909.GA3756465@ulmo>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <e342aee0-c7a6-62db-e4b7-9d72554fd55c@redhat.com>
+Date:   Thu, 3 Sep 2020 13:12:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="UHN/qo2QbUvPLonB"
-Content-Disposition: inline
-In-Reply-To: <20200903105114.9969-8-hdegoede@redhat.com>
-User-Agent: Mutt/1.14.6 (2020-07-11)
+In-Reply-To: <20200903105909.GA3756465@ulmo>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi,
 
---UHN/qo2QbUvPLonB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 9/3/20 12:59 PM, Thierry Reding wrote:
+> On Thu, Sep 03, 2020 at 12:51:03PM +0200, Hans de Goede wrote:
+>> Before this commit pwm_lpss_apply() was making 2 assuming
+>> 2 pre-conditions were met by the existing hardware state:
+> 
+> I think that "making 2" is too much.
 
-On Thu, Sep 03, 2020 at 12:51:04PM +0200, Hans de Goede wrote:
-> PWM controller drivers should not restore the PWM state on resume. The
-> convention is that PWM consumers do this by calling pwm_apply_state(),
-> so that it can be done at the exact moment when the consumer needs
-> the state to be stored, avoiding e.g. backlight flickering.
->=20
-> The only in kernel consumers of the pwm-lpss code, the i915 driver
-> and the pwm-class sysfs interface code both correctly restore the
-> state on resume, so there is no need to do this in the pwm-lpss code.
->=20
-> More-over the removed resume handler is buggy, since it blindly
-> restores the ctrl-register contents without setting the update
-> bit, which is necessary to get the controller to actually use/apply
-> the restored base-unit and on-time-div values.
->=20
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/pwm/pwm-lpss-platform.c |  1 -
->  drivers/pwm/pwm-lpss.c          | 24 ------------------------
->  drivers/pwm/pwm-lpss.h          |  3 ---
->  3 files changed, 28 deletions(-)
+You're right at first the sentence had something about making
+2 assumptions, then I added pre-conditions in there for it
+to better describe the problem...
 
-Nice!
+>> 1. That the base-unit and on-time-div read back from the
+>> control register are those actually in use, so that it
+>> can skip setting the update bit if the read-back value
+>> matches the desired values.
+>>
+>> 2. That the controller is enabled when the cached
+>> pwm_state.enabled says that the controller is enabled.
+>>
+>> As the long history of fixes for subtle (often suspend/resume)
+>> lpss-pwm issues shows, this assumptions are not necessary
+>> always true.
+>>
+>> 1. Specifically is not true on some (*) Cherry Trail devices
+>> with a nasty GFX0._PS3 method which: a. saves the ctrl reg value.
+>> b. sets the base-unit to 0 and writes the update bit to apply/commit
+>> c. restores the original ctrl value without setting the update bit,
+>> so that the 0 base-unit value is still in use.
+>>
+>> 2. Assumption 2. currently is true, but only because of the code which
+>> saves/restores the state on suspend/resume. By convention restoring the
+>> PWM state should be done by the PWM consumer and the presence of this
+>> code in the pmw-lpss driver is a bug. Therefor the save/restore code will
+>> be dropped in the next patch in this series, after which this assumption
+>> also is no longer true.
+>>
+>> This commit changes the pwm_lpss_apply() to make any assumptions about the
+> 
+> Did you mean to say "... to _not_ make any assumptions ..."?
 
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
+Yes, oops. That is a small but important difference.
 
---UHN/qo2QbUvPLonB
-Content-Type: application/pgp-signature; name="signature.asc"
+I'll do a v10 with your 2 Acked-by's added and both commit msg issues fixed.
 
------BEGIN PGP SIGNATURE-----
+Hopefully that will be the last version.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl9QzLwACgkQ3SOs138+
-s6HB4w/7BWTWBa37E/k/JCj9g8/G5zhz6bPtbVQvfjK9uo2SR3Cw9i8ICbGP4kBz
-Hws/izNzkiZT1xylqpMH29fNoLekSTTmA8xxMMwGwbxlqEWdGXgOzKR5cgJ25rCb
-VmEvNxXpITvKR7PeHDrUspOtpZl3CscbScJDA2vxE7W0SeTF2iO19fgF8B//u/tu
-DUQ7aEiORHBGwnIMefulW3bYO2yq8iFG18Iq+vVnPIcak/YqYxKlDaDs+5jY/Oqa
-Jqh250h+36HM0cSYvSMxIqDV1pP6HarcgRavj5daC1V/ymQqZFfmmiq+XVplJSxO
-+CPyioI2QcaRX2iQtOUFd5aAQSaj3E7sKCsv9APE2TqSushpoufrkwnKi1/1lIll
-YMzlXmVRivUg94dYeKWASJ5D9wWzCz5H67aBtu5V21oNcZc3L7Y1Xuztyxhp9ESH
-TDEIiFxqDyritfY+jqC4XXJiwtQYrI16310kEwi2wFA3PB4x2tRmWAi6BQuU5+tU
-y7hCBcSZZaOxbVlKG2dHsUawLT4pJ35G73YjsPzsJJLFfHN504aVSLIbZEogNt3r
-jq466Qm87cD0M6eqT8b338dmUffjZn+bJtp6b0i9FRny+i0Yy3z4KfaT7kh0EP79
-OsdzaUeoPDhyFupUt5Rai5wmOflTsqOupN4bA4OEKDwD8XM35f8=
-=hZTz
------END PGP SIGNATURE-----
+>> state the hardware is in. Instead it makes pwm_lpss_apply() always fully
+>> program the PWM controller, making it much less fragile.
+>>
+>> *) Seen on the Acer One 10 S1003, Lenovo Ideapad Miix 310 and 320 models
+>> and various Medion models.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>   drivers/pwm/pwm-lpss.c | 21 +++++++++------------
+>>   1 file changed, 9 insertions(+), 12 deletions(-)
+> 
+> Other than the two small nits, this looks much more idiomatic and true
+> to the atomic API, so:
+> 
+> Acked-by: Thierry Reding <thierry.reding@gmail.com>
 
---UHN/qo2QbUvPLonB--
+Thank you.
+
+Regards,
+
+Hans
+
