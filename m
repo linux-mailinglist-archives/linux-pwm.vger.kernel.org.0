@@ -2,213 +2,157 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E7C9125C4EA
-	for <lists+linux-pwm@lfdr.de>; Thu,  3 Sep 2020 17:20:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF3D125C517
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Sep 2020 17:22:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729007AbgICPUa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 3 Sep 2020 11:20:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728546AbgICL1B (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Sep 2020 07:27:01 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B794C061249
-        for <linux-pwm@vger.kernel.org>; Thu,  3 Sep 2020 04:18:45 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x14so2746929wrl.12
-        for <linux-pwm@vger.kernel.org>; Thu, 03 Sep 2020 04:18:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CQ15tirZpKA58Rq11JF7jkdfBFgYHMCtFMxo14MKJgM=;
-        b=yAdaap5PB+hSEk2DOwQJho56yttfPUEvELhdmmRyS1aWA6/G07iA1d7B1Aiag5yyRb
-         HBGOzpOR+7eQ1duXllObstGDJ2QrVCfgjTKWh/B5vovtTRM8OkuIkQUL9AhBTOrjZa+k
-         pHHXVEAAZgVR65CNlQhE3F4r74LGaJi72lU8XEOKQ+t+i/pI85BoWmmvEPFkjWMSoLYw
-         Y0zToNSt3UUvWnoGvHkaTgDQDdqPmMhmbOWHsrcJMzCrxqwLEpy6tjCD/6Qvz2ccy9K2
-         zUijigOpVuxEOqKwN7rrTA89Q0657lSLVrciP+dal70DXma2u0aUNkHoQd9jyF+xtZjs
-         bM1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CQ15tirZpKA58Rq11JF7jkdfBFgYHMCtFMxo14MKJgM=;
-        b=guVcW+dxtYVa+r7KYOPguLbzszfaumNQw4jvOyiozwXl/9pMrZZb7rbE2+8SPx4u4U
-         aHgwqlZjCd0RKF8qSsyCU52rWkGyQ+kr3w7+Eh3w/MOTBIsXmWF/1LMcFAmORpm/GFCG
-         v39CKAVzSuvwyaUIkHVajgYoHRkU807ip833f0NUXwO6OCbpxvph5/5PJFutAarkGtg6
-         poW5zM08vvqVPKVebq4OXajUa1suUee82QJ6810x7N3qqjk9QN59BEqV887wYQvycK57
-         RQqyx1o8SCTW9O+qzuWsHhAUucVB7RKWJwe3QNP5jCVTCnlR+eaTZxm5CBqNi/h8hi2n
-         s2Ww==
-X-Gm-Message-State: AOAM531HJfTTgAO85o5E18MQXB2cGdZL8iLOK7Qat2KQ/gR1fs/rfvKz
-        MD8QJUIyaHL6iKIvcVrtgJ8M4Q==
-X-Google-Smtp-Source: ABdhPJzuiRVyOaDLzC9V5jdoMTdPgH3/zYN54my371UhAdkbgzHKgI9i0auo3zIk0dt7BttnIX+osg==
-X-Received: by 2002:adf:e7ca:: with SMTP id e10mr1860353wrn.236.1599131923615;
-        Thu, 03 Sep 2020 04:18:43 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id z14sm3706113wrh.14.2020.09.03.04.18.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 04:18:42 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 12:18:40 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Pascal Roeleven <dev@pascalroeleven.nl>
-Cc:     Andrey Lebedev <andrey@lebedev.lt>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Emil Lenngren <emil.lenngren@gmail.com>
-Subject: Re: pwm-sun4i: PWM backlight is not turned off on shutdown
-Message-ID: <20200903111840.vkjevwmwarx2txhe@holly.lan>
-References: <ae58976c-a8d7-0d00-fe72-d21579b37240@lebedev.lt>
- <20200902095402.pombrirqqjdew34b@holly.lan>
- <913a5324-a7d2-f1d5-701e-1c28359286f2@lebedev.lt>
- <5302741318a28e39239db08a1f05ecb7@pascalroeleven.nl>
+        id S1728616AbgICPW0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 3 Sep 2020 11:22:26 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25478 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728415AbgICLXt (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Sep 2020 07:23:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599132228;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=f9531/S5hjfYNJ4DKbRABJsPBCK3YC+tnLn6QLf6Uew=;
+        b=BCw4tLe94VusPJFGdHePtMhh1/cZI4pAJfq85kbMU5lwyNeQqLbQNHd5rvOCSEjzxwcZsy
+        mCQJ+KlkxU3/OZK1eVtLVi1EkCG9No8OjQeWTyayHAtwdg9Jmm/ciMY++1rIRTT0n/6di9
+        5GR2q8XG1svgsOLdRPXUTOYsn7YNxrU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-124-3_erkd7tMTaMtG1VOa_j3w-1; Thu, 03 Sep 2020 07:23:44 -0400
+X-MC-Unique: 3_erkd7tMTaMtG1VOa_j3w-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DE5B10ABDB1;
+        Thu,  3 Sep 2020 11:23:42 +0000 (UTC)
+Received: from x1.localdomain (ovpn-113-3.ams2.redhat.com [10.36.113.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C4F0F5C1C2;
+        Thu,  3 Sep 2020 11:23:38 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-pwm@vger.kernel.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH v10 00/17] acpi/pwm/i915: Convert pwm-crc and i915 driver's PWM code to use the atomic PWM API
+Date:   Thu,  3 Sep 2020 13:23:20 +0200
+Message-Id: <20200903112337.4113-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5302741318a28e39239db08a1f05ecb7@pascalroeleven.nl>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 09:42:49PM +0200, Pascal Roeleven wrote:
-> Thank you for adding me. Emil (also added now) and I spent a while on trying
-> to figure out how to solve this. The Allwinner PWM controller has some
-> quirks.
-> 
-> Unfortunately I never got around to perform some more tests and fix it
-> indefinitely. It's still on my todo list..
-> 
-> > On 9/2/20 12:54 PM, Daniel Thompson wrote:
-> > > There's some rather odd logic in sun4i_pwm_apply() that results in the
-> > > PWM being disabled twice... once when it applies the initial config
-> > > and again after waiting for a duty_cycle.
-> 
-> That's true. To properly turn off the controller you have to turn the
-> controller off first and keep the gate on for at least two full clock
-> cycles. Then the gate must be turned off. Otherwise it might get stuck.
-> That's probably what is trying to be done here.
-> 
-> On 2020-09-02 21:05, Andrey Lebedev wrote:
-> > Indeed, this fixes the issue for me. The display goes dark reliably on
-> > writing 4 to "/sys/.../bl_power" as well as when system is halted. I did
-> > not notice any negative side effects so far.
-> 
-> Problems start to arise when combining bl_power and brightness setting in a
-> particular order or at the same time (with for example a backlight driver
-> which sets both bl_power and brightness). I can't recall exactly what caused
-> problems and when, but one thing I was sure of is that timing was of the
-> essence. Once I added some delays here and there it started to work.
-> 
-> If this patch works for you then that's great, but unfortunately it isn't a
-> complete solution.
+Hi All,
 
-Forgive my poking but it does look to me like Andrey may have a point
-about d3817a647059 ("pwm: sun4i: Remove redundant needs_delay").
+Here is hopefully the last version of this series, as everything seems
+to be ready for merging this now.
 
-I've not got this hardware so I can't comment on whether the current
-code is correct or not. However, after reviewing d3817a647059, it is
-certainly looks like the patch does not actually implement what the
-patch description says it does. In fact, by activating previously
-unreachable code, it appears to introduces exactly the regression
-described by Andrey.
+The only difference from v9 is correcting some mistakes in the commit-msg of:
+[PATCH v10 06/17] pwm: lpss: Make pwm_lpss_apply() not rely on hardware state
+
+I plan is to push the entire series to drm-intel-next-queued
+(because of interdependencies) once the series has passed CI.
+
+This series has been tested (and re-tested after adding various bug-fixes)
+extensively. It has been tested on the following devices:
+
+-Asus T100TA  BYT + CRC-PMIC PWM
+-Toshiba WT8-A  BYT + CRC-PMIC PWM
+-Thundersoft TS178  BYT + CRC-PMIC PWM, inverse PWM
+-Asus T100HA  CHT + CRC-PMIC PWM
+-Terra Pad 1061  BYT + LPSS PWM
+-Trekstor Twin 10.1  BYT + LPSS PWM
+-Asus T101HA  CHT + LPSS PWM
+-GPD Pocket  CHT + LPSS PWM
+-Acer One S1003  CHT + LPSS PWM
+
+Regards,
+
+Hans
 
 
-> From d3817a647059a3e5f8791e9b7225d194985aa75f Mon Sep 17 00:00:00 2001
-> From: Pascal Roeleven <dev@pascalroeleven.nl>
-> Date: Tue, 17 Mar 2020 16:59:03 +0100
-> Subject: [PATCH] pwm: sun4i: Remove redundant needs_delay
-> 
-> 'needs_delay' does now always evaluate to true, so remove all
-> occurrences.
+Changelog:
 
-In other words, all paths that test !needs_delay[pwm->hwpwm] are
-unreachable...
+Changes in v10:
+- Fixup the commit msg of:
+  [PATCH v10 06/17] pwm: lpss: Make pwm_lpss_apply() not rely on hardware state
 
+Changes in v9:
+- Replace:
+  [PATCH v8 06/17] pwm: lpss: Use pwm_lpss_restore() when restoring state on resume
+  [PATCH v8 07/17] pwm: lpss: Always update state and set update bit
+  with:
+  [PATCH v9 06/17] pwm: lpss: Make pwm_lpss_apply() not rely on hardware state
+  [PATCH v9 07/17] pwm: lpss: Remove suspend/resume handlers
 
-> Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
-> Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-> ---
->  drivers/pwm/pwm-sun4i.c | 13 ++-----------
->  1 file changed, 2 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> index 3e3efa6c768f..5c677c563349 100644
-> --- a/drivers/pwm/pwm-sun4i.c
-> +++ b/drivers/pwm/pwm-sun4i.c
-> @@ -90,7 +90,6 @@ struct sun4i_pwm_chip {
->  	spinlock_t ctrl_lock;
->  	const struct sun4i_pwm_data *data;
->  	unsigned long next_period[2];
-> -	bool needs_delay[2];
->  };
->  
->  static inline struct sun4i_pwm_chip *to_sun4i_pwm_chip(struct pwm_chip *chip)
-> @@ -287,7 +286,6 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  	sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
->  	sun4i_pwm->next_period[pwm->hwpwm] = jiffies +
->  		usecs_to_jiffies(cstate.period / 1000 + 1);
-> -	sun4i_pwm->needs_delay[pwm->hwpwm] = true;
->  
->  	if (state->polarity != PWM_POLARITY_NORMAL)
->  		ctrl &= ~BIT_CH(PWM_ACT_STATE, pwm->hwpwm);
-> @@ -298,7 +296,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  
->  	if (state->enabled) {
->  		ctrl |= BIT_CH(PWM_EN, pwm->hwpwm);
-> -	} else if (!sun4i_pwm->needs_delay[pwm->hwpwm]) {
-> +	} else {
+Changes in v8:
+- Add a new patch dealing with the ACPI/DSDT GFX0._PS3 code poking the PWM controller
+  in unexpected ways on some Cherry Trail devices
 
-... but this previously unreachable path will now be executed
-if state->enabled is false.
+Changes in v7:
+- Fix a u64 divide leading to undefined reference to `__udivdi3' errors on 32 bit
+  platforms by casting the divisor to an unsigned long
 
->  		ctrl &= ~BIT_CH(PWM_EN, pwm->hwpwm);
->  		ctrl &= ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
->  	}
-> @@ -310,15 +308,9 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  	if (state->enabled)
->  		return 0;
->  
-> -	if (!sun4i_pwm->needs_delay[pwm->hwpwm]) {
-> -		clk_disable_unprepare(sun4i_pwm->clk);
-> -		return 0;
-> -	}
-> -
+Changes in v6:
+- Rebase on v5.9-rc1
+- Adjust pwm-crc patches for pwm_state.period and .duty_cycle now being u64
 
-This unreachable path is correctly removed.
+Changes in v5:
+- Dropped the "pwm: lpss: Correct get_state result for base_unit == 0"
+  patch. The base_unit == 0 condition should never happen and sofar it is
+  unclear what the proper behavior / correct values to store in the
+  pwm_state should be when this does happen.  Since this patch was added as
+  an extra pwm-lpss fix in v4 of this patch-set and otherwise is orthogonal
+  to the of this patch-set just drop it (again).
+- "[PATCH 04/16] pwm: lpss: Add range limit check for the base_unit register value"
+  - Use clamp_val(... instead of clam_t(unsigned long long, ...
+- "[PATCH 05/16] pwm: lpss: Add pwm_lpss_prepare_enable() helper"
+  - This is a new patch in v5 of this patchset
+- [PATCH 06/16] pwm: lpss: Use pwm_lpss_apply() when restoring state on resume
+  - Use the new pwm_lpss_prepare_enable() helper
 
->  	/* We need a full period to elapse before disabling the channel. */
->  	now = jiffies;
-> -	if (sun4i_pwm->needs_delay[pwm->hwpwm] &&
+Changes in v4:
+- "[PATCH v4 06/16] pwm: lpss: Correct get_state result for base_unit == 0"
+  - This is a new patch in v4 of this patchset
+- "[PATCH v4 12/16] pwm: crc: Implement get_state() method"
+  - Use DIV_ROUND_UP when calculating the period and duty_cycle values
+- "[PATCH v4 16/16] drm/i915: panel: Use atomic PWM API for devs with an external PWM controller"
+  - Add a note to the commit message about the changes in pwm_disable_backlight()
+  - Use the pwm_set/get_relative_duty_cycle() helpers
 
-This unconditionally true expression is also correctly removed.
+Changes in v3:
+- "[PATCH v3 04/15] pwm: lpss: Add range limit check for the base_unit register value"
+  - Use base_unit_range - 1 as maximum value for the clamp()
+- "[PATCH v3 05/15] pwm: lpss: Use pwm_lpss_apply() when restoring state on resume"
+  - This replaces the "pwm: lpss: Set SW_UPDATE bit when enabling the PWM"
+    patch from previous versions of this patch-set, which really was a hack
+    working around the resume issue which this patch fixes properly.
+- PATCH v3 6 - 11 pwm-crc changes:
+  - Various small changes resulting from the reviews by Andy and Uwe,
+    including some refactoring of the patches to reduce the amount of churn
+    in the patch-set
 
-In short this patch changes behaviour in a manner that could not be
-predicted from the patch description.
-
-
-Daniel.
-
-
-> -	    time_before(now, sun4i_pwm->next_period[pwm->hwpwm])) {
-> +	if (time_before(now, sun4i_pwm->next_period[pwm->hwpwm])) {
-
->  		delay_us = jiffies_to_usecs(sun4i_pwm->next_period[pwm->hwpwm] -
->  					   now);
->  		if ((delay_us / 500) > MAX_UDELAY_MS)
-> @@ -326,7 +318,6 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  		else
->  			usleep_range(delay_us, delay_us * 2);
->  	}
-> -	sun4i_pwm->needs_delay[pwm->hwpwm] = false;
->  
->  	spin_lock(&sun4i_pwm->ctrl_lock);
->  	ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+Changes in v2:
+- Fix coverletter subject
+- Drop accidentally included debugging patch
+- "[PATCH v3 02/15] ACPI / LPSS: Save Cherry Trail PWM ctx registers only once (
+  - Move #define LPSS_SAVE_CTX_ONCE define to group it with LPSS_SAVE_CTX
 
