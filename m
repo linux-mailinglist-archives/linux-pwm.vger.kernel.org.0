@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F14B925DD38
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Sep 2020 17:24:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7177025DD98
+	for <lists+linux-pwm@lfdr.de>; Fri,  4 Sep 2020 17:27:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730975AbgIDPYf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 4 Sep 2020 11:24:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33132 "EHLO mail.kernel.org"
+        id S1730858AbgIDP06 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 4 Sep 2020 11:26:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730968AbgIDPYb (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:24:31 -0400
+        id S1730970AbgIDPYd (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 4 Sep 2020 11:24:33 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52CC02087C;
-        Fri,  4 Sep 2020 15:24:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 144C62074D;
+        Fri,  4 Sep 2020 15:24:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599233068;
-        bh=hL/fcCPcN2C/m5il4PArkR2+637T0WAxztArDirM7/s=;
+        s=default; t=1599233072;
+        bh=g3o7tt+MugsYL++tcyWf98GZHjVPsCkdOLiyqZCrTPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T7gg00No50Jp3fJYbXs425u3OTv/y+SFToaVZGCPXsMvq6GzgAVxbJ5/3BUrLbNVY
-         hMokcm6Old3yn1hFYxjTaN3osu2qkz6pF4TamBPvS3v/4KyEsmeFD5w+rrANriBSqu
-         ZcRc8+HF1e+ZMqbSMZkwN6Soc4J3bk2zLdhJbkH8=
+        b=tvp3tLsxj+Tz4tpJJg9/Iws16vsVTfn4cqnHRQFd0/97FP/oVJnzW1uiArHnInweg
+         yGz6XtT17i0HHAGBbOOPnRfA+VHYNpfvEfTCJ+zJkorCGwS/UGzGh9ds4TZdcf7kin
+         EmQ/SZY+TweAb5oyuButZC0OsvZ4WUTx/H7H+8X0=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -38,9 +38,9 @@ Cc:     Michael Turquette <mturquette@baylibre.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 02/14] dt-bindings: pwm: imx-pwm: Add i.MX 8M compatibles
-Date:   Fri,  4 Sep 2020 17:23:52 +0200
-Message-Id: <20200904152404.20636-3-krzk@kernel.org>
+Subject: [PATCH v3 03/14] dt-bindings: serial: fsl-imx-uart: Add i.MX 8M compatibles
+Date:   Fri,  4 Sep 2020 17:23:53 +0200
+Message-Id: <20200904152404.20636-4-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200904152404.20636-1-krzk@kernel.org>
 References: <20200904152404.20636-1-krzk@kernel.org>
@@ -64,35 +64,30 @@ to fix dtbs_check warnings like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/pwm/imx-pwm.yaml | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.yaml b/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
-index 01df06777cba..473863eb67e5 100644
---- a/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
-@@ -19,9 +19,17 @@ properties:
-       - 3
- 
-   compatible:
--    enum:
--      - fsl,imx1-pwm
--      - fsl,imx27-pwm
-+    oneOf:
-+      - enum:
-+          - fsl,imx1-pwm
-+          - fsl,imx27-pwm
-+      - items:
-+          - enum:
-+              - fsl,imx8mm-pwm
-+              - fsl,imx8mn-pwm
-+              - fsl,imx8mp-pwm
-+              - fsl,imx8mq-pwm
-+          - const: fsl,imx27-pwm
+---
+
+Changes since v1:
+1. Fix subject prefix
+---
+ Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml b/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
+index cba3f83ccd5f..3d896173b3b0 100644
+--- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
++++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
+@@ -36,6 +36,10 @@ properties:
+             - fsl,imx6sx-uart
+             - fsl,imx6ul-uart
+             - fsl,imx7d-uart
++            - fsl,imx8mm-uart
++            - fsl,imx8mn-uart
++            - fsl,imx8mp-uart
++            - fsl,imx8mq-uart
+           - const: fsl,imx6q-uart
  
    reg:
-     maxItems: 1
 -- 
 2.17.1
 
