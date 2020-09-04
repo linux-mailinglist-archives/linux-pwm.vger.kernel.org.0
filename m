@@ -2,43 +2,43 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2403625E3B1
-	for <lists+linux-pwm@lfdr.de>; Sat,  5 Sep 2020 00:29:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2A0725E3BF
+	for <lists+linux-pwm@lfdr.de>; Sat,  5 Sep 2020 00:36:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgIDW31 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 4 Sep 2020 18:29:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41384 "EHLO mail.kernel.org"
+        id S1728098AbgIDWgw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 4 Sep 2020 18:36:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728012AbgIDW31 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 4 Sep 2020 18:29:27 -0400
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+        id S1728076AbgIDWgv (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 4 Sep 2020 18:36:51 -0400
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AA67208C7;
-        Fri,  4 Sep 2020 22:29:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9F9721481;
+        Fri,  4 Sep 2020 22:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599258566;
-        bh=+8dgVfOXgmURomqOzPuR2s0d+0XktF+kVIZ4JamC1Yk=;
+        s=default; t=1599259010;
+        bh=Z77smMqMlJ9InjnfOSLkOfrCVv21ZVMsWg97rhByuYA=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FPfVtLk3VgVy9YY2bppjWvDV2nvJ00oTy/jZPGsp1pSsT+kcmQKDELrZFVKOe/MW4
-         zJ45aqs0sB4ogJLfi9CwwVOS1v0zgXZFL4fluzz0xaGojKmgqLJSTmIwDbIBjLZCDs
-         e36mpUibGpzlRequFLGXPuBTspvr9u7SNO8bieYo=
-Received: by mail-ot1-f53.google.com with SMTP id g96so7253810otb.12;
-        Fri, 04 Sep 2020 15:29:26 -0700 (PDT)
-X-Gm-Message-State: AOAM530HI8S9w97j5PgXqi3vtRBxS4qaUMIMg4IDLgsN+4mUyfAvzmGg
-        1lBYOqogNOdrbP+dn0+qOhkmDJ2fNHZwlCDxBg==
-X-Google-Smtp-Source: ABdhPJyg8Cu0lq2UsQBYhJV227Jo2feqOcJKLxrdCLPxr9lVLm9MUPpbfMcEDGy7OIP/8N+4iwU7/9VeNN4vhk5EUSE=
-X-Received: by 2002:a9d:7f84:: with SMTP id t4mr7261177otp.192.1599258565768;
- Fri, 04 Sep 2020 15:29:25 -0700 (PDT)
+        b=d42dH4d2dmIZHNUOIPn2Xx9MDOlVwMecjUeWrrvxfpq6DK2RfQvJ6xLEXu/dqhvzS
+         Z/ISTc0EKYUenUlG+YNk2cGRIJ9vj92JritbM+b60QJN529orldpgXxshMN/mRXRsl
+         H5JpjCsVsztY+LzY2r0RUl6cSIkr06PafRhcGs0Y=
+Received: by mail-ot1-f44.google.com with SMTP id i4so7324119ota.2;
+        Fri, 04 Sep 2020 15:36:50 -0700 (PDT)
+X-Gm-Message-State: AOAM533W+cEA4mxsG6seLg1qDD4q3g53SJaMW0hz9TF/mmhVyvEhpNdl
+        46dzckZl0PaLaTpBvf5PIaMC+NkpWAKkgVk+EQ==
+X-Google-Smtp-Source: ABdhPJzgDGB2PMZG85xp4jfP9Au8Rn5zzR1d3vIUH17hhCmIoFGECB1Z1dXYQV5cZkVxUXSJH9qoAFDMcWerjSrzYOA=
+X-Received: by 2002:a05:6830:1008:: with SMTP id a8mr6724740otp.107.1599259010019;
+ Fri, 04 Sep 2020 15:36:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200904152404.20636-1-krzk@kernel.org> <20200904152404.20636-14-krzk@kernel.org>
-In-Reply-To: <20200904152404.20636-14-krzk@kernel.org>
+References: <20200904152404.20636-1-krzk@kernel.org> <20200904152404.20636-13-krzk@kernel.org>
+In-Reply-To: <20200904152404.20636-13-krzk@kernel.org>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 4 Sep 2020 16:29:14 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKOkerY14qc-7e5721Xsp0k6jm9oh1U1Lr-3SZA0HFgjw@mail.gmail.com>
-Message-ID: <CAL_JsqKOkerY14qc-7e5721Xsp0k6jm9oh1U1Lr-3SZA0HFgjw@mail.gmail.com>
-Subject: Re: [PATCH v3 13/14] dt-bindings: mtd: nand-controller: Fix matching
- with size-cells==1
+Date:   Fri, 4 Sep 2020 16:36:39 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+tGQhkqtQszOx7nvr1PR=YFz2p1=OnWQ8JxmSg4qNkHA@mail.gmail.com>
+Message-ID: <CAL_Jsq+tGQhkqtQszOx7nvr1PR=YFz2p1=OnWQ8JxmSg4qNkHA@mail.gmail.com>
+Subject: Re: [PATCH v3 12/14] dt-bindings: mtd: gpmi-nand: Fix matching of
+ clocks on different SoCs
 To:     Krzysztof Kozlowski <krzk@kernel.org>
 Cc:     linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org,
         "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
@@ -65,36 +65,145 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 On Fri, Sep 4, 2020 at 9:25 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
-> Most of Freescale/NXP GPMI device trees use size-cells==1 (even when
-> actually not needed except few boards).  This fixes dtbs_check warnings
-> like:
+> Driver requires different amount of clocks for different SoCs.  Describe
+> these requirements properly to fix dtbs_check warnings like:
 >
->     arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: nand-controller@33002000: #size-cells:0:0: 0 was expected
+>     arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: nand-controller@33002000: clock-names:1: 'gpmi_apb' was expected
 >
 > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>
 > ---
->  Documentation/devicetree/bindings/mtd/nand-controller.yaml | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
 >
-> diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> index 40fc5b0b2b8c..0879e1108837 100644
-> --- a/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> @@ -34,7 +34,10 @@ properties:
->      const: 1
+> Changes since v1:
+> 1. Do not require order of clocks (use pattern).
+
+To the extent that you can, you should fix the order in dts files
+first. If we just adjust the schemas to match the dts files, then
+what's the point?
+
+> ---
+>  .../devicetree/bindings/mtd/gpmi-nand.yaml    | 76 +++++++++++++++----
+>  1 file changed, 61 insertions(+), 15 deletions(-)
 >
->    "#size-cells":
-> -    const: 0
-> +    description:
-> +      Depends on your controller. Put zero unless you need a mapping between CS
-> +      lines and dedicated memory regions.
-> +    enum: [0, 1]
+> diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
+> index 28ff8c581837..e08e0a50929e 100644
+> --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
+> +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
+> @@ -9,9 +9,6 @@ title: Freescale General-Purpose Media Interface (GPMI) binding
+>  maintainers:
+>    - Han Xu <han.xu@nxp.com>
+>
+> -allOf:
+> -  - $ref: "nand-controller.yaml"
+> -
+>  description: |
+>    The GPMI nand controller provides an interface to control the NAND
+>    flash chips. The device tree may optionally contain sub-nodes
+> @@ -58,22 +55,10 @@ properties:
+>    clocks:
+>      minItems: 1
+>      maxItems: 5
+> -    items:
+> -      - description: SoC gpmi io clock
+> -      - description: SoC gpmi apb clock
+> -      - description: SoC gpmi bch clock
+> -      - description: SoC gpmi bch apb clock
+> -      - description: SoC per1 bch clock
+>
+>    clock-names:
+>      minItems: 1
+>      maxItems: 5
+> -    items:
+> -      - const: gpmi_io
+> -      - const: gpmi_apb
+> -      - const: gpmi_bch
+> -      - const: gpmi_bch_apb
+> -      - const: per1_bch
+>
+>    fsl,use-minimum-ecc:
+>      type: boolean
+> @@ -107,6 +92,67 @@ required:
+>
+>  unevaluatedProperties: false
+>
+> +allOf:
+> +  - $ref: "nand-controller.yaml"
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - fsl,imx23-gpmi-nand
+> +              - fsl,imx28-gpmi-nand
+> +    then:
+> +      properties:
+> +        clocks:
+> +          items:
+> +            - description: SoC gpmi io clock
+> +        clock-names:
+> +          items:
+> +            - const: gpmi_io
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - fsl,imx6q-gpmi-nand
+> +              - fsl,imx6sx-gpmi-nand
+> +    then:
+> +      properties:
+> +        clocks:
+> +          items:
+> +            - description: SoC gpmi io clock
+> +            - description: SoC gpmi apb clock
+> +            - description: SoC gpmi bch clock
+> +            - description: SoC gpmi bch apb clock
+> +            - description: SoC per1 bch clock
+> +        clock-names:
+> +          items:
+> +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
+> +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
+> +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
+> +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
+> +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
 
-Humm, seems that was to describe partitions, but the expectation of
-the nand binding is describing nand chips. It seems the nand chips are
-never described and on 1 board even has partitions. I think you should
-fix the dts to move 'partition@N' nodes under 'partitions' which is
-preferred and needed if you ever describe nand chips. And then fix
-'#size-cells' to be 0.
+BTW, you can make 'items' a schema rather than a list to apply a
+constraint to all entries:
 
-Rob
+maxItems: 5
+items:
+  pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
+
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: fsl,imx7d-gpmi-nand
+> +    then:
+> +      properties:
+> +        clocks:
+> +          items:
+> +            - description: SoC gpmi io clock
+> +            - description: SoC gpmi bch apb clock
+> +        clock-names:
+> +          minItems: 2
+> +          maxItems: 2
+
+You can drop these. It's the default based on the size of 'items'.
+
+> +          items:
+> +            - pattern: "^gpmi_(io|bch_apb)$"
+> +            - pattern: "^gpmi_(io|bch_apb)$"
+
+Surely here we can define the order.
+
+> +
+>  examples:
+>    - |
+>      nand-controller@8000c000 {
+> --
+> 2.17.1
+>
