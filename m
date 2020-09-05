@@ -2,26 +2,26 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EBF6225E7E7
-	for <lists+linux-pwm@lfdr.de>; Sat,  5 Sep 2020 15:34:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDD5925E7EA
+	for <lists+linux-pwm@lfdr.de>; Sat,  5 Sep 2020 15:35:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgIENe0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 5 Sep 2020 09:34:26 -0400
-Received: from mout.gmx.net ([212.227.17.21]:46607 "EHLO mout.gmx.net"
+        id S1728550AbgIENem (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 5 Sep 2020 09:34:42 -0400
+Received: from mout.gmx.net ([212.227.15.15]:35183 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbgIENeU (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sat, 5 Sep 2020 09:34:20 -0400
+        id S1728371AbgIENe2 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sat, 5 Sep 2020 09:34:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1599312791;
-        bh=X1JDHzlfCU+ENBN8/vZv+W5ToAriCbagxrRnZa4rg4o=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=kqdI1zVLoU5y3EfpwgRA1BDh4J0yUqBLRGr4sWg+olhwiwry59OqCiN6WnYbOeCFa
-         SnhcPcpXkC5dPR6eXqAXZ2h6CVrwraE/9nc0jqVv1hV56Pdl7x/nO89+rHJ7pI8qz/
-         wOaha/I05g5I2D90hV7ygGFwrXoMYEljsc9neK+4=
+        s=badeba3b8450; t=1599312808;
+        bh=rvCCbE4pID8W9dS94D/nwDcZnqQFH63RXYcvweJTvUY=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=HciZmbaGZOejIIDSC1Bk5MATvt9k/YY5/oVSWFWNE9F3eKSSIsdWWA/zdhht7GehX
+         QXkVBUB1fhW9hexr79f+Ggoh6PUxG4+zd5cyVLY9Skpe2x8nGvhhQs8Rwwt23kl7z3
+         74IjlW7pyP9nVhC5XPzt9xcPTS9JAEyXZHBWkR3I=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MBDnC-1kQ9Av1Vug-00CfCO; Sat, 05
- Sep 2020 15:33:11 +0200
+Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MLi8g-1jx1T61wDw-00HiaX; Sat, 05
+ Sep 2020 15:33:28 +0200
 From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
@@ -49,112 +49,75 @@ Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Heiko Stuebner <heiko@sntech.de>,
         Josua Mayer <josua.mayer@jm0.eu>,
         Andreas Kemnade <andreas@kemnade.info>,
-        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>
-Subject: [PATCH v2 00/10] Netronix embedded controller driver for Kobo and Tolino ebook readers
-Date:   Sat,  5 Sep 2020 15:32:20 +0200
-Message-Id: <20200905133230.1014581-1-j.neuschaefer@gmx.net>
+        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 01/10] dt-bindings: Add vendor prefix for Netronix, Inc.
+Date:   Sat,  5 Sep 2020 15:32:21 +0200
+Message-Id: <20200905133230.1014581-2-j.neuschaefer@gmx.net>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200905133230.1014581-1-j.neuschaefer@gmx.net>
+References: <20200905133230.1014581-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:62bYLLM6POKbq+fOwuftSVMbihyuuRYmQtF18cpq0SrmlLm0khW
- 5OA0mdlU64S2+frZGjmJzDs/OoG19cGkL5pmLCv0o3zX49yFoC/PR22iROGxQA5hb7fYVaA
- nhmQN+3Qvy+JGI4L/uvQ6ihKJTWSsWNze3rIK3YTLKKCS50ahtCGR7bNNVJA5Kb7fXRLDBv
- 9mdRHu0y44h3vUJR5lhog==
+X-Provags-ID: V03:K1:L1lxZBEqC4oQRcYC8Ye2ZaSaJiFuYq/v3pYJeYuD9nVH2S8v6fg
+ TKjEkhmqkWVW3IoB9WuytdxC+R6Zp5uPAxzEe4NoNkOsvQ6Vz7hexOC5DSlCVrsNs6obqZQ
+ DBiudNkvyYo8GNx85RyEMBgfdK2AnCMR6k3W+dq4O33c8SGRdBNomwa99tVFh2rASqwpLGL
+ H5AXaJdvAXEAtos+UDa7Q==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:fg1zqR7bC9o=:hie2Q9J9itFryKJun2EHb6
- w26FfeniqaZ9EH+mb9+9d3wreGPWx7J9rfuJ+LjKoRI4Yn+hlUOAn9LVRlajPVwHJxSH9PewR
- fazsTWPLE6pUzHYhks0qaf9hskxJNOcbbAYRKS7ekah5J+V3Th4BP+3f7VwUGmBhf5Qsc13Cs
- uUJfwBcanZ6nRamOZ6v+0gbw5chkTPjdGH/YUTeF0d7WTArIHn4SK4B8t23/N2nhfT1hcaRCr
- k3q0NzHBOR75cITlj+ORu0qkcDy/lanjoMn1VWaFKXOUpSJUc8HDpvXZVjchUTG8WkKSSIf8Z
- wdv6ncOhGg+TfeM0f0i0WWENbnkBxs4dwtgpYJ2Mtj+mysfJ4W9ii5KSkKlLZYNieA11zFmNA
- BxGN+hH5Dkp8xBj5qpQ8E1MU1nw/TNB8dzP4J7K5fsKnK2pgOrX9+5l0nkUsSHbqJzgZV/gPT
- cGvlLhW6kSZfpMK1jJk+l1JP1gGTXZRXMMAlfGsXsyQ/JLni7cNZQwErLjnnEMpdNZ/62cpt3
- xxSFB/Kd7LbTFtIhHpE8Fh8nJ/7YpSIqLPGXxa9LBoB1GW/upN9X0cWzmKZJ7kVlPbP2oOv0E
- XAigo+BI1DKJ4eoFghw4J2ZTLcvhgYc/hG5T5FHA6CumfuAtoPlwuKfk7ka7ufHQUXvIYqt7F
- BzKhIYp5icEE1VQQzzxbVVDTMwkyNOjcyOKcma9knTjVgvtfwbWkFpR7pPhheAtVG3S5GoOqE
- ZvDr09N8PgatP5Fum41PORDcQxVRRhICdvmS2VsbSORW/5tIXSLF4pG5WGNKktQU5eoZIsWtS
- U+0Leuyk7MbAqrUeRAHUtun4C+SiCgvQPhsCSJ1eCNRu9Rx51y9qYD49iSUxOB35HYM/uIT1y
- Fux+dOO7oswgNGbSd42YFMHkmA7ZvFbF7MITkUdQlKRErHTb6xKuyhYmOTPg3WrCLKJ0nCM+X
- B38srR3CQgacumjKwVBmEO4kT3K50iIqi4laehetl12YLyIpasa4EocSMtcU+dEpTX/UVKXEu
- JHSWT08FnxAiuIsHoTGsKS1POxJTRCbP4i5RF2m6BN3RKldJHlVr47cfTT7cUqnPcWLKyoz9P
- A6X3hEzItB1YOtII2q2MTCP51b2tSClbvNIPoWdn2HTYkY5l3ODH0qqrSQ4JunZxUupnzg1D7
- fLdF0Ddzx7so9MVwDVZmTHDW+MG0pdlIGzBD3E8GWYiW1FBg2aDuva5r3xGAnZ8JeLj8ifVim
- YooW/KrRY9YRC1xGBbLpqySBih66011jGmTCTcA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:zv2w5A5nZ7k=:LFdqtJL5il7MuSKPb3xe+q
+ navuPcaouVZmBBpxFabdwAIzjmgwNZhXCi97UgpqrUcBuwEReQO9xVcmN2c6yiYR7oUqqU/OT
+ QHrvUdbePo5tZi3MSy3uDq/ntER0xBXAkVLIAug7GM3e+YIOnZoMldMHb6QVRN95kH9kctPCr
+ BYnpQ4PDFL3FxLKf9pulZIlrSqkOazyPtiNXk389ikM9tSurjXIqnpH3t9rNWD8bfjtdO0HyX
+ zN8svXK4ROy1mzLI2YEHI9sZ3IZTlxFbnPppZTIddd0y0TXg8MJyrqn4zFiTRBT7+j6RVdDqo
+ 0goP/U9mCRQuAq1dI5pW7r4+HKcZ9Cgb+Kzv0x2CqJIywWiSV+YX6/Kx/wWtqCMqQUPfGwxMS
+ 2+EG6fgluljbVRAOt4kZ4yyCFBLVWZmdpfejL265SnxyB2GufbB+PXs1Ory9zuPvpsSue2N3G
+ Zk7/bdukRVX+z1Rh8KsfMQdzxib9OI9V3k76LaNF3Jx860iNuK0zfElF51bKWq4Ybt98r1Am1
+ mxulXua1iL15+kQAhISj5JwJHk2kRofGw9y5Y13mzZpNevN4rPAy4wlreBGaZwrXOPIZmhykK
+ laD9Hy/qN0tV52xMzyoD4+SFtjPUActonqCm5zf5nc6nq8P79HSphCE223iZs+kEvYnTTshp4
+ na7EeybCf6dNZcEXI1HYnhPgKpY6osmNEs6cbBd4o6yxOBx7cXuAKP46xcxuEytpsSso9/mjm
+ 8yu7AQAjqIMx7H3TPOIt+7l6PQ+ZPlvX1d53SwfLACpoTV8Wq21WQVmteBz5qjkXDGVRcePpG
+ 9YCX7HC3UpLUOgX+bIE935X28PSgLAyvFE1YxPkG/vSWh+Mo+CnRYfQgcLbkHIx6O787c37Md
+ HFkH3djG0oPC9yiJ2Qg90JtblEOWSzX7vQNhUxwoKz7N0/k8AZXVvLBm26Wn5ZyMS93mBXZtM
+ 4mpZo9lIDU7X/05fldaVRo4uzGqVSnMAVrgT5gLuySW8YXwXeMgGao4Ib9V+Q4wBOJTZuWeEb
+ 0NWdI6tUPCoigcI2mP5AsdTPZJ+w/tgloJtjxdT2K2q+POpw0juHpNTXkp2LvGf5LOojY0eD1
+ ggk65v89rtgiJ4j0cfrlyvleKIKKoDBq5hfU6D8uIqQQgxRjMZ7BfBHysYSkhsBoa7zcKsmmO
+ JK/Hw5nZ0Lsv/+nmjvuLjEDeQpXD62/Ursp8CeY22tjOwHGifHucP+cY1zlPIcMs4rbZPx1mu
+ lUHWn6CPXDEac3Yc2YvKRaTauw/ChZyGNEq0bYw==
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This patchset adds basic support for the embedded controller found on
-older ebook reader boards designed by/with the ODM Netronix Inc.[1] and
-sold by Kobo or Tolino, for example the Kobo Aura and the Tolino Shine.
-These drivers are based on information contained in the vendor kernel
-sources, but in order to all information in a single place, I documented
-the register interface of the EC on GitHub[2].
+Netronix, Inc. (http://www.netronixinc.com/) makes ebook reader board
+designs, which are for example used in Kobo and Tolino devices.
 
-As previously, I'm not sure I got the YAML DT bindings right. I have
-included the plain text DT bindings for reference, in the patch
-descriptions where they are relevant.
+An alternative prefix for Netronix would be "ntx", which is already used
+in code released by Netronix. It is shorter, but perhaps less clear.
 
-[1]: http://www.netronixinc.com/products.aspx?ID=3D1
-[2]: https://github.com/neuschaefer/linux/wiki/Netronix-MSP430-embedded-co=
-ntroller
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+v2:
+- No changes
+=2D--
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-
-Changes in v2:
-- Moved txt DT bindings to patch descriptions and removed patch 1/10
-  "DT bindings in plain text format"
-- New patch 7/10 "rtc: Introduce RTC_TIMESTAMP_END_2255"
-- Rebased on 5.9-rc3
-- Various other changes which are documented in each patch
-
-v1:
-- https://lore.kernel.org/lkml/20200620223915.1311485-1-j.neuschaefer@gmx.=
-net/
-
-
-Jonathan Neusch=C3=A4fer (10):
-  dt-bindings: Add vendor prefix for Netronix, Inc.
-  dt-bindings: mfd: Add binding for Netronix's embedded controller
-  mfd: Add base driver for Netronix embedded controller
-  dt-bindings: pwm: Add bindings for PWM function in Netronix EC
-  pwm: ntxec: Add driver for PWM function in Netronix EC
-  dt-bindings: rtc: Add bindings for Netronix embedded controller RTC
-  rtc: Introduce RTC_TIMESTAMP_END_2255
-  rtc: New driver for RTC in Netronix embedded controller
-  MAINTAINERS: Add entry for Netronix embedded controller
-  ARM: dts: imx50-kobo-aura: Add Netronix embedded controller
-
- .../bindings/mfd/netronix,ntxec.yaml          |  83 +++++++
- .../bindings/pwm/netronix,ntxec-pwm.yaml      |  33 +++
- .../bindings/rtc/netronix,ntxec-rtc.yaml      |  27 +++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- MAINTAINERS                                   |  11 +
- arch/arm/boot/dts/imx50-kobo-aura.dts         |  27 ++-
- drivers/mfd/Kconfig                           |   7 +
- drivers/mfd/Makefile                          |   1 +
- drivers/mfd/ntxec.c                           | 216 ++++++++++++++++++
- drivers/pwm/Kconfig                           |   8 +
- drivers/pwm/Makefile                          |   1 +
- drivers/pwm/pwm-ntxec.c                       | 160 +++++++++++++
- drivers/rtc/Kconfig                           |   8 +
- drivers/rtc/Makefile                          |   1 +
- drivers/rtc/rtc-ntxec.c                       | 130 +++++++++++
- include/linux/mfd/ntxec.h                     |  24 ++
- include/linux/rtc.h                           |   1 +
- 17 files changed, 739 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/netronix,ntxec.y=
-aml
- create mode 100644 Documentation/devicetree/bindings/pwm/netronix,ntxec-p=
-wm.yaml
- create mode 100644 Documentation/devicetree/bindings/rtc/netronix,ntxec-r=
-tc.yaml
- create mode 100644 drivers/mfd/ntxec.c
- create mode 100644 drivers/pwm/pwm-ntxec.c
- create mode 100644 drivers/rtc/rtc-ntxec.c
- create mode 100644 include/linux/mfd/ntxec.h
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Docu=
+mentation/devicetree/bindings/vendor-prefixes.yaml
+index 63996ab035217..fa173802000a0 100644
+=2D-- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -712,6 +712,8 @@ patternProperties:
+     description: Broadcom Corporation (formerly NetLogic Microsystems)
+   "^netron-dy,.*":
+     description: Netron DY
++  "^netronix,.*":
++    description: Netronix, Inc.
+   "^netxeon,.*":
+     description: Shenzhen Netxeon Technology CO., LTD
+   "^neweast,.*":
 =2D-
 2.28.0
 
