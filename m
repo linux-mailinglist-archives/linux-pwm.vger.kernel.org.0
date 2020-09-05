@@ -2,208 +2,159 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2A0725E3BF
-	for <lists+linux-pwm@lfdr.de>; Sat,  5 Sep 2020 00:36:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBF6225E7E7
+	for <lists+linux-pwm@lfdr.de>; Sat,  5 Sep 2020 15:34:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgIDWgw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 4 Sep 2020 18:36:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43856 "EHLO mail.kernel.org"
+        id S1728248AbgIENe0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 5 Sep 2020 09:34:26 -0400
+Received: from mout.gmx.net ([212.227.17.21]:46607 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728076AbgIDWgv (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 4 Sep 2020 18:36:51 -0400
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9F9721481;
-        Fri,  4 Sep 2020 22:36:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599259010;
-        bh=Z77smMqMlJ9InjnfOSLkOfrCVv21ZVMsWg97rhByuYA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=d42dH4d2dmIZHNUOIPn2Xx9MDOlVwMecjUeWrrvxfpq6DK2RfQvJ6xLEXu/dqhvzS
-         Z/ISTc0EKYUenUlG+YNk2cGRIJ9vj92JritbM+b60QJN529orldpgXxshMN/mRXRsl
-         H5JpjCsVsztY+LzY2r0RUl6cSIkr06PafRhcGs0Y=
-Received: by mail-ot1-f44.google.com with SMTP id i4so7324119ota.2;
-        Fri, 04 Sep 2020 15:36:50 -0700 (PDT)
-X-Gm-Message-State: AOAM533W+cEA4mxsG6seLg1qDD4q3g53SJaMW0hz9TF/mmhVyvEhpNdl
-        46dzckZl0PaLaTpBvf5PIaMC+NkpWAKkgVk+EQ==
-X-Google-Smtp-Source: ABdhPJzgDGB2PMZG85xp4jfP9Au8Rn5zzR1d3vIUH17hhCmIoFGECB1Z1dXYQV5cZkVxUXSJH9qoAFDMcWerjSrzYOA=
-X-Received: by 2002:a05:6830:1008:: with SMTP id a8mr6724740otp.107.1599259010019;
- Fri, 04 Sep 2020 15:36:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200904152404.20636-1-krzk@kernel.org> <20200904152404.20636-13-krzk@kernel.org>
-In-Reply-To: <20200904152404.20636-13-krzk@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 4 Sep 2020 16:36:39 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+tGQhkqtQszOx7nvr1PR=YFz2p1=OnWQ8JxmSg4qNkHA@mail.gmail.com>
-Message-ID: <CAL_Jsq+tGQhkqtQszOx7nvr1PR=YFz2p1=OnWQ8JxmSg4qNkHA@mail.gmail.com>
-Subject: Re: [PATCH v3 12/14] dt-bindings: mtd: gpmi-nand: Fix matching of
- clocks on different SoCs
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        id S1726302AbgIENeU (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sat, 5 Sep 2020 09:34:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1599312791;
+        bh=X1JDHzlfCU+ENBN8/vZv+W5ToAriCbagxrRnZa4rg4o=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=kqdI1zVLoU5y3EfpwgRA1BDh4J0yUqBLRGr4sWg+olhwiwry59OqCiN6WnYbOeCFa
+         SnhcPcpXkC5dPR6eXqAXZ2h6CVrwraE/9nc0jqVv1hV56Pdl7x/nO89+rHJ7pI8qz/
+         wOaha/I05g5I2D90hV7ygGFwrXoMYEljsc9neK+4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MBDnC-1kQ9Av1Vug-00CfCO; Sat, 05
+ Sep 2020 15:33:11 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>
+Subject: [PATCH v2 00/10] Netronix embedded controller driver for Kobo and Tolino ebook readers
+Date:   Sat,  5 Sep 2020 15:32:20 +0200
+Message-Id: <20200905133230.1014581-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:62bYLLM6POKbq+fOwuftSVMbihyuuRYmQtF18cpq0SrmlLm0khW
+ 5OA0mdlU64S2+frZGjmJzDs/OoG19cGkL5pmLCv0o3zX49yFoC/PR22iROGxQA5hb7fYVaA
+ nhmQN+3Qvy+JGI4L/uvQ6ihKJTWSsWNze3rIK3YTLKKCS50ahtCGR7bNNVJA5Kb7fXRLDBv
+ 9mdRHu0y44h3vUJR5lhog==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fg1zqR7bC9o=:hie2Q9J9itFryKJun2EHb6
+ w26FfeniqaZ9EH+mb9+9d3wreGPWx7J9rfuJ+LjKoRI4Yn+hlUOAn9LVRlajPVwHJxSH9PewR
+ fazsTWPLE6pUzHYhks0qaf9hskxJNOcbbAYRKS7ekah5J+V3Th4BP+3f7VwUGmBhf5Qsc13Cs
+ uUJfwBcanZ6nRamOZ6v+0gbw5chkTPjdGH/YUTeF0d7WTArIHn4SK4B8t23/N2nhfT1hcaRCr
+ k3q0NzHBOR75cITlj+ORu0qkcDy/lanjoMn1VWaFKXOUpSJUc8HDpvXZVjchUTG8WkKSSIf8Z
+ wdv6ncOhGg+TfeM0f0i0WWENbnkBxs4dwtgpYJ2Mtj+mysfJ4W9ii5KSkKlLZYNieA11zFmNA
+ BxGN+hH5Dkp8xBj5qpQ8E1MU1nw/TNB8dzP4J7K5fsKnK2pgOrX9+5l0nkUsSHbqJzgZV/gPT
+ cGvlLhW6kSZfpMK1jJk+l1JP1gGTXZRXMMAlfGsXsyQ/JLni7cNZQwErLjnnEMpdNZ/62cpt3
+ xxSFB/Kd7LbTFtIhHpE8Fh8nJ/7YpSIqLPGXxa9LBoB1GW/upN9X0cWzmKZJ7kVlPbP2oOv0E
+ XAigo+BI1DKJ4eoFghw4J2ZTLcvhgYc/hG5T5FHA6CumfuAtoPlwuKfk7ka7ufHQUXvIYqt7F
+ BzKhIYp5icEE1VQQzzxbVVDTMwkyNOjcyOKcma9knTjVgvtfwbWkFpR7pPhheAtVG3S5GoOqE
+ ZvDr09N8PgatP5Fum41PORDcQxVRRhICdvmS2VsbSORW/5tIXSLF4pG5WGNKktQU5eoZIsWtS
+ U+0Leuyk7MbAqrUeRAHUtun4C+SiCgvQPhsCSJ1eCNRu9Rx51y9qYD49iSUxOB35HYM/uIT1y
+ Fux+dOO7oswgNGbSd42YFMHkmA7ZvFbF7MITkUdQlKRErHTb6xKuyhYmOTPg3WrCLKJ0nCM+X
+ B38srR3CQgacumjKwVBmEO4kT3K50iIqi4laehetl12YLyIpasa4EocSMtcU+dEpTX/UVKXEu
+ JHSWT08FnxAiuIsHoTGsKS1POxJTRCbP4i5RF2m6BN3RKldJHlVr47cfTT7cUqnPcWLKyoz9P
+ A6X3hEzItB1YOtII2q2MTCP51b2tSClbvNIPoWdn2HTYkY5l3ODH0qqrSQ4JunZxUupnzg1D7
+ fLdF0Ddzx7so9MVwDVZmTHDW+MG0pdlIGzBD3E8GWYiW1FBg2aDuva5r3xGAnZ8JeLj8ifVim
+ YooW/KrRY9YRC1xGBbLpqySBih66011jGmTCTcA==
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Sep 4, 2020 at 9:25 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Driver requires different amount of clocks for different SoCs.  Describe
-> these requirements properly to fix dtbs_check warnings like:
->
->     arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: nand-controller@33002000: clock-names:1: 'gpmi_apb' was expected
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> ---
->
-> Changes since v1:
-> 1. Do not require order of clocks (use pattern).
+This patchset adds basic support for the embedded controller found on
+older ebook reader boards designed by/with the ODM Netronix Inc.[1] and
+sold by Kobo or Tolino, for example the Kobo Aura and the Tolino Shine.
+These drivers are based on information contained in the vendor kernel
+sources, but in order to all information in a single place, I documented
+the register interface of the EC on GitHub[2].
 
-To the extent that you can, you should fix the order in dts files
-first. If we just adjust the schemas to match the dts files, then
-what's the point?
+As previously, I'm not sure I got the YAML DT bindings right. I have
+included the plain text DT bindings for reference, in the patch
+descriptions where they are relevant.
 
-> ---
->  .../devicetree/bindings/mtd/gpmi-nand.yaml    | 76 +++++++++++++++----
->  1 file changed, 61 insertions(+), 15 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-> index 28ff8c581837..e08e0a50929e 100644
-> --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-> +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-> @@ -9,9 +9,6 @@ title: Freescale General-Purpose Media Interface (GPMI) binding
->  maintainers:
->    - Han Xu <han.xu@nxp.com>
->
-> -allOf:
-> -  - $ref: "nand-controller.yaml"
-> -
->  description: |
->    The GPMI nand controller provides an interface to control the NAND
->    flash chips. The device tree may optionally contain sub-nodes
-> @@ -58,22 +55,10 @@ properties:
->    clocks:
->      minItems: 1
->      maxItems: 5
-> -    items:
-> -      - description: SoC gpmi io clock
-> -      - description: SoC gpmi apb clock
-> -      - description: SoC gpmi bch clock
-> -      - description: SoC gpmi bch apb clock
-> -      - description: SoC per1 bch clock
->
->    clock-names:
->      minItems: 1
->      maxItems: 5
-> -    items:
-> -      - const: gpmi_io
-> -      - const: gpmi_apb
-> -      - const: gpmi_bch
-> -      - const: gpmi_bch_apb
-> -      - const: per1_bch
->
->    fsl,use-minimum-ecc:
->      type: boolean
-> @@ -107,6 +92,67 @@ required:
->
->  unevaluatedProperties: false
->
-> +allOf:
-> +  - $ref: "nand-controller.yaml"
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - fsl,imx23-gpmi-nand
-> +              - fsl,imx28-gpmi-nand
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: SoC gpmi io clock
-> +        clock-names:
-> +          items:
-> +            - const: gpmi_io
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - fsl,imx6q-gpmi-nand
-> +              - fsl,imx6sx-gpmi-nand
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: SoC gpmi io clock
-> +            - description: SoC gpmi apb clock
-> +            - description: SoC gpmi bch clock
-> +            - description: SoC gpmi bch apb clock
-> +            - description: SoC per1 bch clock
-> +        clock-names:
-> +          items:
-> +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
-> +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
-> +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
-> +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
-> +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
+[1]: http://www.netronixinc.com/products.aspx?ID=3D1
+[2]: https://github.com/neuschaefer/linux/wiki/Netronix-MSP430-embedded-co=
+ntroller
 
-BTW, you can make 'items' a schema rather than a list to apply a
-constraint to all entries:
 
-maxItems: 5
-items:
-  pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
+Changes in v2:
+- Moved txt DT bindings to patch descriptions and removed patch 1/10
+  "DT bindings in plain text format"
+- New patch 7/10 "rtc: Introduce RTC_TIMESTAMP_END_2255"
+- Rebased on 5.9-rc3
+- Various other changes which are documented in each patch
 
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: fsl,imx7d-gpmi-nand
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: SoC gpmi io clock
-> +            - description: SoC gpmi bch apb clock
-> +        clock-names:
-> +          minItems: 2
-> +          maxItems: 2
+v1:
+- https://lore.kernel.org/lkml/20200620223915.1311485-1-j.neuschaefer@gmx.=
+net/
 
-You can drop these. It's the default based on the size of 'items'.
 
-> +          items:
-> +            - pattern: "^gpmi_(io|bch_apb)$"
-> +            - pattern: "^gpmi_(io|bch_apb)$"
+Jonathan Neusch=C3=A4fer (10):
+  dt-bindings: Add vendor prefix for Netronix, Inc.
+  dt-bindings: mfd: Add binding for Netronix's embedded controller
+  mfd: Add base driver for Netronix embedded controller
+  dt-bindings: pwm: Add bindings for PWM function in Netronix EC
+  pwm: ntxec: Add driver for PWM function in Netronix EC
+  dt-bindings: rtc: Add bindings for Netronix embedded controller RTC
+  rtc: Introduce RTC_TIMESTAMP_END_2255
+  rtc: New driver for RTC in Netronix embedded controller
+  MAINTAINERS: Add entry for Netronix embedded controller
+  ARM: dts: imx50-kobo-aura: Add Netronix embedded controller
 
-Surely here we can define the order.
+ .../bindings/mfd/netronix,ntxec.yaml          |  83 +++++++
+ .../bindings/pwm/netronix,ntxec-pwm.yaml      |  33 +++
+ .../bindings/rtc/netronix,ntxec-rtc.yaml      |  27 +++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |  11 +
+ arch/arm/boot/dts/imx50-kobo-aura.dts         |  27 ++-
+ drivers/mfd/Kconfig                           |   7 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/ntxec.c                           | 216 ++++++++++++++++++
+ drivers/pwm/Kconfig                           |   8 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-ntxec.c                       | 160 +++++++++++++
+ drivers/rtc/Kconfig                           |   8 +
+ drivers/rtc/Makefile                          |   1 +
+ drivers/rtc/rtc-ntxec.c                       | 130 +++++++++++
+ include/linux/mfd/ntxec.h                     |  24 ++
+ include/linux/rtc.h                           |   1 +
+ 17 files changed, 739 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/netronix,ntxec.y=
+aml
+ create mode 100644 Documentation/devicetree/bindings/pwm/netronix,ntxec-p=
+wm.yaml
+ create mode 100644 Documentation/devicetree/bindings/rtc/netronix,ntxec-r=
+tc.yaml
+ create mode 100644 drivers/mfd/ntxec.c
+ create mode 100644 drivers/pwm/pwm-ntxec.c
+ create mode 100644 drivers/rtc/rtc-ntxec.c
+ create mode 100644 include/linux/mfd/ntxec.h
 
-> +
->  examples:
->    - |
->      nand-controller@8000c000 {
-> --
-> 2.17.1
->
+=2D-
+2.28.0
+
