@@ -2,226 +2,167 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18A4A25F304
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Sep 2020 08:10:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A584425F451
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Sep 2020 09:50:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgIGGKG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 7 Sep 2020 02:10:06 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:44350 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725803AbgIGGKG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Sep 2020 02:10:06 -0400
-Received: by mail-ej1-f67.google.com with SMTP id r7so3266499ejs.11;
-        Sun, 06 Sep 2020 23:10:02 -0700 (PDT)
+        id S1727771AbgIGHuc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Sep 2020 03:50:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbgIGHuY (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Sep 2020 03:50:24 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C1AAC061573
+        for <linux-pwm@vger.kernel.org>; Mon,  7 Sep 2020 00:50:22 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id c15so14661175wrs.11
+        for <linux-pwm@vger.kernel.org>; Mon, 07 Sep 2020 00:50:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lgdO+wcLjjr5/DOIRw2FqQVZyOMD3aT5rG4YxEdLkHI=;
+        b=GkPf9CMa12TsOMNNJBhObX69nm4V7Y0Xa2p/7XNbxitfct8Q1DryNblIAOzMbOxw6Y
+         jcADz/kmPW8+B5VhR/JqxzVB1RSEADWmflOJPo4Tccb7Tmo5ZpoXPvUNtijUtv9TPuD/
+         +vMwTwyBQWCEbnbF69nTs4adshQcK3+J52FkQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GVokwuwCaSVBc9Gyn7b0LOXpcqkbxNYOMN+1IZzWnZQ=;
-        b=a/E5fKmAyHWIix6L1IW31pNLvcxTdToWINidap+0KcmBjq68Hhx6EC+MLnZ3Iv0nKu
-         LGT8SDT65dzLFvq4lmEcpnivS8uEhkZXehNbUtQiG7j3h3KSNg3ZVxQQiSH/HCaOqkds
-         I9ZE9KoHf2eWgIKSIB7JOtDHXgNK6W7eHiZRwEOWJaV01frOvckMeRnQDEAnWyP9SW+K
-         LxxPcBKdjx30SLeFCTyEigg9UYzHjpep0iKNQU0cqjiXUsEO8xApx73G5BhFZNI61yXm
-         /p6sYNeJcjBWHmrdiM92DID6TLHNTug2TChQadaD5FkhxOEvqwpzJiZW923LRtAA+4ph
-         I4wA==
-X-Gm-Message-State: AOAM531ZCzY/DJ6nK2AKirtVlNY4PbDLfXAq4PnodCCT8SHTY+h20F8w
-        MmbRxd2w5uB1/i0LC/BzvoWX17+N00s=
-X-Google-Smtp-Source: ABdhPJzM/GiqDDPUglZaYg3VUWUe0/dDHCWpXQ1+YwL2JZxA9p9bR+MKuStVCwG/XpSPy00N+WM4qQ==
-X-Received: by 2002:a17:906:a00d:: with SMTP id p13mr20408792ejy.535.1599459001754;
-        Sun, 06 Sep 2020 23:10:01 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.174])
-        by smtp.googlemail.com with ESMTPSA id r16sm14473271ejb.110.2020.09.06.23.09.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 06 Sep 2020 23:10:00 -0700 (PDT)
-Date:   Mon, 7 Sep 2020 08:09:58 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 12/14] dt-bindings: mtd: gpmi-nand: Fix matching of
- clocks on different SoCs
-Message-ID: <20200907060958.GA4525@kozik-lap>
-References: <20200904152404.20636-1-krzk@kernel.org>
- <20200904152404.20636-13-krzk@kernel.org>
- <CAL_Jsq+tGQhkqtQszOx7nvr1PR=YFz2p1=OnWQ8JxmSg4qNkHA@mail.gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=lgdO+wcLjjr5/DOIRw2FqQVZyOMD3aT5rG4YxEdLkHI=;
+        b=ElDLTmfKtG4+nF9tpbh5I3A8KHuM42GUrvvbxj2kyzqYd5qMDq36+WL4cvzn1Tdl5g
+         Q9trm2FOwG8ZQYGZZN3LO5FwmvG8GbXuqQf8+y44Ird/LPdxbpzn+buX5VoQbmMNGfqU
+         L/7LgeGRks3MhQpGydY4pdSINwLTu2bqzQTTPimWp+HM8JQH6pL0emUqIsu2vfpqLhn+
+         3t+vX8gBin1abGPscNeuYL0W8jqJdvzHe7ryoEzq/I3Ir/iQegxpEZ6sdfOaRWYIlhyC
+         3CcLQuAAHqKyz7ae+uPNZf8un59g1RblgUIk0t8INkyKkerhiO22QWkJsZR9dJP3wqft
+         0ywg==
+X-Gm-Message-State: AOAM532Bnll5ePR3E+onoIPAWWNyLli+uyAPbKH4nQLVPD+hgkvJsi03
+        pv2x1JQR3GZn3fMF6Z37R+qN3w==
+X-Google-Smtp-Source: ABdhPJz2hCEhRCwXanS9ojpHGz4IM7r4firNCEytShrviFkem7VHOQUejqamyg5Ug83QblsoT0n85Q==
+X-Received: by 2002:a5d:5111:: with SMTP id s17mr20057301wrt.70.1599465021254;
+        Mon, 07 Sep 2020 00:50:21 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id 70sm27928097wme.15.2020.09.07.00.50.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 00:50:20 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 09:50:18 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Alexandru Stan <amstan@chromium.org>, linux-pwm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 2/3] backlight: pwm_bl: Artificially add 0% during
+ interpolation
+Message-ID: <20200907075018.GM2352366@phenom.ffwll.local>
+Mail-Followup-To: Daniel Thompson <daniel.thompson@linaro.org>,
+        Alexandru Stan <amstan@chromium.org>, linux-pwm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+References: <20200721042522.2403410-1-amstan@chromium.org>
+ <20200720212502.2.Iab4d2192e4cf50226e0a58d58df7d90ef92713ce@changeid>
+ <20200904113822.xoyt4w5x7vwvh7cr@holly.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+tGQhkqtQszOx7nvr1PR=YFz2p1=OnWQ8JxmSg4qNkHA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200904113822.xoyt4w5x7vwvh7cr@holly.lan>
+X-Operating-System: Linux phenom 5.7.0-1-amd64 
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 04:36:39PM -0600, Rob Herring wrote:
-> On Fri, Sep 4, 2020 at 9:25 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > Driver requires different amount of clocks for different SoCs.  Describe
-> > these requirements properly to fix dtbs_check warnings like:
-> >
-> >     arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: nand-controller@33002000: clock-names:1: 'gpmi_apb' was expected
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >
+On Fri, Sep 04, 2020 at 12:38:22PM +0100, Daniel Thompson wrote:
+> On Mon, Jul 20, 2020 at 09:25:21PM -0700, Alexandru Stan wrote:
+> > Some displays need the low end of the curve cropped in order to make
+> > them happy. In that case we still want to have the 0% point, even though
+> > anything between 0% and 5%(example) would be skipped.
+> 
+> For backlights it is not defined that 0 means off and, to be honest, 0
+> means off is actually rather weird for anything except transflexive
+> or front lit reflective displays[1]. There is a problem on several
+> systems that when the backlight slider is reduced to zero you can't
+> see the screen properly to turn it back up. This patch looks like it
+> would make that problem worse by hurting systems with will written
+> device trees.
+> 
+> There is some nasty legacy here: some backlight displays that are off
+> at zero and that sucks because userspace doesn't know whether zero is
+> off or lowest possible setting.
+> 
+> Nevertheless perhaps a better way to handle this case is for 0 to map to
+> 5% power and for the userspace to turn the backlight on/off as final
+> step in an animated backlight fade out (and one again for a fade in).
+
+Afaik chromeos encodes "0 means off" somewhere in there stack. We've
+gotten similar patches for the i915 backlight driver when we started
+obeying the panel's lower limit in our pwm backlight driver thing that's
+sometimes used instead of acpi.
+
+There's also the problem that with fancy panels with protocol (dsi, edp,
+...) shutting of the backlight completely out of the proper power sequence
+hangs the panel (for some panels at least), so providing a backlight off
+that doesn't go through the drm modeset sequence isn't always possible.
+
+It's a bit a mess indeed :-/
+-Daniel
+
+> 
+> 
+> Daniel.
+> 
+> > 
+> > Signed-off-by: Alexandru Stan <amstan@chromium.org>
 > > ---
-> >
-> > Changes since v1:
-> > 1. Do not require order of clocks (use pattern).
-> 
-> To the extent that you can, you should fix the order in dts files
-> first. If we just adjust the schemas to match the dts files, then
-> what's the point?
-
-The DTSes do not have mixed order of clocks between each other, as fair
-as I remember. It was fix after Sasha Hauer comment that order is not
-necessarily good.
-
-We have the clock-names property, why enforcing the order?
-
-> 
-> > ---
-> >  .../devicetree/bindings/mtd/gpmi-nand.yaml    | 76 +++++++++++++++----
-> >  1 file changed, 61 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-> > index 28ff8c581837..e08e0a50929e 100644
-> > --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-> > +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-> > @@ -9,9 +9,6 @@ title: Freescale General-Purpose Media Interface (GPMI) binding
-> >  maintainers:
-> >    - Han Xu <han.xu@nxp.com>
-> >
-> > -allOf:
-> > -  - $ref: "nand-controller.yaml"
-> > -
-> >  description: |
-> >    The GPMI nand controller provides an interface to control the NAND
-> >    flash chips. The device tree may optionally contain sub-nodes
-> > @@ -58,22 +55,10 @@ properties:
-> >    clocks:
-> >      minItems: 1
-> >      maxItems: 5
-> > -    items:
-> > -      - description: SoC gpmi io clock
-> > -      - description: SoC gpmi apb clock
-> > -      - description: SoC gpmi bch clock
-> > -      - description: SoC gpmi bch apb clock
-> > -      - description: SoC per1 bch clock
-> >
-> >    clock-names:
-> >      minItems: 1
-> >      maxItems: 5
-> > -    items:
-> > -      - const: gpmi_io
-> > -      - const: gpmi_apb
-> > -      - const: gpmi_bch
-> > -      - const: gpmi_bch_apb
-> > -      - const: per1_bch
-> >
-> >    fsl,use-minimum-ecc:
-> >      type: boolean
-> > @@ -107,6 +92,67 @@ required:
-> >
-> >  unevaluatedProperties: false
-> >
-> > +allOf:
-> > +  - $ref: "nand-controller.yaml"
+> > 
+> >  drivers/video/backlight/pwm_bl.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> > index 5193a72305a2..b24711ddf504 100644
+> > --- a/drivers/video/backlight/pwm_bl.c
+> > +++ b/drivers/video/backlight/pwm_bl.c
+> > @@ -349,6 +349,14 @@ static int pwm_backlight_parse_dt(struct device *dev,
+> >  			/* Fill in the last point, since no line starts here. */
+> >  			table[x2] = y2;
+> >  
+> > +			/*
+> > +			 * If we don't start at 0 yet we're increasing, assume
+> > +			 * the dts wanted to crop the low end of the range, so
+> > +			 * insert a 0 to provide a display off mode.
+> > +			 */
+> > +			if (table[0] > 0 && table[0] < table[num_levels - 1])
+> > +				table[0] = 0;
 > > +
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - fsl,imx23-gpmi-nand
-> > +              - fsl,imx28-gpmi-nand
-> > +    then:
-> > +      properties:
-> > +        clocks:
-> > +          items:
-> > +            - description: SoC gpmi io clock
-> > +        clock-names:
-> > +          items:
-> > +            - const: gpmi_io
-> > +
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - fsl,imx6q-gpmi-nand
-> > +              - fsl,imx6sx-gpmi-nand
-> > +    then:
-> > +      properties:
-> > +        clocks:
-> > +          items:
-> > +            - description: SoC gpmi io clock
-> > +            - description: SoC gpmi apb clock
-> > +            - description: SoC gpmi bch clock
-> > +            - description: SoC gpmi bch apb clock
-> > +            - description: SoC per1 bch clock
-> > +        clock-names:
-> > +          items:
-> > +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
-> > +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
-> > +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
-> > +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
-> > +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
-> 
-> BTW, you can make 'items' a schema rather than a list to apply a
-> constraint to all entries:
-> 
-> maxItems: 5
-> items:
->   pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
+> >  			/*
+> >  			 * As we use interpolation lets remove current
+> >  			 * brightness levels table and replace for the
+> > -- 
+> > 2.27.0
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-Right, I forgot about such syntax.
-
-> 
-> > +
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: fsl,imx7d-gpmi-nand
-> > +    then:
-> > +      properties:
-> > +        clocks:
-> > +          items:
-> > +            - description: SoC gpmi io clock
-> > +            - description: SoC gpmi bch apb clock
-> > +        clock-names:
-> > +          minItems: 2
-> > +          maxItems: 2
-> 
-> You can drop these. It's the default based on the size of 'items'.
-
-Sure.
-
-> 
-> > +          items:
-> > +            - pattern: "^gpmi_(io|bch_apb)$"
-> > +            - pattern: "^gpmi_(io|bch_apb)$"
-> 
-> Surely here we can define the order.
-
-Yes, but still the same question as before - do we want the order? Why
-enforcing it?
-
-Best regards,
-Krzysztof
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
