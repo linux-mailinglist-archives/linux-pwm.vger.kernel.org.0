@@ -2,223 +2,226 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F1F525ED7B
-	for <lists+linux-pwm@lfdr.de>; Sun,  6 Sep 2020 11:22:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18A4A25F304
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Sep 2020 08:10:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbgIFJWQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 6 Sep 2020 05:22:16 -0400
-Received: from mga04.intel.com ([192.55.52.120]:31326 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbgIFJWO (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sun, 6 Sep 2020 05:22:14 -0400
-IronPort-SDR: /wYJs3ZxXNw35PRnrwnvqcqapgwNhSWjtvVaOjnE9C8i8CydGxmPasAHfOYR7R7GdQjN+Kx/Uw
- 6tw6vykAS9/A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9735"; a="155303638"
-X-IronPort-AV: E=Sophos;i="5.76,397,1592895600"; 
-   d="scan'208";a="155303638"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2020 02:22:13 -0700
-IronPort-SDR: SkAZIVl2BGwFu37A7u8zfLcl2Bh01qpVN6snoGThCbUWG06tcvpBHoA0bnQVRFRvDX+MfirM9W
- N6zd7yxNtC3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,397,1592895600"; 
-   d="scan'208";a="316499121"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orsmga002.jf.intel.com with ESMTP; 06 Sep 2020 02:22:13 -0700
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sun, 6 Sep 2020 02:22:12 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Sun, 6 Sep 2020 02:22:12 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.36.59) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.1713.5; Sun, 6 Sep 2020 02:22:11 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XrzBwX/ZOA4h/OwrHuftoIzwqrhVY6QDkVlNw1R+5rh9kubS2fl4SDjhNOlkibsRk62Od/rycCK4Pawb7TxCtrL3N7yLZi2qsceRgKhBqnmNlCX7hW81V3+IA1IpW0TT4JwWj13pkO/055VHl3Axzat5eDiT8FtZ+RBxncclZMPN3zRoNLl891NoXQwauQ4Wiy6xTbl7I1HtXi3x7I/3zw95dBvqLKXSUOTi0rmCuCCmqqMGG1cOkQu2liISjiI0rS/9aAtNxu5YQBcDJNBNFA0m1BKxnC6TtAi7HGPE7Ajrat7q6EuSBpB8brWe1jOy0pzuQ7xyjXIRus3ExkP9bg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ypBbkeqMtmZsydrWV8HuTaH4jYlLCsBfNTylTkANo1k=;
- b=BRwlC8UHtxHgqRrVUHfUHzHyrDo6rjeAPcEfeeOZV0Z0hlJKHXLgyLCVyXN108FJThb8O+jbujuAyBL6TCPBtml0NB0CZqroolH8ylqVNxyIK5/OUS1AeDc9e2z75nXe1kAz0JyHdZmAIXXHXbootW9j3j8dAma9ICj6ZLTWr7vZK6IGViolB03T8maVUiIgIEg0xrpC1tbI0Un9BadsUDgJ+OlNhtVPxRKpW5gXhuAw8TJtSdeV/ajRkgcnpvTHRWvoK/Jg0XUmWGGN/VQthMW7GM08FsIPttnn9huIZpb8ts7KSWhkyfiLGZysk+h9TtRbUN2gADPmwBukjYvJig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ypBbkeqMtmZsydrWV8HuTaH4jYlLCsBfNTylTkANo1k=;
- b=E+x4jpM78Is5pF00x4Ez7thc41byNM3P+67Lji/Cy6cYsfkupPFUhDPJVIU+TAL/lOtlioJjkyH/3/UIxMhMOp397ZmtiSIQ3MOaLL6GHzHaz1rDH3bCiYLqbsqvRfdxVMpDLcILO3dpqrtBEOCIVFO9J89My2O3Uo26B0isegg=
-Received: from SN6PR11MB2575.namprd11.prod.outlook.com (2603:10b6:805:57::20)
- by SN6PR11MB2880.namprd11.prod.outlook.com (2603:10b6:805:58::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Sun, 6 Sep
- 2020 09:22:09 +0000
-Received: from SN6PR11MB2575.namprd11.prod.outlook.com
- ([fe80::6407:40fd:19e3:e270]) by SN6PR11MB2575.namprd11.prod.outlook.com
- ([fe80::6407:40fd:19e3:e270%7]) with mapi id 15.20.3326.025; Sun, 6 Sep 2020
- 09:22:08 +0000
-From:   "G Jaya Kumaran, Vineetha" <vineetha.g.jaya.kumaran@intel.com>
-To:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Wan Mohamad, Wan Ahmad Zainie" 
-        <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "Raja Subramanian, Lakshmi Bai" 
-        <lakshmi.bai.raja.subramanian@intel.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "Ayyathurai, Vijayakannan" <vijayakannan.ayyathurai@intel.com>
-Subject: RE: [PATCH v5 1/2] pwm: Add PWM driver for Intel Keem Bay
-Thread-Topic: [PATCH v5 1/2] pwm: Add PWM driver for Intel Keem Bay
-Thread-Index: AQHWe5OG7Z7IhOoQU0eHxYJS7P1m0qlU7J6AgALcMRCAATNTAIAA91WA
-Date:   Sun, 6 Sep 2020 09:22:08 +0000
-Message-ID: <SN6PR11MB25753C0C4D98914DC5249709F62B0@SN6PR11MB2575.namprd11.prod.outlook.com>
-References: <1598437559-25828-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
- <1598437559-25828-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
- <20200902062543.hf5resp6yci2zojc@pengutronix.de>
- <SN6PR11MB257504DDA3FA499D6740FD0FF62D0@SN6PR11MB2575.namprd11.prod.outlook.com>
- <20200904202618.m72jkoco75zunabi@pengutronix.de>
-In-Reply-To: <20200904202618.m72jkoco75zunabi@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.5.1.3
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [161.142.240.59]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1ee21d30-60f3-4c47-3b9d-08d852465461
-x-ms-traffictypediagnostic: SN6PR11MB2880:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR11MB28806A4838BED27E7564FE7DF62B0@SN6PR11MB2880.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +T2mqGMglLGvE88Kc0F7pRM9HIlavDCfiH7nC3QECDQBi9/u88NHRDfLNSiH6k9JYnmj5VEbP93VhngDL0Ud5UiP78UQDGGUZ9vSFLslSXNtgmtTLsCtach+amxKKdDvQnTbknvMbBoEUkHDJ4w4q5/ajsMFusKctzjmdKjHfwUdNjU1Hl+wn3CGk7bIGgUkOBVhf6h7aPB7oAKOSmnZwDCyLAXi5NcimG2dxwIhDlmOQ2QJFmBMcjB3Sc2Pi3Vq4TC5hd+esPR1/jUOWj7xiG5FnF7YTq6PzbKohWlBYZeQuEtv8ad+dHGuDb179SqEm8WHCmbXbhCZAV0DDQER6DGwV8FOODp+5li0xyPtEGyKmmGREOEpVXvogG+J6EUCcspyCznTWW2w0KKvW9YvzA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2575.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(366004)(136003)(39860400002)(346002)(376002)(4326008)(54906003)(83380400001)(66446008)(66946007)(66556008)(66476007)(64756008)(76116006)(52536014)(8936002)(83080400001)(2906002)(26005)(6506007)(9686003)(66574015)(53546011)(6916009)(186003)(316002)(5660300002)(7696005)(86362001)(55016002)(33656002)(8676002)(71200400001)(478600001)(966005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: IGBcrSwmUafumD1rfLCCJCyjEAYjKqgjhaIFD+DQ8wiJAPQul7WIDZbplkhoEERGWWZJ6lvSKbR/1v0F+xFUEAUmU7HbhoE4mMZoDppRbB+ZXXmaOcS2EKIR1/M9JFjjkQhRmpFnmm/A/Ag0SQGSebyhZigm0W2rEamfOHAlkBDKqB5gj9Kf5IZqr3NxoLPesLs7v/GbVWxU033+fQpHomDbjbCXTOwor271lS2pHJrloiuEelsUsrvosfb6epXo600iN4UMUBe1e9Azec9YCZ2sRF+aNC/BwQb7LQZxh/q/8SQK7ypTqNMe6cs+4A/xfES19VZaPMq3Uj0YhykGQtQige8VCrasuvA+gEkwqcRAQqM2B4lDluaWmzaCSj0qqepZwBHiX97nRBVsUQU6tS1prdeEgfncSr9r8IAcFQbQsrUF17XTfSj45VV2nlRWgZKQ+wZNnnkGTxYWvA+nJx7KoZMhA6fHeOFVK9jF93E1WmRbWVZ5TKa8Mk7fiLbOyFBDuYU8HpilGHJH/WSwzAUabeal6bCrqaLGrR6wDLUyvN/u3dl1jIkwOowuRJOR/X35GdQV/c5i2DNFHcJ4ziaRvuDzlNBzAK/ZvEL4UCSUXMDzXUOn6XBaETsZXRvLbt5BDVML9ukWjrJjGojebA==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S1726708AbgIGGKG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Sep 2020 02:10:06 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:44350 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725803AbgIGGKG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Sep 2020 02:10:06 -0400
+Received: by mail-ej1-f67.google.com with SMTP id r7so3266499ejs.11;
+        Sun, 06 Sep 2020 23:10:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GVokwuwCaSVBc9Gyn7b0LOXpcqkbxNYOMN+1IZzWnZQ=;
+        b=a/E5fKmAyHWIix6L1IW31pNLvcxTdToWINidap+0KcmBjq68Hhx6EC+MLnZ3Iv0nKu
+         LGT8SDT65dzLFvq4lmEcpnivS8uEhkZXehNbUtQiG7j3h3KSNg3ZVxQQiSH/HCaOqkds
+         I9ZE9KoHf2eWgIKSIB7JOtDHXgNK6W7eHiZRwEOWJaV01frOvckMeRnQDEAnWyP9SW+K
+         LxxPcBKdjx30SLeFCTyEigg9UYzHjpep0iKNQU0cqjiXUsEO8xApx73G5BhFZNI61yXm
+         /p6sYNeJcjBWHmrdiM92DID6TLHNTug2TChQadaD5FkhxOEvqwpzJiZW923LRtAA+4ph
+         I4wA==
+X-Gm-Message-State: AOAM531ZCzY/DJ6nK2AKirtVlNY4PbDLfXAq4PnodCCT8SHTY+h20F8w
+        MmbRxd2w5uB1/i0LC/BzvoWX17+N00s=
+X-Google-Smtp-Source: ABdhPJzM/GiqDDPUglZaYg3VUWUe0/dDHCWpXQ1+YwL2JZxA9p9bR+MKuStVCwG/XpSPy00N+WM4qQ==
+X-Received: by 2002:a17:906:a00d:: with SMTP id p13mr20408792ejy.535.1599459001754;
+        Sun, 06 Sep 2020 23:10:01 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.174])
+        by smtp.googlemail.com with ESMTPSA id r16sm14473271ejb.110.2020.09.06.23.09.59
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 06 Sep 2020 23:10:00 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 08:09:58 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 12/14] dt-bindings: mtd: gpmi-nand: Fix matching of
+ clocks on different SoCs
+Message-ID: <20200907060958.GA4525@kozik-lap>
+References: <20200904152404.20636-1-krzk@kernel.org>
+ <20200904152404.20636-13-krzk@kernel.org>
+ <CAL_Jsq+tGQhkqtQszOx7nvr1PR=YFz2p1=OnWQ8JxmSg4qNkHA@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB2575.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1ee21d30-60f3-4c47-3b9d-08d852465461
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Sep 2020 09:22:08.7463
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EtAN8xqRECdZbibvauhJl7LA4+Fwv66q/Xhm1ZrosLLdvUM1A/5Vub4G0rYHfc2DEFCFsLRQFujy5CHd9N0kjaNWSFHvXr/MRTZ6jaJUYFYTBpXL2rFLDjZ2fDw0bzyQ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2880
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+tGQhkqtQszOx7nvr1PR=YFz2p1=OnWQ8JxmSg4qNkHA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-> -----Original Message-----
-> From: linux-pwm-owner@vger.kernel.org <linux-pwm-
-> owner@vger.kernel.org> On Behalf Of Uwe Kleine-K=F6nig
-> Sent: Saturday, September 5, 2020 4:26 AM
-> To: G Jaya Kumaran, Vineetha <vineetha.g.jaya.kumaran@intel.com>
-> Cc: thierry.reding@gmail.com; robh+dt@kernel.org; linux-
-> pwm@vger.kernel.org; devicetree@vger.kernel.org; Wan Mohamad, Wan
-> Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>;
-> andriy.shevchenko@linux.intel.com; Raja Subramanian, Lakshmi Bai
-> <lakshmi.bai.raja.subramanian@intel.com>; mgross@linux.intel.com;
-> Ayyathurai, Vijayakannan <vijayakannan.ayyathurai@intel.com>
-> Subject: Re: [PATCH v5 1/2] pwm: Add PWM driver for Intel Keem Bay
->=20
-> Hello,
->=20
-> On Fri, Sep 04, 2020 at 09:42:37AM +0000, G Jaya Kumaran, Vineetha wrote:
-> > > > +	clk_rate =3D clk_get_rate(priv->clk);
-> > >
-> > > clk_get_rate() must only be called when the clock is enabled. Unless
-> > > I miss something this isn't ensured here.
+On Fri, Sep 04, 2020 at 04:36:39PM -0600, Rob Herring wrote:
+> On Fri, Sep 4, 2020 at 9:25 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 > >
-> > My understanding is this would not be a problem, as according to
-> > databook, the GPIO block clock is auto-enabled, and also we are not
-> > doing any disabling in the driver for it.
->=20
-> It might not be a problem on your hardware today. But this is an API
-> requirement.
->=20
-
-OK, will add clock enablement before using clk_get_rate().
-
-> > > > +	 * The upper 16 bits of the KMB_PWM_HIGHLOW_OFFSET register
-> contain
-> > > > +	 * the high time of the waveform, while the last 16 bits contain
-> > > > +	 * the low time of the waveform, in terms of clock cycles.
-> > > > +	 *
-> > > > +	 * high time =3D clock rate * duty cycle
-> > > > +	 * low time =3D  clock rate * (period - duty cycle)
-> > > > +	 *
-> > > > +	 * e.g. For period 50us, duty cycle 30us, and clock rate 500MHz:
-> > > > +	 * high time =3D 500MHz * 30us =3D 0x3A98
-> > > > +	 * low time =3D 500MHz * 20us =3D 0x2710
-> > > > +	 * Value written to KMB_PWM_HIGHLOW_OFFSET =3D 0x3A982710
-> > > > +	 */
-> > > > +
-> > > > +	clk_rate =3D clk_get_rate(priv->clk);
-> > > > +
-> > > > +	/* Configure waveform high time */
-> > > > +	div =3D clk_rate * state->duty_cycle;
-> > >
-> > > Since v5.9-rc1 (commit a9d887dc1c60ed67f2271d66560cdcf864c4a578)
-> > > state->duty_cycle is a 64 bit type. So div being unsigned long isn't
-> > > big enough on some platforms.
+> > Driver requires different amount of clocks for different SoCs.  Describe
+> > these requirements properly to fix dtbs_check warnings like:
 > >
-> > div is 64-bit here, so I guess I can keep it as is?
->=20
-> unsigned long isn't 64 bits wide on all platforms.
->=20
-
-Sorry, I meant I would keep it as is since div is an unsigned long long her=
-e, not an unsigned long.
-
-> > > > +	/* Ensure enable bit for each channel is cleared at boot */
-> > > > +	for (ch =3D 0; ch < KMB_TOTAL_PWM_CHANNELS; ch++)
-> > > > +		keembay_pwm_disable(priv, ch);
-> > >
-> > > .probe() is not supposed to change the state of the PWM.
-> > >
+> >     arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: nand-controller@33002000: clock-names:1: 'gpmi_apb' was expected
 > >
-> > Sorry, I think misunderstood one of your comments in V2 and added this.
-> > The reset value of the enable bit (and all other bits) in the LEADIN re=
-gister
-> is 0, so this may not be needed.
-> > If it's ok, I'll remove it.
->=20
-> I think the right approach is to set the LEADIN register to 0 in .apply()=
-.
->=20
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >
+> > ---
+> >
+> > Changes since v1:
+> > 1. Do not require order of clocks (use pattern).
+> 
+> To the extent that you can, you should fix the order in dts files
+> first. If we just adjust the schemas to match the dts files, then
+> what's the point?
 
-Okay, will do this.
+The DTSes do not have mixed order of clocks between each other, as fair
+as I remember. It was fix after Sasha Hauer comment that order is not
+necessarily good.
 
-> Best regards
-> Uwe
->=20
+We have the clock-names property, why enforcing the order?
 
-Thank you,
-Vineetha
+> 
+> > ---
+> >  .../devicetree/bindings/mtd/gpmi-nand.yaml    | 76 +++++++++++++++----
+> >  1 file changed, 61 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
+> > index 28ff8c581837..e08e0a50929e 100644
+> > --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
+> > +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
+> > @@ -9,9 +9,6 @@ title: Freescale General-Purpose Media Interface (GPMI) binding
+> >  maintainers:
+> >    - Han Xu <han.xu@nxp.com>
+> >
+> > -allOf:
+> > -  - $ref: "nand-controller.yaml"
+> > -
+> >  description: |
+> >    The GPMI nand controller provides an interface to control the NAND
+> >    flash chips. The device tree may optionally contain sub-nodes
+> > @@ -58,22 +55,10 @@ properties:
+> >    clocks:
+> >      minItems: 1
+> >      maxItems: 5
+> > -    items:
+> > -      - description: SoC gpmi io clock
+> > -      - description: SoC gpmi apb clock
+> > -      - description: SoC gpmi bch clock
+> > -      - description: SoC gpmi bch apb clock
+> > -      - description: SoC per1 bch clock
+> >
+> >    clock-names:
+> >      minItems: 1
+> >      maxItems: 5
+> > -    items:
+> > -      - const: gpmi_io
+> > -      - const: gpmi_apb
+> > -      - const: gpmi_bch
+> > -      - const: gpmi_bch_apb
+> > -      - const: per1_bch
+> >
+> >    fsl,use-minimum-ecc:
+> >      type: boolean
+> > @@ -107,6 +92,67 @@ required:
+> >
+> >  unevaluatedProperties: false
+> >
+> > +allOf:
+> > +  - $ref: "nand-controller.yaml"
+> > +
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - fsl,imx23-gpmi-nand
+> > +              - fsl,imx28-gpmi-nand
+> > +    then:
+> > +      properties:
+> > +        clocks:
+> > +          items:
+> > +            - description: SoC gpmi io clock
+> > +        clock-names:
+> > +          items:
+> > +            - const: gpmi_io
+> > +
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - fsl,imx6q-gpmi-nand
+> > +              - fsl,imx6sx-gpmi-nand
+> > +    then:
+> > +      properties:
+> > +        clocks:
+> > +          items:
+> > +            - description: SoC gpmi io clock
+> > +            - description: SoC gpmi apb clock
+> > +            - description: SoC gpmi bch clock
+> > +            - description: SoC gpmi bch apb clock
+> > +            - description: SoC per1 bch clock
+> > +        clock-names:
+> > +          items:
+> > +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
+> > +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
+> > +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
+> > +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
+> > +            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
+> 
+> BTW, you can make 'items' a schema rather than a list to apply a
+> constraint to all entries:
+> 
+> maxItems: 5
+> items:
+>   pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
 
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig          =
-  |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
-|
+Right, I forgot about such syntax.
+
+> 
+> > +
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            const: fsl,imx7d-gpmi-nand
+> > +    then:
+> > +      properties:
+> > +        clocks:
+> > +          items:
+> > +            - description: SoC gpmi io clock
+> > +            - description: SoC gpmi bch apb clock
+> > +        clock-names:
+> > +          minItems: 2
+> > +          maxItems: 2
+> 
+> You can drop these. It's the default based on the size of 'items'.
+
+Sure.
+
+> 
+> > +          items:
+> > +            - pattern: "^gpmi_(io|bch_apb)$"
+> > +            - pattern: "^gpmi_(io|bch_apb)$"
+> 
+> Surely here we can define the order.
+
+Yes, but still the same question as before - do we want the order? Why
+enforcing it?
+
+Best regards,
+Krzysztof
