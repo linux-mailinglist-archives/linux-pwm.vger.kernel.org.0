@@ -2,96 +2,168 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 583E726157A
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Sep 2020 18:51:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 569D1262157
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Sep 2020 22:48:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731977AbgIHQvi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Sep 2020 12:51:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731909AbgIHQvJ (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:51:09 -0400
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B576E2137B;
-        Tue,  8 Sep 2020 16:51:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599583868;
-        bh=pW1S8wYQ7shAS4VTkFPTvct/ClWzUHOw3xWhbsYQUNo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FgS6w9TKkNIumIokoiwznLHegSZ8da9H6/tyCUONyA8D6mS4MC5L9U2z22U5vpbaJ
-         F9LBw9H3U/ZQfNzWt6ceq2QpbMCME12qMJBPAnufXbEXaMdXUN5OQTdjSiBIy0r3bk
-         7U2jnKRg1UiTm9IReOgbeVZRQG6XO2kMrq5x8Ajs=
-Received: by mail-oo1-f51.google.com with SMTP id 4so4091291ooh.11;
-        Tue, 08 Sep 2020 09:51:08 -0700 (PDT)
-X-Gm-Message-State: AOAM5336w4FaUrgkkaZQMHIC9XcoaoO79MmlghHpn2rTwscnyo8U5huj
-        MQjZH4r+nvWe9apsBepBEXfpRVfNTTha4s0nQQ==
-X-Google-Smtp-Source: ABdhPJyVFdSAOgZ7160kEJoAezjYnztio3h9Ino2moi2r5NNuCCiGtHqBpSUtvivi5rsYhCBevOSckk/m/8RpCmF5Go=
-X-Received: by 2002:a4a:d306:: with SMTP id g6mr19090952oos.25.1599583867914;
- Tue, 08 Sep 2020 09:51:07 -0700 (PDT)
+        id S1729941AbgIHUsk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Sep 2020 16:48:40 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:41391 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729993AbgIHUsj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Sep 2020 16:48:39 -0400
+Received: by mail-il1-f195.google.com with SMTP id w8so233215ilj.8;
+        Tue, 08 Sep 2020 13:48:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=L9u+1Lk2Z2W+mvjM22ziguVUQXZzuFNOokZobOUqdHY=;
+        b=s6Zm8lCgqbSkr1cUk2P0gc0vKcX4344bGRUSq6BYZdelIdHrFDnEg1MCUTOLu9gHr2
+         dZ2GYc8n9fpFkXuVw8X8OlZRi2fNuRm32UUs6RwQC1TDff0pNxzkddk2vjINcMnlG+PN
+         wfq+T2Ul9Ml6O8k1OCucFxf7k01gFAQ8om7I6u0hASQZiO0vsie6tGMq66xGWjU/hDa9
+         FDtGW92GVD0YUuIF5875NXVAIvSAS99jVL8LlsL7k60IYlzlVvjDLeIKyQzP8rPVpzqw
+         y2gzdL7q/5grZcksU+9YTey1NDLqO6Nl+068BW3PvMHt77DTGTiZ2YHTTrs4Ej77GDb8
+         ZDdw==
+X-Gm-Message-State: AOAM533nHV0k2Vwo0l+oi8LTlPNU1OfYGKOJTyfNIrrJPV82nANJ1t9z
+        nMTGSxuMr+WCCULZ8AI6xQ==
+X-Google-Smtp-Source: ABdhPJzo2UJov8PXXJW5aMJngdajRHVncAYkVsO/Xj9gWLtftWvWC98MARoq/mot6KY+pWdHIRsPnA==
+X-Received: by 2002:a05:6e02:ef1:: with SMTP id j17mr574189ilk.211.1599598118339;
+        Tue, 08 Sep 2020 13:48:38 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id u18sm135827iln.78.2020.09.08.13.48.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 13:48:37 -0700 (PDT)
+Received: (nullmailer pid 892637 invoked by uid 1000);
+        Tue, 08 Sep 2020 20:48:34 -0000
+Date:   Tue, 8 Sep 2020 14:48:34 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: microchip: atmel,at91rm9200-tcb: add
+ atmel,tcb-pwm
+Message-ID: <20200908204834.GA886652@bogus>
+References: <20200820225546.2246517-1-alexandre.belloni@bootlin.com>
+ <20200820225546.2246517-2-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-References: <20200904152404.20636-1-krzk@kernel.org> <20200904152404.20636-13-krzk@kernel.org>
- <CAL_Jsq+tGQhkqtQszOx7nvr1PR=YFz2p1=OnWQ8JxmSg4qNkHA@mail.gmail.com> <20200907060958.GA4525@kozik-lap>
-In-Reply-To: <20200907060958.GA4525@kozik-lap>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 8 Sep 2020 10:50:56 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJZ=PxDxH-=GUUg7WadZrAKjYbtE0sQ8h9YDGOGx6Ykwg@mail.gmail.com>
-Message-ID: <CAL_JsqJZ=PxDxH-=GUUg7WadZrAKjYbtE0sQ8h9YDGOGx6Ykwg@mail.gmail.com>
-Subject: Re: [PATCH v3 12/14] dt-bindings: mtd: gpmi-nand: Fix matching of
- clocks on different SoCs
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820225546.2246517-2-alexandre.belloni@bootlin.com>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 12:10 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Fri, Sep 04, 2020 at 04:36:39PM -0600, Rob Herring wrote:
-> > On Fri, Sep 4, 2020 at 9:25 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > >
-> > > Driver requires different amount of clocks for different SoCs.  Describe
-> > > these requirements properly to fix dtbs_check warnings like:
-> > >
-> > >     arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: nand-controller@33002000: clock-names:1: 'gpmi_apb' was expected
-> > >
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > >
-> > > ---
-> > >
-> > > Changes since v1:
-> > > 1. Do not require order of clocks (use pattern).
-> >
-> > To the extent that you can, you should fix the order in dts files
-> > first. If we just adjust the schemas to match the dts files, then
-> > what's the point?
->
-> The DTSes do not have mixed order of clocks between each other, as fair
-> as I remember. It was fix after Sasha Hauer comment that order is not
-> necessarily good.
->
-> We have the clock-names property, why enforcing the order?
+On Fri, Aug 21, 2020 at 12:55:43AM +0200, Alexandre Belloni wrote:
+> Move the TCB pwm nodes under their parent and move its documentation to the
+> main file.
+> 
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+> Cc: Rob Herring <robh+dt@kernel.org>
+> 
+>  .../devicetree/bindings/pwm/atmel-tcb-pwm.txt | 16 ----------
+>  .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 31 ++++++++++++++++++-
+>  2 files changed, 30 insertions(+), 17 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+> deleted file mode 100644
+> index 985fcc65f8c4..000000000000
+> --- a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+> +++ /dev/null
+> @@ -1,16 +0,0 @@
+> -Atmel TCB PWM controller
+> -
+> -Required properties:
+> -- compatible: should be "atmel,tcb-pwm"
+> -- #pwm-cells: should be 3. See pwm.yaml in this directory for a description of
+> -  the cells format. The only third cell flag supported by this binding is
+> -  PWM_POLARITY_INVERTED.
+> -- tc-block: The Timer Counter block to use as a PWM chip.
 
-Because DT/OpenFirmware has always had a defined order for property
-values. '*-names' is just extra information.
+What happened to 'tc-block'? Commit message should mention why it is 
+gone.
 
-Rob
+> -
+> -Example:
+> -
+> -pwm {
+> -	compatible = "atmel,tcb-pwm";
+> -	#pwm-cells = <3>;
+> -	tc-block = <1>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml b/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
+> index 55fffae05dcf..a51adfdb58f6 100644
+> --- a/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
+> +++ b/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
+> @@ -59,6 +59,7 @@ patternProperties:
+>          items:
+>            - enum:
+>                - atmel,tcb-timer
+> +              - atmel,tcb-pwm
+>                - microchip,tcb-capture
+>        reg:
+>          description:
+> @@ -68,11 +69,33 @@ patternProperties:
+>  
+>          minItems: 1
+>          maxItems: 3
+> +    required:
+> +      - compatible
+> +      - reg
+> +
+> +  "^pwm@[0-2]$":
+> +    description: The timer block channels that are used as PWMs.
+> +    $ref: ../../pwm/pwm.yaml#
+> +    type: object
+> +    properties:
+> +      compatible:
+> +        const: atmel,tcb-pwm
+> +      reg:
+> +        description:
+> +          TCB channel to use for this PWM.
+
+enum: [ 0, 1, 2 ]
+
+> +
+> +        maxItems: 1
+> +      "#pwm-cells":
+> +        description:
+> +          The only third cell flag supported by this binding is
+> +          PWM_POLARITY_INVERTED.
+> +        const: 3
+>  
+>      required:
+>        - compatible
+>        - reg
+
+       additionalProperties: false
+
+>  
+> +
+>  allOf:
+>    - if:
+>        properties:
+> @@ -158,7 +181,13 @@ examples:
+>                          compatible = "atmel,tcb-timer";
+>                          reg = <1>;
+>                  };
+> -        };
+> +
+> +                pwm@2 {
+> +                        compatible = "atmel,tcb-pwm";
+> +                        reg = <2>;
+> +                        #pwm-cells = <3>;
+> +                };
+> +         };
+>      /* TCB0 Capture with QDEC: */
+>          timer@f800c000 {
+>                  compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
+> -- 
+> 2.26.2
+> 
