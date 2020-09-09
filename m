@@ -2,163 +2,178 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6BDA262F96
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Sep 2020 16:12:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 375A9263130
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Sep 2020 18:02:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730276AbgIIOMk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 9 Sep 2020 10:12:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53478 "EHLO
+        id S1730336AbgIIQCU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 9 Sep 2020 12:02:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730275AbgIINHq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Sep 2020 09:07:46 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A67CAC061755
-        for <linux-pwm@vger.kernel.org>; Wed,  9 Sep 2020 06:07:51 -0700 (PDT)
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1kFzpB-0002t4-5p; Wed, 09 Sep 2020 15:07:45 +0200
-Received: from mfe by dude02.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1kFzp9-0004Vk-K3; Wed, 09 Sep 2020 15:07:43 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        lee.jones@linaro.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, Anson.Huang@nxp.com,
-        michal.vokac@ysoft.com, l.majewski@majess.pl
-Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de
-Subject: [PATCH 2/3] pwm: imx27: move static pwmcr values into probe() function
-Date:   Wed,  9 Sep 2020 15:07:38 +0200
-Message-Id: <20200909130739.26717-3-m.felsch@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200909130739.26717-1-m.felsch@pengutronix.de>
-References: <20200909130739.26717-1-m.felsch@pengutronix.de>
+        with ESMTP id S1728643AbgIIQCP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Sep 2020 12:02:15 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFF0DC06123F
+        for <linux-pwm@vger.kernel.org>; Wed,  9 Sep 2020 08:03:50 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id t76so2652984oif.7
+        for <linux-pwm@vger.kernel.org>; Wed, 09 Sep 2020 08:03:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XqgUisCv6O6AIe2HSHhoMaBFAHa4ETHNWOlkQljBJ8A=;
+        b=BRT9Vi4VBHt950UmvglmwImZSM4kL3ilDGd58qK07Eo89lRCG7hrMJ5v2fKeNK8UXZ
+         mZLdMBMk12yoKK2uXeOkGlvQeQJvJZmzdNJ04oJpSZucuLlQMSslsP/qVgoNsYapeaEy
+         3wpaj+nh0NeqwJlRpoCiPfrIGDoCd7GLIzy/w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XqgUisCv6O6AIe2HSHhoMaBFAHa4ETHNWOlkQljBJ8A=;
+        b=EmBk/88jb33zKe2gEoGZJtAimOUjxpFUjp4h20jWRasbMTsNGDvqZbVndp5uccFOsy
+         LR5NE1GsgzvrgPkzZmpxlMOQncaxIYodAqEmBfIVUh5sU+RNYO+TfIdJSLyyo21TrqE7
+         FJuhjFGIaQPIhs9rkGuHuZad0p+2ENgY2v+xbPq5Exftolwqwd/pf4DERLbZEIttTaHr
+         EUAYLhfSEVxYk20qSFghAdUi7CIoQRK6EO75wOGUVY6YcosGdu+XrFmAu+GBRizXJOqB
+         eUzke1vJEjDDC6z4SeiEwNdzhG/Sp34kSlHhgKa5eTqQIzNrieO/Kw+MKiWV/jlRcTXE
+         O2SQ==
+X-Gm-Message-State: AOAM530W6092oZqKCcEzw3bwpnahm6CXjIgFZ0YSmXU2uzZ1KL7J6fCK
+        14SDh2gCTuy/nPd8Pv3wAPxbDDLTLOojAPSv2ITebw==
+X-Google-Smtp-Source: ABdhPJzV6KFL4kNw0JMMTwGtLRSVvE2e3kcoWpzF0VGT7IKBd/vRbzuUSWeECw2RPuAZ9KHggkot6bIzZex5xMKydis=
+X-Received: by 2002:aca:5106:: with SMTP id f6mr875834oib.101.1599663828682;
+ Wed, 09 Sep 2020 08:03:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+References: <20200721042522.2403410-1-amstan@chromium.org> <20200720212502.2.Iab4d2192e4cf50226e0a58d58df7d90ef92713ce@changeid>
+ <20200904113822.xoyt4w5x7vwvh7cr@holly.lan> <20200907075018.GM2352366@phenom.ffwll.local>
+ <20200909144537.daq2exfihhxm6bai@holly.lan>
+In-Reply-To: <20200909144537.daq2exfihhxm6bai@holly.lan>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Wed, 9 Sep 2020 17:03:37 +0200
+Message-ID: <CAKMK7uEK5afDHT9n0s+eDYA1Qztf9Xxibz_rZDzy5F6G9EOEVw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] backlight: pwm_bl: Artificially add 0% during interpolation
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Alexandru Stan <amstan@chromium.org>,
+        linux-pwm <linux-pwm@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The STOPEN, DOZEN, WAITEN, DBGEN and the CLKSRC bit values never change.
-So it should be save to move this bit settings into probe() and change
-only the necessary bits during apply(). Therefore I added the
-pwm_imx27_update_bits() helper.
+On Wed, Sep 9, 2020 at 4:45 PM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> On Mon, Sep 07, 2020 at 09:50:18AM +0200, Daniel Vetter wrote:
+> > On Fri, Sep 04, 2020 at 12:38:22PM +0100, Daniel Thompson wrote:
+> > > On Mon, Jul 20, 2020 at 09:25:21PM -0700, Alexandru Stan wrote:
+> > > > Some displays need the low end of the curve cropped in order to make
+> > > > them happy. In that case we still want to have the 0% point, even though
+> > > > anything between 0% and 5%(example) would be skipped.
+> > >
+> > > For backlights it is not defined that 0 means off and, to be honest, 0
+> > > means off is actually rather weird for anything except transflexive
+> > > or front lit reflective displays[1]. There is a problem on several
+> > > systems that when the backlight slider is reduced to zero you can't
+> > > see the screen properly to turn it back up. This patch looks like it
+> > > would make that problem worse by hurting systems with will written
+> > > device trees.
+> > >
+> > > There is some nasty legacy here: some backlight displays that are off
+> > > at zero and that sucks because userspace doesn't know whether zero is
+> > > off or lowest possible setting.
+> > >
+> > > Nevertheless perhaps a better way to handle this case is for 0 to map to
+> > > 5% power and for the userspace to turn the backlight on/off as final
+> > > step in an animated backlight fade out (and one again for a fade in).
+> >
+> > Afaik chromeos encodes "0 means off" somewhere in there stack. We've
+> > gotten similar patches for the i915 backlight driver when we started
+> > obeying the panel's lower limit in our pwm backlight driver thing that's
+> > sometimes used instead of acpi.
+>
+> Out of interest... were they accepted?
+>
+> I did took a quick look at intel_panel.c and didn't see anything
+> that appeared to be special casing zero but I thought I might double
+> check.
 
-Furthermore the patch adds the support to reset the pwm device during
-probe() if the pwm device is disabled.
+I don't think so. Just figured I bring this up since it might explain
+why this is coming back again from an @chromium.com address.
+-Daniel
 
-Both steps are required in preparation of the further patch which fixes
-the "pwm-disabled" state for inverted pwms.
+>
+>
+> Daniel.
+>
+>
+> > There's also the problem that with fancy panels with protocol (dsi, edp,
+> > ...) shutting of the backlight completely out of the proper power sequence
+> > hangs the panel (for some panels at least), so providing a backlight off
+> > that doesn't go through the drm modeset sequence isn't always possible.
+> >
+> > It's a bit a mess indeed :-/
+> > -Daniel
+> >
+> > >
+> > >
+> > > Daniel.
+> > >
+> > > >
+> > > > Signed-off-by: Alexandru Stan <amstan@chromium.org>
+> > > > ---
+> > > >
+> > > >  drivers/video/backlight/pwm_bl.c | 8 ++++++++
+> > > >  1 file changed, 8 insertions(+)
+> > > >
+> > > > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> > > > index 5193a72305a2..b24711ddf504 100644
+> > > > --- a/drivers/video/backlight/pwm_bl.c
+> > > > +++ b/drivers/video/backlight/pwm_bl.c
+> > > > @@ -349,6 +349,14 @@ static int pwm_backlight_parse_dt(struct device *dev,
+> > > >                   /* Fill in the last point, since no line starts here. */
+> > > >                   table[x2] = y2;
+> > > >
+> > > > +                 /*
+> > > > +                  * If we don't start at 0 yet we're increasing, assume
+> > > > +                  * the dts wanted to crop the low end of the range, so
+> > > > +                  * insert a 0 to provide a display off mode.
+> > > > +                  */
+> > > > +                 if (table[0] > 0 && table[0] < table[num_levels - 1])
+> > > > +                         table[0] = 0;
+> > > > +
+> > > >                   /*
+> > > >                    * As we use interpolation lets remove current
+> > > >                    * brightness levels table and replace for the
+> > > > --
+> > > > 2.27.0
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> >
+> > --
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/pwm/pwm-imx27.c | 41 +++++++++++++++++++++++++++++------------
- 1 file changed, 29 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-index 3cf9f1774244..30388a9ece04 100644
---- a/drivers/pwm/pwm-imx27.c
-+++ b/drivers/pwm/pwm-imx27.c
-@@ -96,6 +96,16 @@ struct pwm_imx27_chip {
- 
- #define to_pwm_imx27_chip(chip)	container_of(chip, struct pwm_imx27_chip, chip)
- 
-+static void pwm_imx27_update_bits(void __iomem *reg, u32 mask, u32 val)
-+{
-+	u32 tmp;
-+
-+	tmp = readl(reg);
-+	tmp &= ~mask;
-+	tmp |= val & mask;
-+	return writel(tmp, reg);
-+}
-+
- static int pwm_imx27_clk_prepare_enable(struct pwm_imx27_chip *imx)
- {
- 	int ret;
-@@ -183,10 +193,8 @@ static void pwm_imx27_get_state(struct pwm_chip *chip,
- 	pwm_imx27_clk_disable_unprepare(imx);
- }
- 
--static void pwm_imx27_sw_reset(struct pwm_chip *chip)
-+static void pwm_imx27_sw_reset(struct pwm_imx27_chip *imx, struct device *dev)
- {
--	struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
--	struct device *dev = chip->dev;
- 	int wait_count = 0;
- 	u32 cr;
- 
-@@ -232,7 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	unsigned long long c;
- 	unsigned long long clkrate;
- 	int ret;
--	u32 cr;
-+	u32 cr, mask;
- 
- 	ret = pwm_imx27_clk_prepare_enable(imx);
- 	if (ret)
-@@ -269,7 +277,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	if (cstate.enabled) {
- 		pwm_imx27_wait_fifo_slot(chip, pwm);
- 	} else {
--		pwm_imx27_sw_reset(chip);
-+		pwm_imx27_sw_reset(imx, chip->dev);
- 	}
- 
- 	writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
-@@ -281,10 +289,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 */
- 	imx->duty_cycle = duty_cycles;
- 
--	cr = MX3_PWMCR_PRESCALER_SET(prescale) |
--	     MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
--	     FIELD_PREP(MX3_PWMCR_CLKSRC, MX3_PWMCR_CLKSRC_IPG_HIGH) |
--	     MX3_PWMCR_DBGEN;
-+	cr = MX3_PWMCR_PRESCALER_SET(prescale);
- 
- 	if (state->polarity == PWM_POLARITY_INVERSED)
- 		cr |= FIELD_PREP(MX3_PWMCR_POUTC,
-@@ -293,7 +298,9 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	if (state->enabled)
- 		cr |= MX3_PWMCR_EN;
- 
--	writel(cr, imx->mmio_base + MX3_PWMCR);
-+	mask = MX3_PWMCR_PRESCALER | MX3_PWMCR_POUTC | MX3_PWMCR_EN;
-+
-+	pwm_imx27_update_bits(imx->mmio_base + MX3_PWMCR, mask, cr);
- 
- 	if (!state->enabled)
- 		pwm_imx27_clk_disable_unprepare(imx);
-@@ -364,10 +371,20 @@ static int pwm_imx27_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	/* keep clks on if pwm is running */
-+	/* Keep clks on and pwm settings unchanged if the PWM is already running */
- 	pwmcr = readl(imx->mmio_base + MX3_PWMCR);
--	if (!(pwmcr & MX3_PWMCR_EN))
-+	if (!(pwmcr & MX3_PWMCR_EN)) {
-+		u32 mask;
-+
-+		pwm_imx27_sw_reset(imx, &pdev->dev);
-+		mask = MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
-+			MX3_PWMCR_DBGEN | MX3_PWMCR_CLKSRC;
-+		pwmcr = MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
-+			MX3_PWMCR_DBGEN |
-+			FIELD_PREP(MX3_PWMCR_CLKSRC, MX3_PWMCR_CLKSRC_IPG_HIGH);
-+		pwm_imx27_update_bits(imx->mmio_base + MX3_PWMCR, mask, pwmcr);
- 		pwm_imx27_clk_disable_unprepare(imx);
-+	}
- 
- 	return pwmchip_add(&imx->chip);
- }
+
 -- 
-2.20.1
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
