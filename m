@@ -2,26 +2,26 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 53B86262F9F
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Sep 2020 16:14:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6BDA262F96
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Sep 2020 16:12:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730277AbgIIOM2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 9 Sep 2020 10:12:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53480 "EHLO
+        id S1730276AbgIIOMk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 9 Sep 2020 10:12:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730276AbgIINHq (ORCPT
+        with ESMTP id S1730275AbgIINHq (ORCPT
         <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Sep 2020 09:07:46 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AB98C061786
-        for <linux-pwm@vger.kernel.org>; Wed,  9 Sep 2020 06:07:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A67CAC061755
+        for <linux-pwm@vger.kernel.org>; Wed,  9 Sep 2020 06:07:51 -0700 (PDT)
 Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1kFzpB-0002t3-5r; Wed, 09 Sep 2020 15:07:45 +0200
+        id 1kFzpB-0002t4-5p; Wed, 09 Sep 2020 15:07:45 +0200
 Received: from mfe by dude02.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1kFzp9-0004Uy-Ib; Wed, 09 Sep 2020 15:07:43 +0200
+        id 1kFzp9-0004Vk-K3; Wed, 09 Sep 2020 15:07:43 +0200
 From:   Marco Felsch <m.felsch@pengutronix.de>
 To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
         lee.jones@linaro.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
@@ -29,9 +29,9 @@ To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
         michal.vokac@ysoft.com, l.majewski@majess.pl
 Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         kernel@pengutronix.de
-Subject: [PATCH 1/3] pwm: imx27: track clock enable/disable to simplify code
-Date:   Wed,  9 Sep 2020 15:07:37 +0200
-Message-Id: <20200909130739.26717-2-m.felsch@pengutronix.de>
+Subject: [PATCH 2/3] pwm: imx27: move static pwmcr values into probe() function
+Date:   Wed,  9 Sep 2020 15:07:38 +0200
+Message-Id: <20200909130739.26717-3-m.felsch@pengutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200909130739.26717-1-m.felsch@pengutronix.de>
 References: <20200909130739.26717-1-m.felsch@pengutronix.de>
@@ -46,79 +46,119 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Introduce a simple clock state so we can enable/disable the clock
-without the need to check if we are running or not.
+The STOPEN, DOZEN, WAITEN, DBGEN and the CLKSRC bit values never change.
+So it should be save to move this bit settings into probe() and change
+only the necessary bits during apply(). Therefore I added the
+pwm_imx27_update_bits() helper.
+
+Furthermore the patch adds the support to reset the pwm device during
+probe() if the pwm device is disabled.
+
+Both steps are required in preparation of the further patch which fixes
+the "pwm-disabled" state for inverted pwms.
 
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- drivers/pwm/pwm-imx27.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ drivers/pwm/pwm-imx27.c | 41 +++++++++++++++++++++++++++++------------
+ 1 file changed, 29 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-index c50d453552bd..3cf9f1774244 100644
+index 3cf9f1774244..30388a9ece04 100644
 --- a/drivers/pwm/pwm-imx27.c
 +++ b/drivers/pwm/pwm-imx27.c
-@@ -91,6 +91,7 @@ struct pwm_imx27_chip {
- 	 * value to return in that case.
- 	 */
- 	unsigned int duty_cycle;
-+	bool clk_on;
- };
+@@ -96,6 +96,16 @@ struct pwm_imx27_chip {
  
  #define to_pwm_imx27_chip(chip)	container_of(chip, struct pwm_imx27_chip, chip)
-@@ -99,6 +100,9 @@ static int pwm_imx27_clk_prepare_enable(struct pwm_imx27_chip *imx)
+ 
++static void pwm_imx27_update_bits(void __iomem *reg, u32 mask, u32 val)
++{
++	u32 tmp;
++
++	tmp = readl(reg);
++	tmp &= ~mask;
++	tmp |= val & mask;
++	return writel(tmp, reg);
++}
++
+ static int pwm_imx27_clk_prepare_enable(struct pwm_imx27_chip *imx)
  {
  	int ret;
- 
-+	if (imx->clk_on)
-+		return 0;
-+
- 	ret = clk_prepare_enable(imx->clk_ipg);
- 	if (ret)
- 		return ret;
-@@ -109,13 +113,20 @@ static int pwm_imx27_clk_prepare_enable(struct pwm_imx27_chip *imx)
- 		return ret;
- 	}
- 
-+	imx->clk_on = true;
-+
- 	return 0;
+@@ -183,10 +193,8 @@ static void pwm_imx27_get_state(struct pwm_chip *chip,
+ 	pwm_imx27_clk_disable_unprepare(imx);
  }
  
- static void pwm_imx27_clk_disable_unprepare(struct pwm_imx27_chip *imx)
+-static void pwm_imx27_sw_reset(struct pwm_chip *chip)
++static void pwm_imx27_sw_reset(struct pwm_imx27_chip *imx, struct device *dev)
  {
-+	if (!imx->clk_on)
-+		return;
-+
- 	clk_disable_unprepare(imx->clk_per);
- 	clk_disable_unprepare(imx->clk_ipg);
-+
-+	imx->clk_on = false;
- }
- 
- static void pwm_imx27_get_state(struct pwm_chip *chip,
-@@ -223,6 +234,10 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	int ret;
+-	struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
+-	struct device *dev = chip->dev;
+ 	int wait_count = 0;
  	u32 cr;
  
-+	ret = pwm_imx27_clk_prepare_enable(imx);
-+	if (ret)
-+		return ret;
-+
- 	pwm_get_state(pwm, &cstate);
+@@ -232,7 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	unsigned long long c;
+ 	unsigned long long clkrate;
+ 	int ret;
+-	u32 cr;
++	u32 cr, mask;
  
- 	clkrate = clk_get_rate(imx->clk_per);
-@@ -254,10 +269,6 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	ret = pwm_imx27_clk_prepare_enable(imx);
+ 	if (ret)
+@@ -269,7 +277,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
  	if (cstate.enabled) {
  		pwm_imx27_wait_fifo_slot(chip, pwm);
  	} else {
--		ret = pwm_imx27_clk_prepare_enable(imx);
--		if (ret)
--			return ret;
--
- 		pwm_imx27_sw_reset(chip);
+-		pwm_imx27_sw_reset(chip);
++		pwm_imx27_sw_reset(imx, chip->dev);
  	}
  
+ 	writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
+@@ -281,10 +289,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	 */
+ 	imx->duty_cycle = duty_cycles;
+ 
+-	cr = MX3_PWMCR_PRESCALER_SET(prescale) |
+-	     MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
+-	     FIELD_PREP(MX3_PWMCR_CLKSRC, MX3_PWMCR_CLKSRC_IPG_HIGH) |
+-	     MX3_PWMCR_DBGEN;
++	cr = MX3_PWMCR_PRESCALER_SET(prescale);
+ 
+ 	if (state->polarity == PWM_POLARITY_INVERSED)
+ 		cr |= FIELD_PREP(MX3_PWMCR_POUTC,
+@@ -293,7 +298,9 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	if (state->enabled)
+ 		cr |= MX3_PWMCR_EN;
+ 
+-	writel(cr, imx->mmio_base + MX3_PWMCR);
++	mask = MX3_PWMCR_PRESCALER | MX3_PWMCR_POUTC | MX3_PWMCR_EN;
++
++	pwm_imx27_update_bits(imx->mmio_base + MX3_PWMCR, mask, cr);
+ 
+ 	if (!state->enabled)
+ 		pwm_imx27_clk_disable_unprepare(imx);
+@@ -364,10 +371,20 @@ static int pwm_imx27_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	/* keep clks on if pwm is running */
++	/* Keep clks on and pwm settings unchanged if the PWM is already running */
+ 	pwmcr = readl(imx->mmio_base + MX3_PWMCR);
+-	if (!(pwmcr & MX3_PWMCR_EN))
++	if (!(pwmcr & MX3_PWMCR_EN)) {
++		u32 mask;
++
++		pwm_imx27_sw_reset(imx, &pdev->dev);
++		mask = MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
++			MX3_PWMCR_DBGEN | MX3_PWMCR_CLKSRC;
++		pwmcr = MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
++			MX3_PWMCR_DBGEN |
++			FIELD_PREP(MX3_PWMCR_CLKSRC, MX3_PWMCR_CLKSRC_IPG_HIGH);
++		pwm_imx27_update_bits(imx->mmio_base + MX3_PWMCR, mask, pwmcr);
+ 		pwm_imx27_clk_disable_unprepare(imx);
++	}
+ 
+ 	return pwmchip_add(&imx->chip);
+ }
 -- 
 2.20.1
 
