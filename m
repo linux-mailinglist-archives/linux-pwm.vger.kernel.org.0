@@ -2,80 +2,115 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD0372622B7
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Sep 2020 00:38:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D4A826293C
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Sep 2020 09:52:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbgIHWiz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Sep 2020 18:38:55 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46708 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726434AbgIHWiy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Sep 2020 18:38:54 -0400
-Received: by mail-io1-f68.google.com with SMTP id d18so1078397iop.13;
-        Tue, 08 Sep 2020 15:38:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=p/1hHUSbtL14Ax0at2DUeNcr9Ny+Csoyhco21r35crE=;
-        b=cX9WwNRZsr5luGMsQG022wzXhNe0wv90a/nTbkgq2zxifC4HdfOxCbuy8lALVy1B8G
-         IM8irwkLf8EysjKOrpPGqsREoR6U3/LEN3SmgV06kYM0eohvaHM1HXI4ocRuye3/NVdP
-         OOboCnQbsy92B4jqu94PzbuFmbmzX/rvleEYVWTwn3+6qgnakBvq5bvlcLhosprm0nMU
-         q/ZGm+vSfBvxtKDqh0GCJb25MtCqmZlhqqLN51A6IOVr7x6n29x9tN2JWZd5cYUtPtbL
-         Ee6rhFnprkXwr6vCZIhiQg6NBq6Z3u8UVxCJQs+ypdvVXSdcDIrQBwOOm8cExODcLFkc
-         C4nw==
-X-Gm-Message-State: AOAM530swKCR+ZBLRNX5jvSACVROQbJnLxnIQGRvIUbPfVcK1xCXdMD+
-        FDhKMatJfcqpcvkdJN5P5A==
-X-Google-Smtp-Source: ABdhPJwocbAoceUdBVjvP517IFwXFz5vHn3glVCmHqzqVj0ZPDFrK4R2n3DaoP4Yy/j/0jNShnsB/g==
-X-Received: by 2002:a6b:3e06:: with SMTP id l6mr1023062ioa.160.1599604733487;
-        Tue, 08 Sep 2020 15:38:53 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id a21sm337527ioh.12.2020.09.08.15.38.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 15:38:52 -0700 (PDT)
-Received: (nullmailer pid 1066114 invoked by uid 1000);
-        Tue, 08 Sep 2020 22:38:46 -0000
-Date:   Tue, 8 Sep 2020 16:38:46 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        linux-renesas-soc@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: renesas,pwm-rcar: Add r8a774e1
- support
-Message-ID: <20200908223846.GA1066007@bogus>
-References: <20200825104455.18000-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200825104455.18000-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825104455.18000-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        id S1726399AbgIIHwJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 9 Sep 2020 03:52:09 -0400
+Received: from mga02.intel.com ([134.134.136.20]:16426 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725877AbgIIHwI (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 9 Sep 2020 03:52:08 -0400
+IronPort-SDR: UILeFe14gj6sOc1yuB8rbH1x4po87IIacuA0OWlF+YlROxYCoW0ORLH7/LgxBgqpoushXEMjzc
+ M4XfsqC/dz8g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="146005620"
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="146005620"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 00:52:08 -0700
+IronPort-SDR: 7sjshZpzj43z07R3nV7+O3dUTw5kSgZRS4O3BG4RVBKOE8N1AGM00NRTk3ZcFp9nHqFfq15lPz
+ z2GKXErmOP1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="286141150"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga008.fm.intel.com with ESMTP; 09 Sep 2020 00:52:04 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org
+Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com, Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v12 1/2] Add DT bindings YAML schema for PWM fan controller of LGM SoC
+Date:   Wed,  9 Sep 2020 15:51:56 +0800
+Message-Id: <a5b9fefb58a6fe16964219b0d443bf81c58f5445.1599637734.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <cover.1599637734.git.rahul.tanwar@linux.intel.com>
+References: <cover.1599637734.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <cover.1599637734.git.rahul.tanwar@linux.intel.com>
+References: <cover.1599637734.git.rahul.tanwar@linux.intel.com>
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 25 Aug 2020 11:44:54 +0100, Lad Prabhakar wrote:
-> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> 
-> Document RZ/G2H (R8A774E1) SoC bindings.
-> 
-> No driver change is needed due to the fallback compatible value
-> "renesas,pwm-rcar".
-> 
-> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Intel's LGM(Lightning Mountain) SoC contains a PWM fan controller
+which is only used to control the fan attached to the system. This
+PWM controller does not have any other consumer other than fan.
+Add DT bindings documentation for this PWM fan controller.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     | 44 ++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+
+diff --git a/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+new file mode 100644
+index 000000000000..11a606536169
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/intel,lgm-pwm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: LGM SoC PWM fan controller
++
++maintainers:
++  - Rahul Tanwar <rtanwar@maxlinear.com>
++
++properties:
++  compatible:
++    const: intel,lgm-pwm
++
++  reg:
++    maxItems: 1
++
++  "#pwm-cells":
++    const: 2
++
++  clocks:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - resets
++
++additionalProperties: false
++
++examples:
++  - |
++    pwm: pwm@e0d00000 {
++        compatible = "intel,lgm-pwm";
++        reg = <0xe0d00000 0x30>;
++        #pwm-cells = <2>;
++        clocks = <&cgu0 126>;
++        resets = <&rcu0 0x30 21>;
++    };
+-- 
+2.11.0
+
