@@ -2,34 +2,34 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEEC3269824
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Sep 2020 23:46:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94FC5269825
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Sep 2020 23:46:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726273AbgINVp5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        id S1726265AbgINVp5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
         Mon, 14 Sep 2020 17:45:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48928 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgINVoE (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Sep 2020 17:44:04 -0400
+        with ESMTP id S1726077AbgINVoF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Sep 2020 17:44:05 -0400
 Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43CF1C06174A;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C393CC061788;
         Mon, 14 Sep 2020 14:44:04 -0700 (PDT)
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 8ED2B23E40;
-        Mon, 14 Sep 2020 23:44:01 +0200 (CEST)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 95FEC23E41;
+        Mon, 14 Sep 2020 23:44:02 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1600119842;
+        t=1600119843;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=JCxKToPlnWWGGN4WI7tHD0eb9oQ5HKg+4zoPV30lqcE=;
-        b=f5hp9Js3/nWHkBDX/FR1xAHG7+yZBOXAMT/koCGm4aTmiO4OgeG+l2/TgwtE7DQu0aw0Kz
-        BDnd21kr47EgLOgzMFbbS/1KMz3IsUQ03CzANPLB3c/PlXKZBmDk1lokB3Re3yapY6n/Ii
-        HV+dNlionLWxNbdmM9a0sIX1h4DkEPM=
+        bh=t2MH1scwcbIXAJreJZsYteuUtGQv1/VQUks+DVAxSUw=;
+        b=BKbVEkcwD6UcJo8ukJXQEhBZLl/RI0HT4gRIubma/mnRGxBe3HY5s3jeXqYm/Jgc6sYsHj
+        rNl9t7iCMRO+Dy1jC1iz+c/M+SYu2jrU04ECXl3hQ77DeAyxq+rFzoD5DWWvxxFjvqxP3o
+        T8UeWr0qnYKrES6r7kDd2oWyB2wLCmM=
 From:   Michael Walle <michael@walle.cc>
 To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
@@ -54,9 +54,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
         Michael Walle <michael@walle.cc>
-Subject: [PATCH v10 05/13] watchdog: add support for sl28cpld watchdog
-Date:   Mon, 14 Sep 2020 23:43:33 +0200
-Message-Id: <20200914214341.14268-6-michael@walle.cc>
+Subject: [PATCH v10 06/13] pwm: add support for sl28cpld PWM controller
+Date:   Mon, 14 Sep 2020 23:43:34 +0200
+Message-Id: <20200914214341.14268-7-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200914214341.14268-1-michael@walle.cc>
 References: <20200914214341.14268-1-michael@walle.cc>
@@ -68,310 +68,380 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add support for the watchdog of the sl28cpld board management
+Add support for the PWM controller of the sl28cpld board management
 controller. This is part of a multi-function device driver.
 
+The controller has one PWM channel and can just generate four distinct
+frequencies.
+
 Signed-off-by: Michael Walle <michael@walle.cc>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
 ---
 Changes since v9:
- - none
+ - fixed double whitespace in Kconfig
+ - improved comment about division
 
 Changes since v8:
  - none
 
 Changes since v7:
  - added "depends on MFD_SL28CPLD || COMPILE_TEST"
+ - corrected comment about divison
+ - sanitize pwm values before handing them over to the PWM core
+ - check wether we need to write the the duty cycle first to avoid
+   glitches
 
 Changes since v6:
- - none
+ - added new row "period length"
+ - fixed parenthesis mistake in the description of a calculation
+ - added sl28cpld_pwm_{read/write}()
+ - added more error messages
 
 Changes since v5:
- - none
+ - added brief description of the PWM hardware implementation
+ - added hardware limitations
+ - dropped the frequency mode table, instead calculate the prescaler
+   value on the fly.
+ - round the requested parameters instead of support just distinct
+   periods.
+ - prefix the macros by SL28CPLD_ to make them less generic
+ - set polarity to PWM_POLARITY_NORMAL and reject inverted polarity
+   requests.
+ - apply the workaround just for prescaler value of 0.
+ - make errors during probing more verbose
 
 Changes since v4:
  - update copyright year
  - remove #include <linux/of_device.h>, suggested by Andy.
- - slightly reworked the error code handling (only style), suggested by
-   Andy.
- - Don't use "if (ret < 0)", but only "if (ret)", suggested by Andy.
- - remove comma in terminator line of the compatible strings list
+ - make the pwm mode table look nicer, suggested by Lee.
+ - use dev_get_drvdata(chip->dev) instead of container_of(), suggested by
+   Lee.
+ - use whole sentence in comments, suggested by Lee.
+ - renamed the local "struct sl28cpld_pwm" variable to "priv" everywhere,
+   suggested by Lee.
+ - use pwm_{get,set}_relative_duty_cycle(), suggested by Andy.
+ - make the comment about the 250Hz hardware limitation clearer
+ - don't use "if (ret < 0)", but only "if (ret)", suggested by Andy.
  - don't use KBUID_MODNAME
+ - remove comma in terminator line of the compatible strings list
  - remove the platform device table
 
 Changes since v3:
  - see cover letter
 
- drivers/watchdog/Kconfig        |  11 ++
- drivers/watchdog/Makefile       |   1 +
- drivers/watchdog/sl28cpld_wdt.c | 229 ++++++++++++++++++++++++++++++++
- 3 files changed, 241 insertions(+)
- create mode 100644 drivers/watchdog/sl28cpld_wdt.c
+ drivers/pwm/Kconfig        |  10 ++
+ drivers/pwm/Makefile       |   1 +
+ drivers/pwm/pwm-sl28cpld.c | 270 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 281 insertions(+)
+ create mode 100644 drivers/pwm/pwm-sl28cpld.c
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index e4dd49895567..ba3108ca757d 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -340,6 +340,17 @@ config MLX_WDT
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called mlx-wdt.
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 9448e4ca8c73..63be5362fd3a 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -428,6 +428,16 @@ config PWM_SIFIVE
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-sifive.
  
-+config SL28CPLD_WATCHDOG
-+	tristate "Kontron sl28cpld Watchdog"
++config PWM_SL28CPLD
++	tristate "Kontron sl28cpld PWM support"
 +	depends on MFD_SL28CPLD || COMPILE_TEST
-+	select WATCHDOG_CORE
 +	help
-+	  Say Y here to include support for the watchdog timer
-+	  on the Kontron sl28 CPLD.
++	  Generic PWM framework driver for board management controller
++	  found on the Kontron sl28 CPLD.
 +
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called sl28cpld_wdt.
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-sl28cpld.
 +
- # ALPHA Architecture
- 
- # ARM Architecture
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 97bed1d3d97c..aa6e41126901 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -225,3 +225,4 @@ obj-$(CONFIG_MENF21BMC_WATCHDOG) += menf21bmc_wdt.o
- obj-$(CONFIG_MENZ069_WATCHDOG) += menz69_wdt.o
- obj-$(CONFIG_RAVE_SP_WATCHDOG) += rave-sp-wdt.o
- obj-$(CONFIG_STPMIC1_WATCHDOG) += stpmic1_wdt.o
-+obj-$(CONFIG_SL28CPLD_WATCHDOG) += sl28cpld_wdt.o
-diff --git a/drivers/watchdog/sl28cpld_wdt.c b/drivers/watchdog/sl28cpld_wdt.c
+ config PWM_SPEAR
+ 	tristate "STMicroelectronics SPEAr PWM support"
+ 	depends on PLAT_SPEAR || COMPILE_TEST
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index 2c2ba0a03557..cbdcd55d69ee 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -40,6 +40,7 @@ obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
+ obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
+ obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
+ obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
++obj-$(CONFIG_PWM_SL28CPLD)	+= pwm-sl28cpld.o
+ obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
+ obj-$(CONFIG_PWM_SPRD)		+= pwm-sprd.o
+ obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
+diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
 new file mode 100644
-index 000000000000..a45047d8d9ab
+index 000000000000..5046b6b7fd35
 --- /dev/null
-+++ b/drivers/watchdog/sl28cpld_wdt.c
-@@ -0,0 +1,229 @@
++++ b/drivers/pwm/pwm-sl28cpld.c
+@@ -0,0 +1,270 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * sl28cpld watchdog driver
++ * sl28cpld PWM driver
 + *
-+ * Copyright 2020 Kontron Europe GmbH
++ * Copyright (c) 2020 Michael Walle <michael@walle.cc>
++ *
++ * There is no public datasheet available for this PWM core. But it is easy
++ * enough to be briefly explained. It consists of one 8-bit counter. The PWM
++ * supports four distinct frequencies by selecting when to reset the counter.
++ * With the prescaler setting you can select which bit of the counter is used
++ * to reset it. This implies that the higher the frequency the less remaining
++ * bits are available for the actual counter.
++ *
++ * Let cnt[7:0] be the counter, clocked at 32kHz:
++ * +-----------+--------+--------------+-----------+---------------+
++ * | prescaler |  reset | counter bits | frequency | period length |
++ * +-----------+--------+--------------+-----------+---------------+
++ * |         0 | cnt[7] |     cnt[6:0] |    250 Hz |    4000000 ns |
++ * |         1 | cnt[6] |     cnt[5:0] |    500 Hz |    2000000 ns |
++ * |         2 | cnt[5] |     cnt[4:0] |     1 kHz |    1000000 ns |
++ * |         3 | cnt[4] |     cnt[3:0] |     2 kHz |     500000 ns |
++ * +-----------+--------+--------------+-----------+---------------+
++ *
++ * Limitations:
++ * - The hardware cannot generate a 100% duty cycle if the prescaler is 0.
++ * - The hardware cannot atomically set the prescaler and the counter value,
++ *   which might lead to glitches and inconsistent states if a write fails.
++ * - The counter is not reset if you switch the prescaler which leads
++ *   to glitches, too.
++ * - The duty cycle will switch immediately and not after a complete cycle.
++ * - Depending on the actual implementation, disabling the PWM might have
++ *   side effects. For example, if the output pin is shared with a GPIO pin
++ *   it will automatically switch back to GPIO mode.
 + */
 +
++#include <linux/bitfield.h>
 +#include <linux/kernel.h>
 +#include <linux/mod_devicetable.h>
 +#include <linux/module.h>
 +#include <linux/platform_device.h>
-+#include <linux/property.h>
++#include <linux/pwm.h>
 +#include <linux/regmap.h>
-+#include <linux/watchdog.h>
 +
 +/*
-+ * Watchdog timer block registers.
++ * PWM timer block registers.
 + */
-+#define WDT_CTRL			0x00
-+#define  WDT_CTRL_EN			BIT(0)
-+#define  WDT_CTRL_LOCK			BIT(2)
-+#define  WDT_CTRL_ASSERT_SYS_RESET	BIT(6)
-+#define  WDT_CTRL_ASSERT_WDT_TIMEOUT	BIT(7)
-+#define WDT_TIMEOUT			0x01
-+#define WDT_KICK			0x02
-+#define  WDT_KICK_VALUE			0x6b
-+#define WDT_COUNT			0x03
++#define SL28CPLD_PWM_CTRL			0x00
++#define   SL28CPLD_PWM_CTRL_ENABLE		BIT(7)
++#define   SL28CPLD_PWM_CTRL_PRESCALER_MASK	GENMASK(1, 0)
++#define SL28CPLD_PWM_CYCLE			0x01
++#define   SL28CPLD_PWM_CYCLE_MAX		GENMASK(6, 0)
 +
-+#define WDT_DEFAULT_TIMEOUT		10
++#define SL28CPLD_PWM_CLK			32000 /* 32 kHz */
++#define SL28CPLD_PWM_MAX_DUTY_CYCLE(prescaler)	(1 << (7 - (prescaler)))
++#define SL28CPLD_PWM_PERIOD(prescaler) \
++	(NSEC_PER_SEC / SL28CPLD_PWM_CLK * SL28CPLD_PWM_MAX_DUTY_CYCLE(prescaler))
 +
-+static bool nowayout = WATCHDOG_NOWAYOUT;
-+module_param(nowayout, bool, 0);
-+MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
-+				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
++/*
++ * We calculate the duty cycle like this:
++ *   duty_cycle_ns = pwm_cycle_reg * max_period_ns / max_duty_cycle
++ *
++ * With
++ *   max_period_ns = 1 << (7 - prescaler) / SL28CPLD_PWM_CLK * NSEC_PER_SEC
++ *   max_duty_cycle = 1 << (7 - prescaler)
++ * this then simplifies to:
++ *   duty_cycle_ns = pwm_cycle_reg / SL28CPLD_PWM_CLK * NSEC_PER_SEC
++ *                 = NSEC_PER_SEC / SL28CPLD_PWM_CLK * pwm_cycle_reg
++ *
++ * NSEC_PER_SEC is a multiple of SL28CPLD_PWM_CLK, therefore we're not losing
++ * precision by doing the divison first.
++ */
++#define SL28CPLD_PWM_TO_DUTY_CYCLE(reg) \
++	(NSEC_PER_SEC / SL28CPLD_PWM_CLK * (reg))
++#define SL28CPLD_PWM_FROM_DUTY_CYCLE(duty_cycle) \
++	(DIV_ROUND_DOWN_ULL((duty_cycle), NSEC_PER_SEC / SL28CPLD_PWM_CLK))
 +
-+static int timeout;
-+module_param(timeout, int, 0);
-+MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
++#define sl28cpld_pwm_read(priv, reg, val) \
++	regmap_read((priv)->regmap, (priv)->offset + (reg), (val))
++#define sl28cpld_pwm_write(priv, reg, val) \
++	regmap_write((priv)->regmap, (priv)->offset + (reg), (val))
 +
-+struct sl28cpld_wdt {
-+	struct watchdog_device wdd;
++struct sl28cpld_pwm {
++	struct pwm_chip pwm_chip;
 +	struct regmap *regmap;
 +	u32 offset;
-+	bool assert_wdt_timeout;
 +};
 +
-+static int sl28cpld_wdt_ping(struct watchdog_device *wdd)
++static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
++				   struct pwm_device *pwm,
++				   struct pwm_state *state)
 +{
-+	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
++	struct sl28cpld_pwm *priv = dev_get_drvdata(chip->dev);
++	unsigned int reg;
++	int prescaler;
 +
-+	return regmap_write(wdt->regmap, wdt->offset + WDT_KICK,
-+			    WDT_KICK_VALUE);
++	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CTRL, &reg);
++
++	state->enabled = reg & SL28CPLD_PWM_CTRL_ENABLE;
++
++	prescaler = FIELD_GET(SL28CPLD_PWM_CTRL_PRESCALER_MASK, reg);
++	state->period = SL28CPLD_PWM_PERIOD(prescaler);
++
++	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CYCLE, &reg);
++	state->duty_cycle = SL28CPLD_PWM_TO_DUTY_CYCLE(reg);
++	state->polarity = PWM_POLARITY_NORMAL;
++
++	/*
++	 * Sanitize values for the PWM core. Depending on the prescaler it
++	 * might happen that we calculate a duty_cycle greater than the actual
++	 * period. This might happen if someone (e.g. the bootloader) sets an
++	 * invalid combination of values. The behavior of the hardware is
++	 * undefined in this case. But we need to report sane values back to
++	 * the PWM core.
++	 */
++	state->duty_cycle = min(state->duty_cycle, state->period);
 +}
 +
-+static int sl28cpld_wdt_start(struct watchdog_device *wdd)
++static int sl28cpld_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			      const struct pwm_state *state)
 +{
-+	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-+	unsigned int val;
-+
-+	val = WDT_CTRL_EN | WDT_CTRL_ASSERT_SYS_RESET;
-+	if (wdt->assert_wdt_timeout)
-+		val |= WDT_CTRL_ASSERT_WDT_TIMEOUT;
-+	if (nowayout)
-+		val |= WDT_CTRL_LOCK;
-+
-+	return regmap_update_bits(wdt->regmap, wdt->offset + WDT_CTRL,
-+				  val, val);
-+}
-+
-+static int sl28cpld_wdt_stop(struct watchdog_device *wdd)
-+{
-+	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-+
-+	return regmap_update_bits(wdt->regmap, wdt->offset + WDT_CTRL,
-+				  WDT_CTRL_EN, 0);
-+}
-+
-+static unsigned int sl28cpld_wdt_get_timeleft(struct watchdog_device *wdd)
-+{
-+	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-+	unsigned int val;
++	struct sl28cpld_pwm *priv = dev_get_drvdata(chip->dev);
++	unsigned int cycle, prescaler;
++	bool write_duty_cycle_first;
 +	int ret;
++	u8 ctrl;
 +
-+	ret = regmap_read(wdt->regmap, wdt->offset + WDT_COUNT, &val);
-+	if (ret)
-+		return 0;
-+
-+	return val;
-+}
-+
-+static int sl28cpld_wdt_set_timeout(struct watchdog_device *wdd,
-+				    unsigned int timeout)
-+{
-+	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-+	int ret;
-+
-+	ret = regmap_write(wdt->regmap, wdt->offset + WDT_TIMEOUT, timeout);
-+	if (ret)
-+		return ret;
-+
-+	wdd->timeout = timeout;
-+
-+	return 0;
-+}
-+
-+static const struct watchdog_info sl28cpld_wdt_info = {
-+	.options = WDIOF_MAGICCLOSE | WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
-+	.identity = "sl28cpld watchdog",
-+};
-+
-+static struct watchdog_ops sl28cpld_wdt_ops = {
-+	.owner = THIS_MODULE,
-+	.start = sl28cpld_wdt_start,
-+	.stop = sl28cpld_wdt_stop,
-+	.ping = sl28cpld_wdt_ping,
-+	.set_timeout = sl28cpld_wdt_set_timeout,
-+	.get_timeleft = sl28cpld_wdt_get_timeleft,
-+};
-+
-+static int sl28cpld_wdt_probe(struct platform_device *pdev)
-+{
-+	struct watchdog_device *wdd;
-+	struct sl28cpld_wdt *wdt;
-+	unsigned int status;
-+	unsigned int val;
-+	int ret;
-+
-+	if (!pdev->dev.parent)
-+		return -ENODEV;
-+
-+	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-+	if (!wdt)
-+		return -ENOMEM;
-+
-+	wdt->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!wdt->regmap)
-+		return -ENODEV;
-+
-+	ret = device_property_read_u32(&pdev->dev, "reg", &wdt->offset);
-+	if (ret)
++	/* Polarity inversion is not supported */
++	if (state->polarity != PWM_POLARITY_NORMAL)
 +		return -EINVAL;
 +
-+	wdt->assert_wdt_timeout = device_property_read_bool(&pdev->dev,
-+							    "kontron,assert-wdt-timeout-pin");
-+
-+	/* initialize struct watchdog_device */
-+	wdd = &wdt->wdd;
-+	wdd->parent = &pdev->dev;
-+	wdd->info = &sl28cpld_wdt_info;
-+	wdd->ops = &sl28cpld_wdt_ops;
-+	wdd->min_timeout = 1;
-+	wdd->max_timeout = 255;
-+
-+	watchdog_set_drvdata(wdd, wdt);
-+	watchdog_stop_on_reboot(wdd);
-+
 +	/*
-+	 * Read the status early, in case of an error, we haven't modified the
-+	 * hardware.
++	 * Calculate the prescaler. Pick the biggest period that isn't
++	 * bigger than the requested period.
 +	 */
-+	ret = regmap_read(wdt->regmap, wdt->offset + WDT_CTRL, &status);
-+	if (ret)
-+		return ret;
++	prescaler = DIV_ROUND_UP_ULL(SL28CPLD_PWM_PERIOD(0), state->period);
++	prescaler = order_base_2(prescaler);
++
++	if (prescaler > field_max(SL28CPLD_PWM_CTRL_PRESCALER_MASK))
++		return -ERANGE;
++
++	ctrl = FIELD_PREP(SL28CPLD_PWM_CTRL_PRESCALER_MASK, prescaler);
++	if (state->enabled)
++		ctrl |= SL28CPLD_PWM_CTRL_ENABLE;
++
++	cycle = SL28CPLD_PWM_FROM_DUTY_CYCLE(state->duty_cycle);
++	cycle = min_t(unsigned int, cycle, SL28CPLD_PWM_MAX_DUTY_CYCLE(prescaler));
 +
 +	/*
-+	 * Initial timeout value, may be overwritten by device tree or module
-+	 * parmeter in watchdog_init_timeout().
++	 * Work around the hardware limitation. See also above. Trap 100% duty
++	 * cycle if the prescaler is 0. Set prescaler to 1 instead. We don't
++	 * care about the frequency because its "all-one" in either case.
 +	 *
-+	 * Reading a zero here means that either the hardware has a default
-+	 * value of zero (which is very unlikely and definitely a hardware
-+	 * bug) or the bootloader set it to zero. In any case, we handle
-+	 * this case gracefully and set out own timeout.
++	 * We don't need to check the actual prescaler setting, because only
++	 * if the prescaler is 0 we can have this particular value.
 +	 */
-+	ret = regmap_read(wdt->regmap, wdt->offset + WDT_TIMEOUT, &val);
++	if (cycle == SL28CPLD_PWM_MAX_DUTY_CYCLE(0)) {
++		ctrl &= ~SL28CPLD_PWM_CTRL_PRESCALER_MASK;
++		ctrl |= FIELD_PREP(SL28CPLD_PWM_CTRL_PRESCALER_MASK, 1);
++		cycle = SL28CPLD_PWM_MAX_DUTY_CYCLE(1);
++	}
++
++	/*
++	 * To avoid glitches when we switch the prescaler, we have to make sure
++	 * we have a valid duty cycle for the new mode.
++	 *
++	 * Take the current prescaler (or the current period length) into
++	 * account to decide whether we have to write the duty cycle or the new
++	 * prescaler first. If the period length is decreasing we have to
++	 * write the duty cycle first.
++	 */
++	write_duty_cycle_first = pwm->state.period > state->period;
++
++	if (write_duty_cycle_first) {
++		ret = sl28cpld_pwm_write(priv, SL28CPLD_PWM_CYCLE, cycle);
++		if (ret)
++			return ret;
++	}
++
++	ret = sl28cpld_pwm_write(priv, SL28CPLD_PWM_CTRL, ctrl);
 +	if (ret)
 +		return ret;
 +
-+	if (val)
-+		wdd->timeout = val;
-+	else
-+		wdd->timeout = WDT_DEFAULT_TIMEOUT;
-+
-+	watchdog_init_timeout(wdd, timeout, &pdev->dev);
-+	sl28cpld_wdt_set_timeout(wdd, wdd->timeout);
-+
-+	/* if the watchdog is locked, we set nowayout */
-+	if (status & WDT_CTRL_LOCK)
-+		nowayout = true;
-+	watchdog_set_nowayout(wdd, nowayout);
-+
-+	/*
-+	 * If watchdog is already running, keep it enabled, but make
-+	 * sure its mode is set correctly.
-+	 */
-+	if (status & WDT_CTRL_EN) {
-+		sl28cpld_wdt_start(wdd);
-+		set_bit(WDOG_HW_RUNNING, &wdd->status);
++	if (!write_duty_cycle_first) {
++		ret = sl28cpld_pwm_write(priv, SL28CPLD_PWM_CYCLE, cycle);
++		if (ret)
++			return ret;
 +	}
-+
-+	ret = devm_watchdog_register_device(&pdev->dev, wdd);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to register watchdog device\n");
-+		return ret;
-+	}
-+
-+	dev_info(&pdev->dev, "initial timeout %d sec%s\n",
-+		 wdd->timeout, nowayout ? ", nowayout" : "");
 +
 +	return 0;
 +}
 +
-+static const struct of_device_id sl28cpld_wdt_of_match[] = {
-+	{ .compatible = "kontron,sl28cpld-wdt" },
++static const struct pwm_ops sl28cpld_pwm_ops = {
++	.apply = sl28cpld_pwm_apply,
++	.get_state = sl28cpld_pwm_get_state,
++	.owner = THIS_MODULE,
++};
++
++static int sl28cpld_pwm_probe(struct platform_device *pdev)
++{
++	struct sl28cpld_pwm *priv;
++	struct pwm_chip *chip;
++	int ret;
++
++	if (!pdev->dev.parent) {
++		dev_err(&pdev->dev, "no parent device\n");
++		return -ENODEV;
++	}
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	if (!priv->regmap) {
++		dev_err(&pdev->dev, "could not get parent regmap\n");
++		return -ENODEV;
++	}
++
++	ret = device_property_read_u32(&pdev->dev, "reg", &priv->offset);
++	if (ret) {
++		dev_err(&pdev->dev, "no 'reg' property found (%pe)\n",
++			ERR_PTR(ret));
++		return -EINVAL;
++	}
++
++	/* Initialize the pwm_chip structure */
++	chip = &priv->pwm_chip;
++	chip->dev = &pdev->dev;
++	chip->ops = &sl28cpld_pwm_ops;
++	chip->base = -1;
++	chip->npwm = 1;
++
++	ret = pwmchip_add(&priv->pwm_chip);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to add PWM chip (%pe)",
++			ERR_PTR(ret));
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, priv);
++
++	return 0;
++}
++
++static int sl28cpld_pwm_remove(struct platform_device *pdev)
++{
++	struct sl28cpld_pwm *priv = platform_get_drvdata(pdev);
++
++	return pwmchip_remove(&priv->pwm_chip);
++}
++
++static const struct of_device_id sl28cpld_pwm_of_match[] = {
++	{ .compatible = "kontron,sl28cpld-pwm" },
 +	{}
 +};
-+MODULE_DEVICE_TABLE(of, sl28cpld_wdt_of_match);
++MODULE_DEVICE_TABLE(of, sl28cpld_pwm_of_match);
 +
-+static struct platform_driver sl28cpld_wdt_driver = {
-+	.probe = sl28cpld_wdt_probe,
++static struct platform_driver sl28cpld_pwm_driver = {
++	.probe = sl28cpld_pwm_probe,
++	.remove	= sl28cpld_pwm_remove,
 +	.driver = {
-+		.name = "sl28cpld-wdt",
-+		.of_match_table = sl28cpld_wdt_of_match,
++		.name = "sl28cpld-pwm",
++		.of_match_table = sl28cpld_pwm_of_match,
 +	},
 +};
-+module_platform_driver(sl28cpld_wdt_driver);
++module_platform_driver(sl28cpld_pwm_driver);
 +
-+MODULE_DESCRIPTION("sl28cpld Watchdog Driver");
++MODULE_DESCRIPTION("sl28cpld PWM Driver");
 +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
 +MODULE_LICENSE("GPL");
 -- 
