@@ -2,109 +2,87 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A93E026A1A9
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Sep 2020 11:07:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1235326A6C6
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Sep 2020 16:06:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbgIOJH0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 15 Sep 2020 05:07:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbgIOJHB (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Sep 2020 05:07:01 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4594C06178A
-        for <linux-pwm@vger.kernel.org>; Tue, 15 Sep 2020 02:07:00 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id e16so2488414wrm.2
-        for <linux-pwm@vger.kernel.org>; Tue, 15 Sep 2020 02:07:00 -0700 (PDT)
+        id S1726762AbgIOOGI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 15 Sep 2020 10:06:08 -0400
+Received: from smtp2.axis.com ([195.60.68.18]:65046 "EHLO smtp2.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726339AbgIOOFu (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 15 Sep 2020 10:05:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=iopdDFEV2kcDalmETaYONWkweONCMxEbTqjAdtlggGQ=;
-        b=Ex9+iyZF0nSnE98P6XxFSFn2Qr6RKGJT9NJVVFLYJISLvYD24STWt1cwuyIrEv7AGy
-         sP0WuC46a03FvkRZLXVx5xE6pcQFtFgoC3LiwIcVRycJy8bbR5X+rHYiSdyxwtHYpl7s
-         eyT/zR0w0k1wv8sgIiLzta/7OwIjVAAZslhmceTEKnBoiZ7/YIAXK+vuOIIW8EffumyS
-         jOttUI28vi4VZtxK6ul2JlMEDBKk7/iGBCui1RTxCYJKIyCAuI2iL/asT66Fv1iX5Smc
-         pU4PfNElcNEVScpeZTP4Jih92ddhoBRA9DOtk50geGMJi31Te0vCFCiEX9aizLxR1EWE
-         6WfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=iopdDFEV2kcDalmETaYONWkweONCMxEbTqjAdtlggGQ=;
-        b=KLZl+VSXQhKYnRKtr4+IvC/YkwU7QIUQ9X4k3mIDiuh+LHnUFdSIBIRd9Ru0yA/yev
-         k02rtUqDN52I1AM5uz3yD1KIEG0IrjlLvHhMnGNCT6YJMKuhKqfsXnM/e05wD0uRlRo3
-         lRSPfZL4lpjPFS0AwRc7Nk//b6RUOpGyKg8fClLqoo+i+6rJ0sUeUou3+JcrrGgyQ1GG
-         QZAu6L/d7gur0nZ1R4EhqK8LWdYskUa6EAaj/aimYG93KxCE6g2pCLaN6C+cg7a1Y5kh
-         axHQ8O6ycpxc1uGqaVuCtI2LY/IW9ZI4Uglx8gJ/E08wZoG38WD+yg1ePPzeTfAKYcjK
-         EtOQ==
-X-Gm-Message-State: AOAM533T3LpJrN96KOMhsKL+PdqQ4s49ikF4S830fjIKJghZxp3qaPwe
-        2uGCh0u9/8jOzcbbMxMHAWxqHw==
-X-Google-Smtp-Source: ABdhPJx2bfrpPqM9pdtBgNL8nxLLX0feu+7+qjnCb6gt9yRhwnwDkDEVna9PRLFtFA/C5I0AO+N9Uw==
-X-Received: by 2002:adf:dd44:: with SMTP id u4mr19467349wrm.22.1600160818971;
-        Tue, 15 Sep 2020 02:06:58 -0700 (PDT)
-Received: from dell ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id y6sm25430501wrt.80.2020.09.15.02.06.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2020 02:06:58 -0700 (PDT)
-Date:   Tue, 15 Sep 2020 10:06:55 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v10 06/13] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200915090655.GA4678@dell>
-References: <20200914214341.14268-1-michael@walle.cc>
- <20200914214341.14268-7-michael@walle.cc>
+  d=axis.com; l=1548; q=dns/txt; s=axis-central1;
+  t=1600178749; x=1631714749;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CIoW8RV31m/+63QYI41vckbTL6oVbVgAaZMjvOnFW6w=;
+  b=ZioeXPVUTl/h9PC+14pTGSLYxI1o+Ful7eUUs388WWF+Z0/Cw6MLasBg
+   VajtoX89YBL48hn5MOjvXIWTGqRCzYGwSSILX82cHQ3bIPrNWXZ7PO2AX
+   59th3qRdaEwtlZyfrvOUkVtFfkFupNud0nZp70/1oZYlQ96S33PJX0uzw
+   09+rtwGsJulYp3ltB4LZtrUfjXk/msTAQRKeCbhVmkw+xGbK1GCsoBWje
+   53oBoFmbDIWtMD8SZssBTCRjpyRLCeLsW8h3W9LG+emtiv8I372nYAbOk
+   GWVa/KKEqlwaFdtmq5SMh1eXrijg/9ocq6dBhUjcC1zT7Fiyd6c2Pyqad
+   A==;
+IronPort-SDR: WD9wdm5am+yBY+LYYXBIo78iPXaZ3KlNq7sKmlkuHBBxotj1Ex78IpCJku15f/RJwU86GIqdog
+ 8NKxOxela/8KPV1tXwrFmKOSKyI0o37IaeKgjZPPr+qn5vqOuOqtU/k6/uC/yzfpJ5enhYBzAJ
+ AXpj4uGPYmYYnTOZAM8ZqRSqONiI6p59NZN3bpalaCV8MrrjVB833jlKvbJGExnEbNHRRzg1+S
+ v5gt1Bc5DbwrtznvmFrLjdStLtoyziPkHwivoWhKXP7vlpnsFjaT+KkC9kB4/e/Dc+/15243kW
+ ZPQ=
+X-IronPort-AV: E=Sophos;i="5.76,430,1592863200"; 
+   d="scan'208";a="12508311"
+Date:   Tue, 15 Sep 2020 16:02:08 +0200
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     Olliver Schinagl <oliver@schinagl.nl>
+CC:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        kernel <kernel@axis.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/2] pwm: Add GPIO PWM driver
+Message-ID: <20200915140208.bzserxn2bgw4xiwk@axis.com>
+References: <20200814155513.31936-1-vincent.whitchurch@axis.com>
+ <20200814155513.31936-2-vincent.whitchurch@axis.com>
+ <703362fe-1454-c16e-180a-76bfc4e3ab3f@schinagl.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200914214341.14268-7-michael@walle.cc>
+In-Reply-To: <703362fe-1454-c16e-180a-76bfc4e3ab3f@schinagl.nl>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pwm-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 14 Sep 2020, Michael Walle wrote:
+On Thu, Sep 03, 2020 at 11:15:31AM +0200, Olliver Schinagl wrote:
+> On 14-08-2020 17:55, Vincent Whitchurch wrote:
+> > Add a software PWM which toggles a GPIO from a high-resolution timer.
+> > 
+> > This will naturally not be as accurate or as efficient as a hardware
+> > PWM, but it is useful in some cases.  I have for example used it for
+> > evaluating LED brightness handling (via leds-pwm) on a board where the
+> > LED was just hooked up to a GPIO, and for a simple verification of the
+> > timer frequency on another platform.
+> > 
+> > Since high-resolution timers are used, sleeping gpio chips are not
+> > supported and are rejected in the probe function.
+> > 
+> > Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+> > ---
+> > While preparing this driver for posting, I found a pwm-gpio driver posted to
+> > the lists way back in 2015 by Olliver Schinagl:
+> > 
+> >   https://lore.kernel.org/linux-pwm/1445895161-2317-8-git-send-email-o.schinagl@ultimaker.com/
+> > 
+> Thanks for reminding me there :) As I think I still use this driver, I 
+> don't mind migrating to this one (if merged) but how do you suggests to 
+> proceed with regards to multiple PWM's, as this is how I am using it 
+> currently. E.g. how do we merge them? I'm fine with 'taking the simpler 
+> code method' for a start point, but i guess I solved that part 
+> (somewhat) in 2015 :p
 
-> Add support for the PWM controller of the sl28cpld board management
-> controller. This is part of a multi-function device driver.
-> 
-> The controller has one PWM channel and can just generate four distinct
-> frequencies.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> Acked-by: Thierry Reding <thierry.reding@gmail.com>
-> ---
-> Changes since v9:
->  - fixed double whitespace in Kconfig
->  - improved comment about division
-
-Uwe, are you happy with this now?
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Since this is just a software construct, the simplest way would just be
+to create multiple instances in the device tree if you want multiple
+PWMs, wouldn't it?
