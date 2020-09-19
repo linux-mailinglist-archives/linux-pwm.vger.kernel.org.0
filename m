@@ -2,87 +2,85 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FC80270E84
-	for <lists+linux-pwm@lfdr.de>; Sat, 19 Sep 2020 16:25:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AC96271056
+	for <lists+linux-pwm@lfdr.de>; Sat, 19 Sep 2020 21:42:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgISOZK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 19 Sep 2020 10:25:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57108 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726434AbgISOZK (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sat, 19 Sep 2020 10:25:10 -0400
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+        id S1726518AbgISTm5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 19 Sep 2020 15:42:57 -0400
+Received: from mailout.easymail.ca ([64.68.200.34]:56392 "EHLO
+        mailout.easymail.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726511AbgISTm5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 19 Sep 2020 15:42:57 -0400
+X-Greylist: delayed 558 seconds by postgrey-1.27 at vger.kernel.org; Sat, 19 Sep 2020 15:42:56 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mailout.easymail.ca (Postfix) with ESMTP id C7C54A05B3;
+        Sat, 19 Sep 2020 19:33:37 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at emo05-pco.easydns.vpn
+Received: from mailout.easymail.ca ([127.0.0.1])
+        by localhost (emo05-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id G6RbiLyf29ms; Sat, 19 Sep 2020 19:33:37 +0000 (UTC)
+Received: from jupiter.simonsouth.net (unknown [108.162.141.195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60E4D21582;
-        Sat, 19 Sep 2020 14:25:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600525509;
-        bh=kHRkKnYP82SMnFqUKvGenb2khehyXzI7WLF+nQ+tzgw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2oYZ4BVC2fLdI6wdQldYFviXX+QrY8yA0ESlee7qs0Kg3rxm+3/6PF7RDdoanWhzk
-         7SCrbarFFlCxPmeN8jVVYZ6eN2Dx0WuxN9pBX7Bej1bF3XrffumU+pypQxtnac8AZo
-         1o0OYgAJM/AzKyeyqbeC+5fYnJHhdKDn1nORlUAE=
-Received: by mail-ej1-f50.google.com with SMTP id r7so11824075ejs.11;
-        Sat, 19 Sep 2020 07:25:09 -0700 (PDT)
-X-Gm-Message-State: AOAM532oRJHdcR+yYRD/+FzSvaJSpRXr9lctERxcnRkNsxrPBQ9JP2RJ
-        cRn2Nzdz5QLi/RRmIX6NtWC3RAaQZv6d2xxPMe0=
-X-Google-Smtp-Source: ABdhPJxqLwyyHgA5Kx4Q6V81m6PRoMJ6U0hi/KURq0qDLpn+NftnXz1sAVg2ynpJvB3sE/6Veg68lbEq0jaBtPYIvhc=
-X-Received: by 2002:a17:906:4046:: with SMTP id y6mr43178032ejj.148.1600525507972;
- Sat, 19 Sep 2020 07:25:07 -0700 (PDT)
+        by mailout.easymail.ca (Postfix) with ESMTPSA id 77C83A025D;
+        Sat, 19 Sep 2020 19:33:27 +0000 (UTC)
+From:   Simon South <simon@simonsouth.net>
+To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        lee.jones@linaro.org, heiko@sntech.de, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Cc:     Simon South <simon@simonsouth.net>
+Subject: [PATCH v2] pwm: rockchip: Keep enabled PWMs running while probing
+Date:   Sat, 19 Sep 2020 15:33:06 -0400
+Message-Id: <20200919193306.1023-1-simon@simonsouth.net>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20200904152404.20636-1-krzk@kernel.org> <20200904152404.20636-8-krzk@kernel.org>
- <81a8248f-0d02-5646-36b2-5d4c3a7c4211@linaro.org>
-In-Reply-To: <81a8248f-0d02-5646-36b2-5d4c3a7c4211@linaro.org>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Sat, 19 Sep 2020 16:24:56 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPdJhfUsTqrTCouF+xQ1ChBWipBc6UaOBbewSPfrEw9Mtg@mail.gmail.com>
-Message-ID: <CAJKOXPdJhfUsTqrTCouF+xQ1ChBWipBc6UaOBbewSPfrEw9Mtg@mail.gmail.com>
-Subject: Re: [PATCH v3 07/14] dt-bindings: thermal: imx8mm-thermal: Add i.MX
- 8M Nano compatible
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sat, 19 Sep 2020 at 13:48, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->
-> On 04/09/2020 17:23, Krzysztof Kozlowski wrote:
-> > DTSes with new i.MX 8M SoCs introduce their own compatibles so add them
-> > to fix dtbs_check warnings like:
-> >
-> >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: tmu@30260000:
-> >     compatible:0: 'fsl,imx8mn-tmu' is not one of ['fsl,imx8mm-tmu', 'fsl,imx8mp-tmu']
-> >     From schema: Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
-> >
-> >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: tmu@30260000:
-> >     compatible: ['fsl,imx8mn-tmu', 'fsl,imx8mm-tmu'] is too long
-> >
-> >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: tmu@30260000:
-> >     compatible: Additional items are not allowed ('fsl,imx8mm-tmu' was unexpected)
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > ---
->
-> Shall I pick this patch separately or did you merge the entire series ?
+Following commit cfc4c189bc70 ("pwm: Read initial hardware state at
+request time") the Rockchip PWM driver can no longer assume a device's
+pwm_state structure has been populated after a call to pwmchip_add().
+Consequently, the test in rockchip_pwm_probe() intended to prevent the
+driver from stopping PWM devices already enabled by the bootloader no
+longer functions reliably and this can lead to the kernel hanging
+during startup, particularly on devices like the Pinebook Pro that use
+a PWM-controlled backlight for their display.
 
-Thanks. Rob already picked this up.
+Avoid this by querying the device directly at probe time to determine
+whether or not it is enabled.
 
-Best regards,
-Krzysztof
+Fixes: cfc4c189bc70 ("pwm: Read initial hardware state at request time")
+Signed-off-by: Simon South <simon@simonsouth.net>
+---
+ drivers/pwm/pwm-rockchip.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
+index eb8c9cb645a6..098e94335cb5 100644
+--- a/drivers/pwm/pwm-rockchip.c
++++ b/drivers/pwm/pwm-rockchip.c
+@@ -288,6 +288,7 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
+ 	const struct of_device_id *id;
+ 	struct rockchip_pwm_chip *pc;
+ 	struct resource *r;
++	u32 enable_conf, ctrl;
+ 	int ret, count;
+ 
+ 	id = of_match_device(rockchip_pwm_dt_ids, &pdev->dev);
+@@ -362,7 +363,9 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* Keep the PWM clk enabled if the PWM appears to be up and running. */
+-	if (!pwm_is_enabled(pc->chip.pwms))
++	enable_conf = pc->data->enable_conf;
++	ctrl = readl_relaxed(pc->base + pc->data->regs.ctrl);
++	if ((ctrl & enable_conf) != enable_conf)
+ 		clk_disable(pc->clk);
+ 
+ 	return 0;
+-- 
+2.28.0
+
