@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BF8C271E77
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Sep 2020 11:01:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12038271E93
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Sep 2020 11:10:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgIUJBf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 21 Sep 2020 05:01:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46872 "EHLO
+        id S1726430AbgIUJKF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 21 Sep 2020 05:10:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgIUJBf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Sep 2020 05:01:35 -0400
+        with ESMTP id S1726341AbgIUJKF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Sep 2020 05:10:05 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F148C061755
-        for <linux-pwm@vger.kernel.org>; Mon, 21 Sep 2020 02:01:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E568C061755
+        for <linux-pwm@vger.kernel.org>; Mon, 21 Sep 2020 02:10:05 -0700 (PDT)
 Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
         by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1kKHhQ-0005AG-PH; Mon, 21 Sep 2020 11:01:28 +0200
+        id 1kKHpd-0005sH-5c; Mon, 21 Sep 2020 11:09:57 +0200
 Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
         (envelope-from <ukl@pengutronix.de>)
-        id 1kKHhO-0000m3-MR; Mon, 21 Sep 2020 11:01:26 +0200
-Date:   Mon, 21 Sep 2020 11:01:26 +0200
+        id 1kKHpb-0000up-5n; Mon, 21 Sep 2020 11:09:55 +0200
+Date:   Mon, 21 Sep 2020 11:09:55 +0200
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Marco Felsch <m.felsch@pengutronix.de>
 Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
@@ -30,16 +30,15 @@ Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
         linux-imx@nxp.com, Anson.Huang@nxp.com, michal.vokac@ysoft.com,
         l.majewski@majess.pl, linux-pwm@vger.kernel.org,
         kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/3] pwm: imx27: move static pwmcr values into probe()
- function
-Message-ID: <20200921090126.biff7xjjdju7xn3b@pengutronix.de>
+Subject: Re: [PATCH 3/3] pwm: imx27: fix disable state for inverted PWMs
+Message-ID: <20200921090955.sw3mrlxgh45pcpru@pengutronix.de>
 References: <20200909130739.26717-1-m.felsch@pengutronix.de>
- <20200909130739.26717-3-m.felsch@pengutronix.de>
+ <20200909130739.26717-4-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fm4ggtlkti5a2zhz"
+        protocol="application/pgp-signature"; boundary="ydfpghr6vcmgzvw6"
 Content-Disposition: inline
-In-Reply-To: <20200909130739.26717-3-m.felsch@pengutronix.de>
+In-Reply-To: <20200909130739.26717-4-m.felsch@pengutronix.de>
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -49,150 +48,41 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---fm4ggtlkti5a2zhz
+--ydfpghr6vcmgzvw6
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hello Marco,
 
-the usage of "static" in the subject is unclear. I guess you mean:
-
-	pwm: imx27: setup some PWMCR bits in .probe()
-
-On Wed, Sep 09, 2020 at 03:07:38PM +0200, Marco Felsch wrote:
-> The STOPEN, DOZEN, WAITEN, DBGEN and the CLKSRC bit values never change.
-> So it should be save to move this bit settings into probe() and change
-
-s/save/safe/
-
-> only the necessary bits during apply(). Therefore I added the
-> pwm_imx27_update_bits() helper.
+On Wed, Sep 09, 2020 at 03:07:39PM +0200, Marco Felsch wrote:
+> Up to now disabling the PWM is done using the PWMCR.EN register bit.
+> Setting this bit to zero results in the output pin driving a low value
+> independent of the polarity setting (PWMCR.POUTC).
 >=20
-> Furthermore the patch adds the support to reset the pwm device during
-> probe() if the pwm device is disabled.
+> There is only little documentation about expectations and requirements
+> in the PWM framework but the usual expectation seems to be that
+> disabling a PWM or setting .duty_cycle =3D 0 results in the output driving
 
-IMHO this needs a better motivation ...
+s/or/together with/
 
-> Both steps are required in preparation of the further patch which fixes
-> the "pwm-disabled" state for inverted pwms.
+> the inactive level. The pwm-bl driver for example uses this setting to
+> disable the backlight and with the pwm-imx27 driver this results in an
+> enabled backlight if the pwm signal is inverted.
+>=20
+> Keep the PWMCR.EN bit always enabled and simulate a disabled PWM using
+> duty_cycle =3D 0 to fix this. Furthermore we have to drop the sw-reset
+> from apply() else the PWMCR.EN is cleared too. Therefore the
 
-=2E.. and should maybe go into this other patch?
+s/else/otherwise/
 
+> pwm_imx27_wait_fifo_slot() is extended to guarantee a free FIFO slot.
+>=20
 > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
->  drivers/pwm/pwm-imx27.c | 41 +++++++++++++++++++++++++++++------------
->  1 file changed, 29 insertions(+), 12 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-> index 3cf9f1774244..30388a9ece04 100644
-> --- a/drivers/pwm/pwm-imx27.c
-> +++ b/drivers/pwm/pwm-imx27.c
-> @@ -96,6 +96,16 @@ struct pwm_imx27_chip {
-> =20
->  #define to_pwm_imx27_chip(chip)	container_of(chip, struct pwm_imx27_chip=
-, chip)
-> =20
-> +static void pwm_imx27_update_bits(void __iomem *reg, u32 mask, u32 val)
-> +{
-> +	u32 tmp;
-> +
-> +	tmp =3D readl(reg);
-> +	tmp &=3D ~mask;
-> +	tmp |=3D val & mask;
-> +	return writel(tmp, reg);
-> +}
-> +
->  static int pwm_imx27_clk_prepare_enable(struct pwm_imx27_chip *imx)
->  {
->  	int ret;
-> @@ -183,10 +193,8 @@ static void pwm_imx27_get_state(struct pwm_chip *chi=
-p,
->  	pwm_imx27_clk_disable_unprepare(imx);
->  }
-> =20
-> -static void pwm_imx27_sw_reset(struct pwm_chip *chip)
-> +static void pwm_imx27_sw_reset(struct pwm_imx27_chip *imx, struct device=
- *dev)
->  {
-> -	struct pwm_imx27_chip *imx =3D to_pwm_imx27_chip(chip);
-> -	struct device *dev =3D chip->dev;
 
-This change is fine, but it does belong into a separate patch.
-
->  	int wait_count =3D 0;
->  	u32 cr;
-> =20
-> @@ -232,7 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, str=
-uct pwm_device *pwm,
->  	unsigned long long c;
->  	unsigned long long clkrate;
->  	int ret;
-> -	u32 cr;
-> +	u32 cr, mask;
-> =20
->  	ret =3D pwm_imx27_clk_prepare_enable(imx);
->  	if (ret)
-> @@ -269,7 +277,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, str=
-uct pwm_device *pwm,
->  	if (cstate.enabled) {
->  		pwm_imx27_wait_fifo_slot(chip, pwm);
->  	} else {
-> -		pwm_imx27_sw_reset(chip);
-> +		pwm_imx27_sw_reset(imx, chip->dev);
->  	}
-> =20
->  	writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
-> @@ -281,10 +289,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, st=
-ruct pwm_device *pwm,
->  	 */
->  	imx->duty_cycle =3D duty_cycles;
-> =20
-> -	cr =3D MX3_PWMCR_PRESCALER_SET(prescale) |
-> -	     MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
-> -	     FIELD_PREP(MX3_PWMCR_CLKSRC, MX3_PWMCR_CLKSRC_IPG_HIGH) |
-> -	     MX3_PWMCR_DBGEN;
-> +	cr =3D MX3_PWMCR_PRESCALER_SET(prescale);
-> =20
->  	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
->  		cr |=3D FIELD_PREP(MX3_PWMCR_POUTC,
-> @@ -293,7 +298,9 @@ static int pwm_imx27_apply(struct pwm_chip *chip, str=
-uct pwm_device *pwm,
->  	if (state->enabled)
->  		cr |=3D MX3_PWMCR_EN;
-> =20
-> -	writel(cr, imx->mmio_base + MX3_PWMCR);
-> +	mask =3D MX3_PWMCR_PRESCALER | MX3_PWMCR_POUTC | MX3_PWMCR_EN;
-> +
-> +	pwm_imx27_update_bits(imx->mmio_base + MX3_PWMCR, mask, cr);
-> =20
->  	if (!state->enabled)
->  		pwm_imx27_clk_disable_unprepare(imx);
-> @@ -364,10 +371,20 @@ static int pwm_imx27_probe(struct platform_device *=
-pdev)
->  	if (ret)
->  		return ret;
-> =20
-> -	/* keep clks on if pwm is running */
-> +	/* Keep clks on and pwm settings unchanged if the PWM is already runnin=
-g */
->  	pwmcr =3D readl(imx->mmio_base + MX3_PWMCR);
-> -	if (!(pwmcr & MX3_PWMCR_EN))
-> +	if (!(pwmcr & MX3_PWMCR_EN)) {
-> +		u32 mask;
-> +
-> +		pwm_imx27_sw_reset(imx, &pdev->dev);
-> +		mask =3D MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
-> +			MX3_PWMCR_DBGEN | MX3_PWMCR_CLKSRC;
-> +		pwmcr =3D MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
-> +			MX3_PWMCR_DBGEN |
-> +			FIELD_PREP(MX3_PWMCR_CLKSRC, MX3_PWMCR_CLKSRC_IPG_HIGH);
-> +		pwm_imx27_update_bits(imx->mmio_base + MX3_PWMCR, mask, pwmcr);
->  		pwm_imx27_clk_disable_unprepare(imx);
-> +	}
-
-So you don't enforce MX3_PWMCR_STOPEN (and the others) if the PWM is
-already running. Is this by design?
+Without having looked deeper into this patch the approach described here
+looks sound to me. Dropping the sw-reset in .apply is also nice as this
+results in a spike.
 
 Best regards
 Uwe
@@ -201,19 +91,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---fm4ggtlkti5a2zhz
+--ydfpghr6vcmgzvw6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl9oa+MACgkQwfwUeK3K
-7Alc6wgAmZXga9YO8LLWZ9sCJg8m5uAHMFrzbIaEYvr+HPn4+yC57RYRcCyblzgN
-CoD1FZFhS9Wkmem00XcfDfRYsaf9wFJPyyuDbpc0U4/yCWnpTPIt2dlhmnXo+/zJ
-Ddgv02QxNMRLjCXMy4c8YGpmBv36HssZnLMhlX7RJPxEq5eiACC41r4FMJe8XKnD
-BOnuC+HDGOfcCfH96gMP2mK/kRWdC7aigjVKlC+dLdrKEWF6JgJN6vpZTX5Lry0v
-+etv8HS9H8zR/Oc8zoQCSbAsgUbpNIqvWJgHRUYS7G2gs16jZPdocZJ24nNzvseU
-4zVeXeAwPfbrWDCkdN4ZDZTJYu+svA==
-=P1GE
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl9obeAACgkQwfwUeK3K
+7Am/1wf/Sj+N0zFdHakS/1zqrBYGt3MbeVsW0ZaNnxRghKe+u6q36sKcnNG8E9cS
+44N3TdasImfCZzV+aptK2ocH4yFpgUrBc0ZRhulyKy0d4SRdsPbIBLyXpfnYTzAA
+HM6vj0Jmo3jdSspkuIyHMLPxvsd5fu8U3gf3z7WnRkXsGpKgUEVdzuyD+qTPq4JM
+fvAbKBSPYSvvZNxPdoh6hM1/BeGvJ5u47UaD4b6SLLT2CXpF525npIOuIfYNrrQb
+w7B60sJ5pUUVWkYZ4iUSa/u+tzbFp7m7hYn3WiAcvFNxrueeQjlXFpxgLwqOEvHr
+1297hEatXxvDy1FGDdNn16Yxs4URFQ==
+=PFVe
 -----END PGP SIGNATURE-----
 
---fm4ggtlkti5a2zhz--
+--ydfpghr6vcmgzvw6--
