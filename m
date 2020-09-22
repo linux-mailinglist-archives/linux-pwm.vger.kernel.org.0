@@ -2,110 +2,270 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2E09274545
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Sep 2020 17:29:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1313274A2B
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Sep 2020 22:34:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbgIVP3D (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 22 Sep 2020 11:29:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55956 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbgIVP27 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 22 Sep 2020 11:28:59 -0400
-Received: from localhost.localdomain (unknown [194.230.155.191])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 332D7214F1;
-        Tue, 22 Sep 2020 15:28:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600788539;
-        bh=27J/qBjEJpMQ8FBjYAVH6iBhxNoGncMH/j8Wfds65Pk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=PUADNSFPFhR29EDiZ/Ij/9aOCJMuqQD/tfx+RF+4ktGbqIa574a09TU2HgTYkAgHI
-         IBI43/uVuc/fDA4alYxxp1xhvSuyZG75OL/ch4cfeUkqHCjw0N8hUXlGplF+DensSJ
-         fFcIES1zzv27+KfI4PjVOCCdKSMMXJn6bMWx+0VI=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Mark Brown <broonie@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-iio@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Cc:     Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v2] MAINTAINERS: add Dan Murphy as TP LP8xxx drivers maintainer
-Date:   Tue, 22 Sep 2020 17:28:39 +0200
-Message-Id: <20200922152839.2744-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        id S1726614AbgIVUed (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Sep 2020 16:34:33 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:37784 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgIVUed (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Sep 2020 16:34:33 -0400
+Received: by mail-il1-f195.google.com with SMTP id q4so18628374ils.4;
+        Tue, 22 Sep 2020 13:34:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GVXRqEHXrZ3iuCE86AKACwgjvepk2Jk8PvwnmbjbrKk=;
+        b=DtCPEvbCNm0ql6258L4naFpjaqy9PYG5W8EmWqnSylC2Ee3xZmKpTL4hBbDBXcDnSQ
+         eNZm2z7vryTNMT2Tadx0uP6zkW6brx2P+909IVf+yXcq6GbLC+XyQ3KJmrysJhR/RAYx
+         HafmK2VaYC/9mkfIOnQ6jBSCRnp/30ZM7gWWR3aIke7U6BF4ULmkeOei15VUYBCLh3Rg
+         Lr6OYp1WzOKDF3y8nwHzvErT4Zq7npdK+Ax1NVGyLc3N5WmugMyzepABPYXfGGxfCigD
+         2nSrsxDCccAkhbFZN0b+xhO1QquNc5RK5NUFEO4/AmQcjM1VeyRETedz7bLaLTtryhNv
+         LcyA==
+X-Gm-Message-State: AOAM53232ntgjnO/drbNVTHMFVKi7xF9UE3f1nkeDtjkbtDdvSyjBfvI
+        70vBnoygzCPS7tF+/rbApw==
+X-Google-Smtp-Source: ABdhPJztkpG3s/gqZ3SqL0LUOYMffJ8BBUk3C1/1qIyhG4fiknVIIXEF6njrh2KnCmWxFJA9J7gVQA==
+X-Received: by 2002:a92:6b0d:: with SMTP id g13mr6189676ilc.242.1600806871421;
+        Tue, 22 Sep 2020 13:34:31 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id c5sm1008173ill.1.2020.09.22.13.34.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Sep 2020 13:34:30 -0700 (PDT)
+Received: (nullmailer pid 3195166 invoked by uid 1000);
+        Tue, 22 Sep 2020 20:34:29 -0000
+Date:   Tue, 22 Sep 2020 14:34:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sagar Kadam <sagar.kadam@sifive.com>
+Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, mturquette@baylibre.com,
+        sboyd@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        lee.jones@linaro.org, aou@eecs.berkeley.edu, yash.shah@sifive.com
+Subject: Re: [PATCH v1 2/3] dt-bindings: riscv: convert plic bindings to
+ json-schema
+Message-ID: <20200922203429.GA3188204@bogus>
+References: <1599734644-4791-1-git-send-email-sagar.kadam@sifive.com>
+ <1599734644-4791-3-git-send-email-sagar.kadam@sifive.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1599734644-4791-3-git-send-email-sagar.kadam@sifive.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Milo Kim's email in TI bounces with permanent error (550: Invalid
-recipient).  Last email from him on LKML was in 2017.  Move Milo Kim to
-credits and add Dan Murphy from TI to look after:
- - TI LP855x backlight driver,
- - TI LP8727 charger driver,
- - TI LP8788 MFD (ADC, LEDs, charger and regulator) drivers.
+On Thu, Sep 10, 2020 at 04:14:03PM +0530, Sagar Kadam wrote:
+> Convert device tree bindings for SiFive's PLIC to YAML format
+> 
+> Signed-off-by: Sagar Kadam <sagar.kadam@sifive.com>
+> ---
+>  .../interrupt-controller/sifive,plic-1.0.0.txt     |  58 -----------
+>  .../interrupt-controller/sifive,plic-1.0.0.yaml    | 107 +++++++++++++++++++++
+>  2 files changed, 107 insertions(+), 58 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.txt
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.txt b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.txt
+> deleted file mode 100644
+> index 6adf7a6..0000000
+> --- a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.txt
+> +++ /dev/null
+> @@ -1,58 +0,0 @@
+> -SiFive Platform-Level Interrupt Controller (PLIC)
+> --------------------------------------------------
+> -
+> -SiFive SOCs include an implementation of the Platform-Level Interrupt Controller
+> -(PLIC) high-level specification in the RISC-V Privileged Architecture
+> -specification.  The PLIC connects all external interrupts in the system to all
+> -hart contexts in the system, via the external interrupt source in each hart.
+> -
+> -A hart context is a privilege mode in a hardware execution thread.  For example,
+> -in an 4 core system with 2-way SMT, you have 8 harts and probably at least two
+> -privilege modes per hart; machine mode and supervisor mode.
+> -
+> -Each interrupt can be enabled on per-context basis.  Any context can claim
+> -a pending enabled interrupt and then release it once it has been handled.
+> -
+> -Each interrupt has a configurable priority.  Higher priority interrupts are
+> -serviced first.  Each context can specify a priority threshold. Interrupts
+> -with priority below this threshold will not cause the PLIC to raise its
+> -interrupt line leading to the context.
+> -
+> -While the PLIC supports both edge-triggered and level-triggered interrupts,
+> -interrupt handlers are oblivious to this distinction and therefore it is not
+> -specified in the PLIC device-tree binding.
+> -
+> -While the RISC-V ISA doesn't specify a memory layout for the PLIC, the
+> -"sifive,plic-1.0.0" device is a concrete implementation of the PLIC that
+> -contains a specific memory layout, which is documented in chapter 8 of the
+> -SiFive U5 Coreplex Series Manual <https://static.dev.sifive.com/U54-MC-RVCoreIP.pdf>.
+> -
+> -Required properties:
+> -- compatible : "sifive,plic-1.0.0" and a string identifying the actual
+> -  detailed implementation in case that specific bugs need to be worked around.
+> -- #address-cells : should be <0> or more.
+> -- #interrupt-cells : should be <1> or more.
+> -- interrupt-controller : Identifies the node as an interrupt controller.
+> -- reg : Should contain 1 register range (address and length).
+> -- interrupts-extended : Specifies which contexts are connected to the PLIC,
+> -  with "-1" specifying that a context is not present.  Each node pointed
+> -  to should be a riscv,cpu-intc node, which has a riscv node as parent.
+> -- riscv,ndev: Specifies how many external interrupts are supported by
+> -  this controller.
+> -
+> -Example:
+> -
+> -	plic: interrupt-controller@c000000 {
+> -		#address-cells = <0>;
+> -		#interrupt-cells = <1>;
+> -		compatible = "sifive,plic-1.0.0", "sifive,fu540-c000-plic";
+> -		interrupt-controller;
+> -		interrupts-extended = <
+> -			&cpu0-intc 11
+> -			&cpu1-intc 11 &cpu1-intc 9
+> -			&cpu2-intc 11 &cpu2-intc 9
+> -			&cpu3-intc 11 &cpu3-intc 9
+> -			&cpu4-intc 11 &cpu4-intc 9>;
+> -		reg = <0xc000000 0x4000000>;
+> -		riscv,ndev = <10>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
+> new file mode 100644
+> index 0000000..95c8c85
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
+> @@ -0,0 +1,107 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +# Copyright (C) 2020 SiFive, Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/interrupt-controller/sifive,plic-1.0.0.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: SiFive Platform-Level Interrupt Controller (PLIC)
+> +
+> +description:
+> +  SiFive SOCs include an implementation of the Platform-Level Interrupt Controller
+> +  (PLIC) high-level specification in the RISC-V Privileged Architecture
+> +  specification. The PLIC connects all external interrupts in the system to all
+> +  hart contexts in the system, via the external interrupt source in each hart.
+> +
+> +  A hart context is a privilege mode in a hardware execution thread. For example,
+> +  in an 4 core system with 2-way SMT, you have 8 harts and probably at least two
+> +  privilege modes per hart; machine mode and supervisor mode.
+> +
+> +  Each interrupt can be enabled on per-context basis. Any context can claim
+> +  a pending enabled interrupt and then release it once it has been handled.
+> +
+> +  Each interrupt has a configurable priority. Higher priority interrupts are
+> +  serviced first.  Each context can specify a priority threshold. Interrupts
+> +  with priority below this threshold will not cause the PLIC to raise its
+> +  interrupt line leading to the context.
+> +
+> +  While the PLIC supports both edge-triggered and level-triggered interrupts,
+> +  interrupt handlers are oblivious to this distinction and therefore it is not
+> +  specified in the PLIC device-tree binding.
+> +
+> +  While the RISC-V ISA doesn't specify a memory layout for the PLIC, the
+> +  "sifive,plic-1.0.0" device is a concrete implementation of the PLIC that
+> +  contains a specific memory layout, which is documented in chapter 8 of the
+> +  SiFive U5 Coreplex Series Manual <https://static.dev.sifive.com/U54-MC-RVCoreIP.pdf>.
+> +
+> +maintainers:
+> +  - Sagar Kadam <sagar.kadam@sifive.com>
+> +  - Paul Walmsley  <paul.walmsley@sifive.com>
+> +  - Palmer Dabbelt <palmer@dabbelt.com>
+> +
+> +allOf:
+> +  - $ref: /schemas/interrupt-controller.yaml#
 
-Cc: Dan Murphy <dmurphy@ti.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Don't need this. It gets selected matching on node name.
 
----
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: sifive,plic-1.0.0
+> +      - const: sifive,fu540-c000-plic
 
-Changes since v1:
-1. Add Dan Murphy, do not remove the entries.
----
- CREDITS     | 3 +++
- MAINTAINERS | 6 +++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
+Somehow these ended up in the wrong order. Should be most specific to 
+least specific.
 
-diff --git a/CREDITS b/CREDITS
-index 1df63cdf71df..46384b11f258 100644
---- a/CREDITS
-+++ b/CREDITS
-@@ -1910,6 +1910,9 @@ S: 660 Harvard Ave. #7
- S: Santa Clara, CA 95051
- S: USA
- 
-+N: Milo Kim
-+D: TI LP855x, LP8727 and LP8788 drivers
-+
- N: Russell King
- E: rmk@arm.linux.org.uk
- D: Linux/arm integrator, maintainer & hacker
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5b9621ca2b31..bcd2fdf0dbf2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17472,20 +17472,20 @@ F:	sound/soc/codecs/isabelle*
- F:	sound/soc/codecs/lm49453*
- 
- TI LP855x BACKLIGHT DRIVER
--M:	Milo Kim <milo.kim@ti.com>
-+M:	Dan Murphy <dmurphy@ti.com>
- S:	Maintained
- F:	Documentation/driver-api/backlight/lp855x-driver.rst
- F:	drivers/video/backlight/lp855x_bl.c
- F:	include/linux/platform_data/lp855x.h
- 
- TI LP8727 CHARGER DRIVER
--M:	Milo Kim <milo.kim@ti.com>
-+M:	Dan Murphy <dmurphy@ti.com>
- S:	Maintained
- F:	drivers/power/supply/lp8727_charger.c
- F:	include/linux/platform_data/lp8727.h
- 
- TI LP8788 MFD DRIVER
--M:	Milo Kim <milo.kim@ti.com>
-+M:	Dan Murphy <dmurphy@ti.com>
- S:	Maintained
- F:	drivers/iio/adc/lp8788_adc.c
- F:	drivers/leds/leds-lp8788.c
--- 
-2.17.1
+> +
+> +    description:
+> +      Should be "sifive,plic-1.0.0" and a string identifying the actual
+> +      detailed implementation in case that specific bugs need to be worked around.
 
+Drop this.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description:  Should contain 1 register range (address and length).
+
+Drop this. The schema says this...
+
+> +
+> +  '#address-cells':
+> +    const: 0
+> +    description: Should be <0> or more.
+
+Drop. 'or more' is wrong. If there's a case with more, it will need to 
+be documented.
+
+> +
+> +  '#interrupt-cells':
+> +    const: 1
+> +    description: Should be <1> or more.
+
+Same here.
+
+> +
+> +  interrupt-controller: true
+> +
+> +  interrupts-extended:
+> +    minItems: 1
+> +    description:
+> +      Specifies which contexts are connected to the PLIC, with "-1" specifying
+> +      that a context is not present. Each node pointed to should be a
+> +      riscv,cpu-intc node, which has a riscv node as parent.
+> +
+> +  riscv,ndev:
+> +    $ref: "/schemas/types.yaml#/definitions/uint32"
+> +    description:
+> +      Specifies how many external interrupts are supported by this controller.
+> +
+> +required:
+> +  - compatible
+> +  - '#address-cells'
+> +  - '#interrupt-cells'
+> +  - interrupt-controller
+> +  - reg
+> +  - interrupts-extended
+> +  - riscv,ndev
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    plic: interrupt-controller@c000000 {
+> +      #address-cells = <0>;
+> +      #interrupt-cells = <1>;
+> +      compatible = "sifive,plic-1.0.0", "sifive,fu540-c000-plic";
+> +      interrupt-controller;
+> +      interrupts-extended = <
+> +        &cpu0_intc 11
+> +        &cpu1_intc 11 &cpu1_intc 9
+> +        &cpu2_intc 11 &cpu2_intc 9
+> +        &cpu3_intc 11 &cpu3_intc 9
+> +        &cpu4_intc 11 &cpu4_intc 9>;
+> +      reg = <0xc000000 0x4000000>;
+> +      riscv,ndev = <10>;
+> +    };
+> -- 
+> 2.7.4
+> 
