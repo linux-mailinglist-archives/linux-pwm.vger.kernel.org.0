@@ -2,40 +2,40 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1313274A2B
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Sep 2020 22:34:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2232274A31
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Sep 2020 22:37:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbgIVUed (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 22 Sep 2020 16:34:33 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:37784 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgIVUed (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Sep 2020 16:34:33 -0400
-Received: by mail-il1-f195.google.com with SMTP id q4so18628374ils.4;
-        Tue, 22 Sep 2020 13:34:32 -0700 (PDT)
+        id S1726620AbgIVUhS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Sep 2020 16:37:18 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:33396 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbgIVUhS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Sep 2020 16:37:18 -0400
+Received: by mail-il1-f193.google.com with SMTP id y2so7955719ila.0;
+        Tue, 22 Sep 2020 13:37:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=GVXRqEHXrZ3iuCE86AKACwgjvepk2Jk8PvwnmbjbrKk=;
-        b=DtCPEvbCNm0ql6258L4naFpjaqy9PYG5W8EmWqnSylC2Ee3xZmKpTL4hBbDBXcDnSQ
-         eNZm2z7vryTNMT2Tadx0uP6zkW6brx2P+909IVf+yXcq6GbLC+XyQ3KJmrysJhR/RAYx
-         HafmK2VaYC/9mkfIOnQ6jBSCRnp/30ZM7gWWR3aIke7U6BF4ULmkeOei15VUYBCLh3Rg
-         Lr6OYp1WzOKDF3y8nwHzvErT4Zq7npdK+Ax1NVGyLc3N5WmugMyzepABPYXfGGxfCigD
-         2nSrsxDCccAkhbFZN0b+xhO1QquNc5RK5NUFEO4/AmQcjM1VeyRETedz7bLaLTtryhNv
-         LcyA==
-X-Gm-Message-State: AOAM53232ntgjnO/drbNVTHMFVKi7xF9UE3f1nkeDtjkbtDdvSyjBfvI
-        70vBnoygzCPS7tF+/rbApw==
-X-Google-Smtp-Source: ABdhPJztkpG3s/gqZ3SqL0LUOYMffJ8BBUk3C1/1qIyhG4fiknVIIXEF6njrh2KnCmWxFJA9J7gVQA==
-X-Received: by 2002:a92:6b0d:: with SMTP id g13mr6189676ilc.242.1600806871421;
-        Tue, 22 Sep 2020 13:34:31 -0700 (PDT)
+        bh=b6PLDdi8fxcl5wdYEMizGD4y37EzcneWERt48cXIEcA=;
+        b=kjMHJFuvt/NlRCAY7o7+W1sZhc0iS7/vCKM63sAy+TJTQ5m7Tpy+HqiMVC8+2qQgPJ
+         m2Hk0YpHWmLg74lxHIZ6H5hWsKhdvnfgmvQn55KeDse9RBUeY2o6qJqDfe/qCjdM5WM4
+         CRDOnessCFzzFNu3PXBdNZPKEgizSX439bktacTlUP8lDLZCGcgrjKMSOqH8jorUNWou
+         khoYwtPeFwuFT5nqJAiG4xedsDgShMLjSOmVa8RueKdqUJf2V7hNBIV/jLQbbGPxBx+F
+         m2ZAY5S/ksPO+W3Nwn2n1fL/Dj3eTN5ZUmvwnUlGQMi+S0AQ32ls5vG9mVKn4jmt/Az8
+         Eg9g==
+X-Gm-Message-State: AOAM531TYBob4OkUqJdwIQ0L8qhXOOSq/JpHEgWD6wg2fYoJdk6ibsVQ
+        PRWw9JThhGrPbLF86Qs72w==
+X-Google-Smtp-Source: ABdhPJxILOHU26JjUwj1e2C2a7BUhOjbr/XE/OtmvaSBy6NijsR8Rg+QvKohpCO4W6NfvHoCKokbPw==
+X-Received: by 2002:a92:bf0e:: with SMTP id z14mr5944896ilh.288.1600807036582;
+        Tue, 22 Sep 2020 13:37:16 -0700 (PDT)
 Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id c5sm1008173ill.1.2020.09.22.13.34.29
+        by smtp.gmail.com with ESMTPSA id i10sm7935475ioi.39.2020.09.22.13.37.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Sep 2020 13:34:30 -0700 (PDT)
-Received: (nullmailer pid 3195166 invoked by uid 1000);
-        Tue, 22 Sep 2020 20:34:29 -0000
-Date:   Tue, 22 Sep 2020 14:34:29 -0600
+        Tue, 22 Sep 2020 13:37:15 -0700 (PDT)
+Received: (nullmailer pid 3199568 invoked by uid 1000);
+        Tue, 22 Sep 2020 20:37:14 -0000
+Date:   Tue, 22 Sep 2020 14:37:14 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Sagar Kadam <sagar.kadam@sifive.com>
 Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -45,226 +45,167 @@ Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
         tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
         thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
         lee.jones@linaro.org, aou@eecs.berkeley.edu, yash.shah@sifive.com
-Subject: Re: [PATCH v1 2/3] dt-bindings: riscv: convert plic bindings to
+Subject: Re: [PATCH v1 3/3] dt-bindings: riscv: convert pwm bindings to
  json-schema
-Message-ID: <20200922203429.GA3188204@bogus>
+Message-ID: <20200922203714.GA3195489@bogus>
 References: <1599734644-4791-1-git-send-email-sagar.kadam@sifive.com>
- <1599734644-4791-3-git-send-email-sagar.kadam@sifive.com>
+ <1599734644-4791-4-git-send-email-sagar.kadam@sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1599734644-4791-3-git-send-email-sagar.kadam@sifive.com>
+In-Reply-To: <1599734644-4791-4-git-send-email-sagar.kadam@sifive.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 04:14:03PM +0530, Sagar Kadam wrote:
-> Convert device tree bindings for SiFive's PLIC to YAML format
+On Thu, Sep 10, 2020 at 04:14:04PM +0530, Sagar Kadam wrote:
+> Convert device tree bindings for SiFive's PWM controller to YAML
+> format.
 > 
 > Signed-off-by: Sagar Kadam <sagar.kadam@sifive.com>
 > ---
->  .../interrupt-controller/sifive,plic-1.0.0.txt     |  58 -----------
->  .../interrupt-controller/sifive,plic-1.0.0.yaml    | 107 +++++++++++++++++++++
->  2 files changed, 107 insertions(+), 58 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
+>  .../devicetree/bindings/pwm/pwm-sifive.txt         | 33 ----------
+>  .../devicetree/bindings/pwm/pwm-sifive.yaml        | 72 ++++++++++++++++++++++
+>  2 files changed, 72 insertions(+), 33 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.txt b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.txt
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.txt b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
 > deleted file mode 100644
-> index 6adf7a6..0000000
-> --- a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.txt
+> index 3d1dd7b0..0000000
+> --- a/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
 > +++ /dev/null
-> @@ -1,58 +0,0 @@
-> -SiFive Platform-Level Interrupt Controller (PLIC)
-> --------------------------------------------------
+> @@ -1,33 +0,0 @@
+> -SiFive PWM controller
 > -
-> -SiFive SOCs include an implementation of the Platform-Level Interrupt Controller
-> -(PLIC) high-level specification in the RISC-V Privileged Architecture
-> -specification.  The PLIC connects all external interrupts in the system to all
-> -hart contexts in the system, via the external interrupt source in each hart.
+> -Unlike most other PWM controllers, the SiFive PWM controller currently only
+> -supports one period for all channels in the PWM. All PWMs need to run at
+> -the same period. The period also has significant restrictions on the values
+> -it can achieve, which the driver rounds to the nearest achievable period.
+> -PWM RTL that corresponds to the IP block version numbers can be found
+> -here:
 > -
-> -A hart context is a privilege mode in a hardware execution thread.  For example,
-> -in an 4 core system with 2-way SMT, you have 8 harts and probably at least two
-> -privilege modes per hart; machine mode and supervisor mode.
-> -
-> -Each interrupt can be enabled on per-context basis.  Any context can claim
-> -a pending enabled interrupt and then release it once it has been handled.
-> -
-> -Each interrupt has a configurable priority.  Higher priority interrupts are
-> -serviced first.  Each context can specify a priority threshold. Interrupts
-> -with priority below this threshold will not cause the PLIC to raise its
-> -interrupt line leading to the context.
-> -
-> -While the PLIC supports both edge-triggered and level-triggered interrupts,
-> -interrupt handlers are oblivious to this distinction and therefore it is not
-> -specified in the PLIC device-tree binding.
-> -
-> -While the RISC-V ISA doesn't specify a memory layout for the PLIC, the
-> -"sifive,plic-1.0.0" device is a concrete implementation of the PLIC that
-> -contains a specific memory layout, which is documented in chapter 8 of the
-> -SiFive U5 Coreplex Series Manual <https://static.dev.sifive.com/U54-MC-RVCoreIP.pdf>.
+> -https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/pwm
 > -
 > -Required properties:
-> -- compatible : "sifive,plic-1.0.0" and a string identifying the actual
-> -  detailed implementation in case that specific bugs need to be worked around.
-> -- #address-cells : should be <0> or more.
-> -- #interrupt-cells : should be <1> or more.
-> -- interrupt-controller : Identifies the node as an interrupt controller.
-> -- reg : Should contain 1 register range (address and length).
-> -- interrupts-extended : Specifies which contexts are connected to the PLIC,
-> -  with "-1" specifying that a context is not present.  Each node pointed
-> -  to should be a riscv,cpu-intc node, which has a riscv node as parent.
-> -- riscv,ndev: Specifies how many external interrupts are supported by
-> -  this controller.
+> -- compatible: Should be "sifive,<chip>-pwm" and "sifive,pwm<version>".
+> -  Supported compatible strings are: "sifive,fu540-c000-pwm" for the SiFive
+> -  PWM v0 as integrated onto the SiFive FU540 chip, and "sifive,pwm0" for the
+> -  SiFive PWM v0 IP block with no chip integration tweaks.
+> -  Please refer to sifive-blocks-ip-versioning.txt for details.
+> -- reg: physical base address and length of the controller's registers
+> -- clocks: Should contain a clock identifier for the PWM's parent clock.
+> -- #pwm-cells: Should be 3. See pwm.yaml in this directory
+> -  for a description of the cell format.
+> -- interrupts: one interrupt per PWM channel
 > -
-> -Example:
+> -Examples:
 > -
-> -	plic: interrupt-controller@c000000 {
-> -		#address-cells = <0>;
-> -		#interrupt-cells = <1>;
-> -		compatible = "sifive,plic-1.0.0", "sifive,fu540-c000-plic";
-> -		interrupt-controller;
-> -		interrupts-extended = <
-> -			&cpu0-intc 11
-> -			&cpu1-intc 11 &cpu1-intc 9
-> -			&cpu2-intc 11 &cpu2-intc 9
-> -			&cpu3-intc 11 &cpu3-intc 9
-> -			&cpu4-intc 11 &cpu4-intc 9>;
-> -		reg = <0xc000000 0x4000000>;
-> -		riscv,ndev = <10>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
+> -pwm:  pwm@10020000 {
+> -	compatible = "sifive,fu540-c000-pwm", "sifive,pwm0";
+> -	reg = <0x0 0x10020000 0x0 0x1000>;
+> -	clocks = <&tlclk>;
+> -	interrupt-parent = <&plic>;
+> -	interrupts = <42 43 44 45>;
+> -	#pwm-cells = <3>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml b/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
 > new file mode 100644
-> index 0000000..95c8c85
+> index 0000000..415d053
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
-> @@ -0,0 +1,107 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
+> @@ -0,0 +1,72 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +# Copyright (C) 2020 SiFive, Inc.
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/interrupt-controller/sifive,plic-1.0.0.yaml#
+> +$id: http://devicetree.org/schemas/pwm/pwm-sifive.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: SiFive Platform-Level Interrupt Controller (PLIC)
-> +
-> +description:
-> +  SiFive SOCs include an implementation of the Platform-Level Interrupt Controller
-> +  (PLIC) high-level specification in the RISC-V Privileged Architecture
-> +  specification. The PLIC connects all external interrupts in the system to all
-> +  hart contexts in the system, via the external interrupt source in each hart.
-> +
-> +  A hart context is a privilege mode in a hardware execution thread. For example,
-> +  in an 4 core system with 2-way SMT, you have 8 harts and probably at least two
-> +  privilege modes per hart; machine mode and supervisor mode.
-> +
-> +  Each interrupt can be enabled on per-context basis. Any context can claim
-> +  a pending enabled interrupt and then release it once it has been handled.
-> +
-> +  Each interrupt has a configurable priority. Higher priority interrupts are
-> +  serviced first.  Each context can specify a priority threshold. Interrupts
-> +  with priority below this threshold will not cause the PLIC to raise its
-> +  interrupt line leading to the context.
-> +
-> +  While the PLIC supports both edge-triggered and level-triggered interrupts,
-> +  interrupt handlers are oblivious to this distinction and therefore it is not
-> +  specified in the PLIC device-tree binding.
-> +
-> +  While the RISC-V ISA doesn't specify a memory layout for the PLIC, the
-> +  "sifive,plic-1.0.0" device is a concrete implementation of the PLIC that
-> +  contains a specific memory layout, which is documented in chapter 8 of the
-> +  SiFive U5 Coreplex Series Manual <https://static.dev.sifive.com/U54-MC-RVCoreIP.pdf>.
+> +title: SiFive PWM controller
 > +
 > +maintainers:
+> +  - Yash Shah <yash.shah@sifive.com>
 > +  - Sagar Kadam <sagar.kadam@sifive.com>
-> +  - Paul Walmsley  <paul.walmsley@sifive.com>
-> +  - Palmer Dabbelt <palmer@dabbelt.com>
+> +  - Paul Walmsley <paul.walmsley@sifive.com>
 > +
-> +allOf:
-> +  - $ref: /schemas/interrupt-controller.yaml#
-
-Don't need this. It gets selected matching on node name.
-
+> +description:
+> +  Unlike most other PWM controllers, the SiFive PWM controller currently
+> +  only supports one period for all channels in the PWM. All PWMs need to
+> +  run at the same period. The period also has significant restrictions on
+> +  the values it can achieve, which the driver rounds to the nearest
+> +  achievable period. PWM RTL that corresponds to the IP block version
+> +  numbers can be found here -
+> +
+> +  https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/pwm
 > +
 > +properties:
 > +  compatible:
 > +    items:
-> +      - const: sifive,plic-1.0.0
-> +      - const: sifive,fu540-c000-plic
-
-Somehow these ended up in the wrong order. Should be most specific to 
-least specific.
-
-> +
+> +      - const: sifive,fu540-c000-pwm
+> +      - const: sifive,pwm0
 > +    description:
-> +      Should be "sifive,plic-1.0.0" and a string identifying the actual
-> +      detailed implementation in case that specific bugs need to be worked around.
-
-Drop this.
-
+> +      Should be "sifive,<chip>-pwm" and "sifive,pwm<version>". Supported
+> +      compatible strings are "sifive,fu540-c000-pwm" for the SiFive PWM v0
+> +      as integrated onto the SiFive FU540 chip, and "sifive,pwm0" for the
+> +      SiFive PWM v0 IP block with no chip integration tweaks.
+> +      Please refer to sifive-blocks-ip-versioning.txt for details.
 > +
 > +  reg:
 > +    maxItems: 1
-> +    description:  Should contain 1 register range (address and length).
+> +    description: Physical base address and length of the controller's registers
 
-Drop this. The schema says this...
-
-> +
-> +  '#address-cells':
-> +    const: 0
-> +    description: Should be <0> or more.
-
-Drop. 'or more' is wrong. If there's a case with more, it will need to 
-be documented.
+Drop description.
 
 > +
-> +  '#interrupt-cells':
-> +    const: 1
-> +    description: Should be <1> or more.
+> +  clocks:
+> +    description: Should contain a clock identifier for the PWM's parent clock.
 
-Same here.
+How many clocks?
 
 > +
-> +  interrupt-controller: true
-> +
-> +  interrupts-extended:
-> +    minItems: 1
+> +  "#pwm-cells":
+> +    const: 3
 > +    description:
-> +      Specifies which contexts are connected to the PLIC, with "-1" specifying
-> +      that a context is not present. Each node pointed to should be a
-> +      riscv,cpu-intc node, which has a riscv node as parent.
+> +      Should be 3. See pwm.yaml in this directory for a description of the
+> +      cell format.
+
+Drop.
+
 > +
-> +  riscv,ndev:
-> +    $ref: "/schemas/types.yaml#/definitions/uint32"
-> +    description:
-> +      Specifies how many external interrupts are supported by this controller.
+> +  interrupts:
+> +    maxItems: 1
+
+Is it 1 or...
+
+> +    description: One interrupt per PWM channel.
+
+one per channel?
+
 > +
 > +required:
 > +  - compatible
-> +  - '#address-cells'
-> +  - '#interrupt-cells'
-> +  - interrupt-controller
 > +  - reg
-> +  - interrupts-extended
-> +  - riscv,ndev
+> +  - clocks
+> +  - "#pwm-cells"
+> +  - interrupts
 > +
 > +additionalProperties: false
 > +
 > +examples:
 > +  - |
-> +    plic: interrupt-controller@c000000 {
-> +      #address-cells = <0>;
-> +      #interrupt-cells = <1>;
-> +      compatible = "sifive,plic-1.0.0", "sifive,fu540-c000-plic";
-> +      interrupt-controller;
-> +      interrupts-extended = <
-> +        &cpu0_intc 11
-> +        &cpu1_intc 11 &cpu1_intc 9
-> +        &cpu2_intc 11 &cpu2_intc 9
-> +        &cpu3_intc 11 &cpu3_intc 9
-> +        &cpu4_intc 11 &cpu4_intc 9>;
-> +      reg = <0xc000000 0x4000000>;
-> +      riscv,ndev = <10>;
+> +    pwm:  pwm@10020000 {
+> +      compatible = "sifive,fu540-c000-pwm", "sifive,pwm0";
+> +      reg = <0x10020000 0x1000>;
+> +      clocks = <&tlclk>;
+> +      interrupt-parent = <&plic>;
+> +      interrupts = <42 43 44 45>;
+
+Split entries:
+
+interrupts = <42>, <43>, <44>, <45>;
+
+> +      #pwm-cells = <3>;
 > +    };
 > -- 
 > 2.7.4
