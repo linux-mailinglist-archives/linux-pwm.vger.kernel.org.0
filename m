@@ -2,142 +2,131 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FB0B273901
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Sep 2020 04:59:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B06E273AFF
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Sep 2020 08:34:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbgIVC7P (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 21 Sep 2020 22:59:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728991AbgIVC7O (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 21 Sep 2020 22:59:14 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A63F239A1;
-        Tue, 22 Sep 2020 02:59:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600743554;
-        bh=b2qwnEFh+ba+rThRPVC7+mIXVik4Np6wC8ogIy5np/E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tkH+HRlJL6TKGegQlflvBRnj+TIfWuAQPjXVI8pWBtpZOXwhNMefqNKGTU0bpuMVw
-         DD6Ga0B1wscRBHHGKEVoH5uyZqzR4yY2wu+W2k4UwMKfHbrxS9AtdUUgF6f1ZMGon/
-         YGWy+3a3BE7LVRfsD2XXyK7tnl3j5p/XgI+sKie8=
-Date:   Tue, 22 Sep 2020 10:59:05 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v10 11/13] arm64: dts: freescale: sl28: enable LED support
-Message-ID: <20200922025904.GX25109@dragon>
-References: <20200914214341.14268-1-michael@walle.cc>
- <20200914214341.14268-12-michael@walle.cc>
+        id S1727710AbgIVGeI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Sep 2020 02:34:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726898AbgIVGeI (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Sep 2020 02:34:08 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 744ADC061755
+        for <linux-pwm@vger.kernel.org>; Mon, 21 Sep 2020 23:34:08 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kKbsM-0006DQ-J4; Tue, 22 Sep 2020 08:34:06 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kKbsK-000454-3O; Tue, 22 Sep 2020 08:34:04 +0200
+Date:   Tue, 22 Sep 2020 08:34:03 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     vijayakannan.ayyathurai@intel.com, thierry.reding@gmail.com,
+        robh+dt@kernel.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, wan.ahmad.zainie.wan.mohamad@intel.com,
+        mgross@linux.intel.com, lakshmi.bai.raja.subramanian@intel.com
+Subject: Re: [PATCH v7 2/2] dt-bindings: pwm: keembay: Add bindings for Intel
+ Keem Bay PWM
+Message-ID: <20200922063403.5sm6fk7qopggoitc@pengutronix.de>
+References: <20200909162719.7585-1-vijayakannan.ayyathurai@intel.com>
+ <20200909162719.7585-3-vijayakannan.ayyathurai@intel.com>
+ <20200921084401.gtesjzentxrly47c@pengutronix.de>
+ <20200921103756.GP3956970@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3riy4hp7mq7zkjls"
 Content-Disposition: inline
-In-Reply-To: <20200914214341.14268-12-michael@walle.cc>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200921103756.GP3956970@smile.fi.intel.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Sep 14, 2020 at 11:43:39PM +0200, Michael Walle wrote:
-> Now that we have support for GPIO lines of the SMARC connector, enable
-> LED support on the KBox A-230-LS. There are two LEDs without fixed
-> functions, one is yellow and one is green. Unfortunately, it is just one
-> multi-color LED, thus while it is possible to enable both at the same
-> time it is hard to tell the difference between "yellow only" and "yellow
-> and green".
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> ---
-> Changes since v9:
->  - none
-> 
-> Changes since v8:
->  - none
-> 
-> Changes since v7:
->  - use new "function" and "color" properties instead of a label
->  - added default-on trigger for the power-led
-> 
-> Changes since v6:
->  - none
-> 
-> Changes since v5:
->  - changed the label, suggested by Pavel Machek
-> 
-> Changes since v4:
->  - none
-> 
-> Changes since v3:
->  - see cover letter
-> 
->  .../fsl-ls1028a-kontron-kbox-a-230-ls.dts      | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
-> index 4b4cc6a1573d..dd516c0efd8b 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
-> @@ -11,11 +11,29 @@
->  
->  /dts-v1/;
->  #include "fsl-ls1028a-kontron-sl28-var4.dts"
-> +#include <dt-bindings/leds/common.h>
->  
->  / {
->  	model = "Kontron KBox A-230-LS";
->  	compatible = "kontron,kbox-a-230-ls", "kontron,sl28-var4",
->  		     "kontron,sl28", "fsl,ls1028a";
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +
-> +		alarm-led {
-> +			function = LED_FUNCTION_ALARM;
-> +			color = <LED_COLOR_ID_YELLOW>;
-> +			gpios = <&sl28cpld_gpio0 0 0>;
-> +		};
-> +
-> +		power-led {
-> +			linux,default-trigger = "default-on";
-> +			function = LED_FUNCTION_POWER;
-> +			color = <LED_COLOR_ID_GREEN>;
-> +			gpios = <&sl28cpld_gpio1 3 0>;
 
-Use GPIO_ACTIVE_HIGH for polarity to improve the readability.
+--3riy4hp7mq7zkjls
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I fixed them up and applied patch #9 ~ #13.
+Hello Andy,
 
-Shawn
+On Mon, Sep 21, 2020 at 01:37:56PM +0300, Andy Shevchenko wrote:
+> On Mon, Sep 21, 2020 at 10:44:01AM +0200, Uwe Kleine-K=F6nig wrote:
+> > On Thu, Sep 10, 2020 at 12:27:19AM +0800, vijayakannan.ayyathurai@intel=
+=2Ecom wrote:
+> > > From: Vijayakannan Ayyathurai <vijayakannan.ayyathurai@intel.com>
+> > >=20
+> > > Add PWM Device Tree bindings documentation for the Intel Keem Bay SoC.
+> > >=20
+> > > Signed-off-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@inte=
+l.com>
+> > > Signed-off-by: Vijayakannan Ayyathurai <vijayakannan.ayyathurai@intel=
+=2Ecom>
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> >=20
+> > nitpick: Your S-o-b should always be last. This way it becomes clear who
+> > added the other tags.
+>=20
+> I think it should reflect chronological order. If SoB has been given befo=
+re
+> e.g. Ack then SoB should be followed by Ack and not other way around.
 
-> +		};
-> +	};
->  };
->  
->  &enetc_mdio_pf3 {
-> -- 
-> 2.20.1
-> 
+This is how I interpret the rules even though I admit it is not
+formalized explicitly. The idea is just what I wrote, when the patch
+ends up in git with:
+
+	Signed-off-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
+	Signed-off-by: Vijayakannan Ayyathurai <vijayakannan.ayyathurai@intel.com>
+	Reviewed-by: Rob Herring <robh@kernel.org>
+	Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+	Signed-off-by: Peter Maintainer <p.maintainer@tralala>
+
+I'd expect that is was Peter M. who added Rob's and my tag, while when
+it is
+
+	Signed-off-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
+	Reviewed-by: Rob Herring <robh@kernel.org>
+	Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+	Signed-off-by: Vijayakannan Ayyathurai <vijayakannan.ayyathurai@intel.com>
+	Signed-off-by: Peter Maintainer <p.maintainer@tralala>
+
+it was Vijayakannan who added them.
+
+IMHO this makes sense as Vijayakannan modified the commit log and then
+it is usual to add the signature at the end. In my eyes this is more
+sensible than the date order, but it seems this is subjective.
+
+I'm aware that most people don't care; and I don't care enough to argue
+this case any further.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--3riy4hp7mq7zkjls
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl9pmtgACgkQwfwUeK3K
+7AljeAf/TACR7/NNqYto9dvZocCa4ZRdCBGdD/55DvvBeu9xw3qjAxti/3BC+ecE
+9mMMEDSVN04aKFjkjybb0PqK0rAOMbTWDn7XvzAhkqH30s63PWgtJjqFUqwGRbK5
+ecG9fUXmVat6fvH27LW6sD53FSfVWBLEPE5kgqte2bKmwu+12ll2seb+e3uooupL
+/aWodx2FAFX7GMABbHWzTHQ17bGs+Is8wJm04IqEX4h4h2luC/DgXwnIRQdgl3o7
+mFI8xHY098pxG7S9VaoGXCANraja4VKeiFWsue6//t7YakFI9UqcNaAQjUbawVNI
+igP/VSVSA5CFj+2Czu3kaQ9caemMCg==
+=DzkG
+-----END PGP SIGNATURE-----
+
+--3riy4hp7mq7zkjls--
