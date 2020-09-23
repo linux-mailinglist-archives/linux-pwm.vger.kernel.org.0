@@ -2,118 +2,116 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC5562757B0
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Sep 2020 14:08:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BDDE2757B2
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Sep 2020 14:10:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgIWMIE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 23 Sep 2020 08:08:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39926 "EHLO
+        id S1726498AbgIWMKY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 23 Sep 2020 08:10:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726552AbgIWMID (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Sep 2020 08:08:03 -0400
+        with ESMTP id S1726487AbgIWMKY (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Sep 2020 08:10:24 -0400
 Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0BDCC0613CE
-        for <linux-pwm@vger.kernel.org>; Wed, 23 Sep 2020 05:08:02 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id e17so6912983wme.0
-        for <linux-pwm@vger.kernel.org>; Wed, 23 Sep 2020 05:08:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A337C0613CE
+        for <linux-pwm@vger.kernel.org>; Wed, 23 Sep 2020 05:10:24 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id v12so5036882wmh.3
+        for <linux-pwm@vger.kernel.org>; Wed, 23 Sep 2020 05:10:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=XXF8/TRX8AzJd09lrb0ScAnjPKwtmOIDw+ufXXFf9X8=;
-        b=m9OENKNlaV12tgpN53fgnQUTyOfWxfgtT7tWUbnDNXESkoT2MXnHONUvjIw2FqX4Zf
-         tWZ3VkSIFBRjPxvLcmoD1c41IGAS4OxsuvbUuRmDorzrdZs6zp5xaKZr9bFMuSQBggZT
-         0IZIUZrWjrXwJDN82u/reo+G25YBK+PttC1TBWTT/X5b04dY5jOvsEkwDsUHa8/aIQlV
-         dV/chTd3XjslMoykLoexj3wcJ5JHJEB+A8UwgAkYzkoSNhaI14VYifgqcgc1H8cIy4eE
-         x0rQPPAcQJh8VRElZQhB6wd2F9ZWYpEPoOofhiB5zq6aUnJC8NXsY1+x1rM6++ryNGxB
-         Lf3w==
+        bh=hXHK8DYTWr4N6tWLZblmvgiOPUgo6HEuvbuJGMuIIfU=;
+        b=Eit159zWg9PG8wR5d1aX9d6iVPwq2bCvYcFHV9rp9M+5k8qfpr6I1xQ1LAHd3MRcpT
+         +6MgOKzq7qAh6Hf9cpY1udL1VbG7w69y1QVl62IjH+0Q3GgY8Rpib95X+jch+1YQ3UUF
+         H6h9G/ib+NKWYK7BRcpxBf/VslHmPD0l3bLCbWuHBETkdl/PbAYsVhwYbR2uC+L9I11N
+         gbzMFbgl6N6n3Ecet7Zy5Id0pnUnFoeMJ7GxpeHBnWhv7ew+darE9ei7EcbTryCJgwC+
+         LeUwoRqTCEw41tMERDGenSLIKF1vH++oYmX/Knp/IIV09rjvs5Wxa+FBTAXaABcZOPIE
+         A2iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XXF8/TRX8AzJd09lrb0ScAnjPKwtmOIDw+ufXXFf9X8=;
-        b=LEqPiLlgYLF84P+ZHlAjdxRLf4y6eZTWL+wE6Fjn29zdFufrsAoPCOW/A8vL+yU24M
-         ixyxuBT3CxOXaeoRYR5Sj1+Pzak6AW0zawZB9chEgDcx/G44ez/r3Q9nzet+9RK6Oqcz
-         7v1iNYfDT/4b1bevlBcJVtkaVaE7ne14hIGf4g6aqAEih08NlkNhC7i7mgfcL6bt86BD
-         1OG4jg1julgn+5OLv1zLFh/Ysm/+FUctt52GsxzJEensrW+R9w7YUG129PaKWdnN/s2X
-         2ilsu3xMGxUuJsBFX0hdAGF7+OqOVaVMq8XeyXTUnp0mXi1qypwm0ccGKQ40lZuDIV3T
-         rEHQ==
-X-Gm-Message-State: AOAM532l3t7b9uvPmmiC5K+kIbgt1un+Ct9dfKoswqVFD5jYuv5OFktM
-        arCjTSgZKMWs8s0hzbrf1xhRghfWARQ=
-X-Google-Smtp-Source: ABdhPJyFyNwymYKFz8HsgQ6cevd2Nx/jUIhfJ3+46UjpdWP/bvTXrqlRSPo1o8iAFFkd1uzZwxBFAQ==
-X-Received: by 2002:a05:600c:2312:: with SMTP id 18mr6043399wmo.141.1600862881597;
-        Wed, 23 Sep 2020 05:08:01 -0700 (PDT)
+        bh=hXHK8DYTWr4N6tWLZblmvgiOPUgo6HEuvbuJGMuIIfU=;
+        b=BDuidxmZiTC/9Yr+sD/a9Lt+5qbLNwGnOlzx3FVJ0pJyiWsetDEWa0Yc8sUjxzpiG7
+         rGtfY8XZMJfHJVovgYRXTIGS+7HnoOwBS8UlR36JSlPKwBYzJtIpJ5PFZWULE+a3klqr
+         AEI5+xvuR+WOEkKSTrgKyEd3WxdEjISMTe5gTkkUck8UQcCMWTuqnTWHLoL89L+rol/W
+         McJ2wbjTL0O5GJhTQP+8qq0Gagx3CyvqLdSSoIbAkUFrvg2I8r91WIFWVOsenGyE9SHZ
+         NuRD/odWwB+H1J6xGT9OqmZwybdPosGRWuzgGD/cqZzQxmZ44ZXQn0DoU2RziwxYcT1D
+         Cf8w==
+X-Gm-Message-State: AOAM531lfLOSmQ7QrSSpMz2XdfNADVKu3iDTOHyh3Il8W9xo8aTXsMRS
+        TlH7bBBkzcrGlWaKJxd5Qgs=
+X-Google-Smtp-Source: ABdhPJwqGsN28iw2TfERNRAinFVX8momm0/pPax6aZkTv5HkKAySt6xW5cxPCE+DcjnOdcni2vya5Q==
+X-Received: by 2002:a1c:3d44:: with SMTP id k65mr5964279wma.132.1600863022976;
+        Wed, 23 Sep 2020 05:10:22 -0700 (PDT)
 Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id q186sm8157968wma.45.2020.09.23.05.08.00
+        by smtp.gmail.com with ESMTPSA id 97sm32112021wrm.15.2020.09.23.05.10.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Sep 2020 05:08:00 -0700 (PDT)
-Date:   Wed, 23 Sep 2020 14:07:58 +0200
+        Wed, 23 Sep 2020 05:10:21 -0700 (PDT)
+Date:   Wed, 23 Sep 2020 14:10:20 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     David Jander <david@protonic.nl>
-Cc:     Steffen Trumtrar <s.trumtrar@pengutronix.de>,
-        Clemens Gruber <clemens.gruber@pqgruber.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        linux-pwm@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v2 0/3] pwm: pwm-pca9685 Disable unused alternative
- addresses
-Message-ID: <20200923120758.GA1848911@ulmo>
-References: <20200828121415.1292388-1-david@protonic.nl>
+To:     Hauke Mehrtens <hauke@hauke-m.de>
+Cc:     u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        ed.blake@sondrel.com, linux-pwm@vger.kernel.org, wigyori@uid0.hu
+Subject: Re: [PATCH v2] pwm: img: Fix null pointer access in probe
+Message-ID: <20200923121020.GB1848911@ulmo>
+References: <20200820171425.7106-1-hauke@hauke-m.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+        protocol="application/pgp-signature"; boundary="IrhDeMKUP4DT/M7F"
 Content-Disposition: inline
-In-Reply-To: <20200828121415.1292388-1-david@protonic.nl>
+In-Reply-To: <20200820171425.7106-1-hauke@hauke-m.de>
 User-Agent: Mutt/1.14.7 (2020-08-29)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---SLDf9lqlvOQaIe6s
+--IrhDeMKUP4DT/M7F
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 28, 2020 at 02:14:12PM +0200, David Jander wrote:
-> changes since v2:
-> - Extra patch: Make comments more consisent
-> - Extra patch: Use BIT() macro instead of shift
-> - Fix typo in commit message
+On Thu, Aug 20, 2020 at 07:14:25PM +0200, Hauke Mehrtens wrote:
+> dev_get_drvdata() is called in img_pwm_runtime_resume() before the
+> driver data is set.
+> When pm_runtime_enabled() returns false in img_pwm_probe() it calls
+> img_pwm_runtime_resume() which results in a null pointer access.
 >=20
-> David Jander (3):
->   drivers: pwm: pwm-pcs9685.c: Make comments more consistent
->   drivers: pwm: pwm-pca9685.c: Use BIT() macro instead of shift
->   drivers: pwm: pwm-pca9685.c: Disable unused alternative addresses
+> This patch fixes the problem by setting the driver data earlier in the
+> img_pwm_probe() function.
 >=20
->  drivers/pwm/pwm-pca9685.c | 45 +++++++++++++++++++++++----------------
->  1 file changed, 27 insertions(+), 18 deletions(-)
+> This crash was seen when booting the Imagination Technologies Creator
+> Ci40 (Marduk) with kernel 5.4 in OpenWrt.
+>=20
+> Fixes: e690ae526216 ("pwm: img: Add runtime PM")
+> Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/pwm/pwm-img.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-I know that you and Uwe disagreed on some aspects of this, but I don't
-care much either way and the net result here is positive, so I've
-applied these.
+Applied, thanks.
 
-Thanks,
 Thierry
 
---SLDf9lqlvOQaIe6s
+--IrhDeMKUP4DT/M7F
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl9rOp4ACgkQ3SOs138+
-s6HxWBAAgCkJvLUasga9LpTWZcSa6IoYw1jCUxWqze/mj/6UGQHY77l3HyStsKvt
-WZlSBUNax5dNqDMthakMatYk179YdEcxPiVLIa5wQL6ZfjQrNz51no0Rga0+PJZg
-3KP82a+s5aKUVRF46M5oVF0Dv7z0ajBFpebz98Xfzm/ugoiSYNulFeW5lhX4QNNi
-i7rTPyGbrBM/AvQOBxSVTou7L6aSOcO8pYqztFSkSPQ4thhgDK0kB3AXrCBbZ5H8
-WBf+Gcc/Pe/jSvgfACE6XSCa+MxHaIWUtJSVBfPiOC5U80+wGnmVMlnPpn4ivVmx
-q+12a3EENXJcwmYhrOKwycHxzsijWe7aNUOPxwNv/h4sGC8CSDrnTnc6OXqnvU2K
-9JZt48gr6ZjgjT9arIKOTLANCt/c59JdtU3dIRVsTIoLqe23AMvOFUOObVd2uVz1
-VruZw/JkNjwi7xPjv4sa1iqEgl+GnmLVrpyqNTeIfJawZNkMu3hb1XVBJHVBzCXC
-vpkIqV5UMcG7SWhU/z1kgFepZZUgovzXkIHLtmmtDhsbDfB4KHQrJV5mKJrSJjXp
-llXMqYClWHwxjXCrd8w9XOxp7Q96ADmjVPSVmST14t+CLDSLiU2IDu4hMdovn1ZQ
-w0QlfPoYTotXlY2bTYPOhnkMHV3xUsQfwEkmRmvfOlLWhyYr2tE=
-=0IXW
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl9rOywACgkQ3SOs138+
+s6F5ohAAv3pwVRRgh3oLujBcoGKO/C56jLlTEuTTRcaD2J1VnIvtg1RFVlb2w5xp
+movMV1TaDnRmK0IZuVpNI3ZvG0amfr3o11JfOitzS5yUyMEHTag26LZuPTOEX3LV
+rA9BL2aDJNHqNMvq/XfjVN3rqb3h0t0IHcYnjiqfNBml4cgAsLbczKgu3DSGNXgT
+lr4tPeS0AAfl5w15AWsKK9mOPTG0faFjserY9wAuMaVDdpXdAcG6smxWOIPYpJZd
+vBRcuesPLcYf5kGaV6nJgpg6pzIb4D713/enN5KVNKpTNKbfpCxBb3RKII44hCFY
+D/2LwWTnh7s9fo/yUuGavtjcyuZSUetichx8z/df6u/8Nv9YkY8vKznQAI8cPrtg
+ePgAaPO3wMO05Tac4D7YDRt3Lw+9mjrCtq4CpYk/gID2ydloHZDM/QMtTYnsvlLD
+4yfLfQp2ixwB34NClsV1dfGGO16ldie2CQJ3p2EN9W2Iy1uxYLJIMvlYhBYrWdWZ
+aEPS6Buu5L0ua6AetdZhgjLUw9Hf5SJLrW1KaAKQ/2z+taC/GKMxq3aWGt04RSVL
+/3JmBQ2WatMplI9Obj6xL968WKXvs2mkszTD/L9QLO1QwZkR5BRC+miwwBjVYUxC
+OAqdrowL+e+IRrrYroIFX5L1OhO30Vao6FuHYI/CQMaS60T5gYk=
+=lvXb
 -----END PGP SIGNATURE-----
 
---SLDf9lqlvOQaIe6s--
+--IrhDeMKUP4DT/M7F--
