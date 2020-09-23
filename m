@@ -2,72 +2,143 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 10F8E276194
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Sep 2020 22:02:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED5F5276238
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Sep 2020 22:37:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgIWUBy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 23 Sep 2020 16:01:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726381AbgIWUBx (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Wed, 23 Sep 2020 16:01:53 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 415E6206DB;
-        Wed, 23 Sep 2020 20:01:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600891312;
-        bh=lacwpEnhW0VmojT8XZbUMWQowrObz8O29NKZ1igg/kw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=2d6Ym4AK/j0nrTc0JFBxZFw/lBa4dzWDfLWIDSJkqNZyyr6Y2LqnJdVpmfh4Cr0wS
-         1OoMmB6a789Vbvk/bM8U3ONdgEeBGAUzpSnn87ReKHDBx4lkkduT6nY/zUl4GUyxlF
-         VxlUyWCxSxY83kQC/QRpUy75LYJ8erGuJusDEWcY=
-Date:   Wed, 23 Sep 2020 21:01:45 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-fbdev@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v2] MAINTAINERS: add Dan Murphy as TP LP8xxx drivers
- maintainer
-Message-ID: <20200923205857.5af407ee@archlinux>
-In-Reply-To: <fe4609b5-5aab-46ed-5280-9a4742b97fe5@ti.com>
-References: <20200922152839.2744-1-krzk@kernel.org>
-        <fe4609b5-5aab-46ed-5280-9a4742b97fe5@ti.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726199AbgIWUhi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 23 Sep 2020 16:37:38 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42075 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbgIWUhi (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Sep 2020 16:37:38 -0400
+Received: by mail-io1-f66.google.com with SMTP id u6so902033iow.9;
+        Wed, 23 Sep 2020 13:37:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zyDlLJKi1LCBEhn98FTUiRp7YabuHkI2jkXtBu/lK3s=;
+        b=L2DTSDkxmOrvRgOvWlRJ4IK7fph2V9G4gGxje4KmD/j9ankw+bjpwvuPTV7F+PRWy5
+         xBNdhbsrVn1FrsOL6VSUrQR/B/qyHhmrmKJ2cB2znrJwBmKewrtlZSHY7sam2ccStHRY
+         DJPdmo24foPM8LBEbmK/Ry8yBKPXMBQh/PajGsQeMC1Npt3rlHXS4/RPh9Dnyh53Y5p3
+         EniXrV893ne4N4LHsv1h81XojfztzK/IhunX+dJAwVplc3sZ3/yixSCBnNuwpzm+UrUT
+         MacCQ072jC2NwtgXatOkEa8NDE7Doa2b1OlebRRsUXEcnYfcHhKw+6miPQDB1UG4s+V2
+         abHg==
+X-Gm-Message-State: AOAM532YS7Lqg2h21Fik14vK5wTXuJX1iOz1QoUkXJgY+oUU92cwZyqD
+        /48tuOp7Vs9bbuDXdduKDw==
+X-Google-Smtp-Source: ABdhPJzOk91DVHwMgV1G87qFRX0v0A4pJbMZa2BM4Q3CybLgZllhTEogwEBHo28xHFn87yVHkglBUg==
+X-Received: by 2002:a05:6638:250d:: with SMTP id v13mr1002429jat.50.1600893457259;
+        Wed, 23 Sep 2020 13:37:37 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id k16sm383922ilc.38.2020.09.23.13.37.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Sep 2020 13:37:36 -0700 (PDT)
+Received: (nullmailer pid 1262913 invoked by uid 1000);
+        Wed, 23 Sep 2020 20:37:35 -0000
+Date:   Wed, 23 Sep 2020 14:37:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        punit1.agrawal@toshiba.co.jp, yuji2.ishikawa@toshiba.co.jp,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: Add bindings for Toshiba Visconti
+ PWM Controller
+Message-ID: <20200923203735.GA1257022@bogus>
+References: <20200917223140.227542-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+ <20200917223140.227542-2-nobuhiro1.iwamatsu@toshiba.co.jp>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200917223140.227542-2-nobuhiro1.iwamatsu@toshiba.co.jp>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 23 Sep 2020 11:53:33 -0500
-Dan Murphy <dmurphy@ti.com> wrote:
+On Fri, Sep 18, 2020 at 07:31:39AM +0900, Nobuhiro Iwamatsu wrote:
+> Add bindings for the Toshiba Visconti PWM Controller.
+> 
+> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+> ---
+>  .../bindings/pwm/toshiba,pwm-visconti.yaml    | 48 +++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/toshiba,pwm-visconti.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/toshiba,pwm-visconti.yaml b/Documentation/devicetree/bindings/pwm/toshiba,pwm-visconti.yaml
+> new file mode 100644
+> index 000000000000..9145e9478b41
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/toshiba,pwm-visconti.yaml
+> @@ -0,0 +1,48 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-> Hello
-> 
-> On 9/22/20 10:28 AM, Krzysztof Kozlowski wrote:
-> > Milo Kim's email in TI bounces with permanent error (550: Invalid
-> > recipient).  Last email from him on LKML was in 2017.  Move Milo Kim to
-> > credits and add Dan Murphy from TI to look after:
-> >   - TI LP855x backlight driver,
-> >   - TI LP8727 charger driver,
-> >   - TI LP8788 MFD (ADC, LEDs, charger and regulator) drivers.
-> >
-> > Cc: Dan Murphy <dmurphy@ti.com>
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>  
-> 
-> Acked-by: Dan Murphy <dmurphy@ti.com>
-> 
-Not sure who will pick this one up, but
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Dual license new bindings please.
 
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/toshiba,pwm-visconti.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Toshiba Visconti PWM Controller
+> +
+> +maintainers:
+> +  - Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - toshiba,pwm-tmpv7708
+
+The normal order is: vendor,soc-block
+
+> +      - const: toshiba,pwm-visconti
+
+Do you expect a lot of chips with the exact same version of the IP? If 
+not drop. Future chips can always use toshiba,pwm-tmpv7708 as a 
+fallback.
+
+> +
+> +  reg:
+> +    # base address and length of the registers block for the PWM.
+
+Drop. No need to describe common properties.
+
+> +    maxItems: 1
+> +
+> +  '#pwm-cells':
+> +    # should be 2. See pwm.yaml in this directory for a description of
+> +    # the cells format.
+
+Drop.
+
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#pwm-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    soc {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        pwm: pwm@241c0000 {
+> +            compatible = "toshiba,pwm-tmpv7708", "toshiba,pwm-visconti";
+> +            reg = <0 0x241c0000 0 0x1000>;
+> +            pinctrl-names = "default";
+> +            pinctrl-0 = <&pwm_mux>;
+> +            #pwm-cells = <2>;
+> +        };
+> +    };
+> -- 
+> 2.27.0
+> 
