@@ -2,153 +2,81 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAD712759A2
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Sep 2020 16:15:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D14FA275DF1
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Sep 2020 18:53:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbgIWOPR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 23 Sep 2020 10:15:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgIWOPQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Sep 2020 10:15:16 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6695AC0613CE;
-        Wed, 23 Sep 2020 07:15:16 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id c18so173160wrm.9;
-        Wed, 23 Sep 2020 07:15:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CCpG6jWr4GZzW1CfQaSnnmzY1h1hQX+z5GfUGphu6mo=;
-        b=WyrzDX2hgEfYU9YEV2oB2Vy6Tk0kl11zvxMh4GY5Zt2ZGXDlcM0bIRvJURSeI8ygz8
-         K7BOrYW6NZZZZ8WNO359lHGhMUBKLp8RYVFb1RA9XE6CqaxCBH28mpQ9VlNnCEYpp3oB
-         YaiQ5Pj3XC5d+3qWk61xf4Xl2LYrqI3P+6YmLSDhln3QT1ToaJ/YKV/EMYVvYoFY1K/n
-         CYQfJkBIqbqGPooaLBU3l8dRSPFw3jl+SdGXFuDyljkKofyPmTaHKCbPTQL6hm3orrk/
-         wFBw5Rfz51qnFjDZ6W5wZswA+McLUuOlY4QMfhiXajTRVEeG7MBrNA9HnrmSlEwbsek2
-         V/pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CCpG6jWr4GZzW1CfQaSnnmzY1h1hQX+z5GfUGphu6mo=;
-        b=j9SmZ4sBiSMf4g2btvHev7WDIpJIdRN0dhxjbWsGERL+LJBZqQ20WrVptNvv6jf6yv
-         IJeBhVu8iP2usmmWCFiA8Qtlo1z/L894jKg8nNbhJj5/eqbPDv193PCBiqFiy5YjxxcF
-         b7ns7unDr0lv2xpiuwcjY4az/hJywusbujDdo1UXBRFvb6EcU8NXHqhg3W/spbN++3jF
-         gf/nLM6JMBLNuc3SJIGOaaJ+yxDHdF7wDvhXTeOUi4uofBRd8P93q7vPJzVXhhHbW9hT
-         7KKjeOG2Ik0wmd1VXHFlgMiLukLNOqEuEtUxEpHfVkbxBWQx7h/CYJeCnSX/0OuafBvP
-         B4fQ==
-X-Gm-Message-State: AOAM533fqfkRPjCJQhTEiWnkgWxSeb9GvLKWoVpPPTmMOdVNYYPqvQPo
-        HZKGdMiQrJbnZ9hbmnVBm9o=
-X-Google-Smtp-Source: ABdhPJxE/2vXIiL4kN9hTjYGmAYGf/ntfPr0bNkLM/DKOX5sQazw3tKXKwd9st2bXep+5i7oBXEVXA==
-X-Received: by 2002:a5d:568d:: with SMTP id f13mr1056599wrv.303.1600870515112;
-        Wed, 23 Sep 2020 07:15:15 -0700 (PDT)
-Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id o4sm29300893wru.55.2020.09.23.07.15.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Sep 2020 07:15:13 -0700 (PDT)
-Date:   Wed, 23 Sep 2020 16:15:11 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
-        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
-        devicetree@vger.kernel.org,
+        id S1726617AbgIWQxq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 23 Sep 2020 12:53:46 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:37638 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbgIWQxq (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Sep 2020 12:53:46 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08NGrYUc073873;
+        Wed, 23 Sep 2020 11:53:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1600880014;
+        bh=v/OdQtLrwg8yFHMiXDvciypEO6WxHuaqhFeT3aUYHVk=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=bPXmP2CUn6HstssqRQAJHuvz8dGAJpgOb44WcJiChOvDH5JjqhtpWwfpiqSfRM3Pw
+         pa0uVcKlGFPxYYoMhQMmlLsSOiqovFxNpf+k/wp06OeNuSt03GhjMTxwMOle+5eVV3
+         CTu99N+bQ8HczmerxJF38khSQ3FO4mQuVekEsCmI=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08NGrYso032957
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 23 Sep 2020 11:53:34 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 23
+ Sep 2020 11:53:34 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 23 Sep 2020 11:53:34 -0500
+Received: from [10.250.36.88] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08NGrXwg008341;
+        Wed, 23 Sep 2020 11:53:33 -0500
+Subject: Re: [PATCH v2] MAINTAINERS: add Dan Murphy as TP LP8xxx drivers
+ maintainer
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        <linux-iio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v3 06/19] dt-bindings: pwm: imx-pwm: Add i.MX 8M
- compatibles
-Message-ID: <20200923141511.GF1848911@ulmo>
-References: <20200825193536.7332-1-krzk@kernel.org>
- <20200825193536.7332-7-krzk@kernel.org>
- <20200923115201.GD1846003@ulmo>
- <CAJKOXPcZuonCBK1Fc9r=rHzOL02MArrsE=R4x1tWGqov2nP0fA@mail.gmail.com>
+        <linux-leds@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-fbdev@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>
+References: <20200922152839.2744-1-krzk@kernel.org>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <fe4609b5-5aab-46ed-5280-9a4742b97fe5@ti.com>
+Date:   Wed, 23 Sep 2020 11:53:33 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="SxgehGEc6vB0cZwN"
-Content-Disposition: inline
-In-Reply-To: <CAJKOXPcZuonCBK1Fc9r=rHzOL02MArrsE=R4x1tWGqov2nP0fA@mail.gmail.com>
-User-Agent: Mutt/1.14.7 (2020-08-29)
+In-Reply-To: <20200922152839.2744-1-krzk@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hello
 
---SxgehGEc6vB0cZwN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 9/22/20 10:28 AM, Krzysztof Kozlowski wrote:
+> Milo Kim's email in TI bounces with permanent error (550: Invalid
+> recipient).  Last email from him on LKML was in 2017.  Move Milo Kim to
+> credits and add Dan Murphy from TI to look after:
+>   - TI LP855x backlight driver,
+>   - TI LP8727 charger driver,
+>   - TI LP8788 MFD (ADC, LEDs, charger and regulator) drivers.
+>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-On Wed, Sep 23, 2020 at 04:08:53PM +0200, Krzysztof Kozlowski wrote:
-> On Wed, 23 Sep 2020 at 13:52, Thierry Reding <thierry.reding@gmail.com> w=
-rote:
-> >
-> > On Tue, Aug 25, 2020 at 09:35:23PM +0200, Krzysztof Kozlowski wrote:
-> > > DTSes with new i.MX 8M SoCs introduce their own compatibles so add th=
-em
-> > > to fix dtbs_check warnings like:
-> > >
-> > >   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
-> > >     compatible:0: 'fsl,imx8mm-pwm' is not one of ['fsl,imx1-pwm', 'fs=
-l,imx27-pwm']
-> > >     From schema: Documentation/devicetree/bindings/pwm/imx-pwm.yaml
-> > >
-> > >   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
-> > >     compatible: ['fsl,imx8mm-pwm', 'fsl,imx27-pwm'] is too long
-> > >
-> > >   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
-> > >     compatible: Additional items are not allowed ('fsl,imx27-pwm' was=
- unexpected)
-> > >
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/pwm/imx-pwm.yaml | 14 +++++++++++-=
---
-> > >  1 file changed, 11 insertions(+), 3 deletions(-)
-> >
-> > Applied, thanks.
->=20
-> Thanks Thierry, but this was already picked up by Rob into DT tree.
+Acked-by: Dan Murphy <dmurphy@ti.com>
 
-I hadn't seen any email and since Rob had given a reviewed-by I assumed
-this was supposed to be picked up into subsystem trees. I'll drop it
-again.
-
-Thierry
-
---SxgehGEc6vB0cZwN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl9rWG8ACgkQ3SOs138+
-s6FYZA/+J5rgjcPTqcNSA6/9QwG56DhiJV6FV2eQhf5UbL1l2RFHvVGpAnZxjxM7
-UFP1CVWZIFEYJlXCAjEjHeKrz8wz/M8+j2UYqzCnew7XwH2QOKvJRiQYyjMzJyLh
-Z9AI7zgkZXqz0xH+WIjkynmWnoz1jZw2Ct331f2jaPHmkD4B2CURyhkVtVNhW0Kr
-5Vq8t7NQ7tqQjh2+q4cxf6ge1zc1J2PCNNdc6MDdTHFTBhpqGp4IF7Sx7aMq79OT
-/JtEp0TZohhPUXtkDl1ZghDzryf9pksNOf+HwgpgrbrbZl5tP0y2K3TL+9uIXjfT
-6clna7VIx9ofQpnAeL1RzJMGM93laLOpvdcAj02cgUcNcOU3Bj3oVGBx076M8WyA
-i58nto1/wlQEcZzlMcQigyNCFWu6nhXjebM5U9WdEWAm9xkGv4OSbHQw7ZV7TM8b
-JI334Uvholn1f99bt3JosCAOYTV/88sn4Px8SAxvwGy6EttBPKdnUvBwZdk86xTa
-eKbDtGkvF2pFAgaO7ylV2ADQnVW+A3JEXF+RbT/u5jiFiHUEz8XncHiJmB+e4xrf
-4W3V2QqbWkF6y7BQ+OaNYk98m5dkNE/e7kSCdXcmjjJwazDunejXvQvnNDr70LIP
-oNqvMzEtfA0q5K2Fee3TyE31GBycFO3i6PjxrIad0PsInjVV2Ok=
-=J7v2
------END PGP SIGNATURE-----
-
---SxgehGEc6vB0cZwN--
