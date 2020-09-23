@@ -2,93 +2,94 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6244D2758B3
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Sep 2020 15:29:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 454C0275976
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Sep 2020 16:09:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgIWN3i (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 23 Sep 2020 09:29:38 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40615 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgIWN3i (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Sep 2020 09:29:38 -0400
-Received: by mail-oi1-f196.google.com with SMTP id t76so25005527oif.7;
-        Wed, 23 Sep 2020 06:29:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1rMoEuPGDAy971L25OQzzcUwzDymkiOVA4jg4tTeTHI=;
-        b=Lea3InaDNDnXi04N6avkexks0kmaBfLs9johDZqyWZ+UwMdepz6gMikrBF7c7fc4jn
-         bFJj/urKShgXHQFuuVr8uzbVvG+nJ0png9li+AkqfeDkfc9GxonahGMA1Q7VXYJzRapO
-         El+FXFd2mxboXOp3toWcZX0jIX8x6TOgl06b5Ng0yqy5zX6uIYdErBEIcK0EGtvl3uqC
-         g5D9EwOu6qVCnO9YXyIB4Zb4MpwrNQd5uWqUqwkz/ToYuG8sI868SJjpw/fmCLl1MxC3
-         oBsdIOyv7WFQdcPmmfkIaoxNMCiWzXHhvctQ72+7UeH8C82f6QfF3abD0sJMlP/jbcti
-         40zA==
-X-Gm-Message-State: AOAM531EonW/bBhdS3K8QzcM2FgX9QnAsEZX/DTkeUgSbwJF8OIrACQR
-        +bj4/39YTjof4SVk83b+90DBFobJNF5OXmpCxv3T6c1c
-X-Google-Smtp-Source: ABdhPJziefyJq4JP9IubrLkGlZIwmizPmfyZzixhXhqNpkNSciMNfsNrp++kEzyejdd8neZ6NVOcBk24rZGIIwTUkDs=
-X-Received: by 2002:aca:3bc3:: with SMTP id i186mr5442092oia.148.1600867777289;
- Wed, 23 Sep 2020 06:29:37 -0700 (PDT)
+        id S1726755AbgIWOJI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 23 Sep 2020 10:09:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726572AbgIWOJH (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 23 Sep 2020 10:09:07 -0400
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 679C423119;
+        Wed, 23 Sep 2020 14:09:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600870146;
+        bh=YdIBSxeNAvE6gQ5FC6DdEL/c8aPmX6JYu110Tn4pYb4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SCPL5h7I8Q2+Rqrmk3vTX4xl+c46yq9MI4bSDw5GroNsoIBP8ozU4ghJbq24G/Nng
+         /4D6o/4C0E/pvBIOoaUpT6s7ClcusUZcUS+qb1d/YMD3S9mHHBbZwG6YL/Fe91/goa
+         Q20KNMBVEbzDOzwVGsQxOdShPRPImq/OnuRUcRFk=
+Received: by mail-ed1-f52.google.com with SMTP id i1so20072439edv.2;
+        Wed, 23 Sep 2020 07:09:06 -0700 (PDT)
+X-Gm-Message-State: AOAM531XWC7JkmCXfZyFV6COi3lGmtyxv7Jmf0LzwGfwA0tVnyQYDQ5l
+        oUatQdHLbTrakusF9TEd6b+VoRZYh3lLS4S+hUc=
+X-Google-Smtp-Source: ABdhPJwV6yPAy5gbNdaNXncZ2t260JTMWE7HddlqhxYJPw/t/7iwqoqe4AsHLWgMB6HEHZQn26BjmuJV5+rszBRI9Wk=
+X-Received: by 2002:a05:6402:ca7:: with SMTP id cn7mr9622063edb.143.1600870144956;
+ Wed, 23 Sep 2020 07:09:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200825104455.18000-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200825104455.18000-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdWmvcA8x-t=FgNOuMnAtw6j3OAgo8irmD5e2wrB+LfhHg@mail.gmail.com> <20200923121452.GD1848911@ulmo>
-In-Reply-To: <20200923121452.GD1848911@ulmo>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 23 Sep 2020 15:29:25 +0200
-Message-ID: <CAMuHMdX=G0n4MWNUM46OcUzeKUc=i1Sv4J8tnU0=_Nkt=Pf6xA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: renesas: r8a774e1: Add PWM device nodes
+References: <20200825193536.7332-1-krzk@kernel.org> <20200825193536.7332-7-krzk@kernel.org>
+ <20200923115201.GD1846003@ulmo>
+In-Reply-To: <20200923115201.GD1846003@ulmo>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 23 Sep 2020 16:08:53 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPcZuonCBK1Fc9r=rHzOL02MArrsE=R4x1tWGqov2nP0fA@mail.gmail.com>
+Message-ID: <CAJKOXPcZuonCBK1Fc9r=rHzOL02MArrsE=R4x1tWGqov2nP0fA@mail.gmail.com>
+Subject: Re: [PATCH v3 06/19] dt-bindings: pwm: imx-pwm: Add i.MX 8M compatibles
 To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Thierry,
-
-On Wed, Sep 23, 2020 at 2:14 PM Thierry Reding <thierry.reding@gmail.com> wrote:
-> On Tue, Aug 25, 2020 at 03:32:08PM +0200, Geert Uytterhoeven wrote:
-> > On Tue, Aug 25, 2020 at 12:45 PM Lad Prabhakar
-> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > >
-> > > This patch adds PWM[0123456] device nodes to the RZ/G2H (a.k.a R8A774E1)
-> > > device tree.
-> > >
-> > > Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Wed, 23 Sep 2020 at 13:52, Thierry Reding <thierry.reding@gmail.com> wrote:
+>
+> On Tue, Aug 25, 2020 at 09:35:23PM +0200, Krzysztof Kozlowski wrote:
+> > DTSes with new i.MX 8M SoCs introduce their own compatibles so add them
+> > to fix dtbs_check warnings like:
 > >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > i.e. will queue in renesas-devel for v5.10.
+> >   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
+> >     compatible:0: 'fsl,imx8mm-pwm' is not one of ['fsl,imx1-pwm', 'fsl,imx27-pwm']
+> >     From schema: Documentation/devicetree/bindings/pwm/imx-pwm.yaml
+> >
+> >   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
+> >     compatible: ['fsl,imx8mm-pwm', 'fsl,imx27-pwm'] is too long
+> >
+> >   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
+> >     compatible: Additional items are not allowed ('fsl,imx27-pwm' was unexpected)
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/pwm/imx-pwm.yaml | 14 +++++++++++---
+> >  1 file changed, 11 insertions(+), 3 deletions(-)
 >
-> Hi Geert,
->
-> did you also pick up patch 1/2 in this series?
+> Applied, thanks.
 
-No, I typically don't take DT binding updates for non-core devices.
-Can you please pick it up?
+Thanks Thierry, but this was already picked up by Rob into DT tree.
 
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards,
+Krzysztof
