@@ -2,64 +2,32 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96ADD278400
-	for <lists+linux-pwm@lfdr.de>; Fri, 25 Sep 2020 11:30:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AA68278452
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Sep 2020 11:47:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgIYJaE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 25 Sep 2020 05:30:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727535AbgIYJaE (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 25 Sep 2020 05:30:04 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07611C0613CE;
-        Fri, 25 Sep 2020 02:30:04 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id k8so2619173pfk.2;
-        Fri, 25 Sep 2020 02:30:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=njuKnzjM1XbkGHdVLOoKdb5c4Qn0ofNq9S9KwUbkq6w=;
-        b=MXqLK/NjBAfx6dPwfwUBsQkW3e5I1SI1Rg34aYxvpU2In+TP/Tk5T+p4w/NCUXbD9Q
-         fwvBexwllzRw/qjVmJzstwLqpgXatja7mEIU6rx5lnDytAcn0mU3AhlXVBZpYf69lN9F
-         4LbtezU94x33cxITq4VfuWXhihgdGtSPnCRiK/dmQcoVv5ltSN/g1wBd7stCt8q7NLSr
-         4oKjMm3y58m6hjC9yExBq1himVKM4tRIaYiXyOESiY/NGtZOaWJo2lqKV2w8h3rSHhnI
-         fnyzyq7QlBcOfsw3O/0pmYQWQ2MRBpfw/u6Mxxrc6+oDoNVqQq29QWf/J4/nl436Uj2v
-         igaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=njuKnzjM1XbkGHdVLOoKdb5c4Qn0ofNq9S9KwUbkq6w=;
-        b=nrLpwmS3nRxol0n8vCyGZA0K/k4LCQ48VzSrqqNAQiGBdHKZPkuGoKoMU1kCUaQRMo
-         3ERRxLpoinDinje8iwvCS5ZHzLPsDebQoaXI/H/2fdvM/ou1H9ahErBfQ8y7JbwXYkBj
-         CI81Qq465io+vLsfMcOETEzuzTIGo7A2Bbxt3a/cRRyHnh+pCD1xLm+ol80PuS6fn3q0
-         U5BdbiNDgYVUKHZUJ8Gt/er4JbaoLqXtGc0l+iBhMBlRqZzQD0cZXZbHklj5nuKba21Q
-         831cNXF2yWfZFuTHkXz3tpsJabN0LPvvQnvb+hToWGgwoAnkm0xGyYmwunhoMrnRAtUt
-         fQVQ==
-X-Gm-Message-State: AOAM532vWtDv7862D5JDkrEpJmwHKpftq6kiETMrfbbTf2QlJUpVml1B
-        kxte5qis7DBLhoJmiew79rxXgjcjEEIkZml3IHg=
-X-Google-Smtp-Source: ABdhPJyFoDjI+Lj09DYic41xsSzC3rmiR3KE3jBfV92lPrpC2h1Ga6l1MDN/00ywFSoBy8sV7nlzIF0rOVQK3VxgTX8=
-X-Received: by 2002:a17:902:c14c:b029:d2:4345:5a9 with SMTP id
- 12-20020a170902c14cb02900d2434505a9mr3519072plj.0.1601026203296; Fri, 25 Sep
- 2020 02:30:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200924192455.2484005-1-j.neuschaefer@gmx.net> <20200924192455.2484005-4-j.neuschaefer@gmx.net>
-In-Reply-To: <20200924192455.2484005-4-j.neuschaefer@gmx.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 25 Sep 2020 12:29:45 +0300
-Message-ID: <CAHp75VdUHPsuvDPLnfP9sM2p1FDiCsjkCf1SSM-y02ZsQxSDWQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/7] mfd: Add base driver for Netronix embedded controller
-To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
+        id S1727846AbgIYJrc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 25 Sep 2020 05:47:32 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:48574 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727817AbgIYJrb (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 25 Sep 2020 05:47:31 -0400
+Received: from relay9-d.mail.gandi.net (unknown [217.70.183.199])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id B3C553AFB59
+        for <linux-pwm@vger.kernel.org>; Fri, 25 Sep 2020 09:36:50 +0000 (UTC)
+X-Originating-IP: 90.65.88.165
+Received: from localhost (lfbn-lyo-1-1908-165.w90-65.abo.wanadoo.fr [90.65.88.165])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 4F9B3FF809;
+        Fri, 25 Sep 2020 09:36:15 +0000 (UTC)
+Date:   Fri, 25 Sep 2020 11:36:14 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
@@ -73,285 +41,242 @@ Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Heiko Stuebner <heiko@sntech.de>,
         Josua Mayer <josua.mayer@jm0.eu>,
         Andreas Kemnade <andreas@kemnade.info>,
-        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 5/7] rtc: New driver for RTC in Netronix embedded
+ controller
+Message-ID: <20200925093614.GZ9675@piout.net>
+References: <20200924192455.2484005-1-j.neuschaefer@gmx.net>
+ <20200924192455.2484005-6-j.neuschaefer@gmx.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200924192455.2484005-6-j.neuschaefer@gmx.net>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Sep 24, 2020 at 10:26 PM Jonathan Neusch=C3=A4fer
-<j.neuschaefer@gmx.net> wrote:
->
-> The Netronix embedded controller is a microcontroller found in some
-> e-book readers designed by the ODM Netronix, Inc. It contains RTC,
-> battery monitoring, system power management, and PWM functionality.
->
-> This driver implements register access and version detection.
->
-> Third-party hardware documentation is available at:
->
->   https://github.com/neuschaefer/linux/wiki/Netronix-MSP430-embedded-cont=
-roller
->
-> The EC supports interrupts, but the driver doesn't make use of them so
-> far.
+Hi,
 
-...
+On 24/09/2020 21:24:53+0200, Jonathan Neuschäfer wrote:
+> With this driver, mainline Linux can keep its time and date in sync with
+> the vendor kernel.
+> 
+> Advanced functionality like alarm and automatic power-on is not yet
+> supported.
+> 
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+> ---
+> 
+> v3:
+> - Add email address to copyright line
+> - Remove OF compatible string and don't include linux/of_device.h
+> - Don't use a comma after sentinels
+> - Avoid ret |= ... pattern
+> - Move 8-bit register conversion to ntxec.h
+> - Relicense as GPLv2 or later
 
-> +#include <asm/unaligned.h>
+I don't think you had to relicense. The kernel is GPL 2 only, you are
+free to license your code under GPL 2 only if that is what you desire.
 
-This usually goes after linux/*.h
-(and actually not visible how it's being used, but see below first)
-
-> +#include <linux/delay.h>
-> +#include <linux/errno.h>
-> +#include <linux/i2c.h>
-> +#include <linux/mfd/core.h>
+> 
+> v2:
+> - https://lore.kernel.org/lkml/20200905133230.1014581-7-j.neuschaefer@gmx.net/
+> - Rework top-of-file comment [Lee Jones]
+> - Sort the #include lines [Alexandre Belloni]
+> - don't align = signs in struct initializers [Uwe Kleine-König]
+> - Switch to regmap
+> - Fix register number used to read minutes and seconds
+> - Prefix registers with NTXEC_REG_
+> - Add help text to the Kconfig option
+> - Use devm_rtc_allocate_device and rtc_register_device, set ->range_min and ->range_max
+> ---
+>  drivers/rtc/Kconfig     |   8 +++
+>  drivers/rtc/Makefile    |   1 +
+>  drivers/rtc/rtc-ntxec.c | 132 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 141 insertions(+)
+>  create mode 100644 drivers/rtc/rtc-ntxec.c
+> 
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> index 48c536acd777f..ae8f3dc36c9a3 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -1301,6 +1301,14 @@ config RTC_DRV_CROS_EC
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called rtc-cros-ec.
+> 
+> +config RTC_DRV_NTXEC
+> +	tristate "Netronix embedded controller RTC driver"
+> +	depends on MFD_NTXEC
+> +	help
+> +	  Say yes here if you want to support the RTC functionality of the
+> +	  embedded controller found in certain e-book readers designed by the
+> +	  ODM Netronix.
+> +
+>  comment "on-CPU RTC drivers"
+> 
+>  config RTC_DRV_ASM9260
+> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+> index 880e08a409c3d..733479db18896 100644
+> --- a/drivers/rtc/Makefile
+> +++ b/drivers/rtc/Makefile
+> @@ -111,6 +111,7 @@ obj-$(CONFIG_RTC_DRV_MT7622)	+= rtc-mt7622.o
+>  obj-$(CONFIG_RTC_DRV_MV)	+= rtc-mv.o
+>  obj-$(CONFIG_RTC_DRV_MXC)	+= rtc-mxc.o
+>  obj-$(CONFIG_RTC_DRV_MXC_V2)	+= rtc-mxc_v2.o
+> +obj-$(CONFIG_RTC_DRV_NTXEC)	+= rtc-ntxec.o
+>  obj-$(CONFIG_RTC_DRV_OMAP)	+= rtc-omap.o
+>  obj-$(CONFIG_RTC_DRV_OPAL)	+= rtc-opal.o
+>  obj-$(CONFIG_RTC_DRV_PALMAS)	+= rtc-palmas.o
+> diff --git a/drivers/rtc/rtc-ntxec.c b/drivers/rtc/rtc-ntxec.c
+> new file mode 100644
+> index 0000000000000..af23c7cc76544
+> --- /dev/null
+> +++ b/drivers/rtc/rtc-ntxec.c
+> @@ -0,0 +1,132 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * The Netronix embedded controller is a microcontroller found in some
+> + * e-book readers designed by the ODM Netronix, Inc. It contains RTC,
+> + * battery monitoring, system power management, and PWM functionality.
+> + *
+> + * This driver implements access to the RTC time and date.
+> + *
+> + * Copyright 2020 Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+> + */
+> +
 > +#include <linux/mfd/ntxec.h>
 > +#include <linux/module.h>
-> +#include <linux/pm.h>
-> +#include <linux/reboot.h>
+> +#include <linux/platform_device.h>
 > +#include <linux/regmap.h>
-> +#include <linux/types.h>
-
-...
-
-> +static void ntxec_poweroff(void)
-> +{
-> +       int res;
-> +       u8 buf[] =3D {
-> +               NTXEC_REG_POWEROFF,
-
-> +               (NTXEC_POWEROFF_VALUE >> 8) & 0xff,
-> +               NTXEC_POWEROFF_VALUE & 0xff,
-
-'& 0xff' parts are redundant. *u8 implies that. Fix in all cases.
-Also I would rather see something like
-
-  buf[0] =3D _POWEROFF;
-  put_unaligned_be16(_VALUE, &buf[1]);
-
-to explicitly show the endianess of the register values.
-
-> +       };
-> +       struct i2c_msg msgs[] =3D {
-> +               {
-> +                       .addr =3D poweroff_restart_client->addr,
-> +                       .flags =3D 0,
-> +                       .len =3D sizeof(buf),
-
-> +                       .buf =3D buf
-
-It's slightly better to keep trailing commas in cases like this.
-
-> +               }
-> +       };
-> +
-> +       res =3D i2c_transfer(poweroff_restart_client->adapter, msgs, ARRA=
-Y_SIZE(msgs));
-> +       if (res < 0)
-
-> +               dev_alert(&poweroff_restart_client->dev,
-> +                         "Failed to power off (err =3D %d)\n", res);
-
-alert? This needs to be explained.
-
-> +       /*
-> +        * The time from the register write until the host CPU is powered=
- off
-> +        * has been observed to be about 2.5 to 3 seconds. Sleep long eno=
-ugh to
-> +        * safely avoid returning from the poweroff handler.
-> +        */
-> +       msleep(5000);
-> +}
-> +
-> +static int ntxec_restart(struct notifier_block *nb,
-> +                        unsigned long action, void *data)
-> +{
-> +       int res;
-> +       /*
-> +        * NOTE: The lower half of the reset value is not sent, because s=
-ending
-> +        * it causes an error
-
-Why? Any root cause? Perhaps you need to send 0xffff ?
-
-> +        */
-> +       u8 buf[] =3D {
-> +               NTXEC_REG_RESET,
-
-> +               (NTXEC_RESET_VALUE >> 8) & 0xff,
-
-Here you may still use put_unaligned_be16() but move the comment to be
-before len hardcoded to sizeof(buf) - 1.
-
-> +       };
-> +       struct i2c_msg msgs[] =3D {
-> +               {
-> +                       .addr =3D poweroff_restart_client->addr,
-> +                       .flags =3D 0,
-> +                       .len =3D sizeof(buf),
-> +                       .buf =3D buf
-> +               }
-> +       };
-> +
-> +       res =3D i2c_transfer(poweroff_restart_client->adapter, msgs, ARRA=
-Y_SIZE(msgs));
-> +       if (res < 0)
-> +               dev_alert(&poweroff_restart_client->dev,
-> +                         "Failed to restart (err =3D %d)\n", res);
-> +
-> +       return NOTIFY_DONE;
-> +}
-
-...
-
-> +static int ntxec_probe(struct i2c_client *client)
-> +{
-> +       struct ntxec *ec;
-> +       unsigned int version;
-> +       int res;
-> +
-> +       ec =3D devm_kmalloc(&client->dev, sizeof(*ec), GFP_KERNEL);
-> +       if (!ec)
-> +               return -ENOMEM;
-> +
-> +       ec->dev =3D &client->dev;
-> +
-> +       ec->regmap =3D devm_regmap_init_i2c(client, &regmap_config);
-> +       if (IS_ERR(ec->regmap)) {
-> +               dev_err(ec->dev, "Failed to set up regmap for device\n");
-> +               return res;
-> +       }
-> +
-> +       /* Determine the firmware version */
-> +       res =3D regmap_read(ec->regmap, NTXEC_REG_VERSION, &version);
-> +       if (res < 0) {
-> +               dev_err(ec->dev, "Failed to read firmware version number\=
-n");
-> +               return res;
-> +       }
-
-> +       dev_info(ec->dev,
-> +                "Netronix embedded controller version %04x detected.\n",
-> +                version);
-
-This info level may confuse users if followed by an error path.
-
-> +       /* Bail out if we encounter an unknown firmware version */
-> +       switch (version) {
-> +       case 0xd726: /* found in Kobo Aura */
-> +               break;
-> +       default:
-> +               return -ENODEV;
-> +       }
-> +
-> +       if (of_device_is_system_power_controller(ec->dev->of_node)) {
-> +               /*
-> +                * Set the 'powerkeep' bit. This is necessary on some boa=
-rds
-> +                * in order to keep the system running.
-> +                */
-> +               res =3D regmap_write(ec->regmap, NTXEC_REG_POWERKEEP,
-> +                                  NTXEC_POWERKEEP_VALUE);
-> +               if (res < 0)
-> +                       return res;
-
-> +               WARN_ON(poweroff_restart_client);
-
-WARN_ON? All these alerts, WARNs, BUGs must be explained. Screaming to
-the user is not good if it wasn't justified.
-
-> +               poweroff_restart_client =3D client;
-> +               if (pm_power_off)
-> +                       dev_err(ec->dev, "pm_power_off already assigned\n=
-");
-> +               else
-> +                       pm_power_off =3D ntxec_poweroff;
-> +
-> +               res =3D register_restart_handler(&ntxec_restart_handler);
-> +               if (res)
-> +                       dev_err(ec->dev,
-> +                               "Failed to register restart handler: %d\n=
-", res);
-> +       }
-> +
-> +       i2c_set_clientdata(client, ec);
-> +
-> +       res =3D devm_mfd_add_devices(ec->dev, PLATFORM_DEVID_NONE, ntxec_=
-subdevices,
-> +                                  ARRAY_SIZE(ntxec_subdevices), NULL, 0,=
- NULL);
-> +       if (res)
-
-> +               dev_warn(ec->dev, "Failed to add subdevices: %d\n", res);
-
-'warn' is inconsistent with 'return err'. Either do not return an
-error, or mark a message as an error one.
-
-And above with the restart handler has the same issue.
-
-> +       return res;
-> +}
-> +
-> +static int ntxec_remove(struct i2c_client *client)
-> +{
-
-> +       if (client =3D=3D poweroff_restart_client) {
-
-When it's not the case?
-
-> +               poweroff_restart_client =3D NULL;
-> +               pm_power_off =3D NULL;
-> +               unregister_restart_handler(&ntxec_restart_handler);
-> +       }
-> +
-> +       return 0;
-> +}
-
-...
-
+> +#include <linux/rtc.h>
 > +#include <linux/types.h>
 > +
-
-Missed
-
-struct device;
-struct regmap;
-
-here.
-
-> +struct ntxec {
-> +       struct device *dev;
-> +       struct regmap *regmap;
+> +struct ntxec_rtc {
+> +	struct device *dev;
+> +	struct ntxec *ec;
 > +};
-
-> +/*
-> + * Some registers, such as the battery status register (0x41), are in
-> + * big-endian, but others only have eight significant bits, which are in=
- the
-> + * first byte transmitted over I2C (the MSB of the big-endian value).
-> + * This convenience function converts an 8-bit value to 16-bit for use i=
-n the
-> + * second kind of register.
-> + */
-> +static inline u16 ntxec_reg8(u8 value)
+> +
+> +#define NTXEC_REG_WRITE_YEAR	0x10
+> +#define NTXEC_REG_WRITE_MONTH	0x11
+> +#define NTXEC_REG_WRITE_DAY	0x12
+> +#define NTXEC_REG_WRITE_HOUR	0x13
+> +#define NTXEC_REG_WRITE_MINUTE	0x14
+> +#define NTXEC_REG_WRITE_SECOND	0x15
+> +
+> +#define NTXEC_REG_READ_YM	0x20
+> +#define NTXEC_REG_READ_DH	0x21
+> +#define NTXEC_REG_READ_MS	0x23
+> +
+> +static int ntxec_read_time(struct device *dev, struct rtc_time *tm)
 > +{
-> +       return value << 8;
+> +	struct ntxec_rtc *rtc = dev_get_drvdata(dev);
+> +	unsigned int value;
+> +	int res;
+> +
+> +	res = regmap_read(rtc->ec->regmap, NTXEC_REG_READ_YM, &value);
+> +	if (res < 0)
+> +		return res;
+> +
+> +	tm->tm_year = (value >> 8) + 100;
+> +	tm->tm_mon = (value & 0xff) - 1;
+> +
+> +	res = regmap_read(rtc->ec->regmap, NTXEC_REG_READ_DH, &value);
+> +	if (res < 0)
+> +		return res;
+> +
+> +	tm->tm_mday = value >> 8;
+> +	tm->tm_hour = value & 0xff;
+> +
+> +	res = regmap_read(rtc->ec->regmap, NTXEC_REG_READ_MS, &value);
+> +	if (res < 0)
+> +		return res;
+> +
+> +	tm->tm_min = value >> 8;
+> +	tm->tm_sec = value & 0xff;
+> +
+> +	return 0;
 > +}
+> +
+> +static int ntxec_set_time(struct device *dev, struct rtc_time *tm)
+> +{
+> +	struct ntxec_rtc *rtc = dev_get_drvdata(dev);
+> +	int res = 0;
+> +
+> +	res = regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_YEAR, ntxec_reg8(tm->tm_year - 100));
+> +	if (res)
+> +		return res;
+> +
+> +	res = regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_MONTH, ntxec_reg8(tm->tm_mon + 1));
+> +	if (res)
+> +		return res;
+> +
+> +	res = regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_DAY, ntxec_reg8(tm->tm_mday));
+> +	if (res)
+> +		return res;
+> +
+> +	res = regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_HOUR, ntxec_reg8(tm->tm_hour));
+> +	if (res)
+> +		return res;
+> +
+> +	res = regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_MINUTE, ntxec_reg8(tm->tm_min));
+> +	if (res)
+> +		return res;
+> +
+> +	return regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_SECOND, ntxec_reg8(tm->tm_sec));
+> +}
+> +
+> +static const struct rtc_class_ops ntxec_rtc_ops = {
+> +	.read_time = ntxec_read_time,
+> +	.set_time = ntxec_set_time,
+> +};
+> +
+> +static int ntxec_rtc_probe(struct platform_device *pdev)
+> +{
+> +	struct rtc_device *dev;
+> +	struct ntxec_rtc *rtc;
+> +
+> +	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
+> +	if (!rtc)
+> +		return -ENOMEM;
+> +
+> +	rtc->dev = &pdev->dev;
+> +	rtc->ec = dev_get_drvdata(pdev->dev.parent);
+> +	platform_set_drvdata(pdev, rtc);
+> +
+> +	dev = devm_rtc_allocate_device(&pdev->dev);
+> +	if (IS_ERR(dev))
+> +		return PTR_ERR(dev);
+> +
+> +	dev->ops = &ntxec_rtc_ops;
+> +	dev->range_min = RTC_TIMESTAMP_BEGIN_2000;
+> +	dev->range_max = 9025257599LL; /* 2255-12-31 23:59:59 */
+> +
+> +	return rtc_register_device(dev);
+> +}
+> +
+> +static struct platform_driver ntxec_rtc_driver = {
+> +	.driver = {
+> +		.name = "ntxec-rtc",
+> +	},
+> +	.probe = ntxec_rtc_probe,
+> +};
+> +module_platform_driver(ntxec_rtc_driver);
+> +
+> +MODULE_AUTHOR("Jonathan Neuschäfer <j.neuschaefer@gmx.net>");
+> +MODULE_DESCRIPTION("RTC driver for Netronix EC");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.28.0
+> 
 
-I'm wondering why __be16 is not used as returned type.
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
