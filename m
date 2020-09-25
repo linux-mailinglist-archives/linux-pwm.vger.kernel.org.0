@@ -2,39 +2,32 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E074277A96
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Sep 2020 22:40:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC18D277FC5
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Sep 2020 07:10:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbgIXUks (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 24 Sep 2020 16:40:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbgIXUkr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 24 Sep 2020 16:40:47 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1132BC0613CE;
-        Thu, 24 Sep 2020 13:40:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=YdMmIrFjy96JjZkrcSCWZWLABUbKOvDG/JNltuFZSaU=; b=BRtvxQYh1Y3OMCq4Kf1YBUAwZg
-        AdlcG1QdMUxg3ALlmkBMcq8Fes7GkNqPgbSkFwUY2V54/jeKT8Q05AcH4bBOHmAQc9aouuKfzC72q
-        aG24wLj1cSKhR4DYSdYTwVw163dOCYVYxDNsXX+DF1G7KUlaVk8ZmNzLEDmGihP+/OUg=;
-Received: from p200300ccff10b0001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff10:b000:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1kLY2G-0001pe-BJ; Thu, 24 Sep 2020 22:40:12 +0200
-Date:   Thu, 24 Sep 2020 22:40:11 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        id S1727107AbgIYFKG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 25 Sep 2020 01:10:06 -0400
+Received: from mout.gmx.net ([212.227.17.22]:41681 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727047AbgIYFKF (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 25 Sep 2020 01:10:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1601010538;
+        bh=HlgnC3df/tJycBpbEiuMsr+Bt4rnu2osQrbv2JddJP0=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=lQtEBzqQO3CgdvtzpOK8YL46GR8Ea/No6z/+imZZajAuJjXh4+m8EV/o48HicQ6j5
+         a3czcqf3smBpr8Y7xYJL6CdJDg50Y5HM7CYoeMPW2y0lMrubL9mYOjQ2YqMt/NRWtC
+         w/rvdpaHB2p49hW34Jyqx6d0wnoSwDCDoAKJsoyA=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mwfac-1kg4922a1S-00yB85; Fri, 25
+ Sep 2020 07:08:58 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
@@ -55,246 +48,109 @@ Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Heiko Stuebner <heiko@sntech.de>,
         Josua Mayer <josua.mayer@jm0.eu>,
+        Andreas Kemnade <andreas@kemnade.info>,
         Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 5/7] rtc: New driver for RTC in Netronix embedded
- controller
-Message-ID: <20200924224011.074d7a19@aktux>
-In-Reply-To: <20200924192455.2484005-6-j.neuschaefer@gmx.net>
+Subject: [PATCH v3 7/7] ARM: dts: imx50-kobo-aura: Add Netronix embedded controller
+Date:   Fri, 25 Sep 2020 07:08:18 +0200
+Message-Id: <20200925050818.2512375-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200924192455.2484005-1-j.neuschaefer@gmx.net>
 References: <20200924192455.2484005-1-j.neuschaefer@gmx.net>
-        <20200924192455.2484005-6-j.neuschaefer@gmx.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Score: -1.0 (-)
+X-Provags-ID: V03:K1:nFSbCxYo1nlk4h1TGxOTycwOxGsiVBkLTP+jxKBPubrqFtoiXOt
+ UhgfLQwcAL7GuTFPSvGVq/uyUN89Cz4VHuv9YGqdwFN3ATncYCB2rNDcfDyaJDoPnvAu+wv
+ dKrwRZvpGHgo7HH3vaodHF9te1ugFsggudcQm4G29a75qCzjTHthOaV8CsFgwLn9NAeKD7N
+ G/NyBCqBjMS7Ivz6inXgg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+B0cR6PdDqs=:+0l3nJJy2/OjnpViXaD2sG
+ DnuBotzhqffsfhtCoY3ClI3vjVk85XHTf8uK9RFKVfF865ozqfVtYKOsE5WSgagYImZiORhb9
+ sqvx+UWcB/Xr3eExNzL7i8RZ1ezNtr6MLG5Lntjb3HULQNl+8wnByd8Sl1fS8uPU4j/NTvXAd
+ UljBVT9Bli0r06MkB13/jdC5OcuDTKbYKzPYGtX4F//lE9Ev7sdKocfpSfR2uHYVR5lquiBng
+ 1VyEFUEz3xoAH+TcPnIhsFWMM/wrMFxlJnTrqmSjEo+WJ+edMLZmQZNXdhP74St0dOEGgK3Jw
+ FsVvAGzUoww5rXl2vU6hjFn+N0WcxCvnLZRTdLV/rPeLrRhBqiJ7/kaBAYwiPuhEC6P9fWVM7
+ BhQ2NxzKIdECsQCTlGObzmzHlVWiQWxp+N/1PbW2/BxBXAv0fn2MP92s4+JYv8WsulKXvzjfI
+ 8kokiDWdxcgM3iHaF5tDwTFQKH1iw6GEv2ZsdJkLPALiv5YreM7uVl2m4vovLs4+0/WJ29zLv
+ pFPulGuNW4R86lBQEJNL/CE2qFgkgDVEgy2Busu9V/ebUeONOzgIKFmLnzErzaxRKdu9TKhlQ
+ JOSgT9YaDYC7rhR+WF/dERlxP9w0j66Fk/y/+EUVGcSVJ6y1IfvYnM2g4oTuDMAGOakiqPP5o
+ thstMAVv3+FGHp3yJwF8q7xcWe5FKsohTyHNin6IFgDjb/Prwbuc1aTDXhosOiLb2cNEmfUPM
+ M+3cPhDwDxxhWrWjLkCqOK2Uv8ddsbxM9vpihyj2rEXIukw4wkrI++WlX6Cv+Ovy2yRK5Skt8
+ U34+KsHuelnv/NK6k2j3NGszjyzK8rX9Z51D6xHeD09TMXHB68faKC2y5ACwEuzMRVPiGBJ8K
+ TP/BIMGEt2PmvjvrFKc0QP5MJkky6MIEVf+wbvcXyhfCpLb09cd5CDfw7JETxZ8GRh2OOmsbW
+ Epy/Or473mN6xwzyx/JC43hYwDdVpoyB3TmSDPmNPFBGMZf5Bisp6Iew+i7rU2SJRZMPJvALD
+ mlxfiHEUYLhkS8+D3E508elVCBl1QPGdBZasUQ8Am81ZcAqzZNbikGr6xVNLeZfKjOwgrrKPp
+ 53Hv81zU4YyYcYRIZjkGdomu+VPZWKfZktHksv4p0uZDB3snk2Hmos7BuKRuULiJe6aXcjgDv
+ 8CJjtMBpsYr/W6wYYXAFED8RO4sbl0MR/6LD9ARFDqUNKcZ+uvr6U394tqDWMzGFWf80ljYYO
+ hlHUTCqRV0j56lEVl4ME5E7sejwPtG/vErzanxA==
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, 24 Sep 2020 21:24:53 +0200
-Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
+Enable the Netronix EC on the Kobo Aura ebook reader.
 
-> With this driver, mainline Linux can keep its time and date in sync with
-> the vendor kernel.
->=20
-> Advanced functionality like alarm and automatic power-on is not yet
-> supported.
->=20
-> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> ---
->=20
-> v3:
-> - Add email address to copyright line
-> - Remove OF compatible string and don't include linux/of_device.h
-> - Don't use a comma after sentinels
-> - Avoid ret |=3D ... pattern
-> - Move 8-bit register conversion to ntxec.h
-> - Relicense as GPLv2 or later
->=20
-> v2:
-> - https://lore.kernel.org/lkml/20200905133230.1014581-7-j.neuschaefer@gmx=
-.net/
-> - Rework top-of-file comment [Lee Jones]
-> - Sort the #include lines [Alexandre Belloni]
-> - don't align =3D signs in struct initializers [Uwe Kleine-K=C3=B6nig]
-> - Switch to regmap
-> - Fix register number used to read minutes and seconds
-> - Prefix registers with NTXEC_REG_
-> - Add help text to the Kconfig option
-> - Use devm_rtc_allocate_device and rtc_register_device, set ->range_min a=
-nd ->range_max
-> ---
->  drivers/rtc/Kconfig     |   8 +++
->  drivers/rtc/Makefile    |   1 +
->  drivers/rtc/rtc-ntxec.c | 132 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 141 insertions(+)
->  create mode 100644 drivers/rtc/rtc-ntxec.c
->=20
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index 48c536acd777f..ae8f3dc36c9a3 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -1301,6 +1301,14 @@ config RTC_DRV_CROS_EC
->  	  This driver can also be built as a module. If so, the module
->  	  will be called rtc-cros-ec.
->=20
-> +config RTC_DRV_NTXEC
-> +	tristate "Netronix embedded controller RTC driver"
-> +	depends on MFD_NTXEC
-> +	help
-> +	  Say yes here if you want to support the RTC functionality of the
-> +	  embedded controller found in certain e-book readers designed by the
-> +	  ODM Netronix.
-> +
->  comment "on-CPU RTC drivers"
->=20
->  config RTC_DRV_ASM9260
-> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-> index 880e08a409c3d..733479db18896 100644
-> --- a/drivers/rtc/Makefile
-> +++ b/drivers/rtc/Makefile
-> @@ -111,6 +111,7 @@ obj-$(CONFIG_RTC_DRV_MT7622)	+=3D rtc-mt7622.o
->  obj-$(CONFIG_RTC_DRV_MV)	+=3D rtc-mv.o
->  obj-$(CONFIG_RTC_DRV_MXC)	+=3D rtc-mxc.o
->  obj-$(CONFIG_RTC_DRV_MXC_V2)	+=3D rtc-mxc_v2.o
-> +obj-$(CONFIG_RTC_DRV_NTXEC)	+=3D rtc-ntxec.o
->  obj-$(CONFIG_RTC_DRV_OMAP)	+=3D rtc-omap.o
->  obj-$(CONFIG_RTC_DRV_OPAL)	+=3D rtc-opal.o
->  obj-$(CONFIG_RTC_DRV_PALMAS)	+=3D rtc-palmas.o
-> diff --git a/drivers/rtc/rtc-ntxec.c b/drivers/rtc/rtc-ntxec.c
-> new file mode 100644
-> index 0000000000000..af23c7cc76544
-> --- /dev/null
-> +++ b/drivers/rtc/rtc-ntxec.c
-> @@ -0,0 +1,132 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * The Netronix embedded controller is a microcontroller found in some
-> + * e-book readers designed by the ODM Netronix, Inc. It contains RTC,
-> + * battery monitoring, system power management, and PWM functionality.
-> + *
-> + * This driver implements access to the RTC time and date.
-> + *
-> + * Copyright 2020 Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> + */
-> +
-> +#include <linux/mfd/ntxec.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/rtc.h>
-> +#include <linux/types.h>
-> +
-> +struct ntxec_rtc {
-> +	struct device *dev;
-> +	struct ntxec *ec;
-> +};
-> +
-> +#define NTXEC_REG_WRITE_YEAR	0x10
-> +#define NTXEC_REG_WRITE_MONTH	0x11
-> +#define NTXEC_REG_WRITE_DAY	0x12
-> +#define NTXEC_REG_WRITE_HOUR	0x13
-> +#define NTXEC_REG_WRITE_MINUTE	0x14
-> +#define NTXEC_REG_WRITE_SECOND	0x15
-> +
-> +#define NTXEC_REG_READ_YM	0x20
-> +#define NTXEC_REG_READ_DH	0x21
-> +#define NTXEC_REG_READ_MS	0x23
-> +
-> +static int ntxec_read_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct ntxec_rtc *rtc =3D dev_get_drvdata(dev);
-> +	unsigned int value;
-> +	int res;
-> +
-> +	res =3D regmap_read(rtc->ec->regmap, NTXEC_REG_READ_YM, &value);
-> +	if (res < 0)
-> +		return res;
-> +
-> +	tm->tm_year =3D (value >> 8) + 100;
-> +	tm->tm_mon =3D (value & 0xff) - 1;
-> +
-> +	res =3D regmap_read(rtc->ec->regmap, NTXEC_REG_READ_DH, &value);
-> +	if (res < 0)
-> +		return res;
-> +
-> +	tm->tm_mday =3D value >> 8;
-> +	tm->tm_hour =3D value & 0xff;
-> +
-> +	res =3D regmap_read(rtc->ec->regmap, NTXEC_REG_READ_MS, &value);
-> +	if (res < 0)
-> +		return res;
-> +
-> +	tm->tm_min =3D value >> 8;
-> +	tm->tm_sec =3D value & 0xff;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ntxec_set_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct ntxec_rtc *rtc =3D dev_get_drvdata(dev);
-> +	int res =3D 0;
-> +
-> +	res =3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_YEAR, ntxec_reg8(=
-tm->tm_year - 100));
-> +	if (res)
-> +		return res;
-> +
-> +	res =3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_MONTH, ntxec_reg8=
-(tm->tm_mon + 1));
-> +	if (res)
-> +		return res;
-> +
-> +	res =3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_DAY, ntxec_reg8(t=
-m->tm_mday));
-> +	if (res)
-> +		return res;
-> +
-> +	res =3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_HOUR, ntxec_reg8(=
-tm->tm_hour));
-> +	if (res)
-> +		return res;
-> +
-> +	res =3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_MINUTE, ntxec_reg=
-8(tm->tm_min));
-> +	if (res)
-> +		return res;
-> +
-> +	return regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_SECOND, ntxec_reg8=
-(tm->tm_sec));
-> +}
-> +
-> +static const struct rtc_class_ops ntxec_rtc_ops =3D {
-> +	.read_time =3D ntxec_read_time,
-> +	.set_time =3D ntxec_set_time,
-> +};
-> +
-> +static int ntxec_rtc_probe(struct platform_device *pdev)
-> +{
-> +	struct rtc_device *dev;
-> +	struct ntxec_rtc *rtc;
-> +
-> +	rtc =3D devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
-> +	if (!rtc)
-> +		return -ENOMEM;
-> +
-> +	rtc->dev =3D &pdev->dev;
-> +	rtc->ec =3D dev_get_drvdata(pdev->dev.parent);
-> +	platform_set_drvdata(pdev, rtc);
-> +
-> +	dev =3D devm_rtc_allocate_device(&pdev->dev);
-> +	if (IS_ERR(dev))
-> +		return PTR_ERR(dev);
-> +
-> +	dev->ops =3D &ntxec_rtc_ops;
-> +	dev->range_min =3D RTC_TIMESTAMP_BEGIN_2000;
-> +	dev->range_max =3D 9025257599LL; /* 2255-12-31 23:59:59 */
-> +
-> +	return rtc_register_device(dev);
-> +}
-> +
-> +static struct platform_driver ntxec_rtc_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "ntxec-rtc",
-> +	},
-> +	.probe =3D ntxec_rtc_probe,
-> +};
-> +module_platform_driver(ntxec_rtc_driver);
-> +
-I think module autoloading will not work without
+Several features are still missing:
+ - Frontlight/backlight. The vendor kernel drives the frontlight LED
+   using the PWM output of the EC and an additional boost pin that
+   increases the brightness.
+ - Battery monitoring
+ - Interrupts for RTC alarm and low-battery events
 
-MODULE_ALIAS("platform:ntxec-rtc");
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
 
-Same for the pwm device.
-> +MODULE_AUTHOR("Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>");
-> +MODULE_DESCRIPTION("RTC driver for Netronix EC");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.28.0
->=20
->=20
+v3:
+- Remove interrupt-controller property from embedded-controller node
+- subnodes of embedded-controller node in to the main node
 
-Regards,
-Andreas
+v2:
+- https://lore.kernel.org/lkml/20200905144503.1067124-3-j.neuschaefer@gmx.=
+net/
+- Fix pwm-cells property (should be 2, not 1)
+=2D--
+ arch/arm/boot/dts/imx50-kobo-aura.dts | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx50-kobo-aura.dts b/arch/arm/boot/dts/imx=
+50-kobo-aura.dts
+index a0eaf869b9135..2d1a59091a37c 100644
+=2D-- a/arch/arm/boot/dts/imx50-kobo-aura.dts
++++ b/arch/arm/boot/dts/imx50-kobo-aura.dts
+@@ -6,6 +6,7 @@
+ /dts-v1/;
+ #include "imx50.dtsi"
+ #include <dt-bindings/input/input.h>
++#include <dt-bindings/interrupt-controller/irq.h>
+
+ / {
+ 	model =3D "Kobo Aura (N514)";
+@@ -135,10 +136,24 @@ &i2c3 {
+ 	pinctrl-0 =3D <&pinctrl_i2c3>;
+ 	status =3D "okay";
+
+-	/* TODO: embedded controller at 0x43 */
++	embedded-controller@43 {
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_ec>;
++		compatible =3D "netronix,ntxec";
++		reg =3D <0x43>;
++		system-power-controller;
++		interrupts-extended =3D <&gpio4 11 IRQ_TYPE_EDGE_FALLING>;
++		#pwm-cells =3D <2>;
++	};
+ };
+
+ &iomuxc {
++	pinctrl_ec: ec {
++		fsl,pins =3D <
++			MX50_PAD_CSPI_SS0__GPIO4_11		0x0	/* INT */
++		>;
++	};
++
+ 	pinctrl_gpiokeys: gpiokeys {
+ 		fsl,pins =3D <
+ 			MX50_PAD_CSPI_MISO__GPIO4_10		0x0
+=2D-
+2.28.0
+
