@@ -2,133 +2,314 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 746532793E2
-	for <lists+linux-pwm@lfdr.de>; Sat, 26 Sep 2020 00:01:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E58022796FE
+	for <lists+linux-pwm@lfdr.de>; Sat, 26 Sep 2020 06:51:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgIYWBv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 25 Sep 2020 18:01:51 -0400
-Received: from mout.gmx.net ([212.227.17.20]:54995 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726744AbgIYWBu (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 25 Sep 2020 18:01:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1601071245;
-        bh=ztxbMcMpavSGlbVmgt0d84+xXgIqro2ItnQZq/Y9qY0=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=PCdaXY5rnW1fTrNQ00KUO709FxO/s324Z9VSduWfHoJDbDNDkUmH/t/Miypu034nB
-         SubvKInVRtSQlFKA79001MT8i5IYKm4w5ceScoFniGLFJcx+MZ64TATpcIX9jn3dkh
-         db/NUAdwpEQKiKKcHi377XHMuycs7RutNNjGU/SA=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mi2O1-1kzxUL45RJ-00e22R; Sat, 26
- Sep 2020 00:00:45 +0200
-Date:   Sat, 26 Sep 2020 00:00:33 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 5/7] rtc: New driver for RTC in Netronix embedded
- controller
-Message-ID: <20200925220033.GB2510@latitude>
-References: <20200924192455.2484005-1-j.neuschaefer@gmx.net>
- <20200924192455.2484005-6-j.neuschaefer@gmx.net>
- <20200925093614.GZ9675@piout.net>
+        id S1729057AbgIZEvQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 26 Sep 2020 00:51:16 -0400
+Received: from mail-bn8nam08on2082.outbound.protection.outlook.com ([40.107.100.82]:39648
+        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726305AbgIZEvP (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sat, 26 Sep 2020 00:51:15 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ssk9CjTjntKF2mx15PX1Y2z002r2+bcfmmRegNCEqcFnMtOXMFQZ9g6P2r45jVgit+xCC/Bum5ePkxFicjeYb6pes8JXEf5m2L6coGc/bIfrSVDGKShnpG68Y5egbgBsPEIE6GDfEV/Xz1mrN1s2pB/m8V4zkUF7aISzvkjP9/Bp/HjTvpvK58gL8nsqb7yQp2DlKlpRwbiu6q1u+gOo6p/gxCLKS6hTQZT3U37yUnkWgmCCa/XEg3YMHvHMxdyWWXBfHCae6lh87Tezz+Bm1ozgjPlO8tmp0Tuw2773N8OR2azNE8P19H5sU7p0AwDMNXG27GjJkzlnTIGY+uOKnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8/tAcgnSqSHtVwCgWm6wNOruR9r7HfGLL9aZ+CqMCB8=;
+ b=jM7xb5IN5NZ9lnUH11B+i0+io2ii4y7udjzY2pDSBcOv3xs7GJ9DkvQ2uDyd2D+5hfcwWpakLX+cduw258ZP0iY/vCZgmh38uuupwaOZ7Xg7BAfEEhYEccGThHT8mjtcw6UdEgcxS7SZAJ9WUfYN42ckadMSkJ0CoLVhs+2zHE/ZXrqNSI/Hz0RxCzMUtEvkh2m1x22Dpn5zgXquonnLhXzNnD8pe5sIMOpl79JV9nyQGSNN2C7IE4572dSBRVQCIh0Yo87Y52QgyTq+UzVRFl6DqG+JB9nGuauPIumOctdS4iST6mUDZ5p5EjM2GnIhHqHrQgdrcwIl2vNy0FiTCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=openfive.com; dmarc=pass action=none header.from=openfive.com;
+ dkim=pass header.d=openfive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=osportal.onmicrosoft.com; s=selector2-osportal-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8/tAcgnSqSHtVwCgWm6wNOruR9r7HfGLL9aZ+CqMCB8=;
+ b=II/1ZLrSuRL81AjtbdDDtZk/EqrfMtthZxV1ik1Lw963CJWV0zBhsVJbTk81RhRwQlk0k6ZvE4W93OKlx/wvdiA5kFYnTMsINYpK8ZjdeEc6AwxO8rcecJHOZMnqG5OQoMm/Q4apRmkCcUSenuON570uJzc7U9voYN9WFFVtDGc=
+Received: from DM6PR13MB3451.namprd13.prod.outlook.com (2603:10b6:5:1c3::10)
+ by DM6PR13MB4284.namprd13.prod.outlook.com (2603:10b6:5:33::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.13; Sat, 26 Sep
+ 2020 04:51:10 +0000
+Received: from DM6PR13MB3451.namprd13.prod.outlook.com
+ ([fe80::a48a:1f7c:267c:876]) by DM6PR13MB3451.namprd13.prod.outlook.com
+ ([fe80::a48a:1f7c:267c:876%7]) with mapi id 15.20.3433.013; Sat, 26 Sep 2020
+ 04:51:10 +0000
+From:   Sagar Kadam <sagar.kadam@openfive.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        Yash Shah <yash.shah@openfive.com>
+Subject: RE: [PATCH v1 3/3] dt-bindings: riscv: convert pwm bindings to
+ json-schema
+Thread-Topic: [PATCH v1 3/3] dt-bindings: riscv: convert pwm bindings to
+ json-schema
+Thread-Index: AQHWh19mPLif9BYIJ02zgijqLyV6M6l1MZAAgARda5A=
+Date:   Sat, 26 Sep 2020 04:51:09 +0000
+Message-ID: <DM6PR13MB3451F3BECC0B04765B68ED4997370@DM6PR13MB3451.namprd13.prod.outlook.com>
+References: <1599734644-4791-1-git-send-email-sagar.kadam@sifive.com>
+ <1599734644-4791-4-git-send-email-sagar.kadam@sifive.com>
+ <20200922203714.GA3195489@bogus>
+In-Reply-To: <20200922203714.GA3195489@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=openfive.com;
+x-originating-ip: [116.74.145.229]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 14f411b0-0615-4a49-67f0-08d861d7c9a2
+x-ms-traffictypediagnostic: DM6PR13MB4284:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR13MB42844FD5FC1B37CE7F251AC997370@DM6PR13MB4284.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: sq93CtvmUjIBJqdA7p2x6L/kY9rfJVZFoKnFyHoo4R2yr1QIanrXnT26k4DfxkuXzsr+rnTdDUL35HfH11Fqd8qTIEwKXojB6FaZUcDjVblOLARZpfyQZ5IX72lyi/g0alKD3zDkxa5LwjkCvpD6O5XTSclPjJnBOOI+UgYLjCG4tDXdLDwMI8c7G3lEUkCBlxUuv0O8lQGEr+WqMcKeTru39v1hxXxQtVmTrzCMKyyTtVDtfoK/vkhpyeFct4kdmP5yDYm9Ok9XRQiCEOityix7I08sZwSSZCbR9u9YwoiACShQwOkRVZjmaIp3xohzMyXcqPn+EiVqeGalCXx9ip490trXz+QbirYyy2qTBMuSNMBGFmm+uGsmTZJ6dZvn9NsqTSJrRfaPL2AGiZTCkg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR13MB3451.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(396003)(39840400004)(376002)(346002)(136003)(4326008)(186003)(44832011)(26005)(7416002)(86362001)(7696005)(8936002)(966005)(83080400001)(6506007)(53546011)(83380400001)(55236004)(107886003)(8676002)(33656002)(478600001)(66556008)(66446008)(66476007)(64756008)(52536014)(5660300002)(54906003)(316002)(55016002)(9686003)(2906002)(71200400001)(66946007)(76116006)(6916009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: ZmSQuDScKBGe7S1DnxTqWxhLc6xhnunAUOfILYaqPQML1GXnQ283zYDWySwGAZPN0Q3Fyea8+WJ6M+MzbTix1BSA+9VCsggcM+7y91mmVFSTY63BgyWVdgdGu8TbggCVyfmpQfZjY8jU8P/NYz68C8qR70EpXP10rs/rqKh0985LMSovwxouWCLuiBxefDVq5010H9emA0hQddBdiOCXBbu2zz0DmoSPXqVcXGIAIrYdfYOeK4tJXztWCSe6iUHLpNj/x7f9/O5mE7YJeFDMjlbuZ/gZ1lh0FWBTm0x88O7ssNuZF7FQabUpYDNQ0NuhszVZ0HvJys7aapShKG0iv1yQmoE4itwhdnqw+tfhcPP4BnL5Nf91cJ6v64lnoLAtWRTpvwqr1yWxN3hO3VE0/PVLL/VYMVAPk90BMQS4R5q1E3z9Q+FeAKId9Upho3NDvkL2VwmTIDxQ3qHRvVdXWgNDCgkXA6byA5+SeP5vJP30F7f3KT50/sL+2By44/heweqdNsfhheItwosV58QJbkVpN0nLTIRbknJDx4ts6mL6/FoESoBo3MkYsE7hFqnVOc+TDFwdXVivsO3WL+T+0jziQaFYw5j4wzJgGgE1X1grQ6OKOsalwT/hIRKoYrYelE1OoxKHyVABMgbXyxzQRw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ADZbWkCsHQ7r3kzd"
-Content-Disposition: inline
-In-Reply-To: <20200925093614.GZ9675@piout.net>
-X-Provags-ID: V03:K1:VQy9eNdUYXIIZDE382DMLCtuHkN2mfcSziIHnQhqgWJZIR+IF0X
- oZhufLqAmhdf8JvnJff9j9IqPGiz9cf8tqjk3smwk2hfOwj4xlYuutjQP6sOQJwRIsQLKbe
- WkKgrjJM5KOEhtqqhHo9t3YKj1MOmWB9rFcC97NWGwmD5ODxrzgiguui+brDl94yGXk+cXu
- LDdstcfVJMzW2LypUFIZw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:q80hw9ErrqA=:MR3z7DEezfZXHgjrczDTGr
- KcFIZm59Yy0hP65r2xcCIEN6M8cVfBz5hdhmymgQcKPEuB+CqVbGl8ezwmKPeBFbmjwXxmhbA
- bQrs2l0SvzB4QeHOAJeuy9ZZq7LI2NWQ4WYk858Zn4vVgZhDl37EXpITMKMpZWvwouWpYrmY1
- iZV+igo4Yyinsy/W/u0pFCrUf64MAlcQnL0ZH10a9P4qR4MVnMIHMTR5p6idA+nRJW8QjyT0I
- wk/HAKvBDGdBBBysCS0KquuzBTZktyTbpvCtFc8+Hf/Z+M+izS9xMZVGiFrtaHZAh+dHaoVru
- ogsnZQciXudhL2+SMQOKKIxb9oyJnjfnVpMTG4ocBxSAfI0MYoctUCiW1HAQ1n/Nhu+LvV0Pj
- mPC3niwDJAZJ8UMLCpIXE55tCDIW79TLyxKh6X3kkdx0QGgMnh00xt/M1dK1csTYUvQChRkhk
- rwZ7KOZK0jdyoaCMY98RxtjQErZxsgGpm1vg+YDULfwtJDOwuuRhZaJjJhx87e814nS+1rQ1H
- un0W8wVNWY7xQIWVFPRUMflcbrjQgoaRlfqToRMYu8WwDvtG8KdDj9YNv+f2Q8lsmrXMy/7xg
- T4G8sne8eVyAPdgv948dF3ew+sLFw1c3d+yHxUo0xxol9AoXtekiqv+yJJ46AFt5wsSQ739fI
- eM3XAFQ91JT2EqRdz0hlurw7nMKtFJLAqdysbuf/3lgAeEFXgpxrmk6zZ+jBLVCkY27cmkpyJ
- ixr2InTWnWvfVuGR6GLFTBApzAO5GjxFxo3asIFpyr58DNYILiaUeJkNZPNYio1UGuLSCT3kb
- r8YgWEG84Kkb/24/7aB7eZnkzxOZX6lLF2HXzQKLMAE1M3590HcbvTZ2x1gxrkHXkPFfC9ZQ0
- ThZZbOGaW6qNF/Ohj4Wbevy1hErmMW66ApFySPa4acN2ZJnY4MDTC1UNEesVfKCJmQD/K/VkU
- KQZuwPPMtm/V4qW6g1zOPnIZ9R1VOr61Exfdbal0sgULdUetQv3FU1O+XWwUtIzxYcYi9FEw3
- oA6nUWQc40bkggbIxtXwi2lioJx/U02eiJ3n9IHRKXVMBUmDJi/OG4i69zXphevsd8Nkfld2F
- TYGsK3B9xodL6Usi1lfQKlD0Bv9i/m8dvDnMwJeJw30nlPWEtNdE70k6R7SGWS8yOjy0HwMB/
- w6MGSOKe5Mre8/E3DF76ZueZX6A8S267qJTj7muvdHtXCr3KgJzx2Ya76r+9uzxgjWoBGAdpd
- 140ZgP+oUr2fpGMm7cnoHzD5jG/gKKhSRva2Eig==
+X-OriginatorOrg: openfive.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR13MB3451.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 14f411b0-0615-4a49-67f0-08d861d7c9a2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Sep 2020 04:51:09.9193
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zOuvvn3k2XQ2289LA1xbG8ANrZ5vRnAb2xjKcZag5zZH/5nLQYp1f80zEXC1YXRPjxvW6M/Y1MrlmX8HT+EkaA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR13MB4284
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hello Rob,
 
---ADZbWkCsHQ7r3kzd
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Sep 25, 2020 at 11:36:14AM +0200, Alexandre Belloni wrote:
-> Hi,
+> -----Original Message-----
+> From: Rob Herring <robh@kernel.org>
+> Sent: Wednesday, September 23, 2020 2:07 AM
+> To: Sagar Kadam <sagar.kadam@openfive.com>
+> Cc: linux-pwm@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> riscv@lists.infradead.org; devicetree@vger.kernel.org; linux-
+> clk@vger.kernel.org; mturquette@baylibre.com; sboyd@kernel.org; Paul
+> Walmsley ( Sifive) <paul.walmsley@sifive.com>; palmer@dabbelt.com;
+> tglx@linutronix.de; jason@lakedaemon.net; maz@kernel.org;
+> thierry.reding@gmail.com; u.kleine-koenig@pengutronix.de;
+> lee.jones@linaro.org; aou@eecs.berkeley.edu; Yash Shah
+> <yash.shah@openfive.com>
+> Subject: Re: [PATCH v1 3/3] dt-bindings: riscv: convert pwm bindings to j=
+son-
+> schema
 >=20
-> On 24/09/2020 21:24:53+0200, Jonathan Neusch=C3=A4fer wrote:
-=2E..
-> > v3:
-=2E..
-> > - Relicense as GPLv2 or later
+> [External Email] Do not click links or attachments unless you recognize t=
+he
+> sender and know the content is safe
 >=20
-> I don't think you had to relicense. The kernel is GPL 2 only, you are
-> free to license your code under GPL 2 only if that is what you desire.
+> On Thu, Sep 10, 2020 at 04:14:04PM +0530, Sagar Kadam wrote:
+> > Convert device tree bindings for SiFive's PWM controller to YAML
+> > format.
+> >
+> > Signed-off-by: Sagar Kadam <sagar.kadam@sifive.com>
+> > ---
+> >  .../devicetree/bindings/pwm/pwm-sifive.txt         | 33 ----------
+> >  .../devicetree/bindings/pwm/pwm-sifive.yaml        | 72
+> ++++++++++++++++++++++
+> >  2 files changed, 72 insertions(+), 33 deletions(-)  delete mode
+> > 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> >  create mode 100644
+> > Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> > b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> > deleted file mode 100644
+> > index 3d1dd7b0..0000000
+> > --- a/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> > +++ /dev/null
+> > @@ -1,33 +0,0 @@
+> > -SiFive PWM controller
+> > -
+> > -Unlike most other PWM controllers, the SiFive PWM controller
+> > currently only -supports one period for all channels in the PWM. All
+> > PWMs need to run at -the same period. The period also has significant
+> > restrictions on the values -it can achieve, which the driver rounds to =
+the
+> nearest achievable period.
+> > -PWM RTL that corresponds to the IP block version numbers can be found
+> > -here:
+> > -
+> > -https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/de
+> > vices/pwm
+> > -
+> > -Required properties:
+> > -- compatible: Should be "sifive,<chip>-pwm" and "sifive,pwm<version>".
+> > -  Supported compatible strings are: "sifive,fu540-c000-pwm" for the
+> > SiFive
+> > -  PWM v0 as integrated onto the SiFive FU540 chip, and "sifive,pwm0"
+> > for the
+> > -  SiFive PWM v0 IP block with no chip integration tweaks.
+> > -  Please refer to sifive-blocks-ip-versioning.txt for details.
+> > -- reg: physical base address and length of the controller's registers
+> > -- clocks: Should contain a clock identifier for the PWM's parent clock=
+.
+> > -- #pwm-cells: Should be 3. See pwm.yaml in this directory
+> > -  for a description of the cell format.
+> > -- interrupts: one interrupt per PWM channel
+> > -
+> > -Examples:
+> > -
+> > -pwm:  pwm@10020000 {
+> > -     compatible =3D "sifive,fu540-c000-pwm", "sifive,pwm0";
+> > -     reg =3D <0x0 0x10020000 0x0 0x1000>;
+> > -     clocks =3D <&tlclk>;
+> > -     interrupt-parent =3D <&plic>;
+> > -     interrupts =3D <42 43 44 45>;
+> > -     #pwm-cells =3D <3>;
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
+> > b/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
+> > new file mode 100644
+> > index 0000000..415d053
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
+> > @@ -0,0 +1,72 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) # Copyright
+> > +(C) 2020 SiFive, Inc.
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pwm/pwm-sifive.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: SiFive PWM controller
+> > +
+> > +maintainers:
+> > +  - Yash Shah <yash.shah@sifive.com>
+> > +  - Sagar Kadam <sagar.kadam@sifive.com>
+> > +  - Paul Walmsley <paul.walmsley@sifive.com>
+> > +
+> > +description:
+> > +  Unlike most other PWM controllers, the SiFive PWM controller
+> > +currently
+> > +  only supports one period for all channels in the PWM. All PWMs need
+> > +to
+> > +  run at the same period. The period also has significant
+> > +restrictions on
+> > +  the values it can achieve, which the driver rounds to the nearest
+> > +  achievable period. PWM RTL that corresponds to the IP block version
+> > +  numbers can be found here -
+> > +
+> > +
+> > + https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/d
+> > + evices/pwm
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - const: sifive,fu540-c000-pwm
+> > +      - const: sifive,pwm0
+> > +    description:
+> > +      Should be "sifive,<chip>-pwm" and "sifive,pwm<version>". Support=
+ed
+> > +      compatible strings are "sifive,fu540-c000-pwm" for the SiFive PW=
+M v0
+> > +      as integrated onto the SiFive FU540 chip, and "sifive,pwm0" for =
+the
+> > +      SiFive PWM v0 IP block with no chip integration tweaks.
+> > +      Please refer to sifive-blocks-ip-versioning.txt for details.
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +    description: Physical base address and length of the controller's
+> > + registers
+>=20
+> Drop description.
+Okay.
+>=20
+> > +
+> > +  clocks:
+> > +    description: Should contain a clock identifier for the PWM's paren=
+t
+> clock.
+>=20
+> How many clocks?
+>=20
+PWM IP block instance is clocked with single clock (tlclk).
+> > +
+> > +  "#pwm-cells":
+> > +    const: 3
+> > +    description:
+> > +      Should be 3. See pwm.yaml in this directory for a description of=
+ the
+> > +      cell format.
+>=20
+> Drop.
+Okay, I will drop this description.
+>=20
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+>=20
+> Is it 1 or...
+>=20
+> > +    description: One interrupt per PWM channel.
+>=20
+> one per channel?
+>=20
+Each PWM instance in FU540-C000 has 4 independent comparator's=20
+each capable of generating interrupts.  So maxItems need to be 4 and I can=
+=20
+include it in description something like:
+ " description:=20
+        Each PWM instance in FU540-C000 has 4 comparators. One interrupt pe=
+r comparator"=20
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - "#pwm-cells"
+> > +  - interrupts
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    pwm:  pwm@10020000 {
+> > +      compatible =3D "sifive,fu540-c000-pwm", "sifive,pwm0";
+> > +      reg =3D <0x10020000 0x1000>;
+> > +      clocks =3D <&tlclk>;
+> > +      interrupt-parent =3D <&plic>;
+> > +      interrupts =3D <42 43 44 45>;
+>=20
+> Split entries:
+>=20
+> interrupts =3D <42>, <43>, <44>, <45>;
+>=20
+Yes, I will split entries as suggested.
 
-I don't mind in this case.
-
---ADZbWkCsHQ7r3kzd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl9uaHAACgkQCDBEmo7z
-X9vzphAAoCYGjLQdcxjaBh9Jk+4k/cEK567Nzrk68QQMIyXemvEY15Rvd+Hmtuw4
-6Kz+TfyxGKQT+kapBiKmMUAmezz5c376BNN6yc330IAZ76mK+Zt3JtUut2vDC3m3
-/uk2xriYBB/vbwGeUCBmjzvmhN330o8ZqqEShJHNnnRZHCp66ACtyw7Vrius/Dyz
-dqzbJZ50EktrNkTXQO/oqumv82L0UO4IwThJTWLl1/+XWd6M1FG9OkBNuGlJs1kH
-PPn4lMdZ+QP/+G7ZSM2E12eFXojqD9Y8mpclnGmbfC0plNFK8z5fxnVKYO0vSrl8
-nyNuqyc2LnTQaUw9d/8Dgg1K9S8XdU8ImtYz4GJG4WqMJx5tHsLzdocvIh9/bSjP
-WU2RgRUt6TPc8eeRibBgiKqDGCFhLy/yj532rRrSwNOetNwEEMWd597YyCusWMbY
-kDJxDpKivTP3dd9iqTMMJIyYQjGOr8JH013kFkr0bSOdIaBPybgqvALxzZnLJ7AB
-axnS1Ev8HBJ9zlM7EReT8VZqdfY4BnjsDGLZoVUBCU9iikV9RwVNfD+g5G44zurG
-9XfmWBTcjwwN/3Esf//WDtjHTwYCJaIyk6eh15hrSxG+uxg+yW4nbX0EZwDbIMhi
-IDGN4OuZkCF/kNo2vX383ynU4CS6mzkaOECfsWbvISi7m3ffldc=
-=IVvh
------END PGP SIGNATURE-----
-
---ADZbWkCsHQ7r3kzd--
+Thanks & BR,
+Sagar
+> > +      #pwm-cells =3D <3>;
+> > +    };
+> > --
+> > 2.7.4
+> >
