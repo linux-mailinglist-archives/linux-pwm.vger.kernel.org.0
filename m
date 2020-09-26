@@ -2,106 +2,110 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 00D7D2799AE
-	for <lists+linux-pwm@lfdr.de>; Sat, 26 Sep 2020 15:28:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 844402799BA
+	for <lists+linux-pwm@lfdr.de>; Sat, 26 Sep 2020 15:42:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728504AbgIZN24 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 26 Sep 2020 09:28:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725208AbgIZN24 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 26 Sep 2020 09:28:56 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F7CFC0613CE
-        for <linux-pwm@vger.kernel.org>; Sat, 26 Sep 2020 06:28:56 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kMAFs-0008WC-Nl; Sat, 26 Sep 2020 15:28:48 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kMAFq-0001W9-SI; Sat, 26 Sep 2020 15:28:46 +0200
-Date:   Sat, 26 Sep 2020 15:28:46 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, Anson.Huang@nxp.com, michal.vokac@ysoft.com,
-        l.majewski@majess.pl, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
-Subject: Re: [PATCH v2 1/5] pwm: imx27: enable clock unconditional for
- register access
-Message-ID: <20200926132846.4gq5o7zfplsaskqj@pengutronix.de>
-References: <20200925155330.32301-1-m.felsch@pengutronix.de>
- <20200925155330.32301-2-m.felsch@pengutronix.de>
+        id S1726183AbgIZNmG convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Sat, 26 Sep 2020 09:42:06 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:33065 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725208AbgIZNmG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 26 Sep 2020 09:42:06 -0400
+Received: by mail-ej1-f66.google.com with SMTP id j11so2410399ejk.0;
+        Sat, 26 Sep 2020 06:42:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=zZiC4GFLiCyxWh5u5vGAPSFiD3LqckqVR10/0vflwwg=;
+        b=pmE6FomZalVD8bPNjs20hMVtM9tKotvYkEsVO8i/aIPTM/HjNpSdzyRTs011mLq2W6
+         htrpJzJeqgILNV9M+w/M9teLtUwzka9sx4EkAsae7hXCZs9kuJDnvAjwVzXlrzWj+AKD
+         4Zd5Tj3QGQCCrxrDsztSSUSwHGWkSfdjw+qX+geDCg8pQ2Wj2GDwAutWQSjjXswoSwIc
+         DBGP3toCtf5FkUEptqsiQQ15ZVzYfQIOmc2Yx95/WWK67vQCtYwJ8DVXvJHkP721QvEy
+         ImBCNSYM0xbL4B3vv+uUDXzytm1gBRJ88GL3hDngJxRHhbK4aDcwwU9A8Y4paWiMH8Qi
+         t5OQ==
+X-Gm-Message-State: AOAM532wu1UT7jx+wjSiX1EiEmZ2VLuZHKfFW//TMDvLqIOm0VRkvTFO
+        FZkoLzajkWPIRq2slJk6u/o=
+X-Google-Smtp-Source: ABdhPJz9GR5blkBoMY58veAVwcmSMDo29BUcNV1QcEUQxNVIvkB6gy7KKlrjrtCiqAKvzgYXZdNSLQ==
+X-Received: by 2002:a17:907:2115:: with SMTP id qn21mr7366844ejb.278.1601127723572;
+        Sat, 26 Sep 2020 06:42:03 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.132])
+        by smtp.googlemail.com with ESMTPSA id jo26sm4156240ejb.120.2020.09.26.06.42.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 26 Sep 2020 06:42:02 -0700 (PDT)
+Date:   Sat, 26 Sep 2020 15:41:57 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pwm: imx: document i.MX compatibles
+Message-ID: <20200926134157.GA4730@kozik-lap>
+References: <20200925212609.23093-1-krzk@kernel.org>
+ <20200926132217.xr3rhv7o2o2yc2l7@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qkbpwbf6or4gglkw"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200925155330.32301-2-m.felsch@pengutronix.de>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200926132217.xr3rhv7o2o2yc2l7@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Sat, Sep 26, 2020 at 03:22:17PM +0200, Uwe Kleine-König wrote:
+> On Fri, Sep 25, 2020 at 11:26:09PM +0200, Krzysztof Kozlowski wrote:
+> > Document all ARMv5, ARMv6 and ARMv7 i.MX compatibles to fix dtbs_check
+> > warnings like:
+> > 
+> >   arch/arm/boot/dts/imx6dl-colibri-eval-v3.dt.yaml: pwm@2080000: compatible:0:
+> >     'fsl,imx6q-pwm' is not one of ['fsl,imx8mm-pwm', 'fsl,imx8mn-pwm', 'fsl,imx8mp-pwm', 'fsl,imx8mq-pwm']
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/pwm/imx-pwm.yaml | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.yaml b/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
+> > index 473863eb67e5..379d693889f6 100644
+> > --- a/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
+> > +++ b/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
+> > @@ -25,6 +25,17 @@ properties:
+> >            - fsl,imx27-pwm
+> >        - items:
+> >            - enum:
+> > +              - fsl,imx25-pwm
+> 
+> The driver actually used fsl,imx27-pwm to bind ...
 
---qkbpwbf6or4gglkw
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, most of i.MX drivers use only few compatibles but DTSes and
+bindings use multiple of them.  I was convinced during various talks
+that the specific compatibles (so "fsl,imx6q-pwm, fsl,imx27-pwm") are
+preferred than generic ones (so only "fsl,imx27-pwm"). NXP took it
+to the another level creating compatibles for absolutely every flavor of
+their CPU. And they mainlined it in DTSes...
 
-On Fri, Sep 25, 2020 at 05:53:26PM +0200, Marco Felsch wrote:
-> The current implementation enables the clock if the current PWM state
-> is '!enabled' to ensure the register access and left the clock on if the
-> new state is 'enabled'. Further apply calls don't enable the clock since
-> they relying on the fact the the clock is already running. Change this
+The PWM is this crazy examples where, as you say, only two compatibles
+are actually used for binding but DTSes uses more.
 
-s/relying/rely/
+> 
+> Also since v5.1-rc1~38^2~17 the driver is split into pwm-imx27 and
+> pwm-imx1. So maybe this file should be renamed to fsl,imx27-pwm.yaml?
+> (And we need a volunteer to write fsl,imx1-pwm.yaml.)
 
-> behaviour since it is not very intuitive.
->=20
-> This commit changes this behaviour. Now the clocks are unconditional
+I think there is no need, because the binding describes the hardware and
+could be supported by multiple drivers. I actually recently merged few
+bindings (i.MX 8 clocks, NXP PCA953x/max GPIO expanders).
 
-s/unconditional/unconditionally/
+Best regards,
+Krzysztof
 
-> enabled/disabled before/after the register access. If the PWM should be
-> turned on (state.enabled) we enable the clock again and vice versa if
-> the PWM should be turned off (!state.enabled).
->=20
-> Therefore I added the enable member to the driver state struct since
-> the usage of cstate and pwm_get_state() is a layer violation. I removed
-> this violation while on it.
->=20
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-
-I like it.
-
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Best regards and thanks
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---qkbpwbf6or4gglkw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl9vQgsACgkQwfwUeK3K
-7AnS8wf+LvJ8W9J2zVHvwicUZF05d2lbnzpj1bexPlyPdeG8ZriGzulUJp11Ya0/
-1WFcnFVL50FDJK8WLr2zpbXDBLZ6vvboAMK4LnAlrhVhzrErq6r6JkveGN5DX62M
-hY9G+WNSXl0Fu+pRbziD51xQXhGsym6kDE9U694hVYHlK4Nq9VW2FReBQYi/1IPm
-5JMudYfPVbtdeyr+4Zn/Qas8Ej5hlMJSs1ZJv4SJoaLW5M/w5fx0mOdoQn2IB4sw
-KScm/9stLj2L9kuMzhEakc/ASqX0edR2Wmpcvi1SPeF/+UiExAPKd2a3mO49RZN4
-ktTLVbVeGuZEtCADrKXDIWjM5gj2dA==
-=SFWY
------END PGP SIGNATURE-----
-
---qkbpwbf6or4gglkw--
