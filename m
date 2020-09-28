@@ -2,199 +2,166 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3826A27A7C9
-	for <lists+linux-pwm@lfdr.de>; Mon, 28 Sep 2020 08:45:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DCA227A8A3
+	for <lists+linux-pwm@lfdr.de>; Mon, 28 Sep 2020 09:30:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbgI1GpW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 28 Sep 2020 02:45:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52824 "EHLO
+        id S1726685AbgI1Ha1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 28 Sep 2020 03:30:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbgI1GpV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 28 Sep 2020 02:45:21 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 752F4C0613CE;
-        Sun, 27 Sep 2020 23:45:21 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id j2so10920838wrx.7;
-        Sun, 27 Sep 2020 23:45:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=05iWIJYB2oDYyH9Jw0dcggBXad7SUALC3TiMsF+Azj8=;
-        b=DyqRJdfm63h/KMo4QCnEFJL1M2GlQQm95ZOeccn/9kNWjGfRDaRfzvyLYDX3uaYj+z
-         hIcMplZ+4XU/z0Wnu5QP5A8QcVISkLSL3jlONUkHjOASmAACf0ctZd0PKi8myCTGs6Q5
-         nfy/LLrgkZssLSkwWrleHwS09SwDfU21Q5XquTU19V7JRoxCrfiDo00lYe1zzHbo7EHN
-         gwhY7R8SuvYkvLUHJyVFS3JB1IzvKSrND1ZObSL2jCpvd8bTu8Iw1yUe0Lfk9+k5iv1z
-         wfhEa7fNThovhs//VzZ/gLvb15nTB+T8LeL63ow1O/dV0ZRNM8+EY24UXrluSX16akQD
-         r0oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=05iWIJYB2oDYyH9Jw0dcggBXad7SUALC3TiMsF+Azj8=;
-        b=RWMiY5Uo1A0ijkcRhnhG/Zdz7FZymw5DJBdZZ9jhEoaCvMQrfiv3TjHsQ6CNfPV6/q
-         5uPdzS1KLzcBlcBFi+10Hctf84TR7ZRgvusQYRRn3B6BGXwFMvWDZL6AE5OkkJiXYouN
-         kqgsXNOM1xO7nCFQagkWfBqHq26gXfVSBQoa4WuxXps5fF4txUdVhhvfjMs9lUqoi1bv
-         m6IEFHWn6hvRI98MWowIlUMNgsaNYC+GIzML9DgoaF5o5eXQ7nAbn6lG3StXkiOGpY1G
-         OyFAPH634QpvcJvXL+B/v14X1PRzCl6GR4AK8n7xr4f36pHuSbCrRGaaTBb9tMJmWJC3
-         x9eQ==
-X-Gm-Message-State: AOAM530qgvw2xqTWKOMaARXVDtD631FpIjmcoDtVNxEHdOSYl4BVtVrw
-        wl+d2pDHMPRtfM94s766bfw=
-X-Google-Smtp-Source: ABdhPJxUmnoNK0Resy7N687L4omMhCRf+0hyyUxR25i0XfPeotFKDPjVtTTKDIUT/0aaVXHHjZiEbw==
-X-Received: by 2002:a5d:4fcc:: with SMTP id h12mr17093159wrw.199.1601275520072;
-        Sun, 27 Sep 2020 23:45:20 -0700 (PDT)
-Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id f1sm11637062wrx.75.2020.09.27.23.45.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Sep 2020 23:45:18 -0700 (PDT)
-Date:   Mon, 28 Sep 2020 08:45:17 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        linux-pwm@vger.kernel.org, lee.jones@linaro.org,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        rtanwar@maxlinear.com
-Subject: Re: [PATCH v13 2/2] Add PWM fan controller driver for LGM SoC
-Message-ID: <20200928064517.GA2837573@ulmo>
-References: <cover.1600158087.git.rahul.tanwar@linux.intel.com>
- <befa655d8beb326fc8aa405a25a8b3e62b7e6a4a.1600158087.git.rahul.tanwar@linux.intel.com>
- <20200924065534.e2anwghhtysv63e7@pengutronix.de>
- <20200924132334.GT3956970@smile.fi.intel.com>
- <20200924141659.4wov7w2l2bllpre4@pengutronix.de>
+        with ESMTP id S1726380AbgI1Ha1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 28 Sep 2020 03:30:27 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEEECC0613CE
+        for <linux-pwm@vger.kernel.org>; Mon, 28 Sep 2020 00:30:26 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kMnc5-0008WH-1s; Mon, 28 Sep 2020 09:30:21 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kMnc3-0007Wv-NH; Mon, 28 Sep 2020 09:30:19 +0200
+Date:   Mon, 28 Sep 2020 09:30:19 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, Anson.Huang@nxp.com, michal.vokac@ysoft.com,
+        l.majewski@majess.pl, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
+Subject: Re: [PATCH v2 3/5] pwm: imx27: reset the PWM if it is not running
+Message-ID: <20200928073019.led4eyfl3emv6aau@pengutronix.de>
+References: <20200925155330.32301-1-m.felsch@pengutronix.de>
+ <20200925155330.32301-4-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4hv5z3dxu7ee7d2e"
 Content-Disposition: inline
-In-Reply-To: <20200924141659.4wov7w2l2bllpre4@pengutronix.de>
-User-Agent: Mutt/1.14.7 (2020-08-29)
+In-Reply-To: <20200925155330.32301-4-m.felsch@pengutronix.de>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---xHFwDpU9dbj6ez1V
-Content-Type: text/plain; charset=utf-8
+--4hv5z3dxu7ee7d2e
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 24, 2020 at 04:16:59PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> On Thu, Sep 24, 2020 at 04:23:34PM +0300, Andy Shevchenko wrote:
-> > On Thu, Sep 24, 2020 at 08:55:34AM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> > > On Tue, Sep 15, 2020 at 04:23:37PM +0800, Rahul Tanwar wrote:
-> >=20
-> > ...
-> >=20
-> > > > +	ret =3D lgm_clk_enable(dev, pc);
-> > > > +	if (ret) {
-> > > > +		dev_err(dev, "failed to enable clock\n");
-> > >=20
-> > > You used dev_err_probe four times for six error paths. I wonder why y=
-ou
-> > > didn't use it here (and below for a failing pwmchip_add()).
-> >=20
-> > dev_err_probe() makes sense when we might experience deferred probe. In=
- neither
-> > of mentioned function this can be the case.
-> >=20
-> > > > +		return ret;
-> > > > +	}
-> >=20
-> > ...
-> >=20
-> > > > +	ret =3D lgm_reset_control_deassert(dev, pc);
-> > > > +	if (ret)
-> > > > +		return dev_err_probe(dev, ret, "cannot deassert reset control\n"=
-);
-> > >=20
-> > > After lgm_reset_control_deassert is called pc->rst is unused. So there
-> > > is no need to have this member in struct lgm_pwm_chip. The same appli=
-es
-> > > to ->clk. (You have to pass rst (or clk) to devm_add_action_or_reset =
-for
-> > > that to work. Looks like a nice idea anyhow.)
-> >=20
-> > True. And above dev_err_probe() is not needed.
+On Fri, Sep 25, 2020 at 05:53:28PM +0200, Marco Felsch wrote:
+> Trigger a software reset during probe to clear the FIFO and reset the
+> register values to their default. According the datasheet the DBGEN,
+> STOPEN, DOZEN and WAITEN bits should be untouched by the software reset
+> but this is not the case.
 >=20
-> You argue that dev_err_probe() gives no benefit as
-> lgm_reset_control_deassert won't return -EPROBE_DEFER, right?
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+> v2:
+> - new patch
 >=20
-> Still I consider it a useful function because
+>  drivers/pwm/pwm-imx27.c | 26 ++++++++++++++------------
+>  1 file changed, 14 insertions(+), 12 deletions(-)
 >=20
->  a) I (as an author or as a reviewer) don't need to think if the
->     failing function might return -EPROBE_DEFER now or in the future.
->     dev_err_probe does the right thing even for functions that don't
->     return -EPROBE_DEFER.
->=20
->  b) With dev_err_probe() I can accomplish things in a single line that
->     need two lines when open coding it.
->=20
->  c) dev_err_probe() emits the symbolic error name without having to
->     resort to %pe + ERR_PTR.
->=20
->  d) Using dev_err_probe() for all error paths gives a consistency that I
->     like with a maintainer's hat on.
+> diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+> index b761764b8375..3b6bcd8d58b7 100644
+> --- a/drivers/pwm/pwm-imx27.c
+> +++ b/drivers/pwm/pwm-imx27.c
+> @@ -183,10 +183,8 @@ static void pwm_imx27_get_state(struct pwm_chip *chi=
+p,
+>  	pwm_imx27_clk_disable_unprepare(imx);
+>  }
+> =20
+> -static void pwm_imx27_sw_reset(struct pwm_chip *chip)
+> +static void pwm_imx27_sw_reset(struct pwm_imx27_chip *imx, struct device=
+ *dev)
+>  {
+> -	struct pwm_imx27_chip *imx =3D to_pwm_imx27_chip(chip);
+> -	struct device *dev =3D chip->dev;
+>  	int wait_count =3D 0;
+>  	u32 cr;
 
-That would perhaps be true if all error paths did use dev_err_probe().
-And even if that were the case, dev_err_probe() doesn't guarantee that
-error messages will actually be consistent because developers can still
-provide whatever format string they like.
+This is an unrelated hunk that I don't expect to result in any changes
+in the code. If you consider it better this way, you should at least
+mention it in the commit log.
 
-Also, the format of the messages that dev_err_probe() prints is unlike
-anything that I've seen, so introducing dev_err_probe() actually makes
-things more inconsistent, in my opinion.
+> @@ -266,7 +264,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, str=
+uct pwm_device *pwm,
+>  	if (imx->enabled)
+>  		pwm_imx27_wait_fifo_slot(chip, pwm);
+>  	else
+> -		pwm_imx27_sw_reset(chip);
+> +		pwm_imx27_sw_reset(imx, chip->dev);
+> =20
+>  	writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
+>  	writel(period_cycles, imx->mmio_base + MX3_PWMPR);
+> @@ -370,19 +368,23 @@ static int pwm_imx27_probe(struct platform_device *=
+pdev)
+>  	if (ret)
+>  		return ret;
+> =20
+> -	mask =3D MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
+> -	       MX3_PWMCR_DBGEN;
+> -	pwmcr =3D MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
+> -		MX3_PWMCR_DBGEN;
+> -	pwm_imx27_update_bits(imx->mmio_base + MX3_PWMCR, mask, pwmcr);
+> -
+>  	/* keep clks on and clk settings unchanged if pwm is running */
+>  	pwmcr =3D readl(imx->mmio_base + MX3_PWMCR);
+>  	if (!(pwmcr & MX3_PWMCR_EN)) {
+> -		mask =3D MX3_PWMCR_CLKSRC;
+> -		pwmcr =3D FIELD_PREP(MX3_PWMCR_CLKSRC, MX3_PWMCR_CLKSRC_IPG_HIGH);
+> +		pwm_imx27_sw_reset(imx, &pdev->dev);
+> +		mask =3D MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
+> +		       MX3_PWMCR_DBGEN | MX3_PWMCR_CLKSRC;
+> +		pwmcr =3D MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
+> +			MX3_PWMCR_DBGEN |
+> +			FIELD_PREP(MX3_PWMCR_CLKSRC, MX3_PWMCR_CLKSRC_IPG_HIGH);
+>  		pwm_imx27_update_bits(imx->mmio_base + MX3_PWMCR, mask, pwmcr);
+>  		pwm_imx27_clk_disable_unprepare(imx);
+> +	} else {
+> +		mask =3D MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
+> +			MX3_PWMCR_DBGEN;
+> +		pwmcr =3D MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
+> +			MX3_PWMCR_DBGEN;
+> +		pwm_imx27_update_bits(imx->mmio_base + MX3_PWMCR, mask, pwmcr);
+>  	}
 
-I have in fact been advocating for people to use error messages of the
-form:
+IMHO this is worse than the stuff I suggested for one of the earlier
+patches because there is much repetition. I'd put
 
-	"failed to ...: %d\n", err
+	mask =3D MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN | MX3_PWMCR=
+_DBGEN;
+	value =3D MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN | MX3_PWMC=
+R_DBGEN;
 
-or:
+before the if and just modify as necessary in the first branch of the
+if.
 
-	"unable to ...: %d\n", err
+Best regards
+Uwe
 
-Or some other similar form because that's the most common type that I
-have come across in the kernel. I think it's also easier to read those
-error messages because they contain the important data (i.e. the
-description, which tells you what went wrong) first and then are
-followed by the error code (which tells you how it failed).
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-Now I suspect the current format was chosen because we need to have the
-constant part first, because otherwise the arbitrary format string could
-be something that doesn't lend itself to have an error code appended.
-
-The current format is arguably also something that's easier to parse
-=66rom some script because the format is in a somewhat standard format. On
-the other hand, I think this is a bit misguided because we already have
-structured log messages, so I wonder if it might have been better to
-make the error code part of structured log messages to make them truly
-machine readable but leave the formatting up to developers so that they
-can use whatever is consistent within the driver or whatever fits best
-without actually adding a standard string to the log messages.
-
-Thierry
-
---xHFwDpU9dbj6ez1V
+--4hv5z3dxu7ee7d2e
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl9xhnkACgkQ3SOs138+
-s6FL3xAAi8SW4eZyqa3DzH2x8PIYh0nU4XdJiwu3FXjnpeZKFhpAw727Pf1Rwae7
-PMFnDggq2Q0GJC8Pzo95H0yBYaaVuQa93TLNszX3ofW0GZoZAadGPtGUjQrfFWcZ
-p7DySeukbO3BNIEDSIbMRYSUF+9cPq1sC4RAAQXP27Kdk62nbw2Tsr+AG7YXIBlj
-Z5N4zdFTv6LQRIIv08vpNyj74FSAb41wb+MR5vQnZKwlGRLJ0ZpVuW77SjFtj3Q7
-XMwrHljmSogGLIeqepX3I4McjzVfMXLWcF1sw6quBSX3zJo5DYybcvN6TUnWXQWe
-2AKyE+PGBjwBZcUJg9RM90VvGNjCJ3zm2WUQqLvsYRKC0eGubF9p65b36y6j0IIa
-A2gQNJQ5JiqW5q9Jm5I4RwTU0lZ/Mi+TwnKdZvPiPcC+YuRiqdUC5dHfXvWPfeCL
-eMFhmd7pRI8H7HkRNPo8z/tVufr+zHbYjtQljv2iCCZLXDfBPioX8jeTh9iXbj8Y
-wqR7F5vCC4pAWGLMw4o9jg0Zg5ywPRccXpNh8IbsrNONj0Y7MfXbo5lhxeqck10h
-ZnQRB67wK7iRbV23oos+R5Run1fU/PD4TD+m+6noGDHcmiOmX3g/ZxecAU5iB9pg
-e+V3/apZhQnJ3zwUssmZUfG501sECh3EqmZdUzDT6yrULhEiLtg=
-=Td2r
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl9xkQgACgkQwfwUeK3K
+7Al0HQgAmzOb6wMkEWw3F3aSS1LBhGpa/3mptRmVZzhXuemD9+Jw814QuzsE3FTo
+OuuySFqZQlGBVqec2rtp/6hnOu+ZIXLaKQN4BdVMaJnAQqn6hCoTzGMRzznXds1d
+uuAb/WIjLfHqIclw6indBto42o4ttnMND1SJ4R0Yb2qwTOj0NZxemrhm5I7Gugl/
+rkdHRGqBFfFbMmLBSABOa+Bhf2cxXFVJEAAednkrvza84gmp5kNFL8iKszBBGuXR
+1mP/meMVIOMavu13VTEAgwVqis9jTFqC7tE6DwqOzIuf6nNGkGa8PciLo9F+uWrc
+tJVp1UNihHm/8O292BgkEinswVfZag==
+=NWPn
 -----END PGP SIGNATURE-----
 
---xHFwDpU9dbj6ez1V--
+--4hv5z3dxu7ee7d2e--
