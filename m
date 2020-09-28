@@ -2,350 +2,199 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B38F27A747
-	for <lists+linux-pwm@lfdr.de>; Mon, 28 Sep 2020 08:16:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3826A27A7C9
+	for <lists+linux-pwm@lfdr.de>; Mon, 28 Sep 2020 08:45:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgI1GQi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 28 Sep 2020 02:16:38 -0400
-Received: from mga01.intel.com ([192.55.52.88]:10412 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725294AbgI1GQi (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 28 Sep 2020 02:16:38 -0400
-IronPort-SDR: xGMnXAPkEaP1UnEQvTdz1/T4Qofp58KqYAS1rT9qHORD5FPQkiTdiDU40k+D9nkjkPsWrBubxt
- yhAvN9zFrmNA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9757"; a="180100275"
-X-IronPort-AV: E=Sophos;i="5.77,312,1596524400"; 
-   d="scan'208";a="180100275"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2020 23:16:36 -0700
-IronPort-SDR: e2ihJGsKkhcAHDjgi4LLv03IQ487aL7DVvV8UDNXgPP5jHomT82ZU0lIvvQad95KRAqUNCFzBI
- CffkYtex9buQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,312,1596524400"; 
-   d="scan'208";a="293138487"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by fmsmga007.fm.intel.com with ESMTP; 27 Sep 2020 23:16:33 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        lee.jones@linaro.org
-Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        id S1726458AbgI1GpW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 28 Sep 2020 02:45:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725290AbgI1GpV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 28 Sep 2020 02:45:21 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 752F4C0613CE;
+        Sun, 27 Sep 2020 23:45:21 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j2so10920838wrx.7;
+        Sun, 27 Sep 2020 23:45:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=05iWIJYB2oDYyH9Jw0dcggBXad7SUALC3TiMsF+Azj8=;
+        b=DyqRJdfm63h/KMo4QCnEFJL1M2GlQQm95ZOeccn/9kNWjGfRDaRfzvyLYDX3uaYj+z
+         hIcMplZ+4XU/z0Wnu5QP5A8QcVISkLSL3jlONUkHjOASmAACf0ctZd0PKi8myCTGs6Q5
+         nfy/LLrgkZssLSkwWrleHwS09SwDfU21Q5XquTU19V7JRoxCrfiDo00lYe1zzHbo7EHN
+         gwhY7R8SuvYkvLUHJyVFS3JB1IzvKSrND1ZObSL2jCpvd8bTu8Iw1yUe0Lfk9+k5iv1z
+         wfhEa7fNThovhs//VzZ/gLvb15nTB+T8LeL63ow1O/dV0ZRNM8+EY24UXrluSX16akQD
+         r0oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=05iWIJYB2oDYyH9Jw0dcggBXad7SUALC3TiMsF+Azj8=;
+        b=RWMiY5Uo1A0ijkcRhnhG/Zdz7FZymw5DJBdZZ9jhEoaCvMQrfiv3TjHsQ6CNfPV6/q
+         5uPdzS1KLzcBlcBFi+10Hctf84TR7ZRgvusQYRRn3B6BGXwFMvWDZL6AE5OkkJiXYouN
+         kqgsXNOM1xO7nCFQagkWfBqHq26gXfVSBQoa4WuxXps5fF4txUdVhhvfjMs9lUqoi1bv
+         m6IEFHWn6hvRI98MWowIlUMNgsaNYC+GIzML9DgoaF5o5eXQ7nAbn6lG3StXkiOGpY1G
+         OyFAPH634QpvcJvXL+B/v14X1PRzCl6GR4AK8n7xr4f36pHuSbCrRGaaTBb9tMJmWJC3
+         x9eQ==
+X-Gm-Message-State: AOAM530qgvw2xqTWKOMaARXVDtD631FpIjmcoDtVNxEHdOSYl4BVtVrw
+        wl+d2pDHMPRtfM94s766bfw=
+X-Google-Smtp-Source: ABdhPJxUmnoNK0Resy7N687L4omMhCRf+0hyyUxR25i0XfPeotFKDPjVtTTKDIUT/0aaVXHHjZiEbw==
+X-Received: by 2002:a5d:4fcc:: with SMTP id h12mr17093159wrw.199.1601275520072;
+        Sun, 27 Sep 2020 23:45:20 -0700 (PDT)
+Received: from localhost ([217.111.27.204])
+        by smtp.gmail.com with ESMTPSA id f1sm11637062wrx.75.2020.09.27.23.45.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Sep 2020 23:45:18 -0700 (PDT)
+Date:   Mon, 28 Sep 2020 08:45:17 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        linux-pwm@vger.kernel.org, lee.jones@linaro.org,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         songjun.Wu@intel.com, cheol.yong.kim@intel.com,
         qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        rtanwar@maxlinear.com, Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v14 2/2] Add PWM fan controller driver for LGM SoC
-Date:   Mon, 28 Sep 2020 14:15:58 +0800
-Message-Id: <937f0a387169b119ec3dbcf62fd47c0556e255b1.1601273429.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1601273429.git.rahul.tanwar@linux.intel.com>
-References: <cover.1601273429.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1601273429.git.rahul.tanwar@linux.intel.com>
-References: <cover.1601273429.git.rahul.tanwar@linux.intel.com>
+        rtanwar@maxlinear.com
+Subject: Re: [PATCH v13 2/2] Add PWM fan controller driver for LGM SoC
+Message-ID: <20200928064517.GA2837573@ulmo>
+References: <cover.1600158087.git.rahul.tanwar@linux.intel.com>
+ <befa655d8beb326fc8aa405a25a8b3e62b7e6a4a.1600158087.git.rahul.tanwar@linux.intel.com>
+ <20200924065534.e2anwghhtysv63e7@pengutronix.de>
+ <20200924132334.GT3956970@smile.fi.intel.com>
+ <20200924141659.4wov7w2l2bllpre4@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Content-Disposition: inline
+In-Reply-To: <20200924141659.4wov7w2l2bllpre4@pengutronix.de>
+User-Agent: Mutt/1.14.7 (2020-08-29)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
-This PWM controller does not have any other consumer, it is a
-dedicated PWM controller for fan attached to the system. Add
-driver for this PWM fan controller.
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
----
- drivers/pwm/Kconfig         |  11 ++
- drivers/pwm/Makefile        |   1 +
- drivers/pwm/pwm-intel-lgm.c | 244 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 256 insertions(+)
- create mode 100644 drivers/pwm/pwm-intel-lgm.c
+--xHFwDpU9dbj6ez1V
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 7dbcf6973d33..4949c51fe90b 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -232,6 +232,17 @@ config PWM_IMX_TPM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-imx-tpm.
- 
-+config PWM_INTEL_LGM
-+	tristate "Intel LGM PWM support"
-+	depends on HAS_IOMEM
-+	depends on (OF && X86) || COMPILE_TEST
-+	select REGMAP_MMIO
-+	help
-+	  Generic PWM fan controller driver for LGM SoC.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-intel-lgm.
-+
- config PWM_IQS620A
- 	tristate "Azoteq IQS620A PWM support"
- 	depends on MFD_IQS62X || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 2c2ba0a03557..e9431b151694 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
- obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
- obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
- obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
-+obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
- obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
- obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
- obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
-diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
-new file mode 100644
-index 000000000000..e9e54dda07aa
---- /dev/null
-+++ b/drivers/pwm/pwm-intel-lgm.c
-@@ -0,0 +1,244 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Intel Corporation.
-+ *
-+ * Limitations:
-+ * - The hardware supports fixed period & configures only 2-wire mode.
-+ * - Supports normal polarity. Does not support changing polarity.
-+ * - When PWM is disabled, output of PWM will become 0(inactive). It doesn't
-+ *   keep track of running period.
-+ * - When duty cycle is changed, PWM output may be a mix of previous setting
-+ *   and new setting for the first period. From second period, the output is
-+ *   based on new setting.
-+ * - It is a dedicated PWM fan controller. There are no other consumers for
-+ *   this PWM controller.
-+ */
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+
-+#define LGM_PWM_FAN_CON0		0x0
-+#define LGM_PWM_FAN_EN_EN		BIT(0)
-+#define LGM_PWM_FAN_EN_DIS		0x0
-+#define LGM_PWM_FAN_EN_MSK		BIT(0)
-+#define LGM_PWM_FAN_MODE_2WIRE		0x0
-+#define LGM_PWM_FAN_MODE_MSK		BIT(1)
-+#define LGM_PWM_FAN_DC_MSK		GENMASK(23, 16)
-+
-+#define LGM_PWM_FAN_CON1		0x4
-+#define LGM_PWM_FAN_MAX_RPM_MSK		GENMASK(15, 0)
-+
-+#define LGM_PWM_MAX_RPM			(BIT(16) - 1)
-+#define LGM_PWM_DEFAULT_RPM		4000
-+#define LGM_PWM_MAX_DUTY_CYCLE		(BIT(8) - 1)
-+
-+#define LGM_PWM_DC_BITS			8
-+
-+#define LGM_PWM_PERIOD_2WIRE_NS		(40 * NSEC_PER_MSEC)
-+
-+struct lgm_pwm_chip {
-+	struct pwm_chip chip;
-+	struct regmap *regmap;
-+	u32 period;
-+};
-+
-+static inline struct lgm_pwm_chip *to_lgm_pwm_chip(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct lgm_pwm_chip, chip);
-+}
-+
-+static int lgm_pwm_enable(struct pwm_chip *chip, bool enable)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	struct regmap *regmap = pc->regmap;
-+
-+	return regmap_update_bits(regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_EN_MSK,
-+				  enable ? LGM_PWM_FAN_EN_EN : LGM_PWM_FAN_EN_DIS);
-+}
-+
-+static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			 const struct pwm_state *state)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	u32 duty_cycle, val;
-+	int ret;
-+
-+	/* The hardware only supports normal polarity and fixed period. */
-+	if (state->polarity != PWM_POLARITY_NORMAL || state->period < pc->period)
-+		return -EINVAL;
-+
-+	if (!state->enabled)
-+		return lgm_pwm_enable(chip, 0);
-+
-+	duty_cycle = min_t(u64, state->duty_cycle, pc->period);
-+	val = duty_cycle * LGM_PWM_MAX_DUTY_CYCLE / pc->period;
-+
-+	ret = regmap_update_bits(pc->regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_DC_MSK,
-+				 FIELD_PREP(LGM_PWM_FAN_DC_MSK, val));
-+	if (ret)
-+		return ret;
-+
-+	return lgm_pwm_enable(chip, 1);
-+}
-+
-+static void lgm_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      struct pwm_state *state)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	u32 duty, val;
-+
-+	state->enabled = regmap_test_bits(pc->regmap, LGM_PWM_FAN_CON0,
-+					  LGM_PWM_FAN_EN_EN);
-+	state->polarity = PWM_POLARITY_NORMAL;
-+	state->period = pc->period; /* fixed period */
-+
-+	regmap_read(pc->regmap, LGM_PWM_FAN_CON0, &val);
-+	duty = FIELD_GET(LGM_PWM_FAN_DC_MSK, val);
-+	state->duty_cycle = DIV_ROUND_UP(duty * pc->period, LGM_PWM_MAX_DUTY_CYCLE);
-+}
-+
-+static const struct pwm_ops lgm_pwm_ops = {
-+	.get_state = lgm_pwm_get_state,
-+	.apply = lgm_pwm_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static void lgm_pwm_init(struct lgm_pwm_chip *pc)
-+{
-+	struct regmap *regmap = pc->regmap;
-+	u32 con0_val;
-+
-+	con0_val = FIELD_PREP(LGM_PWM_FAN_MODE_MSK, LGM_PWM_FAN_MODE_2WIRE);
-+	pc->period = LGM_PWM_PERIOD_2WIRE_NS;
-+	regmap_update_bits(regmap, LGM_PWM_FAN_CON1, LGM_PWM_FAN_MAX_RPM_MSK,
-+			   LGM_PWM_DEFAULT_RPM);
-+	regmap_update_bits(regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_MODE_MSK,
-+			   con0_val);
-+}
-+
-+static const struct regmap_config lgm_pwm_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+};
-+
-+static void lgm_clk_release(void *data)
-+{
-+	struct clk *clk = data;
-+
-+	clk_disable_unprepare(clk);
-+}
-+
-+static int lgm_clk_enable(struct device *dev, struct clk *clk)
-+{
-+	int ret;
-+
-+	ret = clk_prepare_enable(clk);
-+	if (ret)
-+		return ret;
-+
-+	return devm_add_action_or_reset(dev, lgm_clk_release, clk);
-+}
-+
-+static void lgm_reset_control_release(void *data)
-+{
-+	struct reset_control *rst = data;
-+
-+	reset_control_assert(rst);
-+}
-+
-+static int lgm_reset_control_deassert(struct device *dev, struct reset_control *rst)
-+{
-+	int ret;
-+
-+	ret = reset_control_deassert(rst);
-+	if (ret)
-+		return ret;
-+
-+	return devm_add_action_or_reset(dev, lgm_reset_control_release, rst);
-+}
-+
-+static int lgm_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct reset_control *rst;
-+	struct lgm_pwm_chip *pc;
-+	void __iomem *io_base;
-+	struct clk *clk;
-+	int ret;
-+
-+	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
-+	if (!pc)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, pc);
-+
-+	io_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(io_base))
-+		return PTR_ERR(io_base);
-+
-+	pc->regmap = devm_regmap_init_mmio(dev, io_base, &lgm_pwm_regmap_config);
-+	if (IS_ERR(pc->regmap))
-+		return dev_err_probe(dev, PTR_ERR(pc->regmap),
-+				     "failed to init register map\n");
-+
-+	clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(clk))
-+		return dev_err_probe(dev, PTR_ERR(clk), "failed to get clock\n");
-+
-+	ret = lgm_clk_enable(dev, clk);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to enable clock\n");
-+
-+	rst = devm_reset_control_get_exclusive(dev, NULL);
-+	if (IS_ERR(rst))
-+		return dev_err_probe(dev, PTR_ERR(rst),
-+				     "failed to get reset control\n");
-+
-+	ret = lgm_reset_control_deassert(dev, rst);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "cannot deassert reset control\n");
-+
-+	pc->chip.dev = dev;
-+	pc->chip.ops = &lgm_pwm_ops;
-+	pc->chip.npwm = 1;
-+	pc->chip.base = -1;
-+
-+	lgm_pwm_init(pc);
-+
-+	ret = pwmchip_add(&pc->chip);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
-+
-+	return 0;
-+}
-+
-+static int lgm_pwm_remove(struct platform_device *pdev)
-+{
-+	struct lgm_pwm_chip *pc = platform_get_drvdata(pdev);
-+
-+	return pwmchip_remove(&pc->chip);
-+}
-+
-+static const struct of_device_id lgm_pwm_of_match[] = {
-+	{ .compatible = "intel,lgm-pwm" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, lgm_pwm_of_match);
-+
-+static struct platform_driver lgm_pwm_driver = {
-+	.driver = {
-+		.name = "intel-pwm",
-+		.of_match_table = lgm_pwm_of_match,
-+	},
-+	.probe = lgm_pwm_probe,
-+	.remove = lgm_pwm_remove,
-+};
-+module_platform_driver(lgm_pwm_driver);
-+
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
+On Thu, Sep 24, 2020 at 04:16:59PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> On Thu, Sep 24, 2020 at 04:23:34PM +0300, Andy Shevchenko wrote:
+> > On Thu, Sep 24, 2020 at 08:55:34AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> > > On Tue, Sep 15, 2020 at 04:23:37PM +0800, Rahul Tanwar wrote:
+> >=20
+> > ...
+> >=20
+> > > > +	ret =3D lgm_clk_enable(dev, pc);
+> > > > +	if (ret) {
+> > > > +		dev_err(dev, "failed to enable clock\n");
+> > >=20
+> > > You used dev_err_probe four times for six error paths. I wonder why y=
+ou
+> > > didn't use it here (and below for a failing pwmchip_add()).
+> >=20
+> > dev_err_probe() makes sense when we might experience deferred probe. In=
+ neither
+> > of mentioned function this can be the case.
+> >=20
+> > > > +		return ret;
+> > > > +	}
+> >=20
+> > ...
+> >=20
+> > > > +	ret =3D lgm_reset_control_deassert(dev, pc);
+> > > > +	if (ret)
+> > > > +		return dev_err_probe(dev, ret, "cannot deassert reset control\n"=
+);
+> > >=20
+> > > After lgm_reset_control_deassert is called pc->rst is unused. So there
+> > > is no need to have this member in struct lgm_pwm_chip. The same appli=
+es
+> > > to ->clk. (You have to pass rst (or clk) to devm_add_action_or_reset =
+for
+> > > that to work. Looks like a nice idea anyhow.)
+> >=20
+> > True. And above dev_err_probe() is not needed.
+>=20
+> You argue that dev_err_probe() gives no benefit as
+> lgm_reset_control_deassert won't return -EPROBE_DEFER, right?
+>=20
+> Still I consider it a useful function because
+>=20
+>  a) I (as an author or as a reviewer) don't need to think if the
+>     failing function might return -EPROBE_DEFER now or in the future.
+>     dev_err_probe does the right thing even for functions that don't
+>     return -EPROBE_DEFER.
+>=20
+>  b) With dev_err_probe() I can accomplish things in a single line that
+>     need two lines when open coding it.
+>=20
+>  c) dev_err_probe() emits the symbolic error name without having to
+>     resort to %pe + ERR_PTR.
+>=20
+>  d) Using dev_err_probe() for all error paths gives a consistency that I
+>     like with a maintainer's hat on.
 
+That would perhaps be true if all error paths did use dev_err_probe().
+And even if that were the case, dev_err_probe() doesn't guarantee that
+error messages will actually be consistent because developers can still
+provide whatever format string they like.
+
+Also, the format of the messages that dev_err_probe() prints is unlike
+anything that I've seen, so introducing dev_err_probe() actually makes
+things more inconsistent, in my opinion.
+
+I have in fact been advocating for people to use error messages of the
+form:
+
+	"failed to ...: %d\n", err
+
+or:
+
+	"unable to ...: %d\n", err
+
+Or some other similar form because that's the most common type that I
+have come across in the kernel. I think it's also easier to read those
+error messages because they contain the important data (i.e. the
+description, which tells you what went wrong) first and then are
+followed by the error code (which tells you how it failed).
+
+Now I suspect the current format was chosen because we need to have the
+constant part first, because otherwise the arbitrary format string could
+be something that doesn't lend itself to have an error code appended.
+
+The current format is arguably also something that's easier to parse
+=66rom some script because the format is in a somewhat standard format. On
+the other hand, I think this is a bit misguided because we already have
+structured log messages, so I wonder if it might have been better to
+make the error code part of structured log messages to make them truly
+machine readable but leave the formatting up to developers so that they
+can use whatever is consistent within the driver or whatever fits best
+without actually adding a standard string to the log messages.
+
+Thierry
+
+--xHFwDpU9dbj6ez1V
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl9xhnkACgkQ3SOs138+
+s6FL3xAAi8SW4eZyqa3DzH2x8PIYh0nU4XdJiwu3FXjnpeZKFhpAw727Pf1Rwae7
+PMFnDggq2Q0GJC8Pzo95H0yBYaaVuQa93TLNszX3ofW0GZoZAadGPtGUjQrfFWcZ
+p7DySeukbO3BNIEDSIbMRYSUF+9cPq1sC4RAAQXP27Kdk62nbw2Tsr+AG7YXIBlj
+Z5N4zdFTv6LQRIIv08vpNyj74FSAb41wb+MR5vQnZKwlGRLJ0ZpVuW77SjFtj3Q7
+XMwrHljmSogGLIeqepX3I4McjzVfMXLWcF1sw6quBSX3zJo5DYybcvN6TUnWXQWe
+2AKyE+PGBjwBZcUJg9RM90VvGNjCJ3zm2WUQqLvsYRKC0eGubF9p65b36y6j0IIa
+A2gQNJQ5JiqW5q9Jm5I4RwTU0lZ/Mi+TwnKdZvPiPcC+YuRiqdUC5dHfXvWPfeCL
+eMFhmd7pRI8H7HkRNPo8z/tVufr+zHbYjtQljv2iCCZLXDfBPioX8jeTh9iXbj8Y
+wqR7F5vCC4pAWGLMw4o9jg0Zg5ywPRccXpNh8IbsrNONj0Y7MfXbo5lhxeqck10h
+ZnQRB67wK7iRbV23oos+R5Run1fU/PD4TD+m+6noGDHcmiOmX3g/ZxecAU5iB9pg
+e+V3/apZhQnJ3zwUssmZUfG501sECh3EqmZdUzDT6yrULhEiLtg=
+=Td2r
+-----END PGP SIGNATURE-----
+
+--xHFwDpU9dbj6ez1V--
