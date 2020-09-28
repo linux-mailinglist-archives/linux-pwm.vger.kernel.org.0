@@ -2,104 +2,114 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3077E27A71A
-	for <lists+linux-pwm@lfdr.de>; Mon, 28 Sep 2020 07:52:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B887827A746
+	for <lists+linux-pwm@lfdr.de>; Mon, 28 Sep 2020 08:16:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgI1FwV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 28 Sep 2020 01:52:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725287AbgI1FwU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 28 Sep 2020 01:52:20 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC64BC0613CE
-        for <linux-pwm@vger.kernel.org>; Sun, 27 Sep 2020 22:52:20 -0700 (PDT)
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1kMm58-0006jL-Ml; Mon, 28 Sep 2020 07:52:14 +0200
-Received: from mfe by dude02.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1kMm58-00046a-6l; Mon, 28 Sep 2020 07:52:14 +0200
-Date:   Mon, 28 Sep 2020 07:52:14 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, Anson.Huang@nxp.com, michal.vokac@ysoft.com,
-        l.majewski@majess.pl, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
-Subject: Re: [PATCH v2 1/5] pwm: imx27: enable clock unconditional for
- register access
-Message-ID: <20200928055214.GQ29466@pengutronix.de>
-References: <20200925155330.32301-1-m.felsch@pengutronix.de>
- <20200925155330.32301-2-m.felsch@pengutronix.de>
- <20200926134823.zog3722y3l3ti25x@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200926134823.zog3722y3l3ti25x@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:50:23 up 219 days, 17:07, 234 users,  load average: 2.56, 3.42,
- 4.71
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+        id S1726469AbgI1GQc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 28 Sep 2020 02:16:32 -0400
+Received: from mga07.intel.com ([134.134.136.100]:44581 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725294AbgI1GQc (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 28 Sep 2020 02:16:32 -0400
+IronPort-SDR: LYyC1g5KUsX779YxSouGp9fE41i2tEIjxD1A+/DDU9XfVcypPwkdBQIjsAB/uqe8DpjS6MjPjn
+ zOgpA1A8DsfA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9757"; a="226095483"
+X-IronPort-AV: E=Sophos;i="5.77,312,1596524400"; 
+   d="scan'208";a="226095483"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2020 23:16:31 -0700
+IronPort-SDR: Rx20PZFH48rJveXPiKci9Q6J95MGFDH8Gb9lAXtZ+JFtsvGAfBxQp1u7SEx6aLD4tWSS26tVZo
+ +eX/ctamCiig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,312,1596524400"; 
+   d="scan'208";a="293779574"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga008.fm.intel.com with ESMTP; 27 Sep 2020 23:16:27 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org
+Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com, Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v14 1/2] Add DT bindings YAML schema for PWM fan controller of LGM SoC
+Date:   Mon, 28 Sep 2020 14:15:57 +0800
+Message-Id: <a5b9fefb58a6fe16964219b0d443bf81c58f5445.1601273429.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <cover.1601273429.git.rahul.tanwar@linux.intel.com>
+References: <cover.1601273429.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <cover.1601273429.git.rahul.tanwar@linux.intel.com>
+References: <cover.1601273429.git.rahul.tanwar@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 20-09-26 15:48, Uwe Kleine-König wrote:
-> Hello,
-> 
-> On Fri, Sep 25, 2020 at 05:53:26PM +0200, Marco Felsch wrote:
-> > The current implementation enables the clock if the current PWM state
-> > is '!enabled' to ensure the register access and left the clock on if the
-> > new state is 'enabled'. Further apply calls don't enable the clock since
-> > they relying on the fact the the clock is already running. Change this
-> > behaviour since it is not very intuitive.
-> > 
-> > This commit changes this behaviour. Now the clocks are unconditional
-> > enabled/disabled before/after the register access. If the PWM should be
-> > turned on (state.enabled) we enable the clock again and vice versa if
-> > the PWM should be turned off (!state.enabled).
-> > 
-> > Therefore I added the enable member to the driver state struct since
-> > the usage of cstate and pwm_get_state() is a layer violation. I removed
-> > this violation while on it.
-> 
-> while looking through patch 2 I found something missing here:
-> You don't initialize .enabled in .probe().
+Intel's LGM(Lightning Mountain) SoC contains a PWM fan controller
+which is only used to control the fan attached to the system. This
+PWM controller does not have any other consumer other than fan.
+Add DT bindings documentation for this PWM fan controller.
 
-Arg.. you are right. Thanks for covering this. Didn't recognized it
-since I added this in patch 4/5.
+Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     | 44 ++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
 
-Any comments left on this series?
-
-Regards,
-  Marco
-
-> 
-> Best regards
-> Uwe
-> 
-> -- 
-> Pengutronix e.K.                           | Uwe Kleine-König            |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
-
-
+diff --git a/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+new file mode 100644
+index 000000000000..11a606536169
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/intel,lgm-pwm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: LGM SoC PWM fan controller
++
++maintainers:
++  - Rahul Tanwar <rtanwar@maxlinear.com>
++
++properties:
++  compatible:
++    const: intel,lgm-pwm
++
++  reg:
++    maxItems: 1
++
++  "#pwm-cells":
++    const: 2
++
++  clocks:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - resets
++
++additionalProperties: false
++
++examples:
++  - |
++    pwm: pwm@e0d00000 {
++        compatible = "intel,lgm-pwm";
++        reg = <0xe0d00000 0x30>;
++        #pwm-cells = <2>;
++        clocks = <&cgu0 126>;
++        resets = <&rcu0 0x30 21>;
++    };
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.11.0
+
