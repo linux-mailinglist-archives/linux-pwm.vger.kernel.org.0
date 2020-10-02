@@ -2,45 +2,49 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8EDA2812B9
-	for <lists+linux-pwm@lfdr.de>; Fri,  2 Oct 2020 14:31:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 620CC2812CB
+	for <lists+linux-pwm@lfdr.de>; Fri,  2 Oct 2020 14:33:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387757AbgJBMbV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 2 Oct 2020 08:31:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36308 "EHLO
+        id S1726090AbgJBMdA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 2 Oct 2020 08:33:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387677AbgJBMbV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 2 Oct 2020 08:31:21 -0400
-Received: from smtp2-2.goneo.de (smtp2.goneo.de [IPv6:2001:1640:5::8:33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C069C0613D0;
-        Fri,  2 Oct 2020 05:31:20 -0700 (PDT)
+        with ESMTP id S1725964AbgJBMdA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 2 Oct 2020 08:33:00 -0400
+Received: from smtp1.goneo.de (smtp1.goneo.de [IPv6:2001:1640:5::8:30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9738C0613D0;
+        Fri,  2 Oct 2020 05:32:59 -0700 (PDT)
 Received: from localhost (localhost [127.0.0.1])
-        by smtp2.goneo.de (Postfix) with ESMTP id AA89323F66A;
-        Fri,  2 Oct 2020 14:31:17 +0200 (CEST)
+        by smtp1.goneo.de (Postfix) with ESMTP id 747C723F20F;
+        Fri,  2 Oct 2020 14:32:58 +0200 (CEST)
 X-Virus-Scanned: by goneo
 X-Spam-Flag: NO
-X-Spam-Score: -2.997
+X-Spam-Score: -2.988
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.997 tagged_above=-999 tests=[ALL_TRUSTED=-1,
-        AWL=-0.097, BAYES_00=-1.9] autolearn=ham
-Received: from smtp2.goneo.de ([127.0.0.1])
-        by localhost (smtp2.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Hs9TwZSDOHnW; Fri,  2 Oct 2020 14:31:16 +0200 (CEST)
+X-Spam-Status: No, score=-2.988 tagged_above=-999 tests=[ALL_TRUSTED=-1,
+        AWL=-0.088, BAYES_00=-1.9] autolearn=ham
+Received: from smtp1.goneo.de ([127.0.0.1])
+        by localhost (smtp1.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id D26-kqQQJXtG; Fri,  2 Oct 2020 14:32:56 +0200 (CEST)
 Received: from lem-wkst-02.lemonage.de. (hq.lemonage.de [87.138.178.34])
-        by smtp2.goneo.de (Postfix) with ESMTPA id 219A423F3EA;
-        Fri,  2 Oct 2020 14:31:16 +0200 (CEST)
+        by smtp1.goneo.de (Postfix) with ESMTPA id 6D0BE23F087;
+        Fri,  2 Oct 2020 14:32:56 +0200 (CEST)
 From:   poeschel@lemonage.de
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "GitAuthor: Lars Poeschel" <poeschel@lemonage.de>,
+        linux-kernel@vger.kernel.org (open list),
         linux-pwm@vger.kernel.org (open list:PWM SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Cc:     Lars Poeschel <poeschel@lemonage.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 1/2] pwm: sysfs: Set class on pwm devices
-Date:   Fri,  2 Oct 2020 14:30:47 +0200
-Message-Id: <20201002123048.3073128-1-poeschel@lemonage.de>
+        linux-doc@vger.kernel.org (open list:DOCUMENTATION)
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 2/2] Documentation: Reflect the changes to pwm sysfs
+Date:   Fri,  2 Oct 2020 14:32:44 +0200
+Message-Id: <20201002123247.3073352-1-poeschel@lemonage.de>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201002123048.3073128-1-poeschel@lemonage.de>
+References: <20201002123048.3073128-1-poeschel@lemonage.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -49,152 +53,187 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 From: Lars Poeschel <poeschel@lemonage.de>
 
-This adds a class to exported pwm devices.
-Exporting a pwm through sysfs did not yield udev events. The
-dev_uevent_filter function does filter-out devices without a bus or
-class.
-This was already addressed in commit
-commit 7e5d1fd75c3d ("pwm: Set class for exported channels in sysfs")
-but this did cause problems and the commit got reverted with
-commit c289d6625237 ("Revert "pwm: Set class for exported channels in
-sysfs"")
-Problem with the previous approach was, that there is a clash if we have
-multiple pwmchips:
-	echo 0 > pwmchip0/export
-	echo 0 > pwmchip1/export
-would both export /sys/class/pwm/pwm0 .
+This is an update to the documentation to reflect the change to pwm
+sysfs.
 
-Now this patch changes the sysfs interface. We do include the pwmchip
-number into the pwm directory that gets exported.
-With the example above we get:
-	/sys/class/pwm/pwm-0-0
-	/sys/class/pwm/pwm-1-0
-We maintain ABI backward compatibility through symlinks.
-	/sys/class/pwm/pwmchip0/pwm0
-	/sys/class/pwm/pwmchip1/pwm0
-are now symbolic links to the new names.
+/sys/class/pwm/pwmchipN/pwmX style exports are marked as deprecated.
+They are still available as symlinks to the new interface.
+New exports are available as /sys/class/pwm/pwm-N-X
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
 ---
- drivers/pwm/sysfs.c | 57 +++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 47 insertions(+), 10 deletions(-)
+ Documentation/ABI/obsolete/sysfs-class-pwm | 52 +++++++++++++++++++
+ Documentation/ABI/testing/sysfs-class-pwm  | 60 ++++++++++++----------
+ Documentation/driver-api/pwm.rst           |  7 +--
+ 3 files changed, 90 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/ABI/obsolete/sysfs-class-pwm
 
-diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-index 449dbc0f49ed..c708da17a857 100644
---- a/drivers/pwm/sysfs.c
-+++ b/drivers/pwm/sysfs.c
-@@ -240,8 +240,10 @@ static void pwm_export_release(struct device *child)
- 
- static int pwm_export_child(struct device *parent, struct pwm_device *pwm)
- {
-+	struct pwm_chip *chip = dev_get_drvdata(parent);
- 	struct pwm_export *export;
- 	char *pwm_prop[2];
-+	char *link_name;
- 	int ret;
- 
- 	if (test_and_set_bit(PWMF_EXPORTED, &pwm->flags))
-@@ -256,25 +258,39 @@ static int pwm_export_child(struct device *parent, struct pwm_device *pwm)
- 	export->pwm = pwm;
- 	mutex_init(&export->lock);
- 
-+	export->child.class = parent->class;
- 	export->child.release = pwm_export_release;
- 	export->child.parent = parent;
- 	export->child.devt = MKDEV(0, 0);
- 	export->child.groups = pwm_groups;
--	dev_set_name(&export->child, "pwm%u", pwm->hwpwm);
-+	dev_set_name(&export->child, "pwm-%u-%u", chip->base, pwm->hwpwm);
- 
- 	ret = device_register(&export->child);
--	if (ret) {
--		clear_bit(PWMF_EXPORTED, &pwm->flags);
--		put_device(&export->child);
--		export = NULL;
--		return ret;
-+	if (ret)
-+		goto error;
+diff --git a/Documentation/ABI/obsolete/sysfs-class-pwm b/Documentation/ABI/obsolete/sysfs-class-pwm
+new file mode 100644
+index 000000000000..92ba4f3586e9
+--- /dev/null
++++ b/Documentation/ABI/obsolete/sysfs-class-pwm
+@@ -0,0 +1,52 @@
++What:		/sys/class/pwm/pwmchipN/pwmX
++Date:		May 2013
++KernelVersion:	3.11
++Contact:	H Hartley Sweeten <hsweeten@visionengravers.com>
++Description:
++		A /sys/class/pwm/pwmchipN/pwmX directory is created for
++		each exported PWM channel where X is the exported PWM
++		channel number.
 +
-+	link_name = kasprintf(GFP_KERNEL, "pwm%u", pwm->hwpwm);
-+	if (link_name == NULL) {
-+		ret = -ENOMEM;
-+		goto dev_unregister;
- 	}
--	pwm_prop[0] = kasprintf(GFP_KERNEL, "EXPORT=pwm%u", pwm->hwpwm);
++What:		/sys/class/pwm/pwmchipN/pwmX/period
++Date:		May 2013
++KernelVersion:	3.11
++Contact:	H Hartley Sweeten <hsweeten@visionengravers.com>
++Description:
++		Sets the PWM signal period in nanoseconds.
 +
-+	pwm_prop[0] = kasprintf(GFP_KERNEL, "EXPORT=%s",
-+			export->child.kobj.name);
- 	pwm_prop[1] = NULL;
- 	kobject_uevent_env(&parent->kobj, KOBJ_CHANGE, pwm_prop);
- 	kfree(pwm_prop[0]);
++What:		/sys/class/pwm/pwmchipN/pwmX/duty_cycle
++Date:		May 2013
++KernelVersion:	3.11
++Contact:	H Hartley Sweeten <hsweeten@visionengravers.com>
++Description:
++		Sets the PWM signal duty cycle in nanoseconds.
++
++What:		/sys/class/pwm/pwmchipN/pwmX/polarity
++Date:		May 2013
++KernelVersion:	3.11
++Contact:	H Hartley Sweeten <hsweeten@visionengravers.com>
++Description:
++		Sets the output polarity of the PWM signal to "normal" or
++		"inversed".
++
++What:		/sys/class/pwm/pwmchipN/pwmX/enable
++Date:		May 2013
++KernelVersion:	3.11
++Contact:	H Hartley Sweeten <hsweeten@visionengravers.com>
++Description:
++		Enable/disable the PWM signal.
++		0 is disabled
++		1 is enabled
++
++What:		/sys/class/pwm/pwmchipN/pwmX/capture
++Date:		June 2016
++KernelVersion:	4.8
++Contact:	Lee Jones <lee.jones@linaro.org>
++Description:
++		Capture information about a PWM signal. The output format is a
++		pair unsigned integers (period and duty cycle), separated by a
++		single space.
++
++  This ABI is deprecated and will be removed after 2025. It is replaced by
++  another sysfs ABI documented in Documentation/ABI/testing/sysfs-class-pwm
++
+diff --git a/Documentation/ABI/testing/sysfs-class-pwm b/Documentation/ABI/testing/sysfs-class-pwm
+index c20e61354561..87582dea1027 100644
+--- a/Documentation/ABI/testing/sysfs-class-pwm
++++ b/Documentation/ABI/testing/sysfs-class-pwm
+@@ -38,50 +38,58 @@ Contact:	H Hartley Sweeten <hsweeten@visionengravers.com>
+ Description:
+ 		Unexports a PWM channel.
  
--	return 0;
-+	ret = sysfs_create_link(&parent->kobj, &export->child.kobj, link_name);
-+	return ret;
-+
-+dev_unregister:
-+	device_unregister(&export->child);
-+error:
-+	clear_bit(PWMF_EXPORTED, &pwm->flags);
-+	put_device(&export->child);
-+	export = NULL;
-+	return ret;
- }
+-What:		/sys/class/pwm/pwmchipN/pwmX
+-Date:		May 2013
+-KernelVersion:	3.11
+-Contact:	H Hartley Sweeten <hsweeten@visionengravers.com>
++What:		/sys/class/pwm/pwm-N-X
++		/sys/class/pwm/pwmchipN/pwm-N-X
++Date:		October 2020
++KernelVersion:	5.9
++Contact:	Lars Poeschel <poeschel@lemonage.de>
+ Description:
+-		A /sys/class/pwm/pwmchipN/pwmX directory is created for
++		A /sys/class/pwm/pwm-N-X directory is created for
+ 		each exported PWM channel where X is the exported PWM
+-		channel number.
++		channel number and N is the number of the pwmchip
++		that this pwm belongs to.
++		/sys/class/pwm/pwmchipN/pwm-N-X is the same
  
- static int pwm_unexport_match(struct device *child, void *data)
-@@ -286,6 +302,7 @@ static int pwm_unexport_child(struct device *parent, struct pwm_device *pwm)
- {
- 	struct device *child;
- 	char *pwm_prop[2];
-+	char *link_name;
+-What:		/sys/class/pwm/pwmchipN/pwmX/period
+-Date:		May 2013
+-KernelVersion:	3.11
+-Contact:	H Hartley Sweeten <hsweeten@visionengravers.com>
++What:		/sys/class/pwm/pwm-N-X/period
++		/sys/class/pwm/pwmchipN/pwm-N-X/period
++Date:		October 2020
++KernelVersion:	5.9
++Contact:	Lars Poeschel <poeschel@lemonage.de>
+ Description:
+ 		Sets the PWM signal period in nanoseconds.
  
- 	if (!test_and_clear_bit(PWMF_EXPORTED, &pwm->flags))
- 		return -ENODEV;
-@@ -294,7 +311,11 @@ static int pwm_unexport_child(struct device *parent, struct pwm_device *pwm)
- 	if (!child)
- 		return -ENODEV;
+-What:		/sys/class/pwm/pwmchipN/pwmX/duty_cycle
+-Date:		May 2013
+-KernelVersion:	3.11
+-Contact:	H Hartley Sweeten <hsweeten@visionengravers.com>
++What:		/sys/class/pwm/pwm-N-X/duty_cycle
++		/sys/class/pwm/pwmchipN/pwm-N-X/duty_cycle
++Date:		October 2020
++KernelVersion:	5.9
++Contact:	Lars Poeschel <poeschel@lemonage.de>
+ Description:
+ 		Sets the PWM signal duty cycle in nanoseconds.
  
--	pwm_prop[0] = kasprintf(GFP_KERNEL, "UNEXPORT=pwm%u", pwm->hwpwm);
-+	link_name = kasprintf(GFP_KERNEL, "pwm%u", pwm->hwpwm);
-+	if (link_name)
-+		sysfs_delete_link(&parent->kobj, &child->kobj, link_name);
-+
-+	pwm_prop[0] = kasprintf(GFP_KERNEL, "UNEXPORT=%s", child->kobj.name);
- 	pwm_prop[1] = NULL;
- 	kobject_uevent_env(&parent->kobj, KOBJ_CHANGE, pwm_prop);
- 	kfree(pwm_prop[0]);
-@@ -365,13 +386,29 @@ static ssize_t npwm_show(struct device *parent, struct device_attribute *attr,
- }
- static DEVICE_ATTR_RO(npwm);
+-What:		/sys/class/pwm/pwmchipN/pwmX/polarity
+-Date:		May 2013
+-KernelVersion:	3.11
+-Contact:	H Hartley Sweeten <hsweeten@visionengravers.com>
++What:		/sys/class/pwm/pwm-N-X/polarity
++		/sys/class/pwm/pwmchipN/pwm-N-X/polarity
++Date:		October 2020
++KernelVersion:	5.9
++Contact:	Lars Poeschel <poeschel@lemonage.de>
+ Description:
+ 		Sets the output polarity of the PWM signal to "normal" or
+ 		"inversed".
  
-+static umode_t pwm_is_visible(struct kobject *kobj, struct attribute *attr,
-+			      int n)
-+{
-+	struct device *dev = container_of(kobj, struct device, kobj);
-+
-+	if (dev->groups == pwm_groups)
-+		return 0;
-+
-+	return attr->mode;
-+}
-+
- static struct attribute *pwm_chip_attrs[] = {
- 	&dev_attr_export.attr,
- 	&dev_attr_unexport.attr,
- 	&dev_attr_npwm.attr,
- 	NULL,
- };
--ATTRIBUTE_GROUPS(pwm_chip);
-+
-+static const struct attribute_group pwm_chip_group = {
-+	.attrs = pwm_chip_attrs,
-+	.is_visible = pwm_is_visible,
-+};
-+__ATTRIBUTE_GROUPS(pwm_chip);
+-What:		/sys/class/pwm/pwmchipN/pwmX/enable
+-Date:		May 2013
+-KernelVersion:	3.11
+-Contact:	H Hartley Sweeten <hsweeten@visionengravers.com>
++What:		/sys/class/pwm/pwm-N-X/enable
++		/sys/class/pwm/pwmchipN/pwm-N-X/enable
++Date:		October 2020
++KernelVersion:	5.9
++Contact:	Lars Poeschel <poeschel@lemonage.de>
+ Description:
+ 		Enable/disable the PWM signal.
+ 		0 is disabled
+ 		1 is enabled
  
- /* takes export->lock on success */
- static struct pwm_export *pwm_class_get_state(struct device *parent,
+-What:		/sys/class/pwm/pwmchipN/pwmX/capture
+-Date:		June 2016
+-KernelVersion:	4.8
+-Contact:	Lee Jones <lee.jones@linaro.org>
++What:		/sys/class/pwm/pwm-N-X/capture
++		/sys/class/pwm/pwmchipN/pwm-N-X/capture
++Date:		October 2020
++KernelVersion:	5.9
++Contact:	Lars Poeschel <poeschel@lemonage.de>
+ Description:
+ 		Capture information about a PWM signal. The output format is a
+ 		pair unsigned integers (period and duty cycle), separated by a
+diff --git a/Documentation/driver-api/pwm.rst b/Documentation/driver-api/pwm.rst
+index ab62f1bb0366..9361cd9b136c 100644
+--- a/Documentation/driver-api/pwm.rst
++++ b/Documentation/driver-api/pwm.rst
+@@ -89,9 +89,10 @@ will find:
+ 
+ The PWM channels are numbered using a per-chip index from 0 to npwm-1.
+ 
+-When a PWM channel is exported a pwmX directory will be created in the
+-pwmchipN directory it is associated with, where X is the number of the
+-channel that was exported. The following properties will then be available:
++When a PWM channel is exported a pwm-N-X directory will be created in the
++/sys/class/pwm/ directory. N is number of the PWM chip this pwm is associated
++with and X is the number of the channel that was exported. The following
++properties will then be available:
+ 
+   period
+     The total period of the PWM signal (read/write).
 -- 
 2.28.0
 
