@@ -2,85 +2,144 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C0A92803E3
-	for <lists+linux-pwm@lfdr.de>; Thu,  1 Oct 2020 18:25:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E5A6280E5F
+	for <lists+linux-pwm@lfdr.de>; Fri,  2 Oct 2020 09:58:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732230AbgJAQZz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 1 Oct 2020 12:25:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730534AbgJAQZz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 1 Oct 2020 12:25:55 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7A4AC0613D0
-        for <linux-pwm@vger.kernel.org>; Thu,  1 Oct 2020 09:25:54 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id w141so1352365oia.2
-        for <linux-pwm@vger.kernel.org>; Thu, 01 Oct 2020 09:25:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2CSu/IScOCsPGM9c3D/eJ8Lgkh9FWTnZ0m8wgNmrDis=;
-        b=Tzu3fz8JfB/jQSuQ4t9QSXrokC1//Gsu6pBqeSbFsF8tuI95mVDMacS2NQKhT86u31
-         DHdVld2B0mgDAi/QPGpAL1QIahr/T135xg9YogX+xPThn3SwAIjC+jT4wtAa6hRFJvQ/
-         ICPtno+uXU5AXJ/R7rD+neX3/UNBU9kFA3xyXXk9USZlxHEovWYBzIVRf7T1chvSTQKW
-         72Eka+lUb8YIb2dOQpSrP5QRq+sYJPMR433ViLcZdEgtRUewcZx9H00+tgjGm5rKviiM
-         F2pepolJfiV0j1SDnzWEoUEEuVPqkUP5uPQwAJD1SNezTry+V9Jz0J8ty7eoXi8Hbt0A
-         bCUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2CSu/IScOCsPGM9c3D/eJ8Lgkh9FWTnZ0m8wgNmrDis=;
-        b=AcwplCBkDh6IkWSCuVG4Z5PUsV3JgX65xZ/Q9Mpp0H9yf03YN/Hs8TQjb+vQTIdtoU
-         FlOCemQLF7UMQ32eYtv+P+sVYeArrj4jHm9SAM0zLEToqItxhtlavMw7KJcKyY7oNq1l
-         qeT4mj57O5IeplHnUroKns+cFL9HLsH0qds9ovrjvWXurP/WmUW88tvjwXlnKSN7I9wH
-         mThbSXU5IePD9FDZU3pl2esrsN6QDWliAxuHkvN9Cm4zQt/YTq18ZIU3OQUBVmyDN1fW
-         ZvwLV1MtIb/ITKmfQX6rRdUlbPHrnN4ajdrfWMntqMNz1DcSNL/K8rpHFUur+9IAnZMl
-         Hskw==
-X-Gm-Message-State: AOAM530TX5b9X9PvmGZ/99/cfEsjxS4uep8jx/T96GmCKtKgseva9wrD
-        qqyx0dWwhwlCnFMNxOc7a6Iw2Q==
-X-Google-Smtp-Source: ABdhPJw+OAhkscZL4XJ+4yh17jZ20OcTK/+TigpL8uj7SnyX70PQGeUcLahBNiIX9VhdiOw+aJV5qw==
-X-Received: by 2002:aca:f417:: with SMTP id s23mr480974oih.168.1601569554231;
-        Thu, 01 Oct 2020 09:25:54 -0700 (PDT)
-Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id f26sm1303860otq.50.2020.10.01.09.25.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Oct 2020 09:25:52 -0700 (PDT)
-Date:   Thu, 1 Oct 2020 11:21:11 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        id S1726499AbgJBH6f (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 2 Oct 2020 03:58:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47796 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726266AbgJBH6f (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 2 Oct 2020 03:58:35 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B73C4206A5;
+        Fri,  2 Oct 2020 07:58:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601625513;
+        bh=VC5t7PYyhQ3yPcf8lwkEP8Aq1I28TaT7zlaw1h6RBQg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iLeBRUFcZ40SPhOzyBOIzhK52CPt5FGDeNSRgEi4qZAJ8M8TEVNB6c96A/uj4jcKe
+         iFK2zJLEFMHg3VFLF7n55f9pULbUpzbkuLv31a/UIwoLijroTPPkhNxEhlrWO5OdrM
+         dwi6oVXKTpvNZrVn4ixQQiWB8ICKXewvmfWaMASc=
+Date:   Fri, 2 Oct 2020 09:58:32 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Lars Poeschel <poeschel@lemonage.de>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
         Lee Jones <lee.jones@linaro.org>,
-        Martin Botka <martin.botka1@gmail.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v4 3/4] arm64: dts: qcom: msm8996: Add mpp and lpg blocks
-Message-ID: <20201001162111.GA114373@builder.lan>
-References: <20200929031544.1000204-1-bjorn.andersson@linaro.org>
- <20200929031544.1000204-4-bjorn.andersson@linaro.org>
- <424f7b71-fb7e-fb45-c449-987ec3578290@gmail.com>
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] pwm: sysfs: Set class on pwm devices
+Message-ID: <20201002075832.GA1184016@kroah.com>
+References: <20200929121953.2817843-1-poeschel@lemonage.de>
+ <20200930065726.fjcsm4pfh65medgl@pengutronix.de>
+ <20200930092056.maz5biy2ugr6yc3p@lem-wkst-02.lemonage>
+ <20200930094146.73s3qzvf5ekjeavc@pengutronix.de>
+ <20201001090531.gubfwmznlto2ng6l@lem-wkst-02.lemonage>
+ <20201001112449.GA2364834@kroah.com>
+ <20201001135009.2dpgojasd3fm5phh@lem-wkst-02.lemonage>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <424f7b71-fb7e-fb45-c449-987ec3578290@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201001135009.2dpgojasd3fm5phh@lem-wkst-02.lemonage>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu 01 Oct 10:22 CDT 2020, Konrad Dybcio wrote:
-
-> Hi, 
+On Thu, Oct 01, 2020 at 03:50:09PM +0200, Lars Poeschel wrote:
+> On Thu, Oct 01, 2020 at 01:24:49PM +0200, Greg Kroah-Hartman wrote:
+> > On Thu, Oct 01, 2020 at 11:05:31AM +0200, Lars Poeschel wrote:
+> > > On Wed, Sep 30, 2020 at 11:41:46AM +0200, Uwe Kleine-König wrote:
+> > > > Hello,
+> > > > 
+> > > > I added Greg Kroah-Hartman who I discussed this with via irc a bit to
+> > > > Cc:.
+> > > > 
+> > > > On Wed, Sep 30, 2020 at 11:20:56AM +0200, Lars Poeschel wrote:
+> > > > > thank you for your review!
+> > > > > 
+> > > > > On Wed, Sep 30, 2020 at 08:57:26AM +0200, Uwe Kleine-König wrote:
+> > > > > > On Tue, Sep 29, 2020 at 02:19:53PM +0200, poeschel@lemonage.de wrote:
+> > > > > > > From: Lars Poeschel <poeschel@lemonage.de>
+> > > > > > > 
+> > > > > > > This adds a class to exported pwm devices.
+> > > > > > > Exporting a pwm through sysfs did not yield udev events. The
+> > > > > > 
+> > > > > > I wonder what is your use-case here. This for sure also has a place to
+> > > > > > be mentioned in the commit log. I suspect there is a better way to
+> > > > > > accomplish you way.
+> > > > > 
+> > > > > Use-case is to be able to use a pwm from a non-root userspace process.
+> > > > > I use udev rules to adjust permissions.
+> > > > 
+> > > > Hmm, how do you trigger the export? Without being aware of all the
+> > > > details in the sysfs code I would expect that the exported stuff is
+> > > > available instantly once the write used to export the PWM is completed.
+> > > > So changing the permissions can be done directly after triggering the
+> > > > export in the same process.
+> > > 
+> > > The export is triggered through the userspace process itself. Why can it
+> > > do this ? Because there is another udev rule, that changes permissions
+> > > when a pwmchip appears.
+> > > Then I'd like to have the second udev rule, that changes permissions on
+> > > the freshly exported pwm. The userspace process can't do this.
+> > > You are right I could propably do everything from within udev: If a
+> > > pwmchip appears, export certain pwms and right away change their
+> > > permissions. It does not also not feel right. It'd require knowledge
+> > > from the userspace application to be mapped to udev.
+> > 
+> > The way the kernel code is now, yes, you will not have any way to
+> > trigger it by userspace as the kernel is creating a "raw" struct device
+> > that isn't assigned to anything.  That is what needs to be fixed here.
 > 
-> Just a nitpick: the title says "qcom: msm8996", whereas the file being changed is pm(i)8994.dtsi. This also applies to most msm8992/94 platforms, as the PMIC was used there too.
+> I did a first try with our approach.
+> I set the class of the child to its parent class. This does work and
+> create the directories right under /sys/pwm but because the child now
+> also inherits the dev_groups from the parent its directory also contain
+> export, unexport and npwm files, that don't apply for pwm's as soon a I
+> register the device to driver core.
 > 
+> Did we miss something or is there a way to avoid that ? I had a look at
+> device_add and saw that as soon as a class it set it's dev_groups get
+> exported through device_add_attrs.
 
-Thanks for pointing that out, replacing msm8996 with pm[i]8994 would
-make more sense.
+Ah, you need to tweak that group to only show up for a specific "type"
+of device.  There is a is_visable callback for a group that should be
+used for this, and you can check the type of device being affected here,
+try messing with that.  And make sure you set a new type for the new
+devices you are creating.
 
-Regards,
-Bjorn
+I know that's vague, if you need more help I can work on it next week.
+
+> > > > Out of interest: What do you use the pwm for? Isn't there a suitable
+> > > > kernel driver that can do the required stuff? Compared to the kernel-API
+> > > > the sysfs interface isn't atomic. Is this an annoyance?
+> > > 
+> > > Use-case is generating a voltage from the pwm. This voltage is used to
+> > > signal different states and does not change very often. This is
+> > > absolutely not annoying that this is not atomic. We just change the duty
+> > > cycle on the fly. Everything else is configured one time at startup.
+> > > I'd call what I need pwm-dac. I could not find a ready to use driver.
+> > > Maybe I could misuse some kernel driver for this. Maybe I could use
+> > > pwm-led or pwm-brightness or pwm-fan. Propably pwm-regulator could work,
+> > > there is even a userspace facing part for this, but this is not
+> > > devicetree ready.
+> > > ...and the worst, please don't blame me: The application is java, so
+> > > ioctl is a problem.
+> > 
+> > I thought java could do ioctls, otherwise how would it ever be able to
+> > talk to serial ports?
+> 
+> It is not impossible but it is horrible. java itself can access the
+> ports through normal file I/O, but it can not set control lines or
+> baudrate or anything. You need some C-code for this, that is not part of
+> the java vm itself and has to be called through something called JNI -
+> java native interface.
+
+Ah, ok, yeah, that's not ok, sorry to hear you are stuck with Java :(
+
+greg k-h
