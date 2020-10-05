@@ -2,184 +2,191 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5090B283566
-	for <lists+linux-pwm@lfdr.de>; Mon,  5 Oct 2020 14:12:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C58612836BF
+	for <lists+linux-pwm@lfdr.de>; Mon,  5 Oct 2020 15:42:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725931AbgJEMMK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 5 Oct 2020 08:12:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725891AbgJEMMK (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 5 Oct 2020 08:12:10 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9909F2075A;
-        Mon,  5 Oct 2020 12:12:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601899928;
-        bh=dhglsjHj4uwibotr7svIV7suAuWFKGapEQPRlLvR6+E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h9ToBfZSo9u9ALqvzX1BUl23M0jH5agkcgYRO+27Yk80nbt2ExRlhO/MZXvt5uIvT
-         OTGu50kN793xjNukX+hdX5gknTcDq8j6rY4lO95yzOJclGkqyt3st0c+38LsZGHArD
-         ZhvTcRq33Z5VoysOK1d24DGIyO6cT7VVlKpPq+xc=
-Date:   Mon, 5 Oct 2020 14:12:53 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Lars Poeschel <poeschel@lemonage.de>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        id S1725939AbgJENm3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 5 Oct 2020 09:42:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgJENm2 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 5 Oct 2020 09:42:28 -0400
+Received: from smtp1.goneo.de (smtp1.goneo.de [IPv6:2001:1640:5::8:30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E1BC0613CE;
+        Mon,  5 Oct 2020 06:42:27 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by smtp1.goneo.de (Postfix) with ESMTP id 263E223F06B;
+        Mon,  5 Oct 2020 15:42:26 +0200 (CEST)
+X-Virus-Scanned: by goneo
+X-Spam-Flag: NO
+X-Spam-Score: -2.985
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.985 tagged_above=-999 tests=[ALL_TRUSTED=-1,
+        AWL=-0.085, BAYES_00=-1.9] autolearn=ham
+Received: from smtp1.goneo.de ([127.0.0.1])
+        by localhost (smtp1.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id KpSmZlKZ73U7; Mon,  5 Oct 2020 15:42:24 +0200 (CEST)
+Received: from lem-wkst-02.lemonage (hq.lemonage.de [87.138.178.34])
+        by smtp1.goneo.de (Postfix) with ESMTPSA id BD5F723F037;
+        Mon,  5 Oct 2020 15:42:23 +0200 (CEST)
+Date:   Mon, 5 Oct 2020 15:42:19 +0200
+From:   Lars Poeschel <poeschel@lemonage.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
         "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pwm: sysfs: Set class on pwm devices
-Message-ID: <20201005121253.GA687559@kroah.com>
-References: <20200930094146.73s3qzvf5ekjeavc@pengutronix.de>
- <20201001090531.gubfwmznlto2ng6l@lem-wkst-02.lemonage>
- <20201001112449.GA2364834@kroah.com>
- <20201005093016.GD425362@ulmo>
- <20201005094530.GA154185@kroah.com>
- <20201005101721.GL425362@ulmo>
- <20201005104023.GB245520@kroah.com>
- <20201005110819.GP425362@ulmo>
- <20201005111738.GA367715@kroah.com>
- <20201005115819.GU425362@ulmo>
+Subject: Re: [PATCH 1/2] pwm: sysfs: Set class on pwm devices
+Message-ID: <20201005134219.bvy7lsy4vguzevhk@lem-wkst-02.lemonage>
+References: <20201002123048.3073128-1-poeschel@lemonage.de>
+ <20201002124616.GB3348424@kroah.com>
+ <20201002130844.udikqwzspp6zlyhh@lem-wkst-02.lemonage>
+ <20201002133512.GB3386034@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201005115819.GU425362@ulmo>
+In-Reply-To: <20201002133512.GB3386034@kroah.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Oct 05, 2020 at 01:58:19PM +0200, Thierry Reding wrote:
-> On Mon, Oct 05, 2020 at 01:17:38PM +0200, Greg Kroah-Hartman wrote:
-> > On Mon, Oct 05, 2020 at 01:08:19PM +0200, Thierry Reding wrote:
-> > > On Mon, Oct 05, 2020 at 12:40:23PM +0200, Greg Kroah-Hartman wrote:
-> > > > On Mon, Oct 05, 2020 at 12:17:21PM +0200, Thierry Reding wrote:
-> > > > > On Mon, Oct 05, 2020 at 11:45:30AM +0200, Greg Kroah-Hartman wrote:
-> > > > > > On Mon, Oct 05, 2020 at 11:30:16AM +0200, Thierry Reding wrote:
-> > > > > > > On Thu, Oct 01, 2020 at 01:24:49PM +0200, Greg Kroah-Hartman wrote:
-> > > > > > > > On Thu, Oct 01, 2020 at 11:05:31AM +0200, Lars Poeschel wrote:
-> > > > > > > > > On Wed, Sep 30, 2020 at 11:41:46AM +0200, Uwe Kleine-König wrote:
-> > > > > > > > > > Hello,
-> > > > > > > > > > 
-> > > > > > > > > > I added Greg Kroah-Hartman who I discussed this with via irc a bit to
-> > > > > > > > > > Cc:.
-> > > > > > > > > > 
-> > > > > > > > > > On Wed, Sep 30, 2020 at 11:20:56AM +0200, Lars Poeschel wrote:
-> > > > > > > > > > > thank you for your review!
-> > > > > > > > > > > 
-> > > > > > > > > > > On Wed, Sep 30, 2020 at 08:57:26AM +0200, Uwe Kleine-König wrote:
-> > > > > > > > > > > > On Tue, Sep 29, 2020 at 02:19:53PM +0200, poeschel@lemonage.de wrote:
-> > > > > > > > > > > > > From: Lars Poeschel <poeschel@lemonage.de>
-> > > > > > > > > > > > > 
-> > > > > > > > > > > > > This adds a class to exported pwm devices.
-> > > > > > > > > > > > > Exporting a pwm through sysfs did not yield udev events. The
-> > > > > > > > > > > > 
-> > > > > > > > > > > > I wonder what is your use-case here. This for sure also has a place to
-> > > > > > > > > > > > be mentioned in the commit log. I suspect there is a better way to
-> > > > > > > > > > > > accomplish you way.
-> > > > > > > > > > > 
-> > > > > > > > > > > Use-case is to be able to use a pwm from a non-root userspace process.
-> > > > > > > > > > > I use udev rules to adjust permissions.
-> > > > > > > > > > 
-> > > > > > > > > > Hmm, how do you trigger the export? Without being aware of all the
-> > > > > > > > > > details in the sysfs code I would expect that the exported stuff is
-> > > > > > > > > > available instantly once the write used to export the PWM is completed.
-> > > > > > > > > > So changing the permissions can be done directly after triggering the
-> > > > > > > > > > export in the same process.
-> > > > > > > > > 
-> > > > > > > > > The export is triggered through the userspace process itself. Why can it
-> > > > > > > > > do this ? Because there is another udev rule, that changes permissions
-> > > > > > > > > when a pwmchip appears.
-> > > > > > > > > Then I'd like to have the second udev rule, that changes permissions on
-> > > > > > > > > the freshly exported pwm. The userspace process can't do this.
-> > > > > > > > > You are right I could propably do everything from within udev: If a
-> > > > > > > > > pwmchip appears, export certain pwms and right away change their
-> > > > > > > > > permissions. It does not also not feel right. It'd require knowledge
-> > > > > > > > > from the userspace application to be mapped to udev.
-> > > > > > > > 
-> > > > > > > > The way the kernel code is now, yes, you will not have any way to
-> > > > > > > > trigger it by userspace as the kernel is creating a "raw" struct device
-> > > > > > > > that isn't assigned to anything.  That is what needs to be fixed here.
-> > > > > > > > 
-> > > > > > > > > > Out of interest: What do you use the pwm for? Isn't there a suitable
-> > > > > > > > > > kernel driver that can do the required stuff? Compared to the kernel-API
-> > > > > > > > > > the sysfs interface isn't atomic. Is this an annoyance?
-> > > > > > > > > 
-> > > > > > > > > Use-case is generating a voltage from the pwm. This voltage is used to
-> > > > > > > > > signal different states and does not change very often. This is
-> > > > > > > > > absolutely not annoying that this is not atomic. We just change the duty
-> > > > > > > > > cycle on the fly. Everything else is configured one time at startup.
-> > > > > > > > > I'd call what I need pwm-dac. I could not find a ready to use driver.
-> > > > > > > > > Maybe I could misuse some kernel driver for this. Maybe I could use
-> > > > > > > > > pwm-led or pwm-brightness or pwm-fan. Propably pwm-regulator could work,
-> > > > > > > > > there is even a userspace facing part for this, but this is not
-> > > > > > > > > devicetree ready.
-> > > > > > > > > ...and the worst, please don't blame me: The application is java, so
-> > > > > > > > > ioctl is a problem.
-> > > > > > > > 
-> > > > > > > > I thought java could do ioctls, otherwise how would it ever be able to
-> > > > > > > > talk to serial ports?
-> > > > > > > > 
-> > > > > > > > Anyway, this needs to be fixed in the kernel...
-> > > > > > > 
-> > > > > > > If atomicity was a problem, we could potentially add a mechanism to the
-> > > > > > > sysfs interface to enable that. I don't see a good way of doing that in
-> > > > > > > a single file, since that works against how sysfs is designed. But one
-> > > > > > > thing I could imagine is adding a file ("lock", or whatever you want to
-> > > > > > > call it) that you can use for atomic fencing:
-> > > > > > > 
-> > > > > > > 	$ echo 1 > lock # locks the hardware state
-> > > > > > > 	$ echo 100 > period
-> > > > > > > 	$ echo 50 > duty_cycle
-> > > > > > > 	$ echo 0 > lock # flushes state to hardware
-> > > > > > > 
-> > > > > > > But it sounds like that's not even a big issue.
-> > > > > > 
-> > > > > > That is exactly what configfs was designed for :)
-> > > > > 
-> > > > > Interesting... for some reason I had never thought about configfs in
-> > > > > this context. But it does indeed sound like it could solve this problem
-> > > > > in a better way.
-> > > > > 
-> > > > > My memory is a bit sketchy, but I think for USB device controllers this
-> > > > > works by exposing each controller in configfs and then configuring
-> > > > > things like endpoints within the controller's directory. So I wonder if
-> > > > > instead of requesting PWMs via sysfs, we should rather expose them via
-> > > > > configfs items.
-> > > > > 
-> > > > > Something like:
-> > > > > 
-> > > > > 	# mkdir /configfs/7000a000.pwm/0
-> > > > > 
-> > > > > could then be the equivalent of exporting PWM channel 0 of the given PWM
-> > > > > chip in sysfs, except that now you get a configfs directory with
-> > > > > attributes that you can use to inspect and reconfigure the PWM channel
-> > > > > and ultimately apply the changes atomically.
-> > > > > 
-> > > > > How does that work from a permissions point of view? How do we ensure
-> > > > > that people don't need root privileges to access these?
+On Fri, Oct 02, 2020 at 03:35:12PM +0200, Greg Kroah-Hartman wrote:
+> On Fri, Oct 02, 2020 at 03:08:44PM +0200, Lars Poeschel wrote:
+> > On Fri, Oct 02, 2020 at 02:46:16PM +0200, Greg Kroah-Hartman wrote:
+> > > On Fri, Oct 02, 2020 at 02:30:47PM +0200, poeschel@lemonage.de wrote:
+> > > > From: Lars Poeschel <poeschel@lemonage.de>
 > > > > 
-> > > > To change things in configfs, yes, I'm pretty sure you need root access.
-> > > > But to read things, sysfs is fine.  I don't really know what you are
-> > > > wanting to do here, both create a device and change the options over
-> > > > time?
+> > > > This adds a class to exported pwm devices.
+> > > > Exporting a pwm through sysfs did not yield udev events. The
+> > > > dev_uevent_filter function does filter-out devices without a bus or
+> > > > class.
+> > > > This was already addressed in commit
+> > > > commit 7e5d1fd75c3d ("pwm: Set class for exported channels in sysfs")
+> > > > but this did cause problems and the commit got reverted with
+> > > > commit c289d6625237 ("Revert "pwm: Set class for exported channels in
+> > > > sysfs"")
+> > > > Problem with the previous approach was, that there is a clash if we have
+> > > > multiple pwmchips:
+> > > > 	echo 0 > pwmchip0/export
+> > > > 	echo 0 > pwmchip1/export
+> > > > would both export /sys/class/pwm/pwm0 .
+> > > > 
+> > > > Now this patch changes the sysfs interface. We do include the pwmchip
+> > > > number into the pwm directory that gets exported.
+> > > > With the example above we get:
+> > > > 	/sys/class/pwm/pwm-0-0
+> > > > 	/sys/class/pwm/pwm-1-0
+> > > > We maintain ABI backward compatibility through symlinks.
+> > > > 	/sys/class/pwm/pwmchip0/pwm0
+> > > > 	/sys/class/pwm/pwmchip1/pwm0
+> > > > are now symbolic links to the new names.
+> > > > 
+> > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+> > > > ---
+> > > >  drivers/pwm/sysfs.c | 57 +++++++++++++++++++++++++++++++++++++--------
+> > > >  1 file changed, 47 insertions(+), 10 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
+> > > > index 449dbc0f49ed..c708da17a857 100644
+> > > > --- a/drivers/pwm/sysfs.c
+> > > > +++ b/drivers/pwm/sysfs.c
+> > > > @@ -240,8 +240,10 @@ static void pwm_export_release(struct device *child)
+> > > >  
+> > > >  static int pwm_export_child(struct device *parent, struct pwm_device *pwm)
+> > > >  {
+> > > > +	struct pwm_chip *chip = dev_get_drvdata(parent);
+> > > >  	struct pwm_export *export;
+> > > >  	char *pwm_prop[2];
+> > > > +	char *link_name;
+> > > >  	int ret;
+> > > >  
+> > > >  	if (test_and_set_bit(PWMF_EXPORTED, &pwm->flags))
+> > > > @@ -256,25 +258,39 @@ static int pwm_export_child(struct device *parent, struct pwm_device *pwm)
+> > > >  	export->pwm = pwm;
+> > > >  	mutex_init(&export->lock);
+> > > >  
+> > > > +	export->child.class = parent->class;
+> > > >  	export->child.release = pwm_export_release;
+> > > >  	export->child.parent = parent;
+> > > >  	export->child.devt = MKDEV(0, 0);
+> > > >  	export->child.groups = pwm_groups;
+> > > > -	dev_set_name(&export->child, "pwm%u", pwm->hwpwm);
+> > > > +	dev_set_name(&export->child, "pwm-%u-%u", chip->base, pwm->hwpwm);
+> > > >  
+> > > >  	ret = device_register(&export->child);
+> > > > -	if (ret) {
+> > > > -		clear_bit(PWMF_EXPORTED, &pwm->flags);
+> > > > -		put_device(&export->child);
+> > > > -		export = NULL;
+> > > > -		return ret;
+> > > > +	if (ret)
+> > > > +		goto error;
+> > > > +
+> > > > +	link_name = kasprintf(GFP_KERNEL, "pwm%u", pwm->hwpwm);
+> > > > +	if (link_name == NULL) {
+> > > > +		ret = -ENOMEM;
+> > > > +		goto dev_unregister;
+> > > >  	}
+> > > > -	pwm_prop[0] = kasprintf(GFP_KERNEL, "EXPORT=pwm%u", pwm->hwpwm);
+> > > > +
+> > > > +	pwm_prop[0] = kasprintf(GFP_KERNEL, "EXPORT=%s",
+> > > > +			export->child.kobj.name);
+> > > >  	pwm_prop[1] = NULL;
+> > > >  	kobject_uevent_env(&parent->kobj, KOBJ_CHANGE, pwm_prop);
 > > > 
-> > > Yes, I'm wondering if we should replace the write usages in sysfs with a
-> > > better configfs implementation. We obviously can't remove the existing
-> > > sysfs ABI, but for anything that's meant to be atomic we could point
-> > > people at the configfs interface.
+> > > Do you still need to do this by hand?  Why can't this uevent field
+> > > belong to the class and have it create this for you automatically when
+> > > the device is added?
 > > 
-> > How about fixing the sysfs interface so that it's usable, like the
-> > proposed patch does?  What you all have now is not working.
+> > I did not add this with my patch, it was there before and I wonder, what
+> > purpose it served, since the uevent was filtered because there was no
+> > class there.
+> > Now we have a class and now it works and this is what happens:
 > > 
-> > When the revised version is sent, not this version...
+> > /sys/class/pwm# echo 0 > pwmchip1/export 
+> > KERNEL[2111.952725] add      /devices/platform/ocp/48302000.epwmss/48302200.pwm/pwm/pwmchip1/pwm-1-0 (pwm)
+> > ACTION=add
+> > DEVPATH=/devices/platform/ocp/48302000.epwmss/48302200.pwm/pwm/pwmchip1/pwm-1-0
+> > SEQNUM=1546
+> > SUBSYSTEM=pwm
+> > 
+> > KERNEL[2111.955155] change   /devices/platform/ocp/48302000.epwmss/48302200.pwm/pwm/pwmchip1 (pwm)
+> > ACTION=change
+> > DEVPATH=/devices/platform/ocp/48302000.epwmss/48302200.pwm/pwm/pwmchip1
+> > EXPORT=pwm-1-0
+> > SEQNUM=1547
+> > SUBSYSTEM=pwm
+> > 
+> > The first event is the event from device_register. It informs us that we
+> > now have a new pwm-1-0. Nice.
+> > The second is the event done here "by hand". It informs us, that
+> > pwmchip1 changed. It has a new export now. For me personally this is not
+> > needed, but also I don't think it is wrong.
+> > You decide!
 > 
-> I'm not sure which patch you're referring to. I don't see anything in my
-> inbox. I'll go check the spam, perhaps it's landed there.
+> If the uevent was being filtered out anyway, and never sent, then let's
+> just drop the thing as there is nothing to keep backwards compatible.
 
-See:
-	https://lore.kernel.org/r/20201002123048.3073128-1-poeschel@lemonage.de
+I had a sleepless night about this. I felt something is wrong with this.
+I investigated a bit:
+- for the kobject_uevent_env line git blame found this commit 552c02e3e7cfe
+  ("pwm: Send a uevent on the pwmchip device upon channel sysfs
+  (un)export")
+- the commit message explicitly mentions my use case! (udev event to
+  change permissions of exported pwm)
+- git log says the commit right before is this one: commit c289d6625237
+  ("Revert "pwm: Set class for exported channels in sysfs""). This is
+  the commit, that reverts the previous addition of the pwmchip class
+  right as is to the pwm. The one that had the sysfs name clash.
 
+I must have done something horribly wrong. I tried again and now I can
+get this udev change event. I don't know what I did wrong. The event is
+not filtered, because this is sent on behalf of the parent that had the
+class attached right from the start. This is my mistake. I am very sorry
+for the noise.
+I think best is now to keep everything as is, right ?
+
+Regards,
+Lars
