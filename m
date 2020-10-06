@@ -2,150 +2,170 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3915B284885
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Oct 2020 10:25:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 301442848E0
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Oct 2020 10:58:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgJFIZN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 6 Oct 2020 04:25:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgJFIZM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Oct 2020 04:25:12 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD9B5C0613D7
-        for <linux-pwm@vger.kernel.org>; Tue,  6 Oct 2020 01:25:11 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id h7so8788554wre.4
-        for <linux-pwm@vger.kernel.org>; Tue, 06 Oct 2020 01:25:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YdhpNKlTW8M5AEVFobND3IcWnRcYsnTU1ylxUOoxLOQ=;
-        b=qHporHfANLglN4o1QtjGAQRWNnN7asjRL3cjazvXjsHh09RfWeLWPhNLVvwSLhWTRD
-         dq9W25RBebcUYOBXWtFq8Xg4Jpr5iwt1eXNmqsekvon7Xl48K0UpprSPFSz88KD7f3X5
-         mVcgrKZ1Q+07rFYOZ6TaIw9SiDE9zLlxqZ10OzeIv3M1P2sRohlLAogcHVmvgwhtbxWh
-         aDv0+4vxSuOdMGAP1BZwP0BlcnNmUE37U3q6XBhiOW2IywzQSNU0oPIf35dwBbDiZGem
-         YyfEcoZuw1vq+eSTNb3BPCippk6TyfUXDjeg7Imo0qPxxzlaz4AKfZHvUV+rJldsOuzH
-         6yMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YdhpNKlTW8M5AEVFobND3IcWnRcYsnTU1ylxUOoxLOQ=;
-        b=hLIDuamjqkIHH4IvzKFEBWef3M7a2PQt+7tGfirO3wyYZIydI+IegUpSN1OuwIUR/P
-         ZEojJFuaFBf+aZPSOxIIpPMPng6mn1sH3ZqaMQ6YmWBDKsrfW5P02P0Hgvh/ZypmT5Xm
-         gw5TBY6cwWTyXGfubfFOgSKZgXZRDoJLBkkjJZLVrDSESyjnyV+Z0DaICtVH9VY8MW8w
-         PfX+fcRXghybGfyQWsq8jMa2MzxTlVUzSMBmMmQnTB7fEhZtVYbarlKQKe74mArH9nh1
-         TKrmmkQ4s4CmH3DT7NBXYWSujNXtD8NM+eC8aBf0sneUBEhs4o8MFMArHRcC1UC7Ia+Q
-         Cntg==
-X-Gm-Message-State: AOAM5337DwUvSmIszGeShw/outkwyzoP2nwdSL6Vk9PGma4pzaLuEK2n
-        3TLAaV1F7grI3/+sauzGR8mXZg==
-X-Google-Smtp-Source: ABdhPJxsjuEumsaEtaU67N9vbg2cBftfsc/wZW21wnFzsv2BjeMFHC1JmQFLaFRJtrvHxARri2Z8Zg==
-X-Received: by 2002:a5d:6409:: with SMTP id z9mr120080wru.391.1601972710164;
-        Tue, 06 Oct 2020 01:25:10 -0700 (PDT)
-Received: from [192.168.86.34] (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
-        by smtp.googlemail.com with ESMTPSA id y11sm3353486wrs.16.2020.10.06.01.25.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Oct 2020 01:25:09 -0700 (PDT)
-Subject: Re: [PATCH 0/4] dt-bindings: additional/unevaluatedProperties
- clean-ups
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>, dmaengine@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        dri-devel@lists.freedesktop.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Jens Axboe <axboe@kernel.dk>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Richard Weinberger <richard@nod.at>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-References: <20201005183830.486085-1-robh@kernel.org>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <d04c47dd-6e37-a7ac-f3c4-d6e6c308dbcd@linaro.org>
-Date:   Tue, 6 Oct 2020 09:25:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20201005183830.486085-1-robh@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        id S1726248AbgJFI62 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 6 Oct 2020 04:58:28 -0400
+Received: from mga07.intel.com ([134.134.136.100]:38346 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725891AbgJFI62 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 6 Oct 2020 04:58:28 -0400
+IronPort-SDR: VfX6lBpPdxbxDSP/q6axiU5beG73LSHc00F3krHTH32A5pLKa3ixEum0xd0od9FBgjkgwS5u4X
+ mDQyHqzhPgjw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9765"; a="228552299"
+X-IronPort-AV: E=Sophos;i="5.77,342,1596524400"; 
+   d="scan'208";a="228552299"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2020 01:58:26 -0700
+IronPort-SDR: 4+rdhvDsCqGBQ6cPuaW258DC+HESF8WOqnUadj0eUZzRKTzggS8K4U+ADXPyRyLXehFswtp8m4
+ cgkTQRQkFPPA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,342,1596524400"; 
+   d="scan'208";a="348375630"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmsmga002.fm.intel.com with ESMTP; 06 Oct 2020 01:58:26 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 6 Oct 2020 01:58:26 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 6 Oct 2020 01:58:26 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.104)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.1713.5; Tue, 6 Oct 2020 01:58:24 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nw8h+mdzGz8AJmhd3jXh/veis4bYUsIGwACmxytKVmyZaZERTEHrVvgqkzUuBSA9e8fa2dJUM5ILfmmGFR5CspqIyLiBRgUhkv292IuIBkLYaAnMHpaB6nYm+0NPUC6Lois54PgGyWXI+dp74ReB81w4N9xcrHzr2QZLKuYyn+Ye7zx1qNS1RARj1EfQKn28jWzPYPKIFRovlOEEcbEqVGEuB0a0yNxqdpVfhvm7z7OzcjJtXZjfwYk6W/3H6mqndgQbIIPvIzf+TXPefHKqTcGSLMryf5TH5KDvMuYPHRhVojIqPc6XPhfJFDduomWQPt+az1ClxUX2ek8CTusjrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=id2eORmQq3WuCCUclwJSYwELx4r8McUBGDlQxPW4xzg=;
+ b=elmU3KEZX77rGzXfwUhBclfOtbGe5fr9VX6gqlHKNIbNInNYvh9205KlsV4GmPiKMVUuPUggWtgoeLbsnJDfAjqUClIOU4cvIikWH2g8VHHceN5WspMrmyLUwN3DFvbUGfuEkXvNdFoU3Zt+LyjdlkoGYTHc+F8Bf9kkboNdjtGphXwpXATHwTzZWfp1ZDVu8R+Ghc5h0PKU7JvIoYTccTRXnpt2h/avnVX04QZZPcTd9fZM98umaXjU2IV0DSTP/2eeDsmwu9rgYvhmdIDPJOgqqZgjYuopyTKDQ5Lp+LSOkZWl/g/9ck/tj1oQs5FSyReaGffuJGSaPYANeZnDGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=id2eORmQq3WuCCUclwJSYwELx4r8McUBGDlQxPW4xzg=;
+ b=S4GEHvBBQqXjepsHCAgcob+9liOYTr7eTFiIDzhEr9bDbuW1wt7wh0O4UgP+gOUDgaKF1A4SNwIHK5Di4q9eMjF96xIf000CmX+Anhtsh2zimy74zmwYaKAFqi4zyX/L7E8CjmSvm8EW3rGCakl1/IY4hUFzYh+7avMTmLjXEPI=
+Received: from DM6PR11MB4250.namprd11.prod.outlook.com (2603:10b6:5:1df::18)
+ by DM6PR11MB2732.namprd11.prod.outlook.com (2603:10b6:5:be::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.43; Tue, 6 Oct
+ 2020 08:58:23 +0000
+Received: from DM6PR11MB4250.namprd11.prod.outlook.com
+ ([fe80::7448:c067:e80d:3c09]) by DM6PR11MB4250.namprd11.prod.outlook.com
+ ([fe80::7448:c067:e80d:3c09%3]) with mapi id 15.20.3433.045; Tue, 6 Oct 2020
+ 08:58:23 +0000
+From:   "Ayyathurai, Vijayakannan" <vijayakannan.ayyathurai@intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
+CC:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Wan Mohamad, Wan Ahmad Zainie" 
+        <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "Raja Subramanian, Lakshmi Bai" 
+        <lakshmi.bai.raja.subramanian@intel.com>,
+        "Ayyathurai, Vijayakannan" <vijayakannan.ayyathurai@intel.com>
+Subject: RE: [PATCH v9 1/2] pwm: Add PWM driver for Intel Keem Bay
+Thread-Topic: [PATCH v9 1/2] pwm: Add PWM driver for Intel Keem Bay
+Thread-Index: AQHWl7Vf+0cewMeXH0CpZx9T41JpCqmChbWAgAfF+vA=
+Date:   Tue, 6 Oct 2020 08:58:22 +0000
+Message-ID: <DM6PR11MB4250F66DD7EEF69CECDB9198FB0D0@DM6PR11MB4250.namprd11.prod.outlook.com>
+References: <20201001053751.10405-1-vijayakannan.ayyathurai@intel.com>
+ <20201001053751.10405-2-vijayakannan.ayyathurai@intel.com>
+ <20201001100643.GA3956970@smile.fi.intel.com>
+In-Reply-To: <20201001100643.GA3956970@smile.fi.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+authentication-results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [42.111.138.29]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 60908414-26c4-4883-f4ba-08d869d5faf0
+x-ms-traffictypediagnostic: DM6PR11MB2732:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB273288BECC5AF99D4B37071DFB0D0@DM6PR11MB2732.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2aJksWD/1nO7wrxOBTZidWWDcCE0Q7iqyd9pWGExq0dbDNhRKV2/a+0Og7V8HKI73pIQNhvLr/gvMuWVNfVf3YKft3cSeFCn4jGnz9n13eMeCM1VtWybT4ifKlyyP84RPnlKDHdfHxQnRoBhRE/RkraYBssA7hNfZ+3+RF1jtksqFQMxNvnBvbD2KTK1nsNTOMr+eUmGCp03gGGIOA34Oc3a5rO2rOpKbmQV8R7EC3XkbgtyiI4+/uJhGWyVoGdGblwcUh9GmNZ9sTm5U0bzkFIOQSPePOKuP2HOQnh1GPRyHdEs3C/Vql6DFR4ixa5NrgyNOcEhCLiOqdKjinrcgg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4250.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(136003)(39860400002)(346002)(396003)(376002)(33656002)(66476007)(66946007)(64756008)(66556008)(66446008)(4326008)(186003)(8936002)(83380400001)(316002)(478600001)(26005)(76116006)(55016002)(9686003)(52536014)(5660300002)(8676002)(54906003)(86362001)(110136005)(7696005)(2906002)(53546011)(6506007)(71200400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: sk1HI7f9m/F5EwLu+qABWVdDJnnf91RL4eBvt4Lxb3wvO3GWtukfVoipVKci8gA1CTscMl6gLlE90MB6CbUk60m5CAycTokk+Q1ZmDPeoftVPL5jJCLmySXX0HEI4KbbOd+C1GUYR1ZVKo8nkSuGttWi9M4cvPRj7pkYa989gI6OluG/1BD3ArpHzp+6/FPB2D9sokKLJ2Qox3tW3iU+9MGUlsVqCz4NrlZqXdFUb/0IqypJRMwPSyBZ/eSqIrfHKeiYTijHA0dRH5mNfdzm4Tp+l7wTgFMXVwxQuqc9yvQovph+JqSp6nUJEnPDooEHVo4RwyekFm0SZSh88dWbhnjWLji1QubMbRY2TrbU35n1ck57SHfBJUD9D0GDMWEw+wUJ/0zRJEn2IwTtuncENZKATaiNXtfm/Lu1ps5nx6wNPOpNVJS/azYBarM67F+rzEw9VN3pNCBPS5vnm66ngM+6kiLOdfdAPhEPIZ1IwFqPBB/30qs9YD7Xl5A8zEgg4OkxPkb5L9WefGo0EscgrynLI9trdYStfOHmuGQe9x/XTezL3eX/WTAw8E8SWV2/FlJp0zReeNRfzj1feUmIdxLe+T9MNiPpGT8KbhJ0HKK9AfMuSAfpgaf/ni8htrd/txvrJqEsrKkpIFK9/ZmhZg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB4250.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60908414-26c4-4883-f4ba-08d869d5faf0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Oct 2020 08:58:22.8682
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Y5QOZ2hz+x3Y8y8P5Op3xXnHHNMPfSA8AG+gIoWk18Kro4yw1GmWkXT2Z0UFbFQlTqrsIrDI+7AgjIUlETUSVU8J5MSTX6APcs9EV5GLFkU5JsfTfvTuGu1Qhd1Fe9jO
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB2732
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Andy and Uwe,
 
+-----Original Message-----
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>=20
+Sent: Thursday, 1 October, 2020 3:37 PM
+To: Ayyathurai, Vijayakannan <vijayakannan.ayyathurai@intel.com>
+Cc: thierry.reding@gmail.com; u.kleine-koenig@pengutronix.de; robh+dt@kerne=
+l.org; linux-pwm@vger.kernel.org; devicetree@vger.kernel.org; Wan Mohamad, =
+Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>; mgross@linux.int=
+el.com; Raja Subramanian, Lakshmi Bai <lakshmi.bai.raja.subramanian@intel.c=
+om>
+Subject: Re: [PATCH v9 1/2] pwm: Add PWM driver for Intel Keem Bay
 
-On 05/10/2020 19:38, Rob Herring wrote:
-> The default behavior for json-schema is any unknown property is allowed.
-> T
-> 
-> hat is generally not the behavior we want for DT. In order to disallow
-> extra properties, schemas need to define 'additionalProperties: false'
-> typically. Ideally, we'd just add that automatically with the tools, but
-> there are some exceptions so only making things explicit everywhere
-> really works. Missing 'additionalProperties' or 'unevaluatedProperties'
-> has been a constant source of review comments, so a meta-schema check is
-> really needed here.
-> 
->   Documentation/devicetree/bindings/nvmem/nvmem.yaml     |  2 ++
->   .../devicetree/bindings/nvmem/qcom,qfprom.yaml         |  2 ++
+On Thu, Oct 01, 2020 at 01:37:50PM +0800, vijayakannan.ayyathurai@intel.com=
+ wrote:
+> From: Vijayakannan Ayyathurai <vijayakannan.ayyathurai@intel.com>
+>=20
+> The Intel Keem Bay SoC requires PWM support.
+> Add the pwm-keembay driver to enable this.
+>=20
+> Signed-off-by: Lai, Poey Seng <poey.seng.lai@intel.com>
+> Signed-off-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.co=
+m>
+> Co-developed-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.=
+com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Vijayakannan Ayyathurai <vijayakannan.ayyathurai@intel.com=
+>
 
-for nvmem parts,
+> Reported-by: kernel test robot <lkp@intel.com>
 
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+No, the absence of the driver is not what was reported.
+If you wish to give a credit to LKP, use changelog for that.
 
+Sure. Let me keep the tag only in the changelog.=20
+Also kindly let me know if there is further feedback related to this patch =
+before I push the next version.
 
-thanks,
---srini
+--=20
+With Best Regards,
+Andy Shevchenko
+
+Thanks,
+Vijay
+
