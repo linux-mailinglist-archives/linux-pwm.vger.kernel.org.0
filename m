@@ -2,136 +2,65 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C980F2847BD
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Oct 2020 09:43:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40EF9284847
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Oct 2020 10:19:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727251AbgJFHnh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 6 Oct 2020 03:43:37 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:45394 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgJFHnf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Oct 2020 03:43:35 -0400
-Received: by mail-oo1-f66.google.com with SMTP id h8so2944257ooc.12;
-        Tue, 06 Oct 2020 00:43:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LzRJVHcc4AOcRIg5DtD/82Z3g3zvHdupm81fE1K+lIM=;
-        b=BW/5PAt2AJgMD9SfH/QsesYXt+U/6bJFbJQJfG5sxIYovIOzcyQ6gF2bIj00iMfQ8d
-         RZygqQIpMNr1c+c+L666giDhaIvxt5bpg7pDbrKAdRYbskhePtOFUFbeCsi0PR6i9hri
-         ukWIrXxRgbSvImT6J1AG3aaltDe/P34wE+52dYRr/0L4r82SfI/cnWcILSJRt6MC4EFH
-         SLfakT9+lnXcfJoqT4igN3gNVxCTnXPonal2wWndqUtrEghaWXsLvLlSScDMWEnpjS0m
-         HDh/nWOTCWl2WQupa64z+xozEO0bj2+IfqFYzSW5VUxjh8t+/MDCnCUK5icpBh4CnM7+
-         knFw==
-X-Gm-Message-State: AOAM531AZ0jK25lmTr78zk4FeDlzxsf7eKFhghkWNIuZSDrAmrWiyT8O
-        jhv9FD23b84uzn6+4x0NIIkF/ZddD/1VaqeSXVk=
-X-Google-Smtp-Source: ABdhPJyU6RRQM46ugWdopDgtkhgi7iGduwzWS1jU+uDheEg5pvon8IztULtlGUyDWuzb6A77GTJ3kgcTOraYuvM5h0M=
-X-Received: by 2002:a4a:4f17:: with SMTP id c23mr2343959oob.11.1601970213208;
- Tue, 06 Oct 2020 00:43:33 -0700 (PDT)
+        id S1726398AbgJFITa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 6 Oct 2020 04:19:30 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:34866 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726779AbgJFITV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Oct 2020 04:19:21 -0400
+X-IronPort-AV: E=Sophos;i="5.77,342,1596466800"; 
+   d="scan'208";a="59034259"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 06 Oct 2020 17:19:14 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 429F2400265E;
+        Tue,  6 Oct 2020 17:19:11 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH v2 0/2] dt-bindings: Document tpu, pwm support for R8A7742
+Date:   Tue,  6 Oct 2020 09:19:08 +0100
+Message-Id: <20201006081910.1238-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20201005183830.486085-1-robh@kernel.org> <20201005183830.486085-5-robh@kernel.org>
-In-Reply-To: <20201005183830.486085-5-robh@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 6 Oct 2020 09:43:22 +0200
-Message-ID: <CAMuHMdVfNE_vLgmCEH7-cat_OasxxZ958WMDUmaFi8PbbEvbaA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] dt-bindings: Explicitly allow additional properties
- in common schemas
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Jens Axboe <axboe@kernel.dk>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Richard Weinberger <richard@nod.at>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-can@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, Linux I2C <linux-i2c@vger.kernel.org>,
-        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        linux-rtc@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Oct 5, 2020 at 8:39 PM Rob Herring <robh@kernel.org> wrote:
-> In order to add meta-schema checks for additional/unevaluatedProperties
-> being present, all schema need to make this explicit. As common/shared
-> schema are included by other schemas, they should always allow for
-> additionalProperties.
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
+Hi All,
 
->  Documentation/devicetree/bindings/bus/simple-pm-bus.yaml     | 2 ++
+This patches are part of series [1], where patch 1/2 was missed to be applied
+before YAML conversation and patch 2/2 was never applied.
 
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+I have restored the Acks for patch 1/2 and patch 2/2 is unchanged.
 
-Gr{oetje,eeting}s,
+[1] https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=329853
 
-                        Geert
+Cheers,
+Prabhakar
+
+Lad Prabhakar (2):
+  dt-bindings: pwm: renesas,tpu-pwm: Document r8a7742 support
+  dt-bindings: pwm: renesas,pwm-rcar: Add r8a7742 support
+
+ Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml | 1 +
+ Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml  | 1 +
+ 2 files changed, 2 insertions(+)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
