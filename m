@@ -2,138 +2,118 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD0052859CF
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Oct 2020 09:46:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40886285C04
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Oct 2020 11:46:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbgJGHqp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 7 Oct 2020 03:46:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50426 "EHLO mail.kernel.org"
+        id S1727290AbgJGJqa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 7 Oct 2020 05:46:30 -0400
+Received: from mail.z3ntu.xyz ([128.199.32.197]:60252 "EHLO mail.z3ntu.xyz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726041AbgJGHqp (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Wed, 7 Oct 2020 03:46:45 -0400
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2932720870;
-        Wed,  7 Oct 2020 07:46:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602056804;
-        bh=R4+hRjeXx44BI8Hcdv5NdWTepbPaIEsQ9jUrvEd5YUk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=x3m4w3PfO9rY8rRGo1rQ1CjNzTrKpKQ2aeHGJ12WZoiDbP4hB6FBpIqezhvDckLa8
-         xmevP6p3xYTJjV16vCqm/G0s4vpHrdN3ZNNck4WfOqL2u5cY5Dx3YehHss9WItbnI3
-         ffUes45WIg6s14zBmdKxvmCiQ4DSzR/ESnm0GgRg=
-Received: by mail-ed1-f54.google.com with SMTP id b12so1110929edz.11;
-        Wed, 07 Oct 2020 00:46:44 -0700 (PDT)
-X-Gm-Message-State: AOAM531s7OBuSS+VDNBAfpccWPr+kSLaFuQQHNZv3daIPO7gOEw3Srb2
-        sj87vQhcgJPT/6NL2Rshb40n6/sY8i3Y4Cn7PAc=
-X-Google-Smtp-Source: ABdhPJwNzl1urhb9nVWyMFf0v62ujPzA20R0+9EZ7zY78dXLqzBp3vrmcCnYB4Kd9+I9bzs0Q6IFpFOhmgYHVbhC46o=
-X-Received: by 2002:a50:e78f:: with SMTP id b15mr2224622edn.104.1602056802570;
- Wed, 07 Oct 2020 00:46:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200924192455.2484005-1-j.neuschaefer@gmx.net> <20200925050818.2512375-1-j.neuschaefer@gmx.net>
-In-Reply-To: <20200925050818.2512375-1-j.neuschaefer@gmx.net>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 7 Oct 2020 09:46:30 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfRh4vyJ21ACM3Bf5+HtWZUy+anV47VBAmtitfLuAeUjw@mail.gmail.com>
-Message-ID: <CAJKOXPfRh4vyJ21ACM3Bf5+HtWZUy+anV47VBAmtitfLuAeUjw@mail.gmail.com>
-Subject: Re: [PATCH v3 7/7] ARM: dts: imx50-kobo-aura: Add Netronix embedded controller
-To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1726411AbgJGJqa (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 7 Oct 2020 05:46:30 -0400
+X-Greylist: delayed 314 seconds by postgrey-1.27 at vger.kernel.org; Wed, 07 Oct 2020 05:46:28 EDT
+Received: by mail.z3ntu.xyz (Postfix, from userid 182)
+        id 8B5E3C7196; Wed,  7 Oct 2020 09:41:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1602063673; bh=G58nxDXR85aKAm9KZdsGVsJleTDCbz79NyrWb3uEyXY=;
+        h=Cc:Subject:From:To:Date:In-Reply-To;
+        b=nssfBIoByvP+3EH8HJuENhBQuGQTosfme+khCz5ttbYEyLd78Tns6n+r4cV4JfDxm
+         wy0lUjTBOkxGZizXrUTo/HZyCgQ6vgOmYd2Dl8Csxx1xkVPJIfCjkc6d4BIqDcVZ0I
+         2vy3Z8F7bZoZVY6eeB0nYQ9yX5E59hiF4rGCiHXc=
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on arch-vps
+X-Spam-Level: 
+X-Spam-Status: No, score=0.9 required=5.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FROM_SUSPICIOUS_NTLD,
+        PDS_OTHER_BAD_TLD,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.4
+Received: from localhost (arch-vps [128.199.32.197])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 56ED9C4CF4;
+        Wed,  7 Oct 2020 09:41:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1602063670; bh=G58nxDXR85aKAm9KZdsGVsJleTDCbz79NyrWb3uEyXY=;
+        h=Cc:Subject:From:To:Date:In-Reply-To;
+        b=KKS8sIN1+vS6ETBIO+nKA9RcB493ngK2y7IMwGZaazCBBxwrViO4xq7AtWUo/aYjo
+         cXV6RfG7Ouk0NCyObeT5ynmMRocAhiuz4TEmukpj+X4BMAbFGCEy0Gmo9iIrzIYpRX
+         eOTbzPqkkEVD23ITtVw0Llo5t2J9nm+UyQez7qtQ=
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Cc:     <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH v4 2/4] leds: Add driver for Qualcomm LPG
+From:   "Luca Weiss" <luca@z3ntu.xyz>
+To:     "Bjorn Andersson" <bjorn.andersson@linaro.org>,
+        "Pavel Machek" <pavel@ucw.cz>, "Dan Murphy" <dmurphy@ti.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Andy Gross" <agross@kernel.org>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        "Lee Jones" <lee.jones@linaro.org>,
+        "Martin Botka" <martin.botka1@gmail.com>
+Date:   Wed, 07 Oct 2020 09:40:45 +0000
+Message-Id: <C66K5YFY5LGN.1S3H72H0QQQAI@arch-vps>
+In-Reply-To: <20200929031544.1000204-3-bjorn.andersson@linaro.org>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, 25 Sep 2020 at 07:10, Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.n=
-et> wrote:
+Hi Bjorn,
+
+On Mon Sep 28, 2020 at 8:15 PM, Bjorn Andersson wrote:
+> The Light Pulse Generator (LPG) is a PWM-block found in a wide range of
+> PMICs from Qualcomm. It can operate on fixed parameters or based on a
+> lookup-table, altering the duty cycle over time - which provides the
+> means for e.g. hardware assisted transitions of LED brightness.
 >
-> Enable the Netronix EC on the Kobo Aura ebook reader.
->
-> Several features are still missing:
->  - Frontlight/backlight. The vendor kernel drives the frontlight LED
->    using the PWM output of the EC and an additional boost pin that
->    increases the brightness.
->  - Battery monitoring
->  - Interrupts for RTC alarm and low-battery events
->
-> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
 >
-> v3:
-> - Remove interrupt-controller property from embedded-controller node
-> - subnodes of embedded-controller node in to the main node
+> Changes since v3:
+> - Adopt multicolor model
+> - Simplified hw_pattern implementation
 >
-> v2:
-> - https://lore.kernel.org/lkml/20200905144503.1067124-3-j.neuschaefer@gmx=
-.net/
-> - Fix pwm-cells property (should be 2, not 1)
-> ---
->  arch/arm/boot/dts/imx50-kobo-aura.dts | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/imx50-kobo-aura.dts b/arch/arm/boot/dts/im=
-x50-kobo-aura.dts
-> index a0eaf869b9135..2d1a59091a37c 100644
-> --- a/arch/arm/boot/dts/imx50-kobo-aura.dts
-> +++ b/arch/arm/boot/dts/imx50-kobo-aura.dts
-> @@ -6,6 +6,7 @@
->  /dts-v1/;
->  #include "imx50.dtsi"
->  #include <dt-bindings/input/input.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
->
->  / {
->         model =3D "Kobo Aura (N514)";
-> @@ -135,10 +136,24 @@ &i2c3 {
->         pinctrl-0 =3D <&pinctrl_i2c3>;
->         status =3D "okay";
->
-> -       /* TODO: embedded controller at 0x43 */
-> +       embedded-controller@43 {
-> +               pinctrl-names =3D "default";
-> +               pinctrl-0 =3D <&pinctrl_ec>;
-> +               compatible =3D "netronix,ntxec";
-> +               reg =3D <0x43>;
-> +               system-power-controller;
-> +               interrupts-extended =3D <&gpio4 11 IRQ_TYPE_EDGE_FALLING>=
-;
-> +               #pwm-cells =3D <2>;
-> +       };
->  };
->
->  &iomuxc {
-> +       pinctrl_ec: ec {
+> drivers/leds/Kconfig | 9 +
+> drivers/leds/Makefile | 1 +
+> drivers/leds/leds-qcom-lpg.c | 1213 ++++++++++++++++++++++++++++++++++
+> 3 files changed, 1223 insertions(+)
+> create mode 100644 drivers/leds/leds-qcom-lpg.c
 
-This should fail on dtschema check - pinctrl groups should end with "grp".
+<snip>
 
-Best regards,
-Krzysztof
+> +static int lpg_pwm_request(struct pwm_chip *chip, struct pwm_device
+> *pwm)
+> +{
+> + struct lpg *lpg =3D container_of(chip, struct lpg, pwm);
+> + struct lpg_channel *chan =3D &lpg->channels[pwm->hwpwm];
+> +
+> + return chan->in_use ? -EBUSY : 0;
+> +}
+> +
+> +static int lpg_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> + const struct pwm_state *state)
+> +{
+> + struct lpg *lpg =3D container_of(chip, struct lpg, pwm);
+> + struct lpg_channel *chan =3D &lpg->channels[pwm->hwpwm];
+> +
+> + lpg_calc_freq(chan, state->period / NSEC_PER_USEC);
+> + lpg_calc_duty(chan, state->duty_cycle / NSEC_PER_USEC);
+
+As written on IRC this has to be wrapped div_u64() to compile on arm32;
+should also fix the buildbot failure.
+
+> + chan->enabled =3D state->enabled;
+> +
+> + lpg_apply(chan);
+> +
+> + triled_set(lpg, chan->triled_mask, chan->enabled);
+> +
+> + return 0;
+> +}
+
+Other than that, this works great on msm8974-fairphone-fp2 (pm8941)
+with reg 7 (red), 6 (green) & 5 (blue). Thanks for updating this
+patchset!
+
+Regards
+Luca
