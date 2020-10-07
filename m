@@ -2,385 +2,961 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 35CF02869B3
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Oct 2020 22:57:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0314286B09
+	for <lists+linux-pwm@lfdr.de>; Thu,  8 Oct 2020 00:46:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbgJGU5i (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 7 Oct 2020 16:57:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35816 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbgJGU5h (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Oct 2020 16:57:37 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7256BC061755
-        for <linux-pwm@vger.kernel.org>; Wed,  7 Oct 2020 13:57:37 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kQGVD-0002Sf-8D; Wed, 07 Oct 2020 22:57:35 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kQGVC-0001LM-Cl; Wed, 07 Oct 2020 22:57:34 +0200
-Date:   Wed, 7 Oct 2020 22:57:34 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     vijayakannan.ayyathurai@intel.com
-Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        wan.ahmad.zainie.wan.mohamad@intel.com,
-        andriy.shevchenko@linux.intel.com, mgross@linux.intel.com,
-        lakshmi.bai.raja.subramanian@intel.com
-Subject: Re: [PATCH v10 1/2] pwm: Add PWM driver for Intel Keem Bay
-Message-ID: <20201007205734.vguookvp6wt3knuq@pengutronix.de>
-References: <cover.1602090900.git.vijayakannan.ayyathurai@intel.com>
- <a8cb129092283cb6415e56b928293ef7121a851b.1602090900.git.vijayakannan.ayyathurai@intel.com>
+        id S1728902AbgJGWqS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 7 Oct 2020 18:46:18 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:60610 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728865AbgJGWqR (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Oct 2020 18:46:17 -0400
+Received: from relay8-d.mail.gandi.net (unknown [217.70.183.201])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id B72CE3B64CC;
+        Wed,  7 Oct 2020 22:40:41 +0000 (UTC)
+X-Originating-IP: 90.65.88.165
+Received: from localhost (lfbn-lyo-1-1908-165.w90-65.abo.wanadoo.fr [90.65.88.165])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 0DF9E1BF205;
+        Wed,  7 Oct 2020 22:40:02 +0000 (UTC)
+Date:   Thu, 8 Oct 2020 00:40:02 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>, dmaengine@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Jens Axboe <axboe@kernel.dk>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Richard Weinberger <richard@nod.at>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH 4/4] dt-bindings: Explicitly allow additional properties
+ in common schemas
+Message-ID: <20201007224002.GJ2804081@piout.net>
+References: <20201005183830.486085-1-robh@kernel.org>
+ <20201005183830.486085-5-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5e4jj4rnobifsvui"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a8cb129092283cb6415e56b928293ef7121a851b.1602090900.git.vijayakannan.ayyathurai@intel.com>
-Autocrypt: addr=u.kleine-koenig@pengutronix.de; keydata=
-        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
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20201005183830.486085-5-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 05/10/2020 13:38:30-0500, Rob Herring wrote:
+> In order to add meta-schema checks for additional/unevaluatedProperties
+> being present, all schema need to make this explicit. As common/shared
+> schema are included by other schemas, they should always allow for
+> additionalProperties.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
---5e4jj4rnobifsvui
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.yaml              | 2 ++
+>  .../devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml      | 2 ++
+>  Documentation/devicetree/bindings/ata/pata-common.yaml       | 2 ++
+>  Documentation/devicetree/bindings/ata/sata-common.yaml       | 2 ++
+>  Documentation/devicetree/bindings/bus/simple-pm-bus.yaml     | 2 ++
+>  .../devicetree/bindings/chrome/google,cros-ec-typec.yaml     | 2 ++
+>  .../devicetree/bindings/connector/usb-connector.yaml         | 2 ++
+>  .../devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml | 2 ++
+>  .../devicetree/bindings/display/dsi-controller.yaml          | 2 ++
+>  Documentation/devicetree/bindings/display/panel/lvds.yaml    | 2 ++
+>  .../devicetree/bindings/display/panel/panel-common.yaml      | 2 ++
+>  Documentation/devicetree/bindings/dma/dma-common.yaml        | 2 ++
+>  Documentation/devicetree/bindings/dma/dma-controller.yaml    | 2 ++
+>  Documentation/devicetree/bindings/dma/dma-router.yaml        | 2 ++
+>  Documentation/devicetree/bindings/extcon/wlf,arizona.yaml    | 2 ++
+>  .../devicetree/bindings/iio/adc/samsung,exynos-adc.yaml      | 5 ++++-
+>  Documentation/devicetree/bindings/iio/common.yaml            | 2 ++
+>  Documentation/devicetree/bindings/input/input.yaml           | 2 ++
+>  Documentation/devicetree/bindings/input/matrix-keymap.yaml   | 2 ++
+>  .../devicetree/bindings/input/touchscreen/touchscreen.yaml   | 2 ++
+>  Documentation/devicetree/bindings/leds/common.yaml           | 2 ++
+>  .../devicetree/bindings/leds/leds-class-multicolor.yaml      | 3 +++
+>  Documentation/devicetree/bindings/leds/trigger-source.yaml   | 2 ++
+>  Documentation/devicetree/bindings/media/rc.yaml              | 2 ++
+>  Documentation/devicetree/bindings/mfd/syscon.yaml            | 2 +-
+>  Documentation/devicetree/bindings/mmc/mmc-controller.yaml    | 2 ++
+>  .../devicetree/bindings/mmc/synopsys-dw-mshc-common.yaml     | 2 ++
+>  Documentation/devicetree/bindings/mtd/nand-controller.yaml   | 2 ++
+>  .../devicetree/bindings/net/can/can-transceiver.yaml         | 2 ++
+>  Documentation/devicetree/bindings/net/dsa/dsa.yaml           | 2 ++
+>  .../devicetree/bindings/net/ethernet-controller.yaml         | 2 ++
+>  Documentation/devicetree/bindings/net/ethernet-phy.yaml      | 2 ++
+>  Documentation/devicetree/bindings/net/mdio.yaml              | 2 ++
+>  Documentation/devicetree/bindings/net/snps,dwmac.yaml        | 2 ++
+>  Documentation/devicetree/bindings/nvmem/nvmem-consumer.yaml  | 2 ++
+>  Documentation/devicetree/bindings/nvmem/nvmem.yaml           | 2 ++
+>  Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml      | 2 ++
+>  Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml    | 2 ++
+>  Documentation/devicetree/bindings/pci/cdns-pcie.yaml         | 2 ++
+>  Documentation/devicetree/bindings/pci/pci-ep.yaml            | 2 ++
+>  Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml | 2 ++
+>  Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml   | 2 ++
+>  Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml   | 2 ++
+>  Documentation/devicetree/bindings/power/power-domain.yaml    | 2 ++
+>  .../devicetree/bindings/power/supply/power-supply.yaml       | 2 ++
+>  Documentation/devicetree/bindings/pwm/pwm.yaml               | 2 ++
+>  Documentation/devicetree/bindings/regulator/regulator.yaml   | 2 ++
+>  Documentation/devicetree/bindings/regulator/wlf,arizona.yaml | 2 ++
+>  Documentation/devicetree/bindings/riscv/cpus.yaml            | 2 ++
+>  Documentation/devicetree/bindings/rtc/rtc.yaml               | 2 ++
+>  Documentation/devicetree/bindings/serial/rs485.yaml          | 3 +++
+>  Documentation/devicetree/bindings/serial/serial.yaml         | 2 ++
+>  Documentation/devicetree/bindings/soc/imx/fsl,aips-bus.yaml  | 2 ++
+>  Documentation/devicetree/bindings/sound/amlogic,aiu.yaml     | 2 ++
+>  Documentation/devicetree/bindings/sound/cirrus,madera.yaml   | 2 ++
+>  .../devicetree/bindings/sound/nvidia,tegra210-ahub.yaml      | 3 +++
+>  Documentation/devicetree/bindings/sound/wlf,arizona.yaml     | 2 ++
+>  .../devicetree/bindings/soundwire/soundwire-controller.yaml  | 2 ++
+>  Documentation/devicetree/bindings/spi/spi-controller.yaml    | 2 ++
+>  Documentation/devicetree/bindings/spmi/spmi.yaml             | 2 ++
+>  .../devicetree/bindings/thermal/thermal-cooling-devices.yaml | 2 ++
+>  .../devicetree/bindings/thermal/thermal-sensor.yaml          | 2 ++
+>  Documentation/devicetree/bindings/usb/ti,tps6598x.yaml       | 2 ++
+>  Documentation/devicetree/bindings/usb/usb-hcd.yaml           | 2 ++
+>  Documentation/devicetree/bindings/watchdog/watchdog.yaml     | 2 ++
+>  65 files changed, 134 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+> index 1222bf1831fa..14cd727d3c4b 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
+> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+> @@ -341,6 +341,8 @@ required:
+>  dependencies:
+>    rockchip,pmu: [enable-method]
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      cpus {
+> diff --git a/Documentation/devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml b/Documentation/devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml
+> index 1043e4be4fca..c9675c4cdc1b 100644
+> --- a/Documentation/devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml
+> +++ b/Documentation/devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml
+> @@ -30,6 +30,8 @@ properties:
+>        Specifies the bpmp node that needs to be queried to get
+>        operating point data for all CPUs.
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      cpus {
+> diff --git a/Documentation/devicetree/bindings/ata/pata-common.yaml b/Documentation/devicetree/bindings/ata/pata-common.yaml
+> index fc5ebbe7108d..2412894a255d 100644
+> --- a/Documentation/devicetree/bindings/ata/pata-common.yaml
+> +++ b/Documentation/devicetree/bindings/ata/pata-common.yaml
+> @@ -47,4 +47,6 @@ patternProperties:
+>            The ID number of the drive port, 0 for the master port and 1 for the
+>            slave port.
+>  
+> +additionalProperties: true
+> +
+>  ...
+> diff --git a/Documentation/devicetree/bindings/ata/sata-common.yaml b/Documentation/devicetree/bindings/ata/sata-common.yaml
+> index 6783a4dec6b5..7ac77b1c5850 100644
+> --- a/Documentation/devicetree/bindings/ata/sata-common.yaml
+> +++ b/Documentation/devicetree/bindings/ata/sata-common.yaml
+> @@ -47,4 +47,6 @@ patternProperties:
+>            multiplier making it possible to connect up to 15 disks to a single
+>            SATA port.
+>  
+> +additionalProperties: true
+> +
+>  ...
+> diff --git a/Documentation/devicetree/bindings/bus/simple-pm-bus.yaml b/Documentation/devicetree/bindings/bus/simple-pm-bus.yaml
+> index 33326ffdb266..182134d7a6a3 100644
+> --- a/Documentation/devicetree/bindings/bus/simple-pm-bus.yaml
+> +++ b/Documentation/devicetree/bindings/bus/simple-pm-bus.yaml
+> @@ -61,6 +61,8 @@ anyOf:
+>    - required:
+>        - power-domains
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      #include <dt-bindings/clock/qcom,gcc-msm8996.h>
+> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> index 6d7396ab8bee..2d98f7c4d3bc 100644
+> --- a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> @@ -26,6 +26,8 @@ properties:
+>  required:
+>    - compatible
+>  
+> +additionalProperties: true #fixme
+> +
+>  examples:
+>    - |+
+>      spi0 {
+> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+> index dc6ff64422d4..f037d65b018e 100644
+> --- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
+> +++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+> @@ -172,6 +172,8 @@ allOf:
+>          type:
+>            const: micro
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    # Micro-USB connector with HS lines routed via controller (MUIC).
+>    - |
+> diff --git a/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
+> index 012aa8e7cb8c..e42cb610f545 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
+> +++ b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
+> @@ -66,3 +66,5 @@ required:
+>    - clocks
+>    - ports
+>    - reg
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/display/dsi-controller.yaml b/Documentation/devicetree/bindings/display/dsi-controller.yaml
+> index a02039e3aca0..ca21671f6bdd 100644
+> --- a/Documentation/devicetree/bindings/display/dsi-controller.yaml
+> +++ b/Documentation/devicetree/bindings/display/dsi-controller.yaml
+> @@ -73,6 +73,8 @@ patternProperties:
+>      required:
+>        - reg
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      #include <dt-bindings/gpio/gpio.h>
+> diff --git a/Documentation/devicetree/bindings/display/panel/lvds.yaml b/Documentation/devicetree/bindings/display/panel/lvds.yaml
+> index 946dd354256c..31164608ba1d 100644
+> --- a/Documentation/devicetree/bindings/display/panel/lvds.yaml
+> +++ b/Documentation/devicetree/bindings/display/panel/lvds.yaml
+> @@ -112,4 +112,6 @@ oneOf:
+>    - required:
+>        - ports
+>  
+> +additionalProperties: true
+> +
+>  ...
+> diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> index 45fe8fe5faba..cd6dc5461721 100644
+> --- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> @@ -163,4 +163,6 @@ dependencies:
+>    width-mm: [ height-mm ]
+>    height-mm: [ width-mm ]
+>  
+> +additionalProperties: true
+> +
+>  ...
+> diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml b/Documentation/devicetree/bindings/dma/dma-common.yaml
+> index c36592683340..307b499e8968 100644
+> --- a/Documentation/devicetree/bindings/dma/dma-common.yaml
+> +++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
+> @@ -49,3 +49,5 @@ properties:
+>  
+>  required:
+>    - "#dma-cells"
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/dma/dma-controller.yaml b/Documentation/devicetree/bindings/dma/dma-controller.yaml
+> index c39f6de76670..0043b91da95e 100644
+> --- a/Documentation/devicetree/bindings/dma/dma-controller.yaml
+> +++ b/Documentation/devicetree/bindings/dma/dma-controller.yaml
+> @@ -17,6 +17,8 @@ properties:
+>    $nodename:
+>      pattern: "^dma-controller(@.*)?$"
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      dma: dma-controller@48000000 {
+> diff --git a/Documentation/devicetree/bindings/dma/dma-router.yaml b/Documentation/devicetree/bindings/dma/dma-router.yaml
+> index 5b5f07393135..4cee5667b8a8 100644
+> --- a/Documentation/devicetree/bindings/dma/dma-router.yaml
+> +++ b/Documentation/devicetree/bindings/dma/dma-router.yaml
+> @@ -36,6 +36,8 @@ required:
+>    - "#dma-cells"
+>    - dma-masters
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      sdma_xbar: dma-router@4a002b78 {
+> diff --git a/Documentation/devicetree/bindings/extcon/wlf,arizona.yaml b/Documentation/devicetree/bindings/extcon/wlf,arizona.yaml
+> index f9845dc2f5ae..5fe784f487c5 100644
+> --- a/Documentation/devicetree/bindings/extcon/wlf,arizona.yaml
+> +++ b/Documentation/devicetree/bindings/extcon/wlf,arizona.yaml
+> @@ -123,3 +123,5 @@ properties:
+>      $ref: "/schemas/types.yaml#/definitions/uint32"
+>      minimum: 0
+>      maximum: 3
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> index 16d76482b4ff..cfb66ba45ee8 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> @@ -46,6 +46,8 @@ properties:
+>    "#io-channel-cells":
+>      const: 1
+>  
+> +  io-channel-ranges: true
+> +
+>    vdd-supply: true
+>  
+>    samsung,syscon-phandle:
+> @@ -107,7 +109,8 @@ allOf:
+>            items:
+>              - const: adc
+>  
+> -additionalProperties: false
+> +additionalProperties:
+> +  type: object
+>  
+>  examples:
+>    - |
+> diff --git a/Documentation/devicetree/bindings/iio/common.yaml b/Documentation/devicetree/bindings/iio/common.yaml
+> index 97ffcb77043d..f845b41d74c4 100644
+> --- a/Documentation/devicetree/bindings/iio/common.yaml
+> +++ b/Documentation/devicetree/bindings/iio/common.yaml
+> @@ -32,4 +32,6 @@ properties:
+>        considered 'near' to the device (an object is near to the
+>        sensor).
+>  
+> +additionalProperties: true
+> +
+>  ...
+> diff --git a/Documentation/devicetree/bindings/input/input.yaml b/Documentation/devicetree/bindings/input/input.yaml
+> index 8edcb3c31270..ab407f266bef 100644
+> --- a/Documentation/devicetree/bindings/input/input.yaml
+> +++ b/Documentation/devicetree/bindings/input/input.yaml
+> @@ -33,3 +33,5 @@ properties:
+>        power off automatically. Device with key pressed shutdown feature can
+>        specify this property.
+>      $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/input/matrix-keymap.yaml b/Documentation/devicetree/bindings/input/matrix-keymap.yaml
+> index c3bf09156783..6699d5e32dca 100644
+> --- a/Documentation/devicetree/bindings/input/matrix-keymap.yaml
+> +++ b/Documentation/devicetree/bindings/input/matrix-keymap.yaml
+> @@ -35,6 +35,8 @@ properties:
+>      $ref: /schemas/types.yaml#/definitions/uint32
+>      description: Number of column lines connected to the keypad controller.
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      keypad {
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
+> index 36dc7b56a453..a771a15f053f 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
+> @@ -81,3 +81,5 @@ dependencies:
+>    touchscreen-size-y: [ touchscreen-size-x ]
+>    touchscreen-x-mm: [ touchscreen-y-mm ]
+>    touchscreen-y-mm: [ touchscreen-x-mm ]
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/leds/common.yaml b/Documentation/devicetree/bindings/leds/common.yaml
+> index a2a541bca73c..08b6700ca61e 100644
+> --- a/Documentation/devicetree/bindings/leds/common.yaml
+> +++ b/Documentation/devicetree/bindings/leds/common.yaml
+> @@ -156,6 +156,8 @@ properties:
+>        Maximum timeout in microseconds after which the flash LED is turned off.
+>        Required for flash LED nodes with configurable timeout.
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      #include <dt-bindings/gpio/gpio.h>
+> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> index b55e1f1308a4..b1a53f054b89 100644
+> --- a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> @@ -34,4 +34,7 @@ patternProperties:
+>  
+>      required:
+>        - color
+> +
+> +additionalProperties: true
+> +
+>  ...
+> diff --git a/Documentation/devicetree/bindings/leds/trigger-source.yaml b/Documentation/devicetree/bindings/leds/trigger-source.yaml
+> index 0618003e40bd..89a1cde2b8aa 100644
+> --- a/Documentation/devicetree/bindings/leds/trigger-source.yaml
+> +++ b/Documentation/devicetree/bindings/leds/trigger-source.yaml
+> @@ -21,4 +21,6 @@ properties:
+>        trigger sources (e.g. a specific USB port).
+>      enum: [ 0, 1 ]
+>  
+> +additionalProperties: true
+> +
+>  ...
+> diff --git a/Documentation/devicetree/bindings/media/rc.yaml b/Documentation/devicetree/bindings/media/rc.yaml
+> index ded2ac43237d..8ad2cba5f61f 100644
+> --- a/Documentation/devicetree/bindings/media/rc.yaml
+> +++ b/Documentation/devicetree/bindings/media/rc.yaml
+> @@ -150,3 +150,5 @@ properties:
+>        - rc-x96max
+>        - rc-xbox-dvd
+>        - rc-zx-irdec
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
+> index 844ee2a6ce05..5317a7d69aa5 100644
+> --- a/Documentation/devicetree/bindings/mfd/syscon.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
+> @@ -71,7 +71,7 @@ required:
+>    - compatible
+>    - reg
+>  
+> -unevaluatedProperties: false
+> +additionalProperties: true
+>  
+>  examples:
+>    - |
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> index b96da0c7f819..57319b425eaa 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> @@ -349,6 +349,8 @@ dependencies:
+>    cd-debounce-delay-ms: [ cd-gpios ]
+>    fixed-emmc-driver-type: [ non-removable ]
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      mmc@ab000000 {
+> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc-common.yaml b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc-common.yaml
+> index 85bd528e9a14..8dfad89c78a7 100644
+> --- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc-common.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc-common.yaml
+> @@ -62,3 +62,5 @@ properties:
+>  
+>    dma-names:
+>      const: rx-tx
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> index 40fc5b0b2b8c..274bbe6a365e 100644
+> --- a/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> @@ -128,6 +128,8 @@ required:
+>    - "#address-cells"
+>    - "#size-cells"
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      nand-controller {
+> diff --git a/Documentation/devicetree/bindings/net/can/can-transceiver.yaml b/Documentation/devicetree/bindings/net/can/can-transceiver.yaml
+> index 6396977d29e5..d1ef1fe6ab29 100644
+> --- a/Documentation/devicetree/bindings/net/can/can-transceiver.yaml
+> +++ b/Documentation/devicetree/bindings/net/can/can-transceiver.yaml
+> @@ -16,3 +16,5 @@ properties:
+>      $ref: /schemas/types.yaml#/definitions/uint32
+>      description: a positive non 0 value that determines the max speed that CAN/CAN-FD can run.
+>      minimum: 1
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/net/dsa/dsa.yaml b/Documentation/devicetree/bindings/net/dsa/dsa.yaml
+> index 6a1ec50ad4fd..a765ceba28c6 100644
+> --- a/Documentation/devicetree/bindings/net/dsa/dsa.yaml
+> +++ b/Documentation/devicetree/bindings/net/dsa/dsa.yaml
+> @@ -89,4 +89,6 @@ oneOf:
+>    - required:
+>        - ethernet-ports
+>  
+> +additionalProperties: true
+> +
+>  ...
+> diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> index fa2baca8c726..3fd85ce37e9c 100644
+> --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> @@ -205,4 +205,6 @@ properties:
+>            required:
+>              - speed
+>  
+> +additionalProperties: true
+> +
+>  ...
+> diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> index a9e547ac7905..6dd72faebd89 100644
+> --- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> @@ -177,6 +177,8 @@ properties:
+>  required:
+>    - reg
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      ethernet {
+> diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
+> index 26afb556dfae..e811e0fd851c 100644
+> --- a/Documentation/devicetree/bindings/net/mdio.yaml
+> +++ b/Documentation/devicetree/bindings/net/mdio.yaml
+> @@ -100,6 +100,8 @@ patternProperties:
+>      required:
+>        - reg
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      davinci_mdio: mdio@5c030000 {
+> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> index 30a1efd26626..11a6fdb657c9 100644
+> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> @@ -356,6 +356,8 @@ allOf:
+>              Enables the TSO feature otherwise it will be managed by
+>              MAC HW capability register.
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      stmmac_axi_setup: stmmac-axi-config {
+> diff --git a/Documentation/devicetree/bindings/nvmem/nvmem-consumer.yaml b/Documentation/devicetree/bindings/nvmem/nvmem-consumer.yaml
+> index b7c00ed31085..d5d7f113bade 100644
+> --- a/Documentation/devicetree/bindings/nvmem/nvmem-consumer.yaml
+> +++ b/Documentation/devicetree/bindings/nvmem/nvmem-consumer.yaml
+> @@ -36,6 +36,8 @@ dependencies:
+>    nvmem-names: [ nvmem ]
+>    nvmem-cell-names: [ nvmem-cells ]
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      tsens {
+> diff --git a/Documentation/devicetree/bindings/nvmem/nvmem.yaml b/Documentation/devicetree/bindings/nvmem/nvmem.yaml
+> index b459f9dba6c9..7481a9e48f19 100644
+> --- a/Documentation/devicetree/bindings/nvmem/nvmem.yaml
+> +++ b/Documentation/devicetree/bindings/nvmem/nvmem.yaml
+> @@ -67,6 +67,8 @@ patternProperties:
+>      required:
+>        - reg
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>        #include <dt-bindings/gpio/gpio.h>
+> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+> index 016a5f61592d..60b8baf299bb 100644
+> --- a/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+> @@ -22,3 +22,5 @@ properties:
+>  
+>  required:
+>    - cdns,max-outbound-regions
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+> index 303078a7b7a8..a944f9bfffff 100644
+> --- a/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+> @@ -33,3 +33,5 @@ properties:
+>      deprecated: true
+>  
+>    msi-parent: true
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+> index 02553d5e6c51..df4fe28222b0 100644
+> --- a/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+> @@ -21,3 +21,5 @@ properties:
+>      items:
+>        - const: pcie-phy
+>      # FIXME: names when more than 1
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/pci/pci-ep.yaml b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+> index 0f8e575ac01a..7847bbcd4a03 100644
+> --- a/Documentation/devicetree/bindings/pci/pci-ep.yaml
+> +++ b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+> @@ -36,3 +36,5 @@ properties:
+>  
+>  required:
+>    - compatible
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml b/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
+> index 6bfc25d0e1b3..4cb174bf31ff 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
+> @@ -120,3 +120,5 @@ properties:
+>  required:
+>    - pinctrl-0
+>    - pinctrl-names
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+> index 13b7ab9dd6d5..71ed0a9def84 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+> @@ -138,3 +138,5 @@ properties:
+>        and the delay before latching a value to an output
+>        pin. Typically indicates how many double-inverters are
+>        used to delay the signal.
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml b/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
+> index ef8877ddb1eb..551df3d9b809 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
+> @@ -129,3 +129,5 @@ properties:
+>  
+>    pinctrl-pin-array:
+>      $ref: /schemas/types.yaml#/definitions/uint32-array
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/power/power-domain.yaml b/Documentation/devicetree/bindings/power/power-domain.yaml
+> index dd564349aa53..aed51e9dcb11 100644
+> --- a/Documentation/devicetree/bindings/power/power-domain.yaml
+> +++ b/Documentation/devicetree/bindings/power/power-domain.yaml
+> @@ -69,6 +69,8 @@ properties:
+>  required:
+>    - "#power-domain-cells"
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      power: power-controller@12340000 {
+> diff --git a/Documentation/devicetree/bindings/power/supply/power-supply.yaml b/Documentation/devicetree/bindings/power/supply/power-supply.yaml
+> index 3bb02bb3a2d8..c5c55f627251 100644
+> --- a/Documentation/devicetree/bindings/power/supply/power-supply.yaml
+> +++ b/Documentation/devicetree/bindings/power/supply/power-supply.yaml
+> @@ -16,6 +16,8 @@ properties:
+>        This property is added to a supply in order to list the devices which
+>        supply it power, referenced by their phandles.
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      power {
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm.yaml b/Documentation/devicetree/bindings/pwm/pwm.yaml
+> index fa4f9de92090..7d1f687cee9c 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/pwm.yaml
+> @@ -20,6 +20,8 @@ properties:
+>  required:
+>    - "#pwm-cells"
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      pwm: pwm@7000a000 {
+> diff --git a/Documentation/devicetree/bindings/regulator/regulator.yaml b/Documentation/devicetree/bindings/regulator/regulator.yaml
+> index ec505dbbf87c..6d0bc9cd4040 100644
+> --- a/Documentation/devicetree/bindings/regulator/regulator.yaml
+> +++ b/Documentation/devicetree/bindings/regulator/regulator.yaml
+> @@ -188,6 +188,8 @@ patternProperties:
+>  
+>      additionalProperties: false
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      xyzreg: regulator {
+> diff --git a/Documentation/devicetree/bindings/regulator/wlf,arizona.yaml b/Documentation/devicetree/bindings/regulator/wlf,arizona.yaml
+> index a0aea73bf412..7b4ae5d23351 100644
+> --- a/Documentation/devicetree/bindings/regulator/wlf,arizona.yaml
+> +++ b/Documentation/devicetree/bindings/regulator/wlf,arizona.yaml
+> @@ -35,3 +35,5 @@ properties:
+>        Initial data for the MICVDD regulator.
+>      $ref: "regulator.yaml#"
+>      type: object
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
+> index f80ba2c66f71..c6925e0b16e4 100644
+> --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
+> +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
+> @@ -91,6 +91,8 @@ required:
+>    - riscv,isa
+>    - interrupt-controller
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      // Example 1: SiFive Freedom U540G Development Kit
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc.yaml b/Documentation/devicetree/bindings/rtc/rtc.yaml
+> index ee237b2ed66a..2d055e37e6f7 100644
+> --- a/Documentation/devicetree/bindings/rtc/rtc.yaml
+> +++ b/Documentation/devicetree/bindings/rtc/rtc.yaml
+> @@ -47,4 +47,6 @@ properties:
+>      description:
+>        Enables wake up of host system on alarm.
+>  
+> +additionalProperties: true
+> +
+>  ...
+> diff --git a/Documentation/devicetree/bindings/serial/rs485.yaml b/Documentation/devicetree/bindings/serial/rs485.yaml
+> index fe90569475e1..0c9fa694f85c 100644
+> --- a/Documentation/devicetree/bindings/serial/rs485.yaml
+> +++ b/Documentation/devicetree/bindings/serial/rs485.yaml
+> @@ -45,4 +45,7 @@ properties:
+>    rs485-term-gpios:
+>      description: GPIO pin to enable RS485 bus termination.
+>      maxItems: 1
+> +
+> +additionalProperties: true
+> +
+>  ...
+> diff --git a/Documentation/devicetree/bindings/serial/serial.yaml b/Documentation/devicetree/bindings/serial/serial.yaml
+> index 8645d0e526b4..65e75d040521 100644
+> --- a/Documentation/devicetree/bindings/serial/serial.yaml
+> +++ b/Documentation/devicetree/bindings/serial/serial.yaml
+> @@ -124,6 +124,8 @@ patternProperties:
+>        required:
+>          - compatible
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      serial@1234 {
+> diff --git a/Documentation/devicetree/bindings/soc/imx/fsl,aips-bus.yaml b/Documentation/devicetree/bindings/soc/imx/fsl,aips-bus.yaml
+> index 3cbf2d28a188..80d99861fec5 100644
+> --- a/Documentation/devicetree/bindings/soc/imx/fsl,aips-bus.yaml
+> +++ b/Documentation/devicetree/bindings/soc/imx/fsl,aips-bus.yaml
+> @@ -35,6 +35,8 @@ required:
+>    - compatible
+>    - reg
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      bus@30000000 {
+> diff --git a/Documentation/devicetree/bindings/sound/amlogic,aiu.yaml b/Documentation/devicetree/bindings/sound/amlogic,aiu.yaml
+> index 7a7f28469624..f50558ed914f 100644
+> --- a/Documentation/devicetree/bindings/sound/amlogic,aiu.yaml
+> +++ b/Documentation/devicetree/bindings/sound/amlogic,aiu.yaml
+> @@ -75,6 +75,8 @@ required:
+>    - reg
+>    - resets
+>  
+> +additionalProperties: false
+> +
+>  examples:
+>    - |
+>      #include <dt-bindings/clock/gxbb-clkc.h>
+> diff --git a/Documentation/devicetree/bindings/sound/cirrus,madera.yaml b/Documentation/devicetree/bindings/sound/cirrus,madera.yaml
+> index c4cd58b5acd4..23138ddcb62d 100644
+> --- a/Documentation/devicetree/bindings/sound/cirrus,madera.yaml
+> +++ b/Documentation/devicetree/bindings/sound/cirrus,madera.yaml
+> @@ -111,3 +111,5 @@ properties:
+>      $ref: /schemas/types.yaml#/definitions/uint32-array
+>      minItems: 2
+>      maxItems: 2
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml
+> index 44ee9d844ae0..d77219727768 100644
+> --- a/Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml
+> +++ b/Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml
+> @@ -67,6 +67,9 @@ required:
+>    - "#size-cells"
+>    - ranges
+>  
+> +additionalProperties:
+> +  type: object
+> +
+>  examples:
+>    - |
+>      #include<dt-bindings/clock/tegra210-car.h>
+> diff --git a/Documentation/devicetree/bindings/sound/wlf,arizona.yaml b/Documentation/devicetree/bindings/sound/wlf,arizona.yaml
+> index 22d54be7900a..1627c0bb69be 100644
+> --- a/Documentation/devicetree/bindings/sound/wlf,arizona.yaml
+> +++ b/Documentation/devicetree/bindings/sound/wlf,arizona.yaml
+> @@ -112,3 +112,5 @@ properties:
+>      $ref: /schemas/types.yaml#/definitions/uint32-array
+>      minItems: 1
+>      maxItems: 12
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+> index 330924b8618e..4aad121eff3f 100644
+> --- a/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+> +++ b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+> @@ -57,6 +57,8 @@ required:
+>    - "#address-cells"
+>    - "#size-cells"
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      soundwire@c2d0000 {
+> diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+> index c6a2f543648b..2b154803b181 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
+> +++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+> @@ -140,6 +140,8 @@ patternProperties:
+>        - compatible
+>        - reg
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      spi@f00 {
+> diff --git a/Documentation/devicetree/bindings/spmi/spmi.yaml b/Documentation/devicetree/bindings/spmi/spmi.yaml
+> index 0cfbf56ba825..173940930719 100644
+> --- a/Documentation/devicetree/bindings/spmi/spmi.yaml
+> +++ b/Documentation/devicetree/bindings/spmi/spmi.yaml
+> @@ -55,6 +55,8 @@ patternProperties:
+>  required:
+>    - reg
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      #include <dt-bindings/spmi/spmi.h>
+> diff --git a/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml b/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+> index ad4beaf02842..f004779ba9b3 100644
+> --- a/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+> @@ -49,6 +49,8 @@ properties:
+>        and the second cell is the maximum cooling state requested.
+>      const: 2
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      #include <dt-bindings/interrupt-controller/arm-gic.h>
+> diff --git a/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml b/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
+> index 727d04550324..9f747921e851 100644
+> --- a/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
+> @@ -36,6 +36,8 @@ properties:
+>        containing several internal sensors.
+>      enum: [0, 1]
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      #include <dt-bindings/interrupt-controller/arm-gic.h>
+> diff --git a/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml b/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
+> index 8eaf4b6c4735..f6819bf2a3b5 100644
+> --- a/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
+> +++ b/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
+> @@ -32,6 +32,8 @@ required:
+>    - interrupts
+>    - interrupt-names
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      #include <dt-bindings/interrupt-controller/irq.h>
+> diff --git a/Documentation/devicetree/bindings/usb/usb-hcd.yaml b/Documentation/devicetree/bindings/usb/usb-hcd.yaml
+> index 7263b7f2b510..b545b087b342 100644
+> --- a/Documentation/devicetree/bindings/usb/usb-hcd.yaml
+> +++ b/Documentation/devicetree/bindings/usb/usb-hcd.yaml
+> @@ -22,6 +22,8 @@ properties:
+>      description:
+>        Name specifier for the USB PHY
+>  
+> +additionalProperties: true
+> +
+>  examples:
+>    - |
+>      usb {
+> diff --git a/Documentation/devicetree/bindings/watchdog/watchdog.yaml b/Documentation/devicetree/bindings/watchdog/watchdog.yaml
+> index 187bf6cb62bf..4e2c26cd981d 100644
+> --- a/Documentation/devicetree/bindings/watchdog/watchdog.yaml
+> +++ b/Documentation/devicetree/bindings/watchdog/watchdog.yaml
+> @@ -23,4 +23,6 @@ properties:
+>      description:
+>        Contains the watchdog timeout in seconds.
+>  
+> +additionalProperties: true
+> +
+>  ...
+> -- 
+> 2.25.1
+> 
 
-Hello,
-
-On Thu, Oct 08, 2020 at 01:40:30AM +0800, vijayakannan.ayyathurai@intel.com=
- wrote:
-> +static int keembay_pwm_apply(struct pwm_chip *chip, struct pwm_device *p=
-wm,
-> +			     const struct pwm_state *state)
-> +{
-> +	struct keembay_pwm *priv =3D to_keembay_pwm_dev(chip);
-> +	struct pwm_state current_state;
-> +	u16 pwm_h_count, pwm_l_count;
-> +	unsigned long long div;
-> +	unsigned long clk_rate;
-> +	u32 pwm_count =3D 0;
-> +
-> +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
-> +		return -ENOSYS;
-> +
-> +	keembay_pwm_update_bits(priv, KMB_PWM_LEADIN_MASK, 0,
-> +				KMB_PWM_LEADIN_OFFSET(pwm->hwpwm));
-> +
-> +	keembay_pwm_get_state(chip, pwm, &current_state);
-> +
-> +	if (!state->enabled) {
-> +		if (current_state.enabled)
-> +			keembay_pwm_disable(priv, pwm->hwpwm);
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * The upper 16 bits of the KMB_PWM_HIGHLOW_OFFSET register contain
-> +	 * the high time of the waveform, while the last 16 bits contain
-> +	 * the low time of the waveform, in terms of clock cycles.
-> +	 *
-> +	 * high time =3D clock rate * duty cycle
-> +	 * low time =3D  clock rate * (period - duty cycle)
-> +	 */
-> +
-> +	clk_rate =3D clk_get_rate(priv->clk);
-> +	/* Configure waveform high time */
-> +	div =3D clk_rate * state->duty_cycle;
-> +	div =3D DIV_ROUND_DOWN_ULL(div, NSEC_PER_SEC);
-> +	if (div > KMB_PWM_COUNT_MAX)
-> +		return -ERANGE;
-> +
-> +	pwm_h_count =3D div;
-> +	/* Configure waveform low time */
-> +	div =3D clk_rate * (state->period - state->duty_cycle);
-> +	div =3D DIV_ROUND_DOWN_ULL(div, NSEC_PER_SEC - pwm_h_count);
-
-In reply to your v7 I suggested the example:
-
-	clk_rate =3D 333334 [Hz]
-	state.duty_cycle =3D 1000500 [ns]
-	state.period =3D 2001000 [ns]
-
-where the expected outcome is
-
-	pwm_h_count =3D 333
-	pwm_l_count =3D 334
-
-=2E Please reread my feedback there. I tried to construct an example where
-the value is more wrong, but with the constraint that pwm_h_count must
-be <=3D KMB_PWM_COUNT_MAX this isn't easy. The best I could come up with
-is:
-
-	clk_rate =3D 1000000000
-	state.duty_cycle =3D 65535 [ns]
-	state.period =3D 131070 [ns]
-
-where the right value for pwm_l_count is 65535 while you calculate
-65539 (and then quit with -ERANGE).
-
-> +	if (div > KMB_PWM_COUNT_MAX)
-> +		return -ERANGE;
-> +
-> +	pwm_l_count =3D div;
-> +
-> +	pwm_count =3D FIELD_PREP(KMB_PWM_HIGH_MASK, pwm_h_count) |
-> +		    FIELD_PREP(KMB_PWM_LOW_MASK, pwm_l_count);
-> +
-> +	writel(pwm_count, priv->base + KMB_PWM_HIGHLOW_OFFSET(pwm->hwpwm));
-> +
-> +	if (state->enabled && !current_state.enabled)
-> +		keembay_pwm_enable(priv, pwm->hwpwm);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct pwm_ops keembay_pwm_ops =3D {
-> +	.owner =3D THIS_MODULE,
-> +	.apply =3D keembay_pwm_apply,
-> +	.get_state =3D keembay_pwm_get_state,
-> +};
-> +
-> +static int keembay_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct keembay_pwm *priv;
-> +	int ret;
-> +
-> +	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->clk =3D devm_clk_get(dev, NULL);
-> +	if (IS_ERR(priv->clk))
-> +		return dev_err_probe(dev, PTR_ERR(priv->clk), "Failed to get clock\n");
-> +
-> +	ret =3D clk_prepare_enable(priv->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	priv->base =3D devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(priv->base)) {
-> +		clk_disable_unprepare(priv->clk);
-> +		return PTR_ERR(priv->base);
-> +	}
-> +
-> +	priv->chip.base =3D -1;
-> +	priv->chip.dev =3D dev;
-> +	priv->chip.ops =3D &keembay_pwm_ops;
-> +	priv->chip.npwm =3D KMB_TOTAL_PWM_CHANNELS;
-> +
-> +	ret =3D pwmchip_add(&priv->chip);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to add PWM chip: %pe\n", ERR_PTR(ret));
-> +		clk_disable_unprepare(priv->clk);
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	return 0;
-> +}
-> +
-> +static int keembay_pwm_remove(struct platform_device *pdev)
-> +{
-> +	struct keembay_pwm *priv =3D platform_get_drvdata(pdev);
-> +
-> +	clk_disable_unprepare(priv->clk);
-> +
-> +	return pwmchip_remove(&priv->chip);
-
-You have to call pwmchip_remove first. Otherwise you're stopping the PWM
-while the framework still believes everything to be fine.
-
-> +}
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---5e4jj4rnobifsvui
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl9+K7oACgkQwfwUeK3K
-7AnkSAf/WMAGErAAZ6G7l5oJUo2RRbVtkiryg8uZ8pTIoFPGtmaZFZY9gkNs/sSr
-FbH6Jw6dQiNYsAZYvbPOUY3AyauGgV+w/1PcQ5bOAeLVIOJSq04R8eeJU8zNcEbj
-DjThbF4JfZ24DCbdNBg3m0wMxPYzfJIchk7P0yYlLpan0sXE8pz9wGc0HtIuGe06
-wrqbyW/22XRpdxnTMqJ9q0wt6ZZXDN35YDbb57omSqEZthi2HgkC4QwVNkflwtyt
-pMTA2XLDK0If7iYC8MXeR+CU9vy4/RQFrEDmqSo0E7VAfPW2QTFl6NCBUOr7bUV3
-7YMdlfOYKLWhcBRFbGx3Uctiv4f/CQ==
-=qpLg
------END PGP SIGNATURE-----
-
---5e4jj4rnobifsvui--
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
