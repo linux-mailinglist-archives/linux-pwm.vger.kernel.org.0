@@ -2,309 +2,212 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AACD5288CB0
-	for <lists+linux-pwm@lfdr.de>; Fri,  9 Oct 2020 17:33:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78BE528A990
+	for <lists+linux-pwm@lfdr.de>; Sun, 11 Oct 2020 21:10:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389313AbgJIPax (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 9 Oct 2020 11:30:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34476 "EHLO mx2.suse.de"
+        id S1728687AbgJKTKP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 11 Oct 2020 15:10:15 -0400
+Received: from mout.gmx.net ([212.227.15.15]:34633 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389297AbgJIPaw (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 9 Oct 2020 11:30:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 767AAAF30;
-        Fri,  9 Oct 2020 15:30:50 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     f.fainelli@gmail.com, linux@roeck-us.net, jdelvare@suse.com,
-        wahrenst@gmx.net,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Eric Anholt <eric@anholt.net>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
+        id S1728236AbgJKTKP (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sun, 11 Oct 2020 15:10:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1602443357;
+        bh=4tiCguk2G4daQO6UyDdSbqh3sXV+E4fT80cf7CrV5AY=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=ZdwHoKYLT6P2T0uwwc/eglY00QK5rz5GCKVpP7P5+ihulRsEn9bdWFuMTqMyK8ujR
+         qZYR5/AWRlNaDB7cRYiIVciYb1X0cfY78GPDNLyPQCP+PWMM2GbbpdqTPQ87a2jhhb
+         Z2Fsp/q3mTYgVIViyodVsLYgJCyjTJl8/OPhuiic=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([37.201.214.162]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MCsU6-1kaWQG2skq-008rQY; Sun, 11
+ Oct 2020 21:09:16 +0200
+Date:   Sun, 11 Oct 2020 21:09:10 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org,
+        Heiko Stuebner <heiko@sntech.de>, linux-pwm@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     linux-hwmon@vger.kernel.org, robh+dt@kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] pwm: Add Raspberry Pi Firmware based PWM bus
-Date:   Fri,  9 Oct 2020 17:30:30 +0200
-Message-Id: <20201009153031.986-4-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201009153031.986-1-nsaenzjulienne@suse.de>
-References: <20201009153031.986-1-nsaenzjulienne@suse.de>
+        Fabio Estevam <festevam@gmail.com>, linux-rtc@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Daniel Palmer <daniel@0x0f.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        allen <allen.chen@ite.com.tw>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Mark Brown <broonie@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Josua Mayer <josua.mayer@jm0.eu>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v3 5/7] rtc: New driver for RTC in Netronix embedded
+ controller
+Message-ID: <20201011190910.GE500800@latitude>
+References: <20200924192455.2484005-1-j.neuschaefer@gmx.net>
+ <20200924192455.2484005-6-j.neuschaefer@gmx.net>
+ <20200925054424.snlr3lggnsv575wu@pengutronix.de>
+ <20201004014323.GD500800@latitude>
+ <20201004084209.GV2804081@piout.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2hMgfIw2X+zgXrFs"
+Content-Disposition: inline
+In-Reply-To: <20201004084209.GV2804081@piout.net>
+X-Provags-ID: V03:K1:7K8Md1pZqbYIW8A9iut38o8lntAa5HGcKgmIuw+DcTCDMPBJz0o
+ fIz/Bi/xrZp3TgfNoxDkvxWMtHjJQPAt+yjh2XCdaU2BZF1gMs8giJXBnWRLBJH8AcAAYRl
+ tjzTY3jkWaRJxT3OK6Iz0IyQPFg7qdp6XhxPJ2s3FWHfLbZavY2Aq2ojl1rV7EctRjix+5a
+ 7/O0xwNGZXrTwEZMbS+IQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/dHCjfPzFI4=:CMeq7wIq1hmXrAFRAICDLV
+ y5rqdbHWH3sowh6/OUJJtnRa1OeVF9t8q7oYQXIXkdxY/bKx/b+wkmp3Imnf1y0cLL4f/iODa
+ aE8l3jj82Die7D0cQr1nFpj8PguPHziC92NAozrUsU9iXQayNW0vnurpqySA12VfRPbKcJmu0
+ fuQAfkQMreV+jLJdiW9ch3BFQTx6ryqWKLS4gjNhTsiWSWkCvGkcwZRhWVeNFC0FKKmbtQfhl
+ U3NNMVxJTT2dyADLDqHH/NZLNfURMyg6qrc6aN3oYIBV5UFYM8Z1+WiWYQvO0hZNL6sz4MntV
+ SVN576fUw821uvSf/2cz+rkOES0u1LAcLX5TLOW32fzGhN0Y6pPA613aVtrP6NYVAf9Dy+gnx
+ kaLjsFm8U/mJ3+vQFmBBKvsSW3DdGF7LIkR5ETdTAaxs6WBHVPs7zi3lU7d9w7OMNg9HXHLnQ
+ TNK2luzZmrQYiCdwMR56361HR1D/uY6RWieUXK6MEg276Tct/ngOo+EKfR5tahOn6l+9xnzUA
+ +q6BGEIIy/K37/IOQuWK//y73HSft0JsFYWUk9UvTPdKOwXMA2W524jA0Q2UfDsy3kHMtmxe1
+ rG6K4ioxQGa9nF0jqakvQCs28qy6en8215xCsj0rIZLuBw+cE1lRsYFbV2GAl7wvQmMpMs/Xa
+ JvcUshZh4jEvaaHZP1oBVNryf80LmjEkTxMLrnFfwRucxQ2DiEr4yIJTwW8BAA7gDm1hHwPa4
+ vxRZHKVAQHSv6LOcx/Kp9Xe+5lCPAVC7/9qoUYOEhM1tdoO6H52KweyJ0PbW5TUMlJxFfQcAM
+ 62shbC9F5A5Q4ZOLXfdG9HyuuVMRjqh14bs2Dl3+SncAq7duCI4fn41uZcc9mznUKdQL5SO+H
+ 9JllVoDOTslRHhMe+6QSvysL3gmA9ac0viac7on0x/7ZN8roD1qfaMSrpHQ5a2E3qUcRU7Fn5
+ O8O+9US2zPGSiMB9jTmREq95D69Zv9zUbMFD6YEmYGP/cVR/xiI3Z5kYCKMEV5MBFiVzaPz1+
+ Y/eIHVG6NHROpdvbizPNp0IkoqTE4YY3IbgiiF6VvluZJHNKcy6ditGKXGsQ1u5O5IY3CTiw8
+ Fsp277vtJq3kUY/Tpo48gUsMWfOgaSUkloUW1/ddfaWvrifNzpYUegs4oYUAc84jxGgCt2u0I
+ YuyZqSvkQzo3o5d9m5LFnlTGuPOcCcICHxj4iqdh01JRCNX8WkXSZqicmKVoYpZuFDhP6jeco
+ qu1422B2ijs+bGQj9WZJ8CVqZ7+WwUeStnXfThw==
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Adds support to control the PWM bus available in official Raspberry Pi
-PoE HAT. Only RPi's co-processor has access to it, so commands have to
-be sent through RPi's firmware mailbox interface.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- drivers/pwm/Kconfig           |   7 ++
- drivers/pwm/Makefile          |   1 +
- drivers/pwm/pwm-raspberrypi.c | 216 ++++++++++++++++++++++++++++++++++
- 3 files changed, 224 insertions(+)
- create mode 100644 drivers/pwm/pwm-raspberrypi.c
+--2hMgfIw2X+zgXrFs
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 63be5362fd3a..a76997ca37d0 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -379,6 +379,13 @@ config PWM_PXA
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-pxa.
- 
-+config PWM_RASPBERRYPI
-+	tristate "Raspberry Pi Firwmware PWM support"
-+	depends on RASPBERRYPI_FIRMWARE || (COMPILE_TEST && !RASPBERRYPI_FIRMWARE)
-+	help
-+	  Enable Raspberry Pi firmware controller PWM bus used to control the
-+	  official RPI PoE hat
-+
- config PWM_RCAR
- 	tristate "Renesas R-Car PWM support"
- 	depends on ARCH_RENESAS || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index cbdcd55d69ee..b557b549d9f3 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -35,6 +35,7 @@ obj-$(CONFIG_PWM_MXS)		+= pwm-mxs.o
- obj-$(CONFIG_PWM_OMAP_DMTIMER)	+= pwm-omap-dmtimer.o
- obj-$(CONFIG_PWM_PCA9685)	+= pwm-pca9685.o
- obj-$(CONFIG_PWM_PXA)		+= pwm-pxa.o
-+obj-$(CONFIG_PWM_RASPBERRYPI)	+= pwm-raspberrypi.o
- obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
- obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
- obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
-diff --git a/drivers/pwm/pwm-raspberrypi.c b/drivers/pwm/pwm-raspberrypi.c
-new file mode 100644
-index 000000000000..1ccff6b1ae34
---- /dev/null
-+++ b/drivers/pwm/pwm-raspberrypi.c
-@@ -0,0 +1,216 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2020 Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+
-+#include <soc/bcm2835/raspberrypi-firmware.h>
-+#include <dt-bindings/pwm/raspberrypi,firmware-pwm.h>
-+
-+#define RPI_PWM_MAX_DUTY		255
-+#define RPI_PWM_PERIOD_NS		80000 /* 12.5KHz */
-+
-+#define RPI_PWM_CUR_DUTY_REG		0x0
-+#define RPI_PWM_DEF_DUTY_REG		0x1
-+
-+struct raspberrypi_pwm {
-+	struct rpi_firmware *firmware;
-+	struct pwm_chip chip;
-+	unsigned int duty_cycle;
-+};
-+
-+struct raspberrypi_pwm_prop {
-+	__le32 reg;
-+	__le32 val;
-+	__le32 ret;
-+} __packed;
-+
-+static inline struct raspberrypi_pwm *to_raspberrypi_pwm(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct raspberrypi_pwm, chip);
-+}
-+
-+static int raspberrypi_pwm_set_property(struct rpi_firmware *firmware,
-+					u32 reg, u32 val)
-+{
-+	struct raspberrypi_pwm_prop msg = {
-+		.reg = cpu_to_le32(reg),
-+		.val = cpu_to_le32(val),
-+	};
-+	int ret;
-+
-+	ret = rpi_firmware_property(firmware, RPI_FIRMWARE_SET_POE_HAT_VAL,
-+				    &msg, sizeof(msg));
-+	if (ret)
-+		return ret;
-+	else if (msg.ret)
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+static int raspberrypi_pwm_get_property(struct rpi_firmware *firmware,
-+					u32 reg, u32 *val)
-+{
-+	struct raspberrypi_pwm_prop msg = {
-+		.reg = reg
-+	};
-+	int ret;
-+
-+	ret = rpi_firmware_property(firmware, RPI_FIRMWARE_GET_POE_HAT_VAL,
-+				    &msg, sizeof(msg));
-+	if (ret)
-+		return ret;
-+	else if (msg.ret)
-+		return -EIO;
-+
-+	*val = le32_to_cpu(msg.val);
-+
-+	return 0;
-+}
-+
-+static void raspberrypi_pwm_get_state(struct pwm_chip *chip,
-+				      struct pwm_device *pwm,
-+				      struct pwm_state *state)
-+{
-+	struct raspberrypi_pwm *pc = to_raspberrypi_pwm(chip);
-+
-+	state->period = RPI_PWM_PERIOD_NS;
-+	state->duty_cycle = pc->duty_cycle * RPI_PWM_PERIOD_NS / RPI_PWM_MAX_DUTY;
-+	state->enabled = !!(pc->duty_cycle);
-+	state->polarity = PWM_POLARITY_NORMAL;
-+}
-+
-+static int raspberrypi_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			         const struct pwm_state *state)
-+{
-+	struct raspberrypi_pwm *pc = to_raspberrypi_pwm(chip);
-+	unsigned int duty_cycle;
-+	int ret;
-+
-+	if (!state->enabled)
-+		duty_cycle = 0;
-+	else
-+		duty_cycle = state->duty_cycle * RPI_PWM_MAX_DUTY /
-+			     RPI_PWM_PERIOD_NS;
-+
-+	if (duty_cycle == pc->duty_cycle)
-+		return 0;
-+
-+	pc->duty_cycle = duty_cycle;
-+	ret = raspberrypi_pwm_set_property(pc->firmware, RPI_PWM_CUR_DUTY_REG,
-+					   pc->duty_cycle);
-+	if (ret) {
-+		dev_err(chip->dev, "Failed to set duty cycle: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = raspberrypi_pwm_set_property(pc->firmware, RPI_PWM_CUR_DUTY_REG,
-+					   pc->duty_cycle);
-+	if (ret) {
-+		dev_err(chip->dev, "Failed to set default duty cycle: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops raspberrypi_pwm_ops = {
-+	.get_state = raspberrypi_pwm_get_state,
-+	.apply = raspberrypi_pwm_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static struct pwm_device *raspberrypi_pwm_xlate(struct pwm_chip *pc,
-+					const struct of_phandle_args *args)
-+{
-+	struct pwm_device *pwm;
-+
-+	if (args->args[0] >= pc->npwm)
-+		return ERR_PTR(-EINVAL);
-+
-+	pwm = pwm_request_from_chip(pc, args->args[0], NULL);
-+	if (IS_ERR(pwm))
-+		return pwm;
-+
-+	/* Firmwre won't let us change the period */
-+	pwm->args.period = RPI_PWM_PERIOD_NS;
-+
-+	return pwm;
-+}
-+
-+static int raspberrypi_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device_node *firmware_node;
-+	struct device *dev = &pdev->dev;
-+	struct rpi_firmware *firmware;
-+	struct raspberrypi_pwm *pc;
-+	int ret;
-+
-+	firmware_node = of_get_parent(dev->of_node);
-+	if (!firmware_node) {
-+		dev_err(dev, "Missing firmware node\n");
-+		return -ENOENT;
-+	}
-+
-+	firmware = rpi_firmware_get(firmware_node);
-+	of_node_put(firmware_node);
-+	if (!firmware)
-+		return -EPROBE_DEFER;
-+
-+	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
-+	if (!pc)
-+		return -ENOMEM;
-+
-+	pc->firmware = firmware;
-+
-+	pc->chip.dev = dev;
-+	pc->chip.ops = &raspberrypi_pwm_ops;
-+	pc->chip.of_xlate = raspberrypi_pwm_xlate;
-+	pc->chip.of_pwm_n_cells = 1;
-+	pc->chip.base = -1;
-+	pc->chip.npwm = RASPBERRYPI_FIRMWARE_PWM_NUM;
-+
-+	platform_set_drvdata(pdev, pc);
-+
-+	ret = raspberrypi_pwm_get_property(pc->firmware, RPI_PWM_CUR_DUTY_REG,
-+					   &pc->duty_cycle);
-+	if (ret) {
-+		dev_err(dev, "Failed to get duty cycle: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return pwmchip_add(&pc->chip);
-+}
-+
-+static int raspberrypi_pwm_remove(struct platform_device *pdev)
-+{
-+	struct raspberrypi_pwm *pc = platform_get_drvdata(pdev);
-+
-+	return pwmchip_remove(&pc->chip);
-+}
-+
-+static const struct of_device_id raspberrypi_pwm_of_match[] = {
-+	{ .compatible = "raspberrypi,firmware-pwm", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, raspberrypi_pwm_of_match);
-+
-+static struct platform_driver raspberrypi_pwm_driver = {
-+	.driver = {
-+		.name = "raspberrypi-pwm",
-+		.of_match_table = raspberrypi_pwm_of_match,
-+	},
-+	.probe = raspberrypi_pwm_probe,
-+	.remove = raspberrypi_pwm_remove,
-+};
-+module_platform_driver(raspberrypi_pwm_driver);
-+
-+MODULE_AUTHOR("Nicolas Saenz Julienne <nsaenzjulienne@suse.de>");
-+MODULE_DESCRIPTION("Raspberry Pi Firwmare Based PWM Bus Driver");
-+MODULE_LICENSE("GPL v2");
-+
--- 
-2.28.0
+On Sun, Oct 04, 2020 at 10:42:09AM +0200, Alexandre Belloni wrote:
+> On 04/10/2020 03:43:23+0200, Jonathan Neusch=C3=A4fer wrote:
+> > > > +static int ntxec_set_time(struct device *dev, struct rtc_time *tm)
+=2E...
+> > > > +	res =3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_MINUTE, ntx=
+ec_reg8(tm->tm_min));
+> > > > +	if (res)
+> > > > +		return res;
+> > > > +
+> > > > +	return regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_SECOND, ntxe=
+c_reg8(tm->tm_sec));
+> > >=20
+> > > I wonder: Is this racy? If you write minute, does the seconds reset to
+> > > zero or something like that? Or can it happen, that after writing the
+> > > minute register and before writing the second register the seconds
+> > > overflow and you end up with the time set to a minute later than
+> > > intended? If so it might be worth to set the seconds to 0 at the start
+> > > of the function (with an explaining comment).
+> >=20
+> > The setting the minutes does not reset the seconds, so I think this race
+> > condition is possible. I'll add the workaround.
+> >=20
+>=20
+> Are you sure this happens? Usually, the seconds are not reset but the
+> internal 32768kHz counter is so you have a full second to write all the
+> registers.
 
+I just checked it, and on this RTC, the phase / sub-second part is not
+reset when the time is set.
+
+> > > .read_time has a similar race. What happens if minutes overflow betwe=
+en
+> > > reading NTXEC_REG_READ_DH and NTXEC_REG_READ_MS?
+> >=20
+> > Yes, we get read tearing in that case. It could even propagate all the
+> > way to the year/month field, for example when the following time rolls
+> > over:
+> > 	   A   |  B  |  C
+> > 	2020-10-31 23:59:59
+> > 	2020-11-01 00:00:00
+> >=20
+> > - If the increment happens after reading C, we get         2020-10-31 2=
+3:59:59
+> > - If the increment happens between reading B and C, we get 2020-10-31 2=
+3:00:00
+> > - If the increment happens between reading A and B, we get 2020-10-01 0=
+0:00:00
+> > - If the increment happens before reading A, we get        2020-11-01 0=
+0:00:00
+> >=20
+> > ... both of which are far from correct.
+> >=20
+> > To mitigate this issue, I think something like the following is needed:
+> >=20
+> > - Read year/month
+> > - Read day/hour
+> > - Read minute/second
+> > - Read day/hour, compare with previously read value, restart on mismatch
+> > - Read year/month, compare with previously read value, restart on misma=
+tch
+> >=20
+> > The order of the last two steps doesn't matter, as far as I can see, but
+> > if I remove one of them, I can't catch all cases of read tearing.
+> >=20
+>=20
+> Are you also sure this happens?
+>=20
+> Only one comparison is necessary, the correct order would be:
+>=20
+>  - Read minute/second
+>  - Read day/hour
+>  - Read year/month
+>  - Read minute/second, compare
+
+With this order, every one-second increment is detected, which I
+previously tried to avoid. But I suppose it's fine because it simplifies
+the logic and the window from first to last read should be short enough
+anyway to be relatively unlikely to hit, and thus not cause a lot of retrie=
+s.
+
+> If day/hour changes but not minute/second, it would mean that it took at
+> least an hour to read all the registers. At this point, I think you have
+> other problems and the exact time doesn't matter anymore.
+
+Indeed.
+
+
+Thanks,
+Jonathan Neusch=C3=A4fer
+
+--2hMgfIw2X+zgXrFs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl+DWEYACgkQCDBEmo7z
+X9uepA//fs6TCspmRMOe/zMk+MiAPbG25ReDry1BglGSs1eeSHmE96PH7J5nrOId
+wQvmP/r+Sf3MqaIie02JZpoj3J223zgb0dfY3fUZ1FwsUpm7lbRJRSmuPEcBcdFd
+6VcvgCL9/xASAYe0ShQg2Gni6Gk6zzGLRxx0C+PTDvar9pzutLZKngTAPDM6yDwO
+4xlZkGWjQ0jxVhcJnUiNF3ooj/PFbkOLGkHlQfWHToDBXWKDkfDiMGFREdnN6lTI
+qzMGwUUCbjEQaGlM/GDMKI+Oq9oqgizZKx+hJ+2hay94cDz/Bh+hqFe5j4TCrvVG
+QCnOixWBQs80Zwoei8owdgszzKasJPFTQ08tcnYGsJvdOTHjTPWY1XUPWhZaxdHO
+57Pg/t3JpU10VjkEIzdg/qLmdlK7yqZ5BPk1WCeLfobzgr72EKslIveFP+7TmqHG
+j9EP5NewELC3Zt5sYvcTy6A7rxNT4TpRr0I3N9As1MNereNq2YV78ylqHDN8xj80
+Meo726ga70Tr2nWQ5/VyPabbvsXsuQGjIpcFs3XjfnvpCRDolGUnjEpy3W9EFMqt
+WFW5XUa9tw+snOi2VkMxmsVa3nNbpH0dLO22JN+C/Y4yEzpdQBPmLDkQDv4rIDqf
+UvXNBVGffn1fxxS3UX71T/KtwxDsGT6+QopIL47DURXw8yqX14Y=
+=GuMr
+-----END PGP SIGNATURE-----
+
+--2hMgfIw2X+zgXrFs--
