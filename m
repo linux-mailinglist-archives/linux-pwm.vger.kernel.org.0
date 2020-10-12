@@ -2,121 +2,134 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74D0C28B414
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Oct 2020 13:48:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8342128BEE4
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Oct 2020 19:17:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388276AbgJLLsu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 12 Oct 2020 07:48:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388239AbgJLLst (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Oct 2020 07:48:49 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B647C0613D2
-        for <linux-pwm@vger.kernel.org>; Mon, 12 Oct 2020 04:48:49 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id b8so5613380wrn.0
-        for <linux-pwm@vger.kernel.org>; Mon, 12 Oct 2020 04:48:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Q6n1VfSlPeYvAYXi3X+McChRUB1U53qE0icC0y04rMg=;
-        b=MlE8AXarx2worHi4q7CJY1BPT575y5Eph90OrpPsS60YFxU0azPItXiw94v2NNig+M
-         /XVWvI9x66INxGk6a94OG3w6q6ePfCPTC4iJbIBefItyga9a3O/bvOjcK6VAqoLciY6U
-         pNWysSgLoYz1MXCEkl7Wkn/acKvsyBfw7cUNHPnaSKVTOwvL42yaqcwjhDMXQjCLkO6f
-         KuZ6BfFzb/U5m1NTM/jweDTUVVK449wIZOvrCxdV16n1smdi1TFe3nTjZ65mARSGo7sr
-         j7p79cm0DaCMUWeLyYMi+GN3rLMMSonRIqZohXKxrkdlwYLAX/Gd0uJ0BAa3d404J1QV
-         Egbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Q6n1VfSlPeYvAYXi3X+McChRUB1U53qE0icC0y04rMg=;
-        b=VbwL6wVfEt6Lf1gedXgZuR0cH/3KSZJsZhUte6nvBbmHrgxHqo9habMjV9/bM2pZYs
-         NNqbqZs+pYWAj214viPGqkisn3yNZzfaf4GlMNatRxUeGsxW6tazePYW+Fguj4xHqM1e
-         qbgaYtFkbZq3pXB9WZvt6/+tWGzi0ZzCt8dsDzG19IskPsDbVwODF0KuuTpcI3qinQfW
-         youhUeWUFUUKwYtVjcee0Wo37wCfdWdVHTDBMDizMbsdsR/DMztEp8tl6cIMs/m+gdJS
-         dJiEhiBQFr0mEv2SWDix9/YWCp9550IL5XMWiX0GRjWCJrlY0qIsU2tNmUs3AutLryNm
-         mNUg==
-X-Gm-Message-State: AOAM532y5kYHfcVHJlZnLO6OXvbmRHJ+mWTNqZ1aNtU3i7SUv9OHxYDi
-        J/TRLzjvbt7talEP4vKNack50g==
-X-Google-Smtp-Source: ABdhPJzDZm0wFpc5zf4P88lMJXp54ZLTHc2e7Lk86RniSNFOP38YB9kxDfBS+Nxrj8yfCOXboR6bbQ==
-X-Received: by 2002:adf:e54b:: with SMTP id z11mr20988583wrm.128.1602503327662;
-        Mon, 12 Oct 2020 04:48:47 -0700 (PDT)
-Received: from dell ([91.110.221.138])
-        by smtp.gmail.com with ESMTPSA id c21sm22940930wme.36.2020.10.12.04.48.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Oct 2020 04:48:46 -0700 (PDT)
-Date:   Mon, 12 Oct 2020 12:48:44 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-        linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-pwm@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>, linux-rtc@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Daniel Palmer <daniel@0x0f.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
-        allen <allen.chen@ite.com.tw>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Mark Brown <broonie@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v3 1/7] dt-bindings: Add vendor prefix for Netronix, Inc.
-Message-ID: <20201012114844.GL1763265@dell>
-References: <20200924192455.2484005-1-j.neuschaefer@gmx.net>
- <20200924192455.2484005-2-j.neuschaefer@gmx.net>
- <20201012071909.wjbclmorlfcz7lln@pengutronix.de>
+        id S2403884AbgJLRQ4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 12 Oct 2020 13:16:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403845AbgJLRQ4 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 12 Oct 2020 13:16:56 -0400
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBEF72087E;
+        Mon, 12 Oct 2020 17:16:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602523015;
+        bh=OXdGjM2WT5x5sf1uC6sNIswByKxFQUWPV6TwtUK3Y0c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=A1pqyRMyjwp3U/Olyt7d5jHUEq7IhD2O0GlgJgMOX2xV+8LWTFBa+tb4G8eLBd0t6
+         YZR26XEn7l7KGsaObmPBcLwQ6ZnboUdYk420hYA5smqwCiqm4Z4ZNSt29peAXazBur
+         EqqNrdoEnXs7Sdc3qL/LGS5n0HGrMid1q31A5LtM=
+Received: by mail-ed1-f53.google.com with SMTP id dg9so15461133edb.12;
+        Mon, 12 Oct 2020 10:16:54 -0700 (PDT)
+X-Gm-Message-State: AOAM5312Rer2LAwtN+YVCSbX+DYj+7C2QEKUh2jh6aWXC4AnkThKZAzv
+        ID9mmiSb4JvMkG6CpFbaCfE/sqpOLX9JHFwlTdk=
+X-Google-Smtp-Source: ABdhPJzEVNB8x3r9rtZW2qJLQPAd4mUTCuAhNFPv7+8r7HZYouTO819J7+/JyUqoGPgkO6hqTwq262cY2ghyAYoZKYQ=
+X-Received: by 2002:aa7:c643:: with SMTP id z3mr13089405edr.104.1602523013267;
+ Mon, 12 Oct 2020 10:16:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201012071909.wjbclmorlfcz7lln@pengutronix.de>
+References: <20200925212609.23093-1-krzk@kernel.org> <20200926132217.xr3rhv7o2o2yc2l7@pengutronix.de>
+ <20200926134157.GA4730@kozik-lap> <20201009120239.GA450876@ulmo>
+In-Reply-To: <20201009120239.GA450876@ulmo>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Mon, 12 Oct 2020 19:16:40 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPe3R4E7sgHGrLumrZ3hYXFMJKc18hotnLGpWvwMcZ8e0Q@mail.gmail.com>
+Message-ID: <CAJKOXPe3R4E7sgHGrLumrZ3hYXFMJKc18hotnLGpWvwMcZ8e0Q@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pwm: imx: document i.MX compatibles
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 12 Oct 2020, Uwe Kleine-König wrote:
+On Fri, 9 Oct 2020 at 14:02, Thierry Reding <thierry.reding@gmail.com> wrot=
+e:
+>
+> On Sat, Sep 26, 2020 at 03:41:57PM +0200, Krzysztof Kozlowski wrote:
+> > On Sat, Sep 26, 2020 at 03:22:17PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> > > On Fri, Sep 25, 2020 at 11:26:09PM +0200, Krzysztof Kozlowski wrote:
+> > > > Document all ARMv5, ARMv6 and ARMv7 i.MX compatibles to fix dtbs_ch=
+eck
+> > > > warnings like:
+> > > >
+> > > >   arch/arm/boot/dts/imx6dl-colibri-eval-v3.dt.yaml: pwm@2080000: co=
+mpatible:0:
+> > > >     'fsl,imx6q-pwm' is not one of ['fsl,imx8mm-pwm', 'fsl,imx8mn-pw=
+m', 'fsl,imx8mp-pwm', 'fsl,imx8mq-pwm']
+> > > >
+> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/pwm/imx-pwm.yaml | 11 ++++++++++=
++
+> > > >  1 file changed, 11 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.yaml b/D=
+ocumentation/devicetree/bindings/pwm/imx-pwm.yaml
+> > > > index 473863eb67e5..379d693889f6 100644
+> > > > --- a/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
+> > > > +++ b/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
+> > > > @@ -25,6 +25,17 @@ properties:
+> > > >            - fsl,imx27-pwm
+> > > >        - items:
+> > > >            - enum:
+> > > > +              - fsl,imx25-pwm
+> > >
+> > > The driver actually used fsl,imx27-pwm to bind ...
+> >
+> > Yes, most of i.MX drivers use only few compatibles but DTSes and
+> > bindings use multiple of them.  I was convinced during various talks
+> > that the specific compatibles (so "fsl,imx6q-pwm, fsl,imx27-pwm") are
+> > preferred than generic ones (so only "fsl,imx27-pwm"). NXP took it
+> > to the another level creating compatibles for absolutely every flavor o=
+f
+> > their CPU. And they mainlined it in DTSes...
+> >
+> > The PWM is this crazy examples where, as you say, only two compatibles
+> > are actually used for binding but DTSes uses more.
+>
+> Yeah, these new compatible strings all seem to be used in the kernel, so
+> we might as well document them.
+>
+> That said, I did want to apply this patch, but that fails. Am I missing
+> some other patch that you have sent out that touches this file? Actually
+> it looks like this is because you've based this patch on linux-next, or
+> perhaps the devicetree tree, because that contains commit d058717bdff4
+> ("dt-bindings: pwm: imx-pwm: Add i.MX 8M compatibles") from you that
+> adds a couple more compatible strings. Probably best for Rob to pick
+> this up, then:
+>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+>
+> Rob, here's a patchwork link for you if you need one:
+>
+>         https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20=
+200925212609.23093-1-krzk@kernel.org/
+>
+> Although, looking at the devicetree-bindings instance version of that
+> patch, I see that it's got a failing check attached (which looks like
+> it can be ignored) and it's marked "Changes Requested", but no comments
+> saying so.
+>
+> Not sure if you want anything done here?
 
-> On Thu, Sep 24, 2020 at 09:24:49PM +0200, Jonathan Neuschäfer wrote:
-> > Netronix, Inc. (http://www.netronixinc.com/) makes ebook reader board
-> > designs, which are for example used in Kobo and Tolino devices.
-> > 
-> > An alternative prefix for Netronix would be "ntx", which is already used
-> > in code released by Netronix. It is shorter, but perhaps less clear.
-> > 
-> > Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> > Acked-by: Rob Herring <robh@kernel.org>
-> 
-> minor nitpick: your S-o-b should be last in the tags area.
+Thanks, I guess this will wait for the merge window to finish. It
+should then apply to your tree. I can resend in two weeks.
 
-I personally like to see tags in chronological order.
-
-I doubt Rob Acked it before Jonathan originally signed it off.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Best regards,
+Krzysztof
