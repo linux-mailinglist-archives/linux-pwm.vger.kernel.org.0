@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 452B728AEAF
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Oct 2020 09:02:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B89728AEC6
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Oct 2020 09:06:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbgJLHCF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 12 Oct 2020 03:02:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54244 "EHLO
+        id S1726694AbgJLHGo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 12 Oct 2020 03:06:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgJLHCE (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Oct 2020 03:02:04 -0400
+        with ESMTP id S1726699AbgJLHGn (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Oct 2020 03:06:43 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA172C0613CE
-        for <linux-pwm@vger.kernel.org>; Mon, 12 Oct 2020 00:02:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48C0DC0613D0
+        for <linux-pwm@vger.kernel.org>; Mon, 12 Oct 2020 00:06:43 -0700 (PDT)
 Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
         by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1kRrpu-0001Ft-PR; Mon, 12 Oct 2020 09:01:34 +0200
+        id 1kRrud-0001rS-L8; Mon, 12 Oct 2020 09:06:27 +0200
 Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
         (envelope-from <ukl@pengutronix.de>)
-        id 1kRrps-0005J4-J1; Mon, 12 Oct 2020 09:01:32 +0200
-Date:   Mon, 12 Oct 2020 09:01:32 +0200
+        id 1kRruc-0005R7-KO; Mon, 12 Oct 2020 09:06:26 +0200
+Date:   Mon, 12 Oct 2020 09:06:26 +0200
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Cc:     f.fainelli@gmail.com, linux@roeck-us.net, jdelvare@suse.com,
@@ -30,20 +30,19 @@ Cc:     f.fainelli@gmail.com, linux@roeck-us.net, jdelvare@suse.com,
         bcm-kernel-feedback-list@broadcom.com,
         linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        linux-hwmon@vger.kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: pwm: Add binding for RPi firmware PWM
- bus
-Message-ID: <20201012070132.it23vl6f3ytavqgj@pengutronix.de>
+        linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-hwmon@vger.kernel.org,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] pwm: Add Raspberry Pi Firmware based PWM bus
+Message-ID: <20201012070626.fzjhp3tkmgglqnm4@pengutronix.de>
 References: <20201009153031.986-1-nsaenzjulienne@suse.de>
- <20201009153031.986-2-nsaenzjulienne@suse.de>
+ <20201009153031.986-4-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ytbjz75axtb3rg5a"
+        protocol="application/pgp-signature"; boundary="mdjz5hjh2cw74st5"
 Content-Disposition: inline
-In-Reply-To: <20201009153031.986-2-nsaenzjulienne@suse.de>
+In-Reply-To: <20201009153031.986-4-nsaenzjulienne@suse.de>
 Autocrypt: addr=u.kleine-koenig@pengutronix.de; keydata=
         mQINBEwXmCYBEACoJSJcKIlkQcTYia0ymmMOBk2veFoy/a0LlqGUEjQ4WECBL19F2BYX1dSp5/Z
         dfKuV605usI6oq4x6k/LKmqZDl6YnqW/YmN/iZVCRunBRfvpTlL4lcNUu5Va/4GBRzBRrrrIhCI
@@ -212,49 +211,324 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---ytbjz75axtb3rg5a
+--mdjz5hjh2cw74st5
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 09, 2020 at 05:30:28PM +0200, Nicolas Saenz Julienne wrote:
-> The PWM bus controlling the fan in RPi's official PoE hat can only be
-> controlled by the board's co-processor.
+Hello,
+
+On Fri, Oct 09, 2020 at 05:30:30PM +0200, Nicolas Saenz Julienne wrote:
+> Adds support to control the PWM bus available in official Raspberry Pi
+> PoE HAT. Only RPi's co-processor has access to it, so commands have to
+> be sent through RPi's firmware mailbox interface.
 >=20
 > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 > ---
->  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
->  .../pwm/raspberrypi,firmware-pwm.h            | 13 ++++++++++++
->  2 files changed, 34 insertions(+)
->  create mode 100644 include/dt-bindings/pwm/raspberrypi,firmware-pwm.h
+>  drivers/pwm/Kconfig           |   7 ++
+>  drivers/pwm/Makefile          |   1 +
+>  drivers/pwm/pwm-raspberrypi.c | 216 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 224 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-raspberrypi.c
 >=20
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm283=
-5-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm=
-2835-firmware.yaml
-> index a2c63c8b1d10..dcaf00e8602e 100644
-> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmw=
-are.yaml
-> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmw=
-are.yaml
-> @@ -64,6 +64,22 @@ properties:
->        - compatible
->        - "#reset-cells"
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 63be5362fd3a..a76997ca37d0 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -379,6 +379,13 @@ config PWM_PXA
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-pxa.
 > =20
-> +  pwm:
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +        const: raspberrypi,firmware-pwm
-> +
-> +      "#pwm-cells":
-> +        const: 1
-> +        description: >
-> +          The argument is the PWM bus number.
+> +config PWM_RASPBERRYPI
+> +	tristate "Raspberry Pi Firwmware PWM support"
 
-This is wrong. #pwm-cells specifies the number of "arguments" for
-phandles pointing to this node. And I would prefer this being 2 to match
-the stuff described in the generic pwm binding.
+s/Firwmware/Firmware/
+
+> +	depends on RASPBERRYPI_FIRMWARE || (COMPILE_TEST && !RASPBERRYPI_FIRMWA=
+RE)
+
+This is more complicated than necessary.
+
+	depends on RASPBERRYPI_FIRMWARE || COMPILE_TEST
+
+is logically equivalent.
+
+> +	help
+> +	  Enable Raspberry Pi firmware controller PWM bus used to control the
+> +	  official RPI PoE hat
+> +
+>  config PWM_RCAR
+>  	tristate "Renesas R-Car PWM support"
+>  	depends on ARCH_RENESAS || COMPILE_TEST
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index cbdcd55d69ee..b557b549d9f3 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -35,6 +35,7 @@ obj-$(CONFIG_PWM_MXS)		+=3D pwm-mxs.o
+>  obj-$(CONFIG_PWM_OMAP_DMTIMER)	+=3D pwm-omap-dmtimer.o
+>  obj-$(CONFIG_PWM_PCA9685)	+=3D pwm-pca9685.o
+>  obj-$(CONFIG_PWM_PXA)		+=3D pwm-pxa.o
+> +obj-$(CONFIG_PWM_RASPBERRYPI)	+=3D pwm-raspberrypi.o
+>  obj-$(CONFIG_PWM_RCAR)		+=3D pwm-rcar.o
+>  obj-$(CONFIG_PWM_RENESAS_TPU)	+=3D pwm-renesas-tpu.o
+>  obj-$(CONFIG_PWM_ROCKCHIP)	+=3D pwm-rockchip.o
+> diff --git a/drivers/pwm/pwm-raspberrypi.c b/drivers/pwm/pwm-raspberrypi.c
+> new file mode 100644
+> index 000000000000..1ccff6b1ae34
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-raspberrypi.c
+> @@ -0,0 +1,216 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2020 Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> + */
+
+Please add a paragraph here about the hardware. See pwm-sifive.c for a
+template. (Please stick to the format there to simplify grepping.)
+
+The things to point out there are:
+
+ - No disable bit, so a disabled PWM is simulated by duty_cycle 0
+ - Only normal polarity
+ - Fixed period
+
+Also add a note about if the currently running period is completed when
+the hardware is reconfigured.
+
+If possible please also add a link to a product page and/or
+documentation.
+
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +
+> +#include <soc/bcm2835/raspberrypi-firmware.h>
+> +#include <dt-bindings/pwm/raspberrypi,firmware-pwm.h>
+> +
+> +#define RPI_PWM_MAX_DUTY		255
+> +#define RPI_PWM_PERIOD_NS		80000 /* 12.5KHz */
+
+12.5 kHz
+
+> +#define RPI_PWM_CUR_DUTY_REG		0x0
+> +#define RPI_PWM_DEF_DUTY_REG		0x1
+> +
+> +struct raspberrypi_pwm {
+> +	struct rpi_firmware *firmware;
+> +	struct pwm_chip chip;
+> +	unsigned int duty_cycle;
+> +};
+> +
+> +struct raspberrypi_pwm_prop {
+> +	__le32 reg;
+> +	__le32 val;
+> +	__le32 ret;
+> +} __packed;
+> +
+> +static inline struct raspberrypi_pwm *to_raspberrypi_pwm(struct pwm_chip=
+ *chip)
+> +{
+> +	return container_of(chip, struct raspberrypi_pwm, chip);
+> +}
+> +
+> +static int raspberrypi_pwm_set_property(struct rpi_firmware *firmware,
+> +					u32 reg, u32 val)
+> +{
+> +	struct raspberrypi_pwm_prop msg =3D {
+> +		.reg =3D cpu_to_le32(reg),
+> +		.val =3D cpu_to_le32(val),
+> +	};
+> +	int ret;
+> +
+> +	ret =3D rpi_firmware_property(firmware, RPI_FIRMWARE_SET_POE_HAT_VAL,
+> +				    &msg, sizeof(msg));
+> +	if (ret)
+> +		return ret;
+> +	else if (msg.ret)
+> +		return -EIO;
+> +
+> +	return 0;
+> +}
+> +
+> +static int raspberrypi_pwm_get_property(struct rpi_firmware *firmware,
+> +					u32 reg, u32 *val)
+> +{
+> +	struct raspberrypi_pwm_prop msg =3D {
+> +		.reg =3D reg
+> +	};
+> +	int ret;
+> +
+> +	ret =3D rpi_firmware_property(firmware, RPI_FIRMWARE_GET_POE_HAT_VAL,
+> +				    &msg, sizeof(msg));
+> +	if (ret)
+> +		return ret;
+> +	else if (msg.ret)
+> +		return -EIO;
+> +
+> +	*val =3D le32_to_cpu(msg.val);
+> +
+> +	return 0;
+> +}
+> +
+> +static void raspberrypi_pwm_get_state(struct pwm_chip *chip,
+> +				      struct pwm_device *pwm,
+> +				      struct pwm_state *state)
+> +{
+> +	struct raspberrypi_pwm *pc =3D to_raspberrypi_pwm(chip);
+> +
+> +	state->period =3D RPI_PWM_PERIOD_NS;
+> +	state->duty_cycle =3D pc->duty_cycle * RPI_PWM_PERIOD_NS / RPI_PWM_MAX_=
+DUTY;
+
+Please round up the result of the division. (The idea is that if you
+apply the state .get_state() returns this should yield no change.)
+
+> +	state->enabled =3D !!(pc->duty_cycle);
+> +	state->polarity =3D PWM_POLARITY_NORMAL;
+> +}
+> +
+> +static int raspberrypi_pwm_apply(struct pwm_chip *chip, struct pwm_devic=
+e *pwm,
+> +			         const struct pwm_state *state)
+> +{
+> +	struct raspberrypi_pwm *pc =3D to_raspberrypi_pwm(chip);
+> +	unsigned int duty_cycle;
+> +	int ret;
+> +
+
+You need to check for polarity here.
+
+> +	if (!state->enabled)
+> +		duty_cycle =3D 0;
+> +	else
+> +		duty_cycle =3D state->duty_cycle * RPI_PWM_MAX_DUTY /
+> +			     RPI_PWM_PERIOD_NS;
+> +
+> +	if (duty_cycle =3D=3D pc->duty_cycle)
+> +		return 0;
+> +
+> +	pc->duty_cycle =3D duty_cycle;
+> +	ret =3D raspberrypi_pwm_set_property(pc->firmware, RPI_PWM_CUR_DUTY_REG,
+> +					   pc->duty_cycle);
+> +	if (ret) {
+> +		dev_err(chip->dev, "Failed to set duty cycle: %d\n", ret);
+> +		return ret;
+> +	}
+
+What happens if duty_cycle happens to be bigger than RPI_PWM_MAX_DUTY?
+
+I think the right thing to do here is:
+
+	if (state->period < RPI_PWM_PERIOD_NS ||
+	    state->polarity !=3D PWM_POLARITY_NORMAL)
+		return -EINVAL;
+
+	if (!state->enabled)
+		duty_cycle =3D 0
+	else if (state->duty_cycle < RPI_PWM_PERIOD_NS)
+		duty_cycle =3D state->duty_cycle * RPI_PWM_MAX_DUTY / RPI_PWM_PERIOD_NS;
+	else
+		duty_cycle =3D RPI_PWM_MAX_DUTY;
+
+	ret =3D raspberrypi_pwm_set_property(pc->firmware, RPI_PWM_CUR_DUTY_REG,
+					   pc->duty_cycle);
+	if (ret)
+		...
+
+	pc->duty_cycle =3D duty_cycle;
+
+> +
+> +	ret =3D raspberrypi_pwm_set_property(pc->firmware, RPI_PWM_CUR_DUTY_REG,
+> +					   pc->duty_cycle);
+> +	if (ret) {
+> +		dev_err(chip->dev, "Failed to set default duty cycle: %d\n", ret);
+> +		return ret;
+> +	}
+
+Huh, why do you have to do this twice, just with different error
+messages? I assume you want to set RPI_PWM_DEF_DUTY_REG? What is the
+effect of writing this property?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pwm_ops raspberrypi_pwm_ops =3D {
+> +	.get_state =3D raspberrypi_pwm_get_state,
+> +	.apply =3D raspberrypi_pwm_apply,
+> +	.owner =3D THIS_MODULE,
+> +};
+> +
+> +static struct pwm_device *raspberrypi_pwm_xlate(struct pwm_chip *pc,
+> +					const struct of_phandle_args *args)
+> +{
+> +	struct pwm_device *pwm;
+> +
+> +	if (args->args[0] >=3D pc->npwm)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	pwm =3D pwm_request_from_chip(pc, args->args[0], NULL);
+> +	if (IS_ERR(pwm))
+> +		return pwm;
+> +
+> +	/* Firmwre won't let us change the period */
+
+Firmware.
+
+> +	pwm->args.period =3D RPI_PWM_PERIOD_NS;
+> +
+> +	return pwm;
+> +}
+
+I think you don't need this function. Just fix up period in .apply().
+
+> +static int raspberrypi_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *firmware_node;
+> +	struct device *dev =3D &pdev->dev;
+> +	struct rpi_firmware *firmware;
+> +	struct raspberrypi_pwm *pc;
+
+What does "pc" stand for? I'd have used "rpipwm" or something similar.
+
+> +	int ret;
+> +
+> +	firmware_node =3D of_get_parent(dev->of_node);
+> +	if (!firmware_node) {
+> +		dev_err(dev, "Missing firmware node\n");
+> +		return -ENOENT;
+> +	}
+> +
+> +	firmware =3D rpi_firmware_get(firmware_node);
+> +	of_node_put(firmware_node);
+> +	if (!firmware)
+> +		return -EPROBE_DEFER;
+
+I don't see a mechanism that prevents the driver providing the firmware
+going away while the PWM is still in use.
+
+> +	pc =3D devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
+> +	if (!pc)
+> +		return -ENOMEM;
+> [...]
+> +
+> +static struct platform_driver raspberrypi_pwm_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "raspberrypi-pwm",
+> +		.of_match_table =3D raspberrypi_pwm_of_match,
+> +	},
+> +	.probe =3D raspberrypi_pwm_probe,
+> +	.remove =3D raspberrypi_pwm_remove,
+> +};
+> +module_platform_driver(raspberrypi_pwm_driver);
+> +
+> +MODULE_AUTHOR("Nicolas Saenz Julienne <nsaenzjulienne@suse.de>");
+> +MODULE_DESCRIPTION("Raspberry Pi Firwmare Based PWM Bus Driver");
+> +MODULE_LICENSE("GPL v2");
+> +
+
+Please drop the empty line at the end of file.
 
 Best regards
 Uwe
@@ -263,19 +537,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---ytbjz75axtb3rg5a
+--mdjz5hjh2cw74st5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl+D/0kACgkQwfwUeK3K
-7AlF0Qf+IaPfqHSenYjm5YrvM3947EEmGMmuWdl2SawbTiGUFBIjOmO7wVPHB0Da
-6Tvws+yPY5mN+vn1ldWLgO5z3HJHJV1abXaopxg454gpcb0dK9nl2Ke70OIAZoJ0
-8FBORWkOyPewJlYB1AgZpXJZY+Xk24Js8eeHND0xGOoTudwU4nMxipzlUTvnRner
-dJ93whx0rU9kCCT5RU6u5lAMS5dJKNWwi+7bKnSILGxQ+RRBmpCl/kSkvzw0y1ln
-CdaR758R0ljCMZTBvJxhxqMADiyVd4k9XhwloVT2pamr4rIUH+H9zzMGqglqYQzo
-aAj19xo0YunP0Z0eFf9jyWMxPHG5Pw==
-=ePfC
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl+EAG8ACgkQwfwUeK3K
+7AkpWgf/ZsEIZnk26F7c2qBvJ4TADC8dLfI+w+tcELnzae+u4XikJ7scnpPs/pna
+ypAP0jE/bAfr4Q2Oa0Q0Z8kg20A7IYpVc3ezvl3560crq+4ai0rIQrN2WhPqsI3h
+9CxA8+NMOZOgCKm+6fwiS6/jCzYmFl2d9elTq4ggDKsBV5wNMm910KkplWMZLy4X
+Ht4CPRwpKuChC9IOmgxSX/0FeLFfgw5Oya54nkWH42WJcXbpeWnHp8Z6fc/Fdvfz
+1MCLCng6BsB/wl7vqpjIxEz9MBKlcTLMVO76UfbZJs/8IeB6q+h6qqu6ihH8Mz7C
+IlGLL5eKOOdBtcUUttPChLJ5FIID1A==
+=4h0s
 -----END PGP SIGNATURE-----
 
---ytbjz75axtb3rg5a--
+--mdjz5hjh2cw74st5--
