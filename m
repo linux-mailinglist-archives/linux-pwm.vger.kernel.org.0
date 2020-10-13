@@ -2,172 +2,207 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 145B628D119
-	for <lists+linux-pwm@lfdr.de>; Tue, 13 Oct 2020 17:18:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F2E228D2A1
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Oct 2020 18:50:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389037AbgJMPS3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 13 Oct 2020 11:18:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43704 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389261AbgJMPS0 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 13 Oct 2020 11:18:26 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 161BDC0613D2
-        for <linux-pwm@vger.kernel.org>; Tue, 13 Oct 2020 08:18:26 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kSM41-0008HW-Q9; Tue, 13 Oct 2020 17:18:09 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kSM3z-0000Zw-Rx; Tue, 13 Oct 2020 17:18:07 +0200
-Date:   Tue, 13 Oct 2020 17:18:07 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+        id S2387948AbgJMQuv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 13 Oct 2020 12:50:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59406 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387919AbgJMQuv (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 13 Oct 2020 12:50:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id CEF98B2F2;
+        Tue, 13 Oct 2020 16:50:49 +0000 (UTC)
+Message-ID: <c171c837a31dea34c845478b7c7d4bdef865b5e0.camel@suse.de>
+Subject: Re: [PATCH 3/3] pwm: Add Raspberry Pi Firmware based PWM bus
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
 Cc:     f.fainelli@gmail.com, linux@roeck-us.net, jdelvare@suse.com,
         wahrenst@gmx.net, Eric Anholt <eric@anholt.net>,
         bcm-kernel-feedback-list@broadcom.com,
         linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        linux-hwmon@vger.kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: pwm: Add binding for RPi firmware PWM
- bus
-Message-ID: <20201013151807.px6o2caoh4vfzlwu@pengutronix.de>
+        linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-hwmon@vger.kernel.org,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 13 Oct 2020 18:50:47 +0200
+In-Reply-To: <20201013121758.gl6ni4b47ei2bhdf@pengutronix.de>
 References: <20201009153031.986-1-nsaenzjulienne@suse.de>
- <20201009153031.986-2-nsaenzjulienne@suse.de>
- <20201012070132.it23vl6f3ytavqgj@pengutronix.de>
- <cc7842ed7f8a4db863024a0ff5d8b7d86de52f50.camel@suse.de>
- <20201013120823.hhy7wyqsb3f3ufnx@pengutronix.de>
- <f891916e193707eb55faa9ea93f294ac44925710.camel@suse.de>
+         <20201009153031.986-4-nsaenzjulienne@suse.de>
+         <20201012070626.fzjhp3tkmgglqnm4@pengutronix.de>
+         <7899e490543723c97ffad6f42942907f8db6b9b4.camel@suse.de>
+         <20201013121758.gl6ni4b47ei2bhdf@pengutronix.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-QQL4Z9L5K9obB4kJlsj+"
+User-Agent: Evolution 3.36.5 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qn6okevj7lpylitq"
-Content-Disposition: inline
-In-Reply-To: <f891916e193707eb55faa9ea93f294ac44925710.camel@suse.de>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---qn6okevj7lpylitq
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+--=-QQL4Z9L5K9obB4kJlsj+
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 13, 2020 at 02:33:20PM +0200, Nicolas Saenz Julienne wrote:
-> On Tue, 2020-10-13 at 14:08 +0200, Uwe Kleine-K=F6nig wrote:
-> > On Tue, Oct 13, 2020 at 12:35:38PM +0200, Nicolas Saenz Julienne wrote:
-> > > Hi Uwe, thanks for having a look at this.
+Hi Uwe,
+
+On Tue, 2020-10-13 at 14:17 +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Nicolas,
+>=20
+> On Tue, Oct 13, 2020 at 01:20:00PM +0200, Nicolas Saenz Julienne wrote:
+> > On Mon, 2020-10-12 at 09:06 +0200, Uwe Kleine-K=C3=B6nig wrote:
+> > > > +	depends on RASPBERRYPI_FIRMWARE || (COMPILE_TEST && !RASPBERRYPI_=
+FIRMWARE)
 > > >=20
-> > > On Mon, 2020-10-12 at 09:01 +0200, Uwe Kleine-K=F6nig wrote:
-> > > > On Fri, Oct 09, 2020 at 05:30:28PM +0200, Nicolas Saenz Julienne wr=
-ote:
-> > > > > The PWM bus controlling the fan in RPi's official PoE hat can onl=
-y be
-> > > > > controlled by the board's co-processor.
-> > > > >=20
-> > > > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > > > > ---
-> > > > >  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++=
-++++++
-> > > > >  .../pwm/raspberrypi,firmware-pwm.h            | 13 ++++++++++++
-> > > > >  2 files changed, 34 insertions(+)
-> > > > >  create mode 100644 include/dt-bindings/pwm/raspberrypi,firmware-=
-pwm.h
-> > > > >=20
-> > > > > diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberryp=
-i,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspber=
-rypi,bcm2835-firmware.yaml
-> > > > > index a2c63c8b1d10..dcaf00e8602e 100644
-> > > > > --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm28=
-35-firmware.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm28=
-35-firmware.yaml
-> > > > > @@ -64,6 +64,22 @@ properties:
-> > > > >        - compatible
-> > > > >        - "#reset-cells"
-> > > > > =20
-> > > > > +  pwm:
-> > > > > +    type: object
-> > > > > +
-> > > > > +    properties:
-> > > > > +      compatible:
-> > > > > +        const: raspberrypi,firmware-pwm
-> > > > > +
-> > > > > +      "#pwm-cells":
-> > > > > +        const: 1
-> > > > > +        description: >
-> > > > > +          The argument is the PWM bus number.
-> > > >=20
-> > > > This is wrong. #pwm-cells specifies the number of "arguments" for
-> > > > phandles pointing to this node. And I would prefer this being 2 to =
-match
-> > > > the stuff described in the generic pwm binding.
+> > > This is more complicated than necessary.
 > > >=20
-> > > I saw buses out there with the same limitation as this one (unable to=
- change
-> > > frequency) that used a single cell, so I whent with it. That said I'l=
-l be happy
-> > > to change it and drop the custom *_xlate() function in benefit of the=
- default
-> > > one.
+> > > 	depends on RASPBERRYPI_FIRMWARE || COMPILE_TEST
+> > >=20
+> > > is logically equivalent.
 > >=20
-> > As the first cell after the phandle is for the period and only the
-> > second if for flags, this is a poor argument.
+> > It's not exactly the same, see patch 7ed915059c300 ("gpio: raspberrypi-=
+ext: fix
+> > firmware dependency ") which explains why this pattern is needed.
+
+I'll add a comment.
+
+> Hmm, this is strange, but if Arnd doesn't know a better solution, then
+> be it so. Is this idiom usual enough to not justify a comment?
 >=20
-> In that case aren't these bindings wrong (and associated xlate() function=
-s)?
-
-Ah, got it wrong, I want #pwm-cells =3D <3> where the first argument is
-the index, the second the period and the third flags.
-
-> google,cros-ec-pwm.yaml:
-> [...]
-> 	properties:
-> 	  compatible:
-> 	    const: google,cros-ec-pwm
-> 	  "#pwm-cells":
-> 	    description: The cell specifies the PWM index.
-> 	    const: 1
-> [...]
+> > > What happens if duty_cycle happens to be bigger than RPI_PWM_MAX_DUTY=
+?
+> > >=20
+> > > I think the right thing to do here is:
+> > >=20
+> > > 	if (state->period < RPI_PWM_PERIOD_NS ||
+> >=20
+> > Why not using state->period !=3D RPI_PWM_PERIOD_NS here?
 >=20
-> cirrus,clps711x-pwm.txt:
-> [...]
-> 	- #pwm-cells: Should be 1. The cell specifies the index of the channel.
-> [...]
+> From the consumer's point of view having to hit the only correct period
+> is hard. So the usual convention is to provide the biggest period not
+> bigger than the requested one. (The idea for the future is to provide a
+> pwm_round_state() function which allows to find out the effect of
+> pwm_apply_state() with the same arguments. This then allows to
+> efficiently find the best setting for the consumer.)
+
+Fair enough.
+
+> > > Huh, why do you have to do this twice, just with different error
+> > > messages? I assume you want to set RPI_PWM_DEF_DUTY_REG? What is the
+> > > effect of writing this property?
+> >=20
+> > Obviously, I failed to change the register name.
+> >=20
+> > This is supposed to set the default duty cycle after resetting the boar=
+d. I
+> > added it so as to keep compatibility with the downstream version of thi=
+s.
+> >=20
+> > I'll add a comment to explain this.
 >=20
-> Note that pxa-pwm.txt behaves as you comment.
+> fine.
+>=20
+> > > > +	int ret;
+> > > > +
+> > > > +	firmware_node =3D of_get_parent(dev->of_node);
+> > > > +	if (!firmware_node) {
+> > > > +		dev_err(dev, "Missing firmware node\n");
+> > > > +		return -ENOENT;
+> > > > +	}
+> > > > +
+> > > > +	firmware =3D rpi_firmware_get(firmware_node);
+> > > > +	of_node_put(firmware_node);
+> > > > +	if (!firmware)
+> > > > +		return -EPROBE_DEFER;
+> > >=20
+> > > I don't see a mechanism that prevents the driver providing the firmwa=
+re
+> > > going away while the PWM is still in use.
+> >=20
+> > There isn't an explicit one. But since you depend on a symbol from the =
+firmware
+> > driver you won't be able to remove the kernel module before removing th=
+e PMW
+> > one.
+>=20
+> this prevents the that the module is unloaded, but not that the driver
+> is unbound.
 
-Hmm, this one has a custom .xlate function, too :-\
+Yes, if you were to unbind the firmware device all devices that depend on i=
+t
+(there are a bunch of them) would access freed memory. Yet again, there is =
+no
+hotplug functionality, so short of being useful for development it'd be ver=
+y
+rare for someone to unbind it. We've been living with it as such for a long
+time. Not to say that is something not to fix, but from my perspective it's
+just a corner-case.
 
-Best regards
-Uwe
+We are using 'simple-mfd' in order to probe all devices under the
+firmware interface, so my first intuition would be to add support for
+automatically unbinding of consumer devices in of/platform.c. See:
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index b557a0fcd4ba..d24f2412d518 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -390,7 +390,13 @@ static int of_platform_bus_create(struct device_node *=
+bus,
+        }
+=20
+        dev =3D of_platform_device_create_pdata(bus, bus_id, platform_data,=
+ parent);
+-       if (!dev || !of_match_node(matches, bus))
++       if (!dev)
++               return 0;
++
++       if (parent && of_device_is_compatible(parent->of_node, "simple-mfd"=
+))
++               device_link_add(&dev->dev, parent, DL_FLAG_AUTOREMOVE_CONSU=
+MER);
++
++       if (!of_match_node(matches, bus))
+                return 0;
+=20
+        for_each_child_of_node(bus, child) {
 
---qn6okevj7lpylitq
+If this is too much for OF maintainers, we could simply create the link upo=
+n
+calling rpi_firmware_get().
+
+This solves the problem of getting a kernel panic because of the use after
+free, but you'll still get some warnings after unbinding from the GPIO
+subsystem, for example, as we just removed a gpiochip that still has consum=
+ers
+up. I guess device links only go so far.
+
+Any ideas/comments?
+
+Regards,
+Nicolas
+
+
+--=-QQL4Z9L5K9obB4kJlsj+
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl+FxSwACgkQwfwUeK3K
-7Al3cAgAjk1ptAKwNfb6sTR0PW+B9xflMvW5NBDs7hGsT9p0ch1OQYp0pmAGdFQR
-ZdylEvKMTVooN8aLEqhADveVZQQSAj6ST3vkmCSNCl6u2c5eOtsO8GaGkassre3o
-+6hIwO2cRoUrA/rCzjA0VxQv64lRbGXBkp3Yr5Wv0r8oeys1SevM3e5zpbWgmwef
-GNcoAAkDVcpbBILvocFhWoDHtpZ+/yV6+nmaZ1AZiOl6mlU9TyA5NkRLm1oOzKXm
-ZCJt8P6k7El90eEg3VYf3verHfx1JWYuKEowDbd0k1scsm+a3+Ebgd0idoNK/Rt7
-HqnGOdnTkpnYbhuFSUqeq0D1PPW9Sg==
-=EP00
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl+F2ucACgkQlfZmHno8
+x/4aKQf+OCDTj2+VaoKNpvJzA4yuSworog5ZQ/I2NeExhZZbxPTs2V2Y/HGEHegl
+n3ejX6yJGqpUsWoeqy5XXDVJhnPSfBTQRWjwzipuI6vUX0PLtJCW9GW5awPc1sTm
+NF2NOFeM0WNPaodHNqzT6JXRbYRRx1EN3NzdfMX89NZ+cx0fQSQBzeXSlqhIWvlC
+rEfGZD3hMMHr/NXzomTPgIp1Wgtq9VRcSs/gGvOzaxYqqSUKrBZf1mnMhwcM5Byb
+KHUJW+hIyCRiTUHrUGItXhRZK3lRHxZDbEN46T8HmtrV6cCRaFTCU2ozTALD47Mn
+CdvAxBZhwALSZ4+AfjB/JwB2C/HfOA==
+=DfAb
 -----END PGP SIGNATURE-----
 
---qn6okevj7lpylitq--
+--=-QQL4Z9L5K9obB4kJlsj+--
+
