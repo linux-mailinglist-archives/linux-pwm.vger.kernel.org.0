@@ -2,207 +2,165 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F2E228D2A1
-	for <lists+linux-pwm@lfdr.de>; Tue, 13 Oct 2020 18:50:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7659328D37D
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Oct 2020 20:17:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387948AbgJMQuv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 13 Oct 2020 12:50:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59406 "EHLO mx2.suse.de"
+        id S1728002AbgJMSRC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 13 Oct 2020 14:17:02 -0400
+Received: from mga09.intel.com ([134.134.136.24]:18841 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387919AbgJMQuv (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 13 Oct 2020 12:50:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id CEF98B2F2;
-        Tue, 13 Oct 2020 16:50:49 +0000 (UTC)
-Message-ID: <c171c837a31dea34c845478b7c7d4bdef865b5e0.camel@suse.de>
-Subject: Re: [PATCH 3/3] pwm: Add Raspberry Pi Firmware based PWM bus
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     f.fainelli@gmail.com, linux@roeck-us.net, jdelvare@suse.com,
-        wahrenst@gmx.net, Eric Anholt <eric@anholt.net>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-hwmon@vger.kernel.org,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 13 Oct 2020 18:50:47 +0200
-In-Reply-To: <20201013121758.gl6ni4b47ei2bhdf@pengutronix.de>
-References: <20201009153031.986-1-nsaenzjulienne@suse.de>
-         <20201009153031.986-4-nsaenzjulienne@suse.de>
-         <20201012070626.fzjhp3tkmgglqnm4@pengutronix.de>
-         <7899e490543723c97ffad6f42942907f8db6b9b4.camel@suse.de>
-         <20201013121758.gl6ni4b47ei2bhdf@pengutronix.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-QQL4Z9L5K9obB4kJlsj+"
-User-Agent: Evolution 3.36.5 
+        id S1726829AbgJMSRC (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 13 Oct 2020 14:17:02 -0400
+IronPort-SDR: MCuhIMj8OS6tIyttst9UFouHCJLi/4tw6WsKXFPwoXAM1dtb9yGpdjiMhUVmZW33LFaNj1HLYa
+ Kq0sDbKy3oaw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9773"; a="166076758"
+X-IronPort-AV: E=Sophos;i="5.77,371,1596524400"; 
+   d="scan'208";a="166076758"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2020 11:17:00 -0700
+IronPort-SDR: yo3IuQdFNUhW1knAsbyhgEZqkaSQHubJP+1iknJVI8Y3Ei5rpyTgSEdmqUiqjrUVNovyB+vm8a
+ poYpH2gBiIyw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,371,1596524400"; 
+   d="scan'208";a="521131457"
+Received: from ubuntu18.png.intel.com ([10.88.229.38])
+  by fmsmga005.fm.intel.com with ESMTP; 13 Oct 2020 11:16:58 -0700
+From:   vijayakannan.ayyathurai@intel.com
+To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        robh+dt@kernel.org
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        wan.ahmad.zainie.wan.mohamad@intel.com,
+        andriy.shevchenko@linux.intel.com, mgross@linux.intel.com,
+        lakshmi.bai.raja.subramanian@intel.com,
+        vijayakannan.ayyathurai@intel.com
+Subject: [PATCH v11 0/2] Add PWM support for Intel Keem Bay SoC
+Date:   Wed, 14 Oct 2020 02:14:11 +0800
+Message-Id: <cover.1602612067.git.vijayakannan.ayyathurai@intel.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+From: Vijayakannan Ayyathurai <vijayakannan.ayyathurai@intel.com>
 
---=-QQL4Z9L5K9obB4kJlsj+
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi Uwe,
+This patch set enables the support for PWM in the Intel Keem Bay SoC.
+Keem Bay is an ARM based SoC, and the GPIO module allows
+configuration of 6 PWM outputs.
 
-On Tue, 2020-10-13 at 14:17 +0200, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Nicolas,
->=20
-> On Tue, Oct 13, 2020 at 01:20:00PM +0200, Nicolas Saenz Julienne wrote:
-> > On Mon, 2020-10-12 at 09:06 +0200, Uwe Kleine-K=C3=B6nig wrote:
-> > > > +	depends on RASPBERRYPI_FIRMWARE || (COMPILE_TEST && !RASPBERRYPI_=
-FIRMWARE)
-> > >=20
-> > > This is more complicated than necessary.
-> > >=20
-> > > 	depends on RASPBERRYPI_FIRMWARE || COMPILE_TEST
-> > >=20
-> > > is logically equivalent.
-> >=20
-> > It's not exactly the same, see patch 7ed915059c300 ("gpio: raspberrypi-=
-ext: fix
-> > firmware dependency ") which explains why this pattern is needed.
+Patch 1 adds the PWM driver and Patch 2 is for the required
+Device Tree bindings documentation.
 
-I'll add a comment.
+This driver was tested on the Keem Bay evaluation module board.
 
-> Hmm, this is strange, but if Arnd doesn't know a better solution, then
-> be it so. Is this idiom usual enough to not justify a comment?
->=20
-> > > What happens if duty_cycle happens to be bigger than RPI_PWM_MAX_DUTY=
-?
-> > >=20
-> > > I think the right thing to do here is:
-> > >=20
-> > > 	if (state->period < RPI_PWM_PERIOD_NS ||
-> >=20
-> > Why not using state->period !=3D RPI_PWM_PERIOD_NS here?
->=20
-> From the consumer's point of view having to hit the only correct period
-> is hard. So the usual convention is to provide the biggest period not
-> bigger than the requested one. (The idea for the future is to provide a
-> pwm_round_state() function which allows to find out the effect of
-> pwm_apply_state() with the same arguments. This then allows to
-> efficiently find the best setting for the consumer.)
-
-Fair enough.
-
-> > > Huh, why do you have to do this twice, just with different error
-> > > messages? I assume you want to set RPI_PWM_DEF_DUTY_REG? What is the
-> > > effect of writing this property?
-> >=20
-> > Obviously, I failed to change the register name.
-> >=20
-> > This is supposed to set the default duty cycle after resetting the boar=
-d. I
-> > added it so as to keep compatibility with the downstream version of thi=
-s.
-> >=20
-> > I'll add a comment to explain this.
->=20
-> fine.
->=20
-> > > > +	int ret;
-> > > > +
-> > > > +	firmware_node =3D of_get_parent(dev->of_node);
-> > > > +	if (!firmware_node) {
-> > > > +		dev_err(dev, "Missing firmware node\n");
-> > > > +		return -ENOENT;
-> > > > +	}
-> > > > +
-> > > > +	firmware =3D rpi_firmware_get(firmware_node);
-> > > > +	of_node_put(firmware_node);
-> > > > +	if (!firmware)
-> > > > +		return -EPROBE_DEFER;
-> > >=20
-> > > I don't see a mechanism that prevents the driver providing the firmwa=
-re
-> > > going away while the PWM is still in use.
-> >=20
-> > There isn't an explicit one. But since you depend on a symbol from the =
-firmware
-> > driver you won't be able to remove the kernel module before removing th=
-e PMW
-> > one.
->=20
-> this prevents the that the module is unloaded, but not that the driver
-> is unbound.
-
-Yes, if you were to unbind the firmware device all devices that depend on i=
-t
-(there are a bunch of them) would access freed memory. Yet again, there is =
-no
-hotplug functionality, so short of being useful for development it'd be ver=
-y
-rare for someone to unbind it. We've been living with it as such for a long
-time. Not to say that is something not to fix, but from my perspective it's
-just a corner-case.
-
-We are using 'simple-mfd' in order to probe all devices under the
-firmware interface, so my first intuition would be to add support for
-automatically unbinding of consumer devices in of/platform.c. See:
-
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index b557a0fcd4ba..d24f2412d518 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -390,7 +390,13 @@ static int of_platform_bus_create(struct device_node *=
-bus,
-        }
-=20
-        dev =3D of_platform_device_create_pdata(bus, bus_id, platform_data,=
- parent);
--       if (!dev || !of_match_node(matches, bus))
-+       if (!dev)
-+               return 0;
-+
-+       if (parent && of_device_is_compatible(parent->of_node, "simple-mfd"=
-))
-+               device_link_add(&dev->dev, parent, DL_FLAG_AUTOREMOVE_CONSU=
-MER);
-+
-+       if (!of_match_node(matches, bus))
-                return 0;
-=20
-        for_each_child_of_node(bus, child) {
-
-If this is too much for OF maintainers, we could simply create the link upo=
-n
-calling rpi_firmware_get().
-
-This solves the problem of getting a kernel panic because of the use after
-free, but you'll still get some warnings after unbinding from the GPIO
-subsystem, for example, as we just removed a gpiochip that still has consum=
-ers
-up. I guess device links only go so far.
-
-Any ideas/comments?
+Thank you.
 
 Regards,
-Nicolas
+Vijay
+
+Changes since v10:
+- Update low time calculation formula as per Uwe.
+- During distruct remove pwmchip first then disable the clock.
+
+Changes since v9:
+- Remove Reported-by tag from the commit log.
+
+Changes since v8:
+- Fix the compilation error reported by kernel test robot.
+- Add the tag Reported-by: kernel test robot <lkp@intel.com>
+- Minor correction in the pwm low time calculation formula.
+- Rebase with 5.9-rc7
+
+Changes since v7:
+- Change the dependency as ARCH_KEEMBAY instead of ARM64 in Kconfig.
+- Use DIV_ROUND_DOWN_ULL instead of DIV_ROUND_CLOSEST_ULL.
+- Update the right formula as per Uwe.
+- List the tags in chronological order.
+- Add clk_disable_unprepare in the error paths.
+
+Changes since v6:
+- Add reviewed-by tag
+
+Changes since v5:
+- Reorder symbols/Kconfig in drivers/pwm/Kconfig and drivers/pwm/Makefile
+- Use "Limitations" for consistency
+- Add clk_prepare_enable()
+- Reorder keembay_pwm_get_state() function call
+- Rework if conditional for channel disablement in .apply()
+- Remove channel disabling from .probe(), and clear LEADIN register bits
+  in .apply instead
+- Update commit message for Patch 1
+
+Changes since v4:
+- Add co-developed-by tag
+- Include mod_devicetable.h and remove of.h
+- Update comment with correct calulation for high/low time
+- Fix missing return from dev_err_probe
+
+Changes since v3:
+- Removed variable for address and calculate in place instead
+- Utilized u32_replace_bits() when updating KMB_PWM_LEADIN_OFFSET
+- Utilized dev_err_probe() for error reporting
+- Updated comments to use physical units
+- Updated error check for pwmchip_add()
+
+Changes since v2:
+- Include documentation about HW limitation/behaviour
+- Use hex values for KMB_PWM_COUNT_MAX
+- Redefine register macros
+- Utilize FIELD_GET/FIELD_PREP for calculating pwm_l/h_count and
+  pwm_count
+- Round up duty cycle/period values
+- Get current hardware state in .apply instead of cached values
+- Do a polarity check before .enabled
+- Round high time/low time to closest value
+- Set enable bit in KMB_PWM_LEADIN_OFFSET to 0 in probe
+- Correct the naming for MODULE_ALIAS
+- Add additionalProperties: false in DT bindings
+
+Changes since v1:
+- Updated licensing info, "clocks" property and example in DT bindings
+- Updated name of DT bindings document to match compatible string
+- Removed 1 patch for addition of new sysfs attribute "count"
+- Added support for COMPILE_TEST in Kconfig
+- Updated naming of defines and regmap attribute
+- Updated calculation of waveform high time and low time
+- Added range checking for waveform high/low time
+- Implemented .get_state
+- Removed register writes for lead-in and count values (left to default)
+- Updated register access to single-access
+- Folded keembay_pwm_enable/disable_channel,
+  keembay_pwm_config_period/duty_cycle,
+  and keembay_pwm_config into keembay_pwm_apply
+- Updated error messages/error codes
+- Removed pwm_disable from keembay_pwm_remove
+- Removed clk_prepare/clk_enable/clk_disable from driver
+
+Lai, Poey Seng (1):
+  pwm: Add PWM driver for Intel Keem Bay
+
+Vineetha G. Jaya Kumaran (1):
+  dt-bindings: pwm: keembay: Add bindings for Intel Keem Bay PWM
+
+ .../bindings/pwm/intel,keembay-pwm.yaml       |  47 ++++
+ drivers/pwm/Kconfig                           |   9 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-keembay.c                     | 228 ++++++++++++++++++
+ 4 files changed, 285 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-keembay.c
 
 
---=-QQL4Z9L5K9obB4kJlsj+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl+F2ucACgkQlfZmHno8
-x/4aKQf+OCDTj2+VaoKNpvJzA4yuSworog5ZQ/I2NeExhZZbxPTs2V2Y/HGEHegl
-n3ejX6yJGqpUsWoeqy5XXDVJhnPSfBTQRWjwzipuI6vUX0PLtJCW9GW5awPc1sTm
-NF2NOFeM0WNPaodHNqzT6JXRbYRRx1EN3NzdfMX89NZ+cx0fQSQBzeXSlqhIWvlC
-rEfGZD3hMMHr/NXzomTPgIp1Wgtq9VRcSs/gGvOzaxYqqSUKrBZf1mnMhwcM5Byb
-KHUJW+hIyCRiTUHrUGItXhRZK3lRHxZDbEN46T8HmtrV6cCRaFTCU2ozTALD47Mn
-CdvAxBZhwALSZ4+AfjB/JwB2C/HfOA==
-=DfAb
------END PGP SIGNATURE-----
-
---=-QQL4Z9L5K9obB4kJlsj+--
+base-commit: 549738f15da0e5a00275977623be199fbbf7df50
+prerequisite-patch-id: 0a348762b660d0d817b8e70cc71647e83173c78c
+prerequisite-patch-id: 0c6072cfe492b078c44ec864b8f9d1c76eada93b
+prerequisite-patch-id: 12b93428ee51a3d92ca973b928c0e0989f5d585e
+-- 
+2.17.1
 
