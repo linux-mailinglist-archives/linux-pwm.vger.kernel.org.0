@@ -2,31 +2,31 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7659328D37D
-	for <lists+linux-pwm@lfdr.de>; Tue, 13 Oct 2020 20:17:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF94728D37F
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Oct 2020 20:17:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgJMSRC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 13 Oct 2020 14:17:02 -0400
-Received: from mga09.intel.com ([134.134.136.24]:18841 "EHLO mga09.intel.com"
+        id S1728074AbgJMSRK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 13 Oct 2020 14:17:10 -0400
+Received: from mga14.intel.com ([192.55.52.115]:6974 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726829AbgJMSRC (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 13 Oct 2020 14:17:02 -0400
-IronPort-SDR: MCuhIMj8OS6tIyttst9UFouHCJLi/4tw6WsKXFPwoXAM1dtb9yGpdjiMhUVmZW33LFaNj1HLYa
- Kq0sDbKy3oaw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9773"; a="166076758"
+        id S1726829AbgJMSRJ (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 13 Oct 2020 14:17:09 -0400
+IronPort-SDR: t8NjZMXGKtN+ukNIM8eS3FMnZh5FzI7gFeYToQFOWZEnhIWrGnSOFhCtBoKodEwyQwXxGa30/8
+ FKexyumbp7jw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9773"; a="165169269"
 X-IronPort-AV: E=Sophos;i="5.77,371,1596524400"; 
-   d="scan'208";a="166076758"
+   d="scan'208";a="165169269"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2020 11:17:00 -0700
-IronPort-SDR: yo3IuQdFNUhW1knAsbyhgEZqkaSQHubJP+1iknJVI8Y3Ei5rpyTgSEdmqUiqjrUVNovyB+vm8a
- poYpH2gBiIyw==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2020 11:17:08 -0700
+IronPort-SDR: RSxuydiNzUGLX2vWd7Zn+HeLPhdlgE8CoUhY2Kt7lTOzYKsemyUl/JPUpvdIZWqVlcfY9XuKVg
+ hFQjC5c0vJiQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,371,1596524400"; 
-   d="scan'208";a="521131457"
+   d="scan'208";a="521131483"
 Received: from ubuntu18.png.intel.com ([10.88.229.38])
-  by fmsmga005.fm.intel.com with ESMTP; 13 Oct 2020 11:16:58 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 13 Oct 2020 11:17:04 -0700
 From:   vijayakannan.ayyathurai@intel.com
 To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
         robh+dt@kernel.org
@@ -35,132 +35,301 @@ Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         andriy.shevchenko@linux.intel.com, mgross@linux.intel.com,
         lakshmi.bai.raja.subramanian@intel.com,
         vijayakannan.ayyathurai@intel.com
-Subject: [PATCH v11 0/2] Add PWM support for Intel Keem Bay SoC
-Date:   Wed, 14 Oct 2020 02:14:11 +0800
-Message-Id: <cover.1602612067.git.vijayakannan.ayyathurai@intel.com>
+Subject: [PATCH v11 1/2] pwm: Add PWM driver for Intel Keem Bay
+Date:   Wed, 14 Oct 2020 02:14:12 +0800
+Message-Id: <d5312c9bef22f4439deb27a00d0bf51d7a2b92c6.1602612067.git.vijayakannan.ayyathurai@intel.com>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1602612067.git.vijayakannan.ayyathurai@intel.com>
+References: <cover.1602612067.git.vijayakannan.ayyathurai@intel.com>
+In-Reply-To: <cover.1602612067.git.vijayakannan.ayyathurai@intel.com>
+References: <cover.1602612067.git.vijayakannan.ayyathurai@intel.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 From: Vijayakannan Ayyathurai <vijayakannan.ayyathurai@intel.com>
 
-Hi,
+The Intel Keem Bay SoC requires PWM support.
+Add the pwm-keembay driver to enable this.
 
-This patch set enables the support for PWM in the Intel Keem Bay SoC.
-Keem Bay is an ARM based SoC, and the GPIO module allows
-configuration of 6 PWM outputs.
-
-Patch 1 adds the PWM driver and Patch 2 is for the required
-Device Tree bindings documentation.
-
-This driver was tested on the Keem Bay evaluation module board.
-
-Thank you.
-
-Regards,
-Vijay
-
-Changes since v10:
-- Update low time calculation formula as per Uwe.
-- During distruct remove pwmchip first then disable the clock.
-
-Changes since v9:
-- Remove Reported-by tag from the commit log.
-
-Changes since v8:
-- Fix the compilation error reported by kernel test robot.
-- Add the tag Reported-by: kernel test robot <lkp@intel.com>
-- Minor correction in the pwm low time calculation formula.
-- Rebase with 5.9-rc7
-
-Changes since v7:
-- Change the dependency as ARCH_KEEMBAY instead of ARM64 in Kconfig.
-- Use DIV_ROUND_DOWN_ULL instead of DIV_ROUND_CLOSEST_ULL.
-- Update the right formula as per Uwe.
-- List the tags in chronological order.
-- Add clk_disable_unprepare in the error paths.
-
-Changes since v6:
-- Add reviewed-by tag
-
-Changes since v5:
-- Reorder symbols/Kconfig in drivers/pwm/Kconfig and drivers/pwm/Makefile
-- Use "Limitations" for consistency
-- Add clk_prepare_enable()
-- Reorder keembay_pwm_get_state() function call
-- Rework if conditional for channel disablement in .apply()
-- Remove channel disabling from .probe(), and clear LEADIN register bits
-  in .apply instead
-- Update commit message for Patch 1
-
-Changes since v4:
-- Add co-developed-by tag
-- Include mod_devicetable.h and remove of.h
-- Update comment with correct calulation for high/low time
-- Fix missing return from dev_err_probe
-
-Changes since v3:
-- Removed variable for address and calculate in place instead
-- Utilized u32_replace_bits() when updating KMB_PWM_LEADIN_OFFSET
-- Utilized dev_err_probe() for error reporting
-- Updated comments to use physical units
-- Updated error check for pwmchip_add()
-
-Changes since v2:
-- Include documentation about HW limitation/behaviour
-- Use hex values for KMB_PWM_COUNT_MAX
-- Redefine register macros
-- Utilize FIELD_GET/FIELD_PREP for calculating pwm_l/h_count and
-  pwm_count
-- Round up duty cycle/period values
-- Get current hardware state in .apply instead of cached values
-- Do a polarity check before .enabled
-- Round high time/low time to closest value
-- Set enable bit in KMB_PWM_LEADIN_OFFSET to 0 in probe
-- Correct the naming for MODULE_ALIAS
-- Add additionalProperties: false in DT bindings
-
-Changes since v1:
-- Updated licensing info, "clocks" property and example in DT bindings
-- Updated name of DT bindings document to match compatible string
-- Removed 1 patch for addition of new sysfs attribute "count"
-- Added support for COMPILE_TEST in Kconfig
-- Updated naming of defines and regmap attribute
-- Updated calculation of waveform high time and low time
-- Added range checking for waveform high/low time
-- Implemented .get_state
-- Removed register writes for lead-in and count values (left to default)
-- Updated register access to single-access
-- Folded keembay_pwm_enable/disable_channel,
-  keembay_pwm_config_period/duty_cycle,
-  and keembay_pwm_config into keembay_pwm_apply
-- Updated error messages/error codes
-- Removed pwm_disable from keembay_pwm_remove
-- Removed clk_prepare/clk_enable/clk_disable from driver
-
-Lai, Poey Seng (1):
-  pwm: Add PWM driver for Intel Keem Bay
-
-Vineetha G. Jaya Kumaran (1):
-  dt-bindings: pwm: keembay: Add bindings for Intel Keem Bay PWM
-
- .../bindings/pwm/intel,keembay-pwm.yaml       |  47 ++++
- drivers/pwm/Kconfig                           |   9 +
- drivers/pwm/Makefile                          |   1 +
- drivers/pwm/pwm-keembay.c                     | 228 ++++++++++++++++++
- 4 files changed, 285 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
+Signed-off-by: Lai, Poey Seng <poey.seng.lai@intel.com>
+Co-developed-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
+Signed-off-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Vijayakannan Ayyathurai <vijayakannan.ayyathurai@intel.com>
+---
+ drivers/pwm/Kconfig       |   9 ++
+ drivers/pwm/Makefile      |   1 +
+ drivers/pwm/pwm-keembay.c | 228 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 238 insertions(+)
  create mode 100644 drivers/pwm/pwm-keembay.c
 
-
-base-commit: 549738f15da0e5a00275977623be199fbbf7df50
-prerequisite-patch-id: 0a348762b660d0d817b8e70cc71647e83173c78c
-prerequisite-patch-id: 0c6072cfe492b078c44ec864b8f9d1c76eada93b
-prerequisite-patch-id: 12b93428ee51a3d92ca973b928c0e0989f5d585e
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 7dbcf6973d33..6129a9dbbfa8 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -254,6 +254,15 @@ config PWM_JZ4740
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-jz4740.
+ 
++config PWM_KEEMBAY
++	tristate "Intel Keem Bay PWM driver"
++	depends on ARCH_KEEMBAY || COMPILE_TEST
++	help
++	  The platform driver for Intel Keem Bay PWM controller.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-keembay.
++
+ config PWM_LP3943
+ 	tristate "TI/National Semiconductor LP3943 PWM support"
+ 	depends on MFD_LP3943
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index 2c2ba0a03557..a1051122eb07 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -22,6 +22,7 @@ obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
+ obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
+ obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
+ obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
++obj-$(CONFIG_PWM_KEEMBAY)	+= pwm-keembay.o
+ obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
+ obj-$(CONFIG_PWM_LPC18XX_SCT)	+= pwm-lpc18xx-sct.o
+ obj-$(CONFIG_PWM_LPC32XX)	+= pwm-lpc32xx.o
+diff --git a/drivers/pwm/pwm-keembay.c b/drivers/pwm/pwm-keembay.c
+new file mode 100644
+index 000000000000..29340902ca63
+--- /dev/null
++++ b/drivers/pwm/pwm-keembay.c
+@@ -0,0 +1,228 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Intel Keem Bay PWM driver
++ *
++ * Copyright (C) 2020 Intel Corporation
++ * Authors: Lai Poey Seng <poey.seng.lai@intel.com>
++ *          Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
++ *
++ * Limitations:
++ * - Upon disabling a channel, the currently running
++ *   period will not be completed. However, upon
++ *   reconfiguration of the duty cycle/period, the
++ *   currently running period will be completed first.
++ */
++
++#include <linux/bitfield.h>
++#include <linux/clk.h>
++#include <linux/io.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++#include <linux/regmap.h>
++
++#define KMB_TOTAL_PWM_CHANNELS		6
++#define KMB_PWM_COUNT_MAX		U16_MAX
++#define KMB_PWM_EN_BIT			BIT(31)
++
++/* Mask */
++#define KMB_PWM_HIGH_MASK		GENMASK(31, 16)
++#define KMB_PWM_LOW_MASK		GENMASK(15, 0)
++#define KMB_PWM_LEADIN_MASK		GENMASK(30, 0)
++
++/* PWM Register offset */
++#define KMB_PWM_LEADIN_OFFSET(ch)	(0x00 + 4 * (ch))
++#define KMB_PWM_HIGHLOW_OFFSET(ch)	(0x20 + 4 * (ch))
++
++struct keembay_pwm {
++	struct pwm_chip chip;
++	struct device *dev;
++	struct clk *clk;
++	void __iomem *base;
++};
++
++static inline struct keembay_pwm *to_keembay_pwm_dev(struct pwm_chip *chip)
++{
++	return container_of(chip, struct keembay_pwm, chip);
++}
++
++static inline void keembay_pwm_update_bits(struct keembay_pwm *priv, u32 mask,
++					   u32 val, u32 offset)
++{
++	u32 buff = readl(priv->base + offset);
++
++	buff = u32_replace_bits(buff, val, mask);
++	writel(buff, priv->base + offset);
++}
++
++static void keembay_pwm_enable(struct keembay_pwm *priv, int ch)
++{
++	keembay_pwm_update_bits(priv, KMB_PWM_EN_BIT, 1,
++				KMB_PWM_LEADIN_OFFSET(ch));
++}
++
++static void keembay_pwm_disable(struct keembay_pwm *priv, int ch)
++{
++	keembay_pwm_update_bits(priv, KMB_PWM_EN_BIT, 0,
++				KMB_PWM_LEADIN_OFFSET(ch));
++}
++
++static void keembay_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++				  struct pwm_state *state)
++{
++	struct keembay_pwm *priv = to_keembay_pwm_dev(chip);
++	unsigned long long pwm_h_count, pwm_l_count;
++	unsigned long clk_rate;
++	u32 buff;
++
++	clk_rate = clk_get_rate(priv->clk);
++
++	/* Read channel enabled status */
++	buff = readl(priv->base + KMB_PWM_LEADIN_OFFSET(pwm->hwpwm));
++	if (buff & KMB_PWM_EN_BIT)
++		state->enabled = true;
++	else
++		state->enabled = false;
++
++	/* Read period and duty cycle */
++	buff = readl(priv->base + KMB_PWM_HIGHLOW_OFFSET(pwm->hwpwm));
++	pwm_l_count = FIELD_GET(KMB_PWM_LOW_MASK, buff) * NSEC_PER_SEC;
++	pwm_h_count = FIELD_GET(KMB_PWM_HIGH_MASK, buff) * NSEC_PER_SEC;
++	state->duty_cycle = DIV_ROUND_UP_ULL(pwm_h_count, clk_rate);
++	state->period = DIV_ROUND_UP_ULL(pwm_h_count + pwm_l_count, clk_rate);
++}
++
++static int keembay_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			     const struct pwm_state *state)
++{
++	struct keembay_pwm *priv = to_keembay_pwm_dev(chip);
++	struct pwm_state current_state;
++	u16 pwm_h_count, pwm_l_count;
++	unsigned long long div;
++	unsigned long clk_rate;
++	u32 pwm_count = 0;
++
++	if (state->polarity != PWM_POLARITY_NORMAL)
++		return -ENOSYS;
++
++	keembay_pwm_update_bits(priv, KMB_PWM_LEADIN_MASK, 0,
++				KMB_PWM_LEADIN_OFFSET(pwm->hwpwm));
++
++	keembay_pwm_get_state(chip, pwm, &current_state);
++
++	if (!state->enabled) {
++		if (current_state.enabled)
++			keembay_pwm_disable(priv, pwm->hwpwm);
++		return 0;
++	}
++
++	/*
++	 * The upper 16 bits of the KMB_PWM_HIGHLOW_OFFSET register contain
++	 * the high time of the waveform, while the last 16 bits contain
++	 * the low time of the waveform, values are in terms of clock cycles.
++	 */
++
++	clk_rate = clk_get_rate(priv->clk);
++	div = clk_rate * state->duty_cycle;
++	div = DIV_ROUND_DOWN_ULL(div, NSEC_PER_SEC);
++	if (div > KMB_PWM_COUNT_MAX)
++		return -ERANGE;
++
++	pwm_h_count = div;
++	div = clk_rate * state->period;
++	div = DIV_ROUND_DOWN_ULL(div, NSEC_PER_SEC);
++	div = div - pwm_h_count;
++	if (div > KMB_PWM_COUNT_MAX)
++		return -ERANGE;
++
++	pwm_l_count = div;
++
++	pwm_count = FIELD_PREP(KMB_PWM_HIGH_MASK, pwm_h_count) |
++		    FIELD_PREP(KMB_PWM_LOW_MASK, pwm_l_count);
++
++	writel(pwm_count, priv->base + KMB_PWM_HIGHLOW_OFFSET(pwm->hwpwm));
++
++	if (state->enabled && !current_state.enabled)
++		keembay_pwm_enable(priv, pwm->hwpwm);
++
++	return 0;
++}
++
++static const struct pwm_ops keembay_pwm_ops = {
++	.owner = THIS_MODULE,
++	.apply = keembay_pwm_apply,
++	.get_state = keembay_pwm_get_state,
++};
++
++static int keembay_pwm_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct keembay_pwm *priv;
++	int ret;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(priv->clk))
++		return dev_err_probe(dev, PTR_ERR(priv->clk), "Failed to get clock\n");
++
++	ret = clk_prepare_enable(priv->clk);
++	if (ret)
++		return ret;
++
++	priv->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(priv->base)) {
++		clk_disable_unprepare(priv->clk);
++		return PTR_ERR(priv->base);
++	}
++
++	priv->chip.base = -1;
++	priv->chip.dev = dev;
++	priv->chip.ops = &keembay_pwm_ops;
++	priv->chip.npwm = KMB_TOTAL_PWM_CHANNELS;
++
++	ret = pwmchip_add(&priv->chip);
++	if (ret) {
++		dev_err(dev, "Failed to add PWM chip: %pe\n", ERR_PTR(ret));
++		clk_disable_unprepare(priv->clk);
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, priv);
++
++	return 0;
++}
++
++static int keembay_pwm_remove(struct platform_device *pdev)
++{
++	struct keembay_pwm *priv = platform_get_drvdata(pdev);
++	int ret;
++
++	ret = pwmchip_remove(&priv->chip);
++	clk_disable_unprepare(priv->clk);
++
++	return ret;
++}
++
++static const struct of_device_id keembay_pwm_of_match[] = {
++	{ .compatible = "intel,keembay-pwm" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, keembay_pwm_of_match);
++
++static struct platform_driver keembay_pwm_driver = {
++	.probe	= keembay_pwm_probe,
++	.remove	= keembay_pwm_remove,
++	.driver	= {
++		.name = "pwm-keembay",
++		.of_match_table = keembay_pwm_of_match,
++	},
++};
++module_platform_driver(keembay_pwm_driver);
++
++MODULE_ALIAS("platform:pwm-keembay");
++MODULE_DESCRIPTION("Intel Keem Bay PWM driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.17.1
 
