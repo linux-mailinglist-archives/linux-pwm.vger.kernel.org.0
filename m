@@ -2,174 +2,266 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6724128DB17
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Oct 2020 10:20:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 220F828DFCE
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Oct 2020 13:26:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbgJNIT7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 14 Oct 2020 04:19:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58680 "EHLO
+        id S1730701AbgJNL0u (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 14 Oct 2020 07:26:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729024AbgJNITg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Oct 2020 04:19:36 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C050EC051112
-        for <linux-pwm@vger.kernel.org>; Wed, 14 Oct 2020 00:02:38 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kSanb-0005kZ-FZ; Wed, 14 Oct 2020 09:02:11 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kSanX-0004oR-E9; Wed, 14 Oct 2020 09:02:07 +0200
-Date:   Wed, 14 Oct 2020 09:02:07 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     f.fainelli@gmail.com, linux@roeck-us.net, jdelvare@suse.com,
-        wahrenst@gmx.net, Eric Anholt <eric@anholt.net>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-hwmon@vger.kernel.org,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 3/3] pwm: Add Raspberry Pi Firmware based PWM bus
-Message-ID: <20201014070207.xg35wg5jnhfuqz2y@pengutronix.de>
-References: <20201009153031.986-1-nsaenzjulienne@suse.de>
- <20201009153031.986-4-nsaenzjulienne@suse.de>
- <20201012070626.fzjhp3tkmgglqnm4@pengutronix.de>
- <7899e490543723c97ffad6f42942907f8db6b9b4.camel@suse.de>
- <20201013121758.gl6ni4b47ei2bhdf@pengutronix.de>
- <c171c837a31dea34c845478b7c7d4bdef865b5e0.camel@suse.de>
+        with ESMTP id S1730587AbgJNL0u (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Oct 2020 07:26:50 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D2D4C061755
+        for <linux-pwm@vger.kernel.org>; Wed, 14 Oct 2020 04:26:48 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id h7so3390546wre.4
+        for <linux-pwm@vger.kernel.org>; Wed, 14 Oct 2020 04:26:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=W1Xb3EWi6oK1/DaQpKgXiT3NvJEd5yovI30IklakN70=;
+        b=GL3cQIAWf+VkmTeQG0gsRX2Df5rOkHjVJgrZqtAvyztHNcswl+uQuyzfuCGZ28KJkL
+         YAVgHVyzwVNQnjrp/DnSi4KG5rjbY8W869ipmyC/6FFxwG69MB3cvEUntMDLrJfv61Hw
+         IpruzSz+SkXcFjCOe6Xm/pUOha4tQ5ZpAuWK2gC43lYOrlBc4GC9zhTwC5ZV3nWapFoi
+         Ieizbagbsy8em+AlXNhlaurWUvIxETXGz7dpGQxQtNVNgUoWpJIgAdli2zVdRjF80fir
+         F/XuWKaYccCX4k+QWfqdZatva20JKp+pUz2zjHWuwyq2HrWYNg9h6DhmNy8Le/89diCc
+         QHzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=W1Xb3EWi6oK1/DaQpKgXiT3NvJEd5yovI30IklakN70=;
+        b=HHiX3rxHQvR/VAoLEbcg2P8GnFUfK/LlYarHrFijJONckiljYNUL9aGmJ6Ac6E/xAc
+         6S66W0faMn5tCnhYxd+Dmhg7Mt961ag44B2RCOBm3LhrPoo/+LAC6NiqnC0/PmN3xNmD
+         tc+qEuBqYRcvNEKRyK6SGCEBnApdHQfWb4C+1kkN2al0i2PYSgM7OK7q2ZIx0clO4J1O
+         IAhf8omW9oav96qsyR1h+egaiM/lK5NQeD0X1dVdQqH/X1mb4MFZUQTcZQFswUOuudm1
+         uuKXi5lLe4RbvL0dT3vag7grbdByMWPvGdjFl2A3qWIrdsiuYultgQFRDpJTo/74ZMFZ
+         rL0Q==
+X-Gm-Message-State: AOAM5334zIhF9ynf00xhVr6dqN+2FMT6xdCsl/T1MscCKBcQbsGOrY5P
+        NRJey3V8dKs8aEQUVY9TBeBnnQ==
+X-Google-Smtp-Source: ABdhPJxgbrMq6ekWxBaMVjFkqS5MobV4c/7LwKcL+o1Ew8C+9mI/Vc0Clz/IN3aydIhGSZtLH/UCfA==
+X-Received: by 2002:adf:ed07:: with SMTP id a7mr5235113wro.326.1602674806848;
+        Wed, 14 Oct 2020 04:26:46 -0700 (PDT)
+Received: from holly.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
+        by smtp.gmail.com with ESMTPSA id f7sm4690901wrx.64.2020.10.14.04.26.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Oct 2020 04:26:45 -0700 (PDT)
+Date:   Wed, 14 Oct 2020 12:26:43 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Alexandru Stan <amstan@chromium.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] backlight: pwm_bl: Fix interpolation
+Message-ID: <20201014112643.grd2x5jj33turihb@holly.lan>
+References: <20201013080103.410133-1-amstan@chromium.org>
+ <20201013010056.v2.1.I4dcea1c90e9da3902d466033aa73351e19e49c49@changeid>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xgqeuslybdl72l3x"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c171c837a31dea34c845478b7c7d4bdef865b5e0.camel@suse.de>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20201013010056.v2.1.I4dcea1c90e9da3902d466033aa73351e19e49c49@changeid>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Tue, Oct 13, 2020 at 01:01:01AM -0700, Alexandru Stan wrote:
+> Whenever num-interpolated-steps was larger than the distance
+> between 2 consecutive brightness levels the table would get really
+> discontinuous. The slope of the interpolation would stick with
+> integers only and if it was 0 the whole line segment would get skipped.
+> 
+> Example settings:
+> 	brightness-levels = <0 1 2 4 8 16 32 64 128 256>;
+> 	num-interpolated-steps = <16>;
+> 
+> The distances between 1 2 4 and 8 would be 1, and only starting with 16
+> it would start to interpolate properly.
 
---xgqeuslybdl72l3x
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Both comments a perilously close to nitpicking but enough that I wanted
+to reply...
 
-Hello Nicolas,
+I'd suggest that the current behaviour as having two properties.
 
-[Cc: +=3D Greg as base driver maintainer]
+1. It was designed to generate strictly increasing tables (no repeated
+   values).
 
-On Tue, Oct 13, 2020 at 06:50:47PM +0200, Nicolas Saenz Julienne wrote:
-> On Tue, 2020-10-13 at 14:17 +0200, Uwe Kleine-K=F6nig wrote:
-> > On Tue, Oct 13, 2020 at 01:20:00PM +0200, Nicolas Saenz Julienne wrote:
-> > > On Mon, 2020-10-12 at 09:06 +0200, Uwe Kleine-K=F6nig wrote:
-> > > > I don't see a mechanism that prevents the driver providing the firm=
-ware
-> > > > going away while the PWM is still in use.
-> > >=20
-> > > There isn't an explicit one. But since you depend on a symbol from th=
-e firmware
-> > > driver you won't be able to remove the kernel module before removing =
-the PMW
-> > > one.
-> >=20
-> > this prevents the that the module is unloaded, but not that the driver
-> > is unbound.
->=20
-> Yes, if you were to unbind the firmware device all devices that depend on=
- it
-> (there are a bunch of them) would access freed memory. Yet again, there i=
-s no
-> hotplug functionality, so short of being useful for development it'd be v=
-ery
-> rare for someone to unbind it. We've been living with it as such for a lo=
-ng
-> time. Not to say that is something not to fix, but from my perspective it=
-'s
-> just a corner-case.
+2. It's implementation contains quantization errors when calculating the
+   step size. This results in both the discards of some interpolated
+   steps you mentioned (it is possible to insert extra steps between 4
+   and 8 whilst retaining a strictly increasing table). It also
+   results in a potentially large undershoot when multiplying a step
+   size (64 interpolated steps and a gap of 127 is likely to get a visual
+   jump as we hop through 63 physical steps in one go).
 
-I agree, that's a corner case. However in my eyes it is one that should
-be get right. Did you try if this is indeed a problem?
+#1 can is a policy that can be changed. #2 is a bug that could be fixed.
 
-> We are using 'simple-mfd' in order to probe all devices under the
-> firmware interface, so my first intuition would be to add support for
-> automatically unbinding of consumer devices in of/platform.c. See:
->=20
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index b557a0fcd4ba..d24f2412d518 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -390,7 +390,13 @@ static int of_platform_bus_create(struct device_node=
- *bus,
->         }
-> =20
->         dev =3D of_platform_device_create_pdata(bus, bus_id, platform_dat=
-a, parent);
-> -       if (!dev || !of_match_node(matches, bus))
-> +       if (!dev)
-> +               return 0;
+To be clear I don't object to generating a monotonically increasing
+table but I'd prefer the policy change to be explicitly described in
+the description.
+
+
+> Let's change it so there's always interpolation happening, even if
+> there's no enough points available (read: values in the table would
+> appear more than once). This should match the expected behavior much
+> more closely.
+> 
+> Signed-off-by: Alexandru Stan <amstan@chromium.org>
+> ---
+> 
+>  drivers/video/backlight/pwm_bl.c | 70 ++++++++++++++------------------
+>  1 file changed, 31 insertions(+), 39 deletions(-)
+> 
+> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> index dfc760830eb9..3e77f6b73fd9 100644
+> --- a/drivers/video/backlight/pwm_bl.c
+> +++ b/drivers/video/backlight/pwm_bl.c
+> @@ -230,8 +230,7 @@ static int pwm_backlight_parse_dt(struct device *dev,
+>  				  struct platform_pwm_backlight_data *data)
+>  {
+>  	struct device_node *node = dev->of_node;
+> -	unsigned int num_levels = 0;
+> -	unsigned int levels_count;
+> +	unsigned int num_levels;
+>  	unsigned int num_steps = 0;
+>  	struct property *prop;
+>  	unsigned int *table;
+> @@ -260,12 +259,11 @@ static int pwm_backlight_parse_dt(struct device *dev,
+>  	if (!prop)
+>  		return 0;
+>  
+> -	data->max_brightness = length / sizeof(u32);
+> +	num_levels = length / sizeof(u32);
+>  
+>  	/* read brightness levels from DT property */
+> -	if (data->max_brightness > 0) {
+> -		size_t size = sizeof(*data->levels) * data->max_brightness;
+> -		unsigned int i, j, n = 0;
+> +	if (num_levels > 0) {
+> +		size_t size = sizeof(*data->levels) * num_levels;
+>  
+>  		data->levels = devm_kzalloc(dev, size, GFP_KERNEL);
+>  		if (!data->levels)
+> @@ -273,7 +271,7 @@ static int pwm_backlight_parse_dt(struct device *dev,
+>  
+>  		ret = of_property_read_u32_array(node, "brightness-levels",
+>  						 data->levels,
+> -						 data->max_brightness);
+> +						 num_levels);
+>  		if (ret < 0)
+>  			return ret;
+>  
+> @@ -298,7 +296,13 @@ static int pwm_backlight_parse_dt(struct device *dev,
+>  		 * between two points.
+>  		 */
+>  		if (num_steps) {
+> -			if (data->max_brightness < 2) {
+> +			unsigned int num_input_levels = num_levels;
+> +			unsigned int i;
+> +			u32 x1, x2, x, dx;
+> +			u32 y1, y2;
+> +			s64 dy;
 > +
-> +       if (parent && of_device_is_compatible(parent->of_node, "simple-mf=
-d"))
-> +               device_link_add(&dev->dev, parent, DL_FLAG_AUTOREMOVE_CON=
-SUMER);
+> +			if (num_input_levels < 2) {
+>  				dev_err(dev, "can't interpolate\n");
+>  				return -EINVAL;
+>  			}
+> @@ -308,14 +312,7 @@ static int pwm_backlight_parse_dt(struct device *dev,
+>  			 * taking in consideration the number of interpolated
+>  			 * steps between two levels.
+>  			 */
+> -			for (i = 0; i < data->max_brightness - 1; i++) {
+> -				if ((data->levels[i + 1] - data->levels[i]) /
+> -				   num_steps)
+> -					num_levels += num_steps;
+> -				else
+> -					num_levels++;
+> -			}
+> -			num_levels++;
+> +			num_levels = (num_input_levels - 1) * num_steps + 1;
+>  			dev_dbg(dev, "new number of brightness levels: %d\n",
+>  				num_levels);
+>  
+> @@ -327,24 +324,25 @@ static int pwm_backlight_parse_dt(struct device *dev,
+>  			table = devm_kzalloc(dev, size, GFP_KERNEL);
+>  			if (!table)
+>  				return -ENOMEM;
+> -
+> -			/* Fill the interpolated table. */
+> -			levels_count = 0;
+> -			for (i = 0; i < data->max_brightness - 1; i++) {
+> -				value = data->levels[i];
+> -				n = (data->levels[i + 1] - value) / num_steps;
+> -				if (n > 0) {
+> -					for (j = 0; j < num_steps; j++) {
+> -						table[levels_count] = value;
+> -						value += n;
+> -						levels_count++;
+> -					}
+> -				} else {
+> -					table[levels_count] = data->levels[i];
+> -					levels_count++;
+> +			/*
+> +			 * Fill the interpolated table[x] = y
+> +			 * by draw lines between each (x1, y1) to (x2, y2).
+> +			 */
+> +			dx = num_steps;
+> +			for (i = 0; i < num_input_levels - 1; i++) {
+> +				x1 = i * dx;
+> +				x2 = x1 + dx;
+> +				y1 = data->levels[i];
+> +				y2 = data->levels[i + 1];
+> +				dy = (s64)y2 - y1;
 > +
-> +       if (!of_match_node(matches, bus))
->                 return 0;
-> =20
->         for_each_child_of_node(bus, child) {
+> +				for (x = x1; x < x2; x++) {
+> +					table[x] = y1 +
+> +						div_s64(dy * ((s64)x - x1), dx);
 
-This looks wrong for generic code. A solution local to simple-mfd (or
-even the firmware device?) should be done (and doable). I think the
-straight forward approach would be to add reference counting and make
-=2Eremove of the firmware device block if there are still users.
-(Returning an error doesn't prevent the device going away IIRC. Last
-time I looked .remove returning something non-0 didn't make any
-difference. Maybe we should change it to return void?)
+I don't think it is possible for x - x1 to be negative (e.g. what is the
+s64 for). Obviously it makes little functional difference whether the
+cast is there or not but I don't like fixed point code that has been
+written with "just in case" casts.
 
-> If this is too much for OF maintainers, we could simply create the link u=
-pon
-> calling rpi_firmware_get().
 
-I don't know how DL_FLAG_AUTOREMOVE_CONSUMER works, but this sounds
-better.
+Daniel.
 
-> This solves the problem of getting a kernel panic because of the use after
-> free, but you'll still get some warnings after unbinding from the GPIO
-> subsystem, for example, as we just removed a gpiochip that still has cons=
-umers
-> up. I guess device links only go so far.
 
-If this is indeed a real problem, lets take this to the GPIO
-maintainers.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---xgqeuslybdl72l3x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl+GomwACgkQwfwUeK3K
-7AmfpAf/eJMGdvOaHLFh9CYeu88+4wE2AXSNdxyNnK7AFovUtxsCGbbMCabDiB1g
-vTEACdDG196IyiWtz04gSoTVJfHCs9HOUukM6SQot7TKarIaEHZH+kt1QMSddLpG
-E6vfCA1KsS/C/2z088PDlSEngoIw9ZQjqsAvdNfECicPkt6xb9JjRTqo0nsKlXvA
-gd4JixCJuDzKpT0QX2DMMuUBC1HtderUOOz+bNVfcOcBoZ4ERLvgOKw+Y6z6QpRF
-hvd7oDBaBlaq1GW7A+cWKIGeStw20G1DHpa5eeH6Lmi7ujQSwF34g6F77jqfCzR8
-MozxfsgfT71ShyrCRK5UUTvXlJuWjQ==
-=NE+d
------END PGP SIGNATURE-----
-
---xgqeuslybdl72l3x--
+>  				}
+>  			}
+> -			table[levels_count] = data->levels[i];
+> +			/* Fill in the last point, since no line starts here. */
+> +			table[x2] = y2;
+>  
+>  			/*
+>  			 * As we use interpolation lets remove current
+> @@ -353,15 +351,9 @@ static int pwm_backlight_parse_dt(struct device *dev,
+>  			 */
+>  			devm_kfree(dev, data->levels);
+>  			data->levels = table;
+> -
+> -			/*
+> -			 * Reassign max_brightness value to the new total number
+> -			 * of brightness levels.
+> -			 */
+> -			data->max_brightness = num_levels;
+>  		}
+>  
+> -		data->max_brightness--;
+> +		data->max_brightness = num_levels - 1;
+>  	}
+>  
+>  	return 0;
+> -- 
+> 2.28.0
+> 
