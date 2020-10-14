@@ -2,71 +2,151 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0570A28DD0A
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Oct 2020 11:22:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68DD228DC7F
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Oct 2020 11:14:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729889AbgJNJWF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 14 Oct 2020 05:22:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39950 "EHLO
+        id S1729078AbgJNJOg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 14 Oct 2020 05:14:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729962AbgJNJVz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Oct 2020 05:21:55 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D485C002156
-        for <linux-pwm@vger.kernel.org>; Tue, 13 Oct 2020 19:01:12 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id u21so2563341eja.2
-        for <linux-pwm@vger.kernel.org>; Tue, 13 Oct 2020 19:01:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UokA0sKQdr0W5NAQ9oqoGME0zBXQ5+h8uv+YRil27Ek=;
-        b=ENnrYc/hM5AHbkKYz17lCLM2js2cn1poTYyLVW7vPfTZRc8E07286YOuhbjJEHMN5M
-         Y5ffttf1AjGwF/4WV0gvjSMg60egTPDhxT4auLa7w4g5gMwKdeQXD4dyUEK1ZDVXn1Rb
-         DoAMphMDL+D+lMzHqzdx3udjRl4jiTqJU8jJVTv8rlRsAm+B0dBnw2IrU2pC00SDUM0H
-         ij9Wnz8R4g8yhvFUC2ZcHq4/OrnRNUocU7+ZJJFG1ys/XXc9Gs60g3N/v7gfWoH3Mkto
-         4jKyhPh3amN9372cYXyYrk+FtQFxtjEI8aKr/XLj/v1tPl1rg/+z/yZ4aioGnztIg/PF
-         G9/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UokA0sKQdr0W5NAQ9oqoGME0zBXQ5+h8uv+YRil27Ek=;
-        b=qM12U+kjttjoPK75U7F7VhGuTcXw3Ujdvzb7FoNZ2CsdjrYe9erzP/XirRaGkJJTWL
-         vp66XWfTE1UaBzU3Rl4E/+oot4IY7R00VuNKV9lWTUtpiFKnV3UVUIVHf/n6kh45leOX
-         V7BxEbQQXe+2cdh5L+TSRHB/Z5gY1/cTSqIM0TQoygBwfkhmu5I4GhRRTbsLASWgp1fq
-         yIm/VB7W57Ube60JQ9eptcqe0q6m8pHwnADMVfKIQyu4/FXahlhNtUpa7C9D8/pV5Oqu
-         P8k4u9MaG3p4bkXkDVqEzG2NtL0wPC543ykJuR7s/6hdI+8HxnkZqyupatG0qdH8BVY2
-         1qWA==
-X-Gm-Message-State: AOAM533TIOD5ruw847vnPUmsMJHDL0nqnTRvOiI4Teg3f4ovAFKJdrKU
-        klvfEa9alSupaNnakZ4LeHiXSrnBasNsLrCcg0ZvHYFZQUSK0eYM
-X-Google-Smtp-Source: ABdhPJziJfGCrzo1mVoJINruC7NbajNtTXinTNUDVRvYw47uRJjF+I++UsBzGKd8uIE1zi1Zs/0HSKVUmCQqm+XEu6g=
-X-Received: by 2002:a17:906:cf9d:: with SMTP id um29mr2773271ejb.307.1602640871135;
- Tue, 13 Oct 2020 19:01:11 -0700 (PDT)
+        with ESMTP id S1729109AbgJNJOg (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Oct 2020 05:14:36 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC90EC051109
+        for <linux-pwm@vger.kernel.org>; Tue, 13 Oct 2020 23:49:16 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kSab2-0004WE-Ds; Wed, 14 Oct 2020 08:49:12 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kSab0-00047U-Gx; Wed, 14 Oct 2020 08:49:10 +0200
+Date:   Wed, 14 Oct 2020 08:49:10 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     vijayakannan.ayyathurai@intel.com
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        wan.ahmad.zainie.wan.mohamad@intel.com,
+        andriy.shevchenko@linux.intel.com, mgross@linux.intel.com,
+        lakshmi.bai.raja.subramanian@intel.com
+Subject: Re: [PATCH v11 1/2] pwm: Add PWM driver for Intel Keem Bay
+Message-ID: <20201014064910.jwb664re6frsqd5a@pengutronix.de>
+References: <cover.1602612067.git.vijayakannan.ayyathurai@intel.com>
+ <d5312c9bef22f4439deb27a00d0bf51d7a2b92c6.1602612067.git.vijayakannan.ayyathurai@intel.com>
 MIME-Version: 1.0
-References: <20201013081321.660884-1-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20201013081321.660884-1-u.kleine-koenig@pengutronix.de>
-From:   Shawn Guo <shawn.guo@linaro.org>
-Date:   Wed, 14 Oct 2020 10:01:00 +0800
-Message-ID: <CAAQ0ZWRrR=qWZ5GQ6zS8q6Hp=_bdooT3qNMLY8Jrzpnyu9jHHg@mail.gmail.com>
-Subject: Re: [PATCH] pwm: zx: Add missing cleanup in error path
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="yx43rknoeurrq3mn"
+Content-Disposition: inline
+In-Reply-To: <d5312c9bef22f4439deb27a00d0bf51d7a2b92c6.1602612067.git.vijayakannan.ayyathurai@intel.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Oct 13, 2020 at 4:13 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> zx_pwm_probe() called clk_prepare_enable() before; this must be undone
-> in the error path.
->
-> Fixes: 4836193c435c ("pwm: Add ZTE ZX PWM device driver")
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 
-Acked-by: Shawn Guo <shawn.guo@linaro.org>
+--yx43rknoeurrq3mn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello,
+
+sorry, I still found a problem that I want to have addressed. I'll point
+out a few minor things en passant.
+
+But after that I really have a good feeling and like the driver now.
+
+On Wed, Oct 14, 2020 at 02:14:12AM +0800, vijayakannan.ayyathurai@intel.com=
+ wrote:
+> +static void keembay_pwm_get_state(struct pwm_chip *chip, struct pwm_devi=
+ce *pwm,
+> +				  struct pwm_state *state)
+> +{
+> +	struct keembay_pwm *priv =3D to_keembay_pwm_dev(chip);
+> +	unsigned long long pwm_h_count, pwm_l_count;
+> +	unsigned long clk_rate;
+> +	u32 buff;
+> +
+> +	clk_rate =3D clk_get_rate(priv->clk);
+> +
+> +	/* Read channel enabled status */
+> +	buff =3D readl(priv->base + KMB_PWM_LEADIN_OFFSET(pwm->hwpwm));
+> +	if (buff & KMB_PWM_EN_BIT)
+> +		state->enabled =3D true;
+> +	else
+> +		state->enabled =3D false;
+> +
+> +	/* Read period and duty cycle */
+> +	buff =3D readl(priv->base + KMB_PWM_HIGHLOW_OFFSET(pwm->hwpwm));
+> +	pwm_l_count =3D FIELD_GET(KMB_PWM_LOW_MASK, buff) * NSEC_PER_SEC;
+> +	pwm_h_count =3D FIELD_GET(KMB_PWM_HIGH_MASK, buff) * NSEC_PER_SEC;
+
+<minor nit>: The variable names are not optimal. I'd use "highlow"
+instead of "buff". pwm_l_count would be appropriate for
+FIELD_GET(KMB_PWM_LOW_MASK, buff); when multiplied with NSEC_PER_SEC
+it's not really matching. Maybe just use "low"?! (and "high" instead of
+pwm_h_count)
+
+> +	state->duty_cycle =3D DIV_ROUND_UP_ULL(pwm_h_count, clk_rate);
+> +	state->period =3D DIV_ROUND_UP_ULL(pwm_h_count + pwm_l_count, clk_rate);
+
+state->polarity =3D PWM_POLARITY_NORMAL; (That's the important bit here.)
+
+> +}
+> +
+> +static int keembay_pwm_apply(struct pwm_chip *chip, struct pwm_device *p=
+wm,
+> +			     const struct pwm_state *state)
+> +{
+> +	struct keembay_pwm *priv =3D to_keembay_pwm_dev(chip);
+> +	struct pwm_state current_state;
+> +	u16 pwm_h_count, pwm_l_count;
+> +	unsigned long long div;
+> +	unsigned long clk_rate;
+> +	u32 pwm_count =3D 0;
+> +
+> +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
+> +		return -ENOSYS;
+> +
+> +	keembay_pwm_update_bits(priv, KMB_PWM_LEADIN_MASK, 0,
+> +				KMB_PWM_LEADIN_OFFSET(pwm->hwpwm));
+
+A comment describing the effect of this register would be great.
+
+> +	keembay_pwm_get_state(chip, pwm, &current_state);
+> +
+> +	if (!state->enabled) {
+> +		if (current_state.enabled)
+> +			keembay_pwm_disable(priv, pwm->hwpwm);
+> +		return 0;
+> +	}
+> +
+> [...]
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--yx43rknoeurrq3mn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl+Gn2MACgkQwfwUeK3K
+7Al7xgf/XG+s4p97S6RCv1PhTDpBnQxQnC4jQPqNrY33kMyI6UP8yqp/jGPHMvHU
+1XZwZh+KFm1j29gxuGgHVJZhWPK/O53aRlQKOMINkMgPZrp0hP/OiTJDqURm2L5E
+fOfB5+pGcYD1JLf2MSUKlA4ri0Bu0l4Zc4EG+cCLgfkezr1jqWDtXl4waYrRCmII
+atFpiWbQJRvQmBh2yw7Oj8bfahAmKr+z/oMJ71L2fc3qD/dYaxcWh747cNo/95Bx
+Q3OF2pqyGYVd+aW9EQT8iEx0J8TJxDbJT232LqMridF+r4h+5j9Y64QRxhXvkjTe
+cJKFkQHJCfTOlLLjBXSwRiIVZO3mig==
+=0nEz
+-----END PGP SIGNATURE-----
+
+--yx43rknoeurrq3mn--
