@@ -2,79 +2,125 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C6422901C7
-	for <lists+linux-pwm@lfdr.de>; Fri, 16 Oct 2020 11:26:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86C8E290814
+	for <lists+linux-pwm@lfdr.de>; Fri, 16 Oct 2020 17:15:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404838AbgJPJYM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 16 Oct 2020 05:24:12 -0400
-Received: from mga18.intel.com ([134.134.136.126]:24207 "EHLO mga18.intel.com"
+        id S2409896AbgJPPPw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 16 Oct 2020 11:15:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404499AbgJPJYL (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 16 Oct 2020 05:24:11 -0400
-IronPort-SDR: 7EIB8gktI96mPbPKEtv6Akhj7L2HsDChz+OWV1q2SrRnKqKvQlcz95aPR3qFxCiNhNNwC4Px5s
- O9Z6lh1s98Lw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9775"; a="154371998"
-X-IronPort-AV: E=Sophos;i="5.77,382,1596524400"; 
-   d="scan'208";a="154371998"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2020 02:24:10 -0700
-IronPort-SDR: mlXEtulFxgODm6K5CtmsjFXusLEtPGooPn/6pPMOe9ZLe1pRJb4lSq2zVvUblVKC3+O5VdmcYG
- yO0pJTjewzxQ==
-X-IronPort-AV: E=Sophos;i="5.77,382,1596524400"; 
-   d="scan'208";a="331110121"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2020 02:24:08 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kTLz4-0088CE-NC; Fri, 16 Oct 2020 12:25:10 +0300
-Date:   Fri, 16 Oct 2020 12:25:10 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Ayyathurai, Vijayakannan" <vijayakannan.ayyathurai@intel.com>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Wan Mohamad, Wan Ahmad Zainie" 
-        <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "Raja Subramanian, Lakshmi Bai" 
-        <lakshmi.bai.raja.subramanian@intel.com>
-Subject: Re: [PATCH v12 1/2] pwm: Add PWM driver for Intel Keem Bay
-Message-ID: <20201016092510.GH4077@smile.fi.intel.com>
-References: <cover.1602703463.git.vijayakannan.ayyathurai@intel.com>
- <5fc6189f9c4cf382d54ae00e663f296baeb2c06e.1602703463.git.vijayakannan.ayyathurai@intel.com>
- <20201015104217.GR4077@smile.fi.intel.com>
- <DM6PR11MB425089996A0CC9A43CBC50C5FB030@DM6PR11MB4250.namprd11.prod.outlook.com>
- <20201016073426.vyjehbkyn3sxn7d5@pengutronix.de>
- <DM6PR11MB4250C00BB0FFB3CD97D5207CFB030@DM6PR11MB4250.namprd11.prod.outlook.com>
+        id S2409856AbgJPPPw (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 16 Oct 2020 11:15:52 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7D3820897;
+        Fri, 16 Oct 2020 15:15:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602861351;
+        bh=4OJOxhlwL10+hIzc3OR9WXy5yLt7RM+8bC7enpcS2dg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SWX5cJfU8mdmrvgiur8vBB1juDQuMAN326gUaFyUMgbDet9z1wUCApkZyS8gzFQ49
+         D88379d/cjY2Tv7JOem0ufX+1krTMYPPkulPd18C/O2TNgcO1pubsDdNg93YPT5Xyg
+         HgOR+gJjib+xTQb5Ij7Z+mRnwICq5KRoGN9iGQ1c=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Andrzej Hajda <a.hajda@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org
+Cc:     Kamil Debski <kamil@wypas.org>
+Subject: [PATCH 1/4] MAINTAINERS: move Kamil Debski to credits
+Date:   Fri, 16 Oct 2020 17:15:25 +0200
+Message-Id: <20201016151528.7553-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <DM6PR11MB4250C00BB0FFB3CD97D5207CFB030@DM6PR11MB4250.namprd11.prod.outlook.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Oct 16, 2020 at 08:32:05AM +0000, Ayyathurai, Vijayakannan wrote:
-> From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de> 
-> Sent: Friday, 16 October, 2020 1:04 PM
-> Hello Ayyathurai,
-> 
-> Can you please fix your MUA to properly quote when replying, this is really annoying.
-> 
-> Sorry for that MUA (Made Up Acronym). 
+Kamil Debski has not been active on LKML since 2017:
+https://lore.kernel.org/lkml/?q=f%3A%22Kamil+Debski%22
 
-MUA = Mail User Agent. And your quoting is a mess. Please, fix this for any
-replies in OSS mailing lists.
+Move Kamil Debski to the CREDITS file.  Thank you for the effort you put
+in to the upstream Linux kernel work.
 
+Cc: Kamil Debski <kamil@wypas.org>
+Cc: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ CREDITS     | 6 ++++++
+ MAINTAINERS | 4 ----
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/CREDITS b/CREDITS
+index 8592e45e3932..8dfd6a2fb3e8 100644
+--- a/CREDITS
++++ b/CREDITS
+@@ -849,6 +849,12 @@ D: trivial hack to add variable address length routing to Rose.
+ D: AX25-HOWTO, HAM-HOWTO, IPX-HOWTO, NET-2-HOWTO
+ D: ax25-utils maintainer.
+ 
++N: Kamil Debski
++E: kamil@wypas.org
++D: Samsung S5P 2D graphics acceleration and Multi Format Codec drivers
++D: Samsung USB2 phy drivers
++D: PWM fan driver
++
+ N: Helge Deller
+ E: deller@gmx.de
+ W: http://www.parisc-linux.org/
+diff --git a/MAINTAINERS b/MAINTAINERS
+index aa46cb3ce6e6..bb40bac8cf27 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2411,7 +2411,6 @@ F:	arch/arm/mach-s5pv210/
+ 
+ ARM/SAMSUNG S5P SERIES 2D GRAPHICS ACCELERATION (G2D) SUPPORT
+ M:	Kyungmin Park <kyungmin.park@samsung.com>
+-M:	Kamil Debski <kamil@wypas.org>
+ M:	Andrzej Hajda <a.hajda@samsung.com>
+ L:	linux-arm-kernel@lists.infradead.org
+ L:	linux-media@vger.kernel.org
+@@ -2437,7 +2436,6 @@ F:	drivers/media/platform/s5p-jpeg/
+ 
+ ARM/SAMSUNG S5P SERIES Multi Format Codec (MFC) SUPPORT
+ M:	Kyungmin Park <kyungmin.park@samsung.com>
+-M:	Kamil Debski <kamil@wypas.org>
+ M:	Jeongtae Park <jtp.park@samsung.com>
+ M:	Andrzej Hajda <a.hajda@samsung.com>
+ L:	linux-arm-kernel@lists.infradead.org
+@@ -14237,7 +14235,6 @@ F:	drivers/media/usb/pwc/*
+ F:	include/trace/events/pwc.h
+ 
+ PWM FAN DRIVER
+-M:	Kamil Debski <kamil@wypas.org>
+ M:	Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+ L:	linux-hwmon@vger.kernel.org
+ S:	Supported
+@@ -15519,7 +15516,6 @@ T:	git https://github.com/lmajewski/linux-samsung-thermal.git
+ F:	drivers/thermal/samsung/
+ 
+ SAMSUNG USB2 PHY DRIVER
+-M:	Kamil Debski <kamil@wypas.org>
+ M:	Sylwester Nawrocki <s.nawrocki@samsung.com>
+ L:	linux-kernel@vger.kernel.org
+ S:	Supported
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
