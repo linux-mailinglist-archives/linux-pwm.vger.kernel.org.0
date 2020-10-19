@@ -2,405 +2,174 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2247291FBB
-	for <lists+linux-pwm@lfdr.de>; Sun, 18 Oct 2020 22:13:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9387C292246
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 Oct 2020 07:44:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbgJRUNS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 18 Oct 2020 16:13:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbgJRUNS (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 18 Oct 2020 16:13:18 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C92EBC061755;
-        Sun, 18 Oct 2020 13:13:16 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id h2so3909711pll.11;
-        Sun, 18 Oct 2020 13:13:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qiLTIFWZBdLPHI9PhMrRJ9NkcaJO2rf64KID/1y8Jq4=;
-        b=fde92EDIsObRIuQ6dMVuPsAZJAM8IHZVlbubAro6fK9RG4G+9d5M3RzVjj1jXeLWnT
-         01gNv3LUSZb+FEYm/4ge9xx+1Y1BM6Ec8n4fA0LjKyJ6t2s1PCaKV014NJJtmphIZ9zF
-         XltJSB07ZBVu4yXg1oDDtWrccpoCeN70oUFfheQ/THSNeuYyohx9odsevJClK9PcUfT9
-         IcGBzD0ntALg4ByThdeOv932AoOu1nVRMc81OVNlKz3FfQQR0MhEttGlu1eOvpfKMbUB
-         I0q2mKNuAJMQo2u/w5bAN8h474Kih6uIJJtJJLfERAJfL7h2z0aG/iEhHaTKVWTymU0v
-         RFUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qiLTIFWZBdLPHI9PhMrRJ9NkcaJO2rf64KID/1y8Jq4=;
-        b=EMDcaRuFFeuW2iRhCamZVEnq5pxathPrYYhO1jBYYRoqDBCWbvVdSgiZuggkcpSY4k
-         U5EEr8zZChPw6KYDCaeGZ3xwX7dTCrDkLTufRRZ9oy3Bouf2hTnSMOfjE6tlC/FcevGs
-         NZV12LU/RvOmUt+P3P60hCskmEmUU3mxQ4k8WScWcJDwR99ptVNerwofe6GQpG4w+lIm
-         o0KHbJ2EUe6wOgD+GUMgjusq7hCnqmhY1gmz+SxxnzOCrCP3AGE7WRFHQQWL+UqVeUjP
-         Ut2yu9a9/g4341zfQX2rST/XZnAnuG7AdGdjsNqrLye5IJf7DXLBnYwBLfSTfnTLhm8W
-         ulGw==
-X-Gm-Message-State: AOAM53151UdsgYUXGzdCjq2DglY8Vl8GJ+ipdF2oS4WaNVO/LjlemtT+
-        DsxAo8I64uQLYr5SnxliZNy4xWKw2VYjf5nY98k=
-X-Google-Smtp-Source: ABdhPJx8fnfhCA+ESUnvRVW3CWZOAZBToPARtzSmbAQdW2rO8EA5SXLVMYJ777ifIGNSH0uGOEhsxV3OYTFKtjZDHhA=
-X-Received: by 2002:a17:90a:be11:: with SMTP id a17mr13763307pjs.181.1603051996194;
- Sun, 18 Oct 2020 13:13:16 -0700 (PDT)
+        id S1726517AbgJSFoq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 19 Oct 2020 01:44:46 -0400
+Received: from mga03.intel.com ([134.134.136.65]:4839 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbgJSFop (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 19 Oct 2020 01:44:45 -0400
+IronPort-SDR: W4nBwblEmsfnh1ohuvkbKXt0B1zU4IqwKQ5DeHyv9wZF8oA677VG7EzL2gacWT+IhJmF1MfUn4
+ ppYQRJR3F0Rw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9778"; a="167047140"
+X-IronPort-AV: E=Sophos;i="5.77,393,1596524400"; 
+   d="scan'208";a="167047140"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2020 22:44:40 -0700
+IronPort-SDR: SgOjublpuWbz2QbwsT6AJkwSmAkwlWAGz4KgBKEPglrLMkqmzh/U5c7lx6jeQfFvj6VeSoNYrO
+ NpIPkpRxY+zA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,393,1596524400"; 
+   d="scan'208";a="320152150"
+Received: from fmsmsx604.amr.corp.intel.com ([10.18.126.84])
+  by orsmga006.jf.intel.com with ESMTP; 18 Oct 2020 22:44:39 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 18 Oct 2020 22:44:38 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 18 Oct 2020 22:44:38 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Sun, 18 Oct 2020 22:44:38 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.53) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.1713.5; Sun, 18 Oct 2020 22:44:37 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RQWQOUzF+fmP7DoDc4rLD2hb4PCaZlOoEFXAhchya1OoZEFa5n7L1WLHgT7PIE7uneMVTFHG8FEimViMX33YLJBlFG2016ZxOw68kUyDjYoyl7cKh8Snd3wBLCOktQF5ybMSD2ziiEwvqE5I6gpY4NLDWTtobfsmgZ1p/GaJ3YTBfJ+UHjt0uV1/xlD+XyTAxuP/ROdx3BeUUmlVh9vpT9+fOlvn1nox0qqeTp6BXLPM3qOJthpKNgaW6IkDdOlVy84r2uPlnMk9lBTf8bbdCJsDrMmbpS25ef4EKHmPIv8h6yCj/mRayPrFycjDZqsmmzkSc/q36B0TPgusTGImEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BHYE/SgqasB2koPYz2yxbiMoyf34o0cPTkJMdNK/xRM=;
+ b=H5dbVwdzNq2Z9GAIuVdWodsByFjcmZ8nERv63eI7r+piniijBTsOer4tosHB/4SfP/az6fhVO71l3D7C82DIxqDergpEVvGzMThQrMq01/9d08WJ1/ShMlEsW5EddyddGZl8tE9ogXb2yHB0ot/dbucUDD1CFaLGduO9QOVErNOmNeKfX05iF1JwFd2y4ij5jcUQx+I+Vo1G9kGc86NseksRpuq14aAOx6Zf8pT5jlG3kZl+vZWFXJX0w5jcF1eKhdWhIby3+LCKP99Pcs1jxbxIPJNTS6JJKEhaXN67bv/qQL7pC/IPd/bap23SMt/Cz5XjNH82WrET+zLIGKUpIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BHYE/SgqasB2koPYz2yxbiMoyf34o0cPTkJMdNK/xRM=;
+ b=KviQCJZauqeEN/lZ/yy6YTiW8C/pw8fOaFrrlgTNqhjSXo3Wul4DhU2KkJsRMcE7iTOzuRwC1y3zcWBROF7RzRao2ZLghK8Z1XHHgI6ZWNj9zz48fY2cZfBbwvZnyEfrYGHEDUh6NwesPfvpXpHyTSe7fKRXEMZ5bqvpazUggog=
+Received: from DM6PR11MB4250.namprd11.prod.outlook.com (2603:10b6:5:1df::18)
+ by DM6PR11MB4514.namprd11.prod.outlook.com (2603:10b6:5:2a3::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.20; Mon, 19 Oct
+ 2020 05:44:36 +0000
+Received: from DM6PR11MB4250.namprd11.prod.outlook.com
+ ([fe80::7448:c067:e80d:3c09]) by DM6PR11MB4250.namprd11.prod.outlook.com
+ ([fe80::7448:c067:e80d:3c09%3]) with mapi id 15.20.3477.028; Mon, 19 Oct 2020
+ 05:44:36 +0000
+From:   "Ayyathurai, Vijayakannan" <vijayakannan.ayyathurai@intel.com>
+To:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Wan Mohamad, Wan Ahmad Zainie" 
+        <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "Raja Subramanian, Lakshmi Bai" 
+        <lakshmi.bai.raja.subramanian@intel.com>
+Subject: RE: [PATCH v12 1/2] pwm: Add PWM driver for Intel Keem Bay
+Thread-Topic: [PATCH v12 1/2] pwm: Add PWM driver for Intel Keem Bay
+Thread-Index: AQHWomCF+NkKYBj1fUCQimGsu2FSAKmYevKAgAENFDCAAFDFAIAElZ1A
+Date:   Mon, 19 Oct 2020 05:44:36 +0000
+Message-ID: <DM6PR11MB42503DE0B047D3EBBA3997C4FB1E0@DM6PR11MB4250.namprd11.prod.outlook.com>
+References: <cover.1602703463.git.vijayakannan.ayyathurai@intel.com>
+ <5fc6189f9c4cf382d54ae00e663f296baeb2c06e.1602703463.git.vijayakannan.ayyathurai@intel.com>
+ <20201015104217.GR4077@smile.fi.intel.com>
+ <DM6PR11MB425089996A0CC9A43CBC50C5FB030@DM6PR11MB4250.namprd11.prod.outlook.com>
+ <20201016073426.vyjehbkyn3sxn7d5@pengutronix.de>
+In-Reply-To: <20201016073426.vyjehbkyn3sxn7d5@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+authentication-results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [42.111.145.158]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b1becca5-37e1-40d6-1f08-08d873f2103d
+x-ms-traffictypediagnostic: DM6PR11MB4514:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB451439369CCB4F708D9FF84AFB1E0@DM6PR11MB4514.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: INHSPAIGomimHm+TD2HoXQutMIls5paS/mafhgxFeXnDNEpxQae/5gxsDI3doo4twaaaYqp2Zj7Lb+0zQa+aRJB06U/3qcG0k8q7G710xJJVDrA22e/SCPlB0pWQrj0B+o7zqvt0PmeXF1qdTo3AwSamiGPNyxdi3QeYpe2J54y9zQkHRUrEME8pesCtVfgmGWpKmG9E4z1IvlbDf9q9yBcTmwmJRgdHz7nwV015SV+ks0LsowLEvn55+38/cil86HkVjDaGvDEGrLRxla8GrDUTbDmc5HwI8n20Z6yMHMRXdDzqcXOBmFSbUND50WdX5UVEZbVaggHd8q7w8ChbcAzIveU+nxaO1rJHOXK/ZH0R5StlaKwSBDrWtHGxICGo+5eNU6QfeuzMk1RBc7Yk5Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4250.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(396003)(366004)(346002)(376002)(6916009)(4326008)(8936002)(8676002)(54906003)(55016002)(186003)(26005)(83380400001)(9686003)(478600001)(86362001)(66574015)(66556008)(6506007)(966005)(66476007)(64756008)(7696005)(66946007)(76116006)(66446008)(316002)(33656002)(53546011)(52536014)(5660300002)(2906002)(71200400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: ey7GUp9DemqDw8IIgdfGo3YefZ6ll9ii0jDqSoFGK0u8z5FUc10Lmv/uWGc1Qd2zlAjGOR/IfSxJcSqndg9iI1i3U5NDOlhvXV/C522S2rg4E4WN+G05jziHuKBm133q0+6h3eP0mtFq7H6Yf7xn4VKWo10Dsox5OXcf/P0fxZpNeTqde8WxrMr2+maBZlmm9Tx1myDGXkJdvD8BZQkk1qYiRpktqj5WCFqrGY6/XfmChTz7OCPkxd1cXgrB7Q26QI2914CLBbGgFLiLWZys9xkH44lQgidqZwxKPV6CISnkJfRLzskN/vZtoABU7QroMyITWK/B+Fr/DDKXMOmi4t4UcRYZ4QxeJ4+rIRAFtDZzQuR8VP3vehpPTpajljDc0AjB6hEoC2CvyNFWqybGvvb/Ege6We4BEAm+dcSoA3ZU8oFPv65pNlICXCzyvvvPA0nLL2iinzQGLri8vTtxpOQlgT42VUV4NBRcjwiCC2WDNX795YEB1NXyhf6giLWoZ1ZMBT7dgFlzC42BuJ6AYrRafXev7UeOCC78nu7Hfk7E38ndpiMVK549YChlfMYNfvkPHDKvM6h1QmGHwP7do/1eNwQIJSamJJ1BRtloK3zn/8QAhnql0ki7Vq8UvlPtuX2SoXzWsPUn8ymj2yVelw==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20201017052057.2698588-1-bjorn.andersson@linaro.org> <20201017052057.2698588-3-bjorn.andersson@linaro.org>
-In-Reply-To: <20201017052057.2698588-3-bjorn.andersson@linaro.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 18 Oct 2020 23:12:59 +0300
-Message-ID: <CAHp75VeVbK1Wx2BEPghtEbEghqDAF2jFFN9=ARLEw-rvTUZ3yw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/4] leds: Add driver for Qualcomm LPG
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Martin Botka <martin.botka1@gmail.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB4250.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1becca5-37e1-40d6-1f08-08d873f2103d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Oct 2020 05:44:36.3136
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rbHVukMvuQQ8lhmCr7saDVxcGQMVhs7LjgWVFwAX4+PrEeQwLTPY5rzoNvcQ43eyvbJv3tofJwIa9ztNzNTd2Ci4AzVs9saZufkRf5CdN10PUeYGCyX/0nfUnkOd9w1S
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4514
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sat, Oct 17, 2020 at 8:41 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> The Light Pulse Generator (LPG) is a PWM-block found in a wide range of
-> PMICs from Qualcomm. It can operate on fixed parameters or based on a
-> lookup-table, altering the duty cycle over time - which provides the
-> means for e.g. hardware assisted transitions of LED brightness.
-
-> +config LEDS_QCOM_LPG
-> +       tristate "LED support for Qualcomm LPG"
-> +       depends on LEDS_CLASS_MULTICOLOR
-> +       depends on OF
-> +       depends on SPMI
-
-
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-
-...
-
-> +struct lpg {
-> +       struct device *dev;
-> +       struct regmap *map;
-
-Can't you derive the former from the latter?
-
-> +
-> +       struct pwm_chip pwm;
-> +
-> +       const struct lpg_data *data;
-> +
-> +       u32 lut_base;
-> +       u32 lut_size;
-> +       unsigned long *lut_bitmap;
-> +
-> +       u32 triled_base;
-> +       u32 triled_src;
-> +
-> +       struct lpg_channel *channels;
-> +       unsigned int num_channels;
-> +};
-
-...
-
-> +static int lpg_lut_store(struct lpg *lpg, struct led_pattern *pattern,
-> +                        size_t len, unsigned int *lo_idx, unsigned int *hi_idx)
-> +{
-> +       unsigned int idx;
-> +       u8 val[2];
-
-__be16 val;
-
-> +       int i;
-> +
-> +       /* Hardware does not behave when LO_IDX == HI_IDX */
-> +       if (len == 1)
-> +               return -EINVAL;
-> +
-> +       idx = bitmap_find_next_zero_area(lpg->lut_bitmap, lpg->lut_size,
-> +                                        0, len, 0);
-> +       if (idx >= lpg->lut_size)
-> +               return -ENOMEM;
-> +
-> +       for (i = 0; i < len; i++) {
-> +               val[0] = pattern[i].brightness & 0xff;
-> +               val[1] = pattern[i].brightness >> 8;
-
-cpu_to_be16();
-
-> +
-> +               regmap_bulk_write(lpg->map,
-> +                                 lpg->lut_base + LPG_LUT_REG(idx + i), val, 2);
-> +       }
-> +
-> +       bitmap_set(lpg->lut_bitmap, idx, len);
-> +
-> +       *lo_idx = idx;
-> +       *hi_idx = idx + len - 1;
-> +
-> +       return 0;
-> +}
-
-...
-
-> +static void lpg_calc_freq(struct lpg_channel *chan, unsigned int period_us)
-> +{
-> +       int             n, m, clk, div;
-> +       int             best_m, best_div, best_clk;
-> +       unsigned int    last_err, cur_err, min_err;
-> +       unsigned int    tmp_p, period_n;
-> +
-> +       if (period_us == chan->period_us)
-> +               return;
-> +
-> +       /* PWM Period / N */
-> +       if (period_us < ((unsigned int)(-1) / NSEC_PER_USEC)) {
-
-Please, replace all these -1 with castings to unsigned types with
-corresponding limits, like
-UINT_MAX here.
-
-> +               period_n = (period_us * NSEC_PER_USEC) >> 6;
-> +               n = 6;
-> +       } else {
-> +               period_n = (period_us >> 9) * NSEC_PER_USEC;
-> +               n = 9;
-> +       }
-
-Why inconsistency in branches? Can you rather derive n and calculate
-only once like
-
-           period_n = (period_us >> n) * NSEC_PER_USEC;
-
-?
-
-> +       min_err = (unsigned int)(-1);
-> +       last_err = (unsigned int)(-1);
-> +       best_m = 0;
-> +       best_clk = 0;
-> +       best_div = 0;
-> +       for (clk = 0; clk < NUM_PWM_CLK; clk++) {
-> +               for (div = 0; div < NUM_PWM_PREDIV; div++) {
-> +                       /* period_n = (PWM Period / N) */
-> +                       /* tmp_p = (Pre-divide * Clock Period) * 2^m */
-> +                       tmp_p = lpg_clk_table[div][clk];
-> +                       for (m = 0; m <= NUM_EXP; m++) {
-> +                               if (period_n > tmp_p)
-> +                                       cur_err = period_n - tmp_p;
-> +                               else
-> +                                       cur_err = tmp_p - period_n;
-> +
-> +                               if (cur_err < min_err) {
-> +                                       min_err = cur_err;
-> +                                       best_m = m;
-> +                                       best_clk = clk;
-> +                                       best_div = div;
-> +                               }
-> +
-> +                               if (m && cur_err > last_err)
-> +                                       /* Break for bigger cur_err */
-> +                                       break;
-> +
-> +                               last_err = cur_err;
-> +                               tmp_p <<= 1;
-> +                       }
-> +               }
-> +       }
-> +
-> +       /* Use higher resolution */
-> +       if (best_m >= 3 && n == 6) {
-> +               n += 3;
-> +               best_m -= 3;
-> +       }
-> +
-> +       chan->clk = best_clk;
-> +       chan->pre_div = best_div;
-> +       chan->pre_div_exp = best_m;
-> +       chan->pwm_size = n;
-> +
-> +       chan->period_us = period_us;
-> +}
-> +
-> +static void lpg_calc_duty(struct lpg_channel *chan, unsigned int duty_us)
-> +{
-> +       unsigned long max = (1 << chan->pwm_size) - 1;
-
-BIT() ?
-
-> +       unsigned long val;
-> +
-> +       /* Figure out pwm_value with overflow handling */
-
-> +       if (duty_us < 1 << (sizeof(val) * 8 - chan->pwm_size))
-
-BITS_PER_TYPE, but actually BITS_PER_LONG here.
-
-BIT(BITS_PER_LONG - ...)
-
-> +               val = (duty_us << chan->pwm_size) / chan->period_us;
-> +       else
-> +               val = duty_us / (chan->period_us >> chan->pwm_size);
-> +
-> +       if (val > max)
-> +               val = max;
-> +
-> +       chan->pwm_value = val;
-> +}
-
-...
-
-> +static void lpg_enable_glitch(struct lpg_channel *chan)
-> +{
-> +       struct lpg *lpg = chan->lpg;
-> +
-> +       regmap_update_bits(lpg->map, chan->base + PWM_TYPE_CONFIG_REG,
-> +                          LPG_ENABLE_GLITCH_REMOVAL, 0);
-> +}
-
-Here and everywhere else when function declared as void there is no
-possibility to know if we do something useful or already screwed up
-the things.
-
-> +static void lpg_apply_pwm_value(struct lpg_channel *chan)
-> +{
-> +       u8 val[] = { chan->pwm_value & 0xff, chan->pwm_value >> 8 };
-
-
-__le16 and cpu_to_le16()
-
-> +       struct lpg *lpg = chan->lpg;
-> +
-> +       if (!chan->enabled)
-> +               return;
-> +
-> +       regmap_bulk_write(lpg->map, chan->base + PWM_VALUE_REG, val, 2);
-> +}
-
-> +#define LPG_PATTERN_CONFIG_LO_TO_HI    BIT(4)
-> +#define LPG_PATTERN_CONFIG_REPEAT      BIT(3)
-> +#define LPG_PATTERN_CONFIG_TOGGLE      BIT(2)
-> +#define LPG_PATTERN_CONFIG_PAUSE_HI    BIT(1)
-> +#define LPG_PATTERN_CONFIG_PAUSE_LO    BIT(0)
-
-Did I miss bits.h inclusion at the beginning of the file?
-
-...
-
-> +static int lpg_blink_set(struct lpg_led *led,
-> +                        unsigned long delay_on, unsigned long delay_off)
-> +{
-> +       struct lpg_channel *chan;
-> +       unsigned int period_us;
-> +       unsigned int duty_us;
-> +       int i;
-> +
-> +       if (!delay_on && !delay_off) {
-> +               delay_on = 500;
-> +               delay_off = 500;
-> +       }
-
-Homegrown duty cycle?
-I mean, why simply not to pass the duty cycle in percentage in the first place?
-
-> +       duty_us = delay_on * USEC_PER_MSEC;
-> +       period_us = (delay_on + delay_off) * USEC_PER_MSEC;
-> +
-> +       for (i = 0; i < led->num_channels; i++) {
-> +               chan = led->channels[i];
-> +
-> +               lpg_calc_freq(chan, period_us);
-> +               lpg_calc_duty(chan, duty_us);
-> +
-> +               chan->enabled = true;
-> +               chan->ramp_enabled = false;
-> +
-> +               lpg_apply(chan);
-> +       }
-> +
-> +       return 0;
-> +}
-
-> +#define interpolate(x1, y1, x2, y2, x) \
-> +       ((y1) + ((y2) - (y1)) * ((x) - (x1)) / ((x2) - (x1)))
-
-Can you rather create a generic one under lib/ or start include/linux/math.h ?
-
-https://elixir.bootlin.com/linux/latest/A/ident/interpolate
-
-...
-
-> +out:
-
-Useless label.
-
-> +       return ret;
-
-...
-
-> +       ret = of_property_read_u32(np, "color", &color);
-> +       if (ret < 0 && ret != -EINVAL)
-
-This check is fishy. Either you have optional property or not, in the
-latter case return any error code.
-
-> +               return ret;
-> +
-> +       chan->color = color;
-
-So, it may be -EINVAL?!
-
-> +       ret = of_property_read_u32_array(np, "qcom,dtest", dtest, 2);
-> +       if (ret < 0 && ret != -EINVAL) {
-> +               dev_err(lpg->dev, "malformed qcom,dtest of %pOFn\n", np);
-> +               return ret;
-> +       } else if (!ret) {
-> +               chan->dtest_line = dtest[0];
-> +               chan->dtest_value = dtest[1];
-> +       }
-
-Ditto.
-
-...
-
-> +       ret = of_property_read_u32(np, "color", &color);
-> +       if (ret < 0 && ret != -EINVAL)
-> +               return ret;
-
-Ditto.
-
-...
-
-> +       size = sizeof(*led) + num_channels * sizeof(struct lpg_channel *);
-
-Use respective helpers from overflow.h.
-
-> +       led = devm_kzalloc(lpg->dev, size, GFP_KERNEL);
-> +       if (!led)
-> +               return -ENOMEM;
-
-...
-
-> +static const struct of_device_id lpg_of_table[] = {
-> +       { .compatible = "qcom,pm8916-pwm", .data = &pm8916_pwm_data },
-> +       { .compatible = "qcom,pm8941-lpg", .data = &pm8941_lpg_data },
-> +       { .compatible = "qcom,pm8994-lpg", .data = &pm8994_lpg_data },
-> +       { .compatible = "qcom,pmi8994-lpg", .data = &pmi8994_lpg_data },
-> +       { .compatible = "qcom,pmi8998-lpg", .data = &pmi8998_lpg_data },
-
-> +       {},
-
-No comma needed for terminator lines.
-
-> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
+Hi Uwe,
+
+> From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> Sent: Friday, 16 October, 2020 1:04 PM
+> Subject: Re: [PATCH v12 1/2] pwm: Add PWM driver for Intel Keem Bay
+>=20
+> Hello Ayyathurai,
+> Note that we're both (Andy and I) are right. You must not disable the clo=
+cks
+> before pwmchip_remove() (otherwise for a short time the PWM looks ready
+> but isn't). And if you use devm-stuff to enable the clock it will be disa=
+bled only
+> after the remove callback completed and your .remove may look like:
+>=20
+> 	static int keembay_pwm_remove(struct platform_device *pdev)
+> 	{
+> 		struct keembay_pwm *priv =3D platform_get_drvdata(pdev);
+>=20
+> 		return pwmchip_remove(&priv->chip);
+> 	}
+>=20
+> because you won't have to care for the clock explicitly.
+
+Sure. I will incorporate the same in the next version.
+
+Also, Is it fine not to care clock during pwmchip_add like below,
+
+        ret =3D pwmchip_add(&priv->chip);
+        if (ret)
+                return dev_err_probe(dev, ret, "Failed to add PWM chip\n");
+
+>=20
+> Best regards
+> Uwe
+>=20
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=F6nig          =
+  |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
+
+Thanks,
+Vijay
