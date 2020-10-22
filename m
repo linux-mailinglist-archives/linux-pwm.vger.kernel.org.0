@@ -2,19 +2,19 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB5B6296203
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 Oct 2020 17:59:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7709F29620A
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 Oct 2020 17:59:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368916AbgJVP7Q (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 22 Oct 2020 11:59:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48680 "EHLO mx2.suse.de"
+        id S368933AbgJVP7U (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 22 Oct 2020 11:59:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48734 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S368899AbgJVP7P (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 22 Oct 2020 11:59:15 -0400
+        id S368908AbgJVP7R (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 22 Oct 2020 11:59:17 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 33D51ADFF;
-        Thu, 22 Oct 2020 15:59:13 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 36ECDADF5;
+        Thu, 22 Oct 2020 15:59:15 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     u.kleine-koenig@pengutronix.de, linux-kernel@vger.kernel.org
 Cc:     f.fainelli@gmail.com, linux-pwm@vger.kernel.org,
@@ -27,9 +27,9 @@ Cc:     f.fainelli@gmail.com, linux-pwm@vger.kernel.org,
         linux-clk@vger.kernel.org, sboyd@kernel.org,
         linux-rpi-kernel@lists.infradead.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v2 06/10] staging: vchiq: Release firmware handle on unbind
-Date:   Thu, 22 Oct 2020 17:58:53 +0200
-Message-Id: <20201022155858.20867-7-nsaenzjulienne@suse.de>
+Subject: [PATCH v2 07/10] input: raspberrypi-ts: Release firmware handle when not needed
+Date:   Thu, 22 Oct 2020 17:58:54 +0200
+Message-Id: <20201022155858.20867-8-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201022155858.20867-1-nsaenzjulienne@suse.de>
 References: <20201022155858.20867-1-nsaenzjulienne@suse.de>
@@ -39,32 +39,26 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Upon unbinding the device make sure we release RPi's firmware interface.
+After passing the DMA buffer address through the firmware interface,
+release the firmware handle, we won't need it anymore.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/input/touchscreen/raspberrypi-ts.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-index 01125d9f991b..dfa4d144faa8 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-@@ -2771,11 +2771,14 @@ static int vchiq_probe(struct platform_device *pdev)
+diff --git a/drivers/input/touchscreen/raspberrypi-ts.c b/drivers/input/touchscreen/raspberrypi-ts.c
+index ef6aaed217cf..29c878a00018 100644
+--- a/drivers/input/touchscreen/raspberrypi-ts.c
++++ b/drivers/input/touchscreen/raspberrypi-ts.c
+@@ -165,6 +165,7 @@ static int rpi_ts_probe(struct platform_device *pdev)
+ 		dev_warn(dev, "Failed to set touchbuf, %d\n", error);
+ 		return error;
+ 	}
++	rpi_firmware_put(fw);
  
- static int vchiq_remove(struct platform_device *pdev)
- {
-+	struct vchiq_drvdata *drvdata = platform_get_drvdata(pdev);
-+
- 	platform_device_unregister(bcm2835_audio);
- 	platform_device_unregister(bcm2835_camera);
- 	vchiq_debugfs_deinit();
- 	device_destroy(vchiq_class, vchiq_devid);
- 	cdev_del(&vchiq_cdev);
-+	rpi_firmware_put(drvdata->fw);
- 
- 	return 0;
- }
+ 	input = devm_input_allocate_device(dev);
+ 	if (!input) {
 -- 
 2.28.0
 
