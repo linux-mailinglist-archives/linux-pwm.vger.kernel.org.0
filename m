@@ -2,67 +2,158 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 769C1298E33
-	for <lists+linux-pwm@lfdr.de>; Mon, 26 Oct 2020 14:38:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0784C298EC4
+	for <lists+linux-pwm@lfdr.de>; Mon, 26 Oct 2020 15:03:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1780322AbgJZNic (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 26 Oct 2020 09:38:32 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40562 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1780319AbgJZNia (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 26 Oct 2020 09:38:30 -0400
-Received: by mail-oi1-f193.google.com with SMTP id m128so10487950oig.7;
-        Mon, 26 Oct 2020 06:38:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xeSglgw6V+lXedmY2yfKw+hxq6uo2upHgu1Rrr+TqIw=;
-        b=nHxEwAPXiWBA84WKjvuSm4TYDx1HaL/aF/RaypDGeKZD7FIc6DC4qiXfNvuooWSjIn
-         nJRykOYg+PwSTik4hf0ymN9Q3GJjBmRp5ga/kFySWk1rHLCvy8s8KkYHt3VyhBENqoZL
-         xDGj75fWthb/CiRdQkn2xY0E49po8HtB7dXPmKj9otyWp0yzX1rE+yVGB+6kpbBcFIpH
-         QW+IKl8Mg2E9zEqGXsH6yWPl4f16qk3BglbYYGmJe6f3Y7ATIyTH+jpb4TjrPA84YuWU
-         hS/s+1Lzm6HLZLklzhk+eA4FWFMq1+zmOI6oEgridcMM1WsNfThLtRB/OjgVSqxjS8RS
-         BblQ==
-X-Gm-Message-State: AOAM533nHPGYKqaOyToSi2E6tV0YHJeJWLjrBlzV3GQ2RlnYUxTjyufx
-        6T92HOi9O08yPwWYqQZAAg==
-X-Google-Smtp-Source: ABdhPJwf8rWPGWPFxMh9FCJA9hqD+W6fqMrnAa7HRWtQOWAfWPHvQI2l4u1rlwvS2lGh3pCiZKqHfg==
-X-Received: by 2002:a05:6808:aa1:: with SMTP id r1mr10468829oij.153.1603719509673;
-        Mon, 26 Oct 2020 06:38:29 -0700 (PDT)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u125sm4017909oif.21.2020.10.26.06.38.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2020 06:38:28 -0700 (PDT)
-Received: (nullmailer pid 43832 invoked by uid 1000);
-        Mon, 26 Oct 2020 13:38:28 -0000
-Date:   Mon, 26 Oct 2020 08:38:28 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Fabien Parent <fparent@baylibre.com>
-Cc:     thierry.reding@gmail.com, linux-mediatek@lists.infradead.org,
-        u.kleine-koenig@pengutronix.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, matthias.bgg@gmail.com,
-        linux-pwm@vger.kernel.org, lee.jones@linaro.org,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] dt-bindings: pwm: pwm-mediatek: Add documentation
- for MT8183 SoC
-Message-ID: <20201026133828.GA43785@bogus>
-References: <20201019140705.1518822-1-fparent@baylibre.com>
- <20201019140705.1518822-2-fparent@baylibre.com>
+        id S1780892AbgJZODD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 26 Oct 2020 10:03:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55984 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1780884AbgJZODD (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 26 Oct 2020 10:03:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 83880AD83;
+        Mon, 26 Oct 2020 14:03:00 +0000 (UTC)
+Message-ID: <13068cff8e3a994df5d8fbe19deb068a741365f3.camel@suse.de>
+Subject: Re: [PATCH v2 10/10] pwm: Add Raspberry Pi Firmware based PWM bus
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-pwm@vger.kernel.org,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        linux-input <linux-input@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>
+Date:   Mon, 26 Oct 2020 15:02:58 +0100
+In-Reply-To: <CAHp75VcB5oxXs38UH5taVGj21wUi3sHYdRPOj3wxa3yXg0vmUA@mail.gmail.com>
+References: <20201022155858.20867-1-nsaenzjulienne@suse.de>
+         <20201022155858.20867-11-nsaenzjulienne@suse.de>
+         <CAHp75VcB5oxXs38UH5taVGj21wUi3sHYdRPOj3wxa3yXg0vmUA@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-TTVm3kIKIXd08z1jOMlD"
+User-Agent: Evolution 3.36.5 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201019140705.1518822-2-fparent@baylibre.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 19 Oct 2020 16:07:01 +0200, Fabien Parent wrote:
-> Add binding documentation for the MT8183 SoC.
-> 
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
 
-Acked-by: Rob Herring <robh@kernel.org>
+--=-TTVm3kIKIXd08z1jOMlD
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Andy, thanks for the review!
+
+On Thu, 2020-10-22 at 21:53 +0300, Andy Shevchenko wrote:
+> On Thu, Oct 22, 2020 at 9:05 PM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > Adds support to control the PWM bus available in official Raspberry Pi
+> > PoE HAT. Only RPi's co-processor has access to it, so commands have to
+> > be sent through RPi's firmware mailbox interface.
+> >  drivers/pwm/pwm-raspberrypi.c | 221 ++++++++++++++++++++++++++++++++++
+>=20
+> Name is completely confusing.
+> Please, make it unique enough to understand that this is exactly the
+> device it serves for.
+>=20
+> For example, pwm-rpi-poe is better.
+
+Sounds reasonable, I'll change that.
+
+>=20
+> ...
+>=20
+> > + *  - Only normal polarity
+>=20
+> Can't it be emulated? Isn't it 100% - duty cycle % ?
+
+I guess it can, OTOH given the rather specific use case, I doubt it'll be
+worth the effort.
+
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/pwm.h>
+>=20
+> ...
+>=20
+> > +       ret =3D rpi_firmware_property(firmware, RPI_FIRMWARE_SET_POE_HA=
+T_VAL,
+> > +                                   &msg, sizeof(msg));
+> > +       if (ret)
+> > +               return ret;
+> > +       else if (msg.ret)
+>=20
+> Redundant 'else'
+
+Noted.
+
+> > +       firmware_node =3D of_get_parent(dev->of_node);
+> > +       if (!firmware_node) {
+> > +               dev_err(dev, "Missing firmware node\n");
+> > +               return -ENOENT;
+> > +       }
+> > +
+> > +       firmware =3D rpi_firmware_get(firmware_node);
+> > +       of_node_put(firmware_node);
+> > +       if (!firmware)
+> > +               return -EPROBE_DEFER;
+>=20
+> Looks like a hack.
+
+This is the pattern we've been using on all firmware dependent devices so f=
+ar.
+Feel free to suggest a better way, I'll be happy to look into it.
+
+>=20
+> ...
+>=20
+> > +       ret =3D pwmchip_remove(&rpipwm->chip);
+> > +       if (!ret)
+> > +               rpi_firmware_put(rpipwm->firmware);
+> > +
+> > +       return ret;
+>=20
+> Can't you use the usual pattern?
+
+Yes of course. Don't know why I went this way.
+
+Regards,
+Nicolas
+
+
+--=-TTVm3kIKIXd08z1jOMlD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl+W1xIACgkQlfZmHno8
+x/4NJgf/d3PqOAENee9eHOK6FqBMAsNsGn4fscamb7Q7MXABE4U/nFCFY7hg1Xo3
+g47j4m8+pNlzE3SjXX0ZyPle4beIWvNQWidQjSyprckUv+wNkJ1Wbt0lFH26GCig
+w8mRGcXYm12zKKDSpGf5Wg/qAhE9qV2ruti8nc94lkSoiP2kSlfp6j5MZZYzEd2p
+y4khOBqxT1e4Trh+QOhKke2pW43WHNZT0TW6ZhJxKq4UNq7lxzer9TFHWgda16oy
+C4kdNiGm9MDQicgNWAq18ctJTZvPoR1scLrBNpJOapJ1UuY0mCqjpMZJDi9W+/EB
+7FRq+EXSXY7hpOmPUUJ1pJm1mUNoOw==
+=ljds
+-----END PGP SIGNATURE-----
+
+--=-TTVm3kIKIXd08z1jOMlD--
+
