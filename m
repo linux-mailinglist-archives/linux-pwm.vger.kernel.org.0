@@ -2,82 +2,82 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 513B62A06A2
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 Oct 2020 14:41:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 698F22A08E6
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 Oct 2020 16:01:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgJ3Nlq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 30 Oct 2020 09:41:46 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39976 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbgJ3Nlq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 30 Oct 2020 09:41:46 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 09UDfeUB093582;
-        Fri, 30 Oct 2020 08:41:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1604065300;
-        bh=yvVr19obSpLwUPQ/Gzos7pBM2m/777m1etKh7pftCw0=;
-        h=From:To:CC:Subject:Date;
-        b=RvFMg13dx1YLfHLhu7L0iFUwJZt0WSNSnnyHrnvy4UrUPEasvLkZ9URj5wjlg8JPh
-         pu0huHAN7rVv30nwwoYtCH+0CKx10npoUcJ4pkZLIv7JJYjuxJ4WTHkaOk9p787TSQ
-         iAZWSqhjjVTVJlSAB6zQiBimjYnVJHsiH29OPo7U=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 09UDfeHZ088059
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 30 Oct 2020 08:41:40 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 30
- Oct 2020 08:41:40 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 30 Oct 2020 08:41:40 -0500
-Received: from lokesh-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 09UDfbaJ036552;
-        Fri, 30 Oct 2020 08:41:38 -0500
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        <u.kleine-koenig@pengutronix.de>
-CC:     Lee Jones <lee.jones@linaro.org>, <linux-pwm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>
-Subject: [PATCH] pwm: lp3943: Dynamically allocate pwm chip base
-Date:   Fri, 30 Oct 2020 19:11:35 +0530
-Message-ID: <20201030134135.28730-1-lokeshvutla@ti.com>
-X-Mailer: git-send-email 2.28.0
+        id S1726912AbgJ3PBL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 30 Oct 2020 11:01:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39472 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbgJ3PAa (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 30 Oct 2020 11:00:30 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 629BAC0613A6
+        for <linux-pwm@vger.kernel.org>; Fri, 30 Oct 2020 07:59:36 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id 126so8248213lfi.8
+        for <linux-pwm@vger.kernel.org>; Fri, 30 Oct 2020 07:59:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=9fkQXWnoPSypfyxvIrXWSyd1r4Ua0eeDJczOBpIf/BU=;
+        b=TjZDjTDUyG5IOPAjtKhDz6bJNm6DqwPh3GYjQnJOtk58Qe+VS+LrjG9D+UJTL89L5a
+         hPszd6YttBU2gVDN4Hgd0nVvKmUsgBGa0RfR9y4dU1VG6wqrOSeXXlqa/jT4b2a91QjD
+         sT+ma7QKBtdbME0ZKxl0kc6DEI2BSZsRxuMkNkQsvOWxO6URWAKkh65L3Tk879AJ4LqG
+         Bj9eXYFDUcjXqha9S32esb82rsLCjf9rEdFYrDoZfWxC18Um3HNxqbzetSufrWkdrmWB
+         Hgfuw2XlX0g8ZkLr3paRT5DvZbKL3ccSJq24BaLzNsiQWn1tArC4uUyPSHMQ3hVqPZo6
+         Sb9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=9fkQXWnoPSypfyxvIrXWSyd1r4Ua0eeDJczOBpIf/BU=;
+        b=p2vnDmnsOoqIdwpvsSIuhuQwwuALGHyl5ZrNsVosK2dPAdL2lpD0ceqPiz09UKc5Jg
+         yznMS6T4381u57G7jPPj+gvXfjB7aCc5ajJBPjNoT86HS8M09LcC8h6RedzQbADzwzZN
+         gIqNZ6PaPveckwGHLBlF/a6ic1MIsyiedLCiKTSi/bIkOWH9OwRy1KgHY0ylCWk5rvvf
+         fVoA0wCwtZ25shUY1H26MhvFnB7szZTvSrnlpj0G9vpGYPywfolLoC0Neorr6ljKsBKE
+         0BQV6m4tMXi9L6ftivjcq+zxi1CLukHXv3OnOcYEYGVSIgFl1MNiJNwpqnFQVaSWM20J
+         cBZg==
+X-Gm-Message-State: AOAM532dRXnkfQFJVMn/SjGJDeOLRMzlKEFdFjFe9v1w3HYkwcHCpzE5
+        +vdIR/xtsmOSSkOrAKCqVXhtOvAgjwK989QPOHH2yn3q8g==
+X-Google-Smtp-Source: ABdhPJz0XXuJnPS5g3+lbBiW+XXmkDUqYoNBDu76t3os6QvlPQSI6Onyl30CWs+Md1o+E0r28qs03HXLpOQosKz8YWo=
+X-Received: by 2002:a50:f307:: with SMTP id p7mr2761574edm.235.1604069974505;
+ Fri, 30 Oct 2020 07:59:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Received: by 2002:a50:f14c:0:0:0:0:0 with HTTP; Fri, 30 Oct 2020 07:59:34
+ -0700 (PDT)
+Reply-To: li.anable85@gmail.com
+From:   Liliane Abel <k.griest04@gmail.com>
+Date:   Fri, 30 Oct 2020 15:59:34 +0100
+Message-ID: <CABAZL7=b-NWks3DKb=fdDjnu_xt_-CcJCqf-F5s0yQCFVH73-A@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-When there are other pwm controllers enabled along with pwm-lp3943,
-pwm-lp3942 is failing to probe with -EEXIST error. This is because
-other pwm controller is probed first and assigned pwmchip 0 and
-pwm-lp3943 is requesting for 0 again. In order to avoid this, assign the
-chip base with -1, so that id is dynamically allocated.
+Dearest
 
-Fixes: af66b3c0934e ("pwm: Add LP3943 PWM driver")
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
- drivers/pwm/pwm-lp3943.c | 1 +
- 1 file changed, 1 insertion(+)
+Greeting my dear, I am Liliane Abel by name, The only daughter of late
+Mr.Benson Abel. My father is one of the top Politician in our country
+and my mother is a farmers and cocoa merchant when they were both
+alive. After the death of my mother, long ago, my father was
+controlling their business until he was poisoned by his business
+associates which he suffered and died.
 
-diff --git a/drivers/pwm/pwm-lp3943.c b/drivers/pwm/pwm-lp3943.c
-index 7551253ada32..bf3f14fb5f24 100644
---- a/drivers/pwm/pwm-lp3943.c
-+++ b/drivers/pwm/pwm-lp3943.c
-@@ -275,6 +275,7 @@ static int lp3943_pwm_probe(struct platform_device *pdev)
- 	lp3943_pwm->chip.dev = &pdev->dev;
- 	lp3943_pwm->chip.ops = &lp3943_pwm_ops;
- 	lp3943_pwm->chip.npwm = LP3943_NUM_PWMS;
-+	lp3943_pwm->chip.base = -1;
- 
- 	platform_set_drvdata(pdev, lp3943_pwm);
- 
--- 
-2.28.0
-
+Before the death of my father, He told me about (two million five
+hundred thousand united states dollars) which he deposited in the bank
+in Lome-Togo, It was the money he intended to transfer overseas for
+investment before he was poisoned. He also instructed me that I should
+seek for foreign partners in any country of my choice who will assist
+me transfer this money in overseas account where the money will be
+wisely invested.
+I am seeking for your kind assistance in the following ways:  (1) to
+provide a safe bank account into where the money will be transferred
+for investment. (2) To serve as a guardian of this fund since I am a
+girl of 19 years old. (3) To make arrangement for me to come over to
+your country to further my education. This is my reason for writing to
+you. Please if you are willing to assist me I will offer you 25% of
+the total money. Reply if  you are interested
+Best regards.
+Liliane Abel.
