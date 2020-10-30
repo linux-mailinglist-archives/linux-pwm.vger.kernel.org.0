@@ -2,99 +2,86 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D90D2A0F3F
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 Oct 2020 21:13:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BBC922A1148
+	for <lists+linux-pwm@lfdr.de>; Sat, 31 Oct 2020 00:02:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbgJ3UNR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 30 Oct 2020 16:13:17 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38714 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727362AbgJ3UNA (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 30 Oct 2020 16:13:00 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 09UKCtsd105958;
-        Fri, 30 Oct 2020 15:12:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1604088775;
-        bh=nWVRfmVC8p1aTgFeGwMeYBz7Vd7oRys8RCcXEhmnEG0=;
-        h=From:To:CC:Subject:Date;
-        b=ixHhZI2S2JENnML2Lsv40o0varPLvIaqC2mr+QJHx1UHVepdGsyS30n86sC8tE/3S
-         2E8v7t27RN6FK4pKxgX0D8juf5hwq5E8TK/GsaZrHOLv0dCToOsQgjwtgpaUyRWoV0
-         P53Vw69Y9kZVLGjKIw6YTHYWWzQSAuq0S07edaYQ=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 09UKCtWx043603
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 30 Oct 2020 15:12:55 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 30
- Oct 2020 15:12:55 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 30 Oct 2020 15:12:55 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 09UKCsNG018741;
-        Fri, 30 Oct 2020 15:12:54 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-pwm@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH] pwm: tiehrpwm: handle deferred probe with dev_err_probe()
-Date:   Fri, 30 Oct 2020 22:12:54 +0200
-Message-ID: <20201030201254.24557-1-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
+        id S1725974AbgJ3XCW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 30 Oct 2020 19:02:22 -0400
+Received: from server.msgroupspa.com ([185.149.113.111]:55162 "EHLO
+        server.msgroupspa.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725780AbgJ3XCU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 30 Oct 2020 19:02:20 -0400
+X-Greylist: delayed 53432 seconds by postgrey-1.27 at vger.kernel.org; Fri, 30 Oct 2020 19:02:11 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=msgroupspa.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        Message-ID:Reply-To:Subject:To:From:Date:MIME-Version:Sender:Cc:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=gOeEglh1DIJatPKqyvOsPs4e0Zw8Lzg9wwjnNfQdiM8=; b=f0J1AWuajA3oZ1Dpfc1x8K8xEJ
+        AUip3Gv2UXILC1QLa9azjb3AcsLQqGjiyvcdNpmgT4E3ckADFb84tXlqXdyZsQiNBG2DujmkXqT6T
+        d2mjFNqNRzqSvTZ5qo3MQnCtCov24Wb4wcnpMjift4pdGB4JPDnKAHB+AICh1brF5U0xFQPetWE6H
+        BdPwBb7MNTVWN2mlAPb66Psghg7IoDbQVF1Tmf3H0jaTjlEaWeH4lQoLQpQIzRJYm5NbY0Di4+n63
+        5jJQ9+O4mZNL1aiyS8rwPAgEOxxbLBRAAH3FJTu26AO783jjZImRhbqNmO2ZZgHvlSfFh6vWgR2oo
+        WibXGz9w==;
+Received: from [::1] (port=55834 helo=server.msgroupspa.com)
+        by server.msgroupspa.com with esmtpa (Exim 4.93)
+        (envelope-from <no-reply@msgroupspa.com>)
+        id 1kYPS7-0006MI-86; Fri, 30 Oct 2020 16:08:03 +0800
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Date:   Fri, 30 Oct 2020 16:08:03 +0800
+From:   "Mr. John Galvan" <no-reply@msgroupspa.com>
+To:     undisclosed-recipients:;
+Subject: Hello/Hallo
+Reply-To: galvan.johnny@outlook.com
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <0d2cf4301ff4649fbf993b8f3f7e83c8@msgroupspa.com>
+X-Sender: no-reply@msgroupspa.com
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.msgroupspa.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - msgroupspa.com
+X-Get-Message-Sender-Via: server.msgroupspa.com: authenticated_id: no-reply@msgroupspa.com
+X-Authenticated-Sender: server.msgroupspa.com: no-reply@msgroupspa.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The devm_clk_get() may return -EPROBE_DEFER which is not handled properly
-by TI EHRPWM driver and causes unnecessary boot log messages.
 
-Hence, add proper deferred probe handling with new dev_err_probe() API.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/pwm/pwm-tiehrpwm.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-index 0846917ff2d2..14c8fdcfd607 100644
---- a/drivers/pwm/pwm-tiehrpwm.c
-+++ b/drivers/pwm/pwm-tiehrpwm.c
-@@ -437,10 +437,8 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	if (IS_ERR(clk)) {
--		dev_err(&pdev->dev, "failed to get clock\n");
--		return PTR_ERR(clk);
--	}
-+	if (IS_ERR(clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(clk), "Failed to get fck\n");
- 
- 	pc->clk_rate = clk_get_rate(clk);
- 	if (!pc->clk_rate) {
-@@ -462,10 +460,8 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
- 
- 	/* Acquire tbclk for Time Base EHRPWM submodule */
- 	pc->tbclk = devm_clk_get(&pdev->dev, "tbclk");
--	if (IS_ERR(pc->tbclk)) {
--		dev_err(&pdev->dev, "Failed to get tbclk\n");
--		return PTR_ERR(pc->tbclk);
--	}
-+	if (IS_ERR(pc->tbclk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(pc->tbclk), "Failed to get tbclk\n");
- 
- 	ret = clk_prepare(pc->tbclk);
- 	if (ret < 0) {
 -- 
-2.17.1
+Sir/Madam,
 
+I have access to very vital information that can be used to move a huge 
+amount of money. I have done my homework very well and I have the 
+machineries in place to get it done since I am still in active service. 
+If it was possible for me to do it alone I would not have bothered 
+contacting you. Ultimately I need an honest foreigner to play an 
+important role in the completion of this business transaction. Send 
+responds to this email: galvan.johnny@outlook.com
+
+Regards,
+John Galvan
+
+---------------------------------------------------------------
+
+Sir / Madam,
+
+Ich habe Zugang zu sehr wichtigen Informationen, mit denen ich eine 
+große Menge Geld bewegen kann. Ich habe meine Hausaufgaben sehr gut 
+gemacht und ich habe die Maschinen, um sie zu erledigen, da ich immer 
+noch im aktiven Dienst bin. Wenn es mir möglich gewesen wäre, es alleine 
+zu tun, hätte ich mich nicht darum gekümmert, Sie zu kontaktieren. 
+Letztendlich brauche ich einen ehrlichen Ausländer, der eine wichtige 
+Rolle beim Abschluss dieses Geschäftsvorgangs spielt. Senden Sie 
+Antworten auf diese E-Mail: galvan.johnny@outlook.com
+
+Grüße,
+John Galvan
