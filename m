@@ -2,69 +2,91 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 27EC82A1F20
-	for <lists+linux-pwm@lfdr.de>; Sun,  1 Nov 2020 16:34:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D3EC2A23DA
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Nov 2020 06:01:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgKAPd6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 1 Nov 2020 10:33:58 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:47662 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726637AbgKAPd6 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sun, 1 Nov 2020 10:33:58 -0500
-Received: from p57b773f8.dip0.t-ipconnect.de ([87.183.115.248] helo=phil.fritz.box)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1kZFMY-0003rS-Uf; Sun, 01 Nov 2020 16:33:47 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Alexandru Stan <amstan@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 0/3] PWM backlight interpolation adjustments
-Date:   Sun,  1 Nov 2020 16:33:41 +0100
-Message-Id: <160424139256.1224767.4744407641354846090.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201022050445.930403-1-amstan@chromium.org>
-References: <20201022050445.930403-1-amstan@chromium.org>
+        id S1725935AbgKBFBw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 2 Nov 2020 00:01:52 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51646 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725208AbgKBFBw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 2 Nov 2020 00:01:52 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0A251kgO013816;
+        Sun, 1 Nov 2020 23:01:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1604293306;
+        bh=K02E9Q2eJoit2mw59sTVq8JgZJ/xKtklxtwqLjjQ268=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=BpEUXHq/1iHq5a4d+273TJ8VpsxThxJM8NYf4bFkKJJPATEY8MvkB0DWl3BiQrMzk
+         OtJ4l5/jqolGe7YB/nCYv7HEljWtp+858ZhSa3lQoQ6qO0npXrNCd6vthGLifnqRal
+         jBaPLSAWPK1lgGmwTNhpwsH+kyGTAWGxnvZfIFIc=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0A251kX2111430
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 1 Nov 2020 23:01:46 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sun, 1 Nov
+ 2020 23:01:46 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Sun, 1 Nov 2020 23:01:46 -0600
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0A251hgt076290;
+        Sun, 1 Nov 2020 23:01:44 -0600
+Subject: Re: [PATCH] pwm: lp3943: Dynamically allocate pwm chip base
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, <linux-pwm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>
+References: <20201030134135.28730-1-lokeshvutla@ti.com>
+ <20201030201117.x5asfjxh7htwv35s@pengutronix.de>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <d1c0467a-f64e-fac5-54fa-e62ac8c5f448@ti.com>
+Date:   Mon, 2 Nov 2020 10:31:42 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20201030201117.x5asfjxh7htwv35s@pengutronix.de>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 21 Oct 2020 22:04:42 -0700, Alexandru Stan wrote:
-> I was trying to adjust the brightness-levels for the trogdor boards:
-> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/2291209
-> Like on a lot of panels, trogdor's low end needs to be cropped,
-> and now that we have the interpolation stuff I wanted to make use of it
-> and bake in even the curve that's customary to have on chromebooks.
+Hi Uwe,
+
+On 31/10/20 1:41 am, Uwe Kleine-König wrote:
+> On Fri, Oct 30, 2020 at 07:11:35PM +0530, Lokesh Vutla wrote:
+>> When there are other pwm controllers enabled along with pwm-lp3943,
+>> pwm-lp3942 is failing to probe with -EEXIST error. This is because
+>> other pwm controller is probed first and assigned pwmchip 0 and
+>> pwm-lp3943 is requesting for 0 again. In order to avoid this, assign the
+>> chip base with -1, so that id is dynamically allocated.
+>>
+>> Fixes: af66b3c0934e ("pwm: Add LP3943 PWM driver")
+>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 > 
-> I found the current behavior of the pwm_bl driver a little unintuitive
-> and non-linear. See patch 1 for a suggested fix for this.
+> Reviewed-by: Uwe Kleine-König <u.kleine-könig@pengutronix.de>
+
+Thanks.
+
 > 
-> [...]
+> With this patch applied only the pwm-ab8500 driver is left not using -1
+> for base.
 
-Applied, thanks!
+pwm-ab8500 is assigning ab8500->chip.base as pdev->id. At least in the DT case
+pdev->id is always -1(as of today). So, base is being allocated dynamically in
+case of DT.
 
-[1/1] ARM: dts: rockchip: Remove 0 point from brightness-levels on rk3288-veyron
-      commit: 225c59b9235a421cdb219be5fbc13126a49714a6
+Thanks and regards,
+Lokesh
 
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+> 
+> Best regards
+> Uwe
+> 
