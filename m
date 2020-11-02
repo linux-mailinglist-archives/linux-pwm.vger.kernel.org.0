@@ -2,91 +2,144 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D3EC2A23DA
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Nov 2020 06:01:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F34902A3362
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Nov 2020 19:53:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725935AbgKBFBw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 2 Nov 2020 00:01:52 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:51646 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725208AbgKBFBw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 2 Nov 2020 00:01:52 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0A251kgO013816;
-        Sun, 1 Nov 2020 23:01:46 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1604293306;
-        bh=K02E9Q2eJoit2mw59sTVq8JgZJ/xKtklxtwqLjjQ268=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=BpEUXHq/1iHq5a4d+273TJ8VpsxThxJM8NYf4bFkKJJPATEY8MvkB0DWl3BiQrMzk
-         OtJ4l5/jqolGe7YB/nCYv7HEljWtp+858ZhSa3lQoQ6qO0npXrNCd6vthGLifnqRal
-         jBaPLSAWPK1lgGmwTNhpwsH+kyGTAWGxnvZfIFIc=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0A251kX2111430
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 1 Nov 2020 23:01:46 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sun, 1 Nov
- 2020 23:01:46 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Sun, 1 Nov 2020 23:01:46 -0600
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0A251hgt076290;
-        Sun, 1 Nov 2020 23:01:44 -0600
-Subject: Re: [PATCH] pwm: lp3943: Dynamically allocate pwm chip base
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, <linux-pwm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>
-References: <20201030134135.28730-1-lokeshvutla@ti.com>
- <20201030201117.x5asfjxh7htwv35s@pengutronix.de>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <d1c0467a-f64e-fac5-54fa-e62ac8c5f448@ti.com>
-Date:   Mon, 2 Nov 2020 10:31:42 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726369AbgKBSx3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 2 Nov 2020 13:53:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgKBSx2 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 2 Nov 2020 13:53:28 -0500
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A1C2C0617A6
+        for <linux-pwm@vger.kernel.org>; Mon,  2 Nov 2020 10:53:28 -0800 (PST)
+Received: by mail-ej1-x642.google.com with SMTP id i19so9301084ejx.9
+        for <linux-pwm@vger.kernel.org>; Mon, 02 Nov 2020 10:53:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GlGtTyawZz1U+foaHuQJleVoISpzv2DwJ6xp8D1Hwk4=;
+        b=dIaNxAccndYlWhHDapF/MDgfnKgAGECRY/zIOGm650eR7riKJDY+LJNCZbF3ThLlRr
+         +jEuZq6zopeOu3FTISuAv02VhSA429Uhgs7h9o100X+Jy67bARpU0p7k6SJahy6TgPZQ
+         vl8C5qfffPSjxCQ+Z0E5TUGJki8xexMTou9E0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GlGtTyawZz1U+foaHuQJleVoISpzv2DwJ6xp8D1Hwk4=;
+        b=q1c7z/M2JQQkEZwUZCzryaMUd21rHRMaYvsLcTNkQCrMuK2+xvMaNQHX/xS9zOwWSC
+         t8FhUjKa9i2ytLcUOP5tCacbKKxjBK5BDh+Gk0kwBqq0XjBXsDw9Ry5sf5cbinmPcU0X
+         V+y86C1FFUpIRkFWWX3KvCpemnaeaxwMBhmFAz3c7Djy2sdJvAcDDcQJvq0PmZrjM7YL
+         f6+ps+BxVXhBzMoaSdFuFou4zYgJDJldp4UxCohtjTGKPJibVQs5DyHlAf5tFnA4P6+U
+         jMh5UADPbxXf2LMllfF0U651VVSnmYE+ax3iJmM14AJK5yWyfdVE4/XxuPVDzIYtUHqd
+         NQ3Q==
+X-Gm-Message-State: AOAM533/IaHyZSgmvFtUXLSu7/GiSPpIJWa+AY1cyPO9sQAn0CRAp32I
+        naFh0SxIC2xAt2bTd+q64FXVkzi7IR2tmA==
+X-Google-Smtp-Source: ABdhPJzJzLmV7Z89k2bGzcAwjspNHP0l37puVhvzu0WTq8NARB9kgrIMemE4wVNC5mFb0ybWoeQVWg==
+X-Received: by 2002:a17:907:2712:: with SMTP id w18mr7466107ejk.130.1604343206599;
+        Mon, 02 Nov 2020 10:53:26 -0800 (PST)
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
+        by smtp.gmail.com with ESMTPSA id s3sm1643532ejv.97.2020.11.02.10.53.25
+        for <linux-pwm@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Nov 2020 10:53:25 -0800 (PST)
+Received: by mail-ed1-f50.google.com with SMTP id o18so15445030edq.4
+        for <linux-pwm@vger.kernel.org>; Mon, 02 Nov 2020 10:53:25 -0800 (PST)
+X-Received: by 2002:a05:6402:a57:: with SMTP id bt23mr6977135edb.62.1604343204920;
+ Mon, 02 Nov 2020 10:53:24 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20201030201117.x5asfjxh7htwv35s@pengutronix.de>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20201022050445.930403-1-amstan@chromium.org> <20201021220404.v3.3.I4dcea1c90e9da3902d466033aa73351e19e49c49@changeid>
+ <20201028151210.7e765hbq2k7i3url@holly.lan>
+In-Reply-To: <20201028151210.7e765hbq2k7i3url@holly.lan>
+From:   Alexandru M Stan <amstan@chromium.org>
+Date:   Mon, 2 Nov 2020 10:52:49 -0800
+X-Gmail-Original-Message-ID: <CAHNYxRy4hg4rZsc-xi3MzK+RapMq76+=hGj0_E-aGcFUPB1wMA@mail.gmail.com>
+Message-ID: <CAHNYxRy4hg4rZsc-xi3MzK+RapMq76+=hGj0_E-aGcFUPB1wMA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] backlight: pwm_bl: Fix interpolation
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
+On Wed, Oct 28, 2020 at 8:12 AM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> On Wed, Oct 21, 2020 at 10:04:45PM -0700, Alexandru Stan wrote:
+> > The previous behavior was a little unexpected, its properties/problems:
+> > 1. It was designed to generate strictly increasing values (no repeats)
+> > 2. It had quantization errors when calculating step size. Resulting in
+> > unexpected jumps near the end of some segments.
+> >
+> > Example settings:
+> >       brightness-levels = <0 1 2 4 8 16 32 64 128 256>;
+> >       num-interpolated-steps = <16>;
+> >
+> > Whenever num-interpolated-steps was larger than the distance
+> > between 2 consecutive brightness levels the table would get really
+> > discontinuous. The slope of the interpolation would stick with
+> > integers only and if it was 0 the whole line segment would get skipped.
+> >
+> > The distances between 1 2 4 and 8 would be 1 (property #1 fighting us),
+> > and only starting with 16 it would start to interpolate properly.
+> >
+> > Property #1 is not enough. The goal here is more than just monotonically
+> > increasing. We should still care about the shape of the curve. Repeated
+> > points might be desired if we're in the part of the curve where we want
+> > to go slow (aka slope near 0).
+> >
+> > Problem #2 is plainly a bug. Imagine if the 64 entry was 63 instead,
+> > the calculated slope on the 32-63 segment will be almost half as it
+> > should be.
+> >
+> > The most expected and simplest algorithm for interpolation is linear
+> > interpolation, which would handle both problems.
+> > Let's just implement that!
+> >
+> > Take pairs of points from the brightness-levels array and linearly
+> > interpolate between them. On the X axis (what userspace sees) we'll
+> > now have equally sized intervals (num-interpolated-steps sized,
+> > as opposed to before where we were at the mercy of quantization).
+> >
+> > END
+>
+> INTERESTING.
+>
+> I guess this a copy 'n paste error from some internal log book?
+> Better removed... but I won't lose sleep over it.
 
-On 31/10/20 1:41 am, Uwe Kleine-König wrote:
-> On Fri, Oct 30, 2020 at 07:11:35PM +0530, Lokesh Vutla wrote:
->> When there are other pwm controllers enabled along with pwm-lp3943,
->> pwm-lp3942 is failing to probe with -EEXIST error. This is because
->> other pwm controller is probed first and assigned pwmchip 0 and
->> pwm-lp3943 is requesting for 0 again. In order to avoid this, assign the
->> chip base with -1, so that id is dynamically allocated.
->>
->> Fixes: af66b3c0934e ("pwm: Add LP3943 PWM driver")
->> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> 
-> Reviewed-by: Uwe Kleine-König <u.kleine-könig@pengutronix.de>
+Sorry! Yeah, I mistakenly duplicated the "END" line in patman.
 
-Thanks.
+>
+>
+> > Signed-off-by: Alexandru Stan <amstan@chromium.org>
+>
+> I've waited a bit to see how strong the feelings were w.r.t. getting rid
+> of the division from the table initialization. It was something I was
+> aware of during an earlier review but it was below my personal nitpicking
+> threshold (which could be badly calibrated... hence waiting). However
+> it's all been quiet so:
+>
+> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+>
+>
+> Daniel.
 
-> 
-> With this patch applied only the pwm-ab8500 driver is left not using -1
-> for base.
 
-pwm-ab8500 is assigning ab8500->chip.base as pdev->id. At least in the DT case
-pdev->id is always -1(as of today). So, base is being allocated dynamically in
-case of DT.
-
-Thanks and regards,
-Lokesh
-
-> 
-> Best regards
-> Uwe
-> 
+Alexandru Stan (amstan)
