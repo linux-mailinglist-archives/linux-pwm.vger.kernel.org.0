@@ -2,51 +2,51 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C091A2A730B
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Nov 2020 00:51:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 497232A72E9
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Nov 2020 00:51:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387777AbgKDXtw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 4 Nov 2020 18:49:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48202 "EHLO
+        id S2387757AbgKDXtv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 4 Nov 2020 18:49:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733035AbgKDXpD (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 Nov 2020 18:45:03 -0500
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E00CC0613CF;
-        Wed,  4 Nov 2020 15:45:03 -0800 (PST)
-Received: by mail-lf1-x141.google.com with SMTP id s30so177581lfc.4;
-        Wed, 04 Nov 2020 15:45:03 -0800 (PST)
+        with ESMTP id S1733037AbgKDXpF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 Nov 2020 18:45:05 -0500
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F61AC0613CF;
+        Wed,  4 Nov 2020 15:45:04 -0800 (PST)
+Received: by mail-lj1-x241.google.com with SMTP id v19so311101lji.5;
+        Wed, 04 Nov 2020 15:45:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cDQcvrPMx8drC1s+JMdYzz1VL97g9qI4z34Z2y/XS6Y=;
-        b=Dy8bsn+8gKozpA8LFXNo9rNaXYZi8RiG8JuZ7GCiOUv3f8EqLH9Yw1DWyrHCG7aXCa
-         nBna2kBpxCxa6756mpfF/sRJLengE1u0981vSeVZ0iww1/R6MDBNg0z7cp8n3hpUWVSG
-         FjsBHb432QblMRC0hfqqL4Td+fPBtzgidhCB8OrfImcHEK/zTulOsaqMZyxf2OL4je50
-         7YzggrtiQ+LZ1ok9kxO8CnZAsV2JQjx98NF/dI6kmyaIX//EtNilxbc+Qcrm5rRwGz27
-         NGH1GnvYdauAc1/ekPxqEtzZNVUC1H9TKTl5j5EZH60kcHtxQ9rJ2uyMKymZmVEh5kbP
-         uWEQ==
+        bh=A6xeyw6ZqKT/K4JMygz/BmuhCT9ICHlbp1KBA4DEr4A=;
+        b=nqm2X6ZZJuj9sZgSTybdOUi83IBwYn9f7Zvfx06NhWRHbQaEo61dn0AWICDKuDsAzX
+         WcnvRncZgz7BZ9/CebWWEjbmvtTisywn31eZ4pmGs2UNS0RRtZfCOBhiTwow/n6mPe9r
+         7agAHRD0R2EELNcElIqennHlgH8OGOPHoFL2PRl+Ja/SdoRvkx4BsTmnP2gpWNQvarxG
+         SjryQPM6YqWLBzOv3L/jKhwY2mKEYxloqIA7EIeYrN+YlKNWbDi4sdhMPjwR1DWYKbqi
+         vxBJYm1aGkZ0x3sS+0lBKRX7ZCwqw3mmTLFKmuBg1cW60xhkD71EveU4NYFDyWJAnfX8
+         8m1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cDQcvrPMx8drC1s+JMdYzz1VL97g9qI4z34Z2y/XS6Y=;
-        b=fUznQ9Qp9Hz107XWTmbzgiJHdvJuYMjCRHa3SJ9XoJmIRlNv0xOJ2HPoZeGgGLIOBz
-         MiIVU30maiDuOX2rwZUEsgO8atvy1IfCGAh0mEM2YhinTdjowDx+SP4Lkbv5GTkFCuls
-         ttYhYGlN7Wt+4Mjz6/GSN+l1dhQZWOxqyfgN+f1wgtq5MaP6G3ru5ltsVRX15ii64Frv
-         eHJA3eMFFsap5Uh29zGXn9LCDs8T2iV3Cql3IoSMyESshcOODkRNqvPh7lULJ087w/Jg
-         0ymCTNVlfF1f7r5zy2QiK4ZOHfy5WivSFeuoXAL+vBBLB6UR4oDt6sCpQDy9FQ36tCbR
-         8uPQ==
-X-Gm-Message-State: AOAM533LRov397ySNZIeJGRWYIOGWwWeMbXq939FgpRE3WzBRmLSyZwb
-        1p/bwV9FQKCMijMHZM6KprXBmFexnB0=
-X-Google-Smtp-Source: ABdhPJz3iuYSiUPzblNYJ3AouIs2I+aBCXK/4d5+EJAE3Br8G9yiMX5bbzdh7qOCN/1x3cb5bQOQVQ==
-X-Received: by 2002:a19:8285:: with SMTP id e127mr54285lfd.270.1604533501645;
-        Wed, 04 Nov 2020 15:45:01 -0800 (PST)
+        bh=A6xeyw6ZqKT/K4JMygz/BmuhCT9ICHlbp1KBA4DEr4A=;
+        b=Y4b+7OImCnBVlJ+Z663vsf/jYtMe9v/tOiwVp/RD907m/yEFEWjdwzcBvHOkKU6qUr
+         Qot8d90Bbt2sOH5rwtQLsqT49Hnlxj91zjWMKcLoraAzq/B4zDYInGcVO6qXbzDeY9ts
+         6UnmHpBAMcjF58JUg8II3ztnwhBAi5kXTgtXpwnDcb4YfiwvoZ1c9uy+CSDWZObRivQb
+         64P+S62TUDlYsaEw54JuCT6Aa8B+MEod5JzoSzhKFzCPwdjxB/lW10IxDniLYC4MMkTW
+         ads0Luv84kxEsVdb2cPOyokOsJbbGzRCZKyoYyCdHU4QPn/XDPB2TAehaSYr85M+HH62
+         etnA==
+X-Gm-Message-State: AOAM533/xtgzEhIAy07fa3Ds9wgK+ykUHzPZ1a28X44zvkliEo2QOMxP
+        aoflnOj8SFUyMJKjQ2rlh/A=
+X-Google-Smtp-Source: ABdhPJzDTd1dZ6QvpxBBESnqfpznl55p7ubyewQPaYA9itl922HIytqPgmIH/zsQSw8jZFmiQ9g1kA==
+X-Received: by 2002:a2e:b619:: with SMTP id r25mr134978ljn.465.1604533503104;
+        Wed, 04 Nov 2020 15:45:03 -0800 (PST)
 Received: from localhost.localdomain (109-252-192-83.dynamic.spd-mgts.ru. [109.252.192.83])
-        by smtp.gmail.com with ESMTPSA id m6sm640725ljc.112.2020.11.04.15.45.00
+        by smtp.gmail.com with ESMTPSA id m6sm640725ljc.112.2020.11.04.15.45.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2020 15:45:01 -0800 (PST)
+        Wed, 04 Nov 2020 15:45:02 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -71,9 +71,9 @@ Cc:     linux-samsung-soc@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-media@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH v1 04/30] media: dt: bindings: tegra-vde: Document OPP and voltage regulator properties
-Date:   Thu,  5 Nov 2020 02:44:01 +0300
-Message-Id: <20201104234427.26477-5-digetx@gmail.com>
+Subject: [PATCH v1 05/30] dt-binding: usb: ci-hdrc-usb2:  Document OPP and voltage regulator properties
+Date:   Thu,  5 Nov 2020 02:44:02 +0300
+Message-Id: <20201104234427.26477-6-digetx@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20201104234427.26477-1-digetx@gmail.com>
 References: <20201104234427.26477-1-digetx@gmail.com>
@@ -83,42 +83,36 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Document new DVFS OPP table and voltage regulator properties of the
-video decoder engine.
+Document new OPP table and NVIDIA Tegra-specific voltage regulator
+properties.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- .../devicetree/bindings/media/nvidia,tegra-vde.txt   | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/nvidia,tegra-vde.txt b/Documentation/devicetree/bindings/media/nvidia,tegra-vde.txt
-index 602169b8aa19..9854fa9d3cd3 100644
---- a/Documentation/devicetree/bindings/media/nvidia,tegra-vde.txt
-+++ b/Documentation/devicetree/bindings/media/nvidia,tegra-vde.txt
-@@ -36,6 +36,16 @@ Optional properties:
- - reset-names : Must include the following entries:
-   - mc
- - iommus: Must contain phandle to the IOMMU device node.
+diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+index a5c5db6a0b2d..f02a98201062 100644
+--- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
++++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+@@ -90,6 +90,7 @@ Optional properties:
+   case, the "idle" state needs to pull down the data and strobe pin
+   and the "active" state needs to pull up the strobe pin.
+ - pinctrl-n: alternate pin modes
 +- operating-points-v2: See ../bindings/opp/opp.txt for details.
-+- core-supply: Phandle to voltage regulator of the SoC "core" power domain.
-+
-+For each opp entry in 'operating-points-v2' table:
-+- opp-supported-hw: One bitfield indicating:
-+	On Tegra20: SoC process ID mask
-+	On Tegra30+: SoC speedo ID mask
-+
-+	A bitwise AND is performed against the value and if any bit
-+	matches, the OPP gets enabled.
  
+ i.mx specific properties
+ - fsl,usbmisc: phandler of non-core register device, with one
+@@ -110,6 +111,9 @@ i.mx specific properties
+   The range is from 0x0 to 0xf, the default value is 0x3.
+   Details can refer to TXVREFTUNE0 bits of USBNC_n_PHY_CFG1.
+ 
++Tegra specific properties
++- core-supply: phandle of voltage regulator of the SoC "core" power domain
++
  Example:
  
-@@ -61,4 +71,6 @@ video-codec@6001a000 {
- 	reset-names = "vde", "mc";
- 	resets = <&tegra_car 61>, <&mc TEGRA20_MC_RESET_VDE>;
- 	iommus = <&mc TEGRA_SWGROUP_VDE>;
-+	operating-points-v2 = <&dvfs_opp_table>;
-+	core-supply = <&vdd_core>;
- };
+ 	usb@f7ed0000 {
 -- 
 2.27.0
 
