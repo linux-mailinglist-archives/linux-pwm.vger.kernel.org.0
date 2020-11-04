@@ -2,133 +2,106 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 670282A6879
-	for <lists+linux-pwm@lfdr.de>; Wed,  4 Nov 2020 16:54:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DCD332A6D7D
+	for <lists+linux-pwm@lfdr.de>; Wed,  4 Nov 2020 20:06:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731294AbgKDPyV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 4 Nov 2020 10:54:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731252AbgKDPyR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 Nov 2020 10:54:17 -0500
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99495C061A4C
-        for <linux-pwm@vger.kernel.org>; Wed,  4 Nov 2020 07:54:16 -0800 (PST)
-Received: by mail-wr1-x443.google.com with SMTP id w1so22625898wrm.4
-        for <linux-pwm@vger.kernel.org>; Wed, 04 Nov 2020 07:54:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=cpjrvx5xa5Fub2SmSs5NxCIt1AtREI63BVQTX9fsjLc=;
-        b=kmf1Z0yeNpYCwPXqysU9kiSujnzjdXKIk8+vE0x44SjNDiibKhNKdvM5DYwJvPv9BP
-         uyTmaIN6g08I7LE1TSotYiRlsqez5OlMd8VdA7Wvqt1o94N7yywzGxi18DlbPu2frcbU
-         UPX4K6ffl5hpw/wWewB4vegS9SjGz/YB1Sag9vLtCsmWpxdvdjJLW4LZUj09EXiUZd15
-         BCZWtGxHuAJBWzgOusXVeUzhNClzoyi4/4FJDp8BdlfPbeMW9yVwD21iRSg8e0O6iycV
-         QKF+XTr/zgsxmxz8jW9vwtA3usnrYac8tlSTIij782QzZwWQGrv1xkhb0om5/c81EElx
-         ZmwQ==
+        id S1731176AbgKDTGR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 4 Nov 2020 14:06:17 -0500
+Received: from mail-oi1-f173.google.com ([209.85.167.173]:33081 "EHLO
+        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729946AbgKDTGQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 Nov 2020 14:06:16 -0500
+Received: by mail-oi1-f173.google.com with SMTP id k26so17738oiw.0;
+        Wed, 04 Nov 2020 11:06:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=cpjrvx5xa5Fub2SmSs5NxCIt1AtREI63BVQTX9fsjLc=;
-        b=exDZZsbsYBW5NfWZshZJ5RcqG/nTNGpStgAqkISRqF5zM42ne1wGne8qkGPlvttIzz
-         o6F/GqqoTeThfD55pTuIJDolHVsIOGTPh8Y1sYk+RzzdNn8ooRZJY9KwD/8MjdF5mEIv
-         r/PmLfPq9OhO65SGelMI0rxfrXVksscyScdnkWoNJ0h9Sv4gwlpgb/wQLAA6sRik1F7z
-         dy2Ao3S5YRi3xT7v2c0DrBf87Y7oFvM2r+HH8BkncMqOQFz7/p0L9UJlNhx4vCCvK+w0
-         zArXT/u7SCuskD1k1EgCdI/2QZY9LyorXlKBee3ks55PEMZe1bsLiqN/CWgSAOWYz786
-         TdlQ==
-X-Gm-Message-State: AOAM533j6GBz4TtdyineG9R3rFZxwK/yd9RhxAyP8hU3f0RfuF1gN4zG
-        updv9z+9TuFQZNYwTSNvqUw5Lg==
-X-Google-Smtp-Source: ABdhPJwrgUZlnu1TW1h3xBXhxKSzhI+viPcm0Js1YrAFKDpqC8wX2kbdVSVE5rj9s6G+jL0loLWHTA==
-X-Received: by 2002:adf:dd90:: with SMTP id x16mr19148018wrl.47.1604505255361;
-        Wed, 04 Nov 2020 07:54:15 -0800 (PST)
-Received: from dell ([91.110.221.242])
-        by smtp.gmail.com with ESMTPSA id w11sm3022885wmg.36.2020.11.04.07.54.14
+         :mime-version:content-disposition:in-reply-to;
+        bh=cFN5h9yGsHsZOKXv8QOHIY58GxPhGQOkwRhjB/ZiBHY=;
+        b=FbgnidgIt7VLNJxNMEbNFFm3S6Chuc1G5n+V3jGI0MuARAkpiyEI7DJ5nrwuyKBV+1
+         +b/CeVSjHeQTcahov28fS48DD66ZAH45QhIvynqnHNcTWf/C3Z1xoNO39Dqmmp/IDbP5
+         m78PeMkk9jNAD/YWAl5++rdd53RYRW/PoICBxwiKSV2IdcbJR0r6eqYoEawlYgJQQe+T
+         NkDIhhN2OFtaNrXYFdLUEwc9ajb+WliISCgIZQfg7nS8z6AIZp6fEXUmA2hOD8Qhf9wb
+         CvjPal0ojb2LFyHc4uVW94NaKThwCkwS8Gyr3fOxuOb6zWV+dT5Gl5fZDiVKO0Db3Qwq
+         me6w==
+X-Gm-Message-State: AOAM531ZkwxqpnjizheeyfySpTfR6RiqNtQFqeYWdMpnPuvmmshrhMQW
+        SiuGu4Evcud2upH65DPiHw==
+X-Google-Smtp-Source: ABdhPJxg0zwV09ldz2969D3HBuxab6u1/Ts/gJbn+JECdctdgUFKh5ZxAEiWT0cSOANiSBHnw3BhhA==
+X-Received: by 2002:aca:a951:: with SMTP id s78mr3577208oie.114.1604516775469;
+        Wed, 04 Nov 2020 11:06:15 -0800 (PST)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r188sm658438oia.13.2020.11.04.11.06.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2020 07:54:14 -0800 (PST)
-Date:   Wed, 4 Nov 2020 15:54:12 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Alexandru Stan <amstan@chromium.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] backlight: pwm_bl: Fix interpolation
-Message-ID: <20201104155412.GR4488@dell>
-References: <20201022050445.930403-1-amstan@chromium.org>
- <20201021220404.v3.3.I4dcea1c90e9da3902d466033aa73351e19e49c49@changeid>
+        Wed, 04 Nov 2020 11:06:14 -0800 (PST)
+Received: (nullmailer pid 3960013 invoked by uid 1000);
+        Wed, 04 Nov 2020 19:06:12 -0000
+Date:   Wed, 4 Nov 2020 13:06:12 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>,
+        Ray Jui <rjui@broadcom.com>, u.kleine-koenig@pengutronix.de,
+        devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>,
+        dmitry.torokhov@gmail.com, Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
+        linux-rpi-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        linux-input@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        bgolaszewski@baylibre.com, sboyd@kernel.org,
+        linux-gpio@vger.kernel.org, Scott Branden <sbranden@broadcom.com>,
+        linus.walleij@linaro.org, linux-clk@vger.kernel.org,
+        andy.shevchenko@gmail.com
+Subject: Re: [PATCH v3 09/11] dt-bindings: pwm: Add binding for RPi firmware
+ PWM bus
+Message-ID: <20201104190612.GA3959462@bogus>
+References: <20201104103938.1286-1-nsaenzjulienne@suse.de>
+ <20201104103938.1286-10-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201021220404.v3.3.I4dcea1c90e9da3902d466033aa73351e19e49c49@changeid>
+In-Reply-To: <20201104103938.1286-10-nsaenzjulienne@suse.de>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 21 Oct 2020, Alexandru Stan wrote:
-
-> The previous behavior was a little unexpected, its properties/problems:
-> 1. It was designed to generate strictly increasing values (no repeats)
-> 2. It had quantization errors when calculating step size. Resulting in
-> unexpected jumps near the end of some segments.
+On Wed, 04 Nov 2020 11:39:35 +0100, Nicolas Saenz Julienne wrote:
+> The PWM bus controlling the fan in RPi's official PoE hat can only be
+> controlled by the board's co-processor.
 > 
-> Example settings:
-> 	brightness-levels = <0 1 2 4 8 16 32 64 128 256>;
-> 	num-interpolated-steps = <16>;
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > 
-> Whenever num-interpolated-steps was larger than the distance
-> between 2 consecutive brightness levels the table would get really
-> discontinuous. The slope of the interpolation would stick with
-> integers only and if it was 0 the whole line segment would get skipped.
-> 
-> The distances between 1 2 4 and 8 would be 1 (property #1 fighting us),
-> and only starting with 16 it would start to interpolate properly.
-> 
-> Property #1 is not enough. The goal here is more than just monotonically
-> increasing. We should still care about the shape of the curve. Repeated
-> points might be desired if we're in the part of the curve where we want
-> to go slow (aka slope near 0).
-> 
-> Problem #2 is plainly a bug. Imagine if the 64 entry was 63 instead,
-> the calculated slope on the 32-63 segment will be almost half as it
-> should be.
-> 
-> The most expected and simplest algorithm for interpolation is linear
-> interpolation, which would handle both problems.
-> Let's just implement that!
-> 
-> Take pairs of points from the brightness-levels array and linearly
-> interpolate between them. On the X axis (what userspace sees) we'll
-> now have equally sized intervals (num-interpolated-steps sized,
-> as opposed to before where we were at the mercy of quantization).
-> 
-> END
-
-I removed this.
-
-> Signed-off-by: Alexandru Stan <amstan@chromium.org>
 > ---
 > 
->  drivers/video/backlight/pwm_bl.c | 70 ++++++++++++++------------------
->  1 file changed, 31 insertions(+), 39 deletions(-)
+> Changes since v1:
+>  - Update bindings to use 2 #pwm-cells
+> 
+>  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 20 +++++++++++++++++++
+>  .../pwm/raspberrypi,firmware-pwm.h            | 13 ++++++++++++
+>  2 files changed, 33 insertions(+)
+>  create mode 100644 include/dt-bindings/pwm/raspberrypi,firmware-pwm.h
+> 
 
-Applied, thanks.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.example.dt.yaml: firmware: pwm:#pwm-cells:0:0: 2 was expected
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+
+
+See https://patchwork.ozlabs.org/patch/1393804
+
+The base for the patch is generally the last rc1. Any dependencies
+should be noted.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
