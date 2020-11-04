@@ -2,51 +2,51 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 273D02A72ED
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Nov 2020 00:51:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FD0F2A730E
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Nov 2020 00:51:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387787AbgKDXtx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 4 Nov 2020 18:49:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48190 "EHLO
+        id S2387770AbgKDXtv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 4 Nov 2020 18:49:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733030AbgKDXpA (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 Nov 2020 18:45:00 -0500
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E114C0613CF;
-        Wed,  4 Nov 2020 15:45:00 -0800 (PST)
-Received: by mail-lj1-x244.google.com with SMTP id 23so300100ljv.7;
-        Wed, 04 Nov 2020 15:45:00 -0800 (PST)
+        with ESMTP id S1733031AbgKDXpC (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 Nov 2020 18:45:02 -0500
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD9ACC0613CF;
+        Wed,  4 Nov 2020 15:45:01 -0800 (PST)
+Received: by mail-lj1-x242.google.com with SMTP id 11so328100ljf.2;
+        Wed, 04 Nov 2020 15:45:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xyl6mwFdE15+t57cfnIytHG3Se38ipqIkKmYax6Z3Mg=;
-        b=njurvPV7mYqVLXzLgzJMnQSBEnKE98oQKN4wK2dwEEIUDD7c6TRaSrw/9vciyz9XTc
-         r0YOhwlcgm49SWqw8X9FydGAuWL+Unq90UFrxUtioI7SBGMjW3CXqGJug3RcWkA/s5yn
-         XXyOv3T/tJxeU3RYP1xk3msgeJ/bxdzuK7URw+UQfBWoEZNEc1GTjxs+RSNpBzQz9Vvx
-         T+BIa1HbzcDoiEXmaykCEP46kmiCL7189E89By+ope+D0L/TnKptWT+CPx5PYg+3BvjO
-         jCwwYbCrTJce2YM5Px34gOTd06YKcy1A+u5agSc+RfC46gLInyC/nzLICGe4dtLWb3l0
-         byVg==
+        bh=tp9Yqrg3ShDWskF8okk8dyCecDIPmsRhr05c/t0mOxA=;
+        b=NdQEwwdMZ/yJ8OPkD9uloM0o9Ugj2c5ieJ8wp9NIAg4kjdkCRrrp6Ude1JYuYIY5el
+         cQ6T9hxjtsLOMggnGayrIGviTd5zP5TmyeAhR19Q9fq/kaJCXx7OBuhnTCeqhvfrSguA
+         Rv4ks7q4ok1WjbMowL1f6z63nyrF+GmoOHEaAOUS5Fxj/XKxQW14PgoN1eaL3naw79IX
+         aLkXyfnX2RmIvqjqe6TajXkhlx2gBtY4zoXde/weS+BuPwWztMj9RUDljXw++NeoX+21
+         CEVubhkQvuVQyjMvWVwLaZygJnsPTNBVNntcOhwNXbHdInAh8pVfdkI0IC9sCjSOa/LH
+         qo2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xyl6mwFdE15+t57cfnIytHG3Se38ipqIkKmYax6Z3Mg=;
-        b=RzysN0s9ME/zA6hTQla/4rO8FwCMzOhza2uSoSA9LdnIUtIwP7iN85mCHDOOX/pnt0
-         4h9I92IuTSsX1xjtjVvDd4Yuc6TJJ0tWyN7x0XVpBLVU9YUfw0uuCd/BMbgTVlMW3LaM
-         Bjogw4MHZevLIgNiuhv+MfWaAF+14VU8QPGHRrPx662TiUXdc27fiYsszhNrN35o1HGA
-         dDgsDNW7BW8+DycpyPKgOU2iKTnJWFrP8aVB47Pe4fcd8UZs+PCribOl5lxL1QVd3Rmc
-         bp94irvAhosD5Pbcg+cwnk+Jv5/SLw1eOnTA2cUMiQnNpodiK0oyEd5W9qn9JjxHUwAk
-         lCKg==
-X-Gm-Message-State: AOAM532Uqfavlo+SX4sl6S5flL4bNM/WRzYOLpNntABJFoVvKR6Z90Vm
-        qrOibD3NKaLvEACyB7tqjus=
-X-Google-Smtp-Source: ABdhPJxyfUR5ytzjzRHO8KNVIYAL6OAR8JGEl8Y8hPTg36jXTHsV0rP3oD6HDz+Wf6BvR5Q/lM5EBw==
-X-Received: by 2002:a2e:9909:: with SMTP id v9mr136172lji.429.1604533498850;
-        Wed, 04 Nov 2020 15:44:58 -0800 (PST)
+        bh=tp9Yqrg3ShDWskF8okk8dyCecDIPmsRhr05c/t0mOxA=;
+        b=GuYvKs6IlBYVuym5W3SCX+yQZ1ftk3igi0xdt38SS0m6NbWNVH9UjHo58iqG9ZSx7S
+         8+EtPtZv7n/TNPH1/TSYH6juymFVKG6MABeAC2nVd6pGpE3BhHHC7gCyWCR0BAgsyQqi
+         dmqGz0En9TgGB5qRE1ilWlUj9/jOsRUiEahDEp44OY/10vRUe0NaZsKkZm/hFkDGWCeh
+         xdyGG9as7e81JU9U/EJ92EUohVi4g68T/C6AEaGW6b6Gm1bCoH55C1HROmzde7q6JmW+
+         2rPMd7Lf1yGlJbpeXHvbajMqLTBxLD0bXjtKbFU+kQX5toPKxUQDepxM70CgPhr2r36o
+         MGLw==
+X-Gm-Message-State: AOAM533bgWQjzq69UbaRmaKF8yjnj6rhakPZ8GNcmSNN16tXRnjIQK8k
+        VCgJmzpGp1ahG6az2jpdX0pQDfEslrs=
+X-Google-Smtp-Source: ABdhPJyMzZS8yFbdeuBZmLEvuZcRuMGo/R+/3Gh1ylV5XVZW8SAuxgU/GPnV+T1exBhvuYiAMbxSkQ==
+X-Received: by 2002:a05:651c:32a:: with SMTP id b10mr125604ljp.256.1604533500240;
+        Wed, 04 Nov 2020 15:45:00 -0800 (PST)
 Received: from localhost.localdomain (109-252-192-83.dynamic.spd-mgts.ru. [109.252.192.83])
-        by smtp.gmail.com with ESMTPSA id m6sm640725ljc.112.2020.11.04.15.44.57
+        by smtp.gmail.com with ESMTPSA id m6sm640725ljc.112.2020.11.04.15.44.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2020 15:44:58 -0800 (PST)
+        Wed, 04 Nov 2020 15:44:59 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -71,9 +71,9 @@ Cc:     linux-samsung-soc@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-media@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH v1 02/30] dt-bindings: mmc: tegra: Document OPP and voltage regulator properties
-Date:   Thu,  5 Nov 2020 02:43:59 +0300
-Message-Id: <20201104234427.26477-3-digetx@gmail.com>
+Subject: [PATCH v1 03/30] dt-bindings: pwm: tegra: Document OPP and voltage regulator properties
+Date:   Thu,  5 Nov 2020 02:44:00 +0300
+Message-Id: <20201104234427.26477-4-digetx@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20201104234427.26477-1-digetx@gmail.com>
 References: <20201104234427.26477-1-digetx@gmail.com>
@@ -84,23 +84,24 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 Document new DVFS OPP table and voltage regulator properties of the
-SDHCI controller.
+PWM controller.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- .../devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ .../devicetree/bindings/pwm/nvidia,tegra20-pwm.txt  | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-index 96c0b1440c9c..1beb0416ae5f 100644
---- a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-+++ b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-@@ -31,6 +31,16 @@ Required properties:
- 
- Optional properties:
- - power-gpios : Specify GPIOs for power control
-+- operating-points-v2: See ../bindings/opp/opp.txt for details.
-+- core-supply: Phandle of voltage regulator of the SoC "core" power domain.
+diff --git a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
+index 74c41e34c3b6..d4d1c44a2c04 100644
+--- a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
++++ b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
+@@ -32,6 +32,17 @@ The PWM node will have following optional properties.
+ pinctrl-names:	Pin state names. Must be "default" and "sleep".
+ pinctrl-0:	phandle for the default/active state of pin configurations.
+ pinctrl-1:	phandle for the sleep state of pin configurations.
++core-supply:	phandle for voltage regulator of the SoC "core" power domain.
++
++operating-points-v2: see ../bindings/opp/opp.txt for details.
 +
 +For each opp entry in 'operating-points-v2' table:
 +- opp-supported-hw: One bitfield indicating:
@@ -112,15 +113,15 @@ index 96c0b1440c9c..1beb0416ae5f 100644
  
  Example:
  
-@@ -45,6 +55,8 @@ sdhci@c8000200 {
- 	wp-gpios = <&gpio 57 0>; /* gpio PH1 */
- 	power-gpios = <&gpio 155 0>; /* gpio PT3 */
- 	bus-width = <8>;
-+	operating-points-v2 = <&dvfs_opp_table>;
-+	core-supply = <&vdd_core>;
- };
+@@ -42,6 +53,8 @@ Example:
+ 		clocks = <&tegra_car 17>;
+ 		resets = <&tegra_car 17>;
+ 		reset-names = "pwm";
++		operating-points-v2 = <&dvfs_opp_table>;
++		core-supply = <&vdd_core>;
+ 	};
  
- Optional properties for Tegra210, Tegra186 and Tegra194:
+ 
 -- 
 2.27.0
 
