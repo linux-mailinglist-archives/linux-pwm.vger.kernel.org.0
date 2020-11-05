@@ -2,139 +2,225 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A0EC2A7ACE
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Nov 2020 10:43:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D59922A7AEC
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Nov 2020 10:46:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgKEJnG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 5 Nov 2020 04:43:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56142 "EHLO
+        id S1727018AbgKEJqD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 5 Nov 2020 04:46:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbgKEJnC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Nov 2020 04:43:02 -0500
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 295EDC0613D6
-        for <linux-pwm@vger.kernel.org>; Thu,  5 Nov 2020 01:43:02 -0800 (PST)
-Received: by mail-ed1-x542.google.com with SMTP id q3so553681edr.12
-        for <linux-pwm@vger.kernel.org>; Thu, 05 Nov 2020 01:43:02 -0800 (PST)
+        with ESMTP id S1726152AbgKEJqC (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Nov 2020 04:46:02 -0500
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ADADC061A4C
+        for <linux-pwm@vger.kernel.org>; Thu,  5 Nov 2020 01:46:00 -0800 (PST)
+Received: by mail-ua1-x943.google.com with SMTP id 52so337868uaj.4
+        for <linux-pwm@vger.kernel.org>; Thu, 05 Nov 2020 01:46:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DeOBs8//T4JC8W2v/41RF/aONDtKGyNLXtxBMCRNHss=;
-        b=CyY1MxxZtzoUExDGbmpfCTNbv0CVGls7p0kDIFJHKIwdCk8Bd4QEzlmsBdJkefe5kF
-         bDVViaItqLXwHDLbA+q9Fr5dnVgW/1XDyTeTaEGjy3Dr6pOaBaYVENiOk6ilsVbG0/HL
-         xeFbvtqJO3blOzIuCgaSSkafRYQolKoH227e+GB3iGCLhm5zzOLXRXW5GdbDuLploRFF
-         FqXsj+CadpLYKdBoFr13XOn5hQRujYHvQqPzQkdCdrmCwaKQKlw9Ba8ZQB5ctigIBhSw
-         tB7ZNrEGerTHA3/IxDKAXDu6f3oUcxTz8A/mJaAdvwYjPMhFzhGJbODSNOIOvro3aJbF
-         ipug==
+        bh=BPeVC0/yyKKsuDCRa2ABd9prVUPUc34ioExCTRmKEHc=;
+        b=uufJzy4G7ts1PiE/L3wJVNCw2wP3NSOmawqIi/e2dVMD4Xd21IBA/Vm2yEuo3NRkIO
+         5RTFPkxoUZgZvRGL3uCJhgSw/HE6fmf+IDx190dCfUqR+JPH8zXGsd6gelceLKdsJg6T
+         W9tmGvZtl0GRilR/Tesuwpo7+anWJCeo6NBiNViKTK2V8/GqdsDZTq11ps7gJlbfeY+i
+         pSoDKrE7a3V1srakOPqPG22Jy7SHWsEgoGIWEGTN0Htlxp1Nhn/YPfKpypwxo8uOWeve
+         gx03c3qbD5se6hfduEKaO+xHmrhlxJQp6xOVJi1NkwG4/qLyzw5ZIE/FCeeFdhAUNOiH
+         Ddqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DeOBs8//T4JC8W2v/41RF/aONDtKGyNLXtxBMCRNHss=;
-        b=oF1uK7g84dMKPXI5X8dW4hvqRqUC0oUwBqgmLP2ZD6eeO4TwGmnXDPbkkD/HGmuaPR
-         riAcJeeII0ApdoTh3Gu+SKwV9j6hjkTmcML4lOzR9qDCQxk1nykNx6VcPnW1+D74Eafl
-         zm2+R9Z0YQxLs4sa73IuOjIyWa4zcfWOsNDSQh5z8emL9MfIYqGpTO5M0fFMOG5eTSHM
-         sI9yH6W2cZCMjrFveUcZHPG6jPYFTDpWj4Sy+4oQgSw5xgZcUyVLS+HegaL7RS1/Ulon
-         gSlKdZXtvUd60f8BlJeuqKMAoy0Ft57HEfA30cPdSFiMFZ77/7tf4abP/KescKgIJwCf
-         7dJw==
-X-Gm-Message-State: AOAM532dQPQAeThpkXlXPKHqnjKnNaZhDAn8GgtdhFS9nySAskUOmjJO
-        zGB5ePUHaISlCj3O4fqFCQujyHHUmMcso86L+cdjTQ==
-X-Google-Smtp-Source: ABdhPJybud6FTPvTcrbvBWnuDfmJGrn2QRie046seVglh3JPax7rANBITFnA8FFir54MK6PUKO/kndp9C8T8y77d14o=
-X-Received: by 2002:a50:e442:: with SMTP id e2mr1738064edm.186.1604569380861;
- Thu, 05 Nov 2020 01:43:00 -0800 (PST)
+        bh=BPeVC0/yyKKsuDCRa2ABd9prVUPUc34ioExCTRmKEHc=;
+        b=uAZin8n7m3uKEDT/u+oHzVEOWAHbH1fniCpCWLpe8PgxO1lDDyMC2REJk+UXseY2RY
+         kygU3J9AlRJYV0813xMcnLklRQLX/DvozOMNdrEXWeTDnqWgav5EhLPQKvJ49sknlX0r
+         7RfVMqKIOw6cte/r6tDn8di4jYK35V2/0vC7S+4Fna4+5qpd8T77rsxMZLXauIXksQYN
+         0acmZAH7DncyasS8YF3PjPMwWl3XU9gALZvjLnYOBS3em7bilVhZy1p20PJlE+JmZkea
+         zL+wb/Tju1L3dmBm5N9RaGpEiTic8PrafkGbKBF0WEnVhobgwB5EtRxpq+O4e+p5Amn8
+         DaJg==
+X-Gm-Message-State: AOAM53190i6brrdOQJ+EGerSCdIACK4Bqt2e1W5TggTfmK+LxTsSMAPZ
+        /feMFrWFZwhZDIUu4ruFulYq6EpSw8dAFY9RTvlBow==
+X-Google-Smtp-Source: ABdhPJyQXmDq3VGXwDr0haDHSXpl4JtWo+uo7sQGY6XWLUZgE6Tj9Jyk5i5lU0labVUxd8mL5Fh6Hi6T+EuKK3uFWNY=
+X-Received: by 2002:ab0:23d5:: with SMTP id c21mr548021uan.129.1604569559528;
+ Thu, 05 Nov 2020 01:45:59 -0800 (PST)
 MIME-Version: 1.0
-References: <20201104103938.1286-1-nsaenzjulienne@suse.de> <20201104103938.1286-2-nsaenzjulienne@suse.de>
- <CAMpxmJWJRcQQiLitJCLWKmhQVQWr3bMDY=td5FEn5uy2YZfwkA@mail.gmail.com> <47eaba0bc71c6e23bff87b8a01cebf0c6d12efd0.camel@suse.de>
-In-Reply-To: <47eaba0bc71c6e23bff87b8a01cebf0c6d12efd0.camel@suse.de>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 5 Nov 2020 10:42:50 +0100
-Message-ID: <CAMpxmJUZ23uYM3+_L2XvTXzvA48JWrxrhZaLnGAxTpJjFiERRA@mail.gmail.com>
-Subject: Re: [PATCH v3 01/11] firmware: raspberrypi: Introduce devm_rpi_firmware_get()
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+References: <20201104234427.26477-1-digetx@gmail.com>
+In-Reply-To: <20201104234427.26477-1-digetx@gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 5 Nov 2020 10:45:23 +0100
+Message-ID: <CAPDyKFr7qTU2RPhA_ZrbCayoTTNUEno1zdmvmv+8HBe-Owrfeg@mail.gmail.com>
+Subject: Re: [PATCH v1 00/30] Introduce core voltage scaling for NVIDIA
+ Tegra20/30 SoCs
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-devicetree <devicetree@vger.kernel.org>, wahrenst@gmx.net,
-        Linux Input <linux-input@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Nov 5, 2020 at 10:28 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
++ Viresh
+
+On Thu, 5 Nov 2020 at 00:44, Dmitry Osipenko <digetx@gmail.com> wrote:
 >
-> Hi Bartosz, thanks for the review.
+> Introduce core voltage scaling for NVIDIA Tegra20/30 SoCs, which reduces
+> power consumption and heating of the Tegra chips. Tegra SoC has multiple
+> hardware units which belong to a core power domain of the SoC and share
+> the core voltage. The voltage must be selected in accordance to a minimum
+> requirement of every core hardware unit.
 >
-> On Thu, 2020-11-05 at 10:13 +0100, Bartosz Golaszewski wrote:
-> > > +/**
-> > > + * devm_rpi_firmware_get - Get pointer to rpi_firmware structure.
-> > > + * @firmware_node:    Pointer to the firmware Device Tree node.
-> > > + *
-> > > + * Returns NULL is the firmware device is not ready.
-> > > + */
-> > > +struct rpi_firmware *devm_rpi_firmware_get(struct device *dev,
-> > > +                                          struct device_node *firmware_node)
-> > > +{
-> > > +       struct platform_device *pdev = of_find_device_by_node(firmware_node);
-> > > +       struct rpi_firmware *fw;
-> > > +
-> > > +       if (!pdev)
-> > > +               return NULL;
-> > > +
-> > > +       fw = platform_get_drvdata(pdev);
-> > > +       if (!fw)
-> > > +               return NULL;
-> > > +
-> > > +       if (!refcount_inc_not_zero(&fw->consumers))
-> > > +               return NULL;
-> > > +
-> > > +       if (devm_add_action_or_reset(dev, rpi_firmware_put, fw))
-> > > +               return NULL;
-> > > +
-> > > +       return fw;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(devm_rpi_firmware_get);
-> >
-> > Usually I'd expect the devres variant to simply call
-> > rpi_firmware_get() and then schedule a release callback which would
-> > call whatever function is the release counterpart for it currently.
-> > Devres actions are for drivers which want to schedule some more
-> > unusual tasks at driver detach. Any reason for designing it this way?
+> The minimum core voltage requirement depends on:
 >
-> Yes, see patch #8 where I get rid of rpi_firmware_get() altogether after
-> converting all users to devres. Since there is no use for the vanilla version
-> of the function anymore, I figured it'd be better to merge everything into
-> devm_rpi_firmware_get(). That said it's not something I have strong feelings
-> about.
+>   1. Clock enable state of a hardware unit.
+>   2. Clock frequency.
+>   3. Unit's internal idling/active state.
+>
+> This series is tested on Acer A500 (T20), AC100 (T20), Nexus 7 (T30) and
+> Ouya (T30) devices. I also added voltage scaling to the Ventana (T20) and
+> Cardhu (T30) boards which are tested by NVIDIA's CI farm. Tegra30 is now up
+> to 5C cooler on Nexus 7 and stays cool on Ouya (instead of becoming burning
+> hot) while system is idling. It should be possible to improve this further
+> by implementing a more advanced power management features for the kernel
+> drivers.
+>
+> The DVFS support is opt-in for all boards, meaning that older DTBs will
+> continue to work like they did it before this series. It should be possible
+> to easily add the core voltage scaling support for Tegra114+ SoCs based on
+> this grounding work later on, if anyone will want to implement it.
+>
+> WARNING(!) This series is made on top of the memory interconnect patches
+>            which are currently under review [1]. The Tegra EMC driver
+>            and devicetree-related patches need to be applied on top of
+>            the ICC series.
+>
+> [1] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=212196
+>
+> Dmitry Osipenko (30):
+>   dt-bindings: host1x: Document OPP and voltage regulator properties
+>   dt-bindings: mmc: tegra: Document OPP and voltage regulator properties
+>   dt-bindings: pwm: tegra: Document OPP and voltage regulator properties
+>   media: dt: bindings: tegra-vde: Document OPP and voltage regulator
+>     properties
+>   dt-binding: usb: ci-hdrc-usb2:  Document OPP and voltage regulator
+>     properties
+>   dt-bindings: usb: tegra-ehci: Document OPP and voltage regulator
+>     properties
+>   soc/tegra: Add sync state API
+>   soc/tegra: regulators: Support Tegra SoC device sync state API
+>   soc/tegra: regulators: Fix lockup when voltage-spread is out of range
+>   regulator: Allow skipping disabled regulators in
+>     regulator_check_consumers()
+>   drm/tegra: dc: Support OPP and SoC core voltage scaling
+>   drm/tegra: gr2d: Correct swapped device-tree compatibles
+>   drm/tegra: gr2d: Support OPP and SoC core voltage scaling
+>   drm/tegra: gr3d: Support OPP and SoC core voltage scaling
+>   drm/tegra: hdmi: Support OPP and SoC core voltage scaling
+>   gpu: host1x: Support OPP and SoC core voltage scaling
+>   mmc: sdhci-tegra: Support OPP and core voltage scaling
+>   pwm: tegra: Support OPP and core voltage scaling
+>   media: staging: tegra-vde: Support OPP and SoC core voltage scaling
+>   usb: chipidea: tegra: Support OPP and SoC core voltage scaling
+>   usb: host: ehci-tegra: Support OPP and SoC core voltage scaling
+>   memory: tegra20-emc: Support Tegra SoC device state syncing
+>   memory: tegra30-emc: Support Tegra SoC device state syncing
+>   ARM: tegra: Add OPP tables for Tegra20 peripheral devices
+>   ARM: tegra: Add OPP tables for Tegra30 peripheral devices
+>   ARM: tegra: ventana: Add voltage supplies to DVFS-capable devices
+>   ARM: tegra: paz00: Add voltage supplies to DVFS-capable devices
+>   ARM: tegra: acer-a500: Add voltage supplies to DVFS-capable devices
+>   ARM: tegra: cardhu-a04: Add voltage supplies to DVFS-capable devices
+>   ARM: tegra: nexus7: Add voltage supplies to DVFS-capable devices
+>
+>  .../display/tegra/nvidia,tegra20-host1x.txt   |  56 +++
+>  .../bindings/media/nvidia,tegra-vde.txt       |  12 +
+>  .../bindings/mmc/nvidia,tegra20-sdhci.txt     |  12 +
+>  .../bindings/pwm/nvidia,tegra20-pwm.txt       |  13 +
+>  .../devicetree/bindings/usb/ci-hdrc-usb2.txt  |   4 +
+>  .../bindings/usb/nvidia,tegra20-ehci.txt      |   2 +
+>  .../boot/dts/tegra20-acer-a500-picasso.dts    |  30 +-
+>  arch/arm/boot/dts/tegra20-paz00.dts           |  40 +-
+>  .../arm/boot/dts/tegra20-peripherals-opp.dtsi | 386 ++++++++++++++++
+>  arch/arm/boot/dts/tegra20-ventana.dts         |  65 ++-
+>  arch/arm/boot/dts/tegra20.dtsi                |  14 +
+>  .../tegra30-asus-nexus7-grouper-common.dtsi   |  23 +
+>  arch/arm/boot/dts/tegra30-cardhu-a04.dts      |  44 ++
+>  .../arm/boot/dts/tegra30-peripherals-opp.dtsi | 415 ++++++++++++++++++
+>  arch/arm/boot/dts/tegra30.dtsi                |  13 +
+>  drivers/gpu/drm/tegra/Kconfig                 |   1 +
+>  drivers/gpu/drm/tegra/dc.c                    | 138 +++++-
+>  drivers/gpu/drm/tegra/dc.h                    |   5 +
+>  drivers/gpu/drm/tegra/gr2d.c                  | 140 +++++-
+>  drivers/gpu/drm/tegra/gr3d.c                  | 136 ++++++
+>  drivers/gpu/drm/tegra/hdmi.c                  |  63 ++-
+>  drivers/gpu/host1x/Kconfig                    |   1 +
+>  drivers/gpu/host1x/dev.c                      |  87 ++++
+>  drivers/memory/tegra/tegra20-emc.c            |   8 +-
+>  drivers/memory/tegra/tegra30-emc.c            |   8 +-
+>  drivers/mmc/host/Kconfig                      |   1 +
+>  drivers/mmc/host/sdhci-tegra.c                |  70 ++-
+>  drivers/pwm/Kconfig                           |   1 +
+>  drivers/pwm/pwm-tegra.c                       |  84 +++-
+>  drivers/regulator/core.c                      |  12 +-
+>  .../soc/samsung/exynos-regulator-coupler.c    |   2 +-
+>  drivers/soc/tegra/common.c                    | 152 ++++++-
+>  drivers/soc/tegra/regulators-tegra20.c        |  25 +-
+>  drivers/soc/tegra/regulators-tegra30.c        |  30 +-
+>  drivers/staging/media/tegra-vde/Kconfig       |   1 +
+>  drivers/staging/media/tegra-vde/vde.c         | 127 ++++++
+>  drivers/staging/media/tegra-vde/vde.h         |   1 +
+>  drivers/usb/chipidea/Kconfig                  |   1 +
+>  drivers/usb/chipidea/ci_hdrc_tegra.c          |  79 ++++
+>  drivers/usb/host/Kconfig                      |   1 +
+>  drivers/usb/host/ehci-tegra.c                 |  79 ++++
+>  include/linux/regulator/coupler.h             |   6 +-
+>  include/soc/tegra/common.h                    |  22 +
+>  43 files changed, 2360 insertions(+), 50 deletions(-)
+>
+> --
+> 2.27.0
 >
 
-I see. So the previous version didn't really have any reference
-counting and it leaked the reference returned by
-of_find_device_by_node(), got it. Could you just clarify for me the
-logic behind the wait_queue in rpi_firmware_remove()? If the firmware
-driver gets detached and remove() stops on the wait_queue - it will be
-stuck until the last user releases the firmware. I'm not sure this is
-correct. I'd prefer to see a kref with a release callback and remove
-would simply decrease the kref and return. Each user would do the same
-and then after the last user is detached the firmware would be
-destroyed.
+I need some more time to review this, but just a quick check found a
+few potential issues...
 
-Don't we really have some centralized firmware subsystem that would handle this?
+The "core-supply", that you specify as a regulator for each
+controller's device node, is not the way we describe power domains.
+Instead, it seems like you should register a power-domain provider
+(with the help of genpd) and implement the ->set_performance_state()
+callback for it. Each device node should then be hooked up to this
+power-domain, rather than to a "core-supply". For DT bindings, please
+have a look at Documentation/devicetree/bindings/power/power-domain.yaml
+and Documentation/devicetree/bindings/power/power_domain.txt.
 
-Bartosz
+In regards to the "sync state" problem (preventing to change
+performance states until all consumers have been attached), this can
+then be managed by the genpd provider driver instead.
+
+Kind regards
+Uffe
