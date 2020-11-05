@@ -2,56 +2,56 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57F0E2A7B27
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Nov 2020 10:58:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B6A22A7B3C
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Nov 2020 11:06:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgKEJ6t (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 5 Nov 2020 04:58:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58652 "EHLO
+        id S1726400AbgKEKGH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 5 Nov 2020 05:06:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbgKEJ6s (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Nov 2020 04:58:48 -0500
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D513FC0613CF;
-        Thu,  5 Nov 2020 01:58:46 -0800 (PST)
-Received: by mail-ej1-x643.google.com with SMTP id w13so1697028eju.13;
-        Thu, 05 Nov 2020 01:58:46 -0800 (PST)
+        with ESMTP id S1726688AbgKEKGH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Nov 2020 05:06:07 -0500
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BC9CC0613D3
+        for <linux-pwm@vger.kernel.org>; Thu,  5 Nov 2020 02:06:07 -0800 (PST)
+Received: by mail-pg1-x542.google.com with SMTP id h6so1082475pgk.4
+        for <linux-pwm@vger.kernel.org>; Thu, 05 Nov 2020 02:06:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8/0+xGMrqmCQCrjRIhp34cgoVWyVPh+6Sc63/MCPbP8=;
-        b=i+mDDBQGg9bf9ZIFzChyy7Rq+AK2ujK0vNsYtVg1phv8sxI4NYIxwWWLXmBO1AoPnr
-         2uAFrojlzm/ql3PTMenBeK5Xq0Ad0WXHmPNn+Zt5r98YKoAxvp2wSLmxnWNwYgCvB4CN
-         lRm9qRiNr4WJ1qN37G+/1M5YXyx4EmkOfDqMpjAfr9MPFTJ7M8zyrThQ9cssePg7fEGo
-         5AAqlqj48wJIvqREQzT41ALbORJ0Ke8tq/ZFNwNADWHAos3p8LRY0+kFTfxfvmQpfEYt
-         J2J4a7RvoVFp+QSO8Q29MM0YfPsa+NYD2yQ4RoaPzew1LRwJnQfhkx6+8bZPNJFsNw4N
-         H0LA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eGW1ILzr61LRI7Nn5j3Px4Z853itoyrKaaACPPuanD8=;
+        b=AwkPgeKN8JxD5DofrhKKvVmK4cvSq6debaCUoSYPEqvE49cn04nt/Ohj9eefgHf9TL
+         aIx6rKXj0///p0JGjzTLdfu2hmMAvQApkss/uH/gSZkh61VO6pZ2ylsM9Il/53KW7LGl
+         IUDWHNviUCd6hnxXLRNUeX3Y6HNhSHtWwbsLSi36WRlNoTuyeXeVCGre4buS3NdKlXZ1
+         C93L+wYAB2E1lwHrDLcQqvzcXv151CIyLt/YY5KfH9h0bSL8R2KSSrdlcms3OAEXEAQn
+         s+1SmPefG0RRF/HzCmYyPjNZRXZ/yeV4tDx9EOD1LS9Yd2qnGpLlBgdhBvWMqnBFNCh+
+         Memw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8/0+xGMrqmCQCrjRIhp34cgoVWyVPh+6Sc63/MCPbP8=;
-        b=kzmvHvs3ZJroBVFHFZFT07r1boly2Z3teu4PGHAoeEkiUM0w1t+9LFjHfovCbkO8TY
-         T6M3k/Qgau6HS1RuH2g+YvJc3DZXnLigkp7BLMmEiCfLVSZ78hJYeznmuI3bTXZvDGHb
-         uXUPh8Xe87IFAikknPq/yg5F2NwMCcsYNi/w536H5JVnRARY1VrUhGfBnxaiz7E4q5cA
-         B7bY971Z2nF1ew76nVkO1ba/d1XojGLadFpebylK7oB8NU4a/7Ql3vQrp7jsOspFepvM
-         EmSXeCk9emuasIKU9+Olz9iP+xFA/e1Y3BP7pcBG353WjA9xdudWs5z6wtFDvdldGVac
-         aE7Q==
-X-Gm-Message-State: AOAM5321qAQuUb8Ps3CS3v1DO6wTLWJgMIai9OVu1LWSKx+t00D8exgt
-        ZU2CwpKVfnowlEOP+ui2ikRvJ24ixXZTFffPcSQ=
-X-Google-Smtp-Source: ABdhPJyn8dHU+iql4LIPEGykzYeJPOpKnFuZLrqcQJDf2Cin2XWenUKK05ejEnpNpXJIWT3fxGVNQdHuR8JyYUjfQ0g=
-X-Received: by 2002:a17:906:3689:: with SMTP id a9mr1424841ejc.403.1604570325540;
- Thu, 05 Nov 2020 01:58:45 -0800 (PST)
-MIME-Version: 1.0
-References: <20201104234427.26477-1-digetx@gmail.com> <20201104234427.26477-18-digetx@gmail.com>
-In-Reply-To: <20201104234427.26477-18-digetx@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eGW1ILzr61LRI7Nn5j3Px4Z853itoyrKaaACPPuanD8=;
+        b=cO+iuKA63UwFhNZzTNqBrdgMmZdhHQbJreCiUVYiYe4t4p5XdiGXnbpdk4lftpWjJs
+         trPgFPUyeKHwQjjb12o79za1pXOPKpyZlm8TDk5VRSIzB76SGtBhPU1G9Eq3UMokoigq
+         MGlmhGRrM/OOiaP5XqM0OioyZw+W1ISMt/UQlMBGKaMsVGEQsGv63ohWyZrSZATQ0VgE
+         m1T9L4CDhBSuBeqqhwRSnteHFAt6v1djxrAL2LraaibyLMiO2X0p27DuJOl3KD6zgIEJ
+         jJNLWXpS/p3nQCzhzUhSy2pOIHVAZxaGRX+Zwv0a2F1skEibgq0TCtdpLeQbtRxGqKVK
+         AwHg==
+X-Gm-Message-State: AOAM532bP4g98DaqDvGeFCAQ1OFkP2kNsH9eMcotkUdrfZwn+3cP/rp4
+        luxHDUnHs4i9qUZwvU+rxso4hA==
+X-Google-Smtp-Source: ABdhPJx+19aSHb7auOFJLKtzrXZ1adaxUM3Bi1xOIxWA6Q/xzn6rrIYE3T8B5dM0UQjbWyOAIsn6/Q==
+X-Received: by 2002:a17:90b:ec9:: with SMTP id gz9mr1700784pjb.105.1604570766580;
+        Thu, 05 Nov 2020 02:06:06 -0800 (PST)
+Received: from localhost ([122.172.12.172])
+        by smtp.gmail.com with ESMTPSA id s22sm1813783pfu.119.2020.11.05.02.06.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Nov 2020 02:06:05 -0800 (PST)
+Date:   Thu, 5 Nov 2020 15:36:03 +0530
 From:   Viresh Kumar <viresh.kumar@linaro.org>
-Date:   Thu, 5 Nov 2020 15:28:34 +0530
-Message-ID: <CAOh2x==sy1w7_oEV8=toC6uQnSN44wyOixbP_X0BrMsnm1AUFg@mail.gmail.com>
-Subject: Re: [PATCH v1 17/30] mmc: sdhci-tegra: Support OPP and core voltage scaling
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         Alan Stern <stern@rowland.harvard.edu>,
         Peter Chen <Peter.Chen@nxp.com>,
@@ -61,115 +61,62 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
         Peter Geis <pgwipeout@gmail.com>,
         Nicolas Chauvet <kwizart@gmail.com>,
-        driver-dev <devel@driverdev.osuosl.org>,
-        linux-pwm@vger.kernel.org,
         linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>, linux-usb@vger.kernel.org,
-        "open list:SECURE DIGITAL HO..." <linux-mmc@vger.kernel.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
         dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-tegra@vger.kernel.org, linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v1 00/30] Introduce core voltage scaling for NVIDIA
+ Tegra20/30 SoCs
+Message-ID: <20201105100603.skrirm7uke4s2xyl@vireshk-i7>
+References: <20201104234427.26477-1-digetx@gmail.com>
+ <CAPDyKFr7qTU2RPhA_ZrbCayoTTNUEno1zdmvmv+8HBe-Owrfeg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFr7qTU2RPhA_ZrbCayoTTNUEno1zdmvmv+8HBe-Owrfeg@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Nov 5, 2020 at 5:15 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+On 05-11-20, 10:45, Ulf Hansson wrote:
+> + Viresh
 
-> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+Thanks Ulf. I found a bug in OPP core because you cc'd me here :)
 
-> +static void sdhci_tegra_deinit_opp_table(void *data)
-> +{
-> +       struct device *dev = data;
-> +       struct opp_table *opp_table;
-> +
-> +       opp_table = dev_pm_opp_get_opp_table(dev);
+> On Thu, 5 Nov 2020 at 00:44, Dmitry Osipenko <digetx@gmail.com> wrote:
+> I need some more time to review this, but just a quick check found a
+> few potential issues...
+> 
+> The "core-supply", that you specify as a regulator for each
+> controller's device node, is not the way we describe power domains.
 
-So you need to get an OPP table to put one :)
-You need to save the pointer returned by dev_pm_opp_set_regulators() instead.
+Maybe I misunderstood your comment here, but there are two ways of
+scaling the voltage of a device depending on if it is a regulator (and
+can be modeled as one in the kernel) or a power domain.
 
-> +       dev_pm_opp_of_remove_table(dev);
-> +       dev_pm_opp_put_regulators(opp_table);
-> +       dev_pm_opp_put_opp_table(opp_table);
-> +}
-> +
-> +static int devm_sdhci_tegra_init_opp_table(struct device *dev)
-> +{
-> +       struct opp_table *opp_table;
-> +       const char *rname = "core";
-> +       int err;
-> +
-> +       /* voltage scaling is optional */
-> +       if (device_property_present(dev, "core-supply"))
-> +               opp_table = dev_pm_opp_set_regulators(dev, &rname, 1);
-> +       else
+In case of Qcom earlier (when we added the performance-state stuff),
+the eventual hardware was out of kernel's control and we didn't wanted
+(allowed) to model it as a virtual regulator just to pass the votes to
+the RPM. And so we did what we did.
 
+But if the hardware (where the voltage is required to be changed) is
+indeed a regulator and is modeled as one, then what Dmitry has done
+looks okay. i.e. add a supply in the device's node and microvolt
+property in the DT entries.
 
-> +               opp_table = dev_pm_opp_get_opp_table(dev);
-
-Nice. I didn't think that someone will end up abusing this API and so made it
-available for all, but someone just did that. I will fix that in the OPP core.
-
-Any idea why you are doing what you are doing here ?
-
-> +
-> +       if (IS_ERR(opp_table))
-> +               return dev_err_probe(dev, PTR_ERR(opp_table),
-> +                                   "failed to prepare OPP table\n");
-> +
-> +       /*
-> +        * OPP table presence is optional and we want the set_rate() of OPP
-> +        * API to work similarly to clk_set_rate() if table is missing in a
-> +        * device-tree.  The add_table() errors out if OPP is missing in DT.
-> +        */
-> +       if (device_property_present(dev, "operating-points-v2")) {
-> +               err = dev_pm_opp_of_add_table(dev);
-> +               if (err) {
-> +                       dev_err(dev, "failed to add OPP table: %d\n", err);
-> +                       goto put_table;
-> +               }
-> +       }
-> +
-> +       err = devm_add_action(dev, sdhci_tegra_deinit_opp_table, dev);
-> +       if (err)
-> +               goto remove_table;
-> +
-> +       return 0;
-> +
-> +remove_table:
-> +       dev_pm_opp_of_remove_table(dev);
-> +put_table:
-> +       dev_pm_opp_put_regulators(opp_table);
-> +
-> +       return err;
-> +}
-> +
->  static int sdhci_tegra_probe(struct platform_device *pdev)
->  {
->         const struct of_device_id *match;
-> @@ -1621,6 +1681,10 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
->                 goto err_power_req;
->         }
->
-> +       rc = devm_sdhci_tegra_init_opp_table(&pdev->dev);
-> +       if (rc)
-> +               goto err_parse_dt;
-> +
->         /*
->          * Tegra210 has a separate SDMMC_LEGACY_TM clock used for host
->          * timeout clock and SW can choose TMCLK or SDCLK for hardware
-> --
-> 2.27.0
->
-> _______________________________________________
-> devel mailing list
-> devel@linuxdriverproject.org
-> http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
+-- 
+viresh
