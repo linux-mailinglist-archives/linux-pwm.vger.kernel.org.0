@@ -2,61 +2,56 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5C962A7F0A
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Nov 2020 13:53:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1ACEF2A8029
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Nov 2020 14:57:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730534AbgKEMxR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 5 Nov 2020 07:53:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57600 "EHLO
+        id S1730746AbgKEN5a (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 5 Nov 2020 08:57:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730461AbgKEMxQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Nov 2020 07:53:16 -0500
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94F2BC0613D4
-        for <linux-pwm@vger.kernel.org>; Thu,  5 Nov 2020 04:53:16 -0800 (PST)
-Received: by mail-ua1-x944.google.com with SMTP id y1so466721uac.13
-        for <linux-pwm@vger.kernel.org>; Thu, 05 Nov 2020 04:53:16 -0800 (PST)
+        with ESMTP id S1730676AbgKEN5a (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Nov 2020 08:57:30 -0500
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14A9DC0613CF;
+        Thu,  5 Nov 2020 05:57:30 -0800 (PST)
+Received: by mail-lf1-x142.google.com with SMTP id v144so2385762lfa.13;
+        Thu, 05 Nov 2020 05:57:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L6TCLuc1aSDhvBsEh/oyOKoJFVXSTFCOXAYW2AUTtHo=;
-        b=y6DX4cMUVCgpxUKuGqoEligLjI7mP0FgyJ97c7sIUUHZxJlTwtRRakXekgH7YsuigB
-         Na2QU2xZN4x2PfpN6omerSdhzPwwGn9bDYKeR2k6MuBaUl4m5dH4WWWTdnhpeJeXb0wO
-         XSZFej4dNy5nb1iC9xr8tfwJeCBjFjlTzg4qI2DAs6FEDqJOv7dGIgx54zxdVZ6kpJNY
-         qEEM8136+KYXcHo4ba8akOcRfEEQa2WPh8DybrHFK+sabZgBhMR36tCVRG83K7vH1cW2
-         +tAvD7+11Tiw9WmdBdchM838Ksuv8W7UHq8LoeYHHVZz9EZWz0CY4hFIKH9bgfZDnoHM
-         MkFw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+oB95VM8Zw9gIAt2FC+TShAF+0gIWo5rt3Q41RXJdtg=;
+        b=k7qYU/S7xIQk2jr0RN0b4YX8DQl0u0bLGIF7BIO03i9ysBwBpKDn2MliLppMdD912h
+         r6BgWfzuRYtSE1eLkUMnbUB/BLsLo+YvOQfwlkgKibkMcVVi1isY/5BggTofJ/y1r0Hm
+         YXTNppZyodPQYF16UO3KTj5p7F89cfzPcpONsMTDz0kZoeDG8Fx0XGembDMrW3FuOzXM
+         jio/WB6mh7LmvjaKoQD27SeVDVB1tKJaInHuJOCXUkAdoOyzgiBYOsX/YjAtCKwJlQaR
+         K889lN9RvZfHHalw/0sSwWgdKgiFdf9q8dpTy6GIkWbl3kBPpBC5N6gEirv5uxbLGA/i
+         qy4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L6TCLuc1aSDhvBsEh/oyOKoJFVXSTFCOXAYW2AUTtHo=;
-        b=WS10zMlFWS4zB3R5ipIn2cUfPyt+e+anP+zGc3GhGohPjnXUHDdEviHOc5/gZ4J6GJ
-         pnhOyCZqHvgR+bf6I77neQv7UbuV/ZQpcZrKtIsdGcVNlpmokPJcrzUATlvO8jOMyHpy
-         l07GWR/cmw3pfm/Z/FhprF6K22u+BNacDMkoiJZgONZ2wbYJKmaJacGq3VWh3JoGUeq2
-         WfVujdypf0EqE0mA05RDP+e9Qz0rfaT6q3Y9vdL9B0kqQy0p2OIoam+XT47vCwbtOCso
-         /CBi8SMAtiEmPYWAWe7DTNLwHvg3RB5eJjraOACiyRHU5APT0murbjAr/cY8KUojwxIo
-         BvXg==
-X-Gm-Message-State: AOAM533b7wTNQ+PZyYFWBrKCmTcTp98dNtm370mlhO3Q1R2I+YWgoWpQ
-        +oWeWsq++156BZIT0DcY0fba2o1YR5RXD5lPsrLFHg==
-X-Google-Smtp-Source: ABdhPJycxdGkrda5dU9htxc/OSwm7s+GQAoBTPW1YXOO/bE03Yfcq+QBohkR+LMOwjYHynIUz7nEwPk/k/ZMFVtVBnc=
-X-Received: by 2002:a9f:2f15:: with SMTP id x21mr833961uaj.104.1604580795669;
- Thu, 05 Nov 2020 04:53:15 -0800 (PST)
-MIME-Version: 1.0
-References: <20201104234427.26477-1-digetx@gmail.com> <CAPDyKFr7qTU2RPhA_ZrbCayoTTNUEno1zdmvmv+8HBe-Owrfeg@mail.gmail.com>
- <20201105100603.skrirm7uke4s2xyl@vireshk-i7> <CAPDyKFoCJt5MBSKBJ8n1OAMdVsWHdwXTx0zFEcZw_F_gQ6Ug0w@mail.gmail.com>
- <20201105104009.oo4dc6a2gdcwduhk@vireshk-i7> <CAPDyKFpQG98d6foc1U6fp3YEBdZ1vLqY9cmWxpUwXoKgDn+ojQ@mail.gmail.com>
- <20201105111301.2hxfx2tnmf2saakp@vireshk-i7>
-In-Reply-To: <20201105111301.2hxfx2tnmf2saakp@vireshk-i7>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 5 Nov 2020 13:52:39 +0100
-Message-ID: <CAPDyKFr3LhrnK9mm=RzhZvcnfeAKez3Yzm6HU_oP1bnPokh9vg@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+oB95VM8Zw9gIAt2FC+TShAF+0gIWo5rt3Q41RXJdtg=;
+        b=LAkh9c++vmxJSnAXiB1xqhPTXTn4TfINks8xtjJrUNHlePux9cmmeS4SC1vlOwc8l/
+         ehqkGpMEQX+IQm1iXV93wYKT4g4sTMvY60FrJe8GisSeHEAngbYqqpvV3MtBmp8fZ4J7
+         rzjoeOT5Dmr9wWWtre/PV2Ua/rOK+hPSvcemCCVAn4pda4AVGHA2BFLQGSEiRjjort9V
+         VBq1zEshzON1llta0pWrh3y7lgWwncfabTlglAHjaqJBjpUgl9on4O27cfQwdL4eTTr2
+         5pcSalCBNF5vNYUrjiMVoSpFN8+5Yjqe4k3eUl6R+da2N/yt98idovbJguXX7SHXvXuT
+         SkGQ==
+X-Gm-Message-State: AOAM532INXx3qDpNEcKJGdVzbINt3P4Kv0OXpx6pJnrFHLljH6WpoIjg
+        D++7dtqY1W3HwUcF/z1IO/DUgke/eBg=
+X-Google-Smtp-Source: ABdhPJy8aDH+pQWACig1gxUeRAo9xbkzKXDLndcNZHc3MgeMS7MQorfWYcYeqkisehyHHQbAhHZsRw==
+X-Received: by 2002:ac2:522a:: with SMTP id i10mr1023516lfl.128.1604584648429;
+        Thu, 05 Nov 2020 05:57:28 -0800 (PST)
+Received: from [192.168.2.145] (109-252-192-83.dynamic.spd-mgts.ru. [109.252.192.83])
+        by smtp.googlemail.com with ESMTPSA id h10sm158920ljj.116.2020.11.05.05.57.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Nov 2020 05:57:27 -0800 (PST)
 Subject: Re: [PATCH v1 00/30] Introduce core voltage scaling for NVIDIA
  Tegra20/30 SoCs
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         Alan Stern <stern@rowland.harvard.edu>,
         Peter Chen <Peter.Chen@nxp.com>,
@@ -66,113 +61,48 @@ Cc:     Dmitry Osipenko <digetx@gmail.com>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
         Peter Geis <pgwipeout@gmail.com>,
         Nicolas Chauvet <kwizart@gmail.com>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-samsung-soc@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-usb@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-media@vger.kernel.org, linux-tegra@vger.kernel.org
+References: <20201104234427.26477-1-digetx@gmail.com>
+ <20201105014502.GB17266@qmqm.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <60e6ea6b-3a02-30a1-f0c9-d33ef7906ed6@gmail.com>
+Date:   Thu, 5 Nov 2020 16:57:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20201105014502.GB17266@qmqm.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, 5 Nov 2020 at 12:13, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 05-11-20, 11:56, Ulf Hansson wrote:
-> > On Thu, 5 Nov 2020 at 11:40, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > > Btw, how do we identify if it is a power domain or a regulator ?
->
-> To be honest, I was a bit afraid and embarrassed to ask this question,
-> and was hoping people to make fun of me in return :)
->
-> > Good question. It's not a crystal clear line in between them, I think.
->
-> And I was relieved after reading this :)
->
-> > A power domain to me, means that some part of a silicon (a group of
-> > controllers or just a single piece, for example) needs some kind of
-> > resource (typically a power rail) to be enabled to be functional, to
-> > start with.
->
-> Isn't this what a part of regulator does as well ? i.e.
-> enabling/disabling of the regulator or power to a group of
-> controllers.
+05.11.2020 04:45, Michał Mirosław пишет:
+> On Thu, Nov 05, 2020 at 02:43:57AM +0300, Dmitry Osipenko wrote:
+>> Introduce core voltage scaling for NVIDIA Tegra20/30 SoCs, which reduces
+>> power consumption and heating of the Tegra chips. Tegra SoC has multiple
+>> hardware units which belong to a core power domain of the SoC and share
+>> the core voltage. The voltage must be selected in accordance to a minimum
+>> requirement of every core hardware unit.
+> [...]
+> 
+> Just looked briefly through the series - it looks like there is a lot of
+> code duplication in *_init_opp_table() functions. Could this be made
+> more generic / data-driven?
 
-It could, but it shouldn't.
-
->
-> Over that the regulator does voltage/current scaling as well, which
-> normally the power domains don't do (though we did that in
-> performance-state case).
->
-> > If there are operating points involved, that's also a
-> > clear indication to me, that it's not a regular regulator.
->
-> Is there any example of that? I hope by OPP you meant both freq and
-> voltage here. I am not sure if I know of a case where a power domain
-> handles both of them.
-
-It may be both voltage and frequency - but in some cases only voltage.
-From HW point of view, many ARM legacy platforms have power domains
-that work like this.
-
-As you know, the DVFS case has in many years not been solved in a
-generic way, but mostly via platform specific hacks.
-
-The worst ones are probably those hacking clock drivers (which myself
-also have contributed to). Have a look at clk_prcmu_opp_prepare(), for
-example, which is used by the UX500 platform. Another option has been
-to use the devfreq framework, but it has limitations in regards to
-this too.
-
-That said, I am hoping that people start moving towards the
-deploying/implementing DVFS through the power-domain approach,
-together with the OPPs. Maybe there are still some pieces missing from
-an infrastructure point of view, but that should become more evident
-as more starts using it.
-
->
-> > Maybe we should try to specify this more exactly in some
-> > documentation, somewhere.
->
-> I think yes, it is very much required. And in absence of that I think,
-> many (or most) of the platforms that also need to scale the voltage
-> would have modeled their hardware as a regulator and not a PM domain.
->
-> What I always thought was:
->
-> - Module that can just enable/disable power to a block of SoC is a
->   power domain.
->
-> - Module that can enable/disable as well as scale voltage is a
->   regulator.
->
-> And so I thought that this patchset has done the right thing. This
-> changed a bit with the qcom stuff where the IP to be configured was in
-> control of RPM and not Linux and so we couldn't add it as a regulator.
-> If it was controlled by Linux, it would have been a regulator in
-> kernel for sure :)
-
-In my view, DT bindings have consistently been pushed back during the
-year, if they have tried to model power domains as regulator supplies
-from consumer device nodes. Hence, people have tried other things, as
-I mentioned above.
-
-I definitely agree that we need to update some documentations,
-explaining things more exactly. Additionally, it seems like a talk at
-some conferences should make sense, as a way to spread the word.
-
-Kind regards
-Uffe
+Indeed, it should be possible to add a common helper. I had a quick
+thought about doing it too, but then decided to defer for the starter
+since there were some differences among the needs of the drivers. I'll
+take a closer look for the v2, thanks!
