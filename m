@@ -2,57 +2,59 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 690712A8598
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Nov 2020 19:02:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B3EC2A8F4C
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Nov 2020 07:15:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731620AbgKESCK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 5 Nov 2020 13:02:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49862 "EHLO
+        id S1726295AbgKFGPT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 6 Nov 2020 01:15:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730246AbgKESCJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Nov 2020 13:02:09 -0500
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59854C0613CF;
-        Thu,  5 Nov 2020 10:02:07 -0800 (PST)
-Received: by mail-lj1-x244.google.com with SMTP id v18so691639ljc.3;
-        Thu, 05 Nov 2020 10:02:07 -0800 (PST)
+        with ESMTP id S1726306AbgKFGPS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Nov 2020 01:15:18 -0500
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBDB1C061A4A
+        for <linux-pwm@vger.kernel.org>; Thu,  5 Nov 2020 22:15:17 -0800 (PST)
+Received: by mail-pl1-x641.google.com with SMTP id x23so186943plr.6
+        for <linux-pwm@vger.kernel.org>; Thu, 05 Nov 2020 22:15:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Al4h4rmGhqwiEGe133XHwebc8D8nOD3olrp8Vml5Ma4=;
-        b=ns839VcoCfQlmSawliO3BW+/1vwbWsC0SuMDgd2rWP8iV711Mqqtf4m0MCEmnLvl6U
-         3vb8CBUhCZHuLBbT/vy/0iMtjPX+V3C6uUIb2OPOXdjLYjIP6UI/e87eGPrrzJ+xbk0U
-         lPuFmuT1kZYJ9xA2IDMRS58fh3QHtxbqkhAxXI9q2n4iD1UkN9wCV6XZxUKCW+jG4fl1
-         bhur1vx8ueIhfdY8E1LoNLWhfnSqc8Cz4pG2mSMrLt8qiqsSVAo166ZZkzVsvdwhvofK
-         JB2HZrGV3JeU2U3FG6Z6xcUm8hK1QDD32JbxQ1HpcmJHxS8qabOilxvrGXG1/u5lCDmu
-         kXEw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=F6tmY/1EFEb7yGiRngVYTKYYAOLMtuHBKlHb/X3FBro=;
+        b=HzLmr6JaFIcMravMY3wIPry/F1073BkN3VM3cd8Gi2O7jw7et61EBNfNlEzqqyIEDr
+         O9QiSB84NaObwQzvoVVuxKeOGt8VndPGxRzphlfH+7cLMvRgCXLb/PtEMTpcP1H83oxY
+         b+191SXYF8ylE2gKUBgugVqSge7yMZjugqqrlBWgxtA673su21UfCt+IML3oDpN4vxti
+         8gs+7/IuMoCGcBYg+3V7fWv1iCZUsugnMa0A4fQsRR3hvDwRfUGjQ+Urs3m1MNcObuQw
+         SCG2Y8JOLZc95bYGIDT0kkK9vrovP4jkrz7oM7qStmXfzFjQgjgOi7MZJht8PgCtGzrM
+         RfPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Al4h4rmGhqwiEGe133XHwebc8D8nOD3olrp8Vml5Ma4=;
-        b=kogleMfcIzCNRGSmtj2Mp4vuVz9hj/KZxXiPi3KwKdtUMTJ9cBrEPYkhZaOqsVlB+f
-         Iqus4nDIr7p0LeKRAwa0TJgf8lRaxP4Ya2c9LifYDYfFGCE6TEbnmjZ2f1YAlAveVNIP
-         H9I/IxuZ7Hg19SLdTK8O1FpAVe2t27aolQ6k5aOhsyO4x7CQxAYbSLOKM7E2nkb3ao08
-         FGWqd2VtGS6Ntqwbgzmu+rmjdZ0OGtOvurTiPTwTQ7WFUAIxDBZVun4OH4aFtl6oAarT
-         Gzy77dz0ksLbCsc5XtHcEb7Z12lG4Xd1pPX5DVDjt9QCa4yrbBoOxMkeAKDmiCOCRalw
-         sJkQ==
-X-Gm-Message-State: AOAM532CPsJwyMLw6SUhYB57bqVpvrs/rICa2rAQkJNaNWSl8s0Q3rex
-        vdzPEl8013fAOXJnbXDwAFnS5A/lpJk=
-X-Google-Smtp-Source: ABdhPJyGo1QPlqd8Bg9dlBjbnD5b7q3iSRiSvONPHwwdeYcMEjv8aISie0TROJMehCbGPKS7ntWyVA==
-X-Received: by 2002:a2e:5007:: with SMTP id e7mr1293766ljb.196.1604599324582;
-        Thu, 05 Nov 2020 10:02:04 -0800 (PST)
-Received: from [192.168.2.145] (109-252-192-83.dynamic.spd-mgts.ru. [109.252.192.83])
-        by smtp.googlemail.com with ESMTPSA id q28sm251319lfn.7.2020.11.05.10.02.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Nov 2020 10:02:03 -0800 (PST)
-Subject: Re: [PATCH v1 21/30] usb: host: ehci-tegra: Support OPP and SoC core
- voltage scaling
-To:     Alan Stern <stern@rowland.harvard.edu>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=F6tmY/1EFEb7yGiRngVYTKYYAOLMtuHBKlHb/X3FBro=;
+        b=UcXAxWbuuv1b4atZDbYx7l/LzPJgMLv+ZFAuJL/jtOAqzVcHEJDVFUWsmBqbbQ3TDJ
+         6BiybTH/OX1kkn+lQ4NGOlUUdorvjuHtb1CcxtZQMzbezrTzp+LsvZzHrh88wEMokazm
+         8EjJKHiqi2eJFfG5B6byGx4MBMInKE6gnbHHWfpSpJg9GbwHkbVxmp5djIs6lRByDVOe
+         cBtFwApHWq2vyiY6hEQt8rXfjd9Ym4ibfRuswRDlFjfbtgHC7gbeE/8cVxODetGbh4nw
+         iHrnoVT9LLCo9Ffj64aj9kscC/e9Jx1MoNnmeI7enxFthk/nBb0BcZQY1dA6Qq66HLru
+         ESGg==
+X-Gm-Message-State: AOAM532RxbcXLp9TokYGULUR3IeiGe5pA+xfAf5hOSgQ48oWsGigWcq4
+        +LNUIrFNmJWXdw74xkuyud+riw==
+X-Google-Smtp-Source: ABdhPJxg63tT7kf2/vWsP55uyoDC2lQuTRCTVcejh0K/L0eGZvU7H1zdtru1IjirtMh06PtAF/i6Ug==
+X-Received: by 2002:a17:902:9a83:b029:d6:e05e:c7e9 with SMTP id w3-20020a1709029a83b02900d6e05ec7e9mr430546plp.49.1604643317224;
+        Thu, 05 Nov 2020 22:15:17 -0800 (PST)
+Received: from localhost ([122.172.12.172])
+        by smtp.gmail.com with ESMTPSA id h16sm703800pjz.10.2020.11.05.22.15.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Nov 2020 22:15:15 -0800 (PST)
+Date:   Fri, 6 Nov 2020 11:45:13 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
         Peter Chen <Peter.Chen@nxp.com>,
         Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
@@ -60,40 +62,125 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
         Peter Geis <pgwipeout@gmail.com>,
         Nicolas Chauvet <kwizart@gmail.com>,
-        linux-samsung-soc@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-usb@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-media@vger.kernel.org, linux-tegra@vger.kernel.org
+        driver-dev <devel@driverdev.osuosl.org>,
+        linux-pwm@vger.kernel.org,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>, linux-usb@vger.kernel.org,
+        "open list:SECURE DIGITAL HO..." <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-tegra@vger.kernel.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH v1 17/30] mmc: sdhci-tegra: Support OPP and core voltage
+ scaling
+Message-ID: <20201106061513.uyys7njcqcdlah67@vireshk-i7>
 References: <20201104234427.26477-1-digetx@gmail.com>
- <20201104234427.26477-22-digetx@gmail.com>
- <20201105160743.GA1613614@rowland.harvard.edu>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a6030abc-3727-01ca-91b6-faf02d8083fd@gmail.com>
-Date:   Thu, 5 Nov 2020 21:02:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ <20201104234427.26477-18-digetx@gmail.com>
+ <CAOh2x==sy1w7_oEV8=toC6uQnSN44wyOixbP_X0BrMsnm1AUFg@mail.gmail.com>
+ <6fa54ce6-d5ae-d04f-7c77-b62c148d92b7@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20201105160743.GA1613614@rowland.harvard.edu>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <6fa54ce6-d5ae-d04f-7c77-b62c148d92b7@gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-05.11.2020 19:07, Alan Stern пишет:
->> +	err = devm_tegra_ehci_init_opp_table(&pdev->dev);
->> +	if (err)
->> +		return dev_err_probe(&pdev->dev, err,
->> +				     "Failed to initialize OPP\n");
-> Why log a second error message?  Just return err.
+On 05-11-20, 17:18, Dmitry Osipenko wrote:
+> 05.11.2020 12:58, Viresh Kumar пишет:
+> >> +static void sdhci_tegra_deinit_opp_table(void *data)
+> >> +{
+> >> +       struct device *dev = data;
+> >> +       struct opp_table *opp_table;
+> >> +
+> >> +       opp_table = dev_pm_opp_get_opp_table(dev);
+> > So you need to get an OPP table to put one :)
+> > You need to save the pointer returned by dev_pm_opp_set_regulators() instead.
+> 
+> This is intentional because why do we need to save the pointer if we're
+> not using it and we know that we could get this pointer using OPP API?
 
-Indeed, thanks.
+Because it is highly inefficient and it doesn't follow the rules set
+by the OPP core. Hypothetically speaking, the OPP core is free to
+allocate the OPP table structure as much as it wants, and if you don't
+use the value returned back to you earlier (think of it as a cookie
+assigned to your driver), then it will eventually lead to memory leak.
+
+> This is exactly the same what I did for the CPUFreq driver [1] :)
+
+I will strongly suggest you to save the pointer here and do the same
+in the cpufreq driver as well.
+
+> >> +static int devm_sdhci_tegra_init_opp_table(struct device *dev)
+> >> +{
+> >> +       struct opp_table *opp_table;
+> >> +       const char *rname = "core";
+> >> +       int err;
+> >> +
+> >> +       /* voltage scaling is optional */
+> >> +       if (device_property_present(dev, "core-supply"))
+> >> +               opp_table = dev_pm_opp_set_regulators(dev, &rname, 1);
+> >> +       else
+> > 
+> >> +               opp_table = dev_pm_opp_get_opp_table(dev);
+
+To make it further clear, this will end up allocating an OPP table for
+you, which it shouldn't have.
+
+> > Nice. I didn't think that someone will end up abusing this API and so made it
+> > available for all, but someone just did that. I will fix that in the OPP core.
+
+To be fair, I allowed the cpufreq-dt driver to abuse it too, which I
+am going to fix shortly.
+
+> The dev_pm_opp_put_regulators() handles the case where regulator is
+> missing by acting as dev_pm_opp_get_opp_table(), but the
+> dev_pm_opp_set_regulators() doesn't do it. Hence I don't think this is
+> an abuse, but the OPP API drawback.
+
+I am not sure what you meant here. Normally you are required to call
+dev_pm_opp_put_regulators() only if you have called
+dev_pm_opp_set_regulators() earlier. And the refcount stays in
+balance.
+
+> > Any idea why you are doing what you are doing here ?
+> 
+> Two reasons:
+> 
+> 1. Voltage regulator is optional, but dev_pm_opp_set_regulators()
+> doesn't support optional regulators.
+> 
+> 2. We need to balance the opp_table refcount in order to use OPP API
+> without polluting code with if(have_regulator), hence the
+> dev_pm_opp_get_opp_table() is needed for taking the opp_table reference
+> to have the same refcount as in the case of the dev_pm_opp_set_regulators().
+
+I am going to send a patchset shortly after which this call to
+dev_pm_opp_get_opp_table() will fail, if it is called before adding
+the OPP table.
+
+> I guess we could make dev_pm_opp_set_regulators(dev, count) to accept
+> regulators count=0 and then act as dev_pm_opp_get_opp_table(dev), will
+> it be acceptable?
+
+Setting regulators for count as 0 doesn't sound good to me.
+
+But, I understand that you don't want to have that if (have_regulator)
+check, and it is a fair request. What I will instead do is, allow all
+dev_pm_opp_put*() API to start accepting a NULL pointer for the OPP
+table and fail silently. And so you won't be required to have this
+unwanted check. But you will be required to save the pointer returned
+back by dev_pm_opp_set_regulators(), which is the right thing to do
+anyways.
+
+-- 
+viresh
