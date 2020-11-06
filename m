@@ -2,73 +2,56 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 637562A9745
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Nov 2020 14:55:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A81E2A9A97
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Nov 2020 18:15:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbgKFNzr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 6 Nov 2020 08:55:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38706 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727093AbgKFNzr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Nov 2020 08:55:47 -0500
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A03D5C0613CF
-        for <linux-pwm@vger.kernel.org>; Fri,  6 Nov 2020 05:55:45 -0800 (PST)
-Received: by mail-lf1-x142.google.com with SMTP id f9so2057101lfq.2
-        for <linux-pwm@vger.kernel.org>; Fri, 06 Nov 2020 05:55:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=c/21Txb66l6mAzu9T/BegbBEWYzwSWqxrKDRbjBWb4s=;
-        b=pm4q52vwwGj0wIl+J0xiwQ3IXb1fGQTm0lKQtMpQbnSf3of/l7NSyEVccpDWqZ+STD
-         jNw8esLa68jdr6IqSSo72Qfr6aBvqwU6RuafhtWQ1E/pE7vIQcQl/4SP4nDSqWLOjOyh
-         JQojQsGQ+EQUeAZyDwHssyS+j8aaDHRApxdqhpEkdtatB9HRatjUvhJrx6rELc0jnEV1
-         gQdIyftPjRVF9+Re3egIbL0MoLgEUpTMa5xA0/91UONRqnDwYGLMKpJQtY1vbkTZxSBH
-         bSutQQ3ZPIXgjaYQWLN6KuY1g41IP5I8XFDs5w+UTzn95cOz8gTShEbj1A+pm+AznJJB
-         FrHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=c/21Txb66l6mAzu9T/BegbBEWYzwSWqxrKDRbjBWb4s=;
-        b=DFsBn9ifITQnTO3SWYXmC/nPE1OYcLZr5AQEeYNp+tW5pUUgLY8j0bnpjVxQEdiQ5e
-         OtSpdzluiv6RlgpTAHbMQcjBzbuEYD133a87T7xUKCgGbh3NKE49Jbb7W0ds8VC3tdqt
-         ZicQJmEv9uZyFlZEz/Iof5H1sp9ECvQ8pDJzNO8+A5DxZJ5je25TQiJRy9SvdSqrzYnI
-         YoYuJg7BH6RRQuGSHcnBu1TlEZjnLLScVAvwYlpeIc6TzYZf8+X68kcHoKwwO06fM81A
-         6OCcdYPhnQynbpEukgzBUy8SiJfBeqvis6o5KvUuOSN2+dHA2IlSoZ7GrPrdisNhWHuN
-         zQPA==
-X-Gm-Message-State: AOAM531Mgrm8k8YyAzMk/aQj6mJoqdXZ/TyT+Bp1lBYT9r15ct6K04/i
-        KGJAmLG6MxkcdEqhKVzaICbuyDSXL/Xf7NUxwWa4DMUGCxGEtA==
-X-Google-Smtp-Source: ABdhPJwZp/Y41keIpJyXGZ2O8e2RatZsGj6oaEdbVbn9MGLBZmbnnXN+I0b6BUZrc5kbQ4pF7+CFiLnJV7sBdgeK3Rc=
-X-Received: by 2002:a05:6512:322d:: with SMTP id f13mr889021lfe.571.1604670944172;
- Fri, 06 Nov 2020 05:55:44 -0800 (PST)
+        id S1727559AbgKFRPv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 6 Nov 2020 12:15:51 -0500
+Received: from antares.kleine-koenig.org ([94.130.110.236]:58002 "EHLO
+        antares.kleine-koenig.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727557AbgKFRPv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Nov 2020 12:15:51 -0500
+Received: by antares.kleine-koenig.org (Postfix, from userid 1000)
+        id 7D25BA72D1E; Fri,  6 Nov 2020 18:15:49 +0100 (CET)
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] pwm: ab8500: Explicitly allocate pwm chip base dynamically
+Date:   Fri,  6 Nov 2020 18:15:47 +0100
+Message-Id: <20201106171547.50669-1-uwe@kleine-koenig.org>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20200812075214.499-1-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20200812075214.499-1-u.kleine-koenig@pengutronix.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 6 Nov 2020 14:55:33 +0100
-Message-ID: <CACRpkdaedgUzBz8HTsSFS+ipTbZTHypB+oNBszA1ZDncWa5Y+Q@mail.gmail.com>
-Subject: Re: [PATCH] pwm: ab8500: Add error message if pwmchip_add() fails
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 9:52 AM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
+The ab8500 driver is the last one which doesn't (explicitly) use dynamic
+allocation of the pwm id. Looking through the kernel sources I didn't
+find a place that relies on this id. And with the device probed from
+device tree pdev->id is -1 anyhow; making this explicit looks
+beneficial, too.
 
-> pwmchip_add() doesn't emit an error message, so add one in the driver.
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
+---
+ drivers/pwm/pwm-ab8500.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+diff --git a/drivers/pwm/pwm-ab8500.c b/drivers/pwm/pwm-ab8500.c
+index b1e1d747cbaa..e6eda26b3418 100644
+--- a/drivers/pwm/pwm-ab8500.c
++++ b/drivers/pwm/pwm-ab8500.c
+@@ -104,7 +104,7 @@ static int ab8500_pwm_probe(struct platform_device *pdev)
+ 
+ 	ab8500->chip.dev = &pdev->dev;
+ 	ab8500->chip.ops = &ab8500_pwm_ops;
+-	ab8500->chip.base = pdev->id;
++	ab8500->chip.base = -1;
+ 	ab8500->chip.npwm = 1;
+ 
+ 	err = pwmchip_add(&ab8500->chip);
+-- 
+2.28.0
 
-Yours,
-Linus Walleij
