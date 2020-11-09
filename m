@@ -2,56 +2,57 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AC062AB04B
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Nov 2020 05:48:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 251B42AB064
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Nov 2020 06:00:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729265AbgKIErw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 8 Nov 2020 23:47:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57034 "EHLO
+        id S1729122AbgKIFAS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 9 Nov 2020 00:00:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728038AbgKIErw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 8 Nov 2020 23:47:52 -0500
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B41C0613CF;
-        Sun,  8 Nov 2020 20:47:51 -0800 (PST)
-Received: by mail-lj1-x243.google.com with SMTP id q19so6947884ljc.10;
-        Sun, 08 Nov 2020 20:47:51 -0800 (PST)
+        with ESMTP id S1728951AbgKIFAQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 Nov 2020 00:00:16 -0500
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 983B1C0613D4
+        for <linux-pwm@vger.kernel.org>; Sun,  8 Nov 2020 21:00:14 -0800 (PST)
+Received: by mail-pl1-x642.google.com with SMTP id k7so4142302plk.3
+        for <linux-pwm@vger.kernel.org>; Sun, 08 Nov 2020 21:00:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cLiYnZqbbTYE+Gmw/2Cct5bDgH44FThPRJ7yw1uOIgg=;
-        b=q2vWN2tcxbRALqh8OhrgcjDqiOjQbYaIcNRVNh3xuY/yQantgDrl9u9nLrJnRUv9hA
-         ozelSxwbh5ozbLSshRt26t0nn4JgOue72bFZttfyw0OBrgyxy/0q3YUfYR1pgzipa1SN
-         6rHhFDgY16ZfVDrPNbw8QVvyGqs9wQGx8X/2T03ASxqQRgNE0dCDud32D9uGfGNfmZew
-         AenTGWzR9MZaHnzxGDIGm5LIPE7Dlu6AUnIf3Gl4/2Uz0XXecX93kgVw1IzKv+dHuxNp
-         SVxUDP0R0o66WKgdGwDfxEasf8e1tTJw/gWlwvjZlL0cz4D/qEX0YXjFyR4Mid3JYB8g
-         gN0w==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=pqRYwsgE80dyuksaxFD472eZJVu82XkbBKetRcMgwkU=;
+        b=jEZAcCQJcoNyrqtopd159IVehbQnFdrCz6Gv6znnBL+oQ9Lbu4SwHrg2soadRKeK2K
+         tHih4WST3i/TCcj6zG3NcC99f5l/4cWK9Hfln+BVXXbkrR1PnWTasCM5zfT/TMCZDGt9
+         4y9fQy768qLLnTE3MNoBwJpSS+n1y2hy4CEdK5c9TZgDv/CsZCyWoBuiaAscEi6XOXaz
+         fFRrm9tIKwCRdg8pkO9cL1mnHke7AsuFQHSxVtVK1lOFWXAcbU0rrIszlYFyBsfjnS5J
+         5MYwsJUwjmTVqE/xB66miJ9Smg7Qnite7DZudEoTQOg9GTVBnz2CKxeWfhRk9Fxccles
+         G1MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cLiYnZqbbTYE+Gmw/2Cct5bDgH44FThPRJ7yw1uOIgg=;
-        b=UaY+v+txMD7MF/ktpnuLEeAVK8VkJVDYQZTixSWKFFF+39x3srEL8g/b3TMAFSH+lF
-         rDQ1ArMTXPaCM9BhCg940oMoboMQkpkNs+UtgX/R5lf2J5ZYsn8QyiClmJ5KTLJy5qoh
-         yFSHLGeBCKflFajhO9CJLFBxKJxkkLpK4Wn6OWvHdmphhpR0+tU8FeT8ambDVEspqm/y
-         TJjlu3Cq190qtsjmQO+O3rMM4u8A78d/iPLPGilnSF48NSolxdJuuOQu0wUJQ6GJ31pV
-         1DzmcmPxodZcR8wdLgpxDGA9fTtrOKLbMDaHUZ6mnU/HxHXu2OWh2D2YEEt+jPx+ZNwz
-         uahg==
-X-Gm-Message-State: AOAM530Vr6J+yXS9gv7zWyAmVXtatMRCiiPhOCuiNoEXMD3fSijrFW02
-        uEmlaV5WalzhxfXn2Q7A0Q5Q15Lg+2M=
-X-Google-Smtp-Source: ABdhPJyDE2aG8TshKuizrAN7qDH3x0b/P0IYn1ToY1b01Ld0Wj957fykeNLLAtH1r4vAPpkK8xTQfg==
-X-Received: by 2002:a05:651c:2cb:: with SMTP id f11mr218668ljo.371.1604897270127;
-        Sun, 08 Nov 2020 20:47:50 -0800 (PST)
-Received: from [192.168.2.145] (109-252-193-159.dynamic.spd-mgts.ru. [109.252.193.159])
-        by smtp.googlemail.com with ESMTPSA id w13sm795441lfq.72.2020.11.08.20.47.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Nov 2020 20:47:49 -0800 (PST)
-Subject: Re: [PATCH v1 00/30] Introduce core voltage scaling for NVIDIA
- Tegra20/30 SoCs
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=pqRYwsgE80dyuksaxFD472eZJVu82XkbBKetRcMgwkU=;
+        b=MdDV5+/BU9Ee3KjSq3V1P1CxgtxhqSc//8OnMzJMaan3hv9Q1pWgg++6HWBligWBQN
+         CpVQpHcZAz5feLlA/qWbUsiIv0q0Qb9rQvMBwjwTCH5V7CrO+495hvXGWmET7PjMlyZZ
+         N7OH9gBmtuxafM4+9zs0Ks8eZjEYw5RRIjEc73WRAiENoGMW4nZ4PClGXYF3sLydCLZv
+         rIoWJTaLUwesHrzwgm+DqoIB9X8lexKG5LCuaD5zaCZqjf9EROzZOQVQpvlTWQFSpcmw
+         NpsWjOh4UnZpYPh3IGAgJEMFDCRnatC0jGXhJJchsiIKmfq+c5Ug93do1hxq1eNMo5IR
+         x0Aw==
+X-Gm-Message-State: AOAM530kBk6IHxGWb4Yd1tnJcU8whNbZqtMd61Gj3D/06AZeuPiAl80O
+        LwH5neUPkoz//K1mCfGabsI+Og==
+X-Google-Smtp-Source: ABdhPJxqVzbXuE7r2OTnlJIGnZcPTN9Z6rBdnUMyX2RPUkOj+pqZMZGHLq2naeoWPtp+jW/061Xf1w==
+X-Received: by 2002:a17:902:a612:b029:d6:6ae:4d47 with SMTP id u18-20020a170902a612b02900d606ae4d47mr10993684plq.50.1604898014065;
+        Sun, 08 Nov 2020 21:00:14 -0800 (PST)
+Received: from localhost ([122.172.12.172])
+        by smtp.gmail.com with ESMTPSA id gx24sm3171830pjb.38.2020.11.08.21.00.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 08 Nov 2020 21:00:12 -0800 (PST)
+Date:   Mon, 9 Nov 2020 10:30:10 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         Alan Stern <stern@rowland.harvard.edu>,
@@ -62,53 +63,71 @@ Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
         Peter Geis <pgwipeout@gmail.com>,
         Nicolas Chauvet <kwizart@gmail.com>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
+        driver-dev <devel@driverdev.osuosl.org>,
         linux-pwm@vger.kernel.org,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>, linux-usb@vger.kernel.org,
+        "open list:SECURE DIGITAL HO..." <linux-mmc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
         dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
+        linux-tegra@vger.kernel.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH v1 17/30] mmc: sdhci-tegra: Support OPP and core voltage
+ scaling
+Message-ID: <20201109050010.g47zojh6wafvwqva@vireshk-i7>
 References: <20201104234427.26477-1-digetx@gmail.com>
- <CAPDyKFr7qTU2RPhA_ZrbCayoTTNUEno1zdmvmv+8HBe-Owrfeg@mail.gmail.com>
- <cd147ab0-1304-a491-7a56-ee6199c02d32@gmail.com>
- <2716c195-083a-112f-f1e5-2f6b7152a4b5@gmail.com>
- <20201109044354.ljd5pomhob6b7u5v@vireshk-i7>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <713b319e-bb7b-4743-59f0-b9892c3da92d@gmail.com>
-Date:   Mon, 9 Nov 2020 07:47:48 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ <20201104234427.26477-18-digetx@gmail.com>
+ <CAOh2x==sy1w7_oEV8=toC6uQnSN44wyOixbP_X0BrMsnm1AUFg@mail.gmail.com>
+ <6fa54ce6-d5ae-d04f-7c77-b62c148d92b7@gmail.com>
+ <20201106061513.uyys7njcqcdlah67@vireshk-i7>
+ <a6926456-8bce-a438-bfaa-be334208f004@gmail.com>
+ <CAEExFWsp0DWw1yO84e3vzr_YZkqkd+pyPfQQR3J2W6n3wTX4Jw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20201109044354.ljd5pomhob6b7u5v@vireshk-i7>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEExFWsp0DWw1yO84e3vzr_YZkqkd+pyPfQQR3J2W6n3wTX4Jw@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-09.11.2020 07:43, Viresh Kumar пишет:
-> On 08-11-20, 15:19, Dmitry Osipenko wrote:
->> I took a detailed look at the GENPD and tried to implement it. Here is
->> what was found:
->>
->> 1. GENPD framework doesn't aggregate performance requests from the
->> attached devices. This means that if deviceA requests performance state
->> 10 and then deviceB requests state 3, then framework will set domain's
->> state to 3 instead of 10.
+On 06-11-20, 21:41, Frank Lee wrote:
+> On Fri, Nov 6, 2020 at 9:18 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+> >
+> > 06.11.2020 09:15, Viresh Kumar пишет:
+> > > Setting regulators for count as 0 doesn't sound good to me.
+> > >
+> > > But, I understand that you don't want to have that if (have_regulator)
+> > > check, and it is a fair request. What I will instead do is, allow all
+> > > dev_pm_opp_put*() API to start accepting a NULL pointer for the OPP
+> > > table and fail silently. And so you won't be required to have this
+> > > unwanted check. But you will be required to save the pointer returned
+> > > back by dev_pm_opp_set_regulators(), which is the right thing to do
+> > > anyways.
+> >
+> > Perhaps even a better variant could be to add a devm versions of the OPP
+> > API functions, then drivers won't need to care about storing the
+> > opp_table pointer if it's unused by drivers.
 > 
-> It does. Look at _genpd_reeval_performance_state().
+> I think so. The consumer may not be so concerned about the status of
+> these OPP tables.
+> If the driver needs to manage the release, it needs to add a pointer
+> to their driver global structure.
 > 
+> Maybe it's worth having these devm interfaces for opp.
 
-Thanks, I probably had a bug in the quick prototype and then overlooked
-that function.
+Sure if there are enough users of this, I am all for it. I was fine
+with the patches you sent, just that there were not a lot of users of
+it and so I pushed them back. If we find that we have more users of it
+now, we can surely get that back.
+
+-- 
+viresh
