@@ -2,54 +2,55 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C9422AB042
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Nov 2020 05:44:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AC062AB04B
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Nov 2020 05:48:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbgKIEn6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 8 Nov 2020 23:43:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56432 "EHLO
+        id S1729265AbgKIErw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 8 Nov 2020 23:47:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729076AbgKIEn5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 8 Nov 2020 23:43:57 -0500
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29573C0613CF
-        for <linux-pwm@vger.kernel.org>; Sun,  8 Nov 2020 20:43:57 -0800 (PST)
-Received: by mail-pl1-x643.google.com with SMTP id t22so4111802plr.9
-        for <linux-pwm@vger.kernel.org>; Sun, 08 Nov 2020 20:43:57 -0800 (PST)
+        with ESMTP id S1728038AbgKIErw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 8 Nov 2020 23:47:52 -0500
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B41C0613CF;
+        Sun,  8 Nov 2020 20:47:51 -0800 (PST)
+Received: by mail-lj1-x243.google.com with SMTP id q19so6947884ljc.10;
+        Sun, 08 Nov 2020 20:47:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VeSMAdUpVTWg5rlPdJVG8pxSdZtExYB1iM9sVnjYDNg=;
-        b=eJHm3TiHV/0XNoAZ9ieRJhgkcSnJxiDmzQgtmuC631IsES0yYbO7cCylVd6eMw/FxM
-         2w0vktpK/2bR+J/jtgktx+Gr2a5E4WIjVPPQB3qrivVht7W81PPT0kSZWbO/ezBP4oh3
-         AFt2l3D8uFT0Of/uJ0JN25E9sZwm+T3B9NQeva8HaVvfnqFTqppTyoIAHyZfRITVb3Tk
-         M+XSs405RTTGa0ZBepic36+ge8Bgo4FFga4GyIa7E9+utyyAeorXLVKT0/zgejtt2kbD
-         UaAyk8u3UMl16KNlB69cPX6b6RoOVz7YMyNvMFsZ6hY2VeKwMUlf+tOPFXVnfhIgA/En
-         +CnA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cLiYnZqbbTYE+Gmw/2Cct5bDgH44FThPRJ7yw1uOIgg=;
+        b=q2vWN2tcxbRALqh8OhrgcjDqiOjQbYaIcNRVNh3xuY/yQantgDrl9u9nLrJnRUv9hA
+         ozelSxwbh5ozbLSshRt26t0nn4JgOue72bFZttfyw0OBrgyxy/0q3YUfYR1pgzipa1SN
+         6rHhFDgY16ZfVDrPNbw8QVvyGqs9wQGx8X/2T03ASxqQRgNE0dCDud32D9uGfGNfmZew
+         AenTGWzR9MZaHnzxGDIGm5LIPE7Dlu6AUnIf3Gl4/2Uz0XXecX93kgVw1IzKv+dHuxNp
+         SVxUDP0R0o66WKgdGwDfxEasf8e1tTJw/gWlwvjZlL0cz4D/qEX0YXjFyR4Mid3JYB8g
+         gN0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VeSMAdUpVTWg5rlPdJVG8pxSdZtExYB1iM9sVnjYDNg=;
-        b=gsq8JqCaH/XuCzg6z+8eqiEmuqKCmyf/15g1dEXnJD8Tbb9iKgXBUcj3cwE1j4jnEi
-         KCe4MXt83/pk6SmzfvesslBHQVG6SYYrsV+8yhrto4fGsukxG07Ui3QRHUN9EO4/7EnS
-         hiSj4+nMl86pl4Xz0Kv/teunfYSMfcmhvRZW3WXasCPnQfWVVJ2klQwjzK2naVBKO4w5
-         hcYeQiYPjj2c+NbKvo82JDbCDARgXy9gzMLTQ0knwzAoSr6Jh2ZHTRBkaO7g4x+w51rq
-         fKaaRyT1YGpQBOUa7dt2s+J7fHu5sMeV3W91xbtdrILAkFcO0nxOqQTOSMhr3NSw6WI6
-         YPhw==
-X-Gm-Message-State: AOAM531XP3K7/Wb1l0AZ+JwsxhRCiKdfHYfjZc3nGLPDQYeyBmXjDn2J
-        2B+el5ywFLakn6ViACmhCADRxw==
-X-Google-Smtp-Source: ABdhPJyHC9U/PvJR88Atd3LH5AQkxzAqN7kL/8313M8l8h0a50sg7VR+oZ4WDuMbbCMOzGA5AzJtTw==
-X-Received: by 2002:a17:902:b58a:b029:d7:d45c:481c with SMTP id a10-20020a170902b58ab02900d7d45c481cmr6521527pls.55.1604897036736;
-        Sun, 08 Nov 2020 20:43:56 -0800 (PST)
-Received: from localhost ([122.172.12.172])
-        by smtp.gmail.com with ESMTPSA id m11sm8962236pgs.56.2020.11.08.20.43.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 08 Nov 2020 20:43:55 -0800 (PST)
-Date:   Mon, 9 Nov 2020 10:13:54 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cLiYnZqbbTYE+Gmw/2Cct5bDgH44FThPRJ7yw1uOIgg=;
+        b=UaY+v+txMD7MF/ktpnuLEeAVK8VkJVDYQZTixSWKFFF+39x3srEL8g/b3TMAFSH+lF
+         rDQ1ArMTXPaCM9BhCg940oMoboMQkpkNs+UtgX/R5lf2J5ZYsn8QyiClmJ5KTLJy5qoh
+         yFSHLGeBCKflFajhO9CJLFBxKJxkkLpK4Wn6OWvHdmphhpR0+tU8FeT8ambDVEspqm/y
+         TJjlu3Cq190qtsjmQO+O3rMM4u8A78d/iPLPGilnSF48NSolxdJuuOQu0wUJQ6GJ31pV
+         1DzmcmPxodZcR8wdLgpxDGA9fTtrOKLbMDaHUZ6mnU/HxHXu2OWh2D2YEEt+jPx+ZNwz
+         uahg==
+X-Gm-Message-State: AOAM530Vr6J+yXS9gv7zWyAmVXtatMRCiiPhOCuiNoEXMD3fSijrFW02
+        uEmlaV5WalzhxfXn2Q7A0Q5Q15Lg+2M=
+X-Google-Smtp-Source: ABdhPJyDE2aG8TshKuizrAN7qDH3x0b/P0IYn1ToY1b01Ld0Wj957fykeNLLAtH1r4vAPpkK8xTQfg==
+X-Received: by 2002:a05:651c:2cb:: with SMTP id f11mr218668ljo.371.1604897270127;
+        Sun, 08 Nov 2020 20:47:50 -0800 (PST)
+Received: from [192.168.2.145] (109-252-193-159.dynamic.spd-mgts.ru. [109.252.193.159])
+        by smtp.googlemail.com with ESMTPSA id w13sm795441lfq.72.2020.11.08.20.47.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Nov 2020 20:47:49 -0800 (PST)
+Subject: Re: [PATCH v1 00/30] Introduce core voltage scaling for NVIDIA
+ Tegra20/30 SoCs
+To:     Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -61,8 +62,7 @@ Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Lee Jones <lee.jones@linaro.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
@@ -78,32 +78,37 @@ Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
         dri-devel <dri-devel@lists.freedesktop.org>,
         Linux Media Mailing List <linux-media@vger.kernel.org>,
         linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v1 00/30] Introduce core voltage scaling for NVIDIA
- Tegra20/30 SoCs
-Message-ID: <20201109044354.ljd5pomhob6b7u5v@vireshk-i7>
 References: <20201104234427.26477-1-digetx@gmail.com>
  <CAPDyKFr7qTU2RPhA_ZrbCayoTTNUEno1zdmvmv+8HBe-Owrfeg@mail.gmail.com>
  <cd147ab0-1304-a491-7a56-ee6199c02d32@gmail.com>
  <2716c195-083a-112f-f1e5-2f6b7152a4b5@gmail.com>
+ <20201109044354.ljd5pomhob6b7u5v@vireshk-i7>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <713b319e-bb7b-4743-59f0-b9892c3da92d@gmail.com>
+Date:   Mon, 9 Nov 2020 07:47:48 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2716c195-083a-112f-f1e5-2f6b7152a4b5@gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20201109044354.ljd5pomhob6b7u5v@vireshk-i7>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 08-11-20, 15:19, Dmitry Osipenko wrote:
-> I took a detailed look at the GENPD and tried to implement it. Here is
-> what was found:
+09.11.2020 07:43, Viresh Kumar пишет:
+> On 08-11-20, 15:19, Dmitry Osipenko wrote:
+>> I took a detailed look at the GENPD and tried to implement it. Here is
+>> what was found:
+>>
+>> 1. GENPD framework doesn't aggregate performance requests from the
+>> attached devices. This means that if deviceA requests performance state
+>> 10 and then deviceB requests state 3, then framework will set domain's
+>> state to 3 instead of 10.
 > 
-> 1. GENPD framework doesn't aggregate performance requests from the
-> attached devices. This means that if deviceA requests performance state
-> 10 and then deviceB requests state 3, then framework will set domain's
-> state to 3 instead of 10.
+> It does. Look at _genpd_reeval_performance_state().
+> 
 
-It does. Look at _genpd_reeval_performance_state().
-
--- 
-viresh
+Thanks, I probably had a bug in the quick prototype and then overlooked
+that function.
