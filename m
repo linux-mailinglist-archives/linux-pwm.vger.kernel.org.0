@@ -2,54 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 662A92AE10E
-	for <lists+linux-pwm@lfdr.de>; Tue, 10 Nov 2020 21:51:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D1502AE173
+	for <lists+linux-pwm@lfdr.de>; Tue, 10 Nov 2020 22:17:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730979AbgKJUvD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 10 Nov 2020 15:51:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35738 "EHLO
+        id S1731687AbgKJVRM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 10 Nov 2020 16:17:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbgKJUvC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 10 Nov 2020 15:51:02 -0500
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF2AAC0613D1;
-        Tue, 10 Nov 2020 12:51:01 -0800 (PST)
-Received: by mail-wr1-x441.google.com with SMTP id c17so14209859wrc.11;
-        Tue, 10 Nov 2020 12:51:01 -0800 (PST)
+        with ESMTP id S1725862AbgKJVRM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 10 Nov 2020 16:17:12 -0500
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8960C0613D1;
+        Tue, 10 Nov 2020 13:17:10 -0800 (PST)
+Received: by mail-lf1-x144.google.com with SMTP id v144so88828lfa.13;
+        Tue, 10 Nov 2020 13:17:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7HIcKzFu5PUUQcFiE5YVq2OrMCSk+O2P2oBdDfJbjm4=;
-        b=p3IuKkDXlF3/hpGET8e431R9TjI8VmaD+tYyRxHQGfyz1Zii2UqQIUz90t+lwWNG3V
-         BSvrTnzMRaDza3nj7lIX82CRMGAvsjEdjNzfHjEnvpAFxV5wVG9/Tdztnp70jZFTX9n7
-         XVoGGmB3AUEEriWlJRtubCXxQZ+7IfKCFRLa1Bs/eq7/b3hujUOOe/nhApmQ3zZBcQr6
-         XTN4tHq9WBwGu9zozNsOUEZcudsB0kAiBu+SsVkmAu2gY+R5sjJku3BNQyWBpCWiG0dn
-         F9Q53i5FcdYDhmSQYf/6sS4PokOHp+ScuogduJxME0MCnBiwFP3QWlpGVvuQch6XGJqx
-         df+Q==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EGw/lJ2fFtGQXxuehfGhLjJtLJBME8AehCZBZ0GpWKM=;
+        b=NAjhIP+3pP7247wVyMNIoqS0eBQ6Ub6VXzYDVkDW5hh7OeVhZnrCfqxE2LxWyJsKMV
+         90KLTj2Sz4TgROVkbS2FdYgKiKElggblFjPltnMdRMP+LsofRfySn0ZAVRiZ/rJhCxi6
+         Ihb4k6looEtRmT1ELEZ0lM7wPWjSKyFQbZqNuGGZWJnLFo6POVOBCZ35lDBdx6WUlyZo
+         hFkkJUxBTXfhYM1L6nmK/Cdx6WzQfwcvnzNWLiRd/LuWn+G/zTP5qT4snC3j+huX+nYr
+         tA9dCLNuMRHfewvKYy4Ua/ksZbn9fdwQO2uPYg+XI2muKxWHeQxfYp9b34Tx6cpXjg8z
+         oyIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7HIcKzFu5PUUQcFiE5YVq2OrMCSk+O2P2oBdDfJbjm4=;
-        b=V/NHP2WbXVovV9P8XI6d8spuqAj6J4vGunak1qh/2ENHWRJzfoAPfwTrlb/naj3HCX
-         hlfkFjsaEAVzoqbm0j3XxyJkqL8HEpqSuGi6bGLPWVBbiurlX1/N494VF4Pnn843fGba
-         Yhuapk6UsAbWWZcNTLbqQ3MeZVPlWp2BThv/oKmpOD8F9qMymp/sIl8PxFVm+RQttNsG
-         3XkVFWaHeKxWqDiTh8om4Be2Tja9+Y9deVZpcP/P3KeV7zbgJrvFfDq370BfQ7X2BSRj
-         9/S++B4mt3ZGtKfOx8pEREsQbB8wechvFBoC3t+5Cm1YcZ3O+mfMm0u4VZ/hMz6wBgqo
-         0wQw==
-X-Gm-Message-State: AOAM531SasjoXAENlgwHamyZkY1QKIFDSVWkrxCJrqFsHQK8KtWNl1S3
-        6hgrcaj3VLRRWKWd/OQO8uM=
-X-Google-Smtp-Source: ABdhPJxzIEmPPnLANkIp2K03g8rC5eaOPrtyiZGMeuwPXYl02/6Hg+v9qU2Prx3ft4ivHx0jS/Q3dA==
-X-Received: by 2002:a5d:51c2:: with SMTP id n2mr12551938wrv.326.1605041460687;
-        Tue, 10 Nov 2020 12:51:00 -0800 (PST)
-Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id z5sm18029459wrw.87.2020.11.10.12.50.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Nov 2020 12:50:59 -0800 (PST)
-Date:   Tue, 10 Nov 2020 21:50:57 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EGw/lJ2fFtGQXxuehfGhLjJtLJBME8AehCZBZ0GpWKM=;
+        b=YZRECcJ7PAUTjtP9s4dxXu0vwXJ/TdAvaawxP8WYuIH35iAxGEkfgMhKtPeollmBlq
+         D0Qaih+nf+WySiB7fzwV4vbdpVo7CgtuMXDuqD5CaOA9pKgiBMnw434KzQ5ohbAzJzJW
+         7xgONDva+SlzjQcT/NZPUlnhzdC1Y2iIVtGTBNAohYMX4G4AoX0BTHUd7CWQ8LZAnt1m
+         gPiv9H8Kt9OKrJ46bW6paHblxjXWSurUJXrDTe7nIlvGp3o8QcHAp2Sj8FWlGpMtJEmb
+         QEUoyraWHs9KfeB8iZkiiHusWiIsraLDqtiyixaMkfmwcXuGJtwTGSS3fN+NNqxlFcM8
+         6SzQ==
+X-Gm-Message-State: AOAM531Ih9D4P6xzza1CqNOLFm42BFxdGp2niDJ2OPFi26saNnNkZaka
+        L6NBIndpt1aCVG3h4aOr84fWlsM3ldE=
+X-Google-Smtp-Source: ABdhPJy9MxQ9JDqgbUxs5iJjOZhvvAhbIb4SB90wBtvxj6i+Z1NqL4Sgmd5xFUlSjTl9BiZi3p2X+g==
+X-Received: by 2002:a19:6a07:: with SMTP id u7mr4706867lfu.252.1605043028710;
+        Tue, 10 Nov 2020 13:17:08 -0800 (PST)
+Received: from [192.168.2.145] (109-252-193-159.dynamic.spd-mgts.ru. [109.252.193.159])
+        by smtp.googlemail.com with ESMTPSA id m7sm1658405ljb.37.2020.11.10.13.17.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Nov 2020 13:17:07 -0800 (PST)
+Subject: Re: [PATCH v1 18/30] pwm: tegra: Support OPP and core voltage scaling
+To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
         Alan Stern <stern@rowland.harvard.edu>,
         Peter Chen <Peter.Chen@nxp.com>,
@@ -59,8 +59,7 @@ Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Lee Jones <lee.jones@linaro.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -72,104 +71,80 @@ Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
         linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-media@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v1 18/30] pwm: tegra: Support OPP and core voltage scaling
-Message-ID: <20201110205057.GH2375022@ulmo>
 References: <20201104234427.26477-1-digetx@gmail.com>
- <20201104234427.26477-19-digetx@gmail.com>
+ <20201104234427.26477-19-digetx@gmail.com> <20201110205057.GH2375022@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <a3bf156d-17b8-0edd-9981-a17991266e1d@gmail.com>
+Date:   Wed, 11 Nov 2020 00:17:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="v2Uk6McLiE8OV1El"
-Content-Disposition: inline
-In-Reply-To: <20201104234427.26477-19-digetx@gmail.com>
-User-Agent: Mutt/1.14.7 (2020-08-29)
+In-Reply-To: <20201110205057.GH2375022@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+10.11.2020 23:50, Thierry Reding пишет:
+> On Thu, Nov 05, 2020 at 02:44:15AM +0300, Dmitry Osipenko wrote:
+> [...]
+>> +static void tegra_pwm_deinit_opp_table(void *data)
+>> +{
+>> +	struct device *dev = data;
+>> +	struct opp_table *opp_table;
+>> +
+>> +	opp_table = dev_pm_opp_get_opp_table(dev);
+>> +	dev_pm_opp_of_remove_table(dev);
+>> +	dev_pm_opp_put_regulators(opp_table);
+>> +	dev_pm_opp_put_opp_table(opp_table);
+>> +}
+>> +
+>> +static int devm_tegra_pwm_init_opp_table(struct device *dev)
+>> +{
+>> +	struct opp_table *opp_table;
+>> +	const char *rname = "core";
+>> +	int err;
+>> +
+>> +	/* voltage scaling is optional */
+>> +	if (device_property_present(dev, "core-supply"))
+>> +		opp_table = dev_pm_opp_set_regulators(dev, &rname, 1);
+>> +	else
+>> +		opp_table = dev_pm_opp_get_opp_table(dev);
+>> +
+>> +	if (IS_ERR(opp_table))
+>> +		return dev_err_probe(dev, PTR_ERR(opp_table),
+>> +				     "failed to prepare OPP table\n");
+>> +
+>> +	/*
+>> +	 * OPP table presence is optional and we want the set_rate() of OPP
+>> +	 * API to work similarly to clk_set_rate() if table is missing in a
+>> +	 * device-tree.  The add_table() errors out if OPP is missing in DT.
+>> +	 */
+>> +	if (device_property_present(dev, "operating-points-v2")) {
+>> +		err = dev_pm_opp_of_add_table(dev);
+>> +		if (err) {
+>> +			dev_err(dev, "failed to add OPP table: %d\n", err);
+>> +			goto put_table;
+>> +		}
+>> +	}
+>> +
+>> +	err = devm_add_action(dev, tegra_pwm_deinit_opp_table, dev);
+>> +	if (err)
+>> +		goto remove_table;
+>> +
+>> +	return 0;
+>> +
+>> +remove_table:
+>> +	dev_pm_opp_of_remove_table(dev);
+>> +put_table:
+>> +	dev_pm_opp_put_regulators(opp_table);
+>> +
+>> +	return err;
+>> +}
+> 
+> These two functions seem to be heavily boilerplate across all these
+> drivers. Have you considered splitting these out into separate helpers?
 
---v2Uk6McLiE8OV1El
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Nov 05, 2020 at 02:44:15AM +0300, Dmitry Osipenko wrote:
-[...]
-> +static void tegra_pwm_deinit_opp_table(void *data)
-> +{
-> +	struct device *dev = data;
-> +	struct opp_table *opp_table;
-> +
-> +	opp_table = dev_pm_opp_get_opp_table(dev);
-> +	dev_pm_opp_of_remove_table(dev);
-> +	dev_pm_opp_put_regulators(opp_table);
-> +	dev_pm_opp_put_opp_table(opp_table);
-> +}
-> +
-> +static int devm_tegra_pwm_init_opp_table(struct device *dev)
-> +{
-> +	struct opp_table *opp_table;
-> +	const char *rname = "core";
-> +	int err;
-> +
-> +	/* voltage scaling is optional */
-> +	if (device_property_present(dev, "core-supply"))
-> +		opp_table = dev_pm_opp_set_regulators(dev, &rname, 1);
-> +	else
-> +		opp_table = dev_pm_opp_get_opp_table(dev);
-> +
-> +	if (IS_ERR(opp_table))
-> +		return dev_err_probe(dev, PTR_ERR(opp_table),
-> +				     "failed to prepare OPP table\n");
-> +
-> +	/*
-> +	 * OPP table presence is optional and we want the set_rate() of OPP
-> +	 * API to work similarly to clk_set_rate() if table is missing in a
-> +	 * device-tree.  The add_table() errors out if OPP is missing in DT.
-> +	 */
-> +	if (device_property_present(dev, "operating-points-v2")) {
-> +		err = dev_pm_opp_of_add_table(dev);
-> +		if (err) {
-> +			dev_err(dev, "failed to add OPP table: %d\n", err);
-> +			goto put_table;
-> +		}
-> +	}
-> +
-> +	err = devm_add_action(dev, tegra_pwm_deinit_opp_table, dev);
-> +	if (err)
-> +		goto remove_table;
-> +
-> +	return 0;
-> +
-> +remove_table:
-> +	dev_pm_opp_of_remove_table(dev);
-> +put_table:
-> +	dev_pm_opp_put_regulators(opp_table);
-> +
-> +	return err;
-> +}
-
-These two functions seem to be heavily boilerplate across all these
-drivers. Have you considered splitting these out into separate helpers?
-
-Thierry
-
---v2Uk6McLiE8OV1El
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl+q/TEACgkQ3SOs138+
-s6FEeBAAokltgZ7HHYhhwbbWHXNUkzO/NUlYWsInWSSKGta8fNY21NFKFf6nxcqg
-ysIyLPN9dv8a9saNwqn3LEtMcfrRlwhNI22SJT9qeJccG/FrVSt9wPszq4Sm/6+/
-XjySJpMVvKGnrZTlrDIqTPjxnocpBDumCM+jSDtNH/VPaGozHg1Zx0qh8/beFTmv
-Vtb0OcnD4qtkufaD0UNVfgFgwtFA3kRYS4cn6HfvqtjefLPSoQPAsdm7Bv4k7x5c
-KT12aYsPstalOtHu+FLiNVpazIpRiQcf1r4C/NtBsZcakeN5yuDe5TjP81BWYYmL
-q2d7TSeKz7bETNVkYlHJYDjvmDKdxfSaCkZYzfrHZlGIIFkDVUldkWLqi3g7SFe8
-SZTVRmWNiXrs6yvvJLLATV+By1fXEUHT+5EncaaS2KKWIER/rkBfZaTU5sm1Dh2e
-1uYKgu1HT00/215AdNLi/QpUSCMoP+RUixydwl9b0+dkJ5mbcY3Zyqz0iyFKEPg6
-EnkFO/edSWtmvQeFqqapWBfvO7ilH+yrlO8usp0A4pFhHFrs5D7k+oij9lDKVDPO
-LT092WpWBVzCxAYioMUGADderKfCTP3Tp4W5Lw9Tp2zyHG6Qze+UsbvNoPwYhb8G
-l0UKpbDA7nfIhJ3zrFcENxPPGXWP7aDaL8sG6HnZ5FQZoyj/w2Y=
-=OvzO
------END PGP SIGNATURE-----
-
---v2Uk6McLiE8OV1El--
+The helper is already prepared for v2.
