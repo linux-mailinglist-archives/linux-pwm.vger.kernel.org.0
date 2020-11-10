@@ -2,53 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D1502AE173
-	for <lists+linux-pwm@lfdr.de>; Tue, 10 Nov 2020 22:17:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 371B42AE17B
+	for <lists+linux-pwm@lfdr.de>; Tue, 10 Nov 2020 22:17:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731687AbgKJVRM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 10 Nov 2020 16:17:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39760 "EHLO
+        id S1726861AbgKJVRg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 10 Nov 2020 16:17:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbgKJVRM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 10 Nov 2020 16:17:12 -0500
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8960C0613D1;
-        Tue, 10 Nov 2020 13:17:10 -0800 (PST)
-Received: by mail-lf1-x144.google.com with SMTP id v144so88828lfa.13;
-        Tue, 10 Nov 2020 13:17:10 -0800 (PST)
+        with ESMTP id S1725862AbgKJVRf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 10 Nov 2020 16:17:35 -0500
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E44DC0613D1;
+        Tue, 10 Nov 2020 13:17:34 -0800 (PST)
+Received: by mail-lj1-x244.google.com with SMTP id b17so3790877ljf.12;
+        Tue, 10 Nov 2020 13:17:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EGw/lJ2fFtGQXxuehfGhLjJtLJBME8AehCZBZ0GpWKM=;
-        b=NAjhIP+3pP7247wVyMNIoqS0eBQ6Ub6VXzYDVkDW5hh7OeVhZnrCfqxE2LxWyJsKMV
-         90KLTj2Sz4TgROVkbS2FdYgKiKElggblFjPltnMdRMP+LsofRfySn0ZAVRiZ/rJhCxi6
-         Ihb4k6looEtRmT1ELEZ0lM7wPWjSKyFQbZqNuGGZWJnLFo6POVOBCZ35lDBdx6WUlyZo
-         hFkkJUxBTXfhYM1L6nmK/Cdx6WzQfwcvnzNWLiRd/LuWn+G/zTP5qT4snC3j+huX+nYr
-         tA9dCLNuMRHfewvKYy4Ua/ksZbn9fdwQO2uPYg+XI2muKxWHeQxfYp9b34Tx6cpXjg8z
-         oyIg==
+        bh=vf5kUjShC7D4zxjBHAlcMmZpxwxqDm+lWkcny/PyTLU=;
+        b=Bb6TkkCgyvh2gtRxC0/lZw/l5uChihV6xuDSvj+rng+LYcNWyxYb8WUqo9KsrKm3BS
+         S8dKRCnLXwn/IGgp2WbbQ3DIv29EHR5Va7mjo4s2WaO63VgRRZfaasHdsQle99i7igTs
+         +gGifF40vB3CE1jzC81DdjJtvR7W9V0IGwrUkQahhQhQhJMCAKLeoq5VMYX9c698zGhw
+         tXh33thzdMaCXs1uut8wQPkGtgubi+1DOWac+ED56DYMUJzkOnN5q2pe0rlX4mcji/jG
+         vpFko7ZNU5mM3vDGH+Db9LGIad7B2kJg7mDut+7PhHZNxAzGHTJDtIL8rYMi5kZkhVIk
+         STKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=EGw/lJ2fFtGQXxuehfGhLjJtLJBME8AehCZBZ0GpWKM=;
-        b=YZRECcJ7PAUTjtP9s4dxXu0vwXJ/TdAvaawxP8WYuIH35iAxGEkfgMhKtPeollmBlq
-         D0Qaih+nf+WySiB7fzwV4vbdpVo7CgtuMXDuqD5CaOA9pKgiBMnw434KzQ5ohbAzJzJW
-         7xgONDva+SlzjQcT/NZPUlnhzdC1Y2iIVtGTBNAohYMX4G4AoX0BTHUd7CWQ8LZAnt1m
-         gPiv9H8Kt9OKrJ46bW6paHblxjXWSurUJXrDTe7nIlvGp3o8QcHAp2Sj8FWlGpMtJEmb
-         QEUoyraWHs9KfeB8iZkiiHusWiIsraLDqtiyixaMkfmwcXuGJtwTGSS3fN+NNqxlFcM8
-         6SzQ==
-X-Gm-Message-State: AOAM531Ih9D4P6xzza1CqNOLFm42BFxdGp2niDJ2OPFi26saNnNkZaka
-        L6NBIndpt1aCVG3h4aOr84fWlsM3ldE=
-X-Google-Smtp-Source: ABdhPJy9MxQ9JDqgbUxs5iJjOZhvvAhbIb4SB90wBtvxj6i+Z1NqL4Sgmd5xFUlSjTl9BiZi3p2X+g==
-X-Received: by 2002:a19:6a07:: with SMTP id u7mr4706867lfu.252.1605043028710;
-        Tue, 10 Nov 2020 13:17:08 -0800 (PST)
+        bh=vf5kUjShC7D4zxjBHAlcMmZpxwxqDm+lWkcny/PyTLU=;
+        b=taRtUWryqLSDN8BTYmtGE+SbWqHlIfSbAly8bVJBxmPNrF9SQks7/mYRHmMgJ1eAJp
+         eoQo4OwNtE9UiMaBna5hKCZ61DGvc4KOPl6WQtVqa9/kDnfqV4hy08ZbDrhTauVQCOUy
+         b+ILHVUUt3kDkLapFtig6zqpXtLNAsS/E2vMawe+l5n6RJF5Bob+EUM7MjqrYeM+dMYF
+         LQV1K6Y2shhB7cGsRPVHkjA6yp/uv1UjQYsdfVrqVL1zgAozVJCD3SDfIBL9+9Wdjybq
+         jaHm/WEQxihaJQWOcC5XaUzDIxVpAVhguH6pEKx8sBAzWNGFoOmzwdGJsG7i6dd3kAig
+         VFzQ==
+X-Gm-Message-State: AOAM531VCy0IowRabNGAyNAkvH30KSpob/3ej7aL5+TfSvjrQV1ZiaMT
+        5jQoZsZLptZSeKVTofWBV3koKviVJJs=
+X-Google-Smtp-Source: ABdhPJwNwDYOAu/bhUmj7d89Tpyf84CZcga2xU2aTsm1UWGg6/U705pR3xmW2fAZuG66Gw6OXy/oSw==
+X-Received: by 2002:a05:651c:1199:: with SMTP id w25mr4001382ljo.165.1605043051937;
+        Tue, 10 Nov 2020 13:17:31 -0800 (PST)
 Received: from [192.168.2.145] (109-252-193-159.dynamic.spd-mgts.ru. [109.252.193.159])
-        by smtp.googlemail.com with ESMTPSA id m7sm1658405ljb.37.2020.11.10.13.17.06
+        by smtp.googlemail.com with ESMTPSA id 201sm3281lfk.152.2020.11.10.13.17.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Nov 2020 13:17:07 -0800 (PST)
-Subject: Re: [PATCH v1 18/30] pwm: tegra: Support OPP and core voltage scaling
+        Tue, 10 Nov 2020 13:17:31 -0800 (PST)
+Subject: Re: [PATCH v1 11/30] drm/tegra: dc: Support OPP and SoC core voltage
+ scaling
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
         Alan Stern <stern@rowland.harvard.edu>,
@@ -72,14 +73,14 @@ Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
         devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-media@vger.kernel.org, linux-tegra@vger.kernel.org
 References: <20201104234427.26477-1-digetx@gmail.com>
- <20201104234427.26477-19-digetx@gmail.com> <20201110205057.GH2375022@ulmo>
+ <20201104234427.26477-12-digetx@gmail.com> <20201110202945.GF2375022@ulmo>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a3bf156d-17b8-0edd-9981-a17991266e1d@gmail.com>
-Date:   Wed, 11 Nov 2020 00:17:04 +0300
+Message-ID: <6bbec0aa-732a-2feb-684a-b1d8cc6a0471@gmail.com>
+Date:   Wed, 11 Nov 2020 00:17:30 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20201110205057.GH2375022@ulmo>
+In-Reply-To: <20201110202945.GF2375022@ulmo>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -87,64 +88,36 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-10.11.2020 23:50, Thierry Reding пишет:
-> On Thu, Nov 05, 2020 at 02:44:15AM +0300, Dmitry Osipenko wrote:
-> [...]
->> +static void tegra_pwm_deinit_opp_table(void *data)
->> +{
->> +	struct device *dev = data;
->> +	struct opp_table *opp_table;
+10.11.2020 23:29, Thierry Reding пишет:
 >> +
->> +	opp_table = dev_pm_opp_get_opp_table(dev);
->> +	dev_pm_opp_of_remove_table(dev);
->> +	dev_pm_opp_put_regulators(opp_table);
->> +	dev_pm_opp_put_opp_table(opp_table);
->> +}
->> +
->> +static int devm_tegra_pwm_init_opp_table(struct device *dev)
->> +{
->> +	struct opp_table *opp_table;
->> +	const char *rname = "core";
->> +	int err;
->> +
->> +	/* voltage scaling is optional */
->> +	if (device_property_present(dev, "core-supply"))
->> +		opp_table = dev_pm_opp_set_regulators(dev, &rname, 1);
->> +	else
->> +		opp_table = dev_pm_opp_get_opp_table(dev);
->> +
->> +	if (IS_ERR(opp_table))
->> +		return dev_err_probe(dev, PTR_ERR(opp_table),
+>> +	dc->opp_table = dev_pm_opp_get_opp_table(dc->dev);
+>> +	if (IS_ERR(dc->opp_table))
+>> +		return dev_err_probe(dc->dev, PTR_ERR(dc->opp_table),
 >> +				     "failed to prepare OPP table\n");
 >> +
->> +	/*
->> +	 * OPP table presence is optional and we want the set_rate() of OPP
->> +	 * API to work similarly to clk_set_rate() if table is missing in a
->> +	 * device-tree.  The add_table() errors out if OPP is missing in DT.
->> +	 */
->> +	if (device_property_present(dev, "operating-points-v2")) {
->> +		err = dev_pm_opp_of_add_table(dev);
->> +		if (err) {
->> +			dev_err(dev, "failed to add OPP table: %d\n", err);
->> +			goto put_table;
->> +		}
->> +	}
+>> +	if (of_machine_is_compatible("nvidia,tegra20"))
+>> +		hw_version = BIT(tegra_sku_info.soc_process_id);
+>> +	else
+>> +		hw_version = BIT(tegra_sku_info.soc_speedo_id);
 >> +
->> +	err = devm_add_action(dev, tegra_pwm_deinit_opp_table, dev);
->> +	if (err)
->> +		goto remove_table;
->> +
->> +	return 0;
->> +
->> +remove_table:
->> +	dev_pm_opp_of_remove_table(dev);
->> +put_table:
->> +	dev_pm_opp_put_regulators(opp_table);
->> +
->> +	return err;
->> +}
+>> +	hw_opp_table = dev_pm_opp_set_supported_hw(dc->dev, &hw_version, 1);
+>> +	err = PTR_ERR_OR_ZERO(hw_opp_table);
+> What's the point of this? A more canonical version would be:
 > 
-> These two functions seem to be heavily boilerplate across all these
-> drivers. Have you considered splitting these out into separate helpers?
+> 	if (IS_ERR(hw_opp_table)) {
+> 		err = PTR_ERR(hw_opp_table);
+> 		dev_err(dc->dev, ...);
+> 		goto put_table;
+> 	}
+> 
+> That uses the same number of lines but is much easier to read, in my
+> opinion, because it is the canonical form.
+> 
 
-The helper is already prepared for v2.
+Your variant is much more difficult to read for me :/
+
+I guess the only reason it could be "canonical" is because
+PTR_ERR_OR_ZERO was added not so long time ago.
+
+But don't worry, this code will be moved out in a v2 and it won't use
+PTR_ERR_OR_ZERO.
