@@ -2,110 +2,136 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A9FB2AF962
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Nov 2020 21:00:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FA6B2AF985
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Nov 2020 21:09:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbgKKUAQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 11 Nov 2020 15:00:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57588 "EHLO
+        id S1725966AbgKKUJ3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 11 Nov 2020 15:09:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbgKKUAQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Nov 2020 15:00:16 -0500
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3E96C0613D1;
-        Wed, 11 Nov 2020 12:00:15 -0800 (PST)
-Received: by mail-wr1-x442.google.com with SMTP id r17so3756206wrw.1;
-        Wed, 11 Nov 2020 12:00:15 -0800 (PST)
+        with ESMTP id S1725860AbgKKUJ2 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Nov 2020 15:09:28 -0500
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C880AC0613D1;
+        Wed, 11 Nov 2020 12:09:26 -0800 (PST)
+Received: by mail-wr1-x443.google.com with SMTP id s8so3722822wrw.10;
+        Wed, 11 Nov 2020 12:09:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=tJE+qKAXrMttXhdl27BZUutECGtRZIEzEE5j9CDRQ7Y=;
-        b=Qk/DKr7m29Bg2Gv+sFToYs5yx7tZoImTYHpJr4UU0a8ULkXna2TGFXkO4eQ6gOHT6w
-         rKzGFPtqZi3PIij6Btu8MSzkfYpi1St+1OuY+rTbhnLv/fCVRkUg224ZlGv1X/P+qGEL
-         sXEuPuBAocYmAA+9n311FZq3xoDPpaonp9HOYmDj0B5uebpTzrvr5nQDOTBVOxHuAta4
-         Bua9alw7Ap5emTBoDktkss9wJ4VBsqJx/CZKEusLphtu1xW3WFr50YL7bW8zOOae5GPP
-         AcaCLgf6eaMnJ9mA9HyP/LDpyu3NnnbsDiIw3qggY2gz+N3X1RJtYsqoftNtFxxKACm7
-         tMLA==
+        bh=Xiuab5loLiZQ4GVsxMBNthWxs97cvVYwFd3nDnMmqgk=;
+        b=D9VOymny/GjO8Dta8qvkdEajDwH/kAlYUet+sY+pJRvP44LyaiB1GaUWTzi6PLKk/F
+         FDgaAX+suXosQlbCO3mUYREqIYeE5uD4joYzCygSLtCmoiRX7mfSbxXnUsSq2DpHdPEz
+         GCQG1YhrqumW+DemUqN6pP7b7Rux1vFdyPk9FSVr7LhFYbWo3eNe0ZYZR1enxdRdW740
+         0dCPAYzeKOh3N6V7MsgPP0gqT311Sxx/R/XaZGodW3unmrq55ymQiMbflgbNLajHH2I3
+         IaNeHbyE5IY0iCThcA5s0XhstJfkt8KV23wA9bfXHriHju3mXzBm6A4HUSSz8wzj8QwU
+         uDpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tJE+qKAXrMttXhdl27BZUutECGtRZIEzEE5j9CDRQ7Y=;
-        b=P/u+xVYDIfE1pQLQqkem/zXri3p5G0KbwPFgAZJWTeeAKY6Q2Np0H7wmc1+C7Zx5jU
-         fe0pWMaGhlmI5/Qbvb+q6gJKx2lecoK20xNEcxCG/6SS4VX49zcsrB1TvyvdAYJWlrcn
-         38CfWw1l1RqHBqVTTWjdJ/ZLiNo+sqRQZ5Dz5I5tf5XIm4qRbK5F8lmVl1T+X6mW1Ftk
-         U/6Jy1TFGMa/9FHPzdgfwbnprboYpolL2pMBezVp7083Fr/o8SyvoFdoruu8tYV0+kGM
-         p1Hkinp34x8hhngsnU1HiUhnjeDTUIFY25sL062U77IRLbL3ycrXQg7E+1uJWdldMuFi
-         ynrw==
-X-Gm-Message-State: AOAM530cFjkm9MZpWWucSY81Mlqy8fVSmqsJuH4bYOk1Ix4ol41XuQ8K
-        9SKGSthCRNT9PBqw0PY7K/o=
-X-Google-Smtp-Source: ABdhPJyhyZ65LpejTI2ODC9N+g6AecxU/6GGwQTPtERROMfdJm5/9Ns+0NJ3Y8AOaR+jQR7GoFOcrw==
-X-Received: by 2002:a5d:4046:: with SMTP id w6mr26262375wrp.51.1605124814454;
-        Wed, 11 Nov 2020 12:00:14 -0800 (PST)
+        bh=Xiuab5loLiZQ4GVsxMBNthWxs97cvVYwFd3nDnMmqgk=;
+        b=bwavL6xW8ZOzq2biYN/AvEhfir20Nz2pbjQriKvlu73dvIAKOtkUQ/faWekxYz4kyv
+         WoYYxom0pm0TLVhSqC92W1lDPwrdtlH8IGcQBLYy/gSkKTwiwVtglimHBb/KfOG8uqCq
+         0z07SoxDujnLRGR3rGzxDEeCzZZARw9dsg45x96jOXzVQPJIqpfeL8ndH+qm4sdIkPNK
+         7yp7jk+SHVJjGNMRAeTew4klQaUGurJA81OPYoTX+0V2sb73oMH4DvzNaxhTDtTTiqp9
+         bi3mjbteE2JbP5+LeaQxB1hibMO92+DMjX/yutSiWP5R/2W6bgJjVho+dGXSPgtH2cgu
+         bijQ==
+X-Gm-Message-State: AOAM532wkITg5u4qb1v2Rn76Mwu4nW3t8zjmd9xnnNj7vqqWTF7x7IeS
+        ZiCSkIAHMNkc2njUdM1750Q=
+X-Google-Smtp-Source: ABdhPJwq7FKsezH6nXrx4aFnOFjKW00DQEGCftsmVgeTppuOgRzBDAUh7nSqZ2c7kErtOPbBgcBIMw==
+X-Received: by 2002:adf:eb08:: with SMTP id s8mr33448589wrn.12.1605125365553;
+        Wed, 11 Nov 2020 12:09:25 -0800 (PST)
 Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id q2sm3807260wru.76.2020.11.11.12.00.13
+        by smtp.gmail.com with ESMTPSA id y16sm3356603wrt.25.2020.11.11.12.09.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Nov 2020 12:00:13 -0800 (PST)
-Date:   Wed, 11 Nov 2020 21:00:12 +0100
+        Wed, 11 Nov 2020 12:09:24 -0800 (PST)
+Date:   Wed, 11 Nov 2020 21:09:22 +0100
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
 Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: tiehrpwm: handle deferred probe with dev_err_probe()
-Message-ID: <20201111200012.GH6125@ulmo>
-References: <20201030201254.24557-1-grygorii.strashko@ti.com>
+        <u.kleine-koenig@pengutronix.de>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] pwm: atmel-tcb: rework device tree binding
+Message-ID: <20201111200922.GI6125@ulmo>
+References: <20201030183658.1007395-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="0OWHXb1mYLuhj1Ox"
+        protocol="application/pgp-signature"; boundary="fmvA4kSBHQVZhkR6"
 Content-Disposition: inline
-In-Reply-To: <20201030201254.24557-1-grygorii.strashko@ti.com>
+In-Reply-To: <20201030183658.1007395-1-alexandre.belloni@bootlin.com>
 User-Agent: Mutt/1.14.7 (2020-08-29)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---0OWHXb1mYLuhj1Ox
+--fmvA4kSBHQVZhkR6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 30, 2020 at 10:12:54PM +0200, Grygorii Strashko wrote:
-> The devm_clk_get() may return -EPROBE_DEFER which is not handled properly
-> by TI EHRPWM driver and causes unnecessary boot log messages.
+On Fri, Oct 30, 2020 at 07:36:54PM +0100, Alexandre Belloni wrote:
+> Hello,
 >=20
-> Hence, add proper deferred probe handling with new dev_err_probe() API.
+> This was sent as part of a 58 patches series back in 2017. The bindings
+> were agreed upon back then:
 >=20
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> ---
->  drivers/pwm/pwm-tiehrpwm.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
+> https://lore.kernel.org/linux-arm-kernel/20170607211752.avts3cofvac7ks3q@=
+rob-hp-laptop/
+>=20
+> There is still only one user of atmel,tcb-pwm in the tree and I still
+> think it is worth doing that change now.
+>=20
+> The various dependencies are now in v5.9-rc1 so it is ready to be
+> applied.
+>=20
+> I have another series removing atmel_tclib once this is applied.
+>=20
+> Changes in v2:
+>  - rework binding commit message
+>  - use enum for the pwm node reg values
+>=20
+> Alexandre Belloni (4):
+>   dt-bindings: microchip: atmel,at91rm9200-tcb: add atmel,tcb-pwm
+>   pwm: atmel-tcb: switch to new binding
+>   pwm: atmel-tcb: add sama5d2 support
+>   ARM: dts: at91: kizbox: switch to new pwm-atmel-tcb binding
+>=20
+>  .../devicetree/bindings/pwm/atmel-tcb-pwm.txt |  16 --
+>  .../soc/microchip/atmel,at91rm9200-tcb.yaml   |  34 ++-
+>  arch/arm/boot/dts/at91-kizbox.dts             |  45 ++-
+>  drivers/pwm/Kconfig                           |   3 +-
+>  drivers/pwm/pwm-atmel-tcb.c                   | 264 ++++++++++--------
+>  5 files changed, 220 insertions(+), 142 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.t=
+xt
 
-Applied, thanks.
+Patches 1-3 applied, thanks.
 
 Thierry
 
---0OWHXb1mYLuhj1Ox
+--fmvA4kSBHQVZhkR6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl+sQssACgkQ3SOs138+
-s6Es6hAAkcm4s47CNuSVr+gkrq3JUtXW9SOOMmSVlAyLrAEp2SG2fBeBFwT1JNSN
-cmXw0aAA5dma9CW1DM+50Ay1BksqQqH5mqfSU5zrjF9+nBVBNtvE2KLFq1HbYZHC
-ElZDwW3u5SDComUnGiMhtHaKIGDv+EE9pHAqbYYa5YqECzKGlASXeqMDu7IIcn0f
-jUy1530GQHYbHlFtMn0P28Oj9oJfZMXJlhSwylTXHd9XORH6CugSINF4miJy+IU5
-dDb11/mIlwBHI7HqULJMHKMnVi2hIWuDTd6muz5pVqjzzTHneKEBJ8bmp8R8qmU1
-U/G1ZS+027S2EL/axLIQYkP5cIod/UatR4MN5xGznAUqIuEmWJAiSOAfOc+bTDwQ
-lAdv0gPisgbDtHlNmKM/UxFueLw027taaN4ADkH7e4h6XxYjRsI+z+U0Tav8Nxnw
-LTmL1LNSGf199fhMvl3WeIrp25qOI3JxBab47SNM+2XKJs/tWQRVonzFtB0BNfuV
-kwGIxz6PJVgfymiIFXcmCiPs7DeGG1g2QW991EGdVTwHC+Yg6Q5juhFX9y36NaOk
-YyxdA/Qyg1l3MHNjpctbUS6slTPQZUEdIQ5ldwNeNtZhpNApOg0IizsEi1dUs9QP
-knPdOHGg9HGrjzl6KBjav40pWEFqehv7bHp/bBSaESbw2P4mR6Y=
-=f2rv
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl+sRPIACgkQ3SOs138+
+s6EjIRAAtR608Qmo8RQVZLEXLwAC8ZuqnunjrxJxrzNKdFQ4EzdOBXp7XHquYp6b
+w+NRvsDLrl7qTHJe39G/TzX187h0rGA944QKXuEpUoJUjN413xb6yQ24LKSdze+S
+YBTDxtiDi9MKEH0v+Q80l0QYQ71dg59IQmkbSEu922eLIDfwucYC5hEqLh8iylpT
+owt1X0xFE4g/cyX10SSvXveYZiQZQ9jDFRPpQY/HZFixHKSpHIiQP/c479qeh/Nq
+Bd7W16YgLZ59iyxFwvBfEBPu/jMRKAzo7r786hoBLdGwqajKMjSnoag/YaBKR/tR
+nqG604+SEoqtWz76UArW0cwNGgCZuCZ0HmEDgAXS5eRDjdWYRxaA068rDKLYmk6C
+K4chBp7kn51YL/xIGhzt8OBArsdWtJLxpzCG3NmbUg9wM9oMtSlqju12fXtvTgBi
+uYgHtWStTD5EUd0r1w7VsJ989FDXn6CYE5xaN9vrcP1nhbxcmWkUUtXeEpHAdMb8
+Ng2oz+PqSuT6aNZp4oY0fT1ErFvSA+pNkh1Ek1NSSyjSnJIUuV1y45O+Nm7pBYnK
+wHphDrErPVqNTi2y6UmItE/r6D3+7ranz7lNXOwAsPx7h+cnjgT3a7W8f6B9/WVV
+BTe0P79UPgvQ+2VwAyfd4EWjs2CitUQNoJVFTGhD5QcVWV4hQv0=
+=xnU/
 -----END PGP SIGNATURE-----
 
---0OWHXb1mYLuhj1Ox--
+--fmvA4kSBHQVZhkR6--
