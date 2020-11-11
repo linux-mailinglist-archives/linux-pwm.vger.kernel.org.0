@@ -2,110 +2,110 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2E362AF952
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Nov 2020 20:55:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF7772AF956
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Nov 2020 20:57:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbgKKTzZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 11 Nov 2020 14:55:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56840 "EHLO
+        id S1725979AbgKKT55 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 11 Nov 2020 14:57:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgKKTzY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Nov 2020 14:55:24 -0500
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FC3BC0613D1
-        for <linux-pwm@vger.kernel.org>; Wed, 11 Nov 2020 11:55:24 -0800 (PST)
-Received: by mail-wm1-x343.google.com with SMTP id c9so3335066wml.5
-        for <linux-pwm@vger.kernel.org>; Wed, 11 Nov 2020 11:55:24 -0800 (PST)
+        with ESMTP id S1725933AbgKKT54 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Nov 2020 14:57:56 -0500
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F014C0613D1;
+        Wed, 11 Nov 2020 11:57:56 -0800 (PST)
+Received: by mail-wr1-x442.google.com with SMTP id s8so3692487wrw.10;
+        Wed, 11 Nov 2020 11:57:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=gd70qSrKeFoeBcrYl2uQ8NaIJcBNWpGeTQU4+YhWMnQ=;
-        b=ncV1b1nhrB7m9fQuk3wnUou7V9jrwXcdHT9iekc2MLX9gwJfynWjPrYXzpypEkMs+o
-         T3PvPtQTH8dJZY6Lhq0Yi0Jokc29NXAqeutJioCxVhrtxBHbov4M5EwAB4kTYbRsLMKK
-         a6TXTVcg0T+NLWnMQpeJlDaDXuiD9kBFyAIJO52dtGNHPQtFYs2P+RZCJ5aLzsvzfuQD
-         TEfimxz5K05ZSplN7+kT+co5rL/SrazBUoadSJcp0aomZAcCBQQ5O7T7EV8Mx/pdnVw5
-         nXhaJEMAOCyLPk8RCWjtW1V6FPT4O/lnG07Br3A5B4cLiDiztUyeTiMhAWT9F82C98/8
-         KP9A==
+        bh=EV1zSZnxeiNj7AdewMQkRMYjJy+CWcSEMHO0hUOUs1g=;
+        b=BYAbyz12Cz9TX5VbWQlkl8fmK5Fth8vSaoEBODOtR3POui1l/yUsOz1f/d75S9pXyX
+         TTd1d02z6d7dykDCCljYgKPcqFxj1iPVc+GNzP15xgcJ4ZDXfMTEyeOZyymFj5v8rgRG
+         J8KEp+ZHqliuSq2YhpqHs7lqEPF2MDRhzhfZrrjiTdhtb+0Wof9XjR3iZj8hRCl7+JTh
+         QFm2wLcax2M20+ko7SaOdyl9MevKbPfGhcacEZRALfdriDbci732XmH26nIvXbKfo3ts
+         JUjw7PWwbLTlyWI1AuBwSQf5hfbmBe1BQtBQHILm8+0rzGR7OkrMIfizdHnqmkPkomYg
+         zSQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gd70qSrKeFoeBcrYl2uQ8NaIJcBNWpGeTQU4+YhWMnQ=;
-        b=OBP5OoNB7QvW2n00s6JpoahyRjBOdReCQDNJsZ+tioPVD/f/ofGNkQ6gydJVEChoYJ
-         6GMtSWxbXTrI47whCrC35e0HnAk5zmEUYTVZAyuRHe4P5mwlCflYTmMDY1ap7cSCZRKn
-         VRVFH9WRHOf77RzaHAywUkNGo72q84vKvNxlVMpLK6Jemj3NUECWKzTqASDWjvi0ECIn
-         mQtIR30CG7lSOVyuBMK59EDXAMSib2WSRx4q+HI3txR5sfwfxNu2V9JNadbAvB7Fv9Z5
-         lKC+A92XddwtRKVySyhdTjTm7XBjWRs9HPlFx2y9Bek4nwZfKdYDLMO0Qwu1MKPghpib
-         C16Q==
-X-Gm-Message-State: AOAM531GizmUsikqKSV5VT84N4eFfV4t8+OIuQKeJAhZ17fKDod4cY10
-        k2w4NUpCmVf8xIzslmAeDXY=
-X-Google-Smtp-Source: ABdhPJwrY5eszrsaysmXZOmwUbW5gRb3i5b3zf9ayhtnh29vTeyh+BOzfhe7ssRZknvfnz0k0w0Arg==
-X-Received: by 2002:a1c:4054:: with SMTP id n81mr5955619wma.48.1605124523237;
-        Wed, 11 Nov 2020 11:55:23 -0800 (PST)
+        bh=EV1zSZnxeiNj7AdewMQkRMYjJy+CWcSEMHO0hUOUs1g=;
+        b=PvBrHzqg1Q68a534VrgTLdud06+F3qDCATE//5bcMDByKwKcDYlH/wkyawtX/xtqS8
+         l9AATYd0hbPt5+2ouyn0ZkMMhyVjVfu6Fe6LZJzZ1sc9D6FOw/rss5mdArfAn0lz1H/k
+         i7SoqeoKuYv6hRgCspMnd8H5E/HvqmgB7VBv3aqdLYXr6eUDufTXsZusBRtoCB0skAKU
+         BXGZOEFkoiQvxeBW0oLppxoqzg05Cx8x+nD+yLAKKFY8otSFgDPsZiVLOvSXeAge4OjQ
+         XXJeOkeEunvQzqUOp9EOf+ARJJ9Z3YvWD0A+aa7gujcMe8kWFIl/ByitItTx2bvG0Ogx
+         mKoQ==
+X-Gm-Message-State: AOAM530jpzJqG+P1voIIAS0rL6ra0145HLkaNJR904WjNt4jNTqsLWkH
+        d388dkaWCXznVu9XtN1+on4=
+X-Google-Smtp-Source: ABdhPJzOau2S3qcK5GwcPQnfWJSpcZjjqWa4TkPkvQLBdOY8oHN3aB17OhfrQLoetvMOqQaJJmJv6g==
+X-Received: by 2002:adf:ea47:: with SMTP id j7mr31221822wrn.126.1605124674908;
+        Wed, 11 Nov 2020 11:57:54 -0800 (PST)
 Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id n9sm3701946wmd.4.2020.11.11.11.55.21
+        by smtp.gmail.com with ESMTPSA id c2sm3875913wrf.68.2020.11.11.11.57.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Nov 2020 11:55:21 -0800 (PST)
-Date:   Wed, 11 Nov 2020 20:55:20 +0100
+        Wed, 11 Nov 2020 11:57:53 -0800 (PST)
+Date:   Wed, 11 Nov 2020 20:57:52 +0100
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] pwm: ab8500: Explicitly allocate pwm chip base
- dynamically
-Message-ID: <20201111195520.GF6125@ulmo>
-References: <20201106171547.50669-1-uwe@kleine-koenig.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-pwm@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] pwm: lpss: pwm: lpss: Misc. cleanups /
+ improvements
+Message-ID: <20201111195752.GG6125@ulmo>
+References: <20201109105726.121512-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yH1ZJFh+qWm+VodA"
+        protocol="application/pgp-signature"; boundary="yQbNiKLmgenwUfTN"
 Content-Disposition: inline
-In-Reply-To: <20201106171547.50669-1-uwe@kleine-koenig.org>
+In-Reply-To: <20201109105726.121512-1-hdegoede@redhat.com>
 User-Agent: Mutt/1.14.7 (2020-08-29)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---yH1ZJFh+qWm+VodA
-Content-Type: text/plain; charset=utf-8
+--yQbNiKLmgenwUfTN
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 06, 2020 at 06:15:47PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> The ab8500 driver is the last one which doesn't (explicitly) use dynamic
-> allocation of the pwm id. Looking through the kernel sources I didn't
-> find a place that relies on this id. And with the device probed from
-> device tree pdev->id is -1 anyhow; making this explicit looks
-> beneficial, too.
+On Mon, Nov 09, 2020 at 11:57:23AM +0100, Hans de Goede wrote:
+> Hi All,
 >=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.org>
-> ---
->  drivers/pwm/pwm-ab8500.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Now that the pwm-lpss / pwm-crc / i915 atomic PWM conversion has landed
+> in 5.10-rc1 here is a small follow up series with some misc. improvements.
+>=20
+> Changes in v2:
+> - Extend comment to explain why the DPM_FLAG_SMART_SUSPEND is set
+> - Add Andy's Reviewed-by to all 3 patches
 
-Applied, thanks.
+All three patches applied, thanks.
 
 Thierry
 
---yH1ZJFh+qWm+VodA
+--yQbNiKLmgenwUfTN
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl+sQagACgkQ3SOs138+
-s6Hleg//Sm7d/ffyFCVveUaB96wydslOJBwATUzgSbGYwq6/YjPXpMWePIsJTaRF
-HTPn18dYbqu1vxfgmxI6bO06asm+CoQ3MlyQGZUqgdN6Iu5DMm0q72VRlCmnzen8
-NB5jZO7PT/lKInpS205v/qu1rzRjfFpYk9qOFvxiI1CMi8F63cjc5wKNGINV9+Zn
-eHG7qunY+TeEJwvsjkqqr/aDh0tS/Wqr2VWbzpSr7aAzIK0qKuwHdza4QmJ/2c1h
-2rPyM06B/Xyc1sjI3iY1aEc+rjyGzIdCiYRtfzhRSrECCrX6ztSlVldTHfw2JKej
-s6G7O61ZVcXpsV9o6A5/CAbm0BZhFfIRxnpwRKq0qroSqa9nMUP8fuYcXxQ3OINh
-XDcbb0IShfqvJI7hkFm5EK9QcBugXfyEKDWNLXdF6W4chyaEaMLUoYjMZZseLpgs
-10xBptEpvN/BoLdfRwEA4f4y3PSaatsojbtDtvJtKUqG2tqZnb9S0DkmrYwqag/s
-bXYZGwjI3SgEHvrPuJQXgYKm6r8sX5PJK7wpBSGepp5cj+ud4ZfHTPOKxIYQDSuN
-0oPqcgJGFbcp3VV5s6bgwprrvEXaAFzy33CmIzd/QgtCg0/w44Xyy/EjRRO4QxJF
-j7kxhKiX64mLbKqAco4syTQlLTT0hhGYIEo0ke03j+S074y6lQo=
-=VXS/
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl+sQkAACgkQ3SOs138+
+s6H2fw/9HXSDngw5gz4ME2lEQMcKkgSohMfps72q+1nh4EdtHmvmnOjCZ2/yJi5/
+mGyPjAfh4TmGAkq1MKPA19Vb6qA4sxpYxo9SgiPPvMKgAO2RdrCONPWENinnqkai
+Er7rdkgriRGonWOUOAE/K8hIfXqmmCOfKPci7dXL8Z8SnK/qgwiI1m6hYWu6tqhb
+ZHMwifMowBjsRNkumlBUU+pFubj7S8SBhn8pxHChJeSfUiLGrw739D+WMUv3sOaI
+oSXeN60BZ/z1Pb9Rhb29FqogemwGaYakeWE7Kox5C1QmxsD/PNkyMlvAUsZ2PkeL
+uWZZj6DZ2L28cDKn3nIazUPLJcptCof1rEzZhaiVV/HM/fTX9CzT30w7Z7e/xHCS
+DuXbFS+NFmyyxnMTszR6iTP4yC/cFBQBaUEkeMZHkbtxU9wmvTX4mRXcT5mod9II
+62jN8qJajGHaZv8LMZawjE1Ik0RPVJPZcUl2y29HTbAxsEf23KQlfnh222sE8hmf
+GJkX5bXR9HW4Ge6vPnBGHQV5DiYXWonOOu+TGK/+ljTEpRBBYHCIpFwwA0H05U4S
+9iH3nHiEnPoYBSk2V+8wmdU0j7vI4TzDD70tRa0rRMTmcYacQgNoxn49gHaEBJFz
+lkNezK1iHgOiCEU8uQ0qNkqq3uWtQ03XHm6Vb4pQPjjUgNjvy+4=
+=wc6m
 -----END PGP SIGNATURE-----
 
---yH1ZJFh+qWm+VodA--
+--yQbNiKLmgenwUfTN--
