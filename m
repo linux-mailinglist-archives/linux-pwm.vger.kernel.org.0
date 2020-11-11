@@ -2,220 +2,141 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C4E72AFA3C
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Nov 2020 22:14:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C95E72AFA3F
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Nov 2020 22:16:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbgKKVOi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 11 Nov 2020 16:14:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40870 "EHLO
+        id S1725949AbgKKVQj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 11 Nov 2020 16:16:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgKKVOh (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Nov 2020 16:14:37 -0500
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74E24C0613D1;
-        Wed, 11 Nov 2020 13:14:37 -0800 (PST)
-Received: by mail-wm1-x342.google.com with SMTP id p22so3508877wmg.3;
-        Wed, 11 Nov 2020 13:14:37 -0800 (PST)
+        with ESMTP id S1725933AbgKKVQj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Nov 2020 16:16:39 -0500
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9023C0613D1
+        for <linux-pwm@vger.kernel.org>; Wed, 11 Nov 2020 13:16:38 -0800 (PST)
+Received: by mail-wr1-x443.google.com with SMTP id d12so3860600wrr.13
+        for <linux-pwm@vger.kernel.org>; Wed, 11 Nov 2020 13:16:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=bY6vAZ0tSmVBFVA037gzrHtbWFO6SEFgmLPgtYjY22g=;
-        b=PCJJ9Z/MM17eDD5kZkQcWeB6SBIS1/Ucd1SMiZuYXSCwrZoxludcCx9XmzK9Jq0KSC
-         iGOCQfDcOoHL48VBqF204XCc3nyUdjmwxu36jTyGUzwaDbzM0YWViZk0oKqzZIhHNLFy
-         h7kLKoXIuE5Kx8oUF3iYT6VLFjGeC/uRY5P9Ndu4IXjJ2aez3I89Vb+pOgF30Sm52JgW
-         BcAaQpvMKLsfNS0I2kZYxx2chfOO41Nd44Clo7oXuy5A2cDfE+zYFalOE8zj8IOskMab
-         2NoJZpiqqhnT0A9f3OSL6YjKYD38HGGkE8IzaxIDnZjPji/9hom0IdFMsRBaXZE1ABNK
-         mvPA==
+        bh=q/G6APEJUmL5oSVKzQU/H9M4Nxa1gDvTeQPyghSx7u0=;
+        b=ZeMYUGojlBDwo1W8yUdtHEfKRRaBmCdThQDc2AxWmcGWh9cIse7Kfd/qXfi3HI62dP
+         vPNf9hQ3PoFJXq079RRURsz4UZoj6QOhy0SYcemZX5XjoZ4oazcsUCqyPM3wJAqFHU96
+         SSbF1miuwx6u0UB/tDklYrZU43mYqPG60Fg+heZxgbhZcIY+A8oNmjTOLUdgg240lgEM
+         rlW0Brnlj1W7pK06vYZ3iAWBOhtSRjxAQOtSo6EFNMa6u76E5Lju1OOgu7Go/zWBlxkC
+         CEl8/2aL6E0wjauSFEL02YLHaXO/bkvpXBdTyBMihegTMQi9gGOgTPXLi4taLvkd0tHZ
+         CM2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bY6vAZ0tSmVBFVA037gzrHtbWFO6SEFgmLPgtYjY22g=;
-        b=J9sv5rxN8jpi9M/Z9Iif28ibwrHouBEI7eucUreYir/bYE/LTFmJemPCie1rDhFret
-         jPRIWRqr882tLBcoXDLznG/ez8QInfrrr006HXHVW1L0NU3VTUwB/IoWjdoyqJlUwV8S
-         cHzCPCLcQTtqtL6bFxEyPlxxavOLcgknHd89FDUcwW/YrN5Imnpktg5JGELx5KdEN16A
-         fIRN4A4jpgaNacRw08T+T5pzfL96QlXB+W2cUrinXmZIDAIjR6MszOfW+OyHLzU67Y84
-         Qj99sMyhQUJoJ8JWHwocYT7pZZa77VD2JKOVlVjO39gs3khjbgJBhmQzLpKaWeatrvl6
-         BTDg==
-X-Gm-Message-State: AOAM530cANF8TasKCl9EtOtaoPj1WA1GMTD9YtQY7U838w3Ozpgl8iKD
-        Ss8Qeh7/L12EMHYdbLbB4rs=
-X-Google-Smtp-Source: ABdhPJwIQVD9sMCTm7j2oLshwB0nlaXclMyL3UfR34Z7VTGFy9XFFHdUAWCJmMVJq2MgFNhkn8yM8g==
-X-Received: by 2002:a1c:6a0d:: with SMTP id f13mr6083297wmc.172.1605129276237;
-        Wed, 11 Nov 2020 13:14:36 -0800 (PST)
+        bh=q/G6APEJUmL5oSVKzQU/H9M4Nxa1gDvTeQPyghSx7u0=;
+        b=cGoJOW05VbE1ABjk+AV1fzBfaorffEVML/E1BQdS04UFXBkQ1pWvzjA5A9fSiavysQ
+         4wLCFXNSrBFZJSm5pKxfxqBBXr61T+hh7YkUOJPRtm0ACBqXHBFPA5/5YWVXUjtHVojk
+         au/5bbSmqZLLqZCf+9zM5GPmfzhRGuCDDoWBZcc7CFo0H93zacRWs/3pRFVudda6bmNf
+         8qrqSrXJcS57VzAR87haUk4MWuhmiAYDA9tjfbBwRYGCLqrvKpC8v10oaTgS4c1pn/NO
+         PbN8lGXbf/hmHep+/gESYvaPqyhDdg0m6s4K5JcURdeVYiGq4vnzQogMBz+E1dpADu2J
+         uyJg==
+X-Gm-Message-State: AOAM531AyzVmXqUCnWTcMrD6IU6UI0597rLW+h8V+lE+TwQlRuGm4hpn
+        hqpljovIsGZ5jj4txP8cgVY=
+X-Google-Smtp-Source: ABdhPJzVdCDv82KsFMP7b0cX11Uv/5R8c3UOGPgVHWlXgxDS+M64kTMbDrkXvW0Uggp0DkL2rx610Q==
+X-Received: by 2002:adf:f88c:: with SMTP id u12mr23378705wrp.209.1605129397590;
+        Wed, 11 Nov 2020 13:16:37 -0800 (PST)
 Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id t5sm3991082wmg.19.2020.11.11.13.14.34
+        by smtp.gmail.com with ESMTPSA id j4sm3687309wrn.83.2020.11.11.13.16.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Nov 2020 13:14:34 -0800 (PST)
-Date:   Wed, 11 Nov 2020 22:14:32 +0100
+        Wed, 11 Nov 2020 13:16:36 -0800 (PST)
+Date:   Wed, 11 Nov 2020 22:16:34 +0100
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        lee.jones@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-Subject: Re: [PATCH v15 0/2] pwm: intel: Add PWM driver for a new SoC
-Message-ID: <20201111211432.GA571441@ulmo>
-References: <cover.1604555266.git.rahul.tanwar@linux.intel.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Ajit Pal Singh <ajitpal.singh@st.com>,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] pwm: sti: fix error handling
+Message-ID: <20201111211634.GB571441@ulmo>
+References: <20201013081531.661528-1-uwe@kleine-koenig.org>
+ <20201106082914.GX4488@dell>
+ <20201106093435.4mlr6ujivvkzkd5z@pengutronix.de>
+ <20201106102908.GC2063125@dell>
+ <20201111192823.GD6125@ulmo>
+ <0d9adfa9-9015-c8c5-c21a-f4ad9b1ef7a9@kleine-koenig.org>
+ <20201111195204.GE6125@ulmo>
+ <5b401246-62dc-3ed2-4fdc-ff9b0fe2354a@kleine-koenig.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
+        protocol="application/pgp-signature"; boundary="WhfpMioaduB5tiZL"
 Content-Disposition: inline
-In-Reply-To: <cover.1604555266.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <5b401246-62dc-3ed2-4fdc-ff9b0fe2354a@kleine-koenig.org>
 User-Agent: Mutt/1.14.7 (2020-08-29)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---gBBFr7Ir9EOA20Yy
-Content-Type: text/plain; charset=us-ascii
+--WhfpMioaduB5tiZL
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 05, 2020 at 01:49:38PM +0800, Rahul Tanwar wrote:
-> Patch 1 adds dt binding document in YAML format.
-> Patch 2 add PWM fan controller driver for LGM SoC.
+On Wed, Nov 11, 2020 at 09:39:51PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Thierry,
 >=20
-> v15:
-> - Rebase to latest linux 5.10-rc2
+> [dropped Ajit Pal Singh from Cc: as the address doesn't seem to exist any
+> more]
 >=20
-> v14:
-> - Address below review concerns from Uwe Kleine-K?nig.
->  * Add limitations info about fixed 2-wire mode support.
->  * Rename clk/reset _disable function names to _release.
->  * Remove clk & rst from driver data structure. Instead
->    use them as arguments.
->  * Add pwm_chip.base =3D -1.
-> - Resolve missing MODULE_LICENSE warning.
+> On 11/11/20 8:52 PM, Thierry Reding wrote:
+> > On Wed, Nov 11, 2020 at 08:43:18PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> > > On 11/11/20 8:28 PM, Thierry Reding wrote:
+> > > > I agree with Lee on this one, so I've applied the patch and touched=
+ up
+> > > > the label names while at it.
+> > >=20
+> > > Have you tried to follow my reasoning?
+> >=20
+> > Yes I did, and I happen to disagree.
+> >=20
+> > >                                         I consider it irritating that=
+ you
+> > > overrule the preference I justified in such detail by applying a patc=
+h with
+> > > me as author and the error handling variant I opposed to.
+> >=20
+> > Well, it was either this or have you respin the patch. I didn't think
+> > you'd mind, so I did that work myself but still wanted to credit you for
+> > fixing this in the first place (the names of the labels really don't
+> > mean much for authorship in my opinion).
+> >=20
+> > If you prefer I can just remove the patch and you can do this yourself.
 >=20
-> v13:
-> - Address below review concerns (Philipp Zabel)
->  * Make unnecessary 2 line comment as 1 line comment.
->  * Move reset_deassert at the last after clk_enable.
->  * Remove unnecessary return ret statement from .remove()
-> - Move platform_set_drvdata() at the top of probe.=20
->=20
-> v12:
-> - Rebase to linux 5.9-rc4
-> - Add Reviewed-by tags from Andy Shevchenko & Rob Herring.
->=20
-> v11:
-> - Address below review concerns (Andy Shevchenko)
->   * Fix a issue with dev_err_probe() usage & improve the usage.
->   * Fix & improve a ordering issue with clk_enable/disable &
->     reset_control assert/deassert.
->=20
-> v10:
-> - Removed unused of_device.h and added platform_device.h
->   & mod_devicetable.h
->=20
-> v9:
-> - Address code quality related review concerns (Andy Shevchenko)
-> - Use devm_add_action_or_reset() instead of explicit unwind calls.
->=20
-> v8:
-> - Remove fan related optional properties usage, keep
->   them as default. If needed, change pwm-fan driver
->   separately in future to add them as generic properties.
->=20
-> v7:
-> - Address code quality related review concerns.
-> - Rename fan related property to pwm-*.
-> - Fix one make dt_binding_check reported error.
->=20
-> v6:
-> - Readjust .apply op as per review feedback.
-> - Add back pwm-cells property to resolve make dt_binding_check error.
->   pwm-cells is a required property for PWM driver.
-> - Add back fan related optional properties.
->=20
-> v5:
-> - Address below review concerns from Uwe Kleine-K?nig.
->   * Improve comments about Limitations.
->   * Use return value of regmap_update_bits if container function returns
->     error code.
->   * Modify .apply op to have strict checking for fixed period supported
->     by PWM HW.
->   * Use u64 as type when use min_t for duty_cycle.
->   * Add reset_control_assert() in failure case in probe where it was miss=
-ing
->     earlier.
-> - Remove fan specific optional properties from pwm dt binding document (R=
-ob Herring)
->=20
-> v4:
-> - Address below review concerns from Uwe Kleine-K?nig.
->   * Improve notes and limitations comments.
->   * Add common prefixes for all #defines.
->   * Modify/Improve logic in .apply & .get_state ops as advised.
->   * Skip error messages in probe when error is -EPROBE_DEFER.
->   * Add dependencies in Kconfig (OF & HAS_IOMEM) and add select REGMAP_MM=
-IO.
->   * Address other code quality related review concerns.
-> - Fix make dt_binding_check reported error in YAML file.
->=20
-> v3:
-> - Address below review concerns from Uwe Kleine-K?nig.
->   * Remove fan rpm calibration task from the driver.
->   * Modify apply op as per the review feedback.
->   * Add roundup & round down where necessary.
->   * Address other misc code quality related review concerns.
->   * Use devm_reset_control_get_exclusive(). (Philipp Zabel)
->   * Improve dt binding document.
->=20
-> v2:
-> - Address below review concerns from Uwe Kleine-K?nig.
->   * Add notes and limitations about PWM HW.
->   * Rename all functions and structure to lgm_pwm_*=20
->   * Readjust space aligninment in structure fields to single space.
->   * Switch to using apply instead of config/enable/disable.
->   * Address other code quality related concerns.
->   * Rebase to 5.8-rc1.
-> - Address review concerns in dt binding YAML from Rob Herring.
->=20
-> v1:
-> - Initial version.
->=20
->=20
-> Rahul Tanwar (2):
->   Add DT bindings YAML schema for PWM fan controller of LGM SoC
->   Add PWM fan controller driver for LGM SoC
->=20
->  .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     |  44 ++++
->  drivers/pwm/Kconfig                                |  11 +
->  drivers/pwm/Makefile                               |   1 +
->  drivers/pwm/pwm-intel-lgm.c                        | 244 +++++++++++++++=
-++++++
->  4 files changed, 300 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.y=
-aml
->  create mode 100644 drivers/pwm/pwm-intel-lgm.c
+> I sent the version of the patch that does it the way I want. So yes, plea=
+se
+> drop the modified patch from your queue.
 
-Both patches applied, thanks.
+Alrighty then.
 
 Thierry
 
---gBBFr7Ir9EOA20Yy
+--WhfpMioaduB5tiZL
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl+sVDQACgkQ3SOs138+
-s6FAgA//bkEboSKJlHm6SeyDedY/54jZJJ743Gsg3m+KrPwS1JvLILrLuZDSCWxC
-zdAG6+2OSeKTbtZn0dcNkG6/v3ng1mKMqCYhJrXOFPWwaBT8TmrvBaAOY9UJIr3E
-aWXjN7AogW6U8zOAK08T5S18hlwxdPZIVUcs6fheSbeEzb9ux2rNiCtNbY0LCJah
-nqp+3TLfR6b6lyd7vgB2iM8Ut2won9M21ig2HiNAST/+ixV7AyW/ejSmy62QcY+K
-iDOOO6h7VfNt5DUSqNkdA0OBGZPcrKKgHD2UqKpSc0rywEaAGlOn2RhsjK9/x5Ru
-9VZhvpQGHLK9yNeS9746EKeE07gMocaHqGXGhh57ltxHFGbm9m79of+SHJB6JzEM
-NxJqQo7Bb2WZVkHaDsk1vkO7KhZ5nitcEUvI8T1lD/Id5eF8F03ghzCrc7OYp4fo
-KlWTNj5F/4sc/IcF55sayceqQu/jKigKgfVIr2ur/o7z81ykh99Ghvm5cGSRfpO/
-2xqBPvYvmhFgumuY+fUKWJzePJxXmAyt3DHWFhL8kfj3sdChTgua8BdgMYurbxLz
-f6i4KH3yHm3lZWXovGFv3LzeCKGGGcLYPI/jvKGyEXeT5b4/u5ksrOHMiOVE8xXW
-H4sY+Is81ABh8dVXsKdhWgPId1//jrUPgISYPDlBhh/P5n3UMlU=
-=MrmB
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl+sVLIACgkQ3SOs138+
+s6EwqBAAs6YNh3Ux56iRqgCMaM/pswIdF0wDvOObTtj3UjZFRnuEYu+rZoI8eLFo
+JYVKaKKs5zRFaXQk3OOQM1PIUv8nkNyW3zkDp7fVOeMjeThcV3NOAb6OueDAd8X9
+rz72gUyNuDWleE6ZzXmbdZiFw6T+VTa5c3JHbtl/MR7A6xyu79bhUuK7j+H2QvZN
+vas7EpdU4Xot3u7xa6MNJjk3KAnsqAs1tZt/nvzUF8tKhfk6kfXVh25CYrqBaTEJ
+si+ROuPvPehre/amq4yJn+ewm06FOsf3loJZaiEnrkY+cixy6tw8jFOmLryi72L5
+2mV9cEayaFiIdbbcQt6mEcdW8xIX7VBwMiy4y2IgeWFpXg0qlq60e8SqJGXXQOZx
+fnz7lE3H30iJdkMs6ugVT3uC9Lez9ySkUMibN6+FB665RqsVF9DBeoUC3VJ0pAJ7
+S7BLD30NZZpyFsSIMa8abYAmvk1ryO7X3wsUnOApJtpqdnsHO4Z/D7LGCn4VgFqQ
+st3oyFhYLTcKH9204aD7WE0IBw1D1sJcBWYGIcd5RfQJ+RcaCbYImefN+5sV18yP
+8Ik/53aK9eLwu+268kFw3Jmv5dgDrXlOdLq91V1yPuxKfWBW7M71Uph5zcHwz5YZ
+Z1BsXfQdJsbBjevxng+uS/paiIGZ5KOI+hWMMUJKhmgCz9ixFb4=
+=RnSA
 -----END PGP SIGNATURE-----
 
---gBBFr7Ir9EOA20Yy--
+--WhfpMioaduB5tiZL--
