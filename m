@@ -2,114 +2,106 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 433672AF7AC
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Nov 2020 19:05:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD9852AF7B4
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Nov 2020 19:07:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726235AbgKKSFo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 11 Nov 2020 13:05:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39836 "EHLO
+        id S1726074AbgKKSHg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 11 Nov 2020 13:07:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbgKKSFo (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Nov 2020 13:05:44 -0500
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD42BC0613D1;
-        Wed, 11 Nov 2020 10:05:43 -0800 (PST)
-Received: by mail-wm1-x344.google.com with SMTP id w24so3196912wmi.0;
-        Wed, 11 Nov 2020 10:05:43 -0800 (PST)
+        with ESMTP id S1726036AbgKKSHf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Nov 2020 13:07:35 -0500
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E968C0613D1
+        for <linux-pwm@vger.kernel.org>; Wed, 11 Nov 2020 10:07:35 -0800 (PST)
+Received: by mail-wm1-x341.google.com with SMTP id h62so3173042wme.3
+        for <linux-pwm@vger.kernel.org>; Wed, 11 Nov 2020 10:07:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=RuVJl4bZiFX7Nolk0H+UJ3kuuE8OxwQA0lCB70NPHZw=;
-        b=bHK11M8WNGQcw+bJQ8fqyLO9MGOhzSrYXmJqO5+k38gQRv2TakO2CfEsWQeUARhq4G
-         rEevPpFFx9IVe4ctDCuljJd6BYWoVWf2e2uZBJWXUlYg3fUHFduqay3RaCqWOmap3Nud
-         SpCJa+yloPH7D/ELREBw2i6/bgKXfLUtkvYWbwcG2X6DeoDNe4jhmjisAZdrifyakUDx
-         syR6fLlVkCOwRMRvHuK2PDQNuc1Y7b8CRsqhSMqaPdGcJdSXoXt9VMg9fTfp1F547Ijh
-         VtC2HgVhC6CYtqgx1Yd7sTl+GDgvrahT7bxi4BEYCFvhbH0XeAzR3rd9oAHuBOn802cy
-         Fr4A==
+        bh=pg9PNaovo24Rh8fP+CDhG35u8Ky03i4DlIeRtl+Iuyc=;
+        b=vJnjreOo5s5RlfwQVuHcgXCEor79epeHBx1xfIJUU/hqiu1UJu5SyHBd1s37BWudcp
+         SSjfY/Yja/0L+OjKmWRg+c8wK5EfZwWCV/yv2qlXqALjb71ss5OrzUDLI9+l/Q/hqz0h
+         fef3+SHefsBAL+OWKVwvvbsTj7M4hD0pYrAZ2+Xu89XQyQTcEBdvwX8GhCPcgloNyHVA
+         +A4GuZ7bzyyGZDlS/jX8u2f3fEYHhWjoB10E36QdE3Ce7ZktIPs8sp2XLCxFeXY/todT
+         eIVBRwG7x+fVyPe9m7fsR9OoxhwNBVNAg7XCcVOlr/7dLTPMXqXuOMmY3RxUjlq51btv
+         Orlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RuVJl4bZiFX7Nolk0H+UJ3kuuE8OxwQA0lCB70NPHZw=;
-        b=Ud9f3eF50baTOR1JTUPvy4jDmV5H0thwYOLguPbmu7RZ37miYPobLghcyRg1wTokoh
-         7P0Rl4cwPm+rdyVv2abqpBhBUAEraQx3yuLLqbYTzgUuyOOYG31f4a66rulZ7HZipduK
-         CgrjoZUdjwZRGiZayDG2XyhGmdc8A24T7CEaOSz49P/z9jYiwHKAlGbc87GO4tIqY+hP
-         PT+VaRtNLeeHsRXBV/HzXUfUhS2lBT3sO9x2Q/eMsyfEeproixexMeZOSo3IBHBK/PUh
-         lGMdBshUnuR3e6qCMWHQFrq7ZyncCupjT0mLSNeRP4rNrD9zSLks3phi081cVzWJgM1L
-         D8Yg==
-X-Gm-Message-State: AOAM532fl6vRxbToDCsmwbtNSmxX+1sGN40Yh0UnG33MQIeZ4wtTamON
-        lWOGlqGZTVih9eSi421diZnSUPUD0aA=
-X-Google-Smtp-Source: ABdhPJzdTZcitXpMl8CJmQD6Quq5kY7tPcTa9aRHAiRiCRMRr1Olb1vzxG8GDRmFWOkoCgOO6mBqLg==
-X-Received: by 2002:a7b:c0d7:: with SMTP id s23mr5823748wmh.54.1605117942572;
-        Wed, 11 Nov 2020 10:05:42 -0800 (PST)
+        bh=pg9PNaovo24Rh8fP+CDhG35u8Ky03i4DlIeRtl+Iuyc=;
+        b=mLQeR+Alm2IMaIBsLjy5yT9KeDRaXY+IPPve3u/ebB2GOA4c10sPHGyCCniXH/0nDM
+         uvPUgFnfCKoXyPE050XsIkKV21mOookO8S3WS6w+BRDNfn0+bdKgPuvx+oYYFhMAuCd7
+         MHpfGMOh9C4iP7eGTg2d4ANR8Cafl1mtZYExb7SPQ7C1JNOAO7d9KmAI8iTMYndkZge4
+         LuEDBEIVr0WwUrPMtHEByJUkecmz7rMPaz90AaqbodeIkznd+llGfYBmuFUMvnk5MZDB
+         mj7xQZavEby4vAAjT4pdnjAmSk5pKlNonBOPDMlX4XRp6B3w0EabvUCUL9EBjXtkISiY
+         /KOw==
+X-Gm-Message-State: AOAM531oCrQEUfzSPI9LIhHHOcEurJPlJc7fx9o/ugMR+rXRTRg/xGnM
+        AS5YSZt5V/qd9r509DQ+z+4=
+X-Google-Smtp-Source: ABdhPJwOQw1EH5IS0OKvZkFXGJrcP4SMkIFuEvgE84Hwmfu/p8gVadN/QUrffG+CUxfwBx+4L1FZHg==
+X-Received: by 2002:a1c:9695:: with SMTP id y143mr5500792wmd.70.1605118054036;
+        Wed, 11 Nov 2020 10:07:34 -0800 (PST)
 Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id n11sm3340274wru.38.2020.11.11.10.05.39
+        by smtp.gmail.com with ESMTPSA id h15sm3374895wrw.15.2020.11.11.10.07.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Nov 2020 10:05:40 -0800 (PST)
-Date:   Wed, 11 Nov 2020 19:05:38 +0100
+        Wed, 11 Nov 2020 10:07:32 -0800 (PST)
+Date:   Wed, 11 Nov 2020 19:07:31 +0100
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V2 1/3] pwm: imx-tpm: Use dev_err_probe() to simplify
- error handling
-Message-ID: <20201111180538.GA6125@ulmo>
-References: <1597127072-26365-1-git-send-email-Anson.Huang@nxp.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] pwm: ab8500: Add error message if pwmchip_add() fails
+Message-ID: <20201111180731.GB6125@ulmo>
+References: <20200812075214.499-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
+        protocol="application/pgp-signature"; boundary="oC1+HKm2/end4ao3"
 Content-Disposition: inline
-In-Reply-To: <1597127072-26365-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200812075214.499-1-u.kleine-koenig@pengutronix.de>
 User-Agent: Mutt/1.14.7 (2020-08-29)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---TB36FDmn/VVEgNH/
-Content-Type: text/plain; charset=us-ascii
+--oC1+HKm2/end4ao3
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 11, 2020 at 02:24:30PM +0800, Anson Huang wrote:
-> dev_err_probe() can reduce code size, uniform error handling and record t=
-he
-> defer probe reason etc., use it to simplify the code.
+On Wed, Aug 12, 2020 at 09:52:14AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> pwmchip_add() doesn't emit an error message, so add one in the driver.
 >=20
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 > ---
-> changes since V1:
-> 	- remove redundant return value print.
-> ---
->  drivers/pwm/pwm-imx-tpm.c | 10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
+>  drivers/pwm/pwm-ab8500.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-All three patches applied, thanks.
+Applied, thanks.
 
 Thierry
 
---TB36FDmn/VVEgNH/
+--oC1+HKm2/end4ao3
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl+sJ/AACgkQ3SOs138+
-s6FpCRAAknY3bT5bDpcO4yXyOi7Th+7KGXTT9QyZeC5FbxExhIzmd7xPqEERmiXo
-9mEh0L4oQExH5W8b3zQ5ypDU7ezO+dLpvcf58QbIUNBWJXEv1GnSn0vMhhxxfi11
-XjJGjtMWeS9IocmALpHLYPaV3++Wv/UP4WBJfj7op/UFglorUz49ALPDrfH8PDFS
-1jcsR0tWRctJG/lmfJ/6dBoX9HEENnG6w3iLgyysYWWiZVIscriDdwuc5wgz5PYP
-st5FDXLf64e6kZvNOOw0bccXgLLGT8ZgkQi43DTl9NB72VsTKbwTmtokYTAnhxj6
-uouEqhfR93MTmnNWc7IRKg6soyLssdcHG+xEKtgOdcxu3L6AoND3DBl0b/rI7gvn
-KJoTOZj2BJvkFKFgxY/a+aoKSKxlX5SOgzsc/DPyQDCudZGwXbt/YLpeMShY5mS7
-6oseo+qQFP6eT5PNmee8C/jUWgDPowQ9wF+Fc3DCQFqjeZhHK8aOw/Wx73VYGFf2
-CcWmjqwp7YPkiGh3oVtwX4nV/0c/h7xA0oehZ95GY7W+UionVayKvoqbBNbS3oRV
-QtUgi3TdyHeh4uf0FIGXEYN7e92bfZdLy5fSpeDjbOW30euUbSrOvCvI+4cKjp3p
-P/rLq4IxpwLHe7uS0WkL+UO1RjhsHl3c5UaencBelNxnoyYUStk=
-=V7Fx
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl+sKGMACgkQ3SOs138+
+s6Fgjw/+IFFZaByYX/h1GpDZMLNeawSGQWGf8/LhtysGdXnBsAIrZU009dWES8O0
+UelUJYYckdj8gY+ptJ3tPl5SpBKTEcxwIfKjz7dM8UvnGJWDO8zNPkk5FLLhf8Aq
+mC9SeZQo+RS4F0GjdPIF8rudmKXfJKc6Fs35UA182DN25/nZ6HgozSUnJM9P0zzj
+2soy332xZqNPkHjRhtPOFEIZBb9SDq95soaxe/Kg2/cuMRB2+2H7Y5kT0H5m/mu7
+IzgALPXqJ6ksaz8xYJMD3OYXqZYaQLWptigey0zGRry5btpeED1OCE5WRxHqY3Dr
+yvHi7u3uDVItHh7ix5LRMqyNd6psLmpFfHKgCgFIv6lXuD0k+wJeFfjZsTMqQD70
+e2tM8DHWgljQ6aGprlBpmqKVO0AQErFsRgSQstodF+ILcXbXoH3XCvIiKQ+Og9cb
+ln/Ex/zOA6x0Z2HrUFJefaB0wC7pc0p2YM78xzgP1FetNe/n50VUzsdqOklu6hJY
+G7DQiBFPIcru1rZV36fRtuM8u5hnngybAm8DbF5vMn0asYQlSdHkZ0JC5ZpPucis
+JEMQQ/QJ3JhYVnTmMhF2PbpcDp8oFn9jn4yurtW4nhW9g7XM6C+2MSihKWjzsxTW
+9UmbEhQ6VGsL/trvOCYUw43T183TuAiNjeWknz6AchPFto8o5Lc=
+=pBAG
 -----END PGP SIGNATURE-----
 
---TB36FDmn/VVEgNH/--
+--oC1+HKm2/end4ao3--
