@@ -2,19 +2,19 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A0892B0A87
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Nov 2020 17:44:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8F102B0A25
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Nov 2020 17:37:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbgKLQoW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 12 Nov 2020 11:44:22 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49880 "EHLO mx2.suse.de"
+        id S1729041AbgKLQhq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 12 Nov 2020 11:37:46 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41794 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729107AbgKLQoG (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 12 Nov 2020 11:44:06 -0500
+        id S1728685AbgKLQho (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 12 Nov 2020 11:37:44 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 7FCB9B016;
-        Thu, 12 Nov 2020 16:44:04 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 99AF8AFC8;
+        Thu, 12 Nov 2020 16:37:42 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     u.kleine-koenig@pengutronix.de, linux-kernel@vger.kernel.org
 Cc:     f.fainelli@gmail.com, linux-pwm@vger.kernel.org,
@@ -28,9 +28,9 @@ Cc:     f.fainelli@gmail.com, linux-pwm@vger.kernel.org,
         linux-rpi-kernel@lists.infradead.org, bgolaszewski@baylibre.com,
         andy.shevchenko@gmail.com,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v4 07/11] staging: vchiq: Release firmware handle on unbind
-Date:   Thu, 12 Nov 2020 17:36:25 +0100
-Message-Id: <20201112163630.17177-8-nsaenzjulienne@suse.de>
+Subject: [PATCH v4 08/11] input: raspberrypi-ts: Release firmware handle when not needed
+Date:   Thu, 12 Nov 2020 17:36:26 +0100
+Message-Id: <20201112163630.17177-9-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201112163630.17177-1-nsaenzjulienne@suse.de>
 References: <20201112163630.17177-1-nsaenzjulienne@suse.de>
@@ -46,25 +46,28 @@ interface when unbinding the device.
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
 
+Changes since v3:
+ - Release firmware handle in probe function
+
 Changes since v2:
  - Use devm_rpi_firmware_get(), instead of remove function
 
- drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c | 2 +-
+ drivers/input/touchscreen/raspberrypi-ts.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-index f500a7043805..6c196cade4a0 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-@@ -2732,7 +2732,7 @@ static int vchiq_probe(struct platform_device *pdev)
- 		return -ENOENT;
- 	}
- 
--	drvdata->fw = rpi_firmware_get(fw_node);
-+	drvdata->fw = devm_rpi_firmware_get(&pdev->dev, fw_node);
- 	of_node_put(fw_node);
- 	if (!drvdata->fw)
- 		return -EPROBE_DEFER;
+diff --git a/drivers/input/touchscreen/raspberrypi-ts.c b/drivers/input/touchscreen/raspberrypi-ts.c
+index ef6aaed217cf..5000f5fd9ec3 100644
+--- a/drivers/input/touchscreen/raspberrypi-ts.c
++++ b/drivers/input/touchscreen/raspberrypi-ts.c
+@@ -160,7 +160,7 @@ static int rpi_ts_probe(struct platform_device *pdev)
+ 	touchbuf = (u32)ts->fw_regs_phys;
+ 	error = rpi_firmware_property(fw, RPI_FIRMWARE_FRAMEBUFFER_SET_TOUCHBUF,
+ 				      &touchbuf, sizeof(touchbuf));
+-
++	rpi_firmware_put(fw);
+ 	if (error || touchbuf != 0) {
+ 		dev_warn(dev, "Failed to set touchbuf, %d\n", error);
+ 		return error;
 -- 
 2.29.2
 
