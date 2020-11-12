@@ -2,87 +2,86 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3489C2B00A2
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Nov 2020 08:56:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F7082B00E6
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Nov 2020 09:11:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725941AbgKLH4u (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 12 Nov 2020 02:56:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54516 "EHLO
+        id S1726140AbgKLILW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 12 Nov 2020 03:11:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgKLH4u (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Nov 2020 02:56:50 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1253BC0613D1
-        for <linux-pwm@vger.kernel.org>; Wed, 11 Nov 2020 23:56:50 -0800 (PST)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kd7TM-0002mh-6I; Thu, 12 Nov 2020 08:56:48 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kd7TK-0007lx-Uk; Thu, 12 Nov 2020 08:56:46 +0100
-Date:   Thu, 12 Nov 2020 08:56:45 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+        with ESMTP id S1725884AbgKLILV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Nov 2020 03:11:21 -0500
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64DDFC0613D1
+        for <linux-pwm@vger.kernel.org>; Thu, 12 Nov 2020 00:11:21 -0800 (PST)
+Received: by mail-wr1-x444.google.com with SMTP id o15so5002651wru.6
+        for <linux-pwm@vger.kernel.org>; Thu, 12 Nov 2020 00:11:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=I0psH8a/+Fx4/4wpzIQacUhJVjG866uveAuMFzdUVxc=;
+        b=popkwFDT2ARLJlAsoaDMJY1l8bBNtTboRVQodxN2Qzbkpx35POXd7SI9kI3+LEzbTv
+         91UXlM4EtFWpwtBVkGbtmx07ZCRn63044p2KXsoqD3mFrsT/DNnV6t3lrkcI/d7U0ACh
+         3MSWFeyAMV0bXtAnAKSyfA4UQEAti5S7MZdmTKCTvLpDyuDzwOuED8XHShT6Pvj8hemh
+         5rYYmZ4hTL6tyOjK9kfuJU0Blw3hitA9pxek0ti3sp75kASuX35HBAlF/oskZkwSdANW
+         /gOz15MIV7+Yoe3Uscu/DitLlIw4iwGVGo/XYjUENrBXwQfycV/CnoTGbw/70Cng9Ua8
+         eRYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=I0psH8a/+Fx4/4wpzIQacUhJVjG866uveAuMFzdUVxc=;
+        b=JSe1QvyJr2hhJqkR11Uvdn83mlNRgujkL18PeqLIuymxy1KU4dSXkrRTA1vqn+vy+O
+         Z0gRWwLmO9uD8LYzzkd3cxGltT5t5g0KW/8sSltnNruzHb1QWlz3lKmxPMJMdnk3ZFb6
+         iKmq0rvjsYzobjUb5vFqeBqLDNHmtXgC+M+lAcf7XRel67NJOql2Ti9oCiifHdLe0+g+
+         H7pdRXuP+M4uShr3nE8Oko7hwj2c+PMRV6ac405mNzmTY/jmvfw1wf7L4Bgbea/bUsUU
+         tkG/SOJcYLFFRhHsk8ySqlxHrCSf68C9+/AWMg1JQIpK7s9ruG+rPFl1Fl5NH/Ls3SX4
+         0JxQ==
+X-Gm-Message-State: AOAM533cw3sckGoyyNmVdLL3NNcCyZlyVmtEveATA8pxKDrJYiqp7Txs
+        jmvUc3lDf8hR1zm1e2O9+Jkg7w==
+X-Google-Smtp-Source: ABdhPJzsRtsMuymzGfu+yz7W7enJUxNQJtPe3qYk9KCEks/g3K4kfgFnbPXXJ+Vu2bkNy2kMZDDB+A==
+X-Received: by 2002:adf:e350:: with SMTP id n16mr35327370wrj.419.1605168680157;
+        Thu, 12 Nov 2020 00:11:20 -0800 (PST)
+Received: from dell ([91.110.221.159])
+        by smtp.gmail.com with ESMTPSA id i6sm5641910wma.42.2020.11.12.00.11.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Nov 2020 00:11:19 -0800 (PST)
+Date:   Thu, 12 Nov 2020 08:11:17 +0000
+From:   Lee Jones <lee.jones@linaro.org>
 To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Ajit Pal Singh <ajitpal.singh@st.com>,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 1/2] pwm: sti: Avoid conditional gotos
-Message-ID: <20201112075645.cjm6csuxwhzs5aqf@pengutronix.de>
-References: <20201111191449.409402-1-thierry.reding@gmail.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] pwm: Use -EINVAL for unsupported polarity
+Message-ID: <20201112081117.GS2063125@dell>
+References: <20201111202257.414889-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ybq6akyf2gmwvhwr"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20201111191449.409402-1-thierry.reding@gmail.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201111202257.414889-1-thierry.reding@gmail.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Wed, 11 Nov 2020, Thierry Reding wrote:
 
---ybq6akyf2gmwvhwr
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello Thierry,
-
-On Wed, Nov 11, 2020 at 08:14:48PM +0100, Thierry Reding wrote:
-> Using gotos for conditional code complicates this code significantly.
-> Convert the code to simple conditional blocks to increase readability.
->=20
-> Suggested-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> Instead of using a mix of -EOPNOTSUPP and -ENOTSUPP, use the more
+> standard -EINVAL to signal that the specified polarity value was
+> invalid.
+> 
 > Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+> ---
+>  drivers/pwm/pwm-crc.c     | 2 +-
+>  drivers/pwm/pwm-iqs620a.c | 2 +-
+>  drivers/pwm/pwm-rcar.c    | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 
-Great you picked that up, thanks.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ybq6akyf2gmwvhwr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl+s6roACgkQwfwUeK3K
-7Am+Jwf+IChwKZS3+CB/KYPKC8vOq6YksTZEo+su6fb+1ChHLuygdgSBPykcADwn
-rsdvHn0CRLCrm6FBLjbtfrism8Rj2PcJDdtWy4BduwmUaSm/i4LQODtC+7I9JUaf
-Pw0Ad3HGVO4BOPZngoNI5xgcwYsu9XQ7ytf8S11V5H57xDcS/OsqWYJ6wE4JQY2Q
-M8XKgEVirAlR8oLkBbMlKm3DaTYoMCYKb3pQts2tSmMHm/EWO+swHpGSsgPBY7kR
-Ff2iTSpW8ptSggoOmclyz8T7m0jYF0+JxVJ/O1yq5S6r8gRVsFEkqAv2wRDiFWpA
-rEBUFkjp28UdP1O9UYavk3L2iIkP3w==
-=w040
------END PGP SIGNATURE-----
-
---ybq6akyf2gmwvhwr--
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
