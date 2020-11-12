@@ -2,86 +2,85 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F27A62B01BB
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Nov 2020 10:08:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E423D2B036C
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Nov 2020 12:05:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbgKLJIM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 12 Nov 2020 04:08:12 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37746 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726960AbgKLJGZ (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 12 Nov 2020 04:06:25 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay1.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 96635AE78;
-        Thu, 12 Nov 2020 09:06:23 +0000 (UTC)
-Message-ID: <9e3a04f0ae76675f610bf25e6b53b4aff26afae4.camel@suse.de>
-Subject: Re: [PATCH v3 07/11] input: raspberrypi-ts: Release firmware handle
- when not needed
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     u.kleine-koenig@pengutronix.de, linux-kernel@vger.kernel.org,
-        f.fainelli@gmail.com, linux-pwm@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        wahrenst@gmx.net, linux-input@vger.kernel.org,
-        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        p.zabel@pengutronix.de, linux-gpio@vger.kernel.org,
-        linus.walleij@linaro.org, linux-clk@vger.kernel.org,
-        sboyd@kernel.org, linux-rpi-kernel@lists.infradead.org,
-        bgolaszewski@baylibre.com, andy.shevchenko@gmail.com
-Date:   Thu, 12 Nov 2020 10:06:21 +0100
-In-Reply-To: <20201112014542.GA1003057@dtor-ws>
-References: <20201104103938.1286-1-nsaenzjulienne@suse.de>
-         <20201104103938.1286-8-nsaenzjulienne@suse.de>
-         <20201112014542.GA1003057@dtor-ws>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-j2+UKM6wkcW3jVx2ysNJ"
-User-Agent: Evolution 3.36.5 
+        id S1727227AbgKLLFG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 12 Nov 2020 06:05:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728195AbgKLLFD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Nov 2020 06:05:03 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE1C8C0613D1
+        for <linux-pwm@vger.kernel.org>; Thu, 12 Nov 2020 03:05:02 -0800 (PST)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kdAPU-00010D-59; Thu, 12 Nov 2020 12:05:00 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kdAPT-0008Go-Hs; Thu, 12 Nov 2020 12:04:59 +0100
+Date:   Thu, 12 Nov 2020 12:04:57 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 2/2] pwm: sti: Remove unnecessary blank line
+Message-ID: <20201112110457.uzno3tz7dv2xokae@pengutronix.de>
+References: <20201111191449.409402-1-thierry.reding@gmail.com>
+ <20201111191449.409402-2-thierry.reding@gmail.com>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lymjkbt23omv7677"
+Content-Disposition: inline
+In-Reply-To: <20201111191449.409402-2-thierry.reding@gmail.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---=-j2+UKM6wkcW3jVx2ysNJ
-Content-Type: text/plain; charset="UTF-8"
+--lymjkbt23omv7677
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-11-11 at 17:45 -0800, Dmitry Torokhov wrote:
-> Hi Nicolas,
+[dropped Ajit Pal Singh from Cc:]
+
+On Wed, Nov 11, 2020 at 08:14:49PM +0100, Thierry Reding wrote:
+> A single blank line is enough to separate logical code blocks.
 >=20
-> On Wed, Nov 04, 2020 at 11:39:33AM +0100, Nicolas Saenz Julienne wrote:
-> > Use devm_rpi_firmware_get() so as to make sure we release RPi's firmwar=
-e
-> > interface when unbinding the device.
->=20
-> Unless I am mistaken this driver does not really need the firmware
-> structure past rpi_ts_probe(), and will be fine if it disappears earlier
-> than unbind time.
+> Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 
-Yes, I missed that. Will update it.
+I would consider this too minor to create a patch for, but as you
+already invested the time:
 
-Regards,
-Nicolas
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
+Thanks
+Uwe
 
---=-j2+UKM6wkcW3jVx2ysNJ
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--lymjkbt23omv7677
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl+s+w0ACgkQlfZmHno8
-x/5iuQgApaPJZjl0NVPJ80THZ1yICuyOa9+6d8Bal28kwj6Ft8Xb+Z6ploXmWJ5T
-EPDFQF4pFMoSBGmgGSspJj4dl/KD3UaeJIRB3c3UNqIC7icH9TpBZY4Z41Mioqsv
-l4QH1DIWYVsRYi/9I1vhoijsquL5t5WK0c1N9GBs6GIQjVwEMN9tsDcQ3flTLKZs
-93saK4xtDp6UbqsYQYtwmupmREvAIxqnm0g3GB/Qk8Fkg9vpIK0H5cRBaJT9bfb8
-tQPpTY2LWTXQ53azvlBOcZC7yJQRBKitR2GkibS1ynNoNl43f5ZjyWXkzK2TEw1j
-HOKtCH+6NObb7Wm+xwL50tkanpTaGg==
-=eql2
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl+tFtYACgkQwfwUeK3K
+7AmGhgf/d8waZwCeF2OyI7sL2QcBl84NLT/PHaW2fiNX4riQz4ZN+3AJYOv5CpDy
+pKGHTXqEMgZeYnjjbvrkhvpmUJTuWFIY4IbXAYQKefpulXXeYHmuu0PEaQ+rhGcs
+H0/L+oy9ArlzooXLq3FLnPBactYLvcrB4W0NfsMlWZUqZSazndxpWW4kteBDd4rt
+PqMGji+ft9EO3sb0cs4YKT2Gzt8Qf01M78U+lRb1etCctWMem/kgG0J23p0f1jR1
+niMvD1Wh7YAu3ofYZr3RU592+/bAzm4Bsb4x09tiz+gqQwOOTR1Oj6FDvJoPZo9+
+PfBvjkf28yu+qGiVbuNLS0g92JLWGA==
+=yj9v
 -----END PGP SIGNATURE-----
 
---=-j2+UKM6wkcW3jVx2ysNJ--
-
+--lymjkbt23omv7677--
