@@ -2,191 +2,156 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 935BD2B2086
-	for <lists+linux-pwm@lfdr.de>; Fri, 13 Nov 2020 17:36:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CEB72B21AD
+	for <lists+linux-pwm@lfdr.de>; Fri, 13 Nov 2020 18:13:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgKMQgE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 13 Nov 2020 11:36:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50774 "EHLO
+        id S1726116AbgKMRNk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 13 Nov 2020 12:13:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgKMQgD (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 13 Nov 2020 11:36:03 -0500
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 724D1C0613D1;
-        Fri, 13 Nov 2020 08:36:01 -0800 (PST)
-Received: by mail-wr1-x442.google.com with SMTP id o15so10575893wru.6;
-        Fri, 13 Nov 2020 08:36:01 -0800 (PST)
+        with ESMTP id S1725981AbgKMRNk (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 13 Nov 2020 12:13:40 -0500
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C8ACC0613D1;
+        Fri, 13 Nov 2020 09:13:54 -0800 (PST)
+Received: by mail-lj1-x242.google.com with SMTP id 11so11601082ljf.2;
+        Fri, 13 Nov 2020 09:13:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dQRQDur4C385F9uHjVsTWYFjOPOTyFC/a81xU2Lamvk=;
-        b=hYjtCO8hZTyLH2Kyoh58AH0k4dJctPDDMUFST3ORvzuMx/d+q622LhLzVrAUwruqpj
-         vatSp2tdsnyRwv0asO3bbpGDvd0vEZjDV3IaINbpZsJmI5S0GwzO7kZs5w4Lyo2VH/4c
-         Y1Xhiw7uCTIk5kY2QZeUv7U1NQWSzu5o9XoRi5yn+8NlZq7l2qlfEeSbzOt2RJpv5OYy
-         1x6+4v3ShQP7Hi7WCV6M1Cx8cu9XeKLqQAKEmagxoqkiRNn8VSJv/QtGIVgzQBRaUZ+M
-         mco4TyKjxVpCzCsxEz/w5kDm69UIKoK6OgA032HEi8rB4Km/3qZsxJLI5l6qtY4Bhnoc
-         fs2w==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uHdzUd8NUNc0lpDwmppHgQMHGeLwwBEPsQiuUdFVMn0=;
+        b=Vf9aLrdMygr+pSOB4syQyMMFa9s3Y8gg9aPfdkjSqO0uUp6X42pZjw6A0oiO8Qo79g
+         VMYB6KWyUWYTFP9RCfvpj6vzwpPwW2W6oCelyU8g7orM2z47YMOnDHg3C2g50zzfEusG
+         nqvrEWPVjXN4vLqhpx0/KIK4pqj8V71LUjcbnFJPdOHtrUJArcFLXTfdV2HqqJ/fhuLd
+         vr4HQXG4TCfqEDnWPBvTd1hixQrQx+II8BCVSHa4t4TrMZyTNIez047wBg702EUCXj6X
+         1iA+hxDZ1SNCWmtV7FjSRYfemkBuFRiPD2NRufuDZeWZswgy5d+Dy8jmCiBsIO+6SJAx
+         soQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dQRQDur4C385F9uHjVsTWYFjOPOTyFC/a81xU2Lamvk=;
-        b=rD/bCBXNWkpvdjvfUv6BFFy8VlXp2KjMGabFmI3TzfOO3LWol6VUkbCkkxhQSFuvDQ
-         zzlV4UqIIO53MjZ+ZqnAJ4kk1RWZgKr0SN7Q6QRLfFbUSi1D3496YTJ0NjnZuj9doJn1
-         xp+NjjMfdIH/rXXagAk8NyaTm3vcK7+bqzRucrpoIiqSbbflWvRaGyaBi1+YI8lImJHc
-         WccbtXLz2baWRRqVcYhA18waEo9R5UHGUn3ueyehMDoODPcfxchtsopU5VwNsR8C2k9s
-         vaPfqZO4cRy5ZHGFZGI/f9mc6ENdg6uOnf03jOcm//O705xHDT8SxjrOwWDbgK3QxR5u
-         +mgQ==
-X-Gm-Message-State: AOAM530rdnu0JeM4msWRvjr8ukU0CuG6RaezGylQ4UuKCfm3wcRG0ahv
-        o0LLt+51LDZJLcvN0shq1g4=
-X-Google-Smtp-Source: ABdhPJyLdoQr70KNk4+Fb/DdcC/nPPnONUO+wvv6EXYBj9QK5AbdJZn9lq3s3z7ryBX+7Ul7LRtFKg==
-X-Received: by 2002:adf:906b:: with SMTP id h98mr4463717wrh.310.1605285355248;
-        Fri, 13 Nov 2020 08:35:55 -0800 (PST)
-Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id t7sm11384960wrx.42.2020.11.13.08.35.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2020 08:35:53 -0800 (PST)
-Date:   Fri, 13 Nov 2020 17:35:52 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uHdzUd8NUNc0lpDwmppHgQMHGeLwwBEPsQiuUdFVMn0=;
+        b=rVRDgvOf0bEMMb0CqQ+L0HbzzUNylTEQTMR3sPIDTci0bmywnuHRF7DV0r4m61JvkB
+         4cwq+RD87pnzW3j3cYQ0NFj3w6eoJyXF9c39AG6JjVaRZw+EM+ZRxfTFBs91MGapriu4
+         tpWQL/UWTtldxwmEnaJZJ2Xq+8txmmDJDw23RkJRkDqc4itkXuDvpI/nriWl/J0Uq03N
+         KL6MPI5S0nroh5KVtmB0qM1tjEn0drwfPLwzlwA8YcK6AXZfdF4yHMJKWCTlTD3XaP7G
+         HfN9Rgb2Pgy6LdXsPtfO3I6xdvOV5NUgJBvchI7Zu73jk0pTtGk6JyOckzfBJ74YPuSv
+         5/4Q==
+X-Gm-Message-State: AOAM53312YFbTzJn/WE8TkbN/RGdntjYHAJGxy+MxAUDw6Gb2K7X2gWQ
+        xDc37NNoNLMOi+lI//u40YlhqZHN4Ao=
+X-Google-Smtp-Source: ABdhPJyHpSg50GBIXMPXL7aP9qtANQ43u803+eBAONtCmTaJb6C6zR3PWcQF6qlWhad3UtWFiD81wQ==
+X-Received: by 2002:a2e:3503:: with SMTP id z3mr1395526ljz.70.1605287631533;
+        Fri, 13 Nov 2020 09:13:51 -0800 (PST)
+Received: from [192.168.2.145] (109-252-193-159.dynamic.spd-mgts.ru. [109.252.193.159])
+        by smtp.googlemail.com with ESMTPSA id e10sm1617281lfn.115.2020.11.13.09.13.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Nov 2020 09:13:50 -0800 (PST)
+Subject: Re: [PATCH v1 11/30] drm/tegra: dc: Support OPP and SoC core voltage
+ scaling
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         Alan Stern <stern@rowland.harvard.edu>,
         Peter Chen <Peter.Chen@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Lee Jones <lee.jones@linaro.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
         Peter Geis <pgwipeout@gmail.com>,
         Nicolas Chauvet <kwizart@gmail.com>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v1 00/30] Introduce core voltage scaling for NVIDIA
- Tegra20/30 SoCs
-Message-ID: <20201113163552.GE1408970@ulmo>
-References: <20201104234427.26477-1-digetx@gmail.com>
- <CAPDyKFr7qTU2RPhA_ZrbCayoTTNUEno1zdmvmv+8HBe-Owrfeg@mail.gmail.com>
- <cd147ab0-1304-a491-7a56-ee6199c02d32@gmail.com>
- <2716c195-083a-112f-f1e5-2f6b7152a4b5@gmail.com>
- <CAPDyKFqUMsH9dCZ=OYqfdLt==+-8NjK9n=S5jGGNXZu6Y9q=2w@mail.gmail.com>
- <1f7e90c4-6134-2e2b-4869-5afbda18ead3@gmail.com>
- <20201112204358.GA1027187@ulmo>
- <25942da9-b527-c0aa-5403-53c9cc34ad93@gmail.com>
+        linux-samsung-soc@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-usb@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-media@vger.kernel.org, linux-tegra@vger.kernel.org
+References: <20201110203257.GC5957@sirena.org.uk>
+ <72ae6462-13df-9fcb-510e-8e57eee0f035@gmail.com>
+ <20201111115534.GA4847@sirena.org.uk>
+ <dd26eb18-8ac4-22a6-29b0-dbbe5fa6075b@gmail.com>
+ <20201112171600.GD4742@sirena.org.uk>
+ <b4b06c1d-c9d4-43b2-c6eb-93f8cb6c677d@gmail.com>
+ <20201112200123.GF4742@sirena.org.uk>
+ <ce9e2d9f-917e-fb8a-7323-f3bf1a367e9d@gmail.com>
+ <20201113142937.GB4828@sirena.org.uk>
+ <7f066805-97d9-088f-e89d-a554fe478574@gmail.com>
+ <20201113161550.GC4828@sirena.org.uk>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <3beaa12b-4a50-a3b6-fc43-ebb5ce7a8db7@gmail.com>
+Date:   Fri, 13 Nov 2020 20:13:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="KuLpqunXa7jZSBt+"
-Content-Disposition: inline
-In-Reply-To: <25942da9-b527-c0aa-5403-53c9cc34ad93@gmail.com>
-User-Agent: Mutt/1.14.7 (2020-08-29)
+In-Reply-To: <20201113161550.GC4828@sirena.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+13.11.2020 19:15, Mark Brown пишет:
+> On Fri, Nov 13, 2020 at 06:55:27PM +0300, Dmitry Osipenko wrote:
+>> 13.11.2020 17:29, Mark Brown пишет:
+> 
+>>> It's not clear if it matters - it's more a policy decision on the part
+>>> of the driver about what it thinks safe error handling is.  If it's not
+> 
+>> If regulator_get() returns a dummy regulator, then this means that
+>> regulator isn't specified in a device-tree. But then the only way for a
+>> consumer driver to check whether regulator is dummy, is to check
+>> presence of the supply property in a device-tree.
+> 
+> My point here is that the driver shouldn't be checking for a dummy
+> regulator, the driver should be checking the features that are provided
+> to it by the regulator and handling those.
 
---KuLpqunXa7jZSBt+
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I understand yours point, but then we need dummy regulator to provide
+all the features, and currently it does the opposite.
 
-On Fri, Nov 13, 2020 at 01:14:45AM +0300, Dmitry Osipenko wrote:
-> 12.11.2020 23:43, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >> The difference in comparison to using voltage regulator directly is
-> >> minimal, basically the core-supply phandle is replaced is replaced with
-> >> a power-domain phandle in a device tree.
-> > These new power-domain handles would have to be added to devices that
-> > potentially already have a power-domain handle, right? Isn't that going
-> > to cause issues? I vaguely recall that we already have multiple power
-> > domains for the XUSB controller and we have to jump through extra hoops
-> > to make that work.
->=20
-> I modeled the core PD as a parent of the PMC sub-domains, which
-> presumably is a correct way to represent the domains topology.
->=20
-> https://gist.github.com/digetx/dfd92c7f7e0aa6cef20403c4298088d7
->=20
-> >> The only thing which makes me feel a bit uncomfortable is that there is
-> >> no real hardware node for the power domain node in a device-tree.
-> > Could we anchor the new power domain at the PMC for example? That would
-> > allow us to avoid the "virtual" node.
->=20
-> I had a thought about using PMC for the core domain, but not sure
-> whether it will be an entirely correct hardware description. Although,
-> it will be nice to have it this way.
->=20
-> This is what Tegra TRM says about PMC:
->=20
-> "The Power Management Controller (PMC) block interacts with an external
-> or Power Manager Unit (PMU). The PMC mostly controls the entry and exit
-> of the system from different sleep modes. It provides power-gating
-> controllers for SOC and CPU power-islands and also provides scratch
-> storage to save some of the context during sleep modes (when CPU and/or
-> SOC power rails are off). Additionally, PMC interacts with the external
-> Power Manager Unit (PMU)."
->=20
-> The core voltage regulator is a part of the PMU.
->=20
-> Not all core SoC devices are behind PMC, IIUC.
+> It doesn't matter if this is
+> a dummy regulator or an actual regulator with limited features, the
+> effect is the same and the handling should be the same.  If the driver
+> is doing anything to handle dummy regulators explicitly as dummy
+> regulators it is doing it wrong.
 
-There are usually some SoC devices that are always-on. Things like the
-RTC for example, can never be power-gated, as far as I recall. On newer
-chips there are usually many more blocks that can't be powergated at
-all.
+It matters because dummy regulator errors out all checks and changes
+other than enable/disable, instead of accepting them. If we could add an
+option for dummy regulator to succeed all the checks and accept all the
+values, then it could become more usable.
 
-> > On the other hand, if we were to
-> > use a regulator, we'd be adding a node for that, right? So isn't this
-> > effectively going to be the same node if we use a power domain? Both
-> > software constructs are using the same voltage regulator, so they should
-> > be able to be described by the same device tree node, shouldn't they?
->=20
-> I'm not exactly sure what you're meaning by "use a regulator" and "we'd
-> be adding a node for that", could you please clarify? This v1 approach
-> uses a core-supply phandle (i.e. regulator is used), it doesn't require
-> extra nodes.
+>> We want to emit error messages when something goes wrong, for example
+>> when regulator voltage fails to change. It's fine that voltage changes
+>> are failing for a dummy regulator, but then consumer driver shouldn't
+>> recognize it as a error condition.
+> 
+> If you're fine with that you should also be fine with any other
+> regulator for which you failed to enumerate any voltages which you can
+> set.
 
-What I meant to say was that the actual supply voltage is generated by
-some device (typically one of the SD outputs of the PMIC). Whether we
-model this as a power domain or a regulator doesn't really matter,
-right? So I'm wondering if the device that generates the voltage should
-be the power domain provider, just like it is the provider of the
-regulator if this was modelled as a regulator.
+It's not fine.
 
-Thierry
+In the case of this driver the dummy regulator should succeed instead of
+failing.
 
---KuLpqunXa7jZSBt+
-Content-Type: application/pgp-signature; name="signature.asc"
+>> The regulator_get_optional() provides a more consistent and
+>> straightforward way for consumer drivers to check presence of a physical
+>> voltage regulator in comparison to dealing with a regulator_get(). The
+>> dummy regulator is nice to use when there is no need to change
+>> regulator's voltage, which doesn't work for a dummy regulator.
+> 
+> To repeat you should *only* be using regulator_get_optional() in the
+> case where the supply may be physically absent which is not the case
+> here.
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl+uteUACgkQ3SOs138+
-s6HFrg//XUCBi+MoTYKA9Q0nyyDEbz8pB7xsPWf9AWJHRToygKc0DTU1ZaPQLNp+
-zx+Yg2HSEBBzzv1c5cABiz0dUaE+gkzTfY74+wByGBumAiPaFCOmamm3fwgTlzsM
-ZzTrLxJShO6bIo12gq98qI68RxlwptdQcGagjc4QLcaL1xxhdyYiEFtQj8X3rwfp
-r2ELceMzT3klMTV34ghkgQKBRkgxm3thCmk+O/+scUwM9ju23OeClHBPsq+YwWz/
-ItCwLTUXyfPTSzIqXbjPEGXPbNGS2aUdYo0YsY42Q5XswBGPGXV+VgCPd153Vyek
-x+tAG0YSkV3NWFIQKBR5iwvguqZbVYgBR8tonT+LH9qyx6wADX2bp1VtEssD3Dsq
-qWc7y+PnmrUkx895JcxYLzhGoN5Hr3xwKeTLSRxGCQQvh1fqJJO4Ja4QnBdxK1lm
-FLLCPrq0/yK+o6DKJnAWjBcVyWfY4z2MPej6lao9ZlR4nC0qaY9URhD//kujuB7R
-dsRKyAwamYzw0b1doZWjffloEhog7WbjMw8UsbF+E8K7kSNePUqgaWWMsZDwh6yI
-VrszC62dJzCUMweS9s2mSjQ08xGrcITA8i2qxMKpRQA6VoZzMAdP6WjxseQoDa4g
-6Rsyr9Mt8Ed+Gs4vssp8C6jeFDQEGXM+37kYIC8LrNM21HZoq74=
-=p82m
------END PGP SIGNATURE-----
-
---KuLpqunXa7jZSBt+--
+Alright, but then we either need to improve regulator core to make dummy
+regulator a bit more usable, or continue to work around it in drivers.
+What should we do?
