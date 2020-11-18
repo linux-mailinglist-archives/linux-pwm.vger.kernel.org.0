@@ -2,125 +2,97 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1260E2B7FC6
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 15:52:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0D112B7FD0
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 15:52:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgKROq7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Nov 2020 09:46:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41646 "EHLO
+        id S1727060AbgKROvk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Nov 2020 09:51:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgKROq6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 09:46:58 -0500
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 931D7C0613D4
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 06:46:58 -0800 (PST)
-Received: by mail-wr1-x442.google.com with SMTP id r17so2518223wrw.1
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 06:46:58 -0800 (PST)
+        with ESMTP id S1726293AbgKROvj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 09:51:39 -0500
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7B78C0613D4;
+        Wed, 18 Nov 2020 06:51:39 -0800 (PST)
+Received: by mail-pj1-x1044.google.com with SMTP id r6so1166525pjd.1;
+        Wed, 18 Nov 2020 06:51:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=IkaU1T+8H3BSMi/OZIdt01pC83gmWoA2b6gexN813gY=;
-        b=ncYrEBRufOu2pip0jWLcl1ef6oGqS09gWhOhJ54VF5gFdvFz8zZ7Y9BBqOLCibxWZ5
-         1E7o5Khplrmn0qpZHHAvp8BeDAwF4wyH/2a12MXy+zEonpCvZJLEs7RKlwrcm/JDVmy/
-         Q85s7aTQi9nz8v/7Uv0kp0Rh+M61lgBVlp6oUWThWXhPCyW+hKuunIqbpCn8/8xtQCdR
-         bOuIoH07zddGkhTqGlsdrITJVuZDTFYfzSC0gOSy0YN2vLGWGXZUB5XWicp6PYXO/Q26
-         a55X4smDs3jwpOOIL9zy1BJRBOp2allN5kQyoZkcTwRlxjeqlzX7gpsCo936vL4EzikH
-         Vv9w==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=t5uedKWjYZhLmHBmo17IOneaP07yxkMVZsdlyTCdn0E=;
+        b=R7abOssRqpTjRzQyxi7nfkaDhzRBoYCcxS+OwUNBEAMwiDHrX0OuR+e7tELtLqpUlp
+         yNqahH6acfS/dXNcQHZfmA7bXThSQ173ZQFDHKwVzbH4RHQUPCmenzsgKe0cH4rPq0TK
+         vK6FUPCgAejh7nka2fPDXQgWlVbJNyA6wWpCmbfR0kNZnAGw2Y8iPlpurHdNhFhv3uvH
+         DVPpY8ChAC+T920e5825Vufnn5QFYjsDL8L5YnxQ/hx63oO5/przV7AvXJJMUHqpZLEO
+         xImUKRDBku6mtfQLlj9P/BMjtBtS6mU6uQBjieNN1nlqqYCwqZgb+kTh9YTurBIAM1Zu
+         rLkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=IkaU1T+8H3BSMi/OZIdt01pC83gmWoA2b6gexN813gY=;
-        b=pMwUzPRddCJiRg/ziIYEKWnMKf0e1F2vuFeLdKFhsS/fKBXyxkYKwvABb7/zqZi4gJ
-         vZeqigxYWjrHXkwocWG+8E3Hf+a0cCy64xw5SERvZ8ZgiL60rS8Elh2WlxQczI392/vU
-         SKc9geBy3vGCc0KebliSAg9sLaXNrAUKJ7jg6dyhCanxojwnMahKdYUgH9sbs+potCUS
-         srt4y/U9RT3jQ7vhP06WXsaf3B0A2BXkoxk6J4WOke0lv/hmWC9mz/l5o3SqTqYif0za
-         zdG759gM7TmL7Zrl+xsC/wKs0ntX3cRjzUayJEiIsVt6vsJr+4k1Rklhid+1zmhrGpK+
-         0RVQ==
-X-Gm-Message-State: AOAM531+ztEb3RCGvTUmn97z6hTrX9sc023Zqn/lQ48NWnhk4MV6nG7t
-        Ivyq7Dau+D3j2RzppMa91VMTNA==
-X-Google-Smtp-Source: ABdhPJzmCg5rGmPl3TA4ofbkxIQA12zKJc4EMI8YdvXMd2K0LqWAP1eAwQh3GbWsxulnG/d1QlP1PQ==
-X-Received: by 2002:a05:6000:182:: with SMTP id p2mr5587590wrx.116.1605710817217;
-        Wed, 18 Nov 2020 06:46:57 -0800 (PST)
-Received: from dell ([91.110.221.159])
-        by smtp.gmail.com with ESMTPSA id t20sm97700wmi.3.2020.11.18.06.46.55
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=t5uedKWjYZhLmHBmo17IOneaP07yxkMVZsdlyTCdn0E=;
+        b=RSn4NqoVh/ZPL7LHAW1H5VbIBV/Ka/gBZ/sMXLIuWeQWkoZOr6LNWSjrJajgEs47d7
+         10OzbSibnsyZm5ERNR6branvgvbFQpoi2/3UqJsF/CVfNyUCd1+DajJjruPnNy3LHIiE
+         P7a/6TUOEWJR2Kb+sVfz3IYekReSZmoAdHSN+dMEFHyD4OCEQR72hog20vFm7N9vLAuB
+         2AA2+xfPoXQi6rDR3BpTw1HXI2nD+EnfgABG5GRXrtlSkUBGAOQSycpoX25M4QLdK+n+
+         sAssh1tUxSPZGS9z+kHOztBfY9oa1y9RgGTexPAg+8v7Ee+u6SKdctswg2uTV3LWHoAp
+         FrBg==
+X-Gm-Message-State: AOAM530XfmNqBJNzZwNAAbf0wqZF5qZxkf9a1VoRjlwMn+OtYRut/xOT
+        ni7gW035/IVS581Sy5VvlDA=
+X-Google-Smtp-Source: ABdhPJw5AyAwbbGTMJggrxcgt8VwHoS3e3plTaNJUt40AlGbeUhTXhp+mxYlguDNNpForIoO4SKrTg==
+X-Received: by 2002:a17:902:9307:b029:d9:d097:fd6c with SMTP id bc7-20020a1709029307b02900d9d097fd6cmr1132363plb.10.1605711099128;
+        Wed, 18 Nov 2020 06:51:39 -0800 (PST)
+Received: from manjaro.domain.name ([202.142.93.91])
+        by smtp.gmail.com with ESMTPSA id t10sm7954297pfq.110.2020.11.18.06.51.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Nov 2020 06:46:56 -0800 (PST)
-Date:   Wed, 18 Nov 2020 14:46:54 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Soham Biswas <sohambiswas41@gmail.com>, thierry.reding@gmail.com,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: core: Use octal permission
-Message-ID: <20201118144654.GU1869941@dell>
+        Wed, 18 Nov 2020 06:51:38 -0800 (PST)
+From:   Soham Biswas <sohambiswas41@gmail.com>
+To:     thierry.reding@gmail.com
+Cc:     lee.jones@linaro.org, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Soham Biswas <sohambiswas41@gmail.com>
+Subject: [PATCH v3] pwm: core: Use octal permission
+Date:   Wed, 18 Nov 2020 20:21:12 +0530
+Message-Id: <20201118145112.21250-1-sohambiswas41@gmail.com>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <20201117175452.26914-1-sohambiswas41@gmail.com>
 References: <20201117175452.26914-1-sohambiswas41@gmail.com>
- <20201118135835.18395-1-sohambiswas41@gmail.com>
- <CAMmt7eMunjSvOQfaXofWY7Dz--Uim6MPf5WGcbn4D1s9=vMXHQ@mail.gmail.com>
- <20201118142156.uf5bfzq3sh3gliik@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201118142156.uf5bfzq3sh3gliik@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 18 Nov 2020, Uwe Kleine-König wrote:
+Permission bits are easier readable in octal than with using the
+symbolic names.
 
-> On Wed, Nov 18, 2020 at 07:36:28PM +0530, Soham Biswas wrote:
-> > On Wed, 18 Nov 2020 at 19:29, Soham Biswas <sohambiswas41@gmail.com> wrote:
-> > >
-> > > Permission bits are easier readable in octal than with using the symbolic names.
-> > >
-> > > Fixes the following warning generated by checkpatch:
-> > >
-> > > drivers/pwm/core.c:1341: WARNING: Symbolic permissions 'S_IRUGO' are not preferred.
-> > > Consider using octal permissions '0444'.
-> > >
-> > > +debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
-> > >                             &pwm_debugfs_fops);
-> > >
-> > > Signed-off-by: Soham Biswas <sohambiswas41@gmail.com>
-> > > ---
-> > >  drivers/pwm/core.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> > > index 1f16f5365d3c..a8eff4b3ee36 100644
-> > > --- a/drivers/pwm/core.c
-> > > +++ b/drivers/pwm/core.c
-> > > @@ -1338,7 +1338,7 @@ DEFINE_SEQ_ATTRIBUTE(pwm_debugfs);
-> > >
-> > >  static int __init pwm_debugfs_init(void)
-> > >  {
-> > > -       debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
-> > > +       debugfs_create_file("pwm", S_IFREG | 0444, NULL, NULL,
-> > >                             &pwm_debugfs_fops);
-> > >
-> > >         return 0;
-> > >
-> > 
-> > I passed -v3 to git-send-email but it didn't work it seems.
-> 
-> It only works if you use it with a commit range I guess, i.e. when it
-> calls git-format-patch itself.
-> 
-> Also I think if you call checkpatch on your own patch (e.g. using:
-> 
-> 	git format-patch -v3 --stdout | scripts/checkpatch.pl
-> 
-> ) it will tell you to break the long line in the commit log.
+Fixes the following warning generated by checkpatch:
 
-That's funny!  Although you can safely ignore that one.
+drivers/pwm/core.c:1341: WARNING: Symbolic permissions 'S_IRUGO' are
+not preferred. Consider using octal permissions '0444'.
 
-I find it's better to keep errors/warnings whole.
++debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
+                            &pwm_debugfs_fops);
 
+Signed-off-by: Soham Biswas <sohambiswas41@gmail.com>
+---
+ drivers/pwm/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 1f16f5365d3c..a8eff4b3ee36 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -1338,7 +1338,7 @@ DEFINE_SEQ_ATTRIBUTE(pwm_debugfs);
+ 
+ static int __init pwm_debugfs_init(void)
+ {
+-	debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
++	debugfs_create_file("pwm", S_IFREG | 0444, NULL, NULL,
+ 			    &pwm_debugfs_fops);
+ 
+ 	return 0;
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.29.2
+
