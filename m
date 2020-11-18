@@ -2,80 +2,103 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF79E2B7A90
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 10:46:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D0BDC2B7AA5
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 10:51:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725804AbgKRJpW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Nov 2020 04:45:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51656 "EHLO
+        id S1727088AbgKRJtm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Nov 2020 04:49:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725964AbgKRJpW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 04:45:22 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08C08C061A4D
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 01:45:22 -0800 (PST)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kfK1f-0002Sf-0T; Wed, 18 Nov 2020 10:45:19 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kfK1d-0007rF-Pu; Wed, 18 Nov 2020 10:45:17 +0100
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     linux-pwm@vger.kernel.org
-Subject: [PATCH 2/2] pwm: lpss: make compilable with COMPILE_TEST
-Date:   Wed, 18 Nov 2020 10:45:09 +0100
-Message-Id: <20201118094509.365684-2-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201118094509.365684-1-u.kleine-koenig@pengutronix.de>
-References: <20201118094509.365684-1-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S1726172AbgKRJtm (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 04:49:42 -0500
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C50BEC061A4D
+        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 01:49:41 -0800 (PST)
+Received: by mail-wm1-x342.google.com with SMTP id a3so2079326wmb.5
+        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 01:49:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=HFTcDZeHbwdubfzDRBdCD5cLqNYQsMR4r/D4QoM7A9E=;
+        b=fIqNcNl6ja8EnvxJpWgdSivTffK0XWt93PUp7LrFxkzxJDeFRtNtztf6dYRXd0vQOQ
+         OSIGMXRSpZvHHcDg13LTqH1NswQ4hh9turaglP9WSI/LTH78lomhvzgUrL0rRnAQc61F
+         mPBQlGBw/96qg+ZUxMMjUwHwvQIneAaq+wvqQErE8AaGH2VcfTWoloS2RtS8xXTG4Puz
+         0jtkLPw8xtzXxBfqhGpH+6BDbXx/+EYAxVD7xNamxzZOIjdXivuanjxvGDY91xX9xh9+
+         0My2kDduJokNwvAW1ao5L4Ljb8t3b7+bcloT2j7kTtcVbECGqB4Do7HHQ+7LupQyja87
+         WtDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=HFTcDZeHbwdubfzDRBdCD5cLqNYQsMR4r/D4QoM7A9E=;
+        b=VVYopmiZTwEn+8yg5fdhZ+bqcU1+9Zz+8WM8U/slT1xR1D8i/jqtCa5T0iUya5a8TC
+         NlUPzq5C214PeF7c6OR5TxkD1CaP9slAMUOqa+qVc6JrDBp5EqL2VK78nEOXjlTyfe2e
+         N0WpXl7zwVznvdiEBl52EZZfpZ15W1QmgjwY2kIW1oj2JXzxOvp8nfYlp5m4HdCHzw2h
+         m2TVVLRItL/03Xi+jAyOfbPPM4MyopCAoBamId7mcaEVYe/gxX7dRX6B40grN5aB9ZM1
+         qKbPMV/ePaPZiv/4ByTf5QedQCH7eP1tNWlIaSr/h79CRUw6KXTV11aiQXP5AUyt+E1a
+         x1dg==
+X-Gm-Message-State: AOAM530Zmgs7dun6mvZby0GusiP3Jq2UzzvXsCvCnhuZ2DObudlqKeqZ
+        h2wie2vk3mCSj6ypG/FarSBY8Q==
+X-Google-Smtp-Source: ABdhPJyEcNTG6/Gz7Fa8vL0gPcb+JqRdX7fRKh1H/5GyTm2gynqxN0ZHezxGR+PfPl4uud2EMioCpg==
+X-Received: by 2002:a1c:9c56:: with SMTP id f83mr3678999wme.49.1605692980555;
+        Wed, 18 Nov 2020 01:49:40 -0800 (PST)
+Received: from dell ([91.110.221.159])
+        by smtp.gmail.com with ESMTPSA id v20sm2737501wmh.44.2020.11.18.01.49.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Nov 2020 01:49:39 -0800 (PST)
+Date:   Wed, 18 Nov 2020 09:49:38 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Soham Biswas <sohambiswas41@gmail.com>,
+        thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: core: Use octal permission
+Message-ID: <20201118094938.GP1869941@dell>
+References: <20201117175452.26914-1-sohambiswas41@gmail.com>
+ <20201117181214.GK1869941@dell>
+ <CAMmt7eO5te05AuVC+MR-zLB-z+r9FCuJwtON=1QXXY2YwQG0eg@mail.gmail.com>
+ <20201118085113.GO1869941@dell>
+ <20201118093506.srljfosnamxe5wwz@pengutronix.de>
+ <ebe315dae8855ed2c55d6ce48f84aa4edd93e5fd.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <ebe315dae8855ed2c55d6ce48f84aa4edd93e5fd.camel@perches.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-All used acpi functions have dummy implementations, and there is no hard
-dependency on x86.
+On Wed, 18 Nov 2020, Joe Perches wrote:
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pwm/Kconfig | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> On Wed, 2020-11-18 at 10:35 +0100, Uwe Kleine-König wrote:
+> 
+> > Actually I'd prefer keeping the symbolic name because this is easier to
+> > grep for. So to convince me a better reason than "checkpatch says so" is
+> > needed.
+> 
+> https://lore.kernel.org/lkml/CA+55aFw5v23T-zvDZp-MmD_EYxF8WbafwwB59934FV7g21uMGQ@mail.gmail.com/
+> -------------------------------------------------------------------
+> From: Linus Torvalds <torvalds@linux-foundation.org>
+> Date: Tue, 2 Aug 2016 16:58:29 -0400
+> 
+> The symbolic names are good for the *other* bits (ie sticky bit, and
+> the inode mode _type_ numbers etc), but for the permission bits, the
+> symbolic names are just insane crap. Nobody sane should ever use them.
+> Not in the kernel, not in user space.
+> 
+>            Linus
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 852aa128c30c..9e497e26aed5 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -301,8 +301,8 @@ config PWM_LPSS
- 
- config PWM_LPSS_PCI
- 	tristate "Intel LPSS PWM PCI driver"
--	depends on X86 && PCI
--	depends on HAS_IOMEM
-+	depends on X86 || COMPILE_TEST
-+	depends on HAS_IOMEM && PCI
- 	select PWM_LPSS
- 	help
- 	  The PCI driver for Intel Low Power Subsystem PWM controller.
-@@ -312,7 +312,7 @@ config PWM_LPSS_PCI
- 
- config PWM_LPSS_PLATFORM
- 	tristate "Intel LPSS PWM platform driver"
--	depends on X86 && ACPI
-+	depends on (X86 && ACPI) || COMPILE_TEST
- 	depends on HAS_IOMEM
- 	select PWM_LPSS
- 	help
+I was waiting for this!
+
+I see your "checkpatch" filter is working well Joe. :)
+
 -- 
-2.28.0
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
