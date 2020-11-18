@@ -2,47 +2,128 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 231002B7791
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 08:59:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD4132B796C
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 09:52:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgKRHww convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Wed, 18 Nov 2020 02:52:52 -0500
-Received: from sw73-70-41.adsl.seed.net.tw ([203.73.70.41]:44736 "EHLO
-        oa.trendtek.com.tw" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1727063AbgKRHwv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 02:52:51 -0500
-Received: from [156.96.44.214] ([156.96.44.214])
-        (authenticated bits=0)
-        by oa.trendtek.com.tw (8.13.8/8.13.1) with ESMTP id 0AI7q7Da021912
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 15:52:47 +0800
-Message-Id: <202011180752.0AI7q7Da021912@oa.trendtek.com.tw>
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1726948AbgKRIvR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Nov 2020 03:51:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbgKRIvQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 03:51:16 -0500
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99C2BC061A4D
+        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 00:51:16 -0800 (PST)
+Received: by mail-wr1-x443.google.com with SMTP id 23so1319272wrc.8
+        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 00:51:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=cdTlLYpoqg49dJytKCngMw0Q/QviqDLm+/R80RdfooU=;
+        b=Gga3KWoYVZfDr07yxKSI+OzcScUs4GDiJQTw5BVHnFRVvdvIe3jmFXyOk/AC0jA1bF
+         mFzyVmgeVITsSycvHLBWC+NRbSBkgMXnnRVC2WG8+AT2p0qKzdnMJRrs2iye4hcZoO3E
+         NE5qJ7CO+t9obqci6xcSh7B/eMNfHCRlWDN6bRnUy8jUsYMuPLzCJkJCgAlocX98bOi0
+         aerNculhYVOSBkYIVqa2m8jMse+470XYeoZEyKFIwE/zGTUAnLIH88ET9jJ8beKNXr2k
+         yjdQA5QIrNpRgpaUIq9MF3W8ZS0i/mdxJDAtji5R2HwS+RrWSKWwPHh4/B3WVz+TxHdN
+         CR6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=cdTlLYpoqg49dJytKCngMw0Q/QviqDLm+/R80RdfooU=;
+        b=WrcXukKR5TeJ7On6X2EiwK59B85CM4vayg/cIGS4xzRK8qh18D9l2H54ETiU5MkCEd
+         B6KCSqW7eigyYzCApdksuW90OUP0k1x4677htL/xNvLSIsQE+45ThmDbjUXJkE2j/4ox
+         3iJwyh5cjJpHm0k+iZddapKjc4FWGXHGGCm1nLJrWmgRQs6Z+AZO6Y45hj2fAf3jxKjK
+         DEXSwjA4rMn0nzT38v8EXxd9L1ZK2AwJ+I5vfRbnlxDmXRBrkpKrGRpWjyNtCFC/o5ib
+         8nPSsW6Lt0+GhVo2cTAZ8Y01eImWu6jSc7ZNn8kYQenwdj7pDgQ2BGwkhpnYeAIVy+4w
+         iCeA==
+X-Gm-Message-State: AOAM532U8l0En9bsJMz1egYSvkb3sg1p4zKKgDuG8dR5mi5Gf5zgPQby
+        jRtszML4xL+HYY8in/bVDvGhxQ==
+X-Google-Smtp-Source: ABdhPJwWERf6qt3Q/4PwXA+tgR/h91DCBbx7+RMOUS5nVnmcEa0Rh+Bh6BZGr5p5uAhPdy3wtG1MAA==
+X-Received: by 2002:a5d:4f12:: with SMTP id c18mr3663146wru.304.1605689475334;
+        Wed, 18 Nov 2020 00:51:15 -0800 (PST)
+Received: from dell ([91.110.221.159])
+        by smtp.gmail.com with ESMTPSA id c2sm33963964wrf.68.2020.11.18.00.51.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Nov 2020 00:51:14 -0800 (PST)
+Date:   Wed, 18 Nov 2020 08:51:13 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Soham Biswas <sohambiswas41@gmail.com>
+Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: core: Use octal permission
+Message-ID: <20201118085113.GO1869941@dell>
+References: <20201117175452.26914-1-sohambiswas41@gmail.com>
+ <20201117181214.GK1869941@dell>
+ <CAMmt7eO5te05AuVC+MR-zLB-z+r9FCuJwtON=1QXXY2YwQG0eg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: Corporate and Personal Loan *
-To:     linux-pwm@vger.kernel.org
-From:   "Investment  Corporate" <financialcapability6@gmail.com>
-Date:   Tue, 17 Nov 2020 23:52:36 -0800
-Reply-To: hmurrah39@gmail.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMmt7eO5te05AuVC+MR-zLB-z+r9FCuJwtON=1QXXY2YwQG0eg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello linux-pwm@vger.kernel.org
+On Tue, 17 Nov 2020, Soham Biswas wrote:
 
+> This fixes the following warning:
+> 
+> `drivers/pwm/core.c:1341: WARNING: Symbolic permissions 'S_IRUGO' are
+> not preferred. Consider using octal permissions '0444'.`
+> 
+> generated by the following script:
+> 
+> `./scripts/checkpatch.pl --file --terse drivers/pwm/core.c`
 
-We are Base Investment Company offering Corporate and Personal Loan at 3% Interest Rate for a duration of 10Years.
+Oh, it's a checkpatch.pl thing.
 
+You should definitely quote the warning and describe where it came
+from in the commit log.
 
-We also pay 1% commission to brokers, who introduce project owners for finance or other opportunities.
+Not entirely sure what that warning is the result of.  Probably as
+they're sightly harder to read and easier to get wrong.  Still, I'll
+let Thierry decide whether the patch itself is suitable for inclusion
+into the PWM core.
 
+> On Tue, 17 Nov 2020 at 23:42, Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Tue, 17 Nov 2020, Soham Biswas wrote:
+> >
+> > > Fixed Warning.
+> >
+> > Which warning does this fix?
+> >
+> > > Replaced symbolic permission 'S_IRUGO' with octal permission '0444'.
+> >
+> > This is semantically equivalent.
+> >
+> > Not sure what and/or how this fixes anything.
+> >
+> > > Signed-off-by: Soham Biswas <sohambiswas41@gmail.com>
+> > > ---
+> > >  drivers/pwm/core.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> > > index 1f16f5365d3c..a8eff4b3ee36 100644
+> > > --- a/drivers/pwm/core.c
+> > > +++ b/drivers/pwm/core.c
+> > > @@ -1338,7 +1338,7 @@ DEFINE_SEQ_ATTRIBUTE(pwm_debugfs);
+> > >
+> > >  static int __init pwm_debugfs_init(void)
+> > >  {
+> > > -     debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
+> > > +     debugfs_create_file("pwm", S_IFREG | 0444, NULL, NULL,
+> > >                           &pwm_debugfs_fops);
+> > >
+> > >       return 0;
+> >
 
-Please get back to me if you are interested for more
-
-details.
-
-
-Yours faithfully,
-
-Hashim Murrah
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
