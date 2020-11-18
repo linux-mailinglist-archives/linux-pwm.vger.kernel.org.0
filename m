@@ -2,82 +2,112 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D292E2B7E8C
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 14:49:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 810662B7E9B
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 14:54:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbgKRNsv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Nov 2020 08:48:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60944 "EHLO
+        id S1726591AbgKRNt5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Nov 2020 08:49:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbgKRNsv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 08:48:51 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D145FC0613D4
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 05:48:50 -0800 (PST)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kfNpI-0003AT-Vd; Wed, 18 Nov 2020 14:48:48 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kfNpI-0008Td-DW; Wed, 18 Nov 2020 14:48:48 +0100
-Date:   Wed, 18 Nov 2020 14:48:46 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+        with ESMTP id S1726602AbgKRNtz (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 08:49:55 -0500
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F79FC0613D6
+        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 05:49:55 -0800 (PST)
+Received: by mail-wm1-x344.google.com with SMTP id 23so4181099wmg.1
+        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 05:49:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=JPxBsG7pLUv1UeZC7bK3HiUpZwCt2ccyPS8zKWnix68=;
+        b=jaAhxIS0kOFrub/2XYBkRaFdVAnK6ivWuYEyDekbW6fGKlwS+EgevqcDkbnpj78GsT
+         W5C7DMKvp8x+kwJoYYxYP7SB0UfQseuhVjrNjHQbDktOvRNZVVcmqV6fasQrHRqbiM1V
+         bt4uY2fSniJTFPq2hz8i2pOuDDnLwAeKCNGUSddr4CnzgKVe8xzzoWp+3hXjBQczi4Cn
+         fNHbTMGz0Bd928VK7xb/I4v6wjsyBrAjU48L/olEJ03WtVcqtgs2ITvSw8mZdtBz2LmD
+         bE5PJ1XT4pmgGXQwUusPBRV6MdX8PV22FfWopjaQIJgsYS0kAfuiIuitWyHzHNq54t4t
+         /VPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=JPxBsG7pLUv1UeZC7bK3HiUpZwCt2ccyPS8zKWnix68=;
+        b=reTHS21RMbjKK4gFjtOsxIfR7QB/P7oOTIugFS9mQ+/63KLwlJA0HyRm71QmltkTq9
+         C/gvwwEbQn7reKSUYRm0Vlc7+cLmcKe9G7x9yR2SlNIzOtqP4lRCL3A1Eg38/bsRXBeW
+         pBlMDDY3jmgPXluYayBdE462FzzzHpNzE/uJLOsMusIg3WiuBcAE3i1zy8M2Z0zZwy1J
+         6ux8u56p8piD95O7P+ZY6QQ0WUVYGZF3nGmLoTWv9S4yQi3jS9knRv/texDplRl0jfup
+         70HVpBIh42CNKBqrLeodFc/wvODbR86namJaVWIcIF7KahP6d8k651MR4daPhHpsfKYl
+         UWRg==
+X-Gm-Message-State: AOAM530jAyvuMwJYc5S1y4xFCLsMN9RawYUjm6hQeeaVw11hUGh4V4ka
+        Qk1Hfneno2F+zqm/zELmAWiNFw==
+X-Google-Smtp-Source: ABdhPJyAMUqiNH0sMSJ+6gPz+g0YzrWzNKXgmPOPpNTTm967Lj9FBDf8f/eZpYPQ/PmJkINZJ39t2Q==
+X-Received: by 2002:a1c:a344:: with SMTP id m65mr112832wme.77.1605707394087;
+        Wed, 18 Nov 2020 05:49:54 -0800 (PST)
+Received: from dell ([91.110.221.159])
+        by smtp.gmail.com with ESMTPSA id n15sm33575358wrq.48.2020.11.18.05.49.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Nov 2020 05:49:53 -0800 (PST)
+Date:   Wed, 18 Nov 2020 13:49:48 +0000
+From:   Lee Jones <lee.jones@linaro.org>
 To:     Soham Biswas <sohambiswas41@gmail.com>
-Cc:     thierry.reding@gmail.com, Lee Jones <lee.jones@linaro.org>,
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, thierry.reding@gmail.com,
         linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v2] pwm: core: Use octal permission
-Message-ID: <20201118134846.ddghymkn2ldallnl@pengutronix.de>
+Message-ID: <20201118134948.GS1869941@dell>
 References: <20201117175452.26914-1-sohambiswas41@gmail.com>
  <20201118104730.4270-1-sohambiswas41@gmail.com>
  <20201118124312.wk6cmnktxefn7k7m@pengutronix.de>
  <CAMmt7ePTtM1hj6C4dgYO2o-A1C9C7NdnJHsnqSUir13ZjeEXTg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vu343jntuqqimxti"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <CAMmt7ePTtM1hj6C4dgYO2o-A1C9C7NdnJHsnqSUir13ZjeEXTg@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Wed, 18 Nov 2020, Soham Biswas wrote:
 
---vu343jntuqqimxti
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Nov 18, 2020 at 07:11:35PM +0530, Soham Biswas wrote:
 > Sure will do that. Sorry for the inconvenience, I am a bit new to the
 > process of emailing patches. Should I mark the next patch as v3?
 
-Yes, just pass -v3 to git-format-patch or git-send-email.
+Make sure the text you are quoting does above your reply.
 
-Best regards
-Uwe
+This is called top-posting and is frowned upon.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Yes, please bump the version number - it will make the tooling happy.
 
---vu343jntuqqimxti
-Content-Type: application/pgp-signature; name="signature.asc"
+> On Wed, 18 Nov 2020 at 18:13, Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> >
+> > [added "v2" to the subject, would have been better if you had already
+> > done that. I don't know if/how this confuses tools like b4 and patchwork]
+> >
+> > Hello,
+> >
+> > On Wed, Nov 18, 2020 at 04:17:30PM +0530, Soham Biswas wrote:
+> > > Fixes the following warning generated by checkpatch:
+> > >
+> > > drivers/pwm/core.c:1341: WARNING: Symbolic permissions 'S_IRUGO' are
+> > > not preferred. Consider using octal permissions '0444'.
+> > >
+> > > +debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
+> > >                           &pwm_debugfs_fops);
+> >
+> > something like: "Permission bits are easier readable in octal than with
+> > using the symbolic names." in the commit log would be good for those of
+> > us who missed why this was added to checkpatch.
+> >
+> > Best regards
+> > Uwe
+> >
+> >
 
------BEGIN PGP SIGNATURE-----
-
-iQEyBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl+1JjwACgkQwfwUeK3K
-7AmrRQf44jl3byaPFhXvbf5iEMszTzaj+xEqVyvAPpC9H7NCK6jK3sdSQ9XJunXN
-OxwaiEkhjBjlGUKZRcLKiX2vcFmkz00AtlED/u4cELBucyLC3JRUoeJdKmc1yroE
-8QPoGe1Ba29JWJPjBhZseDlYletxbBVg0fhkNio8dTGd86ybvPLFukqXyyW5hT/7
-HFZ6gd8R6xQgzD5XjXL1wY5LGn+u9O52tHXTJV6Dq3CDsI6XtujNIn8ceDiIya/e
-dDfCYyhaXIOhNV8kcJnbdYzQ7wOKF0go8OG1FJu36E87I3tT3R7KZqAITbbVN21r
-FOc0dP0X7F//k2b4LGmFz1kW2HEr
-=nIs5
------END PGP SIGNATURE-----
-
---vu343jntuqqimxti--
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
