@@ -2,95 +2,82 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 46FE32B7E76
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 14:43:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D292E2B7E8C
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 14:49:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgKRNlu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Nov 2020 08:41:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59866 "EHLO
+        id S1726456AbgKRNsv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Nov 2020 08:48:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgKRNlt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 08:41:49 -0500
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE725C0613D4;
-        Wed, 18 Nov 2020 05:41:48 -0800 (PST)
-Received: by mail-wm1-x342.google.com with SMTP id a3so2752049wmb.5;
-        Wed, 18 Nov 2020 05:41:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qJ3j+Ydk7CTlx6aogVblseyGYy6ENRm7V9z/KdX9WOo=;
-        b=eBR5n+e72aGJhT7M107LTJoDhuGY1RI4lT97fMGfiQ+6SgS7h+f3Gg6cwlgmp1oAIR
-         w7FkV+LNV+hqCXPPdpYKsDhvOcVwv1WJie3Bk3Xv0PP4VvlAcHi3P8VriYJYSdx7Wxic
-         iwTTpsQOmCKOk8G48eLDOaJlXopFqHRvEmQ67+qaUFLxUjiKNWOV+doKwvOPjAid6uvb
-         kWLPzbm9euZ1gvsF6t4WhAaXJPQmtGYsqsULJ7H6ft+MJq/GMAAUtUZ/r0p8Rl+aorUu
-         4a8G1sxuVJJouUbQbvOu/7Csp0mk9W8PN3O6tY5K9Wfoc7t4pC3xEMFUTT+WiaT7R91I
-         nx5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qJ3j+Ydk7CTlx6aogVblseyGYy6ENRm7V9z/KdX9WOo=;
-        b=mOf2ZcbleN+rgU5o7haQ3OHkXscg3SG6hAtDaMJwg1ImJOgmV4/xlAgHGRWQqoMI2x
-         v86pw/c9eZZ32GI2lJ2rykdxuoqHq4h3dR/PcIhKZf/YV7x501uZ+kWjXmMRqeuV9oRw
-         EFENRWGpG9HYN+UHyltjmtPAWeraIoU+H9cwxRPsuqIoa9K8nD3yBuY06RC1n0O0Usm6
-         y0OHKodszrolo5zpZntRHkqNuds3t3uP6g+3jtfPrZoTXeSO9PvpAzg0IH7H1a4rIiRG
-         4uhRFCZnjoXlUldCq8sOIwTCp83Lu/MUMJQ5BcE00/4OQfVhRg1svH68b4QFqyIn11mD
-         kXeQ==
-X-Gm-Message-State: AOAM530n1iv7sQLKkU2fL7oXqGFa/yscMenV3jk5r4O3GbN1bZ3wBYjW
-        3OvmNtdxzuhLFbLn4m7y3ur8RovdowMv18YZGow=
-X-Google-Smtp-Source: ABdhPJy2KpGtwHps+FHmqMI1bI4n8PuoJudmSVq2XU+cg1YsWa3ZIVJGzko9TSS6nHfEzCfDFnak2VzTNLQZest2694=
-X-Received: by 2002:a1c:4884:: with SMTP id v126mr103433wma.160.1605706906943;
- Wed, 18 Nov 2020 05:41:46 -0800 (PST)
-MIME-Version: 1.0
-References: <20201117175452.26914-1-sohambiswas41@gmail.com>
- <20201118104730.4270-1-sohambiswas41@gmail.com> <20201118124312.wk6cmnktxefn7k7m@pengutronix.de>
-In-Reply-To: <20201118124312.wk6cmnktxefn7k7m@pengutronix.de>
-From:   Soham Biswas <sohambiswas41@gmail.com>
-Date:   Wed, 18 Nov 2020 19:11:35 +0530
-Message-ID: <CAMmt7ePTtM1hj6C4dgYO2o-A1C9C7NdnJHsnqSUir13ZjeEXTg@mail.gmail.com>
-Subject: Re: [PATCH v2] pwm: core: Use octal permission
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
+        with ESMTP id S1726308AbgKRNsv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 08:48:51 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D145FC0613D4
+        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 05:48:50 -0800 (PST)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kfNpI-0003AT-Vd; Wed, 18 Nov 2020 14:48:48 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kfNpI-0008Td-DW; Wed, 18 Nov 2020 14:48:48 +0100
+Date:   Wed, 18 Nov 2020 14:48:46 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Soham Biswas <sohambiswas41@gmail.com>
 Cc:     thierry.reding@gmail.com, Lee Jones <lee.jones@linaro.org>,
         linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] pwm: core: Use octal permission
+Message-ID: <20201118134846.ddghymkn2ldallnl@pengutronix.de>
+References: <20201117175452.26914-1-sohambiswas41@gmail.com>
+ <20201118104730.4270-1-sohambiswas41@gmail.com>
+ <20201118124312.wk6cmnktxefn7k7m@pengutronix.de>
+ <CAMmt7ePTtM1hj6C4dgYO2o-A1C9C7NdnJHsnqSUir13ZjeEXTg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vu343jntuqqimxti"
+Content-Disposition: inline
+In-Reply-To: <CAMmt7ePTtM1hj6C4dgYO2o-A1C9C7NdnJHsnqSUir13ZjeEXTg@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Sure will do that. Sorry for the inconvenience, I am a bit new to the
-process of emailing patches. Should I mark the next patch as v3?
 
-On Wed, 18 Nov 2020 at 18:13, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> [added "v2" to the subject, would have been better if you had already
-> done that. I don't know if/how this confuses tools like b4 and patchwork]
->
-> Hello,
->
-> On Wed, Nov 18, 2020 at 04:17:30PM +0530, Soham Biswas wrote:
-> > Fixes the following warning generated by checkpatch:
-> >
-> > drivers/pwm/core.c:1341: WARNING: Symbolic permissions 'S_IRUGO' are
-> > not preferred. Consider using octal permissions '0444'.
-> >
-> > +debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
-> >                           &pwm_debugfs_fops);
->
-> something like: "Permission bits are easier readable in octal than with
-> using the symbolic names." in the commit log would be good for those of
-> us who missed why this was added to checkpatch.
->
-> Best regards
-> Uwe
->
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
-|
+--vu343jntuqqimxti
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Nov 18, 2020 at 07:11:35PM +0530, Soham Biswas wrote:
+> Sure will do that. Sorry for the inconvenience, I am a bit new to the
+> process of emailing patches. Should I mark the next patch as v3?
+
+Yes, just pass -v3 to git-format-patch or git-send-email.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--vu343jntuqqimxti
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl+1JjwACgkQwfwUeK3K
+7AmrRQf44jl3byaPFhXvbf5iEMszTzaj+xEqVyvAPpC9H7NCK6jK3sdSQ9XJunXN
+OxwaiEkhjBjlGUKZRcLKiX2vcFmkz00AtlED/u4cELBucyLC3JRUoeJdKmc1yroE
+8QPoGe1Ba29JWJPjBhZseDlYletxbBVg0fhkNio8dTGd86ybvPLFukqXyyW5hT/7
+HFZ6gd8R6xQgzD5XjXL1wY5LGn+u9O52tHXTJV6Dq3CDsI6XtujNIn8ceDiIya/e
+dDfCYyhaXIOhNV8kcJnbdYzQ7wOKF0go8OG1FJu36E87I3tT3R7KZqAITbbVN21r
+FOc0dP0X7F//k2b4LGmFz1kW2HEr
+=nIs5
+-----END PGP SIGNATURE-----
+
+--vu343jntuqqimxti--
