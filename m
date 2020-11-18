@@ -2,87 +2,100 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16D2C2B83F9
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 19:41:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA0922B8514
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 20:49:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbgKRSjV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Nov 2020 13:39:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49490 "EHLO
+        id S1725947AbgKRTsX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Nov 2020 14:48:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbgKRSjU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 13:39:20 -0500
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26867C0613D4;
-        Wed, 18 Nov 2020 10:39:19 -0800 (PST)
-Received: by mail-wm1-x342.google.com with SMTP id s13so3656487wmh.4;
-        Wed, 18 Nov 2020 10:39:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YiJTSBtle7cqr6NeENgfeIIBEb6CbCibc49Xjq0ZXzA=;
-        b=a3GsCKtemU3YlqDsjE0mm+erC8chaJq9drsbx3YZnkC9ClcD18vv6d9Bp7cIprcf6w
-         dqBfkajO3kiDj+4ks+8NyOdCw2TkspBKR3rmMedpkL9Alv3oKBavIgfQWsoIVIHHL1+4
-         Ufcxn3s9VaLtdqF1lWYJDXtoMBNJjLDNpId1CR0LTNDuqd/HLtoXKDIyMQr+Hd8iOukz
-         bPmQphYfNsHi5gdJ7Ju2TYT9vKqF3vKgioEsL0lyf7faO/Rn1J8LDohyN/h6/J/jc8TU
-         WSJCu3QZ+x/ET45uX2+M43Mvb4dtje5w3uOxTFXtTgTYusLUvUE7SwL8NfrWLUCws67b
-         BLzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YiJTSBtle7cqr6NeENgfeIIBEb6CbCibc49Xjq0ZXzA=;
-        b=CBMP3BksCA4K0PnfY0yQB3JcHjZHIObnV0aXuqPPJJWX70NztP0rqNQ9DbV5ivb7a9
-         HLWInQm8i1pQrL0Ad3Vhd4MQLB+X0bBcKdg0aw6+uH6cWpHUJsbRhY7d/ZwF/iWfZhfR
-         jFJjKunT6k/bic0VIiYHxqVMak4GHm6XWD0fr8IDeFg7XQ7Z9UerS0ILg5UIgNJKMMbY
-         J/djuTp75M1R15acEO8hLRJrD7sBBVqf0A1lIQJG2piKf8ND3H4UZvAepqb6xSHPXGRu
-         7/diIcZ119EUf9RT8OXVvIYHO/EqVg2B6Fk73V184EF5+F9cys01nw43m+yHvgr40GOG
-         ebjg==
-X-Gm-Message-State: AOAM532WnmsTVEWsa+DH3roMLqnhTnSAWzYjISxw3I3owmqphcgOeYoP
-        rRA/6xUPbjEhFqdtmIuenb8+PdA2AR79nt4TJ6k=
-X-Google-Smtp-Source: ABdhPJwF2QPigW04aMTrGfylLIKdrz+SxKUNnlzSknb+LVXzj9o23MdHGlTOLEQ5ieIY9UMuAzivJUUKP8T222vJilM=
-X-Received: by 2002:a1c:c343:: with SMTP id t64mr505782wmf.140.1605724757758;
- Wed, 18 Nov 2020 10:39:17 -0800 (PST)
-MIME-Version: 1.0
-References: <20201117175452.26914-1-sohambiswas41@gmail.com>
- <20201118145112.21250-1-sohambiswas41@gmail.com> <20201118175936.GB3552669@ulmo>
-In-Reply-To: <20201118175936.GB3552669@ulmo>
-From:   Soham Biswas <sohambiswas41@gmail.com>
-Date:   Thu, 19 Nov 2020 00:09:06 +0530
-Message-ID: <CAMmt7eO217-8aVGkrMDrRiCiJiW0RTk39k1E_GAabDXmjWO+Kg@mail.gmail.com>
-Subject: Re: [PATCH v3] pwm: core: Use octal permission
+        with ESMTP id S1725782AbgKRTsX (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 14:48:23 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F05DC0613D4
+        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 11:48:23 -0800 (PST)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kfTRF-0008Jq-CL; Wed, 18 Nov 2020 20:48:21 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kfTRE-0004E5-O3; Wed, 18 Nov 2020 20:48:20 +0100
+Date:   Wed, 18 Nov 2020 20:48:17 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Soham Biswas <sohambiswas41@gmail.com>, lee.jones@linaro.org,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] pwm: core: Use octal permission
+Message-ID: <20201118194817.4l3esfu5dnhgo6vx@pengutronix.de>
+References: <20201117175452.26914-1-sohambiswas41@gmail.com>
+ <20201118145112.21250-1-sohambiswas41@gmail.com>
+ <20201118175936.GB3552669@ulmo>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uzaqwqsfd3uecqxm"
+Content-Disposition: inline
+In-Reply-To: <20201118175936.GB3552669@ulmo>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 18 Nov 2020 at 23:29, Thierry Reding <thierry.reding@gmail.com> wrote:
->
+
+--uzaqwqsfd3uecqxm
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Nov 18, 2020 at 06:59:36PM +0100, Thierry Reding wrote:
 > On Wed, Nov 18, 2020 at 08:21:12PM +0530, Soham Biswas wrote:
 > > Permission bits are easier readable in octal than with using the
 > > symbolic names.
-> >
+> >=20
 > > Fixes the following warning generated by checkpatch:
-> >
+> >=20
 > > drivers/pwm/core.c:1341: WARNING: Symbolic permissions 'S_IRUGO' are
 > > not preferred. Consider using octal permissions '0444'.
-> >
+> >=20
 > > +debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
 > >                             &pwm_debugfs_fops);
-> >
+> >=20
 > > Signed-off-by: Soham Biswas <sohambiswas41@gmail.com>
 > > ---
 > >  drivers/pwm/core.c | 2 +-
 > >  1 file changed, 1 insertion(+), 1 deletion(-)
->
+>=20
 > Applied, thanks. Though I did unwrap the checkpatch warning message as
 > Uwe suggested.
->
-> Thierry
 
-Thank You!
+Then feel free to add my
+
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--uzaqwqsfd3uecqxm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl+1ensACgkQwfwUeK3K
+7AkYrgf+MLbRmUWmOmVGdJ5eNS/y1sukSZQEqulBrWanPUnHmliEIP6jM3+lynhO
+nXT9CMtv71p3iYk5pSdmSpyYdVlLbfj8A+9wz8SaLzks7NQBN3vTi/DA9yTZZpRG
+FSlOE89yWvN+W4q5vx64mZjQ4RCgJ6YhM28W+wWZN6ak8cy87MXzSMX6SKZJe3e7
+69SnllB6s/e/mQ55vDI7/ZEIWqqciSbyfcP3FYnbTYNRy4fR7OCBn755ZAvR+oHq
+uMosaBYkS1abTR4qnQO82ZunytFLt+ECHOhsFJNIKIN5D7YuouY8E2I/ZwuYeSnC
+3IetN0sRztXNdsFIO7go9rUUyvdkEw==
+=5Se1
+-----END PGP SIGNATURE-----
+
+--uzaqwqsfd3uecqxm--
