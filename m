@@ -2,29 +2,57 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0636E2B7AC1
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 10:57:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3A7B2B7AD0
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 10:57:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbgKRJyD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Nov 2020 04:54:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52996 "EHLO
+        id S1727304AbgKRJ4H (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Nov 2020 04:56:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbgKRJyD (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 04:54:03 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 237EAC0613D4
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 01:54:03 -0800 (PST)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kfK9t-0003br-T9; Wed, 18 Nov 2020 10:53:49 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kfK9p-00087c-1n; Wed, 18 Nov 2020 10:53:45 +0100
-Date:   Wed, 18 Nov 2020 10:53:42 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+        with ESMTP id S1727043AbgKRJ4H (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 04:56:07 -0500
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE023C0613D4;
+        Wed, 18 Nov 2020 01:56:05 -0800 (PST)
+Received: by mail-pj1-x1042.google.com with SMTP id h12so780926pjv.2;
+        Wed, 18 Nov 2020 01:56:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=iN17+NL6h1ATpfyCdibmddqKJUozPpM85yOX+t7P07s=;
+        b=iH601Gg7erHx4XMuGEchEuetzhu7G/RZ5OWbOS3W3/wzXOSJsmX0VTIax8BjL9m5uz
+         GXQ3Js7foFc2XTpaTDPT3YqS7DQ2CzIhnXwQN7MRiheKtQc5DwMKeKKuz3qnGmlnbcla
+         +3kvcBguWTTCeqyc9l+yoldR9X9PFhz4w7+wqEfluCVzevJxHfuWykfpTMFOcJzNDpVC
+         7VDtRtPCcjoutmpn0ruSU0o6anEAKcagv1kx0rgK3ptvJwtGIX6DNkLh1UbkvDazxf/n
+         SfenlBosZtKaZ1+lT8+/fpV74scF7KMfLWXqVGoqafv6CfEeQlSteF8mDj8xx6qbiZog
+         oZEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=iN17+NL6h1ATpfyCdibmddqKJUozPpM85yOX+t7P07s=;
+        b=WjIO/WMVHnNw9qz0Ied2W5+NJSVO/9kcqUj/1GqEt85ypXSR6bi5owIqtkh/+gsjlr
+         p63PmIgzkEwozEbrFKiEn2l7A0nDMDnnMs9/N+HYq67TdNoGYCc2w0GUdt4oUcGxuXR2
+         yB+iHnLxeco/jF6lj6ZdrRQrNTawe121sHvTnjAxpxzvAPKUQzi9rVZcp4r9uFThxgpO
+         mZwz/vpBCGbYpgjA1uVSNgLfgxPS7Vu+CHZBOiozzyfIZeFBb7rHRp+IU/x3SkrAdJaW
+         DBXCsAi3MO8oU2JTkdFqCUW+8XORjhnuHuIZqe1NhYRcDYpNBR5NMaLTDPtypdNJfim/
+         1/kg==
+X-Gm-Message-State: AOAM533zjdOrfpcZt2cXtvGLHqowSeZVAjO9+wSsf/jgiyM2u8pZ8NBL
+        mvpOaCZeOwVL0OytAdW8kqY6D0PwERHmr6GIwSY=
+X-Google-Smtp-Source: ABdhPJwdxF1Zf/yjvQENLno08HERXXeTB9PR24kk98KO1SzJYVXr7enJkFxf3Vj9hg7d/FeAQooIGQGeN9ak0W7yBM0=
+X-Received: by 2002:a17:90a:d90a:: with SMTP id c10mr3343024pjv.129.1605693365044;
+ Wed, 18 Nov 2020 01:56:05 -0800 (PST)
+MIME-Version: 1.0
+References: <20201117154340.18216-1-info@metux.net> <CAHp75VfPio=TacTTrY=vZp8vZ7qst_7zWeXKDpYvJ6q7oh2Hdw@mail.gmail.com>
+ <20201118095342.sviuxvfsbmmn22mo@pengutronix.de>
+In-Reply-To: <20201118095342.sviuxvfsbmmn22mo@pengutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 18 Nov 2020 11:56:53 +0200
+Message-ID: <CAHp75Vd9QUCcUoPLUW3kkJC0h=mPUqHNqNJPY74gDGSu67t8Hw@mail.gmail.com>
+Subject: Re: [PATCH] drivers: gpio: use of_match_ptr() and ACPI_PTR() macros
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
 Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
         Jonathan Cameron <jic23@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -35,7 +63,7 @@ Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
         Lee Jones <lee.jones@linaro.org>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Kevin Hilman <khilman@kernel.org>, zhang.lyra@gmail.com,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
         dl-linux-imx <linux-imx@nxp.com>, orsonzhai@gmail.com,
@@ -57,76 +85,43 @@ Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
         Serge Semin <fancer.lancer@gmail.com>,
         Sascha Hauer <kernel@pengutronix.de>, baolin.wang7@gmail.com,
         Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] drivers: gpio: use of_match_ptr() and ACPI_PTR() macros
-Message-ID: <20201118095342.sviuxvfsbmmn22mo@pengutronix.de>
-References: <20201117154340.18216-1-info@metux.net>
- <CAHp75VfPio=TacTTrY=vZp8vZ7qst_7zWeXKDpYvJ6q7oh2Hdw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jrmdeyhh5m52oxeb"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfPio=TacTTrY=vZp8vZ7qst_7zWeXKDpYvJ6q7oh2Hdw@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
---jrmdeyhh5m52oxeb
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Nov 17, 2020 at 06:45:37PM +0200, Andy Shevchenko wrote:
-> On Tue, Nov 17, 2020 at 5:45 PM Enrico Weigelt, metux IT consult
-> <info@metux.net> wrote:
+On Wed, Nov 18, 2020 at 11:54 AM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+> On Tue, Nov 17, 2020 at 06:45:37PM +0200, Andy Shevchenko wrote:
+> > On Tue, Nov 17, 2020 at 5:45 PM Enrico Weigelt, metux IT consult
+> > <info@metux.net> wrote:
+> > >
+> > > The of_match_ptr(foo) macro evaluates to foo, only if
+> > > CONFIG_OF is set, otherwise to NULL. Same does ACPI_PTR with
+> > > CONFIG_ACPI. That's very helpful for drivers that can be used
+> > > with or without oftree / acpi.
+> > >
+> > > Even though most of the drivers touched here probably don't
+> > > actually need that, it's also nice for consistency to make it
+> > > the de-facto standard and change all drivers to use the
+> > > of_match_ptr() and ACPI_PTR() macros.
+> > >
+> > > A nice side effect: in some situations, when compiled w/o
+> > > CONFIG_OF/CONFIG_ACPI, the corresponding match tables could
+> > > automatically become unreferenced and optimized-away by the
+> > > compiler, w/o explicitly cluttering the code w/ ifdef's.
 > >
-> > The of_match_ptr(foo) macro evaluates to foo, only if
-> > CONFIG_OF is set, otherwise to NULL. Same does ACPI_PTR with
-> > CONFIG_ACPI. That's very helpful for drivers that can be used
-> > with or without oftree / acpi.
+> > NAK.
 > >
-> > Even though most of the drivers touched here probably don't
-> > actually need that, it's also nice for consistency to make it
-> > the de-facto standard and change all drivers to use the
-> > of_match_ptr() and ACPI_PTR() macros.
-> >
-> > A nice side effect: in some situations, when compiled w/o
-> > CONFIG_OF/CONFIG_ACPI, the corresponding match tables could
-> > automatically become unreferenced and optimized-away by the
-> > compiler, w/o explicitly cluttering the code w/ ifdef's.
->=20
-> NAK.
->=20
-> It prevents using DT-enabled drivers on ACPI based platforms.
+> > It prevents using DT-enabled drivers on ACPI based platforms.
+>
+> So a system without CONFIG_OF might still make use of .of_match_table?
 
-So a system without CONFIG_OF might still make use of .of_match_table?
+Yep!
 
-If so: TIL ...
-
-Best regards
-Uwe
+> If so: TIL ...
 
 --=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---jrmdeyhh5m52oxeb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl+07yIACgkQwfwUeK3K
-7Ak+4Af/S4LACdOy4WkgBIlg0vOjRAgAtSXuRqE7DZpYrEDA16Jf1/hvxQgwZgoQ
-2gZ2CszqBXhxH94X4GFtm7veiGfXquPsf0qlQ31Ou2yDIIv0+oXBBrSi78lwesD1
-1s6fYmYnp+Oijt1tRIg+euHAWOyIIyavCIBFkoFVIOvlux7JMc7pQZrdTGuiHJP1
-6c6F0G+G2nlLQtmwsR4Jm2vERKNDy3X87PdQANsH4ipSsIFyxTH/5Mgx4kLRZ/sg
-prSguvAIqgH+3KyVK9w454gWpqQJrGiCa7CEybzjNjAnjCAoxnnJ8SQ1/Ys27Y5L
-O0PgX1tM/ulriSZe+T5UUlYqGZyBAw==
-=A5vw
------END PGP SIGNATURE-----
-
---jrmdeyhh5m52oxeb--
+With Best Regards,
+Andy Shevchenko
