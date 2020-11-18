@@ -2,100 +2,63 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA0922B8514
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 20:49:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E5732B87E9
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 23:47:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725947AbgKRTsX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Nov 2020 14:48:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbgKRTsX (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 14:48:23 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F05DC0613D4
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 11:48:23 -0800 (PST)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kfTRF-0008Jq-CL; Wed, 18 Nov 2020 20:48:21 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kfTRE-0004E5-O3; Wed, 18 Nov 2020 20:48:20 +0100
-Date:   Wed, 18 Nov 2020 20:48:17 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Soham Biswas <sohambiswas41@gmail.com>, lee.jones@linaro.org,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] pwm: core: Use octal permission
-Message-ID: <20201118194817.4l3esfu5dnhgo6vx@pengutronix.de>
-References: <20201117175452.26914-1-sohambiswas41@gmail.com>
- <20201118145112.21250-1-sohambiswas41@gmail.com>
- <20201118175936.GB3552669@ulmo>
+        id S1725947AbgKRWqv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Nov 2020 17:46:51 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:36590 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725710AbgKRWqv (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 18 Nov 2020 17:46:51 -0500
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1kfWDg-007oYC-HA; Wed, 18 Nov 2020 23:46:32 +0100
+Date:   Wed, 18 Nov 2020 23:46:32 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/5] gpio: mvebu: Armada 8K/7K PWM support
+Message-ID: <20201118224632.GE1853236@lunn.ch>
+References: <cover.1605694661.git.baruch@tkos.co.il>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uzaqwqsfd3uecqxm"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201118175936.GB3552669@ulmo>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <cover.1605694661.git.baruch@tkos.co.il>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Wed, Nov 18, 2020 at 12:30:41PM +0200, Baruch Siach wrote:
+> The gpio-mvebu driver supports the PWM functionality of the GPIO block for 
+> earlier Armada variants like XP, 370 and 38x. This series extends support to 
+> newer Armada variants that use CP11x and AP80x, like Armada 8K and 7K.
+> 
+> This series adds adds the 'pwm-offset' property to DT binding. 'pwm-offset' 
 
---uzaqwqsfd3uecqxm
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+One adds is enough.
 
-On Wed, Nov 18, 2020 at 06:59:36PM +0100, Thierry Reding wrote:
-> On Wed, Nov 18, 2020 at 08:21:12PM +0530, Soham Biswas wrote:
-> > Permission bits are easier readable in octal than with using the
-> > symbolic names.
-> >=20
-> > Fixes the following warning generated by checkpatch:
-> >=20
-> > drivers/pwm/core.c:1341: WARNING: Symbolic permissions 'S_IRUGO' are
-> > not preferred. Consider using octal permissions '0444'.
-> >=20
-> > +debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
-> >                             &pwm_debugfs_fops);
-> >=20
-> > Signed-off-by: Soham Biswas <sohambiswas41@gmail.com>
-> > ---
-> >  drivers/pwm/core.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> Applied, thanks. Though I did unwrap the checkpatch warning message as
-> Uwe suggested.
+> points to the base of A/B counter registers that determine the PWM period and 
+> duty cycle.
+> 
+> The existing PWM DT binding reflects an arbitrary decision to allocate the A 
+> counter to the first GPIO block, and B counter to the other one.
 
-Then feel free to add my
+It was not arbitrary. I decided on KISS. The few devices i've seen
+using this have been for a single GPIO/PWN controlled fan. KISS was
+sufficient for that, so why make it more complex?
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Thanks
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---uzaqwqsfd3uecqxm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl+1ensACgkQwfwUeK3K
-7AkYrgf+MLbRmUWmOmVGdJ5eNS/y1sukSZQEqulBrWanPUnHmliEIP6jM3+lynhO
-nXT9CMtv71p3iYk5pSdmSpyYdVlLbfj8A+9wz8SaLzks7NQBN3vTi/DA9yTZZpRG
-FSlOE89yWvN+W4q5vx64mZjQ4RCgJ6YhM28W+wWZN6ak8cy87MXzSMX6SKZJe3e7
-69SnllB6s/e/mQ55vDI7/ZEIWqqciSbyfcP3FYnbTYNRy4fR7OCBn755ZAvR+oHq
-uMosaBYkS1abTR4qnQO82ZunytFLt+ECHOhsFJNIKIN5D7YuouY8E2I/ZwuYeSnC
-3IetN0sRztXNdsFIO7go9rUUyvdkEw==
-=5Se1
------END PGP SIGNATURE-----
-
---uzaqwqsfd3uecqxm--
+	   Andrew
