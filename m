@@ -2,68 +2,291 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D48432B7AAE
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 10:51:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 418AC2B7A8F
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 10:46:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726015AbgKRJuz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Nov 2020 04:50:55 -0500
-Received: from smtprelay0142.hostedemail.com ([216.40.44.142]:45286 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726249AbgKRJuz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 04:50:55 -0500
-X-Greylist: delayed 558 seconds by postgrey-1.27 at vger.kernel.org; Wed, 18 Nov 2020 04:50:55 EST
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave04.hostedemail.com (Postfix) with ESMTP id ADAA418033F5D;
-        Wed, 18 Nov 2020 09:41:35 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 9A220837F24D;
-        Wed, 18 Nov 2020 09:41:34 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 50,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:69:355:379:599:800:960:967:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1539:1593:1594:1711:1714:1730:1747:1777:1792:2393:2525:2553:2560:2563:2682:2685:2828:2859:2933:2937:2939:2942:2945:2947:2951:2954:3022:3138:3139:3140:3141:3142:3351:3622:3865:3867:3868:3870:3871:3934:3936:3938:3941:3944:3947:3950:3953:3956:3959:4321:4605:5007:6691:7576:8985:9025:10004:10400:10848:10967:11232:11233:11658:11914:12043:12262:12297:12438:12555:12679:12683:12740:12895:13069:13161:13229:13311:13357:13439:13894:14110:14181:14659:14721:14777:21080:21627:21795:30029:30030:30034:30051:30054:30090:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:414,LUA_SUMMARY:none
-X-HE-Tag: sun17_590424827339
-X-Filterd-Recvd-Size: 1850
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 18 Nov 2020 09:41:33 +0000 (UTC)
-Message-ID: <ebe315dae8855ed2c55d6ce48f84aa4edd93e5fd.camel@perches.com>
-Subject: Re: [PATCH] pwm: core: Use octal permission
-From:   Joe Perches <joe@perches.com>
-To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>
-Cc:     Soham Biswas <sohambiswas41@gmail.com>, thierry.reding@gmail.com,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 18 Nov 2020 01:41:31 -0800
-In-Reply-To: <20201118093506.srljfosnamxe5wwz@pengutronix.de>
-References: <20201117175452.26914-1-sohambiswas41@gmail.com>
-         <20201117181214.GK1869941@dell>
-         <CAMmt7eO5te05AuVC+MR-zLB-z+r9FCuJwtON=1QXXY2YwQG0eg@mail.gmail.com>
-         <20201118085113.GO1869941@dell>
-         <20201118093506.srljfosnamxe5wwz@pengutronix.de>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.38.1-1 
+        id S1726015AbgKRJpW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Nov 2020 04:45:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbgKRJpW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 04:45:22 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08B68C0613D4
+        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 01:45:22 -0800 (PST)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kfK1f-0002SO-0T; Wed, 18 Nov 2020 10:45:19 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kfK1b-0007rC-UG; Wed, 18 Nov 2020 10:45:15 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     linux-pwm@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: [PATCH 1/2] pwm: fix dependencies on HAS_IOMEM
+Date:   Wed, 18 Nov 2020 10:45:08 +0100
+Message-Id: <20201118094509.365684-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 2020-11-18 at 10:35 +0100, Uwe Kleine-König wrote:
+Drivers making use of IO remapping must depend on HAS_IOMEM.
 
-> Actually I'd prefer keeping the symbolic name because this is easier to
-> grep for. So to convince me a better reason than "checkpatch says so" is
-> needed.
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
+---
+ drivers/pwm/Kconfig | 35 ++++++++++++++++++++++++++++-------
+ 1 file changed, 28 insertions(+), 7 deletions(-)
 
-https://lore.kernel.org/lkml/CA+55aFw5v23T-zvDZp-MmD_EYxF8WbafwwB59934FV7g21uMGQ@mail.gmail.com/
--------------------------------------------------------------------
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 2 Aug 2016 16:58:29 -0400
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 63be5362fd3a..852aa128c30c 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -53,8 +53,8 @@ config PWM_AB8500
+ 
+ config PWM_ATMEL
+ 	tristate "Atmel PWM support"
+-	depends on OF
+ 	depends on ARCH_AT91 || COMPILE_TEST
++	depends on HAS_IOMEM && OF
+ 	help
+ 	  Generic PWM framework driver for Atmel SoC.
+ 
+@@ -88,7 +88,7 @@ config PWM_ATMEL_TCB
+ config PWM_BCM_IPROC
+ 	tristate "iProc PWM support"
+ 	depends on ARCH_BCM_IPROC || COMPILE_TEST
+-	depends on COMMON_CLK
++	depends on COMMON_CLK && HAS_IOMEM
+ 	default ARCH_BCM_IPROC
+ 	help
+ 	  Generic PWM framework driver for Broadcom iProc PWM block. This
+@@ -111,6 +111,7 @@ config PWM_BCM_KONA
+ config PWM_BCM2835
+ 	tristate "BCM2835 PWM support"
+ 	depends on ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  PWM framework driver for BCM2835 controller (Raspberry Pi)
+ 
+@@ -120,6 +121,7 @@ config PWM_BCM2835
+ config PWM_BERLIN
+ 	tristate "Marvell Berlin PWM support"
+ 	depends on ARCH_BERLIN || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  PWM framework driver for Marvell Berlin SoCs.
+ 
+@@ -129,6 +131,7 @@ config PWM_BERLIN
+ config PWM_BRCMSTB
+ 	tristate "Broadcom STB PWM support"
+ 	depends on ARCH_BRCMSTB || BMIPS_GENERIC || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  Generic PWM framework driver for the Broadcom Set-top-Box
+ 	  SoCs (BCM7xxx).
+@@ -163,6 +166,7 @@ config PWM_CROS_EC
+ config PWM_EP93XX
+ 	tristate "Cirrus Logic EP93xx PWM support"
+ 	depends on ARCH_EP93XX || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  Generic PWM framework driver for Cirrus Logic EP93xx.
+ 
+@@ -184,6 +188,7 @@ config PWM_FSL_FTM
+ config PWM_HIBVT
+ 	tristate "HiSilicon BVT PWM support"
+ 	depends on ARCH_HISI || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  Generic PWM framework driver for HiSilicon BVT SoCs.
+ 
+@@ -206,6 +211,7 @@ config PWM_IMG
+ config PWM_IMX1
+ 	tristate "i.MX1 PWM support"
+ 	depends on ARCH_MXC || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  Generic PWM framework driver for i.MX1 and i.MX21
+ 
+@@ -215,6 +221,7 @@ config PWM_IMX1
+ config PWM_IMX27
+ 	tristate "i.MX27 PWM support"
+ 	depends on ARCH_MXC || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  Generic PWM framework driver for i.MX27 and later i.MX SoCs.
+ 
+@@ -267,6 +274,7 @@ config PWM_LP3943
+ config PWM_LPC18XX_SCT
+ 	tristate "LPC18xx/43xx PWM/SCT support"
+ 	depends on ARCH_LPC18XX || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  Generic PWM framework driver for NXP LPC18xx PWM/SCT which
+ 	  supports 16 channels.
+@@ -279,6 +287,7 @@ config PWM_LPC18XX_SCT
+ config PWM_LPC32XX
+ 	tristate "LPC32XX PWM support"
+ 	depends on ARCH_LPC32XX || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  Generic PWM framework driver for LPC32XX. The LPC32XX SOC has two
+ 	  PWM controllers.
+@@ -287,11 +296,13 @@ config PWM_LPC32XX
+ 	  will be called pwm-lpc32xx.
+ 
+ config PWM_LPSS
++	depends on HAS_IOMEM
+ 	tristate
+ 
+ config PWM_LPSS_PCI
+ 	tristate "Intel LPSS PWM PCI driver"
+ 	depends on X86 && PCI
++	depends on HAS_IOMEM
+ 	select PWM_LPSS
+ 	help
+ 	  The PCI driver for Intel Low Power Subsystem PWM controller.
+@@ -302,6 +313,7 @@ config PWM_LPSS_PCI
+ config PWM_LPSS_PLATFORM
+ 	tristate "Intel LPSS PWM platform driver"
+ 	depends on X86 && ACPI
++	depends on HAS_IOMEM
+ 	select PWM_LPSS
+ 	help
+ 	  The platform driver for Intel Low Power Subsystem PWM controller.
+@@ -312,7 +324,7 @@ config PWM_LPSS_PLATFORM
+ config PWM_MESON
+ 	tristate "Amlogic Meson PWM driver"
+ 	depends on ARCH_MESON || COMPILE_TEST
+-	depends on COMMON_CLK
++	depends on COMMON_CLK && HAS_IOMEM
+ 	help
+ 	  The platform driver for Amlogic Meson PWM controller.
+ 
+@@ -333,6 +345,7 @@ config PWM_MTK_DISP
+ config PWM_MEDIATEK
+ 	tristate "MediaTek PWM support"
+ 	depends on ARCH_MEDIATEK || RALINK || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  Generic PWM framework driver for Mediatek ARM SoC.
+ 
+@@ -341,8 +354,8 @@ config PWM_MEDIATEK
+ 
+ config PWM_MXS
+ 	tristate "Freescale MXS PWM support"
+-	depends on OF
+ 	depends on ARCH_MXS || COMPILE_TEST
++	depends on HAS_IOMEM && OF
+ 	select STMP_DEVICE
+ 	help
+ 	  Generic PWM framework driver for Freescale MXS.
+@@ -373,6 +386,7 @@ config PWM_PCA9685
+ config PWM_PXA
+ 	tristate "PXA PWM support"
+ 	depends on ARCH_PXA || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  Generic PWM framework driver for PXA.
+ 
+@@ -404,6 +418,7 @@ config PWM_RENESAS_TPU
+ config PWM_ROCKCHIP
+ 	tristate "Rockchip PWM support"
+ 	depends on ARCH_ROCKCHIP || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  Generic PWM framework driver for the PWM controller found on
+ 	  Rockchip SoCs.
+@@ -411,6 +426,7 @@ config PWM_ROCKCHIP
+ config PWM_SAMSUNG
+ 	tristate "Samsung PWM support"
+ 	depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  Generic PWM framework driver for Samsung.
+ 
+@@ -420,7 +436,7 @@ config PWM_SAMSUNG
+ config PWM_SIFIVE
+ 	tristate "SiFive PWM support"
+ 	depends on OF
+-	depends on COMMON_CLK
++	depends on COMMON_CLK && HAS_IOMEM
+ 	depends on RISCV || COMPILE_TEST
+ 	help
+ 	  Generic PWM framework driver for SiFive SoCs.
+@@ -441,7 +457,7 @@ config PWM_SL28CPLD
+ config PWM_SPEAR
+ 	tristate "STMicroelectronics SPEAr PWM support"
+ 	depends on PLAT_SPEAR || COMPILE_TEST
+-	depends on OF
++	depends on HAS_IOMEM && OF
+ 	help
+ 	  Generic PWM framework driver for the PWM controller on ST
+ 	  SPEAr SoCs.
+@@ -463,7 +479,7 @@ config PWM_SPRD
+ config PWM_STI
+ 	tristate "STiH4xx PWM support"
+ 	depends on ARCH_STI || COMPILE_TEST
+-	depends on OF
++	depends on HAS_IOMEM && OF
+ 	help
+ 	  Generic PWM framework driver for STiH4xx SoCs.
+ 
+@@ -509,6 +525,7 @@ config PWM_SUN4I
+ config PWM_TEGRA
+ 	tristate "NVIDIA Tegra PWM support"
+ 	depends on ARCH_TEGRA || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  Generic PWM framework driver for the PWFM controller found on NVIDIA
+ 	  Tegra SoCs.
+@@ -519,6 +536,7 @@ config PWM_TEGRA
+ config PWM_TIECAP
+ 	tristate "ECAP PWM support"
+ 	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  PWM driver support for the ECAP APWM controller found on TI SOCs
+ 
+@@ -528,6 +546,7 @@ config PWM_TIECAP
+ config PWM_TIEHRPWM
+ 	tristate "EHRPWM PWM support"
+ 	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_K3 || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  PWM driver support for the EHRPWM controller found on TI SOCs
+ 
+@@ -555,6 +574,7 @@ config PWM_TWL_LED
+ config PWM_VT8500
+ 	tristate "vt8500 PWM support"
+ 	depends on ARCH_VT8500 || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  Generic PWM framework driver for vt8500.
+ 
+@@ -564,6 +584,7 @@ config PWM_VT8500
+ config PWM_ZX
+ 	tristate "ZTE ZX PWM support"
+ 	depends on ARCH_ZX || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  Generic PWM framework driver for ZTE ZX family SoCs.
+ 
 
-The symbolic names are good for the *other* bits (ie sticky bit, and
-the inode mode _type_ numbers etc), but for the permission bits, the
-symbolic names are just insane crap. Nobody sane should ever use them.
-Not in the kernel, not in user space.
-
-           Linus
-
+base-commit: 3650b228f83adda7e5ee532e2b90429c03f7b9ec
+-- 
+2.28.0
 
