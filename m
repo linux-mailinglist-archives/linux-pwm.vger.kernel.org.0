@@ -2,132 +2,68 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58A7F2B7A77
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 10:35:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D48432B7AAE
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 10:51:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgKRJfL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Nov 2020 04:35:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726182AbgKRJfK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 04:35:10 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6CFEC0613D4
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 01:35:10 -0800 (PST)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kfJro-0001VM-KB; Wed, 18 Nov 2020 10:35:08 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kfJro-0007Ua-3f; Wed, 18 Nov 2020 10:35:08 +0100
-Date:   Wed, 18 Nov 2020 10:35:06 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Lee Jones <lee.jones@linaro.org>
+        id S1726015AbgKRJuz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Nov 2020 04:50:55 -0500
+Received: from smtprelay0142.hostedemail.com ([216.40.44.142]:45286 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726249AbgKRJuz (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 04:50:55 -0500
+X-Greylist: delayed 558 seconds by postgrey-1.27 at vger.kernel.org; Wed, 18 Nov 2020 04:50:55 EST
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave04.hostedemail.com (Postfix) with ESMTP id ADAA418033F5D;
+        Wed, 18 Nov 2020 09:41:35 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 9A220837F24D;
+        Wed, 18 Nov 2020 09:41:34 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Spam-Summary: 50,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:69:355:379:599:800:960:967:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1539:1593:1594:1711:1714:1730:1747:1777:1792:2393:2525:2553:2560:2563:2682:2685:2828:2859:2933:2937:2939:2942:2945:2947:2951:2954:3022:3138:3139:3140:3141:3142:3351:3622:3865:3867:3868:3870:3871:3934:3936:3938:3941:3944:3947:3950:3953:3956:3959:4321:4605:5007:6691:7576:8985:9025:10004:10400:10848:10967:11232:11233:11658:11914:12043:12262:12297:12438:12555:12679:12683:12740:12895:13069:13161:13229:13311:13357:13439:13894:14110:14181:14659:14721:14777:21080:21627:21795:30029:30030:30034:30051:30054:30090:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:414,LUA_SUMMARY:none
+X-HE-Tag: sun17_590424827339
+X-Filterd-Recvd-Size: 1850
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 18 Nov 2020 09:41:33 +0000 (UTC)
+Message-ID: <ebe315dae8855ed2c55d6ce48f84aa4edd93e5fd.camel@perches.com>
+Subject: Re: [PATCH] pwm: core: Use octal permission
+From:   Joe Perches <joe@perches.com>
+To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>
 Cc:     Soham Biswas <sohambiswas41@gmail.com>, thierry.reding@gmail.com,
         linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: core: Use octal permission
-Message-ID: <20201118093506.srljfosnamxe5wwz@pengutronix.de>
+Date:   Wed, 18 Nov 2020 01:41:31 -0800
+In-Reply-To: <20201118093506.srljfosnamxe5wwz@pengutronix.de>
 References: <20201117175452.26914-1-sohambiswas41@gmail.com>
- <20201117181214.GK1869941@dell>
- <CAMmt7eO5te05AuVC+MR-zLB-z+r9FCuJwtON=1QXXY2YwQG0eg@mail.gmail.com>
- <20201118085113.GO1869941@dell>
+         <20201117181214.GK1869941@dell>
+         <CAMmt7eO5te05AuVC+MR-zLB-z+r9FCuJwtON=1QXXY2YwQG0eg@mail.gmail.com>
+         <20201118085113.GO1869941@dell>
+         <20201118093506.srljfosnamxe5wwz@pengutronix.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.38.1-1 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ohq2x4jqnsuhvgdo"
-Content-Disposition: inline
-In-Reply-To: <20201118085113.GO1869941@dell>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Wed, 2020-11-18 at 10:35 +0100, Uwe Kleine-König wrote:
 
---ohq2x4jqnsuhvgdo
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Actually I'd prefer keeping the symbolic name because this is easier to
+> grep for. So to convince me a better reason than "checkpatch says so" is
+> needed.
 
-On Wed, Nov 18, 2020 at 08:51:13AM +0000, Lee Jones wrote:
-> On Tue, 17 Nov 2020, Soham Biswas wrote:
->=20
-> > This fixes the following warning:
-> >=20
-> > `drivers/pwm/core.c:1341: WARNING: Symbolic permissions 'S_IRUGO' are
-> > not preferred. Consider using octal permissions '0444'.`
-> >=20
-> > generated by the following script:
-> >=20
-> > `./scripts/checkpatch.pl --file --terse drivers/pwm/core.c`
->=20
-> Oh, it's a checkpatch.pl thing.
->=20
-> You should definitely quote the warning and describe where it came
-> from in the commit log.
->=20
-> Not entirely sure what that warning is the result of.  Probably as
-> they're sightly harder to read and easier to get wrong.  Still, I'll
-> let Thierry decide whether the patch itself is suitable for inclusion
-> into the PWM core.
->=20
-> > On Tue, 17 Nov 2020 at 23:42, Lee Jones <lee.jones@linaro.org> wrote:
-> > >
-> > > On Tue, 17 Nov 2020, Soham Biswas wrote:
-> > >
-> > > > Fixed Warning.
-> > >
-> > > Which warning does this fix?
-> > >
-> > > > Replaced symbolic permission 'S_IRUGO' with octal permission '0444'.
-> > >
-> > > This is semantically equivalent.
-> > >
-> > > Not sure what and/or how this fixes anything.
-> > >
-> > > > Signed-off-by: Soham Biswas <sohambiswas41@gmail.com>
-> > > > ---
-> > > >  drivers/pwm/core.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> > > > index 1f16f5365d3c..a8eff4b3ee36 100644
-> > > > --- a/drivers/pwm/core.c
-> > > > +++ b/drivers/pwm/core.c
-> > > > @@ -1338,7 +1338,7 @@ DEFINE_SEQ_ATTRIBUTE(pwm_debugfs);
-> > > >
-> > > >  static int __init pwm_debugfs_init(void)
-> > > >  {
-> > > > -     debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
-> > > > +     debugfs_create_file("pwm", S_IFREG | 0444, NULL, NULL,
+https://lore.kernel.org/lkml/CA+55aFw5v23T-zvDZp-MmD_EYxF8WbafwwB59934FV7g21uMGQ@mail.gmail.com/
+-------------------------------------------------------------------
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 2 Aug 2016 16:58:29 -0400
 
-Actually I'd prefer keeping the symbolic name because this is easier to
-grep for. So to convince me a better reason than "checkpatch says so" is
-needed.
+The symbolic names are good for the *other* bits (ie sticky bit, and
+the inode mode _type_ numbers etc), but for the permission bits, the
+symbolic names are just insane crap. Nobody sane should ever use them.
+Not in the kernel, not in user space.
 
-Best regards
-Uwe
+           Linus
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---ohq2x4jqnsuhvgdo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl+06scACgkQwfwUeK3K
-7AlIXQgAgF8lWGCuUSzrwgut+6vGhG5KY6ME1zv3TbLjIqfz7pJ+Y3Umgc0SXkTV
-a6odi+6fKPG9TV9zZsDpUkra0wJq24pRw1+ilIa2B/WGDUBl7oIz8vd+jmZnHs+r
-uasgn/z3AxFXKeU9OS9suJGsCmnqGWsT6ciKy1ch70qf1ye7oyGzbggJrQC638d+
-s1qDjSGq63LsClzQc9hWng4ym3p36/NFpl2P5K6qxG0YIIWK3mvPWmedhZt5UMYJ
-VFW+ooMHPiLYIsvpiRWqomqOOls41bgiuCD78gnrjgseMH1a3mFXe3/sInBttw6a
-d6/5o2kNv5Jay7bxEdgJ6b3yF9W6uQ==
-=/okk
------END PGP SIGNATURE-----
-
---ohq2x4jqnsuhvgdo--
