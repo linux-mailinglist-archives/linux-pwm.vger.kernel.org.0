@@ -2,56 +2,95 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 200C72B7E40
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 14:25:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 46FE32B7E76
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 14:43:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbgKRNXN convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Wed, 18 Nov 2020 08:23:13 -0500
-Received: from tigeramira.ro ([88.158.78.30]:38394 "EHLO mail.tigeramira.ro"
-        rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbgKRNXN (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Wed, 18 Nov 2020 08:23:13 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.tigeramira.ro (Postfix) with ESMTP id 26172C0FA3B
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 11:38:42 +0200 (EET)
-Received: from mail.tigeramira.ro ([127.0.0.1])
-        by localhost (mail.tigeramira.ro [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id kU-r-9LVO3hg for <linux-pwm@vger.kernel.org>;
-        Wed, 18 Nov 2020 11:38:39 +0200 (EET)
-Received: from mail.tigeramira.ro (localhost [127.0.0.1])
-        by mail.tigeramira.ro (Postfix) with ESMTP id BD4CBC9FA11
-        for <linux-pwm@vger.kernel.org>; Mon, 16 Nov 2020 17:07:51 +0200 (EET)
-Received: from [156.96.44.214] (unknown [192.168.12.254])
-        by mail.tigeramira.ro (Postfix) with ESMTP id 68725998F94
-        for <linux-pwm@vger.kernel.org>; Fri, 13 Nov 2020 19:08:41 +0200 (EET)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1726379AbgKRNlu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Nov 2020 08:41:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbgKRNlt (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 08:41:49 -0500
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE725C0613D4;
+        Wed, 18 Nov 2020 05:41:48 -0800 (PST)
+Received: by mail-wm1-x342.google.com with SMTP id a3so2752049wmb.5;
+        Wed, 18 Nov 2020 05:41:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qJ3j+Ydk7CTlx6aogVblseyGYy6ENRm7V9z/KdX9WOo=;
+        b=eBR5n+e72aGJhT7M107LTJoDhuGY1RI4lT97fMGfiQ+6SgS7h+f3Gg6cwlgmp1oAIR
+         w7FkV+LNV+hqCXPPdpYKsDhvOcVwv1WJie3Bk3Xv0PP4VvlAcHi3P8VriYJYSdx7Wxic
+         iwTTpsQOmCKOk8G48eLDOaJlXopFqHRvEmQ67+qaUFLxUjiKNWOV+doKwvOPjAid6uvb
+         kWLPzbm9euZ1gvsF6t4WhAaXJPQmtGYsqsULJ7H6ft+MJq/GMAAUtUZ/r0p8Rl+aorUu
+         4a8G1sxuVJJouUbQbvOu/7Csp0mk9W8PN3O6tY5K9Wfoc7t4pC3xEMFUTT+WiaT7R91I
+         nx5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qJ3j+Ydk7CTlx6aogVblseyGYy6ENRm7V9z/KdX9WOo=;
+        b=mOf2ZcbleN+rgU5o7haQ3OHkXscg3SG6hAtDaMJwg1ImJOgmV4/xlAgHGRWQqoMI2x
+         v86pw/c9eZZ32GI2lJ2rykdxuoqHq4h3dR/PcIhKZf/YV7x501uZ+kWjXmMRqeuV9oRw
+         EFENRWGpG9HYN+UHyltjmtPAWeraIoU+H9cwxRPsuqIoa9K8nD3yBuY06RC1n0O0Usm6
+         y0OHKodszrolo5zpZntRHkqNuds3t3uP6g+3jtfPrZoTXeSO9PvpAzg0IH7H1a4rIiRG
+         4uhRFCZnjoXlUldCq8sOIwTCp83Lu/MUMJQ5BcE00/4OQfVhRg1svH68b4QFqyIn11mD
+         kXeQ==
+X-Gm-Message-State: AOAM530n1iv7sQLKkU2fL7oXqGFa/yscMenV3jk5r4O3GbN1bZ3wBYjW
+        3OvmNtdxzuhLFbLn4m7y3ur8RovdowMv18YZGow=
+X-Google-Smtp-Source: ABdhPJy2KpGtwHps+FHmqMI1bI4n8PuoJudmSVq2XU+cg1YsWa3ZIVJGzko9TSS6nHfEzCfDFnak2VzTNLQZest2694=
+X-Received: by 2002:a1c:4884:: with SMTP id v126mr103433wma.160.1605706906943;
+ Wed, 18 Nov 2020 05:41:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: Corporate and Personal Loan::,
-To:     linux-pwm@vger.kernel.org
-From:   "Investment  Corporate" <financialcapability6@gmail.com>
-Date:   Fri, 13 Nov 2020 08:08:49 -0800
-Reply-To: hmurrah39@gmail.com
-Message-Id: <20201113170842.68725998F94@mail.tigeramira.ro>
+References: <20201117175452.26914-1-sohambiswas41@gmail.com>
+ <20201118104730.4270-1-sohambiswas41@gmail.com> <20201118124312.wk6cmnktxefn7k7m@pengutronix.de>
+In-Reply-To: <20201118124312.wk6cmnktxefn7k7m@pengutronix.de>
+From:   Soham Biswas <sohambiswas41@gmail.com>
+Date:   Wed, 18 Nov 2020 19:11:35 +0530
+Message-ID: <CAMmt7ePTtM1hj6C4dgYO2o-A1C9C7NdnJHsnqSUir13ZjeEXTg@mail.gmail.com>
+Subject: Re: [PATCH v2] pwm: core: Use octal permission
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     thierry.reding@gmail.com, Lee Jones <lee.jones@linaro.org>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello linux-pwm@vger.kernel.org
+Sure will do that. Sorry for the inconvenience, I am a bit new to the
+process of emailing patches. Should I mark the next patch as v3?
 
-
-We are Base Investment Company offering Corporate and Personal Loan at 3% Interest Rate for a duration of 10Years.
-
-
-We also pay 1% commission to brokers, who introduce project owners for finance or other opportunities.
-
-
-Please get back to me if you are interested for more
-
-details.
-
-
-Yours faithfully,
-
-Hashim Murrah
+On Wed, 18 Nov 2020 at 18:13, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> [added "v2" to the subject, would have been better if you had already
+> done that. I don't know if/how this confuses tools like b4 and patchwork]
+>
+> Hello,
+>
+> On Wed, Nov 18, 2020 at 04:17:30PM +0530, Soham Biswas wrote:
+> > Fixes the following warning generated by checkpatch:
+> >
+> > drivers/pwm/core.c:1341: WARNING: Symbolic permissions 'S_IRUGO' are
+> > not preferred. Consider using octal permissions '0444'.
+> >
+> > +debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
+> >                           &pwm_debugfs_fops);
+>
+> something like: "Permission bits are easier readable in octal than with
+> using the symbolic names." in the commit log would be good for those of
+> us who missed why this was added to checkpatch.
+>
+> Best regards
+> Uwe
+>
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
