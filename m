@@ -2,128 +2,132 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD4132B796C
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 09:52:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58A7F2B7A77
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 10:35:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgKRIvR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Nov 2020 03:51:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43346 "EHLO
+        id S1726754AbgKRJfL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Nov 2020 04:35:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbgKRIvQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 03:51:16 -0500
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99C2BC061A4D
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 00:51:16 -0800 (PST)
-Received: by mail-wr1-x443.google.com with SMTP id 23so1319272wrc.8
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 00:51:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=cdTlLYpoqg49dJytKCngMw0Q/QviqDLm+/R80RdfooU=;
-        b=Gga3KWoYVZfDr07yxKSI+OzcScUs4GDiJQTw5BVHnFRVvdvIe3jmFXyOk/AC0jA1bF
-         mFzyVmgeVITsSycvHLBWC+NRbSBkgMXnnRVC2WG8+AT2p0qKzdnMJRrs2iye4hcZoO3E
-         NE5qJ7CO+t9obqci6xcSh7B/eMNfHCRlWDN6bRnUy8jUsYMuPLzCJkJCgAlocX98bOi0
-         aerNculhYVOSBkYIVqa2m8jMse+470XYeoZEyKFIwE/zGTUAnLIH88ET9jJ8beKNXr2k
-         yjdQA5QIrNpRgpaUIq9MF3W8ZS0i/mdxJDAtji5R2HwS+RrWSKWwPHh4/B3WVz+TxHdN
-         CR6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=cdTlLYpoqg49dJytKCngMw0Q/QviqDLm+/R80RdfooU=;
-        b=WrcXukKR5TeJ7On6X2EiwK59B85CM4vayg/cIGS4xzRK8qh18D9l2H54ETiU5MkCEd
-         B6KCSqW7eigyYzCApdksuW90OUP0k1x4677htL/xNvLSIsQE+45ThmDbjUXJkE2j/4ox
-         3iJwyh5cjJpHm0k+iZddapKjc4FWGXHGGCm1nLJrWmgRQs6Z+AZO6Y45hj2fAf3jxKjK
-         DEXSwjA4rMn0nzT38v8EXxd9L1ZK2AwJ+I5vfRbnlxDmXRBrkpKrGRpWjyNtCFC/o5ib
-         8nPSsW6Lt0+GhVo2cTAZ8Y01eImWu6jSc7ZNn8kYQenwdj7pDgQ2BGwkhpnYeAIVy+4w
-         iCeA==
-X-Gm-Message-State: AOAM532U8l0En9bsJMz1egYSvkb3sg1p4zKKgDuG8dR5mi5Gf5zgPQby
-        jRtszML4xL+HYY8in/bVDvGhxQ==
-X-Google-Smtp-Source: ABdhPJwWERf6qt3Q/4PwXA+tgR/h91DCBbx7+RMOUS5nVnmcEa0Rh+Bh6BZGr5p5uAhPdy3wtG1MAA==
-X-Received: by 2002:a5d:4f12:: with SMTP id c18mr3663146wru.304.1605689475334;
-        Wed, 18 Nov 2020 00:51:15 -0800 (PST)
-Received: from dell ([91.110.221.159])
-        by smtp.gmail.com with ESMTPSA id c2sm33963964wrf.68.2020.11.18.00.51.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Nov 2020 00:51:14 -0800 (PST)
-Date:   Wed, 18 Nov 2020 08:51:13 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Soham Biswas <sohambiswas41@gmail.com>
-Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        with ESMTP id S1726182AbgKRJfK (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 04:35:10 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6CFEC0613D4
+        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 01:35:10 -0800 (PST)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kfJro-0001VM-KB; Wed, 18 Nov 2020 10:35:08 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kfJro-0007Ua-3f; Wed, 18 Nov 2020 10:35:08 +0100
+Date:   Wed, 18 Nov 2020 10:35:06 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Soham Biswas <sohambiswas41@gmail.com>, thierry.reding@gmail.com,
         linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] pwm: core: Use octal permission
-Message-ID: <20201118085113.GO1869941@dell>
+Message-ID: <20201118093506.srljfosnamxe5wwz@pengutronix.de>
 References: <20201117175452.26914-1-sohambiswas41@gmail.com>
  <20201117181214.GK1869941@dell>
  <CAMmt7eO5te05AuVC+MR-zLB-z+r9FCuJwtON=1QXXY2YwQG0eg@mail.gmail.com>
+ <20201118085113.GO1869941@dell>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ohq2x4jqnsuhvgdo"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMmt7eO5te05AuVC+MR-zLB-z+r9FCuJwtON=1QXXY2YwQG0eg@mail.gmail.com>
+In-Reply-To: <20201118085113.GO1869941@dell>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 17 Nov 2020, Soham Biswas wrote:
 
-> This fixes the following warning:
-> 
-> `drivers/pwm/core.c:1341: WARNING: Symbolic permissions 'S_IRUGO' are
-> not preferred. Consider using octal permissions '0444'.`
-> 
-> generated by the following script:
-> 
-> `./scripts/checkpatch.pl --file --terse drivers/pwm/core.c`
+--ohq2x4jqnsuhvgdo
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Oh, it's a checkpatch.pl thing.
-
-You should definitely quote the warning and describe where it came
-from in the commit log.
-
-Not entirely sure what that warning is the result of.  Probably as
-they're sightly harder to read and easier to get wrong.  Still, I'll
-let Thierry decide whether the patch itself is suitable for inclusion
-into the PWM core.
-
-> On Tue, 17 Nov 2020 at 23:42, Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > On Tue, 17 Nov 2020, Soham Biswas wrote:
-> >
-> > > Fixed Warning.
-> >
-> > Which warning does this fix?
-> >
-> > > Replaced symbolic permission 'S_IRUGO' with octal permission '0444'.
-> >
-> > This is semantically equivalent.
-> >
-> > Not sure what and/or how this fixes anything.
-> >
-> > > Signed-off-by: Soham Biswas <sohambiswas41@gmail.com>
-> > > ---
-> > >  drivers/pwm/core.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, Nov 18, 2020 at 08:51:13AM +0000, Lee Jones wrote:
+> On Tue, 17 Nov 2020, Soham Biswas wrote:
+>=20
+> > This fixes the following warning:
+> >=20
+> > `drivers/pwm/core.c:1341: WARNING: Symbolic permissions 'S_IRUGO' are
+> > not preferred. Consider using octal permissions '0444'.`
+> >=20
+> > generated by the following script:
+> >=20
+> > `./scripts/checkpatch.pl --file --terse drivers/pwm/core.c`
+>=20
+> Oh, it's a checkpatch.pl thing.
+>=20
+> You should definitely quote the warning and describe where it came
+> from in the commit log.
+>=20
+> Not entirely sure what that warning is the result of.  Probably as
+> they're sightly harder to read and easier to get wrong.  Still, I'll
+> let Thierry decide whether the patch itself is suitable for inclusion
+> into the PWM core.
+>=20
+> > On Tue, 17 Nov 2020 at 23:42, Lee Jones <lee.jones@linaro.org> wrote:
 > > >
-> > > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> > > index 1f16f5365d3c..a8eff4b3ee36 100644
-> > > --- a/drivers/pwm/core.c
-> > > +++ b/drivers/pwm/core.c
-> > > @@ -1338,7 +1338,7 @@ DEFINE_SEQ_ATTRIBUTE(pwm_debugfs);
+> > > On Tue, 17 Nov 2020, Soham Biswas wrote:
 > > >
-> > >  static int __init pwm_debugfs_init(void)
-> > >  {
-> > > -     debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
-> > > +     debugfs_create_file("pwm", S_IFREG | 0444, NULL, NULL,
-> > >                           &pwm_debugfs_fops);
+> > > > Fixed Warning.
 > > >
-> > >       return 0;
-> >
+> > > Which warning does this fix?
+> > >
+> > > > Replaced symbolic permission 'S_IRUGO' with octal permission '0444'.
+> > >
+> > > This is semantically equivalent.
+> > >
+> > > Not sure what and/or how this fixes anything.
+> > >
+> > > > Signed-off-by: Soham Biswas <sohambiswas41@gmail.com>
+> > > > ---
+> > > >  drivers/pwm/core.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> > > > index 1f16f5365d3c..a8eff4b3ee36 100644
+> > > > --- a/drivers/pwm/core.c
+> > > > +++ b/drivers/pwm/core.c
+> > > > @@ -1338,7 +1338,7 @@ DEFINE_SEQ_ATTRIBUTE(pwm_debugfs);
+> > > >
+> > > >  static int __init pwm_debugfs_init(void)
+> > > >  {
+> > > > -     debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
+> > > > +     debugfs_create_file("pwm", S_IFREG | 0444, NULL, NULL,
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Actually I'd prefer keeping the symbolic name because this is easier to
+grep for. So to convince me a better reason than "checkpatch says so" is
+needed.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ohq2x4jqnsuhvgdo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl+06scACgkQwfwUeK3K
+7AlIXQgAgF8lWGCuUSzrwgut+6vGhG5KY6ME1zv3TbLjIqfz7pJ+Y3Umgc0SXkTV
+a6odi+6fKPG9TV9zZsDpUkra0wJq24pRw1+ilIa2B/WGDUBl7oIz8vd+jmZnHs+r
+uasgn/z3AxFXKeU9OS9suJGsCmnqGWsT6ciKy1ch70qf1ye7oyGzbggJrQC638d+
+s1qDjSGq63LsClzQc9hWng4ym3p36/NFpl2P5K6qxG0YIIWK3mvPWmedhZt5UMYJ
+VFW+ooMHPiLYIsvpiRWqomqOOls41bgiuCD78gnrjgseMH1a3mFXe3/sInBttw6a
+d6/5o2kNv5Jay7bxEdgJ6b3yF9W6uQ==
+=/okk
+-----END PGP SIGNATURE-----
+
+--ohq2x4jqnsuhvgdo--
