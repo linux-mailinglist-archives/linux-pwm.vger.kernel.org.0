@@ -2,106 +2,116 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57A1A2B836B
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 18:57:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 983ED2B837F
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 19:00:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbgKRRyv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Nov 2020 12:54:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42618 "EHLO
+        id S1725782AbgKRR7l (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Nov 2020 12:59:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbgKRRyv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 12:54:51 -0500
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 181B8C0613D4
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 09:54:50 -0800 (PST)
-Received: by mail-wr1-x443.google.com with SMTP id o15so3088369wru.6
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 09:54:50 -0800 (PST)
+        with ESMTP id S1725446AbgKRR7k (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 12:59:40 -0500
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA37EC0613D4;
+        Wed, 18 Nov 2020 09:59:40 -0800 (PST)
+Received: by mail-wm1-x341.google.com with SMTP id c198so2017171wmd.0;
+        Wed, 18 Nov 2020 09:59:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=nZmuCf+It/OPETbe6/xvpbMXjzpKho14+DSnNdmU/kA=;
-        b=opmjglZdHhPkB9T3EnKRVQ+RIjcqyziB+pURvdKluwpZWp8jYW5IokffCUUeyX8N/w
-         w/C8Ni1SQ1BanQ9NXD5OtyleEY4fjPTA3nJgqqkGVn+rLWHsWi4zoVeG3JGhZnVHQ71L
-         JtCp7F1q9XFdyDKbvBlTvNhA99qIH0qiy6+YCOib7cmEB+WM1uCepR/ybUrujoxmnc0w
-         wBsVt/GOlr2gVItSlWjNs5XqvrYNLUOENFTA4dRgmWBCP4ZkAutv2e4PeeFOa8RDSw/N
-         gKjeeG0iQpeQy+xm+bppxb9ITX6PY8S6BvldvOEXwxM88noG0CuqwpgrDZwbcGrpjXug
-         V0Pg==
+        bh=jE6xH3xJT8t3bwjXvLY5varaGvrj90mEqWVft4kIEmo=;
+        b=K8uCnzo+I6QMN8j4L73XC+Q+vWAjDrHlQkHZvObSTdMsxU6SGwz6pxgSsEurOJPbjq
+         HS/TlvzeNIKuprXTIrh6JnzPpSBFZAxnGxpne+mUiV5sZkZkvEIdIquzazv8pxQyiM6b
+         WCwkA4sa69/9qBAr1MwUx9/7H65puByUducCUc87tfZe1qtNMqQoN+7lPvFkIZyOuzi5
+         ctXKnSfO8p7J4JcuTmrMpKaOYiTrLuB2gLe7XZKEwB4sH1BeG7oQ3E6cgFt+7pLCeEHf
+         ftCjGYIpwZJjTET1NvI1kOBDmE/aiV9V2sJdKF9SySPf0sUx0NnXw0JvBeM28NypGgfj
+         NEnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nZmuCf+It/OPETbe6/xvpbMXjzpKho14+DSnNdmU/kA=;
-        b=R+QopBAtt9Hkv45jBDBdOmfxXoq/s+74cjsU17wOY/2Jg3wUnkiPT7z2H3x+wVpwLa
-         gokJ1QDVfDfAALd9DwJf6Y8Mf3s5IDvazWBTU4HHREKaQuBCRANlviFu0TPJtpMtmFcH
-         7j3J4caSOhAs4U/vOOcV8oLywUJE9+v+ZAhwVNGZ/HHWhxphSaRY3tjWwBFCd8phKdiP
-         +f9ytOegoFw0M0grUT/q0MBrEjEhHjVbujd29KsQ17N0RM2IGUYqRiILfTrPGl4wy4St
-         jENb0GTORk5nH0hVCIXQC2wCzbsHU4gC7nxxOzjST1GXG3Qk77aAw+XDIWz/yS6zMIud
-         acmw==
-X-Gm-Message-State: AOAM533rnSH9ROPhVxvAb8P2pVuXyLFyATQpM74M3gGyFavAmTUlXfnQ
-        TbePqRYztF7Gw+QwB7MUQV0=
-X-Google-Smtp-Source: ABdhPJznmCI2BfzgvuU1vlnhd8uPhK3/2fYsTJR2yqgBnssTNqNQC42TMOxXnFO0/6TFree8VOSzqw==
-X-Received: by 2002:a5d:5308:: with SMTP id e8mr5897086wrv.299.1605722088858;
-        Wed, 18 Nov 2020 09:54:48 -0800 (PST)
+        bh=jE6xH3xJT8t3bwjXvLY5varaGvrj90mEqWVft4kIEmo=;
+        b=ToQjYv4wtceLG25X4JWpePMz7EVArgn9vpt8284TU7rMfYQucml04HKL4UAo9VMBUC
+         bMU6FpbMWwF1iIebMDNysHUbws5H0d5Jq2S4nUsXBadeLStx2q0r3T/kz78in7Idh4o7
+         s0KegzeKFXg1kTIy4nTfR/5grV7278IsH6GKbn48Gs436mhinFw8M9aI8RUU/HanJG1V
+         jDWNTnlHnctvNgepI5kpvPEtrWqe0DnhaZbGNgHDZ0SzFMaPjB3X/meG6O1+fswkiY29
+         18uUplYbutl1psjyHvNhwfWCb3aKNY4AdWUMVneHCWOZab3PUloXyIsW5VoOzK7fnn9n
+         zxFw==
+X-Gm-Message-State: AOAM5313QwnqkC6EV7T4ZuWMj/jMczHxXPplqvW5W322h3c/dC3GkZn6
+        pgqEEo1qD+NxaiXVA8hkt6M=
+X-Google-Smtp-Source: ABdhPJzHYJVIqxKzrw2tN2VVzJXDmNacwF8gO8cKfA+DGUCUkw6UdYvqBWrcXYN2JGziNk14njIYQA==
+X-Received: by 2002:a1c:2384:: with SMTP id j126mr318789wmj.116.1605722379424;
+        Wed, 18 Nov 2020 09:59:39 -0800 (PST)
 Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id k64sm5166250wmb.11.2020.11.18.09.54.46
+        by smtp.gmail.com with ESMTPSA id a21sm617367wmb.38.2020.11.18.09.59.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Nov 2020 09:54:47 -0800 (PST)
-Date:   Wed, 18 Nov 2020 18:54:45 +0100
+        Wed, 18 Nov 2020 09:59:38 -0800 (PST)
+Date:   Wed, 18 Nov 2020 18:59:36 +0100
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH 1/2] pwm: fix dependencies on HAS_IOMEM
-Message-ID: <20201118175445.GA3552669@ulmo>
-References: <20201118094509.365684-1-u.kleine-koenig@pengutronix.de>
+To:     Soham Biswas <sohambiswas41@gmail.com>
+Cc:     lee.jones@linaro.org, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] pwm: core: Use octal permission
+Message-ID: <20201118175936.GB3552669@ulmo>
+References: <20201117175452.26914-1-sohambiswas41@gmail.com>
+ <20201118145112.21250-1-sohambiswas41@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="8t9RHnE3ZwKMSgU+"
+        protocol="application/pgp-signature"; boundary="yNb1oOkm5a9FJOVX"
 Content-Disposition: inline
-In-Reply-To: <20201118094509.365684-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20201118145112.21250-1-sohambiswas41@gmail.com>
 User-Agent: Mutt/1.14.7 (2020-08-29)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---8t9RHnE3ZwKMSgU+
-Content-Type: text/plain; charset=utf-8
+--yNb1oOkm5a9FJOVX
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 18, 2020 at 10:45:08AM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> Drivers making use of IO remapping must depend on HAS_IOMEM.
+On Wed, Nov 18, 2020 at 08:21:12PM +0530, Soham Biswas wrote:
+> Permission bits are easier readable in octal than with using the
+> symbolic names.
 >=20
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> Fixes the following warning generated by checkpatch:
+>=20
+> drivers/pwm/core.c:1341: WARNING: Symbolic permissions 'S_IRUGO' are
+> not preferred. Consider using octal permissions '0444'.
+>=20
+> +debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
+>                             &pwm_debugfs_fops);
+>=20
+> Signed-off-by: Soham Biswas <sohambiswas41@gmail.com>
 > ---
->  drivers/pwm/Kconfig | 35 ++++++++++++++++++++++++++++-------
->  1 file changed, 28 insertions(+), 7 deletions(-)
+>  drivers/pwm/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Both patches applied, thanks.
+Applied, thanks. Though I did unwrap the checkpatch warning message as
+Uwe suggested.
 
 Thierry
 
---8t9RHnE3ZwKMSgU+
+--yNb1oOkm5a9FJOVX
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl+1X+MACgkQ3SOs138+
-s6Fdsw//b5/u8Y/mddviNq1ZgRV/bEgihx+C24bpBVcxCKHmlmo7iTiCmBg8YbTP
-eanbAupCGZRLsOJ58FKVQKphbNVKWu7F27V2VhdVQRjz0AqH2vFKHIDcCLNnN9Lx
-waxWJ0UgaqL7bweYwiclzhIUgmlIEsFVjhIhmX/FjoydD0gWHNLD99BaHLVmWCm3
-DAQWnrothkITmglvMMlXzT2sG9WLh5nxFaWrs5Q2wLU1oB0to6l/VdpsA9TAMrpH
-IDp7Xg/e2ZRgMQwn0PNpKa98wGciLobfWfr7kj6f6xkmOt1zdrXxgF574lrgw+Ku
-5cAxjp6rFsEGAMY/WHepRBSPCCT800Fbot5Ck6EjEEOAqB0kjh/7VA7yq1X2cUuM
-qwVoxUaIPMylVpr6CLYSnb1l2rcYCFM/LOmQdaJ2DIIUUYz2rBe8TRC0ovB08agO
-mRPiSs6jzecJPCjx5ijTY0CPsVISAPXccHwL+AVxT/DcVqv/sWMjfZq4W4tLSv18
-mOJSXcYiU5pNYi6w2GKcuRYh6gspeC8q3Tmqas65Oc22yAwom0F4Ok4QNQdO35SI
-Ag+12gEIf4AbaYyXkXQazLWjzW1+kOZpoLizTYNkaNzPWjkJtdrvjyuFoScN0Gzp
-P2SVsSiHwFzyzWbgDsZ/MKunnOmqm9YpkcFALAqQPkKau8uJOOg=
-=qRZF
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl+1YQgACgkQ3SOs138+
+s6EzahAAtvL172oAjP8DMdC4bZL1n1WrGgaPfOOA03IUuaZiYFFQu9/V5UaMa7zk
+jNEYlPHuGGeiRXRhCgOU6loZGiy9pH6/72+cE/y5QBK0azDxk9IT+bnlMnRu13UV
+soab0bFyTkg1skm2Iome7DGxuxoL7baxeZZvdXHFD8zGgYa8uIyHDJBClDe9Zu1Z
+VgWfPG4Cy0ch18TCCJQg29M1cpZwDqLcEI0BBmHVEAmT64+6epNudrslnTEQTyyM
+XkRcq6Fa1U2AHNyy0v/PF+RZbhAcO0FElxYTvKKa6UPzqjkDmlUqGyQ8kuHmmRJg
+0jD4R6nJjLjOA3AOqcG6ZqrfIQ5RaEvELZYn4m3XOJej+oprQvKcpdSnsq+KREyd
+W0CSCb9SfqXZAAIM0m1E40c4NReaubbQaDeNMMhRrWbmq1UMmogVyomiRyGdLLe9
+ASlCGk08Ks0KlkJ+HbKTQ2/hVYtOt0neJuv0BnpCbP2dcPEQZO35RM1KoZTwIyFW
+UF+AKeALMLjmEjDzbrA6YD9aK9bcqxRe+1b4ikjYV4Rb5L2n8Hh3Taxpn/mH08hs
+mMwtUka/giwkuoXNNmHIJV4beH+kdXw9VljAG+PaKyQSaNwRrOwkns+X+7f28nZJ
+ZBTHGHA7Z7NFO6L4jtwfXMKyLrRWPQ3DhFxKbYeyISSWqlMCk9g=
+=gkhH
 -----END PGP SIGNATURE-----
 
---8t9RHnE3ZwKMSgU+--
+--yNb1oOkm5a9FJOVX--
