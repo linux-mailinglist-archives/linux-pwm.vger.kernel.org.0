@@ -2,83 +2,94 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C5ED62B7BA0
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 11:48:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C8312B7BB8
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 11:49:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgKRKqy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Nov 2020 05:46:54 -0500
-Received: from guitar.tcltek.co.il ([192.115.133.116]:55915 "EHLO
-        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727704AbgKRKqy (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Wed, 18 Nov 2020 05:46:54 -0500
-Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id D6D06440DF9;
-        Wed, 18 Nov 2020 12:31:20 +0200 (IST)
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Baruch Siach <baruch@tkos.co.il>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 5/5] dt-bindings: ap806: document gpio pwm-offset property
-Date:   Wed, 18 Nov 2020 12:30:46 +0200
-Message-Id: <8e9c2730806e47524a30c52366edd67670736f0e.1605694661.git.baruch@tkos.co.il>
+        id S1727811AbgKRKsW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Nov 2020 05:48:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbgKRKsW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 05:48:22 -0500
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 145B5C0613D4;
+        Wed, 18 Nov 2020 02:48:22 -0800 (PST)
+Received: by mail-pj1-x1044.google.com with SMTP id h12so846718pjv.2;
+        Wed, 18 Nov 2020 02:48:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=kkD7g/WwFQXyV4FNXDvxg3H94RoRFTUfp67Vye/V3PU=;
+        b=YmCBR5opGa4UStGSFPNmuZ3qo58rtcOk6YEWlOYAebbVsa2sa6D/64BK1ntkPUP0CO
+         DQIP133ZBzKm7s48f/4jMxTgRpBgxEB9dN3kF0EBA0vbFT5uEGn7FfE2b662XfGtaPKw
+         EVsgiBaZEutB2xF/EbSAASgFjjryeFXCcpi1QF+20JPUkYkMCoyS7J2IJZs/gSPGIk3B
+         yUtImYJI7H7PGkvBVfhL5uFAbyvOKUtdMXXRkdEylh7CZN6nkwT4OnXDXUaq3qVn0ywT
+         slfnqtF3Bwx46aAE5zhLCgKodF9oPV75qwOblXwr76guCJSb0+HeUVaIPSvl34e68SSI
+         6NNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=kkD7g/WwFQXyV4FNXDvxg3H94RoRFTUfp67Vye/V3PU=;
+        b=ctdZ2d5ayjmVY2DWLWVnsTfLSiAFtslLTblw/j/ZMn24QPtmyH78qNqs6R6zkjpauW
+         cse0tkHwdmeLDLNDMEo1admoBvuwt+Wvg7hJtaRar1pkfYEcvTmmcQBN/10KQOtyOHkG
+         4gzU9asyAsY3v/xazu69wmCdXMX7zqmu3+2jirOlFCpZvcCZR2w6EyESmvdGHy5VIh4F
+         mbkA7ARa9foO2DFd4mbkDAB/7c1EJrpdbjrKigXZfncs7K58CEKVDLzj2kHC91mZBvAc
+         E0Lue4jk+5tErqsBA5nAdw073DgqyxZ4CO8f0lOt0M3mAR4ObU3NK0LCpWe/MohHRfb+
+         EZjw==
+X-Gm-Message-State: AOAM533/cYp9SQLXREFHbfg7suv7+coLym5X9hK6XwE7d9K2r4PvVyHm
+        jU/tnjQLdb1S8Sy6txbs/2M=
+X-Google-Smtp-Source: ABdhPJxiSVps73UA6RWeEZ8Gop1SI1TB5RWAxfe9IxDY6WzcxsAKFxNM2r9waVHrGW7g7NOYdGDbww==
+X-Received: by 2002:a17:90a:1902:: with SMTP id 2mr3423275pjg.177.1605696501443;
+        Wed, 18 Nov 2020 02:48:21 -0800 (PST)
+Received: from manjaro.domain.name ([202.142.93.91])
+        by smtp.gmail.com with ESMTPSA id o67sm24480994pfb.109.2020.11.18.02.48.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Nov 2020 02:48:20 -0800 (PST)
+From:   Soham Biswas <sohambiswas41@gmail.com>
+To:     thierry.reding@gmail.com
+Cc:     lee.jones@linaro.org, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Soham Biswas <sohambiswas41@gmail.com>
+Subject: [PATCH] pwm: core: Use octal permission
+Date:   Wed, 18 Nov 2020 16:17:30 +0530
+Message-Id: <20201118104730.4270-1-sohambiswas41@gmail.com>
 X-Mailer: git-send-email 2.29.2
-In-Reply-To: <cover.1605694661.git.baruch@tkos.co.il>
-References: <cover.1605694661.git.baruch@tkos.co.il>
+In-Reply-To: <20201117175452.26914-1-sohambiswas41@gmail.com>
+References: <20201117175452.26914-1-sohambiswas41@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Update the example as well. Add the '#pwm-cells' and 'clocks' properties
-for a complete working example.
+Fixes the following warning generated by checkpatch:
 
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+drivers/pwm/core.c:1341: WARNING: Symbolic permissions 'S_IRUGO' are
+not preferred. Consider using octal permissions '0444'.
+
++debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
+			    &pwm_debugfs_fops);
+
+Signed-off-by: Soham Biswas <sohambiswas41@gmail.com>
 ---
- .../bindings/arm/marvell/ap80x-system-controller.txt      | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/pwm/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
-index e31511255d8e..a754e8992450 100644
---- a/Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
-+++ b/Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
-@@ -80,6 +80,11 @@ Required properties:
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 1f16f5365d3c..a8eff4b3ee36 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -1338,7 +1338,7 @@ DEFINE_SEQ_ATTRIBUTE(pwm_debugfs);
  
- - offset: offset address inside the syscon block
+ static int __init pwm_debugfs_init(void)
+ {
+-	debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
++	debugfs_create_file("pwm", S_IFREG | 0444, NULL, NULL,
+ 			    &pwm_debugfs_fops);
  
-+Optional properties:
-+
-+- pwm-offset: offset address of PWM duration control registers inside the
-+  syscon block
-+
- Example:
- ap_syscon: system-controller@6f4000 {
- 	compatible = "syscon", "simple-mfd";
-@@ -101,6 +106,9 @@ ap_syscon: system-controller@6f4000 {
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		gpio-ranges = <&ap_pinctrl 0 0 19>;
-+		pwm-offset = <0x10c0>;
-+		#pwm-cells = <2>;
-+		clocks = <&ap_clk 3>;
- 	};
- };
- 
+ 	return 0;
 -- 
 2.29.2
 
