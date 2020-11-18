@@ -2,98 +2,136 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC7C22B7FE1
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 15:56:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95C182B826D
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 17:59:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgKRO4H (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Nov 2020 09:56:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43102 "EHLO
+        id S1726995AbgKRQ4W (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Nov 2020 11:56:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgKRO4H (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 09:56:07 -0500
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEF1BC0613D4;
-        Wed, 18 Nov 2020 06:56:06 -0800 (PST)
-Received: by mail-wm1-x341.google.com with SMTP id s13so2987907wmh.4;
-        Wed, 18 Nov 2020 06:56:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F9vwVFomlSDuds1FQf9/6Z9QEaL4P+/Z5CIsMWerWJs=;
-        b=pFEK+Ng8n6IXFzuM7v7WdjM4TNgr60JFFNMje9aflY6ZZgny57ggPAcpD22A5bvu8M
-         rr+lflG9E4lDZx1akZ2RzZTtS7PWopwFsPjH1poEOt8EgFIusYhv5IQs2Fgdw48KRmUI
-         v++EWoM6orvV2MBjGvQF4ihQAz6D8+J+lmh8Cc1fCzGLm6devIhMQ/n2Y9EQeCUPf9JA
-         1MeYDJDmoB36ljWC80LkrcQVEyhlfHz8eXCv9e2jqxs+QT8rRuw4fqqsg4RF+GmlhoiC
-         Laz3zQsOs3LscurtQ/iUggBxdaL924Wfi4SP+U3yPgt29IaPitgzEd0etNhC9VoDtu/M
-         lU+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F9vwVFomlSDuds1FQf9/6Z9QEaL4P+/Z5CIsMWerWJs=;
-        b=I9V7jIUeawowQvnFcTkvhbXzmmxvt9I/AoEHbsogxjRfN4zEnvvKd6ijuZ+VMS2vOO
-         dZXvzoqCWR1MzZRXcc0FdTwZc+cQQRePAMm0pIrk49SG/CnNkCUDUqq2wqmQOPFV6RoT
-         Y/8mrxykh1PDqrEZGbzk6zyfWnBQmx1Y9eglUgRGvw3hn6s8Pf33IM626KJUB2iDpnkL
-         +8jLDppgNROEyaqQwYd7x7Xnm2D3LUSBMqJBDfB7S63X9ddx5hUOgZBzLwXiEl9IW7Ga
-         2oDXK1rEOb1O/dFpTMGRuz05TwruKeefFncl+gFJsmTtgcLoHq+W9HLi00axPc+uRCHN
-         LCMA==
-X-Gm-Message-State: AOAM531B24/mhValXPsC+vdGzsOOZ9JoRAPp29SfbDthvj8AGWExA9fz
-        g0VW+zwxWbYY06acpSpVWF0w6Ubiw4b0i0qqvEg=
-X-Google-Smtp-Source: ABdhPJz8d9obRcnmrN9volOJNmR/Y8hcECW/5CcD0MI3o4TXo4LCGp+lITn18nFaQjW9ox4gQVZe9BGUNZ7LMDj1zpg=
-X-Received: by 2002:a1c:4884:: with SMTP id v126mr453517wma.160.1605711365627;
- Wed, 18 Nov 2020 06:56:05 -0800 (PST)
+        with ESMTP id S1726643AbgKRQ4V (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 11:56:21 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71F6EC0613D4
+        for <linux-pwm@vger.kernel.org>; Wed, 18 Nov 2020 08:56:21 -0800 (PST)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kfQkl-0007ff-BB; Wed, 18 Nov 2020 17:56:19 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kfQkk-0006vL-Gh; Wed, 18 Nov 2020 17:56:18 +0100
+Date:   Wed, 18 Nov 2020 17:56:16 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Soham Biswas <sohambiswas41@gmail.com>, thierry.reding@gmail.com,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: core: Use octal permission
+Message-ID: <20201118165616.fld4ayh3v6u73lrw@pengutronix.de>
+References: <20201117175452.26914-1-sohambiswas41@gmail.com>
+ <20201118135835.18395-1-sohambiswas41@gmail.com>
+ <CAMmt7eMunjSvOQfaXofWY7Dz--Uim6MPf5WGcbn4D1s9=vMXHQ@mail.gmail.com>
+ <20201118142156.uf5bfzq3sh3gliik@pengutronix.de>
+ <20201118144654.GU1869941@dell>
 MIME-Version: 1.0
-References: <20201117175452.26914-1-sohambiswas41@gmail.com> <20201118145112.21250-1-sohambiswas41@gmail.com>
-In-Reply-To: <20201118145112.21250-1-sohambiswas41@gmail.com>
-From:   Soham Biswas <sohambiswas41@gmail.com>
-Date:   Wed, 18 Nov 2020 20:25:54 +0530
-Message-ID: <CAMmt7eNwJ=TW3A6xu0PWboHRFtVp8s_u8JqrN-Y7+jijXUO0XQ@mail.gmail.com>
-Subject: Re: [PATCH v3] pwm: core: Use octal permission
-To:     thierry.reding@gmail.com
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="v4udhncqbkiltpgn"
+Content-Disposition: inline
+In-Reply-To: <20201118144654.GU1869941@dell>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 18 Nov 2020 at 20:21, Soham Biswas <sohambiswas41@gmail.com> wrote:
->
-> Permission bits are easier readable in octal than with using the
-> symbolic names.
->
-> Fixes the following warning generated by checkpatch:
->
-> drivers/pwm/core.c:1341: WARNING: Symbolic permissions 'S_IRUGO' are
-> not preferred. Consider using octal permissions '0444'.
->
-> +debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
->                             &pwm_debugfs_fops);
->
-> Signed-off-by: Soham Biswas <sohambiswas41@gmail.com>
-> ---
->  drivers/pwm/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index 1f16f5365d3c..a8eff4b3ee36 100644
-> --- a/drivers/pwm/core.c
-> +++ b/drivers/pwm/core.c
-> @@ -1338,7 +1338,7 @@ DEFINE_SEQ_ATTRIBUTE(pwm_debugfs);
->
->  static int __init pwm_debugfs_init(void)
->  {
-> -       debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
-> +       debugfs_create_file("pwm", S_IFREG | 0444, NULL, NULL,
->                             &pwm_debugfs_fops);
->
->         return 0;
-> --
-> 2.29.2
->
 
-I passed the `-v3` flag this time to the git format patch and fixed
-the long lines error. It changed the name of the patch file though xD
+--v4udhncqbkiltpgn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Nov 18, 2020 at 02:46:54PM +0000, Lee Jones wrote:
+> On Wed, 18 Nov 2020, Uwe Kleine-K=F6nig wrote:
+>=20
+> > On Wed, Nov 18, 2020 at 07:36:28PM +0530, Soham Biswas wrote:
+> > > On Wed, 18 Nov 2020 at 19:29, Soham Biswas <sohambiswas41@gmail.com> =
+wrote:
+> > > >
+> > > > Permission bits are easier readable in octal than with using the sy=
+mbolic names.
+> > > >
+> > > > Fixes the following warning generated by checkpatch:
+> > > >
+> > > > drivers/pwm/core.c:1341: WARNING: Symbolic permissions 'S_IRUGO' ar=
+e not preferred.
+> > > > Consider using octal permissions '0444'.
+> > > >
+> > > > +debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
+> > > >                             &pwm_debugfs_fops);
+> > > >
+> > > > Signed-off-by: Soham Biswas <sohambiswas41@gmail.com>
+> > > > ---
+> > > >  drivers/pwm/core.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> > > > index 1f16f5365d3c..a8eff4b3ee36 100644
+> > > > --- a/drivers/pwm/core.c
+> > > > +++ b/drivers/pwm/core.c
+> > > > @@ -1338,7 +1338,7 @@ DEFINE_SEQ_ATTRIBUTE(pwm_debugfs);
+> > > >
+> > > >  static int __init pwm_debugfs_init(void)
+> > > >  {
+> > > > -       debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
+> > > > +       debugfs_create_file("pwm", S_IFREG | 0444, NULL, NULL,
+> > > >                             &pwm_debugfs_fops);
+> > > >
+> > > >         return 0;
+> > > >
+> > >=20
+> > > I passed -v3 to git-send-email but it didn't work it seems.
+> >=20
+> > It only works if you use it with a commit range I guess, i.e. when it
+> > calls git-format-patch itself.
+> >=20
+> > Also I think if you call checkpatch on your own patch (e.g. using:
+> >=20
+> > 	git format-patch -v3 --stdout | scripts/checkpatch.pl
+> >=20
+> > ) it will tell you to break the long line in the commit log.
+>=20
+> That's funny!  Although you can safely ignore that one.
+>=20
+> I find it's better to keep errors/warnings whole.
+
+Yes, so please don't ignore that warning for:
+
+	Permission bits are easier readable in octal than with using the symbolic =
+names.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--v4udhncqbkiltpgn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl+1Ui0ACgkQwfwUeK3K
+7Ak0+Qf/SkqZXeKoQlUG77SR4ew6wX7/K8tt/KI9Auv7oAx2F9ZZnOFpNIOvRuJy
+0Sd7NrRR6q1uZBK2OARY+MkHxp1N7f6kXwfdGii4rp0y8CjbYWC8OpqRyCXoBRRj
+0RW0j4oExDQ8NQhgslgx9Hh9+L1RP8V/g8xexzrapCUEgR2NH3U+IPYdPOjZLQaE
+RYzpwNm3lucNLTiUyT/NwLNkgiPXIPmfKS0zX2RySct+nN53E8LdLKnHTRQSply4
+odBacth7xK3wRC0GV05u+YzZ+tVebZ31TCYKHKfF6lPpfv9zx65b+rBpuIJkjNdv
+KknqMcpPSNfdO8dVGjEUMi7BBHHv2w==
+=QLcP
+-----END PGP SIGNATURE-----
+
+--v4udhncqbkiltpgn--
