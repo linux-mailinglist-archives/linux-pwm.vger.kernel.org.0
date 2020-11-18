@@ -2,96 +2,96 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D05202B7EDC
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 15:02:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F05682B7F10
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Nov 2020 15:07:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgKRN7E (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Nov 2020 08:59:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34284 "EHLO
+        id S1726983AbgKROGo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Nov 2020 09:06:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgKRN7D (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 08:59:03 -0500
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5833DC0613D4;
-        Wed, 18 Nov 2020 05:59:02 -0800 (PST)
-Received: by mail-pg1-x544.google.com with SMTP id w4so1228118pgg.13;
-        Wed, 18 Nov 2020 05:59:02 -0800 (PST)
+        with ESMTP id S1726963AbgKROGo (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Nov 2020 09:06:44 -0500
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87C60C0613D4;
+        Wed, 18 Nov 2020 06:06:43 -0800 (PST)
+Received: by mail-wr1-x442.google.com with SMTP id p8so2342467wrx.5;
+        Wed, 18 Nov 2020 06:06:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rimqJqRJwrIOhYO+VNFNI9V0S06+Ty+IA7MjQW8qayk=;
-        b=OMtLm8usqAAVY/VNYkTB6P7jvDPV2p343CObgLyaTlQB8TMHMoYBAkpy8twiOLHXdB
-         6LvgZACiq+0O99TVoYZbd2/A8qRW+pxe/6n71ajxgEM6FdusqWu/cQ8/gVa/s4FW5iKL
-         xa67gAzignJp/NsjKQQxSemAKVG/JVqduRqpZUPqpFb1hTxMYMgIiE+pryh/kS5NLr54
-         fd+DrlAeCt2CZ5A98lpp/9YqMJzuAOtbKzxFv3sBII33dUYPH/Np+TXETMNRpBayQUrT
-         8oXO3T0yNk2pu8CBenVfMha86S4/76NQXl5S/rRTQTFCOWylTb01/5yyruJimAgD1Ad9
-         FVzg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=538BN91FjV6xN1ekEF9Yzq7jw0xYzhdIvSlkb3lU5iU=;
+        b=MiOgBX+3miSR9+rtjtWDuW6WBET26/lquadNIZP9O7zkwdua7tbstzzRMnvxsuw/SR
+         8B5nr4b9jOCPGp/s1hagp+hAHVsaXZZ16zc9+IVRdH/56rlaYS+UD1OTT+D5LHLNu9XJ
+         64tlZUeR7kGSIZv0vHK45MGqBBbIp9LVxvi5ntnRVfJ0ezrRvMB5C1hxxsbP3M+ER+nI
+         degGOCFhCtbBsfw/hhSqV3pro+y0YAze/h0brBfI7JY/VJ4zYcBAQ0FR52ElSaMjvLYX
+         ORDXmWN5R4tNfPCbXvRoH0z+PLQF/yBYohvO0tamPiBpDDbMuW3uev/F7kiFoiNi6rye
+         rNyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rimqJqRJwrIOhYO+VNFNI9V0S06+Ty+IA7MjQW8qayk=;
-        b=qaTcB7wS2AHEmLdebVAB9n6A/wZGtPaP7rOg1cbRCGZCgh7fgrScBihnsfUCxXlVFJ
-         fbY549hE8b1FH99aC8JKugjk+XtVxRJ3lIVAI9t6m3dVHrWXDdsiP6jX5U4Ba5xXTksb
-         AGUIhoHRl20n6pQnbQ3aO/sBxYI6fmVdHVJUqGi4+H2F0hDx5RZcVsbkN1G5J70u78PI
-         YxQWU2X2pGqmi5y0hIEBLsq36Ys/PktqDZKPzXsfvFBxO01eYOFETA8A+QLWDyzIljaJ
-         uKHbFIaoBGKjKX5ZNTL39bLGAAGqhPXpedlPUYdBe3s5R3MfikPF1cqKn5KU5WrYxp0t
-         UXVQ==
-X-Gm-Message-State: AOAM530A9UZGsyRrlrH40Y/3WGGl4ariDPg9Z+IJPR8nuKW0n4EAyBh5
-        C1XsTLTk4dohKXYMd2vwjRT3ob5zo39T+Bil/dY=
-X-Google-Smtp-Source: ABdhPJy8Kmmh46lqVfebUl1itC0FZKVnwySpk74pfY2eWFJfYdoz11ICVdAdD7FKHNaLse5RR3GW7A==
-X-Received: by 2002:a65:4485:: with SMTP id l5mr8195872pgq.10.1605707941881;
-        Wed, 18 Nov 2020 05:59:01 -0800 (PST)
-Received: from manjaro.domain.name ([202.142.93.91])
-        by smtp.gmail.com with ESMTPSA id a17sm23269919pga.56.2020.11.18.05.58.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Nov 2020 05:59:01 -0800 (PST)
-From:   Soham Biswas <sohambiswas41@gmail.com>
-To:     thierry.reding@gmail.com
-Cc:     lee.jones@linaro.org, u.kleine-koenig@pengutronix.de,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Soham Biswas <sohambiswas41@gmail.com>
-Subject: [PATCH] pwm: core: Use octal permission
-Date:   Wed, 18 Nov 2020 19:28:35 +0530
-Message-Id: <20201118135835.18395-1-sohambiswas41@gmail.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201117175452.26914-1-sohambiswas41@gmail.com>
-References: <20201117175452.26914-1-sohambiswas41@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=538BN91FjV6xN1ekEF9Yzq7jw0xYzhdIvSlkb3lU5iU=;
+        b=ul27xJ7kqqgZK344xzlqJcqaCM4hzxp/dbDbHd6PWy223tJCTCaRIpHoEC7BR23j+J
+         /PpTyAp9ZMuxVxakCniHqKcTidgvWz1PvYU7Vf234BYLI1VuL9pEHiXwrRZYdCUyKwKq
+         V2zBTglVxHXY/SCnBt5HAj5T0fNXAHZEHLktthaikWVw0QtZ7S0gDvFqw75oAweMSF6h
+         0ocz4bDsTCgfNJpW7e5xIB7w41CETNXPASP4pMBmcdwuG0b5NWDOONFCd2k94NOwCuxA
+         PWizUUnVc2iHlxIu++IE40Snkk/NLdphM6HlBOlFRm+l2xpseEqX8+6MiEkLPB0lawSe
+         pbcA==
+X-Gm-Message-State: AOAM530GNrS7zyi5n7XyEBJsNX/x9Pxh+l5hpUm23oFbiwt8kqyEU2CA
+        te0NZmj1VK/s/vEhEmDWvEZuX1jW/6Tu8ks87r+wReMeetltBvHS
+X-Google-Smtp-Source: ABdhPJy1DdEafyd9rQzrliy3vp+U1Ea4RYa2oPbgM0YHalNAOgDtOZ3ClVOT/0BDdYbAvMldRaPa3G+7zYks7xn/YkY=
+X-Received: by 2002:adf:f94b:: with SMTP id q11mr5250082wrr.351.1605708400272;
+ Wed, 18 Nov 2020 06:06:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20201117175452.26914-1-sohambiswas41@gmail.com> <20201118135835.18395-1-sohambiswas41@gmail.com>
+In-Reply-To: <20201118135835.18395-1-sohambiswas41@gmail.com>
+From:   Soham Biswas <sohambiswas41@gmail.com>
+Date:   Wed, 18 Nov 2020 19:36:28 +0530
+Message-ID: <CAMmt7eMunjSvOQfaXofWY7Dz--Uim6MPf5WGcbn4D1s9=vMXHQ@mail.gmail.com>
+Subject: Re: [PATCH] pwm: core: Use octal permission
+To:     thierry.reding@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Permission bits are easier readable in octal than with using the symbolic names.
+On Wed, 18 Nov 2020 at 19:29, Soham Biswas <sohambiswas41@gmail.com> wrote:
+>
+> Permission bits are easier readable in octal than with using the symbolic names.
+>
+> Fixes the following warning generated by checkpatch:
+>
+> drivers/pwm/core.c:1341: WARNING: Symbolic permissions 'S_IRUGO' are not preferred.
+> Consider using octal permissions '0444'.
+>
+> +debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
+>                             &pwm_debugfs_fops);
+>
+> Signed-off-by: Soham Biswas <sohambiswas41@gmail.com>
+> ---
+>  drivers/pwm/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> index 1f16f5365d3c..a8eff4b3ee36 100644
+> --- a/drivers/pwm/core.c
+> +++ b/drivers/pwm/core.c
+> @@ -1338,7 +1338,7 @@ DEFINE_SEQ_ATTRIBUTE(pwm_debugfs);
+>
+>  static int __init pwm_debugfs_init(void)
+>  {
+> -       debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
+> +       debugfs_create_file("pwm", S_IFREG | 0444, NULL, NULL,
+>                             &pwm_debugfs_fops);
+>
+>         return 0;
+> --
+> 2.29.2
+>
 
-Fixes the following warning generated by checkpatch:
-
-drivers/pwm/core.c:1341: WARNING: Symbolic permissions 'S_IRUGO' are not preferred.
-Consider using octal permissions '0444'.
-
-+debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
-                            &pwm_debugfs_fops);
-
-Signed-off-by: Soham Biswas <sohambiswas41@gmail.com>
----
- drivers/pwm/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 1f16f5365d3c..a8eff4b3ee36 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -1338,7 +1338,7 @@ DEFINE_SEQ_ATTRIBUTE(pwm_debugfs);
- 
- static int __init pwm_debugfs_init(void)
- {
--	debugfs_create_file("pwm", S_IFREG | S_IRUGO, NULL, NULL,
-+	debugfs_create_file("pwm", S_IFREG | 0444, NULL, NULL,
- 			    &pwm_debugfs_fops);
- 
- 	return 0;
--- 
-2.29.2
-
+I passed -v3 to git-send-email but it didn't work it seems.
