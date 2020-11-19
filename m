@@ -2,153 +2,112 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A5E42B9489
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Nov 2020 15:23:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 004572B959C
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Nov 2020 16:02:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbgKSOWt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Nov 2020 09:22:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34442 "EHLO
+        id S1728119AbgKSO6j (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 19 Nov 2020 09:58:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727106AbgKSOWt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Nov 2020 09:22:49 -0500
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5A62C0613CF;
-        Thu, 19 Nov 2020 06:22:47 -0800 (PST)
-Received: by mail-lf1-x143.google.com with SMTP id e139so8515559lfd.1;
-        Thu, 19 Nov 2020 06:22:47 -0800 (PST)
+        with ESMTP id S1727512AbgKSO6j (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Nov 2020 09:58:39 -0500
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E663FC0613CF;
+        Thu, 19 Nov 2020 06:58:38 -0800 (PST)
+Received: by mail-ua1-x943.google.com with SMTP id x13so2001728uar.4;
+        Thu, 19 Nov 2020 06:58:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZvOd3z2dVnB5SZQwK/dvDpMXJ4eITwmefRvuKa9tb0Q=;
-        b=Y21dZRMZ+kNYHUNLiNCHQoS5QxGFMKf7KaEd+6a06G/hQ1bejJXAcijD6xiDcBiBUn
-         JS4yWyB2+zZqqxEzarQ7y2NC3cKCRKUZ2CchFnZU6Kn5vLrutkvXtu+Lq1OFhxgn8Epp
-         UuLT88qmv67A3sWVg1l8Ws05tNM98wJWDlT1hgGfbwXfCiTxIVlprvN48xiVZLuFi3Cn
-         KI3oT4rlzLRHtD8EKwZRS29BsqsZh07SrjWWBHtLowX/toS83Dhlqd9OCn9mvofvfXic
-         DHhrzPVHyIWzxM0YW/p1ZFuzvZaox6YeG/KIcRnpB6NKJzCgXsklV6r9OCr7nnEUUhRd
-         hptw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0X6ei3+dw0Ixie54vJ6xzjoLnN3RiQKq6WUuQ/cy9nE=;
+        b=nSCUSMcsc87MgfVVWxgQ3p9zU/yWpk9azEszsZ+ip8PIgBW1c4GC0jSe/zPWJoHWTZ
+         r6uB0lo1yzn8vmzdilpX+zG/sTkdypXBFVhw0t/3UELss7Nbg2nRSdv7a9ZAQf/CJaoA
+         bJCLu63Ao/qnPxwQpyiGfQbD6YnDSvVJFNzi9CN+t6elmBz370FroTmN2Dc8C+fXQw3Q
+         lHa7sEIwbtwQWr6nyiRnEakgA/5ldBnyqvGXjh7FPuQNHl/r6ktYVmHW33Jsw3A/9UKO
+         FkrgRRlfl1v2sqEedV2hh+5EP5SFyKffFHuSGKzB9R9ec8q9c7iwintxQksrfZhJAhnx
+         IzxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZvOd3z2dVnB5SZQwK/dvDpMXJ4eITwmefRvuKa9tb0Q=;
-        b=i7ba6A/r1lx38CySMfQ+TDUl7Ug5P1w27iAO+JNLA3mdxNi6OJU0Dyqalbxsw01iB0
-         VAsNVwAXW1PqPUXXSjGz0epzuBBCbtyiUFWhin0O2XLXgQRzlY1akQvQtW/ko39PobAl
-         YqRKgEYYe3YFDLqG9cjS0d36YmKabjvOpUI6c76OKGdqYg3fS5LkGKk6O+yUnTz3eRHz
-         PWSciz9HMFkctnmfRE7e4I7307OLnlqaz8QPpkNVd/aym1Zj/CRTKjfv3D9eULG/nYuE
-         2fZ5e3RZt0B5qhOLiz610v07pBXK8W2tBlr9mbSx1CHjsYAJC6p0df7hm4FpmuX71rKU
-         978w==
-X-Gm-Message-State: AOAM530du4USguA/p3pLaUicqA2meLa3ozpjxZ7O2FXF+na2ZDg6G4DO
-        96bNH1Rf87fJcnpUjW52tmsWQdbw810=
-X-Google-Smtp-Source: ABdhPJyUwmqVByndGgJFiM7woqjbf8UJz72yW3W4B1Jv93hEMk1YatxireTGBSQxqAyLLyxkuXCkKw==
-X-Received: by 2002:a19:844a:: with SMTP id g71mr6446029lfd.414.1605795766096;
-        Thu, 19 Nov 2020 06:22:46 -0800 (PST)
-Received: from [192.168.2.145] (109-252-193-159.dynamic.spd-mgts.ru. [109.252.193.159])
-        by smtp.googlemail.com with ESMTPSA id m16sm3851652lfa.57.2020.11.19.06.22.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Nov 2020 06:22:45 -0800 (PST)
-Subject: Re: [PATCH v1 11/30] drm/tegra: dc: Support OPP and SoC core voltage
- scaling
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        linux-samsung-soc@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-usb@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-media@vger.kernel.org, linux-tegra@vger.kernel.org
-References: <20201112171600.GD4742@sirena.org.uk>
- <b4b06c1d-c9d4-43b2-c6eb-93f8cb6c677d@gmail.com>
- <20201112200123.GF4742@sirena.org.uk>
- <ce9e2d9f-917e-fb8a-7323-f3bf1a367e9d@gmail.com>
- <20201113142937.GB4828@sirena.org.uk>
- <7f066805-97d9-088f-e89d-a554fe478574@gmail.com>
- <20201113161550.GC4828@sirena.org.uk>
- <3beaa12b-4a50-a3b6-fc43-ebb5ce7a8db7@gmail.com>
- <20201113172859.GF4828@sirena.org.uk>
- <74cfc6a9-3f59-d679-14b7-51102a6f11b3@gmail.com>
- <20201116133311.GB4739@sirena.org.uk>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <332ab946-daee-bb83-24ab-0bda4fd8e1ef@gmail.com>
-Date:   Thu, 19 Nov 2020 17:22:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0X6ei3+dw0Ixie54vJ6xzjoLnN3RiQKq6WUuQ/cy9nE=;
+        b=cBsVJtnVw5oGrSeMTIQWFmgCVfjidtH3zL7+gTfmKKBQRe9v04o6yrzoTvv6cRZ2Os
+         DZZVBnEZ2VCmlW55fgvM9dNNnFYIr/a9AIkdquwFjYuS26tpTJaEDXNCTrd1/tldOjzu
+         0ZswXf64kTApJgeF7/5D5b0LpJcWPt/emGF4yTWduutPKickdBl8nSG58g3LBvSagy+b
+         W1xtzv1Uy3Vmo7BOAoRnVOOW+ckxsj3pi5QXa/VwBSJKsLfArj0SAXT4TkiJEApjf59L
+         Z0K7DsgZxhU5C1jinrB7CnTaXZ9lDOc9GJ4eEzSbl3S7vu9xbQDsbZvhm3OwKNg1rHD6
+         rL6w==
+X-Gm-Message-State: AOAM532asXfqmor6syWh1dyUhhCFitFj2ES7e71zfOTl/CtFukj5ZNX8
+        FzuvDA1BRcKUwan9bPe9s00K+Kr2wtkYAwZ5H5o=
+X-Google-Smtp-Source: ABdhPJybH08eUOhkjXA+uy1MK5oybKgxRANfgJy2clNuS38q+12ZHNjvPr0fBnTO5j+7AUIDD1aA3PwhK5Hv/WZnqMs=
+X-Received: by 2002:a9f:2583:: with SMTP id 3mr6980138uaf.134.1605797917764;
+ Thu, 19 Nov 2020 06:58:37 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20201116133311.GB4739@sirena.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20201118174417.278011-1-clemens.gruber@pqgruber.com>
+ <CAGngYiV+oDeagaCfpeACMzQyDHVzk9ERbSBjW_fW5hoQANHqog@mail.gmail.com> <20201119100005.GA703@workstation.tuxnet>
+In-Reply-To: <20201119100005.GA703@workstation.tuxnet>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Thu, 19 Nov 2020 09:58:26 -0500
+Message-ID: <CAGngYiU7+X1AbadQ0kFBQOqxK-adowg6CTOMx260fyF1-rpO-Q@mail.gmail.com>
+Subject: Re: [PATCH 1/3] pwm: pca9685: Switch to atomic API
+To:     Clemens Gruber <clemens.gruber@pqgruber.com>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        David Jander <david@protonic.nl>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-16.11.2020 16:33, Mark Brown пишет:
-> On Sun, Nov 15, 2020 at 08:42:10PM +0300, Dmitry Osipenko wrote:
->> 13.11.2020 20:28, Mark Brown пишет:
-> 
->>>> What should we do?
-> 
->>> As I keep saying the consumer driver should be enumerating the voltages
->>> it can set, if it can't find any and wants to continue then it can just
->>> skip setting voltages later on.  If only some are unavailable then it
->>> probably wants to eliminate those specific OPPs instead.
-> 
->> I'm seeing a dummy regulator as a helper for consumer drivers which
->> removes burden of handling an absent (optional) regulator. Is this a
->> correct understanding of a dummy regulator?
-> 
->> Older DTBs don't have a regulator and we want to keep them working. This
->> is equal to a physically absent regulator and in this case it's an
->> optional regulator, IMO.
-> 
-> No, you are failing to understand the purpose of this code.  To
-> reiterate unless the device supports operating with the supply
-> physically absent then the driver should not be attempting to use
-> regulator_get_optional().  That exists specifically for the case where
-> the supply may be absent, nothing else.  The dummy regulator is there
-> precisely for the case where the system does not describe supplies that
-> we know are required for the device to function, it fixes up that
-> omission so we don't need to open code handling of this in every single
-> consumer driver.
+On Thu, Nov 19, 2020 at 5:00 AM Clemens Gruber
+<clemens.gruber@pqgruber.com> wrote:
+>
+> > You appear to mix cached and uncached uses of prescale,
+> > is there a need for this? If not, perhaps pick one and use
+> > it consistently?
+>
+> Yes, sticking to the cached value is probably the way to go.
+>
 
-The original intention of regulator_get_optional() is clear to me, but
-nothing really stops drivers from slightly re-purposing this API, IMO.
+I would suggest going one step further, and turn on the cache in
+regmap, i.e. .cache_type = REGCACHE_RBTREE, then:
+- no need to cache pca->prescale explicitly, you can just read it with
+  regmap_read() every time, and it won't result in bus activity.
+  then you can eliminate pca->prescale, which simplifies the driver.
+- pca9685_pwm_get_state() no longer results in bus reads, every regmap_read()
+  is cached, this is extremely efficient.
+- pca9685_pwm_apply() and pca9685_pwm_gpio_set() now only does bus writes if
+  registers actually change, i.e. calling pwm_apply() multiple times in a row
+  with the same parameters, writes the registers only once.
 
-Drivers should be free to assume that if regulator isn't defined by
-firmware, then it's physically absent if this doesn't break anything. Of
-course in some cases it's unsafe to make such assumptions. I think it's
-a bit unpractical to artificially limit API usage without a good reason,
-i.e. if nothing breaks underneath of a driver.
+We can do this safely because this chip never actively writes to its
+registers (as far as I know).
 
-> Regulators that are present but not described by the firmware are a
-> clearly different case to regulators that are not physically there,
-> hardware with actually optional regulators will generally require some
-> configuration for this case.
-> 
+But maybe that's a suggestion for a follow-up patch...
 
-I have good news. After spending some more time on trying out different
-things, I found that my previous assumption about the fixed-regulator
-was wrong, it actually accepts voltage changes, i.e. regulator consumer
-doesn't get a error on a voltage-change. This is exactly what is needed
-for the OPP core to work properly.
+> > Also, if the prescale register contains an invalid value
+> > during probe(), e.g. 0x00 or 0x01, would it make sense
+> > to explicitly overwrite it with a valid setting?
+>
+> As long as it is overwritten with a correct setting when the PWM is used
+> for the first time, it should be OK?
 
-This means that there is no need to add special quirks to work around
-absent regulators, we will just add a fixed regulator to the DTs which
-don't specify a real regulator. The OPP core will perform voltage
-checking and filter out unsupported OPPs. The older DTBs will continue
-to work as well.
+I'm not sure. Consider the following scenario:
+- prescale register is invalid at probe, say it contains 0x02
+- user calls pwm_apply() but with an invalid period, which results
+  in a calculated prescale value of 0x02
+- pca9685_pwm_apply() skips prescale setup because prescale does not
+  change, returns OK(0)
+- user believes setup was ok, actually it's broken...
+
+Also, some people use this chip exclusively as a gpiochip, in that
+case the prescale register is never touched. So an invalid prescale
+at probe is never corrected.
+
+Speaking of the gpiochip side, would it make sense to call
+pca9685_pwm_full_on()/_off() in pca9685_pwm_gpio_set() too?
