@@ -2,134 +2,121 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FF0F2B95FA
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Nov 2020 16:21:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93BA92B973C
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Nov 2020 17:02:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbgKSPTk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Nov 2020 10:19:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34222 "EHLO mail.kernel.org"
+        id S1728727AbgKSQAS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 19 Nov 2020 11:00:18 -0500
+Received: from mail.pqgruber.com ([52.59.78.55]:36716 "EHLO mail.pqgruber.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728062AbgKSPTk (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 19 Nov 2020 10:19:40 -0500
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6E4F24654;
-        Thu, 19 Nov 2020 15:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605799178;
-        bh=0W6X+yvUpSkdAAGKagVENpsqMNRqNF4X/9HGlBkWMgk=;
+        id S1728726AbgKSQAR (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 19 Nov 2020 11:00:17 -0500
+Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
+        by mail.pqgruber.com (Postfix) with ESMTPSA id 053F4C6866D;
+        Thu, 19 Nov 2020 17:00:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
+        s=mail; t=1605801615;
+        bh=+EByFA9DgtbSpmJVu8ypTg5YXyFZQXFlJcvMgKd16EE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MJc09AJAL2xk01qiS05ieRaCGIlLeUWY/cvod14/kBGzC1gFcG/mDtMvf8iSA9QUD
-         jSD4dFUuEnrjJi4GroCmvV7jayJepAbLbLZeNgzQ9BKU3QE60JUhIRrlYDwHw/JhIU
-         B+8st17jTJ6Z1DYEmUVIDvIfP/2L0eFW2zmF94NU=
-Date:   Thu, 19 Nov 2020 15:19:18 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
+        b=d5B0zJsDUxZxq9qxtD/TtfPWDMIw/2NXszmc2emvIuWAX6mEKbMbbtVnCo741AA3n
+         +ll6+OFWJwX94DGuAVKOiwwLdju5EZVHG/gV37yvM+y6BwybWY7KIrG0LAx9PhWV4x
+         b0yCvdQ54KhOcn7hPvnOZHHFF2mgKbUe5WvqxNgc=
+Date:   Thu, 19 Nov 2020 17:00:13 +0100
+From:   Clemens Gruber <clemens.gruber@pqgruber.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
         Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        linux-samsung-soc@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-usb@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-media@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v1 11/30] drm/tegra: dc: Support OPP and SoC core voltage
- scaling
-Message-ID: <20201119151918.GA5554@sirena.org.uk>
-References: <20201112200123.GF4742@sirena.org.uk>
- <ce9e2d9f-917e-fb8a-7323-f3bf1a367e9d@gmail.com>
- <20201113142937.GB4828@sirena.org.uk>
- <7f066805-97d9-088f-e89d-a554fe478574@gmail.com>
- <20201113161550.GC4828@sirena.org.uk>
- <3beaa12b-4a50-a3b6-fc43-ebb5ce7a8db7@gmail.com>
- <20201113172859.GF4828@sirena.org.uk>
- <74cfc6a9-3f59-d679-14b7-51102a6f11b3@gmail.com>
- <20201116133311.GB4739@sirena.org.uk>
- <332ab946-daee-bb83-24ab-0bda4fd8e1ef@gmail.com>
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        David Jander <david@protonic.nl>
+Subject: Re: [PATCH 1/3] pwm: pca9685: Switch to atomic API
+Message-ID: <20201119160013.GA217674@workstation.tuxnet>
+References: <20201118174417.278011-1-clemens.gruber@pqgruber.com>
+ <CAGngYiV+oDeagaCfpeACMzQyDHVzk9ERbSBjW_fW5hoQANHqog@mail.gmail.com>
+ <20201119100005.GA703@workstation.tuxnet>
+ <CAGngYiU7+X1AbadQ0kFBQOqxK-adowg6CTOMx260fyF1-rpO-Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <332ab946-daee-bb83-24ab-0bda4fd8e1ef@gmail.com>
-X-Cookie: Chocolate chip.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAGngYiU7+X1AbadQ0kFBQOqxK-adowg6CTOMx260fyF1-rpO-Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu, Nov 19, 2020 at 09:58:26AM -0500, Sven Van Asbroeck wrote:
+> On Thu, Nov 19, 2020 at 5:00 AM Clemens Gruber
+> <clemens.gruber@pqgruber.com> wrote:
+> >
+> > > You appear to mix cached and uncached uses of prescale,
+> > > is there a need for this? If not, perhaps pick one and use
+> > > it consistently?
+> >
+> > Yes, sticking to the cached value is probably the way to go.
+> >
+> 
+> I would suggest going one step further, and turn on the cache in
+> regmap, i.e. .cache_type = REGCACHE_RBTREE, then:
+> - no need to cache pca->prescale explicitly, you can just read it with
+>   regmap_read() every time, and it won't result in bus activity.
+>   then you can eliminate pca->prescale, which simplifies the driver.
+> - pca9685_pwm_get_state() no longer results in bus reads, every regmap_read()
+>   is cached, this is extremely efficient.
+> - pca9685_pwm_apply() and pca9685_pwm_gpio_set() now only does bus writes if
+>   registers actually change, i.e. calling pwm_apply() multiple times in a row
+>   with the same parameters, writes the registers only once.
 
---G4iJoqBmSsgzjUCe
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Interesting, I will look into that.
 
-On Thu, Nov 19, 2020 at 05:22:43PM +0300, Dmitry Osipenko wrote:
-> 16.11.2020 16:33, Mark Brown =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> 
+> We can do this safely because this chip never actively writes to its
+> registers (as far as I know).
 
-> > No, you are failing to understand the purpose of this code.  To
-> > reiterate unless the device supports operating with the supply
-> > physically absent then the driver should not be attempting to use
-> > regulator_get_optional().  That exists specifically for the case where
+I think so too.
 
-> The original intention of regulator_get_optional() is clear to me, but
-> nothing really stops drivers from slightly re-purposing this API, IMO.
+> 
+> But maybe that's a suggestion for a follow-up patch...
+> 
+> > > Also, if the prescale register contains an invalid value
+> > > during probe(), e.g. 0x00 or 0x01, would it make sense
+> > > to explicitly overwrite it with a valid setting?
+> >
+> > As long as it is overwritten with a correct setting when the PWM is used
+> > for the first time, it should be OK?
+> 
+> I'm not sure. Consider the following scenario:
+> - prescale register is invalid at probe, say it contains 0x02
+> - user calls pwm_apply() but with an invalid period, which results
+>   in a calculated prescale value of 0x02
+> - pca9685_pwm_apply() skips prescale setup because prescale does not
+>   change, returns OK(0)
+> - user believes setup was ok, actually it's broken...
 
-> Drivers should be free to assume that if regulator isn't defined by
-> firmware, then it's physically absent if this doesn't break anything. Of
-> course in some cases it's unsafe to make such assumptions. I think it's
-> a bit unpractical to artificially limit API usage without a good reason,
-> i.e. if nothing breaks underneath of a driver.
+Makes sense. I will write the default prescale setting in case we read
+an invalid one from the register.
 
-If the supply can be physically absent without breaking anything then
-this is the intended use case for optional regulators.  This is a *very*
-uncommon.
+> 
+> Also, some people use this chip exclusively as a gpiochip, in that
+> case the prescale register is never touched. So an invalid prescale
+> at probe is never corrected.
+> 
+> Speaking of the gpiochip side, would it make sense to call
+> pca9685_pwm_full_on()/_off() in pca9685_pwm_gpio_set() too?
 
-> > Regulators that are present but not described by the firmware are a
-> > clearly different case to regulators that are not physically there,
-> > hardware with actually optional regulators will generally require some
-> > configuration for this case.
+Yes, I think so. Would be cleaner and we avoid setting all registers to
+0 when the GPIO is disabled.
 
-> I have good news. After spending some more time on trying out different
-> things, I found that my previous assumption about the fixed-regulator
-> was wrong, it actually accepts voltage changes, i.e. regulator consumer
-> doesn't get a error on a voltage-change. This is exactly what is needed
-> for the OPP core to work properly.
+--
 
-To be clear when you set a voltage range you will get the minimum
-voltage that can be supported within that range on the system given all
-the other constraints the system has.  For fixed voltage regulators or
-regulators constraints to not change voltage this means that if whatever
-voltage they are fixed at is in the range requested then the API will
-report success.
+One thing I noticed: The driver currently assumes that it comes out of
+POR in "active" state (comment at end of probe and PM calls).
+However, the SLEEP bit is set by default / after POR.
 
---G4iJoqBmSsgzjUCe
-Content-Type: application/pgp-signature; name="signature.asc"
+Do you agree with the following solution?
+1) In .probe: call pm_runtime_set_suspended() instead of _set_active()
+   (If CONFIG_PM is enabled, the SLEEP bit will be cleared in .resume)
+2) If !CONFIG_PM: Clear the SLEEP bit in .probe
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl+2jPUACgkQJNaLcl1U
-h9Cg3Qf/ScTE8SCsHJLjKatjArehtbhKoUyG6aFABrEI/v3bjsqKt/Sq0WjEm255
-nKAu6jVgldwyJP7JR+NQvS2KTy6/Ai/3r+U/lyG8X0xthT14nzXhC6QSAIfukqgq
-JHderVdLXa+mc9bZ4vJ8AzG88ImFulrVA84t2cIuHOU27i4wVx5oQJZoRquB5JdJ
-jAPleN81AYXwTdcJkckY0QoHEFVz55g/4xI2cuh9onlNHbt8eVr7FGsswsNnATrv
-DlAATwOrW84BJnGHjaB0vfWLRx75q3bJ1z62kbdf0VqU5rYaVUppa5a+8eHY6i4V
-A1ZTgD1YjmUvJjo2cbBpm7mJsYOinA==
-=tj+B
------END PGP SIGNATURE-----
-
---G4iJoqBmSsgzjUCe--
+Thanks,
+Clemens
