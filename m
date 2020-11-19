@@ -2,21 +2,21 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF79B2B8B1C
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Nov 2020 06:49:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B3042B8B94
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Nov 2020 07:21:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725786AbgKSFti (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Nov 2020 00:49:38 -0500
-Received: from guitar.tcltek.co.il ([192.115.133.116]:59014 "EHLO
+        id S1725888AbgKSGVv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 19 Nov 2020 01:21:51 -0500
+Received: from guitar.tcltek.co.il ([192.115.133.116]:59091 "EHLO
         mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbgKSFti (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 19 Nov 2020 00:49:38 -0500
+        id S1725816AbgKSGVv (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 19 Nov 2020 01:21:51 -0500
 Received: from tarshish (unknown [10.0.8.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id 8193344064C;
-        Thu, 19 Nov 2020 07:49:26 +0200 (IST)
-References: <cover.1605694661.git.baruch@tkos.co.il> <20201118224632.GE1853236@lunn.ch>
+        by mx.tkos.co.il (Postfix) with ESMTPS id 9466B44064A;
+        Thu, 19 Nov 2020 08:21:48 +0200 (IST)
+References: <cover.1605694661.git.baruch@tkos.co.il> <db0d6d619a0686eef1b15ca7409d73813440856f.1605694661.git.baruch@tkos.co.il> <20201118231811.GH1853236@lunn.ch>
 User-agent: mu4e 1.4.13; emacs 26.3
 From:   Baruch Siach <baruch@tkos.co.il>
 To:     Andrew Lunn <andrew@lunn.ch>
@@ -34,10 +34,10 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Ralph Sennhauser <ralph.sennhauser@gmail.com>,
         linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/5] gpio: mvebu: Armada 8K/7K PWM support
-In-reply-to: <20201118224632.GE1853236@lunn.ch>
-Date:   Thu, 19 Nov 2020 07:49:24 +0200
-Message-ID: <87blft6gm3.fsf@tarshish>
+Subject: Re: [PATCH 3/5] gpio: mvebu: add pwm support for Armada 8K/7K
+In-reply-to: <20201118231811.GH1853236@lunn.ch>
+Date:   Thu, 19 Nov 2020 08:21:48 +0200
+Message-ID: <878sax6f43.fsf@tarshish>
 MIME-Version: 1.0
 Content-Type: text/plain
 Precedence: bulk
@@ -46,43 +46,94 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 Hi Andrew,
 
-Thanks for your review comments.
-
 On Thu, Nov 19 2020, Andrew Lunn wrote:
-> On Wed, Nov 18, 2020 at 12:30:41PM +0200, Baruch Siach wrote:
->> The gpio-mvebu driver supports the PWM functionality of the GPIO block for 
->> earlier Armada variants like XP, 370 and 38x. This series extends support to 
->> newer Armada variants that use CP11x and AP80x, like Armada 8K and 7K.
+> On Wed, Nov 18, 2020 at 12:30:44PM +0200, Baruch Siach wrote:
+>> Use the pwm-offset DT property to store the location of PWM signal
+>> duration registers.
 >> 
->> This series adds adds the 'pwm-offset' property to DT binding. 'pwm-offset' 
->
-> One adds is enough.
->
->> points to the base of A/B counter registers that determine the PWM period and 
->> duty cycle.
+>> Since we have more than two GPIO chips per system, we can't use the
+>> alias id to differentiate between them. Use the offset value for that.
 >> 
->> The existing PWM DT binding reflects an arbitrary decision to allocate the A 
->> counter to the first GPIO block, and B counter to the other one.
+>> Move mvebu_pwm_probe() call before irq support code. The AP80x does not
+>> provide irq support, but does provide PWM. Don't skip PWM probe because
+>> of that.
+>> 
+>> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+
+[snip]
+
+>> @@ -781,51 +787,80 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
+>>  	struct device *dev = &pdev->dev;
+>>  	struct mvebu_pwm *mvpwm;
+>>  	void __iomem *base;
+>> +	u32 offset;
+>>  	u32 set;
+>>  
+>> -	if (!of_device_is_compatible(mvchip->chip.of_node,
+>> -				     "marvell,armada-370-gpio"))
+>> -		return 0;
+>> -
+>> -	/*
+>> -	 * There are only two sets of PWM configuration registers for
+>> -	 * all the GPIO lines on those SoCs which this driver reserves
+>> -	 * for the first two GPIO chips. So if the resource is missing
+>> -	 * we can't treat it as an error.
+>> -	 */
+>> -	if (!platform_get_resource_byname(pdev, IORESOURCE_MEM, "pwm"))
+>> +	if (of_device_is_compatible(mvchip->chip.of_node,
+>> +				    "marvell,armada-370-gpio")) {
+>> +		/*
+>> +		 * There are only two sets of PWM configuration registers for
+>> +		 * all the GPIO lines on those SoCs which this driver reserves
+>> +		 * for the first two GPIO chips. So if the resource is missing
+>> +		 * we can't treat it as an error.
+>> +		 */
+>> +		if (!platform_get_resource_byname(pdev, IORESOURCE_MEM, "pwm"))
+>> +			return 0;
+>> +		offset = 0;
+>> +	} else if (mvchip->soc_variant == MVEBU_GPIO_SOC_VARIANT_A8K) {
+>> +		int ret = of_property_read_u32(dev->of_node, "pwm-offset",
+>> +					       &offset);
+>> +		if (ret < 0)
+>> +			return 0;
 >
-> It was not arbitrary. I decided on KISS. The few devices i've seen
-> using this have been for a single GPIO/PWN controlled fan. KISS was
-> sufficient for that, so why make it more complex?
+> It would look more uniform if this was
+>
+> 	if (of_device_is_compatible(mvchip->chip.of_node,
+> 				    "marvell,armada-8k-gpio")) {
 
-In saying "arbitrary" I don't mean to say it's not a good choice in the
-context of the Linux PWM and GPIO subsystems. But this choice is still
-arbitrary from hardware point of view. DT is meant to describe the
-hardware. I think that coding the A/B counters allocation choice in DT
-is not optimal in terms for hardware description. Both counters are
-usable for both GPIO blocks.
+Right. However I use soc_variant again below. I think that
+of_device_is_compatible is too verbose for that.
 
-I also don't see how this makes anything more complex. The driver code
-is already aware of this A/B allocation (GPIO_BLINK_CNT_SELECT_OFF). My
-suggestion is to keep this decision in the driver, and leave DT to
-describe the hardware. This costs us a single code line (patch #3):
+In fact, I'd rather use soc_variant for marvell,armada-370-gpio as
+well. The trouble is that marvell,armada-370-gpio is not equivalent to
+MVEBU_GPIO_SOC_VARIANT_ORION. Changing that is more intrusive.
 
-  mvpwm->offset += PWM_BLINK_COUNTER_B_OFF;
+>> +	} else {
+>>  		return 0;
+>> +	}
 
-Does that make sense?
+[snip]
+
+>> @@ -1200,6 +1235,13 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+>>  
+>>  	devm_gpiochip_add_data(&pdev->dev, &mvchip->chip, mvchip);
+>>  
+>> +	/* Some MVEBU SoCs have simple PWM support for GPIO lines */
+>> +	if (IS_ENABLED(CONFIG_PWM)) {
+>> +		err = mvebu_pwm_probe(pdev, mvchip, id);
+>> +		if (err)
+>> +			return err;
+>> +	}
+>> +
+>
+> The existing error handling looks odd here. Why is there no goto
+> err_domain when probing the PWMs fails? I wonder if this a bug from me
+> from a long time again?
+
+What would you release under the err_domain label? As far as I can see
+all resources are allocated using devres, and released automatically on
+failure exit.
 
 baruch
 
