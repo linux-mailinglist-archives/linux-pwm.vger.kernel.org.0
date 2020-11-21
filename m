@@ -2,97 +2,103 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD75E2BAA6F
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Nov 2020 13:48:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C20E2BBB68
+	for <lists+linux-pwm@lfdr.de>; Sat, 21 Nov 2020 02:10:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgKTMsW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 20 Nov 2020 07:48:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44642 "EHLO
+        id S1727149AbgKUBKA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 20 Nov 2020 20:10:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbgKTMsW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 20 Nov 2020 07:48:22 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E81DC0613CF
-        for <linux-pwm@vger.kernel.org>; Fri, 20 Nov 2020 04:48:22 -0800 (PST)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kg5pr-0001b9-BC; Fri, 20 Nov 2020 13:48:19 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kg5pq-0002rg-Gt; Fri, 20 Nov 2020 13:48:18 +0100
-Date:   Fri, 20 Nov 2020 13:48:16 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Clemens Gruber <clemens.gruber@pqgruber.com>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pwm: pca9685: Add staggered-outputs property
-Message-ID: <20201120124816.2ncbm75v4c5xrtw3@pengutronix.de>
-References: <20201118174515.278067-1-clemens.gruber@pqgruber.com>
- <20201120082150.kyihkhphph7wosfz@pengutronix.de>
- <X7e4Zj1yejjLBFyl@workstation.tuxnet>
+        with ESMTP id S1726255AbgKUBKA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 20 Nov 2020 20:10:00 -0500
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41859C0613CF
+        for <linux-pwm@vger.kernel.org>; Fri, 20 Nov 2020 17:10:00 -0800 (PST)
+Received: by mail-pf1-x444.google.com with SMTP id 10so9552031pfp.5
+        for <linux-pwm@vger.kernel.org>; Fri, 20 Nov 2020 17:10:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Ezw1GwCVc9UDYhrFeJBWYlueoLdPkQ8+bJt4wUsxqBQ=;
+        b=Ggwu2CfwDHEEuto5V8D65StX/IdBUI5UgrKJKAPTLUfTGB+SYLjtejxkAE/ED45xhj
+         BLb5seW14MhfeTjjCdrtd+OEoZmd8Oyn+baHslgEZWr9ENyTKf1pbkXkfjiFI7pn9QRl
+         GI3u3zZMviM/x4mekes9KOZ0earTWsVLokMsE8hDo7pl1t6CKs9zKA2WqliXrhS10hEE
+         qqzwTcwPj5eaca+E09/zHs83gA/I+leNxe7NbWVWQlEauhH/5LwrR6MJtYoHAGRDHQIy
+         K7jjbI+RznrOMlRzyIUqKVRKnA/klw0jWJtIcYEFafewfToiklKYA2iqExrpeA5lUdfw
+         9NLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Ezw1GwCVc9UDYhrFeJBWYlueoLdPkQ8+bJt4wUsxqBQ=;
+        b=c2bXq7bTLS+sID82fSlQK1tEtTN+KMvz4V4q+S/ulGV2NG5KOoWP4Xun8AOxZZ9g6M
+         0/Y1hy6Hk2qvTFLPA3Ctoi7wJHMUu1BtzkvyWGGkPvld5w3Bj6alr66XDNQ4VJesBRDV
+         FQX+s+S0NtODcWNQmJGkjHzJ19w9QDBBQymdcH/OZFIVv8zmT4jJ342QbPYv8BG2g3QB
+         raBc/Ynr5R2ytQoxmlklXtSRcXWG551trun/ClPWB6rg9yWjzGib64Z80s3UDqnzJ5iR
+         +zncundAdeXUYqBCHZDsjalghpV1QOOw8SMr7vF39AM7W4iKiG32AvwwbxGZkw9Whb17
+         uT0g==
+X-Gm-Message-State: AOAM532O4yzFTLwXDzCK8EwVEHQd2Qi8oa0Hsbgu9hbCa+kCgWQciqWU
+        667Fnj2lxLt45bN6pkTXsm8=
+X-Google-Smtp-Source: ABdhPJzQagWVawHi9ir4pR0X0TUQOrbMyOYjw40H8oqjG+OxjUJL9FfdQv+0LjfBh2Avnn+M59eFSA==
+X-Received: by 2002:a17:90a:d495:: with SMTP id s21mr12892498pju.42.1605920999620;
+        Fri, 20 Nov 2020 17:09:59 -0800 (PST)
+Received: from zen.local ([71.212.189.78])
+        by smtp.gmail.com with ESMTPSA id v191sm5060557pfc.19.2020.11.20.17.09.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Nov 2020 17:09:58 -0800 (PST)
+From:   Trent Piepho <tpiepho@gmail.com>
+To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        lee.jones@linaro.org, heiko@sntech.de, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Cc:     Simon South <simon@simonsouth.net>
+Subject: Re: [PATCH v2] pwm: rockchip: Keep enabled PWMs running while probing
+Date:   Fri, 20 Nov 2020 17:09:58 -0800
+Message-ID: <2177360.ElGaqSPkdT@zen.local>
+In-Reply-To: <20200919193306.1023-1-simon@simonsouth.net>
+References: <20200919193306.1023-1-simon@simonsouth.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wdptpb2gnz4jdjdu"
-Content-Disposition: inline
-In-Reply-To: <X7e4Zj1yejjLBFyl@workstation.tuxnet>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Saturday, September 19, 2020 12:33:06 PM PST Simon South wrote:
+> Following commit cfc4c189bc70 ("pwm: Read initial hardware state at
+> request time") the Rockchip PWM driver can no longer assume a device's
+> pwm_state structure has been populated after a call to pwmchip_add().
+> Consequently, the test in rockchip_pwm_probe() intended to prevent the
 
---wdptpb2gnz4jdjdu
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+> @@ -362,7 +363,9 @@ static int rockchip_pwm_probe(struct platform_device 
+*pdev)
+...
+        ret = pwmchip_add(&pc->chip);
+...
+>  	}
+>  
+>  	/* Keep the PWM clk enabled if the PWM appears to be up and 
+running. */
+> -	if (!pwm_is_enabled(pc->chip.pwms))
+> +	enable_conf = pc->data->enable_conf;
+> +	ctrl = readl_relaxed(pc->base + pc->data->regs.ctrl);
+> +	if ((ctrl & enable_conf) != enable_conf)
+>  		clk_disable(pc->clk);
+>  
 
-On Fri, Nov 20, 2020 at 01:36:54PM +0100, Clemens Gruber wrote:
-> Hi,
->=20
-> On Fri, Nov 20, 2020 at 09:21:50AM +0100, Uwe Kleine-K=F6nig wrote:
-> > On Wed, Nov 18, 2020 at 06:45:15PM +0100, Clemens Gruber wrote:
-> > > The pca9685 driver supports a new staggered-outputs property for redu=
-ced
-> > > current surges and EMI. This adds documentation for the new DT proper=
-ty.
-> >=20
-> > Maybe point out the commit that added this support here?
->=20
-> The pca9685 driver patch was not yet accepted and there will be a v2.
->=20
-> Should I wait until the support is in Linus' tree and only then send a
-> dt-bindings documentation patch, mentioning the commit?
+I came across this while trying to get a PBP working better.  It seems like 
+the issue is the driver was calling pwm_is_enabled() without first requesting 
+the pwm with pwm_get().  Which wouldn't even be possible normally, how would 
+one get the pwm_chip to call pwm_is_enabled on, but the driver already has the 
+pointer.
 
-Then I'd say add the dt-bindings patch to the series adding this
-support.
+Anyway, it seems like this solution has a race.  Isn't the pwm live and 
+requestable as soon as pwmchip_add() returns?  Which would mean that disabling 
+the clock here could race with other code requesting and enabling the pwm.
 
-Best regards
-Uwe
+Seems like it would be safer to check the initial state and turn off the clock 
+before calling pwmchip_add.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---wdptpb2gnz4jdjdu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl+3uw4ACgkQwfwUeK3K
-7Ak15Qf8D7HdXIO7UJ0QM2vt3GNUwmc4Lfee5+zCkePW/6oohnPJD7RQCN+3/aOX
-lqudlv0NVgCsm0DkcHVtrYxl6VTf5Ot1gHx+TGGJp04YAU/b9gNvGUm+AyYsHIbX
-c1JHSjBBhWxOx8aFAZFCGqkiFAjg/H+o89beJgKz0aQq3Ii2sp7OUdXXioC/2N8f
-YYb253k0WYEzaI9N8PEnAAvS7RQ2DkG5XiaOgpmDcPorqL6iltJ4JSD4eznAZaJp
-Mdaow35DVFruvBfRRuns5TjOM7zkJQCZ/5gOyXGZ50wEjzvpEqrqFT9kQLyZxQDD
-EK5+hK9X5h8ktRUKcsq0MXTtC6h/Zw==
-=KXOK
------END PGP SIGNATURE-----
-
---wdptpb2gnz4jdjdu--
