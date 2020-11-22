@@ -2,26 +2,26 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B7FD2BFC7B
-	for <lists+linux-pwm@lfdr.de>; Sun, 22 Nov 2020 23:41:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 774912BFC82
+	for <lists+linux-pwm@lfdr.de>; Sun, 22 Nov 2020 23:41:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgKVWjj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 22 Nov 2020 17:39:39 -0500
-Received: from mout.gmx.net ([212.227.17.21]:33403 "EHLO mout.gmx.net"
+        id S1726779AbgKVWjz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 22 Nov 2020 17:39:55 -0500
+Received: from mout.gmx.net ([212.227.17.21]:58411 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbgKVWji (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sun, 22 Nov 2020 17:39:38 -0500
+        id S1725782AbgKVWjz (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sun, 22 Nov 2020 17:39:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1606084722;
-        bh=57r1xFqwCJIDRPuJ/P+J2+bFfyswaMLpxJDG6pNT6Us=;
+        s=badeba3b8450; t=1606084736;
+        bh=jXZYKt1n1DuufO0ZGjj1ddg8RrIBzQlHWAXXJJOO2C4=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=il21FU6NF3dQ4rt6xiuQbnpb4ct4m5PMoflxM5Wuy2FeerQEKr56SV1CUJV6VCG+3
-         FTd6R44Z/tYqsBVuaZczEwSoGXUU0JCM3zSe6pe/T2N2to3641x3kbjr+asB/4A9Yx
-         wAknJwZ6XnaXMATvFWoJ61RjMNPaGyD2NgYxIxew=
+        b=WwrbWWw2xo8f38fkc8ed6Wb6KdUbpX/izzoGcvBzBWG9Zi0sIwrEpRfH9REIejDHL
+         FUgZhJP7BWbWzlZuhqpfJUShYH6WE3ocOouKXxWj1NmU64o0oXwEPOLU1beMqfjL6b
+         l5QO5e+x3qiXs1vlgoHG1Cxdt4uVHbak6O4onYJk=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([37.201.214.162]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MmDEm-1jynY22wJk-00iAMf; Sun, 22
- Nov 2020 23:38:42 +0100
+Received: from longitude ([37.201.214.162]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MzQkK-1kKmMS1ojg-00vPHa; Sun, 22
+ Nov 2020 23:38:56 +0100
 From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
@@ -51,128 +51,122 @@ Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Andreas Kemnade <andreas@kemnade.info>,
         Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v4 4/7] pwm: ntxec: Add driver for PWM function in Netronix EC
-Date:   Sun, 22 Nov 2020 23:27:36 +0100
-Message-Id: <20201122222739.1455132-5-j.neuschaefer@gmx.net>
+Subject: [PATCH v4 5/7] rtc: New driver for RTC in Netronix embedded controller
+Date:   Sun, 22 Nov 2020 23:27:37 +0100
+Message-Id: <20201122222739.1455132-6-j.neuschaefer@gmx.net>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201122222739.1455132-1-j.neuschaefer@gmx.net>
 References: <20201122222739.1455132-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:EE1AT1+Tqq9NOJEAKqjynManQRn7SWiapiXMkOZaDjPer7g1vLD
- +b7hMCkvGaVCfpS1E1m/QFWG61Fj7LvKlsV9H0K/IkFpAbkMPqBqDdhfPUzsP5NzpU5zD+g
- ho1KX0G+QSiz+XMieZQsWQrQVYIdcNH/mvQje10Sn8J1aWZ02d0KQGMP5rHtev4Iky8QO0Q
- 2aiLHV3Pa3ggEuVEuISQQ==
+X-Provags-ID: V03:K1:JltiIA9UG40wJKVmGENJpHVueJ0cA0GAUhJzig+CGAhKfmZ5IQQ
+ s9ZvOHiCpfO/OrkveJV3Y2em2dEOBi1nE4sEUMa9q8nN8JsPYCMPRhz0lKt0BvxSoySxeu3
+ wbWbbUJ+m7NcadF+dFHwLO0xaFwsnryxDtsNFocxpZv8BO5TOEv7LErcSAfEa3o2BzXYlBZ
+ gFn1wYPs1tJv6d1fdwMjw==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:iFDVfCBf8eE=:4yNeNHof8H7GxJsk6MPrJc
- W/Dp9uZnYGIchuA2N8vPOvZufdQpfXya+qwEqWlfPNoQXVikNkaG1nloDGJ3EsxLUKeSF9+1m
- JbaFgbhFxcJxA8xbwx4W9yacR0OEfLQzO2QOroqC4jdo3tEOCXGfwnV2MCQLNaLfK87x54xWD
- rfOvBtyY/xplsst3xQnhedvr2Wz632vSOi+TWZ8EvBPGNi4AjuG9MK3QUbZcpz8TAkz75axEQ
- qHfZV+iBh9ZWjuH+262oMvkMVLO/z7v6AZdbiBVrQmtUtRrGVHFbvaMB6E1Cw7t0cPLQVLSCq
- gEKd9DbfGtlLNzEYTFc1rLSUp3QUOiHZh5/m5SZb+l2vmy0KA5CdlnG2x7fmBUu/MZ2J2AGRe
- eTj//sJx4h+thdavIhDiTXn6owNrs9/azXl+R9i2/Y8M+6URaZdehbgQxdppEMQBYMcsbTtW5
- bYhRIdTn7+S6VGtJ8quDKfkYtQfZcJHe6OZsLqrHD0AleR5xDuxCpSDWzV4lcNiRJfmu1uu+K
- B/kFIRWLgPyoOdhgDedfdj5bvOp9MvM3JdGnf3xgyo+1rpUkgfFeG22CBiYucmaM4iVsVcezX
- izAb/gO6tYwfuppCWUUjR5JRTxzz4iIXwfJrppNRpwK9r+O5WQymYMkNjsm2kFUhyAxod9yA1
- cdbtVe9YBUn9B1bISxGAS49CyvecEUi6YMI2PoK8P1+C8w/PdeoeRl+3wELJnHLO4RbzJ/cRV
- QtI1WMT3Ut3wAAbpGKP68fc62lEjmADX/vmbohQ10PLGzxpfVQ2kYv4j9cDp/jUGIN7n+oEFh
- tkXwOINAh4K3AvKyxWFjidypMcNi37LYos0sOUElC/JJgDKrEuBepyAAO4wkA9a8LOwNQCNOZ
- O60HONLsgD0UTcihTWKw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:71rcezld2ys=:T2Xofc9LQyO6Cvtzg/2F1v
+ 6dB23r4qU0Z10lf/0CB8HIJX9f49j34zINJcDJ6Fv+QueVVyk2iBwvVMYa19+xL3SyJ/ljo80
+ 8141IdnvEZ1mQ1uIzYPRMIcWiUKw91BWlen5KTh6fP3N47cttlhUN1/nea5zWKR9wEfq5hCrJ
+ rfprsRq7dV02k+bnsqj1OWeG6Ju2CW508BEqQn05gJhSPbs66NlE0fgCWHsmoYqTLpEeC6h2p
+ szJkIjhaya/UfwvQbPHlMTBf5m+0WtazryByrQdanAIRo3hEqBUwV9aQSoVzok080H2yDlwBg
+ K00a5dSr8wy/AM2gRyJUC56C6nAypUqXRdIQ1T4dzJenuAdaFedClKymCg816ge8CkVIGNJAo
+ fLp2x0RKG8Fk4lb32tTCvi8jtp/kWqwSyDmx+9Vo10BxcJfi2Sc9l3bwwH6e9vacV0OwgpL1b
+ HSqwUiU7ZSstfneCbycTj6Xe/gO+zWdlCSOLF5DxuDVa6AWogKGiC5Yu12S/R0gjyk21A1xol
+ t3A7m2WyUcAzWfRfQQJzFrWQ9wcGlKDjh49jdTExC+mp2yvinuhZ2KpJhg/k+EFblxuVKeUV8
+ GHVEdYckcL9FIRMusOr/AdPxMuu6mV1tej62zqXxwiKXmpD+IV2w9ZjBkADpC/QIpY8l82Dgg
+ olSzjm1JFs5gic5pQl4VaxXk21YLzblJ/YhoKUTwTnVY5AV60NpraUuiHgWz58P8IiWIK1U3X
+ LYWHiE7dik17fR2eEHmve1/SnYhl1bWSMvBj2819BejnVEKECNX+TyUVpPbThO2GeSkztROWZ
+ cwzU3tMQCODSyU14WeF3t5j0p2iI5/QUAy+j3lOz95fQTUMJ0mX8u5G87lnp1dyawTZMQk8+n
+ IZDK2npODIi9K/2YMCGw==
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The Netronix EC provides a PWM output which is used for the backlight
-on some ebook readers. This patches adds a driver for the PWM output.
+With this driver, mainline Linux can keep its time and date in sync with
+the vendor kernel.
 
-The .get_state callback is not implemented, because the PWM state can't
-be read back from the hardware.
+Advanced functionality like alarm and automatic power-on is not yet
+supported.
 
 Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 =2D--
 
 v4:
-- Document hardware/driver limitations
-- Only accept normal polarity
-- Fix a typo ("zone" -> "zero")
-- change MAX_PERIOD_NS to 0xffff * 125
-- Clamp period to the maximum rather than returning an error
-- Rename private struct pointer to priv
-- Rearrage control flow in _probe to save a few lines and a temporary vari=
-able
+- Remove "driver" from Kconfig entry for consistency with most other entri=
+es
 - Add missing MODULE_ALIAS line
+- Give NTXEC_REG_READ_ macros longer names
+- Solve the read tearing issue using Alexandre Belloni's algorithm
+- Solve the write tearing issue using Uwe Kleine-K=C3=B6nig's algorithm
 - Spell out ODM
 
 v3:
-- https://lore.kernel.org/lkml/20200924192455.2484005-5-j.neuschaefer@gmx.=
+- https://lore.kernel.org/lkml/20200924192455.2484005-6-j.neuschaefer@gmx.=
 net/
-- Relicense as GPLv2 or later
 - Add email address to copyright line
 - Remove OF compatible string and don't include linux/of_device.h
-- Fix bogus ?: in return line
 - Don't use a comma after sentinels
 - Avoid ret |=3D ... pattern
 - Move 8-bit register conversion to ntxec.h
+- Relicense as GPLv2 or later
 
 v2:
-- https://lore.kernel.org/lkml/20200905133230.1014581-6-j.neuschaefer@gmx.=
+- https://lore.kernel.org/lkml/20200905133230.1014581-7-j.neuschaefer@gmx.=
 net/
-- Various grammar and style improvements, as suggested by Uwe Kleine-K=C3=
-=B6nig,
-  Lee Jones, and Alexandre Belloni
+- Rework top-of-file comment [Lee Jones]
+- Sort the #include lines [Alexandre Belloni]
+- don't align =3D signs in struct initializers [Uwe Kleine-K=C3=B6nig]
 - Switch to regmap
+- Fix register number used to read minutes and seconds
 - Prefix registers with NTXEC_REG_
 - Add help text to the Kconfig option
-- Use the .apply callback instead of the old API
-- Add a #define for the time base (125ns)
-- Don't change device state in .probe; this avoids multiple problems
-- Rework division and overflow check logic to perform divisions in 32 bits
-- Avoid setting duty cycle to zero, to work around a hardware quirk
+- Use devm_rtc_allocate_device and rtc_register_device, set ->range_min an=
+d ->range_max
 =2D--
- drivers/pwm/Kconfig     |   8 ++
- drivers/pwm/Makefile    |   1 +
- drivers/pwm/pwm-ntxec.c | 166 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 175 insertions(+)
- create mode 100644 drivers/pwm/pwm-ntxec.c
+ drivers/rtc/Kconfig     |   8 ++
+ drivers/rtc/Makefile    |   1 +
+ drivers/rtc/rtc-ntxec.c | 158 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 167 insertions(+)
+ create mode 100644 drivers/rtc/rtc-ntxec.c
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 63be5362fd3a5..815f329ed5b46 100644
-=2D-- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -350,6 +350,14 @@ config PWM_MXS
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-mxs.
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 65ad9d0b47ab1..fe009949728b3 100644
+=2D-- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1311,6 +1311,14 @@ config RTC_DRV_CROS_EC
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called rtc-cros-ec.
 
-+config PWM_NTXEC
-+	tristate "Netronix embedded controller PWM support"
++config RTC_DRV_NTXEC
++	tristate "Netronix embedded controller RTC"
 +	depends on MFD_NTXEC
 +	help
-+	  Say yes here if you want to support the PWM output of the embedded
-+	  controller found in certain e-book readers designed by the original
-+	  design manufacturer Netronix.
++	  Say yes here if you want to support the RTC functionality of the
++	  embedded controller found in certain e-book readers designed by the
++	  original design manufacturer Netronix.
 +
- config PWM_OMAP_DMTIMER
- 	tristate "OMAP Dual-Mode Timer PWM support"
- 	depends on OF
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index cbdcd55d69eef..1deb29e6ae8e5 100644
-=2D-- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -32,6 +32,7 @@ obj-$(CONFIG_PWM_MESON)		+=3D pwm-meson.o
- obj-$(CONFIG_PWM_MEDIATEK)	+=3D pwm-mediatek.o
- obj-$(CONFIG_PWM_MTK_DISP)	+=3D pwm-mtk-disp.o
- obj-$(CONFIG_PWM_MXS)		+=3D pwm-mxs.o
-+obj-$(CONFIG_PWM_NTXEC)		+=3D pwm-ntxec.o
- obj-$(CONFIG_PWM_OMAP_DMTIMER)	+=3D pwm-omap-dmtimer.o
- obj-$(CONFIG_PWM_PCA9685)	+=3D pwm-pca9685.o
- obj-$(CONFIG_PWM_PXA)		+=3D pwm-pxa.o
-diff --git a/drivers/pwm/pwm-ntxec.c b/drivers/pwm/pwm-ntxec.c
+ comment "on-CPU RTC drivers"
+
+ config RTC_DRV_ASM9260
+diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+index bfb57464118d0..5f2a7582b2780 100644
+=2D-- a/drivers/rtc/Makefile
++++ b/drivers/rtc/Makefile
+@@ -111,6 +111,7 @@ obj-$(CONFIG_RTC_DRV_MT7622)	+=3D rtc-mt7622.o
+ obj-$(CONFIG_RTC_DRV_MV)	+=3D rtc-mv.o
+ obj-$(CONFIG_RTC_DRV_MXC)	+=3D rtc-mxc.o
+ obj-$(CONFIG_RTC_DRV_MXC_V2)	+=3D rtc-mxc_v2.o
++obj-$(CONFIG_RTC_DRV_NTXEC)	+=3D rtc-ntxec.o
+ obj-$(CONFIG_RTC_DRV_OMAP)	+=3D rtc-omap.o
+ obj-$(CONFIG_RTC_DRV_OPAL)	+=3D rtc-opal.o
+ obj-$(CONFIG_RTC_DRV_PALMAS)	+=3D rtc-palmas.o
+diff --git a/drivers/rtc/rtc-ntxec.c b/drivers/rtc/rtc-ntxec.c
 new file mode 100644
-index 0000000000000..4f4f736d71aba
+index 0000000000000..dad5aba2852f1
 =2D-- /dev/null
-+++ b/drivers/pwm/pwm-ntxec.c
-@@ -0,0 +1,166 @@
++++ b/drivers/rtc/rtc-ntxec.c
+@@ -0,0 +1,158 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
 + * The Netronix embedded controller is a microcontroller found in some
@@ -181,177 +175,166 @@ Inc.
 + * It contains RTC, battery monitoring, system power management, and PWM
 + * functionality.
 + *
-+ * This driver implements PWM output.
++ * This driver implements access to the RTC time and date.
 + *
 + * Copyright 2020 Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-+ *
-+ * Limitations:
-+ * - The get_state callback is not implemented, because the current state=
- of
-+ *   the PWM output can't be read back from the hardware.
-+ * - The hardware can only generate normal polarity output.
 + */
 +
 +#include <linux/mfd/ntxec.h>
 +#include <linux/module.h>
 +#include <linux/platform_device.h>
-+#include <linux/pwm.h>
 +#include <linux/regmap.h>
++#include <linux/rtc.h>
 +#include <linux/types.h>
 +
-+struct ntxec_pwm {
++struct ntxec_rtc {
 +	struct device *dev;
 +	struct ntxec *ec;
-+	struct pwm_chip chip;
 +};
 +
-+static struct ntxec_pwm *pwmchip_to_priv(struct pwm_chip *chip)
++#define NTXEC_REG_WRITE_YEAR	0x10
++#define NTXEC_REG_WRITE_MONTH	0x11
++#define NTXEC_REG_WRITE_DAY	0x12
++#define NTXEC_REG_WRITE_HOUR	0x13
++#define NTXEC_REG_WRITE_MINUTE	0x14
++#define NTXEC_REG_WRITE_SECOND	0x15
++
++#define NTXEC_REG_READ_YEAR_MONTH	0x20
++#define NTXEC_REG_READ_MDAY_HOUR	0x21
++#define NTXEC_REG_READ_MINUTE_SECOND	0x23
++
++static int ntxec_read_time(struct device *dev, struct rtc_time *tm)
 +{
-+	return container_of(chip, struct ntxec_pwm, chip);
-+}
++	struct ntxec_rtc *rtc =3D dev_get_drvdata(dev);
++	unsigned int value;
++	int res;
 +
-+#define NTXEC_REG_AUTO_OFF_HI	0xa1
-+#define NTXEC_REG_AUTO_OFF_LO	0xa2
-+#define NTXEC_REG_ENABLE	0xa3
-+#define NTXEC_REG_PERIOD_LOW	0xa4
-+#define NTXEC_REG_PERIOD_HIGH	0xa5
-+#define NTXEC_REG_DUTY_LOW	0xa6
-+#define NTXEC_REG_DUTY_HIGH	0xa7
-+
-+/*
-+ * The time base used in the EC is 8MHz, or 125ns. Period and duty cycle =
-are
-+ * measured in this unit.
-+ */
-+#define TIME_BASE_NS 125
-+
-+/*
-+ * The maximum input value (in nanoseconds) is determined by the time bas=
-e and
-+ * the range of the hardware registers that hold the converted value.
-+ * It fits into 32 bits, so we can do our calculations in 32 bits as well=
-.
-+ */
-+#define MAX_PERIOD_NS (TIME_BASE_NS * 0xffff)
-+
-+static int ntxec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm_=
-dev,
-+			   const struct pwm_state *state)
-+{
-+	struct ntxec_pwm *priv =3D pwmchip_to_priv(pwm_dev->chip);
-+	unsigned int duty =3D state->duty_cycle;
-+	unsigned int period =3D state->period;
-+	int res =3D 0;
-+
-+	if (state->polarity !=3D PWM_POLARITY_NORMAL)
-+		return -EINVAL;
-+
-+	if (period > MAX_PERIOD_NS) {
-+		period =3D MAX_PERIOD_NS;
-+
-+		if (duty > period)
-+			duty =3D period;
-+	}
-+
-+	period /=3D TIME_BASE_NS;
-+	duty /=3D TIME_BASE_NS;
-+
-+	res =3D regmap_write(priv->ec->regmap, NTXEC_REG_PERIOD_HIGH, ntxec_reg8=
-(period >> 8));
-+	if (res)
++retry:
++	res =3D regmap_read(rtc->ec->regmap, NTXEC_REG_READ_MINUTE_SECOND, &valu=
+e);
++	if (res < 0)
 +		return res;
 +
-+	res =3D regmap_write(priv->ec->regmap, NTXEC_REG_PERIOD_LOW, ntxec_reg8(=
-period));
-+	if (res)
++	tm->tm_min =3D value >> 8;
++	tm->tm_sec =3D value & 0xff;
++
++	res =3D regmap_read(rtc->ec->regmap, NTXEC_REG_READ_MDAY_HOUR, &value);
++	if (res < 0)
 +		return res;
 +
-+	res =3D regmap_write(priv->ec->regmap, NTXEC_REG_DUTY_HIGH, ntxec_reg8(d=
-uty >> 8));
-+	if (res)
++	tm->tm_mday =3D value >> 8;
++	tm->tm_hour =3D value & 0xff;
++
++	res =3D regmap_read(rtc->ec->regmap, NTXEC_REG_READ_YEAR_MONTH, &value);
++	if (res < 0)
 +		return res;
 +
-+	res =3D regmap_write(priv->ec->regmap, NTXEC_REG_DUTY_LOW, ntxec_reg8(du=
-ty));
-+	if (res)
-+		return res;
++	tm->tm_year =3D (value >> 8) + 100;
++	tm->tm_mon =3D (value & 0xff) - 1;
 +
 +	/*
-+	 * Writing a duty cycle of zero puts the device into a state where
-+	 * writing a higher duty cycle doesn't result in the brightness that it
-+	 * usually results in. This can be fixed by cycling the ENABLE register.
-+	 *
-+	 * As a workaround, write ENABLE=3D0 when the duty cycle is zero.
++	 * Read the minutes/seconds field again. If it changed since the first
++	 * read, we can't assume that the values read so far are consistent,
++	 * and should start from the beginning.
 +	 */
-+	if (state->enabled && duty !=3D 0) {
-+		res =3D regmap_write(priv->ec->regmap, NTXEC_REG_ENABLE, ntxec_reg8(1))=
-;
-+		if (res)
-+			return res;
++	res =3D regmap_read(rtc->ec->regmap, NTXEC_REG_READ_MINUTE_SECOND, &valu=
+e);
++	if (res < 0)
++		return res;
 +
-+		/* Disable the auto-off timer */
-+		res =3D regmap_write(priv->ec->regmap, NTXEC_REG_AUTO_OFF_HI, ntxec_reg=
-8(0xff));
-+		if (res)
-+			return res;
++	if (tm->tm_min !=3D value >> 8 || tm->tm_sec !=3D (value & 0xff))
++		goto retry;
 +
-+		return regmap_write(priv->ec->regmap, NTXEC_REG_AUTO_OFF_LO, ntxec_reg8=
-(0xff));
-+	} else {
-+		return regmap_write(priv->ec->regmap, NTXEC_REG_ENABLE, ntxec_reg8(0));
-+	}
++	return 0;
 +}
 +
-+static struct pwm_ops ntxec_pwm_ops =3D {
-+	.apply =3D ntxec_pwm_apply,
-+	.owner =3D THIS_MODULE,
++static int ntxec_set_time(struct device *dev, struct rtc_time *tm)
++{
++	struct ntxec_rtc *rtc =3D dev_get_drvdata(dev);
++	int res =3D 0;
++
++	/*
++	 * To avoid time overflows while we're writing the full date/time,
++	 * set the seconds field to zero before doing anything else. For the
++	 * next 59 seconds (plus however long it takes until the RTC's next
++	 * update of the second field), the seconds field will not overflow
++	 * into the other fields.
++	 */
++	res =3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_SECOND, ntxec_reg8=
+(0));
++	if (res)
++		return res;
++
++	res =3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_YEAR, ntxec_reg8(t=
+m->tm_year - 100));
++	if (res)
++		return res;
++
++	res =3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_MONTH, ntxec_reg8(=
+tm->tm_mon + 1));
++	if (res)
++		return res;
++
++	res =3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_DAY, ntxec_reg8(tm=
+->tm_mday));
++	if (res)
++		return res;
++
++	res =3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_HOUR, ntxec_reg8(t=
+m->tm_hour));
++	if (res)
++		return res;
++
++	res =3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_MINUTE, ntxec_reg8=
+(tm->tm_min));
++	if (res)
++		return res;
++
++	return regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_SECOND, ntxec_reg8(=
+tm->tm_sec));
++}
++
++static const struct rtc_class_ops ntxec_rtc_ops =3D {
++	.read_time =3D ntxec_read_time,
++	.set_time =3D ntxec_set_time,
 +};
 +
-+static int ntxec_pwm_probe(struct platform_device *pdev)
++static int ntxec_rtc_probe(struct platform_device *pdev)
 +{
-+	struct ntxec *ec =3D dev_get_drvdata(pdev->dev.parent);
-+	struct ntxec_pwm *priv;
-+	struct pwm_chip *chip;
++	struct rtc_device *dev;
++	struct ntxec_rtc *rtc;
 +
-+	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
++	rtc =3D devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
++	if (!rtc)
 +		return -ENOMEM;
 +
-+	priv->ec =3D ec;
-+	priv->dev =3D &pdev->dev;
++	rtc->dev =3D &pdev->dev;
++	rtc->ec =3D dev_get_drvdata(pdev->dev.parent);
++	platform_set_drvdata(pdev, rtc);
 +
-+	platform_set_drvdata(pdev, priv);
++	dev =3D devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(dev))
++		return PTR_ERR(dev);
 +
-+	chip =3D &priv->chip;
-+	chip->dev =3D &pdev->dev;
-+	chip->ops =3D &ntxec_pwm_ops;
-+	chip->base =3D -1;
-+	chip->npwm =3D 1;
++	dev->ops =3D &ntxec_rtc_ops;
++	dev->range_min =3D RTC_TIMESTAMP_BEGIN_2000;
++	dev->range_max =3D 9025257599LL; /* 2255-12-31 23:59:59 */
 +
-+	return pwmchip_add(chip);
++	return rtc_register_device(dev);
 +}
 +
-+static int ntxec_pwm_remove(struct platform_device *pdev)
-+{
-+	struct ntxec_pwm *priv =3D platform_get_drvdata(pdev);
-+	struct pwm_chip *chip =3D &priv->chip;
-+
-+	return pwmchip_remove(chip);
-+}
-+
-+static struct platform_driver ntxec_pwm_driver =3D {
++static struct platform_driver ntxec_rtc_driver =3D {
 +	.driver =3D {
-+		.name =3D "ntxec-pwm",
++		.name =3D "ntxec-rtc",
 +	},
-+	.probe =3D ntxec_pwm_probe,
-+	.remove =3D ntxec_pwm_remove,
++	.probe =3D ntxec_rtc_probe,
 +};
-+module_platform_driver(ntxec_pwm_driver);
++module_platform_driver(ntxec_rtc_driver);
 +
 +MODULE_AUTHOR("Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>");
-+MODULE_DESCRIPTION("PWM driver for Netronix EC");
++MODULE_DESCRIPTION("RTC driver for Netronix EC");
 +MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:ntxec-pwm");
++MODULE_ALIAS("platform:ntxec-rtc");
 =2D-
 2.29.2
 
