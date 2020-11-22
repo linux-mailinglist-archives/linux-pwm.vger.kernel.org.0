@@ -2,26 +2,26 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C3A02BFC26
-	for <lists+linux-pwm@lfdr.de>; Sun, 22 Nov 2020 23:29:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B4F32BFC2A
+	for <lists+linux-pwm@lfdr.de>; Sun, 22 Nov 2020 23:29:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgKVW3G (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 22 Nov 2020 17:29:06 -0500
-Received: from mout.gmx.net ([212.227.15.15]:48899 "EHLO mout.gmx.net"
+        id S1726020AbgKVW3C (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 22 Nov 2020 17:29:02 -0500
+Received: from mout.gmx.net ([212.227.15.19]:36037 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725964AbgKVW3F (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sun, 22 Nov 2020 17:29:05 -0500
+        id S1725932AbgKVW3B (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sun, 22 Nov 2020 17:29:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1606084094;
-        bh=2b/jpxzeqaLVuVE3ul1wtEuNUT7aGevK/efjK6yAcks=;
+        s=badeba3b8450; t=1606084102;
+        bh=FkEwDMxgZLTHim30OmXS5VuBshTlz294C3jIoXfipxY=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=JvnfmawMmfuCIV4LKLhQxhM96Kj5b7InDDOLQcng2Y5m1mt4RlnYYEu0HB0Qr/bTq
-         HXrFzfeutrPo7i5tUAlyU1ZRAwKqWqS3Dulp1b+W9OnJf5QudFcmu+7KNrF/5POGJ6
-         czrrrnG+Ze4k6o06d55O+A6KTlP/+GlrL/ckul40=
+        b=bE65ExyOQVzCGTQGoUiRsYFa+BC58jhf5CA77gayyIG60/mU+uLCkFBV542x+TjtX
+         hkKtnXO+oA3D611vtt+ln8tNXQ3/1dtl4+dC9zVSmwrSUnAT7b53fp9YHDzFB+Y8yb
+         d9UhksvPcq/VBdoTrY8vmKfl/AZ00bN5PUO6hDfk=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from longitude ([37.201.214.162]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1McY8d-1k6o4Z1SCz-00czgp; Sun, 22
- Nov 2020 23:28:14 +0100
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mof5H-1jsUwx0sK9-00p84C; Sun, 22
+ Nov 2020 23:28:22 +0100
 From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
@@ -51,79 +51,156 @@ Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Andreas Kemnade <andreas@kemnade.info>,
         Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Subject: [PATCH v4 1/7] dt-bindings: Add vendor prefix for Netronix, Inc.
-Date:   Sun, 22 Nov 2020 23:27:33 +0100
-Message-Id: <20201122222739.1455132-2-j.neuschaefer@gmx.net>
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v4 2/7] dt-bindings: mfd: Add binding for Netronix embedded controller
+Date:   Sun, 22 Nov 2020 23:27:34 +0100
+Message-Id: <20201122222739.1455132-3-j.neuschaefer@gmx.net>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201122222739.1455132-1-j.neuschaefer@gmx.net>
 References: <20201122222739.1455132-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:zEN6Ybp/rxr6QJ2xW71Sa5SlULigJxIfPZ1yuxgJ91bOrAoGt6r
- iu96T4pbbhmNhaqw1k1kTVFjg2PcftrSc1SURH+riGe0F0O5/xdbYqWsJoPPHWioGTDLtzT
- fSApI0sLgNTyGyIlmLTmJ0PHgjFjdoFCc2fScHLEXhWq0HB3lQ1dWNjPDeOB5uxIoR/DHqY
- eJQZCPRblPeq7+mDdoSZA==
+X-Provags-ID: V03:K1:nF3kkwMmgt9OIwH8iqvES5UGpX6cz3/hWNyTI5w7mqGWydvJ8Mc
+ 1noR+XyHeLXC6lce+wgyZqWWRXqc2XOIkXI79SqB1acVaKQKwdHqYjKF2Qo9pDvnlXgWT/y
+ 4s6Yj25dYUbIkMCUG3xGzwz/inb8EGTFD4fPtPY3rRAOOe94PofEQ31pM8rCRvtdN1igAQd
+ enBL8osT0OUNVofvLmm8Q==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:EAr8dmh+WW0=:i8ty95oYQZxVuP3cZBWe2+
- oqvYIC63s+H2yTkWTZLhKiMwyKgn2k6b0Fg8O7CZfQWlkfB19ChW2YM1U3DZ+pmTke3CU8cmf
- BIihbTuGu9t5CxjAD21Qx4DNbd6Sicc0UEJXsp9dgEHVv3M26x2N6rTjxrxDJZRNGckIEY+qY
- l2iaxED3Dzj/RozWZ4bebylZiOjGtiK4aotKX3XYYMD/Pdgbx89zEVTx2ElKm64Awd1rgXylZ
- Ke+vl+p9N9anXX/f3Br+KFESUYFLnRnPAAgB42Dn+7KFikwSk8YzrW3YJIvUwXdGgCerYRhPn
- 7KoP2xkDI+xYfgj4H4OEhk3CkoueqLwd54MNUu9JE6H8ebp/gV9mbnq6nRyJhECDP0r8DwNy4
- HTEcvW+gExYPqqEgXLsznbor1adjo+ZPXSwdBhZW2H3Sj+5wGlbAKm+GcOEojRnKYrAEBDwHN
- 9lzsvEfi0+TEwRLyTve7lrcO0Y3mbGBP9b7zBIFxmiQc2LVBuxvhcW9tS/r9rtGsnpJdXzfVW
- dUv7NG8L5RoxYeU+wSiR6h786MB3cUjXMluyA84e+YVHswBD0NUgpntY0pCLL0TKyZQ+2vLML
- OdkkSfzy/PMztiqfRINqOf78pA+G0eoIXDJ7hQGFYavDPZfTYW3JmIqbIuG/u+VOW3hxx0OGn
- zBP+aKJmPeX0aYf9/IK53PNDgsdWVYp0cRT3FoO3jKyrTq3NyWRboqDMooZjfMH41YXVH4yNC
- R8Tzx8ocG+9VssTjwHQITB3a81i3jyvcnaRIBcC1YgX1hNmQ7URSBBbp7jLfLcAPCAcEXSwlD
- KM2xUkKMUyOTqVB15Eq5UmcxeVQIPSsgXAqan8qwNvy9496YuolOPm7UMEvHtRvC076bm5PPj
- 7EjfjXGDMfgjREO75nJA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nEuwsUuSLow=:zQBob9Q6ol5V3Z8hqZvFGh
+ pfluGE579FA+K3JHGdBPbVKQ95bS8GtltwPGupjqIeWGC6E6Bdt1e+cIJ8olKbIXT51WOk0OG
+ 1riIRIcFwUm9V5B5687dvFyyW5jabp8LuEJxuGGvNOLLDrgYzj46aYXunZ6AOlAmSCLmlCSOx
+ M4WG1NC+eLKTJIZZFFUuQ4Y5XIyBLmAWBYl1blBoKgan/olKILh3WvkrYmYyZsM9aJkJxr5Aw
+ FgC+pVvdgp5T2AL6PnPQJvzKXhdJDjW1bENKw8Dp9FQaIWY1zo2A6u/jKREk2fEYxJdtU0/Pl
+ /9sxqWtmEQmokSEIpisjwM/Z9PnvZpab4COSfvIvbkNxdijGu5svMNrMI1RyOEjXH+Qiha0om
+ FnriutIxNoUduezogkG7kEJ7s211AnKaeEiJYJqsPUYEItjP/dBjmkAR+3OwKVurtUS1pTK8I
+ V9IAbh7fTOtQAL0GGYI/UGQFzr179piHsuJ84L+Iv8gsCkJPSP6A0KPgnZNgh1jCYn8kzcsNW
+ 6LibGm0dKX0SlRozcNsnKBEJ/zcZpykV/KtSfGZesfYmoR1GjND2BuA6X3H4oIONUIJG5BvXn
+ hKspwPOJtxr7r7ukpzkWMMGO7Tpbd75pXFTpfwqegtZWFCl+/UBaXytiPi3UIns/nXggBVf6t
+ Zeba9lYAP7CgHu49V+AbhXgYew261mlxN8qIaq+Q9TtQubT6IwbP/JSP5kvlznFHEKTVX87IN
+ SIOYVRisi4lb9NmECLisrR3XbxImAkZYUYynI6ixMmvXu3N9c6lRFq799Ef8Y69b+MBiz9SoA
+ sRdUHQT0d52mvq9n+xPXv0sdHfEDdGDtqjYMNDxqqKTWPzPzB3QJ352kmx3+f6xpwXi1Mx/QX
+ 8JV1vjxGxCspwAlCwF2A==
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Netronix, Inc. (http://www.netronixinc.com/) makes ebook reader board
-designs, which are for example used in Kobo and Tolino devices.
+This EC is found in e-book readers of multiple brands (e.g. Kobo,
+Tolino), and is typically implemented as a TI MSP430 microcontroller.
 
-An alternative prefix for Netronix would be "ntx", which is already used
-in code released by Netronix. It is shorter, but perhaps less clear.
+It controls different functions of the system, such as power on/off,
+RTC, PWM for the backlight. The exact functionality provided can vary
+between boards.
 
 Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 =2D--
+
 v4:
-- No changes
+- Add R-b tag
 
 v3:
-- https://lore.kernel.org/lkml/20200924192455.2484005-2-j.neuschaefer@gmx.=
+- https://lore.kernel.org/lkml/20200924192455.2484005-3-j.neuschaefer@gmx.=
 net/
-- Add Acked-by tag
+- Remove binding in text form patch description again
+- Add additionalProperties: false
+- Remove interrupt-controller property from example
+- Merge pwm/rtc nodes into main node
 
 v2:
-- No changes
+- https://lore.kernel.org/lkml/20200905133230.1014581-3-j.neuschaefer@gmx.=
+net/
+- Add the plaintext DT binding for comparison
 =2D--
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ .../bindings/mfd/netronix,ntxec.yaml          | 76 +++++++++++++++++++
+ 1 file changed, 76 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/netronix,ntxec.y=
+aml
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Docu=
-mentation/devicetree/bindings/vendor-prefixes.yaml
-index 2735be1a84709..cbf28f992b71e 100644
-=2D-- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -726,6 +726,8 @@ patternProperties:
-     description: Broadcom Corporation (formerly NetLogic Microsystems)
-   "^netron-dy,.*":
-     description: Netron DY
-+  "^netronix,.*":
-+    description: Netronix, Inc.
-   "^netxeon,.*":
-     description: Shenzhen Netxeon Technology CO., LTD
-   "^neweast,.*":
+diff --git a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml b/D=
+ocumentation/devicetree/bindings/mfd/netronix,ntxec.yaml
+new file mode 100644
+index 0000000000000..59a630025f52f
+=2D-- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
+@@ -0,0 +1,76 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/netronix,ntxec.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Netronix Embedded Controller
++
++maintainers:
++  - Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
++
++description: |
++  This EC is found in e-book readers of multiple brands (e.g. Kobo, Tolin=
+o), and
++  is typically implemented as a TI MSP430 microcontroller.
++
++properties:
++  compatible:
++    const: netronix,ntxec
++
++  reg:
++    items:
++      - description: The I2C address of the EC
++
++  system-power-controller:
++    type: boolean
++    description: See Documentation/devicetree/bindings/power/power-contro=
+ller.txt
++
++  interrupts:
++    minItems: 1
++    description:
++      The EC can signal interrupts via a GPIO line
++
++  "#pwm-cells":
++    const: 2
++    description: |
++      Number of cells in a PWM specifier.
++
++      The following PWM channels are supported:
++        - 0: The PWM channel controlled by registers 0xa1-0xa7
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c {
++            #address-cells =3D <1>;
++            #size-cells =3D <0>;
++
++            ec: embedded-controller@43 {
++                    pinctrl-names =3D "default";
++                    pinctrl-0 =3D <&pinctrl_ntxec>;
++
++                    compatible =3D "netronix,ntxec";
++                    reg =3D <0x43>;
++                    system-power-controller;
++                    interrupt-parent =3D <&gpio4>;
++                    interrupts =3D <11 IRQ_TYPE_EDGE_FALLING>;
++                    #pwm-cells =3D <2>;
++            };
++    };
++
++    backlight {
++            compatible =3D "pwm-backlight";
++            pwms =3D <&ec 0 50000>;
++            power-supply =3D <&backlight_regulator>;
++    };
++
++    backlight_regulator: regulator-dummy {
++            compatible =3D "regulator-fixed";
++            regulator-name =3D "backlight";
++    };
 =2D-
 2.29.2
 
