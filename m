@@ -2,133 +2,161 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0B4D2BC258
-	for <lists+linux-pwm@lfdr.de>; Sat, 21 Nov 2020 23:00:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BBAF12BFC27
+	for <lists+linux-pwm@lfdr.de>; Sun, 22 Nov 2020 23:29:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbgKUWAY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 21 Nov 2020 17:00:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728541AbgKUWAX (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 21 Nov 2020 17:00:23 -0500
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8799C0613CF;
-        Sat, 21 Nov 2020 14:00:22 -0800 (PST)
-Received: by mail-vs1-xe43.google.com with SMTP id u7so7068370vsq.11;
-        Sat, 21 Nov 2020 14:00:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MY8NzMGPcLXMY/ED4DpGvzZfCPFifC8yIRCCQIJaAG8=;
-        b=sH8eYt+nuILX4uSEZPd8QQEZZ1sJYsmp0hOBlQs2XgLAJFtvjAvNEPKSHY6tKzmARY
-         SqD6woaXcqAIK7niRps8kAehaeMYBgcbDmw1Yx7KxJukvQ/VLJyf1KvBGfM1VozUkA4K
-         3BgALZkFxDU1e+n+GSTt5EVe9oV9Tt9dq6kUjgO0hHUPHOowO1UTgkp+t8/Nbjh5mLOK
-         NkqvItf7XARVpIbGJfwLM5XhY9Yxcm1JgrSi+WlHy8xy0dRrcDcpelW0X7xL3in3RTZ9
-         VzSQiy8Ipv7QFY72BAs3MW5ezeToTuMxsdD6wrwDKfbfIlTno97yTcUW055yCnEdU/OT
-         81Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MY8NzMGPcLXMY/ED4DpGvzZfCPFifC8yIRCCQIJaAG8=;
-        b=Bv/aXmcBfK8gtZ9ep/pzObcK1+D0Cb3R63gq67lONMyeTSpfF+kwAzIkxqeSe5Rr+5
-         BEeph635gep18H9GeYCOpcTymnegSKJRPPJJsLEia8g7KX6WjN2CELuMxMUHvJp4pJK1
-         xoJEOwdK20rac7fffEz3fDjhlPayl/5Fd0AL+P4cUskL1jKre2sVhaMa+6N5d47G+63J
-         WC4t4o/E9W0V4iOtZ4BcytS0ywenw3QZPZIqOAShDop+p2HVPmYlUG9FMYbQLlOrEt25
-         q1DqLV0U/YfWXt/pAhqgaOsm2IUm3sO4Y2N5mdObYkpcdBmrYvy/VzdvUgOttVl9476v
-         VCEw==
-X-Gm-Message-State: AOAM5332lTyJZ0B4IQM7VixlyZJfWcEkLYTLwtLbRghqjMS0yqvGS7Uo
-        S+BTA7ys6PaJfAMiVgRTOTq+jtylfotZII3rHlo=
-X-Google-Smtp-Source: ABdhPJyM5fgCbpzyQBMLyFUj2jZYULdnUezsPW1i/hsn0T5zQd5HbyDJmLzm+qad0ideMIVov0zq3o8Sz6uTgDGucuE=
-X-Received: by 2002:a67:ff10:: with SMTP id v16mr15914156vsp.40.1605996021829;
- Sat, 21 Nov 2020 14:00:21 -0800 (PST)
-MIME-Version: 1.0
-References: <20201118174417.278011-1-clemens.gruber@pqgruber.com>
- <CAGngYiV+oDeagaCfpeACMzQyDHVzk9ERbSBjW_fW5hoQANHqog@mail.gmail.com>
- <20201119100005.GA703@workstation.tuxnet> <CAGngYiU7+X1AbadQ0kFBQOqxK-adowg6CTOMx260fyF1-rpO-Q@mail.gmail.com>
- <20201119160013.GA217674@workstation.tuxnet> <CAGngYiUELShMgFnvq6XzF0v=2UAwj7gJsPmbdGkmyAbzhM8OLA@mail.gmail.com>
- <X7krI+JkhCO5nYC+@workstation.tuxnet>
-In-Reply-To: <X7krI+JkhCO5nYC+@workstation.tuxnet>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Sat, 21 Nov 2020 17:00:10 -0500
-Message-ID: <CAGngYiWKwDoeM+Hgj-ehJBRp16u2_-dDULzvVbGEUQ2ZOY9w4A@mail.gmail.com>
-Subject: Re: [PATCH 1/3] pwm: pca9685: Switch to atomic API
-To:     Clemens Gruber <clemens.gruber@pqgruber.com>
-Cc:     linux-pwm@vger.kernel.org,
+        id S1726293AbgKVW3C (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 22 Nov 2020 17:29:02 -0500
+Received: from mout.gmx.net ([212.227.15.19]:57009 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725964AbgKVW3B (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sun, 22 Nov 2020 17:29:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1606084084;
+        bh=dtj6W0yQf7os9N3ERREUeHWvsknYOOEdVVmOyejekNA=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=h/GRGXfbBiL+/lpTZgwrHt3pZF/wodtFXaF3v3pamkHQXUYtg+kXroip+WtBglXds
+         6lt5NC1hw30gcZr2B+GBzil7Zx106IaNYNm95Kjs1y9f/gePqtERCzAcYEKktgIR9u
+         9Sq+HsA6lP1NdlG0IAZ0BtMJHOhRooNgiusf3FtE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([37.201.214.162]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1McpNo-1k753W0XfG-00ZxeN; Sun, 22
+ Nov 2020 23:28:04 +0100
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        David Jander <david@protonic.nl>
-Content-Type: text/plain; charset="UTF-8"
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v4 0/7] Netronix embedded controller driver for Kobo and Tolino ebook readers
+Date:   Sun, 22 Nov 2020 23:27:32 +0100
+Message-Id: <20201122222739.1455132-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.29.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:9fi5cn1W4wIcwCMcrpIiO4wYE9TOSPxMlnZh0pqNYCi6ZkuOZOS
+ FpNAVw0/CXpxZWSb9uyyO2BbA8nftnwSgEOfBGfQw4xNwEBM6wtqce3lmyvErhqhmyJiiuI
+ rb/ylvH/d+i9pw4rrm8+DyYwhbAkVtu5zv/lF+C9XgM78YSLIvRwqnDbBRXuZRsO6K2dHoZ
+ a5+vhcgSaapQh/eTPVWhw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:70fq3pGexNk=:VsRFl5purtQlQ5PHwaSKYR
+ GLKpzbG+q7Ce+cUt3+XDjKktTLpgKhCHmjd8MDuqkP2uFCH6mxilTAteKF/Up4mL8Q61Tx1Og
+ EZ0p94NeilOGJWsUwznmo5G3/CkareGLT9WJEtbziCqsuLYsq7thR0CNm8D01gmSQGiEI7bKu
+ LRA06rv0f5CPlEMcOmROEVbvt/fo4pOyv3HFCdu5dVBoym3X/FecGEohpY6Ffq8seNh1Q31So
+ qNGEM8GQ7J3U8PXcYg83/c1JAKIWag3DfKLOCWDInhzPAeOD18lkx1GynT9BMndCXedXCzZQY
+ EcGrye8feArmieWZwEdHnvoCmuORJyzYa6a8Vumgt97gQ+G3+fNEf5GJhM5garEP/gvDVX0Vk
+ gXQhpyp7g5KHSA3uXKmb0wYSmWfX+Vm1tteOBq/WNVzgmEDDFD4P6tGpJ7y6fkCJSqVgOcX03
+ 1iHLR1znUH/cEArRTO+cGyc/LaR+WoAX71md1Jh6xS96j0r0InLPCpJ6M7h9c6uf69DeXR6hn
+ qewxhdzTysc0D1Yzcuo6gTANmgD1cvCZOgwI8UsQfokY8azNRfMU3D9KiRIjTTv86FE620ODf
+ 51i9rm9Y2NTovwyl0K4YWxpxNOaGQeFuyyjmy3v+qwLjeJs0ty/4qR+tmAc1YXf1qu7NSDdsH
+ Xleq9QaWohOnrO4eUJ7hKJL78vTpphd4ZULT4C+Yprr2buYAsBP14ZbMtVqBGZzI+r9N9bH8J
+ t8uWbZmhg39hacvZ2vfXChlSUJWsgRxn/1lxsPnaYmx7WweGjdt9Hlk4iyDNAPyyHGVZ4cPen
+ 0an7RqIWBWF5mNMxn2bGp7vlKRlGAlmf+5fhmvgKuGmbFEClvihB5iNWEZJyOse0XSPchix1X
+ OcOISfXqyyOwTS6iG3+Q==
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sat, Nov 21, 2020 at 9:58 AM Clemens Gruber
-<clemens.gruber@pqgruber.com> wrote:
->
-> I'd rather continue supporting this driver with !CONFIG_PM. (In our
-> company we have a product with a !CONFIG_PM build using this driver)
+This patchset adds basic support for the embedded controller found on
+older ebook reader boards designed by/with the ODM Netronix Inc.[1] and
+sold by Kobo or Tolino, for example the Kobo Aura and the Tolino Shine.
+These drivers are based on information contained in the vendor kernel
+sources, but in order to all information in a single place, I documented
+the register interface of the EC on GitHub[2].
 
-Absolutely, makes sense. If you do add support for !CONFIG_PM, then it's
-important that both PM and !PM cases get tested by you.
+[1]: http://www.netronixinc.com/products.aspx?ID=3D1
+[2]: https://github.com/neuschaefer/linux/wiki/Netronix-MSP430-embedded-co=
+ntroller
 
->
-> I am thinking about the following solution:
-> #ifdef CONFIG_PM
->   /* Set runtime PM status according to chip sleep state */
->   if (reg & MODE1_SLEEP)
->     pm_runtime_set_suspended(..);
->   else
->     pm_runtime_set_active(..);
->
->   pm_runtime_enable(..);
-> #else
->   /* If in SLEEP state on non-PM environments, wake the chip up */
->   if (reg & MODE1_SLEEP)
->     pca9685_set_sleep_mode(.., false)
-> #endif
+v4:
+- Spell out ODM (original design manufacturer)
+- Solve corner cases in the RTC driver
+- Clean up use of log levels vs. error codes
+- Add more comments explaining some peculiarities
+- Add missing MODULE_ALIAS lines
+- Various other cleanups
 
-I don't think we need the #ifdef CONFIG_PM, because all pm_runtime_xxx
-functions become no-ops when !CONFIG_PM.
 
-Also, I believe "if (IS_ENABLED(CONFIG_XXX))" is preferred, because
-it allows the compiler to syntax-check disabled code.
+v3:
+- https://lore.kernel.org/lkml/20200924192455.2484005-1-j.neuschaefer@gmx.=
+net/
+- A few code cleanups
+- A few devicetree related cleanups
+- PWM and RTC functionality were moved from subnodes in the devicetree to
+  the main node. This also means that the subdrivers no longer need DT
+  compatible strings, but are instead loaded via the mfd_cell mechanism.
+- The drivers are now published under GPLv2-or-later rather than GPLv2-onl=
+y.
 
-How about the following? It should be correct, short, and easy to understand.
-Yes, there's one single unnecessary register write (+ 500us delay if !PM) when
-the chip is already active on probe(). But maybe that's worth it if it makes
-the code easier to understand?
 
-probe()
-{
-    ...
-    pm_runtime_set_active(&client->dev);
-    pm_runtime_enable(&client->dev);
+v2:
+- https://lore.kernel.org/lkml/20200905133230.1014581-1-j.neuschaefer@gmx.=
+net/
+- Moved txt DT bindings to patch descriptions and removed patch 1/10
+  "DT bindings in plain text format"
+- New patch 7/10 "rtc: Introduce RTC_TIMESTAMP_END_2255"
+- Rebased on 5.9-rc3
+- Various other changes which are documented in each patch
 
-    if (!IS_ENABLED(CONFIG_PM))
-        pca9685_set_sleep_mode(pca, false);
+v1:
+- https://lore.kernel.org/lkml/20200620223915.1311485-1-j.neuschaefer@gmx.=
+net/
 
-    return 0;
-}
+Jonathan Neusch=C3=A4fer (7):
+  dt-bindings: Add vendor prefix for Netronix, Inc.
+  dt-bindings: mfd: Add binding for Netronix embedded controller
+  mfd: Add base driver for Netronix embedded controller
+  pwm: ntxec: Add driver for PWM function in Netronix EC
+  rtc: New driver for RTC in Netronix embedded controller
+  MAINTAINERS: Add entry for Netronix embedded controller
+  ARM: dts: imx50-kobo-aura: Add Netronix embedded controller
 
-remove()
-{
-    ...
-    pm_runtime_disable(&client->dev);
+ .../bindings/mfd/netronix,ntxec.yaml          |  76 ++++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   9 +
+ arch/arm/boot/dts/imx50-kobo-aura.dts         |  16 +-
+ drivers/mfd/Kconfig                           |  11 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/ntxec.c                           | 216 ++++++++++++++++++
+ drivers/pwm/Kconfig                           |   8 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-ntxec.c                       | 166 ++++++++++++++
+ drivers/rtc/Kconfig                           |   8 +
+ drivers/rtc/Makefile                          |   1 +
+ drivers/rtc/rtc-ntxec.c                       | 158 +++++++++++++
+ include/linux/mfd/ntxec.h                     |  34 +++
+ 14 files changed, 706 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/netronix,ntxec.y=
+aml
+ create mode 100644 drivers/mfd/ntxec.c
+ create mode 100644 drivers/pwm/pwm-ntxec.c
+ create mode 100644 drivers/rtc/rtc-ntxec.c
+ create mode 100644 include/linux/mfd/ntxec.h
 
-    if (!IS_ENABLED(CONFIG_PM))
-        pca9685_set_sleep_mode(pca, true);
+=2D-
+2.29.2
 
-    return 0;
-}
-
->
-> About the regmap cache: I looked into it and think it is a good idea but
-> it's probably best to get these patches merged first and then rework the
-> driver to using the regmap cache?
-
-Good suggestion, I agree.
