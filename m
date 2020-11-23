@@ -2,29 +2,35 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 617A32BFCF0
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Nov 2020 00:11:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85AAC2BFD3A
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Nov 2020 01:10:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgKVXLA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 22 Nov 2020 18:11:00 -0500
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:60791 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbgKVXLA (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 22 Nov 2020 18:11:00 -0500
-X-Originating-IP: 86.194.74.19
-Received: from localhost (lfbn-lyo-1-997-19.w86-194.abo.wanadoo.fr [86.194.74.19])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 7F3591BF206;
-        Sun, 22 Nov 2020 23:10:54 +0000 (UTC)
-Date:   Mon, 23 Nov 2020 00:10:54 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        id S1726777AbgKWAKL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 22 Nov 2020 19:10:11 -0500
+Received: from mout.gmx.net ([212.227.15.19]:34297 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726287AbgKWAKL (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sun, 22 Nov 2020 19:10:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1606090163;
+        bh=TIuVy2yYea4meeUQk6HAaV69tfQRHqFlxaHQ7pmQGAQ=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=V6QOdxEioDA9smqYYMyBF3ctrQLuW/uTbMCOmVy/PMdsblquhHN4odXn4czaZna7F
+         x4rm+hKLDy2cwHEXKQzaJryHm2dJ9mHRwAAJ0nCzUTAG/2iyWrEqmbf9Ma7zzjVans
+         TUnE8sW4ZOgnDI0k7VxIl9Ir12i9wYRrvBPDsFAE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([37.201.214.162]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mplc7-1jtZ2F4AJR-00q8Xg; Mon, 23
+ Nov 2020 01:09:23 +0100
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
@@ -45,111 +51,97 @@ Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Andreas Kemnade <andreas@kemnade.info>,
         Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 5/7] rtc: New driver for RTC in Netronix embedded
- controller
-Message-ID: <20201122231054.GH348979@piout.net>
+Subject: [PATCH v4 7/7] ARM: dts: imx50-kobo-aura: Add Netronix embedded controller
+Date:   Mon, 23 Nov 2020 01:09:13 +0100
+Message-Id: <20201123000913.1506944-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <20201122222739.1455132-1-j.neuschaefer@gmx.net>
 References: <20201122222739.1455132-1-j.neuschaefer@gmx.net>
- <20201122222739.1455132-6-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201122222739.1455132-6-j.neuschaefer@gmx.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:uLvaOtwI9plaURv1O6GufQthB1uZzTJiP2EgUwf1AYpCa+pmgnb
+ zzyFdg8ayPJrfMmtGlXjR9sNu2TWGnE8ZbHGG0tuhGtbWUiz+0aO+XnPw4Kiw6gO7Hiy4ea
+ Lf6Fk6wYSok+Dyl+GWKTgdjJlUjmK0aZSvuQI/qNkQgy1WprFT99pQqk6pxRyy3fzpWSmKo
+ 1bbqjlOZbLD67lpSLjn1A==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:abVzIFyQpNU=:QxZxYx4estxtNikpjhXwTf
+ Ig1RjLRQThLpRFES6t+D5aZFvysbUZCfNpwLGHa3sDV6+Utd0OdN1JuiaAiryCSsrhIoJjDed
+ rGJOeqZawRCxpngYSc4rXQ4d9vdG69cEoiTMOYB42X4wvR9Ll2bsNCKUsvzQSmjXvimF/90nG
+ T3Lb50DzmVrIPN4Y3gkA6+9FRrEBjTVP8vRr3yQqE3Ann6aKxPV7zwoWBBW1fDecqJ6XC5OyR
+ 1Pp+c/JBKP0TcTf3s+tsnU9pQvCQvPGKFvF2gmsxQ0ZfUrlxIZosca651b7Ac1XBgJaBuLW0b
+ TPQZfFVAe2UxHouIlBW5WWAB03hEp5VnG+/PzPqgZ2VoxQ24HHY4zKJSYqOAEoW2IreQnT3Cv
+ wlIcYG8zCPnLkkvQ5uRyceuboo9aJcjQX49o7B3Bp78QtzjhSHA3L7BcppHFBZ+rkBBHrhl91
+ yUv5Ig43se2VJIcNzU9S9CPHO3MVjrAPgjUOzVmcR0QFyaon9QQr066Be0d5Le7TWYzKA/khm
+ ZlNBQvDUvQOY/CDnFLSvM+QOpltpYV+5wG7hSOIhLWMy8tSr2Mqn7jNEzG1263WOWd1EkC3+1
+ RHCtnW3rN2B2rdb9qkk0BGAzJ7THJXbqvOmb00edrokVZwtZrWrZMxCbqiHfR7FFNxccfcWwl
+ tdeKuBOSHeDeUuyABibHbIHauMUEDqkhyANfJtLRM5IFD3VOMDm3gmlYxU+Ii3uZDOVnsub7h
+ IM3ebfybW9lLG8ylYpyvLLASeUD9pCgrpT/CcPT93N8g5aRZaQ3LGhE482Dh47kx8a6Jr2t/9
+ ZYyvlOVrVTsIV2CrunTFY00kn7QIQICWCZc4QpwVWSv4Cg7Rz6H3O5/Ib43wgzm/TeM90bqOR
+ IutSw/tRhbIlt5dclFnw==
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
+Enable the Netronix EC on the Kobo Aura ebook reader.
 
-On 22/11/2020 23:27:37+0100, Jonathan Neuschäfer wrote:
-> With this driver, mainline Linux can keep its time and date in sync with
-> the vendor kernel.
-> 
-> Advanced functionality like alarm and automatic power-on is not yet
-> supported.
-> 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Several features are still missing:
+ - Frontlight/backlight. The vendor kernel drives the frontlight LED
+   using the PWM output of the EC and an additional boost pin that
+   increases the brightness.
+ - Battery monitoring
+ - Interrupts for RTC alarm and low-battery events
 
-However, two comments below:
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+v4:
+- Add 'grp' suffix to pinctrl node
 
-> +static int ntxec_set_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct ntxec_rtc *rtc = dev_get_drvdata(dev);
-> +	int res = 0;
-> +
-> +	/*
-> +	 * To avoid time overflows while we're writing the full date/time,
-> +	 * set the seconds field to zero before doing anything else. For the
-> +	 * next 59 seconds (plus however long it takes until the RTC's next
-> +	 * update of the second field), the seconds field will not overflow
-> +	 * into the other fields.
-> +	 */
-> +	res = regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_SECOND, ntxec_reg8(0));
-> +	if (res)
-> +		return res;
-> +
-> +	res = regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_YEAR, ntxec_reg8(tm->tm_year - 100));
-> +	if (res)
-> +		return res;
-> +
-> +	res = regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_MONTH, ntxec_reg8(tm->tm_mon + 1));
-> +	if (res)
-> +		return res;
-> +
-> +	res = regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_DAY, ntxec_reg8(tm->tm_mday));
-> +	if (res)
-> +		return res;
-> +
-> +	res = regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_HOUR, ntxec_reg8(tm->tm_hour));
-> +	if (res)
-> +		return res;
-> +
-> +	res = regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_MINUTE, ntxec_reg8(tm->tm_min));
-> +	if (res)
-> +		return res;
-> +
-> +	return regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_SECOND, ntxec_reg8(tm->tm_sec));
+v3:
+- https://lore.kernel.org/lkml/20200925050818.2512375-1-j.neuschaefer@gmx.=
+net/
+- Remove interrupt-controller property from embedded-controller node
+- subnodes of embedded-controller node in to the main node
 
-Couldn't you do a regmap_block_write or a regmap_multi_reg_write which
-would be more efficient as they would be locking the regmap only once.
+v2:
+- https://lore.kernel.org/lkml/20200905144503.1067124-3-j.neuschaefer@gmx.=
+net/
+- Fix pwm-cells property (should be 2, not 1)
+=2D--
+ arch/arm/boot/dts/imx50-kobo-aura.dts | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-> +}
-> +
-> +static const struct rtc_class_ops ntxec_rtc_ops = {
-> +	.read_time = ntxec_read_time,
-> +	.set_time = ntxec_set_time,
-> +};
-> +
-> +static int ntxec_rtc_probe(struct platform_device *pdev)
-> +{
-> +	struct rtc_device *dev;
-> +	struct ntxec_rtc *rtc;
-> +
-> +	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
-> +	if (!rtc)
-> +		return -ENOMEM;
-> +
-> +	rtc->dev = &pdev->dev;
-> +	rtc->ec = dev_get_drvdata(pdev->dev.parent);
-> +	platform_set_drvdata(pdev, rtc);
-> +
-> +	dev = devm_rtc_allocate_device(&pdev->dev);
-> +	if (IS_ERR(dev))
-> +		return PTR_ERR(dev);
-> +
-> +	dev->ops = &ntxec_rtc_ops;
-> +	dev->range_min = RTC_TIMESTAMP_BEGIN_2000;
-> +	dev->range_max = 9025257599LL; /* 2255-12-31 23:59:59 */
-> +
-> +	return rtc_register_device(dev);
+diff --git a/arch/arm/boot/dts/imx50-kobo-aura.dts b/arch/arm/boot/dts/imx=
+50-kobo-aura.dts
+index 97cfd970fe742..82ce8c43be867 100644
+=2D-- a/arch/arm/boot/dts/imx50-kobo-aura.dts
++++ b/arch/arm/boot/dts/imx50-kobo-aura.dts
+@@ -143,10 +143,24 @@ &i2c3 {
+ 	pinctrl-0 =3D <&pinctrl_i2c3>;
+ 	status =3D "okay";
 
-Note that this won't compile after
-https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git/commit/?id=fdcfd854333be5b30377dc5daa9cd0fa1643a979
+-	/* TODO: embedded controller at 0x43 */
++	embedded-controller@43 {
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_ec>;
++		compatible =3D "netronix,ntxec";
++		reg =3D <0x43>;
++		system-power-controller;
++		interrupts-extended =3D <&gpio4 11 IRQ_TYPE_EDGE_FALLING>;
++		#pwm-cells =3D <2>;
++	};
+ };
 
-We can solve that with immutable branches though.
+ &iomuxc {
++	pinctrl_ec: ecgrp {
++		fsl,pins =3D <
++			MX50_PAD_CSPI_SS0__GPIO4_11		0x0	/* INT */
++		>;
++	};
++
+ 	pinctrl_gpiokeys: gpiokeysgrp {
+ 		fsl,pins =3D <
+ 			MX50_PAD_CSPI_MISO__GPIO4_10		0x0
+=2D-
+2.29.2
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
