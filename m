@@ -2,330 +2,194 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CC932C13AC
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Nov 2020 20:09:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 227372C17B5
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Nov 2020 22:32:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388558AbgKWSjB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Nov 2020 13:39:01 -0500
-Received: from mx2.suse.de ([195.135.220.15]:59432 "EHLO mx2.suse.de"
+        id S1730466AbgKWVcC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 23 Nov 2020 16:32:02 -0500
+Received: from mout.gmx.net ([212.227.15.18]:35725 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387749AbgKWSi4 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 23 Nov 2020 13:38:56 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 4EA0EACB0;
-        Mon, 23 Nov 2020 18:38:54 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     u.kleine-koenig@pengutronix.de, linux-kernel@vger.kernel.org,
+        id S1729668AbgKWVcB (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 23 Nov 2020 16:32:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1606167075;
+        bh=sCkDsbnNYQ6Pz3/oXpsDLnfnKp/ckhQ+TZMQxjRgd3A=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=SXALL6dkqlmI+G8wKpUobuPezQXOviKE/83S7qWtriuewgq+ufJ+kxT9ve4fjInvI
+         GonNpTmd89Qvh1smmkHwXVIBRZtkr2pVH0IszY8YubSYztbvlkUdp6xgijeNdOk6YZ
+         IFsEsSyuAPGAWEM8oG9sRS+qhDd6RwHi6DqjJnFA=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([37.201.214.162]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M26vL-1kfNcZ33P7-002WX6; Mon, 23
+ Nov 2020 22:31:14 +0100
+Date:   Mon, 23 Nov 2020 22:31:05 +0100
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     f.fainelli@gmail.com, linux-pwm@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        wahrenst@gmx.net, linux-input@vger.kernel.org,
-        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, p.zabel@pengutronix.de,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        linux-clk@vger.kernel.org, sboyd@kernel.org,
-        linux-rpi-kernel@lists.infradead.org, bgolaszewski@baylibre.com,
-        andy.shevchenko@gmail.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v5 11/11] pwm: Add Raspberry Pi Firmware based PWM bus
-Date:   Mon, 23 Nov 2020 19:38:32 +0100
-Message-Id: <20201123183833.18750-12-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201123183833.18750-1-nsaenzjulienne@suse.de>
-References: <20201123183833.18750-1-nsaenzjulienne@suse.de>
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4 5/7] rtc: New driver for RTC in Netronix embedded
+ controller
+Message-ID: <20201123213105.GC456020@latitude>
+References: <20201122222739.1455132-1-j.neuschaefer@gmx.net>
+ <20201122222739.1455132-6-j.neuschaefer@gmx.net>
+ <20201122231054.GH348979@piout.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hHWLQfXTYDoKhP50"
+Content-Disposition: inline
+In-Reply-To: <20201122231054.GH348979@piout.net>
+X-Provags-ID: V03:K1:no2Gna2hTxM9N5hL6CMDIOPd7xqpgCHA1PYx+QzCYCYXmJO39aV
+ eh7+fejXcNZipfhKMG4JqyZ/n52hEDbvWcp8GOh9WWLAVTxcSPWaY0uyyTIfkOYzsEBa2fN
+ vzGT4ccpUzfKb1AZcm6jP/+dmiEo9t1b3E/6l2mASZjnAsCaN0oePm15gRfFyHzFc6bCzGX
+ PzaZLnarMAtk6ofOIYwLw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xtB5ZZleEYM=:6oYlbp6ZnPxYRMENT5U0SS
+ 4J2O/eVE4/KL5m+Cda1SDfZXXmisRKcJs0HHlkREUhR5df04phBeO/+BG8Yybesk8i/uWEw0k
+ l+HWrSz8OyE3/OvkUkzP3C///oqqX0ucMc3DR0b6g48fEwiL6HPDyLQ8i6XpBCqI8BQ98MsgT
+ lB74HdiSpOWvj3EzDPNBxFbkpW2mKLxt39ZU77oMiPIOWkDpPhCcPkl1/aH8EtDCzWaZBCnmE
+ QpYh0A79fNO5zf9Uf6wJppJMj2Jyht1lCtEZens4jfP5cJVkGZJLcZM48H4i6lAOP4G15rzJz
+ +v+muE10se/Pz8Z7d5E0DS0NUoLrUQXKQjZIrbZI3R/5ln8xp7gnbLOnlWmF5ora4KYrq/7ZR
+ iyMQN0VF+IOwGbo/CQdJRbGmWBt5bEonEL4aZPB6MXCNrYh4BrYCk+0FV5tTqba3wJr4SgreY
+ OSClmWSsmL4B+kldZm9ZctIkhw7mtXR+vWuthkhv25BwObusoB4FbQjQnn4cLu+7edjtzMB6S
+ 2jEhEk72s7zQBVnXa9fX/gX8xGIx60uJ2YMFqVHd8n6jdiYrdn6nM8buTpZsuFJLRb9CuloWm
+ 3mS9CtS+czTdRcIosoFzZ3Zd/rlKn+dRTx3RhoyZj3HweS1xQ3SP7EoRURuJRIjbYuLzqPSn7
+ e10uYatI6jjmSX8OvWyCV/vZfuLm9yuxyNH/rSdit0YL0bbcfXdM2RM1MjFjI00Clg2xNT9kX
+ 4p0RDASSbP6uEiDcQ4v+LYMkJ2Y8YiOn6KKcqGg3QF0KcKxi2Y4EkGd6vevxAo6aHfgxUKtml
+ 7f8PaEBwMg/VNOovqidzcbBofYpATnBsJgAMT6wd71BVTj2aqrmdP6aVctHUMGT15O67o4hCG
+ c6ACLePStWn6+FJHfcXw==
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Adds support to control the PWM bus available in official Raspberry Pi
-PoE HAT. Only RPi's co-processor has access to it, so commands have to
-be sent through RPi's firmware mailbox interface.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+--hHWLQfXTYDoKhP50
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
----
+On Mon, Nov 23, 2020 at 12:10:54AM +0100, Alexandre Belloni wrote:
+> Hi,
+>=20
+> On 22/11/2020 23:27:37+0100, Jonathan Neusch=C3=A4fer wrote:
+> > With this driver, mainline Linux can keep its time and date in sync with
+> > the vendor kernel.
+> >=20
+> > Advanced functionality like alarm and automatic power-on is not yet
+> > supported.
+> >=20
+> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>=20
+> However, two comments below:
+>=20
+> > +static int ntxec_set_time(struct device *dev, struct rtc_time *tm)
+> > +{
+> > +	struct ntxec_rtc *rtc =3D dev_get_drvdata(dev);
+> > +	int res =3D 0;
+> > +
+> > +	/*
+> > +	 * To avoid time overflows while we're writing the full date/time,
+> > +	 * set the seconds field to zero before doing anything else. For the
+> > +	 * next 59 seconds (plus however long it takes until the RTC's next
+> > +	 * update of the second field), the seconds field will not overflow
+> > +	 * into the other fields.
+> > +	 */
+> > +	res =3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_SECOND, ntxec_r=
+eg8(0));
+> > +	if (res)
+> > +		return res;
+> > +
+> > +	res =3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_YEAR, ntxec_reg=
+8(tm->tm_year - 100));
+> > +	if (res)
+> > +		return res;
+> > +
+> > +	res =3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_MONTH, ntxec_re=
+g8(tm->tm_mon + 1));
+> > +	if (res)
+> > +		return res;
+> > +
+> > +	res =3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_DAY, ntxec_reg8=
+(tm->tm_mday));
+> > +	if (res)
+> > +		return res;
+> > +
+> > +	res =3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_HOUR, ntxec_reg=
+8(tm->tm_hour));
+> > +	if (res)
+> > +		return res;
+> > +
+> > +	res =3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_MINUTE, ntxec_r=
+eg8(tm->tm_min));
+> > +	if (res)
+> > +		return res;
+> > +
+> > +	return regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_SECOND, ntxec_re=
+g8(tm->tm_sec));
+>=20
+> Couldn't you do a regmap_block_write or a regmap_multi_reg_write which
+> would be more efficient as they would be locking the regmap only once.
 
-Changes since v3:
- - Rename compatible string to be more explicit WRT to bus's limitations
+I can't find regmap_block_write anywhere, but regmap_multi_reg_write
+looks like a good approach to simplify the code here.
 
-Changes since v2:
- - Use devm_rpi_firmware_get()
- - Rename driver
- - Small cleanups
 
-Changes since v1:
- - Use default pwm bindings and get rid of xlate() function
- - Correct spelling errors
- - Correct apply() function
- - Round values
- - Fix divisions in arm32 mode
- - Small cleanups
+[...]
+> Note that this won't compile after
+> https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git/commit=
+/?id=3Dfdcfd854333be5b30377dc5daa9cd0fa1643a979
+>=20
+> We can solve that with immutable branches though.
 
- drivers/pwm/Kconfig               |   9 ++
- drivers/pwm/Makefile              |   1 +
- drivers/pwm/pwm-raspberrypi-poe.c | 216 ++++++++++++++++++++++++++++++
- 3 files changed, 226 insertions(+)
- create mode 100644 drivers/pwm/pwm-raspberrypi-poe.c
+Thanks for the heads-up. Please let me know if/when there is any action
+that I need to take here.
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 0937e1c047ac..75e2344703b3 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -423,6 +423,15 @@ config PWM_PXA
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-pxa.
- 
-+config PWM_RASPBERRYPI_POE
-+	tristate "Raspberry Pi Firwmware PoE Hat PWM support"
-+	# Make sure not 'y' when RASPBERRYPI_FIRMWARE is 'm'. This can only
-+	# happen when COMPILE_TEST=y, hence the added !RASPBERRYPI_FIRMWARE.
-+	depends on RASPBERRYPI_FIRMWARE || (COMPILE_TEST && !RASPBERRYPI_FIRMWARE)
-+	help
-+	  Enable Raspberry Pi firmware controller PWM bus used to control the
-+	  official RPI PoE hat
-+
- config PWM_RCAR
- 	tristate "Renesas R-Car PWM support"
- 	depends on ARCH_RENESAS || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 18b89d7fd092..ed28d7bd4c64 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -38,6 +38,7 @@ obj-$(CONFIG_PWM_MXS)		+= pwm-mxs.o
- obj-$(CONFIG_PWM_OMAP_DMTIMER)	+= pwm-omap-dmtimer.o
- obj-$(CONFIG_PWM_PCA9685)	+= pwm-pca9685.o
- obj-$(CONFIG_PWM_PXA)		+= pwm-pxa.o
-+obj-$(CONFIG_PWM_RASPBERRYPI_POE)	+= pwm-raspberrypi-poe.o
- obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
- obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
- obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
-diff --git a/drivers/pwm/pwm-raspberrypi-poe.c b/drivers/pwm/pwm-raspberrypi-poe.c
-new file mode 100644
-index 000000000000..24b498839fcc
---- /dev/null
-+++ b/drivers/pwm/pwm-raspberrypi-poe.c
-@@ -0,0 +1,216 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2020 Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-+ * For more information on Raspberry Pi's PoE hat see:
-+ * https://www.raspberrypi.org/products/poe-hat/
-+ *
-+ * Limitations:
-+ *  - No disable bit, so a disabled PWM is simulated by duty_cycle 0
-+ *  - Only normal polarity
-+ *  - Fixed 12.5 kHz period
-+ *
-+ * The current period is completed when HW is reconfigured.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+
-+#include <soc/bcm2835/raspberrypi-firmware.h>
-+#include <dt-bindings/pwm/raspberrypi,firmware-poe-pwm.h>
-+
-+#define RPI_PWM_MAX_DUTY		255
-+#define RPI_PWM_PERIOD_NS		80000 /* 12.5 kHz */
-+
-+#define RPI_PWM_CUR_DUTY_REG		0x0
-+#define RPI_PWM_DEF_DUTY_REG		0x1
-+
-+struct raspberrypi_pwm {
-+	struct rpi_firmware *firmware;
-+	struct pwm_chip chip;
-+	unsigned int duty_cycle;
-+};
-+
-+struct raspberrypi_pwm_prop {
-+	__le32 reg;
-+	__le32 val;
-+	__le32 ret;
-+} __packed;
-+
-+static inline struct raspberrypi_pwm *to_raspberrypi_pwm(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct raspberrypi_pwm, chip);
-+}
-+
-+static int raspberrypi_pwm_set_property(struct rpi_firmware *firmware,
-+					u32 reg, u32 val)
-+{
-+	struct raspberrypi_pwm_prop msg = {
-+		.reg = cpu_to_le32(reg),
-+		.val = cpu_to_le32(val),
-+	};
-+	int ret;
-+
-+	ret = rpi_firmware_property(firmware, RPI_FIRMWARE_SET_POE_HAT_VAL,
-+				    &msg, sizeof(msg));
-+	if (ret)
-+		return ret;
-+	if (msg.ret)
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+static int raspberrypi_pwm_get_property(struct rpi_firmware *firmware,
-+					u32 reg, u32 *val)
-+{
-+	struct raspberrypi_pwm_prop msg = {
-+		.reg = reg
-+	};
-+	int ret;
-+
-+	ret = rpi_firmware_property(firmware, RPI_FIRMWARE_GET_POE_HAT_VAL,
-+				    &msg, sizeof(msg));
-+	if (ret)
-+		return ret;
-+	if (msg.ret)
-+		return -EIO;
-+
-+	*val = le32_to_cpu(msg.val);
-+
-+	return 0;
-+}
-+
-+static void raspberrypi_pwm_get_state(struct pwm_chip *chip,
-+				      struct pwm_device *pwm,
-+				      struct pwm_state *state)
-+{
-+	struct raspberrypi_pwm *rpipwm = to_raspberrypi_pwm(chip);
-+
-+	state->period = RPI_PWM_PERIOD_NS;
-+	state->duty_cycle = DIV_ROUND_CLOSEST(rpipwm->duty_cycle * RPI_PWM_PERIOD_NS,
-+					      RPI_PWM_MAX_DUTY);
-+	state->enabled = !!(rpipwm->duty_cycle);
-+	state->polarity = PWM_POLARITY_NORMAL;
-+}
-+
-+static int raspberrypi_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			         const struct pwm_state *state)
-+{
-+	struct raspberrypi_pwm *rpipwm = to_raspberrypi_pwm(chip);
-+	unsigned int duty_cycle;
-+	int ret;
-+
-+        if (state->period < RPI_PWM_PERIOD_NS ||
-+            state->polarity != PWM_POLARITY_NORMAL)
-+                return -EINVAL;
-+
-+        if (!state->enabled)
-+                duty_cycle = 0;
-+        else if (state->duty_cycle < RPI_PWM_PERIOD_NS)
-+                duty_cycle = DIV_ROUND_CLOSEST_ULL(state->duty_cycle * RPI_PWM_MAX_DUTY,
-+					           RPI_PWM_PERIOD_NS);
-+        else
-+                duty_cycle = RPI_PWM_MAX_DUTY;
-+
-+	if (duty_cycle == rpipwm->duty_cycle)
-+		return 0;
-+
-+	ret = raspberrypi_pwm_set_property(rpipwm->firmware, RPI_PWM_CUR_DUTY_REG,
-+					   duty_cycle);
-+	if (ret) {
-+		dev_err(chip->dev, "Failed to set duty cycle: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * This sets the default duty cycle after resetting the board, we
-+	 * updated it every time to mimic Raspberry Pi's downstream's driver
-+	 * behaviour.
-+	 */
-+	ret = raspberrypi_pwm_set_property(rpipwm->firmware, RPI_PWM_DEF_DUTY_REG,
-+					   duty_cycle);
-+	if (ret) {
-+		dev_err(chip->dev, "Failed to set default duty cycle: %d\n", ret);
-+		return ret;
-+	}
-+
-+        rpipwm->duty_cycle = duty_cycle;
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops raspberrypi_pwm_ops = {
-+	.get_state = raspberrypi_pwm_get_state,
-+	.apply = raspberrypi_pwm_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int raspberrypi_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device_node *firmware_node;
-+	struct device *dev = &pdev->dev;
-+	struct rpi_firmware *firmware;
-+	struct raspberrypi_pwm *rpipwm;
-+	int ret;
-+
-+	firmware_node = of_get_parent(dev->of_node);
-+	if (!firmware_node) {
-+		dev_err(dev, "Missing firmware node\n");
-+		return -ENOENT;
-+	}
-+
-+	firmware = devm_rpi_firmware_get(&pdev->dev, firmware_node);
-+	of_node_put(firmware_node);
-+	if (!firmware)
-+		return -EPROBE_DEFER;
-+
-+	rpipwm = devm_kzalloc(&pdev->dev, sizeof(*rpipwm), GFP_KERNEL);
-+	if (!rpipwm)
-+		return -ENOMEM;
-+
-+	rpipwm->firmware = firmware;
-+	rpipwm->chip.dev = dev;
-+	rpipwm->chip.ops = &raspberrypi_pwm_ops;
-+	rpipwm->chip.base = -1;
-+	rpipwm->chip.npwm = RASPBERRYPI_FIRMWARE_PWM_NUM;
-+
-+	platform_set_drvdata(pdev, rpipwm);
-+
-+	ret = raspberrypi_pwm_get_property(rpipwm->firmware, RPI_PWM_CUR_DUTY_REG,
-+					   &rpipwm->duty_cycle);
-+	if (ret) {
-+		dev_err(dev, "Failed to get duty cycle: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return pwmchip_add(&rpipwm->chip);
-+}
-+
-+static int raspberrypi_pwm_remove(struct platform_device *pdev)
-+{
-+	struct raspberrypi_pwm *rpipwm = platform_get_drvdata(pdev);
-+
-+	return pwmchip_remove(&rpipwm->chip);
-+}
-+
-+static const struct of_device_id raspberrypi_pwm_of_match[] = {
-+	{ .compatible = "raspberrypi,firmware-poe-pwm", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, raspberrypi_pwm_of_match);
-+
-+static struct platform_driver raspberrypi_pwm_driver = {
-+	.driver = {
-+		.name = "raspberrypi-poe-pwm",
-+		.of_match_table = raspberrypi_pwm_of_match,
-+	},
-+	.probe = raspberrypi_pwm_probe,
-+	.remove = raspberrypi_pwm_remove,
-+};
-+module_platform_driver(raspberrypi_pwm_driver);
-+
-+MODULE_AUTHOR("Nicolas Saenz Julienne <nsaenzjulienne@suse.de>");
-+MODULE_DESCRIPTION("Raspberry Pi Firwmare Based PWM Bus Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.29.2
 
+Jonathan
+
+--hHWLQfXTYDoKhP50
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl+8KggACgkQCDBEmo7z
+X9v/Ew//VyQzd+IM6WSdNJfdqhDWx4zMzJPjvhGl5YZsqC82CgOowqAy6GWPkRvN
+4xkwP5r4kH5Do6rN92mpKEGzG9HyDOzS/162ZMCIF9KXUOdpHb7viqRB5+Jq9Tod
+2mFgQT9/foVbge9Muad0H4u59kmRbxp52mbRjF2XohPmD/rPVF8r1VrDaHOSSkx/
+GbBVkLz0YIE6T0Wz4umG6d0+TTlelOuz72zqHy6zE2DHwHR/8vyRKPbdsft6w6f4
+DRjjQrEKwj2LT1yx48PIXu9bDI6g+0syC9bwbf2dc3Nvl/nQpxrxrbrnt0H5+h9R
+OyoSTQunwN/s8ppkdopfcQJVf1H4NAMCxoUXSnIX7zkKoPAeckXqQhsWXoJid2rF
+tVt3HG2ddEvV3xW5fMftLXQWeegx7Wy5wqpQvpQPBJx3hrxC2mv0lIYbVMPPGKyM
++vF6atGRir3Jv/AYEeVEojBFrM9dG1xQTIvJz3fVRlM0fLqbj73kMFN+eHNmO3gA
+o4H9WZ76TeaGyGoAMZ7KBJbypFfy27GlzHaChw7yqpYKPsi57dy8zLB57PRATAJy
+/0q6gnpkrSNlaTYKwO/TDgR9E7NY0h9ALE34bqalDR5wNy7ec6Fa7iAouAm5lZcX
+HEcbLvr0895GsbLNX8Ep5zg4V4TrCevq0c3x0ur1ZS8LL7n988Q=
+=BhsG
+-----END PGP SIGNATURE-----
+
+--hHWLQfXTYDoKhP50--
