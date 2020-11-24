@@ -2,402 +2,530 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 35A532C1FC2
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Nov 2020 09:22:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BDF722C2B18
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Nov 2020 16:21:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730427AbgKXIUo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 24 Nov 2020 03:20:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbgKXIUl (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 24 Nov 2020 03:20:41 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0A2DC0613CF
-        for <linux-pwm@vger.kernel.org>; Tue, 24 Nov 2020 00:20:40 -0800 (PST)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1khTYr-0004Ny-FW; Tue, 24 Nov 2020 09:20:29 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1khTYj-0004BH-0Y; Tue, 24 Nov 2020 09:20:21 +0100
-Date:   Tue, 24 Nov 2020 09:20:19 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Heiko Stuebner <heiko@sntech.de>, linux-pwm@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Fabio Estevam <festevam@gmail.com>, linux-rtc@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Daniel Palmer <daniel@0x0f.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
-        allen <allen.chen@ite.com.tw>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Mark Brown <broonie@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v4 4/7] pwm: ntxec: Add driver for PWM function in
- Netronix EC
-Message-ID: <20201124082019.vpkr3xnp55arjpnp@pengutronix.de>
-References: <20201122222739.1455132-1-j.neuschaefer@gmx.net>
- <20201122222739.1455132-5-j.neuschaefer@gmx.net>
+        id S2389507AbgKXPTs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 24 Nov 2020 10:19:48 -0500
+Received: from mail.pqgruber.com ([52.59.78.55]:52390 "EHLO mail.pqgruber.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389434AbgKXPTs (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 24 Nov 2020 10:19:48 -0500
+Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
+        by mail.pqgruber.com (Postfix) with ESMTPSA id 0D44FC81EED;
+        Tue, 24 Nov 2020 16:19:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
+        s=mail; t=1606231184;
+        bh=Z5hEQgcqWKH3GQ4v5QKJlH9ei4XolCZLzG+jjlEV1ws=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M+zxP0HPB29DYgoZTqCyqwWfKrQVW4RZRcuh6kk3hsMWBDU3D9h3w1aLveQBLYjmC
+         3ZvBCsz05PtwVWKFH1WggMTQXmQ66rTGrk2rXuLL7xOlf6R6fGqxn08YnMCR73dH0+
+         NOzdxAgkvdKLEknslHQ1QvvPWF2umDU2euFD4YaI=
+Date:   Tue, 24 Nov 2020 16:19:42 +0100
+From:   Clemens Gruber <clemens.gruber@pqgruber.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        David Jander <david@protonic.nl>
+Subject: Re: [PATCH v2 1/4] pwm: pca9685: Switch to atomic API
+Message-ID: <X70kjlZpIaN1T1ml@workstation.tuxnet>
+References: <20201123163622.166048-1-clemens.gruber@pqgruber.com>
+ <CAGngYiU8M0urUogQJf5-GS_rWmPa85TAVxdRD1EfkRK-EGQ7_w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="n7psjkl5oqhse6nm"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201122222739.1455132-5-j.neuschaefer@gmx.net>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <CAGngYiU8M0urUogQJf5-GS_rWmPa85TAVxdRD1EfkRK-EGQ7_w@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Mon, Nov 23, 2020 at 12:38:26PM -0500, Sven Van Asbroeck wrote:
+> Hi Clemens, some cool changes, thank you !! Constructive feedback below.
+> 
+> On Mon, Nov 23, 2020 at 11:36 AM Clemens Gruber
+> <clemens.gruber@pqgruber.com> wrote:
+> >
+> > Changes since v1:
+> > - Fixed a logic error
+> > - Impoved PM runtime handling and fixed !CONFIG_PM
+> > - Write default prescale reg value if invalid in probe
+> > - Reuse full_off/_on functions throughout driver
+> > - Use cached prescale value whenever possible
+> >
+> >  drivers/pwm/pwm-pca9685.c | 295 ++++++++++++++++++++------------------
+> >  1 file changed, 159 insertions(+), 136 deletions(-)
+> >
+> > diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+> > index 4a55dc18656c..47a69ee7951f 100644
+> > --- a/drivers/pwm/pwm-pca9685.c
+> > +++ b/drivers/pwm/pwm-pca9685.c
+> > @@ -47,11 +47,11 @@
+> >  #define PCA9685_ALL_LED_OFF_H  0xFD
+> >  #define PCA9685_PRESCALE       0xFE
+> >
+> > +#define PCA9685_PRESCALE_DEF   0x1E    /* => default frequency of ~200 Hz */
+> >  #define PCA9685_PRESCALE_MIN   0x03    /* => max. frequency of 1526 Hz */
+> >  #define PCA9685_PRESCALE_MAX   0xFF    /* => min. frequency of 24 Hz */
+> >
+> >  #define PCA9685_COUNTER_RANGE  4096
+> > -#define PCA9685_DEFAULT_PERIOD 5000000 /* Default period_ns = 1/200 Hz */
+> >  #define PCA9685_OSC_CLOCK_MHZ  25      /* Internal oscillator with 25 MHz */
+> >
+> >  #define PCA9685_NUMREGS                0xFF
+> > @@ -74,7 +74,7 @@
+> >  struct pca9685 {
+> >         struct pwm_chip chip;
+> >         struct regmap *regmap;
+> > -       int period_ns;
+> > +       int prescale;
+> >  #if IS_ENABLED(CONFIG_GPIOLIB)
+> >         struct mutex lock;
+> >         struct gpio_chip gpio;
+> > @@ -87,6 +87,61 @@ static inline struct pca9685 *to_pca(struct pwm_chip *chip)
+> >         return container_of(chip, struct pca9685, chip);
+> >  }
+> >
+> > +static inline bool is_prescale_valid(int prescale)
+> > +{
+> > +       return prescale >= PCA9685_PRESCALE_MIN &&
+> > +               prescale <= PCA9685_PRESCALE_MAX;
+> > +}
+> > +
+> > +static void pca9685_pwm_full_off(struct pca9685 *pca, int index)
+> > +{
+> > +       int reg;
+> > +
+> > +       /*
+> > +        * Set the full OFF bit to cause the PWM channel to be always off.
+> > +        * The full OFF bit has precedence over the other register values.
+> > +        */
+> > +
+> > +       if (index >= PCA9685_MAXCHAN)
+> > +               reg = PCA9685_ALL_LED_OFF_H;
+> > +       else
+> > +               reg = LED_N_OFF_H(index);
+> > +
+> > +       regmap_write(pca->regmap, reg, LED_FULL);
+> > +}
+> > +
+> > +static void pca9685_pwm_full_on(struct pca9685 *pca, int index)
+> > +{
+> > +       int reg;
+> > +
+> > +       /*
+> > +        * Clear the OFF registers (including the full OFF bit) and set
+> > +        * the full ON bit to cause the PWM channel to be always on.
+> > +        */
+> > +
+> > +       if (index >= PCA9685_MAXCHAN)
+> > +               reg = PCA9685_ALL_LED_OFF_L;
+> > +       else
+> > +               reg = LED_N_OFF_L(index);
+> > +
+> > +       regmap_write(pca->regmap, reg, 0);
+> > +
+> > +       if (index >= PCA9685_MAXCHAN)
+> > +               reg = PCA9685_ALL_LED_OFF_H;
+> > +       else
+> > +               reg = LED_N_OFF_H(index);
+> > +
+> > +       regmap_write(pca->regmap, reg, 0);
+> > +
+> > +       if (index >= PCA9685_MAXCHAN)
+> > +               reg = PCA9685_ALL_LED_ON_H;
+> > +       else
+> > +               reg = LED_N_ON_H(index);
+> > +
+> > +       regmap_write(pca->regmap, reg, LED_FULL);
+> > +}
+> > +
+> > +
+> >  #if IS_ENABLED(CONFIG_GPIOLIB)
+> >  static bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca, int pwm_idx)
+> >  {
+> > @@ -141,31 +196,27 @@ static int pca9685_pwm_gpio_get(struct gpio_chip *gpio, unsigned int offset)
+> >         struct pwm_device *pwm = &pca->chip.pwms[offset];
+> >         unsigned int value;
+> >
+> > -       regmap_read(pca->regmap, LED_N_ON_H(pwm->hwpwm), &value);
+> > +       regmap_read(pca->regmap, LED_N_OFF_H(pwm->hwpwm), &value);
+> >
+> > -       return value & LED_FULL;
+> > +       return !(value & LED_FULL);
+> >  }
+> >
+> >  static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
+> >                                  int value)
+> >  {
+> >         struct pca9685 *pca = gpiochip_get_data(gpio);
+> > -       struct pwm_device *pwm = &pca->chip.pwms[offset];
+> > -       unsigned int on = value ? LED_FULL : 0;
+> > -
+> > -       /* Clear both OFF registers */
+> > -       regmap_write(pca->regmap, LED_N_OFF_L(pwm->hwpwm), 0);
+> > -       regmap_write(pca->regmap, LED_N_OFF_H(pwm->hwpwm), 0);
+> >
+> > -       /* Set the full ON bit */
+> > -       regmap_write(pca->regmap, LED_N_ON_H(pwm->hwpwm), on);
+> > +       if (value)
+> > +               pca9685_pwm_full_on(pca, offset);
+> > +       else
+> > +               pca9685_pwm_full_off(pca, offset);
+> >  }
+> >
+> >  static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
+> >  {
+> >         struct pca9685 *pca = gpiochip_get_data(gpio);
+> >
+> > -       pca9685_pwm_gpio_set(gpio, offset, 0);
+> > +       pca9685_pwm_full_off(pca, offset);
+> >         pm_runtime_put(pca->chip.dev);
+> >         pca9685_pwm_clear_inuse(pca, offset);
+> >  }
+> > @@ -246,36 +297,75 @@ static void pca9685_set_sleep_mode(struct pca9685 *pca, bool enable)
+> >         }
+> >  }
+> >
+> > -static int pca9685_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> > -                             int duty_ns, int period_ns)
+> > +static void pca9685_set_prescale(struct pca9685 *pca, int prescale)
+> > +{
+> > +       /* Put chip into sleep mode */
+> > +       pca9685_set_sleep_mode(pca, true);
+> > +
+> > +       /* Change the chip-wide output frequency */
+> > +       regmap_write(pca->regmap, PCA9685_PRESCALE, prescale);
+> > +
+> > +       /* Wake the chip up */
+> > +       pca9685_set_sleep_mode(pca, false);
+> > +
+> > +       pca->prescale = prescale;
+> > +}
+> 
+> Refactoring this code as a "general purpose" function is very dangerous, IMHO.
+> This code jumps over the runtime_pm's head to overwrite the sleep mode,
+> and should be used only in very specific cases / places in the code, where this
+> is guaranteed safe.
+> 
+> Leaving this as a function might give future contributors the idea that they
+> can just call this anywhere.
+> 
+> Suggestion: for better maintainability, leave this code in pwm_apply, close to
+> the comment that explains why it's safe to execute.
 
---n7psjkl5oqhse6nm
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I see your point. I will undo the refactoring.
 
-Hello,
+> 
+> > +
+> > +static void pca9685_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> > +                                 struct pwm_state *state)
+> > +{
+> > +       struct pca9685 *pca = to_pca(chip);
+> > +       unsigned int val, duty;
+> > +       int reg;
+> > +
+> > +       /* Calculate (chip-wide) period from cached prescale value */
+> > +       state->period = (PCA9685_COUNTER_RANGE * 1000 / PCA9685_OSC_CLOCK_MHZ) *
+> > +                       (pca->prescale + 1);
+> > +
+> > +       /* The (per-channel) polarity is fixed */
+> > +       state->polarity = PWM_POLARITY_NORMAL;
+> > +
+> > +       /* Read out current duty cycle and enabled state */
+> > +       reg = pwm->hwpwm >= PCA9685_MAXCHAN ? PCA9685_ALL_LED_OFF_H :
+> > +               LED_N_OFF_H(pwm->hwpwm);
+> > +       regmap_read(pca->regmap, reg, &val);
+> > +       duty = (val & 0xf) << 8;
+> > +
+> > +       state->enabled = !(val & LED_FULL);
+> > +
+> > +       reg = pwm->hwpwm >= PCA9685_MAXCHAN ? PCA9685_ALL_LED_OFF_L :
+> > +               LED_N_OFF_L(pwm->hwpwm);
+> > +       regmap_read(pca->regmap, reg, &val);
+> > +       duty |= (val & 0xff);
+> > +
+> > +       if (duty < PCA9685_COUNTER_RANGE) {
+> > +               duty *= state->period;
+> > +               state->duty_cycle = duty / (PCA9685_COUNTER_RANGE - 1);
+> > +       } else
+> > +               state->duty_cycle = 0;
+> > +}
+> > +
+> > +static int pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > +                            const struct pwm_state *state)
+> >  {
+> >         struct pca9685 *pca = to_pca(chip);
+> > -       unsigned long long duty;
+> > +       unsigned long long duty, prescale;
+> >         unsigned int reg;
+> > -       int prescale;
+> >
+> > -       if (period_ns != pca->period_ns) {
+> > -               prescale = DIV_ROUND_CLOSEST(PCA9685_OSC_CLOCK_MHZ * period_ns,
+> > -                                            PCA9685_COUNTER_RANGE * 1000) - 1;
+> > +       if (state->polarity != PWM_POLARITY_NORMAL)
+> > +               return -EOPNOTSUPP;
+> >
+> > -               if (prescale >= PCA9685_PRESCALE_MIN &&
+> > -                       prescale <= PCA9685_PRESCALE_MAX) {
+> > +       prescale = DIV_ROUND_CLOSEST_ULL(PCA9685_OSC_CLOCK_MHZ * state->period,
+> > +                                        PCA9685_COUNTER_RANGE * 1000) - 1;
+> > +       if (prescale != pca->prescale) {
+> > +               if (is_prescale_valid(prescale)) {
+> >                         /*
+> >                          * Putting the chip briefly into SLEEP mode
+> >                          * at this point won't interfere with the
+> >                          * pm_runtime framework, because the pm_runtime
+> >                          * state is guaranteed active here.
+> >                          */
+> > -                       /* Put chip into sleep mode */
+> > -                       pca9685_set_sleep_mode(pca, true);
+> > -
+> > -                       /* Change the chip-wide output frequency */
+> > -                       regmap_write(pca->regmap, PCA9685_PRESCALE, prescale);
+> > -
+> > -                       /* Wake the chip up */
+> > -                       pca9685_set_sleep_mode(pca, false);
+> > -
+> > -                       pca->period_ns = period_ns;
+> > +                       pca9685_set_prescale(pca, (int)prescale);
+> >                 } else {
+> >                         dev_err(chip->dev,
+> >                                 "prescaler not set: period out of bounds!\n");
+> > @@ -283,46 +373,18 @@ static int pca9685_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> >                 }
+> >         }
+> >
+> > -       if (duty_ns < 1) {
+> > -               if (pwm->hwpwm >= PCA9685_MAXCHAN)
+> > -                       reg = PCA9685_ALL_LED_OFF_H;
+> > -               else
+> > -                       reg = LED_N_OFF_H(pwm->hwpwm);
+> > -
+> > -               regmap_write(pca->regmap, reg, LED_FULL);
+> > -
+> > +       if (!state->enabled || state->duty_cycle < 1) {
+> > +               pca9685_pwm_full_off(pca, pwm->hwpwm);
+> >                 return 0;
+> >         }
+> >
+> > -       if (duty_ns == period_ns) {
+> > -               /* Clear both OFF registers */
+> > -               if (pwm->hwpwm >= PCA9685_MAXCHAN)
+> > -                       reg = PCA9685_ALL_LED_OFF_L;
+> > -               else
+> > -                       reg = LED_N_OFF_L(pwm->hwpwm);
+> > -
+> > -               regmap_write(pca->regmap, reg, 0x0);
+> > -
+> > -               if (pwm->hwpwm >= PCA9685_MAXCHAN)
+> > -                       reg = PCA9685_ALL_LED_OFF_H;
+> > -               else
+> > -                       reg = LED_N_OFF_H(pwm->hwpwm);
+> > -
+> > -               regmap_write(pca->regmap, reg, 0x0);
+> > -
+> > -               /* Set the full ON bit */
+> > -               if (pwm->hwpwm >= PCA9685_MAXCHAN)
+> > -                       reg = PCA9685_ALL_LED_ON_H;
+> > -               else
+> > -                       reg = LED_N_ON_H(pwm->hwpwm);
+> > -
+> > -               regmap_write(pca->regmap, reg, LED_FULL);
+> > -
+> > +       if (state->duty_cycle == state->period) {
+> > +               pca9685_pwm_full_on(pca, pwm->hwpwm);
+> >                 return 0;
+> >         }
+> >
+> > -       duty = PCA9685_COUNTER_RANGE * (unsigned long long)duty_ns;
+> > -       duty = DIV_ROUND_UP_ULL(duty, period_ns);
+> > +       duty = (PCA9685_COUNTER_RANGE - 1) * state->duty_cycle;
+> > +       duty = DIV_ROUND_UP_ULL(duty, state->period);
+> >
+> >         if (pwm->hwpwm >= PCA9685_MAXCHAN)
+> >                 reg = PCA9685_ALL_LED_OFF_L;
+> > @@ -349,64 +411,6 @@ static int pca9685_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> >         return 0;
+> >  }
+> >
+> > -static int pca9685_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> > -{
+> > -       struct pca9685 *pca = to_pca(chip);
+> > -       unsigned int reg;
+> > -
+> > -       /*
+> > -        * The PWM subsystem does not support a pre-delay.
+> > -        * So, set the ON-timeout to 0
+> > -        */
+> > -       if (pwm->hwpwm >= PCA9685_MAXCHAN)
+> > -               reg = PCA9685_ALL_LED_ON_L;
+> > -       else
+> > -               reg = LED_N_ON_L(pwm->hwpwm);
+> > -
+> > -       regmap_write(pca->regmap, reg, 0);
+> > -
+> > -       if (pwm->hwpwm >= PCA9685_MAXCHAN)
+> > -               reg = PCA9685_ALL_LED_ON_H;
+> > -       else
+> > -               reg = LED_N_ON_H(pwm->hwpwm);
+> > -
+> > -       regmap_write(pca->regmap, reg, 0);
+> > -
+> > -       /*
+> > -        * Clear the full-off bit.
+> > -        * It has precedence over the others and must be off.
+> > -        */
+> > -       if (pwm->hwpwm >= PCA9685_MAXCHAN)
+> > -               reg = PCA9685_ALL_LED_OFF_H;
+> > -       else
+> > -               reg = LED_N_OFF_H(pwm->hwpwm);
+> > -
+> > -       regmap_update_bits(pca->regmap, reg, LED_FULL, 0x0);
+> > -
+> > -       return 0;
+> > -}
+> > -
+> > -static void pca9685_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+> > -{
+> > -       struct pca9685 *pca = to_pca(chip);
+> > -       unsigned int reg;
+> > -
+> > -       if (pwm->hwpwm >= PCA9685_MAXCHAN)
+> > -               reg = PCA9685_ALL_LED_OFF_H;
+> > -       else
+> > -               reg = LED_N_OFF_H(pwm->hwpwm);
+> > -
+> > -       regmap_write(pca->regmap, reg, LED_FULL);
+> > -
+> > -       /* Clear the LED_OFF counter. */
+> > -       if (pwm->hwpwm >= PCA9685_MAXCHAN)
+> > -               reg = PCA9685_ALL_LED_OFF_L;
+> > -       else
+> > -               reg = LED_N_OFF_L(pwm->hwpwm);
+> > -
+> > -       regmap_write(pca->regmap, reg, 0x0);
+> > -}
+> > -
+> >  static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+> >  {
+> >         struct pca9685 *pca = to_pca(chip);
+> > @@ -422,15 +426,14 @@ static void pca9685_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+> >  {
+> >         struct pca9685 *pca = to_pca(chip);
+> >
+> > -       pca9685_pwm_disable(chip, pwm);
+> > +       pca9685_pwm_full_off(pca, pwm->hwpwm);
+> >         pm_runtime_put(chip->dev);
+> >         pca9685_pwm_clear_inuse(pca, pwm->hwpwm);
+> >  }
+> >
+> >  static const struct pwm_ops pca9685_pwm_ops = {
+> > -       .enable = pca9685_pwm_enable,
+> > -       .disable = pca9685_pwm_disable,
+> > -       .config = pca9685_pwm_config,
+> > +       .get_state = pca9685_pwm_get_state,
+> > +       .apply = pca9685_pwm_apply,
+> >         .request = pca9685_pwm_request,
+> >         .free = pca9685_pwm_free,
+> >         .owner = THIS_MODULE,
+> > @@ -448,7 +451,7 @@ static int pca9685_pwm_probe(struct i2c_client *client,
+> >  {
+> >         struct pca9685 *pca;
+> >         unsigned int reg;
+> > -       int ret;
+> > +       int prescale = 0, ret;
+> >
+> >         pca = devm_kzalloc(&client->dev, sizeof(*pca), GFP_KERNEL);
+> >         if (!pca)
+> > @@ -461,10 +464,17 @@ static int pca9685_pwm_probe(struct i2c_client *client,
+> >                         ret);
+> >                 return ret;
+> >         }
+> > -       pca->period_ns = PCA9685_DEFAULT_PERIOD;
+> >
+> >         i2c_set_clientdata(client, pca);
+> >
+> > +       regmap_read(pca->regmap, PCA9685_PRESCALE, &prescale);
+> > +       if (is_prescale_valid(prescale))
+> > +               pca->prescale = prescale;
+> > +       else {
+> > +               /* If invalid, use HW default prescale value */
+> > +               pca9685_set_prescale(pca, PCA9685_PRESCALE_DEF);
+> > +       }
+> > +
+> >         regmap_read(pca->regmap, PCA9685_MODE2, &reg);
+> >
+> >         if (device_property_read_bool(&client->dev, "invert"))
+> > @@ -505,14 +515,20 @@ static int pca9685_pwm_probe(struct i2c_client *client,
+> >                 return ret;
+> >         }
+> >
+> > -       /* The chip comes out of power-up in the active state */
+> > -       pm_runtime_set_active(&client->dev);
+> > -       /*
+> > -        * Enable will put the chip into suspend, which is what we
+> > -        * want as all outputs are disabled at this point
+> > -        */
+> > +       /* Set runtime PM status according to chip sleep state */
+> > +       if (reg & MODE1_SLEEP)
+> > +               pm_runtime_set_suspended(&client->dev);
+> > +       else
+> > +               pm_runtime_set_active(&client->dev);
+> > +
+> > +       /* If active, enable puts chip into suspend until first use */
+> >         pm_runtime_enable(&client->dev);
+> >
+> > +       if (!IS_ENABLED(CONFIG_PM)) {
+> > +               /* Wake the chip up on non-PM environments */
+> > +               pca9685_set_sleep_mode(pca, false);
+> > +       }
+> > +
+> 
+> IMHO this is quite complex probe code, with all kinds of subtle corner cases.
+> 
+> Normally in a probe() function, we want code that:
+> - is simple && easy to understand
+> - puts the chip in a known state (no corner cases due to leftover state)
+> - if this takes a one or two extra reads/writes that's fine - clarity is more
+>   important than efficiency in a probe() function, which executes maybe
+>   once a day?
+> 
+> I feel that the pca9685 is a chip with lots of little "gotchas". Best to keep
+> things as simple as possible?
 
-On Sun, Nov 22, 2020 at 11:27:36PM +0100, Jonathan Neusch=E4fer wrote:
-> The Netronix EC provides a PWM output which is used for the backlight
-> on some ebook readers. This patches adds a driver for the PWM output.
->=20
-> The .get_state callback is not implemented, because the PWM state can't
-> be read back from the hardware.
->=20
-> Signed-off-by: Jonathan Neusch=E4fer <j.neuschaefer@gmx.net>
-> ---
->=20
-> v4:
-> - Document hardware/driver limitations
-> - Only accept normal polarity
-> - Fix a typo ("zone" -> "zero")
-> - change MAX_PERIOD_NS to 0xffff * 125
-> - Clamp period to the maximum rather than returning an error
-> - Rename private struct pointer to priv
-> - Rearrage control flow in _probe to save a few lines and a temporary var=
-iable
-> - Add missing MODULE_ALIAS line
-> - Spell out ODM
->=20
-> v3:
-> - https://lore.kernel.org/lkml/20200924192455.2484005-5-j.neuschaefer@gmx=
-=2Enet/
-> - Relicense as GPLv2 or later
-> - Add email address to copyright line
-> - Remove OF compatible string and don't include linux/of_device.h
-> - Fix bogus ?: in return line
-> - Don't use a comma after sentinels
-> - Avoid ret |=3D ... pattern
-> - Move 8-bit register conversion to ntxec.h
->=20
-> v2:
-> - https://lore.kernel.org/lkml/20200905133230.1014581-6-j.neuschaefer@gmx=
-=2Enet/
-> - Various grammar and style improvements, as suggested by Uwe Kleine-K=F6=
-nig,
->   Lee Jones, and Alexandre Belloni
-> - Switch to regmap
-> - Prefix registers with NTXEC_REG_
-> - Add help text to the Kconfig option
-> - Use the .apply callback instead of the old API
-> - Add a #define for the time base (125ns)
-> - Don't change device state in .probe; this avoids multiple problems
-> - Rework division and overflow check logic to perform divisions in 32 bits
-> - Avoid setting duty cycle to zero, to work around a hardware quirk
-> ---
->  drivers/pwm/Kconfig     |   8 ++
->  drivers/pwm/Makefile    |   1 +
->  drivers/pwm/pwm-ntxec.c | 166 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 175 insertions(+)
->  create mode 100644 drivers/pwm/pwm-ntxec.c
->=20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 63be5362fd3a5..815f329ed5b46 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -350,6 +350,14 @@ config PWM_MXS
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-mxs.
->=20
-> +config PWM_NTXEC
-> +	tristate "Netronix embedded controller PWM support"
-> +	depends on MFD_NTXEC
-> +	help
-> +	  Say yes here if you want to support the PWM output of the embedded
-> +	  controller found in certain e-book readers designed by the original
-> +	  design manufacturer Netronix.
-> +
->  config PWM_OMAP_DMTIMER
->  	tristate "OMAP Dual-Mode Timer PWM support"
->  	depends on OF
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index cbdcd55d69eef..1deb29e6ae8e5 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -32,6 +32,7 @@ obj-$(CONFIG_PWM_MESON)		+=3D pwm-meson.o
->  obj-$(CONFIG_PWM_MEDIATEK)	+=3D pwm-mediatek.o
->  obj-$(CONFIG_PWM_MTK_DISP)	+=3D pwm-mtk-disp.o
->  obj-$(CONFIG_PWM_MXS)		+=3D pwm-mxs.o
-> +obj-$(CONFIG_PWM_NTXEC)		+=3D pwm-ntxec.o
->  obj-$(CONFIG_PWM_OMAP_DMTIMER)	+=3D pwm-omap-dmtimer.o
->  obj-$(CONFIG_PWM_PCA9685)	+=3D pwm-pca9685.o
->  obj-$(CONFIG_PWM_PXA)		+=3D pwm-pxa.o
-> diff --git a/drivers/pwm/pwm-ntxec.c b/drivers/pwm/pwm-ntxec.c
-> new file mode 100644
-> index 0000000000000..4f4f736d71aba
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-ntxec.c
-> @@ -0,0 +1,166 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * The Netronix embedded controller is a microcontroller found in some
-> + * e-book readers designed by the original design manufacturer Netronix,=
- Inc.
-> + * It contains RTC, battery monitoring, system power management, and PWM
-> + * functionality.
-> + *
-> + * This driver implements PWM output.
-> + *
-> + * Copyright 2020 Jonathan Neusch=E4fer <j.neuschaefer@gmx.net>
-> + *
-> + * Limitations:
-> + * - The get_state callback is not implemented, because the current stat=
-e of
-> + *   the PWM output can't be read back from the hardware.
-> + * - The hardware can only generate normal polarity output.
-> + */
-> +
-> +#include <linux/mfd/ntxec.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/types.h>
-> +
-> +struct ntxec_pwm {
-> +	struct device *dev;
-> +	struct ntxec *ec;
-> +	struct pwm_chip chip;
-> +};
-> +
-> +static struct ntxec_pwm *pwmchip_to_priv(struct pwm_chip *chip)
-> +{
-> +	return container_of(chip, struct ntxec_pwm, chip);
-> +}
-> +
-> +#define NTXEC_REG_AUTO_OFF_HI	0xa1
-> +#define NTXEC_REG_AUTO_OFF_LO	0xa2
-> +#define NTXEC_REG_ENABLE	0xa3
-> +#define NTXEC_REG_PERIOD_LOW	0xa4
-> +#define NTXEC_REG_PERIOD_HIGH	0xa5
-> +#define NTXEC_REG_DUTY_LOW	0xa6
-> +#define NTXEC_REG_DUTY_HIGH	0xa7
-> +
-> +/*
-> + * The time base used in the EC is 8MHz, or 125ns. Period and duty cycle=
- are
-> + * measured in this unit.
-> + */
-> +#define TIME_BASE_NS 125
-> +
-> +/*
-> + * The maximum input value (in nanoseconds) is determined by the time ba=
-se and
-> + * the range of the hardware registers that hold the converted value.
-> + * It fits into 32 bits, so we can do our calculations in 32 bits as wel=
-l.
-> + */
-> +#define MAX_PERIOD_NS (TIME_BASE_NS * 0xffff)
-> +
-> +static int ntxec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm=
-_dev,
-> +			   const struct pwm_state *state)
-> +{
-> +	struct ntxec_pwm *priv =3D pwmchip_to_priv(pwm_dev->chip);
-> +	unsigned int duty =3D state->duty_cycle;
-> +	unsigned int period =3D state->period;
+Fair enough.
 
-state->duty_cycle and state->period are u64, so you're losing
-information here. Consider state->duty_cycle =3D 0x100000001 and
-state->period =3D 0x200000001.
+> 
+> Suggestion:
+> 
+> probe()
+> {
+>     ...
+> 
+>     /* Always initialize with default prescale, but chip must be
+>      * in sleep mode while changing prescaler.
+>      */
+>     pca9685_set_sleep_mode(pca, true);
+>     pca->prescale = PCA9685_PRESCALE_DEF;
+>     regmap_write(pca->regmap, PCA9685_PRESCALE, pca->prescale);
+>     pm_runtime_set_suspended(&client->dev);
+>     pm_runtime_enable(&client->dev);
+> 
+>     if (!IS_ENABLED(CONFIG_PM)) {
+>         /* Wake the chip up on non-PM environments */
+>         pca9685_set_sleep_mode(pca, false);
+>     }
+> 
+>     return 0;
+> }
 
-> +	int res =3D 0;
-> +
-> +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
-> +		return -EINVAL;
-> +
-> +	if (period > MAX_PERIOD_NS) {
-> +		period =3D MAX_PERIOD_NS;
-> +
-> +		if (duty > period)
-> +			duty =3D period;
-> +	}
-> +
-> +	period /=3D TIME_BASE_NS;
-> +	duty /=3D TIME_BASE_NS;
-> +
-> +	res =3D regmap_write(priv->ec->regmap, NTXEC_REG_PERIOD_HIGH, ntxec_reg=
-8(period >> 8));
-> +	if (res)
-> +		return res;
+Looks good to me.
 
-I wonder if you can add some logic to the regmap in the mfd driver such
-that ntxec_reg8 isn't necessary for all users.
+Thanks for your review!
 
-> +	res =3D regmap_write(priv->ec->regmap, NTXEC_REG_PERIOD_LOW, ntxec_reg8=
-(period));
-> +	if (res)
-> +		return res;
-> +
-> +	res =3D regmap_write(priv->ec->regmap, NTXEC_REG_DUTY_HIGH, ntxec_reg8(=
-duty >> 8));
-> +	if (res)
-> +		return res;
-> +
-> +	res =3D regmap_write(priv->ec->regmap, NTXEC_REG_DUTY_LOW, ntxec_reg8(d=
-uty));
-> +	if (res)
-> +		return res;
-
-I think I already asked, but I don't remember the reply: What happens to
-the output between these writes? A comment here about this would be
-suitable.
-
-> +
-> +	/*
-> +	 * Writing a duty cycle of zero puts the device into a state where
-> +	 * writing a higher duty cycle doesn't result in the brightness that it
-> +	 * usually results in. This can be fixed by cycling the ENABLE register.
-> +	 *
-> +	 * As a workaround, write ENABLE=3D0 when the duty cycle is zero.
-> +	 */
-> +	if (state->enabled && duty !=3D 0) {
-> +		res =3D regmap_write(priv->ec->regmap, NTXEC_REG_ENABLE, ntxec_reg8(1)=
-);
-> +		if (res)
-> +			return res;
-> +
-> +		/* Disable the auto-off timer */
-> +		res =3D regmap_write(priv->ec->regmap, NTXEC_REG_AUTO_OFF_HI, ntxec_re=
-g8(0xff));
-> +		if (res)
-> +			return res;
-> +
-> +		return regmap_write(priv->ec->regmap, NTXEC_REG_AUTO_OFF_LO, ntxec_reg=
-8(0xff));
-> +	} else {
-> +		return regmap_write(priv->ec->regmap, NTXEC_REG_ENABLE, ntxec_reg8(0));
-> +	}
-> +}
-> +
-> +static struct pwm_ops ntxec_pwm_ops =3D {
-
-This can be const.
-
-> +	.apply =3D ntxec_pwm_apply,
-
-/*
- * The current state cannot be read out, so there is no .get_state
- * callback.
- */
-
-Hmm, at least you could provice a .get_state() callback that reports the
-setting that was actually implemented for in the last call to .apply()?
-
-@Thierry: Do you have concerns here? Actually it would be more effective
-to have a callback (like .apply()) that modfies its pwm_state
-accordingly. (Some drivers did that in the past, but I changed that to
-get an uniform behaviour in 71523d1812aca61e32e742e87ec064e3d8c615e1.)
-The downside is that people have to understand that concept to properly
-use it. I'm torn about the right approach.
-
-> +	.owner =3D THIS_MODULE,
-> +};
-> +
-> +static int ntxec_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct ntxec *ec =3D dev_get_drvdata(pdev->dev.parent);
-> +	struct ntxec_pwm *priv;
-> +	struct pwm_chip *chip;
-> +
-> +	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->ec =3D ec;
-> +	priv->dev =3D &pdev->dev;
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	chip =3D &priv->chip;
-> +	chip->dev =3D &pdev->dev;
-> +	chip->ops =3D &ntxec_pwm_ops;
-> +	chip->base =3D -1;
-> +	chip->npwm =3D 1;
-> +
-> +	return pwmchip_add(chip);
-> +}
-> +
-> +static int ntxec_pwm_remove(struct platform_device *pdev)
-> +{
-> +	struct ntxec_pwm *priv =3D platform_get_drvdata(pdev);
-> +	struct pwm_chip *chip =3D &priv->chip;
-> +
-> +	return pwmchip_remove(chip);
-> +}
-> +
-> +static struct platform_driver ntxec_pwm_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "ntxec-pwm",
-> +	},
-> +	.probe =3D ntxec_pwm_probe,
-> +	.remove =3D ntxec_pwm_remove,
-> +};
-> +module_platform_driver(ntxec_pwm_driver);
-> +
-> +MODULE_AUTHOR("Jonathan Neusch=E4fer <j.neuschaefer@gmx.net>");
-> +MODULE_DESCRIPTION("PWM driver for Netronix EC");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:ntxec-pwm");
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---n7psjkl5oqhse6nm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl+8wkAACgkQwfwUeK3K
-7Ak9bgf+NapmOS9Fdc80KOeLtGA8StDYY66jDjFZZOGLqfzX2tmGPKOeUbbJkwtu
-qMFOWSBJsJUz2WXM2EOO/vN5O/aXR3FDg8W4wHBLyC76yy0rzCVfkWy4KYvrps72
-p/xjdZQTGZrnUKFdWfz1WGM+dja/sB5tXfIZnYJ2iJGoJ8JkOFXw/8Ug7156STd+
-Nvvg4EF36jSwRi4XyIhiFxmFAdebQsMtxS4R3C9vE64ZtEibTNMCmgNgpm4lNYbm
-cLMf7JgCt6DAviaQl+seBPYtigRAr3z5n8tPPSRyMvPS0PNs2IQEhs18UX9g/O2E
-WQT2wSIwGHALFYjble0FTmZGIUdM0A==
-=8Z7I
------END PGP SIGNATURE-----
-
---n7psjkl5oqhse6nm--
+Clemens
