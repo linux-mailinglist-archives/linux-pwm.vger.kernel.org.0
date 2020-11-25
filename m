@@ -2,164 +2,108 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 723B62C37D0
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Nov 2020 05:02:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C615E2C394A
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Nov 2020 07:48:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgKYDvf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 24 Nov 2020 22:51:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54404 "EHLO
+        id S1726330AbgKYGs3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 25 Nov 2020 01:48:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgKYDvf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 24 Nov 2020 22:51:35 -0500
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5ABDC0613D4;
-        Tue, 24 Nov 2020 19:51:34 -0800 (PST)
-Received: by mail-ua1-x942.google.com with SMTP id p12so307923uam.1;
-        Tue, 24 Nov 2020 19:51:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uS51WQ1NTmDfltGGpsC+YpnUZyidpZ3ywNerFc5c8l4=;
-        b=oS5QeUhMkPyWIrkOfy7q2mWqx9X1PRD/XVc5dmvIBzLHH/tJLaI3Yd9o5KROY0JgI1
-         umeTFvC9ERHNRpy6fskkTK8c0oEnjl/iu8zB4mHPgWxYNlovOoD/IeMjRhO8Jf2tRRxY
-         M8r3sph4FgB1yU0M8Y/95nu7VjzA9SHdKu76YQF6JdnDOV2wCuqyHaASEPD4bctNAg9h
-         K0T1Fj8zapasTNFkKsVpPt9/31oX8OaBmf8KiVSdtZfmr6nimJeDYiHLxsv4XYRiUMjs
-         UBjYgO3mttAYuqYFsFs8OkNpIlyWjtqEo7hT5PKgmUoSWv3GqfG6lDXxlDIY6IYhvABF
-         yEWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uS51WQ1NTmDfltGGpsC+YpnUZyidpZ3ywNerFc5c8l4=;
-        b=EWCuwZhVOcPCukput6flU/iarmJsQ39vcvLZFq2TIHSMZ67kDPc/1MwwEd/DEJ0XNP
-         pRYK6cE/3acFoHHo4vUAGV7pk7H1XjzqaKs985ZQnPFbPmZR2IkdOfagbWGaekf6k4B1
-         gtWp4Bif0f0Ol91qQv8UPcnxZyB/xglxeadiB+GdcZDT6bfp9A/7y90+kKVmGzDdE++r
-         qi2cP/KQrH4bec29Xi5W5j/STQE/s/GW7s3/dufXopkNEOgW4sEGns70FGoafRlsgnE/
-         El1lzngAFtqoAmrnlpfes56YlGyZje9i4g91dnKTtxuqlT82k+6u7R9yqlUblUlHhHf1
-         OmDA==
-X-Gm-Message-State: AOAM533KPuTU4vLsdPNNpFPBgaGqceBdp82HnhcFO7QifaYbpWU8Xx4c
-        4VRaGbC4IkuXCypd08f6wuDWxGZzdCfdUgbcicU=
-X-Google-Smtp-Source: ABdhPJy8W3emCMDnxU1mDz/AaTKlXhVfA7P7ZlLhM+xtIsI8KQUhkJIe5NuHuGktvhVQiewWwylVdrWq5gAL+3AHZNM=
-X-Received: by 2002:ab0:1d83:: with SMTP id l3mr973832uak.41.1606276294038;
- Tue, 24 Nov 2020 19:51:34 -0800 (PST)
-MIME-Version: 1.0
-References: <20201124181013.162176-1-clemens.gruber@pqgruber.com> <20201124181013.162176-3-clemens.gruber@pqgruber.com>
-In-Reply-To: <20201124181013.162176-3-clemens.gruber@pqgruber.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Tue, 24 Nov 2020 22:51:23 -0500
-Message-ID: <CAGngYiXtabaC9j+D081be0+FEVae+jBCBDH=S59f1o-JOn+Gzg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] pwm: pca9685: Support staggered output ON times
-To:     Clemens Gruber <clemens.gruber@pqgruber.com>
+        with ESMTP id S1726314AbgKYGs2 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Nov 2020 01:48:28 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76FC0C0613D4
+        for <linux-pwm@vger.kernel.org>; Tue, 24 Nov 2020 22:48:28 -0800 (PST)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1khobL-0002TL-0D; Wed, 25 Nov 2020 07:48:27 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1khobK-0000TG-1f; Wed, 25 Nov 2020 07:48:26 +0100
+Date:   Wed, 25 Nov 2020 07:48:21 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Michael Walle <michael@walle.cc>
 Cc:     linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        David Jander <david@protonic.nl>
-Content-Type: text/plain; charset="UTF-8"
+        Lee Jones <lee.jones@linaro.org>, kernel@pengutronix.de
+Subject: Re: [PATCH] pwm: sl28cpld: fix getting driver data in pwm callbacks
+Message-ID: <20201125064821.w3wtcrrt3x6am6xc@pengutronix.de>
+References: <20201124212432.3117322-1-u.kleine-koenig@pengutronix.de>
+ <e92a3e855332b8e5fd6698a77852f758@walle.cc>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="64agno3jgm4vkjkc"
+Content-Disposition: inline
+In-Reply-To: <e92a3e855332b8e5fd6698a77852f758@walle.cc>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Nov 24, 2020 at 1:10 PM Clemens Gruber
-<clemens.gruber@pqgruber.com> wrote:
->
-> The PCA9685 supports staggered LED output ON times to minimize current
-> surges and reduce EMI.
-> When this new option is enabled, the ON times of each channel are
-> delayed by channel number x counter range / 16, which avoids asserting
-> all enabled outputs at the same counter value while still maintaining
-> the configured duty cycle of each output.
->
-> Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
-> ---
->
-> Changes since v1:
-> - Rebased
->
->  drivers/pwm/pwm-pca9685.c | 35 ++++++++++++++++++++++++++++++++++-
->  1 file changed, 34 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-> index 2b82b35ff0de..37c80bc8edcf 100644
-> --- a/drivers/pwm/pwm-pca9685.c
-> +++ b/drivers/pwm/pwm-pca9685.c
-> @@ -75,6 +75,7 @@ struct pca9685 {
->         struct pwm_chip chip;
->         struct regmap *regmap;
->         int prescale;
-> +       bool staggered_outputs;
->  #if IS_ENABLED(CONFIG_GPIOLIB)
->         struct mutex lock;
->         struct gpio_chip gpio;
-> @@ -329,7 +330,7 @@ static int pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  {
->         struct pca9685 *pca = to_pca(chip);
->         unsigned long long duty, prescale;
-> -       unsigned int reg;
-> +       unsigned int on, off, reg;
->
->         if (state->polarity != PWM_POLARITY_NORMAL)
->                 return -EOPNOTSUPP;
-> @@ -375,6 +376,32 @@ static int pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->         duty = (PCA9685_COUNTER_RANGE - 1) * state->duty_cycle;
->         duty = DIV_ROUND_UP_ULL(duty, state->period);
->
-> +       if (pca->staggered_outputs) {
-> +               if (pwm->hwpwm < PCA9685_MAXCHAN) {
-> +                       /*
-> +                        * To reduce EMI, the ON times of each channel are
-> +                        * spread out evenly within the counter range, while
-> +                        * still maintaining the configured duty cycle
-> +                        */
-> +                       on = pwm->hwpwm * PCA9685_COUNTER_RANGE /
-> +                               PCA9685_MAXCHAN;
-> +                       off = (on + duty) % PCA9685_COUNTER_RANGE;
 
-Will pwm_get_state() still return the correct duty cycle in case
-of staggered outputs?
+--64agno3jgm4vkjkc
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +                       regmap_write(pca->regmap, LED_N_ON_L(pwm->hwpwm),
-> +                                    on & 0xff);
-> +                       regmap_write(pca->regmap, LED_N_ON_H(pwm->hwpwm),
-> +                                    (on >> 8) & 0xf);
-> +                       regmap_write(pca->regmap, LED_N_OFF_L(pwm->hwpwm),
-> +                                    off & 0xff);
-> +                       regmap_write(pca->regmap, LED_N_OFF_H(pwm->hwpwm),
-> +                                    (off >> 8) & 0xf);
-> +                       return 0;
-> +               }
-> +
-> +               /* No staggering possible if "all LEDs" channel is used */
-> +               regmap_write(pca->regmap, PCA9685_ALL_LED_ON_L, 0);
-> +               regmap_write(pca->regmap, PCA9685_ALL_LED_ON_H, 0);
-> +       }
-> +
->         if (pwm->hwpwm >= PCA9685_MAXCHAN)
->                 reg = PCA9685_ALL_LED_OFF_L;
->         else
-> @@ -470,6 +497,9 @@ static int pca9685_pwm_probe(struct i2c_client *client,
->
->         regmap_write(pca->regmap, PCA9685_MODE2, reg);
->
-> +       pca->staggered_outputs = device_property_read_bool(
-> +               &client->dev, "staggered-outputs");
-> +
->         /* Disable all LED ALLCALL and SUBx addresses to avoid bus collisions */
->         regmap_read(pca->regmap, PCA9685_MODE1, &reg);
->         reg &= ~(MODE1_ALLCALL | MODE1_SUB1 | MODE1_SUB2 | MODE1_SUB3);
-> @@ -478,6 +508,9 @@ static int pca9685_pwm_probe(struct i2c_client *client,
->         /* Reset OFF registers to HW default (only full OFF bit is set) */
->         regmap_write(pca->regmap, PCA9685_ALL_LED_OFF_L, 0);
->         regmap_write(pca->regmap, PCA9685_ALL_LED_OFF_H, LED_FULL);
-> +       /* Reset ON registers to HW default */
-> +       regmap_write(pca->regmap, PCA9685_ALL_LED_ON_L, 0);
-> +       regmap_write(pca->regmap, PCA9685_ALL_LED_ON_H, 0);
->
->         pca->chip.ops = &pca9685_pwm_ops;
->         /* Add an extra channel for ALL_LED */
-> --
-> 2.29.2
->
+On Tue, Nov 24, 2020 at 11:22:33PM +0100, Michael Walle wrote:
+> Am 2020-11-24 22:24, schrieb Uwe Kleine-K=F6nig:
+> > Currently .get_state() and .apply() use dev_get_drvdata() on the struct
+> > device related to the pwm chip. This only works after .probe() called
+> > platform_set_drvdata() which in this driver happens only after
+> > pwmchip_add() and so comes possibly too late.
+> >=20
+> > Instead of setting the driver data earlier use the traditional
+> > container_of approach as this way the driver data is conceptually and
+> > computational nearer.
+> >=20
+> > Fixes: 9db33d221efc ("pwm: Add support for sl28cpld PWM controller")
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+>=20
+> I wasn't able to reproduce the original bug, it seems it is really
+> timing/kernel/kernel config dependent. Thus I could only test if it
+> still working and could not verify that the original bug is fixed.
+> Nonetheless:
+>=20
+> Tested-by: Michael Walle <michael@walle.cc>
+>=20
+>=20
+> Btw. the backtrace is available here:
+>   https://lavalab.kontron.com/scheduler/job/108#L950
+
+This is triggered from deferred_probe_work, so my best guess is that
+both the pwm-fan (here the consumer) and the pwm hardware driver were
+probed in parallel with a timing that made pwm-fan hit the short window
+when driver data was unset.
+
+I wonder if we {sh,c}ould expand PWM_DEBUG to hit this kind of error.
+E.g. let pwmchip_add() request and get_state each PWM.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--64agno3jgm4vkjkc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl+9/jAACgkQwfwUeK3K
+7An99gf/Zy02DrKeO0LtL+6oNhdTvYhBD7DusPfb4nzQ9sNQfirf+8NWakXf8h8c
+LbZPc/EAVOSpn2zGYAzSyKRM5unjYfkshY+JGb7H2AWCFR+l9Znu9R6VS8/zYhi3
+CJNjftAmt+2+jPTaDRYZxaQjYys6EE7dggbjNlrsxtYB3+1YYJr/6GBk53Mxn/TQ
+uUL2FF/RtOwr7umyPqtxGufnoYqaayItsndNj2yw6hHAMXc+eO3yTJqm5u3yEyGk
+blzJUDFx7pyflRmXFjoFAT/UQYH3krRUcqOs73WblM9cUZgaMNd+YvYe9+9ql1XU
+dpv4LayW4PvBw/18psRosXzxvOBmLw==
+=fGrf
+-----END PGP SIGNATURE-----
+
+--64agno3jgm4vkjkc--
