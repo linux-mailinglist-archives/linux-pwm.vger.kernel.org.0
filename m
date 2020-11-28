@@ -2,124 +2,110 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B1BC2C7248
-	for <lists+linux-pwm@lfdr.de>; Sat, 28 Nov 2020 23:06:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23C1A2C7243
+	for <lists+linux-pwm@lfdr.de>; Sat, 28 Nov 2020 23:06:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbgK1VuW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        id S1732932AbgK1VuW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
         Sat, 28 Nov 2020 16:50:22 -0500
-Received: from mout.gmx.net ([212.227.17.21]:39991 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729523AbgK1S1m (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sat, 28 Nov 2020 13:27:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1606587970;
-        bh=fTNcahD5C5mIibbD0BONpKqc5JTcNDDIjg8VN6MVM/A=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=gFbNIdOwltij+vHFkKwdItVku53ydIOJPgOeJ6PTFhl6VGuEqBPewC87VsbCi/A8t
-         n+4pPdJCVagLfbhnGTo6Eji5+4Po7ujwPOtxSy3yI6bRXH/JGReXhYovp+qtcOAj+D
-         zUEgBW5WDwD+ao6Vfo7FpOc95jCT9NxskkyCo77M=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from Venus.fritz.box ([78.42.220.31]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MTzb8-1kZfWP46l8-00R1QV; Sat, 28
- Nov 2020 13:02:16 +0100
-From:   Lino Sanfilippo <LinoSanfilippo@gmx.de>
-To:     thierry.reding@gmail.com
-Cc:     u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        nsaenzjulienne@suse.de, f.fainelli@gmail.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-pwm@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lino Sanfilippo <LinoSanfilippo@gmx.de>
-Subject: [PATCH v2] pwm: bcm2835: Support apply function for atomic configuration
-Date:   Sat, 28 Nov 2020 13:02:06 +0100
-Message-Id: <1606564926-19555-1-git-send-email-LinoSanfilippo@gmx.de>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <202011281128.54eLfMWr-lkp@intel.com>
-References: <202011281128.54eLfMWr-lkp@intel.com>
+Received: from gproxy8-pub.mail.unifiedlayer.com ([67.222.33.93]:59642 "EHLO
+        gproxy8-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387701AbgK1UYM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 28 Nov 2020 15:24:12 -0500
+Received: from cmgw14.unifiedlayer.com (unknown [10.9.0.14])
+        by gproxy8.mail.unifiedlayer.com (Postfix) with ESMTP id 9515D1AB018
+        for <linux-pwm@vger.kernel.org>; Sat, 28 Nov 2020 13:23:29 -0700 (MST)
+Received: from bh-25.webhostbox.net ([208.91.199.152])
+        by cmsmtp with ESMTP
+        id j6kjkG4nkwNNlj6kjkSb0M; Sat, 28 Nov 2020 13:23:29 -0700
+X-Authority-Reason: nr=8
+X-Authority-Analysis: v=2.3 cv=cqm1bWwi c=1 sm=1 tr=0
+ a=QNED+QcLUkoL9qulTODnwA==:117 a=2cfIYNtKkjgZNaOwnGXpGw==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=kj9zAlcOel0A:10:nop_charset_1
+ a=nNwsprhYR40A:10:nop_rcvd_month_year
+ a=evQFzbml-YQA:10:endurance_base64_authed_username_1 a=BTeA3XvPAAAA:8
+ a=8Irnj8bMnQPBBtp7gFEA:9 a=CjuIK1q_8ugA:10:nop_charset_2
+ a=tafbbOV3vt1XuEhzTjGK:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=roeck-us.net; s=default; h=In-Reply-To:Content-Type:MIME-Version:References
+        :Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding
+        :Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=B5TOMW+1RDo4EDUmClChLTL8dkNLROgGaLYCGrQoGVc=; b=GnWhFomQxR1MY2QQ6kMhfOR0Y4
+        3AWe8on+cV9ZPIrrhsiu0LVIrYPKd4YyiWrymtwR1jhobFRBjXxz7dlU+oLmGBm4yfMZa2k9IMqCx
+        +zMR6Vx/6aMz5/5CGZ43gLzf1EqU7O2bNl8RoKQEv+ZCUDKsQ6K53zA4KfCaTeiC1xo3mRy0vSZEB
+        QLxzVFOkY1woQccVloe/jaXV2Xza+bL4LANf6sm09IFJKFqkHphhxhsZMyFn6BVZVp74CLunLEJJu
+        t7J7LbQ3fqqJNPAsEECLhDNXCW7G+dzullEBpb7ZUdfjSwGZjQGcFh2zKIEFYiH8ePXmDNEmf+PGJ
+        jVY4q02A==;
+Received: from 108-223-40-66.lightspeed.sntcca.sbcglobal.net ([108.223.40.66]:48430 helo=localhost)
+        by bh-25.webhostbox.net with esmtpa (Exim 4.93)
+        (envelope-from <linux@roeck-us.net>)
+        id 1kj6kh-002AVk-OV; Sat, 28 Nov 2020 20:23:27 +0000
+Date:   Sat, 28 Nov 2020 12:23:27 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Tian Tao <tiantao6@hisilicon.com>
+Cc:     kamil@wypas.org, b.zolnierkie@samsung.com, jdelvare@suse.com,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] hwmon: (pwm-fan): Switch to using the new API
+ kobj_to_dev()
+Message-ID: <20201128202327.GA89108@roeck-us.net>
+References: <1606525206-22154-1-git-send-email-tiantao6@hisilicon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-X-Provags-ID: V03:K1:og7aglZ3Q+zHmb8EXfjZyCFzh8Ae5o38SlBuTifQqzoXN2JffJR
- dqmvC5FywZBF4ubQoLkvsXZqbPjAbEKapFnoupSXKXcTlHvuAXXUvjmQ8pqiV4mL3WqHjF1
- oXE5JpJErxtKwPFphUY1y30bdXGMo/vd6Eo2oGUcG/WKGGwPLkhMNEHw3bZSSTWk7gEJEqs
- HHdyD/AJTIR5Ql0alVb7g==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ryDjOyhw8zQ=:W/pMlI3oC5HBuQaB/Nt6zX
- 8Gky4dp6vUJmx4ZgSagIn4kTBT1sFV5oWBjzHOSNTLUZlCkjUudWR4OKOyGyu2GSvLhrPGg3/
- CAWw0YVP4SXUuIgxeNJf21PUg5qrShmeXcCXiDCH0IzJGimhtIttnbE0PgyCgCba4so5gthq5
- xSykNEJ0q3cdg9werMu+EXRoZJcz1dW7uaBcJ2cmIRKSkP1r/KU53dVFdQXJyNgroFy8/1HAt
- Ef2/GHrkzOUqs8c1CzLiSy1UDpfZm5fGZizwXH6uqCCTXdzzc7VoP5DbbWk1HQlik/+EeY1ht
- j0HuCvyxnosGv7Z0mMILDAQ5/Rb3yjctGfWPgbG0IdFi+2XluMDVhXpQ+G1D7BeDd9UFYNSW+
- y6v/Yv6fT2YIy3suYFyr8lLsQyMXF7/0noS179HVH2Cx2U+wWqfi9lnMX9tyjFXw4LSZoNrA2
- KipLi70jcjUnoXiZ1HWo8qhRUijM9mQr9SCxiFbPPyMeWKospK2mvjbD+pbONoIpgGKK71VfR
- BNqivL1nw3xkmIPFR/3p5wmV+ly3nuJzM/+fqSg0PSXjokgofNuj+KI4c7hQ8Fc+MTgWLd1Th
- cJ7wfzpbKsgTLEaopgyuYEvL5Kppaq59rFv3hmIiYs7uyu7rMYw3INfNuTFzcVmXoflpJTw3A
- NtkSseHQ0FzEaq7C3Cc4aE19QFhJT/Ee3Ym/gCe/MmMnEGzrYiWBePyY9KmRs+kUVaqYiHXOV
- 0yD8LLvSYM8oDYWE2bc9hZ/+JCooFcNreOJ09KNDvs42BGH/UqqzRse38mzEq1E3K9ErkxSd7
- G4sjKQns+yslosXtPIhScHtrMV4n76ZRUG1srMBshbfj1r+B/N5dgvWGKeArSz2He0RryIeg4
- cWETfO4CHeyA2Wnr6CJA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1606525206-22154-1-git-send-email-tiantao6@hisilicon.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - bh-25.webhostbox.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - roeck-us.net
+X-BWhitelist: no
+X-Source-IP: 108.223.40.66
+X-Source-L: No
+X-Exim-ID: 1kj6kh-002AVk-OV
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 108-223-40-66.lightspeed.sntcca.sbcglobal.net (localhost) [108.223.40.66]:48430
+X-Source-Auth: guenter@roeck-us.net
+X-Email-Count: 11
+X-Source-Cap: cm9lY2s7YWN0aXZzdG07YmgtMjUud2ViaG9zdGJveC5uZXQ=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-VXNlIHRoZSBuZXdlciBhcHBseSBmdW5jdGlvbiBvZiBwd21fb3BzIGluc3RlYWQgb2YgY29uZmln
-LCBlbmFibGUsIGRpc2FibGUKYW5kIHNldF9wb2xhcml0eS4KClRoaXMgZ3VhcmFudGVlcyBhdG9t
-aWMgY2hhbmdlcyBvZiB0aGUgcHdtIGNvbnRyb2xsZXIgY29uZmlndXJhdGlvbi4gSXQgYWxzbwpy
-ZWR1Y2VzIHRoZSBzaXplIG9mIHRoZSBkcml2ZXIuCgpUaGlzIGhhcyBiZWVuIHRlc3RlZCBvbiBh
-IFJhc3BiZXJyeSBQSSA0LgoKdjI6IEZpeGVkIGNvbXBpbGVyIGVycm9yCgpTaWduZWQtb2ZmLWJ5
-OiBMaW5vIFNhbmZpbGlwcG8gPExpbm9TYW5maWxpcHBvQGdteC5kZT4KLS0tCiBkcml2ZXJzL3B3
-bS9wd20tYmNtMjgzNS5jIHwgNjQgKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAyMSBpbnNlcnRpb25zKCspLCA0MyBkZWxldGlv
-bnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL3B3bS9wd20tYmNtMjgzNS5jIGIvZHJpdmVycy9w
-d20vcHdtLWJjbTI4MzUuYwppbmRleCA2ODQxZGNmLi5kYWQ3NDQzIDEwMDY0NAotLS0gYS9kcml2
-ZXJzL3B3bS9wd20tYmNtMjgzNS5jCisrKyBiL2RyaXZlcnMvcHdtL3B3bS1iY20yODM1LmMKQEAg
-LTU4LDEzICs1OCwxNCBAQCBzdGF0aWMgdm9pZCBiY20yODM1X3B3bV9mcmVlKHN0cnVjdCBwd21f
-Y2hpcCAqY2hpcCwgc3RydWN0IHB3bV9kZXZpY2UgKnB3bSkKIAl3cml0ZWwodmFsdWUsIHBjLT5i
-YXNlICsgUFdNX0NPTlRST0wpOwogfQogCi1zdGF0aWMgaW50IGJjbTI4MzVfcHdtX2NvbmZpZyhz
-dHJ1Y3QgcHdtX2NoaXAgKmNoaXAsIHN0cnVjdCBwd21fZGV2aWNlICpwd20sCi0JCQkgICAgICBp
-bnQgZHV0eV9ucywgaW50IHBlcmlvZF9ucykKK3N0YXRpYyBpbnQgYmNtMjgzNV9wd21fYXBwbHko
-c3RydWN0IHB3bV9jaGlwICpjaGlwLCBzdHJ1Y3QgcHdtX2RldmljZSAqcHdtLAorCQkJICAgICBj
-b25zdCBzdHJ1Y3QgcHdtX3N0YXRlICpzdGF0ZSkKIHsKKwogCXN0cnVjdCBiY20yODM1X3B3bSAq
-cGMgPSB0b19iY20yODM1X3B3bShjaGlwKTsKIAl1bnNpZ25lZCBsb25nIHJhdGUgPSBjbGtfZ2V0
-X3JhdGUocGMtPmNsayk7CiAJdW5zaWduZWQgbG9uZyBzY2FsZXI7Ci0JdTMyIHBlcmlvZDsKKwl1
-MzIgdmFsdWU7CiAKIAlpZiAoIXJhdGUpIHsKIAkJZGV2X2VycihwYy0+ZGV2LCAiZmFpbGVkIHRv
-IGdldCBjbG9jayByYXRlXG4iKTsKQEAgLTcyLDY1ICs3Myw0MiBAQCBzdGF0aWMgaW50IGJjbTI4
-MzVfcHdtX2NvbmZpZyhzdHJ1Y3QgcHdtX2NoaXAgKmNoaXAsIHN0cnVjdCBwd21fZGV2aWNlICpw
-d20sCiAJfQogCiAJc2NhbGVyID0gRElWX1JPVU5EX0NMT1NFU1QoTlNFQ19QRVJfU0VDLCByYXRl
-KTsKLQlwZXJpb2QgPSBESVZfUk9VTkRfQ0xPU0VTVChwZXJpb2RfbnMsIHNjYWxlcik7CisJLyog
-c2V0IHBlcmlvZCAqLworCXZhbHVlID0gRElWX1JPVU5EX0NMT1NFU1RfVUxMKHN0YXRlLT5wZXJp
-b2QsIHNjYWxlcik7CiAKLQlpZiAocGVyaW9kIDwgUEVSSU9EX01JTikKKwlpZiAodmFsdWUgPCBQ
-RVJJT0RfTUlOKQogCQlyZXR1cm4gLUVJTlZBTDsKIAotCXdyaXRlbChESVZfUk9VTkRfQ0xPU0VT
-VChkdXR5X25zLCBzY2FsZXIpLAotCSAgICAgICBwYy0+YmFzZSArIERVVFkocHdtLT5od3B3bSkp
-OwotCXdyaXRlbChwZXJpb2QsIHBjLT5iYXNlICsgUEVSSU9EKHB3bS0+aHdwd20pKTsKLQotCXJl
-dHVybiAwOwotfQorCXdyaXRlbCh2YWx1ZSwgcGMtPmJhc2UgKyBQRVJJT0QocHdtLT5od3B3bSkp
-OwogCi1zdGF0aWMgaW50IGJjbTI4MzVfcHdtX2VuYWJsZShzdHJ1Y3QgcHdtX2NoaXAgKmNoaXAs
-IHN0cnVjdCBwd21fZGV2aWNlICpwd20pCi17Ci0Jc3RydWN0IGJjbTI4MzVfcHdtICpwYyA9IHRv
-X2JjbTI4MzVfcHdtKGNoaXApOwotCXUzMiB2YWx1ZTsKKwkvKiBzZXQgZHV0eSBjeWNsZSAqLwor
-CXZhbHVlID0gRElWX1JPVU5EX0NMT1NFU1RfVUxMKHN0YXRlLT5kdXR5X2N5Y2xlLCBzY2FsZXIp
-OworCXdyaXRlbCh2YWx1ZSwgcGMtPmJhc2UgKyBEVVRZKHB3bS0+aHdwd20pKTsKIAorCS8qIHNl
-dCBwb2xhcml0eSAqLwogCXZhbHVlID0gcmVhZGwocGMtPmJhc2UgKyBQV01fQ09OVFJPTCk7Ci0J
-dmFsdWUgfD0gUFdNX0VOQUJMRSA8PCBQV01fQ09OVFJPTF9TSElGVChwd20tPmh3cHdtKTsKLQl3
-cml0ZWwodmFsdWUsIHBjLT5iYXNlICsgUFdNX0NPTlRST0wpOwotCi0JcmV0dXJuIDA7Ci19CiAK
-LXN0YXRpYyB2b2lkIGJjbTI4MzVfcHdtX2Rpc2FibGUoc3RydWN0IHB3bV9jaGlwICpjaGlwLCBz
-dHJ1Y3QgcHdtX2RldmljZSAqcHdtKQotewotCXN0cnVjdCBiY20yODM1X3B3bSAqcGMgPSB0b19i
-Y20yODM1X3B3bShjaGlwKTsKLQl1MzIgdmFsdWU7Ci0KLQl2YWx1ZSA9IHJlYWRsKHBjLT5iYXNl
-ICsgUFdNX0NPTlRST0wpOwotCXZhbHVlICY9IH4oUFdNX0VOQUJMRSA8PCBQV01fQ09OVFJPTF9T
-SElGVChwd20tPmh3cHdtKSk7Ci0Jd3JpdGVsKHZhbHVlLCBwYy0+YmFzZSArIFBXTV9DT05UUk9M
-KTsKLX0KLQotc3RhdGljIGludCBiY20yODM1X3NldF9wb2xhcml0eShzdHJ1Y3QgcHdtX2NoaXAg
-KmNoaXAsIHN0cnVjdCBwd21fZGV2aWNlICpwd20sCi0JCQkJZW51bSBwd21fcG9sYXJpdHkgcG9s
-YXJpdHkpCi17Ci0Jc3RydWN0IGJjbTI4MzVfcHdtICpwYyA9IHRvX2JjbTI4MzVfcHdtKGNoaXAp
-OwotCXUzMiB2YWx1ZTsKLQotCXZhbHVlID0gcmVhZGwocGMtPmJhc2UgKyBQV01fQ09OVFJPTCk7
-Ci0KLQlpZiAocG9sYXJpdHkgPT0gUFdNX1BPTEFSSVRZX05PUk1BTCkKKwlpZiAoc3RhdGUtPnBv
-bGFyaXR5ID09IFBXTV9QT0xBUklUWV9OT1JNQUwpCiAJCXZhbHVlICY9IH4oUFdNX1BPTEFSSVRZ
-IDw8IFBXTV9DT05UUk9MX1NISUZUKHB3bS0+aHdwd20pKTsKIAllbHNlCiAJCXZhbHVlIHw9IFBX
-TV9QT0xBUklUWSA8PCBQV01fQ09OVFJPTF9TSElGVChwd20tPmh3cHdtKTsKIAorCS8qIGVuYWJs
-ZS9kaXNhYmxlICovCisJaWYgKHN0YXRlLT5lbmFibGVkKQorCQl2YWx1ZSB8PSBQV01fRU5BQkxF
-IDw8IFBXTV9DT05UUk9MX1NISUZUKHB3bS0+aHdwd20pOworCWVsc2UKKwkJdmFsdWUgJj0gfihQ
-V01fRU5BQkxFIDw8IFBXTV9DT05UUk9MX1NISUZUKHB3bS0+aHdwd20pKTsKKwogCXdyaXRlbCh2
-YWx1ZSwgcGMtPmJhc2UgKyBQV01fQ09OVFJPTCk7CiAKIAlyZXR1cm4gMDsKIH0KIAorCiBzdGF0
-aWMgY29uc3Qgc3RydWN0IHB3bV9vcHMgYmNtMjgzNV9wd21fb3BzID0gewogCS5yZXF1ZXN0ID0g
-YmNtMjgzNV9wd21fcmVxdWVzdCwKIAkuZnJlZSA9IGJjbTI4MzVfcHdtX2ZyZWUsCi0JLmNvbmZp
-ZyA9IGJjbTI4MzVfcHdtX2NvbmZpZywKLQkuZW5hYmxlID0gYmNtMjgzNV9wd21fZW5hYmxlLAot
-CS5kaXNhYmxlID0gYmNtMjgzNV9wd21fZGlzYWJsZSwKLQkuc2V0X3BvbGFyaXR5ID0gYmNtMjgz
-NV9zZXRfcG9sYXJpdHksCisJLmFwcGx5ID0gYmNtMjgzNV9wd21fYXBwbHksCiAJLm93bmVyID0g
-VEhJU19NT0RVTEUsCiB9OwogCi0tIAoyLjcuNAoK
+On Sat, Nov 28, 2020 at 09:00:06AM +0800, Tian Tao wrote:
+> fixed the following coccicheck:
+> drivers/hwmon//pwm-fan.c:152:60-61: WARNING opportunity for kobj_to_dev().
+> 
+> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+
+With the switch to use devm_hwmon_device_register_with_info() instead of
+devm_hwmon_device_register_with_groups(), this patch is no longer necessary.
+Please see tip of hwmon-next.
+
+Thanks,
+Guenter
+
+> ---
+>  drivers/hwmon/pwm-fan.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> index 1f63807..7849011 100644
+> --- a/drivers/hwmon/pwm-fan.c
+> +++ b/drivers/hwmon/pwm-fan.c
+> @@ -149,7 +149,7 @@ static struct attribute *pwm_fan_attrs[] = {
+>  static umode_t pwm_fan_attrs_visible(struct kobject *kobj, struct attribute *a,
+>  				     int n)
+>  {
+> -	struct device *dev = container_of(kobj, struct device, kobj);
+> +	struct device *dev = kobj_to_dev(kobj);
+>  	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+>  
+>  	/* Hide fan_input in case no interrupt is available  */
