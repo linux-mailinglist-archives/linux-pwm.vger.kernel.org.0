@@ -2,20 +2,20 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF4662CB5A4
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Dec 2020 08:18:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C3202CB5A7
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Dec 2020 08:18:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387581AbgLBHQh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 2 Dec 2020 02:16:37 -0500
-Received: from guitar.tcltek.co.il ([192.115.133.116]:50242 "EHLO
+        id S2387605AbgLBHQi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 2 Dec 2020 02:16:38 -0500
+Received: from guitar.tcltek.co.il ([192.115.133.116]:50252 "EHLO
         mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728105AbgLBHQh (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        id S1728569AbgLBHQh (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
         Wed, 2 Dec 2020 02:16:37 -0500
 Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id 678D24400C5;
-        Wed,  2 Dec 2020 09:15:53 +0200 (IST)
+        by mx.tkos.co.il (Postfix) with ESMTPS id 095A944013A;
+        Wed,  2 Dec 2020 09:15:54 +0200 (IST)
 From:   Baruch Siach <baruch@tkos.co.il>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -31,10 +31,12 @@ Cc:     Baruch Siach <baruch@tkos.co.il>, Andrew Lunn <andrew@lunn.ch>,
         Ralph Sennhauser <ralph.sennhauser@gmail.com>,
         linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v3 0/6] gpio: mvebu: Armada 8K/7K PWM support
-Date:   Wed,  2 Dec 2020 09:15:31 +0200
-Message-Id: <cover.1606892239.git.baruch@tkos.co.il>
+Subject: [PATCH v3 1/6] gpio: mvebu: fix potential user-after-free on probe
+Date:   Wed,  2 Dec 2020 09:15:32 +0200
+Message-Id: <f6248a894264d9bc3af3ca040f7cebe5465b67f0.1606892239.git.baruch@tkos.co.il>
 X-Mailer: git-send-email 2.29.2
+In-Reply-To: <cover.1606892239.git.baruch@tkos.co.il>
+References: <cover.1606892239.git.baruch@tkos.co.il>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -42,41 +44,66 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The gpio-mvebu driver supports the PWM functionality of the GPIO block for 
-earlier Armada variants like XP, 370 and 38x. This series extends support to 
-newer Armada variants that use CP11x and AP80x, like Armada 8K and 7K.
+When mvebu_pwm_probe() fails IRQ domain is not released. Move pwm probe
+before IRQ domain allocation. Add pwm cleanup code to the failure path.
 
-This series adds adds the 'pwm-offset' property to DT binding. 'pwm-offset' 
-points to the base of A/B counter registers that determine the PWM period and 
-duty cycle.
+Fixes: 757642f9a584 ("gpio: mvebu: Add limited PWM support")
+Reported-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+---
+v3: Move pwm back before irq so that irq_alloc_domain_generic_chips()
+    fails last, and we don't need to clean after it
 
-The existing PWM DT binding reflects an arbitrary decision to allocate the A 
-counter to the first GPIO block, and B counter to the other one. In attempt to 
-provide better future flexibility, the new 'pwm-offset' property always points 
-to the base address of both A/B counters. The driver code still allocates the 
-counters in the same way, but this might change in the future with no change to
-the DT.
+v2: Don't leak pwm resources (Uwe Kleine-König)
+---
+ drivers/gpio/gpio-mvebu.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-Tested AP806 and CP110 (both) on Armada 8040 based system.
-
-I marked this series as v3 to avoid confusion about the probe resource leak 
-fix that I posted in a separate patch. The (improved) fix is now patch #1 in 
-this series. That is the only change in v3.
-
-Baruch Siach (6):
-  gpio: mvebu: fix potential user-after-free on probe
-  gpio: mvebu: update Armada XP per-CPU comment
-  gpio: mvebu: switch pwm duration registers to regmap
-  gpio: mvebu: add pwm support for Armada 8K/7K
-  arm64: dts: armada: add pwm offsets for ap/cp gpios
-  dt-bindings: ap806: document gpio pwm-offset property
-
- .../arm/marvell/ap80x-system-controller.txt   |   8 +
- arch/arm64/boot/dts/marvell/armada-ap80x.dtsi |   3 +
- arch/arm64/boot/dts/marvell/armada-cp11x.dtsi |  10 ++
- drivers/gpio/gpio-mvebu.c                     | 170 +++++++++++-------
- 4 files changed, 128 insertions(+), 63 deletions(-)
-
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index 433e2c3f3fd5..2f245594a90a 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -1197,6 +1197,13 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 
+ 	devm_gpiochip_add_data(&pdev->dev, &mvchip->chip, mvchip);
+ 
++	/* Some MVEBU SoCs have simple PWM support for GPIO lines */
++	if (IS_ENABLED(CONFIG_PWM)) {
++		err = mvebu_pwm_probe(pdev, mvchip, id);
++		if (err)
++			return err;
++	}
++
+ 	/* Some gpio controllers do not provide irq support */
+ 	if (!have_irqs)
+ 		return 0;
+@@ -1206,7 +1213,8 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 	if (!mvchip->domain) {
+ 		dev_err(&pdev->dev, "couldn't allocate irq domain %s (DT).\n",
+ 			mvchip->chip.label);
+-		return -ENODEV;
++		err = -ENODEV;
++		goto err_pwm;
+ 	}
+ 
+ 	err = irq_alloc_domain_generic_chips(
+@@ -1254,14 +1262,12 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 						 mvchip);
+ 	}
+ 
+-	/* Some MVEBU SoCs have simple PWM support for GPIO lines */
+-	if (IS_ENABLED(CONFIG_PWM))
+-		return mvebu_pwm_probe(pdev, mvchip, id);
+-
+ 	return 0;
+ 
+ err_domain:
+ 	irq_domain_remove(mvchip->domain);
++err_pwm:
++	pwmchip_remove(&mvchip->mvpwm->chip);
+ 
+ 	return err;
+ }
 -- 
 2.29.2
 
