@@ -2,58 +2,33 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A1932CBDD2
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Dec 2020 14:08:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E37EC2CBEF3
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Dec 2020 15:03:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730103AbgLBNHA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 2 Dec 2020 08:07:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730101AbgLBNHA (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 2 Dec 2020 08:07:00 -0500
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C98BAC0617A6
-        for <linux-pwm@vger.kernel.org>; Wed,  2 Dec 2020 05:06:13 -0800 (PST)
-Received: by mail-wm1-x343.google.com with SMTP id c198so7036745wmd.0
-        for <linux-pwm@vger.kernel.org>; Wed, 02 Dec 2020 05:06:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=7bzhGlEDs3RVzaSNxmlfokQcY9/nLGPy3zIRO283eDU=;
-        b=hoUlgFcojtGx5MWR+uH0MtOMHiRv4HBtzmnVHFXTJOTubmJGqCwD+erZkS0kUu9Ww+
-         HPzUPepiFQ4rB6N8rM4XqGYA/zGW/SHTvumDI6Cl9fZl6JP6NmFZTPhL4ioeOKpcQzhd
-         ymo8qOrFVkO1qG1joUwaT3f+D4Xzz7PjqfshDvctduRl4zUeDFSG2UCB8zDwksUMnbkP
-         g5Z73nZjsc1qRqzFS5YvP92HlUpx2kC51PYaLy3dcMtdgAb47sm84n3LXCzgZaUP+J82
-         wX86L/38M1NIwYOllJXJddHMFgn6uQXDxixe4J8weDtJNzegT4PRQgQVnHB7j88TGjsW
-         nN+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=7bzhGlEDs3RVzaSNxmlfokQcY9/nLGPy3zIRO283eDU=;
-        b=L0hGOJ7gJUUNwPl+d5AymDK+YvT6BvLJWy+ZeZq9Un9ntDPXe5Gk0ZDNX7+7HqTgG0
-         YMPpiJdrLwv15qJg1VZVFE8IHQh3J20QKbR1x74xqQhUJxqXGHv5s7EX3citP7GfvsnB
-         /UvPbx/ruljko9A47g1fNpaPaXhi7j8I9iC4hDOiphXG/9vxsc2LFOVir78RApGw4jU4
-         ibySEyNOocoQ0x12XNAWz/QYAnAbLDtwklbiWs4MDNq3zqGBOfl+yBuPo/oDM6l/OMKg
-         HBaOZ/gv0eQjcXQtmm3BAu0g9LqMLu61UV6+HhzdGs/whWnH1GWXdZWkOQX3L/pyCNu+
-         Uphg==
-X-Gm-Message-State: AOAM5314obbFKUgtFUNpGQVqVg1zowTJ5SW0HdPoguRMQ2xfDxHPnKj/
-        cDV6ap8EEKcK3PturxjEbby5eA==
-X-Google-Smtp-Source: ABdhPJxGawSFJDcD4PpSw5SstbEcGDeQR9jU6qHm7uM9dlQbOvte5ZrJEXWIXJfUg22zIA3A0lGfmw==
-X-Received: by 2002:a05:600c:208:: with SMTP id 8mr3096055wmi.146.1606914372431;
-        Wed, 02 Dec 2020 05:06:12 -0800 (PST)
-Received: from dell ([91.110.221.235])
-        by smtp.gmail.com with ESMTPSA id 35sm1986863wro.71.2020.12.02.05.06.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Dec 2020 05:06:11 -0800 (PST)
-Date:   Wed, 2 Dec 2020 13:06:09 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        id S1726938AbgLBOCs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 2 Dec 2020 09:02:48 -0500
+Received: from mout.gmx.net ([212.227.15.19]:55089 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726828AbgLBOCs (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 2 Dec 2020 09:02:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1606917621;
+        bh=mkPrbK+yJuzfAhf/sO1iUgkIQXheUrt7++KNxongoyM=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=O32K6VLkxNtdhWIzbLII3haODtWzmGPALzgvgG9EWa47XBK49a5QvVytI9xRaWmAw
+         O7vlr7xahai/2MAWQXpevfuRpbbsAq0arW4vxkpVpjP/+FVnXOQqQbqicQ9ABvN93T
+         wVY2GxYwgZArm4K7ZgCHP5Q2KyjmkJSYRRri2yWE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([37.201.214.162]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MEV3I-1kzJyZ0cuI-00Fyd1; Wed, 02
+ Dec 2020 15:00:21 +0100
+Date:   Wed, 2 Dec 2020 15:00:14 +0100
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
@@ -79,125 +54,85 @@ Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
 Subject: Re: [PATCH v4 3/7] mfd: Add base driver for Netronix embedded
  controller
-Message-ID: <20201202130609.GM4801@dell>
+Message-ID: <X8ed7stMOGhnZ18T@latitude>
 References: <20201122222739.1455132-1-j.neuschaefer@gmx.net>
  <20201122222739.1455132-4-j.neuschaefer@gmx.net>
  <20201202130520.GL4801@dell>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="d33nqVJ+uUfH4DYP"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 In-Reply-To: <20201202130520.GL4801@dell>
+X-Provags-ID: V03:K1:UpPvUQU7gK2MH8B05AwoyfhmqHQRzgHJFYfvGagPawWdg2hpRjX
+ PBQ/nFild+nxLnXQVu78bet9XlT8AGxzvTRfGsdjMI28jB4b3opLJn/q4LE/Adpu1XHsdjH
+ K89YJzYN96uuKFAsePp4LHacMPYzW1orC1lAyrHw2gIYT+65e+h4hmYWB2F7HVi5j864TBF
+ 2KN8K/ECir9vCid9Y7C3Q==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NKoJD/ARNdY=:ZfjNf85eZFRrYVNC4Ne9nV
+ TaG+UkHF466XjOkyqjjIkUNs6fquI9tE0VVnNJodWoasIvubrA6r4FtIzOk5AM+ZAcPJIkx6e
+ gAnCCN6EtKRVTDcVQeSEpQ1t7ccNyrvIDykgoPPx1Os9mr0wanSHHePTUS2JtLtqKV9UG5aoy
+ ZpC7vWI/yXumM/yFWsX3nntEeImwVK1b/NnzIVBi/vXdHAEgsDf0hpZWJWgCwvXyEeyfKCimA
+ khssUUaTdHFK8ZtwaeF1NdLlcP2J8Jqygmrxbs3vqGNqGZur//u1prwMD6no5HPJYYSkf97sl
+ +zwfApdwV7GSen9v0S3LuO3bdX8IaStCC9R2q34+gM1kp2BDRbGI1l3WzF6N3Pa5Hfk/nK+UG
+ xz2Yx4PgfxfdnS0UrXs5iW0K/s8QHNarummmNHZWuIn1po/vYe5/24e6mg+wg8mAEiY5yrM0L
+ yt2YWaomwXlwv0iBHQd+ihmkTD9gDEg9cEXD7up2bqAEmDbjyjMbb5grBRkf/GxP3IbZplj1/
+ dW4Gw23nH9vAVVSAPkxmLhFTiUYO/C8tPVJR9lLQ/D2xEeH2rpOqgnlx4ZV4hz1tP3ITPyFEY
+ Llt9FvTcaFkgZbWQ2R39Pu0xJynibpyxxY6PLuCsyd/5W6mUg2wI9yP0E53FLiAv9aSMdtLKm
+ 7VKMeEgUPSbvCEOrdohIaoqXhf3js3MpMfKSIlglvR7w78akaDZBhUrm+RZLkPKe9WGVz4Quz
+ /ww8au5AwXi6N/QGICRBLxcX0+iizjnTli2hBVk94GCgkp5lYdGU2CjO+paHSFHxZ0ky6RNFp
+ KTVt9tGow8ddJl1zW9h+nRP2jrvhH57r9o3K3GG++mnS3z/fcZ6+K5tfdM8NM6e+0if+LDUAH
+ JyDmB7xlhHdV+wVscI+Q==
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 02 Dec 2020, Lee Jones wrote:
 
-> On Sun, 22 Nov 2020, Jonathan Neuschäfer wrote:
-> 
-> > The Netronix embedded controller is a microcontroller found in some
-> > e-book readers designed by the original design manufacturer Netronix,
-> > Inc. It contains RTC, battery monitoring, system power management, and
-> > PWM functionality.
-> > 
-> > This driver implements register access and version detection.
-> > 
-> > Third-party hardware documentation is available at:
-> > 
-> >   https://github.com/neuschaefer/linux/wiki/Netronix-MSP430-embedded-controller
-> > 
-> > The EC supports interrupts, but the driver doesn't make use of them so
-> > far.
-> > 
-> > Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> > ---
-> > 
-> > v4:
-> > - include asm/unaligned.h after linux/*
-> > - Use put_unaligned_be16 instead of open-coded big-endian packing
-> > - Clarify that 0x90=0xff00 causes an error in downstream kernel too
-> > - Add commas after non-sentinel positions
-> > - ntxec.h: declare structs device and regmap
-> > - Replace WARN_ON usage and add comments to explain errors
-> > - Replace dev_alert with dev_warn when the result isn't handled
-> > - Change subdevice registration error message to dev_err
-> > - Declare ntxec_reg8 as returning __be16
-> > - Restructure version detection code
-> > - Spell out ODM
-> > 
-> > v3:
-> > - https://lore.kernel.org/lkml/20200924192455.2484005-4-j.neuschaefer@gmx.net/
-> > - Add (EC) to CONFIG_MFD_NTXEC prompt
-> > - Relicense as GPLv2 or later
-> > - Add email address to copyright line
-> > - remove empty lines in ntxec_poweroff and ntxec_restart functions
-> > - Split long lines
-> > - Remove 'Install ... handler' comments
-> > - Make naming of struct i2c_client parameter consistent
-> > - Remove struct ntxec_info
-> > - Rework 'depends on' lines in Kconfig, hard-depend on I2C, select REGMAP_I2C and
-> >   MFD_CORE
-> > - Register subdevices via mfd_cells
-> > - Move 8-bit register conversion to ntxec.h
-> > 
-> > v2:
-> > - https://lore.kernel.org/lkml/20200905133230.1014581-4-j.neuschaefer@gmx.net/
-> > - Add a description of the device to the patch text
-> > - Unify spelling as 'Netronix embedded controller'.
-> >   'Netronix' is the proper name of the manufacturer, but 'embedded controller'
-> >   is just a label that I have assigned to the device.
-> > - Switch to regmap, avoid regmap use in poweroff and reboot handlers.
-> >   Inspired by cf84dc0bb40f4 ("mfd: rn5t618: Make restart handler atomic safe")
-> > - Use a list of known-working firmware versions instead of checking for a
-> >   known-incompatible version
-> > - Prefix registers with NTXEC_REG_
-> > - Define register values as constants
-> > - Various style cleanups as suggested by Lee Jones
-> > - Don't align = signs in struct initializers [Uwe Kleine-König]
-> > - Don't use dev_dbg for an error message
-> > - Explain sleep in poweroff handler
-> > - Remove (struct ntxec).client
-> > - Switch to .probe_new in i2c driver
-> > - Add .remove callback
-> > - Make CONFIG_MFD_NTXEC a tristate option
-> > ---
-> >  drivers/mfd/Kconfig       |  11 ++
-> >  drivers/mfd/Makefile      |   1 +
-> >  drivers/mfd/ntxec.c       | 216 ++++++++++++++++++++++++++++++++++++++
-> >  include/linux/mfd/ntxec.h |  34 ++++++
-> >  4 files changed, 262 insertions(+)
-> >  create mode 100644 drivers/mfd/ntxec.c
-> >  create mode 100644 include/linux/mfd/ntxec.h
+--d33nqVJ+uUfH4DYP
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Dec 02, 2020 at 01:05:20PM +0000, Lee Jones wrote:
+> On Sun, 22 Nov 2020, Jonathan Neusch=C3=A4fer wrote:
 [...]
-
 > > +	/* Bail out if we encounter an unknown firmware version */
 > > +	switch (version) {
 > > +	case 0xd726: /* found in Kobo Aura */
-> 
+>=20
 > No magic numbers.
-> 
+>=20
 > Please submit a subsequent patch to define this.
-> 
-> > +		break;
-> > +	default:
-> > +		dev_err(ec->dev,
-> > +			"Netronix embedded controller version %04x is not supported.\n",
-> > +			version);
-> > +		return -ENODEV;
-> > +	}
-> 
-> Applied, thanks.
 
-Sorry, that should have been:
+Will do.
 
-For my own reference (apply this as-is to your sign-off block):
+But I don't think I'll be able to give it a more meaningful name than
+NTXEC_VERSION_D726. I don't have a good overview of which versions
+appear in which devices. "0xd726 found in Kobo Aura" only means that;
+I don't know if it's the only version used in the Kobo Aura, and I don't
+know if the Kobo Aura is the only device where it is used.
 
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks,
+Jonathan Neusch=C3=A4fer
+
+--d33nqVJ+uUfH4DYP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl/HneQACgkQCDBEmo7z
+X9tuSBAAqQPKxupxCAWq0KfRYS2QxQ7YnxsgIaSBtW7vVeY+rxYN4B2GFSoME5kb
+SzwLz53agojMGPA71ArROS+dkWmS2fT9TIxMjEtgSrRcEDQ0hN6psPIbWGBaij92
+HMi80iG/yDlNqVa7zklcuRkxLXtEroWwb0Lzr7jVyRcoJhETcuARefmQo4hsQ7gz
+Kxnto0Ol4FRzJxgrKg1n2BJKAwEz5ntiaRCKfcferj44BNBch7smeUCtittku9eS
+6Ij/6Ao7pZcU1Tupabj1yRhcP5KNcixvDCo79DlE5+9aDFkjOiXvJm8AKrSjES02
+thOgBfGugqWu7/c/0flCEfQEKlH+BlHfzsZO7k+Zk2ehvDgy+clXO0jVGTT7joC8
+uMaGhm1v0O78kDXnL1Dl4lbPljCIBOcKAWti2dXmvSsrXYY6Cfyd1ZnYIRK8iOwr
+pE/G0pcwVD9XXLSwgN5Cqvr3wN5g5O/YO4fUqTPz6zRXzEUOYQrD+p0womDZzdaD
+IWbGGwZbVQjr7trWsX3p8VR9YPXQnT+3U69O+1AetWnID8e/hhQ1rVe/4o+cqhen
+rQLHB4VLFYU0hAO2FtnXc1/ew6xA7ejv58Nasq3swhgQKnRs4zqSZnYCQJaA7lU/
+74vnuH3haXYM1K6QBYr78NOHXANOCnJBrS6GggnG5gS57SF/gsE=
+=o2/u
+-----END PGP SIGNATURE-----
+
+--d33nqVJ+uUfH4DYP--
