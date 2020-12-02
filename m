@@ -2,98 +2,117 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DB222CAAAA
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Dec 2020 19:23:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29EBC2CB4CE
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Dec 2020 07:04:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgLASW0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 1 Dec 2020 13:22:26 -0500
-Received: from guitar.tcltek.co.il ([192.115.133.116]:48332 "EHLO
-        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726733AbgLASWZ (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 1 Dec 2020 13:22:25 -0500
-Received: from tarshish (unknown [10.0.8.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id 0910B440069;
-        Tue,  1 Dec 2020 20:21:36 +0200 (IST)
-References: <cover.1605694661.git.baruch@tkos.co.il>
- <db0d6d619a0686eef1b15ca7409d73813440856f.1605694661.git.baruch@tkos.co.il>
- <20201118231811.GH1853236@lunn.ch> <878sax6f43.fsf@tarshish>
- <20201119133429.GS1804098@lunn.ch> <877dqhfogp.fsf@tarshish>
- <CAMpxmJXKDhB1fOGaY_+bmZ=4X6du0n6aoYVTMKnGXvTd8PdUNg@mail.gmail.com>
-User-agent: mu4e 1.4.13; emacs 27.1
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-gpio <linux-gpio@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 3/5] gpio: mvebu: add pwm support for Armada 8K/7K
-In-reply-to: <CAMpxmJXKDhB1fOGaY_+bmZ=4X6du0n6aoYVTMKnGXvTd8PdUNg@mail.gmail.com>
-Date:   Tue, 01 Dec 2020 20:21:33 +0200
-Message-ID: <87lfeho09e.fsf@tarshish>
+        id S1727450AbgLBGEi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 2 Dec 2020 01:04:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbgLBGEh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 2 Dec 2020 01:04:37 -0500
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 937CCC0613CF;
+        Tue,  1 Dec 2020 22:03:51 -0800 (PST)
+Received: by mail-pj1-x1041.google.com with SMTP id r20so407280pjp.1;
+        Tue, 01 Dec 2020 22:03:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=sdg6m13JCDegZRe+NmQ9epCCrqdVuQ58ZPfdb2g7nwk=;
+        b=pCJA7Ta3XJljluS9z7yOcbr2jUsDThZD9M6lRMzlsYVGvFOkg0wP3wWBlshqdNcCUj
+         5uZvn95iyp309exveaPBLaEodgH692I7dBiok0BwlFyBzxW+KxVBKBsaJ3YAqmT67zP+
+         vT7IV6YGmGZXgrQL1P+KbMMk6BkHeNmyXgmsLs8wEBYPoHSWIIV0zS+oIMq3EZ18VhHl
+         v/jVjHYd64fR99K99JDgwRDqJ8llL6f+7U5Vea88QnSVhKT9CDR5uMs8nAOZPE5v31wN
+         8E6sSyJ5FNYSKCxnTg66FyMyGZaitBT0IHC39PlWgV35Rae1pxdg2a75c0p5lOK7kqV3
+         FibQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sdg6m13JCDegZRe+NmQ9epCCrqdVuQ58ZPfdb2g7nwk=;
+        b=fM4ZfHjlYLSJvqgn+MI/+HFIt0ZTkuSvt7EE28og0HyZ4fOyXRROAQoE6JvcT9ksrb
+         sjg8AqbLUWmxLR5Gom1XpDyjEwe3EpZ9Adh1SS7dqlkV4Ula/bPCCLENMEAlLZUwoWEu
+         dL7KGguMY9aNBs20FR+upv0OG66xch8IrIIX7oawJ7NS2VgchFu602XD/5Bpv1bv6iqw
+         Rsg3bW9dhhMm7vkSRVhOSyoItyrsw3jhKILAMNxbXZg7Sd2tvTbLlwuqQctEM55jrVBB
+         jf16YFy7Aljif0/EvMCjVyp9X79WSw/4VNFdrgFpAAqvjH/0pz8hG+FVgMFcAKMa5GDz
+         TT9A==
+X-Gm-Message-State: AOAM531lHwWxtXeTMx30wykALfrm6zeyH+hBA7jjNerH7ekpk41Ec4/C
+        HtSnc7MsbnwVbA9PwKQZfzs=
+X-Google-Smtp-Source: ABdhPJzZ+izHWO3gM6iPbafcGZ1JHYrclBHjBVqhKWL05Il/SE7A6c1xDfh20W3Ydj+C/+H6a3Wb5g==
+X-Received: by 2002:a17:902:bf0b:b029:d8:f677:30f2 with SMTP id bi11-20020a170902bf0bb02900d8f67730f2mr1209361plb.25.1606889030866;
+        Tue, 01 Dec 2020 22:03:50 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id x16sm600470pjh.39.2020.12.01.22.03.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Dec 2020 22:03:50 -0800 (PST)
+Date:   Tue, 1 Dec 2020 22:03:47 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     u.kleine-koenig@pengutronix.de, linux-kernel@vger.kernel.org,
+        f.fainelli@gmail.com, linux-pwm@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        wahrenst@gmx.net, linux-input@vger.kernel.org,
+        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        p.zabel@pengutronix.de, linux-gpio@vger.kernel.org,
+        linus.walleij@linaro.org, linux-clk@vger.kernel.org,
+        sboyd@kernel.org, linux-rpi-kernel@lists.infradead.org,
+        bgolaszewski@baylibre.com, andy.shevchenko@gmail.com
+Subject: Re: [PATCH v5 08/11] input: raspberrypi-ts: Release firmware handle
+ when not needed
+Message-ID: <20201202060347.GA2034289@dtor-ws>
+References: <20201123183833.18750-1-nsaenzjulienne@suse.de>
+ <20201123183833.18750-9-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201123183833.18750-9-nsaenzjulienne@suse.de>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Bartosz,
+Hi Nicolas,
 
-On Tue, Dec 01 2020, Bartosz Golaszewski wrote:
-> On Thu, Nov 19, 2020 at 2:47 PM Baruch Siach <baruch@tkos.co.il> wrote:
->> On Thu, Nov 19 2020, Andrew Lunn wrote:
->> >> >> @@ -1200,6 +1235,13 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
->> >> >>
->> >> >>   devm_gpiochip_add_data(&pdev->dev, &mvchip->chip, mvchip);
->> >> >>
->> >> >> + /* Some MVEBU SoCs have simple PWM support for GPIO lines */
->> >> >> + if (IS_ENABLED(CONFIG_PWM)) {
->> >> >> +         err = mvebu_pwm_probe(pdev, mvchip, id);
->> >> >> +         if (err)
->> >> >> +                 return err;
->> >> >> + }
->> >> >> +
->> >> >
->> >> > The existing error handling looks odd here. Why is there no goto
->> >> > err_domain when probing the PWMs fails? I wonder if this a bug from me
->> >> > from a long time again?
->> >>
->> >> What would you release under the err_domain label? As far as I can see
->> >> all resources are allocated using devres, and released automatically on
->> >> failure exit.
->> >
->> > The IRQ domain is still registers. So once the memory is automatically
->> > freed, don't we have a potential use after free?
->>
->> This patch moves PWM registration before IRQ domain registration for
->> another reason as mentioned in the commit log. So this might
->> incidentally fix the bug.
->>
->> Would you prefer a separate patch for that with a 'Fixes:
->> 757642f9a584e8' tag?
->
-> Baruch: does this series conflict with the fix you sent? I'm thinking
-> about how to take it through the next and fixes trees.
+On Mon, Nov 23, 2020 at 07:38:29PM +0100, Nicolas Saenz Julienne wrote:
+> Use devm_rpi_firmware_get() so as to make sure we release RPi's firmware
+> interface when unbinding the device.
 
-Yes, It conflicts.
+I do not believe this comment is correct any longer. Otherwise:
 
-I can send in a single series v3 of the fix along with the other patches
-rebased on top. Would that work for you?
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Thanks,
-baruch
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> 
+> ---
+> 
+> Changes since v3:
+>  - Release firmware handle in probe function
+> 
+> Changes since v2:
+>  - Use devm_rpi_firmware_get(), instead of remove function
+> 
+>  drivers/input/touchscreen/raspberrypi-ts.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/touchscreen/raspberrypi-ts.c b/drivers/input/touchscreen/raspberrypi-ts.c
+> index ef6aaed217cf..5000f5fd9ec3 100644
+> --- a/drivers/input/touchscreen/raspberrypi-ts.c
+> +++ b/drivers/input/touchscreen/raspberrypi-ts.c
+> @@ -160,7 +160,7 @@ static int rpi_ts_probe(struct platform_device *pdev)
+>  	touchbuf = (u32)ts->fw_regs_phys;
+>  	error = rpi_firmware_property(fw, RPI_FIRMWARE_FRAMEBUFFER_SET_TOUCHBUF,
+>  				      &touchbuf, sizeof(touchbuf));
+> -
+> +	rpi_firmware_put(fw);
+>  	if (error || touchbuf != 0) {
+>  		dev_warn(dev, "Failed to set touchbuf, %d\n", error);
+>  		return error;
+> -- 
+> 2.29.2
+> 
 
 -- 
-                                                     ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+Dmitry
