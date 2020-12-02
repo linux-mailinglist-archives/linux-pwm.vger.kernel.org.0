@@ -2,58 +2,33 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF2BA2CC068
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Dec 2020 16:11:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF8442CC32F
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Dec 2020 18:14:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730378AbgLBPK3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 2 Dec 2020 10:10:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730380AbgLBPK2 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 2 Dec 2020 10:10:28 -0500
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BEB8C0617A6
-        for <linux-pwm@vger.kernel.org>; Wed,  2 Dec 2020 07:09:48 -0800 (PST)
-Received: by mail-wm1-x341.google.com with SMTP id a3so8944151wmb.5
-        for <linux-pwm@vger.kernel.org>; Wed, 02 Dec 2020 07:09:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=oOSicCWhNpoN2Xb8hfcdhiDNzylSo2X/NngolxOC8vQ=;
-        b=VDelKcaY4dVlNWOPXMkFf5mSXUkNLpgLiq61inVRo15dob72+uGh1D9f5e4VkqWOzI
-         u0EHXHU0xohcCj4fmAeQeKP3TXa+vjSI8eNdR74HCDe+UHd9U/DGkrpts1l5adsgcqRQ
-         nfawWVLe5huBvNv3/DutS9t31Sr2Xr9Z01YLLlIxupe+KJnOZK9uRi4CROMt46bfcEYk
-         lqZD+9hDlvOIJs67RAEup4JAo8+NuIgARwg97o7VFnRkSVnMbiXA/FV7aVvtTp2ielGk
-         6kScFx954N9zYr98z5jyAfvmvdp4VwaaaudFbytw/6KBilM4p6zn/3BR8b/mdXllr5Sa
-         2png==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=oOSicCWhNpoN2Xb8hfcdhiDNzylSo2X/NngolxOC8vQ=;
-        b=ny+JQ1I0DaZrLizO2b8R7V+ZA/5ltT32qPUlrqw0Qj5godTwfKrhXOkzqOGblkDQFc
-         ghniul3AYBXvcP1ObMN/Rv/WldH5uZ1ZuChp+auOS+ghujo7fKSftgj9qM/FW4Uh8cMK
-         5dbK/CB9tqhyDRAs0ISg2FfqJSV6qNoNjat5yH8n2mbGJzhoUjbV1Jb1Go3tvDI56yLc
-         vwchVrJR/5pztGEvAuHLLFxGa3/YOYjbOGY4VaSKodBLy06VLmx2+xMZXJJO6XiPkeBP
-         wF3WC+Qe93zgF0osUfjN0934tdStUaDFthNq1AThwmfVQgXB5dn7jA6mRCQGaHiNgkBx
-         y4cw==
-X-Gm-Message-State: AOAM5324b2NxA0nmb0hBVwW+pWS9Oce56qeGpLHenVReeCVqAdBCp3NX
-        +mk1USK3hpOJHPgEfmniVc17kg==
-X-Google-Smtp-Source: ABdhPJyY6iTjOclycbgMdZR1BJM/NQs428i4F9BST8rtkZMQKzAhUor3EpfauPJw0gENxlNhnY3zKw==
-X-Received: by 2002:a7b:c19a:: with SMTP id y26mr2548794wmi.20.1606921786422;
-        Wed, 02 Dec 2020 07:09:46 -0800 (PST)
-Received: from dell ([91.110.221.235])
-        by smtp.gmail.com with ESMTPSA id s4sm2676916wra.91.2020.12.02.07.09.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Dec 2020 07:09:45 -0800 (PST)
-Date:   Wed, 2 Dec 2020 15:09:43 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        id S1727035AbgLBROA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 2 Dec 2020 12:14:00 -0500
+Received: from mout.gmx.net ([212.227.15.18]:39967 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726276AbgLBROA (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 2 Dec 2020 12:14:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1606929099;
+        bh=pQC+UTEB5yU7IDsAP8sscDmvQ/csugMq2wi4Lt2jCMA=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=A0lCja33qclyOmZ7pNpDKQShzqbo23g+otRjsFG0Jw0PPfURqItluSbaPQ3YKyUF2
+         /RK3dxDCkrc6NHp/8TeNxUMBqOOaiDFcE+v4Bu9XbMWvwVZsYkk8zr5SUo46fApa9v
+         Pu91t1T++C4moITBAUkKhFYpVavUc6ELNLTrtAgc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([37.201.214.162]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MyKDe-1jz1Db2IqC-00yhlw; Wed, 02
+ Dec 2020 18:11:39 +0100
+Date:   Wed, 2 Dec 2020 18:11:33 +0100
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
@@ -79,49 +54,98 @@ Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
 Subject: Re: [PATCH v4 3/7] mfd: Add base driver for Netronix embedded
  controller
-Message-ID: <20201202150943.GN4801@dell>
+Message-ID: <X8fKxdIqCbHtx38Q@latitude>
 References: <20201122222739.1455132-1-j.neuschaefer@gmx.net>
  <20201122222739.1455132-4-j.neuschaefer@gmx.net>
  <20201202130520.GL4801@dell>
  <X8ed7stMOGhnZ18T@latitude>
+ <20201202150943.GN4801@dell>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="CjPGjgSPWBKyBoQi"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <X8ed7stMOGhnZ18T@latitude>
+In-Reply-To: <20201202150943.GN4801@dell>
+X-Provags-ID: V03:K1:pby5GaQCe/HvbnOvEPJyjfFrmN1ZR4ZMPcfMTgZaH6QQIMsS9Kk
+ 4X7RFptBlMUrsOi/IIHFOdGz6JOATLTuLKB+sNi0sga4tNzYQZnvZYKpySbykNt/qhlpN9m
+ 2GhhtQC00i2p8m4LQZtIchq7CW5lOPahB2AIqYhkP2inWc46iGs+vRKE07MafwuO4RGt9gy
+ 0RI3dJrCYEJYrXML1pzIA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:TNBPRIlwunk=:Nsl6q2hLwYL/UQGmoy/mDT
+ nJeEY3anUdcnRMg89CcfnQn78e6G0Gyc0oVud99TyvgqFlcXd6k4FNsiO4B35wvTAOFKOwSbF
+ j9XMa3HTtStNcWOtJ8DUtja29Hl2V/cLObQAka/FWDxFpyJpS6pLc+TmmaTH2Fnpwwq032ktD
+ DpxadmmYTOh5J8sxT5O4qDNDw/kUVan8bxlIvJsS0PBtDJpmhhxdBaEail1revilANxYSDsGv
+ co8wnWFiZSFKL2K8rFDqmnt4Nw3r/dz6vqxIThJhYno2HR5PSKxjWsHAk8MGk/btb9h7xz6z+
+ Dg5J7rm4dDhdvm4LdVxf3JOWpQbgjN+ju4qNlRPTRn0aB+zauWeQ2cAiea48st9hoZYtchwwU
+ zobmBt0lksLNGetBv5g+S2tJX1e5fF6NuE1P02PAysh19jJ9V817wRFS6bzcDj/+fSOHk6/Ry
+ ngmiSJD0cAD7lcYiUDhe7VURl68v3n6KAWqCiVuBra9bMP2/EhxnP9xIZG5U4kGAEAXufzzXm
+ VBaAow2uTDxd5GVswv9/2fDh26MTtmGkikNEhkXzA8oXrykeLUmmFFeIMxgsRZvP5eTrj3Utm
+ HsTRlXQz6AdN7mmavpGPHNOHs2Q8WFlVTECfnBY70ri0LEzrgqYXDJ/cjlFrW7GTd9qhnAjjf
+ tuIeuWrNQeo2/PApJ8l+stvGPZfYcSkEf87UPXYMFYDvtOfZtrkPAsV4oz7diaOmu2RNCiyfk
+ jrGR58sioE3IWAfT9PFH0f/b+JobE9C6xXwMtmq6cfNw1vtqEV2bBGM3xDwtwOshPISSCxaEn
+ kIbtFEA7j4EAyvMpq+s6NsLg+cZ8XAx/LUsbR5SWvdMEZEBrGwyvEXeG402lbtNQ1l66Ok951
+ koPkNlYD/HEYykIASRyQ==
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 02 Dec 2020, Jonathan Neuschäfer wrote:
 
-> On Wed, Dec 02, 2020 at 01:05:20PM +0000, Lee Jones wrote:
-> > On Sun, 22 Nov 2020, Jonathan Neuschäfer wrote:
-> [...]
-> > > +	/* Bail out if we encounter an unknown firmware version */
-> > > +	switch (version) {
-> > > +	case 0xd726: /* found in Kobo Aura */
-> > 
-> > No magic numbers.
-> > 
-> > Please submit a subsequent patch to define this.
-> 
-> Will do.
-> 
-> But I don't think I'll be able to give it a more meaningful name than
-> NTXEC_VERSION_D726. I don't have a good overview of which versions
-> appear in which devices. "0xd726 found in Kobo Aura" only means that;
-> I don't know if it's the only version used in the Kobo Aura, and I don't
-> know if the Kobo Aura is the only device where it is used.
+--CjPGjgSPWBKyBoQi
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Defines are not set in stone.
+On Wed, Dec 02, 2020 at 03:09:43PM +0000, Lee Jones wrote:
+> On Wed, 02 Dec 2020, Jonathan Neusch=C3=A4fer wrote:
+>=20
+> > On Wed, Dec 02, 2020 at 01:05:20PM +0000, Lee Jones wrote:
+> > > On Sun, 22 Nov 2020, Jonathan Neusch=C3=A4fer wrote:
+> > [...]
+> > > > +	/* Bail out if we encounter an unknown firmware version */
+> > > > +	switch (version) {
+> > > > +	case 0xd726: /* found in Kobo Aura */
+> > >=20
+> > > No magic numbers.
+> > >=20
+> > > Please submit a subsequent patch to define this.
+> >=20
+> > Will do.
+> >=20
+> > But I don't think I'll be able to give it a more meaningful name than
+> > NTXEC_VERSION_D726. I don't have a good overview of which versions
+> > appear in which devices. "0xd726 found in Kobo Aura" only means that;
+> > I don't know if it's the only version used in the Kobo Aura, and I don't
+> > know if the Kobo Aura is the only device where it is used.
+>=20
+> Defines are not set in stone.
+>=20
+> They can evolve over time as more is known.
+>=20
+> NTXEC_KOBO_AURA would be fine for now.
 
-They can evolve over time as more is known.
+Alright.
 
-NTXEC_KOBO_AURA would be fine for now.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks,
+Jonathan Neusch=C3=A4fer
+
+--CjPGjgSPWBKyBoQi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl/HyrUACgkQCDBEmo7z
+X9ujoRAAiSfqDRe/Gtnw9hmQ5U6LeACNBPYHEExRWA9+KkwWBO6oVYGD06v1QLp/
+7M9dBhcudCM7OXobAwKgZWlnDOTgTct1TNehCOzq7ZyCUbz1oe5+QN+KY98RQNgK
+2ZxEIJFrCoyWSBrPRH6qAiFDb3E28xIYJmZmX/EoHYOiVUfeo9DaaiLTZrIOapRg
+jjUZ5SDM99aB7z2TGjdjpSyRee+t0jSNgvrdb+z+oJ0ODiKJmWYVvCtHWtiZ+30J
+h5z31aKESIm2BaAxM6Xdv2m4OvWURx61gVCx51KVELcwGDtza2nz9osBrcLWqiWm
+OVBszstZwniWDNHqEGx5D4jnYdzLE6YG2ll5O9E3fPzrx3Vr28xmabea8bLiw6gF
+v1jDpZIy/Vx9vxz5+baXfPFLHBqLqNmsXHW0r4EAcNDyBy3B97Qq1R64nCBPKt7c
+3wV+5ja9hykCjQLXAoH9TuATnTP7d5Ya4+njW6KP2p9p6PocSrG9mkKHlgucZGNZ
+ZYGOndbFNw16IOyHhu5Vr8LnvND7qZiYbP1i16L3CVduulbnJGVdWF3v1iH8IHHD
+yb67MJGHa+qDRI1AAsRt0KgM8Pd9sRmrqIxFDlOp0LOscg45FifdV8k5WjQ79hkT
+s5oiVIYAZ0bHyKLggR/Q3yvBFG695uXZucUUZMKj9WyBTYZOsfQ=
+=OnND
+-----END PGP SIGNATURE-----
+
+--CjPGjgSPWBKyBoQi--
