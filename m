@@ -2,88 +2,86 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B031A2CD50F
-	for <lists+linux-pwm@lfdr.de>; Thu,  3 Dec 2020 13:02:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 190B02CD99C
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Dec 2020 15:53:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730308AbgLCMCs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 3 Dec 2020 07:02:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45514 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729035AbgLCMCs (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Dec 2020 07:02:48 -0500
-Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03623C061A4D
-        for <linux-pwm@vger.kernel.org>; Thu,  3 Dec 2020 04:02:08 -0800 (PST)
-Received: by mail-oi1-x236.google.com with SMTP id t205so1857893oib.12
-        for <linux-pwm@vger.kernel.org>; Thu, 03 Dec 2020 04:02:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=qBaAYKZF7FP3opw0GgVwIo/crpaYDCrYJXpX61SYQiw=;
-        b=tf1CyDFJrqYkcwdy7w+IqQm+bMij6x84cGF7KCWyK0BkIQiCQgdZETQfs5WIkEOB+D
-         f6rZGIs4AV5XCnI9Yqni9yR+zotRzhW6NpqumY0WinxItKgVzHICuW9h59bKLghQ/xZi
-         HGzSEPFluz02KFwliNqWVUzSoKgBdu4vf46GHW4pd4I8R8crk0DeU0jZZTjCUPQSLPiK
-         zqLdIxS7X5jVkqEQ+ISIQ6MT1kV62rg4WtEp1vTbUCnqEWGekaj01hU6dDAMnYe1Lo7x
-         IBt3ulfVMhFblMkLRi5elLc3UKBzMqDzZujjKc2QPep2tD4S4bJSBOC5x7a4PmSto/QX
-         bpjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=qBaAYKZF7FP3opw0GgVwIo/crpaYDCrYJXpX61SYQiw=;
-        b=CbjfkeTfnZtlg1jAmTi3/2SwIhG6DIGOlqmUIJi7rTxkOAPSa0GJfos1KltXUyIYrZ
-         stiQ7CocjjeSX5JaZ/Zr2vEqqyYwxhcWuAUSE2ML1hwgUU97qzJj6W7ps6dSU+RL88hp
-         Z/lov9kPyFGwTCb8G+F+GailVUtu4m9o93FcaMGio2jAJP5kX2wK/aKNj8oF/gI1ijgL
-         BCTT+OwOYoeMyc26vf+XQK5wPfPPKwOhCRjn7RzCAQHuNrU543a3LIRwMQ15stN7yRgf
-         foIsR3ojSzvnytvZojux+/ARjxn4pGwQihIMAt4mboHRp8YKE29VPNI8M/yO8t5o6RKh
-         DxFg==
-X-Gm-Message-State: AOAM5306zAqrwi//VL/q68MyWfsz03ahn9e9rT/4dz8xk4gtKUDQiueQ
-        5dfQofVTRgsmuYTcwUTvzjg2tXzHqQ6NxG5HqA==
-X-Google-Smtp-Source: ABdhPJxktgMlbFL2bLHdUssHALmhOpF8kfqOehXsMbqkKHQUNnIo6jBsASkxZ2WedYyar0tbwDTPiO5ixAjtfODR9rc=
-X-Received: by 2002:aca:af4a:: with SMTP id y71mr1502265oie.178.1606996927387;
- Thu, 03 Dec 2020 04:02:07 -0800 (PST)
+        id S1727682AbgLCOxg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 3 Dec 2020 09:53:36 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57454 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726452AbgLCOxf (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 3 Dec 2020 09:53:35 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id D6E6DAC6A;
+        Thu,  3 Dec 2020 14:52:53 +0000 (UTC)
+Message-ID: <25466e2a562765be1d67abd2d1bdae1a089a8d33.camel@suse.de>
+Subject: Re: [PATCH v5 08/11] input: raspberrypi-ts: Release firmware handle
+ when not needed
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-kernel@vger.kernel.org,
+        f.fainelli@gmail.com, linux-pwm@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        wahrenst@gmx.net, linux-input@vger.kernel.org,
+        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        p.zabel@pengutronix.de, linux-gpio@vger.kernel.org,
+        linus.walleij@linaro.org, linux-clk@vger.kernel.org,
+        sboyd@kernel.org, linux-rpi-kernel@lists.infradead.org,
+        bgolaszewski@baylibre.com, andy.shevchenko@gmail.com
+Date:   Thu, 03 Dec 2020 15:52:52 +0100
+In-Reply-To: <20201202060347.GA2034289@dtor-ws>
+References: <20201123183833.18750-1-nsaenzjulienne@suse.de>
+         <20201123183833.18750-9-nsaenzjulienne@suse.de>
+         <20201202060347.GA2034289@dtor-ws>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-ZvftALHIaTsXsRIracDG"
+User-Agent: Evolution 3.38.2 
 MIME-Version: 1.0
-From:   Johannes Pointner <h4nn35.work@gmail.com>
-Date:   Thu, 3 Dec 2020 13:00:56 +0100
-Message-ID: <CAHvQdo1CEQfD4gUG7gVFMqaohXAq-dZiz84VY1ZrVN6DdnRBkQ@mail.gmail.com>
-Subject: pwm: imx27: pwm-backlight strange behavior
-To:     u.kleine-koenig@pengutronix.de, thierry.reding@gmail.com
-Cc:     linux-pwm@vger.kernel.org, linux-imx@nxp.com
-Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello,
 
-I just tested 5.10-rc6 with a imx6dl-board and found an issue
-regarding the pwm-backlight.
-Using 5.10 at about level 67 I got a new maximum and with level 68
-it's restarting at about level 1.
-This was working properly for me with kernel 5.4.
+--=-ZvftALHIaTsXsRIracDG
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I tracked down the commit, which I think is responsible for the new behavior:
-commit aef1a3799b5c ("pwm: imx27: Fix rounding behavior")
-Reverting this commit fixes it for me.
+On Tue, 2020-12-01 at 22:03 -0800, Dmitry Torokhov wrote:
+> Hi Nicolas,
+>=20
+> On Mon, Nov 23, 2020 at 07:38:29PM +0100, Nicolas Saenz Julienne wrote:
+> > Use devm_rpi_firmware_get() so as to make sure we release RPi's firmwar=
+e
+> > interface when unbinding the device.
+>=20
+> I do not believe this comment is correct any longer. Otherwise:
+>=20
+> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Has anyone seen a similar behavior? Is something wrong with my
-setup/configuration?
+Yes, sorry for that. I'll update it.
 
-My devicetree backlight configuration looks like this:
-pwms = <&pwm4 0 5000000>;
-brightness-levels = <
-0   1   2   3   4   5   6   7
- 8   9  10  11  12  13  14  15
-16  17  18  19  20  21  22  23
-24  25  26  27  28  29  30  31
-32  33  34  35  36  37  38  39
-40  41  42  43  44  45  46  47
-48  49  50  51  52  53  54  55
-56  57  58  59  60  61  62  63
-64  65  66  67  68  69  70  71
-72  73  74  75  76  77  78  79
-80  81  82  83  84  85  86  87
-88  89  90  91  92  93  94  95
-96  97  98  99 100>;
+Regards,
+Nicolas
 
-Thanks,
-Hannes
+
+--=-ZvftALHIaTsXsRIracDG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl/I+8QACgkQlfZmHno8
+x/7NvQf+JfeK0Lnf/15akeGZ/8CgqH3D9RSZKgyFKFIcOAUVnKXWdodRdXxrVu0+
+1VgbGz2N5efgb/8exdYKRQqJine/T/NLCHW1PcrUE/NJPvJZ+JdM8P+JcOndFCv3
+ERWwKGhxK5gboL1Av3jiy9rUGSc/xDfmV5JZVDGnaANaDx7TWE0ZrznAqmwLhxfb
+qWo3bToylX8NAWP5vNs24bzPP7KyQHBwXDNuC3LIg3n9D5aj8s/qq/ZbHK3upjIG
+M/3jrHsvITNvyvy5xVhJhlzywtd2780n2VbwUW4JkfxELPxeCrJRmSyop46k98zX
+qBEeTzyBfM9kHKAcklkuqve2moyBtw==
+=2QiO
+-----END PGP SIGNATURE-----
+
+--=-ZvftALHIaTsXsRIracDG--
+
