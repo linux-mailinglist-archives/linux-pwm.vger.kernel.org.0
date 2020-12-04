@@ -2,99 +2,139 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 203532CEE63
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Dec 2020 13:53:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 477E42CEEBE
+	for <lists+linux-pwm@lfdr.de>; Fri,  4 Dec 2020 14:25:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbgLDMxG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 4 Dec 2020 07:53:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50588 "EHLO
+        id S1728948AbgLDNZV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 4 Dec 2020 08:25:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbgLDMxG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 4 Dec 2020 07:53:06 -0500
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA27C0613D1
-        for <linux-pwm@vger.kernel.org>; Fri,  4 Dec 2020 04:52:19 -0800 (PST)
-Received: by mail-ej1-x644.google.com with SMTP id d17so8489842ejy.9
-        for <linux-pwm@vger.kernel.org>; Fri, 04 Dec 2020 04:52:19 -0800 (PST)
+        with ESMTP id S1728113AbgLDNZU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 4 Dec 2020 08:25:20 -0500
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DAEFC061A4F
+        for <linux-pwm@vger.kernel.org>; Fri,  4 Dec 2020 05:24:40 -0800 (PST)
+Received: by mail-wr1-x441.google.com with SMTP id x6so1368861wro.11
+        for <linux-pwm@vger.kernel.org>; Fri, 04 Dec 2020 05:24:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Oylrc0uqpT7rXT0yMKZnwvKFGY3fe2zGWD5fRYQnkx0=;
-        b=Ljfx/2118E/eUylhoO0m8f50LM1MY3BmbUwP1bLGtlGrKWNvxFbut+172iPtL0FYGn
-         p8LYQlGmI8TF7E3NGS+XXW3ocKwSiK2niCW23XO5+EEGhbNM7DgonjLkYUCzUEhUwGU8
-         GYE8wMYOVOMd6Gkt2Tthq3WUqeZg9SIND4aBdXwwXrqRbkfnXMwTvjGM7mvpPkMhVHZf
-         evKtMjeX71xyiWiCUQrkJCmmOgcPFQHPXZ+5i8c/M0y789J/RLdreQughpjIhHI6Tc1L
-         4saQ0A16dXmJ0vEuNKrJVf4jakWyTH83lYJiYR208/Duvy3NUCRYhDCXBpqSyyWeGevM
-         Jmcg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=G2i/87OWKoOd5RyqrzLXRtNep0fvq8PXweoPtpWUKlU=;
+        b=Iymadjrwejs2qqHd/20RZPYXsszWqeOAa5hGJ+fNvvymZEiwTBSpa/0UfaAmfKG5De
+         FSnijVJ9dl+GS2tzE+3tt0YCodlCpcIqe7TS18NrSX1GfI6mGYgLxeVah6DClTDKUvpJ
+         ko1iYX/WK9lvozK4BFFZB+T+i1PrcypCf84jd/2eUDRi0W/hcO7WFQ/k4GonSJYa+nsT
+         V9cfPEFG4g2DFKQ6H1ie3JDuelEz6xl+t9oBzrQm6Vw+3LhTR8XDQZ7TaXjjiD29GLG3
+         er3SJlq9RVUPtRukUqfp9/w66OnoR4dbhWt1qVNUxqbzWcb9BYZhKHqJ20vDyKFWcFUP
+         qU4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Oylrc0uqpT7rXT0yMKZnwvKFGY3fe2zGWD5fRYQnkx0=;
-        b=jrWo7DS9kHPjwuOrD7WEXtlgXAofIrHOk0g1Pa8hpZoKbZkOFm4tH1msWrMFk7OrmM
-         QoGDD0ib92ByT7Te/XomKoYn2FShptxxUEr9I5Opve3nRHg1SVDKg0fWlvucvwo5+T0J
-         m8Gri7XmoJNB4cFmCErD4U5IbPMGY8FMFxzD6y5dTvPjCJttAvUwRI5a7kjNp/ZzZA/L
-         Y/XkXKcCDA+0YlARGaWbInzYGheJVjxawUNARYMUgrClCqpPXvJutWw3EHoutBVco5ht
-         e9l6kt79LP1Y8XCdDuwE991qwmVfT9rhoDn1hdMuVyZmQ9A+ZWRbtSX0Nn/NK91y0gr4
-         hoUA==
-X-Gm-Message-State: AOAM530+PRmMDj3T7P/79kpnHFOqGuVWMaWDvYsCNh2thxuDM0yS6LEv
-        L/mXTUqLCz/vI+w7s1FywyI=
-X-Google-Smtp-Source: ABdhPJySa462TDd9QUnsEm3zaRA58N+DWk56jOVDb/ojkxrA+Pze0RxnTWE/bWkOp5GgnWpGLliTZA==
-X-Received: by 2002:a17:906:b7d6:: with SMTP id fy22mr6960867ejb.219.1607086338532;
-        Fri, 04 Dec 2020 04:52:18 -0800 (PST)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id u1sm3406497edf.65.2020.12.04.04.52.17
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=G2i/87OWKoOd5RyqrzLXRtNep0fvq8PXweoPtpWUKlU=;
+        b=D4SblVUDRgHCA65qIOcgYtRZAlhg+r9mM8ljIX5dX2bqDwh8VvZFJ+BN1WDh1dh/eW
+         fjt5OfhEdn6vHcVepEuo+YGTgfzp5zf/nHSiXdFH0aBlTIxxV9e9vRaAt4YIyp4E2FMM
+         xAOfuP9JSDg9rTKuqsLZfa4x6Ypc5tOjlGvKVBRFNXfzywxVQGFJ8VOyAjIZBvAD+yOw
+         atgPC6fekLXpX/ghsByyR4a98l33KE9o5FCdU9/3TxooGVA8urLufjYcG9Sdr83Cck3F
+         YJXU1WOq1NgFeYcYLma4EY5VTUUj8OcwlBTTmx4nIoZdrihSBp9ohlTnDYqtgY/IxbpW
+         1r2A==
+X-Gm-Message-State: AOAM5338N0aeCF9GkzaUaU1SVSDTN5q/SF9yOQ48fMgcMr8S3pgYYJql
+        Du4sa8PkPOxq2sbaRl8zqpFkxQ==
+X-Google-Smtp-Source: ABdhPJw/lImQ2qsKmyC6KbfVbRJXc9+9sN15nwpomRdqtYGu5fNOSSIByz0/KKdt7nWbiknysMRHDA==
+X-Received: by 2002:adf:f9c5:: with SMTP id w5mr4828051wrr.69.1607088278856;
+        Fri, 04 Dec 2020 05:24:38 -0800 (PST)
+Received: from dell ([91.110.221.235])
+        by smtp.gmail.com with ESMTPSA id b12sm2894213wmj.2.2020.12.04.05.24.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Dec 2020 04:52:17 -0800 (PST)
-From:   Thierry Reding <thierry.reding@gmail.com>
+        Fri, 04 Dec 2020 05:24:37 -0800 (PST)
+Date:   Fri, 4 Dec 2020 13:24:36 +0000
+From:   Lee Jones <lee.jones@linaro.org>
 To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        linux-pwm@vger.kernel.org, Michael Walle <michael@walle.cc>
-Subject: [PATCH] pwm: sl28cpld: Set driver data before registering the PWM chip
-Date:   Fri,  4 Dec 2020 13:52:13 +0100
-Message-Id: <20201204125213.3426567-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.29.2
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        kernel@pengutronix.de, Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH RESEND for 5.10] pwm: sl28cpld: fix getting driver data
+ in pwm callbacks
+Message-ID: <20201204132436.GO4801@dell>
+References: <20201203084142.3810204-1-u.kleine-koenig@pengutronix.de>
+ <X8oubGP9CvoOQKtF@ulmo>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <X8oubGP9CvoOQKtF@ulmo>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The PWM core code can call back into the PWM chip's implementation at
-any time after the chip has been registered. Since the driver uses
-driver data to store contextual information, registration must happen
-after the driver data has been set.
+On Fri, 04 Dec 2020, Thierry Reding wrote:
 
-Reported-by: Michael Walle <michael@walle.cc>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
----
- drivers/pwm/pwm-sl28cpld.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> On Thu, Dec 03, 2020 at 09:41:42AM +0100, Uwe Kleine-König wrote:
+> > Currently .get_state() and .apply() use dev_get_drvdata() on the struct
+> > device related to the pwm chip. This only works after .probe() called
+> > platform_set_drvdata() which in this driver happens only after
+> > pwmchip_add() and so comes possibly too late.
+> > 
+> > Instead of setting the driver data earlier use the traditional
+> > container_of approach as this way the driver data is conceptually and
+> > computational nearer.
+> > 
+> > Fixes: 9db33d221efc ("pwm: Add support for sl28cpld PWM controller")
+> > Tested-by: Michael Walle <michael@walle.cc>
+> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > ---
+> > Hello Linus,
+> > 
+> > Thierry (who usually sends PWM patches to you) didn't react to this
+> > patch sent to the pwm Mailinglist last week
+> > (https://lore.kernel.org/r/20201124212432.3117322-1-u.kleine-koenig@pengutronix.de)
+> > yet.
+> > 
+> > Given v5.10 isn't far away any more and I don't know when Thierry will
+> > take a look and act, I'm sending this directly to you. The affected
+> > driver was new in 5.10-rc1 and at least once the unpatched driver
+> > created an oops:
+> > 
+> > 	https://lavalab.kontron.com/scheduler/job/108#L950
+> > 
+> > Michael Walle who tested this patch is the original author of the
+> > driver. IMHO it would be good to have this fixed before 5.10.
+> > 
+> > If you prefer a pull request, I can setup something (but I don't have
+> > access to Thierry's tree, so it will be for a repository that's new to
+> > you).
+> > 
+> > Best regards
+> > Uwe
+> > 
+> >  drivers/pwm/pwm-sl28cpld.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> I thought I had seen you discuss this with Lee and gotten the impression
+> that you were going to respin this to move the platform_set_drvdata() to
+> an earlier point, which I think is the more correct approach.
+> 
+> container_of() isn't exactly wrong, but it's really just papering over
+> the fact that platform_set_drvdata() is in the wrong place, so I'd
+> prefer a patch that does that instead.
+> 
+> Now, I can no longer find a link to the discussion that I recall, so it
+> was either on IRC (where I don't have any logs) or I'm loosing my mind.
 
-diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
-index 5046b6b7fd35..c5866a2b47b5 100644
---- a/drivers/pwm/pwm-sl28cpld.c
-+++ b/drivers/pwm/pwm-sl28cpld.c
-@@ -230,6 +230,8 @@ static int sl28cpld_pwm_probe(struct platform_device *pdev)
- 	chip->base = -1;
- 	chip->npwm = 1;
- 
-+	platform_set_drvdata(pdev, priv);
-+
- 	ret = pwmchip_add(&priv->pwm_chip);
- 	if (ret) {
- 		dev_err(&pdev->dev, "failed to add PWM chip (%pe)",
-@@ -237,8 +239,6 @@ static int sl28cpld_pwm_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	platform_set_drvdata(pdev, priv);
--
- 	return 0;
- }
- 
+Don't worry, you are (probably!) still quite sane.
+
+The discussion happened over IRC.  I highlighted my concerns, but Uwe
+didn't respond to them.  This patch was the next time I saw anything
+on the subject.
+
+> I'll prepare a patch that moves platform_set_drvdata() for Michael to
+> test. If that works I'll send a PR with fixes to Linus early next week.
+
 -- 
-2.29.2
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
