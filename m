@@ -2,81 +2,98 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 08B202CED47
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Dec 2020 12:41:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ADB6A2CED77
+	for <lists+linux-pwm@lfdr.de>; Fri,  4 Dec 2020 12:49:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbgLDLlT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 4 Dec 2020 06:41:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39608 "EHLO
+        id S1730104AbgLDLtI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 4 Dec 2020 06:49:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgLDLlS (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 4 Dec 2020 06:41:18 -0500
-Received: from gofer.mess.org (gofer.mess.org [IPv6:2a02:8011:d000:212::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87151C0613D1;
-        Fri,  4 Dec 2020 03:40:38 -0800 (PST)
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id 74F6CC63B3; Fri,  4 Dec 2020 11:40:36 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mess.org; s=2020;
-        t=1607082036; bh=X9lIo10egin06IAG613mKzLT1qTrqN6EI08M7P8iL14=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k91fdar8ih3LWqV4ABQ52GXceFOVNux9RtwLETtUZmOZgEWGLQvZHbooqWzFb2OHS
-         vh/AORxGLnyumsBW+lAHt/ywhyogH+0jHnb91N1YJQmsxzVoM5g9+v6biDdm9BAdX3
-         sU0HthYz+/tj0JOwowyva6yjEaB+7AyhSfovWiP1MQn/e4cpcn6IDg2gafsUdQRz4x
-         RO6ALNaTcx1WaMuN60+de9FFKYm0v2e8SuoRPDBWUxfTvJ1ecvCXLy8HBGMgy+34fl
-         nmTDz9EbdCwuqqorzgFGbxndfsOXL7ht3MLwkmPweRe2I1EyWDzQMrMvlgvY96Tfq3
-         V9QuXxJzIgNig==
-Date:   Fri, 4 Dec 2020 11:40:36 +0000
-From:   Sean Young <sean@mess.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Lino Sanfilippo <LinoSanfilippo@gmx.de>, thierry.reding@gmail.com,
-        lee.jones@linaro.org, nsaenzjulienne@suse.de, f.fainelli@gmail.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] pwm: bcm2835: Support apply function for atomic
- configuration
-Message-ID: <20201204114036.GB6547@gofer.mess.org>
-References: <202011281128.54eLfMWr-lkp@intel.com>
- <1606564926-19555-1-git-send-email-LinoSanfilippo@gmx.de>
- <20201129181050.p6rkif5vjoumvafm@pengutronix.de>
- <4683237c-7b40-11ab-b3c0-f94a5dd39b4d@gmx.de>
- <20201204112115.wopx5p5elgte7gad@pengutronix.de>
+        with ESMTP id S1730100AbgLDLtH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 4 Dec 2020 06:49:07 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD06CC0613D1
+        for <linux-pwm@vger.kernel.org>; Fri,  4 Dec 2020 03:48:27 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kl9ZZ-0001sU-ST; Fri, 04 Dec 2020 12:48:25 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kl9ZY-0005FI-VR; Fri, 04 Dec 2020 12:48:24 +0100
+Date:   Fri, 4 Dec 2020 12:48:24 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Johannes Pointner <h4nn35.work@gmail.com>
+Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        linux-imx@nxp.com
+Subject: Re: pwm: imx27: pwm-backlight strange behavior
+Message-ID: <20201204114824.u7mxu6alcsjqry5y@pengutronix.de>
+References: <CAHvQdo1CEQfD4gUG7gVFMqaohXAq-dZiz84VY1ZrVN6DdnRBkQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="akxxxlmvotgctxlz"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201204112115.wopx5p5elgte7gad@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHvQdo1CEQfD4gUG7gVFMqaohXAq-dZiz84VY1ZrVN6DdnRBkQ@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Dec 04, 2020 at 12:21:15PM +0100, Uwe Kleine-König wrote:
-> Hello Lino,
-> 
-> On Fri, Dec 04, 2020 at 12:42:15AM +0100, Lino Sanfilippo wrote:
-> > On 29.11.20 at 19:10, Uwe Kleine-König wrote:
-> > > You're storing an unsigned long long (i.e. 64 bits) in an u32. If
-> > > you are sure that this won't discard relevant bits, please explain
-> > > this in a comment for the cursory reader.
-> > 
-> > What about an extra check then to make sure that the period has not been truncated,
-> > e.g:
-> > 
-> > 	value = DIV_ROUND_CLOSEST_ULL(state->period, scaler);
-> > 
-> > 	/* dont accept a period that is too small or has been truncated */
-> > 	if ((value < PERIOD_MIN) ||
-> > 	    (value != DIV_ROUND_CLOSEST_ULL(state->period, scaler)))
-> > 		return -EINVAL;
-> 
-> I'd make value an unsigned long long and check for > 0xffffffff instead
-> of repeating the (expensive) division. (Hmm, maybe the compiler is smart
-> enough to not actually repeat it, but still.)
 
-I wonder where you got that idea from.
+--akxxxlmvotgctxlz
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hello Johannes,
 
-Sean
+On Thu, Dec 03, 2020 at 01:00:56PM +0100, Johannes Pointner wrote:
+> I just tested 5.10-rc6 with a imx6dl-board and found an issue
+> regarding the pwm-backlight.
+> Using 5.10 at about level 67 I got a new maximum and with level 68
+> it's restarting at about level 1.
+> This was working properly for me with kernel 5.4.
+
+Reverting only the last hunk helps already I assume? I starred at the
+patch for some time now and don't see a relevant change.
+
+Can you please enable PWM_DEBUG and TRACING in the kernel configuration
+and then do:
+
+	echo 1 > /sys/kernel/debug/tracing/events/pwm/enable
+
+reproduce a wrong setting (the less you do other than that the easier it
+will be to analyse the trace) and then send me the contents of
+
+	/sys/kernel/debug/tracing/trace
+
+? Also please lookup the frequency of the per clk (grep for "pwm" in
+/sys/kernel/debug/clk/clk_summary).
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--akxxxlmvotgctxlz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/KIgUACgkQwfwUeK3K
+7AlRhQf/ThBUSs6hWjklAYA1OMgeFEGbCL6C8eHtep7ccVMDwD+nmLsCfS4u74LN
+TZFah4VP30USfPnrrHybgdCBgbVF7rfXuG3w/tAOQ9uyuJQArrUrNt1EYM1dE5a6
++JXoky4bYkUoEfID6Af8jnLwj7GdB83zMZRbPZZtGO2RN2RQgkJ1/MJJcc9hdMpb
+I1SSw/LGxokOjA066xNZGOPZt7cbQujGGOgdq+F7HMCfGL3UsCbgOdpjTskUgpF6
+oX/Gezuh5o3zx6DvMG3VkiZEQonuC8lOXa2IBnNh/mTChgdH1eKsDAwqts4P5YU3
+txPGVynJpFFargndZoKUy5U1GcJNjQ==
+=bs1s
+-----END PGP SIGNATURE-----
+
+--akxxxlmvotgctxlz--
