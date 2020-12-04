@@ -2,95 +2,111 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F0792CF710
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Dec 2020 23:46:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD6A82CF75D
+	for <lists+linux-pwm@lfdr.de>; Sat,  5 Dec 2020 00:20:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgLDWpl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 4 Dec 2020 17:45:41 -0500
-Received: from gofer.mess.org ([88.97.38.141]:41021 "EHLO gofer.mess.org"
+        id S1726112AbgLDXR4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 4 Dec 2020 18:17:56 -0500
+Received: from mout.gmx.net ([212.227.15.18]:39063 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726111AbgLDWpl (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 4 Dec 2020 17:45:41 -0500
-X-Greylist: delayed 50438 seconds by postgrey-1.27 at vger.kernel.org; Fri, 04 Dec 2020 17:45:40 EST
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id 8F2F8C63F3; Fri,  4 Dec 2020 22:44:58 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mess.org; s=2020;
-        t=1607121898; bh=PYH8ww1xg7JJTR9yV5V04QIPlPtwuoeubNCoR6ffAlo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SOU4hQfIGHnzuYrHWcRjab1uQ0fVMy/3s/r8IjYVXz2h02cPZUmubrdovi8MbRDlE
-         bHb7/3pxfeh7AFUthUsi95Zd9+m5K2YM6qS0cU+b5zQ1oYERTt8r7XZ6GgbZs3ItPS
-         M8dM7uJqtyF/XPm2Bcwiz7hvizQTfWFIaOo0osQGKeq3PjntFVXqOpwQXtzwelGpB/
-         cS/LvisM55v9yKB4spqMwd7cIdq4EXQg0u5IxnF3rzFfKvLsav9hpY/gLcgcnncPye
-         EAQFBXdQVe/da5YPSLpHvavRDJZ/gt42IysVJMORk5tuMWDn6/EMraYCh3YOEZhs9Q
-         a2eYr9/zZJ28g==
-Date:   Fri, 4 Dec 2020 22:44:58 +0000
-From:   Sean Young <sean@mess.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Lino Sanfilippo <LinoSanfilippo@gmx.de>, thierry.reding@gmail.com,
-        lee.jones@linaro.org, nsaenzjulienne@suse.de, f.fainelli@gmail.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+        id S1725885AbgLDXR4 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 4 Dec 2020 18:17:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1607123765;
+        bh=wLumdO+uCQMFjKePTBtgmZ5TIViEg4Fo+8J7DjCzRTQ=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=hsd+Aq6saaHs37rnpipMUaUFeH3/yAQOmRQWhGs2SdM7+6c1CP3CeBSJ170b4WfyJ
+         kIfz4F1hKfAC0Xm6XRvy7Jg4AevxCU4IUYHwHZ91rcZ3N728/xPFhq3qdeYyC7XxJX
+         x2mXqbenj9yBEM59pqTp1TQlYwFcIOqVayEuFrCY=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.178.51] ([78.42.220.31]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MvK0R-1jubA53QUj-00rJy8; Sat, 05
+ Dec 2020 00:16:04 +0100
 Subject: Re: [PATCH v2] pwm: bcm2835: Support apply function for atomic
  configuration
-Message-ID: <20201204224458.GA15986@gofer.mess.org>
+To:     Sean Young <sean@mess.org>
+Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        thierry.reding@gmail.com, lee.jones@linaro.org,
+        nsaenzjulienne@suse.de, f.fainelli@gmail.com, rjui@broadcom.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-pwm@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 References: <202011281128.54eLfMWr-lkp@intel.com>
  <1606564926-19555-1-git-send-email-LinoSanfilippo@gmx.de>
  <20201129181050.p6rkif5vjoumvafm@pengutronix.de>
  <4683237c-7b40-11ab-b3c0-f94a5dd39b4d@gmx.de>
- <20201204112115.wopx5p5elgte7gad@pengutronix.de>
- <20201204114036.GB6547@gofer.mess.org>
- <20201204215525.uvjxlebth457aoj5@pengutronix.de>
+ <20201204084417.GA2154@gofer.mess.org>
+From:   Lino Sanfilippo <LinoSanfilippo@gmx.de>
+Message-ID: <e4a124a8-0905-4504-62e0-a809163775fe@gmx.de>
+Date:   Sat, 5 Dec 2020 00:16:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201204215525.uvjxlebth457aoj5@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20201204084417.GA2154@gofer.mess.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:dRjiz5QRIZAzWPKxdMiC16hqzB3oSyqLVo5HXxZKEnaHmrFffZh
+ ev1gFPCewmETUPYyeyeSAxVu+IpFKrCeBE+oIxnXwDA7Lw+a6SGh6fTNaWTsnQNTNvrZOuy
+ qL3U6+1ne9WLrC5LoETAEiri6/afCK+U0hLv7NdhrMCJVaPkJs6NPtv8FfJG/SJqLl80AH7
+ X8gbjmL65LTzBUbD+L4xQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qfbF1NQNmlU=:7PIPQydHq6zwsnI16HUYA+
+ xRYzg06p270IPAIVWwx4vImHDjyRar7fWhUrjB7RXHlMZ34F6H/1PhfiOzpzb+kKXQLstDtEA
+ j0WnS/+X/uAdA4AmwT+xtWWV37KaXVsl+6vObzs2JwMotcRdPThvWsD4FIf3rhZukA3yKZxqL
+ DG0Jz9GDGnxNufXdgFlE34R/o5TAzDNcw5HCuq8NGzVLXtY4AS21B2SoOLCuzX1Acr5S5qWc8
+ yDWbQZPX8XDh8mzJ98CudyCj1W3vhbG5anxXmQ8jtUUoGpYWxQEM4PEON1o3BwTB4DuKHjotz
+ ZqwmlmsQbmWGjm7uIRJqJKsY1mnEyscG6nULoIVnacEuN8BgjR+1/agUFcLYKtZRvcsLDPZ2G
+ qbFg06PyTH1hRq6d2XgEBjY4x+LUPH9y435IOZ6ccH+MC5DU68MR5k33IJRSs5gDsROuDcOy1
+ SXliN4ObNnWqid+AVoVOOzmOnvfLP2GcT8+3nO+or+9bMazBFhEFg+2vm4gd03k+PS4dCTeqi
+ fM816wqDxc+dR52Bqu4B5roANoMvKYIsvzqETQPeXRAGmi5YOdVlklol95+J1H6epvgo/swyk
+ VqXtBvi3kiWktuXJdW5sDmSCjjJjMLdcgoGWzFirZlrmXg8i095agaYCfOPEbrFfPIet251ig
+ Bv7LxRM/lDM5VcGn2V+IvLP08Vw7/z5aaDWzW1WPZGuK3Z2z2ZWEHUBi0xVM4+gzjPGR7bBdt
+ 8EOQyuPL9QOF+EJrWj6qUa3nAeMnOjl7WTKq0DA9y/DDUxkYRG/E+gfqKaCkqNKi+HGi/Cq2k
+ QhU9N/H+CZjHuPnIS4tVSCgUGRSgBvRWzSxKhT7YDJyWJilHJVoscAQn7fRkhNhZ/pmt1pfhT
+ VmZhA88UwriGTIHjQLFA==
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
+Hi Sean,
 
-On Fri, Dec 04, 2020 at 10:55:25PM +0100, Uwe Kleine-König wrote:
-> On Fri, Dec 04, 2020 at 11:40:36AM +0000, Sean Young wrote:
-> > On Fri, Dec 04, 2020 at 12:21:15PM +0100, Uwe Kleine-König wrote:
-> > > On Fri, Dec 04, 2020 at 12:42:15AM +0100, Lino Sanfilippo wrote:
-> > > > On 29.11.20 at 19:10, Uwe Kleine-König wrote:
-> > > > > You're storing an unsigned long long (i.e. 64 bits) in an u32. If
-> > > > > you are sure that this won't discard relevant bits, please explain
-> > > > > this in a comment for the cursory reader.
-> > > > 
-> > > > What about an extra check then to make sure that the period has not been truncated,
-> > > > e.g:
-> > > > 
-> > > > 	value = DIV_ROUND_CLOSEST_ULL(state->period, scaler);
-> > > > 
-> > > > 	/* dont accept a period that is too small or has been truncated */
-> > > > 	if ((value < PERIOD_MIN) ||
-> > > > 	    (value != DIV_ROUND_CLOSEST_ULL(state->period, scaler)))
-> > > > 		return -EINVAL;
-> > > 
-> > > I'd make value an unsigned long long and check for > 0xffffffff instead
-> > > of repeating the (expensive) division. (Hmm, maybe the compiler is smart
-> > > enough to not actually repeat it, but still.)
-> > 
-> > I wonder where you got that idea from.
-> 
-> I don't know how to honestly answer your question.
-> Which idea do you mean? That divisions are expensive? Or that compilers
-> might be smart? And do you consider it a good idea? Or do you disagree?
+On 04.12.20 at 09:44, Sean Young wrote:
 
-I had already made this exact suggestion -- and you had replied to my
-email making that suggestion -- before you emailed this. Granted, I said
-u64 and U32_MAX rather than unsigned long long and 0xffffffff.
+>> What about an extra check then to make sure that the period has not bee=
+n truncated,
+>> e.g:
+>>
+>> 	value =3D DIV_ROUND_CLOSEST_ULL(state->period, scaler);
+>>
+>> 	/* dont accept a period that is too small or has been truncated */
+>> 	if ((value < PERIOD_MIN) ||
+>> 	    (value !=3D DIV_ROUND_CLOSEST_ULL(state->period, scaler)))
+>> 		return -EINVAL;
+>
+> Rather than doing another 64 bit division which is expensive (esp on 32 =
+bit
+> kernels), you could assign to u64 and check:
+>
+> 	if (value < PERIOD || value > U32_MAX)
+> 		return -EINVAL;
+>
 
-However, I should not have sent that snotty email. It's irrelevant.
+Sound reasonable, I will adjust this.
 
-My apologies.
+>
+> There was a problem where the carrier is incorrect for some IR hardware
+> which uses a carrier of 455kHz. With periods that small, rounding errors
+> do really matter and rounding down might cause problems.
+>
+> A policy of rounding down the carrier is not the right thing to do
+> for pwm-ir-tx, and such a change will probably break pwm-ir-tx in some
+> edge cases.
+>
 
 
-Sean
+Thanks for this background information.
+
+Regards,
+Lino
+
