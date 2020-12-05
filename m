@@ -2,271 +2,312 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A2112CFE5D
-	for <lists+linux-pwm@lfdr.de>; Sat,  5 Dec 2020 20:27:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CF032CFF58
+	for <lists+linux-pwm@lfdr.de>; Sat,  5 Dec 2020 22:46:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgLET0E (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 5 Dec 2020 14:26:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50820 "EHLO
+        id S1726524AbgLEVok (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 5 Dec 2020 16:44:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgLET0D (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 5 Dec 2020 14:26:03 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC7FAC0613D1
-        for <linux-pwm@vger.kernel.org>; Sat,  5 Dec 2020 11:25:22 -0800 (PST)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kldBA-0004YV-Vd; Sat, 05 Dec 2020 20:25:12 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kldB8-0005Qv-Lb; Sat, 05 Dec 2020 20:25:10 +0100
-Date:   Sat, 5 Dec 2020 20:25:10 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Sean Young <sean@mess.org>
-Cc:     Lino Sanfilippo <LinoSanfilippo@gmx.de>, thierry.reding@gmail.com,
-        lee.jones@linaro.org, nsaenzjulienne@suse.de, f.fainelli@gmail.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] pwm: bcm2835: Support apply function for atomic
- configuration
-Message-ID: <20201205192510.o76pjs3yc524nwvm@pengutronix.de>
-References: <202011281128.54eLfMWr-lkp@intel.com>
- <1606564926-19555-1-git-send-email-LinoSanfilippo@gmx.de>
- <20201129181050.p6rkif5vjoumvafm@pengutronix.de>
- <4683237c-7b40-11ab-b3c0-f94a5dd39b4d@gmx.de>
- <20201204084417.GA2154@gofer.mess.org>
- <20201204111326.qjux6k2472dmukot@pengutronix.de>
- <20201204113846.GA6547@gofer.mess.org>
- <20201204232834.xzsafkzfmfpw7pqz@pengutronix.de>
- <20201205173444.GA1265@gofer.mess.org>
+        with ESMTP id S1725601AbgLEVok (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 5 Dec 2020 16:44:40 -0500
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AECA5C0613D1
+        for <linux-pwm@vger.kernel.org>; Sat,  5 Dec 2020 13:43:59 -0800 (PST)
+Received: by mail-lj1-x242.google.com with SMTP id r18so10765269ljc.2
+        for <linux-pwm@vger.kernel.org>; Sat, 05 Dec 2020 13:43:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=RBWJc2G89rIviA8W1HJZcxquyFaN4q5Tk2nXV5IYFT8=;
+        b=ngQCxYjs09w2IUkZQQv65wg65Y44ICVTZjWlmfTk3c3i8EtA86pK3occf7iQ0Um64L
+         JBSI93nTRfcerxOb64hACqA8ZOl6uiXhQIFVQ0uXoYYeOLz5QI8vviNhl7KBlzgmaYZg
+         VhI3OchjGabrBq/ruUIToTYcObgdPsy3plBRP2F8myBeZ3DSwY88OJwns9VV3hyVMxXW
+         5gOXjBz62HJvAhm7sKbJ44RacvtEkhLa7hGVMpWc68wL1a9EOSEb8KA0sQd6VIL4eP/K
+         9Xn1UWe1XVfrzX4XGxkWkHoVfP4AfELh8CqwVX54eJhVYgJ5bAZJaLG8dg/SQJi3yfXY
+         jVcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=RBWJc2G89rIviA8W1HJZcxquyFaN4q5Tk2nXV5IYFT8=;
+        b=B6WkKr5Qyw5ThN/7zNKGz+S7/p5ql8b677pWGin96Bfrrg2vPUNeC8xBrTtApHPYPm
+         oEK6LlWQqHbCc5v8s2O9FATTjC8dI9ySdzGnTGHe0349VODfH/j+dXX3cNhUiUvRWTrj
+         3TBpePW8HUbUA+thErQ204Yt/ecWNAmnngQdO4lghWz28NlwA1kM9IUC91T+wC94BwHr
+         1iTyQxoGhY3uOberz1Xkt6MXdIgSKugg5DMGjkM9n/iisZljPyyFSfJv9/XW0YHmFuEu
+         AOuDN+kO7PVeNQyQK9j/SrPw9P7npZ0Mk1vA7qp47QZSB15cwHGOaecqg+fclIYiUtlD
+         g7uw==
+X-Gm-Message-State: AOAM531okbsWACKAAFzSX6l5/DCk2eqfk5uB70k4MGlYk3RZBzVH7bMh
+        7CLruIyGdbkl/ME37GyK//hOg0fFT8NJkA==
+X-Google-Smtp-Source: ABdhPJx3UgOFo4kX4ZZTNgTDgG1BpSc8E846SbjCu2sFGLKYS3neGZ/vWzpv7rfx84OcmEM/QMZNtA==
+X-Received: by 2002:a2e:2a46:: with SMTP id q67mr533215ljq.331.1607204637810;
+        Sat, 05 Dec 2020 13:43:57 -0800 (PST)
+Received: from einstein.dilieto.eu (einstein.dilieto.eu. [188.68.43.228])
+        by smtp.gmail.com with ESMTPSA id r15sm52665lfn.309.2020.12.05.13.43.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 05 Dec 2020 13:43:57 -0800 (PST)
+Date:   Sat, 5 Dec 2020 22:43:53 +0100
+From:   Nicola Di Lieto <nicola.dilieto@gmail.com>
+To:     linux-pwm@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 1/2] pwm: pwm-gpio: New driver
+Message-ID: <20201205214353.xapax46tt5snzd2v@einstein.dilieto.eu>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wdm6e7mw35nruoak"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20201205173444.GA1265@gofer.mess.org>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+User-Agent: NeoMutt/20170113 (1.7.2)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+This new driver allows pulse width modulating any GPIOs using
+a high resolution timer. It is fully generic and can be useful
+in a variety of situations. As an example I used it to provide
+a pwm to the pwm-beeper driver so that my embedded system can
+produce tones through a piezo buzzer connected to a GPIO which
+unfortunately is not hardware PWM capable.
 
---wdm6e7mw35nruoak
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Nicola Di Lieto <nicola.dilieto@gmail.com>
+---
+ MAINTAINERS            |   7 ++
+ drivers/pwm/Kconfig    |  10 +++
+ drivers/pwm/Makefile   |   1 +
+ drivers/pwm/pwm-gpio.c | 172 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 190 insertions(+)
+ create mode 100644 drivers/pwm/pwm-gpio.c
 
-Hello Sean,
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ebe4829cdd4d..fe9b5b00ba94 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14215,6 +14215,13 @@ F:	Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+ F:	Documentation/hwmon/pwm-fan.rst
+ F:	drivers/hwmon/pwm-fan.c
+ 
++PWM GPIO DRIVER
++M:	Nicola Di Lieto <nicola.dilieto@gmail.com>
++L:	linux-pwm@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
++F:	drivers/pwm/pwm-gpio.c
++
+ PWM IR Transmitter
+ M:	Sean Young <sean@mess.org>
+ L:	linux-media@vger.kernel.org
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 63be5362fd3a..5432084c6276 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -181,6 +181,16 @@ config PWM_FSL_FTM
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-fsl-ftm.
+ 
++config PWM_GPIO
++	tristate "PWM GPIO support"
++	depends on GPIOLIB
++	depends on HIGH_RES_TIMERS
++	help
++	  Generic PWM for software modulation of GPIOs
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-gpio.
++
+ config PWM_HIBVT
+ 	tristate "HiSilicon BVT PWM support"
+ 	depends on ARCH_HISI || COMPILE_TEST
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index cbdcd55d69ee..eea0216215a7 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -15,6 +15,7 @@ obj-$(CONFIG_PWM_CRC)		+= pwm-crc.o
+ obj-$(CONFIG_PWM_CROS_EC)	+= pwm-cros-ec.o
+ obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
+ obj-$(CONFIG_PWM_FSL_FTM)	+= pwm-fsl-ftm.o
++obj-$(CONFIG_PWM_GPIO)		+= pwm-gpio.o
+ obj-$(CONFIG_PWM_HIBVT)		+= pwm-hibvt.o
+ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
+ obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
+diff --git a/drivers/pwm/pwm-gpio.c b/drivers/pwm/pwm-gpio.c
+new file mode 100644
+index 000000000000..6f425f2d02fe
+--- /dev/null
++++ b/drivers/pwm/pwm-gpio.c
+@@ -0,0 +1,172 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Generic software PWM for modulating GPIOs
++ *
++ * Copyright 2020 Nicola Di Lieto
++ *
++ * Author: Nicola Di Lieto <nicola.dilieto@gmail.com>
++ */
++
++#include <linux/atomic.h>
++#include <linux/err.h>
++#include <linux/gpio/consumer.h>
++#include <linux/hrtimer.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++#include <linux/workqueue.h>
++
++struct pwm_gpio {
++	struct pwm_chip chip;
++	struct gpio_desc *desc;
++	struct work_struct work;
++	struct hrtimer timer;
++	atomic_t enabled;
++	u64 ton_ns;
++	u64 toff_ns;
++	enum pwm_polarity polarity;
++	bool output;
++};
++
++static void pwm_gpio_work(struct work_struct *work)
++{
++	struct pwm_gpio *pwm_gpio = container_of(work, struct pwm_gpio, work);
++
++	gpiod_set_value_cansleep(pwm_gpio->desc,
++		(pwm_gpio->polarity == PWM_POLARITY_INVERSED) ^ pwm_gpio->output);
++}
++
++enum hrtimer_restart pwm_gpio_do_timer(struct hrtimer *handle)
++{
++	struct pwm_gpio *pwm_gpio = container_of(handle, struct pwm_gpio, timer);
++	u64 ns;
++
++	if (!atomic_read(&pwm_gpio->enabled))
++		return HRTIMER_NORESTART;
++
++	if (pwm_gpio->output) {
++		ns = pwm_gpio->toff_ns;
++		pwm_gpio->output = false;
++	} else {
++		ns = pwm_gpio->ton_ns;
++		pwm_gpio->output = true;
++	}
++
++	schedule_work(&pwm_gpio->work);
++	hrtimer_forward(handle, hrtimer_get_expires(handle), ns_to_ktime(ns));
++
++	return HRTIMER_RESTART;
++}
++
++static inline struct pwm_gpio *to_pwm_gpio(struct pwm_chip *_chip)
++{
++	return container_of(_chip, struct pwm_gpio, chip);
++}
++
++static void pwm_gpio_free(struct pwm_chip *chip, struct pwm_device *pwm)
++{
++	struct pwm_gpio *pwm_gpio = to_pwm_gpio(chip);
++
++	cancel_work_sync(&pwm_gpio->work);
++	gpiod_set_value_cansleep(pwm_gpio->desc,
++		pwm_gpio->polarity == PWM_POLARITY_INVERSED);
++}
++
++static int pwm_gpio_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			  const struct pwm_state *state)
++{
++	struct pwm_gpio *pwm_gpio = to_pwm_gpio(chip);
++	u64 period = clamp(state->period, U64_C(50000), U64_C(1000000000));
++	u64 duty_cycle = clamp(state->duty_cycle, U64_C(0), period);
++
++	pwm_gpio->ton_ns = duty_cycle;
++	pwm_gpio->toff_ns = period - duty_cycle;
++	pwm_gpio->polarity = state->polarity;
++
++	if (state->enabled && !atomic_read(&pwm_gpio->enabled)) {
++		atomic_set(&pwm_gpio->enabled, 1);
++		hrtimer_start(&pwm_gpio->timer, 0, HRTIMER_MODE_REL);
++	} else if (!state->enabled && atomic_read(&pwm_gpio->enabled)) {
++		atomic_set(&pwm_gpio->enabled, 0);
++		pwm_gpio->output = false;
++		schedule_work(&pwm_gpio->work);
++	}
++	return 0;
++}
++
++static void pwm_gpio_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++			       struct pwm_state *state)
++{
++	struct pwm_gpio *pwm_gpio = to_pwm_gpio(chip);
++
++	state->duty_cycle = pwm_gpio->ton_ns;
++	state->period = pwm_gpio->ton_ns + pwm_gpio->toff_ns;
++	state->polarity = pwm_gpio->polarity;
++	state->enabled = atomic_read(&pwm_gpio->enabled);
++}
++
++static const struct pwm_ops pwm_gpio_ops = {
++	.free = pwm_gpio_free,
++	.apply = pwm_gpio_apply,
++	.get_state = pwm_gpio_get_state,
++	.owner = THIS_MODULE,
++};
++
++static int pwm_gpio_probe(struct platform_device *pdev)
++{
++	struct pwm_gpio *pwm_gpio;
++
++	pwm_gpio = devm_kzalloc(&pdev->dev, sizeof(*pwm_gpio), GFP_KERNEL);
++	if (!pwm_gpio)
++		return -ENOMEM;
++
++	pwm_gpio->desc = devm_gpiod_get(&pdev->dev, NULL, GPIOD_OUT_LOW);
++	if (IS_ERR(pwm_gpio->desc))
++		return PTR_ERR(pwm_gpio->desc);
++
++	INIT_WORK(&pwm_gpio->work, pwm_gpio_work);
++
++	hrtimer_init(&pwm_gpio->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	pwm_gpio->timer.function = pwm_gpio_do_timer;
++	pwm_gpio->chip.dev = &pdev->dev;
++	pwm_gpio->chip.ops = &pwm_gpio_ops;
++	pwm_gpio->chip.npwm = 1;
++
++	platform_set_drvdata(pdev, pwm_gpio);
++
++	return pwmchip_add(&pwm_gpio->chip);
++}
++
++static int pwm_gpio_remove(struct platform_device *pdev)
++{
++	struct pwm_gpio *pwm_gpio = platform_get_drvdata(pdev);
++
++	hrtimer_cancel(&pwm_gpio->timer);
++
++	return pwmchip_remove(&pwm_gpio->chip);
++}
++
++#ifdef CONFIG_OF
++static const struct of_device_id pwm_gpio_of_match[] = {
++	{ .compatible = "pwm-gpio", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, pwm_gpio_of_match);
++#endif
++
++static struct platform_driver pwm_gpio_driver = {
++	.probe = pwm_gpio_probe,
++	.remove = pwm_gpio_remove,
++	.driver = {
++		.name = "pwm-gpio",
++		.of_match_table = of_match_ptr(pwm_gpio_of_match),
++	},
++};
++module_platform_driver(pwm_gpio_driver);
++
++MODULE_DESCRIPTION("PWM GPIO driver");
++MODULE_ALIAS("platform:pwm-gpio");
++MODULE_AUTHOR("Nicola Di Lieto");
++MODULE_LICENSE("GPL");
+-- 
+2.11.0
 
-On Sat, Dec 05, 2020 at 05:34:44PM +0000, Sean Young wrote:
-> On Sat, Dec 05, 2020 at 12:28:34AM +0100, Uwe Kleine-K=F6nig wrote:
-> > On Fri, Dec 04, 2020 at 11:38:46AM +0000, Sean Young wrote:
-> > > On Fri, Dec 04, 2020 at 12:13:26PM +0100, Uwe Kleine-K=F6nig wrote:
-> > > > On Fri, Dec 04, 2020 at 08:44:17AM +0000, Sean Young wrote:
-> > > > > On Fri, Dec 04, 2020 at 12:42:15AM +0100, Lino Sanfilippo wrote:
-> > > > > > > You're storing an unsigned long long (i.e. 64 bits) in an u32=
-=2E If
-> > > > > > > you are sure that this won't discard relevant bits, please ex=
-plain
-> > > > > > > this in a comment for the cursory reader.
-> > > > > >=20
-> > > > > > > Also note that round_closed is probably wrong, as .apply() is
-> > > > > > > supposed to round down the period to the next achievable peri=
-od. (But
-> > > > > > > fixing this has to do done in a separate patch.)
-> > > > > >=20
-> > > > > > According to commit 11fc4edc4 rounding to the closest integer h=
-as been introduced
-> > > > > > to improve precision in case that the pwm controller is used by=
- the pwm-ir-tx driver.
-> > > > > > I dont know how strong the requirement is to round down the per=
-iod in apply(), but I
-> > > > > > can imagine that this may be a good reason to deviate from this=
- rule.
-> > > > > > (CCing Sean Young who introduced DIV_ROUND_CLOSEST)
-> > > > >=20
-> > > > > There was a problem where the carrier is incorrect for some IR ha=
-rdware
-> > > > > which uses a carrier of 455kHz. With periods that small, rounding=
- errors
-> > > > > do really matter and rounding down might cause problems.
-> > > > >=20
-> > > > > A policy of rounding down the carrier is not the right thing to do
-> > > > > for pwm-ir-tx, and such a change will probably break pwm-ir-tx in=
- some
-> > > > > edge cases.
-> > > >=20
-> > > > IMO it's not an option to say: pwm-driver A is used for IR, so A's
-> > > > .apply uses round-nearest and pwm-driver B is used for $somethingel=
-se,
-> > > > so B's .apply uses round-down.
-> > >=20
-> > > I'm not saying that one driver should have one it one way and another=
- driver
-> > > another way.
-> >=20
-> > I read between your lines that you think that round-nearest is the
-> > single best strategy, is that right?
->=20
-> Certain the default strategy. When setting a pwm of period X, I would
-> expect it set it to the closest period it can match to X. Doing anything
-> else by default is a surprising API.
-
-This reminds me of a similar discussion about rounding in the clk
-framework which is an unsolved problem, too. It's unspecified how
-clk_set_rate and clk_round_rate behave. If you want to operate an IP
-block you usually have a fixed upper limit for the clock frequency and
-you want the clk as fast as possible. If you operate an UART you want
-the nearest match (for some definition of near, see below) to match the
-baud rate.
-
-> What real life uses-cases are there for round down? If you want to round
-> down, is there any need for round up?
-
-The scenario I have in mind is for driving a motor. I have to admit
-however that usually the period doesn't matter much and it's the
-duty_cycle that defines the motor's speed. So for this case the
-conservative behaviour is round-down to not make the motor run faster
-than expected.
-
-For other usecases (fan, backlight, LED) exactness typically doesn't
-matter that much.
-
-So we could find a compromise: round period to nearest and duty_cycle
-down. But I'm convinced this is a bad compromise because it's quite
-unintuitive.
-
-> Hypothetically you may want e.g. nearest to 100kHz but absolutely no less
-> than 100kHz. I don't know when this comes up, it would be interesting to
-> hear where this is needed.
-
-ack.
-
-> > > Why is is easier to implement?
-> >=20
-> > If pwm_apply_state (and so pwm_round_state) rounds down, you can achieve
-> > round-nearest (simplified: Ignoring polarity, just looking for period) =
-using:
-> >=20
-> > 	lower_state =3D pwm_round_state(pwm, target_state);
-> > 	upper_state =3D {
-> > 		.period =3D 2 * target_state.period - lower_state.period,
-> > 		...
-> > 	}
-> > 	tmp =3D pwm_round_state(pwm, upper)
-> >=20
-> > 	if tmp.period < target_state.period:
-> > 		# tmp =3D=3D lower_state
-> > 		return lower_state
-> >=20
-> > 	else while tmp.period > target_state.period:
-> > 		upper =3D tmp;
-> > 		tmp.period -=3D 1
-> > 		tmp =3D pwm_round_state(pwm, tmp)
-> >=20
-> > I admit it is not pretty. But please try to implement it the other way
-> > around (i.e. pwm_round_state rounding to nearest and search for a
-> > setting that yields the biggest period not above target.period without
-> > just trying all steps). I spend a few brain cycles and the corner cases
-> > are harder. (But maybe I'm not smart enough, so please convince me.)
->=20
-> Ok. Does pwm hardware always work on a linear scale?
-
-No. A quite usual setup is that the PWM hardware has a built-in divider.
-The details here vary heavily (range of the divider, some can only
-divide by powers of two, or by little integer multiples of powers of two
-=2E..)
-
-> > Note that with round-nearest there is another complication: Assume a PWM
-> > that can implement period =3D 500 =B5s and period =3D 1000 =B5s (and no=
-thing
-> > inbetween). That corresponds to the frequencies 2000 Hz and 1000 Hz.
-> > round_nearest for state with period =3D 700 =B5s (corresponding to 1428=
-=2E5714
-> > Hz) would then pick 500 =B5s (corresponding to 2000 Hz), right? So is
-> > round-nearest really what you prefer?
->=20
-> That is an interesting point. So, I guess the question is: do you want the
-> nearest period or the nearest frequency.
-
-I think to match a carrier frequency you want to minimize the deviation
-in period, not frequency. (That is, if you want to match 1000 Hz, 950 Hz
-is worse than 1050 Hz because with 950 Hz it takes little more than 19
-periods ((1/1000) / abs(1/950 - 1/1000)) until you have more than one
-period difference compared to 1000 Hz while with 1050 Hz it takes nearly
-21 periods ((1/1000) / abs(1/1050 - 1/1000)). (So this was a bit of a
-trick question because yes, you should prefer round-nearest, but it
-nicely shows the complexity of the topic.)
-
-> > For a quick (and maybe unreliable) overview:
-> >=20
-> > 	$ git grep -l _CLOSEST drivers/pwm/ | wc -l
-> > 	15
-> >=20
-> > so we might have 15 drivers that round to nearest and the remaining 40
-> > round down. (I checked a few and didn't find a false diagnose.)
-> >=20
-> > For me this isn't a clear indication that round-nearest is
-> > unconditionally better.
->=20
-> Just because some drivers don't use DIV_ROUND_CLOSEST() doesn't mean
-> it was considered by the driver author.
->=20
-> I think some drivers use DIV_ROUND_UP, e.g. pwm-sl28cpld.c.
-
-Yes, still the intention there (see the comment above DIV_ROUND_UP) is
-to round down the period. And rounding up the prescaler is right because
-a bigger divisor yields a lower period.
-=20
-> So there is no concensus between the pwm drivers as to what should be the
-> default.
-
-yes. And that's mostly because for a long time nobody cared for
-uniformity. Since some time I ensure for new drivers that they implement
-round-down, but touching older drivers is difficult because often there
-is no contact to someone who can test it, and even if there is someone,
-this doesn't mean others don't depend on the current behaviour.
-
-So this is kind of a chicken-and-egg problem. We should provide the
-option to consumers to choose their preferred rounding, but adding an
-API function with having lowlevel drivers implementing different
-behaviour is quite hard.
-
-> > What is the fact that convinces you that
-> > round-nearest is better in general?
->=20
-> Surely the general use-case is match frequency (or period!) as closely
-> as possible.
-
-Sounds tempting, but I'm not convinced enough to think this to be
-universally right.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---wdm6e7mw35nruoak
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/L3pMACgkQwfwUeK3K
-7AnZkAf8CWkUZ4jB7r7cV/9xR10+Dq4piFgIr1YpKGDX5BR7o0wmgjQPYsFSy+MJ
-KO9UpEcp3g8F6ai27brZVm0EsJD3zXvnTjPTu7HI2nqbp2bfanOBesg5LGTMxWtB
-tZqcFAMI5ldl71eZuPqjCd9DNxnUeLtD2EU031lSGfD8kzBz5d6LcOmi2mx6bg5R
-N+jEMdQACTF/pCYt3jjfNHaP1LAadtQIFW/dRWN/C2xrFQFk/Xmi6VVSbdWig10J
-2C/nSVHImGFuZs5B9bOK1CUqRBErx8oyhrJeaiotPh5PiAwW1XTMIG6hfZwFGwOq
-WVKtWjqLSj910cRBDTM1llUxW7MPMg==
-=kEAS
------END PGP SIGNATURE-----
-
---wdm6e7mw35nruoak--
