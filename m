@@ -2,121 +2,94 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A8A802CFF65
-	for <lists+linux-pwm@lfdr.de>; Sat,  5 Dec 2020 22:54:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA3792D0576
+	for <lists+linux-pwm@lfdr.de>; Sun,  6 Dec 2020 15:20:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725933AbgLEVxz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 5 Dec 2020 16:53:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45230 "EHLO
+        id S1727857AbgLFOU0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 6 Dec 2020 09:20:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgLEVxy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 5 Dec 2020 16:53:54 -0500
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2734C0613CF
-        for <linux-pwm@vger.kernel.org>; Sat,  5 Dec 2020 13:53:13 -0800 (PST)
-Received: by mail-lf1-x143.google.com with SMTP id u9so7110863lfm.1
-        for <linux-pwm@vger.kernel.org>; Sat, 05 Dec 2020 13:53:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=QF69uECAamzOWlaEn481WwcLAj1MiwOW4Kz1BWJF03c=;
-        b=sk+uNyFpdF8kFEyAikqH4AiCJGjXpLNtWAl9qFtzzlEztUc08zLWQZCjWj69QqimhS
-         seXY4BOhWswrOvthyWUsxiB4VVub+N+xDJ/Qw6f6QIqwblwcF92I0bgLOwFNaP7PiWb1
-         0ym0p7Ckg4hdc9CRXoDIP2NsVuqorZYcWU9fnW8HA6cBWdridf3jBqUGewZkg5XJO8Ck
-         nbswraXgNc0Igx0gr2Ky92QMGKHFEAISjFF5ausWQcE5Q8ZpX0BLG2Mk+abyLMY7qAgX
-         juIkjwK2CozSX1o1lg6qkqEdxvCfJMeJSl+xN9sFksOOeBgSose70zh9rX1kTaFnMey9
-         xImg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=QF69uECAamzOWlaEn481WwcLAj1MiwOW4Kz1BWJF03c=;
-        b=aQDZ68ZkJtxoskChvETIuxgYGo1fHPlReKCS6U8LVcV5aB2vCLB66KsXWo2iiPIF0J
-         jV6WVqApR5idQj+szORcO9yUcBeWy2ky+vd6/EDqBAuyOR31VykLV7lxlnC8gz/G3nEa
-         Ftyfk0E4DYA8FBmaQ9P3BeyeW44xQebmeAf7idO0PbHbunYnhflKaYwSP1VPeFqn3g3l
-         xsIifSccWsHv0Puxzg0OA5hE1hjGGDZx6WSk4zbWydueZwa3MYBRNjqkzch7apFOKjxM
-         rNMrYxfI4aiYHT1lKVq7zAfLg9Cb/XRrgMCEbdEhK6OuuaullAMvD4To0xM8ce7VTmmY
-         ZtAg==
-X-Gm-Message-State: AOAM532fg3Vp7vnBB6Oq8hrt6Wogs7IOvFpQuqH6RepQd/wmfS9eDlrE
-        vONfh1uY/0zIPR8OCf2AnIOg75LvyM0yjQ==
-X-Google-Smtp-Source: ABdhPJyrJA35HZahJpUIotKL61vnffBX2y/xEMuxzmvxKf4Zx/nDUO63CEjsLV45O2xmHK/la92/rg==
-X-Received: by 2002:a19:8207:: with SMTP id e7mr5693520lfd.372.1607205192256;
-        Sat, 05 Dec 2020 13:53:12 -0800 (PST)
-Received: from einstein.dilieto.eu (einstein.dilieto.eu. [188.68.43.228])
-        by smtp.gmail.com with ESMTPSA id u4sm2530851lju.47.2020.12.05.13.53.11
-        for <linux-pwm@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 05 Dec 2020 13:53:11 -0800 (PST)
-Date:   Sat, 5 Dec 2020 22:53:08 +0100
-From:   Nicola Di Lieto <nicola.dilieto@gmail.com>
-To:     linux-pwm@vger.kernel.org
-Subject: [PATCH 2/2] pwm: pwm-gpio: Add DT bindings
-Message-ID: <20201205215308.aczsyoclhi4qfhbw@einstein.dilieto.eu>
+        with ESMTP id S1726757AbgLFOU0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 6 Dec 2020 09:20:26 -0500
+Received: from gofer.mess.org (gofer.mess.org [IPv6:2a02:8011:d000:212::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFD6DC0613D0;
+        Sun,  6 Dec 2020 06:19:45 -0800 (PST)
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id 4F998C63D6; Sun,  6 Dec 2020 14:19:41 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mess.org; s=2020;
+        t=1607264381; bh=b+lxpFhX380M587pcy0Ld+WRWVJiMOZQGdYfRe41wBs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=t8uuCqeoDREUaHCJN3yn3zDTKf/wo6N1A+IrTAKE6hbJLJOzZ3DEo9p75zG8ETNeI
+         4YVLKwSK2Hjqpt/5faOEo27UhLxgiuRC8eRtPpzOO9660HPqc+vDt9H82WFGdhbDsx
+         3zUyV6uOpWty/QYKtdwdF0lXsococi/+bkEv5ahUjBVrQmdvYmD9eTcpBrir4RRU5r
+         k9ZeATD6ZWJ2r1F2eMSlOxn/JssRLcbhAiVhrrCpOza9vzeBfrslqcExrpHkauwcfg
+         RHRXXxJjguTLg6oJ5Tdnu+C5zf+5URo0Hd5Z0kYBeRk7AdlVyW4iEE0R8loE1Wonam
+         18h1BZGYAoI1g==
+Date:   Sun, 6 Dec 2020 14:19:41 +0000
+From:   Sean Young <sean@mess.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Lino Sanfilippo <LinoSanfilippo@gmx.de>, thierry.reding@gmail.com,
+        lee.jones@linaro.org, nsaenzjulienne@suse.de, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] pwm: bcm2835: Support apply function for atomic
+ configuration
+Message-ID: <20201206141941.GA24807@gofer.mess.org>
+References: <202011281128.54eLfMWr-lkp@intel.com>
+ <1606564926-19555-1-git-send-email-LinoSanfilippo@gmx.de>
+ <20201129181050.p6rkif5vjoumvafm@pengutronix.de>
+ <4683237c-7b40-11ab-b3c0-f94a5dd39b4d@gmx.de>
+ <20201204084417.GA2154@gofer.mess.org>
+ <20201204111326.qjux6k2472dmukot@pengutronix.de>
+ <20201204113846.GA6547@gofer.mess.org>
+ <20201204232834.xzsafkzfmfpw7pqz@pengutronix.de>
+ <20201205173444.GA1265@gofer.mess.org>
+ <20201205192510.o76pjs3yc524nwvm@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201205192510.o76pjs3yc524nwvm@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Added Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
+Hello Uwe,
 
-Signed-off-by: Nicola Di Lieto <nicola.dilieto@gmail.com>
----
- .../devicetree/bindings/pwm/pwm-gpio.yaml          | 42 ++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
+On Sat, Dec 05, 2020 at 08:25:10PM +0100, Uwe Kleine-König wrote:
+> On Sat, Dec 05, 2020 at 05:34:44PM +0000, Sean Young wrote:
+> > What real life uses-cases are there for round down? If you want to round
+> > down, is there any need for round up?
+> 
+> The scenario I have in mind is for driving a motor. I have to admit
+> however that usually the period doesn't matter much and it's the
+> duty_cycle that defines the motor's speed. So for this case the
+> conservative behaviour is round-down to not make the motor run faster
+> than expected.
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-gpio.yaml b/Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
-new file mode 100644
-index 000000000000..2e021ac6ff4a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
-@@ -0,0 +1,42 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/pwm-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Generic software PWM for modulating GPIOs
-+
-+maintainers:
-+  - Nicola Di Lieto <nicola.dilieto@gmail.com>
-+
-+properties:
-+  "#pwm-cells":
-+    description: |
-+      It must be 2. See pwm.yaml in this directory for a
-+      description of the cells format.
-+    const: 2
-+
-+  compatible:
-+    const: pwm-gpio
-+
-+  gpios:
-+    description:
-+      GPIO to be modulated
-+    maxItems: 1
-+
-+required:
-+  - "#pwm-cells"
-+  - compatible
-+  - gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    pwm0 {
-+        #pwm-cells = <2>;
-+        compatible = "pwm-gpio";
-+        gpios = <&gpio 1 GPIO_ACTIVE_HIGH>;
-+    };
--- 
-2.11.0
+I am reading here that for driving motors, only the duty cycle matters,
+not the period.
 
+> For other usecases (fan, backlight, LED) exactness typically doesn't
+> matter that much.
+
+So, the use-cases you have are driving motor, fan, backlight, and led.
+And in all these cases the exact Hz does not matter.
+
+The only uses case where the exact Hz does matter is pwm-ir-tx. 
+
+So, I gather there are no use-cases for round-down. Yes, should round-down
+be needed, then this is more difficult to implement if the driver always
+does a round-closest. But, since there is no reason to have round-down,
+this is all academic.
+
+Your policy of forcing new pwm drivers to use round-down is breaking
+pwm-ir-tx.
+
+Thanks,
+
+Sean
