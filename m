@@ -2,97 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67B7D2D1EBA
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Dec 2020 01:01:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA70A2D1F79
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Dec 2020 01:52:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgLHABr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 7 Dec 2020 19:01:47 -0500
-Received: from mout.gmx.net ([212.227.15.19]:48449 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbgLHABr (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 7 Dec 2020 19:01:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1607385603;
-        bh=wvtwafmRpa5o7FnknQH0FLf14PhWObhwf1sB2Xashig=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=bAYgifTVJ7vR2Ea2fItrfoK1BZS+/ht27lJjLRVNR5iAXHRY/M5StKlyDhimYcdO6
-         6hsUaNJQmbiR6goMzQSzDM/9bW2Qe5RYGo1vrnyPbSBvefLyVgla8KGzAbSEwZBbok
-         tDhVEJ5VVsPq7liNSzyO1YZ0pAC7Le+1/gbEvSMY=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.178.51] ([78.42.220.31]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N8GMk-1k8fqt11vc-014E2I; Tue, 08
- Dec 2020 01:00:03 +0100
-Subject: Re: [PATCH v2] pwm: bcm2835: Support apply function for atomic
- configuration
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Sean Young <sean@mess.org>
-Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
-        nsaenzjulienne@suse.de, f.fainelli@gmail.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-pwm@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <4683237c-7b40-11ab-b3c0-f94a5dd39b4d@gmx.de>
- <20201204084417.GA2154@gofer.mess.org>
- <20201204111326.qjux6k2472dmukot@pengutronix.de>
- <20201204113846.GA6547@gofer.mess.org>
- <20201204232834.xzsafkzfmfpw7pqz@pengutronix.de>
- <20201205173444.GA1265@gofer.mess.org>
- <20201205192510.o76pjs3yc524nwvm@pengutronix.de>
- <20201206141941.GA24807@gofer.mess.org>
- <20201207081628.tm3yg7az5k5sbivu@pengutronix.de>
- <20201207094320.GA10460@gofer.mess.org>
- <20201207135209.htp7plyotjxp37q2@pengutronix.de>
-From:   Lino Sanfilippo <LinoSanfilippo@gmx.de>
-Message-ID: <ad83f03b-869d-44e1-5db9-d5e91a0c0da3@gmx.de>
-Date:   Tue, 8 Dec 2020 01:00:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1728893AbgLHAvl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Dec 2020 19:51:41 -0500
+Received: from vsm-gw.hyogo-dai.ac.jp ([202.244.76.12]:35013 "EHLO
+        vsm-gw.hyogo-dai.ac.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728234AbgLHAvk (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Dec 2020 19:51:40 -0500
+X-Greylist: delayed 16991 seconds by postgrey-1.27 at vger.kernel.org; Mon, 07 Dec 2020 19:51:35 EST
+Received: from humans-kc.hyogo-dai.ac.jp (humans-kc.hyogo-dai.ac.jp [202.244.77.11])
+        by vsm-gw.hyogo-dai.ac.jp (Postfix) with ESMTP id DE24F1A606F;
+        Tue,  8 Dec 2020 04:09:26 +0900 (JST)
+Received: from humans-kc.hyogo-dai.ac.jp (humans-kc.hyogo-dai.ac.jp [127.0.0.1])
+        by postfix.imss71 (Postfix) with ESMTP id BC3D8382029;
+        Tue,  8 Dec 2020 04:09:26 +0900 (JST)
+Received: from hyogo-dai.ac.jp (unknown [202.244.77.11])
+        by humans-kc.hyogo-dai.ac.jp (Postfix) with SMTP id 426EA83825B;
+        Tue,  8 Dec 2020 04:09:26 +0900 (JST)
 MIME-Version: 1.0
-In-Reply-To: <20201207135209.htp7plyotjxp37q2@pengutronix.de>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:9LTnKuUWkzb+9t5TXmpWktlN8X27SbL8PRv/wO+Yb/T2Ncr1Oh7
- ROYMUo89lqZYg5T43iSExDPBF99psOQzkqsSKHvW30QRSmBpgODTqfLzELAD3LMW5HcqWeA
- 7+qSN3osa06fkvygaa1zQg7Dzg8ziHJ8URrmaIeGRgoif3k4Hw5w+l6245cFpzYDVtFz6n8
- NExj7xIsO0UWwzJ+TgmlQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qn4Zb7/VqAU=:SKP1eIFfNnl30EvA80MARf
- QqFrADljiJpGWQ7mnIqKI7R9tvbrMjHF5yeMZUeXlt91i4RACGzahV9v2IdXc/VZoUyfu+ajo
- oujMvUsg+deWlVTY7Livpe4PU7DxZEK9g19M/gCrbU1GJDHOM8i8UQrAOcOqfvgIheeb2pPNw
- CYlQ2x0YOEPUur4Sx5OZ9l6frviE0xzNrCXF0ADVZp7qBBLWGL7lw6SyzJZ+RZwb+cA7mSuYl
- v/9jbiwF9G5vQ0BCOwWJhqtwB0M9mWef8DDz44RZIlvBDZeXIiWV0KW3fKXVkM1coy+oPGmMF
- azCmkbA1cLB9oEG1Noqyq3azlkEY0u47cq6hlCt0jWLspYKKnan1b9srOUtUPRwf/PFE8tjC/
- 4mPZLTAUOB0erDLdL18qrqN60GPegVNrmeJRkMibhj6rmUMxfz/ktPrvfC6tSBLiuK8LqKh6p
- SOO2u4B4p4NCgZKkVQOvjOlsHZvkaI6F2ixjHZ8i1q5Fb3qIjLN46geBw8yXQ//RiMuHQAws/
- COqVNXPgoAOEJFxRcgNilOYcjBTZZZyC0qcGX0nYPUuU7KDRZ18aJXL/AnYhlTtLtRtPdIf5J
- WZEjIs3KFplP6xF8kzhJatgljXSBwQBDBEVS3QpTHEyqDKicSGZv/bMOoczqoRSakOVLsgwKi
- anrsfPlQJsqnimAv3PPy5I48f9uurlEr0qgurcgPVQAP+qtML9siyWFg19ic1jb1k65kQzkfB
- gb5+1U1VIN+GkTVyORDAR7TTmM84uSmV7syo0mBcJes6/jGAEqniNxrMILypd92CYVE9W6vkQ
- snAk9IZYuHzRzLIhxiuIcQHSrdfcUp1obv2j+uc9//vTfYAWsWJD//dliTTuY8egTnhLEc6cG
- IhNsYqG5vRrTzeakTAmw==
+Message-ID: <20201207190926.000057A2.0664@hyogo-dai.ac.jp>
+Date:   Tue, 08 Dec 2020 04:09:26 +0900
+From:   "Raymond " <hozumi@hyogo-dai.ac.jp>
+To:     <infocarferw1@aim.com>
+Reply-To: <infocarfer@aim.com>
+Subject: I am Vice Chairman of Hang Seng Bank, Dr. Raymond Chien
+         Kuo Fung I have Important Matter to Discuss with you concerning
+         my late client. Died without a NEXT OF KIN. Send me your private
+         email for full details information.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MAILER: Active! mail
+X-TM-AS-MML: disable
+X-TM-AS-Product-Ver: IMSS-7.1.0.1808-8.2.0.1013-25446.007
+X-TM-AS-Result: No--2.951-5.0-31-10
+X-imss-scan-details: No--2.951-5.0-31-10
+X-TM-AS-User-Approved-Sender: No
+X-TMASE-MatchedRID: X41QhRrT5f5ITndh1lLRASsOycAMAhSTkCM77ifYafsBLhz6t76Ce6P0
+        clhHAFPyJA6GJqxAEzL554DD9nXlqqPFjJEFr+olfeZdJ1XsoriOub3SYcq1hJf7eAx/Ae/AbQo
+        eraIcZBRw7u01FqNA2K1Ia4IbeAdLm9ukrtqhno/rIUidklntLAP5zT0d393cymsk/wUE4hoZaR
+        NzIP3XI5u3uLPgwbAMH5RdHnhWfwyq9gpuf+A6coDeeVSgzszVDx5n520Z3eZyT7DDRtYlKaWBy
+        ZE9nSaC/rhfyjvqkZu/pNa4BidtZEMMprcbiest
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
+email:kraymond75@aol.com
 
-On 07.12.20 at 14:52, Uwe Kleine-K=F6nig wrote:
 
->
-> Given that the bcm2835 driver is quite trivial I would be happy to
-> create a series that "fixes" the driver to round down and provide a
-> prototype for pwm_round_nearest for you to test on pwm-ir-tx. A willing
-> tester and a real use-case were the single two things that stopped me
-> investing time here.
->
-
-Should I send a v3 of the .apply() support for the bcm2835 driver before y=
-ou start
-such a rework? The v3 would contain the check against truncation of the pe=
-riod but
-keep the round-closest strategy as it is.
-
-Regards,
-Lino
 
