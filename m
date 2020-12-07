@@ -2,90 +2,185 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F2732D0CEE
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Dec 2020 10:23:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34D552D0D40
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Dec 2020 10:44:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726356AbgLGJW7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 7 Dec 2020 04:22:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgLGJW7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Dec 2020 04:22:59 -0500
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFF13C0613D0
-        for <linux-pwm@vger.kernel.org>; Mon,  7 Dec 2020 01:22:18 -0800 (PST)
-Received: by mail-wm1-x343.google.com with SMTP id a6so10840082wmc.2
-        for <linux-pwm@vger.kernel.org>; Mon, 07 Dec 2020 01:22:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=RjpX87LYgz+Ufk4R7Q2Jt/H9kwB3A1KtyZWzI6PaILc=;
-        b=gS2hu2iNk7bs7Md6Fn93aM2iILKE/fpaVfjl4r2I+LF3v3MdQu2iLD7HLkr8jf9Js4
-         kJhwVNY9VRm/vh2M6cBnXgOoRngRm+2ewU7YTku92+DsK/0QBzenQXkG5DtSlBjjH3Iv
-         D5qBAm1MLrEV7RDR2bsB5R160xfD8cqR9BnDrooLsVUAsocazFQkOGaqXiwkWZqsnb6C
-         2qo0Z8s+R/puBFKUM/x3wkg6iu0nVQM1BZoAtsawJPAwiduojxsy3XsPZW5RMv5zAHhT
-         oL4wfV1aWyFhLPpKhjfwPzWIz+A45x4hsBUO8/RAFdldIjhpnXMsS68cPmTB8kU3B1DJ
-         ERMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=RjpX87LYgz+Ufk4R7Q2Jt/H9kwB3A1KtyZWzI6PaILc=;
-        b=WWqojR81bXvTXbB2XNiOQukenTIpjvsPcKguz+ZhqP3sIhH0ZQ1FM1kmL++Kerlj4b
-         jSGYgl5uwdJ6ZRNl8WI/CIqrzJyIxP4DgPQwqahj/jlvXGEX/9xwtMFQSIlHpWlIMaMT
-         Z7CnXTLoCex3qLm1Oq9oma3RAdtdTVrZpuSacJ76Bx2kkTm8treEZ0DNF6m8ah6VqYME
-         ukgB01EciS7pG5sNFIb84kzDcl7sOasrE2lRp3yd3flwrP6NGE0rSneegGcBTf6uhuOr
-         NxlYElUrSeoNiX4Cvf/zgtpZ/u5O2J4k2Etqa7Ale1TFlayiuHBGPeC40Z+mB9nwO74t
-         4a7A==
-X-Gm-Message-State: AOAM532Iy4M9OTCObrNYYY2wsidzSmFi2BcDzEbEnx506stnnEVGvM4o
-        5KUEaTq5vw2ogwvWxtih35CM/EJW24Fd0FE7
-X-Google-Smtp-Source: ABdhPJzY+gbBF/I7WXSKJoQJ8jG4gzFfqorUzkgZc20NsWGSkGDMrh2ClxEoD0g7IOcYsFsTABk1Bg==
-X-Received: by 2002:a1c:5603:: with SMTP id k3mr17510853wmb.151.1607332937343;
-        Mon, 07 Dec 2020 01:22:17 -0800 (PST)
-Received: from dell ([91.110.221.235])
-        by smtp.gmail.com with ESMTPSA id 101sm7731937wrc.11.2020.12.07.01.22.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Dec 2020 01:22:16 -0800 (PST)
-Date:   Mon, 7 Dec 2020 09:22:14 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] pwm: Remove unused function pwmchip_add_inversed()
-Message-ID: <20201207092214.GQ4801@dell>
-References: <20201205161924.3864915-1-uwe@kleine-koenig.org>
+        id S1726129AbgLGJoD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Dec 2020 04:44:03 -0500
+Received: from gofer.mess.org ([88.97.38.141]:45065 "EHLO gofer.mess.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726041AbgLGJoC (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 7 Dec 2020 04:44:02 -0500
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id 3F95FC63E5; Mon,  7 Dec 2020 09:43:20 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mess.org; s=2020;
+        t=1607334200; bh=DZlMLoq4qsBnYniUp6Q77rn7ISx5VdIDUqFrvh/AOEM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C+xHZ+8qF17KHekNtmRqS2tbivtDM9fWuBXML8c90oFI1R3OhmOl06zuZnP5dtimq
+         mc2xtpGxcjOFVeBFBU8vvm5oGnYb/XgXL+br2Zgo04nYiVvsKta64Xb6qMHodaq8oE
+         dULjdVMELCLHys+VpxUJj99GUhMrg+NLTgW2Qsao8nAw+ICop+BQWTKEFEn5zYw0eg
+         USwlhTI1zPwyLeqYABhGjrY4hdS8VBgmfXH0ydYG3ZmpwyAaVcURYMge9kgszs84vU
+         EKulVtGWYjdKgLuke56HXNPknrRAVXnD50bQeWLPpgJaprX2bJlXLLbAWjxpRQIlho
+         NOSnPBMfVBdKw==
+Date:   Mon, 7 Dec 2020 09:43:20 +0000
+From:   Sean Young <sean@mess.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Lino Sanfilippo <LinoSanfilippo@gmx.de>, thierry.reding@gmail.com,
+        lee.jones@linaro.org, nsaenzjulienne@suse.de, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] pwm: bcm2835: Support apply function for atomic
+ configuration
+Message-ID: <20201207094320.GA10460@gofer.mess.org>
+References: <20201129181050.p6rkif5vjoumvafm@pengutronix.de>
+ <4683237c-7b40-11ab-b3c0-f94a5dd39b4d@gmx.de>
+ <20201204084417.GA2154@gofer.mess.org>
+ <20201204111326.qjux6k2472dmukot@pengutronix.de>
+ <20201204113846.GA6547@gofer.mess.org>
+ <20201204232834.xzsafkzfmfpw7pqz@pengutronix.de>
+ <20201205173444.GA1265@gofer.mess.org>
+ <20201205192510.o76pjs3yc524nwvm@pengutronix.de>
+ <20201206141941.GA24807@gofer.mess.org>
+ <20201207081628.tm3yg7az5k5sbivu@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201205161924.3864915-1-uwe@kleine-koenig.org>
+In-Reply-To: <20201207081628.tm3yg7az5k5sbivu@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sat, 05 Dec 2020, Uwe Kleine-König wrote:
 
-> This is only defined with CONFIG_PWM unset and was introduced together
-> with pwmchip_add_with_polarity() (which is only defined with CONFIG_PWM
-> enabled). I guess the series that introduced pwmchip_add_with_polarity()
-> had a different concept in earlier revisions and the !CONFIG_PWM part
-> was just not updated accordingly.
+Hello Uwe,
+
+Thank you for taking the time to explain your thinking.
+
+On Mon, Dec 07, 2020 at 09:16:28AM +0100, Uwe Kleine-K�nig wrote:
+> On Sun, Dec 06, 2020 at 02:19:41PM +0000, Sean Young wrote:
+> > On Sat, Dec 05, 2020 at 08:25:10PM +0100, Uwe Kleine-K�nig wrote:
+> > > On Sat, Dec 05, 2020 at 05:34:44PM +0000, Sean Young wrote:
+> > > > What real life uses-cases are there for round down? If you want to round
+> > > > down, is there any need for round up?
+> > > 
+> > > The scenario I have in mind is for driving a motor. I have to admit
+> > > however that usually the period doesn't matter much and it's the
+> > > duty_cycle that defines the motor's speed. So for this case the
+> > > conservative behaviour is round-down to not make the motor run faster
+> > > than expected.
+> > 
+> > I am reading here that for driving motors, only the duty cycle matters,
+> > not the period.
 > 
-> Given that there is no implementation for pwmchip_add_with_polarity()
-> without CONFIG_PWM, just drop pwmchip_add_inversed() instead of renaming
-> it to pwmchip_add_with_polarity().
+> There is an upper limit (usually around 1 ms) for the period, but if you
+> choose 0.1 ms or 0.001 ms doesn't matter much AFAICT.
 > 
-> Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
-> ---
->  include/linux/pwm.h | 5 -----
->  1 file changed, 5 deletions(-)
+> @Thierry: Do you have further use cases in mind?
+> 
+> > > For other usecases (fan, backlight, LED) exactness typically doesn't
+> > > matter that much.
+> > 
+> > So, the use-cases you have are driving motor, fan, backlight, and led.
+> > And in all these cases the exact Hz does not matter.
+> > 
+> > The only uses case where the exact Hz does matter is pwm-ir-tx. 
+> > 
+> > So, I gather there are no use-cases for round-down. Yes, should round-down
+> > be needed, then this is more difficult to implement if the driver always
+> > does a round-closest. But, since there is no reason to have round-down,
+> > this is all academic.
+> > 
+> > Your policy of forcing new pwm drivers to use round-down is breaking
+> > pwm-ir-tx.
+> 
+> So you're indeed suggesting that the "right" rounding strategy for
+> lowlevel drivers should be:
+> 
+>  - Use the period length closest to the requested period (in doubt round
+>    down?)
+>  - With the chosen period length use the biggest duty_cycle not bigger
+>    than the requested duty_cycle.
+> 
+> While this seems technically fine I think for maintenance this is a
+> nightmare.
+> 
+> My preference would be to stick to the rounding strategy we used so far
+> (i.e.:
+> 
+>  - Use the biggest period length not bigger than the requested period
+>  - With the chosen period length use the biggest duty_cycle not bigger
+>    than the requested duty_cycle.
+> 
+> ) and for pwm-ir-tx add support to the PWM API to still make it possible
+> (and easy) to select the best setting.
+> 
+> The reasons why I think that this rounding-down strategy is the best
+> are (in order of importance):
+> 
+>  - It is easier to implement correctly [1]
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Yes, you are right. You have given a great example where a simple
+DIV_ROUND_CLOSEST() does not give the result you want.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+>  - Same rounding method for period and duty cycle
+>  - most drivers already do this (I think)
+> 
+> The (IMHO nice) result would then mean:
+> 
+>  - All consumers can get the setting they want; and
+
+Once there is a nice pwm api for selecting round-nearest, then yes.
+
+For the uses cases you've given, fan, backlight, and led a round-nearest
+is the rounding they would want, I would expect.
+
+>  - Code in lowlevel drivers is simple and the complexity is in common
+>    code and so a single place.
+> 
+> And it would also allow the pwm-ir-tx driver to notice if the PWM to be
+> used can for example only support frequencies under 400 kHz.
+
+I doubt pwm-ir-tx cares about this, however it is a nice-to-have. It would
+also be nice if the rounding could be used with atomic configuration
+as well.
+
+Please let me know when/if this new API exists for pwm so that pwm-ir-tx
+can select the right rounding.
+
+> [1] Consider a PWM with a parent frequency of 66 MHz, to select the
+>     period you can pick an integer divider "div" resulting in the period
+>     4096 / (pclk * d). So the obvious implementation for round-nearest
+>     would be:
+> 
+>     	pclk = clk_get_rate(myclk);
+> 	div = DIV_ROUND_CLOSEST(NSEC_PER_SEC * 4096, targetperiod * pclk);
+
+Note NSEC_PER_SEC * 4096 >> 2^32 so this would need to be
+DIV_ROUND_CLOSEST_ULL.
+
+>     , right?
+> 
+>     With targetperiod = 2641 ns this picks div = 23 and so a period of
+>     2698.2872200263505 ns (delta = 57.2872200263505 ns).
+>     The optimal divider however is div = 24. (implemented period =
+>     2585.8585858585857 ns, delta = 55.14141414141448 ns)
+> 
+>     For round-down the correct implementation is:
+> 
+>     	pclk = clk_get_rate(myclk);
+> 	div = DIV_ROUND_UP(NSEC_PER_SEC * 4096, targetperiod * pclk);
+> 
+>     Exercise for the reader: Come up with a correct implementation for
+>     "round-nearest" and compare its complexity to the round-down code.
+
+To be fair, I haven't been been able to come up with a solution without
+control flow.
+
+Thank you for an interesting conversation about this.
+
+ 
+Sean
