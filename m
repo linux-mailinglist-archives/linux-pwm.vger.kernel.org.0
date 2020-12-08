@@ -2,53 +2,45 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8ED5A2D272C
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Dec 2020 10:08:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2455E2D2731
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Dec 2020 10:11:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbgLHJId (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Dec 2020 04:08:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44280 "EHLO
+        id S1728192AbgLHJLQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Dec 2020 04:11:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728677AbgLHJIb (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Dec 2020 04:08:31 -0500
+        with ESMTP id S1726228AbgLHJLQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Dec 2020 04:11:16 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40E84C0613D6
-        for <linux-pwm@vger.kernel.org>; Tue,  8 Dec 2020 01:07:51 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01F01C061749
+        for <linux-pwm@vger.kernel.org>; Tue,  8 Dec 2020 01:10:36 -0800 (PST)
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1kmYyC-0001O6-5W; Tue, 08 Dec 2020 10:07:40 +0100
+        id 1kmZ10-0001rh-4G; Tue, 08 Dec 2020 10:10:34 +0100
 Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1kmYyA-0008Qo-Hl; Tue, 08 Dec 2020 10:07:38 +0100
-Date:   Tue, 8 Dec 2020 10:07:38 +0100
+        id 1kmZ0z-0000EF-Dg; Tue, 08 Dec 2020 10:10:33 +0100
+Date:   Tue, 8 Dec 2020 10:10:33 +0100
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Lino Sanfilippo <LinoSanfilippo@gmx.de>
-Cc:     Sean Young <sean@mess.org>, thierry.reding@gmail.com,
-        lee.jones@linaro.org, nsaenzjulienne@suse.de, f.fainelli@gmail.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] pwm: bcm2835: Support apply function for atomic
- configuration
-Message-ID: <20201208090738.o43nearryrzimxtg@pengutronix.de>
-References: <20201204111326.qjux6k2472dmukot@pengutronix.de>
- <20201204113846.GA6547@gofer.mess.org>
- <20201204232834.xzsafkzfmfpw7pqz@pengutronix.de>
- <20201205173444.GA1265@gofer.mess.org>
- <20201205192510.o76pjs3yc524nwvm@pengutronix.de>
- <20201206141941.GA24807@gofer.mess.org>
- <20201207081628.tm3yg7az5k5sbivu@pengutronix.de>
- <20201207094320.GA10460@gofer.mess.org>
- <20201207135209.htp7plyotjxp37q2@pengutronix.de>
- <ad83f03b-869d-44e1-5db9-d5e91a0c0da3@gmx.de>
+To:     Clemens Gruber <clemens.gruber@pqgruber.com>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        David Jander <david@protonic.nl>
+Subject: Re: [PATCH v4 1/4] pwm: pca9685: Switch to atomic API
+Message-ID: <20201208091033.bxzrlad7mjbe3dsp@pengutronix.de>
+References: <20201207193629.493241-1-clemens.gruber@pqgruber.com>
+ <20201207220025.42b6g76wq7ph5nvb@pengutronix.de>
+ <X863KNo0IaekkU7q@workstation.tuxnet>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fkonw7ajelah7x52"
+        protocol="application/pgp-signature"; boundary="acneiids2f4t3ggq"
 Content-Disposition: inline
-In-Reply-To: <ad83f03b-869d-44e1-5db9-d5e91a0c0da3@gmx.de>
+In-Reply-To: <X863KNo0IaekkU7q@workstation.tuxnet>
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -58,29 +50,37 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---fkonw7ajelah7x52
+--acneiids2f4t3ggq
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Lino,
+Hello Clemens,
 
-On Tue, Dec 08, 2020 at 01:00:02AM +0100, Lino Sanfilippo wrote:
-> On 07.12.20 at 14:52, Uwe Kleine-K=F6nig wrote:
-> > Given that the bcm2835 driver is quite trivial I would be happy to
-> > create a series that "fixes" the driver to round down and provide a
-> > prototype for pwm_round_nearest for you to test on pwm-ir-tx. A willing
-> > tester and a real use-case were the single two things that stopped me
-> > investing time here.
-> >
+On Tue, Dec 08, 2020 at 12:13:44AM +0100, Clemens Gruber wrote:
+> On Mon, Dec 07, 2020 at 11:00:25PM +0100, Uwe Kleine-K=F6nig wrote:
+> > On Mon, Dec 07, 2020 at 08:36:27PM +0100, Clemens Gruber wrote:
+> > > The hardware readout may return slightly different values than those
+> > > that were set in apply due to the limited range of possible prescale =
+and
+> > > counter register values. If one channel is reconfigured with new duty
+> > > cycle and period, the others will keep the same relative duty cycle to
+> > > period ratio as they had before, even though the per-chip / global
+> > > frequency changed. (The PCA9685 has only one prescaler!)
+> >=20
+> > This is not acceptable, if you have two PWM outputs and a consumer
+> > modifies one of them the other must change. So if this chip only
+> > supports a single period length of all channels, the first consumer
+> > enabling a channel defines the period to be used. All later consumers
+> > must live with that. (Also the first must be denied modifying the period
+> > if a second consumer has enabled its PWM.)
 >=20
-> Should I send a v3 of the .apply() support for the bcm2835 driver before =
-you start
-> such a rework? The v3 would contain the check against truncation of the p=
-eriod but
-> keep the round-closest strategy as it is.
+> Good idea, but is it OK to potentially break users relying on the old
+> behavior ("the last one who changes the period wins") ?
 
-Yes, I had asking for that on my plate for today.
+If this is already in the old code, this probably warrants a separate
+fix, and yes, I consider this a severe bug. (Consider one channel
+driving a motor and reconfiguring an LED modifies the motor's speed.)
 
 Best regards
 Uwe
@@ -89,19 +89,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---fkonw7ajelah7x52
+--acneiids2f4t3ggq
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/PQlcACgkQwfwUeK3K
-7AlEfAgAlF91CSfmR0y8sL1xrnyfwy5xZRwJm/4MS5GVKkN0mntMY89HVntY1jg9
-x3oapm4weyPx1qRvv4WetIFjGASkm5ONplmyD25T+gLVwR8Ek4HwRhufpk33k7DI
-i+aQB9pzHOIrH9/AdJMhkDNPqh8U3RvbGrfPq44gCHHMv8tyYvrJJ4+vT4kI5ppf
-nN5N3vcbZcWGb8R2fa3mQopjUmGI1Zd3EHwpE/+bvILxqgkvU45SpYBhcHvGD4P7
-FvP9mj3mAy3Vccc+TqUBw9HoLlcvrQEXwvXpy/nQ/WhhSxAy7dlae2lgi8PcsIxL
-C/mHUawcoXZDzil0k5oPmWjW3T6JrA==
-=2pG3
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/PQwYACgkQwfwUeK3K
+7AmQZAf/aRaIyHctz+EjoBIMGw6tBPqXWyDp7J3Fbgi28mFexFy+tbd0YqXHHTPD
+IYWbUtDb7KSu/IC9mxpXP3SYiSlzA4n3Br2yk3f/xgRyhy6R9DCLQlHoVcx7bnqO
+xdYRNyisMprl4sMINFG0ipDT0Cv6CdNrZdEgi8uidWgY7Zzje2hx2In2H3GFlT89
+cZ2S6DoVRNdE8XU2FMCdjZ9qvaw12w42oPRcH0oEao1ycSoGQ9dSGBKDi6iUzijX
+gtA4gzkQpxJ1LUlVgkG5cy+zENn4bXZD8XHxdsoWLfNw0CkPBXQFYkpHtBfMc/qZ
+JkA1aV1ij3kmuVxv4WSn9ui4L6RdpA==
+=lGAt
 -----END PGP SIGNATURE-----
 
---fkonw7ajelah7x52--
+--acneiids2f4t3ggq--
