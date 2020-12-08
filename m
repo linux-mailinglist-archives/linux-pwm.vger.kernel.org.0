@@ -2,94 +2,67 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B76DC2D2898
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Dec 2020 11:13:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 38DD82D28A0
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Dec 2020 11:17:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729023AbgLHKNC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Dec 2020 05:13:02 -0500
-Received: from mail.pqgruber.com ([52.59.78.55]:42064 "EHLO mail.pqgruber.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728623AbgLHKNC (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 8 Dec 2020 05:13:02 -0500
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id 10EDCC81EEA;
-        Tue,  8 Dec 2020 11:12:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1607422340;
-        bh=9sTNjQjtWbr4N0B4GN2Kw1dncJZBpW6+Za2GoBgyLO0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dZBEcD4EV639kI/UJ0mgGuObYNkkXGo0Vh8H385stpao1hF8YQwmOb7XRJ5ON6uSU
-         OKVhRY8A+80zui50EoLUObG5KGFo0iwHApWg9w21xiD1GiKr1wIKpjgc5kDT+wZgQs
-         7P/Zut6rhZPXeKOGhtNbKeRzJKjij00HuB1o8ZrE=
-Date:   Tue, 8 Dec 2020 11:12:18 +0100
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        David Jander <david@protonic.nl>
-Subject: Re: [PATCH v4 1/4] pwm: pca9685: Switch to atomic API
-Message-ID: <X89RgpTb3sBBI++w@workstation.tuxnet>
-References: <20201207193629.493241-1-clemens.gruber@pqgruber.com>
- <20201207220025.42b6g76wq7ph5nvb@pengutronix.de>
- <X863KNo0IaekkU7q@workstation.tuxnet>
- <20201208091033.bxzrlad7mjbe3dsp@pengutronix.de>
+        id S1727628AbgLHKQw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Dec 2020 05:16:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726226AbgLHKQw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Dec 2020 05:16:52 -0500
+Received: from antares.kleine-koenig.org (antares.kleine-koenig.org [IPv6:2a01:4f8:c0c:3a97::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A5A1C061749
+        for <linux-pwm@vger.kernel.org>; Tue,  8 Dec 2020 02:16:12 -0800 (PST)
+Received: by antares.kleine-koenig.org (Postfix, from userid 1000)
+        id 5A484A9E91B; Tue,  8 Dec 2020 11:16:09 +0100 (CET)
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+To:     Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
+        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org
+Subject: [PATCH v2] staging: greybus: Add TODO item about modernizing the pwm code
+Date:   Tue,  8 Dec 2020 11:16:07 +0100
+Message-Id: <20201208101607.42785-1-uwe@kleine-koenig.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201208091033.bxzrlad7mjbe3dsp@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Uwe,
+drivers/staging/greybus/pwm.c uses the old style PWM callbacks, new drivers
+should stick to the atomic API instead.
 
-On Tue, Dec 08, 2020 at 10:10:33AM +0100, Uwe Kleine-König wrote:
-> Hello Clemens,
+Signed-off-by: Uwe Kleine-KÃ¶nig <uwe@kleine-koenig.org>
+---
+On 12/8/20 10:39 AM, Johan Hovold wrote:
+> No sign off?
 > 
-> On Tue, Dec 08, 2020 at 12:13:44AM +0100, Clemens Gruber wrote:
-> > On Mon, Dec 07, 2020 at 11:00:25PM +0100, Uwe Kleine-König wrote:
-> > > On Mon, Dec 07, 2020 at 08:36:27PM +0100, Clemens Gruber wrote:
-> > > > The hardware readout may return slightly different values than those
-> > > > that were set in apply due to the limited range of possible prescale and
-> > > > counter register values. If one channel is reconfigured with new duty
-> > > > cycle and period, the others will keep the same relative duty cycle to
-> > > > period ratio as they had before, even though the per-chip / global
-> > > > frequency changed. (The PCA9685 has only one prescaler!)
-> > > 
-> > > This is not acceptable, if you have two PWM outputs and a consumer
-> > > modifies one of them the other must change. So if this chip only
-> > > supports a single period length of all channels, the first consumer
-> > > enabling a channel defines the period to be used. All later consumers
-> > > must live with that. (Also the first must be denied modifying the period
-> > > if a second consumer has enabled its PWM.)
-> > 
-> > Good idea, but is it OK to potentially break users relying on the old
-> > behavior ("the last one who changes the period wins") ?
-> 
-> If this is already in the old code, this probably warrants a separate
-> fix, and yes, I consider this a severe bug. (Consider one channel
-> driving a motor and reconfiguring an LED modifies the motor's speed.)
+> Please also add a staging prefix since this part of greybus still lives
+> there.
 
-Yes, but a user could also be relying on the old behavior as follows:
-1. Requests & enables pwm 0 for a backlight, using a period of 5000000ns
-   (does not care about the frequency as long as it does not flicker)
-2. Requests & enables pwm 1 for a motor, using a period of 1000000ns
-   (does care about the frequency)
+That after all these years I still fail occasionally to add a sign-off
+... /me shakes his head about himself.
 
-In the previous kernel versions, this would work, but with your
-suggested change, (2) would fail and the motor would no longer work.
+Anyhow, here comes a v2, also with the requested prefix.
 
-We are basically changing "the last one to set the period wins" to "the
-first one to set the period wins".
 
-If we do it like this, I'll split it out so we can at least revert it if
-someone complains that it breaks his application, without reverting the
-whole series.
+ drivers/staging/greybus/TODO | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks,
-Clemens
+diff --git a/drivers/staging/greybus/TODO b/drivers/staging/greybus/TODO
+index 31f1f2cb401c..6461e0132fe3 100644
+--- a/drivers/staging/greybus/TODO
++++ b/drivers/staging/greybus/TODO
+@@ -1,3 +1,5 @@
+ * Convert all uses of the old GPIO API from <linux/gpio.h> to the
+   GPIO descriptor API in <linux/gpio/consumer.h> and look up GPIO
+   lines from device tree or ACPI.
++* Make pwm.c use the struct pwm_ops::apply instead of ::config, ::set_polarity,
++  ::enable and ::disable.
+-- 
+2.29.2
+
