@@ -2,26 +2,26 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69E022D2094
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Dec 2020 03:13:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1892E2D209A
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Dec 2020 03:14:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgLHCNO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 7 Dec 2020 21:13:14 -0500
-Received: from mout.gmx.net ([212.227.17.21]:60517 "EHLO mout.gmx.net"
+        id S1727910AbgLHCNQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Dec 2020 21:13:16 -0500
+Received: from mout.gmx.net ([212.227.15.19]:37181 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726830AbgLHCNN (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 7 Dec 2020 21:13:13 -0500
+        id S1727892AbgLHCNQ (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 7 Dec 2020 21:13:16 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1607393458;
-        bh=WBl3UrUkR8LNzp1EKh9L7GsYc+XMH2QlTuD5DMeOSsI=;
+        s=badeba3b8450; t=1607393466;
+        bh=OLRgMJVF5Woco/wE8srh876TdhfxC/CBxXp95Aag1Sw=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=c/gMM1JwkqA70r2eT8hu0Vm9AHadbAa4uktdnkzeVYuQeEOnSrXJgD+mxvVojzpEY
-         SNf2B3GhVvtGK+ouAFOcWXGWrSz6Sp+UevQ+HU9swhV4Z3Zcr7+fQGXNx1He21DmLX
-         GBblwFY7zGouMnTCnrJ9agL3m1r3GI+KIEm24/kQ=
+        b=h/s6ucfcAiEWLKJPFuyYLAH+iY+em/PysCegmqP6m2AINFu0aMUUEKCME+fUsNw5k
+         VjYQNKg34hGOlNNHDj/7rbnV/6Sis+eOrz1hCOcLAUSYJL8gWUJA+0PQde4/7Aw+Fg
+         tdlO3IOh5oabvupfmWZbUWololiuP7hZDUineTMo=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([37.201.214.162]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MybGX-1jwrRn2A7J-00yuzK; Tue, 08
- Dec 2020 03:10:58 +0100
+Received: from longitude ([37.201.214.162]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M8ykW-1kpEQ02tHi-0063xc; Tue, 08
+ Dec 2020 03:11:06 +0100
 From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
@@ -51,79 +51,100 @@ Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Andreas Kemnade <andreas@kemnade.info>,
         Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v6 6/7] MAINTAINERS: Add entry for Netronix embedded controller
-Date:   Tue,  8 Dec 2020 02:09:59 +0100
-Message-Id: <20201208011000.3060239-7-j.neuschaefer@gmx.net>
+Subject: [PATCH v6 7/7] ARM: dts: imx50-kobo-aura: Add Netronix embedded controller
+Date:   Tue,  8 Dec 2020 02:10:00 +0100
+Message-Id: <20201208011000.3060239-8-j.neuschaefer@gmx.net>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201208011000.3060239-1-j.neuschaefer@gmx.net>
 References: <20201208011000.3060239-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:KrRMGiDmIbt0sBNUbCS4VOY+FTc3iGce8A+/3NciAwGds7DAC4A
- HU5zyIPz1YAcGXB0yBjRqBhxui/w+mWKbFBZ7CkITOfBJrecikXxPJmbwLqtlZ+kPkvfXHC
- n5pKbaGyqjDghlbbuyP7lQSmHJ51Ni6/TDLtwizyQ5OUwiV93GAUZm2nntPH50tKinpixa/
- oV4nXdDhbB9trdckJz6Ag==
+X-Provags-ID: V03:K1:Hj42vB6Qt5VgXLNmP/8JQZYM4kptpRvcy4iGsqOpkwfovVUgks6
+ WcaKaf0DX/ow8DkZUB7XehG1fE2N1KGjZoaNLe6LvPjKwp9JCNe+ebRuXSZtP0nWOldLFnA
+ 1D9Bt1b6hLvKp8hUCIBj3DZkUzaTPXCqH1v0YnN7muafylxCdv8fvrXf5IKfuo4ipvKZPMD
+ CMDvtIqLqP6anv0KcmnTA==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:M7CN/MeYUhE=:ZVQHiMlpAZY9664thIOZ+3
- rVdlAFm00hd2Gt1Mo2SY1wLXnT3zjJH41VEZdt1hNbza93CIp6FKN+5eXOuc0qYYDke48jJmn
- P4ubYkj2I61CTn5W8yR6YUxQWOfPJbE1vunUwh6IZ8nYvybNmcY1KvtFan9OsAGfLjEX6kWSr
- vh+FnG57ORB4N5PlUM3ZQ//qylnd6puXa+rh6qZ4KDpuzvA3X26sNENoKeDYxoluwZokPd1l0
- vTMFTvEOGRTlA9+y46bO5VhdH7DVqOb1I1j3FdW+IxiAVLf7zp287FQSD3Po4a6kYOPJzzFuU
- rJfqDGgIHbe0MdYUN2MPBSBYM2sKEuJ2mFQ8CIlqisMSfwYm+2vyFQA+DoWNc4/zHrMj+EOIy
- vzls3j1qvSWNH+U6tHRpuvx8jE6B+aROuoxEghc5gnzaGuj4iicblAL4Dxul10YNr7dMZbb+r
- RQqSyI3s4u2f5mkiBZg07T2I/9DGERGuIGlPNJGRClSOU2r3RQFPeB7CLtv+/85G9ZHkczSJP
- gI+j0eeJSPkLFrk76Wt2xU7lFStoe1QdBdOKzYioFFpGa3iU4eBcScFT/Rsplcv7lSynf3k2a
- uq8zNmOgoaet9+5NjOBT2hA9v/CQvSDZWV+HsyocU+6P6sDEXOH0FSJMEo/ZL94CFHT6/Wr87
- MWoDOErflRMXAiAxcEVc9VGURa6c0/eZ7Cc98WiyuDhbN/71bRUnpSTuwPv9kpKCsmih93Fz9
- ylBOFrsBSfJmzp7eYqI2ewl18ys9Dnd4AvMGNTlpuDl9+iTvibxscBJJaKOAyKopBoc+yiZoy
- GcrpMaVFcjoUtWgOpQ0HaTt/1LscM3ErYJyN5SFDGRZGzOVzhlUvMH5vVfJdBNHB0chSkinfa
- vH1/JmlYgqeehdJ90Xgw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7bZdBAIBoh8=:eSr3n2acQWh9DMJwYzNd6D
+ 50QVJYXuhBdvO/d+HEEQuzBiICRC5g8c4BY/U/8+SMOL2+2y+cvYcdwxGbKa3uBvugL0u+MmG
+ xL0NBLlyBCbFxEyQWnaDuX7QsCW82E1VPX3q21ki1oxDXBDAGRdJzHncVKUoqFDk6bapwwvu1
+ DoXMMYHsr02c0/pdL0PpAkRv/gKkDImR9BilZiEeN1rVMOeuH4LtGquod0ketLqtg4nuKXnU4
+ lU6L+DJiSRsPH/5sQppSieoh32+WYuxK0tGfcJuowZdXlsWIHH+RMWyx5zcoVGjqdbqpASpXL
+ 2jLvdqsg3CYWrq6sJpIyM0VJpF7HI+N1sctwVl8Bg05X2TrDEVfklERrBt6TY1E0moqEfE3a/
+ 5wEvrktwFuGJvOYEH2T0UMNUIhpa3R0W+/RPY5G9c8r6hlv6ZMjhHXjUeS9dMyORAnnz0elgc
+ IKha9ovKfK6YOB0GP+KfD6NNxzObLSmc/iMNDiwHxQwZ1tAvTYHyy8m/hDh3KwxxGYxDGlmIh
+ 26FPx5opCvVjTYTUd2BeGwReouFMwJI7JGRik6eIEkKyD2eaw+XKrqKgsZ/8pA+YYpj3h1CDM
+ FHh2ot19hF/CT4RQrL+I/6T6uM7kUGhPJMT81dDm5ugjqMHZk3m0e1GERkx21ikXNLC9+RkMV
+ 3VeDCqL6INycdeE5MhZyTzLoypEjA0P77ElBL0PxFwrsU2MJ0v45ckt1U//IagUwHe69351JK
+ IpbQgtVxcHqt6PVwZBw/XWU+Y9qrDGMocaGdWbFMjWwT9mdfGA+KffbJ1p7M/fF1/XU8TkWZR
+ vmcabzcPtSAmRQMQaOyDFeznBfKcSiq0YKggzg9VKvSurGaD8g3fWP3NzNgvW5pUcQYxATjMD
+ xuuMxEprrDhto9TiiOsg==
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Let's make sure I'll notice when there are patches for the NTXEC
-drivers.
+Enable the Netronix EC on the Kobo Aura ebook reader.
+
+Several features are still missing:
+ - Frontlight/backlight. The vendor kernel drives the frontlight LED
+   using the PWM output of the EC and an additional boost pin that
+   increases the brightness.
+ - Battery monitoring
+ - Interrupts for RTC alarm and low-battery events
 
 Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 =2D--
-v4-v6:
+v5, v6:
 - no changes
 
+v4:
+- Add 'grp' suffix to pinctrl node
+
 v3:
-- https://lore.kernel.org/lkml/20200924192455.2484005-7-j.neuschaefer@gmx.=
+- https://lore.kernel.org/lkml/20200925050818.2512375-1-j.neuschaefer@gmx.=
 net/
-- Remove pwm and rtc bindings
+- Remove interrupt-controller property from embedded-controller node
+- subnodes of embedded-controller node in to the main node
 
 v2:
-- https://lore.kernel.org/lkml/20200905144503.1067124-2-j.neuschaefer@gmx.=
+- https://lore.kernel.org/lkml/20200905144503.1067124-3-j.neuschaefer@gmx.=
 net/
-- No changes
+- Fix pwm-cells property (should be 2, not 1)
 =2D--
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/imx50-kobo-aura.dts | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2daa6ee673f7f..9eedf3c1e1e09 100644
-=2D-- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12087,6 +12087,15 @@ F:	include/net/netrom.h
- F:	include/uapi/linux/netrom.h
- F:	net/netrom/
+diff --git a/arch/arm/boot/dts/imx50-kobo-aura.dts b/arch/arm/boot/dts/imx=
+50-kobo-aura.dts
+index 97cfd970fe742..82ce8c43be867 100644
+=2D-- a/arch/arm/boot/dts/imx50-kobo-aura.dts
++++ b/arch/arm/boot/dts/imx50-kobo-aura.dts
+@@ -143,10 +143,24 @@ &i2c3 {
+ 	pinctrl-0 =3D <&pinctrl_i2c3>;
+ 	status =3D "okay";
 
-+NETRONIX EMBEDDED CONTROLLER
-+M:	Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-+F:	drivers/mfd/ntxec.c
-+F:	drivers/pwm/pwm-ntxec.c
-+F:	drivers/rtc/rtc-ntxec.c
-+F:	include/linux/mfd/ntxec.h
+-	/* TODO: embedded controller at 0x43 */
++	embedded-controller@43 {
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_ec>;
++		compatible =3D "netronix,ntxec";
++		reg =3D <0x43>;
++		system-power-controller;
++		interrupts-extended =3D <&gpio4 11 IRQ_TYPE_EDGE_FALLING>;
++		#pwm-cells =3D <2>;
++	};
+ };
+
+ &iomuxc {
++	pinctrl_ec: ecgrp {
++		fsl,pins =3D <
++			MX50_PAD_CSPI_SS0__GPIO4_11		0x0	/* INT */
++		>;
++	};
 +
- NETRONOME ETHERNET DRIVERS
- M:	Simon Horman <simon.horman@netronome.com>
- R:	Jakub Kicinski <kuba@kernel.org>
+ 	pinctrl_gpiokeys: gpiokeysgrp {
+ 		fsl,pins =3D <
+ 			MX50_PAD_CSPI_MISO__GPIO4_10		0x0
 =2D-
 2.29.2
 
