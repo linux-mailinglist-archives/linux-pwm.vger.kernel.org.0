@@ -2,170 +2,137 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F58A2D2C29
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Dec 2020 14:45:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B79D22D2D6E
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Dec 2020 15:46:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgLHNot (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Dec 2020 08:44:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58740 "EHLO
+        id S1729752AbgLHOpf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Dec 2020 09:45:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgLHNos (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Dec 2020 08:44:48 -0500
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63A48C0613D6;
-        Tue,  8 Dec 2020 05:44:08 -0800 (PST)
-Received: by mail-ed1-x544.google.com with SMTP id cm17so17657672edb.4;
-        Tue, 08 Dec 2020 05:44:08 -0800 (PST)
+        with ESMTP id S1726080AbgLHOpe (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Dec 2020 09:45:34 -0500
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5065EC061749;
+        Tue,  8 Dec 2020 06:44:54 -0800 (PST)
+Received: by mail-vk1-xa43.google.com with SMTP id j142so3975890vkj.9;
+        Tue, 08 Dec 2020 06:44:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3iuEHdH1gNg101wR8DTEbjhE0rQvqljv1Z07XXcLgl0=;
-        b=Q/5Ovgud/TY63bvbDD/TbQOfp4GoB0YAKgr9Rsq+2TWCHdb+CcLJFsuALmTRH8Zjz5
-         3iL/Bh4CEWO5qgOCQQo2p/o+X+D4mXLyFfd2OqeL99vZuqGgIJNCQg06NTzMuDCOZGp7
-         fqbAYOYST+NR8oBrtK1osZQroE/Ex7PgdCNgzk+lXxScSsA+JBdcPuPuNk2lZlQXiJ1q
-         z6v36G2AuIPgZElJDalVGtbDoKSUV3K/tx1Wsq6FSk7+9OyLVh4TtzVWifWA8MvUckDt
-         VtBCoLc99A2a1uhh4p6OsxdI+lWV9xC1Rpde8O/NPOkj3+9UvvdJRIbZ8wdv3uszIYKA
-         AdKA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=IBntS1UR26V0tRM5vYKd+gGG5su3Y6srXHRCMFQ2Zek=;
+        b=JKr5mhFau93wkACoY7j4hb6IXyF/m51b+Auzjm7/7wxTB2uW7o9ukKT21fkZ3y9c3b
+         dNC84klZSs/mAehx8NgOXeJ8A0XwxAUb0sFnecF1K4lsoRFJ/hcrDIdKQ3sfhzihNpiK
+         mK1vs1urN0AAzZ2NcuhTlt66defkBFCJP5jA395neZ7Am5Ey42vYucf8xEdxCi2vopwu
+         xC6Cprjr0BiEvX7kf2GnFmJOpikBHkur12mvfKbwtyWAKdGUOXjFMiZM3vCvFgFdRfLI
+         Qy9zbTnn/bXnhl4ktBMcOBjNaHTN4LcPw20n3CvNQXVwO1gH6E2ZGzHtCKbNei9zDYUH
+         Px6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3iuEHdH1gNg101wR8DTEbjhE0rQvqljv1Z07XXcLgl0=;
-        b=J/cBio8B+KyITfQb89GSiVZ8z/SqIFEW1AMOsN36qEj+lXullB+7mYbBj5ptSCdhfz
-         B8ykzWiQsHum79EIUmxYdvrOn7RuhcMAn5pdce9/YctKD/+OTdjl9dWk2fUup8IHAc8/
-         8rXN8Gr6p62PQPnEZSYXrTInhltVntho2HiCvnUsPawDssvI9tUjIl/ekSiso93yZZ/T
-         RzcJykfQMAlTt7Q84lcVrbslZ39fq0KOMJKZRtVK49rjHsVTsPCf5muRB31TrEZSMS2z
-         rf0mOqCOYK4/s+q5J+6u9nobK3N5J06Dajm4QA4GxpUtRrBDNS/m+1W2/JbLMSPRGkk9
-         G0fw==
-X-Gm-Message-State: AOAM530mQVUKXVy+ZAJQUvLn5Y4WH+1vqhERHuOYFV7Vzs8P3m4PhTGI
-        W48OH9FNdOXe9WVA82F1Ra4=
-X-Google-Smtp-Source: ABdhPJyacRhLin1x9o87tMyIYIu7lFRwaGJIoc/Kz1vgmt1xUJECtT0S1J78qmQuwicvxuDLa4pBQQ==
-X-Received: by 2002:aa7:c3cf:: with SMTP id l15mr15029612edr.282.1607435047096;
-        Tue, 08 Dec 2020 05:44:07 -0800 (PST)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id a13sm17053147edb.76.2020.12.08.05.44.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Dec 2020 05:44:04 -0800 (PST)
-Date:   Tue, 8 Dec 2020 14:44:03 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Clemens Gruber <clemens.gruber@pqgruber.com>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=IBntS1UR26V0tRM5vYKd+gGG5su3Y6srXHRCMFQ2Zek=;
+        b=NkCWVEYMz9KCw8VrksreV0CGyndi6qP8MPLPvgbv7+omyfLTd3TR5Xm/wmSm1Wxfxg
+         nanZ8TQHPS3y6KZyWiKdCEYsFgrfB20Tafnr9Tlgqg4KMFkNjCKMgxv+P1k0Mi5qlPMY
+         ThW48ypJmhAwk1v4WYbvHuT1b1YSzh9neCFnpcbfoEA09ppoQEdzOwC+wHncl8HorM53
+         hrRv9ueX3zwnufR6Eq8uMmrDGE442L0MgWq95RtFK89MchpCgo9XrRdl7TLalePeWixl
+         /sH86N/Hf1AYb0jAQCAu2mdK89RcYlMbiS/12iE1ymdIsnPCZ2CXJG0joLB34evHjBz9
+         DqAw==
+X-Gm-Message-State: AOAM531o89NJN4YkXwDGgDDnvVWOhhLv0tm7JW9nffAqO8W/dnyPrT/B
+        eVg67IwfO4OPBQs0YXGt5omV+8K7sjV9v5MP6KoBUIaaK0eg3Q==
+X-Google-Smtp-Source: ABdhPJwm1iw0/CdG0TZqhQabg4tUL0iiYeyghigIqHBbcqSFMpn+YoRi3JJjEYzVrxDMPPQxE/RgVsTJQQIV+slZrgU=
+X-Received: by 2002:a05:6122:69c:: with SMTP id n28mr16138230vkq.21.1607438693346;
+ Tue, 08 Dec 2020 06:44:53 -0800 (PST)
+MIME-Version: 1.0
+References: <20201207193629.493241-1-clemens.gruber@pqgruber.com>
+ <20201207220025.42b6g76wq7ph5nvb@pengutronix.de> <X863KNo0IaekkU7q@workstation.tuxnet>
+ <20201208091033.bxzrlad7mjbe3dsp@pengutronix.de> <X89RgpTb3sBBI++w@workstation.tuxnet>
+ <X8+DI7ZN7mXtsxv9@ulmo>
+In-Reply-To: <X8+DI7ZN7mXtsxv9@ulmo>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Tue, 8 Dec 2020 09:44:42 -0500
+Message-ID: <CAGngYiXgVbEXj-yR=DTeA4pO-N3=WhiHjQhknFsbfXBeD_yRbw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] pwm: pca9685: Switch to atomic API
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Clemens Gruber <clemens.gruber@pqgruber.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         David Jander <david@protonic.nl>
-Subject: Re: [PATCH v4 1/4] pwm: pca9685: Switch to atomic API
-Message-ID: <X8+DI7ZN7mXtsxv9@ulmo>
-References: <20201207193629.493241-1-clemens.gruber@pqgruber.com>
- <20201207220025.42b6g76wq7ph5nvb@pengutronix.de>
- <X863KNo0IaekkU7q@workstation.tuxnet>
- <20201208091033.bxzrlad7mjbe3dsp@pengutronix.de>
- <X89RgpTb3sBBI++w@workstation.tuxnet>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mrYU85tcYWs+7OgA"
-Content-Disposition: inline
-In-Reply-To: <X89RgpTb3sBBI++w@workstation.tuxnet>
-User-Agent: Mutt/2.0.2 (d9268908) (2020-11-20)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Uwe, Thierry,
 
---mrYU85tcYWs+7OgA
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Dec 8, 2020 at 4:10 AM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> If this is already in the old code, this probably warrants a separate
+> fix, and yes, I consider this a severe bug. (Consider one channel
+> driving a motor and reconfiguring an LED modifies the motor's speed.)
+>
 
-On Tue, Dec 08, 2020 at 11:12:18AM +0100, Clemens Gruber wrote:
-> Hello Uwe,
->=20
-> On Tue, Dec 08, 2020 at 10:10:33AM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > Hello Clemens,
-> >=20
-> > On Tue, Dec 08, 2020 at 12:13:44AM +0100, Clemens Gruber wrote:
-> > > On Mon, Dec 07, 2020 at 11:00:25PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > > > On Mon, Dec 07, 2020 at 08:36:27PM +0100, Clemens Gruber wrote:
-> > > > > The hardware readout may return slightly different values than th=
-ose
-> > > > > that were set in apply due to the limited range of possible presc=
-ale and
-> > > > > counter register values. If one channel is reconfigured with new =
-duty
-> > > > > cycle and period, the others will keep the same relative duty cyc=
-le to
-> > > > > period ratio as they had before, even though the per-chip / global
-> > > > > frequency changed. (The PCA9685 has only one prescaler!)
-> > > >=20
-> > > > This is not acceptable, if you have two PWM outputs and a consumer
-> > > > modifies one of them the other must change. So if this chip only
-> > > > supports a single period length of all channels, the first consumer
-> > > > enabling a channel defines the period to be used. All later consume=
-rs
-> > > > must live with that. (Also the first must be denied modifying the p=
-eriod
-> > > > if a second consumer has enabled its PWM.)
-> > >=20
-> > > Good idea, but is it OK to potentially break users relying on the old
-> > > behavior ("the last one who changes the period wins") ?
-> >=20
-> > If this is already in the old code, this probably warrants a separate
-> > fix, and yes, I consider this a severe bug. (Consider one channel
-> > driving a motor and reconfiguring an LED modifies the motor's speed.)
->=20
-> Yes, but a user could also be relying on the old behavior as follows:
-> 1. Requests & enables pwm 0 for a backlight, using a period of 5000000ns
->    (does not care about the frequency as long as it does not flicker)
-> 2. Requests & enables pwm 1 for a motor, using a period of 1000000ns
->    (does care about the frequency)
->=20
-> In the previous kernel versions, this would work, but with your
-> suggested change, (2) would fail and the motor would no longer work.
->=20
-> We are basically changing "the last one to set the period wins" to "the
-> first one to set the period wins".
->=20
-> If we do it like this, I'll split it out so we can at least revert it if
-> someone complains that it breaks his application, without reverting the
-> whole series.
+I think you are 100% correct, this would be a severe bug. I have only used
+this chip to drive LEDs, where the actual period is not that important. But
+for motor control, it's a different story.
 
-Yes, that makes sense to me. We do want to make sure that we don't have
-these kinds of races for PWM controllers and other drivers already have
-corresponding checks in place.
+Basically you are suggesting: the period (prescaler) can only be changed if=
+f
+its use-count is 1.
 
-But I agree that if this is preserving the status quo, then yes, we
-should follow up with a separate patch to add that check so that it can
-be easily reverted if this indeed break.
+This however brings up a whole load of additional questions: consider the c=
+ase
+where the chip outputs are also used in gpio mode. the gpio functionality
+only sets "full on" and "full off" bits. On a scope, a gpio output will loo=
+k
+identical, no matter the value of the period. So when a gpio output is in u=
+se,
+does it increment the prescaler use-count ?
 
-Although, if we do get failures after this check has been introduced,
-they should be considered bugs and fixed in the right place. Ultimately
-this is something that board designers have hopefully already thought
-about and if there are two PWM consumers they will usually be able to
-run at a common period, in which case fixing these should be as easy as
-finding that common period and, well, using it for both consumers.
+Example:
+1. output 1: set pwm mode (enabled=3Dtrue, duty_cycle=3D50%, period=3D1/200=
+Hz)
+2. output 2: set led mode (full-on bit set)
+3. output 1: change period(enabled=3Dtrue, duty_cycle=3D50%, period=3D1/100=
+Hz)
 
-Thierry
+Do we have to make (3) fail? I would say no: although output 2 is in use,
+it's not actually using the prescaler. Changing prescale won't modify
+output 2 in any way.
 
---mrYU85tcYWs+7OgA
-Content-Type: application/pgp-signature; name="signature.asc"
+Which brings us to an even trickier question: what happens if a pwm output
+is set to 0% or 100% duty cycle? In that case, it'll behave like a gpio out=
+put.
+So when it's enabled, it does not use the prescaler.
+But! what happens if we now set that output to a different duty cycle?
 
------BEGIN PGP SIGNATURE-----
+Example:
+1. output 1: set pwm mode (enabled=3Dtrue, duty_cycle=3D50%,  period=3D1/20=
+0Hz)
+2. output 2: set pwm mode (enabled=3Dtrue, duty_cycle=3D100%, period=3D1/40=
+0Hz)
+  fail? no, because it's not actually using the period (it's full on)
+3. output 2: set pwm mode (enabled=3Dtrue, duty_cycle=3D100%, period=3D1/20=
+0Hz)
+  fail? no, because it's not actually using the period (it's full on)
+4. output 1: set pwm mode (enabled=3Dtrue, duty_cycle=3D50%,  period=3D1/40=
+0Hz)
+  fail? no, because only output 1 is using the prescaler
+5. output 2: set pwm mode (enabled=3Dtrue, duty_cycle=3D50%, period=3D1/400=
+Hz)
+  fail? no, because output 2 is not changing the prescaler
+6. output 2: set pwm mode (enabled=3Dtrue, duty_cycle=3D50%, period=3D1/200=
+Hz)
+  fail? yes, because output 2 is changing prescaler and it's already in use
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl/PgyEACgkQ3SOs138+
-s6H0Hg/+IFCQPNudxTHOV8jXYr7yxNaRilxcSAkFrjMAUHpYuF+PW5lU4HiXlFrH
-nKABwDGqHD8+KsGvQ+5VUVPVjC5/b6S4nckFRM07iJ3KZ9MdF9ShRaF0RWi3TSkG
-zrXalJ6+lirrmB3Z2Io5uj1EA+HXMjPxuRuqKQ8l5vs2OpUK58ohDz+Fysjw0cpI
-hj2T0Aq6lvyf/ZROI36yjYfVUYe6wBYCXDvViQTx4WcIdV2LfDJKiRRRiSICOCcp
-hUUWBEprQrK77+ftRvDcvYFgiOoERo58NxDZYaLhi7foH8OF+xKIglJqOf5Kr0tM
-FK/I+ag4V/NwKBV820O9Ahc6e/C5zMEcxxxcQ0kJBoIIRoRVi+r6b6fclPn8LZ2K
-mCcuf4F+jjlIn8XSRHTwt9JgGkek25vDnyswOUe9R55td+H4oB+qUYAieWnvSmyn
-c4l7rTlUiVmT3qnspGWfVoc4W+NprSqJIWVXcdLOUDLvz7VjHWpywf2BNYO/3jqy
-XlV0MoummWi+41ie0IbF29SXhnepld1Wc6ErA9rHgVYbWeGOzrPxFZxYgP1oVaaq
-a3keRmlEa4bkp/Mg6EehKcQvVF1QkhgmCzgCMdbgZWupKaZEQE6NX48lN+76VwN3
-Z+Ym12DZ3bkLzTj+INa+Z4zC8iJeE+v8hCoCpIzJ5Sn1JIpbtv4=
-=irwy
------END PGP SIGNATURE-----
+IMHO all this can get very complicated and tricky.
 
---mrYU85tcYWs+7OgA--
+We can of course make this much simpler by assumung that gpio or on/off pwm=
+s
+are actually using the prescaler. But then we'd be limiting this chip's
+functionality.
