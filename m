@@ -2,391 +2,322 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F06A52D22CE
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Dec 2020 06:03:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D5462D2560
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Dec 2020 09:06:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbgLHE6e (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 7 Dec 2020 23:58:34 -0500
-Received: from mail-bn8nam11on2062.outbound.protection.outlook.com ([40.107.236.62]:38624
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726112AbgLHE6d (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 7 Dec 2020 23:58:33 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EE3oy9izEk6PmhEo0jyiod/61jQut1ENqHHO6t0zt0DZ261gAue9Zr7WIVhJND8sbrUKD7iWKqI9aoaR3QpAzzomqOMM09kZc9Ov4e/38AZAIdKEijydHt/t2CrA1G/nAPT6yfWRQm3oSyULwmloA/zGW3l3EJe8lt7lJHAcrkD/98jF/k9kSlij8jFsgRwGWSmsvFgGUMVFPzdHbOd7rOnFZdX5w8l3Kt6vdtrl8RiZ9S4Ml7GTSL6GdImb9aTxOLwyy66RmHuezqVxwSLl1Lg0oo67KKQVr05gCXwA3HvT4Vh3XohM+fhdKaNStEeCy8kQaJwMjtirX5XOK9a+CQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mDZ/WGWTZLipd61Fvk2rm2veRbyPa19lEjVRyXdUyjc=;
- b=e/boOLoxBuTP66jvTYZ+994/jwxanFxyiHQU6IvdVQpAS48yh/xZAO+xB/4oYmcae8yPzTHKi8cladh18aWmNW6KWZie1K+ekoVQOd7SB/NsxdTqhnZ+QPQnjyBbhF6efBncFFQt5R26xlvx4d5TxSlHCBjLCB9O/8vnJdiZrdAMJUHTD8UqSQEN258IOtCB0cGIvJYxYTm8DyZ1A+wr37J4vh16w/Oi5i0kqSDQrvShY8qMpqNrMf+uD+xUYzrZdfPWb5uFUG1Rq1JCZOcwAGmmwi3OYNQ90xitg7khTeoc9eSIWxuE+DNTA3gndqNajNT9p3HGuK3ZzBoj+I4YsA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=openfive.com; dmarc=pass action=none header.from=sifive.com;
- dkim=pass header.d=sifive.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mDZ/WGWTZLipd61Fvk2rm2veRbyPa19lEjVRyXdUyjc=;
- b=kMTumNNPuuoL4Ec+dO6ClFzWXVSpHjmDPnY7bFFPX7kNxsNQLjR3bNADVO4PWkdlf8tSXLOExUXlQQSJwIPVeKQ1MlDdkJUFDFVMpeOgx7RZmz1aqgY/GG+A8pDsRgVdH87/bPderyJN0Jek2F7pUo8nXxGdNk85PpNlNovnU+g=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=sifive.com;
-Received: from BY5PR13MB4453.namprd13.prod.outlook.com (2603:10b6:a03:1d1::19)
- by BY5PR13MB4440.namprd13.prod.outlook.com (2603:10b6:a03:1d2::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3654.7; Tue, 8 Dec
- 2020 04:57:02 +0000
-Received: from BY5PR13MB4453.namprd13.prod.outlook.com
- ([fe80::7c13:1ac6:9f2a:5eae]) by BY5PR13MB4453.namprd13.prod.outlook.com
- ([fe80::7c13:1ac6:9f2a:5eae%8]) with mapi id 15.20.3654.012; Tue, 8 Dec 2020
- 04:57:02 +0000
-From:   Yash Shah <yash.shah@sifive.com>
-To:     linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     broonie@kernel.org, gregkh@linuxfoundation.org,
-        aou@eecs.berkeley.edu, lee.jones@linaro.org,
-        u.kleine-koenig@pengutronix.de, thierry.reding@gmail.com,
-        andrew@lunn.ch, peter@korsgaard.com, paul.walmsley@sifive.com,
-        palmer@dabbelt.com, robh+dt@kernel.org, bgolaszewski@baylibre.com,
-        linus.walleij@linaro.org, Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v2 9/9] riscv: dts: add initial board data for the SiFive HiFive Unmatched
-Date:   Tue,  8 Dec 2020 10:25:41 +0530
-Message-Id: <1607403341-57214-10-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1607403341-57214-1-git-send-email-yash.shah@sifive.com>
-References: <1607403341-57214-1-git-send-email-yash.shah@sifive.com>
-Content-Type: text/plain
-X-Originating-IP: [159.117.144.156]
-X-ClientProxiedBy: PN1PR0101CA0041.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c00:c::27) To BY5PR13MB4453.namprd13.prod.outlook.com
- (2603:10b6:a03:1d1::19)
+        id S1727950AbgLHIF2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Dec 2020 03:05:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727866AbgLHIF1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Dec 2020 03:05:27 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C906C061793
+        for <linux-pwm@vger.kernel.org>; Tue,  8 Dec 2020 00:04:47 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kmXz9-0001CZ-Ua; Tue, 08 Dec 2020 09:04:35 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kmXz7-00047B-Bt; Tue, 08 Dec 2020 09:04:33 +0100
+Date:   Tue, 8 Dec 2020 09:04:33 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: Implement the pwm_chip
+Message-ID: <20201208080433.szy7dek2qvn3d4vb@pengutronix.de>
+References: <20201208044022.972872-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from osubuntu003.open-silicon.com (159.117.144.156) by PN1PR0101CA0041.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00:c::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3632.17 via Frontend Transport; Tue, 8 Dec 2020 04:56:56 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e5febfd7-4098-4949-af14-08d89b35b3e8
-X-MS-TrafficTypeDiagnostic: BY5PR13MB4440:
-X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BY5PR13MB4440602D5B077095DA458FFC82CD0@BY5PR13MB4440.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1923;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qX1Vxp1qAn630t/VqvSPVEvu6vwQfaB8Sq21jnhx+IoRqFiBcvMPbICs1rMkwCl9gD6ZTPS7bTw13N5XGbmE3u4xsgMXyQJrlePZrFKuDWQrEC3RsSPRZKuoHIhuhuexWC6CmtqtYPAqhsxAMZv2fuWnnsEistWcSTi3XeqtfNvbEvmoM6jKTovWt5OAO8C5HLimBbv9PqnRexuU7d5KJFAU0XxLGTCetoaRdedzw8lnWjXkBUHl3fl0Ykof63d9Z/nmpFFKmtRyU/yD9yCFdlZ6mL6k/8lY6jslw4/bZaxpHYZT/JIQovTIbd8tjiR5ilaBtDW5m5Fmfwg63dEI3NYxgUSqWDKt8eM+wkjbTgzNSeiGQd8jaPf2HVf1tkiQk0QdVuJnj20t5viVwZazfQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR13MB4453.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(6029001)(396003)(376002)(39850400004)(366004)(136003)(346002)(52116002)(83170400001)(956004)(5660300002)(4326008)(107886003)(2616005)(26005)(2906002)(316002)(7416002)(42882007)(44832011)(6666004)(83380400001)(16526019)(6506007)(8936002)(8676002)(36756003)(478600001)(6486002)(186003)(966005)(6512007)(66946007)(66476007)(66556008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?n+9ccuoVTME2rBYS0qcpR7op3zNjvTy1FtxVR22Ou4kdrWv6L2DuvGGgqEJ4?=
- =?us-ascii?Q?ZqGWZ2CBg7zLeDJvDFUa+8ecYZD82C7rQyCDt6p5dfYdBp7Njdu/ZLRfsjhy?=
- =?us-ascii?Q?sBskbqsApjgTsODNidV3Zv15Vbyf1pfeWx/CQ87rakZIwPRfdYFj9fcsPgjq?=
- =?us-ascii?Q?UY//Z1OqqXXEKPlliYGy1rh2vXQBZLWjXEIStoQOgjqACGf5P+zjxGbDFOcW?=
- =?us-ascii?Q?BIPw9sb0megijQnwv4Z4w4BMrZa8T/LRRDhygfGVFb9ua1L1VbktQAVyM3c7?=
- =?us-ascii?Q?nj254WY3xd/rW0e8vbhT4oC2qmogwY8faExF1G6RkQqugwifLriOvqhljmXN?=
- =?us-ascii?Q?GZDtOgu3Q7ic58JWUOatp1NFyZShcsnZb2FOj5+ua5tAryEJcKoHwRZ3xn83?=
- =?us-ascii?Q?r8UnpRQVKRsux7SbcvYHFvuQf+7G7UMWRVh6QsG1t/pv07TCmwp4R6SkRQ9r?=
- =?us-ascii?Q?LVyb8ZPtk5+OymCS8if9GbeXn5MElQAXPZJ5gDYRpPpgxeTUl3YtWTBfA6/Y?=
- =?us-ascii?Q?PySbg+sQJyULsYMxouqqBl2zN0XIgZj2d5ZOCbU5VvJo/NIyoRGRHr/8mYXK?=
- =?us-ascii?Q?+aoOHpLcXhsvUahXMReVMF+CHrjUki8RDlZJfA5lonfbzueN9Jlp4uz7+WUR?=
- =?us-ascii?Q?pNOS4tLE50NrmXZJ7Atxf3W+JespJO7dIeowQdjHlEh2wlVKvM6V/5t6Q26S?=
- =?us-ascii?Q?n5JXx8hx4qn18FT3gYjR2kJgIzGEYXlUCU7pYRL+KVHSH7iGJJd/7jwZ0vbo?=
- =?us-ascii?Q?7r76MJW73PAPtYfVxrYggVyKVih2oMR5op2jdhmzm6+SCLD2jISqjxD/D6Ko?=
- =?us-ascii?Q?lmDybUt7pneabV0PBMBw8SSPeoaKV0p2Gtn1OczEh/lnBRokqILmrOqwUYHn?=
- =?us-ascii?Q?yeZc4r2iNGXaro6fGcCO+4h08Gu3PRNswhJrC/uxmzSLvH/ciUWW5h7ib8A6?=
- =?us-ascii?Q?5bhf+hNno7Dom/SrgrRELWkOXerggBAS6ln/xP3VZZ8sYcw83wCAidKthfZ9?=
- =?us-ascii?Q?K9FV?=
-X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR13MB4453.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2020 04:57:02.5205
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5febfd7-4098-4949-af14-08d89b35b3e8
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FsCxZ+eFgYJGWyUlDDaV7iRnV0te8VB3PwvSIJLHmdyY9BXx6xJsoPu7djIUwBJNS/qvOYceS5GhNhIv3G3VFA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR13MB4440
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4uvrfzmltgxuhkh5"
+Content-Disposition: inline
+In-Reply-To: <20201208044022.972872-1-bjorn.andersson@linaro.org>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add initial board data for the SiFive HiFive Unmatched A00.
-This patch is dependent on Zong's Patchset[0].
 
-[0]: https://lore.kernel.org/linux-riscv/20201130082330.77268-4-zong.li@sifive.com/T/#u
+--4uvrfzmltgxuhkh5
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
----
- arch/riscv/boot/dts/sifive/Makefile                |   3 +-
- .../riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 253 +++++++++++++++++++++
- 2 files changed, 255 insertions(+), 1 deletion(-)
- create mode 100644 arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
+Hello,
 
-diff --git a/arch/riscv/boot/dts/sifive/Makefile b/arch/riscv/boot/dts/sifive/Makefile
-index 6d6189e..74c47fe 100644
---- a/arch/riscv/boot/dts/sifive/Makefile
-+++ b/arch/riscv/boot/dts/sifive/Makefile
-@@ -1,2 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
--dtb-$(CONFIG_SOC_SIFIVE) += hifive-unleashed-a00.dtb
-+dtb-$(CONFIG_SOC_SIFIVE) += hifive-unleashed-a00.dtb \
-+			    hifive-unmatched-a00.dtb
-diff --git a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-new file mode 100644
-index 0000000..b1c3c59
---- /dev/null
-+++ b/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-@@ -0,0 +1,253 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/* Copyright (c) 2020 SiFive, Inc */
-+
-+#include "fu740-c000.dtsi"
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+/* Clock frequency (in Hz) of the PCB crystal for rtcclk */
-+#define RTCCLK_FREQ		1000000
-+
-+/ {
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	model = "SiFive HiFive Unmatched A00";
-+	compatible = "sifive,hifive-unmatched-a00", "sifive,fu740-c000",
-+		     "sifive,fu740";
-+
-+	chosen {
-+		stdout-path = "serial0";
-+	};
-+
-+	cpus {
-+		timebase-frequency = <RTCCLK_FREQ>;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x2 0x00000000>;
-+	};
-+
-+	soc {
-+	};
-+
-+	hfclk: hfclk {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <26000000>;
-+		clock-output-names = "hfclk";
-+	};
-+
-+	rtcclk: rtcclk {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <RTCCLK_FREQ>;
-+		clock-output-names = "rtcclk";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	temperature-sensor@4c {
-+		compatible = "ti,tmp451";
-+		reg = <0x4c>;
-+		interrupt-parent = <&gpio>;
-+		interrupts = <6 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	pmic@58 {
-+		compatible = "dlg,da9063";
-+		reg = <0x58>;
-+		interrupt-parent = <&gpio>;
-+		interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+
-+		regulators {
-+			vdd_bcore1: bcore1 {
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <900000>;
-+				regulator-min-microamp = <5000000>;
-+				regulator-max-microamp = <5000000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_bcore2: bcore2 {
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <900000>;
-+				regulator-min-microamp = <5000000>;
-+				regulator-max-microamp = <5000000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_bpro: bpro {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-min-microamp = <2500000>;
-+				regulator-max-microamp = <2500000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_bperi: bperi {
-+				regulator-min-microvolt = <1050000>;
-+				regulator-max-microvolt = <1050000>;
-+				regulator-min-microamp = <1500000>;
-+				regulator-max-microamp = <1500000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_bmem: bmem {
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-min-microamp = <3000000>;
-+				regulator-max-microamp = <3000000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_bio: bio {
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-min-microamp = <3000000>;
-+				regulator-max-microamp = <3000000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo1: ldo1 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-min-microamp = <100000>;
-+				regulator-max-microamp = <100000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo2: ldo2 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-min-microamp = <200000>;
-+				regulator-max-microamp = <200000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo3: ldo3 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-min-microamp = <200000>;
-+				regulator-max-microamp = <200000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo4: ldo4 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-min-microamp = <200000>;
-+				regulator-max-microamp = <200000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo5: ldo5 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-min-microamp = <100000>;
-+				regulator-max-microamp = <100000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo6: ldo6 {
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-min-microamp = <200000>;
-+				regulator-max-microamp = <200000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo7: ldo7 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-min-microamp = <200000>;
-+				regulator-max-microamp = <200000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo8: ldo8 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-min-microamp = <200000>;
-+				regulator-max-microamp = <200000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ld09: ldo9 {
-+				regulator-min-microvolt = <1050000>;
-+				regulator-max-microvolt = <1050000>;
-+				regulator-min-microamp = <200000>;
-+				regulator-max-microamp = <200000>;
-+			};
-+
-+			vdd_ldo10: ldo10 {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1000000>;
-+				regulator-min-microamp = <300000>;
-+				regulator-max-microamp = <300000>;
-+			};
-+
-+			vdd_ldo11: ldo11 {
-+				regulator-min-microvolt = <2500000>;
-+				regulator-max-microvolt = <2500000>;
-+				regulator-min-microamp = <300000>;
-+				regulator-max-microamp = <300000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&qspi0 {
-+	status = "okay";
-+	flash@0 {
-+		compatible = "issi,is25wp256", "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <50000000>;
-+		m25p,fast-read;
-+		spi-tx-bus-width = <4>;
-+		spi-rx-bus-width = <4>;
-+	};
-+};
-+
-+&spi0 {
-+	status = "okay";
-+	mmc@0 {
-+		compatible = "mmc-spi-slot";
-+		reg = <0>;
-+		spi-max-frequency = <20000000>;
-+		voltage-ranges = <3300 3300>;
-+		disable-wp;
-+	};
-+};
-+
-+&eth0 {
-+	status = "okay";
-+	phy-mode = "gmii";
-+	phy-handle = <&phy0>;
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
-+};
-+
-+&pwm0 {
-+	status = "okay";
-+};
-+
-+&pwm1 {
-+	status = "okay";
-+};
-+
-+&gpio {
-+	status = "okay";
-+};
--- 
-2.7.4
+On Mon, Dec 07, 2020 at 10:40:22PM -0600, Bjorn Andersson wrote:
+> The SN65DSI86 provides the ability to supply a PWM signal on GPIO 4,
+> with the primary purpose of controlling the backlight of the attached
+> panel. Add an implementation that exposes this using the standard PWM
+> framework, to allow e.g. pwm-backlight to expose this to the user.
+>=20
+> Special thanks to Doug Anderson for suggestions related to the involved
+> math.
 
+Did you test this with CONFIG_PWM_DEBUG? (I think you didn't, because
+otherwise there would be a .get_state callback.)
+
+> @@ -162,6 +171,12 @@ struct ti_sn_bridge {
+>  	struct gpio_chip		gchip;
+>  	DECLARE_BITMAP(gchip_output, SN_NUM_GPIOS);
+>  #endif
+> +#if defined(CONFIG_PWM)
+
+Would it make sense to introduce a separate config symbol for this?
+Something like CONFIG_PWM_SN65DSI87?
+
+> +	struct pwm_chip			pchip;
+> +	bool				pwm_enabled;
+> +	unsigned int			pwm_refclk;
+> +	atomic_t			pwm_pin_busy;
+
+struct ti_sn_bridge has a kernel doc comment describing all members,
+please add a description of the members you introduced here. Please also
+point out that you use pwm_pin_busy to protect against concurrent use of
+the pin as PWM and GPIO.
+
+> +#endif
+>  };
+> =20
+>  static const struct regmap_range ti_sn_bridge_volatile_ranges[] =3D {
+> @@ -499,6 +514,14 @@ static void ti_sn_bridge_set_refclk_freq(struct ti_s=
+n_bridge *pdata)
+> =20
+>  	regmap_update_bits(pdata->regmap, SN_DPPLL_SRC_REG, REFCLK_FREQ_MASK,
+>  			   REFCLK_FREQ(i));
+> +
+> +#if defined(CONFIG_PWM)
+> +	/*
+> +	 * The PWM refclk is based on the value written to SN_DPPLL_SRC_REG,
+> +	 * regardless of its actual sourcing.
+> +	 */
+> +	pdata->pwm_refclk =3D ti_sn_bridge_refclk_lut[i];
+> +#endif
+
+I don't understand this code. 'i' seems to be something more special
+than a counter variable, so I wonder if it should have a better name.
+(This is however an issue separate from this patch, but it would be
+great to first make the code a bit better understandable. Or is this
+only me?)
+
+>  }
+> =20
+>  static void ti_sn_bridge_set_dsi_rate(struct ti_sn_bridge *pdata)
+> @@ -981,6 +1004,161 @@ static int ti_sn_bridge_parse_dsi_host(struct ti_s=
+n_bridge *pdata)
+>  	return 0;
+>  }
+> =20
+> +#if defined(CONFIG_PWM)
+> +static int ti_sn_pwm_pin_request(struct ti_sn_bridge *pdata)
+> +{
+> +	return atomic_xchg(&pdata->pwm_pin_busy, 1) ? -EBUSY : 0;
+> +}
+> +
+> +static void ti_sn_pwm_pin_release(struct ti_sn_bridge *pdata)
+> +{
+> +	atomic_set(&pdata->pwm_pin_busy, 0);
+> +}
+> +
+> +static struct ti_sn_bridge *
+> +pwm_chip_to_ti_sn_bridge(struct pwm_chip *chip)
+
+All your functions share the same function prefix (which is fine), but
+this one doesn't.
+
+> +{
+> +	return container_of(chip, struct ti_sn_bridge, pchip);
+> +}
+> [...]
+> +	if (state->enabled) {
+> +		/*
+> +		 * Per the datasheet the PWM frequency is given by:
+> +		 *
+> +		 * PWM_FREQ =3D REFCLK_FREQ / (PWM_PRE_DIV * BACKLIGHT_SCALE + 1)
+> +		 *
+> +		 * In order to find the PWM_FREQ that best suits the requested
+> +		 * state->period, the PWM_PRE_DIV is calculated with the
+> +		 * maximum possible number of steps (BACKLIGHT_SCALE_MAX). The
+> +		 * actual BACKLIGHT_SCALE is then adjusted down to match the
+> +		 * requested period.
+> +		 *
+> +		 * The BACKLIGHT value is then calculated against the
+> +		 * BACKLIGHT_SCALE, based on the requested duty_cycle and
+> +		 * period.
+> +		 */
+> +		pwm_freq =3D NSEC_PER_SEC / state->period;
+
+Here you should better have some range checking. Consider for example
+state->period being > NSEC_PER_SEC. (Hint: This makes pwm_freq =3D 0 and
+in the next line you divide by pwm_freq.)
+
+> +		pre_div =3D DIV_ROUND_UP(pdata->pwm_refclk / pwm_freq - 1, BACKLIGHT_S=
+CALE_MAX);
+> +		scale =3D (pdata->pwm_refclk / pwm_freq - 1) / pre_div;
+
+I'm still trying to wrap my head around this calculation, but dividing
+by the result of a division is always loosing precision. This is really
+involved and I'm willing to bet this can be done easier and with more
+precision.
+
+=2E.. some time later ...
+
+You wrote "PWM_FREQ =3D REFCLK_FREQ / (PWM_PRE_DIV * BACKLIGHT_SCALE + 1)",
+so (I think) that means you have:
+
+	period =3D (PWM_PRE_DIV * BACKLIGHT_SCALE + 1) / refclk
+
+right? I deduce from your formula how the duty_cycle is defined and I
+think it's:
+
+	duty_cycle =3D (PWM_PRE_DIV * BACKLIGHT + 1) / refclk
+
+is this right? And now your idea to "best suite the requested period" is
+to select a small divider such that you can still use a big value in
+SCALE to define the period and so have a fine separation for the
+duty_cycle, right?
+
+I will stop doing maths here now until you confirm my steps up to now
+are right.
+
+> +		backlight =3D scale * state->duty_cycle / state->period;
+
+This is an u64 division, you must use do_div for that. Also you're
+losing precision here.
+
+> +		ret =3D regmap_write(pdata->regmap, SN_PWM_PRE_DIV_REG, pre_div);
+> +		if (ret) {
+> +			dev_err(pdata->dev, "failed to update PWM_PRE_DIV\n");
+> +			goto out;
+> +		}
+> +
+> +		ti_sn_bridge_write_u16(pdata, SN_BACKLIGHT_SCALE_REG, scale);
+> +		ti_sn_bridge_write_u16(pdata, SN_BACKLIGHT_REG, backlight);
+
+How does the PWM behave in between these writes? Are the register values
+shadowed until the third write happens (which would be the optimum), or
+does this result in (maybe) emitting an output wave that doesn't
+correspond to the requested setting (assuming the PWM is already enabled
+of course)?
+
+What happens if the value written to SN_BACKLIGHT_SCALE_REG is less than
+the previous value in SN_BACKLIGHT_REG? ti_sn_bridge_write_u16 wraps two
+regmap writes, is there a race, too?
+
+> +	}
+> +
+> +	pwm_en_inv =3D FIELD_PREP(BIT(1), !!state->enabled) |
+> +		     FIELD_PREP(BIT(0), state->polarity =3D=3D PWM_POLARITY_INVERSED);
+
+Please introduce symbolic names for BIT(1) and BIT(0) here.
+
+How does the hardware behave with the enable bit unset? Does it emit the
+inactive level according to the polarity bit?
+
+> +	ret =3D regmap_write(pdata->regmap, SN_PWM_EN_INV_REG, pwm_en_inv);
+> +	if (ret) {
+> +		dev_err(pdata->dev, "failed to update PWM_EN/PWM_INV\n");
+> +		goto out;
+> +	}
+> +
+> +	pdata->pwm_enabled =3D !!state->enabled;
+> +out:
+> +
+> +	if (!pdata->pwm_enabled)
+> +		pm_runtime_put_sync(pdata->dev);
+> +
+> +	return ret;
+> +}
+> +
+> [...]
+> +static struct pwm_device *ti_sn_pwm_of_xlate(struct pwm_chip *pc,
+> +					     const struct of_phandle_args *args)
+> +{
+> +	struct pwm_device *pwm;
+> +
+> +	if (args->args_count !=3D 1)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	pwm =3D pwm_request_from_chip(pc, 0, NULL);
+> +	if (IS_ERR(pwm))
+> +		return pwm;
+> +
+> +	pwm->args.period =3D args->args[0];
+> +
+> +	return pwm;
+> +}
+
+This is done to optimise away the 0 needed in each phandle to implement
+the "usual" pwm binding. IMHO this function should either move into the
+pwm core, or you should stick to the usual binding.
+
+Apropos binding: Is there already a binding document for the hardware?
+You should expand it to describe your additions.
+
+> @@ -1282,6 +1476,12 @@ static int ti_sn_bridge_probe(struct i2c_client *c=
+lient,
+>  		return ret;
+>  	}
+> =20
+> +	ret =3D ti_sn_setup_pwmchip(pdata);
+> +	if (ret)  {
+> +		pm_runtime_disable(pdata->dev);
+> +		return ret;
+> +	}
+
+I'm not sure about the purpose of the containing hardware, but I wonder
+if it would be saner to not break probing of the device if adding the
+PWM functionality fails. Ideally the driver would provide an mfd driver
+that allows its components to be probed independently.
+
+>  	i2c_set_clientdata(client, pdata);
+> =20
+>  	pdata->aux.name =3D "ti-sn65dsi86-aux";
+> @@ -1320,6 +1520,8 @@ static int ti_sn_bridge_remove(struct i2c_client *c=
+lient)
+> =20
+>  	drm_bridge_remove(&pdata->bridge);
+> =20
+> +	ti_sn_remove_pwmchip(pdata);
+> +
+>  	return 0;
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--4uvrfzmltgxuhkh5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/PM44ACgkQwfwUeK3K
+7Ak/Pgf+Ipt5/DvWkzrssAOU7xprddf4muXBxkoYz10o7JzCGWZM1fqHoRli0Ntr
+sky7x0riw2EMVjWiOwVQsNdRdQuPqBqSTXL7UstjgPa5tSFV4jzu8HrHv+hpIE4K
+K4R71AeaTfLTQKrQEkvf4Ob/R4/9qnBnhgLVMfPFNHMuBRFsaGmOInE9mgTWMyIC
+OIPLoX7xYvzB/6T7gE/ZsUOIr7ZR9TKkCQaWNAT7ngXgQXl23abirY+ZXeARubJX
+Vsz3BIX50Hd6NAkbl+TcOQjhE+L3K+mmWcjN/cZ2zN+/5F+e3HfxHqAT+sjz5uIn
+FIUufFqHxCbr5oKHStsT2tMvrY3SxQ==
+=rExz
+-----END PGP SIGNATURE-----
+
+--4uvrfzmltgxuhkh5--
