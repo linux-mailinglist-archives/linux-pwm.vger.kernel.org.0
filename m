@@ -2,375 +2,155 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2BC92D222D
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Dec 2020 05:42:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 788572D2292
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Dec 2020 06:03:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgLHElF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 7 Dec 2020 23:41:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgLHElF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Dec 2020 23:41:05 -0500
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FD01C061793
-        for <linux-pwm@vger.kernel.org>; Mon,  7 Dec 2020 20:40:25 -0800 (PST)
-Received: by mail-ot1-x343.google.com with SMTP id h18so10798509otq.12
-        for <linux-pwm@vger.kernel.org>; Mon, 07 Dec 2020 20:40:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lzzz0sMutIoUKIzQvdI67+hBnQWL6SlfqnfoJgLUlFA=;
-        b=kqpKQtKxze5fiE4No1wPcG5xifpJt+yNFjr9kVOtED0h2UKsrI2PlOLw2dZjfENx5H
-         E7vZecSp0wQzv0yi8zTkJq9kXfBKC7Xm/0rRskz3KaZ6O1KK82YAd1aSc0YNXWEcCXG0
-         NZyWo1+7l1Q+arh0BqLGjZxmoGe65tHk04WPUXHVqsO6RzDCTFTI6yQC44esolSfv5X5
-         SDCxRXcU9M5OfRobG8bxrDcIp8rbWcI0J59pF6nGimL3sEELu3+SuvMT8lVL2RQH6fDW
-         gbmdM4uo9YQb2JFN5mqzy6bISejuf+LLTbcGRx+xTSLD7Gdrkhh/nilknYBWQNtbCQoT
-         7giw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lzzz0sMutIoUKIzQvdI67+hBnQWL6SlfqnfoJgLUlFA=;
-        b=H6auXiS0tXpF5dnbNxigjrodj3KHcTKCHbUSt0+Fjk2FUvqPjN9Gtp1EsW3HAS97hM
-         XgYCjO+AlhO1L940bzism7f/ZpMTxVjr/XVa9SpzGtkuNYNPcmoEMMfZ5BEppbSK29Mq
-         M5MVUU+UXtyWmNKBcYDaNZcLYpqqAnV9GP9M7OUPiV+ftSPU6iwuG3cZ7oBHs+veWDk9
-         g9ZERdL1UuyLr3jnvITcMUmMySBpt4Bo1W1tCDLYTI0qLukyuSoPzVtIchmEVtxLbdFV
-         vDJ7QNmV663MAT/Ew18dvlL/Fxw9UOVQ07NMFFFiXHyACgTR9MwihrVzF2d8dTcOJIgb
-         gVHw==
-X-Gm-Message-State: AOAM531HREBwROOAMUBppgSww+yXgdix9MVH/E1IDKfzdMn20PhWq4uH
-        9PkOjeB4CZ9ALAfLae4oVgieMA==
-X-Google-Smtp-Source: ABdhPJwaCl9gy4RvQYgksIVVraGRUDlEsehe5DzfjHOyQ+m8sIrhXdmZt6l6FlEUG4ZAqsgEBV+poA==
-X-Received: by 2002:a9d:72c4:: with SMTP id d4mr15744997otk.149.1607402424524;
-        Mon, 07 Dec 2020 20:40:24 -0800 (PST)
-Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id t203sm1188995oib.34.2020.12.07.20.40.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Dec 2020 20:40:23 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Doug Anderson <dianders@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: [PATCH] drm/bridge: ti-sn65dsi86: Implement the pwm_chip
-Date:   Mon,  7 Dec 2020 22:40:22 -0600
-Message-Id: <20201208044022.972872-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.29.2
+        id S1726508AbgLHE44 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Dec 2020 23:56:56 -0500
+Received: from mail-mw2nam10on2078.outbound.protection.outlook.com ([40.107.94.78]:21740
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726114AbgLHE4z (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 7 Dec 2020 23:56:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RxPwpTVaMqS/v7fMDI2dTInfju8Uto6HwqfpsoNGhJZkuhlz6jW5tzFltsy29SBzjqu1fW/Gx66d7l+7jIJbouHGZoq8pwmt/zGtXBz11ms+B+Fqd1a2H1nhq3kTL7ccymYatUEdmthMZYKjrGFFCND1SpRYR+I45eYZK+4a3nG4778EVpSsHY1KGSl48r8gzuhxOard8sLs9+lB6l9RslH7NObPvGjMHnhHv/wKh4SaRGFAxro0k4eRdfnBI+OKktkhMz/ruQcFt9NFDBGpLtMTUNkbbBxi2I3+Y8kID1s7vPfUimN2D5DFcz2WZCKWN1GEtfcpune4gd0l6M+bWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+QqCawIH1tQAsebiOI4W+2X3Gc1gvOvGEbCMiSoVpjU=;
+ b=TW6ESCmQxXOLRNTg55mmFsxRZt3zNiSXX9PxswSnPE+1BgwXDv9SGyYRwcMfvxAJqZovjxztuoVVMNy+4Ea/jQNqhKP4hMX1miwSNX3k42mzVFXVztSrwWOkzMcx3Rls8+6SMapOpFBvIjL15YjNUW8YMHVwYAK8waKGoOfnFt6oN5i5NY41nvHh6u2T8jQX96FutykmIRZ5cv9E1TZKQhv1xlUY+IV/tDlaf0XoQIgTd7VPwl0JL9kflRZGi/tNVaXNPNvCW5aUZWXe6rKBKiLhJ/FW3t9cccJ8pMpX/q8Whn73OgAhuZOHMPVgHRyOaBSfiaGL3ZQwhnUeisbYBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=openfive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+QqCawIH1tQAsebiOI4W+2X3Gc1gvOvGEbCMiSoVpjU=;
+ b=B94iJsaN4CPqnQ/ScYY0tfYpKexk4fFHXFAWZ83o41rzQztMhs7CBiRDwK824iLgUVWSWXMQ4Rmo2h1L9QZwzBiTnhR84XZhhAqIjHG1vsgFdV0bnxDcN0akVGTIbvyq4d/BvvRyz/MtbMqZJgxajOK5LyY+Qfn5+6UEuGw1EyY=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=sifive.com;
+Received: from BY5PR13MB4453.namprd13.prod.outlook.com (2603:10b6:a03:1d1::19)
+ by BY5PR13MB3745.namprd13.prod.outlook.com (2603:10b6:a03:22e::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3654.7; Tue, 8 Dec
+ 2020 04:56:02 +0000
+Received: from BY5PR13MB4453.namprd13.prod.outlook.com
+ ([fe80::7c13:1ac6:9f2a:5eae]) by BY5PR13MB4453.namprd13.prod.outlook.com
+ ([fe80::7c13:1ac6:9f2a:5eae%8]) with mapi id 15.20.3654.012; Tue, 8 Dec 2020
+ 04:56:02 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     broonie@kernel.org, gregkh@linuxfoundation.org,
+        aou@eecs.berkeley.edu, lee.jones@linaro.org,
+        u.kleine-koenig@pengutronix.de, thierry.reding@gmail.com,
+        andrew@lunn.ch, peter@korsgaard.com, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, robh+dt@kernel.org, bgolaszewski@baylibre.com,
+        linus.walleij@linaro.org, Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH v2 0/9] arch: riscv: add board and SoC DT file support
+Date:   Tue,  8 Dec 2020 10:25:32 +0530
+Message-Id: <1607403341-57214-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-Originating-IP: [159.117.144.156]
+X-ClientProxiedBy: PN1PR0101CA0041.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c00:c::27) To BY5PR13MB4453.namprd13.prod.outlook.com
+ (2603:10b6:a03:1d1::19)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from osubuntu003.open-silicon.com (159.117.144.156) by PN1PR0101CA0041.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00:c::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3632.17 via Frontend Transport; Tue, 8 Dec 2020 04:55:55 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1b369ea3-592b-45ca-fb76-08d89b35900c
+X-MS-TrafficTypeDiagnostic: BY5PR13MB3745:
+X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BY5PR13MB3745C377B120698A9601C03082CD0@BY5PR13MB3745.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: z76oZ6PsuMZ+IGHQ3TuP6vK1L+E/Ut95/ufsZqCq+eyi786js4hL5CD7I84VAttogSl4yzNgayGkhi3ZaGAoYYYls+/DhchcnOSsTC1jJ4QWIivRzu/YhpsCJo1xUjD1aroxATRY+RzlTlApqXE6CXhZ6n6BIz9cv3bTIjKb3oEk/wE5zrYw+pSepll4gVnIpSLxaBvpkLjpq5IsOSNV7YCKVNH9md6DUkOntXIasGRyGbSMXqe42cTv9sENPHRS0+pERLDNZNKsv7XCjgigQwnvOvPRuOAQjjjHF+ZdXqHUSmS+3bIjOj6rUcfWpgWKF5P5SVuMDK8ETzben4bJ139+4N0QlFOffj9NRJORGCLCTSXm7bFB19BH7o2gWG4gVrBv3dqiNBDe7wQoHVPRvg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR13MB4453.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(376002)(396003)(39840400004)(136003)(346002)(4326008)(6666004)(6506007)(956004)(16526019)(66556008)(66476007)(966005)(7416002)(42882007)(2616005)(6486002)(26005)(478600001)(186003)(316002)(44832011)(36756003)(8936002)(83380400001)(66946007)(6512007)(107886003)(5660300002)(83170400001)(2906002)(52116002)(8676002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?6yIeZ8VHREi9fPekgPO4DeH4MJKOMBD5WZZce1L4kZ7ce+ZkwUa+EdFJfajp?=
+ =?us-ascii?Q?GKK4LvaKo7WI0AKfCrngek310uWA9u00ONm61wOWuuCSltWwi+Hy2QEXgYrF?=
+ =?us-ascii?Q?aZAMPpeMkwq6OyxSfmbtOt9j1TYjy1A5TQW4YCBNpz6x1BtXpRME6zLHHzyV?=
+ =?us-ascii?Q?G7maRXW6fMFn7AGwFzshVG5CnTwKXz+xpaRyKKPp41yZuOWKUQRb+cDiM/Yz?=
+ =?us-ascii?Q?z3gHLU7YQBlXNz/EKv8B+E+UiFlVT0QVRlYaammePoW8mpah3bGlbT0X6Ujk?=
+ =?us-ascii?Q?pxS0U1tvHvkTNbcc3ce+nmNqvizIRZ97U1CYG85L1GPyBzNLj+U69N+sbCyd?=
+ =?us-ascii?Q?lU65R+A9aEGTRfaMOYfWst9n1x3M+Gsi1pE54ACNkqw+BrjQQW4ra3PWFCS8?=
+ =?us-ascii?Q?lk7tN5osROcfxTuff+jG6MCgBxKH6SUKGazi7/z+WgTGO/b89vrZzb2HB9Vq?=
+ =?us-ascii?Q?sqURpZqqkJLF3SreOeGTJpAVqbr+yzuwz0Msn+n+RmyxpSXuqVuOg82Et7D2?=
+ =?us-ascii?Q?AZpAafito69NBVkIaYWpdA98AR69UBdoUhFkbuzZGc0SAPg7hCyI47F9GezO?=
+ =?us-ascii?Q?BmWLgLqfoi1lm6rmUYDYfTtoyS/YI9c9+bPvf3XFpUyOAxXoQryIfNElx/tg?=
+ =?us-ascii?Q?fKw2a/BTmhIBWGAZtx0VkrfWu5dEo1szn/rsErzodpq1CW4YaNwGvwbf0Ra1?=
+ =?us-ascii?Q?i9quv5Kzx3BEylbwXp7jO/gQPhzXE4Iejr8Fb/PP5wYCNN+gtQRlgjuZhIap?=
+ =?us-ascii?Q?s9ynD3pVdhP1Gxcm9lzwFnpb7XZdbQpYOPYwIBf8BYsH+81X656tT6O4ypkn?=
+ =?us-ascii?Q?EM0F8rmmttwFTyH+2Ud49NXHLFmxlQHOs05gx1hTTIMmNaUl+mIKG0vIUCkl?=
+ =?us-ascii?Q?xqKJIKUynA9n11AeoVEEMuIUt/FC4PQv9oj8Fqb809qMhMIFOOcbs/yRdEtq?=
+ =?us-ascii?Q?OWipm4vm/uDkmQ5VS4VCItWb3HDvLM9LtMu2g5iEJcqQ9YdGK4of74kt/q7v?=
+ =?us-ascii?Q?0uY2?=
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR13MB4453.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2020 04:56:02.3026
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b369ea3-592b-45ca-fb76-08d89b35900c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: etpVPxyT7plKRc11wjRLugfVw1D1MuO8ahXxlYrv9pTSvR0Kid8rmup+F6QOJOH+VqBN3nBF8xNYkbtp1gmdag==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR13MB3745
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The SN65DSI86 provides the ability to supply a PWM signal on GPIO 4,
-with the primary purpose of controlling the backlight of the attached
-panel. Add an implementation that exposes this using the standard PWM
-framework, to allow e.g. pwm-backlight to expose this to the user.
+Start board support by adding initial support for the SiFive FU740 SoC
+and the first development board that uses it, the SiFive HiFive
+Unmatched A00.
 
-Special thanks to Doug Anderson for suggestions related to the involved
-math.
+Boot-tested on Linux 5.10-rc4 on a HiFive Unmatched A00 board using the
+U-boot and OpenSBI.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 202 ++++++++++++++++++++++++++
- 1 file changed, 202 insertions(+)
+This patch series is dependent on Zong's Patchset[0]. The patchset also
+adds two new nodes in dtsi file. The binding documentation patch
+for these nodes are already posted on the mailing list[1][2].
 
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index f27306c51e4d..43c0acba57ab 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -4,6 +4,7 @@
-  * datasheet: https://www.ti.com/lit/ds/symlink/sn65dsi86.pdf
-  */
- 
-+#include <linux/atomic.h>
- #include <linux/bits.h>
- #include <linux/clk.h>
- #include <linux/debugfs.h>
-@@ -14,6 +15,7 @@
- #include <linux/module.h>
- #include <linux/of_graph.h>
- #include <linux/pm_runtime.h>
-+#include <linux/pwm.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- 
-@@ -89,6 +91,11 @@
- #define SN_ML_TX_MODE_REG			0x96
- #define  ML_TX_MAIN_LINK_OFF			0
- #define  ML_TX_NORMAL_MODE			BIT(0)
-+#define SN_PWM_PRE_DIV_REG			0xA0
-+#define SN_BACKLIGHT_SCALE_REG			0xA1
-+#define  BACKLIGHT_SCALE_MAX			0xFFFF
-+#define SN_BACKLIGHT_REG			0xA3
-+#define SN_PWM_EN_INV_REG			0xA5
- #define SN_AUX_CMD_STATUS_REG			0xF4
- #define  AUX_IRQ_STATUS_AUX_RPLY_TOUT		BIT(3)
- #define  AUX_IRQ_STATUS_AUX_SHORT		BIT(5)
-@@ -111,6 +118,8 @@
- 
- #define SN_LINK_TRAINING_TRIES		10
- 
-+#define SN_PWM_GPIO			3
-+
- /**
-  * struct ti_sn_bridge - Platform data for ti-sn65dsi86 driver.
-  * @dev:          Pointer to our device.
-@@ -162,6 +171,12 @@ struct ti_sn_bridge {
- 	struct gpio_chip		gchip;
- 	DECLARE_BITMAP(gchip_output, SN_NUM_GPIOS);
- #endif
-+#if defined(CONFIG_PWM)
-+	struct pwm_chip			pchip;
-+	bool				pwm_enabled;
-+	unsigned int			pwm_refclk;
-+	atomic_t			pwm_pin_busy;
-+#endif
- };
- 
- static const struct regmap_range ti_sn_bridge_volatile_ranges[] = {
-@@ -499,6 +514,14 @@ static void ti_sn_bridge_set_refclk_freq(struct ti_sn_bridge *pdata)
- 
- 	regmap_update_bits(pdata->regmap, SN_DPPLL_SRC_REG, REFCLK_FREQ_MASK,
- 			   REFCLK_FREQ(i));
-+
-+#if defined(CONFIG_PWM)
-+	/*
-+	 * The PWM refclk is based on the value written to SN_DPPLL_SRC_REG,
-+	 * regardless of its actual sourcing.
-+	 */
-+	pdata->pwm_refclk = ti_sn_bridge_refclk_lut[i];
-+#endif
- }
- 
- static void ti_sn_bridge_set_dsi_rate(struct ti_sn_bridge *pdata)
-@@ -981,6 +1004,161 @@ static int ti_sn_bridge_parse_dsi_host(struct ti_sn_bridge *pdata)
- 	return 0;
- }
- 
-+#if defined(CONFIG_PWM)
-+static int ti_sn_pwm_pin_request(struct ti_sn_bridge *pdata)
-+{
-+	return atomic_xchg(&pdata->pwm_pin_busy, 1) ? -EBUSY : 0;
-+}
-+
-+static void ti_sn_pwm_pin_release(struct ti_sn_bridge *pdata)
-+{
-+	atomic_set(&pdata->pwm_pin_busy, 0);
-+}
-+
-+static struct ti_sn_bridge *
-+pwm_chip_to_ti_sn_bridge(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct ti_sn_bridge, pchip);
-+}
-+
-+static int ti_sn_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct ti_sn_bridge *pdata = pwm_chip_to_ti_sn_bridge(chip);
-+
-+	return ti_sn_pwm_pin_request(pdata);
-+}
-+
-+static void ti_sn_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct ti_sn_bridge *pdata = pwm_chip_to_ti_sn_bridge(chip);
-+
-+	ti_sn_pwm_pin_release(pdata);
-+}
-+
-+static int ti_sn_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			   const struct pwm_state *state)
-+{
-+	struct ti_sn_bridge *pdata = pwm_chip_to_ti_sn_bridge(chip);
-+	unsigned int pwm_en_inv;
-+	unsigned int backlight;
-+	unsigned int pwm_freq;
-+	unsigned int pre_div;
-+	unsigned int scale;
-+	int ret;
-+
-+	if (!pdata->pwm_enabled) {
-+		ret = pm_runtime_get_sync(pdata->dev);
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = regmap_update_bits(pdata->regmap, SN_GPIO_CTRL_REG,
-+					 SN_GPIO_MUX_MASK << (2 * SN_PWM_GPIO),
-+					 SN_GPIO_MUX_SPECIAL << (2 * SN_PWM_GPIO));
-+		if (ret) {
-+			dev_err(pdata->dev, "failed to mux in PWM function\n");
-+			goto out;
-+		}
-+	}
-+
-+	if (state->enabled) {
-+		/*
-+		 * Per the datasheet the PWM frequency is given by:
-+		 *
-+		 * PWM_FREQ = REFCLK_FREQ / (PWM_PRE_DIV * BACKLIGHT_SCALE + 1)
-+		 *
-+		 * In order to find the PWM_FREQ that best suits the requested
-+		 * state->period, the PWM_PRE_DIV is calculated with the
-+		 * maximum possible number of steps (BACKLIGHT_SCALE_MAX). The
-+		 * actual BACKLIGHT_SCALE is then adjusted down to match the
-+		 * requested period.
-+		 *
-+		 * The BACKLIGHT value is then calculated against the
-+		 * BACKLIGHT_SCALE, based on the requested duty_cycle and
-+		 * period.
-+		 */
-+		pwm_freq = NSEC_PER_SEC / state->period;
-+		pre_div = DIV_ROUND_UP(pdata->pwm_refclk / pwm_freq - 1, BACKLIGHT_SCALE_MAX);
-+		scale = (pdata->pwm_refclk / pwm_freq - 1) / pre_div;
-+
-+		backlight = scale * state->duty_cycle / state->period;
-+
-+		ret = regmap_write(pdata->regmap, SN_PWM_PRE_DIV_REG, pre_div);
-+		if (ret) {
-+			dev_err(pdata->dev, "failed to update PWM_PRE_DIV\n");
-+			goto out;
-+		}
-+
-+		ti_sn_bridge_write_u16(pdata, SN_BACKLIGHT_SCALE_REG, scale);
-+		ti_sn_bridge_write_u16(pdata, SN_BACKLIGHT_REG, backlight);
-+	}
-+
-+	pwm_en_inv = FIELD_PREP(BIT(1), !!state->enabled) |
-+		     FIELD_PREP(BIT(0), state->polarity == PWM_POLARITY_INVERSED);
-+	ret = regmap_write(pdata->regmap, SN_PWM_EN_INV_REG, pwm_en_inv);
-+	if (ret) {
-+		dev_err(pdata->dev, "failed to update PWM_EN/PWM_INV\n");
-+		goto out;
-+	}
-+
-+	pdata->pwm_enabled = !!state->enabled;
-+out:
-+
-+	if (!pdata->pwm_enabled)
-+		pm_runtime_put_sync(pdata->dev);
-+
-+	return ret;
-+}
-+
-+static const struct pwm_ops ti_sn_pwm_ops = {
-+	.request = ti_sn_pwm_request,
-+	.free = ti_sn_pwm_free,
-+	.apply = ti_sn_pwm_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static struct pwm_device *ti_sn_pwm_of_xlate(struct pwm_chip *pc,
-+					     const struct of_phandle_args *args)
-+{
-+	struct pwm_device *pwm;
-+
-+	if (args->args_count != 1)
-+		return ERR_PTR(-EINVAL);
-+
-+	pwm = pwm_request_from_chip(pc, 0, NULL);
-+	if (IS_ERR(pwm))
-+		return pwm;
-+
-+	pwm->args.period = args->args[0];
-+
-+	return pwm;
-+}
-+
-+static int ti_sn_setup_pwmchip(struct ti_sn_bridge *pdata)
-+{
-+	pdata->pchip.dev = pdata->dev;
-+	pdata->pchip.ops = &ti_sn_pwm_ops;
-+	pdata->pchip.base = -1;
-+	pdata->pchip.npwm = 1;
-+	pdata->pchip.of_xlate = ti_sn_pwm_of_xlate;
-+	pdata->pchip.of_pwm_n_cells = 1;
-+
-+	return pwmchip_add(&pdata->pchip);
-+}
-+
-+static void ti_sn_remove_pwmchip(struct ti_sn_bridge *pdata)
-+{
-+	pwmchip_remove(&pdata->pchip);
-+
-+	if (pdata->pwm_enabled)
-+		pm_runtime_put_sync(pdata->dev);
-+}
-+#else
-+static int ti_sn_pwm_pin_request(struct ti_sn_bridge *pdata) { return 0; }
-+static void ti_sn_pwm_pin_release(struct ti_sn_bridge *pdata) {}
-+static int ti_sn_setup_pwmchip(struct ti_sn_bridge *pdata) { return 0; }
-+static void ti_sn_remove_pwmchip(struct ti_sn_bridge *pdata) {}
-+#endif
-+
- #if defined(CONFIG_OF_GPIO)
- 
- static int tn_sn_bridge_of_xlate(struct gpio_chip *chip,
-@@ -1113,10 +1291,25 @@ static int ti_sn_bridge_gpio_direction_output(struct gpio_chip *chip,
- 	return ret;
- }
- 
-+static int ti_sn_bridge_gpio_request(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct ti_sn_bridge *pdata = gpiochip_get_data(chip);
-+
-+	if (offset == SN_PWM_GPIO)
-+		return ti_sn_pwm_pin_request(pdata);
-+
-+	return 0;
-+}
-+
- static void ti_sn_bridge_gpio_free(struct gpio_chip *chip, unsigned int offset)
- {
-+	struct ti_sn_bridge *pdata = gpiochip_get_data(chip);
-+
- 	/* We won't keep pm_runtime if we're input, so switch there on free */
- 	ti_sn_bridge_gpio_direction_input(chip, offset);
-+
-+	if (offset == SN_PWM_GPIO)
-+		ti_sn_pwm_pin_release(pdata);
- }
- 
- static const char * const ti_sn_bridge_gpio_names[SN_NUM_GPIOS] = {
-@@ -1136,6 +1329,7 @@ static int ti_sn_setup_gpio_controller(struct ti_sn_bridge *pdata)
- 	pdata->gchip.owner = THIS_MODULE;
- 	pdata->gchip.of_xlate = tn_sn_bridge_of_xlate;
- 	pdata->gchip.of_gpio_n_cells = 2;
-+	pdata->gchip.request = ti_sn_bridge_gpio_request;
- 	pdata->gchip.free = ti_sn_bridge_gpio_free;
- 	pdata->gchip.get_direction = ti_sn_bridge_gpio_get_direction;
- 	pdata->gchip.direction_input = ti_sn_bridge_gpio_direction_input;
-@@ -1282,6 +1476,12 @@ static int ti_sn_bridge_probe(struct i2c_client *client,
- 		return ret;
- 	}
- 
-+	ret = ti_sn_setup_pwmchip(pdata);
-+	if (ret)  {
-+		pm_runtime_disable(pdata->dev);
-+		return ret;
-+	}
-+
- 	i2c_set_clientdata(client, pdata);
- 
- 	pdata->aux.name = "ti-sn65dsi86-aux";
-@@ -1320,6 +1520,8 @@ static int ti_sn_bridge_remove(struct i2c_client *client)
- 
- 	drm_bridge_remove(&pdata->bridge);
- 
-+	ti_sn_remove_pwmchip(pdata);
-+
- 	return 0;
- }
- 
+[0]: https://lore.kernel.org/linux-riscv/20201130082330.77268-4-zong.li@sifive.com/T/#u
+[1]: https://lore.kernel.org/linux-riscv/1606714984-16593-1-git-send-email-yash.shah@sifive.com/T/#t
+[2]: https://lore.kernel.org/linux-riscv/20201126030043.67390-1-zong.li@sifive.com/T/#u
+
+Changes in v2:
+- The dt bindings patch is split into several individual patches.
+- Expand the full list for compatible strings in i2c-ocores.txt
+
+Yash Shah (9):
+  dt-bindings: riscv: Update DT binding docs to support SiFive FU740 SoC
+  dt-bindings: spi: Update DT binding docs to support SiFive FU740 SoC
+  dt-bindings: pwm: Update DT binding docs to support SiFive FU740 SoC
+  dt-bindings: serial: Update DT binding docs to support SiFive FU740
+    SoC
+  dt-bindings: gpio: Update DT binding docs to support SiFive FU740 SoC
+  dt-bindings: i2c: Update DT binding docs to support SiFive FU740 SoC
+  riscv: dts: add initial support for the SiFive FU740-C000 SoC
+  dt-bindings: riscv: Update YAML doc to support SiFive HiFive Unmatched
+    board
+  riscv: dts: add initial board data for the SiFive HiFive Unmatched
+
+ .../devicetree/bindings/gpio/sifive,gpio.yaml      |   4 +-
+ .../devicetree/bindings/i2c/i2c-ocores.txt         |   8 +-
+ .../devicetree/bindings/pwm/pwm-sifive.yaml        |   9 +-
+ Documentation/devicetree/bindings/riscv/cpus.yaml  |   6 +
+ .../devicetree/bindings/riscv/sifive.yaml          |  17 +-
+ .../devicetree/bindings/serial/sifive-serial.yaml  |   4 +-
+ .../devicetree/bindings/spi/spi-sifive.yaml        |  10 +-
+ arch/riscv/boot/dts/sifive/Makefile                |   3 +-
+ arch/riscv/boot/dts/sifive/fu740-c000.dtsi         | 293 +++++++++++++++++++++
+ .../riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 253 ++++++++++++++++++
+ 10 files changed, 590 insertions(+), 17 deletions(-)
+ create mode 100644 arch/riscv/boot/dts/sifive/fu740-c000.dtsi
+ create mode 100644 arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
+
 -- 
-2.29.2
+2.7.4
 
