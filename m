@@ -2,107 +2,136 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F13A2D480B
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Dec 2020 18:37:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF5092D4C32
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Dec 2020 21:51:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732739AbgLIRhM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 9 Dec 2020 12:37:12 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33291 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732511AbgLIRhJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Dec 2020 12:37:09 -0500
-Received: by mail-oi1-f196.google.com with SMTP id d27so2582363oic.0;
-        Wed, 09 Dec 2020 09:36:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bka+gIe2PYYq4ePeK5SsKTLs6SwK5O5OVnbyEVbKVvc=;
-        b=Fi0zad0gvqWQcDbCcoWqlU8bqCFJa7rnby+wvMXC7+L3yQB2gdoQdZjyOaNx61AKWh
-         3DWG92Sj7V+g+IAyZmLxCrpL9GcLfFF65yY8Os10DpysGZneGvaYiUbQ36WAghvP8aX3
-         EIeFw1F29q+DmpBpXJ8izsyC4pi/FFMVk0tj1UZnE8nUCfhzkYYE5D3iWrPiBcdnoo3G
-         VjrR/zlrXTi1WhWZl2lMfA6QOxtncJsXYGYJXYguQ+2x2H0i5N+5PYMD1kn1hQiBtPVs
-         ftdHkLiTlbkSGS+nWigMsKScVmCj/Q+VZdR58GrYZYLsKczjYQrkFVoc0v0uzbbuNovc
-         8yqQ==
-X-Gm-Message-State: AOAM533iwS8g37L+wb5qi2LNm30ZlO1quG3PO+SaU3/fnRlJp2plLN9N
-        m9UXcd2SgIdYouDTM4Q17Q==
-X-Google-Smtp-Source: ABdhPJwfX4MV4Pd4gkJYdfqaNpb5JzpyOTvPjdxnCE/rfTZkEEStMybE/u7/b04DDpwcwNS7MNIHRQ==
-X-Received: by 2002:aca:b686:: with SMTP id g128mr2565481oif.82.1607535388097;
-        Wed, 09 Dec 2020 09:36:28 -0800 (PST)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 8sm455253oii.45.2020.12.09.09.36.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Dec 2020 09:36:27 -0800 (PST)
-Received: (nullmailer pid 654142 invoked by uid 1000);
-        Wed, 09 Dec 2020 17:36:25 -0000
-Date:   Wed, 9 Dec 2020 11:36:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] dt-bindings: ap806: document gpio pwm-offset
- property
-Message-ID: <20201209173625.GA652178@robh.at.kernel.org>
-References: <cover.1606892239.git.baruch@tkos.co.il>
- <ba17da5dfea6128a2502e5ebd38ed35bcd797deb.1606892239.git.baruch@tkos.co.il>
+        id S1732827AbgLIUup (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 9 Dec 2020 15:50:45 -0500
+Received: from mout.gmx.net ([212.227.15.15]:60915 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732812AbgLIUuo (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 9 Dec 2020 15:50:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1607546940;
+        bh=cZK9lXe+lnP5mffhlgig8QrTV7IO6552Uuy5B8WoglA=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=DtsuGwCnXW+TGgzpJs9Hmkmi91Js//KOffuNTb6ilk2CjFYZ4mjzAgiTzVnO2SP5l
+         9dyd8kUfeTjF5qr53mMPRb3hBOa65krsEuPOy5kV8VPjrtZuB+25pt7xlk84zGxmZW
+         OQBPEsIOLGaDgzSTpb248isrf0EbrLcmIaTFCaPc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from Venus.fritz.box ([78.42.220.31]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MZktZ-1kbIpI3RLD-00WqNi; Wed, 09
+ Dec 2020 21:48:59 +0100
+From:   Lino Sanfilippo <LinoSanfilippo@gmx.de>
+To:     thierry.reding@gmail.com
+Cc:     u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        nsaenzjulienne@suse.de, f.fainelli@gmail.com, rjui@broadcom.com,
+        sean@mess.org, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Lino Sanfilippo <LinoSanfilippo@gmx.de>
+Subject: [PATCH v4] pwm: bcm2835: Support apply function for atomic configuration
+Date:   Wed,  9 Dec 2020 21:48:25 +0100
+Message-Id: <1607546905-20549-1-git-send-email-LinoSanfilippo@gmx.de>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ba17da5dfea6128a2502e5ebd38ed35bcd797deb.1606892239.git.baruch@tkos.co.il>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+X-Provags-ID: V03:K1:Jv47Zx8hJDQO6NMVX5/d9WEbTrKJ8taFw5fjTtl2u6kKHkEV1aG
+ +no7QZOePQ3HfIvSvBco9NIs4V9CsEliAJ6eUxtnV4IHcI/7izOqxILns33APkl835Fi+R4
+ BLmleqNWmAoc596/3YvWonROoK9V7+ibWgkPkRLyAawgxNo6QfgTuX8RRBm0R9Wh1H2ou9P
+ Kp7ql3cGJ6CC6rF5nPqSw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hm6ziXOeYcc=:sppEYLbECBwTAJKPqBS/sL
+ 8WZMMd9JMQPE08AduLKgl++IFUwCYidEKVX0ZApGDQCrzq4CEvgWkM028oIu+49ktGXVwwQGw
+ y7IKuILyGym65vXnwnpnqyHfi7Gk9xavEAiw2BNrXvV4iDzdTtp5dE6+nZdjet6BAQHCZ3fsd
+ mcCXwlPhXMg+yDQ4xEoQYyM17XEO38uJAo0H7d5VS8A5eiNo4yE3y+ip3nL9epCZ/1qisyeKa
+ BT8plJojAP6n/930GyNPJa/6ElVhDVRkTsnJbBbhKE/8Hn1pDwedOog1Tseq6yWHcNDPr14MQ
+ m3SLQegNrQ4/6XEflPKKuX7NB74U9ATT+67zKLh1+WGYP1eykaTrLOS+Ru/rGcf5zMZesSad0
+ gG9UjujE0xKGBf0/Tn4dqUZvqClUSKJCXWEz/YzEUGKyjOAOS7pSfYkxVU8cBDB+PjbSvSej7
+ 5UCJ4Wz2jN4h7T/USc8V364OGUYJM1gN7OTy1s9/iMV7MCU4u4TzGZI0ijPlbzyikXDTbZrEX
+ v3hdxmDkdws67bxcUpvtpblxhlUvU/Xpnmt3qjQCZPriBQSnJtYVoGtbpPnhJo/a/18eJtnlX
+ alBxLxsQhNIaWFnK8lKa7BfDjsBMZqgYju2fxC8M1T0PFooau3IuaZjoQEV7GzxzHhgxjdAoT
+ qUcd3trgwPSDfD02fqffMlru1rNG+DOL+yqk8PLUddHrOz9F560IdRBJtiZdjOSUADa9AQfoa
+ Whqz597mF9EBLLxNwQP+SH0ROBr4JNjgGhyjaYsvsO7kFlealXtFBg1qfAv4M9XbYhzaJkUBh
+ stqDmjBjboya8cHcVP3dJfsCclFgRPmBYPlG04z6JI9wAslwn9A/zD2+d/+a4IyF7LSMjaVih
+ 2cOLFY0+eE/J2rSPUEHQ==
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Dec 02, 2020 at 09:15:37AM +0200, Baruch Siach wrote:
-> Update the example as well. Add the '#pwm-cells' and 'clocks' properties
-> for a complete working example.
-> 
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> ---
->  .../bindings/arm/marvell/ap80x-system-controller.txt      | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
-> index e31511255d8e..a754e8992450 100644
-> --- a/Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
-> +++ b/Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
-> @@ -80,6 +80,11 @@ Required properties:
->  
->  - offset: offset address inside the syscon block
->  
-> +Optional properties:
-> +
-> +- pwm-offset: offset address of PWM duration control registers inside the
-> +  syscon block
-
-marvell,pwm-offset
-
-> +
->  Example:
->  ap_syscon: system-controller@6f4000 {
->  	compatible = "syscon", "simple-mfd";
-> @@ -101,6 +106,9 @@ ap_syscon: system-controller@6f4000 {
->  		gpio-controller;
->  		#gpio-cells = <2>;
->  		gpio-ranges = <&ap_pinctrl 0 0 19>;
-> +		pwm-offset = <0x10c0>;
-> +		#pwm-cells = <2>;
-> +		clocks = <&ap_clk 3>;
->  	};
->  };
->  
-> -- 
-> 2.29.2
-> 
+VXNlIHRoZSBuZXdlciAuYXBwbHkgZnVuY3Rpb24gb2YgcHdtX29wcyBpbnN0ZWFkIG9mIC5jb25m
+aWcsIC5lbmFibGUsCi5kaXNhYmxlIGFuZCAuc2V0X3BvbGFyaXR5LiBUaGlzIGd1YXJhbnRlZXMg
+YXRvbWljIGNoYW5nZXMgb2YgdGhlIHB3bQpjb250cm9sbGVyIGNvbmZpZ3VyYXRpb24uIEl0IGFs
+c28gcmVkdWNlcyB0aGUgc2l6ZSBvZiB0aGUgZHJpdmVyLgoKU2luY2Ugbm93IHBlcmlvZCBpcyBh
+IDY0IGJpdCB2YWx1ZSwgYWRkIGFuIGV4dHJhIGNoZWNrIHRvIHJlamVjdCBwZXJpb2RzCnRoYXQg
+ZXhjZWVkIHRoZSBwb3NzaWJsZSBtYXggdmFsdWUgZm9yIHRoZSAzMiBiaXQgcmVnaXN0ZXIuCgpU
+aGlzIGhhcyBiZWVuIHRlc3RlZCBvbiBhIFJhc3BiZXJyeSBQSSA0LgoKU2lnbmVkLW9mZi1ieTog
+TGlubyBTYW5maWxpcHBvIDxMaW5vU2FuZmlsaXBwb0BnbXguZGU+Ci0tLQoKdjQ6IFJlbW92ZSBh
+IHN1cGVyZmx1b3VzIGJsYW5rIGxpbmUKICAgIFJlbW92ZSBhbiB1bm5lZWRlZCBjYXN0IChib3Ro
+IHJlcXVlc3RlZCBieSBVd2UgS2xlaW5lLUvDtm5pZykKdjM6IENoZWNrIGFnYWluc3QgcGVyaW9k
+IHRydW5jYXRpb24gKGFsc28gYmFzZWQgb24gYSByZXZpZXcgYnkgVXdlKQp2MjogRml4IGNvbXBp
+bGVyIGVycm9yIGZvciA2NCBiaXQgYnVpbGRzCgogZHJpdmVycy9wd20vcHdtLWJjbTI4MzUuYyB8
+IDY5ICsrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiAxIGZp
+bGUgY2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKSwgNDUgZGVsZXRpb25zKC0pIGoKCmRpZmYgLS1n
+aXQgYS9kcml2ZXJzL3B3bS9wd20tYmNtMjgzNS5jIGIvZHJpdmVycy9wd20vcHdtLWJjbTI4MzUu
+YwppbmRleCBkNzhmODZmLi40YjFlZTQ0IDEwMDY0NAotLS0gYS9kcml2ZXJzL3B3bS9wd20tYmNt
+MjgzNS5jCisrKyBiL2RyaXZlcnMvcHdtL3B3bS1iY20yODM1LmMKQEAgLTU4LDEzICs1OCwxNSBA
+QCBzdGF0aWMgdm9pZCBiY20yODM1X3B3bV9mcmVlKHN0cnVjdCBwd21fY2hpcCAqY2hpcCwgc3Ry
+dWN0IHB3bV9kZXZpY2UgKnB3bSkKIAl3cml0ZWwodmFsdWUsIHBjLT5iYXNlICsgUFdNX0NPTlRS
+T0wpOwogfQogCi1zdGF0aWMgaW50IGJjbTI4MzVfcHdtX2NvbmZpZyhzdHJ1Y3QgcHdtX2NoaXAg
+KmNoaXAsIHN0cnVjdCBwd21fZGV2aWNlICpwd20sCi0JCQkgICAgICBpbnQgZHV0eV9ucywgaW50
+IHBlcmlvZF9ucykKK3N0YXRpYyBpbnQgYmNtMjgzNV9wd21fYXBwbHkoc3RydWN0IHB3bV9jaGlw
+ICpjaGlwLCBzdHJ1Y3QgcHdtX2RldmljZSAqcHdtLAorCQkJICAgICBjb25zdCBzdHJ1Y3QgcHdt
+X3N0YXRlICpzdGF0ZSkKIHsKKwogCXN0cnVjdCBiY20yODM1X3B3bSAqcGMgPSB0b19iY20yODM1
+X3B3bShjaGlwKTsKIAl1bnNpZ25lZCBsb25nIHJhdGUgPSBjbGtfZ2V0X3JhdGUocGMtPmNsayk7
+CisJdW5zaWduZWQgbG9uZyBsb25nIHBlcmlvZDsKIAl1bnNpZ25lZCBsb25nIHNjYWxlcjsKLQl1
+MzIgcGVyaW9kOworCXUzMiB2YWw7CiAKIAlpZiAoIXJhdGUpIHsKIAkJZGV2X2VycihwYy0+ZGV2
+LCAiZmFpbGVkIHRvIGdldCBjbG9jayByYXRlXG4iKTsKQEAgLTcyLDU0ICs3NCwzNCBAQCBzdGF0
+aWMgaW50IGJjbTI4MzVfcHdtX2NvbmZpZyhzdHJ1Y3QgcHdtX2NoaXAgKmNoaXAsIHN0cnVjdCBw
+d21fZGV2aWNlICpwd20sCiAJfQogCiAJc2NhbGVyID0gRElWX1JPVU5EX0NMT1NFU1QoTlNFQ19Q
+RVJfU0VDLCByYXRlKTsKLQlwZXJpb2QgPSBESVZfUk9VTkRfQ0xPU0VTVChwZXJpb2RfbnMsIHNj
+YWxlcik7CisJLyogc2V0IHBlcmlvZCAqLworCXBlcmlvZCA9IERJVl9ST1VORF9DTE9TRVNUX1VM
+TChzdGF0ZS0+cGVyaW9kLCBzY2FsZXIpOwogCi0JaWYgKHBlcmlvZCA8IFBFUklPRF9NSU4pCisJ
+LyogZG9udCBhY2NlcHQgYSBwZXJpb2QgdGhhdCBpcyB0b28gc21hbGwgb3IgaGFzIGJlZW4gdHJ1
+bmNhdGVkICovCisJaWYgKChwZXJpb2QgPCBQRVJJT0RfTUlOKSB8fCAocGVyaW9kID4gVTMyX01B
+WCkpCiAJCXJldHVybiAtRUlOVkFMOwogCi0Jd3JpdGVsKERJVl9ST1VORF9DTE9TRVNUKGR1dHlf
+bnMsIHNjYWxlciksCi0JICAgICAgIHBjLT5iYXNlICsgRFVUWShwd20tPmh3cHdtKSk7CiAJd3Jp
+dGVsKHBlcmlvZCwgcGMtPmJhc2UgKyBQRVJJT0QocHdtLT5od3B3bSkpOwogCi0JcmV0dXJuIDA7
+Ci19Ci0KLXN0YXRpYyBpbnQgYmNtMjgzNV9wd21fZW5hYmxlKHN0cnVjdCBwd21fY2hpcCAqY2hp
+cCwgc3RydWN0IHB3bV9kZXZpY2UgKnB3bSkKLXsKLQlzdHJ1Y3QgYmNtMjgzNV9wd20gKnBjID0g
+dG9fYmNtMjgzNV9wd20oY2hpcCk7Ci0JdTMyIHZhbHVlOwotCi0JdmFsdWUgPSByZWFkbChwYy0+
+YmFzZSArIFBXTV9DT05UUk9MKTsKLQl2YWx1ZSB8PSBQV01fRU5BQkxFIDw8IFBXTV9DT05UUk9M
+X1NISUZUKHB3bS0+aHdwd20pOwotCXdyaXRlbCh2YWx1ZSwgcGMtPmJhc2UgKyBQV01fQ09OVFJP
+TCk7CisJLyogc2V0IGR1dHkgY3ljbGUgKi8KKwl2YWwgPSBESVZfUk9VTkRfQ0xPU0VTVF9VTEwo
+c3RhdGUtPmR1dHlfY3ljbGUsIHNjYWxlcik7CisJd3JpdGVsKHZhbCwgcGMtPmJhc2UgKyBEVVRZ
+KHB3bS0+aHdwd20pKTsKIAotCXJldHVybiAwOwotfQorCS8qIHNldCBwb2xhcml0eSAqLworCXZh
+bCA9IHJlYWRsKHBjLT5iYXNlICsgUFdNX0NPTlRST0wpOwogCi1zdGF0aWMgdm9pZCBiY20yODM1
+X3B3bV9kaXNhYmxlKHN0cnVjdCBwd21fY2hpcCAqY2hpcCwgc3RydWN0IHB3bV9kZXZpY2UgKnB3
+bSkKLXsKLQlzdHJ1Y3QgYmNtMjgzNV9wd20gKnBjID0gdG9fYmNtMjgzNV9wd20oY2hpcCk7Ci0J
+dTMyIHZhbHVlOwotCi0JdmFsdWUgPSByZWFkbChwYy0+YmFzZSArIFBXTV9DT05UUk9MKTsKLQl2
+YWx1ZSAmPSB+KFBXTV9FTkFCTEUgPDwgUFdNX0NPTlRST0xfU0hJRlQocHdtLT5od3B3bSkpOwot
+CXdyaXRlbCh2YWx1ZSwgcGMtPmJhc2UgKyBQV01fQ09OVFJPTCk7Ci19Ci0KLXN0YXRpYyBpbnQg
+YmNtMjgzNV9zZXRfcG9sYXJpdHkoc3RydWN0IHB3bV9jaGlwICpjaGlwLCBzdHJ1Y3QgcHdtX2Rl
+dmljZSAqcHdtLAotCQkJCWVudW0gcHdtX3BvbGFyaXR5IHBvbGFyaXR5KQotewotCXN0cnVjdCBi
+Y20yODM1X3B3bSAqcGMgPSB0b19iY20yODM1X3B3bShjaGlwKTsKLQl1MzIgdmFsdWU7Ci0KLQl2
+YWx1ZSA9IHJlYWRsKHBjLT5iYXNlICsgUFdNX0NPTlRST0wpOworCWlmIChzdGF0ZS0+cG9sYXJp
+dHkgPT0gUFdNX1BPTEFSSVRZX05PUk1BTCkKKwkJdmFsICY9IH4oUFdNX1BPTEFSSVRZIDw8IFBX
+TV9DT05UUk9MX1NISUZUKHB3bS0+aHdwd20pKTsKKwllbHNlCisJCXZhbCB8PSBQV01fUE9MQVJJ
+VFkgPDwgUFdNX0NPTlRST0xfU0hJRlQocHdtLT5od3B3bSk7CiAKLQlpZiAocG9sYXJpdHkgPT0g
+UFdNX1BPTEFSSVRZX05PUk1BTCkKLQkJdmFsdWUgJj0gfihQV01fUE9MQVJJVFkgPDwgUFdNX0NP
+TlRST0xfU0hJRlQocHdtLT5od3B3bSkpOworCS8qIGVuYWJsZS9kaXNhYmxlICovCisJaWYgKHN0
+YXRlLT5lbmFibGVkKQorCQl2YWwgfD0gUFdNX0VOQUJMRSA8PCBQV01fQ09OVFJPTF9TSElGVChw
+d20tPmh3cHdtKTsKIAllbHNlCi0JCXZhbHVlIHw9IFBXTV9QT0xBUklUWSA8PCBQV01fQ09OVFJP
+TF9TSElGVChwd20tPmh3cHdtKTsKKwkJdmFsICY9IH4oUFdNX0VOQUJMRSA8PCBQV01fQ09OVFJP
+TF9TSElGVChwd20tPmh3cHdtKSk7CiAKLQl3cml0ZWwodmFsdWUsIHBjLT5iYXNlICsgUFdNX0NP
+TlRST0wpOworCXdyaXRlbCh2YWwsIHBjLT5iYXNlICsgUFdNX0NPTlRST0wpOwogCiAJcmV0dXJu
+IDA7CiB9CkBAIC0xMjcsMTAgKzEwOSw3IEBAIHN0YXRpYyBpbnQgYmNtMjgzNV9zZXRfcG9sYXJp
+dHkoc3RydWN0IHB3bV9jaGlwICpjaGlwLCBzdHJ1Y3QgcHdtX2RldmljZSAqcHdtLAogc3RhdGlj
+IGNvbnN0IHN0cnVjdCBwd21fb3BzIGJjbTI4MzVfcHdtX29wcyA9IHsKIAkucmVxdWVzdCA9IGJj
+bTI4MzVfcHdtX3JlcXVlc3QsCiAJLmZyZWUgPSBiY20yODM1X3B3bV9mcmVlLAotCS5jb25maWcg
+PSBiY20yODM1X3B3bV9jb25maWcsCi0JLmVuYWJsZSA9IGJjbTI4MzVfcHdtX2VuYWJsZSwKLQku
+ZGlzYWJsZSA9IGJjbTI4MzVfcHdtX2Rpc2FibGUsCi0JLnNldF9wb2xhcml0eSA9IGJjbTI4MzVf
+c2V0X3BvbGFyaXR5LAorCS5hcHBseSA9IGJjbTI4MzVfcHdtX2FwcGx5LAogCS5vd25lciA9IFRI
+SVNfTU9EVUxFLAogfTsKIAotLSAKMi43LjQKCg==
