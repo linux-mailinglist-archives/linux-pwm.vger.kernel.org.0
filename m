@@ -2,134 +2,225 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 685BE2D35CD
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Dec 2020 23:13:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 359992D3BF1
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Dec 2020 08:07:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730631AbgLHWEW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Dec 2020 17:04:22 -0500
-Received: from mout.gmx.net ([212.227.17.22]:36791 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730608AbgLHWEQ (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 8 Dec 2020 17:04:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1607464945;
-        bh=0W8L1s/+E8M+O5m3NU5Cjqur7xln1/V/UMJdSR+R264=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=UVFUKXAKROTOprum0Bxa8AAlMCbTb8S2jdMLfGiaG0tBNk91Oo0MyMlrfA9v7qdrX
-         zMLoUlsnO4vp5NDEuQW64URRH61u/huMZO/0n36ILGq4CURhs0j7+PLa1rzi8KuRhF
-         lYGhXeLdTjJQBH0KdSpj8HI3VZWeSgEf0zm5rbqM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from Venus.fritz.box ([78.42.220.31]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N63VY-1k6i7M3dxg-016NUN; Tue, 08
- Dec 2020 23:02:24 +0100
-From:   Lino Sanfilippo <LinoSanfilippo@gmx.de>
-To:     thierry.reding@gmail.com
-Cc:     u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        id S1726690AbgLIHGI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 9 Dec 2020 02:06:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgLIHGI (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Dec 2020 02:06:08 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8687DC0613CF
+        for <linux-pwm@vger.kernel.org>; Tue,  8 Dec 2020 23:05:27 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kmtXK-0007ZR-4Q; Wed, 09 Dec 2020 08:05:18 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kmtXI-0005LE-Iu; Wed, 09 Dec 2020 08:05:16 +0100
+Date:   Wed, 9 Dec 2020 08:05:16 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Lino Sanfilippo <LinoSanfilippo@gmx.de>
+Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
         nsaenzjulienne@suse.de, f.fainelli@gmail.com, rjui@broadcom.com,
         sean@mess.org, sbranden@broadcom.com,
         bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
         linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lino Sanfilippo <LinoSanfilippo@gmx.de>
-Subject: [PATCH v3] pwm: bcm2835: Support apply function for atomic configuration
-Date:   Tue,  8 Dec 2020 23:01:45 +0100
-Message-Id: <1607464905-16630-1-git-send-email-LinoSanfilippo@gmx.de>
-X-Mailer: git-send-email 2.7.4
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] pwm: bcm2835: Support apply function for atomic
+ configuration
+Message-ID: <20201209070516.yw5bpsh474k7mnfx@pengutronix.de>
+References: <1607464905-16630-1-git-send-email-LinoSanfilippo@gmx.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-Provags-ID: V03:K1:aKuR+reSMDTjWPkMggxhK4pXa7GsX+soPSBxaw2X6SiRgJ3gyEf
- eHuRyhr+2p1cY4DXylGklrqH2aM0gQTB+K5IkpcPy8olTJ8MnIdWfT1BIV/jvPBt9Kjvtep
- 8u+LRLFuHosJIDegsOBzZH/oiNvbpdmdzw9niv09U5u4Kzm7sjXf1DLoHJjsVWclPYaiVlI
- zov13P17h6H9/yvHgmFyg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:myZg7KeR1cw=:MRonv6eSgpTO/yMAIm6e4I
- d1W+NUCwofXYYR0/Sqnir9wtHFzgSa2PO/yvwVVOMklldh6o6df2Hmlj8AuX/ErxK8unb7yz6
- sOh48kAXa27KfcHX0Z3rYzFVer0YIYO0QJJr5SRgfjHxREmn9uI46njGNbqoLBwW/QYcUfbez
- tNUky/SCZr6UqMUItZPiaT4kxSjmjTnGt+0Yz2xRBhU7HzXh6t/9TC52RsAiCEL5mriRuraau
- CsODQ6HPHcRHHQV0hB/kUonDEcOK6pgL2iF15KorczqaWw97tDuvEsSNlj8mTbtmOboIagnw8
- cuiIg0k8NJIOsYYZe+U4xXt5Za2bo8PWNgdtqemM8dpBKkYGKgbTuAZ0xoNNn3C8I06+xnGOR
- VwbTrHvlxJG+dXO3CknAWO2ougD/oyNVMRUPF9vkn8reuJG1crchjfU5OaldY7jGpAKRRPRNe
- QSxJrWiP/EdOLkhhi/ddxnxZCtO+feqz08hBGO/A2121Mth8ctN+uXXpYFQUtan5gKZ3WDpsP
- ByyOYi8iLqi5e1DRIGoeLM8BfGuSoqNpVpP6HFOm/9KepSOdXIpaHbRR5vMEH6PTfqCRS/Itz
- fN2VDgQgc0ONIPx6h+sA/wn9f6X9YzbBNV+EBQVBiwwvsGCOpW6u1picVmHUH8tAsiStFRk/t
- 1bdJtRbqpapSYmZHzTUIYna+JCg1EF9BBrwV2jltA/lep4ojiTmWVHxMyo9yEDnvwCEoL/5Fa
- jykH4XD0g5cCikHTgVjQc3881DfAMyK0JbtQbwUHZJT5GjGJK7d0qajGjf1/11FRiSCyfVgSY
- QdqVKyMljJBeirSTWd00ue5CTfQwbg7tCMBtSptJzBojZNvfXcnD0qDWoz/uQmw3OgH4JKFIN
- y5vvwFKstMdTPHgDh4ZA==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2dgo6pzrzz5yxyxt"
+Content-Disposition: inline
+In-Reply-To: <1607464905-16630-1-git-send-email-LinoSanfilippo@gmx.de>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-VXNlIHRoZSBuZXdlciAuYXBwbHkgZnVuY3Rpb24gb2YgcHdtX29wcyBpbnN0ZWFkIG9mIC5jb25m
-aWcsIC5lbmFibGUsCi5kaXNhYmxlIGFuZCAuc2V0X3BvbGFyaXR5LiBUaGlzIGd1YXJhbnRlZXMg
-YXRvbWljIGNoYW5nZXMgb2YgdGhlIHB3bQpjb250cm9sbGVyIGNvbmZpZ3VyYXRpb24uIEl0IGFs
-c28gcmVkdWNlcyB0aGUgc2l6ZSBvZiB0aGUgZHJpdmVyLgoKU2luY2Ugbm93IHBlcmlvZCBpcyBh
-IDY0IGJpdCB2YWx1ZSwgYWRkIGFuIGV4dHJhIGNoZWNrIHRvIHJlamVjdCBwZXJpb2RzCnRoYXQg
-ZXhjZWVkIHRoZSBwb3NzaWJsZSBtYXggdmFsdWUgZm9yIHRoZSAzMiBiaXQgcmVnaXN0ZXIuCgpU
-aGlzIGhhcyBiZWVuIHRlc3RlZCBvbiBhIFJhc3BiZXJyeSBQSSA0LgoKU2lnbmVkLW9mZi1ieTog
-TGlubyBTYW5maWxpcHBvIDxMaW5vU2FuZmlsaXBwb0BnbXguZGU+Ci0tLQoKdjM6IENoZWNrIGFn
-YWluc3QgcGVyaW9kIHRydW5jYXRpb24gKGJhc2VkIG9uIGEgcmV2aWV3IGJ5IFV3ZSBLbGVpbmUt
-S8O2bmlnKQp2MjogRml4IGNvbXBpbGVyIGVycm9yIGZvciA2NCBiaXQgYnVpbGRzCgogZHJpdmVy
-cy9wd20vcHdtLWJjbTI4MzUuYyB8IDcyICsrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgMjYgaW5zZXJ0aW9ucygrKSwgNDYgZGVs
-ZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9wd20vcHdtLWJjbTI4MzUuYyBiL2RyaXZl
-cnMvcHdtL3B3bS1iY20yODM1LmMKaW5kZXggNjg0MWRjZi4uZDMzOTg5OCAxMDA2NDQKLS0tIGEv
-ZHJpdmVycy9wd20vcHdtLWJjbTI4MzUuYworKysgYi9kcml2ZXJzL3B3bS9wd20tYmNtMjgzNS5j
-CkBAIC01OCwxMyArNTgsMTUgQEAgc3RhdGljIHZvaWQgYmNtMjgzNV9wd21fZnJlZShzdHJ1Y3Qg
-cHdtX2NoaXAgKmNoaXAsIHN0cnVjdCBwd21fZGV2aWNlICpwd20pCiAJd3JpdGVsKHZhbHVlLCBw
-Yy0+YmFzZSArIFBXTV9DT05UUk9MKTsKIH0KIAotc3RhdGljIGludCBiY20yODM1X3B3bV9jb25m
-aWcoc3RydWN0IHB3bV9jaGlwICpjaGlwLCBzdHJ1Y3QgcHdtX2RldmljZSAqcHdtLAotCQkJICAg
-ICAgaW50IGR1dHlfbnMsIGludCBwZXJpb2RfbnMpCitzdGF0aWMgaW50IGJjbTI4MzVfcHdtX2Fw
-cGx5KHN0cnVjdCBwd21fY2hpcCAqY2hpcCwgc3RydWN0IHB3bV9kZXZpY2UgKnB3bSwKKwkJCSAg
-ICAgY29uc3Qgc3RydWN0IHB3bV9zdGF0ZSAqc3RhdGUpCiB7CisKIAlzdHJ1Y3QgYmNtMjgzNV9w
-d20gKnBjID0gdG9fYmNtMjgzNV9wd20oY2hpcCk7CiAJdW5zaWduZWQgbG9uZyByYXRlID0gY2xr
-X2dldF9yYXRlKHBjLT5jbGspOworCXVuc2lnbmVkIGxvbmcgbG9uZyBwZXJpb2Q7CiAJdW5zaWdu
-ZWQgbG9uZyBzY2FsZXI7Ci0JdTMyIHBlcmlvZDsKKwl1MzIgdmFsOwogCiAJaWYgKCFyYXRlKSB7
-CiAJCWRldl9lcnIocGMtPmRldiwgImZhaWxlZCB0byBnZXQgY2xvY2sgcmF0ZVxuIik7CkBAIC03
-Miw2NSArNzQsNDMgQEAgc3RhdGljIGludCBiY20yODM1X3B3bV9jb25maWcoc3RydWN0IHB3bV9j
-aGlwICpjaGlwLCBzdHJ1Y3QgcHdtX2RldmljZSAqcHdtLAogCX0KIAogCXNjYWxlciA9IERJVl9S
-T1VORF9DTE9TRVNUKE5TRUNfUEVSX1NFQywgcmF0ZSk7Ci0JcGVyaW9kID0gRElWX1JPVU5EX0NM
-T1NFU1QocGVyaW9kX25zLCBzY2FsZXIpOworCS8qIHNldCBwZXJpb2QgKi8KKwlwZXJpb2QgPSBE
-SVZfUk9VTkRfQ0xPU0VTVF9VTEwoc3RhdGUtPnBlcmlvZCwgc2NhbGVyKTsKIAotCWlmIChwZXJp
-b2QgPCBQRVJJT0RfTUlOKQorCS8qIGRvbnQgYWNjZXB0IGEgcGVyaW9kIHRoYXQgaXMgdG9vIHNt
-YWxsIG9yIGhhcyBiZWVuIHRydW5jYXRlZCAqLworCWlmICgocGVyaW9kIDwgUEVSSU9EX01JTikg
-fHwgKHBlcmlvZCA+IFUzMl9NQVgpKQogCQlyZXR1cm4gLUVJTlZBTDsKIAotCXdyaXRlbChESVZf
-Uk9VTkRfQ0xPU0VTVChkdXR5X25zLCBzY2FsZXIpLAotCSAgICAgICBwYy0+YmFzZSArIERVVFko
-cHdtLT5od3B3bSkpOwotCXdyaXRlbChwZXJpb2QsIHBjLT5iYXNlICsgUEVSSU9EKHB3bS0+aHdw
-d20pKTsKLQotCXJldHVybiAwOwotfQotCi1zdGF0aWMgaW50IGJjbTI4MzVfcHdtX2VuYWJsZShz
-dHJ1Y3QgcHdtX2NoaXAgKmNoaXAsIHN0cnVjdCBwd21fZGV2aWNlICpwd20pCi17Ci0Jc3RydWN0
-IGJjbTI4MzVfcHdtICpwYyA9IHRvX2JjbTI4MzVfcHdtKGNoaXApOwotCXUzMiB2YWx1ZTsKLQot
-CXZhbHVlID0gcmVhZGwocGMtPmJhc2UgKyBQV01fQ09OVFJPTCk7Ci0JdmFsdWUgfD0gUFdNX0VO
-QUJMRSA8PCBQV01fQ09OVFJPTF9TSElGVChwd20tPmh3cHdtKTsKLQl3cml0ZWwodmFsdWUsIHBj
-LT5iYXNlICsgUFdNX0NPTlRST0wpOwotCi0JcmV0dXJuIDA7Ci19Ci0KLXN0YXRpYyB2b2lkIGJj
-bTI4MzVfcHdtX2Rpc2FibGUoc3RydWN0IHB3bV9jaGlwICpjaGlwLCBzdHJ1Y3QgcHdtX2Rldmlj
-ZSAqcHdtKQotewotCXN0cnVjdCBiY20yODM1X3B3bSAqcGMgPSB0b19iY20yODM1X3B3bShjaGlw
-KTsKLQl1MzIgdmFsdWU7CisJd3JpdGVsKCh1MzIpIHBlcmlvZCwgcGMtPmJhc2UgKyBQRVJJT0Qo
-cHdtLT5od3B3bSkpOwogCi0JdmFsdWUgPSByZWFkbChwYy0+YmFzZSArIFBXTV9DT05UUk9MKTsK
-LQl2YWx1ZSAmPSB+KFBXTV9FTkFCTEUgPDwgUFdNX0NPTlRST0xfU0hJRlQocHdtLT5od3B3bSkp
-OwotCXdyaXRlbCh2YWx1ZSwgcGMtPmJhc2UgKyBQV01fQ09OVFJPTCk7Ci19CisJLyogc2V0IGR1
-dHkgY3ljbGUgKi8KKwl2YWwgPSBESVZfUk9VTkRfQ0xPU0VTVF9VTEwoc3RhdGUtPmR1dHlfY3lj
-bGUsIHNjYWxlcik7CisJd3JpdGVsKHZhbCwgcGMtPmJhc2UgKyBEVVRZKHB3bS0+aHdwd20pKTsK
-IAotc3RhdGljIGludCBiY20yODM1X3NldF9wb2xhcml0eShzdHJ1Y3QgcHdtX2NoaXAgKmNoaXAs
-IHN0cnVjdCBwd21fZGV2aWNlICpwd20sCi0JCQkJZW51bSBwd21fcG9sYXJpdHkgcG9sYXJpdHkp
-Ci17Ci0Jc3RydWN0IGJjbTI4MzVfcHdtICpwYyA9IHRvX2JjbTI4MzVfcHdtKGNoaXApOwotCXUz
-MiB2YWx1ZTsKKwkvKiBzZXQgcG9sYXJpdHkgKi8KKwl2YWwgPSByZWFkbChwYy0+YmFzZSArIFBX
-TV9DT05UUk9MKTsKIAotCXZhbHVlID0gcmVhZGwocGMtPmJhc2UgKyBQV01fQ09OVFJPTCk7CisJ
-aWYgKHN0YXRlLT5wb2xhcml0eSA9PSBQV01fUE9MQVJJVFlfTk9STUFMKQorCQl2YWwgJj0gfihQ
-V01fUE9MQVJJVFkgPDwgUFdNX0NPTlRST0xfU0hJRlQocHdtLT5od3B3bSkpOworCWVsc2UKKwkJ
-dmFsIHw9IFBXTV9QT0xBUklUWSA8PCBQV01fQ09OVFJPTF9TSElGVChwd20tPmh3cHdtKTsKIAot
-CWlmIChwb2xhcml0eSA9PSBQV01fUE9MQVJJVFlfTk9STUFMKQotCQl2YWx1ZSAmPSB+KFBXTV9Q
-T0xBUklUWSA8PCBQV01fQ09OVFJPTF9TSElGVChwd20tPmh3cHdtKSk7CisJLyogZW5hYmxlL2Rp
-c2FibGUgKi8KKwlpZiAoc3RhdGUtPmVuYWJsZWQpCisJCXZhbCB8PSBQV01fRU5BQkxFIDw8IFBX
-TV9DT05UUk9MX1NISUZUKHB3bS0+aHdwd20pOwogCWVsc2UKLQkJdmFsdWUgfD0gUFdNX1BPTEFS
-SVRZIDw8IFBXTV9DT05UUk9MX1NISUZUKHB3bS0+aHdwd20pOworCQl2YWwgJj0gfihQV01fRU5B
-QkxFIDw8IFBXTV9DT05UUk9MX1NISUZUKHB3bS0+aHdwd20pKTsKIAotCXdyaXRlbCh2YWx1ZSwg
-cGMtPmJhc2UgKyBQV01fQ09OVFJPTCk7CisJd3JpdGVsKHZhbCwgcGMtPmJhc2UgKyBQV01fQ09O
-VFJPTCk7CiAKIAlyZXR1cm4gMDsKIH0KIAorCiBzdGF0aWMgY29uc3Qgc3RydWN0IHB3bV9vcHMg
-YmNtMjgzNV9wd21fb3BzID0gewogCS5yZXF1ZXN0ID0gYmNtMjgzNV9wd21fcmVxdWVzdCwKIAku
-ZnJlZSA9IGJjbTI4MzVfcHdtX2ZyZWUsCi0JLmNvbmZpZyA9IGJjbTI4MzVfcHdtX2NvbmZpZywK
-LQkuZW5hYmxlID0gYmNtMjgzNV9wd21fZW5hYmxlLAotCS5kaXNhYmxlID0gYmNtMjgzNV9wd21f
-ZGlzYWJsZSwKLQkuc2V0X3BvbGFyaXR5ID0gYmNtMjgzNV9zZXRfcG9sYXJpdHksCisJLmFwcGx5
-ID0gYmNtMjgzNV9wd21fYXBwbHksCiAJLm93bmVyID0gVEhJU19NT0RVTEUsCiB9OwogCi0tIAoy
-LjcuNAoK
+
+--2dgo6pzrzz5yxyxt
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello Lino,
+
+On Tue, Dec 08, 2020 at 11:01:45PM +0100, Lino Sanfilippo wrote:
+> Use the newer .apply function of pwm_ops instead of .config, .enable,
+> .disable and .set_polarity. This guarantees atomic changes of the pwm
+> controller configuration. It also reduces the size of the driver.
+>=20
+> Since now period is a 64 bit value, add an extra check to reject periods
+> that exceed the possible max value for the 32 bit register.
+>=20
+> This has been tested on a Raspberry PI 4.
+
+This looks right, just two small nitpicks below.
+
+> Signed-off-by: Lino Sanfilippo <LinoSanfilippo@gmx.de>
+> ---
+>=20
+> v3: Check against period truncation (based on a review by Uwe Kleine-K=F6=
+nig)
+> v2: Fix compiler error for 64 bit builds
+>=20
+>  drivers/pwm/pwm-bcm2835.c | 72 +++++++++++++++++------------------------=
+------
+>  1 file changed, 26 insertions(+), 46 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
+> index 6841dcf..d339898 100644
+> --- a/drivers/pwm/pwm-bcm2835.c
+> +++ b/drivers/pwm/pwm-bcm2835.c
+> @@ -58,13 +58,15 @@ static void bcm2835_pwm_free(struct pwm_chip *chip, s=
+truct pwm_device *pwm)
+>  	writel(value, pc->base + PWM_CONTROL);
+>  }
+> =20
+> -static int bcm2835_pwm_config(struct pwm_chip *chip, struct pwm_device *=
+pwm,
+> -			      int duty_ns, int period_ns)
+> +static int bcm2835_pwm_apply(struct pwm_chip *chip, struct pwm_device *p=
+wm,
+> +			     const struct pwm_state *state)
+>  {
+> +
+>  	struct bcm2835_pwm *pc =3D to_bcm2835_pwm(chip);
+>  	unsigned long rate =3D clk_get_rate(pc->clk);
+> +	unsigned long long period;
+>  	unsigned long scaler;
+> -	u32 period;
+> +	u32 val;
+> =20
+>  	if (!rate) {
+>  		dev_err(pc->dev, "failed to get clock rate\n");
+> @@ -72,65 +74,43 @@ static int bcm2835_pwm_config(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+>  	}
+> =20
+>  	scaler =3D DIV_ROUND_CLOSEST(NSEC_PER_SEC, rate);
+> -	period =3D DIV_ROUND_CLOSEST(period_ns, scaler);
+> +	/* set period */
+> +	period =3D DIV_ROUND_CLOSEST_ULL(state->period, scaler);
+> =20
+> -	if (period < PERIOD_MIN)
+> +	/* dont accept a period that is too small or has been truncated */
+> +	if ((period < PERIOD_MIN) || (period > U32_MAX))
+>  		return -EINVAL;
+> =20
+> -	writel(DIV_ROUND_CLOSEST(duty_ns, scaler),
+> -	       pc->base + DUTY(pwm->hwpwm));
+> -	writel(period, pc->base + PERIOD(pwm->hwpwm));
+> -
+> -	return 0;
+> -}
+> -
+> -static int bcm2835_pwm_enable(struct pwm_chip *chip, struct pwm_device *=
+pwm)
+> -{
+> -	struct bcm2835_pwm *pc =3D to_bcm2835_pwm(chip);
+> -	u32 value;
+> -
+> -	value =3D readl(pc->base + PWM_CONTROL);
+> -	value |=3D PWM_ENABLE << PWM_CONTROL_SHIFT(pwm->hwpwm);
+> -	writel(value, pc->base + PWM_CONTROL);
+> -
+> -	return 0;
+> -}
+> -
+> -static void bcm2835_pwm_disable(struct pwm_chip *chip, struct pwm_device=
+ *pwm)
+> -{
+> -	struct bcm2835_pwm *pc =3D to_bcm2835_pwm(chip);
+> -	u32 value;
+> +	writel((u32) period, pc->base + PERIOD(pwm->hwpwm));
+
+This cast isn't necessary. (And if it was, I *think* the space between
+"(u32)" and "period" is wrong. But my expectation that checkpatch warns
+about this is wrong, so take this with a grain of salt.)
+
+> -	value =3D readl(pc->base + PWM_CONTROL);
+> -	value &=3D ~(PWM_ENABLE << PWM_CONTROL_SHIFT(pwm->hwpwm));
+> -	writel(value, pc->base + PWM_CONTROL);
+> -}
+> +	/* set duty cycle */
+> +	val =3D DIV_ROUND_CLOSEST_ULL(state->duty_cycle, scaler);
+> +	writel(val, pc->base + DUTY(pwm->hwpwm));
+> =20
+> -static int bcm2835_set_polarity(struct pwm_chip *chip, struct pwm_device=
+ *pwm,
+> -				enum pwm_polarity polarity)
+> -{
+> -	struct bcm2835_pwm *pc =3D to_bcm2835_pwm(chip);
+> -	u32 value;
+> +	/* set polarity */
+> +	val =3D readl(pc->base + PWM_CONTROL);
+> =20
+> -	value =3D readl(pc->base + PWM_CONTROL);
+> +	if (state->polarity =3D=3D PWM_POLARITY_NORMAL)
+> +		val &=3D ~(PWM_POLARITY << PWM_CONTROL_SHIFT(pwm->hwpwm));
+> +	else
+> +		val |=3D PWM_POLARITY << PWM_CONTROL_SHIFT(pwm->hwpwm);
+> =20
+> -	if (polarity =3D=3D PWM_POLARITY_NORMAL)
+> -		value &=3D ~(PWM_POLARITY << PWM_CONTROL_SHIFT(pwm->hwpwm));
+> +	/* enable/disable */
+> +	if (state->enabled)
+> +		val |=3D PWM_ENABLE << PWM_CONTROL_SHIFT(pwm->hwpwm);
+>  	else
+> -		value |=3D PWM_POLARITY << PWM_CONTROL_SHIFT(pwm->hwpwm);
+> +		val &=3D ~(PWM_ENABLE << PWM_CONTROL_SHIFT(pwm->hwpwm));
+> =20
+> -	writel(value, pc->base + PWM_CONTROL);
+> +	writel(val, pc->base + PWM_CONTROL);
+> =20
+>  	return 0;
+>  }
+> =20
+> +
+
+I wouldn't have added this empty line. But I guess that's subjective. Or
+did you add this by mistake?
+
+>  static const struct pwm_ops bcm2835_pwm_ops =3D {
+>  	.request =3D bcm2835_pwm_request,
+>  	.free =3D bcm2835_pwm_free,
+> -	.config =3D bcm2835_pwm_config,
+> -	.enable =3D bcm2835_pwm_enable,
+> -	.disable =3D bcm2835_pwm_disable,
+> -	.set_polarity =3D bcm2835_set_polarity,
+> +	.apply =3D bcm2835_pwm_apply,
+>  	.owner =3D THIS_MODULE,
+>  };
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--2dgo6pzrzz5yxyxt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/QdykACgkQwfwUeK3K
+7AkPywf8Dzj3PZCI1FXSSWq7XojtMiHYjfwbB9wbON6qdC6v66hq0X5HMJyZj5qZ
+uxtVSIA5Q5v5x6OFWVlezzeMapIux09Qyit5m53C67orAVXoW7vgi41n5An158oj
+/KixR6hhj7SOn0YCYP/PFON4ve15vdlspDLFPhP2vcfnaxdjqLGO3zctlsEreZSQ
+cBDDop3dSZvwxHCssqFD9JwHNka2z3Gko3bJRrGBTGNkNGioZGfn43/igU1u/YPY
+UM1xMQWF3hjIvmtWjUQ9UrX4aolVM7LVN3ecrui+Ag0JdxvlNOKvPw2h/q7Uc04A
+77Rmu+XD8LH4xs1yMppmSDNP16QxLA==
+=wwYJ
+-----END PGP SIGNATURE-----
+
+--2dgo6pzrzz5yxyxt--
