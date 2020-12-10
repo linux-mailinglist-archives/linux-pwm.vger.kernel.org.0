@@ -2,74 +2,73 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A7B6B2D522B
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Dec 2020 04:57:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EF4B2D5236
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Dec 2020 04:59:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731598AbgLJD4t (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 9 Dec 2020 22:56:49 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45369 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731425AbgLJD4m (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Dec 2020 22:56:42 -0500
-Received: by mail-oi1-f195.google.com with SMTP id f132so4266485oib.12;
-        Wed, 09 Dec 2020 19:56:22 -0800 (PST)
+        id S1731830AbgLJD5q (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 9 Dec 2020 22:57:46 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41890 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731790AbgLJD5n (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Dec 2020 22:57:43 -0500
+Received: by mail-ot1-f68.google.com with SMTP id x13so3655991oto.8;
+        Wed, 09 Dec 2020 19:57:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=UaBW8kKjumKB5NsRdwxO15H0fluT5i+CZRLhsRHEAQc=;
-        b=C8MLF4bulyGXK3qXMqUq9K5i2BEuIlOmPxK9sjDF1/GaB8x+J96o+mvEnIdbPXKtCC
-         N8l+CvQgRSyAXtd9SPel9JrMstqIO5R4hkSYt3rTtMEmfTYIZp+pS+qqg4GlFLcmY/BH
-         q4oTCD1NSzT4F0h0JmuuE5WjOYGfVMH8QGKMn0xAWD+MtNRpzKi1UyVfr8qiUCDxM7+K
-         s/Xh5j/ayxmeIrMpKqN6O0t6PRShVuND3HQlpbjbqFGloB29otlphk3h8qRftiiridJK
-         OxRS5vDhVb7Y0HQ2E0VcnbZO/C2wp4S/k721U7J82jQNkg7UG9aVRuMz9ckeUH5S0B1D
-         2dWw==
-X-Gm-Message-State: AOAM531BKs7XYHfZRmm7D45KL49fp8wCY0aFs8sqegzbTbR/xvjl/PAI
-        6Ot7PxwoogQ8Re8RyyUv8w==
-X-Google-Smtp-Source: ABdhPJwOhrm+iTszJ9LZontta94nHHnjY/oxO3rxT338UzSFe4GWwGxrSlB90g+rA2ah/Usvy4il1Q==
-X-Received: by 2002:aca:60c4:: with SMTP id u187mr4120688oib.42.1607572557234;
-        Wed, 09 Dec 2020 19:55:57 -0800 (PST)
+        bh=G2QhB7f/IZOs0m3re+ypQrxGcEo7MBRtBPMfHjJs2JY=;
+        b=hBQqGmHsmxDTA+7Ks8Dhn0W1p82f3DIWtyFvM7wDJgxDg47P+QOUvHV7BtOdmX86Xi
+         dI/Y3b3507VTrid0k35FIKGhETRHf8F/eLqrV5UvwNOiIZBJ0NWIHYa06CBIXpooqhaP
+         9mM5zhgDTt/PcHayqDvay7tbNmpFH55DEXV9vXPhKUEI+gNfSj1mu7gLzNOMbxzmYnL2
+         f2qD7orvmBHZDbv1pvOX5E54gXsMQWcijEQNf/UjLvzPE5HinT+/Uf96BZcNIi7DuFEx
+         CUsKRj2NHMAYpBl0TyQEoU0nAALFOUs9DVkAbylHRVSTnBqmZ7aPmwe8b2+oKpCVp8Ip
+         zt7A==
+X-Gm-Message-State: AOAM531EhhMYkKw/GOoyrlJDuZ9rfnhZEKFSM7GG7f+wY7zWyZgzj8J2
+        4pycF5fFaXjiIyS0Xe99Mgot5JjLzw==
+X-Google-Smtp-Source: ABdhPJyrEEkoAekm6sFmqloN+vJ1XT661Hp+eHwH6Y/W1V4otFUI+Q2hFPtNvXcKQnPU2jb3KbntNA==
+X-Received: by 2002:a05:6830:13c8:: with SMTP id e8mr926977otq.139.1607572621748;
+        Wed, 09 Dec 2020 19:57:01 -0800 (PST)
 Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v12sm759702ooi.46.2020.12.09.19.55.55
+        by smtp.gmail.com with ESMTPSA id j126sm756267oib.13.2020.12.09.19.56.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Dec 2020 19:55:56 -0800 (PST)
-Received: (nullmailer pid 1633035 invoked by uid 1000);
-        Thu, 10 Dec 2020 03:55:54 -0000
-Date:   Wed, 9 Dec 2020 21:55:54 -0600
+        Wed, 09 Dec 2020 19:57:01 -0800 (PST)
+Received: (nullmailer pid 1634611 invoked by uid 1000);
+        Thu, 10 Dec 2020 03:56:59 -0000
+Date:   Wed, 9 Dec 2020 21:56:59 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Yash Shah <yash.shah@sifive.com>
-Cc:     linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
-        broonie@kernel.org, linux-riscv@lists.infradead.org,
-        linux-i2c@vger.kernel.org, lee.jones@linaro.org,
-        linux-kernel@vger.kernel.org, palmer@dabbelt.com,
-        linux-gpio@vger.kernel.org, peter@korsgaard.com,
-        robh+dt@kernel.org, paul.walmsley@sifive.com,
-        aou@eecs.berkeley.edu, u.kleine-koenig@pengutronix.de,
-        bgolaszewski@baylibre.com, gregkh@linuxfoundation.org,
-        thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
-        linus.walleij@linaro.org, andrew@lunn.ch,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/9] dt-bindings: riscv: Update DT binding docs to
+Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
+        linus.walleij@linaro.org, u.kleine-koenig@pengutronix.de,
+        aou@eecs.berkeley.edu, bgolaszewski@baylibre.com,
+        gregkh@linuxfoundation.org, peter@korsgaard.com,
+        lee.jones@linaro.org, palmer@dabbelt.com,
+        linux-pwm@vger.kernel.org, paul.walmsley@sifive.com,
+        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
+        robh+dt@kernel.org, andrew@lunn.ch, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, thierry.reding@gmail.com
+Subject: Re: [PATCH v2 4/9] dt-bindings: serial: Update DT binding docs to
  support SiFive FU740 SoC
-Message-ID: <20201210035554.GA1632991@robh.at.kernel.org>
+Message-ID: <20201210035659.GA1634582@robh.at.kernel.org>
 References: <1607403341-57214-1-git-send-email-yash.shah@sifive.com>
- <1607403341-57214-2-git-send-email-yash.shah@sifive.com>
+ <1607403341-57214-5-git-send-email-yash.shah@sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1607403341-57214-2-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <1607403341-57214-5-git-send-email-yash.shah@sifive.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 08 Dec 2020 10:25:33 +0530, Yash Shah wrote:
-> Add new compatible strings in cpus.yaml to support the E71 and U74 CPU
-> cores ("harts") that are present on FU740-C000 SoC.
+On Tue, 08 Dec 2020 10:25:36 +0530, Yash Shah wrote:
+> Add new compatible strings to the DT binding documents to support SiFive
+> FU740-C000.
 > 
 > Signed-off-by: Yash Shah <yash.shah@sifive.com>
 > ---
->  Documentation/devicetree/bindings/riscv/cpus.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  Documentation/devicetree/bindings/serial/sifive-serial.yaml | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
