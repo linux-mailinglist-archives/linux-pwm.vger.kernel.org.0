@@ -2,103 +2,78 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E7CE2D6A0A
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Dec 2020 22:39:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83E732D6EE1
+	for <lists+linux-pwm@lfdr.de>; Fri, 11 Dec 2020 04:49:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394085AbgLJViC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 10 Dec 2020 16:38:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394050AbgLJVhy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Dec 2020 16:37:54 -0500
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C22EEC061793;
-        Thu, 10 Dec 2020 13:37:13 -0800 (PST)
-Received: by mail-vk1-xa41.google.com with SMTP id v185so1590284vkf.8;
-        Thu, 10 Dec 2020 13:37:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oO4d+S9YKM1pH0Lm9beVGewfmjAa6w60PNlPdJrLfTI=;
-        b=AbklrVmERaOF7Qt9rKuET+0352rMiVQ8cbfPDQ/X6XUabw04OcRQ9HfFP9bIMaGgVm
-         pefWQA9Ac+bZhhkxw+z29JItqpnBuNHSk/XizwjfAeBLf5PRTXDb5YD3IpaE7pYUHOlF
-         bLStIOo1VT5+wZMpvJ1/Q6wRG5tovwzEI8GMa5YDr1GnCtYzS5WZLuM8ZEHTKKfAVl/e
-         OT6VyctrDMwYYHKkXdu8mPEJkcyNeGYvyl7yow4kdaMEVn6J0GzfxX+rXELO3JWd6qWX
-         k7A14OjBa2N77qAQYWLVb1QNa6B/C53WHTW3fkeVm0ao0XZLazLHzhjZCFLEL3p9/f9R
-         dlHA==
+        id S2395222AbgLKDsY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 10 Dec 2020 22:48:24 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45383 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395229AbgLKDr4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Dec 2020 22:47:56 -0500
+Received: by mail-ot1-f68.google.com with SMTP id h18so7081595otq.12;
+        Thu, 10 Dec 2020 19:47:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oO4d+S9YKM1pH0Lm9beVGewfmjAa6w60PNlPdJrLfTI=;
-        b=YVuKNkkqj8zQ/HnqwaNZ4wMEA8QiqYEcXSLZlAt1VhYw81tW5h0G7PUdnI4Nnw1EeK
-         iWCkka8/6aeR+Q4DypW5QPCsUNPHVVkeQ3rUHETY2wFO1x+nRql1fJHGXrNUFhU555ZW
-         K2O0s8+m8BOnLT8wZC+Fh1qjNrQiWAilcFX2tGJQmlCO/naRT8VFlMuo0VEl4paNg8Ib
-         WAt8BChs5FUbsUwm2TtGihfgLn2ETz9yn4Io2i/wRhyW1xCNH8FEFqhz+7VKMvDUXG9p
-         cGbs42aB1xiylEEDYXtTbT34GjJb9fmVmZuot1VV1hLjpqI8+q/gxg4yAwzm22lso54S
-         lT0A==
-X-Gm-Message-State: AOAM533Ot8oTcF1damKDzEsk8YWR+ZPsYfrHQ/0tusvtmyHEZEtkH2ak
-        yoanfdayAAdpo++w064tZ59q3njkSmDMDtkGVUR1nk+zCNEvYg==
-X-Google-Smtp-Source: ABdhPJwkHN1JBbLSIJjm3TdHN20gsBdUOu+Mkza2Ot33DX96DdS6DCnAJqN/jgkXMPt+ab3tdANGrvLRoLbYUTW1kqw=
-X-Received: by 2002:a1f:9987:: with SMTP id b129mr11047352vke.5.1607636232804;
- Thu, 10 Dec 2020 13:37:12 -0800 (PST)
-MIME-Version: 1.0
-References: <X863KNo0IaekkU7q@workstation.tuxnet> <20201208091033.bxzrlad7mjbe3dsp@pengutronix.de>
- <X89RgpTb3sBBI++w@workstation.tuxnet> <X8+DI7ZN7mXtsxv9@ulmo>
- <CAGngYiXgVbEXj-yR=DTeA4pO-N3=WhiHjQhknFsbfXBeD_yRbw@mail.gmail.com>
- <X8+waLH58pOaMI06@ulmo> <20201208182637.hm5uzuw5ueelo26k@pengutronix.de>
- <X9EDGHySNYb7CxcW@ulmo> <20201210090124.rfswkrcttsg5gszp@pengutronix.de>
- <X9JWlVPb9ZGdB4q9@ulmo> <X9KK9UrXu+b8F+IT@workstation.tuxnet>
-In-Reply-To: <X9KK9UrXu+b8F+IT@workstation.tuxnet>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Thu, 10 Dec 2020 16:37:01 -0500
-Message-ID: <CAGngYiVAKraGxOYe5bCNhzhPSvFMh5u7cZ-ENqzTv4kvbNjryw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] pwm: pca9685: Switch to atomic API
-To:     Clemens Gruber <clemens.gruber@pqgruber.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZwzlRu7XT64jzkln5zNA8fU/0gIXgr88ZmNCsytqy8k=;
+        b=koIwS9rWqEn/kHlRLpoOiJJZMsKjvBYWD1QjDS84D5/U094L1g/YLN6dsVvEjV9xJ6
+         uQ8r+tmQq6/xr0lGOgSBjNvlNe44kwqgk7DvzgCZ0lvMzSJFXsMkindWC5tBA4nSk6tN
+         mZUw810i+Kvtl0EuVdZfHM6yrd3oBo4JQjq20hRABq9HfOpi2nkZep+nbf5qKE9J1YlS
+         id5TwARSyiZ1on8OYrAPEZCSZ+My8WAmLFh2Ilk3N5nrrG7O2Ds8IuLf0QrmMhFx3S1J
+         h/IWOMO2PnXkyDOrdx3JzxEptGnL3a4aPaSdyl2CMc/ximTDuJvwR6SkbgN78ZoNPjFc
+         Rb0A==
+X-Gm-Message-State: AOAM531WBCBNfljpavlbG/usVDRePB+yDFgfDV+uFTWkAWB8OLpDnWHW
+        L2nse1TT0C8Xpu3jtUpgDQ==
+X-Google-Smtp-Source: ABdhPJygjoh6SmZ/btWfAkyVXnqcEeardEM0RdNav2rSCXwN4/B/XBR7OLLAq9AjNOH8/HnTPoz85g==
+X-Received: by 2002:a9d:2de9:: with SMTP id g96mr8336782otb.209.1607658435276;
+        Thu, 10 Dec 2020 19:47:15 -0800 (PST)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n16sm759177oov.23.2020.12.10.19.47.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Dec 2020 19:47:12 -0800 (PST)
+Received: (nullmailer pid 3603636 invoked by uid 1000);
+        Fri, 11 Dec 2020 03:47:10 -0000
+Date:   Thu, 10 Dec 2020 21:47:10 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, devicetree@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        David Jander <david@protonic.nl>
-Content-Type: text/plain; charset="UTF-8"
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 3/3] dt-bindings: ap806: document marvell, gpio
+ pwm-offset property
+Message-ID: <20201211034710.GA3603606@robh.at.kernel.org>
+References: <cover.1607601615.git.baruch@tkos.co.il>
+ <5c2810b698c5099264b82a7f6fbed13e66062307.1607601615.git.baruch@tkos.co.il>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5c2810b698c5099264b82a7f6fbed13e66062307.1607601615.git.baruch@tkos.co.il>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Dec 10, 2020 at 3:54 PM Clemens Gruber
-<clemens.gruber@pqgruber.com> wrote:
->
-> After reading your reasoning in this mail and rethinking the whole
-> situation, I do no longer have any objections to the more complex
-> solution. (Allowing 0% and 100% duty cycle channels with any period)
->
-> I first thought it would be too confusing to block users from changing a
-> duty cycle when in reality the period is the problem.
-> However, if we log an error message, explaining that the periods have to
-> match if duty cycles > 0 and < 100% are used, I think it's OK.
->
-> Uwe, Sven: Do you have any objections?
+On Thu, 10 Dec 2020 14:16:00 +0200, Baruch Siach wrote:
+> Update the example as well. Add the '#pwm-cells' and 'clocks' properties
+> for a complete working example.
+> 
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> ---
+>  .../bindings/arm/marvell/ap80x-system-controller.txt      | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
 
-No objections, as long as the "fully flexible" solution doesn't get too
-complex. Complex code is hard to maintain and extend, but obviously that
-decision is for Thierry or Uwe to make.
-
-Thinking this through a little bit, I don't think the "fully flexible"
-solution has to be that complex. Keeping track of prescale-inuse may
-have to involve a bitmask and not a counter, such as here:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pwm/pwm-pca9685.c?h=v5.10-rc7#n81
-
-That way, channels can do set_bit() to mark that they use the prescaler,
-clear_bit() when giving up the prescaler, and if (bitmap_weight() <= 1) to
-check if they can make a prescale change.
-
-But this is theory - the only way to find out what's best, is to actually
-write the code...
-
-> If not, I will prepare a v5 next week.
-
-Looking forward to it, thank you !!
+Reviewed-by: Rob Herring <robh@kernel.org>
