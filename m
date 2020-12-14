@@ -2,57 +2,58 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 43E992D9CB4
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Dec 2020 17:29:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B28D2D9CE9
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Dec 2020 17:48:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440254AbgLNQ2f (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 14 Dec 2020 11:28:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35254 "EHLO
+        id S2406169AbgLNQpk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 14 Dec 2020 11:45:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440035AbgLNQ2d (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Dec 2020 11:28:33 -0500
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3F86C0613D3;
-        Mon, 14 Dec 2020 08:27:52 -0800 (PST)
-Received: by mail-vs1-xe42.google.com with SMTP id p7so9280963vsf.8;
-        Mon, 14 Dec 2020 08:27:52 -0800 (PST)
+        with ESMTP id S2405265AbgLNQpb (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Dec 2020 11:45:31 -0500
+Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC01C0613D3;
+        Mon, 14 Dec 2020 08:44:51 -0800 (PST)
+Received: by mail-vk1-xa42.google.com with SMTP id b190so4049695vka.0;
+        Mon, 14 Dec 2020 08:44:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1/dJ41wzQrS/fWmX/gkz6e3GWIPT1AAo3V7XT47RGng=;
-        b=fslF4tMbpOitLsJRfkkBKoFxLpSKhWEt9WX/324yk1nvhB0tmNwCCApaQtFKPqWKdB
-         WphoU84CP2QxH1LtVP3TFmKQE+GLsjoYERJv8KDEZE/ewFFZmB7Ug5BdKJyhV8FillAN
-         FW/0/Xf1+mrBUABHKmCsO2J4QgqimNV1eq7nZnHXxsuLs8wnMj7SD0NA2WiWzRdrgV+L
-         PJqua/Jzo9asbAwsh2aPIjZ1jYxKmsJgEtDnVqb10WeSvqSO28DNlAG6Hs/ZaL46rsZC
-         KLowZRMniPho9TvsQN37nTdHAbXhNKW+ykZ8bFiWbTCea8nRT4KCgyc09+lvy/m7jLMO
-         5UpQ==
+        bh=ts+4deDUbfaCD55Txrp+h4pS1G+LQIOElLBlsDcKu2c=;
+        b=aREAYtXD4AkiWUFdELuBl0Qz79hppDfczkKRBz95xe/6OJTuFO2buvAmNmwmlwDvDu
+         K6eri/ghcTOVS9DD8bJonEX8zeZL5jsqSKlq7w1jYUnqfjYrDvN51bZvXnnQtSso7KlJ
+         8iUwdzRzGCJ+XAVdhN7HB0OUA2mS3BemeaPq28t0rpzL6mhAm9jFlN80EYgpIVireW6k
+         Hj813kxEWpkqVqcC6myjk8tOwpxZYz9cYotNW6tMGgky+XeBPO+2N1dAMU2h5Ti9ICIW
+         sMGhLCKxtmHfdDMJypXMDFlFfx35OcSSGmNLIQgLkBhhfKVg377+FXylZGkcDnykR3pI
+         t1bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1/dJ41wzQrS/fWmX/gkz6e3GWIPT1AAo3V7XT47RGng=;
-        b=qNTeLc/av9PsVcq6oEPjZO9qyM9WhAomVfYOfHxVzMp+81O5eZUiEwxg+bl3vWxcXM
-         MmUe1Azlmdasix+Jf1wTPgxyslMzdN3ecPd3p3XapZCz1E4DHGRexC/lSks6gP6GOG5I
-         natbnpuEOsC6xOoRrykdk/ut9vsrhGrLNcKcjhCvaJLF9weEI2cDluObDq3j9MV8/RWt
-         HsCIQhRHypmMoErrz+3pJGjF/DQK8cAyRqvEcVC2l0WEiEgOtFmEyqrl2OD2vdHpY61R
-         fZ4dRizF/A6mpnfZl6b1m0wHwFPDuSoPTcMhc3GLtjrvuMoWZ68pGq3vQquYsVMxpxf8
-         9bDA==
-X-Gm-Message-State: AOAM531ezzbyzriHBRtXblkcvTjWdB/GXRJh+ysZYpxABInFKlR9bYnU
-        le/VIqi+hEeisMXdsboFCEHyzYFPOJrqjTc5SAgKsJSLBzNv9A==
-X-Google-Smtp-Source: ABdhPJwHKK/CJW0eTYTcAnQRCmAWgqmzjoKjM6MqRY3PKgdImcNPLMUx9XjXz84oLs5X197+nevI2fPPa/Y/U+s1i7k=
-X-Received: by 2002:a67:507:: with SMTP id 7mr17555159vsf.42.1607963272063;
- Mon, 14 Dec 2020 08:27:52 -0800 (PST)
+        bh=ts+4deDUbfaCD55Txrp+h4pS1G+LQIOElLBlsDcKu2c=;
+        b=pAjFqQkYRFHmihYbY9mugRTd+ayth6zAc4yUnTgsWsjJmQgVOrlP6fU71TiV5Ibcvo
+         wxc7LG72vHxruEx0047U2YpBScbHMFTU3X/WC1hk64Y4NhDARgMDHvIACEhTbxAdL2I7
+         ltwO33h/FZx04qiiGTa9veXi8HoovtTZKvAxU/NLlv9UfWC7O2D3L3UdAlblXpjpbKdu
+         PhUjr1UmOAe/AdQg6Qd3BJh/JPa6kiYbArKh0xoELO7eBepPuuuo/0fzezYjgy60eRn9
+         jwdw1DeYY6PcjNDzcO8IzFY3WVP272bicbfiqD7vbrSgQCkeBHpZRhW7uhUUhbvjYdSB
+         OQeA==
+X-Gm-Message-State: AOAM532ir9zfLSKgIAI4WPm+1TMJDgQ/fSHm6Ndr41S7vQWct73nNXnC
+        vB4Vvir8LQs1pPIjctNElZkuaF0x3umg6EYmjG0=
+X-Google-Smtp-Source: ABdhPJyC5TiCREgYrTnLAkj/pKa80m0ovqTKHZSHR+qU0lIChFfggiyTtODg+j9seOOjeJLuL/HazCPKoVcAcaEBgyQ=
+X-Received: by 2002:a1f:9987:: with SMTP id b129mr24526507vke.5.1607964290281;
+ Mon, 14 Dec 2020 08:44:50 -0800 (PST)
 MIME-Version: 1.0
 References: <X8+DI7ZN7mXtsxv9@ulmo> <CAGngYiXgVbEXj-yR=DTeA4pO-N3=WhiHjQhknFsbfXBeD_yRbw@mail.gmail.com>
  <X8+waLH58pOaMI06@ulmo> <20201208182637.hm5uzuw5ueelo26k@pengutronix.de>
  <X9EDGHySNYb7CxcW@ulmo> <20201210090124.rfswkrcttsg5gszp@pengutronix.de>
  <X9JWlVPb9ZGdB4q9@ulmo> <20201210203926.ouzrq3ff5k6zhlvt@pengutronix.de>
- <X9Mu8zrJjFTe6fJq@ulmo> <20201211103454.tqcfzy3ayn2gz7k4@pengutronix.de> <X9d2iFCzSkqLu8zR@ulmo>
-In-Reply-To: <X9d2iFCzSkqLu8zR@ulmo>
+ <X9Mu8zrJjFTe6fJq@ulmo> <20201211103454.tqcfzy3ayn2gz7k4@pengutronix.de>
+ <X9d2iFCzSkqLu8zR@ulmo> <CAGngYiUMP8P=8nEJu2weaR11PoZ9B2OGEdaz=DEeDsLoh3gmCw@mail.gmail.com>
+In-Reply-To: <CAGngYiUMP8P=8nEJu2weaR11PoZ9B2OGEdaz=DEeDsLoh3gmCw@mail.gmail.com>
 From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Mon, 14 Dec 2020 11:27:40 -0500
-Message-ID: <CAGngYiUMP8P=8nEJu2weaR11PoZ9B2OGEdaz=DEeDsLoh3gmCw@mail.gmail.com>
+Date:   Mon, 14 Dec 2020 11:44:39 -0500
+Message-ID: <CAGngYiW8CaYQ+x0C-OevvCvtFeBqdzAYGQzTTa3nxEYUS7RMTw@mail.gmail.com>
 Subject: Re: [PATCH v4 1/4] pwm: pca9685: Switch to atomic API
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
@@ -78,15 +79,16 @@ On Mon, Dec 14, 2020 at 9:28 AM Thierry Reding <thierry.reding@gmail.com> wrote:
 > from upstreaming device trees that make use of this?
 >
 
-There are many reasons why a driver may not appear in the devicetree.
-In my specific case, I backported the PCA9685 driver to a 4.1 Android vendor
-kernel. This is too far behind to upstream. Also, the company regards the
-devicetree as a trade secret, which it is entitled to do, as devicetrees
-tend to be dual-licensed (GPL and MIT).
+Also, there's this section in the driver:
 
-More generally, I believe that the PCA9685 is quite popular in the Raspberry
-Pi world. Raspi devicetrees are not part of mainline, for various reasons
-that we don't need to get into here.
+#ifdef CONFIG_ACPI
+static const struct acpi_device_id pca9685_acpi_ids[] = {
+{ "INT3492", 0 },
+{ /* sentinel */ },
+};
+MODULE_DEVICE_TABLE(acpi, pca9685_acpi_ids);
+#endif
 
-Example:
-https://learn.adafruit.com/adafruit-16-channel-servo-driver-with-raspberry-pi
+Which means there might be arm64 or intel devices out there that define
+presence of this chip via an ACPI tree. Which exists only inside bioses
+and would not show up in any devicetree.
