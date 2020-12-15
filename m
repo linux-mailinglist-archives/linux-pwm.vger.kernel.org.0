@@ -2,93 +2,93 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B28D2D9CE9
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Dec 2020 17:48:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11FD32DA9F7
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Dec 2020 10:21:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406169AbgLNQpk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 14 Dec 2020 11:45:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37862 "EHLO
+        id S1728188AbgLOJVf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 15 Dec 2020 04:21:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405265AbgLNQpb (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Dec 2020 11:45:31 -0500
-Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC01C0613D3;
-        Mon, 14 Dec 2020 08:44:51 -0800 (PST)
-Received: by mail-vk1-xa42.google.com with SMTP id b190so4049695vka.0;
-        Mon, 14 Dec 2020 08:44:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ts+4deDUbfaCD55Txrp+h4pS1G+LQIOElLBlsDcKu2c=;
-        b=aREAYtXD4AkiWUFdELuBl0Qz79hppDfczkKRBz95xe/6OJTuFO2buvAmNmwmlwDvDu
-         K6eri/ghcTOVS9DD8bJonEX8zeZL5jsqSKlq7w1jYUnqfjYrDvN51bZvXnnQtSso7KlJ
-         8iUwdzRzGCJ+XAVdhN7HB0OUA2mS3BemeaPq28t0rpzL6mhAm9jFlN80EYgpIVireW6k
-         Hj813kxEWpkqVqcC6myjk8tOwpxZYz9cYotNW6tMGgky+XeBPO+2N1dAMU2h5Ti9ICIW
-         sMGhLCKxtmHfdDMJypXMDFlFfx35OcSSGmNLIQgLkBhhfKVg377+FXylZGkcDnykR3pI
-         t1bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ts+4deDUbfaCD55Txrp+h4pS1G+LQIOElLBlsDcKu2c=;
-        b=pAjFqQkYRFHmihYbY9mugRTd+ayth6zAc4yUnTgsWsjJmQgVOrlP6fU71TiV5Ibcvo
-         wxc7LG72vHxruEx0047U2YpBScbHMFTU3X/WC1hk64Y4NhDARgMDHvIACEhTbxAdL2I7
-         ltwO33h/FZx04qiiGTa9veXi8HoovtTZKvAxU/NLlv9UfWC7O2D3L3UdAlblXpjpbKdu
-         PhUjr1UmOAe/AdQg6Qd3BJh/JPa6kiYbArKh0xoELO7eBepPuuuo/0fzezYjgy60eRn9
-         jwdw1DeYY6PcjNDzcO8IzFY3WVP272bicbfiqD7vbrSgQCkeBHpZRhW7uhUUhbvjYdSB
-         OQeA==
-X-Gm-Message-State: AOAM532ir9zfLSKgIAI4WPm+1TMJDgQ/fSHm6Ndr41S7vQWct73nNXnC
-        vB4Vvir8LQs1pPIjctNElZkuaF0x3umg6EYmjG0=
-X-Google-Smtp-Source: ABdhPJyC5TiCREgYrTnLAkj/pKa80m0ovqTKHZSHR+qU0lIChFfggiyTtODg+j9seOOjeJLuL/HazCPKoVcAcaEBgyQ=
-X-Received: by 2002:a1f:9987:: with SMTP id b129mr24526507vke.5.1607964290281;
- Mon, 14 Dec 2020 08:44:50 -0800 (PST)
+        with ESMTP id S1728109AbgLOJVc (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Dec 2020 04:21:32 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E59D3C0617B0
+        for <linux-pwm@vger.kernel.org>; Tue, 15 Dec 2020 01:20:51 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kp6Vd-0007FP-Ny; Tue, 15 Dec 2020 10:20:41 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kp6Vb-00020G-W6; Tue, 15 Dec 2020 10:20:39 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH 1/2] hwmon: pwm-fan: Ensure that calculation doesn't discard big period values
+Date:   Tue, 15 Dec 2020 10:20:30 +0100
+Message-Id: <20201215092031.152243-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-References: <X8+DI7ZN7mXtsxv9@ulmo> <CAGngYiXgVbEXj-yR=DTeA4pO-N3=WhiHjQhknFsbfXBeD_yRbw@mail.gmail.com>
- <X8+waLH58pOaMI06@ulmo> <20201208182637.hm5uzuw5ueelo26k@pengutronix.de>
- <X9EDGHySNYb7CxcW@ulmo> <20201210090124.rfswkrcttsg5gszp@pengutronix.de>
- <X9JWlVPb9ZGdB4q9@ulmo> <20201210203926.ouzrq3ff5k6zhlvt@pengutronix.de>
- <X9Mu8zrJjFTe6fJq@ulmo> <20201211103454.tqcfzy3ayn2gz7k4@pengutronix.de>
- <X9d2iFCzSkqLu8zR@ulmo> <CAGngYiUMP8P=8nEJu2weaR11PoZ9B2OGEdaz=DEeDsLoh3gmCw@mail.gmail.com>
-In-Reply-To: <CAGngYiUMP8P=8nEJu2weaR11PoZ9B2OGEdaz=DEeDsLoh3gmCw@mail.gmail.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Mon, 14 Dec 2020 11:44:39 -0500
-Message-ID: <CAGngYiW8CaYQ+x0C-OevvCvtFeBqdzAYGQzTTa3nxEYUS7RMTw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] pwm: pca9685: Switch to atomic API
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Clemens Gruber <clemens.gruber@pqgruber.com>,
-        linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        David Jander <david@protonic.nl>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Thierry,
+With MAX_PWM being defined to 255 the code
 
-On Mon, Dec 14, 2020 at 9:28 AM Thierry Reding <thierry.reding@gmail.com> wrote:
->
->
-> Perhaps Clemens and Sven can shed some light into how this driver is
-> being used. There clearly seem to be people interested in this driver,
-> so why are there no consumers of this upstream. What's keeping people
-> from upstreaming device trees that make use of this?
->
+	unsigned long period;
+	...
+	period = ctx->pwm->args.period;
+	state.duty_cycle = DIV_ROUND_UP(pwm * (period - 1), MAX_PWM);
 
-Also, there's this section in the driver:
+calculates a too small value for duty_cycle if the configured period is
+big (either by discarding the 64 bit value ctx->pwm->args.period or by
+overflowing the multiplication). As this results in a too slow fan and
+so maybe an overheating machine better be safe than sorry and error out
+in .probe.
 
-#ifdef CONFIG_ACPI
-static const struct acpi_device_id pca9685_acpi_ids[] = {
-{ "INT3492", 0 },
-{ /* sentinel */ },
-};
-MODULE_DEVICE_TABLE(acpi, pca9685_acpi_ids);
-#endif
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/hwmon/pwm-fan.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-Which means there might be arm64 or intel devices out there that define
-presence of this chip via an ACPI tree. Which exists only inside bioses
-and would not show up in any devicetree.
+diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+index 1f63807c0399..ec171f2b684a 100644
+--- a/drivers/hwmon/pwm-fan.c
++++ b/drivers/hwmon/pwm-fan.c
+@@ -324,8 +324,18 @@ static int pwm_fan_probe(struct platform_device *pdev)
+ 
+ 	ctx->pwm_value = MAX_PWM;
+ 
+-	/* Set duty cycle to maximum allowed and enable PWM output */
+ 	pwm_init_state(ctx->pwm, &state);
++	/*
++	 * __set_pwm assumes that MAX_PWM * (period - 1) fits into an unsigned
++	 * long. Check this here to prevent the fan running at a too low
++	 * frequency.
++	 */
++	if (state.period > ULONG_MAX / MAX_PWM + 1) {
++		dev_err(dev, "Configured period too big\n");
++		return -EINVAL;
++	}
++
++	/* Set duty cycle to maximum allowed and enable PWM output */
+ 	state.duty_cycle = ctx->pwm->args.period - 1;
+ 	state.enabled = true;
+ 
+
+base-commit: 2c85ebc57b3e1817b6ce1a6b703928e113a90442
+-- 
+2.29.2
+
