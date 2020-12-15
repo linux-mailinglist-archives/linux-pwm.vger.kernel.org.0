@@ -2,233 +2,102 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EEF82DAC50
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Dec 2020 12:48:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E96DD2DAD92
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Dec 2020 13:57:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728758AbgLOLqg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 15 Dec 2020 06:46:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45262 "EHLO
+        id S1729217AbgLOM4y (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 15 Dec 2020 07:56:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728706AbgLOLqa (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Dec 2020 06:46:30 -0500
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 600DAC0617B0
-        for <linux-pwm@vger.kernel.org>; Tue, 15 Dec 2020 03:45:49 -0800 (PST)
-Received: by mail-oi1-x241.google.com with SMTP id x13so13955027oic.5
-        for <linux-pwm@vger.kernel.org>; Tue, 15 Dec 2020 03:45:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VPNooSFhm1lHgbyq3Gdy0dRzatnY9tsEvgnicHbluhg=;
-        b=UkamMj25KVqV6NhEtEgcN5ByRxWRmWGpUSSmD5q3DOeCdL3OGjVkZfJhIRaIFMIj0W
-         4IB28pxIOxpJKFk8oSzl9KvCkv58jPzj4UBtdUuqy9ppyJgj+jNYrvDPwuZo+GZDZagt
-         3OmIphfSRjSDm1ElxIXANEaj6LkYKh5kNod6w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VPNooSFhm1lHgbyq3Gdy0dRzatnY9tsEvgnicHbluhg=;
-        b=Svb4nEuJVLvWMVzlFWr4gbQsf6dRHVq591+5TZSK1bdpIhjpdnBDIDQof817XtvYbH
-         k8RYbuujKfutw1vSIo7w+2yh8xe0wy5ec7xWOyzHb9cBwQDRNjorq0SrmPyDgJjDIoom
-         ER9qk5gYis6uh0chiD2EIIRxQdK+IYFUu0B4S85z4vAX66lkETC7WLJvPf7+kF23kyhG
-         qzthFmEq6azvf2SPQ1YLiJoQ2rw7w8x+/S3kuXjwnOtDU8YZlcnFE1u+Gwz0KsO/3ga6
-         m7t+SuEstn3AZQS3m//zU/I8ejftQfmuMYDYnFKPLkW0oRs60x5LOQmqp2e6KUfeWHNe
-         qNlA==
-X-Gm-Message-State: AOAM530jKmKdHa2AQxpCrNE5Vy/evJ5w7ZBlah2NLPeVVjCrzb3pm7/R
-        +SNyAhepIbq3oVGbrW+oq0fWIx7hhzLqoceud981wQ==
-X-Google-Smtp-Source: ABdhPJx7DX6x3YRqkUtwWW4flfpN7e5gyjFNcY8gOkTw/6YC+2YJypPO1E1yELCRhQXW3q3hrTaqppSpbJBZxlCQ13A=
-X-Received: by 2002:aca:f3d6:: with SMTP id r205mr21203627oih.152.1608032748791;
- Tue, 15 Dec 2020 03:45:48 -0800 (PST)
-MIME-Version: 1.0
-References: <20201215092031.152243-1-u.kleine-koenig@pengutronix.de> <20201215092031.152243-2-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20201215092031.152243-2-u.kleine-koenig@pengutronix.de>
-From:   Paul Barker <pbarker@konsulko.com>
-Date:   Tue, 15 Dec 2020 11:45:38 +0000
-Message-ID: <CAM9ZRVtsxZyuUTP=0idhOL2JC82_GWLCN3c3T5NOXGCrhsu1Ow@mail.gmail.com>
-Subject: Re: [PATCH 2/2] hwmon: pwm-fan: stop using legacy PWM functions and
- some cleanups
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        with ESMTP id S1729202AbgLOM4s (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Dec 2020 07:56:48 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A978C0617A6
+        for <linux-pwm@vger.kernel.org>; Tue, 15 Dec 2020 04:56:08 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kp9s6-0004pL-Dx; Tue, 15 Dec 2020 13:56:06 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kp9s4-0005e9-6b; Tue, 15 Dec 2020 13:56:04 +0100
+Date:   Tue, 15 Dec 2020 13:56:04 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Paul Barker <pbarker@konsulko.com>
+Cc:     linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
         Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        kernel@pengutronix.de, Lee Jones <lee.jones@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/2] hwmon: pwm-fan: Ensure that calculation doesn't
+ discard big period values
+Message-ID: <20201215125604.iygkycrlxmkq5kzx@pengutronix.de>
+References: <20201215092031.152243-1-u.kleine-koenig@pengutronix.de>
+ <CAM9ZRVt1wRUuGSniDvS2PME=O-Y3YtVHgTh27qn5Dkj_kUc3AQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2uwuptwb7ryc6kmr"
+Content-Disposition: inline
+In-Reply-To: <CAM9ZRVt1wRUuGSniDvS2PME=O-Y3YtVHgTh27qn5Dkj_kUc3AQ@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 15 Dec 2020 at 09:23, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> pwm_apply_state() does what the legacy functions pwm_config() and
-> pwm_{en,dis}able() do in a single function call. This simplifies error
-> handling and is more efficient for new-style PWM hardware drivers.
->
-> Instead of repeatedly querying the PWM framework about the initial PWM
-> configuration, cache the settings in driver data.
->
-> Also use __set_pwm() in .probe() to have the algorithm calculating the PW=
-M
-> state in a single place.
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/hwmon/pwm-fan.c | 47 +++++++++++++++++------------------------
->  1 file changed, 19 insertions(+), 28 deletions(-)
->
-> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-> index ec171f2b684a..4ccad5a87019 100644
-> --- a/drivers/hwmon/pwm-fan.c
-> +++ b/drivers/hwmon/pwm-fan.c
-> @@ -25,6 +25,7 @@
->  struct pwm_fan_ctx {
->         struct mutex lock;
->         struct pwm_device *pwm;
-> +       struct pwm_state pwm_state;
->         struct regulator *reg_en;
->
->         int irq;
-> @@ -73,18 +74,17 @@ static int  __set_pwm(struct pwm_fan_ctx *ctx, unsign=
-ed long pwm)
->  {
->         unsigned long period;
->         int ret =3D 0;
-> -       struct pwm_state state =3D { };
-> +       struct pwm_state *state =3D &ctx->pwm_state;
->
->         mutex_lock(&ctx->lock);
->         if (ctx->pwm_value =3D=3D pwm)
->                 goto exit_set_pwm_err;
->
-> -       pwm_init_state(ctx->pwm, &state);
-> -       period =3D ctx->pwm->args.period;
-> -       state.duty_cycle =3D DIV_ROUND_UP(pwm * (period - 1), MAX_PWM);
-> -       state.enabled =3D pwm ? true : false;
-> +       period =3D state->period;
-> +       state->duty_cycle =3D DIV_ROUND_UP(pwm * (period - 1), MAX_PWM);
-> +       state->enabled =3D pwm ? true : false;
->
-> -       ret =3D pwm_apply_state(ctx->pwm, &state);
-> +       ret =3D pwm_apply_state(ctx->pwm, state);
->         if (!ret)
->                 ctx->pwm_value =3D pwm;
->  exit_set_pwm_err:
-> @@ -274,7 +274,9 @@ static void pwm_fan_regulator_disable(void *data)
->  static void pwm_fan_pwm_disable(void *__ctx)
->  {
->         struct pwm_fan_ctx *ctx =3D __ctx;
-> -       pwm_disable(ctx->pwm);
-> +
-> +       ctx->pwm_state.enabled =3D false;
-> +       pwm_apply_state(ctx->pwm, &ctx->pwm_state);
->         del_timer_sync(&ctx->rpm_timer);
->  }
->
-> @@ -285,7 +287,6 @@ static int pwm_fan_probe(struct platform_device *pdev=
-)
->         struct pwm_fan_ctx *ctx;
->         struct device *hwmon;
->         int ret;
-> -       struct pwm_state state =3D { };
->         u32 ppr =3D 2;
->
->         ctx =3D devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> @@ -324,22 +325,20 @@ static int pwm_fan_probe(struct platform_device *pd=
-ev)
->
->         ctx->pwm_value =3D MAX_PWM;
->
-> -       pwm_init_state(ctx->pwm, &state);
-> +       pwm_init_state(ctx->pwm, &ctx->pwm_state);
-> +
->         /*
->          * __set_pwm assumes that MAX_PWM * (period - 1) fits into an uns=
-igned
->          * long. Check this here to prevent the fan running at a too low
->          * frequency.
->          */
-> -       if (state.period > ULONG_MAX / MAX_PWM + 1) {
-> +       if (ctx->pwm_state.period > ULONG_MAX / MAX_PWM + 1) {
->                 dev_err(dev, "Configured period too big\n");
->                 return -EINVAL;
->         }
->
->         /* Set duty cycle to maximum allowed and enable PWM output */
-> -       state.duty_cycle =3D ctx->pwm->args.period - 1;
-> -       state.enabled =3D true;
-> -
-> -       ret =3D pwm_apply_state(ctx->pwm, &state);
-> +       ret =3D __set_pwm(ctx, MAX_PWM);
->         if (ret) {
->                 dev_err(dev, "Failed to configure PWM: %d\n", ret);
->                 return ret;
-> @@ -399,17 +398,16 @@ static int pwm_fan_probe(struct platform_device *pd=
-ev)
->  static int pwm_fan_disable(struct device *dev)
->  {
->         struct pwm_fan_ctx *ctx =3D dev_get_drvdata(dev);
-> -       struct pwm_args args;
->         int ret;
->
-> -       pwm_get_args(ctx->pwm, &args);
-> -
->         if (ctx->pwm_value) {
-> -               ret =3D pwm_config(ctx->pwm, 0, args.period);
-> +               /* keep ctx->pwm_state unmodified for pwm_fan_resume() */
-> +               struct pwm_state state =3D ctx->pwm_state;
-> +               state.duty_cycle =3D 0;
-> +               state.enabled =3D false;
-> +               ret =3D pwm_apply_state(ctx->pwm, &state);
->                 if (ret < 0)
->                         return ret;
-> -
-> -               pwm_disable(ctx->pwm);
->         }
->
->         if (ctx->reg_en) {
-> @@ -437,8 +435,6 @@ static int pwm_fan_suspend(struct device *dev)
->  static int pwm_fan_resume(struct device *dev)
->  {
->         struct pwm_fan_ctx *ctx =3D dev_get_drvdata(dev);
-> -       struct pwm_args pargs;
-> -       unsigned long duty;
->         int ret;
->
->         if (ctx->reg_en) {
-> @@ -452,12 +448,7 @@ static int pwm_fan_resume(struct device *dev)
->         if (ctx->pwm_value =3D=3D 0)
->                 return 0;
->
-> -       pwm_get_args(ctx->pwm, &pargs);
-> -       duty =3D DIV_ROUND_UP_ULL(ctx->pwm_value * (pargs.period - 1), MA=
-X_PWM);
-> -       ret =3D pwm_config(ctx->pwm, duty, pargs.period);
-> -       if (ret)
-> -               return ret;
-> -       return pwm_enable(ctx->pwm);
-> +       return pwm_apply_state(ctx->pwm, &ctx->pwm_state);
->  }
->  #endif
->
-> --
-> 2.29.2
->
 
-All looks good to me at first glance.
+--2uwuptwb7ryc6kmr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This does conflict with the changes I proposed
-(https://lore.kernel.org/linux-hwmon/20201212195008.6036-1-pbarker@konsulko=
-.com/T/#t)
-so we'll need to figure out that out depending which order they get
-applied in (assuming both changes get accepted).
+On Tue, Dec 15, 2020 at 11:29:39AM +0000, Paul Barker wrote:
+> On Tue, 15 Dec 2020 at 09:23, Uwe Kleine-K=F6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> >
+> > With MAX_PWM being defined to 255 the code
+> >
+> >         unsigned long period;
+> >         ...
+> >         period =3D ctx->pwm->args.period;
+> >         state.duty_cycle =3D DIV_ROUND_UP(pwm * (period - 1), MAX_PWM);
+>=20
+> Reviewing this I noticed that in pwm_fan_resume() we use
+> DIV_ROUND_UP_ULL for what looks like essentially the same calculation.
 
-Thanks,
+After my second patch this isn't true any more. With it applied
+__set_pwm is the only place in the driver that calculates this stuff.
+
+> Could we just switch this line to DIV_ROUND_UP_ULL instead?
+
+Yes that would work, but actually I don't expect someone specifiying a
+period big enough to justify the additional overhead of a 64 bit
+division.
+
+Best regards
+Uwe
 
 --=20
-Paul Barker
-Konsulko Group
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--2uwuptwb7ryc6kmr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/YsmAACgkQwfwUeK3K
+7AkhvAgAmAAHDLedS50W9mpbLyngbPASUmJQkUSIaCIPnUSDs6G/Xa3Whk9whCYu
++xwNNbK2EVCSXPKX8Ds1unhan58sq5hc3q4l4Aof5V9qEgKJLTOlkws+I+xWEBBU
+yPHROHc5dVU5PvuG0cxGetLpSnD3iC38X3Lb9nAsYAZ29tjSaOEDO6VFMxj3w3AH
+I/BqDHP0PJP0wpmSKg12CRyyzG4A7H3exHJjQ4pUfsnQQ5kQJ6M/nVQoTC89xJG+
+2M5zybQ6P5PSCLDroqYWD+sdO5f8/7XRXjrSmO8/AfdLtTGBRYHb4bYpYMSsP154
+6cH2E/UdJSfrLgWqC6Y+zsOU8SM/FA==
+=vkFM
+-----END PGP SIGNATURE-----
+
+--2uwuptwb7ryc6kmr--
