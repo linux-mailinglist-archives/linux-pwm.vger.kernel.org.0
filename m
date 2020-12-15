@@ -2,102 +2,104 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E96DD2DAD92
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Dec 2020 13:57:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A0A02DADFD
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Dec 2020 14:31:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729217AbgLOM4y (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 15 Dec 2020 07:56:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56148 "EHLO
+        id S1727200AbgLONau (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 15 Dec 2020 08:30:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729202AbgLOM4s (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Dec 2020 07:56:48 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A978C0617A6
-        for <linux-pwm@vger.kernel.org>; Tue, 15 Dec 2020 04:56:08 -0800 (PST)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kp9s6-0004pL-Dx; Tue, 15 Dec 2020 13:56:06 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kp9s4-0005e9-6b; Tue, 15 Dec 2020 13:56:04 +0100
-Date:   Tue, 15 Dec 2020 13:56:04 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Paul Barker <pbarker@konsulko.com>
+        with ESMTP id S1727069AbgLONal (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Dec 2020 08:30:41 -0500
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 413FAC06179C
+        for <linux-pwm@vger.kernel.org>; Tue, 15 Dec 2020 05:30:01 -0800 (PST)
+Received: by mail-oi1-x243.google.com with SMTP id 15so23290148oix.8
+        for <linux-pwm@vger.kernel.org>; Tue, 15 Dec 2020 05:30:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Wylm9iahzB85sQo54swV1gzcAf2MyfM2fa6Wh1DtC5Q=;
+        b=Z1Mzh7YynW7F1kcqiCpd5Klq3L93ZS0Fy2g6Nr19gHjlkOq6rxVMK8EwoMwd+3mp1x
+         jidbCuIPZfpbQTc9IBxXAw2mmacKS9FrGhjZ2ctVoigppo8WD2Q+G/8m5jQIHAO7qt8B
+         Cmx3RKjnTzjNNtQG6De5htPy2AV69iQpCmCi4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Wylm9iahzB85sQo54swV1gzcAf2MyfM2fa6Wh1DtC5Q=;
+        b=ea3sfmrefxGW4rutkCwMAqzcNZSz8h7caEqwbk7tg4guY9yIsFhe/lCnsHeI0QKONm
+         rw8gBYzS5lAke/8A+kvHPgwKSyzg3oKy4jd/0rtjhiXjdgtfqGUBUGgsNY/rVHo0YkuU
+         G9VAKtJDemPke2UwvJI4TEvhQlCQUlqKAbqzhb3o1HUIaRWNaBI+g8P0Yk3TG7gbNrNy
+         X5iLoWfyDrnVVGNYjGlGmMG7+H96R9srXXO5Kq3OiAsMOiDHHoZzTp4CC3cmXKe8tMLb
+         LoKRlNV5GeSxKL1d7XTMshu2ufzGWhRNahSfC2ebLN882IJvIt195MYXQJkpUD+tLUBV
+         2alg==
+X-Gm-Message-State: AOAM5317UC0JwsVRn+mQ7Br+8XtqB3W1FZTHUa7Nm8PZ7RWG1FmSxizX
+        ASy9Ok21MnvPc/JxLK2By4MMYcySsMBGTS7hxn4WjgQ2JQc=
+X-Google-Smtp-Source: ABdhPJxo1xWSIVDrc64/AyUTXU4nduTXm5NBLuT/Yhv8n+UbW+r67wC9ARsRn+RkJZenMsC6UWg7aVm4Nw5yaxTqMhk=
+X-Received: by 2002:aca:f3d6:: with SMTP id r205mr21442279oih.152.1608039000558;
+ Tue, 15 Dec 2020 05:30:00 -0800 (PST)
+MIME-Version: 1.0
+References: <20201215092031.152243-1-u.kleine-koenig@pengutronix.de>
+ <CAM9ZRVt1wRUuGSniDvS2PME=O-Y3YtVHgTh27qn5Dkj_kUc3AQ@mail.gmail.com> <20201215125604.iygkycrlxmkq5kzx@pengutronix.de>
+In-Reply-To: <20201215125604.iygkycrlxmkq5kzx@pengutronix.de>
+From:   Paul Barker <pbarker@konsulko.com>
+Date:   Tue, 15 Dec 2020 13:29:49 +0000
+Message-ID: <CAM9ZRVuq8YgbuN1fCNaft_RaEu88V0SGYYxy7EHxGE1OFkoy2Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] hwmon: pwm-fan: Ensure that calculation doesn't
+ discard big period values
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
 Cc:     linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
         Jean Delvare <jdelvare@suse.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         kernel@pengutronix.de, Lee Jones <lee.jones@linaro.org>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 1/2] hwmon: pwm-fan: Ensure that calculation doesn't
- discard big period values
-Message-ID: <20201215125604.iygkycrlxmkq5kzx@pengutronix.de>
-References: <20201215092031.152243-1-u.kleine-koenig@pengutronix.de>
- <CAM9ZRVt1wRUuGSniDvS2PME=O-Y3YtVHgTh27qn5Dkj_kUc3AQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2uwuptwb7ryc6kmr"
-Content-Disposition: inline
-In-Reply-To: <CAM9ZRVt1wRUuGSniDvS2PME=O-Y3YtVHgTh27qn5Dkj_kUc3AQ@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
---2uwuptwb7ryc6kmr
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Dec 15, 2020 at 11:29:39AM +0000, Paul Barker wrote:
-> On Tue, 15 Dec 2020 at 09:23, Uwe Kleine-K=F6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
+On Tue, 15 Dec 2020 at 12:56, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> On Tue, Dec 15, 2020 at 11:29:39AM +0000, Paul Barker wrote:
+> > On Tue, 15 Dec 2020 at 09:23, Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > >
+> > > With MAX_PWM being defined to 255 the code
+> > >
+> > >         unsigned long period;
+> > >         ...
+> > >         period =3D ctx->pwm->args.period;
+> > >         state.duty_cycle =3D DIV_ROUND_UP(pwm * (period - 1), MAX_PWM=
+);
 > >
-> > With MAX_PWM being defined to 255 the code
-> >
-> >         unsigned long period;
-> >         ...
-> >         period =3D ctx->pwm->args.period;
-> >         state.duty_cycle =3D DIV_ROUND_UP(pwm * (period - 1), MAX_PWM);
->=20
-> Reviewing this I noticed that in pwm_fan_resume() we use
-> DIV_ROUND_UP_ULL for what looks like essentially the same calculation.
+> > Reviewing this I noticed that in pwm_fan_resume() we use
+> > DIV_ROUND_UP_ULL for what looks like essentially the same calculation.
+>
+> After my second patch this isn't true any more. With it applied
+> __set_pwm is the only place in the driver that calculates this stuff.
+>
+> > Could we just switch this line to DIV_ROUND_UP_ULL instead?
+>
+> Yes that would work, but actually I don't expect someone specifiying a
+> period big enough to justify the additional overhead of a 64 bit
+> division.
 
-After my second patch this isn't true any more. With it applied
-__set_pwm is the only place in the driver that calculates this stuff.
+So ULONG_MAX / (MAX_PWM + 1) is 16.7 million on 32-bit platforms. As
+the period is in nanoseconds (if I understand correctly), this would
+allow a period of up to 16.7ms and so a minimum frequency of around
+60Hz.
 
-> Could we just switch this line to DIV_ROUND_UP_ULL instead?
+That does seem fairly reasonable to me but it's probably worth making
+a note of these limits in the commit message for future reference.
 
-Yes that would work, but actually I don't expect someone specifiying a
-period big enough to justify the additional overhead of a 64 bit
-division.
-
-Best regards
-Uwe
+Thanks,
 
 --=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---2uwuptwb7ryc6kmr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/YsmAACgkQwfwUeK3K
-7AkhvAgAmAAHDLedS50W9mpbLyngbPASUmJQkUSIaCIPnUSDs6G/Xa3Whk9whCYu
-+xwNNbK2EVCSXPKX8Ds1unhan58sq5hc3q4l4Aof5V9qEgKJLTOlkws+I+xWEBBU
-yPHROHc5dVU5PvuG0cxGetLpSnD3iC38X3Lb9nAsYAZ29tjSaOEDO6VFMxj3w3AH
-I/BqDHP0PJP0wpmSKg12CRyyzG4A7H3exHJjQ4pUfsnQQ5kQJ6M/nVQoTC89xJG+
-2M5zybQ6P5PSCLDroqYWD+sdO5f8/7XRXjrSmO8/AfdLtTGBRYHb4bYpYMSsP154
-6cH2E/UdJSfrLgWqC6Y+zsOU8SM/FA==
-=vkFM
------END PGP SIGNATURE-----
-
---2uwuptwb7ryc6kmr--
+Paul Barker
+Konsulko Group
