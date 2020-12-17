@@ -2,54 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 012AC2DCB96
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Dec 2020 05:04:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43F3A2DCB99
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Dec 2020 05:05:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbgLQEDt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 16 Dec 2020 23:03:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53124 "EHLO
+        id S1727978AbgLQEEc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 16 Dec 2020 23:04:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbgLQEDt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Dec 2020 23:03:49 -0500
-Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF97FC061794;
-        Wed, 16 Dec 2020 20:03:08 -0800 (PST)
-Received: by mail-vs1-xe2b.google.com with SMTP id x4so14202058vsp.7;
-        Wed, 16 Dec 2020 20:03:08 -0800 (PST)
+        with ESMTP id S1727788AbgLQEEc (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Dec 2020 23:04:32 -0500
+Received: from mail-vk1-xa2d.google.com (mail-vk1-xa2d.google.com [IPv6:2607:f8b0:4864:20::a2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2CF9C061794;
+        Wed, 16 Dec 2020 20:03:51 -0800 (PST)
+Received: by mail-vk1-xa2d.google.com with SMTP id m67so3820591vkg.7;
+        Wed, 16 Dec 2020 20:03:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=J6CNtTVVyY6d10mDbLdiGXg4JU+0YRuk7ZSRjZDJfRM=;
-        b=Rk49oQeUKJDu4aLrLWz+S0TSDHJbx6QUWv7FTRiqmsM1gMv0pFh5cTRgtjwAfjObWn
-         Tr6OGV9r1KBb0k0+aAmAFxH6qyfP4eqcSixSmRL+SCY618hE2UQP4wUEh+xCfwESuGkF
-         k9rna7RAj4PuLa4f33x9bvlNbOg2rjMS5jf/qEpNWrggkBCN4lqqgw7WR3vP4PI9y1GR
-         6f30dSvQu7EpMIxlZm6tH+tjHIE3h+b+CiXfau1yWekwWFsF17bB1EzDeBTOGikFuw2v
-         FdhY7TfdKIvVyifgix9Kvrvv6O9L+jlIbYPmJvxpsW1qMl3LK0dkcjrVliBMhH3vsg89
-         FG0A==
+        bh=wpvV4G1320CTcs8x7p4CfEdvxJWtV5tnsFEXn9LRPH0=;
+        b=TKMEytSWe/cqxWm6g5cTDMI+7fdNKB///tfnib7Q4WpFIS+i51uonxTKysS/ImG9R5
+         J1PR4KxmjnXVJx7TAaOmtHSkAGpIlYp1oAa7PZI7OwLq6tJ84NY4jNEGzd2J1dUpPZqg
+         MFixL+YJkvYH7d07ZPMhwV2DjIrYf6wMkYm6erAczWSFNbP4jQ73NJw85q3Fv+3p+DBX
+         it295E2eoliUyzkNHZ0ySglUXEJVuWHd78kc7MoRUp05p/QPG04FvY4Vwis+CCszJtxz
+         K1HEWdvRvYS9t/4uYBKXc+quUcaXW8JSIiWbNGyCONTxivEyVlhd9DvU4594+NXLZXJg
+         wBqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=J6CNtTVVyY6d10mDbLdiGXg4JU+0YRuk7ZSRjZDJfRM=;
-        b=RkHIVvwxZbdwNjzWSEO/IgJOPF6uJHyiTG/D3NWRqsJ6b57nh7u/HCbyY5vky602SR
-         QBHCa5pOhgP+vK1JGTNk8R8lDUVkfbmQiHDMhHoWflsUpkD1jGT5Gr4/kvqNdcXdxB1C
-         RdPU1Q3tEo0gmpxVb+bW5JWwp1nfMLglBlLM4Yxmlar+VAUN9EdPeUCCfvQFN5rA1atN
-         SqgIbnLlpbvzCyEL+RHnVbhdjk+T/7jl9t20IkvdNy/67BmhsldF8tWVlU19QIKwTRKN
-         Hi1RBeqerxIspHUfdfISrzMHL8a1uWHGxLML4DWohs8hjYNpBhcwWDcSqtMYWjPMdt8i
-         4SXg==
-X-Gm-Message-State: AOAM533QZrpuTAFW844xJGRvb1CI/3vcV3KdgTsq5ZvR9dzfYA56cd70
-        XER+3HiLMgPpWsbR5G62FtEsAkC4bVjm//MC10E=
-X-Google-Smtp-Source: ABdhPJwHl27mFn6pJei0jyv0vIKawPChnFpPlZcvSXoOyziQHcleuCbgG0V2gVWtY8iBmBJ2J6aF2Hxch0YTRU+Lp9A=
-X-Received: by 2002:a67:2287:: with SMTP id i129mr33549984vsi.15.1608177787893;
- Wed, 16 Dec 2020 20:03:07 -0800 (PST)
+        bh=wpvV4G1320CTcs8x7p4CfEdvxJWtV5tnsFEXn9LRPH0=;
+        b=Qn2nwN/juq6FULSTE8WgBY38dMJ2xGIOJZ9zXljyYxY9oaX+aEPgiRBtDYRjJaAUrK
+         VCYmJ2DWNpM70/+QE0ryBiTw+nVok+4GU6rOz8rIJl3xGqZOfS+rz1RcqR4vBNM+UcKJ
+         8Tn9Q8KPJdBo8k3lBB5xFoveYJUj5TPhGAv/PTxv2iYPTPoYJHgWBJzS0p+3E63Npx+L
+         KIoBPGCFWKqXiHocDr3ANXXMeJ4g5yIoIivec2mkkBYkiaAWYzwwdLycSXfuK364G2yM
+         PgtDsRt+cO8LPdFPAflKPc4bem3Ms96gH8PvQ7RwyR1+2meSJGrAEITeaKdJzvVRDXwp
+         Sudg==
+X-Gm-Message-State: AOAM533KnNNmbb9o0GyKGW5Zl4G5JRufqJ8AD2b76DHb828s2a9MgKY9
+        je+Q66XK+Ne9x4JxkC4Q/UkCYT9XlUVV1A6XtPA=
+X-Google-Smtp-Source: ABdhPJz0OJIv+LRrzEK6zUQBMMIDFInFxUEMu4weV89KWfpYwx75ylbOSuKYe2hLBmSvzV5mI7uxqMjFTwE6YzXv0MQ=
+X-Received: by 2002:a1f:fc84:: with SMTP id a126mr25223346vki.23.1608177830721;
+ Wed, 16 Dec 2020 20:03:50 -0800 (PST)
 MIME-Version: 1.0
-References: <20201215212228.185517-1-clemens.gruber@pqgruber.com> <20201215212228.185517-5-clemens.gruber@pqgruber.com>
-In-Reply-To: <20201215212228.185517-5-clemens.gruber@pqgruber.com>
+References: <20201215212228.185517-1-clemens.gruber@pqgruber.com> <20201215212228.185517-7-clemens.gruber@pqgruber.com>
+In-Reply-To: <20201215212228.185517-7-clemens.gruber@pqgruber.com>
 From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Wed, 16 Dec 2020 23:02:57 -0500
-Message-ID: <CAGngYiXCS-FwQkA7nzizXw_5417_u7VmPAXPbZeDv4dUFs2cog@mail.gmail.com>
-Subject: Re: [PATCH v5 5/7] pwm: pca9685: Support staggered output ON times
+Date:   Wed, 16 Dec 2020 23:03:39 -0500
+Message-ID: <CAGngYiWHrq0f=bQSRpkHtU6Uo4UJ8XoNTxdT6o8njE3cH3H2Mw@mail.gmail.com>
+Subject: Re: [PATCH v5 7/7] pwm: pca9685: Restrict period change for prescaler users
 To:     Clemens Gruber <clemens.gruber@pqgruber.com>
 Cc:     linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -68,155 +68,183 @@ Hi Clemens, see below.
 On Wed, Dec 16, 2020 at 7:53 AM Clemens Gruber
 <clemens.gruber@pqgruber.com> wrote:
 >
-> The PCA9685 supports staggered LED output ON times to minimize current
-> surges and reduce EMI.
-> When this new option is enabled, the ON times of each channel are
-> delayed by channel number x counter range / 16, which avoids asserting
-> all enabled outputs at the same counter value while still maintaining
-> the configured duty cycle of each output.
+> Previously, the last used PWM channel could change the global prescale
+> setting, even if other channels were already in use.
+>
+> Fix it by only allowing the first user of the prescaler to change the
+> global chip-wide prescale setting. If there is more than one channel in
+> use, the prescale settings resulting from the chosen periods must match.
+>
+> PWMs that are disabled or have a duty cycle of 0% or 100% are not
+> considered to be using the prescaler as they have the full OFF or full
+> ON bits set. This also applies to channels used as GPIOs.
 >
 > Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
 > ---
->  drivers/pwm/pwm-pca9685.c | 62 +++++++++++++++++++++++++++++++--------
->  1 file changed, 50 insertions(+), 12 deletions(-)
+>  drivers/pwm/pwm-pca9685.c | 51 +++++++++++++++++++++++++++++++++------
+>  1 file changed, 44 insertions(+), 7 deletions(-)
 >
 > diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-> index 38aadaf50996..ff916980de49 100644
+> index ff916980de49..438492d4aed4 100644
 > --- a/drivers/pwm/pwm-pca9685.c
 > +++ b/drivers/pwm/pwm-pca9685.c
-> @@ -79,6 +79,7 @@
->  struct pca9685 {
+> @@ -23,11 +23,11 @@
+>  #include <linux/bitmap.h>
+>
+>  /*
+> - * Because the PCA9685 has only one prescaler per chip, changing the period of
+> - * one channel affects the period of all 16 PWM outputs!
+> - * However, the ratio between each configured duty cycle and the chip-wide
+> - * period remains constant, because the OFF time is set in proportion to the
+> - * counter range.
+> + * Because the PCA9685 has only one prescaler per chip, only the first channel
+> + * that uses the prescaler is allowed to change the prescale register.
+> + * PWM channels requested afterwards must use a period that results in the same
+> + * prescale setting as the one set by the first requested channel, unless they
+> + * use duty cycles of 0% or 100% (prescaler not used for full OFF/ON).
+>   */
+>
+>  #define PCA9685_MODE1          0x00
+> @@ -80,6 +80,8 @@ struct pca9685 {
 >         struct pwm_chip chip;
 >         struct regmap *regmap;
-> +       bool staggered_outputs;
+>         bool staggered_outputs;
+> +       struct mutex prescaler_users_lock;
+
+Keep things simple by re-using the "struct mutex lock" below?
+This code isn't performance-intensive, so having a single lock for
+pwm/gpio requests + pwm_apply() is probably ok.
+
+> +       DECLARE_BITMAP(prescaler_users, PCA9685_MAXCHAN + 1);
+
+Rename to pwms_use_prescale ?
+
 >  #if IS_ENABLED(CONFIG_GPIOLIB)
 >         struct mutex lock;
 >         struct gpio_chip gpio;
-> @@ -93,45 +94,79 @@ static inline struct pca9685 *to_pca(struct pwm_chip *chip)
+> @@ -92,6 +94,18 @@ static inline struct pca9685 *to_pca(struct pwm_chip *chip)
+>         return container_of(chip, struct pca9685, chip);
+>  }
 >
+> +/* This function is supposed to be called with the prescaler_users_lock held */
+> +static inline bool pca9685_may_change_prescaler(struct pca9685 *pca, int channel)
+
+Drop the inline? Only the compiler knows if inlining this function makes sense
+on a platform (armv7, x86, etc). Compilers are usually better at this then
+humans...
+
+Rename to pca9685_prescaler_can_change() ?
+
+> +{
+> +       /*
+> +        * A PWM channel may only change the prescaler if there are no users of
+> +        * the prescaler yet or that same channel is the only one in use.
+> +        */
+> +       return bitmap_empty(pca->prescaler_users, PCA9685_MAXCHAN + 1) ||
+> +               (bitmap_weight(pca->prescaler_users, PCA9685_MAXCHAN + 1) == 1 &&
+> +                test_bit(channel, pca->prescaler_users));
+> +}
+
+I found this logic expression quite complex to read. Perhaps simplify by using
+a few steps? For example:
+
+/* if prescaler not in use, we can always change it */
+if (empty) return true;
+/* if more than one pwm is using the prescaler, we can never change it */
+if (weight > 1) return false;
+/* one pwm is using the prescaler, we can only change it if it's us */
+return test_bit(us);
+
+> +
 >  static void pca9685_pwm_set_duty(struct pca9685 *pca, int channel, unsigned int duty)
 >  {
-> +       unsigned int on, off;
+>         unsigned int on, off;
+> @@ -337,16 +351,25 @@ static int pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>         duty = PCA9685_COUNTER_RANGE * state->duty_cycle;
+>         duty = DIV_ROUND_CLOSEST_ULL(duty, state->period);
+>
+> +       mutex_lock(&pca->prescaler_users_lock);
 > +
->         if (duty == 0) {
->                 /* Set the full OFF bit, which has the highest precedence */
->                 regmap_write(pca->regmap, REG_OFF_H(channel), LED_FULL);
-> +               return;
->         } else if (duty >= PCA9685_COUNTER_RANGE) {
->                 /* Set the full ON bit and clear the full OFF bit */
->                 regmap_write(pca->regmap, REG_ON_H(channel), LED_FULL);
->                 regmap_write(pca->regmap, REG_OFF_H(channel), 0);
-> -       } else {
-> -               /* Set OFF time (clears the full OFF bit) */
-> -               regmap_write(pca->regmap, REG_OFF_L(channel), duty & 0xff);
-> -               regmap_write(pca->regmap, REG_OFF_H(channel), (duty >> 8) & 0xf);
-> -               /* Clear the full ON bit */
-> -               regmap_write(pca->regmap, REG_ON_H(channel), 0);
-> +               return;
-> +       }
-> +
-> +       if (pca->staggered_outputs) {
-> +               if (channel < PCA9685_MAXCHAN) {
-> +                       /*
-> +                        * To reduce EMI, the ON times of each channel are
-> +                        * spread out evenly within the counter range, while
-> +                        * still maintaining the configured duty cycle
-> +                        */
-> +                       on = channel * PCA9685_COUNTER_RANGE / PCA9685_MAXCHAN;
-> +                       off = (on + duty) % PCA9685_COUNTER_RANGE;
-> +                       regmap_write(pca->regmap, REG_ON_L(channel), on & 0xff);
-> +                       regmap_write(pca->regmap, REG_ON_H(channel), (on >> 8) & 0xf);
-> +                       regmap_write(pca->regmap, REG_OFF_L(channel), off & 0xff);
-> +                       regmap_write(pca->regmap, REG_OFF_H(channel), (off >> 8) & 0xf);
-> +                       return;
+>         if (!state->enabled || duty < 1) {
+>                 pca9685_pwm_set_duty(pca, pwm->hwpwm, 0);
+> -               return 0;
+> +               goto prescaler_unused;
+>         } else if (duty == PCA9685_COUNTER_RANGE) {
+>                 pca9685_pwm_set_duty(pca, pwm->hwpwm, duty);
+> -               return 0;
+> +               goto prescaler_unused;
+>         }
+>
+>         regmap_read(pca->regmap, PCA9685_PRESCALE, &val);
+>         if (prescale != val) {
+> +               if (!pca9685_may_change_prescaler(pca, pwm->hwpwm)) {
+> +                       mutex_unlock(&pca->prescaler_users_lock);
+> +                       dev_err(chip->dev,
+> +                               "prescaler not set: already in use with different setting!\n");
+> +                       return -EBUSY;
 > +               }
-> +               /* No staggering possible if "all LEDs" channel is used */
-> +               regmap_write(pca->regmap, PCA9685_ALL_LED_ON_L, 0);
+> +
+>                 /*
+>                  * Putting the chip briefly into SLEEP mode
+>                  * at this point won't interfere with the
+> @@ -364,6 +387,14 @@ static int pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 >         }
-> +       /* Set OFF time (clears the full OFF bit) */
-> +       regmap_write(pca->regmap, REG_OFF_L(channel), duty & 0xff);
-> +       regmap_write(pca->regmap, REG_OFF_H(channel), (duty >> 8) & 0xf);
-> +       /* Clear the full ON bit */
-> +       regmap_write(pca->regmap, REG_ON_H(channel), 0);
+>
+>         pca9685_pwm_set_duty(pca, pwm->hwpwm, duty);
+> +
+> +       set_bit(pwm->hwpwm, pca->prescaler_users);
+> +       mutex_unlock(&pca->prescaler_users_lock);
+> +       return 0;
+> +
+> +prescaler_unused:
+> +       clear_bit(pwm->hwpwm, pca->prescaler_users);
+> +       mutex_unlock(&pca->prescaler_users_lock);
+>         return 0;
 >  }
 
-I find the set_duty() function quite hard to follow.
-Can we simplify this by eliminating the !staggered_outputs special case?
-E.g. always calculate and write 'on' and 'off'.
-But if !staggered_outputs => on = 0 and off = duty.
+The need for the mutex makes this function quite "messy": we have to guard all
+the exits, and that's easy to forget.
 
-Yes this adds one extra/unnecessary register write in the !staggered case,
-but simplicity/maintainability >>> efficiency here. And this "issue" will
-disappear when we switch on regmap caching.
+Maybe simplify the function by moving the mutex to a helper?
+Example:
+
+static int __pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+     const struct pwm_state *state)
+{
+ ... just do stuff and don't worry about the mutex
+}
+
+static int pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+     const struct pwm_state *state)
+{
+    /* document why we serialize pwm_apply */
+    mutex_lock();
+    __pca9685_pwm_apply(chip, pwm, state);
+    mutex_unlock();
+}
 
 >
->  static unsigned int pca9685_pwm_get_duty(struct pca9685 *pca, int channel)
+> @@ -422,7 +453,11 @@ static void pca9685_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
 >  {
-> -       unsigned int off_h, val;
-> +       unsigned int off, on, val;
+>         struct pca9685 *pca = to_pca(chip);
 >
->         if (WARN_ON(channel >= PCA9685_MAXCHAN)) {
->                 /* Hardware readout not supported for "all LEDs" channel */
->                 return 0;
->         }
->
-> -       regmap_read(pca->regmap, LED_N_OFF_H(channel), &off_h);
-> -       if (off_h & LED_FULL) {
-> +       regmap_read(pca->regmap, LED_N_OFF_H(channel), &off);
-> +       if (off & LED_FULL) {
->                 /* Full OFF bit is set */
->                 return 0;
->         }
->
-> -       regmap_read(pca->regmap, LED_N_ON_H(channel), &val);
-> -       if (val & LED_FULL) {
-> +       regmap_read(pca->regmap, LED_N_ON_H(channel), &on);
-> +       if (on & LED_FULL) {
->                 /* Full ON bit is set */
->                 return PCA9685_COUNTER_RANGE;
->         }
->
->         regmap_read(pca->regmap, LED_N_OFF_L(channel), &val);
-> -       return ((off_h & 0xf) << 8) | (val & 0xff);
-> +       off = ((off & 0xf) << 8) | (val & 0xff);
+> +       mutex_lock(&pca->prescaler_users_lock);
+> +       clear_bit(pwm->hwpwm, pca->prescaler_users);
+>         pca9685_pwm_set_duty(pca, pwm->hwpwm, 0);
+> +       mutex_unlock(&pca->prescaler_users_lock);
 > +
-> +       if (pca->staggered_outputs) {
-> +               regmap_read(pca->regmap, LED_N_ON_L(channel), &val);
-> +               on = ((on & 0xf) << 8) | (val & 0xff);
-> +
-> +               if (off >= on)
-> +                       return off - on;
-> +               else
-> +                       return off + PCA9685_COUNTER_RANGE - on;
-
-I think the if/else is unnecessary. unsigned int is twos-complement,
-so we can just write:
-
-        return (off - on) & 0xfff; (or PCA9685_COUNTER_RANGE - 1)
-
-and it will "magically" work even if off < on.
-
-
-> +       }
-> +
-> +       return off;
+>         pm_runtime_put(chip->dev);
+>         pca9685_pwm_clear_inuse(pca, pwm->hwpwm);
 >  }
-
-As in set_duty(), consider removing the !staggered_outputs special case,
-to make this function clearer and simpler.
-
+> @@ -463,6 +498,8 @@ static int pca9685_pwm_probe(struct i2c_client *client,
 >
->  #if IS_ENABLED(CONFIG_GPIOLIB)
-> @@ -442,6 +477,9 @@ static int pca9685_pwm_probe(struct i2c_client *client,
+>         i2c_set_clientdata(client, pca);
 >
->         regmap_write(pca->regmap, PCA9685_MODE2, reg);
->
-> +       pca->staggered_outputs = device_property_read_bool(
-> +               &client->dev, "nxp,staggered-outputs");
+> +       mutex_init(&pca->prescaler_users_lock);
 > +
->         /* Disable all LED ALLCALL and SUBx addresses to avoid bus collisions */
->         regmap_read(pca->regmap, PCA9685_MODE1, &reg);
->         reg &= ~(MODE1_ALLCALL | MODE1_SUB1 | MODE1_SUB2 | MODE1_SUB3);
+>         regmap_read(pca->regmap, PCA9685_MODE2, &reg);
+>
+>         if (device_property_read_bool(&client->dev, "invert"))
 > --
 > 2.29.2
 >
