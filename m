@@ -2,93 +2,257 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3796E2DD69C
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Dec 2020 18:53:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1454C2DD6DE
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Dec 2020 19:08:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725468AbgLQRxh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 17 Dec 2020 12:53:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbgLQRxf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Dec 2020 12:53:35 -0500
-Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72B7AC0617A7;
-        Thu, 17 Dec 2020 09:52:55 -0800 (PST)
-Received: by mail-vs1-xe32.google.com with SMTP id x4so15389359vsp.7;
-        Thu, 17 Dec 2020 09:52:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o4wBtU5fm9orzQxfqfq4ZnR0tVlAljZj6kq4gq9ZFCw=;
-        b=PRIDciiK3kxktIwkS5JXGn6CUwVypiatHkhHd/aGA3FRwHtmbNuzR6FwnFKfa0YNkE
-         EBDFT48AvcoJ0Qf34eDkghFslX8GULpSP2/TpXCLMp5qxJYJZQmY8bIbCbs0puOMUNZp
-         yDlzCkaR3Jj9Cb0ont1jBmwwfWlWU+16AC2HLh/hr9fXvULqLY/JKwKsgVJdp9pvRRks
-         fV5UGcLUu3oLs+QxUCoYN+/mlQd0WqOO7AKrJqbvubZQcLUmzY0ZT4hABgIDNLN0Sh8h
-         /6laFXSnSaou+YODJfRd3iUt0dugDRoyWHCn2/dsQ87LDE4z0pu6RDsoKK18nySZ80uC
-         1opg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o4wBtU5fm9orzQxfqfq4ZnR0tVlAljZj6kq4gq9ZFCw=;
-        b=iPs7Z9wzhysTZ4WXxsyreIXaSZTHiRiuiXyiCm3sQY3GXQRfJNETb+805noz5Z2HbI
-         /V9vHhBRalrQaXioYebzPzajSVnVOELW4YVltRgXMUQwBbz2efYuNBnZ2R/7cWlss7TW
-         z5npw0K/jN9Lp57tOc4RXRSrWc4Daex41DZFpxhPZCOo2pAR8Vm47t82fUgnIo8ipKaI
-         tVP/E8FEwSIx939d99qSoLsiBEUNIXD/26nXOjVcYcbiFS232PFT3OzAoL0bt/PhjlBA
-         R9xMCyQa9kNt/cqXjQlkLIH2VhfWOkZAozv4VK2Kqo5DPNH5MZTc+J3ALZ6cKTQLXNJ4
-         SiUQ==
-X-Gm-Message-State: AOAM532hJ3P0g2pRONN6Wm5u6rRbPUSZwd4qzVk6kURcvOKeZ6avoIEm
-        MVOevRtia/UoPDitR9mJSpHYspixgpVa8x2bBQLODrTZln2GMg==
-X-Google-Smtp-Source: ABdhPJzyjTIeTU/3R7AteB+QVM4R4vwSxKwAYLDKzEVicK7nyk46tR0iGdOQ6+J4LTisZ2iiZRCGmNAA/ISKLOOCxIY=
-X-Received: by 2002:a67:2e16:: with SMTP id u22mr416762vsu.12.1608227574165;
- Thu, 17 Dec 2020 09:52:54 -0800 (PST)
-MIME-Version: 1.0
-References: <20201216125320.5277-1-clemens.gruber@pqgruber.com>
- <20201216125320.5277-2-clemens.gruber@pqgruber.com> <CAGngYiWkKZGkQ4TTTy8bQYvnGBK45V0A0JCe_+M5V+vuVU+zkQ@mail.gmail.com>
- <X9uYqGboZg5DuEtf@workstation.tuxnet>
-In-Reply-To: <X9uYqGboZg5DuEtf@workstation.tuxnet>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Thu, 17 Dec 2020 12:52:42 -0500
-Message-ID: <CAGngYiUYOL6EF3VTGwcwTuN4EmE26ML3ye7689FTEpowjEcU2w@mail.gmail.com>
-Subject: Re: [PATCH v5 2/7] pwm: pca9685: Support hardware readout
-To:     Clemens Gruber <clemens.gruber@pqgruber.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        id S1728081AbgLQSIH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 17 Dec 2020 13:08:07 -0500
+Received: from mail.pqgruber.com ([52.59.78.55]:56262 "EHLO mail.pqgruber.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729539AbgLQSIH (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 17 Dec 2020 13:08:07 -0500
+Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
+        by mail.pqgruber.com (Postfix) with ESMTPSA id A92FCC727E0;
+        Thu, 17 Dec 2020 19:07:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
+        s=mail; t=1608228444;
+        bh=6rJlKq2DWIbfniJ3C4O+G5aooIQVr7ghDtYBp96MzWk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CaVE0WhobI121PWcpT83je40U3SxtTmb6OdBx5k3ZDdfgJzW4C1FYX/ES/KvDRLSV
+         LD4kguTW4cGsrQ/HX6RvtfGzbEJhNPed8yt1MKLT9YIslIC5acAB/2fUglqcLYDLUX
+         cRKpIBaOqq972dpoKk72GzUXBBMsKQxJWZqH2690=
+Date:   Thu, 17 Dec 2020 19:07:22 +0100
+From:   Clemens Gruber <clemens.gruber@pqgruber.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        David Jander <david@protonic.nl>
+Subject: Re: [PATCH v5 7/7] pwm: pca9685: Restrict period change for
+ prescaler users
+Message-ID: <X9ueWvQs7PhvoQT7@workstation.tuxnet>
+References: <20201215212228.185517-1-clemens.gruber@pqgruber.com>
+ <20201215212228.185517-7-clemens.gruber@pqgruber.com>
+ <CAGngYiWHrq0f=bQSRpkHtU6Uo4UJ8XoNTxdT6o8njE3cH3H2Mw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGngYiWHrq0f=bQSRpkHtU6Uo4UJ8XoNTxdT6o8njE3cH3H2Mw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Dec 17, 2020 at 12:43 PM Clemens Gruber
-<clemens.gruber@pqgruber.com> wrote:
+Hi Sven,
+
+On Wed, Dec 16, 2020 at 11:03:39PM -0500, Sven Van Asbroeck wrote:
+> Hi Clemens, see below.
+> 
+> On Wed, Dec 16, 2020 at 7:53 AM Clemens Gruber
+> <clemens.gruber@pqgruber.com> wrote:
 > >
-> > Conclusion: .get_state() will always return "pwm disabled", so why do we
-> > bother reading out the h/w?
->
-> If there are no plans for the PWM core to call .get_state more often in
-> the future, we could just read out the period and return 0 duty and
-> disabled.
+> > Previously, the last used PWM channel could change the global prescale
+> > setting, even if other channels were already in use.
+> >
+> > Fix it by only allowing the first user of the prescaler to change the
+> > global chip-wide prescale setting. If there is more than one channel in
+> > use, the prescale settings resulting from the chosen periods must match.
+> >
+> > PWMs that are disabled or have a duty cycle of 0% or 100% are not
+> > considered to be using the prescaler as they have the full OFF or full
+> > ON bits set. This also applies to channels used as GPIOs.
+> >
+> > Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+> > ---
+> >  drivers/pwm/pwm-pca9685.c | 51 +++++++++++++++++++++++++++++++++------
+> >  1 file changed, 44 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+> > index ff916980de49..438492d4aed4 100644
+> > --- a/drivers/pwm/pwm-pca9685.c
+> > +++ b/drivers/pwm/pwm-pca9685.c
+> > @@ -23,11 +23,11 @@
+> >  #include <linux/bitmap.h>
+> >
+> >  /*
+> > - * Because the PCA9685 has only one prescaler per chip, changing the period of
+> > - * one channel affects the period of all 16 PWM outputs!
+> > - * However, the ratio between each configured duty cycle and the chip-wide
+> > - * period remains constant, because the OFF time is set in proportion to the
+> > - * counter range.
+> > + * Because the PCA9685 has only one prescaler per chip, only the first channel
+> > + * that uses the prescaler is allowed to change the prescale register.
+> > + * PWM channels requested afterwards must use a period that results in the same
+> > + * prescale setting as the one set by the first requested channel, unless they
+> > + * use duty cycles of 0% or 100% (prescaler not used for full OFF/ON).
+> >   */
+> >
+> >  #define PCA9685_MODE1          0x00
+> > @@ -80,6 +80,8 @@ struct pca9685 {
+> >         struct pwm_chip chip;
+> >         struct regmap *regmap;
+> >         bool staggered_outputs;
+> > +       struct mutex prescaler_users_lock;
+> 
+> Keep things simple by re-using the "struct mutex lock" below?
+> This code isn't performance-intensive, so having a single lock for
+> pwm/gpio requests + pwm_apply() is probably ok.
 
-I'm not sure why we should even read out the period?
-When a channel is disabled, the period is not externally visible,
-therefore it's meaningless ?
+Yes, I think this could work. Good idea.
 
-As far as I can tell, we can use this for .get_state():
-memset(&pwm->state, 0, sizeof(pwm_state));
+> 
+> > +       DECLARE_BITMAP(prescaler_users, PCA9685_MAXCHAN + 1);
+> 
+> Rename to pwms_use_prescale ?
 
->
-> Thierry, Uwe, what's your take on this?
->
-> > Of course, if we choose to leave the pwm enabled after .free(), then
-> > .get_state() can even be left out! Do we want that? Genuine question, I do
-> > not know the answer.
->
-> I do not think we should leave it enabled after free. It is less
-> complicated if we know that unrequested channels are not in use.
->
+Yes, fine with me.
 
-Good point, I agree with you.
+> 
+> >  #if IS_ENABLED(CONFIG_GPIOLIB)
+> >         struct mutex lock;
+> >         struct gpio_chip gpio;
+> > @@ -92,6 +94,18 @@ static inline struct pca9685 *to_pca(struct pwm_chip *chip)
+> >         return container_of(chip, struct pca9685, chip);
+> >  }
+> >
+> > +/* This function is supposed to be called with the prescaler_users_lock held */
+> > +static inline bool pca9685_may_change_prescaler(struct pca9685 *pca, int channel)
+> 
+> Drop the inline? Only the compiler knows if inlining this function makes sense
+> on a platform (armv7, x86, etc). Compilers are usually better at this then
+> humans...
+
+You're probably right. I will drop the inline.
+
+> 
+> Rename to pca9685_prescaler_can_change() ?
+
+Sounds good!
+
+> 
+> > +{
+> > +       /*
+> > +        * A PWM channel may only change the prescaler if there are no users of
+> > +        * the prescaler yet or that same channel is the only one in use.
+> > +        */
+> > +       return bitmap_empty(pca->prescaler_users, PCA9685_MAXCHAN + 1) ||
+> > +               (bitmap_weight(pca->prescaler_users, PCA9685_MAXCHAN + 1) == 1 &&
+> > +                test_bit(channel, pca->prescaler_users));
+> > +}
+> 
+> I found this logic expression quite complex to read. Perhaps simplify by using
+> a few steps? For example:
+> 
+> /* if prescaler not in use, we can always change it */
+> if (empty) return true;
+> /* if more than one pwm is using the prescaler, we can never change it */
+> if (weight > 1) return false;
+> /* one pwm is using the prescaler, we can only change it if it's us */
+> return test_bit(us);
+
+Good point, I will simplify it!
+
+> 
+> > +
+> >  static void pca9685_pwm_set_duty(struct pca9685 *pca, int channel, unsigned int duty)
+> >  {
+> >         unsigned int on, off;
+> > @@ -337,16 +351,25 @@ static int pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> >         duty = PCA9685_COUNTER_RANGE * state->duty_cycle;
+> >         duty = DIV_ROUND_CLOSEST_ULL(duty, state->period);
+> >
+> > +       mutex_lock(&pca->prescaler_users_lock);
+> > +
+> >         if (!state->enabled || duty < 1) {
+> >                 pca9685_pwm_set_duty(pca, pwm->hwpwm, 0);
+> > -               return 0;
+> > +               goto prescaler_unused;
+> >         } else if (duty == PCA9685_COUNTER_RANGE) {
+> >                 pca9685_pwm_set_duty(pca, pwm->hwpwm, duty);
+> > -               return 0;
+> > +               goto prescaler_unused;
+> >         }
+> >
+> >         regmap_read(pca->regmap, PCA9685_PRESCALE, &val);
+> >         if (prescale != val) {
+> > +               if (!pca9685_may_change_prescaler(pca, pwm->hwpwm)) {
+> > +                       mutex_unlock(&pca->prescaler_users_lock);
+> > +                       dev_err(chip->dev,
+> > +                               "prescaler not set: already in use with different setting!\n");
+> > +                       return -EBUSY;
+> > +               }
+> > +
+> >                 /*
+> >                  * Putting the chip briefly into SLEEP mode
+> >                  * at this point won't interfere with the
+> > @@ -364,6 +387,14 @@ static int pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> >         }
+> >
+> >         pca9685_pwm_set_duty(pca, pwm->hwpwm, duty);
+> > +
+> > +       set_bit(pwm->hwpwm, pca->prescaler_users);
+> > +       mutex_unlock(&pca->prescaler_users_lock);
+> > +       return 0;
+> > +
+> > +prescaler_unused:
+> > +       clear_bit(pwm->hwpwm, pca->prescaler_users);
+> > +       mutex_unlock(&pca->prescaler_users_lock);
+> >         return 0;
+> >  }
+> 
+> The need for the mutex makes this function quite "messy": we have to guard all
+> the exits, and that's easy to forget.
+
+I agree.
+
+> 
+> Maybe simplify the function by moving the mutex to a helper?
+> Example:
+> 
+> static int __pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>      const struct pwm_state *state)
+> {
+>  ... just do stuff and don't worry about the mutex
+> }
+> 
+> static int pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>      const struct pwm_state *state)
+> {
+>     /* document why we serialize pwm_apply */
+>     mutex_lock();
+>     __pca9685_pwm_apply(chip, pwm, state);
+>     mutex_unlock();
+> }
+
+Also a good idea!
+
+As always, great review! Thank you!
+
+> 
+> >
+> > @@ -422,7 +453,11 @@ static void pca9685_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+> >  {
+> >         struct pca9685 *pca = to_pca(chip);
+> >
+> > +       mutex_lock(&pca->prescaler_users_lock);
+> > +       clear_bit(pwm->hwpwm, pca->prescaler_users);
+> >         pca9685_pwm_set_duty(pca, pwm->hwpwm, 0);
+> > +       mutex_unlock(&pca->prescaler_users_lock);
+> > +
+> >         pm_runtime_put(chip->dev);
+> >         pca9685_pwm_clear_inuse(pca, pwm->hwpwm);
+> >  }
+> > @@ -463,6 +498,8 @@ static int pca9685_pwm_probe(struct i2c_client *client,
+> >
+> >         i2c_set_clientdata(client, pca);
+> >
+> > +       mutex_init(&pca->prescaler_users_lock);
+> > +
+> >         regmap_read(pca->regmap, PCA9685_MODE2, &reg);
+> >
+> >         if (device_property_read_bool(&client->dev, "invert"))
+> > --
+> > 2.29.2
+> >
