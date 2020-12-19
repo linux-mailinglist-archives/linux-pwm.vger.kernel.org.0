@@ -2,109 +2,56 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 872D52DF198
-	for <lists+linux-pwm@lfdr.de>; Sat, 19 Dec 2020 21:45:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F23C02DF1BE
+	for <lists+linux-pwm@lfdr.de>; Sat, 19 Dec 2020 22:09:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbgLSUpz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 19 Dec 2020 15:45:55 -0500
-Received: from mailout.easymail.ca ([64.68.200.34]:39970 "EHLO
-        mailout.easymail.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726238AbgLSUpz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 19 Dec 2020 15:45:55 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mailout.easymail.ca (Postfix) with ESMTP id 45F2BBFD50;
-        Sat, 19 Dec 2020 20:45:14 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at emo04-pco.easydns.vpn
-Received: from mailout.easymail.ca ([127.0.0.1])
-        by localhost (emo04-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id wmJsXWBXQu9v; Sat, 19 Dec 2020 20:45:14 +0000 (UTC)
-Received: from localhost.localdomain (unknown [108.162.141.195])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailout.easymail.ca (Postfix) with ESMTPSA id 55123BFBC9;
-        Sat, 19 Dec 2020 20:44:59 +0000 (UTC)
-From:   Simon South <simon@simonsouth.net>
-To:     tpiepho@gmail.com, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        heiko@sntech.de, bbrezillon@kernel.org, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Cc:     simon@simonsouth.net
-Subject: [PATCH v2 3/3] pwm: rockchip: Do not start PWMs not already running
-Date:   Sat, 19 Dec 2020 15:44:10 -0500
-Message-Id: <0acdf3a78f670a2678e03b0bbbb01aa58a11ce9a.1608407584.git.simon@simonsouth.net>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <cover.1608407584.git.simon@simonsouth.net>
-References: <cover.1608407584.git.simon@simonsouth.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1727811AbgLSVHY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 19 Dec 2020 16:07:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49540 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727787AbgLSVHU (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sat, 19 Dec 2020 16:07:20 -0500
+Subject: Re: [GIT PULL] pwm: Changes for v5.11-rc1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1608412000;
+        bh=KLg2cKySGiiS/TfxsYaRABdXT+o88LG050RgYe211h8=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=rRzLK4Fma4udmbwD4u5JJNC15C2KZoIzVojHECXG9DirQXJFxy6kdjnb445gEhq0T
+         FJ3iSwpIreXQRwzbhlLrtp4Ml+3cngJTlZPOwu7WfajFntxW7xpDKPWKNAAjGxBu7q
+         205N60maaMeHzqz+propXYwWYrb++7dIVJX0iJ0u54F4vtaswQtRvdcwiowJlG02br
+         U1KiuWPp0+UYs5ZWv2MNzFJvky3uA3XibDSp7alRnMgq9RLlbR2SlBefuhN0urKBcS
+         IcwRANjnZuI9JsgDZFJp0haZ1z91bertO2LGE69PrWjy9jtBOsTys6kKeQNKzThQTe
+         5BP9D/QDQ7cWw==
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20201218160401.2478999-1-thierry.reding@gmail.com>
+References: <20201218160401.2478999-1-thierry.reding@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20201218160401.2478999-1-thierry.reding@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.11-rc1
+X-PR-Tracked-Commit-Id: 6eefb79d6f5bc4086bd02c76f1072dd4a8d9d9f6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d56154c7e8ba090126a5a2cb76098628bc2216a2
+Message-Id: <160841200042.20285.2500639931783873174.pr-tracker-bot@kernel.org>
+Date:   Sat, 19 Dec 2020 21:06:40 +0000
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Currently the Rockchip PWM driver enables the signal ("bus") clock for
-every PWM device it finds during probing, then disables it for any device
-that was not already enabled (such as by a bootloader) when the kernel
-started.
+The pull request you sent on Fri, 18 Dec 2020 17:04:01 +0100:
 
-Instead of starting PWMs unnecessarily, check first to see whether a device
-has already been enabled and if not, do not enable its signal clock.
+> git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.11-rc1
 
-Signed-off-by: Simon South <simon@simonsouth.net>
----
- drivers/pwm/pwm-rockchip.c | 28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d56154c7e8ba090126a5a2cb76098628bc2216a2
 
-diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
-index f286a498b82c..b9faef3e9954 100644
---- a/drivers/pwm/pwm-rockchip.c
-+++ b/drivers/pwm/pwm-rockchip.c
-@@ -327,19 +327,6 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	ret = clk_prepare_enable(pc->clk);
--	if (ret) {
--		dev_err(&pdev->dev, "Can't prepare enable bus clk: %d\n", ret);
--		return ret;
--	}
--
--	ret = clk_prepare_enable(pc->pclk);
--	if (ret) {
--		dev_err(&pdev->dev, "Can't enable APB clk: %d\n", ret);
--		clk_disable_unprepare(pc->clk);
--		return ret;
--	}
--
- 	platform_set_drvdata(pdev, pc);
- 
- 	pc->data = id->data;
-@@ -353,12 +340,23 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
- 		pc->chip.of_pwm_n_cells = 3;
- 	}
- 
-+	ret = clk_prepare_enable(pc->pclk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Can't enable APB clk: %d\n", ret);
-+		return ret;
-+	}
-+
- 	/* Keep the PWM clk enabled if the PWM appears to be up and running. */
- 	enable_conf = pc->data->enable_conf;
- 	ctrl = readl_relaxed(pc->base + pc->data->regs.ctrl);
- 	enabled = ((ctrl & enable_conf) == enable_conf);
--	if (!enabled)
--		clk_disable(pc->clk);
-+
-+	ret = enabled ? clk_prepare_enable(pc->clk) : clk_prepare(pc->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Can't prepare bus clk: %d\n", ret);
-+		clk_disable_unprepare(pc->pclk);
-+		return ret;
-+	}
- 
- 	clk_disable(pc->pclk);
- 
+Thank you!
+
 -- 
-2.29.2
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
