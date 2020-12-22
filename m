@@ -2,118 +2,128 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 53D1F2E0609
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Dec 2020 07:31:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 956272E078C
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Dec 2020 09:57:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725847AbgLVGbJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 22 Dec 2020 01:31:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50842 "EHLO
+        id S1726182AbgLVI4b (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Dec 2020 03:56:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbgLVGbJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Dec 2020 01:31:09 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E98DCC0613D3
-        for <linux-pwm@vger.kernel.org>; Mon, 21 Dec 2020 22:30:28 -0800 (PST)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1krbBg-00021e-C7; Tue, 22 Dec 2020 07:30:24 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1krbBf-0005z5-C3; Tue, 22 Dec 2020 07:30:23 +0100
-Date:   Tue, 22 Dec 2020 07:30:20 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
-        Sean Young <sean@mess.org>, linux-pwm@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, kernel@pengutronix.de
-Subject: Re: [PATCH] pwm: bcm2835: Improve period and duty cycle calculation
-Message-ID: <20201222063020.654mz5zgj764mldc@pengutronix.de>
-References: <20201221165501.717101-1-u.kleine-koenig@pengutronix.de>
- <6742ade7-8ed4-a778-38a8-4433d4854ba0@gmail.com>
+        with ESMTP id S1726158AbgLVI4b (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Dec 2020 03:56:31 -0500
+Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 172E4C061285
+        for <linux-pwm@vger.kernel.org>; Tue, 22 Dec 2020 00:55:11 -0800 (PST)
+Received: by mail-io1-xd31.google.com with SMTP id n4so11308756iow.12
+        for <linux-pwm@vger.kernel.org>; Tue, 22 Dec 2020 00:55:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=cL6fs/TC+AbTrexoVx8lc3glF76LL/64P3jqDOubqOU=;
+        b=p3FaLdyA6wmA6mGKW1iwHZA4ndWfgjKfkiFbsqbgmkPhf9kbrHDYXaUXj/UHpqPOXz
+         xKvfDKYwnoHivFcCrjy/OsKQhIrWrVnfMZVD6aSEQc0iJYvWZlMaPbWXZPBVRUo1DguN
+         tc8H5RUL8YwPJScAZ40XpjLRF5kZpCZq+0CojwWmHcmYzopiuoqFZCJSM7Q7U1mwXHd0
+         LbS0KzUzfZei7GmSL5fm7eUWiQXN6yn7oR1igzb7mwSXXLeEcbJlyR2iRSEPCVdsZ0+N
+         en5MqOLGoU2PuBx0e0BxXUFOLDWc6ahV/suAGeElCchCVDSApjHIw8VunNtIQVlphsGI
+         5XEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cL6fs/TC+AbTrexoVx8lc3glF76LL/64P3jqDOubqOU=;
+        b=eHUVEteXL2kmVFB9JYQ2B+l6tE9ZKF8tC7RgfKngBCXpaZmGJHQSDURI3fAC28kmKS
+         Zz/LcMXFG/JZzG/XrdOK+sYMJcRt6OgPY76C8OB57mDb2fBF3Q9riEsAmQxr5K/9hvsu
+         Ym/urg6x9RFwyH0FVCbptuwxLjOfSMrkF0RfYrX8KO7+Hvpcvu9AVHcr00fOuxxC5upX
+         bGXajnbTLe5qq7uBJ0NhLEnywvGgFG6D1X2/S4QHgcQx3YEzi6URU8sDj10HvpEx/cVy
+         LWGN70fRPmfiClXG2HhInnlIuCzibJagoWMyvnLnKRe2LZL9p5/79k0GCfVq7naNk7ja
+         qzsw==
+X-Gm-Message-State: AOAM533k+boUmveTgS1NDAPzLMCos0LTwHDXFXp5JgvdI3XqHA2dyJEW
+        Ng1aEg3ATGUg2Cd6qtD5vjFpUBuPZQzCe0KriAIayg==
+X-Google-Smtp-Source: ABdhPJwuNazpKAOATKE0nNMW3rBUfq40/YWGzdym8cpzWqRYRMeOtvTbqo19OaXgrOTKauto0Mlknyht6Q0bCPx/Xog=
+X-Received: by 2002:a6b:1454:: with SMTP id 81mr17362520iou.96.1608627309948;
+ Tue, 22 Dec 2020 00:55:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cgelwwiosleq6j26"
-Content-Disposition: inline
-In-Reply-To: <6742ade7-8ed4-a778-38a8-4433d4854ba0@gmail.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+References: <6fa54ce6-d5ae-d04f-7c77-b62c148d92b7@gmail.com>
+ <20201106061513.uyys7njcqcdlah67@vireshk-i7> <a6926456-8bce-a438-bfaa-be334208f004@gmail.com>
+ <CAEExFWsp0DWw1yO84e3vzr_YZkqkd+pyPfQQR3J2W6n3wTX4Jw@mail.gmail.com>
+ <20201109050010.g47zojh6wafvwqva@vireshk-i7> <c584b301-e052-7f01-335d-8f9160865198@gmail.com>
+ <20201109051014.oa6bt4g3ctm2hnuy@vireshk-i7> <4476fed9-a356-b7f1-32ee-935343e23038@gmail.com>
+ <20201109053546.xupmmsx5qccn46tr@vireshk-i7> <33a7ad95-a8cf-7b88-0f78-09086c1a4adf@gmail.com>
+ <20201109055320.5y5gf2whwast2mi4@vireshk-i7> <CAEExFWuF82B3bPn8T8_vkHODNwP89MDrNOqu-MhObzqTfiYODw@mail.gmail.com>
+In-Reply-To: <CAEExFWuF82B3bPn8T8_vkHODNwP89MDrNOqu-MhObzqTfiYODw@mail.gmail.com>
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+Date:   Tue, 22 Dec 2020 14:24:59 +0530
+Message-ID: <CAKohpokBHcv34Qh1csHOF5w7utSNy8F_umMzv--pFuPTP9D4wg@mail.gmail.com>
+Subject: Re: [PATCH v1 17/30] mmc: sdhci-tegra: Support OPP and core voltage scaling
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        driver-dev <devel@driverdev.osuosl.org>,
+        linux-pwm@vger.kernel.org,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
+        <linux-usb@vger.kernel.org>,
+        "open list:SECURE DIGITAL HO..." <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Mon, 9 Nov 2020 at 16:51, Frank Lee <tiny.windzz@gmail.com> wrote:
+> On Mon, Nov 9, 2020 at 1:53 PM Viresh Kumar <viresh.kumar@linaro.org> wro=
+te:
 
---cgelwwiosleq6j26
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > > devm_pm_opp_set_supported_hw()
+> > > devm_pm_opp_set_regulators() [if we won't use GENPD]
+> > > devm_pm_opp_set_clkname()
+> > > devm_pm_opp_of_add_table()
+> >
+> > I tried to look earlier for the stuff already merged in and didn't
+> > find a lot of stuff where the devm_* could be used, maybe I missed
+> > some of it.
+> >
+> > Frank, would you like to refresh your series based on suggestions from
+> > Dmitry and make other drivers adapt to the new APIs ?
+>
+> I am glad to do this.=EF=BC=9A=EF=BC=89
 
-Hello Florian,
+Frank,
 
-On Mon, Dec 21, 2020 at 03:04:25PM -0800, Florian Fainelli wrote:
-> On 12/21/2020 8:55 AM, Uwe Kleine-K=F6nig wrote:
-> > With an input clk rate bigger than 2000000000, scaler would have been
-> > zero which then would have resulted in a division by zero.
-> >=20
-> > Also the originally implemented algorithm divided by the result of a
-> > division. This nearly always looses precision. Consider a requested per=
-iod
-> > of 1000000 ns. With an input clock frequency of 32786885 Hz the hardware
-> > was configured with an actual period of 983869.007 ns (PERIOD =3D 32258)
-> > while the hardware can provide 1000003.508 ns (PERIOD =3D 32787).
-> > And note if the input clock frequency was 32786886 Hz instead, the hard=
-ware
-> > was configured to 1016656.477 ns (PERIOD =3D 33333) while the optimal
-> > setting results in 1000003.477 ns (PERIOD =3D 32787).
-> >=20
-> > This patch implements proper range checking and only divides once for
-> > the calculation of period (and similar for duty_cycle).
-> >=20
-> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > ---
-> > Hello,
-> >=20
-> > during review of the bcm2835 driver I noticed this double division.
-> >=20
-> > I think the practical relevance is low however because the clock rate is
-> > fixed to 10 MHz on this platform which doesn't result in these
-> > deviations. (Is this right, what is the actual rate?)
->=20
-> Currently this is correct but the PWM input clock can be configured from
-> the divider of a PLL that runs at 500MHz so this change is potentially
-> useful in that regard.
+Dmitry has submitted a series with a patch that does stuff like this since =
+you
+never resent your patches.
 
-Thanks for your feedback; is this an Ack?
+http://lore.kernel.org/lkml/20201217180638.22748-14-digetx@gmail.com
 
-Best regards
-Uwe
+Since you were the first one to get to this, I would still like to
+give you a chance
+to get these patches merged under your authorship, otherwise I would be goi=
+ng
+to pick patches from Dmitry.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---cgelwwiosleq6j26
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/hknkACgkQwfwUeK3K
-7Anr1wgAmtdw8hDFAwtBgCd+CznpPP5UwiWj+A8f1M5aDXnGGOfyFztdeskqJHnX
-eDibfQ4jgk5b6fha2RokRQSBcDz785j5kWdohMuviP+RTY9FTXHDf/uNRyPnKM14
-Y3wvjntB+pIfFe9hOYjJ4XxeTQIEeHi1V0Vfbocqj9JegxB5MHp0lQp7+k53Kl0y
-r2YwiE2blLO3WhWSK5ItG/EzImBuvFX4QjwQ7e+ykD5FvPh2o7/p/olnSXzUuGJb
-NXdrQ+3eH/sNeWLN8kfcK0ia1Q4ML3E7sPdYzt+uZlY/ZwRhkSRLKrDNO/6lSHYf
-cK/Z8AxtFBGtdfhrqY3Z5nyytMQHJQ==
-=HmFo
------END PGP SIGNATURE-----
-
---cgelwwiosleq6j26--
+--
+viresh
