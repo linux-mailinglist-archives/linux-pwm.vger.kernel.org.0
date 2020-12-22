@@ -2,126 +2,118 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD4A42E056C
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Dec 2020 05:39:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53D1F2E0609
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Dec 2020 07:31:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725968AbgLVEiv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 21 Dec 2020 23:38:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33646 "EHLO
+        id S1725847AbgLVGbJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Dec 2020 01:31:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbgLVEiu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Dec 2020 23:38:50 -0500
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 561ECC0613D6
-        for <linux-pwm@vger.kernel.org>; Mon, 21 Dec 2020 20:38:10 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id q4so6782387plr.7
-        for <linux-pwm@vger.kernel.org>; Mon, 21 Dec 2020 20:38:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KMIz8Txzy6wjyHZ1wwNssQ3NrdVzopyLXnUTumDPEu4=;
-        b=f37eFkln4a/htDAWss+ZS1U+E4a3XjADVDLugAkDTqYfhz6h+hiYbGevReGFf4n1TK
-         3LcyVU0v8oEj/ldV2LwRorapAZA9fM+aEsLElWnlYinloCFhkUxXIG6IPajD8tgiJJea
-         DpV7MWDOXHzOuzTO/m9jSt14tPoJrM5KP18DX8I2/m7k1RJGMbdgBM9opD9aW4R0APi2
-         qwsxK5iRF4PUxhEWWnJeQbqIQ1L1pe/0UYpfefLQ75Em26FoNTFGgZaoz7DKALCRXLEX
-         ZOBQkG9jMif+c5JtWfTVjvIK0ay59QORO0oyT5r2YmuHYQtzadQyZ5I+40srrzB7gnDd
-         Pygw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=KMIz8Txzy6wjyHZ1wwNssQ3NrdVzopyLXnUTumDPEu4=;
-        b=tYZ40hEQWY8vmJhBy5/R2w8D3N8Et8nEopxI3m0+lJ0pt9tmDn2YxkSBLdZa4xS4hC
-         hYQk4sPEz0UP60JtxhZZY+4lG+FB+okOk89Wm0Bsn/3IfbqZ26sU9JJCcEzR5of/tm5P
-         CWnLiNlFHC4ghfTIasNksZDvMnfNnek/lXr8ZCoqYhNz05e29Fos49FAE5MFYbHkbhdU
-         HSdKRGJO60CLwx5RpzqcAhturPVM7aVRCKDkOcFSbMNBR1y8Zmo5IQvUqYDIZ8VDA/oh
-         i5U6hQ8mXh5cDZrkoXFGMJy3BXuRVDUUFcvYM9O2f9zC55cYHeUZGr7SefGgPYBQzrer
-         oRCA==
-X-Gm-Message-State: AOAM531V+yqWVfqSuagcgckFObqxb4nNeeNoBAgUjPqZEbhBil9y30gb
-        V/gHbXtNLL2j4VtwWl+1U+HMBw==
-X-Google-Smtp-Source: ABdhPJxtuQf6v3NOjOt18j+2XE9PyJZOYNWFlG1D0U0wBxlkHbcyvIu7qM9Ho0qf5ZhZV4ECTna2pA==
-X-Received: by 2002:a17:902:694c:b029:da:afba:beab with SMTP id k12-20020a170902694cb02900daafbabeabmr19519669plt.32.1608611889761;
-        Mon, 21 Dec 2020 20:38:09 -0800 (PST)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id a136sm19619380pfd.149.2020.12.21.20.38.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Dec 2020 20:38:09 -0800 (PST)
-Date:   Mon, 21 Dec 2020 20:38:09 -0800 (PST)
-X-Google-Original-Date: Mon, 21 Dec 2020 20:38:02 PST (-0800)
-Subject:     Re: [PATCH v2 0/9] arch: riscv: add board and SoC DT file support
-In-Reply-To: <1607403341-57214-1-git-send-email-yash.shah@sifive.com>
-CC:     linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        broonie@kernel.org, Greg KH <gregkh@linuxfoundation.org>,
-        aou@eecs.berkeley.edu, lee.jones@linaro.org,
-        u.kleine-koenig@pengutronix.de, thierry.reding@gmail.com,
-        andrew@lunn.ch, peter@korsgaard.com,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
-        yash.shah@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     yash.shah@sifive.com, robh+dt@kernel.org
-Message-ID: <mhng-711b1a2e-46bd-4169-841d-f18fe4bba6bb@palmerdabbelt-glaptop>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        with ESMTP id S1725818AbgLVGbJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Dec 2020 01:31:09 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E98DCC0613D3
+        for <linux-pwm@vger.kernel.org>; Mon, 21 Dec 2020 22:30:28 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1krbBg-00021e-C7; Tue, 22 Dec 2020 07:30:24 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1krbBf-0005z5-C3; Tue, 22 Dec 2020 07:30:23 +0100
+Date:   Tue, 22 Dec 2020 07:30:20 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
+        Sean Young <sean@mess.org>, linux-pwm@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, kernel@pengutronix.de
+Subject: Re: [PATCH] pwm: bcm2835: Improve period and duty cycle calculation
+Message-ID: <20201222063020.654mz5zgj764mldc@pengutronix.de>
+References: <20201221165501.717101-1-u.kleine-koenig@pengutronix.de>
+ <6742ade7-8ed4-a778-38a8-4433d4854ba0@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cgelwwiosleq6j26"
+Content-Disposition: inline
+In-Reply-To: <6742ade7-8ed4-a778-38a8-4433d4854ba0@gmail.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 07 Dec 2020 20:55:32 PST (-0800), yash.shah@sifive.com wrote:
-> Start board support by adding initial support for the SiFive FU740 SoC
-> and the first development board that uses it, the SiFive HiFive
-> Unmatched A00.
->
-> Boot-tested on Linux 5.10-rc4 on a HiFive Unmatched A00 board using the
-> U-boot and OpenSBI.
->
-> This patch series is dependent on Zong's Patchset[0]. The patchset also
-> adds two new nodes in dtsi file. The binding documentation patch
-> for these nodes are already posted on the mailing list[1][2].
->
-> [0]: https://lore.kernel.org/linux-riscv/20201130082330.77268-4-zong.li@sifive.com/T/#u
-> [1]: https://lore.kernel.org/linux-riscv/1606714984-16593-1-git-send-email-yash.shah@sifive.com/T/#t
-> [2]: https://lore.kernel.org/linux-riscv/20201126030043.67390-1-zong.li@sifive.com/T/#u
->
-> Changes in v2:
-> - The dt bindings patch is split into several individual patches.
-> - Expand the full list for compatible strings in i2c-ocores.txt
->
-> Yash Shah (9):
->   dt-bindings: riscv: Update DT binding docs to support SiFive FU740 SoC
->   dt-bindings: spi: Update DT binding docs to support SiFive FU740 SoC
->   dt-bindings: pwm: Update DT binding docs to support SiFive FU740 SoC
->   dt-bindings: serial: Update DT binding docs to support SiFive FU740
->     SoC
->   dt-bindings: gpio: Update DT binding docs to support SiFive FU740 SoC
->   dt-bindings: i2c: Update DT binding docs to support SiFive FU740 SoC
->   riscv: dts: add initial support for the SiFive FU740-C000 SoC
->   dt-bindings: riscv: Update YAML doc to support SiFive HiFive Unmatched
->     board
->   riscv: dts: add initial board data for the SiFive HiFive Unmatched
->
->  .../devicetree/bindings/gpio/sifive,gpio.yaml      |   4 +-
->  .../devicetree/bindings/i2c/i2c-ocores.txt         |   8 +-
->  .../devicetree/bindings/pwm/pwm-sifive.yaml        |   9 +-
->  Documentation/devicetree/bindings/riscv/cpus.yaml  |   6 +
->  .../devicetree/bindings/riscv/sifive.yaml          |  17 +-
->  .../devicetree/bindings/serial/sifive-serial.yaml  |   4 +-
->  .../devicetree/bindings/spi/spi-sifive.yaml        |  10 +-
->  arch/riscv/boot/dts/sifive/Makefile                |   3 +-
->  arch/riscv/boot/dts/sifive/fu740-c000.dtsi         | 293 +++++++++++++++++++++
->  .../riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 253 ++++++++++++++++++
->  10 files changed, 590 insertions(+), 17 deletions(-)
->  create mode 100644 arch/riscv/boot/dts/sifive/fu740-c000.dtsi
->  create mode 100644 arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
 
-Aside from that question about the i2c bug these look good to me.  I don't see
-any Ack/Review on the DT side of things, though.  If you want to take them
-through a DT tree that's fine for me, I'll leave them in my inbox for now and
-if nobody says anything I'll look a bit more and take them for 5.12.
+--cgelwwiosleq6j26
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Hello Florian,
+
+On Mon, Dec 21, 2020 at 03:04:25PM -0800, Florian Fainelli wrote:
+> On 12/21/2020 8:55 AM, Uwe Kleine-K=F6nig wrote:
+> > With an input clk rate bigger than 2000000000, scaler would have been
+> > zero which then would have resulted in a division by zero.
+> >=20
+> > Also the originally implemented algorithm divided by the result of a
+> > division. This nearly always looses precision. Consider a requested per=
+iod
+> > of 1000000 ns. With an input clock frequency of 32786885 Hz the hardware
+> > was configured with an actual period of 983869.007 ns (PERIOD =3D 32258)
+> > while the hardware can provide 1000003.508 ns (PERIOD =3D 32787).
+> > And note if the input clock frequency was 32786886 Hz instead, the hard=
+ware
+> > was configured to 1016656.477 ns (PERIOD =3D 33333) while the optimal
+> > setting results in 1000003.477 ns (PERIOD =3D 32787).
+> >=20
+> > This patch implements proper range checking and only divides once for
+> > the calculation of period (and similar for duty_cycle).
+> >=20
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > ---
+> > Hello,
+> >=20
+> > during review of the bcm2835 driver I noticed this double division.
+> >=20
+> > I think the practical relevance is low however because the clock rate is
+> > fixed to 10 MHz on this platform which doesn't result in these
+> > deviations. (Is this right, what is the actual rate?)
+>=20
+> Currently this is correct but the PWM input clock can be configured from
+> the divider of a PLL that runs at 500MHz so this change is potentially
+> useful in that regard.
+
+Thanks for your feedback; is this an Ack?
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--cgelwwiosleq6j26
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/hknkACgkQwfwUeK3K
+7Anr1wgAmtdw8hDFAwtBgCd+CznpPP5UwiWj+A8f1M5aDXnGGOfyFztdeskqJHnX
+eDibfQ4jgk5b6fha2RokRQSBcDz785j5kWdohMuviP+RTY9FTXHDf/uNRyPnKM14
+Y3wvjntB+pIfFe9hOYjJ4XxeTQIEeHi1V0Vfbocqj9JegxB5MHp0lQp7+k53Kl0y
+r2YwiE2blLO3WhWSK5ItG/EzImBuvFX4QjwQ7e+ykD5FvPh2o7/p/olnSXzUuGJb
+NXdrQ+3eH/sNeWLN8kfcK0ia1Q4ML3E7sPdYzt+uZlY/ZwRhkSRLKrDNO/6lSHYf
+cK/Z8AxtFBGtdfhrqY3Z5nyytMQHJQ==
+=HmFo
+-----END PGP SIGNATURE-----
+
+--cgelwwiosleq6j26--
