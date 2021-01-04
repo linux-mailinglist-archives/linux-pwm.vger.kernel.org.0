@@ -2,43 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FCE62E931B
-	for <lists+linux-pwm@lfdr.de>; Mon,  4 Jan 2021 11:08:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBB772E9324
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 Jan 2021 11:13:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726198AbhADKHs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 4 Jan 2021 05:07:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbhADKHs (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 4 Jan 2021 05:07:48 -0500
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B2B6C061574;
-        Mon,  4 Jan 2021 02:07:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=iB8VDERroWSABUgrwCWnEDI6F4BOeb/hqsj74gIV3e0=; b=LH4HYLWkGGII5XUQ2r73l9+OB
-        v+uGv8xtz0PQ2Xo3txuxTvVg1aF30JDIkUnuH7qYSCfIuJ6S7Mxnx8iUWsnGqpXx92hfgWUS741pi
-        bCt157/gu31tIf2/QdDIw8KgztgV1QjbDl4o5bmSBR2kfNVrzQcnXgpF3vnCGrGTXwlC2HteSYfe2
-        eAW/zC1Q+yjDqBkrysGm0dD8Aov6/GL31c2PgrUCxX/R5+vUSxjHZUFibeSjy6XFyPYnefIyHDOBG
-        DDpL7iZ0RWBydZegbjrVeZ4VnonuaGGeWwZKOyGOJfxbUO+xlsyw96VsFGmWzmpcfvY4aVLpyen7v
-        3QnO10/EA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45052)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1kwMlO-0008CR-Qk; Mon, 04 Jan 2021 10:06:58 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1kwMlJ-0006gY-Fm; Mon, 04 Jan 2021 10:06:53 +0000
-Date:   Mon, 4 Jan 2021 10:06:53 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Baruch Siach <baruch@tkos.co.il>
+        id S1726253AbhADKMs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 4 Jan 2021 05:12:48 -0500
+Received: from guitar.tcltek.co.il ([192.115.133.116]:59298 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725616AbhADKMs (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 4 Jan 2021 05:12:48 -0500
+Received: from tarshish (unknown [10.0.8.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx.tkos.co.il (Postfix) with ESMTPS id 52E89440AEE;
+        Mon,  4 Jan 2021 12:12:05 +0200 (IST)
+References: <cover.1607601615.git.baruch@tkos.co.il>
+ <20210104092449.GA1551@shell.armlinux.org.uk>
+User-agent: mu4e 1.4.13; emacs 27.1
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        Uwe =?utf-8?Q?Kleine-K?= =?utf-8?Q?=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -52,67 +36,65 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         linux-arm-kernel@lists.infradead.org,
         Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v4 1/3] gpio: mvebu: add pwm support for Armada 8K/7K
-Message-ID: <20210104100653.GB1551@shell.armlinux.org.uk>
-References: <cover.1607601615.git.baruch@tkos.co.il>
- <61a022834dce86eefa3144e696078946f332bdfe.1607601615.git.baruch@tkos.co.il>
+Subject: Re: [PATCH v4 0/3] gpio: mvebu: Armada 8K/7K PWM support
+In-reply-to: <20210104092449.GA1551@shell.armlinux.org.uk>
+Date:   Mon, 04 Jan 2021 12:12:04 +0200
+Message-ID: <87mtxp9fkb.fsf@tarshish>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <61a022834dce86eefa3144e696078946f332bdfe.1607601615.git.baruch@tkos.co.il>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Sender: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Dec 10, 2020 at 02:15:58PM +0200, Baruch Siach wrote:
-> @@ -781,51 +787,80 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
->  	struct device *dev = &pdev->dev;
->  	struct mvebu_pwm *mvpwm;
->  	void __iomem *base;
-> +	u32 offset;
->  	u32 set;
->  
-> -	if (!of_device_is_compatible(mvchip->chip.of_node,
-> -				     "marvell,armada-370-gpio"))
-> -		return 0;
-> -
-> -	/*
-> -	 * There are only two sets of PWM configuration registers for
-> -	 * all the GPIO lines on those SoCs which this driver reserves
-> -	 * for the first two GPIO chips. So if the resource is missing
-> -	 * we can't treat it as an error.
-> -	 */
-> -	if (!platform_get_resource_byname(pdev, IORESOURCE_MEM, "pwm"))
-> +	if (of_device_is_compatible(mvchip->chip.of_node,
-> +				    "marvell,armada-370-gpio")) {
-> +		/*
-> +		 * There are only two sets of PWM configuration registers for
-> +		 * all the GPIO lines on those SoCs which this driver reserves
-> +		 * for the first two GPIO chips. So if the resource is missing
-> +		 * we can't treat it as an error.
-> +		 */
-> +		if (!platform_get_resource_byname(pdev, IORESOURCE_MEM, "pwm"))
-> +			return 0;
-> +		offset = 0;
-> +	} else if (mvchip->soc_variant == MVEBU_GPIO_SOC_VARIANT_A8K) {
-> +		int ret = of_property_read_u32(dev->of_node,
-> +					       "marvell,pwm-offset", &offset);
-> +		if (ret < 0)
-> +			return 0;
+Hi Russell,
 
-The reason my patches were rejected was because I was trying to keep
-compatibility with the existing DTs w.r.t the clock - and Uwe didn't
-like that.
+On Mon, Jan 04 2021, Russell King - ARM Linux admin wrote:
+> On Thu, Dec 10, 2020 at 02:15:57PM +0200, Baruch Siach wrote:
+>> This series makes two changes to v3:
+>> 
+>>   * Remove patches that are in LinusW linux-gpio for-next and fixes
+>> 
+>>   * Rename the 'pwm-offset' property to 'marvell,pwm-offset' as suggested by 
+>>     Rob Herring
+>> 
+>> The original cover letter follows (with DT property name updated).
+>> 
+>> The gpio-mvebu driver supports the PWM functionality of the GPIO block for
+>> earlier Armada variants like XP, 370 and 38x. This series extends support to
+>> newer Armada variants that use CP11x and AP80x, like Armada 8K and 7K.
+>> 
+>> This series adds adds the 'marvell,pwm-offset' property to DT binding. 
+>> 'marvell,pwm-offset' points to the base of A/B counter registers that 
+>> determine the PWM period and duty cycle.
+>> 
+>> The existing PWM DT binding reflects an arbitrary decision to allocate the A
+>> counter to the first GPIO block, and B counter to the other one. In attempt to
+>> provide better future flexibility, the new 'marvell,pwm-offset' property 
+>> always points to the base address of both A/B counters. The driver code still 
+>> allocates the counters in the same way, but this might change in the future 
+>> with no change to the DT.
+>> 
+>> Tested AP806 and CP110 (both) on Armada 8040 based system.
+>
+> Did you see the patches I sent during the last year doing this and
+> adding support for the fan on the GT-8k?
 
-I notice that you keep compatibility by detecting the presence or
-absence of the marvell,pwm-offset property which achieves the same
-goal.
+You refer to the series linked below, right?
 
-Also, you are missing fixing a bug in the PWM register calculations
-for get_state().
+  https://lore.kernel.org/linux-pwm/20200329104549.GX25745@shell.armlinux.org.uk/
+
+(For some reason the LAKM archive is missing two years, including this
+time frame)
+
+I now remember that series. I even archived it locally. But then I
+forgot about it, so I ended up recreating Armada 8K PWM support from
+scratch. Sorry about that.
+
+Any comment on this series?
+
+baruch
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+                                                     ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
