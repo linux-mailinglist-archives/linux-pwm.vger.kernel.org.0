@@ -2,20 +2,20 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 81B052EAB10
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Jan 2021 13:43:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B81812EAB15
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Jan 2021 13:43:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbhAEMn3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 5 Jan 2021 07:43:29 -0500
-Received: from guitar.tcltek.co.il ([192.115.133.116]:34636 "EHLO
+        id S1729099AbhAEMna (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 5 Jan 2021 07:43:30 -0500
+Received: from guitar.tcltek.co.il ([192.115.133.116]:34647 "EHLO
         mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729099AbhAEMn3 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 5 Jan 2021 07:43:29 -0500
+        id S1729115AbhAEMna (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 5 Jan 2021 07:43:30 -0500
 Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id B25E1440820;
-        Tue,  5 Jan 2021 14:42:43 +0200 (IST)
+        by mx.tkos.co.il (Postfix) with ESMTPS id 9E55F440AEE;
+        Tue,  5 Jan 2021 14:42:46 +0200 (IST)
 From:   Baruch Siach <baruch@tkos.co.il>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -23,7 +23,8 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>
-Cc:     Baruch Siach <baruch@tkos.co.il>, Andrew Lunn <andrew@lunn.ch>,
+Cc:     Baruch Siach <baruch@tkos.co.il>, Rob Herring <robh@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
         Gregory Clement <gregory.clement@bootlin.com>,
         Russell King <linux@armlinux.org.uk>,
         Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
@@ -33,9 +34,9 @@ Cc:     Baruch Siach <baruch@tkos.co.il>, Andrew Lunn <andrew@lunn.ch>,
         Ralph Sennhauser <ralph.sennhauser@gmail.com>,
         linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v5 3/4] arm64: dts: armada: add pwm offsets for ap/cp gpios
-Date:   Tue,  5 Jan 2021 14:42:30 +0200
-Message-Id: <e783b1233a8d0bc2ef25f5b5b9a7385adc52c8e2.1609849176.git.baruch@tkos.co.il>
+Subject: [PATCH v5 4/4] dt-bindings: ap806: document gpio marvell,pwm-offset property
+Date:   Tue,  5 Jan 2021 14:42:31 +0200
+Message-Id: <517733b3281a28a540bacd8de765660ff1ad99e5.1609849176.git.baruch@tkos.co.il>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <cover.1609849176.git.baruch@tkos.co.il>
 References: <cover.1609849176.git.baruch@tkos.co.il>
@@ -45,77 +46,41 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The 'marvell,pwm-offset' property of both GPIO blocks (per CP component)
-point to the same counter registers offset. The driver will decide how
-to use counters A/B.
+Update the example as well. Add the '#pwm-cells' and 'clocks' properties
+for a complete working example.
 
-This is different from the convention of pwm on earlier Armada series
-(370/38x). On those systems the assignment of A/B counters to GPIO
-blocks is coded in both DT and the driver. The actual behaviour of the
-current driver on Armada 8K/7K is the same as earlier systems.
-
-Add also clock properties for base pwm frequency reference.
-
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Baruch Siach <baruch@tkos.co.il>
 ---
- arch/arm64/boot/dts/marvell/armada-ap80x.dtsi |  3 +++
- arch/arm64/boot/dts/marvell/armada-cp11x.dtsi | 10 ++++++++++
- 2 files changed, 13 insertions(+)
+ .../bindings/arm/marvell/ap80x-system-controller.txt      | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi b/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
-index 12e477f1aeb9..6614472100c2 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
-@@ -281,6 +281,9 @@ ap_gpio: gpio@1040 {
- 					gpio-controller;
- 					#gpio-cells = <2>;
- 					gpio-ranges = <&ap_pinctrl 0 0 20>;
-+					marvell,pwm-offset = <0x10c0>;
-+					#pwm-cells = <2>;
-+					clocks = <&ap_clk 3>;
- 				};
- 			};
+diff --git a/Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
+index e31511255d8e..052a967c1f28 100644
+--- a/Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
++++ b/Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
+@@ -80,6 +80,11 @@ Required properties:
  
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
-index 994a2fce449a..d774a39334d9 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
-@@ -234,12 +234,17 @@ CP11X_LABEL(gpio1): gpio@100 {
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				gpio-ranges = <&CP11X_LABEL(pinctrl) 0 0 32>;
-+				marvell,pwm-offset = <0x1f0>;
-+				#pwm-cells = <2>;
- 				interrupt-controller;
- 				interrupts = <86 IRQ_TYPE_LEVEL_HIGH>,
- 					<85 IRQ_TYPE_LEVEL_HIGH>,
- 					<84 IRQ_TYPE_LEVEL_HIGH>,
- 					<83 IRQ_TYPE_LEVEL_HIGH>;
- 				#interrupt-cells = <2>;
-+				clock-names = "core", "axi";
-+				clocks = <&CP11X_LABEL(clk) 1 21>,
-+					 <&CP11X_LABEL(clk) 1 17>;
- 				status = "disabled";
- 			};
+ - offset: offset address inside the syscon block
  
-@@ -250,12 +255,17 @@ CP11X_LABEL(gpio2): gpio@140 {
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				gpio-ranges = <&CP11X_LABEL(pinctrl) 0 32 31>;
-+				marvell,pwm-offset = <0x1f0>;
-+				#pwm-cells = <2>;
- 				interrupt-controller;
- 				interrupts = <82 IRQ_TYPE_LEVEL_HIGH>,
- 					<81 IRQ_TYPE_LEVEL_HIGH>,
- 					<80 IRQ_TYPE_LEVEL_HIGH>,
- 					<79 IRQ_TYPE_LEVEL_HIGH>;
- 				#interrupt-cells = <2>;
-+				clock-names = "core", "axi";
-+				clocks = <&CP11X_LABEL(clk) 1 21>,
-+					 <&CP11X_LABEL(clk) 1 17>;
- 				status = "disabled";
- 			};
- 		};
++Optional properties:
++
++- marvell,pwm-offset: offset address of PWM duration control registers inside
++  the syscon block
++
+ Example:
+ ap_syscon: system-controller@6f4000 {
+ 	compatible = "syscon", "simple-mfd";
+@@ -101,6 +106,9 @@ ap_syscon: system-controller@6f4000 {
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 		gpio-ranges = <&ap_pinctrl 0 0 19>;
++		marvell,pwm-offset = <0x10c0>;
++		#pwm-cells = <2>;
++		clocks = <&ap_clk 3>;
+ 	};
+ };
+ 
 -- 
 2.29.2
 
