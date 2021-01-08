@@ -2,156 +2,137 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA9EF2ED22B
-	for <lists+linux-pwm@lfdr.de>; Thu,  7 Jan 2021 15:32:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EFC02EEBBE
+	for <lists+linux-pwm@lfdr.de>; Fri,  8 Jan 2021 04:13:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728411AbhAGObH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 7 Jan 2021 09:31:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56600 "EHLO
+        id S1727100AbhAHDNI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 7 Jan 2021 22:13:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbhAGObH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 7 Jan 2021 09:31:07 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8E9FC0612F5
-        for <linux-pwm@vger.kernel.org>; Thu,  7 Jan 2021 06:30:26 -0800 (PST)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kxWIe-0003jA-66; Thu, 07 Jan 2021 15:30:04 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kxWIV-0000VA-Pp; Thu, 07 Jan 2021 15:29:55 +0100
-Date:   Thu, 7 Jan 2021 15:29:53 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 1/4] gpio: mvebu: fix pwm get_state period calculation
-Message-ID: <20210107142953.ifg5yuy3dsblgsju@pengutronix.de>
-References: <cover.1609917364.git.baruch@tkos.co.il>
- <22d1fe7b2137e3a2660ab2e6f1f127d41493fb16.1609917364.git.baruch@tkos.co.il>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ks3fthzfzjkbbgmh"
-Content-Disposition: inline
-In-Reply-To: <22d1fe7b2137e3a2660ab2e6f1f127d41493fb16.1609917364.git.baruch@tkos.co.il>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+        with ESMTP id S1727260AbhAHDNI (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 7 Jan 2021 22:13:08 -0500
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C206C0612F9
+        for <linux-pwm@vger.kernel.org>; Thu,  7 Jan 2021 19:12:28 -0800 (PST)
+Received: by mail-pg1-x52d.google.com with SMTP id n10so6724013pgl.10
+        for <linux-pwm@vger.kernel.org>; Thu, 07 Jan 2021 19:12:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SjIxw593j/BG7x2X3ksVVnxB2uu71tEZmxrMsCj4BiM=;
+        b=h2ktI7s4n8xCoqkoSVH4EHqwEk9bp/enKaHzfXG4daTjSVem3smhzGjWZOERytTBt1
+         uct1LT+TzDwe1P+tWsKICLXw/a9f1Y5NGttqGWBIlq7W0terFsRHlavDYV15Cf8egItt
+         ssfplpyFYDBmZLa4Bss7IeleNkqZcrj7JtyEEWkZPzvoHbtHiUCt9ectPN4fr1muZPpM
+         ywgRFdcUijDEgD1cnBXSpdui63N7Pur/ocDaLM3e7YxpSFI76doqdNO0TUcSv7NbVbUQ
+         egGDX7XIhDuYYpHZ5nnBoNW06xDqi3t8gF0kGVKM7WpiLVNcmrFR1T8datur+4zctrQd
+         fHgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=SjIxw593j/BG7x2X3ksVVnxB2uu71tEZmxrMsCj4BiM=;
+        b=eQNlSCRoFpcXc8aCpGaG1putLb0De2OvBbRYXxUUhHY+jn5T+r1Xth2Ez/00UvjGt/
+         4hdSkzeWmTTUjNCI3gM8KwAZK3RqaRFeK7vfFa8rQ9ae6kqPqXRamcVTaWTJvN4DH5ps
+         ItI8LGl7AtIhKmzs7YfzsNvoV2ncTXgFz4Fdnvxi29vFGkya4rGKlVp4nghBDWktb8G0
+         KC62royRgtDwAhXhVmniBMo0Fg6zPIJNOb0zuYa9QlMFrFv1PgByrhHbhpIK7/nWtFkc
+         GIqr7EyYMjZnbV9j/DaF06R5mUo+s0m0p8jFLJkPga0jBH46dzAMi2Q0NIUHYwRlxDaN
+         mE7A==
+X-Gm-Message-State: AOAM533CaSVSS0sMFM8IC7xT6BqVN/F8Lre3lbTn4IXsIn1HbkYU0BFN
+        PNRuZ4GVfUIMynTt7QVxtdU6Rg==
+X-Google-Smtp-Source: ABdhPJxeTiUgNKGaw5qtkvFU0vf1c4xAKljKlMnfqJb88DCjQRxBowLvlBQ4gqSHPM+ucT8Xlx08sQ==
+X-Received: by 2002:a63:1f47:: with SMTP id q7mr4962672pgm.10.1610075547296;
+        Thu, 07 Jan 2021 19:12:27 -0800 (PST)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id r185sm6938981pfc.53.2021.01.07.19.12.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Jan 2021 19:12:26 -0800 (PST)
+Date:   Thu, 07 Jan 2021 19:12:26 -0800 (PST)
+X-Google-Original-Date: Thu, 07 Jan 2021 17:52:56 PST (-0800)
+Subject:     Re: [PATCH v2 0/9] arch: riscv: add board and SoC DT file support
+In-Reply-To: <1607403341-57214-1-git-send-email-yash.shah@sifive.com>
+CC:     linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        broonie@kernel.org, Greg KH <gregkh@linuxfoundation.org>,
+        aou@eecs.berkeley.edu, lee.jones@linaro.org,
+        u.kleine-koenig@pengutronix.de, thierry.reding@gmail.com,
+        andrew@lunn.ch, peter@korsgaard.com,
+        Paul Walmsley <paul.walmsley@sifive.com>, robh+dt@kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
+        yash.shah@sifive.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     yash.shah@sifive.com
+Message-ID: <mhng-abbd57b3-7d81-4c66-9883-67bc11f1f3a3@palmerdabbelt-glaptop>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Mon, 07 Dec 2020 20:55:32 PST (-0800), yash.shah@sifive.com wrote:
+> Start board support by adding initial support for the SiFive FU740 SoC
+> and the first development board that uses it, the SiFive HiFive
+> Unmatched A00.
+>
+> Boot-tested on Linux 5.10-rc4 on a HiFive Unmatched A00 board using the
+> U-boot and OpenSBI.
+>
+> This patch series is dependent on Zong's Patchset[0]. The patchset also
+> adds two new nodes in dtsi file. The binding documentation patch
+> for these nodes are already posted on the mailing list[1][2].
+>
+> [0]: https://lore.kernel.org/linux-riscv/20201130082330.77268-4-zong.li@sifive.com/T/#u
+> [1]: https://lore.kernel.org/linux-riscv/1606714984-16593-1-git-send-email-yash.shah@sifive.com/T/#t
+> [2]: https://lore.kernel.org/linux-riscv/20201126030043.67390-1-zong.li@sifive.com/T/#u
+>
+> Changes in v2:
+> - The dt bindings patch is split into several individual patches.
+> - Expand the full list for compatible strings in i2c-ocores.txt
+>
+> Yash Shah (9):
+>   dt-bindings: riscv: Update DT binding docs to support SiFive FU740 SoC
+>   dt-bindings: spi: Update DT binding docs to support SiFive FU740 SoC
+>   dt-bindings: pwm: Update DT binding docs to support SiFive FU740 SoC
+>   dt-bindings: serial: Update DT binding docs to support SiFive FU740
+>     SoC
+>   dt-bindings: gpio: Update DT binding docs to support SiFive FU740 SoC
+>   dt-bindings: i2c: Update DT binding docs to support SiFive FU740 SoC
+>   riscv: dts: add initial support for the SiFive FU740-C000 SoC
+>   dt-bindings: riscv: Update YAML doc to support SiFive HiFive Unmatched
+>     board
+>   riscv: dts: add initial board data for the SiFive HiFive Unmatched
+>
+>  .../devicetree/bindings/gpio/sifive,gpio.yaml      |   4 +-
+>  .../devicetree/bindings/i2c/i2c-ocores.txt         |   8 +-
+>  .../devicetree/bindings/pwm/pwm-sifive.yaml        |   9 +-
+>  Documentation/devicetree/bindings/riscv/cpus.yaml  |   6 +
+>  .../devicetree/bindings/riscv/sifive.yaml          |  17 +-
+>  .../devicetree/bindings/serial/sifive-serial.yaml  |   4 +-
+>  .../devicetree/bindings/spi/spi-sifive.yaml        |  10 +-
+>  arch/riscv/boot/dts/sifive/Makefile                |   3 +-
+>  arch/riscv/boot/dts/sifive/fu740-c000.dtsi         | 293 +++++++++++++++++++++
+>  .../riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 253 ++++++++++++++++++
+>  10 files changed, 590 insertions(+), 17 deletions(-)
+>  create mode 100644 arch/riscv/boot/dts/sifive/fu740-c000.dtsi
+>  create mode 100644 arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
 
---ks3fthzfzjkbbgmh
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks, these are on for-next.  There was one checkpatch warning about the
+missing ISSI device tree entry, but we already had that in the FU540 so I'm OK
+letting it slide.
 
-On Wed, Jan 06, 2021 at 09:37:37AM +0200, Baruch Siach wrote:
-> The period is the sum of on and off values.
->=20
-> Reported-by: Russell King <linux@armlinux.org.uk>
-> Fixes: 757642f9a584e ("gpio: mvebu: Add limited PWM support")
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> ---
-> v6: divide (on + off) sum to reduce rounding error (RMK)
-> ---
->  drivers/gpio/gpio-mvebu.c | 19 ++++++++-----------
->  1 file changed, 8 insertions(+), 11 deletions(-)
->=20
-> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> index 672681a976f5..a912a8fed197 100644
-> --- a/drivers/gpio/gpio-mvebu.c
-> +++ b/drivers/gpio/gpio-mvebu.c
-> @@ -676,20 +676,17 @@ static void mvebu_pwm_get_state(struct pwm_chip *ch=
-ip,
->  	else
->  		state->duty_cycle =3D 1;
-> =20
-> +	val =3D (unsigned long long) u; /* on duration */
->  	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm), &u);
-> -	val =3D (unsigned long long) u * NSEC_PER_SEC;
-> +	val +=3D (unsigned long long) u; /* period =3D on + off duration */
-> +	val *=3D NSEC_PER_SEC;
->  	do_div(val, mvpwm->clk_rate);
-> -	if (val < state->duty_cycle) {
-> +	if (val > UINT_MAX)
-> +		state->period =3D UINT_MAX;
+I'm also not really sure this is the right way to do this sort of thing: most
+of the patches here really aren't RISC-V things, they're SiFive SOC things.
+Some of these patches have been picked up by other trees, but I just took the
+rest.  I'm not all that happy about taking DT bindings for things like GPIO or
+PWM bindings, but as they're pretty small I'm OK doing it in this instance.
 
-state->period is an u64, so there is no reason to not use values greater
-than UINT_MAX.
-
-> +	else if (val)
-> +		state->period =3D val;
-> +	else
->  		state->period =3D 1;
-
-This case assigning 1 looks strange. An explanation in a comment would
-be great. I wonder if this is a hardware property or if it is only used
-to not report 0 in case that mvpwm->clk_rate is high.
-
-I found a few further shortcommings in the mvebu_pwm implementation while
-looking through it:
-
- a) The rounding problem that RMK found is also present in .apply
-
-    There we have:
-
-    	val =3D clk_rate * (period - duty_cycle) / NSEC_PER_SEC
-
-    while
-
-    	val =3D clk_rate * period / NSEC_PER_SEC - on
-
-    would be more exact.
-
- b) To make
-
- 	pwm_get_state(pwm, &state);
-	pwm_apply_state(pwm, &state);
-
-    idempotent .get_state should round up the division results.
-
- c) .apply also has a check for val being zero and configures at least 1
-    cycle for the on and off intervals. Is this a hardware imposed
-    limitation?=20
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ks3fthzfzjkbbgmh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/3Gt4ACgkQwfwUeK3K
-7AmqFwf/eYT5rulDQlSUn8MsOkXYy7NLmfZcRfU/HdExqVyhJv8sxtYPdWfdGzxx
-ev8bGjQtylhb4fh0eSvq6LZTdvaxEOFXCO7BrE5CG8Qw4I4a6Av08ypNatSbub7d
-wreWhjuB+lVdiYOKAxOXKeKIpHPi9TKRCr2oOnBb1VP2hN5k5WdXnMRqleZerALG
-AdNVRdveRwG1Sii80z1XL2WdSDM+DdPMv48Ustct1KzHGXweN2GfNueaoTrvA4s4
-OshvyGv/pSYKzCxols4HKScQ2cD6QT4XcovNytSaH1eLkeQ8Y7xkXYIllZ+hZ7hU
-k9xrblYpXwOgA2R/1Hp1VQIgPfqfdQ==
-=yjYP
------END PGP SIGNATURE-----
-
---ks3fthzfzjkbbgmh--
+In the future it would really be better to split these up and land them via
+their respectitve trees, rather than trying to do all the SOC stuff over here.
+I know that can be a headache, but we have that SOC group for this purpose to
+try and keep things a bit more together -- I know it was a while ago and there
+really hasn't been much SOC activity on the RISC-V side of things so maybe it
+hasn't been that widley discussed, but that was really designed to solve these
+sorts of problems.
