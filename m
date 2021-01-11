@@ -2,181 +2,145 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 603B92F1B49
-	for <lists+linux-pwm@lfdr.de>; Mon, 11 Jan 2021 17:43:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F4AA2F208D
+	for <lists+linux-pwm@lfdr.de>; Mon, 11 Jan 2021 21:18:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731664AbhAKQnU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 11 Jan 2021 11:43:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38038 "EHLO
+        id S2388548AbhAKUS2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 11 Jan 2021 15:18:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732373AbhAKQnR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 11 Jan 2021 11:43:17 -0500
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 755DDC061794
-        for <linux-pwm@vger.kernel.org>; Mon, 11 Jan 2021 08:42:37 -0800 (PST)
-Received: by mail-wm1-x32a.google.com with SMTP id g25so240411wmh.1
-        for <linux-pwm@vger.kernel.org>; Mon, 11 Jan 2021 08:42:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=pnjD2UilASpN7loOYOlKYs+Pbcte4indWOVKi/fCTJg=;
-        b=jZPGYifKJXu2wyCXuOOqiam6bYFwnCgZIld3hfdNBNiId3bEdbMCzQkxliyHesCEmS
-         x6cu7r3uREiid7Hb1dctzIY7498SE+zMrR8HPJDsEgnQILuGz6BIgIgvnrXyuJ0QUoq5
-         104uS8DvTxQ8Y4KlApoJiuN2YTQfJTFv1Ef1TZsjopplyIqu1lmKCV0yLutNAtD/+79D
-         RQT1/AUVzII+CqjH3dw0cPsE33XX2ktNEHM1jVNreiTO9MfHIKusni1KNxKGlAL8g40T
-         rWR6RXsOyXsTbJ7hyZV09aXGOaYCq/Be+Sl97sP7jLbTGEL55i2/RL3N2caecholkxQa
-         w1kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=pnjD2UilASpN7loOYOlKYs+Pbcte4indWOVKi/fCTJg=;
-        b=WYcyaWYGXyzdoW7Ith4UL3LWv5zRVpKD3csiEL8H0HncehDgOo1UJO3QrWoyjlXQNi
-         Jz+Amr58KZpuUVbU6kuS2bVVch4hZ0+399NoN5HO1piza+892wkIz/4uIW16tCyFpmWs
-         FrbE93ESHcRnkueE+19a9OMBa8x/8seC68DXjzD4ddiwL198JRpfGDFUBto7h/piExF4
-         OpUoAT5F0SErzeYJj5RBhJSVQ4yNI0D1EpQq9rkfwgHA1VVgUd+R8/nuGOI0PE+8WKzl
-         TkvFAa14h7JY6JHy893yIoMjBs4i0gLXlQgTp2QUBiE6QHT4lJLfz8A25EvFzHffFTUc
-         3hVQ==
-X-Gm-Message-State: AOAM531bkCIXgQVcxzGS6Uh63Y33PJmGjqSc1Pq0Xe7KOcOmvEo+4DQz
-        4hmFcHLtdjdfeTR5RGS1hASJZQ==
-X-Google-Smtp-Source: ABdhPJzApE1wVaNIEk7OP7bPmtcjgsSpWlYwuKYrzBqby7CnQK7nLd4dwQgxpqSjJJiQ2SKJafc7Mw==
-X-Received: by 2002:a7b:c145:: with SMTP id z5mr509718wmi.164.1610383356061;
-        Mon, 11 Jan 2021 08:42:36 -0800 (PST)
-Received: from dell ([91.110.221.229])
-        by smtp.gmail.com with ESMTPSA id v1sm196393wrr.48.2021.01.11.08.42.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Jan 2021 08:42:35 -0800 (PST)
-Date:   Mon, 11 Jan 2021 16:42:28 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
+        with ESMTP id S2391503AbhAKUS1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 11 Jan 2021 15:18:27 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3691C061786
+        for <linux-pwm@vger.kernel.org>; Mon, 11 Jan 2021 12:17:46 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kz3d5-0006pf-QB; Mon, 11 Jan 2021 21:17:31 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kz3cm-0001oG-1F; Mon, 11 Jan 2021 21:17:12 +0100
+Date:   Mon, 11 Jan 2021 21:17:11 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Baruch Siach <baruch@tkos.co.il>, g@pengutronix.de
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v7 4/7] pwm: ntxec: Add driver for PWM function in
- Netronix EC
-Message-ID: <20210111164228.GB3575260@dell>
-References: <20210109180220.121511-1-j.neuschaefer@gmx.net>
- <20210109180220.121511-5-j.neuschaefer@gmx.net>
- <X/xKZI04ipiQCUjd@ulmo>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/5] gpio: mvebu: fix pwm get_state period calculation
+Message-ID: <20210111201711.ym46w7dy62ux66zb@pengutronix.de>
+References: <cover.1610362661.git.baruch@tkos.co.il>
+ <e3afc6e297e495322971c26a79c6f841d5952fd1.1610362661.git.baruch@tkos.co.il>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sbfrqob34qguvdht"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <X/xKZI04ipiQCUjd@ulmo>
+In-Reply-To: <e3afc6e297e495322971c26a79c6f841d5952fd1.1610362661.git.baruch@tkos.co.il>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 11 Jan 2021, Thierry Reding wrote:
 
-> On Sat, Jan 09, 2021 at 07:02:17PM +0100, Jonathan Neuschäfer wrote:
-> > The Netronix EC provides a PWM output which is used for the backlight
-> > on some ebook readers. This patches adds a driver for the PWM output.
-> > 
-> > The .get_state callback is not implemented, because the PWM state can't
-> > be read back from the hardware.
-> > 
-> > Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> > ---
-> > v7:
-> > - no changes
-> > 
-> > v6:
-> > - https://lore.kernel.org/lkml/20201208011000.3060239-5-j.neuschaefer@gmx.net/
-> > - Move period / duty cycle setting code to a function
-> > - Rename pwmchip_to_priv to ntxec_pwm_from_chip
-> > - Set period and duty cycle only before enabling the output
-> > - Mention that duty=0, enable=1 is assumed not to happen
-> > - Interleave writes to the period and duty cycle registers, to minimize the
-> >   window of time that an inconsistent state is configured
-> > 
-> > v5:
-> > - https://lore.kernel.org/lkml/20201201011513.1627028-5-j.neuschaefer@gmx.net/
-> > - Avoid truncation of period and duty cycle to 32 bits
-> > - Make ntxec_pwm_ops const
-> > - Use regmap_multi_reg_write
-> > - Add comment about get_state to ntxec_pwm_ops
-> > - Add comments about non-atomicity of (period, duty cycle) update
-> > 
-> > v4:
-> > - https://lore.kernel.org/lkml/20201122222739.1455132-5-j.neuschaefer@gmx.net/
-> > - Document hardware/driver limitations
-> > - Only accept normal polarity
-> > - Fix a typo ("zone" -> "zero")
-> > - change MAX_PERIOD_NS to 0xffff * 125
-> > - Clamp period to the maximum rather than returning an error
-> > - Rename private struct pointer to priv
-> > - Rearrage control flow in _probe to save a few lines and a temporary variable
-> > - Add missing MODULE_ALIAS line
-> > - Spell out ODM
-> > 
-> > v3:
-> > - https://lore.kernel.org/lkml/20200924192455.2484005-5-j.neuschaefer@gmx.net/
-> > - Relicense as GPLv2 or later
-> > - Add email address to copyright line
-> > - Remove OF compatible string and don't include linux/of_device.h
-> > - Fix bogus ?: in return line
-> > - Don't use a comma after sentinels
-> > - Avoid ret |= ... pattern
-> > - Move 8-bit register conversion to ntxec.h
-> > 
-> > v2:
-> > - https://lore.kernel.org/lkml/20200905133230.1014581-6-j.neuschaefer@gmx.net/
-> > - Various grammar and style improvements, as suggested by Uwe Kleine-König,
-> >   Lee Jones, and Alexandre Belloni
-> > - Switch to regmap
-> > - Prefix registers with NTXEC_REG_
-> > - Add help text to the Kconfig option
-> > - Use the .apply callback instead of the old API
-> > - Add a #define for the time base (125ns)
-> > - Don't change device state in .probe; this avoids multiple problems
-> > - Rework division and overflow check logic to perform divisions in 32 bits
-> > - Avoid setting duty cycle to zero, to work around a hardware quirk
-> > ---
-> >  drivers/pwm/Kconfig     |   8 ++
-> >  drivers/pwm/Makefile    |   1 +
-> >  drivers/pwm/pwm-ntxec.c | 182 ++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 191 insertions(+)
-> >  create mode 100644 drivers/pwm/pwm-ntxec.c
-> 
-> Lee, I assume you'll want to pick the whole set up into the MFD tree? If
-> so:
+--sbfrqob34qguvdht
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, I'll pick this up once we have all the Acks.
+Hello Baruch,
 
-The Arm parts usually go in separately.
+$Subject ~=3D s/get_state/.get_state/ ?
 
-> Acked-by: Thierry Reding <thierry.reding@gmail.com>
+On Mon, Jan 11, 2021 at 01:17:02PM +0200, Baruch Siach wrote:
+> The period is the sum of on and off values.
+>=20
+> Reported-by: Russell King <linux@armlinux.org.uk>
+> Fixes: 757642f9a584e ("gpio: mvebu: Add limited PWM support")
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> ---
+>  drivers/gpio/gpio-mvebu.c | 19 ++++++++-----------
+>  1 file changed, 8 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+> index 672681a976f5..a912a8fed197 100644
+> --- a/drivers/gpio/gpio-mvebu.c
+> +++ b/drivers/gpio/gpio-mvebu.c
+> @@ -676,20 +676,17 @@ static void mvebu_pwm_get_state(struct pwm_chip *ch=
+ip,
+>  	else
+>  		state->duty_cycle =3D 1;
+> =20
+> +	val =3D (unsigned long long) u; /* on duration */
+>  	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm), &u);
+> -	val =3D (unsigned long long) u * NSEC_PER_SEC;
+> +	val +=3D (unsigned long long) u; /* period =3D on + off duration */
+> +	val *=3D NSEC_PER_SEC;
+>  	do_div(val, mvpwm->clk_rate);
+> -	if (val < state->duty_cycle) {
+> +	if (val > UINT_MAX)
+> +		state->period =3D UINT_MAX;
+> +	else if (val)
+> +		state->period =3D val;
+> +	else
+>  		state->period =3D 1;
+> -	} else {
+> -		val -=3D state->duty_cycle;
+> -		if (val > UINT_MAX)
+> -			state->period =3D UINT_MAX;
+> -		else if (val)
+> -			state->period =3D val;
+> -		else
+> -			state->period =3D 1;
+> -	}
 
-Thanks.
+The patch looks good, the patch description could be a bit more verbose.
+Something like:
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+	Calculate the period as
+
+		($on + $off) / clkrate
+
+	instead of
+
+		$off / clkrate - $on / clkrate
+
+	.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--sbfrqob34qguvdht
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/8skQACgkQwfwUeK3K
+7Alzogf+KPPg546GsrokpTE2wlvllmFTgHygaAWs0ZXan8lWTdaN0bFHLvt1FF24
+f8b8auIDDRkqJjkATM7hByvyU8Dh7JKG9Uc4/YJ0Fba6t9bdRZFjJRE4rCycgcK1
++8PmLZFgx4YA9h7qcNJm3te7Q1JOuZigmQffuxbzlVc0/q5kKkbtkhIbCY0dpGvH
+ShuxJo3Rz4vdq6lnyaT1oadkz6kVfAj3BTtpAbUAx4/O8cwnQOtIZTeQCCMuFqDG
+ms+vCmfNgQ6pMxFz51i+XNLNbrk54Dq/9HcnJ2oD6KWR/aG0tmYPWVcjIqEBwwpN
+Dqii+4ngHXKSJEsdnIJnSdjdkzfU7w==
+=iOoM
+-----END PGP SIGNATURE-----
+
+--sbfrqob34qguvdht--
