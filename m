@@ -2,33 +2,33 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6783A2F3AB5
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Jan 2021 20:39:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DE5F2F3AC2
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Jan 2021 20:42:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388019AbhALTh6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 12 Jan 2021 14:37:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47256 "EHLO
+        id S2392980AbhALTj4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 12 Jan 2021 14:39:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726110AbhALTh6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jan 2021 14:37:58 -0500
+        with ESMTP id S2392926AbhALTj4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jan 2021 14:39:56 -0500
 Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 456E5C061575;
-        Tue, 12 Jan 2021 11:37:17 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90099C061575;
+        Tue, 12 Jan 2021 11:39:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
         MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=mqDWy1l/V0CdI/LmRyed+gEX8sostFduBkN/etodnpk=; b=OuZRFCyMVK8FAMUKGZoghNkF9D
-        OkiMOjOXVaUtBWEZLunAsVu6R7LWl0plKTBtL2xFogdzZm1TppAV6cX36Xg/3DfrbJtITMlNDKrOh
-        yukgqUDNK6AAIkhM448agbvcnMx5vb5fvke5RdiV0ExcFumIWhyzyEDMDn80GOP7nZPY=;
+        bh=cS9C/2XYzsbjYTZ0aJ7zWNeNcxrmFX1E76BcBqiBK3c=; b=INxkXnT9LshF4+KSR5QhbpCd6w
+        lqtWX/XifPwQgxQuq2fAMh21xFNLj76YmfvJsRsFYZ4DyFI3WpdSfakUWFPqDMegLbF4l65eYcaoR
+        qpjCYCDtYybCUDwovkPsot+MueW/Ujjb59crkFGeS7GlicyC5fv/JPzuM1eKZXRIrXHY=;
 Received: from p200300ccff1586001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff15:8600:1a3d:a2ff:febf:d33a] helo=aktux)
         by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <andreas@kemnade.info>)
-        id 1kzPTG-0003is-3d; Tue, 12 Jan 2021 20:36:50 +0100
-Date:   Tue, 12 Jan 2021 20:36:49 +0100
+        id 1kzPVP-0003kv-Hc; Tue, 12 Jan 2021 20:39:03 +0100
+Date:   Tue, 12 Jan 2021 20:39:02 +0100
 From:   Andreas Kemnade <andreas@kemnade.info>
 To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
 Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
@@ -57,12 +57,12 @@ Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Josua Mayer <josua.mayer@jm0.eu>,
         Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v7 3/7] mfd: Add base driver for Netronix embedded
- controller
-Message-ID: <20210112203649.67f66996@aktux>
-In-Reply-To: <20210109180220.121511-4-j.neuschaefer@gmx.net>
+Subject: Re: [PATCH v7 4/7] pwm: ntxec: Add driver for PWM function in
+ Netronix EC
+Message-ID: <20210112203902.4e196d11@aktux>
+In-Reply-To: <20210109180220.121511-5-j.neuschaefer@gmx.net>
 References: <20210109180220.121511-1-j.neuschaefer@gmx.net>
-        <20210109180220.121511-4-j.neuschaefer@gmx.net>
+        <20210109180220.121511-5-j.neuschaefer@gmx.net>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -72,142 +72,123 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sat,  9 Jan 2021 19:02:16 +0100
+On Sat,  9 Jan 2021 19:02:17 +0100
 Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
 
-> The Netronix embedded controller is a microcontroller found in some
-> e-book readers designed by the original design manufacturer Netronix,
-> Inc. It contains RTC, battery monitoring, system power management, and
-> PWM functionality.
+> The Netronix EC provides a PWM output which is used for the backlight
+> on some ebook readers. This patches adds a driver for the PWM output.
 >=20
-> This driver implements register access and version detection.
->=20
-> Third-party hardware documentation is available at:
->=20
->   https://github.com/neuschaefer/linux/wiki/Netronix-MSP430-embedded-cont=
-roller
->=20
-> The EC supports interrupts, but the driver doesn't make use of them so
-> far.
+> The .get_state callback is not implemented, because the PWM state can't
+> be read back from the hardware.
 >=20
 > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 > ---
 > v7:
-> - Add #define for version number (suggested by Lee Jones).
->=20
-> v6:
-> - https://lore.kernel.org/lkml/20201208011000.3060239-4-j.neuschaefer@gmx=
-.net/
-> - Add Lee Jones' ACK
->=20
-> v5:
 > - no changes
 >=20
-> v4:
-> - https://lore.kernel.org/lkml/20201122222739.1455132-4-j.neuschaefer@gmx=
+> v6:
+> - https://lore.kernel.org/lkml/20201208011000.3060239-5-j.neuschaefer@gmx=
 .net/
-> - include asm/unaligned.h after linux/*
-> - Use put_unaligned_be16 instead of open-coded big-endian packing
-> - Clarify that 0x90=3D0xff00 causes an error in downstream kernel too
-> - Add commas after non-sentinel positions
-> - ntxec.h: declare structs device and regmap
-> - Replace WARN_ON usage and add comments to explain errors
-> - Replace dev_alert with dev_warn when the result isn't handled
-> - Change subdevice registration error message to dev_err
-> - Declare ntxec_reg8 as returning __be16
-> - Restructure version detection code
+> - Move period / duty cycle setting code to a function
+> - Rename pwmchip_to_priv to ntxec_pwm_from_chip
+> - Set period and duty cycle only before enabling the output
+> - Mention that duty=3D0, enable=3D1 is assumed not to happen
+> - Interleave writes to the period and duty cycle registers, to minimize t=
+he
+>   window of time that an inconsistent state is configured
+>=20
+> v5:
+> - https://lore.kernel.org/lkml/20201201011513.1627028-5-j.neuschaefer@gmx=
+.net/
+> - Avoid truncation of period and duty cycle to 32 bits
+> - Make ntxec_pwm_ops const
+> - Use regmap_multi_reg_write
+> - Add comment about get_state to ntxec_pwm_ops
+> - Add comments about non-atomicity of (period, duty cycle) update
+>=20
+> v4:
+> - https://lore.kernel.org/lkml/20201122222739.1455132-5-j.neuschaefer@gmx=
+.net/
+> - Document hardware/driver limitations
+> - Only accept normal polarity
+> - Fix a typo ("zone" -> "zero")
+> - change MAX_PERIOD_NS to 0xffff * 125
+> - Clamp period to the maximum rather than returning an error
+> - Rename private struct pointer to priv
+> - Rearrage control flow in _probe to save a few lines and a temporary var=
+iable
+> - Add missing MODULE_ALIAS line
 > - Spell out ODM
 >=20
 > v3:
-> - https://lore.kernel.org/lkml/20200924192455.2484005-4-j.neuschaefer@gmx=
+> - https://lore.kernel.org/lkml/20200924192455.2484005-5-j.neuschaefer@gmx=
 .net/
-> - Add (EC) to CONFIG_MFD_NTXEC prompt
 > - Relicense as GPLv2 or later
 > - Add email address to copyright line
-> - remove empty lines in ntxec_poweroff and ntxec_restart functions
-> - Split long lines
-> - Remove 'Install ... handler' comments
-> - Make naming of struct i2c_client parameter consistent
-> - Remove struct ntxec_info
-> - Rework 'depends on' lines in Kconfig, hard-depend on I2C, select REGMAP=
-_I2C and
->   MFD_CORE
-> - Register subdevices via mfd_cells
+> - Remove OF compatible string and don't include linux/of_device.h
+> - Fix bogus ?: in return line
+> - Don't use a comma after sentinels
+> - Avoid ret |=3D ... pattern
 > - Move 8-bit register conversion to ntxec.h
 >=20
 > v2:
-> - https://lore.kernel.org/lkml/20200905133230.1014581-4-j.neuschaefer@gmx=
+> - https://lore.kernel.org/lkml/20200905133230.1014581-6-j.neuschaefer@gmx=
 .net/
-> - Add a description of the device to the patch text
-> - Unify spelling as 'Netronix embedded controller'.
->   'Netronix' is the proper name of the manufacturer, but 'embedded contro=
-ller'
->   is just a label that I have assigned to the device.
-> - Switch to regmap, avoid regmap use in poweroff and reboot handlers.
->   Inspired by cf84dc0bb40f4 ("mfd: rn5t618: Make restart handler atomic s=
-afe")
-> - Use a list of known-working firmware versions instead of checking for a
->   known-incompatible version
+> - Various grammar and style improvements, as suggested by Uwe Kleine-K=C3=
+=B6nig,
+>   Lee Jones, and Alexandre Belloni
+> - Switch to regmap
 > - Prefix registers with NTXEC_REG_
-> - Define register values as constants
-> - Various style cleanups as suggested by Lee Jones
-> - Don't align =3D signs in struct initializers [Uwe Kleine-K=C3=B6nig]
-> - Don't use dev_dbg for an error message
-> - Explain sleep in poweroff handler
-> - Remove (struct ntxec).client
-> - Switch to .probe_new in i2c driver
-> - Add .remove callback
-> - Make CONFIG_MFD_NTXEC a tristate option
+> - Add help text to the Kconfig option
+> - Use the .apply callback instead of the old API
+> - Add a #define for the time base (125ns)
+> - Don't change device state in .probe; this avoids multiple problems
+> - Rework division and overflow check logic to perform divisions in 32 bits
+> - Avoid setting duty cycle to zero, to work around a hardware quirk
 > ---
->  drivers/mfd/Kconfig       |  11 ++
->  drivers/mfd/Makefile      |   1 +
->  drivers/mfd/ntxec.c       | 216 ++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/ntxec.h |  37 +++++++
->  4 files changed, 265 insertions(+)
->  create mode 100644 drivers/mfd/ntxec.c
->  create mode 100644 include/linux/mfd/ntxec.h
+>  drivers/pwm/Kconfig     |   8 ++
+>  drivers/pwm/Makefile    |   1 +
+>  drivers/pwm/pwm-ntxec.c | 182 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 191 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-ntxec.c
 >=20
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index bdfce7b156216..4280bcd47ec7d 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -976,6 +976,17 @@ config MFD_VIPERBOARD
->  	  You need to select the mfd cell drivers separately.
->  	  The drivers do not support all features the board exposes.
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 0937e1c047acb..a2830b8832b97 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -393,6 +393,14 @@ config PWM_MXS
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-mxs.
 >=20
-> +config MFD_NTXEC
-> +	tristate "Netronix embedded controller (EC)"
-> +	depends on OF || COMPILE_TEST
-> +	depends on I2C
-> +	select REGMAP_I2C
-> +	select MFD_CORE
+> +config PWM_NTXEC
+> +	tristate "Netronix embedded controller PWM support"
+> +	depends on MFD_NTXEC
 > +	help
-> +	  Say yes here if you want to support the embedded controller found in
-> +	  certain e-book readers designed by the original design manufacturer
-> +	  Netronix.
+> +	  Say yes here if you want to support the PWM output of the embedded
+> +	  controller found in certain e-book readers designed by the original
+> +	  design manufacturer Netronix.
 > +
->  config MFD_RETU
->  	tristate "Nokia Retu and Tahvo multi-function device"
->  	select MFD_CORE
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 14fdb188af022..948a3bf8e3e57 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -219,6 +219,7 @@ obj-$(CONFIG_MFD_INTEL_PMC_BXT)	+=3D intel_pmc_bxt.o
->  obj-$(CONFIG_MFD_INTEL_PMT)	+=3D intel_pmt.o
->  obj-$(CONFIG_MFD_PALMAS)	+=3D palmas.o
->  obj-$(CONFIG_MFD_VIPERBOARD)    +=3D viperboard.o
-> +obj-$(CONFIG_MFD_NTXEC)		+=3D ntxec.o
->  obj-$(CONFIG_MFD_RC5T583)	+=3D rc5t583.o rc5t583-irq.o
->  obj-$(CONFIG_MFD_RK808)		+=3D rk808.o
->  obj-$(CONFIG_MFD_RN5T618)	+=3D rn5t618.o
-> diff --git a/drivers/mfd/ntxec.c b/drivers/mfd/ntxec.c
+>  config PWM_OMAP_DMTIMER
+>  	tristate "OMAP Dual-Mode Timer PWM support"
+>  	depends on OF
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 18b89d7fd092a..7d97eb595bbef 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -35,6 +35,7 @@ obj-$(CONFIG_PWM_MESON)		+=3D pwm-meson.o
+>  obj-$(CONFIG_PWM_MEDIATEK)	+=3D pwm-mediatek.o
+>  obj-$(CONFIG_PWM_MTK_DISP)	+=3D pwm-mtk-disp.o
+>  obj-$(CONFIG_PWM_MXS)		+=3D pwm-mxs.o
+> +obj-$(CONFIG_PWM_NTXEC)		+=3D pwm-ntxec.o
+>  obj-$(CONFIG_PWM_OMAP_DMTIMER)	+=3D pwm-omap-dmtimer.o
+>  obj-$(CONFIG_PWM_PCA9685)	+=3D pwm-pca9685.o
+>  obj-$(CONFIG_PWM_PXA)		+=3D pwm-pxa.o
+> diff --git a/drivers/pwm/pwm-ntxec.c b/drivers/pwm/pwm-ntxec.c
 > new file mode 100644
-> index 0000000000000..22ed2ef0669cb
+> index 0000000000000..1db30a6caa3ad
 > --- /dev/null
-> +++ b/drivers/mfd/ntxec.c
-> @@ -0,0 +1,216 @@
+> +++ b/drivers/pwm/pwm-ntxec.c
+> @@ -0,0 +1,182 @@
 > +// SPDX-License-Identifier: GPL-2.0-or-later
 > +/*
 > + * The Netronix embedded controller is a microcontroller found in some
@@ -216,224 +197,168 @@ afe")
 > + * It contains RTC, battery monitoring, system power management, and PWM
 > + * functionality.
 > + *
-> + * This driver implements register access, version detection, and system
-> + * power-off/reset.
+> + * This driver implements PWM output.
 > + *
 > + * Copyright 2020 Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> + *
+> + * Limitations:
+> + * - The get_state callback is not implemented, because the current stat=
+e of
+> + *   the PWM output can't be read back from the hardware.
+> + * - The hardware can only generate normal polarity output.
+> + * - The period and duty cycle can't be changed together in one atomic a=
+ction.
 > + */
 > +
-> +#include <linux/delay.h>
-> +#include <linux/errno.h>
-> +#include <linux/i2c.h>
-> +#include <linux/mfd/core.h>
 > +#include <linux/mfd/ntxec.h>
 > +#include <linux/module.h>
-> +#include <linux/pm.h>
-> +#include <linux/reboot.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
 > +#include <linux/regmap.h>
 > +#include <linux/types.h>
-> +#include <asm/unaligned.h>
 > +
-> +#define NTXEC_REG_VERSION	0x00
-> +#define NTXEC_REG_POWEROFF	0x50
-> +#define NTXEC_REG_POWERKEEP	0x70
-> +#define NTXEC_REG_RESET		0x90
-> +
-> +#define NTXEC_POWEROFF_VALUE	0x0100
-> +#define NTXEC_POWERKEEP_VALUE	0x0800
-> +#define NTXEC_RESET_VALUE	0xff00
-> +
-> +static struct i2c_client *poweroff_restart_client;
-> +
-> +static void ntxec_poweroff(void)
-> +{
-> +	int res;
-> +	u8 buf[3] =3D { NTXEC_REG_POWEROFF };
-> +	struct i2c_msg msgs[] =3D {
-> +		{
-> +			.addr =3D poweroff_restart_client->addr,
-> +			.flags =3D 0,
-> +			.len =3D sizeof(buf),
-> +			.buf =3D buf,
-> +		},
-> +	};
-> +
-> +	put_unaligned_be16(NTXEC_POWEROFF_VALUE, buf + 1);
-> +
-> +	res =3D i2c_transfer(poweroff_restart_client->adapter, msgs, ARRAY_SIZE=
-(msgs));
-> +	if (res < 0)
-> +		dev_warn(&poweroff_restart_client->dev,
-> +			 "Failed to power off (err =3D %d)\n", res);
-> +
-> +	/*
-> +	 * The time from the register write until the host CPU is powered off
-> +	 * has been observed to be about 2.5 to 3 seconds. Sleep long enough to
-> +	 * safely avoid returning from the poweroff handler.
-> +	 */
-> +	msleep(5000);
-> +}
-> +
-> +static int ntxec_restart(struct notifier_block *nb,
-> +			 unsigned long action, void *data)
-> +{
-> +	int res;
-> +	u8 buf[3] =3D { NTXEC_REG_RESET };
-> +	/*
-> +	 * NOTE: The lower half of the reset value is not sent, because sending
-> +	 * it causes an I2C error. (The reset handler in the downstream driver
-> +	 * does send the full two-byte value, but doesn't check the result).
-> +	 */
-> +	struct i2c_msg msgs[] =3D {
-> +		{
-> +			.addr =3D poweroff_restart_client->addr,
-> +			.flags =3D 0,
-> +			.len =3D sizeof(buf) - 1,
-> +			.buf =3D buf,
-> +		},
-> +	};
-> +
-> +	put_unaligned_be16(NTXEC_RESET_VALUE, buf + 1);
-> +
-> +	res =3D i2c_transfer(poweroff_restart_client->adapter, msgs, ARRAY_SIZE=
-(msgs));
-> +	if (res < 0)
-> +		dev_warn(&poweroff_restart_client->dev,
-> +			 "Failed to restart (err =3D %d)\n", res);
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static struct notifier_block ntxec_restart_handler =3D {
-> +	.notifier_call =3D ntxec_restart,
-> +	.priority =3D 128,
-> +};
-> +
-> +static const struct regmap_config regmap_config =3D {
-> +	.name =3D "ntxec",
-> +	.reg_bits =3D 8,
-> +	.val_bits =3D 16,
-> +	.cache_type =3D REGCACHE_NONE,
-> +	.val_format_endian =3D REGMAP_ENDIAN_BIG,
-> +};
-> +
-> +static const struct mfd_cell ntxec_subdevices[] =3D {
-> +	{ .name =3D "ntxec-rtc" },
-> +	{ .name =3D "ntxec-pwm" },
-> +};
-> +
-> +static int ntxec_probe(struct i2c_client *client)
-> +{
+> +struct ntxec_pwm {
+> +	struct device *dev;
 > +	struct ntxec *ec;
-> +	unsigned int version;
+> +	struct pwm_chip chip;
+> +};
+> +
+> +static struct ntxec_pwm *ntxec_pwm_from_chip(struct pwm_chip *chip)
+> +{
+> +	return container_of(chip, struct ntxec_pwm, chip);
+> +}
+> +
+> +#define NTXEC_REG_AUTO_OFF_HI	0xa1
+> +#define NTXEC_REG_AUTO_OFF_LO	0xa2
+> +#define NTXEC_REG_ENABLE	0xa3
+> +#define NTXEC_REG_PERIOD_LOW	0xa4
+> +#define NTXEC_REG_PERIOD_HIGH	0xa5
+> +#define NTXEC_REG_DUTY_LOW	0xa6
+> +#define NTXEC_REG_DUTY_HIGH	0xa7
+> +
+> +/*
+> + * The time base used in the EC is 8MHz, or 125ns. Period and duty cycle=
+ are
+> + * measured in this unit.
+> + */
+> +#define TIME_BASE_NS 125
+> +
+> +/*
+> + * The maximum input value (in nanoseconds) is determined by the time ba=
+se and
+> + * the range of the hardware registers that hold the converted value.
+> + * It fits into 32 bits, so we can do our calculations in 32 bits as wel=
+l.
+> + */
+> +#define MAX_PERIOD_NS (TIME_BASE_NS * 0xffff)
+> +
+> +static int ntxec_pwm_set_raw_period_and_duty_cycle(struct pwm_chip *chip,
+> +						   int period, int duty)
+> +{
+> +	struct ntxec_pwm *priv =3D ntxec_pwm_from_chip(chip);
+> +
+> +	/*
+> +	 * Changes to the period and duty cycle take effect as soon as the
+> +	 * corresponding low byte is written, so the hardware may be configured
+> +	 * to an inconsistent state after the period is written and before the
+> +	 * duty cycle is fully written. If, in such a case, the old duty cycle
+> +	 * is longer than the new period, the EC may output 100% for a moment.
+> +	 *
+> +	 * To minimize the time between the changes to period and duty cycle
+> +	 * taking effect, the writes are interleaved.
+> +	 */
+> +
+> +	struct reg_sequence regs[] =3D {
+> +		{ NTXEC_REG_PERIOD_HIGH, ntxec_reg8(period >> 8) },
+> +		{ NTXEC_REG_DUTY_HIGH, ntxec_reg8(duty >> 8) },
+> +		{ NTXEC_REG_PERIOD_LOW, ntxec_reg8(period) },
+> +		{ NTXEC_REG_DUTY_LOW, ntxec_reg8(duty) },
+> +	};
+> +
+> +	return regmap_multi_reg_write(priv->ec->regmap, regs, ARRAY_SIZE(regs));
+> +}
+> +
+> +static int ntxec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm=
+_dev,
+> +			   const struct pwm_state *state)
+> +{
+> +	struct ntxec_pwm *priv =3D ntxec_pwm_from_chip(chip);
+> +	unsigned int period, duty;
 > +	int res;
 > +
-> +	ec =3D devm_kmalloc(&client->dev, sizeof(*ec), GFP_KERNEL);
-> +	if (!ec)
-> +		return -ENOMEM;
+> +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
+> +		return -EINVAL;
 > +
-> +	ec->dev =3D &client->dev;
+> +	period =3D min_t(u64, state->period, MAX_PERIOD_NS);
+> +	duty   =3D min_t(u64, state->duty_cycle, period);
 > +
-> +	ec->regmap =3D devm_regmap_init_i2c(client, &regmap_config);
-> +	if (IS_ERR(ec->regmap)) {
-> +		dev_err(ec->dev, "Failed to set up regmap for device\n");
-> +		return res;
-> +	}
+> +	period /=3D TIME_BASE_NS;
+> +	duty   /=3D TIME_BASE_NS;
 > +
-> +	/* Determine the firmware version */
-> +	res =3D regmap_read(ec->regmap, NTXEC_REG_VERSION, &version);
-> +	if (res < 0) {
-> +		dev_err(ec->dev, "Failed to read firmware version number\n");
-> +		return res;
-> +	}
-> +
-> +	/* Bail out if we encounter an unknown firmware version */
-> +	switch (version) {
-> +	case NTXEC_VERSION_KOBO_AURA:
-> +		break;
-> +	default:
-> +		dev_err(ec->dev,
-> +			"Netronix embedded controller version %04x is not supported.\n",
-> +			version);
-> +		return -ENODEV;
-> +	}
-> +
-> +	dev_info(ec->dev,
-> +		 "Netronix embedded controller version %04x detected.\n", version);
-> +
-> +	if (of_device_is_system_power_controller(ec->dev->of_node)) {
-> +		/*
-> +		 * Set the 'powerkeep' bit. This is necessary on some boards
-> +		 * in order to keep the system running.
-> +		 */
-> +		res =3D regmap_write(ec->regmap, NTXEC_REG_POWERKEEP,
-> +				   NTXEC_POWERKEEP_VALUE);
-> +		if (res < 0)
+> +	/*
+> +	 * Writing a duty cycle of zero puts the device into a state where
+> +	 * writing a higher duty cycle doesn't result in the brightness that it
+> +	 * usually results in. This can be fixed by cycling the ENABLE register.
+> +	 *
+> +	 * As a workaround, write ENABLE=3D0 when the duty cycle is zero.
+> +	 * The case that something has previously set the duty cycle to zero
+> +	 * but ENABLE=3D1, is not handled.
+> +	 */
+> +	if (state->enabled && duty !=3D 0) {
+> +		res =3D ntxec_pwm_set_raw_period_and_duty_cycle(chip, period, duty);
+> +		if (res)
 > +			return res;
 > +
-> +		if (poweroff_restart_client)
-> +			/*
-> +			 * Another instance of the driver already took
-> +			 * poweroff/restart duties.
-> +			 */
-> +			dev_err(ec->dev, "poweroff_restart_client already assigned\n");
-> +		else
-> +			poweroff_restart_client =3D client;
-> +
-> +		if (pm_power_off)
-> +			/* Another driver already registered a poweroff handler. */
-> +			dev_err(ec->dev, "pm_power_off already assigned\n");
-> +		else
-> +			pm_power_off =3D ntxec_poweroff;
-> +
-> +		res =3D register_restart_handler(&ntxec_restart_handler);
+> +		res =3D regmap_write(priv->ec->regmap, NTXEC_REG_ENABLE, ntxec_reg8(1)=
+);
 > +		if (res)
-> +			dev_err(ec->dev,
-> +				"Failed to register restart handler: %d\n", res);
+> +			return res;
+> +
+> +		/* Disable the auto-off timer */
+> +		res =3D regmap_write(priv->ec->regmap, NTXEC_REG_AUTO_OFF_HI, ntxec_re=
+g8(0xff));
+> +		if (res)
+> +			return res;
+> +
+> +		return regmap_write(priv->ec->regmap, NTXEC_REG_AUTO_OFF_LO, ntxec_reg=
+8(0xff));
+> +	} else {
+> +		return regmap_write(priv->ec->regmap, NTXEC_REG_ENABLE, ntxec_reg8(0));
 > +	}
-> +
-> +	i2c_set_clientdata(client, ec);
-> +
-> +	res =3D devm_mfd_add_devices(ec->dev, PLATFORM_DEVID_NONE, ntxec_subdev=
-ices,
-> +				   ARRAY_SIZE(ntxec_subdevices), NULL, 0, NULL);
-> +	if (res)
-> +		dev_err(ec->dev, "Failed to add subdevices: %d\n", res);
-> +
-> +	return res;
 > +}
 > +
-> +static int ntxec_remove(struct i2c_client *client)
+> +static const struct pwm_ops ntxec_pwm_ops =3D {
+> +	.owner =3D THIS_MODULE,
+> +	.apply =3D ntxec_pwm_apply,
+> +	/*
+> +	 * No .get_state callback, because the current state cannot be read
+> +	 * back from the hardware.
+> +	 */
+> +};
+> +
+> +static int ntxec_pwm_probe(struct platform_device *pdev)
 > +{
-> +	if (client =3D=3D poweroff_restart_client) {
-> +		poweroff_restart_client =3D NULL;
-> +		pm_power_off =3D NULL;
-> +		unregister_restart_handler(&ntxec_restart_handler);
-> +	}
+> +	struct ntxec *ec =3D dev_get_drvdata(pdev->dev.parent);
+> +	struct ntxec_pwm *priv;
+> +	struct pwm_chip *chip;
 > +
-> +	return 0;
-> +}
+> +	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
 > +
-> +static const struct of_device_id of_ntxec_match_table[] =3D {
-> +	{ .compatible =3D "netronix,ntxec", },
-> +	{}
-> +};
+> +	priv->ec =3D ec;
+> +	priv->dev =3D &pdev->dev;
 > +
-MODULE_DEVICE_TABLE?
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	chip =3D &priv->chip;
+> +	chip->dev =3D &pdev->dev;
 
-> +static struct i2c_driver ntxec_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "ntxec",
-> +		.of_match_table =3D of_ntxec_match_table,
-> +	},
-> +	.probe_new =3D ntxec_probe,
-> +	.remove =3D ntxec_remove,
-> +};
-> +module_i2c_driver(ntxec_driver);
-
-MODULE_LICENSE()?
-
-modpost moans about that here.
+Hmm, I needed
+chip->dev =3D &pdev->dev.parent to use the backlight example
+in patch 2/7.
+Not sure what the correct solution is. Maybe the pwm deserves its own
+devicetree node.
 
 Regards,
 Andreas
