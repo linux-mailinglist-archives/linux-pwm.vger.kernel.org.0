@@ -2,363 +2,389 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DE5F2F3AC2
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Jan 2021 20:42:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC84F2F3D1F
+	for <lists+linux-pwm@lfdr.de>; Wed, 13 Jan 2021 01:43:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392980AbhALTj4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 12 Jan 2021 14:39:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47680 "EHLO
+        id S2437004AbhALVh0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 12 Jan 2021 16:37:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392926AbhALTj4 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jan 2021 14:39:56 -0500
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90099C061575;
-        Tue, 12 Jan 2021 11:39:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=cS9C/2XYzsbjYTZ0aJ7zWNeNcxrmFX1E76BcBqiBK3c=; b=INxkXnT9LshF4+KSR5QhbpCd6w
-        lqtWX/XifPwQgxQuq2fAMh21xFNLj76YmfvJsRsFYZ4DyFI3WpdSfakUWFPqDMegLbF4l65eYcaoR
-        qpjCYCDtYybCUDwovkPsot+MueW/Ujjb59crkFGeS7GlicyC5fv/JPzuM1eKZXRIrXHY=;
-Received: from p200300ccff1586001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff15:8600:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1kzPVP-0003kv-Hc; Tue, 12 Jan 2021 20:39:03 +0100
-Date:   Tue, 12 Jan 2021 20:39:02 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v7 4/7] pwm: ntxec: Add driver for PWM function in
- Netronix EC
-Message-ID: <20210112203902.4e196d11@aktux>
-In-Reply-To: <20210109180220.121511-5-j.neuschaefer@gmx.net>
-References: <20210109180220.121511-1-j.neuschaefer@gmx.net>
-        <20210109180220.121511-5-j.neuschaefer@gmx.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        with ESMTP id S2437029AbhALUpq (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jan 2021 15:45:46 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7919AC061786
+        for <linux-pwm@vger.kernel.org>; Tue, 12 Jan 2021 12:45:05 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kzQXI-0007eu-3C; Tue, 12 Jan 2021 21:45:04 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kzQXH-00074f-7e; Tue, 12 Jan 2021 21:45:03 +0100
+Date:   Tue, 12 Jan 2021 21:45:02 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Angelo Compagnucci <angelo.compagnucci@gmail.com>
+Cc:     linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] misc: servo-pwm: driver for controlling servo motors via
+ PWM
+Message-ID: <20210112204502.5tbige2mdrjgttst@pengutronix.de>
+References: <20201222213342.2657026-1-angelo.compagnucci@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Score: -1.0 (-)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="74lwahphb3cujflz"
+Content-Disposition: inline
+In-Reply-To: <20201222213342.2657026-1-angelo.compagnucci@gmail.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sat,  9 Jan 2021 19:02:17 +0100
-Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
 
-> The Netronix EC provides a PWM output which is used for the backlight
-> on some ebook readers. This patches adds a driver for the PWM output.
+--74lwahphb3cujflz
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello,
+
+you should add Rob Herring and devicetree@vger.kernel.org to the list of
+recipents to get an Ack for your device tree documentation. This should
+also probably split out in a separate patch.
+
+On Tue, Dec 22, 2020 at 10:33:42PM +0100, Angelo Compagnucci wrote:
+> Ts patch adds a simple driver to control servo motor position via PWM
+> signal.
+> Driver allows to set the angle, the duty cycle at 0 and 180 degrees and
+> to set the initial position when the driver loads.
 >=20
-> The .get_state callback is not implemented, because the PWM state can't
-> be read back from the hardware.
->=20
-> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> Signed-off-by: Angelo Compagnucci <angelo.compagnucci@gmail.com>
 > ---
-> v7:
-> - no changes
+>  .../devicetree/bindings/misc/servo-pwm.txt    |  30 +++
+>  drivers/misc/Kconfig                          |   9 +
+>  drivers/misc/Makefile                         |   1 +
+>  drivers/misc/servo-pwm.c                      | 177 ++++++++++++++++++
+>  4 files changed, 217 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/servo-pwm.txt
+>  create mode 100644 drivers/misc/servo-pwm.c
 >=20
-> v6:
-> - https://lore.kernel.org/lkml/20201208011000.3060239-5-j.neuschaefer@gmx=
-.net/
-> - Move period / duty cycle setting code to a function
-> - Rename pwmchip_to_priv to ntxec_pwm_from_chip
-> - Set period and duty cycle only before enabling the output
-> - Mention that duty=3D0, enable=3D1 is assumed not to happen
-> - Interleave writes to the period and duty cycle registers, to minimize t=
-he
->   window of time that an inconsistent state is configured
->=20
-> v5:
-> - https://lore.kernel.org/lkml/20201201011513.1627028-5-j.neuschaefer@gmx=
-.net/
-> - Avoid truncation of period and duty cycle to 32 bits
-> - Make ntxec_pwm_ops const
-> - Use regmap_multi_reg_write
-> - Add comment about get_state to ntxec_pwm_ops
-> - Add comments about non-atomicity of (period, duty cycle) update
->=20
-> v4:
-> - https://lore.kernel.org/lkml/20201122222739.1455132-5-j.neuschaefer@gmx=
-.net/
-> - Document hardware/driver limitations
-> - Only accept normal polarity
-> - Fix a typo ("zone" -> "zero")
-> - change MAX_PERIOD_NS to 0xffff * 125
-> - Clamp period to the maximum rather than returning an error
-> - Rename private struct pointer to priv
-> - Rearrage control flow in _probe to save a few lines and a temporary var=
-iable
-> - Add missing MODULE_ALIAS line
-> - Spell out ODM
->=20
-> v3:
-> - https://lore.kernel.org/lkml/20200924192455.2484005-5-j.neuschaefer@gmx=
-.net/
-> - Relicense as GPLv2 or later
-> - Add email address to copyright line
-> - Remove OF compatible string and don't include linux/of_device.h
-> - Fix bogus ?: in return line
-> - Don't use a comma after sentinels
-> - Avoid ret |=3D ... pattern
-> - Move 8-bit register conversion to ntxec.h
->=20
-> v2:
-> - https://lore.kernel.org/lkml/20200905133230.1014581-6-j.neuschaefer@gmx=
-.net/
-> - Various grammar and style improvements, as suggested by Uwe Kleine-K=C3=
-=B6nig,
->   Lee Jones, and Alexandre Belloni
-> - Switch to regmap
-> - Prefix registers with NTXEC_REG_
-> - Add help text to the Kconfig option
-> - Use the .apply callback instead of the old API
-> - Add a #define for the time base (125ns)
-> - Don't change device state in .probe; this avoids multiple problems
-> - Rework division and overflow check logic to perform divisions in 32 bits
-> - Avoid setting duty cycle to zero, to work around a hardware quirk
-> ---
->  drivers/pwm/Kconfig     |   8 ++
->  drivers/pwm/Makefile    |   1 +
->  drivers/pwm/pwm-ntxec.c | 182 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 191 insertions(+)
->  create mode 100644 drivers/pwm/pwm-ntxec.c
->=20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 0937e1c047acb..a2830b8832b97 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -393,6 +393,14 @@ config PWM_MXS
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-mxs.
->=20
-> +config PWM_NTXEC
-> +	tristate "Netronix embedded controller PWM support"
-> +	depends on MFD_NTXEC
-> +	help
-> +	  Say yes here if you want to support the PWM output of the embedded
-> +	  controller found in certain e-book readers designed by the original
-> +	  design manufacturer Netronix.
-> +
->  config PWM_OMAP_DMTIMER
->  	tristate "OMAP Dual-Mode Timer PWM support"
->  	depends on OF
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 18b89d7fd092a..7d97eb595bbef 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -35,6 +35,7 @@ obj-$(CONFIG_PWM_MESON)		+=3D pwm-meson.o
->  obj-$(CONFIG_PWM_MEDIATEK)	+=3D pwm-mediatek.o
->  obj-$(CONFIG_PWM_MTK_DISP)	+=3D pwm-mtk-disp.o
->  obj-$(CONFIG_PWM_MXS)		+=3D pwm-mxs.o
-> +obj-$(CONFIG_PWM_NTXEC)		+=3D pwm-ntxec.o
->  obj-$(CONFIG_PWM_OMAP_DMTIMER)	+=3D pwm-omap-dmtimer.o
->  obj-$(CONFIG_PWM_PCA9685)	+=3D pwm-pca9685.o
->  obj-$(CONFIG_PWM_PXA)		+=3D pwm-pxa.o
-> diff --git a/drivers/pwm/pwm-ntxec.c b/drivers/pwm/pwm-ntxec.c
+> diff --git a/Documentation/devicetree/bindings/misc/servo-pwm.txt b/Docum=
+entation/devicetree/bindings/misc/servo-pwm.txt
 > new file mode 100644
-> index 0000000000000..1db30a6caa3ad
+> index 000000000000..dd3df38bbd7a
 > --- /dev/null
-> +++ b/drivers/pwm/pwm-ntxec.c
-> @@ -0,0 +1,182 @@
+> +++ b/Documentation/devicetree/bindings/misc/servo-pwm.txt
+
+I guess Rob will ask you to specify the binding in a yaml file instead.
+
+> @@ -0,0 +1,30 @@
+> +Servo motor connected to PWM
+> +
+> +Required properties:
+> +- compatible : should be "servo-pwm".
+
+I think you should use the actual chip names here.
+
+> +Each servo is represented as a servo-pwm device.
+> +
+> +Servo properties:
+> +- pwms : PWM property to point to the PWM device (phandle)/port (id) and=
+ to
+> +  specify the period time to be used: <&phandle id period_ns>;
+
+Better refer to the pwm binding instead. Some PWMs need 3 arguments.
+
+> +- duty-0 : (optional) [default 500000] duty cycle to set the servo motor=
+ at
+> +  0 degrees, useful to compensate for devices drift.
+> +- duty-180 : (optional) [default 2500000] duty cycle to set the servo mo=
+tor at
+> +  180 degrees, useful to compensate for devices drift.
+> +- angle : (optional) [defaul 0] set the starting angle at driver loading.
+
+It might just be me not knowing this type of motor, but I don't
+understand these parameters.
+
+s/defaul/default/
+
+> +Example:
+> +
+> +pwm: pwm@0 {
+> +	compatible =3D "pwm-gpio";
+> +	pwm-gpio =3D <&pio 6 3 GPIO_ACTIVE_LOW>;
+> +};
+> +
+> +servo: servo@0 {
+> +	compatible =3D "servo-pwm";
+> +	pwms =3D <&pwm 0 2000000>;
+> +	duty-0 =3D <60000>;
+> +	duty-180 =3D <260000>;
+> +	angle =3D <90>;
+> +};
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index fafa8b0d8099..921f179b0fc4 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -466,6 +466,15 @@ config HISI_HIKEY_USB
+>  	  switching between the dual-role USB-C port and the USB-A host ports
+>  	  using only one USB controller.
+> =20
+> +config SERVO_PWM
+> +	tristate "Servo motor positioning"
+> +	depends on PWM
+> +	help
+> +	  Driver to change servo motor angle.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called servo-pwm.
+> +
+>  source "drivers/misc/c2port/Kconfig"
+>  source "drivers/misc/eeprom/Kconfig"
+>  source "drivers/misc/cb710/Kconfig"
+> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> index d23231e73330..47796b56d7d7 100644
+> --- a/drivers/misc/Makefile
+> +++ b/drivers/misc/Makefile
+> @@ -57,3 +57,4 @@ obj-$(CONFIG_HABANA_AI)		+=3D habanalabs/
+>  obj-$(CONFIG_UACCE)		+=3D uacce/
+>  obj-$(CONFIG_XILINX_SDFEC)	+=3D xilinx_sdfec.o
+>  obj-$(CONFIG_HISI_HIKEY_USB)	+=3D hisi_hikey_usb.o
+> +obj-$(CONFIG_SERVO_PWM)	+=3D servo-pwm.o
+> diff --git a/drivers/misc/servo-pwm.c b/drivers/misc/servo-pwm.c
+> new file mode 100644
+> index 000000000000..781ef5d79c10
+> --- /dev/null
+> +++ b/drivers/misc/servo-pwm.c
+> @@ -0,0 +1,177 @@
 > +// SPDX-License-Identifier: GPL-2.0-or-later
 > +/*
-> + * The Netronix embedded controller is a microcontroller found in some
-> + * e-book readers designed by the original design manufacturer Netronix,=
- Inc.
-> + * It contains RTC, battery monitoring, system power management, and PWM
-> + * functionality.
+> + * Copyright (c) 2019 Angelo Compagnucci <angelo.compagnucci@gmail.com>
 > + *
-> + * This driver implements PWM output.
+> + * servo-pwm.c - driver for controlling servo motors via pwm.
 > + *
-> + * Copyright 2020 Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
 > + *
-> + * Limitations:
-> + * - The get_state callback is not implemented, because the current stat=
-e of
-> + *   the PWM output can't be read back from the hardware.
-> + * - The hardware can only generate normal polarity output.
-> + * - The period and duty cycle can't be changed together in one atomic a=
-ction.
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+
+Please drop the license boilerplate here. The purpose of the SPDX stuff
+is to not need this.
+
+> + *
+
+While at it also drop this "empty" line.
+
 > + */
 > +
-> +#include <linux/mfd/ntxec.h>
 > +#include <linux/module.h>
+> +#include <linux/kernel.h>
 > +#include <linux/platform_device.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of.h>
+> +#include <linux/err.h>
 > +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/types.h>
+> +#include <linux/slab.h>
 > +
-> +struct ntxec_pwm {
-> +	struct device *dev;
-> +	struct ntxec *ec;
-> +	struct pwm_chip chip;
+> +#define DEFAULT_PERIOD		2000000
+> +#define DEFAULT_DUTY_0		50000
+> +#define DEFAULT_DUTY_180	250000
+> +#define DEFAULT_ANGLE		0
+> +
+> +struct servo_pwm_data {
+> +	u32 duty_0;
+> +	u32 duty_180;
+> +	u32 period;
+> +	u32 angle;
+> +	struct mutex lock;
+> +	struct pwm_device *pwm;
 > +};
 > +
-> +static struct ntxec_pwm *ntxec_pwm_from_chip(struct pwm_chip *chip)
+> +static int servo_pwm_set(struct servo_pwm_data *servo_data)
 > +{
-> +	return container_of(chip, struct ntxec_pwm, chip);
+> +	u32 new_duty =3D (servo_data->duty_180 - servo_data->duty_0) /
+> +			180 * servo_data->angle + servo_data->duty_0;
+> +	int ret;
+> +
+> +	ret =3D pwm_config(servo_data->pwm, new_duty, servo_data->period);
+
+please use pwm_apply instead of the legacy pwm functions.
+
+> +	return ret;
 > +}
 > +
-> +#define NTXEC_REG_AUTO_OFF_HI	0xa1
-> +#define NTXEC_REG_AUTO_OFF_LO	0xa2
-> +#define NTXEC_REG_ENABLE	0xa3
-> +#define NTXEC_REG_PERIOD_LOW	0xa4
-> +#define NTXEC_REG_PERIOD_HIGH	0xa5
-> +#define NTXEC_REG_DUTY_LOW	0xa6
-> +#define NTXEC_REG_DUTY_HIGH	0xa7
-> +
-> +/*
-> + * The time base used in the EC is 8MHz, or 125ns. Period and duty cycle=
- are
-> + * measured in this unit.
-> + */
-> +#define TIME_BASE_NS 125
-> +
-> +/*
-> + * The maximum input value (in nanoseconds) is determined by the time ba=
-se and
-> + * the range of the hardware registers that hold the converted value.
-> + * It fits into 32 bits, so we can do our calculations in 32 bits as wel=
-l.
-> + */
-> +#define MAX_PERIOD_NS (TIME_BASE_NS * 0xffff)
-> +
-> +static int ntxec_pwm_set_raw_period_and_duty_cycle(struct pwm_chip *chip,
-> +						   int period, int duty)
+> +static ssize_t angle_show(struct device *dev, struct device_attribute *a=
+ttr,
+> +			  char *buf)
 > +{
-> +	struct ntxec_pwm *priv =3D ntxec_pwm_from_chip(chip);
+> +	struct servo_pwm_data *servo_data =3D dev_get_drvdata(dev);
 > +
-> +	/*
-> +	 * Changes to the period and duty cycle take effect as soon as the
-> +	 * corresponding low byte is written, so the hardware may be configured
-> +	 * to an inconsistent state after the period is written and before the
-> +	 * duty cycle is fully written. If, in such a case, the old duty cycle
-> +	 * is longer than the new period, the EC may output 100% for a moment.
-> +	 *
-> +	 * To minimize the time between the changes to period and duty cycle
-> +	 * taking effect, the writes are interleaved.
-> +	 */
-> +
-> +	struct reg_sequence regs[] =3D {
-> +		{ NTXEC_REG_PERIOD_HIGH, ntxec_reg8(period >> 8) },
-> +		{ NTXEC_REG_DUTY_HIGH, ntxec_reg8(duty >> 8) },
-> +		{ NTXEC_REG_PERIOD_LOW, ntxec_reg8(period) },
-> +		{ NTXEC_REG_DUTY_LOW, ntxec_reg8(duty) },
-> +	};
-> +
-> +	return regmap_multi_reg_write(priv->ec->regmap, regs, ARRAY_SIZE(regs));
+> +	return snprintf(buf, PAGE_SIZE, "%u\n", servo_data->angle);
 > +}
 > +
-> +static int ntxec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm=
-_dev,
-> +			   const struct pwm_state *state)
+> +static ssize_t angle_store(struct device *dev, struct device_attribute *=
+attr,
+> +			   const char *buf, size_t count)
 > +{
-> +	struct ntxec_pwm *priv =3D ntxec_pwm_from_chip(chip);
-> +	unsigned int period, duty;
-> +	int res;
+> +	struct servo_pwm_data *servo_data =3D dev_get_drvdata(dev);
+> +	unsigned int val;
+> +	int ret;
 > +
-> +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
+> +	ret =3D kstrtouint(buf, 10, &val);
+> +	if (ret < 0)
 > +		return -EINVAL;
 > +
-> +	period =3D min_t(u64, state->period, MAX_PERIOD_NS);
-> +	duty   =3D min_t(u64, state->duty_cycle, period);
+> +	if (val > 180)
+> +		return -EINVAL;
 > +
-> +	period /=3D TIME_BASE_NS;
-> +	duty   /=3D TIME_BASE_NS;
+> +	mutex_lock(&servo_data->lock);
 > +
-> +	/*
-> +	 * Writing a duty cycle of zero puts the device into a state where
-> +	 * writing a higher duty cycle doesn't result in the brightness that it
-> +	 * usually results in. This can be fixed by cycling the ENABLE register.
-> +	 *
-> +	 * As a workaround, write ENABLE=3D0 when the duty cycle is zero.
-> +	 * The case that something has previously set the duty cycle to zero
-> +	 * but ENABLE=3D1, is not handled.
-> +	 */
-> +	if (state->enabled && duty !=3D 0) {
-> +		res =3D ntxec_pwm_set_raw_period_and_duty_cycle(chip, period, duty);
-> +		if (res)
-> +			return res;
+> +	servo_data->angle =3D val;
 > +
-> +		res =3D regmap_write(priv->ec->regmap, NTXEC_REG_ENABLE, ntxec_reg8(1)=
-);
-> +		if (res)
-> +			return res;
-> +
-> +		/* Disable the auto-off timer */
-> +		res =3D regmap_write(priv->ec->regmap, NTXEC_REG_AUTO_OFF_HI, ntxec_re=
-g8(0xff));
-> +		if (res)
-> +			return res;
-> +
-> +		return regmap_write(priv->ec->regmap, NTXEC_REG_AUTO_OFF_LO, ntxec_reg=
-8(0xff));
-> +	} else {
-> +		return regmap_write(priv->ec->regmap, NTXEC_REG_ENABLE, ntxec_reg8(0));
+> +	ret =3D servo_pwm_set(servo_data);
+> +	if (ret) {
+> +		mutex_unlock(&servo_data->lock);
+> +		return ret;
 > +	}
+> +
+> +	mutex_unlock(&servo_data->lock);
+> +
+> +	return count;
 > +}
 > +
-> +static const struct pwm_ops ntxec_pwm_ops =3D {
-> +	.owner =3D THIS_MODULE,
-> +	.apply =3D ntxec_pwm_apply,
-> +	/*
-> +	 * No .get_state callback, because the current state cannot be read
-> +	 * back from the hardware.
-> +	 */
+> +static DEVICE_ATTR_RW(angle);
+> +
+> +static struct attribute *servo_pwm_attrs[] =3D {
+> +	&dev_attr_angle.attr,
+> +	NULL,
 > +};
 > +
-> +static int ntxec_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct ntxec *ec =3D dev_get_drvdata(pdev->dev.parent);
-> +	struct ntxec_pwm *priv;
-> +	struct pwm_chip *chip;
+> +ATTRIBUTE_GROUPS(servo_pwm);
 > +
-> +	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
+> +static int servo_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *node =3D pdev->dev.of_node;
+> +	struct servo_pwm_data *servo_data;
+> +	struct pwm_args pargs;
+> +	int ret =3D 0;
+> +
+> +	servo_data =3D devm_kzalloc(&pdev->dev, sizeof(*servo_data), GFP_KERNEL=
+);
+> +	if (!servo_data)
 > +		return -ENOMEM;
 > +
-> +	priv->ec =3D ec;
-> +	priv->dev =3D &pdev->dev;
+> +	if (!of_property_read_u32(node, "duty-0", &servo_data->duty_0) =3D=3D 0)
+> +		servo_data->duty_0 =3D DEFAULT_DUTY_0;
 > +
-> +	platform_set_drvdata(pdev, priv);
+> +	if (!of_property_read_u32(node, "duty-180", &servo_data->duty_180) =3D=
+=3D 0)
+> +		servo_data->duty_180 =3D DEFAULT_DUTY_180;
 > +
-> +	chip =3D &priv->chip;
-> +	chip->dev =3D &pdev->dev;
+> +	if (!of_property_read_u32(node, "angle", &servo_data->angle) =3D=3D 0)
+> +		servo_data->angle =3D DEFAULT_ANGLE;
+> +
+> +	servo_data->pwm =3D devm_of_pwm_get(&pdev->dev, node, NULL);
+> +	if (IS_ERR(servo_data->pwm)) {
+> +		ret =3D PTR_ERR(servo_data->pwm);
+> +		if (ret !=3D -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "unable to request pwm\n");
 
-Hmm, I needed
-chip->dev =3D &pdev->dev.parent to use the backlight example
-in patch 2/7.
-Not sure what the correct solution is. Maybe the pwm deserves its own
-devicetree node.
+Please use dev_err_probe here to reduce boilerplate.
 
-Regards,
-Andreas
+> +		return ret;
+> +	}
+> +
+> +	pwm_apply_args(servo_data->pwm);
+> +
+> +	pwm_get_args(servo_data->pwm, &pargs);
+> +
+> +	servo_data->period =3D pargs.period;
+> +
+> +	if (!servo_data->period)
+> +		servo_data->period =3D DEFAULT_PERIOD;
+> +
+> +	ret =3D servo_pwm_set(servo_data);
+
+I wonder if you really should reconfigure the PWM in probe. I'd keep the
+hardware configured as is and only act when a user requests a state
+change.
+
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "cannot configure servo: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret =3D pwm_enable(servo_data->pwm);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "cannot enable servo: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, servo_data);
+
+This is unused. (But I think it should be used in a .remove function.)
+
+> +	ret =3D devm_device_add_groups(&pdev->dev, servo_pwm_groups);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "error creating sysfs groups: %d\n", ret);
+> +		return ret;
+
+Assuming the PWM configuration stays in this function, you probably
+should disable the PWM in this error path.
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id of_servo_pwm_match[] =3D {
+> +	{ .compatible =3D "servo-pwm", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, of_servo_pwm_match);
+> +
+> +static struct platform_driver servo_pwm_driver =3D {
+> +	.probe		=3D servo_pwm_probe,
+> +	.driver		=3D {
+> +		.name	=3D "servo-pwm",
+> +		.of_match_table =3D of_servo_pwm_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(servo_pwm_driver);
+> +
+> +MODULE_AUTHOR("Angelo Compagnucci <angelo.compagnucci@gmail.com>");
+> +MODULE_DESCRIPTION("generic PWM servo motor driver");
+> +MODULE_LICENSE("GPL");
+> --=20
+> 2.25.1
+>=20
+>=20
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--74lwahphb3cujflz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/+CksACgkQwfwUeK3K
+7AkvSAf/WO3HnyT8VIPgYaZlslsDC8SQVFunVYAC1gKnEHNEBGw4pxleYPO+mB2k
+cKjAHe7Wp+Ptf47DdiyrBHJlIcOhGJFqqlSROUQjZXSqesnI75tizeXDmagh32/Q
+sRIV93VxCJ/W2GBo4EBzNIjrWI9RuCP1qZ+iiHEuK7a2rQx0SaYqemP7wlfgDVja
+ypABvGulOsRqPPYPyDTT7XH/NtVOAdy+QlwGDZHuPYvpUxbiYJujTWBrIx6LWhUm
+1LBK50G3iR7cyend57Hpu/+Zjf2fX/geHCqch2FxxrhrmWiAdahhrIUsHVGL/Ayf
++Mp0s5JRPOUdK2NBs817yJmO4DSSyw==
+=/VaH
+-----END PGP SIGNATURE-----
+
+--74lwahphb3cujflz--
