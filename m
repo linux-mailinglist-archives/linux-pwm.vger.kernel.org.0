@@ -2,183 +2,129 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5B252F2D00
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Jan 2021 11:38:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 096DA2F392D
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Jan 2021 19:50:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbhALKh1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 12 Jan 2021 05:37:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43358 "EHLO
+        id S2392644AbhALSsg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 12 Jan 2021 13:48:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbhALKh0 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jan 2021 05:37:26 -0500
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2188C061575;
-        Tue, 12 Jan 2021 02:36:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=I1TOZTlIyWpJo6t+ktfKEwi2Grwz2ejbXpCqmeiGeoo=; b=bWaGhBd8PtoP/cQ7GvkqD3iEH
-        vbtnhNtL3/0sktfKOgWpaPiT+pa4W7eLRYzfxQVhYuklWvXGb+53tLKrcz+lKUW0XtbvUUWb5WUAl
-        Sij2k3/WNcOvU84Vyalstmgvz24Xij+13atBb0OhLQqE7zA7+n9T6Lda4J/jo6H599SLyMA3L7cL5
-        PdmqKfrR8d+Z4+6y6PWKp5Ar0Ppyi/3eVTl+mBqufomfvlF4fllM8k4QFD6QvswBusmlPLWAqm9nG
-        NP0SEHTXHAtAPTUp+YwEmsda2jvDNe/sWgNjvO8tJusxfBlibf0TJ4X7xq3dkRJC1/9Z5DKbw5DDU
-        tE5m40bzQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46984)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        with ESMTP id S2392633AbhALSsg (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jan 2021 13:48:36 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC655C061575
+        for <linux-pwm@vger.kernel.org>; Tue, 12 Jan 2021 10:47:55 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1kzH2J-000813-Ox; Tue, 12 Jan 2021 10:36:27 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1kzH2A-0006CA-6h; Tue, 12 Jan 2021 10:36:18 +0000
-Date:   Tue, 12 Jan 2021 10:36:18 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Baruch Siach <baruch@tkos.co.il>, Rob Herring <robh@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>, linux-pwm@vger.kernel.org,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kzOhs-0002Bf-Ub; Tue, 12 Jan 2021 19:47:52 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kzOhr-00004s-NF; Tue, 12 Jan 2021 19:47:51 +0100
+Date:   Tue, 12 Jan 2021 19:47:48 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Lino Sanfilippo <LinoSanfilippo@gmx.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v7 3/3] dt-bindings: ap806: document gpio
- marvell,pwm-offset property
-Message-ID: <20210112103617.GB1551@shell.armlinux.org.uk>
-References: <cover.1610364681.git.baruch@tkos.co.il>
- <5e1b119a51df19ead32561e87ce2ee1441b67154.1610364681.git.baruch@tkos.co.il>
- <CACRpkdZAHpcgzXSJKZyQjBOriALZUoXbw_hBpPa_zxa27=F0hg@mail.gmail.com>
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Sean Young <sean@mess.org>, linux-pwm@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, kernel@pengutronix.de
+Subject: Re: [PATCH v2] pwm: bcm2835: Improve period and duty cycle
+ calculation
+Message-ID: <20210112184748.rl6fsukpaa7erdmq@pengutronix.de>
+References: <20201222221319.2101107-1-u.kleine-koenig@pengutronix.de>
+ <ab77b694-38c7-7f09-d1c0-b8a680ab84a4@gmx.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2ak7anwnjgvaov4n"
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZAHpcgzXSJKZyQjBOriALZUoXbw_hBpPa_zxa27=F0hg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Sender: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+In-Reply-To: <ab77b694-38c7-7f09-d1c0-b8a680ab84a4@gmx.de>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Jan 12, 2021 at 09:49:16AM +0100, Linus Walleij wrote:
-> Hi Baruch,
-> 
-> this caught my eye:
-> 
-> On Mon, Jan 11, 2021 at 12:47 PM Baruch Siach <baruch@tkos.co.il> wrote:
-> 
-> > Update the example as well. Add the '#pwm-cells' and 'clocks' properties
-> > for a complete working example.
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> 
-> (...)
-> > +Optional properties:
-> > +
-> > +- marvell,pwm-offset: offset address of PWM duration control registers inside
-> > +  the syscon block
-> (...)
-> >  ap_syscon: system-controller@6f4000 {
-> >         compatible = "syscon", "simple-mfd";
-> > @@ -101,6 +106,9 @@ ap_syscon: system-controller@6f4000 {
-> >                 gpio-controller;
-> >                 #gpio-cells = <2>;
-> >                 gpio-ranges = <&ap_pinctrl 0 0 19>;
-> > +               marvell,pwm-offset = <0x10c0>;
-> 
-> This seems to be one of those cases where we start to encode things related
-> to the hardware variant into the device tree.
-> 
-> Is this just documenting ABI that was introduced in the past and we can not
-> do anything about now? In that case it is OK I suppose.
-> 
-> For a new binding we would certainly require that the system controller
-> provide a specific tertiary compatible string for this, lest we disguise
-> the not-so-simple system controller as "simple-mfd" so:
-> 
-> compatible = "syscon", "simple-mfd", "my-silicon-id";
-> 
-> Then detect the PWM offset by using
-> if(of_device_is_compatibe(np, "my-silicon-id"))
-> in the code rather than parsing any marvell,pwm-offset property.
 
-I think it would be a good idea to describe the hardware more fully.
-For the CP110 and AP80x dies on Armada 8040:
+--2ak7anwnjgvaov4n
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-CP110	AP80x
-Offset	Offset
-00/40	5040	Data Out
-04/44	5044	Data Out Enable
-08/48	5048	Blink Enable
-0c/4c	504c	Data In polarity
-10/50	5050	Data In
-14/54	5054	IRQ Cause
-18/58	5058	IRQ Mask
-1c/5c	505c	IRQ Level mask
-20/60	5060	Blink Counter Select
-28/68	5068	Control Set
-2c/6c	506c	Control Clear
-30/70	5070	Data Out Set
-34/74	5074	Data Out Clear
-f0	50c0	Blink Counter A ON duration
-f4	50c4	Blink Counter A OFF duration
-f8	50c8	Blink Counter B ON duration
-fc	50cc	Blink Counter B OFF duration
+Hello Lino,
 
-We identify both of these using a compatible of "marvell,armada-8k-gpio"
-which really only describes the first 64 bytes of the register set:
+On Thu, Dec 31, 2020 at 08:30:12PM +0100, Lino Sanfilippo wrote:
+> just some nitpicks (maybe only worth fixing if there will be a v3 for oth=
+er reasons):
+>=20
+> On 22.12.20 at 23:13, Uwe Kleine-K=F6nig wrote:
+>=20
+> > +	/*
+> > +	 * period_cycles must be a 32 bit value, so period * rate / NSEC_PER_=
+SEC
+> > +	 * must be <=3D U32_MAX. As U32_MAX * NSEC_PER_SEC < U64_MAX the
+> > +	 * multiplication period * rate doesn't overflow.
+> > +	 */
+> > +	max_period =3D DIV_ROUND_UP_ULL((u64)U32_MAX * NSEC_PER_SEC + NSEC_PE=
+R_SEC / 2, rate) - 1;
+>=20
+> For someone looking at the formula it might be helpful to also have an ex=
+planation for the added
+> term "+ NSEC_PER_SEC / 2" in the comment. This line also exeeds the 80 ch=
+ars limit...
 
-			ap_gpio: gpio@1040 {
-				compatible = "marvell,armada-8k-gpio";
-				offset = <0x1040>;
-				...
-			};
+Yeah, the 80 char limit isn't that strict any more and (IMHO) adding a
+line break anywhere in the formula hurts readibility, so I accepted
+the long line as the lesser evil.
 
-			CP11X_LABEL(gpio1): gpio@100 {
-				compatible = "marvell,armada-8k-gpio";
-				offset = <0x100>;
-				...
-			};
+Regarding the + NSEC_PER_SEC / 2: Is it clear to you that it is right?
+If so that would be great as confirmation that I got the maths right.
 
-			CP11X_LABEL(gpio2): gpio@140 {
-				compatible = "marvell,armada-8k-gpio";
-				offset = <0x140>;
-				...
-			};
+Adding a comment is a good idea, what about:
 
-Note that on the CP11x dies, there are two GPIO controllers sharing the
-same set of blink counter registers - one at offset 0 the other at
-offset 0x40.
++	/*
++	 * period_cycles must be a 32 bit value, so period * rate / NSEC_PER_SEC
++	 * must be <=3D U32_MAX. As U32_MAX * NSEC_PER_SEC < U64_MAX the
++	 * multiplication period * rate doesn't overflow.
++	 * To calculate the maximal possible period that guarantees the
++	 * above inequality:
++	 *
++	 *     round(period * rate / NSEC_PER_SEC) <=3D U32_MAX
++	 * <=3D> period * rate / NSEC_PER_SEC < U32_MAX + 0.5
++	 * <=3D> period * rate < (U32_MAX + 0.5) * NSEC_PER_SEC
+	 * <=3D> period < ((U32_MAX + 0.5) * NSEC_PER_SEC) / rate
+	 * <=3D> period < ((U32_MAX * NSEC_PER_SEC + NSEC_PER_SEC/2) / rate
+	 * <=3D> period <=3D ceil((U32_MAX * NSEC_PER_SEC + NSEC_PER_SEC/2) / rate=
+) - 1
++	 */
 
-However, the pwm-offset is the offset in the regmap of the parent node.
+Best regards
+Uwe
 
-It is possible to use a more specific compatible that would describe
-the PWM offset for the CP11x and AP806 (which would need two different
-ones) but that starts getting messy when you consider that we already
-describe an offset in regmap for the first 64 registers, and encoding
-the blink register offset in a compatible would partially end up
-encoding the "offset" we already have.
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-In any case, these offsets are a function of how it was originally
-chosen to describe the hardware in DT, rather than anything about the
-hardware itself. The choice to use a syscon/regmap is purely an
-implementation decision rather than something from the hardware, so
-this DT description is already based around describing what is required
-for the Linux implementation, rather than purely being a hardware
-description.
+--2ak7anwnjgvaov4n
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/97tEACgkQwfwUeK3K
+7Ane5gf7BLMAv9vDjFK99poW9OnQsucnUx1vX0st6YSgd6FRF4noJ7Ro00w+58+X
+lpmoo6MNNgM5TR4ZF6AuA5dnSA+HCquzwY877FV/eqr2BUl+xytVCaMEuE48dSW2
+cj/DQ2WE+B5aGpyRmM0aKixPN3MvIzvzSq6pN0xp323/SExqfkr+k562nr2aY/Qp
+5ZuRZYQMNompBFfiHL+vGctf08ptN9LdNwdpqlPMJEVmZQZ6TOkriGl4gR2T7eki
+Gyr63T9coA4LOc6uqCgyGCvtCNk6DhEQsNAVMuD4RtW3+CudvkyQqy4QLHh3zD+O
+uKMtV3mghj85grH3VmSSZIETtVcAKA==
+=cg7O
+-----END PGP SIGNATURE-----
+
+--2ak7anwnjgvaov4n--
