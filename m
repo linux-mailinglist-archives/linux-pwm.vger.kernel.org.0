@@ -2,316 +2,183 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34CE42F2B22
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Jan 2021 10:22:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E5B252F2D00
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Jan 2021 11:38:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392563AbhALJTe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 12 Jan 2021 04:19:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54798 "EHLO
+        id S1726428AbhALKh1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 12 Jan 2021 05:37:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392560AbhALJTa (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jan 2021 04:19:30 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 813C3C061794
-        for <linux-pwm@vger.kernel.org>; Tue, 12 Jan 2021 01:18:50 -0800 (PST)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        with ESMTP id S1726387AbhALKh0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jan 2021 05:37:26 -0500
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2188C061575;
+        Tue, 12 Jan 2021 02:36:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=I1TOZTlIyWpJo6t+ktfKEwi2Grwz2ejbXpCqmeiGeoo=; b=bWaGhBd8PtoP/cQ7GvkqD3iEH
+        vbtnhNtL3/0sktfKOgWpaPiT+pa4W7eLRYzfxQVhYuklWvXGb+53tLKrcz+lKUW0XtbvUUWb5WUAl
+        Sij2k3/WNcOvU84Vyalstmgvz24Xij+13atBb0OhLQqE7zA7+n9T6Lda4J/jo6H599SLyMA3L7cL5
+        PdmqKfrR8d+Z4+6y6PWKp5Ar0Ppyi/3eVTl+mBqufomfvlF4fllM8k4QFD6QvswBusmlPLWAqm9nG
+        NP0SEHTXHAtAPTUp+YwEmsda2jvDNe/sWgNjvO8tJusxfBlibf0TJ4X7xq3dkRJC1/9Z5DKbw5DDU
+        tE5m40bzQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46984)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kzFp7-0000pF-8e; Tue, 12 Jan 2021 10:18:45 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kzFp4-0006Im-L6; Tue, 12 Jan 2021 10:18:42 +0100
-Date:   Tue, 12 Jan 2021 10:18:42 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     linux-kernel@vger.kernel.org,
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1kzH2J-000813-Ox; Tue, 12 Jan 2021 10:36:27 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1kzH2A-0006CA-6h; Tue, 12 Jan 2021 10:36:18 +0000
+Date:   Tue, 12 Jan 2021 10:36:18 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Baruch Siach <baruch@tkos.co.il>, Rob Herring <robh@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>, linux-pwm@vger.kernel.org,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, f.fainelli@gmail.com,
-        linux-pwm@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        wahrenst@gmx.net, linux-input@vger.kernel.org,
-        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, p.zabel@pengutronix.de,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        linux-clk@vger.kernel.org, sboyd@kernel.org,
-        linux-rpi-kernel@lists.infradead.org, bgolaszewski@baylibre.com,
-        andy.shevchenko@gmail.com
-Subject: Re: [PATCH v6 11/11] pwm: Add Raspberry Pi Firmware based PWM bus
-Message-ID: <20210112091842.3th64ardbqjafvuq@pengutronix.de>
-References: <20201211164801.7838-1-nsaenzjulienne@suse.de>
- <20201211164801.7838-12-nsaenzjulienne@suse.de>
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v7 3/3] dt-bindings: ap806: document gpio
+ marvell,pwm-offset property
+Message-ID: <20210112103617.GB1551@shell.armlinux.org.uk>
+References: <cover.1610364681.git.baruch@tkos.co.il>
+ <5e1b119a51df19ead32561e87ce2ee1441b67154.1610364681.git.baruch@tkos.co.il>
+ <CACRpkdZAHpcgzXSJKZyQjBOriALZUoXbw_hBpPa_zxa27=F0hg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="r23z722cpflr6wgz"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201211164801.7838-12-nsaenzjulienne@suse.de>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <CACRpkdZAHpcgzXSJKZyQjBOriALZUoXbw_hBpPa_zxa27=F0hg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: Russell King - ARM Linux admin <linux@armlinux.org.uk>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Tue, Jan 12, 2021 at 09:49:16AM +0100, Linus Walleij wrote:
+> Hi Baruch,
+> 
+> this caught my eye:
+> 
+> On Mon, Jan 11, 2021 at 12:47 PM Baruch Siach <baruch@tkos.co.il> wrote:
+> 
+> > Update the example as well. Add the '#pwm-cells' and 'clocks' properties
+> > for a complete working example.
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> 
+> (...)
+> > +Optional properties:
+> > +
+> > +- marvell,pwm-offset: offset address of PWM duration control registers inside
+> > +  the syscon block
+> (...)
+> >  ap_syscon: system-controller@6f4000 {
+> >         compatible = "syscon", "simple-mfd";
+> > @@ -101,6 +106,9 @@ ap_syscon: system-controller@6f4000 {
+> >                 gpio-controller;
+> >                 #gpio-cells = <2>;
+> >                 gpio-ranges = <&ap_pinctrl 0 0 19>;
+> > +               marvell,pwm-offset = <0x10c0>;
+> 
+> This seems to be one of those cases where we start to encode things related
+> to the hardware variant into the device tree.
+> 
+> Is this just documenting ABI that was introduced in the past and we can not
+> do anything about now? In that case it is OK I suppose.
+> 
+> For a new binding we would certainly require that the system controller
+> provide a specific tertiary compatible string for this, lest we disguise
+> the not-so-simple system controller as "simple-mfd" so:
+> 
+> compatible = "syscon", "simple-mfd", "my-silicon-id";
+> 
+> Then detect the PWM offset by using
+> if(of_device_is_compatibe(np, "my-silicon-id"))
+> in the code rather than parsing any marvell,pwm-offset property.
 
---r23z722cpflr6wgz
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I think it would be a good idea to describe the hardware more fully.
+For the CP110 and AP80x dies on Armada 8040:
 
-Hello Nicolas,
+CP110	AP80x
+Offset	Offset
+00/40	5040	Data Out
+04/44	5044	Data Out Enable
+08/48	5048	Blink Enable
+0c/4c	504c	Data In polarity
+10/50	5050	Data In
+14/54	5054	IRQ Cause
+18/58	5058	IRQ Mask
+1c/5c	505c	IRQ Level mask
+20/60	5060	Blink Counter Select
+28/68	5068	Control Set
+2c/6c	506c	Control Clear
+30/70	5070	Data Out Set
+34/74	5074	Data Out Clear
+f0	50c0	Blink Counter A ON duration
+f4	50c4	Blink Counter A OFF duration
+f8	50c8	Blink Counter B ON duration
+fc	50cc	Blink Counter B OFF duration
 
-On Fri, Dec 11, 2020 at 05:48:00PM +0100, Nicolas Saenz Julienne wrote:
-> diff --git a/drivers/pwm/pwm-raspberrypi-poe.c b/drivers/pwm/pwm-raspberr=
-ypi-poe.c
-> new file mode 100644
-> index 000000000000..24b498839fcc
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-raspberrypi-poe.c
-> @@ -0,0 +1,216 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2020 Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> + * For more information on Raspberry Pi's PoE hat see:
-> + * https://www.raspberrypi.org/products/poe-hat/
-> + *
-> + * Limitations:
-> + *  - No disable bit, so a disabled PWM is simulated by duty_cycle 0
-> + *  - Only normal polarity
-> + *  - Fixed 12.5 kHz period
-> + *
-> + * The current period is completed when HW is reconfigured.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +
-> +#include <soc/bcm2835/raspberrypi-firmware.h>
-> +#include <dt-bindings/pwm/raspberrypi,firmware-poe-pwm.h>
-> +
-> +#define RPI_PWM_MAX_DUTY		255
-> +#define RPI_PWM_PERIOD_NS		80000 /* 12.5 kHz */
-> +
-> +#define RPI_PWM_CUR_DUTY_REG		0x0
-> +#define RPI_PWM_DEF_DUTY_REG		0x1
-> +
-> +struct raspberrypi_pwm {
-> +	struct rpi_firmware *firmware;
-> +	struct pwm_chip chip;
-> +	unsigned int duty_cycle;
-> +};
-> +
-> +struct raspberrypi_pwm_prop {
-> +	__le32 reg;
-> +	__le32 val;
-> +	__le32 ret;
-> +} __packed;
-> +
-> +static inline struct raspberrypi_pwm *to_raspberrypi_pwm(struct pwm_chip=
- *chip)
+We identify both of these using a compatible of "marvell,armada-8k-gpio"
+which really only describes the first 64 bytes of the register set:
 
-I'd like to see this function use the same prefix as the other
-functions. I suggest "raspberrypi_pwm_from_chip".
+			ap_gpio: gpio@1040 {
+				compatible = "marvell,armada-8k-gpio";
+				offset = <0x1040>;
+				...
+			};
 
-> +{
-> +	return container_of(chip, struct raspberrypi_pwm, chip);
-> +}
-> +
-> +static int raspberrypi_pwm_set_property(struct rpi_firmware *firmware,
-> +					u32 reg, u32 val)
-> +{
-> +	struct raspberrypi_pwm_prop msg =3D {
-> +		.reg =3D cpu_to_le32(reg),
-> +		.val =3D cpu_to_le32(val),
-> +	};
-> +	int ret;
-> +
-> +	ret =3D rpi_firmware_property(firmware, RPI_FIRMWARE_SET_POE_HAT_VAL,
-> +				    &msg, sizeof(msg));
-> +	if (ret)
-> +		return ret;
-> +	if (msg.ret)
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-> +
-> +static int raspberrypi_pwm_get_property(struct rpi_firmware *firmware,
-> +					u32 reg, u32 *val)
-> +{
-> +	struct raspberrypi_pwm_prop msg =3D {
-> +		.reg =3D reg
-> +	};
-> +	int ret;
-> +
-> +	ret =3D rpi_firmware_property(firmware, RPI_FIRMWARE_GET_POE_HAT_VAL,
-> +				    &msg, sizeof(msg));
-> +	if (ret)
-> +		return ret;
-> +	if (msg.ret)
-> +		return -EIO;
-> +
-> +	*val =3D le32_to_cpu(msg.val);
-> +
-> +	return 0;
-> +}
-> +
-> +static void raspberrypi_pwm_get_state(struct pwm_chip *chip,
-> +				      struct pwm_device *pwm,
-> +				      struct pwm_state *state)
-> +{
-> +	struct raspberrypi_pwm *rpipwm =3D to_raspberrypi_pwm(chip);
-> +
-> +	state->period =3D RPI_PWM_PERIOD_NS;
-> +	state->duty_cycle =3D DIV_ROUND_CLOSEST(rpipwm->duty_cycle * RPI_PWM_PE=
-RIOD_NS,
-> +					      RPI_PWM_MAX_DUTY);
+			CP11X_LABEL(gpio1): gpio@100 {
+				compatible = "marvell,armada-8k-gpio";
+				offset = <0x100>;
+				...
+			};
 
-Please round up here ...
+			CP11X_LABEL(gpio2): gpio@140 {
+				compatible = "marvell,armada-8k-gpio";
+				offset = <0x140>;
+				...
+			};
 
-> +	state->enabled =3D !!(rpipwm->duty_cycle);
-> +	state->polarity =3D PWM_POLARITY_NORMAL;
-> +}
-> +
-> +static int raspberrypi_pwm_apply(struct pwm_chip *chip, struct pwm_devic=
-e *pwm,
-> +			         const struct pwm_state *state)
-> +{
-> +	struct raspberrypi_pwm *rpipwm =3D to_raspberrypi_pwm(chip);
-> +	unsigned int duty_cycle;
-> +	int ret;
-> +
-> +        if (state->period < RPI_PWM_PERIOD_NS ||
-> +            state->polarity !=3D PWM_POLARITY_NORMAL)
-> +                return -EINVAL;
-> +
-> +        if (!state->enabled)
-> +                duty_cycle =3D 0;
-> +        else if (state->duty_cycle < RPI_PWM_PERIOD_NS)
-> +                duty_cycle =3D DIV_ROUND_CLOSEST_ULL(state->duty_cycle *=
- RPI_PWM_MAX_DUTY,
-> +					           RPI_PWM_PERIOD_NS);
+Note that on the CP11x dies, there are two GPIO controllers sharing the
+same set of blink counter registers - one at offset 0 the other at
+offset 0x40.
 
-=2E.. and round down here.
+However, the pwm-offset is the offset in the regmap of the parent node.
 
-Just to be sure: writing RPI_PWM_MAX_DUTY (i.e. 255) yields 100% duty
-cycle, right?
+It is possible to use a more specific compatible that would describe
+the PWM offset for the CP11x and AP806 (which would need two different
+ones) but that starts getting messy when you consider that we already
+describe an offset in regmap for the first 64 registers, and encoding
+the blink register offset in a compatible would partially end up
+encoding the "offset" we already have.
 
-> +        else
-> +                duty_cycle =3D RPI_PWM_MAX_DUTY;
-> +
-> +	if (duty_cycle =3D=3D rpipwm->duty_cycle)
-> +		return 0;
-> +
-> +	ret =3D raspberrypi_pwm_set_property(rpipwm->firmware, RPI_PWM_CUR_DUTY=
-_REG,
-> +					   duty_cycle);
-> +	if (ret) {
-> +		dev_err(chip->dev, "Failed to set duty cycle: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	/*
-> +	 * This sets the default duty cycle after resetting the board, we
-> +	 * updated it every time to mimic Raspberry Pi's downstream's driver
-> +	 * behaviour.
-> +	 */
-> +	ret =3D raspberrypi_pwm_set_property(rpipwm->firmware, RPI_PWM_DEF_DUTY=
-_REG,
-> +					   duty_cycle);
-> +	if (ret) {
-> +		dev_err(chip->dev, "Failed to set default duty cycle: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +        rpipwm->duty_cycle =3D duty_cycle;
+In any case, these offsets are a function of how it was originally
+chosen to describe the hardware in DT, rather than anything about the
+hardware itself. The choice to use a syscon/regmap is purely an
+implementation decision rather than something from the hardware, so
+this DT description is already based around describing what is required
+for the Linux implementation, rather than purely being a hardware
+description.
 
-Please use tabs for indention. (The general hint is to use checkpatch
-which (I hope) tells you about problems like this.)
-
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct pwm_ops raspberrypi_pwm_ops =3D {
-> +	.get_state =3D raspberrypi_pwm_get_state,
-> +	.apply =3D raspberrypi_pwm_apply,
-> +	.owner =3D THIS_MODULE,
-> +};
-> +
-> +static int raspberrypi_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *firmware_node;
-> +	struct device *dev =3D &pdev->dev;
-> +	struct rpi_firmware *firmware;
-> +	struct raspberrypi_pwm *rpipwm;
-> +	int ret;
-> +
-> +	firmware_node =3D of_get_parent(dev->of_node);
-> +	if (!firmware_node) {
-> +		dev_err(dev, "Missing firmware node\n");
-> +		return -ENOENT;
-> +	}
-> +
-> +	firmware =3D devm_rpi_firmware_get(&pdev->dev, firmware_node);
-> +	of_node_put(firmware_node);
-> +	if (!firmware)
-> +		return -EPROBE_DEFER;
-
-Please use dev_err_probe to benefit from recording an error message in
-this case.
-
-> +	rpipwm =3D devm_kzalloc(&pdev->dev, sizeof(*rpipwm), GFP_KERNEL);
-> +	if (!rpipwm)
-> +		return -ENOMEM;
-> +
-> +	rpipwm->firmware =3D firmware;
-> +	rpipwm->chip.dev =3D dev;
-> +	rpipwm->chip.ops =3D &raspberrypi_pwm_ops;
-> +	rpipwm->chip.base =3D -1;
-> +	rpipwm->chip.npwm =3D RASPBERRYPI_FIRMWARE_PWM_NUM;
-> +
-> +	platform_set_drvdata(pdev, rpipwm);
-> +
-> +	ret =3D raspberrypi_pwm_get_property(rpipwm->firmware, RPI_PWM_CUR_DUTY=
-_REG,
-> +					   &rpipwm->duty_cycle);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to get duty cycle: %d\n", ret);
-
-Please use %pe for the error codes (directly or still better by using
-dev_err_probe here, too).
-
-> +		return ret;
-> +	}
-> +
-> +	return pwmchip_add(&rpipwm->chip);
-> +}
-> [...]
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---r23z722cpflr6wgz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/9aW8ACgkQwfwUeK3K
-7AkKmAf/X43HuzDS2E9bHa7KzzW9+7rOPBmL3wmZt/Ab01mgp1yRp2gC+qtv7BPT
-0n138wPi5O+rOAxm/iC9Uc4Y1s0bpvndj05noMRAK2X+XLXxwWhLARqf63uCvxIr
-sa6Dl6PDQsOj9ucrNUJPWFNYkjm4YGLmKJQrqjr8lEyydl7j8S4e2IGryiMs+sSV
-nL9CkhaIA0cFiritdv3THxRfhxnzMLkcG2E3ePHA2eq91FuV1DHqfZpgYwSd0eDf
-w1egR/8M6Lup6AxF7B5IzSzaBf+XFZi5k5Wj0LuRXNSpUBcL7nv81l0e+A8+fCF5
-ZmpW6QOoovobVNxANzKLcZ4hfKwybw==
-=J/5G
------END PGP SIGNATURE-----
-
---r23z722cpflr6wgz--
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
