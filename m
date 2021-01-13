@@ -2,124 +2,98 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1BA42F4497
-	for <lists+linux-pwm@lfdr.de>; Wed, 13 Jan 2021 07:36:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3965B2F4529
+	for <lists+linux-pwm@lfdr.de>; Wed, 13 Jan 2021 08:27:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726238AbhAMGg5 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Wed, 13 Jan 2021 01:36:57 -0500
-Received: from guitar.tcltek.co.il ([192.115.133.116]:45552 "EHLO
-        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbhAMGg5 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Wed, 13 Jan 2021 01:36:57 -0500
-Received: from tarshish (unknown [10.0.8.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id B346E440045;
-        Wed, 13 Jan 2021 08:36:12 +0200 (IST)
-References: <cover.1610362661.git.baruch@tkos.co.il>
- <e3afc6e297e495322971c26a79c6f841d5952fd1.1610362661.git.baruch@tkos.co.il>
- <20210111201711.ym46w7dy62ux66zb@pengutronix.de>
-User-agent: mu4e 1.4.13; emacs 27.1
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     g@pengutronix.de, Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/5] gpio: mvebu: fix pwm get_state period calculation
-In-reply-to: <20210111201711.ym46w7dy62ux66zb@pengutronix.de>
-Date:   Wed, 13 Jan 2021 08:36:12 +0200
-Message-ID: <87ft35xs0z.fsf@tarshish>
+        id S1726238AbhAMHYq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 13 Jan 2021 02:24:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbhAMHYp (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 13 Jan 2021 02:24:45 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45B9BC061575
+        for <linux-pwm@vger.kernel.org>; Tue, 12 Jan 2021 23:24:05 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kzaVc-0006Yj-QS; Wed, 13 Jan 2021 08:24:00 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kzaVa-00033W-MR; Wed, 13 Jan 2021 08:23:58 +0100
+Date:   Wed, 13 Jan 2021 08:23:58 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Simon South <simon@simonsouth.net>
+Cc:     tpiepho@gmail.com, thierry.reding@gmail.com, robin.murphy@arm.com,
+        lee.jones@linaro.org, heiko@sntech.de, bbrezillon@kernel.org,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v3 1/7] pwm: rockchip: Enable APB clock during register
+ access while probing
+Message-ID: <20210113072358.7ozcznyjyhuh2mt4@pengutronix.de>
+References: <cover.1608735481.git.simon@simonsouth.net>
+ <49ceda3def13f6186073745e99d7315c974bfa81.1608735481.git.simon@simonsouth.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bm5todtkkso6pnn6"
+Content-Disposition: inline
+In-Reply-To: <49ceda3def13f6186073745e99d7315c974bfa81.1608735481.git.simon@simonsouth.net>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
 
-On Mon, Jan 11 2021, Uwe Kleine-König wrote:
-> $Subject ~= s/get_state/.get_state/ ?
+--bm5todtkkso6pnn6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ack.
+Hello Simon,
 
-> On Mon, Jan 11, 2021 at 01:17:02PM +0200, Baruch Siach wrote:
->> The period is the sum of on and off values.
->> 
->> Reported-by: Russell King <linux@armlinux.org.uk>
->> Fixes: 757642f9a584e ("gpio: mvebu: Add limited PWM support")
->> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
->> ---
->>  drivers/gpio/gpio-mvebu.c | 19 ++++++++-----------
->>  1 file changed, 8 insertions(+), 11 deletions(-)
->> 
->> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
->> index 672681a976f5..a912a8fed197 100644
->> --- a/drivers/gpio/gpio-mvebu.c
->> +++ b/drivers/gpio/gpio-mvebu.c
->> @@ -676,20 +676,17 @@ static void mvebu_pwm_get_state(struct pwm_chip *chip,
->>  	else
->>  		state->duty_cycle = 1;
->>  
->> +	val = (unsigned long long) u; /* on duration */
->>  	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm), &u);
->> -	val = (unsigned long long) u * NSEC_PER_SEC;
->> +	val += (unsigned long long) u; /* period = on + off duration */
->> +	val *= NSEC_PER_SEC;
->>  	do_div(val, mvpwm->clk_rate);
->> -	if (val < state->duty_cycle) {
->> +	if (val > UINT_MAX)
->> +		state->period = UINT_MAX;
->> +	else if (val)
->> +		state->period = val;
->> +	else
->>  		state->period = 1;
->> -	} else {
->> -		val -= state->duty_cycle;
->> -		if (val > UINT_MAX)
->> -			state->period = UINT_MAX;
->> -		else if (val)
->> -			state->period = val;
->> -		else
->> -			state->period = 1;
->> -	}
->
-> The patch looks good, the patch description could be a bit more verbose.
-> Something like:
->
-> 	Calculate the period as
->
-> 		($on + $off) / clkrate
->
-> 	instead of
->
-> 		$off / clkrate - $on / clkrate
->
-> 	.
+On Wed, Dec 23, 2020 at 11:01:03AM -0500, Simon South wrote:
+> Commit 457f74abbed0 ("pwm: rockchip: Keep enabled PWMs running while
+> probing") modified rockchip_pwm_probe() to access a PWM device's registers
+> directly to check whether or not the device is running, but did not also
+> change the function to first enable the device's APB clock to be certain
+> the device can respond. This risks hanging the kernel on systems with PWM
+> devices that use more than a single clock.
+>=20
+> Avoid this by enabling the device's APB clock before accessing its
+> registers (and disabling the clock when register access is complete).
+>=20
+> Fixes: 457f74abbed0 ("pwm: rockchip: Keep enabled PWMs running while prob=
+ing")
+> Reported-by: Thierry Reding <thierry.reding@gmail.com>
+> Suggested-by: Trent Piepho <tpiepho@gmail.com>
+> Signed-off-by: Simon South <simon@simonsouth.net>
 
-I take this to refer to the next patch (2/5). This patch changes from
-buggy
+Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
-  $on / clkrate
+Thanks
+Uwe
 
-to
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-  ($on + $off) / clkrate
+--bm5todtkkso6pnn6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-baruch
+-----BEGIN PGP SIGNATURE-----
 
--- 
-                                                     ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/+oAsACgkQwfwUeK3K
+7AmGCwf+Kf7kFu7rEDsPuXQ0t/Mv+Ml4/sd2e7dUbGs8vnSZ8y8YpNxUAHnPpiF0
+4ZtrSpCim5ZOZ93c2H3IUoMrqN8XBx6TIqYfffpmp6Zi8pibJerrr8mg2kxM7mMb
+SnX6uIj/WZds6Y2goMdTjuYuj5Yw2nNozNFttMu/iO3n+f5YAdcqXZ0w9sVSdrgK
+6jOLukSKnJRIE2i5D/fL1zIn1yY2LgotzmxW6Q5TUtFsLXryr94XAjaQ95HsmBGJ
+dMiGwqRqyA6OIF5fXBa4EZTubxJ2VEGVMT8HKTTEk7PxVbZYzv3PbbBjzsDTodQy
+u9BQbOl+c7/tcSbXwq702pEFlSDAmA==
+=YfRY
+-----END PGP SIGNATURE-----
+
+--bm5todtkkso6pnn6--
