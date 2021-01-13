@@ -2,95 +2,82 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 622802F476C
-	for <lists+linux-pwm@lfdr.de>; Wed, 13 Jan 2021 10:23:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6D1D2F4778
+	for <lists+linux-pwm@lfdr.de>; Wed, 13 Jan 2021 10:26:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbhAMJUT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 13 Jan 2021 04:20:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727716AbhAMJUT (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 13 Jan 2021 04:20:19 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7911C061786
-        for <linux-pwm@vger.kernel.org>; Wed, 13 Jan 2021 01:19:38 -0800 (PST)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kzcJS-0003Pl-2T; Wed, 13 Jan 2021 10:19:34 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kzcJQ-0001dK-Ir; Wed, 13 Jan 2021 10:19:32 +0100
-Date:   Wed, 13 Jan 2021 10:19:32 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     David Wu <david.wu@rock-chips.com>
-Cc:     Kever Yang <kever.yang@rock-chips.com>,
-        Simon South <simon@simonsouth.net>, tpiepho@gmail.com,
-        thierry.reding@gmail.com, Robin Murphy <robin.murphy@arm.com>,
-        lee.jones@linaro.org, Heiko Stuebner <heiko@sntech.de>,
-        bbrezillon@kernel.org, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, steven.liu@rock-chips.com
-Subject: Re: [PATCH v3 0/7] pwm: rockchip: Eliminate potential =?utf-8?Q?r?=
- =?utf-8?B?YWNlIGNvbmRpdGlvbiB3aGVuIHByb2JpbmfjgJDor7fms6jmhI/vvIzpgq4=?=
- =?utf-8?B?5Lu255Sxa2V2ZXIueWFuZ0BnbWFpbC5jb23ku6Plj5HjgJE=?=
-Message-ID: <20210113091932.k3l2ni2jkhyfa27t@pengutronix.de>
-References: <CAKUh=Ry7=WUmN5OYv5g_E1EHk8jNE-QcOtw_BrMbH+_aP68w8Q@mail.gmail.com>
- <fdd2b3c3-5eaf-bcad-ba57-54b13e891f4a@rock-chips.com>
+        id S1726017AbhAMJYI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 13 Jan 2021 04:24:08 -0500
+Received: from guitar.tcltek.co.il ([192.115.133.116]:45691 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbhAMJYH (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 13 Jan 2021 04:24:07 -0500
+Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx.tkos.co.il (Postfix) with ESMTPS id 53CA1440458;
+        Wed, 13 Jan 2021 11:23:24 +0200 (IST)
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Baruch Siach <baruch@tkos.co.il>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 0/5] gpio: mvebu: pwm fixes and improvements
+Date:   Wed, 13 Jan 2021 11:22:40 +0200
+Message-Id: <cover.1610529002.git.baruch@tkos.co.il>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ehrq7v2eww4meykk"
-Content-Disposition: inline
-In-Reply-To: <fdd2b3c3-5eaf-bcad-ba57-54b13e891f4a@rock-chips.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+This series adds a few related fixes to the pwm .apply and .get_state 
+callbacks.
 
---ehrq7v2eww4meykk
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The first patch was originally part of the series adding Armada 8K/7K pwm 
+support. I split it out to a separate series following review comments from 
+Uwe Kleine-König who spotted a few more issues. There is no dependency between 
+this and the Armada 8K/7K series.
 
-Hi David,
+v2:
 
-On Tue, Jan 05, 2021 at 07:26:16PM +0800, David Wu wrote:
-> Hi Simon,
->=20
-> This series of patches are okay for me, simplify to read pwm
-> register to check pwm whether it is enabled. So,
->=20
-> Revieded-by: David Wu <david.wu@rock-chips.com>
+Address Uwe Kleine-König comments.
 
-You might want to reply to each patch individually and use "Reviewed-by"
-instead of "Revieded-by" for the patch application tools (like patchwork
-and b4) to properly account for your effort checking the patches.
+  * Improve patch 1/5 summary line
 
-Best regards
-Uwe
+  * Add more information to patch 1/5 description
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+  * Add more information to patch 2/5 description
 
---ehrq7v2eww4meykk
-Content-Type: application/pgp-signature; name="signature.asc"
+  * Don't round period/duty_cycle up in .apply (patch 3/5)
 
------BEGIN PGP SIGNATURE-----
+  * Expand the comment in path 5/5 based on RMK's analysis of hardware 
+    behaviour
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl/+uyEACgkQwfwUeK3K
-7AksIgf+NwFbI6WGzE5vCwhDV8y9kXsBJEgSXVeMXZAM+zOCAaEXINLfSLU9MDxV
-qfNufYi5f6OU61tn1DChNEArSZrk1JOfKYG1x88VKfnvOeMGwib/pkdKFeKuK0LQ
-X0Fb46tUBkBA2rPwPuqYmow/ymEGyo677565VLIF5MWI3DAkaZiSWTyCL/EkcTDc
-upbhbzqIICypuaYePfAsV5gaPW+fPL68WwPqJtUSZsVebZcMrpDvhZpMjbXAtKAe
-+g3x+Mjz6lC3zQrGbW4LUs2SIVgJIf2zL/8rpZcnk2vuN8AgFTueyhgRI+R+e8Ev
-meEXu0lt00YVUVTCBvkpzpwvVdHrXg==
-=3A/3
------END PGP SIGNATURE-----
+  * Add Uwe's Reviewed-by tags
 
---ehrq7v2eww4meykk--
+Baruch Siach (5):
+  gpio: mvebu: fix pwm .get_state period calculation
+  gpio: mvebu: improve pwm period calculation accuracy
+  gpio: mvebu: make pwm .get_state closer to idempotent
+  gpio: mvebu: don't limit pwm period/duty_cycle to UINT_MAX
+  gpio: mvebu: document zero pwm duty cycle limitation
+
+ drivers/gpio/gpio-mvebu.c | 33 +++++++++++++++------------------
+ 1 file changed, 15 insertions(+), 18 deletions(-)
+
+-- 
+2.29.2
+
