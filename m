@@ -2,97 +2,132 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B26062F6D84
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Jan 2021 22:54:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 895F12F6E2F
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Jan 2021 23:29:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbhANVvO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 14 Jan 2021 16:51:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47492 "EHLO
+        id S1730242AbhANW3C (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 14 Jan 2021 17:29:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727105AbhANVvN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 Jan 2021 16:51:13 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7535BC061575
-        for <linux-pwm@vger.kernel.org>; Thu, 14 Jan 2021 13:50:33 -0800 (PST)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        with ESMTP id S1729586AbhANW3C (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 Jan 2021 17:29:02 -0500
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90C6EC061757;
+        Thu, 14 Jan 2021 14:28:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+c27JvaG+gyEJ2essLvjqsTpAebaaMjXRpDRTZS4lnw=; b=YxlVRLcvHz4lnPRWymzjv3YzN
+        iKbQBygqTA+prJsHeB+ccZVZ2dPnxs4bcbW6RbH1oY/O36r8+aqboK6nynPAfRwZHhKI/OTfGZXrN
+        uDzQEzDKhMQxjK0pAaaGySnKWg0PAZpKY7Q75O5tAA/jYd/BVheHORO16oT41bH1I9or543fMgQHz
+        8FRz8nF2oH4cFIwqYN/vbpKCWeJvLnWOf4a5AA8gKxkKHjI7LqRELWx4qoIiGWTab6OWdJL8ycAVA
+        jc6TYc2ZBGBl3wzDH8FhijlVlD1XCW74O0Ql4BuK7NL4I53g6McEB6jgUmXbaHy8z4PMhLUQz3nTX
+        DQ6cCBg1Q==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48046)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1l0AVj-0004w6-9i; Thu, 14 Jan 2021 22:50:31 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1l0AVi-0000Gi-Af; Thu, 14 Jan 2021 22:50:30 +0100
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1l0B6A-00030H-QS; Thu, 14 Jan 2021 22:28:10 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1l0B62-0000Ha-LP; Thu, 14 Jan 2021 22:28:02 +0000
+Date:   Thu, 14 Jan 2021 22:28:02 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Jeff LaBundy <jeff@labundy.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        kernel@pengutronix.de
-Subject: [PATCH v3] pwm: iqs620a: Fix overflow and optimize calculations
-Date:   Thu, 14 Jan 2021 22:50:26 +0100
-Message-Id: <20210114215026.163424-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.29.2
+Cc:     Baruch Siach <baruch@tkos.co.il>, Andrew Lunn <andrew@lunn.ch>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-pwm@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-gpio@vger.kernel.org,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v3 5/5] gpio: mvebu: document zero pwm duty cycle
+ limitation
+Message-ID: <20210114222802.GY1551@shell.armlinux.org.uk>
+References: <cover.1610628807.git.baruch@tkos.co.il>
+ <7c18dd67d3bf3e3ed9a8efa2edd33e8f29f09a7a.1610628807.git.baruch@tkos.co.il>
+ <20210114202545.7wnc5ikeffc45xk5@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20210114202545.7wnc5ikeffc45xk5@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: Russell King - ARM Linux admin <linux@armlinux.org.uk>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-If state->duty_cycle is 0x100000000000000, the previous calculation of
-duty_scale overflows and yields a duty cycle ratio of 0% instead of
-100%. Fix this by clamping the requested duty cycle to the maximal
-possible duty cycle first. This way it is possible to use a native
-integer division instead of a (depending on the architecture) more
-expensive 64bit division.
+On Thu, Jan 14, 2021 at 09:25:45PM +0100, Uwe Kleine-König wrote:
+> Hello Baruch,
+> 
+> On Thu, Jan 14, 2021 at 08:57:37PM +0200, Baruch Siach wrote:
+> > Add a comment on why the code never sets on/off registers to zero.
+> > 
+> > Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > Analyzed-by: Russell King <linux@armlinux.org.uk>
+> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> > ---
+> >  drivers/gpio/gpio-mvebu.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+> > index 6b017854ce61..09780944bef9 100644
+> > --- a/drivers/gpio/gpio-mvebu.c
+> > +++ b/drivers/gpio/gpio-mvebu.c
+> > @@ -706,6 +706,10 @@ static int mvebu_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> >  	do_div(val, NSEC_PER_SEC);
+> >  	if (val > UINT_MAX)
+> >  		return -EINVAL;
+> > +	/*
+> > +	 * Zero on/off values don't work as expected. Experimentation shows
+> > +	 * that zero value is treated as 2^32. This behavior is not documented.
+> > +	 */
+> 
+> This is too easy. The right thing to do is to adapt .apply and
+> .get_state to use this new information.
 
-With this change in place duty_scale cannot be bigger than 256 which
-allows to simplify the calculation of duty_val.
+What exactly do you expect the changes to be?
 
-Fixes: 6f0841a8197b ("pwm: Add support for Azoteq IQS620A PWM generator")
-Signed-off-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
----
- drivers/pwm/pwm-iqs620a.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Bear in mind that the hardware is not capable of atomically updating
+e.g. the duty cycle without affecting the period, because any change
+in duty cycle needs the "on" and "off" durations to be separately
+programmed, and there's a chance that the hardware could start using
+either value mid-update.
 
-diff --git a/drivers/pwm/pwm-iqs620a.c b/drivers/pwm/pwm-iqs620a.c
-index 5ede8255926e..eb03f60c5db8 100644
---- a/drivers/pwm/pwm-iqs620a.c
-+++ b/drivers/pwm/pwm-iqs620a.c
-@@ -46,7 +46,9 @@ static int iqs620_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- {
- 	struct iqs620_pwm_private *iqs620_pwm;
- 	struct iqs62x_core *iqs62x;
--	u64 duty_scale;
-+	unsigned duty_cycle;
-+	unsigned duty_scale;
-+
- 	int ret;
- 
- 	if (state->polarity != PWM_POLARITY_NORMAL)
-@@ -70,7 +72,8 @@ static int iqs620_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 * For lower duty cycles (e.g. 0), the PWM output is simply disabled to
- 	 * allow an external pull-down resistor to hold the GPIO3/LTX pin low.
- 	 */
--	duty_scale = div_u64(state->duty_cycle * 256, IQS620_PWM_PERIOD_NS);
-+	duty_cycle = min_t(u64, state->duty_cycle, IQS620_PWM_PERIOD_NS);
-+	duty_scale = duty_cycle * 256 / IQS620_PWM_PERIOD_NS;
- 
- 	mutex_lock(&iqs620_pwm->lock);
- 
-@@ -82,7 +85,7 @@ static int iqs620_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	}
- 
- 	if (duty_scale) {
--		u8 duty_val = min_t(u64, duty_scale - 1, 0xff);
-+		u8 duty_val = duty_scale - 1;
- 
- 		ret = regmap_write(iqs62x->regmap, IQS620_PWM_DUTY_CYCLE,
- 				   duty_val);
+Also, disabling "blink" mode to achieve a steady output (for 0% or 100%
+duty cycle) would require further investigation to find out how the
+hardware behaves at the moment where blink mode is disabled: does the
+output retain its current state (does the bit in the output register
+toggle with the blink) or does it revert to the value in the output
+register that was programmed before blink mode was enabled.
+
+Again, none of that is documented, so would need experimentation with
+the hardware to work out how to achieve it.
+
+And then if you want even more complexity, I suppose we could try and
+read the current state of the pin, add a delay, recheck it and try and
+work out the optimal place to disable the blink mode.
+
+Exactly how far do you want to go with this?
+
+All of this is likely getting rediculously complicated for the use
+cases of it today that don't need it. Yes, it's annoying that we can't
+achieve 0% or 100% duty cycle with this hardware that was never
+designed as a PWM without jumping through a lot of hoops but currently
+settle for a minimum pulse width of 4ns at each end of the range.
+
 -- 
-2.29.2
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
