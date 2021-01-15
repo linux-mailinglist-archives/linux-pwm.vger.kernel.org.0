@@ -2,41 +2,40 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF2072F741D
-	for <lists+linux-pwm@lfdr.de>; Fri, 15 Jan 2021 09:14:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AC082F744A
+	for <lists+linux-pwm@lfdr.de>; Fri, 15 Jan 2021 09:29:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbhAOIOB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 15 Jan 2021 03:14:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39690 "EHLO
+        id S1729182AbhAOI3K (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 15 Jan 2021 03:29:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727936AbhAOIOA (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 15 Jan 2021 03:14:00 -0500
+        with ESMTP id S1726004AbhAOI3K (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 15 Jan 2021 03:29:10 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AFAEC061575
-        for <linux-pwm@vger.kernel.org>; Fri, 15 Jan 2021 00:13:20 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 250A7C061575
+        for <linux-pwm@vger.kernel.org>; Fri, 15 Jan 2021 00:28:30 -0800 (PST)
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1l0KER-0002OM-3c; Fri, 15 Jan 2021 09:13:19 +0100
+        id 1l0KT4-00040t-Dd; Fri, 15 Jan 2021 09:28:26 +0100
 Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1l0KEQ-0004MF-Pw; Fri, 15 Jan 2021 09:13:18 +0100
-Date:   Fri, 15 Jan 2021 09:13:18 +0100
+        id 1l0KT3-0004r3-G2; Fri, 15 Jan 2021 09:28:25 +0100
+Date:   Fri, 15 Jan 2021 09:28:25 +0100
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Angelo Compagnucci <angelo.compagnucci@gmail.com>,
-        Nicola Di Lieto <nicola.dilieto@gmail.com>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] pwm: pwm-gpio: Generic GPIO bit-banged PWM driver
-Message-ID: <20210115081318.ig76unyfp3fqhu5z@pengutronix.de>
-References: <20201222213325.2656124-1-angelo.compagnucci@gmail.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Re: [PATCH] pwm: add a config symbol for legacy drivers
+Message-ID: <20210115082825.3e3kahhxfuxstttb@pengutronix.de>
+References: <20200613155742.31528-1-uwe@kleine-koenig.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="e3ghc5pfz3gmajep"
+        protocol="application/pgp-signature"; boundary="zp46fca5mcu55o5s"
 Content-Disposition: inline
-In-Reply-To: <20201222213325.2656124-1-angelo.compagnucci@gmail.com>
+In-Reply-To: <20200613155742.31528-1-uwe@kleine-koenig.org>
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -46,23 +45,22 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---e3ghc5pfz3gmajep
+--zp46fca5mcu55o5s
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-there are currently two patches with the same goal ready for review on
-the linux-pwm list:
+On Sat, Jun 13, 2020 at 05:57:42PM +0200, Uwe Kleine-K=F6nig wrote:
+> This (slightly) simplifies the core, reduces the size of the pwm_ops
+> struct, and makes it more obvious for driver authors to not add new drive=
+rs
+> relying on the old set of callbacks.
 
-  - https://lore.kernel.org/r/20201211170432.6113-1-nicola.dilieto@gmail.com
-  - https://lore.kernel.org/r/20201222213325.2656124-1-angelo.compagnucci@g=
-mail.com
-    (i.e. this one)
-
-In my eyes the former is the better one, so @Angelo: Maybe you can join
-forces with Nicola and work on his patch set.
+I didn't get feedback for this patch. Even in the presence of PWM_DEBUG
+I consider it worthwhile, mainly for the last reason stated in the
+commit log.
 
 Best regards
 Uwe
@@ -71,19 +69,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---e3ghc5pfz3gmajep
+--zp46fca5mcu55o5s
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmABTpsACgkQwfwUeK3K
-7Amz/wf/Z+xWDLS0ymdqeNIic23ARaFVjQYqfCTpNrkiGHImXsPLFmJwBhFfa8hh
-Sj/zfSpJJhYoO8EWFVXN//PVolBbIa+28aFN3B7F3Bgy3YB9OahchQU5YX96W7Uf
-PE1smmexr/uNF4T7uKrkqyvp1zWVNT/bwslSeFruaYLI43kuMeLbOeqvWBSXC189
-SwPBImL8Qft30jZdtPE3DeZUFiGWPpd7noL1wBbduBLzrP2IjhyC5nMBfbkLB0Pw
-qb1dbfYKjW3YnHQCNvhmAYWKnS8EocjG736SEcT11r0s1tXX9RCHEeigTaenyUai
-gu9s/G4D1XLpugbEb3OpN7eul/s9cQ==
-=KIOT
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmABUiYACgkQwfwUeK3K
+7AkzEwgAlpZ8QV/AiDgpfHrL6762Idq8lln70sofPOdf8oaCXryIXhrcsF0yKyR7
+AgCgQYqc/gtFpjNIBm7a1hoZMzn/ojNFq2pEHMEcCx3s7Lspt8nVLXJ9+/HlzvFK
+WAAPezxKUKUBt6psj7cbq8fBVm4nDvh3UOhzPVbiFejETiISNoaQgIXevNn9auY/
+e/nxl15yWeWTX5QW2QHtEtqLE0V0FW6D6PN6u5/07hRMoH2Qnjd3QE5hCIs9TJpL
+4FBNu7nSKfiublr33tjEZfTYm17652BnfvCjLk1o8FlKEQ3r4GbpCAfsCFiDAKSR
+iNlC0AspNokN4fvl2PQtCw4Dbk50gw==
+=VZhN
 -----END PGP SIGNATURE-----
 
---e3ghc5pfz3gmajep--
+--zp46fca5mcu55o5s--
