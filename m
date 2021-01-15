@@ -2,137 +2,174 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C83152F6E45
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Jan 2021 23:34:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A39E2F7163
+	for <lists+linux-pwm@lfdr.de>; Fri, 15 Jan 2021 05:08:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730507AbhANWeD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 14 Jan 2021 17:34:03 -0500
-Received: from mout.gmx.net ([212.227.17.21]:49037 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726498AbhANWeD (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 14 Jan 2021 17:34:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1610663503;
-        bh=/PW0bQDf3ENMIRfvCNeNzBCuWtMlwg2PEDP2yhFy+tg=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=hi5t2o4KYhobW4KmG6dacTTgWlpORIaLpm/lQd5UB+dKQNgCwfqlFjw/NN/aduFg/
-         zzO2oQO4ck8iE7mQaifDTOBFm5HC8sy6DiFchOlljFz25OVR+3tPkJTouYBM+ltw0G
-         QvJGkIZNhRs3wGL9/NjV1UxTG2PXhuqm8ohE6PQk=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.194.208]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MNt0C-1lOKmN0VWS-00OK6E; Thu, 14
- Jan 2021 23:31:43 +0100
-Date:   Thu, 14 Jan 2021 23:31:33 +0100
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v7 4/7] pwm: ntxec: Add driver for PWM function in
- Netronix EC
-Message-ID: <YADGRft4AWwnkA33@latitude>
-References: <20210109180220.121511-1-j.neuschaefer@gmx.net>
- <20210109180220.121511-5-j.neuschaefer@gmx.net>
- <20210112203902.4e196d11@aktux>
- <20210113234645.52fcf73c@aktux>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="HDuVcb6jseGv59n6"
+        id S1727794AbhAOEIS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 14 Jan 2021 23:08:18 -0500
+Received: from mail-dm6nam11on2040.outbound.protection.outlook.com ([40.107.223.40]:27809
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726493AbhAOEIR (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 14 Jan 2021 23:08:17 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NkVUoTrVIfArMua9VqZYVhXjqPL7vT95tNQPzadO/08qNRJHT/Yvp1ibMqNhH5ZmY/UlusWr7omXCEfFx/y0o12G+tXpn6YAY2B7t04klV2ozomudrt4jIDGTnxVHSTlTP6CfpEMkXFhHyczZCDHwNl1xYRVPkkIlNADhpOJuBZ+WktZthBXEqYg72Wj9vvtykX1OzcCx4l1lAjl39BPIpUvEoVWBGcVYLTlIjIfe5m+49SJHFRu6hWQ8bsGTO7LdH6/yG54tKizYlgoRp4DhAY1JgnQgRk+t0JUXxXHcMB27nOto0QmHusyTTAszCNQa5WJfuy08MDwy5mSkE8+Qg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NMRuWt7tQ/cYSrFvSmb4CBdxsSoOw118mFzuQieXCz0=;
+ b=dylEyExd7csme64nUKbxa3VJJyGdahd7lOjVLGOUrbAA1gLSwFGsbTPCtC0HhyswtbyEM6Um5a9fP1mfhyJ8g6pAp3vzKZDSJbilQPGYEZ2PlTEU48Rt9rRBo8lcPopJX0z+Xem0jV0+Z8FGHhchvSare+uTjb/UrwFJjdBrCQYlX4RhENZfLCEL8TLuhTdBCbpV5w3Q40MAuo1AWQ5AL+QOxNdGxJXR83efUWCDbqZmel2fl/f5nlw20b4DAtRZJ065aqMFmJGIQxjIfx9c5/9UCAJ+ClRi174W9V6Zvc24wiSGLSSQncZ4LlDpee2IHoBca/DdPJ9Cpjt7ROl9bw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
+ dkim=pass header.d=labundy.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NMRuWt7tQ/cYSrFvSmb4CBdxsSoOw118mFzuQieXCz0=;
+ b=HrNdP/pXDuLrUD034SgXPRUsAWYqx4ivcnin6Dtl+1XHMG1s1HSC5O52NN9/wsYdqWAaVONXZPIgW8rbBDUFXrziyRuBl/0pwSWe/mFQH/wapCW5QcTRYUbzBRor8JvchQxYSztpQpr5ijcxK+WKwfVOIBmUxZUq/u4/2nFr450=
+Authentication-Results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=labundy.com;
+Received: from SN6PR08MB5517.namprd08.prod.outlook.com (2603:10b6:805:fb::32)
+ by SN2PR0801MB2335.namprd08.prod.outlook.com (2603:10b6:804:6::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.10; Fri, 15 Jan
+ 2021 04:07:23 +0000
+Received: from SN6PR08MB5517.namprd08.prod.outlook.com
+ ([fe80::972:c257:aa68:9be0]) by SN6PR08MB5517.namprd08.prod.outlook.com
+ ([fe80::972:c257:aa68:9be0%4]) with mapi id 15.20.3763.010; Fri, 15 Jan 2021
+ 04:07:23 +0000
+Date:   Thu, 14 Jan 2021 22:07:20 -0600
+From:   Jeff LaBundy <jeff@labundy.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v3] pwm: iqs620a: Fix overflow and optimize calculations
+Message-ID: <20210115040720.GC27243@labundy.com>
+References: <20210114215026.163424-1-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20210113234645.52fcf73c@aktux>
-X-Provags-ID: V03:K1:9XjKrmV/1AFahXgaUITwWleebD3JkCgxOwFo/LhmBY4OVONqQHZ
- uYT0J0ulcHTVOriPK3GY+jx3rfu5Nnh6lFe25hEFFdWEckiuKw6+E/YS9TVmIgn5M28oAGh
- OLGogc34a6xE+z+sT+NoXc+hNKQ9ql8Pjn2yWb0whClV0pnDVKMgjbMWYjE47XGS9Pz4t+W
- 9d4bbCnzd2tcuQuLMFv4A==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6pzA9SSkmQ4=:t+i4DMIeD6qT3XcNUBW3ep
- zSDPfettqbJ7gQhSVyQcrGZAnuC+KhC6Woi+AxD+wWuhrNQYP/38tez84+5GCvhCjmE+iBzhs
- 8uTBrUTkHJNTsIuYdQPpWzMiAhy9yWVY+Dscb9FidwfyxYKhshrmeDm3e64Vf8ZFD4paF6N4z
- C7lwmNugP8PsuX9Z0p5IYvGFyFPJRlt9hEvdwel64m9RxIhaDq82whqyCECJZKR5M1jh7UP1f
- CM3sluTYtDYUUPFsId9IBXR+yHZwQDvDZt5hkI6p1Q2h3blD7Iua0U9eTk0JzJJKUCDbpCxVc
- b6larzuZqYZf2hHvl6iMNCuvwO1K+yLvqYlfhuV7I78An8AIT1/Z23/bFq/xNjhDiWXZHQ0eA
- SiYMyFlWEBm08aX834kNbA6U7IEpJqmAZDI0PxmMeJKXUSimropjGW0TqSVpTHEyYjCK2Gdsm
- xb13XhOD6a9OND7/o119kRJM6avj0ihDnosVq0HQD0FkfM2hWNpExwqRUsEqEKCUtkr4A1u8/
- Y1ZWLoDQo9fnu4+ulWJbRcjxMOEVjtE/Z8oUZK8vtoXFNbyLpoaHQOVkPG+G9tirkY1NAW5fV
- 8x+VLTr4iisdPFj8ienYe+WixOyxMIYIdeZDRxgbgidy/xnP527r36g5nt/be30QlqceQp4Fo
- Yy125H172Wv4hi8q+aWyo6AOjVRw6ANBThY0bcMpLImEx95S3w3wBufTFE+IXbOVbt9EsbN7E
- UfMD6epBmjiEgFL8tw+JAVKlU5vt+tiy+n0h9Gtj48D3Bclu7xI/rZTOdx/HPZdEXjpRuX93r
- ss6WdCyKWHwEws9nnp9NQAJTX4AsSBGqS8FLvkqcW5znevIi9qZRTPBJobkI775A6azTu2Qb6
- 5GTGQ12YsLXiFS+u6D6g==
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210114215026.163424-1-u.kleine-koenig@pengutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [136.49.173.128]
+X-ClientProxiedBy: SA0PR12CA0011.namprd12.prod.outlook.com
+ (2603:10b6:806:6f::16) To SN6PR08MB5517.namprd08.prod.outlook.com
+ (2603:10b6:805:fb::32)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from labundy.com (136.49.173.128) by SA0PR12CA0011.namprd12.prod.outlook.com (2603:10b6:806:6f::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.11 via Frontend Transport; Fri, 15 Jan 2021 04:07:22 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9626554c-5a47-4bf9-ef82-08d8b90b0f84
+X-MS-TrafficTypeDiagnostic: SN2PR0801MB2335:
+X-Microsoft-Antispam-PRVS: <SN2PR0801MB23352A63B15B6723D6DB4D4ED3A70@SN2PR0801MB2335.namprd08.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 349DbmSunTrLS0KzBO/2haIIlODAvttKFZTDWZAa8FKNELdqg8agLAspVDQOrbBOGzXJfEQ9kwe/1in+pKKdNdeApemqr+uKKx3Dnzp2j+LPjjL+30s+Z0Ue/lpyZrT6QQ0fEwx9Mw4G9+bIj5g+9fTDWh960n42ab01Em/FgWx6p3BZD8iOwSWjBYfiNAOICJuRP4ooneQNSHvg2snVOS6Cgm030aqIIN8sQa9BQr1b+3JJ1RbCZBcGoGyxAEkqIU1ucSc5UbsMwKLn0oj+hu8bGHk4BtR00ySiJmm4cZvlOyT6JWMA6/XqxbCV/s9dJmYE33NMj/fkO6zdwCRtyLyt2g+DC03p3LBCWliGbA88A3lBDqRH8+wy3zKLBa0vc2qSaVnGidopvxBK0n+Vww==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR08MB5517.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(396003)(376002)(136003)(346002)(39830400003)(33656002)(66476007)(52116002)(66574015)(6916009)(8936002)(5660300002)(2906002)(478600001)(2616005)(83380400001)(7696005)(16526019)(54906003)(4326008)(66556008)(55016002)(86362001)(1076003)(316002)(66946007)(26005)(8676002)(186003)(956004)(8886007)(36756003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?iso-8859-1?Q?iVdTZ+7+5xnMzVTBXfh4CaZjVZSOy0dDHARJJaqbgO/MdVi1HANe0TWu4Q?=
+ =?iso-8859-1?Q?JSkqa9UsNgB7ET6eWjQOuhrR+iVxaGlyL5sB7jZOC3TiqHKyUX+TcTy6g1?=
+ =?iso-8859-1?Q?JGO8Rjv7Nr8E1cBpV53jgJFBeerQrMeC1lD7nZpziR699dAxlqGQtM142V?=
+ =?iso-8859-1?Q?7vgu4Cje84mIDh7s8eNzegN3ySi1hccR0VqFMKMUQ0kdeRwtSyJjGO0XHK?=
+ =?iso-8859-1?Q?W9lC9SCu/5os0/QzVAEDllhItVl7xBgEf1O/73qj+imr3mXxVzqlkDEMvj?=
+ =?iso-8859-1?Q?WtMbeYsGLNvtNuIMG7y8eZ9De1zgGqm6YLzpNHC9r85yMdEr4/g/TyZwZD?=
+ =?iso-8859-1?Q?tBio8ZQTGZdEmhmUH0bi07RlAUuGHd4nSMgVa8d2fP30ESdi4OkhzaD2+k?=
+ =?iso-8859-1?Q?3qEafMcmOZdB/ZOIS0bi2yG8wLihjHcWINcj9wCJiHyIY4n5Pi709Qlpr5?=
+ =?iso-8859-1?Q?UuqkY6F4FN/6vsYUQkTkN94v+WO0nOrAcskDDQ3XJCvlSCuQjexd7FFx+C?=
+ =?iso-8859-1?Q?nSIO7ylAIgiq3KU/jWkClLfdzDEdTtlBMiql281mZxylk8lZoiemBYD6pw?=
+ =?iso-8859-1?Q?NCGN/4NupkV3LkoUDTFjc9P+hENisD3sjbmFOsIbDc0ToiP92ZGIRzIMXC?=
+ =?iso-8859-1?Q?ZXCtlX9Da7OeSV0Lnig2ubJQaQ4PkBOiwJK/LRkG3fyykMDcimj+ZrgEkp?=
+ =?iso-8859-1?Q?Kyzcc6p2IJeEJHAFLHmltPf07myIA6Z6QjjxvD3pW4eyRLeWV/scDVwukI?=
+ =?iso-8859-1?Q?MNr4f8EyVxx0EhwoCyVgLqZCggIphPOoMq32DQdgOrKwO+yvoVcP7n2gnO?=
+ =?iso-8859-1?Q?eRm6yp/q2l9Rcm7XnywvhC4QgC7kBW6Jpep6AtTItQR0YHx39N+qilxgXY?=
+ =?iso-8859-1?Q?2sDTK5IBsld+8Of/34Zp6dplidBEDHomikXu6JyFx/0cZ1sI3L5lZeMDxK?=
+ =?iso-8859-1?Q?tpYyCR3wzFBf01d9qgvpoMu+84zP+pnqsaP676SHNuNMqn5S4tsnVuAos0?=
+ =?iso-8859-1?Q?WSiXMpS9vtTEXsBDP4wFqj5+kmEj55M5e+u6bX?=
+X-OriginatorOrg: labundy.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9626554c-5a47-4bf9-ef82-08d8b90b0f84
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR08MB5517.namprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2021 04:07:23.0831
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kV4O+Pk605ZIctT6nS11Cvy8NiQVZT2NQf/kkJSBa9vy1UCf8n4+hJDBrqBiJFOZ8KIBPLUd/0r88F+nQOAfMQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN2PR0801MB2335
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Uwe,
 
---HDuVcb6jseGv59n6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for your work here; it's coming together quite nicely.
 
-On Wed, Jan 13, 2021 at 11:46:45PM +0100, Andreas Kemnade wrote:
-> On Tue, 12 Jan 2021 20:39:02 +0100
-> Andreas Kemnade <andreas@kemnade.info> wrote:
->=20
-> [...]
-> > > +static int ntxec_pwm_probe(struct platform_device *pdev)
-[...]
-> > Hmm, I needed
-> > chip->dev =3D &pdev->dev.parent to use the backlight example
-> > in patch 2/7.
-> > Not sure what the correct solution is. Maybe the pwm deserves its own
-> > devicetree node.
-> >=20
-> probably just assigning the node from the parent.
->=20
->    pdev->dev.of_node =3D pdev->dev.parent->of_node;
+On Thu, Jan 14, 2021 at 10:50:26PM +0100, Uwe Kleine-König wrote:
+> If state->duty_cycle is 0x100000000000000, the previous calculation of
+> duty_scale overflows and yields a duty cycle ratio of 0% instead of
+> 100%. Fix this by clamping the requested duty cycle to the maximal
+> possible duty cycle first. This way it is possible to use a native
+> integer division instead of a (depending on the architecture) more
+> expensive 64bit division.
+> 
+> With this change in place duty_scale cannot be bigger than 256 which
+> allows to simplify the calculation of duty_val.
+> 
+> Fixes: 6f0841a8197b ("pwm: Add support for Azoteq IQS620A PWM generator")
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> ---
+>  drivers/pwm/pwm-iqs620a.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-iqs620a.c b/drivers/pwm/pwm-iqs620a.c
+> index 5ede8255926e..eb03f60c5db8 100644
+> --- a/drivers/pwm/pwm-iqs620a.c
+> +++ b/drivers/pwm/pwm-iqs620a.c
+> @@ -46,7 +46,9 @@ static int iqs620_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  {
+>  	struct iqs620_pwm_private *iqs620_pwm;
+>  	struct iqs62x_core *iqs62x;
+> -	u64 duty_scale;
+> +	unsigned duty_cycle;
+> +	unsigned duty_scale;
+> +
+>  	int ret;
+>  
 
-Ah, good catch, thanks. This works, I'll add it to the next version.
+Nit: there is a rogue newline here. I'm also not such a fan of mixing
+shorthand 'unsigned' with existing 'unsigned int' (as in probe).
 
+>  	if (state->polarity != PWM_POLARITY_NORMAL)
+> @@ -70,7 +72,8 @@ static int iqs620_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	 * For lower duty cycles (e.g. 0), the PWM output is simply disabled to
+>  	 * allow an external pull-down resistor to hold the GPIO3/LTX pin low.
+>  	 */
+> -	duty_scale = div_u64(state->duty_cycle * 256, IQS620_PWM_PERIOD_NS);
+> +	duty_cycle = min_t(u64, state->duty_cycle, IQS620_PWM_PERIOD_NS);
+> +	duty_scale = duty_cycle * 256 / IQS620_PWM_PERIOD_NS;
+>  
+>  	mutex_lock(&iqs620_pwm->lock);
+>  
+> @@ -82,7 +85,7 @@ static int iqs620_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	}
+>  
+>  	if (duty_scale) {
+> -		u8 duty_val = min_t(u64, duty_scale - 1, 0xff);
+> +		u8 duty_val = duty_scale - 1;
+>  
+>  		ret = regmap_write(iqs62x->regmap, IQS620_PWM_DUTY_CYCLE,
+>  				   duty_val);
+> -- 
+> 2.29.2
+> 
 
-Jonathan
+That being said, the patch is functionally correct and I validated all
+corner cases with actual hardware. Feel free to add to future cosmetic
+revisions:
 
---HDuVcb6jseGv59n6
-Content-Type: application/pgp-signature; name="signature.asc"
+Tested-by: Jeff LaBundy <jeff@labundy.com>
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmAAxj0ACgkQCDBEmo7z
-X9tuAQ/+I/fgq/4KiZ/hxst2Kdd7r5iiqyVHUXajGHBX1h6S/divbTF05YEipq5z
-5PSrq+RBEc6dBbNk7F5GTzE05MtmMAFk7l5fB+pA3U0zF6C8+CfAyoA47UdCFuPp
-LtHhKT1GKs1DcfK9E/k05UJMscXCEj5+gDhDf3a5yQ4our++LEcwepUBHf3Tb3Yo
-QI7e0wRMTYDkmo/98Krrmei96oWav/Zu0HBy6U9WlEWdKz7mNF7CbrWNMdLoj56i
-NaOaJgRUGIAEd6v2PDmG1zLUOnyRPd9yFVGP/acj1t9bwQx2soxB0gdV03/n81rI
-/0A+xXvMNwPfK43G7s7pkVmqr6/9U4F9EIW43hX3HNDPfm+WRPBbxeddhsT9RAtM
-MJuluSgEaSRT5vSfK74ZUnpbEGvrfAxPqkuG5Z5ssS2DC57R5njD+fNbfimovzXz
-IOJjax1NzXMQ9DM5hb6JQQfR/Q0TumCmTw+gGAYWa39ywv/du2aiAmg/5ZgCILjG
-zZL3L85WiGJT3roV2FoFUDwLuAm8bwfGR7l2c/gwO8/qWqXbNjnibVEUJTZ5OOEP
-ha7AKdyDYsEiRbcS79xKeU2GBNheMmKZDif66X/0DYbU7aSyGjE/c5z1EZFQr7Ao
-WAOgoHbr1BE599wWNAbrHKCm9QN9dPZJDYKQc+WJw7EZuwMQ5Gc=
-=Fe0t
------END PGP SIGNATURE-----
-
---HDuVcb6jseGv59n6--
+Kind regards,
+Jeff LaBundy
