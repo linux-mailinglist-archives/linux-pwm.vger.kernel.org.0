@@ -2,50 +2,41 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C9A3B2F9AC4
-	for <lists+linux-pwm@lfdr.de>; Mon, 18 Jan 2021 08:46:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E5B02F9AEE
+	for <lists+linux-pwm@lfdr.de>; Mon, 18 Jan 2021 09:03:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733078AbhARHpU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 18 Jan 2021 02:45:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51792 "EHLO
+        id S1733262AbhARIDP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 18 Jan 2021 03:03:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbhARHpS (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 18 Jan 2021 02:45:18 -0500
+        with ESMTP id S1733192AbhARIDH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 18 Jan 2021 03:03:07 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 018DAC061757
-        for <linux-pwm@vger.kernel.org>; Sun, 17 Jan 2021 23:44:37 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB6CDC061573
+        for <linux-pwm@vger.kernel.org>; Mon, 18 Jan 2021 00:02:26 -0800 (PST)
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1l1PDG-0007pM-BJ; Mon, 18 Jan 2021 08:44:34 +0100
+        id 1l1PUV-0001J4-07; Mon, 18 Jan 2021 09:02:23 +0100
 Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1l1PDF-0004CK-Mg; Mon, 18 Jan 2021 08:44:33 +0100
-Date:   Mon, 18 Jan 2021 08:44:33 +0100
+        id 1l1PUU-0005qe-C9; Mon, 18 Jan 2021 09:02:22 +0100
+Date:   Mon, 18 Jan 2021 09:02:19 +0100
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Nicola Di Lieto <nicola.dilieto@gmail.com>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] pwm: pwm-gpio: New driver
-Message-ID: <20210118074433.fzdyfpd7xxrfynbt@pengutronix.de>
-References: <20201209072842.amvpwe37zvfmve3g@pengutronix.de>
- <20201211170432.6113-1-nicola.dilieto@gmail.com>
- <20201211170432.6113-2-nicola.dilieto@gmail.com>
- <20210117130434.663qpp6noujptdyt@pengutronix.de>
- <20210117135803.gt2zgta5pv7o6t6t@einstein.dilieto.eu>
- <20210117184556.7huqlkxykjwionok@pengutronix.de>
- <20210117210618.ptnypp4zgk4lfuab@einstein.dilieto.eu>
+To:     Jeff LaBundy <jeff@labundy.com>
+Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
+        linux-pwm@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH] pwm: iqs620a: Correct a stale state variable
+Message-ID: <20210118080219.ezxukoavyi5fklgr@pengutronix.de>
+References: <1610686834-6149-1-git-send-email-jeff@labundy.com>
+ <20210115074509.h6ytqb3dflbcud5z@pengutronix.de>
+ <20210118043005.GB7479@labundy.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bw6bmqeu4wz2fqj6"
+        protocol="application/pgp-signature"; boundary="cv3losvwvqg2ka5i"
 Content-Disposition: inline
-In-Reply-To: <20210117210618.ptnypp4zgk4lfuab@einstein.dilieto.eu>
+In-Reply-To: <20210118043005.GB7479@labundy.com>
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -55,91 +46,95 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---bw6bmqeu4wz2fqj6
+--cv3losvwvqg2ka5i
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello Nicola,
+Hello Jeff,
 
-On Sun, Jan 17, 2021 at 10:06:18PM +0100, Nicola Di Lieto wrote:
-> On Sun, Jan 17, 2021 at 07:45:56PM +0100, Uwe Kleine-K=F6nig wrote:
-> > > > > +	pwm_gpio->output =3D pwm_gpio->state ^ pwm_gpio->cur.invert;
+On Sun, Jan 17, 2021 at 10:30:05PM -0600, Jeff LaBundy wrote:
+> Thank you for taking a look; actually I came across this problem while
+> testing your patch, so I owe you even more gratitude :)
+
+:-)
+
+> On Fri, Jan 15, 2021 at 08:45:09AM +0100, Uwe Kleine-K=F6nig wrote:
+> > On Thu, Jan 14, 2021 at 11:00:34PM -0600, Jeff LaBundy wrote:
+> > > If duty cycle is first set to a value that is sufficiently high to
+> > > enable the output (e.g. 10000 ns) but then lowered to a value that
+> > > is quantized to zero (e.g. 1000 ns), the output is disabled as the
+> > > device cannot drive a constant zero (as expected).
+> > >=20
+> > > However if the device is later re-initialized due to watchdog bite,
+> > > the output is re-enabled at the next-to-last duty cycle (10000 ns).
+> > > This is because the iqs620_pwm->out_en flag unconditionally tracks
+> > > state->enabled instead of what was actually written to the device.
+> > >=20
+> > > To solve this problem, force the iqs620_pwm->out_en flag to follow
+> > > the IQS620_PWR_SETTINGS_PWM_OUT field instead, as was the original
+> > > design intent.
+> > >=20
+> > > Fixes: 6f0841a8197b ("pwm: Add support for Azoteq IQS620A PWM generat=
+or")
+> > > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+> > > ---
+> > >  drivers/pwm/pwm-iqs620a.c | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > >=20
+> > > diff --git a/drivers/pwm/pwm-iqs620a.c b/drivers/pwm/pwm-iqs620a.c
+> > > index 5ede825..5eb8fa4 100644
+> > > --- a/drivers/pwm/pwm-iqs620a.c
+> > > +++ b/drivers/pwm/pwm-iqs620a.c
+> > > @@ -79,6 +79,8 @@ static int iqs620_pwm_apply(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+> > >  					 IQS620_PWR_SETTINGS_PWM_OUT, 0);
+> > >  		if (ret)
+> > >  			goto err_mutex;
+> > > +
+> > > +		iqs620_pwm->out_en =3D false;
+> > >  	}
+> > > =20
+> > >  	if (duty_scale) {
+> > > @@ -97,9 +99,9 @@ static int iqs620_pwm_apply(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+> > >  					 IQS620_PWR_SETTINGS_PWM_OUT, 0xff);
+> > >  		if (ret)
+> > >  			goto err_mutex;
+> > > -	}
+> > > =20
+> > > -	iqs620_pwm->out_en =3D state->enabled;
+> > > +		iqs620_pwm->out_en =3D true;
+> > > +	}
 > >=20
-> > So far I understood also only comment. What wasn't obvious immediately
-> > is the state member.
+> > I got the problem and I agree it needs fixing. Are you aware you change
+> > the semantic of out_en here and so the behaviour of .get_state()? IMHO
+> > the change is fine however, and unless I miss something this patch makes
+> > the comment in iqs620_pwm_get_state true.
 >=20
-> Would it become clear enough by adding: "state is the logical PWM output;
-> the actual PIN output level is inverted by XORing with cur.invert when the
-> latter is true" ?
-
-This was at least good enough for me to understand it now.
-
-So iff state is true, the PWM is in the active phase of the current
-period. Maybe "currently_active" is a better name for this variable?
-
-Then the code could (with some comments added and a few more variables
-renamed) could look as follows:
-
-	if (ddata->currently_active) {
-		/* Enter the inactive part of the current period. */
-		ddata->currently_active =3D false;
-		next_transistion =3D ddata->cur.toff_ns;
-	} else {
-		/*
-		 * Start a new period. First check if there is a new
-		 * configuration setting pending in ddata->new.
-		 */
-		ddata->currently_active =3D true;
-
-		if (spin_trylock(&ddata->lock)) {
-			ddata->cur =3D ddata->new;
-			spin_unlock(&ddata->lock);
-		}
-		next_transition =3D ddata->cur.ton_ns;
-	}
-	...
-
-which IMHO is easier to understand.
-
-I think there are still two problems with this approach:
-
- - The locking is hard to follow, .enabled is accessed using atomic
-   accessors, .new is protected by the spinlock and the other members
-   are not accessed concurrently, right?
-   If pwm_apply(..., {.enabled =3D false}) and pwm_apply(.., {.enabled =3D
-   true}) are called in quick sequence (e.g. faster than the first call
-   triggers the work queue) there is trouble ahead, isn't there?
-
- - If .duty_cycle is equal to 0 (or .period) the output should be
-   constant. I think this isn't what will happen.
-
-> > > Would it be ok to cancel the timer first and then "return
-> > > pwmchip_remove(...)"?
-> >=20
-> > No. The PWM must stay functional until pwmchip_remove() returns.
-> >=20
+> Agreed on all counts; in fact I saw this as an improvement because the
+> get_state callback now reflects the actual state of the hardware under
+> all circumstances.
 >=20
-> Could you please clarify what I should do when pwmchip_remove returns
-> non-zero? In my original implementation
-> - if pwmchip_remove returns a non-zero error code, I return it to the
-> caller and do not cancel the timer.
-> - if pwmchip_remove returns zero, I cancel the timer and return zero to  =
-the
-> caller
+> As you mention, the comment in iqs620_pwm_get_state() is fully correct
+> now too. Previously it was incorrect in this particular corner case.
 
-IMHO it's a bug that pwmchip_remove() can return an error code. I think
-the best you can do currently is:
+ok, I wondered if I missed something.
 
-	ret =3D pwmchip_remove(...)
-	WARN_ON(ret);
+> > Other than that I wonder if it would make more sense to track duty_scale
+> > in the driver struct instead of duty_val and out_en.
+>=20
+> You would still have to cache state->enabled because it's required for
+> decoding duty_scale at the time it was cached, so there is not much to
+> gain. I prefer this solution because the get_state callback is correct
+> across all cases now, and the change is small.
 
-	hrtimer_cancel(..);
+Can't we cope for this by just doing
 
-	return 0;
+	if (!state->enabled)
+		duty_scale =3D 0;
 
-because whatever you do is wrong. To sort this out needs some thought
-and work in the framework and so is unrelated to this patch.
+?
 
 Best regards
 Uwe
@@ -148,19 +143,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---bw6bmqeu4wz2fqj6
+--cv3losvwvqg2ka5i
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmAFPF4ACgkQwfwUeK3K
-7AlLnAf9G1EK9AIg46lWQP7nqCqeeYRHv0WufpKO7/EQuBWV9s8z3ZTGLykYTkk8
-3hC5RtuuejUrMVwGNdV4B4t5iTB56rdyMnk1PISIJhopmFz5naNhFKmNh7RHCzwF
-hbwAiI0veY0+C31L6XvqAel0qb7T8Co8+IGoDmurMw2DDxo9NsGjfR0ZJuqG/ji/
-vFUKYXEf1F+Q7TjjyTDwAFINBsN4JdWSeKKuVU6eklIodve0M0qAbZx+jyqFhPYd
-L6ryZ40DxAl2NuyCVjJqkCvkU67XUEuqyEFhKQtFlxI1mVhaCRywcKuPVGO9ahp0
-eNq+Yt0sAPGx1oyz6H+bwUwXZ6+xew==
-=jOxa
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmAFQIgACgkQwfwUeK3K
+7AkxJgf+O1wDh6kQOz11ri00jgnK6VMDBMcDeanVeYtgsD6i8CznP7El5QpZJ4Ov
+A1JNsOj6rbAOJxqdLgnOT95yVXTHGTHcA7HX1u2MsBW1jmQ138oCro+vd7KrvNJT
+ltq2fwKGsGE31njEzamQiVq2Gx+5VdiPBe0/eo80bnXRZ7i5QMOimG43JzizsQau
+Z8sz+lau04Se1JPvzFV768a/d6P2W793xHLlY58GdRXMuvuyu0Ag63eLeWFzcaSb
+uJ0WE+2KIMp0nmXpjZi8/OWjnPhk789si6DgxRychSJoEa72L95DKea9W8bxLHIV
+xuMvZT7+MUm23ZgCjDkEIfe77DHj/w==
+=W1UP
 -----END PGP SIGNATURE-----
 
---bw6bmqeu4wz2fqj6--
+--cv3losvwvqg2ka5i--
