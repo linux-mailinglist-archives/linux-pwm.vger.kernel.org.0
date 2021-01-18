@@ -2,111 +2,184 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69D652F9558
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 Jan 2021 22:07:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B84E2F98AD
+	for <lists+linux-pwm@lfdr.de>; Mon, 18 Jan 2021 05:31:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729755AbhAQVHF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 17 Jan 2021 16:07:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbhAQVHE (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 17 Jan 2021 16:07:04 -0500
-Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F1E6C061574;
-        Sun, 17 Jan 2021 13:06:24 -0800 (PST)
-Received: by mail-io1-xd33.google.com with SMTP id u17so29154337iow.1;
-        Sun, 17 Jan 2021 13:06:24 -0800 (PST)
+        id S1728690AbhAREbG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 17 Jan 2021 23:31:06 -0500
+Received: from mail-bn8nam12on2041.outbound.protection.outlook.com ([40.107.237.41]:5473
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726186AbhAREbC (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sun, 17 Jan 2021 23:31:02 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IIJ+Aw4m0th+mh1hqluw32Efh06m3PQtLe+EDH4oaM346kYgWkz1OgpU1TGfH+Gs0aa0NGgF6G/vwjChEBbXx5aJlDsSFvom2ORA0BKbIv9sPmYiTA2GV8i1e88G6sZvZSNmO2m6N3cvcwh53NPFezNwPKDqGs6n4ECCxlLlLTMHxbUXeE1VRFvGry+BcQ74QHuL689KYQvMvW0t0pUP3I2hJIiIvqQIgM/bBbfOZPJrkCqWfi1JzvnSPAjMcWjjmnXBtnMStpqEHDU5Zcz3rySCYfdNWsvKy/kW/AJJ/LeqLcFD9n96lyVLViQ30MfAjqtBqoRoJvGkPlO/0JMDfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6Kf/w22APgLg8Wo0V81tV+E8PTkjZ32ZaH/zgla1zxk=;
+ b=lXX6+t8hMMwDMq/p+H2Qg8zMNNUaqvdPh8TmkJRlyKGtYpZpfOK7T/7ZAeLmr2aPZ370k0UNaDuXItrVP3j8rUmsroTRLN92roelujRWfSoMgAQpHY963LTwo1xRO2D8z/9YSmduHsbuRvigVdgW8Sm4wHlyGrrrlJJKR6m8dY9rMFZbLFmro1X6C6YNQawMs8qxYbAO39+D7UafaG+ahdGXXMwAib1zYduOckeg+eNqkIrIq83hzafVmo7dJdo4GQtgscuZdK0USqXuxW+R3m25ftisNVYRbR7wwzBc0gO7S3VwY4YmjTnCZ3IARLVwhD+isBYnhjaXrSRyF6szIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
+ dkim=pass header.d=labundy.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=cZ5CzqR6FHC8SFBm9OPNqcdI+zSFrw+LNNyzBre+mNw=;
-        b=lGrsv+fAWJAiFARhfVtpuwrmv5paBIcu/pnVy6Khbm4A3sazKaaroxX0KsBXqi/Pw2
-         s1VWSXFdF0fJqZhxAcU+R3ldDE4lB8vQqTjnr9kgOGHxRNZq9fVeBVkVrdYquijD7krQ
-         XGWLSUunmMOvbZ+8PO9MImmgVouvi7/QnziGuaYdtQpqq/FnlVut4WY2GYOZA/mxvNO8
-         MopVBfn5IBgvOAd26YgJTWs9bEHStZ+AvVd0JkAOo8YXeL1W3PH0v41nA0mIOpowdltq
-         wgxFGjF+mDE1sjWUFrgHmJfgwe42nghl+zvpktaezSaNuSkpKYVfJ5Sp17vc853ea4H/
-         epFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=cZ5CzqR6FHC8SFBm9OPNqcdI+zSFrw+LNNyzBre+mNw=;
-        b=jpgcQEFs8pxMnDPHI2yJr5tqYmCfV7/K3tkf2wQmV0KXYa8armK8HV0J0bUqpwEHpm
-         H5AqLk2YrgVf9JBDZISMZpjxZIQDHT7/X3GzQgzB4ZCp4kj14A3XKWuvr7jONcBkVboW
-         ceZWCRB9bcV57g5WoVIzbEJ5tDBk4CyeOcGa/LGcI+teTMtCXIQzlictoIlzDLkKN8JZ
-         sEIyLJ9CSwDpVdWZWkeU+HMev5nI/4xgZ1XGkpKAMHiVxJU65NFK0txRLEQC0s6qQStE
-         GrWYapkhrmjTues4AZfbZCf3VcF/inoK/Zv6M04z50uqCrPXmzdmyErt4E35T62w7BvH
-         o5qA==
-X-Gm-Message-State: AOAM531rzF1ZQfGfxzUUEpxJlKIP38aQXqHrTHIbgByBhu7IDd2tFIi+
-        nFA8IjWADgJUxMhoRw2Ay1tb9Z6dQyr6cw==
-X-Google-Smtp-Source: ABdhPJwOvMykMbuKTMebYd1ePJZmIm78C9XrvCq4JCcIcHXlAPZNTQPgSUrYChJBm1LrcgbXK6OvDA==
-X-Received: by 2002:a02:1d0a:: with SMTP id 10mr9356430jaj.122.1610917583539;
-        Sun, 17 Jan 2021 13:06:23 -0800 (PST)
-Received: from einstein.dilieto.eu (smtp.dilieto.eu. [188.68.43.228])
-        by smtp.gmail.com with ESMTPSA id f19sm3011475ioc.51.2021.01.17.13.06.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 17 Jan 2021 13:06:22 -0800 (PST)
-Date:   Sun, 17 Jan 2021 22:06:18 +0100
-From:   Nicola Di Lieto <nicola.dilieto@gmail.com>
+ d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6Kf/w22APgLg8Wo0V81tV+E8PTkjZ32ZaH/zgla1zxk=;
+ b=mOMUNuj77Wa7fKp3/B2uNjQLg9XlH65itAeY+C6WOKBrLpKhCFkKtubH6TEzRBHudfWTs/7qiLJcrG9Ax4V4eJ46/d5qNNamiqWXoBXOTINrs6H5SyAWwP/L1H1iyzbq7ZC64K0IWbtdqIbmQUzzY+uoWmL8HSQYHvVtCwDORrE=
+Authentication-Results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=labundy.com;
+Received: from SN6PR08MB5517.namprd08.prod.outlook.com (2603:10b6:805:fb::32)
+ by SN6PR08MB6112.namprd08.prod.outlook.com (2603:10b6:805:f4::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.10; Mon, 18 Jan
+ 2021 04:30:08 +0000
+Received: from SN6PR08MB5517.namprd08.prod.outlook.com
+ ([fe80::972:c257:aa68:9be0]) by SN6PR08MB5517.namprd08.prod.outlook.com
+ ([fe80::972:c257:aa68:9be0%4]) with mapi id 15.20.3763.014; Mon, 18 Jan 2021
+ 04:30:08 +0000
+Date:   Sun, 17 Jan 2021 22:30:05 -0600
+From:   Jeff LaBundy <jeff@labundy.com>
 To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] pwm: pwm-gpio: New driver
-Message-ID: <20210117210618.ptnypp4zgk4lfuab@einstein.dilieto.eu>
-References: <20201209072842.amvpwe37zvfmve3g@pengutronix.de>
- <20201211170432.6113-1-nicola.dilieto@gmail.com>
- <20201211170432.6113-2-nicola.dilieto@gmail.com>
- <20210117130434.663qpp6noujptdyt@pengutronix.de>
- <20210117135803.gt2zgta5pv7o6t6t@einstein.dilieto.eu>
- <20210117184556.7huqlkxykjwionok@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] pwm: iqs620a: Correct a stale state variable
+Message-ID: <20210118043005.GB7479@labundy.com>
+References: <1610686834-6149-1-git-send-email-jeff@labundy.com>
+ <20210115074509.h6ytqb3dflbcud5z@pengutronix.de>
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210117184556.7huqlkxykjwionok@pengutronix.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20210115074509.h6ytqb3dflbcud5z@pengutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [136.49.173.128]
+X-ClientProxiedBy: SN1PR12CA0096.namprd12.prod.outlook.com
+ (2603:10b6:802:21::31) To SN6PR08MB5517.namprd08.prod.outlook.com
+ (2603:10b6:805:fb::32)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from labundy.com (136.49.173.128) by SN1PR12CA0096.namprd12.prod.outlook.com (2603:10b6:802:21::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.9 via Frontend Transport; Mon, 18 Jan 2021 04:30:07 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 846228bc-fa99-48c9-a35e-08d8bb69bc48
+X-MS-TrafficTypeDiagnostic: SN6PR08MB6112:
+X-Microsoft-Antispam-PRVS: <SN6PR08MB61121EC966D5E19B6230E1B0D3A40@SN6PR08MB6112.namprd08.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1DCM+YuatBfI0+Kq569JehDmNhWqgw78inag06NJPwaoTNDGx0oZIQV1eGWR7AzPqDfGfrYUoI7bl9kLyzVfq9Slu2KcM0cQmBPd/c21wa8jCl60dThEkYd32RLTdM2EB45wEMC3LJHfDRjr+fUe2OPK1kM/GPYfXTVESsFMR2oVEU/B0pIMSvrqaFC9q7jlKXSYr5Ky6QyiKSZF6ZQpBiXR3/g8hhve8SabXLeRF9m71UOdMgKBSeNNpn3d+iAqjmeAzw/npVVpFTALU3u8NRlrdCX1Xna5gFxVJ188Ozz30BKbQgFxsHSaRTQbXRUfrn9UVDrAb3V09KvutcWQnUlc8I481fCfgF13oYIK0IVHCfqu876DhNOYYaMws4JznNy8r7fjphL6rHv9wbNHyY072IxKuZ4srHpO8JXNq3Ey1kogzi6WPoVAqy3G1Cyp3jsTLEl11IhZ/e7fjRHZnK65eRPuqBGG1A+3HYdb2MBcmQ/nGT08fmjVWZxlmbtAD7i8Ik0pKgFEiu5YmU0OJw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR08MB5517.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(346002)(39830400003)(396003)(366004)(136003)(186003)(36756003)(4326008)(33656002)(16526019)(26005)(8936002)(2906002)(66574015)(52116002)(478600001)(86362001)(7696005)(956004)(2616005)(8886007)(8676002)(83380400001)(66946007)(1076003)(966005)(83080400002)(5660300002)(55016002)(66476007)(66556008)(6916009)(316002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?iso-8859-1?Q?XPlWfd+17a5aDKVAmdga3GM05ke5FJz71OhPcbWhllxgxA0p8CFe/JHIZs?=
+ =?iso-8859-1?Q?rioMCxUJ6oeD6jUd3yjpDP9NgcpwjhqwdDwExu6BGL7SawrQG4iHVJr9cW?=
+ =?iso-8859-1?Q?+70pPl7cPk859I6wjlHKMb012ORz3REAGWK4mLu/4gQTAvogZ642W51wA/?=
+ =?iso-8859-1?Q?sv1NjBYpP6Xd+neKwruyMbZiHwj3/w1OjzjJhg//O+Gs31Iun9W6Lcbgh3?=
+ =?iso-8859-1?Q?7siRyQIqgDKsLK7jTYGwpIo8Pac39uc5T3ct3LlanErmjYQ5FSpqet7LGu?=
+ =?iso-8859-1?Q?xvkr4PYdBMb8AFFg+rUPHb+2EGmZj16lLcvCSMKq56AvybZ8T4M+FTPb4V?=
+ =?iso-8859-1?Q?BVUK/+j+5PCiIRXW9OF8axcn8+ECC6+aZbL7EBWiEV3CXW/kUBm90Pgz5o?=
+ =?iso-8859-1?Q?UlJaLgBZ6UuW0WwE7GfR2qRvNqqxyRKKtsWQNc9m5PeQEDVR3Ht6XYnNke?=
+ =?iso-8859-1?Q?YTbqeaEoheOyXnhvJklYtvzJv344MYoe1BK/ps4MnGa9RztWoo4Q+QZanQ?=
+ =?iso-8859-1?Q?L3NtF7VQQ9xDQR9QvOYFxqlnZqPSHy3uWWFnwba0V8y3snqixlnvX5bNes?=
+ =?iso-8859-1?Q?7ikYJ3fwzbytw62Yl3JGKR3s+JhWMwp7TMJ+BMh08mjDKLfuWmslPXGjw7?=
+ =?iso-8859-1?Q?V2dvcP1STpJokw13B4k4aTbIQd5b3y/VtUsK6h6DR8sHYMZxiMy8Hyf+wm?=
+ =?iso-8859-1?Q?DZEkrKYyVIXYTvGYHPCNR8Xb86s/aHHB6H79l8lC/Ge/NC4OWXqj1r31i2?=
+ =?iso-8859-1?Q?j4IAZ/xjt+IK1PYr9l5skBSP4CeQRsQYBGwuU4m9WHVuoeMnJU3pIuQAh4?=
+ =?iso-8859-1?Q?p2YMd3Rgjx5jTwwytSZDAg9gJxdUK2nUtggUIuW4QGdLfHc2u1VIOTQAcL?=
+ =?iso-8859-1?Q?PeIbSFiFYk+NW/+BNbHKaL9XJFI0txoVjwHRrByrnB9xOfomlaNa5tjVVG?=
+ =?iso-8859-1?Q?x5TkxSpgZFDbmV45rGlMKTQdE7tDsiJXvGJsNet8AD2mQ+dCv3Y6Ev1GzX?=
+ =?iso-8859-1?Q?rdFzR8Dy//Fd8F1fClgNarb98kjXaV7FSGVA0h?=
+X-OriginatorOrg: labundy.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 846228bc-fa99-48c9-a35e-08d8bb69bc48
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR08MB5517.namprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jan 2021 04:30:07.9633
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NLT31HusMvHS67SVFOyST2SBg19p1Oxr0NfjhNxf8I1f3GNTxj3zUhYqRkP71stH0BAB8H5GGNONGQeUbpvYoQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR08MB6112
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Uwe,
+Hi Uwe,
 
-On Sun, Jan 17, 2021 at 07:45:56PM +0100, Uwe Kleine-König wrote:
->> > > +	pwm_gpio->output = pwm_gpio->state ^ pwm_gpio->cur.invert;
->
->So far I understood also only comment. What wasn't obvious immediately
->is the state member.
+Thank you for taking a look; actually I came across this problem while
+testing your patch, so I owe you even more gratitude :)
 
-Would it become clear enough by adding: "state is the logical PWM 
-output; the actual PIN output level is inverted by XORing with 
-cur.invert when the latter is true" ?
+On Fri, Jan 15, 2021 at 08:45:09AM +0100, Uwe Kleine-König wrote:
+> On Thu, Jan 14, 2021 at 11:00:34PM -0600, Jeff LaBundy wrote:
+> > If duty cycle is first set to a value that is sufficiently high to
+> > enable the output (e.g. 10000 ns) but then lowered to a value that
+> > is quantized to zero (e.g. 1000 ns), the output is disabled as the
+> > device cannot drive a constant zero (as expected).
+> > 
+> > However if the device is later re-initialized due to watchdog bite,
+> > the output is re-enabled at the next-to-last duty cycle (10000 ns).
+> > This is because the iqs620_pwm->out_en flag unconditionally tracks
+> > state->enabled instead of what was actually written to the device.
+> > 
+> > To solve this problem, force the iqs620_pwm->out_en flag to follow
+> > the IQS620_PWR_SETTINGS_PWM_OUT field instead, as was the original
+> > design intent.
+> > 
+> > Fixes: 6f0841a8197b ("pwm: Add support for Azoteq IQS620A PWM generator")
+> > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+> > ---
+> >  drivers/pwm/pwm-iqs620a.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pwm/pwm-iqs620a.c b/drivers/pwm/pwm-iqs620a.c
+> > index 5ede825..5eb8fa4 100644
+> > --- a/drivers/pwm/pwm-iqs620a.c
+> > +++ b/drivers/pwm/pwm-iqs620a.c
+> > @@ -79,6 +79,8 @@ static int iqs620_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> >  					 IQS620_PWR_SETTINGS_PWM_OUT, 0);
+> >  		if (ret)
+> >  			goto err_mutex;
+> > +
+> > +		iqs620_pwm->out_en = false;
+> >  	}
+> >  
+> >  	if (duty_scale) {
+> > @@ -97,9 +99,9 @@ static int iqs620_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> >  					 IQS620_PWR_SETTINGS_PWM_OUT, 0xff);
+> >  		if (ret)
+> >  			goto err_mutex;
+> > -	}
+> >  
+> > -	iqs620_pwm->out_en = state->enabled;
+> > +		iqs620_pwm->out_en = true;
+> > +	}
+> 
+> I got the problem and I agree it needs fixing. Are you aware you change
+> the semantic of out_en here and so the behaviour of .get_state()? IMHO
+> the change is fine however, and unless I miss something this patch makes
+> the comment in iqs620_pwm_get_state true.
 
->> Would it be ok to cancel the timer first and then "return
->> pwmchip_remove(...)"?
->
->No. The PWM must stay functional until pwmchip_remove() returns.
->
+Agreed on all counts; in fact I saw this as an improvement because the
+get_state callback now reflects the actual state of the hardware under
+all circumstances.
 
-Could you please clarify what I should do when pwmchip_remove returns 
-non-zero? In my original implementation
+As you mention, the comment in iqs620_pwm_get_state() is fully correct
+now too. Previously it was incorrect in this particular corner case.
 
-- if pwmchip_remove returns a non-zero error code, I return it to the 
-  caller and do not cancel the timer.
-- if pwmchip_remove returns zero, I cancel the timer and return zero to 
-  the caller
+> 
+> Other than that I wonder if it would make more sense to track duty_scale
+> in the driver struct instead of duty_val and out_en.
 
-So under no circumstance I return a different code from what 
-pwmchip_remove does...
+You would still have to cache state->enabled because it's required for
+decoding duty_scale at the time it was cached, so there is not much to
+gain. I prefer this solution because the get_state callback is correct
+across all cases now, and the change is small.
 
-Best regards,
-Nicola
+> 
+> Best regards
+> Uwe
+> 
+> -- 
+> Pengutronix e.K.                           | Uwe Kleine-König            |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
+Kind regards,
+Jeff LaBundy
