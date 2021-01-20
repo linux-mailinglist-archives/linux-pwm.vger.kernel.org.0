@@ -2,71 +2,106 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 270182FD4F1
-	for <lists+linux-pwm@lfdr.de>; Wed, 20 Jan 2021 17:09:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 945192FD55F
+	for <lists+linux-pwm@lfdr.de>; Wed, 20 Jan 2021 17:22:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728439AbhATQHH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 20 Jan 2021 11:07:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391254AbhATQFe (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Wed, 20 Jan 2021 11:05:34 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 65BAE233F8;
-        Wed, 20 Jan 2021 16:04:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611158693;
-        bh=tCY0oELYRd4QvtVyOqXMepIBNI4ULR18UJOim1D3bsk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sEmKfr9CxifTG2YE8U1qSq6PoLQjtahrX6K7FwtjlQ5VZoYVQcu73Tpfkkg0Hlaix
-         Io7a5B7ukdvjEjPWfmi5Xs/UU4WqGtOP0PA3jD/+4lWe+7CQRQcaXLcck0XwgQJVHD
-         Sm0CYOX8Avuqq/YRgq2wTKjv0hRak3Kq9dkEEYWpkhWbgf5QQDAJs6hFasnfx38CWI
-         OKqlwcBXCxsns6HDVmT++FMKM9upO3kE/oT9brDMGLcW5qgTOePxz7ftuC9vX6taQo
-         Nc0f3TFVcgh8HEVhSOZIotk0/sxKUckGGqdxgu17cB6NIKfqfboMnodt1S0rdtcLL5
-         OC0p/zwiu8QbA==
-Received: by mail-oi1-f176.google.com with SMTP id f132so25494184oib.12;
-        Wed, 20 Jan 2021 08:04:53 -0800 (PST)
-X-Gm-Message-State: AOAM532Wc5ioCkuwibp5mlULX6lfiglCxFlMWrk8935CCX/K+7yJDSuK
-        j8+wmrFVXbZAGdmsQ0J8bgC5VtgWn3fekF+BV90=
-X-Google-Smtp-Source: ABdhPJyLDeFbaDazP1z9y9ooclYTHcmXJDGv3fxWTYIMN6vJgmVL46kRjEEjTbvBK5FAEEjz0DdaTdejgQPy+pxBIdI=
-X-Received: by 2002:aca:44d:: with SMTP id 74mr3345812oie.4.1611158692720;
- Wed, 20 Jan 2021 08:04:52 -0800 (PST)
+        id S2403766AbhATQT3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 20 Jan 2021 11:19:29 -0500
+Received: from guitar.tcltek.co.il ([192.115.133.116]:55070 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391451AbhATQRk (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 20 Jan 2021 11:17:40 -0500
+Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx.tkos.co.il (Postfix) with ESMTPS id 6A0C444056C;
+        Wed, 20 Jan 2021 18:16:37 +0200 (IST)
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Baruch Siach <baruch@tkos.co.il>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v5 0/4] gpio: mvebu: pwm fixes and improvements
+Date:   Wed, 20 Jan 2021 18:16:24 +0200
+Message-Id: <cover.1611128398.git.baruch@tkos.co.il>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-References: <20210120150944.1688327-1-arnd@kernel.org> <YAhRMaJhYJZat2SI@ulmo>
-In-Reply-To: <YAhRMaJhYJZat2SI@ulmo>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Wed, 20 Jan 2021 17:04:36 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2JhcRnaDXK1V4=FgRJrGjqrj5-LzhCaC+jpLa1hDL+Pw@mail.gmail.com>
-Message-ID: <CAK8P3a2JhcRnaDXK1V4=FgRJrGjqrj5-LzhCaC+jpLa1hDL+Pw@mail.gmail.com>
-Subject: Re: [PATCH] pwm: remove zte zx driver
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jun Nie <jun.nie@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Jan 20, 2021 at 4:50 PM Thierry Reding <thierry.reding@gmail.com> wrote:
-> On Wed, Jan 20, 2021 at 04:09:22PM +0100, Arnd Bergmann wrote:
+This series adds a few related fixes to the pwm .apply and .get_state
+callbacks.
 
-> > -config PWM_VT8500
-> > -     tristate "vt8500 PWM support"
-> > -     depends on ARCH_VT8500 || COMPILE_TEST
-> > -     depends on HAS_IOMEM
-> > -     help
-> > -       Generic PWM framework driver for vt8500.
-> > -
-> > -       To compile this driver as a module, choose M here: the module
-> > -       will be called pwm-vt8500.
-> > -
->
-> I assume that you dropped the PWM_VT8500 symbol by mistake? I can fix
-> that up while applying, so no need to resend.
+The first patch was originally part of the series adding Armada 8K/7K pwm
+support. I split it out to a separate series following review comments from
+Uwe Kleine-König who spotted a few more issues. There is no dependency between
+this and the Armada 8K/7K series.
 
-Indeed, thanks for catching my mistake and fixing it up!
+v5:
 
-       Arnd
+  * Drop a patch applied to the gpio tree
+
+  * Fix patch 4/4 description typo (Uwe)
+
+  * Reduce the number of multiplications (Uwe)
+
+  * Add spaces around '+' (Uwe)
+
+  * Use '1ULL' instead of explicit cast to reduce verbosity
+
+  * Add Linus' Reviewed-by tags to patches that are unchanged since v2
+
+v4:
+
+  * Take advantage of zero value being treated as 2^32 by hardware. Rewrite
+    patch 5/5 (Uwe).
+
+v3:
+
+  * Improve patch 3/5 description (Uwe)
+
+  * Add more Reviewed-by tags from Uwe
+
+v2:
+
+Address Uwe Kleine-König comments.
+
+  * Improve patch 1/5 summary line
+
+  * Add more information to patch 1/5 description
+
+  * Add more information to patch 2/5 description
+
+  * Don't round period/duty_cycle up in .apply (patch 3/5)
+
+  * Expand the comment in path 5/5 based on RMK's analysis of hardware
+    behaviour
+
+  * Add Uwe's Reviewed-by tags
+
+Baruch Siach (4):
+  gpio: mvebu: improve pwm period calculation accuracy
+  gpio: mvebu: make pwm .get_state closer to idempotent
+  gpio: mvebu: don't limit pwm period/duty_cycle to UINT_MAX
+  gpio: mvebu: improve handling of pwm zero on/off values
+
+ drivers/gpio/gpio-mvebu.c | 47 +++++++++++++++++++++------------------
+ 1 file changed, 25 insertions(+), 22 deletions(-)
+
+-- 
+2.29.2
+
