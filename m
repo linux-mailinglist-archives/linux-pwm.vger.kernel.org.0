@@ -2,177 +2,412 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D8BA2FC03D
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 Jan 2021 20:44:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D9B2F2FD3A5
+	for <lists+linux-pwm@lfdr.de>; Wed, 20 Jan 2021 16:14:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729686AbhASTkn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 19 Jan 2021 14:40:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729890AbhASTkb (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 19 Jan 2021 14:40:31 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E949C061573
-        for <linux-pwm@vger.kernel.org>; Tue, 19 Jan 2021 11:39:51 -0800 (PST)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1l1wql-0007Vp-Hz; Tue, 19 Jan 2021 20:39:35 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1l1wqc-0000CL-3n; Tue, 19 Jan 2021 20:39:26 +0100
-Date:   Tue, 19 Jan 2021 20:39:25 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        id S2390280AbhATPNU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 20 Jan 2021 10:13:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390424AbhATPKa (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 20 Jan 2021 10:10:30 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4B8AE23159;
+        Wed, 20 Jan 2021 15:09:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611155390;
+        bh=WUbBotuq4Oy3mOku8gwtWKS3a6Wa5oh19lqXYgHBTPk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XJe6y9IkPheSVA1dkehUm4nXJaNtJmMAWGxhpbS1n76Bb8Jwp7txkWfhJrz1dZxbE
+         mG2e9yDMJVBY86Qh1VmEn0DkBluSzuR1jSLnYemOLxGy62R9F4H0SqDuGAtuGk78rG
+         y+a7qAnFqTvU8gymBknDVMsw4av+iH3+WlTcl3U7st9TrYGwgBYHlgEztf68JStGVL
+         tQ1dx9wdAl2WsCIIYOP+m48JaeTguu9SKyBti97BqI0gQriMrF4Z82zIAA/YdrjvTF
+         svmvw+AgImzUNoPsiSMWQZo141JCH5FfLqsOYaG2U9WX6YRIVJjxntxs4vQzC3m8Ks
+         QkvXLriQSK0tw==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 5/5] gpio: mvebu: improve handling of pwm zero on/off
- values
-Message-ID: <20210119193925.xcqr6owx7nf4h63l@pengutronix.de>
-References: <cover.1610882271.git.baruch@tkos.co.il>
- <065aa239ba7e10b64f1c563aba08626f5de790ba.1610882271.git.baruch@tkos.co.il>
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jun Nie <jun.nie@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pwm: remove zte zx driver
+Date:   Wed, 20 Jan 2021 16:09:22 +0100
+Message-Id: <20210120150944.1688327-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jsctpgqt2dlm4ahi"
-Content-Disposition: inline
-In-Reply-To: <065aa239ba7e10b64f1c563aba08626f5de790ba.1610882271.git.baruch@tkos.co.il>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+From: Arnd Bergmann <arnd@arndb.de>
 
---jsctpgqt2dlm4ahi
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The zte zx platform is getting removed, so this driver is no
+longer needed.
 
-Hello Baruch,
+Cc: Jun Nie <jun.nie@linaro.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ .../devicetree/bindings/pwm/pwm-zx.txt        |  22 --
+ drivers/pwm/Kconfig                           |  20 --
+ drivers/pwm/Makefile                          |   2 -
+ drivers/pwm/pwm-zx.c                          | 278 ------------------
+ 4 files changed, 322 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-zx.txt
+ delete mode 100644 drivers/pwm/pwm-zx.c
 
-On Sun, Jan 17, 2021 at 03:17:06PM +0200, Baruch Siach wrote:
-> Hardware appears to treat zero value as 2^32. Take advantage of this
-> fact to support on/off values of up to UINT_MAX+1 =3D=3D 2^32. Adjust both
-> .apply and .get_sate to handle zero as a special case.
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-zx.txt b/Documentation/devicetree/bindings/pwm/pwm-zx.txt
+deleted file mode 100644
+index 3c8fe7aa8269..000000000000
+--- a/Documentation/devicetree/bindings/pwm/pwm-zx.txt
++++ /dev/null
+@@ -1,22 +0,0 @@
+-ZTE ZX PWM controller
+-
+-Required properties:
+- - compatible: Should be "zte,zx296718-pwm".
+- - reg: Physical base address and length of the controller's registers.
+- - clocks : The phandle and specifier referencing the controller's clocks.
+- - clock-names: "pclk" for PCLK, "wclk" for WCLK to the PWM controller.  The
+-   PCLK is for register access, while WCLK is the reference clock for
+-   calculating period and duty cycles.
+- - #pwm-cells: Should be 3. See pwm.yaml in this directory for a description of
+-   the cells format.
+-
+-Example:
+-
+-	pwm: pwm@1439000 {
+-		compatible = "zte,zx296718-pwm";
+-		reg = <0x1439000 0x1000>;
+-		clocks = <&lsp1crm LSP1_PWM_PCLK>,
+-			 <&lsp1crm LSP1_PWM_WCLK>;
+-		clock-names = "pclk", "wclk";
+-		#pwm-cells = <3>;
+-	};
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 0937e1c047ac..4c28d0634ce9 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -601,24 +601,4 @@ config PWM_TWL_LED
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-twl-led.
+ 
+-config PWM_VT8500
+-	tristate "vt8500 PWM support"
+-	depends on ARCH_VT8500 || COMPILE_TEST
+-	depends on HAS_IOMEM
+-	help
+-	  Generic PWM framework driver for vt8500.
+-
+-	  To compile this driver as a module, choose M here: the module
+-	  will be called pwm-vt8500.
+-
+-config PWM_ZX
+-	tristate "ZTE ZX PWM support"
+-	depends on ARCH_ZX || COMPILE_TEST
+-	depends on HAS_IOMEM
+-	help
+-	  Generic PWM framework driver for ZTE ZX family SoCs.
+-
+-	  To compile this driver as a module, choose M here: the module
+-	  will be called pwm-zx.
+-
+ endif
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index 18b89d7fd092..e90d0fd789f3 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -56,5 +56,3 @@ obj-$(CONFIG_PWM_TIECAP)	+= pwm-tiecap.o
+ obj-$(CONFIG_PWM_TIEHRPWM)	+= pwm-tiehrpwm.o
+ obj-$(CONFIG_PWM_TWL)		+= pwm-twl.o
+ obj-$(CONFIG_PWM_TWL_LED)	+= pwm-twl-led.o
+-obj-$(CONFIG_PWM_VT8500)	+= pwm-vt8500.o
+-obj-$(CONFIG_PWM_ZX)		+= pwm-zx.o
+diff --git a/drivers/pwm/pwm-zx.c b/drivers/pwm/pwm-zx.c
+deleted file mode 100644
+index 34e91195ce98..000000000000
+--- a/drivers/pwm/pwm-zx.c
++++ /dev/null
+@@ -1,278 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * Copyright (C) 2017 Sanechips Technology Co., Ltd.
+- * Copyright 2017 Linaro Ltd.
+- */
+-
+-#include <linux/clk.h>
+-#include <linux/err.h>
+-#include <linux/io.h>
+-#include <linux/kernel.h>
+-#include <linux/module.h>
+-#include <linux/platform_device.h>
+-#include <linux/pwm.h>
+-#include <linux/slab.h>
+-
+-#define ZX_PWM_MODE		0x0
+-#define ZX_PWM_CLKDIV_SHIFT	2
+-#define ZX_PWM_CLKDIV_MASK	GENMASK(11, 2)
+-#define ZX_PWM_CLKDIV(x)	(((x) << ZX_PWM_CLKDIV_SHIFT) & \
+-					 ZX_PWM_CLKDIV_MASK)
+-#define ZX_PWM_POLAR		BIT(1)
+-#define ZX_PWM_EN		BIT(0)
+-#define ZX_PWM_PERIOD		0x4
+-#define ZX_PWM_DUTY		0x8
+-
+-#define ZX_PWM_CLKDIV_MAX	1023
+-#define ZX_PWM_PERIOD_MAX	65535
+-
+-struct zx_pwm_chip {
+-	struct pwm_chip chip;
+-	struct clk *pclk;
+-	struct clk *wclk;
+-	void __iomem *base;
+-};
+-
+-static inline struct zx_pwm_chip *to_zx_pwm_chip(struct pwm_chip *chip)
+-{
+-	return container_of(chip, struct zx_pwm_chip, chip);
+-}
+-
+-static inline u32 zx_pwm_readl(struct zx_pwm_chip *zpc, unsigned int hwpwm,
+-			       unsigned int offset)
+-{
+-	return readl(zpc->base + (hwpwm + 1) * 0x10 + offset);
+-}
+-
+-static inline void zx_pwm_writel(struct zx_pwm_chip *zpc, unsigned int hwpwm,
+-				 unsigned int offset, u32 value)
+-{
+-	writel(value, zpc->base + (hwpwm + 1) * 0x10 + offset);
+-}
+-
+-static void zx_pwm_set_mask(struct zx_pwm_chip *zpc, unsigned int hwpwm,
+-			    unsigned int offset, u32 mask, u32 value)
+-{
+-	u32 data;
+-
+-	data = zx_pwm_readl(zpc, hwpwm, offset);
+-	data &= ~mask;
+-	data |= value & mask;
+-	zx_pwm_writel(zpc, hwpwm, offset, data);
+-}
+-
+-static void zx_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+-			     struct pwm_state *state)
+-{
+-	struct zx_pwm_chip *zpc = to_zx_pwm_chip(chip);
+-	unsigned long rate;
+-	unsigned int div;
+-	u32 value;
+-	u64 tmp;
+-
+-	value = zx_pwm_readl(zpc, pwm->hwpwm, ZX_PWM_MODE);
+-
+-	if (value & ZX_PWM_POLAR)
+-		state->polarity = PWM_POLARITY_NORMAL;
+-	else
+-		state->polarity = PWM_POLARITY_INVERSED;
+-
+-	if (value & ZX_PWM_EN)
+-		state->enabled = true;
+-	else
+-		state->enabled = false;
+-
+-	div = (value & ZX_PWM_CLKDIV_MASK) >> ZX_PWM_CLKDIV_SHIFT;
+-	rate = clk_get_rate(zpc->wclk);
+-
+-	tmp = zx_pwm_readl(zpc, pwm->hwpwm, ZX_PWM_PERIOD);
+-	tmp *= div * NSEC_PER_SEC;
+-	state->period = DIV_ROUND_CLOSEST_ULL(tmp, rate);
+-
+-	tmp = zx_pwm_readl(zpc, pwm->hwpwm, ZX_PWM_DUTY);
+-	tmp *= div * NSEC_PER_SEC;
+-	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, rate);
+-}
+-
+-static int zx_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+-			 unsigned int duty_ns, unsigned int period_ns)
+-{
+-	struct zx_pwm_chip *zpc = to_zx_pwm_chip(chip);
+-	unsigned int period_cycles, duty_cycles;
+-	unsigned long long c;
+-	unsigned int div = 1;
+-	unsigned long rate;
+-
+-	/* Find out the best divider */
+-	rate = clk_get_rate(zpc->wclk);
+-
+-	while (1) {
+-		c = rate / div;
+-		c = c * period_ns;
+-		do_div(c, NSEC_PER_SEC);
+-
+-		if (c < ZX_PWM_PERIOD_MAX)
+-			break;
+-
+-		div++;
+-
+-		if (div > ZX_PWM_CLKDIV_MAX)
+-			return -ERANGE;
+-	}
+-
+-	/* Calculate duty cycles */
+-	period_cycles = c;
+-	c *= duty_ns;
+-	do_div(c, period_ns);
+-	duty_cycles = c;
+-
+-	/*
+-	 * If the PWM is being enabled, we have to temporarily disable it
+-	 * before configuring the registers.
+-	 */
+-	if (pwm_is_enabled(pwm))
+-		zx_pwm_set_mask(zpc, pwm->hwpwm, ZX_PWM_MODE, ZX_PWM_EN, 0);
+-
+-	/* Set up registers */
+-	zx_pwm_set_mask(zpc, pwm->hwpwm, ZX_PWM_MODE, ZX_PWM_CLKDIV_MASK,
+-			ZX_PWM_CLKDIV(div));
+-	zx_pwm_writel(zpc, pwm->hwpwm, ZX_PWM_PERIOD, period_cycles);
+-	zx_pwm_writel(zpc, pwm->hwpwm, ZX_PWM_DUTY, duty_cycles);
+-
+-	/* Re-enable the PWM if needed */
+-	if (pwm_is_enabled(pwm))
+-		zx_pwm_set_mask(zpc, pwm->hwpwm, ZX_PWM_MODE,
+-				ZX_PWM_EN, ZX_PWM_EN);
+-
+-	return 0;
+-}
+-
+-static int zx_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+-			const struct pwm_state *state)
+-{
+-	struct zx_pwm_chip *zpc = to_zx_pwm_chip(chip);
+-	struct pwm_state cstate;
+-	int ret;
+-
+-	pwm_get_state(pwm, &cstate);
+-
+-	if (state->polarity != cstate.polarity)
+-		zx_pwm_set_mask(zpc, pwm->hwpwm, ZX_PWM_MODE, ZX_PWM_POLAR,
+-				(state->polarity == PWM_POLARITY_INVERSED) ?
+-				 0 : ZX_PWM_POLAR);
+-
+-	if (state->period != cstate.period ||
+-	    state->duty_cycle != cstate.duty_cycle) {
+-		ret = zx_pwm_config(chip, pwm, state->duty_cycle,
+-				    state->period);
+-		if (ret)
+-			return ret;
+-	}
+-
+-	if (state->enabled != cstate.enabled) {
+-		if (state->enabled) {
+-			ret = clk_prepare_enable(zpc->wclk);
+-			if (ret)
+-				return ret;
+-
+-			zx_pwm_set_mask(zpc, pwm->hwpwm, ZX_PWM_MODE,
+-					ZX_PWM_EN, ZX_PWM_EN);
+-		} else {
+-			zx_pwm_set_mask(zpc, pwm->hwpwm, ZX_PWM_MODE,
+-					ZX_PWM_EN, 0);
+-			clk_disable_unprepare(zpc->wclk);
+-		}
+-	}
+-
+-	return 0;
+-}
+-
+-static const struct pwm_ops zx_pwm_ops = {
+-	.apply = zx_pwm_apply,
+-	.get_state = zx_pwm_get_state,
+-	.owner = THIS_MODULE,
+-};
+-
+-static int zx_pwm_probe(struct platform_device *pdev)
+-{
+-	struct zx_pwm_chip *zpc;
+-	unsigned int i;
+-	int ret;
+-
+-	zpc = devm_kzalloc(&pdev->dev, sizeof(*zpc), GFP_KERNEL);
+-	if (!zpc)
+-		return -ENOMEM;
+-
+-	zpc->base = devm_platform_ioremap_resource(pdev, 0);
+-	if (IS_ERR(zpc->base))
+-		return PTR_ERR(zpc->base);
+-
+-	zpc->pclk = devm_clk_get(&pdev->dev, "pclk");
+-	if (IS_ERR(zpc->pclk))
+-		return PTR_ERR(zpc->pclk);
+-
+-	zpc->wclk = devm_clk_get(&pdev->dev, "wclk");
+-	if (IS_ERR(zpc->wclk))
+-		return PTR_ERR(zpc->wclk);
+-
+-	ret = clk_prepare_enable(zpc->pclk);
+-	if (ret)
+-		return ret;
+-
+-	zpc->chip.dev = &pdev->dev;
+-	zpc->chip.ops = &zx_pwm_ops;
+-	zpc->chip.base = -1;
+-	zpc->chip.npwm = 4;
+-	zpc->chip.of_xlate = of_pwm_xlate_with_flags;
+-	zpc->chip.of_pwm_n_cells = 3;
+-
+-	/*
+-	 * PWM devices may be enabled by firmware, and let's disable all of
+-	 * them initially to save power.
+-	 */
+-	for (i = 0; i < zpc->chip.npwm; i++)
+-		zx_pwm_set_mask(zpc, i, ZX_PWM_MODE, ZX_PWM_EN, 0);
+-
+-	ret = pwmchip_add(&zpc->chip);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "failed to add PWM chip: %d\n", ret);
+-		clk_disable_unprepare(zpc->pclk);
+-		return ret;
+-	}
+-
+-	platform_set_drvdata(pdev, zpc);
+-
+-	return 0;
+-}
+-
+-static int zx_pwm_remove(struct platform_device *pdev)
+-{
+-	struct zx_pwm_chip *zpc = platform_get_drvdata(pdev);
+-	int ret;
+-
+-	ret = pwmchip_remove(&zpc->chip);
+-	clk_disable_unprepare(zpc->pclk);
+-
+-	return ret;
+-}
+-
+-static const struct of_device_id zx_pwm_dt_ids[] = {
+-	{ .compatible = "zte,zx296718-pwm", },
+-	{ /* sentinel */ }
+-};
+-MODULE_DEVICE_TABLE(of, zx_pwm_dt_ids);
+-
+-static struct platform_driver zx_pwm_driver = {
+-	.driver = {
+-		.name = "zx-pwm",
+-		.of_match_table = zx_pwm_dt_ids,
+-	},
+-	.probe = zx_pwm_probe,
+-	.remove = zx_pwm_remove,
+-};
+-module_platform_driver(zx_pwm_driver);
+-
+-MODULE_ALIAS("platform:zx-pwm");
+-MODULE_AUTHOR("Shawn Guo <shawn.guo@linaro.org>");
+-MODULE_DESCRIPTION("ZTE ZX PWM Driver");
+-MODULE_LICENSE("GPL v2");
+-- 
+2.29.2
 
-s/get_sate/get_state/
-
-> Rounded up division result in .get_state can't be zero, since the
-> dividend is now larger than 0. Remove check for this case.
->=20
-> Reported-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> Analyzed-by: Russell King <linux@armlinux.org.uk>
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> ---
->  drivers/gpio/gpio-mvebu.c | 38 ++++++++++++++++++++++----------------
->  1 file changed, 22 insertions(+), 16 deletions(-)
->=20
-> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> index 6b017854ce61..37f5bd65062f 100644
-> --- a/drivers/gpio/gpio-mvebu.c
-> +++ b/drivers/gpio/gpio-mvebu.c
-> @@ -667,22 +667,20 @@ static void mvebu_pwm_get_state(struct pwm_chip *ch=
-ip,
->  	spin_lock_irqsave(&mvpwm->lock, flags);
-> =20
->  	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_on_duration(mvpwm), &u);
-> -	val =3D (unsigned long long) u * NSEC_PER_SEC;
-> -	val =3D DIV_ROUND_UP_ULL(val, mvpwm->clk_rate);
-> -	if (val)
-> -		state->duty_cycle =3D val;
-> +	/* Hardware treats zero as 2^32. See mvebu_pwm_apply(). */
-> +	if (u > 0)
-> +		val =3D (unsigned long long) u * NSEC_PER_SEC;
->  	else
-> -		state->duty_cycle =3D 1;
-> +		val =3D ((unsigned long long) UINT_MAX+1) * NSEC_PER_SEC;
-> +	state->duty_cycle =3D DIV_ROUND_UP_ULL(val, mvpwm->clk_rate);
-
-Instead of
-
-	if (u > 0)
-		val =3D (unsigned long long) u * NSEC_PER_SEC;
-	else
-		val =3D ((unsigned long long) UINT_MAX+1) * NSEC_PER_SEC;
-
-	state->duty_cycle =3D DIV_ROUND_UP_ULL(val, mvpwm->clk_rate);
-
-you could also write
-
-	if (u > 0)
-		val =3D u;
-	else
-		val =3D UINT_MAX + 1;
-
-	state->duty_cycle =3D DIV_ROUND_UP_ULL(val * NSEC_PER_SEC, mvpwm->clk_rate=
-);
-
-which is a bit lighter (IMHO).
-
-> =20
-> -	val =3D (unsigned long long) u; /* on duration */
->  	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm), &u);
-> -	val +=3D (unsigned long long) u; /* period =3D on + off duration */
-> -	val *=3D NSEC_PER_SEC;
-> -	val =3D DIV_ROUND_UP_ULL(val, mvpwm->clk_rate);
-> -	if (val)
-> -		state->period =3D val;
-> +	/* period =3D on + off duration */
-> +	if (u > 0)
-> +		val +=3D (unsigned long long) u * NSEC_PER_SEC;
->  	else
-> -		state->period =3D 1;
-> +		val +=3D ((unsigned long long) UINT_MAX+1) * NSEC_PER_SEC;
-> +	state->period =3D DIV_ROUND_UP_ULL(val, mvpwm->clk_rate);
-
-> =20
->  	regmap_read(mvchip->regs, GPIO_BLINK_EN_OFF + mvchip->offset, &u);
->  	if (u)
-> @@ -704,9 +702,15 @@ static int mvebu_pwm_apply(struct pwm_chip *chip, st=
-ruct pwm_device *pwm,
-> =20
->  	val =3D (unsigned long long) mvpwm->clk_rate * state->duty_cycle;
->  	do_div(val, NSEC_PER_SEC);
-> -	if (val > UINT_MAX)
-> +	if (val > (unsigned long long) UINT_MAX+1)
-
-Please add whitespace around the +
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---jsctpgqt2dlm4ahi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmAHNWoACgkQwfwUeK3K
-7AnXjgf9EwtZ55HS0s52jx06kVWGpriRFGau/ipPimx3D5uMO1gXKxlWiqRpA2xp
-yn3LutJ5nPW3E1zJZ243BcswZe3EEuyl3THD7nAvTlK/fwaBUmd/Tc0lPdTBYKAf
-qZxb2IiX++LA4ATTLLWrxXeW52dRR8lD3CteidMra1tIUwXLKH/KDaHSwH7PCxzQ
-Dgcu6u5IUMH0SoWHpqPagKLKSMgCaoY4M7C32AxQ1xMygFyVFCezQ0/r2/xWocF+
-fjvCVut44wwSYH3uvYLJ4Es2ko9dp0GWFxbT/n3RFkDh739tMNYicYI29Fp0yLwm
-fJIl6K4OFSLqnj4IckOr4vIJEq2Imw==
-=xEsd
------END PGP SIGNATURE-----
-
---jsctpgqt2dlm4ahi--
