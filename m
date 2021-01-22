@@ -2,131 +2,116 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6282E2FD75D
-	for <lists+linux-pwm@lfdr.de>; Wed, 20 Jan 2021 18:43:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6174300002
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Jan 2021 11:19:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbhATRm3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 20 Jan 2021 12:42:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37320 "EHLO
+        id S1727774AbhAVKRs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 22 Jan 2021 05:17:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732755AbhATRiq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 20 Jan 2021 12:38:46 -0500
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B402AC061575;
-        Wed, 20 Jan 2021 09:38:00 -0800 (PST)
-Received: by mail-qk1-x731.google.com with SMTP id 19so26099320qkm.8;
-        Wed, 20 Jan 2021 09:38:00 -0800 (PST)
+        with ESMTP id S1727262AbhAVKQX (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Jan 2021 05:16:23 -0500
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36965C061786
+        for <linux-pwm@vger.kernel.org>; Fri, 22 Jan 2021 02:15:23 -0800 (PST)
+Received: by mail-lf1-x12f.google.com with SMTP id m22so6772855lfg.5
+        for <linux-pwm@vger.kernel.org>; Fri, 22 Jan 2021 02:15:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fXzwMVogqDvK2f8fn8CTgEE+JZ+HrCHP+qXvVICM9to=;
-        b=de2S+XDN4SetD2uJ6R5xNZS+NHJ3PlRiwed1XKZAtFi+eD36pCrXG54ylI7Cu4D2Mq
-         DNmrJxJCwrZZ87I4DtgSJUdaEXKiXvlzvfMOnDcGsVDtnKcYiiesOM7kvWMk5RmIEIcn
-         JrhacS5eJ12QDZVf+PzNCOJbXnp5kPjCcCa5PcovIOm+DMS6iUqjB71+XTGlKaPD3r+k
-         mL2V7gpMekklrA7UQiwr83jPUJy3fAa7MCJDUJYGrUt+qGIenBxll6Z7i7Sr/pEMltZ5
-         Pc0wl8mf6B6yw0gOiQxK/WEEA1pAY6Q3cYepuu0P716181T444uz0F8QctrrMmzwA4Dt
-         rLdg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=JeOk+55hs/OjAgPyY2pb0nUEwkpKQZfK7wFamZWRbYs=;
+        b=ZutjUI2lm71tLSgZAaQNa0u/+Urgw/34kwRHkYdDkn5FxIxtrRCeAOTHzgeWePnwYs
+         kUSrCiLPSzdFwOlKTwcAzg09jPp+C0rMFFdw0krhbTLHYaJ8cPBw9TSgpEesedTLXDo0
+         jGY6dXbt8fMo6RPM/UWHbEthK2UMyq/nU6RbWeAYDB8/Q5q1Z4hwltIvJZOSSmzRu9Lz
+         ypDtXM6pz5ZAKV6IuJYFAzfOZL/4u1harAEtafCjedsMab9QVBiHaon68kJ9HC3Eib2j
+         o/vFbypqY3CqiRpX+P70hkrAVAX4Z1qoac2LNHlnACwRBydFFKCkAaIDaCmPHZ1roA9Y
+         BJgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fXzwMVogqDvK2f8fn8CTgEE+JZ+HrCHP+qXvVICM9to=;
-        b=nbYcVWNreRWqOpud49fFTeBzQkdHJ8PWnFLI8w8OJDrS5lpbEACUX41R0hKoJIGAJB
-         gJEC13Ec1Y3IzN/U0mepkhcPULCKFYUXzgoPOrJVlQHuaSf8jZsgHQNgDC1yKbw/lsvg
-         5TfyI7kxexQzMZn62YZlIcenb4cwbAnVupr8a5qbGnAc1k5oUEaoW19POnnQ7tzPoq18
-         v+3554MAYFQqxFGQly6cDHjOk8RnYgiEkUjdChuxQfil1uowCq+MQUf1B1YJI9ssDzLU
-         3BHnNLG4v4jLbK2gYWakpctALJ9/3hx5y7Op01x/ose2MJ6J2ZWuhKhMB+LiHL62zQw1
-         EsFw==
-X-Gm-Message-State: AOAM533ylTIhlTsDcEv0A1ZC4g2oPu0B98twg+3TmFIhWyKFpZK61Q7s
-        /cQGcwVOXg32nkxSSRloNeI=
-X-Google-Smtp-Source: ABdhPJzlm+CfygWXDAnwQfxgsHclgXc/ogYnn4aSL59U+RNQqGJUw3aMWdOu3o0hwSsLIY0K5aFiWw==
-X-Received: by 2002:a37:a950:: with SMTP id s77mr10546135qke.122.1611164280028;
-        Wed, 20 Jan 2021 09:38:00 -0800 (PST)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id k23sm1582944qtp.61.2021.01.20.09.37.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Jan 2021 09:37:58 -0800 (PST)
-Date:   Wed, 20 Jan 2021 18:37:56 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v8 4/7] pwm: ntxec: Add driver for PWM function in
- Netronix EC
-Message-ID: <YAhqdGMd/2Iviy2g@ulmo>
-References: <20210116194826.3866540-1-j.neuschaefer@gmx.net>
- <20210116194826.3866540-5-j.neuschaefer@gmx.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=JeOk+55hs/OjAgPyY2pb0nUEwkpKQZfK7wFamZWRbYs=;
+        b=Cc+3l2dTO0Vql8y32w5cj3TUdsVRIZOWXfprOQPymhtOiCOckHBHLUMaP1NLABxNPe
+         dDvAXERyjpw2bfpiyZdoOfawTvZ866AlsAdHHC1TR7XlnygBjQJIywrZz43nOaCc/lJs
+         1jyVkZUoQDiEKFp43BDAfIDklemoi/uQ9R9uEjX/E0J98nnuJPkDkZ/bt68d9vq3OPVv
+         CZVG8IVAiQR9ZxLSng/njaiSz91EYZksPo9LVpzOXKYXjFNz6RhB1+Bz8VHoQk2QseHF
+         gfyDEAl/j1iGCXbzUuu5YO3AclzTSVr1Evx8mfm9JW1la167aSGJtG+D3sZowZgv63Xc
+         bbbA==
+X-Gm-Message-State: AOAM5308+EERZz5aIr4HGB9gItyhauW8dtrv7O2ETZQNC3BI8iJ4vyx4
+        ygUhrH5JnSafZ5DE0oa0R/l6N0LaOIy1s4n2yu0VBQ==
+X-Google-Smtp-Source: ABdhPJxxdubXPUSxQzdq6d+z5fTzKW36/7vCD1kavkda0eM8/Ly6Qv8oTZwe5Q/8DW3CLRR1CypzljgEijF8mX6PknA=
+X-Received: by 2002:a05:6512:3238:: with SMTP id f24mr1964113lfe.29.1611310521729;
+ Fri, 22 Jan 2021 02:15:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lBNzTqKU9kiRT1e4"
-Content-Disposition: inline
-In-Reply-To: <20210116194826.3866540-5-j.neuschaefer@gmx.net>
-User-Agent: Mutt/2.0.4 (26f41dd1) (2020-12-30)
+References: <20201209072842.amvpwe37zvfmve3g@pengutronix.de>
+ <20201211170432.6113-1-nicola.dilieto@gmail.com> <20201211170432.6113-2-nicola.dilieto@gmail.com>
+ <20210117130434.663qpp6noujptdyt@pengutronix.de>
+In-Reply-To: <20210117130434.663qpp6noujptdyt@pengutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 22 Jan 2021 11:15:10 +0100
+Message-ID: <CACRpkdawMpuznr-XC2uvZm8PvOj-jObpnbz6iptV-Q4OFxjesw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pwm: pwm-gpio: New driver
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Nicola Di Lieto <nicola.dilieto@gmail.com>,
+        linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Nicola, Uwe,
 
---lBNzTqKU9kiRT1e4
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+thanks for looping me in on this very interesting driver!
 
-On Sat, Jan 16, 2021 at 08:48:23PM +0100, Jonathan Neusch=C3=A4fer wrote:
-> The Netronix EC provides a PWM output which is used for the backlight
-> on some ebook readers. This patches adds a driver for the PWM output.
->=20
-> The .get_state callback is not implemented, because the PWM state can't
-> be read back from the hardware.
->=20
-> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> Reviewed-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+This can be really helpful, I already see that it would be possible to
+replace the hopeless idiomatic driver for the NSLU2 ixp4xx
+beeper speaker with this driver.
 
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
+On Sun, Jan 17, 2021 at 2:04 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
 
---lBNzTqKU9kiRT1e4
-Content-Type: application/pgp-signature; name="signature.asc"
+> > +static void pwm_gpio_work(struct work_struct *work)
+> > +{
+> > +     struct pwm_gpio *pwm_gpio =3D container_of(work, struct pwm_gpio,=
+ work);
+> > +
+> > +     gpiod_set_value_cansleep(pwm_gpio->desc, pwm_gpio->output);
+>
+> Usually you want to check the return value of gpiod_set_value. @Linus +
+> Bartosz: What do you think, does it need checking for an error here?
 
------BEGIN PGP SIGNATURE-----
+We have traditionally been quite relaxed on that. But since it is
+the cansleep variant, meaning this GPIO could be on a GPIO
+expander on I2C or SPI, it would be more important.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmAIanQACgkQ3SOs138+
-s6EFrQ/9EEAHn2rbJKEm/DmKgeQNHRPrNspWJNLAd53/w8b0Eb4c7ujIzIEsgRNk
-86gHze1V2P1dKsLKV+ySTJI5TcLmF6GW6I0IVf1uhivnEZ9PtHxniB3BORCZQZvF
-Jk+RaVLggKutE8CJiiCYJAliVJ2/5jLGeTTsLTs14iKZ/a6x17Aw+M0Qvol9B33m
-CfebZDSZzGM2/MbjtSNDfvXW8cYj9rf0bpMO8U8QO8gDmd4zKGsG53RFEmnfrtHa
-ELKkOlUxesIery21g4utWAIdr9ElWV/rs55UuTdxn5PuaLkxQXqTiE04ZowMLnJ0
-8+85TgNAYDR+8gJ1kTZRBxAfV17MIN0lRh+Mduzuius7DEzynTvSJ146xr6rO23s
-lLB84rDocawfBd0kgjYY97axNfHPFiXo98Y+D3e7REdmg4XvV2Q/gkgOzlfQ5kUu
-fd+a13gTJdlJuDQZfbylK7BKB8EQ5FMBCXp6LBstmkfHFVFkzIwRzBETQNC6PPXS
-iXvVMWP7BiM8YXDvKK9msIPPUCHCC8kTDj6X0ugayoz+wezYtS+qqpEkv4UO9VoQ
-jtpjl7aNGLZlymFv0g/R9J1Bsx0fSpKqG6kLUmTyz0b+Y49qkwEYvoye3kqqGvRp
-pgoXtrlwLuotaKafrrzcigIEXmOZGw+jmgVcf2XrKscB8jyXqto=
-=zLz8
------END PGP SIGNATURE-----
+However: in this specific case for PWM I wonder if we should
+stick with gpio_set_value() without _cansleep, and then we can
+definitely skip the error check.
 
---lBNzTqKU9kiRT1e4--
+That means GPIO PWM can happen on on-chip GPIOs that
+are just a register write. Certainly no need to check the return
+value of these. Also we know it will satisfy timing.
+
+If we allow GPIO PWM on slow buses and expanders that can
+sleep I do not think the PWM will be very good or reliable.
+
+For example on an I2C expander, with the bus speed of
+max 400 kHz, what kind of PWM can we create on that?
+Certainly now above 200 kHz (Nyquist frequency) and
+probably less. And we have to way to actually check the
+frequency of the underlying bus, so I am a bit skeptic
+here.
+
+Would gpio_set_value() work for now or do we need to
+support expanders and _cansleep?
+
+Yours,
+Linus Walleij
