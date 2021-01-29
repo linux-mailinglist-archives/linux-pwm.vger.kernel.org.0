@@ -2,101 +2,78 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5356308A49
-	for <lists+linux-pwm@lfdr.de>; Fri, 29 Jan 2021 17:36:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CADC0308AAA
+	for <lists+linux-pwm@lfdr.de>; Fri, 29 Jan 2021 17:54:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231643AbhA2Qdy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 29 Jan 2021 11:33:54 -0500
-Received: from mail.pqgruber.com ([52.59.78.55]:55744 "EHLO mail.pqgruber.com"
+        id S231156AbhA2Qx1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 29 Jan 2021 11:53:27 -0500
+Received: from mleia.com ([178.79.152.223]:51854 "EHLO mail.mleia.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231452AbhA2Qcb (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 29 Jan 2021 11:32:31 -0500
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id B31B0C6B26F;
-        Fri, 29 Jan 2021 17:31:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1611937908;
-        bh=DyVjiqkvwtlqI4o3EcQtV2h3pSbBneM1WDytITBk7RI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QvmqkrRHoO8OTWpUz6Mk8rhaDh2GYebv8JjCP4MzmIpHbNvim7sdHMXdvdxdk1WV6
-         wh8DkbdtjnGeJljhSaUYGVmhqJNmnOmqZQycOFhkEvCq+/twNMF7ojFC9pl5EukbN9
-         gOerXCtBQV58ahmyweGooFaqHbEaj7t/MRYb2SFw=
-Date:   Fri, 29 Jan 2021 17:31:47 +0100
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        id S231582AbhA2Qwy (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 29 Jan 2021 11:52:54 -0500
+Received: from mail.mleia.com (localhost [127.0.0.1])
+        by mail.mleia.com (Postfix) with ESMTP id 40D8742F998;
+        Fri, 29 Jan 2021 16:51:56 +0000 (UTC)
+Subject: Re: [PATCH] pwm: fix semicolon.cocci warnings
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v5 2/7] pwm: pca9685: Support hardware readout
-Message-ID: <YBQ4c2cYYPDMjkeH@workstation.tuxnet>
-References: <20201216125320.5277-1-clemens.gruber@pqgruber.com>
- <20201216125320.5277-2-clemens.gruber@pqgruber.com>
- <CAGngYiWkKZGkQ4TTTy8bQYvnGBK45V0A0JCe_+M5V+vuVU+zkQ@mail.gmail.com>
- <X9uYqGboZg5DuEtf@workstation.tuxnet>
- <20210111203532.m3yvq6e5bcpjs7mc@pengutronix.de>
- <CAGngYiW=KhCOZX3tPMFykXzpWLpj3qusN2OXVPSfHLRcyts+wA@mail.gmail.com>
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <202101282111.dfwxyPwI-lkp@intel.com>
+ <20210128134537.GA54687@068c7b848bbb>
+ <20210128205716.j2afd32lcxh2l323@pengutronix.de>
+From:   Vladimir Zapolskiy <vz@mleia.com>
+Message-ID: <c2152a64-d4ae-f18d-9af7-b80b12474b00@mleia.com>
+Date:   Fri, 29 Jan 2021 18:51:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20210128205716.j2afd32lcxh2l323@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGngYiW=KhCOZX3tPMFykXzpWLpj3qusN2OXVPSfHLRcyts+wA@mail.gmail.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
+X-CRM114-CacheID: sfid-20210129_165156_288101_1C25B468 
+X-CRM114-Status: GOOD (  12.07  )
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Sven,
-
-On Fri, Jan 29, 2021 at 08:42:13AM -0500, Sven Van Asbroeck wrote:
-> On Mon, Jan 11, 2021 at 3:35 PM Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> >
-> > My position here is: A consumer should disable a PWM before calling
-> > pwm_put. The driver should however not enforce this and so should not
-> > modify the hardware state in .free().
-> >
-> > Also .probe should not change the PWM configuration.
+On 1/28/21 10:57 PM, Uwe Kleine-KÃ¶nig wrote:
+> Hello,
 > 
-> I agree that this is the most user-friendly behaviour.
+> On Thu, Jan 28, 2021 at 09:45:37PM +0800, kernel test robot wrote:
+>> From: kernel test robot <lkp@intel.com>
+>>
+>> drivers/pwm/pwm-lpc18xx-sct.c:292:2-3: Unneeded semicolon
+>>
+>>
+>>   Remove unneeded semicolon.
+>>
+>> Generated by: scripts/coccinelle/misc/semicolon.cocci
+>>
+>> Fixes: e96c0ff4b1e0 ("pwm: Enable compile testing for some of drivers")
 > 
-> The problem however with the pca9685 is that it has many degrees of
-> freedom: there are many possible register values which produce the same
-> physical chip outputs.
+> This looks wrong. e96c0ff4b1e0 only touches drivers/pwm/Kconfig.
 > 
-> This could lead to a situation where, if .probe() does not reset the register
-> values, subsequent writes may lead to different outputs than expected.
-> 
-> One possible solution is to write .get_state() so that it always reads the
-> correct state, even if "unconventional" register settings are present, i.e.
-> those written by an outside entity, e.g. a bootloader. Then write that
-> state back using driver conventions.
-> 
-> This may be trickier than it sounds - after all we've learnt that the pca9685
-> looks simple on the surface, but is actually quite challenging to get right.
-> 
-> Clemens, Uwe, what do you think?
+> The ; was introduced by commit 841e6f90bb78 ("pwm: NXP LPC18xx PWM/SCT
+> driver")
 
-Ok, so you suggest we extend our get_state logic to deal with cases
-like the following:
-If neither full OFF nor full ON is set && ON == OFF, we should probably
-set the full OFF bit to disable the PWM and log a warning message?
-(e.g. "invalid register setting detected: pwm disabled" ?)
-If the ON registers are set and the nxp,staggered-outputs property is
-not, I'd calculate (off - on) & 4095, set the OFF register to that value
-and clear the ON register.
+Right, thank you for the correction, Uwe.
 
-And then call our get_state in .probe, followed by a write of the
-resulting / fixed-up state?
+Since the patch has been composed by the robot, it has to be fixed
+in the first place.
 
-This would definitely solve the problem of invalid/unconventional values
-set by the bootloader and avoid inconsistencies.
-Sounds good to me!
+And regarding this particular change and in general fixes to this type
+of issues detected by the robot, I don't think that it earns a Fixes tag.
 
-If Thierry and Uwe have no objections, I can send out a new round of
-patches in the upcoming weeks.
+>> CC: Krzysztof Kozlowski <krzk@kernel.org>
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Signed-off-by: kernel test robot <lkp@intel.com>
 
-My current goal is to get the changes into 5.13.
-
-Thanks,
-Clemens
+--
+Best wishes,
+Vladimir
