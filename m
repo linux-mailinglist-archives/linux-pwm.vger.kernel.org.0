@@ -2,124 +2,101 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28589308009
-	for <lists+linux-pwm@lfdr.de>; Thu, 28 Jan 2021 21:59:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E5356308A49
+	for <lists+linux-pwm@lfdr.de>; Fri, 29 Jan 2021 17:36:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229802AbhA1U6W (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 28 Jan 2021 15:58:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231196AbhA1U6K (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 28 Jan 2021 15:58:10 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02670C06174A
-        for <linux-pwm@vger.kernel.org>; Thu, 28 Jan 2021 12:57:30 -0800 (PST)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1l5ELu-0001TJ-Ct; Thu, 28 Jan 2021 21:57:18 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1l5ELs-0002Ax-DZ; Thu, 28 Jan 2021 21:57:16 +0100
-Date:   Thu, 28 Jan 2021 21:57:16 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org,
+        id S231643AbhA2Qdy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 29 Jan 2021 11:33:54 -0500
+Received: from mail.pqgruber.com ([52.59.78.55]:55744 "EHLO mail.pqgruber.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231452AbhA2Qcb (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 29 Jan 2021 11:32:31 -0500
+Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
+        by mail.pqgruber.com (Postfix) with ESMTPSA id B31B0C6B26F;
+        Fri, 29 Jan 2021 17:31:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
+        s=mail; t=1611937908;
+        bh=DyVjiqkvwtlqI4o3EcQtV2h3pSbBneM1WDytITBk7RI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QvmqkrRHoO8OTWpUz6Mk8rhaDh2GYebv8JjCP4MzmIpHbNvim7sdHMXdvdxdk1WV6
+         wh8DkbdtjnGeJljhSaUYGVmhqJNmnOmqZQycOFhkEvCq+/twNMF7ojFC9pl5EukbN9
+         gOerXCtBQV58ahmyweGooFaqHbEaj7t/MRYb2SFw=
+Date:   Fri, 29 Jan 2021 17:31:47 +0100
+From:   Clemens Gruber <clemens.gruber@pqgruber.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Vladimir Zapolskiy <vz@mleia.com>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] pwm: fix semicolon.cocci warnings
-Message-ID: <20210128205716.j2afd32lcxh2l323@pengutronix.de>
-References: <202101282111.dfwxyPwI-lkp@intel.com>
- <20210128134537.GA54687@068c7b848bbb>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v5 2/7] pwm: pca9685: Support hardware readout
+Message-ID: <YBQ4c2cYYPDMjkeH@workstation.tuxnet>
+References: <20201216125320.5277-1-clemens.gruber@pqgruber.com>
+ <20201216125320.5277-2-clemens.gruber@pqgruber.com>
+ <CAGngYiWkKZGkQ4TTTy8bQYvnGBK45V0A0JCe_+M5V+vuVU+zkQ@mail.gmail.com>
+ <X9uYqGboZg5DuEtf@workstation.tuxnet>
+ <20210111203532.m3yvq6e5bcpjs7mc@pengutronix.de>
+ <CAGngYiW=KhCOZX3tPMFykXzpWLpj3qusN2OXVPSfHLRcyts+wA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="b6z4cigldfqahqsy"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20210128134537.GA54687@068c7b848bbb>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGngYiW=KhCOZX3tPMFykXzpWLpj3qusN2OXVPSfHLRcyts+wA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Sven,
 
---b6z4cigldfqahqsy
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jan 29, 2021 at 08:42:13AM -0500, Sven Van Asbroeck wrote:
+> On Mon, Jan 11, 2021 at 3:35 PM Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> >
+> > My position here is: A consumer should disable a PWM before calling
+> > pwm_put. The driver should however not enforce this and so should not
+> > modify the hardware state in .free().
+> >
+> > Also .probe should not change the PWM configuration.
+> 
+> I agree that this is the most user-friendly behaviour.
+> 
+> The problem however with the pca9685 is that it has many degrees of
+> freedom: there are many possible register values which produce the same
+> physical chip outputs.
+> 
+> This could lead to a situation where, if .probe() does not reset the register
+> values, subsequent writes may lead to different outputs than expected.
+> 
+> One possible solution is to write .get_state() so that it always reads the
+> correct state, even if "unconventional" register settings are present, i.e.
+> those written by an outside entity, e.g. a bootloader. Then write that
+> state back using driver conventions.
+> 
+> This may be trickier than it sounds - after all we've learnt that the pca9685
+> looks simple on the surface, but is actually quite challenging to get right.
+> 
+> Clemens, Uwe, what do you think?
 
-Hello,
+Ok, so you suggest we extend our get_state logic to deal with cases
+like the following:
+If neither full OFF nor full ON is set && ON == OFF, we should probably
+set the full OFF bit to disable the PWM and log a warning message?
+(e.g. "invalid register setting detected: pwm disabled" ?)
+If the ON registers are set and the nxp,staggered-outputs property is
+not, I'd calculate (off - on) & 4095, set the OFF register to that value
+and clear the ON register.
 
-On Thu, Jan 28, 2021 at 09:45:37PM +0800, kernel test robot wrote:
-> From: kernel test robot <lkp@intel.com>
->=20
-> drivers/pwm/pwm-lpc18xx-sct.c:292:2-3: Unneeded semicolon
->=20
->=20
->  Remove unneeded semicolon.
->=20
-> Generated by: scripts/coccinelle/misc/semicolon.cocci
->=20
-> Fixes: e96c0ff4b1e0 ("pwm: Enable compile testing for some of drivers")
+And then call our get_state in .probe, followed by a write of the
+resulting / fixed-up state?
 
-This looks wrong. e96c0ff4b1e0 only touches drivers/pwm/Kconfig.
+This would definitely solve the problem of invalid/unconventional values
+set by the bootloader and avoid inconsistencies.
+Sounds good to me!
 
-The ; was introduced by commit 841e6f90bb78 ("pwm: NXP LPC18xx PWM/SCT
-driver")
+If Thierry and Uwe have no objections, I can send out a new round of
+patches in the upcoming weeks.
 
-Best regards
-Uwe
+My current goal is to get the changes into 5.13.
 
-> CC: Krzysztof Kozlowski <krzk@kernel.org>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: kernel test robot <lkp@intel.com>
-> ---
->=20
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t master
-> head:   76c057c84d286140c6c416c3b4ba832cd1d8984e
-> commit: e96c0ff4b1e013a4e9174344b0fcda0d566d3689 pwm: Enable compile test=
-ing for some of drivers
->=20
->  pwm-lpc18xx-sct.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> --- a/drivers/pwm/pwm-lpc18xx-sct.c
-> +++ b/drivers/pwm/pwm-lpc18xx-sct.c
-> @@ -289,7 +289,7 @@ static int lpc18xx_pwm_request(struct pw
->  		dev_err(lpc18xx_pwm->dev,
->  			"maximum number of simultaneous channels reached\n");
->  		return -EBUSY;
-> -	};
-> +	}
-> =20
->  	set_bit(event, &lpc18xx_pwm->event_map);
->  	lpc18xx_data->duty_event =3D event;
->=20
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---b6z4cigldfqahqsy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmATJSkACgkQwfwUeK3K
-7Al3Hwf+P8VVmOOf5rWtn9MKhYar3Xb7CAMRTa4T77hrdrcAjH7rCxafa4+JooXE
-kgH5pitjPAt41o2YkYmngoMuChVXRswnmRSTURKdSloHh6oqLl27hVhU1PIujPpD
-1nax9rMy/ltwYI0/VFIrDI6oFqMSA6fHmneTzws4QUlg/ANaUhRnnYyRCt89xO0W
-GL6Y0O80U06pjGh4s/PDIQOdiYLARuMBGScvB3xh+VuPWDEqU7BfpSHue7wbWSDs
-rumxGbO+ixaREEQkOR2el4KpQhasENxJ3rFO9jDvdd92Bhx+LFNZoi42RrQIli6m
-RTRr+RQzzis8PBVJKduRK0nUliYbng==
-=Y7CL
------END PGP SIGNATURE-----
-
---b6z4cigldfqahqsy--
+Thanks,
+Clemens
