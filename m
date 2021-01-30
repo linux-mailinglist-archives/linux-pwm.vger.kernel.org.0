@@ -2,97 +2,61 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 32253308FF2
-	for <lists+linux-pwm@lfdr.de>; Fri, 29 Jan 2021 23:23:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 866C23095D0
+	for <lists+linux-pwm@lfdr.de>; Sat, 30 Jan 2021 15:16:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233546AbhA2WRq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 29 Jan 2021 17:17:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233544AbhA2WRo (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 29 Jan 2021 17:17:44 -0500
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 285DEC061574;
-        Fri, 29 Jan 2021 14:17:04 -0800 (PST)
-Received: by mail-wr1-x42d.google.com with SMTP id g10so10317786wrx.1;
-        Fri, 29 Jan 2021 14:17:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OjbXD/Cdr+QHwG9B3QZlpTa2KkeVmfJ9I1pyRoZjjEE=;
-        b=G6xEChS9glp+w7ZjmNJFRVqi0IbvGoqbO9uwGNW2N+Z6mfQI0rjyLjUM1jr+wKlEEI
-         JViX23Kpy2uYvEd/rFPRBq16G08SWFVWwRH7NCtCqzvMxYCxRIBrr+t6WjgNPmHh62Qo
-         toVgVPZcSIpz6OdmygldwyXtSt1DWRxzO3VEm60b2dxoptuf3uQQPMiKNNBRZS3SX2wi
-         hOFBjZGs5HVSRBHn8ZEiKmKCU4+7QEdQqzBSEIpwrkpvDczulSfqSGBxy8Mzgt/TYTZ7
-         loXOMpna3qJT79tlXSrYEmj7/SnkKjG1doBThbAbClf88l9E9GycNiHVW2IJL/OXkeai
-         YW5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OjbXD/Cdr+QHwG9B3QZlpTa2KkeVmfJ9I1pyRoZjjEE=;
-        b=l9gzu0/Ts0u/ni26jANdiudYBe6mn93DWNawVzoOPCZrnP34BG+bdH5Co6xZUh9DoR
-         VsB8+vUH+6Tw4o822hFKDdf3oGcCDuWWUG/bwMYa4cn+UeKksRQmdWLbtUiu3dlOoAn1
-         EWE7iC5eWTzEhpdpJA3MJoKLDIW0FEFNs163ZzGCfsn799oDO3bFP11+Q2LGQClfUw4q
-         d+QzUpjG90t+gqjXy30zzdTgxmvczqLMmb1D3CK8MR+UPdeKGIvdpshhM/wdvwek8TuM
-         SLJHh9QDa/7ougH0tAkVECcqFVE+So+Q0gwJKCOjKS+GPeQ5RZdbi4J4re2GVnukXy3y
-         BlhQ==
-X-Gm-Message-State: AOAM533K6U2RPXyGuGggE5xu6xJWgzihx/glpWvHjrEon1eEbcH0vkIp
-        81XOBmw++y6r9yi3BZSfaFndmilM2opn/9popr3Kva9AWMsJMw==
-X-Google-Smtp-Source: ABdhPJy/ExFIu4LtSXprv+LcxqV9hJewLNuPkKO0igU+eyCBQ2E3uZa3XkXDKC71UgtGeeXPikNr1ipmbCbWBJ//kwo=
-X-Received: by 2002:a5d:60c6:: with SMTP id x6mr6653657wrt.85.1611958622829;
- Fri, 29 Jan 2021 14:17:02 -0800 (PST)
+        id S230518AbhA3OOS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 30 Jan 2021 09:14:18 -0500
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:63566 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S231783AbhA3ON5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 30 Jan 2021 09:13:57 -0500
+X-UUID: 75891c7ccce04862ba908eefaa5ba124-20210130
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=0EHa8G4GCy+novOwU6OJI2yK0pPjlAP1l0rYdaET5P8=;
+        b=nDuaPGHO4GWeEuj2PdzZBdm7FNHBK3giCGoW3DGn6O5Kq0HicZ71sUMKw/P8BTPjotsM5ZAUAzHi/7VtQLqOggidoC3RdGMHDB0MlR6qojXeHbCgI8hVZ1tAL4221JTls8GMkv76HzdskX3YxQk1hobuwbCBGaWrzx1irXDHNQU=;
+X-UUID: 75891c7ccce04862ba908eefaa5ba124-20210130
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1884248618; Sat, 30 Jan 2021 22:12:32 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sat, 30 Jan
+ 2021 22:12:29 +0800
+Received: from mszsdaap41.gcn.mediatek.inc (10.16.6.141) by
+ MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1497.2 via Frontend Transport; Sat, 30 Jan 2021 22:12:29 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <linux-pwm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <ck.hu@mediatek.com>, <stonea168@163.com>,
+        <huijuan.xie@mediatek.com>, Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH v2 0/3] Convert the mtk_disp driver to aotmic API
+Date:   Sat, 30 Jan 2021 22:12:23 +0800
+Message-ID: <20210130141226.25357-1-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.12.5
 MIME-Version: 1.0
-References: <20201216125320.5277-1-clemens.gruber@pqgruber.com>
- <20201216125320.5277-2-clemens.gruber@pqgruber.com> <CAGngYiWkKZGkQ4TTTy8bQYvnGBK45V0A0JCe_+M5V+vuVU+zkQ@mail.gmail.com>
- <X9uYqGboZg5DuEtf@workstation.tuxnet> <20210111203532.m3yvq6e5bcpjs7mc@pengutronix.de>
- <CAGngYiW=KhCOZX3tPMFykXzpWLpj3qusN2OXVPSfHLRcyts+wA@mail.gmail.com>
- <YBQ4c2cYYPDMjkeH@workstation.tuxnet> <CAGngYiWd0u=+DPhvK+8v9FT8Y1Evn1brWRheMNDXWFVVL-wNFw@mail.gmail.com>
- <YBRyG0vv3gRzygSB@workstation.tuxnet> <CAGngYiXxfz7rtsw4zSj5QX7Lj7hvnoESqyUE_2__=oDaRmGGJQ@mail.gmail.com>
-In-Reply-To: <CAGngYiXxfz7rtsw4zSj5QX7Lj7hvnoESqyUE_2__=oDaRmGGJQ@mail.gmail.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Fri, 29 Jan 2021 17:16:51 -0500
-Message-ID: <CAGngYiV5GGJvHTwG7k6mv76uR1RLnHOJoO8+d2ofiZAQi3K0BA@mail.gmail.com>
-Subject: Re: [PATCH v5 2/7] pwm: pca9685: Support hardware readout
-To:     Clemens Gruber <clemens.gruber@pqgruber.com>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: ACFC5FED0B4CBE8DE67FFFBAE3EE08092F9D118AD2DF692C187DF2B2441CBB4A2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Clemens,
+Q2hhbmdlcyBzaW5jZSB2MToNCiAtIFNlcGVyYXRlIGNsb2NrIG9wZXJhdGlvbiBhcyBzaW5nbGUg
+cGF0Y2guDQogLSBTZXBlcmF0ZSBhcHBseSgpIGFzIHNpbmdsZSBwYXRjaC4NCiAtIFNlcGVyYXRl
+IGdldF9zdGF0ZSgpIG9wZXJhdGlvbiBhcyBzaW5nbGUgcGF0Y2guDQoNCkppdGFvIFNoaSAoMyk6
+DQogIHB3bTogbXRrX2Rpc3A6IGNsZWFyIHRoZSBjbG9jayBvcGVyYXRpb25zDQogIHB3bTogbXRr
+X2Rpc3A6IGNvbnZlcnQgdGhlIGRyaXZlciB0byBhdG9taWMgQVBJDQogIHB3bTogbXRrX2Rpc3A6
+IGltcGxlbWVudCAuZ2V0X3N0YXRlKCkNCg0KIGRyaXZlcnMvcHdtL3B3bS1tdGstZGlzcC5jIHwg
+MTc5ICsrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLQ0KIDEgZmls
+ZSBjaGFuZ2VkLCAxMDQgaW5zZXJ0aW9ucygrKSwgNzUgZGVsZXRpb25zKC0pDQoNCi0tIA0KMi4x
+Mi41DQo=
 
-On Fri, Jan 29, 2021 at 4:24 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
->
-> LEN_ON = 409, LED_OFF = 1228 and
-> LED_ON = 419, LED_OFF = 1238
-> produce the same result. you can't see the difference between the two
-> when scoping the channel. there are probably more ways to do this,
-> some might surprise us. It's a tricky chip.
-
-Please ignore this example, it's bogus. In my defence, it's a Friday
-afternoon here :)
-
-But consider the following: imagine the bootloader has enabled a few
-pwm channels, and the driver's .probe() has left them on/unchanged.
-Then the user enables another pwm channel, and tries to change the
-period/prescaler. How would pca9685_may_change_prescaler() know
-if changing the prescaler is allowed?
-
-And the following: imagine the bootloader has enabled a few
-pwm channels, and the driver's .probe() has left them on/unchanged.
-After .probe(), the runtime_pm will immediately put the chip to sleep,
-because it's unaware that some channels are alive.
-
-I'm sure I'm overlooking a few complications here. probe not changing
-the existing configuration, will add a lot of complexity to the driver.
-I'm not saying this is necessarily bad, just a tradeoff. Or, a management
-decision.
-
-Sven
