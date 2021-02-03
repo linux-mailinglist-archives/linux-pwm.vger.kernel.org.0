@@ -2,68 +2,87 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AAFA30DB49
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Feb 2021 14:30:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9519F30D43B
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Feb 2021 08:47:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231925AbhBCN2I (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 3 Feb 2021 08:28:08 -0500
-Received: from 198-20-226-115.unifiedlayer.com ([198.20.226.115]:51174 "EHLO
-        198-20-226-115.unifiedlayer.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S231886AbhBCN2C (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 Feb 2021 08:28:02 -0500
-X-Greylist: delayed 21682 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Feb 2021 08:27:03 EST
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=carnivalassure.com.bd; s=default; h=Content-Transfer-Encoding:Content-Type:
-        Message-ID:Reply-To:Subject:To:From:Date:MIME-Version:Sender:Cc:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=miRpAdBSO5eDo01VDX+EK9bqGCmqMjXHS3kO16T6iWw=; b=oR9DBi73zWrpNptVGG8joD1q3D
-        a2vFVnixMQAUcmehD6fgJOQ9JP9N27NiM2NuC8HmaSTuyc4tIbd8kMLlSjPNy8b19j5i4Yecn4k41
-        d2L53GGQ3KAYNm9cTjTcF00G/e0wgveF66KZo4CFoHY+VyQWZpnDvHs7YXjdM1k0LGC10SnlZJnOf
-        hyfuxn41TeLbFp37bqri+jK8o3wb0VHiGKRxBfijUx18MCanoqvAna1IaS7ccBxFfbvZdTXygBXlc
-        j3LFBSU0eQazmqTdBY+jvtCMEdlAV/WbBykAUBZA45AnMWlIO1A8LzPVfVBXCEwNqNeODasQNIR6+
-        B0GfR5SA==;
-Received: from [127.0.0.1] (port=46664 helo=dot.dotlines.com.sg)
-        by dot.dotlines.com.sg with esmtpa (Exim 4.93)
-        (envelope-from <noreply@carnivalassure.com.bd>)
-        id 1l7CVp-0005bM-9S; Wed, 03 Feb 2021 01:23:41 -0600
+        id S232223AbhBCHqu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 3 Feb 2021 02:46:50 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55401 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231956AbhBCHqt (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 Feb 2021 02:46:49 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1l7CpO-0000ZG-Mn; Wed, 03 Feb 2021 08:43:54 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1l7CpN-0005Dj-QG; Wed, 03 Feb 2021 08:43:53 +0100
+Date:   Wed, 3 Feb 2021 08:43:53 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Yang Li <yang.lee@linux.alibaba.com>
+Cc:     thierry.reding@gmail.com, lee.jones@linaro.org, vz@mleia.com,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: lpc18xx-sct: remove unneeded semicolon
+Message-ID: <20210203074353.judxqscjba6ph7qu@pengutronix.de>
+References: <1612320605-6430-1-git-send-email-yang.lee@linux.alibaba.com>
 MIME-Version: 1.0
-Date:   Wed, 03 Feb 2021 01:23:40 -0600
-From:   Francois Pinault <noreply@carnivalassure.com.bd>
-To:     undisclosed-recipients:;
-Subject: Hello/Hallo
-Organization: Donation
-Reply-To: francoispinault1936@outlook.com
-Mail-Reply-To: francoispinault1936@outlook.com
-Message-ID: <02cc13f2661d3cb7582fa6695be089c9@carnivalassure.com.bd>
-X-Sender: noreply@carnivalassure.com.bd
-User-Agent: Roundcube Webmail/1.3.15
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - dot.dotlines.com.sg
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - carnivalassure.com.bd
-X-Get-Message-Sender-Via: dot.dotlines.com.sg: authenticated_id: noreply@carnivalassure.com.bd
-X-Authenticated-Sender: dot.dotlines.com.sg: noreply@carnivalassure.com.bd
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xoijghsafgj7dcgf"
+Content-Disposition: inline
+In-Reply-To: <1612320605-6430-1-git-send-email-yang.lee@linux.alibaba.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
+--xoijghsafgj7dcgf
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Hallo, ich bin Herr Francois Pinault, ich habe Ihnen gespendet. Sie 
-können mein Profil auf Wikipedia, Google oder Forbes überprüfen.
+On Wed, Feb 03, 2021 at 10:50:05AM +0800, Yang Li wrote:
+> Eliminate the following coccicheck warning:
+> ./drivers/pwm/pwm-lpc18xx-sct.c:292:2-3: Unneeded semicolon
+>=20
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
 
-Für Ihren Spendenanspruch und weitere Informationen kontaktieren Sie 
-mich umgehend unter francoispinault1936@outlook.com
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
-Mit freundlichen Grüßen,
-Herr Francois Pinault
+But this is prior art:
+https://lore.kernel.org/r/20210128134537.GA54687@068c7b848bbb
+
+This patch is better though as it doesn't have a bogus Fixes: line.
+
+*shrug*, I let Thierry decide which one to pick up.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--xoijghsafgj7dcgf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmAaVDYACgkQwfwUeK3K
+7AnY3QgAnhJW6xrm1dfNxyfMToFJ7FJ+D8AVVWp18RLDoVCvXTNcdNonJz87C3Yz
+kGYGjBvqPNBJY3ad6UP3VbPKpx6ZCDS452eYMHwG5CgCz1GgFheR8kVL/0HneTnD
+ea/ezvGVO1ntjtlkadaXRObP/lVh3alYDduUHqWmS33sxF+M/BccKEiMMFee1S6X
+q/6qXxQ7Pz44l/spdASPtnogWcPmWMx+7/5qjDyx8Ir215DXgCSAlfnEFgbSGHa2
+rKrOzj2i/qsw2k8/a+xfHk6kOLI5F8v3U29iWVdXSiHSwHJK2mUhfYSLn6LW9OoV
+pIDO5Y1XWQdMwCSjXBDlBVSVzbXGPw==
+=c/Sp
+-----END PGP SIGNATURE-----
+
+--xoijghsafgj7dcgf--
