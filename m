@@ -2,54 +2,68 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1D1B30D1CB
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Feb 2021 03:52:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AAFA30DB49
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Feb 2021 14:30:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231201AbhBCCuw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 2 Feb 2021 21:50:52 -0500
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:37022 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230286AbhBCCuv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 2 Feb 2021 21:50:51 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0UNizxU5_1612320606;
-Received: from j63c13417.sqa.eu95.tbsite.net(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0UNizxU5_1612320606)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 03 Feb 2021 10:50:07 +0800
-From:   Yang Li <yang.lee@linux.alibaba.com>
-To:     thierry.reding@gmail.com
-Cc:     u.kleine-koenig@pengutronix.de, lee.jones@linaro.org, vz@mleia.com,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Yang Li <yang.lee@linux.alibaba.com>
-Subject: [PATCH] pwm: lpc18xx-sct: remove unneeded semicolon
-Date:   Wed,  3 Feb 2021 10:50:05 +0800
-Message-Id: <1612320605-6430-1-git-send-email-yang.lee@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        id S231925AbhBCN2I (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 3 Feb 2021 08:28:08 -0500
+Received: from 198-20-226-115.unifiedlayer.com ([198.20.226.115]:51174 "EHLO
+        198-20-226-115.unifiedlayer.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S231886AbhBCN2C (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 Feb 2021 08:28:02 -0500
+X-Greylist: delayed 21682 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Feb 2021 08:27:03 EST
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=carnivalassure.com.bd; s=default; h=Content-Transfer-Encoding:Content-Type:
+        Message-ID:Reply-To:Subject:To:From:Date:MIME-Version:Sender:Cc:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=miRpAdBSO5eDo01VDX+EK9bqGCmqMjXHS3kO16T6iWw=; b=oR9DBi73zWrpNptVGG8joD1q3D
+        a2vFVnixMQAUcmehD6fgJOQ9JP9N27NiM2NuC8HmaSTuyc4tIbd8kMLlSjPNy8b19j5i4Yecn4k41
+        d2L53GGQ3KAYNm9cTjTcF00G/e0wgveF66KZo4CFoHY+VyQWZpnDvHs7YXjdM1k0LGC10SnlZJnOf
+        hyfuxn41TeLbFp37bqri+jK8o3wb0VHiGKRxBfijUx18MCanoqvAna1IaS7ccBxFfbvZdTXygBXlc
+        j3LFBSU0eQazmqTdBY+jvtCMEdlAV/WbBykAUBZA45AnMWlIO1A8LzPVfVBXCEwNqNeODasQNIR6+
+        B0GfR5SA==;
+Received: from [127.0.0.1] (port=46664 helo=dot.dotlines.com.sg)
+        by dot.dotlines.com.sg with esmtpa (Exim 4.93)
+        (envelope-from <noreply@carnivalassure.com.bd>)
+        id 1l7CVp-0005bM-9S; Wed, 03 Feb 2021 01:23:41 -0600
+MIME-Version: 1.0
+Date:   Wed, 03 Feb 2021 01:23:40 -0600
+From:   Francois Pinault <noreply@carnivalassure.com.bd>
+To:     undisclosed-recipients:;
+Subject: Hello/Hallo
+Organization: Donation
+Reply-To: francoispinault1936@outlook.com
+Mail-Reply-To: francoispinault1936@outlook.com
+Message-ID: <02cc13f2661d3cb7582fa6695be089c9@carnivalassure.com.bd>
+X-Sender: noreply@carnivalassure.com.bd
+User-Agent: Roundcube Webmail/1.3.15
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - dot.dotlines.com.sg
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - carnivalassure.com.bd
+X-Get-Message-Sender-Via: dot.dotlines.com.sg: authenticated_id: noreply@carnivalassure.com.bd
+X-Authenticated-Sender: dot.dotlines.com.sg: noreply@carnivalassure.com.bd
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Eliminate the following coccicheck warning:
-./drivers/pwm/pwm-lpc18xx-sct.c:292:2-3: Unneeded semicolon
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
----
- drivers/pwm/pwm-lpc18xx-sct.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-lpc18xx-sct.c b/drivers/pwm/pwm-lpc18xx-sct.c
-index dc5133b..7ef4024 100644
---- a/drivers/pwm/pwm-lpc18xx-sct.c
-+++ b/drivers/pwm/pwm-lpc18xx-sct.c
-@@ -289,7 +289,7 @@ static int lpc18xx_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- 		dev_err(lpc18xx_pwm->dev,
- 			"maximum number of simultaneous channels reached\n");
- 		return -EBUSY;
--	};
-+	}
- 
- 	set_bit(event, &lpc18xx_pwm->event_map);
- 	lpc18xx_data->duty_event = event;
 -- 
-1.8.3.1
+Hallo, ich bin Herr Francois Pinault, ich habe Ihnen gespendet. Sie 
+können mein Profil auf Wikipedia, Google oder Forbes überprüfen.
 
+Für Ihren Spendenanspruch und weitere Informationen kontaktieren Sie 
+mich umgehend unter francoispinault1936@outlook.com
+
+Mit freundlichen Grüßen,
+Herr Francois Pinault
