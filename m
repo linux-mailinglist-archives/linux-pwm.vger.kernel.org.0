@@ -2,59 +2,168 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2248030DE00
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Feb 2021 16:23:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DA5830DE9E
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Feb 2021 16:49:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233749AbhBCPWt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 3 Feb 2021 10:22:49 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53563 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234171AbhBCPO7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 Feb 2021 10:14:59 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1l7Jp3-0002k9-GM; Wed, 03 Feb 2021 16:12:01 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1l7Jp2-0007eB-IG; Wed, 03 Feb 2021 16:12:00 +0100
-Date:   Wed, 3 Feb 2021 16:12:00 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+        id S234673AbhBCPsY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 3 Feb 2021 10:48:24 -0500
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:36655 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234606AbhBCPrq (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 Feb 2021 10:47:46 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 65A6D5C01CC;
+        Wed,  3 Feb 2021 10:46:32 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Wed, 03 Feb 2021 10:46:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=96Ecvhc/pjHBeZw4weIlWXVyrP/
+        5g67z/J1POqTyq4U=; b=ko7CP+t5HsJn5tZux9svMu86IFpUpTO8Zjnf6NLpOi6
+        xDEE3NYRvTHB9n+AqFBcsCtECl2UmD02QPHLEDxnwpg238v72v/TMdhj3Q24b/CN
+        qtVT3PbEQP3TxfPRvfd6EiI1uX16j6l40XCghIG4lSCCvManqxZBW9Xz7MUmTKpZ
+        wgcwS0uOgfTbObFkeYN1NtBQGgRQk6rnlMIzZVdgKrMWxBxWOzqtVvRZbvU+NwB9
+        XBT/1VmZjzVsP6RyEhxNOup/HFW4lwPEj4W5xhrhGct3olPs0PgQu09TWOaqPsxd
+        D47N1vpSDgLh05IAx2L5dkmVFe2V+XxcKmlN1MWtvnA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=96Ecvh
+        c/pjHBeZw4weIlWXVyrP/5g67z/J1POqTyq4U=; b=ZrHWCUdxVT/wlTqG0LvEwV
+        KORUlrIzFriTKHtGwXSsgJb4C38eonk9UgxEnze879Wd5FoZLObcT0TrIGN23uAD
+        70nW1/iz5M+/sOhANGnxt3B6WSLJ9UJU8p9xBLXRp0LkSmgTeVwxvFFRd5Psb3OL
+        BVvUTZAG/JjzkL9cvOmAm1tx8u3CDECNtmqf5kiWZKrffvWQHgY56L1UhHxhR3Ui
+        yiIX1O5QX+q4HLM/IAk0Ep7Y/IuEIuCbhb9Jlzkh4iM+XK9jTlHRCCGXLmgtOuy7
+        4bkhcH/Y6l7XfiVZwoO+X75gQYHAclm8FIZ4xbEZpcGAom0GKxzAGjBKAzsFJi+g
+        ==
+X-ME-Sender: <xms:V8UaYHz4g_5DKWrCD3eIVn8r_cKENnrxVb_4b-3w058ICRyqcwkM9A>
+    <xme:V8UaYPO1NfInnxCaffyTmS-lAZsZhGU05VKa0xpNAkA1ivRYOSizDAzsXz8xTfoMB
+    r3M0alAT8qQP_oJQqM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrgedvgdejlecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehgtderre
+    dttddvnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgihimhgvsegtvghr
+    nhhordhtvggthheqnecuggftrfgrthhtvghrnhepleekgeehhfdutdeljefgleejffehff
+    fgieejhffgueefhfdtveetgeehieehgedunecukfhppeeltddrkeelrdeikedrjeeinecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimh
+    gvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:V8UaYOO_f3lJLAyN-0CRWMfc5lrUczROYSWL5FAeecdQPrlG1bPSGw>
+    <xmx:V8UaYJSSuQLs-HTQ5M7ukMSTSBIpPgnrab0nyKUFGZC7ITSa_Piwhg>
+    <xmx:V8UaYIBqI2qcj8FBNXsPT9gMd_GQ46caAgXhZuxIuiPSIBmZiZ-zWQ>
+    <xmx:WMUaYLf3VYAHiep-ZpfLW5rfNi7M2w7TNraECOqjurrIdLT46wNeyQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 31D771080059;
+        Wed,  3 Feb 2021 10:46:31 -0500 (EST)
+Date:   Wed, 3 Feb 2021 16:46:28 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
 To:     Ban Tao <fengzheng923@gmail.com>
-Cc:     thierry.reding@gmail.com, mripard@kernel.org, wens@csie.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        kernel@pengutronix.de
+Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        wens@csie.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
 Subject: Re: [PATCH v2] pwm: sunxi: Add Allwinner SoC PWM controller driver
-Message-ID: <20210203151200.fdzzq23teoypbxad@pengutronix.de>
+Message-ID: <20210203154628.infi5jnlofdrysvs@gilmour>
 References: <20210203125317.1975-1-fengzheng923@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xc7r6qniku525sjf"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qbm7zw7fomypmndn"
 Content-Disposition: inline
 In-Reply-To: <20210203125317.1975-1-fengzheng923@gmail.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---xc7r6qniku525sjf
-Content-Type: text/plain; charset=iso-8859-1
+--qbm7zw7fomypmndn
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello Ban,
+Hi,
 
 On Wed, Feb 03, 2021 at 08:53:17PM +0800, Ban Tao wrote:
+> From: Ban Tao <fengzheng923@gmail.com>
+>=20
+> The Allwinner R818, A133, R329, V536 and V833 has a new PWM controller
+> IP compared to the older Allwinner SoCs.
+>=20
+> Signed-off-by: Ban Tao <fengzheng923@gmail.com>
+
+Thanks for your patch. There's a bunch of warnings reported by
+checkpatch --strict, they should be addressed.
+
+> ---
 > v1->v2:
+> 1.delete unnecessary code.
+> 2.using a named define for some constants.
+> 3.Add comment in sun50i_pwm_config function.
+> 4.using dev_err_probe() for error handling.
+> 5.disable the clock after pwmchip_remove().
+> ---
+>  MAINTAINERS              |   6 +
+>  drivers/pwm/Kconfig      |  11 ++
+>  drivers/pwm/Makefile     |   1 +
+>  drivers/pwm/pwm-sun50i.c | 348 +++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 366 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-sun50i.c
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e73636b75f29..d33cf1b69b43 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -737,6 +737,12 @@ L:	linux-media@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/staging/media/sunxi/cedrus/
+> =20
+> +ALLWINNER PWM DRIVER
+> +M:	Ban Tao <fengzheng923@gmail.com>
+> +L:	linux-pwm@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/pwm/pwm-sun50i.c
+> +
+>  ALPHA PORT
+>  M:	Richard Henderson <rth@twiddle.net>
+>  M:	Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 9a4f66ae8070..17635a8f2ed3 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -552,6 +552,17 @@ config PWM_SUN4I
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-sun4i.
+> =20
+> +config PWM_SUN50I
+> +	tristate "Allwinner enhanced PWM support"
+> +	depends on ARCH_SUNXI || COMPILE_TEST
+> +	depends on HAS_IOMEM && COMMON_CLK
+> +	help
+> +	  Enhanced PWM framework driver for Allwinner R818, A133, R329,
+> +	  V536 and V833 SoCs.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-sun50i.
+> +
 
-FTR: v1 wasn't sent to any list, so don't try to find it in some
-archive.
+Even though it's unfortunate, there's a bunch of other SoCs part of the
+sun50i family that are supported by the sun4i driver.
 
+Which SoC introduced that new design? It's usually the name we pick up
+then.
+
+>  config PWM_TEGRA
+>  	tristate "NVIDIA Tegra PWM support"
+>  	depends on ARCH_TEGRA || COMPILE_TEST
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 6374d3b1d6f3..b4754927fd8f 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -51,6 +51,7 @@ obj-$(CONFIG_PWM_STM32)		+=3D pwm-stm32.o
+>  obj-$(CONFIG_PWM_STM32_LP)	+=3D pwm-stm32-lp.o
+>  obj-$(CONFIG_PWM_STMPE)		+=3D pwm-stmpe.o
+>  obj-$(CONFIG_PWM_SUN4I)		+=3D pwm-sun4i.o
+> +obj-$(CONFIG_PWM_SUN50I)	+=3D pwm-sun50i.o
+>  obj-$(CONFIG_PWM_TEGRA)		+=3D pwm-tegra.o
+>  obj-$(CONFIG_PWM_TIECAP)	+=3D pwm-tiecap.o
+>  obj-$(CONFIG_PWM_TIEHRPWM)	+=3D pwm-tiehrpwm.o
 > diff --git a/drivers/pwm/pwm-sun50i.c b/drivers/pwm/pwm-sun50i.c
 > new file mode 100644
 > index 000000000000..37285d771924
@@ -67,22 +176,6 @@ archive.
 > + *
 > + * Copyright (C) 2020 Ban Tao <fengzheng923@gmail.com>
 > + */
-
-Please add a section here about how this PWM behaves. Things to cover:
-
- - Mention if the hardware cannot do 0% or 100%
- - Describe if changing the settings is racy, e.g. if it can happen when
-   switching from duty_cycle=3D100 + period=3D1000 to duty_cycle=3D200 +
-   period=3D2000 that we see a period with duty_cycle=3D100 and period=3D20=
-00
-   or similar
- - Tell if on a reconfiguration the currently running period is
-   completed.
-
-Please stick to the format used in other drivers to simplify grepping,
-see the Limitations section in drivers/pwm/pwm-sl28cpld.c for an
-example.
-
 > +
 > +#include <linux/err.h>
 > +#include <linux/io.h>
@@ -113,9 +206,6 @@ example.
 > +#define PWM_ENTIRE_CYCLE_WIDTH		0x10
 > +#define PWM_ACT_CYCLE			0
 > +#define PWM_ACT_CYCLE_WIDTH		0x10
-
-Please use a driver specific prefix for these defines.
-
 > +
 > +#define BIT_CH(bit, chan)		((bit) << (chan))
 > +
@@ -126,9 +216,6 @@ ft))
 > +	    (((reg) & SETMASK(width, shift)) >> (shift))
 > +#define SET_BITS(shift, width, reg, val) \
 > +	    (((reg) & CLRMASK(width, shift)) | (val << (shift)))
-
-You're reinventing the stuff from <linux/bitfield.h> here. Please don't.
-
 > +
 > +#define PWM_OSC_CLK			24000000
 > +#define PWM_PRESCALER_MAX		256
@@ -183,16 +270,10 @@ ice *pwm,
 > +
 > +	return 0;
 > +}
-
-For v1 I asked to test this driver with PWM_DEBUG enabled and to fix all
-emitted warnings. This didn't happen :-\
-
+> +
 > +static int sun50i_pwm_config(struct pwm_chip *chip, struct pwm_device *p=
 wm,
 > +		int duty_ns, int period_ns)
-
-Please align to the opening brace in the line above.
-
 > +{
 > +	struct sun50i_pwm_chip *sun50i_pwm =3D sun50i_pwm_from_chip(chip);
 > +	unsigned long long c;
@@ -216,9 +297,6 @@ Please align to the opening brace in the line above.
 > +
 > +	dev_dbg(chip->dev, "duty_ns=3D%d period_ns=3D%d c =3D%llu.\n",
 > +			duty_ns, period_ns, c);
-
-Inconsistent spacing in the message.
-
 > +
 > +	/*
 > +	 * (clk / div_m / prescaler) / entire_cycles =3D NSEC_PER_SEC / period_=
@@ -230,50 +308,21 @@ aler.
 > +	do_div(c, NSEC_PER_SEC);
 > +	for (div_m =3D 0; div_m < PWM_CLK_DIV_M__MAX; div_m++) {
 > +		for (prescaler =3D 0; prescaler < PWM_PRESCALER_MAX; prescaler++) {
-
-The calculation could be done without this double-for loop. Something
-like:
-
-	div_m =3D order_base_2(PWM_ENTIRE_CYCLE_MAX * PWM_PRESCALER_MAX / c);
-	if (div_m >=3D PWM_CLK_DIV_M__MAX)
-		bail out;
-
-	prescaler =3D DIV_ROUND_UP(c << div_m, PWM_ENTIRE_CYCLE_MAX) - 1;
-
-(but please double check, I didn't.) Also note that this doesn't yield
-the best approximation for period in general. (But that's ok for now,
-maybe just mention it in a comment.)
-
 > +			/*
 > +			 * actual prescaler =3D prescaler + 1.
 > +			 * actual div_m =3D 0x1 << div_m.
 > +			*/
 > +			entire_cycles =3D ((unsigned long)c/(0x1 << div_m))/(prescaler + 1);
-
-c / (1 << div_m) can be written as c >> div_m which reads better and
-might result in better code.
-
 > +			if (entire_cycles <=3D PWM_ENTIRE_CYCLE_MAX) {
 > +				goto calc_end;
 > +			}
-
-No { } for one line bodys please.
-
 > +		}
 > +	}
-
-Missing error handling for the case that
-
-	c >> (PWM_CLK_DIV_M__MAX - 1) / PWM_PRESCALER_MAX > PWM_ENTIRE_CYCLE_MAX
-
 > +
 > +calc_end:
 > +	/*
 > +	 * duty_ns / period_ns =3D active_cycles / entire_cycles.
 > +	 * So, active_cycles =3D entire_cycles * duty_ns / period_ns.
-
-active_cyles is the number of clock steps for duty_cycle, right?
-
 > +	 */
 > +	c =3D (unsigned long long)entire_cycles * duty_ns;
 > +	do_div(c, period_ns);
@@ -292,9 +341,6 @@ active_cyles is the number of clock steps for duty_cycle, right?
 > +	sun50i_pwm_writel(sun50i_pwm, tmp, PWM_GET_CLK_OFFSET(pwm->hwpwm));
 > +
 > +	/* config prescal */
-
-prescale
-
 > +	tmp =3D sun50i_pwm_readl(sun50i_pwm, PWM_CTL_REG(pwm->hwpwm));
 > +	tmp =3D SET_BITS(PWM_PRESCAL_K, PWM_PRESCAL_K_WIDTH, tmp, prescaler);
 > +	sun50i_pwm_writel(sun50i_pwm, tmp, PWM_CTL_REG(pwm->hwpwm));
@@ -310,9 +356,6 @@ _cycles - 1));
 > +	dev_dbg(chip->dev, "active_cycles=3D%lu entire_cycles=3D%lu prescaler=
 =3D%u div_m=3D%u\n",
 > +			active_cycles, entire_cycles, prescaler, div_m);
-
-align to opening brace.
-
 > +
 > +	return 0;
 > +}
@@ -388,95 +431,24 @@ wm)
 > +	},
 > +};
 > +MODULE_DEVICE_TABLE(of, sun50i_pwm_dt_ids);
-> +
-> +static int sun50i_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct sun50i_pwm_chip *pwm;
 
-"pwm" isn't a good name, in PWM code this name is usually used for
-struct pwm_device pointers (and sometimes the global pwm id). I usually
-use "ddata" for driver data (and would have called "sun50i_pwm_chip"
-"sun50i_pwm_ddata" instead). Another common name is "priv".
+What are the differences between all these SoCs? If there's none between
+the v833, v536 and R329, and between the r818 and the A133, you should
+use the same compatible.
 
-> +	int ret;
-> +
-> +	pwm =3D devm_kzalloc(&pdev->dev, sizeof(*pwm), GFP_KERNEL);
-> +	if (!pwm)
-> +		return -ENOMEM;
-> +
-> +	pwm->data =3D of_device_get_match_data(&pdev->dev);
-> +	if (!pwm->data)
+The device tree binding must be documented too
 
-Error message here
+Maxime
 
-> +		return -ENODEV;
-> +
-> +	pwm->base =3D devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(pwm->base))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(pwm->base),
-> +				     "can't remap pwm resource\n");
-> +
-> +	pwm->clk =3D devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(pwm->clk))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(pwm->clk),
-> +				     "get unnamed clock failed\n");
-
-s/unnamed/PWM/ ?
-
-> +
-> +	pwm->rst_clk =3D devm_reset_control_get_exclusive(&pdev->dev, NULL);
-> +	if (IS_ERR(pwm->rst_clk))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(pwm->rst_clk),
-> +				     "get reset failed\n");
-> +
-> +	/* Deassert reset */
-> +	ret =3D reset_control_deassert(pwm->rst_clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "cannot deassert reset control: %pe\n",
-> +			ERR_PTR(ret));
-> +		return ret;
-
-Even though reset_control_deassert probably will never return
--EPROBE_DEFER, you should use dev_err_probe here to for consistency.
-
-> +	}
-> +
-> +	ret =3D clk_prepare_enable(pwm->clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "cannot prepare and enable clk %pe\n",
-> +			ERR_PTR(ret));
-> +		goto err_clk;
-> +	}
-> +
-> +	pwm->chip.dev =3D &pdev->dev;
-> +	pwm->chip.ops =3D &sun50i_pwm_ops;
-> +	pwm->chip.npwm =3D pwm->data->npwm;
-> +	pwm->chip.of_xlate =3D of_pwm_xlate_with_flags;
-> +	pwm->chip.base =3D -1;
-> +	pwm->chip.of_pwm_n_cells =3D 3;
-> +
-> [...]
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---xc7r6qniku525sjf
+--qbm7zw7fomypmndn
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmAavTwACgkQwfwUeK3K
-7AnEXAf8C5s1LEz9zY50LpmcldnQFDt79E/nxex4Tf/QWrvYSqXmFyv/OhI6NLSB
-Rx8xRknBdjsslmiXEwuUsDwL/cfqcSNqn0jvhdXlRZyiZIJCNOdZvtxTPFoBejcl
-32uINxIVUC6RZXO3tWgBg7OH3k420aBOTGXlqnIiQqirDCizcoBE6u6oDiGFbD03
-vCJpoXgvG9BZ3Zb0EwoQjj0EJHOmAaq9Tiukyj05yFTPSr0SIA94VPChrQhcUyRe
-GXqGaoI8x0l29ICfQrafLT5P4H9bVoMzaNesVbD4V5o94krDD15GWSjNTrbKUtLj
-iyC6j1zuG2LaQnTzdXMi7ccLbUsrJw==
-=ODJI
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCYBrFVAAKCRDj7w1vZxhR
+xfTZAP0SItG49wLJS6zaFskVkcdtDbDXvmRpMvuijPxvoSHXaQEAnARYWHjiXzl1
+0x4vf8zBs+YG5d3IkBH6yaa1RKYz9wY=
+=Bvzx
 -----END PGP SIGNATURE-----
 
---xc7r6qniku525sjf--
+--qbm7zw7fomypmndn--
