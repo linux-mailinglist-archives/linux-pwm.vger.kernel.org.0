@@ -2,73 +2,66 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1742D3123BC
-	for <lists+linux-pwm@lfdr.de>; Sun,  7 Feb 2021 12:13:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD24E312E2A
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 Feb 2021 11:00:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229510AbhBGLN1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 7 Feb 2021 06:13:27 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12081 "EHLO
-        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbhBGLN0 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 7 Feb 2021 06:13:26 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4DYRKY3MdlzMWRN;
-        Sun,  7 Feb 2021 19:10:57 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.498.0; Sun, 7 Feb 2021 19:12:37 +0800
-From:   Tian Tao <tiantao6@hisilicon.com>
-To:     <jdelvare@suse.com>, <linux@roeck-us.net>,
-        <thierry.reding@gmail.com>, <lee.jones@linaro.org>
-CC:     <openbmc@lists.ozlabs.org>, <linux-hwmon@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>
-Subject: [PATCH] hwmon: (npcm750-pwm-fan): replace spin_lock_irqsave by spin_lock in hard IRQ
-Date:   Sun, 7 Feb 2021 19:12:13 +0800
-Message-ID: <1612696333-50502-1-git-send-email-tiantao6@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        id S229848AbhBHJ7C (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 8 Feb 2021 04:59:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232111AbhBHJwl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 8 Feb 2021 04:52:41 -0500
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A875C0698D4
+        for <linux-pwm@vger.kernel.org>; Mon,  8 Feb 2021 01:46:30 -0800 (PST)
+Received: by mail-pf1-x42d.google.com with SMTP id 189so342025pfy.6
+        for <linux-pwm@vger.kernel.org>; Mon, 08 Feb 2021 01:46:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=z7Z/JdX0RhrlgqchmamXWMY47TIIKUp5Zm0+e0J1lMs=;
+        b=EBAN8kT/RdDTitIJIwHViEDhHzNJv4CIWk9rs6YltTkWZ458GA493YyOdSoiZ3kf2I
+         cdNbMkg2fZDvPvkuycg7WSARNJ/puPrDyOFIWKtgjChKMEIfkIP2Q2XVpBk+DA9Lhucn
+         6XQlMQaKQZVW2ZyZN5QBK8n9vbP0QwsOuCEl8YnAfifh/FxrfAzpfX38semmARrCGxh8
+         WFi+25A8lhFcplpes37lwhh0IayXXJWFPkoQ+knUplL4fyj/9WvmsAavsN2O11FqYU0q
+         sXGcgyuoksh1FLpl3IVpUWra/8A8W9zD+TSlCF6rCGoTQRx8E8R9VquYNvg3vN5bAAWe
+         XSXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=z7Z/JdX0RhrlgqchmamXWMY47TIIKUp5Zm0+e0J1lMs=;
+        b=tJatNvQJFP1EWFUHhAcNVurX/QzRJ7P7dgvnDtGMCuWWDhqv24NANQq1hmRfEKzDIB
+         qYj/3gfTRkMe399blAvOU8prJSniRmJOgd/oA2tsAOKM4C3E2hedPV4DfVJOqQSRrOgU
+         Lw9ng8uZ6AAoD1ekJB5xnmsl5lUnaS4D9usCeZAD8SD/D4ERfsu3HFNRY/WMgjQKu95i
+         0vbW4zXLum/OwVwcRv+sz0cxGWER63Thc/wJVUV/d2hfB7D2DRTujVRHSlzN/RkZtJmz
+         OB0wGVSOxuWDTYVa9QEPfIok/vkJ8d/s/+58T/HNlWRxdKHEnoBbvZTOuEU+dkMY185j
+         lgLQ==
+X-Gm-Message-State: AOAM533zott1mINCz3jnOqRkhO8EJhB8EG8mWklBgBk11Rp0wpw+JhZu
+        ZspBa55pBS/QS4zDDmryTFQEZ7vORx906eo0iXE=
+X-Google-Smtp-Source: ABdhPJybDL+KhCvXPDIs57vnx74bKnUW7LRfIk9mtYaX6Td3ETIAJUIor6BltYlrl2tm2rDxnhIvTg/8Y9D/vq+/hVc=
+X-Received: by 2002:a63:c84a:: with SMTP id l10mr16253996pgi.159.1612777589348;
+ Mon, 08 Feb 2021 01:46:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Received: by 2002:a17:90a:5d0a:0:0:0:0 with HTTP; Mon, 8 Feb 2021 01:46:29
+ -0800 (PST)
+Reply-To: richadtomm@qq.com
+From:   "Mr.Richard Thomas" <tommiirrrch@gmail.com>
+Date:   Mon, 8 Feb 2021 01:46:29 -0800
+Message-ID: <CAGbSTZMAc0EF+BT96=ag5apRs+Aauw-A-2pin2QX1dEQy+tMew@mail.gmail.com>
+Subject: Re Thanks.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The code has been in a irq-disabled context since it is hard IRQ. There
-is no necessity to do it again.
+Dear Friend,
+I will be pleased if you can allow me to invest $104M Dollars in
+Estate Management,in your company or any area you best that will be
+of good profit to both of us
 
-Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
----
- drivers/hwmon/npcm750-pwm-fan.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Please do well to respond including your information for more details.
 
-diff --git a/drivers/hwmon/npcm750-pwm-fan.c b/drivers/hwmon/npcm750-pwm-fan.c
-index 11a2860..6c27af1 100644
---- a/drivers/hwmon/npcm750-pwm-fan.c
-+++ b/drivers/hwmon/npcm750-pwm-fan.c
-@@ -481,12 +481,11 @@ static inline void npcm7xx_check_cmp(struct npcm7xx_pwm_fan_data *data,
- static irqreturn_t npcm7xx_fan_isr(int irq, void *dev_id)
- {
- 	struct npcm7xx_pwm_fan_data *data = dev_id;
--	unsigned long flags;
- 	int module;
- 	u8 flag;
- 
- 	module = irq - data->fan_irq[0];
--	spin_lock_irqsave(&data->fan_lock[module], flags);
-+	spin_lock(&data->fan_lock[module]);
- 
- 	flag = ioread8(NPCM7XX_FAN_REG_TICTRL(data->fan_base, module));
- 	if (flag > 0) {
-@@ -496,7 +495,7 @@ static irqreturn_t npcm7xx_fan_isr(int irq, void *dev_id)
- 		return IRQ_HANDLED;
- 	}
- 
--	spin_unlock_irqrestore(&data->fan_lock[module], flags);
-+	spin_unlock(&data->fan_lock[module]);
- 
- 	return IRQ_NONE;
- }
--- 
-2.7.4
-
+Thanks.
+Mr.Richard Thomas
