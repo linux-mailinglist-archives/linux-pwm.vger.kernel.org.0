@@ -2,110 +2,143 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1790631A116
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Feb 2021 16:06:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D019D31A2CD
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Feb 2021 17:37:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229493AbhBLPF0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 12 Feb 2021 10:05:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229478AbhBLPFV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 12 Feb 2021 10:05:21 -0500
-Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D2F1C061574;
-        Fri, 12 Feb 2021 07:04:41 -0800 (PST)
-Received: by mail-ot1-x32b.google.com with SMTP id y11so8641890otq.1;
-        Fri, 12 Feb 2021 07:04:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xRzerL37rg751TyU6bwXPn/hRqxwdJLt22EE4yM78/4=;
-        b=j0WkHcMOOzWY/E3hEIbBqWVhP61NJS+ElQp3uyCDAaBTrsRTvWtVMlar/6dldtCW6w
-         za+krt4gwUcQwrJ9CmHgvH4hQzTx2JcDDcpI8alfHRvEQg6Io8BPG2KMLtBgDNx72sVr
-         ep1LdF/xlc4gHDCXqpvyKI0AkEPG5NlLJllerkYO8OSFEBPsUQuUtCbyAXGk1ihAOkDg
-         D4GgArL+3pGLhJKGqSDD1KDo+FYGnUj3c4qOlfpFQ7X72oUTlv9uNYrFlsW9qoS+n26a
-         LzmmWBSZKUdV3Z0RegIvYcPQjCy6z0bokX0XZ2uPSiFZUSvmLIDQaDCqFJPXzuM03lgz
-         SsWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xRzerL37rg751TyU6bwXPn/hRqxwdJLt22EE4yM78/4=;
-        b=D70OESNNXOt6KuL+NzaUcinQ9l6y0G4+kcooS1MnGdXvIXWJD3l9JVSstbQMK9So0B
-         wnPjHJdVoXWzQ6juTZ2Mu5ZI+rYeTf7DWi8tExgQ8CsrqtvFv/IpOnyTF7w/fbtQVqOo
-         YZKf+M5zjsHS3miIspLpBhpwNjX2zw8xdQwQM1cyU4ZoyHcEfITuKySiL01cMyhHShAl
-         cCU2IGmhi+nAIm1BJdP5w9ruNVDxFEdnh+NRHKIh8hYwLWWW8FqtDWVa+TSbQqWaLUR+
-         AiVHnEodaEzoML9KFIS6Ub+CFMv+0vLDnssxzxLaV+ILOswwHMvgYq9GqW8/PaTdZHZ0
-         5kLQ==
-X-Gm-Message-State: AOAM533fij7rV7QJGHlDARpBUleF9HCftjLdpz55SMVSCYrwTvjOcGc4
-        utW6ZuPKB6L5aOXU+fiu6Qb8i6zD1PY=
-X-Google-Smtp-Source: ABdhPJxf3Qr9yjbuYZKxXoTyvphmL4Ozh4W7q4PN+aSXIhb1tq4VcD2KjSIvAttFzuA8f5/xd2OYIg==
-X-Received: by 2002:a9d:6f93:: with SMTP id h19mr2285387otq.236.1613142280425;
-        Fri, 12 Feb 2021 07:04:40 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 18sm1698700oti.30.2021.02.12.07.04.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Feb 2021 07:04:39 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Fri, 12 Feb 2021 07:04:38 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Tian Tao <tiantao6@hisilicon.com>
-Cc:     jdelvare@suse.com, thierry.reding@gmail.com, lee.jones@linaro.org,
-        openbmc@lists.ozlabs.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] hwmon: (npcm750-pwm-fan): replace spin_lock_irqsave by
- spin_lock in hard IRQ
-Message-ID: <20210212150438.GA32815@roeck-us.net>
-References: <1612696333-50502-1-git-send-email-tiantao6@hisilicon.com>
+        id S230337AbhBLQfh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 12 Feb 2021 11:35:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36966 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231307AbhBLQdW (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 12 Feb 2021 11:33:22 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E138F64DB1;
+        Fri, 12 Feb 2021 16:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1613147557;
+        bh=u1/9qFb1jcDrE7vnQF9/4iC4Sa1MsRCfL+IXvC69710=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bj9TAl6rU/VSmGsk4jINUW3SBmVXm8I4saZ1pOqYDX2pwqiuktm+7BhosA+XtmQ3T
+         MW+eeJJqlS3Tr07yRiuZvi2CpvGq6cvvhiVq+xKtu/5clbEw8Nx1DaNZJEK4w5exoM
+         NNwsu5HMxi5zzeNjo1H2295SMj2q6FiVtQNEs9mC2MicMCDN+wHT5+lSXir4fQpC9T
+         Ld24ZMWwMXSm51Kb36ttYGe6GAobtE6KB7QE8hCSIRh3ydQLwmz7DjHaiRQtos28hC
+         HtiMUfsaEwahiUNvI0FwgWbY9AR5Tpz0w4clg5GE7TS/EsVUPWqkJOrBsIcWHaCgRq
+         0meT4kgrRmH7A==
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-iio@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-pwm@vger.kernel.org
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Dan Murphy <dmurphy@ti.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v4] MAINTAINERS: move Milo Kim to credits
+Date:   Fri, 12 Feb 2021 17:32:29 +0100
+Message-Id: <20210212163229.68270-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1612696333-50502-1-git-send-email-tiantao6@hisilicon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun, Feb 07, 2021 at 07:12:13PM +0800, Tian Tao wrote:
-> The code has been in a irq-disabled context since it is hard IRQ. There
-> is no necessity to do it again.
-> 
-> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+Milo Kim's email in TI bounces with permanent error (550: Invalid
+recipient).  Last email from him on LKML was in 2017.  Move Milo Kim to
+credits and remove the separate driver entries for:
+ - TI LP855x backlight driver,
+ - TI LP8727 charger driver,
+ - TI LP8788 MFD (ADC, LEDs, charger and regulator) drivers.
 
-Now dropped. Quite obviously you have not even compile tested,
-much less runtime tested this patch.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>
 
-Guenter
+---
 
-> ---
->  drivers/hwmon/npcm750-pwm-fan.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hwmon/npcm750-pwm-fan.c b/drivers/hwmon/npcm750-pwm-fan.c
-> index 11a2860..6c27af1 100644
-> --- a/drivers/hwmon/npcm750-pwm-fan.c
-> +++ b/drivers/hwmon/npcm750-pwm-fan.c
-> @@ -481,12 +481,11 @@ static inline void npcm7xx_check_cmp(struct npcm7xx_pwm_fan_data *data,
->  static irqreturn_t npcm7xx_fan_isr(int irq, void *dev_id)
->  {
->  	struct npcm7xx_pwm_fan_data *data = dev_id;
-> -	unsigned long flags;
->  	int module;
->  	u8 flag;
->  
->  	module = irq - data->fan_irq[0];
-> -	spin_lock_irqsave(&data->fan_lock[module], flags);
-> +	spin_lock(&data->fan_lock[module]);
->  
->  	flag = ioread8(NPCM7XX_FAN_REG_TICTRL(data->fan_base, module));
->  	if (flag > 0) {
-> @@ -496,7 +495,7 @@ static irqreturn_t npcm7xx_fan_isr(int irq, void *dev_id)
->  		return IRQ_HANDLED;
->  	}
->  
-> -	spin_unlock_irqrestore(&data->fan_lock[module], flags);
-> +	spin_unlock(&data->fan_lock[module]);
->  
->  	return IRQ_NONE;
->  }
+Dear Lee,
+
+Could you take care about this patch?
+
+Best regards,
+Krzysztof
+
+Changes since v3:
+1. Remove the entries as Dan Murphy won't be mainaining them.
+
+Changes since v2:
+1. Fix subject (TP -> TI).
+
+Changes since v1:
+1. Add Dan Murphy, do not remove the entries.
+---
+ CREDITS     |  3 +++
+ MAINTAINERS | 23 -----------------------
+ 2 files changed, 3 insertions(+), 23 deletions(-)
+
+diff --git a/CREDITS b/CREDITS
+index be097156bd71..71552790774d 100644
+--- a/CREDITS
++++ b/CREDITS
+@@ -1933,6 +1933,9 @@ N: Kukjin Kim
+ E: kgene@kernel.org
+ D: Samsung S3C, S5P and Exynos ARM architectures
+ 
++N: Milo Kim
++D: TI LP855x, LP8727 and LP8788 drivers
++
+ N: Sangbeom Kim
+ E: sbkim73@samsung.com
+ D: Samsung SoC Audio (ASoC) drivers
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 00bca3e220cc..3478082debd1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17880,29 +17880,6 @@ S:	Maintained
+ F:	sound/soc/codecs/isabelle*
+ F:	sound/soc/codecs/lm49453*
+ 
+-TI LP855x BACKLIGHT DRIVER
+-M:	Milo Kim <milo.kim@ti.com>
+-S:	Maintained
+-F:	Documentation/driver-api/backlight/lp855x-driver.rst
+-F:	drivers/video/backlight/lp855x_bl.c
+-F:	include/linux/platform_data/lp855x.h
+-
+-TI LP8727 CHARGER DRIVER
+-M:	Milo Kim <milo.kim@ti.com>
+-S:	Maintained
+-F:	drivers/power/supply/lp8727_charger.c
+-F:	include/linux/platform_data/lp8727.h
+-
+-TI LP8788 MFD DRIVER
+-M:	Milo Kim <milo.kim@ti.com>
+-S:	Maintained
+-F:	drivers/iio/adc/lp8788_adc.c
+-F:	drivers/leds/leds-lp8788.c
+-F:	drivers/mfd/lp8788*.c
+-F:	drivers/power/supply/lp8788-charger.c
+-F:	drivers/regulator/lp8788-*.c
+-F:	include/linux/mfd/lp8788*.h
+-
+ TI NETCP ETHERNET DRIVER
+ M:	Wingman Kwok <w-kwok2@ti.com>
+ M:	Murali Karicheri <m-karicheri2@ti.com>
+-- 
+2.25.1
+
