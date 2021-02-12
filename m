@@ -2,113 +2,59 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 654EF319B42
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Feb 2021 09:36:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A9E7319B68
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Feb 2021 09:44:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229625AbhBLIdO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 12 Feb 2021 03:33:14 -0500
-Received: from mo-csw1515.securemx.jp ([210.130.202.154]:38578 "EHLO
+        id S229782AbhBLInj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 12 Feb 2021 03:43:39 -0500
+Received: from mo-csw1515.securemx.jp ([210.130.202.154]:51438 "EHLO
         mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229965AbhBLIdL (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 12 Feb 2021 03:33:11 -0500
-Received: by mo-csw.securemx.jp (mx-mo-csw1515) id 11C8Urdh007948; Fri, 12 Feb 2021 17:30:53 +0900
-X-Iguazu-Qid: 34tMK0YvjHbwIp64gD
-X-Iguazu-QSIG: v=2; s=0; t=1613118652; q=34tMK0YvjHbwIp64gD; m=XXCDxVKpf4aQwjavsXtZ3BLAX2tHngY0b2N6NzuemsQ=
+        with ESMTP id S230018AbhBLInh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 12 Feb 2021 03:43:37 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1515) id 11C8f5UC008286; Fri, 12 Feb 2021 17:41:05 +0900
+X-Iguazu-Qid: 34tMYNXf5Z1bu3U7ze
+X-Iguazu-QSIG: v=2; s=0; t=1613119264; q=34tMYNXf5Z1bu3U7ze; m=8BaUyYyvKED2mAc4XY3oZMbnl8h2XtUI4pdMIUeCCLo=
 Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
-        by relay.securemx.jp (mx-mr1510) id 11C8Upqq014136;
-        Fri, 12 Feb 2021 17:30:52 +0900
+        by relay.securemx.jp (mx-mr1511) id 11C8f3T5038654;
+        Fri, 12 Feb 2021 17:41:04 +0900
 Received: from enc01.toshiba.co.jp ([106.186.93.100])
-        by imx2.toshiba.co.jp  with ESMTP id 11C8Upgm015122;
-        Fri, 12 Feb 2021 17:30:51 +0900 (JST)
+        by imx2.toshiba.co.jp  with ESMTP id 11C8f3PF020430;
+        Fri, 12 Feb 2021 17:41:03 +0900 (JST)
 Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc01.toshiba.co.jp  with ESMTP id 11C8Up9s023702;
-        Fri, 12 Feb 2021 17:30:51 +0900
-Date:   Fri, 12 Feb 2021 17:30:49 +0900
+        by enc01.toshiba.co.jp  with ESMTP id 11C8f3F5032333;
+        Fri, 12 Feb 2021 17:41:03 +0900
+Date:   Fri, 12 Feb 2021 17:40:56 +0900
 From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-Cc:     linux-pwm@vger.kernel.org,
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     devicetree@vger.kernel.org, punit1.agrawal@toshiba.co.jp,
         Nobuhiro Iwamatsu <iwamatsu@nigauri.org>,
-        devicetree@vger.kernel.org, yuji2.ishikawa@toshiba.co.jp,
+        linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        linux-arm-kernel@lists.infradead.org
+        yuji2.ishikawa@toshiba.co.jp, linux-arm-kernel@lists.infradead.org
 Subject: Re: [PATCH 2/2] pwm: visconti: Add Toshiba Visconti SoC PWM support
 X-TSB-HOP: ON
-Message-ID: <20210212083049.ue4iuojjz3qjj5jn@toshiba.co.jp>
+Message-ID: <20210212084056.atz2jzlbn66prrwx@toshiba.co.jp>
 References: <20200917223140.227542-1-nobuhiro1.iwamatsu@toshiba.co.jp>
  <20200917223140.227542-3-nobuhiro1.iwamatsu@toshiba.co.jp>
- <87zh5jjyhh.fsf@kokedama.swc.toshiba.co.jp>
+ <20200922071409.lkmnhs73fu472va6@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <87zh5jjyhh.fsf@kokedama.swc.toshiba.co.jp>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200922071409.lkmnhs73fu472va6@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi, 
+Hi,
 
 Thanks for your review.
 
-On Mon, Sep 21, 2020 at 06:00:26PM +0900, Punit Agrawal wrote:
-> Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp> writes:
+On Tue, Sep 22, 2020 at 09:14:09AM +0200, Uwe Kleine-König wrote:
+> Hello,
 > 
-> > From: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
-> >
-> > Add a driver for the PWM controller on Toshiba Visconti ARM SoC.
-> >
-> > Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> > ---
-> >  drivers/pwm/Kconfig        |   9 +++
-> >  drivers/pwm/Makefile       |   1 +
-> >  drivers/pwm/pwm-visconti.c | 141 +++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 151 insertions(+)
-> >  create mode 100644 drivers/pwm/pwm-visconti.c
-> >
-> > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> > index cb8d739067d2..f99d48f74c76 100644
-> > --- a/drivers/pwm/Kconfig
-> > +++ b/drivers/pwm/Kconfig
-> > @@ -533,6 +533,15 @@ config PWM_TIEHRPWM
-> >  	  To compile this driver as a module, choose M here: the module
-> >  	  will be called pwm-tiehrpwm.
-> >  
-> > +config PWM_VISCONTI
-> > +	tristate "Toshiba Visconti PWM support"
-> > +	depends on ARCH_VISCONTI || COMPILE_TEST
-> > +	help
-> > +	  PWM Subsystem driver support for Toshiba Visconti SoCs.
-> > +
-> > +	  To compile this driver as a module, choose M here: the module
-> > +	  will be called pwm-visconti.
-> > +
-> 
-> The entries in the file seem to be alphabetically sorted. Can you please
-> move this to the appropriate location.
-> 
-
-OK, I will this.
-
-> >  config PWM_TWL
-> >  	tristate "TWL4030/6030 PWM support"
-> >  	depends on TWL4030_CORE
-> > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> > index a59c710e98c7..ef6dc1af7c17 100644
-> > --- a/drivers/pwm/Makefile
-> > +++ b/drivers/pwm/Makefile
-> > @@ -51,6 +51,7 @@ obj-$(CONFIG_PWM_SUN4I)		+= pwm-sun4i.o
-> >  obj-$(CONFIG_PWM_TEGRA)		+= pwm-tegra.o
-> >  obj-$(CONFIG_PWM_TIECAP)	+= pwm-tiecap.o
-> >  obj-$(CONFIG_PWM_TIEHRPWM)	+= pwm-tiehrpwm.o
-> > +obj-$(CONFIG_PWM_VISCONTI)	+= pwm-visconti.o
-> 
-> Same comment as above.
-> 
-> >  obj-$(CONFIG_PWM_TWL)		+= pwm-twl.o
-> >  obj-$(CONFIG_PWM_TWL_LED)	+= pwm-twl-led.o
-> >  obj-$(CONFIG_PWM_VT8500)	+= pwm-vt8500.o
+> On Fri, Sep 18, 2020 at 07:31:40AM +0900, Nobuhiro Iwamatsu wrote:
 > > diff --git a/drivers/pwm/pwm-visconti.c b/drivers/pwm/pwm-visconti.c
 > > new file mode 100644
 > > index 000000000000..601450111166
@@ -116,6 +62,14 @@ OK, I will this.
 > > +++ b/drivers/pwm/pwm-visconti.c
 > > @@ -0,0 +1,141 @@
 > > +// SPDX-License-Identifier: GPL-2.0
+> 
+> The SPDX guys deprecated "GPL-2.0" as identifier and recommend
+> "GPL-2.0-only" instead. As in the kernel both are allowed I prefer the
+> latter.
+> 
+I see. I will change to GPL-2.0-only.
+
+
 > > +/*
 > > + * Toshiba Visconti pulse-width-modulation controller driver
 > > + *
@@ -124,7 +78,13 @@ OK, I will this.
 > > + * Copyright (c) 2020 Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 > > + *
 > > + */
-> > +
+> 
+> If there is a publically available manual, please add a link here.
+> 
+
+This device's manual is not open yet. If it is opened, I will add.
+
+
 > > +#include <linux/err.h>
 > > +#include <linux/io.h>
 > > +#include <linux/module.h>
@@ -137,16 +97,17 @@ OK, I will this.
 > > +#define REG_PCSR(ch) (0x400 + 4 * (ch))
 > > +#define REG_PDUT(ch) (0x420 + 4 * (ch))
 > > +#define REG_PWM0(ch) (0x440 + 4 * (ch))
-> > +
+> 
+> Please us a prefix for the register defines. Also it would be great if
+> it would be obvious from the naming to which register the PWMACT bit
+> belongs.
+> 
+
+I will change this.
+
 > > +struct visconti_pwm_chip {
 > > +	struct pwm_chip chip;
 > > +	struct device *dev;
-> 
-> "dev" can be dropped from the structure if ..
-> 
-
-Indeed. I will drop this.
-
 > > +	void __iomem *base;
 > > +};
 > > +
@@ -161,32 +122,9 @@ Indeed. I will drop this.
 > > +
 > > +	dev_dbg(priv->dev, "%s: ch = %d en = %d p = 0x%llx d = 0x%llx\n", __func__,
 > > +		pwm->hwpwm, state->enabled, state->period, state->duty_cycle);
-> 
-> ... the usage here is replaced by "chip->dev" instead of "priv->dev".
-> 
-
-I will fix this line.
-
 > > +	if (state->enabled) {
 > > +		period = state->period / 1000;
 > > +		duty = state->duty_cycle / 1000;
-> 
-> Does it make sense to replace the constant 1000 here with the macro -
-> NSEC_PER_USEC?
-
-
-I see. I will change NSEC_PER_USEC instead of 1000.
-
-> 
-> Also, period and duty_cycle are defined as u64 in the pwm_state
-> structure. Is there any chance for the values to be truncated due to
-> them being u32 in the driver?
-
-As you pointed out, the registers of this IP are 32bit.
-Therefore, the value may be truncated. I will fix it.
-
-
-> 
 > > +		if (period < 0x10000)
 > > +			pwmc0 = 0;
 > > +		else if (period < 0x20000)
@@ -201,53 +139,64 @@ Therefore, the value may be truncated. I will fix it.
 > > +		if (pwmc0) {
 > > +			period /= BIT(pwmc0);
 > > +			duty /= BIT(pwmc0);
-> 
-> It would be better to replace division with right-shift operator.
-> 
-> period >>= pwmc0;
-> duty >>= pwmc0;
-
-I will change to use shift.
-
-> 
 > > +		}
-> > +
+> 
+> You can drop the if and just make this:
+> 
+> 	period <<= pwmc0;
+> 	duty <<= pwmc0;
+> 
+> as this is a noop if pwmc0 is zero.
+> 
+
+I will fix this.
+
+
 > > +		if (state->polarity == PWM_POLARITY_INVERSED)
 > > +			pwmc0 |= PWMC0_PWMACT;
 > > +
 > > +		writel(pwmc0, priv->base + REG_PWM0(pwm->hwpwm));
 > > +		writel(duty, priv->base + REG_PDUT(pwm->hwpwm));
 > > +		writel(period, priv->base + REG_PCSR(pwm->hwpwm));
+> 
+> Some comments about the function of the hardware would be good.
+> Something like (I assume the optimal hardware here, please adapt to
+> reality):
+> 
+> 	pwmc is a 2-bit divider for the input clock running at 1 MHz.
+> 	When the settings of the PWM are modified, the new values are
+> 	shadowed in hardware until the period register (PCSR) is written
+> 	and the currently running period is completed. This way the
+> 	hardware switches atomically from the old setting to the new.
+> 	Also disabling the hardware completes the currently running
+> 	period and then the output drives the inactive state.
+> 
+> (I'm sure however this is wrong because you don't consider
+> state->polarity in the !state-enabled case.)
+> 
+> If your hardware doesn't behave as indicated please add a Limitations
+> paragraph at the beginning of the driver as is done for several other
+> drivers already describing the shortcomings.
+> 
+
+OK, I will add a comment about IP restrictions as you pointed out.
+
+
 > > +	} else {
 > > +		writel(0, priv->base + REG_PCSR(pwm->hwpwm));
 > > +	}
-> 
-> One suggestion - the else condition can be handled first to reduce
-> indentation for the state->enabled condition,
-> 
-> 
->         if (!state->enabled) {
->            ...
->            return 0;
->         }
-> 
-> 
->         <handle state enabled case>
-> 
-> But so far the driver is simple enough so I'll leave it upto you which
-> way you prefer.
-
-
-I see. 
-I will change to your suggestion. 
-
-> 
 > > +
 > > +	return 0;
 > > +}
 > > +
 > > +static const struct pwm_ops visconti_pwm_ops = {
 > > +	.apply = visconti_pwm_apply,
+> 
+> Please implement .get_state(). (And test it using PWM_DEBUG.)
+> 
+
+OK, I will add get_state() function.
+
 > > +	.owner = THIS_MODULE,
 > > +};
 > > +
@@ -262,10 +211,27 @@ I will change to your suggestion.
 > > +		return -ENOMEM;
 > > +
 > > +	priv->dev = &pdev->dev;
-> > +
+> 
+> You can better use
+> 
+> 	priv->dev = dev;
+> 
+> here. (But I agree to the previous review that it makes little sense to
+> keep this member in struct visconti_pwm_chip.)
+> 
+
+OK, I will remove dev from visconti_pwm_chip.
+
 > > +	priv->base = devm_platform_ioremap_resource(pdev, 0);
 > > +	if (IS_ERR(priv->base)) {
 > > +		dev_err(dev, "unable to map I/O space\n");
+> 
+> devm_platform_ioremap_resource already emits an error message on failure,
+> so no need to add another.
+
+OK, I will drop error message.
+
+> 
 > > +		return PTR_ERR(priv->base);
 > > +	}
 > > +
@@ -279,11 +245,23 @@ I will change to your suggestion.
 > > +	ret = pwmchip_add(&priv->chip);
 > > +	if (ret < 0) {
 > > +		dev_err(dev, "Cannot register visconti PWM: %d\n", ret);
+> 
+> Please use dev_err_probe here or %pe for the error code.
+> 
+
+
+I will chakge to using  dev_err_probe.
+
 > > +		return ret;
 > > +	}
 > > +
 > > +	dev_info(&pdev->dev, "visconti PWM registered\n");
-> > +
+> 
+> Please degrade this to dev_dbg.
+
+I will change to dev_dbg.
+
+> 
 > > +	return 0;
 > > +}
 > > +
@@ -300,7 +278,12 @@ I will change to your suggestion.
 > > +};
 > > +
 > > +MODULE_DEVICE_TABLE(of, visconti_pwm_of_match);
-> > +
+> 
+> Please drop the empty line before MODULE_DEVICE_TABLE.
+> 
+
+OK, I will drop this.
+
 > > +static struct platform_driver visconti_pwm_driver = {
 > > +	.driver = {
 > > +		.name = "pwm-visconti",
@@ -311,22 +294,38 @@ I will change to your suggestion.
 > > +};
 > > +
 > > +module_platform_driver(visconti_pwm_driver);
-> > +
+> 
+> The empty line before module_platform_driver is also unusual.
+> 
+OK, I will drop this.
+
 > > +MODULE_LICENSE("GPL v2");
 > > +MODULE_AUTHOR("Toshiba");
-> 
-> Please use the author name / email here.
-> 
-
-I see. I will change MODULE_AUTHOR to my name and email.
-
 > > +MODULE_ALIAS("platform:visconti-pwm");
 > 
-> Thanks,
-> Punit
+> This is wrong; as the driver name is pwm-visconti this should be
+> MODULE_ALIAS("platform:pwm-visconti");
+
+OK, I will change to "platform:pwm-visconti".
+
 > 
+> Best regards
+> Uwe
+> 
+
+Thanks!
+
+Best regards,
+  Nobuhiro
+
+> -- 
+> Pengutronix e.K.                           | Uwe Kleine-König            |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+
+
 > _______________________________________________
 > linux-arm-kernel mailing list
 > linux-arm-kernel@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+
