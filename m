@@ -2,131 +2,95 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BB5C31BAEC
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Feb 2021 15:23:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DDB4321156
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Feb 2021 08:23:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229933AbhBOOXC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 15 Feb 2021 09:23:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52248 "EHLO
+        id S229886AbhBVHXT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 22 Feb 2021 02:23:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229961AbhBOOXA (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 15 Feb 2021 09:23:00 -0500
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3616AC061788
-        for <linux-pwm@vger.kernel.org>; Mon, 15 Feb 2021 06:22:20 -0800 (PST)
-Received: by mail-wr1-x431.google.com with SMTP id 7so9174893wrz.0
-        for <linux-pwm@vger.kernel.org>; Mon, 15 Feb 2021 06:22:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=cNvVdIdxlGj+Sfuamem72Qeix0oXAhgklbIFT61Vzrw=;
-        b=bmcYji8KmCDbksc8hp2MPVH5eDhkXRgtiRRfCRq6DoX2SEzAHyOlzQ8MimKicYZ9xC
-         7T87ysTFuAlWQw/+jY0Gid3ydZ+2hT460y3G8h1X2uC2a78MZckm5G4Noz+gW+rkep05
-         lVKA9dNP2HfcTsfjRTtZvbrLf5wmJAOZE4k+2Dh5baeQhavOwAiNWxaC6o6QaM9+8zP/
-         54JW0GJMfUMwO2nQg8Py25NO45SApbJ8njSeJ1SDZgXnhEmwi6VtSn2qwARAwFplSZgV
-         KZrsU//AhVGco7TlybPeYe9+BZSj0rvHalZIUlQ4kyX3keUE81D19FNWvFN39+PVh+bZ
-         YcFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=cNvVdIdxlGj+Sfuamem72Qeix0oXAhgklbIFT61Vzrw=;
-        b=JDH+vaS5x3OG/xzg6L2T4Cp3wL8plXH323EpsGp9k1TJ1RAVkoXU35jx15CTprZKvL
-         qzlKxbV3O2/MA5cHI2LO+DBmH0KVhKfZWrxenk1YSy9J/tI7IX+7DspR14fFQ+BFgpz9
-         9/PmKONtOdy+AUzZs00AeX35zfJ8oXwupnWQG39Iz9XRNFCr3oSo2pnqGarjR5fJ1FPy
-         VN7eC5rTuym/S/B9jVCs5nIQUSXdlngiQxwZOxkn815A1eIHkJXZfHMNH1nfKTifTbGG
-         wHINovAEyD28bZRkx24EgJyFuR5muLJ1cMaK4ZErsXF6ikdh7zKCuLiObpuRJATQV4Y9
-         HfGw==
-X-Gm-Message-State: AOAM5332bB6kp7bHs0mDoIJ2iEf6gNfsg3Pj2H4X7NStNC2709d/p+D2
-        F7O1+dy4aNHd84vw0Q7GugE7lA==
-X-Google-Smtp-Source: ABdhPJyvLoPzpqgceTkmdirn2jBoo7kyNUoI9xyniMGSW3yxHYUlh/mGG05y681DGTzNHzaIx7MD9w==
-X-Received: by 2002:adf:fc4c:: with SMTP id e12mr19808318wrs.106.1613398938553;
-        Mon, 15 Feb 2021 06:22:18 -0800 (PST)
-Received: from dell ([91.110.221.146])
-        by smtp.gmail.com with ESMTPSA id f14sm17218090wmg.28.2021.02.15.06.22.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Feb 2021 06:22:18 -0800 (PST)
-Date:   Mon, 15 Feb 2021 14:22:16 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Emil Velikov <emil.l.velikov@gmail.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>, linux-pwm@vger.kernel.org,
-        linux-fbdev <linux-fbdev@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Linux PM <linux-pm@vger.kernel.org>, linux-iio@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        linux-leds@vger.kernel.org
-Subject: Re: [PATCH v4] MAINTAINERS: move Milo Kim to credits
-Message-ID: <20210215142216.GA4770@dell>
-References: <20210212163229.68270-1-krzk@kernel.org>
- <20210215085241.GG179940@dell>
- <CACvgo53wn84G8wuyF++=bwtjnVzVB31BA2_JBWnihnwinSFD7A@mail.gmail.com>
+        with ESMTP id S229934AbhBVHXO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Feb 2021 02:23:14 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3063CC06178A
+        for <linux-pwm@vger.kernel.org>; Sun, 21 Feb 2021 23:22:34 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lE5Y7-0005IW-12; Mon, 22 Feb 2021 08:22:31 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lE5Y5-0004hX-OL; Mon, 22 Feb 2021 08:22:29 +0100
+Date:   Mon, 22 Feb 2021 08:22:29 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     =?utf-8?B?54+t5rab?= <fengzheng923@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mripard@kernel.org, wens@csie.org, thierry.reding@gmail.com,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v2] pwm: sunxi: Add Allwinner SoC PWM controller driver
+Message-ID: <20210222072229.6zvwi2c5eojy2d4j@pengutronix.de>
+References: <20210203125317.1975-1-fengzheng923@gmail.com>
+ <20210203151200.fdzzq23teoypbxad@pengutronix.de>
+ <CAE=m618FY6_Qq1gNmkivswKjCB984WfV_Cr_Cw253ffGQmAS5Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vxfyc6lupdiwoyhb"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACvgo53wn84G8wuyF++=bwtjnVzVB31BA2_JBWnihnwinSFD7A@mail.gmail.com>
+In-Reply-To: <CAE=m618FY6_Qq1gNmkivswKjCB984WfV_Cr_Cw253ffGQmAS5Q@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 15 Feb 2021, Emil Velikov wrote:
 
-> Greetings everyone,
-> 
-> On Mon, 15 Feb 2021 at 08:52, Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > On Fri, 12 Feb 2021, Krzysztof Kozlowski wrote:
-> >
-> > > Milo Kim's email in TI bounces with permanent error (550: Invalid
-> > > recipient).  Last email from him on LKML was in 2017.  Move Milo Kim to
-> > > credits and remove the separate driver entries for:
-> > >  - TI LP855x backlight driver,
-> > >  - TI LP8727 charger driver,
-> > >  - TI LP8788 MFD (ADC, LEDs, charger and regulator) drivers.
-> > >
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > Cc: Mark Brown <broonie@kernel.org>
-> > > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > Cc: Jingoo Han <jingoohan1@gmail.com>
-> > > Cc: Lee Jones <lee.jones@linaro.org>
-> > > Cc: Pavel Machek <pavel@ucw.cz>
-> > > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > > Cc: Sebastian Reichel <sre@kernel.org>
-> > > Cc: Daniel Thompson <daniel.thompson@linaro.org>
-> > >
-> > > ---
-> > >
-> > > Dear Lee,
-> > >
-> > > Could you take care about this patch?
-> >
-> > Yes, but I'll be sending out my pull-request for v5.12 in the next
-> > couple of days (maybe even today if I can find some time), so this
-> > will have to wait until v5.13.
-> >
-> Would it make sense to keep the MAINTAINERS entries as "orphan"?
-> Checking with linux-next, the drivers are still present in-tree.
+--vxfyc6lupdiwoyhb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please see:
+On Sat, Feb 20, 2021 at 10:18:27AM +0800, =E7=8F=AD=E6=B6=9B wrote:
+> Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> =E4=BA=8E2021=E5=
+=B9=B42=E6=9C=883=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=8811:12=E5=86=
+=99=E9=81=93=EF=BC=9A
+>=20
+> > Hello Ban,
+> >
+> > On Wed, Feb 03, 2021 at 08:53:17PM +0800, Ban Tao wrote:
+> > > v1->v2:
+> >
+> > FTR: v1 wasn't sent to any list, so don't try to find it in some
+> > archive.
+> >
+>=20
+> Sorry, I understand. So is the next patch v3? Or v2?
 
- https://lore.kernel.org/patchwork/patch/1379016/
+Using v3 is fine. Please don't send another series that is called v2.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--vxfyc6lupdiwoyhb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmAzW7IACgkQwfwUeK3K
+7AkWwggAhkq6CJS1KD9oYQ7qNG+6yhKRylexiymtJ45lhxwj/YUPyL7xn23lqE/i
+8amGrQHfQQ0UO3CaDg2/TVPRZ2DKdTBjEk9KAvaQNfGdGe67D4f3J0n0Uh/CZThg
+BzEVTRg8KwQiTtCUu3pQ3DhKHD9JoZ28S5KB3PZr3yUNhwUAfH+gFeuZzZK7HGUU
+CZyaiXha2RC9Rw7E7xl57yCQ1W+0bL8nBxQoWKfcPDvyTicDn1rml5OpVxOuQJEr
+nGCvBs1jBi997AKCbpEP0fSlMIpsROdCdYekA1/k6sBXfhkDYsVC5uROJz+c4bmC
+hmBwy/BHc+IrAm8ccERZwsUpDnVA+A==
+=hBBJ
+-----END PGP SIGNATURE-----
+
+--vxfyc6lupdiwoyhb--
