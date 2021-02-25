@@ -2,126 +2,90 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58C073256D0
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Feb 2021 20:37:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7D0A3257A5
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Feb 2021 21:30:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234429AbhBYTg6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 25 Feb 2021 14:36:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34526 "EHLO
+        id S234058AbhBYUaU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 25 Feb 2021 15:30:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234934AbhBYTfO (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 25 Feb 2021 14:35:14 -0500
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9933C061756;
-        Thu, 25 Feb 2021 11:34:33 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id n4so4399737wmq.3;
-        Thu, 25 Feb 2021 11:34:33 -0800 (PST)
+        with ESMTP id S234468AbhBYU3Q (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 25 Feb 2021 15:29:16 -0500
+Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 559A6C061756
+        for <linux-pwm@vger.kernel.org>; Thu, 25 Feb 2021 12:28:36 -0800 (PST)
+Received: by mail-il1-x135.google.com with SMTP id o1so6077137ila.11
+        for <linux-pwm@vger.kernel.org>; Thu, 25 Feb 2021 12:28:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lVZp14Mcd8FycajwzlQP/vuilnLXZoOgy0eCNqGJ0m4=;
-        b=J2OOoVb9u1EcBPPokPsurVn8KByV44J0ZX04iFk+WG9o0jK/+46MmhfxeokcEoOFq5
-         1SsNH8pYoGUiLpKHMQP86m42LwO3m5cqVkkTTMtEH3h9j3A1hDP2wjXxmGMw+VreIScx
-         QHIRtyPM302s6uvGDjg52bNin/2w++v8bV/rEK5Ehru6aC5aTw5w9nE4GLiDjD9mSTLM
-         FRitHNTceFI9JT2yIT7UAxteMmM1HyEkLXVIfxmdGGDaSrC9mT1wGsZorSOAW3XrPvNP
-         9ltDTJmirJrfXXpsJwMHWPa1JR27q6NA6dU+Lls+h/fvEYnxLLG7M/Az4+OEuvkLnH/Y
-         iL2g==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z4eHLGp721chnJdPwO6uZcOzua6OKeicZtQo55lPVJ8=;
+        b=UnFTFbTL3lkN9ox2PniBTZrWFsUhvVW6QbaDv3hKnZTI1eLXnJMdqyNlp3O7YcCPa3
+         RIF+xJWU6C2jfrhG0p4cv1M0RQ7FcU7rUUJcWbskF1T5m9Ko88vgi2mYSrnt627k/n5+
+         d4AydKV/FHSnMXpbaTPXmA8Rj95YwxnHXJr+8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lVZp14Mcd8FycajwzlQP/vuilnLXZoOgy0eCNqGJ0m4=;
-        b=qddflWq0/qRthxARGhzrgrJo1uwulMw3wWhHXQX0P30n8DMBqkU7bAEByw+54f8/Lv
-         QyJuf8gwps61wVys5qYlauulXL/r3tersKdEPpYvCZbwUvXsDqe/xDngO574tJgLjmxN
-         r/qccxITXfI1dDfgOBUtJYGKTPo3lITe6TFdptG3z2F7fNyNMWFmRU10P6flazL5LM6j
-         ifWNUeTVX+wgTn/6H7b8Vo4kMmTb8S0fqoPtBeBTN9zxi0vHTotg/KdY9S5loNRT9bvo
-         Ovj9TDPcaQH7+KlSP9+hD9ji5jAy+PmjDdNJb2p0hGZnZ8/yBGyNSf8TbmqD76g6T7Mh
-         JBzA==
-X-Gm-Message-State: AOAM532wTABxdZ7GZMJUkRMw2TbSdLE6LndI7hTPIc6mZC8JCZMK7JhA
-        0H3ktz9oayP6GNfeohFH798=
-X-Google-Smtp-Source: ABdhPJwi5c4JQV8ntU927+jDX4oN5q5lZTAZXC2Q5YRE4TxwY/2Geq592o1YkHgyFLECtmTfocsLmA==
-X-Received: by 2002:a05:600c:4f94:: with SMTP id n20mr4670107wmq.78.1614281672529;
-        Thu, 25 Feb 2021 11:34:32 -0800 (PST)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id k15sm8417005wmj.6.2021.02.25.11.34.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Feb 2021 11:34:31 -0800 (PST)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] pwm: Changes for v5.12-rc1
-Date:   Thu, 25 Feb 2021 20:34:26 +0100
-Message-Id: <20210225193426.3679817-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.30.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z4eHLGp721chnJdPwO6uZcOzua6OKeicZtQo55lPVJ8=;
+        b=LBmgxXXrPtEi7J2SP6aX0bLEKFKIUIF16vlgwLU6ypEUKOcmrf3J06pFCbpN4NnDxk
+         BmIBdD+aPKhUXtdiHfwA6kRGdJzzgoN2MZXBFhXdD9mili/ocrT9QKwowpUVysThYlpN
+         YPhe3Z98RHS2WMEBdWF8VhexfJeyfCYvMO2Twad9kUY3vrrXhni0PhHwlaomIU+SVORw
+         agOhtMSPvtbeb70obXSTn1JEManehasAJSCXbsGzErf/liZHY+QDsr4YtzgfNVKzruJy
+         gyz8fEQjmWH/4dRmg/huEEzUNGaoIVPcu3a9tzxGCnMYK+HvFYgK4Wg0sPB8HGNHWsUY
+         6yyw==
+X-Gm-Message-State: AOAM531ypZ1ELF49uqYI3IdhD7obcscAYwe1YNjMZQAy0evk2h0cyaup
+        zZ9SewDppQLC78xlMb1Dab1+NygynjWRcw==
+X-Google-Smtp-Source: ABdhPJwKaEsGJpiAsI6lpqIbWQ+M/Z2MvpBY4cYKPTa/tnZqceuL8ZC+VPa0IX+P8IITEzchWHV3Pg==
+X-Received: by 2002:a05:6e02:ca1:: with SMTP id 1mr3886379ilg.242.1614284915535;
+        Thu, 25 Feb 2021 12:28:35 -0800 (PST)
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com. [209.85.166.44])
+        by smtp.gmail.com with ESMTPSA id r9sm3537092ill.72.2021.02.25.12.28.35
+        for <linux-pwm@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Feb 2021 12:28:35 -0800 (PST)
+Received: by mail-io1-f44.google.com with SMTP id f20so7295471ioo.10
+        for <linux-pwm@vger.kernel.org>; Thu, 25 Feb 2021 12:28:35 -0800 (PST)
+X-Received: by 2002:a6b:7619:: with SMTP id g25mr4350943iom.177.1614284914825;
+ Thu, 25 Feb 2021 12:28:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20210225193426.3679817-1-thierry.reding@gmail.com>
+In-Reply-To: <20210225193426.3679817-1-thierry.reding@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 25 Feb 2021 12:28:18 -0800
+X-Gmail-Original-Message-ID: <CAHk-=witngtUa0Rx_C3semguau62obR3UQSTbQpUyp9YCUbNbA@mail.gmail.com>
+Message-ID: <CAHk-=witngtUa0Rx_C3semguau62obR3UQSTbQpUyp9YCUbNbA@mail.gmail.com>
+Subject: Re: [GIT PULL] pwm: Changes for v5.12-rc1
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Linus,
+On Thu, Feb 25, 2021 at 11:34 AM Thierry Reding
+<thierry.reding@gmail.com> wrote:
+>
+> As I was generating the pull request I noticed that I forgot to fast-
+> forward this to v5.11-rc1 after the last merge window.
 
-The following changes since commit 6eefb79d6f5bc4086bd02c76f1072dd4a8d9d9f6:
+Honestly, there is very little reason to ever do the fast-forward if
+the new development doesn't depend on new features, and I have
+absolutely no issues pulling something like this that is simply just a
+continuation of a previous development tree.
 
-  pwm: sun4i: Remove erroneous else branch (2020-12-17 14:23:49 +0100)
+So you did the right thing in not re-basing, this looks fine to me.
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.12-rc1
-
-for you to fetch changes up to 9a9dd7e473517b68412fd2da3da8a4aeb4ecb38a:
-
-  pwm: lpc18xx-sct: remove unneeded semicolon (2021-02-22 15:20:43 +0100)
-
-As I was generating the pull request I noticed that I forgot to fast-
-forward this to v5.11-rc1 after the last merge window. However, I did
-not think a last-minute rebase was appropriate. I did go back and ran
-my test builds on a rebase on top of v5.11-rc1 and everything checked
-out, so I think this is safe to merge. Also, linux-next would have
-caught any problems related to this. I'll make sure to properly roll
-forward the branch next time.
+Obviously, every once in a while a development tree would want to
+update to a newer base, just because of various infrastructure changes
+that could otherwise cause semantic conflicts etc if you end up basing
+stuff on something _truly_ ancient.  But a release or two? No problem
+at all.
 
 Thanks,
-Thierry
 
-----------------------------------------------------------------
-pwm: Changes for v5.12-rc1
-
-The ZTE ZX platform is being removed, so the PWM driver is no longer
-needed and removed as well. Other than that this contains a small set of
-fixes and cleanups across a couple of drivers.
-
-----------------------------------------------------------------
-Arnd Bergmann (1):
-      pwm: Remove ZTE ZX driver
-
-Jeff LaBundy (1):
-      pwm: iqs620a: Correct a stale state variable
-
-Simon South (5):
-      pwm: rockchip: Enable APB clock during register access while probing
-      pwm: rockchip: rockchip_pwm_probe(): Remove superfluous clk_unprepare()
-      pwm: rockchip: Replace "bus clk" with "PWM clk"
-      pwm: rockchip: Eliminate potential race condition when probing
-      pwm: rockchip: Enable clock before calling clk_get_rate()
-
-Uwe Kleine-König (1):
-      pwm: iqs620a: Fix overflow and optimize calculations
-
-Yang Li (1):
-      pwm: lpc18xx-sct: remove unneeded semicolon
-
- Documentation/devicetree/bindings/pwm/pwm-zx.txt |  22 --
- drivers/pwm/Kconfig                              |  10 -
- drivers/pwm/Makefile                             |   1 -
- drivers/pwm/pwm-iqs620a.c                        |  94 ++++----
- drivers/pwm/pwm-lpc18xx-sct.c                    |   2 +-
- drivers/pwm/pwm-rockchip.c                       |  32 ++-
- drivers/pwm/pwm-zx.c                             | 278 -----------------------
- 7 files changed, 65 insertions(+), 374 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-zx.txt
- delete mode 100644 drivers/pwm/pwm-zx.c
+               Linus
