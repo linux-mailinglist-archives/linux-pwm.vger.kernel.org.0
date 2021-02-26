@@ -2,61 +2,83 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DEE93257AE
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Feb 2021 21:32:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C40E32606C
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Feb 2021 10:48:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234385AbhBYUbh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 25 Feb 2021 15:31:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234107AbhBYUab (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 25 Feb 2021 15:30:31 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 9196064F31;
-        Thu, 25 Feb 2021 20:29:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614284990;
-        bh=6TzGkHYtDWGGkmRQMOy+QOiaiKcrffOEkxH+upkAS/8=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=PPTaVJdoNN9M01sGplTIliLxmEUPkYxoLOCKEV4kpZN9IAnOve8NmajpWfIHOhmPV
-         yR6zXZs9s+5585GDdHKwbMaTCsSlFFL8i3ObQiA3zo1LhDj3OW7MTO4qpo+muc7fDp
-         tsZdwBUVPRnQAYuC4g2vF9kx/rhoo8p80nBLQTXBRZ9RM+Sdw/WJd8OopxGgpgQ5F5
-         ifrI41CBqKx/nE3sMv3vfv+Q5u3mPEWF6p456LiP2rQ/XbTrlNmTaWJmAs1FyYCpQa
-         WLqa1a/mZa7EnXS/SIGtE/lIEon/euv6iBPaSyFUpS63fTpv1tnMLIh3VAwznmrFk9
-         AiuQSYA7m/cYg==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 8BC51609F5;
-        Thu, 25 Feb 2021 20:29:50 +0000 (UTC)
-Subject: Re: [GIT PULL] pwm: Changes for v5.12-rc1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20210225193426.3679817-1-thierry.reding@gmail.com>
-References: <20210225193426.3679817-1-thierry.reding@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20210225193426.3679817-1-thierry.reding@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.12-rc1
-X-PR-Tracked-Commit-Id: 9a9dd7e473517b68412fd2da3da8a4aeb4ecb38a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2c87f7a38f930ef6f6a7bdd04aeb82ce3971b54b
-Message-Id: <161428499056.20173.10269401811789879646.pr-tracker-bot@kernel.org>
-Date:   Thu, 25 Feb 2021 20:29:50 +0000
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+        id S229550AbhBZJsF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 26 Feb 2021 04:48:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229482AbhBZJsE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 26 Feb 2021 04:48:04 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1C96C061574
+        for <linux-pwm@vger.kernel.org>; Fri, 26 Feb 2021 01:47:24 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lFZiU-0008IA-93; Fri, 26 Feb 2021 10:47:22 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lFZiT-0001rt-RD; Fri, 26 Feb 2021 10:47:21 +0100
+Date:   Fri, 26 Feb 2021 10:47:21 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Jeff LaBundy <jeff@labundy.com>
+Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v2] pwm: iqs620a: Correct a stale state variable
+Message-ID: <20210226094721.2uzjupkcy42qpjuw@pengutronix.de>
+References: <1611030629-21746-1-git-send-email-jeff@labundy.com>
+ <20210122181239.ut33bmzxlvy2mx5f@pengutronix.de>
+ <20210215011927.GA15385@labundy.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="iul7quvq7cqhkcqx"
+Content-Disposition: inline
+In-Reply-To: <20210215011927.GA15385@labundy.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The pull request you sent on Thu, 25 Feb 2021 20:34:26 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.12-rc1
+--iul7quvq7cqhkcqx
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2c87f7a38f930ef6f6a7bdd04aeb82ce3971b54b
+Hello Jeff,
 
-Thank you!
+On Sun, Feb 14, 2021 at 07:19:27PM -0600, Jeff LaBundy wrote:
+> Do you have any objection to applying Uwe's patch [1] followed by
+> this one so that they can land in 5.12?
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+FTR: These two patches are in Linus' tree now.
+=20
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--iul7quvq7cqhkcqx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmA4w6YACgkQwfwUeK3K
+7AmnKgf/au2V/YbjJGilLTXeJRv30aBAQ/E4uMdQBXO3KxvDBfisSEEQWmEzU1H8
+jf3VQpMgCdOjx11AxZIrZMYSNahVk4/HVeQnYwma8gLQwxQnc76V4OdU97rZf6Go
+f63u9nOb13vgkC//qKvljfuoTrtxp7dvP9SiaYd3DQFbDOgig7lXPlNBByk2rF5A
+1ABdTqhqHtS/L03T4DUwPdMCYaOMj1tusdk+OBdL3TWzB3C9sRoiMPro5eW5+bh3
+ju5CRgVBvmWPGlSeYqoO8CvMfem8H05+KHsXgkTSs5xUvvYxONQ42k6Yr9J1p0wT
+tbLRJoTrsVlVN18/flHc+99MRKirgw==
+=WnQE
+-----END PGP SIGNATURE-----
+
+--iul7quvq7cqhkcqx--
