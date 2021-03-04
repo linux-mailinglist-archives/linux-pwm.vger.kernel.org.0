@@ -2,89 +2,109 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D4B132CA85
-	for <lists+linux-pwm@lfdr.de>; Thu,  4 Mar 2021 03:45:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 03D6E32CD2E
+	for <lists+linux-pwm@lfdr.de>; Thu,  4 Mar 2021 07:50:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231411AbhCDCoN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 3 Mar 2021 21:44:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51630 "EHLO
+        id S235751AbhCDGsc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 4 Mar 2021 01:48:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231445AbhCDCny (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 Mar 2021 21:43:54 -0500
-Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B260FC061756
-        for <linux-pwm@vger.kernel.org>; Wed,  3 Mar 2021 18:43:14 -0800 (PST)
-Received: by mail-qt1-x829.google.com with SMTP id 2so10267617qtw.1
-        for <linux-pwm@vger.kernel.org>; Wed, 03 Mar 2021 18:43:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=f2rQ/+qfqDHNMsOFwnT814eTwP+Vh04AEIGtU1NncxE=;
-        b=H/JaHEqj2kT5FTBZkMWtLShWL7EFGhlqYVJUSobNY6MMaPX7+BCGVHeAsMDpI5q8ZC
-         t8AtvI9o/rxHfiTApqHvqMI8t95LeIRp4jUEg6Xh3TUUSNfQIP+6zdBn62r5hRk1W/CE
-         hXA3vbrkbuDzuNeX2ZPRtnpPAX2yGoh+RIWMwJsYv1PojmhGOWKpa+Jxnhb1kQweUltI
-         8jKrgRj3HHzIvFiAbgfCQ7u5xRMhM2FsgkMj5sw3dyXd9i+s+YzxKYIEMhiMPEKgU4z+
-         NDJS6wo9sOZPK1tNJ78Nr9C+GY2RFVSPEXnpQR81+GuWtPxnksEfXskkJUCId5rcFO+u
-         fRTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=f2rQ/+qfqDHNMsOFwnT814eTwP+Vh04AEIGtU1NncxE=;
-        b=DstEqy6KR8ogaYZKlK4KFM0bot0UBmZ2PVr1ZE5JibEVlWDNspxCgnfnfBs6zA5SEc
-         BRqoEm3uuGX2Akq2mwkdhLz0TeCsWAo8Vdi8hRDUYnGAKB6O1xg3PWXQnyEO1aTxSohQ
-         Xtl7eRV4ZG5+Ttz0I6M/drmAgiBYZjXUIRc4KcfX+icyNM2bBV6NoXfAPxs2h527xFH/
-         xk3qtLgHFR1DMoRRFOxBWQeY8KKACrfSeCkeVKD0/mGgA4Qla62MD+CUjRC/WmN6dk4N
-         wpf8Y0HoFeuq9Cs+01eurWyDBgAXvGqy+cXRFf1FyG6lhQ3YfAwTmwL0YtSkDANslOPk
-         OYJA==
-X-Gm-Message-State: AOAM533UqVIOqyKM1l8H+SMZnVm59a47WuSf6P/mOk/hdbX+ItPECcmb
-        QouTXaHN7ZWmyEMZyp1f1L8=
-X-Google-Smtp-Source: ABdhPJyMPOwphSNB0e3YM9/2fobyAeAhBTX3VMjFa7lyN8wZtBL3yd2wXAJuu/pd+3w146xTIOQsLw==
-X-Received: by 2002:ac8:5ec3:: with SMTP id s3mr2239685qtx.145.1614825794015;
-        Wed, 03 Mar 2021 18:43:14 -0800 (PST)
-Received: from localhost.localdomain ([2804:14c:482:919::1001])
-        by smtp.gmail.com with ESMTPSA id x57sm14793581qtb.25.2021.03.03.18.43.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Mar 2021 18:43:13 -0800 (PST)
-From:   Fabio Estevam <festevam@gmail.com>
-To:     thierry.reding@gmail.com
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH] pwm: imx-tpm: Use a single line for error message
-Date:   Wed,  3 Mar 2021 23:42:42 -0300
-Message-Id: <20210304024242.2363294-1-festevam@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S235778AbhCDGsS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 4 Mar 2021 01:48:18 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0713C061756
+        for <linux-pwm@vger.kernel.org>; Wed,  3 Mar 2021 22:47:37 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lHhlm-0001qV-G1; Thu, 04 Mar 2021 07:47:34 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lHhll-0005lH-Iu; Thu, 04 Mar 2021 07:47:33 +0100
+Date:   Thu, 4 Mar 2021 07:47:33 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>, kernel@pengutronix.de
+Subject: Re: [PATCH] pwm: imx-tpm: Use a single line for error message
+Message-ID: <20210304064733.cx4fpc7z2kvg5jrj@pengutronix.de>
+References: <20210304024242.2363294-1-festevam@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zwnvyy6huiplilck"
+Content-Disposition: inline
+In-Reply-To: <20210304024242.2363294-1-festevam@gmail.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-There is no need to split the dev_err() call in three lines.
 
-Use a single line to improve readability.
+--zwnvyy6huiplilck
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- drivers/pwm/pwm-imx-tpm.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Hello Fabio,
 
-diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
-index aaf629bd8c35..eec9ec4e1a2a 100644
---- a/drivers/pwm/pwm-imx-tpm.c
-+++ b/drivers/pwm/pwm-imx-tpm.c
-@@ -411,9 +411,7 @@ static int __maybe_unused pwm_imx_tpm_resume(struct device *dev)
- 
- 	ret = clk_prepare_enable(tpm->clk);
- 	if (ret)
--		dev_err(dev,
--			"failed to prepare or enable clock: %d\n",
--			ret);
-+		dev_err(dev, "failed to prepare or enable clock: %d\n", ret);
- 
- 	return ret;
- }
--- 
-2.17.1
+[expanding Cc: a bit]
 
+On Wed, Mar 03, 2021 at 11:42:42PM -0300, Fabio Estevam wrote:
+> There is no need to split the dev_err() call in three lines.
+>=20
+> Use a single line to improve readability.
+
+For me the reason to like this change is more to save vertical space
+without making readability worse, but *shrug*.
+
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Thanks
+Uwe
+
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> ---
+>  drivers/pwm/pwm-imx-tpm.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
+> index aaf629bd8c35..eec9ec4e1a2a 100644
+> --- a/drivers/pwm/pwm-imx-tpm.c
+> +++ b/drivers/pwm/pwm-imx-tpm.c
+> @@ -411,9 +411,7 @@ static int __maybe_unused pwm_imx_tpm_resume(struct d=
+evice *dev)
+> =20
+>  	ret =3D clk_prepare_enable(tpm->clk);
+>  	if (ret)
+> -		dev_err(dev,
+> -			"failed to prepare or enable clock: %d\n",
+> -			ret);
+> +		dev_err(dev, "failed to prepare or enable clock: %d\n", ret);
+> =20
+>  	return ret;
+>  }
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--zwnvyy6huiplilck
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmBAgoEACgkQwfwUeK3K
+7AmYBgf+M7Xa135Put73AGRJUjp5XPpIaGdFvZP6dzvnCRZvIILSPB/MVtdVH70+
+Awjat2sPqHPCaTVT3YnVx315mDVxvRf0PVnwnZSKcduYqbyRO+ikjGv4NRRhlkk8
+R4agaVEfNNUxNvh0fNW6cmg/XB++pkQ+kmEPynCj4XmfxXwU2anvrGj8foBCZqc/
+h2ZsGS5mv2WcdhHv/PTnP/sRWLNtEI45VV6grHZU6QErPgcRm013qrHWV5sepTSa
+hqV8jaco2obnRbf1j1vn3f2aqjX7UQB4dajdAHZJIrID4Qt6cZBIQEFCRMCUZzmu
+ogiv6E+c5jRKrbbwjSD2RgciZ9ST+w==
+=ojMc
+-----END PGP SIGNATURE-----
+
+--zwnvyy6huiplilck--
