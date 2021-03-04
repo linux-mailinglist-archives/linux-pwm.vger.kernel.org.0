@@ -2,76 +2,89 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 19D3432C577
-	for <lists+linux-pwm@lfdr.de>; Thu,  4 Mar 2021 01:59:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D4B132CA85
+	for <lists+linux-pwm@lfdr.de>; Thu,  4 Mar 2021 03:45:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347850AbhCDAVG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 3 Mar 2021 19:21:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37824 "EHLO
+        id S231411AbhCDCoN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 3 Mar 2021 21:44:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1842913AbhCCKW2 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 Mar 2021 05:22:28 -0500
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C07FC0698CB
-        for <linux-pwm@vger.kernel.org>; Wed,  3 Mar 2021 01:09:20 -0800 (PST)
-Received: by mail-lj1-x235.google.com with SMTP id q23so27669984lji.8
-        for <linux-pwm@vger.kernel.org>; Wed, 03 Mar 2021 01:09:20 -0800 (PST)
+        with ESMTP id S231445AbhCDCny (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 Mar 2021 21:43:54 -0500
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B260FC061756
+        for <linux-pwm@vger.kernel.org>; Wed,  3 Mar 2021 18:43:14 -0800 (PST)
+Received: by mail-qt1-x829.google.com with SMTP id 2so10267617qtw.1
+        for <linux-pwm@vger.kernel.org>; Wed, 03 Mar 2021 18:43:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=s/ftGumlRNPAdvb+UWvT2PLvPwoGzMjtbzohIB+RDfg=;
-        b=yeNAepQjMUV1WWbbhptXnI1rJ0p+XLhku1dfbt23Y6gwQDaU0uBTmSc7GINWZar85e
-         GN1L2sMYJWHQYqoQM6b7qwcOmbpcku72D2ikxcRBa89ZT5Wn+DCtBf8fnBBFWbK/IbUE
-         8/wOyqYdodzmwkRTFfcqVl3jvrma7yg5oYd0DLnAT/o+dwJgnso0jVoQIl2rc3BqDcGJ
-         zz1rzijWqk+gdIlltztOJg/EMC0tkuunNcKVIGr6xLg0c+zmQF/TwmKA0CV+cOpBRB3T
-         Qskie2w7OsT3hxlHWyjAOZAecdn94HKnLGxd1ghuIF/vM7/m5mVaHCb9FoOmzB1Ev00O
-         M4DQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f2rQ/+qfqDHNMsOFwnT814eTwP+Vh04AEIGtU1NncxE=;
+        b=H/JaHEqj2kT5FTBZkMWtLShWL7EFGhlqYVJUSobNY6MMaPX7+BCGVHeAsMDpI5q8ZC
+         t8AtvI9o/rxHfiTApqHvqMI8t95LeIRp4jUEg6Xh3TUUSNfQIP+6zdBn62r5hRk1W/CE
+         hXA3vbrkbuDzuNeX2ZPRtnpPAX2yGoh+RIWMwJsYv1PojmhGOWKpa+Jxnhb1kQweUltI
+         8jKrgRj3HHzIvFiAbgfCQ7u5xRMhM2FsgkMj5sw3dyXd9i+s+YzxKYIEMhiMPEKgU4z+
+         NDJS6wo9sOZPK1tNJ78Nr9C+GY2RFVSPEXnpQR81+GuWtPxnksEfXskkJUCId5rcFO+u
+         fRTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=s/ftGumlRNPAdvb+UWvT2PLvPwoGzMjtbzohIB+RDfg=;
-        b=iNeTuNrx9gXmT30F7jgV73eklymn83sFty+UGebzcwSGpSlUoxsEM0Fc5oR+cp4VYe
-         tLsAPtPOzmJgJXD/LA0S6q4ZZPcmF75zSISf2XfsY9GzIrb0ItoTRFpipRoBKZvqMG5e
-         nBfhylJDZ3mhHjWRYmRSWjwsITyWA4peOniYqxrL3Npmvpbsh150qGCuHWTNzPwaIso3
-         QrbRLnP3UVvwWI+GH7bJJ6kJrl1J0WrRYGRT7Rh/SOTayoq20CPBobCTJQJoXDYM3hVB
-         jFwAl4szy2rZt91W7y7dhv0gbTAkkO/LEz1Y+ZkC926/pd2MwNJA9Qfe2NdZpeAQJyZc
-         7f6g==
-X-Gm-Message-State: AOAM530yPSbmckW6uX/np5bRbJPI75ce7uPAJx8yJlhUHdDw26bScK1P
-        2GDvNV9KoITrIluU6sLEcbPxcvzyTCOm2BLAg1STEw==
-X-Google-Smtp-Source: ABdhPJwi6gtOpQ7/5pPNdF8W8BwyeFunSUg18hn9FiWcnPdFNxQ1om+cQBZMU1haqdp03+gBYUG90vLtIwv3MWYRlfY=
-X-Received: by 2002:a2e:9cb:: with SMTP id 194mr5441670ljj.438.1614762558695;
- Wed, 03 Mar 2021 01:09:18 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f2rQ/+qfqDHNMsOFwnT814eTwP+Vh04AEIGtU1NncxE=;
+        b=DstEqy6KR8ogaYZKlK4KFM0bot0UBmZ2PVr1ZE5JibEVlWDNspxCgnfnfBs6zA5SEc
+         BRqoEm3uuGX2Akq2mwkdhLz0TeCsWAo8Vdi8hRDUYnGAKB6O1xg3PWXQnyEO1aTxSohQ
+         Xtl7eRV4ZG5+Ttz0I6M/drmAgiBYZjXUIRc4KcfX+icyNM2bBV6NoXfAPxs2h527xFH/
+         xk3qtLgHFR1DMoRRFOxBWQeY8KKACrfSeCkeVKD0/mGgA4Qla62MD+CUjRC/WmN6dk4N
+         wpf8Y0HoFeuq9Cs+01eurWyDBgAXvGqy+cXRFf1FyG6lhQ3YfAwTmwL0YtSkDANslOPk
+         OYJA==
+X-Gm-Message-State: AOAM533UqVIOqyKM1l8H+SMZnVm59a47WuSf6P/mOk/hdbX+ItPECcmb
+        QouTXaHN7ZWmyEMZyp1f1L8=
+X-Google-Smtp-Source: ABdhPJyMPOwphSNB0e3YM9/2fobyAeAhBTX3VMjFa7lyN8wZtBL3yd2wXAJuu/pd+3w146xTIOQsLw==
+X-Received: by 2002:ac8:5ec3:: with SMTP id s3mr2239685qtx.145.1614825794015;
+        Wed, 03 Mar 2021 18:43:14 -0800 (PST)
+Received: from localhost.localdomain ([2804:14c:482:919::1001])
+        by smtp.gmail.com with ESMTPSA id x57sm14793581qtb.25.2021.03.03.18.43.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Mar 2021 18:43:13 -0800 (PST)
+From:   Fabio Estevam <festevam@gmail.com>
+To:     thierry.reding@gmail.com
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH] pwm: imx-tpm: Use a single line for error message
+Date:   Wed,  3 Mar 2021 23:42:42 -0300
+Message-Id: <20210304024242.2363294-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20210301184537.1687926-1-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20210301184537.1687926-1-u.kleine-koenig@pengutronix.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 3 Mar 2021 10:09:08 +0100
-Message-ID: <CACRpkdZ0S5z7ex9j0mQxu8pwVA0FPFtDG0LRkC7w2tXQnLs45w@mail.gmail.com>
-Subject: Re: [PATCH] pwm: ab8500: Implement .apply instead of .config, .enable
- and .disable
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
-        Sascha Hauer <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Mar 1, 2021 at 7:45 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
+There is no need to split the dev_err() call in three lines.
 
-> To eventually get rid of all legacy drivers convert this driver to the
-> modern world implementing .apply().
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+Use a single line to improve readability.
 
-Looks correct to me, thanks Uwe!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+---
+ drivers/pwm/pwm-imx-tpm.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Yours,
-Linus Walleij
+diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
+index aaf629bd8c35..eec9ec4e1a2a 100644
+--- a/drivers/pwm/pwm-imx-tpm.c
++++ b/drivers/pwm/pwm-imx-tpm.c
+@@ -411,9 +411,7 @@ static int __maybe_unused pwm_imx_tpm_resume(struct device *dev)
+ 
+ 	ret = clk_prepare_enable(tpm->clk);
+ 	if (ret)
+-		dev_err(dev,
+-			"failed to prepare or enable clock: %d\n",
+-			ret);
++		dev_err(dev, "failed to prepare or enable clock: %d\n", ret);
+ 
+ 	return ret;
+ }
+-- 
+2.17.1
+
