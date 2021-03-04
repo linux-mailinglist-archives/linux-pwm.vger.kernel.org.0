@@ -2,129 +2,109 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A53B532D410
-	for <lists+linux-pwm@lfdr.de>; Thu,  4 Mar 2021 14:23:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1790632D76E
+	for <lists+linux-pwm@lfdr.de>; Thu,  4 Mar 2021 17:10:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234801AbhCDNW7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 4 Mar 2021 08:22:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236534AbhCDNWz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 4 Mar 2021 08:22:55 -0500
-X-Greylist: delayed 608 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 04 Mar 2021 05:22:15 PST
-Received: from mail.pqgruber.com (mail.pqgruber.com [IPv6:2a05:d014:575:f70b:4f2c:8f1d:40c4:b13e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58F84C061574;
-        Thu,  4 Mar 2021 05:22:15 -0800 (PST)
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id B19FCC72819;
-        Thu,  4 Mar 2021 14:22:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1614864133;
-        bh=s42k8uAo9kxNjLeN9HuZ/mbV6dmUP2yAZhrHu3lt1ec=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YXoNOhNHQqlx4d8o+UngFwqgEBNUw4B9vfkQGLTIeM2p3lHG+GKpqzNJJ4hgOeDJ6
-         zn1A3q2Cx0UPQqAejx2yQfpmuSP8e0PEH1gcogqnjSCuimEDnHKnB8TGnKQA1b9TMC
-         XH9DDSXhuOdwyVaJ0mueNyaIok/mqn9ZHAXzcQhQ=
-Date:   Thu, 4 Mar 2021 14:22:12 +0100
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v5 2/7] pwm: pca9685: Support hardware readout
-Message-ID: <YEDfBPsbZ5uxj/PP@workstation.tuxnet>
-References: <X9uYqGboZg5DuEtf@workstation.tuxnet>
- <20210111203532.m3yvq6e5bcpjs7mc@pengutronix.de>
- <CAGngYiW=KhCOZX3tPMFykXzpWLpj3qusN2OXVPSfHLRcyts+wA@mail.gmail.com>
- <YBQ4c2cYYPDMjkeH@workstation.tuxnet>
- <CAGngYiWd0u=+DPhvK+8v9FT8Y1Evn1brWRheMNDXWFVVL-wNFw@mail.gmail.com>
- <YBRyG0vv3gRzygSB@workstation.tuxnet>
- <CAGngYiXxfz7rtsw4zSj5QX7Lj7hvnoESqyUE_2__=oDaRmGGJQ@mail.gmail.com>
- <CAGngYiV5GGJvHTwG7k6mv76uR1RLnHOJoO8+d2ofiZAQi3K0BA@mail.gmail.com>
- <YBg5MlvJQ0N2u+j6@workstation.tuxnet>
- <20210301215248.ekclgxc7dq6asdz5@pengutronix.de>
+        id S236626AbhCDQJY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 4 Mar 2021 11:09:24 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:47377 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236552AbhCDQI4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 4 Mar 2021 11:08:56 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 990DA5C00C3;
+        Thu,  4 Mar 2021 11:07:50 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Thu, 04 Mar 2021 11:07:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=eHQ4QqGgtqjhOexEwbL14ScFJ6g
+        3yh7pxR25VkwY/Ic=; b=MJ1Ws7L8OmyqfpEGlRpTCOdfktu/g5jU69MoTBcnvZ3
+        kYpXIuwrfhfLSzTzaokp5ImgTiT6VMeh7YZG6o7zfvcRoyvrAIPkKB83UnSMSd9C
+        Zu7qMfRZmOWXUFLsU10DqSsY8PJ25jp+I/1ox6aDg/XNoA8n+A+yS0Wlkol0Oute
+        sFOas2vZxRsFHT1ZuwylfvJzr0aJg3IE2iWy0sCG6ljDc5xJ+fFIwxWYb0IQxa4/
+        o4yr2vB60vmzaOY6J2tyjAFFluPekv8v8Qa6XZ2cn/Y4XzikoQYiTb1fbzMw/PDa
+        TJUXIMjvb9tanIPVtEvvGaLzdXtRybto5PxuBhdpiTQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=eHQ4Qq
+        GgtqjhOexEwbL14ScFJ6g3yh7pxR25VkwY/Ic=; b=CpXGbfw3qk0WrcVJuPZYWT
+        wrriOMSYc7Tl1AHHNzLDc24DhAX5E4rBB3TPr9mG1FUYAGD0gtDA1IEb5zQ93R86
+        7w+JTfKrntPFzfDW3MrEay9ZT97S2VavMUrJf+IiavbSOWG7d7Ep9WG3Wms35PqJ
+        dqKCGO9DRuP0+uu1HzNKiOzJQM9Jq9VFWfOYrdDXROvXk5kaP0xeCRYzsFT9SABt
+        W81gffk55HRPqAOWMSJ3TyJCoy0dx5rn43sYJjPkYat88PcZ5dINYgJKrZEAKUXc
+        mtrzKSyJxeJaU+d4AkpBL/2boWJYnNtKmPRqkpNWhMsDEVgArYCNdrzwkbf0dDCQ
+        ==
+X-ME-Sender: <xms:1QVBYCu8GocI-DiQtchUMZC8z6PoaBountsJg9dxZ6cHfknrF3rmYw>
+    <xme:1QVBYHfcCpX87i9H0GJf1f90va3CyPfv9WtKZjYnD4sUNBUhQtcXmVmzrmMZyuXQs
+    -OtdoWjlIA3cmSARC8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledruddtgedgjeekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujgesghdtre
+    ertddtvdenucfhrhhomhepofgrgihimhgvucftihhprghrugcuoehmrgigihhmvgestggv
+    rhhnohdrthgvtghhqeenucggtffrrghtthgvrhhnpeelkeeghefhuddtleejgfeljeffhe
+    ffgfeijefhgfeufefhtdevteegheeiheegudenucfkphepledtrdekledrieekrdejieen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigih
+    hmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:1QVBYNwgx55SbUkruUWRzuObz5GnLdHseN9kFg5F3WB-ybqH34ryCQ>
+    <xmx:1QVBYNMRAtqXg3LluksfKyLGzC01q_XxNlRHef2NBiVMQRNESnlCdw>
+    <xmx:1QVBYC_trFO-o5iuTTymg7DZXg8gCYlh4m6L6csmksN08zBvJks_0w>
+    <xmx:1gVBYJlKoHCbxFdZLzpxs7j8oKe6H_Pmml8Cwp5K1tVIaKNGh7A5qA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 347991080059;
+        Thu,  4 Mar 2021 11:07:49 -0500 (EST)
+Date:   Thu, 4 Mar 2021 17:07:47 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Ban Tao <fengzheng923@gmail.com>
+Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        lee.jones@linaro.org, wens@csie.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/2] pwm: sunxi: Add Allwinner SoC PWM controller
+ driver
+Message-ID: <20210304160747.pblbugvgsa2oueqi@gilmour>
+References: <20210302123737.1867-1-fengzheng923@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7riidxa4uwozvogo"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210301215248.ekclgxc7dq6asdz5@pengutronix.de>
+In-Reply-To: <20210302123737.1867-1-fengzheng923@gmail.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
 
-On Mon, Mar 01, 2021 at 10:52:48PM +0100, Uwe Kleine-König wrote:
-> Hello,
-> 
-> On Mon, Feb 01, 2021 at 06:24:02PM +0100, Clemens Gruber wrote:
-> > Hi Sven, Thierry, Uwe,
-> > 
-> > On Fri, Jan 29, 2021 at 05:16:51PM -0500, Sven Van Asbroeck wrote:
-> > > Hi Clemens,
-> > > 
-> > > On Fri, Jan 29, 2021 at 4:24 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
-> > > >
-> > > > LEN_ON = 409, LED_OFF = 1228 and
-> > > > LED_ON = 419, LED_OFF = 1238
-> > > > produce the same result. you can't see the difference between the two
-> > > > when scoping the channel. there are probably more ways to do this,
-> > > > some might surprise us. It's a tricky chip.
-> > > 
-> > > Please ignore this example, it's bogus. In my defence, it's a Friday
-> > > afternoon here :)
-> > 
-> > Happens to the best of us :)
-> > 
-> > > 
-> > > But consider the following: imagine the bootloader has enabled a few
-> > > pwm channels, and the driver's .probe() has left them on/unchanged.
-> > > Then the user enables another pwm channel, and tries to change the
-> > > period/prescaler. How would pca9685_may_change_prescaler() know
-> > > if changing the prescaler is allowed?
-> > > 
-> > > And the following: imagine the bootloader has enabled a few
-> > > pwm channels, and the driver's .probe() has left them on/unchanged.
-> > > After .probe(), the runtime_pm will immediately put the chip to sleep,
-> > > because it's unaware that some channels are alive.
-> > 
-> > (We could read out the state in .probe. If a pwm is already enabled by
-> > the bootloader, then the user can't change the period. Also, the chip
-> > would not be put to sleep.
-> > 
-> > The user then can export channels and see if they are enabled. If he
-> > wants to change the period, he needs to find the one enabled by the
-> > bootloader and change the period there, before he requests more.
-> > If the bootloader enabled more than one, then he has to disable all but
-> > one to change the period.
-> > 
-> > Or did I miss something?)
-> > 
-> > > 
-> > > I'm sure I'm overlooking a few complications here. probe not changing
-> > > the existing configuration, will add a lot of complexity to the driver.
-> > > I'm not saying this is necessarily bad, just a tradeoff. Or, a management
-> > > decision.
-> > 
-> > But I agree that it is simpler if we keep the resets in probe. It would
-> > also avoid a potentially breaking change for users that do not reset
-> > their pca9685 chips in their bootloader code.
-> 
-> I would prefer to drop the reset. If the bootloader left with an invalid
-> state, this is active for sure until the PWM driver is loaded. If you
-> don't reset, the time is extended (usually) until the consumer comes
-> along and corrects the setting. So the downside of not resetting is
-> quite limited, but if you disable the PWM in .probe() the effect can be
-> worse. And consistency dictates to not reset.
-> 
-> > Removing the resets could then be left as something to discuss further
-> > in the future and something that belongs in a separate patch series?
-> 
-> That would be fine for me, too.
+--7riidxa4uwozvogo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Great, then I will prepare a new series next week.
+Hi,
 
-Thanks,
-Clemens
+On Tue, Mar 02, 2021 at 08:37:37PM +0800, Ban Tao wrote:
+> From: Ban Tao <fengzheng923@gmail.com>
+>=20
+> The Allwinner R818, A133, R329, V536 and V833 has a new PWM controller
+> IP compared to the older Allwinner SoCs.
+>=20
+> Signed-off-by: Ban Tao <fengzheng923@gmail.com>
+
+Thanks for sending an update.
+
+Like I said in the previous version though, without proper SoC support
+upstream, that driver would effectively be dead code
+
+Maxime
+
+--7riidxa4uwozvogo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHQEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCYEEF0wAKCRDj7w1vZxhR
+xWg3APIDan8axufR1ZCgDgHwNEkc0R0qwAUGJ5edYjZDlUbEAQC8ZUuURKbh+QZB
+RalYcFqwjPRNeDHlKWHmKqik2tVDAA==
+=V0ju
+-----END PGP SIGNATURE-----
+
+--7riidxa4uwozvogo--
