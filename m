@@ -2,53 +2,53 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A04E332F92
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 Mar 2021 21:06:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B243333B15
+	for <lists+linux-pwm@lfdr.de>; Wed, 10 Mar 2021 12:09:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231516AbhCIUF4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 9 Mar 2021 15:05:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47010 "EHLO
+        id S232621AbhCJLJP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 10 Mar 2021 06:09:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231664AbhCIUFY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 9 Mar 2021 15:05:24 -0500
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C782C061760
-        for <linux-pwm@vger.kernel.org>; Tue,  9 Mar 2021 12:05:24 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id 124-20020a1c00820000b029010b871409cfso7820119wma.4
-        for <linux-pwm@vger.kernel.org>; Tue, 09 Mar 2021 12:05:24 -0800 (PST)
+        with ESMTP id S232604AbhCJLIv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 10 Mar 2021 06:08:51 -0500
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC9CBC061762
+        for <linux-pwm@vger.kernel.org>; Wed, 10 Mar 2021 03:08:50 -0800 (PST)
+Received: by mail-wr1-x42a.google.com with SMTP id d15so22845708wrv.5
+        for <linux-pwm@vger.kernel.org>; Wed, 10 Mar 2021 03:08:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=XGjP1IwYY9V5MTdu5gz2bGCMoHloL2HLzkBo8xqKCcU=;
-        b=xffYs7vzhK4DnRSpTaSp+Ec//mT5EfBuoIpR9TBygBXd4AVAxF82/Fgt0GRuFuiCkw
-         hCCxPhhv5u6IrdEV/DSl05apgw5Le+1xwYxkVYy7jMINaAo4S7lIKcnWmStllOApmD6n
-         IibsYpnUwstk3fEKwphtWzG5H+xHg/R+8cThq6k3biaiGf+/DKKIOLhlaTFsrVzKttzp
-         BNDdCaPRxzYad7e37L3WUDA3T12xWfzs61ENy2Xm2jbUP4xSUWMTGBkL98b5Wd8ZCLrH
-         tBKOowGx5stqetns4YSjuQ/reyAKDmaVxHe4Lg8qA+JWI3TUpGK5FTiKAfmqbc6rLhqS
-         JyAQ==
+        bh=ZRL7VpICIHdNLQCDIEw5U87ZqICmDJ3F4jDS2Mxkavk=;
+        b=iAVdIFoX2sYOz9Oz0LAWiZIJ42usPLOZU2Cv53gTTtvAC6abthP+11eKGG9NwlEQ2Q
+         GXsTWO5ET1RmmG6rftOgt2vtuWjfCkAbgA6TEdt8v21bNeiCMT+GgjGuaizMiYrf4NgE
+         rCznMWTzJCTYDDB/ZIw6ScyNXy7+3SUNaYaDJ3rhWN71tmtUksW7u6u8KjQ5iN+4DQqr
+         h0Xh67xcuiSP4lSJcLoiKU3VZHMh0onVL0o+TGcnckSRa4+xJWHGJi5yky9jTErzY4U7
+         eYVE/hkomACyPuTz37nsPalIB9fhlxhO2l2hHs8HHGI7lS2i7dd2ZPpEGJkO4euzJicC
+         Jyqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=XGjP1IwYY9V5MTdu5gz2bGCMoHloL2HLzkBo8xqKCcU=;
-        b=frDYaOw2dnn8I1mvpoHhcFJC+2v7LAiLX8SPeAxPheEKiveoE4862RO12PfD0LKWJB
-         d9S/Ke5/2nUP5Pzqdx3mL2OdETI0ruRiMdCdfoaNFyCBm2k80Uv+caRrqC6pMwypqSCW
-         Z9+0eamgn59N4XAvox5c+9b0kfb38GTmhggUnXOQ/4CKYyS64ehiE3OV+fYUoLO7tRfQ
-         hsR8Q9irUtQiaeG0Y2wA1OaO54gcD/DoabMip7i28X8ktTLNEnKg7bVympPURzqzZBGI
-         WtDz34nMTAOLOEMWhoqAMtmGM9mm1LZaW736aw1NdeOPXQhKlA/BML5A9zTaBuV1gGjx
-         xk0g==
-X-Gm-Message-State: AOAM532lcQKRRERErNcUR2vnHbpzZVxaIzE+X/pmfMHbBwWH02op8EvT
-        ijr8+R3SND9f7tgKAg+6BD3GGg==
-X-Google-Smtp-Source: ABdhPJxlGaFCDMWbfFV5Pr/WWx8z0K7o5uAIGkLbbZ+Fg98b+aBlnMrftxj9+78TWRIlh0DueAOXyg==
-X-Received: by 2002:a05:600c:190a:: with SMTP id j10mr5821993wmq.140.1615320323081;
-        Tue, 09 Mar 2021 12:05:23 -0800 (PST)
+        bh=ZRL7VpICIHdNLQCDIEw5U87ZqICmDJ3F4jDS2Mxkavk=;
+        b=b1XlEF5nbLbQddApb5lVzGHnLQ4FYHp3Xw8z4TwC6i5w6bb3IuOLeR5EOjFPzLJlF4
+         9H4Bp76tyVZhXGtRRGmF8wGmdbsbHzlNTc5z3N4QczuptOA5N4h4AvqPB/V3pDTE2IW3
+         dSOYZyBZxvD7pSCZ1eemZS6MM4+3bWiTqZYL+NKdSna9fsLSIw2sxo4AnWce9fgTyyaj
+         J4OyMwSi/3Josb+qJxHVgoEBMJO+7DNM7Sa/uzweYrhhYzZaknsdqzE+VnB9yOQDEQoR
+         y9cCjOiQlhZQ1ADIfUu9p8vFI+Ud/ViQE2KDpJU9lKrBr6UaJCCeGTXgpZJuW91npasT
+         TMkA==
+X-Gm-Message-State: AOAM532rFhIxTDQo1guFQ+5lYt9dfLloJgicY4R1WIBRhAdjCC+WTdI8
+        PoRdql4T7S0Ro4KuyRzf7bdyFA==
+X-Google-Smtp-Source: ABdhPJzC+XqMc01WfFzTn7uqK7JGCaqqOoS9um+sF6WwFpSlL8vRl76t9ktjXIMW0q99U5mHRNrQvQ==
+X-Received: by 2002:adf:f851:: with SMTP id d17mr2893397wrq.267.1615374529542;
+        Wed, 10 Mar 2021 03:08:49 -0800 (PST)
 Received: from dell ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id p10sm26424631wrw.33.2021.03.09.12.05.21
+        by smtp.gmail.com with ESMTPSA id z2sm34244531wrm.0.2021.03.10.03.08.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Mar 2021 12:05:22 -0800 (PST)
-Date:   Tue, 9 Mar 2021 20:05:20 +0000
+        Wed, 10 Mar 2021 03:08:49 -0800 (PST)
+Date:   Wed, 10 Mar 2021 11:08:46 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
 Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
@@ -79,70 +79,77 @@ Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
 Subject: Re: [GIT PULL] Immutable branch between MFD, PWM and RTC due for the
  v5.13 merge window
-Message-ID: <20210309200520.GA4931@dell>
+Message-ID: <20210310110846.GL701493@dell>
 References: <20210124214127.3631530-1-j.neuschaefer@gmx.net>
  <20210301102826.GK641347@dell>
+ <20210309200520.GA4931@dell>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210301102826.GK641347@dell>
+In-Reply-To: <20210309200520.GA4931@dell>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 01 Mar 2021, Lee Jones wrote:
+On Tue, 09 Mar 2021, Lee Jones wrote:
 
-> Enjoy!
+> On Mon, 01 Mar 2021, Lee Jones wrote:
 > 
-> The following changes since commit fe07bfda2fb9cdef8a4d4008a409bb02f35f1bd8:
+> > Enjoy!
+> > 
+> > The following changes since commit fe07bfda2fb9cdef8a4d4008a409bb02f35f1bd8:
+> > 
+> >   Linux 5.12-rc1 (2021-02-28 16:05:19 -0800)
+> > 
+> > are available in the Git repository at:
+> > 
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-pwm-rtc-v5.13
+> > 
+> > for you to fetch changes up to 80629611215d1c5d52ed3cf723fd6d24a5872504:
+> > 
+> >   MAINTAINERS: Add entry for Netronix embedded controller (2021-03-01 10:26:17 +0000)
+> > 
+> > ----------------------------------------------------------------
+> > Immutable branch between MFD, PWM and RTC due for the v5.13 merge window
+> > 
+> > ----------------------------------------------------------------
+> > Jonathan Neuschäfer (6):
+> >       dt-bindings: Add vendor prefix for Netronix, Inc.
+> >       dt-bindings: mfd: Add binding for Netronix embedded controller
+> >       mfd: Add base driver for Netronix embedded controller
+> >       pwm: ntxec: Add driver for PWM function in Netronix EC
+> >       rtc: New driver for RTC in Netronix embedded controller
+> >       MAINTAINERS: Add entry for Netronix embedded controller
+> > 
+> >  .../devicetree/bindings/mfd/netronix,ntxec.yaml    |  76 +++++++
+> >  .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+> >  MAINTAINERS                                        |   9 +
+> >  drivers/mfd/Kconfig                                |  11 +
+> >  drivers/mfd/Makefile                               |   1 +
+> >  drivers/mfd/ntxec.c                                | 221 +++++++++++++++++++++
+> >  drivers/pwm/Kconfig                                |   8 +
+> >  drivers/pwm/Makefile                               |   1 +
+> >  drivers/pwm/pwm-ntxec.c                            | 184 +++++++++++++++++
+> >  drivers/rtc/Kconfig                                |   8 +
+> >  drivers/rtc/Makefile                               |   1 +
+> >  drivers/rtc/rtc-ntxec.c                            | 145 ++++++++++++++
+> >  include/linux/mfd/ntxec.h                          |  37 ++++
+> >  13 files changed, 704 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
+> >  create mode 100644 drivers/mfd/ntxec.c
+> >  create mode 100644 drivers/pwm/pwm-ntxec.c
+> >  create mode 100644 drivers/rtc/rtc-ntxec.c
+> >  create mode 100644 include/linux/mfd/ntxec.h
 > 
->   Linux 5.12-rc1 (2021-02-28 16:05:19 -0800)
+> FYI, if anyone has pulled this, they should probably rebase it onto
+> v5.12-rc2 and delete the v5.12-rc1 tag from their tree:
 > 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-pwm-rtc-v5.13
-> 
-> for you to fetch changes up to 80629611215d1c5d52ed3cf723fd6d24a5872504:
-> 
->   MAINTAINERS: Add entry for Netronix embedded controller (2021-03-01 10:26:17 +0000)
-> 
-> ----------------------------------------------------------------
-> Immutable branch between MFD, PWM and RTC due for the v5.13 merge window
-> 
-> ----------------------------------------------------------------
-> Jonathan Neuschäfer (6):
->       dt-bindings: Add vendor prefix for Netronix, Inc.
->       dt-bindings: mfd: Add binding for Netronix embedded controller
->       mfd: Add base driver for Netronix embedded controller
->       pwm: ntxec: Add driver for PWM function in Netronix EC
->       rtc: New driver for RTC in Netronix embedded controller
->       MAINTAINERS: Add entry for Netronix embedded controller
-> 
->  .../devicetree/bindings/mfd/netronix,ntxec.yaml    |  76 +++++++
->  .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
->  MAINTAINERS                                        |   9 +
->  drivers/mfd/Kconfig                                |  11 +
->  drivers/mfd/Makefile                               |   1 +
->  drivers/mfd/ntxec.c                                | 221 +++++++++++++++++++++
->  drivers/pwm/Kconfig                                |   8 +
->  drivers/pwm/Makefile                               |   1 +
->  drivers/pwm/pwm-ntxec.c                            | 184 +++++++++++++++++
->  drivers/rtc/Kconfig                                |   8 +
->  drivers/rtc/Makefile                               |   1 +
->  drivers/rtc/rtc-ntxec.c                            | 145 ++++++++++++++
->  include/linux/mfd/ntxec.h                          |  37 ++++
->  13 files changed, 704 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
->  create mode 100644 drivers/mfd/ntxec.c
->  create mode 100644 drivers/pwm/pwm-ntxec.c
->  create mode 100644 drivers/rtc/rtc-ntxec.c
->  create mode 100644 include/linux/mfd/ntxec.h
+>   https://lwn.net/Articles/848431/
 
-FYI, if anyone has pulled this, they should probably rebase it onto
-v5.12-rc2 and delete the v5.12-rc1 tag from their tree:
+In case you haven't pulled this in yet, I have created a new tag:
 
-  https://lwn.net/Articles/848431/
+  ib-mfd-pwm-rtc-v5.13-1
 
 -- 
 Lee Jones [李琼斯]
