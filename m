@@ -2,83 +2,99 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB95B3389F0
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Mar 2021 11:21:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3660F338A67
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Mar 2021 11:42:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233281AbhCLKVG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 12 Mar 2021 05:21:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59180 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233158AbhCLKUj (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 12 Mar 2021 05:20:39 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AF53464FEE;
-        Fri, 12 Mar 2021 10:20:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1615544439;
-        bh=i8BTjPbaSBD2WJf+zlHsnLnWtJt4ZNHViJXbI9JhEOo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l4W12jvokMyP69k/o3RM4oRWptEwBlstuCjbqt7jkGTjgNcZpz87dPbcymvIrP6ws
-         h2drR+xGaBZLdCWSx7yf0WZqEeCkE51pGYD9wdlukDF/052Z69CJx9gaFWPoNcWAT6
-         eVnvKjS1PVvX8MmpUyijhLWYr/RvJZd12NZTDqIE=
-Date:   Fri, 12 Mar 2021 11:20:37 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        id S232920AbhCLKlp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 12 Mar 2021 05:41:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232834AbhCLKla (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 12 Mar 2021 05:41:30 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12F7C061574
+        for <linux-pwm@vger.kernel.org>; Fri, 12 Mar 2021 02:41:29 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id g25so3496956wmh.0
+        for <linux-pwm@vger.kernel.org>; Fri, 12 Mar 2021 02:41:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+gXo8IhvV19zxxTo+ZvjWxKQs290uFHYLxm7t4YCZME=;
+        b=Pi0qFID++gpWxIB4A33jz9wllnikXC2zG6qCInezMfEbq6UtK9SaGnp9U2Q0j49Wxb
+         IaqwRgyM06p356jWimSHgZhhngb6zBE8IRzKDbKjMeGhqIo3jugeEEVSJKBNjIQ0FgKj
+         FeZ8nR+slHTR/ID5mYBh8cX0pzq/srdhJXQ52rW7EjZhtTVLBMbiXWfD7r+pACmRthb3
+         pZODCvVpuA4XcgFB9VvGm+AupS/D2veJA49Hj6HElsJlDIVHsTqq+iZh2AZSP5nRDmkA
+         TKms1Iyz5HQ8urEJpd5lmzHvN8qMkYRFiSR6Pxi/tHgYj+iz6EQixnHnH7NBKvi8B5iv
+         V+eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+gXo8IhvV19zxxTo+ZvjWxKQs290uFHYLxm7t4YCZME=;
+        b=EiEn1ouMXzuemqUPo7wBaSOl5WI2yCARRN/kLDRoKKReQqlZQKpGI4J+2+pGIuwE0l
+         tD+HwPPusYio6gqhWN2+4sR6RYkHDL0Hz61puhYvhClAoWGWi001elZib9lKNCRMmXTt
+         JhbbAPdtgHGJ5uCNJVY2a5oIRwuyJHrwZGdx0FlaDO3tuvFUH3AZC4v+S4zEeJ1JyTZN
+         /aO2SoJyxrFl41OKWz0t7FMcSkHyjrXdfYB5JLt/8AYO26X/iani4L6NOVZ4zmn/JreL
+         jOVvJMnSPaXUQPrwkxWidAxTDk/uUJfIkIhbqOdehFD0QDucSf/uAMF4HfokNxBiAJ+4
+         2/kQ==
+X-Gm-Message-State: AOAM531cP5ikK7acaYIv1pzEgzrNDRbbmy5l8myGkd/ZYdTuxeRAbFOF
+        5ayzf6d7kDODhJx2LpwiM6eFmfnOVynIjTcZQtg=
+X-Google-Smtp-Source: ABdhPJy/9Eb8dqlSvo+81A5JKICvmLwtQtRRvC2Tus+Rz8pTovn8yyaKdO2iAYe4IHgSrBQHXV4dAWxUJlwdiSKm8aI=
+X-Received: by 2002:a1c:7402:: with SMTP id p2mr12103714wmc.43.1615545688495;
+ Fri, 12 Mar 2021 02:41:28 -0800 (PST)
+MIME-Version: 1.0
+References: <20210312085916.386422-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20210312085916.386422-1-u.kleine-koenig@pengutronix.de>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Fri, 12 Mar 2021 18:40:52 +0800
+Message-ID: <CAAfSe-uN-U8OqPErRUWmt8CUHGW+8PVZTZN1UACynozzWFA9Rw@mail.gmail.com>
+Subject: Re: [PATCH] pwm: sprd: Refuse requests with unsupported polarity
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: Re: lifetime of pwm devices
-Message-ID: <YEtAdbNA/c/FtVgX@kroah.com>
-References: <20210312083449.5htbbr2zgqfxc3wo@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210312083449.5htbbr2zgqfxc3wo@pengutronix.de>
+        Lee Jones <lee.jones@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        linux-pwm@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Mar 12, 2021 at 09:34:49AM +0100, Uwe Kleine-König wrote:
-> Hello,
-> 
-> currently PWM consumers (like for example a PWM fan) get a device link
-> to the PWM device that ensures that if the PWM device goes away, the
-> consumer is removed, too.
-> 
-> (This results in:
-> 
-> [   67.234400] pwm-fan pwm-fan: Dropping the link to 3f20c000.pwm
-> [   67.234429] device: 'platform:3f20c000.pwm--platform:pwm-fan': device_unregister
-> [   67.234694] device: 'hwmon1': device_unregister
-> [   67.235384] device: 'pwmchip0': device_unregister
-> [   67.235488] device: 'pwmchip0': device_create_release
-> 
-> when I do
-> 	echo 3f20c000.pwm > /sys/bus/platform/drivers/bcm2835-pwm/unbind
-> 
-> on a rpi3 like device with a PWM fan and some debugging enabled.)
-> 
-> Before the device link was established in commit
-> 
-> 	b2c200e3f2fd ("pwm: Add consumer device link")
-> 
-> for v5.3-rc1 the machine was easy to crash after the PWM disappeared by
-> making the consumer use the gone PWM.
-> 
-> Now I wonder if it is just harder to trigger such a crash or if the link
-> is good enough to cover all corner cases.
-> 
-> I wonder if the pretty approach would be to ensure that the pwmchip's
-> lifetime is tracked using a struct dev that ensures that the pwmchip
-> doesn't go away until the consumer releases it. Is there an urge to
-> address this?
+On Fri, 12 Mar 2021 at 16:59, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> The driver only supports normal polarity and so should refuse requests
+> for inversed polarity.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+>  drivers/pwm/pwm-sprd.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
+> index 5123d948efd6..bd6087cfb0b2 100644
+> --- a/drivers/pwm/pwm-sprd.c
+> +++ b/drivers/pwm/pwm-sprd.c
+> @@ -164,6 +164,9 @@ static int sprd_pwm_apply(struct pwm_chip *chip, stru=
+ct pwm_device *pwm,
+>         struct pwm_state *cstate =3D &pwm->state;
+>         int ret;
+>
+> +       if (state->polarity !=3D PWM_POLARITY_NORMAL)
+> +               return -EINVAL;
 
-Preventing user-causable oopses is always good :)
+Should we use EOPNOTSUPP instead?
 
-The driver model should solve this, if it is used properly, why isn't
-the pwm layer using a struct device today?
-
-thanks,
-
-greg k-h
+> +
+>         if (state->enabled) {
+>                 if (!cstate->enabled) {
+>                         /*
+>
+> base-commit: a38fd8748464831584a19438cbb3082b5a2dab15
+> --
+> 2.30.1
+>
