@@ -2,99 +2,153 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3660F338A67
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Mar 2021 11:42:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36F0D338CCF
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Mar 2021 13:26:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232920AbhCLKlp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 12 Mar 2021 05:41:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37810 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232834AbhCLKla (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 12 Mar 2021 05:41:30 -0500
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12F7C061574
-        for <linux-pwm@vger.kernel.org>; Fri, 12 Mar 2021 02:41:29 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id g25so3496956wmh.0
-        for <linux-pwm@vger.kernel.org>; Fri, 12 Mar 2021 02:41:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+gXo8IhvV19zxxTo+ZvjWxKQs290uFHYLxm7t4YCZME=;
-        b=Pi0qFID++gpWxIB4A33jz9wllnikXC2zG6qCInezMfEbq6UtK9SaGnp9U2Q0j49Wxb
-         IaqwRgyM06p356jWimSHgZhhngb6zBE8IRzKDbKjMeGhqIo3jugeEEVSJKBNjIQ0FgKj
-         FeZ8nR+slHTR/ID5mYBh8cX0pzq/srdhJXQ52rW7EjZhtTVLBMbiXWfD7r+pACmRthb3
-         pZODCvVpuA4XcgFB9VvGm+AupS/D2veJA49Hj6HElsJlDIVHsTqq+iZh2AZSP5nRDmkA
-         TKms1Iyz5HQ8urEJpd5lmzHvN8qMkYRFiSR6Pxi/tHgYj+iz6EQixnHnH7NBKvi8B5iv
-         V+eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+gXo8IhvV19zxxTo+ZvjWxKQs290uFHYLxm7t4YCZME=;
-        b=EiEn1ouMXzuemqUPo7wBaSOl5WI2yCARRN/kLDRoKKReQqlZQKpGI4J+2+pGIuwE0l
-         tD+HwPPusYio6gqhWN2+4sR6RYkHDL0Hz61puhYvhClAoWGWi001elZib9lKNCRMmXTt
-         JhbbAPdtgHGJ5uCNJVY2a5oIRwuyJHrwZGdx0FlaDO3tuvFUH3AZC4v+S4zEeJ1JyTZN
-         /aO2SoJyxrFl41OKWz0t7FMcSkHyjrXdfYB5JLt/8AYO26X/iani4L6NOVZ4zmn/JreL
-         jOVvJMnSPaXUQPrwkxWidAxTDk/uUJfIkIhbqOdehFD0QDucSf/uAMF4HfokNxBiAJ+4
-         2/kQ==
-X-Gm-Message-State: AOAM531cP5ikK7acaYIv1pzEgzrNDRbbmy5l8myGkd/ZYdTuxeRAbFOF
-        5ayzf6d7kDODhJx2LpwiM6eFmfnOVynIjTcZQtg=
-X-Google-Smtp-Source: ABdhPJy/9Eb8dqlSvo+81A5JKICvmLwtQtRRvC2Tus+Rz8pTovn8yyaKdO2iAYe4IHgSrBQHXV4dAWxUJlwdiSKm8aI=
-X-Received: by 2002:a1c:7402:: with SMTP id p2mr12103714wmc.43.1615545688495;
- Fri, 12 Mar 2021 02:41:28 -0800 (PST)
+        id S231707AbhCLMZl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 12 Mar 2021 07:25:41 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56958 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229907AbhCLMZS (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 12 Mar 2021 07:25:18 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id C8322B0AE;
+        Fri, 12 Mar 2021 12:25:16 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     u.kleine-koenig@pengutronix.de
+Cc:     f.fainelli@gmail.com, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        wahrenst@gmx.net, linux-input@vger.kernel.org,
+        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, p.zabel@pengutronix.de,
+        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        linux-clk@vger.kernel.org, sboyd@kernel.org,
+        linux-rpi-kernel@lists.infradead.org, bgolaszewski@baylibre.com,
+        andy.shevchenko@gmail.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH v8 00/11] Raspberry Pi PoE HAT fan support
+Date:   Fri, 12 Mar 2021 13:24:43 +0100
+Message-Id: <20210312122454.24480-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-References: <20210312085916.386422-1-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20210312085916.386422-1-u.kleine-koenig@pengutronix.de>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Fri, 12 Mar 2021 18:40:52 +0800
-Message-ID: <CAAfSe-uN-U8OqPErRUWmt8CUHGW+8PVZTZN1UACynozzWFA9Rw@mail.gmail.com>
-Subject: Re: [PATCH] pwm: sprd: Refuse requests with unsupported polarity
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        linux-pwm@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, 12 Mar 2021 at 16:59, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> The driver only supports normal polarity and so should refuse requests
-> for inversed polarity.
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/pwm/pwm-sprd.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
-> index 5123d948efd6..bd6087cfb0b2 100644
-> --- a/drivers/pwm/pwm-sprd.c
-> +++ b/drivers/pwm/pwm-sprd.c
-> @@ -164,6 +164,9 @@ static int sprd_pwm_apply(struct pwm_chip *chip, stru=
-ct pwm_device *pwm,
->         struct pwm_state *cstate =3D &pwm->state;
->         int ret;
->
-> +       if (state->polarity !=3D PWM_POLARITY_NORMAL)
-> +               return -EINVAL;
+The aim of this series is to add support to the fan found on RPi's PoE
+HAT. Some commentary on the design can be found below. But the important
+part to the people CC'd here not involved with PWM is that, in order to
+achieve this properly, we also have to fix the firmware interface the
+driver uses to communicate with the PWM bus (and many other low level
+functions). Specifically, we have to make sure the firmware interface
+isn't unbound while consumers are still up. So, patch #1 & #2 introduce
+reference counting in the firmware interface driver and patches #3 to #8
+update all firmware users. Patches #9 to #11 introduce the new PWM
+driver.
 
-Should we use EOPNOTSUPP instead?
+I sent everything as a single series as the final version of the PWM
+drivers depends on the firmware fixes, but I'll be happy to split this
+into two separate series if you think it's better.
 
-> +
->         if (state->enabled) {
->                 if (!cstate->enabled) {
->                         /*
->
-> base-commit: a38fd8748464831584a19438cbb3082b5a2dab15
-> --
-> 2.30.1
->
+--- Original cover letter below ---
+
+This series aims at adding support to RPi's official PoE HAT fan[1].
+
+The HW setup is the following:
+
+| Raspberry Pi                               | PoE HAT                    |
+ arm core -> Mailbox -> RPi co-processor -> I2C -> Atmel MCU -> PWM -> FAN
+
+The arm cores have only access to the mailbox interface, as i2c0, even if
+physically accessible, is to be used solely by the co-processor
+(VideoCore 4/6).
+
+This series implements a PWM bus, and has pwm-fan sitting on top of it as per
+this discussion: https://lkml.org/lkml/2018/9/2/486. Although this design has a
+series of shortcomings:
+
+- It depends on a DT binding: it's not flexible if a new hat shows up with new
+  functionality, we're not 100% sure we'll be able to expand it without
+  breaking backwards compatibility. But without it we can't make use of DT
+  thermal-zones, which IMO is overkill.
+
+- We're using pwm-fan, writing a hwmon driver would, again, give us more
+  flexibility, but it's not really needed at the moment.
+
+I personally think that it's not worth the effort, it's unlikely we'll get
+things right in advance. And ultimately, if the RPi people come up with
+something new, we can always write a new driver/bindings from scratch (as in
+not reusing previous code).
+
+That said, I'm more than happy to change things if there is a consensus that
+another design will do the trick.
+
+[1] https://www.raspberrypi.org/blog/introducing-power-over-ethernet-poe-hat/
+
+---
+
+Changes since v7:
+ - Remove unwarranted RPI_PWM_DEF_DUTY_REG usage
+
+Changes since v6:
+ - Address PWM driver comments
+
+Changes since v5:
+ - Small cleanups
+ - Add extra code comments
+
+Changes since v4:
+ - Cleanup devm calls
+ - Rename compatible string so it's unique to the PoE HAT
+
+Changes since v3:
+ - Split first patch, #1 introduces refcount, then #2 the devm function
+ - Fix touchscreen function
+ - Use kref
+
+Changes since v2:
+ - Introduce devm_rpi_firmware_get()
+ - Small cleanups in PWM driver
+
+Changes since v1:
+ - Address PWM driver changes
+ - Fix binding, now with 2 cells
+
+Nicolas Saenz Julienne (11):
+  firmware: raspberrypi: Keep count of all consumers
+  firmware: raspberrypi: Introduce devm_rpi_firmware_get()
+  clk: bcm: rpi: Release firmware handle on unbind
+  gpio: raspberrypi-exp: Release firmware handle on unbind
+  reset: raspberrypi: Release firmware handle on unbind
+  soc: bcm: raspberrypi-power: Release firmware handle on unbind
+  staging: vchiq: Release firmware handle on unbind
+  input: raspberrypi-ts: Release firmware handle when not needed
+  dt-bindings: pwm: Add binding for RPi firmware PWM bus
+  DO NOT MERGE: ARM: dts: Add RPi's official PoE hat support
+  pwm: Add Raspberry Pi Firmware based PWM bus
+
+ .../arm/bcm/raspberrypi,bcm2835-firmware.yaml |  20 ++
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts         |  54 +++++
+ drivers/clk/bcm/clk-raspberrypi.c             |   2 +-
+ drivers/firmware/raspberrypi.c                |  69 +++++-
+ drivers/gpio/gpio-raspberrypi-exp.c           |   2 +-
+ drivers/input/touchscreen/raspberrypi-ts.c    |   2 +-
+ drivers/pwm/Kconfig                           |   9 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-raspberrypi-poe.c             | 206 ++++++++++++++++++
+ drivers/reset/reset-raspberrypi.c             |   2 +-
+ drivers/soc/bcm/raspberrypi-power.c           |   2 +-
+ .../interface/vchiq_arm/vchiq_arm.c           |   2 +-
+ .../pwm/raspberrypi,firmware-poe-pwm.h        |  13 ++
+ include/soc/bcm2835/raspberrypi-firmware.h    |  10 +
+ 14 files changed, 385 insertions(+), 9 deletions(-)
+ create mode 100644 drivers/pwm/pwm-raspberrypi-poe.c
+ create mode 100644 include/dt-bindings/pwm/raspberrypi,firmware-poe-pwm.h
+
+-- 
+2.30.1
+
