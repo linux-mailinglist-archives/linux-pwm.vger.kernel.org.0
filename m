@@ -2,73 +2,78 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C34733ED3C
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Mar 2021 10:42:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A84933F4D5
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Mar 2021 17:00:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229712AbhCQJlw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 17 Mar 2021 05:41:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229914AbhCQJli (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 17 Mar 2021 05:41:38 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9022C06174A
-        for <linux-pwm@vger.kernel.org>; Wed, 17 Mar 2021 02:41:38 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 04AF81F44EA4
-Subject: Re: [PATCH] pwm: cros-ec: Refuse requests with unsupported polarity
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
-References: <20210312090058.386850-1-u.kleine-koenig@pengutronix.de>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <4d00dcb6-70ed-f528-0e49-5fc50aa63b8c@collabora.com>
-Date:   Wed, 17 Mar 2021 10:41:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        id S231956AbhCQP76 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 17 Mar 2021 11:59:58 -0400
+Received: from mga02.intel.com ([134.134.136.20]:62849 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232099AbhCQP7c (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 17 Mar 2021 11:59:32 -0400
+IronPort-SDR: 9V0aniCEdISAUZLBqKNtSkMZrIPcGPLCu/kQ5ZcWDNiVZzuoBbEpJ2eaOTpd5CQyESI/H1L9mC
+ 0KjtRIso1rJA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9926"; a="176624076"
+X-IronPort-AV: E=Sophos;i="5.81,256,1610438400"; 
+   d="scan'208";a="176624076"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2021 08:59:32 -0700
+IronPort-SDR: tOZX1CPjU/dUiQ1hDfIWWb2hdv9dMCzyvIuWO05wPw6PuUX8V6+nPxZYglu8wnS1dyT6HSWGaz
+ xWDGAdKrcZRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,256,1610438400"; 
+   d="scan'208";a="605767444"
+Received: from mylly.fi.intel.com (HELO mylly.fi.intel.com.) ([10.237.72.176])
+  by fmsmga005.fm.intel.com with ESMTP; 17 Mar 2021 08:59:30 -0700
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+To:     linux-pwm@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: [PATCH] pwm: dwc: Use dev_get_drvdata() directly in PM callbacks
+Date:   Wed, 17 Mar 2021 17:59:25 +0200
+Message-Id: <20210317155925.297680-1-jarkko.nikula@linux.intel.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <20210312090058.386850-1-u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
+Instead of figuring out struct pci_dev pointer from device pointer and
+then pci_get_drvdata() we can use directly dev_get_drvdata() to get the
+pointer to struct dwc_pwm.
 
-Thank you for your patch.
+Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+---
+ drivers/pwm/pwm-dwc.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-On 12/3/21 10:00, Uwe Kleine-König wrote:
-> The driver only supports normal polarity and so should refuse requests
-> for inversed polarity.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
+index f6c98e0d57c2..4d59a035c0c9 100644
+--- a/drivers/pwm/pwm-dwc.c
++++ b/drivers/pwm/pwm-dwc.c
+@@ -258,8 +258,7 @@ static void dwc_pwm_remove(struct pci_dev *pci)
+ #ifdef CONFIG_PM_SLEEP
+ static int dwc_pwm_suspend(struct device *dev)
+ {
+-	struct pci_dev *pdev = container_of(dev, struct pci_dev, dev);
+-	struct dwc_pwm *dwc = pci_get_drvdata(pdev);
++	struct dwc_pwm *dwc = dev_get_drvdata(dev);
+ 	int i;
+ 
+ 	for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
+@@ -278,8 +277,7 @@ static int dwc_pwm_suspend(struct device *dev)
+ 
+ static int dwc_pwm_resume(struct device *dev)
+ {
+-	struct pci_dev *pdev = container_of(dev, struct pci_dev, dev);
+-	struct dwc_pwm *dwc = pci_get_drvdata(pdev);
++	struct dwc_pwm *dwc = dev_get_drvdata(dev);
+ 	int i;
+ 
+ 	for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
+-- 
+2.30.2
 
-Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-> ---
->  drivers/pwm/pwm-cros-ec.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
-> index c1c337969e4e..349ba3f02a54 100644
-> --- a/drivers/pwm/pwm-cros-ec.c
-> +++ b/drivers/pwm/pwm-cros-ec.c
-> @@ -124,6 +124,9 @@ static int cros_ec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  	if (state->period != EC_PWM_MAX_DUTY)
->  		return -EINVAL;
->  
-> +	if (state->polarity != PWM_POLARITY_NORMAL)
-> +		return -EINVAL;
-> +
->  	/*
->  	 * EC doesn't separate the concept of duty cycle and enabled, but
->  	 * kernel does. Translate.
-> 
-> base-commit: a38fd8748464831584a19438cbb3082b5a2dab15
-> 
