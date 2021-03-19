@@ -2,35 +2,35 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 417B6341A00
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Mar 2021 11:30:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC85D3419FF
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Mar 2021 11:30:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229687AbhCSK31 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 19 Mar 2021 06:29:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59924 "EHLO
+        id S229772AbhCSK32 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 19 Mar 2021 06:29:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230020AbhCSK3D (ORCPT
+        with ESMTP id S230008AbhCSK3D (ORCPT
         <rfc822;linux-pwm@vger.kernel.org>); Fri, 19 Mar 2021 06:29:03 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6817C061763
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9F91C061761
         for <linux-pwm@vger.kernel.org>; Fri, 19 Mar 2021 03:29:02 -0700 (PDT)
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lNCNI-0003iF-Rr; Fri, 19 Mar 2021 11:29:00 +0100
+        id 1lNCNJ-0003iP-4B; Fri, 19 Mar 2021 11:29:01 +0100
 Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lNCNI-0001gX-I3; Fri, 19 Mar 2021 11:29:00 +0100
+        id 1lNCNI-0001ga-QU; Fri, 19 Mar 2021 11:29:00 +0100
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>
 Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-Subject: [PATCH 04/14] pwm: Drop function pwmchip_add_with_polarity()
-Date:   Fri, 19 Mar 2021 11:28:42 +0100
-Message-Id: <20210319102852.101209-5-u.kleine-koenig@pengutronix.de>
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 05/14] pwm: ab8500: Implement .apply instead of .config, .enable and .disable
+Date:   Fri, 19 Mar 2021 11:28:43 +0100
+Message-Id: <20210319102852.101209-6-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210319102852.101209-1-u.kleine-koenig@pengutronix.de>
 References: <20210319102852.101209-1-u.kleine-koenig@pengutronix.de>
@@ -45,92 +45,111 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Uwe Kleine-König <uwe@kleine-koenig.org>
+To eventually get rid of all legacy drivers convert this driver to the
+modern world implementing .apply().
 
-pwmchip_add() only calls pwmchip_add_with_polarity() and nothing else. All
-other users of pwmchip_add_with_polarity() are gone. So drop
-pwmchip_add_with_polarity() and move the code instead to pwmchip_add().
-
-The initial assignment to pwm->state.polarity is dropped. In every correct
-usage of the PWM API this value is overwritten later anyhow.
-
-Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
-Link: https://lore.kernel.org/r/20201207134556.25217-4-uwe@kleine-koenig.org
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20210301184537.1687926-1-u.kleine-koenig@pengutronix.de
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/core.c  | 25 +++----------------------
- include/linux/pwm.h |  2 --
- 2 files changed, 3 insertions(+), 24 deletions(-)
+ drivers/pwm/pwm-ab8500.c | 53 +++++++++++++++++++---------------------
+ 1 file changed, 25 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index a8eff4b3ee36..e7a2d9095669 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -260,18 +260,15 @@ static bool pwm_ops_check(const struct pwm_chip *chip)
- }
+diff --git a/drivers/pwm/pwm-ab8500.c b/drivers/pwm/pwm-ab8500.c
+index 58c6c0f5b0ec..5b0a71243d0f 100644
+--- a/drivers/pwm/pwm-ab8500.c
++++ b/drivers/pwm/pwm-ab8500.c
+@@ -24,23 +24,37 @@ struct ab8500_pwm_chip {
+ 	struct pwm_chip chip;
+ };
  
- /**
-- * pwmchip_add_with_polarity() - register a new PWM chip
-+ * pwmchip_add() - register a new PWM chip
-  * @chip: the PWM chip to add
-- * @polarity: initial polarity of PWM channels
-  *
-  * Register a new PWM chip. If chip->base < 0 then a dynamically assigned base
-- * will be used. The initial polarity for all channels is specified by the
-- * @polarity parameter.
-+ * will be used.
-  *
-  * Returns: 0 on success or a negative error code on failure.
-  */
--int pwmchip_add_with_polarity(struct pwm_chip *chip,
--			      enum pwm_polarity polarity)
-+int pwmchip_add(struct pwm_chip *chip)
+-static int ab8500_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+-			     int duty_ns, int period_ns)
++static int ab8500_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			    const struct pwm_state *state)
  {
- 	struct pwm_device *pwm;
- 	unsigned int i;
-@@ -303,7 +300,6 @@ int pwmchip_add_with_polarity(struct pwm_chip *chip,
- 		pwm->chip = chip;
- 		pwm->pwm = chip->base + i;
- 		pwm->hwpwm = i;
--		pwm->state.polarity = polarity;
+-	int ret = 0;
+-	unsigned int higher_val, lower_val;
++	int ret;
+ 	u8 reg;
++	unsigned int higher_val, lower_val;
++
++	if (state->polarity != PWM_POLARITY_NORMAL)
++		return -EINVAL;
++
++	if (!state->enabled) {
++		ret = abx500_mask_and_set_register_interruptible(chip->dev,
++					AB8500_MISC, AB8500_PWM_OUT_CTRL7_REG,
++					1 << (chip->base - 1), 0);
++
++		if (ret < 0)
++			dev_err(chip->dev, "%s: Failed to disable PWM, Error %d\n",
++								pwm->label, ret);
++		return ret;
++	}
  
- 		radix_tree_insert(&pwm_tree, pwm->pwm, pwm);
- 	}
-@@ -326,21 +322,6 @@ int pwmchip_add_with_polarity(struct pwm_chip *chip,
+ 	/*
+ 	 * get the first 8 bits that are be written to
+ 	 * AB8500_PWM_OUT_CTRL1_REG[0:7]
+ 	 */
+-	lower_val = duty_ns & 0x00FF;
++	lower_val = state->duty_cycle & 0x00FF;
+ 	/*
+ 	 * get bits [9:10] that are to be written to
+ 	 * AB8500_PWM_OUT_CTRL2_REG[0:1]
+ 	 */
+-	higher_val = ((duty_ns & 0x0300) >> 8);
++	higher_val = ((state->duty_cycle & 0x0300) >> 8);
  
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(pwmchip_add_with_polarity);
+ 	reg = AB8500_PWM_OUT_CTRL1_REG + ((chip->base - 1) * 2);
+ 
+@@ -48,15 +62,11 @@ static int ab8500_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			reg, (u8)lower_val);
+ 	if (ret < 0)
+ 		return ret;
++
+ 	ret = abx500_set_register_interruptible(chip->dev, AB8500_MISC,
+ 			(reg + 1), (u8)higher_val);
 -
--/**
-- * pwmchip_add() - register a new PWM chip
-- * @chip: the PWM chip to add
-- *
-- * Register a new PWM chip. If chip->base < 0 then a dynamically assigned base
-- * will be used. The initial polarity for all channels is normal.
-- *
-- * Returns: 0 on success or a negative error code on failure.
-- */
--int pwmchip_add(struct pwm_chip *chip)
--{
--	return pwmchip_add_with_polarity(chip, PWM_POLARITY_NORMAL);
+-	return ret;
 -}
- EXPORT_SYMBOL_GPL(pwmchip_add);
+-
+-static int ab8500_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+-{
+-	int ret;
++	if (ret < 0)
++		return ret;
  
- /**
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index e4d84d4db293..8f4eefd129aa 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -392,8 +392,6 @@ int pwm_capture(struct pwm_device *pwm, struct pwm_capture *result,
- int pwm_set_chip_data(struct pwm_device *pwm, void *data);
- void *pwm_get_chip_data(struct pwm_device *pwm);
+ 	ret = abx500_mask_and_set_register_interruptible(chip->dev,
+ 				AB8500_MISC, AB8500_PWM_OUT_CTRL7_REG,
+@@ -64,25 +74,12 @@ static int ab8500_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	if (ret < 0)
+ 		dev_err(chip->dev, "%s: Failed to enable PWM, Error %d\n",
+ 							pwm->label, ret);
+-	return ret;
+-}
  
--int pwmchip_add_with_polarity(struct pwm_chip *chip,
--			      enum pwm_polarity polarity);
- int pwmchip_add(struct pwm_chip *chip);
- int pwmchip_remove(struct pwm_chip *chip);
- struct pwm_device *pwm_request_from_chip(struct pwm_chip *chip,
+-static void ab8500_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+-{
+-	int ret;
+-
+-	ret = abx500_mask_and_set_register_interruptible(chip->dev,
+-				AB8500_MISC, AB8500_PWM_OUT_CTRL7_REG,
+-				1 << (chip->base - 1), 0);
+-	if (ret < 0)
+-		dev_err(chip->dev, "%s: Failed to disable PWM, Error %d\n",
+-							pwm->label, ret);
++	return ret;
+ }
+ 
+ static const struct pwm_ops ab8500_pwm_ops = {
+-	.config = ab8500_pwm_config,
+-	.enable = ab8500_pwm_enable,
+-	.disable = ab8500_pwm_disable,
++	.apply = ab8500_pwm_apply,
+ 	.owner = THIS_MODULE,
+ };
+ 
 -- 
 2.30.1
 
