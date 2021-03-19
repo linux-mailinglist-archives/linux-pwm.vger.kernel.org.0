@@ -2,92 +2,149 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0BED3400A3
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Mar 2021 09:07:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF8273419F8
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Mar 2021 11:29:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229640AbhCRIGw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 18 Mar 2021 04:06:52 -0400
-Received: from mga07.intel.com ([134.134.136.100]:43054 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229734AbhCRIGk (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 18 Mar 2021 04:06:40 -0400
-IronPort-SDR: N98ixxTp0JXftw5gF2BLzf8No/Y2bYoK7hGL5RPUajNoXJ1p6mAJBbiPtmjbRMsXOP/vMG7PJa
- hNpbPbpfmQsw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9926"; a="253636429"
-X-IronPort-AV: E=Sophos;i="5.81,257,1610438400"; 
-   d="scan'208";a="253636429"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2021 01:06:39 -0700
-IronPort-SDR: uWFQPdgB5uNsEqMtsvLMrWYNqwQL62cNdMdioxYVH86fDHu0wY9/t6ivZuSpA1GdmElsS4Yu9P
- /5FsA5eLMeaA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,257,1610438400"; 
-   d="scan'208";a="389148185"
-Received: from mylly.fi.intel.com (HELO [10.237.72.57]) ([10.237.72.57])
-  by orsmga002.jf.intel.com with ESMTP; 18 Mar 2021 01:06:38 -0700
-Subject: Re: [PATCH] pwm: dwc: Use dev_get_drvdata() directly in PM callbacks
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
+        id S229873AbhCSK31 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 19 Mar 2021 06:29:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229914AbhCSK3C (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 19 Mar 2021 06:29:02 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E3A7C06174A
+        for <linux-pwm@vger.kernel.org>; Fri, 19 Mar 2021 03:29:02 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lNCNI-0003ho-8Z; Fri, 19 Mar 2021 11:29:00 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lNCNH-0001gI-LG; Fri, 19 Mar 2021 11:28:59 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>
-References: <20210317155925.297680-1-jarkko.nikula@linux.intel.com>
- <20210317200936.zfmcpjwuvhvc2pcv@pengutronix.de>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <0343a601-466f-ad52-cd1c-cb443482018f@linux.intel.com>
-Date:   Thu, 18 Mar 2021 10:06:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH 00/14] pwm: Patches I consider ready for the next merge window 
+Date:   Fri, 19 Mar 2021 11:28:38 +0100
+Message-Id: <20210319102852.101209-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-In-Reply-To: <20210317200936.zfmcpjwuvhvc2pcv@pengutronix.de>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 3/17/21 10:09 PM, Uwe Kleine-König wrote:
-> Hello Jarkko,
-> 
-> On Wed, Mar 17, 2021 at 05:59:25PM +0200, Jarkko Nikula wrote:
->> Instead of figuring out struct pci_dev pointer from device pointer and
->> then pci_get_drvdata() we can use directly dev_get_drvdata() to get the
->> pointer to struct dwc_pwm.
->>
->> Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
->> ---
->>   drivers/pwm/pwm-dwc.c | 6 ++----
->>   1 file changed, 2 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
->> index f6c98e0d57c2..4d59a035c0c9 100644
->> --- a/drivers/pwm/pwm-dwc.c
->> +++ b/drivers/pwm/pwm-dwc.c
->> @@ -258,8 +258,7 @@ static void dwc_pwm_remove(struct pci_dev *pci)
->>   #ifdef CONFIG_PM_SLEEP
->>   static int dwc_pwm_suspend(struct device *dev)
->>   {
->> -	struct pci_dev *pdev = container_of(dev, struct pci_dev, dev);
->> -	struct dwc_pwm *dwc = pci_get_drvdata(pdev);
->> +	struct dwc_pwm *dwc = dev_get_drvdata(dev);
->>   	int i;
-> 
-> I'm a bit ambivalent here. I'd consider it an implementation detail of
-> the PCI framework that pci_get_drvdata is dev_get_drvdata on the related
-> struct device. So even though the PCI guys probably will never change
-> that, it feels a bit like a layer violation to rely on this behaviour.
-> 
-> As additionally the status quo isn't less effective (unless I miss
-> something) than the alternative proposed in your patch, I tend to not
-> like your change.
-> 
-Yeah, agree, it is a bit confusing to see mix of pci_set_drvdata() and 
-dev_get_drvdata(). Got the idea for this patch from another driver and 
-similar commits.
+Hello,
 
-Better would be to switch entirely to dev_set_drvdata() in probe and 
-dev_get_drvdata() in all other functions. Perhaps not worth of effort 
-(does here 4 insertions(+), 6 deletions(-)) and not many PCI drivers 
-seem to use dev_set_drvdata() in their probe (additional confusion?).
+this is the set of patches that are open on the list for some time.
+Lee suggested to resend them.
 
-Jarkko
+@Thierry: I'm unsure what is the best way to nag. Is it really
+resending? Or does this just result mostly in overhead because the
+patches are still open in patchwork and it adds copies to your mailbox?
+(Another downside is that taking the patches from this thread results in
+recording a newer Author Date compared to picking up the originals.)
+
+Anhow, you can also find these patches applied on top of a pull of Lee's
+
+        git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-pwm-rtc-v5.13-1
+
+from https://lore.kernel.org/r/20210310110846.GL701493@dell at:
+
+        https://git.pengutronix.de/git/ukl/linux pwm-next
+
+if you prefer to just pull this series.
+
+Best regards
+Uwe
+
+Fabio Estevam (1):
+  pwm: imx-tpm: Use a single line for error message
+
+Uwe Kleine-KÃ¶nig (13):
+  pwm: bcm2835: Improve period and duty cycle calculation
+  pwm: bcm-kona: Use pwmchip_add() instead of
+    pwmchip_add_with_polarity()
+  pwm: atmel-hlcdc: Use pwmchip_add() instead of
+    pwmchip_add_with_polarity()
+  pwm: Drop function pwmchip_add_with_polarity()
+  pwm: ab8500: Implement .apply instead of .config, .enable and .disable
+  pwm: Always allocate pwm id dynamically
+  pwm: Return -EINVAL for old-style drivers without .set_polarity
+    callback
+  pwm: Prevent a glitch in compat code
+  pwm: atmel-tcb: Implement .apply callback
+  pwm: atmel-tcb: Only free resources after pwm_chip_remove() returned
+  pwm: sprd: Refuse requests with unsupported polarity
+  pwm: cros-ec: Refuse requests with unsupported polarity
+  pwm: Soften potential loss of precision in compat code
+
+ drivers/pwm/core.c             | 81 +++++++++++++---------------------
+ drivers/pwm/pwm-ab8500.c       | 54 +++++++++++------------
+ drivers/pwm/pwm-atmel-hlcdc.c  |  3 +-
+ drivers/pwm/pwm-atmel-tcb.c    | 42 ++++++++++++------
+ drivers/pwm/pwm-atmel.c        |  1 -
+ drivers/pwm/pwm-bcm-iproc.c    |  1 -
+ drivers/pwm/pwm-bcm-kona.c     |  3 +-
+ drivers/pwm/pwm-bcm2835.c      | 36 +++++++++++----
+ drivers/pwm/pwm-berlin.c       |  1 -
+ drivers/pwm/pwm-brcmstb.c      |  1 -
+ drivers/pwm/pwm-clps711x.c     |  1 -
+ drivers/pwm/pwm-crc.c          |  1 -
+ drivers/pwm/pwm-cros-ec.c      |  4 +-
+ drivers/pwm/pwm-dwc.c          |  1 -
+ drivers/pwm/pwm-ep93xx.c       |  1 -
+ drivers/pwm/pwm-fsl-ftm.c      |  1 -
+ drivers/pwm/pwm-hibvt.c        |  1 -
+ drivers/pwm/pwm-img.c          |  1 -
+ drivers/pwm/pwm-imx-tpm.c      |  5 +--
+ drivers/pwm/pwm-imx1.c         |  1 -
+ drivers/pwm/pwm-imx27.c        |  1 -
+ drivers/pwm/pwm-intel-lgm.c    |  1 -
+ drivers/pwm/pwm-iqs620a.c      |  1 -
+ drivers/pwm/pwm-jz4740.c       |  1 -
+ drivers/pwm/pwm-keembay.c      |  1 -
+ drivers/pwm/pwm-lp3943.c       |  1 -
+ drivers/pwm/pwm-lpc18xx-sct.c  |  1 -
+ drivers/pwm/pwm-lpc32xx.c      |  1 -
+ drivers/pwm/pwm-lpss.c         |  1 -
+ drivers/pwm/pwm-mediatek.c     |  1 -
+ drivers/pwm/pwm-meson.c        |  1 -
+ drivers/pwm/pwm-mtk-disp.c     |  1 -
+ drivers/pwm/pwm-mxs.c          |  1 -
+ drivers/pwm/pwm-omap-dmtimer.c |  1 -
+ drivers/pwm/pwm-pca9685.c      |  1 -
+ drivers/pwm/pwm-pxa.c          |  1 -
+ drivers/pwm/pwm-rcar.c         |  1 -
+ drivers/pwm/pwm-renesas-tpu.c  |  1 -
+ drivers/pwm/pwm-rockchip.c     |  1 -
+ drivers/pwm/pwm-samsung.c      |  1 -
+ drivers/pwm/pwm-sifive.c       |  1 -
+ drivers/pwm/pwm-sl28cpld.c     |  1 -
+ drivers/pwm/pwm-spear.c        |  1 -
+ drivers/pwm/pwm-sprd.c         |  4 +-
+ drivers/pwm/pwm-sti.c          |  1 -
+ drivers/pwm/pwm-stm32-lp.c     |  1 -
+ drivers/pwm/pwm-stm32.c        |  1 -
+ drivers/pwm/pwm-stmpe.c        |  1 -
+ drivers/pwm/pwm-sun4i.c        |  1 -
+ drivers/pwm/pwm-tegra.c        |  1 -
+ drivers/pwm/pwm-tiecap.c       |  1 -
+ drivers/pwm/pwm-tiehrpwm.c     |  1 -
+ drivers/pwm/pwm-twl-led.c      |  1 -
+ drivers/pwm/pwm-twl.c          |  1 -
+ drivers/pwm/pwm-vt8500.c       |  1 -
+ include/linux/pwm.h            |  2 -
+ 56 files changed, 121 insertions(+), 159 deletions(-)
+
+-- 
+2.30.1
+
