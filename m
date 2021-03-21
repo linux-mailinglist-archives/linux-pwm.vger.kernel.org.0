@@ -2,131 +2,83 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2B79341EEA
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Mar 2021 15:01:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 834A234355F
+	for <lists+linux-pwm@lfdr.de>; Sun, 21 Mar 2021 23:37:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230046AbhCSOAx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 19 Mar 2021 10:00:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48986 "EHLO
+        id S230140AbhCUWX4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 21 Mar 2021 18:23:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230044AbhCSOAq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 19 Mar 2021 10:00:46 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC40FC06174A
-        for <linux-pwm@vger.kernel.org>; Fri, 19 Mar 2021 07:00:46 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lNFgD-0003jB-6k; Fri, 19 Mar 2021 15:00:45 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lNFgC-0005oP-DW; Fri, 19 Mar 2021 15:00:44 +0100
-Date:   Fri, 19 Mar 2021 15:00:44 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, kernel@pengutronix.de
-Subject: Re: [PATCH 1/4] pwm: Make of_pwm_xlate_with_flags() work with
- #pwm-cells = <2>
-Message-ID: <20210319140044.zoxr3gbykgjp73jx@pengutronix.de>
-References: <20210315111124.2475274-1-u.kleine-koenig@pengutronix.de>
- <20210315111124.2475274-2-u.kleine-koenig@pengutronix.de>
- <20210319125858.b2roeeeinowhxkxy@pengutronix.de>
+        with ESMTP id S230129AbhCUWXv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 21 Mar 2021 18:23:51 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9F77C061574;
+        Sun, 21 Mar 2021 15:23:50 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id cl21-20020a17090af695b02900c61ac0f0e9so10172692pjb.1;
+        Sun, 21 Mar 2021 15:23:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ZocK+lEX6bhNxI2jv7CoDE+irXUEmIHfQ5j/xvFprW8=;
+        b=prEm9IRHetMEEw4QYjFcl5DuLLURfHvGGRQBJzfOxmQJBfIUrRkSg0AI/JAcdI8zqU
+         SdKGMzGK/83S/x9/6zK/3SxHo2pkG/hhu22vQXeM93UHRY3EVcRTVnTJ0ZcOPPZYQRPK
+         s5jLqdMG7B1ptuZcM0U/SeNBgOj9yANk6Z9qQqVkNV680bv+H2XduROED4WPf8czA5Me
+         +26DoICU5h7XmikipHv2nouGljYh9j5uRnkVjAkBdljG3E6FgVFvvrzx76d97BXeNxi7
+         3YUuwXV58ljxHrPUKPYebi4ifT+qbOpP7p+Ex9AHiFQSFmqz0TSMU1g7K86AisfYuN7e
+         hBpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ZocK+lEX6bhNxI2jv7CoDE+irXUEmIHfQ5j/xvFprW8=;
+        b=gtP2mHXo9OocGu8T+B8pFzJw029SIuBhqLyn7USDpkvdT/S4wFm0+kPqvuMEgkMmOO
+         NjiRZgOcc7loWXdIH6PLkbunTjF/Js9Lv2Ze+L+b8E5fp2eLMGt726uvFlPuUampCgE2
+         03wuIb4VnZiIU6XBYgtNxlJrfn1JV/5ierxP1JghFWc/TwfXFD702ksyZgIObO0+Ue7c
+         rjKwoRjTxtDtZHekkM0t9X80L1TVwBgXXA2365hckew4Cq8occUeH6pEn9FQtcDAJXTz
+         UFIJ2EpdUkdul4p/VuO/p6sPibijWtLw2K3z+v/+D73HhWBO+QlYUeeFA8a1CuUcQSGL
+         9PCw==
+X-Gm-Message-State: AOAM532M8lK1s3q152bjBz238W/W955yw+fHql5MlCwozdYUQJqGaF2o
+        27bSQkWO86K77+C+E/TeijM=
+X-Google-Smtp-Source: ABdhPJwpo0KS6Wy7bGOD5Jb4U5aUtf7dGouMuY2+XMMB8cc48/xBZo1MovWY4ye6LeQeqJ0G8v5WBQ==
+X-Received: by 2002:a17:90a:8083:: with SMTP id c3mr9624140pjn.134.1616365430416;
+        Sun, 21 Mar 2021 15:23:50 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:85c2:9df1:533a:87e9])
+        by smtp.gmail.com with ESMTPSA id gt22sm11843383pjb.35.2021.03.21.15.23.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Mar 2021 15:23:49 -0700 (PDT)
+Date:   Sun, 21 Mar 2021 15:23:46 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-input@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] input: misc: max8997: Switch to pwm_apply()
+Message-ID: <YFfHciL2CXX0aERa@google.com>
+References: <20210316203813.48999-1-uwe@kleine-koenig.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fzgjswcwy3ghggpo"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20210319125858.b2roeeeinowhxkxy@pengutronix.de>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210316203813.48999-1-uwe@kleine-koenig.org>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Uwe,
 
---fzgjswcwy3ghggpo
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Mar 16, 2021 at 09:38:13PM +0100, Uwe Kleine-König wrote:
+> max8997_haptic_enable() is the only caller of
+> max8997_haptic_set_duty_cycle(). For the non-external case the PWM is
+> already enabled in max8997_haptic_set_duty_cycle(), so this can be done
 
-Hello Marco,
+Are you sure about that? I think the intent was to enable it in
+max8997_haptic_configure(), and only after "inmotor" regulator is
+enabled. If the device is enabled earlier then I'd say we need to make
+sure we disable it until it is needed.
 
-On Fri, Mar 19, 2021 at 01:58:58PM +0100, Marco Felsch wrote:
-> On 21-03-15 12:11, Uwe Kleine-K=F6nig wrote:
-> > The two functions of_pwm_simple_xlate() and of_pwm_xlate_with_flags() a=
-re
-> > quite similar. of_pwm_simple_xlate() only supports two pwm-cells while
-> > of_pwm_xlate_with_flags() only support >=3D 3 pwm-cells. The latter can
-> > easily be modified to behave identically to of_pwm_simple_xlate for two
-> > pwm-cells. This is implemented here and allows to drop
-> > of_pwm_simple_xlate() in the next commit.
-> >=20
-> > There is a small detail that is different now between of_pwm_simple_xla=
-te()
-> > and of_pwm_xlate_with_flags() with pwm-cells =3D <2>: pwm->args.polarit=
-y is
-> > unconditionally initialized to PWM_POLARITY_NORMAL in the latter. I did=
-n't
-> > find a case where this matters and doing that explicitly is the more
-> > robust approach.
-> >=20
-> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > ---
-> >  drivers/pwm/core.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> > index b1adf3bb8508..39b0ad506bdd 100644
-> > --- a/drivers/pwm/core.c
-> > +++ b/drivers/pwm/core.c
-> > @@ -126,8 +126,7 @@ of_pwm_xlate_with_flags(struct pwm_chip *pc, const =
-struct of_phandle_args *args)
-> >  {
-> >  	struct pwm_device *pwm;
-> > =20
-> > -	/* check, whether the driver supports a third cell for flags */
-> > -	if (pc->of_pwm_n_cells < 3)
-> > +	if (pc->of_pwm_n_cells < 2)
-> >  		return ERR_PTR(-EINVAL);
->=20
-> Wouldn't this introduce regressions with old dtb's?
+Thanks.
 
-Can you be more specific here? I don't see a possible regression here.
-
-Take into account:
-
- - Today no driver uses of_pwm_xlate_with_flags with pc->of_pwm_n_cells =3D=
-=3D 2; and
- - the callback is only called after of_parse_phandle_with_args() with
-   cells_name =3D #pwm-cells returned this chip.
-
-So in the end the change is only that drivers that today only support 2
-cells also support 3 iff the PWM node has #pwm-cells =3D <3>.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---fzgjswcwy3ghggpo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmBUrokACgkQwfwUeK3K
-7AlPggf8DPViQEa36uwxztGscwEVXLuYpvN/JWbcS27QbgT/y8eLnEMBEfw4idtY
-FZcKAshGqxzyBuaQm5T6+FpmLo3mitb1NKeC8g06SPXjjYUDxniTtuYwcpdmWTVn
-8DR9SpxCUPSkHgBl8GYXs6jc+B3V2yr/J/wbfHBtD62ssF9vYvvYCsBHEbAR8QKz
-OsDSXnJEHu/eFhdoxtokZFhSEB1pEV9DK+bnvrIXeqtt2alW8TPJL8kUIWve3hA0
-5kjpXE/ted69kcFtf3zugqmOJXEbeMpPdWAyIA9ghIFaTZ0Vee66+dQp75vJBw4E
-UAzbSPaRPiVUXkWxj6IRBjr3gcmqvQ==
-=QeKV
------END PGP SIGNATURE-----
-
---fzgjswcwy3ghggpo--
+-- 
+Dmitry
