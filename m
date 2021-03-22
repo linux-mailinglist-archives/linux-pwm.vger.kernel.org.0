@@ -2,52 +2,52 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6317343BD7
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 09:34:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E59A9343C0B
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 09:48:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229472AbhCVIeK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 22 Mar 2021 04:34:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56914 "EHLO
+        id S229760AbhCVIrv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 22 Mar 2021 04:47:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbhCVIeH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 04:34:07 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A88ACC061574;
-        Mon, 22 Mar 2021 01:34:05 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id b9so15685925wrt.8;
-        Mon, 22 Mar 2021 01:34:05 -0700 (PDT)
+        with ESMTP id S229728AbhCVIre (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 04:47:34 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91BA3C061574;
+        Mon, 22 Mar 2021 01:47:34 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id m20-20020a7bcb940000b029010cab7e5a9fso10879760wmi.3;
+        Mon, 22 Mar 2021 01:47:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=tLp+sq/FazE29Dpyy74umHg5WohG4Hq6x2ANHAGmND4=;
-        b=gj4L7vZQwiSTsGb/CJ9/XDAIm6ImT8dSKSK0iY6K4ME4JvwRr0ZmFNJ3gsyzfOyomA
-         Y592x5HiP1kzZQAHDuNEyKk2ZHzDMTUSGyFPhM788hwpgiRn1LQnKFrfxgpO0QjOUVgn
-         MEO41whyzDpY7488ikxH5vK6HF2hiUnQ2kv+/uK8MIhDsOJdLbwVPQvM0dYd1XoJ6xow
-         MNaYEgL0/m/Z+IPCp0KsbcfgsfOF6v59LdVxFriPhAyy3oiFuq7PXy6/+JNFSrAGgUbK
-         fWu4mKO39YIB8Kx7izVDTVX+SoSafLNRXpA1A+TxcYMlZCDuKIk5pinb2PCgu/pgGV3d
-         1qEA==
+        bh=WbdCiWzCxeWbc2p5/beWzVhb0x0dDZx3geHqSJDmH5o=;
+        b=WWotAzaYCTPM7dCVb0Qh1qBNHmOV/hj2Q4jFsz8ssKenN/3f8c/wnbbsCqwtGwcRWT
+         syxEelvbEl/T4AKv2DFyQAnD/Coz/l0IaDlbwReH6zy6uSg5qLFtypwfpQFMJt9dsXe3
+         7RmtYNDVApM6Tag5hZPueL7Zd8a7mY7tWcW17B/07t7uP632uI810eXKnDRRTqWnHd3B
+         Uo8hXBWdEbsHQJOv6qKaseN6xpXRoLKqZ+R+qCNzGrcSAWsZs58G62/xHl/rl4FHvDUJ
+         WyFIw6MoZOrNWnec8jQ+aSP8xUrXIroliF17KWEzx2Av4bELNHSQEBEQ+XLCTRriyS6C
+         /usw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tLp+sq/FazE29Dpyy74umHg5WohG4Hq6x2ANHAGmND4=;
-        b=dj1/NpUnY7AYKzWTtqGD9+5c62kB1lLmgOmeMLcxrbeTrRTfe8agFxlA6IeNNAXQB0
-         H+CRI/Ofv2loMc+WaRNB/6EHEsLIkZDZ4uDnl+wCPbRX8aZ1xxPj6/PbxRKKDRYLf9Z4
-         /98fgZhOJT2mrlH3xtXbuBH1oA5ZjbS3gkdb6D5PkAULqIdH0iphJHzBaB0fRelqE+Gz
-         Arx0zuVKTHNjdS5gPHSBZDB5ED3l+1Rfc/aKDwaXzvybk3xSP0U/OmPuCbizWNj3+RMV
-         orlFtzZwoWw2H50FkjuG4dZZ1ulaEWGZoE8wE2PGNpig0MKGtEES3Em3QEUQvWWhNNj9
-         y8jQ==
-X-Gm-Message-State: AOAM530XGt/QsfKAL/IMNEx406yyfwNEpFvfF75NBXfHdc/dcJpb2Sqo
-        cJXs3Io5SGka8wtVOf/1D9E=
-X-Google-Smtp-Source: ABdhPJwo/b2ymmixn8OQZGq1QFOPDPhlgF/wr8XI/lRJn7zHQYAA4/7FIhApjH8VgVU9yj9f7NjNeg==
-X-Received: by 2002:a5d:61c9:: with SMTP id q9mr16672352wrv.219.1616402044464;
-        Mon, 22 Mar 2021 01:34:04 -0700 (PDT)
+        bh=WbdCiWzCxeWbc2p5/beWzVhb0x0dDZx3geHqSJDmH5o=;
+        b=b6DV8CtdqoKs3uCWyOeLly6FtLvaKYb8xFWrPCr83zgjiaolZ10Isl5yK3K6vSx/L+
+         e+TukggQRkb3mejM5XYxyS4kCst5Tyt3ORVZLGeIyzz+qGQ/w7HWf3fDrZB/+IpbrOPr
+         VTOHZi/qZY8hIXR/pd+r1WI8v7OrbcCdlEEVdb7Ib5Z2KymjlTmW9hbvtXffUrfi6LuK
+         7rAlSSsYD1726UWYts3Em+BEpcEhrgGAXykySRIi5saPQmQRIMO0bEl/zkqekm1qAwsx
+         2vtCE9tvO4uy2qXNerDw44CHjaeNtjWR4xT5rqIXa/KY6Ob99QFAvHsqdjFALJ+l5C4X
+         fTKA==
+X-Gm-Message-State: AOAM5318F7AwfP3rysdr0R0TCQcomEMVuTTnhaQ84wmutyMHsCx4HmvN
+        EqmBUIo4MErv+7Semt/aAOrB59Aa6DA=
+X-Google-Smtp-Source: ABdhPJxsC54AfXoVkyLl5YHqh5gPiOTK9VGZqSWfqy43dZO6fKowzqSYQUAmQYKPbVaWRrS2s2tMoA==
+X-Received: by 2002:a7b:c7ca:: with SMTP id z10mr14575605wmk.117.1616402853374;
+        Mon, 22 Mar 2021 01:47:33 -0700 (PDT)
 Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id 64sm15931087wmz.7.2021.03.22.01.34.02
+        by smtp.gmail.com with ESMTPSA id u2sm19703680wmm.5.2021.03.22.01.47.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Mar 2021 01:34:03 -0700 (PDT)
-Date:   Mon, 22 Mar 2021 09:34:21 +0100
+        Mon, 22 Mar 2021 01:47:32 -0700 (PDT)
+Date:   Mon, 22 Mar 2021 09:47:50 +0100
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 Cc:     Clemens Gruber <clemens.gruber@pqgruber.com>,
@@ -55,118 +55,117 @@ Cc:     Clemens Gruber <clemens.gruber@pqgruber.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-pwm@vger.kernel.org
 Subject: Re: [PATCH v5 2/7] pwm: pca9685: Support hardware readout
-Message-ID: <YFhWjXAF/D6oBpGE@orome.fritz.box>
+Message-ID: <YFhZtiA3YnqKolag@orome.fritz.box>
 References: <20201216125320.5277-1-clemens.gruber@pqgruber.com>
  <20201216125320.5277-2-clemens.gruber@pqgruber.com>
  <CAGngYiWkKZGkQ4TTTy8bQYvnGBK45V0A0JCe_+M5V+vuVU+zkQ@mail.gmail.com>
  <X9uYqGboZg5DuEtf@workstation.tuxnet>
- <CAGngYiUYOL6EF3VTGwcwTuN4EmE26ML3ye7689FTEpowjEcU2w@mail.gmail.com>
- <X/H5CqcRHelg5M4p@workstation.tuxnet>
- <20210111204350.k2bhpdj7xnnqkfi3@pengutronix.de>
+ <20210111203532.m3yvq6e5bcpjs7mc@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="k14jXRtCCuJyXIwP"
+        protocol="application/pgp-signature"; boundary="t2Use13uT5HzaTop"
 Content-Disposition: inline
-In-Reply-To: <20210111204350.k2bhpdj7xnnqkfi3@pengutronix.de>
+In-Reply-To: <20210111203532.m3yvq6e5bcpjs7mc@pengutronix.de>
 User-Agent: Mutt/2.0.6 (98f8cb83) (2021-03-06)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---k14jXRtCCuJyXIwP
+--t2Use13uT5HzaTop
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 11, 2021 at 09:43:50PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> On Sun, Jan 03, 2021 at 06:04:10PM +0100, Clemens Gruber wrote:
-> > Another point is the period: Sven suggested we do not read out the
-> > period at all, as the PWM is disabled anyway (see above).
-> > Is this acceptable?
+On Mon, Jan 11, 2021 at 09:35:32PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> Hello,
 >=20
-> In my eyes consumers should consider the period value as "don't care" if
-> the PWM is off. But this doesn't match reality (and maybe also it
-> doesn't match Thierry's opinion). See for example the
-> drivers/video/backlight/pwm_bl.c driver which uses the idiom:
+> On Thu, Dec 17, 2020 at 06:43:04PM +0100, Clemens Gruber wrote:
+> > On Wed, Dec 16, 2020 at 11:00:59PM -0500, Sven Van Asbroeck wrote:
+> > > On Wed, Dec 16, 2020 at 7:53 AM Clemens Gruber
+> > > <clemens.gruber@pqgruber.com> wrote:
+> > > >
+> > > > Implements .get_state to read-out the current hardware state.
+> > > >
+> > >=20
+> > > I am not convinced that we actually need this.
+> > >=20
+> > > Looking at the pwm core, .get_state() is only called right after .req=
+uest(),
+> > > to initialize the cached value of the state. The core then uses the c=
+ached
+> > > value throughout, it'll never read out the h/w again, until the next =
+=2Erequest().
+> > >=20
+> > > In our case, we know that the state right after request is always dis=
+abled,
+> > > because:
+> > > - we disable all pwm channels on probe (in PATCH v5 4/7)
+> > > - .free() disables the pwm channel
+> > >=20
+> > > Conclusion: .get_state() will always return "pwm disabled", so why do=
+ we
+> > > bother reading out the h/w?
+> >=20
+> > If there are no plans for the PWM core to call .get_state more often in
+> > the future, we could just read out the period and return 0 duty and
+> > disabled.
+> >=20
+> > Thierry, Uwe, what's your take on this?
 >=20
-> 	pwm_get_state(mypwm, &state);
-> 	state.enabled =3D true;
-> 	pwm_apply_state(pb->pwm, &state);
+> I have some plans here. In the past I tried to implement them (see
+> commit 01ccf903edd65f6421612321648fa5a7f4b7cb10), but this failed
+> (commit 40a6b9a00930fd6b59aa2eb6135abc2efe5440c3).
 >=20
-> which breaks if .period is invalid. (OK, this isn't totally accurate
-> because currently the .get_state callback has only little to do with
-> pwm_get_state(), but you get the point.)
+> > > Of course, if we choose to leave the pwm enabled after .free(), then
+> > > .get_state() can even be left out! Do we want that? Genuine question,=
+ I do
+> > > not know the answer.
+> >=20
+> > I do not think we should leave it enabled after free. It is less
+> > complicated if we know that unrequested channels are not in use.
+>=20
+> My position here is: A consumer should disable a PWM before calling
+> pwm_put. The driver should however not enforce this and so should not
+> modify the hardware state in .free().
 
-The idea behind atomic states in the PWM API is to provide accurate
-snapshots of a PWM channel's settings. It's not a representation of
-the PWM channel's physical output, although in some cases they may
-be the same.
+There had been discussions in the past about at least letting the PWM
+core warn about any PWMs that had been left enabled after pwm_put(). I
+still think that's worthwhile to do because it is consistent with how
+the rest of the kernel works (i.e. drivers are supposed to leave devices
+in a quiescent state when they relinquish control), and consumers are
+ultimately responsible for making sure they've cleaned up their
+resources.
 
-However, there's no 1:1 correspondence between those two. For example,
-when looking purely at the physical output of a PWM it is in most cases
-not possible to make the distinction between these two states:
+Most PWM drivers do a variant of this and assert a reset, disable clocks
+and/or release runtime PM references when removing the PWM chip on
+->remove(), but that happens at a different time than pwm_put(), so I
+think it makes sense to nudge consumers in the right direction and WARN
+when they've left a PWM enabled when calling pwm_put().
 
-    - duty: 0
-      period: 100
-
-    - duty: 0
-      period: 200
-
-Because the output will be a constant 0 (or 1, depending on polarity).
-
-However, given that we want a snapshot of the currently configured
-settings, we can't simply assume that there's a 1:1 correspondence and
-then use shortcuts to simplify the hardware state representation because
-it isn't going to be accurate.
-
-It is entirely expected that consumers will be able to use an existing
-atomic state, update it and then apply it without necessarily having to
-recompute the whole state. So what pwm-backlight is doing is expressly
-allowed (and in fact was one specific feature that we wanted to have in
-the atomic API).
-
-Similarly it's a valid use-case to do something like this:
-
-	/* set duty cycle to 50% */
-	pwm_get_state(pwm, &state);
-	state.duty_cycle =3D state.period / 2;
-	pwm_apply_state(pwm, &state);
-
-which allows a consumer to do simple modifications without actually
-knowing what period has been configured. Some consumers just don't care
-about the period or don't even have a clue about what a good value would
-be (again, pwm-backlight would be one example). For some PWMs it may
-also not be possible to modify the period and if there's no explicit
-reason to do so, why should consumers be forced to even bother?
-
-All of that's out the window if we start taking shortcuts. If the PWM
-provider reads out the hardware state's PWM as "don't care", how is the
-consumer going to know what value to use? Yes, they can use things like
-pwm_get_args() to get the configuration from DT, but then what's the
-purpose of using states in the first place if consumers have to do all
-the tracking manually anyway?
+If we do that, it shouldn't take very long for any violations to get
+fixed and then we don't have to enforce this in PWM drivers or the core.
 
 Thierry
 
---k14jXRtCCuJyXIwP
+--t2Use13uT5HzaTop
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmBYVooACgkQ3SOs138+
-s6Gs+w//ciOB3LxDCVL7APKaaIXQe20PV1ogRvsjSfw9oxFltO2YLpdtRg6ywwon
-g3G7ZpmeQRFgQhuc309HUyLkjG+WI78orkxNkA942VtQhlrjPIWjyZnm0qbqrD95
-XWjAacokDREgmSUToxK+d/o4ATR+R8slXHKQE+q8+STcWnFjj6o8vaHRncGN21qE
-MdWvwhij3gdtqtn3KMH9L78zBBbDOsvGcbl7Kae5R6ZMm5xvOMFHT7qDftaCZygo
-UMo/s0a9c1BTxqb6Hoda7ThSUoMURIzZd0oVomk0kIcXxa6MM0zZ9mLtGeETn82k
-bnyteRHdbVzfKLKxQYdfbJEaWxve3Z/S1gQBiQ+2onbe6YxZbU0liAOIukY6+sN4
-UIAgmKcckGU7Ivs6OjIlPgHvOPeT5wpOwjL1gukYBo1maPW59mhsfBKpfFOShpd2
-Wsit96860zAWTvxLDiH4nr/iKki65QPl6YfS5UxNnjpAZEBw9oalIziwaPtZpBgC
-8065+01wRYYV1pL90HrBGkTg0CDfb15Y0Llfgs8enswEGKYpp63nwbQ5kQDJ2eq4
-8saB/hRnm/a5Bks7i8aQ0k4k4osJ1G/xzAmN41yBuyZ1HlRfz0dHJNSFLBV7raTz
-+qpkGbiKe/ssSIRaUDzXTfvHDiPP6FHyV74PLos1YRGMHKgAtr4=
-=tx4K
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmBYWbMACgkQ3SOs138+
+s6E0/xAAi3K3cEjtmE0i7CWSGUeTDm22dDFNy1P/qNW2qvUig4E33jKPzyom2ap1
+vWJcYPOftG5FYG8Y1JZvfZTdBFu8FbalI4pmnSuHVZvcUwXkBGV5R+5uV1W8lbEm
+wqZV4pNeCNGkUzyBYmLYjEjHoJQFgKpWEH6IW++g+Y+78x4Zz74Ira/nFUypd6SR
+tWrTAM2HXbqBG4vsG8YgVOOq7ds1HTf/jL0CoY2NsPBlXo20qo46c4XMUL3tZ/MU
+DRhoLFHevFVQIL4dBV7NeA5ZUckxJCVTW2lF2I5szkVyOTkAN0ujmvW52ziOrBXG
+vXUz3AQtPpLOCuTTAR68jeUhvMhWvrOPbkksEdz9yfyK0GeUCz4752PEJbpPmTks
+8ApNC/5JBEH36y66+piJy6FqlShci7yR3OJRVkoiBiWOvpq+yV3OF+0AvR8/QpEU
+Q5/BefUmswkPwkSD+7MmzpQ534Zd0myCyC2UAK7fq2jkUqJZA/JU31mQw8Ho6WZp
+OdFrbfOS08coVfBIJOsCV01oLgUmZOXbsBQEbPv+M8m4K2Uagav8rimUpJs0NSPu
+HuYvQyFR2LF2cavkhimTTUdRhJ16L2rM0sI0ZGO+phz53CWvjh2l3+bEmeWFcC0x
+pi+BvMbiCuRQVKX8U2Y8t5jX1Bq/XdW3VFj0CoXSSjrrHyikkto=
+=etHA
 -----END PGP SIGNATURE-----
 
---k14jXRtCCuJyXIwP--
+--t2Use13uT5HzaTop--
