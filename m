@@ -2,116 +2,105 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7094B3449AE
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 16:51:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29C5B344D7A
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 18:36:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229931AbhCVPuj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 22 Mar 2021 11:50:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230185AbhCVPuZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 11:50:25 -0400
-X-Greylist: delayed 27213 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 22 Mar 2021 08:50:24 PDT
-Received: from antares.kleine-koenig.org (antares.kleine-koenig.org [IPv6:2a01:4f8:c0c:3a97::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 460BCC061574
-        for <linux-pwm@vger.kernel.org>; Mon, 22 Mar 2021 08:50:24 -0700 (PDT)
-Received: from antares.kleine-koenig.org (localhost [127.0.0.1])
-        by antares.kleine-koenig.org (Postfix) with ESMTP id 4950CB3D085;
-        Mon, 22 Mar 2021 16:50:22 +0100 (CET)
-Received: from antares.kleine-koenig.org ([94.130.110.236])
-        by antares.kleine-koenig.org (antares.kleine-koenig.org [94.130.110.236]) (amavisd-new, port 10024)
-        with ESMTP id 1rkLMxZmoQTP; Mon, 22 Mar 2021 16:50:21 +0100 (CET)
-Received: from taurus.defre.kleine-koenig.org (unknown [IPv6:2a02:8071:b5c8:7bfc:9c64:7e23:b041:2958])
-        by antares.kleine-koenig.org (Postfix) with ESMTPSA;
-        Mon, 22 Mar 2021 16:50:21 +0100 (CET)
-Subject: Re: [PATCH v2 3/3] pwm: Drop function pwmchip_add_with_polarity()
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org
-References: <20201207134556.25217-1-uwe@kleine-koenig.org>
- <20201207134556.25217-4-uwe@kleine-koenig.org>
- <YFiAaIIaOo6kBG0q@orome.fritz.box>
-From:   =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-Message-ID: <6eccf6a4-d410-bf30-fd0b-c1093cb6263a@kleine-koenig.org>
-Date:   Mon, 22 Mar 2021 16:50:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        id S229764AbhCVRgU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 22 Mar 2021 13:36:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48082 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231365AbhCVRgP (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 22 Mar 2021 13:36:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0770361994;
+        Mon, 22 Mar 2021 17:36:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1616434575;
+        bh=VdW4om2AyPCfqy4wAovCR7HUVEe2frovxQ0Cc8nEk7s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Mh9yoSTNMWrpBFxp7mRAqgfTfZOlph3dYZnhso+XBF99dtzEHkgBu1YOy2DccLzzn
+         fUylSmXKjiXNkdvZx/WKnjEV+5GnHZAVRPf8FAuQ+FX2zNlEFwMnVuBx3/7QcHBGRR
+         VmCt4+L4cInUjBNq78zxXp4FBDQOleC4/KxA9aQVsnHM3Zt5q+sPQ+9++fOCLAChGA
+         ZrbBCoyVviPqoFFBHsivxNrK5fArDQmqAhFcrkwkX3XZuyzri6iX5TjfgUyKO2BGWn
+         +jNA3cIftCwjS8BGd8BxZpoBiA5+h4IHlX0hKg0akAFueiGgUW8oqUusCrgeyLdw+R
+         NAjf6bEHS7S5w==
+Received: by mail-ed1-f45.google.com with SMTP id z1so20406691edb.8;
+        Mon, 22 Mar 2021 10:36:14 -0700 (PDT)
+X-Gm-Message-State: AOAM531IT0C8EmZXdUdl2/O0RfqM2n+Belt7+onRvizq6QDIQphW2JSP
+        Rz4HTlybecblpmqZzlLW4FYCCmlGZgWGlIDeSg==
+X-Google-Smtp-Source: ABdhPJx2NmuQG0Y5DzdS5+450riDgemRYrFCSvVWhwcs0YPSA/NP54tZmFoCyKBJEdQ1WhL/o13t1FITdk/T511dQts=
+X-Received: by 2002:aa7:c403:: with SMTP id j3mr718221edq.137.1616434573540;
+ Mon, 22 Mar 2021 10:36:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <YFiAaIIaOo6kBG0q@orome.fritz.box>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="L0CLSk1cL5zZfoWZBRE1BU0CMKTzWpjSN"
+References: <1599734644-4791-1-git-send-email-sagar.kadam@sifive.com>
+ <1599734644-4791-3-git-send-email-sagar.kadam@sifive.com> <20200922203429.GA3188204@bogus>
+ <CAMuHMdXPG-+EOCrQZi1deKv1yYMBtohprUVYW_-Shdp_gfQs5Q@mail.gmail.com>
+In-Reply-To: <CAMuHMdXPG-+EOCrQZi1deKv1yYMBtohprUVYW_-Shdp_gfQs5Q@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 22 Mar 2021 11:36:01 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJSF=p657tdvm4CW_LYi93t6vG0aOmQxUmYYW3_5h5UHQ@mail.gmail.com>
+Message-ID: <CAL_JsqJSF=p657tdvm4CW_LYi93t6vG0aOmQxUmYYW3_5h5UHQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] dt-bindings: riscv: convert plic bindings to json-schema
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Sagar Kadam <sagar.kadam@sifive.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Yash Shah <yash.shah@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---L0CLSk1cL5zZfoWZBRE1BU0CMKTzWpjSN
-Content-Type: multipart/mixed; boundary="sA25Pxf1hRLB9dJZuqs1ki1wnZnmKJkmJ";
- protected-headers="v1"
-From: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org
-Message-ID: <6eccf6a4-d410-bf30-fd0b-c1093cb6263a@kleine-koenig.org>
-Subject: Re: [PATCH v2 3/3] pwm: Drop function pwmchip_add_with_polarity()
-References: <20201207134556.25217-1-uwe@kleine-koenig.org>
- <20201207134556.25217-4-uwe@kleine-koenig.org>
- <YFiAaIIaOo6kBG0q@orome.fritz.box>
-In-Reply-To: <YFiAaIIaOo6kBG0q@orome.fritz.box>
+On Mon, Mar 22, 2021 at 9:38 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Sagar, Rob,
+>
+> (replying to an old email, as this one seems to be the most appropriate)
+>
+> On Tue, Sep 22, 2020 at 10:34 PM Rob Herring <robh@kernel.org> wrote:
+> > On Thu, Sep 10, 2020 at 04:14:03PM +0530, Sagar Kadam wrote:
+> > > Convert device tree bindings for SiFive's PLIC to YAML format
+> > >
+> > > Signed-off-by: Sagar Kadam <sagar.kadam@sifive.com>
+>
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
+>
+> > > +
+> > > +  '#address-cells':
+> > > +    const: 0
+> > > +    description: Should be <0> or more.
+> >
+> > Drop. 'or more' is wrong. If there's a case with more, it will need to
+> > be documented.
+>
+> Why do we have the "'#address-cells': const: 0" at all...
+>
+> > > +required:
+> > > +  - compatible
+> > > +  - '#address-cells'
+>
+> ... and why is it required?
 
---sA25Pxf1hRLB9dJZuqs1ki1wnZnmKJkmJ
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+It is only required if an 'interrupt-map' points to this node.
+Currently dtc is warning if it is missing always, but there are plans
+to relax dtc to only warn when 'interrupt-map' is present. Of course,
+if you had 'interrupt-map' in an overlay, you'd want #address-cells in
+the base dt and there's no other way to check that than making it
+required.
 
-Hi Thierry,
-
-On 3/22/21 12:32 PM, Thierry Reding wrote:
-> On Mon, Dec 07, 2020 at 02:45:56PM +0100, Uwe Kleine-K=C3=B6nig wrote:
->> pwmchip_add() only calls pwmchip_add_with_polarity() and nothing else.=
- All
->> other users of pwmchip_add_with_polarity() are gone. So drop
->> pwmchip_add_with_polarity() and move the code instead to pwmchip_add()=
-=2E
->>
->> The initial assignment to pwm->state.polarity is dropped. In every cor=
-rect
->> usage of the PWM API this value is overwritten later anyhow.
->>
->> Signed-off-by: Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.org>
->> ---
->>   drivers/pwm/core.c  | 25 +++----------------------
->>   include/linux/pwm.h |  2 --
->>   2 files changed, 3 insertions(+), 24 deletions(-)
->=20
-> There was a conflict between this and patch "pwm: Always allocate PWM
-> chip base ID dynamically", but it was fairly trivial to resolve. Let me=
-
-> know if you think I didn't resolve it correctly.
-
-You did it in the same way I did it on my next branch. (Actually I had=20
-the patch order reversed, but the result is the same.)
-
-Best regards
-Uwe
-
-
---sA25Pxf1hRLB9dJZuqs1ki1wnZnmKJkmJ--
-
---L0CLSk1cL5zZfoWZBRE1BU0CMKTzWpjSN
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmBYvLYACgkQwfwUeK3K
-7AlPggf/SFHdJlBAwEJr7TyCpMX3Zyep/eX0IkMc6qXWjOAaHkL+N0QkCf5o94Mi
-UqgDlu50JSFFiF55wX/LPD6o57t5VQKWoWZDHlIxqSatvDtSD/LZ+MHK0oVy3tjD
-8UaNJ+VWmPehS0n52onlkXJuUQa2e9ZEtWAJ6c7Pm41KfPFO44bw6c0lgIx47jEJ
-tEl42cUk49J5zV743vSLf6aRpuuyeX+ahTL0r313dyGjs1n1A43ntmAQI6feRiLZ
-qqsLK+Ms4QEwjFNA/cY4YWPTc1B6915a78eivK2SxCkmL/jbnwZnXd+Au45860Ry
-DRDXStHYaJT9rMe3bKgok6F4UyOQCQ==
-=GgcM
------END PGP SIGNATURE-----
-
---L0CLSk1cL5zZfoWZBRE1BU0CMKTzWpjSN--
+Rob
