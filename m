@@ -2,109 +2,142 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 04E37343F22
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 12:08:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D72E343F50
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 12:12:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230343AbhCVLIR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 22 Mar 2021 07:08:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33904 "EHLO
+        id S230247AbhCVLMK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 22 Mar 2021 07:12:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230203AbhCVLIK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 07:08:10 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D969C061574
-        for <linux-pwm@vger.kernel.org>; Mon, 22 Mar 2021 04:08:09 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id j18so16216489wra.2
-        for <linux-pwm@vger.kernel.org>; Mon, 22 Mar 2021 04:08:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rRiKix/TwUnpb1USYjs2yHTWY2kpH7fP8bGbo5L4dOQ=;
-        b=WocRWLXJzAWbg+rBa6Pj/HPel5RAIwHGExH1ZsIXuw0T+6EqlBSSLl2hkQG2qYXamx
-         b+VURWVofEuo/XGAXDYTWJ5ovjh83Wo/vlzJWbUguoIIj3jJnFA6CqAbbu5Amk27mY1C
-         VCoq759EhwZe2G4wt5kRYxVd5aEzy5HkNuVOeRIthb794ijBiYtsBWvX41mGpH2ZnaF0
-         lbfESBB3HyUkkTCE1w/D7ALrR9bfjjiwGEYh1aSIWln9VIZOTiPG0rRsQ+NIedMz1xHR
-         WynDHKggORj7L3X9tob83lKxmZnrBo08ylZcODYXxG70RNwd3znHdgFT+JNgkl4s5bu5
-         g+9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rRiKix/TwUnpb1USYjs2yHTWY2kpH7fP8bGbo5L4dOQ=;
-        b=fnV/1Mwq7ZVXJhOlEyRUJdOvWt06jzjB7wx+AjArALjgS7nt0vBCQ56zf5uxvquYSH
-         eUDJUSmqyDBBq+N8HfQTk+btmlDMnwPHFNvPtuVU8S9Nt925B4pr7MLzvUb/c7nW150C
-         dxmMuUfvwmslaM9gUuvB/2yNPw/KWjlNkwS31AJwjrLDuXb4KctR3TUGupLasBVwtlpB
-         50FgovQXC9oZOcRJYmOTUzbhAGBNii4sfAL9uCY+mnB1BoncMbpe9TFwttcvS1ywuEM+
-         Bh57/ckQrYv1ImOS4mIhRnx5FNiO/aN/5U7Da8Xohn0aMqXPOQZsWUxvN2Z7TZhIUyty
-         BXUQ==
-X-Gm-Message-State: AOAM531eQtgziFGD3w2PbGrI+hVucLvNRUb4ybda2uNm6IN3m5v6ZJBt
-        IoPQKOMO4qBvFV9yDvgpA98=
-X-Google-Smtp-Source: ABdhPJw0lBwkIkkIl14+58XoCBVasjSlctRlyhua7p06Z7HcEp3gOik8EZU6uxix1T6GS9TA44Ylqg==
-X-Received: by 2002:a05:6000:10c3:: with SMTP id b3mr17496184wrx.96.1616411287841;
-        Mon, 22 Mar 2021 04:08:07 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id a13sm20104735wrp.31.2021.03.22.04.08.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Mar 2021 04:08:06 -0700 (PDT)
-Date:   Mon, 22 Mar 2021 12:08:24 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>, linux-pwm@vger.kernel.org,
+        with ESMTP id S230078AbhCVLLe (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 07:11:34 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90CE3C061574
+        for <linux-pwm@vger.kernel.org>; Mon, 22 Mar 2021 04:11:33 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lOIT5-000475-Uw; Mon, 22 Mar 2021 12:11:31 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lOIT5-0008C4-6Y; Mon, 22 Mar 2021 12:11:31 +0100
+Date:   Mon, 22 Mar 2021 12:11:31 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         kernel@pengutronix.de
-Subject: Re: [PATCH] pwm: cros-ec: Refuse requests with unsupported polarity
-Message-ID: <YFh6qLeIfcCZSUAX@orome.fritz.box>
-References: <20210312090058.386850-1-u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH] pwm: Prevent a glitch in compat code
+Message-ID: <20210322111131.w2c6lj6m2vw7socw@pengutronix.de>
+References: <20210308093600.25455-1-u.kleine-koenig@pengutronix.de>
+ <YFh47dFLmWqZHvz7@orome.fritz.box>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="naFyJ2kOClt1eQ2j"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="g6sjvpyd6exp2eje"
 Content-Disposition: inline
-In-Reply-To: <20210312090058.386850-1-u.kleine-koenig@pengutronix.de>
-User-Agent: Mutt/2.0.6 (98f8cb83) (2021-03-06)
+In-Reply-To: <YFh47dFLmWqZHvz7@orome.fritz.box>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---naFyJ2kOClt1eQ2j
-Content-Type: text/plain; charset=utf-8
+--g6sjvpyd6exp2eje
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 12, 2021 at 10:00:58AM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> The driver only supports normal polarity and so should refuse requests
-> for inversed polarity.
+On Mon, Mar 22, 2021 at 12:01:01PM +0100, Thierry Reding wrote:
+> On Mon, Mar 08, 2021 at 10:36:00AM +0100, Uwe Kleine-K=F6nig wrote:
+> > When a PWM is to be disabled, configuring the duty cycle and
+> > period before actually disabling the hardware might result in either a
+> > glitch or a delay. So check for disabling first and return early in this
+> > case.
+> >=20
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > ---
+> >  drivers/pwm/core.c | 20 +++++++++++---------
+> >  1 file changed, 11 insertions(+), 9 deletions(-)
+> >=20
+> > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> > index 4058d3c86a45..4604ca3e0e62 100644
+> > --- a/drivers/pwm/core.c
+> > +++ b/drivers/pwm/core.c
+> > @@ -597,6 +597,12 @@ int pwm_apply_state(struct pwm_device *pwm, const =
+struct pwm_state *state)
+> >  			pwm->state.polarity =3D state->polarity;
+> >  		}
+> > =20
+> > +		if (!state->enabled && pwm->state.enabled) {
+> > +			chip->ops->disable(chip, pwm);
+> > +			pwm->state.enabled =3D false;
+> > +			return 0;
 >=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/pwm/pwm-cros-ec.c | 3 +++
->  1 file changed, 3 insertions(+)
+> I don't think we can return early here because otherwise if consumers
+> happen to modify the period along with the enabled state, the changes
+> to the period will get lost.
 
-Applied, thanks.
+This however doesn't matter, because the output of a disabled PWM only
+depends on polarity. (And polarity is already cared for.)
 
-Thierry
+And if a driver calls pwm_enable() afterwards (or the equivalent in
+terms of pwm_apply_state) the period and duty_cycle will be picked up
+correctly.
 
---naFyJ2kOClt1eQ2j
+> Can we just omit the "return 0;" here?
+
+>=20
+> > +		}
+> > +
+> >  		if (state->period !=3D pwm->state.period ||
+> >  		    state->duty_cycle !=3D pwm->state.duty_cycle) {
+> >  			int duty_cycle, period;
+> > @@ -620,16 +626,12 @@ int pwm_apply_state(struct pwm_device *pwm, const=
+ struct pwm_state *state)
+> >  			pwm->state.period =3D state->period;
+> >  		}
+> > =20
+> > -		if (state->enabled !=3D pwm->state.enabled) {
+> > -			if (state->enabled) {
+> > -				err =3D chip->ops->enable(chip, pwm);
+> > -				if (err)
+> > -					return err;
+> > -			} else {
+> > -				chip->ops->disable(chip, pwm);
+> > -			}
+> > +		if (!pwm->state.enabled) {
+>=20
+> If we don't return early above, we'll have to change this here as well
+> to ensure we don't gratuituously enable the PWM. Instead this would
+> basically become the inverse of what we do for disable above, which is
+> also nicely symmetrical (i.e. disable, then change period/duty to avoid
+> a glitch and change period/duty then enable to avoid the glitch).
+
+Either I don't understand you, or we're already there.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--g6sjvpyd6exp2eje
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmBYeqgACgkQ3SOs138+
-s6GTZA/8D3vdtWmntX+R9E6Ozxwin+Xkd1lNqABcYOxCsZOHPGTZ6eKuWojMTYUo
-XaQDRc0eFSkFPrpjIWOuz3OK08nywk/9uOvb3S9icvMbqmWS5vkOUu5NP8OriJqm
-ROwTdDycVrsgbw0uKYZOPjK5AQyFfZ8z0HO+ti5nQo6XljTMwbmsDxjdoZs4YDcg
-2AXQMIOlrP5DJYixejJZ0k2woxFRb7IiHoCBzcUZafgy0raeYQLgy2VBtBgkO4sW
-bNdQ0XyC7OWX9G+5HVBpJljNEjYJHXaa++hZktvkDfv/qbnl2limMiLGYNCQjLtF
-h/GnSYjpj7qxu71uR0o0vTJlmgOj3pAWcfCHvwql7QJbsIcriGDxCM6ZjzEj4t9o
-nWBe00s8Sigfxf2oeJVmfXIQXNLafJbucEImn6jRJDafxsCwWJhiVTsIaAGlQp+n
-qW6IsoBPEIsFdq1gy7fH0bVD/hi1euev1xv8sskhdb8VFlb9K11W7oWCAWuk+QgQ
-bx9O9VCI8rVbkkf8+UZsAJrcCmTu82afziSo3o6A3UYjPboyRODRV8uEVjH6d/rL
-gxxCwuJe0Isj/DSeupqJ+C8hu5nCImNsfBH8HXxTGNY+DG+hHMgyURgepROehWNn
-cgvg9FYp8WPYXp9IkjDL6ix/vJRldVyZp1Tt8So+T7HnE/18tiU=
-=kUau
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmBYe2AACgkQwfwUeK3K
+7AmzFwgAlcqR+Y16Tw6JXbR6XD6sp8T6wJ7KJwvtV6gjLsH9LWAI9AMry7WTb4Oc
+dmW4Rmb5Iv5JEjCbxbpZ8fXwcSwHo2UNBuljtFQUm8R5peCoqRtDz0WPI/athCtB
+TOYwEXw/jylK01sRl6d3Pudd0o9e8KAmdN2paF+Qv9O+Bmslx9B/+7yJHva64jvj
+chFOEWTNVG5ZfyGu/CJTRktDiVje7KXoOs/QYvnvV4bpBhaPsm5XrsUbg6RAcoDE
+QaS+UOyuz0jTk+r+8U2zSjUmxSguUGZMovJBv2KX8NuA8SmjAspxqGybH/HHT1ug
+mQghc5RrLP1OB1bGu5uNnyI5TbSVaw==
+=Ca9V
 -----END PGP SIGNATURE-----
 
---naFyJ2kOClt1eQ2j--
+--g6sjvpyd6exp2eje--
