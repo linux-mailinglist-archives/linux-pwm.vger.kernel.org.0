@@ -2,107 +2,106 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 402AF343E5D
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 11:49:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EEB3343E5F
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 11:50:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230293AbhCVKt1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 22 Mar 2021 06:49:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57978 "EHLO
+        id S230209AbhCVKt7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 22 Mar 2021 06:49:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230163AbhCVKs5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 06:48:57 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0722AC061574
-        for <linux-pwm@vger.kernel.org>; Mon, 22 Mar 2021 03:48:57 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id u5-20020a7bcb050000b029010e9316b9d5so8968461wmj.2
-        for <linux-pwm@vger.kernel.org>; Mon, 22 Mar 2021 03:48:56 -0700 (PDT)
+        with ESMTP id S230337AbhCVKts (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 06:49:48 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A975EC061574
+        for <linux-pwm@vger.kernel.org>; Mon, 22 Mar 2021 03:49:47 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id d8-20020a1c1d080000b029010f15546281so8793095wmd.4
+        for <linux-pwm@vger.kernel.org>; Mon, 22 Mar 2021 03:49:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=spT6mdXA3W15MpSJI6dDAtWotiB/ADAAPujZoIVO1jo=;
-        b=hQSYQHsnh/0CTuLz9iMv9VXObU9Xg8JgZMr+TUn5PqSSUNj/CbobnDotnQIZJYogfA
-         4V1lKXZwSO0w6AZGpHUB4/kW1Ae2CoHqLII5H+KsHgv06kRQ+yjCAvgweADtuW5jW2tX
-         pxY528rxIykMPsLL+SM5Ym0Au33TryYLwkUClQcYn4qc0t2cNwlSWYnm452qDGOiNMUd
-         1UL1Ci6UVyRYxdGAy0Xk9kOh1wLENwFFTOMoKiIpSDKB9hDUDADPLyPlzyqHxLWATGF8
-         f4PO326fBfOzgv6zBHJ+ChKkVf7i2yYmWlNKQvfeSkBf0tYmbloGrlRz0a8QbdVQpkUU
-         quEA==
+        bh=Z8BUJlTaijGF4tsrPaRZ+TA7Cswcqvl/d5E/uC+GEeU=;
+        b=V5dQsvSeujFz4vpcm8+2FRDRiIgttTFkeKn2u5JbenaTXBEHkJyq6StjClhcEImsW3
+         wxkr3QJNwTEta3yw6PqjRViE5xSYrGkbOe1OVYOlaI0itRP04SeVSt2M2jQAb4onFl7w
+         vapFXHTNdGqrAiUz/ILMdvB9GynwJac2hpsarjhmtojnU75wO/egQvDqaK/SRoPKxeYK
+         hbn1TZOJXnKW3ppX0LRZTSSwDzOx+mumkk69mqty0uwropuUhNmGTdxyN7Zd5LilpEMX
+         SYkJKXQap5JG2N7YiQLcGihqEDoXRHtRc4Kj4YpzpXe1rEOTvOrYOyNY5dEeyJyLTjWp
+         X/ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=spT6mdXA3W15MpSJI6dDAtWotiB/ADAAPujZoIVO1jo=;
-        b=CU4TgOppK+7SZttTl4fi+r/VrDozvUTMtZTVsM1Dl35FUPVA9Bohe/vOlUm4rPqnrk
-         Syw9ESiNeL7G3nG6c8M9lUuxmo6yznESzDWbaTaAHEQj4z5GpKjAEsoqm+GZ5a9rxzRT
-         EwQFOAI+aVuLN0kquEFdW3Z4Tjud8sEyxsWioo+fb8SU077pMD8f15luHi53N2dsHZRd
-         bq9lR4X84DOcuqE/wFfRoUddE4lJvlh58YIFUlqKvVtzL3I9IBaRHyRp3Ou1LZYRnvpC
-         fB3ai54KXixz0938/aTAtVvbpeD9BnYEPP1wx5TSw4J3NJUpb338O9i15NBuiKJWBkbM
-         0eHw==
-X-Gm-Message-State: AOAM531hRY9CD6+6H7YI3XUu1DycMXOiNHD7bLFjQFxqxIU5dKoi6jWw
-        5ibySHVEiYd9PF3OR3K1wIA=
-X-Google-Smtp-Source: ABdhPJzXsmh2Qp9r3S46eV/hlgZGycHrvRXFdTvvW5btAq6Y+RzZg3qe6mSMGFTc7m4TBZdODJBmXQ==
-X-Received: by 2002:a1c:6243:: with SMTP id w64mr2309172wmb.0.1616410135652;
-        Mon, 22 Mar 2021 03:48:55 -0700 (PDT)
+        bh=Z8BUJlTaijGF4tsrPaRZ+TA7Cswcqvl/d5E/uC+GEeU=;
+        b=oRH9NpOXo85YkFQtTGp3enqPlF6HrpEJlmoAHFICJod1Mdmz4jetOcDJExjyPYL3Xn
+         r7GpSHzeDGLh70PAfJGQBsEhi69zWUhzeHLKWk5d4d5KbP+paM4nyx0klZR5SllOLRx4
+         sumJ43oioMdWaRJpkCAAuxAMYFl0nD0sAV3mIeA4sT6FEyTtX9VYr/zDN+vFo89PK0cv
+         LDEkOI4mHp+70tERweK1zOS7YKQjPGR8QJl1L4i2X94E3t3FClsMKEM1a5kiF8gR0SH0
+         XJmlxYfBfumNbQJR46BlodhBe6j9ih3/FwP32AN3/3JiHl6YUmMXoL+zd2EBIOM4/Q0W
+         iAUQ==
+X-Gm-Message-State: AOAM530sVSIKBZ2jSwGW4mM9rXaxAiEM6vKVk6A0KJU7pKEJQr2asXK+
+        uZu7StY+AL/IN+tYu1DSI/k=
+X-Google-Smtp-Source: ABdhPJzdJZoet8YrveJZMZLKOMbwqZq3fBvLQfMtUR5sfO2eaynxc4W5vBYBmoQ/oCWVMKq8HBUHgw==
+X-Received: by 2002:a1c:9d51:: with SMTP id g78mr15932198wme.5.1616410186477;
+        Mon, 22 Mar 2021 03:49:46 -0700 (PDT)
 Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id s83sm16433612wmf.26.2021.03.22.03.48.54
+        by smtp.gmail.com with ESMTPSA id o11sm19116627wrq.74.2021.03.22.03.49.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Mar 2021 03:48:54 -0700 (PDT)
-Date:   Mon, 22 Mar 2021 11:49:12 +0100
+        Mon, 22 Mar 2021 03:49:43 -0700 (PDT)
+Date:   Mon, 22 Mar 2021 11:50:01 +0100
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>, kernel@pengutronix.de
-Subject: Re: [PATCH] pwm: ab8500: Implement .apply instead of .config,
- .enable and .disable
-Message-ID: <YFh2KCS5E0XiaP9A@orome.fritz.box>
-References: <20210301184537.1687926-1-u.kleine-koenig@pengutronix.de>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] pwm: imx-tpm: Use a single line for error message
+Message-ID: <YFh2WUixZQceHtew@orome.fritz.box>
+References: <20210304024242.2363294-1-festevam@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="u0wXW0dhLkb9EY5Z"
+        protocol="application/pgp-signature"; boundary="eU/2tv9nGGjlGHFW"
 Content-Disposition: inline
-In-Reply-To: <20210301184537.1687926-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20210304024242.2363294-1-festevam@gmail.com>
 User-Agent: Mutt/2.0.6 (98f8cb83) (2021-03-06)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---u0wXW0dhLkb9EY5Z
-Content-Type: text/plain; charset=utf-8
+--eU/2tv9nGGjlGHFW
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 01, 2021 at 07:45:37PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> To eventually get rid of all legacy drivers convert this driver to the
-> modern world implementing .apply().
+On Wed, Mar 03, 2021 at 11:42:42PM -0300, Fabio Estevam wrote:
+> There is no need to split the dev_err() call in three lines.
 >=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> Use a single line to improve readability.
+>=20
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
 > ---
->  drivers/pwm/pwm-ab8500.c | 53 +++++++++++++++++++---------------------
->  1 file changed, 25 insertions(+), 28 deletions(-)
+>  drivers/pwm/pwm-imx-tpm.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 
 Applied, thanks.
 
 Thierry
 
---u0wXW0dhLkb9EY5Z
+--eU/2tv9nGGjlGHFW
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmBYdigACgkQ3SOs138+
-s6E6QxAArGYJP4zjtAWSRh8uJpYZ9XrcXtVP4/FzTuMdHI5HP3OnZ3/5kWrsC5+q
-v8a+OwDtYt62TTPDo+8HwTnrBqX2cmKN7RtS5Enj3RJHkd9yCq6BaqgrZb+ln+T7
-BxXfahQ7i2aWW7tDNm/pvNnRWfwdu8JZ1OjwW8LaF6tA+xtOg9ezEeM9HaR/5lQg
-/uVz5J6WzwZzn8IIHIDqjx96ikfxn99p/Ct7lj1kc2besUwFUCqzH+Y+LCxPH+fA
-VmK9V4n1VDkowRWO224Okqo8iKIojjYy4iZkmUBQkBVZexrFlbXvVxonVE9/IKLz
-KeIy1A8Gmepb7Rp0Lh3SSEaY6k9mxpSfhx420bo8bdVMSoiCB6Mekaw5euTb5sgg
-YC+aZR0H7tM2oIRuuOAjodyImznOzcniFGQ3GGT2En7aWzLv+RF8yJRYJOBxhRi8
-PCnO9k8TESZvH0tGFSM//JDYr+rHHvERy5TpfpW5bIavT07OKVOBpROIPs3fw5YE
-1mKRHMH1vrONvJMUMX42pd0h1n3jxOYHGqItiorLN8Qayeuet1uZww/+9ocJ2H7C
-otQXj0itwFvhxyEg6TPEGdEPeJ0v9avNHu9XGrArb+hGwibzcDpaUARLct0Xa8DY
-u4mj271+3tE88IkkwW/8XQSG7d3PYCGszKKd2mKLU7aPpLAbY7w=
-=Oism
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmBYdlgACgkQ3SOs138+
+s6ESag//Rnwh2pnquszEmN8MX7lTDpvGzL9A3tCnOW8oppw1gyfmcjxAPGIggWZj
+uMxT8jmmSObgxUMC4omv8LQuJSB4GXcTDGAGlfJt6rG5JONizV4OwLVB/FoO4FAh
+r585AujxRL0w8w9suQHfd+7/SyH8JWTg4QYABPaqbaAI/vBhtSzBWx8bY4iQ4BPX
+J3L7pM19SfZza+qK/LBZECumeFE1hhIqEYytcdZOv9N5ziD1Ii+1I0iiyH4hkUYY
+CgbEsMrL9A89yKP5gw5OavwwAAABz1/pUiI+J9dYqcJ3kF1aozH3zdfebWTbn6U2
+FI84sqYWpIQJ3S7f+3MrMIuVGSSBFQf2YGfo7i1MsvUWEGJlQK2BxADwXtddLA5D
+xhoTcWP1WEmUYreJ+LcZlDy9YGGWqeaf6topAyBzcnfKxC51tZ0G8dx2T+DxU4f6
+ZpFcRqKU3PhNpWVXrQ1n1429K8pcbcWfdUjU3/BLngf2lbKOrBD39oYg8AY6yXQu
+FeEjVIPBvCbHAQi+RYomStTjV5lZ2sL7vSHu4gBjy4cYbba2DJZm2cJeMQURB26t
+fB2MHOd+YYk/TnfUGnnxcEiiwfHYg4UCLdBJTbuyU/biONEmqSVhQ/VlcGdYoCvD
+VXHNCWLyFIjpN5wQW1+SfggX75x7JgwktHed+LsTgzALVsZ74o8=
+=IHBM
 -----END PGP SIGNATURE-----
 
---u0wXW0dhLkb9EY5Z--
+--eU/2tv9nGGjlGHFW--
