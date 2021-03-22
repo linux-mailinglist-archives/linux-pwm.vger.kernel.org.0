@@ -2,135 +2,145 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D7F58344023
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 12:49:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D36C34403F
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 12:57:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229893AbhCVLs5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 22 Mar 2021 07:48:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42622 "EHLO
+        id S230254AbhCVL43 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 22 Mar 2021 07:56:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230219AbhCVLsa (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 07:48:30 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98971C061756
-        for <linux-pwm@vger.kernel.org>; Mon, 22 Mar 2021 04:48:30 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lOJ2p-000161-16; Mon, 22 Mar 2021 12:48:27 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lOJ2o-0002Vt-LM; Mon, 22 Mar 2021 12:48:26 +0100
-Date:   Mon, 22 Mar 2021 12:48:26 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Clemens Gruber <clemens.gruber@pqgruber.com>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v5 2/7] pwm: pca9685: Support hardware readout
-Message-ID: <20210322114826.ahwhbqxjxfg3nmrf@pengutronix.de>
-References: <X9uYqGboZg5DuEtf@workstation.tuxnet>
- <20210111203532.m3yvq6e5bcpjs7mc@pengutronix.de>
- <CAGngYiW=KhCOZX3tPMFykXzpWLpj3qusN2OXVPSfHLRcyts+wA@mail.gmail.com>
- <YBQ4c2cYYPDMjkeH@workstation.tuxnet>
- <CAGngYiWd0u=+DPhvK+8v9FT8Y1Evn1brWRheMNDXWFVVL-wNFw@mail.gmail.com>
- <YBRyG0vv3gRzygSB@workstation.tuxnet>
- <YFhhGpiHDELxIo9V@orome.fritz.box>
- <CAHp75Ve2FFEMsAv8S18bUDFsH2UkiQ5UvgcRtZ=j30syQtEirw@mail.gmail.com>
- <20210322112254.5mjkajkq3wnhgnd5@pengutronix.de>
- <CAHp75VfedZyFF46koLOg13t_TzMbwj5zBYU2zBA52vRRtb202g@mail.gmail.com>
+        with ESMTP id S230015AbhCVL4Y (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 07:56:24 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74887C061574;
+        Mon, 22 Mar 2021 04:56:23 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id bx7so18934744edb.12;
+        Mon, 22 Mar 2021 04:56:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KS85IVDzb0H7K1jO3EiwO+5LR6In+7iTE4xtTzUGrfM=;
+        b=MkK0DLI4jGhh0jNi8U1dH8B8/03b5UgOs80kYlp9lhL8YYeqwK/NpJrXn2Nud2lFQB
+         tFOy/KwpjyBQWrPJTXgiFKOp8BcuSOsBTmpJ3VNWo3zyv71feWRS9GLna7FtAH7JxC78
+         ZYy7XltspQfW2m980z/ZdVvZABkTxsylmnqRlWFnSONUdkAz+g6+idd8uQ0uYc/EG2bi
+         pGBfrKbXdT9sXFbwJ8ZT0kG5MgfV0AmrscReIwZ6IIVIDsAh6V2FqvvvNsUzIwuV+hal
+         K4uJa9lHcDNL2R4gOlnXVobKc7miHnyG9TSicOHpmnbr3ZcQ+qaL6vOkop/WuWVk7M8Z
+         EQGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KS85IVDzb0H7K1jO3EiwO+5LR6In+7iTE4xtTzUGrfM=;
+        b=b45yIS4PjhSNjLmHgfuh83ajVUilqOCaBJkAgc78NoAL3TYnAyD8pK2uWYTeGMQa3G
+         NW/vAqLCqL6AKt/v7nBurKCzfkVzWhKlei3aAMvaz0W2vCXkl2zsYt7+g5/A2OGkrgvQ
+         vw7LnN94F73KjTG+U5gb7Cjse2gn4Cbd/bOWkFJOiWnUd72yFojeuEfp6o2+p/OU2O/l
+         s75HpRPS+4Z9GoYGLb8qa5f7gBql/uj3JYX2h6Hlm/LKNRfRCdIkapaN/J8Xbn6VpYAE
+         fUEJqs4xO+SCCYcia6L7j75j2cV7NSHfC3NauCn7LKSStaxVehXXL53K8+a/D0nkNAKq
+         2ajw==
+X-Gm-Message-State: AOAM530YTwLT/M1OJEppEUa1mpI+EP4pXYkiOQjFfAy45OipEF5pH0yy
+        RJH2qp+9O57WlH3zxxlIPY8=
+X-Google-Smtp-Source: ABdhPJwpVsrotPvmpeBqtoqp7lZGoCpny93lpHIapXgAftlRQ4tIEGo2ymIkhjPc4BiaflFrE0JryQ==
+X-Received: by 2002:a05:6402:4245:: with SMTP id g5mr25409909edb.306.1616414182220;
+        Mon, 22 Mar 2021 04:56:22 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id n26sm11201580eds.22.2021.03.22.04.56.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Mar 2021 04:56:21 -0700 (PDT)
+Date:   Mon, 22 Mar 2021 12:56:39 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     u.kleine-koenig@pengutronix.de, f.fainelli@gmail.com,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        wahrenst@gmx.net, linux-input@vger.kernel.org,
+        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, p.zabel@pengutronix.de,
+        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        linux-clk@vger.kernel.org, sboyd@kernel.org,
+        linux-rpi-kernel@lists.infradead.org, bgolaszewski@baylibre.com,
+        andy.shevchenko@gmail.com
+Subject: Re: [PATCH v8 11/11] pwm: Add Raspberry Pi Firmware based PWM bus
+Message-ID: <YFiF94ZDi2xdy8yx@orome.fritz.box>
+References: <20210312122454.24480-1-nsaenzjulienne@suse.de>
+ <20210312122454.24480-12-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5irkqxzmkpzjow3i"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="WsDiv438+NmnlX5u"
 Content-Disposition: inline
-In-Reply-To: <CAHp75VfedZyFF46koLOg13t_TzMbwj5zBYU2zBA52vRRtb202g@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20210312122454.24480-12-nsaenzjulienne@suse.de>
+User-Agent: Mutt/2.0.6 (98f8cb83) (2021-03-06)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---5irkqxzmkpzjow3i
-Content-Type: text/plain; charset=iso-8859-1
+--WsDiv438+NmnlX5u
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 22, 2021 at 01:40:57PM +0200, Andy Shevchenko wrote:
-> On Mon, Mar 22, 2021 at 1:22 PM Uwe Kleine-K=F6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Mon, Mar 22, 2021 at 11:38:40AM +0200, Andy Shevchenko wrote:
-> > > On Monday, March 22, 2021, Thierry Reding <thierry.reding@gmail.com> =
-wrote:
-> > > > On Fri, Jan 29, 2021 at 09:37:47PM +0100, Clemens Gruber wrote:
-> > > > > Thierry: Would you accept it if we continue to reset the register=
-s in
-> > > > > .probe?
-> > > >
-> > > > Yes, I think it's fine to continue to reset the registers since tha=
-t's
-> > > > basically what the driver already does. It'd be great if you could
-> > > > follow up with a patch that removes the reset and leaves the hardwa=
-re in
-> > > > whatever state the bootloader has set up. Then we can take that pat=
-ch
-> > > > for a ride and see if there are any complains about it breaking. If
-> > > > there are we can always try to fix them, but as a last resort we can
-> > > > also revert, which then may be something we have to live with. But I
-> > > > think we should at least try to make this consistent with how other
-> > > > drivers do this so that people don't stumble over this particular
-> > > > driver's
-> > >
-> > > I guess we may miss (a PCB / silicon design flaw or warm boot case) w=
-hen
-> > > boot loader left device completely untouched and device either in wro=
-ng
-> > > state because if failed reset (saw this on PCA9555 which has a
-> > > corresponding errata), or simply we have done a warm reset of the sys=
-tem.
-> > > So, we also have to understand how to properly exit.
-> >
-> > I don't think that not resetting is a real problem. My argumentation
-> > goes as follows:
-> >
-> > When the PWM driver is loaded and the PWM configuration is invalid, it
-> > was already invalid for the time between power up (or warm start) and
-> > PWM driver load time. Then it doesn't really hurt to keep the PWM
-> > in this invalid state for a little moment longer until the consumer of
-> > the PWM becomes active.
+On Fri, Mar 12, 2021 at 01:24:54PM +0100, Nicolas Saenz Julienne wrote:
+> Adds support to control the PWM bus available in official Raspberry Pi
+> PoE HAT. Only RPi's co-processor has access to it, so commands have to
+> be sent through RPi's firmware mailbox interface.
 >=20
-> But this won't work in the cases when we have a chip with a shared
-> settings for period and/or duty cycle. You will never have a user come
-> due to -EBUSY.
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>=20
+> ---
+>=20
+> Changes since v7:
+>  - Remove unwarranted RPI_PWM_DEF_DUTY_REG usage
+>=20
+>  Changes since v6:
+> - Use %pe
+> - Round divisions properly
+> - Use dev_err_probe()
+> - Pass check_patch
+>=20
+> Changes since v3:
+>  - Rename compatible string to be more explicit WRT to bus's limitations
+>=20
+> Changes since v2:
+>  - Use devm_rpi_firmware_get()
+>  - Rename driver
+>  - Small cleanups
+>=20
+> Changes since v1:
+>  - Use default pwm bindings and get rid of xlate() function
+>  - Correct spelling errors
+>  - Correct apply() function
+>  - Round values
+>  - Fix divisions in arm32 mode
+>  - Small cleanups
+>=20
+>  drivers/pwm/Kconfig               |   9 ++
+>  drivers/pwm/Makefile              |   1 +
+>  drivers/pwm/pwm-raspberrypi-poe.c | 206 ++++++++++++++++++++++++++++++
+>  3 files changed, 216 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-raspberrypi-poe.c
 
-That's wrong, the first consumer to enable the PWM (in software) is
-supposed to be able to change the settings.
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---5irkqxzmkpzjow3i
+--WsDiv438+NmnlX5u
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmBYhAcACgkQwfwUeK3K
-7Al+/gf+KpevRNoTs82vxuWQJH4jxHJSMxSLY+TsNTxPSRog+bTjOsA7aR0tHs/S
-FyX4mIVRSkD1Gq+0j9Te/C1t7W/q5cHik4gwb3WXQ0Pez02viyy8R6JbAOOjonmL
-mILr0rg77htKLxgb8MXY1QVrsNuqe5tt3npHpW4FCooSrqm0B6M2D5KW53chxoyu
-f7f5uT3cv8VS1ScstW11FjuTcrWeO3V5w653lA1YScp8LHAp52FFSWh30Um8Pe82
-W3PRd0XUbjnrmMWz386ficKkRplWm9TyGGdc8pTBaTiu+NZT6q1ZO08cLlS343j/
-Kf3wCXQOxiEfbSQ/Te0hPEoP7sliOw==
-=Ljaj
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmBYhfQACgkQ3SOs138+
+s6EnXRAAjnwdU3G0KN2XyFF2cU6Hmif3eeSfiKIfBkONfEQKpjd5lXaJQ5NhViG3
+keYEFiM/eOnuhXWshnMGzwjq/G22ufO/owlbwlEsZo8Rf9SMkDkK0EgBSvM/9p6A
+NshCjKRNEYqd0ajXxY5Pzo6ma/o9Qb6bbYAXzcFP4d3vMPYbA6M1utYAltUQrUBR
+GvDmt1K93Jeuk6jbDXkNbi4x+pn3gUDEH4f+/jJfLT0gzAD/JNvD2uR5YDj58f9T
+EqA9KHm/yk/6IsYBseBOHFbx1EZ8zO0HLl145Bg19GMfaab2FLEiL4s/3DUZ4U3m
+admNIIPzr81WKtXvHPN7gNmzpLu5NEcUavkSKRVviKNXVSXA3geNsY1XCNTJkfk/
+ijme2kA3fEkomnyB8KcVz2X96iqE6vAqySeddmBkfM0/HJcfdA93XyRIiDMU6IlJ
+JXuuYKDwXthz/kioxs44h8cK04pW8MfJMqf5KESQfwQF57kFH2J3n0pseLtbHySV
+w7LZ7rd/BT8zr9WBC5BCVWA43Xfx4kj2wOWEsMjp/6r6iLoPcPUPztEj1OLdskoN
+xaGcQFozx6y9PsSLIFd6yn4HmMXMekgGQiuwMYpsiqDWfWMJpgIwMMhszu6F6Twx
+OOx8TIiCBT1WQG2hMZY/13Pl1c5HoAxjDd6fPV2ixPH5lz4bjcI=
+=2cN9
 -----END PGP SIGNATURE-----
 
---5irkqxzmkpzjow3i--
+--WsDiv438+NmnlX5u--
