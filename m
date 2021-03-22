@@ -2,184 +2,184 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 44962343C1B
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 09:53:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6867343C73
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 10:15:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229665AbhCVIw5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 22 Mar 2021 04:52:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60982 "EHLO
+        id S230011AbhCVJOg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 22 Mar 2021 05:14:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229614AbhCVIwx (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 04:52:53 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42EAEC061574;
-        Mon, 22 Mar 2021 01:52:53 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id b2-20020a7bc2420000b029010be1081172so8778660wmj.1;
-        Mon, 22 Mar 2021 01:52:53 -0700 (PDT)
+        with ESMTP id S229984AbhCVJOE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 05:14:04 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B52BAC061574;
+        Mon, 22 Mar 2021 02:14:03 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id v11so15798787wro.7;
+        Mon, 22 Mar 2021 02:14:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=coUfxHZjnvAds7knKbvoQaJLzKIJ/fAxoytksxex/e0=;
-        b=gQnKPH4WD8KAVE6hi98zj0GjTMYc4mhAo9+IXKHtj5grOWuTQ/RJAuXAQzAcPoAT3g
-         dwAJQwpxQTRoCltxqVOeLEX2Ku3MqK10L4+fxN/YV/Trjv6d76ntdZeScmJp2TFqxkGH
-         +hGmbWyYjAdMsCHkk3/7V6yFzkkfuBOxFwmejJ3fnw0ow3WAneDVViNVYyPKZ/XXM0e9
-         W7IBzzjyAtjklz28a1VFvHUMgvQucb0kb6enWpoNUkpjZ/a0SpV/yvgnBwiQbAjAmKfj
-         PE2/T7hXB7ibH2qTYpNDKCr0qjhA7jCNxBM+gpDq6bM401EAPqCqBSo7tkMauGHMQoAs
-         llXw==
+        bh=BRjaBu4YPexHXWZ5zkfVnDdMvqs/EIBJCNeqCSsYZrI=;
+        b=Ygoimmrj0kFpPABkpPLFBhk86CDZ/2+gluciX6ke6hrSrPbgXOFB9PTO3c0qxDDNyW
+         rJNsCCF959PmBJ9EQwXK0hEMXWvoH+tdPEsw/Nn7nrvNBaUnrpXsh7+Dt0yKzLOZ7qX6
+         ixV+dSBcHYsxEESs65WbbJ4dFXTM4yWGkYz7r3Am12QT7E9+YuTkAJJGRZTZ2Am0R1LN
+         WPhZZHDarTrS7V6KXpt2m7GkoC9w7aDuaGIkmAvOGEDUJJb9dI5v03QMYKs01QXBq0Ng
+         s6KlN/GEOlm9v3r3etF4uzzseSSV3FNheBRY4x2PypT1GDcIeASZzNWDRW4kaCxM7EjI
+         Y6TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=coUfxHZjnvAds7knKbvoQaJLzKIJ/fAxoytksxex/e0=;
-        b=RFaw0cMsbQzQXNEpqsIZPAIt95Riur199RdLL4IsnHYxK6Fnz0GnmG1OgNHfry0FH+
-         lara628Gnu8Ce8gXSniMaUXpu/VoFIyEmrlpH6z0AD5Hcjz5KOF8PZ11NuGHzmxGwAf+
-         QJFHKbY4+5IIwZHEMnoK8tzFWnkNWIfmF6kzXQB8eYvN0boRVwAVwWyUmuccAq18moWT
-         hFZCaNdgIaclTnKHeEqeuD+31w5TN/eEdkP9YsYKGUmuq5iP8eqk0YN3ZqGwOwA8zCIR
-         hk6HUf/w2iMINJNxfa8K9xmMRf7Ry54zLy0+89MxYVBY6kiKMS+0qCRmGNXSN63gLZAv
-         vImQ==
-X-Gm-Message-State: AOAM532CCbVw6KaT6euEaFZA3fC7Z5tlz0QACRj3/s/bR0pb8lHTCeTZ
-        Qf0FiJffezPyCpLL6hsDki0=
-X-Google-Smtp-Source: ABdhPJxq8otrOxF4RiH0a6wdyEpM9O8GytsgnS3vYx11VW8rbYtImWmm2U0F7zHq6b8wLMqI4ADNUQ==
-X-Received: by 2002:a1c:7715:: with SMTP id t21mr14758930wmi.132.1616403172048;
-        Mon, 22 Mar 2021 01:52:52 -0700 (PDT)
+        bh=BRjaBu4YPexHXWZ5zkfVnDdMvqs/EIBJCNeqCSsYZrI=;
+        b=Kj9LYLBoxd9hsN4EG94V616QO465vfpuMzNSlFcuddjRs9oXk6S8G89bs+mCSJvt79
+         qEPGY3go4RFkFGAOrAGqALHyMudIOWnamP+LjcdIBg9A6LAjtmVNpW0el34Jr0gIMGhd
+         yp34cs8kgdrJjv9bt3uPcvmzevjBi89gth4ZOzIT0bzhrJtbx92KXy3jAWOcKOx8rtgh
+         bkV+LXRHAPLXNCphYAhkBquHgrjMr7HBurs8RW4Rx5BFkyrlfqMKeLi/8pfO8XuS5PlF
+         3Q8FkzAU4MiLTRLqVf/3aTCn0oAaKsvtqqOxPmAEFDsTe8N0pJCHjkU0Bjfm0cBxfn4e
+         9mhA==
+X-Gm-Message-State: AOAM532d8E9esQ2HSwRAz3oZrgwBU6kfWbOrBX+VeJS0r5VFjhXNBObE
+        nQgOYmDOBaU2Jt+qsOXpA0s=
+X-Google-Smtp-Source: ABdhPJxz+gL6ZSsY+OiKnJPX3/iFZmJ291s0nGVJWzVmX9OWifqYYzasnsP4ZrD728nSSCaYnjKScw==
+X-Received: by 2002:a5d:5411:: with SMTP id g17mr17232486wrv.194.1616404442519;
+        Mon, 22 Mar 2021 02:14:02 -0700 (PDT)
 Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id p6sm18148841wru.2.2021.03.22.01.52.50
+        by smtp.gmail.com with ESMTPSA id x23sm15874872wmi.33.2021.03.22.02.14.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Mar 2021 01:52:51 -0700 (PDT)
-Date:   Mon, 22 Mar 2021 09:53:08 +0100
+        Mon, 22 Mar 2021 02:14:01 -0700 (PDT)
+Date:   Mon, 22 Mar 2021 10:14:18 +0100
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Clemens Gruber <clemens.gruber@pqgruber.com>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Clemens Gruber <clemens.gruber@pqgruber.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-pwm@vger.kernel.org
 Subject: Re: [PATCH v5 2/7] pwm: pca9685: Support hardware readout
-Message-ID: <YFha9H+6ATFbb/VA@orome.fritz.box>
+Message-ID: <YFhf6nhdQ+PgdpsN@orome.fritz.box>
 References: <20201216125320.5277-1-clemens.gruber@pqgruber.com>
  <20201216125320.5277-2-clemens.gruber@pqgruber.com>
  <CAGngYiWkKZGkQ4TTTy8bQYvnGBK45V0A0JCe_+M5V+vuVU+zkQ@mail.gmail.com>
  <X9uYqGboZg5DuEtf@workstation.tuxnet>
  <20210111203532.m3yvq6e5bcpjs7mc@pengutronix.de>
- <YAB8ZmtOxRV1QN4l@workstation.tuxnet>
+ <CAGngYiW=KhCOZX3tPMFykXzpWLpj3qusN2OXVPSfHLRcyts+wA@mail.gmail.com>
+ <YBQ4c2cYYPDMjkeH@workstation.tuxnet>
+ <CAGngYiWd0u=+DPhvK+8v9FT8Y1Evn1brWRheMNDXWFVVL-wNFw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="clyIA7PyjV+ubgbt"
+        protocol="application/pgp-signature"; boundary="QCrUqsTeVqvlpF16"
 Content-Disposition: inline
-In-Reply-To: <YAB8ZmtOxRV1QN4l@workstation.tuxnet>
+In-Reply-To: <CAGngYiWd0u=+DPhvK+8v9FT8Y1Evn1brWRheMNDXWFVVL-wNFw@mail.gmail.com>
 User-Agent: Mutt/2.0.6 (98f8cb83) (2021-03-06)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---clyIA7PyjV+ubgbt
-Content-Type: text/plain; charset=utf-8
+--QCrUqsTeVqvlpF16
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 14, 2021 at 06:16:22PM +0100, Clemens Gruber wrote:
-> Hi,
+On Fri, Jan 29, 2021 at 01:05:14PM -0500, Sven Van Asbroeck wrote:
+> Hi Clemens,
 >=20
-> On Mon, Jan 11, 2021 at 09:35:32PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > Hello,
-> >=20
-> > On Thu, Dec 17, 2020 at 06:43:04PM +0100, Clemens Gruber wrote:
-> > > On Wed, Dec 16, 2020 at 11:00:59PM -0500, Sven Van Asbroeck wrote:
-> > > > On Wed, Dec 16, 2020 at 7:53 AM Clemens Gruber
-> > > > <clemens.gruber@pqgruber.com> wrote:
-> > > > >
-> > > > > Implements .get_state to read-out the current hardware state.
-> > > > >
-> > > >=20
-> > > > I am not convinced that we actually need this.
-> > > >=20
-> > > > Looking at the pwm core, .get_state() is only called right after .r=
-equest(),
-> > > > to initialize the cached value of the state. The core then uses the=
- cached
-> > > > value throughout, it'll never read out the h/w again, until the nex=
-t .request().
-> > > >=20
-> > > > In our case, we know that the state right after request is always d=
-isabled,
-> > > > because:
-> > > > - we disable all pwm channels on probe (in PATCH v5 4/7)
-> > > > - .free() disables the pwm channel
-> > > >=20
-> > > > Conclusion: .get_state() will always return "pwm disabled", so why =
-do we
-> > > > bother reading out the h/w?
-> > >=20
-> > > If there are no plans for the PWM core to call .get_state more often =
-in
-> > > the future, we could just read out the period and return 0 duty and
-> > > disabled.
-> > >=20
-> > > Thierry, Uwe, what's your take on this?
-> >=20
-> > I have some plans here. In the past I tried to implement them (see
-> > commit 01ccf903edd65f6421612321648fa5a7f4b7cb10), but this failed
-> > (commit 40a6b9a00930fd6b59aa2eb6135abc2efe5440c3).
-> >=20
-> > > > Of course, if we choose to leave the pwm enabled after .free(), then
-> > > > .get_state() can even be left out! Do we want that? Genuine questio=
-n, I do
-> > > > not know the answer.
-> > >=20
-> > > I do not think we should leave it enabled after free. It is less
-> > > complicated if we know that unrequested channels are not in use.
-> >=20
-> > My position here is: A consumer should disable a PWM before calling
-> > pwm_put. The driver should however not enforce this and so should not
-> > modify the hardware state in .free().
-> >=20
-> > Also .probe should not change the PWM configuration.
+> On Fri, Jan 29, 2021 at 11:31 AM Clemens Gruber
+> <clemens.gruber@pqgruber.com> wrote:
+> >
+> > Ok, so you suggest we extend our get_state logic to deal with cases
+> > like the following:
 >=20
-> I see. This would also allow PWMs initialized in the bootloader (e.g.
-> backlights) to stay on between the bootloader and Linux and avoid
-> flickering.
+> Kind of. We can't control how other actors (bootloaders etc) program the
+> chip. As far as I know, there are many, many different register settings =
+that
+> result in the same physical chip outputs. So if .probe() wants to preserv=
+e the
+> existing chip settings, .get_state() has to be able to deal with every po=
+ssible
+> setting. Even invalid ones.
 
-Yes, that's precisely one of the reasons why we introduced the atomic
-API. One of the use-cases that led to the current design was that the
-kernel pwm-regulator on some platforms was causing devices to crash
-because the driver would reprogram the PWM and cause a glitch on the
-power supply for the CPUs.
+I said earlier that the PWM state is a snapshot of the current hardware
+settings and that's not entirely accurate because it isn't actually a
+complete representation of the hardware state. It's merely a
+representation of the PWM software state that's currently applied to the
+hardware.
 
-So it's crucial in some cases that the PWM driver don't touch the
-hardware state in ->probe(). If some drivers currently do so, that's
-something we should eventually change, but given that there haven't been
-any complaints yet, it likely means nothing breaks because of this, so
-we do have the luxury of not having to rush things.
+This is simpler from an API point of view than completely representing
+the actual hardware state, but it's also sufficient for most use-cases
+because we don't care about the exact programming as long as it yields
+the result represented by the atomic state. Although it's still vitally
+important that the amount of state that we have is accurately
+represented (i.e. duty-cycle/period values must not be collapsed to 0
+when the PWM is off), otherwise the API isn't usable.
 
-> If no one objects, I would then no longer reset period and duty cycles
-> in the driver (and for our projects, reset them in the bootloader code
-> to avoid leaving PWMs on after a kernel panic and watchdog reset, etc.)
+One good thing that comes from this simplification is that it gives us
+a bit more flexibility in hardware readout because you can collapse a
+large amount of variation into the couple of values that we have. So if
+your bootloaders program weird values, you can canonicalize them as long
+as they still yield the same result.
 
-This isn't strictly necessary, but it's obviously something that's up to
-board designers/maintainers to decide.
+So roughly what should be guaranteed from an atomic API point of view is
+that doing the following is glitch-free and doesn't cause a change in
+the physical PWM signal:
+
+    chip->ops->get_state(chip, pwm, &state);
+    pwm_apply_state(pwm, &state);
+
+Ideally we'd even be able to, though we don't do it at present, to
+optimize that out as a no-op by comparing the new state with the current
+state and just not doing anything if they are equal.
+
+And just to clarify: glitch-free above means: to the extent possible. In
+some cases it might not be possible to set PWM hardware state in a
+completely glitch-free way. If so, there's not a lot we can do and it's
+better to do something even if it's not ideal. The rationale behind this
+is that nobody will select a chip that doesn't meet requirements to
+perform a given task, so it's highly unlikely that a chip that glitches
+during transitions will ever be used in a setup where it's required not
+to glitch. We should obviously always do our best to keep glitches to a
+minimum, but software can't change hardware...
+
+> In addition, .apply() cannot make any assumptions as to which bits are
+> already set/cleared on the chip. Including preserved, invalid settings.
+>=20
+> This might get quite complex.
+>=20
+> However if we reset the chip in .probe() to a known state (a normalized s=
+tate,
+> in the mathematical sense), then both .get_state() and .apply() become
+> much simpler. because they only need to deal with known, normalized state=
+s.
+
+As was mentioned before, this does restrict the usability of the driver.
+In some cases you really want to avoid resetting the chip. But I'm also
+okay with leaving this as-is because it's the status quo.
+
+So what I'd propose is to take this forward and keep the reset during
+probe for now and then follow up with a separate, simple patch that
+removes the reset. That way we can easily back it out, or revert it, if
+it causes any breakage, but it won't hold up this series.
 
 Thierry
 
---clyIA7PyjV+ubgbt
+--QCrUqsTeVqvlpF16
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmBYWvQACgkQ3SOs138+
-s6FcJg//ZR0zAocR/x8CX247pgq0Sjcn5fZGy46F2tlxas6t34qvHPh8FYMALIvw
-5W5EXkYsGpItoByvgtz/sKIZFaNSPnzHHdF9EQ4m/Y+4J6+stUBGTVBVNM3SvAl9
-WnSEzFs0Xin8zXi6ocFRCAJnX4yto4Su5F87lBK8hpJaEZjmP3e2GHuohvV78uSm
-0pcdaZBlmpnCSGI87YiQJeNTLAaR5RnZUEUinnda2Nxe0OXhek2olAEh5+BjfW6w
-tLLJjuGbGOAJRsE6WMrAywncLnptVKu69dB3TQXDBQW1f+BESe0B/TGJcPD9el84
-Nqd3I+IeEfsEcGGFJgG40UsqHAnOLo2uuKEDeEMzJxJh+8U6hkPok5RIrq+Z5h/e
-4rkRRCCcXUa86wBOGzFXWnNnpxPzWOgSFT9klagyGaWnMZ+av+p8bWfecx4mPSQK
-NxQH1x2sNd8Y1XdQMKt5nkU3+dix06gr44keheEUL+qHDe2rbgK0sk7Uo0aXsbgr
-KflNTTma7J/Ux9+UQqzEGmVivYeXrPBU67Tq/Th2Bxcv168an+MT2S95+CdTD2f9
-t36t+bKefy54LqPaFELYCkkAf1phPbWl67637WVls5WADNmf5Bg6N4Lt/rJzj/wd
-TOfXw0pwPiBRo3/gOs9Jm5Ak6LfcCTtuZP9tMw7DgxugDAZdTWs=
-=BSxS
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmBYX+gACgkQ3SOs138+
+s6EedA//RjyuSgLLpBZSSQrtJxcaAJDULyJfJx1oiXC5EYFPTkE5IYZmx1zRhvvA
+emVj5+UxG/L0BobMfYpU4Z6BCtFRE4GAZD6aw2Pu72LdMIN1iIMqR7MU9OHswHUG
+S2OwMLU7ykIToz/eyqpUBKUjDh3YmjaSSi8QRL3X7MQPrDv1Vry1W/gC78SepAyN
+kMSHs1dgP++PHB77bQzFzHEnMuNLaPxkvMTTiTzXmfFZad7gAaFoX5hUQ9LhNJwQ
+sPXtrpPs1eBDsYYhEaO7xLY8Q7Vn1TlASHXthvOQc1pFCncUME0KfaQNYhP0AU/I
+N0DNoYMRMPC60aFyh259Oaqg6ySKlrR1qH6oKNImZaaHLY+5uMgswn5YSWlioOCS
+EmhhGR5assh1iKVTFX9b0q/O4SlMCZ/vSy6rF1CpSqMu43kYjbdu18RLMNBzeptT
+2kYhV+J4s0h8xHok02QXsWQFBGzIwwXTtxWzhj39dboGoIWnX1iuhRkUfLwSmk7K
+3/LeyAJSxUTexfkPs5B2RP3NNnl6oQDhgBQmebt2A9cM++bjw8NJxqJzu+HNCYTr
+IUQu56yUwsiyQNL4Pi2rXEK7A9bdKbJADL/ITe1vH0r2fw9Txj2eKy5Vjtx4/kc4
+LwZptE+2nQ7H9j2P6ASjbzffGpebOsf7RdTPxuRDWy7aNBDtN+Y=
+=wLec
 -----END PGP SIGNATURE-----
 
---clyIA7PyjV+ubgbt--
+--QCrUqsTeVqvlpF16--
