@@ -2,105 +2,105 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29C5B344D7A
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 18:36:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D5283452FB
+	for <lists+linux-pwm@lfdr.de>; Tue, 23 Mar 2021 00:30:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229764AbhCVRgU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 22 Mar 2021 13:36:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231365AbhCVRgP (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 22 Mar 2021 13:36:15 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0770361994;
-        Mon, 22 Mar 2021 17:36:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616434575;
-        bh=VdW4om2AyPCfqy4wAovCR7HUVEe2frovxQ0Cc8nEk7s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Mh9yoSTNMWrpBFxp7mRAqgfTfZOlph3dYZnhso+XBF99dtzEHkgBu1YOy2DccLzzn
-         fUylSmXKjiXNkdvZx/WKnjEV+5GnHZAVRPf8FAuQ+FX2zNlEFwMnVuBx3/7QcHBGRR
-         VmCt4+L4cInUjBNq78zxXp4FBDQOleC4/KxA9aQVsnHM3Zt5q+sPQ+9++fOCLAChGA
-         ZrbBCoyVviPqoFFBHsivxNrK5fArDQmqAhFcrkwkX3XZuyzri6iX5TjfgUyKO2BGWn
-         +jNA3cIftCwjS8BGd8BxZpoBiA5+h4IHlX0hKg0akAFueiGgUW8oqUusCrgeyLdw+R
-         NAjf6bEHS7S5w==
-Received: by mail-ed1-f45.google.com with SMTP id z1so20406691edb.8;
-        Mon, 22 Mar 2021 10:36:14 -0700 (PDT)
-X-Gm-Message-State: AOAM531IT0C8EmZXdUdl2/O0RfqM2n+Belt7+onRvizq6QDIQphW2JSP
-        Rz4HTlybecblpmqZzlLW4FYCCmlGZgWGlIDeSg==
-X-Google-Smtp-Source: ABdhPJx2NmuQG0Y5DzdS5+450riDgemRYrFCSvVWhwcs0YPSA/NP54tZmFoCyKBJEdQ1WhL/o13t1FITdk/T511dQts=
-X-Received: by 2002:aa7:c403:: with SMTP id j3mr718221edq.137.1616434573540;
- Mon, 22 Mar 2021 10:36:13 -0700 (PDT)
+        id S230273AbhCVXaC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 22 Mar 2021 19:30:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229871AbhCVX3p (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 19:29:45 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18004C061574;
+        Mon, 22 Mar 2021 16:29:45 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id q6-20020a17090a4306b02900c42a012202so9303297pjg.5;
+        Mon, 22 Mar 2021 16:29:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=U/IBmLp8QkjVB/SzgsK/2A+PcX1LFcU9lJnWkixjLUk=;
+        b=XG+yurS4EUzoBdPJxud6mro8oq863CFyPC7zxbgHi2O7EHmpr0CRSmdT2B2Za96O2D
+         eezVz+iVtNAcPA4h956V+7btkbHcZtQiq7XrxE6o5LTQfN/Pt020g6E1Y8IlcGGqauwI
+         TgDc6rLBkQvtkBI72WI1CoQHZGlEp0KI3Bz16pjvs7EXk3LmzKRZKvgghVw9XTWkX6sG
+         ueC9ZnFYb7mMyO3RRFR6EG5G/I3/+QZcLDeAcwocKkZYC+C7XRqIpw2YJd8XI3zaFVw6
+         pbTkROP9GB7xDfunCHPF1mR90gNrPbzK2ldJiDBtx13g0jtAH2LNWCSoS0gXJEzWusIz
+         zPeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=U/IBmLp8QkjVB/SzgsK/2A+PcX1LFcU9lJnWkixjLUk=;
+        b=slaBjJCYFSXJ9IDqVqv7qXQRO53+O9UiWrpOIbxZP3Tob43Y+NXF5mcD4qLiDiYVcn
+         jVeUcR87aiPIeK0eewH5zNg2gkismqXW1YYRpepgxd5jX2iC2zJUAGxfbWNLbnyi/ct7
+         v0MQ/cK+PCd6o/ijeQMr2rgq5PF4lxEg9+1SxZzIWAUh1svUNr5zN0Avf73tGsSS9414
+         pNrkBj/v4NS6CFl37Vtr31Uf6FseA4HZYv+bivUV1DUnZ5x1UXRIZYh6D6OjyxcbzfDP
+         a9J+GkeT1d87SOj46jZStpyiO87wRF7st+3EAw54+wLjpDh/j6d/HE6djxE9UWH7en0f
+         MDUA==
+X-Gm-Message-State: AOAM5315RJtyOIchV5H1ggj4L+HVJSrjg/d1iV7vGPMrZToM66P8XQNn
+        +TY/EAQwemgFhW+csT7TeNQ=
+X-Google-Smtp-Source: ABdhPJz/tDZ30C8PiBsuFxIrZ2KEotS2s7Xw+gnv0MR1HNPjfDVu03faBkOxmgcLbN2vTOGLh3nRKQ==
+X-Received: by 2002:a17:90a:fd0b:: with SMTP id cv11mr1404366pjb.183.1616455784445;
+        Mon, 22 Mar 2021 16:29:44 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:499f:7361:582b:fd05])
+        by smtp.gmail.com with ESMTPSA id p22sm432999pjg.39.2021.03.22.16.29.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Mar 2021 16:29:43 -0700 (PDT)
+Date:   Mon, 22 Mar 2021 16:29:40 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-input@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] input: misc: max8997: Switch to pwm_apply()
+Message-ID: <YFkoZKOEkBg6wdV2@google.com>
+References: <20210316203813.48999-1-uwe@kleine-koenig.org>
+ <YFfHciL2CXX0aERa@google.com>
+ <2972bc70-2535-0c09-faff-b74f6842fbc4@kleine-koenig.org>
 MIME-Version: 1.0
-References: <1599734644-4791-1-git-send-email-sagar.kadam@sifive.com>
- <1599734644-4791-3-git-send-email-sagar.kadam@sifive.com> <20200922203429.GA3188204@bogus>
- <CAMuHMdXPG-+EOCrQZi1deKv1yYMBtohprUVYW_-Shdp_gfQs5Q@mail.gmail.com>
-In-Reply-To: <CAMuHMdXPG-+EOCrQZi1deKv1yYMBtohprUVYW_-Shdp_gfQs5Q@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 22 Mar 2021 11:36:01 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJSF=p657tdvm4CW_LYi93t6vG0aOmQxUmYYW3_5h5UHQ@mail.gmail.com>
-Message-ID: <CAL_JsqJSF=p657tdvm4CW_LYi93t6vG0aOmQxUmYYW3_5h5UHQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] dt-bindings: riscv: convert plic bindings to json-schema
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Sagar Kadam <sagar.kadam@sifive.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Yash Shah <yash.shah@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2972bc70-2535-0c09-faff-b74f6842fbc4@kleine-koenig.org>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Mar 22, 2021 at 9:38 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Sagar, Rob,
->
-> (replying to an old email, as this one seems to be the most appropriate)
->
-> On Tue, Sep 22, 2020 at 10:34 PM Rob Herring <robh@kernel.org> wrote:
-> > On Thu, Sep 10, 2020 at 04:14:03PM +0530, Sagar Kadam wrote:
-> > > Convert device tree bindings for SiFive's PLIC to YAML format
-> > >
-> > > Signed-off-by: Sagar Kadam <sagar.kadam@sifive.com>
->
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
->
-> > > +
-> > > +  '#address-cells':
-> > > +    const: 0
-> > > +    description: Should be <0> or more.
-> >
-> > Drop. 'or more' is wrong. If there's a case with more, it will need to
-> > be documented.
->
-> Why do we have the "'#address-cells': const: 0" at all...
->
-> > > +required:
-> > > +  - compatible
-> > > +  - '#address-cells'
->
-> ... and why is it required?
+Hi Uwe,
 
-It is only required if an 'interrupt-map' points to this node.
-Currently dtc is warning if it is missing always, but there are plans
-to relax dtc to only warn when 'interrupt-map' is present. Of course,
-if you had 'interrupt-map' in an overlay, you'd want #address-cells in
-the base dt and there's no other way to check that than making it
-required.
+On Mon, Mar 22, 2021 at 09:16:43AM +0100, Uwe Kleine-König wrote:
+> Hi Dmitry,
+> 
+> On 3/21/21 11:23 PM, Dmitry Torokhov wrote:
+> > On Tue, Mar 16, 2021 at 09:38:13PM +0100, Uwe Kleine-König wrote:
+> > > max8997_haptic_enable() is the only caller of
+> > > max8997_haptic_set_duty_cycle(). For the non-external case the PWM is
+> > > already enabled in max8997_haptic_set_duty_cycle(), so this can be done
+> > 
+> > Are you sure about that? I think the intent was to enable it in
+> > max8997_haptic_configure(), and only after "inmotor" regulator is
+> > enabled. If the device is enabled earlier then I'd say we need to make
+> > sure we disable it until it is needed.
+> 
+> If you claim you understand this better, I will well believe that. I
+> described my train of thoughts, i.e. how I understood the internal case.
+> 
+> Anyhow, there is little sense in separating configuration and enablement of
+> the PWM, because the change of duty_cycle and period for a disabled PWM is
+> expected to do nothing to the hardware's output.
+> 
+> So the safer approach is to do the pwm_apply_state at the place, where
+> pwm_enable was before, but the more consistent is how I suggested in my
+> patch. If it feels better I can do the more conservative change instead and
+> if somebody with a deeper understanding of the driver and/or a testing
+> possibility can be found, the internal and external cases can be unified.
 
-Rob
+Yes, could we please go with the more conservative approach as I do not
+have the hardware to verify the behavior.
+
+Thanks!
+
+-- 
+Dmitry
