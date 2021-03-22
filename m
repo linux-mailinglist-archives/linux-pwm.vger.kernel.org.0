@@ -2,138 +2,192 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A604C34409E
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 13:16:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6C8A34409A
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 13:15:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230015AbhCVMP4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 22 Mar 2021 08:15:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48436 "EHLO
+        id S230366AbhCVMPc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 22 Mar 2021 08:15:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229979AbhCVMPY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 08:15:24 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91AE2C061574;
-        Mon, 22 Mar 2021 05:15:24 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id u19so8488934pgh.10;
-        Mon, 22 Mar 2021 05:15:24 -0700 (PDT)
+        with ESMTP id S229764AbhCVMPQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 08:15:16 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04FEAC061574
+        for <linux-pwm@vger.kernel.org>; Mon, 22 Mar 2021 05:15:16 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id v11so16426655wro.7
+        for <linux-pwm@vger.kernel.org>; Mon, 22 Mar 2021 05:15:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vLVQEbCaZ+2sASCPIVc5025gzMbQRYGdD6fBiIA+ogw=;
-        b=YalbtbL5Ay1s/ZY6TELzy+l6vTrHk4GpwC/So/VQe+M9PKSXMfimPwO01NBzNedoAI
-         Yew7Ce6fMBMV0IJpQOxrk8jvF8dmgwlrIRC87/+3rbMyCYB38L4q/Po3To948VmTFjaq
-         fPJuIiYXjP8nKbgftyAxtAUyXDt9y4kwbVGSBVA0wXHvMQ4qM7Ba5ZYEQ/NEEg0ikw5S
-         VaRZLXWvWesNNdOHxTBqew3QIZJUPPU6b/gtXrmT5QSUXSL5XjzVkkm3zz0jhDQaP4n6
-         rrooTdjksXTNwEdAXQDndBD2bPlwmJrqBw/631TRMYYPJyq72UdIvBMG8Grv/QuVQ1mA
-         eexA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=y+SS7ewtHS/8sEt0xCqKB03M+mrlFUzi10kQWVG/aV4=;
+        b=TKx81DD3NTG3Va/dDD4oAAdYhlF/c0BITRZf0hfWX5Hq5abdkCbo4FiR8l2T5S/dRj
+         tW9JphswLZIGGWDJUc9grlPymyvQDODOMV+BtOZqCDoOrhAg8WXo9f2d6XU7/bgYkrZa
+         u+SwBgNccG2oD6Fk9GrrokaJWL1v2Yds3DAU5gWGwnWVRfuxS0OlyCt6QTinVB9FQyhu
+         EQooMjzkLdBflrS1dbL1i4S5iZzDa+xQHXbbDG/poTxoD4FujEjsA952oU1hqOvQpjM2
+         LHnqHJ19QFlX9mKFDc6YNLS8og9fbvp/4RRqc+KyLFt0W10V4sVO4030xA/3Scdtzn4q
+         7HKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vLVQEbCaZ+2sASCPIVc5025gzMbQRYGdD6fBiIA+ogw=;
-        b=DJnRB9j4WjEU1sAdlre3kunRP/KGOVzlqlsQ1f9kNTn6edzNL4AO4FPLb0UFq5MM2i
-         y/zv00/4FeJkgJFw3Utsb9H060uZzcQim3hcNVMDsx8bwjHhiizFDwDnaHEmVlE7Rtzc
-         oDr5dKV4ZQE2qf9EttOMRsgcPkcGW2rTzA62ZgXCHUWXOTfkZ0sLFBBOsX9xCOUMWWpT
-         a4mAKxM8U2yeIRCoT9EpYFi5b+dcY90ZUTXeUMWPVXRUvWxgilgbzv3eOGVE/8OAkzH/
-         XjiyRvohx+ejha4dNRcj1K6Dw5XPcATmoZ7v/zceJVWGPGBbSr0tMuFbkw+Sx4yE+6Xt
-         bs6g==
-X-Gm-Message-State: AOAM532g0/aI6bEoJSnG7mfRYmmGsigTX85nFpUAPB7Tb8+CM9ahpKkw
-        S1O3BSwOU3LhMj7NnU54HB+pvsdW6mTJ7a4OuAk=
-X-Google-Smtp-Source: ABdhPJzlKo/A09nKXiQQboNC8DZc588++KuJB0rfw2lzeEj9hNgD+0r20jDxOgfKccUB6QBb5dZyJvVycnGDab3Cgh4=
-X-Received: by 2002:a62:e50f:0:b029:214:8e4a:ae46 with SMTP id
- n15-20020a62e50f0000b02902148e4aae46mr12024153pff.73.1616415324021; Mon, 22
- Mar 2021 05:15:24 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=y+SS7ewtHS/8sEt0xCqKB03M+mrlFUzi10kQWVG/aV4=;
+        b=lkjfl3dHdVIGJi6yvyoq8bU2GCTpeuUN3i7cV/9nVVHzz9Tr00nDcWuy159CxZS2/s
+         NTi7QcQXYzm5r4AR9XNfFSYBLy2iGygxiceSK1SCmIHaERFGXSD4fqNWtp1tP8RLwrGC
+         hhJPmtSm3wDXn3tyNcid3lDi1wSzn9KNrT48Z6/w6x+54Sw9Ey/UqJuu01/QU4n4CWBC
+         UDKFZDrEHRdbulUc7FgkMTfNjjcODQULW2DLetTsu84FE2X75dH0T2qz7abRzgoc6QZR
+         nWInSBLez89N3Gfo2otgYlLBLQj6waNV5Lux5mzhCVuVqh+c2QDYZJfsn/ewVQZH9MdI
+         a+Vg==
+X-Gm-Message-State: AOAM531MTUP3RU0JOH6R51eji1anibILGi2LTEiLl1nCp0Dm8ur8K4gt
+        mxvlAwCGm5g5Uq8xzDmnUgY=
+X-Google-Smtp-Source: ABdhPJxUBC6T4o0Il6iCfFwo0lQywGgm3bU+ibZ/9psZJ46Xrz5t7Q+HNU8whpE6c1jttcMZX0U3cw==
+X-Received: by 2002:adf:e38a:: with SMTP id e10mr18081619wrm.37.1616415314768;
+        Mon, 22 Mar 2021 05:15:14 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id i16sm20335568wmq.3.2021.03.22.05.15.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Mar 2021 05:15:13 -0700 (PDT)
+Date:   Mon, 22 Mar 2021 13:15:31 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        kernel@pengutronix.de, Guru Das Srinagesh <gurus@codeaurora.org>
+Subject: Re: [PATCH v3] pwm: Soften potential loss of precision in compat code
+Message-ID: <YFiKY7nrIDj+ZD47@orome.fritz.box>
+References: <20210315080050.2337075-1-u.kleine-koenig@pengutronix.de>
+ <YFh7uCgeir4L+ZTf@orome.fritz.box>
+ <20210322112947.iru2dj3yggkhecwl@pengutronix.de>
 MIME-Version: 1.0
-References: <X9uYqGboZg5DuEtf@workstation.tuxnet> <20210111203532.m3yvq6e5bcpjs7mc@pengutronix.de>
- <CAGngYiW=KhCOZX3tPMFykXzpWLpj3qusN2OXVPSfHLRcyts+wA@mail.gmail.com>
- <YBQ4c2cYYPDMjkeH@workstation.tuxnet> <CAGngYiWd0u=+DPhvK+8v9FT8Y1Evn1brWRheMNDXWFVVL-wNFw@mail.gmail.com>
- <YBRyG0vv3gRzygSB@workstation.tuxnet> <YFhhGpiHDELxIo9V@orome.fritz.box>
- <CAHp75Ve2FFEMsAv8S18bUDFsH2UkiQ5UvgcRtZ=j30syQtEirw@mail.gmail.com>
- <20210322112254.5mjkajkq3wnhgnd5@pengutronix.de> <CAHp75VfedZyFF46koLOg13t_TzMbwj5zBYU2zBA52vRRtb202g@mail.gmail.com>
- <20210322114826.ahwhbqxjxfg3nmrf@pengutronix.de>
-In-Reply-To: <20210322114826.ahwhbqxjxfg3nmrf@pengutronix.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 22 Mar 2021 14:15:08 +0200
-Message-ID: <CAHp75Vc6YnHJdt0HhV9AZtpLHLapHZb08O5ygg++PX+u04m--A@mail.gmail.com>
-Subject: Re: [PATCH v5 2/7] pwm: pca9685: Support hardware readout
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Clemens Gruber <clemens.gruber@pqgruber.com>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bBaCeP+6ur3hzXPe"
+Content-Disposition: inline
+In-Reply-To: <20210322112947.iru2dj3yggkhecwl@pengutronix.de>
+User-Agent: Mutt/2.0.6 (98f8cb83) (2021-03-06)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Mar 22, 2021 at 1:48 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
-> On Mon, Mar 22, 2021 at 01:40:57PM +0200, Andy Shevchenko wrote:
-> > On Mon, Mar 22, 2021 at 1:22 PM Uwe Kleine-K=C3=B6nig
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > > On Mon, Mar 22, 2021 at 11:38:40AM +0200, Andy Shevchenko wrote:
-> > > > On Monday, March 22, 2021, Thierry Reding <thierry.reding@gmail.com=
-> wrote:
-> > > > > On Fri, Jan 29, 2021 at 09:37:47PM +0100, Clemens Gruber wrote:
-> > > > > > Thierry: Would you accept it if we continue to reset the regist=
-ers in
-> > > > > > .probe?
-> > > > >
-> > > > > Yes, I think it's fine to continue to reset the registers since t=
-hat's
-> > > > > basically what the driver already does. It'd be great if you coul=
-d
-> > > > > follow up with a patch that removes the reset and leaves the hard=
-ware in
-> > > > > whatever state the bootloader has set up. Then we can take that p=
-atch
-> > > > > for a ride and see if there are any complains about it breaking. =
-If
-> > > > > there are we can always try to fix them, but as a last resort we =
-can
-> > > > > also revert, which then may be something we have to live with. Bu=
-t I
-> > > > > think we should at least try to make this consistent with how oth=
-er
-> > > > > drivers do this so that people don't stumble over this particular
-> > > > > driver's
-> > > >
-> > > > I guess we may miss (a PCB / silicon design flaw or warm boot case)=
- when
-> > > > boot loader left device completely untouched and device either in w=
-rong
-> > > > state because if failed reset (saw this on PCA9555 which has a
-> > > > corresponding errata), or simply we have done a warm reset of the s=
-ystem.
-> > > > So, we also have to understand how to properly exit.
-> > >
-> > > I don't think that not resetting is a real problem. My argumentation
-> > > goes as follows:
-> > >
-> > > When the PWM driver is loaded and the PWM configuration is invalid, i=
-t
-> > > was already invalid for the time between power up (or warm start) and
-> > > PWM driver load time. Then it doesn't really hurt to keep the PWM
-> > > in this invalid state for a little moment longer until the consumer o=
-f
-> > > the PWM becomes active.
-> >
-> > But this won't work in the cases when we have a chip with a shared
-> > settings for period and/or duty cycle. You will never have a user come
-> > due to -EBUSY.
->
-> That's wrong, the first consumer to enable the PWM (in software) is
-> supposed to be able to change the settings.
 
-If it's a critical PWM, how can you be allowed to do that?
-And if so, what is the difference between resetting the device in this
-case? You may consider it as a change to the settings by the first
-consumer.
+--bBaCeP+6ur3hzXPe
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
---=20
-With Best Regards,
-Andy Shevchenko
+On Mon, Mar 22, 2021 at 12:29:47PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> On Mon, Mar 22, 2021 at 12:12:56PM +0100, Thierry Reding wrote:
+> > On Mon, Mar 15, 2021 at 09:00:51AM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> > > The legacy callback .config() only uses int for period and duty_cycle
+> > > while the corresponding values in struct pwm_state are u64. To prevent
+> > > that a value bigger than INT_MAX is discarded to a very small value,
+> > > explicitly check for big values and pass INT_MAX instead of discardin=
+g.
+> > >=20
+> > > Acked-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> > > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> > > ---
+> > > Changes since v2 (Message-Id: 20210312212119.1342666-1-u.kleine-koeni=
+g@pengutronix.de)
+> > >=20
+> > >  - Fixed indention of comment (noticed by Guru Das)
+> > >  - Add Ack for Guru Das.
+> > >=20
+> > >  drivers/pwm/core.c | 13 +++++++++++--
+> > >  1 file changed, 11 insertions(+), 2 deletions(-)
+> > >=20
+> > > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> > > index 4b3779d58c5a..b1adf3bb8508 100644
+> > > --- a/drivers/pwm/core.c
+> > > +++ b/drivers/pwm/core.c
+> > > @@ -605,9 +605,18 @@ int pwm_apply_state(struct pwm_device *pwm, cons=
+t struct pwm_state *state)
+> > > =20
+> > >  		if (state->period !=3D pwm->state.period ||
+> > >  		    state->duty_cycle !=3D pwm->state.duty_cycle) {
+> > > +			int duty_cycle, period;
+> > > +
+> > > +			/*
+> > > +			 * The legacy callbacks use only (signed!) int for
+> > > +			 * period and duty_cycle compared to u64 in struct
+> > > +			 * pwm_state. So clamp the values to INT_MAX.
+> > > +			 */
+> > > +			period =3D min(state->period, (u64)INT_MAX);
+> > > +			duty_cycle =3D min(state->duty_cycle, (u64)INT_MAX);
+> >=20
+> > Do we want to highlight this using a WARN()?
+>=20
+> That would be fine for me, too. In the past you were not happy with
+> WARN I added, so I implemented this in a silent way.
+
+The WARN that I remember was in a completely different context. There
+are occasions when it's good to be loud. I think this is one of them.
+
+> > It seems to me like doing this would always be a programming error and
+> > easy to fix. Silently truncating this to just INT_MAX may not give the
+> > desired effect and be actively wrong most of the time.
+> >=20
+> > Come to think of it: why not just refuse such requests with -EINVAL?
+> > That's what drivers already do if they're faced with values that they
+> > can't handle.
+>=20
+> No, the strategy I ask authors of new drivers to implement is to program
+> the biggest possible period not bigger than the requested period. So if
+> a consumer requests INT_MAX+3 it must already today cope with the case
+> that it gets a smaller period.
+
+That just seems wrong. I mean to a degree this might be sensible, but
+the way you do this here it's completely out of hands. What if somebody
+tries to configure this?
+
+	duty-cycle: 0x0000000100000000
+	period:     0x0000000200000000
+
+Clearly what they were aiming for is a 50% duty-cycle, but with your
+proposal, this will now result in a 100% duty-cycle, which is cleary not
+what's requested here.
+
+That's different, in my opinion, from a case where you may have to round
+a little bit and get a deviation of, say, 1% in the resulting signal.
+
+> The underlaying problem can only be solved with a way to query the
+> resulting configuration for a given request. I have a prototype I can
+> share if you're interested.
+
+I don't think we need to go all the way for this legacy code. But I
+think we need to make sure that people get a result that is reasonably
+within what they asked for. And I think just flat out rejecting these
+kinds of requests that are completely out of bounds of the hardware is
+better than silently clamping the values. I'd be surprised if this even
+had an impact at all on any existing drivers because it had, the
+truncation that's currently happening would've likely already exposed
+any of them.
+
+Also, in most of these cases the period has been hand-picked and is part
+of device tree (or some legacy PWM lookup table), and it was picked
+because it is supported by the hardware. Since the duty-cycle always has
+to be smaller than the period (we actively reject configurations if that
+is not the case), I don't think it likely that we'd currently hit these
+conditions at all.
+
+Thierry
+
+--bBaCeP+6ur3hzXPe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmBYimAACgkQ3SOs138+
+s6FTWw/8D/FL4q2qYBwUN7aYW55KjqjSCeAUTY8OxLoSEWJuFZQkW61O/CNdP5Kb
+lKUzFeXTn6+3j4eFug/QFcXhsi205IZCw7WmWZfChxaAOUctfXkwsPXlPpDP+d6T
+zTxj05LjcQccpAPTzCU8QTexscE4yGLs3vLLNj+50XIuxiIVacxJyjNkweJXtm4D
+OdjAJZG6C1Q3MBbus8aWnF2tpvNXGMCeMgjAAoimrlVxpy9lXYjsRwyL1CV7R0uj
+xHrn7rSIe0gQLO2JsP1rVkHQvyiB2Fo4O40+UbL+a7bfJAP+bFw6iw48jb9dIzTT
+wpBHyuoCLmSBgQ1gZVahQlEzxH3OJuhUybVoU3Ls0jOK4RnogOwQC6yyccPh4X5U
+9g72Jdx+xHgqmRRdGuwiBUcIh1WbslsECtrAJyOVw3q+PhH0cc9NVdT8o5xxYXD+
+k8s8uziSqO46owU3xT629FPMw44oKBjEYrrVMHiW/JyzJzvFbaOkQ9xPKbB+mdtr
+VTTdANJAooZR8vrx/XKfyLwhNBpNSs0HB8nWUqxQ5wyRcIRD+UYZwWwexfGKdQoF
+jiJrT4Gjg306/GChpZHjhIZv6H1Zj8n1AX+qWuyyjrtYezwOX3rvPB0GLSw+TvVP
+ANNymmUkiyUORfZOxauPi6PUum5p6p1awBHOIuK8cesxE81tRS0=
+=Eaeb
+-----END PGP SIGNATURE-----
+
+--bBaCeP+6ur3hzXPe--
