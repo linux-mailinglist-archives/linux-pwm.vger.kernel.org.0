@@ -2,94 +2,126 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA21D344707
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 15:23:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3344B344967
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 16:38:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230064AbhCVOWh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 22 Mar 2021 10:22:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229614AbhCVOW3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 10:22:29 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0450FC061574
-        for <linux-pwm@vger.kernel.org>; Mon, 22 Mar 2021 07:22:29 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lOLRq-0003oj-UF; Mon, 22 Mar 2021 15:22:26 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lOLRq-0007Nf-IM; Mon, 22 Mar 2021 15:22:26 +0100
-Date:   Mon, 22 Mar 2021 15:22:26 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-pwm@vger.kernel.org, linux-clk@vger.kernel.org,
-        kernel@pengutronix.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] clk: provide new devm helpers for prepared and
- enabled clocks
-Message-ID: <20210322142226.n7qa4rijdhsqoqgf@pengutronix.de>
-References: <20210301135053.1462168-1-u.kleine-koenig@pengutronix.de>
+        id S230142AbhCVPiU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 22 Mar 2021 11:38:20 -0400
+Received: from mail-vs1-f46.google.com ([209.85.217.46]:39817 "EHLO
+        mail-vs1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230091AbhCVPiQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 11:38:16 -0400
+Received: by mail-vs1-f46.google.com with SMTP id e72so2232004vsc.6;
+        Mon, 22 Mar 2021 08:38:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HeaWu7NQhqTg67+28QJCmBXaQRsdudr3ZwUMLAQvMow=;
+        b=pxJp6kwcs2WRp/H7USwaqjME4s4abgdyDbFEL0aZTRRWtWMwwWPca8sq8JjFDUouMF
+         mP3PhHoUu6jpj2G6rja5KTcJNXGashBWBJQo2mvNmtGFp8ZXa9vnjruHzzwa0YeIlEFo
+         w8br3x8E47ceHueurHwui310Ro2R51xUIe7L/dz8mY21EmWS3wqjQRi6D70HZhZETW8j
+         EaJlHPRRMXE62uPp4MKGeG67SxAXDyv3c7eXosARVXk2LRRL8sQxhaaJc+jhLwm+i2op
+         lxXVkzTYPE9aIsk2ad9tCArTkYPgyIq4KULkE86xxBkvZb2/V4tr21kPC0SIpB9ugRI0
+         P3YQ==
+X-Gm-Message-State: AOAM533I+WX2zMqHD/JKmigePgZYo4r+RtLm1rgWg4Y6zf2cEihb/1LB
+        U63vdtubpwR6IfJ7XNXgnuzv6L43rUtqPTnj1DE=
+X-Google-Smtp-Source: ABdhPJxNe+DMTZdB2lWgUCE5StB9yp5TTZKT2HloywUXMNLbDmvZ6gW30OxDfaCQ8FunvzXfxRMyQk6bPYmPn8SKULg=
+X-Received: by 2002:a67:8883:: with SMTP id k125mr515895vsd.18.1616427495528;
+ Mon, 22 Mar 2021 08:38:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5phyeawdahq2t3cm"
-Content-Disposition: inline
-In-Reply-To: <20210301135053.1462168-1-u.kleine-koenig@pengutronix.de>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+References: <1599734644-4791-1-git-send-email-sagar.kadam@sifive.com>
+ <1599734644-4791-3-git-send-email-sagar.kadam@sifive.com> <20200922203429.GA3188204@bogus>
+In-Reply-To: <20200922203429.GA3188204@bogus>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 22 Mar 2021 16:38:04 +0100
+Message-ID: <CAMuHMdXPG-+EOCrQZi1deKv1yYMBtohprUVYW_-Shdp_gfQs5Q@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] dt-bindings: riscv: convert plic bindings to json-schema
+To:     Sagar Kadam <sagar.kadam@sifive.com>, Rob Herring <robh@kernel.org>
+Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Yash Shah <yash.shah@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Sagar, Rob,
 
---5phyeawdahq2t3cm
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+(replying to an old email, as this one seems to be the most appropriate)
 
-Hello,
+On Tue, Sep 22, 2020 at 10:34 PM Rob Herring <robh@kernel.org> wrote:
+> On Thu, Sep 10, 2020 at 04:14:03PM +0530, Sagar Kadam wrote:
+> > Convert device tree bindings for SiFive's PLIC to YAML format
+> >
+> > Signed-off-by: Sagar Kadam <sagar.kadam@sifive.com>
 
-On Mon, Mar 01, 2021 at 02:50:50PM +0100, Uwe Kleine-K=F6nig wrote:
-> Uwe Kleine-K=F6nig (3):
->   clk: generalize devm_clk_get() a bit
->   clk: Provide new devm_clk_helpers for prepared and enabled clocks
->   pwm: atmel: Simplify using devm_clk_get_prepared()
->=20
->  drivers/clk/clk-devres.c | 96 +++++++++++++++++++++++++++++++++-------
->  drivers/pwm/pwm-atmel.c  | 15 +------
->  include/linux/clk.h      | 87 +++++++++++++++++++++++++++++++++++-
->  3 files changed, 168 insertions(+), 30 deletions(-)
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
 
-can I get some feedback on this series please? The idea is on the list
-since October last year with absolutely no maintainer feedback.
+> > +
+> > +  '#address-cells':
+> > +    const: 0
+> > +    description: Should be <0> or more.
+>
+> Drop. 'or more' is wrong. If there's a case with more, it will need to
+> be documented.
 
-I think it's a good idea and not too hard to review, so I wonder what is
-stopping you.
+Why do we have the "'#address-cells': const: 0" at all...
 
-Best regards
-Uwe
+> > +required:
+> > +  - compatible
+> > +  - '#address-cells'
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+... and why is it required?
 
---5phyeawdahq2t3cm
-Content-Type: application/pgp-signature; name="signature.asc"
+> > +  - '#interrupt-cells'
+> > +  - interrupt-controller
+> > +  - reg
+> > +  - interrupts-extended
+> > +  - riscv,ndev
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    plic: interrupt-controller@c000000 {
+> > +      #address-cells = <0>;
+> > +      #interrupt-cells = <1>;
+> > +      compatible = "sifive,plic-1.0.0", "sifive,fu540-c000-plic";
+> > +      interrupt-controller;
+> > +      interrupts-extended = <
+> > +        &cpu0_intc 11
+> > +        &cpu1_intc 11 &cpu1_intc 9
+> > +        &cpu2_intc 11 &cpu2_intc 9
+> > +        &cpu3_intc 11 &cpu3_intc 9
+> > +        &cpu4_intc 11 &cpu4_intc 9>;
+> > +      reg = <0xc000000 0x4000000>;
+> > +      riscv,ndev = <10>;
+> > +    };
 
------BEGIN PGP SIGNATURE-----
+Gr{oetje,eeting}s,
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmBYqB8ACgkQwfwUeK3K
-7AlcLwf+MO9wU66kI2KeEmjWTjbBNyavpby/rc/RzbJBTlUBEA+WMpbfUsZCslhW
-kYjEEdrVqJ5WnR15w/17Y5fcu6eP2McQ1gaEhYFtseU27HNy2xZ4VABnRRrtzdbX
-NJsWJrhFWVMQtGe1YXsfLFY5BdsbzJcSdhs3YY9tPUaeJMIzz3QyNEp2eVVtQZZ8
-eEggpUA/2Xz57sdS4ILGs9+QEk4y3rK1+1IERQHu3USuenA2U7KhqG3CZ2tVj+AE
-OJvOpHfmDxSEVI9MmwP5YhKYWKCbjisug3ucdjStk47ERe28t5U8c+0RBbv8xPY5
-JqKOm+ZNH6JOZYaKRd6ycYpjeXtZTQ==
-=AvXV
------END PGP SIGNATURE-----
+                        Geert
 
---5phyeawdahq2t3cm--
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
