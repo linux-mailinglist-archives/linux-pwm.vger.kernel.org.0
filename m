@@ -2,171 +2,117 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 047E5343B72
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 09:16:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C61C3343B7F
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Mar 2021 09:17:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229786AbhCVIPm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 22 Mar 2021 04:15:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52972 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229760AbhCVIPi (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 04:15:38 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40941C061574;
-        Mon, 22 Mar 2021 01:15:38 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id r10-20020a05600c35cab029010c946c95easo8700503wmq.4;
-        Mon, 22 Mar 2021 01:15:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/RWd7ZwHE3xycjYNtOxM50LUqOJd9/cKFSrwh2G6S3w=;
-        b=BgIumkrnLWxF9Rq5eVnQGUkfPWZ6j9omthIh3tyZi/h+q/r29VJB+1KTDKZGH5OfnB
-         ETd2eGyYOVZ/FONbhKQvOta2TAwugvyGhQYSBHbZKBA/GZVRdQejS4bXjix4P8UVmN/z
-         nPUwf92nZWoKAKMc98kRLeg/62FM14yVPeoExkWSYD1EVO8p4zuloLgA3bSJwbKko7I/
-         6yec2r16eoZdiDhc/+KKqm3AHplnyoqIBNfTUtlO8VLR6OEjRasKk0INK4k7NiCJN8M/
-         75FFRh/WUWG8cmy3/0MjqtkrgA0CxeIvPviicCmC7GFPjjXn1iog5J5mHkF3F/sgEkWF
-         5+Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/RWd7ZwHE3xycjYNtOxM50LUqOJd9/cKFSrwh2G6S3w=;
-        b=n3J87R4td9aaZ/LFleII9kNqat15CnHk8tP61iR21CnQ4NXynBBhXe4TtJMPO2RBJH
-         jpZoL5mf7FikII3Bb2IXbn43TDspCjbR9ds5uA3MIjWNW4GjVaWOWHv6tzcbU+bobwvS
-         nVNHSqIQWtghEDh8vafMh5nWtGs8/xmBDB7xyEdeqxVdiMRJstPvZkRDCWYQExwgq5DM
-         AFZBXgt+k2MFRt8ZDJOxkuZ6gMSrTOUt3XJDpyId23jINwIMEyloczdNms+QW8FTch0i
-         52zp6iNrfUODZLOV/G1rRXVm/EwlEQavLBISRMGQyS6wkhCMZWNzrdq4t23GbBnjyXtj
-         M5NA==
-X-Gm-Message-State: AOAM532czts9RXWjbZCZ8nJyemc421o3mTy48BLVhsBy1WhHLIijDnJD
-        f9G6Vbn6/QOjdERolsWvy9g=
-X-Google-Smtp-Source: ABdhPJxLktSDJOgU3BVQm2Q+ZjHDUnhzm+/6Rks1yPyzH06FJ0wQoeyJ6hgqjrWrj1CsTJukFngihg==
-X-Received: by 2002:a1c:7e82:: with SMTP id z124mr14859045wmc.51.1616400936905;
-        Mon, 22 Mar 2021 01:15:36 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id u9sm15277463wmc.38.2021.03.22.01.15.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Mar 2021 01:15:35 -0700 (PDT)
-Date:   Mon, 22 Mar 2021 09:15:53 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Clemens Gruber <clemens.gruber@pqgruber.com>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        id S229829AbhCVIRV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 22 Mar 2021 04:17:21 -0400
+Received: from antares.kleine-koenig.org ([94.130.110.236]:39468 "EHLO
+        antares.kleine-koenig.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229961AbhCVIQ5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 04:16:57 -0400
+Received: from antares.kleine-koenig.org (localhost [127.0.0.1])
+        by antares.kleine-koenig.org (Postfix) with ESMTP id C962BB3C86B;
+        Mon, 22 Mar 2021 09:16:48 +0100 (CET)
+Received: from antares.kleine-koenig.org ([94.130.110.236])
+        by antares.kleine-koenig.org (antares.kleine-koenig.org [94.130.110.236]) (amavisd-new, port 10024)
+        with ESMTP id B0BHinaC3rfe; Mon, 22 Mar 2021 09:16:47 +0100 (CET)
+Received: from taurus.defre.kleine-koenig.org (unknown [IPv6:2a02:8071:b5c8:7bfc:9c64:7e23:b041:2958])
+        by antares.kleine-koenig.org (Postfix) with ESMTPSA;
+        Mon, 22 Mar 2021 09:16:47 +0100 (CET)
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-input@vger.kernel.org,
         linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v5 2/7] pwm: pca9685: Support hardware readout
-Message-ID: <YFhSOXCEo5XTlvd1@orome.fritz.box>
-References: <20201216125320.5277-1-clemens.gruber@pqgruber.com>
- <20201216125320.5277-2-clemens.gruber@pqgruber.com>
- <CAGngYiWkKZGkQ4TTTy8bQYvnGBK45V0A0JCe_+M5V+vuVU+zkQ@mail.gmail.com>
- <X9uYqGboZg5DuEtf@workstation.tuxnet>
- <CAGngYiUYOL6EF3VTGwcwTuN4EmE26ML3ye7689FTEpowjEcU2w@mail.gmail.com>
- <X/H5CqcRHelg5M4p@workstation.tuxnet>
+References: <20210316203813.48999-1-uwe@kleine-koenig.org>
+ <YFfHciL2CXX0aERa@google.com>
+From:   =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
+Subject: Re: [PATCH] input: misc: max8997: Switch to pwm_apply()
+Message-ID: <2972bc70-2535-0c09-faff-b74f6842fbc4@kleine-koenig.org>
+Date:   Mon, 22 Mar 2021 09:16:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
+In-Reply-To: <YFfHciL2CXX0aERa@google.com>
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="L//akOo9iCkrBAT3"
-Content-Disposition: inline
-In-Reply-To: <X/H5CqcRHelg5M4p@workstation.tuxnet>
-User-Agent: Mutt/2.0.6 (98f8cb83) (2021-03-06)
+ protocol="application/pgp-signature";
+ boundary="JvyNxNltdv0BXIJPkZRotIbzCSnA5NFaQ"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--JvyNxNltdv0BXIJPkZRotIbzCSnA5NFaQ
+Content-Type: multipart/mixed; boundary="w33nu2tB8mrXCo1yBobfSrvxPtJKuPS6T";
+ protected-headers="v1"
+From: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+ Lee Jones <lee.jones@linaro.org>, linux-input@vger.kernel.org,
+ linux-pwm@vger.kernel.org
+Message-ID: <2972bc70-2535-0c09-faff-b74f6842fbc4@kleine-koenig.org>
+Subject: Re: [PATCH] input: misc: max8997: Switch to pwm_apply()
+References: <20210316203813.48999-1-uwe@kleine-koenig.org>
+ <YFfHciL2CXX0aERa@google.com>
+In-Reply-To: <YFfHciL2CXX0aERa@google.com>
 
---L//akOo9iCkrBAT3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--w33nu2tB8mrXCo1yBobfSrvxPtJKuPS6T
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jan 03, 2021 at 06:04:10PM +0100, Clemens Gruber wrote:
-> Hi everyone,
+Hi Dmitry,
+
+On 3/21/21 11:23 PM, Dmitry Torokhov wrote:
+> On Tue, Mar 16, 2021 at 09:38:13PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+>> max8997_haptic_enable() is the only caller of
+>> max8997_haptic_set_duty_cycle(). For the non-external case the PWM is
+>> already enabled in max8997_haptic_set_duty_cycle(), so this can be don=
+e
 >=20
-> happy new year, hope you are all well!
->=20
-> On Thu, Dec 17, 2020 at 12:52:42PM -0500, Sven Van Asbroeck wrote:
-> > On Thu, Dec 17, 2020 at 12:43 PM Clemens Gruber
-> > <clemens.gruber@pqgruber.com> wrote:
-> > > >
-> > > > Conclusion: .get_state() will always return "pwm disabled", so why =
-do we
-> > > > bother reading out the h/w?
-> > >
-> > > If there are no plans for the PWM core to call .get_state more often =
-in
-> > > the future, we could just read out the period and return 0 duty and
-> > > disabled.
-> >=20
-> > I'm not sure why we should even read out the period?
-> > When a channel is disabled, the period is not externally visible,
-> > therefore it's meaningless ?
-> >=20
-> > As far as I can tell, we can use this for .get_state():
-> > memset(&pwm->state, 0, sizeof(pwm_state));
-> >=20
-> > >
-> > > Thierry, Uwe, what's your take on this?
->=20
-> I will continue working on this series in the upcoming weeks.
-> Feedback on the .get_state issue would be greatly appreciated.
->=20
-> To summarize:
-> Is it OK for a driver to expect the chip->ops->get_state function to be
-> only called from the place in pwm core it is currently called from?
-> (Namely in pwm_device_request after chip->ops->request)
->=20
-> If yes, we could always return a 0 duty cycle and disabled state,
-> because this is the state we left it in after .probe (and .free).
->=20
-> However, if in the future, the pwm core adds additional calls to
-> chip->ops->get_state in other places, this could lead to problems.
+> Are you sure about that? I think the intent was to enable it in
+> max8997_haptic_configure(), and only after "inmotor" regulator is
+> enabled. If the device is enabled earlier then I'd say we need to make
+> sure we disable it until it is needed.
 
-It's not safe in general to assume that this function will be called
-only at one specific point. If you implement the function, then it
-should do what it says (i.e. read the current hardware state), and not
-bother about when it might be called, or guess at the state that the PWM
-might be in.
+If you claim you understand this better, I will well believe that. I=20
+described my train of thoughts, i.e. how I understood the internal case.
 
-If you can't implement hardware readout, then that's fine (there are
-some devices for which no physical way exists to read out the current
-hardware state), but it doesn't sound like that's the problem here.
+Anyhow, there is little sense in separating configuration and enablement =
 
-> Another point is the period: Sven suggested we do not read out the
-> period at all, as the PWM is disabled anyway (see above).
-> Is this acceptable?
+of the PWM, because the change of duty_cycle and period for a disabled=20
+PWM is expected to do nothing to the hardware's output.
 
-No, if the PWM has separate bits for "enable" and "period", then they
-should be read separately. The hardware state isn't about representing
-what the currently configured output is, it's a representation of what
-the current settings of the PWM channel are.
+So the safer approach is to do the pwm_apply_state at the place, where=20
+pwm_enable was before, but the more consistent is how I suggested in my=20
+patch. If it feels better I can do the more conservative change instead=20
+and if somebody with a deeper understanding of the driver and/or a=20
+testing possibility can be found, the internal and external cases can be =
 
-> And, if we never return anything but 0 in .get_state, should it be
-> implemented at all?
+unified.
 
-Yes, not implementing .get_state() at all is better than lying. If you
-always return an all-zeros state, you're inevitably going to return the
-wrong result at some point in time.
+Best regards
+Uwe
 
-Thierry
 
---L//akOo9iCkrBAT3
-Content-Type: application/pgp-signature; name="signature.asc"
+
+--w33nu2tB8mrXCo1yBobfSrvxPtJKuPS6T--
+
+--JvyNxNltdv0BXIJPkZRotIbzCSnA5NFaQ
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmBYUjYACgkQ3SOs138+
-s6FQCxAAhL5sNQDsJCjXIQddAmRoO/t8EwYDI3UOY4QLAYx+8ntkGlLSNfyjt/Nf
-zD6nc0lgfmVmZIIO5ljfI1hvfOrEDZrBgghTxaPuLGVVL6KW7eNTbJjsPqhrQ9yC
-Lc0ugnv8Xa01lKOU3YCZ5fHvz5g862Hdt8OmK3/lK6syRmmVfGmtWjmU4v0XrJag
-cUxhr0vHww4uFZBqwLLxNFt+QV0fzMZxevCM9xrKJgBtJK31sm4EKdmtjWfvAOSK
-EUrBXl5c5WodcMclCRyDt+QbbIFraA+rWaJbucykblBwe13l4cDbDN+ks2x6Twpx
-y5HmCZW18WT4tqJRTtcZvBsNi3balI2EQ/AEwpZw26mob3pcnoclNoduk2nBer0O
-A+S6mzdWzGKt52NCT8rqTXgzrd8e8q8dgWXLMBObpTy4uvmepUjGSdYfm1ficQ75
-Oc0BnAK9jxcNR6Bj7Z+J8omTmWBNc2cRn7fAfDzJwc1Zlr1C2O8CFHMMP2pK2MoK
-Q+zYY7S8iyrMz4RbIDS/M4NG0RfEGQovKtiu0SpafpCAT4bykezzOevszhSWkew7
-D5o1GLq53L1py22QPbAeL4kuFANjV7YLvXeaFc8PZcWtnKamFzFwJ+gIN1J0f6wj
-3yx/O3LGZfCvtXQgthLRBYDYqiAovkeyWVbc1c7VKHjKwUj3Bto=
-=oc5y
+iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmBYUmwACgkQwfwUeK3K
+7AmkRAf8CAFrFLvQHlKyLbx7t9+KGMdjs2F6VHvUPJjk5uGtFc2rRsPPFugjqwfR
+uuPomfMeIrhRv6t76cOFtDhva7ArOmhdAHDk0ETHQl6RpqQJPCHFAv5EWOpElHqU
+TpftF9OxpC4Bl4ZHWgCIDeB9c1JrwrA8BOUlgLsXPQxEZWgJpHwKehfl59Ezy7jP
+QU1en1uRwQ+G1U45t6ktpNRazwv3KUMgyDQI6wLw37KLSRgWHKp2vEE4pflviK6i
+7Zl/zOsDbzQFd/4SqnLvpTWWPgjMI7JuYf5/soNYLjJPTCFnrDiiRTw6B4kgdR1K
+XlMFIdwEB2zRoZ7Ggl6Ni0GsbJDPQQ==
+=keJR
 -----END PGP SIGNATURE-----
 
---L//akOo9iCkrBAT3--
+--JvyNxNltdv0BXIJPkZRotIbzCSnA5NFaQ--
