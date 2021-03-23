@@ -2,105 +2,118 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D5283452FB
-	for <lists+linux-pwm@lfdr.de>; Tue, 23 Mar 2021 00:30:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95536345877
+	for <lists+linux-pwm@lfdr.de>; Tue, 23 Mar 2021 08:20:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230273AbhCVXaC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 22 Mar 2021 19:30:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52840 "EHLO
+        id S230064AbhCWHT4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 23 Mar 2021 03:19:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229871AbhCVX3p (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Mar 2021 19:29:45 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18004C061574;
-        Mon, 22 Mar 2021 16:29:45 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id q6-20020a17090a4306b02900c42a012202so9303297pjg.5;
-        Mon, 22 Mar 2021 16:29:45 -0700 (PDT)
+        with ESMTP id S230029AbhCWHTf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 23 Mar 2021 03:19:35 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DA47C061574
+        for <linux-pwm@vger.kernel.org>; Tue, 23 Mar 2021 00:19:35 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id a7so25379764ejs.3
+        for <linux-pwm@vger.kernel.org>; Tue, 23 Mar 2021 00:19:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=U/IBmLp8QkjVB/SzgsK/2A+PcX1LFcU9lJnWkixjLUk=;
-        b=XG+yurS4EUzoBdPJxud6mro8oq863CFyPC7zxbgHi2O7EHmpr0CRSmdT2B2Za96O2D
-         eezVz+iVtNAcPA4h956V+7btkbHcZtQiq7XrxE6o5LTQfN/Pt020g6E1Y8IlcGGqauwI
-         TgDc6rLBkQvtkBI72WI1CoQHZGlEp0KI3Bz16pjvs7EXk3LmzKRZKvgghVw9XTWkX6sG
-         ueC9ZnFYb7mMyO3RRFR6EG5G/I3/+QZcLDeAcwocKkZYC+C7XRqIpw2YJd8XI3zaFVw6
-         pbTkROP9GB7xDfunCHPF1mR90gNrPbzK2ldJiDBtx13g0jtAH2LNWCSoS0gXJEzWusIz
-         zPeQ==
+        bh=0ZRWR7SyUfOFjKEhmvgj2n6DxL2rukToh7fqH5zbAY0=;
+        b=tPFcX58ojqyf6SXv96EFP8FxHVmIAE8EjX/vZmP5zuB7KXDIZ/HYo29NUKR2tfNyKZ
+         0EClqWxQXI/wZC6dJB2iVopWInz5N3ftT6rYwFmHVAk1CB1T/buLH7Evce318QrTWYaR
+         vwC17qEl6oRcLQwob9mfed2D2xdvdlbrTMPa3gRu0d0vZqkwi6AQcpCCCPP7ddL2bpbX
+         VOEbxcJ2iLSH4xjakMJeqV406ULIO3Zgew28wfgEv1NCo+VsgdBQ9SLQdaunBqSqskSj
+         3xIu4u5brjzcOOa+vMrEuVNurTOokraJxImPknp3swP9G2FHFNF3qV3Xw7DyUR/26o5k
+         +xsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=U/IBmLp8QkjVB/SzgsK/2A+PcX1LFcU9lJnWkixjLUk=;
-        b=slaBjJCYFSXJ9IDqVqv7qXQRO53+O9UiWrpOIbxZP3Tob43Y+NXF5mcD4qLiDiYVcn
-         jVeUcR87aiPIeK0eewH5zNg2gkismqXW1YYRpepgxd5jX2iC2zJUAGxfbWNLbnyi/ct7
-         v0MQ/cK+PCd6o/ijeQMr2rgq5PF4lxEg9+1SxZzIWAUh1svUNr5zN0Avf73tGsSS9414
-         pNrkBj/v4NS6CFl37Vtr31Uf6FseA4HZYv+bivUV1DUnZ5x1UXRIZYh6D6OjyxcbzfDP
-         a9J+GkeT1d87SOj46jZStpyiO87wRF7st+3EAw54+wLjpDh/j6d/HE6djxE9UWH7en0f
-         MDUA==
-X-Gm-Message-State: AOAM5315RJtyOIchV5H1ggj4L+HVJSrjg/d1iV7vGPMrZToM66P8XQNn
-        +TY/EAQwemgFhW+csT7TeNQ=
-X-Google-Smtp-Source: ABdhPJz/tDZ30C8PiBsuFxIrZ2KEotS2s7Xw+gnv0MR1HNPjfDVu03faBkOxmgcLbN2vTOGLh3nRKQ==
-X-Received: by 2002:a17:90a:fd0b:: with SMTP id cv11mr1404366pjb.183.1616455784445;
-        Mon, 22 Mar 2021 16:29:44 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:499f:7361:582b:fd05])
-        by smtp.gmail.com with ESMTPSA id p22sm432999pjg.39.2021.03.22.16.29.42
+        bh=0ZRWR7SyUfOFjKEhmvgj2n6DxL2rukToh7fqH5zbAY0=;
+        b=MUUQzhCQfqFIJE1fmzFo1kXa7H5xon/6ojr2u/lMtOONdaIj221TCKf5S8R8l7lJsd
+         LNywblaeoxyaoTCL3ojTqqV/cvPaB/qCNeks2Aq9PH5Ru6VLSHuAr40VMzoo9GNMUMmj
+         AUNl8PLT0ujv83aEjRlKs+5qNHLDx1kS3Fd7yEPy/4EvQm4N+aBu5A/nApqBf1cn80Qi
+         GNY6wBNGVEqWx0iRuQFDeyf2ceeYNkHoKU2mtSUk4hsYN4qy2WzPRF0AG3uToKR+6l2G
+         f4hwfSAoyJjdg8xjFq5K/y/uvCYaHQDmumYnJx+s/iuwX7BivwaMljOO2DDBvrUBtPeO
+         LBRg==
+X-Gm-Message-State: AOAM531BUc3K5fWLAYj1dV73gZL5Wab9WjkKSQHQEnktwNQK24LRPhRf
+        RpPHDhJt12C+SZYCZCn7IkLTXw==
+X-Google-Smtp-Source: ABdhPJzII9/3F/d3MIJ9LRagad+ReiGv4LKjlMdJhVAqh1b6LBFoMIOzP25UxaYZyPnS0WB7mNevtw==
+X-Received: by 2002:a17:907:98f5:: with SMTP id ke21mr3552827ejc.552.1616483971317;
+        Tue, 23 Mar 2021 00:19:31 -0700 (PDT)
+Received: from dell ([91.110.221.180])
+        by smtp.gmail.com with ESMTPSA id r17sm10931354ejz.109.2021.03.23.00.19.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Mar 2021 16:29:43 -0700 (PDT)
-Date:   Mon, 22 Mar 2021 16:29:40 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-input@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] input: misc: max8997: Switch to pwm_apply()
-Message-ID: <YFkoZKOEkBg6wdV2@google.com>
-References: <20210316203813.48999-1-uwe@kleine-koenig.org>
- <YFfHciL2CXX0aERa@google.com>
- <2972bc70-2535-0c09-faff-b74f6842fbc4@kleine-koenig.org>
+        Tue, 23 Mar 2021 00:19:30 -0700 (PDT)
+Date:   Tue, 23 Mar 2021 07:19:29 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Re: [PATCH 00/14] pwm: Patches I consider ready for the next merge
+ window
+Message-ID: <20210323071929.GD2916463@dell>
+References: <20210319102852.101209-1-u.kleine-koenig@pengutronix.de>
+ <YFia9Q4lLIlKdEmf@orome.fritz.box>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2972bc70-2535-0c09-faff-b74f6842fbc4@kleine-koenig.org>
+In-Reply-To: <YFia9Q4lLIlKdEmf@orome.fritz.box>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
+On Mon, 22 Mar 2021, Thierry Reding wrote:
 
-On Mon, Mar 22, 2021 at 09:16:43AM +0100, Uwe Kleine-K�nig wrote:
-> Hi Dmitry,
-> 
-> On 3/21/21 11:23 PM, Dmitry Torokhov wrote:
-> > On Tue, Mar 16, 2021 at 09:38:13PM +0100, Uwe Kleine-K�nig wrote:
-> > > max8997_haptic_enable() is the only caller of
-> > > max8997_haptic_set_duty_cycle(). For the non-external case the PWM is
-> > > already enabled in max8997_haptic_set_duty_cycle(), so this can be done
+> On Fri, Mar 19, 2021 at 11:28:38AM +0100, Uwe Kleine-König wrote:
+> > Hello,
 > > 
-> > Are you sure about that? I think the intent was to enable it in
-> > max8997_haptic_configure(), and only after "inmotor" regulator is
-> > enabled. If the device is enabled earlier then I'd say we need to make
-> > sure we disable it until it is needed.
+> > this is the set of patches that are open on the list for some time.
+> > Lee suggested to resend them.
+> > 
+> > @Thierry: I'm unsure what is the best way to nag. Is it really
+> > resending? Or does this just result mostly in overhead because the
+> > patches are still open in patchwork and it adds copies to your mailbox?
+> > (Another downside is that taking the patches from this thread results in
+> > recording a newer Author Date compared to picking up the originals.)
 > 
-> If you claim you understand this better, I will well believe that. I
-> described my train of thoughts, i.e. how I understood the internal case.
+> I use patchwork extensively for tracking, so merely resending patches so
+> that they float to the top of my inbox isn't useful in itself. Patches
+> do, by the way, float to the top of my inbox when you just reply to them
+> (e.g. by pinging). Resending a particular series is fine because it's
+> then easy to mark the old version as "superseded". Sending a collection
+> of patch such as this is a bit more annoying because now the duplicates
+> are spread about a bit more in patchwork, so it's a bit more work to get
+> patchwork cleaned up. But it's not that bad, so no harm done.
 > 
-> Anyhow, there is little sense in separating configuration and enablement of
-> the PWM, because the change of duty_cycle and period for a disabled PWM is
-> expected to do nothing to the hardware's output.
+> Usually when I look at patchwork I will look at the A/F/R/T column and
+> the more flags I see there, the more likely I will be to go and apply
+> it. Anything else I will go and look at myself and comment and/or apply
+> or sometimes wait for someone else to review.
 > 
-> So the safer approach is to do the pwm_apply_state at the place, where
-> pwm_enable was before, but the more consistent is how I suggested in my
-> patch. If it feels better I can do the more conservative change instead and
-> if somebody with a deeper understanding of the driver and/or a testing
-> possibility can be found, the internal and external cases can be unified.
+> Perhaps a better way to nag me would be to delegate patches that you've
+> reviewed or think are ready to me, which would make them stand out more
+> among the others.
 
-Yes, could we please go with the more conservative approach as I do not
-have the hardware to verify the behavior.
+It's not Uwe's fault, it's mine.
 
-Thanks!
+Since some of Uwe's patches had been left unreviewed for several
+weeks, I asked him to collect up all of his dangling patches and
+submit this resend for *me* to review.
+
+As someone who does not use Patchwork, I find this to be the simplest
+and cleanest method of patch collation.  Going by your almost
+immediate reply, I guess it had a nice desired side-effect. :)
+
+Thanks for taking the time.
 
 -- 
-Dmitry
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
