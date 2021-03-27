@@ -2,134 +2,76 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C20134B818
-	for <lists+linux-pwm@lfdr.de>; Sat, 27 Mar 2021 17:06:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F84234B97D
+	for <lists+linux-pwm@lfdr.de>; Sat, 27 Mar 2021 22:25:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230015AbhC0QGB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 27 Mar 2021 12:06:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41436 "EHLO
+        id S230021AbhC0VYv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 27 Mar 2021 17:24:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229582AbhC0QFi (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 27 Mar 2021 12:05:38 -0400
-Received: from mail.pqgruber.com (mail.pqgruber.com [IPv6:2a05:d014:575:f70b:4f2c:8f1d:40c4:b13e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D56FC0613B1;
-        Sat, 27 Mar 2021 09:05:38 -0700 (PDT)
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id B4276CB478B;
-        Sat, 27 Mar 2021 17:05:36 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1616861136;
-        bh=QPLsMrmELyZRDmLYX2w/l2qB+1PgXZX0xEoCvX+7rAI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ubbkyCUxq+dbxTxzPZutEONWDIfQy/30EdpvM+WbbyOjAPZQu94hbgxi+SOJYbEkn
-         fMAaHv+evBuvnddCXj+HTQlX2O7d4caQ0CXCVdMG0OOH+6TxIBVynAlse95+1V+nVl
-         kO59XJZXU20/CJdDsAjsklhei5bILbg4hZaqTJN8=
-Date:   Sat, 27 Mar 2021 17:05:35 +0100
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v5 2/7] pwm: pca9685: Support hardware readout
-Message-ID: <YF9Xz0znW8cFfTpE@workstation.tuxnet>
-References: <20201216125320.5277-1-clemens.gruber@pqgruber.com>
- <20201216125320.5277-2-clemens.gruber@pqgruber.com>
- <CAGngYiWkKZGkQ4TTTy8bQYvnGBK45V0A0JCe_+M5V+vuVU+zkQ@mail.gmail.com>
- <X9uYqGboZg5DuEtf@workstation.tuxnet>
- <20210111203532.m3yvq6e5bcpjs7mc@pengutronix.de>
- <CAGngYiW=KhCOZX3tPMFykXzpWLpj3qusN2OXVPSfHLRcyts+wA@mail.gmail.com>
- <YBQ4c2cYYPDMjkeH@workstation.tuxnet>
- <CAGngYiWd0u=+DPhvK+8v9FT8Y1Evn1brWRheMNDXWFVVL-wNFw@mail.gmail.com>
- <YBRyG0vv3gRzygSB@workstation.tuxnet>
- <YFhhGpiHDELxIo9V@orome.fritz.box>
+        with ESMTP id S230176AbhC0VYf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 27 Mar 2021 17:24:35 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B5AC0613B1
+        for <linux-pwm@vger.kernel.org>; Sat, 27 Mar 2021 14:24:35 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lQGQ5-0002Qo-BX; Sat, 27 Mar 2021 22:24:33 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lQGQ3-0005m8-CA; Sat, 27 Mar 2021 22:24:31 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     Vladimir Zapolskiy <vz@mleia.com>, linux-pwm@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: [PATCH] pwm: lpc18xx-sct: Free resources only after pwmchip_remove()
+Date:   Sat, 27 Mar 2021 22:24:28 +0100
+Message-Id: <20210327212428.136684-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YFhhGpiHDELxIo9V@orome.fritz.box>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Thierry,
+Before pwmchip_remove() returns the PWM is expected to be functional. So
+remove the pwmchip before disabling the clock.
 
-On Mon, Mar 22, 2021 at 10:19:22AM +0100, Thierry Reding wrote:
-> On Fri, Jan 29, 2021 at 09:37:47PM +0100, Clemens Gruber wrote:
-> > Hi Sven,
-> > 
-> > On Fri, Jan 29, 2021 at 01:05:14PM -0500, Sven Van Asbroeck wrote:
-> > > Hi Clemens,
-> > > 
-> > > On Fri, Jan 29, 2021 at 11:31 AM Clemens Gruber
-> > > <clemens.gruber@pqgruber.com> wrote:
-> > > >
-> > > > Ok, so you suggest we extend our get_state logic to deal with cases
-> > > > like the following:
-> > > 
-> > > Kind of. We can't control how other actors (bootloaders etc) program the
-> > > chip. As far as I know, there are many, many different register settings that
-> > > result in the same physical chip outputs. So if .probe() wants to preserve the
-> > > existing chip settings, .get_state() has to be able to deal with every possible
-> > > setting. Even invalid ones.
-> > 
-> > Is the driver really responsible for bootloaders that program the chip
-> > with invalid values?
-> > The chip comes out of PoR with sane default values. If the bootloader of
-> > a user messes them up, isn't that a bootloader problem instead of a
-> > Linux kernel driver problem?
-> 
-> It is ultimately a problem of the bootloader and where possible the
-> bootloader should be fixed. However, fixing bootloaders sometimes isn't
-> possible, or impractical, so the kernel has to be able to deal with
-> hardware that's been badly programmed by the bootloader. Within reason,
-> of course. Sometimes this can't be done in any other way than forcing a
-> hard reset of the chip, but it should always be a last resort.
-> 
-> > > In addition, .apply() cannot make any assumptions as to which bits are
-> > > already set/cleared on the chip. Including preserved, invalid settings.
-> > > 
-> > > This might get quite complex.
-> > > 
-> > > However if we reset the chip in .probe() to a known state (a normalized state,
-> > > in the mathematical sense), then both .get_state() and .apply() become
-> > > much simpler. because they only need to deal with known, normalized states.
-> > 
-> > Yes, I agree. This would however make it impossible to do a flicker-free
-> > transition from bootloader to kernel, but that's not really a usecase I
-> > have so I can live without it.
-> > 
-> > Another point in favor of resetting is that the driver already does it.
-> > Removing the reset of the OFF register may break some boards who rely on
-> > that behaviour.
-> > My version only extended the reset to include the ON register.
-> > 
-> > > 
-> > > In short, it's a tradeoff between code complexity, and user friendliness/
-> > > features.
-> > > 
-> > > Sven
-> > 
-> > Thierry, Uwe, what's your take on this?
-> > 
-> > Thierry: Would you accept it if we continue to reset the registers in
-> > .probe?
-> 
-> Yes, I think it's fine to continue to reset the registers since that's
-> basically what the driver already does. It'd be great if you could
-> follow up with a patch that removes the reset and leaves the hardware in
-> whatever state the bootloader has set up. Then we can take that patch
-> for a ride and see if there are any complains about it breaking. If
-> there are we can always try to fix them, but as a last resort we can
-> also revert, which then may be something we have to live with. But I
-> think we should at least try to make this consistent with how other
-> drivers do this so that people don't stumble over this particular
-> driver's behaviour.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/pwm/pwm-lpc18xx-sct.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thanks for your input!
+diff --git a/drivers/pwm/pwm-lpc18xx-sct.c b/drivers/pwm/pwm-lpc18xx-sct.c
+index 3f8e54ec28c6..b643ac61a2e7 100644
+--- a/drivers/pwm/pwm-lpc18xx-sct.c
++++ b/drivers/pwm/pwm-lpc18xx-sct.c
+@@ -441,13 +441,15 @@ static int lpc18xx_pwm_remove(struct platform_device *pdev)
+ 	struct lpc18xx_pwm_chip *lpc18xx_pwm = platform_get_drvdata(pdev);
+ 	u32 val;
+ 
++	pwmchip_remove(&lpc18xx_pwm->chip);
++
+ 	val = lpc18xx_pwm_readl(lpc18xx_pwm, LPC18XX_PWM_CTRL);
+ 	lpc18xx_pwm_writel(lpc18xx_pwm, LPC18XX_PWM_CTRL,
+ 			   val | LPC18XX_PWM_CTRL_HALT);
+ 
+ 	clk_disable_unprepare(lpc18xx_pwm->pwm_clk);
+ 
+-	return pwmchip_remove(&lpc18xx_pwm->chip);
++	return 0;
+ }
+ 
+ static struct platform_driver lpc18xx_pwm_driver = {
+-- 
+2.30.2
 
-Sounds good to me. I am currently preparing a new revision of the
-series. As soon as that is reviewed and good to go, I will look into
-removing the resets.
-
-Clemens
