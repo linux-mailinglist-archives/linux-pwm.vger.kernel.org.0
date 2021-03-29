@@ -2,37 +2,34 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 587B334D0B9
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Mar 2021 15:00:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D27334D0BF
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Mar 2021 15:01:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231342AbhC2M7e (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 29 Mar 2021 08:59:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54034 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231340AbhC2M7W (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Mar 2021 08:59:22 -0400
-Received: from mail.pqgruber.com (mail.pqgruber.com [IPv6:2a05:d014:575:f70b:4f2c:8f1d:40c4:b13e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5051EC061574;
-        Mon, 29 Mar 2021 05:59:22 -0700 (PDT)
+        id S231599AbhC2NAG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 29 Mar 2021 09:00:06 -0400
+Received: from mail.pqgruber.com ([52.59.78.55]:55454 "EHLO mail.pqgruber.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231593AbhC2M7j (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 29 Mar 2021 08:59:39 -0400
 Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id E409EC72850;
-        Mon, 29 Mar 2021 14:59:20 +0200 (CEST)
+        by mail.pqgruber.com (Postfix) with ESMTPSA id 90DC6C72850;
+        Mon, 29 Mar 2021 14:59:37 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1617022761;
-        bh=a+6Tf/7N+yofFcME49R1IaiFgFnKW1GEScpwMJvXS8M=;
+        s=mail; t=1617022777;
+        bh=x7/rmoN1rvbHplc619xYQLnqT9dor1RAV1sG80FysJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ir84w4dHK/48fWdFRJ1XTui0M82tdGnt0xt6FwWI8lKy8/FvyCNCl0VaT11JxoveE
-         Fz8FcJfF9IuHyx02zOYqQURWfMmzGsDPMEh4xqKOKldb13kA2iYQaMfe6BMLKzCytE
-         jijCR2Fq/SDslKwxELoWJl2Ur8qzM0ttbbu/pEEI=
+        b=eb+HLKCqyrNMQl6zbyaCqWZgzGogUDQwHLBKrfqEYSR6cmLkFQAVKMhrCA0xsJJr2
+         qcYD6rKE7Ub081N8GVzZpXUEjRg+QQVndziUA/NjWp+5fQE1VZUYpbsxwIMBNJ2MC8
+         knGmqUnpKFvn4fyFgjLVuLfTnQ0flXcoIpLGFSao=
 From:   Clemens Gruber <clemens.gruber@pqgruber.com>
 To:     linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Sven Van Asbroeck <TheSven73@gmail.com>,
         u.kleine-koenig@pengutronix.de, linux-kernel@vger.kernel.org,
         Clemens Gruber <clemens.gruber@pqgruber.com>
-Subject: [PATCH v6 6/7] pwm: pca9685: Restrict period change for prescaler users
-Date:   Mon, 29 Mar 2021 14:57:06 +0200
-Message-Id: <20210329125707.182732-6-clemens.gruber@pqgruber.com>
+Subject: [PATCH v6 7/7] pwm: pca9685: Add error messages for failed regmap calls
+Date:   Mon, 29 Mar 2021 14:57:07 +0200
+Message-Id: <20210329125707.182732-7-clemens.gruber@pqgruber.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210329125707.182732-1-clemens.gruber@pqgruber.com>
 References: <20210329125707.182732-1-clemens.gruber@pqgruber.com>
@@ -42,171 +39,202 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Previously, the last used PWM channel could change the global prescale
-setting, even if other channels are already in use.
-
-Fix it by only allowing the first user of the prescaler to change the
-global chip-wide prescale setting. If there is more than one channel in
-use, the prescale settings resulting from the chosen periods must match.
-
-PWMs that are disabled or have a duty cycle of 0% or 100% are not
-considered to be using the prescaler as they have the full OFF or full
-ON bits set. This also applies to channels used as GPIOs.
+Regmap operations can fail if the underlying subsystem is not working
+properly (e.g. hogged I2C bus, etc.)
+As this is useful information for the user, print an error message if it
+happens.
+Let probe fail if the first regmap_read or the first regmap_write fails.
 
 Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
 ---
-Changes since v5:
-- Reused the existing lock
-- Improved readability of can_change function
-- Moved locking out of apply function
-- Improved error messages
-
-drivers/pwm/pwm-pca9685.c | 63 ++++++++++++++++++++++++++++++++-------
- 1 file changed, 53 insertions(+), 10 deletions(-)
+ drivers/pwm/pwm-pca9685.c | 83 ++++++++++++++++++++++++++++-----------
+ 1 file changed, 59 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-index a61eafdd2335..418d3c5b2fa2 100644
+index 418d3c5b2fa2..065141b87fc3 100644
 --- a/drivers/pwm/pwm-pca9685.c
 +++ b/drivers/pwm/pwm-pca9685.c
-@@ -23,11 +23,11 @@
- #include <linux/bitmap.h>
- 
- /*
-- * Because the PCA9685 has only one prescaler per chip, changing the period of
-- * one channel affects the period of all 16 PWM outputs!
-- * However, the ratio between each configured duty cycle and the chip-wide
-- * period remains constant, because the OFF time is set in proportion to the
-- * counter range.
-+ * Because the PCA9685 has only one prescaler per chip, only the first channel
-+ * that uses the prescaler is allowed to change the prescale register.
-+ * PWM channels requested afterwards must use a period that results in the same
-+ * prescale setting as the one set by the first requested channel, unless they
-+ * use duty cycles of 0% or 100% (prescaler not used for full OFF/ON).
-  */
- 
- #define PCA9685_MODE1		0x00
-@@ -79,8 +79,9 @@ struct pca9685 {
- 	struct pwm_chip chip;
- 	struct regmap *regmap;
- 	bool staggered_outputs;
--#if IS_ENABLED(CONFIG_GPIOLIB)
- 	struct mutex lock;
-+	DECLARE_BITMAP(prescaler_users, PCA9685_MAXCHAN + 1);
-+#if IS_ENABLED(CONFIG_GPIOLIB)
- 	struct gpio_chip gpio;
- 	DECLARE_BITMAP(pwms_inuse, PCA9685_MAXCHAN + 1);
- #endif
-@@ -91,6 +92,22 @@ static inline struct pca9685 *to_pca(struct pwm_chip *chip)
- 	return container_of(chip, struct pca9685, chip);
+@@ -108,6 +108,30 @@ static bool pca9685_prescaler_can_change(struct pca9685 *pca, int channel)
+ 	return test_bit(channel, pca->prescaler_users);
  }
  
-+/* This function is supposed to be called with the lock mutex held */
-+static bool pca9685_prescaler_can_change(struct pca9685 *pca, int channel)
++static int pca9685_read_reg(struct pca9685 *pca, unsigned int reg, unsigned int *val)
 +{
-+	/* Prescaler not in use: Change allowed */
-+	if (bitmap_empty(pca->prescaler_users, PCA9685_MAXCHAN + 1))
-+		return true;
-+	/* More than one PWM using the prescaler: Change not allowed */
-+	if (bitmap_weight(pca->prescaler_users, PCA9685_MAXCHAN + 1) > 1)
-+		return false;
-+	/*
-+	 * Only one PWM using the prescaler: Change allowed if the PWM about to
-+	 * be changed is the one using the prescaler
-+	 */
-+	return test_bit(channel, pca->prescaler_users);
++	struct device *dev = pca->chip.dev;
++	int err;
++
++	err = regmap_read(pca->regmap, reg, val);
++	if (err != 0)
++		dev_err(dev, "regmap_read of register 0x%x failed: %d\n", reg, err);
++
++	return err;
++}
++
++static int pca9685_write_reg(struct pca9685 *pca, unsigned int reg, unsigned int val)
++{
++	struct device *dev = pca->chip.dev;
++	int err;
++
++	err = regmap_write(pca->regmap, reg, val);
++	if (err != 0)
++		dev_err(dev, "regmap_write to register 0x%x failed: %d\n", reg, err);
++
++	return err;
 +}
 +
  /* Helper function to set the duty cycle ratio to duty/4096 (e.g. duty=2048 -> 50%) */
  static void pca9685_pwm_set_duty(struct pca9685 *pca, int channel, unsigned int duty)
  {
-@@ -263,8 +280,6 @@ static int pca9685_pwm_gpio_probe(struct pca9685 *pca)
- {
- 	struct device *dev = pca->chip.dev;
+@@ -115,12 +139,12 @@ static void pca9685_pwm_set_duty(struct pca9685 *pca, int channel, unsigned int
  
--	mutex_init(&pca->lock);
--
- 	pca->gpio.label = dev_name(dev);
- 	pca->gpio.parent = dev;
- 	pca->gpio.request = pca9685_pwm_gpio_request;
-@@ -308,8 +323,8 @@ static void pca9685_set_sleep_mode(struct pca9685 *pca, bool enable)
+ 	if (duty == 0) {
+ 		/* Set the full OFF bit, which has the highest precedence */
+-		regmap_write(pca->regmap, REG_OFF_H(channel), LED_FULL);
++		pca9685_write_reg(pca, REG_OFF_H(channel), LED_FULL);
+ 		return;
+ 	} else if (duty >= PCA9685_COUNTER_RANGE) {
+ 		/* Set the full ON bit and clear the full OFF bit */
+-		regmap_write(pca->regmap, REG_ON_H(channel), LED_FULL);
+-		regmap_write(pca->regmap, REG_OFF_H(channel), 0);
++		pca9685_write_reg(pca, REG_ON_H(channel), LED_FULL);
++		pca9685_write_reg(pca, REG_OFF_H(channel), 0);
+ 		return;
  	}
+ 
+@@ -137,11 +161,11 @@ static void pca9685_pwm_set_duty(struct pca9685 *pca, int channel, unsigned int
+ 	off = (on + duty) % PCA9685_COUNTER_RANGE;
+ 
+ 	/* Set ON time (clears full ON bit) */
+-	regmap_write(pca->regmap, REG_ON_L(channel), on & 0xff);
+-	regmap_write(pca->regmap, REG_ON_H(channel), (on >> 8) & 0xf);
++	pca9685_write_reg(pca, REG_ON_L(channel), on & 0xff);
++	pca9685_write_reg(pca, REG_ON_H(channel), (on >> 8) & 0xf);
+ 	/* Set OFF time (clears full OFF bit) */
+-	regmap_write(pca->regmap, REG_OFF_L(channel), off & 0xff);
+-	regmap_write(pca->regmap, REG_OFF_H(channel), (off >> 8) & 0xf);
++	pca9685_write_reg(pca, REG_OFF_L(channel), off & 0xff);
++	pca9685_write_reg(pca, REG_OFF_H(channel), (off >> 8) & 0xf);
  }
  
--static int pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
--			     const struct pwm_state *state)
-+static int __pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			       const struct pwm_state *state)
- {
- 	struct pca9685 *pca = to_pca(chip);
- 	unsigned long long duty, prescale;
-@@ -330,14 +345,22 @@ static int pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	if (!state->enabled || duty < 1) {
- 		pca9685_pwm_set_duty(pca, pwm->hwpwm, 0);
-+		clear_bit(pwm->hwpwm, pca->prescaler_users);
- 		return 0;
- 	} else if (duty == PCA9685_COUNTER_RANGE) {
- 		pca9685_pwm_set_duty(pca, pwm->hwpwm, duty);
-+		clear_bit(pwm->hwpwm, pca->prescaler_users);
+ static unsigned int pca9685_pwm_get_duty(struct pca9685 *pca, int channel)
+@@ -153,26 +177,26 @@ static unsigned int pca9685_pwm_get_duty(struct pca9685 *pca, int channel)
  		return 0;
  	}
  
- 	regmap_read(pca->regmap, PCA9685_PRESCALE, &val);
+-	regmap_read(pca->regmap, LED_N_OFF_H(channel), &off);
++	pca9685_read_reg(pca, LED_N_OFF_H(channel), &off);
+ 	if (off & LED_FULL) {
+ 		/* Full OFF bit is set */
+ 		return 0;
+ 	}
+ 
+-	regmap_read(pca->regmap, LED_N_ON_H(channel), &on);
++	pca9685_read_reg(pca, LED_N_ON_H(channel), &on);
+ 	if (on & LED_FULL) {
+ 		/* Full ON bit is set */
+ 		return PCA9685_COUNTER_RANGE;
+ 	}
+ 
+-	regmap_read(pca->regmap, LED_N_OFF_L(channel), &val);
++	pca9685_read_reg(pca, LED_N_OFF_L(channel), &val);
+ 	off = ((off & 0xf) << 8) | (val & 0xff);
+ 	if (!pca->staggered_outputs)
+ 		return off;
+ 
+ 	/* Read ON register to calculate duty cycle of staggered output */
+ 	val = 0;
+-	regmap_read(pca->regmap, LED_N_ON_L(channel), &val);
++	pca9685_read_reg(pca, LED_N_ON_L(channel), &val);
+ 	on = ((on & 0xf) << 8) | (val & 0xff);
+ 	return (off - on) & (PCA9685_COUNTER_RANGE - 1);
+ }
+@@ -315,8 +339,15 @@ static inline int pca9685_pwm_gpio_probe(struct pca9685 *pca)
+ 
+ static void pca9685_set_sleep_mode(struct pca9685 *pca, bool enable)
+ {
+-	regmap_update_bits(pca->regmap, PCA9685_MODE1,
+-			   MODE1_SLEEP, enable ? MODE1_SLEEP : 0);
++	struct device *dev = pca->chip.dev;
++	int err = regmap_update_bits(pca->regmap, PCA9685_MODE1,
++				     MODE1_SLEEP, enable ? MODE1_SLEEP : 0);
++	if (err != 0) {
++		dev_err(dev, "regmap_update_bits of register 0x%x failed: %d\n",
++			PCA9685_MODE1, err);
++		return;
++	}
++
+ 	if (!enable) {
+ 		/* Wait 500us for the oscillator to be back up */
+ 		udelay(500);
+@@ -353,7 +384,7 @@ static int __pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		return 0;
+ 	}
+ 
+-	regmap_read(pca->regmap, PCA9685_PRESCALE, &val);
++	pca9685_read_reg(pca, PCA9685_PRESCALE, &val);
  	if (prescale != val) {
-+		if (!pca9685_prescaler_can_change(pca, pwm->hwpwm)) {
-+			dev_err(chip->dev,
-+				"pwm not changed: prescaler in use with different setting!\n");
-+			return -EBUSY;
-+		}
-+
- 		/*
- 		 * Putting the chip briefly into SLEEP mode
- 		 * at this point won't interfere with the
-@@ -355,9 +378,23 @@ static int pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	}
+ 		if (!pca9685_prescaler_can_change(pca, pwm->hwpwm)) {
+ 			dev_err(chip->dev,
+@@ -371,7 +402,7 @@ static int __pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		pca9685_set_sleep_mode(pca, true);
  
- 	pca9685_pwm_set_duty(pca, pwm->hwpwm, duty);
-+	set_bit(pwm->hwpwm, pca->prescaler_users);
- 	return 0;
- }
+ 		/* Change the chip-wide output frequency */
+-		regmap_write(pca->regmap, PCA9685_PRESCALE, (int)prescale);
++		pca9685_write_reg(pca, PCA9685_PRESCALE, (int)prescale);
  
-+static int pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			     const struct pwm_state *state)
-+{
-+	struct pca9685 *pca = to_pca(chip);
-+	int ret;
-+
-+	mutex_lock(&pca->lock);
-+	ret = __pca9685_pwm_apply(chip, pwm, state);
-+	mutex_unlock(&pca->lock);
-+
-+	return ret;
-+}
-+
- static void pca9685_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 				  struct pwm_state *state)
- {
-@@ -413,7 +450,11 @@ static void pca9685_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- {
- 	struct pca9685 *pca = to_pca(chip);
+ 		/* Wake the chip up */
+ 		pca9685_set_sleep_mode(pca, false);
+@@ -403,7 +434,7 @@ static void pca9685_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	unsigned int val = 0;
  
-+	mutex_lock(&pca->lock);
-+	clear_bit(pwm->hwpwm, pca->prescaler_users);
- 	pca9685_pwm_set_duty(pca, pwm->hwpwm, 0);
-+	mutex_unlock(&pca->lock);
-+
- 	pm_runtime_put(chip->dev);
- 	pca9685_pwm_clear_inuse(pca, pwm->hwpwm);
- }
-@@ -454,6 +495,8 @@ static int pca9685_pwm_probe(struct i2c_client *client,
+ 	/* Calculate (chip-wide) period from prescale value */
+-	regmap_read(pca->regmap, PCA9685_PRESCALE, &val);
++	pca9685_read_reg(pca, PCA9685_PRESCALE, &val);
+ 	state->period = (PCA9685_COUNTER_RANGE * 1000 / PCA9685_OSC_CLOCK_MHZ) *
+ 			(val + 1);
  
- 	i2c_set_clientdata(client, pca);
+@@ -497,7 +528,9 @@ static int pca9685_pwm_probe(struct i2c_client *client,
  
-+	mutex_init(&pca->lock);
-+
- 	regmap_read(pca->regmap, PCA9685_MODE2, &reg);
+ 	mutex_init(&pca->lock);
+ 
+-	regmap_read(pca->regmap, PCA9685_MODE2, &reg);
++	ret = pca9685_read_reg(pca, PCA9685_MODE2, &reg);
++	if (ret != 0)
++		return ret;
  
  	if (device_property_read_bool(&client->dev, "invert"))
+ 		reg |= MODE2_INVRT;
+@@ -509,21 +542,23 @@ static int pca9685_pwm_probe(struct i2c_client *client,
+ 	else
+ 		reg |= MODE2_OUTDRV;
+ 
+-	regmap_write(pca->regmap, PCA9685_MODE2, reg);
++	ret = pca9685_write_reg(pca, PCA9685_MODE2, reg);
++	if (ret != 0)
++		return ret;
+ 
+ 	pca->staggered_outputs = device_property_read_bool(
+ 		&client->dev, "nxp,staggered-outputs");
+ 
+ 	/* Disable all LED ALLCALL and SUBx addresses to avoid bus collisions */
+-	regmap_read(pca->regmap, PCA9685_MODE1, &reg);
++	pca9685_read_reg(pca, PCA9685_MODE1, &reg);
+ 	reg &= ~(MODE1_ALLCALL | MODE1_SUB1 | MODE1_SUB2 | MODE1_SUB3);
+-	regmap_write(pca->regmap, PCA9685_MODE1, reg);
++	pca9685_write_reg(pca, PCA9685_MODE1, reg);
+ 
+ 	/* Reset OFF/ON registers to POR default */
+-	regmap_write(pca->regmap, PCA9685_ALL_LED_OFF_L, LED_FULL);
+-	regmap_write(pca->regmap, PCA9685_ALL_LED_OFF_H, LED_FULL);
+-	regmap_write(pca->regmap, PCA9685_ALL_LED_ON_L, 0);
+-	regmap_write(pca->regmap, PCA9685_ALL_LED_ON_H, 0);
++	pca9685_write_reg(pca, PCA9685_ALL_LED_OFF_L, LED_FULL);
++	pca9685_write_reg(pca, PCA9685_ALL_LED_OFF_H, LED_FULL);
++	pca9685_write_reg(pca, PCA9685_ALL_LED_ON_L, 0);
++	pca9685_write_reg(pca, PCA9685_ALL_LED_ON_H, 0);
+ 
+ 	pca->chip.ops = &pca9685_pwm_ops;
+ 	/* Add an extra channel for ALL_LED */
 -- 
 2.31.1
 
