@@ -2,85 +2,159 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A25F1352047
-	for <lists+linux-pwm@lfdr.de>; Thu,  1 Apr 2021 22:03:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66CE5352130
+	for <lists+linux-pwm@lfdr.de>; Thu,  1 Apr 2021 22:58:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235555AbhDAUDT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 1 Apr 2021 16:03:19 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45358 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235545AbhDAUDQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 1 Apr 2021 16:03:16 -0400
-Received: from mail-ej1-f71.google.com ([209.85.218.71])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <krzysztof.kozlowski@canonical.com>)
-        id 1lS1Ja-0003ZS-Lx
-        for linux-pwm@vger.kernel.org; Thu, 01 Apr 2021 17:41:06 +0000
-Received: by mail-ej1-f71.google.com with SMTP id r26so2531721eja.22
-        for <linux-pwm@vger.kernel.org>; Thu, 01 Apr 2021 10:41:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=10LZoBfcnsxrENoJnS7HaRBaD24q40UPMnwxVlRqiBY=;
-        b=ryNWW3K2toRMizd89uNJE9T/z5aryuSlUYaSfKgU+xaxvto+EFThuvVzSuJLQFptU6
-         ktnOimAquOMtUNJRmgMUu0ZH0ZXLpE291bpVG56yPWu5u+Z72T2TaNDcEge8uw/STGSV
-         TH4SVDpGlwDU0ePbiPepuNULdtPLO55DyOWPf0e7mX25wTim6o5sFOiw2S4u179zbp+U
-         wluXD9S6WJdAF5wvZSLaQKCpBtGRdO4LdrMXW0FEDDw1I6uDqzZYZ/FSAdPOLzAPjnCe
-         ah+G6e9MKK3VM8M9grAt+G30TUaF2qYU6yvc3+cgGcpLW6mmPJgaNoRPWOrxmzBupJxW
-         h09w==
-X-Gm-Message-State: AOAM530voM0JjVYMgoG+CdXAjZZXELXpVN2zfAms3j4CgyKBBqb7T+U+
-        eTc/1HRcLb2nzRyPrqgj9JPQe7XkFMlsJBb0kPLZN2Ya58z/OLjuhkXazIzoLrB7w2Qq/NjiyGz
-        Izlx146VZHlmKaTR8gj3H4LlzAvail/r7ptPI0w==
-X-Received: by 2002:aa7:cd54:: with SMTP id v20mr11340662edw.80.1617298866427;
-        Thu, 01 Apr 2021 10:41:06 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxp7X80T8hJtuVkwbrMRfiGRnA/IaN4S4nH38Uf+y6pmiIEXFsck1CHFGqH5BTWdVTb8A6Alw==
-X-Received: by 2002:aa7:cd54:: with SMTP id v20mr11340642edw.80.1617298866265;
-        Thu, 01 Apr 2021 10:41:06 -0700 (PDT)
-Received: from localhost.localdomain (xdsl-188-155-192-147.adslplus.ch. [188.155.192.147])
-        by smtp.gmail.com with ESMTPSA id c17sm4398766edw.32.2021.04.01.10.41.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Apr 2021 10:41:05 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, kernel@pengutronix.de,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] ARM: s3c/rx1950: Use pwm_get() in favour of pwm_request()
-Date:   Thu,  1 Apr 2021 19:41:04 +0200
-Message-Id: <161729885474.9397.10566581741781836932.b4-ty@canonical.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210326090641.122436-1-u.kleine-koenig@pengutronix.de>
-References: <20210326090641.122436-1-u.kleine-koenig@pengutronix.de>
+        id S233744AbhDAU62 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 1 Apr 2021 16:58:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233710AbhDAU62 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 1 Apr 2021 16:58:28 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DE70C0613E6
+        for <linux-pwm@vger.kernel.org>; Thu,  1 Apr 2021 13:58:28 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lS4OV-0003bP-Sw; Thu, 01 Apr 2021 22:58:23 +0200
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lS4OV-0005nC-5i; Thu, 01 Apr 2021 22:58:23 +0200
+Date:   Thu, 1 Apr 2021 22:58:19 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Clemens Gruber <clemens.gruber@pqgruber.com>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 4/7] pwm: pca9685: Support staggered output ON times
+Message-ID: <20210401205819.soloiozcrgq4eool@pengutronix.de>
+References: <20210329125707.182732-1-clemens.gruber@pqgruber.com>
+ <20210329125707.182732-4-clemens.gruber@pqgruber.com>
+ <20210329170357.par7c3izvtmtovlj@pengutronix.de>
+ <YGILdjZBCc2vVlRd@workstation.tuxnet>
+ <20210329180206.rejl32uajslpvbgi@pengutronix.de>
+ <YGRqZsi4WApZcwIT@workstation.tuxnet>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="n7fwc2tuuwjeiysf"
+Content-Disposition: inline
+In-Reply-To: <YGRqZsi4WApZcwIT@workstation.tuxnet>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, 26 Mar 2021 10:06:41 +0100, Uwe Kleine-König wrote:
-> pwm_request() is deprecated because (among others) it depends on a global
-> numbering of PWM devices. So register a pwm_lookup to pick the right PWM
-> device (identified by provider and its local id) and use pwm_get().
-> 
-> Before this patch the PWM #1 was used. This is provided by the
-> samsung-pwm device which is the only PWM provider on this machine. The
-> local offset is 1, see also commit c107fe904a10 ("ARM: S3C24XX: Use PWM
-> lookup table for mach-rx1950") with a similar conversion for PWM #0.
-> 
-> [...]
 
-Applied, thanks!
+--n7fwc2tuuwjeiysf
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1/1] ARM: s3c/rx1950: Use pwm_get() in favour of pwm_request()
-      commit: 19f5027e0394d2f3e1766200b6bbde660f0b7848
+Hello Clemens,
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+On Wed, Mar 31, 2021 at 02:26:14PM +0200, Clemens Gruber wrote:
+> On Mon, Mar 29, 2021 at 08:02:06PM +0200, Uwe Kleine-K=F6nig wrote:
+> > On Mon, Mar 29, 2021 at 07:16:38PM +0200, Clemens Gruber wrote:
+> > > On Mon, Mar 29, 2021 at 07:03:57PM +0200, Uwe Kleine-K=F6nig wrote:
+> > > > On Mon, Mar 29, 2021 at 02:57:04PM +0200, Clemens Gruber wrote:
+> > > > > The PCA9685 supports staggered LED output ON times to minimize cu=
+rrent
+> > > > > surges and reduce EMI.
+> > > > > When this new option is enabled, the ON times of each channel are
+> > > > > delayed by channel number x counter range / 16, which avoids asse=
+rting
+> > > > > all enabled outputs at the same counter value while still maintai=
+ning
+> > > > > the configured duty cycle of each output.
+> > > > >=20
+> > > > > Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+> > > >=20
+> > > > Is there a reason to not want this staggered output? If it never hu=
+rts I
+> > > > suggest to always stagger and drop the dt property.
+> > >=20
+> > > There might be applications where you want multiple outputs to assert=
+ at
+> > > the same time / to be synchronized.
+> > > With staggered outputs mode always enabled, this would no longer be
+> > > possible as they are spread out according to their channel number.
+> > >=20
+> > > Not sure how often that usecase is required, but just enforcing the
+> > > staggered mode by default sounds risky to me.
+> >=20
+> > There is no such guarantee in the PWM framework, so I don't think we
+> > need to fear breaking setups. Thierry?
+>=20
+> Still, someone might rely on it? But let's wait for Thierry's opinion.
+
+Someone might rely on the pca9685 driver being as racy as a driver with
+legacy bindings usually is. Should this be the reason to drop this whole
+series?
+
+> > One reason we might not want staggering is if we have a consumer who
+> > cares about config transitions. (This however is moot it the hardware
+> > doesn't provide sane transitions even without staggering.)
+> >=20
+> > Did I already ask about races in this driver? I assume there is a
+> > free running counter and the ON and OFF registers just define where in
+> > the period the transitions happen, right? Given that changing ON and OFF
+> > needs two register writes probably all kind of strange things can
+> > happen, right? (Example thought: for simplicity's sake I assume ON is
+> > always 0. Then if you want to change from OFF =3D 0xaaa to OFF =3D 0xcc=
+c we
+> > might see a period with 0xacc. Depending on how the hardware works we
+> > might even see 4 edges in a single period then.)
+>=20
+> Yes, there is a free running counter from 0 to 4095.
+> And it is probably true, that there can be short intermediate states
+> with our two register writes.
+>=20
+> There is a separate mode "Update on ACK" (MODE2 register, bit 3 "OCH"),
+> which is 0 by default (Outputs change on STOP command) but could be set
+> to 1 (Outputs change on ACK):
+> "Update on ACK requires all 4 PWM channel registers to be loaded before
+> outputs will change on the last ACK."
+
+This is about the ACK and STOP in the i2c communication, right? I fail
+to understand the relevance of this difference. I guess I have to read
+the manual myself.
+=20
+> The chip datasheet also states:
+> "Because the loading of the LEDn_ON and LEDn_OFF registers is via the
+> I2C-bus, and asynchronous to the internal oscillator, we want to ensure
+> that we do not see any visual artifacts of changing the ON and OFF
+> values. This is achieved by updating the changes at the end of the LOW
+> cycle."
+
+So we're only out of luck if the first register write happens before and
+the second after the end of the LOW cycle, aren't we?
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--n7fwc2tuuwjeiysf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmBmM+gACgkQwfwUeK3K
+7AnrnAf+PVqO/phKEkjjclL7NYX3i7Sm9fZztTdeMkcLrsnLRFF5qwQXZSraTmST
+3WWiIqCLUmgCh/ksNhqyP6Ka1tQe0oEnNodSjMVKCK6773byXUevAz4xF/1xXFfj
+Lcef2ZfuztMUgRAKOKCDqMDN/KJNsYZrYWtcJND2GwIGSCIIbnZdkVVPZ2rq2Ewh
+lf5HuxSDzn28um1H+4wD4MzXtWcBPV72UFgPwitUC0xDxwuZARQ7HmDJorCp8r7C
+swsBJ8V0fVab2vFyL0jch+IHn3E8MS6VFj442JMk9kNwSWjscaJFVJ+XcP0gvwFk
+/pQEleVfH97fDbezvKksfAfh5xTi3w==
+=scZq
+-----END PGP SIGNATURE-----
+
+--n7fwc2tuuwjeiysf--
