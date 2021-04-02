@@ -2,46 +2,42 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E28935303B
-	for <lists+linux-pwm@lfdr.de>; Fri,  2 Apr 2021 22:23:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFF97353049
+	for <lists+linux-pwm@lfdr.de>; Fri,  2 Apr 2021 22:27:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236590AbhDBUX1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 2 Apr 2021 16:23:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38194 "EHLO
+        id S231406AbhDBU1v (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 2 Apr 2021 16:27:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231462AbhDBUXY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 2 Apr 2021 16:23:24 -0400
+        with ESMTP id S231149AbhDBU1v (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 2 Apr 2021 16:27:51 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB0CDC0613E6
-        for <linux-pwm@vger.kernel.org>; Fri,  2 Apr 2021 13:23:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C31C0613E6
+        for <linux-pwm@vger.kernel.org>; Fri,  2 Apr 2021 13:27:49 -0700 (PDT)
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lSQK8-0005B5-GB; Fri, 02 Apr 2021 22:23:20 +0200
+        id 1lSQOR-0005Z8-GH; Fri, 02 Apr 2021 22:27:47 +0200
 Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lSQK8-0002VA-6b; Fri, 02 Apr 2021 22:23:20 +0200
-Date:   Fri, 2 Apr 2021 22:23:17 +0200
+        id 1lSQOQ-0002dg-BM; Fri, 02 Apr 2021 22:27:46 +0200
+Date:   Fri, 2 Apr 2021 22:27:43 +0200
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Clemens Gruber <clemens.gruber@pqgruber.com>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 4/7] pwm: pca9685: Support staggered output ON times
-Message-ID: <20210402202317.vq4xsp4yfpmvrxab@pengutronix.de>
-References: <20210329125707.182732-1-clemens.gruber@pqgruber.com>
- <20210329125707.182732-4-clemens.gruber@pqgruber.com>
- <20210329170357.par7c3izvtmtovlj@pengutronix.de>
- <YGILdjZBCc2vVlRd@workstation.tuxnet>
- <20210329180206.rejl32uajslpvbgi@pengutronix.de>
- <YGRqZsi4WApZcwIT@workstation.tuxnet>
+To:     Claudiu.Beznea@microchip.com
+Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
+        linux-pwm@vger.kernel.org, alexandre.belloni@bootlin.com,
+        Ludovic.Desroches@microchip.com, Nicolas.Ferre@microchip.com,
+        kernel@pengutronix.de
+Subject: Re: [PATCH] pwm: atmel: Free resources only after pwmchip_remove()
+Message-ID: <20210402202743.hvx7dz3iraesfcbs@pengutronix.de>
+References: <20210324195635.75037-1-u.kleine-koenig@pengutronix.de>
+ <34080c7a-71d3-334c-498e-cb65dad9f817@microchip.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rimdad5gkaqhxbgo"
+        protocol="application/pgp-signature"; boundary="xlb6hwwprgvrxfrm"
 Content-Disposition: inline
-In-Reply-To: <YGRqZsi4WApZcwIT@workstation.tuxnet>
+In-Reply-To: <34080c7a-71d3-334c-498e-cb65dad9f817@microchip.com>
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -51,80 +47,37 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---rimdad5gkaqhxbgo
+--xlb6hwwprgvrxfrm
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 31, 2021 at 02:26:14PM +0200, Clemens Gruber wrote:
-> On Mon, Mar 29, 2021 at 08:02:06PM +0200, Uwe Kleine-K=F6nig wrote:
-> > On Mon, Mar 29, 2021 at 07:16:38PM +0200, Clemens Gruber wrote:
-> > > On Mon, Mar 29, 2021 at 07:03:57PM +0200, Uwe Kleine-K=F6nig wrote:
-> > > > On Mon, Mar 29, 2021 at 02:57:04PM +0200, Clemens Gruber wrote:
-> > > > > The PCA9685 supports staggered LED output ON times to minimize cu=
-rrent
-> > > > > surges and reduce EMI.
-> > > > > When this new option is enabled, the ON times of each channel are
-> > > > > delayed by channel number x counter range / 16, which avoids asse=
-rting
-> > > > > all enabled outputs at the same counter value while still maintai=
-ning
-> > > > > the configured duty cycle of each output.
-> > > > >=20
-> > > > > Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
-> > > >=20
-> > > > Is there a reason to not want this staggered output? If it never hu=
-rts I
-> > > > suggest to always stagger and drop the dt property.
-> > >=20
-> > > There might be applications where you want multiple outputs to assert=
- at
-> > > the same time / to be synchronized.
-> > > With staggered outputs mode always enabled, this would no longer be
-> > > possible as they are spread out according to their channel number.
-> > >=20
-> > > Not sure how often that usecase is required, but just enforcing the
-> > > staggered mode by default sounds risky to me.
+On Fri, Apr 02, 2021 at 10:55:14AM +0000, Claudiu.Beznea@microchip.com wrot=
+e:
+> Hi Uwe,
+>=20
+> On 24.03.2021 21:56, Uwe Kleine-K=F6nig wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know =
+the content is safe
 > >=20
-> > There is no such guarantee in the PWM framework, so I don't think we
-> > need to fear breaking setups. Thierry?
->=20
-> Still, someone might rely on it? But let's wait for Thierry's opinion.
->=20
+> > Before pwmchip_remove() returns the PWM is expected to be functional. So
+> > remove the pwmchip before disabling the clock.
 > >=20
-> > One reason we might not want staggering is if we have a consumer who
-> > cares about config transitions. (This however is moot it the hardware
-> > doesn't provide sane transitions even without staggering.)
-> >=20
-> > Did I already ask about races in this driver? I assume there is a
-> > free running counter and the ON and OFF registers just define where in
-> > the period the transitions happen, right? Given that changing ON and OFF
-> > needs two register writes probably all kind of strange things can
-> > happen, right? (Example thought: for simplicity's sake I assume ON is
-> > always 0. Then if you want to change from OFF =3D 0xaaa to OFF =3D 0xcc=
-c we
-> > might see a period with 0xacc. Depending on how the hardware works we
-> > might even see 4 edges in a single period then.)
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>> ---
 >=20
-> Yes, there is a free running counter from 0 to 4095.
-> And it is probably true, that there can be short intermediate states
-> with our two register writes.
->=20
-> There is a separate mode "Update on ACK" (MODE2 register, bit 3 "OCH"),
-> which is 0 by default (Outputs change on STOP command) but could be set
-> to 1 (Outputs change on ACK):
-> "Update on ACK requires all 4 PWM channel registers to be loaded before
-> outputs will change on the last ACK."
+> Does this need a fixes tag?
 
-After reading the manual I understood that at least a bit now.
+Hmm, that would be:
 
-The Output chang on STOP is only needed to synchronize two or more
-PCA9685 chips. Also with "Update on ACK" it is possible to prevent
-glitches when writing with the auto increment mode. Not sure what
-happens with the way it is implemented now, as it isn't described in
-manual when the registers are written in four separate transfers.
+Fixes: 32b16d46e415 ("pwm: atmel-pwm: Add Atmel PWM controller driver")
 
-I agree that addressing this in a separater patch is sensible.
+which is the commit that introduced the driver in 2013.
+
+> Other than this:
+> Ack-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+
+You might want to make this "Acked-by:" so that patchwork automatically
+picks this up.
 
 Best regards
 Uwe
@@ -133,19 +86,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---rimdad5gkaqhxbgo
+--xlb6hwwprgvrxfrm
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmBnfTIACgkQwfwUeK3K
-7AnILQf+K2zbUUb+LkcaQ+sDwIrqbZo8O1lSwQcbK5TCWtvx5SJDZVataE9llISA
-grwX637hFU8eh/7dZUiaRTlW/mmejOm7QfqGSUQLci+mYt0o4eDT8wJpHc1vDPGf
-rKlNz8Q231V/WOmXOxsPVRV6yFGOGRxje+cqXHBDHDVrq/OuWADLCsQz9wR3HY+Z
-crtPORzN0cqj3YhCzwewOEExG4wCyz2pLhCuQeShasVmFeC6yqy/6olSeGTxsOkm
-K3afDyn3RRAfRddxUy6hq8TKnmk5isO9wnu+HfjHSVC3XBqWltxDrbL3a9wf3LVg
-dVxK9/STSRiCGkyPzusLHnx2m+5lJw==
-=RS9E
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmBnfjwACgkQwfwUeK3K
+7Anz5wf/TQQooZspkXqEhDtlJ0iTO+KdO++X1hoDcUho0Pa0dZfhp6NRPae2XT5W
+BUxYblWSj/72VCiVYSSR4YXH8pX2TLfvv+AgX7uuSK1jGje+3LNXkZ1xTXUChRzj
+5zh/0jM56QauzzBxTcUUB8jWsoctbfUbxawMjUYOeIQu67hO0jYNJcXNiS5eBDs8
+sDunXuSMRDV/hEjWxF7JqhZKGD4PXiulpjd/TeBBsWLZ35j/qLVf+B0SK5EGdQ9q
+cZHwXj2lrId0dhNApj8jmMa5ZTSPnGqMHAgiOSNpfozAUHF77k3tookbiayiwoGA
+m5huZS4wK9XdaEdayYbRUC2mt1D33Q==
+=hGal
 -----END PGP SIGNATURE-----
 
---rimdad5gkaqhxbgo--
+--xlb6hwwprgvrxfrm--
