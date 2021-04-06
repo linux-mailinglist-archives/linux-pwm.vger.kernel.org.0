@@ -2,25 +2,28 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF5F535596C
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Apr 2021 18:43:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D5CD35596D
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Apr 2021 18:43:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234809AbhDFQng (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 6 Apr 2021 12:43:36 -0400
-Received: from mail.pqgruber.com ([52.59.78.55]:56080 "EHLO mail.pqgruber.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1346542AbhDFQng (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 6 Apr 2021 12:43:36 -0400
+        id S1346553AbhDFQnp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 6 Apr 2021 12:43:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1346547AbhDFQnm (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Apr 2021 12:43:42 -0400
+Received: from mail.pqgruber.com (mail.pqgruber.com [IPv6:2a05:d014:575:f70b:4f2c:8f1d:40c4:b13e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92EE2C06174A;
+        Tue,  6 Apr 2021 09:43:34 -0700 (PDT)
 Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id C9C95C6B19D;
-        Tue,  6 Apr 2021 18:43:26 +0200 (CEST)
+        by mail.pqgruber.com (Postfix) with ESMTPSA id 0BB3BC6B19E;
+        Tue,  6 Apr 2021 18:43:33 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1617727407;
-        bh=TF4X370n3fRovCG7RRBaZoUbB28YXxXjdTqhvmgeoVc=;
+        s=mail; t=1617727413;
+        bh=xqQD0/lOi/rZHdcAzLBmtbxzS06ML0IpAzpSqNIcug0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DSoEtnmKA/4KfOfLhMZBTiQQVp4eHN7wKnWRyHItI0TMkytB6Gi7axeXRRwJ7T3Cz
-         cXiRg1wVRgWnM7JUbVHNenspttXy6jWHuS6OXgeUnJenme+D4ytxCvkbP1LJ2Kl61W
-         zbFshIBS6Gql9scSYeWr9wlfuluTlkODxnryPCKM=
+        b=QUM/Z+/n79L/8705eRG8U+kAT4tdwofZziHRGhU9BFjbRfgXVO5ESpiJ2T4np1n3P
+         6CKgeBDvoDKNaxTG1a6MwLK4YPvILLXlUYzhOUSsTo9xZVJYjvxjbYk3pD+hSPFUi2
+         tYcLiibcDlVJqQpvJVcpxWoYm1DJrO+js2QH288A=
 From:   Clemens Gruber <clemens.gruber@pqgruber.com>
 To:     linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -29,9 +32,9 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         <u.kleine-koenig@pengutronix.de>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Clemens Gruber <clemens.gruber@pqgruber.com>
-Subject: [PATCH v7 2/8] pwm: pca9685: Support hardware readout
-Date:   Tue,  6 Apr 2021 18:41:34 +0200
-Message-Id: <20210406164140.81423-2-clemens.gruber@pqgruber.com>
+Subject: [PATCH v7 3/8] pwm: pca9685: Improve runtime PM behavior
+Date:   Tue,  6 Apr 2021 18:41:35 +0200
+Message-Id: <20210406164140.81423-3-clemens.gruber@pqgruber.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210406164140.81423-1-clemens.gruber@pqgruber.com>
 References: <20210406164140.81423-1-clemens.gruber@pqgruber.com>
@@ -41,89 +44,67 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Implements .get_state to read-out the current hardware state.
+The chip does not come out of POR in active state but in sleep state.
+To be sure (in case the bootloader woke it up) we force it to sleep in
+probe.
 
-The hardware readout may return slightly different values than those
-that were set in apply due to the limited range of possible prescale and
-counter register values.
-
-Also note that although the datasheet mentions 200 Hz as default
-frequency when using the internal 25 MHz oscillator, the calculated
-period from the default prescaler register setting of 30 is 5079040ns.
+On kernels without CONFIG_PM, we wake the chip in .probe and put it to
+sleep in .remove.
 
 Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
 ---
 Changes since v6:
-- Added a comment regarding the division (Suggested by Uwe)
-- Rebased
+- Improved !CONFIG_PM handling (wake it up without putting it to sleep
+  first)
 
- drivers/pwm/pwm-pca9685.c | 46 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ drivers/pwm/pwm-pca9685.c | 26 +++++++++++++++++++-------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-index 5a2ce97e71fd..d4474c5ff96f 100644
+index d4474c5ff96f..0bcec04b138a 100644
 --- a/drivers/pwm/pwm-pca9685.c
 +++ b/drivers/pwm/pwm-pca9685.c
-@@ -333,6 +333,51 @@ static int pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+@@ -474,13 +474,18 @@ static int pca9685_pwm_probe(struct i2c_client *client,
+ 		return ret;
+ 	}
+ 
+-	/* The chip comes out of power-up in the active state */
+-	pm_runtime_set_active(&client->dev);
+-	/*
+-	 * Enable will put the chip into suspend, which is what we
+-	 * want as all outputs are disabled at this point
+-	 */
+-	pm_runtime_enable(&client->dev);
++	if (IS_ENABLED(CONFIG_PM)) {
++		/*
++		 * The chip comes out of power-up in the sleep state,
++		 * but force it to sleep in case it was woken up before
++		 */
++		pca9685_set_sleep_mode(pca, true);
++		pm_runtime_set_suspended(&client->dev);
++		pm_runtime_enable(&client->dev);
++	} else {
++		/* Wake the chip up on non-PM environments */
++		pca9685_set_sleep_mode(pca, false);
++	}
+ 
+ 	return 0;
+ }
+@@ -493,7 +498,14 @@ static int pca9685_pwm_remove(struct i2c_client *client)
+ 	ret = pwmchip_remove(&pca->chip);
+ 	if (ret)
+ 		return ret;
++
+ 	pm_runtime_disable(&client->dev);
++
++	if (!IS_ENABLED(CONFIG_PM)) {
++		/* Put chip in sleep state on non-PM environments */
++		pca9685_set_sleep_mode(pca, true);
++	}
++
  	return 0;
  }
  
-+static void pca9685_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				  struct pwm_state *state)
-+{
-+	struct pca9685 *pca = to_pca(chip);
-+	unsigned long long duty;
-+	unsigned int val = 0;
-+
-+	/* Calculate (chip-wide) period from prescale value */
-+	regmap_read(pca->regmap, PCA9685_PRESCALE, &val);
-+	/*
-+	 * PCA9685_OSC_CLOCK_MHZ is 25, i.e. an integer divider of 1000.
-+	 * The following calculation is therefore only a multiplication
-+	 * and we are not losing precision.
-+	 */
-+	state->period = (PCA9685_COUNTER_RANGE * 1000 / PCA9685_OSC_CLOCK_MHZ) *
-+			(val + 1);
-+
-+	/* The (per-channel) polarity is fixed */
-+	state->polarity = PWM_POLARITY_NORMAL;
-+
-+	if (pwm->hwpwm >= PCA9685_MAXCHAN) {
-+		/*
-+		 * The "all LEDs" channel does not support HW readout
-+		 * Return 0 and disabled for backwards compatibility
-+		 */
-+		state->duty_cycle = 0;
-+		state->enabled = false;
-+		return;
-+	}
-+
-+	duty = pca9685_pwm_get_duty(pca, pwm->hwpwm);
-+
-+	state->enabled = !!duty;
-+	if (!state->enabled) {
-+		state->duty_cycle = 0;
-+		return;
-+	} else if (duty == PCA9685_COUNTER_RANGE) {
-+		state->duty_cycle = state->period;
-+		return;
-+	}
-+
-+	duty *= state->period;
-+	state->duty_cycle = duty / PCA9685_COUNTER_RANGE;
-+}
-+
- static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- {
- 	struct pca9685 *pca = to_pca(chip);
-@@ -355,6 +400,7 @@ static void pca9685_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- 
- static const struct pwm_ops pca9685_pwm_ops = {
- 	.apply = pca9685_pwm_apply,
-+	.get_state = pca9685_pwm_get_state,
- 	.request = pca9685_pwm_request,
- 	.free = pca9685_pwm_free,
- 	.owner = THIS_MODULE,
 -- 
 2.31.1
 
