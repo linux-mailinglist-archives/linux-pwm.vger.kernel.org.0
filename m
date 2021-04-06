@@ -2,109 +2,136 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71B89355298
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Apr 2021 13:44:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69FCF355428
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Apr 2021 14:45:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239470AbhDFLoj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 6 Apr 2021 07:44:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60454 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S245749AbhDFLoV (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 6 Apr 2021 07:44:21 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 54559613A3;
-        Tue,  6 Apr 2021 11:44:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617709453;
-        bh=2Vm9ityjyZldn07RFATp/5Z6vJvrtF34+UIuw8/w51g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GReFQWQpMbEkyEVsTKHs7ItqEeoFaP16m5Z3rbHGee/xUg8t97DrCK353XkdbGbf9
-         lao7igukf7FQKFGApt0frZlorzz/1m9K6PSQnaNs8KWGe74p49eVqMnMWSMWr/eWb6
-         h0E6V8WCjhzowkzHQKaBkT6y+Zl0z1OLo0UBhroRVCHDhJe0Nw2db833UnCeJjEsF5
-         vFXsftpWcfKnGw/Wg7KJBeV7IdlAJh6JaV2qku9wWyxeJQCnvfMWFJ4nXmMzAkQKYp
-         MBgfG9A4tCMG1nh+ayjA722WXw/iGJ434k7CUQ3wegQio0D9yZSJwuwQyNNFxp3+dF
-         yc6IGZsD1CfUg==
-Date:   Tue, 6 Apr 2021 12:43:57 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
+        id S243161AbhDFMp6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 6 Apr 2021 08:45:58 -0400
+Received: from esa.microchip.iphmx.com ([68.232.153.233]:22409 "EHLO
+        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243129AbhDFMp4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Apr 2021 08:45:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1617713148; x=1649249148;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=RreDx+hwN2KnXkp9m1HiIofVELZL3wH0B1Z6ElipDUE=;
+  b=W7B5n/eNidvf3z0hLE3BFO68MbGw2xGgJ3dW65WDG0/SWf4Ff7xE5DR2
+   aNM0mw27gmNGegYE3YRaR3+68V2gI30SPXdjZ+C9fZtifP2wknCeN+dsX
+   6lNLSFeM+2nA2zz7PkI71c+5vZkCcfGC+p3wMLyTKRVSmoOj2pGA1zXDj
+   k/NhOzEif3LkWuP6iISyRurUzpTZQJUbASottQH2ur6CftYVebRWPjq1Y
+   bXX+uKJ2SzWDs7V/UhlMJMx1cpvVSXytHG8Y8plKQe5kENldb6OqzRhJu
+   klaC+nHwcEdtsG5/I7o8CRECMyFKVrK6CpdLwrjrcN5HOOuxzzYcR3V5s
+   w==;
+IronPort-SDR: bk5v5L8RKiVbpr7+Ht/C5p3cQaLbTYxYccOH8PkaSW3cOUi+ISO2Q7nczzQ+UNBfYUgVyER4W9
+ k6BLwxcnukxiq0QNCjwzpuBsyyzrJW1iIQsfaDwAznHC6x69qBhjiUFCj7JxPMba5KqaTQynhd
+ +4CUtljX29b1yJvhlbYHW9zyC6qal1zv7JYWiNyQrM+QRxbj3FSrHFN8bBpYQKQdlb7YUH8rV6
+ QpflU3athueaDCHVPHZco1jJvFyr5vsWfNvRPNFIt1IVjAIOWFJI0TqEg7Gf6D42+7lHs1Vk3H
+ bWY=
+X-IronPort-AV: E=Sophos;i="5.81,309,1610434800"; 
+   d="scan'208";a="115984629"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Apr 2021 05:45:43 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Tue, 6 Apr 2021 05:45:43 -0700
+Received: from [10.12.73.192] (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2176.2 via Frontend
+ Transport; Tue, 6 Apr 2021 05:45:41 -0700
+Subject: Re: [PATCH v4 3/6] pwm: atmel: Simplify using devm_clk_get_prepared()
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
         Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>, linux-pwm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH] pwm: Rename pwm_get_state() to better reflect its
- semantic
-Message-ID: <20210406114357.GC6443@sirena.org.uk>
-References: <20210406073036.26857-1-u.kleine-koenig@pengutronix.de>
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>
+CC:     <linux-clk@vger.kernel.org>, <kernel@pengutronix.de>,
+        <linux-pwm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+References: <20210330181755.204339-1-u.kleine-koenig@pengutronix.de>
+ <20210330181755.204339-4-u.kleine-koenig@pengutronix.de>
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+Organization: microchip
+Message-ID: <822218d0-6b28-98d9-c23a-2dc3c3f0c84a@microchip.com>
+Date:   Tue, 6 Apr 2021 14:45:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UFHRwCdBEJvubb2X"
-Content-Disposition: inline
-In-Reply-To: <20210406073036.26857-1-u.kleine-koenig@pengutronix.de>
-X-Cookie: BARBARA STANWYCK makes me nervous!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210330181755.204339-4-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 30/03/2021 at 20:17, Uwe Kleine-König wrote:
+> With devm_clk_get_prepared() caring to unprepare the clock the error
+> path and remove callback can be simplified accordingly.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
---UFHRwCdBEJvubb2X
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks good to me:
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-On Tue, Apr 06, 2021 at 09:30:36AM +0200, Uwe Kleine-K=F6nig wrote:
-> Given that lowlevel drivers usually cannot implement exactly what a
-> consumer requests with pwm_apply_state() there is some rounding involved.
+> ---
+>   drivers/pwm/pwm-atmel.c | 15 ++-------------
+>   1 file changed, 2 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
+> index 5813339b597b..d65e23da2582 100644
+> --- a/drivers/pwm/pwm-atmel.c
+> +++ b/drivers/pwm/pwm-atmel.c
+> @@ -415,16 +415,10 @@ static int atmel_pwm_probe(struct platform_device *pdev)
+>          if (IS_ERR(atmel_pwm->base))
+>                  return PTR_ERR(atmel_pwm->base);
+> 
+> -       atmel_pwm->clk = devm_clk_get(&pdev->dev, NULL);
+> +       atmel_pwm->clk = devm_clk_get_prepared(&pdev->dev, NULL);
+>          if (IS_ERR(atmel_pwm->clk))
+>                  return PTR_ERR(atmel_pwm->clk);
+> 
+> -       ret = clk_prepare(atmel_pwm->clk);
+> -       if (ret) {
+> -               dev_err(&pdev->dev, "failed to prepare PWM clock\n");
+> -               return ret;
+> -       }
+> -
+>          atmel_pwm->chip.dev = &pdev->dev;
+>          atmel_pwm->chip.ops = &atmel_pwm_ops;
+>          atmel_pwm->chip.of_xlate = of_pwm_xlate_with_flags;
+> @@ -435,23 +429,18 @@ static int atmel_pwm_probe(struct platform_device *pdev)
+>          ret = pwmchip_add(&atmel_pwm->chip);
+>          if (ret < 0) {
+>                  dev_err(&pdev->dev, "failed to add PWM chip %d\n", ret);
+> -               goto unprepare_clk;
+> +               return ret;
+>          }
+> 
+>          platform_set_drvdata(pdev, atmel_pwm);
+> 
+>          return ret;
+> -
+> -unprepare_clk:
+> -       clk_unprepare(atmel_pwm->clk);
+> -       return ret;
+>   }
+> 
+>   static int atmel_pwm_remove(struct platform_device *pdev)
+>   {
+>          struct atmel_pwm_chip *atmel_pwm = platform_get_drvdata(pdev);
+> 
+> -       clk_unprepare(atmel_pwm->clk);
+>          mutex_destroy(&atmel_pwm->isr_lock);
+> 
+>          return pwmchip_remove(&atmel_pwm->chip);
+> --
+> 2.30.2
+> 
 
-Acked-by: Mark Brown <broonie@kernel.org>
 
---UFHRwCdBEJvubb2X
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmBsSXwACgkQJNaLcl1U
-h9CeAAgAg9/Q2RgSOxhbh64cI3whEBi2rDoy4JrnVOIaezDbl1KVpYtyba0y715D
-Y+27eAxh97zRr3AOb8di8IGVTcKZqEJvwbFWeAxIYTqr7yewyfFV2r3+aj1n6uji
-E06xtLVSajGadFJ8cwDdQmB2HGTiOraS8BIQTq8UgV4X6S2LOC6RRZ/BADXxlSXZ
-awgIor1dw+uVGentYfCseXYt3xOeoBGm1kcv2bLWZOf7p34NrBErZxEelYeZycnR
-FVaAHx4aGe2/1xPGOYGRdXxub+JSiKOXp8tFNWDNnrr/343S2A8pBE8u1GWqB2tu
-i/C2E1EQmwot6hIKN5/6hIg/LOb4cA==
-=bscb
------END PGP SIGNATURE-----
-
---UFHRwCdBEJvubb2X--
+-- 
+Nicolas Ferre
