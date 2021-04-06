@@ -2,117 +2,96 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3332F35506D
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Apr 2021 11:59:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E861B355083
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Apr 2021 12:08:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241224AbhDFJ7J (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 6 Apr 2021 05:59:09 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:40628 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S241262AbhDFJ7G (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Apr 2021 05:59:06 -0400
-X-UUID: a433c042379b4056a3ca568004468f46-20210406
-X-UUID: a433c042379b4056a3ca568004468f46-20210406
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <rex-bc.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1787102030; Tue, 06 Apr 2021 17:58:54 +0800
-Received: from mtkcas11.mediatek.inc (172.21.101.40) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 6 Apr 2021 17:58:53 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas11.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 6 Apr 2021 17:58:52 +0800
-From:   Rex-BC Chen <rex-bc.chen@mediatek.com>
-To:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
-        <lee.jones@linaro.org>, <matthias.bgg@gmail.com>
-CC:     <linux-pwm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
-        Rex-BC Chen <rex-bc.chen@mediatek.com>,
+        id S235463AbhDFKIN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 6 Apr 2021 06:08:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237420AbhDFKIM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Apr 2021 06:08:12 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C068C06174A
+        for <linux-pwm@vger.kernel.org>; Tue,  6 Apr 2021 03:08:04 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lTicn-0000Ih-L1; Tue, 06 Apr 2021 12:07:57 +0200
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lTicm-0004j3-7j; Tue, 06 Apr 2021 12:07:56 +0200
+Date:   Tue, 6 Apr 2021 12:07:56 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Rex-BC Chen <rex-bc.chen@mediatek.com>
+Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
+        matthias.bgg@gmail.com, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com,
         Jitao Shi <jitao.shi@mediatek.com>
-Subject: [v3,PATCH 3/3] pwm: mtk_disp: implement .get_state()
-Date:   Tue, 6 Apr 2021 17:57:42 +0800
-Message-ID: <1617703062-4251-4-git-send-email-rex-bc.chen@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1617703062-4251-1-git-send-email-rex-bc.chen@mediatek.com>
+Subject: Re: [v3,PATCH 1/3] pwm: mtk_disp: clear the clock operations
+Message-ID: <20210406100756.ijthlp2j3a3eygdt@pengutronix.de>
 References: <1617703062-4251-1-git-send-email-rex-bc.chen@mediatek.com>
+ <1617703062-4251-2-git-send-email-rex-bc.chen@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="af63drcvcndnf3ct"
+Content-Disposition: inline
+In-Reply-To: <1617703062-4251-2-git-send-email-rex-bc.chen@mediatek.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-implement get_state function for pwm-mtk-disp
 
-Signed-off-by: Rex-BC Chen <rex-bc.chen@mediatek.com>
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
----
- drivers/pwm/pwm-mtk-disp.c | 46 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+--af63drcvcndnf3ct
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
-index 502228adf718..166e0a8ca703 100644
---- a/drivers/pwm/pwm-mtk-disp.c
-+++ b/drivers/pwm/pwm-mtk-disp.c
-@@ -179,8 +179,54 @@ static int mtk_disp_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	return mtk_disp_pwm_enable(chip, state);
- }
- 
-+static void mtk_disp_pwm_get_state(struct pwm_chip *chip,
-+				   struct pwm_device *pwm,
-+				   struct pwm_state *state)
-+{
-+	struct mtk_disp_pwm *mdp = to_mtk_disp_pwm(chip);
-+	u32 clk_div, period, high_width, con0, con1;
-+	u64 rate;
-+	int err;
-+
-+	err = clk_prepare_enable(mdp->clk_main);
-+	if (err < 0) {
-+		dev_err(chip->dev, "Can't enable mdp->clk_main: %d\n", err);
-+		return;
-+	}
-+	err = clk_prepare_enable(mdp->clk_mm);
-+	if (err < 0) {
-+		dev_err(chip->dev, "Can't enable mdp->clk_mm: %d\n", err);
-+		clk_disable_unprepare(mdp->clk_main);
-+		return;
-+	}
-+
-+	rate = clk_get_rate(mdp->clk_main);
-+
-+	con0 = readl(mdp->base + mdp->data->con0);
-+	con1 = readl(mdp->base + mdp->data->con1);
-+
-+	state->polarity = con0 & PWM_POLARITY ?
-+			  PWM_POLARITY_INVERSED : PWM_POLARITY_NORMAL;
-+	state->enabled = !!(con0 & BIT(0));
-+
-+	clk_div = (con0 & PWM_CLKDIV_MASK) >> PWM_CLKDIV_SHIFT;
-+	period = con1 & PWM_PERIOD_MASK;
-+	state->period = div_u64(period * (clk_div + 1) * NSEC_PER_SEC, rate);
-+	high_width = (con1 & PWM_HIGH_WIDTH_MASK) >> PWM_HIGH_WIDTH_SHIFT;
-+	state->duty_cycle = div_u64(high_width * (clk_div + 1) * NSEC_PER_SEC,
-+				    rate);
-+
-+	if (!state->enabled) {
-+		clk_disable_unprepare(mdp->clk_mm);
-+		clk_disable_unprepare(mdp->clk_main);
-+	}
-+
-+	mdp->enabled = state->enabled;
-+}
-+
- static const struct pwm_ops mtk_disp_pwm_ops = {
- 	.apply = mtk_disp_pwm_apply,
-+	.get_state = mtk_disp_pwm_get_state,
- 	.owner = THIS_MODULE,
- };
- 
--- 
-2.18.0
+Hello,
 
+On Tue, Apr 06, 2021 at 05:57:40PM +0800, Rex-BC Chen wrote:
+> Remove the clk_prepare from mtk_disp_pwm_probe.
+> Remove the clk_unprepare from mtk_disp_pwm_remove.
+>=20
+> After using atomic API and get_state() function which are implemented
+> in PATCH [2/3], [3/3],
+
+Refering to the following patches as 2/3 and 3/3 doesn't make sense once
+these patches are applied to a tree.
+
+> clk_prepare/clk_unprepare are useless in probe/remove function.
+> So we remove clk_prepare/clk_unprepare in probe/remove fuinction.
+
+Does the driver still work with only this patch applied? If not, please
+rearrange and order this patch after the conversion to the atomic API.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--af63drcvcndnf3ct
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmBsMvkACgkQwfwUeK3K
+7Ak6aAf9H1Hh1pupjsfSXeA1E7ELdVBhmy24h4j6m4zEM5wT8FAgdrYnnX04fAhV
+qY6CquneoPnm5BvZp2CXMukAi67J0kL0C6APkjh3hpHfElyd8a//gsGID9uZ4hIj
+S7EmQEWjGBg9unsnUJdyWrUHipA4XGktfoSGSUIFIPZjQDEmOxqPaYm9dHrSt92w
+ukZ2PzqxCDIZqilIgijo3w2BARAe3n0w0pzWbB/hwjsF8a/bhCDI3ynkc45G5D2d
+nPNBv6YTQaxKcxbpn13nF4RSxUKh43T7nN79KFY7xnA6fokm+hRoZV8Rjn2/kQiO
+TZ0OO1o+NqYosUQWAJZp6kdMQ6zIaA==
+=6z2O
+-----END PGP SIGNATURE-----
+
+--af63drcvcndnf3ct--
