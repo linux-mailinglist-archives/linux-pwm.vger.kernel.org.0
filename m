@@ -2,29 +2,26 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C62B3575CD
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Apr 2021 22:21:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF2C1357639
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Apr 2021 22:41:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356062AbhDGUVX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 7 Apr 2021 16:21:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234971AbhDGUVX (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Apr 2021 16:21:23 -0400
-Received: from mail.pqgruber.com (mail.pqgruber.com [IPv6:2a05:d014:575:f70b:4f2c:8f1d:40c4:b13e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C54CC061760;
-        Wed,  7 Apr 2021 13:21:13 -0700 (PDT)
+        id S230202AbhDGUlk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 7 Apr 2021 16:41:40 -0400
+Received: from mail.pqgruber.com ([52.59.78.55]:39898 "EHLO mail.pqgruber.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229586AbhDGUlk (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 7 Apr 2021 16:41:40 -0400
 Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id 7951DC759B8;
-        Wed,  7 Apr 2021 22:21:11 +0200 (CEST)
+        by mail.pqgruber.com (Postfix) with ESMTPSA id 98A9CC6B24A;
+        Wed,  7 Apr 2021 22:41:28 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1617826871;
-        bh=6FOoXDFvJhzROR5qW6KYw+A/3BsMIFWHmnC3Vtj6XKo=;
+        s=mail; t=1617828088;
+        bh=Xl/ESSD4/hhMuitp64+ekC4g7ibiaBi8k1rzUFGoZNI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HqavCxfBN60NiNnt5TF7D7Lfb3mDVJe+VZ+oceCPTTMXWW11U+Csz6Z43emiOhXAw
-         U9fDbu7nlCkRe+p8ePB4w+A3HFujhGyJGdhuiLPaw8VgZHh04uvKlGsMEtn9t3qYR7
-         71HJreEYtyoQQRNHFgciNtw4NhpsZiD91Wh2q6oI=
-Date:   Wed, 7 Apr 2021 22:21:10 +0200
+        b=Hql7Nxg0TS3eQEQ7YhCH0EaTWzpFa3P5UfnWA0MZd1dMwsnp9xJe/HcZCxUCakeQ0
+         Dp+FDQyf4bi1Xsrpwx7SQYP9ulvc9MhWMlGqgI0mI3UIail/mEq40WtBNLIGag730n
+         av8XwzEjXG3/l9g1MKuwpS7HnKn2pSdqM6LHyYf0=
+Date:   Wed, 7 Apr 2021 22:41:27 +0200
 From:   Clemens Gruber <clemens.gruber@pqgruber.com>
 To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
@@ -32,62 +29,124 @@ Cc:     linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
         Sven Van Asbroeck <TheSven73@gmail.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 5/8] pwm: core: Support new PWM_STAGGERING_ALLOWED flag
-Message-ID: <YG4UNoBCQJkEEfwi@workstation.tuxnet>
+Subject: Re: [PATCH v7 7/8] pwm: pca9685: Restrict period change for enabled
+ PWMs
+Message-ID: <YG4Y94sIL/xO2u/N@workstation.tuxnet>
 References: <20210406164140.81423-1-clemens.gruber@pqgruber.com>
- <20210406164140.81423-5-clemens.gruber@pqgruber.com>
- <20210407054658.qdsjkstqwynxeuxj@pengutronix.de>
+ <20210406164140.81423-7-clemens.gruber@pqgruber.com>
+ <20210407061229.lsyg7blh3ebxtvx6@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210407054658.qdsjkstqwynxeuxj@pengutronix.de>
+In-Reply-To: <20210407061229.lsyg7blh3ebxtvx6@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Apr 07, 2021 at 07:46:58AM +0200, Uwe Kleine-König wrote:
-> On Tue, Apr 06, 2021 at 06:41:37PM +0200, Clemens Gruber wrote:
-> > If the flag PWM_STAGGERING_ALLOWED is set on a channel, the PWM driver
-> > may (if supported by the HW) delay the ON time of the channel relative
-> > to the channel number.
-> > This does not alter the duty cycle ratio and is only relevant for PWM
-> > chips with less prescalers than channels, which would otherwise assert
-> > multiple or even all enabled channels at the same time.
+On Wed, Apr 07, 2021 at 08:12:29AM +0200, Uwe Kleine-König wrote:
+> On Tue, Apr 06, 2021 at 06:41:39PM +0200, Clemens Gruber wrote:
+> > Previously, the last used PWM channel could change the global prescale
+> > setting, even if other channels are already in use.
 > > 
-> > If this feature is supported by the driver and the flag is set on
-> > multiple channels, their ON times are spread out to improve EMI and
-> > reduce current spikes.
+> > Fix it by only allowing the first enabled PWM to change the global
+> > chip-wide prescale setting. If there is more than one channel in use,
+> > the prescale settings resulting from the chosen periods must match.
+> > 
+> > GPIOs do not count as enabled PWMs as they are not using the prescaler
+> > and can't change it.
+> > 
+> > Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+> > ---
+> > Changes since v6:
+> > - Only allow the first PWM that is enabled to change the prescaler, not
+> >   the first one that uses the prescaler
+> > 
+> >  drivers/pwm/pwm-pca9685.c | 66 +++++++++++++++++++++++++++++++++------
+> >  1 file changed, 56 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+> > index 24221ee7a77a..cf0c98e4ef44 100644
+> > --- a/drivers/pwm/pwm-pca9685.c
+> > +++ b/drivers/pwm/pwm-pca9685.c
+> > @@ -23,11 +23,11 @@
+> >  #include <linux/bitmap.h>
+> >  
+> >  /*
+> > - * Because the PCA9685 has only one prescaler per chip, changing the period of
+> > - * one channel affects the period of all 16 PWM outputs!
+> > - * However, the ratio between each configured duty cycle and the chip-wide
+> > - * period remains constant, because the OFF time is set in proportion to the
+> > - * counter range.
+> > + * Because the PCA9685 has only one prescaler per chip, only the first channel
+> > + * that is enabled is allowed to change the prescale register.
+> > + * PWM channels requested afterwards must use a period that results in the same
+> > + * prescale setting as the one set by the first requested channel.
+> > + * GPIOs do not count as enabled PWMs as they are not using the prescaler.
+> >   */
+> >  
+> >  #define PCA9685_MODE1		0x00
+> > @@ -78,8 +78,9 @@
+> >  struct pca9685 {
+> >  	struct pwm_chip chip;
+> >  	struct regmap *regmap;
+> > -#if IS_ENABLED(CONFIG_GPIOLIB)
+> >  	struct mutex lock;
+> > +	DECLARE_BITMAP(pwms_enabled, PCA9685_MAXCHAN + 1);
+> > +#if IS_ENABLED(CONFIG_GPIOLIB)
+> >  	struct gpio_chip gpio;
+> >  	DECLARE_BITMAP(pwms_inuse, PCA9685_MAXCHAN + 1);
+> >  #endif
+> > @@ -90,6 +91,22 @@ static inline struct pca9685 *to_pca(struct pwm_chip *chip)
+> >  	return container_of(chip, struct pca9685, chip);
+> >  }
+> >  
+> > +/* This function is supposed to be called with the lock mutex held */
+> > +static bool pca9685_prescaler_can_change(struct pca9685 *pca, int channel)
+> > +{
+> > +	/* No PWM enabled: Change allowed */
+> > +	if (bitmap_empty(pca->pwms_enabled, PCA9685_MAXCHAN + 1))
+> > +		return true;
+> > +	/* More than one PWM enabled: Change not allowed */
+> > +	if (bitmap_weight(pca->pwms_enabled, PCA9685_MAXCHAN + 1) > 1)
+> > +		return false;
+> > +	/*
+> > +	 * Only one PWM enabled: Change allowed if the PWM about to
+> > +	 * be changed is the one that is already enabled
+> > +	 */
+> > +	return test_bit(channel, pca->pwms_enabled);
 > 
-> As said in reply to patch 4/8 already: I don't like this idea and
-> think this should be made explicit using a new offset member in struct
-> pwm_state instead. That's because I think that the wave form a PWM
-> generates should be (completely) defined by the consumer and not by a
-> mix between consumer and device tree. Also the consumer has no (sane)
-> way to determine if staggering is in use or not.
+> Maybe this is a bit more effective?:
+> 
+> 	DECLARE_BITMAP(blablub, PCA9685_MAXCHAN + 1);	
+> 	bitmap_zero(blablub, PCA9685_MAXCHAN + 1);
+> 	bitmap_set(blablub, channel);
+> 	return bitmap_subset(pca->pwms_enabled, blablub);
 
-I don't think offsets are ideal for this feature: It makes it more
-cumbersome for the user, because he has to allocate the offsets
-himself instead of a simple on/off switch.
-The envisioned usecase is: "I want better EMI behavior and don't care
-about the individual channels no longer being asserted at the exact same
-time".
+But if no PWM is enabled, it should return true, not false.
 
-> One side effect (at least for the pca9685) is that when programming a
-> new duty cycle it takes a bit longer than without staggering until the
-> new setting is active. 
+> (but that's a minor issue, the suggested algorithm is correct.)
 
-Yes, but it can be turned off if this is a problem, now even per-PWM.
+I would prefer to keep it explicit because it is a little easier to
+follow and probably not worth optimizing.
 
-> Another objection I have is that we already have some technical debt
-> because there are already two different types of drivers (.apply vs
-> .config+.set_polarity+.enable+.disable) and I would like to unify this
-> first before introducing new stuff.
+> 
+> So:
+> 
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-But there is already PWM_POLARITY_INVERTED, which can be set in the DT.
-I am only adding another flag.
+Thanks.
 
-Thierry: What's your take on this?
+> 
+> (side-note: I wonder if the handling of the set-all channel is correct
+> here. But given that it is messy anyhow, (e.g. because setting some
+> state to this set-all channel doesn't influence pwm_get_state for the
+> individual channels) I don't object if there is another problem in this
+> corner case. IMHO just dropping this virtual channel would be nice.)
 
-Thanks,
+As you can't request the all channel and the individual channels
+together, there shouldn't be any problems.
+
+I agree that it would be nice to drop the ALL channel support.
+
 Clemens
