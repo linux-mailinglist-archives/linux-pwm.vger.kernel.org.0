@@ -2,143 +2,78 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64247356545
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Apr 2021 09:33:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8586F3565F5
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Apr 2021 10:02:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346677AbhDGHdz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 7 Apr 2021 03:33:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40614 "EHLO
+        id S236497AbhDGICk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 7 Apr 2021 04:02:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232598AbhDGHdq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Apr 2021 03:33:46 -0400
-Received: from mail.pqgruber.com (mail.pqgruber.com [IPv6:2a05:d014:575:f70b:4f2c:8f1d:40c4:b13e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC52C06174A;
-        Wed,  7 Apr 2021 00:33:23 -0700 (PDT)
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id 341C5C6B24A;
-        Wed,  7 Apr 2021 09:33:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1617780802;
-        bh=2rrkRiew20+H4UyA8Em/KsMBwMk+jHbfTnOtvXL8CRA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ohThtx6IaMF+y5Ex5cH3Tiw03cXrhGUYWMwXdjTlQL1iG9G0RYuxQDxb0NGqsqnYR
-         TFM5KwSRUDYQpew/D0YC7cUSb/JTP7bkHpIaMbfuN+BDBBeXMjYO8vH1q2QImd0IBd
-         8V/ew39f0XKW7mm1/G7qZp/LqflsrQ4AzbbOWcs8=
-Date:   Wed, 7 Apr 2021 09:33:20 +0200
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        with ESMTP id S245377AbhDGICY (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Apr 2021 04:02:24 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 800E6C06175F
+        for <linux-pwm@vger.kernel.org>; Wed,  7 Apr 2021 01:02:07 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lU38X-0002Jg-Gm; Wed, 07 Apr 2021 10:02:05 +0200
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lU38V-0001xv-Uy; Wed, 07 Apr 2021 10:02:03 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/8] pwm: pca9685: Support hardware readout
-Message-ID: <YG1gQNdDYA1RwrCo@workstation.tuxnet>
-References: <20210406164140.81423-1-clemens.gruber@pqgruber.com>
- <20210406164140.81423-2-clemens.gruber@pqgruber.com>
- <20210407053135.tx2q4bzxf2lwtqna@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH 1/3] pwm: lpss: Don't modify HW state in .remove callback
+Date:   Wed,  7 Apr 2021 10:01:53 +0200
+Message-Id: <20210407080155.55004-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210407053135.tx2q4bzxf2lwtqna@pengutronix.de>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Apr 07, 2021 at 07:31:35AM +0200, Uwe Kleine-König wrote:
-> On Tue, Apr 06, 2021 at 06:41:34PM +0200, Clemens Gruber wrote:
-> > Implements .get_state to read-out the current hardware state.
-> > 
-> > The hardware readout may return slightly different values than those
-> > that were set in apply due to the limited range of possible prescale and
-> > counter register values.
-> > 
-> > Also note that although the datasheet mentions 200 Hz as default
-> > frequency when using the internal 25 MHz oscillator, the calculated
-> > period from the default prescaler register setting of 30 is 5079040ns.
-> > 
-> > Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
-> > ---
-> > Changes since v6:
-> > - Added a comment regarding the division (Suggested by Uwe)
-> > - Rebased
-> > 
-> >  drivers/pwm/pwm-pca9685.c | 46 +++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 46 insertions(+)
-> > 
-> > diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-> > index 5a2ce97e71fd..d4474c5ff96f 100644
-> > --- a/drivers/pwm/pwm-pca9685.c
-> > +++ b/drivers/pwm/pwm-pca9685.c
-> > @@ -333,6 +333,51 @@ static int pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> >  	return 0;
-> >  }
-> >  
-> > +static void pca9685_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> > +				  struct pwm_state *state)
-> > +{
-> > +	struct pca9685 *pca = to_pca(chip);
-> > +	unsigned long long duty;
-> > +	unsigned int val = 0;
-> > +
-> > +	/* Calculate (chip-wide) period from prescale value */
-> > +	regmap_read(pca->regmap, PCA9685_PRESCALE, &val);
-> > +	/*
-> > +	 * PCA9685_OSC_CLOCK_MHZ is 25, i.e. an integer divider of 1000.
-> > +	 * The following calculation is therefore only a multiplication
-> > +	 * and we are not losing precision.
-> > +	 */
-> > +	state->period = (PCA9685_COUNTER_RANGE * 1000 / PCA9685_OSC_CLOCK_MHZ) *
-> > +			(val + 1);
-> > +
-> > +	/* The (per-channel) polarity is fixed */
-> > +	state->polarity = PWM_POLARITY_NORMAL;
-> > +
-> > +	if (pwm->hwpwm >= PCA9685_MAXCHAN) {
-> > +		/*
-> > +		 * The "all LEDs" channel does not support HW readout
-> > +		 * Return 0 and disabled for backwards compatibility
-> > +		 */
-> > +		state->duty_cycle = 0;
-> > +		state->enabled = false;
-> > +		return;
-> > +	}
-> > +
-> > +	duty = pca9685_pwm_get_duty(pca, pwm->hwpwm);
-> > +
-> > +	state->enabled = !!duty;
-> > +	if (!state->enabled) {
-> > +		state->duty_cycle = 0;
-> > +		return;
-> > +	} else if (duty == PCA9685_COUNTER_RANGE) {
-> > +		state->duty_cycle = state->period;
-> > +		return;
-> > +	}
-> > +
-> > +	duty *= state->period;
-> > +	state->duty_cycle = duty / PCA9685_COUNTER_RANGE;
-> 
-> Given that with duty = 0 the chip is still "on" and changing the duty
-> will first complete the currently running period, I'd model duty=0 as
-> enabled. This also simplifies the code a bit, to something like:
-> 
-> 
-> 	state->enabled = true;
-> 	duty = pca9685_pwm_get_duty(pca, pwm->hwpwm);
-> 	state->duty_cycle = div_round_up(duty * state->period, PCA9685_COUNTER_RANGE);
-> 
-> (I'm using round-up here assuming apply uses round-down to get
-> idempotency. In the current patch set state this is wrong however.)
+A consumer is expected to disable a PWM before calling pwm_put(). And if
+they didn't there is hopefully a good reason (or the consumer needs
+fixing). Also if disabling an enabled PWM was the right thing to do,
+this should better be done in the framework instead of in each low level
+driver.
 
-So, in your opinion, every requested PWM of the pca9685 should always be
-enabled by default (from the PWM core viewpoint) ?
+So drop the hardware modification from the .remove() callback.
 
-And this wouldn't break the following because pwm_get_state does not
-actually read out the hw state:
-pwm_get_state -> enabled=true duty=0
-pwm_apply_state -> enabled =false duty=0
-pwm_get_state -> enabled=false duty=0
+Signed-off-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
+---
+ drivers/pwm/pwm-lpss.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-Thanks,
-Clemens
+diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
+index 939de93c157b..c81cb0ef984a 100644
+--- a/drivers/pwm/pwm-lpss.c
++++ b/drivers/pwm/pwm-lpss.c
+@@ -255,12 +255,6 @@ EXPORT_SYMBOL_GPL(pwm_lpss_probe);
+ 
+ int pwm_lpss_remove(struct pwm_lpss_chip *lpwm)
+ {
+-	int i;
+-
+-	for (i = 0; i < lpwm->info->npwm; i++) {
+-		if (pwm_is_enabled(&lpwm->chip.pwms[i]))
+-			pm_runtime_put(lpwm->chip.dev);
+-	}
+ 	return pwmchip_remove(&lpwm->chip);
+ }
+ EXPORT_SYMBOL_GPL(pwm_lpss_remove);
+
+base-commit: a38fd8748464831584a19438cbb3082b5a2dab15
+-- 
+2.30.2
+
