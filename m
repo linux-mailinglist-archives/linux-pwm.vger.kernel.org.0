@@ -2,120 +2,109 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96C07359ED2
-	for <lists+linux-pwm@lfdr.de>; Fri,  9 Apr 2021 14:34:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83069359ED3
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 Apr 2021 14:34:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233550AbhDIMeR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 9 Apr 2021 08:34:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59540 "EHLO
+        id S232690AbhDIMek (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 9 Apr 2021 08:34:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233506AbhDIMeQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Apr 2021 08:34:16 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 242F1C061760
-        for <linux-pwm@vger.kernel.org>; Fri,  9 Apr 2021 05:34:03 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id n2so8388275ejy.7
-        for <linux-pwm@vger.kernel.org>; Fri, 09 Apr 2021 05:34:03 -0700 (PDT)
+        with ESMTP id S232855AbhDIMej (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Apr 2021 08:34:39 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 804D0C061760
+        for <linux-pwm@vger.kernel.org>; Fri,  9 Apr 2021 05:34:25 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id n2so8389944ejy.7
+        for <linux-pwm@vger.kernel.org>; Fri, 09 Apr 2021 05:34:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=WRmUBvMEhhwcxKMG4LWatGlefBiVuxWL49Va25oh3rw=;
-        b=L4/psNox+i53PyTPqlVW+BIoEvhufGn4+qJ8yVdqpG+73E1kte007CfRe71iubl7OK
-         ms9SB5u/ZQ+Q+8ANmXBgBmSuZYXgBDWn1wJoZRYie0ktvEcSYUl15iSmQWBDz32bDyed
-         9B9b7u4j23q/EA0h1plQHyZGo/mtYdGuTU5HjehtkCIwrSPAfP5ppHm4JRnY76EPras+
-         E/oVS7bFuUwtF0F/x1ZJxZJkvlPau/MWjCUJsf9l/2DNOqUdpCnjuk1G1Ftusc/AVy0n
-         VqgrY/p3A2PANPXbUOsxZFDEImDsGYsvtSBYEy8ej4bpWv/I1+z7B/HVajH5o7KhpQh8
-         e+VQ==
+        bh=JeYflsjmuGxJ2QYm8Iv2tJsN2dLfBVqFSYip4gx2oZs=;
+        b=Cjq9ndiOkCN5Z6LX4GjKDAIw+VFrW+Rj+DByuYb/YlH55pEZ2eJZCb/0xbVYmXrcXF
+         68VKP4MjMVRG1+VMveseAWsxTvFAIPnyO8VHzn+5l5axekmcX5f02fZr8eYOz/vMfC5S
+         DnmJ+lG6S36ocNl2lb4d2PiQgivd78UTlTORaatWazFB5xZ8r10a4kpycSG38EF4Gjpr
+         4GEwjRjBxPXKYtv5Mm1suwPyLaDublMGyiQpxyC++G87yz0nnupSDpQc7KnZ9SwZfSNg
+         IamzcPIWMJ+6NNTVCDAqsopcVHX2ZtDCVzPtEjL3SqK02CenQkhyy9KdzF+F2WQzSRs7
+         HAfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WRmUBvMEhhwcxKMG4LWatGlefBiVuxWL49Va25oh3rw=;
-        b=HrsNGBUPEFweGwOlxnaBva+L18HLDP/noHQ0eyXgLZrXEs20KLS0aRet6VdC1CPFU6
-         gAwI8oybRP+4LcZwh24wTdBdKK5okE6HzRRM/J0RWAKkpOuPNbw3lYinpbLTa3jXkyz7
-         xqDKiyEwR4U2UilCkDr8TkEAkTj3+114InjCvWzu49e2bmaqd4t5BKrSZCb9HkyUX0lS
-         FlmbATebNb4Q+tD5L4czTspaFnlrhnLITC4a0YpxXkU5mUx3gqe8WaBXvpDCWsWuj7rV
-         C8R5IXnTdJFDMSPNfn99fBFtYUEuHFe3F4RH5KTcJDvn+L5wtv/GvMMHxi/PPGTXZGcN
-         8iaw==
-X-Gm-Message-State: AOAM530oGI1D7o31m348MRtaDc11FL0bAyJ7QkiSKkcxaRHiQcOnoy4K
-        +x08hBTEBcu5tI034xskTKc=
-X-Google-Smtp-Source: ABdhPJyJyErqz0V7q/8mAMoXbn/4p0PYzEBmdNQ/0Ff7S49K0ibRvjqjUDM47I1tpM7jNR0YrIkYtQ==
-X-Received: by 2002:a17:906:c45a:: with SMTP id ck26mr15761255ejb.125.1617971641888;
-        Fri, 09 Apr 2021 05:34:01 -0700 (PDT)
+        bh=JeYflsjmuGxJ2QYm8Iv2tJsN2dLfBVqFSYip4gx2oZs=;
+        b=nOzSHzjmQGclwH/o72gx/YKGWaccB+ay7sJ/jdohOdjrLhFuv2aGCDSjjfJTB8EUZY
+         K6K5ssgKRkMFfZt4TswnJllGjSo36F5VC5o3BHkZUpJ+vOTFE9VEdfX5kOIdqV8FLQAd
+         0L8mP6Yx61pFm4dD2rnn+m10DhyyBOcUJZirSmRqzX6Q7cR4ib4aAKD88FHgOvjdGzLM
+         E4cUqgewIipUdwhqOmnEKGYiXanTxp2BWrOsA2ZI36JZ63WWluQJsxB1czDwSLj1lkln
+         fDbc32WG6PPz1vo2iPvYmim3iHQQe+mFJi7V4rJK6OKf1K3hWw2pIfJaqb4QeeT9rvv7
+         OEbw==
+X-Gm-Message-State: AOAM531xzbQ2M6lOauOc5/lVDVKBh8Deohss8U6coZXk7domu+J5QYsD
+        BXgcco5maw/lKnFFT3nWOWE=
+X-Google-Smtp-Source: ABdhPJwPqapSy1C65h1yHycYm/CGTO3x0wllZ3eHFZ+9hGDnqSMEE5MjNudk9RT0rME9kUReOV3+Lw==
+X-Received: by 2002:a17:907:2cec:: with SMTP id hz12mr8425750ejc.372.1617971664309;
+        Fri, 09 Apr 2021 05:34:24 -0700 (PDT)
 Received: from localhost (pd9e51abe.dip0.t-ipconnect.de. [217.229.26.190])
-        by smtp.gmail.com with ESMTPSA id k8sm1367066edr.75.2021.04.09.05.34.00
+        by smtp.gmail.com with ESMTPSA id ld19sm1175779ejb.102.2021.04.09.05.34.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Apr 2021 05:34:00 -0700 (PDT)
-Date:   Fri, 9 Apr 2021 14:34:37 +0200
+        Fri, 09 Apr 2021 05:34:23 -0700 (PDT)
+Date:   Fri, 9 Apr 2021 14:34:59 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ray Jui <rjui@broadcom.com>,
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Lee Jones <lee.jones@linaro.org>, Ray Jui <rjui@broadcom.com>,
         Scott Branden <sbranden@broadcom.com>,
         bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, kernel@pengutronix.de,
-        Lino Sanfilippo <LinoSanfilippo@gmx.de>
-Subject: Re: [PATCH] pwm: bcm2835: Free resources only after pwmchip_remove()
-Message-ID: <YHBJ3VORidL5HI8q@orome.fritz.box>
-References: <20210325082931.81774-1-u.kleine-koenig@pengutronix.de>
- <d16b2937-a697-56e7-5c66-37839253d7c1@gmail.com>
+        kernel@pengutronix.de
+Subject: Re: [PATCH] pwm: bcm-iproc: Free resources only after
+ pwmchip_remove()
+Message-ID: <YHBJ88dpMOYJsbgT@orome.fritz.box>
+References: <20210324200134.75513-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fZxrLXij7Eda29gC"
+        protocol="application/pgp-signature"; boundary="mLfrBIZ1gb1IQ6b/"
 Content-Disposition: inline
-In-Reply-To: <d16b2937-a697-56e7-5c66-37839253d7c1@gmail.com>
+In-Reply-To: <20210324200134.75513-1-u.kleine-koenig@pengutronix.de>
 User-Agent: Mutt/2.0.6 (98f8cb83) (2021-03-06)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---fZxrLXij7Eda29gC
+--mLfrBIZ1gb1IQ6b/
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 25, 2021 at 03:37:14PM -0700, Florian Fainelli wrote:
+On Wed, Mar 24, 2021 at 09:01:34PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> Before pwmchip_remove() returns the PWM is expected to be functional. So
+> remove the pwmchip before disabling the clock.
 >=20
->=20
-> On 3/25/2021 1:29 AM, Uwe Kleine-K=C3=B6nig wrote:
-> > Before pwmchip_remove() returns the PWM is expected to be functional. So
-> > remove the pwmchip before disabling the clock.
-> >=20
-> > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
->=20
-> Similar to your pwm-bcm-iproc.c change, I would be inclined to add a:
->=20
-> Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
->=20
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+>  drivers/pwm/pwm-bcm-iproc.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-I think unless this causes an actual problem, which I've never heard of,
-there's little sense in having this backported all the way back.
+Applied, thanks.
 
 Thierry
 
---fZxrLXij7Eda29gC
+--mLfrBIZ1gb1IQ6b/
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmBwSdwACgkQ3SOs138+
-s6HCnQ//RaL2LKDQfrnzfCX23iZlu/2nlkTBT1+vsWbQYC6+eMDux+te+YODEnvc
-6uGeLx3ZdT8C5F3OJS4Lqug9vfms7qt3nddfo/unM011aFRR9h3+/ayAHRKKyaS8
-G2DWXpWnO9TEmBf3EdWXh6fmEm15SD1556zO0U6vR79ctC/85U6R25K3XmXfXFmv
-rcV6KZ99sdL3a5AuAPQLrP7Rlqk+fx1qvbM6SkyyBW8x1Pr+iZQHmcwqJ1X5pjrd
-qNh3vF4YerTskuerH9KBKZNSkBYPRH4DreXHgYV/x4XaDGKA+AWtbUSlgsEIhSTT
-0l8FkmS/KF3gN2Ja0/rN1aw5YPCjbfENRPsu38rBAVBlUulIXaR0Ten2/gXcZLgs
-Sl2TaSkcRfJiuYQ2ECNa5Ss83xODgvQg7X6g2H7ZyQfcqet0tFNhIRwE0+ps76fM
-YDekwkreWanjkx/pO7k9mdr/r/m5NAwHAjUZ1VrxJ8uHKYTAswVxWV/akJAVVTIB
-V65uaVbSAUopzGJk2I1m0vCbVfGk+3Y1MMYjRr39stJ4wv4CNOMxz5bt5g/Yj018
-dORKMSlCQ1saJgHkllPcrEF9+Iuzzh8HRzl1HLLpQn/I7wTfbuAOJibNG7cORqhQ
-gwNdisFMLP+JF8VdT7vA5yvAgr40K1ewKJ9gXtctKVw2xin7eG8=
-=oiaV
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmBwSfMACgkQ3SOs138+
+s6EsuRAAtlBW96kHHqtDpLoRYYeFsucCi+WL/LtaLk/WXeO5G8bIfDWeJLftKplX
+B3pDkBC/Nl7b/ga2U3eWt3eI2W2oya7i0PUL1QraRzKuQO9+q76EdZJTE0se2cuP
+YFIaX+wiyXCU+TgLHVx/6zK7YdSuHjVeas//C3lbvbhHBOl4mTN1Nh6WfbiLOjvp
+dr6SnEt8B6kcZMajXjwNvFPxtJ6NMIAQC/+q0KBu3qNGGBoiHnA7vftXvijD7wLm
+ZxUD+2tYMXyM+HNIGuVUzaKMzNpnZhQqpHjdJkVe1kaBlBggZ9NhJoyDH5/B6o/D
+gWshTKHD65AD93awgkl/TxNZfFkpOT8ss6a5VVFmkLoK+e8XKZ1Q+KJvszr2N1gw
+8Voxd79vxF90+t3n1JT/GIwKtszwILvXsOdSLGIQyihxZUS4wBVtzOk7M2QGGFoG
+SZop4j1vn0JwSAZQK4XNuUdYy3sw/6tw33ZBrr1VJt21aWOaydG6gdAUmEOWlkX7
+RdHDfHnlnXftxbHtZmhujvDvkA1Wvb6gWjm/imaS5OixYaZpSZNKcgf7FVC4RWYI
+ES/IyBDNE6bRLGWxAFI+qAUpAaVBblgA1anN5zgH6CRKaJlTTD42z6UP4Zu+fb7B
+qTiioPMmHdqpS2oIXSXyUQrozRrFFogQHghQZGLDURRt+ikk83o=
+=5fdb
 -----END PGP SIGNATURE-----
 
---fZxrLXij7Eda29gC--
+--mLfrBIZ1gb1IQ6b/--
