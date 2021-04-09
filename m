@@ -2,99 +2,99 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 11906358BF8
-	for <lists+linux-pwm@lfdr.de>; Thu,  8 Apr 2021 20:14:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DCEA3596AB
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 Apr 2021 09:45:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232287AbhDHSOX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 8 Apr 2021 14:14:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231716AbhDHSOX (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 8 Apr 2021 14:14:23 -0400
-Received: from mail.pqgruber.com (mail.pqgruber.com [IPv6:2a05:d014:575:f70b:4f2c:8f1d:40c4:b13e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE6EEC061760;
-        Thu,  8 Apr 2021 11:14:11 -0700 (PDT)
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id A092AC725C7;
-        Thu,  8 Apr 2021 20:14:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1617905649;
-        bh=bqq+6Ua6gjCE1d4qctGpoLs9LGXr1awDHysmE+XtkwE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1G+vlnAkRYmKGPKs3Spm9nAkUs7fBssKaYLh8Lr2hfgtHkh0iz9LB3aKBtsWtkbMO
-         IKbZg4JguOYSnDK0xR8FDTqEBfA25zTaghX0Sr9AVqtJ3ao5bolI905JBKp9IxNXQx
-         XCClDPIAgXdKSoZ1qbB4Y8aZ1dV56c4Bm4j/it80=
-Date:   Thu, 8 Apr 2021 20:14:08 +0200
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
+        id S231811AbhDIHpT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 9 Apr 2021 03:45:19 -0400
+Received: from mo-csw1516.securemx.jp ([210.130.202.155]:47362 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229803AbhDIHpS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Apr 2021 03:45:18 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1516) id 1397iWUC032283; Fri, 9 Apr 2021 16:44:32 +0900
+X-Iguazu-Qid: 34ts1PSq8uy9NsjtWP
+X-Iguazu-QSIG: v=2; s=0; t=1617954271; q=34ts1PSq8uy9NsjtWP; m=HQ4LwDPZhM5Lp0dULteRO76Vt1mbmgpcJ69yjzbLcY0=
+Received: from imx12-a.toshiba.co.jp (imx12-a.toshiba.co.jp [61.202.160.135])
+        by relay.securemx.jp (mx-mr1510) id 1397iUh5015378
+        (version=TLSv1.2 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 9 Apr 2021 16:44:30 +0900
+Received: from enc02.toshiba.co.jp (enc02.toshiba.co.jp [61.202.160.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by imx12-a.toshiba.co.jp (Postfix) with ESMTPS id A6AEC1000B1;
+        Fri,  9 Apr 2021 16:44:30 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id 1397iU8N007893;
+        Fri, 9 Apr 2021 16:44:30 +0900
+Date:   Fri, 9 Apr 2021 16:44:28 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Rob Herring <robh@kernel.org>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 5/8] pwm: core: Support new PWM_STAGGERING_ALLOWED flag
-Message-ID: <YG9H8D5YW0KEtaoG@workstation.tuxnet>
-References: <20210406164140.81423-1-clemens.gruber@pqgruber.com>
- <20210406164140.81423-5-clemens.gruber@pqgruber.com>
- <20210407054658.qdsjkstqwynxeuxj@pengutronix.de>
- <YG4UNoBCQJkEEfwi@workstation.tuxnet>
- <20210407213403.h6n6l2t7vqoalceu@pengutronix.de>
- <YG78IHIMGtl8Pokp@orome.fritz.box>
- <YG8miEOZXsH0NTcA@workstation.tuxnet>
- <20210408173637.w26njwystfuyrgan@pengutronix.de>
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        punit1.agrawal@toshiba.co.jp, yuji2.ishikawa@toshiba.co.jp,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: Add bindings for Toshiba
+ Visconti PWM Controller
+X-TSB-HOP: ON
+Message-ID: <20210409074428.hg7ys5he6iuqzhm6@toshiba.co.jp>
+References: <20210212131910.557581-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+ <20210212131910.557581-2-nobuhiro1.iwamatsu@toshiba.co.jp>
+ <20210305202224.GA583007@robh.at.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210408173637.w26njwystfuyrgan@pengutronix.de>
+In-Reply-To: <20210305202224.GA583007@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Apr 08, 2021 at 07:36:37PM +0200, Uwe Kleine-König wrote:
-> On Thu, Apr 08, 2021 at 05:51:36PM +0200, Clemens Gruber wrote:
-> > On Thu, Apr 08, 2021 at 02:50:40PM +0200, Thierry Reding wrote:
-> > > Yes, I think that's basically what this is saying. I think we're perhaps
-> > > getting hung up on the terminology here. PWM_STAGGERING_ALLOWED gives
-> > > the impression that we're dealing with some provider-specific feature,
-> > > whereas what we really want to express is that the PWM doesn't care
-> > > exactly when the active cycle starts and based on that a provider that
-> > > can support it may optimize the EMI behavior.
-> > > 
-> > > Maybe we can find a better name for this? Ultimately what this means is
-> > > that the consumer is primarily interested in the power output of the PWM
-> > > rather than the exact shape of the signal. So perhaps something like
-> > > PWM_USAGE_POWER would be more appropriate.
+Hi,
+
+On Fri, Mar 05, 2021 at 02:22:24PM -0600, Rob Herring wrote:
+> On Fri, Feb 12, 2021 at 10:19:09PM +0900, Nobuhiro Iwamatsu wrote:
+> > Add bindings for the Toshiba Visconti PWM Controller.
 > > 
-> > Yes, although it would then no longer be obvious that this feature leads
-> > to improved EMI behavior, as long as we mention that in the docs, I
-> > think it's a good idea
+> > Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+> > ---
+> >  .../bindings/pwm/toshiba,pwm-visconti.yaml    | 43 +++++++++++++++++++
+> >  1 file changed, 43 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pwm/toshiba,pwm-visconti.yaml
 > > 
-> > Maybe document it as follows?
-> > PWM_USAGE_POWER - Allow the driver to delay the start of the cycle
-> > for EMI improvements, as long as the power output stays the same
+> > diff --git a/Documentation/devicetree/bindings/pwm/toshiba,pwm-visconti.yaml b/Documentation/devicetree/bindings/pwm/toshiba,pwm-visconti.yaml
+> > new file mode 100644
+> > index 000000000000..f11558cdc32f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pwm/toshiba,pwm-visconti.yaml
+> > @@ -0,0 +1,43 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pwm/toshiba,pwm-visconti.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Toshiba Visconti PWM Controller
+> > +
+> > +maintainers:
+> > +  - Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - const: toshiba,pwm-visconti
 > 
-> I don't like both names, because for someone who is only halfway into
-> PWM stuff it is not understandable. Maybe ALLOW_PHASE_SHIFT?
+> The 'normal' order is: toshiba,visconti-pwm
 
-Sounds good to me.
+I see, I will change to it.
 
-> When a consumer is only interested in the power output than
 > 
-> 	.period = 20
-> 	.duty_cycle = 5
+> Otherwise,
 > 
-> would also be an allowed response for the request
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > 
-> 	.period = 200
-> 	.duty_cycle = 50
-> 
-> and this is not what is in the focus here.
 
-Right.
+Thanks!
 
-If Thierry agrees, I can spin up a new revision.
-
-Maybe we can get it into 5.13 after all.
-
-Thanks,
-Clemens
+Best regards,
+  Nobuhiro
