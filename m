@@ -2,144 +2,135 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4ADE359FF8
-	for <lists+linux-pwm@lfdr.de>; Fri,  9 Apr 2021 15:38:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20B8535A283
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 Apr 2021 18:02:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232286AbhDINie (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 9 Apr 2021 09:38:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45434 "EHLO
+        id S232395AbhDIQDG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 9 Apr 2021 12:03:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231819AbhDINie (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Apr 2021 09:38:34 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C389C061760
-        for <linux-pwm@vger.kernel.org>; Fri,  9 Apr 2021 06:38:21 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id s15so6602899edd.4
-        for <linux-pwm@vger.kernel.org>; Fri, 09 Apr 2021 06:38:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ztVSslfeXk+Puzf/6F61J60GRyKpaqQ6M4PfwrNU87w=;
-        b=FYMngXVVGj6ygEWQYsxYkNvKGhUzU9mul6NsNKviwxu+ruIgEAiOsLPzJs729MIIde
-         pvinkMrV6XdgExeccNrA+iSpRefg5SoRvR7PaBJbC+HB1Kd/udsEzCgTPM4OlOECUvJO
-         mjBWcofa74N9P8gGhEYGX9DdPL0qbNbJvjheVqtMJem6R4t/pR/XJg/uNQ4U/bwyrSf3
-         a/Ay1SG209ZK2H5Lpv0gIb46n5b56+lt896/xwdRwPhmsfTdatWT1cRBvFu+i5n58Al/
-         4GjTbU3IOgbVQVhcZiBgTixYaqQF1/wqp/RO8iKA7GtiLeSjhBpCsmee7uh5Lox+Z6fA
-         t2Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ztVSslfeXk+Puzf/6F61J60GRyKpaqQ6M4PfwrNU87w=;
-        b=l173FZSIqx1LVZFrEs6kiSQg3H+DjpqeBBGv+2QIXBXg3QhaN/gl/lJCYcT0Kilu+9
-         eh7umYX1vyGj1I/F/JHtH+RBMiQ4jLjvhvFMj9wMSYdOfLuY7o1eW4tKTpIge3URJDLa
-         q/oPKtg0Z5Bia+zvmxQ5w4PBWhg1pFp0/5PEyt0P6NgGEFHYm19XxghT+ykmMmS3oI9X
-         meF5p+dThE+AwTkdo37R7B/WLpGDenQMoZQichakCaM+WJ8QPCp8K2ZiIF62kFQQxDLp
-         4qRcitwgfQgQUbE8OSSDYKd3Oy9f4ck+vPkkkuMzyDpEh08OQccwn6zoP/u37TJP3dMz
-         lBsA==
-X-Gm-Message-State: AOAM5320zB38v/+K38WFOatuZ5n+EmADFnuxFCgDa7iqsMhahWh5PHCz
-        wjlGW4uef9riPsasYhHdMyo=
-X-Google-Smtp-Source: ABdhPJyCeTPNz2c9OBfAmMX9yOr5DZ2g2eo0NxUAYY5PH/S3jOAbf/Zn/DyuyDguF8aff4SkzH/zwg==
-X-Received: by 2002:a50:fd16:: with SMTP id i22mr17503935eds.239.1617975500049;
-        Fri, 09 Apr 2021 06:38:20 -0700 (PDT)
-Received: from localhost (pd9e51abe.dip0.t-ipconnect.de. [217.229.26.190])
-        by smtp.gmail.com with ESMTPSA id r4sm1229894ejd.125.2021.04.09.06.38.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Apr 2021 06:38:16 -0700 (PDT)
-Date:   Fri, 9 Apr 2021 15:38:53 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: Re: [PATCH 0/4] pwm: Simplify drivers with of_pwm_n_cells = 3
-Message-ID: <YHBY7aXlJYKmXKGG@orome.fritz.box>
-References: <20210315111124.2475274-1-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S229665AbhDIQDF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Apr 2021 12:03:05 -0400
+Received: from mail.pqgruber.com (mail.pqgruber.com [IPv6:2a05:d014:575:f70b:4f2c:8f1d:40c4:b13e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4089C061760;
+        Fri,  9 Apr 2021 09:02:52 -0700 (PDT)
+Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
+        by mail.pqgruber.com (Postfix) with ESMTPSA id 23E12C725C8;
+        Fri,  9 Apr 2021 18:02:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
+        s=mail; t=1617984171;
+        bh=LIxPHBmo/KeqMZhUOvGy0UsxCNZtEfquEOWX7sW/jAo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=L1W2OMqw1YYp+BDN8lYxuq8J/C2uG9MWqK6tUyJFGTNduiYyu0dXTdKazWKvRPkXZ
+         94OlucJWrUfT92/uHqhoqBegM5iuKqUSeY83MhnJ1eVpuCJEfRmbHqJt57r1GHoJH8
+         t1WgWpok32/ZSwSxB2yeqa/ZkPdlmBsaku0IkZ/4=
+Date:   Fri, 9 Apr 2021 18:02:49 +0200
+From:   Clemens Gruber <clemens.gruber@pqgruber.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 5/8] pwm: core: Support new PWM_STAGGERING_ALLOWED flag
+Message-ID: <YHB6qQGTyVt8rh4Y@workstation.tuxnet>
+References: <20210406164140.81423-1-clemens.gruber@pqgruber.com>
+ <20210406164140.81423-5-clemens.gruber@pqgruber.com>
+ <20210407054658.qdsjkstqwynxeuxj@pengutronix.de>
+ <YG4UNoBCQJkEEfwi@workstation.tuxnet>
+ <20210407213403.h6n6l2t7vqoalceu@pengutronix.de>
+ <YG78IHIMGtl8Pokp@orome.fritz.box>
+ <YG8miEOZXsH0NTcA@workstation.tuxnet>
+ <20210408173637.w26njwystfuyrgan@pengutronix.de>
+ <YHA5sPuZmbSLU3aM@orome.fritz.box>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yzwueTQphz5WRVHa"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20210315111124.2475274-1-u.kleine-koenig@pengutronix.de>
-User-Agent: Mutt/2.0.6 (98f8cb83) (2021-03-06)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YHA5sPuZmbSLU3aM@orome.fritz.box>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Fri, Apr 09, 2021 at 01:25:36PM +0200, Thierry Reding wrote:
+> On Thu, Apr 08, 2021 at 07:36:37PM +0200, Uwe Kleine-König wrote:
+> > On Thu, Apr 08, 2021 at 05:51:36PM +0200, Clemens Gruber wrote:
+> > > On Thu, Apr 08, 2021 at 02:50:40PM +0200, Thierry Reding wrote:
+> > > > Yes, I think that's basically what this is saying. I think we're perhaps
+> > > > getting hung up on the terminology here. PWM_STAGGERING_ALLOWED gives
+> > > > the impression that we're dealing with some provider-specific feature,
+> > > > whereas what we really want to express is that the PWM doesn't care
+> > > > exactly when the active cycle starts and based on that a provider that
+> > > > can support it may optimize the EMI behavior.
+> > > > 
+> > > > Maybe we can find a better name for this? Ultimately what this means is
+> > > > that the consumer is primarily interested in the power output of the PWM
+> > > > rather than the exact shape of the signal. So perhaps something like
+> > > > PWM_USAGE_POWER would be more appropriate.
+> > > 
+> > > Yes, although it would then no longer be obvious that this feature leads
+> > > to improved EMI behavior, as long as we mention that in the docs, I
+> > > think it's a good idea
+> > > 
+> > > Maybe document it as follows?
+> > > PWM_USAGE_POWER - Allow the driver to delay the start of the cycle
+> > > for EMI improvements, as long as the power output stays the same
+> > 
+> > I don't like both names, because for someone who is only halfway into
+> > PWM stuff it is not understandable. Maybe ALLOW_PHASE_SHIFT?
+> 
+> Heh... how's that any more understandable?
+> 
+> > When a consumer is only interested in the power output than
+> > 
+> > 	.period = 20
+> > 	.duty_cycle = 5
+> > 
+> > would also be an allowed response for the request
+> > 
+> > 	.period = 200
+> > 	.duty_cycle = 50
+> > 
+> > and this is not what is in the focus here.
+> 
+> Actually, that's *exactly* what's important here. From a consumer point
+> of view the output power is the key in this case. The specifier is a
+> description of a particular PWM in the consumer context. And the
+> consumer not going to care what exactly the PWM controller might end up
+> configuring to achieve best results. If the controller allows the phase
+> shift to be changed and the constraints allow it, then that's great, but
+> it isn't something that the consumer has to know if all it wants is that
+> the power output is as requested.
+> 
+> Put another way, the more generically we can describe the constraints or
+> use cases, the more flexibility we get for drivers to fulfill those
+> constraints. For example one controller might support phase shifting and
+> use that for PWM_USAGE_POWER for better EMI behaviour. But another PWM
+> controller may not support it. But it could perhaps want to optimize the
+> PWM signal by reversing the polarity of one channel or whatever other
+> mechanism there may be.
+> 
+> If we add a flag such as ALLOW_PHASE_SHIFT, then only controllers that
+> support programmable phase shift will be able to support this. If some
+> other mechanism can also be used to support "equivalent power" use
+> cases, that would have to be described as some other flag, which has
+> essentially the same meaning. So you can get into a situation where you
+> have multiple flags used for the same thing.
 
---yzwueTQphz5WRVHa
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I see what you mean. We have more flexibility with PWM_USAGE_POWER. The
+only downside is that there is no real connection to the improved EMI
+but I guess that's what documentation is for.
 
-On Mon, Mar 15, 2021 at 12:11:20PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> Hello,
->=20
-> quite some drivers support the modern PWM binding with #pwm-cells =3D <3>.
-> Make this still more normal by simplifying the core a bit which then
-> allows to drop the explicit support for 3 cells from the drivers.
->=20
-> Best regards
-> Uwe
->=20
-> Uwe Kleine-K=C3=B6nig (4):
->   pwm: Make of_pwm_xlate_with_flags() work with #pwm-cells =3D <2>
->   pwm: Drop of_pwm_simple_xlate() in favour of of_pwm_xlate_with_flags()
->   pwm: Autodetect default value for of_pwm_n_cells from device tree
->   pwm: Simplify all drivers with explicit of_pwm_n_cells =3D 3
->=20
->  drivers/pwm/core.c             | 41 +++++++++-------------------------
->  drivers/pwm/pwm-atmel-hlcdc.c  |  2 --
->  drivers/pwm/pwm-atmel-tcb.c    |  2 --
->  drivers/pwm/pwm-atmel.c        |  2 --
->  drivers/pwm/pwm-bcm-iproc.c    |  2 --
->  drivers/pwm/pwm-bcm-kona.c     |  2 --
->  drivers/pwm/pwm-bcm2835.c      |  2 --
->  drivers/pwm/pwm-berlin.c       |  2 --
->  drivers/pwm/pwm-fsl-ftm.c      |  2 --
->  drivers/pwm/pwm-hibvt.c        |  2 --
->  drivers/pwm/pwm-imx-tpm.c      |  2 --
->  drivers/pwm/pwm-imx27.c        |  3 ---
->  drivers/pwm/pwm-jz4740.c       |  2 --
->  drivers/pwm/pwm-lpc18xx-sct.c  |  2 --
->  drivers/pwm/pwm-meson.c        |  2 --
->  drivers/pwm/pwm-mxs.c          |  2 --
->  drivers/pwm/pwm-omap-dmtimer.c |  2 --
->  drivers/pwm/pwm-renesas-tpu.c  |  2 --
->  drivers/pwm/pwm-rockchip.c     |  5 -----
->  drivers/pwm/pwm-samsung.c      |  3 ---
->  drivers/pwm/pwm-sifive.c       |  2 --
->  drivers/pwm/pwm-stm32-lp.c     |  2 --
->  drivers/pwm/pwm-stm32.c        |  2 --
->  drivers/pwm/pwm-sun4i.c        |  2 --
->  drivers/pwm/pwm-tiecap.c       |  2 --
->  drivers/pwm/pwm-tiehrpwm.c     |  2 --
->  drivers/pwm/pwm-vt8500.c       |  2 --
->  27 files changed, 11 insertions(+), 87 deletions(-)
+I will try to document it as follows:
+- PWM_USAGE_POWER - Only care about the power output of the signal. This
+  allows drivers (if supported) to optimize the signals, for example to
+  improve EMI and reduce current spikes.
 
-Given where we are in the release cycle I'm hesitant to apply this, just
-in case it regressed somewhere. If you send out a v2 I'll queue this up
-shortly after v5.13-rc1 to give it maximum soak time in linux-next.
+Maybe I then add a comment describing the specific optimization in the
+pca9685 code, maybe like this:
+If PWM_USAGE_POWER is set on a PWM, the pca9685 driver will phase shift
+the individual channels relative to their channel number. This improves
+EMI because the enabled channels no longer turn on at the same time,
+while still maintaining the configured duty cycle.
 
-Thierry
-
---yzwueTQphz5WRVHa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmBwWO0ACgkQ3SOs138+
-s6HmjBAAgQrWNJdDVuT8Z5Lvs6vWbuS6Ivhmdg3on8U+y4HHCSRuLe/uRzUABtIA
-gZVeLqIEdM446+OnR1WTioAIGBAYpy59QjQihQl/Ky9lWdBm7ZJIuMCnHfGRQecL
-kpVId8TTwiof6MoH1kcX3MfR6Z6EqyqP2zyLaAXl2PaTpNVOz82hryTK4sLHLC0d
-++S6CSWBQg6jLDERJV9TEcTk6mozcnke5tVClq4iLKv3yOmYIRu8Hr1+zDasOQ1/
-qhpBtglNdYx20jFBh6sH8ret1gzTfBwxPBfKfZG/wdhQOsHU1dB6my6Pl0vGvksc
-Wjhg4u3d3dkpIzXgANtqLRyWXHInWt18FRXD2VMbV4Jkf4cQzN18oVsN2RIMaNV/
-ySs3QcPrOtZ9x268L6bDGMhNoUHEmDmmo2xlbbNwdPR7H3re5hnaUtS7szWJex5t
-70X/CnCVUShuyKEfac+ve19D+wfypRtUg/DvaT4fyghGqKq9TFWC5srCil3G63u5
-Kcow6B04zzSh2W3FbWuQA91lLq65D27LykFX0YBXZ1oIxyn7arzsg/Bz4c2esR+0
-No/OlxVPpDlyDb/GJKLw3NuUJIYaDYDoGyfCsNGFy1QmtMu2J+TEIUuJN02IW9gm
-yQhEC7c/QIP/ZISj6lDgJNgpN1fU+fvWRXA4COeNGMl3B7YWY8o=
-=FxDR
------END PGP SIGNATURE-----
-
---yzwueTQphz5WRVHa--
+Thanks,
+Clemens
