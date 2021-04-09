@@ -2,349 +2,223 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3362435A861
-	for <lists+linux-pwm@lfdr.de>; Fri,  9 Apr 2021 23:35:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2724635A863
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 Apr 2021 23:35:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234416AbhDIVfj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 9 Apr 2021 17:35:39 -0400
-Received: from mo-csw1116.securemx.jp ([210.130.202.158]:47788 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233687AbhDIVfj (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Apr 2021 17:35:39 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1116) id 139LYwRH008798; Sat, 10 Apr 2021 06:34:58 +0900
-X-Iguazu-Qid: 2wHHssSnbYbFdnoxPc
-X-Iguazu-QSIG: v=2; s=0; t=1618004098; q=2wHHssSnbYbFdnoxPc; m=D1xW780p6Id16TNwDIvBcVhNiqlRO90vFrM0M43hh+g=
-Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
-        by relay.securemx.jp (mx-mr1112) id 139LYv3Z027218
-        (version=TLSv1.2 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-        Sat, 10 Apr 2021 06:34:57 +0900
-Received: from enc01.toshiba.co.jp (enc01.toshiba.co.jp [106.186.93.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by imx2-a.toshiba.co.jp (Postfix) with ESMTPS id 2DC7E1000E5;
-        Sat, 10 Apr 2021 06:34:57 +0900 (JST)
-Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc01.toshiba.co.jp  with ESMTP id 139LYuoA006484;
-        Sat, 10 Apr 2021 06:34:56 +0900
-Date:   Sat, 10 Apr 2021 06:34:55 +0900
-From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+        id S234538AbhDIVfl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 9 Apr 2021 17:35:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234513AbhDIVfk (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Apr 2021 17:35:40 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E41EBC061762
+        for <linux-pwm@vger.kernel.org>; Fri,  9 Apr 2021 14:35:26 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lUymg-00030P-3i; Fri, 09 Apr 2021 23:35:22 +0200
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lUymf-0002XY-F3; Fri, 09 Apr 2021 23:35:21 +0200
+Date:   Fri, 9 Apr 2021 23:35:21 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        punit1.agrawal@toshiba.co.jp, yuji2.ishikawa@toshiba.co.jp,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] pwm: visconti: Add Toshiba Visconti SoC PWM
- support
-X-TSB-HOP: ON
-Message-ID: <20210409213455.6f25m4jyttqn75hf@toshiba.co.jp>
-References: <20210409090709.1918021-1-nobuhiro1.iwamatsu@toshiba.co.jp>
- <20210409090709.1918021-3-nobuhiro1.iwamatsu@toshiba.co.jp>
- <YHBUjPjEpLYF/915@orome.fritz.box>
+Cc:     Clemens Gruber <clemens.gruber@pqgruber.com>,
+        linux-pwm@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 5/8] pwm: core: Support new PWM_STAGGERING_ALLOWED flag
+Message-ID: <20210409213521.mni4jygws4ml53dk@pengutronix.de>
+References: <20210406164140.81423-1-clemens.gruber@pqgruber.com>
+ <20210406164140.81423-5-clemens.gruber@pqgruber.com>
+ <20210407054658.qdsjkstqwynxeuxj@pengutronix.de>
+ <YG4UNoBCQJkEEfwi@workstation.tuxnet>
+ <20210407213403.h6n6l2t7vqoalceu@pengutronix.de>
+ <YG78IHIMGtl8Pokp@orome.fritz.box>
+ <YG8miEOZXsH0NTcA@workstation.tuxnet>
+ <20210408173637.w26njwystfuyrgan@pengutronix.de>
+ <YHA5sPuZmbSLU3aM@orome.fritz.box>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="s3vmzldvkbc4c6zk"
 Content-Disposition: inline
-In-Reply-To: <YHBUjPjEpLYF/915@orome.fritz.box>
+In-Reply-To: <YHA5sPuZmbSLU3aM@orome.fritz.box>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Thierry,
 
-Thanks for your review.
+--s3vmzldvkbc4c6zk
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 09, 2021 at 03:20:12PM +0200, Thierry Reding wrote:
-> On Fri, Apr 09, 2021 at 06:07:09PM +0900, Nobuhiro Iwamatsu wrote:
-> > Add driver for the PWM controller on Toshiba Visconti ARM SoC.
-> > 
-> > Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> > ---
-> >  drivers/pwm/Kconfig        |   9 ++
-> >  drivers/pwm/Makefile       |   1 +
-> >  drivers/pwm/pwm-visconti.c | 193 +++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 203 insertions(+)
-> >  create mode 100644 drivers/pwm/pwm-visconti.c
-> 
-> Looks good, but I have a few minor comments, see below.
-> 
-> > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> > index 9a4f66ae8070..8ae68d6203fb 100644
-> > --- a/drivers/pwm/Kconfig
-> > +++ b/drivers/pwm/Kconfig
-> > @@ -601,6 +601,15 @@ config PWM_TWL_LED
-> >  	  To compile this driver as a module, choose M here: the module
-> >  	  will be called pwm-twl-led.
-> >  
-> > +config PWM_VISCONTI
-> > +	tristate "Toshiba Visconti PWM support"
-> > +	depends on ARCH_VISCONTI || COMPILE_TEST
-> > +	help
-> > +	  PWM Subsystem driver support for Toshiba Visconti SoCs.
-> > +
-> > +	  To compile this driver as a module, choose M here: the module
-> > +	  will be called pwm-visconti.
-> > +
-> >  config PWM_VT8500
-> >  	tristate "vt8500 PWM support"
-> >  	depends on ARCH_VT8500 || COMPILE_TEST
-> > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> > index 6374d3b1d6f3..d43b1e17e8e1 100644
-> > --- a/drivers/pwm/Makefile
-> > +++ b/drivers/pwm/Makefile
-> > @@ -56,4 +56,5 @@ obj-$(CONFIG_PWM_TIECAP)	+= pwm-tiecap.o
-> >  obj-$(CONFIG_PWM_TIEHRPWM)	+= pwm-tiehrpwm.o
-> >  obj-$(CONFIG_PWM_TWL)		+= pwm-twl.o
-> >  obj-$(CONFIG_PWM_TWL_LED)	+= pwm-twl-led.o
-> > +obj-$(CONFIG_PWM_VISCONTI)	+= pwm-visconti.o
-> >  obj-$(CONFIG_PWM_VT8500)	+= pwm-vt8500.o
-> > diff --git a/drivers/pwm/pwm-visconti.c b/drivers/pwm/pwm-visconti.c
-> > new file mode 100644
-> > index 000000000000..ff4a5f5b0009
-> > --- /dev/null
-> > +++ b/drivers/pwm/pwm-visconti.c
-> > @@ -0,0 +1,193 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Toshiba Visconti pulse-width-modulation controller driver
-> > + *
-> > + * Copyright (c) 2020 TOSHIBA CORPORATION
-> > + * Copyright (c) 2020 Toshiba Electronic Devices & Storage Corporation
-> > + *
-> > + * Authors: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> > + *
-> > + */
-> > +
-> > +#include <linux/err.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/pwm.h>
-> > +#include <linux/platform_device.h>
-> 
-> Should be sorted alphabetically.
-> 
+Hello Thierry,
 
-I forgot it, I will fix.
+On Fri, Apr 09, 2021 at 01:25:36PM +0200, Thierry Reding wrote:
+> On Thu, Apr 08, 2021 at 07:36:37PM +0200, Uwe Kleine-K=F6nig wrote:
+> > On Thu, Apr 08, 2021 at 05:51:36PM +0200, Clemens Gruber wrote:
+> > > On Thu, Apr 08, 2021 at 02:50:40PM +0200, Thierry Reding wrote:
+> > > > Yes, I think that's basically what this is saying. I think we're pe=
+rhaps
+> > > > getting hung up on the terminology here. PWM_STAGGERING_ALLOWED giv=
+es
+> > > > the impression that we're dealing with some provider-specific featu=
+re,
+> > > > whereas what we really want to express is that the PWM doesn't care
+> > > > exactly when the active cycle starts and based on that a provider t=
+hat
+> > > > can support it may optimize the EMI behavior.
+> > > >=20
+> > > > Maybe we can find a better name for this? Ultimately what this mean=
+s is
+> > > > that the consumer is primarily interested in the power output of th=
+e PWM
+> > > > rather than the exact shape of the signal. So perhaps something like
+> > > > PWM_USAGE_POWER would be more appropriate.
+> > >=20
+> > > Yes, although it would then no longer be obvious that this feature le=
+ads
+> > > to improved EMI behavior, as long as we mention that in the docs, I
+> > > think it's a good idea
+> > >=20
+> > > Maybe document it as follows?
+> > > PWM_USAGE_POWER - Allow the driver to delay the start of the cycle
+> > > for EMI improvements, as long as the power output stays the same
+> >=20
+> > I don't like both names, because for someone who is only halfway into
+> > PWM stuff it is not understandable. Maybe ALLOW_PHASE_SHIFT?
+>=20
+> Heh... how's that any more understandable?
 
-> > +
-> > +#define PIPGM_PCSR(ch) (0x400 + 4 * (ch))
-> > +#define PIPGM_PDUT(ch) (0x420 + 4 * (ch))
-> > +#define PIPGM_PWMC(ch) (0x440 + 4 * (ch))
-> > +
-> > +#define PIPGM_PWMC_PWMACT		BIT(5)
-> > +#define PIPGM_PWMC_CLK_MASK		GENMASK(1, 0)
-> > +#define PIPGM_PWMC_POLARITY_MASK	GENMASK(5, 5)
-> > +
-> > +struct visconti_pwm_chip {
-> > +	struct pwm_chip chip;
-> > +	void __iomem *base;
-> > +};
-> > +
-> > +#define to_visconti_chip(chip) \
-> > +	container_of(chip, struct visconti_pwm_chip, chip)
-> 
-> I prefer these to be static inline functions because that tends to give
-> better error messages than macros. Also, that's what's primarily used in
-> the PWM drivers, even if there are a couple of outliers.
-> 
-> I'll go fix those up.
+The questions that come to (my) mind when reading PWM_USAGE_POWER are:
+So the PWM is allowed to use some power? The PWM is used to provide a
+power source (like a regulator)? Has this something to do with a
+permission to use the PWM (the power to use it)?
 
-I see. I will change to use static inline functions..
+Please try googling for "usage power", and compare it with the results
+you get for "phase shift".
 
-> 
-> > +
-> > +static int visconti_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> > +			      const struct pwm_state *state)
-> > +{
-> > +	struct visconti_pwm_chip *priv = to_visconti_chip(chip);
-> > +	u32 period, duty_cycle, pwmc0;
-> > +
-> > +	dev_dbg(chip->dev, "%s: ch = %d en = %d p = 0x%llx d = 0x%llx\n", __func__,
-> > +		pwm->hwpwm, state->enabled, state->period, state->duty_cycle);
-> 
-> Don't the trace points work for you?
+> > When a consumer is only interested in the power output than
+> >=20
+> > 	.period =3D 20
+> > 	.duty_cycle =3D 5
+> >=20
+> > would also be an allowed response for the request
+> >=20
+> > 	.period =3D 200
+> > 	.duty_cycle =3D 50
+> >=20
+> > and this is not what is in the focus here.
+>=20
+> Actually, that's *exactly* what's important here. From a consumer point
+> of view the output power is the key in this case.
 
-Yes, we can get this information by using the trace function. I will
-drop this.
+OK, so if I understand you correctly, you want indeed allow
 
-> 
-> > +
-> > +	/*
-> > +	 * pwmc is a 2-bit divider for the input clock running at 1 MHz.
-> > +	 * When the settings of the PWM are modified, the new values are shadowed in hardware until
-> > +	 * the period register (PCSR) is written and the currently running period is completed. This
-> > +	 * way the hardware switches atomically from the old setting to the new.
-> > +	 * Also, disabling the hardware completes the currently running period and keeps the output
-> > +	 * at low level at all times.
-> > +	 */
-> > +	if (!state->enabled) {
-> > +		writel(0, priv->base + PIPGM_PCSR(pwm->hwpwm));
-> > +		return 0;
-> > +	}
-> > +
-> > +	/*
-> > +	 * The biggest period the hardware can provide is
-> > +	 *	(0xffff << 3) * 1000 ns
-> > +	 * This value fits easily in an u32, so simplify the maths by
-> > +	 * capping the values to 32 bit integers.
-> > +	 */
-> > +	if (state->period > (0xffff << 3) * 1000)
-> > +		period = (0xffff << 3) * 1000;
-> > +	else
-> > +		period = state->period;
-> > +
-> > +	if (state->duty_cycle > period)
-> > +		duty_cycle = period;
-> > +	else
-> > +		duty_cycle = state->duty_cycle;
-> > +
-> > +	/*
-> > +	 * The input clock runs fixed at 1 MHz, so we have only
-> > +	 * microsecond resolution and so can divide by
-> > +	 * NSEC_PER_SEC / CLKFREQ = 1000 without loosing precision.
-> > +	 */
-> > +	period /= 1000;
-> > +	duty_cycle /= 1000;
-> > +
-> > +	if (!period)
-> > +		/* period too small */
-> > +		return -ERANGE;
-> 
-> Maybe braces around this so the two-line "block" doesn't look wrong,
-> even if it actually isn't. Or perhaps put the comment above the check
-> for the same effect.
+ 	.period =3D 200
+ 	.duty_cycle =3D 50
 
-I see, it's readability.
+when
 
-> 
-> Quite frankly, I'd just drop the comment because the code itself is
-> clear and the comment doesn't add anything.
+	.period =3D 20
+	.duty_cycle =3D 5
 
-OK, I will drop this comment.
+was requested? Do you want also allow .period =3D 20000 + .duty_cycle =3D
+5000? How would you limit what is allowed? I'd expect we don't want to
+allow .period =3D 20000000000 + .duty_cycle =3D 5000000000? What should a
+driver for a PWM backlight pass to pwm_apply_state if the PWM period
+should be between 4000000 ns and 16666666 ns? (This comes from the first
+backlight datasheet I found where the valid range for the brightness
+input is 60 to 250Hz.) Maybe saying that only making the period smaller
+would be an idea; but the motor bridge I recently worked with[1] limits
+the PWM frequency to "up to 20 kHz", so this isn't an universally good
+idea either.
 
-> 
-> > +
-> > +	/*
-> > +	 * PWMC controls a divider that divides the input clk by a
-> > +	 * power of two between 1 and 8. As a smaller divider yields
-> > +	 * higher precision, pick the smallest possible one.
-> > +	 */
-> > +	if (period > 0xffff) {
-> > +		pwmc0 = ilog2(period >> 16);
-> > +		BUG_ON(pwmc0 > 3);
-> > +	} else
-> > +		pwmc0 = 0;
-> > +
-> > +	period >>= pwmc0;
-> > +	duty_cycle >>= pwmc0;
-> > +
-> > +	if (state->polarity == PWM_POLARITY_INVERSED)
-> > +		pwmc0 |= PIPGM_PWMC_PWMACT;
-> > +	writel(pwmc0, priv->base + PIPGM_PWMC(pwm->hwpwm));
-> > +	writel(duty_cycle, priv->base + PIPGM_PDUT(pwm->hwpwm));
-> > +	writel(period, priv->base + PIPGM_PCSR(pwm->hwpwm));
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void visconti_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> > +				   struct pwm_state *state)
-> > +{
-> > +	struct visconti_pwm_chip *priv = to_visconti_chip(chip);
-> > +	u32 period, duty, pwmc0, pwmc0_clk;
-> > +
-> > +	period = readl(priv->base + PIPGM_PCSR(pwm->hwpwm));
-> > +	if (period)
-> > +		state->enabled = true;
-> > +	else
-> > +		state->enabled = false;
-> > +
-> > +	duty = readl(priv->base + PIPGM_PDUT(pwm->hwpwm));
-> > +	pwmc0 = readl(priv->base + PIPGM_PWMC(pwm->hwpwm));
-> > +	pwmc0_clk = pwmc0 & PIPGM_PWMC_CLK_MASK;
-> > +
-> > +	state->period = (period << pwmc0_clk) * NSEC_PER_USEC;
-> > +	state->duty_cycle = (duty << pwmc0_clk) * NSEC_PER_USEC;
-> > +	if (pwmc0 & PIPGM_PWMC_POLARITY_MASK)
-> > +		state->polarity = PWM_POLARITY_INVERSED;
-> > +	else
-> > +		state->polarity = PWM_POLARITY_NORMAL;
-> > +}
-> > +
-> > +static const struct pwm_ops visconti_pwm_ops = {
-> > +	.apply = visconti_pwm_apply,
-> > +	.get_state = visconti_pwm_get_state,
-> > +	.owner = THIS_MODULE,
-> > +};
-> > +
-> > +static int visconti_pwm_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct visconti_pwm_chip *priv;
-> > +	int ret;
-> > +
-> > +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv)
-> > +		return -ENOMEM;
-> > +
-> > +	priv->base = devm_platform_ioremap_resource(pdev, 0);
-> > +	if (IS_ERR(priv->base))
-> > +		return PTR_ERR(priv->base);
-> > +
-> > +	platform_set_drvdata(pdev, priv);
-> > +
-> > +	priv->chip.dev = dev;
-> > +	priv->chip.ops = &visconti_pwm_ops;
-> > +	priv->chip.base = -1;
-> 
-> There's no need for this anymore. The current PWM tree will always
-> assume base = -1.
+[1] https://www.st.com/resource/en/datasheet/vnh5019a-e.pdf
 
-I see. I will drop this.
+> The specifier is a description of a particular PWM in the consumer
+> context. And the consumer not going to care what exactly the PWM
+> controller might end up configuring to achieve best results. If the
+> controller allows the phase shift to be changed and the constraints
+> allow it, then that's great, but it isn't something that the consumer
+> has to know if all it wants is that the power output is as requested.
 
-> 
-> > +	priv->chip.npwm = 4;
-> > +
-> > +	ret = pwmchip_add(&priv->chip);
-> > +	if (ret < 0)
-> > +		return dev_err_probe(&pdev->dev, ret, "Cannot register visconti PWM\n");
-> > +
-> > +	dev_dbg(&pdev->dev, "visconti PWM registered\n");
-> 
-> Maybe not the best use of a debug message. There are better ways to
-> check if a device has successfully bound to a driver than relying on
-> debug messages.
+Yes, if ALLOW_PHASE_SHIFT isn't what the consumer actually wants, they
+shouldn't use it. Agreed.
 
-I will drop this line. it says there are better way to check, but what is it?
+> Put another way, the more generically we can describe the constraints
+> or use cases, the more flexibility we get for drivers to fulfill those
+> constraints.
 
-> 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int visconti_pwm_remove(struct platform_device *pdev)
-> > +{
-> > +	struct visconti_pwm_chip *priv = platform_get_drvdata(pdev);
-> > +
-> > +	return pwmchip_remove(&priv->chip);
-> 
-> I think Uwe would prefer this to be done separately because he's working
-> towards removing the return value from pwmchip_remove() and if we start
-> ignoring it in new drivers that will make life easier going forward.
-> 
-> So this should just be:
-> 
-> 	pwmchip_remove(&priv->chip);
-> 
-> 	return 0;
+Yes, from the POV of a lowlevel driver the more general the better. From
+the POV of a consumer this isn't universally true, because the consumer
+might only accept a subset of the freedom this general flag gives to the
+lowlevel driver.
 
-I understand your suggestion.
-However, it looks like the pwmchip_remove() hasn't been updated yet.
-I will wait for the update of pwmchip_remove.
+> For example one controller might support phase shifting
+> and use that for PWM_USAGE_POWER for better EMI behaviour. But another
+> PWM controller may not support it. But it could perhaps want to
+> optimize the PWM signal by reversing the polarity of one channel or
+> whatever other mechanism there may be.
+>=20
+> If we add a flag such as ALLOW_PHASE_SHIFT, then only controllers that
+> support programmable phase shift will be able to support this.
 
-> 
-> Thierry
+That's wrong, drivers that support the polarity that was not requested
+can make use of it, too. That's something you already pointed out
+yourself (or I misunderstood you). (Then
 
-Best regards,
-  Nobuhiro
+	.period =3D X
+	.duty_cycle =3D Y
+	.polarity =3D PWM_POLARITY_NORMAL
+
+is "equivalent" to
+
+	.period =3D X
+	.duty_cycle =3D X - Y
+	.polarity =3D PWM_POLARITY_INVERSED
+
+as the signals only differ by a phase shift.)
+
+> If some other mechanism can also be used to support "equivalent power"
+> use cases, that would have to be described as some other flag, which
+> has essentially the same meaning. So you can get into a situation
+> where you have multiple flags used for the same thing.
+
+If they are for the same thing, you don't need another flag. Your
+concern is only valid if all consumers that are ok to accept a phase
+shifted PWM signal really only care about the relative duty cycle. I
+think that's wrong. (All consumers that use the PWM as something like a
+clock signal where something happens on the rising and/or falling edge
+and want this something happen with a certain frequency care about the
+period, but not the phase shift.)
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--s3vmzldvkbc4c6zk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmBwyJUACgkQwfwUeK3K
+7Akdmgf/RRrVk0JmdkZzOTJLd04K3pmZal+637F+mDs0Lm4HKt83fvdzEQLinWSe
+HLag4DAxHOGChJrboJyYhF1xBLSj8pp6M6RLi2W7CJVfhjYFFeYKLAah7IzNeCFe
+D14/UKiRI3V+KfwLqAhd5Bg/xDJBAgCzJRaCzXJ1PUjoYx4Ezn9g5WPmTCT0RVoh
++j7CjTcRw3AvBLFeFSWGFvsb5KIYnpCS24pGr/2FIyIBoVMUBqqSSS2P2asvWT/P
+0vaODlDO24qAHvbUeq1+dRKvStxj9P1fhbGeMt0rR+IOfZZH3LPlRf5OBp6mc1wM
+KtW8WpbLbxjT8OP8IJYfWtR9QUDOdA==
+=npIW
+-----END PGP SIGNATURE-----
+
+--s3vmzldvkbc4c6zk--
