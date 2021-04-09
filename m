@@ -2,135 +2,119 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20B8535A283
-	for <lists+linux-pwm@lfdr.de>; Fri,  9 Apr 2021 18:02:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71CA435A2AD
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 Apr 2021 18:08:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232395AbhDIQDG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 9 Apr 2021 12:03:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48940 "EHLO
+        id S233912AbhDIQI1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 9 Apr 2021 12:08:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229665AbhDIQDF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Apr 2021 12:03:05 -0400
+        with ESMTP id S233657AbhDIQI0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Apr 2021 12:08:26 -0400
 Received: from mail.pqgruber.com (mail.pqgruber.com [IPv6:2a05:d014:575:f70b:4f2c:8f1d:40c4:b13e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4089C061760;
-        Fri,  9 Apr 2021 09:02:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF5B9C061761;
+        Fri,  9 Apr 2021 09:08:13 -0700 (PDT)
 Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id 23E12C725C8;
-        Fri,  9 Apr 2021 18:02:51 +0200 (CEST)
+        by mail.pqgruber.com (Postfix) with ESMTPSA id 35805C725C8;
+        Fri,  9 Apr 2021 18:08:12 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1617984171;
-        bh=LIxPHBmo/KeqMZhUOvGy0UsxCNZtEfquEOWX7sW/jAo=;
+        s=mail; t=1617984492;
+        bh=Np0R8jz8X4f7v3vdRWj+57iPcgTXHXb9XIYeOfW1UjU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L1W2OMqw1YYp+BDN8lYxuq8J/C2uG9MWqK6tUyJFGTNduiYyu0dXTdKazWKvRPkXZ
-         94OlucJWrUfT92/uHqhoqBegM5iuKqUSeY83MhnJ1eVpuCJEfRmbHqJt57r1GHoJH8
-         t1WgWpok32/ZSwSxB2yeqa/ZkPdlmBsaku0IkZ/4=
-Date:   Fri, 9 Apr 2021 18:02:49 +0200
+        b=BVZ9FKGYwtfh+ksPg4LV9T5cfz/S7UWpckmigqBJUkQ++69eYSiEdVfd6NDGrQC1G
+         LKm+7ywk4nXYWJH2ncU5dth8JOXifkKfFBNZ8FnlqCjrRm5hrCdJpaZk6JL1kA3KI1
+         bKVi50TYuyy6nI4j+lkYZ15TzPyAi80Rum4Y651I=
+Date:   Fri, 9 Apr 2021 18:08:10 +0200
 From:   Clemens Gruber <clemens.gruber@pqgruber.com>
 To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 5/8] pwm: core: Support new PWM_STAGGERING_ALLOWED flag
-Message-ID: <YHB6qQGTyVt8rh4Y@workstation.tuxnet>
+Cc:     linux-pwm@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 3/8] pwm: pca9685: Improve runtime PM behavior
+Message-ID: <YHB76i7IcVAqvTQm@workstation.tuxnet>
 References: <20210406164140.81423-1-clemens.gruber@pqgruber.com>
- <20210406164140.81423-5-clemens.gruber@pqgruber.com>
- <20210407054658.qdsjkstqwynxeuxj@pengutronix.de>
- <YG4UNoBCQJkEEfwi@workstation.tuxnet>
- <20210407213403.h6n6l2t7vqoalceu@pengutronix.de>
- <YG78IHIMGtl8Pokp@orome.fritz.box>
- <YG8miEOZXsH0NTcA@workstation.tuxnet>
- <20210408173637.w26njwystfuyrgan@pengutronix.de>
- <YHA5sPuZmbSLU3aM@orome.fritz.box>
+ <20210406164140.81423-3-clemens.gruber@pqgruber.com>
+ <YHBQmGJIsa6sNRIg@orome.fritz.box>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YHA5sPuZmbSLU3aM@orome.fritz.box>
+In-Reply-To: <YHBQmGJIsa6sNRIg@orome.fritz.box>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Apr 09, 2021 at 01:25:36PM +0200, Thierry Reding wrote:
-> On Thu, Apr 08, 2021 at 07:36:37PM +0200, Uwe Kleine-König wrote:
-> > On Thu, Apr 08, 2021 at 05:51:36PM +0200, Clemens Gruber wrote:
-> > > On Thu, Apr 08, 2021 at 02:50:40PM +0200, Thierry Reding wrote:
-> > > > Yes, I think that's basically what this is saying. I think we're perhaps
-> > > > getting hung up on the terminology here. PWM_STAGGERING_ALLOWED gives
-> > > > the impression that we're dealing with some provider-specific feature,
-> > > > whereas what we really want to express is that the PWM doesn't care
-> > > > exactly when the active cycle starts and based on that a provider that
-> > > > can support it may optimize the EMI behavior.
-> > > > 
-> > > > Maybe we can find a better name for this? Ultimately what this means is
-> > > > that the consumer is primarily interested in the power output of the PWM
-> > > > rather than the exact shape of the signal. So perhaps something like
-> > > > PWM_USAGE_POWER would be more appropriate.
-> > > 
-> > > Yes, although it would then no longer be obvious that this feature leads
-> > > to improved EMI behavior, as long as we mention that in the docs, I
-> > > think it's a good idea
-> > > 
-> > > Maybe document it as follows?
-> > > PWM_USAGE_POWER - Allow the driver to delay the start of the cycle
-> > > for EMI improvements, as long as the power output stays the same
+On Fri, Apr 09, 2021 at 03:03:20PM +0200, Thierry Reding wrote:
+> On Tue, Apr 06, 2021 at 06:41:35PM +0200, Clemens Gruber wrote:
+> > The chip does not come out of POR in active state but in sleep state.
+> > To be sure (in case the bootloader woke it up) we force it to sleep in
+> > probe.
 > > 
-> > I don't like both names, because for someone who is only halfway into
-> > PWM stuff it is not understandable. Maybe ALLOW_PHASE_SHIFT?
-> 
-> Heh... how's that any more understandable?
-> 
-> > When a consumer is only interested in the power output than
+> > On kernels without CONFIG_PM, we wake the chip in .probe and put it to
+> > sleep in .remove.
 > > 
-> > 	.period = 20
-> > 	.duty_cycle = 5
+> > Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+> > ---
+> > Changes since v6:
+> > - Improved !CONFIG_PM handling (wake it up without putting it to sleep
+> >   first)
 > > 
-> > would also be an allowed response for the request
+> >  drivers/pwm/pwm-pca9685.c | 26 +++++++++++++++++++-------
+> >  1 file changed, 19 insertions(+), 7 deletions(-)
 > > 
-> > 	.period = 200
-> > 	.duty_cycle = 50
-> > 
-> > and this is not what is in the focus here.
+> > diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+> > index d4474c5ff96f..0bcec04b138a 100644
+> > --- a/drivers/pwm/pwm-pca9685.c
+> > +++ b/drivers/pwm/pwm-pca9685.c
+> > @@ -474,13 +474,18 @@ static int pca9685_pwm_probe(struct i2c_client *client,
+> >  		return ret;
+> >  	}
+> >  
+> > -	/* The chip comes out of power-up in the active state */
+> > -	pm_runtime_set_active(&client->dev);
+> > -	/*
+> > -	 * Enable will put the chip into suspend, which is what we
+> > -	 * want as all outputs are disabled at this point
+> > -	 */
+> > -	pm_runtime_enable(&client->dev);
+> > +	if (IS_ENABLED(CONFIG_PM)) {
 > 
-> Actually, that's *exactly* what's important here. From a consumer point
-> of view the output power is the key in this case. The specifier is a
-> description of a particular PWM in the consumer context. And the
-> consumer not going to care what exactly the PWM controller might end up
-> configuring to achieve best results. If the controller allows the phase
-> shift to be changed and the constraints allow it, then that's great, but
-> it isn't something that the consumer has to know if all it wants is that
-> the power output is as requested.
+> This looks odd to me. I've seen similar constructs, but they usually go
+> something like this (I think):
 > 
-> Put another way, the more generically we can describe the constraints or
-> use cases, the more flexibility we get for drivers to fulfill those
-> constraints. For example one controller might support phase shifting and
-> use that for PWM_USAGE_POWER for better EMI behaviour. But another PWM
-> controller may not support it. But it could perhaps want to optimize the
-> PWM signal by reversing the polarity of one channel or whatever other
-> mechanism there may be.
+> 	pm_runtime_enable(&client->dev);
 > 
-> If we add a flag such as ALLOW_PHASE_SHIFT, then only controllers that
-> support programmable phase shift will be able to support this. If some
-> other mechanism can also be used to support "equivalent power" use
-> cases, that would have to be described as some other flag, which has
-> essentially the same meaning. So you can get into a situation where you
-> have multiple flags used for the same thing.
+> 	if (!pm_runtime_enabled(&client->dev)) {
+> 		/* resume device */
+> 	}
+> 
+> Which I guess in your would be somewhat the opposite and it wouldn't
+> actually resume the device but rather put it to sleep.
 
-I see what you mean. We have more flexibility with PWM_USAGE_POWER. The
-only downside is that there is no real connection to the improved EMI
-but I guess that's what documentation is for.
+Yes, I wanted to keep it in sleep mode if runtime PM is supported (to be
+woken up later) and otherwise just wake it up in probe.
 
-I will try to document it as follows:
-- PWM_USAGE_POWER - Only care about the power output of the signal. This
-  allows drivers (if supported) to optimize the signals, for example to
-  improve EMI and reduce current spikes.
+> 
+> Perhaps something like this:
+> 
+> 	pm_runtime_enable(&client->dev);
+> 
+> 	if (pm_runtime_enabled(&client->dev)) {
+> 		pca9685_set_sleep_mode(pca, true);
+> 		pm_runtime_set_suspended(&client->dev);
+> 	} else {
+> 		/* wake the chip up on non-PM environments */
+> 		pca9685_set_sleep_mode(pca, false);
+> 	}
+> 
+> ? I think that's slightly more correct than your original because it
+> takes into account things like sysfs power control and such. It also
+> doesn't rely on the config option alone but instead uses the runtime
+> PM API to achieve this more transparently.
 
-Maybe I then add a comment describing the specific optimization in the
-pca9685 code, maybe like this:
-If PWM_USAGE_POWER is set on a PWM, the pca9685 driver will phase shift
-the individual channels relative to their channel number. This improves
-EMI because the enabled channels no longer turn on at the same time,
-while still maintaining the configured duty cycle.
+Ah, yes, I missed the fact that runtime could be disabled 'at runtime'
+via sysfs as well, so yes, that's more correct and pm_runtime_enabled
+will just return false if !CONFIG_PM, so that should work as well.
 
 Thanks,
 Clemens
