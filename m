@@ -2,80 +2,78 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20E0835A54D
-	for <lists+linux-pwm@lfdr.de>; Fri,  9 Apr 2021 20:09:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96CDB35A79E
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 Apr 2021 22:09:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234316AbhDISJv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 9 Apr 2021 14:09:51 -0400
-Received: from mail-oo1-f42.google.com ([209.85.161.42]:33328 "EHLO
-        mail-oo1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233332AbhDISJv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Apr 2021 14:09:51 -0400
-Received: by mail-oo1-f42.google.com with SMTP id i25-20020a4aa1190000b02901bbd9429832so1548097ool.0;
-        Fri, 09 Apr 2021 11:09:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LVU+FsLg96bFDUDU6A9aFOp+y4DojD87pf/U1wdf1yQ=;
-        b=JBvg/V5TVFCTTj+eLs55oxyp3QA2giOeTKcBT1ksq/W64QSOyYlRlai/sAJI7VffRh
-         SikVVP4gA7MYF1MnB7xQ1F/2HwyXBTsc1Niyl8rsWZWbGXqp5yCgBJGhlpIxZx7kQGN1
-         piF7+jBvPvWq/lm1lCk5nYqEONDbOIjnvY+PXUpDTv6l3GGO+w6cqHuSsoSurZMSblqq
-         lHeGRtdv9tq5B2+B+oItqSNEPzeH34fZlCJ3G5vzLlsX54SHCqbuu380tOcH4mvVmb98
-         qBAcHWw2W+48ClM+8nMof0s+pApjxCpZ8n3xvMP20wE9h0+2xg0rZ92a7AMjcAPQC+zn
-         F8eg==
-X-Gm-Message-State: AOAM532XGl1HjlhZU0L42E6cOUHm3toSfCbk6WoTJJiZDSqkshZ9HLC1
-        Z7nTDhp6WkaUkUBmXMQlDw==
-X-Google-Smtp-Source: ABdhPJyL7uQP3fZ6rTaXBePGYdufLxlMHG1qIzUu+Yb1eFiH7dGCjpSv6zGCyXO+9GlTpBbewdlIbw==
-X-Received: by 2002:a4a:4005:: with SMTP id n5mr12920298ooa.61.1617991777612;
-        Fri, 09 Apr 2021 11:09:37 -0700 (PDT)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l15sm290618otp.4.2021.04.09.11.09.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Apr 2021 11:09:37 -0700 (PDT)
-Received: (nullmailer pid 3894955 invoked by uid 1000);
-        Fri, 09 Apr 2021 18:09:35 -0000
-Date:   Fri, 9 Apr 2021 13:09:35 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     u.kleine-koenig@pengutronix.de, linux-kernel@vger.kernel.org,
-        lee.jones@linaro.org, heiko@sntech.de,
-        linux-arm-kernel@lists.infradead.org, thierry.reding@gmail.com,
-        robh+dt@kernel.org, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v1 2/2] dt-bindings: pwm: add more compatible strings to
- pwm-rockchip.yaml
-Message-ID: <20210409180935.GA3894908@robh.at.kernel.org>
-References: <20210406155053.29101-1-jbx6244@gmail.com>
- <20210406155053.29101-2-jbx6244@gmail.com>
+        id S234026AbhDIUJ5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 9 Apr 2021 16:09:57 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:33323 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234014AbhDIUJ5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Apr 2021 16:09:57 -0400
+Received: from mail-ot1-f48.google.com ([209.85.210.48]) by
+ mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1N6Kl7-1lbioB1Cv3-016jT4; Fri, 09 Apr 2021 22:09:42 +0200
+Received: by mail-ot1-f48.google.com with SMTP id 101-20020a9d0d6e0000b02902816815ff62so984993oti.9;
+        Fri, 09 Apr 2021 13:09:41 -0700 (PDT)
+X-Gm-Message-State: AOAM531kWBOsDk6s+Dopu80OC600JMVwTDmNlTh/7UJOWUunpZE2tWtl
+        zrQN59U7a7ojDeKY7M217ZhqW7K6UPaSNqQOAKo=
+X-Google-Smtp-Source: ABdhPJxgrpDN9niRoNJxEKNx9C3ESXH4MOZLEU3LztsYaa0J5NzZ/rEFwV/cMlf6ndV4sAexBU7tKL0P9BMH4NAvC0U=
+X-Received: by 2002:a05:6830:148c:: with SMTP id s12mr13951880otq.251.1617998980848;
+ Fri, 09 Apr 2021 13:09:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210406155053.29101-2-jbx6244@gmail.com>
+References: <20210409090819.24805-1-nsaenz@kernel.org>
+In-Reply-To: <20210409090819.24805-1-nsaenz@kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 9 Apr 2021 22:09:24 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3k94hJDJzCJSAC=jVF7S88vzUTK4V_cR31u0ve5jJJig@mail.gmail.com>
+Message-ID: <CAK8P3a3k94hJDJzCJSAC=jVF7S88vzUTK4V_cR31u0ve5jJJig@mail.gmail.com>
+Subject: Re: [PATCH] pwm: raspberrypi-poe: Fix mailbox message initialization
+To:     Nicolas Saenz Julienne <nsaenz@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        kernel test robot <lkp@intel.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:My4Shks7QHgMxSJ/kdBcZMkykldbq39U6c07xM0O6AJoGJBKET0
+ 9L4QmZo088neJ2eTofR0ekylltqccVZaWpf20wkMkIY3/YqAuomrqa1tDN4hugl4ErVDcZJ
+ 80CED+8jIrOGeyJAnjff/UgGstiJwIREZhqrHLMtu3s4ova5ZTL7XI9SvhfMLq7IslKl/ML
+ /YU0kn15/+gFe9efNj5Mg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0iIOvEf3l7U=:ua2uhpjK1MrwXNXG3VnEti
+ 0JrVjakwrbPXcBAz0kMEH9RsQnLjL254Y5JNUW1mbH1s7hvyjKIX8pS+kCmasgaXaktpg9JxX
+ +c+fW6DAlM7RpbPpsssqMfV8Z6xNX0S49U+nMnXuUanyV2OaXfHFfWiNo3A0+72d+YVpWVCVB
+ p38FbSt4sDlQ2P7ewVShxPzOtCSEs7B58e1CcIcuVyevF1r7Qry2zEV00uHndOnPdunxTHuu/
+ +jT9Ea//xs91+Xpnteex3UyqGuFwWRDa9+TZ+30bkSihpfqy5kdZ4npN0RnEgXL+4ArAF/KBJ
+ B7MU3iYau/lBQhLfm5UTSwn7ghyVXYYGGNXn7f6SDibtTiE0u53aKzEjVjS2wDx2PUndMmn9T
+ dT7rum48jM2WHKnBMefSjCblM6GDVjJCO0TJAW3yAgsqtySxtJvbaXiqGDcb2O/+qpRlWqZ9a
+ lZOj5JodQtVAxiuaRsf+NDtg7BuacAWOjocM//zP5/+tLrH3B+K0O0WSm4hMB0B8Zv4HIF56B
+ rsHqBksMfTj22K0H9iDeOr7rvrilwv15T3S8V/cT9yKGb1TMog8mKWNjCo+xABGEuZCCFuuVt
+ 4kt+GBdqXZDFQPEtMhqAVykB6vJV+e+reu
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 06 Apr 2021 17:50:53 +0200, Johan Jonker wrote:
-> The compatible strings below are already in use in the Rockchip
-> dtsi files, but were somehow never added to a document, so add
-> 
-> "rockchip,rk3328-pwm"
-> 
-> "rockchip,rk3036-pwm", "rockchip,rk2928-pwm"
-> 
-> "rockchip,rk3368-pwm", "rockchip,rk3288-pwm"
-> "rockchip,rk3399-pwm", "rockchip,rk3288-pwm"
-> 
-> "rockchip,px30-pwm", "rockchip,rk3328-pwm"
-> "rockchip,rk3308-pwm", "rockchip,rk3328-pwm"
-> 
-> for pwm nodes to pwm-rockchip.yaml.
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+On Fri, Apr 9, 2021 at 11:08 AM Nicolas Saenz Julienne
+<nsaenz@kernel.org> wrote:
+>
+> For testing purposes this driver might be built on big-endian
+> architectures. So make sure we take that into account when populating
+> structures that are to be passed to RPi4's mailbox.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Fixes: 79caa362eab6 ("pwm: Add Raspberry Pi Firmware based PWM bus")
+> Signed-off-by: Nicolas Saenz Julienne <nsaenz@kernel.org>
 > ---
->  Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
+>
+> @arndb: This was just meged into the arm-soc tree some days ago. Should I
+> prepare a second PR once it's been reviewed?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Yes, that would be good. If you have no other driver patches that I should
+pick up, just forward the patch (with the Ack) to soc@kernel.org and I
+can just apply it.
+
+        Arnd
