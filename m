@@ -2,189 +2,155 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D666B359E59
-	for <lists+linux-pwm@lfdr.de>; Fri,  9 Apr 2021 14:08:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3391359E88
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 Apr 2021 14:24:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232615AbhDIMI6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 9 Apr 2021 08:08:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53990 "EHLO
+        id S232087AbhDIMYW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 9 Apr 2021 08:24:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231402AbhDIMI4 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Apr 2021 08:08:56 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2114DC061760;
-        Fri,  9 Apr 2021 05:08:43 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id u17so8302060ejk.2;
-        Fri, 09 Apr 2021 05:08:43 -0700 (PDT)
+        with ESMTP id S231946AbhDIMYW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Apr 2021 08:24:22 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D07DC061760;
+        Fri,  9 Apr 2021 05:24:09 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id w23so6324229edx.7;
+        Fri, 09 Apr 2021 05:24:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=cEi4dBMf1BkmuY14gGbElJbBTh//wd4dN7gILare5wE=;
-        b=pQ+ZrITvRJMq9gBKBD5zfu3ZTxMiQ0leTkBxsvGMVbkQw/+/nGowpbVKDkLnwkIvf1
-         rr4UDyF83OUFNyun0b/I8NlZzgYFhUWaSZsBn00AYCh/72n3ePyYZVlPB/Ma40c6mdsk
-         SOKXCjAuNMB5QXHfNXqBeE5RAcnyp3n0aG1Z/c5AVFW2SHNhN0P3e0RCLvosgCS85T1V
-         shoITnsV/MmRNuMOih8rWULq78meoIiVsqp7Ll+G9nHexsotUoPN0MZsF7cNCgU10CpJ
-         6URgdTD3ejvZc+FmgmuX49Rxa98bdXURDxEcTAzejG2L+vjnu0jzkWrXwhPBzD8cDx/t
-         68GA==
+        bh=dDmmuOMnrTstdQHLcak7JJ08nQ33vOnMIv2U8P95spE=;
+        b=iMm27RJjZpAnS1VjwjNFdEdlorvTwevDfiANV6EBz84mi1L9Ympa/MEL45nLob0r5U
+         SLw1cAa/mcaLCCudi3m3kCtphAU3NuZl4DDSlo8xCMY0kd2Tm5Mnm5U5B1+bHkypbJH4
+         irU80VH9KgyZjv7FuzP/IDfFmr2rzgBFamd6lx+OwThKIHxFxPjbg5C0EUiQlxewiVw/
+         MKxUQ+OFKpMqSA1eUDXqdBRSUd6nRn5oC2wna7hCne4xo9Rs+Ryl7oCqYYpyDBPc7Kil
+         maDL0YpDmSJVrObWzO89A7t8EqPB5Y7PTxNnguM6+/TV0+BdmT5YSOKdcTY2v6MBq01d
+         +YGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cEi4dBMf1BkmuY14gGbElJbBTh//wd4dN7gILare5wE=;
-        b=C+lAc+fVS2nRJK9DIp2DuzuGnJlRvWFw8c36f2asbr/rfodaPS0lSKov04vxlhJh/f
-         6pNLjMuxu2AmgjN7c2n4w7vwGnx+pHJMBhb5X0IWWgqrlUsabaq0G4n//jUjcc5ssbE4
-         T/9Te/jeBQ7/U2ztdIRHYRk85abAeP3lt6kcH6L/w9N6A7tlva+d+7odu9tHAU9qWwxn
-         6SXe9tezDvT0MgIF0RS2/EkUrw/TQhN2lsEVd769szp/zgHfd10Gs+RyViwiOA3nZksw
-         ZYxU1sqrUhsmqOErqveBzckc//M8pHPQPcEiKxQt0Er27DYf9bNfNcg2umtVG2hKYcHJ
-         /G+A==
-X-Gm-Message-State: AOAM530/LYi8y9Wrl0N33U4WlpxrFu4l+6saX/R28oMd60YncWgUFV6X
-        ISrUM+p9H8w4Pd9RXI1cxLA=
-X-Google-Smtp-Source: ABdhPJx8h9Pc3BjF3vRa5o1sWGyI42O8E2SC22STz2KAQ0OfGsoMxl6LpxVlci6LyxYc8HpCRIYF8g==
-X-Received: by 2002:a17:906:1115:: with SMTP id h21mr16575768eja.352.1617970121833;
-        Fri, 09 Apr 2021 05:08:41 -0700 (PDT)
+        bh=dDmmuOMnrTstdQHLcak7JJ08nQ33vOnMIv2U8P95spE=;
+        b=FyaEuEm86Y1+0Q+6zihGWlYK3qeYT1+03m8Sb2TiQG1nQrv+oyGsNnocDieTBtvUNt
+         yn1qsVtwTVd+86TcC4v34BpzZc37HS9cAU2zh4/3om1UcZDFbfeyVki9yAMlVB0Fjib4
+         5Ys43v+Ejr+0Z2R35Z58Jy68yManOoVpzn54GU8Svp1WT50DcPE9ezSPUkehW0gh+g0I
+         YL+edgf/kH7wYjOU18mbHJ01MqQne/WKPUBG4mt4S0LmLKHgJ79tfBGWEc0CcAP0kR9I
+         n1/JxFZfOblJ9zdWK+nPgLoCrOKEH3k6H6asNEp6OTPG1GVJ8NsmLxpe2kelk6uE33oh
+         aCLA==
+X-Gm-Message-State: AOAM5308+9EFPJ0UWkDsS6kO50eFVHS1w5Dyp9gTHt7X8AgLm6lgO2oL
+        vBja+J2Z3E1s/dhDds+9UDs=
+X-Google-Smtp-Source: ABdhPJw1UQ8t+I94zh+tUqUsDHSoeO2DCGHzyhF75nSRTJ1hIv1N/Mwn2ysHBEgVkMwveeTttbR0/g==
+X-Received: by 2002:a05:6402:1a2b:: with SMTP id be11mr8900562edb.304.1617971048229;
+        Fri, 09 Apr 2021 05:24:08 -0700 (PDT)
 Received: from localhost (pd9e51abe.dip0.t-ipconnect.de. [217.229.26.190])
-        by smtp.gmail.com with ESMTPSA id h13sm1345521edz.71.2021.04.09.05.08.40
+        by smtp.gmail.com with ESMTPSA id p22sm1159691eju.85.2021.04.09.05.24.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Apr 2021 05:08:40 -0700 (PDT)
-Date:   Fri, 9 Apr 2021 14:09:16 +0200
+        Fri, 09 Apr 2021 05:24:07 -0700 (PDT)
+Date:   Fri, 9 Apr 2021 14:24:43 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-doc@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Chen-Yu Tsai <wens@csie.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-input@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-pwm@vger.kernel.org,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        intel-gfx@lists.freedesktop.org, Mark Brown <broonie@kernel.org>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
+Cc:     Rex-BC Chen <rex-bc.chen@mediatek.com>, lee.jones@linaro.org,
+        matthias.bgg@gmail.com, linux-pwm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: Re: [PATCH] pwm: Rename pwm_get_state() to better reflect its
- semantic
-Message-ID: <YHBD7AhOJGyELpVZ@orome.fritz.box>
-References: <20210406073036.26857-1-u.kleine-koenig@pengutronix.de>
- <YGxDD4jVZx/H/Zdr@orome.fritz.box>
- <20210406134356.dda74heeshkwdarw@pengutronix.de>
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com,
+        Jitao Shi <jitao.shi@mediatek.com>
+Subject: Re: [v3,PATCH 3/3] pwm: mtk_disp: implement .get_state()
+Message-ID: <YHBHizYI7oyULZx9@orome.fritz.box>
+References: <1617703062-4251-1-git-send-email-rex-bc.chen@mediatek.com>
+ <1617703062-4251-4-git-send-email-rex-bc.chen@mediatek.com>
+ <20210406102756.4kncasxe4um3q6wi@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="PvYVwmcUBFdXJjNu"
+        protocol="application/pgp-signature"; boundary="IeOqv4HFT+wQMYyn"
 Content-Disposition: inline
-In-Reply-To: <20210406134356.dda74heeshkwdarw@pengutronix.de>
+In-Reply-To: <20210406102756.4kncasxe4um3q6wi@pengutronix.de>
 User-Agent: Mutt/2.0.6 (98f8cb83) (2021-03-06)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---PvYVwmcUBFdXJjNu
+--IeOqv4HFT+wQMYyn
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 06, 2021 at 03:43:56PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Thierry,
->=20
-> On Tue, Apr 06, 2021 at 01:16:31PM +0200, Thierry Reding wrote:
-> > On Tue, Apr 06, 2021 at 09:30:36AM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> > > Given that lowlevel drivers usually cannot implement exactly what a
-> > > consumer requests with pwm_apply_state() there is some rounding invol=
-ved.
-> > >=20
-> > > pwm_get_state() traditionally returned the setting that was requested=
- most
-> > > recently by the consumer (opposed to what was actually implemented in
-> > > hardware in reply to the last request). To make this semantic obvious
-> > > rename the function.
-> > >=20
-> > > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> > > ---
-> > >  Documentation/driver-api/pwm.rst           |  6 +++-
-> > >  drivers/clk/clk-pwm.c                      |  2 +-
-> > >  drivers/gpu/drm/i915/display/intel_panel.c |  4 +--
-> > >  drivers/input/misc/da7280.c                |  2 +-
-> > >  drivers/input/misc/pwm-beeper.c            |  2 +-
-> > >  drivers/input/misc/pwm-vibra.c             |  4 +--
-> > >  drivers/pwm/core.c                         |  4 +--
-> > >  drivers/pwm/pwm-atmel-hlcdc.c              |  2 +-
-> > >  drivers/pwm/pwm-atmel.c                    |  2 +-
-> > >  drivers/pwm/pwm-imx27.c                    |  2 +-
-> > >  drivers/pwm/pwm-rockchip.c                 |  2 +-
-> > >  drivers/pwm/pwm-stm32-lp.c                 |  4 +--
-> > >  drivers/pwm/pwm-sun4i.c                    |  2 +-
-> > >  drivers/pwm/sysfs.c                        | 18 ++++++------
-> > >  drivers/regulator/pwm-regulator.c          |  4 +--
-> > >  drivers/video/backlight/pwm_bl.c           | 10 +++----
-> > >  include/linux/pwm.h                        | 34 ++++++++++++++------=
---
-> > >  17 files changed, 59 insertions(+), 45 deletions(-)
+On Tue, Apr 06, 2021 at 12:27:56PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> On Tue, Apr 06, 2021 at 05:57:42PM +0800, Rex-BC Chen wrote:
+> > implement get_state function for pwm-mtk-disp
 > >=20
-> > Honestly, I don't think this is worth the churn. If you think people
-> > will easily get confused by this then a better solution might be to more
-> > explicitly document the pwm_get_state() function to say exactly what it
-> > returns.
+> > Signed-off-by: Rex-BC Chen <rex-bc.chen@mediatek.com>
+> > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 >=20
-> I'm not so optimistic that people become aware of the semantic just
-> because there is documentation describing it and I strongly believe that
-> a good name for functions is more important than accurate documentation.
+> Ideally you S-o-b line is the last one to show the order in which this
+> patch went from one person to another.
 >=20
-> If you don't agree, what do you think about the updated wording in
-> Documentation/driver-api/pwm.rst?
-
-Yeah, that clarifies this a bit. I can apply that hunk of the patch
-separately.
-
-> > But there's no need to make life difficult for everyone by
-> > renaming this to something as cumbersome as this.
+> > ---
+> >  drivers/pwm/pwm-mtk-disp.c | 46 ++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 46 insertions(+)
+> >=20
+> > diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
+> > index 502228adf718..166e0a8ca703 100644
+> > --- a/drivers/pwm/pwm-mtk-disp.c
+> > +++ b/drivers/pwm/pwm-mtk-disp.c
+> > @@ -179,8 +179,54 @@ static int mtk_disp_pwm_apply(struct pwm_chip *chi=
+p, struct pwm_device *pwm,
+> >  	return mtk_disp_pwm_enable(chip, state);
+> >  }
+> > =20
+> > +static void mtk_disp_pwm_get_state(struct pwm_chip *chip,
+> > +				   struct pwm_device *pwm,
+> > +				   struct pwm_state *state)
+> > +{
+> > +	struct mtk_disp_pwm *mdp =3D to_mtk_disp_pwm(chip);
+> > +	u32 clk_div, period, high_width, con0, con1;
+> > +	u64 rate;
+> > +	int err;
+> > +
+> > +	err =3D clk_prepare_enable(mdp->clk_main);
+> > +	if (err < 0) {
+> > +		dev_err(chip->dev, "Can't enable mdp->clk_main: %d\n", err);
+> > +		return;
+> > +	}
+> > +	err =3D clk_prepare_enable(mdp->clk_mm);
+> > +	if (err < 0) {
+> > +		dev_err(chip->dev, "Can't enable mdp->clk_mm: %d\n", err);
+> > +		clk_disable_unprepare(mdp->clk_main);
 >=20
-> I don't expect any merge conflicts (and if still a problem occurs
-> resolving should be trivial enough). So I obviously don't agree to your
-> weighing.
+> As before: %pe please
 
-I wasn't talking about merge conflicts but instead about the extra churn
-of changing all consumers and having to type all these extra characters
-for no benefit.
+According to the documentation %pe only works on pointers for which
+IS_ERR() is true, so I'm not sure it can be used with plain integer
+error codes.
+
+Looks like there's a bunch of drivers that will do %pe and then use
+ERR_PTR(err) to make this work, but to be honest, that seems like
+jumping through hoops.
+
+But I don't feel strongly either way, so choose whichever you want.
 
 Thierry
 
---PvYVwmcUBFdXJjNu
+--IeOqv4HFT+wQMYyn
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmBwQ+wACgkQ3SOs138+
-s6FoaQ/9EG+snyNuisvtyU5qYi/2TVmPDZz6j1D/s1DAK1Op6AtOQksGAH7dqHgw
-bT+jTMJi5bTnc4RSeUNrVFcVtb5qVWZEvN3D4c1wcr3PLtM8O4XxRQaMULo2+3pN
-CCrHZKWyvB50hVFEs9CUSozlWk3HO/MNjef2MmwxBHiro1JBdAJivwFZEX8xQo2h
-/y0HVDlrH2A1soG/WaGEeR6s3TzquHZiOawgNu51xgxIaxrEBs/ca7gBCuEfvy7d
-Mu2yR+6VpjNWA0m3e53Nc4QkbQUDG89Thdf2i2HjVYsHX8wpVKWiA3OogCpVbTlQ
-BUqEvvRQ5krW5IcneASEEKMOJSkX6zf86kC3RoYSbKmydCc6BlYVePr25yoTMAPK
-XaYqd7i5ocueQZF5RdxrIXIoRgjU3Wu8v34N2mgaCCrHIwTHFJHAdim4h18Mbj+3
-hVgZ+cuQ8Kaz0YjF4nAGQTQLsAQb7u7CjH6BqRzKUveMfInqD5wij6bP+jN0IYZA
-4eUL5tfEdajQBvosPm4aQm0xULcg5jxq7rG/hpTa9y+J7s31IzXQ73dx2gse4kOt
-0QY36evBxZKnvM5LGwWOkHK3aB8T2RqQP4l0kA9fmiQYYBudAL3VSEyE4mWU2Iza
-P1UoRFFrCJ9K6dYBRX19nE+N1kAi2axBa0+KTMxQAUo0KzYGB0w=
-=aO1m
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmBwR4gACgkQ3SOs138+
+s6H28RAAjleBEqp+dx8paKdyG8VdIU9HykF82fycv6g3VrCecRf53SQtxA7boouL
+ZwXKfG14xpSZe6RGEhlG3s4CLwzQQVnoVn/pp2hIGwJHB58lXYKZ7RlUUvhKxov9
+J341uNYUPUkBheLIkgbF44ohGIRH8YV107LdI2KpYLZP7Q0cyX7B6tat5VTxH7R9
+l2TGrEjpzpXjwx1k1zhTnIubJNwTqYGAnat2WpGDTWsBrL3Bm1u9i7kkYEfrYuvp
+LUGiQuZTbIlFY5xU8A+7+4oNVwkEI4k+yQeltm5dS4TNH1JPeA8iX87B8WIaOQ30
+tO8rufvyeU+mfkwmZw7gxU6uQoBNip9K9hksXP6ufxz9mQk/7EDYDvltQeFWLQE1
+P0Iop2JaL7WVWRwVYoG/K4tlkwDV88LgVxSNq7I/VoXe8b+yOXsaYCxcOKfWdEDz
+FjgYDq8i2FiA/twxnAopPtFWZhyctrTokPU7JRv9wNCkFG+7V4kjbtQNcE/STGic
+bsuPg1MN0iev2oDsXEolXhLorZNkREpfOjTc15jUmunEWjf/V6/m1aEKaodhjptq
+bGNcXEWogDc9ZwJbi59KR8GDhClYLfdBRfGTBLazdX5iZ/63pOk2nCHF353EEldm
+jN3Ca0o0VnHUcc9HzMdZEaPMvGgh3SZs3/rcivNtIZSyModYZf0=
+=NX8J
 -----END PGP SIGNATURE-----
 
---PvYVwmcUBFdXJjNu--
+--IeOqv4HFT+wQMYyn--
