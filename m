@@ -2,158 +2,246 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D0E135B48D
-	for <lists+linux-pwm@lfdr.de>; Sun, 11 Apr 2021 15:17:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B65D635B606
+	for <lists+linux-pwm@lfdr.de>; Sun, 11 Apr 2021 18:05:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235682AbhDKNKm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 11 Apr 2021 09:10:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36730 "EHLO
+        id S236222AbhDKQFV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 11 Apr 2021 12:05:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235659AbhDKNKg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 11 Apr 2021 09:10:36 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25FB6C06138B;
-        Sun, 11 Apr 2021 06:10:20 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id g17so13025257ejp.8;
-        Sun, 11 Apr 2021 06:10:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=dP6M+sgZMuzTEGYj0l4EYUpeVr19klo1MRRCTxVz25w=;
-        b=Rg+cSuaVmSjmTDibRXA8sdjDBMrmUwzphxaFPKrw1KrQju6roHl6S0t7yrl1ggfoim
-         pk9SaOEmOJFDha66VLsFbuSLCehvUNxNnL9K1c5zu58KcNDHwLwpkkm7V2b4MUc0punt
-         ME5rm32kVABTRbJ9wP/07zWYQhbe/G/ctzn+E8ZdDJhXnly5j1dvxgY2aVaAP6ZM2yq7
-         so/h8ZGUhOEPL5Ov8NznDUVaWa7EV7qeR+wYrVPazpvpEBBWEWoCXaZNK84zoJ6QM3Gs
-         GlBwoP5grqECVRTUTygT3Dq3OBIwYBaFDCztrJZocFQNygNDCuQMaRsuDOsZkFA8/zTQ
-         +cbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=dP6M+sgZMuzTEGYj0l4EYUpeVr19klo1MRRCTxVz25w=;
-        b=Ayw00pZZ/5zj+TLZwowJwQxNcX30Aybkl2SHJYfM9vULU37xMBM2lxbv08slYe0X4G
-         Pft7xngTiNYnMgvUZThSYfbow7O0vl1eAvalpyP1Wj9l7nXLdaFCZUPrzUcMzVzbD5nx
-         7YuAk8+BZq+jckMch/16yXfctifJYd4WnIEBjaEHvmJ8qfV5oCOi26kqqVYiIwm6HO/z
-         URgibcqyNjMQxDw8lU8VHVo+yAwjqBts7NQr9905mONIzT+j3jC/145NjdgegcgvQv9+
-         wSXbD3c9rPHq2iHGGZ9ZL91PCyh7cdjeS8EWaidWNDeEyBEOzjqlieqiea9Ddkm+KJjg
-         yddA==
-X-Gm-Message-State: AOAM532wvIU2Yw+tP8SsqhKw0oSlHaukN66bsuqBY0W4OJp18yr4w29V
-        OkerHFWqrGAE99ZX95d7WkI=
-X-Google-Smtp-Source: ABdhPJzMrep/dqtmFqleBVmWlFLT358vORL48eeH9EjXxNOm5BPPYolk9ikhMRMe573T7MhPljHSFw==
-X-Received: by 2002:a17:906:b7ce:: with SMTP id fy14mr4002248ejb.261.1618146618908;
-        Sun, 11 Apr 2021 06:10:18 -0700 (PDT)
-Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id w2sm3983520eju.71.2021.04.11.06.10.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 11 Apr 2021 06:10:18 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/6] arm64: dts: rockchip: remove clock-names from pwm nodes
-Date:   Sun, 11 Apr 2021 15:10:07 +0200
-Message-Id: <20210411131007.21757-6-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20210411131007.21757-1-jbx6244@gmail.com>
-References: <20210411131007.21757-1-jbx6244@gmail.com>
+        with ESMTP id S235499AbhDKQFU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 11 Apr 2021 12:05:20 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38F1FC061574
+        for <linux-pwm@vger.kernel.org>; Sun, 11 Apr 2021 09:05:02 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lVca1-0005MZ-Ck; Sun, 11 Apr 2021 18:04:57 +0200
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lVca0-0003T0-7L; Sun, 11 Apr 2021 18:04:56 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH] pwm: Ensure for legacy drivers that pwm->state stays consistent
+Date:   Sun, 11 Apr 2021 18:04:51 +0200
+Message-Id: <20210411160451.1207799-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.30.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-A test with the command below gives this error:
+Without this change it can happen that if changing the polarity succeeded
+but changing duty_cycle and period failed pwm->state contains a mixture
+between the old and the requested state.
 
-/arch/arm64/boot/dts/rockchip/rk3368-evb-act8846.dt.yaml:
-pwm@ff680030: clock-names: ['pwm'] is too short
+So remember the initial state before starting to modify the configuration
+and restore it when one of the required callback fails.
 
-Devices with only one pwm clock use it to both
-to derive the functional clock for the device
-and as the bus clock. The driver does not need
-"clock-names" to get a handle, so remove them all.
+Compared to the previous implementation .disable() (if necessary) is called
+earlier to prevent a glitch.
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 4 ----
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ----
- 2 files changed, 8 deletions(-)
+Hello,
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index 61b0a2a90..7832e26a3 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -561,7 +561,6 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pwm0_pin>;
- 		clocks = <&cru PCLK_PWM1>;
--		clock-names = "pwm";
- 		status = "disabled";
- 	};
+this is my approach to address Thierry's review for my patch "pwm:
+Prevent a glitch in compat code"
+(https://lore.kernel.org/linux-pwm/20210308093600.25455-1-u.kleine-koenig@pengutronix.de).
+
+The problem that Thierry pointed out already exists in the status quo
+(but only if a callback failed) and with my patch it triggered more
+often. So here is a patch that fixes both problems (partial update of
+pwm->state and the glitch) in one go. Is it worth the effor to split
+this patch further? (e.g. 1) move legacy handling in a separate
+function, 2) address the partial update problem, 3) fix the glitch)
+
+Best regards
+Uwe
+
+ drivers/pwm/core.c | 139 +++++++++++++++++++++++++--------------------
+ 1 file changed, 78 insertions(+), 61 deletions(-)
+
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index c4d5c0667137..3f216c59bb38 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -535,6 +535,71 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
+ 	}
+ }
  
-@@ -572,7 +571,6 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pwm1_pin>;
- 		clocks = <&cru PCLK_PWM1>;
--		clock-names = "pwm";
- 		status = "disabled";
- 	};
++static int pwm_apply_legacy(struct pwm_chip *chip, struct pwm_device *pwm,
++			    const struct pwm_state *state)
++{
++	int err;
++	struct pwm_state initial_state = pwm->state;
++
++	if (state->polarity != pwm->state.polarity) {
++		if (!chip->ops->set_polarity) {
++			err = -EINVAL;
++			goto out_err;
++		}
++
++		/*
++		 * Changing the polarity of a running PWM is only allowed when
++		 * the PWM driver implements ->apply().
++		 */
++		if (pwm->state.enabled) {
++			chip->ops->disable(chip, pwm);
++
++			/*
++			 * Update pwm->state already here in case
++			 * .set_polarity() or another callback depend on that.
++			 */
++			pwm->state.enabled = false;
++		}
++
++		err = chip->ops->set_polarity(chip, pwm,
++					      state->polarity);
++		if (err)
++			goto out_err;
++
++		pwm->state.polarity = state->polarity;
++	}
++
++	if (!state->enabled) {
++		if (pwm->state.enabled)
++			chip->ops->disable(chip, pwm);
++		return 0;
++	}
++
++	if (state->period != pwm->state.period ||
++	    state->duty_cycle != pwm->state.duty_cycle) {
++		err = chip->ops->config(pwm->chip, pwm,
++					state->duty_cycle,
++					state->period);
++		if (err)
++			goto out_err;
++
++		pwm->state.period = state->period;
++		pwm->state.duty_cycle = state->duty_cycle;
++	}
++
++	if (state->enabled && !pwm->state.enabled) {
++		err = chip->ops->enable(chip, pwm);
++		if (err)
++			goto out_err;
++	}
++
++	return 0;
++
++out_err:
++	pwm->state = initial_state;
++	return err;
++}
++
+ /**
+  * pwm_apply_state() - atomically apply a new state to a PWM device
+  * @pwm: PWM device
+@@ -544,6 +609,8 @@ int pwm_apply_state(struct pwm_device *pwm, const struct pwm_state *state)
+ {
+ 	struct pwm_chip *chip;
+ 	int err;
++	int (*apply)(struct pwm_chip *chip, struct pwm_device *pwm,
++		     const struct pwm_state *state);
  
-@@ -581,7 +579,6 @@
- 		reg = <0x0 0xff680020 0x0 0x10>;
- 		#pwm-cells = <3>;
- 		clocks = <&cru PCLK_PWM1>;
--		clock-names = "pwm";
- 		status = "disabled";
- 	};
+ 	if (!pwm || !state || !state->period ||
+ 	    state->duty_cycle > state->period)
+@@ -557,70 +624,20 @@ int pwm_apply_state(struct pwm_device *pwm, const struct pwm_state *state)
+ 	    state->enabled == pwm->state.enabled)
+ 		return 0;
  
-@@ -592,7 +589,6 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pwm3_pin>;
- 		clocks = <&cru PCLK_PWM1>;
--		clock-names = "pwm";
- 		status = "disabled";
- 	};
+-	if (chip->ops->apply) {
+-		err = chip->ops->apply(chip, pwm, state);
+-		if (err)
+-			return err;
+-
+-		trace_pwm_apply(pwm, state);
+-
+-		pwm->state = *state;
+-
+-		/*
+-		 * only do this after pwm->state was applied as some
+-		 * implementations of .get_state depend on this
+-		 */
+-		pwm_apply_state_debug(pwm, state);
+-	} else {
+-		/*
+-		 * FIXME: restore the initial state in case of error.
+-		 */
+-		if (state->polarity != pwm->state.polarity) {
+-			if (!chip->ops->set_polarity)
+-				return -EINVAL;
+-
+-			/*
+-			 * Changing the polarity of a running PWM is
+-			 * only allowed when the PWM driver implements
+-			 * ->apply().
+-			 */
+-			if (pwm->state.enabled) {
+-				chip->ops->disable(chip, pwm);
+-				pwm->state.enabled = false;
+-			}
++	apply = chip->ops->apply ?: pwm_apply_legacy;
++	err = apply(chip, pwm, state);
++	if (err)
++		return err;
  
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index e93a5f320..6221b027e 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1185,7 +1185,6 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pwm0_pin>;
- 		clocks = <&pmucru PCLK_RKPWM_PMU>;
--		clock-names = "pwm";
- 		status = "disabled";
- 	};
+-			err = chip->ops->set_polarity(chip, pwm,
+-						      state->polarity);
+-			if (err)
+-				return err;
++	trace_pwm_apply(pwm, state);
  
-@@ -1196,7 +1195,6 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pwm1_pin>;
- 		clocks = <&pmucru PCLK_RKPWM_PMU>;
--		clock-names = "pwm";
- 		status = "disabled";
- 	};
+-			pwm->state.polarity = state->polarity;
+-		}
+-
+-		if (state->period != pwm->state.period ||
+-		    state->duty_cycle != pwm->state.duty_cycle) {
+-			err = chip->ops->config(pwm->chip, pwm,
+-						state->duty_cycle,
+-						state->period);
+-			if (err)
+-				return err;
++	pwm->state = *state;
  
-@@ -1207,7 +1205,6 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pwm2_pin>;
- 		clocks = <&pmucru PCLK_RKPWM_PMU>;
--		clock-names = "pwm";
- 		status = "disabled";
- 	};
+-			pwm->state.duty_cycle = state->duty_cycle;
+-			pwm->state.period = state->period;
+-		}
+-
+-		if (state->enabled != pwm->state.enabled) {
+-			if (state->enabled) {
+-				err = chip->ops->enable(chip, pwm);
+-				if (err)
+-					return err;
+-			} else {
+-				chip->ops->disable(chip, pwm);
+-			}
+-
+-			pwm->state.enabled = state->enabled;
+-		}
+-	}
++	/*
++	 * only do this after pwm->state was applied as some
++	 * implementations of .get_state depend on this
++	 */
++	pwm_apply_state_debug(pwm, state);
  
-@@ -1218,7 +1215,6 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pwm3a_pin>;
- 		clocks = <&pmucru PCLK_RKPWM_PMU>;
--		clock-names = "pwm";
- 		status = "disabled";
- 	};
- 
+ 	return 0;
+ }
+
+base-commit: 64d7d074acd52e1bdff621f2cb86c0aae9bcef80
 -- 
-2.11.0
+2.30.2
 
