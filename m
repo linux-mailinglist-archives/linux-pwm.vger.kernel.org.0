@@ -2,44 +2,42 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05E2B35B0A3
-	for <lists+linux-pwm@lfdr.de>; Sat, 10 Apr 2021 23:56:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77CE635B269
+	for <lists+linux-pwm@lfdr.de>; Sun, 11 Apr 2021 10:22:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234874AbhDJV4Z (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 10 Apr 2021 17:56:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39136 "EHLO
+        id S231356AbhDKIWo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 11 Apr 2021 04:22:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232659AbhDJV4Z (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 10 Apr 2021 17:56:25 -0400
+        with ESMTP id S229804AbhDKIWo (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 11 Apr 2021 04:22:44 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7735EC06138A
-        for <linux-pwm@vger.kernel.org>; Sat, 10 Apr 2021 14:56:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7E70C061574
+        for <linux-pwm@vger.kernel.org>; Sun, 11 Apr 2021 01:22:27 -0700 (PDT)
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lVLaK-0006iG-R0; Sat, 10 Apr 2021 23:56:08 +0200
+        id 1lVVMP-0000W7-CT; Sun, 11 Apr 2021 10:22:25 +0200
 Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lVLaJ-0000aJ-3o; Sat, 10 Apr 2021 23:56:07 +0200
-Date:   Sat, 10 Apr 2021 23:56:06 +0200
+        id 1lVVMO-0002Qy-Pk; Sun, 11 Apr 2021 10:22:24 +0200
+Date:   Sun, 11 Apr 2021 10:22:16 +0200
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-pwm@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/2] pwm: Drop unused error path from pwmchip_remove()
-Message-ID: <20210410215606.hrdfjqygeoexhzbt@pengutronix.de>
-References: <20210324152058.69022-1-u.kleine-koenig@pengutronix.de>
- <20210324152058.69022-2-u.kleine-koenig@pengutronix.de>
- <YHBBOrhHqFdN2QxV@orome.fritz.box>
+Cc:     linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH] pwm: Prevent a glitch in compat code
+Message-ID: <20210411082216.jlrhzgo2or4s3gyd@pengutronix.de>
+References: <20210308093600.25455-1-u.kleine-koenig@pengutronix.de>
+ <YFh47dFLmWqZHvz7@orome.fritz.box>
+ <20210322111131.w2c6lj6m2vw7socw@pengutronix.de>
+ <20210410214642.nh2c4jhxbcqd7jxt@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="j66dtzl53sm4ft4z"
+        protocol="application/pgp-signature"; boundary="4jnvqyy4sejfvozh"
 Content-Disposition: inline
-In-Reply-To: <YHBBOrhHqFdN2QxV@orome.fritz.box>
+In-Reply-To: <20210410214642.nh2c4jhxbcqd7jxt@pengutronix.de>
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -49,36 +47,58 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---j66dtzl53sm4ft4z
+--4jnvqyy4sejfvozh
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 09, 2021 at 01:57:46PM +0200, Thierry Reding wrote:
-> On Wed, Mar 24, 2021 at 04:20:57PM +0100, Uwe Kleine-K=F6nig wrote:
-> > Since the pwm core uses device links (commit b2c200e3f2fd ("pwm: Add
-> > consumer device link")) it cannot happen any more that there is still a
-> > consumer when a pwmchip goes away. So drop this check.
+On Sat, Apr 10, 2021 at 11:46:42PM +0200, Uwe Kleine-K=F6nig wrote:
+> On Mon, Mar 22, 2021 at 12:11:31PM +0100, Uwe Kleine-K=F6nig wrote:
+> > On Mon, Mar 22, 2021 at 12:01:01PM +0100, Thierry Reding wrote:
+> > > On Mon, Mar 08, 2021 at 10:36:00AM +0100, Uwe Kleine-K=F6nig wrote:
+> > > > When a PWM is to be disabled, configuring the duty cycle and
+> > > > period before actually disabling the hardware might result in eithe=
+r a
+> > > > glitch or a delay. So check for disabling first and return early in=
+ this
+> > > > case.
+> > > >=20
+> > > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > > > ---
+> > > >  drivers/pwm/core.c | 20 +++++++++++---------
+> > > >  1 file changed, 11 insertions(+), 9 deletions(-)
+> > > >=20
+> > > > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> > > > index 4058d3c86a45..4604ca3e0e62 100644
+> > > > --- a/drivers/pwm/core.c
+> > > > +++ b/drivers/pwm/core.c
+> > > > @@ -597,6 +597,12 @@ int pwm_apply_state(struct pwm_device *pwm, co=
+nst struct pwm_state *state)
+> > > >  			pwm->state.polarity =3D state->polarity;
+> > > >  		}
+> > > > =20
+> > > > +		if (!state->enabled && pwm->state.enabled) {
+> > > > +			chip->ops->disable(chip, pwm);
+> > > > +			pwm->state.enabled =3D false;
+> > > > +			return 0;
+> > >=20
+> > > I don't think we can return early here because otherwise if consumers
+> > > happen to modify the period along with the enabled state, the changes
+> > > to the period will get lost.
 > >=20
-> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > ---
-> >  drivers/pwm/core.c | 16 ++--------------
-> >  1 file changed, 2 insertions(+), 14 deletions(-)
+> > This however doesn't matter, because the output of a disabled PWM only
+> > depends on polarity. (And polarity is already cared for.)
+> >=20
+> > And if a driver calls pwm_enable() afterwards (or the equivalent in
+> > terms of pwm_apply_state) the period and duty_cycle will be picked up
+> > correctly.
 >=20
-> Can't this still happen when a consumer forgets to pwm_put() the PWM?
+> I see you marked my patch as "changes requested" in patchwork. However
+> I'm convinced your feedback is wrong and so I still think the patch
+> is safe to be applied unmodified.
 
-The change is still good, and a more correct change log would be:
-
-	Since the pwm core uses device links (commit b2c200e3f2fd ("pwm: Add
-	consumer device link")) each consumer driver that requested the PWMs is
-	already gone. If they called pwm_put() (as they should) the
-	PWMF_REQUESTED bit is not set. If they failed (which is a bug) the
-	PWMF_REQUESTED bit is still set, but the driver that cared is still
-	gone, so nothing bad happens if the pwmchip goes away anyhow.
-
-	So the check can be dropped.
-
-Does this sound better?
+After sleeping about this I understood you're right. I will rework the
+patch.
 
 Best regards
 Uwe
@@ -87,19 +107,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---j66dtzl53sm4ft4z
+--4jnvqyy4sejfvozh
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmByHvMACgkQwfwUeK3K
-7AnaOgf7BDzewUqOPVDy2/uTbRW16l+Stg93lFhAgggtK7qWyhnqPeUBGxMtwJfM
-CWzNXSxyKRpScYkLjnL/f5jKFadBavO7j1JPJoz9OvCdq1bKpJdXJafsJVNIaHFq
-Hb9bmh/w0ZzPKp7h51V8a+R7hKBApWU19vcsun+KcYmH+6rFC5XGkHBddX3BJP+9
-mnd8vn8wYfEqoq8gFg5dCk4PaYtwmv50RdLqJeNxQ2zftZt0JYBNejNAP6nkqccn
-ue+8DBJys6di0Ea1hverye/xiL0+g8dqD17BeqRniTE5kUZfhug07Nky9HsFgJu/
-F2vVS33j2IkKnrbsXhZsHOCUGT6N8g==
-=PsYk
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmBysbQACgkQwfwUeK3K
+7Am6tQf/WIbBvuhLkR6Tr9CJY7QeuHr6QFPZT4+IV3+Ely7jbWiACRjRA+IohLuK
+r/P/2a9gw6UfPtLROQy60CKwNSdi2XqVhJ9jsB+ygFgDK5hYSXAVTzfsuCj+JoEW
+Lt6iFTZU8U+UAodLDpkK2W2PJhO1UPep/ZnSYZdaAdlf7+Uq/pW3PoFUPCIvnLVo
+E6CXoBTOG3URfEAv+GQTJlPQfaVKdlXwB6/EXAQ4wrxf+tUWC+pDvCkxSSEhOzIi
+aSbK+PoAjsmtIhgwJnako6P1IjTg+OKmY5gL52ZpsjrCMD3YqcIrDbQyRPyaTAcH
+QjB/sLX/5H0XxVF88qqQ+hU2ohtbyQ==
+=Slb/
 -----END PGP SIGNATURE-----
 
---j66dtzl53sm4ft4z--
+--4jnvqyy4sejfvozh--
