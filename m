@@ -2,124 +2,209 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77CE635B269
-	for <lists+linux-pwm@lfdr.de>; Sun, 11 Apr 2021 10:22:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F066735B485
+	for <lists+linux-pwm@lfdr.de>; Sun, 11 Apr 2021 15:17:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231356AbhDKIWo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 11 Apr 2021 04:22:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59530 "EHLO
+        id S235661AbhDKNKh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 11 Apr 2021 09:10:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229804AbhDKIWo (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 11 Apr 2021 04:22:44 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7E70C061574
-        for <linux-pwm@vger.kernel.org>; Sun, 11 Apr 2021 01:22:27 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lVVMP-0000W7-CT; Sun, 11 Apr 2021 10:22:25 +0200
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lVVMO-0002Qy-Pk; Sun, 11 Apr 2021 10:22:24 +0200
-Date:   Sun, 11 Apr 2021 10:22:16 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH] pwm: Prevent a glitch in compat code
-Message-ID: <20210411082216.jlrhzgo2or4s3gyd@pengutronix.de>
-References: <20210308093600.25455-1-u.kleine-koenig@pengutronix.de>
- <YFh47dFLmWqZHvz7@orome.fritz.box>
- <20210322111131.w2c6lj6m2vw7socw@pengutronix.de>
- <20210410214642.nh2c4jhxbcqd7jxt@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4jnvqyy4sejfvozh"
-Content-Disposition: inline
-In-Reply-To: <20210410214642.nh2c4jhxbcqd7jxt@pengutronix.de>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+        with ESMTP id S235616AbhDKNKd (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 11 Apr 2021 09:10:33 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED03C061574;
+        Sun, 11 Apr 2021 06:10:15 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id e7so11775476edu.10;
+        Sun, 11 Apr 2021 06:10:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HSvdpIMLsn0RnpUE4sX7jib7kDhn37eZZS9bsKWgBwM=;
+        b=FLLf+FINblf0xE6K84r49vHqlJhZXHkUC4gkjPIDXI8MGMaQBpF4cihrV6onpXTaBp
+         vdkLL7dKxgW4JtI7yGkgR9edSUOif91Z7hayO9VyxeOIEYg0oDi5fHxj06ezRw1YS0GE
+         /UEP0zK8DSvyaezvf7/sRSDjSFXp6C7Rqh1LEFCGDDkHE8wBeCd0bqfk2+VXr3e4YqyC
+         CyW9iNuhrVHLL9W3AsMNlMdRbXpDERQxsFLgZzYSmwzosIxKuS3uU2zJHA7tETIwwZpf
+         471zec6rzuUmtCXU3WJ+/ldE4Cli6MezB/xGtRtWjOMU8LWVLzB/feura8Nk20Y4vHXd
+         gZJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HSvdpIMLsn0RnpUE4sX7jib7kDhn37eZZS9bsKWgBwM=;
+        b=IUuBp+lMXY0giqk/VdVvLzyXwQeNjmILtkQhLTMqOHbwYvtG3rll6ULXU4VCQItpth
+         YhOm5131bGI7uLEfchWrHC1QGpncl6UdJGRdXhx44balZF/IKB4AXwDnN8I5+ad0ZE4t
+         QsI+zKZy1CGsBVezeYa+AVrdr8XG8rok+4Dhmqu2U7hYVixQ+KWlxIFkJKiMSCg4bl7Q
+         ECZoX08Ha0hMqg8+baHGSsMWI/VYaDB300Tk0lYHOm7IQkuIpRWsoPT0WEUvnyOxFqZi
+         bh/OtJL0wfoAooM/9HBANqbld5sAgSqKjcHffTjZbl2blGQlpgicTkAQ9WSWzOUlpTaf
+         6W7A==
+X-Gm-Message-State: AOAM530vXlYF38TovmepkE99sfCpbtyhwDLWthktW6yCKxSzoBnXthhA
+        5KgLn5h/aUvuG8m9uH151AY0O6dMf/hPaQ==
+X-Google-Smtp-Source: ABdhPJx19OZpyYTMvsTHKcHcJM+xDYsx1U55kZsBqfMosXJyUMgV0g33n4IP6IFs7QV3sls4PaDo/Q==
+X-Received: by 2002:a05:6402:5153:: with SMTP id n19mr11353148edd.173.1618146614237;
+        Sun, 11 Apr 2021 06:10:14 -0700 (PDT)
+Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id w2sm3983520eju.71.2021.04.11.06.10.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 11 Apr 2021 06:10:13 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/6] dt-bindings: pwm: convert pwm-rockchip.txt to YAML
+Date:   Sun, 11 Apr 2021 15:10:02 +0200
+Message-Id: <20210411131007.21757-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Current dts files with 'pwm' nodes are manually verified.
+In order to automate this process pwm-rockchip.txt
+has to be converted to yaml.
 
---4jnvqyy4sejfvozh
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+Changed V2:
+  changed schema for clocks and clock-names
+---
+ .../devicetree/bindings/pwm/pwm-rockchip.txt       | 27 -------
+ .../devicetree/bindings/pwm/pwm-rockchip.yaml      | 91 ++++++++++++++++++++++
+ 2 files changed, 91 insertions(+), 27 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
 
-On Sat, Apr 10, 2021 at 11:46:42PM +0200, Uwe Kleine-K=F6nig wrote:
-> On Mon, Mar 22, 2021 at 12:11:31PM +0100, Uwe Kleine-K=F6nig wrote:
-> > On Mon, Mar 22, 2021 at 12:01:01PM +0100, Thierry Reding wrote:
-> > > On Mon, Mar 08, 2021 at 10:36:00AM +0100, Uwe Kleine-K=F6nig wrote:
-> > > > When a PWM is to be disabled, configuring the duty cycle and
-> > > > period before actually disabling the hardware might result in eithe=
-r a
-> > > > glitch or a delay. So check for disabling first and return early in=
- this
-> > > > case.
-> > > >=20
-> > > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > > > ---
-> > > >  drivers/pwm/core.c | 20 +++++++++++---------
-> > > >  1 file changed, 11 insertions(+), 9 deletions(-)
-> > > >=20
-> > > > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> > > > index 4058d3c86a45..4604ca3e0e62 100644
-> > > > --- a/drivers/pwm/core.c
-> > > > +++ b/drivers/pwm/core.c
-> > > > @@ -597,6 +597,12 @@ int pwm_apply_state(struct pwm_device *pwm, co=
-nst struct pwm_state *state)
-> > > >  			pwm->state.polarity =3D state->polarity;
-> > > >  		}
-> > > > =20
-> > > > +		if (!state->enabled && pwm->state.enabled) {
-> > > > +			chip->ops->disable(chip, pwm);
-> > > > +			pwm->state.enabled =3D false;
-> > > > +			return 0;
-> > >=20
-> > > I don't think we can return early here because otherwise if consumers
-> > > happen to modify the period along with the enabled state, the changes
-> > > to the period will get lost.
-> >=20
-> > This however doesn't matter, because the output of a disabled PWM only
-> > depends on polarity. (And polarity is already cared for.)
-> >=20
-> > And if a driver calls pwm_enable() afterwards (or the equivalent in
-> > terms of pwm_apply_state) the period and duty_cycle will be picked up
-> > correctly.
->=20
-> I see you marked my patch as "changes requested" in patchwork. However
-> I'm convinced your feedback is wrong and so I still think the patch
-> is safe to be applied unmodified.
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-rockchip.txt b/Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
+deleted file mode 100644
+index f70956dea..000000000
+--- a/Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
++++ /dev/null
+@@ -1,27 +0,0 @@
+-Rockchip PWM controller
+-
+-Required properties:
+- - compatible: should be "rockchip,<name>-pwm"
+-   "rockchip,rk2928-pwm": found on RK29XX,RK3066 and RK3188 SoCs
+-   "rockchip,rk3288-pwm": found on RK3288 SOC
+-   "rockchip,rv1108-pwm", "rockchip,rk3288-pwm": found on RV1108 SoC
+-   "rockchip,vop-pwm": found integrated in VOP on RK3288 SoC
+- - reg: physical base address and length of the controller's registers
+- - clocks: See ../clock/clock-bindings.txt
+-   - For older hardware (rk2928, rk3066, rk3188, rk3228, rk3288, rk3399):
+-     - There is one clock that's used both to derive the functional clock
+-       for the device and as the bus clock.
+-   - For newer hardware (rk3328 and future socs): specified by name
+-     - "pwm": This is used to derive the functional clock.
+-     - "pclk": This is the APB bus clock.
+- - #pwm-cells: must be 2 (rk2928) or 3 (rk3288). See pwm.yaml in this directory
+-   for a description of the cell format.
+-
+-Example:
+-
+-	pwm0: pwm@20030000 {
+-		compatible = "rockchip,rk2928-pwm";
+-		reg = <0x20030000 0x10>;
+-		clocks = <&cru PCLK_PWM01>;
+-		#pwm-cells = <2>;
+-	};
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml b/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
+new file mode 100644
+index 000000000..142ce85ce
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
+@@ -0,0 +1,91 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/pwm-rockchip.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip PWM controller
++
++maintainers:
++  - Heiko Stuebner <heiko@sntech.de>
++
++properties:
++  compatible:
++    oneOf:
++      - const: rockchip,rk2928-pwm
++      - const: rockchip,rk3288-pwm
++      - const: rockchip,vop-pwm
++      - items:
++          - const: rockchip,rk3036-pwm
++          - const: rockchip,rk2928-pwm
++      - items:
++          - enum:
++              - rockchip,rv1108-pwm
++          - const: rockchip,rk3288-pwm
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    maxItems: 2
++
++  "#pwm-cells":
++    enum: [2, 3]
++    description:
++      Must be 2 (rk2928) or 3 (rk3288 and later).
++      See pwm.yaml for a description of the cell format.
++
++required:
++  - compatible
++  - reg
++  - "#pwm-cells"
++
++if:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - rockchip,rv1108-pwm
++
++then:
++  properties:
++    clocks:
++      items:
++        - description: Used to derive the functional clock for the device.
++        - description: Used as the APB bus clock.
++
++    clock-names:
++      items:
++        - const: pwm
++        - const: pclk
++
++  required:
++    - clocks
++    - clock-names
++
++else:
++  properties:
++    clocks:
++      maxItems: 1
++      description:
++        Used both to derive the functional clock
++        for the device and as the bus clock.
++
++  required:
++    - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/rk3188-cru-common.h>
++    pwm0: pwm@20030000 {
++      compatible = "rockchip,rk2928-pwm";
++      reg = <0x20030000 0x10>;
++      clocks = <&cru PCLK_PWM01>;
++      #pwm-cells = <2>;
++    };
+-- 
+2.11.0
 
-After sleeping about this I understood you're right. I will rework the
-patch.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---4jnvqyy4sejfvozh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmBysbQACgkQwfwUeK3K
-7Am6tQf/WIbBvuhLkR6Tr9CJY7QeuHr6QFPZT4+IV3+Ely7jbWiACRjRA+IohLuK
-r/P/2a9gw6UfPtLROQy60CKwNSdi2XqVhJ9jsB+ygFgDK5hYSXAVTzfsuCj+JoEW
-Lt6iFTZU8U+UAodLDpkK2W2PJhO1UPep/ZnSYZdaAdlf7+Uq/pW3PoFUPCIvnLVo
-E6CXoBTOG3URfEAv+GQTJlPQfaVKdlXwB6/EXAQ4wrxf+tUWC+pDvCkxSSEhOzIi
-aSbK+PoAjsmtIhgwJnako6P1IjTg+OKmY5gL52ZpsjrCMD3YqcIrDbQyRPyaTAcH
-QjB/sLX/5H0XxVF88qqQ+hU2ohtbyQ==
-=Slb/
------END PGP SIGNATURE-----
-
---4jnvqyy4sejfvozh--
