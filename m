@@ -2,75 +2,79 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17B6435B8CB
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Apr 2021 05:05:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA55835B8D6
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Apr 2021 05:15:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236533AbhDLDFs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 11 Apr 2021 23:05:48 -0400
-Received: from mo-csw1514.securemx.jp ([210.130.202.153]:55006 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236411AbhDLDFr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 11 Apr 2021 23:05:47 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1514) id 13C354xU001261; Mon, 12 Apr 2021 12:05:04 +0900
-X-Iguazu-Qid: 34trpShQI277aZkbf5
-X-Iguazu-QSIG: v=2; s=0; t=1618196704; q=34trpShQI277aZkbf5; m=lP9cfn233k75Uk+XzofdsciNBCS2CP+P5GkJetk8OSo=
-Received: from imx12-a.toshiba.co.jp (imx12-a.toshiba.co.jp [61.202.160.135])
-        by relay.securemx.jp (mx-mr1513) id 13C353JR017710
-        (version=TLSv1.2 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 12 Apr 2021 12:05:03 +0900
-Received: from enc02.toshiba.co.jp (enc02.toshiba.co.jp [61.202.160.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by imx12-a.toshiba.co.jp (Postfix) with ESMTPS id 324491000A7;
-        Mon, 12 Apr 2021 12:05:03 +0900 (JST)
-Received: from hop101.toshiba.co.jp ([133.199.85.107])
-        by enc02.toshiba.co.jp  with ESMTP id 13C352MU012428;
-        Mon, 12 Apr 2021 12:05:02 +0900
-Date:   Mon, 12 Apr 2021 12:04:58 +0900
-From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org, punit1.agrawal@toshiba.co.jp,
-        yuji2.ishikawa@toshiba.co.jp, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] pwm: visconti: Add Toshiba Visconti SoC PWM
- support
-X-TSB-HOP: ON
-Message-ID: <20210412030458.t2vhg4nxwyi5yp4o@toshiba.co.jp>
-References: <20210409230837.1919744-1-nobuhiro1.iwamatsu@toshiba.co.jp>
- <20210409230837.1919744-3-nobuhiro1.iwamatsu@toshiba.co.jp>
- <20210410185222.4tfpgm2hcka26e6g@pengutronix.de>
+        id S235095AbhDLDQD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 11 Apr 2021 23:16:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235229AbhDLDQD (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sun, 11 Apr 2021 23:16:03 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id EFF2C6120C;
+        Mon, 12 Apr 2021 03:15:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618197346;
+        bh=MEBeMSZwCLiNgtETaZdBAHcB6oSiuhP7OTq68o+q6qU=;
+        h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
+        b=AsixbbEfcJQeCUBLhHHdSKb4PsstJcAjesgFqQSgsFfoutKECCR4Eaxp1XEQ9J4MA
+         UpncmUnFRscfoXy9LObT8q5ZtMr00QUTYo5HqsA51O4xxcnUFgycv8ukBAJ5kFwvfW
+         GCdyem1GHPp0ihDFB2JDxIlJo6h9TCeoEphym4XnjjKYbXr1+DB/tf3/nn4/FIgsrp
+         5KZhWuPZBY5UzZ6L04IG4wzh7/FHm/HK7NcQFTzGO3VU/e5qqW2epzr/SWXh1M8eKr
+         KEfd/QXi92cRRaJnwMRfay1AmRuKd8B6DLQjxLIW43EzBCca9X45Xck6pqrw9kaOHE
+         l3+6JLRj3CCMg==
+Received: by mail-lj1-f176.google.com with SMTP id a36so2722916ljq.8;
+        Sun, 11 Apr 2021 20:15:45 -0700 (PDT)
+X-Gm-Message-State: AOAM532rxptN0jr3QjYBlmz38QYBe9WQVVCeUHXPk3sRT6g5+zZgk+yL
+        3BhKQsSkbTeUM1jmANC7MkIS9HVWtmUm67Dw8OU=
+X-Google-Smtp-Source: ABdhPJxY40eVzTueYOpnHIuI8SLf2FP95b6CadyqCzVZkmgU4iiNPf4qkbkYSduLZMay54CJOUuttMeYEXCIdAuFf4o=
+X-Received: by 2002:a2e:2f03:: with SMTP id v3mr11027054ljv.463.1618197344265;
+ Sun, 11 Apr 2021 20:15:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210410185222.4tfpgm2hcka26e6g@pengutronix.de>
+References: <20210411131007.21757-1-jbx6244@gmail.com> <20210411131007.21757-3-jbx6244@gmail.com>
+In-Reply-To: <20210411131007.21757-3-jbx6244@gmail.com>
+Reply-To: wens@kernel.org
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Mon, 12 Apr 2021 11:15:35 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67s7a4GARfAnROKS40kaYQpdW_qWX=HX6GU09jV9wrbXw@mail.gmail.com>
+Message-ID: <CAGb2v67s7a4GARfAnROKS40kaYQpdW_qWX=HX6GU09jV9wrbXw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] ARM: dts: rockchip: remove interrupts properties
+ from pwm nodes rv1108.dtsi
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        linux-pwm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
+On Sun, Apr 11, 2021 at 9:11 PM Johan Jonker <jbx6244@gmail.com> wrote:
+>
+> A test with the command below gives this error:
+>
+> /arch/arm/boot/dts/rv1108-evb.dt.yaml:
+> pwm@10280000: 'interrupts' does not match any of the regexes:
+> 'pinctrl-[0-9]+'
+>
+> "interrupts" is an undocumented property, so remove them
+> from pwm nodes in rv1108.dtsi.
+>
+> make ARCH=arm dtbs_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
+>
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-On Sat, Apr 10, 2021 at 08:52:22PM +0200, Uwe Kleine-König wrote:
-> Hello,
-> 
-> one more comment:
-> 
-> On Sat, Apr 10, 2021 at 08:08:37AM +0900, Nobuhiro Iwamatsu wrote:
-> > +static inline struct visconti_pwm_chip *to_visconti_chip(struct pwm_chip *chip)
-> 
-> all functions but this one start have the common prefix "visconti_pwm_".
-> I like the concept of a common prefix and so you could rename this
-> function to visconti_pwm_from_chip or similar.
+Given that the interrupts were specified, meaning they are wired up in hardware,
+shouldn't the solution be to add the interrupts property to the binding instead?
 
-OK, I will change. 
+After all, the device tree describes the actual hardware, not just what the
+implementations need.
 
-> 
-> Best regards
-> Uwe
-> 
-
-Best regards,
-  Nobuhiro
+ChenYu
