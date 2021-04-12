@@ -2,195 +2,120 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BE7435CF43
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Apr 2021 19:12:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E7A735CFDC
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Apr 2021 19:54:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240644AbhDLRMT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 12 Apr 2021 13:12:19 -0400
-Received: from mail.pqgruber.com ([52.59.78.55]:33300 "EHLO mail.pqgruber.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239716AbhDLRMT (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 12 Apr 2021 13:12:19 -0400
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id 8292EC725CF;
-        Mon, 12 Apr 2021 19:11:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1618247519;
-        bh=s70jJ6PUcq1vMW2f9OQQPQXe2SFSJs1hmfS8w1t+mBI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ok66qAe83uGzzW0JSXD++tUQXyjBZbgHfcwj3mUqOUSEaGbg6ItOzfsMin32rAPlX
-         C264jO/Zo2j03Q+dmoRm7Xubl0MqJ2vNTt/jbWMJRkbPKPIuhAVN6GPYt53EKLnO29
-         JayCN2TCfxYGa2JEfsXuyl6wFpZ9BCF9JH0r3/rs=
-Date:   Mon, 12 Apr 2021 19:11:58 +0200
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 6/8] pwm: pca9685: Support new PWM_USAGE_POWER flag
-Message-ID: <YHR/Xm5nOjrSwVYs@workstation.tuxnet>
-References: <20210412132745.76609-1-clemens.gruber@pqgruber.com>
- <20210412132745.76609-6-clemens.gruber@pqgruber.com>
- <20210412163045.apgnac7atgpboths@pengutronix.de>
+        id S243494AbhDLRym (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 12 Apr 2021 13:54:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243428AbhDLRym (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Apr 2021 13:54:42 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F217C061574;
+        Mon, 12 Apr 2021 10:54:23 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id u21so21681874ejo.13;
+        Mon, 12 Apr 2021 10:54:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7xZ2z/REQKDHpPpudGHJDtF+j1fU3msVI7XisJ2amc4=;
+        b=UDvpB2a4GDnPlFBEkaSIRcfJMyWB2e4QNAnncdGeKlzcLUokn2c5mfaqypZdqPbzeL
+         Mgf+FlNviP3AHd3CvAVEfJtY/q6YxakAF/BnOFglDXUoiyj+C7c32AEOOA9F0iLhEWRO
+         CcdpFtRr/n/ZAKLasjDjtjzeWFNPP2j1akh81i+Rb3ZEI7wP+TrRBhduHH2pkpDyq7zi
+         4XTOk0keAF9aQ6vSqLAt5uftZrp5PRIi2yZvhFsGniVbqN+YeLI5d+1Yz4p3anyOs87f
+         UxN4fXHrpm3XJJZovc+HLoX4/DBDf11qcSXZG6UriPeE4PacTj0A2tfonbkOIIoyGX7A
+         Tvgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7xZ2z/REQKDHpPpudGHJDtF+j1fU3msVI7XisJ2amc4=;
+        b=g5CwhagksympI0i+7dDVwY5ePbZhBvqIgzuFnpxeMvO54YdA+LVLniRMHHmFyilaUO
+         qaS4/L4xr5QBjocbc6juXOumcBj3bhMKwn8G8eaZMb5gS817ZKlQGdY5mti2LaGY5Cqo
+         dvq1FMxzn8A15J56X1y419zqrXtxCrlJNUNZorO45HILNs9ROaU6LoXn1hSgkwUEqQwV
+         btkm50g94+Qcevgt2+0QvYQI/uEJLTw+4V/jxIQtGjLzZwOXV7B5WXxb5njHFBjZPTOo
+         WnSvnrPgLrBs7HWuuCgdwZz7z6a/ho0usJSkemFSEjJAAuN2uvz77n9Iu5OCDUr02DQh
+         5iFg==
+X-Gm-Message-State: AOAM531xolMQVLpCoxfeZpHGqqC0fKfLYXS0eJgvQ8QeWxB9xwJCo/vn
+        cUorntbII/jkeL8rAs8Kpiw=
+X-Google-Smtp-Source: ABdhPJwmIXBWKA7QOETds/BhD3661kA4UbZLfCHUrVwbpjensenk1YYVEv3gTJRh6So+ofnhWvdZ+A==
+X-Received: by 2002:a17:906:3c45:: with SMTP id i5mr2579867ejg.368.1618250062327;
+        Mon, 12 Apr 2021 10:54:22 -0700 (PDT)
+Received: from [192.168.2.2] (81-204-249-205.fixed.kpn.net. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id v5sm7472791edx.87.2021.04.12.10.54.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Apr 2021 10:54:21 -0700 (PDT)
+Subject: Re: [PATCH v2 2/6] dt-bindings: pwm: add more compatible strings to
+ pwm-rockchip.yaml
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        heiko@sntech.de, thierry.reding@gmail.com, lee.jones@linaro.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        u.kleine-koenig@pengutronix.de
+References: <20210411131007.21757-1-jbx6244@gmail.com>
+ <20210411131007.21757-2-jbx6244@gmail.com>
+ <20210412150533.GA3898302@robh.at.kernel.org>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <ba14a833-10dd-fc70-d6bd-70e8f6811ab3@gmail.com>
+Date:   Mon, 12 Apr 2021 19:54:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210412163045.apgnac7atgpboths@pengutronix.de>
+In-Reply-To: <20210412150533.GA3898302@robh.at.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 Hi,
 
-On Mon, Apr 12, 2021 at 06:30:45PM +0200, Uwe Kleine-König wrote:
-> On Mon, Apr 12, 2021 at 03:27:43PM +0200, Clemens Gruber wrote:
-> > If PWM_USAGE_POWER is set on a PWM, the pca9685 driver will phase shift
-> > the individual channels relative to their channel number. This improves
-> > EMI because the enabled channels no longer turn on at the same time,
-> > while still maintaining the configured duty cycle / power output.
-> > 
-> > Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
-> > ---
-> >  drivers/pwm/pwm-pca9685.c | 63 ++++++++++++++++++++++++++++++---------
-> >  1 file changed, 49 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-> > index 7f97965033e7..410b93b115dc 100644
-> > --- a/drivers/pwm/pwm-pca9685.c
-> > +++ b/drivers/pwm/pwm-pca9685.c
-> > @@ -93,46 +93,76 @@ static inline struct pca9685 *to_pca(struct pwm_chip *chip)
-> >  /* Helper function to set the duty cycle ratio to duty/4096 (e.g. duty=2048 -> 50%) */
-> >  static void pca9685_pwm_set_duty(struct pca9685 *pca, int channel, unsigned int duty)
-> >  {
-> > +	struct pwm_device *pwm = &pca->chip.pwms[channel];
-> > +	unsigned int on, off;
-> > +
-> >  	if (duty == 0) {
-> >  		/* Set the full OFF bit, which has the highest precedence */
-> >  		regmap_write(pca->regmap, REG_OFF_H(channel), LED_FULL);
-> > +		return;
-> >  	} else if (duty >= PCA9685_COUNTER_RANGE) {
-> >  		/* Set the full ON bit and clear the full OFF bit */
-> >  		regmap_write(pca->regmap, REG_ON_H(channel), LED_FULL);
-> >  		regmap_write(pca->regmap, REG_OFF_H(channel), 0);
-> > -	} else {
-> > -		/* Set OFF time (clears the full OFF bit) */
-> > -		regmap_write(pca->regmap, REG_OFF_L(channel), duty & 0xff);
-> > -		regmap_write(pca->regmap, REG_OFF_H(channel), (duty >> 8) & 0xf);
-> > -		/* Clear the full ON bit */
-> > -		regmap_write(pca->regmap, REG_ON_H(channel), 0);
-> > +		return;
-> >  	}
-> > +
-> > +
-> > +	if (pwm->args.usage_power && channel < PCA9685_MAXCHAN) {
-> > +		/*
-> > +		 * If PWM_USAGE_POWER is set on a PWM, the pca9685
-> > +		 * driver will phase shift the individual channels
-> > +		 * relative to their channel number.
-> > +		 * This improves EMI because the enabled channels no
-> > +		 * longer turn on at the same time, while still
-> > +		 * maintaining the configured duty cycle / power output.
-> > +		 */
-> > +		on = channel * PCA9685_COUNTER_RANGE / PCA9685_MAXCHAN;
-> > +	} else
-> > +		on = 0;
-> > +
-> > +	off = (on + duty) % PCA9685_COUNTER_RANGE;
-> > +
-> > +	/* Set ON time (clears full ON bit) */
-> > +	regmap_write(pca->regmap, REG_ON_L(channel), on & 0xff);
-> > +	regmap_write(pca->regmap, REG_ON_H(channel), (on >> 8) & 0xf);
-> > +	/* Set OFF time (clears full OFF bit) */
-> > +	regmap_write(pca->regmap, REG_OFF_L(channel), off & 0xff);
-> > +	regmap_write(pca->regmap, REG_OFF_H(channel), (off >> 8) & 0xf);
-> >  }
-> >  
-> >  static unsigned int pca9685_pwm_get_duty(struct pca9685 *pca, int channel)
-> >  {
-> > -	unsigned int off_h = 0, val = 0;
-> > +	struct pwm_device *pwm = &pca->chip.pwms[channel];
-> > +	unsigned int off = 0, on = 0, val = 0;
-> >  
-> >  	if (WARN_ON(channel >= PCA9685_MAXCHAN)) {
-> >  		/* HW does not support reading state of "all LEDs" channel */
-> >  		return 0;
-> >  	}
-> >  
-> > -	regmap_read(pca->regmap, LED_N_OFF_H(channel), &off_h);
-> > -	if (off_h & LED_FULL) {
-> > +	regmap_read(pca->regmap, LED_N_OFF_H(channel), &off);
-> > +	if (off & LED_FULL) {
-> >  		/* Full OFF bit is set */
-> >  		return 0;
-> >  	}
-> >  
-> > -	regmap_read(pca->regmap, LED_N_ON_H(channel), &val);
-> > -	if (val & LED_FULL) {
-> > +	regmap_read(pca->regmap, LED_N_ON_H(channel), &on);
-> > +	if (on & LED_FULL) {
-> >  		/* Full ON bit is set */
-> >  		return PCA9685_COUNTER_RANGE;
-> >  	}
-> >  
-> > -	val = 0;
-> >  	regmap_read(pca->regmap, LED_N_OFF_L(channel), &val);
-> > -	return ((off_h & 0xf) << 8) | (val & 0xff);
-> > +	off = ((off & 0xf) << 8) | (val & 0xff);
-> > +	if (!pwm->args.usage_power)
-> > +		return off;
-> > +
-> > +	/* Read ON register to calculate duty cycle of staggered output */
-> > +	val = 0;
-> > +	regmap_read(pca->regmap, LED_N_ON_L(channel), &val);
-> > +	on = ((on & 0xf) << 8) | (val & 0xff);
-> > +	return (off - on) & (PCA9685_COUNTER_RANGE - 1);
+Sorry, made a little mistake in version 2 with "rockchip,rk3036-pwm",
+"rockchip,rk2928-pwm".
+Please trash. Will send version 3.
+By the change of schema for clocks and clock-names I add
+"rockchip,rk3328-pwm" to the "if:", so strictly speaking v1 and (v2) v3
+will not be the same.
+
+Johan
+
+
+On 4/12/21 5:05 PM, Rob Herring wrote:
+> On Sun, 11 Apr 2021 15:10:03 +0200, Johan Jonker wrote:
+>> The compatible strings below are already in use in the Rockchip
+>> dtsi files, but were somehow never added to a document, so add
+>>
+>> "rockchip,rk3328-pwm"
+>>
+>> "rockchip,rk3036-pwm", "rockchip,rk2928-pwm"
+>>
+>> "rockchip,rk3368-pwm", "rockchip,rk3288-pwm"
+>> "rockchip,rk3399-pwm", "rockchip,rk3288-pwm"
+>>
+>> "rockchip,px30-pwm", "rockchip,rk3328-pwm"
+>> "rockchip,rk3308-pwm", "rockchip,rk3328-pwm"
+>>
+>> for pwm nodes to pwm-rockchip.yaml.
+>>
+>> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+>> ---
+>> Changed V2:
+>>   changed schema for clocks and clock-names
+>> ---
+>>  Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
+>>
 > 
-> If LED_N_ON is != 0 but usage_power is false, the returned state is
-> bogus.
-
-If usage_power is false, LED_N_ON is guaranteed to be 0. It is reset to
-0 in probe and never changed. Or did I miss something?
-
 > 
-> >  }
-> >  
-> >  #if IS_ENABLED(CONFIG_GPIOLIB)
-> > @@ -439,9 +469,11 @@ static int pca9685_pwm_probe(struct i2c_client *client,
-> >  	reg &= ~(MODE1_ALLCALL | MODE1_SUB1 | MODE1_SUB2 | MODE1_SUB3);
-> >  	regmap_write(pca->regmap, PCA9685_MODE1, reg);
-> >  
-> > -	/* Reset OFF registers to POR default */
-> > +	/* Reset OFF/ON registers to POR default */
-> >  	regmap_write(pca->regmap, PCA9685_ALL_LED_OFF_L, LED_FULL);
-> >  	regmap_write(pca->regmap, PCA9685_ALL_LED_OFF_H, LED_FULL);
-> > +	regmap_write(pca->regmap, PCA9685_ALL_LED_ON_L, 0);
-> > +	regmap_write(pca->regmap, PCA9685_ALL_LED_ON_H, 0);
-> >  
-> >  	pca->chip.ops = &pca9685_pwm_ops;
-> >  	/* Add an extra channel for ALL_LED */
-> > @@ -450,6 +482,9 @@ static int pca9685_pwm_probe(struct i2c_client *client,
-> >  	pca->chip.dev = &client->dev;
-> >  	pca->chip.base = -1;
-> >  
-> > +	pca->chip.of_xlate = of_pwm_xlate_with_flags;
-> > +	pca->chip.of_pwm_n_cells = 3;
-> > +
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
 > 
-> Huh, you're incompatibly changing the device tree binding here.
+> If a tag was not added on purpose, please state why and what changed.
+> 
 
-No, I don't think so:
-
-The third cell is optional with of_pwm_xlate_with_flags.
-So previous DTs with pwm-cells = <2> will still work.
-If you want to use the new flag for some PWMs you have to set pwm-cells
-to <3> and PWM_USAGE_POWER (or 0) in the third field at the consumer.
-
-This should not break backwards compatibility. Let me know if I missed
-something.
-
-Thanks for your review,
-Clemens
