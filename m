@@ -2,50 +2,50 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E942135D19F
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Apr 2021 22:02:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E02BD35D1A5
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Apr 2021 22:04:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244016AbhDLUC0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 12 Apr 2021 16:02:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43444 "EHLO
+        id S245426AbhDLUCc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 12 Apr 2021 16:02:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237252AbhDLUCZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Apr 2021 16:02:25 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CCFEC061574;
-        Mon, 12 Apr 2021 13:02:07 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id h10so16527400edt.13;
-        Mon, 12 Apr 2021 13:02:07 -0700 (PDT)
+        with ESMTP id S245408AbhDLUC3 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Apr 2021 16:02:29 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB173C061574;
+        Mon, 12 Apr 2021 13:02:08 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id g5so15611309ejx.0;
+        Mon, 12 Apr 2021 13:02:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+jLQeqDVwDZITNTxZ7lqCyLYCdhzsUWl09kewB6trH0=;
-        b=YZNwcdEImrCzGnD0FqZShGAeqfaj8pc/By0os1O5rLpJUb/eSLjfO+VDrRDeNSdhIA
-         SXmJQcCGibEYDlGYCn18CYjpWEBBljP64+NGWLMMj6LptLDaCWupuVU/msVFN72yvABt
-         ez5HLfMajASimP9jgXLAJf+WK96umC3zciy52o3+kpU+t+vwXz5vHTa7bE16YO0xmzVQ
-         LSC5BLSeuvPwfB+Kl4TeBH3cLUBWlpvzSh+jH3lBBJoqna2pu0R55YWHEtl1kJu2mi72
-         fSQj5rStNeNNB6Jr6ek0zooBcMlWIZfLNPBJV2bI5NDoQyQf+dRU814O4uFQr4fYW2hM
-         4nWg==
+        bh=+xTKglaTtBBnIwb4sWoIFa19QpsHo2j4/zd4VoY1yJc=;
+        b=qh59HB/hE/Y3AvIY5m10Mpyrf2atm3n/6KSctcZQ/2Z2aI8Pore38oGdJ+1w/B7tJQ
+         wXUA5PsaIMlzN2cadddZ4YUAODXpafYVv9irLuvqV4xg1AeS3pTt/uZo9ryhtnvEtqxk
+         xwTGiqSDmtbrvyymQqkSVs/0eQu5Y+qVs7kCs9KEtx4ll1FrpzNrqXK1xYjB2nXKkfQ5
+         8pbkB3IREzs//DAE67l9ZtMB+bJ2jKc/YJiw+mE+vvf3NdtzhO49GqgsGXCfhQGEOyYi
+         LoHq+HkOr8NOgBE/ImVdCU5iDomt5S9u7nDf2u2XtvqZLfyONTQiBGdR9wJtYbdWIHkt
+         ZvDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=+jLQeqDVwDZITNTxZ7lqCyLYCdhzsUWl09kewB6trH0=;
-        b=qLNFZIQM3qUN+0hNCAqV+Li6OAPt0Cem1k7eRNUEMHUatXqNPgGgFn7L0S4sp5ooVR
-         /neZzClj7exFSt9NV03HO9QIBCHrONL+arb3c2AaB/OBGcZLoFQCCaGIdr4E/xkIJ0rb
-         R1VJ14s/GZ4xN9Pgz3fIel5DAWq4rV30Vlq5zpCyhRvAo63W3nD9YotxpdBLWSqZ1vXa
-         GHfGLzVRo4FXUTeKIQ6YV4xjqMgN6toI8yY8/axzJD+hvGg+jH1qTJegPPsrQwPdUgwt
-         s9vbPugi3qoomnSuZm+TZeS1jfpaaqbcuN82Bs392hLQo6t2YmCboEx2cJi1cUh1ALRH
-         EALg==
-X-Gm-Message-State: AOAM533MbI8aF6fg29pDemQBJ8J3jR3CgvYNYAfC+Cc/gl1Vvh0xuRVM
-        WtduENSGDfE/REKBpxOrkHI=
-X-Google-Smtp-Source: ABdhPJx1jtaE/ZUGMEI+E3LxsIWY5rpu+gPFvZf6AVycYUhjxG8W4PL7/+hE1u9gNDTrCW/QkrAd0g==
-X-Received: by 2002:a05:6402:2691:: with SMTP id w17mr23721636edd.81.1618257726232;
-        Mon, 12 Apr 2021 13:02:06 -0700 (PDT)
+        bh=+xTKglaTtBBnIwb4sWoIFa19QpsHo2j4/zd4VoY1yJc=;
+        b=MHnlukhWT28Shwt2zSbgxiGHSlGnttNnQUO2EfS7UKE7S2hMyvSL5SVf4N+dlLbB1u
+         jzRd8/8ITZyMKw7h0K+/PbRVUvP7n25J+3pwWeyPeCzFe+Pg1dFSAFc0XbL+MzDLUygd
+         JHbUm9GfANtCkd7fj34RvwMzkpsroX5VKmEQvTwvQeCOdwg0ZBJdqsV/RAHYnNKLwfyw
+         io3sDbIhoK63HDSd0LVKlOemWunEnDbjqxd8wGZW6QPdEEnSpSdjZUvaTqUKf9FW9NZp
+         1oUg/2IwN/sYw8jZP9azd/zCvobFj3ApZNs5SUm5uQTqTVxy46f4CCj6v073S+r1OmLy
+         +bgQ==
+X-Gm-Message-State: AOAM531vtZa+yRNhGdDJSWLPG/OFsHZwDV3WoOTzQVRY876AhGzodz0n
+        JtiPCTdceN5izhpgf5ClRydGA0LQ8Pb0dg==
+X-Google-Smtp-Source: ABdhPJxK1rEEbA5wGozTlAIcW69RHJgVqRiptIwmUce5/T0BP+VeY7DEnUHv/uZx5NPnilZcBolNyA==
+X-Received: by 2002:a17:906:430f:: with SMTP id j15mr28964429ejm.543.1618257727215;
+        Mon, 12 Apr 2021 13:02:07 -0700 (PDT)
 Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id x9sm7514531edv.22.2021.04.12.13.02.05
+        by smtp.gmail.com with ESMTPSA id x9sm7514531edv.22.2021.04.12.13.02.06
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Apr 2021 13:02:05 -0700 (PDT)
+        Mon, 12 Apr 2021 13:02:06 -0700 (PDT)
 From:   Johan Jonker <jbx6244@gmail.com>
 To:     heiko@sntech.de
 Cc:     robh+dt@kernel.org, thierry.reding@gmail.com,
@@ -53,9 +53,9 @@ Cc:     robh+dt@kernel.org, thierry.reding@gmail.com,
         linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/4] dt-bindings: pwm: add more compatible strings to pwm-rockchip.yaml
-Date:   Mon, 12 Apr 2021 22:01:53 +0200
-Message-Id: <20210412200155.5316-2-jbx6244@gmail.com>
+Subject: [PATCH v3 3/4] ARM: dts: rockchip: remove clock-names from pwm nodes
+Date:   Mon, 12 Apr 2021 22:01:54 +0200
+Message-Id: <20210412200155.5316-3-jbx6244@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20210412200155.5316-1-jbx6244@gmail.com>
 References: <20210412200155.5316-1-jbx6244@gmail.com>
@@ -63,77 +63,97 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The compatible strings below are already in use in the Rockchip
-dtsi files, but were somehow never added to a document, so add
+A test with the command below gives this error:
 
-"rockchip,rk3328-pwm"
+/arch/arm/boot/dts/rk3036-evb.dt.yaml:
+pwm@20050030: clock-names: ['pwm'] is too short
 
-"rockchip,rk3036-pwm", "rockchip,rk2928-pwm"
+Devices with only one pwm clock use it to both
+to derive the functional clock for the device
+and as the bus clock. The driver does not need
+"clock-names" to get a handle, so remove them all.
 
-"rockchip,rk3368-pwm", "rockchip,rk3288-pwm"
-"rockchip,rk3399-pwm", "rockchip,rk3288-pwm"
-
-"rockchip,px30-pwm", "rockchip,rk3328-pwm"
-"rockchip,rk3308-pwm", "rockchip,rk3328-pwm"
-
-for pwm nodes to pwm-rockchip.yaml.
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
-Note for rob+dt:
-A tag was not added on purpose, because by the change of schema
-for clocks and clock-names I add "rockchip,rk3328-pwm" to
-the "if:", so strictly speaking V1 and (V2) V3 will not be the same.
-Please have a look at it again.
+ arch/arm/boot/dts/rk3036.dtsi | 4 ----
+ arch/arm/boot/dts/rk3288.dtsi | 4 ----
+ 2 files changed, 8 deletions(-)
 
-For some SoC nodes this patch serie generates notifications
-for undocumented "interrupts" properties shared between
-PWM channels till there is consensus of what to do with it or
-someone makes a solution for the whole PWM block.
-
-Changed V3:
-  fix mistake with compatibles introduced in V2
-Changed V2:
-  changed schema for clocks and clock-names
----
- Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml b/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
-index 19b42d31d..5596bee70 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
-+++ b/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
-@@ -14,11 +14,22 @@ properties:
-     oneOf:
-       - const: rockchip,rk2928-pwm
-       - const: rockchip,rk3288-pwm
-+      - const: rockchip,rk3328-pwm
-       - const: rockchip,vop-pwm
-       - items:
-+          - const: rockchip,rk3036-pwm
-+          - const: rockchip,rk2928-pwm
-+      - items:
-           - enum:
-+              - rockchip,rk3368-pwm
-+              - rockchip,rk3399-pwm
-               - rockchip,rv1108-pwm
-           - const: rockchip,rk3288-pwm
-+      - items:
-+          - enum:
-+              - rockchip,px30-pwm
-+              - rockchip,rk3308-pwm
-+          - const: rockchip,rk3328-pwm
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index 47a787a12..e24230d50 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -355,7 +355,6 @@
+ 		reg = <0x20050000 0x10>;
+ 		#pwm-cells = <3>;
+ 		clocks = <&cru PCLK_PWM>;
+-		clock-names = "pwm";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pwm0_pin>;
+ 		status = "disabled";
+@@ -366,7 +365,6 @@
+ 		reg = <0x20050010 0x10>;
+ 		#pwm-cells = <3>;
+ 		clocks = <&cru PCLK_PWM>;
+-		clock-names = "pwm";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pwm1_pin>;
+ 		status = "disabled";
+@@ -377,7 +375,6 @@
+ 		reg = <0x20050020 0x10>;
+ 		#pwm-cells = <3>;
+ 		clocks = <&cru PCLK_PWM>;
+-		clock-names = "pwm";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pwm2_pin>;
+ 		status = "disabled";
+@@ -388,7 +385,6 @@
+ 		reg = <0x20050030 0x10>;
+ 		#pwm-cells = <2>;
+ 		clocks = <&cru PCLK_PWM>;
+-		clock-names = "pwm";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pwm3_pin>;
+ 		status = "disabled";
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index ea7416c31..05557ad02 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -679,7 +679,6 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pwm0_pin>;
+ 		clocks = <&cru PCLK_RKPWM>;
+-		clock-names = "pwm";
+ 		status = "disabled";
+ 	};
  
-   reg:
-     maxItems: 1
-@@ -46,6 +57,7 @@ if:
-     compatible:
-       contains:
-         enum:
-+          - rockchip,rk3328-pwm
-           - rockchip,rv1108-pwm
+@@ -690,7 +689,6 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pwm1_pin>;
+ 		clocks = <&cru PCLK_RKPWM>;
+-		clock-names = "pwm";
+ 		status = "disabled";
+ 	};
  
- then:
+@@ -701,7 +699,6 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pwm2_pin>;
+ 		clocks = <&cru PCLK_RKPWM>;
+-		clock-names = "pwm";
+ 		status = "disabled";
+ 	};
+ 
+@@ -712,7 +709,6 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pwm3_pin>;
+ 		clocks = <&cru PCLK_RKPWM>;
+-		clock-names = "pwm";
+ 		status = "disabled";
+ 	};
+ 
 -- 
 2.11.0
 
