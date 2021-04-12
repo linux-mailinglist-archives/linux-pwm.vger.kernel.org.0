@@ -2,73 +2,98 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B388935D244
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Apr 2021 22:57:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFCD335D2AA
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Apr 2021 23:46:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238765AbhDLU6P (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 12 Apr 2021 16:58:15 -0400
-Received: from mail-oi1-f176.google.com ([209.85.167.176]:35680 "EHLO
-        mail-oi1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237497AbhDLU6P (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Apr 2021 16:58:15 -0400
-Received: by mail-oi1-f176.google.com with SMTP id x2so14836926oiv.2;
-        Mon, 12 Apr 2021 13:57:55 -0700 (PDT)
+        id S243695AbhDLVqw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 12 Apr 2021 17:46:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238172AbhDLVqv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Apr 2021 17:46:51 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29134C061574;
+        Mon, 12 Apr 2021 14:46:29 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id sd23so14036495ejb.12;
+        Mon, 12 Apr 2021 14:46:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uFUrnfIf09ezybuVkP04vDSdaVZKjH/YcufmPLg/EJA=;
+        b=SR9/ZPn34QjAzkHsEkByTJNEzre4oYG+GlELLhGkzdPICK2PzHnAXXdR2kuXrH+JBV
+         3CKshQfZrIH1zhl0sLSqUr+P3VV0MLnge6GRs/X7RQZosh7DpOd69z7rfaU4e7xlM7a4
+         nK+TlRUWEScPLSU81NiDnDPKd5sFB84OxNqnYwdL0QFMQXrvFEE3/sP1z8mu5mc86h+l
+         QmvlwgwJlwiBHWyBHIl1JnnBfffDXI4QEZDTs1fM8XNFbI0e7kSUlf8sWhXASFkqHPxl
+         sWCLRhK0IdebQcZRq78nfb4HRO6gO9aIk3+MdL2X/qbRVOMtraGSvKcqjc8E0f4rOYdg
+         dSog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2sVPmXqqYHpMPr6v1hWYxCdWgD57bKqmVBWwEqZ02Hw=;
-        b=fFgzwN/k24zWYDrqx7/y7CYJ+N4C7syAFbNLIvldKAKUMems/uGE46BKTB9/mtAvWe
-         0/n3z6bJ4tZSWMOEtlybFSt5v9Kmj3WLpfbsPktdQmd8bHUcMtZ/Mea7CrQVRMEGxQJD
-         g48MqyeBwR3icLWMoBqeCXwVQoxSxJbkbW98i5tumDWWl6i8PvjNiTQx2s5QbtsfkMhh
-         yfu135aUbtUmLIhv2uZ7rMh8aWCjtC1DpvJ4rU2x5vNElR5yphjt1jsUd2tNt1LZzln8
-         DAvzR/PY/0Jp36iJ2qKatcl+yYRLh0m2oW4h9Abm4mqp0babKQ+OWI2OydFJ3DwRjLu6
-         TgHA==
-X-Gm-Message-State: AOAM533MCwdYLJBC0HikdG2pZfQ6V7lmqHBdP5DkwilVQ0+AN0Igxw1x
-        GPam+oJ0c1tCms4J6wq1BA==
-X-Google-Smtp-Source: ABdhPJz9YxXzZV7HBQ97lVOF27AThJosqKvHcLSt7zlTOgwB7qi4nL7B6fFkh+3veL3dckMnu0CrxQ==
-X-Received: by 2002:aca:5945:: with SMTP id n66mr783932oib.11.1618261075427;
-        Mon, 12 Apr 2021 13:57:55 -0700 (PDT)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j142sm2059215oih.33.2021.04.12.13.57.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Apr 2021 13:57:54 -0700 (PDT)
-Received: (nullmailer pid 158351 invoked by uid 1000);
-        Mon, 12 Apr 2021 20:57:53 -0000
-Date:   Mon, 12 Apr 2021 15:57:53 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uFUrnfIf09ezybuVkP04vDSdaVZKjH/YcufmPLg/EJA=;
+        b=Rg/ifEv5zp6xbGEm3lmCaBXbUAOkQOfDL9SCqnpQWvWYV4/trMMkRKp36am7oMCkDX
+         nZ+1j2VSa4Y6NiU8MKXGw0W1La9F0tyxxKlNfYZHovwft4oi7BancxaYlKkpPZ99j/XV
+         A2mChI9kGDYqyPs2xQNYO6L53B+oS7Vd9eivKKgT2cgET9fhhu5y5tlu3HRzRkVyCfiK
+         ISx7qEzGFiDD88Xohdw0GGhxdD8cJ1lAfrQXum8uD5syErEwKiKshbgnaILNTrAi9JbL
+         aTeeTv2YaY07Fjf8Av9LyMz8E+EmolmCHInxSkNqgaHqQspaKXQEo61tx5sZ37WssDxa
+         XSyA==
+X-Gm-Message-State: AOAM532vArwjLEB/LA8LSyF67P7bTCtk3B8msvRUJadT+NFE/ClEa4Uk
+        cxadQGdip6H1bSdmHATQPUc=
+X-Google-Smtp-Source: ABdhPJzbzVMu26M4OrHzDAxRyzivV5rBNL9tM9AJWb1TsGiwOAomqyu6SFHVzQYgqpT8dKZrtMd0/Q==
+X-Received: by 2002:a17:906:5855:: with SMTP id h21mr29208531ejs.522.1618263987967;
+        Mon, 12 Apr 2021 14:46:27 -0700 (PDT)
+Received: from [192.168.2.2] (81-204-249-205.fixed.kpn.net. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id ke14sm1698718ejc.1.2021.04.12.14.46.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Apr 2021 14:46:27 -0700 (PDT)
+Subject: Re: [PATCH v2 1/6] dt-bindings: pwm: convert pwm-rockchip.txt to YAML
+To:     Rob Herring <robh@kernel.org>
 Cc:     devicetree@vger.kernel.org, u.kleine-koenig@pengutronix.de,
         robh+dt@kernel.org, linux-pwm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, lee.jones@linaro.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         thierry.reding@gmail.com, heiko@sntech.de
-Subject: Re: [PATCH v2 1/6] dt-bindings: pwm: convert pwm-rockchip.txt to YAML
-Message-ID: <20210412205753.GA158321@robh.at.kernel.org>
 References: <20210411131007.21757-1-jbx6244@gmail.com>
+ <20210412205753.GA158321@robh.at.kernel.org>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <5705f804-5db0-1d14-f853-02be72fe4d2c@gmail.com>
+Date:   Mon, 12 Apr 2021 23:46:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210411131007.21757-1-jbx6244@gmail.com>
+In-Reply-To: <20210412205753.GA158321@robh.at.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun, 11 Apr 2021 15:10:02 +0200, Johan Jonker wrote:
-> Current dts files with 'pwm' nodes are manually verified.
-> In order to automate this process pwm-rockchip.txt
-> has to be converted to yaml.
+On 4/12/21 10:57 PM, Rob Herring wrote:
+> On Sun, 11 Apr 2021 15:10:02 +0200, Johan Jonker wrote:
+>> Current dts files with 'pwm' nodes are manually verified.
+>> In order to automate this process pwm-rockchip.txt
+>> has to be converted to yaml.
+>>
+>> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+>> ---
+>> Changed V2:
+>>   changed schema for clocks and clock-names
+>> ---
+>>  .../devicetree/bindings/pwm/pwm-rockchip.txt       | 27 -------
+>>  .../devicetree/bindings/pwm/pwm-rockchip.yaml      | 91 ++++++++++++++++++++++
+>>  2 files changed, 91 insertions(+), 27 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
+>>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
+>>
 > 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
-> Changed V2:
->   changed schema for clocks and clock-names
-> ---
->  .../devicetree/bindings/pwm/pwm-rockchip.txt       | 27 -------
->  .../devicetree/bindings/pwm/pwm-rockchip.yaml      | 91 ++++++++++++++++++++++
->  2 files changed, 91 insertions(+), 27 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > 
+Hi
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This tags version 2 with a little mistake instead of version 3?
+Is that correct?
+
+Johan
