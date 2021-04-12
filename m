@@ -2,86 +2,91 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B9BA35C6CD
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Apr 2021 14:55:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 601BF35C76E
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Apr 2021 15:20:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241407AbhDLM4N (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 12 Apr 2021 08:56:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241271AbhDLM4N (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Apr 2021 08:56:13 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FC49C061574
-        for <linux-pwm@vger.kernel.org>; Mon, 12 Apr 2021 05:55:55 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lVw6S-0000K5-Ld; Mon, 12 Apr 2021 14:55:44 +0200
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lVw6R-0002Vu-MH; Mon, 12 Apr 2021 14:55:43 +0200
-Date:   Mon, 12 Apr 2021 14:55:43 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+        id S240400AbhDLNUa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 12 Apr 2021 09:20:30 -0400
+Received: from mail-oi1-f182.google.com ([209.85.167.182]:37653 "EHLO
+        mail-oi1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239617AbhDLNU2 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Apr 2021 09:20:28 -0400
+Received: by mail-oi1-f182.google.com with SMTP id k25so13388248oic.4;
+        Mon, 12 Apr 2021 06:20:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=5n3lwv9EjfPJBx+21UO8C42pguWqHmFLoVLJG4Pmt/8=;
+        b=mUO4Tm/BauiG1P7td9TeoY1tkpLhT3ZV9oojGNA5z90atxO4o85V0Dq83FMVWfGPzH
+         enHwzcIFwLvYIFOu+ZRUCQ4faOBwuUnefZncZuWd9JDwG4dizIVofNRLyRp8qIroMsys
+         BnrqM+hOXeEmxVfVbu26HFJqvf9CSzp3Xc+2wk2w5hdhDOpowjLgaRKO97D346H9WvpR
+         KfyzSepG44W/UhOP9uhp1cEWbr4Cnta6xKj7k/o/tQxeoTfcGntPnVjkgFcRXJHGHqz8
+         48TMvPs48Qh5dwI+sx+qKtAPRvKrN7YbN3gSAENSrVpik2ErfIVN7QseVyUOGl0hBnL+
+         JuMA==
+X-Gm-Message-State: AOAM532e8owmAa7UCrmlZGFYibkDGLc1wenKrzSQ7nC57cnoB3CJYoGH
+        Z6TfbpMyFtYba9NFGcSkkg==
+X-Google-Smtp-Source: ABdhPJxkwQARah6Q/rf1DbNTOAJlUzHL9osoUKpq9VAyJPVrU6baUsVLQdOFRK5Og/wakyM83q8y4Q==
+X-Received: by 2002:a05:6808:b09:: with SMTP id s9mr19069272oij.36.1618233610277;
+        Mon, 12 Apr 2021 06:20:10 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 3sm2636995otw.58.2021.04.12.06.20.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Apr 2021 06:20:09 -0700 (PDT)
+Received: (nullmailer pid 3757980 invoked by uid 1000);
+        Mon, 12 Apr 2021 13:20:00 -0000
+From:   Rob Herring <robh@kernel.org>
 To:     Billy Tsai <billy_tsai@aspeedtech.com>
-Cc:     lee.jones@linaro.org, robh+dt@kernel.org, joel@jms.id.au,
-        andrew@aj.id.au, thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        billy_tasi@aspeedtech.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, BMC-SW@aspeedtech.com
-Subject: Re: [PATCH 1/4] dt-bindings: Add bindings for aspeed pwm-tach.
-Message-ID: <20210412125543.xhnitijeumddqdmn@pengutronix.de>
-References: <20210412095457.15095-1-billy_tsai@aspeedtech.com>
- <20210412095457.15095-2-billy_tsai@aspeedtech.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="72zyimz3jwqrdzfk"
-Content-Disposition: inline
-In-Reply-To: <20210412095457.15095-2-billy_tsai@aspeedtech.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Cc:     u.kleine-koenig@pengutronix.de, devicetree@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, andrew@aj.id.au,
+        linux-kernel@vger.kernel.org, billy_tasi@aspeedtech.com,
+        p.zabel@pengutronix.de, linux-pwm@vger.kernel.org, joel@jms.id.au,
+        thierry.reding@gmail.com, robh+dt@kernel.org,
+        BMC-SW@aspeedtech.com, linux-arm-kernel@lists.infradead.org,
+        lee.jones@linaro.org
+In-Reply-To: <20210412095457.15095-3-billy_tsai@aspeedtech.com>
+References: <20210412095457.15095-1-billy_tsai@aspeedtech.com> <20210412095457.15095-3-billy_tsai@aspeedtech.com>
+Subject: Re: [PATCH 2/4] dt-bindings: Add bindings for aspeed pwm
+Date:   Mon, 12 Apr 2021 08:20:00 -0500
+Message-Id: <1618233600.223110.3757979.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Mon, 12 Apr 2021 17:54:55 +0800, Billy Tsai wrote:
+> This patch adds device bindings for aspeed pwm device which should be
+> the sub-node of aspeed,ast2600-pwm-tach.
+> 
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> ---
+>  .../bindings/pwm/aspeed,ast2600-pwm.yaml      | 47 +++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml
+> 
 
---72zyimz3jwqrdzfk
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Hello,
+yamllint warnings/errors:
 
-On Mon, Apr 12, 2021 at 05:54:54PM +0800, Billy Tsai wrote:
-> +  - Billy Tsai <billy_tasi@aspeedtech.com>
+dtschema/dtc warnings/errors:
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml: Additional properties are not allowed ('pwm-cells' was unexpected)
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml: Additional properties are not allowed ('pwm-cells' was unexpected)
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml: ignoring, error in schema: 
+warning: no schema found in file: ./Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml
+Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.example.dt.yaml:0:0: /example-0/pwm_tach@1e610000: failed to match any schema with compatible: ['aspeed,ast2600-pwm-tach', 'simple-mfd', 'syscon']
+Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.example.dt.yaml:0:0: /example-0/pwm_tach@1e610000/pwm@0: failed to match any schema with compatible: ['aspeed,ast2600-pwm']
 
-I object because the MTA at aspeedtech.com doesn't know this email
-address.
+See https://patchwork.ozlabs.org/patch/1465116
 
-Best regards
-Uwe
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
---72zyimz3jwqrdzfk
-Content-Type: application/pgp-signature; name="signature.asc"
+pip3 install dtschema --upgrade
 
------BEGIN PGP SIGNATURE-----
+Please check and re-submit.
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmB0Q0wACgkQwfwUeK3K
-7AlClggAkJzxzLk6CyBb65jTrLt6GHUVsNktatzSSRR+W6qXEyPzt1Snay/1HEex
-EDQicnfgTL16yXBjHLHwWEqg7ek82wnO3I8weSNFcM9xs3J49dcGUnMII6gBCDFK
-/UAD5sugnnHfDaaWDvj/OGT9uGQlPBtaA1LJBb6EGb4qeaSINwc77ySfzIqZyMeQ
-R+I6nNRvID/fJYg6cbpe4AUgr+jBnZ9YFxkkMdKjl3Wz0Zy2p0nIoqBFl3H8/NFs
-Xwk3HkIWwZ/M0YbVcBcHj4YVKC+TW47Pno+QGfmbTTxwBaTABKPkD2uTQOtg5Z5U
-0KRgU0CZnI/F2/IhLd0Qiz+V57VnMg==
-=x1yQ
------END PGP SIGNATURE-----
-
---72zyimz3jwqrdzfk--
