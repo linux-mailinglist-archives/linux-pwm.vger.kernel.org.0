@@ -2,52 +2,52 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2520735DDEB
-	for <lists+linux-pwm@lfdr.de>; Tue, 13 Apr 2021 13:41:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B850235DE0F
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Apr 2021 13:50:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231260AbhDMLlD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 13 Apr 2021 07:41:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49998 "EHLO
+        id S1343722AbhDMLvA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 13 Apr 2021 07:51:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231163AbhDMLlC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 13 Apr 2021 07:41:02 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10A68C061574;
-        Tue, 13 Apr 2021 04:40:43 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id s10-20020a05600c318ab029012d7c83637bso25129wmp.0;
-        Tue, 13 Apr 2021 04:40:42 -0700 (PDT)
+        with ESMTP id S1343506AbhDMLu6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 13 Apr 2021 07:50:58 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 235DAC061574;
+        Tue, 13 Apr 2021 04:50:37 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id j5so15170555wrn.4;
+        Tue, 13 Apr 2021 04:50:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=MkaJsdRxcT7X9SeJC6tmjhb8Lb+kbsYW+1qTzC0vHSg=;
-        b=NbbEjj+8QyG7yInSEnyfAVZV6f6bHqYIPq95qqf0KoINEPGw0i3ulBOFhROAIWORdQ
-         g+s8tG8VHqKqpxZsAnX/0KCumHKedofe0vc7poTggkp1+dOm1Fa8pOTF/lseWzDzcIq1
-         alicTMoZ8XNxDCY06jnaNIiwdHP1cyj/zuKUqlPk674rX6W1Qw/yQDT/41o71/HjAFIJ
-         UizZOzTRJNAPbh9ZtRmnXFMJJ2u5NTnQPov9XN1iCBECoSF95psRq38s4cHxIMgj7aGj
-         msPPuytaklTeVc1vv2mgdIUgozwZVj08eCsvD1NliWMziUep0Fni0JPvfFnRs1fcebX4
-         AdYg==
+        bh=zrBQReSgCMY+OanYzHXGQEOPpNoJlLuJMLlJaEtW1GU=;
+        b=CsRT1I3hZPY9u/p2FbsnDSev8v2QMEjS3cJqBgCLCg6lodkHQzSP5vp6ZcaY0o+GhG
+         9N5JfcuRwViPByhzv35X/kFQ6ebe2QWP96cjrTAf6/Hdqt5anv0UMFUC/CpJPTRT16KK
+         2uweAE4wqyLvq5V+qYLVmhd5UFEMPn2cRTZijnzkx7U4bUH6qvgnK74jam8WfDRS/StP
+         BPlzEAAKE9I0TTjX7Lf0Hi0GFJMMys/+dGI0770muxYKN4SHyeOakbkM3hGwsy7BJuO/
+         8+LZZ+UOETw4oHPyrhesEs33Pzn9B71PTln3/PvNaj3clpoEvRYdfqz71Y+F3HTKzv/i
+         NRJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MkaJsdRxcT7X9SeJC6tmjhb8Lb+kbsYW+1qTzC0vHSg=;
-        b=IeHuel2DMqne24nSt+u1NR0w9xmUvzv5EjeQViv1ncoJukbfjcbQGpAwz58Yp6Kwrd
-         V/QAgSFWbOrOl+pt3B+Bvc305X9ovV4UsZXGrJ3Z7fXLqUQZLO13+yKmLYYA8YMoIuB5
-         tgGma1o2p+uVxI9VGlzzDtg0YAhlqAUiJQaUwBjr0MfVmXUccgrcwQrUsAeLjMSK+PSK
-         Grd5TQ6Kl/+SMVDv3Z6v498zmbx5wNYIRpVNvsTscmmlHzU7wdf9ZQRc3NBLSd8I4mSk
-         CVzI/SSPqdpufYOQXfvgWLc82dF43I+t0XL7PmymO2ph+xHDD2Y0io1LscadKLfIIVGl
-         1s3Q==
-X-Gm-Message-State: AOAM532wpeWueSKC2I3nGGs2sp8oczNcmxQ+LCD3O9GPTuk5S13Ldzz+
-        VW3gFAMn/21k2T8SHd0Rte+VrdCS4+4=
-X-Google-Smtp-Source: ABdhPJxOAUE/BxJoRtiCqbQFHbbi/VfFLPUrutL9mYtMCQ9Eg2HJvT1cDY7t0WOv6pvny2LQphBirw==
-X-Received: by 2002:a1c:6887:: with SMTP id d129mr3770013wmc.114.1618314041846;
-        Tue, 13 Apr 2021 04:40:41 -0700 (PDT)
+        bh=zrBQReSgCMY+OanYzHXGQEOPpNoJlLuJMLlJaEtW1GU=;
+        b=mwGoN1Icyr9LOY12ogxolFc88rJjrklhUxGNsQAiq8x5rMfH4eoiJX63FdjiPkzwEo
+         E682Nu9n1IkA1+vB+jV+a7ZmZXAyvuI4G4cq5DCWtxTFwA6bErqxSNg07bnSegXJk5I/
+         DNistydEHkhX7sWCN1F748iUrGI34i3lHAu6w/2DRGu34sDoKRojgM1cBE/8TJGMUWx5
+         4JJnAa3ZdQAHF+yVnOPc7PGelbI8C5b8RqH3p8qFWb3y12veFtnYt+vReo7ipXGg3eK5
+         qhywm77L5b5qgSJkkZS7bZesoNloRMyIEe3UC/cXbTBJO0rxvmv2ZnFYtKVAZHY4IVW0
+         BiSg==
+X-Gm-Message-State: AOAM533ueMT+pmOsiE5YEwzu8+EQ8HxGiu2VEYbNsEF79pWKsR/ybb1N
+        U1FE+85r+hlZ/IPyWWZBaaMCZAvAuRM=
+X-Google-Smtp-Source: ABdhPJyt+FUGCR4EoaJA2Km+HzTa59IB9H8Kfio//rf4dR28tjz9KfRPxIa5rvfDSR+QmLODHnQlsg==
+X-Received: by 2002:a5d:5914:: with SMTP id v20mr11125063wrd.402.1618314635917;
+        Tue, 13 Apr 2021 04:50:35 -0700 (PDT)
 Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id z8sm20198827wrh.37.2021.04.13.04.40.40
+        by smtp.gmail.com with ESMTPSA id v185sm2339354wmb.25.2021.04.13.04.50.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Apr 2021 04:40:40 -0700 (PDT)
-Date:   Tue, 13 Apr 2021 13:41:20 +0200
+        Tue, 13 Apr 2021 04:50:34 -0700 (PDT)
+Date:   Tue, 13 Apr 2021 13:51:15 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 Cc:     Clemens Gruber <clemens.gruber@pqgruber.com>,
@@ -55,74 +55,98 @@ Cc:     Clemens Gruber <clemens.gruber@pqgruber.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>
 Subject: Re: [PATCH v8 4/8] dt-bindings: pwm: Support new PWM_USAGE_POWER flag
-Message-ID: <YHWDYOPKGylFKQvl@orome.fritz.box>
+Message-ID: <YHWFs1f0XHkqbddp@orome.fritz.box>
 References: <20210412132745.76609-1-clemens.gruber@pqgruber.com>
  <20210412132745.76609-4-clemens.gruber@pqgruber.com>
  <20210412162723.7hlhgqp6wlfbkeky@pengutronix.de>
- <YHR5eyLPqiwhTGrr@workstation.tuxnet>
- <20210413113805.mjft5jxt3qhsxg6e@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="1vkEgIoTkhyBIpER"
+        protocol="application/pgp-signature"; boundary="CeMXB2IKKXvrsAIH"
 Content-Disposition: inline
-In-Reply-To: <20210413113805.mjft5jxt3qhsxg6e@pengutronix.de>
+In-Reply-To: <20210412162723.7hlhgqp6wlfbkeky@pengutronix.de>
 User-Agent: Mutt/2.0.6 (98f8cb83) (2021-03-06)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---1vkEgIoTkhyBIpER
+--CeMXB2IKKXvrsAIH
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 13, 2021 at 01:38:05PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> Hello,
+On Mon, Apr 12, 2021 at 06:27:23PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> On Mon, Apr 12, 2021 at 03:27:41PM +0200, Clemens Gruber wrote:
+> > Add the flag and corresponding documentation for PWM_USAGE_POWER.
 >=20
-> On Mon, Apr 12, 2021 at 06:46:51PM +0200, Clemens Gruber wrote:
-> > On Mon, Apr 12, 2021 at 06:27:23PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> > > On Mon, Apr 12, 2021 at 03:27:41PM +0200, Clemens Gruber wrote:
-> > > > Add the flag and corresponding documentation for PWM_USAGE_POWER.
-> > >=20
-> > > My concern here in the previous round was that PWM_USAGE_POWER isn't a
-> > > name that intuitively suggests its semantic. Do you disagree?
-> >=20
-> > No. It is more abstract and requires documentation. But I also didn't
-> > want to waste too much time on discussing names, so I used Thierry's
-> > suggestion.
->=20
-> If you introduce API thinking about the name before actually introducing
-> it is a good idea in general. (OK, the name doesn't become part of the
-> (binary) dt API, but we don't even agree about its semantic here.)
->=20
-> And IMHO a bad name with a good documentation isn't good enough.
-> Otherwise we can better just agree on using plain numbers in the .dts
-> files.
+> My concern here in the previous round was that PWM_USAGE_POWER isn't a
+> name that intuitively suggests its semantic. Do you disagree?
 
-Plain numbers or not doesn't change anything. The meaning of the bit has
-to be defined. This has nothing to do with the symbolic name at all.
+I suggested PWM_USAGE_POWER because I think it accurately captures what
+we want here.
+
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+> > ---
+> >  Documentation/devicetree/bindings/pwm/pwm.txt | 3 +++
+> >  include/dt-bindings/pwm/pwm.h                 | 1 +
+> >  2 files changed, 4 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Documentat=
+ion/devicetree/bindings/pwm/pwm.txt
+> > index 084886bd721e..fe3a28f887c0 100644
+> > --- a/Documentation/devicetree/bindings/pwm/pwm.txt
+> > +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
+> > @@ -46,6 +46,9 @@ period in nanoseconds.
+> >  Optionally, the pwm-specifier can encode a number of flags (defined in
+> >  <dt-bindings/pwm/pwm.h>) in a third cell:
+> >  - PWM_POLARITY_INVERTED: invert the PWM signal polarity
+> > +- PWM_USAGE_POWER: Only care about the power output of the signal. This
+> > +  allows drivers (if supported) to optimize the signals, for example to
+> > +  improve EMI and reduce current spikes.
+>=20
+> IMHO there are too many open questions about which freedom this gives to
+> the lowlevel driver. If the consumer requests .duty_cycle =3D 25ns +
+> .period =3D 100ns, can the driver provide .duty_cycle =3D 25s + .period =
+=3D
+> 100s which nominally has the same power output? Let's not introduce more
+> ambiguity than there already is.
+
+The freedom given to the driver should be to adjust the signal within
+reasonable bounds. Changing the time unit by a factor of 1000000000 is
+not within reason, and I doubt anyone would interpret it that way, even
+if we didn't document this at all.
+
+To be frank I think that quest of yours to try and rid the PWM API of
+all ambiguity is futile. I've been trying to be lenient because you seem
+motivated, but I think you're taking this too far. There are always
+going to be cases that aren't completely clear-cut and where drivers
+need the flexibility to cheat in order to be useful at all. If we get to
+a point where everything needs to be 100% accurate, the majority of the
+PWM controllers won't be usable at all.
+
+Don't let perfect be the enemy of good.
 
 Thierry
 
---1vkEgIoTkhyBIpER
+--CeMXB2IKKXvrsAIH
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmB1g2AACgkQ3SOs138+
-s6GFIhAAsJVQtvNUbdNjFIrlooVmgFsgZDdz6nvRDINjq5wAXhr9VC25lzKFUu2y
-M3obnsBkTZ54FR4GGbtMFmQnrQcDj+E8xpxqNMaupLBmTwWpgZgsSCqxag1quVFL
-NNZvyIrnYKDaRRfxvWVVPI8GXWlzceEuCpStmggjjp8qv2isqlvPGq+VxW9AURLR
-zuGWp7a7DIgO5i5bbhJ7gPAI48V0QIqN0c1Oq4jkPsQm0x5L8+qoTlD/4o1smhxE
-HKBqgKyLtcnT2FJKvcbVsVhCQK+ZtWBYiTM/NIQ2Ym/70jD9Ktz6a3w5EDMu5Rfl
-S0iUTFQ0tAZUGlDs3aLl0EH95/bdvlu5eEp8r7HzTh/vrvcv+fSI5Fj1Isek37+c
-NEDuJb0LP7CChm7KiN6WCtpxeBQSJ9t7MUk0/1EEqR++PD/iFQ04X6I66gxBBJLf
-Su6ho/Pet3SgjkridToUUDmxZqTrfZ4fzxG1Jf4yIAO9ePfwPxTnLSrayZDVFl6M
-IymcjlBuel15E5rXIhUIBKQjNamZQUG11LEviQtvmF3YWddsaOQcFyoc27lM508h
-nLjyFhxSGa+AXSM3GB/eR8ZRHt8XfQ76JFdSK4MKT+VwJKZnWClH03IRo+XnqsKM
-xWmvvP3aT9+/sInV4Fl5FyKCcdmEw0oSCSWGbSQx2+AbFWbAk7M=
-=GeVW
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmB1hbMACgkQ3SOs138+
+s6HYLhAAhdf86s3re5qOKds5oPjtXld/X7JkGE4TVl5uSJ57Lft2n3oVTuXtIbMJ
+j07WfvLgEDG2B2dX7LcSoCd6VH1A3f4iop/VbkyLe5xT0NZ4AtEA2rZBRuUs5gvw
+K3GrPOtQeU2V1WX2rRcVGZDBqlv+Hrwy0AF09MrZw8XW4YIYnkXPDmp5OD/oBzKv
+Jk9ZPWZngieA3y5KGaA25sWOSoz5owkEBcHlw0FDr0y3lGljl8yVXxVs0fbXio9V
+IgFL1mU6cFz3Xh71H6qBy0aql/I+tnB3Q/cKVFk5N3pnh5j3K0nxYuNG2NXnNkd2
+9lMt/5rk8SRwa0UWbarxGBK1bZAEUpFAfVaWmKB2uzp1iixyNxvDJOKuYnmpIrE3
+kBMKguVf7Xj8OJKcBkk6R3RRgORPdEKTKE890wqRx/NISsp5gNnqRTdWNfrmnIzS
+zPJK1vqmymqggapL2/xuvdIFfntTaR6THH1R5i5tRS7RrVb+jswLwk7fBn1F7St0
+6dh/fJ0qR0uqtq4Pw2TQVmBc/ku+/dxae41YAcM+tLM20JWECQOUerVTWB6F9Hfm
+bw6M8AQYZIkUCGbImBNJlqC7kSiqfyGH0gss82y4nNvk6hmfeBX0cs6glX6WPOLd
+tXrTwTktfGcS+xfBVUo2qqt5P4qmBH7HzCxP1TRlaTu9BQG1jAQ=
+=nXbs
 -----END PGP SIGNATURE-----
 
---1vkEgIoTkhyBIpER--
+--CeMXB2IKKXvrsAIH--
