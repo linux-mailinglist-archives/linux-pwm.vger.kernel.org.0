@@ -2,98 +2,121 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFCD335D2AA
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Apr 2021 23:46:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96B2635D525
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Apr 2021 04:11:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243695AbhDLVqw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 12 Apr 2021 17:46:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238172AbhDLVqv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Apr 2021 17:46:51 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29134C061574;
-        Mon, 12 Apr 2021 14:46:29 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id sd23so14036495ejb.12;
-        Mon, 12 Apr 2021 14:46:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uFUrnfIf09ezybuVkP04vDSdaVZKjH/YcufmPLg/EJA=;
-        b=SR9/ZPn34QjAzkHsEkByTJNEzre4oYG+GlELLhGkzdPICK2PzHnAXXdR2kuXrH+JBV
-         3CKshQfZrIH1zhl0sLSqUr+P3VV0MLnge6GRs/X7RQZosh7DpOd69z7rfaU4e7xlM7a4
-         nK+TlRUWEScPLSU81NiDnDPKd5sFB84OxNqnYwdL0QFMQXrvFEE3/sP1z8mu5mc86h+l
-         QmvlwgwJlwiBHWyBHIl1JnnBfffDXI4QEZDTs1fM8XNFbI0e7kSUlf8sWhXASFkqHPxl
-         sWCLRhK0IdebQcZRq78nfb4HRO6gO9aIk3+MdL2X/qbRVOMtraGSvKcqjc8E0f4rOYdg
-         dSog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uFUrnfIf09ezybuVkP04vDSdaVZKjH/YcufmPLg/EJA=;
-        b=Rg/ifEv5zp6xbGEm3lmCaBXbUAOkQOfDL9SCqnpQWvWYV4/trMMkRKp36am7oMCkDX
-         nZ+1j2VSa4Y6NiU8MKXGw0W1La9F0tyxxKlNfYZHovwft4oi7BancxaYlKkpPZ99j/XV
-         A2mChI9kGDYqyPs2xQNYO6L53B+oS7Vd9eivKKgT2cgET9fhhu5y5tlu3HRzRkVyCfiK
-         ISx7qEzGFiDD88Xohdw0GGhxdD8cJ1lAfrQXum8uD5syErEwKiKshbgnaILNTrAi9JbL
-         aTeeTv2YaY07Fjf8Av9LyMz8E+EmolmCHInxSkNqgaHqQspaKXQEo61tx5sZ37WssDxa
-         XSyA==
-X-Gm-Message-State: AOAM532vArwjLEB/LA8LSyF67P7bTCtk3B8msvRUJadT+NFE/ClEa4Uk
-        cxadQGdip6H1bSdmHATQPUc=
-X-Google-Smtp-Source: ABdhPJzbzVMu26M4OrHzDAxRyzivV5rBNL9tM9AJWb1TsGiwOAomqyu6SFHVzQYgqpT8dKZrtMd0/Q==
-X-Received: by 2002:a17:906:5855:: with SMTP id h21mr29208531ejs.522.1618263987967;
-        Mon, 12 Apr 2021 14:46:27 -0700 (PDT)
-Received: from [192.168.2.2] (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id ke14sm1698718ejc.1.2021.04.12.14.46.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Apr 2021 14:46:27 -0700 (PDT)
-Subject: Re: [PATCH v2 1/6] dt-bindings: pwm: convert pwm-rockchip.txt to YAML
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        robh+dt@kernel.org, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, lee.jones@linaro.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        thierry.reding@gmail.com, heiko@sntech.de
-References: <20210411131007.21757-1-jbx6244@gmail.com>
- <20210412205753.GA158321@robh.at.kernel.org>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <5705f804-5db0-1d14-f853-02be72fe4d2c@gmail.com>
-Date:   Mon, 12 Apr 2021 23:46:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S240980AbhDMCL7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 12 Apr 2021 22:11:59 -0400
+Received: from mail-eopbgr1300139.outbound.protection.outlook.com ([40.107.130.139]:29568
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S239254AbhDMCL5 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 12 Apr 2021 22:11:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AtJ3ukqLuGSdXiZYRcAiUs0FF/uXiHrdqRbulrth59M9o5hBpRNP+v7hMEIMVYZHtGGUHliJREsVwVLcRIDdddOGj8OzwqiQBgaGUE84WntyGgZ+mVJXnbVjbk+56XBXMM6xDfU1vHZKuppTtl17lICgxYILNlBVfMl+rxOkByQEnuy7NTT5jnJZyRcLe84jQeBpgrrhe4l8KZGmSyvpxm+3nGaoqLGFqXp3M0IQh9yZT5cYN5y6VGugfuMmZAvFe7EeuARxp48/F2Fcu38y+GMfbrhWcG/6ERBt5h5FHS1xcWkv1gNboRoCDpjPRk8oQRSNI4If/bvX57byHq31qw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RtFkONwTsv4YY8agLXNOZThLsllqfV5U6g9hvd3Ksow=;
+ b=bKG3MRkFj5u/g1mKn+dT00uODhoSs3ypM8ewqjIOpDGZbq5+D7ZctTInLB7dhN0FQV1RRst630Xfp1e8kjqgH1lGSIXVjbUnNCSuoBo/Qulic0G7PxozkEG3N1cjwatIiRnq3SnDxj2/8D/mZEoo3i4c9V6Wm6UaA1HV2rDv1sau3qCFlDyGTCRMtru/jgtw87TjaJ0YPWdRfUATnMha4hW/oQg5PlAmpJwJOqUhpCvTnTcx8gW9FGD0x/FcG7u1/D+kIUscMGyMfFmYq8EAWy88UfGUH4uj3qeWzqQUk2IOo/xCYPP8tJr8CTQxCg7miw8Q9sc52Wm854SRJyU+Ig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+Received: from HK0PR06MB3362.apcprd06.prod.outlook.com (2603:1096:203:8b::10)
+ by HK2PR06MB3537.apcprd06.prod.outlook.com (2603:1096:202:36::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4020.21; Tue, 13 Apr
+ 2021 02:11:30 +0000
+Received: from HK0PR06MB3362.apcprd06.prod.outlook.com
+ ([fe80::4d49:12fe:2d9a:b1bd]) by HK0PR06MB3362.apcprd06.prod.outlook.com
+ ([fe80::4d49:12fe:2d9a:b1bd%3]) with mapi id 15.20.4020.022; Tue, 13 Apr 2021
+ 02:11:30 +0000
+From:   Billy Tsai <billy_tsai@aspeedtech.com>
+To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "billy_tasi@aspeedtech.com" <billy_tasi@aspeedtech.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        BMC-SW <BMC-SW@aspeedtech.com>
+Subject: Re: [PATCH 4/4] pwm: Add support for aspeed pwm controller
+Thread-Topic: [PATCH 4/4] pwm: Add support for aspeed pwm controller
+Thread-Index: AQHXL4HkpEnvYhPT9U6/7p/B4+axNaqwutwAgAGA3YA=
+Date:   Tue, 13 Apr 2021 02:11:30 +0000
+Message-ID: <BAD0AD58-BE95-4EF2-BC3F-EFAA19A91965@aspeedtech.com>
+References: <20210412095457.15095-1-billy_tsai@aspeedtech.com>
+ <20210412095457.15095-5-billy_tsai@aspeedtech.com>
+ <20210412111400.w4yafy2r2lcy3qqv@pengutronix.de>
+In-Reply-To: <20210412111400.w4yafy2r2lcy3qqv@pengutronix.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none
+ header.from=aspeedtech.com;
+x-originating-ip: [211.20.114.70]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: acf280fe-c321-4469-d16d-08d8fe2173bd
+x-ms-traffictypediagnostic: HK2PR06MB3537:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HK2PR06MB353703725F848F10BCD7A6C78B4F9@HK2PR06MB3537.apcprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5u4ME1wft5yNZjvJ7oiG4xvQ51pt7QTK/NDFTiGO8/EHt/dOQh34cmvpevXpvlupY0KBXr0TScPEBraExoQYqdIczfkJWKtQJ3JCBxTk6xMmgpcIhJO35aJAX3X0JM37o2t0ke73KrC85JMXTinPko1Ri2J4ReS08vNC+w6gku/n+VfTeqUHHc3wRvyLAS8nuMOpAlVO5Y39Zom2Wr1Wf4mr/Q07VkPNjj5b/eGQgPJHopnLkCuJSwv377bSuuqeV7jM6zzOhjCAb8us1foDTRm5KrMPifGkOPWVBvtjGVs0VfpGffWwL1gf0rCroGDex5AXISZrS+600Rt7RRUQrcIQr33J1eaxvm8NrN9t2ysUSffJakQ2lAWSn0xM7EiyjLTdQUJ0G9c32yQKst026SjwGWQpjdpb+aBINJ8Hcgn2jMIzxShow9Jovbkl/sTyOTcOwPyYh5Pa2rFXGh+xMYBtlwSJBZ3cE4xh3Qq1SGMIA+43Qf1pFJX6Pxoch1Z5+VgFBU8gBvpnQ4kSB/q12DQ8WNbY1lC0dhkIomFDh6YUraYvKqDSmDXFDwiV0tP+QIfU/TC91GPEoHMjYy/yku51PMFVDK7kuLHCtaSIbgtfKLcGFm+deszX1dDOmKiFqmo9HazpEVyGeoQp2WYAAvay/hpdWeype5XW6sn44bMx0qlWPvZouGo7476fTPCERUn55BNBVAbEvcmXXnQxhPRoEQuSnQzWniEiqgK2VhQxdTqldB/MKXtO58p+uJub
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0PR06MB3362.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(376002)(136003)(396003)(346002)(39840400004)(71200400001)(38100700002)(76116006)(107886003)(66476007)(66946007)(33656002)(64756008)(66446008)(7416002)(66556008)(6506007)(54906003)(6512007)(8676002)(55236004)(5660300002)(2906002)(4326008)(6916009)(478600001)(26005)(86362001)(6486002)(36756003)(966005)(316002)(2616005)(66574015)(8936002)(186003)(122000001)(45980500001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: axW2e844Y3ISbp+wwEYlsqyunoTro8Ki6wOmysjGdl4DQcPd1+9GYqGjkWHEDMnr9flS3XHNxgsiHDTS3y3/O0zZRzluq5OULAt/GWgs1s2zzcS9yDH1/9IH83HE1Dn/HGBGB9nrQqf+hIRyibGBG5O++678URMOP70eedoUs8YS8v/jO+adohLWLnbcWnWyB2DaORd8nshesSyHn25A4jHaizZL0VQ5wH83HJv2YCHnSA/zQqfdnKl7HzsmzRNhtbErlx1RjnUjATHydF/0NQQJRIEUO5G2PZ+BiFPJ/hI/5F6xJ1Ju4yLDTGt0S/7AFLpHfbBHzLWrBRPcHjxidUilhgOOj769MJxQu0DOTv3FlSvHv9ymNztEVn3jOD4JJaTXdXbIi24C5cD3HyVUFMcRbPd8OJKQ7Yp73q34kX36HmVtfxmk0yMC3VKWLEldeqxK0vF8VQYDixsH9Jd8eAxbg8ZJi3DvNdnCv1v8UsWI7md5XjznYncbbElkGYbpGRZmpUV3acKF1Aq/Fjl5RCW5vIhNJ3n0sBvhJCgaVFHSDS1f0RCMvbI2v8YbiDv+f12etDI91flRWaza7qq+qQT+ocblmpDv+3By7KuN2Xldv1LtLgW65PopZtNGkWPkSTGrtsupijXIwDJeB3mF5XYqlaHhWRVU0K9AYXrh8DRVs8VOtV5DCc3seygH6w9hgqVVnRMQQFYWaE6fyW/Ss5umcoCDE1OyC/ISOgJENZwP+9CHpP9jn4q7ISawduIU
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <95FB6D91137D5E42B958F38694EDCE15@apcprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20210412205753.GA158321@robh.at.kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HK0PR06MB3362.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: acf280fe-c321-4469-d16d-08d8fe2173bd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Apr 2021 02:11:30.1121
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NIEjRLeydxa5WGPTxvDKzKmG/PVN0e5yErJIvlNpzyeRjk0Smq9uqhgPOJVLKSGUFDjF4vn1wrIktW4JDP2kLAH2OzBQddk2SFr6xIZHYL8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2PR06MB3537
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 4/12/21 10:57 PM, Rob Herring wrote:
-> On Sun, 11 Apr 2021 15:10:02 +0200, Johan Jonker wrote:
->> Current dts files with 'pwm' nodes are manually verified.
->> In order to automate this process pwm-rockchip.txt
->> has to be converted to yaml.
->>
->> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
->> ---
->> Changed V2:
->>   changed schema for clocks and clock-names
->> ---
->>  .../devicetree/bindings/pwm/pwm-rockchip.txt       | 27 -------
->>  .../devicetree/bindings/pwm/pwm-rockchip.yaml      | 91 ++++++++++++++++++++++
->>  2 files changed, 91 insertions(+), 27 deletions(-)
->>  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
->>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
->>
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-Hi
-
-This tags version 2 with a little mistake instead of version 3?
-Is that correct?
-
-Johan
+VGhhbmtzIGZvciB5b3VyIHJldmlldw0KDQpCZXN0IFJlZ2FyZHMsDQpCaWxseSBUc2FpDQoNCk9u
+IDIwMjEvNC8xMiwgNzoxNCBQTSxVd2UgS2xlaW5lLUvDtm5pZ3dyb3RlOg0KDQogICAgPkhlbGxv
+LA0KDQogICAgPk9uIE1vbiwgQXByIDEyLCAyMDIxIGF0IDA1OjU0OjU3UE0gKzA4MDAsIEJpbGx5
+IFRzYWkgd3JvdGU6DQogICAgPj4gQWRkIHN1cHBvcnQgZm9yIHRoZSBwd20gY29udHJvbGxlciB3
+aGljaCBjYW4gYmUgZm91bmQgYXQgYXNwZWVkIGFzdDI2MDANCiAgICA+PiBzb2MuIFRoaXMgZHJp
+dmVyIGlzIHBhcnQgZnVuY3Rpb24gb2YgbXVsdGktZnVuY2l0b24gb2YgZGV2aWNlICJwd20tdGFj
+aA0KICAgID4+IGNvbnRyb2xsZXIiLg0KDQogICAgPnBsZWFzZSBzcXVhc2ggdGhpcyBpbnRvIHBh
+dGNoIDMuDQoNCk9LLCBJIHdpbGwgc3F1YXNoIGl0IHdoZW4gc2VuZGluZyB2Mi4NCg0KICAgID4+
+IFNpZ25lZC1vZmYtYnk6IEJpbGx5IFRzYWkgPGJpbGx5X3RzYWlAYXNwZWVkdGVjaC5jb20+DQog
+ICAgPj4gLS0tDQogICAgPj4gIGRyaXZlcnMvcHdtL0tjb25maWcgIHwgNiArKysrKysNCiAgICA+
+PiAgZHJpdmVycy9wd20vTWFrZWZpbGUgfCAxICsNCiAgICA+PiAgMiBmaWxlcyBjaGFuZ2VkLCA3
+IGluc2VydGlvbnMoKykNCiAgICA+PiANCiAgICA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wd20v
+S2NvbmZpZyBiL2RyaXZlcnMvcHdtL0tjb25maWcNCiAgICA+PiBpbmRleCA2M2JlNTM2MmZkM2Eu
+Ljk0N2VkNjQyZGViZSAxMDA2NDQNCiAgICA+PiAtLS0gYS9kcml2ZXJzL3B3bS9LY29uZmlnDQog
+ICAgPj4gKysrIGIvZHJpdmVycy9wd20vS2NvbmZpZw0KICAgID4+IEBAIC00Miw2ICs0MiwxMiBA
+QCBjb25maWcgUFdNX0RFQlVHDQogICAgPj4gIAkgIEl0IGlzIGV4cGVjdGVkIHRvIGludHJvZHVj
+ZSBzb21lIHJ1bnRpbWUgb3ZlcmhlYWQgYW5kIGRpYWdub3N0aWMNCiAgICA+PiAgCSAgb3V0cHV0
+IHRvIHRoZSBrZXJuZWwgbG9nLCBzbyBvbmx5IGVuYWJsZSB3aGlsZSB3b3JraW5nIG9uIGEgZHJp
+dmVyLg0KICAgID4+ICANCiAgICA+PiArY29uZmlnIFBXTV9BU1BFRURfRzYNCiAgICA+PiArCXRy
+aXN0YXRlICJBU1BFRURHNiBQV00gc3VwcG9ydCINCg0KICAgID5ObyBkZXBlbmRzPw0KDQpJIHdp
+bGwgYWRkICJkZXBlbmRzIG9uIChBUkNIX0FTUEVFRCB8fCBDT01QSUxFX1RFU1QpIiBmb3IgdGhp
+cyBjb25maWd1cmUuDQoNCiAgICA+QmVzdCByZWdhcmRzDQogICAgPlV3ZQ0KDQogICAgPi0tIA0K
+ICAgID5QZW5ndXRyb25peCBlLksuICAgICAgICAgICAgICAgICAgICAgICAgICAgfCBVd2UgS2xl
+aW5lLUvDtm5pZyAgICAgICAgICAgIHwNCiAgICA+SW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMg
+ICAgICAgICAgICAgICAgIHwgaHR0cHM6Ly93d3cucGVuZ3V0cm9uaXguZGUvIHwNCg0K
