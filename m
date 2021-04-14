@@ -2,114 +2,208 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A597535FBD1
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Apr 2021 21:45:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DE7035FD9E
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 Apr 2021 00:15:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353460AbhDNTp7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 14 Apr 2021 15:45:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347936AbhDNTp6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Apr 2021 15:45:58 -0400
-Received: from mail.pqgruber.com (mail.pqgruber.com [IPv6:2a05:d014:575:f70b:4f2c:8f1d:40c4:b13e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A347C061574;
-        Wed, 14 Apr 2021 12:45:35 -0700 (PDT)
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id 56B9FC725CF;
-        Wed, 14 Apr 2021 21:45:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1618429534;
-        bh=NcyhMGkK4f3s6Jb75I3zSLqjm8FszWSB9VvtZQdYA3o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=INppUTN2R41mVczgBPa/SGaLm4kMSUW/fkHjLuCQy8DdAGjP1F0Oi0y0493qiBvyq
-         LRWYeFvSQ7JBCfMiQxaL3JMJlcSvw1bHeXRRKto+25h47bjQ+XJTMqin9Wrr8Mnn6M
-         UHU9V5yd1/scDbBE2aMGNlHkS65az6/QRYyoe6hM=
-Date:   Wed, 14 Apr 2021 21:45:32 +0200
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 1/8] pwm: pca9685: Switch to atomic API
-Message-ID: <YHdGXG3PbsmicK7U@workstation.tuxnet>
-References: <20210412132745.76609-1-clemens.gruber@pqgruber.com>
- <20210412161808.lp2amdfopw74lvz7@pengutronix.de>
- <YHR3wP4Fk3jidnri@workstation.tuxnet>
- <20210412201019.vouxx4daumusrcvr@pengutronix.de>
- <YHWKehtYFSaHt1hC@workstation.tuxnet>
- <20210413193818.r7oqzdzbxqf5sjj3@pengutronix.de>
- <YHbbaiwK9Tasb7NF@workstation.tuxnet>
- <20210414192131.2o4c2eia6jnjatp2@pengutronix.de>
+        id S231435AbhDNWQR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 14 Apr 2021 18:16:17 -0400
+Received: from mail-ot1-f50.google.com ([209.85.210.50]:34574 "EHLO
+        mail-ot1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231190AbhDNWQR (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Apr 2021 18:16:17 -0400
+Received: by mail-ot1-f50.google.com with SMTP id k14-20020a9d7dce0000b02901b866632f29so20817285otn.1;
+        Wed, 14 Apr 2021 15:15:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=F07gtHUJwY/w7iuYzdTNfY1HnMAu4hugjUa0Lgoy7/U=;
+        b=NsJMRPRosVt9CSm4SZ3LQE3Znv1fU6h3h2NsIbySrrlTBEu6s29AL7n6u57KrQ6VzJ
+         Yo+0ApRlF1Wmq35IzeQbgNSqMs0vBS90BjZcWctwOL2fKq4VJvgyICbwUa1kNsAgSEyd
+         MKI8ev31WxSpnT+UuKA5CmBnYOr5AWMMuvJ4yh2Mbb/Xt7mx2VIztLa6rxxhSCYiJYh/
+         cEWukY0RAA0KYZWeS4O5W2ltp43j8pKvgCuuAR2QJs/WgJIkgqsvXAnbfj0eZV/3el1L
+         39qhGy8XbAS1QFjJTsgxDkCdIXtzKGRsBYHJy5OH0KYpBHumS0JL7YbQvTG/j9B7dmrt
+         wybA==
+X-Gm-Message-State: AOAM531F/yjwkSnznJOcQhgqNotqfdLtW1u7DohsH8z6VOQFrmaVJpor
+        XNsVpB73GpRywnig4v6yiw==
+X-Google-Smtp-Source: ABdhPJwQ/l5ePXdK2531ARA8Lyb1Lw/ISWyLZmahs26BmVT5HGe9aezzG+AecBIPDpM7O6nek5tzSQ==
+X-Received: by 2002:a9d:4911:: with SMTP id e17mr223342otf.38.1618438555210;
+        Wed, 14 Apr 2021 15:15:55 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id o2sm205446oti.30.2021.04.14.15.15.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Apr 2021 15:15:54 -0700 (PDT)
+Received: (nullmailer pid 63091 invoked by uid 1000);
+        Wed, 14 Apr 2021 22:15:53 -0000
+Date:   Wed, 14 Apr 2021 17:15:53 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Billy Tsai <billy_tsai@aspeedtech.com>
+Cc:     lee.jones@linaro.org, joel@jms.id.au, andrew@aj.id.au,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        p.zabel@pengutronix.de, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, BMC-SW@aspeedtech.com
+Subject: Re: [v2 1/2] dt-bindings: Add bindings for aspeed pwm-tach and pwm.
+Message-ID: <20210414221553.GA56046@robh.at.kernel.org>
+References: <20210414104939.1093-1-billy_tsai@aspeedtech.com>
+ <20210414104939.1093-2-billy_tsai@aspeedtech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210414192131.2o4c2eia6jnjatp2@pengutronix.de>
+In-Reply-To: <20210414104939.1093-2-billy_tsai@aspeedtech.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Apr 14, 2021 at 09:21:31PM +0200, Uwe Kleine-König wrote:
-> On Wed, Apr 14, 2021 at 02:09:14PM +0200, Clemens Gruber wrote:
-> > Hi Uwe,
-> > 
-> > On Tue, Apr 13, 2021 at 09:38:18PM +0200, Uwe Kleine-König wrote:
-> > > Hello Clemens,
-> > > 
-> > > On Tue, Apr 13, 2021 at 02:11:38PM +0200, Clemens Gruber wrote:
-> > > > On Mon, Apr 12, 2021 at 10:10:19PM +0200, Uwe Kleine-König wrote:
-> > > > > On Mon, Apr 12, 2021 at 06:39:28PM +0200, Clemens Gruber wrote:
-> > > > > > With your suggested round-down, the example with frequency of 200 Hz
-> > > > > > would no longer result in 30 but 29 and that contradicts the datasheet.
-> > > > > 
-> > > > > Well, with PRESCALE = 30 we get a frequency of 196.88 Hz and with
-> > > > > PRESCALE = 29 we get a frequency of 203.45 Hz. So no matter if you pick
-> > > > > 29 or 30, you don't get 200 Hz. And which of the two possible values is
-> > > > > the better one depends on the consumer, no matter what rounding
-> > > > > algorithm the data sheet suggests. Also note that the math here contains
-> > > > > surprises you don't expect at first. For example, what PRESCALE value
-> > > > > would you pick to get 284 Hz? [If my mail was a video, I'd suggest to
-> > > > > press Space now to pause and let you think first :-)] The data sheet's
-> > > > > formula suggests:
-> > > > > 
-> > > > > 	round(25 MHz / (4096 * 284)) - 1 = 20
-> > > > > 
-> > > > > The resulting frequency when picking PRESCALE = 20 is 290.644 Hz (so an
-> > > > > error of 6.644 Hz). If instead you pick PRESCALE = 21 you get 277.433 Hz
-> > > > > (error = 6.567 Hz), so 21 is the better choice.
-> > > > > 
-> > > > > Exercise for the reader:
-> > > > >  What is the correct formula to really determine the PRESCALE value that
-> > > > >  yields the best approximation (i.e. minimizing
-> > > > >  abs(real_freq - target_freq)) for a given target_freq?
-> > > 
-> > > I wonder if you tried this.
-> > 
-> > We could calculate both round-up and round-down and decide which one is
-> > closer to "real freq" (even though that is not the actual frequency but
-> > just our backwards-calculated frequency).
+On Wed, Apr 14, 2021 at 06:49:38PM +0800, Billy Tsai wrote:
+> This patch adds device bindings for aspeed pwm-tach device which is a
+> multi-function device include pwn and tach function and pwm device which
+> should be the sub-node of pwm-tach device.
 > 
-> Yeah, the backwards-calculated frequency is the best assumption we
-> have.
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> Change-Id: I18d9dea14c3a04e1b7e38ffecd49d45917b9b545
+
+Drop
+
+> ---
+>  .../bindings/mfd/aspeed,ast2600-pwm-tach.yaml | 60 +++++++++++++++++++
+>  .../bindings/pwm/aspeed,ast2600-pwm.yaml      | 44 ++++++++++++++
+>  2 files changed, 104 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml
 > 
-> > But I can't give you a formula with minimized abs(real_freq-target_freq)
-> > Is it a different round point than 0.5 and maybe relative to f ?
-> > 
-> > Please enlighten us :-)
+> diff --git a/Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml b/Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
+> new file mode 100644
+> index 000000000000..eaf8bdf8d44e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (C) 2021 ASPEED, Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/aspeed,ast2600-pwm-tach.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: PWM Tach controller Device Tree Bindings
+> +
+> +description: |
+> +  The PWM Tach controller is represented as a multi-function device which
+> +  includes:
+> +    PWM
+> +    Tach
+
+But is it really? A PWM and tach sounds like a fan controller. Look at 
+other existing PWM+tach bindings we have for fans.
+
+> +
+> +maintainers:
+> +  - Billy Tsai <billy_tsai@aspeedtech.com>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - aspeed,ast2600-pwm-tach
+> +      - const: syscon
+> +      - const: simple-mfd
+> +  reg:
+> +    maxItems: 1
+> +  "#address-cells":
+> +    const: 1
+> +  "#size-cells":
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +additionalProperties:
+> +  type: object
+
+As you know the 2 node names, they should be documented. However, see 
+below.
+
+> +
+> +examples:
+> +  - |
+> +    pwm_tach: pwm_tach@1e610000 {
+> +      compatible = "aspeed,ast2600-pwm-tach", "syscon", "simple-mfd";
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +      reg = <0x1e610000 0x100>;
+> +
+> +      pwm: pwm@0 {
+> +        compatible = "aspeed,ast2600-pwm";
+> +        #pwm-cells = <3>;
+> +        reg = <0x0 0x100>;
+> +      };
+> +
+> +      tach: tach@1 {
+> +        compatible = "aspeed,ast2600-tach";
+> +        reg = <0x0 0x100>;
+
+You have 2 nodes at the same address. Not valid.
+
+> +      };
+
+There's no real need for 2 child nodes. The parent node can be a PWM 
+provider.
+
+> +    };
+> diff --git a/Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml b/Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml
+> new file mode 100644
+> index 000000000000..97923e68ccb9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml
+> @@ -0,0 +1,44 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (C) 2021 ASPEED, Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/aspeed,ast2600-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ASPEED AST2600 PWM controller
+> +
+> +maintainers:
+> +  - Billy Tsai <billy_tsai@aspeedtech.com>
+> +
+> +description: |
+> +  The ASPEED PWM controller can support upto 16 PWM outputs.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - aspeed,ast2600-pwm
+> +
+> +  "#pwm-cells":
+> +    const: 3
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    // The PWM should be a subnode of a "aspeed,ast2600-pwm-tach" compatible
+> +    // node.
+> +    pwm_tach: pwm_tach@1e610000 {
+> +      compatible = "aspeed,ast2600-pwm-tach", "syscon", "simple-mfd";
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +      reg = <0x1e610000 0x100>;
+> +
+> +      pwm: pwm@0 {
+> +        compatible = "aspeed,ast2600-pwm";
+> +        #pwm-cells = <3>;
+> +        reg = <0x0 0x100>;
+> +      };
+> +    };
+> -- 
+> 2.25.1
 > 
-> Sorry, I cannot. I spend ~20 min today after lunch with pencil and
-> paper, but without success. I was aware that it isn't trivial and this
-> is the main reason I established round-down as default for new drivers
-> instead of round-nearest.
-
-Oh, I thought you already solved it. I tried too for a while but was
-unsuccessful. Not trivial indeed!
-
-But regarding you establishing round-down: Wouldn't it be even better if
-the driver did what I suggested above, namely calculate backwards from
-both the rounded-up as well as the rounded-down prescale value and then
-write the one with the smallest abs(f_target - f_real) to the register?
-
-Clemens
