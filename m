@@ -2,421 +2,263 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 495D735F1AE
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Apr 2021 12:51:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B20A935F330
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Apr 2021 14:11:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231535AbhDNKuI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 14 Apr 2021 06:50:08 -0400
-Received: from twspam01.aspeedtech.com ([211.20.114.71]:44588 "EHLO
-        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233897AbhDNKuI (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Apr 2021 06:50:08 -0400
-Received: from mail.aspeedtech.com ([192.168.0.24])
-        by twspam01.aspeedtech.com with ESMTP id 13EAd1LV057544;
-        Wed, 14 Apr 2021 18:39:02 +0800 (GMT-8)
-        (envelope-from billy_tsai@aspeedtech.com)
-Received: from BillyTsai-pc.aspeed.com (192.168.2.149) by TWMBX02.aspeed.com
- (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 14 Apr
- 2021 18:49:32 +0800
-From:   Billy Tsai <billy_tsai@aspeedtech.com>
-To:     <lee.jones@linaro.org>, <robh+dt@kernel.org>, <joel@jms.id.au>,
-        <andrew@aj.id.au>, <thierry.reding@gmail.com>,
-        <u.kleine-koenig@pengutronix.de>, <p.zabel@pengutronix.de>,
-        <billy_tsai@aspeedtech.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>
-CC:     <BMC-SW@aspeedtech.com>
-Subject: [v2 2/2] pwm: Add Aspeed ast2600 PWM support
-Date:   Wed, 14 Apr 2021 18:49:39 +0800
-Message-ID: <20210414104939.1093-3-billy_tsai@aspeedtech.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210414104939.1093-1-billy_tsai@aspeedtech.com>
-References: <20210414104939.1093-1-billy_tsai@aspeedtech.com>
+        id S1350669AbhDNMJj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 14 Apr 2021 08:09:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1350681AbhDNMJj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Apr 2021 08:09:39 -0400
+Received: from mail.pqgruber.com (mail.pqgruber.com [IPv6:2a05:d014:575:f70b:4f2c:8f1d:40c4:b13e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 650D9C061574;
+        Wed, 14 Apr 2021 05:09:17 -0700 (PDT)
+Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
+        by mail.pqgruber.com (Postfix) with ESMTPSA id C0EE9C725D8;
+        Wed, 14 Apr 2021 14:09:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
+        s=mail; t=1618402156;
+        bh=jzfesz/tc5g4uK9XizjG/xFnmqTcGzY409QvJU0he+c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nyNBklIMXpBtSyuPKntfpU+A7XXA1KHMgtJ8q25632tHenrfXFNbVyZ9tUdCfSaIx
+         yfWaN0cmtJsGGNluR2rx6OaPfT1ktYXpIqt0hMZZCsreEmVFmcQLYUzjV0XzltbKps
+         MRje6pZI1ykWXXaBdPHahB83LCgRhLQhsrF4OFx4=
+Date:   Wed, 14 Apr 2021 14:09:14 +0200
+From:   Clemens Gruber <clemens.gruber@pqgruber.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 1/8] pwm: pca9685: Switch to atomic API
+Message-ID: <YHbbaiwK9Tasb7NF@workstation.tuxnet>
+References: <20210412132745.76609-1-clemens.gruber@pqgruber.com>
+ <20210412161808.lp2amdfopw74lvz7@pengutronix.de>
+ <YHR3wP4Fk3jidnri@workstation.tuxnet>
+ <20210412201019.vouxx4daumusrcvr@pengutronix.de>
+ <YHWKehtYFSaHt1hC@workstation.tuxnet>
+ <20210413193818.r7oqzdzbxqf5sjj3@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [192.168.2.149]
-X-ClientProxiedBy: TWMBX02.aspeed.com (192.168.0.24) To TWMBX02.aspeed.com
- (192.168.0.24)
-X-DNSRBL: 
-X-MAIL: twspam01.aspeedtech.com 13EAd1LV057544
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210413193818.r7oqzdzbxqf5sjj3@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This patch add the support of PWM controller which can be found at aspeed
-ast2600 soc. The pwm supoorts up to 16 channels and it's part function
-of multi-funciton device "pwm-tach controller".
+Hi Uwe,
 
-Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
----
- drivers/pwm/Kconfig         |   7 +
- drivers/pwm/Makefile        |   1 +
- drivers/pwm/pwm-aspeed-g6.c | 324 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 332 insertions(+)
- create mode 100644 drivers/pwm/pwm-aspeed-g6.c
+On Tue, Apr 13, 2021 at 09:38:18PM +0200, Uwe Kleine-König wrote:
+> Hello Clemens,
+> 
+> On Tue, Apr 13, 2021 at 02:11:38PM +0200, Clemens Gruber wrote:
+> > On Mon, Apr 12, 2021 at 10:10:19PM +0200, Uwe Kleine-König wrote:
+> > > On Mon, Apr 12, 2021 at 06:39:28PM +0200, Clemens Gruber wrote:
+> > > > On Mon, Apr 12, 2021 at 06:18:08PM +0200, Uwe Kleine-König wrote:
+> > > > > On Mon, Apr 12, 2021 at 03:27:38PM +0200, Clemens Gruber wrote:
+> > > > > > The switch to the atomic API goes hand in hand with a few fixes to
+> > > > > > previously experienced issues:
+> > > > > > - The duty cycle is no longer lost after disable/enable (previously the
+> > > > > >   OFF registers were cleared in disable and the user was required to
+> > > > > >   call config to restore the duty cycle settings)
+> > > > > > - If one sets a period resulting in the same prescale register value,
+> > > > > >   the sleep and write to the register is now skipped
+> > > > > > - Previously, only the full ON bit was toggled in GPIO mode (and full
+> > > > > >   OFF cleared if set to high), which could result in both full OFF and
+> > > > > >   full ON not being set and on=0, off=0, which is not allowed according
+> > > > > >   to the datasheet
+> > > > > > - The OFF registers were reset to 0 in probe, which could lead to the
+> > > > > >   forbidden on=0, off=0. Fixed by resetting to POR default (full OFF)
+> > > > > > 
+> > > > > > Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+> > > > > > ---
+> > > > > > Changes since v7:
+> > > > > > - Moved check for !state->enabled before prescaler configuration
+> > > > > > - Removed unnecessary cast
+> > > > > > - Use DIV_ROUND_DOWN in .apply
+> > > > > > 
+> > > > > > Changes since v6:
+> > > > > > - Order of a comparison switched for improved readability
+> > > > > > 
+> > > > > > Changes since v5:
+> > > > > > - Function documentation for set_duty
+> > > > > > - Variable initializations
+> > > > > > - Print warning if all LEDs channel
+> > > > > > - Changed EOPNOTSUPP to EINVAL
+> > > > > > - Improved error messages
+> > > > > > - Register reset corrections moved to this patch
+> > > > > > 
+> > > > > > Changes since v4:
+> > > > > > - Patches split up
+> > > > > > - Use a single set_duty function
+> > > > > > - Improve readability / new macros
+> > > > > > - Added a patch to restrict prescale changes to the first user
+> > > > > > 
+> > > > > > Changes since v3:
+> > > > > > - Refactoring: Extracted common functions
+> > > > > > - Read prescale register value instead of caching it
+> > > > > > - Return all zeros and disabled for "all LEDs" channel state
+> > > > > > - Improved duty calculation / mapping to 0..4096
+> > > > > > 
+> > > > > > Changes since v2:
+> > > > > > - Always set default prescale value in probe
+> > > > > > - Simplified probe code
+> > > > > > - Inlined functions with one callsite
+> > > > > > 
+> > > > > > Changes since v1:
+> > > > > > - Fixed a logic error
+> > > > > > - Impoved PM runtime handling and fixed !CONFIG_PM
+> > > > > > - Write default prescale reg value if invalid in probe
+> > > > > > - Reuse full_off/_on functions throughout driver
+> > > > > > - Use cached prescale value whenever possible
+> > > > > > 
+> > > > > >  drivers/pwm/pwm-pca9685.c | 259 +++++++++++++-------------------------
+> > > > > >  1 file changed, 89 insertions(+), 170 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+> > > > > > index 4a55dc18656c..827b57ced3c2 100644
+> > > > > > --- a/drivers/pwm/pwm-pca9685.c
+> > > > > > +++ b/drivers/pwm/pwm-pca9685.c
+> > > > > > @@ -51,7 +51,6 @@
+> > > > > >  #define PCA9685_PRESCALE_MAX	0xFF	/* => min. frequency of 24 Hz */
+> > > > > >  
+> > > > > >  #define PCA9685_COUNTER_RANGE	4096
+> > > > > > -#define PCA9685_DEFAULT_PERIOD	5000000	/* Default period_ns = 1/200 Hz */
+> > > > > >  #define PCA9685_OSC_CLOCK_MHZ	25	/* Internal oscillator with 25 MHz */
+> > > > > >  
+> > > > > >  #define PCA9685_NUMREGS		0xFF
+> > > > > > @@ -71,10 +70,14 @@
+> > > > > >  #define LED_N_OFF_H(N)	(PCA9685_LEDX_OFF_H + (4 * (N)))
+> > > > > >  #define LED_N_OFF_L(N)	(PCA9685_LEDX_OFF_L + (4 * (N)))
+> > > > > >  
+> > > > > > +#define REG_ON_H(C)	((C) >= PCA9685_MAXCHAN ? PCA9685_ALL_LED_ON_H : LED_N_ON_H((C)))
+> > > > > > +#define REG_ON_L(C)	((C) >= PCA9685_MAXCHAN ? PCA9685_ALL_LED_ON_L : LED_N_ON_L((C)))
+> > > > > > +#define REG_OFF_H(C)	((C) >= PCA9685_MAXCHAN ? PCA9685_ALL_LED_OFF_H : LED_N_OFF_H((C)))
+> > > > > > +#define REG_OFF_L(C)	((C) >= PCA9685_MAXCHAN ? PCA9685_ALL_LED_OFF_L : LED_N_OFF_L((C)))
+> > > > > 
+> > > > > I'd like to see these named PCA9685_REG_ON_H etc.
+> > > > 
+> > > > I did not use the prefix because the existing LED_N_ON/OFF_H/L also do
+> > > > not have a prefix. If the prefix is mandatory, I think LED_N_.. should
+> > > > also be prefixed, right?
+> > > 
+> > > I'd like to seem the prefixed (and assume that Thierry doesn't agree).
+> > > IMHO it's good style and even though it yields longer name usually it
+> > > yields easier understandable code. (But this seems to be subjective.)
+> > 
+> > I am not sure I want to also rename the existing LED_N_OFF stuff in this
+> > patch. Maybe we can discuss unifying the macros (either with or without
+> > prefix) in a later patch and I keep the REG_ON_ stuff for now without to
+> > match the LED_N_ stuff?
+> 
+> While consistency is fine I agree that this patch is already big and
+> letting it do the things similar to other stuff in this driver is ok.
+> 
+> > > > > Consider the following request: state->period = 4177921 [ns] +
+> > > > > state->duty_cycle = 100000 [ns], then we get
+> > > > > PRESCALE = round(25 * state->period / 4096000) - 1 = 25 and so an actual
+> > > > > period of 4096000 / 25 * (25 + 1) = 4259840 [ns]. If you now calculate
+> > > > > the duty using 4096 * 100000 / 4177920 = 98, this corresponds to an
+> > > > > actual duty cycle of 98 * 4259840 / 4096 = 101920 ns while you should
+> > > > > actually configure 96 to get 99840 ns.
+> > > > > 
+> > > > > So in the end I'd like to have the following:
+> > > > > 
+> > > > > 	PRESCALE = round-down(25 * state->period / 4096000) - 1
+> > > > > 
+> > > > > (to get the biggest period not bigger than state->period) and
+> > > > > 
+> > > > > 	duty = round-down(state->duty_cycle * 25 / ((PRESCALE + 1) * 1000))
+> > > > > 
+> > > > > (to get the biggest duty cycle not bigger than state->duty_cycle). With
+> > > > > the example above this yields
+> > > > > 
+> > > > > 	PRESCALE = 24
+> > > > > 	duty = 100
+> > > > > 
+> > > > > which results in
+> > > > > 
+> > > > > 	.period = 4096000 / 25 * 25 = 4096000 [ns]
+> > > > > 	.duty_cycle = 100000 [ns]
+> > > > > 	
+> > > > > Now you have a mixture of old and new with no consistent behaviour. So
+> > > > > please either stick to the old behaviour or do it right immediately.
+> > > > 
+> > > > I avoided rounding down the prescale value because the datasheet has an
+> > > > example where a round-closest is used, see page 25.
+> > > 
+> > > The hardware guy who wrote this data sheet wasn't aware of the rounding
+> > > rules for Linux PWM drivers :-)
+> > > 
+> > > > With your suggested round-down, the example with frequency of 200 Hz
+> > > > would no longer result in 30 but 29 and that contradicts the datasheet.
+> > > 
+> > > Well, with PRESCALE = 30 we get a frequency of 196.88 Hz and with
+> > > PRESCALE = 29 we get a frequency of 203.45 Hz. So no matter if you pick
+> > > 29 or 30, you don't get 200 Hz. And which of the two possible values is
+> > > the better one depends on the consumer, no matter what rounding
+> > > algorithm the data sheet suggests. Also note that the math here contains
+> > > surprises you don't expect at first. For example, what PRESCALE value
+> > > would you pick to get 284 Hz? [If my mail was a video, I'd suggest to
+> > > press Space now to pause and let you think first :-)] The data sheet's
+> > > formula suggests:
+> > > 
+> > > 	round(25 MHz / (4096 * 284)) - 1 = 20
+> > > 
+> > > The resulting frequency when picking PRESCALE = 20 is 290.644 Hz (so an
+> > > error of 6.644 Hz). If instead you pick PRESCALE = 21 you get 277.433 Hz
+> > > (error = 6.567 Hz), so 21 is the better choice.
+> > > 
+> > > Exercise for the reader:
+> > >  What is the correct formula to really determine the PRESCALE value that
+> > >  yields the best approximation (i.e. minimizing
+> > >  abs(real_freq - target_freq)) for a given target_freq?
+> 
+> I wonder if you tried this.
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 9a4f66ae8070..d6c1e25717d7 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -42,6 +42,13 @@ config PWM_DEBUG
- 	  It is expected to introduce some runtime overhead and diagnostic
- 	  output to the kernel log, so only enable while working on a driver.
- 
-+config PWM_ASPEED_G6
-+	tristate "ASPEEDG6 PWM support"
-+	depends on ARCH_ASPEED || COMPILE_TEST
-+	help
-+	  This driver provides support for ASPEED G6 PWM controllers.
-+
-+
- config PWM_AB8500
- 	tristate "AB8500 PWM support"
- 	depends on AB8500_CORE && ARCH_U8500
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 6374d3b1d6f3..2d9b4590662e 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_PWM)		+= core.o
- obj-$(CONFIG_PWM_SYSFS)		+= sysfs.o
-+obj-$(CONFIG_PWM_ASPEED_G6)	+= pwm-aspeed-g6.o
- obj-$(CONFIG_PWM_AB8500)	+= pwm-ab8500.o
- obj-$(CONFIG_PWM_ATMEL)		+= pwm-atmel.o
- obj-$(CONFIG_PWM_ATMEL_HLCDC_PWM)	+= pwm-atmel-hlcdc.o
-diff --git a/drivers/pwm/pwm-aspeed-g6.c b/drivers/pwm/pwm-aspeed-g6.c
-new file mode 100644
-index 000000000000..b537a5d7015a
---- /dev/null
-+++ b/drivers/pwm/pwm-aspeed-g6.c
-@@ -0,0 +1,324 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (C) 2021 ASPEED Technology Inc.
-+ *
-+ * PWM controller driver for Aspeed ast26xx SoCs.
-+ * This drivers doesn't rollback to previous version of aspeed SoCs.
-+ *
-+ * Hardware Features:
-+ * 1. Support up to 16 channels
-+ * 2. Support PWM frequency range from 24Hz to 780KHz
-+ * 3. Duty cycle from 0 to 100% with 1/256 resolution incremental
-+ * 4. Support wdt reset tolerance (Driver not ready)
-+ *
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/errno.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/sysfs.h>
-+#include <linux/reset.h>
-+#include <linux/regmap.h>
-+#include <linux/bitfield.h>
-+#include <linux/slab.h>
-+#include <linux/pwm.h>
-+/* The channel number of Aspeed pwm controller */
-+#define PWM_ASPEED_NR_PWMS 16
-+
-+/* PWM Control Register */
-+#define PWM_ASPEED_CTRL_CH(ch) (((ch * 0x10) + 0x00))
-+#define PWM_LOAD_SEL_RISING_AS_WDT BIT(19)
-+#define PWM_DUTY_LOAD_AS_WDT_ENABLE BIT(18)
-+#define PWM_DUTY_SYNC_DISABLE BIT(17)
-+#define PWM_CLK_ENABLE BIT(16)
-+#define PWM_LEVEL_OUTPUT BIT(15)
-+#define PWM_INVERSE BIT(14)
-+#define PWM_OPEN_DRAIN_ENABLE BIT(13)
-+#define PWM_PIN_ENABLE BIT(12)
-+#define PWM_CLK_DIV_H GENMASK(11, 8)
-+#define PWM_CLK_DIV_L GENMASK(7, 0)
-+
-+/* PWM Duty Cycle Register */
-+#define PWM_ASPEED_DUTY_CYCLE_CH(ch) (((ch * 0x10) + 0x04))
-+#define PWM_PERIOD GENMASK(31, 24)
-+#define PWM_POINT_AS_WDT GENMASK(23, 16)
-+#define PWM_FALLING_POINT GENMASK(15, 8)
-+#define PWM_RISING_POINT GENMASK(7, 0)
-+
-+/* PWM fixed value */
-+#define PWM_FIXED_PERIOD 0xff
-+
-+struct aspeed_pwm_data {
-+	struct pwm_chip chip;
-+	struct clk *clk;
-+	struct regmap *regmap;
-+	struct reset_control *reset;
-+};
-+
-+static void aspeed_set_pwm_channel_enable(struct regmap *regmap, u8 pwm_channel,
-+					  bool enable)
-+{
-+	regmap_update_bits(regmap, PWM_ASPEED_CTRL_CH(pwm_channel),
-+			   (PWM_CLK_ENABLE | PWM_PIN_ENABLE),
-+			   enable ? (PWM_CLK_ENABLE | PWM_PIN_ENABLE) : 0);
-+}
-+/*
-+ * The PWM frequency = HCLK(200Mhz) / (clock division L bit *
-+ * clock division H bit * (period bit + 1))
-+ */
-+static void aspeed_set_pwm_freq(struct aspeed_pwm_data *priv,
-+				struct pwm_device *pwm, u32 freq)
-+{
-+	u32 target_div, freq_a_fix_div, out_freq;
-+	u32 tmp_div_h, tmp_div_l, diff, min_diff = INT_MAX;
-+	u32 div_h = BIT(5) - 1, div_l = BIT(8) - 1;
-+	u8 div_found;
-+	u32 index = pwm->hwpwm;
-+	/* Frequency after fixed divide */
-+	freq_a_fix_div = clk_get_rate(priv->clk) / (PWM_FIXED_PERIOD + 1);
-+	/*
-+	 * Use round up to avoid 0 case.
-+	 * After that the only scenario which can't find divide pair is too slow
-+	 */
-+	target_div = DIV_ROUND_UP(freq_a_fix_div, freq);
-+	div_found = 0;
-+	/* calculate for target frequency */
-+	for (tmp_div_h = 0; tmp_div_h < 0x10; tmp_div_h++) {
-+		tmp_div_l = target_div / BIT(tmp_div_h) - 1;
-+
-+		if (tmp_div_l < 0 || tmp_div_l > 255)
-+			continue;
-+
-+		diff = freq - ((freq_a_fix_div >> tmp_div_h) / (tmp_div_l + 1));
-+		if (abs(diff) < abs(min_diff)) {
-+			min_diff = diff;
-+			div_l = tmp_div_l;
-+			div_h = tmp_div_h;
-+			div_found = 1;
-+			if (diff == 0)
-+				break;
-+		}
-+	}
-+	if (div_found == 0) {
-+		pr_debug("target freq: %d too slow set minimal frequency\n",
-+			 freq);
-+	}
-+	out_freq = freq_a_fix_div / (BIT(div_h) * (div_l + 1));
-+	pr_debug("div h %x, l : %x\n", div_h, div_l);
-+	pr_debug("hclk %ld, target pwm freq %d, real pwm freq %d\n",
-+		 clk_get_rate(priv->clk), freq, out_freq);
-+
-+	regmap_update_bits(priv->regmap, PWM_ASPEED_CTRL_CH(index),
-+			   (PWM_CLK_DIV_H | PWM_CLK_DIV_L),
-+			   FIELD_PREP(PWM_CLK_DIV_H, div_h) |
-+				   FIELD_PREP(PWM_CLK_DIV_L, div_l));
-+}
-+
-+static void aspeed_set_pwm_duty(struct aspeed_pwm_data *priv,
-+				struct pwm_device *pwm, u32 duty_pt)
-+{
-+	u32 index = pwm->hwpwm;
-+
-+	if (duty_pt == 0) {
-+		aspeed_set_pwm_channel_enable(priv->regmap, index, false);
-+	} else {
-+		regmap_update_bits(priv->regmap,
-+				   PWM_ASPEED_DUTY_CYCLE_CH(index),
-+				   PWM_FALLING_POINT,
-+				   FIELD_PREP(PWM_FALLING_POINT, duty_pt));
-+		aspeed_set_pwm_channel_enable(priv->regmap, index, true);
-+	}
-+}
-+
-+static void aspeed_set_pwm_polarity(struct aspeed_pwm_data *priv,
-+				    struct pwm_device *pwm, u8 polarity)
-+{
-+	u32 index = pwm->hwpwm;
-+
-+	regmap_update_bits(priv->regmap, PWM_ASPEED_CTRL_CH(index), PWM_INVERSE,
-+			   (polarity) ? PWM_INVERSE : 0);
-+}
-+
-+static int aspeed_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct device *dev = chip->dev;
-+	struct aspeed_pwm_data *priv = dev_get_drvdata(dev);
-+	struct pwm_state *channel;
-+	u32 index = pwm->hwpwm;
-+	/*
-+	 * Fixed the period to the max value and rising point to 0
-+	 * for high resolution and simplified frequency calculation.
-+	 */
-+	regmap_update_bits(priv->regmap, PWM_ASPEED_DUTY_CYCLE_CH(index),
-+			   PWM_PERIOD,
-+			   FIELD_PREP(PWM_PERIOD, PWM_FIXED_PERIOD));
-+
-+	regmap_update_bits(priv->regmap, PWM_ASPEED_DUTY_CYCLE_CH(index),
-+			   PWM_RISING_POINT, 0);
-+
-+	channel = kzalloc(sizeof(*channel), GFP_KERNEL);
-+	if (!channel)
-+		return -ENOMEM;
-+
-+	return pwm_set_chip_data(pwm, channel);
-+}
-+
-+static void aspeed_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct pwm_state *channel = pwm_get_chip_data(pwm);
-+
-+	kfree(channel);
-+}
-+
-+static inline struct aspeed_pwm_data *
-+aspeed_pwm_chip_to_data(struct pwm_chip *c)
-+{
-+	return container_of(c, struct aspeed_pwm_data, chip);
-+}
-+
-+static int aspeed_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			    const struct pwm_state *state)
-+{
-+	struct device *dev = chip->dev;
-+	struct aspeed_pwm_data *priv = aspeed_pwm_chip_to_data(chip);
-+	struct pwm_state *channel = pwm_get_chip_data(pwm);
-+	/* compute the ns to Hz */
-+	u32 freq = DIV_ROUND_UP_ULL(1000000000, state->period);
-+	u32 duty_pt = DIV_ROUND_UP_ULL(
-+		state->duty_cycle * (PWM_FIXED_PERIOD + 1), state->period);
-+	dev_dbg(dev, "freq: %d, duty_pt: %d", freq, duty_pt);
-+	if (state->enabled) {
-+		aspeed_set_pwm_freq(priv, pwm, freq);
-+		aspeed_set_pwm_duty(priv, pwm, duty_pt);
-+		aspeed_set_pwm_polarity(priv, pwm, state->polarity);
-+	} else {
-+		aspeed_set_pwm_duty(priv, pwm, 0);
-+	}
-+	channel->period = state->period;
-+	channel->duty_cycle = state->duty_cycle;
-+	channel->polarity = state->polarity;
-+	channel->enabled = state->enabled;
-+
-+	return 0;
-+}
-+
-+static void aspeed_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				 struct pwm_state *state)
-+{
-+	struct pwm_state *channel = pwm_get_chip_data(pwm);
-+
-+	state->period = channel->period;
-+	state->duty_cycle = channel->duty_cycle;
-+	state->polarity = channel->polarity;
-+	state->enabled = channel->enabled;
-+}
-+
-+static const struct pwm_ops aspeed_pwm_ops = {
-+	.request = aspeed_pwm_request,
-+	.free = aspeed_pwm_free,
-+	.apply = aspeed_pwm_apply,
-+	.get_state = aspeed_pwm_get_state,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int aspeed_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+	struct aspeed_pwm_data *priv;
-+	struct device_node *np;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	np = pdev->dev.parent->of_node;
-+	if (!of_device_is_compatible(np, "aspeed,ast2600-pwm-tach")) {
-+		dev_err(dev, "unsupported pwm device binding\n");
-+		return -ENODEV;
-+	}
-+
-+	priv->regmap = syscon_node_to_regmap(np);
-+	if (IS_ERR(priv->regmap)) {
-+		dev_err(dev, "Couldn't get regmap\n");
-+		return -ENODEV;
-+	}
-+
-+	priv->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(priv->clk))
-+		return -ENODEV;
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret) {
-+		dev_err(dev, "couldn't enable clock\n");
-+		return ret;
-+	}
-+
-+	priv->reset = reset_control_get_shared(dev, NULL);
-+	if (IS_ERR(priv->reset)) {
-+		dev_err(dev, "can't get aspeed_pwm_tacho reset: %pe\n",
-+			ERR_PTR((long)priv->reset));
-+		return PTR_ERR(priv->reset);
-+	}
-+
-+	ret = reset_control_deassert(priv->reset);
-+	if (ret) {
-+		dev_err(&pdev->dev, "cannot deassert reset control: %pe\n",
-+			ERR_PTR(ret));
-+		return ret;
-+	}
-+
-+	priv->chip.dev = dev;
-+	priv->chip.ops = &aspeed_pwm_ops;
-+	priv->chip.npwm = PWM_ASPEED_NR_PWMS;
-+	priv->chip.of_xlate = of_pwm_xlate_with_flags;
-+	priv->chip.of_pwm_n_cells = 3;
-+
-+	ret = pwmchip_add(&priv->chip);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to add PWM chip: %pe\n", ERR_PTR(ret));
-+		return ret;
-+	}
-+	dev_set_drvdata(dev, priv);
-+	return ret;
-+}
-+
-+static int aspeed_pwm_remove(struct platform_device *dev)
-+{
-+	struct aspeed_pwm_data *priv = platform_get_drvdata(dev);
-+
-+	reset_control_assert(priv->reset);
-+	clk_disable_unprepare(priv->clk);
-+
-+	return pwmchip_remove(&priv->chip);
-+}
-+
-+static const struct of_device_id of_pwm_match_table[] = {
-+	{
-+		.compatible = "aspeed,ast2600-pwm",
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, of_pwm_match_table);
-+
-+static struct platform_driver aspeed_pwm_driver = {
-+	.probe		= aspeed_pwm_probe,
-+	.remove		= aspeed_pwm_remove,
-+	.driver		= {
-+		.name	= "aspeed_pwm",
-+		.of_match_table = of_pwm_match_table,
-+	},
-+};
-+
-+module_platform_driver(aspeed_pwm_driver);
-+
-+MODULE_AUTHOR("Billy Tsai <billy_tsai@aspeedtech.com>");
-+MODULE_DESCRIPTION("ASPEED PWM device driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.25.1
+We could calculate both round-up and round-down and decide which one is
+closer to "real freq" (even though that is not the actual frequency but
+just our backwards-calculated frequency).
 
+But I can't give you a formula with minimized abs(real_freq-target_freq)
+Is it a different round point than 0.5 and maybe relative to f ?
+
+Please enlighten us :-)
+
+> 
+> > > These things don't happen when you round down only.
+> > 
+> > Sure, but it might also be counterintuitive that the Linux driver does
+> > not use the same formula as the datasheet. And when using 200 Hz, 29 is
+> > a little closer than 30.
+> 
+> First let me state that I consider keeping the math as is in this patch
+> a good idea. So to argue already for the future:
+> 
+> I value consistency among the various pwm lowlevel drivers higher than
+> what an individual hardware engineer happened to write in a data sheet.
+> That engineer was successful in describing the functionality of the chip
+> and that's where her/his job ends. How a driver should behave is to be
+> decided by us.
+> 
+> > I once measured the actual frequency and the internal oscillator is not
+> > very accurate, so even if you think you should get 196.88 Hz, the actual
+> > frequency measured with a decent scope is about 206 Hz and varies from
+> > chip to chip (~ 205-207 Hz).
+> 
+> Huh. Did you do further measurements that suggest that the oscillator
+> doesn't run at 25 MHz but maybe at 26 MHz (which would yield 204.7552
+> Hz)? (Assume this is true, what do you think: Should be use the formula
+> that matches reality, or should we stick to the formula defined in the
+> data sheet?)
+
+No, I just tested this for 3-4 chips and for them I measured these
+errors, but that's just a small sample.
+Maybe the next few measurements would indicate that it runs at 24 MHz
+and it evens out at 25 MHz for all produced chips, but we just have
+enough information imho.
+
+Clemens
