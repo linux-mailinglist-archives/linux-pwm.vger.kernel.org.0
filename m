@@ -2,226 +2,181 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A09D2360098
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 Apr 2021 05:44:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2B6F3602A8
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 Apr 2021 08:49:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229457AbhDODpD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 14 Apr 2021 23:45:03 -0400
-Received: from mail-eopbgr1310108.outbound.protection.outlook.com ([40.107.131.108]:25120
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229449AbhDODpC (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Wed, 14 Apr 2021 23:45:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=garDlr2W7zYLWRx723Css7NOX94WayRA3uSE+QFd+YlddP1q1QPtUYDg+mtUH7w3trfBJAzPt3FjWNcIg0XSqqleeFBH7jvWCbbMv7XgdKhxNShVe02beMI87xCrTG/RQQzbzyhhFUaGXAZTqSBLXyxNxos7zE/DUQj8DOYt3o/gZ0BsaSbYjrdI/G5E3duKxOr1MbqHtM7CWa56vZsqdT+f0C1i3Mz9PF5hOi2TKFlPzFHO8sme9v6uWoxChbslN8Op0UuMnyOjvB4/TL+UgVrgTWjHg2o2ftPI07LOmc+GL1oZT9yUbTnMxrTPwK8VWUgH3OgRRt9SetK9XjU2Xw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ekNazvJ9NfQZDe/Iy9+kG+qnO8hQkwpRJojTzgWnBRw=;
- b=IUvevn64yDemq5U1/CY6r263wE0X36uW9Zr+2nvQ3jC142ns//e2VrP8nvpcUzR3QoDBY2mhoGGrGumFRu4rjU08ThBU47VzPaW95QT+/jWSBkviOX2qfMmiT3HYPWvEfpEVYIemqm/pRG+Ju6Rw1qIc8O0Am8aXkVc8iDfI9zITbBl4RDhBq2ooDjT28+uOeoW6v7TN1AtwSP2MyUmJlbp+fzpbYze1XFFxmx7c9XQ/slF5t2KYaARpKFyHAp90SjziUr7cEdHhSm8FEUfyS7+lIBfzgNp5E/Z22mhMS04n1Beg5/q0kGCjIr//V+hcpCgkXHDcuc2mSk86zoS14g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-Received: from HK0PR06MB3362.apcprd06.prod.outlook.com (2603:1096:203:8b::10)
- by HK0PR06MB3362.apcprd06.prod.outlook.com (2603:1096:203:8b::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4020.18; Thu, 15 Apr
- 2021 03:44:30 +0000
-Received: from HK0PR06MB3362.apcprd06.prod.outlook.com
- ([fe80::4d49:12fe:2d9a:b1bd]) by HK0PR06MB3362.apcprd06.prod.outlook.com
- ([fe80::4d49:12fe:2d9a:b1bd%3]) with mapi id 15.20.4020.022; Thu, 15 Apr 2021
- 03:44:30 +0000
-From:   Billy Tsai <billy_tsai@aspeedtech.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        BMC-SW <BMC-SW@aspeedtech.com>
-Subject: Re: [v2 1/2] dt-bindings: Add bindings for aspeed pwm-tach and pwm.
-Thread-Topic: [v2 1/2] dt-bindings: Add bindings for aspeed pwm-tach and pwm.
-Thread-Index: AQHXMRveymfOqXW0b0q4pkWKQfA6vaq0lT+AgADh7IA=
-Date:   Thu, 15 Apr 2021 03:44:29 +0000
-Message-ID: <B9287FE7-5EF5-40B3-BCB3-08DA11D6CDD7@aspeedtech.com>
-References: <20210414104939.1093-1-billy_tsai@aspeedtech.com>
- <20210414104939.1093-2-billy_tsai@aspeedtech.com>
- <20210414221553.GA56046@robh.at.kernel.org>
-In-Reply-To: <20210414221553.GA56046@robh.at.kernel.org>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=aspeedtech.com;
-x-originating-ip: [211.20.114.70]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 509caba7-2a5f-4c45-7ccf-08d8ffc0c673
-x-ms-traffictypediagnostic: HK0PR06MB3362:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HK0PR06MB3362ED46E22C4C7783D46DC08B4D9@HK0PR06MB3362.apcprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nfxQEM/dHQoD5MJajZ+vy4OzSKOClqd7XibvnXMScmY7lM9lsa8sP+OcYYPdVsm/CIOwqeL/rmPS63trqiVWNmA+7yZ/Wt0gaRKhxzxvDM8vjTx/JRUt+tpTkNdJG79FjCZTiqWGfet7CVX2rc0Uf4XMOWjYZbY2Dzc1M/QOpsHO8k2owWcv6D0Oag1RfOymOTmDkSgyJHAoXX40SD9wPhB/48ADu+wWo56I2frjviFD/mQ+88fNO/rykXcV4vUHbDyjdKhmG3T6c+YCykEki2jcgKjheVVygmlXtaZgnjxxBoZD+TxBejo7bSrUoHCaUT604Xi/x676mGUqngc46p8CsGH+FOQqAdJUjz7u0sZN+8ncxTBDfWIH+Zr+0fboURAD+JgTJ3BQd3RxQC+Vv5knnWfv0+PmXO2aTkbsUsOdU9KscIfjEAEoxZfwQVgXdvTZPq4JON98GebZLgiYqb3/A2DSBzgGF0Zh7G32Wq4fmAMEF0zmXyGcDd1iXJsAGPf+9G9JtROiH5+sJedjNcmX1BnUQQmCOQja+6X+Hm1vqz/un1oudDDBNI4SvUxQxwhcCO9ypOD+T6XdqfLv9tQrgngzHjJcbI3AmfhYVLdbMLtKmPJFt/6NVt3L+izmRTNl4cFk3/yTFpk+Lj5kfQuy3Yq8nKYFIk7q5ZCUXYQXHJc3b4bL2Vy+d/RIw6B/fxmaIJbki1LLDh50ASa20qI3e3m1FRAg6Eg79XhP0hg=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0PR06MB3362.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(39840400004)(346002)(136003)(396003)(376002)(8936002)(2616005)(186003)(4326008)(38100700002)(6506007)(76116006)(66446008)(7416002)(83380400001)(966005)(107886003)(66556008)(122000001)(71200400001)(36756003)(8676002)(66946007)(478600001)(6512007)(86362001)(6916009)(54906003)(55236004)(2906002)(26005)(5660300002)(64756008)(33656002)(6486002)(316002)(66476007)(45980500001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?K0pKczZvMEtSUk9TWkNxbTc0MkEzaHlmVXpFMDBWcUFDTGZhMTF3cVVvY0VV?=
- =?utf-8?B?eUNjNWprM2s0djRrUEp0Y2tJTlYrcjdmRGo5eTFvSDZ3SXgrUWlQeUdBWnNx?=
- =?utf-8?B?dTFRV0RxWERZK1d1QUFLVlRjTXI3Njh4UTk0OTBaTGhuWmJmSDBzUVU2dm13?=
- =?utf-8?B?bldFM0JnMVVwR3o2VFR3WUtnMWtYdFFjVTc1MmsweVBMZ2syK0Y1T21hK25p?=
- =?utf-8?B?NzJBZXhFUjE1ZjJBWWdwd203N0V5TVZ1b2paYktneFFlWkpLZG5VRHNXeE5t?=
- =?utf-8?B?UjM1OUlpRmtjK3RiRWxqN1lJaUErTzJkSjluTkRjQlFQMmEvQm1XRE9DU05h?=
- =?utf-8?B?OE9nMStvZGw4MGl3bFlJcldvNENuNTF5Y2tycFMyZytPWDRPaW5DQ0l3L09U?=
- =?utf-8?B?T2YzV3Bpa1BITVRLUFpVbEhkZzhyeDFwT2lBSkdObDZmaC9yb3R4TU5ZNDha?=
- =?utf-8?B?SkFiVm9uZjhVRlBobTN3ZEh6Y2NpbHFFUXdTNHVMVkt5dC9uTFVzbm9kOWc1?=
- =?utf-8?B?dkVRR0JtMTAyaEg4aUJRVjhRVGdRQzdraWpHbjkzWHRaWm1STHFBM1BYSFVx?=
- =?utf-8?B?SkhFMmg4S0Q4ZUZPb21pZ2dLNE8zUzFPUExyaWhVa3NLREdyNmVDeWppblNZ?=
- =?utf-8?B?VW5YQUNWSndqQ3lwL0JmbEpyNzlNNGFoU2Z6TXh0cVlOYmJHK3puT3dROThh?=
- =?utf-8?B?Um9hcXZTdkN1MFNTdmxXRGNPUFdZNUszNjl5RGhtVVQzT2N6Rno5d0xkem9H?=
- =?utf-8?B?eEVtNjUvTkxUMUFrM1EvcXlMQzZOaUFRS3R6dTY4U056a1V6SU5VZlBobm5n?=
- =?utf-8?B?WmhRRm5lY0dkbUY2c0h4ckdaUFVYcHkrNEpsanViNDJiVDdKSjQrMk96TFlN?=
- =?utf-8?B?ZHNtTUZSRTJJZllQck1TN0p0cmZjT29VSFJZemUrY1JKWjBnVHBxWEZFUkpN?=
- =?utf-8?B?M1pkZUFFYVpxeXkrNEcwbndFWUlMY29QSi9PSjBZLzJERG9Lc1RYV0haY1ZQ?=
- =?utf-8?B?aDVxT1JLRjFVRVZ6amFWL0NySHZPWkRrL2hjTXVXMTczTE9oUGNFYVhrVjFs?=
- =?utf-8?B?aWxDc1pYNVZ5L0hhL3pUcnBxT0k2MVR3Rm5rclRNdHB6alcvbFdSOW04cjRD?=
- =?utf-8?B?dTY2dzI5V1pOay9qY0FoTldwZzFmSXpsZXlhYWhWQkVoaU9NWTB0bHovL3cx?=
- =?utf-8?B?WVh5U25laHJnNnd3MXV1WnlXaFJwUTVlVWZLOE1NaEw1UjBPbHFhbVoyMU4x?=
- =?utf-8?B?dk82QTREMWUreWY4UnVyT0Nremgrc3p1NEwyeXl4V1hUOER5cUpYbXlkRG1H?=
- =?utf-8?B?TmIya1d6TFlMaThZeGlzbytyQ2JkaTMyZ3pMV2o5eTdmL25ZVWF0UnFpTTV6?=
- =?utf-8?B?QUdwakRlbjR2cE1zNnZHQldJK3BXVHQxRU1OaVJmZERUR2RoeDNuTC9sV1U5?=
- =?utf-8?B?MzNQNUIxcjNsclh3bUVsUGp0QjM5cnBkcFo3QWl6RkowaGNRa3NYNzdsRlgz?=
- =?utf-8?B?UStyelBQbnVFUUg2VkRVZnFnSXg2MzdWcDkvZTVtNzEvRUxUVlVMWllPV2Qw?=
- =?utf-8?B?SmpReVhBTTZiWDdicTlXbGJFeTdPNThvTE9RNkphOEVNejFRaGZyenNmNWtU?=
- =?utf-8?B?U1FTZnJ6T25UY0d3TmtsMVg2WUtOZmkyWmIwbnZiQ082YittOWdTL1JhdGVu?=
- =?utf-8?B?c1B6dHpuQm9KRnRTdkFqejdzclAzck1NTDVtcHZLc3ExcGtTTlVnY2hGQTZu?=
- =?utf-8?Q?11AEkkUYRVrO5c9nfX7X0lMhzSg36vi9MQYcLpw?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9942EB53D3348D4EBB01D175B4BB5843@apcprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S229793AbhDOGtZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 15 Apr 2021 02:49:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229503AbhDOGtY (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 15 Apr 2021 02:49:24 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33446C061574
+        for <linux-pwm@vger.kernel.org>; Wed, 14 Apr 2021 23:49:02 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lWvo8-0002Xv-UD; Thu, 15 Apr 2021 08:48:56 +0200
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lWvo8-0005YD-GV; Thu, 15 Apr 2021 08:48:56 +0200
+Date:   Thu, 15 Apr 2021 08:48:54 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Clemens Gruber <clemens.gruber@pqgruber.com>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 1/8] pwm: pca9685: Switch to atomic API
+Message-ID: <20210415064854.glrvk7d634bisb34@pengutronix.de>
+References: <20210412132745.76609-1-clemens.gruber@pqgruber.com>
+ <20210412161808.lp2amdfopw74lvz7@pengutronix.de>
+ <YHR3wP4Fk3jidnri@workstation.tuxnet>
+ <20210412201019.vouxx4daumusrcvr@pengutronix.de>
+ <YHWKehtYFSaHt1hC@workstation.tuxnet>
+ <20210413193818.r7oqzdzbxqf5sjj3@pengutronix.de>
+ <YHbbaiwK9Tasb7NF@workstation.tuxnet>
+ <20210414192131.2o4c2eia6jnjatp2@pengutronix.de>
+ <YHdGXG3PbsmicK7U@workstation.tuxnet>
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: HK0PR06MB3362.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 509caba7-2a5f-4c45-7ccf-08d8ffc0c673
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2021 03:44:29.8487
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WOgiLvGvqzGfkhcymoolZqS7cYplnbRvOhA5Gl5BfzIcAJjTUTnGTujq5CVNICpgdrYKFp5QK62Zx1+pWJbnOj57SQ4pFQS8+libSJl3iIQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0PR06MB3362
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kij3efdivtjivdyy"
+Content-Disposition: inline
+In-Reply-To: <YHdGXG3PbsmicK7U@workstation.tuxnet>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-SGkgUm9iLA0KDQpPbiAyMDIxLzQvMTUsIDY6MTYgQU0sUm9iIEhlcnJpbmd3cm90ZToNCg0KICAg
-IE9uIFdlZCwgQXByIDE0LCAyMDIxIGF0IDA2OjQ5OjM4UE0gKzA4MDAsIEJpbGx5IFRzYWkgd3Jv
-dGU6DQogICAgPj4gVGhpcyBwYXRjaCBhZGRzIGRldmljZSBiaW5kaW5ncyBmb3IgYXNwZWVkIHB3
-bS10YWNoIGRldmljZSB3aGljaCBpcyBhDQogICAgPj4gbXVsdGktZnVuY3Rpb24gZGV2aWNlIGlu
-Y2x1ZGUgcHduIGFuZCB0YWNoIGZ1bmN0aW9uIGFuZCBwd20gZGV2aWNlIHdoaWNoDQogICAgPj4g
-c2hvdWxkIGJlIHRoZSBzdWItbm9kZSBvZiBwd20tdGFjaCBkZXZpY2UuDQogICAgPj4gDQogICAg
-Pj4gU2lnbmVkLW9mZi1ieTogQmlsbHkgVHNhaSA8YmlsbHlfdHNhaUBhc3BlZWR0ZWNoLmNvbT4N
-CiAgICA+PiBDaGFuZ2UtSWQ6IEkxOGQ5ZGVhMTRjM2EwNGUxYjdlMzhmZmVjZDQ5ZDQ1OTE3Yjli
-NTQ1DQogICAgPg0KICAgID5Ecm9wDQogICAgPg0KICAgID4+IC0tLQ0KICAgID4+ICAuLi4vYmlu
-ZGluZ3MvbWZkL2FzcGVlZCxhc3QyNjAwLXB3bS10YWNoLnlhbWwgfCA2MCArKysrKysrKysrKysr
-KysrKysrDQogICAgPj4gIC4uLi9iaW5kaW5ncy9wd20vYXNwZWVkLGFzdDI2MDAtcHdtLnlhbWwg
-ICAgICB8IDQ0ICsrKysrKysrKysrKysrDQogICAgPj4gIDIgZmlsZXMgY2hhbmdlZCwgMTA0IGlu
-c2VydGlvbnMoKykNCiAgICA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9tZmQvYXNwZWVkLGFzdDI2MDAtcHdtLXRhY2gueWFtbA0KICAgID4+
-ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3
-bS9hc3BlZWQsYXN0MjYwMC1wd20ueWFtbA0KICAgID4+IA0KICAgID4+IGRpZmYgLS1naXQgYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2FzcGVlZCxhc3QyNjAwLXB3bS10
-YWNoLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2FzcGVlZCxh
-c3QyNjAwLXB3bS10YWNoLnlhbWwNCiAgICA+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KICAgID4+
-IGluZGV4IDAwMDAwMDAwMDAwMC4uZWFmOGJkZjhkNDRlDQogICAgPj4gLS0tIC9kZXYvbnVsbA0K
-ICAgID4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvYXNwZWVk
-LGFzdDI2MDAtcHdtLXRhY2gueWFtbA0KICAgID4+IEBAIC0wLDAgKzEsNjAgQEANCiAgICA+PiAr
-IyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAtb25seSBPUiBCU0QtMi1DbGF1c2Up
-DQogICAgPj4gKyMgQ29weXJpZ2h0IChDKSAyMDIxIEFTUEVFRCwgSW5jLg0KICAgID4+ICslWUFN
-TCAxLjINCiAgICA+PiArLS0tDQogICAgPj4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3Nj
-aGVtYXMvbWZkL2FzcGVlZCxhc3QyNjAwLXB3bS10YWNoLnlhbWwjDQogICAgPj4gKyRzY2hlbWE6
-IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIw0KICAgID4+ICsN
-CiAgICA+PiArdGl0bGU6IFBXTSBUYWNoIGNvbnRyb2xsZXIgRGV2aWNlIFRyZWUgQmluZGluZ3MN
-CiAgICA+PiArDQogICAgPj4gK2Rlc2NyaXB0aW9uOiB8DQogICAgPj4gKyAgVGhlIFBXTSBUYWNo
-IGNvbnRyb2xsZXIgaXMgcmVwcmVzZW50ZWQgYXMgYSBtdWx0aS1mdW5jdGlvbiBkZXZpY2Ugd2hp
-Y2gNCiAgICA+PiArICBpbmNsdWRlczoNCiAgICA+PiArICAgIFBXTQ0KICAgID4+ICsgICAgVGFj
-aA0KDQogICAgPiBCdXQgaXMgaXQgcmVhbGx5PyBBIFBXTSBhbmQgdGFjaCBzb3VuZHMgbGlrZSBh
-IGZhbiBjb250cm9sbGVyLiBMb29rIGF0IA0KDQpPdXIgUFdNIGlzIG5vdCBvbmx5IGZvciBmYW5z
-IGJ1dCBhbHNvIHVzZWQgZm9yIHRoZSBtb3RvciwgbGVkLCBidXp6ZXIsIGFuZCBzbyBvbi4gDQpT
-byBJIHdhbnQgdG8gc3BsaXQgdGhlIGZ1bmN0aW9uIGludG8gdHdvIGRldmljZXMgd2l0aCBhIG11
-bHRpLWZ1bmN0aW9uIGRldmljZS4gDQpPbmUgZm9yIFBXTSBvdXRwdXQgYW5kIG9uZSBmb3IgdGFj
-aCBtb25pdG9yLg0KDQogICAgPiBvdGhlciBleGlzdGluZyBQV00rdGFjaCBiaW5kaW5ncyB3ZSBo
-YXZlIGZvciBmYW5zLg0KDQpJIGRpZG4ndCBzZWUgdGhlIFBXTSt0YWNoIGJpbmRpbmdzIGNhbiB5
-b3UgZ2l2ZSBzb21lIGV4YW1wbGUgZm9yIG1lLCB0aGFua3MuDQoNCiAgICA+PiArDQogICAgPj4g
-K21haW50YWluZXJzOg0KICAgID4+ICsgIC0gQmlsbHkgVHNhaSA8YmlsbHlfdHNhaUBhc3BlZWR0
-ZWNoLmNvbT4NCiAgICA+PiArDQogICAgPj4gK3Byb3BlcnRpZXM6DQogICAgPj4gKyAgY29tcGF0
-aWJsZToNCiAgICA+PiArICAgIGl0ZW1zOg0KICAgID4+ICsgICAgICAtIGVudW06DQogICAgPj4g
-KyAgICAgICAgICAtIGFzcGVlZCxhc3QyNjAwLXB3bS10YWNoDQogICAgPj4gKyAgICAgIC0gY29u
-c3Q6IHN5c2Nvbg0KICAgID4+ICsgICAgICAtIGNvbnN0OiBzaW1wbGUtbWZkDQogICAgPj4gKyAg
-cmVnOg0KICAgID4+ICsgICAgbWF4SXRlbXM6IDENCiAgICA+PiArICAiI2FkZHJlc3MtY2VsbHMi
-Og0KICAgID4+ICsgICAgY29uc3Q6IDENCiAgICA+PiArICAiI3NpemUtY2VsbHMiOg0KICAgID4+
-ICsgICAgY29uc3Q6IDENCiAgICA+PiArDQogICAgPj4gK3JlcXVpcmVkOg0KICAgID4+ICsgIC0g
-Y29tcGF0aWJsZQ0KICAgID4+ICsgIC0gcmVnDQogICAgPj4gKyAgLSAiI2FkZHJlc3MtY2VsbHMi
-DQogICAgPj4gKyAgLSAiI3NpemUtY2VsbHMiDQogICAgPj4gKw0KICAgID4+ICthZGRpdGlvbmFs
-UHJvcGVydGllczoNCiAgICA+PiArICB0eXBlOiBvYmplY3QNCg0KICAgID4gQXMgeW91IGtub3cg
-dGhlIDIgbm9kZSBuYW1lcywgdGhleSBzaG91bGQgYmUgZG9jdW1lbnRlZC4gSG93ZXZlciwgc2Vl
-IA0KICAgID4gYmVsb3cuDQoNCiAgICA+PiArDQogICAgPj4gK2V4YW1wbGVzOg0KICAgID4+ICsg
-IC0gfA0KICAgID4+ICsgICAgcHdtX3RhY2g6IHB3bV90YWNoQDFlNjEwMDAwIHsNCiAgICA+PiAr
-ICAgICAgY29tcGF0aWJsZSA9ICJhc3BlZWQsYXN0MjYwMC1wd20tdGFjaCIsICJzeXNjb24iLCAi
-c2ltcGxlLW1mZCI7DQogICAgPj4gKyAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KICAgID4+
-ICsgICAgICAjc2l6ZS1jZWxscyA9IDwxPjsNCiAgICA+PiArICAgICAgcmVnID0gPDB4MWU2MTAw
-MDAgMHgxMDA+Ow0KICAgID4+ICsNCiAgICA+PiArICAgICAgcHdtOiBwd21AMCB7DQogICAgPj4g
-KyAgICAgICAgY29tcGF0aWJsZSA9ICJhc3BlZWQsYXN0MjYwMC1wd20iOw0KICAgID4+ICsgICAg
-ICAgICNwd20tY2VsbHMgPSA8Mz47DQogICAgPj4gKyAgICAgICAgcmVnID0gPDB4MCAweDEwMD47
-DQogICAgPj4gKyAgICAgIH07DQogICAgPj4gKw0KICAgID4+ICsgICAgICB0YWNoOiB0YWNoQDEg
-ew0KICAgID4+ICsgICAgICAgIGNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI2MDAtdGFjaCI7DQog
-ICAgPj4gKyAgICAgICAgcmVnID0gPDB4MCAweDEwMD47DQoNCiAgICA+IFlvdSBoYXZlIDIgbm9k
-ZXMgYXQgdGhlIHNhbWUgYWRkcmVzcy4gTm90IHZhbGlkLg0KDQpPdXIgcHdtIGFuZCB0YWNoIGlz
-IHVzZWQgdGhlIHNhbWUgYmFzZSBhZGRyZXNzIGFuZCB0aGUgb2Zmc2V0IGlzIGxpa2UgYmVsb3c6
-DQoNClBXTTAgdXNlZCAweDAgMHg0LCBUYWNoMCB1c2VkIDB4OCAweGMNClBXTTEgdXNlZCAweDEw
-IDB4MTQsIFRhY2gxIHVzZWQgMHgxOCAweDFjDQouLi4NCg0KSSB3aWxsIHJlbW92ZSB0aGUgcmVn
-IHByb3BlcnR5IGZyb20gcHdtIGFuZCB0YWNoIG5vZGUgYW5kIHJlbW92ZSB0aGUgIiNhZGRyZXNz
-LWNlbGxzIiBhbmQNCiIjc2l6ZS1jZWxscyIgZnJvbSB0aGUgcGFyZW50IG5vZGUuDQoNCiAgICA+
-PiArICAgICAgfTsNCg0KICAgID4gVGhlcmUncyBubyByZWFsIG5lZWQgZm9yIDIgY2hpbGQgbm9k
-ZXMuIFRoZSBwYXJlbnQgbm9kZSBjYW4gYmUgYSBQV00gDQogICAgPiBwcm92aWRlci4NCg0KSG93
-ZXZlciwgSW4gb3VyIHVzYWdlLCB0aGUgcGFyZW50IG5vZGUgaXMgYSBtZmQsIG5vdCBhIHNpbXBs
-ZSBQV00gZGV2aWNlIG9ubHkuIEkgZG9uJ3Qgd2FudCB0bw0KY29tYmluZSB0aGUgZGlmZmVyZW50
-IGZ1bmN0aW9ucyB3aXRoIHRoZSBvbmUgZGV2aWNlIG5vZGUuDQoNCg0KICAgID4+ICsgICAgfTsN
-CiAgICA+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3
-bS9hc3BlZWQsYXN0MjYwMC1wd20ueWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9wd20vYXNwZWVkLGFzdDI2MDAtcHdtLnlhbWwNCiAgICA+PiBuZXcgZmlsZSBtb2RlIDEw
-MDY0NA0KICAgID4+IGluZGV4IDAwMDAwMDAwMDAwMC4uOTc5MjNlNjhjY2I5DQogICAgPj4gLS0t
-IC9kZXYvbnVsbA0KICAgID4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9wd20vYXNwZWVkLGFzdDI2MDAtcHdtLnlhbWwNCiAgICA+PiBAQCAtMCwwICsxLDQ0IEBADQog
-ICAgPj4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNELTIt
-Q2xhdXNlKQ0KICAgID4+ICsjIENvcHlyaWdodCAoQykgMjAyMSBBU1BFRUQsIEluYy4NCiAgICA+
-PiArJVlBTUwgMS4yDQogICAgPj4gKy0tLQ0KICAgID4+ICskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVl
-Lm9yZy9zY2hlbWFzL3B3bS9hc3BlZWQsYXN0MjYwMC1wd20ueWFtbCMNCiAgICA+PiArJHNjaGVt
-YTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQogICAgPj4g
-Kw0KICAgID4+ICt0aXRsZTogQVNQRUVEIEFTVDI2MDAgUFdNIGNvbnRyb2xsZXINCiAgICA+PiAr
-DQogICAgPj4gK21haW50YWluZXJzOg0KICAgID4+ICsgIC0gQmlsbHkgVHNhaSA8YmlsbHlfdHNh
-aUBhc3BlZWR0ZWNoLmNvbT4NCiAgICA+PiArDQogICAgPj4gK2Rlc2NyaXB0aW9uOiB8DQogICAg
-Pj4gKyAgVGhlIEFTUEVFRCBQV00gY29udHJvbGxlciBjYW4gc3VwcG9ydCB1cHRvIDE2IFBXTSBv
-dXRwdXRzLg0KICAgID4+ICsNCiAgICA+PiArcHJvcGVydGllczoNCiAgICA+PiArICBjb21wYXRp
-YmxlOg0KICAgID4+ICsgICAgZW51bToNCiAgICA+PiArICAgICAgLSBhc3BlZWQsYXN0MjYwMC1w
-d20NCiAgICA+PiArDQogICAgPj4gKyAgIiNwd20tY2VsbHMiOg0KICAgID4+ICsgICAgY29uc3Q6
-IDMNCiAgICA+PiArDQogICAgPj4gKyAgcmVnOg0KICAgID4+ICsgICAgbWF4SXRlbXM6IDENCiAg
-ICA+PiArDQogICAgPj4gK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KICAgID4+ICsNCiAg
-ICA+PiArZXhhbXBsZXM6DQogICAgPj4gKyAgLSB8DQogICAgPj4gKyAgICAvLyBUaGUgUFdNIHNo
-b3VsZCBiZSBhIHN1Ym5vZGUgb2YgYSAiYXNwZWVkLGFzdDI2MDAtcHdtLXRhY2giIGNvbXBhdGli
-bGUNCiAgICA+PiArICAgIC8vIG5vZGUuDQogICAgPj4gKyAgICBwd21fdGFjaDogcHdtX3RhY2hA
-MWU2MTAwMDAgew0KICAgID4+ICsgICAgICBjb21wYXRpYmxlID0gImFzcGVlZCxhc3QyNjAwLXB3
-bS10YWNoIiwgInN5c2NvbiIsICJzaW1wbGUtbWZkIjsNCiAgICA+PiArICAgICAgI2FkZHJlc3Mt
-Y2VsbHMgPSA8MT47DQogICAgPj4gKyAgICAgICNzaXplLWNlbGxzID0gPDE+Ow0KICAgID4+ICsg
-ICAgICByZWcgPSA8MHgxZTYxMDAwMCAweDEwMD47DQogICAgPj4gKw0KICAgID4+ICsgICAgICBw
-d206IHB3bUAwIHsNCiAgICA+PiArICAgICAgICBjb21wYXRpYmxlID0gImFzcGVlZCxhc3QyNjAw
-LXB3bSI7DQogICAgPj4gKyAgICAgICAgI3B3bS1jZWxscyA9IDwzPjsNCiAgICA+PiArICAgICAg
-ICByZWcgPSA8MHgwIDB4MTAwPjsNCiAgICA+PiArICAgICAgfTsNCiAgICA+PiArICAgIH07DQog
-ICAgPj4gLS0gDQogICAgPj4gMi4yNS4xDQogICAgPj4NCg0K
+
+--kij3efdivtjivdyy
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Apr 14, 2021 at 09:45:32PM +0200, Clemens Gruber wrote:
+> On Wed, Apr 14, 2021 at 09:21:31PM +0200, Uwe Kleine-K=F6nig wrote:
+> > On Wed, Apr 14, 2021 at 02:09:14PM +0200, Clemens Gruber wrote:
+> > > Hi Uwe,
+> > >=20
+> > > On Tue, Apr 13, 2021 at 09:38:18PM +0200, Uwe Kleine-K=F6nig wrote:
+> > > > Hello Clemens,
+> > > >=20
+> > > > On Tue, Apr 13, 2021 at 02:11:38PM +0200, Clemens Gruber wrote:
+> > > > > On Mon, Apr 12, 2021 at 10:10:19PM +0200, Uwe Kleine-K=F6nig wrot=
+e:
+> > > > > > On Mon, Apr 12, 2021 at 06:39:28PM +0200, Clemens Gruber wrote:
+> > > > > > > With your suggested round-down, the example with frequency of=
+ 200 Hz
+> > > > > > > would no longer result in 30 but 29 and that contradicts the =
+datasheet.
+> > > > > >=20
+> > > > > > Well, with PRESCALE =3D 30 we get a frequency of 196.88 Hz and =
+with
+> > > > > > PRESCALE =3D 29 we get a frequency of 203.45 Hz. So no matter i=
+f you pick
+> > > > > > 29 or 30, you don't get 200 Hz. And which of the two possible v=
+alues is
+> > > > > > the better one depends on the consumer, no matter what rounding
+> > > > > > algorithm the data sheet suggests. Also note that the math here=
+ contains
+> > > > > > surprises you don't expect at first. For example, what PRESCALE=
+ value
+> > > > > > would you pick to get 284 Hz? [If my mail was a video, I'd sugg=
+est to
+> > > > > > press Space now to pause and let you think first :-)] The data =
+sheet's
+> > > > > > formula suggests:
+> > > > > >=20
+> > > > > > 	round(25 MHz / (4096 * 284)) - 1 =3D 20
+> > > > > >=20
+> > > > > > The resulting frequency when picking PRESCALE =3D 20 is 290.644=
+ Hz (so an
+> > > > > > error of 6.644 Hz). If instead you pick PRESCALE =3D 21 you get=
+ 277.433 Hz
+> > > > > > (error =3D 6.567 Hz), so 21 is the better choice.
+> > > > > >=20
+> > > > > > Exercise for the reader:
+> > > > > >  What is the correct formula to really determine the PRESCALE v=
+alue that
+> > > > > >  yields the best approximation (i.e. minimizing
+> > > > > >  abs(real_freq - target_freq)) for a given target_freq?
+> > > >=20
+> > > > I wonder if you tried this.
+> > >=20
+> > > We could calculate both round-up and round-down and decide which one =
+is
+> > > closer to "real freq" (even though that is not the actual frequency b=
+ut
+> > > just our backwards-calculated frequency).
+> >=20
+> > Yeah, the backwards-calculated frequency is the best assumption we
+> > have.
+> >=20
+> > > But I can't give you a formula with minimized abs(real_freq-target_fr=
+eq)
+> > > Is it a different round point than 0.5 and maybe relative to f ?
+> > >=20
+> > > Please enlighten us :-)
+> >=20
+> > Sorry, I cannot. I spend ~20 min today after lunch with pencil and
+> > paper, but without success. I was aware that it isn't trivial and this
+> > is the main reason I established round-down as default for new drivers
+> > instead of round-nearest.
+>=20
+> Oh, I thought you already solved it. I tried too for a while but was
+> unsuccessful. Not trivial indeed!
+>=20
+> But regarding you establishing round-down: Wouldn't it be even better if
+> the driver did what I suggested above, namely calculate backwards from
+> both the rounded-up as well as the rounded-down prescale value and then
+> write the one with the smallest abs(f_target - f_real) to the register?
+
+No, I don't think so for several reasons. First, just rounding down is
+easier (and keeping lowlevel drivers rules and implementation easy is
+IMHO a good goal). The second reason is that round-nearest is a bit
+ambigous because round to the nearest frequency is slightly different to
+round to the nearest period length. So to actually implement (or use)
+it correctly, people have to grasp that difference. Compared to that
+rounding down the period length corresponds 1:1 to rounding up
+frequency. That's easy.
+
+For the third reason I have to backup a bit: I intend to introduce a
+function pwm_round_rate that predicts what pwm_apply_rate will actually
+implement. Of course it must have the same rounding rules. This allows
+to implement efficient search for consumers that e.g. prefer
+round-nearest time, or round-nearest frequency. I'm convinced that
+searching the optimal request to make is easier if round_rate uses
+round-down and not round-nearest.
+
+All three reasons boil down to "the math for round-down is just simpler
+(for implementers and for users) than with round-nearest".
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--kij3efdivtjivdyy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmB34dMACgkQwfwUeK3K
+7AkZWgf/SJH5gUNhVoq0Ss5l1e4cNXs73avV6WBUWFp9ZanIcKrNAo+vsErxneq3
+riw2RUutTTaVybfzlbwfeGJJVLrnnKDKIgp6DJPsHXVS3puf0hfjsVlSVmwpisnV
+xkfpshaAfWXdH+IBQFBj9p7CJsaqeVsV2Dwm8+A9Ud7J9LYduqNvKLq1eW1CbwcW
+NOJNIFQqB+Am4AnD8W7/jMbnKoXlhSG2Cc4+HSNjoczDw8029wYIMP1GBY62a7Q1
+OmhP696dLosuUs/T73ZZg65EojAZfg7qRaBFmgBlLtDFJHSl1njj1F0x7Qj277ut
+u4/11FzWpidfcR2e5PZiq0E5INSYqQ==
+=gN4c
+-----END PGP SIGNATURE-----
+
+--kij3efdivtjivdyy--
