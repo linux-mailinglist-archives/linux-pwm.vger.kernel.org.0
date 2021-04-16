@@ -2,318 +2,353 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CE1A361018
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 Apr 2021 18:26:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5399F361A94
+	for <lists+linux-pwm@lfdr.de>; Fri, 16 Apr 2021 09:40:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232799AbhDOQ0q (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 15 Apr 2021 12:26:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36252 "EHLO
+        id S239271AbhDPH2Z (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 16 Apr 2021 03:28:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230056AbhDOQ0p (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 15 Apr 2021 12:26:45 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EF7DC061574;
-        Thu, 15 Apr 2021 09:26:22 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id x4so28839171edd.2;
-        Thu, 15 Apr 2021 09:26:22 -0700 (PDT)
+        with ESMTP id S231666AbhDPH2Z (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Apr 2021 03:28:25 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C0FC061574;
+        Fri, 16 Apr 2021 00:27:59 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id l4so40641523ejc.10;
+        Fri, 16 Apr 2021 00:27:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jyH3HdOd9UkAaM7HlQMLpD8REdK46Ccawf0yY1ovzww=;
-        b=mKB7iXcKYJ2r9LfwtCEG1Av4zQgh4wGme2vgiLdxtssRu3OHI1P51HAyWvKVLaUEF9
-         0oIWPP1btTCCkw8BkKeyFZ9YmVVM4tOOdk9Kv6lRiwq5vM8ErVFMOcf3eCnbiix4Goas
-         CrzoCRCznsajH03B0vtm84z6USNNqYuxY3MvhhsnGS0o9uMYKZvlqI89NGcXaKdVz2vA
-         lGyZucIfKWd1FF9NdDiABcQ8Bv2Tb5eU2ADEIfBtgYtgZQXF2T6uqhlmNgofLFOs0FaQ
-         qzwMnqCcOetYXuqAU9D21U8q3kePjcMA+zP9szJc0jeFNiLVkqSlmyXJCTS+35/NlJX9
-         PaEw==
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=uIAH1plO3MN4SRUjVKd4kP8g31/+FxJs1fOzDsYlCbo=;
+        b=N6uGgQO8+cLVzD/QgDSA5V7zSmM9UIFDjyJzz2OmlxctfAJ1lC8JM/97knIOwmw0K9
+         r0vWmDeEsfxNSRtooUNDvJdOqIi/VDZQfXZJJvSgF6sq9H7cGZGCxjjCFS7gOSn5mIs/
+         W/NGSe/Mqvdm5gp1xlkb6mZqg9jRK6TP5WD4d9xO79DJgtdQHKujPzuvmBsfiYn9+N0Q
+         t7CvW3g2kqIqRNiA952nUUEuFrSHCmSGxfTQqyxx0Dd8Txy6tyaRZlY7QEB3gxUb8cAF
+         2uRbVoDhe+yVdFhaVbzgmUhjQRZCKQuJWWTkZumJO5AMpTjz6xM4fydiAFSOzQx118vq
+         7SQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jyH3HdOd9UkAaM7HlQMLpD8REdK46Ccawf0yY1ovzww=;
-        b=iXjO4uvtMrnwNWneaPwXu8Bly+OMI0ktlQN4XeYFQzfYQT22+9SWBCu/Rr2wccUr8y
-         /rvrU2N8Y/vJyk+L5QuWDzd2FKX6aXNsLKabUR3LIU8r2WPEvu1JHt/OYkCnXe5AKNyU
-         RH8XQc+Q5mjw45Vk627gV+womin243+dCPi5YOX22VxhSHiT0PtdYyhx7Gn834J9qoMK
-         M6PlC3UEKK9MNhU1XKr2lH7/nsUaei0lSg5jyP+NdHLbXGKhq4UEQ7xl0F+c16Ao6R0Z
-         0Gw1AOvgffFZxdYNwOOZiZi5d9WKL46Og8Fc5TnzRM/mzEX/MRpc15dzDsSfWsstqafY
-         lr2A==
-X-Gm-Message-State: AOAM530B9AawcKzZdRTKhqqdwNxCn+WJADADqMqiB7SRvy2Wcr3RkeEW
-        dhXlOc/4DtEMIP+JqHuIVL4293q4sW8=
-X-Google-Smtp-Source: ABdhPJz6xTW+/ErlqOlG9emoNNpsPztjM0l/wufr1ZGMdpOIobwhiBH5COWz+6yHliHwjgIIgpSLPw==
-X-Received: by 2002:aa7:cc03:: with SMTP id q3mr5313484edt.366.1618503980921;
-        Thu, 15 Apr 2021 09:26:20 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id y16sm2881265edc.62.2021.04.15.09.26.19
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=uIAH1plO3MN4SRUjVKd4kP8g31/+FxJs1fOzDsYlCbo=;
+        b=FSltQiaQQ8zO41idzEEafBbHySib5yQr+UB4Xtv583EAcNfjqEL2eJkxKrY0WAJh3O
+         HiGjMQ+UZxGAswryah1a3hU3O/YZOq0FIIduSp0v+Y9foCz8efWPatH9UcrlyYT+afXh
+         lrAmaXzfFkCsqbssgvdw5L8QKOjsPMKPDJmsmqsD+bjyrQp+Q7OTvdLVbqTkRhlK+Wma
+         PFBukK8qLql7sO/gLMYOTVQZz6nlCNrr8Oj26b4hZ2Z6RVkfjH8orPVtZZmLSoVd2/W5
+         EBfIZ18n27wzmba1nSm18Hr1oeQb2XXNGKmEjfr/BUIwlWqn2lXMolb3mP3feBmnu5Ht
+         1mtA==
+X-Gm-Message-State: AOAM531BVQ1L8+2PuDNiFAGmPb914B2giSOL9MEPAxbk7Za4jN6TcGWj
+        QWlDOtgPJVFn/jErYuVcf3mL63lqNRA=
+X-Google-Smtp-Source: ABdhPJwpTyTaQDc+EbhpxL8tFd56oLWRh0t8z7AnP8xqKqmpD6luDMq0WqTz/Ca/WfMV75lvMvKyQw==
+X-Received: by 2002:a17:907:3f08:: with SMTP id hq8mr7264695ejc.90.1618558078374;
+        Fri, 16 Apr 2021 00:27:58 -0700 (PDT)
+Received: from agape.jhs ([5.171.81.105])
+        by smtp.gmail.com with ESMTPSA id bh14sm3577410ejb.104.2021.04.16.00.27.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Apr 2021 09:26:19 -0700 (PDT)
-Date:   Thu, 15 Apr 2021 18:27:02 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Clemens Gruber <clemens.gruber@pqgruber.com>,
-        linux-pwm@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v8 4/8] dt-bindings: pwm: Support new PWM_USAGE_POWER flag
-Message-ID: <YHhpVusyiBLWIM0V@orome.fritz.box>
-References: <20210412132745.76609-1-clemens.gruber@pqgruber.com>
- <20210412132745.76609-4-clemens.gruber@pqgruber.com>
- <20210412162723.7hlhgqp6wlfbkeky@pengutronix.de>
- <YHWFs1f0XHkqbddp@orome.fritz.box>
- <20210413175631.pwbynvwmnn7oog4m@pengutronix.de>
+        Fri, 16 Apr 2021 00:27:57 -0700 (PDT)
+Date:   Fri, 16 Apr 2021 09:27:51 +0200
+From:   Fabio Aiuto <fabioaiuto83@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, ac100@lists.launchpad.net,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        Allen Pais <apais@linux.microsoft.com>,
+        Anders Blomdell <anders.blomdell@control.lth.se>,
+        Andrea Merello <andrea.merello@gmail.com>,
+        Andres Klode <jak@jak-linux.org>,
+        Andrey Shvetsov <andrey.shvetsov@k2l.de>,
+        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        Comedi <comedi@comedi.org>, "David A. Schleef" <ds@schleef.org>,
+        dri-devel@lists.freedesktop.org,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herman.Bruyninckx@mech.kuleuven.ac.be,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        Ilya Petrov <ilya.muromec@gmail.com>,
+        Jacob Feder <jacobsfeder@gmail.com>,
+        Jerry chuang <wlanfae@realtek.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "John B. Wyatt IV" <jbwyatt4@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        "J.P. Mellor" <jpmellor@rose-hulman.edu>,
+        karthik alapati <mail@karthek.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <ac100@lists.lauchpad.net>,
+        Klaas.Gadeyne@mech.kuleuven.ac.be,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-staging@lists.linux.dev,
+        linux-tegra@vger.kernel.org, Marc Dietrich <marvin24@gmx.de>,
+        Marco Cesati <marcocesati@gmail.com>,
+        Martijn Coenen <maco@android.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Michael Straube <straube.linux@gmail.com>,
+        Mori Hess <fmhess@users.sourceforge.net>,
+        =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado 
+        <nfraprado@protonmail.com>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Pierre-Hugues Husson <phhusson@free.fr>,
+        Robert Love <rlove@google.com>,
+        Romain Perier <romain.perier@gmail.com>,
+        Ross Schmidt <ross.schm.dev@gmail.com>,
+        "Spencer E. Olson" <olsonse@umich.edu>, Stanley@BB.SD3,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Sumera Priyadarsini <sylphrenadin@gmail.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Teddy Wang <teddy.wang@siliconmotion.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Todd Kjos <tkjos@android.com>,
+        Truxton Fulton <trux@truxton.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Wim.Meeussen@mech.kuleuven.ac.be,
+        Zhansaya Bagdauletkyzy <zhansayabagdaulet@gmail.com>
+Subject: Re: [PATCH 00/57] Rid W=1 warnings from Staging
+Message-ID: <20210416072749.GA1394@agape.jhs>
+References: <20210414181129.1628598-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ssHf/w3M5y+cB+4m"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210413175631.pwbynvwmnn7oog4m@pengutronix.de>
-User-Agent: Mutt/2.0.6 (98f8cb83) (2021-03-06)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210414181129.1628598-1-lee.jones@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Wed, Apr 14, 2021 at 07:10:32PM +0100, Lee Jones wrote:
+> This set is part of a larger effort attempting to clean-up W=1
+> kernel builds, which are currently overwhelmingly riddled with
+> niggly little warnings.
+> 
+> Lee Jones (57):
+>   staging: r8192U_core: Remove two unused variables 'ret' and
+>     'reset_status'
+>   staging: android: ashmem: Supply description for 'new_range'
+>   staging: comedi_8254: Fix descriptions for 'i8254' and 'iobase'
+>   staging: r8192U_core: Do not use kernel-doc formatting for !kernel-doc
+>     headers
+>   staging: r819xU_phy: Remove some local variables from the stack
+>   staging: r819xU_cmdpkt: Remove functionless method
+>     'cmpk_handle_query_config_rx'
+>   staging: wlan-ng: cfg80211: Move large struct onto the heap
+>   staging: rtw_ioctl_set: Move 'channel_table' to the only place it's
+>     used
+>   staging: rtl8188eu: core: rtw_ieee80211: Fix incorrectly documented
+>     function
+>   staging: rtl8723bs: core: rtw_mlme: Remove a bunch of unused variables
+>   staging: rtl8723bs: core: rtw_mlme_ext: Deal with a bunch of unused
+>     variables
+>   staging: rtl8712: rtl871x_mp_ioctl: Remove a bunch of unused tables
+>   staging: rtl8723bs: core: rtw_recv: Mark debug variable as
+>     __maybe_unused
+>   staging: rtl8188eu: core: rtw_security: Fix some formatting and
+>     misdocumentation
+>   staging: rtl8723bs: core: rtw_security: Demote non-conformant
+>     kernel-doc header
+>   staging: rtl8723bs: core: rtw_sta_mgt: Remove unused variable 'psta'
+>   staging: rtl8723bs: core: rtw_sta_mgt: Return error value directly
+>   staging: octeon: ethernet-tx: Fix formatting issue in function header
+>   staging: rtl8723bs: core: rtw_wlan_util: Remove unused variable
+>     'start_seq'
+>   staging: rtl8712: rtl871x_mp_ioctl: Move a large data struct onto the
+>     heap
+>   staging: iio: frequency: ad9834: Provide missing description for
+>     'devid'
+>   staging: nvec: Fix a bunch of kernel-doc issues
+>   staging: ks7010: ks_hostif: Remove a bunch of unused variables
+>   staging: fwserial: Demote a whole host of kernel-doc abuses
+>   staging: sm750fb: sm750_accel: Provide description for 'accel' and fix
+>     function naming
+>   staging: most: net: Fix some kernel-doc formatting issues
+>   staging: vt6655: upc: Suppress set but not used warning in macro
+>   staging: rtl8192u: ieee80211_softmac: Move a large data struct onto
+>     the heap
+>   staging: most: dim2: Provide missing descriptions and fix doc-rot
+>   staging: rtl8723bs: core: rtw_ieee80211: Remove seemingly pointless
+>     copy
+>   staging: rtl8723bs: core: rtw_mlme: 'retry' is only used if REJOIN is
+>     set
+>   staging: rtl8723bs: core: rtw_mlme_ext: 'evt_seq' is only used if
+>     CHECK_EVENT_SEQ is set
+>   staging: most: i2c: Fix a little doc-rot
+>   staging: most: dim2: hal: Fix one kernel-doc header and demote two
+>     non-conforming ones
+>   staging: most: dim2: hal: Demote non-conformant kernel-doc headers
+>   staging: axis-fifo: axis-fifo: Fix some formatting issues
+>   staging: rtl8188eu: os_dep: ioctl_linux: Move 2 large data buffers
+>     into the heap
+>   staging: fbtft: fb_ili9320: Remove unused variable 'ret'
+>   staging: rtl8723bs: core: rtw_ieee80211: Fix incorrectly named
+>     function
+>   staging: rtl8723bs: hal: odm_NoiseMonitor: Remove unused variable and
+>     dead code
+>   staging: rtl8188eu: os_dep: mon: Demote non-conforming kernel-doc
+>     headers
+>   staging: rtl8188eu: os_dep: rtw_android: Demote kernel-doc abuse
+>   staging: rtl8723bs: hal: rtl8723b_hal_init: Remove unused variable and
+>     dead code
+>   staging: rtl8723bs: hal: rtl8723b_phycfg: Fix a bunch of misnamed
+>     functions
+>   staging: rtl8723bs: hal: sdio_halinit: 'start' is only used if debug
+>     is enabled
+>   staging: rtl8723bs: hal: sdio_ops: Mark used 'err' as __maybe_unused
+>     and remove another
+>   staging: rtl8723bs: os_dep: ioctl_cfg80211: 'ack' is used when debug
+>     is enabled
+>   staging: comedi: drivers: jr3_pci: Remove set but unused variable
+>     'min_full_scale'
+>   staging: comedi: drivers: ni_tio: Fix slightly broken kernel-doc and
+>     demote others
+>   staging: comedi: drivers: ni_routes: Demote non-conforming kernel-doc
+>     headers
+>   staging: axis-fifo: axis-fifo: Fix function naming in the
+>     documentation
+>   staging: rtl8723bs: hal: odm_NoiseMonitor: Remove unused variable
+>     'func_start'
+>   staging: rtl8723bs: core: rtw_mlme_ext: Move very large data buffer
+>     onto the heap
+>   staging: rtl8723bs: hal: rtl8723b_hal_init: Mark a bunch of debug
+>     variables as __maybe_unused
+>   staging: comedi: drivers: ni_mio_common: Move 'range_ni_E_ao_ext' to
+>     where it is used
+>   staging: comedi: drivers: comedi_isadma: Fix misspelling of
+>     'dma_chan1'
+>   staging: rtl8723bs: hal: sdio_halinit: Remove unused variable 'ret'
+> 
+>  drivers/staging/android/ashmem.c              |   1 +
+>  drivers/staging/axis-fifo/axis-fifo.c         |  18 +--
+>  drivers/staging/comedi/drivers/comedi_8254.c  |   3 +-
+>  .../staging/comedi/drivers/comedi_isadma.c    |   2 +-
+>  drivers/staging/comedi/drivers/jr3_pci.c      |   3 +-
+>  .../staging/comedi/drivers/ni_mio_common.c    |   9 --
+>  drivers/staging/comedi/drivers/ni_routes.c    |   6 +-
+>  drivers/staging/comedi/drivers/ni_stc.h       |   9 +-
+>  drivers/staging/comedi/drivers/ni_tio.c       |  12 +-
+>  drivers/staging/fbtft/fb_ili9320.c            |   3 +-
+>  drivers/staging/fwserial/fwserial.c           |  46 +++----
+>  drivers/staging/iio/frequency/ad9834.c        |   5 +-
+>  drivers/staging/ks7010/ks_hostif.c            |  14 +-
+>  drivers/staging/most/dim2/dim2.c              |  23 ++--
+>  drivers/staging/most/dim2/hal.c               |  10 +-
+>  drivers/staging/most/i2c/i2c.c                |  12 +-
+>  drivers/staging/most/net/net.c                |   6 +-
+>  drivers/staging/nvec/nvec.c                   |   7 +-
+>  drivers/staging/octeon/ethernet-tx.c          |   1 -
+>  drivers/staging/qlge/qlge_main.c              |   4 +-
+>  .../staging/rtl8188eu/core/rtw_ieee80211.c    |   2 +-
+>  .../staging/rtl8188eu/core/rtw_ioctl_set.c    |   8 ++
+>  drivers/staging/rtl8188eu/core/rtw_security.c |  10 +-
+>  .../staging/rtl8188eu/include/rtw_mlme_ext.h  |   8 --
+>  .../staging/rtl8188eu/os_dep/ioctl_linux.c    |  12 +-
+>  drivers/staging/rtl8188eu/os_dep/mon.c        |   6 +-
+>  .../staging/rtl8188eu/os_dep/rtw_android.c    |   2 +-
+>  .../rtl8192u/ieee80211/ieee80211_softmac.c    |   9 +-
+>  drivers/staging/rtl8192u/r8192U_core.c        |  11 +-
+>  drivers/staging/rtl8192u/r819xU_cmdpkt.c      |  41 ------
+>  drivers/staging/rtl8192u/r819xU_phy.c         |  48 +++++--
+>  drivers/staging/rtl8712/rtl871x_mp_ioctl.c    |  29 ++--
+>  drivers/staging/rtl8712/rtl871x_mp_ioctl.h    | 127 ------------------
+>  .../staging/rtl8723bs/core/rtw_ieee80211.c    |   6 +-
+>  drivers/staging/rtl8723bs/core/rtw_mlme.c     |  17 +--
+>  drivers/staging/rtl8723bs/core/rtw_mlme_ext.c |  19 +--
+>  drivers/staging/rtl8723bs/core/rtw_recv.c     |   2 +-
+>  drivers/staging/rtl8723bs/core/rtw_security.c |   2 +-
+>  drivers/staging/rtl8723bs/core/rtw_sta_mgt.c  |  10 +-
+>  .../staging/rtl8723bs/core/rtw_wlan_util.c    |   4 +-
+>  .../staging/rtl8723bs/hal/odm_NoiseMonitor.c  |   9 +-
+>  .../staging/rtl8723bs/hal/rtl8723b_hal_init.c |  21 +--
+>  .../staging/rtl8723bs/hal/rtl8723b_phycfg.c   |  10 +-
+>  drivers/staging/rtl8723bs/hal/sdio_halinit.c  |   8 +-
+>  drivers/staging/rtl8723bs/hal/sdio_ops.c      |   7 +-
+>  .../staging/rtl8723bs/os_dep/ioctl_cfg80211.c |   2 +-
+>  drivers/staging/sm750fb/sm750_accel.c         |   4 +-
+>  drivers/staging/vt6655/upc.h                  |   2 +-
+>  drivers/staging/wlan-ng/cfg80211.c            |  30 +++--
+>  49 files changed, 256 insertions(+), 404 deletions(-)
+> 
+> Cc: ac100@lists.launchpad.net
+> Cc: "Alexander A. Klimov" <grandmaster@al2klimov.de>
+> Cc: Allen Pais <apais@linux.microsoft.com>
+> Cc: Anders Blomdell <anders.blomdell@control.lth.se>
+> Cc: Andrea Merello <andrea.merello@gmail.com>
+> Cc: Andres Klode <jak@jak-linux.org>
+> Cc: Andrey Shvetsov <andrey.shvetsov@k2l.de>
+> Cc: "Arve Hjønnevåg" <arve@android.com>
+> Cc: Christian Brauner <christian@brauner.io>
+> Cc: Comedi <comedi@comedi.org>
+> Cc: "David A. Schleef" <ds@schleef.org>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: Fabio Aiuto <fabioaiuto83@gmail.com>
+> Cc: Florian Schilhabel <florian.c.schilhabel@googlemail.com>
+> Cc: Forest Bond <forest@alittletooquiet.net>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Herman.Bruyninckx@mech.kuleuven.ac.be
+> Cc: H Hartley Sweeten <hsweeten@visionengravers.com>
+> Cc: Hridya Valsaraju <hridya@google.com>
+> Cc: Ian Abbott <abbotti@mev.co.uk>
+> Cc: Ilya Petrov <ilya.muromec@gmail.com>
+> Cc: Jacob Feder <jacobsfeder@gmail.com>
+> Cc: Jerry chuang <wlanfae@realtek.com>
+> Cc: Joel Fernandes <joel@joelfernandes.org>
+> Cc: "John B. Wyatt IV" <jbwyatt4@gmail.com>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: "J.P. Mellor" <jpmellor@rose-hulman.edu>
+> Cc: karthik alapati <mail@karthek.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Kernel Team <ac100@lists.lauchpad.net>
+> Cc: Klaas.Gadeyne@mech.kuleuven.ac.be
+> Cc: Larry Finger <Larry.Finger@lwfinger.net>
+> Cc: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: linux-fbdev@vger.kernel.org
+> Cc: linux-iio@vger.kernel.org
+> Cc: linux-pwm@vger.kernel.org
+> Cc: linux-staging@lists.linux.dev
+> Cc: linux-tegra@vger.kernel.org
+> Cc: Marc Dietrich <marvin24@gmx.de>
+> Cc: Marco Cesati <marcocesati@gmail.com>
+> Cc: Martijn Coenen <maco@android.com>
+> Cc: Michael Hennerich <Michael.Hennerich@analog.com>
+> Cc: Michael Straube <straube.linux@gmail.com>
+> Cc: Mori Hess <fmhess@users.sourceforge.net>
+> Cc: "Nícolas F. R. A. Prado" <nfraprado@protonmail.com>
+> Cc: Peter Hurley <peter@hurleysoftware.com>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: Pierre-Hugues Husson <phhusson@free.fr>
+> Cc: Robert Love <rlove@google.com>
+> Cc: Romain Perier <romain.perier@gmail.com>
+> Cc: Ross Schmidt <ross.schm.dev@gmail.com>
+> Cc: "Spencer E. Olson" <olsonse@umich.edu>
+> Cc: Stanley@BB.SD3
+> Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+> Cc: Sumera Priyadarsini <sylphrenadin@gmail.com>
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Cc: Teddy Wang <teddy.wang@siliconmotion.com>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Todd Kjos <tkjos@android.com>
+> Cc: Truxton Fulton <trux@truxton.com>
+> Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
+> Cc: Wim.Meeussen@mech.kuleuven.ac.be
+> Cc: WLAN FAE <wlanfae@realtek.com>
+> Cc: Zhansaya Bagdauletkyzy <zhansayabagdaulet@gmail.com>
+> -- 
+> 2.27.0
+> 
 
---ssHf/w3M5y+cB+4m
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Tue, Apr 13, 2021 at 07:56:31PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> On Tue, Apr 13, 2021 at 01:51:15PM +0200, Thierry Reding wrote:
-> > On Mon, Apr 12, 2021 at 06:27:23PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> > > On Mon, Apr 12, 2021 at 03:27:41PM +0200, Clemens Gruber wrote:
-> > > > Add the flag and corresponding documentation for PWM_USAGE_POWER.
-> > >=20
-> > > My concern here in the previous round was that PWM_USAGE_POWER isn't a
-> > > name that intuitively suggests its semantic. Do you disagree?
-> >=20
-> > I suggested PWM_USAGE_POWER because I think it accurately captures what
-> > we want here.
-> >=20
-> > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/pwm/pwm.txt | 3 +++
-> > > >  include/dt-bindings/pwm/pwm.h                 | 1 +
-> > > >  2 files changed, 4 insertions(+)
-> > > >=20
-> > > > diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Docume=
-ntation/devicetree/bindings/pwm/pwm.txt
-> > > > index 084886bd721e..fe3a28f887c0 100644
-> > > > --- a/Documentation/devicetree/bindings/pwm/pwm.txt
-> > > > +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
-> > > > @@ -46,6 +46,9 @@ period in nanoseconds.
-> > > >  Optionally, the pwm-specifier can encode a number of flags (define=
-d in
-> > > >  <dt-bindings/pwm/pwm.h>) in a third cell:
-> > > >  - PWM_POLARITY_INVERTED: invert the PWM signal polarity
-> > > > +- PWM_USAGE_POWER: Only care about the power output of the signal.=
- This
-> > > > +  allows drivers (if supported) to optimize the signals, for examp=
-le to
-> > > > +  improve EMI and reduce current spikes.
-> > >=20
-> > > IMHO there are too many open questions about which freedom this gives=
- to
-> > > the lowlevel driver. If the consumer requests .duty_cycle =3D 25ns +
-> > > .period =3D 100ns, can the driver provide .duty_cycle =3D 25s + .peri=
-od =3D
-> > > 100s which nominally has the same power output? Let's not introduce m=
-ore
-> > > ambiguity than there already is.
-> >=20
-> > The freedom given to the driver should be to adjust the signal within
-> > reasonable bounds. Changing the time unit by a factor of 1000000000 is
-> > not within reason, and I doubt anyone would interpret it that way, even
-> > if we didn't document this at all.
->=20
-> Please define a rule that allows to judge if any given implementation is
-> correct or not. For the record neither "within reasonable bounds" nor "a
-> factor of 1000000000 is not within reason" is good enough.
+what about splitting this series in smaller per driver series?
 
-We haven't had any rules thus far and I have yet to see a single report
-that drivers get this completely wrong. So "within reason", which I
-think is what driver authors will do by default, is good enough in
-practice.
+thank you,
 
-> This is not only important to be able to review drivers that implement
-> it, but also for consumers, because they should know what to expect.
-
-Again, consumers should expect that the PWM driver will do something
-that is within reasonable margins. If that ever ends up being wrong for
-a given use-case we may need to change that.
-
-But I don't think it's necessary to take out all flexibility if we don't
-have to. As long as things work fine there's no reason to make the rules
-any more strict.
-
-> > To be frank I think that quest of yours to try and rid the PWM API of
-> > all ambiguity is futile.
->=20
-> I consider my quest about rounding reasonable. And I think this is
-> painful because when the PWM framework was introduced it was too much ad
-> hoc and the APIs were not thought through enough. And because I don't
-> want to have that repeated, I express my concerns here.
-
-Maybe try to look at this from another perspective. Maybe what you call
-adhoc API was actually deliberately designed this way. To be honest I
-don't know what the intentions were when the original PWM API was
-created, that was way before I took on maintenance of the PWM subsystem.
-The PWM framework adopted the existing API and there was no reason to
-change it because it worked just fine.
-
-And I still don't see a reason for the API to change. Like I said, if we
-ever run into a case where the current flexibility gets in the way and
-yields unpredictable or unusable results, then that's something we have
-to improve. But I don't think we should make any such changes if they're
-not necessary, because then we may end up making matters worse.
-
-Also, I think this actually corroborates the need for something like the
-usage flags in the PWM specifier. Currently drivers will do their best
-to generate a PWM signal that's as close as possible to the requested
-parameters. If that's not enough for a specific use-case, then that's
-something that the new use-case has to describe somehow. They could do
-that using a usage flag (perhaps something like PWM_USAGE_STRICT, which
-may tell the driver to return an error if the requested parameters
-cannot be applied exactly). Another possibility is to give consumers a
-way of running a given state through the driver but not applying just
-yet so that they can inspect what the driver would have programmed and
-then make adjustments (that's along the lines of what you had in mind
-with the "round state" concept, I suppose).
-
-> > I've been trying to be lenient because you seem
-> > motivated, but I think you're taking this too far. There are always
-> > going to be cases that aren't completely clear-cut and where drivers
-> > need the flexibility to cheat in order to be useful at all. If we get to
-> > a point where everything needs to be 100% accurate, the majority of the
-> > PWM controllers won't be usable at all.
-> >=20
-> > Don't let perfect be the enemy of good.
->=20
-> I admit here I don't have a constructive idea how to define what is
-> needed.
->=20
-> For example if we only care about the relative duty cycle, a consumer
-> requests
->=20
-> 	.period =3D 1045
-> 	.duty_cyle =3D 680
->=20
-> and the driver can provide multiples of 100 ns for both .period and
-> .duty_cycle, the candidates that might be sensible to chose from are
-> (IMHO):
->=20
->  - exact relative duty:
->=20
-> 	.period =3D 104500
-> 	.duty_cycle =3D 68000
->=20
->  - round both values in the same direction, minimizing error
->=20
->  	.period =3D 1100
-> 	.duty_cycle =3D 700
->=20
->    (requested relative duty =3D 65.07%, implemented =3D 63.64%; when
->    rounding both down we get 60%)
->=20
->  - round both values mathematically:=20
->=20
->  	.period =3D 1000
-> 	.duty_cycle =3D 700
->=20
->    (yielding a relative duty of 70% instead of the requested 65.07%)
->=20
->  - Maybe
->=20
->  	.period =3D 1000
-> 	.duty_cycle =3D 600
->=20
->    might also be preferable for some consumers?! (60%)
->=20
->  - Maybe
->=20
->  	.period =3D 2000
-> 	.duty_cycle =3D 1300
->=20
->    is a good compromise because the relative duty is nearly exactly
->    matched and the period is only stretched by a factor < 2.
->=20
-> In my eyes a driver author should be told which of these options should
-> be picked. Do you consider it obvious which of these options is the
-> objective best? If so why? Do you agree that we should tell driver
-> authors how to implement this before we have several drivers that all
-> implement their own ideas and getting this in a consistent state is
-> another pain?
-
-We already have several drivers implementing things inconsistently. And
-again, I don't see how that's a problem. Most of the time, values for
-period will be hand-picked to match the requirements of the use-case on
-a given platform (for backlights or LEDs, for example, you don't want a
-period that's too long, because then you'll get flicker). The duty cycle
-is then simply used as a way of getting a power output of the desired
-percentage. For something like PWM backlight, if interpolation doesn't
-work, you have the option of specifying discrete levels with hand-picked
-values.
-
-Backlight and LEDs are the vast majority of applications for PWMs used
-in the kernel today. Another category would be regulators and they end
-up being pretty much the same in where the values come from.
-
-The one use-case that's perhaps a bit more tricky is the sysfs interface
-because people can throw whatever they want at it. But even that is not
-likely to be problematic in practice because users will either be
-satisfied with the result that they get when computationally getting the
-numbers, or end up hand-picking values for those as well, with the only
-difference being that they are programmed from userspace.
-
-For the particular case of PWM_USAGE_POWER, I think it really only says
-that the power output of the signal should be as requested. It does not
-mean that the driver can pick whatever values it wants. Drivers should
-still try to match period and duty cycle as closely as possible because
-there's not enough other information to know if, for example, stretching
-the clock by a factor of 2 is reasonable for the use-case.
-
-> (My bet is you are lax and don't consider consistency among drivers soo
-> important. In this case we don't agree. I think it's important for
-> consumer driver authors to be able to rely on some expectations
-> independently which lowlevel driver is in use.)
-
-Well, yeah. Consumers should be able to rely on the expectation that the
-provider will try to best match the given parameters. Something like
-PWM_USAGE_POWER can be used to give the driver a bit more freedom, but
-it doesn't mean it should switch into crazy mode.
-
-Again, most of the time the values that we're dealing with here will be
-hand-picked for a given use-case, which means a given PWM channel and
-what it will be used for. So the values that the API and driver get are
-going to be something that the driver can set to within a reasonable
-margin, otherwise users will go and pick a better value.
-
-So in practice these problems just don't exist, and we're spending a
-huge amount of time tryng to solve a non-existent problem. And that's
-the reason why we're not coming up with a good solution. You can't come
-up with a good solution to a problem that doesn't exist because you
-don't know any of the parameters.
-
-Thierry
-
---ssHf/w3M5y+cB+4m
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmB4aVMACgkQ3SOs138+
-s6FulBAAloD3l7tCQd5lvP1mGbBi2vIvvbFliPxzoiBSZDt3iENH5i8nZv8y78cX
-aNfvdDJh0SRNQ8GzObsiWFPs0doKPxhnmAZX+aPwYiMSyNPbC8xT5+sNCTEKGpq1
-WICN387DTROPd+lSCTmDP+G4tUGdoq0f26otjWQEtGm1YOLwIqGmAJ6tFl7+i22Z
-Tz/GQ7kDoTjYmCRzg1MqOYgFDquKOQsxvDhUikpHcfnE4iqJefLr7G2V1VNbbveL
-weIt5VueY2BWtWHqWvOzoaH4AKtaEQ9XrKo5c1HybNodKhKX0vVD40F4FADFQE/6
-FoRYjR9Ajl7+EvWHBxPYBQhW/7OhMdenDnLfmJriSIjpyoEXkyWnjNd3JaHRYPRP
-6eE6+pXkU/wMb7gAHvUelwn/7l/a1OPIZQBQYZDRiNTqHU3dglqO9YSjOTAorumB
-DYI1z/AhJDOhQ7dOYaYZmclisj2ZwefwIBwMdTQSAeYB08Y3s/aD1rH+tW6oOtEt
-nzjAtGYuVW1Xhc3ljbBTOppvgpPwjv06W9zq+64sTZAvJUqxVCsBasBK681qxhWF
-XoYMaMaLoKz1OyrrAXUexkwNRDbmvmJRY8558lCvBG+WMjnW8u1CuOyeIzlppV38
-QQSRb8UM4jv43HiUH6gQlw+RG8tTcNyGJhz+a4YLYqgREaIW3yg=
-=izae
------END PGP SIGNATURE-----
-
---ssHf/w3M5y+cB+4m--
+fabio
