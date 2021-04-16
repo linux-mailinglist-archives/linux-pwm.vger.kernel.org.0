@@ -2,131 +2,121 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 99A32361F98
-	for <lists+linux-pwm@lfdr.de>; Fri, 16 Apr 2021 14:15:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC5BF362181
+	for <lists+linux-pwm@lfdr.de>; Fri, 16 Apr 2021 15:54:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235523AbhDPMQJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 16 Apr 2021 08:16:09 -0400
-Received: from mo-csw1514.securemx.jp ([210.130.202.153]:40234 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232130AbhDPMQJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Apr 2021 08:16:09 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1514) id 13GCFQJd029781; Fri, 16 Apr 2021 21:15:26 +0900
-X-Iguazu-Qid: 34trSOSPthsRJckbCs
-X-Iguazu-QSIG: v=2; s=0; t=1618575326; q=34trSOSPthsRJckbCs; m=7HPJQplQYDVdOr5qiRc8LTUir5zBahKRvEqdYSEGzxQ=
-Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
-        by relay.securemx.jp (mx-mr1512) id 13GCFPEU030896
-        (version=TLSv1.2 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 16 Apr 2021 21:15:25 +0900
-Received: from enc01.toshiba.co.jp (enc01.toshiba.co.jp [106.186.93.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by imx2-a.toshiba.co.jp (Postfix) with ESMTPS id 0C1031000DC;
-        Fri, 16 Apr 2021 21:15:25 +0900 (JST)
-Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc01.toshiba.co.jp  with ESMTP id 13GCFOLS011662;
-        Fri, 16 Apr 2021 21:15:24 +0900
-Date:   Fri, 16 Apr 2021 21:15:23 +0900
-From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org, punit1.agrawal@toshiba.co.jp,
-        yuji2.ishikawa@toshiba.co.jp, linux-arm-kernel@lists.infradead.org,
+        id S235541AbhDPNy5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 16 Apr 2021 09:54:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235478AbhDPNy5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Apr 2021 09:54:57 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CC00C061574;
+        Fri, 16 Apr 2021 06:54:31 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id r9so42270665ejj.3;
+        Fri, 16 Apr 2021 06:54:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KDk3amLs0Zl+rRoVpfXZhI0atBu/zQbhsj1RfUtselA=;
+        b=lKlNd6BbkPwTyNkHOTZRnX0iDbb2TgVGLzu55+YftgoNzLJSSJGaYPoyg8E0dZ8xR0
+         rYsnThJY3dl2H62jYsA+2E8//nx/yafkJUec1BohIIwhEhuONmNkTCM8VD/JrLX6FX7q
+         tYD1tvwGKkV3CNzzNRWTsDtMya7adSbsx7eI4S56Wfc9WVkdiUtdUHcE3+FEIwNl8xuv
+         MRUsygSswlXwxmDVno4FB3/rLGn3tKlibgZX6LL57aLX3WQYnwv6pV3tNgdNdAGj3gBl
+         bwsvPdcQNwUA201LiM7ulpeb40D8T6eryJeZ7b0GMx4/Gz0V2HwOHNT4PQPAWFfZ66jQ
+         7jJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KDk3amLs0Zl+rRoVpfXZhI0atBu/zQbhsj1RfUtselA=;
+        b=OHtwKcuFxjPYgdsfI9SYQ6E5HQ39N8KYmurVWijflqUmWSgYScoW+r2fgBPW2KpDCs
+         2R685b5hieSEPvMrzRZ8MBRNNqA3jIWKY5e9ORHVIye9tvG4HFVzzxUp/ABDLfPTfmnt
+         XOYMtsJnRe4b/TuNDXY2Yo+LvZ7QmFmTZS8VgQkdlLT08N0iu5zuS5iKU3H52zd3LtnH
+         wgdzCaFYhSb4VWTKxXYJRMLbF859OAsGeod93VxS9JngTPl4Win446TASp0sGT4aPkoJ
+         Ch8P1oJryRMnY4GqqsaM6UOpSgTBKVW2WZY+B7pxyA4x5ze8b4/3+2En0JAnehacDIBD
+         456A==
+X-Gm-Message-State: AOAM532waVK6MveGk5xadzCwjXSFV9NvFoc/stidq6kv/fCMnL8JwGzf
+        5nGoyNVbX/CiD8Ou0WVyNNQ=
+X-Google-Smtp-Source: ABdhPJxsoAA0G4Bt4HknjHiIPZuQRBEjgsZO5sOBy03fib7O8u7qlp7wFovDtI2HB59oKaG/6ZikAA==
+X-Received: by 2002:a17:906:85cb:: with SMTP id i11mr8075474ejy.311.1618581269965;
+        Fri, 16 Apr 2021 06:54:29 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id c12sm5968623edx.54.2021.04.16.06.54.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Apr 2021 06:54:28 -0700 (PDT)
+Date:   Fri, 16 Apr 2021 15:55:11 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Clemens Gruber <clemens.gruber@pqgruber.com>,
+        linux-pwm@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] pwm: visconti: Add Toshiba Visconti SoC PWM
- support
-X-TSB-HOP: ON
-Message-ID: <20210416121523.c34trzsrlcjuzirl@toshiba.co.jp>
-References: <20210409230837.1919744-1-nobuhiro1.iwamatsu@toshiba.co.jp>
- <20210409230837.1919744-3-nobuhiro1.iwamatsu@toshiba.co.jp>
- <20210410135321.oissremqropvrpd3@pengutronix.de>
- <20210412025536.i5chpp6sighunvfx@toshiba.co.jp>
- <20210412070232.6q3cgqvuj53p4cmi@pengutronix.de>
- <20210416080721.oa7xdvu22w2b2rkf@toshiba.co.jp>
- <20210416094426.x4gyw3drp2fcwczs@pengutronix.de>
+Subject: Re: [PATCH v8 4/8] dt-bindings: pwm: Support new PWM_USAGE_POWER flag
+Message-ID: <YHmXPyf+XjgJs3C8@orome.fritz.box>
+References: <20210412132745.76609-1-clemens.gruber@pqgruber.com>
+ <20210412132745.76609-4-clemens.gruber@pqgruber.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="XbFHZBPVqfivajiW"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210416094426.x4gyw3drp2fcwczs@pengutronix.de>
+In-Reply-To: <20210412132745.76609-4-clemens.gruber@pqgruber.com>
+User-Agent: Mutt/2.0.6 (98f8cb83) (2021-03-06)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
 
-Thanks for your comment.
+--XbFHZBPVqfivajiW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 16, 2021 at 11:44:26AM +0200, Uwe Kleine-König wrote:
-> Hello Nobuhiro,
-> 
-> On Fri, Apr 16, 2021 at 05:07:21PM +0900, Nobuhiro Iwamatsu wrote:
-> > On Mon, Apr 12, 2021 at 09:02:32AM +0200, Uwe Kleine-König wrote:
-> > > On Mon, Apr 12, 2021 at 11:55:36AM +0900, Nobuhiro Iwamatsu wrote:
-> > > > On Sat, Apr 10, 2021 at 03:53:21PM +0200, Uwe Kleine-König wrote:
-> > > > > Can you please put a paragraph analogous to the one in pwm-sifive in the
-> > > > > same format. This simplified keeping an overview about the oddities of
-> > > > > the various supported chips.
-> > > > 
-> > > > OK, I will check pwm-sifive's, and add.
-> > 
-> > I will add the following :
-> > 
-> >  * Limitations:
-> >  * - PIPGM_PWMC is a 2-bit divider (00: 1, 01: 2, 10: 4, 11: 8) for the input
-> >  *   clock running at 1 MHz.
-> 
-> I would strip that to:
-> 
->  - Fixed input clock running at 1 MHz
-> 
+On Mon, Apr 12, 2021 at 03:27:41PM +0200, Clemens Gruber wrote:
+> Add the flag and corresponding documentation for PWM_USAGE_POWER.
+>=20
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm.txt | 3 +++
+>  include/dt-bindings/pwm/pwm.h                 | 1 +
+>  2 files changed, 4 insertions(+)
 
-OK, I will update.
+Rob, what are your thoughts on this? I've been thinking about this some
+more and I'm having second thoughts about putting this into device tree
+because it doesn't actually describe a property of the PWM hardware but
+rather a use-case specific hint. It's a bit of a gray area because this
+is just part of the PWM specifier which already has use-case specific
+"configuration", such as the period and the polarity.
 
-> >  * - When the settings of the PWM are modified, the new values are shadowed
-> >  *   in hardware until the PIPGM_PCSR register is written and the currently
-> >  *   running period is completed. This way the hardware switches atomically
-> >  *   from the old setting to the new.
-> >  * - Disabling the hardware completes the currently running period and keeps
-> >  *   the output at low level at all times.
-> 
-> This looks fine.
->  
-> > > For me the critical (and only) difference between "off" and
-> > > "duty cycle = 0" is that when a new configuration is to be applied. In
-> > > the "off" state a new period can (and should) start immediately, while
-> > > with "duty_cycle = 0" the rising edge should be delayed until the
-> > > currently running period is over.[1]
-> > > 
-> > > So the thing to do here (IMHO) is:
-> > > 
-> > > Iff with PIPGM_PCSR = 0 configuring a new setting (that is finalized
-> > > with writing a non-zero value to PIPGM_PCSR) completes the currently
-> > > running period, then always assume the PWM as enabled.
-> > 
-> > Yes, this device works that way.
-> 
-> OK, then please use
-> 
-> 	state->enabled = true
-> 
-> unconditionally in visconti_pwm_get_state().
-> 
+Perhaps a better place for this is within the PWM API? We could add the
+same information into struct pwm_state and then consumers that don't
+care about specifics of the signal (such as pwm-backlight) can set that
+flag when they request a state to be applied.
 
-Please let me check.
-If I unconditionally add 'state->enabled = true' to visconti_pwm_get_state(),
-state->enabled is set to true because visconti_pwm_get_state() is called when
-the device is created (this is when I write the device number to the export of
-/sys/class/pwm/pwmchip0 ).
-And since PIPGM_PCSR is 0 in this state, the pulse by PWM is not output.
-However, I think this means that the device is working as this driver.
-Is this correct?
+Thierry
 
-> Best regards
-> Uwe
-> 
+--XbFHZBPVqfivajiW
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Best regards,
-  Nobuhiro
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmB5lzwACgkQ3SOs138+
+s6EIRBAAopZq0WA+PGKaCMBdc3iqIKquJL4ZtHYLNy7PIFmUgxNw2bn/B3IRihS1
+WKd0Tvt9OYiP9vMhVKdUUm2W0How6aUWgACYAfj1O8LZU5Xa44ENeXSCkACBN6mW
+A+ff1QrfNZqxE9BtFPChjTKsm2ty+2ybzT9Z5RcwcmWoZn2/rioZGsx79QzuO02Y
+D1fk3L7jkPa7sZsqwkJOdBgSb31hgMzPSOxm3VZaJoxIxr+uIEqJVHNG5vpw/cY0
+EStGp0wZc5uROb/zFFlHTi5JuAV+Mxrk/2A6vUU+IL6OwFQ3o1toTQToIW+oK1Ul
+1gh/Ts3lFj3O6ALj/8n7pW6eN6JAnE0ZZo75ccWHmaNmzypPNiePA0Vit1WDklZM
+KtdIHdCTC0i55R90wFQNPZBhYIfk72hNUJGWjHQV5AwmjwmsXGPLY6q0qvl11kzy
+kzDg7CSF2E1BuIb4VGAg+fdJzsoaVQa4pbNT1TYB94eQvPZXUvJ7urNBOntKWH6T
+IpDp/DJd5btx+qsXLFKF3fqyEwYlpfQkZlCqhEBM8Qivwa7pMrCLp8YpsDBXGwPK
+36GJAzwDQRRx2Efgugk898nZ60dCllaJyt+rMs8HpCkkb6P8OsRuXrrgEcOVLtzl
+MkQ1FhpXZOjiIcCh1tqcfjv/7KXCbkam1O2i7d1JSpiHbAzL/Cc=
+=GQic
+-----END PGP SIGNATURE-----
+
+--XbFHZBPVqfivajiW--
