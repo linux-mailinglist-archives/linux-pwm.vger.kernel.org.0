@@ -2,327 +2,227 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01196361AA5
-	for <lists+linux-pwm@lfdr.de>; Fri, 16 Apr 2021 09:40:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94A96361B61
+	for <lists+linux-pwm@lfdr.de>; Fri, 16 Apr 2021 10:34:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239605AbhDPHbi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 16 Apr 2021 03:31:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45498 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234997AbhDPHbi (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 16 Apr 2021 03:31:38 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EDDDC6101B;
-        Fri, 16 Apr 2021 07:31:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1618558273;
-        bh=spgJ/KMOc4d8eiog9zRsZ7WW404gLjnTfxQjL9agoIo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aNTwh+//3BQ+3izHpEyUUN6ZjvmAEymvE2PvOK/acHqtScRI9RkSNPmty5eVLGuOA
-         5LEVSQ8XUrZME6EjnWu2nnFqVgw9KM400jhBkizWWxoVo3TYALqAmzKLUODv7cVfRD
-         HEPZPD7JvroVHnF+/W8f92rfFp0zwxc5OxIaQjb4=
-Date:   Fri, 16 Apr 2021 09:31:11 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Fabio Aiuto <fabioaiuto83@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        ac100@lists.launchpad.net,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        Allen Pais <apais@linux.microsoft.com>,
-        Anders Blomdell <anders.blomdell@control.lth.se>,
-        Andrea Merello <andrea.merello@gmail.com>,
-        Andres Klode <jak@jak-linux.org>,
-        Andrey Shvetsov <andrey.shvetsov@k2l.de>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        Comedi <comedi@comedi.org>, "David A. Schleef" <ds@schleef.org>,
-        dri-devel@lists.freedesktop.org,
-        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
-        Forest Bond <forest@alittletooquiet.net>,
-        Herman.Bruyninckx@mech.kuleuven.ac.be,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        Ilya Petrov <ilya.muromec@gmail.com>,
-        Jacob Feder <jacobsfeder@gmail.com>,
-        Jerry chuang <wlanfae@realtek.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "John B. Wyatt IV" <jbwyatt4@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        "J.P. Mellor" <jpmellor@rose-hulman.edu>,
-        karthik alapati <mail@karthek.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kernel Team <ac100@lists.lauchpad.net>,
-        Klaas.Gadeyne@mech.kuleuven.ac.be,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-staging@lists.linux.dev,
-        linux-tegra@vger.kernel.org, Marc Dietrich <marvin24@gmx.de>,
-        Marco Cesati <marcocesati@gmail.com>,
-        Martijn Coenen <maco@android.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Michael Straube <straube.linux@gmail.com>,
-        Mori Hess <fmhess@users.sourceforge.net>,
-        =?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado 
-        <nfraprado@protonmail.com>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Pierre-Hugues Husson <phhusson@free.fr>,
-        Robert Love <rlove@google.com>,
-        Romain Perier <romain.perier@gmail.com>,
-        Ross Schmidt <ross.schm.dev@gmail.com>,
-        "Spencer E. Olson" <olsonse@umich.edu>, Stanley@bb.sd3,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Sumera Priyadarsini <sylphrenadin@gmail.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
+        id S239979AbhDPIIX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 16 Apr 2021 04:08:23 -0400
+Received: from mo-csw1515.securemx.jp ([210.130.202.154]:51128 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235020AbhDPIIW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Apr 2021 04:08:22 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1515) id 13G87UGW003391; Fri, 16 Apr 2021 17:07:30 +0900
+X-Iguazu-Qid: 34tr9jB2dbDVDmZAI3
+X-Iguazu-QSIG: v=2; s=0; t=1618560450; q=34tr9jB2dbDVDmZAI3; m=yhkDNzpcSRv3VLZjqeMnV3i50xF81NUOuQ8lkDquMT8=
+Received: from imx12-a.toshiba.co.jp (imx12-a.toshiba.co.jp [61.202.160.135])
+        by relay.securemx.jp (mx-mr1511) id 13G87Sx8021320
+        (version=TLSv1.2 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 16 Apr 2021 17:07:28 +0900
+Received: from enc02.toshiba.co.jp (enc02.toshiba.co.jp [61.202.160.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by imx12-a.toshiba.co.jp (Postfix) with ESMTPS id BE3501000AA;
+        Fri, 16 Apr 2021 17:07:28 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id 13G87Sho013100;
+        Fri, 16 Apr 2021 17:07:28 +0900
+Date:   Fri, 16 Apr 2021 17:07:21 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Todd Kjos <tkjos@android.com>,
-        Truxton Fulton <trux@truxton.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Wim.Meeussen@mech.kuleuven.ac.be,
-        Zhansaya Bagdauletkyzy <zhansayabagdaulet@gmail.com>
-Subject: Re: [PATCH 00/57] Rid W=1 warnings from Staging
-Message-ID: <YHk9Pw1almEsimVW@kroah.com>
-References: <20210414181129.1628598-1-lee.jones@linaro.org>
- <20210416072749.GA1394@agape.jhs>
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-pwm@vger.kernel.org, punit1.agrawal@toshiba.co.jp,
+        yuji2.ishikawa@toshiba.co.jp, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] pwm: visconti: Add Toshiba Visconti SoC PWM
+ support
+X-TSB-HOP: ON
+Message-ID: <20210416080721.oa7xdvu22w2b2rkf@toshiba.co.jp>
+References: <20210409230837.1919744-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+ <20210409230837.1919744-3-nobuhiro1.iwamatsu@toshiba.co.jp>
+ <20210410135321.oissremqropvrpd3@pengutronix.de>
+ <20210412025536.i5chpp6sighunvfx@toshiba.co.jp>
+ <20210412070232.6q3cgqvuj53p4cmi@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210416072749.GA1394@agape.jhs>
+In-Reply-To: <20210412070232.6q3cgqvuj53p4cmi@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Apr 16, 2021 at 09:27:51AM +0200, Fabio Aiuto wrote:
-> On Wed, Apr 14, 2021 at 07:10:32PM +0100, Lee Jones wrote:
-> > This set is part of a larger effort attempting to clean-up W=1
-> > kernel builds, which are currently overwhelmingly riddled with
-> > niggly little warnings.
+Hi,
+
+Thanks for your review.
+
+On Mon, Apr 12, 2021 at 09:02:32AM +0200, Uwe Kleine-König wrote:
+> On Mon, Apr 12, 2021 at 11:55:36AM +0900, Nobuhiro Iwamatsu wrote:
+> > Hi Uwe,
 > > 
-> > Lee Jones (57):
-> >   staging: r8192U_core: Remove two unused variables 'ret' and
-> >     'reset_status'
-> >   staging: android: ashmem: Supply description for 'new_range'
-> >   staging: comedi_8254: Fix descriptions for 'i8254' and 'iobase'
-> >   staging: r8192U_core: Do not use kernel-doc formatting for !kernel-doc
-> >     headers
-> >   staging: r819xU_phy: Remove some local variables from the stack
-> >   staging: r819xU_cmdpkt: Remove functionless method
-> >     'cmpk_handle_query_config_rx'
-> >   staging: wlan-ng: cfg80211: Move large struct onto the heap
-> >   staging: rtw_ioctl_set: Move 'channel_table' to the only place it's
-> >     used
-> >   staging: rtl8188eu: core: rtw_ieee80211: Fix incorrectly documented
-> >     function
-> >   staging: rtl8723bs: core: rtw_mlme: Remove a bunch of unused variables
-> >   staging: rtl8723bs: core: rtw_mlme_ext: Deal with a bunch of unused
-> >     variables
-> >   staging: rtl8712: rtl871x_mp_ioctl: Remove a bunch of unused tables
-> >   staging: rtl8723bs: core: rtw_recv: Mark debug variable as
-> >     __maybe_unused
-> >   staging: rtl8188eu: core: rtw_security: Fix some formatting and
-> >     misdocumentation
-> >   staging: rtl8723bs: core: rtw_security: Demote non-conformant
-> >     kernel-doc header
-> >   staging: rtl8723bs: core: rtw_sta_mgt: Remove unused variable 'psta'
-> >   staging: rtl8723bs: core: rtw_sta_mgt: Return error value directly
-> >   staging: octeon: ethernet-tx: Fix formatting issue in function header
-> >   staging: rtl8723bs: core: rtw_wlan_util: Remove unused variable
-> >     'start_seq'
-> >   staging: rtl8712: rtl871x_mp_ioctl: Move a large data struct onto the
-> >     heap
-> >   staging: iio: frequency: ad9834: Provide missing description for
-> >     'devid'
-> >   staging: nvec: Fix a bunch of kernel-doc issues
-> >   staging: ks7010: ks_hostif: Remove a bunch of unused variables
-> >   staging: fwserial: Demote a whole host of kernel-doc abuses
-> >   staging: sm750fb: sm750_accel: Provide description for 'accel' and fix
-> >     function naming
-> >   staging: most: net: Fix some kernel-doc formatting issues
-> >   staging: vt6655: upc: Suppress set but not used warning in macro
-> >   staging: rtl8192u: ieee80211_softmac: Move a large data struct onto
-> >     the heap
-> >   staging: most: dim2: Provide missing descriptions and fix doc-rot
-> >   staging: rtl8723bs: core: rtw_ieee80211: Remove seemingly pointless
-> >     copy
-> >   staging: rtl8723bs: core: rtw_mlme: 'retry' is only used if REJOIN is
-> >     set
-> >   staging: rtl8723bs: core: rtw_mlme_ext: 'evt_seq' is only used if
-> >     CHECK_EVENT_SEQ is set
-> >   staging: most: i2c: Fix a little doc-rot
-> >   staging: most: dim2: hal: Fix one kernel-doc header and demote two
-> >     non-conforming ones
-> >   staging: most: dim2: hal: Demote non-conformant kernel-doc headers
-> >   staging: axis-fifo: axis-fifo: Fix some formatting issues
-> >   staging: rtl8188eu: os_dep: ioctl_linux: Move 2 large data buffers
-> >     into the heap
-> >   staging: fbtft: fb_ili9320: Remove unused variable 'ret'
-> >   staging: rtl8723bs: core: rtw_ieee80211: Fix incorrectly named
-> >     function
-> >   staging: rtl8723bs: hal: odm_NoiseMonitor: Remove unused variable and
-> >     dead code
-> >   staging: rtl8188eu: os_dep: mon: Demote non-conforming kernel-doc
-> >     headers
-> >   staging: rtl8188eu: os_dep: rtw_android: Demote kernel-doc abuse
-> >   staging: rtl8723bs: hal: rtl8723b_hal_init: Remove unused variable and
-> >     dead code
-> >   staging: rtl8723bs: hal: rtl8723b_phycfg: Fix a bunch of misnamed
-> >     functions
-> >   staging: rtl8723bs: hal: sdio_halinit: 'start' is only used if debug
-> >     is enabled
-> >   staging: rtl8723bs: hal: sdio_ops: Mark used 'err' as __maybe_unused
-> >     and remove another
-> >   staging: rtl8723bs: os_dep: ioctl_cfg80211: 'ack' is used when debug
-> >     is enabled
-> >   staging: comedi: drivers: jr3_pci: Remove set but unused variable
-> >     'min_full_scale'
-> >   staging: comedi: drivers: ni_tio: Fix slightly broken kernel-doc and
-> >     demote others
-> >   staging: comedi: drivers: ni_routes: Demote non-conforming kernel-doc
-> >     headers
-> >   staging: axis-fifo: axis-fifo: Fix function naming in the
-> >     documentation
-> >   staging: rtl8723bs: hal: odm_NoiseMonitor: Remove unused variable
-> >     'func_start'
-> >   staging: rtl8723bs: core: rtw_mlme_ext: Move very large data buffer
-> >     onto the heap
-> >   staging: rtl8723bs: hal: rtl8723b_hal_init: Mark a bunch of debug
-> >     variables as __maybe_unused
-> >   staging: comedi: drivers: ni_mio_common: Move 'range_ni_E_ao_ext' to
-> >     where it is used
-> >   staging: comedi: drivers: comedi_isadma: Fix misspelling of
-> >     'dma_chan1'
-> >   staging: rtl8723bs: hal: sdio_halinit: Remove unused variable 'ret'
+> > Thanks for your review.
 > > 
-> >  drivers/staging/android/ashmem.c              |   1 +
-> >  drivers/staging/axis-fifo/axis-fifo.c         |  18 +--
-> >  drivers/staging/comedi/drivers/comedi_8254.c  |   3 +-
-> >  .../staging/comedi/drivers/comedi_isadma.c    |   2 +-
-> >  drivers/staging/comedi/drivers/jr3_pci.c      |   3 +-
-> >  .../staging/comedi/drivers/ni_mio_common.c    |   9 --
-> >  drivers/staging/comedi/drivers/ni_routes.c    |   6 +-
-> >  drivers/staging/comedi/drivers/ni_stc.h       |   9 +-
-> >  drivers/staging/comedi/drivers/ni_tio.c       |  12 +-
-> >  drivers/staging/fbtft/fb_ili9320.c            |   3 +-
-> >  drivers/staging/fwserial/fwserial.c           |  46 +++----
-> >  drivers/staging/iio/frequency/ad9834.c        |   5 +-
-> >  drivers/staging/ks7010/ks_hostif.c            |  14 +-
-> >  drivers/staging/most/dim2/dim2.c              |  23 ++--
-> >  drivers/staging/most/dim2/hal.c               |  10 +-
-> >  drivers/staging/most/i2c/i2c.c                |  12 +-
-> >  drivers/staging/most/net/net.c                |   6 +-
-> >  drivers/staging/nvec/nvec.c                   |   7 +-
-> >  drivers/staging/octeon/ethernet-tx.c          |   1 -
-> >  drivers/staging/qlge/qlge_main.c              |   4 +-
-> >  .../staging/rtl8188eu/core/rtw_ieee80211.c    |   2 +-
-> >  .../staging/rtl8188eu/core/rtw_ioctl_set.c    |   8 ++
-> >  drivers/staging/rtl8188eu/core/rtw_security.c |  10 +-
-> >  .../staging/rtl8188eu/include/rtw_mlme_ext.h  |   8 --
-> >  .../staging/rtl8188eu/os_dep/ioctl_linux.c    |  12 +-
-> >  drivers/staging/rtl8188eu/os_dep/mon.c        |   6 +-
-> >  .../staging/rtl8188eu/os_dep/rtw_android.c    |   2 +-
-> >  .../rtl8192u/ieee80211/ieee80211_softmac.c    |   9 +-
-> >  drivers/staging/rtl8192u/r8192U_core.c        |  11 +-
-> >  drivers/staging/rtl8192u/r819xU_cmdpkt.c      |  41 ------
-> >  drivers/staging/rtl8192u/r819xU_phy.c         |  48 +++++--
-> >  drivers/staging/rtl8712/rtl871x_mp_ioctl.c    |  29 ++--
-> >  drivers/staging/rtl8712/rtl871x_mp_ioctl.h    | 127 ------------------
-> >  .../staging/rtl8723bs/core/rtw_ieee80211.c    |   6 +-
-> >  drivers/staging/rtl8723bs/core/rtw_mlme.c     |  17 +--
-> >  drivers/staging/rtl8723bs/core/rtw_mlme_ext.c |  19 +--
-> >  drivers/staging/rtl8723bs/core/rtw_recv.c     |   2 +-
-> >  drivers/staging/rtl8723bs/core/rtw_security.c |   2 +-
-> >  drivers/staging/rtl8723bs/core/rtw_sta_mgt.c  |  10 +-
-> >  .../staging/rtl8723bs/core/rtw_wlan_util.c    |   4 +-
-> >  .../staging/rtl8723bs/hal/odm_NoiseMonitor.c  |   9 +-
-> >  .../staging/rtl8723bs/hal/rtl8723b_hal_init.c |  21 +--
-> >  .../staging/rtl8723bs/hal/rtl8723b_phycfg.c   |  10 +-
-> >  drivers/staging/rtl8723bs/hal/sdio_halinit.c  |   8 +-
-> >  drivers/staging/rtl8723bs/hal/sdio_ops.c      |   7 +-
-> >  .../staging/rtl8723bs/os_dep/ioctl_cfg80211.c |   2 +-
-> >  drivers/staging/sm750fb/sm750_accel.c         |   4 +-
-> >  drivers/staging/vt6655/upc.h                  |   2 +-
-> >  drivers/staging/wlan-ng/cfg80211.c            |  30 +++--
-> >  49 files changed, 256 insertions(+), 404 deletions(-)
+> > On Sat, Apr 10, 2021 at 03:53:21PM +0200, Uwe Kleine-König wrote:
+> > > Hello,
+> > > 
+> > > just a few small details left to criticize ...
+> > > 
+> > > On Sat, Apr 10, 2021 at 08:08:37AM +0900, Nobuhiro Iwamatsu wrote:
+> > > > diff --git a/drivers/pwm/pwm-visconti.c b/drivers/pwm/pwm-visconti.c
+> > > > new file mode 100644
+> > > > index 000000000000..99d83f94ed86
+> > > > --- /dev/null
+> > > > +++ b/drivers/pwm/pwm-visconti.c
+> > > > @@ -0,0 +1,188 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > > +/*
+> > > > + * Toshiba Visconti pulse-width-modulation controller driver
+> > > > + *
+> > > > + * Copyright (c) 2020 TOSHIBA CORPORATION
+> > > > + * Copyright (c) 2020 Toshiba Electronic Devices & Storage Corporation
+> > > > + *
+> > > > + * Authors: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+> > > > + *
+> > > > + */
+> > > > +
+> > > > +#include <linux/err.h>
+> > > > +#include <linux/io.h>
+> > > > +#include <linux/module.h>
+> > > > +#include <linux/of_device.h>
+> > > > +#include <linux/platform_device.h>
+> > > > +#include <linux/pwm.h>
+> > > > +
+> > > > +#define PIPGM_PCSR(ch) (0x400 + 4 * (ch))
+> > > > +#define PIPGM_PDUT(ch) (0x420 + 4 * (ch))
+> > > > +#define PIPGM_PWMC(ch) (0x440 + 4 * (ch))
+> > > > +
+> > > > +#define PIPGM_PWMC_PWMACT		BIT(5)
+> > > > +#define PIPGM_PWMC_CLK_MASK		GENMASK(1, 0)
+> > > > +#define PIPGM_PWMC_POLARITY_MASK	GENMASK(5, 5)
+> > > > +
+> > > > +struct visconti_pwm_chip {
+> > > > +	struct pwm_chip chip;
+> > > > +	void __iomem *base;
+> > > > +};
+> > > > +
+> > > > +static inline struct visconti_pwm_chip *to_visconti_chip(struct pwm_chip *chip)
+> > > > +{
+> > > > +	return container_of(chip, struct visconti_pwm_chip, chip);
+> > > > +}
+> > > > +
+> > > > +static int visconti_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > > > +			      const struct pwm_state *state)
+> > > > +{
+> > > > +	struct visconti_pwm_chip *priv = to_visconti_chip(chip);
+> > > > +	u32 period, duty_cycle, pwmc0;
+> > > > +
+> > > > +	/*
+> > > > +	 * pwmc is a 2-bit divider for the input clock running at 1 MHz.
+> > > > +	 * When the settings of the PWM are modified, the new values are shadowed in hardware until
+> > > > +	 * the period register (PCSR) is written and the currently running period is completed. This
+> > > > +	 * way the hardware switches atomically from the old setting to the new.
+> > > > +	 * Also, disabling the hardware completes the currently running period and keeps the output
+> > > > +	 * at low level at all times.
+> > > 
+> > > Can you please put a paragraph analogous to the one in pwm-sifive in the
+> > > same format. This simplified keeping an overview about the oddities of
+> > > the various supported chips.
 > > 
-> > Cc: ac100@lists.launchpad.net
-> > Cc: "Alexander A. Klimov" <grandmaster@al2klimov.de>
-> > Cc: Allen Pais <apais@linux.microsoft.com>
-> > Cc: Anders Blomdell <anders.blomdell@control.lth.se>
-> > Cc: Andrea Merello <andrea.merello@gmail.com>
-> > Cc: Andres Klode <jak@jak-linux.org>
-> > Cc: Andrey Shvetsov <andrey.shvetsov@k2l.de>
-> > Cc: "Arve Hjønnevåg" <arve@android.com>
-> > Cc: Christian Brauner <christian@brauner.io>
-> > Cc: Comedi <comedi@comedi.org>
-> > Cc: "David A. Schleef" <ds@schleef.org>
-> > Cc: dri-devel@lists.freedesktop.org
-> > Cc: Fabio Aiuto <fabioaiuto83@gmail.com>
-> > Cc: Florian Schilhabel <florian.c.schilhabel@googlemail.com>
-> > Cc: Forest Bond <forest@alittletooquiet.net>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Herman.Bruyninckx@mech.kuleuven.ac.be
-> > Cc: H Hartley Sweeten <hsweeten@visionengravers.com>
-> > Cc: Hridya Valsaraju <hridya@google.com>
-> > Cc: Ian Abbott <abbotti@mev.co.uk>
-> > Cc: Ilya Petrov <ilya.muromec@gmail.com>
-> > Cc: Jacob Feder <jacobsfeder@gmail.com>
-> > Cc: Jerry chuang <wlanfae@realtek.com>
-> > Cc: Joel Fernandes <joel@joelfernandes.org>
-> > Cc: "John B. Wyatt IV" <jbwyatt4@gmail.com>
-> > Cc: Jonathan Cameron <jic23@kernel.org>
-> > Cc: "J.P. Mellor" <jpmellor@rose-hulman.edu>
-> > Cc: karthik alapati <mail@karthek.com>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Kernel Team <ac100@lists.lauchpad.net>
-> > Cc: Klaas.Gadeyne@mech.kuleuven.ac.be
-> > Cc: Larry Finger <Larry.Finger@lwfinger.net>
-> > Cc: Lars-Peter Clausen <lars@metafoo.de>
-> > Cc: Lee Jones <lee.jones@linaro.org>
-> > Cc: linux-fbdev@vger.kernel.org
-> > Cc: linux-iio@vger.kernel.org
-> > Cc: linux-pwm@vger.kernel.org
-> > Cc: linux-staging@lists.linux.dev
-> > Cc: linux-tegra@vger.kernel.org
-> > Cc: Marc Dietrich <marvin24@gmx.de>
-> > Cc: Marco Cesati <marcocesati@gmail.com>
-> > Cc: Martijn Coenen <maco@android.com>
-> > Cc: Michael Hennerich <Michael.Hennerich@analog.com>
-> > Cc: Michael Straube <straube.linux@gmail.com>
-> > Cc: Mori Hess <fmhess@users.sourceforge.net>
-> > Cc: "Nícolas F. R. A. Prado" <nfraprado@protonmail.com>
-> > Cc: Peter Hurley <peter@hurleysoftware.com>
-> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> > Cc: Pierre-Hugues Husson <phhusson@free.fr>
-> > Cc: Robert Love <rlove@google.com>
-> > Cc: Romain Perier <romain.perier@gmail.com>
-> > Cc: Ross Schmidt <ross.schm.dev@gmail.com>
-> > Cc: "Spencer E. Olson" <olsonse@umich.edu>
-> > Cc: Stanley@BB.SD3
-> > Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-> > Cc: Sumera Priyadarsini <sylphrenadin@gmail.com>
-> > Cc: Suren Baghdasaryan <surenb@google.com>
-> > Cc: Teddy Wang <teddy.wang@siliconmotion.com>
-> > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Todd Kjos <tkjos@android.com>
-> > Cc: Truxton Fulton <trux@truxton.com>
-> > Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
-> > Cc: Wim.Meeussen@mech.kuleuven.ac.be
-> > Cc: WLAN FAE <wlanfae@realtek.com>
-> > Cc: Zhansaya Bagdauletkyzy <zhansayabagdaulet@gmail.com>
-> > -- 
-> > 2.27.0
+> > OK, I will check pwm-sifive's, and add.
+
+I will add the following :
+
+ * Limitations:
+ * - PIPGM_PWMC is a 2-bit divider (00: 1, 01: 2, 10: 4, 11: 8) for the input
+ *   clock running at 1 MHz.
+ * - When the settings of the PWM are modified, the new values are shadowed
+ *   in hardware until the PIPGM_PCSR register is written and the currently
+ *   running period is completed. This way the hardware switches atomically
+ *   from the old setting to the new.
+ * - Disabling the hardware completes the currently running period and keeps
+ *   the output at low level at all times.
+
+
 > > 
+> > > 
+> > > > +	 */
+> > > > +	if (!state->enabled) {
+> > > > +		writel(0, priv->base + PIPGM_PCSR(pwm->hwpwm));
+> > > > +		return 0;
+> > > > +	}
+> > > > +
+> > > > [...]
+> > > > +
+> > > > +static void visconti_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> > > > +				   struct pwm_state *state)
+> > > > +{
+> > > > +	struct visconti_pwm_chip *priv = chip_to_priv(chip);
+> > > > +	u32 period, duty, pwmc0, pwmc0_clk;
+> > > > +
+> > > > +	period = readl(priv->base + PIPGM_PCSR(pwm->hwpwm));
+> > > > +	if (period)
+> > > > +		state->enabled = true;
+> > > > +	else
+> > > > +		state->enabled = false;
+> > > 
+> > > If PIPGM_PCSR is 0 the hardware is still active and setting a new
+> > > configuration completes the currently running period, right? Then I
+> > > think having always state->enabled = true is a better match.
+> >
+> > If PIPGM_PCSR is 0, the hardware is stopped. Even if the settings of
+> > other registers are written, the values of other registers will not work
+> > unless PIPGM_PCSR is written.
 > 
-> Hi,
+> Correct me if I'm wrong, but how I understand it, PCSR is special as the
+> other registers are shadow until PCSR is written. (And that is
+> irrespective of which value is active in PCSR or what is written to
+> PCSR.)
+
+This is correct.
+
+>  
+> > However, as a logic, if PIPGM_PCSR becomes 0, it is only
+> > visconti_pwm_apply () in this driver,
+> > so I think that this process should always be state-> enabled = true
+> > as you pointed out.
+> > I wil drop this, thanks.
 > 
-> what about splitting this series in smaller per driver series?
+> For me the critical (and only) difference between "off" and
+> "duty cycle = 0" is that when a new configuration is to be applied. In
+> the "off" state a new period can (and should) start immediately, while
+> with "duty_cycle = 0" the rising edge should be delayed until the
+> currently running period is over.[1]
+> 
+> So the thing to do here (IMHO) is:
+> 
+> Iff with PIPGM_PCSR = 0 configuring a new setting (that is finalized
+> with writing a non-zero value to PIPGM_PCSR) completes the currently
+> running period, then always assume the PWM as enabled.
 
-No real need to, I can handle patch series this big easily.
+Yes, this device works that way.
 
-thanks,
+> 
+> And so if the hardware is stopped and the counter is reset when 0 is
+> written to PIPGM_PCSR, model that as enabled = false.
 
-greg k-h
+I don't think the current this driver can handle the above.
+As far as I can see your comment, I think I need to implement this,
+but after writing 0 to PIPGM_PCSR, driver need to confirm that signal has
+changed to low level and change state->enabled to false. 
+But with this device has no way of knowing that the signal has changed
+to low level.
+
+> 
+> Best regards
+> Uwe
+> 
+> [1] In practise this is more difficult because several PWMs don't
+> complete periods in general. But the hardware under discussion luckily
+> isn't one of these. And (worse) there are other hardware implementations
+> where off doesn't emit an inactive level.
+
+I see.
+
+Best regards,
+  Nobuhiro
