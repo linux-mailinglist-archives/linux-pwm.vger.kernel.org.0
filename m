@@ -2,214 +2,151 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 312283637FD
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 Apr 2021 00:04:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CA0A363881
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 Apr 2021 01:21:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232500AbhDRWE3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 18 Apr 2021 18:04:29 -0400
-Received: from relay03.th.seeweb.it ([5.144.164.164]:46783 "EHLO
-        relay03.th.seeweb.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230258AbhDRWE3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 18 Apr 2021 18:04:29 -0400
-X-Greylist: delayed 566 seconds by postgrey-1.27 at vger.kernel.org; Sun, 18 Apr 2021 18:04:29 EDT
-Received: from [10.0.20.3] (94-209-165-62.cable.dynamic.v4.ziggo.nl [94.209.165.62])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        id S232530AbhDRXVx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 18 Apr 2021 19:21:53 -0400
+Received: from mo-csw1515.securemx.jp ([210.130.202.154]:54030 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231489AbhDRXVx (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 18 Apr 2021 19:21:53 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1515) id 13INL0TW024872; Mon, 19 Apr 2021 08:21:00 +0900
+X-Iguazu-Qid: 34trpShQIDkL9fGb0y
+X-Iguazu-QSIG: v=2; s=0; t=1618788060; q=34trpShQIDkL9fGb0y; m=htFKz+h4lbFLcahE26O7ZRAXTEyWViAHI8UFOYwBN5k=
+Received: from imx12-a.toshiba.co.jp (imx12-a.toshiba.co.jp [61.202.160.135])
+        by relay.securemx.jp (mx-mr1513) id 13INKxGT022101
+        (version=TLSv1.2 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 19 Apr 2021 08:20:59 +0900
+Received: from enc02.toshiba.co.jp (enc02.toshiba.co.jp [61.202.160.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 96E351F60D;
-        Sun, 18 Apr 2021 23:54:32 +0200 (CEST)
-From:   Marijn Suijten <marijn.suijten@somainline.org>
-Subject: Re: [PATCH v6 2/4] leds: Add driver for Qualcomm LPG
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
+        by imx12-a.toshiba.co.jp (Postfix) with ESMTPS id 19AA91000BB;
+        Mon, 19 Apr 2021 08:20:59 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id 13INKwYW003126;
+        Mon, 19 Apr 2021 08:20:58 +0900
+Date:   Mon, 19 Apr 2021 08:20:01 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Martin Botka <martin.botka1@gmail.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-References: <20201021201224.3430546-1-bjorn.andersson@linaro.org>
- <20201021201224.3430546-3-bjorn.andersson@linaro.org>
-Message-ID: <881fb5a3-fb51-3967-63de-a09950839855@somainline.org>
-Date:   Sun, 18 Apr 2021 23:54:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.1
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-pwm@vger.kernel.org, punit1.agrawal@toshiba.co.jp,
+        yuji2.ishikawa@toshiba.co.jp, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] pwm: visconti: Add Toshiba Visconti SoC PWM
+ support
+X-TSB-HOP: ON
+Message-ID: <20210418232001.lvx7ho2qo2ac2khy@toshiba.co.jp>
+References: <20210418110904.1942806-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+ <20210418110904.1942806-3-nobuhiro1.iwamatsu@toshiba.co.jp>
+ <20210418134411.vfltokielrwuygqa@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20201021201224.3430546-3-bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210418134411.vfltokielrwuygqa@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Bjorn,
+Hi Uwe,
 
-On 10/21/20 10:12 PM, Bjorn Andersson wrote:
-> The Light Pulse Generator (LPG) is a PWM-block found in a wide range of
-> PMICs from Qualcomm. It can operate on fixed parameters or based on a
-> lookup-table, altering the duty cycle over time - which provides the
-> means for e.g. hardware assisted transitions of LED brightness.
+Thanks for your review.
+
+On Sun, Apr 18, 2021 at 03:44:11PM +0200, Uwe Kleine-König wrote:
+> Hello,
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Tested-by: Luca Weiss <luca@z3ntu.xyz>
+> just a few smaller issues left to fix.
+> 
+> On Sun, Apr 18, 2021 at 08:09:04PM +0900, Nobuhiro Iwamatsu wrote:
+> > diff --git a/drivers/pwm/pwm-visconti.c b/drivers/pwm/pwm-visconti.c
+> > new file mode 100644
+> > index 000000000000..166b18ac1a3a
+> > --- /dev/null
+> > +++ b/drivers/pwm/pwm-visconti.c
+> > @@ -0,0 +1,188 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Toshiba Visconti pulse-width-modulation controller driver
+> > + *
+> > + * Copyright (c) 2020 TOSHIBA CORPORATION
+> > + * Copyright (c) 2020 Toshiba Electronic Devices & Storage Corporation
+> 
+> We're in 2021, so you might want to adapt the year in the copy right
+> notice.
+
+OK, I will update.
+
+> 
+> > + *
+> > + * Authors: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+> > + *
+> > + * Limitations:
+> > + * - PIPGM_PWMC is a 2-bit divider (00: 1, 01: 2, 10: 4, 11: 8).
+> 
+> This is too detailed for the purpose of this section. Please either drop
+> it or make this:
+> 
+>  - The fixed input clock is running at 1 MHz and is divided by either 1,
+>    2, 4 or 8.
 
 
-Thanks for these patches.  I have tested them successfully on the Sony 
-Xperia XA2 (Discovery, Nile platform) with the leds on the PM660l - feel 
-free to add my Tested-by.  Should I send the configuration your way for 
-inclusion in this patch, or submit them separately (either applied 
-after, or included as separate patches in the next version of this series)?
+OK, I will add your sugggestion.
 
-> +/**
-> + * struct lpg_data - initialization data
-> + * @lut_base:		base address of LUT block
-> + * @lut_size:		number of entries in LUT
-> + * @triled_base:	base address of TRILED
-> + * @pwm_9bit_mask:	bitmask for switching from 6bit to 9bit pwm
-
-
-Our downstream kernel derives this from the "LPG subtype" for each 
-distinct channel, read from register offset +0x5.  A value of 0xb is 
-subtype "PWM" with a shift of 2, a value of 0x11 is subtype "LPG_LITE" 
-with a shift of 4.  Can we do the same here instead of hardcoding it for 
-all channels in the LPG at once?  How should we determine if the mask is 
-one or two bits wide, for the 3<<4 case?
-
-> + * @num_channels:	number of channels in LPG
-> + * @channels:		list of channel initialization data
-> + */
-
-> +	if (ping_pong) {
-> +		if (len % 2)
-> +			hi_pause = 0;
-> +		else
-> +			hi_pause = pattern[len + 1 / 2].delta_t;
-
-
-len + 1 should be wrapped in parentheses just like the reassignment to 
-len= below, otherwise this is always an out of bounds read (at len + 0).
-
-> +		lo_pause = pattern[len - 1].delta_t;
-> +
-> +		len = (len + 1) / 2;
+> 
+> > + * - Fixed input clock running at 1 MHz.
+> > + * - When the settings of the PWM are modified, the new values are shadowed
+> > + *   in hardware until the PIPGM_PCSR register is written and the currently
+> > + *   running period is completed. This way the hardware switches atomically
+> > + *   from the old setting to the new.
+> > + * - Disabling the hardware completes the currently running period and keeps
+> > + *   the output at low level at all times.
+> > + */
+> > +
+> > [...]
+> > +	/*
+> > +	 * PWMC controls a divider that divides the input clk by a
+> > +	 * power of two between 1 and 8. As a smaller divider yields
+> > +	 * higher precision, pick the smallest possible one.
+> > +	 */
+> > +	if (period > 0xffff) {
+> > +		pwmc0 = ilog2(period >> 16);
+> > +		BUG_ON(pwmc0 > 3);
+> > +	} else
+> > +		pwmc0 = 0;
+> 
+> The linux coding style mandates that you should use braces for both
+> branches. (i.e.
+> 
+> +	if (period > 0xffff) {
+> +		pwmc0 = ilog2(period >> 16);
+> +		BUG_ON(pwmc0 > 3);
 > +	} else {
-> +		hi_pause = pattern[len - 1].delta_t;
-> +		lo_pause = 0;
+> +		pwmc0 = 0;
 > +	}
-> +
-> +	ret = lpg_lut_store(lpg, pattern, len, &lo_idx, &hi_idx);
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	for (i = 0; i < led->num_channels; i++) {
-> +		chan = led->channels[i];
-> +
-> +		chan->ramp_duration_ms = pattern[0].delta_t * len;
+> )
+
+Oh, I fotgot it, I will fix this. Thanks you.
+
+> 
+> > +	period >>= pwmc0;
+> > +	duty_cycle >>= pwmc0;
+> > +
+> > +	if (state->polarity == PWM_POLARITY_INVERSED)
+> > +		pwmc0 |= PIPGM_PWMC_PWMACT;
+> > +	writel(pwmc0, priv->base + PIPGM_PWMC(pwm->hwpwm));
+> > +	writel(duty_cycle, priv->base + PIPGM_PDUT(pwm->hwpwm));
+> > +	writel(period, priv->base + PIPGM_PCSR(pwm->hwpwm));
+> > +
+> > +	return 0;
+> > +}
+> 
+> Best regards
+> Uwe
 
 
-Perhaps this could store the duration of a single step instead, since 
-the only use in lpg_apply_lut_control divides it by pattern length again?
+Best regards,
+  Nobuhiro
 
-> +		chan->ramp_ping_pong = ping_pong;
-> +		chan->ramp_oneshot = repeat != -1;
-> +
-> +		chan->ramp_lo_pause_ms = lo_pause;
-> +		chan->ramp_hi_pause_ms = hi_pause;
-> +
-> +		chan->pattern_lo_idx = lo_idx;
-> +		chan->pattern_hi_idx = hi_idx;
-> +	}
-> +
-> +out:
-> +	return ret;
-> +}
-
-> +static int lpg_init_lut(struct lpg *lpg)
-> +{
-> +	const struct lpg_data *data = lpg->data;
-> +	size_t bitmap_size;
-> +
-> +	if (!data->lut_base)
-> +		return 0;
-> +
-> +	lpg->lut_base = data->lut_base;
-> +	lpg->lut_size = data->lut_size;
-> +
-> +	bitmap_size = BITS_TO_LONGS(lpg->lut_size) * sizeof(unsigned long);
-> +	lpg->lut_bitmap = devm_kzalloc(lpg->dev, bitmap_size, GFP_KERNEL);
-
-
-Would it be nicer to use BITS_TO_BYTES here, or otherwise 
-devm_kcalloc(..., bitmap_size, sizeof(long), ...) without mutiplying 
-with sizeof(unsigned long)?
-
-> +
-> +	bitmap_clear(lpg->lut_bitmap, 0, lpg->lut_size);
-> +	return lpg->lut_bitmap ? 0 : -ENOMEM;
-> +}
-> +
-> +static int lpg_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np;
-> +	struct lpg *lpg;
-> +	int ret;
-> +	int i;
-> +
-> +	lpg = devm_kzalloc(&pdev->dev, sizeof(*lpg), GFP_KERNEL);
-> +	if (!lpg)
-> +		return -ENOMEM;
-> +
-> +	lpg->data = of_device_get_match_data(&pdev->dev);
-> +	if (!lpg->data)
-> +		return -EINVAL;
-> +
-> +	lpg->dev = &pdev->dev;
-> +
-> +	lpg->map = dev_get_regmap(pdev->dev.parent, NULL);
-> +	if (!lpg->map) {
-> +		dev_err(&pdev->dev, "parent regmap unavailable\n");
-> +		return -ENXIO;
-> +	}
-> +
-> +	ret = lpg_init_channels(lpg);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = lpg_init_triled(lpg);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = lpg_init_lut(lpg);
-> +	if (ret < 0)
-> +		return ret;
-
-
-How about turning these returns into dev_err_probe?  I'm not sure if 
-that's the expected way to go nowadays, but having some form of logging 
-when a driver fails to probe is always good to have.
-
-Thanks!
-Marijn
-
-> +
-> +	for_each_available_child_of_node(pdev->dev.of_node, np) {
-> +		ret = lpg_add_led(lpg, np);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	for (i = 0; i < lpg->num_channels; i++)
-> +		lpg_apply_dtest(&lpg->channels[i]);
-> +
-> +	ret = lpg_add_pwm(lpg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	platform_set_drvdata(pdev, lpg);
-> +
-> +	return 0;
-> +}
