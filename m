@@ -2,151 +2,128 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CA0A363881
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 Apr 2021 01:21:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C819C3638B1
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 Apr 2021 02:03:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232530AbhDRXVx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 18 Apr 2021 19:21:53 -0400
-Received: from mo-csw1515.securemx.jp ([210.130.202.154]:54030 "EHLO
+        id S237056AbhDSABv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 18 Apr 2021 20:01:51 -0400
+Received: from mo-csw1114.securemx.jp ([210.130.202.156]:38768 "EHLO
         mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231489AbhDRXVx (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 18 Apr 2021 19:21:53 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1515) id 13INL0TW024872; Mon, 19 Apr 2021 08:21:00 +0900
-X-Iguazu-Qid: 34trpShQIDkL9fGb0y
-X-Iguazu-QSIG: v=2; s=0; t=1618788060; q=34trpShQIDkL9fGb0y; m=htFKz+h4lbFLcahE26O7ZRAXTEyWViAHI8UFOYwBN5k=
-Received: from imx12-a.toshiba.co.jp (imx12-a.toshiba.co.jp [61.202.160.135])
-        by relay.securemx.jp (mx-mr1513) id 13INKxGT022101
+        with ESMTP id S236772AbhDSABl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 18 Apr 2021 20:01:41 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1114) id 13J00pQR021687; Mon, 19 Apr 2021 09:00:51 +0900
+X-Iguazu-Qid: 2wHHQAoCK5XYSo4bGK
+X-Iguazu-QSIG: v=2; s=0; t=1618790451; q=2wHHQAoCK5XYSo4bGK; m=og7IFJUKyb7215psUxeUTVV/b9UvbMqd3VDJn/siVEY=
+Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
+        by relay.securemx.jp (mx-mr1113) id 13J00ox4029022
         (version=TLSv1.2 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 19 Apr 2021 08:20:59 +0900
-Received: from enc02.toshiba.co.jp (enc02.toshiba.co.jp [61.202.160.51])
+        Mon, 19 Apr 2021 09:00:50 +0900
+Received: from enc01.toshiba.co.jp (enc01.toshiba.co.jp [106.186.93.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by imx12-a.toshiba.co.jp (Postfix) with ESMTPS id 19AA91000BB;
-        Mon, 19 Apr 2021 08:20:59 +0900 (JST)
-Received: from hop101.toshiba.co.jp ([133.199.85.107])
-        by enc02.toshiba.co.jp  with ESMTP id 13INKwYW003126;
-        Mon, 19 Apr 2021 08:20:58 +0900
-Date:   Mon, 19 Apr 2021 08:20:01 +0900
+        by imx2-a.toshiba.co.jp (Postfix) with ESMTPS id 4A92E100096;
+        Mon, 19 Apr 2021 09:00:50 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc01.toshiba.co.jp  with ESMTP id 13J00n4R025236;
+        Mon, 19 Apr 2021 09:00:49 +0900
 From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+To:     Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org, punit1.agrawal@toshiba.co.jp,
-        yuji2.ishikawa@toshiba.co.jp, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] pwm: visconti: Add Toshiba Visconti SoC PWM
- support
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>
+Cc:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        punit1.agrawal@toshiba.co.jp, yuji2.ishikawa@toshiba.co.jp,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH v6 0/2] pwm: visconti: Add Toshiba Visconti SoC PWM support
+Date:   Mon, 19 Apr 2021 09:00:05 +0900
 X-TSB-HOP: ON
-Message-ID: <20210418232001.lvx7ho2qo2ac2khy@toshiba.co.jp>
-References: <20210418110904.1942806-1-nobuhiro1.iwamatsu@toshiba.co.jp>
- <20210418110904.1942806-3-nobuhiro1.iwamatsu@toshiba.co.jp>
- <20210418134411.vfltokielrwuygqa@pengutronix.de>
+Message-Id: <20210419000007.1944301-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+X-Mailer: git-send-email 2.30.0.rc2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210418134411.vfltokielrwuygqa@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
+Hi,
 
-Thanks for your review.
+This series is the PWM driver for Toshiba's ARM SoC, Visconti[0].
+This provides DT binding documentation and device driver.
 
-On Sun, Apr 18, 2021 at 03:44:11PM +0200, Uwe Kleine-König wrote:
-> Hello,
-> 
-> just a few smaller issues left to fix.
-> 
-> On Sun, Apr 18, 2021 at 08:09:04PM +0900, Nobuhiro Iwamatsu wrote:
-> > diff --git a/drivers/pwm/pwm-visconti.c b/drivers/pwm/pwm-visconti.c
-> > new file mode 100644
-> > index 000000000000..166b18ac1a3a
-> > --- /dev/null
-> > +++ b/drivers/pwm/pwm-visconti.c
-> > @@ -0,0 +1,188 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Toshiba Visconti pulse-width-modulation controller driver
-> > + *
-> > + * Copyright (c) 2020 TOSHIBA CORPORATION
-> > + * Copyright (c) 2020 Toshiba Electronic Devices & Storage Corporation
-> 
-> We're in 2021, so you might want to adapt the year in the copy right
-> notice.
+[0]: https://toshiba.semicon-storage.com/ap-en/semiconductor/product/image-recognition-processors-visconti.html
 
-OK, I will update.
+Updates:
 
-> 
-> > + *
-> > + * Authors: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> > + *
-> > + * Limitations:
-> > + * - PIPGM_PWMC is a 2-bit divider (00: 1, 01: 2, 10: 4, 11: 8).
-> 
-> This is too detailed for the purpose of this section. Please either drop
-> it or make this:
-> 
->  - The fixed input clock is running at 1 MHz and is divided by either 1,
->    2, 4 or 8.
+  dt-bindings: pwm: Add bindings for Toshiba Visconti PWM Controller
+    v5 -> v6:
+      - No update.
+    v4 -> v5:
+      - No update.
+    v3 -> v4:
+      - No update.
+    v2 -> v3:
+      - Change compatible to toshiba,visconti-pwm
+      - Change filename to toshiba,visconti-pwm.yaml.
+      - Add Reviewed-by tag from Rob.
+    v1 -> v2:
+      - Change SPDX-License-Identifier to GPL-2.0-only OR BSD-2-Clause.
+      - Set compatible toshiba,pwm-visconti only.
+      - Drop unnecessary comments.
 
+  pwm: visconti: Add Toshiba Visconti SoC PWM support
+    v5 -> v6:
+     - Update year in copyright.
+     - Update limitations.
+     - Fix coding style, used braces for both branches.
+    v4 -> v5:
+      - Droped checking PIPGM_PCSR from visconti_pwm_get_state.
+      - Changed from to_visconti_chip to visconti_pwm_from_chip.
+      - Removed pwmchip_remove return value management.
+      - Add limitations of this device.
+      - Add 'state->enabled = true' to visconti_pwm_get_state().
+    v3 -> v4:
+      - Sorted alphabetically include files.
+      - Changed container_of to using static inline functions.
+      - Dropped unnecessary dev_dbg().
+      - Drop Initialization of chip.base.
+      - Drop commnet "period too small".
+      - Rebased for-next. 
+    v2 -> v3:
+      - Change compatible to toshiba,visconti-pwm.
+      - Fix MODULE_ALIAS to platform:pwm-visconti, again.
+      - Align continuation line to the opening parenthesis.
+      - Rewrite the contents of visconti_pwm_apply() based on the contents suggested by Uwe.
+    v1 -> v2:
+      - Change SPDX-License-Identifier to GPL-2.0-only.
+      - Add prefix for the register defines.
+      - Drop struct device from struct visconti_pwm_chip.
+      - Use '>>' instead of '/'.
+      - Drop error message by devm_platform_ioremap_resource().
+      - Use dev_err_probe instead of dev_err.
+      - Change dev_info to dev_dbg.
+      - Remove some empty lines.
+      - Fix MODULE_ALIAS to platform:pwm-visconti.
+      - Add .get_state() function.
+      - Use the author name and email address to MODULE_AUTHOR.
+      - Add more comment to function of the hardware.
+      - Support .get_status() function.
+      - Use NSEC_PER_USEC instead of 1000.
+      - Alphabetically sorted for Makefile and Kconfig.
+      - Added check for set value in visconti_pwm_apply().
 
-OK, I will add your sugggestion.
+Nobuhiro Iwamatsu (2):
+  dt-bindings: pwm: Add bindings for Toshiba Visconti PWM Controller
+  pwm: visconti: Add Toshiba Visconti SoC PWM support
 
-> 
-> > + * - Fixed input clock running at 1 MHz.
-> > + * - When the settings of the PWM are modified, the new values are shadowed
-> > + *   in hardware until the PIPGM_PCSR register is written and the currently
-> > + *   running period is completed. This way the hardware switches atomically
-> > + *   from the old setting to the new.
-> > + * - Disabling the hardware completes the currently running period and keeps
-> > + *   the output at low level at all times.
-> > + */
-> > +
-> > [...]
-> > +	/*
-> > +	 * PWMC controls a divider that divides the input clk by a
-> > +	 * power of two between 1 and 8. As a smaller divider yields
-> > +	 * higher precision, pick the smallest possible one.
-> > +	 */
-> > +	if (period > 0xffff) {
-> > +		pwmc0 = ilog2(period >> 16);
-> > +		BUG_ON(pwmc0 > 3);
-> > +	} else
-> > +		pwmc0 = 0;
-> 
-> The linux coding style mandates that you should use braces for both
-> branches. (i.e.
-> 
-> +	if (period > 0xffff) {
-> +		pwmc0 = ilog2(period >> 16);
-> +		BUG_ON(pwmc0 > 3);
-> +	} else {
-> +		pwmc0 = 0;
-> +	}
-> )
+ .../bindings/pwm/toshiba,pwm-visconti.yaml    |  43 ++++
+ drivers/pwm/Kconfig                           |   9 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-visconti.c                    | 189 ++++++++++++++++++
+ 4 files changed, 242 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/toshiba,pwm-visconti.yaml
+ create mode 100644 drivers/pwm/pwm-visconti.c
 
-Oh, I fotgot it, I will fix this. Thanks you.
-
-> 
-> > +	period >>= pwmc0;
-> > +	duty_cycle >>= pwmc0;
-> > +
-> > +	if (state->polarity == PWM_POLARITY_INVERSED)
-> > +		pwmc0 |= PIPGM_PWMC_PWMACT;
-> > +	writel(pwmc0, priv->base + PIPGM_PWMC(pwm->hwpwm));
-> > +	writel(duty_cycle, priv->base + PIPGM_PDUT(pwm->hwpwm));
-> > +	writel(period, priv->base + PIPGM_PCSR(pwm->hwpwm));
-> > +
-> > +	return 0;
-> > +}
-> 
-> Best regards
-> Uwe
-
-
-Best regards,
-  Nobuhiro
+-- 
+2.30.0.rc2
 
