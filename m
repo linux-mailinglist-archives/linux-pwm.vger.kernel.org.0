@@ -2,26 +2,26 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EB50367A63
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 Apr 2021 08:57:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4891367A68
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 Apr 2021 08:57:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234920AbhDVG6R (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 22 Apr 2021 02:58:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49136 "EHLO
+        id S234969AbhDVG6T (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 22 Apr 2021 02:58:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234925AbhDVG6R (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 22 Apr 2021 02:58:17 -0400
+        with ESMTP id S234952AbhDVG6T (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 22 Apr 2021 02:58:19 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F71BC06138B
-        for <linux-pwm@vger.kernel.org>; Wed, 21 Apr 2021 23:57:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D463C06138B
+        for <linux-pwm@vger.kernel.org>; Wed, 21 Apr 2021 23:57:45 -0700 (PDT)
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lZTHJ-0006TZ-VO; Thu, 22 Apr 2021 08:57:33 +0200
+        id 1lZTHJ-0006Ta-VJ; Thu, 22 Apr 2021 08:57:33 +0200
 Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lZTHI-0003O5-Cd; Thu, 22 Apr 2021 08:57:32 +0200
+        id 1lZTHI-0003O8-JJ; Thu, 22 Apr 2021 08:57:32 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Michael Turquette <mturquette@baylibre.com>,
@@ -38,10 +38,12 @@ Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-rtc@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         linux-spi@vger.kernel.org, Wolfram Sang <wsa@kernel.org>,
         Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v5 0/6] clk: provide new devm helpers for prepared and enabled clocks
-Date:   Thu, 22 Apr 2021 08:57:20 +0200
-Message-Id: <20210422065726.1646742-1-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v5 1/6] clk: generalize devm_clk_get() a bit
+Date:   Thu, 22 Apr 2021 08:57:21 +0200
+Message-Id: <20210422065726.1646742-2-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210422065726.1646742-1-u.kleine-koenig@pengutronix.de>
+References: <20210422065726.1646742-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -53,39 +55,110 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello,
+Allow to add an exit hook to devm managed clocks. Also use
+clk_get_optional() in devm_clk_get_optional instead of open coding it.
+The generalisation will be used in the next commit to add some more
+devm_clk helpers.
 
-the only change since v5 is that the fixed i2c patch is now properly
-part of this series.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/clk/clk-devres.c | 67 ++++++++++++++++++++++++++++++----------
+ 1 file changed, 50 insertions(+), 17 deletions(-)
 
-Can I please get a feedback by the clock maintainers? The series got
-positive feedback by several people now and is still unreplied by by the
-clk maintainers since October. Should I resend regularly, say once per
-two weeks? How many digits do I have to consider for the resend counter?
-At what point can I ask the maintainers further up in the chain to merge
-my series? Does a pull request help?
-
-Best regards
-Uwe
-
-Uwe Kleine-König (6):
-  clk: generalize devm_clk_get() a bit
-  clk: Provide new devm_clk_helpers for prepared and enabled clocks
-  pwm: atmel: Simplify using devm_clk_get_prepared()
-  rtc: at91sma9: Simplify using devm_clk_get_enabled()
-  i2c: imx: Simplify using devm_clk_get_enableded()
-  spi: davinci: Simplify using devm_clk_get_enabled()
-
- drivers/clk/clk-devres.c     | 96 ++++++++++++++++++++++++++++++------
- drivers/i2c/busses/i2c-imx.c | 12 +----
- drivers/pwm/pwm-atmel.c      | 15 +-----
- drivers/rtc/rtc-at91sam9.c   | 22 ++-------
- drivers/spi/spi-davinci.c    | 11 +----
- include/linux/clk.h          | 87 +++++++++++++++++++++++++++++++-
- 6 files changed, 176 insertions(+), 67 deletions(-)
-
-
-base-commit: a38fd8748464831584a19438cbb3082b5a2dab15
+diff --git a/drivers/clk/clk-devres.c b/drivers/clk/clk-devres.c
+index be160764911b..91c995815b57 100644
+--- a/drivers/clk/clk-devres.c
++++ b/drivers/clk/clk-devres.c
+@@ -4,39 +4,72 @@
+ #include <linux/export.h>
+ #include <linux/gfp.h>
+ 
++struct devm_clk_state {
++	struct clk *clk;
++	void (*exit)(struct clk *clk);
++};
++
+ static void devm_clk_release(struct device *dev, void *res)
+ {
+-	clk_put(*(struct clk **)res);
++	struct devm_clk_state *state = *(struct devm_clk_state **)res;
++
++	if (state->exit)
++		state->exit(state->clk);
++
++	clk_put(state->clk);
+ }
+ 
+-struct clk *devm_clk_get(struct device *dev, const char *id)
++static struct clk *__devm_clk_get(struct device *dev, const char *id,
++				  struct clk *(*get)(struct device *dev, const char *id),
++				  int (*init)(struct clk *clk),
++				  void (*exit)(struct clk *clk))
+ {
+-	struct clk **ptr, *clk;
++	struct devm_clk_state *state;
++	struct clk *clk;
++	int ret;
+ 
+-	ptr = devres_alloc(devm_clk_release, sizeof(*ptr), GFP_KERNEL);
+-	if (!ptr)
++	state = devres_alloc(devm_clk_release, sizeof(*state), GFP_KERNEL);
++	if (!state)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	clk = clk_get(dev, id);
+-	if (!IS_ERR(clk)) {
+-		*ptr = clk;
+-		devres_add(dev, ptr);
+-	} else {
+-		devres_free(ptr);
++	clk = get(dev, id);
++	if (IS_ERR(clk)) {
++		ret = PTR_ERR(clk);
++		goto err_clk_get;
+ 	}
+ 
++	if (init) {
++		ret = init(clk);
++		if (ret)
++			goto err_clk_init;
++	}
++
++	state->clk = clk;
++	state->exit = exit;
++
++	devres_add(dev, state);
++
+ 	return clk;
++
++err_clk_init:
++
++	clk_put(clk);
++err_clk_get:
++
++	devres_free(state);
++	return ERR_PTR(ret);
+ }
+-EXPORT_SYMBOL(devm_clk_get);
+ 
+-struct clk *devm_clk_get_optional(struct device *dev, const char *id)
++struct clk *devm_clk_get(struct device *dev, const char *id)
+ {
+-	struct clk *clk = devm_clk_get(dev, id);
++	return __devm_clk_get(dev, id, clk_get, NULL, NULL);
+ 
+-	if (clk == ERR_PTR(-ENOENT))
+-		return NULL;
++}
++EXPORT_SYMBOL(devm_clk_get);
+ 
+-	return clk;
++struct clk *devm_clk_get_optional(struct device *dev, const char *id)
++{
++	return __devm_clk_get(dev, id, clk_get_optional, NULL, NULL);
+ }
+ EXPORT_SYMBOL(devm_clk_get_optional);
+ 
 -- 
 2.30.2
 
