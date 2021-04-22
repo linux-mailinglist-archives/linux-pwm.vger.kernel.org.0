@@ -2,48 +2,35 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3FE0367A5F
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 Apr 2021 08:57:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3461367AB1
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 Apr 2021 09:12:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234925AbhDVG6U (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 22 Apr 2021 02:58:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49160 "EHLO
+        id S234777AbhDVHMv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 22 Apr 2021 03:12:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234952AbhDVG6T (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 22 Apr 2021 02:58:19 -0400
+        with ESMTP id S234774AbhDVHMv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 22 Apr 2021 03:12:51 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99667C06138C
-        for <linux-pwm@vger.kernel.org>; Wed, 21 Apr 2021 23:57:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D7CFC06174A
+        for <linux-pwm@vger.kernel.org>; Thu, 22 Apr 2021 00:12:16 -0700 (PDT)
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lZTHJ-0006Tb-VK; Thu, 22 Apr 2021 08:57:33 +0200
+        id 1lZTVW-00008l-Kk; Thu, 22 Apr 2021 09:12:14 +0200
 Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lZTHI-0003OB-Tp; Thu, 22 Apr 2021 08:57:32 +0200
+        id 1lZTVW-0005Wu-3j; Thu, 22 Apr 2021 09:12:14 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-pwm@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
-        linux-rtc@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-spi@vger.kernel.org, Wolfram Sang <wsa@kernel.org>,
-        Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v5 2/6] clk: Provide new devm_clk_helpers for prepared and enabled clocks
-Date:   Thu, 22 Apr 2021 08:57:22 +0200
-Message-Id: <20210422065726.1646742-3-u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH] pwm: Clarify documentation about pwm_get_state()
+Date:   Thu, 22 Apr 2021 09:12:12 +0200
+Message-Id: <20210422071212.1647352-1-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210422065726.1646742-1-u.kleine-koenig@pengutronix.de>
-References: <20210422065726.1646742-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -55,188 +42,31 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-When a driver keeps a clock prepared (or enabled) during the whole
-lifetime of the driver, these helpers allow to simplify the drivers.
+There is a difference between the last requested state and the last
+implemented state. Clearify that pwm_get_state() returns the former.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/clk/clk-devres.c | 31 ++++++++++++++
- include/linux/clk.h      | 87 +++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 117 insertions(+), 1 deletion(-)
+ Documentation/driver-api/pwm.rst | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/clk-devres.c b/drivers/clk/clk-devres.c
-index 91c995815b57..b54f7f0f2a35 100644
---- a/drivers/clk/clk-devres.c
-+++ b/drivers/clk/clk-devres.c
-@@ -67,12 +67,43 @@ struct clk *devm_clk_get(struct device *dev, const char *id)
- }
- EXPORT_SYMBOL(devm_clk_get);
+diff --git a/Documentation/driver-api/pwm.rst b/Documentation/driver-api/pwm.rst
+index ab62f1bb0366..a7ca4f58305a 100644
+--- a/Documentation/driver-api/pwm.rst
++++ b/Documentation/driver-api/pwm.rst
+@@ -55,7 +55,11 @@ several parameter at once. For example, if you see pwm_config() and
+ pwm_{enable,disable}() calls in the same function, this probably means you
+ should switch to pwm_apply_state().
  
-+struct clk *devm_clk_get_prepared(struct device *dev, const char *id)
-+{
-+	return __devm_clk_get(dev, id, clk_get, clk_prepare, clk_unprepare);
-+
-+}
-+EXPORT_SYMBOL(devm_clk_get_prepared);
-+
-+struct clk *devm_clk_get_enabled(struct device *dev, const char *id)
-+{
-+	return __devm_clk_get(dev, id, clk_get,
-+			      clk_prepare_enable, clk_disable_unprepare);
-+
-+}
-+EXPORT_SYMBOL(devm_clk_get_enabled);
-+
- struct clk *devm_clk_get_optional(struct device *dev, const char *id)
- {
- 	return __devm_clk_get(dev, id, clk_get_optional, NULL, NULL);
- }
- EXPORT_SYMBOL(devm_clk_get_optional);
+-The PWM user API also allows one to query the PWM state with pwm_get_state().
++The PWM user API also allows one to query the PWM state that was passed to the
++last invocation of pwm_apply_state() using pwm_get_state(). Note this is
++different to what the driver has actually implemented if the request cannot be
++satisfied exactly with the hardware in use. There is currently no way for
++consumers to get the actually implemented settings.
  
-+struct clk *devm_clk_get_optional_prepared(struct device *dev, const char *id)
-+{
-+	return __devm_clk_get(dev, id, clk_get_optional,
-+			      clk_prepare, clk_unprepare);
-+
-+}
-+EXPORT_SYMBOL(devm_clk_get_optional_prepared);
-+
-+struct clk *devm_clk_get_optional_enabled(struct device *dev, const char *id)
-+{
-+	return __devm_clk_get(dev, id, clk_get_optional,
-+			      clk_prepare_enable, clk_disable_unprepare);
-+
-+}
-+EXPORT_SYMBOL(devm_clk_get_optional_enabled);
-+
- struct clk_bulk_devres {
- 	struct clk_bulk_data *clks;
- 	int num_clks;
-diff --git a/include/linux/clk.h b/include/linux/clk.h
-index 266e8de3cb51..b3c5da388b08 100644
---- a/include/linux/clk.h
-+++ b/include/linux/clk.h
-@@ -449,7 +449,7 @@ int __must_check devm_clk_bulk_get_all(struct device *dev,
-  * the clock producer.  (IOW, @id may be identical strings, but
-  * clk_get may return different clock producers depending on @dev.)
-  *
-- * Drivers must assume that the clock source is not enabled.
-+ * Drivers must assume that the clock source is neither prepared nor enabled.
-  *
-  * devm_clk_get should not be called from within interrupt context.
-  *
-@@ -458,6 +458,47 @@ int __must_check devm_clk_bulk_get_all(struct device *dev,
-  */
- struct clk *devm_clk_get(struct device *dev, const char *id);
- 
-+/**
-+ * devm_clk_get_prepared - devm_clk_get() + clk_prepare()
-+ * @dev: device for clock "consumer"
-+ * @id: clock consumer ID
-+ *
-+ * Returns a struct clk corresponding to the clock producer, or
-+ * valid IS_ERR() condition containing errno.  The implementation
-+ * uses @dev and @id to determine the clock consumer, and thereby
-+ * the clock producer.  (IOW, @id may be identical strings, but
-+ * clk_get may return different clock producers depending on @dev.)
-+ *
-+ * The returned clk (if valid) is prepared. Drivers must however assume that the
-+ * clock is not enabled.
-+ *
-+ * devm_clk_get_prepared should not be called from within interrupt context.
-+ *
-+ * The clock will automatically be unprepared and freed when the
-+ * device is unbound from the bus.
-+ */
-+struct clk *devm_clk_get_prepared(struct device *dev, const char *id);
-+
-+/**
-+ * devm_clk_get_enabled - devm_clk_get() + clk_prepare_enable()
-+ * @dev: device for clock "consumer"
-+ * @id: clock consumer ID
-+ *
-+ * Returns a struct clk corresponding to the clock producer, or
-+ * valid IS_ERR() condition containing errno.  The implementation
-+ * uses @dev and @id to determine the clock consumer, and thereby
-+ * the clock producer.  (IOW, @id may be identical strings, but
-+ * clk_get may return different clock producers depending on @dev.)
-+ *
-+ * The returned clk (if valid) is prepared and enabled.
-+ *
-+ * devm_clk_get_prepared should not be called from within interrupt context.
-+ *
-+ * The clock will automatically be disabled, unprepared and freed when the
-+ * device is unbound from the bus.
-+ */
-+struct clk *devm_clk_get_enabled(struct device *dev, const char *id);
-+
- /**
-  * devm_clk_get_optional - lookup and obtain a managed reference to an optional
-  *			   clock producer.
-@@ -469,6 +510,26 @@ struct clk *devm_clk_get(struct device *dev, const char *id);
-  */
- struct clk *devm_clk_get_optional(struct device *dev, const char *id);
- 
-+/**
-+ * devm_clk_get_optional_prepared - devm_clk_get_optional() + clk_prepare()
-+ * @dev: device for clock "consumer"
-+ * @id: clock consumer ID
-+ *
-+ * Behaves the same as devm_clk_get_prepared() except where there is no clock producer.
-+ * In this case, instead of returning -ENOENT, the function returns NULL.
-+ */
-+struct clk *devm_clk_get_optional_prepared(struct device *dev, const char *id);
-+
-+/**
-+ * devm_clk_get_optional_enabled - devm_clk_get_optional() + clk_prepare_enable()
-+ * @dev: device for clock "consumer"
-+ * @id: clock consumer ID
-+ *
-+ * Behaves the same as devm_clk_get_enabled() except where there is no clock producer.
-+ * In this case, instead of returning -ENOENT, the function returns NULL.
-+ */
-+struct clk *devm_clk_get_optional_enabled(struct device *dev, const char *id);
-+
- /**
-  * devm_get_clk_from_child - lookup and obtain a managed reference to a
-  *			     clock producer from child node.
-@@ -813,12 +874,36 @@ static inline struct clk *devm_clk_get(struct device *dev, const char *id)
- 	return NULL;
- }
- 
-+static inline struct clk *devm_clk_get_prepared(struct device *dev,
-+						const char *id)
-+{
-+	return NULL;
-+}
-+
-+static inline struct clk *devm_clk_get_enabled(struct device *dev,
-+					       const char *id)
-+{
-+	return NULL;
-+}
-+
- static inline struct clk *devm_clk_get_optional(struct device *dev,
- 						const char *id)
- {
- 	return NULL;
- }
- 
-+static inline struct clk *devm_clk_get_optional_prepared(struct device *dev,
-+							 const char *id)
-+{
-+	return NULL;
-+}
-+
-+static inline struct clk *devm_clk_get_optional_enabled(struct device *dev,
-+							const char *id)
-+{
-+	return NULL;
-+}
-+
- static inline int __must_check devm_clk_bulk_get(struct device *dev, int num_clks,
- 						 struct clk_bulk_data *clks)
- {
+ In addition to the PWM state, the PWM API also exposes PWM arguments, which
+ are the reference PWM config one should use on this PWM.
 -- 
 2.30.2
 
