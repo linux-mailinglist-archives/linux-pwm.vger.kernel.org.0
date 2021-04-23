@@ -2,221 +2,128 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45B973697EC
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Apr 2021 19:04:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE4703697F1
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 Apr 2021 19:05:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243237AbhDWRF0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 23 Apr 2021 13:05:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48818 "EHLO
+        id S243292AbhDWRG2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 23 Apr 2021 13:06:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243264AbhDWRFZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Apr 2021 13:05:25 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB04CC06175F;
-        Fri, 23 Apr 2021 10:04:48 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id g17so57531646edm.6;
-        Fri, 23 Apr 2021 10:04:48 -0700 (PDT)
+        with ESMTP id S229691AbhDWRG1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Apr 2021 13:06:27 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46872C061574;
+        Fri, 23 Apr 2021 10:05:50 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id e7so58118397edu.10;
+        Fri, 23 Apr 2021 10:05:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=yp0Fcm4ftjxsSpx+OMWSILWZbaBJSa4V9KKvmMfNtFk=;
-        b=t4w9Merg1efC3mkVl8fmW75MKFTzIUHGYMFsFQI9yr6SD+0AHgRhFxzU1JgdgR/2ZB
-         1kuGO+ZRGcNY7wrdTmpwaFai1FAMSQi5Mn6xmr20fMfUDxmsB4DITAWkHyIJp2WAYUNs
-         FhOqslTv2JcT4pKfXpTF56AGIqReqMaUavVZR56ixQoZpQaUCbmJaDRcnZ5zg9s7QIfa
-         PpboitbSfwBfEwzIiRMtJYriFBSzmPipqm5iw1jR3TZBHhoY9cSeJeoAsFOqJDT+y1D+
-         9TCnI3xLX6BoLR4TXJrI2cibi7/lwi23dSdHZ3WEmdx+XZ+zONZrDXWgiE/bYYLKjbp0
-         0HAQ==
+        bh=EQyizf+7h3833Tu6UXCm8h39mHaVLtzkSeXq40Y8eG0=;
+        b=LFduqtoAmtYGRKmJME8wHpF+n+PM2wv34lPG2KVuQGjSwOA/OBEbsUzpurSfPjtLdF
+         aHZAqiDJPvPi8FxZzxfmrXIthkjnXUw3UUwvj/GMUKUPXzTGI6j6261m6cUhe/caaojR
+         RUutHq5dwX1HS+0bbWh89ywotEF+l8n2N7DSmI4rKQHgH8QnQ09U6OaaIiCrxoByd3L3
+         DoemlySZx+OnDaJzUHbHMZQnvk8oYRFiIO0dueKBircb1uHMBH+u8HEdemdZroCU1Ze+
+         oucifu68OGV9IXfVBzIBkgDAO18VYrSuRg73hqwgHJ/8NS7zim6ri8OLa+H2do8lu0ZY
+         4H4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yp0Fcm4ftjxsSpx+OMWSILWZbaBJSa4V9KKvmMfNtFk=;
-        b=Efx++3peN7vxRJrFGajX+gFwDu6UaIr6Ljkz70hddskAglQvBAcKeZYYelQ1zJOMz5
-         jCCYvz7Dns38bV2a9EdiPuAZIuWMMGYVTix35GHj6ZGFuYCq3BZj2GMWRZwtssUdUfg0
-         GVreOA3UOuhVNg2MyTf/m9uPx/4AahfWPxoKXIahBskeciZ3N1P+QlFrL5p+nXOKNXRU
-         Ji0Bno0gAdCeZ8J25HN+XhcGcf9DcvjBmavhBpQYbFcIKC8ZiWq+auQIBEKZUDsB3QdW
-         4dVeqsKL1mhg61Jre6By2F2Yo0tG46W7pyp1hIf6tMEKeD5lFyeI3rx+/5cZon+yZP48
-         6WKg==
-X-Gm-Message-State: AOAM530j4D8jPkls/Hg2miy/qvDTL1RHN48MvoLeJrjZrAGJZXfZsc4E
-        GiE9fUSXjpDQP2C5fH5YW+g=
-X-Google-Smtp-Source: ABdhPJyzyWxSdAyEIFimlcXfMU2ky29TPHyE2cUPGI/3diEAZcyN7IZZI+wAMpHiJgeHhB24Fj2H7A==
-X-Received: by 2002:a05:6402:5111:: with SMTP id m17mr5867151edd.175.1619197487628;
-        Fri, 23 Apr 2021 10:04:47 -0700 (PDT)
+        bh=EQyizf+7h3833Tu6UXCm8h39mHaVLtzkSeXq40Y8eG0=;
+        b=tTWVjt+52XIKowMkkdqO2QnFHYUHSKmWqg0KxoeMS5pJrYBCnW8NzdJ8l/68mZATUA
+         eqxgPrO51rcITdLBPZ70fm4d1ia+1isjvqvg/QDTnvYV5OfD0R1MN6kNqB5JnIiLJy+u
+         I4ImGFrEJqNSKBrCxYnQVvdNUOxmeAZzkp3vqaltOcoDfXWTNjHCNJrvNnNj65iDRpCs
+         7vXX31cCCz7S+BEt/Recj63q8XIXv7GNF+CW0vKnwaZJyt9lf4rWp9vVQFVb2X1+jzT4
+         pIXI42PDfrKrWeu0KrxNsP7cDT3TzzBcMBYNdjhcvtn6C2D5bOZ7F54aQkcN2lienSLW
+         6Ggw==
+X-Gm-Message-State: AOAM530EeKO+eqbpnaWNLsZ+nLGSa6JXhxewzVXqIgU2VC0L2BvEJbY7
+        Die/PhOC34H+rVFrZTKouwc=
+X-Google-Smtp-Source: ABdhPJwlJkXYJRMaTQtZKNRfobN4KHHQWXOII38GvKtGqCm1CWwKJV0J+xdD63f/tMEl5tRJNbgRRw==
+X-Received: by 2002:aa7:d693:: with SMTP id d19mr5785888edr.8.1619197549092;
+        Fri, 23 Apr 2021 10:05:49 -0700 (PDT)
 Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id e11sm4470851ejn.100.2021.04.23.10.04.46
+        by smtp.gmail.com with ESMTPSA id w13sm5477585edx.80.2021.04.23.10.05.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Apr 2021 10:04:46 -0700 (PDT)
-Date:   Fri, 23 Apr 2021 19:05:35 +0200
+        Fri, 23 Apr 2021 10:05:47 -0700 (PDT)
+Date:   Fri, 23 Apr 2021 19:06:37 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        punit1.agrawal@toshiba.co.jp, yuji2.ishikawa@toshiba.co.jp,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/2] pwm: visconti: Add Toshiba Visconti SoC PWM
- support
-Message-ID: <YIL+Xwjbk1EE04Sm@orome.fritz.box>
-References: <20210419000007.1944301-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
+        linux-doc@vger.kernel.org, kernel@pengutronix.de,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v2] pwm: reword docs about pwm_apply_state()
+Message-ID: <YIL+nQGNmNvZZ4Wa@orome.fritz.box>
+References: <20210423074411.2167332-1-u.kleine-koenig@pengutronix.de>
+ <20210423163225.2438763-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="OOXUOpActKFR3W/b"
+        protocol="application/pgp-signature"; boundary="ZaURXP/REy8v30Lq"
 Content-Disposition: inline
-In-Reply-To: <20210419000007.1944301-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+In-Reply-To: <20210423163225.2438763-1-u.kleine-koenig@pengutronix.de>
 User-Agent: Mutt/2.0.6 (98f8cb83) (2021-03-06)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---OOXUOpActKFR3W/b
-Content-Type: text/plain; charset=us-ascii
+--ZaURXP/REy8v30Lq
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 19, 2021 at 09:00:05AM +0900, Nobuhiro Iwamatsu wrote:
-> Hi,
+On Fri, Apr 23, 2021 at 06:32:26PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> The main issue is that the current documentation talks about the
+> non-existent function pwm_get_last_applied_state. (This was right in the
+> context of
+> https://lore.kernel.org/linux-pwm/20210406073036.26857-1-u.kleine-koenig@=
+pengutronix.de/
+> but was then missed to adapt when this patch was reduced to a
+> documentation update.)
 >=20
-> This series is the PWM driver for Toshiba's ARM SoC, Visconti[0].
-> This provides DT binding documentation and device driver.
+> While at is also clarify "last applied PWM state" to "PWM state that was
+> passed to the last invocation of pwm_apply_state()" to better
+> distinguish to the last actually implemented state and reword to drop a
+> word repetition.
 >=20
-> [0]: https://toshiba.semicon-storage.com/ap-en/semiconductor/product/imag=
-e-recognition-processors-visconti.html
+> Fixes: 539ed98e2bd3 ("pwm: Clarify documentation about pwm_get_state()")
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+> Hello,
 >=20
-> Updates:
+> the only change compared to v1 is that I didn't use --word-diff to
+> create the patch. I just found out that git am cannot apply patches
+> created with --word-diff.
 >=20
->   dt-bindings: pwm: Add bindings for Toshiba Visconti PWM Controller
->     v5 -> v6:
->       - No update.
->     v4 -> v5:
->       - No update.
->     v3 -> v4:
->       - No update.
->     v2 -> v3:
->       - Change compatible to toshiba,visconti-pwm
->       - Change filename to toshiba,visconti-pwm.yaml.
->       - Add Reviewed-by tag from Rob.
->     v1 -> v2:
->       - Change SPDX-License-Identifier to GPL-2.0-only OR BSD-2-Clause.
->       - Set compatible toshiba,pwm-visconti only.
->       - Drop unnecessary comments.
+> Best regards
+> Uwe
 >=20
->   pwm: visconti: Add Toshiba Visconti SoC PWM support
->     v5 -> v6:
->      - Update year in copyright.
->      - Update limitations.
->      - Fix coding style, used braces for both branches.
->     v4 -> v5:
->       - Droped checking PIPGM_PCSR from visconti_pwm_get_state.
->       - Changed from to_visconti_chip to visconti_pwm_from_chip.
->       - Removed pwmchip_remove return value management.
->       - Add limitations of this device.
->       - Add 'state->enabled =3D true' to visconti_pwm_get_state().
->     v3 -> v4:
->       - Sorted alphabetically include files.
->       - Changed container_of to using static inline functions.
->       - Dropped unnecessary dev_dbg().
->       - Drop Initialization of chip.base.
->       - Drop commnet "period too small".
->       - Rebased for-next.=20
->     v2 -> v3:
->       - Change compatible to toshiba,visconti-pwm.
->       - Fix MODULE_ALIAS to platform:pwm-visconti, again.
->       - Align continuation line to the opening parenthesis.
->       - Rewrite the contents of visconti_pwm_apply() based on the content=
-s suggested by Uwe.
->     v1 -> v2:
->       - Change SPDX-License-Identifier to GPL-2.0-only.
->       - Add prefix for the register defines.
->       - Drop struct device from struct visconti_pwm_chip.
->       - Use '>>' instead of '/'.
->       - Drop error message by devm_platform_ioremap_resource().
->       - Use dev_err_probe instead of dev_err.
->       - Change dev_info to dev_dbg.
->       - Remove some empty lines.
->       - Fix MODULE_ALIAS to platform:pwm-visconti.
->       - Add .get_state() function.
->       - Use the author name and email address to MODULE_AUTHOR.
->       - Add more comment to function of the hardware.
->       - Support .get_status() function.
->       - Use NSEC_PER_USEC instead of 1000.
->       - Alphabetically sorted for Makefile and Kconfig.
->       - Added check for set value in visconti_pwm_apply().
->=20
-> Nobuhiro Iwamatsu (2):
->   dt-bindings: pwm: Add bindings for Toshiba Visconti PWM Controller
->   pwm: visconti: Add Toshiba Visconti SoC PWM support
->=20
->  .../bindings/pwm/toshiba,pwm-visconti.yaml    |  43 ++++
->  drivers/pwm/Kconfig                           |   9 +
->  drivers/pwm/Makefile                          |   1 +
->  drivers/pwm/pwm-visconti.c                    | 189 ++++++++++++++++++
->  4 files changed, 242 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/toshiba,pwm-vis=
-conti.yaml
->  create mode 100644 drivers/pwm/pwm-visconti.c
+>  Documentation/driver-api/pwm.rst | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 
-Both patches applied, thanks.
-
-checkpatch did complain when I applied:
-
-> WARNING: please write a paragraph that describes the config symbol fully
-> #9: FILE: drivers/pwm/Kconfig:604:
-> +config PWM_VISCONTI
-
-That seems a bit excessive. The paragraph is perhaps not a poster child
-for Kconfig, but there are others that aren't better, so I think that's
-fine.
-
-> WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
-> #32:=20
-> new file mode 100644
-
-Fine, too.
-
-> WARNING: 'loosing' may be misspelled - perhaps 'losing'?
-> #112: FILE: drivers/pwm/pwm-visconti.c:76:
->  +	 * NSEC_PER_SEC / CLKFREQ =3D 1000 without loosing precision.
->   	                                         ^^^^^^^
-
-I've fixed that up while applying.
-
-> WARNING: Avoid crashing the kernel - try using WARN_ON & recovery code ra=
-ther than BUG() or BUG_ON()
-> #127: FILE: drivers/pwm/pwm-visconti.c:91:
-> +		BUG_ON(pwmc0 > 3);
-
-I think that one is legit. I've turned that into:
-
-	if (WARN_ON(pwmc0 > 3))
-		return -EINVAL;
-
-so that requests for too big period will be rejected rather than crash
-the system. Next time, please run checkpatch before submitting and
-eliminate at least the big warnings.
+Applied, thanks.
 
 Thierry
 
---OOXUOpActKFR3W/b
+--ZaURXP/REy8v30Lq
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmCC/lwACgkQ3SOs138+
-s6GyZg//fJSJJDdj59dL5ufPtYkDzLvfPUP/5WuRD3JMyxANw11LWExaErgZmtC4
-JDAsEWBPV0MwNKECyTpYiCJpKWOjer9lIw4oVCqbMeSjZBaRN7RJJb83j68v2tU0
-ksaN8tGyOLz3UZnJRh3ExXQ3iAwYJcZDRFCjJTypc7Ve2kUdiK3FEv5uPfNpSK8a
-o6DmGe2Lv78F/rn3VZzZtgA2kYsGu8UGW3LM0DygZ1zb/W60x0SlKWAEPfhpUVKV
-+KKMMDlVcfp/G1/V3Iw8X0L1C/psC3QtwM8VFOQuml4EkCxGKF7BUbqxMWgQo/uh
-5ugx5C48cZ4U2aDnfyc1M0Hy7bF3uuSck8PV8bEY6BSci5Wol3z2U27JsZpMKA24
-8HmzBBVlc1l0an2Cd2nAf8osc3r+UKltAzHIBwi46gs43Pt0zc60b/mfu6CJA9V0
-jlGXM5JTWtNxpEhshKvNtk8gpMVieeVC9o4Rh/U8PpZbEZThmBAisn7ygZWFyW7s
-yff9YcV1EI4p5kUVgcBMR/04OBshPDfBz/hpoyzT4t9I6KT6DlSWjB8h94QX71zD
-z+SsL/5YprPAl0QqdzZUvDO+pu8PBVidu12222hnICrgK6u1WcU/My44GgXul22o
-kArqNPZWJvW6GEm5DofV8zvo4mfEfXns2mhOgGE9d4FuhNtumic=
-=YER4
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmCC/p0ACgkQ3SOs138+
+s6EKiw//WUlw9oSjjOjq0rwT1RkI/6JVX0NVzD6JnI+x1LT44jrLmuxqj16xgzj/
+4Fntlu+TH/fcXyK2Qw1CCdrsGtYXuBi1YnZPb/u+Od4zIR25+4tUqTRMu7ogjG9F
+e5XzJybkMKbOJQP8vNe9buCjOvPGP1zVAsgtmat6uIoNMe7cFkP/0ptps5pqkcx9
+UteVm5YM1KtKrD+TYnY0lZ4pyCYJtFefrA4OvXtaqsenNLvw9zSVAmSuX8igZ733
+gyQnd/8Z83c2A3e2nWiw33k6Hib65cZDr0qWFspYRqcC3PS8xG3DecN6lepda6gw
+4tWvJez9xdeVnSHJ3IYGfbytVKwe5ZBws+9Q+B8ywWUOYxk9xPAKlt5X0njYaQpT
+ioLg9+WfQ73euSMJjSHwQbFG8hbQPUiDU15K2xrQSOx8ZhDTV9oN5XdQ6Lt+USZH
+0CD4+kF89dLrDYC0qAFIVIosJChHNtJ2Fb32Y8VVVaB7YJINeqF8+5qMoacShAST
+BAIkLaIbR/cTG8/1ceAzDJSYGqoCxVSitN7rrDMNxe7aBdorsVoIVcyWY+l9KBvk
+Ny9yj/wQpzNIuhsh26PiCjw/tIUcD25KA/okaweNd3xkj1+HHIFcvk53ATqX34b4
+JUmplAV33cqQQRrJLBGFFALAFAaBbE6xXTun7+squG6MpxxFmf8=
+=gUX5
 -----END PGP SIGNATURE-----
 
---OOXUOpActKFR3W/b--
+--ZaURXP/REy8v30Lq--
