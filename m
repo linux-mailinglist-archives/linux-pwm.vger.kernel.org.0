@@ -2,125 +2,107 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33C5836976B
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Apr 2021 18:52:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2B88369785
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 Apr 2021 18:59:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230072AbhDWQxT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 23 Apr 2021 12:53:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46052 "EHLO
+        id S231312AbhDWQ7v (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 23 Apr 2021 12:59:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229691AbhDWQxT (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Apr 2021 12:53:19 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4550BC061574;
-        Fri, 23 Apr 2021 09:52:42 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id j7so21297477eds.8;
-        Fri, 23 Apr 2021 09:52:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jFCniOtGAUvh5tDuIWS7uZa9/8xrAA1r1T8fT2Kl1d8=;
-        b=FjQGgLqAoRAhJDP8bvbuAIWX1fRLtXTbDahJh8lyg9ZwyYqTYQ1JrARnNmgGE1G2fF
-         NddJewqq3uVP6kIqIhAVFRXj1BLLalyAk3qquiW/5rFAl7uuyy/UrdEOdKRK/uP/Fov7
-         Can6OluAi2QOdBAXmgyWKMDze3WaAF20Y7wlUdt4v8a/kFPqjpfneJQpQEca1vvzXQQ1
-         e7D99+zVtTmacVRvTWzKb/tyWzekicGmRNvV/wzHXKSUv4/ASkhoVpvQ25OGiXpblfO3
-         LH0NLRkGWpHDLY/8P069PE3KUJLRo+/6SNsQs6Ymw0TZ0kHFX6U7IW5/lEoBLz7D3Ejw
-         aD9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jFCniOtGAUvh5tDuIWS7uZa9/8xrAA1r1T8fT2Kl1d8=;
-        b=Yudr37XL/J4rtpp/1lwEai0W79AzHprUzOFeE5RviugCZgvxr0EW8FQzVxMcHv+7MF
-         mQ/2/Wl7Q5yg52WypsD7Ez9BqEZf+mhHexMlw3Kl/q2Pyle8h41r5RiftRwc1ayVFHmI
-         3+uLjZj2U+PW9IPEbrdGsVkyFRvaXG9LAxBS9UTg1Vis+s0gIOKlcBaABPvGkwIurIxf
-         uRb6pmuoVFPDiwjYEeVQtEhfGVpCeblVfe1eezJzV+E8hC5939pGoSxGgYb/EtnBxjlE
-         rvVKxnGAiyof18pOq65STuQzSITWbfzFQhGIVoTfqRhtPQTlpjLDFxvc6mp9I7o0UMcg
-         +Z0A==
-X-Gm-Message-State: AOAM530/beQPzhgui5AQo2+UBPx+ltm3scKslJwL3uECYjsP6q/DODpu
-        ByYwH+MYlPgWUFQAagKLJmM=
-X-Google-Smtp-Source: ABdhPJwztJLM5Bl1NlErdY2qO/fU4NaGrY72Dw41ahvzAZi/41DyvMd8wADZX8VGCRAySbgqCt/D9A==
-X-Received: by 2002:aa7:c511:: with SMTP id o17mr5452004edq.335.1619196761013;
-        Fri, 23 Apr 2021 09:52:41 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id q16sm5446999edv.61.2021.04.23.09.52.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Apr 2021 09:52:40 -0700 (PDT)
-Date:   Fri, 23 Apr 2021 18:53:29 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     heiko@sntech.de, robh+dt@kernel.org,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] dt-bindings: pwm: convert pwm-rockchip.txt to YAML
-Message-ID: <YIL7ibC/Pojfw3OT@orome.fritz.box>
-References: <20210412200155.5316-1-jbx6244@gmail.com>
+        with ESMTP id S229957AbhDWQ7v (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Apr 2021 12:59:51 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F9E4C061574
+        for <linux-pwm@vger.kernel.org>; Fri, 23 Apr 2021 09:59:14 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lZz94-0000OI-PA; Fri, 23 Apr 2021 18:59:10 +0200
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lZz94-00077o-0O; Fri, 23 Apr 2021 18:59:10 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-pwm@vger.kernel.org
+Subject: [PATCH v2] pwm: Drop irrelevant error path from pwmchip_remove()
+Date:   Fri, 23 Apr 2021 18:59:02 +0200
+Message-Id: <20210423165902.2439564-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zQJ8OWk5MsO8Q17F"
-Content-Disposition: inline
-In-Reply-To: <20210412200155.5316-1-jbx6244@gmail.com>
-User-Agent: Mutt/2.0.6 (98f8cb83) (2021-03-06)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Since the pwm core uses device links (commit b2c200e3f2fd ("pwm: Add
+consumer device link")) each consumer driver that requested the PWMs is
+already gone. If they called pwm_put() (as they should) the
+PWMF_REQUESTED bit is not set. If they failed (which is a bug) the
+PWMF_REQUESTED bit might still be set, but the driver that cared is
+gone, so nothing bad happens if the pwmchip goes away even if the
+PWMF_REQUESTED is still present.
 
---zQJ8OWk5MsO8Q17F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So the check can be dropped.
 
-On Mon, Apr 12, 2021 at 10:01:52PM +0200, Johan Jonker wrote:
-> Current dts files with 'pwm' nodes are manually verified.
-> In order to automate this process pwm-rockchip.txt
-> has to be converted to yaml.
->=20
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
-> For some SoC nodes this patch serie generates notifications
-> for undocumented "interrupts" properties shared between
-> PWM channels till there is consensus of what to do with it or
-> someone makes a solution for the whole PWM block.
->=20
-> Changed V3:
->   fix mistake with compatibles introduced in V2
-> Changed V2:
->   changed schema for clocks and clock-names
-> ---
->  .../devicetree/bindings/pwm/pwm-rockchip.txt       | 27 -------
->  .../devicetree/bindings/pwm/pwm-rockchip.yaml      | 88 ++++++++++++++++=
-++++++
->  2 files changed, 88 insertions(+), 27 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-rockchip.ya=
-ml
+With this change pwmchip_remove() returns always 0, so lowlevel drivers
+don't need to check the return code any more. Once all drivers dropped
+this check this function can be changed to return void.
 
-All 4 patches applied, thanks.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/pwm/core.c | 16 ++--------------
+ 1 file changed, 2 insertions(+), 14 deletions(-)
 
-Thierry
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index c4d5c0667137..2ff0cc8c3f01 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -324,22 +324,10 @@ EXPORT_SYMBOL_GPL(pwmchip_add);
+  */
+ int pwmchip_remove(struct pwm_chip *chip)
+ {
+-	unsigned int i;
+-	int ret = 0;
+-
+ 	pwmchip_sysfs_unexport(chip);
+ 
+ 	mutex_lock(&pwm_lock);
+ 
+-	for (i = 0; i < chip->npwm; i++) {
+-		struct pwm_device *pwm = &chip->pwms[i];
+-
+-		if (test_bit(PWMF_REQUESTED, &pwm->flags)) {
+-			ret = -EBUSY;
+-			goto out;
+-		}
+-	}
+-
+ 	list_del_init(&chip->list);
+ 
+ 	if (IS_ENABLED(CONFIG_OF))
+@@ -347,9 +335,9 @@ int pwmchip_remove(struct pwm_chip *chip)
+ 
+ 	free_pwms(chip);
+ 
+-out:
+ 	mutex_unlock(&pwm_lock);
+-	return ret;
++
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(pwmchip_remove);
+ 
 
---zQJ8OWk5MsO8Q17F
-Content-Type: application/pgp-signature; name="signature.asc"
+base-commit: 64d7d074acd52e1bdff621f2cb86c0aae9bcef80
+-- 
+2.30.2
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmCC+4kACgkQ3SOs138+
-s6HqWw//ZMveK8MeXwu6wrXBFllrTVKghpCj/TcBnvjT39S+lh/KNUVhkDbki0+A
-VliqplxKSCk2ZPcu9FCnEDN0l8NI7TQLRtJ6QGPnAWuEkAIhn9qaS9VBN1yo6Sob
-0mSvzRy5iGUN90xYyjYujns3oXe0vIxNZwRO/KBztsg6uis2sN3E6zqvbyPl6Pdt
-ll8pY5N+GimqEG5vACKWOpHkVZUp5j/ojfEWfQL/R9S7iVJo1yzoqVLzTyBc2oYx
-CiVFo54KNR/WnacrrC+GIpmgnrLbKEh/bswNugXaZ/Umdd2dhxtgGI8hUMgRUqx1
-rIpWFHboxGLlqeFQORoxxV3a4ybFcZB1wdTbHyb5XsMyfYxFRqabED9K84JxMxpB
-DaxOOBW2jDBiwmJjhWuy2ICE65rtSx6rrGkr4gply7O14A8bllHKrHG6W0DrT2hY
-k1l6J5J+RZc+Ivf3NRpfO1a74/80xXKeXi4KSgfIxl/mM9AGKN6yDVEf0e085rau
-9kGHvOdjuItr7XeneUz0FuSqdKK/6UwyMU+QohELgJ313zKeX0/gOQME7+AKa/36
-4sbGuTXjTXbIjOK5sAk1kR5VLFUcohMVbRfm4c3lI3wjEkrRfPCKnrD0WRy30leq
-7vz7Y0Zn3IciHw0ZL77RMip0doXR8wlX+Qazl5TXqLpY/d4BRW8=
-=RnDA
------END PGP SIGNATURE-----
-
---zQJ8OWk5MsO8Q17F--
