@@ -2,59 +2,59 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6458369C0E
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Apr 2021 23:30:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A2BA369C10
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 Apr 2021 23:33:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231881AbhDWVba (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 23 Apr 2021 17:31:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50792 "EHLO
+        id S232438AbhDWVdo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 23 Apr 2021 17:33:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229488AbhDWVb3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Apr 2021 17:31:29 -0400
-Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25D70C061574
-        for <linux-pwm@vger.kernel.org>; Fri, 23 Apr 2021 14:30:51 -0700 (PDT)
-Received: by mail-ot1-x333.google.com with SMTP id 65-20020a9d03470000b02902808b4aec6dso41745637otv.6
-        for <linux-pwm@vger.kernel.org>; Fri, 23 Apr 2021 14:30:51 -0700 (PDT)
+        with ESMTP id S229488AbhDWVdn (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Apr 2021 17:33:43 -0400
+Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1293FC061574
+        for <linux-pwm@vger.kernel.org>; Fri, 23 Apr 2021 14:33:06 -0700 (PDT)
+Received: by mail-oi1-x22d.google.com with SMTP id u16so33200150oiu.7
+        for <linux-pwm@vger.kernel.org>; Fri, 23 Apr 2021 14:33:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=biSWV55F2dE+el+PFILbFyyqzGxlorix6gdc/rvSk1A=;
-        b=QKLnSy7HaoTthiq8JJVeJC4MwVDhmw1673MXJ1M7z8smE+Iof3gtd4juqf2WjIA7uG
-         jGX3XV1mABlp3VHATKm9zPVoz97OwO/r51APBemFXaAE6cXY9ySi12n1vnbdDKo8skQN
-         DmkX3wRalGuYcZ7HfwjPGp/L922MerrwbSRgIxfzHE/x4EblC8BIjBy6zmCl8sCqHDXh
-         bKy6lWn2qt/eZxfyAseuRaLgh8aOcalQ13QIyq2y+IOmTCKiR6ra3gb9ON0AfyZlYWoG
-         S+xQSDTkLCld+o3WaferAq7PYeWxw1xdmQyin7EzpOKfgGmpkOqUS5MyRJgIWjMsRqCl
-         g6fA==
+        bh=SCQMPElA0WHlgUF2PvhQ3Cu0lyVrRmp2lWXbo4Z3WV8=;
+        b=x1bDHHRuDlQ+knBxxOjwQ6+gpr3D1n66l9uKhtvhJOdGqAb6/laF3Ysbo21kiRMxYz
+         OoOgaF0aY/ZgZoUFWtv7im6qa83S3cADRd7hop5oogSadf4z1tZehLRPSWiSX1EBPMVa
+         W06J15SCe6R5ZEcKmIFqjkoa/kXQfx7s4xX5brvJ7VnF+2ls6pXRAtawy0nLdzaVeYxL
+         MpXhaTFIcYqGqbWa3Hl2+X3N4n/6csqeADi1mXcYNgFJxrKAnx7VRs0GmeVezdf0w/Qd
+         H3Yb3S8GeSO02IaVoVVyPuH7pumgc6IJctGxkLMO+pNrYmV8mx19s8afLllx0Co98oGe
+         rLsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=biSWV55F2dE+el+PFILbFyyqzGxlorix6gdc/rvSk1A=;
-        b=kQcQH23bFlG7cFhBt47GyXJ82m9mY0b0wLS45826hWpqcSwC0AeGewOg/wNo0jRguu
-         Q/GzRAUgZpCuU6fIKIxOQcQbP7zQSNoLodYY1bz3lgYZ4tMzr1cxmpInLEy1pZcgFPgI
-         HWA9S+sQ4i2yfHBN7Ww6VKLqWfmEs2WM4a+mK3rphp2q71QrbXzDMTbLIqjN9nsuyRU7
-         vR2JjFnVKVrX/ixBMhLkiFCqSDm32TcspP8b7e2Ho0QDfI4otK78wukUU8Aff41CpVor
-         rBqdl1kuje01MQSla/4a3P6XQHVMmNTynECtUphGU/LIbErkrcwGu7f3fbSg8/NPeCt9
-         Lp7g==
-X-Gm-Message-State: AOAM531aHCCAEmEJ2zjkeF6b08e+jZIgPMh961dj0HEe9gtO7IL6rOw2
-        9+K4+4fhKI6ea1qu0QLBwwGbeA==
-X-Google-Smtp-Source: ABdhPJySh+dpatWG7Z09QnFYMgdTR7IGynzmALJgchtxrZmyIRPJz2Wxrx7EAtf6GBplbWUmIlVrYA==
-X-Received: by 2002:a9d:2f04:: with SMTP id h4mr5030788otb.364.1619213450099;
-        Fri, 23 Apr 2021 14:30:50 -0700 (PDT)
+        bh=SCQMPElA0WHlgUF2PvhQ3Cu0lyVrRmp2lWXbo4Z3WV8=;
+        b=bleLObEbplVFhpfWZ3/wx4vlQq9hmZMvlYBmciQIME5TZWT9dtXtXKjxUI0Rtf7MPa
+         iPaqeBKYEwBhpclC0kekw4p8gxxneMQptsuK0aIf+kZbTLTdtqouE6UFfg2JMbw+iqn5
+         tkdnes7wbH266Woxu36ddmX7ehGIUbsJcxpu31Crz47nGsJOsbRQDI6GAqZe+/L0Jdgp
+         mUCfzVv38HMjE9ZqgnxFbqIyvx6vBsqYemT4Tx8DaWfqOIOK/d/7IO4N8I5A25tJATbX
+         pXDMmUKjPCCtwzaqezGf9NggzkDkceYGha2KTonrO0KrURNSHC4yHWxPUPxeR++07291
+         +NEg==
+X-Gm-Message-State: AOAM533dmFpLvZGRSbaaAWH9bHNk6+xsSHrzwYadVGrjTykekuOyKRHD
+        d2jbGJk/REyU9D+Pxqqfw+CYFYGSYcwf2w==
+X-Google-Smtp-Source: ABdhPJzscdZhFyTFiR9k17dKZYLfujVNwIT+PP8DQHzVaqsvux2IjQjZgADO1BMOOJwgoN6TH9c4NQ==
+X-Received: by 2002:a05:6808:10cc:: with SMTP id s12mr4266218ois.148.1619213585404;
+        Fri, 23 Apr 2021 14:33:05 -0700 (PDT)
 Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id a19sm1617075oto.50.2021.04.23.14.30.49
+        by smtp.gmail.com with ESMTPSA id 34sm1679951otf.38.2021.04.23.14.33.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Apr 2021 14:30:49 -0700 (PDT)
+        Fri, 23 Apr 2021 14:33:05 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>
 Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pwm: Introduce single-PWM of_xlate function
-Date:   Fri, 23 Apr 2021 16:30:48 -0500
-Message-Id: <20210423213048.1370821-1-bjorn.andersson@linaro.org>
+Subject: [PATCH v2] pwm: Introduce single-PWM of_xlate function
+Date:   Fri, 23 Apr 2021 16:33:04 -0500
+Message-Id: <20210423213304.1371143-1-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.31.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -72,9 +72,14 @@ of_xlate by such drivers and migrate the pxa driver to use this.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
+
+Changes since v1:
+- Included the pwm.h change in the commit...
+
  drivers/pwm/core.c    | 24 ++++++++++++++++++++++++
  drivers/pwm/pwm-pxa.c | 16 +---------------
- 2 files changed, 25 insertions(+), 15 deletions(-)
+ include/linux/pwm.h   |  2 ++
+ 3 files changed, 27 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
 index c4d5c0667137..25ed23cdf0d3 100644
@@ -145,6 +150,19 @@ index cfb683827d32..8cd82fb54483 100644
  		pwm->chip.of_pwm_n_cells = 1;
  	}
  
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index 5bb90af4997e..0ac242a5b5e4 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -405,6 +405,8 @@ struct pwm_device *pwm_request_from_chip(struct pwm_chip *chip,
+ 
+ struct pwm_device *of_pwm_xlate_with_flags(struct pwm_chip *pc,
+ 		const struct of_phandle_args *args);
++struct pwm_device *of_pwm_single_xlate(struct pwm_chip *pc,
++				       const struct of_phandle_args *args);
+ 
+ struct pwm_device *pwm_get(struct device *dev, const char *con_id);
+ struct pwm_device *of_pwm_get(struct device *dev, struct device_node *np,
 -- 
 2.31.0
 
