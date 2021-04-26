@@ -2,37 +2,36 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C5A436B4F6
-	for <lists+linux-pwm@lfdr.de>; Mon, 26 Apr 2021 16:34:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC62A36B560
+	for <lists+linux-pwm@lfdr.de>; Mon, 26 Apr 2021 17:04:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233867AbhDZOen (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 26 Apr 2021 10:34:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47824 "EHLO
+        id S233890AbhDZPEo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 26 Apr 2021 11:04:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233755AbhDZOem (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 26 Apr 2021 10:34:42 -0400
+        with ESMTP id S233573AbhDZPEn (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 26 Apr 2021 11:04:43 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47979C061574
-        for <linux-pwm@vger.kernel.org>; Mon, 26 Apr 2021 07:34:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03031C061574
+        for <linux-pwm@vger.kernel.org>; Mon, 26 Apr 2021 08:04:01 -0700 (PDT)
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lb2JD-0004JH-C9; Mon, 26 Apr 2021 16:33:59 +0200
+        id 1lb2mE-0007g4-HF; Mon, 26 Apr 2021 17:03:58 +0200
 Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lb2JD-0006LT-1c; Mon, 26 Apr 2021 16:33:59 +0200
+        id 1lb2mB-0008NW-RB; Mon, 26 Apr 2021 17:03:55 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>,
+To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>
 Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH 2/2] pwm: spear: Free resources only after pwmchip_remove()
-Date:   Mon, 26 Apr 2021 16:33:53 +0200
-Message-Id: <20210426143353.2828160-2-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH] pwm: visconti: Fix and simplify period calculation
+Date:   Mon, 26 Apr 2021 17:03:50 +0200
+Message-Id: <20210426150350.2829255-1-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210426143353.2828160-1-u.kleine-koenig@pengutronix.de>
-References: <20210426143353.2828160-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -44,34 +43,47 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Before pwmchip_remove() returns the PWM is expected to be functional. So
-remove the pwmchip before disabling the clocks. The check for
-pwmchip_remove()'s return value is dropped as this function returns
-effectively always 0 and returning an error in a remove callback is
-useless anyhow (as the device core ignores it and drops devm allocated
-resources).
+With the original code a request for period = 65536000 ns and period =
+32768000 ns yields the same register settings (which results in 32768000
+ns) because the value for pwmc0 was miscalculated.
 
+Also simplify using that fls(0) is 0.
+
+Fixes: 721b595744f1 ("pwm: visconti: Add Toshiba Visconti SoC PWM support")
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-spear.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pwm/pwm-visconti.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pwm/pwm-spear.c b/drivers/pwm/pwm-spear.c
-index 6879b49581b3..3a4e52182251 100644
---- a/drivers/pwm/pwm-spear.c
-+++ b/drivers/pwm/pwm-spear.c
-@@ -229,9 +229,10 @@ static int spear_pwm_remove(struct platform_device *pdev)
- {
- 	struct spear_pwm_chip *pc = platform_get_drvdata(pdev);
+diff --git a/drivers/pwm/pwm-visconti.c b/drivers/pwm/pwm-visconti.c
+index 46d903786366..af4e37d3e3a6 100644
+--- a/drivers/pwm/pwm-visconti.c
++++ b/drivers/pwm/pwm-visconti.c
+@@ -82,17 +82,14 @@ static int visconti_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		return -ERANGE;
  
-+	pwmchip_remove(&pc->chip);
-+
- 	/* clk was prepared in probe, hence unprepare it here */
- 	clk_unprepare(pc->clk);
--	return pwmchip_remove(&pc->chip);
- }
+ 	/*
+-	 * PWMC controls a divider that divides the input clk by a
+-	 * power of two between 1 and 8. As a smaller divider yields
+-	 * higher precision, pick the smallest possible one.
++	 * PWMC controls a divider that divides the input clk by a power of two
++	 * between 1 and 8. As a smaller divider yields higher precision, pick
++	 * the smallest possible one. As period is at most 0xffff << 3, pwmc0 is
++	 * in the intended range [0..3].
+ 	 */
+-	if (period > 0xffff) {
+-		pwmc0 = ilog2(period >> 16);
+-		if (WARN_ON(pwmc0 > 3))
+-			return -EINVAL;
+-	} else {
+-		pwmc0 = 0;
+-	}
++	pwmc0 = fls(period >> 16);
++	if (WARN_ON(pwmc0 > 3))
++		return -EINVAL;
  
- static const struct of_device_id spear_pwm_of_match[] = {
+ 	period >>= pwmc0;
+ 	duty_cycle >>= pwmc0;
 -- 
 2.30.2
 
