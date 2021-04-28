@@ -2,94 +2,94 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A408236CFF4
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 Apr 2021 02:20:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0F7D36D20C
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 Apr 2021 08:14:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237984AbhD1AUu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 27 Apr 2021 20:20:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44580 "EHLO
+        id S235940AbhD1GOv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 28 Apr 2021 02:14:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230368AbhD1AUt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 27 Apr 2021 20:20:49 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B59C061574
-        for <linux-pwm@vger.kernel.org>; Tue, 27 Apr 2021 17:20:05 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id i24so12484727edy.8
-        for <linux-pwm@vger.kernel.org>; Tue, 27 Apr 2021 17:20:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=prusa3d-cz.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=coh3uK8A3rVZT8BT4tCqVuJ+myblPEITgGPRbovsrpo=;
-        b=S4YKT1KkCm3jQg2KVZ/ehWg+UKPP8SljKPVr7IvlzAl4i7ZJH8UEBMkm1M866bGHNN
-         Mt2MwDJbZTwVBZiBwbmV9mgVAP0X4thqHOhxU7wzgVphQI2kxHQyQpXw7gPdR1nQi4lc
-         e+cNPJUarku2gyp1VxSJKo3aLkHpoIPW2v8dkc4c1dF/fk8zoYPpcM4oT/gtJ+CPP8qe
-         BNJE16xNguIPSSs6Wtn9JLtn1QCAsoTi0/pa2FsYNA96WVqEa51nZjW+Ywn+X49ldQ9D
-         +N7bjoMKGwl4rASICkYWpSj7dgm/lsVEgO7HcXJelazmFu+x2PGV2cn+9JW9IEXoXYQx
-         MMAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=coh3uK8A3rVZT8BT4tCqVuJ+myblPEITgGPRbovsrpo=;
-        b=sIHPkZ9ek/c26IlnTMD3OFdlkIHQPMOHZ8d01MU9DZbK0UcW8WA4N8JkvydVgvYRwt
-         H/O7xg8+RJIu2ezvHjipWgRyPG6fBrAMIn0ltdzjoHGFWDHpCKrVtVxdz/XOKjfQdDOh
-         CZ2SKeTfWauvxVSLmQLBDVOxiASiW6lMmdX2paxvmxAiq7El8vOdgxPpsW8LhCihYHl0
-         C77vShq9ZDcefEcFa2QjWqKo76aE5t13ExqOPu7rMaG1BIIjR6MoBzlt+7/e/CjtY+ZW
-         5kJstxpAKDOmA7HF7BM5y4vBcyOec5syMnSotOO1SYQJw8ohyvQdx9WuemnIKua7uaAA
-         vZbQ==
-X-Gm-Message-State: AOAM531CRMeFafnsWQ1GAcaqmn7mcLpjjR4PKfDCfvk0b69hA8K6Lz2Z
-        a7+kWrYNjS8b7BiJzq5mhEeUsw==
-X-Google-Smtp-Source: ABdhPJz0ekb3OQBIyH6iYc/iKBgeHfQ6WBKq95E5jHRFfKk4F1digJy8gYassw6JCOF9vpb6PuKIag==
-X-Received: by 2002:a05:6402:280c:: with SMTP id h12mr7359213ede.332.1619569204001;
-        Tue, 27 Apr 2021 17:20:04 -0700 (PDT)
-Received: from zen.local (ip-213-220-236-33.net.upcbroadband.cz. [213.220.236.33])
-        by smtp.gmail.com with ESMTPSA id rs8sm802460ejb.17.2021.04.27.17.20.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Apr 2021 17:20:03 -0700 (PDT)
-From:   Roman Beranek <roman.beranek@prusa3d.cz>
-X-Google-Original-From: Roman Beranek <roman.beranek@prusa3d.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        with ESMTP id S229464AbhD1GOv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Apr 2021 02:14:51 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDA1AC061574
+        for <linux-pwm@vger.kernel.org>; Tue, 27 Apr 2021 23:14:06 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lbdSR-0002qp-S0; Wed, 28 Apr 2021 08:13:59 +0200
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lbdSP-0003Xz-78; Wed, 28 Apr 2021 08:13:57 +0200
+Date:   Wed, 28 Apr 2021 08:13:57 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Roman Beranek <roman.beranek@prusa3d.cz>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Maxime Ripard <mripard@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-sunxi@lists.linux.dev, linux-sunxi@googlegroups.com,
         Roman Beranek <roman.beranek@prusa3d.com>
-Subject: [PATCH] pwm: sun4i: Round delay time up to a nearest jiffy
-Date:   Wed, 28 Apr 2021 02:19:46 +0200
-Message-Id: <20210428001946.1059426-1-roman.beranek@prusa3d.com>
-X-Mailer: git-send-email 2.31.1
+Subject: Re: [PATCH] pwm: sun4i: Round delay time up to a nearest jiffy
+Message-ID: <20210428061357.725m72aikc52n4gg@pengutronix.de>
+References: <20210428001946.1059426-1-roman.beranek@prusa3d.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jcd6h5dtj45zoqrf"
+Content-Disposition: inline
+In-Reply-To: <20210428001946.1059426-1-roman.beranek@prusa3d.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-More often than not, a PWM period may span nowhere near as far
-as 1 jiffy, yet it still must be waited upon before the channel
-is disabled.
 
-Signed-off-by: Roman Beranek <roman.beranek@prusa3d.com>
----
- drivers/pwm/pwm-sun4i.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--jcd6h5dtj45zoqrf
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index ce5c4fc8d..f4b991048 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -285,7 +285,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	val = (duty & PWM_DTY_MASK) | PWM_PRD(period);
- 	sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
- 	sun4i_pwm->next_period[pwm->hwpwm] = jiffies +
--		nsecs_to_jiffies(cstate.period + 1000);
-+		nsecs_to_jiffies(cstate.period) + 1;
- 
- 	if (state->polarity != PWM_POLARITY_NORMAL)
- 		ctrl &= ~BIT_CH(PWM_ACT_STATE, pwm->hwpwm);
--- 
-2.31.1
+Hello Roman,
 
+On Wed, Apr 28, 2021 at 02:19:46AM +0200, Roman Beranek wrote:
+> More often than not, a PWM period may span nowhere near as far
+> as 1 jiffy, yet it still must be waited upon before the channel
+> is disabled.
+
+I wonder what happens if you don't wait long enough. Is this a
+theoretical issue, or do you see an (occasional?) breakage that is fixed
+by this patch?
+
+I guess the problem is that if you disable too early the output freezes
+and that might be in a state where the output is still active? Would
+polling the PWMx_RDY bit in the control register help here?
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--jcd6h5dtj45zoqrf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmCI/SIACgkQwfwUeK3K
+7AkXLAf/bUbMStbK4wgMlibFbdHTkhIKSDtArwAbiulVWM1p/j7hivJ/JASFPjaI
+ZoY077XgIBojXcgJ4eqsnHJGmEevyvcxiBJCF/TDNUNgr4Azk9zO6dh3zCIDtQT9
+gKimlPCsrPOOt53Ai0N1LOKgghYa7g6tS1Bdf7dEtQuryX52NUmBgHnbvz2AoiAo
+mb6e7bIEyEUSpjIfIjVGg06WmfP0Zo6CyQRQqsBsgJ2I3X/lHkT2H3eV8yHWRbwK
+fTO17Bk1uVXgPYPAcIm74bBcUjFpApkbJA4671mohspC23SYsPhN+6k68uUeIoWh
+M56TvuCDCsEF0iiF0SCSHP39EW1W8Q==
+=sMKq
+-----END PGP SIGNATURE-----
+
+--jcd6h5dtj45zoqrf--
