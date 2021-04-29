@@ -2,111 +2,100 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D03B036F19C
-	for <lists+linux-pwm@lfdr.de>; Thu, 29 Apr 2021 23:12:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91F8436F1A4
+	for <lists+linux-pwm@lfdr.de>; Thu, 29 Apr 2021 23:15:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236795AbhD2VNP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 29 Apr 2021 17:13:15 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:58834 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234795AbhD2VNM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 29 Apr 2021 17:13:12 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 151021C0BA1; Thu, 29 Apr 2021 23:12:24 +0200 (CEST)
-Date:   Thu, 29 Apr 2021 23:12:23 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        id S232246AbhD2VQE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 29 Apr 2021 17:16:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234795AbhD2VQD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 29 Apr 2021 17:16:03 -0400
+Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1005C061346
+        for <linux-pwm@vger.kernel.org>; Thu, 29 Apr 2021 14:15:15 -0700 (PDT)
+Received: by mail-ot1-x330.google.com with SMTP id x54-20020a05683040b6b02902a527443e2fso11568585ott.1
+        for <linux-pwm@vger.kernel.org>; Thu, 29 Apr 2021 14:15:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kTyxnJ1yi531R5AZDzagRwpZVx/RNSIurfNN65budp8=;
+        b=S6rFyfWZAPendWMKR6bwGEcvDFTkl7QZLv//CsPWs+gx5rzHkpv+sGP88ks6qDSNaH
+         yHN6ZqScV5txpDI8SwAvPcaUDwIEgzHVsJBkGLgTb/4qwU28wKmqTdyUhxmMAnKd+ytL
+         /18rCLhTWe8cX6f9HkzQLxy18ftGaLtCNZ7iq7juIYFOhmpM0o13hevqD7lhXRSMf+PU
+         Bs03VQ+W355RD1yv/iSyz6EyealoMwz++a7c7AT5JTXnzZGfO75KsFhPvyqUxugGhreQ
+         O00JjuuTaEmpw0pk+dRuuOVGwpnPVvQIUAE51vIpaL34lv+ia+ehFbCmiOdZ1s9qkZFS
+         uySA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kTyxnJ1yi531R5AZDzagRwpZVx/RNSIurfNN65budp8=;
+        b=Q0ZUrxlODa+QFu67D2aP8WQZ8dYTeredWdvoK5SdqxtOOKd3KH3glRQeKlSzETr8l8
+         B4ahHlFqXfzYvwmIEllFJsUP5C3O9eSpM/a9YBUiqlCPrNsOxu62AF3ifJFepcBAuQhi
+         r1JyxwlSFbbgqIi2am+VDKWaTMdwU8YF9lHh7SohsFXTh2DUoJKy1AROP9Ylmoe0lIzP
+         7jr2W4bGwBK3/v9P/DLyi/xEcglKmVOTz4jYI0+tD+8ZjpagnsG0nYeCN3uOq1kLnW+3
+         nc4rC1h/s9qlhGN4TFZVHoBwRPpCSVvZY7ZfxuGTS+cUWBpnrRwhSjtURbTwDDc280U4
+         CBow==
+X-Gm-Message-State: AOAM531AjBHkXg7xTIhWgL/cA8pwEkeYOeyMYY8zCafqmbuCBDylp5jr
+        r4ywPlXFxAmemCjWoXgivy70lQ==
+X-Google-Smtp-Source: ABdhPJwI/aV509jX6FittC3nahit3zZyjvjjwFAwUQTbcgiygCVzFvo2c9Z6rxsC+CBfEC0jSr/55g==
+X-Received: by 2002:a9d:74c6:: with SMTP id a6mr1053267otl.290.1619730914250;
+        Thu, 29 Apr 2021 14:15:14 -0700 (PDT)
+Received: from localhost.localdomain (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id y67sm242707otb.1.2021.04.29.14.15.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Apr 2021 14:15:13 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
         Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Martin Botka <martin.botka1@gmail.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>
+Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v6 2/4] leds: Add driver for Qualcomm LPG
-Message-ID: <20210429211223.GA5480@amd>
-References: <20201021201224.3430546-1-bjorn.andersson@linaro.org>
- <20201021201224.3430546-3-bjorn.andersson@linaro.org>
- <20201029181357.GE26053@duo.ucw.cz>
- <YIn50NW+Pimqfsih@builder.lan>
+        linux-pwm@vger.kernel.org,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Yassine Oudjana <y.oudjana@protonmail.com>,
+        Luca Weiss <luca@z3ntu.xyz>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: [PATCH v7 0/6] Qualcomm Light Pulse Generator
+Date:   Thu, 29 Apr 2021 14:15:11 -0700
+Message-Id: <20210429211517.312792-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
-Content-Disposition: inline
-In-Reply-To: <YIn50NW+Pimqfsih@builder.lan>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+This introduces support for the Qualcomm Light Pulse Generator block found in a
+wide range of Qualcomm PMICs.
 
---wRRV7LY7NUeQGEoC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Bjorn Andersson (6):
+  dt-bindings: leds: Add Qualcomm Light Pulse Generator binding
+  leds: Add driver for Qualcomm LPG
+  arm64: dts: qcom: Add LPG to pm8916, pm8994, pmi8994 and pmi8998
+  arm64: dts: qcom: sdm845: Enable user LEDs on DB845c
+  arm64: dts: qcom: pmi8994: Define MPP block
+  arm64: dts: qcom: db820c: Add user LEDs
 
-Hi!
+ .../bindings/leds/leds-qcom-lpg.yaml          |  158 ++
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi  |   49 +
+ arch/arm64/boot/dts/qcom/pm8916.dtsi          |    8 +
+ arch/arm64/boot/dts/qcom/pm8994.dtsi          |   10 +
+ arch/arm64/boot/dts/qcom/pmi8994.dtsi         |   22 +
+ arch/arm64/boot/dts/qcom/pmi8998.dtsi         |   10 +
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts    |   24 +
+ drivers/leds/Kconfig                          |    3 +
+ drivers/leds/Makefile                         |    3 +
+ drivers/leds/rgb/leds-qcom-lpg.c              | 1286 +++++++++++++++++
+ 10 files changed, 1573 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
+ create mode 100644 drivers/leds/rgb/leds-qcom-lpg.c
 
-> > > +static int lpg_add_pwm(struct lpg *lpg)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	lpg->pwm.base =3D -1;
-> > > +	lpg->pwm.dev =3D lpg->dev;
-> > > +	lpg->pwm.npwm =3D lpg->num_channels;
-> > > +	lpg->pwm.ops =3D &lpg_pwm_ops;
-> > > +
-> > > +	ret =3D pwmchip_add(&lpg->pwm);
-> > > +	if (ret)
-> > > +		dev_err(lpg->dev, "failed to add PWM chip: ret %d\n", ret);
-> > > +
-> > > +	return ret;
-> > > +}
-> >=20
-> > Do we need to do this? I'd rather have LED driver, than LED+PWM
-> > driver...
-> >=20
->=20
-> Yes, I believe we need to do this.
->=20
-> Because each piece of hardware has N channels, which can be wired to
-> LEDs, grouped with other channels and wired to multicolor LEDs or be
-> used as PWM signals. And this configuration is board specific.
->=20
-> One such example is the laptop in front of me, which has 3 channels
-> wired to an RGB LED and 1 channel wired as a backlight control signal
-> (i.e. using pwm-backlight).  Another example is a devboard where the
-> 4 channels are wired to 4 LEDs.
+-- 
+2.29.2
 
-Ok, so this is actually important. In this case you should have PWM
-layer, exporting PWMs, and then rgb-LED driver that takes three of
-those PWMs and turns them into LED, no?
-
-And ... surprise ... that is likely to help other people, as LEDs
-connected to PWMs are quite common.
-
-Hmm.?
-
-If you can't do this for some reason, you should probably explain in
-the changelog, because this is going to be FAQ.
-
-Best regards,
-								Pavel
---=20
-http://www.livejournal.com/~pavelmachek
-
---wRRV7LY7NUeQGEoC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAmCLITcACgkQMOfwapXb+vK+BACeMLv8lEYnpH1WKHwqzQQfYMGc
-5O4AoKuyGX4vAejCvrj2ZaEI2S6+fTMH
-=al0Q
------END PGP SIGNATURE-----
-
---wRRV7LY7NUeQGEoC--
