@@ -2,213 +2,143 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCAEF36E265
-	for <lists+linux-pwm@lfdr.de>; Thu, 29 Apr 2021 02:12:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 247E136E523
+	for <lists+linux-pwm@lfdr.de>; Thu, 29 Apr 2021 08:52:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232284AbhD2AM5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 28 Apr 2021 20:12:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49760 "EHLO
+        id S239047AbhD2GxJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 29 Apr 2021 02:53:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232308AbhD2AM4 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Apr 2021 20:12:56 -0400
-Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85CA0C06138B
-        for <linux-pwm@vger.kernel.org>; Wed, 28 Apr 2021 17:12:10 -0700 (PDT)
-Received: by mail-oi1-x22d.google.com with SMTP id t24so7418328oic.10
-        for <linux-pwm@vger.kernel.org>; Wed, 28 Apr 2021 17:12:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=SBQkZZ+AM0rdRiolN8pMUJvJaHdqRcP6uvGtBB7hbVU=;
-        b=ZoTQshL6LSUn3Lj4/ZAJK9Rw3XfU8aTAMNv0jvQ6LotAVOdLClfvB+3CeSpCEioye0
-         Xtopma3PqjaDfDfsQayOuP4TbqJWt9iSo+X07bTjJZrtqsrpD62HHGpNjKK8gv1NaNtS
-         j+jH6knXMDHPhdU/nGtL0OIOSn/aAekpdbSYjfJzWoxRqf7OTjh4v4eEpfubQ2W/pv6d
-         Z+RgHfkEWL9+um/+yz3n1MeBS04aaAlWZ1J852+CB8wQARNwCvxGxntYdB7vjtAt8hzm
-         umKD+6zJY4V0bBk45x5b0yvwel00U0JtsWLN76hqI9/nZIU2JQov5EqcHbyL4pPBuLAT
-         GL4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SBQkZZ+AM0rdRiolN8pMUJvJaHdqRcP6uvGtBB7hbVU=;
-        b=kiS8AuM62TfdVpHQdfnOzaONITQ5JBVDWyswHt/Y37IL+jJcn8LwvRp2Xk4MFzcovU
-         KjRfoqEIzwjAmyOlj6hpQ3bXG5n39b1cnQ6AfPjF0+u0tJjvWAi+DWHGOuF7EPT64kUn
-         MXT6sm/To9YiEug865ujspzizxghGN5uE1Z7FTBnUHFb4hrL1EvmtedYWbaindS8fXV3
-         O0DitUzbop+svhVyCH3fuKXIcFgpoOehxrP7RG5WoPi82REYt5pMQf9jZZjel4hX0GKJ
-         LB9Vn4YRosaH72Gj8cAvpM321qJte8JdMsLBbl2a38Za0E+RvqeKxTlQPjUeHyROjRee
-         EhqA==
-X-Gm-Message-State: AOAM533ftPPoaSaltDF721e9bYzmEGI4Nh2dsom2OqqxOHviaeTxFV37
-        9hRnlhnXBXm14UaTJfRP1SgA7Q==
-X-Google-Smtp-Source: ABdhPJxVHBqD0ADdSUFDRMR3ZR31HODm2e3SR+lV5ybAgqah5lCuPwSWrEvzbrK39xY68/DgooIHzA==
-X-Received: by 2002:aca:5845:: with SMTP id m66mr5007370oib.0.1619655123470;
-        Wed, 28 Apr 2021 17:12:03 -0700 (PDT)
-Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id r63sm305743oia.43.2021.04.28.17.12.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Apr 2021 17:12:03 -0700 (PDT)
-Date:   Wed, 28 Apr 2021 19:12:00 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Martin Botka <martin.botka1@gmail.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v6 2/4] leds: Add driver for Qualcomm LPG
-Message-ID: <YIn50NW+Pimqfsih@builder.lan>
-References: <20201021201224.3430546-1-bjorn.andersson@linaro.org>
- <20201021201224.3430546-3-bjorn.andersson@linaro.org>
- <20201029181357.GE26053@duo.ucw.cz>
+        with ESMTP id S238726AbhD2GxI (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 29 Apr 2021 02:53:08 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3241C06138B
+        for <linux-pwm@vger.kernel.org>; Wed, 28 Apr 2021 23:52:22 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lc0X0-0002j9-JE; Thu, 29 Apr 2021 08:52:14 +0200
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lc0Wz-0002AX-Ul; Thu, 29 Apr 2021 08:52:13 +0200
+Date:   Thu, 29 Apr 2021 08:52:13 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
+        subbaram@codeaurora.org, collinsd@codeaurora.org,
+        aghayal@codeaurora.org
+Subject: Re: [PATCH 2/2] pwm: pwm-qcom: add driver for PWM modules in QCOM
+ PMICs
+Message-ID: <20210429065213.inajpznvfxa2xsld@pengutronix.de>
+References: <20210427102247.822-1-fenglinw@codeaurora.org>
+ <20210427102247.822-3-fenglinw@codeaurora.org>
+ <20210427170748.wglupc6zwrndalxs@pengutronix.de>
+ <YImfkM/ll1nCmopq@orome.fritz.box>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="y4s53szfi6y5jve3"
 Content-Disposition: inline
-In-Reply-To: <20201029181357.GE26053@duo.ucw.cz>
+In-Reply-To: <YImfkM/ll1nCmopq@orome.fritz.box>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu 29 Oct 13:13 CDT 2020, Pavel Machek wrote:
 
-> Hi!
-> 
-> > The Light Pulse Generator (LPG) is a PWM-block found in a wide range of
-> > PMICs from Qualcomm. It can operate on fixed parameters or based on a
-> > lookup-table, altering the duty cycle over time - which provides the
-> > means for e.g. hardware assisted transitions of LED brightness.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> > 
-> > Changes since v5:
-> > - Make sure to not used the state of the last channel in a group to determine
-> >   if the current sink should be active for all channels in the group.
-> > - Replacement of unsigned -1 with UINT_MAX
-> > - Work around potential overflow by using larger data types, instead of separate code paths
-> > - Use cpu_to_l16() rather than hand rolling them
-> > - Minor style cleanups
-> > 
-> >  drivers/leds/Kconfig         |    9 +
-> >  drivers/leds/Makefile        |    1 +
-> >  drivers/leds/leds-qcom-lpg.c | 1190 ++++++++++++++++++++++++++++++++++
-> >  3 files changed, 1200 insertions(+)
-> >  create mode 100644 drivers/leds/leds-qcom-lpg.c
-> 
-> Let's put this into drivers/leds/rgb/. You may need to create it.
-> 
+--y4s53szfi6y5jve3
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Will do so.
+Hello,
 
-> 
-> > +static int lpg_lut_store(struct lpg *lpg, struct led_pattern *pattern,
-> > +			 size_t len, unsigned int *lo_idx, unsigned int *hi_idx)
-> > +{
-> > +	unsigned int idx;
-> > +	__le16 val;
-> 
-> No need for __XX variants outside of headers meant for userspace.
-> 
+On Wed, Apr 28, 2021 at 07:46:56PM +0200, Thierry Reding wrote:
+> On Tue, Apr 27, 2021 at 07:07:48PM +0200, Uwe Kleine-K=F6nig wrote:
+> > I would like to see the register definition to use a common prefix (like
+> > QCOM_PWM_) and that the names of bit fields include the register name.
+> > So something like:
+> >=20
+> > 	#define QCOM_PWM_PWM_SIZE_CLK		0x41
+> > 	#define QCOM_PWM_PWM_SIZE_CLK_FREQ_SEL 		GENMASK(1, 0)
+> >=20
+> > even if the names are quite long, its usage is less error prone. Maybe
+> > it makes sense to drop the duplicated PWM (but only if all or no
+> > register contains PWM in its name according to the reference manual).
+> > Also maybe QCOM_PWM_PWMSIZECLK_FREQSEL might be a good choice. I let you
+> > judge about the details.
+>=20
+> Please stop requesting this. A common prefix is good for namespacing
+> symbols, but these defines are used only within this file, so there's no
+> need to namespace them.
 
-__le16 is the in-kernel return type for cpu_to_le16(), but after further
-review I believe I don't need to do this.
+I do consider it important. The goal of my review comments is to improve
+the drivers according to what I consider sensible even if that might not
+fit your metrics.=20
 
-> > +#define LPG_ENABLE_GLITCH_REMOVAL	BIT(5)
-> > +
-> > +static void lpg_enable_glitch(struct lpg_channel *chan)
-> > +{
-> > +	struct lpg *lpg = chan->lpg;
-> > +
-> > +	regmap_update_bits(lpg->map, chan->base + PWM_TYPE_CONFIG_REG,
-> > +			   LPG_ENABLE_GLITCH_REMOVAL, 0);
-> > +}
-> > +
-> > +static void lpg_disable_glitch(struct lpg_channel *chan)
-> > +{
-> > +	struct lpg *lpg = chan->lpg;
-> > +
-> > +	regmap_update_bits(lpg->map, chan->base + PWM_TYPE_CONFIG_REG,
-> > +			   LPG_ENABLE_GLITCH_REMOVAL,
-> > +			   LPG_ENABLE_GLITCH_REMOVAL);
-> > +}
-> 
-> Helper functions for single register write is kind of overkill...
-> 
+Consistent name(space)ing is sensible because the names of static
+functions are used in backtraces. It is sensible because tools like
+ctags, etags and cscope work better when names are unique. It is
+sensible because it's harder than necessary to spot the error in
 
-Yes, it is, but it keep lpg_apply() tidy.
+	writel(PWM_EN_GLITCH_REMOVAL_MASK, base + REG_ENABLE_CONTROL);
 
-> > +static int lpg_blink_set(struct lpg_led *led,
-> > +			 unsigned long delay_on, unsigned long delay_off)
-> > +{
-> > +	struct lpg_channel *chan;
-> > +	unsigned int period_us;
-> > +	unsigned int duty_us;
-> > +	int i;
-> > +
-> > +	if (!delay_on && !delay_off) {
-> > +		delay_on = 500;
-> > +		delay_off = 500;
-> > +	}
-> 
-> Aren't you supposed to modify the values passed to you, so that
-> userspace knows what the default rate is?
-> 
+=2E It is sensible because the rule "Use namespacing for all symbols" is
+easier than "Use namespacing for symbols that might conflict with
+(present or future) names in the core or that might appear in user
+visible messages like backtraces or KASAN reports". It's sensible
+because then it's obvious when reading a code line that the symbol is
+driver specific. It is useful to have a common prefix for driver
+functions because that makes it easier to select them for tracing.
 
-I had missed this.
+> Forcing everyone to use a specific prefix is just going to add a bunch
+> of characters but doesn't actually add any value.
 
-> 
-> > +	ret = lpg_lut_store(lpg, pattern, len, &lo_idx, &hi_idx);
-> > +	if (ret < 0)
-> > +		goto out;
-> 
-> Just do direct return.
-> 
+That's your opinion and I disagree. I do see a value and the "burden" of
+these additional characters is quite worth its costs. In my bubble most
+people also see this value. This includes the coworkers I talked to,
+several other maintainers also insist on common prefixes[1] and it
+matches what my software engineering professor taught me during my
+studies. I also agree that longer names are more annoying than short
+ones, but that doesn't outweigh the advantages in my eyes and a good
+editor helps here.
+=20
+Best regards
+Uwe
 
-Will do.
+[1] A few posts that I found quickly:
+    https://lore.kernel.org/lkml/YH2k5xnD%2F+CKnMBQ@hovoldconsulting.com/
+    https://lore.kernel.org/lkml/CAPDyKFpg1qJD0r54sBC3hCoFey_+gwAL1n2o-aGwn=
+AzAan5p7w@mail.gmail.com/
+    https://lore.kernel.org/lkml/CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBY=
+OyFiVyOeg@mail.gmail.com/
+    https://lore.kernel.org/linux-can/fe0a8a9b-35c6-8f23-5968-0b14abb6078d@=
+pengutronix.de/
+    https://lore.kernel.org/netdev/20190327084422.4209-16-maxime.chevallier=
+@bootlin.com/
 
-> > +out:
-> > +	return ret;
-> > +}
-> 
-> > +static const struct pwm_ops lpg_pwm_ops = {
-> > +	.request = lpg_pwm_request,
-> > +	.apply = lpg_pwm_apply,
-> > +	.owner = THIS_MODULE,
-> > +};
-> > +
-> > +static int lpg_add_pwm(struct lpg *lpg)
-> > +{
-> > +	int ret;
-> > +
-> > +	lpg->pwm.base = -1;
-> > +	lpg->pwm.dev = lpg->dev;
-> > +	lpg->pwm.npwm = lpg->num_channels;
-> > +	lpg->pwm.ops = &lpg_pwm_ops;
-> > +
-> > +	ret = pwmchip_add(&lpg->pwm);
-> > +	if (ret)
-> > +		dev_err(lpg->dev, "failed to add PWM chip: ret %d\n", ret);
-> > +
-> > +	return ret;
-> > +}
-> 
-> Do we need to do this? I'd rather have LED driver, than LED+PWM
-> driver...
-> 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-Yes, I believe we need to do this.
+--y4s53szfi6y5jve3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Because each piece of hardware has N channels, which can be wired to
-LEDs, grouped with other channels and wired to multicolor LEDs or be
-used as PWM signals. And this configuration is board specific.
+-----BEGIN PGP SIGNATURE-----
 
-One such example is the laptop in front of me, which has 3 channels
-wired to an RGB LED and 1 channel wired as a backlight control signal
-(i.e. using pwm-backlight).  Another example is a devboard where the
-4 channels are wired to 4 LEDs.
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmCKV5kACgkQwfwUeK3K
+7AlmwQf/epeEtpmrZMHYRnU75vEFtSLuwbRwEWsSadMmTTP8gE82juELjPfqMZff
+aUHOX2IiZkMlBEsPUIUWQZIqY0tMnlpnrwg6ndugFlhACZXn1G7eIl0ojyeoTnB8
+tSjHCQOzL4S8+PWHyxshxFzG3eQJuEbK5LkcvZiENPM0LrIrh0OOHvCVVQedMeg4
+zrmAQ2jJgB4QQ4taTQ/n9HyJ07GZUZxEkU9c5SGVfYcwc2BXLLnTHg39K2FNVUW+
+qiqMTgLyXFUVv6pfOxUU0uGY87XOzG+pIUIm/2eO6eKnx45ewxaur5k9PSaNF9+3
+bYo8WAxns5T8PEg+r4UjeWlIwYj9yw==
+=sHLp
+-----END PGP SIGNATURE-----
 
-Regards,
-Bjorn
+--y4s53szfi6y5jve3--
