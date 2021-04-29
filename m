@@ -2,56 +2,55 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 81DFF36E1D2
-	for <lists+linux-pwm@lfdr.de>; Thu, 29 Apr 2021 01:02:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCAEF36E265
+	for <lists+linux-pwm@lfdr.de>; Thu, 29 Apr 2021 02:12:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240136AbhD1Wka (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 28 Apr 2021 18:40:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57812 "EHLO
+        id S232284AbhD2AM5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 28 Apr 2021 20:12:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237181AbhD1Wka (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Apr 2021 18:40:30 -0400
-Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90D5CC06138D
-        for <linux-pwm@vger.kernel.org>; Wed, 28 Apr 2021 15:39:43 -0700 (PDT)
-Received: by mail-oi1-x231.google.com with SMTP id i26so9297434oii.3
-        for <linux-pwm@vger.kernel.org>; Wed, 28 Apr 2021 15:39:43 -0700 (PDT)
+        with ESMTP id S232308AbhD2AM4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Apr 2021 20:12:56 -0400
+Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85CA0C06138B
+        for <linux-pwm@vger.kernel.org>; Wed, 28 Apr 2021 17:12:10 -0700 (PDT)
+Received: by mail-oi1-x22d.google.com with SMTP id t24so7418328oic.10
+        for <linux-pwm@vger.kernel.org>; Wed, 28 Apr 2021 17:12:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=NJgioqDWdKAET5WKiWO1U4XbKqCMuCFU3cGEOM7ro6o=;
-        b=u/E9Gt5cg1H8iyQ0N4FUiZxddi9IEfEi3QJA9VDk2Uxia48DMRDVvWz07Tzyw4cRAy
-         jvu8OaWHWcChElNul+iVWzqSfHOYI4iCVy9ZRyxNEKYys53KWsuizy50DOiWYVSotqQW
-         HoZikWrXR36qEj2YJkCVrAiiqNyYgOEG6E9p9NFRNhwsiRetGkinSuL4fxcENbVPYxmL
-         dXJWNysM3rbD6rvb1rBrR2Nt2bTtFAdLvh8w9n5QF4E6T/rM801pwLbw4BoWLv2WHUTB
-         Qg24nLc3e+ifWGhTC/laIlMpBpQpDgVLtqncdrqNEtQvQTvbxOVP0SnWQvXRxnlq2bUA
-         eWRw==
+        bh=SBQkZZ+AM0rdRiolN8pMUJvJaHdqRcP6uvGtBB7hbVU=;
+        b=ZoTQshL6LSUn3Lj4/ZAJK9Rw3XfU8aTAMNv0jvQ6LotAVOdLClfvB+3CeSpCEioye0
+         Xtopma3PqjaDfDfsQayOuP4TbqJWt9iSo+X07bTjJZrtqsrpD62HHGpNjKK8gv1NaNtS
+         j+jH6knXMDHPhdU/nGtL0OIOSn/aAekpdbSYjfJzWoxRqf7OTjh4v4eEpfubQ2W/pv6d
+         Z+RgHfkEWL9+um/+yz3n1MeBS04aaAlWZ1J852+CB8wQARNwCvxGxntYdB7vjtAt8hzm
+         umKD+6zJY4V0bBk45x5b0yvwel00U0JtsWLN76hqI9/nZIU2JQov5EqcHbyL4pPBuLAT
+         GL4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=NJgioqDWdKAET5WKiWO1U4XbKqCMuCFU3cGEOM7ro6o=;
-        b=qELMMz6Hw29GnpNNU0er78l1ejCw7sP5x4dVHzFCytmnyVoFz/DLb6uc0EoOmkmGpR
-         3GfEEUIz86ZdWQQ6TCEgGdmIKCGC4CzeCweS+CYAKVRLLgDpo5N4qRh8ydJ1lrhSkjvp
-         pVxUhYiiLLUyJmVR43e3BQZVsBTw10CfWeH7fr45k4oZ8TBLr1pamaX6vDIEbf6ynMjs
-         2j7WgjwhMd3yk7YoKDng3fpnU8kjbxcFLumWcWQcJC8OwM9XptP/MQuC4CN0mhgSBhxD
-         L/dqVdZCc8P8IjsF/FWUVq85IXnWvX0uGeMf/CkpxDfmqUk8bZRAPVk77pg5fFEpA0+W
-         z16A==
-X-Gm-Message-State: AOAM532DYYfElDmKhxukXG6LzuN1b4Z5vc1RgITuzSWaA4pM8gXqYJQT
-        T85P1UVeBUajB98DxfcrYa6Wjg==
-X-Google-Smtp-Source: ABdhPJwD8AMHlFWkT0PEmKmxtPOG8Dya6tQD8PCReMCG0J6yux62nUtJNRQVt2iU1xRcVWvWs8Cr+g==
-X-Received: by 2002:a05:6808:f8e:: with SMTP id o14mr22019998oiw.56.1619649582773;
-        Wed, 28 Apr 2021 15:39:42 -0700 (PDT)
-Received: from yoga (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id j20sm313169ooc.29.2021.04.28.15.39.41
+        bh=SBQkZZ+AM0rdRiolN8pMUJvJaHdqRcP6uvGtBB7hbVU=;
+        b=kiS8AuM62TfdVpHQdfnOzaONITQ5JBVDWyswHt/Y37IL+jJcn8LwvRp2Xk4MFzcovU
+         KjRfoqEIzwjAmyOlj6hpQ3bXG5n39b1cnQ6AfPjF0+u0tJjvWAi+DWHGOuF7EPT64kUn
+         MXT6sm/To9YiEug865ujspzizxghGN5uE1Z7FTBnUHFb4hrL1EvmtedYWbaindS8fXV3
+         O0DitUzbop+svhVyCH3fuKXIcFgpoOehxrP7RG5WoPi82REYt5pMQf9jZZjel4hX0GKJ
+         LB9Vn4YRosaH72Gj8cAvpM321qJte8JdMsLBbl2a38Za0E+RvqeKxTlQPjUeHyROjRee
+         EhqA==
+X-Gm-Message-State: AOAM533ftPPoaSaltDF721e9bYzmEGI4Nh2dsom2OqqxOHviaeTxFV37
+        9hRnlhnXBXm14UaTJfRP1SgA7Q==
+X-Google-Smtp-Source: ABdhPJxVHBqD0ADdSUFDRMR3ZR31HODm2e3SR+lV5ybAgqah5lCuPwSWrEvzbrK39xY68/DgooIHzA==
+X-Received: by 2002:aca:5845:: with SMTP id m66mr5007370oib.0.1619655123470;
+        Wed, 28 Apr 2021 17:12:03 -0700 (PDT)
+Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id r63sm305743oia.43.2021.04.28.17.12.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Apr 2021 15:39:42 -0700 (PDT)
-Date:   Wed, 28 Apr 2021 17:39:39 -0500
+        Wed, 28 Apr 2021 17:12:03 -0700 (PDT)
+Date:   Wed, 28 Apr 2021 19:12:00 -0500
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Marijn Suijten <marijn.suijten@somainline.org>
-Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
         Andy Gross <agross@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
@@ -61,188 +60,155 @@ Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-pwm@vger.kernel.org
 Subject: Re: [PATCH v6 2/4] leds: Add driver for Qualcomm LPG
-Message-ID: <20210428223939.GN1908499@yoga>
+Message-ID: <YIn50NW+Pimqfsih@builder.lan>
 References: <20201021201224.3430546-1-bjorn.andersson@linaro.org>
  <20201021201224.3430546-3-bjorn.andersson@linaro.org>
- <881fb5a3-fb51-3967-63de-a09950839855@somainline.org>
+ <20201029181357.GE26053@duo.ucw.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <881fb5a3-fb51-3967-63de-a09950839855@somainline.org>
+In-Reply-To: <20201029181357.GE26053@duo.ucw.cz>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun 18 Apr 16:54 CDT 2021, Marijn Suijten wrote:
+On Thu 29 Oct 13:13 CDT 2020, Pavel Machek wrote:
 
-> Hi Bjorn,
+> Hi!
 > 
-> On 10/21/20 10:12 PM, Bjorn Andersson wrote:
 > > The Light Pulse Generator (LPG) is a PWM-block found in a wide range of
 > > PMICs from Qualcomm. It can operate on fixed parameters or based on a
 > > lookup-table, altering the duty cycle over time - which provides the
 > > means for e.g. hardware assisted transitions of LED brightness.
 > > 
 > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Tested-by: Luca Weiss <luca@z3ntu.xyz>
+> > ---
+> > 
+> > Changes since v5:
+> > - Make sure to not used the state of the last channel in a group to determine
+> >   if the current sink should be active for all channels in the group.
+> > - Replacement of unsigned -1 with UINT_MAX
+> > - Work around potential overflow by using larger data types, instead of separate code paths
+> > - Use cpu_to_l16() rather than hand rolling them
+> > - Minor style cleanups
+> > 
+> >  drivers/leds/Kconfig         |    9 +
+> >  drivers/leds/Makefile        |    1 +
+> >  drivers/leds/leds-qcom-lpg.c | 1190 ++++++++++++++++++++++++++++++++++
+> >  3 files changed, 1200 insertions(+)
+> >  create mode 100644 drivers/leds/leds-qcom-lpg.c
 > 
-> 
-> Thanks for these patches.  I have tested them successfully on the Sony
-> Xperia XA2 (Discovery, Nile platform) with the leds on the PM660l - feel
-> free to add my Tested-by.  Should I send the configuration your way for
-> inclusion in this patch, or submit them separately (either applied after, or
-> included as separate patches in the next version of this series)?
-> 
-
-Thanks for testing, let's try to land this first iteration first and
-then we can add PM660l and PM8150* definitions/support on top.
-
-> > +/**
-> > + * struct lpg_data - initialization data
-> > + * @lut_base:		base address of LUT block
-> > + * @lut_size:		number of entries in LUT
-> > + * @triled_base:	base address of TRILED
-> > + * @pwm_9bit_mask:	bitmask for switching from 6bit to 9bit pwm
-> 
-> 
-> Our downstream kernel derives this from the "LPG subtype" for each distinct
-> channel, read from register offset +0x5.  A value of 0xb is subtype "PWM"
-> with a shift of 2, a value of 0x11 is subtype "LPG_LITE" with a shift of 4.
-> Can we do the same here instead of hardcoding it for all channels in the LPG
-> at once?  How should we determine if the mask is one or two bits wide, for
-> the 3<<4 case?
+> Let's put this into drivers/leds/rgb/. You may need to create it.
 > 
 
-I don't see any obvious solution to the latter, so perhaps we should
-just stick with defining this per compatible? Or am I reading your
-suggestion wrong?
+Will do so.
 
-> > + * @num_channels:	number of channels in LPG
-> > + * @channels:		list of channel initialization data
-> > + */
 > 
-> > +	if (ping_pong) {
-> > +		if (len % 2)
-> > +			hi_pause = 0;
-> > +		else
-> > +			hi_pause = pattern[len + 1 / 2].delta_t;
+> > +static int lpg_lut_store(struct lpg *lpg, struct led_pattern *pattern,
+> > +			 size_t len, unsigned int *lo_idx, unsigned int *hi_idx)
+> > +{
+> > +	unsigned int idx;
+> > +	__le16 val;
 > 
-> 
-> len + 1 should be wrapped in parentheses just like the reassignment to len=
-> below, otherwise this is always an out of bounds read (at len + 0).
+> No need for __XX variants outside of headers meant for userspace.
 > 
 
-Thanks for spotting this.
+__le16 is the in-kernel return type for cpu_to_le16(), but after further
+review I believe I don't need to do this.
 
-> > +		lo_pause = pattern[len - 1].delta_t;
+> > +#define LPG_ENABLE_GLITCH_REMOVAL	BIT(5)
 > > +
-> > +		len = (len + 1) / 2;
-> > +	} else {
-> > +		hi_pause = pattern[len - 1].delta_t;
-> > +		lo_pause = 0;
+> > +static void lpg_enable_glitch(struct lpg_channel *chan)
+> > +{
+> > +	struct lpg *lpg = chan->lpg;
+> > +
+> > +	regmap_update_bits(lpg->map, chan->base + PWM_TYPE_CONFIG_REG,
+> > +			   LPG_ENABLE_GLITCH_REMOVAL, 0);
+> > +}
+> > +
+> > +static void lpg_disable_glitch(struct lpg_channel *chan)
+> > +{
+> > +	struct lpg *lpg = chan->lpg;
+> > +
+> > +	regmap_update_bits(lpg->map, chan->base + PWM_TYPE_CONFIG_REG,
+> > +			   LPG_ENABLE_GLITCH_REMOVAL,
+> > +			   LPG_ENABLE_GLITCH_REMOVAL);
+> > +}
+> 
+> Helper functions for single register write is kind of overkill...
+> 
+
+Yes, it is, but it keep lpg_apply() tidy.
+
+> > +static int lpg_blink_set(struct lpg_led *led,
+> > +			 unsigned long delay_on, unsigned long delay_off)
+> > +{
+> > +	struct lpg_channel *chan;
+> > +	unsigned int period_us;
+> > +	unsigned int duty_us;
+> > +	int i;
+> > +
+> > +	if (!delay_on && !delay_off) {
+> > +		delay_on = 500;
+> > +		delay_off = 500;
 > > +	}
-> > +
+> 
+> Aren't you supposed to modify the values passed to you, so that
+> userspace knows what the default rate is?
+> 
+
+I had missed this.
+
+> 
 > > +	ret = lpg_lut_store(lpg, pattern, len, &lo_idx, &hi_idx);
 > > +	if (ret < 0)
 > > +		goto out;
-> > +
-> > +	for (i = 0; i < led->num_channels; i++) {
-> > +		chan = led->channels[i];
-> > +
-> > +		chan->ramp_duration_ms = pattern[0].delta_t * len;
 > 
-> 
-> Perhaps this could store the duration of a single step instead, since the
-> only use in lpg_apply_lut_control divides it by pattern length again?
+> Just do direct return.
 > 
 
-Sounds like a good idea.
+Will do.
 
-> > +		chan->ramp_ping_pong = ping_pong;
-> > +		chan->ramp_oneshot = repeat != -1;
-> > +
-> > +		chan->ramp_lo_pause_ms = lo_pause;
-> > +		chan->ramp_hi_pause_ms = hi_pause;
-> > +
-> > +		chan->pattern_lo_idx = lo_idx;
-> > +		chan->pattern_hi_idx = hi_idx;
-> > +	}
-> > +
 > > +out:
 > > +	return ret;
 > > +}
 > 
-> > +static int lpg_init_lut(struct lpg *lpg)
+> > +static const struct pwm_ops lpg_pwm_ops = {
+> > +	.request = lpg_pwm_request,
+> > +	.apply = lpg_pwm_apply,
+> > +	.owner = THIS_MODULE,
+> > +};
+> > +
+> > +static int lpg_add_pwm(struct lpg *lpg)
 > > +{
-> > +	const struct lpg_data *data = lpg->data;
-> > +	size_t bitmap_size;
-> > +
-> > +	if (!data->lut_base)
-> > +		return 0;
-> > +
-> > +	lpg->lut_base = data->lut_base;
-> > +	lpg->lut_size = data->lut_size;
-> > +
-> > +	bitmap_size = BITS_TO_LONGS(lpg->lut_size) * sizeof(unsigned long);
-> > +	lpg->lut_bitmap = devm_kzalloc(lpg->dev, bitmap_size, GFP_KERNEL);
-> 
-> 
-> Would it be nicer to use BITS_TO_BYTES here, or otherwise devm_kcalloc(...,
-> bitmap_size, sizeof(long), ...) without mutiplying with sizeof(unsigned
-> long)?
-> 
-
-Yes, that's cleaner.
-
-> > +
-> > +	bitmap_clear(lpg->lut_bitmap, 0, lpg->lut_size);
-> > +	return lpg->lut_bitmap ? 0 : -ENOMEM;
-> > +}
-> > +
-> > +static int lpg_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device_node *np;
-> > +	struct lpg *lpg;
 > > +	int ret;
-> > +	int i;
 > > +
-> > +	lpg = devm_kzalloc(&pdev->dev, sizeof(*lpg), GFP_KERNEL);
-> > +	if (!lpg)
-> > +		return -ENOMEM;
+> > +	lpg->pwm.base = -1;
+> > +	lpg->pwm.dev = lpg->dev;
+> > +	lpg->pwm.npwm = lpg->num_channels;
+> > +	lpg->pwm.ops = &lpg_pwm_ops;
 > > +
-> > +	lpg->data = of_device_get_match_data(&pdev->dev);
-> > +	if (!lpg->data)
-> > +		return -EINVAL;
+> > +	ret = pwmchip_add(&lpg->pwm);
+> > +	if (ret)
+> > +		dev_err(lpg->dev, "failed to add PWM chip: ret %d\n", ret);
 > > +
-> > +	lpg->dev = &pdev->dev;
-> > +
-> > +	lpg->map = dev_get_regmap(pdev->dev.parent, NULL);
-> > +	if (!lpg->map) {
-> > +		dev_err(&pdev->dev, "parent regmap unavailable\n");
-> > +		return -ENXIO;
-> > +	}
-> > +
-> > +	ret = lpg_init_channels(lpg);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	ret = lpg_init_triled(lpg);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	ret = lpg_init_lut(lpg);
-> > +	if (ret < 0)
-> > +		return ret;
+> > +	return ret;
+> > +}
 > 
-> 
-> How about turning these returns into dev_err_probe?  I'm not sure if that's
-> the expected way to go nowadays, but having some form of logging when a
-> driver fails to probe is always good to have.
+> Do we need to do this? I'd rather have LED driver, than LED+PWM
+> driver...
 > 
 
-The intention is that each code path through these functions will either
-pass or spit out an error in the log. I looked through them again and
-think I cover all paths...
+Yes, I believe we need to do this.
 
-Thanks,
+Because each piece of hardware has N channels, which can be wired to
+LEDs, grouped with other channels and wired to multicolor LEDs or be
+used as PWM signals. And this configuration is board specific.
+
+One such example is the laptop in front of me, which has 3 channels
+wired to an RGB LED and 1 channel wired as a backlight control signal
+(i.e. using pwm-backlight).  Another example is a devboard where the
+4 channels are wired to 4 LEDs.
+
+Regards,
 Bjorn
