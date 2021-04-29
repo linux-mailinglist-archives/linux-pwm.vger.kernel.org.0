@@ -2,56 +2,21 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7493E36F174
-	for <lists+linux-pwm@lfdr.de>; Thu, 29 Apr 2021 22:54:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D03B036F19C
+	for <lists+linux-pwm@lfdr.de>; Thu, 29 Apr 2021 23:12:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232246AbhD2Uz2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 29 Apr 2021 16:55:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233699AbhD2Uz1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 29 Apr 2021 16:55:27 -0400
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2263C06138C
-        for <linux-pwm@vger.kernel.org>; Thu, 29 Apr 2021 13:54:40 -0700 (PDT)
-Received: by mail-ot1-x32e.google.com with SMTP id g4-20020a9d6b040000b029029debbbb3ecso29635262otp.7
-        for <linux-pwm@vger.kernel.org>; Thu, 29 Apr 2021 13:54:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cDEQYYCABMBKlLd20tFhLfZu2zu60qgD4qzCgh4a7Hs=;
-        b=DuAjdN32RcXze+taixHhxgfk+J8jEGyrIP07wW6CuRJlnkwYge0i/2pVD3UWE00LPu
-         2flBNq/HqM9PGCVOSQWWXLDOWL2LXZ+8OWH564Jz/f2/RuF7rOr3X+xmikVY9yjiXFHu
-         Uy5t2Ep3oGnuPCWrbpmv0BXDicBzrU7UYFgvFMEG6yYstAhpThE3oANFC9alPuOBjjN0
-         eOa4614uUoD7/6gx2klBruypLvTfZiCHOJx1aF1Fdz27XD8gyLUSkMpeT4o20YnIccPz
-         VdREWbe+js7q1E8RdxjeMb7FknGneURiYzQyhC6WXvxSVPdUNS3hPBZz4eRMuc0Jlsto
-         Bweg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cDEQYYCABMBKlLd20tFhLfZu2zu60qgD4qzCgh4a7Hs=;
-        b=bDQHvh1yBEeY1cEy+XGBeBFgl/JcoDd2Ibnbs3sC9fn17WBpU4h7CimZ6EqmahbZR8
-         9PkDuhLO3TQAIfs746VWqOXd6VYdiYB92UXDBOfQwc2cZDRvqGNdHc7auYZaLqzlCv0Q
-         JErqsGOfWhpUW0AHTBLk2PCrjHwJI6YmZuPWw0aPH0ZbdfYpC4M3Kiat3HPzsbVkwBKc
-         kxwfue0zFokInf/hmNXPA7yvrKBKug5S+7gQBuTvEQRG3e0U8gbwZtSMJVTpgdhfMKiH
-         wlXCrXJ+MUku0aJ9R1BdjgtCDwidXXfnX67rxs+wcFdiWLodx7dsuzpDBfGC8x2fvCi1
-         +OhQ==
-X-Gm-Message-State: AOAM532KkoC/x5YsvuFsarNQAWLhJRaK6BZwE5qQiOR7BqCsVgQlodgI
-        t8jQfyUfJumUkl+NZzcJzK4eiQ==
-X-Google-Smtp-Source: ABdhPJwb1Us3vfLjZyNwGpHnKQtg+2ziIVzR4m/46fSQ3cNvwsZZhbPQrBPKVaThPYh2I7jxQRlUIA==
-X-Received: by 2002:a9d:17e9:: with SMTP id j96mr1019565otj.143.1619729679793;
-        Thu, 29 Apr 2021 13:54:39 -0700 (PDT)
-Received: from yoga (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id i9sm200057otr.19.2021.04.29.13.54.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Apr 2021 13:54:39 -0700 (PDT)
-Date:   Thu, 29 Apr 2021 15:54:36 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Marijn Suijten <marijn.suijten@somainline.org>
-Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        id S236795AbhD2VNP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 29 Apr 2021 17:13:15 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:58834 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234795AbhD2VNM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 29 Apr 2021 17:13:12 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 151021C0BA1; Thu, 29 Apr 2021 23:12:24 +0200 (CEST)
+Date:   Thu, 29 Apr 2021 23:12:23 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
         Andy Gross <agross@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
@@ -61,51 +26,87 @@ Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-pwm@vger.kernel.org
 Subject: Re: [PATCH v6 2/4] leds: Add driver for Qualcomm LPG
-Message-ID: <20210429205436.GA2484@yoga>
+Message-ID: <20210429211223.GA5480@amd>
 References: <20201021201224.3430546-1-bjorn.andersson@linaro.org>
  <20201021201224.3430546-3-bjorn.andersson@linaro.org>
- <881fb5a3-fb51-3967-63de-a09950839855@somainline.org>
- <20210428223939.GN1908499@yoga>
- <f7fa3d57-3541-130a-e5fc-0df31206598f@somainline.org>
+ <20201029181357.GE26053@duo.ucw.cz>
+ <YIn50NW+Pimqfsih@builder.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
 Content-Disposition: inline
-In-Reply-To: <f7fa3d57-3541-130a-e5fc-0df31206598f@somainline.org>
+In-Reply-To: <YIn50NW+Pimqfsih@builder.lan>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu 29 Apr 14:31 CDT 2021, Marijn Suijten wrote:
 
-> On 4/29/21 12:39 AM, Bjorn Andersson wrote:
-> > On Sun 18 Apr 16:54 CDT 2021, Marijn Suijten wrote:
-[..]
-> > > > +	ret = lpg_init_lut(lpg);
-> > > > +	if (ret < 0)
-> > > > +		return ret;
-> > > 
-> > > 
-> > > How about turning these returns into dev_err_probe?  I'm not sure if that's
-> > > the expected way to go nowadays, but having some form of logging when a
-> > > driver fails to probe is always good to have.
-> > > 
-> > 
-> > The intention is that each code path through these functions will either
-> > pass or spit out an error in the log. I looked through them again and
-> > think I cover all paths...
-> 
-> 
-> That is true, all the errors not covered are extremely unlikely like
-> -ENOMEM.  I vaguely recall having to insert extra logging to get through
-> initial probe, but that might have been something inside lpg_add_led as
-> well.  Fine to leave this as it is.
-> 
+--wRRV7LY7NUeQGEoC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-When kzalloc et al returns -ENOMEM it will be done with an error print,
-so that does not need an additional print. That said, another pass
-through lpg_add_led() made me spot that if you get a parse error on
-the "color" property we would silently return -EINVAL. I've corrected
-this.
+Hi!
 
-Thanks,
-Bjorn
+> > > +static int lpg_add_pwm(struct lpg *lpg)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	lpg->pwm.base =3D -1;
+> > > +	lpg->pwm.dev =3D lpg->dev;
+> > > +	lpg->pwm.npwm =3D lpg->num_channels;
+> > > +	lpg->pwm.ops =3D &lpg_pwm_ops;
+> > > +
+> > > +	ret =3D pwmchip_add(&lpg->pwm);
+> > > +	if (ret)
+> > > +		dev_err(lpg->dev, "failed to add PWM chip: ret %d\n", ret);
+> > > +
+> > > +	return ret;
+> > > +}
+> >=20
+> > Do we need to do this? I'd rather have LED driver, than LED+PWM
+> > driver...
+> >=20
+>=20
+> Yes, I believe we need to do this.
+>=20
+> Because each piece of hardware has N channels, which can be wired to
+> LEDs, grouped with other channels and wired to multicolor LEDs or be
+> used as PWM signals. And this configuration is board specific.
+>=20
+> One such example is the laptop in front of me, which has 3 channels
+> wired to an RGB LED and 1 channel wired as a backlight control signal
+> (i.e. using pwm-backlight).  Another example is a devboard where the
+> 4 channels are wired to 4 LEDs.
+
+Ok, so this is actually important. In this case you should have PWM
+layer, exporting PWMs, and then rgb-LED driver that takes three of
+those PWMs and turns them into LED, no?
+
+And ... surprise ... that is likely to help other people, as LEDs
+connected to PWMs are quite common.
+
+Hmm.?
+
+If you can't do this for some reason, you should probably explain in
+the changelog, because this is going to be FAQ.
+
+Best regards,
+								Pavel
+--=20
+http://www.livejournal.com/~pavelmachek
+
+--wRRV7LY7NUeQGEoC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAmCLITcACgkQMOfwapXb+vK+BACeMLv8lEYnpH1WKHwqzQQfYMGc
+5O4AoKuyGX4vAejCvrj2ZaEI2S6+fTMH
+=al0Q
+-----END PGP SIGNATURE-----
+
+--wRRV7LY7NUeQGEoC--
