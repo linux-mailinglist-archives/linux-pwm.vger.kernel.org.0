@@ -2,95 +2,122 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B058136F5E8
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 Apr 2021 08:49:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACC8936F753
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 Apr 2021 10:48:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229647AbhD3Gtt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 30 Apr 2021 02:49:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58156 "EHLO
+        id S229786AbhD3Ism (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 30 Apr 2021 04:48:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbhD3Gtt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 30 Apr 2021 02:49:49 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A325C06174A
-        for <linux-pwm@vger.kernel.org>; Thu, 29 Apr 2021 23:49:01 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lcMxP-0006K5-Ir; Fri, 30 Apr 2021 08:48:59 +0200
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lcMxO-0007CK-M6; Fri, 30 Apr 2021 08:48:58 +0200
-Date:   Fri, 30 Apr 2021 08:48:58 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     linux-pwm@vger.kernel.org, Franklin S Cooper Jr <fcooper@ti.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH] pwm: tiecap: Drop .free() callback
-Message-ID: <20210430064858.dwyitrocrvxk3lgm@pengutronix.de>
-References: <20210429133218.66971-1-u.kleine-koenig@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="b6depw7fye6wnvhg"
-Content-Disposition: inline
-In-Reply-To: <20210429133218.66971-1-u.kleine-koenig@pengutronix.de>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+        with ESMTP id S229507AbhD3Ism (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 30 Apr 2021 04:48:42 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1886C06174A
+        for <linux-pwm@vger.kernel.org>; Fri, 30 Apr 2021 01:47:52 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id r9so104075446ejj.3
+        for <linux-pwm@vger.kernel.org>; Fri, 30 Apr 2021 01:47:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=prusa3d-cz.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:content-transfer-encoding:cc:subject:from:to:date
+         :message-id:in-reply-to;
+        bh=ix10HKl4Ji6QvrIhi2BCp+LJFNaL/wGngqRsoRAXrcw=;
+        b=qnXj4HI03B4usnHFixzqm+1A77XNUTnUhCdyrDYv/KkmDCNT7krP3Sji70SjV9YsxN
+         BzSmnnPPltZ6X5GBtHSUBLRGC2ae1ITVpbJznYSh2kT5/9lkl50v1HO+1++ZLeRuqBDd
+         lwW49APmr5oMSYEYMpLZPwqiEXi9GJtJPwRlgdysZTzhBAcJ/gECj3nJpz6RY91pP3Tv
+         j6R2yNajDuns9TNFmJRUZhYjMCTpdBjnGZq/QTDXKy5ZODGw1ZsAMnuVhK2W6zr09p42
+         nmZbXvDpMdUiHwQwpOSaPlXEvD/vp8B4jbC5Dk592yZ3fk6GqSEuSzKzuKxjZ59at1ms
+         wBPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding:cc
+         :subject:from:to:date:message-id:in-reply-to;
+        bh=ix10HKl4Ji6QvrIhi2BCp+LJFNaL/wGngqRsoRAXrcw=;
+        b=D5RaVNViG4pfuS9r5ZaXT0xrre99qCj2rWp4Oo1VDgjTlB73yOYZ2e1jjGPT/YRgEw
+         XXsieSnhxqoP+EpTyOIMiG6PAm3+U0FfqTn1WHnx59JFvOjzdvcstJe58V5WU841NWtW
+         Yfid6+jGQG656RT3CH/wcZxsQxvEhHJuFw0brxKhrW3NTmiRwaivGRKmF82DKYZiFAPx
+         MXUCYA5usPOVYz+iNJKfPWWS2tguCQKZ1x5bQ3NJfB/rdqwD+BlrVxcPPiL2h5WyAxC0
+         p5jxoujTrf9RUHjcJr28K2Ei5gCVvn1Lo/yVb2DYqmbKsBT1ZJq7/+tKRy1nbiz3lyHs
+         3l7Q==
+X-Gm-Message-State: AOAM531uYhF4+6PxxXEC1sR3roSY8FzdGneE4NIkSrZHYM+Y+meka7xU
+        NWYi+3pURWdWAtXaSCX1FE8V0A==
+X-Google-Smtp-Source: ABdhPJydNhoRcU4F9++M7+BFSAGysOcXhyO8/MEtoORm2Fzk3Ykujk6hiDy48VdoeeQHgRWdM6RLbA==
+X-Received: by 2002:a17:906:7257:: with SMTP id n23mr3146650ejk.412.1619772471402;
+        Fri, 30 Apr 2021 01:47:51 -0700 (PDT)
+Received: from localhost (ip-213-220-236-33.net.upcbroadband.cz. [213.220.236.33])
+        by smtp.gmail.com with ESMTPSA id s20sm751262edu.93.2021.04.30.01.47.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 Apr 2021 01:47:50 -0700 (PDT)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Cc:     "Thierry Reding" <thierry.reding@gmail.com>,
+        "Lee Jones" <lee.jones@linaro.org>,
+        "Maxime Ripard" <mripard@kernel.org>,
+        "Chen-Yu Tsai" <wens@csie.org>,
+        "Jernej Skrabec" <jernej.skrabec@siol.net>,
+        <linux-pwm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-sunxi@lists.linux.dev>, <linux-sunxi@googlegroups.com>,
+        "Roman Beranek" <roman.beranek@prusa3d.com>
+Subject: Re: [PATCH] pwm: sun4i: Round delay time up to a nearest jiffy
+From:   "Roman Beranek" <roman.beranek@prusa3d.cz>
+To:     =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Date:   Fri, 30 Apr 2021 09:17:49 +0200
+Message-Id: <CB0VI785HYEE.3PXPB7BDOUPFC@zen.local>
+In-Reply-To: <20210430064145.nzlcw3lpayzapnbx@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hello Uwe,
 
---b6depw7fye6wnvhg
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri Apr 30, 2021 at 8:41 AM CEST, Uwe Kleine-K=C3=B6nig wrote:
+> On Fri, Apr 30, 2021 at 04:19:32AM +0200, Roman Ber=C3=A1nek wrote:
+> > On Thu, Apr 29, 2021 at 2:04 PM Uwe Kleine-K=C3=B6nig wrote:
+> > > On Wed, Apr 28, 2021 at 02:14:31PM +0200, Roman Ber=C3=A1nek wrote:
+> > > > Correct, the output may stay in an active state. I only discovered =
+this
+> > > > bug as I investigated a report of unreliable screen timeout. The pe=
+riod
+> > > > we use the PWM with is 50 us.
+> > >
+> > > What I don't like here is that the delay is quite coarse and might st=
+ill
+> > > be too short. (Maybe I miss something, but consider the current perio=
+d
+> > > is quite long, then you configure a short one and then disable. In th=
+is
+> > > case the inital long setting might still be active.)
+> >=20
+> > The delay is calculated from the original period (cstate.period),
+> > not the one that was just written into PWM_CHx_PRD 2 lines above.
+>
+> Yes, but that's not good enough. Consider the PWM is running with a
+> period of 4s and the period just started. Then you call
+>
+> pwm_apply_state(mypwm, &(struct pwm_state){
+> .period =3D 20,
+> .enabled =3D 1,
+> ...
+> })
+>
+> This doesn't result into the waiting code being run, because
+> .enabled =3D 1. Then immidiately after that call:
+>
+> pwm_apply_state(mypwm, &(struct pwm_state){
+> .period =3D 20,
+> .enabled =3D 0,
+> ...
+> })
+>
+> which triggers the waiting but only based on a period of 20 ns while the
+> 4s period is still active.
 
-Hello,
+OK, now I see what you mean. To remedy this, the delay shall occur
+regardless of state->enabled.
 
-On Thu, Apr 29, 2021 at 03:32:18PM +0200, Uwe Kleine-K=F6nig wrote:
-> ecap_pwm_free is only called when a consumer releases the PWM (using
-> pwm_put() or pwm_free()). The consumer is expected to disable the PWM
-> before doing that. It's not clear if a warning about that is justified, b=
-ut
-> if it is this is independent of the actual driver and can better be done =
-in
-> the core. Also if there is a good reason it's wrong to disable the hardwa=
-re
-> and so the call to pm_runtime_put_sync() should be dropped. Moreover there
-> is no matching pwm_runtime_get call and so the runtime usage counter might
-> become negative.
+In my view, this lies beneath the scope of the patch though and would be
+better served as a follow-up.
 
-For the record: The two people from TI (Vaibhav Bedia
-<vaibhav.bedia@ti.com>, Avinash Philip <avinashphilip@ti.com>) I
-addressed with that patch (because they were involved previously with
-this driver) didn't receive my mail. The addresses don't exist according
-to TI's mail server. I dropped them from To: for this reply.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---b6depw7fye6wnvhg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmCLqFcACgkQwfwUeK3K
-7AkJugf/TDgVRr3KvlHOfBmvfxbK22eYcCXMN2KJtS9UMMqZIcC1AfoshT3nz7BZ
-kJCjD3P2WoABs4e/2KPozUEnzdOAbbMrnCgAUlQq95Xel6zOuu2xZDVhFte1Zw/X
-CNb/y2/wItBR1Xp5IHIz2mbEqMcN9nV/L0c6L0Z7i4kSGlrDxc1x+/g6jn8rIInG
-q56PwU7aOW/b0A+wBEabXGfF+rJ68Xke2U4WBnIRBNPC0OiAxS0xo86MQPFwlSQe
-LDG0OseQHZVlFIbs076cvVEXvhM6c9mKktX0v7h8B2fvpNt8j4sn5xXjn14wGArf
-SzS3A/hQREfMqTO6Iw7HHbM/EZ7xIw==
-=J51X
------END PGP SIGNATURE-----
-
---b6depw7fye6wnvhg--
+Cheers,
+Roman
