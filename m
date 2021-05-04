@@ -2,81 +2,70 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9871E372AEE
-	for <lists+linux-pwm@lfdr.de>; Tue,  4 May 2021 15:25:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98088372C3E
+	for <lists+linux-pwm@lfdr.de>; Tue,  4 May 2021 16:41:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231240AbhEDN0l (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 4 May 2021 09:26:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231241AbhEDN0j (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 4 May 2021 09:26:39 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C3EEC061763
-        for <linux-pwm@vger.kernel.org>; Tue,  4 May 2021 06:25:44 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ldv3W-0001tP-Dg; Tue, 04 May 2021 15:25:42 +0200
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ldv3V-0008SO-VB; Tue, 04 May 2021 15:25:41 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de,
-        Thomas Hebb <tommyhebb@gmail.com>,
-        Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH 4/4] pwm: berlin: Don't check the return code of pwmchip_remove()
-Date:   Tue,  4 May 2021 15:25:37 +0200
-Message-Id: <20210504132537.62072-4-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210504132537.62072-1-u.kleine-koenig@pengutronix.de>
-References: <20210504132537.62072-1-u.kleine-koenig@pengutronix.de>
+        id S231534AbhEDOls convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Tue, 4 May 2021 10:41:48 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:44448 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231610AbhEDOlo (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 4 May 2021 10:41:44 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 27BE01C0B9B; Tue,  4 May 2021 16:40:47 +0200 (CEST)
+Date:   Tue, 4 May 2021 16:39:45 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe Kleine-K??nig <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Yassine Oudjana <y.oudjana@protonmail.com>,
+        Luca Weiss <luca@z3ntu.xyz>
+Subject: Re: [PATCH v7 1/6] dt-bindings: leds: Add Qualcomm Light Pulse
+ Generator binding
+Message-ID: <YJFcsRnki3XT3isk@mobian>
+References: <20210429211517.312792-1-bjorn.andersson@linaro.org>
+ <20210429211517.312792-2-bjorn.andersson@linaro.org>
+ <635d3f2c-d3a8-c0d6-7659-c22e44103901@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <635d3f2c-d3a8-c0d6-7659-c22e44103901@codeaurora.org>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-pwmchip_remove() always returns 0. Don't use the value to make it
-possible to eventually change the function to return void. This is a
-good thing as pwmchip_remove() is usually called from a remove function
-(mostly for platform devices) and their return value is ignored by the
-device core anyhow.
+Hi!
+On Mon 2021-05-03 18:01:09, Subbaraman Narayanamurthy wrote:
+> On 4/29/21 2:15 PM, Bjorn Andersson wrote:
+> > This adds the binding document describing the three hardware blocks
+> > related to the Light Pulse Generator found in a wide range of Qualcomm
+> > PMICs.
+> >
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+...
+> > +      "^led@[0-9a-f]$":
+> > +        type: object
+> > +        $ref: common.yaml#
+> > +
+> 
+> 
+> Just a question more than a comment. From what I can see, when this device is specified as a multi-color device or an individual device (e.g. "red", "green" and "blue"), the user can only set "pattern" and "repeat" under the corresponding device after setting "pattern" to "trigger". Would you be planning to add a way (e.g. another set of DT properties) for the user to specify such patterns via the devicetree itself?
+>
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pwm/pwm-berlin.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Please trim your replies and format emails to 72 columns or so.
 
-diff --git a/drivers/pwm/pwm-berlin.c b/drivers/pwm/pwm-berlin.c
-index 4e838a973c97..605e91d2f6b9 100644
---- a/drivers/pwm/pwm-berlin.c
-+++ b/drivers/pwm/pwm-berlin.c
-@@ -241,12 +241,12 @@ static int berlin_pwm_probe(struct platform_device *pdev)
- static int berlin_pwm_remove(struct platform_device *pdev)
- {
- 	struct berlin_pwm_chip *bpc = platform_get_drvdata(pdev);
--	int ret;
- 
--	ret = pwmchip_remove(&bpc->chip);
-+	pwmchip_remove(&bpc->chip);
-+
- 	clk_disable_unprepare(bpc->clk);
- 
--	return ret;
-+	return 0;
- }
- 
- #ifdef CONFIG_PM_SLEEP
+If you need patterns in DTS that can be discussed, but it should be
+generic functionality not tied to one driver.
+
+Best regards,
+
+       	    	 	     	    	      	 	 Pavel
 -- 
-2.30.2
-
