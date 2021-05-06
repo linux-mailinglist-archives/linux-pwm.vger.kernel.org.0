@@ -2,61 +2,87 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 749283749A9
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 May 2021 22:49:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CB0C374F2A
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 May 2021 08:09:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230037AbhEEUuS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 5 May 2021 16:50:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229575AbhEEUuO (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Wed, 5 May 2021 16:50:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 41C0C61176;
-        Wed,  5 May 2021 20:49:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620247757;
-        bh=JAPEwygHF0DlXdg0rwn6ALhQHLMU50LUI/kyN4dsCdE=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=Oe5Cnj4qK3AKlqvXDWdDo821h9weRZ1GseG3+8+8xBq7zF2w6dqGsJg6uDU3xtAcY
-         jKr5l0sAd4m2JfDuLhjKdmZbjyFNWQs0I9rLS/f2pHJJikaWVU7dCfvzQYsWKWpCJ1
-         u5//3Ts4QNACc3fzhfRLDMB/poQ9ogx6xDd2APb/9wtKKfDPE4X+1bKBLFyyNq+3Fg
-         TxMfRZDYyTFm4wXu4nT3N7MI/3q/r8QZBGzPPBiVB3OQl40KyGyDngwUHCbUPrzTCt
-         S9MljagP3065ri+gLCkeLvFnfq10vdMnUE9lxK4s+VfeQFb0Wj0ZUN114b04rzAPJP
-         T//myeBvs+gWQ==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 3B36C609AD;
-        Wed,  5 May 2021 20:49:17 +0000 (UTC)
-Subject: Re: [GIT PULL] pwm: Changes for v5.13-rc1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20210505184015.1250649-1-thierry.reding@gmail.com>
-References: <20210505184015.1250649-1-thierry.reding@gmail.com>
-X-PR-Tracked-List-Id: <linux-pwm.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20210505184015.1250649-1-thierry.reding@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.13-rc1
-X-PR-Tracked-Commit-Id: a6efb35019d00f483a0e5f188747723371d659fe
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7b9df264f0ab6595eabe367b04c81824a06d9227
-Message-Id: <162024775723.12235.7235479426274310541.pr-tracker-bot@kernel.org>
-Date:   Wed, 05 May 2021 20:49:17 +0000
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+        id S229824AbhEFGKk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 6 May 2021 02:10:40 -0400
+Received: from twspam01.aspeedtech.com ([211.20.114.71]:27431 "EHLO
+        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229560AbhEFGKj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 May 2021 02:10:39 -0400
+Received: from mail.aspeedtech.com ([192.168.0.24])
+        by twspam01.aspeedtech.com with ESMTP id 1465vje5003652;
+        Thu, 6 May 2021 13:57:45 +0800 (GMT-8)
+        (envelope-from billy_tsai@aspeedtech.com)
+Received: from BillyTsai-pc.aspeed.com (192.168.2.149) by TWMBX02.aspeed.com
+ (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 6 May
+ 2021 14:09:32 +0800
+From:   Billy Tsai <billy_tsai@aspeedtech.com>
+To:     <lee.jones@linaro.org>, <robh+dt@kernel.org>, <joel@jms.id.au>,
+        <andrew@aj.id.au>, <thierry.reding@gmail.com>,
+        <u.kleine-koenig@pengutronix.de>, <p.zabel@pengutronix.de>,
+        <billy_tsai@aspeedtech.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>
+CC:     <BMC-SW@aspeedtech.com>
+Subject: [v3 0/2] Support pwm driver for aspeed ast26xx
+Date:   Thu, 6 May 2021 14:10:48 +0800
+Message-ID: <20210506061050.8001-1-billy_tsai@aspeedtech.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [192.168.2.149]
+X-ClientProxiedBy: TWMBX02.aspeed.com (192.168.0.24) To TWMBX02.aspeed.com
+ (192.168.0.24)
+X-DNSRBL: 
+X-MAIL: twspam01.aspeedtech.com 1465vje5003652
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The pull request you sent on Wed,  5 May 2021 20:40:15 +0200:
+The legacy driver of aspeed pwm is binding with tach controller and it
+doesn't follow the pwm framworks usage. In addition, the pwm register
+usage of the 6th generation of ast26xx has drastic change. So these
+patch serials add the new aspeed pwm driver to fix up the problem above.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.13-rc1
+Changes since v2:
+- Remove the tach node, #address-cells and #size-cells from pwm-tach.yaml
+- Add clocks and reset properties to pwm-tach.yaml
+- Kconfig/Makfile sorted alphabetically
+- pwm-aspeed-g6.c suggested by Uwe Kleine-König
+  - Add more hardware descriptions at top of the driver.
+  - Remove unused api request and free
+  - Move the initialize settings of all pwm channel to probe.
+  - Change the method of getting the approximate period.
+  - Read the hardware register values to fill the state for .get_state()
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7b9df264f0ab6595eabe367b04c81824a06d9227
+Changes since v1:
+- Fix the dt_binding_check fail suggested by Rob Herring
+- Add depends to PWM_ASPEED_G6 configure suggested by Uwe Kleine-Konig
+- pwm-aspeed-g6.c suggested by Uwe Kleine-König
+  - Fix license header
+  - Use bitfiled.h macro to define register fields
+  - Implement .remove device function
+  - Implement .get_state pwm api
 
-Thank you!
+
+Billy Tsai (2):
+  dt-bindings: Add bindings for aspeed pwm-tach and pwm.
+  pwm: Add Aspeed ast2600 PWM support
+
+ .../bindings/mfd/aspeed,ast2600-pwm-tach.yaml |  55 +++
+ .../bindings/pwm/aspeed,ast2600-pwm.yaml      |  41 ++
+ drivers/pwm/Kconfig                           |   8 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-aspeed-g6.c                   | 368 ++++++++++++++++++
+ 5 files changed, 473 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
+ create mode 100644 Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-aspeed-g6.c
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.25.1
+
