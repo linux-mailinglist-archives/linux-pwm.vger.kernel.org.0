@@ -2,466 +2,279 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3675C374F29
-	for <lists+linux-pwm@lfdr.de>; Thu,  6 May 2021 08:09:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E353375592
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 May 2021 16:24:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229795AbhEFGKh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 6 May 2021 02:10:37 -0400
-Received: from twspam01.aspeedtech.com ([211.20.114.71]:27427 "EHLO
-        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229560AbhEFGKg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 May 2021 02:10:36 -0400
-Received: from mail.aspeedtech.com ([192.168.0.24])
-        by twspam01.aspeedtech.com with ESMTP id 1465vjqG003653;
-        Thu, 6 May 2021 13:57:45 +0800 (GMT-8)
-        (envelope-from billy_tsai@aspeedtech.com)
-Received: from BillyTsai-pc.aspeed.com (192.168.2.149) by TWMBX02.aspeed.com
- (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 6 May
- 2021 14:09:32 +0800
-From:   Billy Tsai <billy_tsai@aspeedtech.com>
-To:     <lee.jones@linaro.org>, <robh+dt@kernel.org>, <joel@jms.id.au>,
-        <andrew@aj.id.au>, <thierry.reding@gmail.com>,
-        <u.kleine-koenig@pengutronix.de>, <p.zabel@pengutronix.de>,
-        <billy_tsai@aspeedtech.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>
-CC:     <BMC-SW@aspeedtech.com>
-Subject: [v3 2/2] pwm: Add Aspeed ast2600 PWM support
-Date:   Thu, 6 May 2021 14:10:50 +0800
-Message-ID: <20210506061050.8001-3-billy_tsai@aspeedtech.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210506061050.8001-1-billy_tsai@aspeedtech.com>
-References: <20210506061050.8001-1-billy_tsai@aspeedtech.com>
+        id S234700AbhEFOZe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 6 May 2021 10:25:34 -0400
+Received: from mail-vi1eur05on2044.outbound.protection.outlook.com ([40.107.21.44]:4704
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S234397AbhEFOZd (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 6 May 2021 10:25:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OosxvuUkT1OtWY1yAgE7YEQ8kp42XxoZeAU3lXTFOGZxrwYH0jqPSqqtISQox3iq28fAAE93038lhEkKC6/B9xyKV3aTwCO7QINr88BHanICRTRVDwQpXzhWKJ0zWX8QJ7I2hPYYwpmmQM3Amyw2X6ZmoZ7KX/OGK+4HRNrP8MgoJQGJlC8399qElTiiKiokyTmxGFHOqr2A36AIDy7HBKHmN1j2cSbwa4smD7qufEmtpPTKJLECSYmihrp23AdrAfFSitaFiDdruhD1VpVywwKhgorVFAG+EusBi8gn+qK2vvEY9MQ+kPge3L769kHsw9TMwgr4wH0Y3OBTRGrZnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kssnTIfUSADtoLyBu7X8/Jbz0l3OCLIHcyrzxbnDTd4=;
+ b=hhn/MFCJLcvQ4FeAqT8rAm3EIiBr/2BFgLvwOCFm6S6tY+t8lCpRGn8PLDJxERlqSenuGbNALcyJ2s/YVKZOS3OENwyku2fJzn/QQV7L8VzSbc3jt+rQbGdOjOjl6t5XjbFQub3QgXa2ee4RipXpVOeBcaF3YQjhu0RfPZxN84Ql5SqTfglRqjAEC8stGAD76WnJyOd2/f/jL9R6Kh9XgO7sBKJVp8NI9MJfnj4hlaaNZnLS1pF/4x2eoAXeps/OLeMoZTOMd/4kJqbma4ztDda+VO4QPGaHX2o97sdJS4woCEn+qCemEKn/rrIqGA+Iy0PqxeRNbwx2sXv+VnisUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=seco.com; dmarc=pass action=none header.from=seco.com;
+ dkim=pass header.d=seco.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=secospa.onmicrosoft.com; s=selector2-secospa-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kssnTIfUSADtoLyBu7X8/Jbz0l3OCLIHcyrzxbnDTd4=;
+ b=yh09vUOIn4jha+xE/ngUhqEkymGM0ChJVHvXxqILhw6GM0lPBFYdnrKW/7IfcnEyBjR27BYVhnGJGbUSByJISfmGxBETHxwE3g8n5PlWVaTryXhFrnvNXPUq3JP+3UmV5SNF01eqPQVqD5AuPG7r8Z5nWxOzjymDbqr2EDcOJeU=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=seco.com;
+Received: from DB7PR03MB4523.eurprd03.prod.outlook.com (2603:10a6:10:19::27)
+ by DB8PR03MB6330.eurprd03.prod.outlook.com (2603:10a6:10:136::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.27; Thu, 6 May
+ 2021 14:24:32 +0000
+Received: from DB7PR03MB4523.eurprd03.prod.outlook.com
+ ([fe80::40d5:3554:c709:6b1b]) by DB7PR03MB4523.eurprd03.prod.outlook.com
+ ([fe80::40d5:3554:c709:6b1b%5]) with mapi id 15.20.4108.026; Thu, 6 May 2021
+ 14:24:32 +0000
+Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: Add Xilinx AXI Timer
+To:     Michal Simek <michal.simek@xilinx.com>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alvaro Gamez <alvaro.gamez@hazent.com>,
+        Rob Herring <robh@kernel.org>
+References: <20210504184925.3399934-1-sean.anderson@seco.com>
+ <0326a217-e6cd-d2b3-65a2-4285e9342418@xilinx.com>
+From:   Sean Anderson <sean.anderson@seco.com>
+Message-ID: <b8a38fbc-dda9-688d-3985-8c3ca01168f3@seco.com>
+Date:   Thu, 6 May 2021 10:24:26 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <0326a217-e6cd-d2b3-65a2-4285e9342418@xilinx.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [50.195.82.171]
+X-ClientProxiedBy: BL1PR13CA0311.namprd13.prod.outlook.com
+ (2603:10b6:208:2c1::16) To DB7PR03MB4523.eurprd03.prod.outlook.com
+ (2603:10a6:10:19::27)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [192.168.2.149]
-X-ClientProxiedBy: TWMBX02.aspeed.com (192.168.0.24) To TWMBX02.aspeed.com
- (192.168.0.24)
-X-DNSRBL: 
-X-MAIL: twspam01.aspeedtech.com 1465vjqG003653
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.27.1.65] (50.195.82.171) by BL1PR13CA0311.namprd13.prod.outlook.com (2603:10b6:208:2c1::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4129.11 via Frontend Transport; Thu, 6 May 2021 14:24:31 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 994152f0-2cdd-48fc-f643-08d9109aaa4d
+X-MS-TrafficTypeDiagnostic: DB8PR03MB6330:
+X-Microsoft-Antispam-PRVS: <DB8PR03MB633026EEF709908A67C0AD9A96589@DB8PR03MB6330.eurprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2maaUJ6QaACmcM5Rl0CJDubrHc1hducubPV1BmJKJTY8xlApKEJJBCK1+fiZ22CLGI3MKvAHVGa1Uxjiekcl4FiBSdsOi50ZmM9RD2SA86P1Q465KKAme4lgYVIwQrHh7nLi5DIg5rEyOFJAjEt1sjYRT9Xqdl1jcHZ6LDNKimR80cEWT37Uj5sG/mwnd0eS2OQ3A5YYqPQOjsZoKALYYvv1I6HYn3ro8+B1XLmokuns980vD2VMVFSaNRs/CR1uNk65UyGB+bWJIMmRtzSKcUglP3jl0R3AnTb9qfjyCTvtiVAFvIYc0g0FhRpsq4lQEtX4JUd7jqhZJv7BMi5En+8oQlUh2kJkSJ8i0GotDRSM4uGSEWn4TE/WNam52Ba8lvOCthr/fq444Wdm+Puvj8xYUskMCuTzw2O57qSrD4S1mbzVi36BBQkb8kM475NbSc63aPpVXrPodSU2Xwbv12LZE/CPhZ+ismBLl/zxXPY3pc6TJ+vaAt1ezI9tXLuI2NOpPnHeo1uHUQjp0r+zq+ia2zyFo8aP+hwZOVLi4VfIzTxVlAdf10ivRI91pufv0bzb7LweuiyigDnLYTtpSAjN0P4zs/FG2e9vff5HuSg2Pt3Dhw43Sk2OxdU43vURfYiV6C9iqDBWpnHMweK//wEw2bqynJMNY9hmDxU7dJZx3gqsh9aZcDLIq6kXLNrWX4twogLZv0coCcQESQgkYsz/28g4twqmsPeQrKpzkVOz1Uic4Uxvh7ojjVDp+bXO7crf52rHNvWwF/CkDNnRLEOvr3stqd2FOOTsAQHCCmY=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR03MB4523.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(376002)(136003)(39840400004)(396003)(346002)(6486002)(4326008)(2906002)(6666004)(316002)(44832011)(956004)(186003)(5660300002)(26005)(16576012)(478600001)(31696002)(8936002)(53546011)(83380400001)(66476007)(54906003)(2616005)(16526019)(966005)(38350700002)(38100700002)(36756003)(86362001)(66946007)(52116002)(31686004)(66556008)(8676002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?UFBYRzd2V0pYM3JuR2MzSkNieEZhQjZFbmsvcVkvV2ZsbjkvaDJsN2F5MGpw?=
+ =?utf-8?B?cmdVSXF3anVCTThnSjAreWJ1YSttMFNvY2Z5RVg5akdaUm1ZRDdTWnE2ZXlv?=
+ =?utf-8?B?MzloWjFObmQrdi9NbVg2UzhPdjJXMW5XUmcxMWpkWHErZGZJOUVBRjNwTjFE?=
+ =?utf-8?B?ZHZlK0FrbmZDUGsvOGFob253eFIwVUowd1ZpK1QrZ3JtZ0NoeXpjRlUrNGZ3?=
+ =?utf-8?B?VEVCRUFDb0hJbzVDYi8rVU9way8waFRPbUZtbXBmK1hseXZ2VldlbmJNTVlD?=
+ =?utf-8?B?NUJHdkFHMU0wbkhSdHhrRmJQekczMUlSVTZEYy9TNC9FMlJzdnlsejNMbkJq?=
+ =?utf-8?B?TERiMlpwUFNCcjVMYXBKNUhDK2lmYjhIWGJKU2V6QXNEbW5icW9VQlZRWkNu?=
+ =?utf-8?B?emtkazU2eWFrV3RoRGV5cURxVng3Rm1mWUllenZsNVN5NGNnYm5zakdLTzlk?=
+ =?utf-8?B?b2ZtaTRNcHRBRm5ldUd0ZkRTYklROUhORFBaMGNraFlsTThWZkZjNzBDVWJs?=
+ =?utf-8?B?Z2ROMUxXNDJyZWZNdnNlakV0SVBkbmptRGZFSHlYdFNmZkxNOVZIelZ4Ui9t?=
+ =?utf-8?B?TlpTejl0WC9GZm5XWVVPU0RNNjBScDJ6SVFKcWsrTFRzK2pXYXNZamxmc0JQ?=
+ =?utf-8?B?OFIxZVBweC85OERYNDV2ZlFhWUdrbEVmcjN3cGdacWxmWTJjaFNaNi8rK0dk?=
+ =?utf-8?B?VEo2dk5vcHZPam14L0pVRCt0eTUvS0tYOGJMMFlRL0l3V2x0T2NiRUZZNUFo?=
+ =?utf-8?B?RzdSVzVTcW1oY3ZacTZHdlR6R2pnd2JWTHlDT0tWNUc1VitqaVNVbUptaTBF?=
+ =?utf-8?B?QWZoWEpoZkRnbm91SDltUENyVmFFTndXTXJMczlJYzZRTzBiZkMvWnpLS3FI?=
+ =?utf-8?B?eXc1OTJ2bHkxYlJwM1NzamxXcGVEZUhqTDdmUkx5Z00rY3BCYkxLaDNwZXdr?=
+ =?utf-8?B?NkNVOWxtUlpUTmlRMEl0R0wzSVFIRVpkNzNkODFMcXE5ZDM5TVBXVUl5M0Zl?=
+ =?utf-8?B?bFpldFJTY2tpQVZDTERKU2FXMlBvdE9GVkwvczhzTHlkaWdVcy9NU0MxV2VS?=
+ =?utf-8?B?bmtZQWx5WWcxTzh1WjlWcEg1dHZ2M0tQUXNwc0JEcndSczJOcE9DaGRJaHpa?=
+ =?utf-8?B?YUFkUVRvSHpid0lnek4vdjFVbFJ1QjgzSG1IcjhFL2xVSjZmTGQ3M2hmMHp2?=
+ =?utf-8?B?YVZWZWIyY3hoVTkzVWFUYW0wQlFmL3ZSZnBwTGxmUjJXWURaVG9CMExicFlw?=
+ =?utf-8?B?cmV2R1dRelg5aUhlRVZJeSs2OCtWbnJuTGpCQ1k1UEpmUWlRNDZwUkNXQlNS?=
+ =?utf-8?B?dENXWGplZXNQc25PMS92aVpkNGJ4ajZLOFdCMzlWV2lLV3pXTnRtMC9zdmRW?=
+ =?utf-8?B?R25pbFFhSExwcXlYc0ZLRUVrTmJBYklncGZkdlJwVW1LWkU0OWxCanBQZkVU?=
+ =?utf-8?B?WHhhVXFwdHRVYlRSc1hRMVJJY2dUb0hlQzNGTi80MUdoYTdlYXBRVFMxcHVi?=
+ =?utf-8?B?UzVEZzRRY1dOb2ZqTlMyVlJidW5qUVdnTUVMV0EvTVh5RU1hZWNLUDJRSHRl?=
+ =?utf-8?B?N1J4bDYrSTlSSTBETE1EYThPNFIrRFZ3dWhnSTRma2JLaTd6MU1jcVVXL2Q3?=
+ =?utf-8?B?dEFBelNYTlBYTDZQajlIRXFERFMwM0IrQ1BvNTZrazJ6Z1hzQkJpamZ0KzFN?=
+ =?utf-8?B?akxpT1hzeENtNGk2TmhBcWhOV0VZMGVmSi9BMWhGWEhGOVVkS3N4Nk42aEli?=
+ =?utf-8?Q?K6YG06KPxFd6RDFtE5cF3S9POO3LTTYQkykUCEB?=
+X-OriginatorOrg: seco.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 994152f0-2cdd-48fc-f643-08d9109aaa4d
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR03MB4523.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2021 14:24:31.9209
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bebe97c3-6438-442e-ade3-ff17aa50e733
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cR2Mrd4C19b5y5Y3Q8lZ3d4TgbLbWhf34t2d3aKjmHKFsIIvaIdyCyprjfKRUjtXL4+z18hCFrkTZPya8VeVnw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR03MB6330
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This patch add the support of PWM controller which can be found at aspeed
-ast2600 soc. The pwm supoorts up to 16 channels and it's part function
-of multi-function device "pwm-tach controller".
 
-Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
----
- drivers/pwm/Kconfig         |   8 +
- drivers/pwm/Makefile        |   1 +
- drivers/pwm/pwm-aspeed-g6.c | 368 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 377 insertions(+)
- create mode 100644 drivers/pwm/pwm-aspeed-g6.c
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 63be5362fd3a..b0964b9a3273 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -51,6 +51,14 @@ config PWM_AB8500
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-ab8500.
- 
-+config PWM_ASPEED_G6
-+	tristate "ASPEEDG6 PWM support"
-+	depends on ARCH_ASPEED || COMPILE_TEST
-+	help
-+	  Generic PWM framework driver for ASPEED G6 SoC.
-+
-+	  This driver provides support for ASPEED G6 PWM controllers.
-+
- config PWM_ATMEL
- 	tristate "Atmel PWM support"
- 	depends on OF
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index cbdcd55d69ee..29d22d806e68 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -2,6 +2,7 @@
- obj-$(CONFIG_PWM)		+= core.o
- obj-$(CONFIG_PWM_SYSFS)		+= sysfs.o
- obj-$(CONFIG_PWM_AB8500)	+= pwm-ab8500.o
-+obj-$(CONFIG_PWM_ASPEED_G6)	+= pwm-aspeed-g6.o
- obj-$(CONFIG_PWM_ATMEL)		+= pwm-atmel.o
- obj-$(CONFIG_PWM_ATMEL_HLCDC_PWM)	+= pwm-atmel-hlcdc.o
- obj-$(CONFIG_PWM_ATMEL_TCB)	+= pwm-atmel-tcb.o
-diff --git a/drivers/pwm/pwm-aspeed-g6.c b/drivers/pwm/pwm-aspeed-g6.c
-new file mode 100644
-index 000000000000..f5bb982c21e6
---- /dev/null
-+++ b/drivers/pwm/pwm-aspeed-g6.c
-@@ -0,0 +1,368 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (C) 2021 ASPEED Technology Inc.
-+ *
-+ * PWM controller driver for Aspeed ast26xx SoCs.
-+ * This drivers doesn't rollback to previous version of aspeed SoCs.
-+ *
-+ * The formula of pwm frequency:
-+ * PWM frequency = CLK Source / ((DIV_L + 1) * BIT(DIV_H) * (PERIOD + 1))
-+ *
-+ * The software driver fixes the period to 256, which causes the high-frequency
-+ * precision of the PWM to be coarse, in exchange for the fineness of the duty cycle.
-+ *
-+ * Register usage:
-+ * PIN_ENABLE: When it is unset the pwm controller will always output low to the extern.
-+ * Use to determin PWM channel enable/disable.
-+ * CLK_ENABLE: When it is unset the pwm controller will reset the duty counter to 0 and
-+ * output low to the PIN_ENABLE mux after that the driver can still change the pwm period
-+ * and duty and the value will apply when CLK_ENABLE be set again.
-+ * Use to determin whether duty_cycle bigger than 0.
-+ * PWM_ASPEED_INVERSE: When it is toggled the output value will inverse immediately.
-+ *
-+ * Limitations:
-+ * - When changing both duty cycle and period, we cannot prevent in
-+ *   software that the output might produce a period with mixed
-+ *   settings.
-+ *
-+ * Improvements:
-+ * - When changing the duty cycle or period, our pwm controller will not
-+ *   generate the glitch, the configure will change at next cycle of pwm.
-+ *   This improvement can disable/enable through PWM_ASPEED_DUTY_SYNC_DISABLE.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/errno.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/sysfs.h>
-+#include <linux/reset.h>
-+#include <linux/regmap.h>
-+#include <linux/bitfield.h>
-+#include <linux/slab.h>
-+#include <linux/pwm.h>
-+
-+/* The channel number of Aspeed pwm controller */
-+#define PWM_ASPEED_NR_PWMS 16
-+
-+/* PWM Control Register */
-+#define PWM_ASPEED_CTRL_CH(ch) (((ch * 0x10) + 0x00))
-+#define PWM_ASPEED_LOAD_SEL_RISING_AS_WDT BIT(19)
-+#define PWM_ASPEED_DUTY_LOAD_AS_WDT_ENABLE BIT(18)
-+#define PWM_ASPEED_DUTY_SYNC_DISABLE BIT(17)
-+#define PWM_ASPEED_CLK_ENABLE BIT(16)
-+#define PWM_ASPEED_LEVEL_OUTPUT BIT(15)
-+#define PWM_ASPEED_INVERSE BIT(14)
-+#define PWM_ASPEED_OPEN_DRAIN_ENABLE BIT(13)
-+#define PWM_ASPEED_PIN_ENABLE BIT(12)
-+#define PWM_ASPEED_CLK_DIV_H GENMASK(11, 8)
-+#define PWM_ASPEED_CLK_DIV_L GENMASK(7, 0)
-+
-+/* PWM Duty Cycle Register */
-+#define PWM_ASPEED_DUTY_CYCLE_CH(ch) (((ch * 0x10) + 0x04))
-+#define PWM_ASPEED_PERIOD GENMASK(31, 24)
-+#define PWM_ASPEED_POINT_AS_WDT GENMASK(23, 16)
-+#define PWM_ASPEED_FALLING_POINT GENMASK(15, 8)
-+#define PWM_ASPEED_RISING_POINT GENMASK(7, 0)
-+
-+/* PWM fixed value */
-+#define PWM_ASPEED_FIXED_PERIOD 0xff
-+
-+struct aspeed_pwm_data {
-+	struct pwm_chip chip;
-+	struct clk *clk;
-+	struct regmap *regmap;
-+	struct reset_control *reset;
-+};
-+
-+static inline struct aspeed_pwm_data *
-+aspeed_pwm_chip_to_data(struct pwm_chip *c)
-+{
-+	return container_of(c, struct aspeed_pwm_data, chip);
-+}
-+
-+static void aspeed_set_pwm_clk_enable(struct regmap *regmap, u8 pwm_channel,
-+					  bool enable)
-+{
-+	regmap_update_bits(regmap, PWM_ASPEED_CTRL_CH(pwm_channel),
-+			   PWM_ASPEED_CLK_ENABLE,
-+			   enable ? PWM_ASPEED_CLK_ENABLE : 0);
-+}
-+
-+static u32 apseed_get_pwm_freq(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct aspeed_pwm_data *priv = aspeed_pwm_chip_to_data(chip);
-+	unsigned long rate;
-+	u32 index = pwm->hwpwm;
-+	u32 div_h, div_l, cur_freq, val;
-+
-+	rate = clk_get_rate(priv->clk);
-+	regmap_read(priv->regmap, PWM_ASPEED_CTRL_CH(index), &val);
-+	div_h = FIELD_GET(PWM_ASPEED_CLK_DIV_H, val);
-+	div_l = FIELD_GET(PWM_ASPEED_CLK_DIV_L, val);
-+
-+	cur_freq = DIV_ROUND_DOWN_ULL(rate, (BIT(div_h) * (div_l + 1) *
-+					     (PWM_ASPEED_FIXED_PERIOD + 1)));
-+	return cur_freq;
-+}
-+
-+static int aspeed_set_pwm_freq(struct pwm_chip *chip, struct pwm_device *pwm,
-+			       const struct pwm_state *state)
-+{
-+	struct device *dev = chip->dev;
-+	struct aspeed_pwm_data *priv = aspeed_pwm_chip_to_data(chip);
-+	unsigned long rate;
-+	u32 div_h, div_l, freq;
-+	u32 index = pwm->hwpwm;
-+	/* Get the smallest value for div_h  */
-+	freq = DIV_ROUND_UP_ULL(NSEC_PER_SEC, state->period);
-+	rate = clk_get_rate(priv->clk);
-+	div_h = DIV_ROUND_DOWN_ULL(rate,
-+				   ((FIELD_MAX(PWM_ASPEED_CLK_DIV_L) + 1) *
-+				    freq * (PWM_ASPEED_FIXED_PERIOD + 1)));
-+	div_h = order_base_2(div_h);
-+	if (div_h > 0xf)
-+		div_h = 0xf;
-+
-+	div_l = DIV_ROUND_DOWN_ULL(rate >> div_h,
-+				   (freq * (PWM_ASPEED_FIXED_PERIOD + 1)));
-+	if (div_l == 0) {
-+		dev_err(dev, "Period too small, cannot implement it");
-+		return -ERANGE;
-+	}
-+
-+	div_l -= 1;
-+
-+	if (div_l > 255)
-+		div_l = 255;
-+
-+	dev_dbg(dev, "clk source: %ld div h %x, l : %x\n", rate, div_h, div_l);
-+
-+	regmap_update_bits(priv->regmap, PWM_ASPEED_CTRL_CH(index),
-+			   (PWM_ASPEED_CLK_DIV_H | PWM_ASPEED_CLK_DIV_L),
-+			   FIELD_PREP(PWM_ASPEED_CLK_DIV_H, div_h) |
-+				   FIELD_PREP(PWM_ASPEED_CLK_DIV_L, div_l));
-+	return 0;
-+}
-+
-+static void aspeed_set_pwm_duty(struct pwm_chip *chip, struct pwm_device *pwm,
-+				const struct pwm_state *state)
-+{
-+	struct aspeed_pwm_data *priv = aspeed_pwm_chip_to_data(chip);
-+	u32 duty_pt;
-+	u32 index = pwm->hwpwm;
-+	u32 cur_freq;
-+	u64 cur_period;
-+
-+	cur_freq = apseed_get_pwm_freq(chip, pwm);
-+	cur_period = DIV_ROUND_DOWN_ULL(NSEC_PER_SEC, cur_freq);
-+	duty_pt = DIV_ROUND_DOWN_ULL(
-+		state->duty_cycle * (PWM_ASPEED_FIXED_PERIOD + 1), cur_period);
-+	if (duty_pt == 0) {
-+		aspeed_set_pwm_clk_enable(priv->regmap, index, false);
-+	} else {
-+		if (duty_pt >= (PWM_ASPEED_FIXED_PERIOD + 1))
-+			duty_pt = 0;
-+		/* When duty_pt = 0 it mean our duty cycle = 100% */
-+		regmap_update_bits(
-+			priv->regmap, PWM_ASPEED_DUTY_CYCLE_CH(index),
-+			PWM_ASPEED_FALLING_POINT,
-+			FIELD_PREP(PWM_ASPEED_FALLING_POINT, duty_pt));
-+		aspeed_set_pwm_clk_enable(priv->regmap, index, true);
-+	}
-+}
-+
-+static void aspeed_set_pwm_polarity(struct pwm_chip *chip,
-+				    struct pwm_device *pwm,
-+				    const struct pwm_state *state)
-+{
-+	struct aspeed_pwm_data *priv = aspeed_pwm_chip_to_data(chip);
-+	u32 index = pwm->hwpwm;
-+
-+	regmap_update_bits(priv->regmap, PWM_ASPEED_CTRL_CH(index),
-+			   PWM_ASPEED_INVERSE,
-+			   FIELD_PREP(PWM_ASPEED_INVERSE, state->polarity));
-+}
-+
-+static void aspeed_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				 struct pwm_state *state)
-+{
-+	struct device *dev = chip->dev;
-+	struct aspeed_pwm_data *priv = aspeed_pwm_chip_to_data(chip);
-+	u32 index = pwm->hwpwm;
-+	bool polarity, ch_en, clk_en;
-+	u32 duty_pt, val;
-+	u32 cur_freq;
-+
-+	regmap_read(priv->regmap, PWM_ASPEED_CTRL_CH(index), &val);
-+	polarity = FIELD_GET(PWM_ASPEED_INVERSE, val);
-+	ch_en = FIELD_GET(PWM_ASPEED_PIN_ENABLE, val);
-+	clk_en = FIELD_GET(PWM_ASPEED_CLK_ENABLE, val);
-+	regmap_read(priv->regmap, PWM_ASPEED_DUTY_CYCLE_CH(index), &val);
-+	duty_pt = FIELD_GET(PWM_ASPEED_FALLING_POINT, val);
-+
-+	cur_freq = apseed_get_pwm_freq(chip, pwm);
-+
-+	state->period = DIV_ROUND_DOWN_ULL(NSEC_PER_SEC, cur_freq);
-+	if (clk_en && duty_pt)
-+		state->duty_cycle = DIV_ROUND_DOWN_ULL(
-+			state->period * duty_pt, PWM_ASPEED_FIXED_PERIOD + 1);
-+	else
-+		state->duty_cycle = clk_en ? state->period : 0;
-+	state->polarity = polarity;
-+	state->enabled = ch_en;
-+	dev_dbg(dev, "get period: %lldns, duty_cycle: %lldns", state->period,
-+		state->duty_cycle);
-+}
-+
-+static int aspeed_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			    const struct pwm_state *state)
-+{
-+	struct device *dev = chip->dev;
-+	struct aspeed_pwm_data *priv = aspeed_pwm_chip_to_data(chip);
-+	u32 index = pwm->hwpwm;
-+	struct pwm_state cur_state;
-+	int ret;
-+
-+	aspeed_pwm_get_state(chip, pwm, &cur_state);
-+	dev_dbg(dev, "cur period: %lldns, cur duty_cycle: %lldns",
-+		cur_state.period, cur_state.duty_cycle);
-+	dev_dbg(dev, "apply period: %lldns, duty_cycle: %lldns", state->period,
-+		state->duty_cycle);
-+	regmap_update_bits(priv->regmap, PWM_ASPEED_CTRL_CH(index),
-+			   PWM_ASPEED_PIN_ENABLE,
-+			   state->enabled ? PWM_ASPEED_PIN_ENABLE : 0);
-+	if (cur_state.period != state->period) {
-+		ret = aspeed_set_pwm_freq(chip, pwm, state);
-+		if (ret)
-+			return ret;
-+		aspeed_set_pwm_duty(chip, pwm, state);
-+	} else if (cur_state.duty_cycle != state->duty_cycle)
-+		aspeed_set_pwm_duty(chip, pwm, state);
-+	aspeed_set_pwm_polarity(chip, pwm, state);
-+	return 0;
-+}
-+
-+static const struct pwm_ops aspeed_pwm_ops = {
-+	.apply = aspeed_pwm_apply,
-+	.get_state = aspeed_pwm_get_state,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int aspeed_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	int ret, index;
-+	struct aspeed_pwm_data *priv;
-+	struct device_node *np;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	np = pdev->dev.parent->of_node;
-+	if (!of_device_is_compatible(np, "aspeed,ast2600-pwm-tach")) {
-+		dev_err(dev, "unsupported pwm device binding\n");
-+		return -ENODEV;
-+	}
-+
-+	priv->regmap = syscon_node_to_regmap(np);
-+	if (IS_ERR(priv->regmap)) {
-+		dev_err(dev, "Couldn't get regmap\n");
-+		return -ENODEV;
-+	}
-+
-+	priv->clk = of_clk_get(np, 0);
-+	if (IS_ERR(priv->clk))
-+		return dev_err_probe(dev, PTR_ERR(priv->clk),
-+				     "get clock failed\n");
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret) {
-+		dev_err(dev, "couldn't enable clock\n");
-+		return ret;
-+	}
-+
-+	priv->reset = of_reset_control_get_shared(np, NULL);
-+	if (IS_ERR(priv->reset))
-+		return dev_err_probe(dev, PTR_ERR(priv->reset),
-+				     "get reset failed\n");
-+
-+	ret = reset_control_deassert(priv->reset);
-+	if (ret) {
-+		dev_err(dev, "cannot deassert reset control: %pe\n",
-+			ERR_PTR(ret));
-+		clk_disable_unprepare(priv->clk);
-+		return ret;
-+	}
-+
-+	priv->chip.dev = dev;
-+	priv->chip.ops = &aspeed_pwm_ops;
-+	priv->chip.npwm = PWM_ASPEED_NR_PWMS;
-+	priv->chip.of_xlate = of_pwm_xlate_with_flags;
-+	priv->chip.of_pwm_n_cells = 3;
-+
-+	/*
-+	 * Fixed the period to the max value and rising point to 0
-+	 * for high resolution and simplified frequency calculation.
-+	 */
-+	for (index = 0; index < PWM_ASPEED_NR_PWMS; index++) {
-+		regmap_update_bits(
-+			priv->regmap, PWM_ASPEED_DUTY_CYCLE_CH(index),
-+			PWM_ASPEED_PERIOD,
-+			FIELD_PREP(PWM_ASPEED_PERIOD, PWM_ASPEED_FIXED_PERIOD));
-+		regmap_update_bits(priv->regmap,
-+				   PWM_ASPEED_DUTY_CYCLE_CH(index),
-+				   PWM_ASPEED_RISING_POINT, 0);
-+	}
-+
-+	ret = pwmchip_add(&priv->chip);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to add PWM chip: %pe\n", ERR_PTR(ret));
-+		reset_control_assert(priv->reset);
-+		clk_disable_unprepare(priv->clk);
-+		return ret;
-+	}
-+	dev_set_drvdata(dev, priv);
-+	return ret;
-+}
-+
-+static int aspeed_pwm_remove(struct platform_device *dev)
-+{
-+	struct aspeed_pwm_data *priv = platform_get_drvdata(dev);
-+
-+	pwmchip_remove(&priv->chip);
-+	reset_control_assert(priv->reset);
-+	clk_disable_unprepare(priv->clk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id of_pwm_match_table[] = {
-+	{
-+		.compatible = "aspeed,ast2600-pwm",
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, of_pwm_match_table);
-+
-+static struct platform_driver aspeed_pwm_driver = {
-+	.probe		= aspeed_pwm_probe,
-+	.remove		= aspeed_pwm_remove,
-+	.driver		= {
-+		.name	= "aspeed_pwm",
-+		.of_match_table = of_pwm_match_table,
-+	},
-+};
-+
-+module_platform_driver(aspeed_pwm_driver);
-+
-+MODULE_AUTHOR("Billy Tsai <billy_tsai@aspeedtech.com>");
-+MODULE_DESCRIPTION("ASPEED PWM device driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.25.1
+On 5/5/21 2:46 AM, Michal Simek wrote:
+ >
+ >
+ > On 5/4/21 8:49 PM, Sean Anderson wrote:
+ >> This adds a binding for the Xilinx LogiCORE IP AXI Timer. This device is
+ >> a "soft" block, so it has many parameters which would not be
+ >> configurable in most hardware. This binding is usually automatically
+ >> generated by Xilinx's tools, so the names and values of properties
+ >> must be kept as they are.
+ >>
+ >> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
+ >> ---
+ >>
+ >> Changes in v2:
+ >> - Use 32-bit addresses for example binding
+ >>
+ >>   .../bindings/pwm/xlnx,axi-timer.yaml          | 91 +++++++++++++++++++
+ >>   1 file changed, 91 insertions(+)
+ >>   create mode 100644 Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml
+ >>
+ >> diff --git a/Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml b/Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml
+ >> new file mode 100644
+ >> index 000000000000..bd014134c322
+ >> --- /dev/null
+ >> +++ b/Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml
+ >> @@ -0,0 +1,91 @@
+ >> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+ >> +%YAML 1.2
+ >> +---
+ >> +$id: http://devicetree.org/schemas/pwm/xlnx,axi-timer.yaml#
+ >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+ >> +
+ >> +title: Xilinx LogiCORE IP AXI Timer Device Tree Binding
+ >> +
+ >> +maintainers:
+ >> +  - Sean Anderson <sean.anderson@seco.com>
+ >> +
+ >> +properties:
+ >> +  compatible:
+ >> +    items:
+ >> +      - const: xlnx,axi-timer-2.0
+ >> +      - const: xlnx,xps-timer-1.00.a
+ >> +
+ >> +  clocks:
+ >> +    maxItems: 1
+ >> +
+ >> +  clock-names:
+ >> +    const: s_axi_aclk
+ >> +
+ >> +  reg:
+ >> +    maxItems: 1
+ >> +
+ >> +  xlnx,count-width:
+ >> +    $ref: /schemas/types.yaml#/definitions/uint32
+ >> +    minimum: 8
+ >> +    maximum: 32
+ >> +    description:
+ >> +      The width of the counters, in bits.
+ >> +
+ >> +  xlnx,gen0-assert:
+ >> +    $ref: /schemas/types.yaml#/definitions/uint32
+ >> +    enum: [ 0, 1 ]
+ >> +    description:
+ >> +      The polarity of the generateout0 signal. 0 for active-low, 1 for active-high.
+ >> +
+ >> +  xlnx,gen1-assert:
+ >> +    $ref: /schemas/types.yaml#/definitions/uint32
+ >> +    enum: [ 0, 1 ]
+ >> +    description:
+ >> +      The polarity of the generateout1 signal. 0 for active-low, 1 for active-high.
+ >> +
+ >> +  xlnx,one-timer-only:
+ >> +    $ref: /schemas/types.yaml#/definitions/uint32
+ >> +    enum: [ 0, 1 ]
+ >> +    description:
+ >> +      Whether only one timer is present in this block.
+ >> +
+ >> +  xlnx,trig0-assert:
+ >> +    $ref: /schemas/types.yaml#/definitions/uint32
+ >> +    enum: [ 0, 1 ]
+ >> +    description:
+ >> +      The polarity of the capturetrig0 signal. 0 for active-low, 1 for active-high.
+ >> +
+ >> +  xlnx,trig1-assert:
+ >> +    $ref: /schemas/types.yaml#/definitions/uint32
+ >> +    enum: [ 0, 1 ]
+ >> +    description:
+ >> +      The polarity of the capturetrig1 signal. 0 for active-low, 1 for active-high.
+ >> +
+ >
+ > Based on xilinx design tool selection there is also mode_64bit option
+ > which I expect will be translate to xlnx,mode-64bit [0, 1].
+ > But any coverage of this as bool property should be fine.
 
+I believe that just selects count-width=32 and one-timer-only=0. From
+the data sheet, there doesn't appear to be a separate mode-64bit
+parameter.
+
+ >
+ >> +required:
+ >> +  - compatible
+ >> +  - clocks
+ >> +  - reg
+ >> +  - xlnx,count-width
+ >> +  - xlnx,gen0-assert
+ >> +  - xlnx,gen1-assert
+ >
+ > these 3 shouldn't be required.
+
+Count width is certainly required so that we can determine the correct
+value to program into TLR. For the PWM driver, gen?-assert are required
+to determine whether PWM mode is enabled.
+
+ >
+ >> +  - xlnx,one-timer-only
+ >> +  - xlnx,trig0-assert
+ >> +  - xlnx,trig1-assert
+ >
+ > these 2 are also not required.
+
+These are not currently required by the driver, but might be in the
+future if capture mode support is enabled. In general, since these
+properties cannot be determined from the hardware, I think they should
+be present in the devicetree.
+
+ >
+ >
+ >> +
+ >> +additionalProperties: true
+ >> +
+ >> +examples:
+ >> +  - |
+ >> +    axi_timer_0: timer@800e0000 {
+ >> +        clock-frequency = <99999001>;
+ >
+ > I can't see this listed above. It is allowed to have additional
+ > properties but I don't think it is good to list it here.
+
+This is just the direct output of Xilinx's generated device tree (but
+with address width reduced to 32-bit).
+
+--Sean
+
+ >
+ >> +        clock-names = "s_axi_aclk";
+ >> +        clocks = <&zynqmp_clk 71>;
+ >> +        compatible = "xlnx,axi-timer-2.0", "xlnx,xps-timer-1.00.a";
+ >> +        reg = <0x800e0000 0x10000>;
+ >> +        xlnx,count-width = <0x20>;
+ >> +        xlnx,gen0-assert = <0x1>;
+ >> +        xlnx,gen1-assert = <0x1>;
+ >> +        xlnx,one-timer-only = <0x0>;
+ >> +        xlnx,trig0-assert = <0x1>;
+ >> +        xlnx,trig1-assert = <0x1>;
+ >> +    };
+ >>
+ >
+ > Thanks,
+ > Michal
+ >
