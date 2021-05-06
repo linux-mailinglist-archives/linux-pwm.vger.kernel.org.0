@@ -2,192 +2,173 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E63CF3758CB
-	for <lists+linux-pwm@lfdr.de>; Thu,  6 May 2021 18:55:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E300E375C8B
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 May 2021 23:05:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236190AbhEFQ4C (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 6 May 2021 12:56:02 -0400
-Received: from mail-bn1nam07on2058.outbound.protection.outlook.com ([40.107.212.58]:24197
-        "EHLO NAM02-BN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S236075AbhEFQ4B (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 6 May 2021 12:56:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oJd3ACrL+0RS0MGV1rs+GDApDlIHinwujOzsCTCG+VX4Mn3H45pPUpP1FJSmwAiFxeRhMmTu9jmnt/Tb867DA6y/vvOdEg33SnhJpn5LlPCvV7yO+qW0qPrE18zUQ7SCifJlu6oLuyQWACdAgHMmgcmhjx0ZO5CJfVEHl1WqBVW38HTx7u3LTofFwPqOVYlQ0fDaU1EXXhIT+jeqa0RhihgHcOlIiSN8GDWeNMxme1E9uxvIVdtOAV+QOPhJ+BDbjRWCkonnUHsvr/WMk0HFgqN1V63ttlwqDdMakAcfYbVI5r8rt55Q9ICXiWXe0iUZPV+dnVhV/vrO7BA0RPGN/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=am6P0oxgMk2raBe2Oyu8fWeBRFHJlJvyd02nP1c7lho=;
- b=CrhJZeeZsEkKi4+MDIlyjWFlbO6NZ+GvxwMXtPhjEVnEradxGMbYQPahbaCdU8+x7x/ALWZSCRhy4Z+qiYrKuOrGw91S1EoxYtcWsVe6EJFHuqsz4K39Ad/17CxCYScfDDCSa7epMRVmAuJ0EVsp2FMx6/r04aIdD+slIBA0/uU0YemYKc7JZ7GVKNxVrWIgT2aLIMzG0o1FxUhkN5OM4bFl221Ly5GGBUDV4ztoemTS16flqTNWmISwIvxIV+myv4I2dnbPl/XlR/TvSfyCFqrFckcQn9q9Dhh5ZWVHjclQdhwBpXx6pV/8EWPXUVNb2/0HmO3bBu0qkhlshS8IsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.62.198) smtp.rcpttodomain=pengutronix.de smtp.mailfrom=xilinx.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=am6P0oxgMk2raBe2Oyu8fWeBRFHJlJvyd02nP1c7lho=;
- b=dbjPF/mbaM7hwF4uoyW6lERFuoXQuVuTcXo7ErW0PrNzcmPMzOtAbN0st3EmtV5oXg27jZbdtUUYJV4duizUI8+ZQ6J2iHk4MbdHQepk0LQ8JTEsXQ3hThJUgEM55HK2qrxnIPmffopijqXEsKOKN1gVd9SCnuV5WcICriJM2As=
-Received: from SN4PR0501CA0135.namprd05.prod.outlook.com
- (2603:10b6:803:2c::13) by BYAPR02MB4741.namprd02.prod.outlook.com
- (2603:10b6:a03:52::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.38; Thu, 6 May
- 2021 16:55:00 +0000
-Received: from SN1NAM02FT0053.eop-nam02.prod.protection.outlook.com
- (2603:10b6:803:2c:cafe::39) by SN4PR0501CA0135.outlook.office365.com
- (2603:10b6:803:2c::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4129.11 via Frontend
- Transport; Thu, 6 May 2021 16:55:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
- smtp.mailfrom=xilinx.com; pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=pass action=none header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com;
-Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
- SN1NAM02FT0053.mail.protection.outlook.com (10.97.4.115) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4065.21 via Frontend Transport; Thu, 6 May 2021 16:54:59 +0000
-Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
- xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Thu, 6 May 2021 09:54:58 -0700
-Received: from smtp.xilinx.com (172.19.127.95) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.2176.2 via Frontend Transport; Thu, 6 May 2021 09:54:58 -0700
-Envelope-to: u.kleine-koenig@pengutronix.de,
- thierry.reding@gmail.com,
- lee.jones@linaro.org,
- alvaro.gamez@hazent.com,
- linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org,
- linux-pwm@vger.kernel.org,
- sean.anderson@seco.com
-Received: from [172.30.17.109] (port=37840)
-        by smtp.xilinx.com with esmtp (Exim 4.90)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1lehH8-00027y-3H; Thu, 06 May 2021 09:54:58 -0700
-To:     Sean Anderson <sean.anderson@seco.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alvaro Gamez <alvaro.gamez@hazent.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+        id S229714AbhEFVG1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 6 May 2021 17:06:27 -0400
+Received: from mail-ot1-f41.google.com ([209.85.210.41]:33405 "EHLO
+        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229672AbhEFVG1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 May 2021 17:06:27 -0400
+Received: by mail-ot1-f41.google.com with SMTP id i23-20020a9d68d70000b02902dc19ed4c15so2130384oto.0;
+        Thu, 06 May 2021 14:05:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bKeryIHrEzJrWyO+r99fo0J5qhxhhnLfQ516dxutmXs=;
+        b=Eedg63MwFxFxLCXYfGLDhQakpS/4c996MerKEH1ikJYdPB4Bue4Y75jvvMkYI7lJ18
+         OTft7QpZKBbR4UR2gEK8OS9NbMWBdisR4hRHtJHNirdUeAKmOk1GtialVgB65t4gW7B/
+         DIxFk6R0lZ4Rl3Myh1e+9DxY/QQCDqT7WrDZPOlMq67uPcUCOF+zTGTk9sQQqW0q3mk0
+         Zc8G4HfP4SHwU9H+QPfpfMWmOMb7L5axyS5tJIn835gL2lywcQ0tf/Tm0bm5OGX3bxSQ
+         YfId5Ehi4UhJdqgAZgmxdoYt5pdVd0Y7eLIW2PqVNxjOGCq8Kb4+gSAErvCQjAshTbY9
+         ztgg==
+X-Gm-Message-State: AOAM533/gHjKONtmWE4j2udZhCJN/GJubAeZFybCsvFrbz/NDZ+UB83q
+        nThABLIxhFg3vglk35uSQw==
+X-Google-Smtp-Source: ABdhPJxS+hi8/dkxulvYqF7PxTofXU6XPdnpBsVIPNchAm9VdqcSjuluRoBpfJrPza7tru4o2I7o2A==
+X-Received: by 2002:a9d:2de3:: with SMTP id g90mr5284461otb.274.1620335128276;
+        Thu, 06 May 2021 14:05:28 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a14sm789863otl.52.2021.05.06.14.05.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 May 2021 14:05:27 -0700 (PDT)
+Received: (nullmailer pid 799624 invoked by uid 1000);
+        Thu, 06 May 2021 21:05:27 -0000
+Date:   Thu, 6 May 2021 16:05:27 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sean Anderson <sean.anderson@seco.com>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        michal.simek@xilinx.com, Alvaro Gamez <alvaro.gamez@hazent.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: Add Xilinx AXI Timer
+Message-ID: <20210506210527.GA789155@robh.at.kernel.org>
 References: <20210504184925.3399934-1-sean.anderson@seco.com>
- <20210504184925.3399934-2-sean.anderson@seco.com>
- <e3782bc5-bcd9-5eb8-e89b-e4e52ed2e3cb@xilinx.com>
- <1bfde199-617a-343c-10ed-4c436bfd908f@seco.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v2 2/2] pwm: Add support for Xilinx AXI Timer
-Message-ID: <ff8eb398-fd49-fdb8-447e-2f6270cb006d@xilinx.com>
-Date:   Thu, 6 May 2021 18:54:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
 MIME-Version: 1.0
-In-Reply-To: <1bfde199-617a-343c-10ed-4c436bfd908f@seco.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4e75f63a-adb4-4d07-bdb1-08d910afaf57
-X-MS-TrafficTypeDiagnostic: BYAPR02MB4741:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB4741C4C037229F9BA538E425C6589@BYAPR02MB4741.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 91Inww1iiPbP6P2KsmfsuyVjBjr0Ql1eSMwifPUf3mqyycGTQBFXbHN/6wFiKBYo1pYby8OFC5/PiYmUlIm15aJV95MQwclX8Ww3CdDtzqifDzwwtONS2NXap4XTdtYBEwc0sl+D68YsIRxlvh0BH8bakYjj5RyUULo/OmBKpVun7PxIsxprWV4T/MRKF0sbSfMw94raB9MjCkExd01mTffA73jevDNOQvG66Tc7OZlUL7iE3A2QzkdEda4d3ESIIqIPndlzNeNyi8Yfc1x3UE3ot1CCom9GC+dzm/3rLrTI4GVKPw6/1OqhLQz712phEw9V/ikM5EYq17rphapohDgN6K0rHtj1egQwbpcnntUn479wP0vAvX+UfG2fKTzvIk+LxQbmEq7iXYszxpfJY+U5w00cL/lc70SjaSpA7tk2ZJCGHBSi7oddbzI8XXXRT0M8LCz0nlyTgw0DTdU7AoKxq49hDnIyD+mhOM4OWZkELWHW9Jda+S2N4p9J2kk/TXJVhtxmTqQI19HcwPL9eI2HYfBObOhESEh6iCa40MZkR6is+no3uZ6lxk64JXeb8w784EpEmLyWSuH/NLMHXAwFfoqae8orsJRa+20hixXhkfuQmDO1IEayY1cY6J699KqZz3y7f7dsJ9vXY7LifvIbb0lI4H3gRBzNXtEeMXreCSWzl6tk7wvghfabmygEzH4SbWXoTfR+UbQmEtW6XXSE6xS3eAlzAsyt+yUKlVzXmgyWF7ff4ZrgHwJMv81z900bfldp5lzqHS/jrRRUFpV1x0lA9LJxOvs3uKytNaQ=
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(396003)(376002)(136003)(346002)(39850400004)(36840700001)(46966006)(8676002)(966005)(6666004)(70206006)(44832011)(47076005)(82310400003)(426003)(336012)(31696002)(110136005)(316002)(36860700001)(54906003)(53546011)(478600001)(186003)(31686004)(4326008)(2616005)(356005)(82740400003)(36906005)(26005)(36756003)(8936002)(83380400001)(7636003)(5660300002)(70586007)(9786002)(2906002)(50156003)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2021 16:54:59.5920
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e75f63a-adb4-4d07-bdb1-08d910afaf57
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0053.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4741
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210504184925.3399934-1-sean.anderson@seco.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
-
-On 5/6/21 4:28 PM, Sean Anderson wrote:
+On Tue, May 04, 2021 at 02:49:24PM -0400, Sean Anderson wrote:
+> This adds a binding for the Xilinx LogiCORE IP AXI Timer. This device is
+> a "soft" block, so it has many parameters which would not be
+> configurable in most hardware. This binding is usually automatically
+> generated by Xilinx's tools, so the names and values of properties
+> must be kept as they are.
 > 
+> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
+> ---
 > 
-> On 5/5/21 2:37 AM, Michal Simek wrote:
->>
->>
->> On 5/4/21 8:49 PM, Sean Anderson wrote:
->>> This adds PWM support for Xilinx LogiCORE IP AXI soft timers commonly
->>> found on Xilinx FPGAs. There is another driver for this device located
->>> at arch/microblaze/kernel/timer.c, but it is only used for timekeeping.
->>> This driver was written with reference to Xilinx DS764 for v1.03.a [1].
->>>
->>> [1]
-> https://www.xilinx.com/support/documentation/ip_documentation/axi_timer/v1_03_a/axi_timer_ds764.pdf
+> Changes in v2:
+> - Use 32-bit addresses for example binding
 > 
->>>
->>> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
->>> ---
->>> I tried adding a XILINX_PWM_ prefix to all the defines, but IMO it
->>> really hurt readability. That prefix almost doubles the size the
->>> defines, and is particularly excessive in something like
->>> XILINX_PWM_TCSR_RUN_MASK.
->>>
->>> Changes in v2:
->>> - Don't compile this module by default for arm64
->>> - Add dependencies on COMMON_CLK and HAS_IOMEM
->>> - Add comment explaining why we depend on !MICROBLAZE
->>> - Add comment describing device
->>> - Rename TCSR_(SET|CLEAR) to TCSR_RUN_(SET|CLEAR)
->>> - Use NSEC_TO_SEC instead of defining our own
->>> - Use TCSR_RUN_MASK to check if the PWM is enabled, as suggested by Uwe
->>> - Cast dividends to u64 to avoid overflow
->>> - Check for over- and underflow when calculating TLR
->>> - Set xilinx_pwm_ops.owner
->>> - Don't set pwmchip.base to -1
->>> - Check range of xlnx,count-width
->>> - Ensure the clock is always running when the pwm is registered
->>> - Remove debugfs file :l
->>> - Report errors with dev_error_probe
->>>
->>>   drivers/pwm/Kconfig      |  13 ++
->>>   drivers/pwm/Makefile     |   1 +
->>>   drivers/pwm/pwm-xilinx.c | 301 +++++++++++++++++++++++++++++++++++++++
->>>   3 files changed, 315 insertions(+)
->>>   create mode 100644 drivers/pwm/pwm-xilinx.c
->>
->> Without looking below another driver which target the same IP is just
->> wrong that's why NACK from me.
+>  .../bindings/pwm/xlnx,axi-timer.yaml          | 91 +++++++++++++++++++
+>  1 file changed, 91 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml
 > 
-> Can you elaborate on this position a bit more? I don't think a rework of
-> the microblaze driver should hold back this one. They cannot be enabled
-> at the same time. I think it is OK to leave the work of making them
-> coexist for a future series (written by someone with microblaze hardware
-> to test on).
+> diff --git a/Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml b/Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml
+> new file mode 100644
+> index 000000000000..bd014134c322
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml
+> @@ -0,0 +1,91 @@
+> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/xlnx,axi-timer.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Xilinx LogiCORE IP AXI Timer Device Tree Binding
+> +
+> +maintainers:
+> +  - Sean Anderson <sean.anderson@seco.com>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: xlnx,axi-timer-2.0
+> +      - const: xlnx,xps-timer-1.00.a
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: s_axi_aclk
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  xlnx,count-width:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 8
+> +    maximum: 32
+> +    description:
+> +      The width of the counters, in bits.
+> +
+> +  xlnx,gen0-assert:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [ 0, 1 ]
+> +    description:
+> +      The polarity of the generateout0 signal. 0 for active-low, 1 for active-high.
+> +
+> +  xlnx,gen1-assert:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [ 0, 1 ]
+> +    description:
+> +      The polarity of the generateout1 signal. 0 for active-low, 1 for active-high.
+> +
+> +  xlnx,one-timer-only:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [ 0, 1 ]
+> +    description:
+> +      Whether only one timer is present in this block.
+> +
+> +  xlnx,trig0-assert:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [ 0, 1 ]
+> +    description:
+> +      The polarity of the capturetrig0 signal. 0 for active-low, 1 for active-high.
+> +
+> +  xlnx,trig1-assert:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [ 0, 1 ]
+> +    description:
+> +      The polarity of the capturetrig1 signal. 0 for active-low, 1 for active-high.
 
-I am here to test it on Microblaze. In a lot of cases you don't have
-access to all HW you should test things on but that's why others can
-help with this.
-As I said in previous thread driver duplication is not good way to go
-and never was.
+Can't all these be boolean?
 
-This patch targets axi timer IP which is already in the tree just for
-Microblaze. You want to use it on other HW which is good but it needs to
-be done properly which is not create another copy.
-The right way is to get axi timer out of arch/microblaze to
-drivers/clocksource (or any other driver folder) and add PMW
-functionality on the top of it.
-I would expect that PWM guys will say how to add PWM support to timer
-driver which is not unique configuration.
-
-Thanks,
-Michal
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +  - reg
+> +  - xlnx,count-width
+> +  - xlnx,gen0-assert
+> +  - xlnx,gen1-assert
+> +  - xlnx,one-timer-only
+> +  - xlnx,trig0-assert
+> +  - xlnx,trig1-assert
+> +
+> +additionalProperties: true
+> +
+> +examples:
+> +  - |
+> +    axi_timer_0: timer@800e0000 {
+> +        clock-frequency = <99999001>;
+> +        clock-names = "s_axi_aclk";
+> +        clocks = <&zynqmp_clk 71>;
+> +        compatible = "xlnx,axi-timer-2.0", "xlnx,xps-timer-1.00.a";
+> +        reg = <0x800e0000 0x10000>;
+> +        xlnx,count-width = <0x20>;
+> +        xlnx,gen0-assert = <0x1>;
+> +        xlnx,gen1-assert = <0x1>;
+> +        xlnx,one-timer-only = <0x0>;
+> +        xlnx,trig0-assert = <0x1>;
+> +        xlnx,trig1-assert = <0x1>;
+> +    };
+> -- 
+> 2.25.1
+> 
