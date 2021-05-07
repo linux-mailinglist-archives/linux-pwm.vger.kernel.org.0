@@ -2,81 +2,109 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EAFEE376CB8
-	for <lists+linux-pwm@lfdr.de>; Sat,  8 May 2021 00:26:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A780376C79
+	for <lists+linux-pwm@lfdr.de>; Sat,  8 May 2021 00:22:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230103AbhEGW1k (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 7 May 2021 18:27:40 -0400
-Received: from bosmailout01.eigbox.net ([66.96.190.1]:36027 "EHLO
-        bosmailout01.eigbox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbhEGW1h (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 7 May 2021 18:27:37 -0400
-X-Greylist: delayed 1929 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 May 2021 18:27:30 EDT
-Received: from bosmailscan09.eigbox.net ([10.20.15.9])
-        by bosmailout01.eigbox.net with esmtp (Exim)
-        id 1lf8QO-00068o-JJ; Fri, 07 May 2021 17:54:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=godsofu4.com; s=dkim; h=Sender:Content-Transfer-Encoding:Content-Type:
-        Message-ID:Reply-To:Subject:To:From:Date:MIME-Version:Cc:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=aM9bUFGSTpfnep8zAVAJMnojqhcwpuHDFPgQnPqW4M4=; b=bjgKomV6NO5Eg5D3qsCBps1llx
-        tj4k2teSfIdfo/duBtOSoC/FW1+C1nXiYJbrvf2JDobx8fDCsgnxHFoPWOCb5eI+OJOIgvnnfKlpl
-        ZqidIuDnjEPTMao1vFwrg6M9FUKU/cz6TT5/KN4ccsk+aQli3Wgs3G1cQz5vdbC1Y2SXULFY8Mu2t
-        1PShwmiDRn71EPzgUHUVu0GG39z6uSTEuRgOXhiNl9ekuZ5QXUAEykoocvC5/DkORRmERAA91o1HY
-        Sl76pPWw9UBVGbuFbfdVPfVcFxJM5xZDrmgt6uCf9J+dn/n7LFOSOxBaL9svxxYdhOkJwdz4uh075
-        2gI+xJSw==;
-Received: from [10.115.3.32] (helo=bosimpout12)
-        by bosmailscan09.eigbox.net with esmtp (Exim)
-        id 1lf8QO-0003aD-AI; Fri, 07 May 2021 17:54:20 -0400
-Received: from boswebmail06.eigbox.net ([10.20.16.6])
-        by bosimpout12 with 
-        id 1xuH2500407qujN01xuLVi; Fri, 07 May 2021 17:54:20 -0400
-X-EN-SP-DIR: OUT
-X-EN-SP-SQ: 1
-Received: from [127.0.0.1] (helo=homestead)
-        by boswebmail06.eigbox.net with esmtp (Exim)
-        id 1lf8QL-0006fx-UG; Fri, 07 May 2021 17:54:17 -0400
-Received: from [197.239.81.229]
- by emailmg.homestead.com
- with HTTP (HTTP/1.1 POST); Fri, 07 May 2021 17:54:17 -0400
+        id S229780AbhEGWXD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 7 May 2021 18:23:03 -0400
+Received: from mail-ot1-f48.google.com ([209.85.210.48]:34454 "EHLO
+        mail-ot1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229470AbhEGWXD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 7 May 2021 18:23:03 -0400
+Received: by mail-ot1-f48.google.com with SMTP id u25-20020a0568302319b02902ac3d54c25eso9240144ote.1;
+        Fri, 07 May 2021 15:22:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wJE+TC+b5jLMRQ3EZL0NyaJOHHWlrS4m1edurMUIrWE=;
+        b=MIhLDolfsp+f/RFpcJwh8LacbmOvY4i7L/+iQTjK2DQUPAd2aMIu5HYiQRTHTnQXC8
+         EncsxGfTcRTbiUSIuY6lzaygbk3g1LC4pG5xIIjB507rvFcP6PgmHBOw6WUs7snKK937
+         d8vmcep1OlsfwEjZM6hhMkxO+XZNgZbADMLmDQhHCXTEQi0oq4QHfFpQ21iscF2ZlePO
+         7w9+dQS0IjmIBcmoEvV24V0CWzVToDLfDSHxfD/F0wu6yIIi5ex3+ah3Gm3VDzFaf764
+         Ptu7X+7aOt4wBQHP+i/MGnBrXpPbD4hsCqRbh6OpFSFCbW3VfJ+04KlDsZu3WhXaW9i3
+         SCLA==
+X-Gm-Message-State: AOAM532n65HcIosU/60GatY4a9mh0SV3pkarsUvcCBH9wCtxcueOWO21
+        tT8ewQ9UBrsYSqRB/s5iHA==
+X-Google-Smtp-Source: ABdhPJy+am6NARFsVfyMVq93tpVSfof2No3lbd73Pco+c4GCQHZ+rd7ceY+/jkcCkJUIgJ8gYXqAmA==
+X-Received: by 2002:a9d:6359:: with SMTP id y25mr10422588otk.103.1620426121281;
+        Fri, 07 May 2021 15:22:01 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f30sm1366213ooh.10.2021.05.07.15.21.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 May 2021 15:21:59 -0700 (PDT)
+Received: (nullmailer pid 3004259 invoked by uid 1000);
+        Fri, 07 May 2021 22:21:57 -0000
+Date:   Fri, 7 May 2021 17:21:57 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        uclinux-h8-devel@lists.sourceforge.jp, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: renesas,tpu-pwm: Improve
+ json-schema
+Message-ID: <20210507222157.GA3000824@robh.at.kernel.org>
+References: <cover.1620375445.git.geert+renesas@glider.be>
+ <82dcf4b87f2b2149bb2e238c7fd654ca2397230e.1620375445.git.geert+renesas@glider.be>
 MIME-Version: 1.0
-Date:   Fri, 07 May 2021 21:54:17 +0000
-From:   Mrs Suzara Maling Wan <fast65@godsofu4.com>
-To:     undisclosed-recipients:;
-Subject: URGENT REPLY NEEDED
-Reply-To: suzara2017malingwan@gmail.com
-Mail-Reply-To: suzara2017malingwan@gmail.com
-Message-ID: <36acfe805efde59f3f399df1324ce6b9@godsofu4.com>
-X-Sender: fast65@godsofu4.com
-User-Agent: Roundcube Webmail/1.3.14
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-EN-AuthUser: fast65@godsofu4.com
-Sender:  Mrs Suzara Maling Wan <fast65@godsofu4.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <82dcf4b87f2b2149bb2e238c7fd654ca2397230e.1620375445.git.geert+renesas@glider.be>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Fri, May 07, 2021 at 10:25:12AM +0200, Geert Uytterhoeven wrote:
+>   - Include the general PWM controller schema,
+>   - Make clocks, power-domains, and resets properties required.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  .../bindings/pwm/renesas,tpu-pwm.yaml         | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
+> index aa9a4570c9068226..3a072ee29815c695 100644
+> --- a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
+> @@ -58,8 +58,25 @@ required:
+>    - compatible
+>    - reg
+>    - '#pwm-cells'
+> +  - clocks
+> +  - power-domains
+>  
+> -additionalProperties: false
+> +allOf:
+> +  - $ref: pwm.yaml#
 
+This doesn't add any other properties, so you can keep 
+'additionalProperties: false'. 
 
-My names are Mrs Suzara Maling Wan, I am a Nationality of the Republic
-of the Philippine presently base in West Africa B/F, dealing with
-exportation of Gold, I was diagnose of blood Causal decease, and my
-doctor have announce to me that I have few days to leave due to the
-condition of my sickness.
-
-I have a desire to build an orphanage home in your country of which i
-cannot execute the project myself due to my present health condition,
-I am willing to hand over the project under your care for you to help
-me fulfill my dreams and desire of building an orphanage home in your
-country.
-
-Reply in you are will to help so that I can direct you to my bank for
-the urgent transfer of the fund/money require for the project to your
-account as I have already made the fund/money available.
-
-With kind regards
-Mrs Suzara Maling Wan
+> +
+> +  - if:
+> +      not:
+> +        properties:
+> +          compatible:
+> +            contains:
+> +              enum:
+> +                - renesas,tpu-r8a73a4
+> +                - renesas,tpu-r8a7740
+> +    then:
+> +      required:
+> +        - resets
+> +
+> +unevaluatedProperties: false
+>  
+>  examples:
+>    - |
+> -- 
+> 2.25.1
+> 
