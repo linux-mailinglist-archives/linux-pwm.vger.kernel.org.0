@@ -2,112 +2,93 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 83D5A377C23
-	for <lists+linux-pwm@lfdr.de>; Mon, 10 May 2021 08:17:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47F96377D29
+	for <lists+linux-pwm@lfdr.de>; Mon, 10 May 2021 09:33:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230133AbhEJGSv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 10 May 2021 02:18:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230029AbhEJGSv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 10 May 2021 02:18:51 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8184CC061573
-        for <linux-pwm@vger.kernel.org>; Sun,  9 May 2021 23:17:44 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lfzEU-0007ZC-QR; Mon, 10 May 2021 08:17:34 +0200
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lfzEU-0004a5-4T; Mon, 10 May 2021 08:17:34 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc:     linux-clk@vger.kernel.org, kernel@pengutronix.de,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-pwm@vger.kernel.org
-Subject: [PATCH v6 RESEND 3/6] pwm: atmel: Simplify using devm_clk_get_prepared()
-Date:   Mon, 10 May 2021 08:17:21 +0200
-Message-Id: <20210510061724.940447-4-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210510061724.940447-1-u.kleine-koenig@pengutronix.de>
-References: <20210510061724.940447-1-u.kleine-koenig@pengutronix.de>
+        id S230045AbhEJHej (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 10 May 2021 03:34:39 -0400
+Received: from twspam01.aspeedtech.com ([211.20.114.71]:37731 "EHLO
+        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229684AbhEJHei (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 10 May 2021 03:34:38 -0400
+Received: from mail.aspeedtech.com ([192.168.0.24])
+        by twspam01.aspeedtech.com with ESMTP id 14A7LODP042444;
+        Mon, 10 May 2021 15:21:24 +0800 (GMT-8)
+        (envelope-from billy_tsai@aspeedtech.com)
+Received: from BillyTsai-pc.aspeed.com (192.168.2.149) by TWMBX02.aspeed.com
+ (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 10 May
+ 2021 15:33:27 +0800
+From:   Billy Tsai <billy_tsai@aspeedtech.com>
+To:     <lee.jones@linaro.org>, <robh+dt@kernel.org>, <joel@jms.id.au>,
+        <andrew@aj.id.au>, <thierry.reding@gmail.com>,
+        <u.kleine-koenig@pengutronix.de>, <p.zabel@pengutronix.de>,
+        <billy_tsai@aspeedtech.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>
+CC:     <BMC-SW@aspeedtech.com>
+Subject: [v4 0/2] Support pwm driver for aspeed ast26xx
+Date:   Mon, 10 May 2021 15:35:09 +0800
+Message-ID: <20210510073511.7291-1-billy_tsai@aspeedtech.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Originating-IP: [192.168.2.149]
+X-ClientProxiedBy: TWMBX02.aspeed.com (192.168.0.24) To TWMBX02.aspeed.com
+ (192.168.0.24)
+X-DNSRBL: 
+X-MAIL: twspam01.aspeedtech.com 14A7LODP042444
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-With devm_clk_get_prepared() caring to unprepare the clock the error
-path and remove callback can be simplified accordingly.
+The legacy driver of aspeed pwm is binding with tach controller and it
+doesn't follow the pwm framworks usage. In addition, the pwm register
+usage of the 6th generation of ast26xx has drastic change. So these
+patch serials add the new aspeed pwm driver to fix up the problem above.
 
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pwm/pwm-atmel.c | 15 ++-------------
- 1 file changed, 2 insertions(+), 13 deletions(-)
+Changes since v3:
+- Add the dt_binding for aspeed,ast2600-tach.
+- Describe the pwm/tach as child-node of pwm-tach mfd.
+- Complete the properties of pwm node.
 
-diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-index 5813339b597b..d65e23da2582 100644
---- a/drivers/pwm/pwm-atmel.c
-+++ b/drivers/pwm/pwm-atmel.c
-@@ -415,16 +415,10 @@ static int atmel_pwm_probe(struct platform_device *pdev)
- 	if (IS_ERR(atmel_pwm->base))
- 		return PTR_ERR(atmel_pwm->base);
- 
--	atmel_pwm->clk = devm_clk_get(&pdev->dev, NULL);
-+	atmel_pwm->clk = devm_clk_get_prepared(&pdev->dev, NULL);
- 	if (IS_ERR(atmel_pwm->clk))
- 		return PTR_ERR(atmel_pwm->clk);
- 
--	ret = clk_prepare(atmel_pwm->clk);
--	if (ret) {
--		dev_err(&pdev->dev, "failed to prepare PWM clock\n");
--		return ret;
--	}
--
- 	atmel_pwm->chip.dev = &pdev->dev;
- 	atmel_pwm->chip.ops = &atmel_pwm_ops;
- 	atmel_pwm->chip.of_xlate = of_pwm_xlate_with_flags;
-@@ -435,23 +429,18 @@ static int atmel_pwm_probe(struct platform_device *pdev)
- 	ret = pwmchip_add(&atmel_pwm->chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to add PWM chip %d\n", ret);
--		goto unprepare_clk;
-+		return ret;
- 	}
- 
- 	platform_set_drvdata(pdev, atmel_pwm);
- 
- 	return ret;
--
--unprepare_clk:
--	clk_unprepare(atmel_pwm->clk);
--	return ret;
- }
- 
- static int atmel_pwm_remove(struct platform_device *pdev)
- {
- 	struct atmel_pwm_chip *atmel_pwm = platform_get_drvdata(pdev);
- 
--	clk_unprepare(atmel_pwm->clk);
- 	mutex_destroy(&atmel_pwm->isr_lock);
- 
- 	return pwmchip_remove(&atmel_pwm->chip);
+Changes since v2:
+- Remove the tach node, #address-cells and #size-cells from pwm-tach.yaml
+- Add clocks and reset properties to pwm-tach.yaml
+- Kconfig/Makfile sorted alphabetically
+- pwm-aspeed-g6.c suggested by Uwe Kleine-König
+  - Add more hardware descriptions at top of the driver.
+  - Remove unused api request and free
+  - Move the initialize settings of all pwm channel to probe.
+  - Change the method of getting the approximate period.
+  - Read the hardware register values to fill the state for .get_state()
+
+Changes since v1:
+- Fix the dt_binding_check fail suggested by Rob Herring
+- Add depends to PWM_ASPEED_G6 configure suggested by Uwe Kleine-Konig
+- pwm-aspeed-g6.c suggested by Uwe Kleine-König
+  - Fix license header
+  - Use bitfiled.h macro to define register fields
+  - Implement .remove device function
+  - Implement .get_state pwm api
+
+Billy Tsai (2):
+  dt-bindings: Add bindings for aspeed pwm-tach.
+  pwm: Add Aspeed ast2600 PWM support
+
+ .../bindings/hwmon/aspeed,ast2600-tach.yaml   |  66 ++++
+ .../bindings/mfd/aspeed,ast2600-pwm-tach.yaml |  82 ++++
+ .../bindings/pwm/aspeed,ast2600-pwm.yaml      |  62 +++
+ drivers/pwm/Kconfig                           |   8 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-aspeed-g6.c                   | 368 ++++++++++++++++++
+ 6 files changed, 587 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed,ast2600-tach.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
+ create mode 100644 Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-aspeed-g6.c
+
 -- 
-2.30.2
+2.25.1
 
