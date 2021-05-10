@@ -2,42 +2,53 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E663E37951A
-	for <lists+linux-pwm@lfdr.de>; Mon, 10 May 2021 19:10:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BAFE37957B
+	for <lists+linux-pwm@lfdr.de>; Mon, 10 May 2021 19:27:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231768AbhEJRL4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 10 May 2021 13:11:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43828 "EHLO
+        id S232471AbhEJR2W (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 10 May 2021 13:28:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231562AbhEJRL4 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 10 May 2021 13:11:56 -0400
+        with ESMTP id S231670AbhEJR2T (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 10 May 2021 13:28:19 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D680C061574
-        for <linux-pwm@vger.kernel.org>; Mon, 10 May 2021 10:10:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E76DC061574
+        for <linux-pwm@vger.kernel.org>; Mon, 10 May 2021 10:27:14 -0700 (PDT)
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lg9Qe-0000l9-VQ; Mon, 10 May 2021 19:10:48 +0200
+        id 1lg9gS-0002jf-3l; Mon, 10 May 2021 19:27:08 +0200
 Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lg9Qe-0005YF-9B; Mon, 10 May 2021 19:10:48 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>,
+        id 1lg9gQ-00063v-JJ; Mon, 10 May 2021 19:27:06 +0200
+Date:   Mon, 10 May 2021 19:27:06 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-pwm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
+        Wolfram Sang <wsa@kernel.org>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel@pengutronix.de, Andrew Morton <akpm@linux-foundation.org>,
         Lee Jones <lee.jones@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org
-Subject: [PATCH] pwm: meson: Simplify using devm_pwmchip_add
-Date:   Mon, 10 May 2021 19:10:46 +0200
-Message-Id: <20210510171046.984246-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.30.2
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 RESEND 1/6] clk: generalize devm_clk_get() a bit
+Message-ID: <20210510172706.lfafdkfevya7ycqq@pengutronix.de>
+References: <20210510061724.940447-1-u.kleine-koenig@pengutronix.de>
+ <20210510061724.940447-2-u.kleine-koenig@pengutronix.de>
+ <20210510180205.000004dd@Huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="la5yu5g5mopezfed"
+Content-Disposition: inline
+In-Reply-To: <20210510180205.000004dd@Huawei.com>
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -46,58 +57,81 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-Hello,
 
-this obviously depends on https://lore.kernel.org/r/20210407080155.55004-2-u.kleine-koenig@pengutronix.de
+--la5yu5g5mopezfed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, May 10, 2021 at 06:02:05PM +0100, Jonathan Cameron wrote:
+> On Mon, 10 May 2021 08:17:19 +0200
+> Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de> wrote:
+>=20
+> > Allow to add an exit hook to devm managed clocks. Also use
+> > clk_get_optional() in devm_clk_get_optional instead of open coding it.
+> > The generalisation will be used in the next commit to add some more
+> > devm_clk helpers.
+> >=20
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+>=20
+> If feels marginally odd to register cleanup that we know won't do anything
+> for the optional case, but it works as far as I can tell and it would be
+> a little fiddly to special case it.
+
+It took a moment for me to understand your concern. Yes, I register a
+cleanup even if (*init) happens to be clk_get_optional() and it returned
+NULL. It's not hard to optimize that:
+
+diff --git a/drivers/clk/clk-devres.c b/drivers/clk/clk-devres.c
+index b54f7f0f2a35..2420d6ae7b33 100644
+--- a/drivers/clk/clk-devres.c
++++ b/drivers/clk/clk-devres.c
+@@ -38,14 +38,17 @@ static struct clk *__devm_clk_get(struct device *dev, c=
+onst char *id,
+ 		goto err_clk_get;
+ 	}
+=20
+-	if (init) {
+-		ret =3D init(clk);
+-		if (ret)
+-			goto err_clk_init;
++	/* short-cut the case where clk_get_optional returned NULL */
++	if (clk) {
++		if (init) {
++			ret =3D init(clk);
++			if (ret)
++				goto err_clk_init;
++		}
++		state->exit =3D exit;
+ 	}
+=20
+ 	state->clk =3D clk;
+-	state->exit =3D exit;
+=20
+ 	devres_add(dev, state);
+
+But I'd value simplicity over micro-optimizing and keep the code as is.
+=20
 Best regards
 Uwe
 
- drivers/pwm/pwm-meson.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index 9eb060613cb4..d9de4562e003 100644
---- a/drivers/pwm/pwm-meson.c
-+++ b/drivers/pwm/pwm-meson.c
-@@ -560,31 +560,21 @@ static int meson_pwm_probe(struct platform_device *pdev)
- 	if (err < 0)
- 		return err;
- 
--	err = pwmchip_add(&meson->chip);
-+	err = devm_pwmchip_add(&meson->chip);
- 	if (err < 0) {
- 		dev_err(&pdev->dev, "failed to register PWM chip: %d\n", err);
- 		return err;
- 	}
- 
--	platform_set_drvdata(pdev, meson);
--
- 	return 0;
- }
- 
--static int meson_pwm_remove(struct platform_device *pdev)
--{
--	struct meson_pwm *meson = platform_get_drvdata(pdev);
--
--	return pwmchip_remove(&meson->chip);
--}
--
- static struct platform_driver meson_pwm_driver = {
- 	.driver = {
- 		.name = "meson-pwm",
- 		.of_match_table = meson_pwm_matches,
- 	},
- 	.probe = meson_pwm_probe,
--	.remove = meson_pwm_remove,
- };
- module_platform_driver(meson_pwm_driver);
- 
+--la5yu5g5mopezfed
+Content-Type: application/pgp-signature; name="signature.asc"
 
-base-commit: 6efb943b8616ec53a5e444193dccf1af9ad627b5
-prerequisite-patch-id: fa39cd0c852d109ed957dc44dca5bdcf5dff0685
--- 
-2.30.2
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmCZbOcACgkQwfwUeK3K
+7AmXIQf/c3HuQfNTch4Xl+/TfVW1wBEkH4bhu2025v3mpSfZGRNTmKlBBMjvoJaQ
+ZaaoVaze/k9HY4AZPbYTsofDgDsRK2qFUDeKG4QF+kSxQ1YRsi3nDqwApmEtzbS2
+ANIm9kR97cOBMb3fxo7FZpCifLB/4fWyScYFksgu8INDv8qK+/U5NZvBgUzVZ29o
+K7va7sm/jadYgihQ/f4aJnNhCsGxMNxIP3SrMZM04AsY9J+smEdwYX/na6Px54Sj
+RqIK1fK7Ewiq2Be7fPuARD4JVRXWrxbpQ4wY8bkG5ZtqnxPz/dTQRcCYZDwSBozv
+v3RANwxRr6pdDrO/ECcd3myx7Mc33Q==
+=oeyl
+-----END PGP SIGNATURE-----
+
+--la5yu5g5mopezfed--
