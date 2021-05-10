@@ -2,195 +2,125 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B2A7378EDB
-	for <lists+linux-pwm@lfdr.de>; Mon, 10 May 2021 15:52:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 215B9379042
+	for <lists+linux-pwm@lfdr.de>; Mon, 10 May 2021 16:09:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232267AbhEJNcG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 10 May 2021 09:32:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346071AbhEJM02 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 10 May 2021 08:26:28 -0400
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E846C05BD08
-        for <linux-pwm@vger.kernel.org>; Mon, 10 May 2021 05:18:44 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:f937:4595:45ff:bcbf])
-        by baptiste.telenet-ops.be with bizsmtp
-        id 30Je250054jQ7kl010JexP; Mon, 10 May 2021 14:18:42 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1lg4rt-004QlE-GY; Mon, 10 May 2021 14:18:37 +0200
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1lg4rt-00HQPt-0h; Mon, 10 May 2021 14:18:37 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 2/2] dt-bindings: timer: renesas,tpu: Convert to json-schema
-Date:   Mon, 10 May 2021 14:18:35 +0200
-Message-Id: <1c33e62c3a74979c3ca9580176e6cf89384caea9.1620648868.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1620648868.git.geert+renesas@glider.be>
-References: <cover.1620648868.git.geert+renesas@glider.be>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S233512AbhEJOKE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 10 May 2021 10:10:04 -0400
+Received: from mail-ot1-f45.google.com ([209.85.210.45]:44556 "EHLO
+        mail-ot1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236259AbhEJOC5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 10 May 2021 10:02:57 -0400
+Received: by mail-ot1-f45.google.com with SMTP id r26-20020a056830121ab02902a5ff1c9b81so14477675otp.11;
+        Mon, 10 May 2021 07:01:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=JKsO3/Ex9MYUNGYvtUUsilRIUDXYRO1OT6ejMhv7T8k=;
+        b=IAZHduJ4ITLsJb1ZPAZwrEwfPXhROp8zcUw7QyqEFNUdO/ESryuNkA+N5UEYXp5GMK
+         jwoo8skjwFUhLvoO/Ks1Fe4dS4/6hASWa06xuQlRCvGiNWW8Xe022amps1+JTFaroGHv
+         EshcFTUHMorSOhrUv1cCttjyQKN3Vxo9XIclCEF9bkGYS2AXD8HlscbSa9gYZVaefJpx
+         xciBmgIjhN5owv3790CMOkPjT9imtk0SsIgilfifRDKlNb6irEg8TyNwN9KEl7EmlGky
+         7Qnqmsa7JWlFHd1jCn/gVf0N2vayd9V9ZyswpcYyxveb/QAfEM6UxL4FFYsbIrMFhNsA
+         d9Rg==
+X-Gm-Message-State: AOAM532Cqf0n+um1U7VtBR1qmWdcH47sBHGZGhBy4fykrpOV6iCBUQ7m
+        gSyvUOtL94hLEXaYQbpiUxIhoPI8fA==
+X-Google-Smtp-Source: ABdhPJzkMirGR5MPxh2vUgnso6g9WUTGlKFG5pxnf2yqU3vz/35X9pfPvS3TiXp4ftEr9Ospw50ksA==
+X-Received: by 2002:a05:6830:17cb:: with SMTP id p11mr22366787ota.283.1620655310131;
+        Mon, 10 May 2021 07:01:50 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 64sm2648753oob.12.2021.05.10.07.01.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 May 2021 07:01:48 -0700 (PDT)
+Received: (nullmailer pid 41441 invoked by uid 1000);
+        Mon, 10 May 2021 14:01:39 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Billy Tsai <billy_tsai@aspeedtech.com>
+Cc:     linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de,
+        linux-pwm@vger.kernel.org, BMC-SW@aspeedtech.com,
+        linux-aspeed@lists.ozlabs.org, andrew@aj.id.au,
+        linux-kernel@vger.kernel.org, lee.jones@linaro.org,
+        robh+dt@kernel.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, devicetree@vger.kernel.org,
+        joel@jms.id.au
+In-Reply-To: <20210510073511.7291-2-billy_tsai@aspeedtech.com>
+References: <20210510073511.7291-1-billy_tsai@aspeedtech.com> <20210510073511.7291-2-billy_tsai@aspeedtech.com>
+Subject: Re: [v4 1/2] dt-bindings: Add bindings for aspeed pwm-tach.
+Date:   Mon, 10 May 2021 09:01:39 -0500
+Message-Id: <1620655299.806171.41440.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Convert the Renesas H8/300 Timer Pulse Unit Device Tree binding
-documentation to json-schema.
+On Mon, 10 May 2021 15:35:10 +0800, Billy Tsai wrote:
+> This patch adds device binding for aspeed pwm-tach device which is a
+> multi-function device include pwm and tach function and pwm/tach device
+> bindings which should be the child-node of pwm-tach device.
+> 
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> ---
+>  .../bindings/hwmon/aspeed,ast2600-tach.yaml   | 66 +++++++++++++++
+>  .../bindings/mfd/aspeed,ast2600-pwm-tach.yaml | 82 +++++++++++++++++++
+>  .../bindings/pwm/aspeed,ast2600-pwm.yaml      | 62 ++++++++++++++
+>  3 files changed, 210 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed,ast2600-tach.yaml
+>  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml
+> 
 
-Correct clock-names, as "peripheral_clk" is the name of the supplier,
-and all users use "fck".
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Note that there are two different bindings for the TPU, both using
-"renesas,tpu": this one for using the TPU as a clock source (used on
-H8/300), and a second use for using the TPU as a PWM controller (used on
-ARM).  To avoid conflicts, both bindings are marked with the appropriate
-"select" logic, to check for the absence respectively presence of the
-"#pwm-cells" property.
+yamllint warnings/errors:
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v2:
-  - Drop unneeded "'#pwm-cells': true" from "select" section in
-    renesas,tpu-pwm.yaml,
-  - Add Reviewed-by.
+dtschema/dtc warnings/errors:
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/hwmon/aspeed,ast2600-tach.yaml: Additional properties are not allowed ('child-node' was unexpected)
+	hint: Keywords must be a subset of known json-schema keywords
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/hwmon/aspeed,ast2600-tach.yaml: 'child-node' is not one of ['$id', '$schema', 'title', 'description', 'examples', 'required', 'allOf', 'anyOf', 'oneOf', 'definitions', '$defs', 'additionalProperties', 'dependencies', 'patternProperties', 'properties', 'if', 'then', 'else', 'unevaluatedProperties', 'deprecated', 'maintainers', 'select']
+	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/hwmon/aspeed,ast2600-tach.yaml: 'additionalProperties' is a required property
+	hint: A schema without a "$ref" to another schema must define all properties and use "additionalProperties"
+	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml: Additional properties are not allowed ('child-node' was unexpected)
+	hint: Keywords must be a subset of known json-schema keywords
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml: 'child-node' is not one of ['$id', '$schema', 'title', 'description', 'examples', 'required', 'allOf', 'anyOf', 'oneOf', 'definitions', '$defs', 'additionalProperties', 'dependencies', 'patternProperties', 'properties', 'if', 'then', 'else', 'unevaluatedProperties', 'deprecated', 'maintainers', 'select']
+	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml: 'additionalProperties' is a required property
+	hint: A schema without a "$ref" to another schema must define all properties and use "additionalProperties"
+	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
+schemas/pwm/aspeed,ast2600-pwm.yaml: ignoring, error in schema: 
+schemas/hwmon/aspeed,ast2600-tach.yaml: ignoring, error in schema: 
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml: Additional properties are not allowed ('child-node' was unexpected)
+	hint: Keywords must be a subset of known json-schema keywords
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml: 'child-node' is not one of ['$id', '$schema', 'title', 'description', 'examples', 'required', 'allOf', 'anyOf', 'oneOf', 'definitions', '$defs', 'additionalProperties', 'dependencies', 'patternProperties', 'properties', 'if', 'then', 'else', 'unevaluatedProperties', 'deprecated', 'maintainers', 'select']
+	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml: 'additionalProperties' is a required property
+	hint: A schema without a "$ref" to another schema must define all properties and use "additionalProperties"
+	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/hwmon/aspeed,ast2600-tach.yaml: ignoring, error in schema: 
+warning: no schema found in file: ./Documentation/devicetree/bindings/hwmon/aspeed,ast2600-tach.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml: ignoring, error in schema: 
+warning: no schema found in file: ./Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml: ignoring, error in schema: 
+warning: no schema found in file: ./Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
+Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.example.dt.yaml:0:0: /example-0/pwm_tach@1e610000: failed to match any schema with compatible: ['aspeed,ast2600-pwm-tach', 'syscon', 'simple-mfd']
+Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.example.dt.yaml:0:0: /example-0/pwm_tach@1e610000/pwm: failed to match any schema with compatible: ['aspeed,ast2600-pwm']
+Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.example.dt.yaml:0:0: /example-0/pwm_tach@1e610000/tach: failed to match any schema with compatible: ['aspeed,ast2600-tach']
 
-I have listed Sato-san as the maintainer, as he wrote the original
-driver and bindings.
-Sato-san: Please scream if this is inappropriate ;-)
----
- .../bindings/pwm/renesas,tpu-pwm.yaml         |  9 +++
- .../devicetree/bindings/timer/renesas,tpu.txt | 21 -------
- .../bindings/timer/renesas,tpu.yaml           | 56 +++++++++++++++++++
- 3 files changed, 65 insertions(+), 21 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/renesas,tpu.txt
- create mode 100644 Documentation/devicetree/bindings/timer/renesas,tpu.yaml
+See https://patchwork.ozlabs.org/patch/1476200
 
-diff --git a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
-index 7c99e42ad780c2cd..81ccb2110162c3eb 100644
---- a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
-@@ -9,6 +9,15 @@ title: Renesas R-Car Timer Pulse Unit PWM Controller
- maintainers:
-   - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
- 
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        const: renesas,tpu
-+  required:
-+    - compatible
-+    - '#pwm-cells'
-+
- properties:
-   compatible:
-     items:
-diff --git a/Documentation/devicetree/bindings/timer/renesas,tpu.txt b/Documentation/devicetree/bindings/timer/renesas,tpu.txt
-deleted file mode 100644
-index 1d46f9de4feb8a84..0000000000000000
---- a/Documentation/devicetree/bindings/timer/renesas,tpu.txt
-+++ /dev/null
-@@ -1,21 +0,0 @@
--* Renesas H8/300 Timer Pulse Unit
--
--The TPU is a 16bit timer/counter with configurable clock inputs and
--programmable compare match.
--This implementation support only cascade mode.
--
--Required Properties:
--
--  - compatible: must contain "renesas,tpu"
--  - reg: base address and length of the registers block in 2 channel.
--  - clocks: a list of phandle, one for each entry in clock-names.
--  - clock-names: must contain "peripheral_clk" for the functional clock.
--
--
--Example:
--	tpu: tpu@ffffe0 {
--		compatible = "renesas,tpu";
--		reg = <0xffffe0 16>, <0xfffff0 12>;
--		clocks = <&pclk>;
--		clock-names = "peripheral_clk";
--	};
-diff --git a/Documentation/devicetree/bindings/timer/renesas,tpu.yaml b/Documentation/devicetree/bindings/timer/renesas,tpu.yaml
-new file mode 100644
-index 0000000000000000..01554dff23d8a954
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/renesas,tpu.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/renesas,tpu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas H8/300 Timer Pulse Unit
-+
-+maintainers:
-+  - Yoshinori Sato <ysato@users.sourceforge.jp>
-+
-+description:
-+  The TPU is a 16bit timer/counter with configurable clock inputs and
-+  programmable compare match.
-+  This implementation supports only cascade mode.
-+
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        const: renesas,tpu
-+    '#pwm-cells': false
-+  required:
-+    - compatible
-+
-+properties:
-+  compatible:
-+    const: renesas,tpu
-+
-+  reg:
-+    items:
-+      - description: First channel
-+      - description: Second channel
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: fck
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    tpu: tpu@ffffe0 {
-+            compatible = "renesas,tpu";
-+            reg = <0xffffe0 16>, <0xfffff0 12>;
-+            clocks = <&pclk>;
-+            clock-names = "fck";
-+    };
--- 
-2.25.1
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
 
