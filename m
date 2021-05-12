@@ -2,162 +2,110 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A75D37CFC2
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 May 2021 19:32:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 832F737EE70
+	for <lists+linux-pwm@lfdr.de>; Thu, 13 May 2021 00:58:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235953AbhELRRy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 May 2021 13:17:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240162AbhELQa3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 May 2021 12:30:29 -0400
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A074DC08EACF;
-        Wed, 12 May 2021 09:03:16 -0700 (PDT)
-Received: by mail-lj1-x233.google.com with SMTP id p20so6276044ljj.8;
-        Wed, 12 May 2021 09:03:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m5a3LpSMEA2FyBM0XUI5BkccXTFTL84Xmwv8wTBlzfM=;
-        b=mr/g/PwBPVeExTjtiZC+qX8HbljZsXXFQpRTFHmFENuSx7iLcL4ulhU2K2nbToesaV
-         FM436fFeJbW6OP1Agi7rENm91cnFQiSmN4hE79wgZoFRoxh7frZ6SMcuxC5SNqjT677x
-         jFIzMQSNGijLC5wO0W7OIfXicS5i9JY/VEuX5RttgbEmXB++EqsZdkTGfI2VsaSCoE9t
-         2EGlDt6nzTTID3RjVW+eC206NKN75z0N/Y+EFJhtDQgikkfXr+JWvNo6LzLN9g0KVyk9
-         aUQeJ326qMk1vWFBAKIqA41fjJcYancb3l/UX9Dy1UJiwAYwIjZQQvOQwHoLBODmyVna
-         +Pgw==
+        id S1346191AbhELVnV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 May 2021 17:43:21 -0400
+Received: from mail-oi1-f176.google.com ([209.85.167.176]:37786 "EHLO
+        mail-oi1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1385232AbhELUHi (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 May 2021 16:07:38 -0400
+Received: by mail-oi1-f176.google.com with SMTP id k25so23419961oic.4;
+        Wed, 12 May 2021 13:06:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m5a3LpSMEA2FyBM0XUI5BkccXTFTL84Xmwv8wTBlzfM=;
-        b=HbnnxRX3NLF4kni8BJbPGn4Ml1OBaVevFJw93uQLrATI8sZe8gZtu4QUQaKdKaOurK
-         kH34b2Y+EE7wXckgNpAY7l1MDgrnx5ceEkDx+SpwAkSCxRjGhy7s2sWSJeFG2gZ5Pi+m
-         v4IXp/G52uVp9sNAZQss37gP/Fq1rJBg4vhbqdTKNFKjyT9CbBDyweq94sBPD12HiX/T
-         C/8Mqb9h0GMTQR7mWXCF9OTIuPh32ImXnX5Z6owaSrgeBQawEM009EIzYWn1DlW/jKxu
-         vDQ1NB1vsDsXdEMmxP5JQtd2SCact3n+AqcHFrSBTTHsH46coEbzLXr6VaZN+he2sCYY
-         Je0Q==
-X-Gm-Message-State: AOAM530WR+2B0xjsdYn9lbW2BSqYEe3Z1TqQ4GYKfqQZPHVQiq/0EWTa
-        BSbIik0E70hSsSd+d7JjJXc=
-X-Google-Smtp-Source: ABdhPJwbfi+Iv9VSTgBMtpTqyMbSw1fieIjoLW3VHjdo1A4uK4xe3NoyvdsrwxdLRI3Xj+FV5+L1dQ==
-X-Received: by 2002:a2e:9c01:: with SMTP id s1mr29260574lji.402.1620835394404;
-        Wed, 12 May 2021 09:03:14 -0700 (PDT)
-Received: from localhost.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.gmail.com with ESMTPSA id a6sm32646ljp.76.2021.05.12.09.03.12
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=ZT4JNzSVA4XzKpARhAEfHQrvscUrf/xbLw82kFR8CgM=;
+        b=gUYvJSMePg6fhzUY7HrLQWKBXq5ZoZjxqu1wYUjOb894V34suYFMTfeniJfdwigZpC
+         tdqyOpCXdPKF3FrJNFlAEXLNYcSOMcROPV2IbPM5BXg/mcVqKwQMWg1Dj60gG7x/4B9+
+         FBuvIwXxdOiR5F2Pta7iGt0S8xhBL8DqdvwVo4fob/G2cogTylB0qjTS2M2NZXxHxHDK
+         nbsPaKpFq0xixVz1JIDUv45MxX8eQekzr++8zWiyN93zFfySgYkK6/1aUteavS2sd8Bl
+         vtUmeT+P472696GFJq5m5Xqtnl2mMXw5MRObuXFt6IHB3JJvLbmrPCym2G8l9RAJK/+C
+         86zA==
+X-Gm-Message-State: AOAM532YmmW0S3QK66werJdHwr5RkAZ96zCou8DbnjLsXXisNNpwhiyX
+        F6TMH2AwdLxrTdTuldTrIw==
+X-Google-Smtp-Source: ABdhPJyx3BiGpIeRJ3UIVk48+wQi6XdGs6DMxX1QJJ+UbedL6x3vdBzMYF8skTJgNZgJb8r3EWzcbQ==
+X-Received: by 2002:aca:1a05:: with SMTP id a5mr182147oia.26.1620849989353;
+        Wed, 12 May 2021 13:06:29 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h184sm191133oia.1.2021.05.12.13.06.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 May 2021 09:03:13 -0700 (PDT)
-From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH] dt-bindings: pwm: brcm,iproc-pwm: convert to the json-schema
-Date:   Wed, 12 May 2021 18:02:53 +0200
-Message-Id: <20210512160253.15000-1-zajec5@gmail.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Wed, 12 May 2021 13:06:28 -0700 (PDT)
+Received: (nullmailer pid 204078 invoked by uid 1000);
+        Wed, 12 May 2021 18:35:16 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Sean Anderson <sean.anderson@seco.com>
+Cc:     michal.simek@xilinx.com, linux-pwm@vger.kernel.org,
+        Alvaro Gamez <alvaro.gamez@hazent.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20210511191239.774570-1-sean.anderson@seco.com>
+References: <20210511191239.774570-1-sean.anderson@seco.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: pwm: Add Xilinx AXI Timer
+Date:   Wed, 12 May 2021 13:35:16 -0500
+Message-Id: <1620844516.484369.204077.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
+On Tue, 11 May 2021 15:12:37 -0400, Sean Anderson wrote:
+> This adds a binding for the Xilinx LogiCORE IP AXI Timer. This device is
+> a "soft" block, so it has many parameters which would not be
+> configurable in most hardware. This binding is usually automatically
+> generated by Xilinx's tools, so the names and values of some properties
+> must be kept as they are. Replacement properties have been provided for
+> new device trees.
+> 
+> Because we need to init timer devices so early in boot, the easiest way
+> to configure things is to use a device tree property. For the moment
+> this is 'xlnx,pwm', but this could be extended/renamed/etc. in the
+> future if these is a need for a generic property.
+> 
+> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
+> ---
+> How should the clocking situation be documented? For the moment I have
+> just left clock as optional, but should clock-frequency be documented?
+> 
+> Changes in v3:
+> - Mark all boolean-as-int properties as deprecated
+> - Add xlnx,pwm and xlnx,gen?-active-low properties.
+> - Make newer replacement properties mutually-exclusive with what they
+>   replace
+> - Add an example with non-deprecated properties only.
+> 
+> Changes in v2:
+> - Use 32-bit addresses for example binding
+> 
+>  .../bindings/pwm/xlnx,axi-timer.yaml          | 142 ++++++++++++++++++
+>  1 file changed, 142 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml
+> 
 
-This helps validating DTS files.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
- .../bindings/pwm/brcm,iproc-pwm.txt           | 21 ---------
- .../bindings/pwm/brcm,iproc-pwm.yaml          | 45 +++++++++++++++++++
- 2 files changed, 45 insertions(+), 21 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.txt
- create mode 100644 Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.yaml
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml:16:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
 
-diff --git a/Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.txt b/Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.txt
-deleted file mode 100644
-index 655f6cd4ef46..000000000000
---- a/Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.txt
-+++ /dev/null
-@@ -1,21 +0,0 @@
--Broadcom iProc PWM controller device tree bindings
--
--This controller has 4 channels.
--
--Required Properties :
--- compatible: must be "brcm,iproc-pwm"
--- reg: physical base address and length of the controller's registers
--- clocks: phandle + clock specifier pair for the external clock
--- #pwm-cells: Should be 3. See pwm.yaml in this directory for a
--  description of the cells format.
--
--Refer to clocks/clock-bindings.txt for generic clock consumer properties.
--
--Example:
--
--pwm: pwm@18031000 {
--	compatible = "brcm,iproc-pwm";
--	reg = <0x18031000 0x28>;
--	clocks = <&osc>;
--	#pwm-cells = <3>;
--};
-diff --git a/Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.yaml b/Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.yaml
-new file mode 100644
-index 000000000000..218ab06c34d1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.yaml
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/brcm,iproc-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Broadcom iProc PWM controller
-+
-+maintainers:
-+  - Rafał Miłecki <rafal@milecki.pl>
-+
-+description:
-+  This controller has 4 channels.
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    const: brcm,iproc-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    description: external clock
-+    maxItems: 1
-+
-+  "#pwm-cells":
-+    const: 3
-+
-+unevaluatedProperties: false
-+
-+required:
-+  - reg
-+  - clocks
-+
-+examples:
-+  - |
-+    pwm@18031000 {
-+        compatible = "brcm,iproc-pwm";
-+        reg = <0x18031000 0x28>;
-+        clocks = <&osc>;
-+        #pwm-cells = <3>;
-+    };
--- 
-2.26.2
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/pwm/xlnx,axi-timer.example.dts:49.37-57.11: ERROR (duplicate_label): /example-1/timer@800e0000: Duplicate label 'axi_timer_0' on /example-1/timer@800e0000 and /example-0/timer@800e0000
+ERROR: Input tree has errors, aborting (use -f to force output)
+make[1]: *** [scripts/Makefile.lib:380: Documentation/devicetree/bindings/pwm/xlnx,axi-timer.example.dt.yaml] Error 2
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1416: dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1477288
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
 
