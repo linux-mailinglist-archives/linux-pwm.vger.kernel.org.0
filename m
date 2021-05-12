@@ -2,97 +2,162 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F82537BA00
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 May 2021 12:07:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A75D37CFC2
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 May 2021 19:32:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230236AbhELKIy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 May 2021 06:08:54 -0400
-Received: from mail02.asahi-net.or.jp ([202.224.55.14]:54289 "EHLO
-        mail02.asahi-net.or.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230230AbhELKIy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 May 2021 06:08:54 -0400
-X-Greylist: delayed 442 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 May 2021 06:08:49 EDT
-Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
-        (Authenticated sender: PQ4Y-STU)
-        by mail02.asahi-net.or.jp (Postfix) with ESMTPA id 61E06218E5;
-        Wed, 12 May 2021 19:00:41 +0900 (JST)
-Received: from yo-satoh-debian.ysato.ml (v096177.dynamic.ppp.asahi-net.or.jp [124.155.96.177])
-        by sakura.ysato.name (Postfix) with ESMTPSA id 186721C0077;
-        Wed, 12 May 2021 19:00:41 +0900 (JST)
-Date:   Wed, 12 May 2021 19:00:40 +0900
-Message-ID: <87h7j86zlj.wl-ysato@users.sourceforge.jp>
-From:   Yoshinori Sato <ysato@users.sourceforge.jp>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        id S235953AbhELRRy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 May 2021 13:17:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60700 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240162AbhELQa3 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 May 2021 12:30:29 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A074DC08EACF;
+        Wed, 12 May 2021 09:03:16 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id p20so6276044ljj.8;
+        Wed, 12 May 2021 09:03:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m5a3LpSMEA2FyBM0XUI5BkccXTFTL84Xmwv8wTBlzfM=;
+        b=mr/g/PwBPVeExTjtiZC+qX8HbljZsXXFQpRTFHmFENuSx7iLcL4ulhU2K2nbToesaV
+         FM436fFeJbW6OP1Agi7rENm91cnFQiSmN4hE79wgZoFRoxh7frZ6SMcuxC5SNqjT677x
+         jFIzMQSNGijLC5wO0W7OIfXicS5i9JY/VEuX5RttgbEmXB++EqsZdkTGfI2VsaSCoE9t
+         2EGlDt6nzTTID3RjVW+eC206NKN75z0N/Y+EFJhtDQgikkfXr+JWvNo6LzLN9g0KVyk9
+         aUQeJ326qMk1vWFBAKIqA41fjJcYancb3l/UX9Dy1UJiwAYwIjZQQvOQwHoLBODmyVna
+         +Pgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m5a3LpSMEA2FyBM0XUI5BkccXTFTL84Xmwv8wTBlzfM=;
+        b=HbnnxRX3NLF4kni8BJbPGn4Ml1OBaVevFJw93uQLrATI8sZe8gZtu4QUQaKdKaOurK
+         kH34b2Y+EE7wXckgNpAY7l1MDgrnx5ceEkDx+SpwAkSCxRjGhy7s2sWSJeFG2gZ5Pi+m
+         v4IXp/G52uVp9sNAZQss37gP/Fq1rJBg4vhbqdTKNFKjyT9CbBDyweq94sBPD12HiX/T
+         C/8Mqb9h0GMTQR7mWXCF9OTIuPh32ImXnX5Z6owaSrgeBQawEM009EIzYWn1DlW/jKxu
+         vDQ1NB1vsDsXdEMmxP5JQtd2SCact3n+AqcHFrSBTTHsH46coEbzLXr6VaZN+he2sCYY
+         Je0Q==
+X-Gm-Message-State: AOAM530WR+2B0xjsdYn9lbW2BSqYEe3Z1TqQ4GYKfqQZPHVQiq/0EWTa
+        BSbIik0E70hSsSd+d7JjJXc=
+X-Google-Smtp-Source: ABdhPJwbfi+Iv9VSTgBMtpTqyMbSw1fieIjoLW3VHjdo1A4uK4xe3NoyvdsrwxdLRI3Xj+FV5+L1dQ==
+X-Received: by 2002:a2e:9c01:: with SMTP id s1mr29260574lji.402.1620835394404;
+        Wed, 12 May 2021 09:03:14 -0700 (PDT)
+Received: from localhost.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
+        by smtp.gmail.com with ESMTPSA id a6sm32646ljp.76.2021.05.12.09.03.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 May 2021 09:03:13 -0700 (PDT)
+From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: renesas,tpu-pwm: Improve json-schema
-In-Reply-To: <d36e3690ce8c5a1e53d054552e4fd8b90d6a5478.1620648868.git.geert+renesas@glider.be>
-References: <cover.1620648868.git.geert+renesas@glider.be>
-        <d36e3690ce8c5a1e53d054552e4fd8b90d6a5478.1620648868.git.geert+renesas@glider.be>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL/10.8 EasyPG/1.0.0 Emacs/27
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
+        Rob Herring <robh+dt@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Subject: [PATCH] dt-bindings: pwm: brcm,iproc-pwm: convert to the json-schema
+Date:   Wed, 12 May 2021 18:02:53 +0200
+Message-Id: <20210512160253.15000-1-zajec5@gmail.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 10 May 2021 21:18:34 +0900,
-Geert Uytterhoeven wrote:
-> 
->   - Include the general PWM controller schema,
->   - Make clocks, power-domains, and resets properties required.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v2:
->   - Keep additionalProperties, as pwm.yaml doesn't add any other
->     properties.
-> ---
->  .../bindings/pwm/renesas,tpu-pwm.yaml           | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
-> index aa9a4570c9068226..7c99e42ad780c2cd 100644
-> --- a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
-> @@ -58,6 +58,23 @@ required:
->    - compatible
->    - reg
->    - '#pwm-cells'
-> +  - clocks
-> +  - power-domains
-> +
-> +allOf:
-> +  - $ref: pwm.yaml#
-> +
-> +  - if:
-> +      not:
-> +        properties:
-> +          compatible:
-> +            contains:
-> +              enum:
-> +                - renesas,tpu-r8a73a4
-> +                - renesas,tpu-r8a7740
-> +    then:
-> +      required:
-> +        - resets
->  
->  additionalProperties: false
->  
-> -- 
-> 2.25.1
-> 
+From: Rafał Miłecki <rafal@milecki.pl>
 
-Acked-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+This helps validating DTS files.
 
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+---
+ .../bindings/pwm/brcm,iproc-pwm.txt           | 21 ---------
+ .../bindings/pwm/brcm,iproc-pwm.yaml          | 45 +++++++++++++++++++
+ 2 files changed, 45 insertions(+), 21 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.yaml
+
+diff --git a/Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.txt b/Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.txt
+deleted file mode 100644
+index 655f6cd4ef46..000000000000
+--- a/Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.txt
++++ /dev/null
+@@ -1,21 +0,0 @@
+-Broadcom iProc PWM controller device tree bindings
+-
+-This controller has 4 channels.
+-
+-Required Properties :
+-- compatible: must be "brcm,iproc-pwm"
+-- reg: physical base address and length of the controller's registers
+-- clocks: phandle + clock specifier pair for the external clock
+-- #pwm-cells: Should be 3. See pwm.yaml in this directory for a
+-  description of the cells format.
+-
+-Refer to clocks/clock-bindings.txt for generic clock consumer properties.
+-
+-Example:
+-
+-pwm: pwm@18031000 {
+-	compatible = "brcm,iproc-pwm";
+-	reg = <0x18031000 0x28>;
+-	clocks = <&osc>;
+-	#pwm-cells = <3>;
+-};
+diff --git a/Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.yaml b/Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.yaml
+new file mode 100644
+index 000000000000..218ab06c34d1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.yaml
+@@ -0,0 +1,45 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/brcm,iproc-pwm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Broadcom iProc PWM controller
++
++maintainers:
++  - Rafał Miłecki <rafal@milecki.pl>
++
++description:
++  This controller has 4 channels.
++
++allOf:
++  - $ref: pwm.yaml#
++
++properties:
++  compatible:
++    const: brcm,iproc-pwm
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    description: external clock
++    maxItems: 1
++
++  "#pwm-cells":
++    const: 3
++
++unevaluatedProperties: false
++
++required:
++  - reg
++  - clocks
++
++examples:
++  - |
++    pwm@18031000 {
++        compatible = "brcm,iproc-pwm";
++        reg = <0x18031000 0x28>;
++        clocks = <&osc>;
++        #pwm-cells = <3>;
++    };
 -- 
-Yosinori Sato
+2.26.2
+
