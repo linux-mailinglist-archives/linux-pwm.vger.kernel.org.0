@@ -2,230 +2,318 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 854E0380C02
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 May 2021 16:40:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2CBC380EAA
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 May 2021 19:13:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234436AbhENOlr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 14 May 2021 10:41:47 -0400
-Received: from mail-eopbgr70043.outbound.protection.outlook.com ([40.107.7.43]:7563
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        id S233298AbhENROy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 14 May 2021 13:14:54 -0400
+Received: from mail-eopbgr40066.outbound.protection.outlook.com ([40.107.4.66]:48006
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231792AbhENOlr (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 14 May 2021 10:41:47 -0400
+        id S230063AbhENROx (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 14 May 2021 13:14:53 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E5avTZ9ZnOl2mzRVHnSb5yA8Y6apw18IhgryR7VSK/L8Mr0738YAoumtwbvSpgqSHqnXwsDxhDyIIapvfD160DrmwNYIISlqo2s7NxiJJFfeSp/LhR3rUR/rNZm+PNQ6dcYBhUkz7GaL+uZJhAjvt9Y5gbVJDmj8r+Hin1bMPKSMUuC2SpKY4OfS2Z7ESlTGQgMpsiG7eQObsZuIoJ0FeYb77+qV3m6B90T6+vUDBMRvlcfGiS+LhaaPAPJZwE4wfs9OfgrKdsgkDmTSJ4oIJVelgiugKZ/n8W9rpArzEO9/xghUAmk628y04+HDU7E8k1DSdeXgLFi2nR2j+1qCfQ==
+ b=mJW6cTMEsKYIXLBn2UTSHmN6GW5jrMljt5zjPobDl68EJ1NGS+GBmBLmQM+U2ZbmTEFd9vSul6UL6BM5M+2TusNyJ23gutDDrQ9ucxRkdvZWHQQWaUZRyJRQZjUptsBLJc8LZg8pFzNpyNCDzJuJqi6ShUOzkV3mArvK9+rgHH602eEa2SAp5rnidWARjjWDjrSM5OFW2ZExhrUrlm9vt7H3ebJnISIwI0BKnQbtAf0T6gtXUiEJBmmGWp6s2zpekY2Px1ew5O2jSL5AJqune2uTefTr5PdpyFS7bPGcn7Mq8Uug2DMUpoiWR1RGttvLRB/F/7hGcjA0NMQWgH8J1Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dKma1LLAgHk/SDT2dk4kXwr0uUX4nlWJIPIJLJ+N6oY=;
- b=AhtnQaPXWv9ZTEX6kqfl9IU+z2AXuoqCAIBwM+UAzYe8dj7sx6IevGSNGpZIG7YMswTf4CzHVY3+eitwYjqF5w6Ou9U3/uMgpVydBTulc2pnOZG8jSep/qb5d30rPu//yH+XW3X9rOHL1LOb45N9jrvoK94VMUESE/AyaGH3+aAtxV21RtUEGd4Hczr9jcleUfblii5oopDIDIo/w+AUTv/H8ntLLtk+ypvcdg4E9yBWLhIYIv/Q0lcNlupPDD90K7CSVg1u+sjwj+YAIexYi1rYGrPY/wRJcA4ut6yQERjiI2ihiCOZqD40lvwFL5a7nOuRda1doCFLZAn5gyRpfw==
+ bh=h3IvTvH8H+OFelMjo4NVbx0ZNGknOPim1cFa+AsYsMI=;
+ b=W8gDimsYfsa+cSmNMGcebJsgEgjG0BXM1ZBtIoesY/ARNAeSCjzdrCLJzmsx81yCoMdZpWzWtd338q2Fi1FDhchU86QAd2dCA/9ts6+q2scFkFO9kk9qXmr6MFHKx+eMVi18f6JjHXIiSHz8W9XYIluEfTrdJn1wJOhuCiBOGOLX0Yab7UnY5nYfN3kv6MUG1kN2mZkHVy73ZEAlT1tpm4WnYNzpvxS7h9MGJutlQLTPiSQzBDQah7mk9eyld3snwbgZ9111G4tHeJkoTuGkib8fn2kLOQ3NbI1psSZwtEnvxxj+W+X5u03iWo+xlYbJ6E1zSqcOOJW1l6iGBiw9RA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=seco.com; dmarc=pass action=none header.from=seco.com;
  dkim=pass header.d=seco.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=secospa.onmicrosoft.com; s=selector2-secospa-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dKma1LLAgHk/SDT2dk4kXwr0uUX4nlWJIPIJLJ+N6oY=;
- b=Yzy5Msrxb49DkkuUmiYKIIOixPq5xlSIlR4hOqdIKagUU/zXpGUCBZ/uAbzsRSqOVHp1IryA7RnUcCcoaYFXvm0vTnuyd+6krEBMgNmT2MybhlHipM6YetG6gaN+dC4BQiwVO91R0/7gCfii+Kxnx48qFZ4elb1VlPoCyXlPaZ4=
-Authentication-Results: pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=none action=none header.from=seco.com;
+ bh=h3IvTvH8H+OFelMjo4NVbx0ZNGknOPim1cFa+AsYsMI=;
+ b=KOOv215vvF8oD762B4X77K+H1Xn3yQjF1gtcLplMPag1oUnETeBtAuJhCNS6Fd4v50f8I9i/vQOq+arYj3AgZ1wM/0nPQC1B2PaLOOrRfyK2fr8T643dzNkUVpmGTzEIVCpBwDzUHXMTeDhmVvv+013SwI9JDqovBMyHQ0V3FHI=
+Authentication-Results: lists.infradead.org; dkim=none (message not signed)
+ header.d=none;lists.infradead.org; dmarc=none action=none
+ header.from=seco.com;
 Received: from DB7PR03MB4523.eurprd03.prod.outlook.com (2603:10a6:10:19::27)
- by DB7PR03MB3801.eurprd03.prod.outlook.com (2603:10a6:5:33::14) with
+ by DBBPR03MB7129.eurprd03.prod.outlook.com (2603:10a6:10:206::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.26; Fri, 14 May
- 2021 14:40:32 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4129.28; Fri, 14 May
+ 2021 17:13:39 +0000
 Received: from DB7PR03MB4523.eurprd03.prod.outlook.com
  ([fe80::40d5:3554:c709:6b1b]) by DB7PR03MB4523.eurprd03.prod.outlook.com
  ([fe80::40d5:3554:c709:6b1b%5]) with mapi id 15.20.4129.026; Fri, 14 May 2021
- 14:40:32 +0000
-Subject: Re: [PATCH v3 2/2] clocksource: Add support for Xilinx AXI Timer
-To:     Michal Simek <michal.simek@xilinx.com>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     Alvaro Gamez <alvaro.gamez@hazent.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+ 17:13:39 +0000
+Subject: Re: [PATCH v3 1/2] dt-bindings: pwm: Add Xilinx AXI Timer
+To:     Michal Simek <michal.simek@xilinx.com>,
+        Rob Herring <robh@kernel.org>
+Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
+        devicetree@vger.kernel.org, Alvaro Gamez <alvaro.gamez@hazent.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 References: <20210511191239.774570-1-sean.anderson@seco.com>
- <20210511191239.774570-2-sean.anderson@seco.com>
- <d4bb7b5d-9f38-cf60-fb0b-18f8e0ca2b1e@xilinx.com>
+ <20210513021631.GA878860@robh.at.kernel.org>
+ <f9165937-c578-d225-9f5e-d964367c4711@seco.com>
+ <70176596-2250-8ae1-912a-9f9c30694e7d@seco.com>
+ <CAL_JsqJY1W=t-gYYt+iTPgF7e9yJqzYFYGSJNrA4BNhAY+va8Q@mail.gmail.com>
+ <9cf3a580-e4d3-07fc-956f-dc5c84802d93@xilinx.com>
 From:   Sean Anderson <sean.anderson@seco.com>
-Message-ID: <5f960034-174d-0ed8-9f52-3d5fde90e16a@seco.com>
-Date:   Fri, 14 May 2021 10:40:26 -0400
+Message-ID: <87b31b06-9b81-5743-e3a8-50c255c0a83c@seco.com>
+Date:   Fri, 14 May 2021 13:13:35 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
-In-Reply-To: <d4bb7b5d-9f38-cf60-fb0b-18f8e0ca2b1e@xilinx.com>
+In-Reply-To: <9cf3a580-e4d3-07fc-956f-dc5c84802d93@xilinx.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [50.195.82.171]
-X-ClientProxiedBy: BL1PR13CA0069.namprd13.prod.outlook.com
- (2603:10b6:208:2b8::14) To DB7PR03MB4523.eurprd03.prod.outlook.com
+X-ClientProxiedBy: BL0PR02CA0127.namprd02.prod.outlook.com
+ (2603:10b6:208:35::32) To DB7PR03MB4523.eurprd03.prod.outlook.com
  (2603:10a6:10:19::27)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [172.27.1.65] (50.195.82.171) by BL1PR13CA0069.namprd13.prod.outlook.com (2603:10b6:208:2b8::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4150.11 via Frontend Transport; Fri, 14 May 2021 14:40:30 +0000
+Received: from [172.27.1.65] (50.195.82.171) by BL0PR02CA0127.namprd02.prod.outlook.com (2603:10b6:208:35::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25 via Frontend Transport; Fri, 14 May 2021 17:13:38 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 66de1478-c7d9-4c34-b9e3-08d916e639e3
-X-MS-TrafficTypeDiagnostic: DB7PR03MB3801:
-X-Microsoft-Antispam-PRVS: <DB7PR03MB3801D24D4E1BBD98E6B150F996509@DB7PR03MB3801.eurprd03.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 3d33ed74-d3a8-4b1b-369b-08d916fb9e04
+X-MS-TrafficTypeDiagnostic: DBBPR03MB7129:
+X-Microsoft-Antispam-PRVS: <DBBPR03MB7129F9B09C7A4C088850EE2396509@DBBPR03MB7129.eurprd03.prod.outlook.com>
 X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: sR60hE9Y6FxwA7zgNufrCIB7p0ArgKvBXjy4pwKEzKLd3N1q2G5+W1Ow8W5GAkCkPJHWMnO3Bf3CKZXTaNpFvvkQnOpkte3El8XUgP6H8W+PuYSC8X5eYFM12OMBt+OhN6/JEg1cSE94a6i2tlaHEXEzoyYJrw+exSq8GCL90V+6hGUBInu53Zv+zLrUKalf3R+/WdE2kK1DG6lY5eVqA93MAbxCjRh25IuQKFXU61io9Wh52r5uYGwroXkJ57rosSZeigrAphCzT5Ejjbty1lgnHc1sesvLyL3ys3yO0T3PpFNSm6eelYVJYt4yhkEg0Tz6auh7mUfh8pf7jurso/9l8bRFbwkvtkPf+OTQ/VaPeITXgh/cY6kIZjdX8TcVpgRumBbhuTgat6MnwBugXuZn56dPcGZN2eM8Ztys5Ykqxfk6uLroO8Pwbj6dwRUm69Q8RbzLbuF+BnJAeW/WzKcL5yW3pDHvFDp4LLBgsj7Jfzhp9WwesSTS+ptSuZgX/7M+EAgLj+Bcb/QwbgVYrlR0gYOz+BUy/QUddyn9Av7aoYz/FCxY0libiW3Cl3F5a5tLTGN4QMFzNUI4NORFXQuzspELDHGsvpQgxXNw6dw4PR5t2LHNLAb2UytNSR56fEoJHjPYT0FmeUeAaEFarm9iVM7aOO5vDMJLHeDnS181llyCj5G1pIX1m+HXExGOCNfqIa7whelyThMXovDWWd+ZgvPDc6I4ex+heOxb2YidkBQgyzzV4TBEb3fQUyNDUBAyyJIh++fzXjBhHTcvJQXLLjzGEY4GKJD1gZs12lk=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR03MB4523.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(54906003)(86362001)(8676002)(16576012)(6666004)(66476007)(6486002)(66556008)(66946007)(44832011)(966005)(36756003)(4326008)(8936002)(7416002)(83380400001)(2616005)(956004)(2906002)(38100700002)(38350700002)(16526019)(186003)(31686004)(26005)(498600001)(31696002)(53546011)(52116002)(5660300002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?QjNEL2NELy9maXh0SWVFRE5DTUt0a3VQK3FzaHExYnhhcStkTTI5amgzTWhv?=
- =?utf-8?B?TDZINmlmcytqdHFabkUxTlQwUkxMR2pHUWRYOUZoeDBQUnhFbVhSWXRMT3RP?=
- =?utf-8?B?Uml6NmhxSnpmei9oVU5sbjAyTnd0QzBHY1FFcFVwRlpscGhhRngybTZFeEJH?=
- =?utf-8?B?eEczYndxUmRzYlp3aFhYSEtIZ0U1UHUzSUpQQjNRb3E1MEpKeVNYQzRRN2s1?=
- =?utf-8?B?UGR3UE9RazRkM0tOQUhsb0ZYK1ZZTjNFWTNXMFQwLzJxS1B4WWU0QWdtMTJr?=
- =?utf-8?B?MlBja3NtRVRidlpLOEVLMnhRTmdxdEdicnF4VkpOcFBOclRPdDNXcEFGVnRV?=
- =?utf-8?B?aThlZmZ0ZzhacDROd2FPYU1hcTFXZlZMczI3T21VTEpYcWJlbU9hU05EWUE4?=
- =?utf-8?B?Sk9OeW42RzBMR0FDQXpMRll5Nk5LWWZOenRDNWZDYmxDOWRWYmFjWHJxUjdG?=
- =?utf-8?B?ZzZRcEdXemZKWTkxZ3l2RVZzZTg4YVh4SDFZcVIyU3o3TjFBa2lMZkJybWUv?=
- =?utf-8?B?TndvVEo0WUhqVUF0TWp5SXNKK2k3eFllQVZ1YmYra3JyRzN6V1cxSEVsb2M4?=
- =?utf-8?B?bkJreElCbXFNOTg3Tk5ncFRLbjNRY0ZORGJ2cHk2NjZPVXIzRVY5UzFvWEFM?=
- =?utf-8?B?MlF1TDJ4UGpEOEF4dzVYT3lSYnhwenNOUHRpcCs0QzFOWDZHekNjSytLM3Y3?=
- =?utf-8?B?SWMvTHc4azVVa1VFRlVMYXNhVnk0ODJOcDIxcUNoMjRpWlVXRnVmVFpsZWlS?=
- =?utf-8?B?QS9kY055T002azcwazFuRS9GREV6N3ZuWldNM3lHbmtpQkxhdXJFSDZTWHhh?=
- =?utf-8?B?V0txbDB2RTNhWmN2UVhQNnhsZXhwZlpFY2QxbkJvRkN2dWlUUHc5MkF1T3RZ?=
- =?utf-8?B?RjhaR2NVd3dKTDB2dU01b2NudmJjRTE0dkw1SlFXZmtQUUxYQ1RpMUdKUUcv?=
- =?utf-8?B?S0tycFpyZS9LdngyOUtsYkFaZGxZUHNOdExwaWFCbTNGaDd0MlU5THFPalc3?=
- =?utf-8?B?aVhyNnV1dk5qaHAraWtjcFdhREhqNERpZ3VmeXFqQWRkcG43eWFaRkZKeUFP?=
- =?utf-8?B?UkR0amtpbm45OFB5Q1Q0cTJXYzREWHU1OC9YZGFXRFdOVTNqdGtzRHo1VVpG?=
- =?utf-8?B?VkV1SEhqV0pUOUtzRjJQNk9RUDMrZmFDN2RkSXV3SEZXSlFFZnJadVVYT1VD?=
- =?utf-8?B?dlB4bFdRSWlrOVpndmhuMDFDazZ3U3FmY092SFdLS2Vicm1WU0R1NHd0M1VG?=
- =?utf-8?B?SVI5YXJISUdvUzhMRVdjem13SzQwWkZBcDdEQmVpdEFzQWRjb1JTWWZXbjFY?=
- =?utf-8?B?dW9FWlFTVFlKU0F6c1VNQWlkVTFRclA4TEFOc0pRbEVJTVA2VFA4MTBURXBZ?=
- =?utf-8?B?TzVFTWE5YjJWTnFBekZRbzd2Y0lhWVlhYzdDanAvYmhUSFlPbzlKNXFra2w2?=
- =?utf-8?B?R2hHWDgyWHQ3dnZoZmV1ZEdFeFE0MEd1L0FlRkFmaThqcTZLT05BalZqNm5T?=
- =?utf-8?B?V2VNU1BoTVltT0d2V3FaWVk3R1BzUjcxakNJQ1N0UStHOVNCazJyVkpCTTVK?=
- =?utf-8?B?Z0xvamowYldDWjY0MHBlU0E0aEpKL0JGUHBsQ3dBRlZwRjBCbmdsWElzZG5n?=
- =?utf-8?B?UWQ1SytzWHM0QWhUSjZJOG5lc1MxcWhRK3BxVFJOSVhHVVpVN3NwSHJ4QTFM?=
- =?utf-8?B?SnByZ1FSOFFmaW9yek1Gci9uSW9laGJlOElOYm9kc29SMnpIWHo2WkVsU1gv?=
- =?utf-8?Q?J/F6mHUKmY0QsxKBbVTDJHeYoaa5RWtcN38f0wR?=
+X-Microsoft-Antispam-Message-Info: ZEf+lyIPUEpvShU88JfdOBFFZMzERSCEdP/Dd/7zAGz2nXXOq3CbDMUc9rCIy0RSkZw7WkrLLO12qUETENXYLGGCfs+rPqxtIHOzoA62Tdy54udn51sWd+R61ptH+jiyxYKm/fpwtJEFWnvjYYrdwWL9xm4XNDcedKdO3eSkL8BY8mF4qp1mYWFXy39qwGBNS2WNOWZUo21g2wSt/hzm0erY1yEJgpc7i0rcEPgcYeLTqH8YnzkWe+1eRkEEGJdbXrFnJIFmYa1NDuEu0yECpZJDopHodf19V8kB7jp0rv0OwGJxyilNHL8ybPkEYgIjaYEMZu+x08f96+/+WwWHkd+6l9FB8BA/yEVbBsa9aBw0H1AZqLLae9o34hB5qSDXUl1KvF3aH5nJGG6iDqaVc7TpiI2XunBKh6yWP+ziC6negn/ngPmBXr5vzKbrVqtTBWrQiJzommAiIInqxAUG5DnKmZjNiqBJ6gS0UwnYQ1z83Vofp6WEKNK8YUPQYUbdhL22bsEPx2XVUp1ax6dEIhRz4hQYNPjnp4CGYmB/7h89u6GRqcpf601HmPuV8KJ9GQ534WFgTu1jjV+WgR/3qO/yKUHlZE5p4zHabTYMaU/QAsTDZ7wiu2UlaVRkb4h/q78KJHfZUISbb0+afjuK+q5oamBGChEafHHbPTGuhx3J1jdBpVYpwz2nxnaTLG0uHp+Tg09l9MSdlL6mWBTRim7XgykkznFk6H0rn3DPaNg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR03MB4523.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(31696002)(498600001)(2616005)(38100700002)(53546011)(110136005)(16526019)(31686004)(83380400001)(44832011)(6666004)(956004)(54906003)(8936002)(36756003)(16576012)(5660300002)(6486002)(4326008)(186003)(52116002)(8676002)(26005)(86362001)(66476007)(66946007)(66556008)(2906002)(38350700002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?YmZQWnQ3dU96OUcrMHp5bU5kdWZqNjhwVVh0c2JtTEdyekJleW10eFI4UFI4?=
+ =?utf-8?B?aUV6MjA0TVJOcG5rQ3NQNHZ0LzRJL3NyWFcrZDBhblN2V0NoYUs3TU9EaHV3?=
+ =?utf-8?B?aXhMb2VaNkdNdnU4VmoyYkVXVGsyWVlmRVBPRjQxMWxvQm5NYWFzSUhkNVdu?=
+ =?utf-8?B?eFR1bldpNUd6TUxVRGczWkw0T0N2MERWSkZIVUxpMkg5eXB5QnZOcEt1a2g2?=
+ =?utf-8?B?V09MZGpCSkh3aGZKYVNYRWxGZU9zdVA0c2FRMG9HK1BvQlRhbHhYeWxTZEg0?=
+ =?utf-8?B?RTkvM1NhM1lZVGU0WWxOSkhNT25PZTdOVEFtbU9rWVE1MEZSY3Ird25mSzBW?=
+ =?utf-8?B?MkVXZkZERWxkQUs2cEtYVzNCbXlKYUxmdnJNTUk0VEZVdGQ1OWZFTVFDNnUy?=
+ =?utf-8?B?S3BnS2VRaG8rajhOL1MveFVvb28yQlQ2TW4vcHU2dXh4L2Vlc3BEbEsxQk82?=
+ =?utf-8?B?Wk9OcStUWW5pb2ZFYkpDWjBIOTNERGEremJKSW9PdzRITDJ1VUF3N2g3ZlUz?=
+ =?utf-8?B?OExrcEJBRUFWVGR5L21udkN3Mkszd0g3SDJNQUdaMkFYbHNlWkd0WnZxTXFR?=
+ =?utf-8?B?M2tDTVZBUEVNcnBFZ0hKSll6SmwzS2dUYU5hemZOckxZTy83Ymhxb1dkZlVO?=
+ =?utf-8?B?QnBtdXBoNUJTY1loeDQxSmJCbE9SN3oyaDVxRVFSWlJtTlJmWGZ5OXRDalov?=
+ =?utf-8?B?Z1BUMFNkc3I1ZTN5MmtWZ0d5STAveGtMUDhhT0lsOWk2WUwrL1d2NjJvZ2ww?=
+ =?utf-8?B?bTNOQ2swM0lURzR3bjZweTRIMXlxRyswOStycFAzOGxpM25BSmFVeUtkczFZ?=
+ =?utf-8?B?WnBjMng4ZkU4L2FZVllNSk1GWFFzSGdabFFENkIzY2lvdFJQTVMzUWRsUzdu?=
+ =?utf-8?B?TUhMZFdVNXVaNXpCc3c0akRBZmdnUENJTXdUZ01sSlFwSlVUc2RpMXJZZFJP?=
+ =?utf-8?B?Zzd1Q1dsUkMwZmFtYjFNcTZobVVKSEFxdWtET01YdG03Ly85UTNlcnVoMk9r?=
+ =?utf-8?B?Zm9ZNDUzVlVaSUMwUFFLVFp5dWNSSDRjNGkwQVlvby9lMVgvUm9uVWhzK3FU?=
+ =?utf-8?B?Z1BBNW9CM2dod1I4bjFodVNQQ21xbko2dFA2cVZMdE1lT2t5amNvc2VJbTBS?=
+ =?utf-8?B?aW9WN0gwbDJlN2ZlVFJoMlNFUFVIMkRwcEVWYWppVm0wSEZkYTM2a2dYRW9Q?=
+ =?utf-8?B?UFBEMWVXOUhLWnd6SzN3azg5dGNUSzVnVFlEbW9DRTIvMUMxdGFRK3dnNldR?=
+ =?utf-8?B?V2Z6SGV5VUttaTMwbDVLMGZiSzNreTdTdE1zdVEvYk1JbFFSenNjT3ErNUl3?=
+ =?utf-8?B?RUh3V3FUaE9kbEZFUnR2TzB4MUhFeUk3aDBmMzZodmwwTUdvZVVndjl0Ujgv?=
+ =?utf-8?B?dnVqdVpxbDZRcG9GRDJSSjk1TzlXMDNaUFZGL3JHd2w3dnN0azdGZnk0eDZz?=
+ =?utf-8?B?Vi9TOXljcjUrTUNKV1FrMFVJMkZWbkYzY05CZ1NxbVJ1QTNQR2RuU2Z3SmZ5?=
+ =?utf-8?B?WlB0VXpqSGQ0UmxoNnZzYzFvUUhNRC9jWW1tdU1HOWtXQ01NczF5Y010OEFv?=
+ =?utf-8?B?SW1PNFRVbG5QdWlrTDRkZEdXdGhmSG5RNnlLUk85QmN1bTNlNXVSbVhIbEFq?=
+ =?utf-8?B?ZzFsaVVaejBHTkdRWWQwUGpXa29oQmJKL2JqUEhTZzV1c3pKWFJ6S25XdjRB?=
+ =?utf-8?B?bjFoNVBvOFJSRjVDdTdzaXM3OU9KNnAwLzcwK1hHeEw4eW1mZ0RSVGQxWllM?=
+ =?utf-8?Q?n1tWyvFzdlESiC86Hb/QKcEOpdOs8TGDWpDEuTd?=
 X-OriginatorOrg: seco.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66de1478-c7d9-4c34-b9e3-08d916e639e3
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d33ed74-d3a8-4b1b-369b-08d916fb9e04
 X-MS-Exchange-CrossTenant-AuthSource: DB7PR03MB4523.eurprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2021 14:40:32.0459
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2021 17:13:39.4173
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: bebe97c3-6438-442e-ade3-ff17aa50e733
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dkf5QZlJX42RxXy9tqBbazdfschblI387xL/hIsyhDIZ9mNBiIIUY4QNbyJlc2YT89TMd9JkG485dC4ESRBoHg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR03MB3801
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9ep7TcwOY1sHjxnl3zVjsNpyBtNkKi32SVfxfX+6BUN+WrRhth8ufHQNm3N/rayuJjebXTn1yOF7T84qoeJ7rQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR03MB7129
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
 
-On 5/14/21 4:59 AM, Michal Simek wrote:
+On 5/14/21 4:50 AM, Michal Simek wrote:
  >
  >
- > On 5/11/21 9:12 PM, Sean Anderson wrote:
- >> This adds generic clocksource and clockevent support for Xilinx LogiCORE IP
- >> AXI soft timers commonly found on Xilinx FPGAs. This timer is also the
- >> primary timer for Microblaze processors. This commit also adds support for
- >> configuring this timer as a PWM (though this could be split off if
- >> necessary). This whole driver lives in clocksource because it is primarily
- >> clocksource stuff now (even though it started out as a PWM driver). I think
- >> teasing apart the driver would not be worth it since they share so many
- >> functions.
+ > On 5/13/21 10:43 PM, Rob Herring wrote:
+ >> On Thu, May 13, 2021 at 10:28 AM Sean Anderson <sean.anderson@seco.com> wrote:
+ >>>
+ >>>
+ >>>
+ >>> On 5/13/21 10:33 AM, Sean Anderson wrote:
+ >>>   >
+ >>>   >
+ >>>   > On 5/12/21 10:16 PM, Rob Herring wrote:
+ >>>   >  > On Tue, May 11, 2021 at 03:12:37PM -0400, Sean Anderson wrote:
+ >>>   >  >> This adds a binding for the Xilinx LogiCORE IP AXI Timer. This device is
+ >>>   >  >> a "soft" block, so it has many parameters which would not be
+ >>>   >  >> configurable in most hardware. This binding is usually automatically
+ >>>   >  >> generated by Xilinx's tools, so the names and values of some properties
+ >>>   >  >> must be kept as they are. Replacement properties have been provided for
+ >>>   >  >> new device trees.
+ >>>   >  >
+ >>>   >  > Because you have some tool generating properties is not a reason we have
+ >>>   >  > to accept them upstream.
+ >>>   >
+ >>>   > These properties are already in arch/microblaze/boot/dts/system.dts and
+ >>>   > in the devicetree supplied to Linux by qemu. Removing these properties
+ >>>   > will break existing setups, which I would like to avoid.
  >>
- >> This driver configures timer 0 (which is always present) as a clocksource,
- >> and timer 1 (which might be missing) as a clockevent. I don't know if this
- >> is the correct priority for these timers, or whether we should be using a
- >> more dynamic allocation scheme.
+ >> Already in use in upstream dts files is different than just
+ >> 'automatically generated' by vendor tools.
  >>
- >> At the moment clock control is very basic: we just enable the clock during
- >> probe and pin the frequency. In the future, someone could add support for
- >> disabling the clock when not in use. Cascade mode is also unsupported.
+ >>>   >
+ >>>   >  > 'deprecated' is for what *we* have deprecated.
+ >>>   >
+ >>>   > Ok. I will remove that then.
+ >>>   >
+ >>>   >  >
+ >>>   >  > In this case, I don't really see the point in defining new properties
+ >>>   >  > just to have bool.
+ >>>   >
+ >>>   > I don't either, but it was requested, by Michal...
+ >>>
+ >>> Err, your comment on the original bindings was
+ >>>
+ >>>   > Can't all these be boolean?
  >>
- >> This driver was written with reference to Xilinx DS764 for v1.03.a [1].
+ >> With no other context, yes that's what I would ask. Now you've given
+ >> me some context, between using the existing ones and 2 sets of
+ >> properties to maintain, I choose the former.
  >>
- >> [1] https://www.xilinx.com/support/documentation/ip_documentation/axi_timer/v1_03_a/axi_timer_ds764.pdf
+ >>> And Michal commented
+ >>>
+ >>>   > I think in this case you should described what it is used by current
+ >>>   > driver in Microblaze and these options are required. The rest are by
+ >>>   > design optional.
+ >>>   > If you want to change them to different value then current binding
+ >>>   > should be deprecated and have any transition time with code alignment.
+ >>>
+ >>> So that is what I tried to accomplish with this revision. I also tried
+ >>> allowing something like
+ >>>
+ >>>          xlnx,one-timer-only = <0>; /* two timers */
+ >>>          xlnx,one-timer-only = <1>; /* one timer  */
+ >>>          xlnx,one-timer-only; /* one timer */
+ >>>          /* property absent means two timers */
+ >>>
+ >>> but I was unable to figure out how to express this with json-schema. I
+ >>> don't think it's the best design either...
  >>
- >> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
- >> ---
- >> Please let me know if I should organize this differently or if it should
- >> be broken up.
- >>
- >> Changes in v3:
- >> - Add clockevent and clocksource support
- >> - Rewrite probe to only use a device_node, since timers may need to be
- >>    initialized before we have proper devices. This does bloat the code a bit
- >>    since we can no longer rely on helpers such as dev_err_probe. We also
- >>    cannot rely on device resources being free'd on failure, so we must free
- >>    them manually.
- >> - We now access registers through xilinx_timer_(read|write). This allows us
- >>    to deal with endianness issues, as originally seen in the microblaze
- >>    driver. CAVEAT EMPTOR: I have not tested this on big-endian!
- >> - Remove old microblaze driver
- >>
- >> Changes in v2:
- >> - Don't compile this module by default for arm64
- >> - Add dependencies on COMMON_CLK and HAS_IOMEM
- >> - Add comment explaining why we depend on !MICROBLAZE
- >> - Add comment describing device
- >> - Rename TCSR_(SET|CLEAR) to TCSR_RUN_(SET|CLEAR)
- >> - Use NSEC_TO_SEC instead of defining our own
- >> - Use TCSR_RUN_MASK to check if the PWM is enabled, as suggested by Uwe
- >> - Cast dividends to u64 to avoid overflow
- >> - Check for over- and underflow when calculating TLR
- >> - Set xilinx_pwm_ops.owner
- >> - Don't set pwmchip.base to -1
- >> - Check range of xlnx,count-width
- >> - Ensure the clock is always running when the pwm is registered
- >> - Remove debugfs file :l
- >> - Report errors with dev_error_probe
- >>
- >>   arch/microblaze/kernel/Makefile    |   2 +-
- >>   arch/microblaze/kernel/timer.c     | 326 ---------------
- >>   drivers/clocksource/Kconfig        |  15 +
- >>   drivers/clocksource/Makefile       |   1 +
- >>   drivers/clocksource/timer-xilinx.c | 650 +++++++++++++++++++++++++++++
- >>   5 files changed, 667 insertions(+), 327 deletions(-)
- >>   delete mode 100644 arch/microblaze/kernel/timer.c
- >>   create mode 100644 drivers/clocksource/timer-xilinx.c
+ >> json-schema would certainly let you, but generally we don't want
+ >> properties to have more than 1 type.
  >
- > I don't think this is the right way to go.
- > The first patch should be move current timer driver from microblaze to
- > generic location and then apply patches on the top based on what you are
- > adding/fixing to be able to review every change separately.
- > When any issue happens it can be bisected and exact patch is identified.
- > With this way we will end up in this patch and it will take a lot of
- > time to find where that problem is.
+ > One thing is what it is in system.dts file which was committed in 2009
+ > and there are just small alignments there. But none is really using it.
+ > Maybe I should just delete it.
+ > And this version was generated by Xilinx ancient tools at that time. All
+ > parameters there are fully describing HW and they are not changing. Only
+ > new one can be added.
+ >
+ >  From the current microblaze code you can see which properties are really
+ > used.
+ >
+ > reg
+ > interrupts
+ > xlnx,one-timer-only
+ > clocks
+ > clock-frequency
 
-What parts would you like to see split? Fundamentally, this current
-patch is a reimplementation of the driver. I think the only reasonable
-split would be to add PWM support in a separate patch.
+There is also an implicit dependency on xlnx,count-width. Several times
+the existing driver assumes the counter width is 32, but this should
+instead be discovered from the devicetree.
 
-I do not think that genericizing the microblaze timer driver is an
-integral part of adding PWM support. This is especially since you seem
-opposed to using existing devicetree properties to inform the driver. I
-am inclined to just add a patch adding a check for '#-pwm-cells' to the
-existing driver and otherwise leave it untouched.
+ > It means from my point of view these should be listed in the binding.
+ > clock-frequency is optional by code when clock is defined.
+ >
+ > All other properties listed in system.dts are from my perspective
+ > optional and that's how it should be.
 
- > Another part of this is that you have c&p some parts from origin driver
- > and do not keep origin authors there which can be consider as license
- > violation.
+Here is the situation as I understand it
 
-I have not copy-pasted any code from the original driver. All of this
-was written by consulting with the datasheet and other timer drivers in
-the Linux kernel. In some instances I have referred to the original
-driver (such as when discovering the need for detecting endianness) but
-none of the original code was re-used. As it happens, since these
-drivers are accomplishing the same task, some code is necessarily going
-to be similar. Therefore, I have not added the copyright lines from the
-original driver.
+* This device has existed for around 15 years (since 2006)
+* Because it is a soft device, there are several configurable parameters
+* Although all of these parameters must be known for a complete
+   implementation of this device, some are unnecessary if onlu reduced
+   functionality is needed.
+* A de facto devicetree binding for this device has existed for at least
+   12 years (since 2009), but likely for as long as the device itself has
+   existed. This binding has not changed substantially during this time.
+* This binding is present in devicetrees from the Linux kernel, from
+   qemu, in other existing systems, and in devicetrees generated by
+   Xilinx's toolset.
+* Because the existing driver for this device does not implement all
+   functionality for this device, not all properties in the devicetree
+   binding are used. In fact, there is (as noted above) one property
+   which should be in use but is not because the current driver
+   (implicitly) does not support some hardware configurations.
+* To support additional functionality, it is necessary to
+   use hardware parameters which were not previously necessary.
+
+Based on the above, we can classify the properties of this binding into
+several categories.
+
+* Those which are currently read by the driver.
+   * compatible
+   * reg
+   * clocks
+   * clock-frequency
+   * interrupts
+   * xlnx,one-timer-only
+
+* Those which reflect hardware parameters which are currently explicitly
+   or implicitly relied upon by the driver.
+   * reg
+   * clocks
+   * clock-frequency
+   * interrupts
+   * xlnx,counter-width
+   * xlnx,one-timer-only
+
+* Those which are currently present in device trees.
+   * compatible
+   * reg
+   * interrupts
+   * clocks
+   * clock-frequency
+   * xlnx,count-width
+   * xlnx,one-timer-only
+   * xlnx,trig0-assert
+   * xlnx,trig1-assert
+   * xlnx,gen0-assert
+   * xlnx,gen1-assert
+
+When choosing what properties to use, we must consider what the impact
+of our changes will be on not just the kernel but also on existing users
+of this binding:
+
+* To use properties currently present in device trees, we just need to
+   modify the kernel driver.
+* To add additional properties (such as e.g. '#pwm-cells'), we must
+   modify the kernel driver. In addition, users who would like to use
+   these new properties must add them to their device trees. This may be
+   done in a mechanical way using e.g. overlays.
+* To deprecate existing properties and introduce new properties to
+   expose the same underlying hardware parameters, we must modify the
+   kernel driver. However, this has a large impact on existing users.
+   They must modify their tools to generate this information in a
+   different format. When this information is generated by upstream tools
+   this may require updating a core part of their build system. For many
+   projects, this may happen very infrequently because of the risk that
+   such an upgrade will break things. Even if you suggest that Xilinx can
+   easily modify its tools to generate any sort of output, the time for
+   this upgrade to be deployed/adopted may be significantly longer.
+
+Note that while all three types of changes are similar from a kernel
+point of view, the impact on existing users is much large in the latter
+case. For this reason, I think that wherever possible we should use
+properties which are already present in existing device trees.
+
+ > I think DT binding patch should reflect this state as patch itself.
+ > And then PWM should be added on the top as separate patch.
+
+I have no preference here.
 
 --Sean
 
  >
+ > Note: In past we were using only parameters and name we got from tools
+ > but over years we were fine to use for example bool properties and we
+ > just aligned Xilinx device tree generator to match it. That's why not a
+ > problem to deprecate any property and move to new one. Xilinx DTG is
+ > already prepared for it and it is easy to remap it.
+ >
  > Thanks,
  > Michal
- >
