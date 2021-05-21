@@ -2,215 +2,160 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9848638BB73
-	for <lists+linux-pwm@lfdr.de>; Fri, 21 May 2021 03:20:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4255238C0B3
+	for <lists+linux-pwm@lfdr.de>; Fri, 21 May 2021 09:26:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236617AbhEUBVl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 20 May 2021 21:21:41 -0400
-Received: from mail-ot1-f44.google.com ([209.85.210.44]:37628 "EHLO
-        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236106AbhEUBVk (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 20 May 2021 21:21:40 -0400
-Received: by mail-ot1-f44.google.com with SMTP id v19-20020a0568301413b0290304f00e3d88so16607488otp.4;
-        Thu, 20 May 2021 18:20:18 -0700 (PDT)
+        id S232281AbhEUH2D (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 21 May 2021 03:28:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235846AbhEUH2C (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 21 May 2021 03:28:02 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A803EC061574
+        for <linux-pwm@vger.kernel.org>; Fri, 21 May 2021 00:26:38 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id y14so17913549wrm.13
+        for <linux-pwm@vger.kernel.org>; Fri, 21 May 2021 00:26:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=wHJsiC5bAPMJ/JK2F8/kAPqQTZHzq5ny0YRHjZNAtPg=;
+        b=D9Q+TP0/xYt4iQ45TGcwC580vJ0ZoowBEIqSbX9KoF301h+z+xAJAjXYNPkmhcmO3e
+         zgy8E4COS7RDsbiucJ8FlmM7gnHuo/tVxwxKnSuTnfWx7uRMZFWkONcGL/Z4kp67mBFd
+         +BnwEy2t7VMOC5CB1PKqSyOdh022za9V8pMv7R+5xMLKhsHhnU+5ObBAXKY4z8y/z96D
+         j8VsK3FcOyNuElRe11Uw4MSYYWTFG/lDwZJudfhwDtpsZ7558q8GbrerDk67+Nwb0u3F
+         8ztbk2Uyee+zWrCrQoirq+/r9tPtihNRW9BEl1cAAPqcqBxrsYTnsNaI3S9qaJGvh07Y
+         N4tQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=L8yBjYQAgys656MK8UvpdfNfI8yFhToVlmHgAetNSy4=;
-        b=Yk27UfrnX26WZ1G5byKd7VhaPj+8W2NQbwhc7uRuBQHm3E9/SW9JQL8HyS/zzopvM7
-         qhkb30T45UyKXUpjlPdoS2STEQctwt/QXvvgfI4+0TrXUM3am7eeqVBMuGC3fUwN5dq2
-         vIiGaewAP3mGDJj1/hnJdgIRtsiH+EldfV7H3BmOQBivmnnSAUpzpxgIu2fRIXGJYTTL
-         KtCLBWvXjRRaBTaM0hsQjIF3DgIojbJIWTgZV8RNo/6Dj8lkCXiYjbY9ukW1JZFWeMhv
-         7IYQOyh5IQ+/Yos3d7YGJJfBhgc4QVyD2ghLJ6sIDMANccQBOPoJiMY9zOX8wNUVJ04B
-         9XNg==
-X-Gm-Message-State: AOAM533HtHug4OgrlkEYb1Ckkm8ttag1Z2ozqT2Izzfvf7NkwbMFEvRW
-        Q/tDwbwjCKoab8AOtGJdbg==
-X-Google-Smtp-Source: ABdhPJwloniGyDrtyyk8GwSUBgwJrVccusdGH8bFeLm/IkJVIgSlu1dAYGnYt1qlN/bRKbEy1r88CA==
-X-Received: by 2002:a9d:721e:: with SMTP id u30mr6028225otj.250.1621560017968;
-        Thu, 20 May 2021 18:20:17 -0700 (PDT)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v19sm1000293otq.35.2021.05.20.18.20.16
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=wHJsiC5bAPMJ/JK2F8/kAPqQTZHzq5ny0YRHjZNAtPg=;
+        b=LR692mm702u62RB7+fz/Vy6yz4yPgrZOdOm1Olb2NZsWV+Bf0BEtJh5PaPc9BaKxSU
+         /IrRehkFeWVVkJq+wtujeqX1JRxTpdtk9zUK42Cv93UAlqN4yrJbaQI2uAyLEyrSZLki
+         ozos37oVCU2piTJyDfe6YwH47a2m8C59aerbggymtP9+OKdG6VN7fwhl+2GHNMJstEdk
+         BwpDVylHfPlQI+DX+UaXTUpe3K1lwsyA4FclpILqcpf3wDuhUZfVdFsRNeBQ5ySzek68
+         9JMAJYixiLOfQaXJs6oXL4NiFwqhZDyeIxMis8kc/6e16sT/eF0rzU7JoZe4jluYQslb
+         Gp9w==
+X-Gm-Message-State: AOAM530IURFUV+me/8aHJA/w6lq3M8XO8W8ZKufY8RFdef//Kt1IOMRf
+        iEJ0JcpYVomr+4Y5NaU7IXgbrQ==
+X-Google-Smtp-Source: ABdhPJzESohZioxALYLgYLF5Uhkx1nAY0R/4gNgHpibC0XIoL2X2pIn9HQvSnSr0YfBD+4gAM9qgjg==
+X-Received: by 2002:a5d:688d:: with SMTP id h13mr7927610wru.362.1621581997336;
+        Fri, 21 May 2021 00:26:37 -0700 (PDT)
+Received: from dell ([91.110.221.215])
+        by smtp.gmail.com with ESMTPSA id c6sm1032177wru.50.2021.05.21.00.26.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 May 2021 18:20:17 -0700 (PDT)
-Received: (nullmailer pid 2424374 invoked by uid 1000);
-        Fri, 21 May 2021 01:20:16 -0000
-Date:   Thu, 20 May 2021 20:20:16 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Fabien Parent <fparent@baylibre.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Fri, 21 May 2021 00:26:36 -0700 (PDT)
+Date:   Fri, 21 May 2021 08:26:35 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Ian Abbott <abbotti@mev.co.uk>
+Cc:     linux-kernel@vger.kernel.org,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        mkorpershoek@baylibre.com, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: pwm: pwm-mtk-disp: convert to YAML
- schema
-Message-ID: <20210521012016.GA2421079@robh.at.kernel.org>
-References: <20210518175422.2678665-1-fparent@baylibre.com>
+        <u.kleine-koenig@pengutronix.de>,
+        "David A. Schleef" <ds@schleef.org>,
+        Mori Hess <fmhess@users.sourceforge.net>,
+        Truxton Fulton <trux@truxton.com>,
+        linux-staging@lists.linux.dev, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 5/6] comedi: drivers: ni_mio_common: Move
+ 'range_ni_E_ao_ext' to where it is used
+Message-ID: <20210521072635.GY2549456@dell>
+References: <20210520122538.3470259-1-lee.jones@linaro.org>
+ <20210520122538.3470259-6-lee.jones@linaro.org>
+ <c69d39a0-bf9e-857d-93ba-73e2884fa4ad@mev.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210518175422.2678665-1-fparent@baylibre.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c69d39a0-bf9e-857d-93ba-73e2884fa4ad@mev.co.uk>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, May 18, 2021 at 07:54:19PM +0200, Fabien Parent wrote:
-> Convert the dt-binding documentation for pwm-mtk-disp to YAML.
-> 
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-mtk-disp.txt  | 44 ----------
->  .../devicetree/bindings/pwm/pwm-mtk-disp.yaml | 83 +++++++++++++++++++
->  2 files changed, 83 insertions(+), 44 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-> deleted file mode 100644
-> index 902b271891ae..000000000000
-> --- a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-> +++ /dev/null
-> @@ -1,44 +0,0 @@
-> -MediaTek display PWM controller
-> -
-> -Required properties:
-> - - compatible: should be "mediatek,<name>-disp-pwm":
-> -   - "mediatek,mt2701-disp-pwm": found on mt2701 SoC.
-> -   - "mediatek,mt6595-disp-pwm": found on mt6595 SoC.
-> -   - "mediatek,mt8167-disp-pwm", "mediatek,mt8173-disp-pwm": found on mt8167 SoC.
-> -   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC.
-> - - reg: physical base address and length of the controller's registers.
-> - - #pwm-cells: must be 2. See pwm.yaml in this directory for a description of
-> -   the cell format.
-> - - clocks: phandle and clock specifier of the PWM reference clock.
-> - - clock-names: must contain the following:
-> -   - "main": clock used to generate PWM signals.
-> -   - "mm": sync signals from the modules of mmsys.
-> - - pinctrl-names: Must contain a "default" entry.
-> - - pinctrl-0: One property must exist for each entry in pinctrl-names.
-> -   See pinctrl/pinctrl-bindings.txt for details of the property values.
-> -
-> -Example:
-> -	pwm0: pwm@1401e000 {
-> -		compatible = "mediatek,mt8173-disp-pwm",
-> -			     "mediatek,mt6595-disp-pwm";
-> -		reg = <0 0x1401e000 0 0x1000>;
-> -		#pwm-cells = <2>;
-> -		clocks = <&mmsys CLK_MM_DISP_PWM026M>,
-> -			 <&mmsys CLK_MM_DISP_PWM0MM>;
-> -		clock-names = "main", "mm";
-> -		pinctrl-names = "default";
-> -		pinctrl-0 = <&disp_pwm0_pins>;
-> -	};
-> -
-> -	backlight_lcd: backlight_lcd {
-> -		compatible = "pwm-backlight";
-> -		pwms = <&pwm0 0 1000000>;
-> -		brightness-levels = <
-> -			  0  16  32  48  64  80  96 112
-> -			128 144 160 176 192 208 224 240
-> -			255
-> -		>;
-> -		default-brightness-level = <9>;
-> -		power-supply = <&mt6397_vio18_reg>;
-> -		enable-gpios = <&pio 95 GPIO_ACTIVE_HIGH>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.yaml b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.yaml
-> new file mode 100644
-> index 000000000000..0f016c81cd53
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.yaml
-> @@ -0,0 +1,83 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/pwm/pwm-mtk-disp.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: MediaTek display PWM controller
-> +
-> +maintainers:
-> +  - Thierry Reding <thierry.reding@gmail.com>
-> +  - Lee Jones <lee.jones@linaro.org>
-> +  - Matthias Brugger <matthias.bgg@gmail.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - enum:
-> +          - mediatek,mt2701-disp-pwm
-> +          - mediatek,mt6595-disp-pwm
-> +          - mediatek,mt8173-disp-pwm
-> +      - items:
-> +          - const: mediatek,mt8167-disp-pwm
-> +          - const: mediatek,mt8173-disp-pwm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: clock used to generate PWM signals
-> +      - description: sync signal from the mmsys module
-> +
-> +  clock-names:
-> +    items:
-> +      - const: main
-> +      - const: mm
-> +
-> +  "#pwm-cells":
-> +    const: 2
-> +
-> +  power-domains:
-> +    description:
-> +      List of phandles and PM domain specifiers, as defined by bindings of the
-> +      PM domain provider (see also ../power_domain.txt).
+On Thu, 20 May 2021, Ian Abbott wrote:
 
-Don't need to define what the common property is. You need to say how 
-many.
-
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/mt8173-clk.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    pwm0: pwm@1401e000 {
-> +      compatible = "mediatek,mt8173-disp-pwm";
-> +      reg = <0x1401e000 0x1000>;
-> +      #pwm-cells = <2>;
-> +      clocks = <&mmsys CLK_MM_DISP_PWM026M>,
-> +               <&mmsys CLK_MM_DISP_PWM0MM>;
-> +      clock-names = "main", "mm";
-> +      pinctrl-names = "default";
-> +      pinctrl-0 = <&disp_pwm0_pins>;
-> +    };
-> +
-> +    backlight_lcd: backlight_lcd {
-> +      compatible = "pwm-backlight";
-> +      pwms = <&pwm0 0 1000000>;
-> +      brightness-levels = <
-> +        0  16  32  48  64  80  96 112
-> +        128 144 160 176 192 208 224 240
-> +        255
-> +      >;
-> +      default-brightness-level = <9>;
-> +      power-supply = <&mt6397_vio18_reg>;
-> +      enable-gpios = <&pio 95 GPIO_ACTIVE_HIGH>;
-> +    };
-> -- 
-> 2.31.1
+> On 20/05/2021 13:25, Lee Jones wrote:
+> > ... and mark it as __maybe_unused since not all users of the
+> > header file reference it.
+> > 
+> > Fixes the following W=1 kernel build warning(s):
+> > 
+> >   drivers/staging/comedi/drivers/ni_mio_common.c:163:35: warning: ‘range_ni_E_ao_ext’ defined but not used [-Wunused-const-variable=]
+> > 
+> > Cc: Ian Abbott <abbotti@mev.co.uk>
+> > Cc: H Hartley Sweeten <hsweeten@visionengravers.com>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
+> > Cc: Lee Jones <lee.jones@linaro.org>
+> > Cc: "David A. Schleef" <ds@schleef.org>
+> > Cc: Mori Hess <fmhess@users.sourceforge.net>
+> > Cc: Truxton Fulton <trux@truxton.com>
+> > Cc: linux-staging@lists.linux.dev
+> > Cc: linux-pwm@vger.kernel.org
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >   drivers/comedi/drivers/ni_mio_common.c | 9 ---------
+> >   drivers/comedi/drivers/ni_stc.h        | 9 ++++++++-
+> >   2 files changed, 8 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/comedi/drivers/ni_mio_common.c b/drivers/comedi/drivers/ni_mio_common.c
+> > index 4f80a4991f953..37615b4e2c10d 100644
+> > --- a/drivers/comedi/drivers/ni_mio_common.c
+> > +++ b/drivers/comedi/drivers/ni_mio_common.c
+> > @@ -160,15 +160,6 @@ static const struct comedi_lrange range_ni_M_ai_628x = {
+> >   	}
+> >   };
+> > -static const struct comedi_lrange range_ni_E_ao_ext = {
+> > -	4, {
+> > -		BIP_RANGE(10),
+> > -		UNI_RANGE(10),
+> > -		RANGE_ext(-1, 1),
+> > -		RANGE_ext(0, 1)
+> > -	}
+> > -};
+> > -
+> >   static const struct comedi_lrange *const ni_range_lkup[] = {
+> >   	[ai_gain_16] = &range_ni_E_ai,
+> >   	[ai_gain_8] = &range_ni_E_ai_limited,
+> > diff --git a/drivers/comedi/drivers/ni_stc.h b/drivers/comedi/drivers/ni_stc.h
+> > index fbc0b753a0f59..0822e65f709dd 100644
+> > --- a/drivers/comedi/drivers/ni_stc.h
+> > +++ b/drivers/comedi/drivers/ni_stc.h
+> > @@ -1137,6 +1137,13 @@ struct ni_private {
+> >   	u8 rgout0_usage;
+> >   };
+> > -static const struct comedi_lrange range_ni_E_ao_ext;
+> > +static const struct comedi_lrange __maybe_unused range_ni_E_ao_ext = {
+> > +	4, {
+> > +		BIP_RANGE(10),
+> > +		UNI_RANGE(10),
+> > +		RANGE_ext(-1, 1),
+> > +		RANGE_ext(0, 1)
+> > +	}
+> > +};
+> >   #endif /* _COMEDI_NI_STC_H */
+> > 
 > 
+> The "ni_stc.h" header is also included by "ni_mio_cs.c" which doesn't need
+> `range_ni_E_ao_ext` (admittedly, it was already pulling in a "tentative"
+> definition of the variable).
+> 
+> Thinking about it, I think it's probably better to move `range_ni_E_ao_ext`
+> from "ni_mio_common.c" into *both* "ni_atmio.c" and "ni_pcimio.c" (I think
+> we can live with the small amount of duplication), and to remove the
+> tentative definition from "ni_stc.h".
+
+Happy to rework.
+
+Am I taking this or Uwe's suggestion?
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
