@@ -2,41 +2,37 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ADAB938D63D
-	for <lists+linux-pwm@lfdr.de>; Sat, 22 May 2021 17:04:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 325A138D65C
+	for <lists+linux-pwm@lfdr.de>; Sat, 22 May 2021 17:27:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231191AbhEVPGX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 22 May 2021 11:06:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57548 "EHLO
+        id S231193AbhEVP2c (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 22 May 2021 11:28:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231152AbhEVPGW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 22 May 2021 11:06:22 -0400
+        with ESMTP id S231191AbhEVP2c (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 22 May 2021 11:28:32 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 747C2C061574
-        for <linux-pwm@vger.kernel.org>; Sat, 22 May 2021 08:04:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA942C061574
+        for <linux-pwm@vger.kernel.org>; Sat, 22 May 2021 08:27:07 -0700 (PDT)
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lkTBN-0007is-41; Sat, 22 May 2021 17:04:53 +0200
+        id 1lkTWr-0001Sy-Pe; Sat, 22 May 2021 17:27:05 +0200
 Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lkTBM-0006hb-8m; Sat, 22 May 2021 17:04:52 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH] pwm: sprd: Don't check the return code of pwmchip_remove()
-Date:   Sat, 22 May 2021 17:04:32 +0200
-Message-Id: <20210522150432.825408-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.30.2
+        id 1lkTWq-0007uA-VR; Sat, 22 May 2021 17:27:04 +0200
+Date:   Sat, 22 May 2021 17:27:02 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Patches for next merge window?
+Message-ID: <20210522152702.xhmidizdqnih5bpf@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lmtoczk5frtrjgd5"
+Content-Disposition: inline
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -45,32 +41,42 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-pwmchip_remove() returns always 0. Don't use the value to make it
-possible to eventually change the function to return void. This is a
-good thing as pwmchip_remove() is usually called from a remove function
-(mostly for platform devices) and their return value is ignored by the
-device core anyhow.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pwm/pwm-sprd.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+--lmtoczk5frtrjgd5
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
-index 98c479dfae31..f2a85e8dd941 100644
---- a/drivers/pwm/pwm-sprd.c
-+++ b/drivers/pwm/pwm-sprd.c
-@@ -284,7 +284,9 @@ static int sprd_pwm_remove(struct platform_device *pdev)
- {
- 	struct sprd_pwm_chip *spc = platform_get_drvdata(pdev);
- 
--	return pwmchip_remove(&spc->chip);
-+	pwmchip_remove(&spc->chip);
-+
-+	return 0;
- }
- 
- static const struct of_device_id sprd_pwm_of_match[] = {
--- 
-2.30.2
+Hello Thierry,
 
+is there already an ETA when you will pick patches for your next branch?
+
+Patchwork contains several patches that I consider ready, most
+prominently my "pwm: Simplify drivers with of_pwm_n_cells =3D 3" series
+that you wanted to apply shortly after v5.12-rc1 to have it in next for
+a long period.
+
+Best regards
+Uwe
+
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--lmtoczk5frtrjgd5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmCpIsIACgkQwfwUeK3K
+7AnXIwf+I7p7tfE+Qf6s/nCw6r+jnVjQg6Xka6OylaDClsYr/8+USVetIT3kAX62
+7AJ7y45i9SGgXr4czfNM7HHUbMx+si74SIs2SV+KXf2WKes2TXNCl5qrXUaJWElJ
+/VJQlaLGJNSpDM+z/TMzTu5ctkoKCii5aqN6ziz6IYpFUv21T3lRVOpK5ZhplCbg
+R7NQ6sqIySXI7UtdQO+3E95CbPJ2Rb4IqeC29tmZSHYW0lQ9PBkslv4rVhP6z4LW
+m5e1VIqQJWekCakkk8g+v8T9LDhoCU+g3GwzXwmSHa6Cckx3rUtYujf01r6ay0Tj
+IFRpbR1Eri9VbXYOU7dgjEql+PdSAA==
+=0O99
+-----END PGP SIGNATURE-----
+
+--lmtoczk5frtrjgd5--
