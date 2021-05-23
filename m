@@ -2,107 +2,92 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEE2038DB44
-	for <lists+linux-pwm@lfdr.de>; Sun, 23 May 2021 15:35:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B2A938DBC8
+	for <lists+linux-pwm@lfdr.de>; Sun, 23 May 2021 18:03:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231843AbhEWNgZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 23 May 2021 09:36:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40782 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231833AbhEWNgY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 23 May 2021 09:36:24 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A25FC061574
-        for <linux-pwm@vger.kernel.org>; Sun, 23 May 2021 06:34:58 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lkoFq-0006SS-3P; Sun, 23 May 2021 15:34:54 +0200
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lkoFo-0004zg-S6; Sun, 23 May 2021 15:34:52 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Alexander Shiyan <shc_work@mail.ru>,
+        id S231789AbhEWQEu convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Sun, 23 May 2021 12:04:50 -0400
+Received: from guitar.tcltek.co.il ([192.115.133.116]:52807 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231817AbhEWQEt (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sun, 23 May 2021 12:04:49 -0400
+X-Greylist: delayed 550 seconds by postgrey-1.27 at vger.kernel.org; Sun, 23 May 2021 12:04:49 EDT
+Received: from tarshish (unknown [10.0.8.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx.tkos.co.il (Postfix) with ESMTPS id D1FC0440583;
+        Sun, 23 May 2021 18:54:26 +0300 (IDT)
+References: <70ced827689b7ab35d8f3b07db8d9ccd1489e3e2.1621410526.git.baruch@tkos.co.il>
+ <20210522213524.lnb5bds5hvv2f2zi@pengutronix.de>
+User-agent: mu4e 1.4.15; emacs 27.1
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: [PATCH] pwm: clps711x: Simplify using devm_pwmchip_add()
-Date:   Sun, 23 May 2021 15:34:43 +0200
-Message-Id: <20210523133443.924247-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.30.2
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Balaji Prakash J <bjagadee@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robert Marko <robert.marko@sartura.hr>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 1/3] pwm: driver for qualcomm ipq6018 pwm block
+In-reply-to: <20210522213524.lnb5bds5hvv2f2zi@pengutronix.de>
+Date:   Sun, 23 May 2021 18:54:08 +0300
+Message-ID: <87zgwltpi7.fsf@tarshish>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Patch-Hashes: v=1; h=sha256; i=atZxAcDSOtoJBwmz/pIIhfW5Dd6NTf227xy9ncZqIsI=; m=yrTx4MD7F7yctjkCERVFwSEjngDvVB3pLIpp5WkOHVg=; p=mTJZ6yi4D2gNfcbiDq6h1iDbDFRJr9Hi03Qx4yGKCgg=; g=6972aa9eae01c2f866ddcbc9e9c940e9de2cbec0
-X-Patch-Sig: m=pgp; i=u.kleine-koenig@pengutronix.de; s=0x0D2511F322BFAB1C1580266BE2DCDD9132669BD6; b=iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmCqWcwACgkQwfwUeK3K7AlO1gf/U+7 9O6qjIpZbbFei+vS9unfyDIUlBQS9fyDSZ59DSp6RnY9nzHF6DCV6lb5jQJzIqhcLMr3jjPYfV7D7 1OVpQWtJVb6j/XylOANg0wD7oMH4GZTac0meQQuQERm0qJD0c0fxEJx7xbX9eBV7nOCOgqvwOH9iE PF5k1EcM+XdwVT3bB+Cn0tfyI8LQWYMY7rv/hhT4WspPOPay24HTDu7JmX+mWOO4oUysQ1scCnqE/ HIARaYeIALuuB2Y/zo1CVdSbfua2uo6ito1igOPHn7+v1G6d38+iDwJ9XUmU2UstJRyvpM2isRPab nQKjBY0o7HVVPk9wwI+MmNUlRRXHSKw==
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-With devm_pwmchip_add() we can drop pwmchip_remove() from the device
-remove callback. The latter can then go away, too and as this is the
-only user of platform_get_drvdata(), the respective call to
-platform_set_drvdata() can go, too.
+Hi Uwe,
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-Hello,
+Thanks for your review comments.
 
-this patch depends on my earlier patch "pwm: Add a devm managed function to add
-pwm_chips" that you can find at
+On Sun, May 23 2021, Uwe Kleine-König wrote:
+> On Wed, May 19, 2021 at 10:48:44AM +0300, Baruch Siach wrote:
+>> Driver for the PWM block in Qualcomm IPQ6018 line of SoCs. Based on
+>> driver from downstream Codeaurora kernel tree. Removed support for older
+>> (V1) variants because I have no access to that hardware.
+>> 
+>> Tested on IPQ6010 based hardware.
+>> 
+>> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
 
-	https://patchwork.ozlabs.org/project/linux-pwm/patch/20210407080155.55004-2-u.kleine-koenig@pengutronix.de/
+[...]
 
-or
+>> +static void ipq_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+>> +{
+>> +	struct ipq_pwm_chip *ipq_chip = to_ipq_pwm_chip(pwm->chip);
+>> +	unsigned offset = ipq_pwm_reg_offset(pwm, PWM_CFG_REG1);
+>> +	unsigned long val;
+>> +
+>> +	val = readl(ipq_chip->mem + offset);
+>> +	val |= PWM_UPDATE;
+>
+> What is the effect of this register bit?
+>
+> Does the output become inactive or does it freeze at state that happens
+> to be emitted when the ENABLE bit is removed?
 
-	https://lore.kernel.org/r/20210407080155.55004-2-u.kleine-koenig@pengutronix.de
+I don't know. PWM does not work when this bit is not set here. The
+original downstream driver[1] does not set this bit on disable. But it
+also enables PWM unconditionally on .config. I added the 'enabled' check
+in .config, and then PWM stopped working even when enabled later. It was
+only by accident (excess copy/paste) that I found this workaround.
 
-Best regards
-Uwe
+A comment on the original code says that PWM_UPDATE is "auto cleared".
+This is evidently not true on my hardware (IPQ6010). This might be true
+for older variants of this PWM block. Unfortunately, I have no access to
+hardware documentation.
 
- drivers/pwm/pwm-clps711x.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+[1] https://source.codeaurora.org/quic/qsdk/oss/kernel/linux-ipq-5.4/tree/drivers/pwm/pwm-ipq.c?h=NHSS.QSDK.11.4.1.r1&id=9e4627b7088b0c06ddd910c8770274d26613de9e
 
-diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
-index f3d17a590305..d7ad88685830 100644
---- a/drivers/pwm/pwm-clps711x.c
-+++ b/drivers/pwm/pwm-clps711x.c
-@@ -134,16 +134,7 @@ static int clps711x_pwm_probe(struct platform_device *pdev)
- 
- 	spin_lock_init(&priv->lock);
- 
--	platform_set_drvdata(pdev, priv);
--
--	return pwmchip_add(&priv->chip);
--}
--
--static int clps711x_pwm_remove(struct platform_device *pdev)
--{
--	struct clps711x_chip *priv = platform_get_drvdata(pdev);
--
--	return pwmchip_remove(&priv->chip);
-+	return devm_pwmchip_add(&pdev->dev, &priv->chip);
- }
- 
- static const struct of_device_id __maybe_unused clps711x_pwm_dt_ids[] = {
-@@ -158,7 +149,6 @@ static struct platform_driver clps711x_pwm_driver = {
- 		.of_match_table = of_match_ptr(clps711x_pwm_dt_ids),
- 	},
- 	.probe = clps711x_pwm_probe,
--	.remove = clps711x_pwm_remove,
- };
- module_platform_driver(clps711x_pwm_driver);
- 
+baruch
 
-base-commit: 6efb943b8616ec53a5e444193dccf1af9ad627b5
-prerequisite-patch-id: fa39cd0c852d109ed957dc44dca5bdcf5dff0685
 -- 
-2.30.2
-
+                                                     ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
