@@ -2,184 +2,338 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2CD438DF01
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 May 2021 03:56:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A92F638E143
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 May 2021 09:01:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231896AbhEXB5w (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 23 May 2021 21:57:52 -0400
-Received: from mail-eopbgr1320094.outbound.protection.outlook.com ([40.107.132.94]:33504
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        id S232266AbhEXHC3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 24 May 2021 03:02:29 -0400
+Received: from mail-dm6nam12on2040.outbound.protection.outlook.com ([40.107.243.40]:7008
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231744AbhEXB5v (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sun, 23 May 2021 21:57:51 -0400
+        id S232120AbhEXHC2 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 24 May 2021 03:02:28 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fveOkYLvGNmzw479pXxazb8ojpCQO545HLVAmJHRIM8H13uUF0t36i6QuexRo92DrVQvcTW/HODt+plqPMbv2CLPrGewBgeOLPst0puZrm/UqxdsvqONvHvI2MRvexpVA5LEH05104hWhvmFNewfg1STOgmtKL0yiUd2ohRebC+R1sC6eyvsaz9Y+U8byXJLBsfjB4OsE4VtOyxuSG+FLvXIHLnJE4TPK+iBx4s4eFUdH+KnqrxfPFxAG8YunsK+T3p5HvOYm4LvKrM1D/Y2f2hrxkHlIfKvAbZYkT3MaxfoFxYDQFcjAxo63fao1v/waIhxXL9y+oYFEOQetgBJ8g==
+ b=EGNwRuUh+8HGtlVrFz+cIgJkvcT90RPY7Bs4DoT9SfrwJ2O4YkS2SV1PqTgjVrUt0SJgqIUSkhj4X5EjJLUN2ib29pPik1OmdvVJurnkahDSx/NF/PmiJDdvkRaEsmk3a4dHxkeN60pHIHfBrkXy3huBkjdkXJUGRawmNE2IeefCLWkobrBjxFTeWImgK5YhC6L5qo3bzzRnjddUF4+nyQxF9UhMvDNLMCXXq1B5xEZU0Q2uXJrU0fQVLmNAd8WG6Tr6lCVyvSKIkBCstzVKq86TjGMG/DYQwwOqbGoEtuG1EXpQheGyaJGD22SUT3xUeeAlytgrCYInfs9TcyY6JQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HvYTMuDpxK6/2MiwN9gc2Nja4iJXE43LTSiWRpOI4/E=;
- b=Ed02hmGNQUjYr35zvk8wfIJOYw4FM+SHzpVOYwjG3s7K5MtitcuyZnVIya9xDBm2gBV4qF681zGpnT5Y0S6ixWVeGyD+5VGVOHNyHokSpK1SXJnf+XvM4eOXnga1pneKO62JFZ5PDGyOiBXhG7VO+pPBn4lFN/cBh8C5E7y96E0SrUlTss/BfAY7s/fc6J4L9OrcxoyzJHEyRBIONUeG0wVsBZ/7RPMvTSHjI7XZN9vEONyRUMNhQVrihg1Rb6TkqJY4c4yo/CzvUscJeCR37yyKyn88jyYIvbuDGGmv4tRvI7imStbUQWYPU4aNyuj07WdZw4ivjUtEHrX/kIFooQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector1;
+ bh=jU8HbE4NuAyN1xUGZFGzQPcMUNo+aEWm46VFc1nd8o4=;
+ b=MukY0y2EIAa5SgnATUa/Z0McaGShqI09IqZkk0Phl+qg1a+eQIO9iYLDYdg4A43w4TG+EeuHGCbodJPbdf+07BiWwGT9tiu8LK7MXWCorVBZ2YPjjbz4v3796CVAJ2oSI7Bv/KQ9GinguekS8inWddMuRCmJlEOTSHNrJmdv20xssjoj7mhQZht/fk95AHuIKSpkP/m6zLk7P1zvuO7NI05qVPtmS09uaiy83sp8+Gy03quvaAmo+oFL4zMfa/09NR2R/OWshYfgpD91QkSCDH00tG104hg7+AXXI1ShjRuZOnuht9sRrm2GIlQjcVYTK+dk9tDlUcQKroHjBiflEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=linutronix.de smtp.mailfrom=xilinx.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HvYTMuDpxK6/2MiwN9gc2Nja4iJXE43LTSiWRpOI4/E=;
- b=FY/+pwtXR9i9OiQGbiIFh6gr2WzXWLJDZ3j/xiWUxJ3rzq+YAOchKvQZHYGQaTZN0NTL4qrUYYrzpuaacWHIdIm/Oqur2aT3Lw7zywOe/oBGZwABVBpQ8cRvTu+quk6KfwKrI/gYCx9zCuJabSnero7VVjF3HnsopXsOtLh8bze1r/HuRVZ1bi2m/Qq5J9u/gp46zOWG7njcdAo5Tmy2lZTCTiqxLpL/OZ9k9bRM+LbVcTChajoCZ4JzLPFfb7y6rXXJ7QFaUC9MUWyn+ef73krv2wUaXnSfRHYqCOy6MqqtcQepMWDWfRxS/I2kc0XwMo/lwFTQ+tcrO8uQmYiQ7A==
-Received: from HK0PR06MB3362.apcprd06.prod.outlook.com (2603:1096:203:8b::10)
- by HK0PR06MB2131.apcprd06.prod.outlook.com (2603:1096:203:4d::15) with
+ bh=jU8HbE4NuAyN1xUGZFGzQPcMUNo+aEWm46VFc1nd8o4=;
+ b=oOBaEbv9P/8SNXKyLIN+xnYKpAQYJtuAkuVzps+/pxnCI38DaWLc32i26w7CoNy6HG4oyCxAOO3H6VK1kc+HIYgP997Boa7oxJHS5P8dmRrDKtMxRjQlmUL+7pTJCmfxJxXktGz5enIuThGT6nz4uxVdi12Qrd72itDIDGOnLeg=
+Received: from DM6PR13CA0056.namprd13.prod.outlook.com (2603:10b6:5:134::33)
+ by MN2PR02MB6446.namprd02.prod.outlook.com (2603:10b6:208:118::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4150.23; Mon, 24 May
- 2021 01:56:19 +0000
-Received: from HK0PR06MB3362.apcprd06.prod.outlook.com
- ([fe80::9096:5259:90e5:42dc]) by HK0PR06MB3362.apcprd06.prod.outlook.com
- ([fe80::9096:5259:90e5:42dc%2]) with mapi id 15.20.4150.027; Mon, 24 May 2021
- 01:56:19 +0000
-From:   Billy Tsai <billy_tsai@aspeedtech.com>
-To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+ 2021 07:00:58 +0000
+Received: from DM3NAM02FT016.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:5:134:cafe::3e) by DM6PR13CA0056.outlook.office365.com
+ (2603:10b6:5:134::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.11 via Frontend
+ Transport; Mon, 24 May 2021 07:00:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; linutronix.de; dkim=none (message not signed)
+ header.d=none;linutronix.de; dmarc=pass action=none header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
+Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
+ DM3NAM02FT016.mail.protection.outlook.com (10.13.4.77) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4129.27 via Frontend Transport; Mon, 24 May 2021 07:00:57 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Mon, 24 May 2021 00:00:55 -0700
+Received: from smtp.xilinx.com (172.19.127.96) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.2176.2 via Frontend Transport; Mon, 24 May 2021 00:00:55 -0700
+Envelope-to: tglx@linutronix.de,
+ lee.jones@linaro.org,
+ daniel.lezcano@linaro.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ alvaro.gamez@hazent.com,
+ u.kleine-koenig@pengutronix.de,
+ thierry.reding@gmail.com,
+ robh+dt@kernel.org,
+ devicetree@vger.kernel.org,
+ linux-pwm@vger.kernel.org,
+ sean.anderson@seco.com
+Received: from [172.30.17.109] (port=46096)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1ll4a6-0007D0-Ub; Mon, 24 May 2021 00:00:55 -0700
+To:     Sean Anderson <sean.anderson@seco.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+CC:     Alvaro Gamez <alvaro.gamez@hazent.com>,
+        <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        BMC-SW <BMC-SW@aspeedtech.com>
-Subject: Re: [v6 2/2] pwm: Add Aspeed ast2600 PWM support
-Thread-Topic: [v6 2/2] pwm: Add Aspeed ast2600 PWM support
-Thread-Index: AQHXS4BrVEeu+Idp8UuXdMC2i+TrmqrvsgYAgAK9CoA=
-Date:   Mon, 24 May 2021 01:56:19 +0000
-Message-ID: <9EA46360-8F43-4D1B-9004-3965A6182FA1@aspeedtech.com>
-References: <20210518005517.9036-1-billy_tsai@aspeedtech.com>
- <20210518005517.9036-3-billy_tsai@aspeedtech.com>
- <20210522160708.ryr7n7klapszu2da@pengutronix.de>
-In-Reply-To: <20210522160708.ryr7n7klapszu2da@pengutronix.de>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=none action=none
- header.from=aspeedtech.com;
-x-originating-ip: [211.20.114.70]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1fa4694f-65ed-48d7-d56b-08d91e571ffa
-x-ms-traffictypediagnostic: HK0PR06MB2131:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HK0PR06MB2131807FB435CDFA745CE7458B269@HK0PR06MB2131.apcprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3173;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0dfBVTmYf990gxcD1c3uo1bo2V+IjCDZnxzTyPoSKWyefVSjLPZSMnIN2nZrhSAOdzlfvLpMdj73S/qcQeG8b2uSplhB35L2Cl5ium9rMPdII7EL+uuhT6MLnOeRJtasCkzXTJQBP5k5N09VHMUEvRgqPBYDGgYWdTsyT8BbdqTFtP6vTqQiMXEcOuLdptJ9qcXuV+mkFGOBUCz4ZlkQkB18mWyWzRc9QxB9PaMrjd0QndwS5sBWKrH2YhoYeNfKoD7Y+etqYKr3EsAGx1EwRtKNkRVHlCL14PQyn5bMMfpsUpd2i5nmzrN8Bd2yI0oaIoWOZ9wuFssrmJX+eb9zf9W5x5FCtMYhalCPgwJAC2GYBE9f3W7tjtL5xTn4FjW5j9WfPr5cOiciRdthBUkUl+uJA3K0vBnJiHAXfvTFrcPK2p8kX7V+PUTCNToNiZ7VhYVR7KsedMy9JkwZyLh4IMESSauoNmATPeZZnZ7Ukz0mNqz4LOwhWcikAxB194gVPnoEKWr7QBqQ0aweMkKVqbxbkuD2Ok0pOL7ix0vRzWQRPXm3Q9hKTueoIlG+SPQf2lHm1I9j7mpCuvPGLZcyjUA92KD7jriTBphgnq/wpKbkNcC/2RBhhF5F/CuVybqSpmOnZ8+6RK8a79vi5qTMN5WioWUrkYASx1OKbUyN0Ts=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0PR06MB3362.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(39840400004)(346002)(376002)(136003)(366004)(26005)(6506007)(66946007)(33656002)(5660300002)(2906002)(66476007)(86362001)(66446008)(66556008)(186003)(64756008)(38100700002)(4326008)(8936002)(122000001)(2616005)(7416002)(478600001)(6512007)(54906003)(316002)(36756003)(83380400001)(6916009)(55236004)(71200400001)(8676002)(76116006)(107886003)(6486002)(66574015)(45980500001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?NVRLYlM3bHpkbXJpTGFURHYvQ2EyMGdZRWJGR29KTGdKWkluTE1YVHczL0do?=
- =?utf-8?B?Z0N1bStDeVN6RWYvbFVtbjBMVVNKWnowZjNHUU1TYnBVM0ZZVE5wN1BwWmx3?=
- =?utf-8?B?Z2xsbkJ0bDZKbVduMW5saFpRa21UUXFrOHVEQzQ3cmFDSFNZOFRNTXZiMmxJ?=
- =?utf-8?B?SHdGL3FZSWltVlE3elE4d0tiSHAzOGRtQjk4VzB0MC9ZdHI0Z1drSUpiK0ZZ?=
- =?utf-8?B?MVluM21XL2R3dnl0Q3RxTVRWUnFGYzRqNnF5SjVDWHRoWEtSbjllZEpsQmNC?=
- =?utf-8?B?bXZScjUwaW1Rb1k0STcralpncjBTdk5NMkFjVW9uK3FYMjV1Q1F0bmFoTnRH?=
- =?utf-8?B?a2l5dHY1Q3RWTG1tajdkSWdSYXB6aDY5NzRaa2ZSTlMyVnZFSFNsaEJVb2Vx?=
- =?utf-8?B?MXZicm5WaTdyeENxNXFUU2RNOVRqSVFxM0U5M2s5MG05TkVuSm1tM1A1SmIz?=
- =?utf-8?B?amZKS1hsdTFlMzdCcUwxWW1lTE04cGdwR3ZueXZZS1lVNUlyRjdNNkxucEJn?=
- =?utf-8?B?bzh2Qm9ERTRUL2JZb0pvNEtlU0xZNnJqbStLZjduQ01WZHhtcWl4YjdvcUNn?=
- =?utf-8?B?RTNZemVRMjRuRjFsYWNlWXF2M1IvRzZ5MXF6ZFFDcExZRHgwak1CYXBZUjdQ?=
- =?utf-8?B?R2FXQVRHTG9yQnYwNXZDb1NNOEpjTU9HMXpEUlR2MmhiWHVEMG1qSDlyajNz?=
- =?utf-8?B?SlF1TmhHT2E1TVhMTnl3TWhndnpnTlZlOTlFbHVjWm9lMG5wNTdLSDV4V3Nt?=
- =?utf-8?B?NVFsSkZ3QWJZTjVmUWJWUWZibkhuUk0wZy9za0tqMTZTRnhCb3VCRkNDUFBS?=
- =?utf-8?B?T21OL04wczVjRXVNR2krbWxMbktCNGdjSEVWcG4zZnJmTDZxTzVmSWh3TGQx?=
- =?utf-8?B?K0YyaSsza2RlS2N2V25sRUl1bDMzRGVTZ0NJazJaU1VZUUNvTjJSNUZEOWFh?=
- =?utf-8?B?YlhDSjU4M2UrQlVWcFZoWUowQ3VBYVZnODZ3clU3TW43cWtnU0RIUnhLMGRG?=
- =?utf-8?B?RjdxWkdvQi81WkxMUDRxaGdaWVI2WDlESmZOSUtHcU1pZVQwYTEzeU1JQ290?=
- =?utf-8?B?VUVvZHRaT2NyMWNValRsbUV6SllrL254V3hSdmtrRVNqRDRSS0JXUVFYaGRL?=
- =?utf-8?B?MjQxU0ZxTGdjL1d0YnhFVlEyLytkS3M5QmxiNVZwWUhPV2tZcFlFT3pKUnV5?=
- =?utf-8?B?TjNsMFlKQUt5YjdqOGRWUFk2MUhRR2FTeE96U1NGNVd3WCtjbTlRUXgrdVR3?=
- =?utf-8?B?SU81OU1BOFpibmJzbGwwZ1JyWUUvMlE0MlRJOTF4YVdGTjliZjBmMi9OSWlD?=
- =?utf-8?B?VWIwL2JyUmNBd2hseHQ4eWpxaVBiOTg5WnN6TjRwSUlTWko1WHU3WVIwLzBS?=
- =?utf-8?B?d1FrNmJoTzY5cktwMFpwUnpaQ1VIVU5lTGUyRVIzNFFuR0t4dHlNYjAvMVMx?=
- =?utf-8?B?c2xDZVh5bzFvUE9ES0VUZWpLSVRjTTZ3ZldCZVcrNXRrVHBVVUU0MXNFZVNv?=
- =?utf-8?B?UVVtN3M0aTkxUnlNR1lHNmUwSTNDT2F2d2h2UEw3ZmJBTkY0TVNFMTRXb1lj?=
- =?utf-8?B?ZCtqNkQ3Q2JkdVB4UktkUFMwdGFyOWNUL0lmMEo3SGlFUks0bkl6dm9WYTBT?=
- =?utf-8?B?NkRmdDQ3c1p0MzdWUUkzUHVjcnZ1QjIrdk1UUUZNS1N0VnJrSjNMQU40dzl3?=
- =?utf-8?B?MjJIRnovUTNyY29hLzA5SEF3T1lIbzFEanpjMWgzZWgzTm9Lb1RWQTRjSVM3?=
- =?utf-8?Q?cCfU8hL7tcgvvX0Ckv9f+X9D6NdcGYQp90b0pOH?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <60E32294AAA652489CE6283C0853324F@apcprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20210511191239.774570-1-sean.anderson@seco.com>
+ <20210511191239.774570-2-sean.anderson@seco.com>
+ <d4bb7b5d-9f38-cf60-fb0b-18f8e0ca2b1e@xilinx.com>
+ <5f960034-174d-0ed8-9f52-3d5fde90e16a@seco.com>
+ <9f227f96-a310-0fbd-fd34-91eb386306b9@xilinx.com>
+ <7a06cf46-0f85-1edb-ca08-abd7b2543ad9@seco.com>
+ <41542760-3967-4f9a-0f0c-1206e03ff494@xilinx.com>
+ <d206a399-454e-d9c5-e2d3-337d098ed7aa@seco.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v3 2/2] clocksource: Add support for Xilinx AXI Timer
+Message-ID: <2296d4e5-717a-0470-d487-e0924cf6c076@xilinx.com>
+Date:   Mon, 24 May 2021 09:00:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.2
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: HK0PR06MB3362.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1fa4694f-65ed-48d7-d56b-08d91e571ffa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2021 01:56:19.6076
+In-Reply-To: <d206a399-454e-d9c5-e2d3-337d098ed7aa@seco.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c488ce47-49bc-4852-6a3f-08d91e81aeb8
+X-MS-TrafficTypeDiagnostic: MN2PR02MB6446:
+X-Microsoft-Antispam-PRVS: <MN2PR02MB64461EA0A34F0C3B7DA8A3FAC6269@MN2PR02MB6446.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lpEhtf/MEKV1LSZeIh9PtFm4UmblXqhpB2rqAWQn6oT+YWVGdYXhyRWzs4a+m8hIdGoQLpbDR8+6LmC3wtnpA5BiGugVRG7JWcbat3jf1dzQVRdkOhTYT4bdYQXWzWOuijEG4gaFRJ937xHtwybJ+moyt0jBA29Y+xFIDEVfH54WZ7/LzgEOwVY8Bitn+Tzs5wv2M83Jv6VTHRHo80mpHfI0p4bTXyey0ynElWCkqPQeAc0IqKkm7h6T+8vZPPuor+D/Q6gX0dS9grSZ1DdtCYkpHH8HVT42j2jgxHQFZwrQW5m6DMJs9xhhLyhNRri4/W4nybUDVk5YFvaY5jruMCD4ZSIvqtBuwXNT+LLaF4FIezPBfT+f9f+RmldyRBDHNHWChIgEPowz0bCY0qResp8xf+CAEtqvI7RDdsbm2vj4Nstjnm27rhnuNV6jm12cGrwGIh7aIE3F+szFxuUu8TJCHk43/w+EGGrEPZt0BYIrx6uEg7Yb/E1+Hd29/cqSesJ7b+dJCEiIQgJY/0370rmCNAkg4DAYYhVQyClzWFIfqoY94v35wlXs6jCc92d/OGlEHB3EONN/gtMZ+SNgW1/OwcRfyGnWeQci6SWKYiCItHEU9OGx8j5ib6bDraFNiHOxH9CbQTXYjNC9vG3Btnw7YH5zs+4u1I3iC0cBE1OH2HyFN5x4bOls9Vw2pVEnBS1J07E1mfwMpXSv91LmO+8+ydNJEJ3LPkErYVOE0rgwyeBwKBNuHRLG1wCWTyE9ruS+NbOFwvYsV+spGfc55E3bn4mK16IXiEbs4nLL1BYNof14F8K3Ptxr2035XR/+/UYIPG6IgOaEkZ9c+Bv3kg==
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(396003)(376002)(39850400004)(136003)(346002)(46966006)(36840700001)(336012)(8676002)(9786002)(478600001)(6666004)(4326008)(82740400003)(8936002)(70586007)(36756003)(70206006)(2616005)(44832011)(26005)(426003)(54906003)(53546011)(7636003)(966005)(5660300002)(186003)(356005)(31696002)(47076005)(110136005)(36860700001)(83380400001)(36906005)(7416002)(316002)(82310400003)(31686004)(2906002)(50156003)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2021 07:00:57.9602
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AszpazOpWQuBkyJcZcNXr4JbyxzKFHKX3pCFINmtfq+lUvsAD5uJn0O6kn4Scv1D9NgImM/GzmMO0GMjFFAYWfXwHjQbUN/LpK6LgLwMqa8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0PR06MB2131
+X-MS-Exchange-CrossTenant-Network-Message-Id: c488ce47-49bc-4852-6a3f-08d91e81aeb8
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM3NAM02FT016.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6446
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-SGksDQoNCk9uIDIwMjEvNS8yMywgMTI6MDcgQU0sVXdlIEtsZWluZS1Lw7ZuaWd3cm90ZToNCg0K
-ICAgIEhlbGxvLA0KDQogICAgT24gVHVlLCBNYXkgMTgsIDIwMjEgYXQgMDg6NTU6MTdBTSArMDgw
-MCwgQmlsbHkgVHNhaSB3cm90ZToNCiAgICA+ICAgPiArc3RhdGljIHU2NCBhc3BlZWRfcHdtX2dl
-dF9wZXJpb2Qoc3RydWN0IHB3bV9jaGlwICpjaGlwLCBzdHJ1Y3QgcHdtX2RldmljZSAqcHdtKQ0K
-ICAgID4gICA+ICt7DQogICAgPiAgID4gKwlzdHJ1Y3QgYXNwZWVkX3B3bV9kYXRhICpwcml2ID0g
-YXNwZWVkX3B3bV9jaGlwX3RvX2RhdGEoY2hpcCk7DQogICAgPiAgID4gKwl1bnNpZ25lZCBsb25n
-IHJhdGU7DQogICAgPiAgID4gKwl1MzIgaW5kZXggPSBwd20tPmh3cHdtOw0KICAgID4gICA+ICsJ
-dTMyIHZhbDsNCiAgICA+ICAgPiArCXU2NCBwZXJpb2QsIGRpdl9oLCBkaXZfbCwgY2xrX3Blcmlv
-ZDsNCiAgICA+ICAgPiArDQogICAgPiAgID4gKwlyYXRlID0gY2xrX2dldF9yYXRlKHByaXYtPmNs
-ayk7DQogICAgPiAgID4gKwlyZWdtYXBfcmVhZChwcml2LT5yZWdtYXAsIFBXTV9BU1BFRURfQ1RS
-TF9DSChpbmRleCksICZ2YWwpOw0KICAgID4gICA+ICsJZGl2X2ggPSBGSUVMRF9HRVQoUFdNX0FT
-UEVFRF9DVFJMX0NMS19ESVZfSCwgdmFsKTsNCiAgICA+ICAgPiArCWRpdl9sID0gRklFTERfR0VU
-KFBXTV9BU1BFRURfQ1RSTF9DTEtfRElWX0wsIHZhbCk7DQogICAgPiAgID4gKwlyZWdtYXBfcmVh
-ZChwcml2LT5yZWdtYXAsIFBXTV9BU1BFRURfRFVUWV9DWUNMRV9DSChpbmRleCksICZ2YWwpOw0K
-ICAgID4gICA+ICsJY2xrX3BlcmlvZCA9IEZJRUxEX0dFVChQV01fQVNQRUVEX0RVVFlfQ1lDTEVf
-UEVSSU9ELCB2YWwpOw0KICAgID4gICA+ICsJcGVyaW9kID0gKE5TRUNfUEVSX1NFQyAqIEJJVChk
-aXZfaCkgKiAoZGl2X2wgKyAxKSAqIChjbGtfcGVyaW9kICsgMSkpOw0KDQogICAgPiBUaGUgb3V0
-ZXIgcGFpciBvZiBwYXJlbnRoZXNpcyBvbiB0aGUgUkhTIGlzbid0IG5lY2Vzc2FyeS4gVGhlIG1h
-eGltYWwNCiAgICA+IHZhbHVlIHRoYXQgcGVyaW9kIGNhbiBoYXZlIGhlcmUgaXM6DQoNCiAgICA+
-CTEwMDAwMDAwMDAgKiAyKioxNSAqIDI1NiAqIDI1Ng0KDQogICAgPiBUaGlzIGZpdHMgaW50byBh
-biB1NjQsIGJ1dCBhcyBhbGwgYnV0IHRoZSBsYXN0IGZhY3RvciBhcmUgMzIgYml0IHZhbHVlcw0K
-ICAgID4geW91IG1pZ2h0IGdldCBhbiBvdmVyZmxvdyBoZXJlLg0KDQpJIGRvbuKAmXQga25vdyBp
-biB3aGljaCBjYXNlIHRoZSB2YWx1ZSB3aWxsIG92ZXJmbG93LCB3aGVuIG15IHBhcmFtZXRlciB0
-eXBlcyBhcmUgYWxsIHU2NC4NCkNhbiB5b3UgdGVsbCBtZSB3aGF0IGlzICJ0aGUgbGFzdCBmYWN0
-b3IiPw0KDQogICAgPiAgID4gK3N0YXRpYyBpbnQgYXNwZWVkX3B3bV9hcHBseShzdHJ1Y3QgcHdt
-X2NoaXAgKmNoaXAsIHN0cnVjdCBwd21fZGV2aWNlICpwd20sDQogICAgPiAgID4gKwkJCSAgICBj
-b25zdCBzdHJ1Y3QgcHdtX3N0YXRlICpzdGF0ZSkNCiAgICA+ICAgPiArew0KICAgID4gICA+ICsJ
-c3RydWN0IGRldmljZSAqZGV2ID0gY2hpcC0+ZGV2Ow0KICAgID4gICA+ICsJc3RydWN0IGFzcGVl
-ZF9wd21fZGF0YSAqcHJpdiA9IGFzcGVlZF9wd21fY2hpcF90b19kYXRhKGNoaXApOw0KICAgID4g
-ICA+ICsJdTMyIGluZGV4ID0gcHdtLT5od3B3bTsNCiAgICA+ICAgPiArCWludCByZXQ7DQogICAg
-PiAgID4gKw0KICAgID4gICA+ICsJZGV2X2RiZyhkZXYsICJhcHBseSBwZXJpb2Q6ICVsbGRucywg
-ZHV0eV9jeWNsZTogJWxsZG5zIiwgc3RhdGUtPnBlcmlvZCwNCiAgICA+ICAgPiArCQlzdGF0ZS0+
-ZHV0eV9jeWNsZSk7DQogICAgPiAgID4gKw0KICAgID4gICA+ICsJcmVnbWFwX3VwZGF0ZV9iaXRz
-KHByaXYtPnJlZ21hcCwgUFdNX0FTUEVFRF9DVFJMX0NIKGluZGV4KSwNCiAgICA+ICAgPiArCQkJ
-ICAgUFdNX0FTUEVFRF9DVFJMX1BJTl9FTkFCTEUsDQogICAgPiAgID4gKwkJCSAgIHN0YXRlLT5l
-bmFibGVkID8gUFdNX0FTUEVFRF9DVFJMX1BJTl9FTkFCTEUgOiAwKTsNCiAgICA+ICAgPiArCS8q
-DQogICAgPiAgID4gKwkgKiBGaXhlZCB0aGUgcGVyaW9kIHRvIHRoZSBtYXggdmFsdWUgYW5kIHJp
-c2luZyBwb2ludCB0byAwDQogICAgPiAgID4gKwkgKiBmb3IgaGlnaCByZXNvbHV0aW9uIGFuZCBz
-aW1wbGlmeSBmcmVxdWVuY3kgY2FsY3VsYXRpb24uDQogICAgPiAgID4gKwkgKi8NCiAgICA+ICAg
-PiArCXJlZ21hcF91cGRhdGVfYml0cyhwcml2LT5yZWdtYXAsIFBXTV9BU1BFRURfRFVUWV9DWUNM
-RV9DSChpbmRleCksDQogICAgPiAgID4gKwkJCSAgIChQV01fQVNQRUVEX0RVVFlfQ1lDTEVfUEVS
-SU9EIHwNCiAgICA+ICAgPiArCQkJICAgIFBXTV9BU1BFRURfRFVUWV9DWUNMRV9SSVNJTkdfUE9J
-TlQpLA0KICAgID4gICA+ICsJCQkgICBGSUVMRF9QUkVQKFBXTV9BU1BFRURfRFVUWV9DWUNMRV9Q
-RVJJT0QsDQogICAgPiAgID4gKwkJCQkgICAgICBQV01fQVNQRUVEX0ZJWEVEX1BFUklPRCkpOw0K
-ICAgID4gICA+ICsNCiAgICA+ICAgPiArCXJldCA9IGFzcGVlZF9wd21fc2V0X3BlcmlvZChjaGlw
-LCBwd20sIHN0YXRlKTsNCiAgICA+ICAgPiArCWlmIChyZXQpDQogICAgPiAgID4gKwkJcmV0dXJu
-IHJldDsNCiAgICA+ICAgPiArCWFzcGVlZF9wd21fc2V0X2R1dHkoY2hpcCwgcHdtLCBzdGF0ZSk7
-DQoNCiAgICA+IGFzcGVlZF9wd21fc2V0X2R1dHkgY2FsbHMgYXNwZWVkX3B3bV9nZXRfcGVyaW9k
-KCkgd2hpY2ggaXMgYSBiaXQNCiAgICA+IGluZWZmZWN0aXZlIGFmdGVyIGp1c3QgaGF2aW5nIHNl
-dCB0aGUgcGVyaW9kLg0KDQpXaGVuIEkgY2FsbCBhc3BlZWRfcHdtX3NldF9wZXJpb2QgaXQgZG9l
-c24ndCBtZWFuIHRoZSBwZXJpb2QgaXMgZXF1YWwgdG8gd2hhdCBJIHNldCAoSXQgbWF5DQpsb3Nl
-IHNvbWUgcHJlY2lzaW9uIEV4OiBXaGVuIEkgc2V0IHRoZSBwZXJpb2QgNDAwMDBucywgdGhlIGFj
-dHVhbCBwZXJpb2QgSSBzZXQgaXMgMzk2ODBucykgYW5kDQpJIGRpZG4ndCBnZXQgdGhpcyBpbmZv
-cm1hdGlvbiB3aGVuIEkgY2FsbCBhc3BlZWRfcHdtX3NldF9wZXJpb2QuIFRodXMsIEkgbmVlZCB0
-byBnZXQgdGhlIGFjdHVhbA0KcGVyaW9kIGZpcnN0IGJlZm9yZSBzZXQgZHV0eS4NCg0K
+
+
+On 5/20/21 10:13 PM, Sean Anderson wrote:
+> 
+> 
+> On 5/19/21 3:24 AM, Michal Simek wrote:
+>>
+>>
+>> On 5/18/21 12:15 AM, Sean Anderson wrote:
+>>>
+>>>
+>>> On 5/17/21 3:54 AM, Michal Simek wrote:
+>>>>
+>>>>
+>>>> On 5/14/21 4:40 PM, Sean Anderson wrote:
+>>>>>
+>>>>>
+>>>>> On 5/14/21 4:59 AM, Michal Simek wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 5/11/21 9:12 PM, Sean Anderson wrote:
+>>>>>>> This adds generic clocksource and clockevent support for Xilinx
+>>>>> LogiCORE IP
+>>>>>>> AXI soft timers commonly found on Xilinx FPGAs. This timer is
+> also the
+>>>>>>> primary timer for Microblaze processors. This commit also adds
+>>>>> support for
+>>>>>>> configuring this timer as a PWM (though this could be split off if
+>>>>>>> necessary). This whole driver lives in clocksource because it is
+>>>>> primarily
+>>>>>>> clocksource stuff now (even though it started out as a PWM
+> driver). I
+>>>>> think
+>>>>>>> teasing apart the driver would not be worth it since they share so
+>>> many
+>>>>>>> functions.
+>>>>>>>
+>>>>>>> This driver configures timer 0 (which is always present) as a
+>>>>> clocksource,
+>>>>>>> and timer 1 (which might be missing) as a clockevent. I don't
+> know if
+>>>>> this
+>>>>>>> is the correct priority for these timers, or whether we should be
+>>>>> using a
+>>>>>>> more dynamic allocation scheme.
+>>>>>>>
+>>>>>>> At the moment clock control is very basic: we just enable the clock
+>>>>> during
+>>>>>>> probe and pin the frequency. In the future, someone could add
+> support
+>>>>> for
+>>>>>>> disabling the clock when not in use. Cascade mode is also
+> unsupported.
+>>>>>>>
+>>>>>>> This driver was written with reference to Xilinx DS764 for v1.03.a
+>>> [1].
+>>>>>>>
+>>>>>>> [1]
+>>>>>
+>>>
+> https://www.xilinx.com/support/documentation/ip_documentation/axi_timer/v1_03_a/axi_timer_ds764.pdf
+> 
+>>>
+>>>>>
+>>>>>>>
+>>>>>>> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
+>>>>>>> ---
+>>>>>>> Please let me know if I should organize this differently or if it
+>>> should
+>>>>>>> be broken up.
+>>>>>>>
+>>>>>>> Changes in v3:
+>>>>>>> - Add clockevent and clocksource support
+>>>>>>> - Rewrite probe to only use a device_node, since timers may need
+> to be
+>>>>>>>        initialized before we have proper devices. This does bloat
+> the
+>>>>> code a bit
+>>>>>>>        since we can no longer rely on helpers such as dev_err_probe.
+>>> We also
+>>>>>>>        cannot rely on device resources being free'd on failure,
+> so we
+>>>>> must free
+>>>>>>>        them manually.
+>>>>>>> - We now access registers through xilinx_timer_(read|write). This
+>>>>> allows us
+>>>>>>>        to deal with endianness issues, as originally seen in the
+>>> microblaze
+>>>>>>>        driver. CAVEAT EMPTOR: I have not tested this on big-endian!
+>>>>>>> - Remove old microblaze driver
+>>>>>>>
+>>>>>>> Changes in v2:
+>>>>>>> - Don't compile this module by default for arm64
+>>>>>>> - Add dependencies on COMMON_CLK and HAS_IOMEM
+>>>>>>> - Add comment explaining why we depend on !MICROBLAZE
+>>>>>>> - Add comment describing device
+>>>>>>> - Rename TCSR_(SET|CLEAR) to TCSR_RUN_(SET|CLEAR)
+>>>>>>> - Use NSEC_TO_SEC instead of defining our own
+>>>>>>> - Use TCSR_RUN_MASK to check if the PWM is enabled, as suggested by
+>>> Uwe
+>>>>>>> - Cast dividends to u64 to avoid overflow
+>>>>>>> - Check for over- and underflow when calculating TLR
+>>>>>>> - Set xilinx_pwm_ops.owner
+>>>>>>> - Don't set pwmchip.base to -1
+>>>>>>> - Check range of xlnx,count-width
+>>>>>>> - Ensure the clock is always running when the pwm is registered
+>>>>>>> - Remove debugfs file :l
+>>>>>>> - Report errors with dev_error_probe
+>>>>>>>
+>>>>>>>       arch/microblaze/kernel/Makefile    |   2 +-
+>>>>>>>       arch/microblaze/kernel/timer.c     | 326 ---------------
+>>>>>>>       drivers/clocksource/Kconfig        |  15 +
+>>>>>>>       drivers/clocksource/Makefile       |   1 +
+>>>>>>>       drivers/clocksource/timer-xilinx.c | 650
+>>> +++++++++++++++++++++++++++++
+>>>>>>>       5 files changed, 667 insertions(+), 327 deletions(-)
+>>>>>>>       delete mode 100644 arch/microblaze/kernel/timer.c
+>>>>>>>       create mode 100644 drivers/clocksource/timer-xilinx.c
+>>>>>>
+>>>>>> I don't think this is the right way to go.
+>>>>>> The first patch should be move current timer driver from
+> microblaze to
+>>>>>> generic location and then apply patches on the top based on what you
+>>> are
+>>>>>> adding/fixing to be able to review every change separately.
+>>>>>> When any issue happens it can be bisected and exact patch is
+>>> identified.
+>>>>>> With this way we will end up in this patch and it will take a lot of
+>>>>>> time to find where that problem is.
+>>>>>
+>>>>> What parts would you like to see split? Fundamentally, this current
+>>>>> patch is a reimplementation of the driver. I think the only reasonable
+>>>>> split would be to add PWM support in a separate patch.
+>>>>>
+>>>>> I do not think that genericizing the microblaze timer driver is an
+>>>>> integral part of adding PWM support. This is especially since you seem
+>>>>> opposed to using existing devicetree properties to inform the
+> driver. I
+>>>>> am inclined to just add a patch adding a check for '#-pwm-cells' to
+> the
+>>>>> existing driver and otherwise leave it untouched.
+>>>>
+>>>> As I said I think the patches should be like this.
+>>>> 1. Cover existing DT binding based on current code.
+>>>> 2. Move time out of arch/microblaze to drivers/clocksource/ and even
+>>>> enable it via Kconfig just for Microblaze.
+>>>> 3. Remove dependency on Microblaze and enable build for others. I have
+>>>> seen at least one cpuinfo.cpu_clock_freq assignment. This code can be
+>>>> likely completely removed or deprecate.
+>>>
+>>> This could be deprecated, but cannot be removed since existing device
+>>> trees (e.g. qemu) have neither clocks nor clock-frequency properties.
+>>
+>> Rob: Do we have any obligation to keep properties for other projects?
+>>
+>>
+>>>> 4. Make driver as module
+>>>> 5. Do whatever changes you want before adding pwm support
+>>>> 6. Extend DT binding doc for PWM support
+>>>> 7. Add PWM support
+>>>
+>>> Frankly, I am inclined to just leave the microblaze timer as-is. The PWM
+>>> driver is completely independent. I have already put too much effort
+> into
+>>> this driver, and I don't have the energy to continue working on the
+>>> microblaze timer.
+>>
+>> I understand. I am actually using axi timer as pwm driver in one of my
+>> project but never had time to upstream it because of couple of steps
+> above.
+>> We need to do it right based on steps listed above. If this is too much
+>> work it will have to wait. I will NACK all attempts to add separate
+>> driver for IP which we already support in the tree.
+> 
+> 1. Many timers have separate clocksource and PWM drivers. E.g. samsung,
+>    renesas TPU, etc. It is completely reasonable to keep separate
+>    drivers for these purposes. There is no Linux requirement that each
+>    device have only one driver, especially if it has multiple functions
+>    or ways to be configured.
+
+It doesn't mean that it was done properly and correctly. Code
+duplication is bad all the time.
+
+> 2. If you want to do work on a driver, I'm all for it. However, if you
+>    have not yet submitted that work to the list, you should not gate
+>    other work behind it. Saying that X feature must be gated behind Y
+>    *even if X works completely independently of Y* is just stifling
+>    development.
+
+I gave you guidance how I think this should be done. I am not gating you
+from this work. Your patch is not working on Microblaze arch which is
+what I maintain. And I don't want to go the route that we will have two
+drivers for the same IP without integration. We were there in past and
+it is just pain.
+I am expecting that PWM guys will guide how this should be done
+properly. I haven't heard any guidance on this yet.
+Thierry/Uwe: Any comment?
+
+
+> 3. There is a clear desire for a PWM driver for this device. You, I, and
+>    Alvaro have all written separate drivers for this device because we
+>    want to use it as a PWM. By preventing merging this driver, you are
+>    encouraging duplicate effort by the next person who wants to use this
+>    device as a PWM, and sees that there is no driver in the tree.
+
+We should do it cleanly that it will be easy to maintain which is not by
+creating two separate drivers or by switching to completely new driver.
+
+Thanks,
+Michal
