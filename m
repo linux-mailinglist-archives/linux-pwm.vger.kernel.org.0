@@ -2,338 +2,359 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A92F638E143
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 May 2021 09:01:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E640E38E3E4
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 May 2021 12:20:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232266AbhEXHC3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 24 May 2021 03:02:29 -0400
-Received: from mail-dm6nam12on2040.outbound.protection.outlook.com ([40.107.243.40]:7008
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232120AbhEXHC2 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 24 May 2021 03:02:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EGNwRuUh+8HGtlVrFz+cIgJkvcT90RPY7Bs4DoT9SfrwJ2O4YkS2SV1PqTgjVrUt0SJgqIUSkhj4X5EjJLUN2ib29pPik1OmdvVJurnkahDSx/NF/PmiJDdvkRaEsmk3a4dHxkeN60pHIHfBrkXy3huBkjdkXJUGRawmNE2IeefCLWkobrBjxFTeWImgK5YhC6L5qo3bzzRnjddUF4+nyQxF9UhMvDNLMCXXq1B5xEZU0Q2uXJrU0fQVLmNAd8WG6Tr6lCVyvSKIkBCstzVKq86TjGMG/DYQwwOqbGoEtuG1EXpQheGyaJGD22SUT3xUeeAlytgrCYInfs9TcyY6JQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jU8HbE4NuAyN1xUGZFGzQPcMUNo+aEWm46VFc1nd8o4=;
- b=MukY0y2EIAa5SgnATUa/Z0McaGShqI09IqZkk0Phl+qg1a+eQIO9iYLDYdg4A43w4TG+EeuHGCbodJPbdf+07BiWwGT9tiu8LK7MXWCorVBZ2YPjjbz4v3796CVAJ2oSI7Bv/KQ9GinguekS8inWddMuRCmJlEOTSHNrJmdv20xssjoj7mhQZht/fk95AHuIKSpkP/m6zLk7P1zvuO7NI05qVPtmS09uaiy83sp8+Gy03quvaAmo+oFL4zMfa/09NR2R/OWshYfgpD91QkSCDH00tG104hg7+AXXI1ShjRuZOnuht9sRrm2GIlQjcVYTK+dk9tDlUcQKroHjBiflEQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.62.198) smtp.rcpttodomain=linutronix.de smtp.mailfrom=xilinx.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jU8HbE4NuAyN1xUGZFGzQPcMUNo+aEWm46VFc1nd8o4=;
- b=oOBaEbv9P/8SNXKyLIN+xnYKpAQYJtuAkuVzps+/pxnCI38DaWLc32i26w7CoNy6HG4oyCxAOO3H6VK1kc+HIYgP997Boa7oxJHS5P8dmRrDKtMxRjQlmUL+7pTJCmfxJxXktGz5enIuThGT6nz4uxVdi12Qrd72itDIDGOnLeg=
-Received: from DM6PR13CA0056.namprd13.prod.outlook.com (2603:10b6:5:134::33)
- by MN2PR02MB6446.namprd02.prod.outlook.com (2603:10b6:208:118::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4150.23; Mon, 24 May
- 2021 07:00:58 +0000
-Received: from DM3NAM02FT016.eop-nam02.prod.protection.outlook.com
- (2603:10b6:5:134:cafe::3e) by DM6PR13CA0056.outlook.office365.com
- (2603:10b6:5:134::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.11 via Frontend
- Transport; Mon, 24 May 2021 07:00:58 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
- smtp.mailfrom=xilinx.com; linutronix.de; dkim=none (message not signed)
- header.d=none;linutronix.de; dmarc=pass action=none header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
-Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
- DM3NAM02FT016.mail.protection.outlook.com (10.13.4.77) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4129.27 via Frontend Transport; Mon, 24 May 2021 07:00:57 +0000
-Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Mon, 24 May 2021 00:00:55 -0700
-Received: from smtp.xilinx.com (172.19.127.96) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.2176.2 via Frontend Transport; Mon, 24 May 2021 00:00:55 -0700
-Envelope-to: tglx@linutronix.de,
- lee.jones@linaro.org,
- daniel.lezcano@linaro.org,
- linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- alvaro.gamez@hazent.com,
- u.kleine-koenig@pengutronix.de,
- thierry.reding@gmail.com,
- robh+dt@kernel.org,
- devicetree@vger.kernel.org,
- linux-pwm@vger.kernel.org,
- sean.anderson@seco.com
-Received: from [172.30.17.109] (port=46096)
-        by smtp.xilinx.com with esmtp (Exim 4.90)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1ll4a6-0007D0-Ub; Mon, 24 May 2021 00:00:55 -0700
-To:     Sean Anderson <sean.anderson@seco.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        id S232603AbhEXKWZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 24 May 2021 06:22:25 -0400
+Received: from guitar.tcltek.co.il ([192.115.133.116]:53084 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232609AbhEXKWW (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 24 May 2021 06:22:22 -0400
+Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx.tkos.co.il (Postfix) with ESMTPS id D89AC44094B;
+        Mon, 24 May 2021 13:21:05 +0300 (IDT)
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>
+Cc:     Baruch Siach <baruch@tkos.co.il>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Balaji Prakash J <bjagadee@codeaurora.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-CC:     Alvaro Gamez <alvaro.gamez@hazent.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20210511191239.774570-1-sean.anderson@seco.com>
- <20210511191239.774570-2-sean.anderson@seco.com>
- <d4bb7b5d-9f38-cf60-fb0b-18f8e0ca2b1e@xilinx.com>
- <5f960034-174d-0ed8-9f52-3d5fde90e16a@seco.com>
- <9f227f96-a310-0fbd-fd34-91eb386306b9@xilinx.com>
- <7a06cf46-0f85-1edb-ca08-abd7b2543ad9@seco.com>
- <41542760-3967-4f9a-0f0c-1206e03ff494@xilinx.com>
- <d206a399-454e-d9c5-e2d3-337d098ed7aa@seco.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v3 2/2] clocksource: Add support for Xilinx AXI Timer
-Message-ID: <2296d4e5-717a-0470-d487-e0924cf6c076@xilinx.com>
-Date:   Mon, 24 May 2021 09:00:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.2
+        Robert Marko <robert.marko@sartura.hr>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 1/3] pwm: driver for qualcomm ipq6018 pwm block
+Date:   Mon, 24 May 2021 13:20:42 +0300
+Message-Id: <ea071bbcab92d4a296c7aee5d72de0427676847a.1621851644.git.baruch@tkos.co.il>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <d206a399-454e-d9c5-e2d3-337d098ed7aa@seco.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c488ce47-49bc-4852-6a3f-08d91e81aeb8
-X-MS-TrafficTypeDiagnostic: MN2PR02MB6446:
-X-Microsoft-Antispam-PRVS: <MN2PR02MB64461EA0A34F0C3B7DA8A3FAC6269@MN2PR02MB6446.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: lpEhtf/MEKV1LSZeIh9PtFm4UmblXqhpB2rqAWQn6oT+YWVGdYXhyRWzs4a+m8hIdGoQLpbDR8+6LmC3wtnpA5BiGugVRG7JWcbat3jf1dzQVRdkOhTYT4bdYQXWzWOuijEG4gaFRJ937xHtwybJ+moyt0jBA29Y+xFIDEVfH54WZ7/LzgEOwVY8Bitn+Tzs5wv2M83Jv6VTHRHo80mpHfI0p4bTXyey0ynElWCkqPQeAc0IqKkm7h6T+8vZPPuor+D/Q6gX0dS9grSZ1DdtCYkpHH8HVT42j2jgxHQFZwrQW5m6DMJs9xhhLyhNRri4/W4nybUDVk5YFvaY5jruMCD4ZSIvqtBuwXNT+LLaF4FIezPBfT+f9f+RmldyRBDHNHWChIgEPowz0bCY0qResp8xf+CAEtqvI7RDdsbm2vj4Nstjnm27rhnuNV6jm12cGrwGIh7aIE3F+szFxuUu8TJCHk43/w+EGGrEPZt0BYIrx6uEg7Yb/E1+Hd29/cqSesJ7b+dJCEiIQgJY/0370rmCNAkg4DAYYhVQyClzWFIfqoY94v35wlXs6jCc92d/OGlEHB3EONN/gtMZ+SNgW1/OwcRfyGnWeQci6SWKYiCItHEU9OGx8j5ib6bDraFNiHOxH9CbQTXYjNC9vG3Btnw7YH5zs+4u1I3iC0cBE1OH2HyFN5x4bOls9Vw2pVEnBS1J07E1mfwMpXSv91LmO+8+ydNJEJ3LPkErYVOE0rgwyeBwKBNuHRLG1wCWTyE9ruS+NbOFwvYsV+spGfc55E3bn4mK16IXiEbs4nLL1BYNof14F8K3Ptxr2035XR/+/UYIPG6IgOaEkZ9c+Bv3kg==
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(396003)(376002)(39850400004)(136003)(346002)(46966006)(36840700001)(336012)(8676002)(9786002)(478600001)(6666004)(4326008)(82740400003)(8936002)(70586007)(36756003)(70206006)(2616005)(44832011)(26005)(426003)(54906003)(53546011)(7636003)(966005)(5660300002)(186003)(356005)(31696002)(47076005)(110136005)(36860700001)(83380400001)(36906005)(7416002)(316002)(82310400003)(31686004)(2906002)(50156003)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2021 07:00:57.9602
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c488ce47-49bc-4852-6a3f-08d91e81aeb8
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM3NAM02FT016.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6446
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Driver for the PWM block in Qualcomm IPQ6018 line of SoCs. Based on
+driver from downstream Codeaurora kernel tree. Removed support for older
+(V1) variants because I have no access to that hardware.
 
+Tested on IPQ6010 based hardware.
 
-On 5/20/21 10:13 PM, Sean Anderson wrote:
-> 
-> 
-> On 5/19/21 3:24 AM, Michal Simek wrote:
->>
->>
->> On 5/18/21 12:15 AM, Sean Anderson wrote:
->>>
->>>
->>> On 5/17/21 3:54 AM, Michal Simek wrote:
->>>>
->>>>
->>>> On 5/14/21 4:40 PM, Sean Anderson wrote:
->>>>>
->>>>>
->>>>> On 5/14/21 4:59 AM, Michal Simek wrote:
->>>>>>
->>>>>>
->>>>>> On 5/11/21 9:12 PM, Sean Anderson wrote:
->>>>>>> This adds generic clocksource and clockevent support for Xilinx
->>>>> LogiCORE IP
->>>>>>> AXI soft timers commonly found on Xilinx FPGAs. This timer is
-> also the
->>>>>>> primary timer for Microblaze processors. This commit also adds
->>>>> support for
->>>>>>> configuring this timer as a PWM (though this could be split off if
->>>>>>> necessary). This whole driver lives in clocksource because it is
->>>>> primarily
->>>>>>> clocksource stuff now (even though it started out as a PWM
-> driver). I
->>>>> think
->>>>>>> teasing apart the driver would not be worth it since they share so
->>> many
->>>>>>> functions.
->>>>>>>
->>>>>>> This driver configures timer 0 (which is always present) as a
->>>>> clocksource,
->>>>>>> and timer 1 (which might be missing) as a clockevent. I don't
-> know if
->>>>> this
->>>>>>> is the correct priority for these timers, or whether we should be
->>>>> using a
->>>>>>> more dynamic allocation scheme.
->>>>>>>
->>>>>>> At the moment clock control is very basic: we just enable the clock
->>>>> during
->>>>>>> probe and pin the frequency. In the future, someone could add
-> support
->>>>> for
->>>>>>> disabling the clock when not in use. Cascade mode is also
-> unsupported.
->>>>>>>
->>>>>>> This driver was written with reference to Xilinx DS764 for v1.03.a
->>> [1].
->>>>>>>
->>>>>>> [1]
->>>>>
->>>
-> https://www.xilinx.com/support/documentation/ip_documentation/axi_timer/v1_03_a/axi_timer_ds764.pdf
-> 
->>>
->>>>>
->>>>>>>
->>>>>>> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
->>>>>>> ---
->>>>>>> Please let me know if I should organize this differently or if it
->>> should
->>>>>>> be broken up.
->>>>>>>
->>>>>>> Changes in v3:
->>>>>>> - Add clockevent and clocksource support
->>>>>>> - Rewrite probe to only use a device_node, since timers may need
-> to be
->>>>>>>        initialized before we have proper devices. This does bloat
-> the
->>>>> code a bit
->>>>>>>        since we can no longer rely on helpers such as dev_err_probe.
->>> We also
->>>>>>>        cannot rely on device resources being free'd on failure,
-> so we
->>>>> must free
->>>>>>>        them manually.
->>>>>>> - We now access registers through xilinx_timer_(read|write). This
->>>>> allows us
->>>>>>>        to deal with endianness issues, as originally seen in the
->>> microblaze
->>>>>>>        driver. CAVEAT EMPTOR: I have not tested this on big-endian!
->>>>>>> - Remove old microblaze driver
->>>>>>>
->>>>>>> Changes in v2:
->>>>>>> - Don't compile this module by default for arm64
->>>>>>> - Add dependencies on COMMON_CLK and HAS_IOMEM
->>>>>>> - Add comment explaining why we depend on !MICROBLAZE
->>>>>>> - Add comment describing device
->>>>>>> - Rename TCSR_(SET|CLEAR) to TCSR_RUN_(SET|CLEAR)
->>>>>>> - Use NSEC_TO_SEC instead of defining our own
->>>>>>> - Use TCSR_RUN_MASK to check if the PWM is enabled, as suggested by
->>> Uwe
->>>>>>> - Cast dividends to u64 to avoid overflow
->>>>>>> - Check for over- and underflow when calculating TLR
->>>>>>> - Set xilinx_pwm_ops.owner
->>>>>>> - Don't set pwmchip.base to -1
->>>>>>> - Check range of xlnx,count-width
->>>>>>> - Ensure the clock is always running when the pwm is registered
->>>>>>> - Remove debugfs file :l
->>>>>>> - Report errors with dev_error_probe
->>>>>>>
->>>>>>>       arch/microblaze/kernel/Makefile    |   2 +-
->>>>>>>       arch/microblaze/kernel/timer.c     | 326 ---------------
->>>>>>>       drivers/clocksource/Kconfig        |  15 +
->>>>>>>       drivers/clocksource/Makefile       |   1 +
->>>>>>>       drivers/clocksource/timer-xilinx.c | 650
->>> +++++++++++++++++++++++++++++
->>>>>>>       5 files changed, 667 insertions(+), 327 deletions(-)
->>>>>>>       delete mode 100644 arch/microblaze/kernel/timer.c
->>>>>>>       create mode 100644 drivers/clocksource/timer-xilinx.c
->>>>>>
->>>>>> I don't think this is the right way to go.
->>>>>> The first patch should be move current timer driver from
-> microblaze to
->>>>>> generic location and then apply patches on the top based on what you
->>> are
->>>>>> adding/fixing to be able to review every change separately.
->>>>>> When any issue happens it can be bisected and exact patch is
->>> identified.
->>>>>> With this way we will end up in this patch and it will take a lot of
->>>>>> time to find where that problem is.
->>>>>
->>>>> What parts would you like to see split? Fundamentally, this current
->>>>> patch is a reimplementation of the driver. I think the only reasonable
->>>>> split would be to add PWM support in a separate patch.
->>>>>
->>>>> I do not think that genericizing the microblaze timer driver is an
->>>>> integral part of adding PWM support. This is especially since you seem
->>>>> opposed to using existing devicetree properties to inform the
-> driver. I
->>>>> am inclined to just add a patch adding a check for '#-pwm-cells' to
-> the
->>>>> existing driver and otherwise leave it untouched.
->>>>
->>>> As I said I think the patches should be like this.
->>>> 1. Cover existing DT binding based on current code.
->>>> 2. Move time out of arch/microblaze to drivers/clocksource/ and even
->>>> enable it via Kconfig just for Microblaze.
->>>> 3. Remove dependency on Microblaze and enable build for others. I have
->>>> seen at least one cpuinfo.cpu_clock_freq assignment. This code can be
->>>> likely completely removed or deprecate.
->>>
->>> This could be deprecated, but cannot be removed since existing device
->>> trees (e.g. qemu) have neither clocks nor clock-frequency properties.
->>
->> Rob: Do we have any obligation to keep properties for other projects?
->>
->>
->>>> 4. Make driver as module
->>>> 5. Do whatever changes you want before adding pwm support
->>>> 6. Extend DT binding doc for PWM support
->>>> 7. Add PWM support
->>>
->>> Frankly, I am inclined to just leave the microblaze timer as-is. The PWM
->>> driver is completely independent. I have already put too much effort
-> into
->>> this driver, and I don't have the energy to continue working on the
->>> microblaze timer.
->>
->> I understand. I am actually using axi timer as pwm driver in one of my
->> project but never had time to upstream it because of couple of steps
-> above.
->> We need to do it right based on steps listed above. If this is too much
->> work it will have to wait. I will NACK all attempts to add separate
->> driver for IP which we already support in the tree.
-> 
-> 1. Many timers have separate clocksource and PWM drivers. E.g. samsung,
->    renesas TPU, etc. It is completely reasonable to keep separate
->    drivers for these purposes. There is no Linux requirement that each
->    device have only one driver, especially if it has multiple functions
->    or ways to be configured.
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+---
+v2:
 
-It doesn't mean that it was done properly and correctly. Code
-duplication is bad all the time.
+Address Uwe Kleine-König review comments:
 
-> 2. If you want to do work on a driver, I'm all for it. However, if you
->    have not yet submitted that work to the list, you should not gate
->    other work behind it. Saying that X feature must be gated behind Y
->    *even if X works completely independently of Y* is just stifling
->    development.
+  Fix period calculation when out of range
 
-I gave you guidance how I think this should be done. I am not gating you
-from this work. Your patch is not working on Microblaze arch which is
-what I maintain. And I don't want to go the route that we will have two
-drivers for the same IP without integration. We were there in past and
-it is just pain.
-I am expecting that PWM guys will guide how this should be done
-properly. I haven't heard any guidance on this yet.
-Thierry/Uwe: Any comment?
+  Don't set period larger than requested
 
+  Remove PWM disable on configuration change
 
-> 3. There is a clear desire for a PWM driver for this device. You, I, and
->    Alvaro have all written separate drivers for this device because we
->    want to use it as a PWM. By preventing merging this driver, you are
->    encouraging duplicate effort by the next person who wants to use this
->    device as a PWM, and sees that there is no driver in the tree.
+  Implement .apply instead of non-atomic .config/.enable/.disable
 
-We should do it cleanly that it will be easy to maintain which is not by
-creating two separate drivers or by switching to completely new driver.
+  Don't modify PWM on .request/.free
 
-Thanks,
-Michal
+  Check pwm_div underflow
+
+  Fix various code and comment formatting issues
+
+Other changes:
+
+  Use u64 divisor safe division
+
+  Remove now empty .request/.free
+---
+ drivers/pwm/Kconfig   |  12 +++
+ drivers/pwm/Makefile  |   1 +
+ drivers/pwm/pwm-ipq.c | 238 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 251 insertions(+)
+ create mode 100644 drivers/pwm/pwm-ipq.c
+
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 9a4f66ae8070..54ef62a27bdc 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -260,6 +260,18 @@ config PWM_INTEL_LGM
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-intel-lgm.
+ 
++config PWM_IPQ
++	tristate "IPQ PWM support"
++	depends on ARCH_QCOM || COMPILE_TEST
++	depends on HAVE_CLK && HAS_IOMEM
++	help
++	  Generic PWM framework driver for IPQ PWM block which supports
++	  4 pwm channels. Each of the these channels can be configured
++	  independent of each other.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-ipq.
++
+ config PWM_IQS620A
+ 	tristate "Azoteq IQS620A PWM support"
+ 	depends on MFD_IQS62X || COMPILE_TEST
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index 6374d3b1d6f3..73eb955dea1d 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -22,6 +22,7 @@ obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
+ obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
+ obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
+ obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
++obj-$(CONFIG_PWM_IPQ)		+= pwm-ipq.o
+ obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
+ obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
+ obj-$(CONFIG_PWM_KEEMBAY)	+= pwm-keembay.o
+diff --git a/drivers/pwm/pwm-ipq.c b/drivers/pwm/pwm-ipq.c
+new file mode 100644
+index 000000000000..cedbd682a5c7
+--- /dev/null
++++ b/drivers/pwm/pwm-ipq.c
+@@ -0,0 +1,238 @@
++// SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0
++/*
++ * Copyright (c) 2016-2017, 2020 The Linux Foundation. All rights reserved.
++ */
++
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++#include <linux/clk.h>
++#include <linux/io.h>
++#include <linux/math64.h>
++#include <linux/of_device.h>
++
++#define CLK_SRC_FREQ		(100*1000*1000)
++#define MAX_PWM_DEVICES		4
++
++/*
++ * Enable bit is set to enable output toggling in pwm device.
++ * Update bit is set to reflect the changed divider and high duration
++ * values in register.
++ */
++#define PWM_ENABLE		0x80000000
++#define PWM_UPDATE		0x40000000
++
++/* The frequency range supported is 1Hz to 100MHz */
++#define MIN_PERIOD_NS	10
++#define MAX_PERIOD_NS	1000000000
++
++/*
++ * The max value specified for each field is based on the number of bits
++ * in the pwm control register for that field
++ */
++#define MAX_PWM_CFG		0xFFFF
++
++#define PWM_CTRL_HI_SHIFT	16
++
++#define PWM_CFG_REG0 0 /*PWM_DIV PWM_HI*/
++#define PWM_CFG_REG1 1 /*ENABLE UPDATE PWM_PRE_DIV*/
++
++struct ipq_pwm_chip {
++	struct pwm_chip chip;
++	struct clk *clk;
++	void __iomem *mem;
++};
++
++static struct ipq_pwm_chip *to_ipq_pwm_chip(struct pwm_chip *chip)
++{
++	return container_of(chip, struct ipq_pwm_chip, chip);
++}
++
++static unsigned ipq_pwm_reg_offset(struct pwm_device *pwm, unsigned reg)
++{
++	return ((pwm->hwpwm * 2) + reg) * 4;
++}
++
++static void config_div_and_duty(struct pwm_device *pwm, int pre_div,
++			unsigned long long pwm_div, unsigned long period_ns,
++			unsigned long long duty_ns)
++{
++	unsigned long hi_dur;
++	unsigned long long quotient;
++	unsigned long val = 0;
++	struct ipq_pwm_chip *ipq_chip = to_ipq_pwm_chip(pwm->chip);
++
++	/*
++	 * high duration = pwm duty * (pwm div + 1)
++	 * pwm duty = duty_ns / period_ns
++	 */
++	quotient = (pwm_div + 1) * duty_ns;
++	hi_dur = div64_u64(quotient, period_ns);
++
++	val |= ((hi_dur & MAX_PWM_CFG) << PWM_CTRL_HI_SHIFT);
++	val |= (pwm_div & MAX_PWM_CFG);
++	writel(val, ipq_chip->mem + ipq_pwm_reg_offset(pwm, PWM_CFG_REG0));
++	val = pre_div & MAX_PWM_CFG;
++	writel(val, ipq_chip->mem + ipq_pwm_reg_offset(pwm, PWM_CFG_REG1));
++}
++
++static int ipq_pwm_enable(struct pwm_device *pwm)
++{
++	struct ipq_pwm_chip *ipq_chip = to_ipq_pwm_chip(pwm->chip);
++	unsigned offset = ipq_pwm_reg_offset(pwm, PWM_CFG_REG1);
++	unsigned long val;
++
++	val = readl(ipq_chip->mem + offset);
++	val |= PWM_ENABLE | PWM_UPDATE;
++	writel(val, ipq_chip->mem + offset);
++
++	return 0;
++}
++
++static void ipq_pwm_disable(struct pwm_device *pwm)
++{
++	struct ipq_pwm_chip *ipq_chip = to_ipq_pwm_chip(pwm->chip);
++	unsigned offset = ipq_pwm_reg_offset(pwm, PWM_CFG_REG1);
++	unsigned long val;
++
++	val = readl(ipq_chip->mem + offset);
++	val |= PWM_UPDATE;
++	val &= ~PWM_ENABLE;
++	writel(val, ipq_chip->mem + offset);
++}
++
++static int ipq_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			 const struct pwm_state *state)
++{
++	struct ipq_pwm_chip *ipq_chip = to_ipq_pwm_chip(chip);
++	unsigned long freq;
++	int pre_div, close_pre_div, close_pwm_div;
++	int pwm_div;
++	long long diff;
++	unsigned long rate = clk_get_rate(ipq_chip->clk);
++	unsigned long min_diff = rate;
++	uint64_t fin_ps;
++	u64 period_ns, duty_ns;
++
++	if (state->period < MIN_PERIOD_NS)
++		return -ERANGE;
++
++	period_ns = min_t(u64, state->period, MAX_PERIOD_NS);
++	duty_ns = min_t(u64, state->duty_cycle, period_ns);
++
++	/* freq in Hz for period in nano second*/
++	freq = NSEC_PER_SEC / period_ns;
++	fin_ps = div64_u64(NSEC_PER_SEC * 1000, rate);
++	close_pre_div = MAX_PWM_CFG;
++	close_pwm_div = MAX_PWM_CFG;
++
++	for (pre_div = 0; pre_div <= MAX_PWM_CFG; pre_div++) {
++		pwm_div = DIV64_U64_ROUND_CLOSEST(period_ns * 1000,
++						  fin_ps * (pre_div + 1));
++		pwm_div--;
++		if (pwm_div < 0 || pwm_div > MAX_PWM_CFG)
++			continue;
++
++		diff = ((uint64_t)freq * (pre_div + 1) * (pwm_div + 1))
++			- (uint64_t)rate;
++
++		if (diff < 0) /* period larger than requested */
++			continue;
++		if (diff == 0) { /* bingo */
++			close_pre_div = pre_div;
++			close_pwm_div = pwm_div;
++			break;
++		}
++		if (diff < min_diff) {
++			min_diff = diff;
++			close_pre_div = pre_div;
++			close_pwm_div = pwm_div;
++		}
++	}
++
++	/* config divider values for the closest possible frequency */
++	config_div_and_duty(pwm, close_pre_div, close_pwm_div,
++			    period_ns, duty_ns);
++	if (state->enabled)
++		ipq_pwm_enable(pwm);
++	else
++		ipq_pwm_disable(pwm);
++
++	return 0;
++}
++
++static struct pwm_ops ipq_pwm_ops = {
++	.apply = ipq_pwm_apply,
++	.owner = THIS_MODULE,
++};
++
++static int ipq_pwm_probe(struct platform_device *pdev)
++{
++	struct ipq_pwm_chip *pwm;
++	struct device *dev;
++	int ret;
++
++	dev = &pdev->dev;
++	pwm = devm_kzalloc(dev, sizeof(*pwm), GFP_KERNEL);
++	if (!pwm)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, pwm);
++
++	pwm->mem = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(pwm->mem))
++		return PTR_ERR(pwm->mem);
++
++	pwm->clk = devm_clk_get(dev, "core");
++	if (IS_ERR(pwm->clk))
++		return PTR_ERR(pwm->clk);
++
++	ret = clk_set_rate(pwm->clk, CLK_SRC_FREQ);
++	if (ret)
++		return ret;
++	ret = clk_prepare_enable(pwm->clk);
++	if (ret)
++		return ret;
++
++	pwm->chip.dev = dev;
++	pwm->chip.ops = &ipq_pwm_ops;
++	pwm->chip.npwm = MAX_PWM_DEVICES;
++
++	ret = pwmchip_add(&pwm->chip);
++	if (ret < 0) {
++		dev_err_probe(dev, ret, "pwmchip_add() failed\n");
++		clk_disable_unprepare(pwm->clk);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int ipq_pwm_remove(struct platform_device *pdev)
++{
++	struct ipq_pwm_chip *pwm = platform_get_drvdata(pdev);
++
++	pwmchip_remove(&pwm->chip);
++
++	return 0;
++}
++
++static const struct of_device_id pwm_ipq_dt_match[] = {
++	{ .compatible = "qcom,pwm-ipq6018", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, pwm_ipq_dt_match);
++
++static struct platform_driver ipq_pwm_driver = {
++	.driver = {
++		.name = "ipq-pwm",
++		.owner = THIS_MODULE,
++		.of_match_table = pwm_ipq_dt_match,
++	},
++	.probe = ipq_pwm_probe,
++	.remove = ipq_pwm_remove,
++};
++
++module_platform_driver(ipq_pwm_driver);
++
++MODULE_LICENSE("Dual BSD/GPL");
+-- 
+2.30.2
+
