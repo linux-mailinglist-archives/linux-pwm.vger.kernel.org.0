@@ -2,46 +2,42 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CAD1390A71
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 May 2021 22:24:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 733EB390A81
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 May 2021 22:32:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233244AbhEYUZ6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 25 May 2021 16:25:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43282 "EHLO
+        id S232024AbhEYUds (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 25 May 2021 16:33:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233048AbhEYUZ6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 May 2021 16:25:58 -0400
+        with ESMTP id S229643AbhEYUds (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 May 2021 16:33:48 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15AF2C061574
-        for <linux-pwm@vger.kernel.org>; Tue, 25 May 2021 13:24:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF61C061574
+        for <linux-pwm@vger.kernel.org>; Tue, 25 May 2021 13:32:18 -0700 (PDT)
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lldbG-0003k0-F6; Tue, 25 May 2021 22:24:26 +0200
+        id 1lldiq-0004bV-5F; Tue, 25 May 2021 22:32:16 +0200
 Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lldbE-0002MN-Jf; Tue, 25 May 2021 22:24:24 +0200
-Date:   Tue, 25 May 2021 22:24:23 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+        id 1lldip-0002jH-4S; Tue, 25 May 2021 22:32:15 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
 Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH 1/2] pwm: stm32-lp: Don't modify HW state in .remove
- callback
-Message-ID: <20210525202423.j44jd4qqkfegeupc@pengutronix.de>
-References: <20210505162843.188901-1-u.kleine-koenig@pengutronix.de>
- <1bd7cad8-723b-ec43-745c-0be32d105c0b@foss.st.com>
- <20210514140843.fmwxb777vaommodw@pengutronix.de>
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH] pwm: crc: Simplify using devm_pwmchip_add()
+Date:   Tue, 25 May 2021 22:31:56 +0200
+Message-Id: <20210525203156.969295-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="45j4xlhkaffbxc5p"
-Content-Disposition: inline
-In-Reply-To: <20210514140843.fmwxb777vaommodw@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+X-Patch-Hashes: v=1; h=sha256; i=vxXUVouDR1/QIYJOQpfbFaW9OLda9yzcfW1jx3S+KNY=; m=yrTx4MD7F7yctjkCERVFwSEjngDvVB3pLIpp5WkOHVg=; p=/D6wco9ZEdxHpTnjJMITnNcTREhh1JJu7smK6X6oXnw=; g=bb9df8898e3cd49032376fdf29a753e6430fe9ae
+X-Patch-Sig: m=pgp; i=uwe@kleine-koenig.org; s=0x0D2511F322BFAB1C1580266BE2DCDD9132669BD6; b=iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmCtXjAACgkQwfwUeK3K7AmbCQf+LSw BbIS1+MRvzbZrBPC941sZ9QdKQVQ2gmSEqnHy7M+T3JBZzeQ6+ZMnMN5SJB+cKzpd2wxNeOytwvbh AlEOehjBilVLZIKE509VDcsjGqI5g2o324oHoeQmCB6+BtWaw/VKQ8ZavV0MXQ3Eij/xDtX1GaR0v F/uB+ovqwIHgDAsMi02v5Mlx3IONhp/gvJBNjOdPrOIcC7xurJNnsJssjlXHo6sM5wLuZOb7gDRY9 QBdusmy4JiY67iCgfFgXJbp/KjbUZv3GEEEsBVYWjv6IeUkqxKMXMckNqlMVwBeuCvLAVJTfoEtC5 t32fkeS+Bbo7zOWI7Ga1EE2SarB5aHQ==
+Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -50,72 +46,60 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+With devm_pwmchip_add() we can drop pwmchip_remove() from the device
+remove callback. The latter can then go away, too and as this is the
+only user of platform_get_drvdata(), the respective call to
+platform_set_drvdata() can go, too.
 
---45j4xlhkaffbxc5p
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+Hello,
 
-Hello Fabrice,
+this patch depends on my earlier patch "pwm: Add a devm managed function to add
+pwm_chips" that you can find at
 
-On Fri, May 14, 2021 at 04:08:43PM +0200, Uwe Kleine-K=F6nig wrote:
-> On Wed, May 12, 2021 at 09:41:45AM +0200, Fabrice Gasnier wrote:
-> > On 5/5/21 6:28 PM, Uwe Kleine-K=F6nig wrote:
-> > > A consumer is expected to disable a PWM before calling pwm_put(). And=
- if
-> > > they didn't there is hopefully a good reason (or the consumer needs
-> > > fixing).
-> >=20
-> > As you pointed out, (ideally) consumers need to disable the PWM before
-> > undind or remove of the driver. Calling pwm_disable in the remove is a
-> > "fail safe".
-> >=20
-> > > Also if disabling an enabled PWM was the right thing to do,
-> > > this should better be done in the framework instead of in each low le=
-vel
-> > > driver.
-> >=20
-> > Not doing so, in case the driver gets unbind when the PWM is enabled,
-> > then bind again, it leads to unbalanced clock enable count.
->=20
-> Ah, the clk must indeed be properly freed, hmm. I will respin the patch.
+        https://patchwork.ozlabs.org/project/linux-pwm/patch/20210407080155.55004-2-u.kleine-koenig@pengutronix.de/
 
-I took a deeper look now, and I don't agree any more to what I wrote
-here. The clock is provided by the parent device, so .probe() doesn't
-call clk_get() (or one of its variants). The clock is only enabled when
-the .apply() callback is called with .enabled =3D true. So indeed if the
-driver is unloaded while the PWM is still running, the enable count is
-non-zero at the end. The unbalanced clock enable count isn't a big
-problem (it just never reaches zero any more, which is harmless compared
-to becoming negative).
+or
 
-I don't think this should be fixed or handled at the driver level.
-Consumers should be fixed to not produce such a leak and if we are sure
-that this is really always wrong, a check (and maybe a call to
-pwm_disable()) should be added to the PWM core code.
-
-So I'm in favour of applying the patch as is.
+        https://lore.kernel.org/r/20210407080155.55004-2-u.kleine-koenig@pengutronix.de
 
 Best regards
 Uwe
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+ drivers/pwm/pwm-crc.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
---45j4xlhkaffbxc5p
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/pwm/pwm-crc.c b/drivers/pwm/pwm-crc.c
+index 02522a9a3073..7b357d1cf642 100644
+--- a/drivers/pwm/pwm-crc.c
++++ b/drivers/pwm/pwm-crc.c
+@@ -173,21 +173,11 @@ static int crystalcove_pwm_probe(struct platform_device *pdev)
+ 	/* get the PMIC regmap */
+ 	pwm->regmap = pmic->regmap;
+ 
+-	platform_set_drvdata(pdev, pwm);
+-
+-	return pwmchip_add(&pwm->chip);
+-}
+-
+-static int crystalcove_pwm_remove(struct platform_device *pdev)
+-{
+-	struct crystalcove_pwm *pwm = platform_get_drvdata(pdev);
+-
+-	return pwmchip_remove(&pwm->chip);
++	return devm_pwmchip_add(&pdev->dev, &pwm->chip);
+ }
+ 
+ static struct platform_driver crystalcove_pwm_driver = {
+ 	.probe = crystalcove_pwm_probe,
+-	.remove = crystalcove_pwm_remove,
+ 	.driver = {
+ 		.name = "crystal_cove_pwm",
+ 	},
 
------BEGIN PGP SIGNATURE-----
+base-commit: 6efb943b8616ec53a5e444193dccf1af9ad627b5
+prerequisite-patch-id: fa39cd0c852d109ed957dc44dca5bdcf5dff0685
+-- 
+2.30.2
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmCtXPQACgkQwfwUeK3K
-7AmuDQgAlTxav4zuot8XqBV5L4q2+ItZyzqZxrRRcBJs+elkfzdgQ1qLmp4mXOay
-curw0RKu4vFqPUS6R2iSWVMMxnFk4TQsAI0s81x0MWNBBCTyvZcS36+UOr74vTiU
-Szft2WXM6tG+kg/y3uR62eLMwSSwZVy11YRQ+FGSAQPNOyR3SPvVUZvTjoqXmPbp
-ZYhmZnuJ8e4pxwELo7DcrklATYi7yKXmWZDNyBH4TWuBLvlCP4diSAIwhR9K2JHq
-uj/dFYmhm1qhIDh1U7rsKYT3Xs5TLOP2W1OGZj8FphGfPpSmm5QiLzLcDya67OFu
-SdHFhnTbPE1zNU1fEOxfZJAXXytoMw==
-=5YHM
------END PGP SIGNATURE-----
-
---45j4xlhkaffbxc5p--
