@@ -2,49 +2,49 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 656F43954C5
-	for <lists+linux-pwm@lfdr.de>; Mon, 31 May 2021 06:46:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 290843954C8
+	for <lists+linux-pwm@lfdr.de>; Mon, 31 May 2021 06:46:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230006AbhEaEsL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 31 May 2021 00:48:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54656 "EHLO
+        id S230050AbhEaEsM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 31 May 2021 00:48:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230008AbhEaEsC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 May 2021 00:48:02 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4500C061574
-        for <linux-pwm@vger.kernel.org>; Sun, 30 May 2021 21:46:21 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id o5so11992765edc.5
-        for <linux-pwm@vger.kernel.org>; Sun, 30 May 2021 21:46:21 -0700 (PDT)
+        with ESMTP id S230024AbhEaEsK (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 May 2021 00:48:10 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DD6AC061761
+        for <linux-pwm@vger.kernel.org>; Sun, 30 May 2021 21:46:22 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id t3so11945640edc.7
+        for <linux-pwm@vger.kernel.org>; Sun, 30 May 2021 21:46:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=prusa3d-cz.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=c9TPrVvwOJU1vM2zQOe9sLDjTnXNJ7tTt34i6paI9+g=;
-        b=FKpLtB8Wsq0qoax8vN+Zo33QxMyFfLGW7aozw1rqXPYArZRJ9fsszF5dVm4xQ8jaWf
-         GqUYeTXPzQh63TrU2ZwSVR65vr9YHKc2lKpT8BuQCAJcalmJOdSS3PT1SJ9otVwTHumD
-         86y7jvp/eNLgNYvxwx/yDk8YfCOth38e1fJ0qJhoAgI+yr+7qnIhc4zjK6JGoTxg22YM
-         Ld+4w0wt3ODRnwbseM8TlIebb7K2hVrtviYoNnnAsGywZu8ObvnwRosoOui+sSDNIEJB
-         9TA77sPZBDTu7agUuUHMMFINRUSwBnhtjnjyGacDABPQE/GmJVX58TB/FpIDBzn+PUB7
-         GQ8g==
+        bh=bJxASN9/VJ7juNYNTX4EX6mmIGaWh5aMZc7qgtuD+IU=;
+        b=oqizCzkWKvZf15jO987l874C6oFmf+PpZfdo0bF1dGwoCiPP+xMcyjRvMa6l7ELvc1
+         6Cbtz+m9iIJxpaZwVRMK6+ChJ3n5P7sgfdCJ/jvCwyJxa5JoKSRKP+nyWmLcGdlG9cub
+         czyKvHvkeakh/Y25cl4sodc3AQjz4m9oADK5shjPcUtX7OEEwxWTAHX0l7aVfhiEjNoi
+         Mzz2hA59kF31of4IpXdCBnxz0rEBbAkKAFByZVKuffbhNsS/3mk+J33vjT6hDC0WUpec
+         IzCL42VsUCcNozdzaxSgNX7uruW2+PImiG08fYlJJYm6gYqfsmyA0ZXiMki29clDsvzY
+         eftw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=c9TPrVvwOJU1vM2zQOe9sLDjTnXNJ7tTt34i6paI9+g=;
-        b=ubxA24r1M51MqQDKZlUXWI8MY2GPJPxLdSnRbKDzXXUE1iWNy8Ah7MQtVQsIXRfcP0
-         N2CJQhPJQkhyV4FNNUE3rkGPdmStmYvh/sD+2oPx3b+EO1+/noWJobFc76D2wi8TFEQt
-         b8+RBUY4+zXQIVCvt5hxfN1ZXw8evXCA2wghvWXxE8W0iAPzcGuGvafRg5JEjEbvgwJq
-         yRLXtN9S1q91XOOiQGFqZgc/8ZhSTHt5QPdPc6PvhKvTf2Utj8y8/DeySV35tQAP12fD
-         ZsEVpb1onmV98uDTUF0+QpZHGR1BbcDgHAnm2XfoswUER+XB/YEzG+gzWgwoEgrqX2rt
-         5wGw==
-X-Gm-Message-State: AOAM531GhzlJH4X1T90GTdCKaZdst16do7yuKB4mmzMmtY99ug+dZIhT
-        YOqBoZA1rruR+kTmx57UnVunQQ==
-X-Google-Smtp-Source: ABdhPJwm2wapTm/meH0HsCh6lRt8OuethMrV45J+Fj/R8rSSjGe+Cr0iZp+gMcfd3kIV8vbuPdV9tA==
-X-Received: by 2002:a05:6402:152:: with SMTP id s18mr22918277edu.221.1622436380394;
-        Sun, 30 May 2021 21:46:20 -0700 (PDT)
+        bh=bJxASN9/VJ7juNYNTX4EX6mmIGaWh5aMZc7qgtuD+IU=;
+        b=eC2Mp3yv5gExiWHFXjRcT6Lk2xnMuX/hkoxj6xETuEwi8LJSNgYGwvCBhVL7iXV0YI
+         qFontzdgHANAEumwuJX3BL+x0M78Zmg3rT4R2oVOXXnsFTCmtt0QimH5918F0kZFgLSK
+         haWbX8aXNuLs81rGIYOQaqZyuLFbEq7U+w0RkWDbvb8dp64pR28Hq+z3ifkSnJjcsV2Y
+         atKBhD1elmDyLTDaIAS2FwiosfzKQP2c4T9+jHD20EyIOgpb2jQjLyKRbl8JUHYnO3Fq
+         rvx+WXZKHS6khcXFy4I6hiTk5+Ii/GbCHMCAKP3L8W9Xa9V09l8RpmCbLyuU9G89S6Gv
+         pziQ==
+X-Gm-Message-State: AOAM531gfyX8Ob4Xu/e4KEUlpf8YUB2eTMWY077ApTT21cEfwx/j0+1p
+        mYxAf5SwW5ai4JsRRHpngYo6tA==
+X-Google-Smtp-Source: ABdhPJw2frB/ZmhM9tgloeFhP25YeHOi7cT5JP2v2UeqpuGbPnO2vr6JcP4Q185T9pvonWQGT/hPiA==
+X-Received: by 2002:aa7:cdd8:: with SMTP id h24mr23142258edw.276.1622436381298;
+        Sun, 30 May 2021 21:46:21 -0700 (PDT)
 Received: from zen.local (ip-89-103-215-157.net.upcbroadband.cz. [89.103.215.157])
-        by smtp.gmail.com with ESMTPSA id h9sm6238376edt.18.2021.05.30.21.46.19
+        by smtp.gmail.com with ESMTPSA id h9sm6238376edt.18.2021.05.30.21.46.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Sun, 30 May 2021 21:46:20 -0700 (PDT)
 From:   Roman Beranek <roman.beranek@prusa3d.cz>
@@ -59,9 +59,9 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
         linux-sunxi@googlegroups.com
-Subject: [PATCH 3/6] pwm: sun4i: replace spinlock with a mutex
-Date:   Mon, 31 May 2021 06:46:05 +0200
-Message-Id: <20210531044608.1006024-4-roman.beranek@prusa3d.com>
+Subject: [PATCH 4/6] pwm: sun4i: simplify calculation of the delay time
+Date:   Mon, 31 May 2021 06:46:06 +0200
+Message-Id: <20210531044608.1006024-5-roman.beranek@prusa3d.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210531044608.1006024-1-roman.beranek@prusa3d.com>
 References: <20210531044608.1006024-1-roman.beranek@prusa3d.com>
@@ -71,97 +71,72 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Releasing ctrl_lock for the duration of the delay is not desirable as it
-allows re-enabling the PWM before the delay is over. Instead, substitute
-the spinlock with a mutex so that we can sleep while holding it.
+There's no reason to expect a single jiffy has passed since writing
+the CTRL register except if a preemption has occured in the meantime.
+Avoid introducing unnecessary complexity and simply wait for the whole
+period.
 
 Signed-off-by: Roman Beranek <roman.beranek@prusa3d.com>
 ---
- drivers/pwm/pwm-sun4i.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+ drivers/pwm/pwm-sun4i.c | 17 ++---------------
+ 1 file changed, 2 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 2777abe66f79..b3ec59a83d00 100644
+index b3ec59a83d00..8218173ce3f6 100644
 --- a/drivers/pwm/pwm-sun4i.c
 +++ b/drivers/pwm/pwm-sun4i.c
-@@ -16,13 +16,13 @@
+@@ -14,7 +14,6 @@
+ #include <linux/delay.h>
+ #include <linux/err.h>
  #include <linux/io.h>
- #include <linux/jiffies.h>
+-#include <linux/jiffies.h>
  #include <linux/module.h>
-+#include <linux/mutex.h>
+ #include <linux/mutex.h>
  #include <linux/of.h>
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
- #include <linux/reset.h>
- #include <linux/slab.h>
--#include <linux/spinlock.h>
- #include <linux/time.h>
- 
- #define PWM_CTRL_REG		0x0
-@@ -87,7 +87,7 @@ struct sun4i_pwm_chip {
- 	struct clk *clk;
- 	struct reset_control *rst;
+@@ -89,7 +88,6 @@ struct sun4i_pwm_chip {
  	void __iomem *base;
--	spinlock_t ctrl_lock;
-+	struct mutex ctrl_lock;
+ 	struct mutex ctrl_lock;
  	const struct sun4i_pwm_data *data;
- 	unsigned long next_period[2];
+-	unsigned long next_period[2];
  };
-@@ -265,7 +265,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 		return ret;
+ 
+ static inline struct sun4i_pwm_chip *to_sun4i_pwm_chip(struct pwm_chip *chip)
+@@ -242,8 +240,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	struct pwm_state cstate;
+ 	u32 ctrl, duty = 0, period = 0, val;
+ 	int ret;
+-	unsigned int delay_us, prescaler = 0;
+-	unsigned long now;
++	unsigned int prescaler = 0;
+ 	bool bypass;
+ 
+ 	pwm_get_state(pwm, &cstate);
+@@ -291,8 +288,6 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 
+ 	val = (duty & PWM_DTY_MASK) | PWM_PRD(period);
+ 	sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
+-	sun4i_pwm->next_period[pwm->hwpwm] = jiffies +
+-		nsecs_to_jiffies(cstate.period + 1000);
+ 
+ 	if (state->polarity != PWM_POLARITY_NORMAL)
+ 		ctrl &= ~BIT_CH(PWM_ACT_STATE, pwm->hwpwm);
+@@ -314,15 +309,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
  	}
- 
--	spin_lock(&sun4i_pwm->ctrl_lock);
-+	mutex_lock(&sun4i_pwm->ctrl_lock);
- 	ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
- 
- 	if (sun4i_pwm->data->has_direct_mod_clk_output) {
-@@ -273,7 +273,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			ctrl |= BIT_CH(PWM_BYPASS, pwm->hwpwm);
- 			/* We can skip other parameter */
- 			sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
--			spin_unlock(&sun4i_pwm->ctrl_lock);
-+			mutex_unlock(&sun4i_pwm->ctrl_lock);
- 			return 0;
- 		}
- 
-@@ -308,10 +308,10 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
- 
--	spin_unlock(&sun4i_pwm->ctrl_lock);
--
--	if (state->enabled)
-+	if (state->enabled) {
-+		mutex_unlock(&sun4i_pwm->ctrl_lock);
- 		return 0;
-+	}
  
  	/* We need a full period to elapse before disabling the channel. */
- 	now = jiffies;
-@@ -324,11 +324,9 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			usleep_range(delay_us, delay_us * 2);
- 	}
+-	now = jiffies;
+-	if (time_before(now, sun4i_pwm->next_period[pwm->hwpwm])) {
+-		delay_us = jiffies_to_usecs(sun4i_pwm->next_period[pwm->hwpwm] -
+-					   now);
+-		if ((delay_us / 500) > MAX_UDELAY_MS)
+-			msleep(delay_us / 1000 + 1);
+-		else
+-			usleep_range(delay_us, delay_us * 2);
+-	}
++	fsleep(cstate.period / NSEC_PER_USEC + 1);
  
--	spin_lock(&sun4i_pwm->ctrl_lock);
--	ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
  	ctrl &= ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
  	sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
--	spin_unlock(&sun4i_pwm->ctrl_lock);
-+	mutex_unlock(&sun4i_pwm->ctrl_lock);
- 
- 	clk_disable_unprepare(sun4i_pwm->clk);
- 
-@@ -471,7 +469,7 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 	pwm->chip.of_xlate = of_pwm_xlate_with_flags;
- 	pwm->chip.of_pwm_n_cells = 3;
- 
--	spin_lock_init(&pwm->ctrl_lock);
-+	mutex_init(&pwm->ctrl_lock);
- 
- 	ret = pwmchip_add(&pwm->chip);
- 	if (ret < 0) {
 -- 
 2.31.1
 
