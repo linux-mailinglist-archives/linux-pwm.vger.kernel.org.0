@@ -2,31 +2,31 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47A5C396879
-	for <lists+linux-pwm@lfdr.de>; Mon, 31 May 2021 21:49:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8792B396871
+	for <lists+linux-pwm@lfdr.de>; Mon, 31 May 2021 21:49:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231983AbhEaTvV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 31 May 2021 15:51:21 -0400
-Received: from mga02.intel.com ([134.134.136.20]:39812 "EHLO mga02.intel.com"
+        id S231663AbhEaTvT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 31 May 2021 15:51:19 -0400
+Received: from mga05.intel.com ([192.55.52.43]:6903 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231542AbhEaTvS (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        id S231563AbhEaTvS (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
         Mon, 31 May 2021 15:51:18 -0400
-IronPort-SDR: RnpqX1aVFeCWtdTjJ3GqBU/PSjhIsi0I+BNJ8KSBkPKEGOvR+KlaJUku+8XtrhqDvIhLWi44q+
- SMYoMIkOmtKQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,10001"; a="190528034"
+IronPort-SDR: llgHi44og4euXMoGje9G5HJUcfP+D62CPMMSq4BlmGXi6VDK1vpG6F596kwawZQgw9ZUvlEpxj
+ McsPxp5Nvjjg==
+X-IronPort-AV: E=McAfee;i="6200,9189,10001"; a="289027850"
 X-IronPort-AV: E=Sophos;i="5.83,238,1616482800"; 
-   d="scan'208";a="190528034"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2021 12:49:35 -0700
-IronPort-SDR: BpUMOXnWRLq/Luqgqw2ZyRnaXxetWYCJQYTFx2dtERc8lNCuiYjt/jcxdTKib+Sa90FgpfpBWx
- 6x6vmzhmEafA==
+   d="scan'208";a="289027850"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2021 12:49:35 -0700
+IronPort-SDR: V7ODrX3xLgQyAgWRdFqSl+psciNKF2/BbgM4EGLlNy0C6Qg7uBmF0wcNEQA7/7utGJmctNSwBw
+ kRlVu71KxxqQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.83,238,1616482800"; 
-   d="scan'208";a="548829862"
+   d="scan'208";a="399062437"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 31 May 2021 12:49:32 -0700
+  by orsmga003.jf.intel.com with ESMTP; 31 May 2021 12:49:31 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 46DAC6BC; Mon, 31 May 2021 22:49:51 +0300 (EEST)
+        id 4E0655B6; Mon, 31 May 2021 22:49:51 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
@@ -38,9 +38,9 @@ To:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
 Cc:     Jonathan Corbet <corbet@lwn.net>, Lee Jones <lee.jones@linaro.org>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>
-Subject: [PATCH v2 6/7] pwm: core: Remove unused devm_pwm_put()
-Date:   Mon, 31 May 2021 22:49:46 +0300
-Message-Id: <20210531194947.10770-6-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 7/7] pwm: core: Simplify some devm_*pwm*() functions
+Date:   Mon, 31 May 2021 22:49:47 +0300
+Message-Id: <20210531194947.10770-7-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210531194947.10770-1-andriy.shevchenko@linux.intel.com>
 References: <20210531194947.10770-1-andriy.shevchenko@linux.intel.com>
@@ -50,107 +50,119 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-There are no users and seems no will come of the devm_pwm_put().
-Remove the function.
-
-While at it, slightly update documentation.
+Use devm_add_action_or_reset() instead of devres_alloc() and
+devres_add(), which works the same. This will simplify the
+code. There is no functional changes.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
 v2: new patch
- .../driver-api/driver-model/devres.rst        |  3 ++-
- Documentation/driver-api/pwm.rst              |  3 ++-
- drivers/pwm/core.c                            | 25 -------------------
- include/linux/pwm.h                           |  5 ----
- 4 files changed, 4 insertions(+), 32 deletions(-)
+ drivers/pwm/core.c | 60 +++++++++++++++++++---------------------------
+ 1 file changed, 25 insertions(+), 35 deletions(-)
 
-diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-index b2645870ef7e..cc1e0138ba9f 100644
---- a/Documentation/driver-api/driver-model/devres.rst
-+++ b/Documentation/driver-api/driver-model/devres.rst
-@@ -410,7 +410,8 @@ POWER
- 
- PWM
-   devm_pwm_get()
--  devm_pwm_put()
-+  devm_of_pwm_get()
-+  devm_fwnode_pwm_get()
- 
- REGULATOR
-   devm_regulator_bulk_get()
-diff --git a/Documentation/driver-api/pwm.rst b/Documentation/driver-api/pwm.rst
-index a7ca4f58305a..251e3f7be230 100644
---- a/Documentation/driver-api/pwm.rst
-+++ b/Documentation/driver-api/pwm.rst
-@@ -40,7 +40,8 @@ after usage with pwm_free().
- 
- New users should use the pwm_get() function and pass to it the consumer
- device or a consumer name. pwm_put() is used to free the PWM device. Managed
--variants of these functions, devm_pwm_get() and devm_pwm_put(), also exist.
-+variants of the getter, devm_pwm_get(), devm_of_pwm_get(),
-+devm_fwnode_pwm_get(), also exist.
- 
- After being requested, a PWM has to be configured using::
- 
 diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index a27d7c2aa6fe..6d4410bd9793 100644
+index 6d4410bd9793..9f643414676b 100644
 --- a/drivers/pwm/core.c
 +++ b/drivers/pwm/core.c
-@@ -1166,31 +1166,6 @@ struct pwm_device *devm_fwnode_pwm_get(struct device *dev,
+@@ -1059,9 +1059,9 @@ void pwm_put(struct pwm_device *pwm)
  }
- EXPORT_SYMBOL_GPL(devm_fwnode_pwm_get);
+ EXPORT_SYMBOL_GPL(pwm_put);
  
--static int devm_pwm_match(struct device *dev, void *res, void *data)
--{
--	struct pwm_device **p = res;
--
--	if (WARN_ON(!p || !*p))
--		return 0;
--
--	return *p == data;
--}
--
--/**
-- * devm_pwm_put() - resource managed pwm_put()
-- * @dev: device for PWM consumer
-- * @pwm: PWM device
-- *
-- * Release a PWM previously allocated using devm_pwm_get(). Calling this
-- * function is usually not needed because devm-allocated resources are
-- * automatically released on driver detach.
-- */
--void devm_pwm_put(struct device *dev, struct pwm_device *pwm)
--{
--	WARN_ON(devres_release(dev, devm_pwm_release, devm_pwm_match, pwm));
--}
--EXPORT_SYMBOL_GPL(devm_pwm_put);
--
- #ifdef CONFIG_DEBUG_FS
- static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
+-static void devm_pwm_release(struct device *dev, void *res)
++static void devm_pwm_release(void *pwm)
  {
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 5bb90af4997e..1eaded57c666 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -417,7 +417,6 @@ struct pwm_device *devm_of_pwm_get(struct device *dev, struct device_node *np,
- struct pwm_device *devm_fwnode_pwm_get(struct device *dev,
+-	pwm_put(*(struct pwm_device **)res);
++	pwm_put(pwm);
+ }
+ 
+ /**
+@@ -1077,19 +1077,16 @@ static void devm_pwm_release(struct device *dev, void *res)
+  */
+ struct pwm_device *devm_pwm_get(struct device *dev, const char *con_id)
+ {
+-	struct pwm_device **ptr, *pwm;
+-
+-	ptr = devres_alloc(devm_pwm_release, sizeof(*ptr), GFP_KERNEL);
+-	if (!ptr)
+-		return ERR_PTR(-ENOMEM);
++	struct pwm_device *pwm;
++	int ret;
+ 
+ 	pwm = pwm_get(dev, con_id);
+-	if (!IS_ERR(pwm)) {
+-		*ptr = pwm;
+-		devres_add(dev, ptr);
+-	} else {
+-		devres_free(ptr);
+-	}
++	if (IS_ERR(pwm))
++		return pwm;
++
++	ret = devm_add_action_or_reset(dev, devm_pwm_release, pwm);
++	if (ret)
++		return ERR_PTR(ret);
+ 
+ 	return pwm;
+ }
+@@ -1110,19 +1107,16 @@ EXPORT_SYMBOL_GPL(devm_pwm_get);
+ struct pwm_device *devm_of_pwm_get(struct device *dev, struct device_node *np,
+ 				   const char *con_id)
+ {
+-	struct pwm_device **ptr, *pwm;
+-
+-	ptr = devres_alloc(devm_pwm_release, sizeof(*ptr), GFP_KERNEL);
+-	if (!ptr)
+-		return ERR_PTR(-ENOMEM);
++	struct pwm_device *pwm;
++	int ret;
+ 
+ 	pwm = of_pwm_get(dev, np, con_id);
+-	if (!IS_ERR(pwm)) {
+-		*ptr = pwm;
+-		devres_add(dev, ptr);
+-	} else {
+-		devres_free(ptr);
+-	}
++	if (IS_ERR(pwm))
++		return pwm;
++
++	ret = devm_add_action_or_reset(dev, devm_pwm_release, pwm);
++	if (ret)
++		return ERR_PTR(ret);
+ 
+ 	return pwm;
+ }
+@@ -1144,23 +1138,19 @@ struct pwm_device *devm_fwnode_pwm_get(struct device *dev,
  				       struct fwnode_handle *fwnode,
- 				       const char *con_id);
--void devm_pwm_put(struct device *dev, struct pwm_device *pwm);
- #else
- static inline struct pwm_device *pwm_request(int pwm_id, const char *label)
+ 				       const char *con_id)
  {
-@@ -524,10 +523,6 @@ devm_fwnode_pwm_get(struct device *dev, struct fwnode_handle *fwnode,
- {
- 	return ERR_PTR(-ENODEV);
- }
+-	struct pwm_device **ptr, *pwm = ERR_PTR(-ENODEV);
 -
--static inline void devm_pwm_put(struct device *dev, struct pwm_device *pwm)
--{
--}
- #endif
+-	ptr = devres_alloc(devm_pwm_release, sizeof(*ptr), GFP_KERNEL);
+-	if (!ptr)
+-		return ERR_PTR(-ENOMEM);
++	struct pwm_device *pwm = ERR_PTR(-ENODEV);
++	int ret;
  
- static inline void pwm_apply_args(struct pwm_device *pwm)
+ 	if (is_of_node(fwnode))
+ 		pwm = of_pwm_get(dev, to_of_node(fwnode), con_id);
+ 	else if (is_acpi_node(fwnode))
+ 		pwm = acpi_pwm_get(fwnode);
++	if (IS_ERR(pwm))
++		return pwm;
+ 
+-	if (!IS_ERR(pwm)) {
+-		*ptr = pwm;
+-		devres_add(dev, ptr);
+-	} else {
+-		devres_free(ptr);
+-	}
++	ret = devm_add_action_or_reset(dev, devm_pwm_release, pwm);
++	if (ret)
++		return ERR_PTR(ret);
+ 
+ 	return pwm;
+ }
 -- 
 2.30.2
 
