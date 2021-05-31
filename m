@@ -2,22 +2,18 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F0C0396846
-	for <lists+linux-pwm@lfdr.de>; Mon, 31 May 2021 21:13:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0292C396840
+	for <lists+linux-pwm@lfdr.de>; Mon, 31 May 2021 21:08:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230424AbhEaTO4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 31 May 2021 15:14:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50032 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230174AbhEaTOz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 May 2021 15:14:55 -0400
-X-Greylist: delayed 307 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 31 May 2021 12:13:15 PDT
-Received: from pmg01-out2.zxcs.nl (pmg01-out2.zxcs.nl [IPv6:2a06:2ec0:1:a::ffeb])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C318C061574
-        for <linux-pwm@vger.kernel.org>; Mon, 31 May 2021 12:13:14 -0700 (PDT)
-Received: from pmg01.zxcs.nl (localhost.localdomain [127.0.0.1])
-        by pmg01.zxcs.nl (ZXCS) with ESMTP id 6BDBF106355
-        for <linux-pwm@vger.kernel.org>; Mon, 31 May 2021 21:08:03 +0200 (CEST)
+        id S231652AbhEaTJj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 31 May 2021 15:09:39 -0400
+Received: from pmg02-out3.zxcs.nl ([185.220.172.251]:56589 "EHLO
+        pmg02-out3.zxcs.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230174AbhEaTJi (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 May 2021 15:09:38 -0400
+Received: from pmg02.zxcs.nl (localhost.localdomain [127.0.0.1])
+        by pmg02.zxcs.nl (ZXCS) with ESMTP id EDA0182B8F;
+        Mon, 31 May 2021 21:07:55 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=pascalroeleven.nl; s=x; h=Content-Transfer-Encoding:Content-Type:Message-ID
         :References:In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender:Reply-To:
@@ -50,7 +46,7 @@ Message-ID: <e63e2b31c63bb9e227ed9ec04a8af54e@pascalroeleven.nl>
 X-Sender: dev@pascalroeleven.nl
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Forwarded-For: linux-pwm@vger.kernel.org
+X-Forwarded-For: roman.beranek@prusa3d.cz
 X-AuthUser: dev@pascalroeleven.nl
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
