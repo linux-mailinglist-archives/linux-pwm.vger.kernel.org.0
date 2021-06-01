@@ -2,91 +2,109 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C1FD3973C8
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jun 2021 15:05:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 395AD39744D
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jun 2021 15:32:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233949AbhFANGt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 1 Jun 2021 09:06:49 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:58482 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233905AbhFANGs (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Jun 2021 09:06:48 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 151D4x0Z106173;
-        Tue, 1 Jun 2021 08:04:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1622552699;
-        bh=naX3kstdCVTukTs526qUtm1q78sZy0YnorByIZb+vlo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=YE4glL+XSB393NoUQKgZkWYIfnA0HjKPoj8IFa2SPx46HBav5Z2tP93b8urvwSnyh
-         hpHFhrBFGIgy7vB3GZFN/POjZ6alUe20HYLAuihqEQHSQ8dEuH3vf30wlTvLVaC3pU
-         8fuiFRxPLzTmUqHUSmsjkoGGBbpriWjA6uujTh10=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 151D4xfB125250
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 1 Jun 2021 08:04:59 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Tue, 1 Jun
- 2021 08:04:59 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Tue, 1 Jun 2021 08:04:59 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 151D4u4t118350;
-        Tue, 1 Jun 2021 08:04:56 -0500
-Subject: Re: [PATCH v3] arm: dts: ti: drop usage of redundant compatible
-To:     Lokesh Vutla <lokeshvutla@ti.com>, Rob Herring <robh+dt@kernel.org>
-CC:     <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>,
-        Vignesh R <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
-        <linux-pwm@vger.kernel.org>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>
-References: <20210601054029.1839-1-lokeshvutla@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <b6b1277c-916f-49b9-cc63-1235a0c35b02@ti.com>
-Date:   Tue, 1 Jun 2021 16:04:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20210601054029.1839-1-lokeshvutla@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        id S234098AbhFANeS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Jun 2021 09:34:18 -0400
+Received: from mail-oo1-f46.google.com ([209.85.161.46]:40804 "EHLO
+        mail-oo1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234072AbhFANeF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Jun 2021 09:34:05 -0400
+Received: by mail-oo1-f46.google.com with SMTP id w20-20020a4a35540000b02902458551c0d6so1680452oog.7;
+        Tue, 01 Jun 2021 06:32:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=cbbANktLK+nxqt4uUwCIqegFj6C7KopoJQcn0d/pISM=;
+        b=ApsoDh9VYkKMiGaqrPjWkHbxo9xMTg4lMmq6s7GJjzCUAqqAt1YvWzjjXrMrS6F35X
+         Raw0/oNmx2zGHMyOd4IDxlKM2CHPDIIsHqtCAKBZDIzWrvJtRQ5qIGDymA5DrtlqJNWx
+         a4WqJ5SKYk+ovlf2UN4rl93S8JvFEUWf8bFYA6yf+yXt6xdRSljtROghrororpC4hs7G
+         jW/O/FhUc1vF2gBLYi5KtpyYO0dtL7hcoE2QnCE+AbgrRnePN5NznXrICI464N6vG+9K
+         yPDbNULwAq8X82bMgiJmWaUNipAMGH7SrQ8u/tiKpSccbBGeXvHP0d3TgsHLBjpdl1cl
+         fzdw==
+X-Gm-Message-State: AOAM531t6eFcUKLA+C1rNm7PiumPuXeZ3a4gyGfryM8GAl2k1xR+lbKU
+        e8MztF/oHNEaBYIyN26WoA==
+X-Google-Smtp-Source: ABdhPJzeNcFyGQm1lJ+4LJMre1TykO8SPIZ4q+FLDdGzVeNgU89lwPVka2DuK9V5/kTBHs/BfedkyQ==
+X-Received: by 2002:a4a:3f53:: with SMTP id x19mr20741442ooe.88.1622554342745;
+        Tue, 01 Jun 2021 06:32:22 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s4sm3809013otr.80.2021.06.01.06.32.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jun 2021 06:32:21 -0700 (PDT)
+Received: (nullmailer pid 242357 invoked by uid 1000);
+        Tue, 01 Jun 2021 13:32:10 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Sean Anderson <sean.anderson@seco.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alvaro Gamez <alvaro.gamez@hazent.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20210528214522.617435-1-sean.anderson@seco.com>
+References: <20210528214522.617435-1-sean.anderson@seco.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: pwm: Add Xilinx AXI Timer
+Date:   Tue, 01 Jun 2021 08:32:10 -0500
+Message-Id: <1622554330.014931.242356.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
-
-On 01/06/2021 08:40, Lokesh Vutla wrote:
-> Commit 229110c1aa691 ("ARM: dts: am437x/am33xx/da850: Add new ECAP and
-> EPWM bindings") added ti,am3352-ehrpwm compatible which is similar to
-> ti,am33xx-ehrpwm but without out t,hwmod properties. But with commit
-> 58bfbea5b1c68 ("ARM: dts: am437x/am33xx: Remove hwmod entries for ECAP
-> and EPWM nodes") dropped support for all ti,hwmod for ehrpwm, but
-> missed deprecating ti,am33xx-ehrpwm compatible. So drop ti,am33xx-ehrpwm
-> from DT as it is no longer needed.
+On Fri, 28 May 2021 17:45:20 -0400, Sean Anderson wrote:
+> This adds a binding for the Xilinx LogiCORE IP AXI Timer. This device is
+> a "soft" block, so it has many parameters which would not be
+> configurable in most hardware. This binding is usually automatically
+> generated by Xilinx's tools, so the names and values of some properties
+> must be kept as they are. Replacement properties have been provided for
+> new device trees.
 > 
-> ti-ehrpwn driver still support ti,am33xx-ehrpwm in order to maintain
-> backward compatibility.
+> Because we need to init timer devices so early in boot, the easiest way
+> to configure things is to use a device tree property. For the moment
+> this is 'xlnx,pwm', but this could be extended/renamed/etc. in the
+> future if these is a need for a generic property.
 > 
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
 > ---
-> Changes since v2:
-> - Split from ehrpwm yaml conversion series:
->    https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=489981
-> - Dropped documentation update in this patch.
 > 
->   arch/arm/boot/dts/am33xx-l4.dtsi |  9 +++------
->   arch/arm/boot/dts/am437x-l4.dtsi | 18 ++++++------------
->   arch/arm/boot/dts/da850.dtsi     |  6 ++----
->   3 files changed, 11 insertions(+), 22 deletions(-)
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> Changes in v4:
+> - Remove references to generate polarity so this can get merged
+> - Predicate PWM driver on the presence of #pwm-cells
+> - Make some properties optional for clocksource drivers
+> 
+> Changes in v3:
+> - Mark all boolean-as-int properties as deprecated
+> - Add xlnx,pwm and xlnx,gen?-active-low properties.
+> - Make newer replacement properties mutually-exclusive with what they
+>   replace
+> - Add an example with non-deprecated properties only.
+> 
+> Changes in v2:
+> - Use 32-bit addresses for example binding
+> 
+>  .../bindings/pwm/xlnx,axi-timer.yaml          | 85 +++++++++++++++++++
+>  1 file changed, 85 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml
+> 
 
--- 
-Best regards,
-grygorii
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
+
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml:16:10: [warning] wrong indentation: expected 10 but found 9 (indentation)
+./Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml:19:10: [warning] wrong indentation: expected 10 but found 9 (indentation)
+
+dtschema/dtc warnings/errors:
+
+See https://patchwork.ozlabs.org/patch/1485318
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
