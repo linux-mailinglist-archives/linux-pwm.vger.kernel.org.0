@@ -2,342 +2,187 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ABBE397560
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jun 2021 16:24:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 923E139785A
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jun 2021 18:47:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234072AbhFAO0P (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 1 Jun 2021 10:26:15 -0400
-Received: from mail-eopbgr10052.outbound.protection.outlook.com ([40.107.1.52]:47134
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        id S232490AbhFAQs4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Jun 2021 12:48:56 -0400
+Received: from mail-eopbgr00069.outbound.protection.outlook.com ([40.107.0.69]:48198
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233797AbhFAO0N (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 1 Jun 2021 10:26:13 -0400
+        id S230288AbhFAQs4 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 1 Jun 2021 12:48:56 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FNe93GDWfOjeeGR1LD8e7jgU6nCkO5mWHlTcKQDpvuRYRAbEvakv4YPfneqgZI1y0N6bRisG6/dWPuxT4pc5SDMNP7yLxi041cu1bQN0VTm3oFPPJRhp3G9WbR97JUxEwAo7mo4is6idVPdS8f8VNqbZKgsfCoMvay/sA6OOme/cLOYTp9uiiOJC25p+pRmhiAoHNIWsd5GxePKQhrpyvkiuMNZp7ze7WCGjP9aS+GzQ3udG+qAKdubYON1rg2ry1iiaYxXg1Ur3MqzdHb+ejYsduggZAdBTsgzu7k7w8jSG5h4RC+x5A1wL8LTn4bRyxbf2s763+i3NxtFoOHaF3g==
+ b=N7/1Us3JCYCyVET5BHr3DTNOsWtgtbGa8++YX3qZ7IMlWluKOyxbCKqM7mDx3qp2LJjBxoyfwPtKxrKYbUmRnUBneG04eU11AxsI6d/uCMqLfG8Gz3HHJuc7diQbpjw/mv83C40Wi94gmAx1tO+oZtPfTqhkqHpXddpfU868ROmLUgWxucBXmOZizunUqvmzvL21KL6YR6CcD6JPpvUdGuEEKx5ItDSRJEMiBJOP/0STiTMlWXz1BGT7ilG4gxvdkWOZsW+h7eU1QnUhNFQNPMNhYnFkux4XpsBlfRtxeEV8TN7hv1s1PBS0gbEbVsdB1pyJ2wQQifg2XoRyjMLtQA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3Ceife/428YaAB9EGFII0hg/1woE0Jau24s8c4IcobE=;
- b=HzfI7PGERLnB0ZkigzwZaYXwe2SOI9cng8FFISCCTGfKnMCIX2fhr9JbiuJBenbwQhrby1NzHuWREIEuUb9LC6hTIkykzD8ShSElPRRrki9Xxi9Z5g0+ue9qk9RjBZGb9J7UinZg0ufIL5itnZEJL9MqQWO902Z6uj2Z5QT4BhnXn+stT5iPm+T/ldiFQiHR8YAlESU/VWJfhOa6laa3NEoATjvX3UtT1bHkVaDwunNNdxm808/YNj1eelKCxykv+D7lQ2UXBMClz+gna7Tvn4IFK6QGP+3kFGXkZqbKwI318jptwPJYOhN4clS3kjqyR6So9T32w2UpnaxlOwWzcw==
+ bh=QbLzvD36BAAJyme2i+wJWaIo1edwDCbqDx6CC47n2FY=;
+ b=FtU4A6M/UYb8dzdQ7HJ6NUcKjrakX1pDr/oBcaKcrXFGlUl3v2/AdYFgSZl7qy/v0BkA89mK4TrNVRT6FvunZCr87c58LZdPSKvyBTIlMlGu70hPZkDt7F8MtMSk7FSGi7Z+Jpj95WONPe8C8HAwPrVhbsAx1HZxmNJHuviQZR2qbg+lKUfUuUavBZ6PfcpOkiPJv/q+v8+ij9gPsTh2H+5iVBLfcJLRhYh/bQu7D+OIsrFIaIgzCerJHmkDIM+tYmaUH1jJvkBJhk6EKVxL3NIGEgy5uBRedbKVZsTdAenkgPsnVySdsAAuXFigGcp8aoDp0E/mnUrH7PwaM7+dSA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=seco.com; dmarc=pass action=none header.from=seco.com;
  dkim=pass header.d=seco.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=secospa.onmicrosoft.com; s=selector2-secospa-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3Ceife/428YaAB9EGFII0hg/1woE0Jau24s8c4IcobE=;
- b=pPOVkFzWPvEE9MTp56ENmILQ3a7rcgz0UaT9bnyPJjQFJBS7Q/gNSL5G9w9+7EgSHCGw8MkTK4wUBe89YLWxH5YwvLTSHxPxXrxoIb1j/bJjhubvzFxaEEDwEe8hnqzvEMbVt77fQkl7CDlmAr0EV8Ce5XxbzFQzxODq0ZkzsYc=
-Authentication-Results: linutronix.de; dkim=none (message not signed)
- header.d=none;linutronix.de; dmarc=none action=none header.from=seco.com;
+ bh=QbLzvD36BAAJyme2i+wJWaIo1edwDCbqDx6CC47n2FY=;
+ b=0JIE7ZLQCmh8sdAKFoAV7rPTvzel8w5x+7YxcteT9ajTA08yVEyrE6MH9LSp7Xa9aYVsZDLFEvaFHMGXz0UhQUeXdk5zdIZPAA+amaUUHxe0wS7XDsct67QWs2NwsCy8fu27JALmk0/OdBB+RU3HoC+5EVSkhIXKSyWUhs2AVHA=
+Authentication-Results: lists.infradead.org; dkim=none (message not signed)
+ header.d=none;lists.infradead.org; dmarc=none action=none
+ header.from=seco.com;
 Received: from DB7PR03MB4523.eurprd03.prod.outlook.com (2603:10a6:10:19::27)
- by DB8PR03MB6027.eurprd03.prod.outlook.com (2603:10a6:10:ec::30) with
+ by DB7PR03MB4346.eurprd03.prod.outlook.com (2603:10a6:10:23::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.21; Tue, 1 Jun
- 2021 14:24:29 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.27; Tue, 1 Jun
+ 2021 16:47:12 +0000
 Received: from DB7PR03MB4523.eurprd03.prod.outlook.com
  ([fe80::40d5:3554:c709:6b1b]) by DB7PR03MB4523.eurprd03.prod.outlook.com
  ([fe80::40d5:3554:c709:6b1b%5]) with mapi id 15.20.4173.030; Tue, 1 Jun 2021
- 14:24:28 +0000
-Subject: Re: [PATCH v4 2/3] clocksource: Rewrite Xilinx AXI timer driver
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        michal.simek@xilinx.com, linux-kernel@vger.kernel.org,
+ 16:47:12 +0000
+Subject: Re: [PATCH v4 1/3] dt-bindings: pwm: Add Xilinx AXI Timer
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
         Alvaro Gamez <alvaro.gamez@hazent.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org
 References: <20210528214522.617435-1-sean.anderson@seco.com>
- <20210528214522.617435-2-sean.anderson@seco.com>
- <20210601084734.GX543307@dell>
+ <1622554330.014931.242356.nullmailer@robh.at.kernel.org>
 From:   Sean Anderson <sean.anderson@seco.com>
-Message-ID: <fe95aba7-8362-96f2-a43f-60cd11565cea@seco.com>
-Date:   Tue, 1 Jun 2021 10:24:23 -0400
+Message-ID: <6e13f224-b5b5-25dd-9288-ce2deb05974a@seco.com>
+Date:   Tue, 1 Jun 2021 12:47:07 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
-In-Reply-To: <20210601084734.GX543307@dell>
+In-Reply-To: <1622554330.014931.242356.nullmailer@robh.at.kernel.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [50.195.82.171]
-X-ClientProxiedBy: BL1P223CA0010.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:208:2c4::15) To DB7PR03MB4523.eurprd03.prod.outlook.com
+X-ClientProxiedBy: MN2PR11CA0028.namprd11.prod.outlook.com
+ (2603:10b6:208:23b::33) To DB7PR03MB4523.eurprd03.prod.outlook.com
  (2603:10a6:10:19::27)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [172.27.1.65] (50.195.82.171) by BL1P223CA0010.NAMP223.PROD.OUTLOOK.COM (2603:10b6:208:2c4::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.20 via Frontend Transport; Tue, 1 Jun 2021 14:24:27 +0000
+Received: from [172.27.1.65] (50.195.82.171) by MN2PR11CA0028.namprd11.prod.outlook.com (2603:10b6:208:23b::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.20 via Frontend Transport; Tue, 1 Jun 2021 16:47:11 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 256cf883-2c4e-4895-6ca3-08d92508f724
-X-MS-TrafficTypeDiagnostic: DB8PR03MB6027:
-X-Microsoft-Antispam-PRVS: <DB8PR03MB6027E1D635EFE5366AD16106963E9@DB8PR03MB6027.eurprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2887;
+X-MS-Office365-Filtering-Correlation-Id: 66e51498-07a3-4bb2-1bc1-08d9251ce747
+X-MS-TrafficTypeDiagnostic: DB7PR03MB4346:
+X-Microsoft-Antispam-PRVS: <DB7PR03MB43461A0B8453460C0DD4A167963E9@DB7PR03MB4346.eurprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: y+T+5IVxSygby2rzGao9BqdZCN/0G+N4EMbm/iDGNg4iz1HsaVItfNLTCWOXGAOoNTVgHVIkWZ8XHBdqhH0Swp2zKfWA6aHjg4f9X+CsVIbh0aiW9gI+AwuCWtedidvVhCscnj9rVJ6FfpBgyUVqKoSNfx7Fb/Yl0QWUdPuXYx5zT/wp7781wox0S4DOaUZi0fnSIwdNcKu5EUHBBvqdaw4g13MiFG/fyJxfjrr/Ezu0/0GHZB6hpU3jFtYcsjNoAXB11j6fL+EgxEJYnlI/LBuQJ+gJ3PkArU8M4ljr55vKQKQ7lBhrEVbYQg2kpQin81HHGF4IEIhh4texo4MhD5EmNpxKLsqY1gy2SLykjhSodbWqQgT8R7rB4psd/DZuDhCq649cYQNO35ARZHzV63xUNASfATgwVqaqPwXXEHd5Qm8xw5kxur0HqPsJ+ZvZC31xI2N9ShTOBr8xLCpGUl5gctEhvZXQWJ0f2cmZMdRjnH4uYWDA/4YrVyc4Y18n7jWN7l5LvEB7IkOCrZ1E+XFbME6SkGRwUfMNSY00dVwLDeSHqHIz41PGsoZOr5MFH6xILRY82L70btl6Msb+Rr12DXSbkQSfUFouD/+rLP7t1JjfeHA24BhP+JxSF5SiHg+3vi5Q4hj72FiQLHvbJ8e6CamnpdUA+1aPL04oCcy4DN/r3u11Tyiabs5FF3tAGLeyPkPSoS32GG5UM71sVY1QmEUPnKXLPQZGfMOMlCDZdMSgjrSYuyqoQb1MTBL60TGDIxUKKNFBMGE2EylYdm8CSVeJ/H2++Xz97nJzFeRD1r3MdCcq8iclS2k2BtVkzo1H6CkJXUnxgIS0Of/E6w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR03MB4523.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(16576012)(86362001)(66556008)(66476007)(38350700002)(26005)(6666004)(54906003)(31696002)(83380400001)(4326008)(16526019)(186003)(6916009)(38100700002)(66946007)(8676002)(44832011)(52116002)(53546011)(966005)(5660300002)(31686004)(2616005)(36756003)(956004)(498600001)(8936002)(2906002)(6486002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?MXZCeUVycXJQc0htWitaM0R0RC8zbkMxcG9YcnhCaDNXNFl0R0pLcWdkbXli?=
- =?utf-8?B?TFBCbWo2UUhKWjlIZ1dUZEpNSWdOanhNRUxiY3dObTUvREkzUEMwdjkzVE56?=
- =?utf-8?B?MDRmem9scmFSekVmWUhaOHVmeXgrN1ZRTzJwSjZBbTN6YUVCb1Ruakdhdk9p?=
- =?utf-8?B?Y3YxV2FnWStYMHQrMlhrZjYvZ2lIeG5SUTY5RlNxN1FPUlVMbThEVks3aWFS?=
- =?utf-8?B?S0l6WUp0OE1hZzRxYXJ1cVdvUFpUc0VSMVMxK2U3UTBub2NvR250ejNBMWtw?=
- =?utf-8?B?aHR3ZEhaTU1rbHlvaDVYR2lxRmtrYjN5dTJoQkM3VFJsb2NBN01wYkg3RXds?=
- =?utf-8?B?RElxSENxb04xMWQxSW05UE9aY0tpdzFpNWIyQytwNXlJdkIzOWNVKzNRY0N2?=
- =?utf-8?B?VjJ5eDhOYThmNnQ5cnlZeUQ0S3FCUHNFbGFkVDQvMklkZzZnNjBVWlZieXNa?=
- =?utf-8?B?WndZMmdSWSszRWhiSXRTRy84bytNdlVmbVBFaXF6QXNnS0dHa3E1K2xlS0VT?=
- =?utf-8?B?QkNDTUx0NFZsd2tGSTZPOVZ1T2o4VVl4b1BDb3k3dy9sNGRYTW1qN0RWTFA0?=
- =?utf-8?B?cmcvbHRscGhWRHdldGdRRU9WNUFRTjRNeVBXZG1UZDBZOERQb3ZjYXVQRCtM?=
- =?utf-8?B?N2oyUTlVQVpzb0lQM0tMeENtZGplakdRbitQbEZVTmJuSStJRzJoVWhkdWtN?=
- =?utf-8?B?NmpBWjdXT0VzR0dBUEh0TGNHWFVsb2tRNmtDTGw2L3Q1K2xjU25GbVJSQzVl?=
- =?utf-8?B?TnppZXVBNW11R3FpZjQxNjIwVWs4UUtHcCtkQ2V5L0ZKblh2VlNlYkowQnJE?=
- =?utf-8?B?TUJCNHJ3ZU5XSnl3bEUrMENTZmQvSVBDVXpKVmhEN2JVU0d5ZzBVRmI5TitQ?=
- =?utf-8?B?a3d6c3d1U1pVdFkyWUF5ekI0V0padDAyNlR2OEk4MmJxb2NMRGZwZTdNOUd0?=
- =?utf-8?B?Z0FHNXF6Rm1LYTUyZUpkS2ZqN0NwTkVrUGR6aUozUWVEVElqKzFtaklVRVJ6?=
- =?utf-8?B?aDV0Rk15ZXJEVXRoN1hDbFl3aksrUHJXd3E0SWo5YWxLTDVLNVJkdFVsK24x?=
- =?utf-8?B?R0JCa2kwdmdPMjc3YUJuNlFUUjFOMUFVRjhPbFNrc25Ld0x0dGpVWXZ6RGlO?=
- =?utf-8?B?OFR1MlpYVXVTTjFCdFdhVVBFYzFCaTlzM1hzQThnNWVicVpsMlRvN3FpYUIx?=
- =?utf-8?B?My9HY1NhYVhreFRXYjdyWDNTTkk5ZW1NUXRQNXJMWGtpSlBXTmRmRkpjbi9T?=
- =?utf-8?B?VkdEVVUvb1ZBNUxWU0NOc1VUdzBFOEdGWWwxTk0rcExjQm5vN0crNnVyd2o1?=
- =?utf-8?B?Q3JHejFENDVzSCsxeWtOL0MrVHllTmFWSExWUmFhZmI5ZXNuRW1CWm5PNnVi?=
- =?utf-8?B?ZlVkbnB4dkJLRGZqNXhYd2F3WXFHVWpoTzdNY2MvaVd1SURJbUhMQWRzUmhQ?=
- =?utf-8?B?RUpKTE5RdytEZXE4bHBwRHBJU1NyTTlGUXdRMlM2VThGMldpb05KUjRvZjBk?=
- =?utf-8?B?N1hYQTlCNVdRQXhvRXFqNTkwc2VZMlpsZ281bTgxM1d0eFJHU0pKUFhRUjFW?=
- =?utf-8?B?Nnk3TnlMZ0IyMlJHQjRDWkoxQ21HMG5jVGFKTDFBZDdWb3EvOXJPN3BaUDlR?=
- =?utf-8?B?MCtRV09Ec3AvS3JRWTdVYVNjcnVraG5JNmpWbXhmdXRSZk5XSXAvdlZzK3ZK?=
- =?utf-8?B?cnBPWDRvVGFJVmRmVjNDMVg0NytPRmpwVHBSTy82cGl0Y1A4VUZ6VkhLQy9n?=
- =?utf-8?Q?1cNo5ryVd14zEPmbO+qkAUZkkvaplRerTz4ZK0y?=
+X-Microsoft-Antispam-Message-Info: Y0nrHGslbPfViRefT+b86+wVLhybWhht75/6TuGmPQzAb0MePt2rUks+vtK8uu0HmdHUKd187m9XfI8th09tkarQpt9YD5LEFjw4+jIFPjdDbkpL6ZemtqAbI9afEk3SAohtk7ZMPFJGs60EO+T3SYNTkumFMZiox2akFlcTzvO1/UgdLf3so9UopkyJkAf8WZyAsBH3+xXJFEXSQ9GrDGjir32SVe1daYSCo5PdgF7uiesW3SFbkrdh/hRce2Ffos9e//y2nS3zx6mc7XfFNq56g5B9s1ZXATNeW9ZLVGuc+JI/fx4mrhNerGgHaI4PWloEkEFy7p/vIDy8ddRqR1b1Jthvzxa+Aq0lIpayX4S9QOnYz4B6AoYSfYgq8fbQ3KjnOyBAV3sSh7j2LESeantNnd7/hq9v5vevpV8kOQSdhU2hNwp8n19kvneKeLLZCJj+Xi/CndUw4Hro4m/DCco9v3egGh9SNmj5heZjmNpiPku+6HPFnBkBXhEvc8BnDkVcy6PedIzWEKZ3BKA7PwQGg/kb+gqchfpsJjEjMlUyxMnXVHj0fKfn/bN1Cd/4mntG+WRQ4JXqQGPtetEN7YOcrokJLXtFfHm9F0XJASg5+ul7I1/lL05Z19MPHgJsd3gc4XJC9BYHEkLlVM7Yf+LQ5q7EE++51qf74bHqss0TbgXSv4aatpu3B2rFXqmT5Y38mev/h54674pgZgQLiaCjb0GBGJC9pG3J5Tgn/n3DJ+tjH4WeFotdlPlxwC0oD0r/8Dta2YCtgbBzRpiX5A7Xi/r3xrMz8j7S7uPTES4zLBT5T0OcD5a/oxw2/ye7gNTJTAXkPTn2zULP9ZBpJg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR03MB4523.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(376002)(396003)(366004)(39830400003)(136003)(2616005)(8936002)(52116002)(6486002)(5660300002)(956004)(8676002)(966005)(316002)(83380400001)(36756003)(478600001)(53546011)(6666004)(31696002)(4326008)(86362001)(66946007)(66476007)(186003)(66556008)(44832011)(16526019)(2906002)(26005)(38100700002)(6916009)(38350700002)(31686004)(16576012)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?R0IzTEVtV2lqNVlOaGJCeGtYcFlFTVpaN1NwR3BuL01aOHMxRmtIWlpzUzBO?=
+ =?utf-8?B?UkRNZStQcDRJcm1PUXBzN3lrMEphdGtnTG9Pem9pMk1sZWxleWxIVjlTcDlr?=
+ =?utf-8?B?RnQ2K1l5SktMNndTSmlvVEtkelMrSzlmQW4wS0F5MGx1LzJaN20vcWF4dmZQ?=
+ =?utf-8?B?ZnBWRGdTYjcxZ2xtSSttODBsYWZYSWNkcTd2RUN2N3ZqYXI4M2xNaFY2aHFv?=
+ =?utf-8?B?TDRGbEJqRFY4R0NKY0ZEYmI4ZW1kWjk0c0t0M281eGZYdVlxMUN6bjMva0t1?=
+ =?utf-8?B?MVNkRjVDVTlCZUdEdW5rWHpmMDNQbnAvZ1dDVXBZdm9Fd2hocm1XaC9rcmVx?=
+ =?utf-8?B?eU1FVmRhOE9KT2MzWEp6cDVad3B0ZnJMKzVCaUVxNWxEVzhHTGNyMk5oRW4v?=
+ =?utf-8?B?aERqakQzRUpHK0xDRGZSMnZuSjVvN3BRMXdCeWhHUkJ3eVMrT0JrdUJBWExi?=
+ =?utf-8?B?eGdyaU5SOElmUEVKT0JnaW9qRXZLZXFmaGswRFZCbFpzK2R0NTFZUWg3SS95?=
+ =?utf-8?B?VWQ5QU1SVm45NFRNbFBCYU9wck9SZWUvc2todlpLT3Vja042VzdoM0J4K2Vq?=
+ =?utf-8?B?QmtRSFZDNUhMZGZEOFRRNnFDWldHMnFRU2s2cUs1RUxZV1YxRFJ1dXVPY0dn?=
+ =?utf-8?B?QklMblZWem9rNkFIVkl6YWYySkJzejI3ZXVZRjRLNTdBb1Y2eUMzRXFSN2o0?=
+ =?utf-8?B?aXEwQ2pSajhzQWZ6YkwvWWxCWjRwTG9HRDVRQ3NrTmxjVGhGajU0VkxhU1FY?=
+ =?utf-8?B?bW95SXZnaURGaTF6SVBkdHZscXpBbUw1VDh1ZzlHd3RzelEzZ3hXNnJ4TmMr?=
+ =?utf-8?B?MnlkS1JZRFAwRjY5TzFEeXBlUVVWRlgwOG8ySXRZbW1jM1VJSE5abEpZajA0?=
+ =?utf-8?B?Z0VDT0ZBMk4vRnlDMGhFbUR6Y1N2VkJxWVJmK2tIQzMwcldYTzVacnE0QVpH?=
+ =?utf-8?B?QmJaRzRqcnlmc1diYWNkR2hhRTNpMExJY0ozb1oxLzVvODFVbFprdWw5d0h6?=
+ =?utf-8?B?U2FsVllvMGtPOVpYMTArZjVMaks2QlJxMFNCak5aZWswTy8vb1V4VWRYbFpE?=
+ =?utf-8?B?V3kyaHREYWswNzJvY1k5SGRIZ3JmNVdpVlpCM2FTRkx4SnNMTjJhWHdXNEh5?=
+ =?utf-8?B?eUZxVjl6NVQ1eXNvUU41ZHcrc3lzMzgreUtpZ3RLbGQrMkhCU29MemJnY0dW?=
+ =?utf-8?B?UG53c3ZLUkwyeWRsQVM1TEFMZkllYVZUWGN4N2kyb3ZobXUwcDhYRlJhZXBV?=
+ =?utf-8?B?Z2pZTGpxQncwc1J2Ui81VkkwWXBDM1NNZlNLVDZYOFdTdHpydnU2NGVxN1No?=
+ =?utf-8?B?U0hRcEs5T3RXQW1oQlhNUk5KeURDTndZeVEzMXlvZ09VYmVPOENrMm5OOTZJ?=
+ =?utf-8?B?cVRvWXhCd3BZa203QXEwd2pCc2U2WlowK25WTVlSTWdoaU1ENTJTUDZJY0JV?=
+ =?utf-8?B?a3lUQTM3NGZmcnZtaGEwNXJsaHNGUXI2cHJLaDVlWDl1MXJTR1NiN0RKalls?=
+ =?utf-8?B?T2kzaE9xeVFRajdvbVltYm5vVnh2THJ4RmhpQ2QxOHhyV1l4YjcxS3ArVnp0?=
+ =?utf-8?B?L2x3K0xXUEZSRnRPUXY3ZnQ5ejFyVzRwNXRaQzA0R0xNOU5ZSzR4WTFKei83?=
+ =?utf-8?B?K3B4V2VnL1h5QU44TmJzZzNmL1Z3VDB2eUdWb29pSmxrVExYS2lnV3c3VTR2?=
+ =?utf-8?B?MGg1dGxpK1JhRFpqWGZLbG1MVlIwclpVd2Y2SkRzZGpSUWFjUFQ3RERrUlZV?=
+ =?utf-8?Q?NR2aWdTn6eXoWZtSoD9Xm1pcI0ajCacBd3EuLGk?=
 X-OriginatorOrg: seco.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 256cf883-2c4e-4895-6ca3-08d92508f724
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66e51498-07a3-4bb2-1bc1-08d9251ce747
 X-MS-Exchange-CrossTenant-AuthSource: DB7PR03MB4523.eurprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2021 14:24:28.8010
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2021 16:47:12.1683
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: bebe97c3-6438-442e-ade3-ff17aa50e733
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9BLzHbWjUNjw7Erqjr20u+FvL/BhLfWjqQGOK2P+Cvi2mOoKihOtH3S2JS069z3QjXv+DlBQnlyZNs2QeZWDhQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR03MB6027
+X-MS-Exchange-CrossTenant-UserPrincipalName: NwLhVOJ0kpO3UZchssKT994j14+xGnRkh97VspoyD0bTOHPdW0PkE6B+KxCgTpsrvQZM9ABscdZWrgfLCmKvMw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR03MB4346
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
 
-On 6/1/21 4:47 AM, Lee Jones wrote:
- > On Fri, 28 May 2021, Sean Anderson wrote:
- >
- >> This rewrites the Xilinx AXI timer driver to be more platform agnostic.
- >> Some common code has been split off so it can be reused. These routines
- >> currently live in drivers/mfd. The largest changes have taken place in the
- >> initialization:
+On 6/1/21 9:32 AM, Rob Herring wrote:
+ > On Fri, 28 May 2021 17:45:20 -0400, Sean Anderson wrote:
+ >> This adds a binding for the Xilinx LogiCORE IP AXI Timer. This device is
+ >> a "soft" block, so it has many parameters which would not be
+ >> configurable in most hardware. This binding is usually automatically
+ >> generated by Xilinx's tools, so the names and values of some properties
+ >> must be kept as they are. Replacement properties have been provided for
+ >> new device trees.
  >>
- >> - We now support any number of timer devices, possibly with only one
- >>    counter each. The first counter will be used as a clocksource. Every
- >>    other counter will be used as a clockevent.
- >> - We do not use timer_of_init because we need to perform some tasks in
- >>    between different stages. For example, we must ensure that ->read and
- >>    ->write are initialized before registering the irq. This can only happen
- >>    after we have gotten the register base (to detect endianness). We also
- >>    have a rather unusual clock initialization sequence in order to remain
- >>    backwards compatible. Due to this, it's ok for the initial clock request
- >>    to fail, and we do not want other initialization to be undone. Lastly, it
- >>    is more convenient to do one allocation for xilinx_clockevent_device than
- >>    to do one for timer_of and one for xilinx_timer_priv.
- >> - We now pay attention to xlnx,count-width and handle smaller width timers.
- >>    The default remains 32.
+ >> Because we need to init timer devices so early in boot, the easiest way
+ >> to configure things is to use a device tree property. For the moment
+ >> this is 'xlnx,pwm', but this could be extended/renamed/etc. in the
+ >> future if these is a need for a generic property.
  >>
  >> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
  >> ---
- >> This has been tested on microblaze qemu.
  >>
  >> Changes in v4:
- >> - Break out clock* drivers into their own file
+ >> - Remove references to generate polarity so this can get merged
+ >> - Predicate PWM driver on the presence of #pwm-cells
+ >> - Make some properties optional for clocksource drivers
  >>
- >>   arch/microblaze/kernel/Makefile    |   3 +-
- >>   arch/microblaze/kernel/timer.c     | 326 -----------------------------
- >>   drivers/clocksource/Kconfig        |  11 +
- >>   drivers/clocksource/Makefile       |   1 +
- >>   drivers/clocksource/timer-xilinx.c | 300 ++++++++++++++++++++++++++
- >>   drivers/mfd/Makefile               |   4 +
- >>   drivers/mfd/xilinx-timer.c         | 147 +++++++++++++
+ >> Changes in v3:
+ >> - Mark all boolean-as-int properties as deprecated
+ >> - Add xlnx,pwm and xlnx,gen?-active-low properties.
+ >> - Make newer replacement properties mutually-exclusive with what they
+ >>    replace
+ >> - Add an example with non-deprecated properties only.
+ >>
+ >> Changes in v2:
+ >> - Use 32-bit addresses for example binding
+ >>
+ >>   .../bindings/pwm/xlnx,axi-timer.yaml          | 85 +++++++++++++++++++
+ >>   1 file changed, 85 insertions(+)
+ >>   create mode 100644 Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml
+ >>
  >
- > I'm confused!
+ > My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+ > on your patch (DT_CHECKER_FLAGS is new in v5.13):
  >
- >>   include/linux/mfd/xilinx-timer.h   | 134 ++++++++++++
- >>   8 files changed, 598 insertions(+), 328 deletions(-)
- >>   delete mode 100644 arch/microblaze/kernel/timer.c
- >>   create mode 100644 drivers/clocksource/timer-xilinx.c
- >>   create mode 100644 drivers/mfd/xilinx-timer.c
- >>   create mode 100644 include/linux/mfd/xilinx-timer.h
+ > yamllint warnings/errors:
+ > ./Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml:16:10: [warning] wrong indentation: expected 10 but found 9 (indentation)
+ > ./Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml:19:10: [warning] wrong indentation: expected 10 but found 9 (indentation)
  >
- > [...]
+ > dtschema/dtc warnings/errors:
  >
- >> +// SPDX-License-Identifier: GPL-2.0+
- >> +/*
- >> + * Copyright (C) 2021 Sean Anderson <sean.anderson@seco.com>
- >> + *
- >> + * For Xilinx LogiCORE IP AXI Timer documentation, refer to DS764:
- >> + * https://www.xilinx.com/support/documentation/ip_documentation/axi_timer/v1_03_a/axi_timer_ds764.pdf
- >> + */
- >> +
- >> +#include <linux/clk.h>
- >> +#include <linux/mfd/xilinx-timer.h>
- >> +#include <linux/of.h>
- >> +#include <asm/io.h>
+ > See https://patchwork.ozlabs.org/patch/1485318
  >
- > RED FLAG: You are not using the MFD API here.
+ > This check can fail if there are any dependencies. The base for a patch
+ > series is generally the most recent rc1.
+ >
+ > If you already ran 'make dt_binding_check' and didn't see the above
+ > error(s), then make sure 'yamllint' is installed and dt-schema is up to
+ > date:
 
-Should I be?
-
- >
- >> +#define TCSR0	0x00
- >> +#define TLR0	0x04
- >> +#define TCR0	0x08
- >> +#define TCSR1	0x10
- >> +#define TLR1	0x14
- >> +#define TCR1	0x18
- >> +
- >> +#define TCSR_MDT	BIT(0)
- >> +#define TCSR_UDT	BIT(1)
- >> +#define TCSR_GENT	BIT(2)
- >> +#define TCSR_CAPT	BIT(3)
- >> +#define TCSR_ARHT	BIT(4)
- >> +#define TCSR_LOAD	BIT(5)
- >> +#define TCSR_ENIT	BIT(6)
- >> +#define TCSR_ENT	BIT(7)
- >> +#define TCSR_TINT	BIT(8)
- >> +#define TCSR_PWMA	BIT(9)
- >> +#define TCSR_ENALL	BIT(10)
- >> +#define TCSR_CASC	BIT(11)
- >> +
- >> +/* readl/writel wrappers to support BE systems */
- >> +
- >> +static u32 xilinx_ioread32be(const void __iomem *addr)
- >> +{
- >> +	return ioread32be(addr);
- >> +}
- >> +
- >> +static void xilinx_iowrite32be(u32 value, void __iomem *addr)
- >> +{
- >> +	iowrite32be(value, addr);
- >> +}
- >> +
- >> +static u32 xilinx_ioread32(const void __iomem *addr)
- >> +{
- >> +	return ioread32(addr);
- >> +}
- >> +
- >> +static void xilinx_iowrite32(u32 value, void __iomem *addr)
- >> +{
- >> +	iowrite32(value, addr);
- >> +}
- >
- > Abstraction for the sake of abstraction, is not allowed.
- >
- > Just use the io*() calls directly in-place.
-
-Can't. The call signatures on some arches have volatile addr and some do
-not. So without these wrappers, we will get warnings about how the
-function has the wrong type.
-
- >
- >> +int xilinx_timer_tlr_cycles(struct xilinx_timer_priv *priv, u32 *tlr,
- >> +			    u32 tcsr, u64 cycles)
- >> +{
- >> +	if (cycles < 2 || cycles > priv->max + 2)
- >> +		return -ERANGE;
- >> +
- >> +	if (tcsr & TCSR_UDT)
- >> +		*tlr = cycles - 2;
- >> +	else
- >> +		*tlr = priv->max - cycles + 2;
- >> +
- >> +	return 0;
- >> +}
- >> +
- >> +int xilinx_timer_tlr_period(struct xilinx_timer_priv *priv, u32 *tlr,
- >> +			    u32 tcsr, unsigned int period)
- >> +{
- >> +	u64 cycles = DIV_ROUND_DOWN_ULL((u64)period * clk_get_rate(priv->clk),
- >> +					NSEC_PER_SEC);
- >> +
- >> +	return xilinx_timer_tlr_cycles(priv, tlr, tcsr, cycles);
- >> +}
- >> +
- >> +unsigned int xilinx_timer_get_period(struct xilinx_timer_priv *priv,
- >> +				     u32 tlr, u32 tcsr)
- >> +{
- >> +	u64 cycles;
- >> +
- >> +	if (tcsr & TCSR_UDT)
- >> +		cycles = tlr + 2;
- >> +	else
- >> +		cycles = priv->max - tlr + 2;
- >> +
- >> +	return DIV_ROUND_UP_ULL(cycles * NSEC_PER_SEC,
- >> +				clk_get_rate(priv->clk));
- >> +}
- >> +
- >> +int xilinx_timer_common_init(struct device_node *np,
- >> +			     struct xilinx_timer_priv *priv,
- >> +			     u32 *one_timer)
- >> +{
- >> +	int ret;
- >> +	u32 tcsr0, width;
- >> +
- >> +
- >> +	priv->read = xilinx_ioread32;
- >> +	priv->write = xilinx_iowrite32;
- >> +	/*
- >> +	 * If PWM mode is enabled, we should try not to disturb it. Use
- >> +	 * CAPT since if PWM mode is enabled then MDT will be set as
- >> +	 * well.
- >> +	 *
- >> +	 * First, clear CAPT and verify that it has been cleared
- >> +	 */
- >> +	tcsr0 = xilinx_timer_read(priv, TCSR0);
- >> +	xilinx_timer_write(priv, tcsr0 & ~(TCSR_CAPT & swab(TCSR_CAPT)), TCSR0);
- >> +	tcsr0 = xilinx_timer_read(priv, TCSR0);
- >> +	if (tcsr0 & (TCSR_CAPT | swab(TCSR_CAPT))) {
- >> +		pr_err("%pOF: cannot determine endianness\n", np);
- >> +		return -EOPNOTSUPP;
- >> +	}
- >> +
- >> +	/* Then check to make sure our write sticks */
- >> +	xilinx_timer_write(priv, tcsr0 | TCSR_CAPT, TCSR0);
- >> +	if (!(xilinx_timer_read(priv, TCSR0) & TCSR_CAPT)) {
- >> +		priv->read = xilinx_ioread32be;
- >> +		priv->write = xilinx_iowrite32be;
- >> +	}
- >> +
- >> +	ret = of_property_read_u32(np, "xlnx,one-timer-only", one_timer);
- >> +	if (ret) {
- >> +		pr_err("%pOF: err %d: xlnx,one-timer-only\n", np, ret);
- >> +		return ret;
- >> +	} else if (*one_timer && *one_timer != 1) {
- >> +		pr_err("%pOF: xlnx,one-timer-only must be 0 or 1\n", np);
- >> +		return -EINVAL;
- >> +	}
- >> +
- >> +	ret = of_property_read_u32(np, "xlnx,count-width", &width);
- >> +	if (ret == -EINVAL) {
- >> +		width = 32;
- >> +	} else if (ret) {
- >> +		pr_err("%pOF: err %d: xlnx,count-width\n", np, ret);
- >> +		return ret;
- >> +	} else if (width < 8 || width > 32) {
- >> +		pr_err("%pOF: invalid counter width\n", np);
- >> +		return -EINVAL;
- >> +	}
- >> +	priv->max = BIT_ULL(width) - 1;
- >> +
- >> +	return 0;
- >> +}
- >
- > This is *all* timer stuff.
- >
- > What is your rationale for dumping this into MFD?
-
-It was requested that common code for the timer and PWM drivers be
-reused in some way. I stuck it in mfd because I wasn't sure where else
-to put it. If you have a better location suggestion, I'm all ears
+I needed yamllint installed to get these errors. Is this requirement
+documented anywhere? I don't see it in [1].
 
 --Sean
+
+[1] https://www.kernel.org/doc/html/latest/devicetree/bindings/writing-schema.html#testing
+
+ >
+ > pip3 install dtschema --upgrade
+ >
+ > Please check and re-submit.
+ >
