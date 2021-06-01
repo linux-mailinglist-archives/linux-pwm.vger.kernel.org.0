@@ -2,92 +2,91 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 963003972A1
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jun 2021 13:42:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C1FD3973C8
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jun 2021 15:05:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233717AbhFALoc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 1 Jun 2021 07:44:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233627AbhFALoc (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Jun 2021 07:44:32 -0400
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66052C06174A
-        for <linux-pwm@vger.kernel.org>; Tue,  1 Jun 2021 04:42:49 -0700 (PDT)
-Received: by mail-io1-xd30.google.com with SMTP id a6so14944282ioe.0
-        for <linux-pwm@vger.kernel.org>; Tue, 01 Jun 2021 04:42:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=psPAB9NqHofPPQuOtyDnz2jywzmWciM0sLALrIheAbI=;
-        b=oWB9VREBzenyW3LLR7LLy+bhrONuvWzAVRchXRYWFhBPdnTFvAHwhBpq0gbDscQLfn
-         UJ9rdp4D3SGz8YKUF+trqOSfeV6GHj0jF8UxKqwyxWjCzzYW06q8FVSNBaoJExoVEke5
-         HcdnzwJ9s3ntfI1opLOqHMoLE0eXAa4Eo7+ql3SSd/h7j6Kv1RY+Eguc4x3ZxgzN4msu
-         EEXNS1Pm+E22v6/DDX5gEs34g88CBbEttP9af9z9opnz1SZk2upSMAEzRIJfSUjkj5bi
-         wPSIX4UXTStSwgpVX7lwjHRerxnB5Zn26U/DRdlvoG/nTOsyTRR1FiNDpeE+AXzNieYK
-         8aKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=psPAB9NqHofPPQuOtyDnz2jywzmWciM0sLALrIheAbI=;
-        b=eX11VANiiet+EVaktlVRk/Z3C1AqZYTRG6uYXwWaMSvYQuOL79zQYjV56fFBY/r3FZ
-         UMkKUgKrBWdwDXTO2kBhAMLY7n2kcQGpCGNStq/YBCC9qC9+/tL6CGDwsh671SetEOau
-         YtpbrmpI2sxVEqWbMWpebEOFGWLi6QJe9fRSPacLbA65yNXw2Yowef9UAIWiZOz4AiPB
-         tjejVhDjA5mQApov5427Jc3nfoMHdjmczUpDpC6SM6KIEzjcP4J2IsacyTiHEKamb18w
-         g1GYj5nWP/BGbdlCHsj7ON4YQPMVvBx+7bCKau7BtH7eyZzujIvfJBH/6WlOXB8v8GT8
-         uIhA==
-X-Gm-Message-State: AOAM530XJXQa5EeCFIyRe6oUBlc+ebXQB0mmS5WC/Y+XcPDc4JmODJQC
-        32YKnQJlBGwSmnTVPaLBNgK7ED1yLfFSPMPKikQ=
-X-Google-Smtp-Source: ABdhPJxByS5/pWQ1SIv88JzwJsdaSTsYhq85MNk4hM/rnpv/V/bw25/4G54zwAZy6QRtYlP03K0X9kLcXrtW3Oc9j2U=
-X-Received: by 2002:a05:6638:2728:: with SMTP id m40mr25090602jav.55.1622547768765;
- Tue, 01 Jun 2021 04:42:48 -0700 (PDT)
+        id S233949AbhFANGt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Jun 2021 09:06:49 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58482 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233905AbhFANGs (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Jun 2021 09:06:48 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 151D4x0Z106173;
+        Tue, 1 Jun 2021 08:04:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1622552699;
+        bh=naX3kstdCVTukTs526qUtm1q78sZy0YnorByIZb+vlo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=YE4glL+XSB393NoUQKgZkWYIfnA0HjKPoj8IFa2SPx46HBav5Z2tP93b8urvwSnyh
+         hpHFhrBFGIgy7vB3GZFN/POjZ6alUe20HYLAuihqEQHSQ8dEuH3vf30wlTvLVaC3pU
+         8fuiFRxPLzTmUqHUSmsjkoGGBbpriWjA6uujTh10=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 151D4xfB125250
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 1 Jun 2021 08:04:59 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Tue, 1 Jun
+ 2021 08:04:59 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Tue, 1 Jun 2021 08:04:59 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 151D4u4t118350;
+        Tue, 1 Jun 2021 08:04:56 -0500
+Subject: Re: [PATCH v3] arm: dts: ti: drop usage of redundant compatible
+To:     Lokesh Vutla <lokeshvutla@ti.com>, Rob Herring <robh+dt@kernel.org>
+CC:     <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>,
+        Vignesh R <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
+        <linux-pwm@vger.kernel.org>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>
+References: <20210601054029.1839-1-lokeshvutla@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <b6b1277c-916f-49b9-cc63-1235a0c35b02@ti.com>
+Date:   Tue, 1 Jun 2021 16:04:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Reply-To: patzengu@outlook.com
-Sender: jamesmarcus570@gmail.com
-Received: by 2002:a4f:612:0:0:0:0:0 with HTTP; Tue, 1 Jun 2021 04:42:48 -0700 (PDT)
-From:   Patrice Zengu <rm2568590@gmail.com>
-Date:   Tue, 1 Jun 2021 13:42:48 +0200
-X-Google-Sender-Auth: j9GB33snZ0LVJo0OYevnKFj52wc
-Message-ID: <CAB5Sy2iGQWBJ3JLAqjiPJdA11vm7=T3k-KPRbeZO_CcXX_+GNg@mail.gmail.com>
-Subject: Please co-operate with me
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210601054029.1839-1-lokeshvutla@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+
+
+On 01/06/2021 08:40, Lokesh Vutla wrote:
+> Commit 229110c1aa691 ("ARM: dts: am437x/am33xx/da850: Add new ECAP and
+> EPWM bindings") added ti,am3352-ehrpwm compatible which is similar to
+> ti,am33xx-ehrpwm but without out t,hwmod properties. But with commit
+> 58bfbea5b1c68 ("ARM: dts: am437x/am33xx: Remove hwmod entries for ECAP
+> and EPWM nodes") dropped support for all ti,hwmod for ehrpwm, but
+> missed deprecating ti,am33xx-ehrpwm compatible. So drop ti,am33xx-ehrpwm
+> from DT as it is no longer needed.
+> 
+> ti-ehrpwn driver still support ti,am33xx-ehrpwm in order to maintain
+> backward compatibility.
+> 
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+> Changes since v2:
+> - Split from ehrpwm yaml conversion series:
+>    https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=489981
+> - Dropped documentation update in this patch.
+> 
+>   arch/arm/boot/dts/am33xx-l4.dtsi |  9 +++------
+>   arch/arm/boot/dts/am437x-l4.dtsi | 18 ++++++------------
+>   arch/arm/boot/dts/da850.dtsi     |  6 ++----
+>   3 files changed, 11 insertions(+), 22 deletions(-)
+Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+
 -- 
-Dear Friend,
-
-I am Mr.Patrice Zengu ,from Burkina Faso and i am the new bank telex
-manager of our bank here in Africa.
-
-I have the opportunity to transfer the sum of US$ 10.5Million to your
-bank account which i personally placed on an Escrow account without a
-name.
-
-I must tell you that after revision of files both old and new as the
-new telex manager ,i discovered that if these funds remains here
-without transferring it offshore,it will be lawfully recovered
-andmoved to the  Government of Burkina Faso treasury as an abandoned
-funds without any name.
-
-I want to let you know that a Burkinabe cannot stand as the depositor
-of these US dollars  since we are not allowed to operate on foreign
-currrency.I do not intend to work  and stay in Africa till the rest of
-my life.
-
-Moreso,i will not want my bank to know about these funds and if they
-happens to know probably,the funds will be moved to the Burkina Faso
-Government public treasury as an abandoned funds.
-
-I will furnish you with more details of this transfer and how it ca
-nbe perfectly and legally executed without any hitch since i am now in
-control.
-
-I am waiting to hear from you urgently to proceed.
-
-
-Yours sincerely,
-Mr.Patrice Zengu.
+Best regards,
+grygorii
