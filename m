@@ -2,93 +2,206 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 967BD3968BD
-	for <lists+linux-pwm@lfdr.de>; Mon, 31 May 2021 22:28:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34190396CDE
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jun 2021 07:32:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232069AbhEaU3z (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 31 May 2021 16:29:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231809AbhEaU3y (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 May 2021 16:29:54 -0400
-X-Greylist: delayed 430 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 31 May 2021 13:28:13 PDT
-Received: from pmg01-out1.zxcs.nl (pmg01-out1.zxcs.nl [IPv6:2a06:2ec0:1::ffeb])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56879C061574
-        for <linux-pwm@vger.kernel.org>; Mon, 31 May 2021 13:28:13 -0700 (PDT)
-Received: from pmg01.zxcs.nl (localhost.localdomain [127.0.0.1])
-        by pmg01.zxcs.nl (ZXCS) with ESMTP id BCDC91061D2
-        for <linux-pwm@vger.kernel.org>; Mon, 31 May 2021 22:21:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=pascalroeleven.nl; s=x; h=Content-Transfer-Encoding:Content-Type:Message-ID
-        :References:In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=JZmFLiAjzHRQOpVd4kN6fWiDdTeT4sWd4zxcaKOicbA=; b=eR//+iq3F13fcdq27DJGciZMNj
-        BCTBdTCg4qTtU1B/AtmYa1H3F+oBA1iXHVCP/NKc9PavEbpzBs+KYEzJF3OxQrzHWC2w9f+swhEJ9
-        J/HKkspj3LwYp9451PAaVnsYdCpOz4HLiyuYOD3DwXDt59TnR0yYMs+3TOZX+86j4hXqMqkp5dJmk
-        KXD4N4trtCrcqNzzBjr9KnBhQxD0O36zjHsJy8EyBKTmK+vy8bs1AAAMcajo0dzxgil8n+8mddrx8
-        fKBp2+kYgu7hGrs/HuWXnVWf7rcepQtdQnLMpIzujI8jImP8hOjkkdH+SBFVQD8k/lgEdlY0FzD3y
-        L0CIUO8Q==;
+        id S232815AbhFAFeP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Jun 2021 01:34:15 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:39904 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230326AbhFAFeP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Jun 2021 01:34:15 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 1515WL8R064115;
+        Tue, 1 Jun 2021 00:32:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1622525541;
+        bh=WvpvW7OgztFAVo/BvWJFiOHwaLBd1oH444fGsFPLFiM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=NfkIMv3bqsyBF0coTqHQSXSGwub4K8MNWx5xWhuK9Y/ckozs+5rshKoohN3hMDOd0
+         d5t3y2UbkaBrmmxFwQFJe1xz5pejk3OQGw+2qSiYnaReXWB4hBioVehniX4FEMnmLq
+         armTI6pCEo73AkpJsP/5A4GNjhXnA5MsMXpyeqIg=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 1515WLA1029907
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 1 Jun 2021 00:32:21 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Tue, 1 Jun
+ 2021 00:32:21 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Tue, 1 Jun 2021 00:32:21 -0500
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 1515WEtv070319;
+        Tue, 1 Jun 2021 00:32:16 -0500
+Subject: Re: [PATCH 1/4] arm: dts: ti: drop usage of redundant compatible
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
+        <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>
+CC:     <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>,
+        Vignesh R <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
+        <linux-pwm@vger.kernel.org>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>
+References: <20210526084306.6534-1-lokeshvutla@ti.com>
+ <20210526084306.6534-2-lokeshvutla@ti.com>
+ <de96c176-1163-a6c4-54f2-a9924db6f9df@ti.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <627acc59-b702-d3da-2a61-3f321c8432e8@ti.com>
+Date:   Tue, 1 Jun 2021 11:02:13 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Date:   Mon, 31 May 2021 22:20:55 +0200
-From:   Pascal Roeleven <dev@pascalroeleven.nl>
-To:     Emil Lenngren <emil.lenngren@gmail.com>
-Cc:     Roman Beranek <roman.beranek@prusa3d.cz>,
-        =?UTF-8?Q?Uwe_Kleine-K?= =?UTF-8?Q?=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 0/6] pwm: sun4i: only wait 2 cycles prior to disabling
-In-Reply-To: <CAO1O6sdBX8D13tNKFAUynC2AcOX_Oo7tBEJi1vPPueSSQLfJOg@mail.gmail.com>
-References: <20210531044608.1006024-1-roman.beranek@prusa3d.com>
- <e63e2b31c63bb9e227ed9ec04a8af54e@pascalroeleven.nl>
- <CAO1O6sdBX8D13tNKFAUynC2AcOX_Oo7tBEJi1vPPueSSQLfJOg@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <3626bda2eb9cd93744eca6f19c189feb@pascalroeleven.nl>
-X-Sender: dev@pascalroeleven.nl
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Forwarded-For: linux-pwm@vger.kernel.org
-X-AuthUser: dev@pascalroeleven.nl
+In-Reply-To: <de96c176-1163-a6c4-54f2-a9924db6f9df@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 2021-05-31 22:01, Emil Lenngren wrote:
-> You could look at the devmem source code, and in C write a script that
-> writes to pwm register to disable the pwm, insert a usleep, then
-> disable the gating. This can be done for various sleep values, then
-> retrying with same sleep value multiple times. Assuming the overhead
-> is low (you can check the overhead by checking the current timestamp
-> at the beginning and at the end of the program, take the diff and then
-> subtract the sleep time), you will get one range where it never works,
-> one range where it works sometimes, and one range where it always
-> works. The uncertain range's condition for succeeding will depend on
-> when in the cycle you run the code.
-> Assuming we believe 3 cycles are enough on A10 and prescaler is 72000,
-> the thresholds for these ranges are 0-6 ms, 6-9 ms and 9+ ms.
 
-Thank you I will give this a shot if there is still an uncertainty about
-the cycles in the end. I performed my tests with a Busybox rootfs, so I
-assumed the overhead was low as well.
 
-> About "being stuck", I'm not sure exactly what you mean but it's
-> expected that writes to the period register won't be visible (if you
-> read it after a write) when the clock gating is disabled. Three full
-> cycles (with the gating is on) must take place before the change is
-> visible (i.e. need to wait four cycles to be sure). At least on >=A13.
-> I documented that here:
-> https://linux-sunxi.org/PWM_Controller_Register_Guide.
+On 31/05/21 4:47 pm, Grygorii Strashko wrote:
+> 
+> 
+> On 26/05/2021 11:43, Lokesh Vutla wrote:
+>> Commit 229110c1aa691 ("ARM: dts: am437x/am33xx/da850: Add new ECAP and
+>> EPWM bindings") added ti,am3352-ehrpwm compatible which is similar to
+>> ti,am33xx-ehrpwm but without out t,hwmod properties. But with commit
+>> 58bfbea5b1c68 ("ARM: dts: am437x/am33xx: Remove hwmod entries for ECAP
+>> and EPWM nodes") dropped support for all ti,hwmod for ehrpwm, but
+>> missed deprecating ti,am33xx-ehrpwm compatible. So drop ti,am33xx-ehrpwm
+>> from DT as it is no longer needed.
+>>
+>> ti-ehrpwn driver still support ti,am33xx-ehrpwm in order to maintain
+>> backward compatibility.
+>>
+>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>> ---
+>>   .../devicetree/bindings/pwm/pwm-tiehrpwm.txt   | 13 ++++++-------
+>>   arch/arm/boot/dts/am33xx-l4.dtsi               |  9 +++------
+>>   arch/arm/boot/dts/am437x-l4.dtsi               | 18 ++++++------------
+>>   arch/arm/boot/dts/da850.dtsi                   |  6 ++----
+>>   4 files changed, 17 insertions(+), 29 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+>> b/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+>> index c7e28f6d28be..e124e41418d8 100644
+>> --- a/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+>> +++ b/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+>> @@ -2,10 +2,10 @@ TI SOC EHRPWM based PWM controller
+>>     Required properties:
+>>   - compatible: Must be "ti,<soc>-ehrpwm".
+>> -  for am33xx  - compatible = "ti,am3352-ehrpwm", "ti,am33xx-ehrpwm";
+>> -  for am4372  - compatible = "ti,am4372-ehrpwm", "ti-am3352-ehrpwm",
+>> "ti,am33xx-ehrpwm";
+>> +  for am33xx  - compatible = "ti,am3352-ehrpwm";
+>> +  for am4372  - compatible = "ti,am4372-ehrpwm", "ti-am3352-ehrpwm";
+>>     for am654   - compatible = "ti,am654-ehrpwm", "ti-am3352-ehrpwm";
+>> -  for da850   - compatible = "ti,da850-ehrpwm", "ti-am3352-ehrpwm",
+>> "ti,am33xx-ehrpwm";
+>> +  for da850   - compatible = "ti,da850-ehrpwm", "ti-am3352-ehrpwm";
+>>     for dra746 - compatible = "ti,dra746-ehrpwm", "ti-am3352-ehrpwm";
+>>   - #pwm-cells: should be 3. See pwm.yaml in this directory for a description of
+>>     the cells format. The only third cell flag supported by this binding is
+>> @@ -19,7 +19,7 @@ Optional properties:
+>>   Example:
+>>     ehrpwm0: pwm@48300200 { /* EHRPWM on am33xx */
+>> -    compatible = "ti,am3352-ehrpwm", "ti,am33xx-ehrpwm";
+>> +    compatible = "ti,am3352-ehrpwm";
+>>       #pwm-cells = <3>;
+>>       reg = <0x48300200 0x100>;
+>>       clocks = <&ehrpwm0_tbclk>, <&l4ls_gclk>;
+>> @@ -27,16 +27,15 @@ ehrpwm0: pwm@48300200 { /* EHRPWM on am33xx */
+>>   };
+>>     ehrpwm0: pwm@48300200 { /* EHRPWM on am4372 */
+>> -    compatible = "ti,am4372-ehrpwm", "ti,am3352-ehrpwm", "ti,am33xx-ehrpwm";
+>> +    compatible = "ti,am4372-ehrpwm", "ti,am3352-ehrpwm";
+>>       #pwm-cells = <3>;
+>>       reg = <0x48300200 0x80>;
+>>       clocks = <&ehrpwm0_tbclk>, <&l4ls_gclk>;
+>>       clock-names = "tbclk", "fck";
+>> -    ti,hwmods = "ehrpwm0";
+>>   };
+>>     ehrpwm0: pwm@1f00000 { /* EHRPWM on da850 */
+>> -    compatible = "ti,da850-ehrpwm", "ti,am3352-ehrpwm", "ti,am33xx-ehrpwm";
+>> +    compatible = "ti,da850-ehrpwm", "ti,am3352-ehrpwm";
+>>       #pwm-cells = <3>;
+>>       reg = <0x1f00000 0x2000>;
+>>   };
+>> diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+>> index 039a9ab4c7ea..fbf3458ab246 100644
+>> --- a/arch/arm/boot/dts/am33xx-l4.dtsi
+>> +++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+>> @@ -2017,8 +2017,7 @@ eqep0: counter@180 {
+>>                   };
+>>                     ehrpwm0: pwm@200 {
+>> -                    compatible = "ti,am3352-ehrpwm",
+>> -                             "ti,am33xx-ehrpwm";
+>> +                    compatible = "ti,am3352-ehrpwm";
+>>                       #pwm-cells = <3>;
+>>                       reg = <0x200 0x80>;
+>>                       clocks = <&ehrpwm0_tbclk>, <&l4ls_gclk>;
+>> @@ -2078,8 +2077,7 @@ eqep1: counter@180 {
+>>                   };
+>>                     ehrpwm1: pwm@200 {
+>> -                    compatible = "ti,am3352-ehrpwm",
+>> -                             "ti,am33xx-ehrpwm";
+>> +                    compatible = "ti,am3352-ehrpwm";
+>>                       #pwm-cells = <3>;
+>>                       reg = <0x200 0x80>;
+>>                       clocks = <&ehrpwm1_tbclk>, <&l4ls_gclk>;
+>> @@ -2139,8 +2137,7 @@ eqep2: counter@180 {
+>>                   };
+>>                     ehrpwm2: pwm@200 {
+>> -                    compatible = "ti,am3352-ehrpwm",
+>> -                             "ti,am33xx-ehrpwm";
+>> +                    compatible = "ti,am3352-ehrpwm";
+>>                       #pwm-cells = <3>;
+>>                       reg = <0x200 0x80>;
+>>                       clocks = <&ehrpwm2_tbclk>, <&l4ls_gclk>;
+>> diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
+> 
+> [...]
+> 
+>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+>> index 7cf31b6e48b7..afdf3d3747ce 100644
+>> --- a/arch/arm/boot/dts/da850.dtsi
+>> +++ b/arch/arm/boot/dts/da850.dtsi
+>> @@ -574,8 +574,7 @@ mmc1: mmc@21b000 {
+>>               status = "disabled";
+>>           };
+>>           ehrpwm0: pwm@300000 {
+>> -            compatible = "ti,da850-ehrpwm", "ti,am3352-ehrpwm",
+>> -                     "ti,am33xx-ehrpwm";
+>> +            compatible = "ti,da850-ehrpwm", "ti,am3352-ehrpwm";
+>>               #pwm-cells = <3>;
+>>               reg = <0x300000 0x2000>;
+>>               clocks = <&psc1 17>, <&ehrpwm_tbclk>;
+>> @@ -584,8 +583,7 @@ ehrpwm0: pwm@300000 {
+>>               status = "disabled";
+>>           };
+>>           ehrpwm1: pwm@302000 {
+>> -            compatible = "ti,da850-ehrpwm", "ti,am3352-ehrpwm",
+>> -                     "ti,am33xx-ehrpwm";
+>> +            compatible = "ti,da850-ehrpwm", "ti,am3352-ehrpwm";
+>>               #pwm-cells = <3>;
+>>               reg = <0x302000 0x2000>;
+>>               clocks = <&psc1 17>, <&ehrpwm_tbclk>;
+>>
+> 
+> I think, the DT changes can be split and posted standalone while bindings fixed
+> as part of yaml conversation.
+> Personally I do not see reasons for separate .txt bindings fix here as ymal
+> conversation just
+> reveals inconsistency between DT bindings, DTBs and code which leads to DTBs fix.
 
-By being stuck, I mean being in an state from which it can't recover.
-The controller will keep outputting seemingly the same signal regardless
-what you write to the period register. You can read the values back, but
-they aren't effecting the output anymore. No matter in what order or
-with what delay I try to re-enable and disable the gate or enable bit,
-it'll keep outputting the same signal until you reset the device.
+I agree. Will split the series into DT changes and yaml conversion.
 
+Thanks and regards,
+Lokesh
