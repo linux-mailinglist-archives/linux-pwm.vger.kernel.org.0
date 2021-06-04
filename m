@@ -2,78 +2,73 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D84F39C2E4
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Jun 2021 23:49:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 938AF39C2E7
+	for <lists+linux-pwm@lfdr.de>; Fri,  4 Jun 2021 23:49:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230128AbhFDVvF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 4 Jun 2021 17:51:05 -0400
-Received: from mail-ot1-f48.google.com ([209.85.210.48]:43857 "EHLO
-        mail-ot1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229929AbhFDVvE (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 4 Jun 2021 17:51:04 -0400
-Received: by mail-ot1-f48.google.com with SMTP id i12-20020a05683033ecb02903346fa0f74dso10463037otu.10;
-        Fri, 04 Jun 2021 14:49:18 -0700 (PDT)
+        id S229929AbhFDVve (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 4 Jun 2021 17:51:34 -0400
+Received: from mail-ot1-f54.google.com ([209.85.210.54]:40546 "EHLO
+        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229774AbhFDVvd (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 4 Jun 2021 17:51:33 -0400
+Received: by mail-ot1-f54.google.com with SMTP id c31-20020a056830349fb02903a5bfa6138bso10483472otu.7;
+        Fri, 04 Jun 2021 14:49:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=USdbMhWSRgMqODaRMx3wKYgyJf2pCkCziKl2l0CDKDo=;
-        b=ErQHTbJIzvpp9rOpytpj6NpMoRDsgM9+CQ97K77aQ4pk63Feodp4xYqPl6uNEWGYIC
-         7MdWK8fxViFDYqfz7HrR0U8LOTAn80oBjEkAJ7QZJVA9Dy0cfGvjiTXtwDxO+YDg4SFm
-         cKY3SZkKcRp+Wy5kM83FskyI1OPQoIeJfpJYlWEVvGGOmhDVMMNVIYfN1f2aKpOzfC6u
-         27kzsbYHf8PLhj4L/akZ7TbHMXIMJuANErFKZ2O75yxdxqbMhkOa+Jx3cMnqijsBj6ih
-         EKFjdJxsRmsrkyE5Il5D4GYDYij3Pg9WNvE3a7yw7c2cKhFTrCipyEVuSXz0VC8XOYdM
-         AFQg==
-X-Gm-Message-State: AOAM531ztgIpz3/1B1em+f68bCc88SmtJu/2jeq2POKsjAuiOFnMGeUu
-        0MnqKOamXoFkNpyHJBAynA==
-X-Google-Smtp-Source: ABdhPJwwMN055pDTnS3iLcssrEc5Fq8uTwxHn7q3GorjKCpg5IWVlPe9miBhiAs75SD5YuQw1gQ6Sg==
-X-Received: by 2002:a9d:7a5:: with SMTP id 34mr5340827oto.371.1622843357711;
-        Fri, 04 Jun 2021 14:49:17 -0700 (PDT)
+        bh=AyI3Bv7v3Pj1ilSBOJvpQtV6ge00H/vUNYRyVuGjTgc=;
+        b=JsO6yW6cKNpFxsM3QR+iN/IkSc5SFkgp6StYnkhD240KArP4DY+snhPT76wpWSHtvM
+         8ZX/0dGkc6NbiuB20IeYxJRKdSy4W1L1uBXFbrP9/lRrHEXVTB1pnX0SQ8TIDg4G7GGN
+         XgMKa0+y5xc3E+sHgibn++FfslnGLNqmGfR7+Xb0bjUCMcuOk0Pcf+1ME2tcB5lgK52A
+         rPXJkbdhYpMj9QPL5FH/PJrMTudoOQyVau9p/dYxY2nDsaVtHLWdoqPNWfqbQmTHZknY
+         HbNVEXsh4lRRDJfsoxXcFmPzyN9hdOIX81L2E8R0HVLiriDadv4oQNlb2f4umyevangj
+         7zHw==
+X-Gm-Message-State: AOAM531Yox9RIJHXnVCs7zPvAgZmUyjU4Amr5ObdnWelJuAYSL0y94cW
+        g0wwXqKyRBfQ3fM5SoqwysVhdzaNJA==
+X-Google-Smtp-Source: ABdhPJzgKjQvnY1oVboaSEVe4Fzh5yMgnaGgbt4UfLSWg3miomKHxnK8p6XELinXE7k8xPpteuFJBg==
+X-Received: by 2002:a05:6830:2011:: with SMTP id e17mr5307866otp.295.1622843374660;
+        Fri, 04 Jun 2021 14:49:34 -0700 (PDT)
 Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j26sm736132otp.15.2021.06.04.14.49.16
+        by smtp.gmail.com with ESMTPSA id y66sm342726ooa.48.2021.06.04.14.49.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jun 2021 14:49:16 -0700 (PDT)
-Received: (nullmailer pid 3984270 invoked by uid 1000);
-        Fri, 04 Jun 2021 21:49:15 -0000
-Date:   Fri, 4 Jun 2021 16:49:15 -0500
+        Fri, 04 Jun 2021 14:49:34 -0700 (PDT)
+Received: (nullmailer pid 3984835 invoked by uid 1000);
+        Fri, 04 Jun 2021 21:49:32 -0000
+Date:   Fri, 4 Jun 2021 16:49:32 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        lee.jones@linaro.org, u.kleine-koenig@pengutronix.de,
-        tony@atomide.com, Vignesh R <vigneshr@ti.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Nishanth Menon <nm@ti.com>,
+Cc:     Nishanth Menon <nm@ti.com>, Vignesh R <vigneshr@ti.com>,
+        u.kleine-koenig@pengutronix.de, Rob Herring <robh+dt@kernel.org>,
+        lee.jones@linaro.org, tony@atomide.com,
         Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: pwm-tiecap: Convert to json schema
-Message-ID: <20210604214915.GA3984212@robh.at.kernel.org>
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        thierry.reding@gmail.com,
+        Device Tree Mailing List <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: pwm: pwm-tiecap: Add compatible string
+ for AM64 SoC
+Message-ID: <20210604214932.GA3984784@robh.at.kernel.org>
 References: <20210601102804.22152-1-lokeshvutla@ti.com>
- <20210601102804.22152-2-lokeshvutla@ti.com>
+ <20210601102804.22152-3-lokeshvutla@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210601102804.22152-2-lokeshvutla@ti.com>
+In-Reply-To: <20210601102804.22152-3-lokeshvutla@ti.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 01 Jun 2021 15:58:03 +0530, Lokesh Vutla wrote:
-> Convert the tiecap binding to DT schema format using json-schema.
-> Along with this conversion the following changes are included:
-> - 'clock' and 'clock-names' properties are marked required as
->    driver fails to probe without these properties
-> - Dropped ti,am33xx-ecap as it is no longer applicable.
-> - 'power-domains' property is introduced and marked as optional.
+On Tue, 01 Jun 2021 15:58:04 +0530, Lokesh Vutla wrote:
+> Add compatible string for AM64 SoC in device tree binding.
+> IP is compatible with ti,am3352-ecap, so adding the AM64 compatible
+> under enum of one of the compatible list entry.
 > 
 > Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 > ---
->  .../devicetree/bindings/pwm/pwm-tiecap.txt    | 51 ---------------
->  .../devicetree/bindings/pwm/pwm-tiecap.yaml   | 63 +++++++++++++++++++
->  2 files changed, 63 insertions(+), 51 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-tiecap.yaml
+>  Documentation/devicetree/bindings/pwm/pwm-tiecap.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
