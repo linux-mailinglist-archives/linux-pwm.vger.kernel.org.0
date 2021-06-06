@@ -2,46 +2,37 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C48C39D1BA
-	for <lists+linux-pwm@lfdr.de>; Sun,  6 Jun 2021 23:45:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F4C139D1BC
+	for <lists+linux-pwm@lfdr.de>; Sun,  6 Jun 2021 23:49:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230398AbhFFVrW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 6 Jun 2021 17:47:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59242 "EHLO
+        id S230355AbhFFVvV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 6 Jun 2021 17:51:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230383AbhFFVrW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 6 Jun 2021 17:47:22 -0400
+        with ESMTP id S230342AbhFFVvV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 6 Jun 2021 17:51:21 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0562BC061766
-        for <linux-pwm@vger.kernel.org>; Sun,  6 Jun 2021 14:45:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE9A6C061766
+        for <linux-pwm@vger.kernel.org>; Sun,  6 Jun 2021 14:49:30 -0700 (PDT)
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lq0aF-0005Yf-3o; Sun, 06 Jun 2021 23:45:27 +0200
+        id 1lq0e8-0005ml-JB; Sun, 06 Jun 2021 23:49:28 +0200
 Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lq0aD-0005oY-Jc; Sun, 06 Jun 2021 23:45:25 +0200
-Date:   Sun, 6 Jun 2021 23:45:12 +0200
+        id 1lq0e7-0006OP-QO; Sun, 06 Jun 2021 23:49:27 +0200
+Date:   Sun, 6 Jun 2021 23:49:24 +0200
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Flavio Suligoi <f.suligoi@asem.it>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH v2 7/7] pwm: core: Simplify some devm_*pwm*() functions
-Message-ID: <20210606214512.36ntagggat7wbhvh@pengutronix.de>
-References: <20210531194947.10770-1-andriy.shevchenko@linux.intel.com>
- <20210531194947.10770-7-andriy.shevchenko@linux.intel.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, kernel@pengutronix.de,
+        linux-pwm@vger.kernel.org
+Subject: Patches for next
+Message-ID: <20210606214924.lrecu6msanhdejpj@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="p3seyr7qu6fpltut"
+        protocol="application/pgp-signature"; boundary="s6egbcodfvtbmjdh"
 Content-Disposition: inline
-In-Reply-To: <20210531194947.10770-7-andriy.shevchenko@linux.intel.com>
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -51,132 +42,54 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---p3seyr7qu6fpltut
+--s6egbcodfvtbmjdh
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello Andy,
+Hello Thierry,
 
-On Mon, May 31, 2021 at 10:49:47PM +0300, Andy Shevchenko wrote:
-> Use devm_add_action_or_reset() instead of devres_alloc() and
-> devres_add(), which works the same. This will simplify the
-> code. There is no functional changes.
->=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> v2: new patch
->  drivers/pwm/core.c | 60 +++++++++++++++++++---------------------------
->  1 file changed, 25 insertions(+), 35 deletions(-)
->=20
-> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index 6d4410bd9793..9f643414676b 100644
-> --- a/drivers/pwm/core.c
-> +++ b/drivers/pwm/core.c
-> @@ -1059,9 +1059,9 @@ void pwm_put(struct pwm_device *pwm)
->  }
->  EXPORT_SYMBOL_GPL(pwm_put);
-> =20
-> -static void devm_pwm_release(struct device *dev, void *res)
-> +static void devm_pwm_release(void *pwm)
->  {
-> -	pwm_put(*(struct pwm_device **)res);
-> +	pwm_put(pwm);
->  }
-> =20
->  /**
-> @@ -1077,19 +1077,16 @@ static void devm_pwm_release(struct device *dev, =
-void *res)
->   */
->  struct pwm_device *devm_pwm_get(struct device *dev, const char *con_id)
->  {
-> -	struct pwm_device **ptr, *pwm;
-> -
-> -	ptr =3D devres_alloc(devm_pwm_release, sizeof(*ptr), GFP_KERNEL);
-> -	if (!ptr)
-> -		return ERR_PTR(-ENOMEM);
-> +	struct pwm_device *pwm;
-> +	int ret;
-> =20
->  	pwm =3D pwm_get(dev, con_id);
-> -	if (!IS_ERR(pwm)) {
-> -		*ptr =3D pwm;
-> -		devres_add(dev, ptr);
-> -	} else {
-> -		devres_free(ptr);
-> -	}
-> +	if (IS_ERR(pwm))
-> +		return pwm;
-> +
-> +	ret =3D devm_add_action_or_reset(dev, devm_pwm_release, pwm);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> =20
->  	return pwm;
->  }
-> @@ -1110,19 +1107,16 @@ EXPORT_SYMBOL_GPL(devm_pwm_get);
->  struct pwm_device *devm_of_pwm_get(struct device *dev, struct device_nod=
-e *np,
->  				   const char *con_id)
->  {
-> -	struct pwm_device **ptr, *pwm;
-> -
-> -	ptr =3D devres_alloc(devm_pwm_release, sizeof(*ptr), GFP_KERNEL);
-> -	if (!ptr)
-> -		return ERR_PTR(-ENOMEM);
-> +	struct pwm_device *pwm;
-> +	int ret;
-> =20
->  	pwm =3D of_pwm_get(dev, np, con_id);
-> -	if (!IS_ERR(pwm)) {
-> -		*ptr =3D pwm;
-> -		devres_add(dev, ptr);
-> -	} else {
-> -		devres_free(ptr);
-> -	}
-> +	if (IS_ERR(pwm))
-> +		return pwm;
-> +
-> +	ret =3D devm_add_action_or_reset(dev, devm_pwm_release, pwm);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> =20
->  	return pwm;
->  }
-> @@ -1144,23 +1138,19 @@ struct pwm_device *devm_fwnode_pwm_get(struct dev=
-ice *dev,
->  				       struct fwnode_handle *fwnode,
->  				       const char *con_id)
->  {
-> -	struct pwm_device **ptr, *pwm =3D ERR_PTR(-ENODEV);
-> -
-> -	ptr =3D devres_alloc(devm_pwm_release, sizeof(*ptr), GFP_KERNEL);
-> -	if (!ptr)
-> -		return ERR_PTR(-ENOMEM);
-> +	struct pwm_device *pwm =3D ERR_PTR(-ENODEV);
-> +	int ret;
-> =20
->  	if (is_of_node(fwnode))
->  		pwm =3D of_pwm_get(dev, to_of_node(fwnode), con_id);
->  	else if (is_acpi_node(fwnode))
->  		pwm =3D acpi_pwm_get(fwnode);
-> +	if (IS_ERR(pwm))
-> +		return pwm;
-> =20
-> -	if (!IS_ERR(pwm)) {
-> -		*ptr =3D pwm;
-> -		devres_add(dev, ptr);
-> -	} else {
-> -		devres_free(ptr);
-> -	}
-> +	ret =3D devm_add_action_or_reset(dev, devm_pwm_release, pwm);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> =20
+[I already sent this mail before, but failed to also send it to the
+linux-pwm list. So here is a resend. Please ignore the first
+submission.]
 
-Another nice one:
+I saw you applied a few patches to your for-next branch. IMHO there are
+some more that are ready for prime time:
 
-Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+ - [v2] pwm: Drop irrelevant error path from pwmchip_remove()=20
+   in (implicit) v1 you only had some concerns about the commit log.
+   This is the same patch with an improved commit log.
+
+ - [v2] pwm: Ensure for legacy drivers that pwm->state stays consistent
+   this is a rework that improves behaviour for legacy drivers: It
+   ensures that pwm->state is consistent even if a callback fails, it
+   fixes a glitch when disabling and it adds tracing support en passant.
+
+ - several cleanup series that improve individual drivers.
+   (naming cleanup, conversion to .apply, stop checking the return code
+   of pwmchip_remove()). There are series for
+	- tiecap
+	- berlin
+	- pxa
+	- stm32-lp
+	- sprd
+	- imx1
+
+ - devm_pwmchip_add
+   You had some doubts to my initial patch set that only converted one
+   driver. In the meantime I identified and patched several drivers that
+   can benefit from this function and simplified accordingly. This
+   affects the following patches:
+
+	- pwm: Add a devm managed function to add pwm_chips=20
+	- pwm: lpss: Simplify using devm_pwmchip_add=20
+	- [v2] pwm: meson: Simplify using devm_pwmchip_add=20
+	- pwm: clps711x: Simplify using devm_pwmchip_add()=20
+	- pwm: imx1: Simplify using devm_pwmchip_add()=20
+	- pwm: crc: Simplify using devm_pwmchip_add()=20
+
+It would be great if you would still consider these for the next merge
+window or reply to these patches with your concerns.
 
 Thanks
 Uwe
@@ -185,19 +98,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---p3seyr7qu6fpltut
+--s6egbcodfvtbmjdh
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmC9QeMACgkQwfwUeK3K
-7AnunwgAj+fZK1hM1Jp8n2rLPPJU3E/yhcn7MkQT3xzlqXC1Wygu6WtAcuPB3Tjs
-yi0fhP6DWsmzN4ndnmLIolx8lESkoVZbxyJtPbn+5XfwjHLTZfHcxMNiJEx3w1jD
-xW6lT1bR343OwzDvWDvVIpn5myF8jiQLoNtdPxUxMRu9KzPOnkb8Pj2WYXIfPCMK
-R3iwd48RBicjUMN26eqB2Mvm8j8GJlDM4Jg1NFGVfC4h+EsMibf7qby0S4turi0b
-m5Oe2KQeo4oJKIAPJMWqHqDyzTAfqRC2hrDHNwj/H8QAQvDIBYsF6Irmuia54ZLv
-cUbVR34IIOBkRSZlgiLo35I0So5DKg==
-=w/dp
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmC9QuAACgkQwfwUeK3K
+7AnoNAgAmMjR748qe//g4yZm3s7MJc1fyjCoIhnXTeuCb9k63BY+5LXcFcm+uVP4
+YaYnjGXuzJfz0xvEg10lKGyUhxpkbjuUEZ7uEAxq1SfSGcfEqnxoCQVrqSKJ9pqn
+7vAFraH4skn7Z8CMP4eY0alk49D1FYzTdk3JwkipRC3pv/oT6UgU0xsxv7jnS8Ag
+aDfq3wp6xjy7Od6tPw7KBWZUsNIUqlf3OwdT6PFAdMQFxMSi28AaDqG+ZZtDBkbx
+At1Lf1Z2uLz5/5Ul2dwYGXNjeuOBw8lr+Lyksbq3lE9LCTSdHfBMhwoFVzHay5XM
+V2ZvJXIWqu25JH0XAvktMCoWqV2LsA==
+=MFHY
 -----END PGP SIGNATURE-----
 
---p3seyr7qu6fpltut--
+--s6egbcodfvtbmjdh--
