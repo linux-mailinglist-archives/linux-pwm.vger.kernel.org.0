@@ -2,161 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4741539DE63
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Jun 2021 16:11:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EFDC339DEE5
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Jun 2021 16:36:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230261AbhFGONZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 7 Jun 2021 10:13:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230237AbhFGONZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Jun 2021 10:13:25 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD9B3C061766
-        for <linux-pwm@vger.kernel.org>; Mon,  7 Jun 2021 07:11:33 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lqFyS-0004K4-3e; Mon, 07 Jun 2021 16:11:28 +0200
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lqFyH-0003VO-7M; Mon, 07 Jun 2021 16:11:17 +0200
-Date:   Mon, 7 Jun 2021 16:11:17 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Flavio Suligoi <f.suligoi@asem.it>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        id S230266AbhFGOiD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Jun 2021 10:38:03 -0400
+Received: from mga12.intel.com ([192.55.52.136]:6488 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230213AbhFGOiD (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 7 Jun 2021 10:38:03 -0400
+IronPort-SDR: ShV0/11HTYcLLl524PdDMZ4s5r2i9PtKLTiMkkomfp410kK9XOlHBq4ll5mdonphBsvvpI4IWM
+ rcFauRd6Obxg==
+X-IronPort-AV: E=McAfee;i="6200,9189,10008"; a="184315546"
+X-IronPort-AV: E=Sophos;i="5.83,255,1616482800"; 
+   d="scan'208";a="184315546"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2021 07:36:08 -0700
+IronPort-SDR: Y37UMWScXJDZ303soo6I9Yqr9mSsORiTUXT9IqjmD+0FVepK7Jy9XZkXULa3tOZNWgoCVRrEsz
+ 1RYnHBCHWJTA==
+X-IronPort-AV: E=Sophos;i="5.83,255,1616482800"; 
+   d="scan'208";a="484794854"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2021 07:36:05 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lqGME-000HEt-Dk; Mon, 07 Jun 2021 17:36:02 +0300
+Date:   Mon, 7 Jun 2021 17:36:02 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Flavio Suligoi <f.suligoi@asem.it>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Jonathan Corbet <corbet@lwn.net>,
         Lee Jones <lee.jones@linaro.org>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH v2 2/7] pwm: core: Always require PWM flags to be provided
-Message-ID: <20210607141117.24bvqiafy4cndoj4@pengutronix.de>
-References: <20210531194947.10770-1-andriy.shevchenko@linux.intel.com>
- <20210531194947.10770-2-andriy.shevchenko@linux.intel.com>
- <20210606213054.bmqgs5hehbowa62d@pengutronix.de>
- <YL3grTQ00lFCXyCp@smile.fi.intel.com>
- <20210607095324.yaiu5lzb5zgoejpa@pengutronix.de>
- <YL3xuJyAcbPLW7yG@smile.fi.intel.com>
- <YL3zDUWsY9mUW0eQ@smile.fi.intel.com>
- <YL4HrZTb+fmW4UTf@smile.fi.intel.com>
+Subject: Re: [PATCH v3 1/6] docs: firmware-guide: ACPI: Add a PWM example
+Message-ID: <YL4u0iPs3WbWulV8@smile.fi.intel.com>
+References: <20210607122458.40073-1-andriy.shevchenko@linux.intel.com>
+ <CAJZ5v0jNWTzy37rX_V6LF7y7LOdy=KUokkVZ+25zj4+AZ244OQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zdgor72n6fpmyvqy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YL4HrZTb+fmW4UTf@smile.fi.intel.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <CAJZ5v0jNWTzy37rX_V6LF7y7LOdy=KUokkVZ+25zj4+AZ244OQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Mon, Jun 07, 2021 at 02:38:26PM +0200, Rafael J. Wysocki wrote:
+> On Mon, Jun 7, 2021 at 2:24 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > When PWM support for ACPI has been added into the kernel, it missed
+> > the documentation update. Hence update documentation here.
+> >
+> > Fixes: 4a6ef8e37c4d ("pwm: Add support referencing PWMs from ACPI")
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> and I'm assuming this to go in via PWM.
 
---zdgor72n6fpmyvqy
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, thanks for your tags!
 
-Hello Andy,
+-- 
+With Best Regards,
+Andy Shevchenko
 
-On Mon, Jun 07, 2021 at 02:49:01PM +0300, Andy Shevchenko wrote:
-> On Mon, Jun 07, 2021 at 01:21:01PM +0300, Andy Shevchenko wrote:
-> > On Mon, Jun 07, 2021 at 01:15:20PM +0300, Andy Shevchenko wrote:
-> > > On Mon, Jun 07, 2021 at 11:53:24AM +0200, Uwe Kleine-K=F6nig wrote:
-> > > > On Mon, Jun 07, 2021 at 12:02:37PM +0300, Andy Shevchenko wrote:
-> > > > > On Sun, Jun 06, 2021 at 11:30:54PM +0200, Uwe Kleine-K=F6nig wrot=
-e:
-> > > > > > On Mon, May 31, 2021 at 10:49:42PM +0300, Andy Shevchenko wrote:
-> > > > > > > It makes little sense to make PWM flags optional since in case
-> > > > > > > of multi-channel consumer the flags can be optional only for
-> > > > > > > the last listed channel.
-> > > > > >=20
-> > > > > > I think the same holds true for dt references.
-> > > > >=20
-> > > > > Can you elaborate this? I haven't got what you are talking about,=
- not a DT
-> > > > > expert here.
-> > > >=20
-> > > > Ah no, I mixed that up. While the function that parses the phandle =
-is
-> > > > flexible, for each pwm controller the number of arguments is fixed,=
- so
-> > > >=20
-> > > > 	pwms =3D <&pwm1 100000 &pwm2 100000 &pwm3 1000000>;
-> > > >=20
-> > > > cannot be interpreted as 3-argument references to two PWMs. This is
-> > > > different to ACPI (I guess, not an ACPI expert here :-) because &pw=
-m1
-> > > > "knows" if it needs 1 or 2 additional parameters (#pwm-cells).
-> > >=20
-> > > It's not about ACPI, it's about "the ACPI glue layer in Linux kernel".
-> > > Used API is a part of it and it does allow only two cases, either NUL=
-L entry
-> > > (by having 0 as an argument) or full-length supplied tuple (in case o=
-f PWM it's
-> > > 3, so, means 4 parameters.
-> > >=20
-> > > Let's consider examples:
-> > >=20
-> > > (0, 0, x3, y3, z3, t3) // NULL, NULL, PWM3
-> > > (x1, y1, z1, t1, 0, x3, y3, z3, t3) // PWM1, NULL, PWM3
-> > >=20
-> > > So, making last parameter "flexible" will work only for the last tupl=
-e in the
-> > > array.
-> > >=20
-> > > Read this [1] for further information.
-> > >=20
-> > > [1]: https://elixir.bootlin.com/linux/latest/source/drivers/acpi/prop=
-erty.c#L629
-> >=20
-> > Hmm... I have read the actual implementation and it seems it's possible=
- to have
-> > flexible array, so this patch needs to be reconsidered.
->=20
-> I was thinking more about it and what we have here is positional-dependent
-> arguments. Either way we might end up in the same situation (when we need=
- to
-> parse arguments based on their positions, rather than always have them be=
-ing
-> present). So, while I won't change documentation example (to be more stri=
-cter
-> there), I will drop this change.
->=20
-> Also, the PWM initial state doesn't include duty cycle. Any explanations =
-why is
-> that?
 
-This isn't technically the initial state. It's a hint to the consumer
-which period to pick. The duty-cycle is usually variable, but if I
-designed the binding today I would not include the period in the pwm
-handle. But to discuss this is moot---the binding is as it is.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---zdgor72n6fpmyvqy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmC+KQEACgkQwfwUeK3K
-7AmoCgf7BALxWbL2VI8+acrc4CorcueM4VAe+cJtBXASfcqn/W4hS39ZwYumlJpX
-EGyOfnnV73WcPqD63fUTAtKvdoTAuXQd/7ziOw4AzQZmx1UaX/tXtvSgJ5Nx8Pq1
-U22dLPoIHLw8oTrWx0s58iz9a9fSGjUufUf/ZqAVlDToDSKKvvWrDTn5IYp3OwFk
-kTh9+MRaqMoS8tR+IMwU4VGngj4aZMzytgguuDCxKGRP8OB5HWoj/yxRuCNbmvMM
-EbLVzs+VE/nRCNA/smqzpTiG6KX2vywcHgyRbgqCRy5COvAO/sZj4tHEyAORCBFW
-hUPFmkPha4xmcoS/UVZYqLzd0EH3VA==
-=AzX/
------END PGP SIGNATURE-----
-
---zdgor72n6fpmyvqy--
