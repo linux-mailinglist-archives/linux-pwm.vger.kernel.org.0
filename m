@@ -2,117 +2,106 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FACD39DBB7
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Jun 2021 13:49:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3985139DC31
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Jun 2021 14:24:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231325AbhFGLu6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 7 Jun 2021 07:50:58 -0400
-Received: from mga06.intel.com ([134.134.136.31]:47165 "EHLO mga06.intel.com"
+        id S230286AbhFGM0j (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Jun 2021 08:26:39 -0400
+Received: from mga05.intel.com ([192.55.52.43]:65295 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231283AbhFGLu6 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 7 Jun 2021 07:50:58 -0400
-IronPort-SDR: wZgmnU9c3Jj/iwFIBNdjyA+3lOM3UpCHFqxlCpz1zYn9eGyXqJ8azfV6rzO1FA+xKYrPZ3jihU
- 9T+V2xp9Lrow==
-X-IronPort-AV: E=McAfee;i="6200,9189,10007"; a="265761217"
+        id S230241AbhFGM0h (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 7 Jun 2021 08:26:37 -0400
+IronPort-SDR: X4Ty/k9GcdKKeuQeXCic1iwvTKQj0ijcz/FTjRE/8WW9Bv5NJRR0YhvBeFH3YBXE22d2X2G3SR
+ h39Qz9OWsHTw==
+X-IronPort-AV: E=McAfee;i="6200,9189,10007"; a="290236963"
 X-IronPort-AV: E=Sophos;i="5.83,255,1616482800"; 
-   d="scan'208";a="265761217"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2021 04:49:06 -0700
-IronPort-SDR: u17BKXvx/hUR46TzWYEH1/SrBnug8cLVNtgUOpARTkwSnngROQ/OLo6pqeQujI435LdHyJ1dTj
- ScM475RMOI1A==
+   d="scan'208";a="290236963"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2021 05:24:46 -0700
+IronPort-SDR: nivNo8rv/nlBVVlwLvcRKyP83Q92lUN4ObKZF+jVMGqQn5BAHf4q6eZOyywJAUrg1QloO6QcOR
+ fjcwYge4K/Eg==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.83,255,1616482800"; 
-   d="scan'208";a="484747647"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2021 04:49:03 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lqDkb-000FDV-3n; Mon, 07 Jun 2021 14:49:01 +0300
-Date:   Mon, 7 Jun 2021 14:49:01 +0300
+   d="scan'208";a="481505770"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga001.jf.intel.com with ESMTP; 07 Jun 2021 05:24:42 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id BDE10C5; Mon,  7 Jun 2021 15:25:05 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Flavio Suligoi <f.suligoi@asem.it>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Lee Jones <lee.jones@linaro.org>,
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Flavio Suligoi <f.suligoi@asem.it>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Cc:     Jonathan Corbet <corbet@lwn.net>, Lee Jones <lee.jones@linaro.org>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH v2 2/7] pwm: core: Always require PWM flags to be provided
-Message-ID: <YL4HrZTb+fmW4UTf@smile.fi.intel.com>
-References: <20210531194947.10770-1-andriy.shevchenko@linux.intel.com>
- <20210531194947.10770-2-andriy.shevchenko@linux.intel.com>
- <20210606213054.bmqgs5hehbowa62d@pengutronix.de>
- <YL3grTQ00lFCXyCp@smile.fi.intel.com>
- <20210607095324.yaiu5lzb5zgoejpa@pengutronix.de>
- <YL3xuJyAcbPLW7yG@smile.fi.intel.com>
- <YL3zDUWsY9mUW0eQ@smile.fi.intel.com>
+Subject: [PATCH v3 1/6] docs: firmware-guide: ACPI: Add a PWM example
+Date:   Mon,  7 Jun 2021 15:24:53 +0300
+Message-Id: <20210607122458.40073-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <YL3zDUWsY9mUW0eQ@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Jun 07, 2021 at 01:21:01PM +0300, Andy Shevchenko wrote:
-> On Mon, Jun 07, 2021 at 01:15:20PM +0300, Andy Shevchenko wrote:
-> > On Mon, Jun 07, 2021 at 11:53:24AM +0200, Uwe Kleine-König wrote:
-> > > On Mon, Jun 07, 2021 at 12:02:37PM +0300, Andy Shevchenko wrote:
-> > > > On Sun, Jun 06, 2021 at 11:30:54PM +0200, Uwe Kleine-König wrote:
-> > > > > On Mon, May 31, 2021 at 10:49:42PM +0300, Andy Shevchenko wrote:
-> > > > > > It makes little sense to make PWM flags optional since in case
-> > > > > > of multi-channel consumer the flags can be optional only for
-> > > > > > the last listed channel.
-> > > > > 
-> > > > > I think the same holds true for dt references.
-> > > > 
-> > > > Can you elaborate this? I haven't got what you are talking about, not a DT
-> > > > expert here.
-> > > 
-> > > Ah no, I mixed that up. While the function that parses the phandle is
-> > > flexible, for each pwm controller the number of arguments is fixed, so
-> > > 
-> > > 	pwms = <&pwm1 100000 &pwm2 100000 &pwm3 1000000>;
-> > > 
-> > > cannot be interpreted as 3-argument references to two PWMs. This is
-> > > different to ACPI (I guess, not an ACPI expert here :-) because &pwm1
-> > > "knows" if it needs 1 or 2 additional parameters (#pwm-cells).
-> > 
-> > It's not about ACPI, it's about "the ACPI glue layer in Linux kernel".
-> > Used API is a part of it and it does allow only two cases, either NULL entry
-> > (by having 0 as an argument) or full-length supplied tuple (in case of PWM it's
-> > 3, so, means 4 parameters.
-> > 
-> > Let's consider examples:
-> > 
-> > (0, 0, x3, y3, z3, t3) // NULL, NULL, PWM3
-> > (x1, y1, z1, t1, 0, x3, y3, z3, t3) // PWM1, NULL, PWM3
-> > 
-> > So, making last parameter "flexible" will work only for the last tuple in the
-> > array.
-> > 
-> > Read this [1] for further information.
-> > 
-> > [1]: https://elixir.bootlin.com/linux/latest/source/drivers/acpi/property.c#L629
-> 
-> Hmm... I have read the actual implementation and it seems it's possible to have
-> flexible array, so this patch needs to be reconsidered.
+When PWM support for ACPI has been added into the kernel, it missed
+the documentation update. Hence update documentation here.
 
-I was thinking more about it and what we have here is positional-dependent
-arguments. Either way we might end up in the same situation (when we need to
-parse arguments based on their positions, rather than always have them being
-present). So, while I won't change documentation example (to be more stricter
-there), I will drop this change.
+Fixes: 4a6ef8e37c4d ("pwm: Add support referencing PWMs from ACPI")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v3: despite flags being optional, don't alter it in the documentation
+v2: updated example to use 600 ms instead of 600 us (looks saner)
+ .../firmware-guide/acpi/enumeration.rst       | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-Also, the PWM initial state doesn't include duty cycle. Any explanations why is
-that?
-
+diff --git a/Documentation/firmware-guide/acpi/enumeration.rst b/Documentation/firmware-guide/acpi/enumeration.rst
+index 9f0d5c854fa4..f588663ba906 100644
+--- a/Documentation/firmware-guide/acpi/enumeration.rst
++++ b/Documentation/firmware-guide/acpi/enumeration.rst
+@@ -258,6 +258,38 @@ input driver::
+ 		.id_table	= mpu3050_ids,
+ 	};
+ 
++Reference to PWM device
++=======================
++
++Sometimes a device can be a consumer of PWM channel. Obviously OS would like
++to know which one. To provide this mapping the special property has been
++introduced, i.e.::
++
++    Device (DEV)
++    {
++        Name (_DSD, Package ()
++        {
++            ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++            Package () {
++                Package () { "compatible", Package () { "pwm-leds" } },
++                Package () { "label", "alarm-led" },
++                Package () { "pwms",
++                    Package () {
++                        "\\_SB.PCI0.PWM",  // <PWM device reference>
++                        0,                 // <PWM index>
++                        600000000,         // <PWM period>
++                        0,                 // <PWM flags>
++                    }
++                }
++            }
++
++        })
++        ...
++
++In the above example the PWM-based LED driver references to the PWM channel 0
++of \_SB.PCI0.PWM device with initial period setting equal to 600 ms (note that
++value is given in nanoseconds).
++
+ GPIO support
+ ============
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.30.2
 
