@@ -2,27 +2,27 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58CEE39D6A2
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Jun 2021 10:01:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2512239D6BF
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Jun 2021 10:07:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229657AbhFGICv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 7 Jun 2021 04:02:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51378 "EHLO
+        id S230097AbhFGIJT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Jun 2021 04:09:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230175AbhFGICv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Jun 2021 04:02:51 -0400
+        with ESMTP id S229545AbhFGIJT (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Jun 2021 04:09:19 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AF50C061766
-        for <linux-pwm@vger.kernel.org>; Mon,  7 Jun 2021 01:01:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 928AEC061766
+        for <linux-pwm@vger.kernel.org>; Mon,  7 Jun 2021 01:07:28 -0700 (PDT)
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lqABr-0000dm-Bv; Mon, 07 Jun 2021 10:00:55 +0200
+        id 1lqAI7-0001dM-B8; Mon, 07 Jun 2021 10:07:23 +0200
 Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lqABn-00033K-TW; Mon, 07 Jun 2021 10:00:51 +0200
-Date:   Mon, 7 Jun 2021 10:00:51 +0200
+        id 1lqAI6-0004JI-2w; Mon, 07 Jun 2021 10:07:22 +0200
+Date:   Mon, 7 Jun 2021 10:07:21 +0200
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Roman Beranek <roman.beranek@prusa3d.cz>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -33,15 +33,15 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
         linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 1/6] pwm: sun4i: enable clk prior to getting its rate
-Message-ID: <20210607080051.anzdfywvbpu52e2f@pengutronix.de>
+Subject: Re: [PATCH 2/6] pwm: sun4i: disable EN bit prior to the delay
+Message-ID: <20210607080721.4o2dd4pmb4wwddgg@pengutronix.de>
 References: <20210531044608.1006024-1-roman.beranek@prusa3d.com>
- <20210531044608.1006024-2-roman.beranek@prusa3d.com>
+ <20210531044608.1006024-3-roman.beranek@prusa3d.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fgvzcr2xl7qwtzjm"
+        protocol="application/pgp-signature"; boundary="anudz3llin6kdgsz"
 Content-Disposition: inline
-In-Reply-To: <20210531044608.1006024-2-roman.beranek@prusa3d.com>
+In-Reply-To: <20210531044608.1006024-3-roman.beranek@prusa3d.com>
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -51,44 +51,60 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---fgvzcr2xl7qwtzjm
+--anudz3llin6kdgsz
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 31, 2021 at 06:46:03AM +0200, Roman Beranek wrote:
-> Ensure the PWM clock is enabled prior to retrieving its rate, as is
-> already being done in sun4i_pwm_apply.
+On Mon, May 31, 2021 at 06:46:04AM +0200, Roman Beranek wrote:
+> The reason why we wait before gating the clock is to allow for the PWM
+> to finish its cycle and stop. But it won't stop unless the EN bit is
+> disabled.
 >=20
 > Signed-off-by: Roman Beranek <roman.beranek@prusa3d.com>
 > ---
->  drivers/pwm/pwm-sun4i.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  drivers/pwm/pwm-sun4i.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 >=20
 > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> index e01becd102c0..3721b9894cf6 100644
+> index 3721b9894cf6..2777abe66f79 100644
 > --- a/drivers/pwm/pwm-sun4i.c
 > +++ b/drivers/pwm/pwm-sun4i.c
-> @@ -117,8 +117,15 @@ static void sun4i_pwm_get_state(struct pwm_chip *chi=
-p,
->  	u64 clk_rate, tmp;
->  	u32 val;
->  	unsigned int prescaler;
-> +	int ret;
+> @@ -303,6 +303,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, str=
+uct pwm_device *pwm,
 > =20
-> +	ret =3D clk_prepare_enable(sun4i_pwm->clk);
-> +	if (ret) {
-> +		dev_err(chip->dev, "failed to enable PWM clock\n");
-> +		return;
-> +	}
->  	clk_rate =3D clk_get_rate(sun4i_pwm->clk);
-> +	clk_disable_unprepare(sun4i_pwm->clk);
-> =20
->  	val =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+>  	if (state->enabled)
+>  		ctrl |=3D BIT_CH(PWM_EN, pwm->hwpwm);
+> +	else
+> +		ctrl &=3D ~BIT_CH(PWM_EN, pwm->hwpwm);
 
-If the clock is off, does the PWM actually run? Assuming it doesn't the
-right thing to do is to ensure the clock is enabled in .probe iff the
-PWM is enabled.
+Catching the case !state->enabled even earlier would make sense.
+Otherwise you might see a needless glitch after
+
+	pwm_apply_state(mypwm, { .period =3D A, .duty_cycle =3D B, .enabled =3D tr=
+ue });
+	pwm_apply_state(mypwm, { .period =3D C, .duty_cycle =3D D, .enabled =3D fa=
+lse });
+
+which might make C+D visible on the PWM before disabling.
+
+> =20
+>  	sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
+> =20
+> @@ -325,7 +327,6 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, str=
+uct pwm_device *pwm,
+>  	spin_lock(&sun4i_pwm->ctrl_lock);
+>  	ctrl =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+>  	ctrl &=3D ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
+> -	ctrl &=3D ~BIT_CH(PWM_EN, pwm->hwpwm);
+>  	sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
+>  	spin_unlock(&sun4i_pwm->ctrl_lock);
+
+So the comment
+
+  /* We need a full period to elapse before disabling the channel. */
+
+is wrong?
 
 Best regards
 Uwe
@@ -97,19 +113,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---fgvzcr2xl7qwtzjm
+--anudz3llin6kdgsz
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmC90jAACgkQwfwUeK3K
-7AkTwQf/QHr6m8fTM/0AQ1Q9o6vzNcycIEHwD35swSOiuUM/FJD3zDMwbuaN5P8m
-5+Huh5ZopP6VYTl4oRqlb41J2UUzGXVhGRu8XL07fHpps6TYZzxcuPk/oc2nnEfW
-J+uEedwhAx/OrvWmZXxGx+0on1HpgBqY7SeGFkr/rB4Dm1uF1Wn+QDgM1J4QOiXt
-OmjuMKQItgz7FirKHYyUFqjZ/8v1rseUfl5GjAQlgBQUjAlnxJbL1ZP7EnfGdmdG
-5uaggsyAxgmwmEM/tigKDZjTswTKdXYjPthx6zk3MirPSb/EWxfyBGIG1Rd5pym4
-faMhKKyIIwRhVAiq80W2occrz6IGGA==
-=tXV6
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmC907cACgkQwfwUeK3K
+7Ame3gf/Ur7YoIu9nMF20rXnA1ys1wDYe0y17G8qfQVWLhbb3wVzlQdCBxrx7zcH
+vsBQL0rRoYu04Cgdz+YSWnfDnp/LdjwAwPQ6G5KN6rlXQNiuOqMgVdpdJAlZ0jyt
+uTOTR6OfN8JKAcLTKxOWNORnZbD4cVQa58rRJYMiFJAhaGscDwdWYkwvy/QkOkiB
+j4y0A+sJbHd7M7P8vL4DeTTHZU3TFcaEqiXJ75PTkJc0Z5nE6SFjN/xkwewhfK9H
+iKHtSejdiGFvthOHNmVJ5R9obDkyGcBzNI/AO5qNrk3Ju+ckOf1lCW9TSVQYZO8a
+V1OmOtMiWRSd8K1pDBXwZeEXMBbqjA==
+=QwWJ
 -----END PGP SIGNATURE-----
 
---fgvzcr2xl7qwtzjm--
+--anudz3llin6kdgsz--
