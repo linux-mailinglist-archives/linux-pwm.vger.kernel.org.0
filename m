@@ -2,36 +2,58 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F029F3A1E35
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Jun 2021 22:41:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBE1F3A2C8D
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Jun 2021 15:11:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229507AbhFIUnn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 9 Jun 2021 16:43:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229692AbhFIUnm (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Jun 2021 16:43:42 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 763C0C061574
-        for <linux-pwm@vger.kernel.org>; Wed,  9 Jun 2021 13:41:47 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lr51E-0004DH-In; Wed, 09 Jun 2021 22:41:44 +0200
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lr51E-0004QN-7a; Wed, 09 Jun 2021 22:41:44 +0200
-Date:   Wed, 9 Jun 2021 22:41:44 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
+        id S230393AbhFJNNF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 10 Jun 2021 09:13:05 -0400
+Received: from mail-wr1-f52.google.com ([209.85.221.52]:40825 "EHLO
+        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230272AbhFJNNF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Jun 2021 09:13:05 -0400
+Received: by mail-wr1-f52.google.com with SMTP id y7so2252066wrh.7;
+        Thu, 10 Jun 2021 06:10:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4f+fsTzlqk4Doy8mEp8ob8qzE9C2j0yN/+wDfzUy4TU=;
+        b=kObKvZ3OOQKsEOBvNzSJlB/v3h+u7ip8MkbSRsvzZBWQaWU8JSwgmtp6Mdk3Zc2Hf+
+         v5sBt0tDnlL5866q6w7kLQAksksmWDsCjhyXHi2FJ8OooUIeeCHYvhYeJTJwtKAUOS/V
+         B08vQ3QgXdqdaMgU9ipNy35XBNmst6DEH2KW+6QTjIZOCI0X/9JGstZCow59zhGaFSjX
+         mTDpmyLudCesXO1mNgakT0ziRsyATDr56kmvJeyQQpX2FXT/i6SnXsNfm64SxhK9W9lW
+         pWwhjb6r28j1dldqdBSJNJyx35ENfjW+0FecWirjJowYDTVPecozOd42relqr1tCZFlo
+         0Gpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4f+fsTzlqk4Doy8mEp8ob8qzE9C2j0yN/+wDfzUy4TU=;
+        b=KVEQSdBSgiv2hfuR2MNeJASfou5sSryZ0kQa5sYg+ZY7MW1EJaTmyNHyDm1ZzvKAVU
+         MEnPBIzsuTwEMW4ZU2eCKBQn8QzGAx5m25yBvUOzCoAk1bDN8MR/AMJSWHo3hxkt3CYF
+         irzdEwzr9x0camdE7f5O6rKAiceb8Gon052FGTx8ZMWMreL0xfLj6crfgOWUMaEVotOm
+         qEwM3zEu/35aVEfp/ap43zUqzQYEE9xK+Iw08ylKgmS/BJxSU7tpYHhHmttAlQtO2AXQ
+         UH12wFpfEqIXX8CXaNpHc8TP4OTHSIlSPVTMM2Pm7nhZSaSkNslr7JdcWV1JP0luEwxe
+         j16A==
+X-Gm-Message-State: AOAM530vFuzWG2UV3uapVzz6MmxlO4o/GvUkABItGDmuVV7BZ0Wpd5+Z
+        zOHl4bx+Uagpc+zLDXo8oMk=
+X-Google-Smtp-Source: ABdhPJxsLSjK+geZQ5dJLH/Z5KJd+5rJHYswkoNu0wRa0Khq1o4Fsaj4zyeVjV6HfdVrAfZMA/5/0A==
+X-Received: by 2002:a5d:47a6:: with SMTP id 6mr5301217wrb.203.1623330598144;
+        Thu, 10 Jun 2021 06:09:58 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id o11sm2785535wmq.1.2021.06.10.06.09.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Jun 2021 06:09:56 -0700 (PDT)
+Date:   Thu, 10 Jun 2021 15:11:40 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 Cc:     Sven Van Asbroeck <TheSven73@gmail.com>,
         Clemens Gruber <clemens.gruber@pqgruber.com>,
         linux-kernel@vger.kernel.org, kernel@pengutronix.de,
         linux-pwm@vger.kernel.org
 Subject: Re: [PATCH 1/4] pwm: core: Support new usage_power setting in PWM
  state
-Message-ID: <20210609204144.nkksqjovs2yqfiyo@pengutronix.de>
+Message-ID: <YMIPjGtYfby6ZXKl@orome.fritz.box>
 References: <20210507131845.37605-1-clemens.gruber@pqgruber.com>
  <20210507150317.bnluhqrqepde4xjm@pengutronix.de>
  <YJVhLrkeNXBp6M1p@workstation.tuxnet>
@@ -41,57 +63,63 @@ References: <20210507131845.37605-1-clemens.gruber@pqgruber.com>
  <20210607060827.vxdihsfqtw3otyco@pengutronix.de>
  <YL4vzvznTzqih0pA@orome.fritz.box>
  <20210607185158.jweahkoa3cxwl2nh@pengutronix.de>
+ <20210609204144.nkksqjovs2yqfiyo@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xtamggj425ztxndq"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lW/sldeGnfD/1z66"
 Content-Disposition: inline
-In-Reply-To: <20210607185158.jweahkoa3cxwl2nh@pengutronix.de>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20210609204144.nkksqjovs2yqfiyo@pengutronix.de>
+User-Agent: Mutt/2.0.6 (98f8cb83) (2021-03-06)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---xtamggj425ztxndq
-Content-Type: text/plain; charset=iso-8859-1
+--lW/sldeGnfD/1z66
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello Thierry,
+On Wed, Jun 09, 2021 at 10:41:44PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Thierry,
+>=20
+> On Mon, Jun 07, 2021 at 08:51:58PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> > My problem is not that in the end a solution is picked that wasn't my
+> > favourite. My problem is that I have the impression my arguments were
+> > not considered but simply ignored.
+>=20
+> Another thing that annoys me is that there are currently ~20 open
+> patches by me in patchwork, most of them are easy to understand cleanups
+> and fixes, most of them are older than Clemens' series and most of them
+> are uncommented by you. And in this situation you apply the only
+> controversial series.
 
-On Mon, Jun 07, 2021 at 08:51:58PM +0200, Uwe Kleine-K=F6nig wrote:
-> My problem is not that in the end a solution is picked that wasn't my
-> favourite. My problem is that I have the impression my arguments were
-> not considered but simply ignored.
+Clemens' series is actually older than those cleanups because it's been
+in the works for many months now. And the reason why I'm prioritizing
+Clemens' series is because it has broader impact and I want to make sure
+it gets maximum soaking time in linux-next. Small fixes and cleanups are
+less likely to break things, so I'm going to apply them after.
 
-Another thing that annoys me is that there are currently ~20 open
-patches by me in patchwork, most of them are easy to understand cleanups
-and fixes, most of them are older than Clemens' series and most of them
-are uncommented by you. And in this situation you apply the only
-controversial series.
+Thierry
 
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---xtamggj425ztxndq
+--lW/sldeGnfD/1z66
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmDBJ34ACgkQwfwUeK3K
-7Ak+cAgAiYI/FArcq9sayMBtSkEOKbDV7Wf7gdj1mtlUlmJPXx+PmMjzP2eRS3WF
-dXyZ5Rpux2AsCyvBKAaYKSIFp4mdwH0hseSBeqwaQdB/g1KBa+3IRek8KLJSGjhb
-xKBuzXCCQSQaNwld0cOXEhjAj2YadbfaFf4VZVr02jGH5hw8e7mq40xx/wdvquUP
-OfmGSIEHo1Se0x5OgzWBRaeAB+KWQE3UjLdDZ4f2goQH6FVHvcS6aOJriDA3C5EE
-13D3CVl3fJP7ZnENaEeO527scoDTG9R86Z3OOeZdaeU/p9gOIqyFWfDkMifhUzsE
-joRsnyN0O24f+CdgIvmROpN86PIA3g==
-=xKGo
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmDCD4kACgkQ3SOs138+
+s6HOoA//fjFojkbazod7GhlxBC1N6vSY3Rl9yLfOdAVm/tKxLnHF5HhKZCS8GfCB
+85Gxby+h2GABIZ6grkbRHpptoGF9SMVb5SZKmWT43oOlEiUzuUb8gyWIS9GN4H4O
+cNiAvjM2u70q2gJKEaWJAcJpgcDdDvsq2EGVbjs/Nr8Ki1U53Ez4z6sx9/LHvyai
+mwe7o1p0XH/sHDLf+iq0lohVrVgr0HGnT7ix1EunP+o+EGk1ym6JpMxiV0QaI7Z2
+bxjLFaSi1jBSjT0qIIFpx1EvGB5CuES2tERbv/4EfgPmwIpGJRF2293NT12l4YLM
+FZ7bgPE1R9FwyzL9JN5Whs+S0q33O+lPYNxfnWtkMqqM4XVySUXJtGfr6r3ywiOx
+qM0bhIySqEHcS1CB3Ollh+yFHcF7e9keOcYtaYx0Z0XDWcaq7GfEGuGQhomtdwnj
+lunNqFRQtuZzaqTrOG3sRWefrUE4KOPxalD31fGmGnyF9Q0sKWbMu5MzqW6VqXTo
+2W6kuwhBkW/Xk9dBZBU4unK2L1BAaDZjeX1ckUg3o9afdjkPJESN2ceQp2qHnJoB
+LnkG5awVco5LMWwHNzkcp0qfsdWmlenUlUqLI1DoeIrN5NoZwmnGPahnRXpIMz2A
+uKMjJWvapD0LlDsryOkYLKQMPmx+22gBGT58yAEvpJasa3EzGBI=
+=nW3a
 -----END PGP SIGNATURE-----
 
---xtamggj425ztxndq--
+--lW/sldeGnfD/1z66--
