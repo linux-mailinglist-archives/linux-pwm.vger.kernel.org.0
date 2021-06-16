@@ -2,92 +2,119 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94F333A956D
-	for <lists+linux-pwm@lfdr.de>; Wed, 16 Jun 2021 10:54:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2416E3A978D
+	for <lists+linux-pwm@lfdr.de>; Wed, 16 Jun 2021 12:35:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231513AbhFPI4d (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 16 Jun 2021 04:56:33 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:55379 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S231335AbhFPI4d (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Jun 2021 04:56:33 -0400
-X-UUID: a6071b1f0abe432a9cfe1a05c72d3c7c-20210616
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=AXElBXbtTIV7kOa1ImSC9TOOYMbfTQra4QqOyt/B34E=;
-        b=Sfn8m/wsndP1rMUaUFBldHiM72/UDJ7pHpZyTb+MJcz2FtPl64RUQ4f7eF2u5NUSx1blqtSeKash3zjqma4BkMmoPYH+2h1Zpg0KWn6EIbIhQbYWsFOa9zCNywRGRikPv42ng3llETaBLuEIVKgLhDw9Ngr866dao/PwPCV0svc=;
-X-UUID: a6071b1f0abe432a9cfe1a05c72d3c7c-20210616
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1140021566; Wed, 16 Jun 2021 16:54:23 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 16 Jun
- 2021 16:54:20 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
- MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1497.2 via Frontend Transport; Wed, 16 Jun 2021 16:54:19 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <linux-pwm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <ck.hu@mediatek.com>, <stonea168@163.com>,
-        <huijuan.xie@mediatek.com>, Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH v5 3/3] pwm: mtk_disp: implement atomic API .get_state()
-Date:   Wed, 16 Jun 2021 16:52:24 +0800
-Message-ID: <20210616085224.157318-4-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210616085224.157318-1-jitao.shi@mediatek.com>
-References: <20210616085224.157318-1-jitao.shi@mediatek.com>
+        id S232526AbhFPKhc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 16 Jun 2021 06:37:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232370AbhFPKhA (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 16 Jun 2021 06:37:00 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 998E661107;
+        Wed, 16 Jun 2021 10:34:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623839691;
+        bh=uJEv3OvJMqswalWvG2rx1DCmioR+VtUOrO7CZGR2Ajw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A6wsFevRhS9CeafwlT529v2rV3Gm9GGwn4GGkmYDghQBgvSltNdLhA2d1VwUgm9YV
+         V+BZ/Z7dkVuRC9jA+aF8uUIN4oppwPSoc0YE3UC/NPxsGiCugwhXT7XZEbbeh2pmB/
+         M4rdDOJ4s0X9LmiRn4axjJlxF+T4B+Wd1HYLAz0MgEG64RvZ+ZZaXxAxnqcCDwPJej
+         pW3zx7fe6lsVprl/vQScwg/OlH7/cEN61iAlussljsV2mRmi/pOkb0n3FbRiUdCHAK
+         H6X3SZGPBKP1nePHfXCLHq/6yaW3vQZyt5NRvZBipljaN3xhgyRVkvGP83STRQZ1Xh
+         jhhQBOeaewbeQ==
+Date:   Wed, 16 Jun 2021 16:04:47 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, dmaengine@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
+        alsa-devel@alsa-project.org, iommu@lists.linux-foundation.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Stephen Boyd <sboyd@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] dt-bindings: Drop redundant minItems/maxItems
+Message-ID: <YMnTx4GqTWu75o2n@vkoul-mobl>
+References: <20210615191543.1043414-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 0C37CFED5B1E1D54DFBEC98F011F3896F16D2A5E4F950A0C8F029A10444253912000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210615191543.1043414-1-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-U3dpdGNoIHRoZSBkcml2ZXIgdG8gc3VwcG9ydCB0aGUgLmdldF9zdGF0ZSgpIG1ldGhvZC4NCg0K
-U2lnbmVkLW9mZi1ieTogSml0YW8gU2hpIDxqaXRhby5zaGlAbWVkaWF0ZWsuY29tPg0KLS0tDQog
-ZHJpdmVycy9wd20vcHdtLW10ay1kaXNwLmMgfCAzOSArKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAzOSBpbnNlcnRpb25zKCspDQoNCmRpZmYg
-LS1naXQgYS9kcml2ZXJzL3B3bS9wd20tbXRrLWRpc3AuYyBiL2RyaXZlcnMvcHdtL3B3bS1tdGst
-ZGlzcC5jDQppbmRleCBhNDc2NmU5MzFiNjguLmQ2MGE2YjM3OTY4MyAxMDA2NDQNCi0tLSBhL2Ry
-aXZlcnMvcHdtL3B3bS1tdGstZGlzcC5jDQorKysgYi9kcml2ZXJzL3B3bS9wd20tbXRrLWRpc3Au
-Yw0KQEAgLTE1OSw4ICsxNTksNDcgQEAgc3RhdGljIGludCBtdGtfZGlzcF9wd21fYXBwbHkoc3Ry
-dWN0IHB3bV9jaGlwICpjaGlwLCBzdHJ1Y3QgcHdtX2RldmljZSAqcHdtLA0KIAlyZXR1cm4gMDsN
-CiB9DQogDQorc3RhdGljIHZvaWQgbXRrX2Rpc3BfcHdtX2dldF9zdGF0ZShzdHJ1Y3QgcHdtX2No
-aXAgKmNoaXAsDQorCQkJCSAgIHN0cnVjdCBwd21fZGV2aWNlICpwd20sDQorCQkJCSAgIHN0cnVj
-dCBwd21fc3RhdGUgKnN0YXRlKQ0KK3sNCisJc3RydWN0IG10a19kaXNwX3B3bSAqbWRwID0gdG9f
-bXRrX2Rpc3BfcHdtKGNoaXApOw0KKwl1MzIgY2xrX2RpdiwgY29uMCwgY29uMTsNCisJdTY0IHJh
-dGUsIHBlcmlvZCwgaGlnaF93aWR0aDsNCisJaW50IGVycjsNCisNCisJaWYgKCFtZHAtPmVuYWJs
-ZWQpIHsNCisJCWVyciA9IGNsa19wcmVwYXJlX2VuYWJsZShtZHAtPmNsa19tYWluKTsNCisJCWlm
-IChlcnIgPCAwKSB7DQorCQkJZGV2X2VycihjaGlwLT5kZXYsICJDYW4ndCBlbmFibGUgbWRwLT5j
-bGtfbWFpbjogJXBlXG4iLCBFUlJfUFRSKGVycikpOw0KKwkJCXJldHVybjsNCisJCX0NCisJCWVy
-ciA9IGNsa19wcmVwYXJlX2VuYWJsZShtZHAtPmNsa19tbSk7DQorCQlpZiAoZXJyIDwgMCkgew0K
-KwkJCWRldl9lcnIoY2hpcC0+ZGV2LCAiQ2FuJ3QgZW5hYmxlIG1kcC0+Y2xrX21tOiAlcGVcbiIs
-IEVSUl9QVFIoZXJyKSk7DQorCQkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKG1kcC0+Y2xrX21haW4p
-Ow0KKwkJCXJldHVybjsNCisJCX0NCisJfQ0KKwlyYXRlID0gY2xrX2dldF9yYXRlKG1kcC0+Y2xr
-X21haW4pOw0KKwljb24wID0gcmVhZGwobWRwLT5iYXNlICsgbWRwLT5kYXRhLT5jb24wKTsNCisJ
-Y29uMSA9IHJlYWRsKG1kcC0+YmFzZSArIG1kcC0+ZGF0YS0+Y29uMSk7DQorCXN0YXRlLT5lbmFi
-bGVkID0gISEoY29uMCAmIEJJVCgwKSk7DQorCWNsa19kaXYgPSBGSUVMRF9HRVQoUFdNX0NMS0RJ
-Vl9NQVNLLCBjb24wKTsNCisJcGVyaW9kID0gY29uMSAmIFBXTV9QRVJJT0RfTUFTSzsNCisJc3Rh
-dGUtPnBlcmlvZCA9IERJVjY0X1U2NF9ST1VORF9VUChwZXJpb2QgKiAoY2xrX2RpdiArIDEpICog
-TlNFQ19QRVJfU0VDLCByYXRlKTsNCisJaGlnaF93aWR0aCA9IEZJRUxEX0dFVChQV01fSElHSF9X
-SURUSF9NQVNLLCBjb24xKTsNCisJc3RhdGUtPmR1dHlfY3ljbGUgPSBESVY2NF9VNjRfUk9VTkRf
-VVAoaGlnaF93aWR0aCAqIChjbGtfZGl2ICsgMSkgKiBOU0VDX1BFUl9TRUMsDQorCQkJCQkgICAg
-ICAgcmF0ZSk7DQorCWlmICghbWRwLT5lbmFibGVkKSB7DQorCQljbGtfZGlzYWJsZV91bnByZXBh
-cmUobWRwLT5jbGtfbW0pOw0KKwkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKG1kcC0+Y2xrX21haW4p
-Ow0KKwl9DQorfQ0KKw0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcHdtX29wcyBtdGtfZGlzcF9wd21f
-b3BzID0gew0KIAkuYXBwbHkgPSBtdGtfZGlzcF9wd21fYXBwbHksDQorCS5nZXRfc3RhdGUgPSBt
-dGtfZGlzcF9wd21fZ2V0X3N0YXRlLA0KIAkub3duZXIgPSBUSElTX01PRFVMRSwNCiB9Ow0KIA0K
-LS0gDQoyLjI1LjENCg==
+On 15-06-21, 13:15, Rob Herring wrote:
+> If a property has an 'items' list, then a 'minItems' or 'maxItems' with the
+> same size as the list is redundant and can be dropped. Note that is DT
+> schema specific behavior and not standard json-schema behavior. The tooling
+> will fixup the final schema adding any unspecified minItems/maxItems.
+> 
+> This condition is partially checked with the meta-schema already, but
+> only if both 'minItems' and 'maxItems' are equal to the 'items' length.
+> An improved meta-schema is pending.
 
+>  .../devicetree/bindings/dma/renesas,rcar-dmac.yaml          | 1 -
+
+>  Documentation/devicetree/bindings/phy/brcm,sata-phy.yaml    | 1 -
+>  Documentation/devicetree/bindings/phy/mediatek,tphy.yaml    | 2 --
+>  .../devicetree/bindings/phy/phy-cadence-sierra.yaml         | 2 --
+>  .../devicetree/bindings/phy/phy-cadence-torrent.yaml        | 4 ----
+>  .../devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml    | 1 -
+>  .../devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml    | 1 -
+>  Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml     | 1 -
+>  Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml   | 2 --
+>  Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml | 2 --
+>  Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml | 1 -
+
+Acked-By: Vinod Koul <vkoul@kernel.org>
+
+-- 
+~Vinod
