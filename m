@@ -2,55 +2,81 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A8F43AB096
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Jun 2021 11:57:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FCD43AB049
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Jun 2021 11:52:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232127AbhFQKAB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 17 Jun 2021 06:00:01 -0400
-Received: from [103.120.28.226] ([103.120.28.226]:17747 "EHLO
-        UPCDCDAMX02.upcl.org" rhost-flags-FAIL-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S231132AbhFQJ75 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Jun 2021 05:59:57 -0400
-X-Greylist: delayed 509 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Jun 2021 05:59:47 EDT
-Received: from UPCDCDAMX02.upcl.org (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CE69E8B12E;
-        Thu, 17 Jun 2021 13:26:35 +0530 (IST)
-Received: from UPCDCDAMX02.upcl.org (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 715804AFEC;
-        Thu, 17 Jun 2021 12:50:14 +0530 (IST)
-Received: from User (unknown [210.212.82.37])
-        by UPCDCDAMX02.upcl.org (Postfix) with SMTP;
-        Thu, 17 Jun 2021 12:50:14 +0530 (IST)
-Reply-To: <marielthiago102@gmail.com>
-From:   "Mariel Thiago" <info@infotools.in>
-Subject: Re:: Please contact me it's very urgent.
-Date:   Thu, 17 Jun 2021 07:20:41 -0000
+        id S231202AbhFQJyG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 17 Jun 2021 05:54:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230526AbhFQJyG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Jun 2021 05:54:06 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F38EC061574
+        for <linux-pwm@vger.kernel.org>; Thu, 17 Jun 2021 02:51:58 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ltogm-0007OL-C6; Thu, 17 Jun 2021 11:51:56 +0200
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ltogl-0005N6-Hi; Thu, 17 Jun 2021 11:51:55 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: [PATCH v1 0/6] pwm: tegra: several improvements
+Date:   Thu, 17 Jun 2021 11:51:39 +0200
+Message-Id: <20210617095145.163694-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-Id: <20210617072014.715804AFEC@UPCDCDAMX02.upcl.org>
-To:     undisclosed-recipients:;
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSVA-9.1.0.1960-8.6.0.1013-26224.006
-X-TM-AS-Result: No-2.497-5.0-31-10
-X-imss-scan-details: No-2.497-5.0-31-10
-X-TMASE-Version: IMSVA-9.1.0.1960-8.6.1013-26224.006
-X-TMASE-Result: 10-2.496900-10.000000
-X-TMASE-MatchedRID: PEpoWB/n4wPoJ7ZHxnJI6/6CJzEkJBKDVOXpHWpii+ddyparHcc9UIhu
-        TvsiBEc/JfjcKHKDDk8K4MBRf7I7puawzjZNF/+9gM4D72plZiep43A0ENmZJqRrhpwKFLjUkZO
-        l7WKIImpu9tOD27u7FNTHX+rg7MGt505jRA97RdWRSAi45KhHyaxczqyf2GA9LHdIgRft8S1QSp
-        LfxZGQcl8vMu11r33KXPP583vQDYF3yrRBFBiPVS2s/H4x5wHg3QfwsVk0UbuGrPnef/I+ej6N5
-        5/6MNSnpdDo0PaPyGFHwD2XNKdI8sVZh7bvPcyg0m3qDro1rgcxP1evyC/00KVBBtW+D6/IR7CD
-        JBvMFOms6dZMAot5Yg==
-X-IMSS-DKIM-White-List: No
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-12:0,22:0,33:0,34:0-0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
- I think I have something huge you might be interested in.
+This series improves the tegra-pwm driver. There are a few problems left though:
+
+ - if the PWM is configured to a 100% duty cycle it writes bit 24 which is
+   either bogus or needs a comment.
+
+ - clock handling is broken: If pwm_disable() is called without calling
+   pwm_enable() before, this triggers a warning in clk_disable(). This also 
+   might trigger a HW fault as the register is accessed without enabling the
+   clock first.
+
+ - The calculation of period and duty_cycle is imprecise as it divides by the
+   result of a division and it discards relevant bits from pc->clk_rate without
+   rounding. (I bet there are more problems, I only checked quickly
+   trying to implement .get_state(), but I gave up.)
+
+I didn't address these because I have neither any hardware to test nor
+documentation. So this series is only compile tested.
+
+Best regards
+Uwe
+
+Uwe Kleine-König (6):
+  pwm: tegra: Drop an if block with an always false condition
+  pwm: tegra: Don't modify HW state in .remove callback
+  pwm: tegra: Don't needlessly enable and disable the clock in .remove()
+  pwm: tegra: Assert reset only after the PWM was unregistered
+  pwm: tegra: Implement .apply callback
+  pwm: tegra: unfold legacy callbacks into tegra_pwm_apply()
+
+ drivers/pwm/pwm-tegra.c | 246 ++++++++++++++++++----------------------
+ 1 file changed, 112 insertions(+), 134 deletions(-)
+
+-- 
+2.30.2
+
