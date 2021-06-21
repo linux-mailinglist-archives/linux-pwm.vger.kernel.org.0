@@ -2,85 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 543F53AE869
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Jun 2021 13:53:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1C443AE9A9
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Jun 2021 15:05:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229611AbhFUL4I (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 21 Jun 2021 07:56:08 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:34544 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229576AbhFUL4I (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Jun 2021 07:56:08 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 15LBrhKW059771;
-        Mon, 21 Jun 2021 06:53:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1624276423;
-        bh=5nHxsBQDy/Mqy9USBF2x599r8UPBoh7zt5PsD3t1noc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JyPQS0WmUIN/kJyxrN8beSAIN6FIcJRcYrh7UVd53T2p6hrvlRtHyIQwrbZEseTQI
-         WioROAxiUrnFnH/FF34FdOT19yzhK1rPwHkPC3WDhJKFg7nbS/iB3vM5riVn5bmP3i
-         N41kI4NltTLoLXEnCl2qYRlCznl+BvJUZIqFtukI=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 15LBrhQD127220
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 21 Jun 2021 06:53:43 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Mon, 21
- Jun 2021 06:53:42 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Mon, 21 Jun 2021 06:53:42 -0500
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 15LBrYSx040876;
-        Mon, 21 Jun 2021 06:53:37 -0500
-Subject: Re: [PATCH 0/2] dt-bindings: pwm: pwm-tiecap: Convert to json schema
-To:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
-        <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>
-CC:     <tony@atomide.com>, Vignesh R <vigneshr@ti.com>,
-        Nishanth Menon <nm@ti.com>, <linux-pwm@vger.kernel.org>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-References: <20210601102804.22152-1-lokeshvutla@ti.com>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <a84a1fcb-b85d-975f-1763-03cd533855f1@ti.com>
-Date:   Mon, 21 Jun 2021 17:23:33 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S229736AbhFUNH1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 21 Jun 2021 09:07:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229708AbhFUNH0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Jun 2021 09:07:26 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA0ABC061574
+        for <linux-pwm@vger.kernel.org>; Mon, 21 Jun 2021 06:05:11 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lvJbx-0002V2-KM; Mon, 21 Jun 2021 15:05:09 +0200
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lvJbr-00086T-9J; Mon, 21 Jun 2021 15:05:03 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Tony Prisk <linux@prisktech.co.nz>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: [PATCH 1/2] pwm: vt8500: Drop if with an always false condition
+Date:   Mon, 21 Jun 2021 15:04:57 +0200
+Message-Id: <20210621130458.118530-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <20210601102804.22152-1-lokeshvutla@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Thierry,
+vt8500_pwm_remove() is only called after vt8500_pwm_probe() returned
+successfully. In this case driver data was set to a non-NULL value
+and so chip can never be NULL.
 
-On 01/06/21 3:58 pm, Lokesh Vutla wrote:
-> This series:
-> - converts tiecap to DT schema format using json-schema
-> - Add new compatible for AM64 SoC.
+While touching this code also put declaration and assignment in a single
+line.
 
-If there are no objections, can we merge this series?
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/pwm/pwm-vt8500.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Thanks and regards,
-Lokesh
+diff --git a/drivers/pwm/pwm-vt8500.c b/drivers/pwm/pwm-vt8500.c
+index f9eb36be9088..7164df2fbacf 100644
+--- a/drivers/pwm/pwm-vt8500.c
++++ b/drivers/pwm/pwm-vt8500.c
+@@ -238,11 +238,8 @@ static int vt8500_pwm_probe(struct platform_device *pdev)
+ 
+ static int vt8500_pwm_remove(struct platform_device *pdev)
+ {
+-	struct vt8500_chip *chip;
++	struct vt8500_chip *chip = platform_get_drvdata(pdev);
+ 
+-	chip = platform_get_drvdata(pdev);
+-	if (chip == NULL)
+-		return -ENODEV;
+ 
+ 	clk_unprepare(chip->clk);
+ 
+-- 
+2.30.2
 
-> 
-> Lokesh Vutla (2):
->   dt-bindings: pwm: pwm-tiecap: Convert to json schema
->   dt-bindings: pwm: pwm-tiecap: Add compatible string for AM64 SoC
-> 
->  .../devicetree/bindings/pwm/pwm-tiecap.txt    | 51 ---------------
->  .../devicetree/bindings/pwm/pwm-tiecap.yaml   | 64 +++++++++++++++++++
->  2 files changed, 64 insertions(+), 51 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-tiecap.yaml
-> 
