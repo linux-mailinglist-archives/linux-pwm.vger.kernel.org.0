@@ -2,121 +2,85 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BC8D3AE676
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Jun 2021 11:48:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 543F53AE869
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Jun 2021 13:53:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229710AbhFUJuZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 21 Jun 2021 05:50:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51038 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229651AbhFUJuY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Jun 2021 05:50:24 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 009BFC061574
-        for <linux-pwm@vger.kernel.org>; Mon, 21 Jun 2021 02:48:10 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lvGXJ-0002i6-D7; Mon, 21 Jun 2021 11:48:09 +0200
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lvGXJ-0002Go-1u; Mon, 21 Jun 2021 11:48:09 +0200
-Date:   Mon, 21 Jun 2021 11:48:08 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     helpdesk@kernel.org
-Cc:     kernel@pengutronix.de, linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: linux-pwm Archives on lore.kernel.org incomplete
-Message-ID: <20210621094808.dhom6zuijdw2yqkg@pengutronix.de>
-References: <20210618082411.hojl5hedrgx3tsmy@pengutronix.de>
+        id S229611AbhFUL4I (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 21 Jun 2021 07:56:08 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34544 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229576AbhFUL4I (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Jun 2021 07:56:08 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 15LBrhKW059771;
+        Mon, 21 Jun 2021 06:53:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1624276423;
+        bh=5nHxsBQDy/Mqy9USBF2x599r8UPBoh7zt5PsD3t1noc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=JyPQS0WmUIN/kJyxrN8beSAIN6FIcJRcYrh7UVd53T2p6hrvlRtHyIQwrbZEseTQI
+         WioROAxiUrnFnH/FF34FdOT19yzhK1rPwHkPC3WDhJKFg7nbS/iB3vM5riVn5bmP3i
+         N41kI4NltTLoLXEnCl2qYRlCznl+BvJUZIqFtukI=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 15LBrhQD127220
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 21 Jun 2021 06:53:43 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Mon, 21
+ Jun 2021 06:53:42 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Mon, 21 Jun 2021 06:53:42 -0500
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 15LBrYSx040876;
+        Mon, 21 Jun 2021 06:53:37 -0500
+Subject: Re: [PATCH 0/2] dt-bindings: pwm: pwm-tiecap: Convert to json schema
+To:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
+        <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>
+CC:     <tony@atomide.com>, Vignesh R <vigneshr@ti.com>,
+        Nishanth Menon <nm@ti.com>, <linux-pwm@vger.kernel.org>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+References: <20210601102804.22152-1-lokeshvutla@ti.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <a84a1fcb-b85d-975f-1763-03cd533855f1@ti.com>
+Date:   Mon, 21 Jun 2021 17:23:33 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="y6y3jenn4evgw377"
-Content-Disposition: inline
-In-Reply-To: <20210618082411.hojl5hedrgx3tsmy@pengutronix.de>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20210601102804.22152-1-lokeshvutla@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Thierry,
 
---y6y3jenn4evgw377
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 01/06/21 3:58 pm, Lokesh Vutla wrote:
+> This series:
+> - converts tiecap to DT schema format using json-schema
+> - Add new compatible for AM64 SoC.
 
-Hello,
+If there are no objections, can we merge this series?
 
-On Fri, Jun 18, 2021 at 10:24:11AM +0200, Uwe Kleine-K=F6nig wrote:
-> for a recent discussion I wanted to point out an old mail thread on this
-> list and I noticed that it is missing in the archives on
-> lore.kernel.org.
->=20
-> So I cloned the linux-pwm public-inbox from lore and did:
->=20
-> 	cd git/0.git
-> 	git rev-list HEAD | while read rev; do git cat-file blob $rev:m | formai=
-l -z -c -x Message-Id; done > ~/tmp/linux-pwm-known-ids.txt
-> 	list-archive-maker.py -s ~/Maildir-work/.lists.linux-pwm/ -e linux-pwm -=
-k linux-pwm-known-ids.txt -l linux-pwm.vger.kernel.org
->=20
-> which found 400+ mails missing, some of them are spam, but a
-> considerable amount isn't.
->=20
-> I'd like to complete the archives, but I'm for sure not the oldest
-> subscriber. So it would be great if you could check your archives for
-> further missing mail.
->=20
-> Just follow the instructions on this page:
-> https://korg.wiki.kernel.org/userdoc/lore
->=20
-> The list of message-ids that I already have is available at
-> https://www.kleine-koenig.org/~uwe/linux-pwm-known-ids.txt . You'll need
-> that during the archive sanitization process to pass to the -k switch.
->=20
-> Please tar up and xz -9 the resulting directory with mbox files and send
-> the archive to me (preferably via some download link, but mail should
-> work, too, I suggest to not send it to the list though) so I can add it
-> to what I already have. I will then talk the the kernel.org admins to
-> add these mails to the archive.
+Thanks and regards,
+Lokesh
 
-I got a message-drop from Thierry which includes quite some more mail
-and seems to cover the complete livetime of the linux-pwm list.
-After sorting out spam I now identified a total of 1527 mails missing in
-the linux-pwm archive:
-
-$ notmuch-work search --output=3Dmessages List:linux-pwm.vger.kernel.org an=
-d not tag:lore-linux-pwm | wc -l
-1527
-
-Assuming you are willing to feed these to lore.kernel.org: How should I
-send you these mails? Should I include the spam mails and a list of
-which mails I considered spam?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---y6y3jenn4evgw377
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmDQYFUACgkQwfwUeK3K
-7AlEgAf+JbAIFRKXn98glJvrz74iY3NtTKQFdm3ykuFqVinmtwDSNNBZz6lNnUaK
-8W3OBBqejXdiellpSTZ9c8aTQIyuEAJgyg89WHCWf04LOVKds7XCbMXPnyf3XVhu
-UZf3id0ozzmkK9/mA3cqail3Xso4exEpwYUl/LAsTtOU1Wz5BiH5myPheSUgTTxU
-ZkZZ03rQyRmP4xOyI8PGVNzYR5zS+GRnR8WGJA8iEDTu/e7FurnG+cPvHLyk/urU
-s5XiBUkDNyfjbxmQka8dZKSr7/jvepOHOcOO5P3SxRxZI1zGMA53csfBTKyieceZ
-WckeYEybTGjUMVxpIdub/awftekmdg==
-=tKkV
------END PGP SIGNATURE-----
-
---y6y3jenn4evgw377--
+> 
+> Lokesh Vutla (2):
+>   dt-bindings: pwm: pwm-tiecap: Convert to json schema
+>   dt-bindings: pwm: pwm-tiecap: Add compatible string for AM64 SoC
+> 
+>  .../devicetree/bindings/pwm/pwm-tiecap.txt    | 51 ---------------
+>  .../devicetree/bindings/pwm/pwm-tiecap.yaml   | 64 +++++++++++++++++++
+>  2 files changed, 64 insertions(+), 51 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-tiecap.yaml
+> 
