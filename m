@@ -2,76 +2,365 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B96853AFE28
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Jun 2021 09:43:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C7B73AFE73
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Jun 2021 09:55:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229702AbhFVHqC convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Tue, 22 Jun 2021 03:46:02 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:53947 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229677AbhFVHqB (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Jun 2021 03:46:01 -0400
-Received: from mail-wm1-f49.google.com ([209.85.128.49]) by
- mrelayeu.kundenserver.de (mreue106 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1M738r-1lulKA1g6B-008dTl for <linux-pwm@vger.kernel.org>; Tue, 22 Jun 2021
- 09:43:45 +0200
-Received: by mail-wm1-f49.google.com with SMTP id n35-20020a05600c3ba3b02901cdecb6bda8so1050578wms.5
-        for <linux-pwm@vger.kernel.org>; Tue, 22 Jun 2021 00:43:45 -0700 (PDT)
-X-Gm-Message-State: AOAM533byat7SXAC/Y+6zZggs/EsWG18g4grcLse0Xq2ZDJc5S9BMF6H
-        SUuT+xONJPgR14vGkZE0as6P6RHOg/30tjiKigw=
-X-Google-Smtp-Source: ABdhPJxe7FndZe4T1TjbMbkiKWnVqKhZWSL+17F7P/vjfO1rDtpMiK/YliI1otO7EtO7mLe4GKhqzMAvwlg7ptwnyCA=
-X-Received: by 2002:a7b:ca48:: with SMTP id m8mr2915370wml.75.1624347825075;
- Tue, 22 Jun 2021 00:43:45 -0700 (PDT)
+        id S229695AbhFVH5j (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Jun 2021 03:57:39 -0400
+Received: from guitar.tcltek.co.il ([192.115.133.116]:57279 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229677AbhFVH5i (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 22 Jun 2021 03:57:38 -0400
+Received: from tarshish.tkos.co.il (unknown [10.0.8.3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx.tkos.co.il (Postfix) with ESMTPS id 71E07440209;
+        Tue, 22 Jun 2021 10:55:08 +0300 (IDT)
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>
+Cc:     Baruch Siach <baruch@tkos.co.il>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Balaji Prakash J <bjagadee@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robert Marko <robert.marko@sartura.hr>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 1/3] pwm: driver for qualcomm ipq6018 pwm block
+Date:   Tue, 22 Jun 2021 10:55:00 +0300
+Message-Id: <f97c32aa98c9cdd977fac22cd504ad97448949e9.1624348502.git.baruch@tkos.co.il>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <20210621130458.118530-1-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20210621130458.118530-1-u.kleine-koenig@pengutronix.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 22 Jun 2021 09:41:26 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2Ht9aRgG-AGqA4wNvVJG7tBXAoi1BDPtAHX6_JrDLKMQ@mail.gmail.com>
-Message-ID: <CAK8P3a2Ht9aRgG-AGqA4wNvVJG7tBXAoi1BDPtAHX6_JrDLKMQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pwm: vt8500: Drop if with an always false condition
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:qZP/Rppax1f0I+1iB4fKf3PtXodRqMWcIG/pdgpHINjXLnE5z1O
- iMyHGyClPNC4bJlNfWo1Uc9H/zT5RpzK7jP2gEFQQHzdvg/qC0u9zhVFwcf0j/R7rb3tcyn
- EAoZ3X9p8LS0Cp5/64PG/8acCcad81pdIY4XzQIcahF53w7FnNRi2/fyIfaqxHKpVP2TzRR
- ZDVm39PMK+zLTQ1CxUuHQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UbI2eHYEgk0=:t+gRbqhD+bUqCbbC63j+4l
- UTU9a92tOB6VZUYZ9YDuXdNy1tveC7bizhSwoM9S/xSczp5Nbb/TFxaZU3g+eOeuNjCB0hF+k
- oE7awX/YnkPnwQok7IWMLI+hHguHgIlabxVuqeOB/YM4xW0qaexg5s4rOR5iSx1IEho3K5Nng
- m0yutWN2tx1o1hPRD/R1ISvi0IJzwpx+/0eI6FJ257HZighjfHuRGrx+yrGGuQF10Fojd1qWJ
- KiVsja5LCILDwpOGELLJTjVKVKQgwqUMdnMfkew2MKsFMpaW/z6tSGg/oyFLnb7zqaoPqQS6u
- vOtPyuKIQLs5EEv2uVYWXSWO3tNvQJpi6rsMq7s4zp5n/mllW+xg1aEOR0J6LbSPupqjIat0s
- mN+eO93g6h5gSmfzaedXUeJ1MkCmdeYjf5Y1/6DzUSwjK3D/4sNOJMnkKzYDeoZ/fnp6y/g+Q
- OG8rjbAspCs8YbCpd3IEddRjvwZHFNhSkl9uvS8c4lLx1Fq9H5kDTwUPw6SIEmw+574IF5Y7i
- uRu52eOvTEmumbbe4eBfBC++Xlh65QVu8UWxRI8ZFXqi1hiAi0KIjBmpkXFdNFkgeKcK43es8
- wCwRzvNcd2WEgbEfqYQFJvwxVy3BxJUghc4yUrxXioNUpqqKEfHIQ5qEIMVePRBqnafbMKW3P
- P5wg=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Jun 21, 2021 at 3:04 PM Uwe Kleine-König
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> vt8500_pwm_remove() is only called after vt8500_pwm_probe() returned
-> successfully. In this case driver data was set to a non-NULL value
-> and so chip can never be NULL.
->
-> While touching this code also put declaration and assignment in a single
-> line.
->
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
+Driver for the PWM block in Qualcomm IPQ6018 line of SoCs. Based on
+driver from downstream Codeaurora kernel tree. Removed support for older
+(V1) variants because I have no access to that hardware.
 
-Both patches
+Tested on IPQ6010 based hardware.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+---
+v3:
+
+  s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
+
+  Fix integer overflow on 32-bit targets (kernel test robot <lkp@intel.com>)
+
+v2:
+
+Address Uwe Kleine-König review comments:
+
+  Fix period calculation when out of range
+
+  Don't set period larger than requested
+
+  Remove PWM disable on configuration change
+
+  Implement .apply instead of non-atomic .config/.enable/.disable
+
+  Don't modify PWM on .request/.free
+
+  Check pwm_div underflow
+
+  Fix various code and comment formatting issues
+
+Other changes:
+
+  Use u64 divisor safe division
+
+  Remove now empty .request/.free
+---
+ drivers/pwm/Kconfig   |  12 +++
+ drivers/pwm/Makefile  |   1 +
+ drivers/pwm/pwm-ipq.c | 238 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 251 insertions(+)
+ create mode 100644 drivers/pwm/pwm-ipq.c
+
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index c76adedd58c9..08add845596f 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -260,6 +260,18 @@ config PWM_INTEL_LGM
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-intel-lgm.
+ 
++config PWM_IPQ
++	tristate "IPQ PWM support"
++	depends on ARCH_QCOM || COMPILE_TEST
++	depends on HAVE_CLK && HAS_IOMEM
++	help
++	  Generic PWM framework driver for IPQ PWM block which supports
++	  4 pwm channels. Each of the these channels can be configured
++	  independent of each other.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-ipq.
++
+ config PWM_IQS620A
+ 	tristate "Azoteq IQS620A PWM support"
+ 	depends on MFD_IQS62X || COMPILE_TEST
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index 708840b7fba8..7402feae4b36 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -22,6 +22,7 @@ obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
+ obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
+ obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
+ obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
++obj-$(CONFIG_PWM_IPQ)		+= pwm-ipq.o
+ obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
+ obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
+ obj-$(CONFIG_PWM_KEEMBAY)	+= pwm-keembay.o
+diff --git a/drivers/pwm/pwm-ipq.c b/drivers/pwm/pwm-ipq.c
+new file mode 100644
+index 000000000000..52b93b7831f1
+--- /dev/null
++++ b/drivers/pwm/pwm-ipq.c
+@@ -0,0 +1,238 @@
++// SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0
++/*
++ * Copyright (c) 2016-2017, 2020 The Linux Foundation. All rights reserved.
++ */
++
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++#include <linux/clk.h>
++#include <linux/io.h>
++#include <linux/math64.h>
++#include <linux/of_device.h>
++
++#define CLK_SRC_FREQ		(100*1000*1000)
++#define MAX_PWM_DEVICES		4
++
++/*
++ * Enable bit is set to enable output toggling in pwm device.
++ * Update bit is set to reflect the changed divider and high duration
++ * values in register.
++ */
++#define PWM_ENABLE		0x80000000
++#define PWM_UPDATE		0x40000000
++
++/* The frequency range supported is 1Hz to 100MHz */
++#define MIN_PERIOD_NS	10
++#define MAX_PERIOD_NS	1000000000
++
++/*
++ * The max value specified for each field is based on the number of bits
++ * in the pwm control register for that field
++ */
++#define MAX_PWM_CFG		0xFFFF
++
++#define PWM_CTRL_HI_SHIFT	16
++
++#define PWM_CFG_REG0 0 /*PWM_DIV PWM_HI*/
++#define PWM_CFG_REG1 1 /*ENABLE UPDATE PWM_PRE_DIV*/
++
++struct ipq_pwm_chip {
++	struct pwm_chip chip;
++	struct clk *clk;
++	void __iomem *mem;
++};
++
++static struct ipq_pwm_chip *to_ipq_pwm_chip(struct pwm_chip *chip)
++{
++	return container_of(chip, struct ipq_pwm_chip, chip);
++}
++
++static unsigned ipq_pwm_reg_offset(struct pwm_device *pwm, unsigned reg)
++{
++	return ((pwm->hwpwm * 2) + reg) * 4;
++}
++
++static void config_div_and_duty(struct pwm_device *pwm, int pre_div,
++			unsigned long long pwm_div, unsigned long period_ns,
++			unsigned long long duty_ns)
++{
++	unsigned long hi_dur;
++	unsigned long long quotient;
++	unsigned long val = 0;
++	struct ipq_pwm_chip *ipq_chip = to_ipq_pwm_chip(pwm->chip);
++
++	/*
++	 * high duration = pwm duty * (pwm div + 1)
++	 * pwm duty = duty_ns / period_ns
++	 */
++	quotient = (pwm_div + 1) * duty_ns;
++	hi_dur = div64_u64(quotient, period_ns);
++
++	val |= ((hi_dur & MAX_PWM_CFG) << PWM_CTRL_HI_SHIFT);
++	val |= (pwm_div & MAX_PWM_CFG);
++	writel(val, ipq_chip->mem + ipq_pwm_reg_offset(pwm, PWM_CFG_REG0));
++	val = pre_div & MAX_PWM_CFG;
++	writel(val, ipq_chip->mem + ipq_pwm_reg_offset(pwm, PWM_CFG_REG1));
++}
++
++static int ipq_pwm_enable(struct pwm_device *pwm)
++{
++	struct ipq_pwm_chip *ipq_chip = to_ipq_pwm_chip(pwm->chip);
++	unsigned offset = ipq_pwm_reg_offset(pwm, PWM_CFG_REG1);
++	unsigned long val;
++
++	val = readl(ipq_chip->mem + offset);
++	val |= PWM_ENABLE | PWM_UPDATE;
++	writel(val, ipq_chip->mem + offset);
++
++	return 0;
++}
++
++static void ipq_pwm_disable(struct pwm_device *pwm)
++{
++	struct ipq_pwm_chip *ipq_chip = to_ipq_pwm_chip(pwm->chip);
++	unsigned offset = ipq_pwm_reg_offset(pwm, PWM_CFG_REG1);
++	unsigned long val;
++
++	val = readl(ipq_chip->mem + offset);
++	val |= PWM_UPDATE;
++	val &= ~PWM_ENABLE;
++	writel(val, ipq_chip->mem + offset);
++}
++
++static int ipq_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			 const struct pwm_state *state)
++{
++	struct ipq_pwm_chip *ipq_chip = to_ipq_pwm_chip(chip);
++	unsigned long freq;
++	int pre_div, close_pre_div, close_pwm_div;
++	int pwm_div;
++	long long diff;
++	unsigned long rate = clk_get_rate(ipq_chip->clk);
++	unsigned long min_diff = rate;
++	uint64_t fin_ps;
++	u64 period_ns, duty_ns;
++
++	if (state->period < MIN_PERIOD_NS)
++		return -ERANGE;
++
++	period_ns = min_t(u64, state->period, MAX_PERIOD_NS);
++	duty_ns = min_t(u64, state->duty_cycle, period_ns);
++
++	/* freq in Hz for period in nano second*/
++	freq = NSEC_PER_SEC / period_ns;
++	fin_ps = div64_u64(NSEC_PER_SEC * 1000ULL, rate);
++	close_pre_div = MAX_PWM_CFG;
++	close_pwm_div = MAX_PWM_CFG;
++
++	for (pre_div = 0; pre_div <= MAX_PWM_CFG; pre_div++) {
++		pwm_div = DIV64_U64_ROUND_CLOSEST(period_ns * 1000,
++						  fin_ps * (pre_div + 1));
++		pwm_div--;
++		if (pwm_div < 0 || pwm_div > MAX_PWM_CFG)
++			continue;
++
++		diff = ((uint64_t)freq * (pre_div + 1) * (pwm_div + 1))
++			- (uint64_t)rate;
++
++		if (diff < 0) /* period larger than requested */
++			continue;
++		if (diff == 0) { /* bingo */
++			close_pre_div = pre_div;
++			close_pwm_div = pwm_div;
++			break;
++		}
++		if (diff < min_diff) {
++			min_diff = diff;
++			close_pre_div = pre_div;
++			close_pwm_div = pwm_div;
++		}
++	}
++
++	/* config divider values for the closest possible frequency */
++	config_div_and_duty(pwm, close_pre_div, close_pwm_div,
++			    period_ns, duty_ns);
++	if (state->enabled)
++		ipq_pwm_enable(pwm);
++	else
++		ipq_pwm_disable(pwm);
++
++	return 0;
++}
++
++static struct pwm_ops ipq_pwm_ops = {
++	.apply = ipq_pwm_apply,
++	.owner = THIS_MODULE,
++};
++
++static int ipq_pwm_probe(struct platform_device *pdev)
++{
++	struct ipq_pwm_chip *pwm;
++	struct device *dev;
++	int ret;
++
++	dev = &pdev->dev;
++	pwm = devm_kzalloc(dev, sizeof(*pwm), GFP_KERNEL);
++	if (!pwm)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, pwm);
++
++	pwm->mem = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(pwm->mem))
++		return PTR_ERR(pwm->mem);
++
++	pwm->clk = devm_clk_get(dev, "core");
++	if (IS_ERR(pwm->clk))
++		return PTR_ERR(pwm->clk);
++
++	ret = clk_set_rate(pwm->clk, CLK_SRC_FREQ);
++	if (ret)
++		return ret;
++	ret = clk_prepare_enable(pwm->clk);
++	if (ret)
++		return ret;
++
++	pwm->chip.dev = dev;
++	pwm->chip.ops = &ipq_pwm_ops;
++	pwm->chip.npwm = MAX_PWM_DEVICES;
++
++	ret = pwmchip_add(&pwm->chip);
++	if (ret < 0) {
++		dev_err_probe(dev, ret, "pwmchip_add() failed\n");
++		clk_disable_unprepare(pwm->clk);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int ipq_pwm_remove(struct platform_device *pdev)
++{
++	struct ipq_pwm_chip *pwm = platform_get_drvdata(pdev);
++
++	pwmchip_remove(&pwm->chip);
++
++	return 0;
++}
++
++static const struct of_device_id pwm_ipq_dt_match[] = {
++	{ .compatible = "qcom,ipq6018-pwm", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, pwm_ipq_dt_match);
++
++static struct platform_driver ipq_pwm_driver = {
++	.driver = {
++		.name = "ipq-pwm",
++		.owner = THIS_MODULE,
++		.of_match_table = pwm_ipq_dt_match,
++	},
++	.probe = ipq_pwm_probe,
++	.remove = ipq_pwm_remove,
++};
++
++module_platform_driver(ipq_pwm_driver);
++
++MODULE_LICENSE("Dual BSD/GPL");
+-- 
+2.30.2
+
