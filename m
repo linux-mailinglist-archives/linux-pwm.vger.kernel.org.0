@@ -2,53 +2,40 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1E063B15D7
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Jun 2021 10:29:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 487CB3B1BEE
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Jun 2021 16:02:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230028AbhFWIbp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 23 Jun 2021 04:31:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34300 "EHLO
+        id S231261AbhFWOFJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 23 Jun 2021 10:05:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229982AbhFWIbo (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Jun 2021 04:31:44 -0400
+        with ESMTP id S230430AbhFWOFJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Jun 2021 10:05:09 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BDF1C061574
-        for <linux-pwm@vger.kernel.org>; Wed, 23 Jun 2021 01:29:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FAAFC061574
+        for <linux-pwm@vger.kernel.org>; Wed, 23 Jun 2021 07:02:51 -0700 (PDT)
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lvyG5-0004q2-UE; Wed, 23 Jun 2021 10:29:17 +0200
+        id 1lw3Sq-0001lG-2L; Wed, 23 Jun 2021 16:02:48 +0200
 Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1lvyG4-00032S-3W; Wed, 23 Jun 2021 10:29:16 +0200
-Date:   Wed, 23 Jun 2021 10:29:15 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Robert Foss <robert.foss@linaro.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        id 1lw3So-0005pC-8M; Wed, 23 Jun 2021 16:02:46 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Matthieu Crapet <mcrapet@gmail.com>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Doug Anderson <dianders@chromium.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH v3 2/2] drm/bridge: ti-sn65dsi86: Implement the pwm_chip
-Message-ID: <20210623082915.tj7pid46wm3dl5jf@pengutronix.de>
-References: <20210622030948.966748-1-bjorn.andersson@linaro.org>
- <20210622030948.966748-2-bjorn.andersson@linaro.org>
- <20210622202935.lbghwelbiwgufycd@pengutronix.de>
- <YNKKkEMD4sVhfcNr@yoga>
+        Lee Jones <lee.jones@linaro.org>
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH 1/2] pwm: ep93xx: Implement .apply callback
+Date:   Wed, 23 Jun 2021 16:02:39 +0200
+Message-Id: <20210623140240.170706-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2vpq5rw3nar65532"
-Content-Disposition: inline
-In-Reply-To: <YNKKkEMD4sVhfcNr@yoga>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -57,193 +44,70 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+To ease review this reuses the formerly implemented callbacks.
 
---2vpq5rw3nar65532
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/pwm/pwm-ep93xx.c | 43 ++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 39 insertions(+), 4 deletions(-)
 
-Hello Bjorn,
+diff --git a/drivers/pwm/pwm-ep93xx.c b/drivers/pwm/pwm-ep93xx.c
+index 4ca70794ad96..3ef4b41bfd66 100644
+--- a/drivers/pwm/pwm-ep93xx.c
++++ b/drivers/pwm/pwm-ep93xx.c
+@@ -156,13 +156,48 @@ static void ep93xx_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	clk_disable(ep93xx_pwm->clk);
+ }
+ 
++static int ep93xx_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			    const struct pwm_state *state)
++{
++	int ret;
++	bool enabled = state->enabled;
++
++	if (state->polarity != pwm->state.polarity) {
++		if (enabled) {
++			ep93xx_pwm_disable(chip, pwm);
++			enabled = false;
++		}
++
++		ret = ep93xx_pwm_polarity(chip, pwm, state->polarity);
++		if (ret)
++			return ret;
++	}
++
++	if (!state->enabled) {
++		if (enabled)
++			ep93xx_pwm_disable(chip, pwm);
++
++		return 0;
++	}
++
++	if (state->period != pwm->state.period ||
++	    state->duty_cycle != pwm->state.duty_cycle) {
++		ret = ep93xx_pwm_config(chip, pwm, (int)state->duty_cycle,
++					(int)state->period);
++		if (ret)
++			return ret;
++	}
++
++	if (!enabled)
++		return ep93xx_pwm_enable(chip, pwm);
++
++	return 0;
++}
++
+ static const struct pwm_ops ep93xx_pwm_ops = {
+ 	.request = ep93xx_pwm_request,
+ 	.free = ep93xx_pwm_free,
+-	.config = ep93xx_pwm_config,
+-	.set_polarity = ep93xx_pwm_polarity,
+-	.enable = ep93xx_pwm_enable,
+-	.disable = ep93xx_pwm_disable,
++	.apply = ep93xx_pwm_apply,
+ 	.owner = THIS_MODULE,
+ };
+ 
+-- 
+2.30.2
 
-On Tue, Jun 22, 2021 at 08:12:48PM -0500, Bjorn Andersson wrote:
-> On Tue 22 Jun 15:29 CDT 2021, Uwe Kleine-K?nig wrote:
-> > On Mon, Jun 21, 2021 at 10:09:48PM -0500, Bjorn Andersson wrote:
-> > > +		/*
-> > > +		 * PWM duty cycle is given as:
-> > > +		 *
-> > > +		 *   duty =3D BACKLIGHT / (BACKLIGHT_SCALE + 1)
-> > > +		 *
-> > > +		 * The documentation is however inconsistent in its examples,
-> > > +		 * so the interpretation used here is that the duty cycle is
-> > > +		 * the period of BACKLIGHT * PRE_DIV / REFCLK_FREQ.
-> >=20
-> > I don't understand this.
-> >=20
-> > > +		 *
-> > > +		 * The ratio PRE_DIV / REFCLK_FREQ is rounded up to whole
-> > > +		 * nanoseconds in order to ensure that the calculations are
-> > > +		 * idempotent and gives results that are smaller than the
-> > > +		 * requested value.
-> > > +		 */
-> > > +		tick =3D DIV_ROUND_UP(NSEC_PER_SEC * pre_div, pdata->pwm_refclk_fr=
-eq);
-> > > +		backlight =3D state->duty_cycle / tick;
-> >=20
-> > You're loosing precision here by dividing by the result of a division.
->=20
-> The actual period is also a result of a division and after spending too
-> many hours scratching my head I reached to conclusion that this was the
-> reason why I wasn't able to get the duty cycle calculation idempotent
-> over the ranges I tested.
-
-How did you test? Using the sysfs interface?
-=20
-> But in my effort to describe this to you here, I finally spotted the
-> error and will follow up with a new version that does:
->=20
->                 actual =3D NSEC_PER_SEC * (pre_div * scale + 1) / pdata->=
-pwm_refclk_freq);
->                 backlight =3D state->duty_cycle * (scale + 1) / actual;
-
-So the first term ("actual") is the period that you get for a given
-pre_div, scale and pwm_refclk_freq, right? And the 2nd ("backlight")
-defines the register value to configure the duty_cycle, right?
-
-I wonder: Is it possible to configure a 100% relative duty cycle? Then
-backlight would be scale + 1 which (at least if scale is 0xffff) would
-overflow the 16 bit register width?!
-
-> > > +static void ti_sn_pwm_get_state(struct pwm_chip *chip, struct pwm_de=
-vice *pwm,
-> > > +				struct pwm_state *state)
-> > > +{
-> > > +	struct ti_sn65dsi86 *pdata =3D pwm_chip_to_ti_sn_bridge(chip);
-> > > +	unsigned int pwm_en_inv;
-> > > +	unsigned int pre_div;
-> > > +	u16 backlight;
-> > > +	u16 scale;
-> > > +	int ret;
-> > > +
-> > > +	ret =3D regmap_read(pdata->regmap, SN_PWM_EN_INV_REG, &pwm_en_inv);
-> > > +	if (ret)
-> > > +		return;
-> > > +
-> > > +	ret =3D ti_sn65dsi86_read_u16(pdata, SN_BACKLIGHT_SCALE_REG, &scale=
-);
-> > > +	if (ret)
-> > > +		return;
-> > > +
-> > > +	ret =3D ti_sn65dsi86_read_u16(pdata, SN_BACKLIGHT_REG, &backlight);
-> > > +	if (ret)
-> > > +		return;
-> > > +
-> > > +	ret =3D regmap_read(pdata->regmap, SN_PWM_PRE_DIV_REG, &pre_div);
-> > > +	if (ret)
-> > > +		return;
-> > > +
-> > > +	state->enabled =3D FIELD_GET(SN_PWM_EN_MASK, pwm_en_inv);
-> > > +	if (FIELD_GET(SN_PWM_INV_MASK, pwm_en_inv))
-> > > +		state->polarity =3D PWM_POLARITY_INVERSED;
-> > > +	else
-> > > +		state->polarity =3D PWM_POLARITY_NORMAL;
-> > > +
-> > > +	state->period =3D DIV_ROUND_UP(NSEC_PER_SEC * (pre_div * scale + 1)=
-, pdata->pwm_refclk_freq);
-> > > +	state->duty_cycle =3D backlight * DIV_ROUND_UP(NSEC_PER_SEC * pre_d=
-iv, pdata->pwm_refclk_freq);
-> >=20
-> > If you use
-> >=20
-> > 	state->duty_cycle =3D DIV_ROUND_UP(backlight * NSEC_PER_SEC * pre_div,=
- pdata->pwm_refclk_freq);
-> >=20
-> > instead (with a cast to u64 to not yield an overflow) the result is more
-> > exact.
-> >=20
->=20
-> The problem with this is that it sometimes yields duty_cycles larger
-> than what was requested... But going back to describing this as a ratio
-> of the period this becomes:
->=20
->         state->duty_cycle =3D DIV_ROUND_UP_ULL(state->period * backlight,=
- scale + 1);
-
-I saw your next iteration of this patch set, but didn't look into it
-yet. Note that if it uses this formula it sill looses precision.
-Consider:
-
-	pwm_refclk_freq =3D 1333333
-	pre_div =3D 4
-	scale =3D 60000
-	backlight =3D 59999
-
-then you calculate:
-
-	state->period =3D 180000796 (exact value: 180000795.00019875)
-	state->duty_cycle =3D 179994797 (exact value: 179994795.0736975)
-
-so duty_cycle should actually be reported as 179994796. That happens
-because state->period is already the result of a division, you get the
-right value when doing:
-
-	state->duty_cycle =3D round_up(NSEC_PER_SEC * (pre_div * scale + 1) * back=
-light, (scale + 1) * pdata->pwm_refclk_freq)
-
-> > I still find this surprising, I'd expect that SCALE also matters for the
-> > duty_cycle. With the assumption implemented here modifying SCALE only
-> > affects the period. This should be easy to verify?! I would expect that
-> > changing SCALE doesn't affect the relative duty_cycle, so the brightness
-> > of an LED is unaffected (unless the period gets too big of course).
-> >=20
->=20
-> I think the hardware is two nested counters, one (A) ticking at REFCLK_FR=
-EQ
-> and as that hits PRE_DIV, it kicks the second counter (B) (and resets).
->=20
-> As counter A is reset the output signal goes high, when A hits BACKLIGHT =
-the
-> signal goes low and when A hits BACKLIGHT_SCALE it resets.
-
-then we would probably have:
-
-	period =3D (scale + 1) * pre_div / refclk
-
-but not
-
-	period =3D (scale * pre_div + 1) / refclk
-
-=2E The former would be nicer because then in the calculation for
-duty_cycle the factor (scale + 1) would cancel.
-
-> Per this implementation the actual length of the duty cycle would indeed
-> be independent of the BACKLIGHT_SCALE,
-
-In your formula for duty_cycle scale actually does matter. So I think
-we're not there yet?
-
-> but the length of the low signal (and hence the ratio, which results
-> in the actual brightness) does depend on BACKLIGHT_SCALE.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---2vpq5rw3nar65532
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmDS8NgACgkQwfwUeK3K
-7AkmWQf8Cgehquu/iCwmNawhGxiQwrqeAVFvnlUEWyBetJg5IOeaL/HMb/zQmUI0
-17YHKce8WtlQl+ggyPiXOw03Hj9Hdgg22AEi/AlBpUTCj3uRiuL2h18UqFTzDqO6
-diXK5vaukl67y1+ty3wt1Nn6tkTidC3+3+z7gN4Rii0ww6q/RN50KacD/Hw3c/qU
-rX1VpxznBhAH7YIL3K2++yeD/rHWCZJyaMgKCDV0v03RHxOkVZc4P6NgJreGYRfA
-2x3mANPFi1GrIhZBvVEMApz5bIjiIjSyaY/ZHXKfpPGNKNe4p4ls2Gy8vOR0/w6L
-Jlo1kmWoQV06Bja5wxVbT8aLDNsbHw==
-=+/kF
------END PGP SIGNATURE-----
-
---2vpq5rw3nar65532--
