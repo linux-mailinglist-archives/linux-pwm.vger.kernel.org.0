@@ -2,133 +2,130 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56D1A3B5934
-	for <lists+linux-pwm@lfdr.de>; Mon, 28 Jun 2021 08:38:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 861673B5D48
+	for <lists+linux-pwm@lfdr.de>; Mon, 28 Jun 2021 13:44:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230148AbhF1GlM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 28 Jun 2021 02:41:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43970 "EHLO
+        id S232608AbhF1LqY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 28 Jun 2021 07:46:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229911AbhF1GlL (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 28 Jun 2021 02:41:11 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9371C061574
-        for <linux-pwm@vger.kernel.org>; Sun, 27 Jun 2021 23:38:46 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lxkum-0002SH-IT; Mon, 28 Jun 2021 08:38:40 +0200
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lxkul-0003IP-RG; Mon, 28 Jun 2021 08:38:39 +0200
-Date:   Mon, 28 Jun 2021 08:38:39 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Zou Wei <zou_wei@huawei.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH -next] pwm: img: Fix PM reference leak in img_pwm_enable()
-Message-ID: <20210628063839.5oeh5fvvoy3fk2gw@pengutronix.de>
-References: <1620791837-16138-1-git-send-email-zou_wei@huawei.com>
- <20210512045222.2yjm6yxikznohlmn@pengutronix.de>
- <CAJZ5v0huz6Ek1FTvdMs0hPOoMn+ZHiNJeDp6-ujg-1WwpCsELQ@mail.gmail.com>
+        with ESMTP id S232540AbhF1LqY (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 28 Jun 2021 07:46:24 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F719C061574
+        for <linux-pwm@vger.kernel.org>; Mon, 28 Jun 2021 04:43:58 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id o35-20020a05600c5123b02901e6a7a3266cso8560599wms.1
+        for <linux-pwm@vger.kernel.org>; Mon, 28 Jun 2021 04:43:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BB9C1kHiGfrVLLONHinDPUdn57GDcjujgBigVPRH/NQ=;
+        b=FNnUrB5tbatTWRIWbIWjFaBNJUJCo2m/zT8Q9b+bhc4v8TiS6wn/HK2R46xGGffcaD
+         Ud9eb0X7jhRcrUJ6oWO/IU/uz+y6Zg4l6Y2Hd2ssHidNxwbJibwO8hprwMv3pzNoNThg
+         DL64k1UeI7yvKDvEM6NbaL7KoY/21QQyC5YESTUJWwkXfwfgcrJufK2JkaibHJGf77Mn
+         8CwudaFerUwzcT4LJUnT24kBsWTXqZ23LfG9Pu9k4Pl6WCwc2p7egjDrnn7sDzc6pFyi
+         O//lgJlp8YMOqahuY/7153xEtJQIzYxvkqFsvf3hwUMCHFsTKY1+LPzYDWQ9A+zwFcnL
+         +8xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BB9C1kHiGfrVLLONHinDPUdn57GDcjujgBigVPRH/NQ=;
+        b=nBSyqZvDUNP24CthMMOCXSZLT3BTcozEo8qUZCQbqoh3mmRK1Mg88TyyiaIh9lSb7O
+         66g6bxAuzmsQQf3GpfNtWxZVsStGUL4xOCcM+rpUkC9fSYIPsyOhetEpVKgX/67aV0zu
+         jw81RhPuIe/KCoNV6c7N72EzCtVa7KZWhUWSspLoQfb7rznAed5fYNXewMnkbb5YA1rh
+         htnI3Ydtwn6supvbZ5PiRUoheDvaw4OgCqx+q3ldfT3sipAwiX3G93QKdiN3iNAcDV8d
+         Pq3kEPthFtJNL5h9decWJsHaIvThArV+oH5/zHdirKu7gi+apmp9MAaKB8e3jEKRLIBe
+         1rDA==
+X-Gm-Message-State: AOAM532Q1hJdEhk5l6jrCCS+y/0gNd0W3uZ5fw2HtrdMiRoGuMBG6eJi
+        un4s7UvJz8wMS6HJT5Lbpo4=
+X-Google-Smtp-Source: ABdhPJx2xqyyyd4fd9GFh6X1dWy04xwGjGkQ3l9KxKcm6scBcjAX42PbIO6RgDnaOBi8wzjcnyP/0w==
+X-Received: by 2002:a1c:f216:: with SMTP id s22mr25772281wmc.18.1624880636522;
+        Mon, 28 Jun 2021 04:43:56 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id s5sm2063909wmh.46.2021.06.28.04.43.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Jun 2021 04:43:55 -0700 (PDT)
+Date:   Mon, 28 Jun 2021 13:46:06 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v2] pwm: Ensure for legacy drivers that pwm->state stays
+ consistent
+Message-ID: <YNm2ftmwN2Nsgy0I@orome.fritz.box>
+References: <20210411160451.1207799-1-u.kleine-koenig@pengutronix.de>
+ <20210501160943.108821-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ouqyesh2gt3a22qr"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zR/WVagU7u/raQ17"
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0huz6Ek1FTvdMs0hPOoMn+ZHiNJeDp6-ujg-1WwpCsELQ@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20210501160943.108821-1-u.kleine-koenig@pengutronix.de>
+User-Agent: Mutt/2.1 (4b100969) (2021-06-12)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---ouqyesh2gt3a22qr
-Content-Type: text/plain; charset=iso-8859-1
+--zR/WVagU7u/raQ17
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello Zou,
-
-On Fri, Jun 25, 2021 at 07:45:14PM +0200, Rafael J. Wysocki wrote:
-> On Wed, May 12, 2021 at 6:52 AM Uwe Kleine-K=F6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Wed, May 12, 2021 at 11:57:17AM +0800, Zou Wei wrote:
-> > > pm_runtime_get_sync will increment pm usage counter even it failed.
-> > > Forgetting to putting operation will result in reference leak here.
-> > > Fix it by replacing it with pm_runtime_resume_and_get to keep usage
-> > > counter balanced.
-> > >
-> > > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > > Signed-off-by: Zou Wei <zou_wei@huawei.com>
-> > > ---
-> > >  drivers/pwm/pwm-img.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pwm/pwm-img.c b/drivers/pwm/pwm-img.c
-> > > index cc37054..11b16ec 100644
-> > > --- a/drivers/pwm/pwm-img.c
-> > > +++ b/drivers/pwm/pwm-img.c
-> > > @@ -156,7 +156,7 @@ static int img_pwm_enable(struct pwm_chip *chip, =
-struct pwm_device *pwm)
-> > >       struct img_pwm_chip *pwm_chip =3D to_img_pwm_chip(chip);
-> > >       int ret;
-> > >
-> > > -     ret =3D pm_runtime_get_sync(chip->dev);
-> > > +     ret =3D pm_runtime_resume_and_get(chip->dev);
-> > >       if (ret < 0)
-> > >               return ret;
-> >
-> > This patch looks right with my limited understanding of pm_runtime. A
-> > similar issue in this driver was fixed in commit
-> >
-> >         ca162ce98110 ("pwm: img: Call pm_runtime_put() in pm_runtime_ge=
-t_sync() failed case")
-> >
-> > where (even though the commit log talks about pm_runtime_put()) a call
-> > to pm_runtime_put_autosuspend() was added in the error path.
-> >
-> > I added the PM guys to Cc, maybe they can advise about the right thing
-> > to do here. Does it make sense to use the same idiom in both
-> > img_pwm_enable() and img_pwm_config()?
+On Sat, May 01, 2021 at 06:09:43PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Without this change it can happen that if changing the polarity succeeded
+> but changing duty_cycle and period failed pwm->state contains a mixture
+> between the old and the requested state.
 >=20
-> I think so.
+> So remember the initial state before starting to modify the configuration
+> and restore it when one of the required callback fails.
 >=20
-> And calling pm_runtime_put_autosuspend() in the img_pwm_enable() error
-> path would work too.
+> Compared to the previous implementation .disable() (if necessary) is call=
+ed
+> earlier to prevent a glitch.
+>=20
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+> Hello,
+>=20
+> just a small optimisation: At the end of pwm_apply_legacy()
+> state->enabled is known to be true, so simplify
+>=20
+> 	if (state->enabled && !pwm->state.enabled) {
+>=20
+> to
+> 	if (!pwm->state.enabled) {
+>=20
+> Best regards
+> Uwe
+>=20
+>  drivers/pwm/core.c | 139 +++++++++++++++++++++++++--------------------
+>  1 file changed, 78 insertions(+), 61 deletions(-)
 
-Do you care to clean this up accordingly and send a new patch?
+Applied, thanks. I made a few tiny changes such as dropping the apply
+function pointer, which didn't seem very useful.
 
-Best regards
-Uwe
+Thierry
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ouqyesh2gt3a22qr
+--zR/WVagU7u/raQ17
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmDZbmwACgkQwfwUeK3K
-7AkHdAgAh/F2qNIQATDK1b+ShrXomsXhrDHW8/TMxpw+VRjRRGpnIPzv5NMXxNNt
-v9ABxSjUBms6N1vP5ax3Jv52IJWWetn53OAOGTI99PsvESh+1yW2J6LlNAO7yyLw
-y/2Ify+L7Ppoj3vbgGYFCdgiJf/3g0f/q4xTzA3zhSPDD1Ku6enUW6+upjkYuKbs
-GAFcraEYEBSGBI186HRWB2zOB645APQXm/YZlz6dTDHwhBUBgtjkjxfy8lmW8jpc
-RZs9l8fbMWzKlk8SQPgbRUpsJnzO/+lwMnSskJQMfm1U8lL+had5PW9kTD7L39sE
-kPMOWYwIjGbKBIvVF9KnlFLHZMYt1Q==
-=p3Fy
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmDZtgYACgkQ3SOs138+
+s6EGVw//cDtw6vs8e4hXKi4Hhn4P/mpoPawyVnvj9enXir6/qOUA1yEJsD9uxltY
+TwGZSccYSEEXWOB/dGur7WNyNlN/lHzKHHMW0r9qGpGSZEMSF5UI37xNeU3QLkQf
+mrnloii3QpISulj8Tp/7VwZKTrEMMGc17vD196FbZ4GfsUoEOcXQGbNvckaHUWPy
+gE9DffhZFNmwyiTbtUdAHwLO3jj8dSpUaGAle3sTeu5Vs+inwarudxfQ6Wa3Q5fF
++VPFreb+O7XyAzyOfiQ4msgo4jBaMoCNq+C9NYkunJrIY16n35U/ihmAbGTDX23g
+QfWpgDplrtCqi3aJUdu3VOeSRltEI75eMIgrpbrFhWSn75u0d+/evdHDrN8wfmL4
+nMaTB3x9rqNP3APfxMTeSmqCdc6DUrG9iu4hIaO3Z2Ech8poXvODDN98nlCXNU3X
+3w+BCJYdQWBqUJtj4K/XqhAG7RkHFU0lFhjOYhbNZ9dyOcvPodfMzv68JzC2bLjT
+4qJF1Zpq3OWlv1EDCh0BSwSjnlEElw/Y/Evqp00TKtuheYAz2JUsetvmPE3sdqT0
+oovCtZbJGg6oyQypHyzcrSVNsyX4+p95LrYjQ27HryS59dVJwbszlu9/w8Qs56qZ
++bshx1sBrX5BR7NPQM8jvD5R69Zx2y/4zRtRr6ljV3R7VIwt97M=
+=y4E8
 -----END PGP SIGNATURE-----
 
---ouqyesh2gt3a22qr--
+--zR/WVagU7u/raQ17--
