@@ -2,86 +2,75 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B6803B6F89
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Jun 2021 10:39:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 298B93B6FFE
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Jun 2021 11:17:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232431AbhF2IlW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 29 Jun 2021 04:41:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232411AbhF2IlW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 29 Jun 2021 04:41:22 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57458C061574
-        for <linux-pwm@vger.kernel.org>; Tue, 29 Jun 2021 01:38:55 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ly9Ge-0000KY-En; Tue, 29 Jun 2021 10:38:52 +0200
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ly9Gd-0004Fe-IF; Tue, 29 Jun 2021 10:38:51 +0200
-Date:   Tue, 29 Jun 2021 10:38:51 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Sean Anderson <sean.anderson@seco.com>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        michal.simek@xilinx.com, linux-kernel@vger.kernel.org,
-        Alvaro Gamez <alvaro.gamez@hazent.com>,
-        linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/3] dt-bindings: pwm: Add Xilinx AXI Timer
-Message-ID: <20210629083851.dsejopbe3pbgjer2@pengutronix.de>
-References: <20210528214522.617435-1-sean.anderson@seco.com>
+        id S232674AbhF2JTw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 29 Jun 2021 05:19:52 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:6022 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232568AbhF2JTv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 29 Jun 2021 05:19:51 -0400
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4GDdyp5sXSzXlVc;
+        Tue, 29 Jun 2021 17:12:02 +0800 (CST)
+Received: from dggemi762-chm.china.huawei.com (10.1.198.148) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2176.2; Tue, 29 Jun 2021 17:17:11 +0800
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ dggemi762-chm.china.huawei.com (10.1.198.148) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Tue, 29 Jun 2021 17:17:10 +0800
+From:   Zou Wei <zou_wei@huawei.com>
+To:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
+        <lee.jones@linaro.org>
+CC:     <linux-pwm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH -next v2] pwm: img: Call pm_runtime_put_autosuspend() in pm_runtime_get_sync() failed case
+Date:   Tue, 29 Jun 2021 17:35:29 +0800
+Message-ID: <1624959329-71785-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="twcsnips74edkkg2"
-Content-Disposition: inline
-In-Reply-To: <20210528214522.617435-1-sean.anderson@seco.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggemi762-chm.china.huawei.com (10.1.198.148)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+pm_runtime_get_sync will increment pm usage counter even it failed.
+Forgetting to putting operation will result in reference leak here.
+Fix it by call pm_runtime_put_autosuspend() in pm_runtime_get_sync()
+to keep usage counter balanced.
 
---twcsnips74edkkg2
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+v1-->v2:
+   call pm_runtime_put_autosuspend() to keep consistency
 
-Hello Sean,
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
+---
+ drivers/pwm/pwm-img.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-I wonder what tree you chose as a base here. I found tags/v5.13-rc1~44^2
-as a tree that your patches can be applied to (and tags/v5.13-rc1~44 or
-later doesn't work). I recommend using
+diff --git a/drivers/pwm/pwm-img.c b/drivers/pwm/pwm-img.c
+index cc37054..d58ee47 100644
+--- a/drivers/pwm/pwm-img.c
++++ b/drivers/pwm/pwm-img.c
+@@ -157,8 +157,10 @@ static int img_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(chip->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_autosuspend(chip->dev);
+ 		return ret;
++	}
+ 
+ 	val = img_pwm_readl(pwm_chip, PWM_CTRL_CFG);
+ 	val |= BIT(pwm->hwpwm);
+-- 
+2.6.2
 
-	git format-patch --base ...
-
-=2E This makes it easier for the responsible maintainers to pick the
-right base and allows easier automatic testing.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---twcsnips74edkkg2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmDa3BcACgkQwfwUeK3K
-7AlJowf/dNyTC7mU7OK5CaeXltx0/w38Sm6ieyqX98gYRz2FHFEZ5426HyjnHUe3
-PnlLJSwWJL9dTJUyP4IsjLxMJhZFRzMSUnMOUQLSP1+pVUyhdgubCaLsF5X7aROo
-9mmeaf5C8RC7zhXyUDJluqAL1tEbOKjsQnFeTG+t4mCpHi6MSIFb6F6nT+vEzCOO
-fGNPYMnD17DzB+Cs990uTFHbK4X4Y8GQteRIqxP9BuUI0dPjAs4Ca2UEF9LrN0vm
-aq+6YTbgKSLFEQOUULFJt69tsx0boFLS+YlmggAjwSLFUXnwYsrY2JUsX4IcsFis
-6wCY4K65/h4cq1PN/SPYQzQsi3fvfg==
-=7gCo
------END PGP SIGNATURE-----
-
---twcsnips74edkkg2--
