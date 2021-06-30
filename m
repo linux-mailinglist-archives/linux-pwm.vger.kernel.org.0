@@ -2,172 +2,84 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F04E73B853B
-	for <lists+linux-pwm@lfdr.de>; Wed, 30 Jun 2021 16:46:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06FE83B864F
+	for <lists+linux-pwm@lfdr.de>; Wed, 30 Jun 2021 17:36:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235428AbhF3OtI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 30 Jun 2021 10:49:08 -0400
-Received: from so254-9.mailgun.net ([198.61.254.9]:48954 "EHLO
-        so254-9.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235345AbhF3OtF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 30 Jun 2021 10:49:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1625064397; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=XyKDiODvliERgv50vKj1x6QF0TJ/5j1C/p7t9fvUQXU=;
- b=Tki+cn94S6JkVHEZODsZEFp6OGoq254BH5VzNNZ8Z/g/4+vX4uXGgCosvjKqH8jXGj5Q51si
- hi71BLBLScJ8xBZQ0cumCH5mwXkLTVQWSFH8o1Zy6Lpss+YP5AXyKExfICqhxR9iYNHEzV/q
- ga8G+t4mdTaS6YBqZexxw8Vbxhw=
-X-Mailgun-Sending-Ip: 198.61.254.9
-X-Mailgun-Sid: WyJkZWM1ZCIsICJsaW51eC1wd21Admdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 60dc83bfad0600eede5b20d1 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 30 Jun 2021 14:46:23
- GMT
-Sender: kathirav=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6E7C9C4338A; Wed, 30 Jun 2021 14:46:23 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kathirav)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 71476C433D3;
-        Wed, 30 Jun 2021 14:46:20 +0000 (UTC)
+        id S235671AbhF3Pih (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 30 Jun 2021 11:38:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41742 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235466AbhF3Pih (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 30 Jun 2021 11:38:37 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13170C061756
+        for <linux-pwm@vger.kernel.org>; Wed, 30 Jun 2021 08:36:08 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lycFw-0005CI-LS; Wed, 30 Jun 2021 17:36:04 +0200
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lycFu-0003fc-Gl; Wed, 30 Jun 2021 17:36:02 +0200
+Date:   Wed, 30 Jun 2021 17:36:00 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin King <colin.king@canonical.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] pwm: ep93xx: Fix uninitialized variable bug in
+ ep93xx_pwm_apply()
+Message-ID: <20210630153600.327ff7vcrx76lw26@pengutronix.de>
+References: <YNx1y8PlSLehZVIY@mwanda>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 30 Jun 2021 20:16:20 +0530
-From:   Kathiravan T <kathirav@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Baruch Siach <baruch@tkos.co.il>, Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Balaji Prakash J <bjagadee@codeaurora.org>,
-        Robert Marko <robert.marko@sartura.hr>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: pwm: add IPQ6018 binding
-In-Reply-To: <YLgO0Aj1d4w9EcPv@yoga>
-References: <ea071bbcab92d4a296c7aee5d72de0427676847a.1621851644.git.baruch@tkos.co.il>
- <249bddc521b15e992d0846edf1813aeb577458b9.1621851644.git.baruch@tkos.co.il>
- <YLgO0Aj1d4w9EcPv@yoga>
-Message-ID: <5d1bb3b8b0eeedd82a3a6fb02ff5794d@codeaurora.org>
-X-Sender: kathirav@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vphn4jk3p3wcvnpg"
+Content-Disposition: inline
+In-Reply-To: <YNx1y8PlSLehZVIY@mwanda>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 2021-06-03 04:35, Bjorn Andersson wrote:
-> On Mon 24 May 05:20 CDT 2021, Baruch Siach wrote:
-> 
->> DT binding for the PWM block in Qualcomm IPQ6018 SoC.
->> 
->> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
->> ---
->> v2: Make #pwm-cells const (Rob Herring)
->> ---
->>  .../devicetree/bindings/pwm/ipq-pwm.yaml      | 52 
->> +++++++++++++++++++
->>  1 file changed, 52 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
->> 
->> diff --git a/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml 
->> b/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
->> new file mode 100644
->> index 000000000000..f85ce808a14e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
->> @@ -0,0 +1,52 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pwm/ipq-pwm.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm IPQ6018 PWM controller
->> +
->> +maintainers:
->> +  - Baruch Siach <baruch@tkos.co.il>
->> +
->> +properties:
->> +  "#pwm-cells":
->> +    const: 2
->> +
->> +  compatible:
->> +    const: qcom,pwm-ipq6018
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +    const: core
->> +
->> +required:
->> +  - "#pwm-cells"
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
->> +
->> +    soc {
->> +        #address-cells = <2>;
->> +        #size-cells = <2>;
->> +
->> +        pwm@1941010 {
->> +            #pwm-cells = <2>;
->> +            compatible = "qcom,pwm-ipq6018";
->> +            reg = <0x0 0x1941010 0x0 0x20>;
-> 
-> These 32 bytes are in the middle of the TCSR block, which is already
-> partially described by the &tcsr_q6 node, which is described as only
-> compatible = "syscon" - something no longer accepted by the DT
-> maintainers.
-> 
-> As such, I think we should adjust the &tcsr_q6 definition to cover the
-> entire TCSR: 0x01937000 of size 0x21000.
-> 
 
-To my knowledge, we can cover the entire TCSR region, so that we can use 
-it
-for the other features like qcom,dload-mode as well.
+--vphn4jk3p3wcvnpg
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> @Rob, should we represent the entire tcsr as a simple-mfd and then have
-> the pwm and q6 region as children of that? Or can we make the whole
-> thing as a simple-mfd and a syscon and only describe the pwm as a 
-> child?
-> 
-> Regards,
-> Bjorn
-> 
->> +            clocks = <&gcc GCC_ADSS_PWM_CLK>;
->> +            clock-names = "core";
->> +        };
->> +    };
->> --
->> 2.30.2
->> 
+Hello,
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member of Code Aurora Forum, hosted by The Linux Foundation
+this problem was found already earlier by Colin King:
+
+	https://lore.kernel.org/r/20210629172253.43131-1-colin.king@canonical.com
+
+I'm fine with either change.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--vphn4jk3p3wcvnpg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmDcj10ACgkQwfwUeK3K
+7AmM7wf/e97AoCAkzfOVrEkGepxK6NtmYvP59bREHrSkc6WWjRtwhe2PoHG/IzdH
+aDSuq2c0fk3SAcfocPBHKg87iTOPR6sQb/f853pze5fdURgJy46DzcRT1bEjnXlf
+0iSbHWiLmtYQVfidvopKrazQz/6OPxpm+1NLH6Qsia7YxZhaO/9XHJPQuXIQphq0
+zfnr8jHnB25yuo32GCMb1lQg4poOVvLXpIY1IWME910jn8JT9/Ui8lUiN1bIkR9d
+Hkksrq+KLHFa+opJLcLg2D9V8Y+gXycS3xmm0XU3EyUJrJc11ZPFiPgfGXl3i+Xr
+ar3u5ALK5GVQG+QhxSQMC4AY/JJWIw==
+=12r2
+-----END PGP SIGNATURE-----
+
+--vphn4jk3p3wcvnpg--
