@@ -2,96 +2,257 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9D0C3B837D
-	for <lists+linux-pwm@lfdr.de>; Wed, 30 Jun 2021 15:47:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21B693B8382
+	for <lists+linux-pwm@lfdr.de>; Wed, 30 Jun 2021 15:47:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235117AbhF3Ntq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 30 Jun 2021 09:49:46 -0400
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:21038 "EHLO
-        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235039AbhF3Ntp (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 30 Jun 2021 09:49:45 -0400
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15UDgnuw001791;
-        Wed, 30 Jun 2021 13:47:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=z+LDutZH0urZ87b+8AQ/NNjQzIHfjBaCRTM6UUAttgU=;
- b=okChKBybudDzRdcGK6YQVHExedY1tyJyq7Mn/aRg445Q4pzCamhmmavmAedSWKGzqxaF
- 9TllbC7seVM0eLIodVBQ1KIG9xdm4SNtOAZ7LsVro9jJJAy+zgECmF0LYLnOsTj0LR2c
- CtNTNa8dOxNKVP4rSX3d9Czu8IrEpSGNtyfM+S21tkKLucPz1bToqgyVCVAaJoDXxBle
- JzbTm2mq363zxIaw5EUfCV08OtM5zpWPJUiBneSw90jaNZ/hbpv5ui1RjBjLLTeMiStU
- lOOJoKNdYZRH/mO77AyccHMIkGpa3lyIPysXAVEx8fo1RZS6iXweOwNGy8MBS2KuHMO/ HA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by mx0b-00069f02.pphosted.com with ESMTP id 39gguq1254-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Jun 2021 13:47:07 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 15UDe59C071080;
-        Wed, 30 Jun 2021 13:47:06 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3030.oracle.com with ESMTP id 39dt9h4jx6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Jun 2021 13:47:06 +0000
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 15UDl5Mm100976;
-        Wed, 30 Jun 2021 13:47:05 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 39dt9h4jwr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Jun 2021 13:47:05 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 15UDl4Vm024783;
-        Wed, 30 Jun 2021 13:47:04 GMT
-Received: from mwanda (/102.222.70.252)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 30 Jun 2021 06:47:03 -0700
-Date:   Wed, 30 Jun 2021 16:46:51 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] pwm: ep93xx: Fix uninitialized variable bug in
- ep93xx_pwm_apply()
-Message-ID: <YNx1y8PlSLehZVIY@mwanda>
+        id S235167AbhF3Ntx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 30 Jun 2021 09:49:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235168AbhF3Ntu (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 30 Jun 2021 09:49:50 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A01CC061756
+        for <linux-pwm@vger.kernel.org>; Wed, 30 Jun 2021 06:47:20 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id v20so4285021eji.10
+        for <linux-pwm@vger.kernel.org>; Wed, 30 Jun 2021 06:47:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NiFfnM4nxPKv3wBf/KQmGM6lG+GXst7adkovnLuCU8U=;
+        b=wQ/r+hCBG+g9+ksz+k4ZRvsyRx0gxoQDcA+TuwHe8mxhBDxQ0rPrEFZGazh7JncXtc
+         yYVWG8d6O7IOUocV6gfxaHea7kuewGWzhuXl2fmW4lF/KJTUcwvQplKndHLHkpEdlKR2
+         wtlPBg2u9Hlz4+xy1m3THQwLwcxAVllSBERvcXscx/4vwbUUawRuM29w63EaITUiEeGp
+         ibVGzMn9gY9Q3VAGLnNqg4IX0YHOI0eqya93IxLsJvxaicqDAkDynqW4fBF6XRGAmaOy
+         cF2tQYSrK3uJ4wfpJfXUGToIJbTQxUJJBe/RMkm66nE3cVv92G6bbEdxyqvB8unwLi2d
+         FhnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NiFfnM4nxPKv3wBf/KQmGM6lG+GXst7adkovnLuCU8U=;
+        b=SX6hzP0kGhiB7oP5CALmHcErrUerkQJAIReBFPuUhFqUTqnFRAagHDtyVzD3ifTHiX
+         kPW0Gm+VnSZoPqGHOAU8lGYndmwRJg8NTwgeHp/6kJF2heXFsoAHu7tcfRwM2nFB7jZr
+         jyLWDBhAmNldMXTGIvWJboacEPkpmRKBNUHj84EGWYzAiIZt8Qq9v0uAFKgLMSQEPAzC
+         7Pbz5te2rS0AFa4rrkHb0fGFoAAT1k42l31OhSc3R3FOXrSFLE8j1WPkgFKJjfJKdCcW
+         hLy4EAXZN254E+PCGPj5UoWsotgWTVkvcaf61hnzUDtUXfWQbGqhrfOFCaCElNpFEvNL
+         zLvg==
+X-Gm-Message-State: AOAM533hPWSyLZPhAV3rKzcn026aH9OvsrfmQ8aCzNtR6E3t5kXN7Vrz
+        Fog4DV++1l/WHe0RfcM6SNl3rQ==
+X-Google-Smtp-Source: ABdhPJxsqeSQfJuyngC91sLJZ+6xnm0UeG2PQ+/LMc3+fz5GGaWtZwgPqPtgtUI3SwnHPFIXlNQ59g==
+X-Received: by 2002:a17:906:c010:: with SMTP id e16mr35364761ejz.214.1625060839125;
+        Wed, 30 Jun 2021 06:47:19 -0700 (PDT)
+Received: from ?IPv6:2a02:768:2307:40d6::648? ([2a02:768:2307:40d6::648])
+        by smtp.gmail.com with ESMTPSA id s5sm12876834edi.93.2021.06.30.06.47.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Jun 2021 06:47:18 -0700 (PDT)
+From:   Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v4 1/3] dt-bindings: pwm: Add Xilinx AXI Timer
+To:     Sean Anderson <sean.anderson@seco.com>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     michal.simek@xilinx.com, linux-kernel@vger.kernel.org,
+        Alvaro Gamez <alvaro.gamez@hazent.com>,
+        linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>
+References: <20210528214522.617435-1-sean.anderson@seco.com>
+Message-ID: <13c9345f-b3e5-cc97-437b-c342777fcf3c@monstr.eu>
+Date:   Wed, 30 Jun 2021 15:47:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-ORIG-GUID: jnggKSkJ1roDwESKAcPbsCmeJqVJyvbP
-X-Proofpoint-GUID: jnggKSkJ1roDwESKAcPbsCmeJqVJyvbP
+In-Reply-To: <20210528214522.617435-1-sean.anderson@seco.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Smatch found a potential uninitialized variable in ep93xx_pwm_apply():
 
-    drivers/pwm/pwm-ep93xx.c:147 ep93xx_pwm_apply()
-    error: uninitialized symbol 'ret'.
 
-Initialize "ret" to zero at the start to solve this issue.
+On 5/28/21 11:45 PM, Sean Anderson wrote:
+> This adds a binding for the Xilinx LogiCORE IP AXI Timer. This device is
+> a "soft" block, so it has many parameters which would not be
+> configurable in most hardware. This binding is usually automatically
+> generated by Xilinx's tools, so the names and values of some properties
+> must be kept as they are. Replacement properties have been provided for
+> new device trees.
+> 
+> Because we need to init timer devices so early in boot, the easiest way
+> to configure things is to use a device tree property. For the moment
+> this is 'xlnx,pwm', but this could be extended/renamed/etc. in the
+> future if these is a need for a generic property.
+> 
+> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
+> ---
+> 
+> Changes in v4:
+> - Remove references to generate polarity so this can get merged
+> - Predicate PWM driver on the presence of #pwm-cells
+> - Make some properties optional for clocksource drivers
+> 
+> Changes in v3:
+> - Mark all boolean-as-int properties as deprecated
+> - Add xlnx,pwm and xlnx,gen?-active-low properties.
+> - Make newer replacement properties mutually-exclusive with what they
+>   replace
+> - Add an example with non-deprecated properties only.
+> 
+> Changes in v2:
+> - Use 32-bit addresses for example binding
+> 
+>  .../bindings/pwm/xlnx,axi-timer.yaml          | 85 +++++++++++++++++++
+>  1 file changed, 85 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml b/Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml
+> new file mode 100644
+> index 000000000000..48a280f96e63
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml
 
-Fixes: f6ef94edf0f6 ("pwm: ep93xx: Unfold legacy callbacks into ep93xx_pwm_apply()")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/pwm/pwm-ep93xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I don't think this is the right location for this.
 
-diff --git a/drivers/pwm/pwm-ep93xx.c b/drivers/pwm/pwm-ep93xx.c
-index 70fa2957f9d3..ffa79248c1e1 100644
---- a/drivers/pwm/pwm-ep93xx.c
-+++ b/drivers/pwm/pwm-ep93xx.c
-@@ -61,7 +61,7 @@ static void ep93xx_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- static int ep93xx_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			    const struct pwm_state *state)
- {
--	int ret;
-+	int ret = 0;
- 	struct ep93xx_pwm *ep93xx_pwm = to_ep93xx_pwm(chip);
- 	bool enabled = state->enabled;
- 
+I have done some grepping and I think this should be done in a different
+way. I pretty much like solution around "ti,omap3430-timer" which is
+calling dmtimer_systimer_select_best() and later dmtimer_is_preferred()
+which in this case would allow us to get rid of cases which are not
+suitable for clocksource and clockevent.
+
+And there is drivers/pwm/pwm-omap-dmtimer.c which has link to timer
+which is providing functions for it's functionality.
+
+I have also looked at
+Documentation/devicetree/bindings/timer/nxp,tpm-timer.yaml which is also
+the same device.
+
+And sort of curious if you look at
+https://www.xilinx.com/support/documentation/ip_documentation/axi_timer/v2_0/pg079-axi-timer.pdf
+( Figure 1-1)
+that PWM is taking input from generate out 0 and generate out 1 which is
+maybe can be modeled is any output and pwm driver can register inputs
+for pwm driver.
+
+
+> @@ -0,0 +1,85 @@
+> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/xlnx,axi-timer.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Xilinx LogiCORE IP AXI Timer Device Tree Binding
+> +
+> +maintainers:
+> +  - Sean Anderson <sean.anderson@seco.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +         - const: xlnx,axi-timer-2.0
+> +         - const: xlnx,xps-timer-1.00.a
+> +      - items:
+> +         - const: xlnx,xps-timer-1.00.a
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: s_axi_aclk
+
+Origin driver is not using this clock name and it is only one that's why
+it shouldn't be listed.
+
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  xlnx,count-width:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 8
+> +    maximum: 32
+> +    default: 32
+
+This is not accurate. It should be enum because only 8/16/32 are valid
+values here.
+
+> +    description:
+> +      The width of the counter(s), in bits.
+> +
+> +  xlnx,one-timer-only:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [ 0, 1 ]
+> +    description:
+> +      Whether only one timer is present in this block.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - xlnx,one-timer-only
+> +
+> +allOf:
+> +  - if:
+> +      required:
+> +        - '#pwm-cells'
+
+Let's discussed this usage based on design.
+
+> +    then:
+> +      allOf:
+> +        - required:
+> +            - clocks
+> +        - properties:
+> +            xlnx,one-timer-only:
+> +              const: 0
+> +    else:
+> +      required:
+> +        - interrupts
+> +  - if:
+> +      required:
+> +        - clocks
+> +    then:
+> +      required:
+> +        - clock-names
+
+And this checking should be removed too.
+
+> +
+> +additionalProperties: true
+> +
+> +examples:
+> +  - |
+> +    axi_timer_0: timer@800e0000 {
+
+label is useless here and should be removed.
+
+> +        #pwm-cells = <0>;
+> +        clock-names = "s_axi_aclk";
+> +        clocks = <&zynqmp_clk 71>;
+> +        compatible = "xlnx,axi-timer-2.0", "xlnx,xps-timer-1.00.a";
+> +        reg = <0x800e0000 0x10000>;
+> +        xlnx,count-width = <0x20>;
+> +        xlnx,one-timer-only = <0x0>;
+> +    };
+> 
+
+I would list example without pwm-cells first as it is valid and reflect
+current status.
+
+Thanks,
+Michal
+
+
 -- 
-2.30.2
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
 
