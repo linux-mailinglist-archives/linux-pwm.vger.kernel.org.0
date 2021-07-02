@@ -2,217 +2,350 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 768B53BA09C
-	for <lists+linux-pwm@lfdr.de>; Fri,  2 Jul 2021 14:41:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBD3C3BA23C
+	for <lists+linux-pwm@lfdr.de>; Fri,  2 Jul 2021 16:32:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232168AbhGBMne (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 2 Jul 2021 08:43:34 -0400
-Received: from mail-dm6nam10on2085.outbound.protection.outlook.com ([40.107.93.85]:27616
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232026AbhGBMne (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Fri, 2 Jul 2021 08:43:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=doV5xYSEah825xBhHxTBAEpILtL19ngsHuy9H4woyVMh5Gxa/RWOFSTgxZK5fG9mbWkSVbXycE0IOJUXN7S45udCr/FsMwqRPKNBO0f64DO8CY31uhOdZHMs5zNwA5dnRgL1Uni4xGbCCvJbXoSTRuOhhthGjiJk6T0pkSfNg60PguMC+/zL67XpgyU8mrSEX3PAMbVFVsipqVYOdFSdMHCKr7E+k5oh5Iyhzspm6K3fFun6niNlZMRVkEDiHFq6K5vPuSN/CQSJWMCc0pJjP8BLoQqeeU90hVeUF8iWQ56fAD9jIiBk3cz+zwJn2Y55bPnQlZO6e/Fdg9iccnDcUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZOo2Bh7EFs7tFMOR5iXj4/s7OZ6ZAOzqNVncj92rDjE=;
- b=K5oKOYKzF6dY/qkqq3zIyO5DuZbpG6PXWk1nPdjHIEZemMV2ylFA25dIHCsYWXvQa19oNm7p/bNMZvVCBfxK5PJeT0M2Sg7qtJrspA1v/XBNrUUxYgtDFzQNO5TsS2c585A6pVSXj+06HMf8iA9Xdd9mYqu7wNspQe21GdB4VeyLOcbreMXREfUPc2mYWyd+GPOpbM24aIA7bh8CF1/JhN7/TLFGeedzrdwV/6+trmcjrv3/z+6UeZ/8oqsgnncMSaNFwh1wNOSph55jrgNpgKeXrvuQPDSMa2fbugRjpmKNlSlHFYxzGCGlrAwpZ18rTAUYgQ1v7eNXZ2wpNmggFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.62.198) smtp.rcpttodomain=kernel.org smtp.mailfrom=xilinx.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZOo2Bh7EFs7tFMOR5iXj4/s7OZ6ZAOzqNVncj92rDjE=;
- b=DAH7J4zFFyr55VRxKGEtSlpH+riA1ZkLqqdEIzd6m33NkbcHINY1iq2L4tIx577yqL7yxEgxWVv6FhicJI2bGyJ5DcLzMVpkRK6Vu+KbIaxvi/jPNzxxA1tdW6EUgUjg+IRP+h9m//z6uYQOeatwQtwoqJ4RD2P3jYz6jKQxv0g=
-Received: from BN6PR16CA0023.namprd16.prod.outlook.com (2603:10b6:404:f5::33)
- by SJ0PR02MB7472.namprd02.prod.outlook.com (2603:10b6:a03:29d::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.18; Fri, 2 Jul
- 2021 12:41:00 +0000
-Received: from BN1NAM02FT024.eop-nam02.prod.protection.outlook.com
- (2603:10b6:404:f5:cafe::4d) by BN6PR16CA0023.outlook.office365.com
- (2603:10b6:404:f5::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4287.22 via Frontend
- Transport; Fri, 2 Jul 2021 12:41:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
- smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=pass action=none header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
-Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
- BN1NAM02FT024.mail.protection.outlook.com (10.13.2.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4287.22 via Frontend Transport; Fri, 2 Jul 2021 12:41:00 +0000
-Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Fri, 2 Jul 2021 05:40:59 -0700
-Received: from smtp.xilinx.com (172.19.127.96) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.2176.2 via Frontend Transport; Fri, 2 Jul 2021 05:40:59 -0700
-Envelope-to: robh@kernel.org,
- linux-arm-kernel@lists.infradead.org,
- alvaro.gamez@hazent.com,
- linux-kernel@vger.kernel.org,
- s.hauer@pengutronix.de,
- u.kleine-koenig@pengutronix.de,
- devicetree@vger.kernel.org,
- linux-pwm@vger.kernel.org,
- monstr@monstr.eu,
- sean.anderson@seco.com
-Received: from [172.30.17.109] (port=49258)
-        by smtp.xilinx.com with esmtp (Exim 4.90)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1lzITa-000E83-UH; Fri, 02 Jul 2021 05:40:59 -0700
-Subject: Re: [PATCH v4 1/3] dt-bindings: pwm: Add Xilinx AXI Timer
-To:     Sean Anderson <sean.anderson@seco.com>,
-        Michal Simek <monstr@monstr.eu>, <linux-pwm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-CC:     <michal.simek@xilinx.com>, <linux-kernel@vger.kernel.org>,
-        Alvaro Gamez <alvaro.gamez@hazent.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh@kernel.org>
-References: <20210528214522.617435-1-sean.anderson@seco.com>
- <13c9345f-b3e5-cc97-437b-c342777fcf3c@monstr.eu>
- <36b23b6b-e064-a9c6-2cd4-4fd53614724b@seco.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <5e7c9d00-bacb-325a-c8f6-413ad9da5f73@xilinx.com>
-Date:   Fri, 2 Jul 2021 14:40:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        id S232939AbhGBOel (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 2 Jul 2021 10:34:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232746AbhGBOek (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 2 Jul 2021 10:34:40 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BFF9C061762
+        for <linux-pwm@vger.kernel.org>; Fri,  2 Jul 2021 07:32:08 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lzKCs-00087Y-Hl; Fri, 02 Jul 2021 16:31:50 +0200
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lzKCp-0006q4-Lv; Fri, 02 Jul 2021 16:31:47 +0200
+Date:   Fri, 2 Jul 2021 16:31:47 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Billy Tsai <billy_tsai@aspeedtech.com>
+Cc:     lee.jones@linaro.org, robh+dt@kernel.org, joel@jms.id.au,
+        andrew@aj.id.au, thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, BMC-SW@aspeedtech.com
+Subject: Re: [v8 2/2] pwm: Add Aspeed ast2600 PWM support
+Message-ID: <20210702143147.6a7psfup4tlidq2x@pengutronix.de>
+References: <20210608064658.14262-1-billy_tsai@aspeedtech.com>
+ <20210608064658.14262-3-billy_tsai@aspeedtech.com>
 MIME-Version: 1.0
-In-Reply-To: <36b23b6b-e064-a9c6-2cd4-4fd53614724b@seco.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 5fae810a-5698-4923-ed1c-08d93d56a579
-X-MS-TrafficTypeDiagnostic: SJ0PR02MB7472:
-X-Microsoft-Antispam-PRVS: <SJ0PR02MB7472BA7BBE679E44A99FC0B0C61F9@SJ0PR02MB7472.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2ocOu+TVHyPIzFoDoYbr6/sWUFpK8Q7ggaEs2DG1+joKw911p4hAoj83ixsxgK9MKS01Oa2C9ns3YYo1xG9UEtyGvArKFJ2jcjuy+nLd4Pu+Ou/S2T7It7ZKkGq2qlAKpSfG3rx6APJyoP7O4MV76gZ8VLYm2syULOV8vmmLcTXKz4O7qTIY5K8p2QKsEeHQF5DA3X6W3zHHxxgTcnQzJj4e590k4SxI1nt8iQOYEAfMfoWsws6x560+hVbHr1Natvr5ccWAD4LwJCQDuO5O1eztmg+1JhDt/0V7Ub6ZfBwE0aY+bSH0rxx4HFczAvD4Rspc4dp8Xi4sjjV0V9AAQV4oZa5myhNLwWmF+TCYmY3r3wff/2+Q7bLrPJw9GcmeQrnP8MEN7KxHRSfUS4HraWV1Fo3gZUe9kzVF1S2EefzxFF3Oq5x7lVRZdnHhxouM4BIhRbq9R+0QACzz8h/HRaYxvQvA/0CboIDwq+wrI3cjho1kkoCsjdnMD1NomYbHvGWztoICZWfFbHqkbhHjOmzmQk8p/leNuOXWp7Iv3mPn0UoyPyXeqW5jS6ks4nqOo5RweV5uuFX/W3StnaFPMGaTZXPXpAdReDBkJ+e3Z4eNvNQRfWomZ+E0W/BAXF+fHld4EE8hByEYsHLY7bXm878ttd8Epk2mmSl/H4+Y4k7K5n1SIlGmD5bVvEApZHnjZqhfysGrsSrrbGDCP/MB47/kb5uKf6gPbJXoF0D3qrtOvANfR+AFfBTJU9w7CICZwYPrCp5FANXuauAyImoP6vzGKEft5SlWqr10SPUJcddjtCRl93KN91nV6ND/APkzTPjoxwvIEJ0WcixG/rdNbYJSxfI3+ZUM91ZFB7dIpi9MmYS1MiO8ghNTD9KDmupI
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(396003)(376002)(39860400002)(136003)(346002)(36840700001)(46966006)(36860700001)(82310400003)(31686004)(7416002)(47076005)(44832011)(82740400003)(356005)(478600001)(31696002)(966005)(2906002)(83380400001)(70206006)(6666004)(316002)(26005)(54906003)(8676002)(2616005)(186003)(36756003)(5660300002)(36906005)(336012)(9786002)(8936002)(426003)(110136005)(4326008)(7636003)(70586007)(53546011)(50156003)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2021 12:41:00.0929
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5fae810a-5698-4923-ed1c-08d93d56a579
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN1NAM02FT024.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB7472
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bvtsoikuummpf4jw"
+Content-Disposition: inline
+In-Reply-To: <20210608064658.14262-3-billy_tsai@aspeedtech.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
+--bvtsoikuummpf4jw
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 7/1/21 5:32 PM, Sean Anderson wrote:
-> 
-> 
-> On 6/30/21 9:47 AM, Michal Simek wrote:
->>
->>
->> On 5/28/21 11:45 PM, Sean Anderson wrote:
->>> This adds a binding for the Xilinx LogiCORE IP AXI Timer. This device is
->>> a "soft" block, so it has many parameters which would not be
->>> configurable in most hardware. This binding is usually automatically
->>> generated by Xilinx's tools, so the names and values of some properties
->>> must be kept as they are. Replacement properties have been provided for
->>> new device trees.
->>>
->>> Because we need to init timer devices so early in boot, the easiest way
->>> to configure things is to use a device tree property. For the moment
->>> this is 'xlnx,pwm', but this could be extended/renamed/etc. in the
->>> future if these is a need for a generic property.
->>>
->>> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
->>> ---
->>>
->>> Changes in v4:
->>> - Remove references to generate polarity so this can get merged
->>> - Predicate PWM driver on the presence of #pwm-cells
->>> - Make some properties optional for clocksource drivers
->>>
->>> Changes in v3:
->>> - Mark all boolean-as-int properties as deprecated
->>> - Add xlnx,pwm and xlnx,gen?-active-low properties.
->>> - Make newer replacement properties mutually-exclusive with what they
->>>   replace
->>> - Add an example with non-deprecated properties only.
->>>
->>> Changes in v2:
->>> - Use 32-bit addresses for example binding
->>>
->>>  .../bindings/pwm/xlnx,axi-timer.yaml          | 85 +++++++++++++++++++
->>>  1 file changed, 85 insertions(+)
->>>  create mode 100644
-> Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml
->>>
->>> diff --git
-> a/Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml
-> b/Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml
->>> new file mode 100644
->>> index 000000000000..48a280f96e63
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pwm/xlnx,axi-timer.yaml
->>
->> I don't think this is the right location for this.
->>
->> I have done some grepping and I think this should be done in a different
->> way. I pretty much like solution around "ti,omap3430-timer" which is
->> calling dmtimer_systimer_select_best() and later dmtimer_is_preferred()
->> which in this case would allow us to get rid of cases which are not
->> suitable for clocksource and clockevent.
->>
->> And there is drivers/pwm/pwm-omap-dmtimer.c which has link to timer
->> which is providing functions for it's functionality.
->>
->> I have also looked at
->> Documentation/devicetree/bindings/timer/nxp,tpm-timer.yaml which is also
->> the same device.
-> 
-> Ok, I will move this under bindings/timer.
-> 
->>
->> And sort of curious if you look at
->>
-> https://www.xilinx.com/support/documentation/ip_documentation/axi_timer/v2_0/pg079-axi-timer.pdf
-> 
->> ( Figure 1-1)
->> that PWM is taking input from generate out 0 and generate out 1 which is
->> maybe can be modeled is any output and pwm driver can register inputs
->> for pwm driver.
-> 
-> I don't think that is a good model, since several bits (GENERATE, PWM,
-> etc) need to be set in the TCSR, and we need to coordinate changes
-> between timers closely to keep our contract for apply_state(). Although
-> that is how the hardware is organized, the requirements of the
-> clocksource and pwm subsystems are very different.
+Hello Billy,
 
-There is another upstream solution done by samsung. Where they use
-samsung,pwm-outputs property to identify PWMs. I think that make sense
-to consider to identify which timer should be clocksource/clockevent
-because with MB SMP this has to be done to pair timer with cpu for
-clockevents.
+On Tue, Jun 08, 2021 at 02:46:58PM +0800, Billy Tsai wrote:
+> This patch add the support of PWM controller which can be found at aspeed
+> ast2600 soc. The pwm supoorts up to 16 channels and it's part function
+> of multi-function device "pwm-tach controller".
+>=20
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> ---
+>  drivers/pwm/Kconfig              |   9 +
+>  drivers/pwm/Makefile             |   1 +
+>  drivers/pwm/pwm-aspeed-ast2600.c | 311 +++++++++++++++++++++++++++++++
+>  3 files changed, 321 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-aspeed-ast2600.c
+>=20
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 63be5362fd3a..a5aac3ca4ac7 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -51,6 +51,15 @@ config PWM_AB8500
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-ab8500.
+> =20
+> +config PWM_ASPEED_AST2600
+> +	tristate "Aspeed ast2600 PWM support"
+> +	depends on ARCH_ASPEED || COMPILE_TEST
+> +	help
+> +	  This driver provides support for Aspeed ast2600 PWM controllers.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-aspeed-ast2600.
+> +
+>  config PWM_ATMEL
+>  	tristate "Atmel PWM support"
+>  	depends on OF
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index cbdcd55d69ee..ada454f9129a 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -2,6 +2,7 @@
+>  obj-$(CONFIG_PWM)		+=3D core.o
+>  obj-$(CONFIG_PWM_SYSFS)		+=3D sysfs.o
+>  obj-$(CONFIG_PWM_AB8500)	+=3D pwm-ab8500.o
+> +obj-$(CONFIG_PWM_ASPEED_AST2600)	+=3D pwm-aspeed-ast2600.o
+>  obj-$(CONFIG_PWM_ATMEL)		+=3D pwm-atmel.o
+>  obj-$(CONFIG_PWM_ATMEL_HLCDC_PWM)	+=3D pwm-atmel-hlcdc.o
+>  obj-$(CONFIG_PWM_ATMEL_TCB)	+=3D pwm-atmel-tcb.o
+> diff --git a/drivers/pwm/pwm-aspeed-ast2600.c b/drivers/pwm/pwm-aspeed-as=
+t2600.c
+> new file mode 100644
+> index 000000000000..6ea0f7eb311f
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-aspeed-ast2600.c
+> @@ -0,0 +1,311 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Copyright (C) 2021 Aspeed Technology Inc.
+> + *
+> + * PWM controller driver for Aspeed ast2600 SoCs.
+> + * This drivers doesn't support earlier version of the IP.
+> + *
+> + * The formula of pwm period duration:
+> + * period duration =3D ((DIV_L + 1) * BIT(DIV_H) * (PERIOD + 1)) / input=
+-clk
+> + *
+> + * The software driver fixes the period to 255, which causes the high-fr=
+equency
+> + * precision of the PWM to be coarse, in exchange for the fineness of th=
+e duty cycle.
+> + *
+> + * Register usage:
+> + * PIN_ENABLE: When it is unset the pwm controller will always output lo=
+w to the extern.
+> + * Use to determine whether the PWM channel is enabled or disabled
+> + * CLK_ENABLE: When it is unset the pwm controller will reset the duty c=
+ounter to 0 and
+> + * output low to the PIN_ENABLE mux after that the driver can still chan=
+ge the pwm period
+> + * and duty and the value will apply when CLK_ENABLE be set again.
+> + * Use to determine whether duty_cycle bigger than 0.
+> + * PWM_ASPEED_CTRL_INVERSE: When it is toggled the output value will inv=
+erse immediately.
+> + * PWM_ASPEED_DUTY_CYCLE_FALLING_POINT/PWM_ASPEED_DUTY_CYCLE_RISING_POIN=
+T: When these two
+> + * values are equal it means the duty cycle =3D 100%.
+> + *
+> + * Limitations:
+> + * - When changing both duty cycle and period, we cannot prevent in
+> + *   software that the output might produce a period with mixed
+> + *   settings.
+> + * - Disabling the PWM doesn't complete the current period.
+> + *
+> + * Improvements:
+> + * - When only changing one of duty cycle or period, our pwm controller =
+will not
+> + *   generate the glitch, the configure will change at next cycle of pwm.
+> + *   This improvement can disable/enable through PWM_ASPEED_CTRL_DUTY_SY=
+NC_DISABLE.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/errno.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/reset.h>
+> +#include <linux/regmap.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/slab.h>
+> +#include <linux/pwm.h>
+> +#include <linux/math64.h>
+> +
+> +/* The channel number of Aspeed pwm controller */
+> +#define PWM_ASPEED_NR_PWMS 16
+> +
+> +/* PWM Control Register */
+> +#define PWM_ASPEED_CTRL(ch) ((ch) * 0x10 + 0x00)
+> +#define PWM_ASPEED_CTRL_LOAD_SEL_RISING_AS_WDT BIT(19)
+> +#define PWM_ASPEED_CTRL_DUTY_LOAD_AS_WDT_ENABLE BIT(18)
+> +#define PWM_ASPEED_CTRL_DUTY_SYNC_DISABLE BIT(17)
+> +#define PWM_ASPEED_CTRL_CLK_ENABLE BIT(16)
+> +#define PWM_ASPEED_CTRL_LEVEL_OUTPUT BIT(15)
+> +#define PWM_ASPEED_CTRL_INVERSE BIT(14)
+> +#define PWM_ASPEED_CTRL_OPEN_DRAIN_ENABLE BIT(13)
+> +#define PWM_ASPEED_CTRL_PIN_ENABLE BIT(12)
+> +#define PWM_ASPEED_CTRL_CLK_DIV_H GENMASK(11, 8)
+> +#define PWM_ASPEED_CTRL_CLK_DIV_L GENMASK(7, 0)
+> +
+> +/* PWM Duty Cycle Register */
+> +#define PWM_ASPEED_DUTY_CYCLE(ch) ((ch) * 0x10 + 0x04)
+> +#define PWM_ASPEED_DUTY_CYCLE_PERIOD GENMASK(31, 24)
+> +#define PWM_ASPEED_DUTY_CYCLE_POINT_AS_WDT GENMASK(23, 16)
+> +#define PWM_ASPEED_DUTY_CYCLE_FALLING_POINT GENMASK(15, 8)
+> +#define PWM_ASPEED_DUTY_CYCLE_RISING_POINT GENMASK(7, 0)
+> +
+> +/* PWM fixed value */
+> +#define PWM_ASPEED_FIXED_PERIOD FIELD_MAX(PWM_ASPEED_DUTY_CYCLE_PERIOD)
+> +
+> +struct aspeed_pwm_data {
+> +	struct pwm_chip chip;
+> +	struct clk *clk;
+> +	struct regmap *regmap;
+> +	struct reset_control *reset;
+> +};
+> +
+> +static inline struct aspeed_pwm_data *
+> +aspeed_pwm_chip_to_data(struct pwm_chip *chip)
+> +{
+> +	return container_of(chip, struct aspeed_pwm_data, chip);
+> +}
+> +
+> +static void aspeed_pwm_get_state(struct pwm_chip *chip, struct pwm_devic=
+e *pwm,
+> +				 struct pwm_state *state)
+> +{
+> +	struct device *dev =3D chip->dev;
+> +	struct aspeed_pwm_data *priv =3D aspeed_pwm_chip_to_data(chip);
+> +	u32 index =3D pwm->hwpwm;
+> +	bool polarity, ch_en, clk_en;
+> +	u32 duty_pt, val;
+> +	unsigned long rate;
+> +	u64 div_h, div_l, clk_period;
+> +
+> +	regmap_read(priv->regmap, PWM_ASPEED_CTRL(index), &val);
+> +	polarity =3D FIELD_GET(PWM_ASPEED_CTRL_INVERSE, val);
+> +	ch_en =3D FIELD_GET(PWM_ASPEED_CTRL_PIN_ENABLE, val);
+> +	clk_en =3D FIELD_GET(PWM_ASPEED_CTRL_CLK_ENABLE, val);
+> +	div_h =3D FIELD_GET(PWM_ASPEED_CTRL_CLK_DIV_H, val);
+> +	div_l =3D FIELD_GET(PWM_ASPEED_CTRL_CLK_DIV_L, val);
+> +	regmap_read(priv->regmap, PWM_ASPEED_DUTY_CYCLE(index), &val);
+> +	duty_pt =3D FIELD_GET(PWM_ASPEED_DUTY_CYCLE_FALLING_POINT, val);
+> +	clk_period =3D FIELD_GET(PWM_ASPEED_DUTY_CYCLE_PERIOD, val);
+> +
+> +	rate =3D clk_get_rate(priv->clk);
+> +	state->period =3D DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC * _BITULL(div_h) *
+> +						 (div_l + 1) * (clk_period + 1),
+> +					 rate);
 
-You can see drivers here.
-drivers/clocksource/smasung_pwm_timer.c
-drivers/pwm/pwm-samsung.c
+Instead of _BITULL(div_h) you can just do << div_h, which reads a bit
+easier.
 
-Uwe: How does it sound to you?
+The multiplication can be up to:
 
-Thanks,
-Michal
+	100000000 * (1 << 31) * (31 + 1) * (255 + 1)
+
+right? This needs 71 bits and so might overflow a u64.
+
+I guess to prevent that you have to do something like SH_DIV does for a
+u32 division:
+
+	u64 rem;
+
+	/*
+	 * To calculate
+	 *
+	 *   roundup(NSEC_PER_SEC * (div_l + 1) * (clk_period + 1) << div_h / rate)
+	 *
+	 * we have to jump through some hoops because the numerator
+	 * might not fit into a u64. So calculate:
+	 *
+	 *   roundup(NSEC_PER_SEC * (div_l + 1) * (clk_period + 1) / rate) << div_h
+	 *
+	 * and fixup for the imprecision.
+	 */
+	nom =3D (u64)NSEC_PER_SEC * (div_l + 1) * (clk_period + 1) + (rate - 1);
+	rem =3D do_div(nom, rate);
+	state->period =3D nom << div_h + DIV_ROUND_DOWN_ULL(rem << div_h + (rate >=
+> 1), rate);
+
+You might want to double check my math here, I didn't invest the time to
+verify myself that this is sensible but just quickly combined SH_DIV and
+DIV_ROUND_UP_ULL.
+
+> +	if (clk_en && duty_pt)
+> +		state->duty_cycle =3D DIV_ROUND_UP_ULL(
+> +			state->period * duty_pt, clk_period + 1);
+
+You're loosing precision here. You have to repeat the hoop jumping from
+above to fix.
+
+> +	else
+> +		state->duty_cycle =3D clk_en ? state->period : 0;
+> +	state->polarity =3D polarity;
+> +	state->enabled =3D ch_en;
+> +	dev_dbg(dev, "get period: %lldns, duty_cycle: %lldns", state->period,
+> +		state->duty_cycle);
+> +}
+> +
+> +static int aspeed_pwm_apply(struct pwm_chip *chip, struct pwm_device *pw=
+m,
+> +			    const struct pwm_state *state)
+> +{
+> +	struct device *dev =3D chip->dev;
+> +	struct aspeed_pwm_data *priv =3D aspeed_pwm_chip_to_data(chip);
+> +	u32 index =3D pwm->hwpwm, duty_pt;
+> +	unsigned long rate;
+> +	u64 div_h, div_l, divisor;
+> +	bool clk_en;
+> +
+> +	dev_dbg(dev, "expect period: %lldns, duty_cycle: %lldns", state->period,
+> +		state->duty_cycle);
+> +
+> +	rate =3D clk_get_rate(priv->clk);
+> +	/*
+> +	 * Pick the smallest value for div_h so that div_l can be the biggest
+> +	 * which results in a finer resolution near the target period value.
+> +	 */
+> +	divisor =3D (u64)NSEC_PER_SEC * (PWM_ASPEED_FIXED_PERIOD + 1) *
+> +		  (FIELD_MAX(PWM_ASPEED_CTRL_CLK_DIV_L) + 1);
+> +	div_h =3D order_base_2(DIV64_U64_ROUND_UP(rate * state->period, divisor=
+));
+> +	if (div_h > 0xf)
+> +		div_h =3D 0xf;
+> +
+> +	divisor =3D ((u64)NSEC_PER_SEC * (PWM_ASPEED_FIXED_PERIOD + 1)) << div_=
+h;
+> +	div_l =3D div64_u64(rate * state->period, divisor);
+> +
+> +	if (div_l =3D=3D 0)
+> +		return -ERANGE;
+> +
+> +	div_l -=3D 1;
+> +
+> +	if (div_l > 255)
+> +		div_l =3D 255;
+
+I already checked that in the previous round, I assume that's fine now.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--bvtsoikuummpf4jw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmDfI0UACgkQwfwUeK3K
+7AkxzQf/aRvsyQ+PYgKY6u78z8gwkDP0Vd4TckmUEh/wF8b//PdWA1dEMh8d7iuB
+QvpKzfPJ9wvRt4MfGxR8FTSE4TLkK1hlKZIYdyTlPGNyNWIyUu0i6TzYVnw/SzFJ
+7rb4lAvfr8bW6AwTBwwhPp8C8K6NFXoEZ1E6+GrfDTBBTmDu/yuCHk76CQqIHqqM
+M7lJebtreYDrpkvFoQV1yLBGlvEkCAGgxdoIlvKyBQR3KH+oVjEHkqXyDAs0q6dx
+7KhKkM2FIR9B43ClRQNJ9IK+brjDpCi42+tFqpF+bhLZLie53H/vPGJPKEs4ookm
+mFhh1X/hWr/Ip8UThnNgQdLdZ6C8GA==
+=DoBB
+-----END PGP SIGNATURE-----
+
+--bvtsoikuummpf4jw--
