@@ -2,38 +2,38 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E3073BEC26
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Jul 2021 18:28:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2A1D3BEC38
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Jul 2021 18:29:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230288AbhGGQb3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 7 Jul 2021 12:31:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39208 "EHLO
+        id S230322AbhGGQbp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 7 Jul 2021 12:31:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230187AbhGGQb2 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Jul 2021 12:31:28 -0400
+        with ESMTP id S230317AbhGGQbp (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Jul 2021 12:31:45 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DDD4C061574
-        for <linux-pwm@vger.kernel.org>; Wed,  7 Jul 2021 09:28:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC61AC06175F
+        for <linux-pwm@vger.kernel.org>; Wed,  7 Jul 2021 09:29:04 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1m1APm-00042x-8q; Wed, 07 Jul 2021 18:28:46 +0200
+        id 1m1AQ2-0004oY-Jb; Wed, 07 Jul 2021 18:29:02 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1m1APl-0002bx-Ok; Wed, 07 Jul 2021 18:28:45 +0200
+        id 1m1AQ1-0002eP-Qt; Wed, 07 Jul 2021 18:29:01 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1m1APl-0006JK-O2; Wed, 07 Jul 2021 18:28:45 +0200
+        id 1m1APm-0006Jb-AN; Wed, 07 Jul 2021 18:28:46 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>
 Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH 33/47] pwm: atmel-hlcdc: Don't check the return code of pwmchip_remove()
-Date:   Wed,  7 Jul 2021 18:28:21 +0200
-Message-Id: <20210707162835.1772882-34-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 37/47] pwm: img: Don't check the return code of pwmchip_remove()
+Date:   Wed,  7 Jul 2021 18:28:25 +0200
+Message-Id: <20210707162835.1772882-38-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210707162835.1772882-1-u.kleine-koenig@pengutronix.de>
 References: <20210707162835.1772882-1-u.kleine-koenig@pengutronix.de>
@@ -50,31 +50,28 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 pwmchip_remove() returns always 0. Don't use the value to make it
 possible to eventually change the function to return void. Also the
-driver core ignores the return value of atmel_hlcdc_pwm_remove()
-and considers the device removed anyhow.
+driver core ignores the return value of pwm_imx_tpm_remove().
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-atmel-hlcdc.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/pwm/pwm-img.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-atmel-hlcdc.c b/drivers/pwm/pwm-atmel-hlcdc.c
-index 4459325d3650..a43b2babc809 100644
---- a/drivers/pwm/pwm-atmel-hlcdc.c
-+++ b/drivers/pwm/pwm-atmel-hlcdc.c
-@@ -281,11 +281,8 @@ static int atmel_hlcdc_pwm_probe(struct platform_device *pdev)
- static int atmel_hlcdc_pwm_remove(struct platform_device *pdev)
- {
- 	struct atmel_hlcdc_pwm *chip = platform_get_drvdata(pdev);
--	int ret;
+diff --git a/drivers/pwm/pwm-img.c b/drivers/pwm/pwm-img.c
+index 18d8e34d0d08..f97f82548293 100644
+--- a/drivers/pwm/pwm-img.c
++++ b/drivers/pwm/pwm-img.c
+@@ -331,7 +331,9 @@ static int img_pwm_remove(struct platform_device *pdev)
+ 	if (!pm_runtime_status_suspended(&pdev->dev))
+ 		img_pwm_runtime_suspend(&pdev->dev);
  
--	ret = pwmchip_remove(&chip->chip);
--	if (ret)
--		return ret;
-+	pwmchip_remove(&chip->chip);
+-	return pwmchip_remove(&pwm_chip->chip);
++	pwmchip_remove(&pwm_chip->chip);
++
++	return 0;
+ }
  
- 	clk_disable_unprepare(chip->hlcdc->periph_clk);
- 
+ #ifdef CONFIG_PM_SLEEP
 -- 
 2.30.2
 
