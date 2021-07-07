@@ -2,107 +2,170 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D72A3BDB55
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Jul 2021 18:28:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E90C53BE244
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Jul 2021 06:58:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229958AbhGFQan (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 6 Jul 2021 12:30:43 -0400
-Received: from mga07.intel.com ([134.134.136.100]:47991 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229935AbhGFQam (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 6 Jul 2021 12:30:42 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10037"; a="272994965"
-X-IronPort-AV: E=Sophos;i="5.83,328,1616482800"; 
-   d="scan'208";a="272994965"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2021 09:28:02 -0700
-X-IronPort-AV: E=Sophos;i="5.83,328,1616482800"; 
-   d="scan'208";a="563369725"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2021 09:27:59 -0700
-Received: from andy by smile with local (Exim 4.94.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1m0nvO-009Uen-1g; Tue, 06 Jul 2021 19:27:54 +0300
-Date:   Tue, 6 Jul 2021 19:27:54 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Colin King <colin.king@canonical.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH][next] pwm: core: remove redundant assignment to pointer
- pwm
-Message-ID: <YOSEivHTfvhnCgkY@smile.fi.intel.com>
-References: <20210706151133.33175-1-colin.king@canonical.com>
- <20210706155820.aiv3q6rxuer7kdco@pengutronix.de>
+        id S230201AbhGGFAp convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Wed, 7 Jul 2021 01:00:45 -0400
+Received: from guitar.tcltek.co.il ([192.115.133.116]:33273 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229883AbhGGFAp (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 7 Jul 2021 01:00:45 -0400
+Received: from tarshish (unknown [10.0.8.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx.tkos.co.il (Postfix) with ESMTPS id D7B5344029B;
+        Wed,  7 Jul 2021 07:58:01 +0300 (IDT)
+References: <305eacc9c57c2404795b6be76a08915808e23108.1624771446.git.baruch@tkos.co.il>
+ <20210705072055.5mvux5h6zdewzabz@pengutronix.de>
+User-agent: mu4e 1.4.15; emacs 27.1
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Balaji Prakash J <bjagadee@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robert Marko <robert.marko@sartura.hr>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 1/3] pwm: driver for qualcomm ipq6018 pwm block
+In-reply-to: <20210705072055.5mvux5h6zdewzabz@pengutronix.de>
+Date:   Wed, 07 Jul 2021 07:58:01 +0300
+Message-ID: <875yxmg1pi.fsf@tarshish>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210706155820.aiv3q6rxuer7kdco@pengutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Jul 06, 2021 at 05:58:20PM +0200, Uwe Kleine-König wrote:
+Hi Uwe,
 
-> [adding Andy and Rafael to Cc:]
+Thanks for taking the time to review this patch. I have a few comment
+below.
 
-Thanks.
+On Mon, Jul 05 2021, Uwe Kleine-KÃ¶nig wrote:
+> On Sun, Jun 27, 2021 at 08:24:04AM +0300, Baruch Siach wrote:
+>> +/*
+>> + * Enable bit is set to enable output toggling in pwm device.
+>> + * Update bit is set to reflect the changed divider and high duration
+>> + * values in register.
+>> + */
+>> +#define PWM_ENABLE		0x80000000
+>> +#define PWM_UPDATE		0x40000000
+>> +
+>> +/* The frequency range supported is 1Hz to 100MHz */
+>> +#define MIN_PERIOD_NS	10
+>> +#define MAX_PERIOD_NS	1000000000
+>
+> Please use a driver prefix for these defines.
 
-> On Tue, Jul 06, 2021 at 04:11:32PM +0100, Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> > 
-> > The pointer pwm is being initialized with a value that is never read and
-> > it is being updated later with a new value. The initialization is
-> > redundant and can be removed.
-> > 
-> > Addresses-Coverity: ("Unused value")
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > ---
-> >  drivers/pwm/core.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> > index a28c8639af5b..35e894f4a379 100644
-> > --- a/drivers/pwm/core.c
-> > +++ b/drivers/pwm/core.c
-> > @@ -846,7 +846,7 @@ EXPORT_SYMBOL_GPL(of_pwm_get);
-> >   */
-> >  static struct pwm_device *acpi_pwm_get(const struct fwnode_handle *fwnode)
-> >  {
-> > -	struct pwm_device *pwm = ERR_PTR(-ENODEV);
-> > +	struct pwm_device *pwm;
+I take this to refer also to the defines below, right?
 
-I would move it after the next line...
+>> +
+>> +/*
+>> + * The max value specified for each field is based on the number of bits
+>> + * in the pwm control register for that field
+>> + */
+>> +#define MAX_PWM_CFG		0xFFFF
+>> +
+>> +#define PWM_CTRL_HI_SHIFT	16
+>> +
+>> +#define PWM_CFG_REG0 0 /*PWM_DIV PWM_HI*/
+>> +#define PWM_CFG_REG1 1 /*ENABLE UPDATE PWM_PRE_DIV*/
 
-> >  	struct fwnode_reference_args args;
+...
 
-...i.e. here
+>> +static void config_div_and_duty(struct pwm_device *pwm, int pre_div,
+>> +			unsigned long long pwm_div, unsigned long period_ns,
+>> +			unsigned long long duty_ns)
+>
+> Please also use a consistent prefix for function names.
+>
+> I suggest to use u64 for some of the parameters. While this doesn't
+> change anything, it is cleaner as the caller passes variables of this
+> type.
 
-	struct pwm_device *pwm;
+Actually for pre_div and pwm_div the caller passes int values. I agree
+this is inconsistent.
 
-> >  	struct pwm_chip *chip;
-> >  	int ret;
-> 
-> LGTM:
-> 
-> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> 
-> and if you want:
-> 
-> Fixes: e5c38ba9f281 ("pwm: core: Reuse fwnode_to_pwmchip() in ACPI case")
+...
 
-With or without above comment addressed,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> +static int ipq_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>> +			 const struct pwm_state *state)
+>> +{
+>> +	struct ipq_pwm_chip *ipq_chip = to_ipq_pwm_chip(chip);
+>> +	unsigned long freq;
+>> +	int pre_div, close_pre_div, close_pwm_div;
+>> +	int pwm_div;
+>> +	long long diff;
+>> +	unsigned long rate = clk_get_rate(ipq_chip->clk);
+>> +	unsigned long min_diff = rate;
+>> +	uint64_t fin_ps;
+>> +	u64 period_ns, duty_ns;
+>> +
+>> +	if (state->period < MIN_PERIOD_NS)
+>> +		return -ERANGE;
+>
+> MIN_PERIOD_NS depends on clk_get_rate(ipq_chip->clk), doesn't it?
 
-Thanks for spotting and fixing this!
+probe sets this clock to the fixed 100MHz rate (CLK_SRC_FREQ). Would you
+prefer to derive MIN_PERIOD_NS from CLK_SRC_FREQ?
+
+>> +	period_ns = min_t(u64, state->period, MAX_PERIOD_NS);
+>> +	duty_ns = min_t(u64, state->duty_cycle, period_ns);
+>
+> If you define MAX_PERIOD_NS as (u64)1000000000 you can just use min().
+>
+>> +
+>> +	/* freq in Hz for period in nano second*/
+>
+> Space before the closing */ please
+>
+>> +	freq = div64_u64(NSEC_PER_SEC, period_ns);
+>> +	fin_ps = div64_u64(NSEC_PER_SEC * 1000ULL, rate);
+>> +	close_pre_div = MAX_PWM_CFG;
+>> +	close_pwm_div = MAX_PWM_CFG;
+>> +
+>> +	for (pre_div = 0; pre_div <= MAX_PWM_CFG; pre_div++) {
+>> +		pwm_div = DIV64_U64_ROUND_CLOSEST(period_ns * 1000,
+>> +						  fin_ps * (pre_div + 1));
+>> +		pwm_div--;
+>> +		if (pwm_div < 0 || pwm_div > MAX_PWM_CFG)
+>> +			continue;
+>> +
+>> +		diff = ((uint64_t)freq * (pre_div + 1) * (pwm_div + 1))
+>> +			- (uint64_t)rate;
+>> +
+>> +		if (diff < 0) /* period larger than requested */
+>> +			continue;
+>> +		if (diff == 0) { /* bingo */
+>> +			close_pre_div = pre_div;
+>> +			close_pwm_div = pwm_div;
+>> +			break;
+>> +		}
+>> +		if (diff < min_diff) {
+>> +			min_diff = diff;
+>> +			close_pre_div = pre_div;
+>> +			close_pwm_div = pwm_div;
+>> +		}
+>
+> I didn't check deeply, but I assume this calculation can be done more
+> efficiently.
+
+The thing is that we have two dividers to play with. I can't think of a
+cleaner way to find the best match for a given target frequency.
+
+> Also I wonder if DIV64_U64_ROUND_CLOSEST is right. When you implement
+> a .get_state() callback (which usually helps me to understand how the
+> hardware works) I'm willing to take a closer look.
+
+Thanks,
+baruch
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+                                                     ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
