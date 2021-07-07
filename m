@@ -2,38 +2,38 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4ABCC3BEC37
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Jul 2021 18:29:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 512F33BEC2C
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Jul 2021 18:28:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230324AbhGGQbm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 7 Jul 2021 12:31:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39292 "EHLO
+        id S230293AbhGGQbf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 7 Jul 2021 12:31:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230317AbhGGQbm (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Jul 2021 12:31:42 -0400
+        with ESMTP id S230168AbhGGQbe (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Jul 2021 12:31:34 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 516A9C061574
-        for <linux-pwm@vger.kernel.org>; Wed,  7 Jul 2021 09:29:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B4E7C061574
+        for <linux-pwm@vger.kernel.org>; Wed,  7 Jul 2021 09:28:54 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1m1AQ0-0004fl-AI; Wed, 07 Jul 2021 18:29:00 +0200
+        id 1m1APs-0004Iq-FI; Wed, 07 Jul 2021 18:28:52 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1m1APz-0002e9-PM; Wed, 07 Jul 2021 18:28:59 +0200
+        id 1m1APr-0002cj-RO; Wed, 07 Jul 2021 18:28:51 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1m1APk-0006Io-9X; Wed, 07 Jul 2021 18:28:44 +0200
+        id 1m1APk-0006Ir-Hj; Wed, 07 Jul 2021 18:28:44 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>
 Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH 24/47] pwm: mxs: Simplify using devm_pwmchip_add()
-Date:   Wed,  7 Jul 2021 18:28:12 +0200
-Message-Id: <20210707162835.1772882-25-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 25/47] pwm: ntxec: Simplify using devm_pwmchip_add()
+Date:   Wed,  7 Jul 2021 18:28:13 +0200
+Message-Id: <20210707162835.1772882-26-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210707162835.1772882-1-u.kleine-koenig@pengutronix.de>
 References: <20210707162835.1772882-1-u.kleine-koenig@pengutronix.de>
@@ -53,46 +53,44 @@ only user of driver data so this can go away, too.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-mxs.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ drivers/pwm/pwm-ntxec.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/drivers/pwm/pwm-mxs.c b/drivers/pwm/pwm-mxs.c
-index 558dc1de8f5d..766dbc58dad8 100644
---- a/drivers/pwm/pwm-mxs.c
-+++ b/drivers/pwm/pwm-mxs.c
-@@ -150,24 +150,15 @@ static int mxs_pwm_probe(struct platform_device *pdev)
- 	if (ret)
- 		return dev_err_probe(&pdev->dev, ret, "failed to reset PWM\n");
+diff --git a/drivers/pwm/pwm-ntxec.c b/drivers/pwm/pwm-ntxec.c
+index 29a463b7d63a..ab63b081df53 100644
+--- a/drivers/pwm/pwm-ntxec.c
++++ b/drivers/pwm/pwm-ntxec.c
+@@ -150,22 +150,12 @@ static int ntxec_pwm_probe(struct platform_device *pdev)
+ 	priv->ec = ec;
+ 	priv->dev = &pdev->dev;
  
--	ret = pwmchip_add(&mxs->chip);
-+	ret = devm_pwmchip_add(&pdev->dev, &mxs->chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to add pwm chip %d\n", ret);
- 		return ret;
- 	}
- 
--	platform_set_drvdata(pdev, mxs);
+-	platform_set_drvdata(pdev, priv);
 -
- 	return 0;
- }
+ 	chip = &priv->chip;
+ 	chip->dev = &pdev->dev;
+ 	chip->ops = &ntxec_pwm_ops;
+ 	chip->npwm = 1;
  
--static int mxs_pwm_remove(struct platform_device *pdev)
--{
--	struct mxs_pwm_chip *mxs = platform_get_drvdata(pdev);
--
--	return pwmchip_remove(&mxs->chip);
+-	return pwmchip_add(chip);
 -}
 -
- static const struct of_device_id mxs_pwm_dt_ids[] = {
- 	{ .compatible = "fsl,imx23-pwm", },
- 	{ /* sentinel */ }
-@@ -180,7 +171,6 @@ static struct platform_driver mxs_pwm_driver = {
- 		.of_match_table = mxs_pwm_dt_ids,
+-static int ntxec_pwm_remove(struct platform_device *pdev)
+-{
+-	struct ntxec_pwm *priv = platform_get_drvdata(pdev);
+-	struct pwm_chip *chip = &priv->chip;
+-
+-	return pwmchip_remove(chip);
++	return devm_pwmchip_add(&pdev->dev, chip);
+ }
+ 
+ static struct platform_driver ntxec_pwm_driver = {
+@@ -173,7 +163,6 @@ static struct platform_driver ntxec_pwm_driver = {
+ 		.name = "ntxec-pwm",
  	},
- 	.probe = mxs_pwm_probe,
--	.remove = mxs_pwm_remove,
+ 	.probe = ntxec_pwm_probe,
+-	.remove = ntxec_pwm_remove,
  };
- module_platform_driver(mxs_pwm_driver);
+ module_platform_driver(ntxec_pwm_driver);
  
 -- 
 2.30.2
