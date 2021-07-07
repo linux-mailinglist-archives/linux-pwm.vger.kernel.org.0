@@ -2,38 +2,38 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85F7A3BEC22
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Jul 2021 18:28:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 541DD3BEC31
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Jul 2021 18:29:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230264AbhGGQb0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 7 Jul 2021 12:31:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39188 "EHLO
+        id S230313AbhGGQbk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 7 Jul 2021 12:31:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230265AbhGGQbY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Jul 2021 12:31:24 -0400
+        with ESMTP id S230168AbhGGQbk (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Jul 2021 12:31:40 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78467C061765
-        for <linux-pwm@vger.kernel.org>; Wed,  7 Jul 2021 09:28:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39E0FC061574
+        for <linux-pwm@vger.kernel.org>; Wed,  7 Jul 2021 09:29:00 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1m1APi-0003qg-EH; Wed, 07 Jul 2021 18:28:42 +0200
+        id 1m1APy-0004Zf-2K; Wed, 07 Jul 2021 18:28:58 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1m1APh-0002b0-Sk; Wed, 07 Jul 2021 18:28:41 +0200
+        id 1m1APx-0002dN-FY; Wed, 07 Jul 2021 18:28:57 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1m1APh-0006Hn-Rs; Wed, 07 Jul 2021 18:28:41 +0200
+        id 1m1APi-0006Hv-0l; Wed, 07 Jul 2021 18:28:42 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>
 Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH 08/47] pwm: tiehrpwm: Unprepare clock only after the PWM was unregistered
-Date:   Wed,  7 Jul 2021 18:27:56 +0200
-Message-Id: <20210707162835.1772882-9-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 09/47] pwm: ntxec: Drop useless assignment to struct pwmchip::base
+Date:   Wed,  7 Jul 2021 18:27:57 +0200
+Message-Id: <20210707162835.1772882-10-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210707162835.1772882-1-u.kleine-koenig@pengutronix.de>
 References: <20210707162835.1772882-1-u.kleine-koenig@pengutronix.de>
@@ -48,37 +48,28 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The driver is supposed to stay functional until pwmchip_remove()
-returns. So disable clocks only after that.
-
-pwmchip_remove() always returns 0, so the return code can be ignored
-which keeps ehrpwm_pwm_remove() a bit simpler and eventually allows to
-make pwmchip_remove() return void.
+Since commit f9a8ee8c8bcd ("pwm: Always allocate PWM chip base ID
+dynamically") there is no effect any more for assigning this variable.
+When the patch resulting in f9a8ee8c8bcd was created, this driver didn't
+exist yet, so this was missed.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-tiehrpwm.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/pwm/pwm-ntxec.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-index 17909fa53211..5b723a48c5f1 100644
---- a/drivers/pwm/pwm-tiehrpwm.c
-+++ b/drivers/pwm/pwm-tiehrpwm.c
-@@ -485,11 +485,13 @@ static int ehrpwm_pwm_remove(struct platform_device *pdev)
- {
- 	struct ehrpwm_pwm_chip *pc = platform_get_drvdata(pdev);
+diff --git a/drivers/pwm/pwm-ntxec.c b/drivers/pwm/pwm-ntxec.c
+index 50c454c553c4..29a463b7d63a 100644
+--- a/drivers/pwm/pwm-ntxec.c
++++ b/drivers/pwm/pwm-ntxec.c
+@@ -155,7 +155,6 @@ static int ntxec_pwm_probe(struct platform_device *pdev)
+ 	chip = &priv->chip;
+ 	chip->dev = &pdev->dev;
+ 	chip->ops = &ntxec_pwm_ops;
+-	chip->base = -1;
+ 	chip->npwm = 1;
  
-+	pwmchip_remove(&pc->chip);
-+
- 	clk_unprepare(pc->tbclk);
- 
- 	pm_runtime_disable(&pdev->dev);
- 
--	return pwmchip_remove(&pc->chip);
-+	return 0;
- }
- 
- #ifdef CONFIG_PM_SLEEP
+ 	return pwmchip_add(chip);
 -- 
 2.30.2
 
