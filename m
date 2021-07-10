@@ -2,40 +2,37 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 19FEF3C38FC
-	for <lists+linux-pwm@lfdr.de>; Sun, 11 Jul 2021 01:54:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AD933C3913
+	for <lists+linux-pwm@lfdr.de>; Sun, 11 Jul 2021 01:54:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234057AbhGJX5O (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 10 Jul 2021 19:57:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40800 "EHLO mail.kernel.org"
+        id S234289AbhGJX5k (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 10 Jul 2021 19:57:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234089AbhGJX4C (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sat, 10 Jul 2021 19:56:02 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0A7AE61403;
-        Sat, 10 Jul 2021 23:52:04 +0000 (UTC)
+        id S233381AbhGJX4V (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sat, 10 Jul 2021 19:56:21 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 344116135E;
+        Sat, 10 Jul 2021 23:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625961125;
-        bh=DPYLXDBQlJ4xCJUeTqh/3nUbSMOGFtVr9aV+f0tGoH0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YXi8xCUTVj4g8MNmeGjoqJ4vKD9qKU2MwbLFOG7KWAxOHvQviz+bdH4EyHYwprZuz
-         p/7zZbKgdR9oQcKe2ojY6g/qtq2ceRYa5a4FJ178HcTNXv15VXBBuLNmsHuXVghC7l
-         0wFEWqgAL+281mJHpPqY+b2PrEgZrCu+9msgt+IeiH7sAmrTvd/dW70IBaOxp6r1l4
-         E4GtVAg11mv0U0FunDy+DxnsWzsTMoDN9ZZ+LD7cm3dFLz1pB3HRsD8BorvNH0/9QJ
-         vxY2S+7MxWKaf4q9MfzeidLTZltkhuxwkeKk5U11+HQkW4VNv4DEnMu2dH5fZR/Bzy
-         dAUOw6sj7QSdQ==
+        s=k20201202; t=1625961134;
+        bh=lwqM6PvVga1wrNPdaKICIzDas3E2Hl7kjyv++ULeiNA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FZophOi3bf7CcHsW1GO+lRXbRhf5Julotja1Lqhb8fYXgYzbfu4ST0MEI82n6EKT9
+         4/IqNB6Vih+EQnZk4DxUzVP2e1gLtA988+YEWPYa9bBJkOHpkLeL6rmi07scEzOpSS
+         ZtpKlgh4HeuW0QVFxa/lW1vnMabHxnKaK7fGLzXrAL85noK4eaPc+0yVkGQqmulb49
+         atDP6yLwnSdt2tq4o28NFvDw1zfH/MTzZTHxt+FveQ+MoAcQZnYEf2J76g+Lrlahsi
+         f4QbPKIkR3wUETT9VRpRIWH0WsHaJISiTWPgjhjKaamhFuBzVx3iYKXM12QRENs0P8
+         8xWd2LCwGh3Pg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 17/22] pwm: tegra: Don't modify HW state in .remove callback
-Date:   Sat, 10 Jul 2021 19:51:38 -0400
-Message-Id: <20210710235143.3222129-17-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 01/21] pwm: spear: Don't modify HW state in .remove callback
+Date:   Sat, 10 Jul 2021 19:51:52 -0400
+Message-Id: <20210710235212.3222375-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210710235143.3222129-1-sashal@kernel.org>
-References: <20210710235143.3222129-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -47,7 +44,7 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit 86f7fa71cd830d18d7ebcaf719dffd5ddfe1acdd ]
+[ Upstream commit b601a18f12383001e7a8da238de7ca1559ebc450 ]
 
 A consumer is expected to disable a PWM before calling pwm_put(). And if
 they didn't there is hopefully a good reason (or the consumer needs
@@ -61,40 +58,24 @@ Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-tegra.c | 13 -------------
- 1 file changed, 13 deletions(-)
+ drivers/pwm/pwm-spear.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
-index f8ebbece57b7..6be14e0f1dc3 100644
---- a/drivers/pwm/pwm-tegra.c
-+++ b/drivers/pwm/pwm-tegra.c
-@@ -245,7 +245,6 @@ static int tegra_pwm_probe(struct platform_device *pdev)
- static int tegra_pwm_remove(struct platform_device *pdev)
+diff --git a/drivers/pwm/pwm-spear.c b/drivers/pwm/pwm-spear.c
+index 6c6b44fd3f43..2d11ac277de8 100644
+--- a/drivers/pwm/pwm-spear.c
++++ b/drivers/pwm/pwm-spear.c
+@@ -231,10 +231,6 @@ static int spear_pwm_probe(struct platform_device *pdev)
+ static int spear_pwm_remove(struct platform_device *pdev)
  {
- 	struct tegra_pwm_chip *pc = platform_get_drvdata(pdev);
--	unsigned int i;
- 	int err;
+ 	struct spear_pwm_chip *pc = platform_get_drvdata(pdev);
+-	int i;
+-
+-	for (i = 0; i < NUM_PWM; i++)
+-		pwm_disable(&pc->chip.pwms[i]);
  
- 	if (WARN_ON(!pc))
-@@ -255,18 +254,6 @@ static int tegra_pwm_remove(struct platform_device *pdev)
- 	if (err < 0)
- 		return err;
- 
--	for (i = 0; i < pc->chip.npwm; i++) {
--		struct pwm_device *pwm = &pc->chip.pwms[i];
--
--		if (!pwm_is_enabled(pwm))
--			if (clk_prepare_enable(pc->clk) < 0)
--				continue;
--
--		pwm_writel(pc, i, 0);
--
--		clk_disable_unprepare(pc->clk);
--	}
--
- 	reset_control_assert(pc->rst);
- 	clk_disable_unprepare(pc->clk);
- 
+ 	/* clk was prepared in probe, hence unprepare it here */
+ 	clk_unprepare(pc->clk);
 -- 
 2.30.2
 
