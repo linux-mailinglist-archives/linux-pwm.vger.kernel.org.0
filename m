@@ -2,80 +2,86 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9CBE3C3981
-	for <lists+linux-pwm@lfdr.de>; Sun, 11 Jul 2021 01:58:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 928F03C3E80
+	for <lists+linux-pwm@lfdr.de>; Sun, 11 Jul 2021 19:44:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233833AbhGKAAy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 10 Jul 2021 20:00:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48462 "EHLO mail.kernel.org"
+        id S232878AbhGKRra convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Sun, 11 Jul 2021 13:47:30 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:53612 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233949AbhGJX61 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Sat, 10 Jul 2021 19:58:27 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CC9556136D;
-        Sat, 10 Jul 2021 23:53:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625961184;
-        bh=lwqM6PvVga1wrNPdaKICIzDas3E2Hl7kjyv++ULeiNA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nm/5CPmqI7PW9UzuukoCVTkBk+mDPazHNP4nVQpwjSfnI7pdw2mUSkja1a78JWXVj
-         +VpL07koGLxyMrN0p158iHTRLS7hM9ns+IKOa5uvcxed7CTWMlKq9CqwCwn/yL5MEH
-         +b8jXprQK4wZmUvhPOaiPCCTDxNNTK9Cxz3UHIyF2GaIK1Af6n1JmotIicBbVUBbWM
-         ZnZC/WL2tTW+iNmC/ukynQjZUCn7tZwHNjTQHILwjgn2vZBZmDyNpY2Jq+2mnnvODQ
-         zlONzPLuBdEbC8Mk9VXlRO6LXBq5CXib9BhvjGJcGkRlIlQHslRlnubHNmXF7Ghv86
-         vQ+vNJUwPauDQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 01/12] pwm: spear: Don't modify HW state in .remove callback
-Date:   Sat, 10 Jul 2021 19:52:51 -0400
-Message-Id: <20210710235302.3222809-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.2
+        id S230353AbhGKRra (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sun, 11 Jul 2021 13:47:30 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1m2dV2-0008H7-WF; Sun, 11 Jul 2021 19:44:17 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     cl@rock-chips.com, thierry.reding@gmail.com, robh+dt@kernel.org,
+        jagan@amarulasolutions.com, wens@csie.org, uwe@kleine-koenig.org,
+        mail@david-bauer.net, jbx6244@gmail.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jensenhuang@friendlyarm.com, michael@amarulasolutions.com,
+        cnsztl@gmail.com, devicetree@vger.kernel.org,
+        ulf.hansson@linaro.org, linux-mmc@vger.kernel.org,
+        gregkh@linuxfoundation.org, linux-serial@vger.kernel.org,
+        linux-i2c@vger.kernel.org, jay.xu@rock-chips.com,
+        shawn.lin@rock-chips.com, david.wu@rock-chips.com,
+        zhangqing@rock-chips.com, huangtao@rock-chips.com,
+        wim@linux-watchdog.org, linux@roeck-us.net, jamie@jamieiles.com,
+        linux-watchdog@vger.kernel.org, maz@kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [RESEND PATCH v5 1/4] dt-bindings: pwm: rockchip: add description for rk3568
+Date:   Sun, 11 Jul 2021 19:44:12 +0200
+Message-ID: <5069193.2yuIWEeYC1@diego>
+In-Reply-To: <20210705074405.uj62h4evd6htftf3@pengutronix.de>
+References: <20210622020517.13100-1-cl@rock-chips.com> <YOK1+pMy+N64eR75@dell> <20210705074405.uj62h4evd6htftf3@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
+Am Montag, 5. Juli 2021, 09:44:05 CEST schrieb Uwe Kleine-König:
+> Hello Lee,
+> 
+> On Mon, Jul 05, 2021 at 08:34:18AM +0100, Lee Jones wrote:
+> > On Mon, 05 Jul 2021, Uwe Kleine-König wrote:
+> > > On Wed, Jun 23, 2021 at 10:13:03AM +0800, cl@rock-chips.com wrote:
+> > > > From: Liang Chen <cl@rock-chips.com>
+> > > > 
+> > > > add "rockchip,rk3568-pwm", "rockchip,rk3328-pwm" for pwm nodes on
+> > > > a rk3568 platform to pwm-rockchip.yaml.
+> > > 
+> > > [...]
+> > > 
+> > > Who is supposed to apply this patch? Does this need blessing by Rob?
+> > 
+> > There is no standard. [...]
+> 
+> I'm aware of that. That's why I asked to prevent that everybody thinks
+> some other maintainer will care for it.
 
-[ Upstream commit b601a18f12383001e7a8da238de7ca1559ebc450 ]
+I suppose Thierry would be the one responsible?
 
-A consumer is expected to disable a PWM before calling pwm_put(). And if
-they didn't there is hopefully a good reason (or the consumer needs
-fixing). Also if disabling an enabled PWM was the right thing to do,
-this should better be done in the framework instead of in each low level
-driver.
+I.e. bindings normally go through the subsystem tree and
+	$ scripts/get_maintainer.pl drivers/pwm
+returns:
 
-So drop the hardware modification from the .remove() callback.
+Thierry Reding <thierry.reding@gmail.com> (maintainer:PWM SUBSYSTEM)
+"Uwe Kleine-König" <u.kleine-koenig@pengutronix.de> (reviewer:PWM SUBSYSTEM)
+Lee Jones <lee.jones@linaro.org> (maintainer:PWM SUBSYSTEM)
+linux-pwm@vger.kernel.org (open list:PWM SUBSYSTEM)
+linux-kernel@vger.kernel.org (open list)
 
-Signed-off-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pwm/pwm-spear.c | 4 ----
- 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/pwm/pwm-spear.c b/drivers/pwm/pwm-spear.c
-index 6c6b44fd3f43..2d11ac277de8 100644
---- a/drivers/pwm/pwm-spear.c
-+++ b/drivers/pwm/pwm-spear.c
-@@ -231,10 +231,6 @@ static int spear_pwm_probe(struct platform_device *pdev)
- static int spear_pwm_remove(struct platform_device *pdev)
- {
- 	struct spear_pwm_chip *pc = platform_get_drvdata(pdev);
--	int i;
--
--	for (i = 0; i < NUM_PWM; i++)
--		pwm_disable(&pc->chip.pwms[i]);
- 
- 	/* clk was prepared in probe, hence unprepare it here */
- 	clk_unprepare(pc->clk);
--- 
-2.30.2
+See my reply to the original pwm binding patch from 2021-06-21.
+
+Heiko
+
 
