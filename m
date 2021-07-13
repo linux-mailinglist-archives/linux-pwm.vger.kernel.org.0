@@ -2,77 +2,120 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E53E3C6A43
-	for <lists+linux-pwm@lfdr.de>; Tue, 13 Jul 2021 08:12:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CCF03C6A9A
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Jul 2021 08:31:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231261AbhGMGPs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 13 Jul 2021 02:15:48 -0400
-Received: from birdy.pmhahn.de ([88.198.22.186]:57216 "EHLO birdy.pmhahn.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229798AbhGMGPr (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 13 Jul 2021 02:15:47 -0400
-X-Greylist: delayed 629 seconds by postgrey-1.27 at vger.kernel.org; Tue, 13 Jul 2021 02:15:47 EDT
-Received: from [IPv6:2003:e2:7738:c200:a5ae:ca72:d4d5:6724] (p200300E27738C200A5aEcA72d4D56724.dip0.t-ipconnect.de [IPv6:2003:e2:7738:c200:a5ae:ca72:d4d5:6724])
-        by birdy.pmhahn.de (Postfix) with ESMTPSA id 626F62208EDA;
-        Tue, 13 Jul 2021 08:02:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=pmhahn.de; s=202002;
-        t=1626156148; bh=HfuvmijpRKAZ3kq4/6lrXulnT7YaLAQipZHwr6kr8E4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=LYIB3WsIHggROpun740ag9e7XbypxixZ7+A8tFMhcdDqX/BKG9jLUjKLpu4NFLMvq
-         0tXGrnAMg2+aZO+6LulZj++mey3V94gkXReys0qXDjGag3e6HWTeYeGsiiba7VdldA
-         g/jVYlxxKDB1N5mW512dO9HEe3FuPoERGdbfANO7vezjSLvBUWPnMD4LGDpPhOl/PW
-         f+glKg7wSMqU4oucsqYG4AX0UTn7h4OwQBsWXjbMRQ1cL4nnfd1N377WGdmz5MzMfl
-         ux5aZ71QWZJaLJbn6Zz7UMdsU8T1HXLDlkVmb30TTAwrjp54J2j65B5D5oHMGQRiPp
-         57OhLqZcJW56w==
-Subject: Re: [PATCH] divide by 3*sizeof(u32) when computing array_size
-To:     Salah Triki <salah.triki@gmail.com>, fabrice.gasnier@foss.st.com,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        id S233384AbhGMGdx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 13 Jul 2021 02:33:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233310AbhGMGdw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 13 Jul 2021 02:33:52 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B48C0613DD
+        for <linux-pwm@vger.kernel.org>; Mon, 12 Jul 2021 23:31:03 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m3BwY-0005bt-Jb; Tue, 13 Jul 2021 08:30:58 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m3BwW-0006OT-Hw; Tue, 13 Jul 2021 08:30:56 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m3BwW-0000mq-Gu; Tue, 13 Jul 2021 08:30:56 +0200
+Date:   Tue, 13 Jul 2021 08:30:53 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Salah Triki <salah.triki@gmail.com>
+Cc:     fabrice.gasnier@foss.st.com, thierry.reding@gmail.com,
         lee.jones@linaro.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@foss.st.com
-Cc:     linux-pwm@vger.kernel.org,
+        alexandre.torgue@foss.st.com, linux-pwm@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] divide by 3*sizeof(u32) when computing array_size
+Message-ID: <20210713063053.qqttzxlopvpnadj3@pengutronix.de>
 References: <20210712231910.GA1831270@pc>
-From:   Philipp Hahn <pmhahn@pmhahn.de>
-Message-ID: <e597d6b8-55d6-2fa6-5f79-86ff813d8bd2@pmhahn.de>
-Date:   Tue, 13 Jul 2021 08:02:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ez7arkdudmeg6ooh"
+Content-Disposition: inline
 In-Reply-To: <20210712231910.GA1831270@pc>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello,
 
-Disclaimer: I have no idea what 'pwm-stm32' is or does
+--ez7arkdudmeg6ooh
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Am 13.07.21 um 01:19 schrieb Salah Triki:
+Hello Salah,
+
+On Tue, Jul 13, 2021 at 12:19:10AM +0100, Salah Triki wrote:
 > Divide by 3*sizeof(u32) when computing array_size, since stm32_breakinput
 > has 3 fields of type u32.
-...
+>=20
+> Signed-off-by: Salah Triki <salah.triki@gmail.com>
+> ---
+>  drivers/pwm/pwm-stm32.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
+> index 794ca5b02968..fb21bc2b2dd6 100644
 > --- a/drivers/pwm/pwm-stm32.c
 > +++ b/drivers/pwm/pwm-stm32.c
-> @@ -544,7 +544,7 @@ static int stm32_pwm_probe_breakinputs(struct stm32_pwm *priv,
->   		return -EINVAL;
->   
->   	priv->num_breakinputs = nb;
-> -	array_size = nb * sizeof(struct stm32_breakinput) / sizeof(u32);
-> +	array_size = nb * sizeof(struct stm32_breakinput) / (3 * sizeof(u32));
+> @@ -544,7 +544,7 @@ static int stm32_pwm_probe_breakinputs(struct stm32_p=
+wm *priv,
+>  		return -EINVAL;
+> =20
+>  	priv->num_breakinputs =3D nb;
+> -	array_size =3D nb * sizeof(struct stm32_breakinput) / sizeof(u32);
+> +	array_size =3D nb * sizeof(struct stm32_breakinput) / (3 * sizeof(u32));
+>  	ret =3D of_property_read_u32_array(np, "st,breakinput",
+>  					 (u32 *)priv->breakinputs, array_size);
+>  	if (ret)
 
-Maybe it's too early in the morning for me, but this does not look right:
+I agree with Philipp here; this looks strange and needs a better
+description.
 
-> struct stm32_breakinput {
-> 	u32 index;
-> 	u32 level;
-> 	u32 filter;
-> };
+Looking a bit more in details:
 
-then "sizeof(struct stm32_breakinput)" == "(3 * sizeof(u32))", which 
-would simply make "arrray_site := nb" ?
+ - priv->breakinputs has type struct stm32_breakinput[MAX_BREAKINPUT]
+ - nb is in [0 .. MAX_BREAKINPUT]
+ - sizeof(struct stm32_breakinput) =3D=3D 3 * sizeof(u32)
+ - of_property_read_u32_array reads $array_size u32 quantities
 
-Philipp
+so to read $nb members of type stm32_breakinput array_size must be a
+multiple of 3 which isn't given any more after your patch. This makes me
+believe your suggested change to be wrong.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ez7arkdudmeg6ooh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmDtMxoACgkQwfwUeK3K
+7AmuxAf/TJUx15z8hdmnrrErJ3Hlc4gXAA+lr7K0fa/zANbA22QYZ4mhmLiNcsca
+8XRosInmiaz3M7bEBslrYIMl+vbuLclNt+lTPMeL9V0OcdWtnvZoDnDPpHdE77v1
+K10wsl5Uj6HJR27TnXm8VTolsTA5a4VEu4ocU3Ytnx6897ySGKG6wGxpQltn8ulN
+NtLZ0lIEmB93kF3UpGv2OHqElh1K8FQ6v4a9eREqlXytznMVdiqxQdfygPWZcYvY
+sY5V3UXdaKuP05bJK6qsmt3hZKT9tZ+4/z7UurgD2FwFe271rGk3+sJ38pyV6vPB
+AP9WncikXpljRtU/mIEpp/Fu2O4uwA==
+=OfoS
+-----END PGP SIGNATURE-----
+
+--ez7arkdudmeg6ooh--
