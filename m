@@ -2,88 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6196C3C66DE
-	for <lists+linux-pwm@lfdr.de>; Tue, 13 Jul 2021 01:19:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E53E3C6A43
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Jul 2021 08:12:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232489AbhGLXWH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 12 Jul 2021 19:22:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232122AbhGLXWH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Jul 2021 19:22:07 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1634DC0613DD;
-        Mon, 12 Jul 2021 16:19:18 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id s15so30413630edt.13;
-        Mon, 12 Jul 2021 16:19:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=VBbhEWvbus7ziJpvb/XYH0OM683tiVzU4891qJ5jW4U=;
-        b=lemSPLuV5IaA49HyZM/afkD+OgNcBUvIJauIxkInOvd4rnovqj3+gKZfSRrxj6fT2C
-         1fMNmcNF52bK3nvqP1a0BTcDcKWOAb9x4uZBaHgv8gajItD/T1cQH+1Ux4JaSLNumzsC
-         EuHqf0Kg5BSClTi60HMrLHy30v2msKCJ19bwDeypVU+IQ47DDaRNmuoDWvTGD9Vht5CT
-         ZmKa5PeMIGz2+0RvavO6uIeSKDm71/BFljpMu9kwUGHR/Y/DxXmlYmzbpSQYJuk+7Mxi
-         78a5MuBMHWqC3LSsNPPg0QBgSDQWUp2ejhH/zhIB1F+y1z6gXlMf/u4zhrQVj674LKFw
-         lAhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=VBbhEWvbus7ziJpvb/XYH0OM683tiVzU4891qJ5jW4U=;
-        b=Mndgknk0kGYv9Q05zAiQXAaNdFa+vTRbcjlmplTQH8srohpKEVbcjJ5hWvjRCMjlzI
-         CqILdyB4qv3Y3wqhZGNQhRPjUak/MZ3vEc8ICLGux3nqk3idxMz1V6TJLkD2F8vEe8pH
-         ghsrtrxqdYNX7C84/Bsd8h0HLKlb/K2hc2O97YcHIudFdmm563hBrFYYw4CjP8QcuLSm
-         D+FpLczEdfP3i+qYfrdfG0nmdbTWK8OohfjzEPBF5ij2qFx+y8HSJ5r8dBLCZTjs7LdO
-         +LV86aGyRSfKjc2z6c3IrROFUgTeb/JdMEX4upFW2zCYaCJxt3SFXUHaQsYVpUizs93/
-         gShg==
-X-Gm-Message-State: AOAM530p8UveW3GCEHC7iRVm94P700BTH6rNSddMZAgAh+r7VzbpfHsf
-        ctWT9QoiYW7LihqGpGbWbw4=
-X-Google-Smtp-Source: ABdhPJxaNoFn9O1IGfp71lScAWRvRQMBo74KvcqChM8BUYAhSFoXmB3BCa2ZOxHlKrWpZgeMLi/W3Q==
-X-Received: by 2002:aa7:cfcf:: with SMTP id r15mr1594999edy.161.1626131956606;
-        Mon, 12 Jul 2021 16:19:16 -0700 (PDT)
-Received: from pc ([196.235.212.194])
-        by smtp.gmail.com with ESMTPSA id e24sm6983837ejx.100.2021.07.12.16.19.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jul 2021 16:19:16 -0700 (PDT)
-Date:   Tue, 13 Jul 2021 00:19:10 +0100
-From:   Salah Triki <salah.triki@gmail.com>
-To:     fabrice.gasnier@foss.st.com, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com
+        id S231261AbhGMGPs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 13 Jul 2021 02:15:48 -0400
+Received: from birdy.pmhahn.de ([88.198.22.186]:57216 "EHLO birdy.pmhahn.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229798AbhGMGPr (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 13 Jul 2021 02:15:47 -0400
+X-Greylist: delayed 629 seconds by postgrey-1.27 at vger.kernel.org; Tue, 13 Jul 2021 02:15:47 EDT
+Received: from [IPv6:2003:e2:7738:c200:a5ae:ca72:d4d5:6724] (p200300E27738C200A5aEcA72d4D56724.dip0.t-ipconnect.de [IPv6:2003:e2:7738:c200:a5ae:ca72:d4d5:6724])
+        by birdy.pmhahn.de (Postfix) with ESMTPSA id 626F62208EDA;
+        Tue, 13 Jul 2021 08:02:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=pmhahn.de; s=202002;
+        t=1626156148; bh=HfuvmijpRKAZ3kq4/6lrXulnT7YaLAQipZHwr6kr8E4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=LYIB3WsIHggROpun740ag9e7XbypxixZ7+A8tFMhcdDqX/BKG9jLUjKLpu4NFLMvq
+         0tXGrnAMg2+aZO+6LulZj++mey3V94gkXReys0qXDjGag3e6HWTeYeGsiiba7VdldA
+         g/jVYlxxKDB1N5mW512dO9HEe3FuPoERGdbfANO7vezjSLvBUWPnMD4LGDpPhOl/PW
+         f+glKg7wSMqU4oucsqYG4AX0UTn7h4OwQBsWXjbMRQ1cL4nnfd1N377WGdmz5MzMfl
+         ux5aZ71QWZJaLJbn6Zz7UMdsU8T1HXLDlkVmb30TTAwrjp54J2j65B5D5oHMGQRiPp
+         57OhLqZcJW56w==
+Subject: Re: [PATCH] divide by 3*sizeof(u32) when computing array_size
+To:     Salah Triki <salah.triki@gmail.com>, fabrice.gasnier@foss.st.com,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        lee.jones@linaro.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@foss.st.com
 Cc:     linux-pwm@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] divide by 3*sizeof(u32) when computing array_size
-Message-ID: <20210712231910.GA1831270@pc>
+References: <20210712231910.GA1831270@pc>
+From:   Philipp Hahn <pmhahn@pmhahn.de>
+Message-ID: <e597d6b8-55d6-2fa6-5f79-86ff813d8bd2@pmhahn.de>
+Date:   Tue, 13 Jul 2021 08:02:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20210712231910.GA1831270@pc>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Divide by 3*sizeof(u32) when computing array_size, since stm32_breakinput
-has 3 fields of type u32.
+Hello,
 
-Signed-off-by: Salah Triki <salah.triki@gmail.com>
----
- drivers/pwm/pwm-stm32.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Disclaimer: I have no idea what 'pwm-stm32' is or does
 
-diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-index 794ca5b02968..fb21bc2b2dd6 100644
---- a/drivers/pwm/pwm-stm32.c
-+++ b/drivers/pwm/pwm-stm32.c
-@@ -544,7 +544,7 @@ static int stm32_pwm_probe_breakinputs(struct stm32_pwm *priv,
- 		return -EINVAL;
- 
- 	priv->num_breakinputs = nb;
--	array_size = nb * sizeof(struct stm32_breakinput) / sizeof(u32);
-+	array_size = nb * sizeof(struct stm32_breakinput) / (3 * sizeof(u32));
- 	ret = of_property_read_u32_array(np, "st,breakinput",
- 					 (u32 *)priv->breakinputs, array_size);
- 	if (ret)
--- 
-2.25.1
+Am 13.07.21 um 01:19 schrieb Salah Triki:
+> Divide by 3*sizeof(u32) when computing array_size, since stm32_breakinput
+> has 3 fields of type u32.
+...
+> --- a/drivers/pwm/pwm-stm32.c
+> +++ b/drivers/pwm/pwm-stm32.c
+> @@ -544,7 +544,7 @@ static int stm32_pwm_probe_breakinputs(struct stm32_pwm *priv,
+>   		return -EINVAL;
+>   
+>   	priv->num_breakinputs = nb;
+> -	array_size = nb * sizeof(struct stm32_breakinput) / sizeof(u32);
+> +	array_size = nb * sizeof(struct stm32_breakinput) / (3 * sizeof(u32));
 
+Maybe it's too early in the morning for me, but this does not look right:
+
+> struct stm32_breakinput {
+> 	u32 index;
+> 	u32 level;
+> 	u32 filter;
+> };
+
+then "sizeof(struct stm32_breakinput)" == "(3 * sizeof(u32))", which 
+would simply make "arrray_site := nb" ?
+
+Philipp
