@@ -2,75 +2,122 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C7A93C6FCB
-	for <lists+linux-pwm@lfdr.de>; Tue, 13 Jul 2021 13:35:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AD5A3C703D
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Jul 2021 14:20:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235803AbhGMLiq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 13 Jul 2021 07:38:46 -0400
-Received: from guitar.tcltek.co.il ([192.115.133.116]:52465 "EHLO
-        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235839AbhGMLip (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 13 Jul 2021 07:38:45 -0400
-Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id D8DAD44075F;
-        Tue, 13 Jul 2021 14:35:49 +0300 (IDT)
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>
-Cc:     Baruch Siach <baruch@tkos.co.il>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Balaji Prakash J <bjagadee@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robert Marko <robert.marko@sartura.hr>,
-        Kathiravan T <kathirav@codeaurora.org>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v5 4/4] arm64: dts: ipq6018: add pwm node
-Date:   Tue, 13 Jul 2021 14:35:45 +0300
-Message-Id: <998a94922be5d0ec810bae6f4775ac9de79ff87b.1626176145.git.baruch@tkos.co.il>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <f79128fa287e37ee59cb03ae04b319ecb3d68c29.1626176145.git.baruch@tkos.co.il>
-References: <f79128fa287e37ee59cb03ae04b319ecb3d68c29.1626176145.git.baruch@tkos.co.il>
+        id S236087AbhGMMXW convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Tue, 13 Jul 2021 08:23:22 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:50231 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235968AbhGMMXV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 13 Jul 2021 08:23:21 -0400
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-231-Dk-aoIJGObaCzW5wvCtF0g-1; Tue, 13 Jul 2021 13:20:28 +0100
+X-MC-Unique: Dk-aoIJGObaCzW5wvCtF0g-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.18; Tue, 13 Jul 2021 13:20:26 +0100
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.018; Tue, 13 Jul 2021 13:20:26 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Russell King' <linux@armlinux.org.uk>
+CC:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Salah Triki <salah.triki@gmail.com>,
+        "fabrice.gasnier@foss.st.com" <fabrice.gasnier@foss.st.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "alexandre.torgue@foss.st.com" <alexandre.torgue@foss.st.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] divide by 3*sizeof(u32) when computing array_size
+Thread-Topic: [PATCH] divide by 3*sizeof(u32) when computing array_size
+Thread-Index: AQHXd8hGdzQpdmgYHUiEx+VC3p1WwKtAvfwg///0h4CAAB31IA==
+Date:   Tue, 13 Jul 2021 12:20:26 +0000
+Message-ID: <2f725f0be09349308bf7d9a24399d516@AcuMS.aculab.com>
+References: <20210712231910.GA1831270@pc>
+ <20210713063053.qqttzxlopvpnadj3@pengutronix.de>
+ <20210713091954.GG22278@shell.armlinux.org.uk>
+ <012ccfea2a564274bd9d2e1cfc130873@AcuMS.aculab.com>
+ <20210713112253.GH22278@shell.armlinux.org.uk>
+In-Reply-To: <20210713112253.GH22278@shell.armlinux.org.uk>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Describe the PWM block on IPQ6018.
+From: Russell King
+> Sent: 13 July 2021 12:23
+> 
+> On Tue, Jul 13, 2021 at 11:07:00AM +0000, David Laight wrote:
+> > From: Russell King
+> > > Sent: 13 July 2021 10:20
+> > ....
+> > > I would also note that the code relies on there being no padding in
+> > > struct stm32_breakinput - it should be noted that a strict
+> > > interpretation of the C standard allows padding to be added anywhere
+> > > to a structure - at the start, end or between members.
+> >
+> > I'm pretty certain I remember that padding before the first member
+> > isn't allowed.
+> 
+> You may be right there.
+> 
+> > In any case the kernel generally assumes there is no extra padding.
+> > (eg for structures that map hardware registers.)
+> 
+> That's incorrect. Places where we care either generally end up with
+> __packed or are carefully layed out to ensure members are naturally
+> aligned to reduce the likelyhood of it. 32-bit OABI ARM has been
+> particularly "fun" in this respect.
 
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
----
-v5: Use qcom,pwm-regs for TCSR phandle instead of direct regs
+I did say 'extra padding'.
+Ensuring everything is naturally aligned is best - shame the standards
+bodies don't do that - just look at the SCTP socket options.
 
-v3: s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
----
- arch/arm64/boot/dts/qcom/ipq6018.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Adding __packed is right sometimes, but it isn't without cost
+and is probably wrong for anything hardware related.
+Definitely useful on structure members to remove the padding
+before that specific member (eg for 64bit in x86 compat code).
+But marking a structure __packed is usually wrong (or bad).
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-index 72ac36c1be57..06b6676097e8 100644
---- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-@@ -355,6 +355,15 @@ i2c_1: i2c@78b7000 { /* BLSP1 QUP2 */
- 			status = "disabled";
- 		};
- 
-+		pwm: pwm {
-+			#pwm-cells = <2>;
-+			compatible = "qcom,ipq6018-pwm";
-+			qcom,pwm-regs = <&tcsr_q6 0xa010>;
-+			clocks = <&gcc GCC_ADSS_PWM_CLK>;
-+			clock-names = "core";
-+			status = "disabled";
-+		};
-+
- 		qpic_bam: dma-controller@7984000 {
- 			compatible = "qcom,bam-v1.7.0";
- 			reg = <0x0 0x07984000 0x0 0x1a000>;
--- 
-2.30.2
+> > For big structures it is worth adding a compile-time check of
+> > the structure size - but not really for three u32.
+> 
+> Sorry, structure size has absolutely nothing to do with whether it's
+> a good idea to have a compile-time check. The deciding factor is
+> whether the code relies on some property such as it being a certain
+> size. Such as in this exact case. If you grep for "BUILD_BUG_ON.*sizeof"
+> in fs/ for example, this illustrates the point rather well.
+
+I'd not bother if the size is obviously going to be correct.
+
+I did get some odd bugs a few years ago from a compiler that aligned
+all structures on 4-byte boundaries.
+I had to change a structure of two u16 into an array :-)
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
