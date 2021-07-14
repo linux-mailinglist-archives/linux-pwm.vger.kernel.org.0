@@ -2,80 +2,147 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CB733C79E2
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Jul 2021 00:59:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2D7D3C7BE4
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Jul 2021 04:40:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236737AbhGMXBv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 13 Jul 2021 19:01:51 -0400
-Received: from mail-io1-f43.google.com ([209.85.166.43]:45981 "EHLO
-        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235417AbhGMXBu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 13 Jul 2021 19:01:50 -0400
-Received: by mail-io1-f43.google.com with SMTP id y16so6223805iol.12;
-        Tue, 13 Jul 2021 15:59:00 -0700 (PDT)
+        id S237513AbhGNCnJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 13 Jul 2021 22:43:09 -0400
+Received: from mail-il1-f174.google.com ([209.85.166.174]:46789 "EHLO
+        mail-il1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237478AbhGNCnJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 13 Jul 2021 22:43:09 -0400
+Received: by mail-il1-f174.google.com with SMTP id y6so67825ilj.13;
+        Tue, 13 Jul 2021 19:40:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=JTI1ZBR9D1Ugup4282dbl5tw68/bdXRLNL3cR2M36lk=;
-        b=AqXB8tdCYM+JQVy+8YYIEFzjHv1mck4krMtxLlypCIMHXlHptHapmdZ04Nv+/2G1R+
-         ABDe9RnxG2B2gBul2xAUSeYr2LD/c1fU+68YLq61aTqioe24SzjGio3orVW0VUb27ist
-         FOXsrUERQ2JF8iKQvTcAeHnb/YZZhLmnGYlocvRYXT4DHt4jdm5ATQuLzsRZAmHfBzqM
-         25ukl0fg8Bv9DhBtqmJLfP41WVQohFPKZ03uHEZ1N+POWm0u/YQdxHvNDrui0uLq8XTP
-         pz6hmHSIpOeLPurwuWwA56JlUqrkHKlTpfoP7OZ6MILlKmdebXOH2jf8/7v9KHWPtiwN
-         WfaQ==
-X-Gm-Message-State: AOAM533iZbDjaqz8+WfbsgWHElz6mqMlkWAfSPKBUWs89VegWpr3UJ5U
-        4pnZOiPY54cNNiCFnIzX+Q==
-X-Google-Smtp-Source: ABdhPJwqQj4i60dPLCZFJEHdYwTRX+Yhru1/A8V14H871+oGYZI2ex/1qE4HdMBMRRnO95P5eEF3/Q==
-X-Received: by 2002:a02:cace:: with SMTP id f14mr6161797jap.5.1626217139833;
-        Tue, 13 Jul 2021 15:58:59 -0700 (PDT)
+        bh=riDFU7JLN9rdxbZ0yha84VJqHGAQItObLh3l+N0JqmE=;
+        b=mEa55NW0kVDXs6XLun0o0XtAT6bE6CqA0JcmzkjjNy119u9HD7wv9q7QWFOaRikTMC
+         tvMbBwgWiJLH0b2vWG8jWQCB3byQwsCEdnJvdROUkZ43D1NdqGny+eBUaXLgP8YL6iaU
+         9Y1y5UmxCBhwIPkkDUTXty59rlNrtnkjVfXzo2SCvsVBr6SXGdUX0/xGNsymPDn3TCcu
+         r8nZ6+qgG7gEvJrNG9hSaLVEYC29Phwbfzp6SGufV/dUK+vdN5bSLEmmx+1yI7E1uMoH
+         XJkWIyt75V8Hm0zfHOJOAKfBpdBC13sNVXNWNJCW5hO1eOxnity/XDjI7QBgJbgDQv9C
+         sgfw==
+X-Gm-Message-State: AOAM53156VsSNZlohNCXTT8N5FAVGm12i+DcFAyG0UDrYcZWidlxNeSC
+        bghuL230FxRIxKLZWCZJew==
+X-Google-Smtp-Source: ABdhPJyYpTVJnJWr7IspJv6gkKDKsVeyNcozRDAHV5BN+pzvPlKtikW62UPo9J9JYyBz7AeGniakEg==
+X-Received: by 2002:a92:b003:: with SMTP id x3mr5176007ilh.93.1626230418602;
+        Tue, 13 Jul 2021 19:40:18 -0700 (PDT)
 Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id b2sm224559iln.5.2021.07.13.15.58.55
+        by smtp.gmail.com with ESMTPSA id d8sm407613iom.49.2021.07.13.19.40.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jul 2021 15:58:59 -0700 (PDT)
-Received: (nullmailer pid 1010485 invoked by uid 1000);
-        Tue, 13 Jul 2021 22:58:53 -0000
-Date:   Tue, 13 Jul 2021 16:58:53 -0600
+        Tue, 13 Jul 2021 19:40:17 -0700 (PDT)
+Received: (nullmailer pid 1350780 invoked by uid 1000);
+        Wed, 14 Jul 2021 02:40:14 -0000
+Date:   Tue, 13 Jul 2021 20:40:14 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     cl@rock-chips.com
-Cc:     linux-rockchip@lists.infradead.org, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, cnsztl@gmail.com,
-        linux-watchdog@vger.kernel.org, lee.jones@linaro.org,
-        shawn.lin@rock-chips.com, linux-kernel@vger.kernel.org,
-        heiko@sntech.de, huangtao@rock-chips.com, wim@linux-watchdog.org,
-        jensenhuang@friendlyarm.com, linux-serial@vger.kernel.org,
-        maz@kernel.org, zhangqing@rock-chips.com, thierry.reding@gmail.com,
-        jamie@jamieiles.com, ulf.hansson@linaro.org, mail@david-bauer.net,
-        jbx6244@gmail.com, david.wu@rock-chips.com,
-        linux-pwm@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        linux-mmc@vger.kernel.org, jay.xu@rock-chips.com,
-        uwe@kleine-koenig.org, michael@amarulasolutions.com,
-        linux@roeck-us.net, jagan@amarulasolutions.com,
-        gregkh@linuxfoundation.org, robh+dt@kernel.org, wens@csie.org,
-        devicetree@vger.kernel.org
-Subject: Re: [RESEND PATCH v5 1/4] dt-bindings: pwm: rockchip: add
- description for rk3568
-Message-ID: <20210713225853.GA1010426@robh.at.kernel.org>
-References: <20210622020517.13100-1-cl@rock-chips.com>
- <20210623021303.28015-1-cl@rock-chips.com>
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Balaji Prakash J <bjagadee@codeaurora.org>,
+        Robert Marko <robert.marko@sartura.hr>,
+        Kathiravan T <kathirav@codeaurora.org>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 3/4] dt-bindings: pwm: add IPQ6018 binding
+Message-ID: <20210714024014.GA1334332@robh.at.kernel.org>
+References: <f79128fa287e37ee59cb03ae04b319ecb3d68c29.1626176145.git.baruch@tkos.co.il>
+ <6d3a4483d22753ba8114304db07756620c66da41.1626176145.git.baruch@tkos.co.il>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210623021303.28015-1-cl@rock-chips.com>
+In-Reply-To: <6d3a4483d22753ba8114304db07756620c66da41.1626176145.git.baruch@tkos.co.il>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 23 Jun 2021 10:13:03 +0800, cl@rock-chips.com wrote:
-> From: Liang Chen <cl@rock-chips.com>
+On Tue, Jul 13, 2021 at 02:35:44PM +0300, Baruch Siach wrote:
+> DT binding for the PWM block in Qualcomm IPQ6018 SoC.
 > 
-> add "rockchip,rk3568-pwm", "rockchip,rk3328-pwm" for pwm nodes on
-> a rk3568 platform to pwm-rockchip.yaml.
-> 
-> Signed-off-by: Liang Chen <cl@rock-chips.com>
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
 > ---
->  Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> v5: Use qcom,pwm-regs for phandle instead of direct regs (Bjorn
+>     Andersson, Kathiravan T)
 > 
+> v4: Update the binding example node as well (Rob Herring's bot)
+> 
+> v3: s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
+> 
+> v2: Make #pwm-cells const (Rob Herring)
+> ---
+>  .../devicetree/bindings/pwm/ipq-pwm.yaml      | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml b/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
+> new file mode 100644
+> index 000000000000..a07bfe63dc1a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/ipq-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm IPQ6018 PWM controller
+> +
+> +maintainers:
+> +  - Baruch Siach <baruch@tkos.co.il>
+> +
+> +properties:
+> +  "#pwm-cells":
+> +    const: 2
+> +
+> +  compatible:
+> +    const: qcom,ipq6018-pwm
+> +
+> +  qcom,pwm-regs:
+> +    $ref: '/schemas/types.yaml#/definitions/phandle-array'
+> +    maxItems: 1
+> +    description: |
+> +      phandle link and offset to TCSR block
 
-Acked-by: Rob Herring <robh@kernel.org>
+This binding should be a child of the TCSR I think as Bjorn asked.
+
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: core
+> +
+> +required:
+> +  - "#pwm-cells"
+> +  - compatible
+> +  - qcom,pwm-regs
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
+> +
+> +    soc {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        pwm {
+> +            #pwm-cells = <2>;
+> +            compatible = "qcom,ipq6018-pwm";
+> +            qcom,pwm-regs = <&tcsr_q6 0xa010>;
+> +            clocks = <&gcc GCC_ADSS_PWM_CLK>;
+> +            clock-names = "core";
+> +        };
+> +    };
+> -- 
+> 2.30.2
+> 
+> 
