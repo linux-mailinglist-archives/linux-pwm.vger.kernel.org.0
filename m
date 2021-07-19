@@ -2,187 +2,259 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 322383CD3C1
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jul 2021 13:24:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 084923CF06F
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jul 2021 02:03:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236292AbhGSKms (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 19 Jul 2021 06:42:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236723AbhGSKlb (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 19 Jul 2021 06:41:31 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E83CC061762
-        for <linux-pwm@vger.kernel.org>; Mon, 19 Jul 2021 03:32:53 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id r11so21555417wro.9
-        for <linux-pwm@vger.kernel.org>; Mon, 19 Jul 2021 04:22:06 -0700 (PDT)
+        id S232227AbhGSXWd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 19 Jul 2021 19:22:33 -0400
+Received: from mail-eopbgr60063.outbound.protection.outlook.com ([40.107.6.63]:37942
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1388944AbhGSVdJ (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 19 Jul 2021 17:33:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IIxrlV54aPssyetTdvwJCornTf3dLV0eGOEx0qYVeNVrZbUqRcLwr0mc0kY2tfxU4IoD/AgFd8uJ5NNV+qUW3FivOzAo0+joLQBMSUfsRXCE8yjsQe+7uuC2lGP1z/JPjER82NNb7GKU80WRuuyKrFZKum2MACFIdUhxgLKRk9EaKCJQZRJvi8K25sUOJkdmQ+HXT/nu6v9d/MIds6h2S8gMMiv8Hq2blJCO2TBgbCIqtADJ0J8gMLzSafSUYfwuBRrtSjEVcipu2B1eERkxu6wEweCcM6oIRncqDs8TFzEjMdwp8QpiP3TTsH+lYdyjupO7/umwZqPEhJaVnRPGgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4sNmb/LY1jza75jmELJzuI/x/FZwey0G5Z+9iTI/CKg=;
+ b=i84O7es3q7twqdiUf2Dz3Yk2ufR4YbuXqc3+gu98qUlEm+2A+FsQBqCT5E5Kt/EAKUH/2w/njHdbSeeyTWP+AJySVrS8HNq3ngn8YXtWeDBRR7Bh90esIGa2EeUbJCkgkCO+ZFeaPRpaXVFSE6ASsyhJ6l+8f9s9MV+gHBYs8BTp2PeYy1ojFWSiEIIyygk8tPPphA2yaAdDZT09gUVk6ZpBFRrDKpolgUeXTOWvyRbqA58xpKEARe1z9ysBmkM/kPUFa5TxWrI9TblPNIV/lOfJiegXmJNK5OG3EW86OX3IVU+gDK0U5+aTRk86Og1EQd1CTRivTD0wDworeYmg5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=seco.com; dmarc=pass action=none header.from=seco.com;
+ dkim=pass header.d=seco.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=19Ti1NA8xVHCqT+B8GYPMXpjdTLfZFTkg7dVmDYiAEs=;
-        b=jAyCwfKi2yqyRkfxA82+bQyCTExzPurK7LDyypufme3eSHYHBzPBWBBBnUzo9GBfRs
-         NJ3jnlfG8TJxNXEc/L4SnQfF9D7h7uBmkJLc1cdMiJ7RbSW4WKDeZpSy9zsDkUjHxqmb
-         8nrIEwuTsY4HuqFcbixvcihqEuKWBMazj63bwpma3KAtWLMewuGZZJq2u4pH2tQaznkh
-         nJiP/BSTiYrXkBeS5bWQcjpr5T8xEePeNmxEmxVEpmqHWjOFynRLzTAQMTrsBNumWF9g
-         6iAReWVOaKoSOJpTMYTewADer5Nk0IgOlnR1I+sw76QkwhtfZzvMNtas7DZebVVSdYNo
-         QzRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=19Ti1NA8xVHCqT+B8GYPMXpjdTLfZFTkg7dVmDYiAEs=;
-        b=cUcfouzTjWM13wUn6g8RST3Y69O0niIsPHUMYzYCHX+p6YFXkMpZJtalbOvijELwIa
-         HU/lmnNoMELmTHHBWQnDc2tTu5b2/eILXI/spMF/LSJv4oNdwn+umK/03uJnkizXlNTk
-         I/8F5I7k+Y7F5IspSiE/ZA9B8fcJ+U4maRRCbYgQjnmXE19gy6Ul2Xsw4+UY/3qAauw4
-         tgXGJGEMgLtVxTUE/CnK4rYjj0BSUmGHmNf/aK8H2MLTW15jXJHTEpLWsBzp7Fusqah9
-         LvU+KjpotSzUE43yWamWp4zNhwFKTUU2uNYV/NyQeHxgFDQgmC7V/vQ85zNra95QpZhd
-         /KRA==
-X-Gm-Message-State: AOAM531LBle44ypp4EMSUM6353qsUBS4eg0dJFYSvteJCX9HdsuM+zjn
-        GlAndT4oaYLiPox2tF2DqAbWng==
-X-Google-Smtp-Source: ABdhPJx1HmRU4Pb7pJdzPw2qozjXr9k8BAezOmNqwPaNbmc9C7dUNiBMx3ODTUPKpcXItKDcBZArEg==
-X-Received: by 2002:a05:6000:1867:: with SMTP id d7mr29237501wri.199.1626693725475;
-        Mon, 19 Jul 2021 04:22:05 -0700 (PDT)
-Received: from maple.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
-        by smtp.gmail.com with ESMTPSA id d67sm20703707wmd.9.2021.07.19.04.22.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jul 2021 04:22:04 -0700 (PDT)
-Date:   Mon, 19 Jul 2021 12:22:02 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Marek Vasut <marex@denx.de>
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Thierry Reding <treding@nvidia.com>, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] backlight: pwm_bl: Avoid backlight flicker if backlight
- control GPIO is input
-Message-ID: <20210719112202.4fvmn57ibgy3yesa@maple.lan>
-References: <20210718211415.143709-1-marex@denx.de>
+ d=secospa.onmicrosoft.com; s=selector2-secospa-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4sNmb/LY1jza75jmELJzuI/x/FZwey0G5Z+9iTI/CKg=;
+ b=HAUV3iuHd/McJMMX64cwwpIjaP2ArrF4IFsU8bKzn4s3W0+HAUgkIR7UkbkLCRE4RgwMxS1jHokNc4HbPqQNomyNPeuhccl+4NAe0WpDqroTQ7QRSk9UMYxZStFq+MbxSOnwFfnbsmdXsmGOcKtS1JRu1c26BgQnqKo+cDtFmJQ=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=seco.com;
+Received: from DB7PR03MB4523.eurprd03.prod.outlook.com (2603:10a6:10:19::27)
+ by DB7PR03MB3962.eurprd03.prod.outlook.com (2603:10a6:5:30::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.29; Mon, 19 Jul
+ 2021 22:13:43 +0000
+Received: from DB7PR03MB4523.eurprd03.prod.outlook.com
+ ([fe80::dc6c:815b:2062:d1f1]) by DB7PR03MB4523.eurprd03.prod.outlook.com
+ ([fe80::dc6c:815b:2062:d1f1%7]) with mapi id 15.20.4331.033; Mon, 19 Jul 2021
+ 22:13:42 +0000
+From:   Sean Anderson <sean.anderson@seco.com>
+To:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Alvaro Gamez <alvaro.gamez@hazent.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, michal.simek@xilinx.com,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sean Anderson <sean.anderson@seco.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v5 1/3] dt-bindings: pwm: Add Xilinx AXI Timer
+Date:   Mon, 19 Jul 2021 18:13:20 -0400
+Message-Id: <20210719221322.3723009-1-sean.anderson@seco.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BLAPR03CA0132.namprd03.prod.outlook.com
+ (2603:10b6:208:32e::17) To DB7PR03MB4523.eurprd03.prod.outlook.com
+ (2603:10a6:10:19::27)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210718211415.143709-1-marex@denx.de>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from plantagenet.inhand.com (50.195.82.171) by BLAPR03CA0132.namprd03.prod.outlook.com (2603:10b6:208:32e::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.21 via Frontend Transport; Mon, 19 Jul 2021 22:13:41 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7a16fb50-aa01-4bfe-e195-08d94b02781e
+X-MS-TrafficTypeDiagnostic: DB7PR03MB3962:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB7PR03MB3962EF4D64B9A06CDE14E83796E19@DB7PR03MB3962.eurprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ydmF7oWuhdHVS+/6zaaaPk/xZ1Y7zUibMOIt8MlM+Kn5Caex6CUzeyduUkjCS87K9zlVTX5fedaOzLDFncitEFtR2qiS+0zky7rIJHuNL+qU/tVu3aDqxUAuViP4G615TB8xdLQ7RBxMG/F+7GrMkvHO9wz0K/URgCy2B+SkMDcI6pmuIEikazcsn/PmskzPKBDw5T2qwJMmRk6uoTyTFKEPbEQeneKCd2iuaI7h3EOHLvum1+Pw/qF1VcoVq/NuLKG0xX39KEDuG/yxXw1aU6rz3xn7jJ3TVYg3sx92j4AfySvXENep+oSFvIwfrrC151FfVOYX3aVP/IaFxkuQdNFCNEiCDLLqbwIV2h0QvRY8Tqi79CmkhpUUzdS1bZEcyt2A+f9t2dPVoBwmwmvTutGjSWFZoie0ZkU32RbL5DwfUKPmT5exLheyT0l86HUrco68aFxCsYRtcOCrbMlETUuL3QOSqeZrrjpRqs5Deb9RweAi3aHIlD2A4k+NFUAWsou9WzVZQQ29pbMdsipxc9v692ITchNPQ1G2eMwT96aIT4Nj4gDER+PyeJw4NlNaRANGkrOg5nXYrUh/HoO4Pdu3Bx4I5abiLpj2nTRMGIMRbK7K0P+JBHLWzFrwXeXj/Hr6IWGqCxoTl7oAaNBsCbKdl3JoCQ8fmb4AAIoLDq9Ykb69rKEjMqY0zHIkbxRC+xhgFSDYQY5IOtc6IegrMKlvLMieG7IgrXprtYAeDqGciyC7/XRt6WU1KO1oIowEG1sZay07yKAx3yowg3hfuk0C63cvfGkgVFlYOWIXxYY=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR03MB4523.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(1076003)(6916009)(6666004)(38100700002)(38350700002)(83380400001)(52116002)(316002)(44832011)(2616005)(36756003)(956004)(4326008)(54906003)(186003)(6506007)(66946007)(6512007)(66556008)(5660300002)(8676002)(26005)(508600001)(966005)(86362001)(6486002)(7416002)(2906002)(8936002)(66476007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Vhlml4TdQ5uZS+ajMp+QGB5+WiggL9isVEC19zqpn5ZPsw64fKI2gyIMgB2m?=
+ =?us-ascii?Q?e8uhuce9r0ZJxvUpKb6SKSNKa57ikbhgsh9KY4iNrJhaDjF8BbWJnlGVioz4?=
+ =?us-ascii?Q?4oMU6qqfdOY31+3eYm2kNhz4McOlvZngyyHoKML30sWExe0nHv+MmWYxaeSG?=
+ =?us-ascii?Q?P1dG06TuF7etnFAJ5PxoyiKDZJnqtqqkk7g5sWVap49NQoG3jO7VCxzasjW5?=
+ =?us-ascii?Q?QL40KCdsiSPwAt5azvuZ99RDnzk0ug8KWzemhtt3jYaF+AiJTGCOkFj4hntD?=
+ =?us-ascii?Q?4PQeFcsJD871/DBGh0uhVJaxdhpuSxQ5TEXQnV8Mz7+qbsffc4KtQT2DpO9i?=
+ =?us-ascii?Q?lAWUD4RwgIu0b2FBm+6ygzD/5RXCDcX30vcCynolvvGt6EaIqQNbq5/nrXLK?=
+ =?us-ascii?Q?Y3U3Ytsir5VptgQV9H4APNBebleM0ycbD1XibN45qcXkCdQE/mfuxoYaNBC2?=
+ =?us-ascii?Q?gaGsShGuRLKi9GpVdUH+4x3enkR1z2gZy4/B6aIqAWBuqjhoSkZ39fOm+mhQ?=
+ =?us-ascii?Q?CJB36qtwTEF85F6EMq6y4kdWxhodT/P0CV5jJfRfApRuiKO6+yMfYIdTIm6W?=
+ =?us-ascii?Q?/tBEiLPmstVZTKMhNKiMLrkzqw43sVJYQfVLagFHCUNyptvSDK+FEVY5O24+?=
+ =?us-ascii?Q?EOR9pC0oGVpU0Xj5/92Q7vFKrexTD+7GlZF4RbzDU1bgvuJegfbmjyp07FoY?=
+ =?us-ascii?Q?R2snuxgttoEl6Si6YYRH/vDgChGgQHvnIPOeYl6R8u+dU0x4fSMa52z2Z/ik?=
+ =?us-ascii?Q?dXUSNx6FCbErS29jfar7HR1wesQfAg1MBR6WYfNz0Hz3jh4iH8oVY9TVWNBR?=
+ =?us-ascii?Q?b1585fEJylQYTomyUJ1r35dWGJS0a+BJCjVVdMAkUerdJF3C83My+WgxQkEx?=
+ =?us-ascii?Q?a5xysJsXGaUUFeCJYvpMhHLXqiI5XfPXtbXfoVTvzsLJiiAJrstnX4bxNMrB?=
+ =?us-ascii?Q?zWDfUnAYimmMd8o917u0LLVDU9PmL7pijPakV1/5fI17/2DuLBQl+sCdxmh4?=
+ =?us-ascii?Q?SYFamNrOVfK9fmo1VwYpdp/FwuV9+drXaAQArIr4TrL91o7xv7vSkA2EnAfM?=
+ =?us-ascii?Q?WHM44dKJ+wm+VVRBcNCqpw+7gFrjbNR9MXqNcDwDABtzI4WOBY/V/7USV25E?=
+ =?us-ascii?Q?h+zk8SWO87ot/ADHq1v+V6atAU7MvHOYIFkw9sJqaHpRAx2M0W/l6f+SNYi2?=
+ =?us-ascii?Q?LTsnDIY1fft9WaQd3xyh4Q6SjSPkvSL4hIyd56cEK+lqLB2YuGTUShS+OrWo?=
+ =?us-ascii?Q?w8dZ75DejBpBm0ZA6I4ncv13iePIYTXnNUIVTTTh7kunomBSmrk/ptr5aV2m?=
+ =?us-ascii?Q?Vu7zqffSuPxQcb7710VO7VTm?=
+X-OriginatorOrg: seco.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a16fb50-aa01-4bfe-e195-08d94b02781e
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR03MB4523.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jul 2021 22:13:42.8102
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bebe97c3-6438-442e-ade3-ff17aa50e733
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0EzpjYQHxZNoZYQmP8Q5LUBgvObh73bkY9yKHEZJPDT87PakQYa9IKjQDRmMsXptX6RdGfprHp1rUWr64H6gXw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR03MB3962
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun, Jul 18, 2021 at 11:14:15PM +0200, Marek Vasut wrote:
-> If the backlight enable GPIO is configured as input, the driver currently
-> unconditionally forces the GPIO to output-enable. This can cause backlight
-> flicker on boot e.g. in case the GPIO should not be enabled before the PWM
-> is configured and is correctly pulled low by external resistor.
-> 
-> Fix this by extending the current check to differentiate between backlight
-> GPIO enable set as input and set as direction unknown. In case of input,
-> read the GPIO value to determine the pull resistor placement, set the GPIO
-> as output, and drive that exact value it was pulled to. In case of unknown
-> direction, retain previous behavior, that is set the GPIO as output-enable.
-> 
-> Fixes: 3698d7e7d221 ("backlight: pwm_bl: Avoid backlight flicker when probed from DT")
-> Signed-off-by: Marek Vasut <marex@denx.de>
-> Cc: Christian Gmeiner <christian.gmeiner@gmail.com>
-> Cc: Daniel Thompson <daniel.thompson@linaro.org>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: Thierry Reding <treding@nvidia.com>
-> Cc: linux-pwm@vger.kernel.org
-> Cc: linux-fbdev@vger.kernel.org
-> To: dri-devel@lists.freedesktop.org
-> ---
-> NOTE: I think this whole auto-detection scheme should just be replaced by a
->       DT prop, because it is very fragile.
+This adds a binding for the Xilinx LogiCORE IP AXI Timer. This device is a
+"soft" block, so it has some parameters which would not be configurable in
+most hardware. This binding is usually automatically generated by Xilinx's
+tools, so the names and values of some properties should be kept as they
+are, if possible. In addition, this binding is already in the kernel at
+arch/microblaze/boot/dts/system.dts, and in user software such as QEMU.
 
-I have some sympathy for this view... although I think the boat has
-already set sail.
+The existing driver uses the clock-frequency property, or alternatively the
+/cpus/timebase-frequency property as its frequency input. Because these
+properties are deprecated, they have not been included with this schema.
+All new bindings should use the clocks/clock-names properties to specify
+the parent clock.
 
-However, on the basis of making things less fragile, I think the
-underlying problem here is the assumption that it is safe to modify
-enable_gpio before the driver has imposed state upon the PWM (this
-assumption has always been made and, in addition to systems where the BL
-has a phandle will also risks flicker problems on systems where
-power_pwm_on_delay is not zero).
+Because we need to init timer devices so early in boot, we determine if we
+should use the PWM driver or the clocksource/clockevent driver by the
+presence/absence, respectively, of #pwm-cells. Because both counters are
+used by the PWM, there is no need for a separate property specifying which
+counters are to be used for the PWM.
 
-This patch does not change the assumption that we can configure the
-GPIO before we modify the PWM state. This means it won't fix the problem
-for cases there the pin is HiZ by default but whose GPIOD_ASIS state is
-neither input nor output.
+Signed-off-by: Sean Anderson <sean.anderson@seco.com>
+---
 
-I wonder if it might be better to move the code to configure the
-direction of enable_gpio out of the probe function and into
-pwm_backlight_power_on():
+Changes in v5:
+- Update commit message to reflect revisions
+- Fix indentation lint
+- Add example for timer binding
+- Remove xlnx,axi-timer-2.0 compatible string
+- Move schema into the timer directory
 
-	if (pb->enable_gpio) {
-		if (gpiod_get_direction(pb->enable_gpio) != 0))
-			gpiod_direction_output(pb->enable_gpio, 1);
-		else
-			gpiod_set_value_can_sleep(pb->enable_gpio, 1);
-	}
+Changes in v4:
+- Remove references to generate polarity so this can get merged
+- Predicate PWM driver on the presence of #pwm-cells
+- Make some properties optional for clocksource drivers
 
-By the time we reach this function the driver explicitly applies state
-to the GPIO then we know what the value must be.
+Changes in v3:
+- Mark all boolean-as-int properties as deprecated
+- Add xlnx,pwm and xlnx,gen?-active-low properties.
+- Make newer replacement properties mutually-exclusive with what they
+  replace
+- Add an example with non-deprecated properties only.
 
+Changes in v2:
+- Use 32-bit addresses for example binding
 
-Daniel.
+ .../bindings/timer/xlnx,xps-timer.yaml        | 91 +++++++++++++++++++
+ 1 file changed, 91 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
 
-> ---
->  drivers/video/backlight/pwm_bl.c | 35 +++++++++++++++++++++++---------
->  1 file changed, 25 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> index e48fded3e414..7ec992b722eb 100644
-> --- a/drivers/video/backlight/pwm_bl.c
-> +++ b/drivers/video/backlight/pwm_bl.c
-> @@ -445,7 +445,7 @@ static int pwm_backlight_probe(struct platform_device *pdev)
->  	struct device_node *node = pdev->dev.of_node;
->  	struct pwm_bl_data *pb;
->  	struct pwm_state state;
-> -	unsigned int i;
-> +	unsigned int i, dir, val;
->  	int ret;
->  
->  	if (!data) {
-> @@ -487,16 +487,31 @@ static int pwm_backlight_probe(struct platform_device *pdev)
->  	}
->  
->  	/*
-> -	 * If the GPIO is not known to be already configured as output, that
-> -	 * is, if gpiod_get_direction returns either 1 or -EINVAL, change the
-> -	 * direction to output and set the GPIO as active.
-> -	 * Do not force the GPIO to active when it was already output as it
-> -	 * could cause backlight flickering or we would enable the backlight too
-> -	 * early. Leave the decision of the initial backlight state for later.
-> +	 * If the GPIO is not known to be already configured as output, then:
-> +	 * - if the GPIO direction is input, read its current value to find out
-> +	 *   whether the pin is pulled high or low (it is backlight control, so
-> +	 *   it cannot be floating), change the direction to output and set the
-> +	 *   GPIO such that it drives this strapped value.
-> +	 *   Do not force the GPIO to state which is different than that to
-> +	 *   which the GPIO was pulled to, this could cause backlight flicker
-> +	 *   on boot e.g. in case the PWM is not ready yet.
-> +	 * - if the GPIO direction is unknown, tahat is, if gpiod_get_direction
-> +	 *   returns -EINVAL, change the direction to output and set the GPIO
-> +	 *   as active.
-> +	 *   Do not force the GPIO to active when it was already output as it
-> +	 *   could cause backlight flickering or we would enable the backlight
-> +	 *   too early. Leave the decision of the initial backlight state for
-> +	 *   later.
->  	 */
-> -	if (pb->enable_gpio &&
-> -	    gpiod_get_direction(pb->enable_gpio) != 0)
-> -		gpiod_direction_output(pb->enable_gpio, 1);
-> +	if (pb->enable_gpio) {
-> +		dir = gpiod_get_direction(pb->enable_gpio);
-> +		if (dir != 0) {
-> +			val = 1;
-> +			if (dir == 1)
-> +				val = gpiod_get_value_cansleep(pb->enable_gpio);
-> +			gpiod_direction_output(pb->enable_gpio, val);
-> +		}
-> +	}
->  
->  	pb->power_supply = devm_regulator_get(&pdev->dev, "power");
->  	if (IS_ERR(pb->power_supply)) {
-> -- 
-> 2.30.2
-> 
+diff --git a/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml b/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
+new file mode 100644
+index 000000000000..e5439653dc03
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
+@@ -0,0 +1,91 @@
++# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/xlnx,axi-timer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xilinx LogiCORE IP AXI Timer Device Tree Binding
++
++maintainers:
++  - Sean Anderson <sean.anderson@seco.com>
++
++properties:
++  compatible:
++    contains:
++      const: xlnx,xps-timer-1.00.a
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: s_axi_aclk
++
++  interrupts:
++    maxItems: 1
++
++  reg:
++    maxItems: 1
++
++  xlnx,count-width:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 8
++    maximum: 32
++    default: 32
++    description:
++      The width of the counter(s), in bits.
++
++  xlnx,one-timer-only:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [ 0, 1 ]
++    description:
++      Whether only one timer is present in this block.
++
++required:
++  - compatible
++  - reg
++  - xlnx,one-timer-only
++
++allOf:
++  - if:
++      required:
++        - '#pwm-cells'
++    then:
++      allOf:
++        - required:
++            - clocks
++        - properties:
++            xlnx,one-timer-only:
++              const: 0
++    else:
++      required:
++        - interrupts
++  - if:
++      required:
++        - clocks
++    then:
++      required:
++        - clock-names
++
++additionalProperties: true
++
++examples:
++  - |
++    timer@800e0000 {
++        clock-names = "s_axi_aclk";
++        clocks = <&zynqmp_clk 71>;
++        compatible = "xlnx,xps-timer-1.00.a";
++        reg = <0x800e0000 0x10000>;
++        interrupts = <0 39 2>;
++        xlnx,count-width = <16>;
++        xlnx,one-timer-only = <0x0>;
++    };
++
++    timer@800f0000 {
++        #pwm-cells = <0>;
++        clock-names = "s_axi_aclk";
++        clocks = <&zynqmp_clk 71>;
++        compatible = "xlnx,xps-timer-1.00.a";
++        reg = <0x800e0000 0x10000>;
++        xlnx,count-width = <32>;
++        xlnx,one-timer-only = <0x0>;
++    };
+-- 
+2.25.1
+
