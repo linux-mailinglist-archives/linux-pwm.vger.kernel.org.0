@@ -2,128 +2,136 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 834343CFA2F
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jul 2021 15:12:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35B983D0374
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jul 2021 22:57:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234417AbhGTMbz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 20 Jul 2021 08:31:55 -0400
-Received: from mail-io1-f54.google.com ([209.85.166.54]:37477 "EHLO
-        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234942AbhGTMb3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 20 Jul 2021 08:31:29 -0400
-Received: by mail-io1-f54.google.com with SMTP id r18so12756553iot.4;
-        Tue, 20 Jul 2021 06:12:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=3uaiIA266oYzcSw5ViiNhUOcSHy5KGVbduxtAyiJ2M4=;
-        b=l1tWZ6ch5T16FJKcP2NGOCubyZTcfKqqfdJDGVnBsyotEw90fIynBrJ9xn5fzxbOpA
-         yWRWtmpL5SwD6k2CdiD6m9mttkJ8kQUDa0cgKIKA1Gky3gRGFR2V0/lAt1RNotzPAFfn
-         /LI7C2OAxH3BRipPJ8lh1j0tfHGx3B1Gy8T6ssQs4A1JtsDz5EWClX59sUxhpJSOCDzZ
-         p98rRykAT+4Neqe+Ig8YFUAAvNWkStsHXO6cMFMY0d4C+cDch1pO6/FPeC4eBUiPSrby
-         l15leE+jz0rr4MTou9E9+OH4IOm5JXCvPX+s7yjCGu+1TsCJbprExfg6dCsTzW0oB17K
-         rVcA==
-X-Gm-Message-State: AOAM532k4YaPYlcaJhwmwt4cb0oZHrMc7gLn95Dao1B8BfA8P5ph7JYd
-        OHfOTYad8jbUIuBLuleUQQ==
-X-Google-Smtp-Source: ABdhPJx3i7k89YrlM+ySkipECLjV8CBmT6J7j7w9kGYMYmrse6KfxDaHEo/SSOE0vZW49na1EM3A6A==
-X-Received: by 2002:a02:2382:: with SMTP id u124mr26150014jau.138.1626786720858;
-        Tue, 20 Jul 2021 06:12:00 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id h6sm11993036iop.40.2021.07.20.06.11.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jul 2021 06:12:00 -0700 (PDT)
-Received: (nullmailer pid 4121601 invoked by uid 1000);
-        Tue, 20 Jul 2021 13:11:58 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Sean Anderson <sean.anderson@seco.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Alvaro Gamez <alvaro.gamez@hazent.com>,
-        linux-kernel@vger.kernel.org,
-        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        devicetree@vger.kernel.org, michal.simek@xilinx.com,
-        linux-pwm@vger.kernel.org
-In-Reply-To: <20210719221322.3723009-1-sean.anderson@seco.com>
-References: <20210719221322.3723009-1-sean.anderson@seco.com>
-Subject: Re: [PATCH v5 1/3] dt-bindings: pwm: Add Xilinx AXI Timer
-Date:   Tue, 20 Jul 2021 07:11:58 -0600
-Message-Id: <1626786718.716987.4121600.nullmailer@robh.at.kernel.org>
+        id S235729AbhGTUJ5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 20 Jul 2021 16:09:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237201AbhGTTsA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 20 Jul 2021 15:48:00 -0400
+Received: from phobos.denx.de (phobos.denx.de [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4188DC061574;
+        Tue, 20 Jul 2021 13:28:38 -0700 (PDT)
+Received: from [IPv6:::1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: marex@denx.de)
+        by phobos.denx.de (Postfix) with ESMTPSA id C910982977;
+        Tue, 20 Jul 2021 22:28:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+        s=phobos-20191101; t=1626812913;
+        bh=d/oWvjB00i6oJ+9T3eKmMHhNOvRfGvUeewgfn+NNM08=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=zEx9w1T7rocWXQVxb4y7WtBWlqCpZ/4cVKL+fYyLX9tzHAqPuVP8G3dvAV+awKcd+
+         PbEgh6MvQJIzgJLcH5Py8+eE1i4hkW9ErydVmhmlOasodXYyVgMN/KYYpfbn2QW3Tk
+         ky8Dit1JaQ8GoSvFHZEQl03eLHw4F0NzWJNSbC0yTFCv0YinUrIBpjLTQoa0bNTwZo
+         XBC2GSQ1kbeLJwFsxb6HTURklLr3DoWAhm0lbacF7iagH/7pcisLT8MTbl7eoFG7wq
+         e+NJH8mFka6FNQVIZvHexwLX8rd3UMonhKzGWIA/U9HMa8lmXRXyyqHqGcHusBJF9A
+         NT2LsCVU/JL3g==
+Subject: Re: [PATCH] backlight: pwm_bl: Avoid backlight flicker if backlight
+ control GPIO is input
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Thierry Reding <treding@nvidia.com>, linux-pwm@vger.kernel.org
+References: <20210718211415.143709-1-marex@denx.de>
+ <20210719112202.4fvmn57ibgy3yesa@maple.lan>
+From:   Marek Vasut <marex@denx.de>
+Message-ID: <bbaad78e-91c7-0787-fa72-b5cfabcc6dbd@denx.de>
+Date:   Tue, 20 Jul 2021 22:28:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
+MIME-Version: 1.0
+In-Reply-To: <20210719112202.4fvmn57ibgy3yesa@maple.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.103.2 at phobos.denx.de
+X-Virus-Status: Clean
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 19 Jul 2021 18:13:20 -0400, Sean Anderson wrote:
-> This adds a binding for the Xilinx LogiCORE IP AXI Timer. This device is a
-> "soft" block, so it has some parameters which would not be configurable in
-> most hardware. This binding is usually automatically generated by Xilinx's
-> tools, so the names and values of some properties should be kept as they
-> are, if possible. In addition, this binding is already in the kernel at
-> arch/microblaze/boot/dts/system.dts, and in user software such as QEMU.
+On 7/19/21 1:22 PM, Daniel Thompson wrote:
+> On Sun, Jul 18, 2021 at 11:14:15PM +0200, Marek Vasut wrote:
+>> If the backlight enable GPIO is configured as input, the driver currently
+>> unconditionally forces the GPIO to output-enable. This can cause backlight
+>> flicker on boot e.g. in case the GPIO should not be enabled before the PWM
+>> is configured and is correctly pulled low by external resistor.
+>>
+>> Fix this by extending the current check to differentiate between backlight
+>> GPIO enable set as input and set as direction unknown. In case of input,
+>> read the GPIO value to determine the pull resistor placement, set the GPIO
+>> as output, and drive that exact value it was pulled to. In case of unknown
+>> direction, retain previous behavior, that is set the GPIO as output-enable.
+>>
+>> Fixes: 3698d7e7d221 ("backlight: pwm_bl: Avoid backlight flicker when probed from DT")
+>> Signed-off-by: Marek Vasut <marex@denx.de>
+>> Cc: Christian Gmeiner <christian.gmeiner@gmail.com>
+>> Cc: Daniel Thompson <daniel.thompson@linaro.org>
+>> Cc: Heiko Stuebner <heiko@sntech.de>
+>> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+>> Cc: Thierry Reding <treding@nvidia.com>
+>> Cc: linux-pwm@vger.kernel.org
+>> Cc: linux-fbdev@vger.kernel.org
+>> To: dri-devel@lists.freedesktop.org
+>> ---
+>> NOTE: I think this whole auto-detection scheme should just be replaced by a
+>>        DT prop, because it is very fragile.
 > 
-> The existing driver uses the clock-frequency property, or alternatively the
-> /cpus/timebase-frequency property as its frequency input. Because these
-> properties are deprecated, they have not been included with this schema.
-> All new bindings should use the clocks/clock-names properties to specify
-> the parent clock.
+> I have some sympathy for this view... although I think the boat has
+> already set sail.
+
+I'm not sure that's correct, we can simply say that any new uses of the 
+pwm-backlight should specify the initial GPIO configuration, and for the 
+legacy ones, use whatever is in the code now.
+
+> However, on the basis of making things less fragile, I think the
+> underlying problem here is the assumption that it is safe to modify
+> enable_gpio before the driver has imposed state upon the PWM (this
+> assumption has always been made and, in addition to systems where the BL
+> has a phandle will also risks flicker problems on systems where
+> power_pwm_on_delay is not zero).
+
+It is safe to modify the GPIO into defined state, but that defined state 
+is not always out/enabled, that defined state depends on the hardware.
+
+> This patch does not change the assumption that we can configure the
+> GPIO before we modify the PWM state. This means it won't fix the problem
+> for cases there the pin is HiZ by default but whose GPIOD_ASIS state is
+> neither input nor output.
+
+That is correct, for pin that is floating, we lost. But then I would 
+argue that if your backlight-enable GPIO is floating, the hardware is 
+buggy, I would expect some pull resistor to keep the backlight off on 
+power on on that GPIO.
+
+> I wonder if it might be better to move the code to configure the
+> direction of enable_gpio out of the probe function and into
+> pwm_backlight_power_on():
+
+No, I tried that already.
+
+The first thing that is called on boot is pwm_backlight_power_off() to 
+set the backlight to 0 (and thus set pwm to 0), but since pb->enabled is 
+false, that is where the function exits with configuring PWM and without 
+configuring the GPIO state.
+
+I also experimented with some "first time only" flag in those functions, 
+but that looked ugly and complicated the runtime code.
+
+> 	if (pb->enable_gpio) {
+> 		if (gpiod_get_direction(pb->enable_gpio) != 0))
+> 			gpiod_direction_output(pb->enable_gpio, 1);
+> 		else
+> 			gpiod_set_value_can_sleep(pb->enable_gpio, 1);
+> 	}
 > 
-> Because we need to init timer devices so early in boot, we determine if we
-> should use the PWM driver or the clocksource/clockevent driver by the
-> presence/absence, respectively, of #pwm-cells. Because both counters are
-> used by the PWM, there is no need for a separate property specifying which
-> counters are to be used for the PWM.
-> 
-> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
-> ---
-> 
-> Changes in v5:
-> - Update commit message to reflect revisions
-> - Fix indentation lint
-> - Add example for timer binding
-> - Remove xlnx,axi-timer-2.0 compatible string
-> - Move schema into the timer directory
-> 
-> Changes in v4:
-> - Remove references to generate polarity so this can get merged
-> - Predicate PWM driver on the presence of #pwm-cells
-> - Make some properties optional for clocksource drivers
-> 
-> Changes in v3:
-> - Mark all boolean-as-int properties as deprecated
-> - Add xlnx,pwm and xlnx,gen?-active-low properties.
-> - Make newer replacement properties mutually-exclusive with what they
->   replace
-> - Add an example with non-deprecated properties only.
-> 
-> Changes in v2:
-> - Use 32-bit addresses for example binding
-> 
->  .../bindings/timer/xlnx,xps-timer.yaml        | 91 +++++++++++++++++++
->  1 file changed, 91 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
-> 
+> By the time we reach this function the driver explicitly applies state
+> to the GPIO then we know what the value must be.
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-./Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/timer/xlnx,xps-timer.yaml#
-\ndoc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/patch/1507329
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+See above, I don't think that's the best option.
