@@ -2,51 +2,51 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A58E23D2616
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jul 2021 16:46:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A96133D2645
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jul 2021 16:53:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232431AbhGVOGX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 22 Jul 2021 10:06:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50014 "EHLO
+        id S232520AbhGVONL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 22 Jul 2021 10:13:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232375AbhGVOGX (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 22 Jul 2021 10:06:23 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00CEDC0613C1
-        for <linux-pwm@vger.kernel.org>; Thu, 22 Jul 2021 07:46:58 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id x14-20020a7bc20e0000b0290249f2904453so2651494wmi.1
-        for <linux-pwm@vger.kernel.org>; Thu, 22 Jul 2021 07:46:57 -0700 (PDT)
+        with ESMTP id S232568AbhGVONH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 22 Jul 2021 10:13:07 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8EF3C061798
+        for <linux-pwm@vger.kernel.org>; Thu, 22 Jul 2021 07:52:40 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id l6so3522045wmq.0
+        for <linux-pwm@vger.kernel.org>; Thu, 22 Jul 2021 07:52:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DnmHNNXEi+D67CdXt2sdtRiYmXnF0UzDAK5d1qxhJYo=;
-        b=sh8hlv9dg7eFqGZTlCBS2fKOrpDKfSZK3zJeZAxqFqqhfvCmEK+p2ojCMdRWL4QTY1
-         qHojFkfGdIg6xnOeJsgldaeFwrZXI+0iVQAYPS3CL4l1xCGYemJTMcW38fTnJoXCdl/x
-         t/bhlRsTtobXIZx9KJPjblZFuuHKoNbtUftrzqGxFV6GnOBEyLkgCOHKzm89LzDkfnpy
-         bo1lPduqlKiYJzUzLcbCGTFOQ5vPoPyPxk+9Bdj6CZ1itgw5tz7j/fFh6Fu4QFmrkKG+
-         8qS9w+idYQf/1f/QWfl6Bc6iw2Hp3K25vaDVrlWaCKyoCu2YX52X2iXDrh+XKwdT25hL
-         SBbA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=NP0Nk6TpvGXmi3EQspzqhmeGXtJTWbb2t8lR/ui8TD4=;
+        b=izUC5Qvf/tubSNdCEliUDdjaUor/iX8CATtMD/ErOTgRdDxMAKIFt3zG53ZHHOZogA
+         xpLQ++qh4wvdPwv+BS2h+ZSz2nvLI+dJLauYxNCgRHa7dzFSLC7Du1yuHucHCt5Gnb4V
+         ddRFrp71Lnb7AUlyWZ7QxMsJhrQTgPQGQO7NTG1h7M79yfis3wwcP2Hy0SraUA9F83lP
+         M1Qv6MG5/oCL863uBERgRSzRsBaUPn2sqYNF7gw6CWT7f3uSr/sUOBtNU0H7REb5PqQT
+         wtEbXtVjfTjbPDyvDi5uYllGTU1HAYEryx1rrTECSAXWMj0+0BWTbgPD6JvmCWqBEh7A
+         UXJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DnmHNNXEi+D67CdXt2sdtRiYmXnF0UzDAK5d1qxhJYo=;
-        b=Ggnq5maymjj+emxkH0HW8uBW/cNm9tjPT8Y+QBcyefRfNzGTjr8g3NSYEnBbBuMRxH
-         s/5CM3VT/nax0jzM/PNXoKGXF7QhI1yiG0smR1aNORdqk7vl4aC5jfM1tBGtHJ4ao8Kh
-         HIWwLpEfkjtzeY+7ayliDFsxy7A5Wlu66EPgX4zwb9n73TpqnNbUvhyvFXLgWVJgR6L5
-         K8zui3pinYyZHw5k2b2sBIuS7qPtdsZwzkIOri29RywwdJ4dt/YiqiJdZsjjfiQgmXDH
-         fv4HK8K7Jmbkrd7l8KX+kVPTkTwT9uftlbKxKWNQ6WOjQnIXF7zxh4z7w3L5k6XD0QET
-         RpJA==
-X-Gm-Message-State: AOAM530znGxGtyQhqSshUONthDJTNdAAKmfOkedwpYe8H9CXkXz/HQvn
-        u4HsjGdAIY9B6EU38pAgDkiRkQlGJeBIyw==
-X-Google-Smtp-Source: ABdhPJyXKXdBb+fuVyS8Yn0+pkXgwpRuUuzEuOXAMYs5CxxpmGCrWsN6xeN3PEe8irE+we8l+OBkxg==
-X-Received: by 2002:a7b:c7cb:: with SMTP id z11mr9558960wmk.102.1626965216396;
-        Thu, 22 Jul 2021 07:46:56 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=NP0Nk6TpvGXmi3EQspzqhmeGXtJTWbb2t8lR/ui8TD4=;
+        b=AJf48F7em8ZS4eE3FSRJg058WhW7ML6tVwmrlQ58zj9p9Z3oE1BuDcSvj2bo0f/2ae
+         ruPMELZ3VaKKZkNYuQchJHEs6hSL2RUw5vJ2dDGIBONO9Q5LSSPNpW7xKU9iubp7hhXI
+         C9G/vB1PgU2kfEvOd4wo+5aFN6vgCuSbf0MCRQFwh7zS1L8DZzj6Vc703z3MAFtwHDnp
+         uxCnavjzCD0C9eLYL6VP/u5nRc1B632GMFLCM7pMKRN2Hhb/E7KcRp7SIkxp35QkJ1tv
+         ELdhQUMLe4zRayiSkRyNNXTJeKjUtQxgLT4vd7rvlgdZq0WCgha2nE7pSl1IR8UcrPYr
+         EbqQ==
+X-Gm-Message-State: AOAM533Ixpmig5QXGzp2CF6V3xgLKHC5qFJLGCL9NJUXtdRuaK7Wd9RV
+        nlZVo8ceqo8v9quVOfUa4uVS6g==
+X-Google-Smtp-Source: ABdhPJy+uWxaydk70jwEcneHyghwzuOPld3QjaXdRC3fwtuprHx9eqlp5Y1QL6QB6ktCf4+LdElMcA==
+X-Received: by 2002:a05:600c:1c86:: with SMTP id k6mr43890478wms.147.1626965559165;
+        Thu, 22 Jul 2021 07:52:39 -0700 (PDT)
 Received: from maple.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
-        by smtp.gmail.com with ESMTPSA id z2sm10167362wma.45.2021.07.22.07.46.54
+        by smtp.gmail.com with ESMTPSA id t6sm30527687wru.75.2021.07.22.07.52.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Jul 2021 07:46:55 -0700 (PDT)
+        Thu, 22 Jul 2021 07:52:38 -0700 (PDT)
 From:   Daniel Thompson <daniel.thompson@linaro.org>
 To:     Lee Jones <lee.jones@linaro.org>, Jingoo Han <jingoohan1@gmail.com>
 Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
@@ -56,10 +56,12 @@ Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
         dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Marek Vasut <marex@denx.de>,
         stable@vger.kernel.org
-Subject: [PATCH] backlight: pwm_bl: Improve bootloader/kernel device handover
-Date:   Thu, 22 Jul 2021 15:46:23 +0100
-Message-Id: <20210722144623.1572816-1-daniel.thompson@linaro.org>
+Subject: [PATCH v2] backlight: pwm_bl: Improve bootloader/kernel device handover
+Date:   Thu, 22 Jul 2021 15:52:27 +0100
+Message-Id: <20210722145227.1573115-1-daniel.thompson@linaro.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210722144623.1572816-1-daniel.thompson@linaro.org>
+References: <20210722144623.1572816-1-daniel.thompson@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -86,9 +88,14 @@ backlight is on.
 Reported-by: Marek Vasut <marex@denx.de>
 Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
 Cc: stable@vger.kernel.org
+Fixes: 3698d7e7d221 ("backlight: pwm_bl: Avoid backlight flicker when probed from DT")
 Acked-by: Marek Vasut <marex@denx.de>
 Tested-by: Marek Vasut <marex@denx.de>
 ---
+
+Notes:
+    v2: Added Fixes: tag (sorry for the noise)
+
  drivers/video/backlight/pwm_bl.c | 54 +++++++++++++++++---------------
  1 file changed, 28 insertions(+), 26 deletions(-)
 
