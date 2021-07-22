@@ -2,120 +2,177 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEDEC3D2314
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jul 2021 14:07:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A58E23D2616
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jul 2021 16:46:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231738AbhGVL0s (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 22 Jul 2021 07:26:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231712AbhGVL0m (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 22 Jul 2021 07:26:42 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8A82961351;
-        Thu, 22 Jul 2021 12:07:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626955637;
-        bh=gbtgRtJwBuii+M7tkqsl84TqgCIZq8mhcmte2Lzn+MU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ddt3vm77y1mLIvPkDSMVMzHyNoET2snL4RU4Xto4FuWRjolDWsCffbkdPaix+t87x
-         VrBh0KcRxla7FaXm83dqk7zUmfbENHuAlalGxA4vy9G9YDNwFOJCRK8DZ3l8lh2nZM
-         EBSbiHSvZ9qVwsegoGfKYFxtJvOrILOfdvMkUvlLQB1Y+vYP+Zqa4A+6w9dtYMT9TJ
-         Xt10Af4cb7dIQGTNzpEAEG1RfrgdueAJGQ2BzsLqn5/EfSzGUwjGKY5Ezi6pswSHbj
-         8uKg4F0zihD6S+NknM29cXmlN53cVl2Vm+QDSB4jsDuRQCwhKeiswcmqIFNywTqKCm
-         h3Uo0EbuQfJ5w==
-Date:   Thu, 22 Jul 2021 14:07:13 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Stephen Boyd <sboyd@kernel.org>, linux-rtc@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-spi@vger.kernel.org,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
+        id S232431AbhGVOGX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 22 Jul 2021 10:06:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50014 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232375AbhGVOGX (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 22 Jul 2021 10:06:23 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00CEDC0613C1
+        for <linux-pwm@vger.kernel.org>; Thu, 22 Jul 2021 07:46:58 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id x14-20020a7bc20e0000b0290249f2904453so2651494wmi.1
+        for <linux-pwm@vger.kernel.org>; Thu, 22 Jul 2021 07:46:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DnmHNNXEi+D67CdXt2sdtRiYmXnF0UzDAK5d1qxhJYo=;
+        b=sh8hlv9dg7eFqGZTlCBS2fKOrpDKfSZK3zJeZAxqFqqhfvCmEK+p2ojCMdRWL4QTY1
+         qHojFkfGdIg6xnOeJsgldaeFwrZXI+0iVQAYPS3CL4l1xCGYemJTMcW38fTnJoXCdl/x
+         t/bhlRsTtobXIZx9KJPjblZFuuHKoNbtUftrzqGxFV6GnOBEyLkgCOHKzm89LzDkfnpy
+         bo1lPduqlKiYJzUzLcbCGTFOQ5vPoPyPxk+9Bdj6CZ1itgw5tz7j/fFh6Fu4QFmrkKG+
+         8qS9w+idYQf/1f/QWfl6Bc6iw2Hp3K25vaDVrlWaCKyoCu2YX52X2iXDrh+XKwdT25hL
+         SBbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DnmHNNXEi+D67CdXt2sdtRiYmXnF0UzDAK5d1qxhJYo=;
+        b=Ggnq5maymjj+emxkH0HW8uBW/cNm9tjPT8Y+QBcyefRfNzGTjr8g3NSYEnBbBuMRxH
+         s/5CM3VT/nax0jzM/PNXoKGXF7QhI1yiG0smR1aNORdqk7vl4aC5jfM1tBGtHJ4ao8Kh
+         HIWwLpEfkjtzeY+7ayliDFsxy7A5Wlu66EPgX4zwb9n73TpqnNbUvhyvFXLgWVJgR6L5
+         K8zui3pinYyZHw5k2b2sBIuS7qPtdsZwzkIOri29RywwdJ4dt/YiqiJdZsjjfiQgmXDH
+         fv4HK8K7Jmbkrd7l8KX+kVPTkTwT9uftlbKxKWNQ6WOjQnIXF7zxh4z7w3L5k6XD0QET
+         RpJA==
+X-Gm-Message-State: AOAM530znGxGtyQhqSshUONthDJTNdAAKmfOkedwpYe8H9CXkXz/HQvn
+        u4HsjGdAIY9B6EU38pAgDkiRkQlGJeBIyw==
+X-Google-Smtp-Source: ABdhPJyXKXdBb+fuVyS8Yn0+pkXgwpRuUuzEuOXAMYs5CxxpmGCrWsN6xeN3PEe8irE+we8l+OBkxg==
+X-Received: by 2002:a7b:c7cb:: with SMTP id z11mr9558960wmk.102.1626965216396;
+        Thu, 22 Jul 2021 07:46:56 -0700 (PDT)
+Received: from maple.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
+        by smtp.gmail.com with ESMTPSA id z2sm10167362wma.45.2021.07.22.07.46.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Jul 2021 07:46:55 -0700 (PDT)
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>, Jingoo Han <jingoohan1@gmail.com>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Alexandru Ardelean <aardelean@deviqon.com>,
-        kernel@pengutronix.de,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PULL] Add variants of devm_clk_get for prepared and enabled
- clocks enabled clocks
-Message-ID: <YPlfcbkxiBmB+vw1@kunai>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>, linux-rtc@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-spi@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Alexandru Ardelean <aardelean@deviqon.com>, kernel@pengutronix.de,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20210510174142.986250-1-u.kleine-koenig@pengutronix.de>
- <20210609202123.u5rmw7al4x3rrvun@pengutronix.de>
- <20210625171434.3xusxpxjprcdqa47@pengutronix.de>
- <20210705080144.zfbzkm7l3gmnh6st@pengutronix.de>
- <20210722060654.nudpdtemosi64nlb@pengutronix.de>
- <YPkg0wtYIoHKpTUW@kunai>
- <20210722081817.2tsjzof4gvldq6ka@pengutronix.de>
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Marek Vasut <marex@denx.de>,
+        stable@vger.kernel.org
+Subject: [PATCH] backlight: pwm_bl: Improve bootloader/kernel device handover
+Date:   Thu, 22 Jul 2021 15:46:23 +0100
+Message-Id: <20210722144623.1572816-1-daniel.thompson@linaro.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="HJmKiO7YWMeyy5Jn"
-Content-Disposition: inline
-In-Reply-To: <20210722081817.2tsjzof4gvldq6ka@pengutronix.de>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Currently there are (at least) two problems in the way pwm_bl starts
+managing the enable_gpio pin. Both occur when the backlight is initially
+off and the driver finds the pin not already in output mode and, as a
+result, unconditionally switches it to output-mode and asserts the signal.
 
---HJmKiO7YWMeyy5Jn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Problem 1: This could cause the backlight to flicker since, at this stage
+in driver initialisation, we have no idea what the PWM and regulator are
+doing (an unconfigured PWM could easily "rest" at 100% duty cycle).
 
+Problem 2: This will cause us not to correctly honour the
+post_pwm_on_delay (which also risks flickers).
 
-> > What about adding gkh to the list explaining the situation to him?
->=20
-> Greg doesn't like devm_ stuff.
->=20
-> I already asked Arnd who doesn't want to interfere and akpm who didn't
-> react either up to now.
+Fix this by moving the code to configure the GPIO output mode until after
+we have examines the handover state. That allows us to initialize
+enable_gpio to off if the backlight is currently off and on if the
+backlight is on.
 
-Wow, okay, that is frustrating.
+Reported-by: Marek Vasut <marex@denx.de>
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: stable@vger.kernel.org
+Acked-by: Marek Vasut <marex@denx.de>
+Tested-by: Marek Vasut <marex@denx.de>
+---
+ drivers/video/backlight/pwm_bl.c | 54 +++++++++++++++++---------------
+ 1 file changed, 28 insertions(+), 26 deletions(-)
 
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index e48fded3e414..8d8959a70e44 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -409,6 +409,33 @@ static bool pwm_backlight_is_linear(struct platform_pwm_backlight_data *data)
+ static int pwm_backlight_initial_power_state(const struct pwm_bl_data *pb)
+ {
+ 	struct device_node *node = pb->dev->of_node;
++	bool active = true;
++
++	/*
++	 * If the enable GPIO is present, observable (either as input
++	 * or output) and off then the backlight is not currently active.
++	 * */
++	if (pb->enable_gpio && gpiod_get_value_cansleep(pb->enable_gpio) == 0)
++		active = false;
++
++	if (!regulator_is_enabled(pb->power_supply))
++		active = false;
++
++	if (!pwm_is_enabled(pb->pwm))
++		active = false;
++
++	/*
++	 * Synchronize the enable_gpio with the observed state of the
++	 * hardware.
++	 */
++	if (pb->enable_gpio)
++		gpiod_direction_output(pb->enable_gpio, active);
++
++	/*
++	 * Do not change pb->enabled here! pb->enabled essentially
++	 * tells us if we own one of the regulator's use counts and
++	 * right now we do not.
++	 */
 
---HJmKiO7YWMeyy5Jn
-Content-Type: application/pgp-signature; name="signature.asc"
+ 	/* Not booted with device tree or no phandle link to the node */
+ 	if (!node || !node->phandle)
+@@ -420,20 +447,7 @@ static int pwm_backlight_initial_power_state(const struct pwm_bl_data *pb)
+ 	 * assume that another driver will enable the backlight at the
+ 	 * appropriate time. Therefore, if it is disabled, keep it so.
+ 	 */
+-
+-	/* if the enable GPIO is disabled, do not enable the backlight */
+-	if (pb->enable_gpio && gpiod_get_value_cansleep(pb->enable_gpio) == 0)
+-		return FB_BLANK_POWERDOWN;
+-
+-	/* The regulator is disabled, do not enable the backlight */
+-	if (!regulator_is_enabled(pb->power_supply))
+-		return FB_BLANK_POWERDOWN;
+-
+-	/* The PWM is disabled, keep it like this */
+-	if (!pwm_is_enabled(pb->pwm))
+-		return FB_BLANK_POWERDOWN;
+-
+-	return FB_BLANK_UNBLANK;
++	return active ? FB_BLANK_UNBLANK: FB_BLANK_POWERDOWN;
+ }
 
------BEGIN PGP SIGNATURE-----
+ static int pwm_backlight_probe(struct platform_device *pdev)
+@@ -486,18 +500,6 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+ 		goto err_alloc;
+ 	}
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmD5X20ACgkQFA3kzBSg
-KbZ9fg/+IRGhv497cb9AjUOAaqwkvEXqBc1EjRWR9pNzZOWyt7pj/mR/lEHb0xW7
-EVNmU6w1ZFv4l3zRKsIYlEXggrIk/vuFsMvYpARpFRFY8v7tU4pwCBDjTFe4aSTH
-lTWbeySPepEbAFfkX0V05vlCFyl/5yXMoP5y5qmuQrRrsJ9Usu6wr00YtcA0ImSh
-lkqxiOudsmiEF8l3UbxyX10o6CYYGZnKpuADEl9SMj9dRF7GHicNHKsW9jQklRig
-b9cjnZJH2SNzM6wzP2IK2OplmLoP7KFCPbkfPfC6jvCDVZ97/9FMu78y4IN2B1bx
-mWXSY6VWPNmV3yl7Xl1SwbyL7StWZleneeQcsQkX9V80g3b//eqkqDziz/Db8MPf
-hIqkvbj5OAX9jWb8DQBNTE12bvHKXiq5L377FdD4WPgt2xj8zDHwBM7t9HQyIUUZ
-jzDgNDGRye3H+FGr4rfmjUU4y5U+pN3f0hgWshTc6Hk4pmf7fGek03/W/bSlo3e2
-c4VcVDDs90DZN6guC6fZKWoPSl1AMTTsRavsU3V2IxykCUFSPJzfxlJZ3xOkjPhX
-ajN8x4uy3fZj8EsITgszI08QhCavDH4XHvouiBhQKzHmT4iDsQRgeGuHaVRyzCr/
-DOf97Ewe7ukTIHFB7uRSaPua/Y0nPXpeNyqWeR/cJZA4PmFDUaY=
-=qGuf
------END PGP SIGNATURE-----
+-	/*
+-	 * If the GPIO is not known to be already configured as output, that
+-	 * is, if gpiod_get_direction returns either 1 or -EINVAL, change the
+-	 * direction to output and set the GPIO as active.
+-	 * Do not force the GPIO to active when it was already output as it
+-	 * could cause backlight flickering or we would enable the backlight too
+-	 * early. Leave the decision of the initial backlight state for later.
+-	 */
+-	if (pb->enable_gpio &&
+-	    gpiod_get_direction(pb->enable_gpio) != 0)
+-		gpiod_direction_output(pb->enable_gpio, 1);
+-
+ 	pb->power_supply = devm_regulator_get(&pdev->dev, "power");
+ 	if (IS_ERR(pb->power_supply)) {
+ 		ret = PTR_ERR(pb->power_supply);
 
---HJmKiO7YWMeyy5Jn--
+base-commit: 2734d6c1b1a089fb593ef6a23d4b70903526fe0c
+--
+2.30.2
+
