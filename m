@@ -2,117 +2,88 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1B7A3D1FC4
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jul 2021 10:18:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C69B73D21DB
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jul 2021 12:11:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230330AbhGVHiA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 22 Jul 2021 03:38:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45180 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230048AbhGVHh7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 22 Jul 2021 03:37:59 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FFD7C061575
-        for <linux-pwm@vger.kernel.org>; Thu, 22 Jul 2021 01:18:35 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m6TuN-0002SO-F3; Thu, 22 Jul 2021 10:18:19 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m6TuL-0001kn-O6; Thu, 22 Jul 2021 10:18:17 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m6TuL-00036S-MN; Thu, 22 Jul 2021 10:18:17 +0200
-Date:   Thu, 22 Jul 2021 10:18:17 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Wolfram Sang <wsa@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-rtc@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-spi@vger.kernel.org,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Alexandru Ardelean <aardelean@deviqon.com>,
-        kernel@pengutronix.de,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PULL] Add variants of devm_clk_get for prepared and enabled
- clocks enabled clocks
-Message-ID: <20210722081817.2tsjzof4gvldq6ka@pengutronix.de>
-References: <20210510174142.986250-1-u.kleine-koenig@pengutronix.de>
- <20210609202123.u5rmw7al4x3rrvun@pengutronix.de>
- <20210625171434.3xusxpxjprcdqa47@pengutronix.de>
- <20210705080144.zfbzkm7l3gmnh6st@pengutronix.de>
- <20210722060654.nudpdtemosi64nlb@pengutronix.de>
- <YPkg0wtYIoHKpTUW@kunai>
+        id S231655AbhGVJas (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 22 Jul 2021 05:30:48 -0400
+Received: from guitar.tcltek.co.il ([192.115.133.116]:39349 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231552AbhGVJar (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 22 Jul 2021 05:30:47 -0400
+Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx.tkos.co.il (Postfix) with ESMTPS id 3EDA44407CE;
+        Thu, 22 Jul 2021 13:01:28 +0300 (IDT)
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>
+Cc:     Baruch Siach <baruch@tkos.co.il>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Balaji Prakash J <bjagadee@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robert Marko <robert.marko@sartura.hr>,
+        Kathiravan T <kathirav@codeaurora.org>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v6 1/4] arm64: dts: ipq6018: correct TCSR block area
+Date:   Thu, 22 Jul 2021 13:01:07 +0300
+Message-Id: <889aae1b88f120cb6281919d27164a959fbe69d0.1626948070.git.baruch@tkos.co.il>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dcz6k6v3zmej7fpb"
-Content-Disposition: inline
-In-Reply-To: <YPkg0wtYIoHKpTUW@kunai>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+According to Bjorn Andersson[1], &tcsr_q6 base is 0x01937000 with size
+0x21000. Adjust qcom,halt-regs offsets (add 0xe000) to match the new
+syscon base.
 
---dcz6k6v3zmej7fpb
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Also, rename to just &tcsr as Kathiravan T suggested.
 
-Hey Wolfram,
+[1] https://lore.kernel.org/r/YLgO0Aj1d4w9EcPv@yoga
 
-On Thu, Jul 22, 2021 at 09:40:03AM +0200, Wolfram Sang wrote:
->=20
-> > The next merge window is over now. The pull request still merges fine
-> > into v5.14-rc2. I'm still convinced it adds some benefit and I want to
-> > use it to simplify a bunch of drivers. But I cannot without this being
-> > merged.
-> >=20
-> > Do I have to consider creating these functions in the pwm namespace to
-> > continue here? This cannot be the right thing to do?!
->=20
-> What about adding gkh to the list explaining the situation to him?
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+---
+v6:
 
-Greg doesn't like devm_ stuff.
+  Fix offset adjust (Kathiravan T)
 
-I already asked Arnd who doesn't want to interfere and akpm who didn't
-react either up to now.
+  Rename &tcsr_q6 to &tcsr (Kathiravan T)
 
-Best regards
-Uwe
+v5: New patch in this series
+---
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+index 6ee7b99c21ec..6bb262757cd9 100644
+--- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+@@ -270,9 +270,9 @@ tcsr_mutex_regs: syscon@1905000 {
+ 			reg = <0x0 0x01905000 0x0 0x8000>;
+ 		};
+ 
+-		tcsr_q6: syscon@1945000 {
++		tcsr: syscon@1937000 {
+ 			compatible = "syscon";
+-			reg = <0x0 0x01945000 0x0 0xe000>;
++			reg = <0x0 0x01937000 0x0 0x21000>;
+ 		};
+ 
+ 		blsp_dma: dma-controller@7884000 {
+@@ -615,7 +615,7 @@ q6v5_wcss: remoteproc@cd00000 {
+ 			clocks = <&gcc GCC_PRNG_AHB_CLK>;
+ 			clock-names = "prng";
+ 
+-			qcom,halt-regs = <&tcsr_q6 0xa000 0xd000 0x0>;
++			qcom,halt-regs = <&tcsr 0x18000 0x1b000 0xe000>;
+ 
+ 			qcom,smem-states = <&wcss_smp2p_out 0>,
+ 					   <&wcss_smp2p_out 1>;
+-- 
+2.30.2
 
---dcz6k6v3zmej7fpb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmD5KcYACgkQwfwUeK3K
-7An5gwf/afFsO3XhKXHxb1kAtRxC3wVwPMVXvOt3lTAT8Xj2zGPXDM/j3uOEod7w
-bt+MoV2KpvrIBXqQC1H/xuG6UOGI7TXHsMtCButRTQDlr9GQvQnpd/u1S4Kp6Bue
-yRV0YigoJLCba3100r7Ibs30oDluD1zEzGbCdaiuqEHDIAqezH2fCEAzGJreg6eb
-MvMJ6dOKSqIe3rOPvM9DiTUy+Zluco6y9Pw3ZM3oMRQTTvQnsrGbXnlGrcelkD4A
-siFcCUhI4hF8BxGCiYArEX2R1hNFiDWCeTXeSHB8pIE3hYqzya98X+Z9GeSKcc5e
-LCKoXqOqcE9oB0xyvs/bvBYWjJv/mg==
-=3nTq
------END PGP SIGNATURE-----
-
---dcz6k6v3zmej7fpb--
