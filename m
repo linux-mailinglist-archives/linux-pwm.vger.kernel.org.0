@@ -2,99 +2,182 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E3ADE3D179B
-	for <lists+linux-pwm@lfdr.de>; Wed, 21 Jul 2021 22:10:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7037C3D1B55
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jul 2021 03:13:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231216AbhGUT3x (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 21 Jul 2021 15:29:53 -0400
-Received: from phobos.denx.de ([85.214.62.61]:35412 "EHLO phobos.denx.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229461AbhGUT3w (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Wed, 21 Jul 2021 15:29:52 -0400
-Received: from [IPv6:::1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        id S230017AbhGVAcQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 21 Jul 2021 20:32:16 -0400
+Received: from relay-us1.mymailcheap.com ([51.81.35.219]:47874 "EHLO
+        relay-us1.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229818AbhGVAcP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 21 Jul 2021 20:32:15 -0400
+X-Greylist: delayed 541 seconds by postgrey-1.27 at vger.kernel.org; Wed, 21 Jul 2021 20:32:15 EDT
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.241.64])
+        by relay-us1.mymailcheap.com (Postfix) with ESMTPS id 4C6F620F4F;
+        Thu, 22 Jul 2021 01:03:50 +0000 (UTC)
+Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.66.161])
+        by relay5.mymailcheap.com (Postfix) with ESMTPS id 3FCA020100;
+        Thu, 22 Jul 2021 01:03:47 +0000 (UTC)
+Received: from filter1.mymailcheap.com (filter1.mymailcheap.com [149.56.130.247])
+        by relay3.mymailcheap.com (Postfix) with ESMTPS id 9B2513F1CC;
+        Thu, 22 Jul 2021 03:03:43 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by filter1.mymailcheap.com (Postfix) with ESMTP id DB91B2A0C8;
+        Wed, 21 Jul 2021 21:03:42 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+        s=default; t=1626915822;
+        bh=yDd2oKbRqrkbem8gSLtEdP0ZNN5cwHjZF/28VLiVO1c=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=LP4z8i74x9ARwf819TDIJpJHMFyM0kvG55HQI5uVR6q9LcPp6UqxYH82zLxqn0B6E
+         ItOP341JR915D4jr9YcCSMHrFDl4TfB4DkCvH+BCUg+8DxVk97vucv7ydwQmlK/KTC
+         fJwTd/VdUDYSw7oi604DxPFUnRIrgJYbT9Amxp/g=
+X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
+Received: from filter1.mymailcheap.com ([127.0.0.1])
+        by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id jHCk167GoQY0; Wed, 21 Jul 2021 21:03:42 -0400 (EDT)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: marex@denx.de)
-        by phobos.denx.de (Postfix) with ESMTPSA id 4454F8164D;
-        Wed, 21 Jul 2021 22:10:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-        s=phobos-20191101; t=1626898227;
-        bh=Nxg6D9/LNvGyyanXCtwvpqzrW0bClFd5ufksR+iD2ro=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=q5moY773ha3x3um5//G43YCFsmvOk/oy05rHfEQsbrUfVEacfY3dwlf4N+uPGqPZ+
-         OqtYJAyqPx+7fXQ+Ru0YSkHKGAo1FNR7VbfjKgLiVpjAmtn1Hu/ZpjD9SK4iKsR95u
-         UV42HlgMUraA3/ZhN83ZQDDeihOeiU/UAJp4l9/WOk7aJwXX2DonyfeIU3mnL7Pi1J
-         vyNX3J+JaE0vpJkM0+IHWrvpID3P3p8ufsQoQmWD4wTkWsCTiyK0OjbiHw6VScknMX
-         zdIxFVNKSSFRx6jvU1SxSi/kRZRvnJtUx0XrahDtE40JDSWPr2GSkwcbALO5KevWI/
-         Ci4FyV5bpmL0g==
-Subject: Re: [PATCH] backlight: pwm_bl: Avoid backlight flicker if backlight
- control GPIO is input
-From:   Marek Vasut <marex@denx.de>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Thierry Reding <treding@nvidia.com>, linux-pwm@vger.kernel.org
-References: <20210718211415.143709-1-marex@denx.de>
- <20210719112202.4fvmn57ibgy3yesa@maple.lan>
- <bbaad78e-91c7-0787-fa72-b5cfabcc6dbd@denx.de>
- <20210721104914.4difos6w3ysjelnv@maple.lan>
- <fee1ad9e-ae70-1644-5444-6c894473b48e@denx.de>
- <20210721164319.uaf4qyr62dnktadv@maple.lan>
- <f8b2bc71-2d2d-09f1-913d-0a6b93a1da31@denx.de>
-Message-ID: <7c354dc1-11d5-ed80-ed74-59c1aa6a9a31@denx.de>
-Date:   Wed, 21 Jul 2021 22:10:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        by filter1.mymailcheap.com (Postfix) with ESMTPS;
+        Wed, 21 Jul 2021 21:03:41 -0400 (EDT)
+Received: from [213.133.102.83] (ml.mymailcheap.com [213.133.102.83])
+        by mail20.mymailcheap.com (Postfix) with ESMTP id 560CD40CD0;
+        Thu, 22 Jul 2021 01:03:40 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com;
+        dkim=pass (1024-bit key; unprotected) header.d=aosc.io header.i=@aosc.io header.b="vhOhl0fc";
+        dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from [192.168.0.49] (unknown [14.154.30.9])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 3D19640CD0;
+        Thu, 22 Jul 2021 01:03:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+        t=1626915809; bh=yDd2oKbRqrkbem8gSLtEdP0ZNN5cwHjZF/28VLiVO1c=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=vhOhl0fckjsIGH1fYlKrhjgywXlH1bqwZz1xhQrlfvzyvMsfWEZ99FdPuk2qQIZ95
+         2jyvCtefM1DfNXbXnCStBZaNalvIaZ+MekKRq9I6YhBCAOeU+CXNKaZUeOGAYgwX2o
+         m1crbdVRm0S4qnZC7QG4vzxpYnQRRprxIbgdxNaw=
+Message-ID: <0a9bda1e91246c7e473fcbb833ac94159d13b084.camel@aosc.io>
+Subject: Re: [PATCH v3 0/6] PWM support for allwinner sun8i R40/T3/V40 SOCs.
+From:   Icenowy Zheng <icenowy@aosc.io>
+To:     Hao Zhang <hao5781286@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org,
+        mturquette@baylibre.com, sboyd@kernel.org, thierry.reding@gmail.com
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org
+Date:   Thu, 22 Jul 2021 09:03:18 +0800
+In-Reply-To: <20181125161534.GA4481@arx-s1>
+References: <20181125161534.GA4481@arx-s1>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.0 
 MIME-Version: 1.0
-In-Reply-To: <f8b2bc71-2d2d-09f1-913d-0a6b93a1da31@denx.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.103.2 at phobos.denx.de
-X-Virus-Status: Clean
+X-Rspamd-Queue-Id: 560CD40CD0
+X-Rspamd-Server: mail20.mymailcheap.com
+X-Spamd-Result: default: False [1.40 / 10.00];
+         RCVD_VIA_SMTP_AUTH(0.00)[];
+         ARC_NA(0.00)[];
+         R_DKIM_ALLOW(0.00)[aosc.io:s=default];
+         MID_RHS_MATCH_FROM(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DMARC_NA(0.00)[aosc.io];
+         R_SPF_SOFTFAIL(0.00)[~all];
+         RECEIVED_SPAMHAUS_PBL(0.00)[14.154.30.9:received];
+         ML_SERVERS(-3.10)[213.133.102.83];
+         DKIM_TRACE(0.00)[aosc.io:+];
+         RCPT_COUNT_TWELVE(0.00)[14];
+         FREEMAIL_TO(0.00)[gmail.com,kernel.org,arm.com,bootlin.com,csie.org,baylibre.com];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:24940, ipnet:213.133.96.0/19, country:DE];
+         RCVD_COUNT_TWO(0.00)[2];
+         SUSPICIOUS_RECIPS(1.50)[];
+         HFILTER_HELO_BAREIP(3.00)[213.133.102.83,1]
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 7/21/21 9:01 PM, Marek Vasut wrote:
+Hao,
 
-[...]
+Would you mind me to continue on this work? Newer Allwinner SoCs have
+PWM controllers similar to the R40 one.
 
->>>> @@ -486,18 +500,6 @@ static int pwm_backlight_probe(struct 
->>>> platform_device *pdev)
->>>>            goto err_alloc;
->>>>        }
->>>> -    /*
->>>> -     * If the GPIO is not known to be already configured as output, 
->>>> that
->>>> -     * is, if gpiod_get_direction returns either 1 or -EINVAL, 
->>>> change the
->>>> -     * direction to output and set the GPIO as active.
->>>> -     * Do not force the GPIO to active when it was already output 
->>>> as it
->>>> -     * could cause backlight flickering or we would enable the 
->>>> backlight too
->>>> -     * early. Leave the decision of the initial backlight state for 
->>>> later.
->>>> -     */
->>>> -    if (pb->enable_gpio &&
->>>> -        gpiod_get_direction(pb->enable_gpio) != 0)
->>>> -        gpiod_direction_output(pb->enable_gpio, 1);
->>>
->>> pwm_backlight_initial_power_state() is still called after 
->>> pwm_apply_state()
->>> in pwm_backlight_probe(), so that might still be too late, no ?
->>
->> The initial pwm_apply_state() is essentially a nop or, perhaps, a sanity
->> check if you prefer to think if it that way.
->>
->> It can change the PWM period in some (non-DT) cases but only if the PWM
->> is not already running... and the change of period should not start it
->> running.
+Yours sincerely,
+Icenowy Zheng
+
+
+在 2018-11-26星期一的 00:18 +0800，Hao Zhang写道：
+> PWM support for allwinner sun8i R40/T3/V40 SOCs.
 > 
-> All right, let me give this a try.
+> The sun8i R40/T3/V40 PWM has 8 PWM channals and divides to 4 PWM
+> pairs,
+> each PWM pair built-in 1 clock module, 2 timer logic module and 1
+> programmable dead-time generator, it also support waveform capture.
+> It has 2 clock sources OSC24M and APB1, it is different with the
+> sun4i-pwm driver, Therefore add a new driver for it.
+> 
+> Some test method:
+> cd /sys/class/pwm/pwmchip0
+> echo 0 > export
+> cd pwm0
+> echo 1000 > period
+> echo 500 > duty_cycle
+> echo 1 > enable
+> then check the PB2 pin with oscilloscope.
+> 
+> v3 Changes:
+> 1. fix coding format.
+> 2. use 2/ilog2 instead of divide table
+> 3. remove spinlock.
+> 4. remove sun8i_pwm_data structure and use DT to parse pwm-channals  
+> 5. remove inline because complier knows it better.
+> 6. don't hardcode clock source and parse two clock source from dt
+> "mux-0"
+>    and "mux-1"
+> 7. remove bypass method.
+> 8. add a method to change clock source when mux-0 is not support the
+>    input period it can change to mux-1.
+> 9. add cycle range check.
+> 10. add some variable to make it more readability.
+> 11. add clk_disable_unprepare when some false accur.
+> 
+> v2 Changes:
+> 1. change sun8i-r40 symbol to sun8i.
+> 2. change pwm0_pin, pwm0-pin to pwm_ch0_pin, pwm-ch0-pin.
+> 3. remove clk_disable_unprepare(), check !match and IS_ERR(pwm-
+> >regmap).
+> 
+> Hao Zhang (6):
+>   Documentation: ARM: sunxi: pwm: add Allwinner sun8i.
+>   ARM: dtsi: add pwm node for sun8i R40.
+>   ARM: dts: add PWM for Bananapi M2 Ultrar board.
+>   DEV: CLK: add function to check the using clock name of driver.
+>   DEV: CLK: sunxi ccu: export clk_apb1 for sun8i-r40 soc pwm.
+>   ARM: PWM: add allwinner sun8i R40/T3/V40 PWM support.
+> 
+>  .../devicetree/bindings/pwm/pwm-sun8i.txt          |  24 ++
+>  arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts  |   6 +
+>  arch/arm/boot/dts/sun8i-r40.dtsi                   |  17 +
+>  drivers/clk/clk.c                                  |   6 +
+>  drivers/clk/sunxi-ng/ccu-sun8i-r40.h               |   4 +-
+>  drivers/pwm/Kconfig                                |  12 +-
+>  drivers/pwm/Makefile                               |   1 +
+>  drivers/pwm/pwm-sun8i.c                            | 418
+> +++++++++++++++++++++
+>  include/dt-bindings/clock/sun8i-r40-ccu.h          |   2 +
+>  include/linux/clk-provider.h                       |   1 +
+>  10 files changed, 489 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-
+> sun8i.txt
+>  create mode 100644 drivers/pwm/pwm-sun8i.c
+> 
 
-ACK, for this case I have here, this works too. Can you submit a proper 
-patch, including my AB/TB and I think also the Fixes tag ?
