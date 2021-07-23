@@ -2,62 +2,42 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69AD23D394D
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jul 2021 13:17:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC6363D3A30
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jul 2021 14:27:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232566AbhGWKg4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 23 Jul 2021 06:36:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47702 "EHLO
+        id S234751AbhGWLrA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 23 Jul 2021 07:47:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231428AbhGWKgz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Jul 2021 06:36:55 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2307FC061757
-        for <linux-pwm@vger.kernel.org>; Fri, 23 Jul 2021 04:17:28 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id r2so2004477wrl.1
-        for <linux-pwm@vger.kernel.org>; Fri, 23 Jul 2021 04:17:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=S8WwVQRfLT+0YgVaktWAs6cKEtHZfTnHXotrbhRYPLk=;
-        b=EVouAHej+UXSehgbUHqpNrOqCHh2c7UAnWBbWV79YZa1GRI8jJ+YiBXaUoF6hn7hhE
-         qqYby6CFmllOEXR2XPaJUOqXgGCG4A26juXm+mWuibBekkAfOyGJ9hAMcWBU/p27We02
-         pDjVchqV7m8X6MYnTpiGCI55twrrwQrR3pEIt8uPB4ooLlMMXQvENky0JOcxhL8i+4ce
-         Qur56fAc+1hCpl6B/5dKCk/f0xrUvKjBXP0AjXb7Py6jjGQXXZ1/14T5jWSaEu2L8XiP
-         CC2XwQFL86ki3TCZklLYGPI88z8NEhoAbaAa7u7PlAkNjdYR1HRmexpzTCkIYWH73eAC
-         B3KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=S8WwVQRfLT+0YgVaktWAs6cKEtHZfTnHXotrbhRYPLk=;
-        b=q6I8eBH+bftGd3A58rRBLPejmv+MO6/FvBa+btAEA1KT9SUw9Ff7YiLgIGVyNBhjkw
-         XXeSanMXYfwf8icBRJ6QkiUN8aYFCG1nsbGEVIXzjaj5Ort1W2hjpGqipsHrXYZ2XFQp
-         VYcbjc7uU8G4iw3WRjjQ+YfyWSQb6dYjYUItkRHAZg/8kjTd1pJlTyD6PP7/c0D1yy+g
-         zRYmR83iFqk819wNhP1qsaEUUuLtkIlFauH2SZCWiP3HnPeg7iCP6ySjmMYoiF90LHTP
-         XOmb64l2d1rQlff73se/6SzmUzPhBYB92AN7ujUdmYD0mlr9h4fjCzh+wqX62u1RSSc5
-         6YGw==
-X-Gm-Message-State: AOAM5333nEJeMie9uEkvVU52ZbjKKUTdGRzmXckEBIKzipdlpNgyhzFA
-        gJMqXl51pU3f9t/k5xvAbZERKw==
-X-Google-Smtp-Source: ABdhPJzJM2NBkW1FR8tuwIoIfkquQ155By0Bouro5WdgnqSK60iUBFW3nLZji5lk49wRS+uuNjb3Ng==
-X-Received: by 2002:a05:6000:120f:: with SMTP id e15mr4672334wrx.399.1627039046608;
-        Fri, 23 Jul 2021 04:17:26 -0700 (PDT)
-Received: from maple.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
-        by smtp.gmail.com with ESMTPSA id j20sm734263wmi.1.2021.07.23.04.17.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Jul 2021 04:17:25 -0700 (PDT)
-Date:   Fri, 23 Jul 2021 12:17:24 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Marek Vasut <marex@denx.de>
+        with ESMTP id S234601AbhGWLq7 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Jul 2021 07:46:59 -0400
+Received: from phobos.denx.de (phobos.denx.de [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A31FC061575;
+        Fri, 23 Jul 2021 05:27:32 -0700 (PDT)
+Received: from [IPv6:::1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: marex@denx.de)
+        by phobos.denx.de (Postfix) with ESMTPSA id DB68082AC8;
+        Fri, 23 Jul 2021 14:27:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+        s=phobos-20191101; t=1627043248;
+        bh=BMRi2GxUriRwmcdG1cPsCeoz19yB61hstpeYO9lGmf8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=QHpexctG4cy8oTIP3vXAQ6VUcBbCQtbRsM3SxwvxPcsYtg+DUjwCwka9DrPykqSY2
+         GB/GNwxtJW/xl82Mol36Cjwh0ft+h8MaTAgWMNgnKGIAlv/NAkmT14mmPyyiQaWB8s
+         8D7b+5Osu6kdVNIuxhRVCHgVu07GYkmP8qlMKdhOhlyoSQm9nx/zXpFwJyu8y55qcF
+         pJD9XgJ6Nmft2Taizxr/bes5O+Cy6ckO9CiVRgolFqsr/AFo5/olQt7qoWnbD32poV
+         9FLj5n71FAK5bYEYAV6oZITtrHx6zYEspcqgPckflUl/aOuOCBiAK3RoEb0sTzJtof
+         syPqsehfugsJQ==
+Subject: Re: [PATCH] backlight: pwm_bl: Avoid backlight flicker if backlight
+ control GPIO is input
+To:     Daniel Thompson <daniel.thompson@linaro.org>
 Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
         Christian Gmeiner <christian.gmeiner@gmail.com>,
         Heiko Stuebner <heiko@sntech.de>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Thierry Reding <treding@nvidia.com>, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] backlight: pwm_bl: Avoid backlight flicker if backlight
- control GPIO is input
-Message-ID: <20210723111724.q4yu2ocgn5fdzge6@maple.lan>
 References: <20210718211415.143709-1-marex@denx.de>
  <20210719112202.4fvmn57ibgy3yesa@maple.lan>
  <bbaad78e-91c7-0787-fa72-b5cfabcc6dbd@denx.de>
@@ -68,79 +48,93 @@ References: <20210718211415.143709-1-marex@denx.de>
  <20210722112824.z5s2fst2q3vrblcr@maple.lan>
  <dd372ddc-0137-2f1c-8493-4bd38762384c@denx.de>
  <20210723101510.r2xz4rlzvgkhxtw3@maple.lan>
+ <20210723111724.q4yu2ocgn5fdzge6@maple.lan>
+From:   Marek Vasut <marex@denx.de>
+Message-ID: <50dc41ab-cbeb-693e-01f1-fecb1ed3b048@denx.de>
+Date:   Fri, 23 Jul 2021 14:27:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210723101510.r2xz4rlzvgkhxtw3@maple.lan>
+In-Reply-To: <20210723111724.q4yu2ocgn5fdzge6@maple.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.103.2 at phobos.denx.de
+X-Virus-Status: Clean
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Jul 23, 2021 at 11:15:10AM +0100, Daniel Thompson wrote:
-> On Thu, Jul 22, 2021 at 09:02:04PM +0200, Marek Vasut wrote:
-> > On 7/22/21 1:28 PM, Daniel Thompson wrote:
-> > > On Wed, Jul 21, 2021 at 08:46:42PM +0200, Marek Vasut wrote:
-> > > > On 7/21/21 6:12 PM, Daniel Thompson wrote:
-> > > > > On Wed, Jul 21, 2021 at 05:09:57PM +0200, Marek Vasut wrote:
-> > > > > > On 7/21/21 12:49 PM, Daniel Thompson wrote:
-> > > > > [...]
-> > > > > This sails very close to the
-> > > > > edge of what is in-scope for DT (at least it does it we can read
-> > > > > the inherited state directly from the hardware).
-> > > > 
-> > > > The problem with reading it out of hardware is that the hardware might be in
-> > > > undefined state and expects Linux to define that state, so that does not
-> > > > always work. Hence my initial suggestion to add a DT property to define the
-> > > > state up front, instead of using these fragile heuristics.
-> > > 
-> > > To achieve a flicker-free boot we must know the initial state of the
-> > > backlight (not just the enable pin).
-> > 
-> > The backlight hardware might be in uninitialized state and then Linux should
-> > set the state, likely based on something in DT, because there is no previous
-> > state to read.
+On 7/23/21 1:17 PM, Daniel Thompson wrote:
+> On Fri, Jul 23, 2021 at 11:15:10AM +0100, Daniel Thompson wrote:
+>> On Thu, Jul 22, 2021 at 09:02:04PM +0200, Marek Vasut wrote:
+>>> On 7/22/21 1:28 PM, Daniel Thompson wrote:
+>>>> On Wed, Jul 21, 2021 at 08:46:42PM +0200, Marek Vasut wrote:
+>>>>> On 7/21/21 6:12 PM, Daniel Thompson wrote:
+>>>>>> On Wed, Jul 21, 2021 at 05:09:57PM +0200, Marek Vasut wrote:
+>>>>>>> On 7/21/21 12:49 PM, Daniel Thompson wrote:
+>>>>>> [...]
+>>>>>> This sails very close to the
+>>>>>> edge of what is in-scope for DT (at least it does it we can read
+>>>>>> the inherited state directly from the hardware).
+>>>>>
+>>>>> The problem with reading it out of hardware is that the hardware might be in
+>>>>> undefined state and expects Linux to define that state, so that does not
+>>>>> always work. Hence my initial suggestion to add a DT property to define the
+>>>>> state up front, instead of using these fragile heuristics.
+>>>>
+>>>> To achieve a flicker-free boot we must know the initial state of the
+>>>> backlight (not just the enable pin).
+>>>
+>>> The backlight hardware might be in uninitialized state and then Linux should
+>>> set the state, likely based on something in DT, because there is no previous
+>>> state to read.
+>>
+>> There is always a previous state. The kernel doesn't care whether that
+>> previous state was imposed by a power-on reset, the bootloader or a
+>> kexec.
+>>
+>> For the driver to come up flicker-free in all the different cases we
+>> need to know whether the backlight is currently emitting light or not
+>> and, if it is emitting light, then we need to know what the duty cycle
+>> is (currently we inherit require the PWM driver to correctly inherit the
+>> duty cycle from the hardware).
 > 
-> There is always a previous state. The kernel doesn't care whether that
-> previous state was imposed by a power-on reset, the bootloader or a
-> kexec.
+> Oops... this is wrong (I think it is cross-talk from an old patch). We
+> do not currently inherit the duty cycle.
+
+There is that, and if you did, you would be telling PWM drivers not to 
+reset/reinit the hardware in probe. I'm not sure whether that is a good 
+idea.
+
+>> So far, the previous state has been observable by the lower level
+>> drivers (GPIO, PWM, regulator). I remain reluctant to provide
+>> workarounds for cases where it is not observable without motivating
+>> hardware. I certainly wouldn't want to make such bindings mandatory
+>> since observable hardware registers are a far more reliable source of
+>> truth than what the DT tells us about what it thinks the bootloader
+>> (or power-on reset) actually did ;-).
 > 
-> For the driver to come up flicker-free in all the different cases we
-> need to know whether the backlight is currently emitting light or not
-> and, if it is emitting light, then we need to know what the duty cycle
-> is (currently we inherit require the PWM driver to correctly inherit the
-> duty cycle from the hardware).
-
-Oops... this is wrong (I think it is cross-talk from an old patch). We
-do not currently inherit the duty cycle.
-
-
-> So far, the previous state has been observable by the lower level
-> drivers (GPIO, PWM, regulator). I remain reluctant to provide
-> workarounds for cases where it is not observable without motivating
-> hardware. I certainly wouldn't want to make such bindings mandatory
-> since observable hardware registers are a far more reliable source of
-> truth than what the DT tells us about what it thinks the bootloader
-> (or power-on reset) actually did ;-).
-
-Which makes conclusion badly reasoned.
-
-However, until we can clearly articulate whether the problem we want to
-solve is describing the initial backlight state or specifying the default
-(post-probe) power state for the legacy cases I'm still content not to
-change things ;-).
-
-
-> > > [...]
-> > > Wow! That is *way* longer than I intended when I started writing it.
-> > > Anyhow I suspect any disconnect comes about due to the difference in
-> > > backlight state *after* probe being, in part, to software structure
-> > > rather than purely a hardware property.
-> > 
-> > Maybe this should be added to documentation.
+> Which makes conclusion badly reasoned.
 > 
-> I'll see what I can do.
+> However, until we can clearly articulate whether the problem we want to
+> solve is describing the initial backlight state or specifying the default
+> (post-probe) power state for the legacy cases I'm still content not to
+> change things ;-).
 
-Done, see v3. I think it is better explained than the e-mail version.
+For me, it was always about specifying well defined default state of the 
+backlight.
 
+>>>> [...]
+>>>> Wow! That is *way* longer than I intended when I started writing it.
+>>>> Anyhow I suspect any disconnect comes about due to the difference in
+>>>> backlight state *after* probe being, in part, to software structure
+>>>> rather than purely a hardware property.
+>>>
+>>> Maybe this should be added to documentation.
+>>
+>> I'll see what I can do.
+> 
+> Done, see v3. I think it is better explained than the e-mail version.
 
-Daniel.
+Thanks
