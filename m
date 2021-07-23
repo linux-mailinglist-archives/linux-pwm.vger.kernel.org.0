@@ -2,139 +2,199 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC6363D3A30
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jul 2021 14:27:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 171DE3D415E
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jul 2021 22:13:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234751AbhGWLrA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 23 Jul 2021 07:47:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35530 "EHLO
+        id S231407AbhGWTcl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 23 Jul 2021 15:32:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234601AbhGWLq7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Jul 2021 07:46:59 -0400
-Received: from phobos.denx.de (phobos.denx.de [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A31FC061575;
-        Fri, 23 Jul 2021 05:27:32 -0700 (PDT)
-Received: from [IPv6:::1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: marex@denx.de)
-        by phobos.denx.de (Postfix) with ESMTPSA id DB68082AC8;
-        Fri, 23 Jul 2021 14:27:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-        s=phobos-20191101; t=1627043248;
-        bh=BMRi2GxUriRwmcdG1cPsCeoz19yB61hstpeYO9lGmf8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=QHpexctG4cy8oTIP3vXAQ6VUcBbCQtbRsM3SxwvxPcsYtg+DUjwCwka9DrPykqSY2
-         GB/GNwxtJW/xl82Mol36Cjwh0ft+h8MaTAgWMNgnKGIAlv/NAkmT14mmPyyiQaWB8s
-         8D7b+5Osu6kdVNIuxhRVCHgVu07GYkmP8qlMKdhOhlyoSQm9nx/zXpFwJyu8y55qcF
-         pJD9XgJ6Nmft2Taizxr/bes5O+Cy6ckO9CiVRgolFqsr/AFo5/olQt7qoWnbD32poV
-         9FLj5n71FAK5bYEYAV6oZITtrHx6zYEspcqgPckflUl/aOuOCBiAK3RoEb0sTzJtof
-         syPqsehfugsJQ==
-Subject: Re: [PATCH] backlight: pwm_bl: Avoid backlight flicker if backlight
- control GPIO is input
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Thierry Reding <treding@nvidia.com>, linux-pwm@vger.kernel.org
-References: <20210718211415.143709-1-marex@denx.de>
- <20210719112202.4fvmn57ibgy3yesa@maple.lan>
- <bbaad78e-91c7-0787-fa72-b5cfabcc6dbd@denx.de>
- <20210721104914.4difos6w3ysjelnv@maple.lan>
- <fee1ad9e-ae70-1644-5444-6c894473b48e@denx.de>
- <20210721161249.gehnwkscto2hlh7s@maple.lan>
- <298f6a35-2120-60a6-598a-87b141118bfa@denx.de>
- <20210722112824.z5s2fst2q3vrblcr@maple.lan>
- <dd372ddc-0137-2f1c-8493-4bd38762384c@denx.de>
- <20210723101510.r2xz4rlzvgkhxtw3@maple.lan>
- <20210723111724.q4yu2ocgn5fdzge6@maple.lan>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <50dc41ab-cbeb-693e-01f1-fecb1ed3b048@denx.de>
-Date:   Fri, 23 Jul 2021 14:27:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        with ESMTP id S229648AbhGWTck (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Jul 2021 15:32:40 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6ECDC061575
+        for <linux-pwm@vger.kernel.org>; Fri, 23 Jul 2021 13:13:13 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m71XV-0005Yj-8f; Fri, 23 Jul 2021 22:12:57 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m71XR-0005GT-1q; Fri, 23 Jul 2021 22:12:53 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m71XR-0000Yi-05; Fri, 23 Jul 2021 22:12:53 +0200
+Date:   Fri, 23 Jul 2021 22:12:50 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Billy Tsai <billy_tsai@aspeedtech.com>
+Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        BMC-SW <BMC-SW@aspeedtech.com>
+Subject: Re: [v9 2/2] pwm: Add Aspeed ast2600 PWM support
+Message-ID: <20210723201250.x4ki5ackfznmn4aw@pengutronix.de>
+References: <20210709065217.6153-3-billy_tsai@aspeedtech.com>
+ <20210715150533.vppkw5oiomkxmfrn@pengutronix.de>
+ <BD5B012C-B377-45E2-B04E-61D12B086670@aspeedtech.com>
+ <20210716070943.ayxkz2irkwhgincz@pengutronix.de>
+ <DD5590B4-11BC-411B-95BF-03AC26C078E4@aspeedtech.com>
+ <20210716101301.l563tdwt5xuq5iq6@pengutronix.de>
+ <3F12A498-DF5C-4954-8BCE-8C0C66BC9734@aspeedtech.com>
+ <4BC9AEF6-31EA-4EDA-BCB2-7E4D44B6D5D2@aspeedtech.com>
+ <20210721124859.clv6qlitbyomdz6s@pengutronix.de>
+ <7F794DD8-0FC6-491D-B071-CAD6C216E044@aspeedtech.com>
 MIME-Version: 1.0
-In-Reply-To: <20210723111724.q4yu2ocgn5fdzge6@maple.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.2 at phobos.denx.de
-X-Virus-Status: Clean
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="toxq6bq4j46rzjqb"
+Content-Disposition: inline
+In-Reply-To: <7F794DD8-0FC6-491D-B071-CAD6C216E044@aspeedtech.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 7/23/21 1:17 PM, Daniel Thompson wrote:
-> On Fri, Jul 23, 2021 at 11:15:10AM +0100, Daniel Thompson wrote:
->> On Thu, Jul 22, 2021 at 09:02:04PM +0200, Marek Vasut wrote:
->>> On 7/22/21 1:28 PM, Daniel Thompson wrote:
->>>> On Wed, Jul 21, 2021 at 08:46:42PM +0200, Marek Vasut wrote:
->>>>> On 7/21/21 6:12 PM, Daniel Thompson wrote:
->>>>>> On Wed, Jul 21, 2021 at 05:09:57PM +0200, Marek Vasut wrote:
->>>>>>> On 7/21/21 12:49 PM, Daniel Thompson wrote:
->>>>>> [...]
->>>>>> This sails very close to the
->>>>>> edge of what is in-scope for DT (at least it does it we can read
->>>>>> the inherited state directly from the hardware).
->>>>>
->>>>> The problem with reading it out of hardware is that the hardware might be in
->>>>> undefined state and expects Linux to define that state, so that does not
->>>>> always work. Hence my initial suggestion to add a DT property to define the
->>>>> state up front, instead of using these fragile heuristics.
->>>>
->>>> To achieve a flicker-free boot we must know the initial state of the
->>>> backlight (not just the enable pin).
->>>
->>> The backlight hardware might be in uninitialized state and then Linux should
->>> set the state, likely based on something in DT, because there is no previous
->>> state to read.
->>
->> There is always a previous state. The kernel doesn't care whether that
->> previous state was imposed by a power-on reset, the bootloader or a
->> kexec.
->>
->> For the driver to come up flicker-free in all the different cases we
->> need to know whether the backlight is currently emitting light or not
->> and, if it is emitting light, then we need to know what the duty cycle
->> is (currently we inherit require the PWM driver to correctly inherit the
->> duty cycle from the hardware).
-> 
-> Oops... this is wrong (I think it is cross-talk from an old patch). We
-> do not currently inherit the duty cycle.
 
-There is that, and if you did, you would be telling PWM drivers not to 
-reset/reinit the hardware in probe. I'm not sure whether that is a good 
-idea.
+--toxq6bq4j46rzjqb
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> So far, the previous state has been observable by the lower level
->> drivers (GPIO, PWM, regulator). I remain reluctant to provide
->> workarounds for cases where it is not observable without motivating
->> hardware. I certainly wouldn't want to make such bindings mandatory
->> since observable hardware registers are a far more reliable source of
->> truth than what the DT tells us about what it thinks the bootloader
->> (or power-on reset) actually did ;-).
-> 
-> Which makes conclusion badly reasoned.
-> 
-> However, until we can clearly articulate whether the problem we want to
-> solve is describing the initial backlight state or specifying the default
-> (post-probe) power state for the legacy cases I'm still content not to
-> change things ;-).
+On Fri, Jul 23, 2021 at 04:23:23AM +0000, Billy Tsai wrote:
+> On 2021/7/23, 3:17 AM, "Uwe Kleine-K=F6nig" <u.kleine-koenig@pengutronix.=
+de> wrote:
+>=20
+>     On Wed, Jul 21, 2021 at 10:52:21AM +0000, Billy Tsai wrote:
+>     >> Hi Uwe,
+>     >>=20
+>     >>     On 2021/7/16, 6:13 PM, "Uwe Kleine-K=F6nig" <u.kleine-koenig@p=
+engutronix.de> wrote:
+>     >>=20
+>     >>         On Fri, Jul 16, 2021 at 09:22:22AM +0000, Billy Tsai wrote:
+>     >>         >> On 2021/7/16, 3:10 PM, "Uwe Kleine-K=F6nig" <u.kleine-k=
+oenig@pengutronix.de> wrote:
+>     >>         >>=20
+>     >>         >>     On Fri, Jul 16, 2021 at 01:48:20AM +0000, Billy Tsa=
+i wrote:
+>     >>         >>     >> On 2021/7/15, 11:06 PM, "Uwe Kleine-K=F6nig" <u.=
+kleine-koenig@pengutronix.de>> wrote:
+>     >>         >>     >>     > Another is: The PWM doesn't support duty_c=
+ycle 0, on such a request the
+>     >>         >>     >>     > PWM is disabled which results in a constan=
+t inactive level.
+>     >>         >>     >>=20
+>     >>         >>     >>     > (This is correct, is it? Or does it yield =
+a constant 0 level?)
+>     >>         >>     >>=20
+>     >>         >>     >> Our pwm can support duty_cycle 0 by unset CLK_EN=
+ABLE.
+>     >>         >>=20
+>     >>         >>     > This has a slightly different semantic though. So=
+me consumer might
+>     >>         >>     > expect that the following sequence:
+>     >>         >>=20
+>     >>         >>     >	pwm_apply(mypwm, { .period =3D 10000, .duty_cycle=
+ =3D 10000, .enabled =3D true })
+>     >>         >>     >	pwm_apply(mypwm, { .period =3D 10000, .duty_cycle=
+ =3D 0, .enabled =3D true })
+>     >>         >>     >	pwm_apply(mypwm, { .period =3D 10000, .duty_cycle=
+ =3D 10000, .enabled =3D true })
+>     >>         >>=20
+>     >>         >>     > results in the output being low for an integer mu=
+ltiple of 10 =B5s. This
+>     >>         >>     > isn't given with setting CLK_ENABLE to zero, is i=
+t? (I didn't recheck,
+>     >>         >>     > if the PWM doesn't complete periods on reconfigur=
+ation this doesn't
+>     >>         >>     > matter much though.)
+>     >>         >> Thanks for the explanation.
+>     >>         >> Our hardware actually can only support duty from 1/256 =
+to 256/256.
+>     >>         >> For this situation I can do possible solution:
+>     >>         >> We can though change polarity to meet this requirement.=
+ Inverse the pin and use
+>     >>         >> duty_cycle 100.=20
+>     >>         >> But I think this is not a good solution for this proble=
+m right?
+>     >>=20
+>     >>         > If this doesn't result in more glitches that would be fi=
+ne for me.
+>     >>         > (Assuming it is documented good enough in the code to be
+>     >>         > understandable.)
+>     >>=20
+>     >>     > The polarity of our pwm controller will affect the duty cycl=
+e range:
+>     >>     > PWM_POLARITY_INVERSED : Support duty_cycle from 0% to 99%
+>     >>     > PWM_POLARITY_NORMAL: Support duty_cycle from 1% to 100%
+>     >>     > Dynamic change polarity will result in more glitches. Thus, =
+this will become
+>     >>     > a trade-off between 100% and 0% duty_cycle support for user =
+to use our pwm device.
+>     >>     > I will document it and send next patch.
+>     >>=20
+>     >> For handling the situation that the user want to set the duty cycl=
+e to 0%, the driver can:
+>     >> 1. Just return the error.
+>     >> 2. Use the minimum duty cycle value.
+>     >> I don't know which solution will be the better way or others.
+>     >> I would be grateful if you can give me some suggestion about this =
+problem.
+>=20
+>     > I thought if you disable the PWM it emits the inactive level? Then =
+this
+>     > is the best you can do if duty_cycle =3D 0 is requested.
+>=20
+> Thanks for your quick reply.
+> When duty_cycle =3D 0 is requested my driver currently will emit the inac=
+tive level.
+> So, the next patch I need to do is to add the comment about this?
 
-For me, it was always about specifying well defined default state of the 
-backlight.
+Not sure I got the complete picture now. The things I consider important
+are:
 
->>>> [...]
->>>> Wow! That is *way* longer than I intended when I started writing it.
->>>> Anyhow I suspect any disconnect comes about due to the difference in
->>>> backlight state *after* probe being, in part, to software structure
->>>> rather than purely a hardware property.
->>>
->>> Maybe this should be added to documentation.
->>
->> I'll see what I can do.
-> 
-> Done, see v3. I think it is better explained than the e-mail version.
+ - If your hardware cannot emit a 100% or 0% relative duty cycle, note
+   this in the Limitations section
 
-Thanks
+ - Assuming your PWM emits the inactive level when disabled (that is 0
+   for PWM_POLARITY_NORMAL and 1 for PWM_POLARITY_INVERSED) this is the
+   best that can be done when a 0% relative duty cycle is requested
+   (assuming the hardware cannot implement that in a normal way).
+
+I hope this answered your remaining questions.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--toxq6bq4j46rzjqb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmD7Ir8ACgkQwfwUeK3K
+7AkC4Qf/UySDPXNcbHOt72z/xM5f81I/l//h6KQb/ov/i2Acp8sazD1ANZ2+oN1/
+ZeecnsddK2CbLAHwuB53a7PUNfUmnFFf0hqaJGqG4k7ijswU+ln8mGj3Riaz1/8f
+P2fVTq62m7qmG7qF0WZoGcip9PHD0RO4yYOE/MwriQqsZV8e0z+rmd1xE536ys73
+A1JdFOThHpA8ZeQNbLaEvXkfHQ8qcamXcWGmnSgWyC6sUqYtRvyu+MPCgQs//ANB
+N+zGyKRfytVIl70GdbioHUn7vNQLwTVkfliecpdoCbdZaCpdQEzuZQVwztuEVctH
+siL6R66w7b074QtT3qfOvoKcLmeqIg==
+=LY3j
+-----END PGP SIGNATURE-----
+
+--toxq6bq4j46rzjqb--
