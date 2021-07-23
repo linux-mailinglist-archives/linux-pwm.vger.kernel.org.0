@@ -2,249 +2,145 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A46803D3900
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jul 2021 13:04:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69AD23D394D
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jul 2021 13:17:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231848AbhGWKX3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 23 Jul 2021 06:23:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44530 "EHLO
+        id S232566AbhGWKg4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 23 Jul 2021 06:36:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231829AbhGWKX2 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Jul 2021 06:23:28 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81388C061760
-        for <linux-pwm@vger.kernel.org>; Fri, 23 Jul 2021 04:04:02 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id z8-20020a1c4c080000b029022d4c6cfc37so3248706wmf.5
-        for <linux-pwm@vger.kernel.org>; Fri, 23 Jul 2021 04:04:02 -0700 (PDT)
+        with ESMTP id S231428AbhGWKgz (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Jul 2021 06:36:55 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2307FC061757
+        for <linux-pwm@vger.kernel.org>; Fri, 23 Jul 2021 04:17:28 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id r2so2004477wrl.1
+        for <linux-pwm@vger.kernel.org>; Fri, 23 Jul 2021 04:17:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zS2GWn48je0bjrRKkqgGo/XGjFxQUky99Wi4nJkA+88=;
-        b=G7PfQVwbTct99uIkTWzMyoXTLraDkSlKbm/Xbh7VjFeJGaKm6pqms2ifNfSHPFHUPa
-         sx5cJj87jyfUixwhlYOzFnfk7JLUPpTlKiJoggiiQEQ8MYMKe3ueLtY9DY8R0IjoesLc
-         ixq4b15VCtZpnoJhN/lkrqlrQjbN4UEt2PXvj/CWEHF9sA9gM7F+pdcEKGQNvYh+SYpF
-         AY6nnT4cBdmbYVtTirbReGkptGvI48FYtp8TjFPrQ4dKkZKSMsxVCguOHepAR5jV2bOh
-         BZdBuT4YOS4PKlCS9tbC9HZG4PT8saRMG/AbkhI0qn/y352UmjCA9Rj4uRr0288B4Jrl
-         sdnQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=S8WwVQRfLT+0YgVaktWAs6cKEtHZfTnHXotrbhRYPLk=;
+        b=EVouAHej+UXSehgbUHqpNrOqCHh2c7UAnWBbWV79YZa1GRI8jJ+YiBXaUoF6hn7hhE
+         qqYby6CFmllOEXR2XPaJUOqXgGCG4A26juXm+mWuibBekkAfOyGJ9hAMcWBU/p27We02
+         pDjVchqV7m8X6MYnTpiGCI55twrrwQrR3pEIt8uPB4ooLlMMXQvENky0JOcxhL8i+4ce
+         Qur56fAc+1hCpl6B/5dKCk/f0xrUvKjBXP0AjXb7Py6jjGQXXZ1/14T5jWSaEu2L8XiP
+         CC2XwQFL86ki3TCZklLYGPI88z8NEhoAbaAa7u7PlAkNjdYR1HRmexpzTCkIYWH73eAC
+         B3KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zS2GWn48je0bjrRKkqgGo/XGjFxQUky99Wi4nJkA+88=;
-        b=LOsgxATwJpui/8W4M4NWNy5Fbh2fnprK6hviKoyUuoKPH4gSzG3P9WbupXMks+nqpP
-         4VJUwTVDqOr9cc5P885a8lh9WX4Wjp+UwbrS2tbm39JdLGZqgPS9UOwnuyVc9CZ4vTDM
-         Gig0UjCAmSRFhkqFsOVuiwqraXiaZlWIGCMp2E2qxZGf6+gIF7mLCPzt3FHB6nraL9jO
-         9uU2hOO+MCvxs5gsXbU7Aq06E8OR/uof+q/E3R5qvOd0WhbJRK6AS1RmGDng+lhrU7bR
-         Aamg86oGqG+p5WVmDQen2Xc4EatygSrJ6FdDrhW16Y4pQ89XneeDXQL7WZqg+UnkT7Ed
-         xPVQ==
-X-Gm-Message-State: AOAM533bqL9mSWfOXGMwaK0WWrI7rstpyl03j7dInfHAewhks3IOZShk
-        NdnIhgWmR1/162eJ7Fxb2zhM5g==
-X-Google-Smtp-Source: ABdhPJwXjYd/l4dQLMWFtE8wkIOw/4pJFY+8TKTo/OL8hFIe/dm7K2TB2C3x4d1nl4jaIOXOk4Dlaw==
-X-Received: by 2002:a1c:9851:: with SMTP id a78mr13505101wme.33.1627038240862;
-        Fri, 23 Jul 2021 04:04:00 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=S8WwVQRfLT+0YgVaktWAs6cKEtHZfTnHXotrbhRYPLk=;
+        b=q6I8eBH+bftGd3A58rRBLPejmv+MO6/FvBa+btAEA1KT9SUw9Ff7YiLgIGVyNBhjkw
+         XXeSanMXYfwf8icBRJ6QkiUN8aYFCG1nsbGEVIXzjaj5Ort1W2hjpGqipsHrXYZ2XFQp
+         VYcbjc7uU8G4iw3WRjjQ+YfyWSQb6dYjYUItkRHAZg/8kjTd1pJlTyD6PP7/c0D1yy+g
+         zRYmR83iFqk819wNhP1qsaEUUuLtkIlFauH2SZCWiP3HnPeg7iCP6ySjmMYoiF90LHTP
+         XOmb64l2d1rQlff73se/6SzmUzPhBYB92AN7ujUdmYD0mlr9h4fjCzh+wqX62u1RSSc5
+         6YGw==
+X-Gm-Message-State: AOAM5333nEJeMie9uEkvVU52ZbjKKUTdGRzmXckEBIKzipdlpNgyhzFA
+        gJMqXl51pU3f9t/k5xvAbZERKw==
+X-Google-Smtp-Source: ABdhPJzJM2NBkW1FR8tuwIoIfkquQ155By0Bouro5WdgnqSK60iUBFW3nLZji5lk49wRS+uuNjb3Ng==
+X-Received: by 2002:a05:6000:120f:: with SMTP id e15mr4672334wrx.399.1627039046608;
+        Fri, 23 Jul 2021 04:17:26 -0700 (PDT)
 Received: from maple.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
-        by smtp.gmail.com with ESMTPSA id w18sm35025315wrg.68.2021.07.23.04.03.59
+        by smtp.gmail.com with ESMTPSA id j20sm734263wmi.1.2021.07.23.04.17.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Jul 2021 04:03:59 -0700 (PDT)
+        Fri, 23 Jul 2021 04:17:25 -0700 (PDT)
+Date:   Fri, 23 Jul 2021 12:17:24 +0100
 From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>, Jingoo Han <jingoohan1@gmail.com>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        stable@vger.kernel.org
-Subject: [PATCH v3] backlight: pwm_bl: Improve bootloader/kernel device handover
-Date:   Fri, 23 Jul 2021 12:03:45 +0100
-Message-Id: <20210723110345.1724410-1-daniel.thompson@linaro.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210722145227.1573115-1-daniel.thompson@linaro.org>
-References: <20210722145227.1573115-1-daniel.thompson@linaro.org>
+To:     Marek Vasut <marex@denx.de>
+Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Thierry Reding <treding@nvidia.com>, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] backlight: pwm_bl: Avoid backlight flicker if backlight
+ control GPIO is input
+Message-ID: <20210723111724.q4yu2ocgn5fdzge6@maple.lan>
+References: <20210718211415.143709-1-marex@denx.de>
+ <20210719112202.4fvmn57ibgy3yesa@maple.lan>
+ <bbaad78e-91c7-0787-fa72-b5cfabcc6dbd@denx.de>
+ <20210721104914.4difos6w3ysjelnv@maple.lan>
+ <fee1ad9e-ae70-1644-5444-6c894473b48e@denx.de>
+ <20210721161249.gehnwkscto2hlh7s@maple.lan>
+ <298f6a35-2120-60a6-598a-87b141118bfa@denx.de>
+ <20210722112824.z5s2fst2q3vrblcr@maple.lan>
+ <dd372ddc-0137-2f1c-8493-4bd38762384c@denx.de>
+ <20210723101510.r2xz4rlzvgkhxtw3@maple.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210723101510.r2xz4rlzvgkhxtw3@maple.lan>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Currently there are (at least) two problems in the way pwm_bl starts
-managing the enable_gpio pin. Both occur when the backlight is initially
-off and the driver finds the pin not already in output mode and, as a
-result, unconditionally switches it to output-mode and asserts the signal.
+On Fri, Jul 23, 2021 at 11:15:10AM +0100, Daniel Thompson wrote:
+> On Thu, Jul 22, 2021 at 09:02:04PM +0200, Marek Vasut wrote:
+> > On 7/22/21 1:28 PM, Daniel Thompson wrote:
+> > > On Wed, Jul 21, 2021 at 08:46:42PM +0200, Marek Vasut wrote:
+> > > > On 7/21/21 6:12 PM, Daniel Thompson wrote:
+> > > > > On Wed, Jul 21, 2021 at 05:09:57PM +0200, Marek Vasut wrote:
+> > > > > > On 7/21/21 12:49 PM, Daniel Thompson wrote:
+> > > > > [...]
+> > > > > This sails very close to the
+> > > > > edge of what is in-scope for DT (at least it does it we can read
+> > > > > the inherited state directly from the hardware).
+> > > > 
+> > > > The problem with reading it out of hardware is that the hardware might be in
+> > > > undefined state and expects Linux to define that state, so that does not
+> > > > always work. Hence my initial suggestion to add a DT property to define the
+> > > > state up front, instead of using these fragile heuristics.
+> > > 
+> > > To achieve a flicker-free boot we must know the initial state of the
+> > > backlight (not just the enable pin).
+> > 
+> > The backlight hardware might be in uninitialized state and then Linux should
+> > set the state, likely based on something in DT, because there is no previous
+> > state to read.
+> 
+> There is always a previous state. The kernel doesn't care whether that
+> previous state was imposed by a power-on reset, the bootloader or a
+> kexec.
+> 
+> For the driver to come up flicker-free in all the different cases we
+> need to know whether the backlight is currently emitting light or not
+> and, if it is emitting light, then we need to know what the duty cycle
+> is (currently we inherit require the PWM driver to correctly inherit the
+> duty cycle from the hardware).
 
-Problem 1: This could cause the backlight to flicker since, at this stage
-in driver initialisation, we have no idea what the PWM and regulator are
-doing (an unconfigured PWM could easily "rest" at 100% duty cycle).
+Oops... this is wrong (I think it is cross-talk from an old patch). We
+do not currently inherit the duty cycle.
 
-Problem 2: This will cause us not to correctly honour the
-post_pwm_on_delay (which also risks flickers).
 
-Fix this by moving the code to configure the GPIO output mode until after
-we have examines the handover state. That allows us to initialize
-enable_gpio to off if the backlight is currently off and on if the
-backlight is on.
+> So far, the previous state has been observable by the lower level
+> drivers (GPIO, PWM, regulator). I remain reluctant to provide
+> workarounds for cases where it is not observable without motivating
+> hardware. I certainly wouldn't want to make such bindings mandatory
+> since observable hardware registers are a far more reliable source of
+> truth than what the DT tells us about what it thinks the bootloader
+> (or power-on reset) actually did ;-).
 
-There has also been lots of discussion recently about how pwm_bl inherits
-the initial state established by the bootloader (or by power-on reset if
-the bootloader doesn't do anything to the backlight). Let's take this
-chance to document the four handover cases.
+Which makes conclusion badly reasoned.
 
-Reported-by: Marek Vasut <marex@denx.de>
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: stable@vger.kernel.org
-Fixes: 3698d7e7d221 ("backlight: pwm_bl: Avoid backlight flicker when probed from DT")
-Acked-by: Marek Vasut <marex@denx.de>
-Tested-by: Marek Vasut <marex@denx.de>
----
+However, until we can clearly articulate whether the problem we want to
+solve is describing the initial backlight state or specifying the default
+(post-probe) power state for the legacy cases I'm still content not to
+change things ;-).
 
-Notes:
-    v3: Added better documentation of the different handover cases (thanks
-        Marek)
-    v2: Added Fixes: tag (sorry for the noise)
 
- drivers/video/backlight/pwm_bl.c | 110 +++++++++++++++++++++++--------
- 1 file changed, 83 insertions(+), 27 deletions(-)
+> > > [...]
+> > > Wow! That is *way* longer than I intended when I started writing it.
+> > > Anyhow I suspect any disconnect comes about due to the difference in
+> > > backlight state *after* probe being, in part, to software structure
+> > > rather than purely a hardware property.
+> > 
+> > Maybe this should be added to documentation.
+> 
+> I'll see what I can do.
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index e48fded3e414..5dda3f11129a 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -406,9 +406,90 @@ static bool pwm_backlight_is_linear(struct platform_pwm_backlight_data *data)
- 	return true;
- }
+Done, see v3. I think it is better explained than the e-mail version.
 
-+/*
-+ * Inherit the initial power state from the hardware.
-+ *
-+ * This function provides the features necessary to achieve a flicker-free boot
-+ * sequence regardless of the initial state of the backlight.
-+ *
-+ * There are two factors that affect the behaviour of this function.
-+ *
-+ * 1. Whether the backlight was on or off when the kernel was booted.  We
-+ *    currently determine the state of the backlight by checking if the PWM is
-+ *    enabled, whether the regulator (if there is one) is enabled and whether
-+ *    the enable_gpio (if there is one) is asserted.  All must be enabled for
-+ *    the backlight to be on.
-+ *
-+ * 2. Whether the backlight is linked to a display device. This matters because
-+ *    when there is a linked display is will automatically handle the
-+ *    backlight as part of its own blank/unblanking.
-+ *
-+ * This gives us four possible cases.
-+ *
-+ * Backlight initially off, display linked:
-+ *
-+ *   The backlight must remain off (a.k.a. FB_BLANK_POWERDOWN) during and after
-+ *   the backlight probe. This allows a splash screen to be drawn before the
-+ *   backlight is enabled by the display driver. This avoids a flicker when the
-+ *   backlight comes on (which typically changes the black level slightly)
-+ *   before the splash image has been drawn.
-+ *
-+ * Backlight initially on, display linked:
-+ *
-+ *   The backlight must remain on (a.k.a. FB_BLANK_UNBLANK) during and after
-+ *   the backlight probe.  This allows a bootloader to show a splash screen and
-+ *   for the display system (including the backlight) to continue showing the
-+ *   splash image until the kernel is ready to take over the display and draw
-+ *   something else.
-+ *
-+ * Backlight initially off, no display:
-+ *
-+ *   The backlight must transition from off to on (a.k.a. FB_BLANK_UNBLANK)
-+ *   during the backlight probe. This is largely a legacy case. We must
-+ *   unblank the backlight at boot because some userspaces are not
-+ *   capable of changing the power state of a free-standing backlight
-+ *   (they only know how to set the brightness level).
-+ *
-+ * Backlight initially on, no display:
-+ *
-+ *   Identical to the initially on, display linked case.
-+ *
-+ * Note: In both cases where backlight is initially off then we must
-+ *       explicitly deassert the enable_gpio in order to ensure we
-+ *       honour the post_pwm_on_delay when the backlight is eventually
-+ *       activated.  This is required regardless of both the initial state of
-+ *       the enable pin and whether we intend to activate the backlight during
-+ *       the probe.
-+ */
- static int pwm_backlight_initial_power_state(const struct pwm_bl_data *pb)
- {
--	struct device_node *node = pb->dev->of_node;
-+	struct device_node *node = pb->dev->of_node; bool active = true;
-+
-+	/*
-+	 * If the enable GPIO is present, observable (either as input
-+	 * or output) and off then the backlight is not currently active.
-+	 */
-+	if (pb->enable_gpio && gpiod_get_value_cansleep(pb->enable_gpio) == 0)
-+		active = false;
-+
-+	if (!regulator_is_enabled(pb->power_supply))
-+		active = false;
-+
-+	if (!pwm_is_enabled(pb->pwm))
-+		active = false;
-+
-+	/*
-+	 * Synchronize the enable_gpio with the observed state of the
-+	 * hardware.
-+	 */
-+	if (pb->enable_gpio)
-+		gpiod_direction_output(pb->enable_gpio, active);
-+
-+	/*
-+	 * Do not change pb->enabled here! pb->enabled essentially
-+	 * tells us if we own one of the regulator's use counts and
-+	 * right now we do not.
-+	 */
 
- 	/* Not booted with device tree or no phandle link to the node */
- 	if (!node || !node->phandle)
-@@ -420,20 +501,7 @@ static int pwm_backlight_initial_power_state(const struct pwm_bl_data *pb)
- 	 * assume that another driver will enable the backlight at the
- 	 * appropriate time. Therefore, if it is disabled, keep it so.
- 	 */
--
--	/* if the enable GPIO is disabled, do not enable the backlight */
--	if (pb->enable_gpio && gpiod_get_value_cansleep(pb->enable_gpio) == 0)
--		return FB_BLANK_POWERDOWN;
--
--	/* The regulator is disabled, do not enable the backlight */
--	if (!regulator_is_enabled(pb->power_supply))
--		return FB_BLANK_POWERDOWN;
--
--	/* The PWM is disabled, keep it like this */
--	if (!pwm_is_enabled(pb->pwm))
--		return FB_BLANK_POWERDOWN;
--
--	return FB_BLANK_UNBLANK;
-+	return active ? FB_BLANK_UNBLANK : FB_BLANK_POWERDOWN;
- }
-
- static int pwm_backlight_probe(struct platform_device *pdev)
-@@ -486,18 +554,6 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 		goto err_alloc;
- 	}
-
--	/*
--	 * If the GPIO is not known to be already configured as output, that
--	 * is, if gpiod_get_direction returns either 1 or -EINVAL, change the
--	 * direction to output and set the GPIO as active.
--	 * Do not force the GPIO to active when it was already output as it
--	 * could cause backlight flickering or we would enable the backlight too
--	 * early. Leave the decision of the initial backlight state for later.
--	 */
--	if (pb->enable_gpio &&
--	    gpiod_get_direction(pb->enable_gpio) != 0)
--		gpiod_direction_output(pb->enable_gpio, 1);
--
- 	pb->power_supply = devm_regulator_get(&pdev->dev, "power");
- 	if (IS_ERR(pb->power_supply)) {
- 		ret = PTR_ERR(pb->power_supply);
-
-base-commit: 2734d6c1b1a089fb593ef6a23d4b70903526fe0c
---
-2.30.2
-
+Daniel.
