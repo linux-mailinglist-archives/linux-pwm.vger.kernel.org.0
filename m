@@ -2,199 +2,176 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 171DE3D415E
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jul 2021 22:13:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D9FB3D4338
+	for <lists+linux-pwm@lfdr.de>; Sat, 24 Jul 2021 01:03:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231407AbhGWTcl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 23 Jul 2021 15:32:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229648AbhGWTck (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Jul 2021 15:32:40 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6ECDC061575
-        for <linux-pwm@vger.kernel.org>; Fri, 23 Jul 2021 13:13:13 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m71XV-0005Yj-8f; Fri, 23 Jul 2021 22:12:57 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m71XR-0005GT-1q; Fri, 23 Jul 2021 22:12:53 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m71XR-0000Yi-05; Fri, 23 Jul 2021 22:12:53 +0200
-Date:   Fri, 23 Jul 2021 22:12:50 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Billy Tsai <billy_tsai@aspeedtech.com>
-Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        BMC-SW <BMC-SW@aspeedtech.com>
-Subject: Re: [v9 2/2] pwm: Add Aspeed ast2600 PWM support
-Message-ID: <20210723201250.x4ki5ackfznmn4aw@pengutronix.de>
-References: <20210709065217.6153-3-billy_tsai@aspeedtech.com>
- <20210715150533.vppkw5oiomkxmfrn@pengutronix.de>
- <BD5B012C-B377-45E2-B04E-61D12B086670@aspeedtech.com>
- <20210716070943.ayxkz2irkwhgincz@pengutronix.de>
- <DD5590B4-11BC-411B-95BF-03AC26C078E4@aspeedtech.com>
- <20210716101301.l563tdwt5xuq5iq6@pengutronix.de>
- <3F12A498-DF5C-4954-8BCE-8C0C66BC9734@aspeedtech.com>
- <4BC9AEF6-31EA-4EDA-BCB2-7E4D44B6D5D2@aspeedtech.com>
- <20210721124859.clv6qlitbyomdz6s@pengutronix.de>
- <7F794DD8-0FC6-491D-B071-CAD6C216E044@aspeedtech.com>
+        id S232904AbhGWWXG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 23 Jul 2021 18:23:06 -0400
+Received: from mail-io1-f48.google.com ([209.85.166.48]:37877 "EHLO
+        mail-io1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231954AbhGWWXG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Jul 2021 18:23:06 -0400
+Received: by mail-io1-f48.google.com with SMTP id r18so4416411iot.4;
+        Fri, 23 Jul 2021 16:03:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=DW4bQw9bBu1BhDL+EWMhBLTiwn6MVnii4A/u2r0uOO4=;
+        b=ihIKncyVTDq4wTE8FoYN9zK3HA34IhaxvttAOwvSf4dlt/dfr8OoqDgWVyRduLDRAZ
+         uSz/c63/3fcK5gaGBMgFTaf8/eD0KrhapTJcn6D6dq51sA9pK/0bHPXie7JzzDQIrXP7
+         /uYGXaE9J5GoytxRo92FuvFBtkMen7rDgIMuFv7l+XNp2/WWosHCBDaIm8IdHSwGW5j8
+         cf7h/8dDDrgbOj3JONe+8tMj5UwE//HFIh1f9obD9kKOHnLYmE5RSPzphqNIgBkaZu8W
+         Xcx9bdrPE0PlXIRQRoW4/c5exb2Xxzam2S2pZiARHA2axmus93FQzuO6pqavC8GVzWH9
+         Yoiw==
+X-Gm-Message-State: AOAM530Fa2lZxduIwuxZwY+2VNQIolTHvn+AzrAPMx2oeUBDKHd029bq
+        k51KOrUE28UqlIJfGguk3Q==
+X-Google-Smtp-Source: ABdhPJzkKRM3SdTpwR7KsVQI2xc7VD6bxG1O9jkUH3Cu4HixVa3X3vQH5/ZVGWU5h977KexrakHw8w==
+X-Received: by 2002:a05:6638:25c7:: with SMTP id u7mr6034251jat.26.1627081418604;
+        Fri, 23 Jul 2021 16:03:38 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id v18sm17161933iln.49.2021.07.23.16.03.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Jul 2021 16:03:38 -0700 (PDT)
+Received: (nullmailer pid 2770149 invoked by uid 1000);
+        Fri, 23 Jul 2021 23:03:36 -0000
+Date:   Fri, 23 Jul 2021 17:03:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Balaji Prakash J <bjagadee@codeaurora.org>,
+        Robert Marko <robert.marko@sartura.hr>,
+        Kathiravan T <kathirav@codeaurora.org>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 3/4] dt-bindings: pwm: add IPQ6018 binding
+Message-ID: <20210723230336.GA2764383@robh.at.kernel.org>
+References: <889aae1b88f120cb6281919d27164a959fbe69d0.1626948070.git.baruch@tkos.co.il>
+ <70f0522a9394e9da2f31871442d47f6ad0ff41aa.1626948070.git.baruch@tkos.co.il>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="toxq6bq4j46rzjqb"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <7F794DD8-0FC6-491D-B071-CAD6C216E044@aspeedtech.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <70f0522a9394e9da2f31871442d47f6ad0ff41aa.1626948070.git.baruch@tkos.co.il>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu, Jul 22, 2021 at 01:01:09PM +0300, Baruch Siach wrote:
+> DT binding for the PWM block in Qualcomm IPQ6018 SoC.
+> 
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> ---
+> v6:
+> 
+>   Device node is child of TCSR; remove phandle (Rob Herring)
+> 
+>   Add assigned-clocks/assigned-clock-rates (Uwe Kleine-König)
+> 
+> v5: Use qcom,pwm-regs for phandle instead of direct regs (Bjorn
+>     Andersson, Kathiravan T)
+> 
+> v4: Update the binding example node as well (Rob Herring's bot)
+> 
+> v3: s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
+> 
+> v2: Make #pwm-cells const (Rob Herring)
+> ---
+>  .../devicetree/bindings/pwm/ipq-pwm.yaml      | 69 +++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml b/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
+> new file mode 100644
+> index 000000000000..ee2bb03a1223
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/ipq-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm IPQ6018 PWM controller
+> +
+> +maintainers:
+> +  - Baruch Siach <baruch@tkos.co.il>
+> +
+> +properties:
+> +  "#pwm-cells":
+> +    const: 2
+> +
+> +  compatible:
+> +    const: qcom,ipq6018-pwm
+> +
+> +  offset:
+> +    description: |
+> +      Offset of PWM register in the TCSR block.
+> +    maxItems: 1
 
---toxq6bq4j46rzjqb
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Use 'reg' here instead.
 
-On Fri, Jul 23, 2021 at 04:23:23AM +0000, Billy Tsai wrote:
-> On 2021/7/23, 3:17 AM, "Uwe Kleine-K=F6nig" <u.kleine-koenig@pengutronix.=
-de> wrote:
->=20
->     On Wed, Jul 21, 2021 at 10:52:21AM +0000, Billy Tsai wrote:
->     >> Hi Uwe,
->     >>=20
->     >>     On 2021/7/16, 6:13 PM, "Uwe Kleine-K=F6nig" <u.kleine-koenig@p=
-engutronix.de> wrote:
->     >>=20
->     >>         On Fri, Jul 16, 2021 at 09:22:22AM +0000, Billy Tsai wrote:
->     >>         >> On 2021/7/16, 3:10 PM, "Uwe Kleine-K=F6nig" <u.kleine-k=
-oenig@pengutronix.de> wrote:
->     >>         >>=20
->     >>         >>     On Fri, Jul 16, 2021 at 01:48:20AM +0000, Billy Tsa=
-i wrote:
->     >>         >>     >> On 2021/7/15, 11:06 PM, "Uwe Kleine-K=F6nig" <u.=
-kleine-koenig@pengutronix.de>> wrote:
->     >>         >>     >>     > Another is: The PWM doesn't support duty_c=
-ycle 0, on such a request the
->     >>         >>     >>     > PWM is disabled which results in a constan=
-t inactive level.
->     >>         >>     >>=20
->     >>         >>     >>     > (This is correct, is it? Or does it yield =
-a constant 0 level?)
->     >>         >>     >>=20
->     >>         >>     >> Our pwm can support duty_cycle 0 by unset CLK_EN=
-ABLE.
->     >>         >>=20
->     >>         >>     > This has a slightly different semantic though. So=
-me consumer might
->     >>         >>     > expect that the following sequence:
->     >>         >>=20
->     >>         >>     >	pwm_apply(mypwm, { .period =3D 10000, .duty_cycle=
- =3D 10000, .enabled =3D true })
->     >>         >>     >	pwm_apply(mypwm, { .period =3D 10000, .duty_cycle=
- =3D 0, .enabled =3D true })
->     >>         >>     >	pwm_apply(mypwm, { .period =3D 10000, .duty_cycle=
- =3D 10000, .enabled =3D true })
->     >>         >>=20
->     >>         >>     > results in the output being low for an integer mu=
-ltiple of 10 =B5s. This
->     >>         >>     > isn't given with setting CLK_ENABLE to zero, is i=
-t? (I didn't recheck,
->     >>         >>     > if the PWM doesn't complete periods on reconfigur=
-ation this doesn't
->     >>         >>     > matter much though.)
->     >>         >> Thanks for the explanation.
->     >>         >> Our hardware actually can only support duty from 1/256 =
-to 256/256.
->     >>         >> For this situation I can do possible solution:
->     >>         >> We can though change polarity to meet this requirement.=
- Inverse the pin and use
->     >>         >> duty_cycle 100.=20
->     >>         >> But I think this is not a good solution for this proble=
-m right?
->     >>=20
->     >>         > If this doesn't result in more glitches that would be fi=
-ne for me.
->     >>         > (Assuming it is documented good enough in the code to be
->     >>         > understandable.)
->     >>=20
->     >>     > The polarity of our pwm controller will affect the duty cycl=
-e range:
->     >>     > PWM_POLARITY_INVERSED : Support duty_cycle from 0% to 99%
->     >>     > PWM_POLARITY_NORMAL: Support duty_cycle from 1% to 100%
->     >>     > Dynamic change polarity will result in more glitches. Thus, =
-this will become
->     >>     > a trade-off between 100% and 0% duty_cycle support for user =
-to use our pwm device.
->     >>     > I will document it and send next patch.
->     >>=20
->     >> For handling the situation that the user want to set the duty cycl=
-e to 0%, the driver can:
->     >> 1. Just return the error.
->     >> 2. Use the minimum duty cycle value.
->     >> I don't know which solution will be the better way or others.
->     >> I would be grateful if you can give me some suggestion about this =
-problem.
->=20
->     > I thought if you disable the PWM it emits the inactive level? Then =
-this
->     > is the best you can do if duty_cycle =3D 0 is requested.
->=20
-> Thanks for your quick reply.
-> When duty_cycle =3D 0 is requested my driver currently will emit the inac=
-tive level.
-> So, the next patch I need to do is to add the comment about this?
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: core
+> +
+> +  assigned-clocks:
+> +    maxItems: 1
+> +
+> +  assigned-clock-rates:
+> +    maxItems: 1
+> +
+> +required:
+> +  - "#pwm-cells"
+> +  - compatible
+> +  - clocks
+> +  - clock-names
+> +  - assigned-clocks
+> +  - assigned-clock-rates
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
+> +
+> +    soc {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        tcsr: syscon@1937000 {
+> +            compatible = "syscon", "simple-mfd";
 
-Not sure I got the complete picture now. The things I consider important
-are:
+This should really have a specific compatible string, but we don't warn 
+for that (yet).
 
- - If your hardware cannot emit a 100% or 0% relative duty cycle, note
-   this in the Limitations section
+> +            reg = <0x0 0x01937000 0x0 0x21000>;
+> +
+> +            pwm: pwm {
+> +                #pwm-cells = <2>;
+> +                compatible = "qcom,ipq6018-pwm";
+> +                offset = <0xa010>;
+> +                clocks = <&gcc GCC_ADSS_PWM_CLK>;
+> +                clock-names = "core";
+> +                assigned-clocks = <&gcc GCC_ADSS_PWM_CLK>;
+> +                assigned-clock-rates = <100000000>;
+> +                status = "disabled";
 
- - Assuming your PWM emits the inactive level when disabled (that is 0
-   for PWM_POLARITY_NORMAL and 1 for PWM_POLARITY_INVERSED) this is the
-   best that can be done when a 0% relative duty cycle is requested
-   (assuming the hardware cannot implement that in a normal way).
+Drop 'status'
 
-I hope this answered your remaining questions.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---toxq6bq4j46rzjqb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmD7Ir8ACgkQwfwUeK3K
-7AkC4Qf/UySDPXNcbHOt72z/xM5f81I/l//h6KQb/ov/i2Acp8sazD1ANZ2+oN1/
-ZeecnsddK2CbLAHwuB53a7PUNfUmnFFf0hqaJGqG4k7ijswU+ln8mGj3Riaz1/8f
-P2fVTq62m7qmG7qF0WZoGcip9PHD0RO4yYOE/MwriQqsZV8e0z+rmd1xE536ys73
-A1JdFOThHpA8ZeQNbLaEvXkfHQ8qcamXcWGmnSgWyC6sUqYtRvyu+MPCgQs//ANB
-N+zGyKRfytVIl70GdbioHUn7vNQLwTVkfliecpdoCbdZaCpdQEzuZQVwztuEVctH
-siL6R66w7b074QtT3qfOvoKcLmeqIg==
-=LY3j
------END PGP SIGNATURE-----
-
---toxq6bq4j46rzjqb--
+> +            };
+> +        };
+> +    };
+> -- 
+> 2.30.2
+> 
+> 
