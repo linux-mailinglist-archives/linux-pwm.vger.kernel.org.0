@@ -2,176 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D9FB3D4338
-	for <lists+linux-pwm@lfdr.de>; Sat, 24 Jul 2021 01:03:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 761A43D4649
+	for <lists+linux-pwm@lfdr.de>; Sat, 24 Jul 2021 10:19:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232904AbhGWWXG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 23 Jul 2021 18:23:06 -0400
-Received: from mail-io1-f48.google.com ([209.85.166.48]:37877 "EHLO
-        mail-io1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231954AbhGWWXG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Jul 2021 18:23:06 -0400
-Received: by mail-io1-f48.google.com with SMTP id r18so4416411iot.4;
-        Fri, 23 Jul 2021 16:03:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=DW4bQw9bBu1BhDL+EWMhBLTiwn6MVnii4A/u2r0uOO4=;
-        b=ihIKncyVTDq4wTE8FoYN9zK3HA34IhaxvttAOwvSf4dlt/dfr8OoqDgWVyRduLDRAZ
-         uSz/c63/3fcK5gaGBMgFTaf8/eD0KrhapTJcn6D6dq51sA9pK/0bHPXie7JzzDQIrXP7
-         /uYGXaE9J5GoytxRo92FuvFBtkMen7rDgIMuFv7l+XNp2/WWosHCBDaIm8IdHSwGW5j8
-         cf7h/8dDDrgbOj3JONe+8tMj5UwE//HFIh1f9obD9kKOHnLYmE5RSPzphqNIgBkaZu8W
-         Xcx9bdrPE0PlXIRQRoW4/c5exb2Xxzam2S2pZiARHA2axmus93FQzuO6pqavC8GVzWH9
-         Yoiw==
-X-Gm-Message-State: AOAM530Fa2lZxduIwuxZwY+2VNQIolTHvn+AzrAPMx2oeUBDKHd029bq
-        k51KOrUE28UqlIJfGguk3Q==
-X-Google-Smtp-Source: ABdhPJzkKRM3SdTpwR7KsVQI2xc7VD6bxG1O9jkUH3Cu4HixVa3X3vQH5/ZVGWU5h977KexrakHw8w==
-X-Received: by 2002:a05:6638:25c7:: with SMTP id u7mr6034251jat.26.1627081418604;
-        Fri, 23 Jul 2021 16:03:38 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id v18sm17161933iln.49.2021.07.23.16.03.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Jul 2021 16:03:38 -0700 (PDT)
-Received: (nullmailer pid 2770149 invoked by uid 1000);
-        Fri, 23 Jul 2021 23:03:36 -0000
-Date:   Fri, 23 Jul 2021 17:03:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Balaji Prakash J <bjagadee@codeaurora.org>,
-        Robert Marko <robert.marko@sartura.hr>,
-        Kathiravan T <kathirav@codeaurora.org>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 3/4] dt-bindings: pwm: add IPQ6018 binding
-Message-ID: <20210723230336.GA2764383@robh.at.kernel.org>
-References: <889aae1b88f120cb6281919d27164a959fbe69d0.1626948070.git.baruch@tkos.co.il>
- <70f0522a9394e9da2f31871442d47f6ad0ff41aa.1626948070.git.baruch@tkos.co.il>
+        id S234801AbhGXHia (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 24 Jul 2021 03:38:30 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:45906 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S234774AbhGXHi3 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 24 Jul 2021 03:38:29 -0400
+X-UUID: b4fee2a433de458099db443222babec4-20210724
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=cXF42RrJw1ABsP86uX0FWJDg2YYpWsgUVihxQzX44zo=;
+        b=WRpX60z83Hd7oe0+ZyomSLb7ofGc3HAUfzkG2SzzgEU8st9hHNVKbpkS6cEWeggmfRtDCQFVeMl4B2t/MdMDw8eXHB/LppWwjgxjyZ1mFnlflAk7ZjtakTj7OyHujjrR9ZpwPbc8Q2ZOA8IvtcYULJM5qv0sn9IdZQzg7HxdYwE=;
+X-UUID: b4fee2a433de458099db443222babec4-20210724
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 2101701451; Sat, 24 Jul 2021 16:18:58 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N2.mediatek.inc
+ (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sat, 24 Jul
+ 2021 16:18:51 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
+ MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1497.2 via Frontend Transport; Sat, 24 Jul 2021 16:18:50 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <linux-pwm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <ck.hu@mediatek.com>, <stonea168@163.com>,
+        <huijuan.xie@mediatek.com>, <shuijing.li@mediatek.com>,
+        Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH v6 0/5] fix the clks on/off mismatch issue and switch pwm-mtk-disp to atomic APIs
+Date:   Sat, 24 Jul 2021 16:18:44 +0800
+Message-ID: <20210724081849.182108-1-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <70f0522a9394e9da2f31871442d47f6ad0ff41aa.1626948070.git.baruch@tkos.co.il>
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 8631904548A5ADA78DF1745B7A3102CBCB1AF9C1E5A86DECAE8D376CF649AA202000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Jul 22, 2021 at 01:01:09PM +0300, Baruch Siach wrote:
-> DT binding for the PWM block in Qualcomm IPQ6018 SoC.
-> 
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> ---
-> v6:
-> 
->   Device node is child of TCSR; remove phandle (Rob Herring)
-> 
->   Add assigned-clocks/assigned-clock-rates (Uwe Kleine-König)
-> 
-> v5: Use qcom,pwm-regs for phandle instead of direct regs (Bjorn
->     Andersson, Kathiravan T)
-> 
-> v4: Update the binding example node as well (Rob Herring's bot)
-> 
-> v3: s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
-> 
-> v2: Make #pwm-cells const (Rob Herring)
-> ---
->  .../devicetree/bindings/pwm/ipq-pwm.yaml      | 69 +++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml b/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
-> new file mode 100644
-> index 000000000000..ee2bb03a1223
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/ipq-pwm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm IPQ6018 PWM controller
-> +
-> +maintainers:
-> +  - Baruch Siach <baruch@tkos.co.il>
-> +
-> +properties:
-> +  "#pwm-cells":
-> +    const: 2
-> +
-> +  compatible:
-> +    const: qcom,ipq6018-pwm
-> +
-> +  offset:
-> +    description: |
-> +      Offset of PWM register in the TCSR block.
-> +    maxItems: 1
+Q2hhbmdlcyBzaW5jZSB2NToNCiAtIGZpeCBvdmVyZmxvdy4NCiAtIFNlcGVyYXRlIHRoZSByZWcg
+c2hhZG93IGFzIGEgc2luZ2xlIHBhdGNoLg0KDQpDaGFuZ2VzIHNpbmNlIHY0Og0KIC0gU3F1YXNo
+IHRoZSBjb21taXQgIm1vdmUgdGhlIGNvbW1pdCB0byBjbG9jayBlbmFibGVkIiB0byAiYWRqdXN0
+IHRoZSBjbG9ja3MgdG8gYXZvaWQgdGhlbSBtaXNtYXRjaCIuDQogLSBEcm9wIHRoZSB1c2VsZXNz
+IGNvbW1lbnQgYWJvdXQgTVQyNzAxLg0KIC0gUmVlbmFibGUgdGhlIGNsa3MgIm1tIiBhbmQgIm1h
+aW4iIGluIC5lbmFibGUoKS4NCiAtIEZpeCB0eXBvLg0KIC0gU2VwZXJhdGUgZ2V0X3N0YXRlKCkg
+b3BlcmF0aW9uIGFzIHNpbmdsZSBwYXRjaC4NCg0KQ2hhbmdlcyBzaW5jZSB2MzoNCiAtIFNlcGVy
+YXRlIHRoZSBjbG9jayBzZXF1ZW5jZSBhcyBzaW5nbGUgcGF0Y2guDQogLSBGaXh1cCB0aGUgcmVn
+IGNvbW1pdCB3aGVuIGNsb2NrcyBzZXF1ZW5jZSBjaGFuZ2VkLg0KIC0gTWVyZ2UgdGhlIGFwcGx5
+IGFuZCBnZXRfc3RhdGUgYXMgc2luZ2xlIHBhdGNoLg0KDQpDaGFuZ2VzIHNpbmNlIHYyOg0KIC0g
+Q2hhbmdlIGNvbW1pdCBtZXNzYWdlcyB0byByZW1vdmUgdGhlIGNsb2NrIG9wZXJhdGlvbnMgZm9y
+IGF0b21pYyBBUElzLg0KIC0gUmViYXNlIHRvIHY1LjEzIHJjMS4NCg0KQ2hhbmdlcyBzaW5jZSB2
+MToNCiAtIFNlcGVyYXRlIGNsb2NrIG9wZXJhdGlvbiBhcyBzaW5nbGUgcGF0Y2guDQogLSBTZXBl
+cmF0ZSBhcHBseSgpIGFzIHNpbmdsZSBwYXRjaC4NCiAtIFNlcGVyYXRlIGdldF9zdGF0ZSgpIG9w
+ZXJhdGlvbiBhcyBzaW5nbGUgcGF0Y2guDQoNCkppdGFvIFNoaSAoNSk6DQogIHB3bTogbXRrLWRp
+c3A6IGFkanVzdCB0aGUgY2xvY2tzIHRvIGF2b2lkIHRoZW0gbWlzbWF0Y2gNCiAgcHdtOiBtdGtf
+ZGlzcDogZml4IGZvcmNlIHJlZyB0byB3b3JraW5nIHJlZy4NCiAgcHdtOiBtdGtfZGlzcDogaW1w
+bGVtZW50IGF0b21pYyBBUEkgLmFwcGx5KCkNCiAgcHdtOiBtdGtfZGlzcDogZml4IG92ZXJmbG93
+IGluIHBlcmlvZCBhbmQgZHV0eSBjYWxjYWxhdGlvbg0KICBwd206IG10a19kaXNwOiBpbXBsZW1l
+bnQgYXRvbWljIEFQSSAuZ2V0X3N0YXRlKCkNCg0KIGRyaXZlcnMvcHdtL3B3bS1tdGstZGlzcC5j
+IHwgMTcyICsrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0NCiAxIGZpbGUgY2hh
+bmdlZCwgOTIgaW5zZXJ0aW9ucygrKSwgODAgZGVsZXRpb25zKC0pDQoNCi0tIA0KMi4yNS4xDQo=
 
-Use 'reg' here instead.
-
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: core
-> +
-> +  assigned-clocks:
-> +    maxItems: 1
-> +
-> +  assigned-clock-rates:
-> +    maxItems: 1
-> +
-> +required:
-> +  - "#pwm-cells"
-> +  - compatible
-> +  - clocks
-> +  - clock-names
-> +  - assigned-clocks
-> +  - assigned-clock-rates
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
-> +
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        tcsr: syscon@1937000 {
-> +            compatible = "syscon", "simple-mfd";
-
-This should really have a specific compatible string, but we don't warn 
-for that (yet).
-
-> +            reg = <0x0 0x01937000 0x0 0x21000>;
-> +
-> +            pwm: pwm {
-> +                #pwm-cells = <2>;
-> +                compatible = "qcom,ipq6018-pwm";
-> +                offset = <0xa010>;
-> +                clocks = <&gcc GCC_ADSS_PWM_CLK>;
-> +                clock-names = "core";
-> +                assigned-clocks = <&gcc GCC_ADSS_PWM_CLK>;
-> +                assigned-clock-rates = <100000000>;
-> +                status = "disabled";
-
-Drop 'status'
-
-> +            };
-> +        };
-> +    };
-> -- 
-> 2.30.2
-> 
-> 
