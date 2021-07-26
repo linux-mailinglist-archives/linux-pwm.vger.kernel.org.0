@@ -2,183 +2,116 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85B493D56D8
-	for <lists+linux-pwm@lfdr.de>; Mon, 26 Jul 2021 11:53:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 876CA3D58F0
+	for <lists+linux-pwm@lfdr.de>; Mon, 26 Jul 2021 13:58:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233042AbhGZJMi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 26 Jul 2021 05:12:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50426 "EHLO
+        id S233769AbhGZLRz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 26 Jul 2021 07:17:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232861AbhGZJMi (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 26 Jul 2021 05:12:38 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 891B8C061757;
-        Mon, 26 Jul 2021 02:53:06 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id e21so6409062pla.5;
-        Mon, 26 Jul 2021 02:53:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=J11jCx264fDkYB4Ey5+F/K1O59ZJzQ0+bvigKGl9vLw=;
-        b=C5VW49QstETO2+nuSLBxPYmWT5UFG2d/DKZGk6G0dcyb9Sqw4lenOzvlZ2r3hw57W9
-         xiHEJuhlXYAvbBDr/48DS+PgQu3WoEdrKEkxAaKWojCGTTPQB3Z+cfG/Lsp0m7J9SIaE
-         t4ByfnivIBylnuZYOWpEsiwmqjREBX+DdpcWvaP16OujRGFnVMnjGXrzq0571LSzPXHh
-         XtvE0oJ8yb0nTDNYGjYRojSDcDh8+cZsO2pz0+brbSO2JMCML5/9lALcQB4Vr8Fw2EYI
-         7he4EPa/V2gcoi89RG3Kh8E/TtNrrVuW8O9w2A5q6qujRae2MXBrqAQDwKt2Hw/UDERV
-         Cegw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=J11jCx264fDkYB4Ey5+F/K1O59ZJzQ0+bvigKGl9vLw=;
-        b=JSflZndkBukGECewBB1symzTn++pC5DR1L+9BPWhSrlJzN/kE9vYxh9bnT7q9XNayT
-         GdN8K+cvf5VflGGY3hQt46zUyrw7jLwsZuFddeh21gBWBRiE6T+el8iakAR+kGM6N0Lq
-         VhAxUeKr58nz0Lo3qcmOtBfIJwkDo6UgKZcGxOQRdObQ0HDERlLjTIbM5c25unXJ7GTY
-         Zk7FroWleUxNa/MNGzedk65JX1VP8i7ANzojzPQIWjtXRchJ3dWXmkXr4BJ/H2WtkY3m
-         t4eyMgZojSZCRSB/9ZghIFhST6ILvqxBHFFR/Sv/3wmv5tBNb6u8aop6/vd/vPJHNl/p
-         1MpA==
-X-Gm-Message-State: AOAM532mHcOakdBVA9OC+jcIBCGSHfSIRXe5BzW8sAZxb9OvQKn5mS9F
-        HUdFFT0Xi8CBvD5/dXmEk0T8tKZOmgGm6iJ25wk=
-X-Google-Smtp-Source: ABdhPJyrleBpLvLSD6dget3tB6MIaHE3pdYrzLelP+QIQO/diqAZwSWk0ozlkYeOVamNBz/HZ52KPSJJUEEKdjIN/b0=
-X-Received: by 2002:a17:90b:1194:: with SMTP id gk20mr25831664pjb.181.1627293186051;
- Mon, 26 Jul 2021 02:53:06 -0700 (PDT)
+        with ESMTP id S233606AbhGZLRy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 26 Jul 2021 07:17:54 -0400
+X-Greylist: delayed 405 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 26 Jul 2021 04:58:22 PDT
+Received: from forward105o.mail.yandex.net (forward105o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::608])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 712E1C061757;
+        Mon, 26 Jul 2021 04:58:22 -0700 (PDT)
+Received: from iva8-40f91c705526.qloud-c.yandex.net (iva8-40f91c705526.qloud-c.yandex.net [IPv6:2a02:6b8:c0c:b9a7:0:640:40f9:1c70])
+        by forward105o.mail.yandex.net (Yandex) with ESMTP id 57BEC4200B66;
+        Mon, 26 Jul 2021 14:51:31 +0300 (MSK)
+Received: from iva6-2d18925256a6.qloud-c.yandex.net (iva6-2d18925256a6.qloud-c.yandex.net [2a02:6b8:c0c:7594:0:640:2d18:9252])
+        by iva8-40f91c705526.qloud-c.yandex.net (mxback/Yandex) with ESMTP id lkre8hYrIW-pTH0Ga7j;
+        Mon, 26 Jul 2021 14:51:31 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1627300291;
+        bh=syS++HTe1Cfn1grqGafzmOlSb2JtfOhz46f0mgWNJy4=;
+        h=Date:Subject:To:From:Message-Id:Cc;
+        b=E0wy+n4muSO1ZLMeBWliO0BhcyWs6KoSoeJWdqaCR52kWT6mHi7gxowiUFGY6irYT
+         be1AwLTE4dNL+xYTAkyBJYWgCXYptO8V83/LNeZFDp4RbyoGeo2C+M9Dr7oKoKzW4P
+         dZKZcvyhEJp7DS7GLat0LUjSneb5gTIb+hVwaHc8=
+Authentication-Results: iva8-40f91c705526.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
+Received: by iva6-2d18925256a6.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id PIKatQa27D-pR2S8g73;
+        Mon, 26 Jul 2021 14:51:28 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Nikita Shubin <nikita.shubin@maquefel.me>
+To:     Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Nikita Shubin <nikita.shubin@maquefel.me>,
+        alsa-devel@alsa-project.org (moderated list:SOUND - SOC LAYER / DYNAMIC
+        AUDIO POWER MANAGEM...),
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE
+        SUBSYSTEM), Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        dri-devel@lists.freedesktop.org (open list:FRAMEBUFFER LAYER),
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT),
+        linux-fbdev@vger.kernel.org (open list:FRAMEBUFFER LAYER),
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK
+        , TOUCHSCREEN)...), linux-kernel@vger.kernel.org (open list),
+        linux-pwm@vger.kernel.org (open list:PWM SUBSYSTEM),
+        linux-spi@vger.kernel.org (open list:SPI SUBSYSTEM),
+        Mark Brown <broonie@kernel.org>,
+        Mike Rapoport <rppt@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, YiFei Zhu <yifeifz2@illinois.edu>
+Subject: [PATCH 0/8] arm: ep93xx: CCF conversion
+Date:   Mon, 26 Jul 2021 14:50:44 +0300
+Message-Id: <20210726115058.23729-1-nikita.shubin@maquefel.me>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20210510174142.986250-1-u.kleine-koenig@pengutronix.de>
- <20210609202123.u5rmw7al4x3rrvun@pengutronix.de> <20210625171434.3xusxpxjprcdqa47@pengutronix.de>
- <20210705080144.zfbzkm7l3gmnh6st@pengutronix.de> <20210722060654.nudpdtemosi64nlb@pengutronix.de>
- <YPkg0wtYIoHKpTUW@kunai> <20210722081817.2tsjzof4gvldq6ka@pengutronix.de>
- <YPlfcbkxiBmB+vw1@kunai> <CAHp75VfC=s12Unw3+Cn0ag71mM5i90=Jbwj4nYwB5cPKiUTRSA@mail.gmail.com>
- <20210723091331.wl33wtcvvnejuhau@pengutronix.de> <06e799be-b7c0-5b93-8586-678a449d2239@microchip.com>
-In-Reply-To: <06e799be-b7c0-5b93-8586-678a449d2239@microchip.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 26 Jul 2021 12:52:26 +0300
-Message-ID: <CAHp75VeFXJ-0ak7=a0QCtKNdFpu98W6iJ2YuR4MpNx+U4rHe2A@mail.gmail.com>
-Subject: Re: [PULL] Add variants of devm_clk_get for prepared and enabled
- clocks enabled clocks
-To:     Claudiu.Beznea@microchip.com
-Cc:     u.kleine-koenig@pengutronix.de, wsa@kernel.org, sboyd@kernel.org,
-        linux-rtc@vger.kernel.org, linux-pwm@vger.kernel.org,
-        alexandre.belloni@bootlin.com, a.zummo@towertech.it,
-        mturquette@baylibre.com, Nicolas.Ferre@microchip.com,
-        linux-spi@vger.kernel.org, o.rempel@pengutronix.de,
-        Ludovic.Desroches@microchip.com, broonie@kernel.org,
-        thierry.reding@gmail.com, aardelean@deviqon.com,
-        kernel@pengutronix.de, Jonathan.Cameron@huawei.com,
-        akpm@linux-foundation.org, lee.jones@linaro.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Jul 26, 2021 at 12:18 PM <Claudiu.Beznea@microchip.com> wrote:
-> On 23.07.2021 12:13, Uwe Kleine-K=C3=B6nig wrote:
-> > From:
-> > Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> > Date:
-> > 23.07.2021, 12:13
-> > On Wed, Jun 09, 2021 at 10:21:23PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> >> given that I don't succeed in getting any feedback for my patch set, I=
-'m
-> >> trying with a pull request today.
-> > This is for a series that is currently in v7 and didn't get any feedbac=
-k
-> > at all yet. The history is:
-> >
-> > v1: 2020-10-13, https://lore.kernel.org/linux-clk/20201013082132.661993=
--1-u.kleine-koenig@pengutronix.de
-> >     no feedback at all
-> >
-> > v2: 2021-03-01, https://lore.kernel.org/linux-clk/20210301110821.144575=
-6-1-uwe@kleine-koenig.org
-> >     kernel test robot identified some issues
-> >
-> > v3: 2021-03-01, https://lore.kernel.org/linux-clk/20210301135053.146216=
-8-1-u.kleine-koenig@pengutronix.de
-> >     I added a few driver patches to show the benefit. (However in a way
-> >     that the autobuilders don't understand, so there were some false
-> >     positive build failure reports.)
-> >
-> > v4: 2021-03-30, https://lore.kernel.org/linux-clk/20210330181755.204339=
--1-u.kleine-koenig@pengutronix.de
-> >     Got some feedback for the converted drivers by the respective
-> >     maintainers. Some were indifferent, some found it good
-> >
-> > v5: 2021-04-22, https://lore.kernel.org/linux-clk/20210422065726.164674=
-2-1-u.kleine-koenig@pengutronix.de
-> >     Fixed a problem in one of the driver changes (i2c-imx), no feedback
-> >     apart from pointing out a few typos, silence from the clk
-> >     maintainers
-> >
-> > v6: 2021-04-26, https://lore.kernel.org/linux-clk/20210426141730.282683=
-2-1-u.kleine-koenig@pengutronix.de
-> >     Just the typos fixed, no feedback
-> >
-> > v6 resend: 2021-05-10, https://lore.kernel.org/linux-clk/20210510061724=
-.940447-1-u.kleine-koenig@pengutronix.de
-> >     no changes in code. Got some feedback from Jonathan Cameron
-> >
-> > v7: 2021-05-10, https://lore.kernel.org/linux-clk/20210510174142.986250=
--1-u.kleine-koenig@pengutronix.de
-> >     Adress Jonathan's feedback, recieved some more acks from non-clk
-> >     people
-> >
-> > pull request: 2021-07-09, https://lore.kernel.org/linux-clk/20210609202=
-123.u5rmw7al4x3rrvun@pengutronix.de
-> >
-> > On Fri, Jul 23, 2021 at 11:26:58AM +0300, Andy Shevchenko wrote:
-> >> On Thursday, July 22, 2021, Wolfram Sang <wsa@kernel.org> wrote:
-> >>
-> >>>>> What about adding gkh to the list explaining the situation to him?
-> >>>> Greg doesn't like devm_ stuff.
-> >>>>
-> >>>> I already asked Arnd who doesn't want to interfere and akpm who didn=
-'t
-> >>>> react either up to now.
-> >>> Wow, okay, that is frustrating.
-> >> The situation simply shows the process gap and One Maintainer nowadays=
- is
-> >> far from enough to satisfy demands.
-> > Technically there are two maintainers for drivers/clk, Michael Turquett=
-e
-> > and Stephen Boyd. It seems Michael is MIA and Stephen doesn't have the
-> > capacity to address all requests.
-> >
-> >> What I think about is that we need to escalate this to Linus and
-> >> others and elaborate the mechanisms how to squeeze a new (additional)
-> >> maintainer when the original one is not responsive. Let=E2=80=99s say =
-some
-> >> procedural steps. Otherwise we doomed because of human factor.
-> > Assuming there was some process for this, is there someone who is
-> > willing to take responsibility here?
->
-> Hi,
->
-> In the last year I worked on AT91 clock drivers and I would be available
-> for taking responsibility beyond AT91 clocks (if everyone's OK with this)=
-,
-> in whatever form the current maintainers and people in the audience would
-> agree, if any (co-maintainer or other forms that could be useful). The id=
-ea
-> is to help things progress as I also have patches waiting for feedback on
-> clock mailing list for almost 6 months.
->
-> Let me know if I can be helpful.
+This series series of patches converts ep93xx to Common Clock Framework.
 
-I think so. Many subsystems relatively recently (in the last couple of
-years or so) enforced that new drivers have to have official
-maintainers. Besides that it's warmly welcome to register existing
-drivers in the MAINTAINERS database. I would tell you go ahead and
-become a maintainer of AT91 clocks and it will definitely reduce the
-burden on Stephan's shoulders.
+It consists of preparation patches to use clk_prepare_enable where it is 
+needed, instead of clk_enable used in ep93xx drivers prior to CCF and
+a patch converting mach-ep93xx/clock.c to CCF.
 
-The idea is that you will send a PR to CCF maintainers instead of
-patches, although it's expected that patches appear in the mailing
-list beforehand anyway.
+Link: https://lore.kernel.org/patchwork/cover/1445563/
+Link: https://lore.kernel.org/patchwork/patch/1435884/
 
---=20
-With Best Regards,
-Andy Shevchenko
+Alexander Sverdlin (7):
+  iio: ep93xx: Prepare clock before using it
+  spi: spi-ep93xx: Prepare clock before using it
+  Input: ep93xx_keypad: Prepare clock before using it
+  video: ep93xx: Prepare clock before using it
+  dmaengine: ep93xx: Prepare clock before using it
+  ASoC: cirrus: i2s: Prepare clock before using it
+  pwm: ep93xx: Prepare clock before using it
+
+Nikita Shubin (1):
+  ep93xx: clock: convert in-place to COMMON_CLK
+
+ arch/arm/Kconfig                       |   2 +-
+ arch/arm/mach-ep93xx/clock.c           | 975 ++++++++++++++-----------
+ arch/arm/mach-ep93xx/core.c            |   2 +-
+ arch/arm/mach-ep93xx/soc.h             |  42 +-
+ drivers/dma/ep93xx_dma.c               |   6 +-
+ drivers/iio/adc/ep93xx_adc.c           |   6 +-
+ drivers/input/keyboard/ep93xx_keypad.c |   4 +-
+ drivers/pwm/pwm-ep93xx.c               |  12 +-
+ drivers/spi/spi-ep93xx.c               |   4 +-
+ drivers/video/fbdev/ep93xx-fb.c        |   4 +-
+ sound/soc/cirrus/ep93xx-i2s.c          |  12 +-
+ 11 files changed, 605 insertions(+), 464 deletions(-)
+
+
+base-commit: 64376a981a0e2e57c46efa63197c2ebb7dab35df
+-- 
+2.26.2
+
