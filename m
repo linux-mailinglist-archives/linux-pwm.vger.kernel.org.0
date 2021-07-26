@@ -2,141 +2,112 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 725A33D65EF
-	for <lists+linux-pwm@lfdr.de>; Mon, 26 Jul 2021 19:41:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D90F3D6609
+	for <lists+linux-pwm@lfdr.de>; Mon, 26 Jul 2021 19:50:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231694AbhGZRA0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 26 Jul 2021 13:00:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229646AbhGZRA0 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 26 Jul 2021 13:00:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E71F660F6C;
-        Mon, 26 Jul 2021 17:40:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627321254;
-        bh=r4zehfT85ltEor5F3Dr98zoMp3ICL3Y2HydcZKQboLk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uTLvus1ceKZtOlE+govp/T6+S9F8lO7yoRwSpZ1JnxIJr/C5XxRvZa+Aa5a8vBEMY
-         ALlTvi7y/pyGO7FGkTYEtcRtmcVHXXppkq5TPAW6GC93uSv17e0CVS2uKxICNv7/Pb
-         ATQHy5O5MPtDfquDdje85rmcGU6bBJTq4t1NKeooNt6ooWynRK2FUMsPApSLRGMKMy
-         0YaNQy0cCsWK+rcOazZHb3ndqLDrYO7L06puZML/pzuU+biNQf9T782/CQQHE44Pvr
-         dtSdVscpabIPfUeh44Uz+lcQop+9/zb5+uqsqY6NAdp7+Ny8CNfN/n1a/EGLpcZ3zA
-         Iff3vU4eI7iGA==
-Date:   Mon, 26 Jul 2021 19:40:47 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Claudiu Beznea <Claudiu.Beznea@microchip.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Stephen Boyd <sboyd@kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, linux-pwm@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Nicolas Ferre <Nicolas.Ferre@microchip.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Ludovic Desroches <Ludovic.Desroches@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
+        id S231502AbhGZRJy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 26 Jul 2021 13:09:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229680AbhGZRJy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 26 Jul 2021 13:09:54 -0400
+Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1D12C061757
+        for <linux-pwm@vger.kernel.org>; Mon, 26 Jul 2021 10:50:21 -0700 (PDT)
+Received: by mail-oi1-x236.google.com with SMTP id u25so11863775oiv.5
+        for <linux-pwm@vger.kernel.org>; Mon, 26 Jul 2021 10:50:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=db48y/ovq+/R24P2kuhwOLAKu+icrzjTHuCcSHS86vg=;
+        b=w1uqw0eZtgt4oeg8v9LZI7uXoVEIOkGhBTsjhDru5QNLljSUpMgtcxH9f+3VbGkoYV
+         hJP1nNBhc6oQIjO1dZd6jFOoLYmfT5vM1qnC6Ffx1bc/ny6L3xG2rPcJ5mGeGj90ZeTV
+         JVxgMgz8/du2yQv2Az0128DkCblfYB7wwh2/7hJF2BJusX5wv13SSZPChhuzr/PI8QKZ
+         zrdrOUdEi7Wo7h2RZcduQkOvSp3kua+ivw3AQ4JlHEOdDsMhKCmMHlI3+WvowjtlpxR7
+         cJ6YzL/XAaAhi0I3bmrkp5mHjGs5JfXiItLz67tvOqBeoi4KL16VdFmwM5tSDm5XqdSm
+         a3ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=db48y/ovq+/R24P2kuhwOLAKu+icrzjTHuCcSHS86vg=;
+        b=O/FcVRIPLYhn0W7mYxpX9/exwyYvXViiFWzI898aBz1zfBI2pATrcFuwka0VFuNheF
+         d32zOLhnQ70RZ3NV+ZeLSuCiXDgjgW239BOPUU9/MioaLTGfbAwgicexC9xbfgkz/4fe
+         H3dFvA/59+l+IABVfUmdgcNRr4h7mTzQj1nOSNR27ofZM01eTIDGg5atoR7G5o3tPdqs
+         DBY7QvZpmBl70nyedVkvrFHiVpwIR6zqYqH9wihoCrxRgdGmEexNiSru0MNOIDZ2Rraw
+         KFHKyLIpQKbEdkOGm0nXW0Z3azBeFC9vETes+nKf6INAjPOtXcCjjqgbD5t843a4Y9og
+         q6IQ==
+X-Gm-Message-State: AOAM531egQqne26X4pg4uZ+/pEGrayOEYhl0W7T7hvVAeJpbXDf2VHti
+        CzvCvORnyMano7Mh9dHm6Oht3w==
+X-Google-Smtp-Source: ABdhPJx/nGg701JhccQq4lqQVoXFFP3F3OPPYRM5w+P3u/t+MNBSirVAf1yX4j6qSp94l2IEEXDSng==
+X-Received: by 2002:aca:4d55:: with SMTP id a82mr12164918oib.100.1627321821170;
+        Mon, 26 Jul 2021 10:50:21 -0700 (PDT)
+Received: from ripper (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id l17sm107177ota.20.2021.07.26.10.50.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Jul 2021 10:50:20 -0700 (PDT)
+Date:   Mon, 26 Jul 2021 10:48:32 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Alexandru Ardelean <aardelean@deviqon.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
         Lee Jones <lee.jones@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PULL] Add variants of devm_clk_get for prepared and enabled
- clocks enabled clocks
-Message-ID: <YP7zn8n8wpSW4Gek@kunai>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Claudiu Beznea <Claudiu.Beznea@microchip.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Nicolas Ferre <Nicolas.Ferre@microchip.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Ludovic Desroches <Ludovic.Desroches@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Alexandru Ardelean <aardelean@deviqon.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20210722060654.nudpdtemosi64nlb@pengutronix.de>
- <YPkg0wtYIoHKpTUW@kunai>
- <20210722081817.2tsjzof4gvldq6ka@pengutronix.de>
- <YPlfcbkxiBmB+vw1@kunai>
- <CAHp75VfC=s12Unw3+Cn0ag71mM5i90=Jbwj4nYwB5cPKiUTRSA@mail.gmail.com>
- <20210723091331.wl33wtcvvnejuhau@pengutronix.de>
- <06e799be-b7c0-5b93-8586-678a449d2239@microchip.com>
- <CAHp75VeFXJ-0ak7=a0QCtKNdFpu98W6iJ2YuR4MpNx+U4rHe2A@mail.gmail.com>
- <YP6rdmi31FFrBMzE@ninjato>
- <CAHp75VeT-EX6U3+Y7dxoWWRZ7NqAEiNgPGW8YGVmWTuZKB4j+Q@mail.gmail.com>
+        Andy Gross <agross@kernel.org>,
+        Balaji Prakash J <bjagadee@codeaurora.org>,
+        Robert Marko <robert.marko@sartura.hr>,
+        Kathiravan T <kathirav@codeaurora.org>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 3/4] dt-bindings: pwm: add IPQ6018 binding
+Message-ID: <YP71cMSjuvmiREda@ripper>
+References: <889aae1b88f120cb6281919d27164a959fbe69d0.1626948070.git.baruch@tkos.co.il>
+ <70f0522a9394e9da2f31871442d47f6ad0ff41aa.1626948070.git.baruch@tkos.co.il>
+ <YP2tAR+zZgJZQOgG@yoga>
+ <87h7ghwwcb.fsf@tarshish>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/Ub7HcA0kcaU5RAp"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VeT-EX6U3+Y7dxoWWRZ7NqAEiNgPGW8YGVmWTuZKB4j+Q@mail.gmail.com>
+In-Reply-To: <87h7ghwwcb.fsf@tarshish>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Sun 25 Jul 21:08 PDT 2021, Baruch Siach wrote:
 
---/Ub7HcA0kcaU5RAp
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Hi Bjorn,
+> 
+> On Sun, Jul 25 2021, Bjorn Andersson wrote:
+> > On Thu 22 Jul 05:01 CDT 2021, Baruch Siach wrote:
+> >> +  clocks:
+> >> +    maxItems: 1
+> >> +
+> >> +  clock-names:
+> >> +    const: core
+> >
+> > With a single clock, it's nice to skip the -names.
+> 
+> I find it nicer and better for forward compatibility with hardware
+> variants the might introduce more clocks.
+> 
 
+Do you foresee any need for forward compatibility? What other clocks
+would this binding have to refer to?
 
-> AFAICT in practice it's a mandatory requirement in I=C2=B2C subsys (in the
-> past you hadn't accepted a patch from us without a tag from the
-> maintainer) which makes it equal to sending PR by a maintainer. PR
+That said, you'd achieve the same forward compatibility by just
+making sure that the current clock is the first on in the amended
+binding (which you have to do with or without -names).
 
-Right. I require a tag from the driver maintainer.
+> Are there any downsides to -names?
+> 
 
-> makes less burden since subsys maintainer don't need to run many tools
-> or a tool many times to get the pile of patches.
+Look at the number of places in a typical dts that we could have added
+clock-names, reg-names, interrupt-names, power-domain-names etc for a
+single cell.
 
-I had driver maintainers who found it difficult to have a public tree to
-pull from or forgot how to send properly prepared pull requests. They
-were happy to send Rev-by, though. And I am happy with that, too. At
-least in I2C, picking up patches is small work compared to the actual
-review.
+I do find it beneficial to keep things cleaner and sticking with the
+design of "single resource has no -names".
 
-
---/Ub7HcA0kcaU5RAp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmD+85sACgkQFA3kzBSg
-KbYMFRAAoWozaOVEHjIi+cCiXLD3YtgYnrrT8mNSlpf11k8gAkfEERXC9nIXKJyG
-uAv36d98/mKGGJemeqDXKuPii7VOqx3FeIgsmpa41N++qUEvXrjKXwCnq85+x/B/
-eZxsJv82F0sxidnvujOrMDhitRMZNKQzZCmPaqhmnGRIWvaAwePF2ioMCEi+QxbN
-HqJTNL+7G48hoGZq9WG8EW73gMkn2SDqiJJdwGSQbPMJ0Jqt4oAclkWfeqLP4Rou
-StO5Pe1OSowMkIZJEOZAQvJwpcI3qruOxp9P2QYsm/7pYJrqMqGZCv/UD7uFb0UO
-G8M6t8RNXfDOqGCwkCHeskTDixT/74pcvzIPB5C17n4xAgt3P5XuwH0+Sg+D3fqW
-4Z2ig1HHc7dlTUYkTnRwECAkv1r7o98hpk3U0OT3FHJjsDpOuo0HUnH93HHI6spU
-KgwVO4EaGIhExfl25ryyzKnanlchfN1s5nzEIxSj1YwrWbgZqtUEeXuS17zQebQ/
-WA7uyvtGMkatdsFsYNdXT/U6aNbSSwz8Rnj8Ipz+FwpAqrr8rrLPcHD8hwEDnvtv
-/LpAc5ANbmxmlHZb/WAdjxf1LlJiamhr0lnnSfYVqnw2jWpxFy4hdaJP6/HG1N80
-e+jQNCQdbUPYUU2q53ZBj5SjHjAgTetpC3znuCYAAS7lY1Kk6iM=
-=42tk
------END PGP SIGNATURE-----
-
---/Ub7HcA0kcaU5RAp--
+Regards,
+Bjorn
