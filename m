@@ -2,143 +2,157 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47C0A3D683A
-	for <lists+linux-pwm@lfdr.de>; Mon, 26 Jul 2021 22:39:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75AA23D96B0
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 Jul 2021 22:26:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232571AbhGZT6n (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 26 Jul 2021 15:58:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56098 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232169AbhGZT6n (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 26 Jul 2021 15:58:43 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D5C6A60F93;
-        Mon, 26 Jul 2021 20:39:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627331951;
-        bh=jwo7kjnHqUbR60c5VoxUCqCoqYO9MoJQlrQi+4fW4nw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IM1Cyw+uHcMqpcFwB5U40N1+xhiaMW+QGgy8y88TD4v54U/cYQTjnicq9o5a2t5qd
-         Huqtohyx1ES7ADhbV+hXCmpd2FfwEUf7nnqYi2eKd1v00GtAWuBe6WFhTSp71Hngz4
-         Ac5P7NQRd0mEY6CmBbbDl2U0Z5r7DGJuQhnGADH65RKX1Vl74teoVJXMGtykOJtQEY
-         4eMJ3dvlQjMssn2PBx6NIApqmS0j7amH6ipSdLgYNBgaVYcBxt3qHG2TeQpsF1Yx11
-         DxBf/ov8CcLuJC062sr5/xJkxB258vf6ezv4ab/J9hmxmf5SfEDSTQ6BH1C28I4IKs
-         +ptqSeBkla+xg==
-Received: by mail-ej1-f52.google.com with SMTP id gt31so18307817ejc.12;
-        Mon, 26 Jul 2021 13:39:11 -0700 (PDT)
-X-Gm-Message-State: AOAM531u5mn9+q8Rbhr1marjXeY7Wthzo72S5Sdj05vfaNavpxXEYE/C
-        +bNhCkUra9LJ6zR040hL3e817bBK1kRA3udE4g==
-X-Google-Smtp-Source: ABdhPJyDv+fNM15O8FW0ikww+Gu4xZZSpQZ6R3qbgI+h6Cc4kEmc6zdHsuCgR+UDTohh/3hVsE7ncmERZ84okNEPzy0=
-X-Received: by 2002:a17:906:4917:: with SMTP id b23mr35654ejq.468.1627331950408;
- Mon, 26 Jul 2021 13:39:10 -0700 (PDT)
+        id S231334AbhG1U0P (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 28 Jul 2021 16:26:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229878AbhG1U0P (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Jul 2021 16:26:15 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73D8DC061757
+        for <linux-pwm@vger.kernel.org>; Wed, 28 Jul 2021 13:26:13 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m8q7j-0001DY-CD; Wed, 28 Jul 2021 22:25:51 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m8q7f-00016c-Jz; Wed, 28 Jul 2021 22:25:47 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m8q7f-00018J-IS; Wed, 28 Jul 2021 22:25:47 +0200
+Date:   Wed, 28 Jul 2021 22:25:47 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Claudiu.Beznea@microchip.com
+Cc:     Arnd Bergmann <arnd@arndb.de>, andy.shevchenko@gmail.com,
+        alexandre.belloni@bootlin.com, Nicolas.Ferre@microchip.com,
+        thierry.reding@gmail.com, lee.jones@linaro.org,
+        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
+        o.rempel@pengutronix.de, Ludovic.Desroches@microchip.com,
+        aardelean@deviqon.com, linux-pwm@vger.kernel.org,
+        broonie@kernel.org, Jonathan.Cameron@huawei.com,
+        linux-arm-kernel@lists.infradead.org, a.zummo@towertech.it,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        wsa@kernel.org, kernel@pengutronix.de, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org
+Subject: About clk maintainership [Was: Re: [PULL] Add variants of
+ devm_clk_get for prepared and enabled clocks enabled clocks]
+Message-ID: <20210728202547.7uvfwflpruku7yps@pengutronix.de>
+References: <20210609202123.u5rmw7al4x3rrvun@pengutronix.de>
+ <20210625171434.3xusxpxjprcdqa47@pengutronix.de>
+ <20210705080144.zfbzkm7l3gmnh6st@pengutronix.de>
+ <20210722060654.nudpdtemosi64nlb@pengutronix.de>
+ <YPkg0wtYIoHKpTUW@kunai>
+ <20210722081817.2tsjzof4gvldq6ka@pengutronix.de>
+ <YPlfcbkxiBmB+vw1@kunai>
+ <CAHp75VfC=s12Unw3+Cn0ag71mM5i90=Jbwj4nYwB5cPKiUTRSA@mail.gmail.com>
+ <20210723091331.wl33wtcvvnejuhau@pengutronix.de>
+ <06e799be-b7c0-5b93-8586-678a449d2239@microchip.com>
 MIME-Version: 1.0
-References: <889aae1b88f120cb6281919d27164a959fbe69d0.1626948070.git.baruch@tkos.co.il>
- <70f0522a9394e9da2f31871442d47f6ad0ff41aa.1626948070.git.baruch@tkos.co.il> <YP2tAR+zZgJZQOgG@yoga>
-In-Reply-To: <YP2tAR+zZgJZQOgG@yoga>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 26 Jul 2021 14:38:58 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+a__sQoKLahH3zu9hd2f4fCqaOQ6S82yua38om0D8raA@mail.gmail.com>
-Message-ID: <CAL_Jsq+a__sQoKLahH3zu9hd2f4fCqaOQ6S82yua38om0D8raA@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] dt-bindings: pwm: add IPQ6018 binding
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Baruch Siach <baruch@tkos.co.il>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "Uwe Kleine-K?nig" <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Balaji Prakash J <bjagadee@codeaurora.org>,
-        Robert Marko <robert.marko@sartura.hr>,
-        Kathiravan T <kathirav@codeaurora.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6qq7fthau66l5qry"
+Content-Disposition: inline
+In-Reply-To: <06e799be-b7c0-5b93-8586-678a449d2239@microchip.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun, Jul 25, 2021 at 12:27 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Thu 22 Jul 05:01 CDT 2021, Baruch Siach wrote:
->
-> > DT binding for the PWM block in Qualcomm IPQ6018 SoC.
-> >
-> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> > ---
-> > v6:
-> >
-> >   Device node is child of TCSR; remove phandle (Rob Herring)
-> >
-> >   Add assigned-clocks/assigned-clock-rates (Uwe Kleine-K=C3=B6nig)
-> >
-> > v5: Use qcom,pwm-regs for phandle instead of direct regs (Bjorn
-> >     Andersson, Kathiravan T)
-> >
-> > v4: Update the binding example node as well (Rob Herring's bot)
-> >
-> > v3: s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
-> >
-> > v2: Make #pwm-cells const (Rob Herring)
-> > ---
-> >  .../devicetree/bindings/pwm/ipq-pwm.yaml      | 69 +++++++++++++++++++
-> >  1 file changed, 69 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml b/Docum=
-entation/devicetree/bindings/pwm/ipq-pwm.yaml
-> > new file mode 100644
-> > index 000000000000..ee2bb03a1223
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
-> > @@ -0,0 +1,69 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pwm/ipq-pwm.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Qualcomm IPQ6018 PWM controller
-> > +
-> > +maintainers:
-> > +  - Baruch Siach <baruch@tkos.co.il>
-> > +
-> > +properties:
-> > +  "#pwm-cells":
-> > +    const: 2
-> > +
-> > +  compatible:
-> > +    const: qcom,ipq6018-pwm
-> > +
-> > +  offset:
-> > +    description: |
->
-> '|' maintains the formatting of the text, you don't need that.
->
-> > +      Offset of PWM register in the TCSR block.
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    const: core
->
-> With a single clock, it's nice to skip the -names.
->
-> > +
-> > +  assigned-clocks:
-> > +    maxItems: 1
-> > +
-> > +  assigned-clock-rates:
-> > +    maxItems: 1
->
-> These (assigned-*) are generic properties that may be used on a lot of
-> nodes, should they really be part of the individual binding, Rob?
 
-They are allowed on any node with 'clocks', so you don't need them.
-However, if you know there's 1 entry only, then I'd keep that. Or was
-'maxItems: 1' just copied because I see that alot.
+--6qq7fthau66l5qry
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rob
+Hello,
+
+I adapted the Subject in the hope to catch Stephen's and Michael's
+attention. My impression is that this thread isn't on their radar yet,
+but the topic here seems important enough to get a matching Subject.
+
+On Mon, Jul 26, 2021 at 09:18:16AM +0000, Claudiu.Beznea@microchip.com wrot=
+e:
+> > On Fri, Jul 23, 2021 at 11:26:58AM +0300, Andy Shevchenko wrote:
+> >> On Thursday, July 22, 2021, Wolfram Sang <wsa@kernel.org> wrote:
+> >>>>>> [ some frustration for not getting feedback for clk patches ]
+> >>>>> What about adding gkh to the list explaining the situation to him?
+> >>>> Greg doesn't like devm_ stuff.
+> >>>>
+> >>>> I already asked Arnd who doesn't want to interfere and akpm who didn=
+'t
+> >>>> react either up to now.
+> >>> Wow, okay, that is frustrating.
+> >> The situation simply shows the process gap and One Maintainer nowadays=
+ is
+> >> far from enough to satisfy demands.
+> >=20
+> > Technically there are two maintainers for drivers/clk, Michael Turquette
+> > and Stephen Boyd. It seems Michael is MIA and Stephen doesn't have the
+> > capacity to address all requests.
+> >=20
+> >> What I think about is that we need to escalate this to Linus and
+> >> others and elaborate the mechanisms how to squeeze a new (additional)
+> >> maintainer when the original one is not responsive. Let=E2=80=99s say =
+some
+> >> procedural steps. Otherwise we doomed because of human factor.
+> >=20
+> > Assuming there was some process for this, is there someone who is
+> > willing to take responsibility here?
+>=20
+> In the last year I worked on AT91 clock drivers and I would be available
+> for taking responsibility beyond AT91 clocks (if everyone's OK with this),
+> in whatever form the current maintainers and people in the audience would
+> agree, if any (co-maintainer or other forms that could be useful). The id=
+ea
+> is to help things progress as I also have patches waiting for feedback on
+> clock mailing list for almost 6 months.
+>=20
+> Let me know if I can be helpful.
+
+Wondering about how we can progress here I think it's crucial that
+Stephen and/or Michael share their thoughts about how they intend to
+care for drivers/clk in the future.
+
+Do you want to keep the maintainer post long-term? Or only for a
+transitional period until someone else can take care? Is your
+non-presence only temporal and is it foreseeable that you will increase
+your efforts in the next weeks/months again? Do you welcome a
+co-maintainer? What kind of involvement would you consider helpful?
+
+Thanks to Claudiu for offering to support here, at least from my side
+this is very appreciated.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--6qq7fthau66l5qry
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmEBvToACgkQwfwUeK3K
+7Aksbwf/YlXrflASuxAw9ZMxMY43DC3nIKdf2RTKOgtNNEFOXGHJAhFzxIb9D6Iu
+yUJ9O3vjSnS2L56hUNq4WzAFg/QFj29vCHYwMlI3S0rKJAbPik+NbdakEvgjgGSH
+G5jhi2RKJDosXRHy2djyjqINHgjPViVka7qVoa2+hJnOLrfGmUjSzWTbWBE69Zs+
+Zm0HSIg9VXbOpxcqxy55PNTkn5hzQ03rvHR6VeqnB15Pab9AHSKDta5yfReZPWoP
+/WHoVwCGU6JmlKbTAqCePaDG0Y0HfUQjhg6aQj1Z823tT9LcNP8khCE2tbhM0ii7
+5y0J8EYhxmhak5kFGiuNPYvYGgfTsw==
+=SgSy
+-----END PGP SIGNATURE-----
+
+--6qq7fthau66l5qry--
