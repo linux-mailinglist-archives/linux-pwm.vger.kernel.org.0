@@ -2,164 +2,111 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C8BD3DEB19
-	for <lists+linux-pwm@lfdr.de>; Tue,  3 Aug 2021 12:40:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BED5B3DF7E7
+	for <lists+linux-pwm@lfdr.de>; Wed,  4 Aug 2021 00:36:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235530AbhHCKko (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 3 Aug 2021 06:40:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235543AbhHCKkl (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 3 Aug 2021 06:40:41 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96B5CC06179B
-        for <linux-pwm@vger.kernel.org>; Tue,  3 Aug 2021 03:40:29 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mArqL-0000Z2-TR; Tue, 03 Aug 2021 12:40:17 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mArqG-0006N5-So; Tue, 03 Aug 2021 12:40:12 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mArqG-0002vP-Qh; Tue, 03 Aug 2021 12:40:12 +0200
-Date:   Tue, 3 Aug 2021 12:40:12 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        alexandre.belloni@bootlin.com,
-        Michael Turquette <mturquette@baylibre.com>,
-        thierry.reding@gmail.com, lee.jones@linaro.org,
-        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Ludovic.Desroches@microchip.com, o.rempel@pengutronix.de,
-        andy.shevchenko@gmail.com, aardelean@deviqon.com,
-        linux-pwm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        broonie@kernel.org, Jonathan.Cameron@huawei.com,
-        linux-arm-kernel@lists.infradead.org, a.zummo@towertech.it,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        wsa@kernel.org, kernel@pengutronix.de, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org, Claudiu.Beznea@microchip.com
-Subject: Re: About clk maintainership [Was: Re: [PULL] Add variants of
- devm_clk_get for prepared and enabled clocks enabled clocks]
-Message-ID: <20210803104012.wf2buscbukxufesl@pengutronix.de>
-References: <20210723091331.wl33wtcvvnejuhau@pengutronix.de>
- <06e799be-b7c0-5b93-8586-678a449d2239@microchip.com>
- <20210728202547.7uvfwflpruku7yps@pengutronix.de>
- <20210728204033.GF22278@shell.armlinux.org.uk>
- <162771727997.714452.2303764341103276867@swboyd.mtv.corp.google.com>
- <20210731120004.i3affxw7upl5y4c5@pengutronix.de>
- <20210802094810.GJ22278@shell.armlinux.org.uk>
- <20210802152755.ibisunvibmwhiyry@pengutronix.de>
- <20210802163824.GK22278@shell.armlinux.org.uk>
- <162797831443.714452.3551045763456936564@swboyd.mtv.corp.google.com>
+        id S233236AbhHCWgL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 3 Aug 2021 18:36:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53212 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231770AbhHCWgL (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 3 Aug 2021 18:36:11 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D3C4560525;
+        Tue,  3 Aug 2021 22:35:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628030159;
+        bh=VLQDPuYtppmqHTWikIAl/LlTeEVdU62YKptNtZBvwDM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XiC4OcyA9vPRScT+26U/MPHk/PLw7cfWKDzQmhm7L/2ifrhJ/zeydraOBFfSielel
+         C9CoTPz9m8g5nHPqw5lV3cach9MFKoQo7P1BIrAUEWxt2n34NVbQ8Vq9y9Bk17olEn
+         YwLObrlxabk//+7InLHI/JB3MrRVuc6CLmVXUNAItfsddCLQfVMIBm5OTMNUIr0d2j
+         6rr6MddHbqKXUpTXihj8VOyu+VpdlXivyHd+uCltwAZVIFEkOJPzox3KYwl2CflZxe
+         PtulX27cIMv06Ar6mdPJO8Z5O1byM1L5d1FcFiP35VJWL3P8a4KAnMf4Mgm9Rzd4KU
+         G6lou/vcPBEZA==
+From:   Mark Brown <broonie@kernel.org>
+To:     Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     Mark Brown <broonie@kernel.org>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        "open list:INPUT KEYBOARD, MOUSE, JOYSTICK , TOUCHSCREEN..." 
+        <linux-input@vger.kernel.org>, YiFei Zhu <yifeifz2@illinois.edu>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        "open list:FRAMEBUFFER LAYER" <dri-devel@lists.freedesktop.org>,
+        Mike Rapoport <rppt@kernel.org>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
+Subject: Re: (subset) [PATCH v2 0/8] arm: ep93xx: CCF conversion
+Date:   Tue,  3 Aug 2021 23:35:30 +0100
+Message-Id: <162803013703.42391.16928190328940334025.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20210726140001.24820-1-nikita.shubin@maquefel.me>
+References: <20210726115058.23729-1-nikita.shubin@maquefel.me> <20210726140001.24820-1-nikita.shubin@maquefel.me>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jsnx7dwxusk2t7bj"
-Content-Disposition: inline
-In-Reply-To: <162797831443.714452.3551045763456936564@swboyd.mtv.corp.google.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Mon, 26 Jul 2021 16:59:48 +0300, Nikita Shubin wrote:
+> This series series of patches converts ep93xx to Common Clock Framework.
+> 
+> It consists of preparation patches to use clk_prepare_enable where it is
+> needed, instead of clk_enable used in ep93xx drivers prior to CCF and
+> a patch converting mach-ep93xx/clock.c to CCF.
+> 
+> Link: https://lore.kernel.org/patchwork/cover/1445563/
+> Link: https://lore.kernel.org/patchwork/patch/1435884/
+> 
+> [...]
 
---jsnx7dwxusk2t7bj
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to
 
-On Tue, Aug 03, 2021 at 01:11:54AM -0700, Stephen Boyd wrote:
-> Quoting Russell King (Oracle) (2021-08-02 09:38:24)
-> > On Mon, Aug 02, 2021 at 05:27:55PM +0200, Uwe Kleine-Konig wrote:
-> > > Hello Russell,
-> > >=20
-> > > On Mon, Aug 02, 2021 at 10:48:10AM +0100, Russell King (Oracle) wrote:
-> >=20
-> > > > There have been several different approaches to wrapping things up,
-> > > > but here's a question: should we make it easier to do the lazy thing
-> > > > (get+enable) or should we make it easier to be power efficient?
-> > > > Shouldn't we be encouraging people to write power efficient drivers?
-> > >=20
-> > > Yeah, sounds compelling, but I wonder if that's of practical importan=
-ce.
-> > > How many driver authors do you expect to lure into making a better
-> > > driver just because devm_clk_get_prepared() doesn't exist? In contras=
-t:
-> > > How many drivers become simpler with devm_clk_get_prepared() and so
-> > > it becomes easier to maintain them and easier to spot bugs?
-> > > In the absence of devm_clk_get_prepared(), is it better that several
-> > > frameworks (or drivers) open code it?
-> >=20
-> > It probably depends on where you stand on power management and power
-> > efficiency issues. Personally, I would like to see more effort put
-> > into drivers to make them more power efficient, and I believe in the
-> > coming years, power efficiency is going to become a big issue.
-> >=20
->=20
-> I agree we should put more effort into power efficiency in the kernel.
-> I've occasionally heard from driver writers that they never will turn
-> the clk off even in low power modes though. They feel like it's a
-> nuisance to have to do anything with the clk framework in their driver.
-> When I say "why not use runtime PM?" I get told that they're not turning
-> the clk off because it needs to be on all the time, so using runtime PM
-> makes the driver more complicated, not less, and adds no value. I think
-> some touchscreens are this way, and watchdogs too. Looking at the
-> drivers being converted in this series I suspect RTC is one of those
-> sorts of devices as well. But SPI and I2C most likely could benefit from
-> using runtime PM and so those ones don't feel appropriate to convert.
->=20
-> Maybe this series would be more compelling if those various drivers that
-> are hand rolling the devm action were converted to the consolidated
-> official devm function. The truth is it's already happening in various
-> subsystems so consolidating that logic into one place would be a win
-> code size wise and very hard to ignore.
->=20
-> Doing
->=20
->  $ git grep devm_add_action | grep clk
->=20
-> seems to catch quite a few of them.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-Another upside is that grepping for these drivers with a potential for
-further improvement become easier to grep for as
-devm_clk_get_{prepared,enabled} is a much better hint :-)
+Thanks!
 
-The changes to these drivers probably won't go through a clk tree, so
-adding these patches before adding devm_clk_get_enabled() would only
-help for the warm and cozy feeling that it is right to do so, correct?
+[2/8] spi: spi-ep93xx: Prepare clock before using it
+      commit: 7c72dc56a631b87043e3c5838f5094db30d8c58d
 
-As my focus is limited to (mostly) drivers/pwm and I already have quite
-some other patch quests on my list:
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-So can I lure you in merging the new functions and I will create a
-kernel janitor task to convert more existing drivers?
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Best regards
-Uwe
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---jsnx7dwxusk2t7bj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmEJHQkACgkQwfwUeK3K
-7Al74wgAkhpu5oiH9zXF7yver2FOhm5lA/whLWxAmSyiMUqAURgga0ZHZaA5jSfS
-V47S5aYg2PHTPQjHsE9vffbXZ1NfmE4t+XsY/9hn1EaGA3yrwCfxF5oFeTqZnP+D
-AJxuot538b05HhV1MY2TDE/MYs7XKlKzT/BzfI14JPKIAzdFpTu33/XNNocLBs3M
-FK3NlL7d2p7tynJYDE7WCTsBH8r+k9QJmwSVl1GB8xTk7WOwEcPysg4Ts3aO5csk
-02QFW6StrFEYfMKMEPm6uf5PX0Y4G4es8MbCpy+3pU1UXGojQcRvp4ocPiszpYFt
-mqFFq7f3cn4PK8GIh5GncnlWzh7DeQ==
-=THuX
------END PGP SIGNATURE-----
-
---jsnx7dwxusk2t7bj--
+Thanks,
+Mark
