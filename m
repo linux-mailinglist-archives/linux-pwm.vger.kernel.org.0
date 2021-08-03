@@ -2,106 +2,82 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1980A3DE0A6
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Aug 2021 22:29:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08F223DE767
+	for <lists+linux-pwm@lfdr.de>; Tue,  3 Aug 2021 09:44:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231308AbhHBU3T (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 2 Aug 2021 16:29:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229729AbhHBU3S (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 2 Aug 2021 16:29:18 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94C0EC06175F;
-        Mon,  2 Aug 2021 13:29:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=l+fsYpXHnA5UWflt6UdASmUhsqYZSqpyJ5dbaN1LNhI=; b=vjQduL25s9hj45Yfu4BTWPBTU
-        kSrAkTSvbBkmMoP+U+eq7jLxh9RY41POf05sbal5DLZUOHV14VyAkDosbwqMP6hNbjJNzszGxQOFb
-        5wYJIChsZvBSrMFJdmAcTH4YkXzYoyuavecHIGnNfsnYkoQHkamhrzD+2t/mLD6cSA8AE/lejVALP
-        o14n71qmu350xdj1XuaKMWTtEqYO2HM34dB006g4k7212DICITO8uYJP3CFtt6kaRoKcMqpnwP50V
-        UIFDzpfSBBtP1nJ9QQnkdI2ASdn0BAlsWuimFTpAKGqcXPn7safpQjAHW1AXfy3hNuN5xHrP1qriX
-        LkVuUtlRQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46868)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1mAeYW-0006Ce-VV; Mon, 02 Aug 2021 21:29:00 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1mAeYR-0003Bf-Ax; Mon, 02 Aug 2021 21:28:55 +0100
-Date:   Mon, 2 Aug 2021 21:28:55 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        Ludovic Desroches <Ludovic.Desroches@microchip.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Alexandru Ardelean <aardelean@deviqon.com>,
-        linux-pwm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Mark Brown <broonie@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Claudiu Beznea <Claudiu.Beznea@microchip.com>
-Subject: Re: About clk maintainership [Was: Re: [PULL] Add variants of
- devm_clk_get for prepared and enabled clocks enabled clocks]
-Message-ID: <20210802202855.GL22278@shell.armlinux.org.uk>
-References: <20210723091331.wl33wtcvvnejuhau@pengutronix.de>
- <06e799be-b7c0-5b93-8586-678a449d2239@microchip.com>
- <20210728202547.7uvfwflpruku7yps@pengutronix.de>
- <20210728204033.GF22278@shell.armlinux.org.uk>
- <162771727997.714452.2303764341103276867@swboyd.mtv.corp.google.com>
- <20210731120004.i3affxw7upl5y4c5@pengutronix.de>
- <20210802094810.GJ22278@shell.armlinux.org.uk>
- <20210802152755.ibisunvibmwhiyry@pengutronix.de>
- <20210802163824.GK22278@shell.armlinux.org.uk>
- <CAHp75VcpA0vOwN8gBj2iikXW2dw+KCgZEM=QJ5Jx6UWqww=iCw@mail.gmail.com>
+        id S234223AbhHCHo2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 3 Aug 2021 03:44:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33304 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234137AbhHCHo1 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 3 Aug 2021 03:44:27 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0EE2860F70;
+        Tue,  3 Aug 2021 07:44:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627976657;
+        bh=zJTYPdrqBdBI+iQ5yhHZVFDlufFj0L6ikGhtn2lcFFw=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=mMMmChjY3DZNkw1INo8gOxHT+nYeyYP7yNG8Cq7kXrGuwppP/hyJLZmW14vRquvsq
+         mrA6JLlrHCRDR0wyqRN43YcgrswcpSDWckfc587HNlFGoFLJP2xms573lRC8w9XLB8
+         KS53fmAMxRX9WRs9mjOwd1yW4e6xPfwZW8D9UOsWjlGS1zZ4LZTGZlTb/3eKz8eDeA
+         Ll5q+SWVB3CwVgMjYr1EsLv03cqCvHCt0HeI44BNCrg9eoVdEhpYDe+TqKgWoeuSsW
+         StN4wnqaRxSJop+JeEGFjw5Ngitn4kprtialS//uLYwsdTrh0VbW6EL7KxqfuPpn3c
+         WQ4pzQwFQzz2w==
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VcpA0vOwN8gBj2iikXW2dw+KCgZEM=QJ5Jx6UWqww=iCw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20210802094810.GJ22278@shell.armlinux.org.uk>
+References: <YPkg0wtYIoHKpTUW@kunai> <YPlfcbkxiBmB+vw1@kunai> <CAHp75VfC=s12Unw3+Cn0ag71mM5i90=Jbwj4nYwB5cPKiUTRSA@mail.gmail.com> <20210723091331.wl33wtcvvnejuhau@pengutronix.de> <06e799be-b7c0-5b93-8586-678a449d2239@microchip.com> <20210728202547.7uvfwflpruku7yps@pengutronix.de> <20210728204033.GF22278@shell.armlinux.org.uk> <162771727997.714452.2303764341103276867@swboyd.mtv.corp.google.com> <20210731120004.i3affxw7upl5y4c5@pengutronix.de> <20210802094810.GJ22278@shell.armlinux.org.uk>
+Subject: Re: About clk maintainership [Was: Re: [PULL] Add variants of devm_clk_get for prepared and enabled clocks enabled clocks]
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     alexandre.belloni@bootlin.com,
+        Michael Turquette <mturquette@baylibre.com>,
+        thierry.reding@gmail.com, lee.jones@linaro.org,
+        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Ludovic.Desroches@microchip.com, o.rempel@pengutronix.de,
+        andy.shevchenko@gmail.com, aardelean@deviqon.com,
+        linux-pwm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        broonie@kernel.org, Jonathan.Cameron@huawei.com,
+        linux-arm-kernel@lists.infradead.org, a.zummo@towertech.it,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        wsa@kernel.org, kernel@pengutronix.de, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org, Claudiu.Beznea@microchip.com
+To:     Russell King (Oracle) <linux@armlinux.org.uk>,
+        <u.kleine-koenig@pengutronix.de>
+Date:   Tue, 03 Aug 2021 00:44:15 -0700
+Message-ID: <162797665579.714452.9746229195858722362@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Aug 02, 2021 at 08:13:05PM +0300, Andy Shevchenko wrote:
-> On Mon, Aug 2, 2021 at 7:38 PM Russell King (Oracle)
-> <linux@armlinux.org.uk> wrote:
-> > It probably depends on where you stand on power management and power
-> > efficiency issues. Personally, I would like to see more effort put
-> > into drivers to make them more power efficient, and I believe in the
-> > coming years, power efficiency is going to become a big issue.
-> 
-> While in the ideal world I 100% agree with the approach, IRL we have
-> to deal with constantly degrading quality of the code and instead of
-> thinking about power management and efficiency the absence of APIs
-> such as discussed provokes not only creating the power management
-> inefficient code, but also memory leaks here and there.
+Quoting Russell King (Oracle) (2021-08-02 02:48:10)
+>=20
+> > > I still wonder if it would be better if we had some sort of DT binding
+> > > that said "turn this clk on when the driver probes this device and ke=
+ep
+> > > it on until the driver is unbound".
+> >=20
+> > This doesn't sound like a hardware property and so I don't think this
+> > belongs into DT and I would be surprised if the dt maintainers would be
+> > willing to accept an idea with this semantic.
+>=20
+> I really don't like that idea - enabling or disabling a clock is
+> an implementation decision, one which can change over time. Even
+> if a clock is required to be on for e.g. accessing device registers,
+> we may decide that, if we want maximum power savings, to disable
+> that clock when the device is not being used, but an initial driver
+> implementation may not do that. If we encourage people to throw a
+> property in DT, then the driver's runtime behaviour becomes a
+> combination of the DT being used and the driver implementation.
+> Let's keep that to a minimum.
+>=20
 
-The point of my previous reply that you quoted above was to make a
-prediction, it wasn't a rejection of the approach.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+I suspect that sometimes we want to express that some clk is on all the
+time in DT because there isn't any sort of consumer driver for it. We
+have fixed rate clks that sort of do that, but I'm thinking about
+something like a GPIO clk gate that is downstream of some clk source,
+and this gpio gate is enabled once at boot and then forgotten about. I
+suppose in this case we could have a property in the clk gpio binding
+that expresses this property of the hardware so it's best to not make
+something more generic that could be abused.
