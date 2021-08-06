@@ -2,104 +2,70 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 853F33E1FFA
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Aug 2021 02:26:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34E153E2CD5
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Aug 2021 16:41:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237222AbhHFA0d (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 5 Aug 2021 20:26:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235480AbhHFA0c (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 5 Aug 2021 20:26:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C6C4D6103B;
-        Fri,  6 Aug 2021 00:26:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628209577;
-        bh=YFtjL1PAXNXSdcZpSOdpjOpPtHM0Uq0mwmaKoBiv7Ng=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=nTBlAbLcMlktPMKTmuZWSwf8qZuNTuimEEJKAP/Jl70nzb4PuCp6jmXm8On/8rZ1e
-         bHd3PWXnDvVTCHCQVNFqLBoxRx+9WiplFvAARRKooeyFeoZhQGZY5iw5Ny+qO8Fqa5
-         rYC46cEsbkvsa/1RbsPZKrfbZLEjfoVhEE4Ue+/xAq8aIgEqmD9eoXeSQVBc//Kdie
-         hmgHunpMJQAq3sRgiUdkuydl0OV6ikTNVBmDP2Q1nKrHjQ2f4jD3anKK/Jy40PXPeG
-         ON3ASC7tam/ND04fURgRmqwi/Vb1kYry7MFHzvt2LrSGQzeU+NkmC5+yKOAxJL3DXL
-         4yEushO9353bA==
-Content-Type: text/plain; charset="utf-8"
+        id S241158AbhHFOmL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 6 Aug 2021 10:42:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240948AbhHFOmL (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Aug 2021 10:42:11 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54966C06179B
+        for <linux-pwm@vger.kernel.org>; Fri,  6 Aug 2021 07:41:54 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id zb12so10617008ejb.5
+        for <linux-pwm@vger.kernel.org>; Fri, 06 Aug 2021 07:41:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=/oMubRmlLM5EZ/UdY6Fj3wsfS2kyoMzN9ASXgZ3xneY=;
+        b=Bwoup+8csuZ0aplYDrhW1xTORktIbRO14S6hXUsMZ9qnVQK/Wen6vIADpq80JjLLvK
+         2pA4sCb9U7+sKuLkDvBPL+7glCU3yWZXzZXfnOqNPlpUMIi37fJjkb1OyWFGaXbn+7qJ
+         ZgpNgioUv5oIUkujl6qgAeZCEY+5dL8nHoDIeUBJmbLeQbGLl8RMPfl5e1I7TVQtz72M
+         YgCtE5Ps5pu1XK1Wap/uxFRItrSEKSh9T9SE6S/+fyFaZRR8rqClRcvW6amRZLYFOpTd
+         W9AfLqI29XcgUqeuC8OIG9xIi1Y7WAzEvjmjWDuPPWYUqQ4diYsAuxjLzXbMOPuFHMkS
+         MwFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=/oMubRmlLM5EZ/UdY6Fj3wsfS2kyoMzN9ASXgZ3xneY=;
+        b=LWFGE7C/W0NYzG4NP43i/tYwAhIYDxxTKXGOYyMzicj5DivrBq/n0nKA9H6Tflc1lI
+         zCBmQaK5DG7879voVlccsAkNkiQR1B6Vc4LyzuKRPZak/KJZw2y2CrN0uCUk7hVuVsYi
+         v81xWUh5xc/IQcQ9YqPjBGKAAe/rf1fnDC/sHXak3AvWN57EBOMqyzUptaKXNyOVUOtX
+         7Hq9W2NzEbeWzz+5OyADVu9ZAarj6GZ1oe3RTGj5g5mxqABXKymk+8HQYL98i2YfgrQV
+         cufEoWvsfYe4k5ktRKP2tlKtIK4s2ESrv4DSNWNBQx2psazwF18ruIgvWp2YquisNQBl
+         ne1A==
+X-Gm-Message-State: AOAM533VIZH51mSISYK7uuYZVHLMqWyLQVaT8QRlGyCS9nhEpgo+E4X0
+        xNWF+TASlxaCYMEsstT3qfJVuF7BoyrOHrVMBnU=
+X-Google-Smtp-Source: ABdhPJzhoMwSsDxi4S8EoWL0J76UmqUWdvA8vv3/aAh6CaNxty+Qan2PxETx4EBDoNgIDXjmLPth7CopVqd9zmwjhmA=
+X-Received: by 2002:a17:906:648f:: with SMTP id e15mr10312451ejm.451.1628260912483;
+ Fri, 06 Aug 2021 07:41:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20210803104012.wf2buscbukxufesl@pengutronix.de>
-References: <20210723091331.wl33wtcvvnejuhau@pengutronix.de> <20210728202547.7uvfwflpruku7yps@pengutronix.de> <20210728204033.GF22278@shell.armlinux.org.uk> <162771727997.714452.2303764341103276867@swboyd.mtv.corp.google.com> <20210731120004.i3affxw7upl5y4c5@pengutronix.de> <20210802094810.GJ22278@shell.armlinux.org.uk> <20210802152755.ibisunvibmwhiyry@pengutronix.de> <20210802163824.GK22278@shell.armlinux.org.uk> <162797831443.714452.3551045763456936564@swboyd.mtv.corp.google.com> <20210803104012.wf2buscbukxufesl@pengutronix.de>
-Subject: Re: About clk maintainership [Was: Re: [PULL] Add variants of devm_clk_get for prepared and enabled clocks enabled clocks]
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        alexandre.belloni@bootlin.com,
-        Michael Turquette <mturquette@baylibre.com>,
-        thierry.reding@gmail.com, lee.jones@linaro.org,
-        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Ludovic.Desroches@microchip.com, o.rempel@pengutronix.de,
-        andy.shevchenko@gmail.com, aardelean@deviqon.com,
-        linux-pwm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        broonie@kernel.org, Jonathan.Cameron@huawei.com,
-        linux-arm-kernel@lists.infradead.org, a.zummo@towertech.it,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        wsa@kernel.org, kernel@pengutronix.de, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org, Claudiu.Beznea@microchip.com
-To:     <u.kleine-koenig@pengutronix.de>
-Date:   Thu, 05 Aug 2021 17:26:16 -0700
-Message-ID: <162820957661.19113.17221558053361108175@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Received: by 2002:ab4:a729:0:0:0:0:0 with HTTP; Fri, 6 Aug 2021 07:41:51 -0700 (PDT)
+Reply-To: mrmaxwellwatford@gmail.com
+From:   Maxwell Watford <kazahalima@gmail.com>
+Date:   Fri, 6 Aug 2021 14:41:51 +0000
+Message-ID: <CAA3roWncDd30x6RhoupgCfnn44FVPeEfYLaNFmHeDGvKLtq7EQ@mail.gmail.com>
+Subject: i need your reply
+To:     kazahalima@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Quoting Uwe Kleine-K=C3=B6nig (2021-08-03 03:40:12)
-> On Tue, Aug 03, 2021 at 01:11:54AM -0700, Stephen Boyd wrote:
-> >=20
-> > Maybe this series would be more compelling if those various drivers that
-> > are hand rolling the devm action were converted to the consolidated
-> > official devm function. The truth is it's already happening in various
-> > subsystems so consolidating that logic into one place would be a win
-> > code size wise and very hard to ignore.
-> >=20
-> > Doing
-> >=20
-> >  $ git grep devm_add_action | grep clk
-> >=20
-> > seems to catch quite a few of them.
->=20
-> Another upside is that grepping for these drivers with a potential for
-> further improvement become easier to grep for as
-> devm_clk_get_{prepared,enabled} is a much better hint :-)
+Greetings,
 
-Sorry, but that's a pretty weak argument. I'd think grepping for the
-absence of pm_ops in drivers would be the same hint.
+We are writing to you from Ecowas Finance Controller Office Lome Togo,
+because we have received a file from the Ministry of Finance Lome-
+Togo, concerning an Inherited Fund bearing your name on it, And after
+our verifications, we found out that the funds belong to you.
 
->=20
-> The changes to these drivers probably won't go through a clk tree, so
-> adding these patches before adding devm_clk_get_enabled() would only
-> help for the warm and cozy feeling that it is right to do so, correct?
+It has been awarded and I will like to guide you to claim the funds.
+Please contact me at my private email address
+(mrmaxwellwatford@gmail.com) for more information and directive
 
-It isn't to feel warm and cozy. It's to demonstrate the need for
-consolidating code. Converting the i2c and spi drivers to use this is
-actively damaging the cause though. Those driver frameworks are more
-likely to encourage proper power management around bus transfers, so
-converting them to use the devm API moves them away from power
-management, not closer to it.
-
-This proves why this topic is always contentious. It's too easy to
-blindly convert drivers to get the clk and leave it enabled forever and
-then they never use power management. The janitors win and nobody else.
-
-Is there some way to avoid that trap? Maybe through some combination of
-a device PM function that indicates the driver has no runtime PM
-callbacks (pm_runtime_no_callbacks() perhaps?) and
-devm_clk_get_enabled() checking for that and returning the clk only when
-that call has been made (i.e. pm_runtime_has_no_callbacks())? This
-approach would fail to catch the case where system wide suspend/resume
-could turn the clk off but the driver doesn't do it. I'm not sure how
-much we care about that case though.
-
->=20
-> As my focus is limited to (mostly) drivers/pwm and I already have quite
-> some other patch quests on my list:
-
-Don't we all? :)
+I am looking forward to your urgent reply,
+Best regards
+Mr Maxwell Watford
