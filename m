@@ -2,91 +2,67 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D1563EB3C1
-	for <lists+linux-pwm@lfdr.de>; Fri, 13 Aug 2021 12:03:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40CB83EC50A
+	for <lists+linux-pwm@lfdr.de>; Sat, 14 Aug 2021 22:33:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239277AbhHMKDm convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Fri, 13 Aug 2021 06:03:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60686 "EHLO
+        id S231745AbhHNUdu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 14 Aug 2021 16:33:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239664AbhHMKDQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 13 Aug 2021 06:03:16 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43DF8C0613A4
-        for <linux-pwm@vger.kernel.org>; Fri, 13 Aug 2021 03:02:36 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1mEU14-0003CR-44; Fri, 13 Aug 2021 12:02:18 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1mEU11-0003w2-Fx; Fri, 13 Aug 2021 12:02:15 +0200
-Message-ID: <5da35c2030e57621fa56795cd193e727f53205fe.camel@pengutronix.de>
-Subject: Re: [v11 2/2] pwm: Add Aspeed ast2600 PWM support
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Billy Tsai <billy_tsai@aspeedtech.com>, lee.jones@linaro.org,
-        robh+dt@kernel.org, joel@jms.id.au, andrew@aj.id.au,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Cc:     BMC-SW@aspeedtech.com
-Date:   Fri, 13 Aug 2021 12:02:15 +0200
-In-Reply-To: <20210812040942.5365-3-billy_tsai@aspeedtech.com>
-References: <20210812040942.5365-1-billy_tsai@aspeedtech.com>
-         <20210812040942.5365-3-billy_tsai@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        with ESMTP id S229489AbhHNUdu (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 14 Aug 2021 16:33:50 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 567ADC061764
+        for <linux-pwm@vger.kernel.org>; Sat, 14 Aug 2021 13:33:21 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id r7so18085016wrs.0
+        for <linux-pwm@vger.kernel.org>; Sat, 14 Aug 2021 13:33:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:from:mime-version:content-transfer-encoding
+         :content-description:subject:to:date:reply-to;
+        bh=5NTJSky9UX3JbuB9riY3wCYfXDpCwy2c7hzO0kF4AHA=;
+        b=FjIY0tVyCoGcUuxfz0xADC2jquTI1Z5pnJfu/WyDdc3FTTM5l5NVTZfvCZwVNDZloF
+         KSp0Bi5C3ObvHmzxEPFNEB6BcE/Yy0rAqBukl/osiyh79jFKC7seHU/dpSY3NWPcYrEf
+         3C0/iEC8qDq3/Nh+h0XmnYZqdCppvQOwC0cJMvOe4FL0cQPvGgyYPpflGz0mfE8rvzpk
+         kYTn8YL2/U+22Op4fGaYuNKHQS0qvMqGSHPh3t5KJ8kvJGOOi4QxNwM/pjGlmVW2rO/z
+         TUD+L09E9E1OHxWCz6g6ZeYQQCZfkl0fhsnEWcNIf130XONXVRLESYB2fAo5887Wqa0G
+         3QYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:from:mime-version
+         :content-transfer-encoding:content-description:subject:to:date
+         :reply-to;
+        bh=5NTJSky9UX3JbuB9riY3wCYfXDpCwy2c7hzO0kF4AHA=;
+        b=O6VyrGuGHoiO2X60ZwE2+ecsTIFFJoIbpQ9CScy7Xa7WWC5073X1zGHNdp5BLDUogs
+         PEF3kUVcccFVtExNSqodINMoD82+Mf+Ai+Ig/x2VHwMdP0pXjqZyagVJGeGSiLSj82FU
+         PUAEV+NLKffjKLmfcaz2nugJWqJNSHqH3z35Qy2SRgQuc9Umqm9LXm5a73GzbTj3FGNg
+         4NVwV03Epqtatg5ANSaPjg2Eg70B0i4sXSkYfvkH5jO5YTjYgN6sb+sV8+XcuccKxfPm
+         p2MHCiHGLLIaBzrl1Cxk1RGnxuT2c6849FjT8y+IYoii/5LAhLibJI7p3Ww8S2s2ne0p
+         dtBg==
+X-Gm-Message-State: AOAM53001UYzuxiBGDsvWv1Uoozav2/U7o/vWIPV0PSomrb9aJ5TIkRF
+        W8hdKDfo1ohXNuyVK88a1ZA=
+X-Google-Smtp-Source: ABdhPJxWbJJOV+hftEmFmzdHBBPusCzgKW2jIWcJlgObVRHl936xVd1qMfyq0JVFXZNZpQTwHifIwQ==
+X-Received: by 2002:adf:9c8c:: with SMTP id d12mr9961771wre.71.1628973199960;
+        Sat, 14 Aug 2021 13:33:19 -0700 (PDT)
+Received: from [192.168.1.70] ([102.64.221.122])
+        by smtp.gmail.com with ESMTPSA id e17sm5604100wrs.78.2021.08.14.13.33.15
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Sat, 14 Aug 2021 13:33:19 -0700 (PDT)
+Message-ID: <6118288f.1c69fb81.4ddf7.f23b@mx.google.com>
+From:   Vanina curth <curtisvani0028@gmail.com>
+X-Google-Original-From: Vanina curth
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Sir,
+To:     Recipients <Vanina@vger.kernel.org>
+Date:   Sat, 14 Aug 2021 20:33:04 +0000
+Reply-To: curtisvani9008@gmail.com
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Billy,
-
-On Thu, 2021-08-12 at 12:09 +0800, Billy Tsai wrote:
-> This patch add the support of PWM controller which can be found at aspeed
-> ast2600 soc. The pwm supoorts up to 16 channels and it's part function
-> of multi-function device "pwm-tach controller".
-> 
-> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
-> ---
-[...]
-> diff --git a/drivers/pwm/pwm-aspeed-ast2600.c b/drivers/pwm/pwm-aspeed-ast2600.c
-> new file mode 100644
-> index 000000000000..f89ce1d4cd67
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-aspeed-ast2600.c
-> @@ -0,0 +1,327 @@
-[...]
-> +static int aspeed_pwm_probe(struct platform_device *pdev)
-> +{
-[...]
-> +	priv->clk = devm_clk_get(&parent_dev->dev, 0);
-> +	if (IS_ERR(priv->clk))
-> +		return dev_err_probe(dev, PTR_ERR(priv->clk),
-> +				     "Couldn't get clock\n");
-> +
-> +	ret = clk_prepare_enable(priv->clk);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Couldn't enable clock\n");
-> +
-> +	priv->reset = devm_reset_control_get_shared(&parent_dev->dev, NULL);
-> +	if (IS_ERR(priv->reset)) {
-> +		ret = dev_err_probe(dev, PTR_ERR(priv->reset),
-> +				    "Get reset failed\n");
-> +		goto err_disable_clk;
-> +	}
-
-I suggest to request the reset control before enabling the clock. That
-way you can simplify the error path and avoid enabling the clock in case
-of reset_control_get failure.
-
-regards
-Philipp
+How are you? I'm Vanina. I'm interested to know you and I would like to kno=
+w more about you and establish relationship with you. i will wait for your =
+response. thank you.
