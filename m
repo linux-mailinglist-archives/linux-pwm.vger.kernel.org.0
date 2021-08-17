@@ -2,51 +2,51 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 676D53EE2B3
+	by mail.lfdr.de (Postfix) with ESMTP id B24903EE2B4
 	for <lists+linux-pwm@lfdr.de>; Tue, 17 Aug 2021 03:31:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238504AbhHQBba (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 16 Aug 2021 21:31:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48102 "EHLO
+        id S238591AbhHQBbd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 16 Aug 2021 21:31:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237362AbhHQBbG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 16 Aug 2021 21:31:06 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05B2BC0617AF;
-        Mon, 16 Aug 2021 18:30:34 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id d4so38104913lfk.9;
-        Mon, 16 Aug 2021 18:30:33 -0700 (PDT)
+        with ESMTP id S237491AbhHQBbI (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 16 Aug 2021 21:31:08 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3092CC0612A5;
+        Mon, 16 Aug 2021 18:30:35 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id h17so30147628ljh.13;
+        Mon, 16 Aug 2021 18:30:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6lLAJV89hQcPlyDX5yfRwTHcihc/r1AqZv/5pRsMLxM=;
-        b=nwrGyMxr7TkokoAbKrZt8dmendcbwZ/KglOYAoBtkklp0BVOYjBE6OPrXf8u2d0QSs
-         JYJkalIYEYZY+URP5BFOM3PuBRhSKyvy8KCdC/rx8InfIY2vyXdT7bnsx67YVsK3yyDk
-         TkFSDgeuVXYwWRPVubotA6I+kOxT5++AJriWNKLk5qzlP67E32aPtTnhVVg7sPhLoFDq
-         F4wGo4eWbDPCAQY0oBCeUh2eY1FGe1yC6o5DeAI/SL7hvqLmmnRTITxwj3pV7KwsBons
-         EzwYyNAwszjKMGVw+qrqW2pmosbwgrw1V5vmLfVDZeczzI3UsacNhxC+Ilhf6fIDM6QR
-         GHbQ==
+        bh=pQDzXZvRDUZkLv5x3ImTMmoCkegW1/kgvrYOEYJcZ1E=;
+        b=WnkqPT38iEK+LI2pegQ5CAgZHbUA+4T1HBF1Robs64xHzd2RVVDQL5P2Th1DUqHQmg
+         Bmip5c85v20usxU6l+F6TNpm0oydiIVHub5elxPj9ebjhuRxMMJKJhh1mnjJkJBfCPui
+         t3RNY/nUebYwUEneR0f3mwbtZtB/CmmkPR03QqeUewR3IvqyyyMRHZHKTwRUPOGUnQQw
+         FHGyQFw5JabzhE6WPtOkrekSYjBvD/veH3cIzof6CzoYj45MQmTsKOpvWSA2fZSY8GmA
+         YlKTz9SZ2ABu0XLhuo4N3qRhp1fuwUr3pubXVtg1Z2vckegbLZrvE43sBkYZzT4kyasO
+         fJeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6lLAJV89hQcPlyDX5yfRwTHcihc/r1AqZv/5pRsMLxM=;
-        b=UttBLl3z/7PH2HhPEaslglZqOzlecrf668EkvgKIM+CbnC0RlmW6o0NSSkQ17LzckU
-         L2lDwOhz4lwvk2ijNbZgk7+raRFrD2UqTb0FveO87yTQYKoYs4M4ev/DehL8NBqsPvPp
-         KyR+DqqweUNoencgEdAW1eRKvlEMy/av6paPJgLFHDt93Cy79EOVbBB0jETsq0YuKEZY
-         rXhvUd7dzOPJGy9dBKE3bbaD/nxLBxIK79dCVoAz3clcDMBek5kNL/+fEuM2zXY2mgOL
-         RE1EPjVqUQoR3XLGLI4wtt83GZzF+YjaDclRIee80rDg0BkQDyJm8ARCSawBfEYH1y8c
-         YBHA==
-X-Gm-Message-State: AOAM530IvvYLHaYi+OP7gbnYuM6jiB7rqJ+reZm6iLqYDvqyiePzfRPw
-        cGjpHdR8S1zijseaMte0ieE=
-X-Google-Smtp-Source: ABdhPJysm3N4gOhYNuFKEDPKN7Uh+i4G/iAeuT5GxXfDxPml3wY50JIEVz90Yl1goWbq9lgObhlGSQ==
-X-Received: by 2002:ac2:596b:: with SMTP id h11mr492625lfp.558.1629163832433;
-        Mon, 16 Aug 2021 18:30:32 -0700 (PDT)
+        bh=pQDzXZvRDUZkLv5x3ImTMmoCkegW1/kgvrYOEYJcZ1E=;
+        b=ZM0Os8twWd/01Z7GvBcfU6VT5+PE2z5lyWRtMvidq+RgfoUTbxSoBO9q5N2M6cH4bk
+         1DdcXcUaS3JBHrF9OO0obxE1tFpvX223mUzBkDhMoH1MlvNyQMf6yUx0G4z6UTtACg2T
+         1IGblD1UxYDNwc1lXFSQjQz1/wEuvg707PcxorfN+f8QokYi1cvJGkhSGsFelyC+plnB
+         ukLuW+UWT3da2qPOZ31Ap+gvJSLHajvlocRxAT4Y2Q4Z691yT72WjN+6ffxy17VncRvN
+         w9m9qOKbHlFWQsuLQ2KkAaWZtiS7RhhC4H0bsg50k+5Cx0iXy5/ln+5E8D0mZIbAIIap
+         EAeQ==
+X-Gm-Message-State: AOAM533CNR9aufiu9xFUn+HJvPshaMDvO2aY5XgWLUJXNMuKGagvZZ9H
+        vxgKrJOGPbt4e1AkXGptuI0=
+X-Google-Smtp-Source: ABdhPJxafgNSwgi9onfKPo0+LX8+L56eoUxCQoUliGfkte3CyYpPj4Ux16SZvsFjT/VXs0Ws0bfVww==
+X-Received: by 2002:a05:651c:1144:: with SMTP id h4mr847720ljo.396.1629163833587;
+        Mon, 16 Aug 2021 18:30:33 -0700 (PDT)
 Received: from localhost.localdomain (46-138-85-91.dynamic.spd-mgts.ru. [46.138.85.91])
-        by smtp.gmail.com with ESMTPSA id g30sm46607lfj.298.2021.08.16.18.30.31
+        by smtp.gmail.com with ESMTPSA id g30sm46607lfj.298.2021.08.16.18.30.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Aug 2021 18:30:32 -0700 (PDT)
+        Mon, 16 Aug 2021 18:30:33 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -75,9 +75,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-mmc@vger.kernel.org, linux-media@vger.kernel.org,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-clk@vger.kernel.org
-Subject: [PATCH v8 26/34] soc/tegra: fuse: Add OPP support
-Date:   Tue, 17 Aug 2021 04:27:46 +0300
-Message-Id: <20210817012754.8710-27-digetx@gmail.com>
+Subject: [PATCH v8 27/34] soc/tegra: fuse: Reset hardware
+Date:   Tue, 17 Aug 2021 04:27:47 +0300
+Message-Id: <20210817012754.8710-28-digetx@gmail.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210817012754.8710-1-digetx@gmail.com>
 References: <20210817012754.8710-1-digetx@gmail.com>
@@ -87,50 +87,70 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Initialize and sync FUSE OPP to set up SoC core voltage vote needed by
-FUSE hardware.
+The FUSE controller is enabled at a boot time. Reset it in order to put
+hardware and clock into clean and disabled state.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/soc/tegra/fuse/fuse-tegra.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/soc/tegra/fuse/fuse-tegra.c | 25 +++++++++++++++++++++++++
+ drivers/soc/tegra/fuse/fuse.h       |  1 +
+ 2 files changed, 26 insertions(+)
 
 diff --git a/drivers/soc/tegra/fuse/fuse-tegra.c b/drivers/soc/tegra/fuse/fuse-tegra.c
-index f2151815db58..d1b66cd9339d 100644
+index d1b66cd9339d..0c2723c2822f 100644
 --- a/drivers/soc/tegra/fuse/fuse-tegra.c
 +++ b/drivers/soc/tegra/fuse/fuse-tegra.c
-@@ -13,6 +13,7 @@
- #include <linux/of.h>
- #include <linux/of_address.h>
+@@ -15,6 +15,7 @@
  #include <linux/platform_device.h>
-+#include <linux/pm_opp.h>
+ #include <linux/pm_opp.h>
  #include <linux/pm_runtime.h>
++#include <linux/reset.h>
  #include <linux/slab.h>
  #include <linux/sys_soc.h>
-@@ -213,6 +214,10 @@ static int tegra_fuse_probe(struct platform_device *pdev)
  
- 	pm_runtime_enable(&pdev->dev);
+@@ -248,6 +249,30 @@ static int tegra_fuse_probe(struct platform_device *pdev)
+ 		goto restore;
+ 	}
  
-+	err = devm_tegra_core_dev_init_opp_table_simple(&pdev->dev);
++	fuse->rst = devm_reset_control_get_optional(&pdev->dev, "fuse");
++	if (IS_ERR(fuse->rst)) {
++		err = PTR_ERR(fuse->rst);
++		dev_err(&pdev->dev, "failed to get FUSE reset: %pe\n",
++			fuse->rst);
++		goto restore;
++	}
++
++	/*
++	 * FUSE clock is enabled at a boot time, hence this resume/suspend
++	 * disables the clock besides the h/w resetting.
++	 */
++	err = pm_runtime_resume_and_get(&pdev->dev);
 +	if (err)
 +		goto restore;
 +
- 	if (fuse->soc->probe) {
- 		err = fuse->soc->probe(fuse);
- 		if (err < 0)
-@@ -259,6 +264,12 @@ static int __maybe_unused tegra_fuse_runtime_resume(struct device *dev)
- {
- 	int err;
- 
-+	err = dev_pm_opp_sync(dev);
-+	if (err) {
-+		dev_err(dev, "failed to sync OPP: %d\n", err);
-+		return err;
++	err = reset_control_reset(fuse->rst);
++	pm_runtime_put(&pdev->dev);
++
++	if (err < 0) {
++		dev_err(&pdev->dev, "failed to reset FUSE: %d\n", err);
++		goto restore;
 +	}
 +
- 	err = clk_prepare_enable(fuse->clk);
- 	if (err < 0) {
- 		dev_err(dev, "failed to enable FUSE clock: %d\n", err);
+ 	/* release the early I/O memory mapping */
+ 	iounmap(base);
+ 
+diff --git a/drivers/soc/tegra/fuse/fuse.h b/drivers/soc/tegra/fuse/fuse.h
+index de58feba0435..1b719d85bd04 100644
+--- a/drivers/soc/tegra/fuse/fuse.h
++++ b/drivers/soc/tegra/fuse/fuse.h
+@@ -43,6 +43,7 @@ struct tegra_fuse {
+ 	void __iomem *base;
+ 	phys_addr_t phys;
+ 	struct clk *clk;
++	struct reset_control *rst;
+ 
+ 	u32 (*read_early)(struct tegra_fuse *fuse, unsigned int offset);
+ 	u32 (*read)(struct tegra_fuse *fuse, unsigned int offset);
 -- 
 2.32.0
 
