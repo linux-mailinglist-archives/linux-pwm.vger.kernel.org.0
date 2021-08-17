@@ -2,40 +2,64 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B030C3EEC56
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Aug 2021 14:23:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 138583EEE03
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Aug 2021 16:03:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236950AbhHQMXl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 17 Aug 2021 08:23:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37282 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234866AbhHQMXk (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 17 Aug 2021 08:23:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B1CB760FA0;
-        Tue, 17 Aug 2021 12:23:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629202987;
-        bh=c/PlC/W6yjxlV+Z7ZbF/hxgaIiNXDZlZo9QTekHzzto=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nmskkW06SeXdvESPFwWJP4iQi/AfZfa0vEFy+cuAqLmy+f4I2uJuGlWiIG3+qOPHv
-         xnda4sK3SpsR15EDLFwOPVpUWOowLkNLIk9ImApHVFPfJnKz/lhdsh+HFZYj/NbRHm
-         eXuH3smkHCoqx0QNay+eOr+RUqsGi1/LD/ASV8gvs921fqWRRcXPMo3BLK5Ue/LMAY
-         E7aHmfxbASTmbJ0PGpnfzkpkFQY6yMi66OmBVe1qXWlxHCeHepAgYCfKYqlUOjbUyt
-         lxKqpcb5n/55Qq2tzaqx1B4Vg1bUnEx45zv+Fl9rzaJm69xqekfjJ82brq5dSoJIe+
-         WqipDMJt6MCZg==
-Date:   Tue, 17 Aug 2021 13:22:44 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        id S239901AbhHQODi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 17 Aug 2021 10:03:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229761AbhHQODh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Aug 2021 10:03:37 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BADD3C061764;
+        Tue, 17 Aug 2021 07:03:03 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id k8so9836739wrn.3;
+        Tue, 17 Aug 2021 07:03:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VVEiHKfbgxJy3Si7x9qMwuCkodu1ovrZav3yAuRw/WQ=;
+        b=NGu0DCEpleG+Ep+gjrtMwj36Cigf1Xn/FwALxpXcDjG/HheiEOcqif1j7C30iNyDoR
+         UfnkWvY654GbLJJiiHR7imSwFIKyv9XLT96K8+GsD6oCLfWY1318PUVuH4QQVpXL+5MB
+         sWXWF+45ADknPxGX3t+Xe/QTitR63+pwekLYS4LtFAdHYnksZWahfT+1GTFaodEeWnqA
+         eOx7tn6jgCs37eoODu+VwLdsRQzuUuonwBBcsUzg/5aaFUc8Y73zeAXoNTr9PLjG3bO9
+         GV9fg3sIOtBFLYnWBNiTabJSWHMGHfUzG0ouqf+ehjLzM7Ukg8pSAWhUps4ZDVmX+JZ9
+         8Aqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VVEiHKfbgxJy3Si7x9qMwuCkodu1ovrZav3yAuRw/WQ=;
+        b=ReM7+3sfUUKSQWVP5mdazSd2AN39sOb0KmiRI07hDeQpu8VcBZ8Kssd555117FHKKc
+         pwUXumiurByshwIbtfiG67fHDI8cgSjOay1Cz3OaKIT1fm9LGzm0OSzc2Y4dnogAOHVg
+         sapWxRKnUBA69Zeva56+8JVZfGzAlcWeBjDg/6jsbsB/x5zbEqq45lt7j1okyyAtTmrW
+         LQsUsxeDUn574dIutus5OWe0D/QFUcVE4XCwoOUSNgeRL2fNJ3PurTw2h9DHwYpdNLh2
+         xeuZCetGhWXBBAv/1YBC6odVIer1hS9occ25QZE/MNf80pNehuutMwsZ3C3qhcUvaVHg
+         nkRw==
+X-Gm-Message-State: AOAM530j8f2NSQGyB7RukPTwIsKHDo+VPoy+lNZsPu8OMVV2no0/NBOi
+        oteSmjeU5JVsglI0B07KQW4=
+X-Google-Smtp-Source: ABdhPJygrj9qfA9fJB+/HxTzsq0FYpI1BCHKBArAxcgyM8xNpQ/5kTdymiAaBBuoBgqjg4SIBuMyfQ==
+X-Received: by 2002:adf:f282:: with SMTP id k2mr4338657wro.255.1629208982405;
+        Tue, 17 Aug 2021 07:03:02 -0700 (PDT)
+Received: from localhost ([217.111.27.204])
+        by smtp.gmail.com with ESMTPSA id d8sm2628053wrx.12.2021.08.17.07.03.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Aug 2021 07:03:01 -0700 (PDT)
+Date:   Tue, 17 Aug 2021 16:02:59 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
         Viresh Kumar <vireshk@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>,
         Peter De Schrijver <pdeschrijver@nvidia.com>,
         Mikko Perttunen <mperttunen@nvidia.com>,
         Peter Chen <peter.chen@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Richard Weinberger <richard@nod.at>,
@@ -45,57 +69,189 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
         linux-staging@lists.linux.dev, linux-spi@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH v8 22/34] spi: tegra20-slink: Add OPP support
-Message-ID: <20210817122244.GA4290@sirena.org.uk>
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Subject: Re: [PATCH v8 11/34] gpu: host1x: Add runtime PM and OPP support
+Message-ID: <YRvBkyfFCqthBIBV@orome.fritz.box>
 References: <20210817012754.8710-1-digetx@gmail.com>
- <20210817012754.8710-23-digetx@gmail.com>
+ <20210817012754.8710-12-digetx@gmail.com>
+ <CAPDyKFrax-EYtO03W5QWM2tcWLWeMM8hHZCRYFcsenuiP2zObQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fGItigaj8JHSG5hJ"
 Content-Disposition: inline
-In-Reply-To: <20210817012754.8710-23-digetx@gmail.com>
-X-Cookie: Custer committed Siouxicide.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAPDyKFrax-EYtO03W5QWM2tcWLWeMM8hHZCRYFcsenuiP2zObQ@mail.gmail.com>
+User-Agent: Mutt/2.1.1 (e2a89abc) (2021-07-12)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---mP3DRpeJDSE+ciuQ
+--fGItigaj8JHSG5hJ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 17, 2021 at 04:27:42AM +0300, Dmitry Osipenko wrote:
-> The SPI on Tegra belongs to the core power domain and we're going to
-> enable GENPD support for the core domain. Now SPI driver must use OPP
-> API for driving the controller's clock rate because OPP API takes care
-> of reconfiguring the domain's performance state in accordance to the
-> rate. Add OPP support to the driver.
+On Tue, Aug 17, 2021 at 02:04:38PM +0200, Ulf Hansson wrote:
+> On Tue, 17 Aug 2021 at 03:30, Dmitry Osipenko <digetx@gmail.com> wrote:
+> >
+> > Add runtime PM and OPP support to the Host1x driver. It's required for
+> > enabling system-wide DVFS and supporting dynamic power management using
+> > a generic power domain. For the starter we will keep host1x always-on
+> > because dynamic power management require a major refactoring of the dri=
+ver
+> > code since lot's of code paths will need the RPM handling and we're goi=
+ng
+> > to remove some of these paths in the future. Host1x doesn't consume much
+> > power so it is good enough, we at least need to resume Host1x in order
+> > to initialize the power state.
+> >
+> > Tested-by: Peter Geis <pgwipeout@gmail.com> # Ouya T30
+> > Tested-by: Paul Fertser <fercerpav@gmail.com> # PAZ00 T20
+> > Tested-by: Nicolas Chauvet <kwizart@gmail.com> # PAZ00 T20 and TK1 T124
+> > Tested-by: Matt Merhar <mattmerhar@protonmail.com> # Ouya T30
+> > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> > ---
+>=20
+> [...]
+>=20
+> > +
+> >  static int host1x_probe(struct platform_device *pdev)
+> >  {
+> >         struct host1x *host;
+> > @@ -394,6 +423,10 @@ static int host1x_probe(struct platform_device *pd=
+ev)
+> >         /* set common host1x device data */
+> >         platform_set_drvdata(pdev, host);
+> >
+> > +       err =3D devm_tegra_core_dev_init_opp_table_simple(&pdev->dev);
+> > +       if (err)
+> > +               return err;
+> > +
+> >         host->regs =3D devm_ioremap_resource(&pdev->dev, regs);
+> >         if (IS_ERR(host->regs))
+> >                 return PTR_ERR(host->regs);
+> > @@ -423,12 +456,9 @@ static int host1x_probe(struct platform_device *pd=
+ev)
+> >                 return err;
+> >         }
+> >
+> > -       host->rst =3D devm_reset_control_get(&pdev->dev, "host1x");
+> > -       if (IS_ERR(host->rst)) {
+> > -               err =3D PTR_ERR(host->rst);
+> > -               dev_err(&pdev->dev, "failed to get reset: %d\n", err);
+> > +       err =3D host1x_get_resets(host);
+> > +       if (err)
+> >                 return err;
+> > -       }
+> >
+> >         err =3D host1x_iommu_init(host);
+> >         if (err < 0) {
+> > @@ -443,22 +473,10 @@ static int host1x_probe(struct platform_device *p=
+dev)
+> >                 goto iommu_exit;
+> >         }
+> >
+> > -       err =3D clk_prepare_enable(host->clk);
+> > -       if (err < 0) {
+> > -               dev_err(&pdev->dev, "failed to enable clock\n");
+> > -               goto free_channels;
+> > -       }
+> > -
+> > -       err =3D reset_control_deassert(host->rst);
+> > -       if (err < 0) {
+> > -               dev_err(&pdev->dev, "failed to deassert reset: %d\n", e=
+rr);
+> > -               goto unprepare_disable;
+> > -       }
+> > -
+>=20
+> Removing the clk_prepare_enable() and reset_control_deassert() from
+> host1x_probe(), might not be a good idea. See more about why, below.
+>=20
+> >         err =3D host1x_syncpt_init(host);
+> >         if (err) {
+> >                 dev_err(&pdev->dev, "failed to initialize syncpts\n");
+> > -               goto reset_assert;
+> > +               goto free_channels;
+> >         }
+> >
+> >         err =3D host1x_intr_init(host, syncpt_irq);
+> > @@ -467,10 +485,14 @@ static int host1x_probe(struct platform_device *p=
+dev)
+> >                 goto deinit_syncpt;
+> >         }
+> >
+> > -       host1x_debug_init(host);
+> > +       pm_runtime_enable(&pdev->dev);
+> >
+> > -       if (host->info->has_hypervisor)
+> > -               host1x_setup_sid_table(host);
+> > +       /* the driver's code isn't ready yet for the dynamic RPM */
+> > +       err =3D pm_runtime_resume_and_get(&pdev->dev);
+>=20
+> If the driver is being built with the CONFIG_PM Kconfig option being
+> unset, pm_runtime_resume_and_get() will return 0 to indicate success -
+> and without calling the ->runtime_resume() callback.
+> In other words, the clock will remain gated and the reset will not be
+> deasserted, likely causing the driver to be malfunctioning.
+>=20
+> If the driver isn't ever being built with CONFIG_PM unset, feel free
+> to ignore my above comments.
+>=20
+> Otherwise, if it needs to work both with and without CONFIG_PM being
+> set, you may use the following pattern in host1x_probe() to deploy
+> runtime PM support:
+>=20
+> "Enable the needed resources to probe the device"
+> pm_runtime_get_noresume()
+> pm_runtime_set_active()
+> pm_runtime_enable()
+>=20
+> "Before successfully completing probe"
+> pm_runtime_put()
 
-Acked-by: Mark Brown <broonie@kernel.org>
+We made a conscious decision a few years ago to have ARCH_TEGRA select
+PM on both 32-bit and 64-bit ARM, specifically to avoid the need to do
+this dance (though there are still a few drivers left that do this, I
+think).
 
-Is there a concrete dependency here or can I merge this separately?
+So I think this should be unnecessary. Unless perhaps if the sysfs PM
+controls have any influence on this. As far as I know, as long as the
+PM kconfig option is enabled, the sysfs control only influence the
+runtime behaviour (i.e. setting the sysfs PM control to "on" is going
+to force runtime PM to be resumed) but there's no way to disable
+runtime PM altogether via sysfs that would make the above necessary.
 
---mP3DRpeJDSE+ciuQ
+Thierry
+
+--fGItigaj8JHSG5hJ
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmEbqhMACgkQJNaLcl1U
-h9Buggf/d4C5+YzSeq0C2NHs0zamK8fHfoeCb5Qf7DbvwC4xNpUEoKAl6kFe6XlO
-ngiyDsMKDiDDirVRL6usRQkhxcB9hYlR9qZPZwTumcSB8omPU2d8ibg0bZlq6+EW
-bQf4R3TRA5YOFtGXxUejMSdK0+MO4I0QbuU6o4zLT3dzFtq+nK1Oct7FNyhjNrK/
-ELy4bDfbSewMfEPDjMsi05Qg7I6ftQiO3ZAqdTAj+0bLpHvsChKGv474uEXEw6vv
-FICFNW+bUCUC/oS3NykjRlVmWPr6eACJDT33krIuaX8/G0mN5kVjAfVPnOK1OzG+
-Y+z6bEN/Dr6UAjhZRQbizQRM04sR+w==
-=JJo7
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmEbwZMACgkQ3SOs138+
+s6EqjxAAs5FWbje3iCJOP7sod6VEu/M7e7ZG4mEPa2/e+EajCY0rD+kJaknBVNdK
+htJY+3B3pez2I2TjXZtaFOzcXEVl0e94EIQb8bY1wZEFLg91V6DTPfnvbEPb9BN8
+kzesliKQKiVhD/gG5D/9K7TnEFThE2JTj02MDE7Q6opTEaxlKgAN8jrbkNCuAOUg
+wCrzFqRzmbVuuZrGkA/xApbfCh7lTLObvJ1enX9IB0s/WZZfej3PrylP5U379Nab
+OA1JisBmk5NHgi8djWyeN/X+urNAYDixcJIfwPqs3yqb3+piiG+X+oNX8Xz6byUt
+bZJ86CC/A4XGufnL7A0+ZKrd/UYNH3WE17R16LxFytD1chZQ82aWyVIJPGLW+42q
+k6lWheWwNsn2Gua2ZOlUfkC9fRD6Sj/fSnqRS0zgslnq/n80VGIz/35q2zCZ1tiG
+D4hRPhQukShFXdCy/HaNXbtdXfTGZH8owlNDiDArmoIclSj+828GRbMqDTJDVxUs
+RldB6jISMtRo/iBpCoj9VM1h01kedIHXimkm8zsOyVWYapi6ScKSbMqWaPS02SSe
+Fc5t4wnn/jSruWZ5HVHU+iOOmlU6Buli+4cQZQIsUOb4FD4V+BrEO3ArlYzxkzH5
+mAM+3LofUzwqGi67FOn92GGM/LJZcDAX6v5c8WjnpM1uh5VdR5g=
+=8GYQ
 -----END PGP SIGNATURE-----
 
---mP3DRpeJDSE+ciuQ--
+--fGItigaj8JHSG5hJ--
