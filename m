@@ -2,56 +2,56 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BCCD3EF7E4
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Aug 2021 04:07:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58F5A3EF8EB
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Aug 2021 05:55:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236413AbhHRCH7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 17 Aug 2021 22:07:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46758 "EHLO
+        id S237322AbhHRD4N (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 17 Aug 2021 23:56:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233920AbhHRCH5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Aug 2021 22:07:57 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B294C061764;
-        Tue, 17 Aug 2021 19:07:23 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id w4so644021ljh.13;
-        Tue, 17 Aug 2021 19:07:22 -0700 (PDT)
+        with ESMTP id S237273AbhHRD4M (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Aug 2021 23:56:12 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9488C0613A3
+        for <linux-pwm@vger.kernel.org>; Tue, 17 Aug 2021 20:55:36 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id n18so862851pgm.12
+        for <linux-pwm@vger.kernel.org>; Tue, 17 Aug 2021 20:55:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZdWGOBRulL4VUr2nkxtGmp68zHpJN18S3Cy3ExunZB8=;
-        b=ZbJ4H3eCNv1Bvw3hVzD9YPDeNyOTQ/GmXBdTT71urRvt/nxoTwLH1fzA/K6qn+n13V
-         EMyJFOcQBAXmK3unujC0pekGKV+GhAYdJyvRHdQzj7rWIPi7xVLg/WMJcPcQ5PirKj3r
-         mCWcJAQa780CvmoxoDAaM90aUyQvNJACNApvjKFPAAm9WwsGGlEyD1f2fvSTTM9fYxeK
-         t5Z+FLcqvZcqhqpvPAUYUBL8uyZLNwpVWq6XOlWr029EcHcHjhy6C69qNnGWOe53OGMD
-         UD0ZHK+jZlCvKxlNNnLY/8mNCqP91QRuXBKGfyt7TpkAkHcvIpzE8oPTRJStoeU2i7/F
-         OFxA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=VGIhwyovjc9cLTorbY5F7s7VUrCyo5ROsIE6mKdF2i8=;
+        b=rsLZ+5+cs34CeKm8FdeypOasGszO5Z+LGg/gURNdpo/BaltaeBSvKidQFxg+U/P7vq
+         S/zusxLUtdDoCDzHAq+gTq22WAB40n4Qkk0Ku4cXOc+uTEyaQRKWv/b52rLV4JZHB+rE
+         GpTGxz7vZkIm7Ms92t/jEfqzxajkgCcDGx/hfYVqqHH+Ja2QK6EJtgOjTFD7Mons7/7z
+         jRQRosrCR9tYeU2COXGJUOTnQsHGWC5eYAYHYZf+lDoWMOvzM0YqaRI8vzA1Q6qR94h5
+         JdL36SX2xj7RIzuN9CFefrR3429SFDWAFHYvDz+a1OiNH/4h5wRF/0Uqw9a4yTL9NaQb
+         DX8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZdWGOBRulL4VUr2nkxtGmp68zHpJN18S3Cy3ExunZB8=;
-        b=IJviccCdFwT+KoMnlqEoCg7Us869jV85n22YQtA5Q6ILVQHVn8KYbaRjYw8/Mjalk3
-         HnlJMj5bEc2bcJaw4KKYg1fdCbnBDpen0uV4fP7tWMpuEeT965SG1QPqTJE6dUmqF6g/
-         ffZsl6Li5SVd7hxfENwsSEVONMOgQE05s6XUtJMDutlyFTSeKXd6H6Jy6ukS8TBB/6tz
-         P7Jjrj84BjD+JL7elTiMq3UamdI/YV/k/JZG8iDTl23xcxBm8ygOEMPXIdUSFjR3qkaj
-         0na7JQCzWoRDQtGyQeN4dgPbbXem0n+2wE186Uhj1KoFciI8RY7TyPVdgd91+ALMfRsi
-         G/3w==
-X-Gm-Message-State: AOAM530a5pyWArEVjR7lkY62q30zaHyZOABlML5OeI6Yv5PjjiXxTVKa
-        EDQXD6+pnadARhzmF8/pXayny/RpQHI=
-X-Google-Smtp-Source: ABdhPJxciZnUMzd7GVFJFA8FMA0hGtsUp4JHBzMUe6n55lLwaZhk7ErG9OStqzAcGbzrvom9TXW02A==
-X-Received: by 2002:a2e:9256:: with SMTP id v22mr5752535ljg.150.1629252441273;
-        Tue, 17 Aug 2021 19:07:21 -0700 (PDT)
-Received: from [192.168.2.145] (46-138-85-91.dynamic.spd-mgts.ru. [46.138.85.91])
-        by smtp.googlemail.com with ESMTPSA id 27sm353157lfz.146.2021.08.17.19.07.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Aug 2021 19:07:20 -0700 (PDT)
-Subject: Re: [PATCH v8 09/34] dt-bindings: host1x: Document Memory Client
- resets of Host1x, GR2D and GR3D
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Rob Herring <robh@kernel.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=VGIhwyovjc9cLTorbY5F7s7VUrCyo5ROsIE6mKdF2i8=;
+        b=hAeHyfozKkqcylvHI/cFX70/ao/b3fy50WQRr1R8rrnbJ3VAPggzzyL9xnZVCa4xSi
+         j8ZHYWc1dBC9JYTTdovAvQpW1K+mLRFXCcqt8V4Msw9JjHX6XeZrxSISNz9bPJJOhfte
+         PQNpJCjxwz0RJY+zY/hehXgD5i3Zdptpt+WlXQJggsqOwKxMXoCqgokx7wNDS+oOdYvt
+         T9jZxMwerJh8+oJ6T2HDhNOdK0BIFeuleOnyrzYQXH77BIYKr11COPmzXqUblZhIp7WK
+         NJq2KrWQyeR2hbe7BT59nNXDKSJeM4l9gpKdZdSorv4sHKnYnQd37HSYfm49cAvFAzXb
+         ot/g==
+X-Gm-Message-State: AOAM5322tLPV49rZMUCc6BtsTtxxDFV1EChbsWUmXS6pa9LM+tlKZ7oP
+        aaVibOuOvVgr3U8RDlDdQKWtmA==
+X-Google-Smtp-Source: ABdhPJxZ0gvNmqzlYvzU9rK9OQ8NNCMq9wCIZZhKFhU5FN4x6UJRSgCEgSUhRZIdfilYavV9v+XkrA==
+X-Received: by 2002:a62:a20d:0:b029:35b:73da:dc8d with SMTP id m13-20020a62a20d0000b029035b73dadc8dmr7200457pff.54.1629258935761;
+        Tue, 17 Aug 2021 20:55:35 -0700 (PDT)
+Received: from localhost ([122.172.201.85])
+        by smtp.gmail.com with ESMTPSA id u21sm4880194pgk.57.2021.08.17.20.55.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Aug 2021 20:55:35 -0700 (PDT)
+Date:   Wed, 18 Aug 2021 09:25:33 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
@@ -62,14 +62,15 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Peter Chen <peter.chen@kernel.org>,
         Mark Brown <broonie@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Nishanth Menon <nm@ti.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Richard Weinberger <richard@nod.at>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Lucas Stach <dev@lynxeye.de>, Stefan Agner <stefan@agner.ch>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
         linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-usb@vger.kernel.org,
@@ -78,61 +79,54 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         linux-mmc@vger.kernel.org, linux-media@vger.kernel.org,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-clk@vger.kernel.org
+Subject: Re: [PATCH v8 01/34] opp: Add dev_pm_opp_sync() helper
+Message-ID: <20210818035533.ieqkexltfvvf2p4n@vireshk-i7>
 References: <20210817012754.8710-1-digetx@gmail.com>
- <20210817012754.8710-10-digetx@gmail.com>
- <YRxfWJJ6+1GgVs33@robh.at.kernel.org>
- <fa9a1fb7-8a87-de1a-e40a-fdc4f4d05d57@gmail.com>
- <9deced25-b184-7b5b-cebf-0ad82bd959db@gmail.com>
-Message-ID: <7f35b432-d113-99fa-88ca-20601ccf7e04@gmail.com>
-Date:   Wed, 18 Aug 2021 05:07:19 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+ <20210817012754.8710-2-digetx@gmail.com>
+ <20210817075515.vyyv7z37e6jcrhsl@vireshk-i7>
+ <710261d9-7ae3-5155-c0a2-f8aed2408d0b@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <9deced25-b184-7b5b-cebf-0ad82bd959db@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <710261d9-7ae3-5155-c0a2-f8aed2408d0b@gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-18.08.2021 05:04, Dmitry Osipenko пишет:
-> 18.08.2021 04:37, Dmitry Osipenko пишет:
->> 18.08.2021 04:16, Rob Herring пишет:
->>> On Tue, Aug 17, 2021 at 04:27:29AM +0300, Dmitry Osipenko wrote:
->>>> Memory Client should be blocked before hardware reset is asserted in order
->>>> to prevent memory corruption and hanging of memory controller.
->>>>
->>>> Document Memory Client resets of Host1x, GR2D and GR3D hardware units.
->>>>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  .../bindings/display/tegra/nvidia,tegra20-host1x.txt          | 4 ++++
->>>>  1 file changed, 4 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->>>> index 62861a8fb5c6..07a08653798b 100644
->>>> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->>>> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->>>> @@ -18,6 +18,7 @@ Required properties:
->>>>  - resets: Must contain an entry for each entry in reset-names.
->>>>    See ../reset/reset.txt for details.
->>>>  - reset-names: Must include the following entries:
->>>> +  - mc
->>>>    - host1x
->>>
->>> New entries should be at the end. Order matters.
->>
->> Indeed, order matters. In this case it matters by the hardware because
->> memory reset must be asserted before the controller's reset. We rely on
->> it in the code of the GENPD driver. Hence it's the intended order in
->> this patch.
->>
+On 17-08-21, 18:49, Dmitry Osipenko wrote:
+> 17.08.2021 10:55, Viresh Kumar пишет:
+> ...
+> >> +int dev_pm_opp_sync(struct device *dev)
+> >> +{
+> >> +	struct opp_table *opp_table;
+> >> +	struct dev_pm_opp *opp;
+> >> +	int ret = 0;
+> >> +
+> >> +	/* Device may not have OPP table */
+> >> +	opp_table = _find_opp_table(dev);
+> >> +	if (IS_ERR(opp_table))
+> >> +		return 0;
+> >> +
+> >> +	if (!_get_opp_count(opp_table))
+> >> +		goto put_table;
+> >> +
+> >> +	opp = _find_current_opp(dev, opp_table);
+> >> +	ret = _set_opp(dev, opp_table, opp, opp->rate);
+> > 
+> > And I am not sure how this will end up working, since new OPP will be
+> > equal to old one. Since I see you call this from resume() at many
+> > places.
 > 
-> Although, my bad. It should be to reorder items here, it's not a GENPD
-> binding.
+> Initially OPP table is "uninitialized" and opp_table->enabled=false,
+> hence the first sync always works even if OPP is equal to old one. Once
+> OPP has been synced, all further syncs are NO-OPs, hence it doesn't
+> matter how many times syncing is called.
 > 
+> https://elixir.bootlin.com/linux/v5.14-rc6/source/drivers/opp/core.c#L1012
 
-* should be fine
+Right, but how will this work from Resume ? Won't that be a no-op ?
 
-I'll change it in v9.
+-- 
+viresh
