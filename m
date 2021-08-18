@@ -2,54 +2,55 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 532203EF7A9
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Aug 2021 03:44:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D1623EF7DA
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Aug 2021 04:05:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236053AbhHRBpJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 17 Aug 2021 21:45:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41666 "EHLO
+        id S236518AbhHRCFi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 17 Aug 2021 22:05:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234723AbhHRBpI (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Aug 2021 21:45:08 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02015C061764;
-        Tue, 17 Aug 2021 18:44:34 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id q21so2057451ljj.6;
-        Tue, 17 Aug 2021 18:44:33 -0700 (PDT)
+        with ESMTP id S233380AbhHRCFh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Aug 2021 22:05:37 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B9DFC061764;
+        Tue, 17 Aug 2021 19:05:03 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id z2so1237790lft.1;
+        Tue, 17 Aug 2021 19:05:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
+        h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XoDVcVB/VE1dBlO9x4lpVsT9geXPOq4o0WU/0sRPebc=;
-        b=Gmnqy4jfwBqsDu9LBGxLpx1nvtIhZFSGaBcJVbAwo50K4s+mgQjS0okbtwsUutyxB8
-         crURnbnyrk/mMjC5uyqR+Vc4wyXpn+d+boHXA+Xp1BhvXFshKYhg804UtoJM30j71C4u
-         J2Oi65VGe0ZWSvpPAE+ZMPCxHmZODECsKuoOcPsZnVV2NTW6mY508lzEbTu7b+WV31F0
-         mOmEp6hyujXqYoE04beg1akt/TvZfGMnEmyffvJhfR2jN5IueeSUVfQm+Kv43WgZBbPE
-         A1/FPF7q3EFR+MQEP/OCrx/s1N0zxIrfUMfTscncRBAeQA/ySJ/MFa/6tQu2m5wzNNQY
-         1kEQ==
+        bh=X8+ZsfkkdhFJ3lNlK7e7T4FVUdx6tvIJ9KJHYwNXX0E=;
+        b=psE/+Zb/PlhPOXdD9k7AaCLwlvP8OKK2CxCpqtTva5uF/wv+Xtz6ZZdtrMlAsRQDtg
+         7rJ1+OFJG70Mh6foE8c/wWZu0py55FepYDWxIbDuoVTxTgBuzT8ZcFjpgV0uw7z0bwOq
+         i9HHUiAj3Xqbast6UUZ8gmBgbXw0U4LpmOyNFm67RejtBHQP2jypUFUUKW0xIcMgMKcL
+         ChJSL/bQlQM0gRznLB21YUo8/DgwCsLyw/I/zDvt4ajeJqQnSAPqYHVtMBJYBP0KBvdo
+         65wfts0XEWuHOf4x7WBr50M1S1Ive7NyVGoWeMXJtbq5mjMMdP45+6N1n0CRVKczG1XI
+         jxgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=XoDVcVB/VE1dBlO9x4lpVsT9geXPOq4o0WU/0sRPebc=;
-        b=V5xl8b7pmh2RfLExq4xbFPgpMnaYrCgFuA0wqzBaNFhrHU/SwbMWC5WhfMAnKO4UQj
-         +xSxN+ZkAkueikfrJ0qlKOZidmq5uFSJyZRpZooXpk4N3RPkaY4HVCVjPSsRj6nPgya3
-         JMxM/Xvf/qefNkenFg/GM5r/rJJDZ3QbrXYAYqsFs1Kq+slKTfmIYWV4EusVouxIFuXH
-         zqtArQfTn3HMlMH681M4M4UGdihW4jSDYfQP/fvAZP8ehPyXMo5M7f0CW2sL/w4GylW7
-         D6Y7YEIoMeYxBHFXTsM2cAS51tCmaEn8TmYFFMEWeIlEvEIVfoUy9i+dn3RhZFuCHc1f
-         h0BQ==
-X-Gm-Message-State: AOAM532MeXPdYTK4JNT306EPKexfpYBozOrJaXtXCaWCfbvLepxVmCeX
-        nLxtnuQLeTrArJUaBJjBH8yr28ean+4=
-X-Google-Smtp-Source: ABdhPJzBCF6cJbZHRHPrIUVUUUZ+kASYBl6l8+zSZcW0/IKHSG28sW6dmnWvQHlNaXqEE5KMF+anLw==
-X-Received: by 2002:a2e:5307:: with SMTP id h7mr5878272ljb.154.1629251072136;
-        Tue, 17 Aug 2021 18:44:32 -0700 (PDT)
+        bh=X8+ZsfkkdhFJ3lNlK7e7T4FVUdx6tvIJ9KJHYwNXX0E=;
+        b=nIFaXjtJgRKn12nQMXlgWtjIg0O4k7TSmlvjzrsk1Cn42u2rp0rMQhuM+lxT8uvuOq
+         pmPOHMSE2ddHa1qaltQvYkxdy1KjLYkRyUpGggnv3MB0xfDe4NcP5pjIg7HmL3miZDvD
+         x/OsqS/X8Q8BcwdihhgWP1JfZQpcgcML13oAO0yB5DS1NouzoPPSa3Xi63dWIVK8oU3o
+         tnCIpXpjAINkxyV3mjfmEEMi0KsFJNCa52eVtYwvqh/unIJCutgw7gJqao0sLOf6oBvm
+         wvdy31qrugL7ap8bbGQWpMzPcs8GORRlSBAJnesPnt4Ab0wyGFxaUACKyLp3bVxabkkb
+         LY3Q==
+X-Gm-Message-State: AOAM5302pOY/937Fs8CHosz17DxDCSdkAAn0neuo2JbfjqwUnWdU+Ay0
+        abOdsrT64BD1+NtHECPhp5l5yVXRaJI=
+X-Google-Smtp-Source: ABdhPJwwMJ2c/iB7oqJvPztbQr932HvMGogZlivLLNy//t0lEE4kjZGF01UFpJ8GCXlQsFh175I2Fw==
+X-Received: by 2002:a05:6512:3771:: with SMTP id z17mr4806675lft.46.1629252301306;
+        Tue, 17 Aug 2021 19:05:01 -0700 (PDT)
 Received: from [192.168.2.145] (46-138-85-91.dynamic.spd-mgts.ru. [46.138.85.91])
-        by smtp.googlemail.com with ESMTPSA id y14sm288752ljm.39.2021.08.17.18.44.30
+        by smtp.googlemail.com with ESMTPSA id z7sm350800lft.302.2021.08.17.19.04.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Aug 2021 18:44:31 -0700 (PDT)
-Subject: Re: [PATCH v8 06/34] dt-bindings: clock: tegra-car: Document new
- tegra-clocks sub-node
+        Tue, 17 Aug 2021 19:05:00 -0700 (PDT)
+Subject: Re: [PATCH v8 09/34] dt-bindings: host1x: Document Memory Client
+ resets of Host1x, GR2D and GR3D
+From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Rob Herring <robh@kernel.org>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -78,15 +79,15 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-clk@vger.kernel.org
 References: <20210817012754.8710-1-digetx@gmail.com>
- <20210817012754.8710-7-digetx@gmail.com>
- <YRxfGtWPXeSQXuHo@robh.at.kernel.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <06128217-92e1-9b66-64ea-91855d041121@gmail.com>
-Date:   Wed, 18 Aug 2021 04:44:30 +0300
+ <20210817012754.8710-10-digetx@gmail.com>
+ <YRxfWJJ6+1GgVs33@robh.at.kernel.org>
+ <fa9a1fb7-8a87-de1a-e40a-fdc4f4d05d57@gmail.com>
+Message-ID: <9deced25-b184-7b5b-cebf-0ad82bd959db@gmail.com>
+Date:   Wed, 18 Aug 2021 05:04:59 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <YRxfGtWPXeSQXuHo@robh.at.kernel.org>
+In-Reply-To: <fa9a1fb7-8a87-de1a-e40a-fdc4f4d05d57@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -94,32 +95,37 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-18.08.2021 04:15, Rob Herring пишет:
->> +  tegra-clocks:
->> +    description: child nodes are the output clocks from the CAR
->> +    type: object
->> +
->> +    patternProperties:
->> +      "^[a-z]+[0-9]+$":
->> +        type: object
->> +        properties:
->> +          compatible:
->> +            allOf:
->> +              - items:
->> +                  - enum:
->> +                      - nvidia,tegra20-sclk
->> +                      - nvidia,tegra30-sclk
->> +                      - nvidia,tegra30-pllc
->> +                      - nvidia,tegra30-plle
->> +                      - nvidia,tegra30-pllm
->> +              - const: nvidia,tegra-clock
-> You are saying the first string must be both one of the enums and 
-> 'nvidia,tegra-clock'. You don't get an error because your pattern 
-> doesn't match 'sclk'.
+18.08.2021 04:37, Dmitry Osipenko пишет:
+> 18.08.2021 04:16, Rob Herring пишет:
+>> On Tue, Aug 17, 2021 at 04:27:29AM +0300, Dmitry Osipenko wrote:
+>>> Memory Client should be blocked before hardware reset is asserted in order
+>>> to prevent memory corruption and hanging of memory controller.
+>>>
+>>> Document Memory Client resets of Host1x, GR2D and GR3D hardware units.
+>>>
+>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> ---
+>>>  .../bindings/display/tegra/nvidia,tegra20-host1x.txt          | 4 ++++
+>>>  1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>>> index 62861a8fb5c6..07a08653798b 100644
+>>> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>>> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>>> @@ -18,6 +18,7 @@ Required properties:
+>>>  - resets: Must contain an entry for each entry in reset-names.
+>>>    See ../reset/reset.txt for details.
+>>>  - reset-names: Must include the following entries:
+>>> +  - mc
+>>>    - host1x
+>>
+>> New entries should be at the end. Order matters.
+> 
+> Indeed, order matters. In this case it matters by the hardware because
+> memory reset must be asserted before the controller's reset. We rely on
+> it in the code of the GENPD driver. Hence it's the intended order in
+> this patch.
 > 
 
-Could you please rephrase or clarify? If pattern doesn't match 'sclk',
-then it must match any other enum. I'm not sure what you're meaning.
-
-The 'nvidia,tegra-clock' actually could be removed since it's
-superfluous now. I'll consider the removal in v9.
+Although, my bad. It should be to reorder items here, it's not a GENPD
+binding.
