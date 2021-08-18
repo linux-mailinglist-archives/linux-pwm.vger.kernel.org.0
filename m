@@ -2,52 +2,52 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 240143F0586
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Aug 2021 16:00:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9E373F05AC
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Aug 2021 16:07:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238575AbhHROAU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Aug 2021 10:00:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43256 "EHLO
+        id S238658AbhHROHn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Aug 2021 10:07:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238534AbhHROAS (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Aug 2021 10:00:18 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D914C0613CF;
-        Wed, 18 Aug 2021 06:59:43 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id x12so3651307wrr.11;
-        Wed, 18 Aug 2021 06:59:42 -0700 (PDT)
+        with ESMTP id S235121AbhHROHl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Aug 2021 10:07:41 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23442C061764;
+        Wed, 18 Aug 2021 07:07:06 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id x12so3693126wrr.11;
+        Wed, 18 Aug 2021 07:07:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=KNffZkosHqyXx54/Hpv5ZrGxbGQeRq47x+KeHOQn2D4=;
-        b=ibuocWT93lqgP2jFTcmPxR3VZo0d3F1Xf1TvV8Ax8j9ydj7+q7Af1STuLQmp/w0lkJ
-         CpUJcHGatD8/lifTM+iTTF8M3X6uRJyXK4+iwJDUgoSBuwu+iUzJ5etA3MOE7KZUuTiJ
-         VzQNmTrzFh8jm/DNdhZmMnsQuBs7Y0JOvpqSKBnEaJQcwcgmozjoOtCe5IuoSXd3SJi5
-         r+wu0oOp4C+CRCmSDJJzlhXYjyFGEyb15wd3WSAlduhqb0QrSHb4nByKv7J6xAJhYYj1
-         Qxq9RpobYHQRwyH77A92zvewXitzMA7u8fnZPH3Ku++ZZxHLayWxduyBzjm6sr9p1an2
-         A+JA==
+        bh=i6nHV4Vzm5Umu6SJhmhoU8e3Ow8sOCfq6m4vf5vpOCg=;
+        b=ZJdtuwUuQvNaAbdr9Fz2fAvktw5J/+5+vjt8im/pkRZqyKjHlmqluk+dpJgPv/GFEk
+         rs7jlCk5NOlSnehipLU0nyzn/A/7FZS7QQCaIl7MSF6vAha+BX6LZBrQQREaflmjEitO
+         dlEahiAy8zC6MjFccmUrLBYvfs88a8jl/uHALh0tSc5Nn+N5OqlxOYEPLAvMwQAyowns
+         Ndkxrox4afb9mQcpEWWL0GiCRmTwzTOHCYxL6M4H8oWTYs7RmlUoqU0WistPX7vqT8pO
+         6Su4Nkctsrk6dlh0F8i2tqudBygnvEpqj+ChJ3xGjixCFrJ6bgmI3P/HGSPs7QQyovGr
+         4V5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KNffZkosHqyXx54/Hpv5ZrGxbGQeRq47x+KeHOQn2D4=;
-        b=LSL+p5cAyI0eOt7/uKjL3evi9OEbJE/KAaVEelacQMHehrgBXiBbr711PmbYT1PHIF
-         1X4QDJYqKRgaJ/Rl051esD873t9j5tkHk2n++2wnvcImlCn34hsNxZlvTv54xwmWl+iO
-         zc7l3RS9sgmZZ0QOc+qIkEbBYcDgEqklZmSO7ntj9A5iYMdy9qFBZ0C2So/8PQVE8kDI
-         kaGl3fVjhCCwJ5NLx1YVxXA1cZ1p5Km0a1YUJYXo4ZF3Nlh2H3uBiK14EqPTvcAG9PQD
-         eTAEIPgJ2eUuwpcIOP55qAJ2Z0Ile/bdquRai66oRG37ZfK8Aqzha/4WxpaMoiG/6IL+
-         zwdA==
-X-Gm-Message-State: AOAM531K3I1knHXMoXIhKRZZmydcIq4ddC2B9LcBkgsUTlSocF62zEkv
-        T1m0RUeA+KphhKKS97yS5/k=
-X-Google-Smtp-Source: ABdhPJxvF7WMaqSu8zeTy7i/rg84Q96ABr3QOSv6VnFi/zQqxYTwAuSffE52Els7OFHVChKGgH4lUQ==
-X-Received: by 2002:adf:e10c:: with SMTP id t12mr10789333wrz.36.1629295181628;
-        Wed, 18 Aug 2021 06:59:41 -0700 (PDT)
+        bh=i6nHV4Vzm5Umu6SJhmhoU8e3Ow8sOCfq6m4vf5vpOCg=;
+        b=ppTKTa/703CeAEI59hNnPTP/m+Te09QvsyLaeQh0wbfGD3ANAmhKMOlfhQXmALYSWs
+         DlxWkHbk1MN+JvtWh6lDqeUG7D+zicVKtvEX1pCIwk1UPaSTijlDGylYiZs+97zGeaHP
+         GCjLexRwAm6GmTygFxVYwAA11t6uWcWH2IJIhfgF1P6z35GqpeVkbJbJBtQPb8V8hsjl
+         eY7uj0ZgwV6BTFl3ObiJ+uUIQHDaGIICQBqNhZ1fPmAvqeR8gD3ar5rM4WdhRARzjA+u
+         HLroI4XkcBeKM3auSgk/dAaQlHG78hntBNSiuk+w+p+AWXJ1Ktcq0UKeoHR77GZdYob3
+         zv5Q==
+X-Gm-Message-State: AOAM531/qHmw0w9EyI5oh5UVYX8+7+9wnrwn4tterqWOKh2FChP7EGci
+        ixA7Jxc1TL0TXzc4XHUZtZQ=
+X-Google-Smtp-Source: ABdhPJyXq9/0R+WfXjdNLNbDmiuZklvSlQEBjFaDDAdAwgPSc6Y2VNRCrYkje8+AywzsdZxW8DAWow==
+X-Received: by 2002:a5d:500a:: with SMTP id e10mr11157882wrt.332.1629295624742;
+        Wed, 18 Aug 2021 07:07:04 -0700 (PDT)
 Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id e4sm6166417wrw.74.2021.08.18.06.59.40
+        by smtp.gmail.com with ESMTPSA id e2sm6158851wrq.56.2021.08.18.07.07.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Aug 2021 06:59:40 -0700 (PDT)
-Date:   Wed, 18 Aug 2021 15:59:39 +0200
+        Wed, 18 Aug 2021 07:07:03 -0700 (PDT)
+Date:   Wed, 18 Aug 2021 16:07:02 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Dmitry Osipenko <digetx@gmail.com>
 Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
@@ -76,167 +76,82 @@ Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
         linux-mmc@vger.kernel.org, linux-media@vger.kernel.org,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-clk@vger.kernel.org
-Subject: Re: [PATCH v8 06/34] dt-bindings: clock: tegra-car: Document new
- tegra-clocks sub-node
-Message-ID: <YR0SSz7KMh7TwaFW@orome.fritz.box>
+Subject: Re: [PATCH v8 07/34] clk: tegra: Support runtime PM and power domain
+Message-ID: <YR0UBi/ejy+oF4Hm@orome.fritz.box>
 References: <20210817012754.8710-1-digetx@gmail.com>
- <20210817012754.8710-7-digetx@gmail.com>
+ <20210817012754.8710-8-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rawOBESmF2Gu2Spy"
+        protocol="application/pgp-signature"; boundary="GjgnhAguwPYREA1d"
 Content-Disposition: inline
-In-Reply-To: <20210817012754.8710-7-digetx@gmail.com>
+In-Reply-To: <20210817012754.8710-8-digetx@gmail.com>
 User-Agent: Mutt/2.1.1 (e2a89abc) (2021-07-12)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---rawOBESmF2Gu2Spy
+--GjgnhAguwPYREA1d
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 17, 2021 at 04:27:26AM +0300, Dmitry Osipenko wrote:
-> Document tegra-clocks sub-node which describes Tegra SoC clocks that
-> require a higher voltage of the core power domain in order to operate
-> properly on a higher clock rates.  Each node contains a phandle to OPP
-> table and power domain.
->=20
-> The root PLLs and system clocks don't have any specific device dedicated
-> to them, clock controller is in charge of managing power for them.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  .../bindings/clock/nvidia,tegra20-car.yaml    | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra20-car.y=
-aml b/Documentation/devicetree/bindings/clock/nvidia,tegra20-car.yaml
-> index 459d2a525393..7f5cd27e4ce0 100644
-> --- a/Documentation/devicetree/bindings/clock/nvidia,tegra20-car.yaml
-> +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra20-car.yaml
-> @@ -42,6 +42,48 @@ properties:
->    "#reset-cells":
->      const: 1
-> =20
-> +  tegra-clocks:
-> +    description: child nodes are the output clocks from the CAR
-> +    type: object
+On Tue, Aug 17, 2021 at 04:27:27AM +0300, Dmitry Osipenko wrote:
+[...]
+> +struct clk *tegra_clk_register(struct clk_hw *hw)
+> +{
+> +	struct platform_device *pdev;
+> +	struct device *dev = NULL;
+> +	struct device_node *np;
+> +	const char *dev_name;
 > +
-> +    patternProperties:
-> +      "^[a-z]+[0-9]+$":
-> +        type: object
-> +        properties:
-> +          compatible:
-> +            allOf:
-> +              - items:
-> +                  - enum:
-> +                      - nvidia,tegra20-sclk
-> +                      - nvidia,tegra30-sclk
-> +                      - nvidia,tegra30-pllc
-> +                      - nvidia,tegra30-plle
-> +                      - nvidia,tegra30-pllm
-> +              - const: nvidia,tegra-clock
+> +	np = tegra_clk_get_of_node(hw);
 > +
-> +          operating-points-v2:
-> +            $ref: /schemas/types.yaml#/definitions/phandle
-> +            description:
-> +              Phandle to OPP table that contains frequencies, voltages a=
-nd
-> +              opp-supported-hw property, which is a bitfield indicating
-> +              SoC process or speedo ID mask.
+> +	if (!of_device_is_available(np))
+> +		goto put_node;
 > +
-> +          clocks:
-> +            items:
-> +              - description: node's clock
+> +	dev_name = kasprintf(GFP_KERNEL, "tegra_clk_%s", hw->init->name);
+> +	if (!dev_name)
+> +		goto put_node;
 > +
-> +          power-domains:
-> +            maxItems: 1
-> +            description: phandle to the core SoC power domain
+> +	pdev = of_platform_device_create(np, dev_name, NULL);
+> +	if (!pdev) {
+> +		pr_err("%s: failed to create device for %pOF\n", __func__, np);
+> +		kfree(dev_name);
+> +		goto put_node;
+> +	}
 > +
-> +        required:
-> +          - compatible
-> +          - operating-points-v2
-> +          - clocks
-> +          - power-domains
+> +	dev = &pdev->dev;
+> +	pm_runtime_enable(dev);
+> +put_node:
+> +	of_node_put(np);
 > +
-> +        additionalProperties: false
-> +
->  required:
->    - compatible
->    - reg
-> @@ -59,6 +101,15 @@ examples:
->          reg =3D <0x60006000 0x1000>;
->          #clock-cells =3D <1>;
->          #reset-cells =3D <1>;
-> +
-> +        tegra-clocks {
-> +            sclk {
-> +                compatible =3D "nvidia,tegra20-sclk", "nvidia,tegra-cloc=
-k";
-> +                operating-points-v2 =3D <&opp_table>;
-> +                clocks =3D <&tegra_car TEGRA20_CLK_SCLK>;
-> +                power-domains =3D <&domain>;
-> +            };
-> +        };
+> +	return clk_register(dev, hw);
+> +}
 
-I wonder if it'd be better to match on the name of the node rather than
-add an artificial compatible string. We usually use the compatible
-string to match a device, but here you're really trying to add
-information about a resource provided by the CAR controller.
-
-We do similar things for example in PMIC bindings where the individual
-regulators are represented in the device tree via nodes named after the
-regulator.
-
-You could then also leave out the clocks property, which is weird as it
-is because it's basically a self-reference. But you don't really need
-the reference here in the first place because the CAR is already the
-parent of SCLK.
-
-Also, I don't think the tegra- prefix is necessary here. The parent node
-is already identified as Tegra via the compatible string.
-
-In the case of CAR, I'd imagine something like:
-
-	clocks {
-		sclk {
-			operating-points-v2 =3D <&opp_table>;
-			power-domains =3D <&domain>;
-		};
-	};
-
-Now you've only got the bare minimum in here that you actually add. All
-the other data that you used to have is simply derived from the parent.
+This looks wrong. Why do we need struct platform_device objects for each
+of these clocks? That's going to be a massive amount of platform devices
+and they will completely mess up sysfs.
 
 Thierry
 
->      };
-> =20
->      usb-controller@c5004000 {
-> --=20
-> 2.32.0
->=20
-
---rawOBESmF2Gu2Spy
+--GjgnhAguwPYREA1d
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmEdEksACgkQ3SOs138+
-s6HP0Q/+La/49DtiMYKwipA8LeYUP5rVqDJT7F0fxC9HA4NLuzMTMUyDN3r1as5D
-5YPP2qMQ+ASzE9RWtl5MLh+yBAJ8z3xsw8lz9CE+VMPTDbbrYboz5emtaE6omzrq
-hnx7QwqMgbUGL9RPFyN9TVPE+Ku5e398ASVBNadBEIGQufI6xVe7sjs85rAjlVfY
-fpZOtuFoca7anBdWd2M7xUdIJFNQ1RBoCFcMN9xWN4I/ETvHnzcLThIWU9eyBu4/
-5ySzXXBtK3w5MVCXLR/48lTaNY2CqpXWprl3Sf7mcb69IuNLc8WHUQknh7ETAoVR
-F5GmeuXhQgJGxg4weOHxD0bUsy6rYfZIYSqF+oHnjNlmfaSfu/yv0H4jmDJL+WhC
-uYWkWHdT+OEgZPBm5LePnOAOvI1SEppNEy/gzib6QxafL+KioWQoUMQXQO14mbOs
-vIknf5KOVA5bhDsqBvd+PU9sI+f0EQodHIH0Ki2YGzIM/YSdRZi7oKsxB4AvHYPp
-MO0JpyJlh3BbeV/d54EXNR61RI+vxGUT2ae5W995GddFkKKwR6OyEIIJUAuZDtiM
-7naeRRPQgroHFFvzd1Z+sF+8pH3PN6qDwCfwksUKnBmMftuhXMSV2eyixURGvQaa
-oG3qz1liUA8vmPu8h4+JUeLh+VK23CdzQn9kXuKSDMe0L1ngDnc=
-=29ra
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmEdFAYACgkQ3SOs138+
+s6HeRQ/+On1vzXNiDk0hs4KISsGV+2p4XxyJVq/mvJWq4nwbzB0fnbltpnQGekNK
+rv9LKvLwpMpikV4RHOysHn4hnusz+I3P/SOJVq8nB5ctz7QEcklxJNgaKIyY3Nri
+JD8EiV936HB8R2Ecg5fEynk0MHmJ4+Pe1pFjfK/3i6l1Xx5Xy+jt/AwHXkTAJG6B
+LilpaYxjeYK0xLVY0uy/3TWmSNj7zmA9NLYadLedHWKAIrmfdhL4qEn0keHZPjeN
+wTRUkexp/mHpfwaNRpUvHM2sF6WuetFM6FrIIAEyVB4SSq3usTLtWtFWl3qca2Vi
+f/LKNT+GlKsS7vs6/bokHE5CtOc1bbILItuJCunjCSnOgElWzJ+WV2oAdBodcDr9
+AaDHCtN1kTr/1f0KYw3zKQHErq1Z9sRrTeETjAkYSE6agOOHm+eBIkPF38mdl7ZN
+eI5syiX8NwgIHv4jp1YR6lbvplx9XhD9Se4EcrgNSytiYYWfZMDEyH3dFTzCjzyT
+E5pNO8BuA8JHJWCUYtqjl+OccK0XhnR99XyHvsb1HM+jT0EqRjLc59PJlOwQeX2f
+KwOX9DhOQf+ZyRegAHSh4uNpR2fySasbnBT7RwyG17MKbeoTEqTOTJ5QZmMXSqDa
+kNchGN8JwMPpyDcw6adERGyrLYh0tFLdrM+1JjImnnDrLx9SuRo=
+=yj83
 -----END PGP SIGNATURE-----
 
---rawOBESmF2Gu2Spy--
+--GjgnhAguwPYREA1d--
