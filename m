@@ -2,54 +2,56 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EDF13EFC40
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Aug 2021 08:23:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E85843EFCB8
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Aug 2021 08:27:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238246AbhHRGXg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Aug 2021 02:23:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48040 "EHLO
+        id S239575AbhHRG2P (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Aug 2021 02:28:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237947AbhHRGXe (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Aug 2021 02:23:34 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BECFC061764;
-        Tue, 17 Aug 2021 23:23:00 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id i28so3039419ljm.7;
-        Tue, 17 Aug 2021 23:23:00 -0700 (PDT)
+        with ESMTP id S239154AbhHRG2F (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Aug 2021 02:28:05 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5060CC0613A4
+        for <linux-pwm@vger.kernel.org>; Tue, 17 Aug 2021 23:27:26 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id t13so1103347pfl.6
+        for <linux-pwm@vger.kernel.org>; Tue, 17 Aug 2021 23:27:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HRbW8G1xwSB2ls1NijjktR4beuv1neTM9+sNIEIh1SY=;
-        b=QhekG6HEhPh05G6EVGmH5gG1vsu7rLtXHoMmf8TooWyY48CtokKXpp3Ao28M9gzDIL
-         bOVJgsJpVuu4U6ZWhqbn/zzSzP/fh3SXlt9kSPpa9GZDTZZhDmzkZCL094g6b3/xpTlq
-         nR0VqcsEMuT8DrZzKg9OpHD9vAWhvLMA9THzTn2p/fALoh3IOyqRWsGfYkKKKn80LTpF
-         0ONjMpwOjktQ6neNrcoQ/FCq6G1LpKBpZ2d3r2xDohXQf3R33Yqsm7PvyRSmOAMdrmX2
-         8g7Na8C+8jCc1UJQu7St/hkelmGm9SnYblY2IzzA+hu0M9oU3v9y97qHAydPZ+UblpGW
-         RUgg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ynpJGQ+aoMGoVR3/TzuLa6jhj83G7NCnezbFysKyDck=;
+        b=rkMxRzllxsu72p9VoE+F1Y2uNFqfHroY89seElO0F/IF9+njGBhH+JhTjiV6p10xBW
+         RZkVVmBoHTbmBO5qy0Cu5P7Yjfpn+Q0pDbpgd//DyVd9iIE8FToCC+snGEMZelh3paY/
+         +hPtSq0td+yzw80H6HXZomYGW6ujPphQgl+LDlsExLGmraR/J0ZHNe7yOVInyCFXmT/P
+         91wgqIKeFsyocJA7qECcUweDwMNTMng3I+m8yWPcUOWHp3ukJGcj7wwvK4fm1T2uIjDm
+         QM2rYu2cAoeXaM+8hLCXU5bhhQmCXVpZaudJg93f24DbqOKNah/15WaZUn/RqJ/MrtRh
+         mNtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HRbW8G1xwSB2ls1NijjktR4beuv1neTM9+sNIEIh1SY=;
-        b=ena2CNacUns3FV3/aQkd2xATzx7JekVKL5+A/9nVDDeA+CacHLtkC6bkkARPmbOctJ
-         JP3i8O/B6y92K4tmG+Vx02Sgqx9avieFVu1N9DmjqgCKa4iE7SJKy2bJd745uzb6fCng
-         otHvp6VWBqARfnP38rK5HPjf5FZpNEkVPCNIzwc3gklTv5dd1KsVcGH95aWrnhKB51/v
-         BL389qyFVo41t8k2VSNDT8ctI3EKHr3X3TSubpOs8ytIEZ34RAQEnTUdlW0+R7zuj/sV
-         GJtQYWT6R2ddJ3hZWa2gfiOPl+KEhRL8yLaFI2ZrRDZ1LD5y+dl8piu+U8Gt45n8AYQ4
-         FXnQ==
-X-Gm-Message-State: AOAM530gJNojWuaDn5fB3w4rB2rJZYqAItjm3lVsC9jaopXK1Oz6jK7I
-        QT1v3hcWkTlQtExD9i5wFfLdmbhb9X0=
-X-Google-Smtp-Source: ABdhPJyL01ZM7X19Ri9kaNq915zcz165uE238H3LdTxs+q0TxSrtrvPc1BOJdsnl0Akd4i2Y2iKECw==
-X-Received: by 2002:a2e:a785:: with SMTP id c5mr6383685ljf.434.1629267778216;
-        Tue, 17 Aug 2021 23:22:58 -0700 (PDT)
-Received: from [192.168.2.145] (46-138-85-91.dynamic.spd-mgts.ru. [46.138.85.91])
-        by smtp.googlemail.com with ESMTPSA id w4sm503212ljg.99.2021.08.17.23.22.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Aug 2021 23:22:57 -0700 (PDT)
-Subject: Re: [PATCH v8 01/34] opp: Add dev_pm_opp_sync() helper
-To:     Viresh Kumar <viresh.kumar@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ynpJGQ+aoMGoVR3/TzuLa6jhj83G7NCnezbFysKyDck=;
+        b=G55MVXScK3xGgNkx2ufOqXZYOILEheEQUwPnaxaBnYElZ/l+QXscaZFJUFys5+ibSd
+         6QsqfT17eg+yHpe69Ta/rUpaMdQFNfrWJSG0rrd1rXkJ4RUc3P+lmF1UTo67ZNakabNF
+         S/HP6fc90Zp+fqhd/rnNQGonbu456h5vQQImoZxa1y8/cC78wFHAq4lmVLaE6w5P5coS
+         770dQQXc1jemMU4Z1UoeQ44VdtnKUvHhLj2ck1wZnjY1c9/Ap1i9qolJ7hSqanRVlgPI
+         VQlz6eEoKG4AVXuBocfJ6th0/qXej3N3gtH1SZo4mfqem2hd2CcJCoka3CZAwBVZXZcW
+         hABQ==
+X-Gm-Message-State: AOAM531q7C5k0eFUhyzy3gm6hKr+3jNaqHuFaOmb8LOZnespB1nKZY7M
+        /LMWDIv6TPNNbP/nv4Xja3xMLQ==
+X-Google-Smtp-Source: ABdhPJyUhfdCbjMBESEOiqAS08eZgxAs7V5/0XRqW4UZTe3K4OmwyniXAPYZlVBrx4vmpFlW5lQzVA==
+X-Received: by 2002:a62:ea0f:0:b029:319:8eef:5ff1 with SMTP id t15-20020a62ea0f0000b02903198eef5ff1mr7706167pfh.74.1629268045601;
+        Tue, 17 Aug 2021 23:27:25 -0700 (PDT)
+Received: from localhost ([122.172.201.85])
+        by smtp.gmail.com with ESMTPSA id l12sm4457595pff.182.2021.08.17.23.27.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Aug 2021 23:27:24 -0700 (PDT)
+Date:   Wed, 18 Aug 2021 11:57:23 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
@@ -60,8 +62,8 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Peter Chen <peter.chen@kernel.org>,
         Mark Brown <broonie@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Nishanth Menon <nm@ti.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Richard Weinberger <richard@nod.at>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -77,9 +79,9 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         linux-mmc@vger.kernel.org, linux-media@vger.kernel.org,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-clk@vger.kernel.org
-References: <20210817012754.8710-1-digetx@gmail.com>
- <20210817012754.8710-2-digetx@gmail.com>
- <20210817075515.vyyv7z37e6jcrhsl@vireshk-i7>
+Subject: Re: [PATCH v8 01/34] opp: Add dev_pm_opp_sync() helper
+Message-ID: <20210818062723.dqamssfkf7lf7cf7@vireshk-i7>
+References: <20210817075515.vyyv7z37e6jcrhsl@vireshk-i7>
  <710261d9-7ae3-5155-c0a2-f8aed2408d0b@gmail.com>
  <20210818035533.ieqkexltfvvf2p4n@vireshk-i7>
  <5b2a80c1-9743-e633-6257-ede94c8a274c@gmail.com>
@@ -88,65 +90,50 @@ References: <20210817012754.8710-1-digetx@gmail.com>
  <20210818045307.4brb6cafkh3adjth@vireshk-i7>
  <080469b3-612b-3a34-86e5-7037a64de2fe@gmail.com>
  <20210818055849.ybfajzu75ecpdrbn@vireshk-i7>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f1c76f23-086d-ef36-54ea-0511b0ebe0e1@gmail.com>
-Date:   Wed, 18 Aug 2021 09:22:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+ <f1c76f23-086d-ef36-54ea-0511b0ebe0e1@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20210818055849.ybfajzu75ecpdrbn@vireshk-i7>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <f1c76f23-086d-ef36-54ea-0511b0ebe0e1@gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-18.08.2021 08:58, Viresh Kumar пишет:
-> On 18-08-21, 08:21, Dmitry Osipenko wrote:
->> Yes, GENPD will cache the perf state across suspend/resume and initially
->> cached value is out of sync with h/w.
->>
->> Nothing else. But let me clarify it all again.
+On 18-08-21, 09:22, Dmitry Osipenko wrote:
+> 18.08.2021 08:58, Viresh Kumar пишет:
+> > What about calling dev_pm_opp_set_rate(dev, clk_get_rate(dev)) here
+> > instead ? That will work, right ? The advantage is it works without
+> > any special routine to do so.
 > 
-> Thanks for your explanation.
+> It will work, but a dedicated helper is nicer.
 > 
->> Initially the performance state of all GENPDs is 0 for all devices.
->>
->> The clock rate is preinitialized for all devices to a some default rate
->> by clk driver, or by bootloader or by assigned-clocks in DT.
->>
->> When device is rpm-resumed, the resume callback of a device driver
->> enables the clock.
->>
->> Before clock is enabled, the voltage needs to be configured in
->> accordance to the clk rate.
->>
->> So now we have a GENPD with pstate=0 on a first rpm-resume, which
->> doesn't match the h/w configuration. Calling dev_pm_opp_sync() sets the
->> pstate in accordance to the h/w config.
+> > I also wonder looking at your gr3d.c changes, you set a set-opp
+> > helper, but the driver doesn't call set_opp_rate at all. Who calls it
+> > ?
 > 
-> What about calling dev_pm_opp_set_rate(dev, clk_get_rate(dev)) here
-> instead ? That will work, right ? The advantage is it works without
-> any special routine to do so.
+> dev_pm_opp_sync() calls it from _set_opp().
 
-It will work, but a dedicated helper is nicer.
+Okay, please use dev_pm_opp_set_rate() instead then. New helper just
+adds to the confusion and isn't doing anything special apart from
+doing clk_get_rate() for you.
 
-> I also wonder looking at your gr3d.c changes, you set a set-opp
-> helper, but the driver doesn't call set_opp_rate at all. Who calls it
-> ?
+> > And if it is all about just syncing the genpd core, then can the genpd
+> > core do something like what clk framework does? i.e. allow a new
+> > optional genpd callback, get_performance_state() (just like
+> > set_performance_state()), which can be called initially by the core to
+> > get the performance to something other than zero. opp-set-rate is
+> > there to set the performance state and enable the stuff as well.
+> > That's why it looks incorrect in your case, where the function was
+> > only required to be called once, and you are ending up calling it on
+> > each resume. Limiting that with another local variable is bad as well.
+> 
+> We discussed variant with get_performance_state() previously and Ulf
+> didn't like it either since it still requires to touch 'internals' of GENPD.
 
-dev_pm_opp_sync() calls it from _set_opp().
+Hmm, I wonder if that would be a problem since only genpd core is
+going to call that routine anyway.
 
-> And if it is all about just syncing the genpd core, then can the genpd
-> core do something like what clk framework does? i.e. allow a new
-> optional genpd callback, get_performance_state() (just like
-> set_performance_state()), which can be called initially by the core to
-> get the performance to something other than zero. opp-set-rate is
-> there to set the performance state and enable the stuff as well.
-> That's why it looks incorrect in your case, where the function was
-> only required to be called once, and you are ending up calling it on
-> each resume. Limiting that with another local variable is bad as well.
-
-We discussed variant with get_performance_state() previously and Ulf
-didn't like it either since it still requires to touch 'internals' of GENPD.
+-- 
+viresh
