@@ -2,56 +2,57 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACC243F1EAD
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Aug 2021 19:03:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51EB13F20B5
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Aug 2021 21:36:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232117AbhHSRE3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Aug 2021 13:04:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51976 "EHLO
+        id S234365AbhHSTgj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 19 Aug 2021 15:36:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230312AbhHSRE2 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Aug 2021 13:04:28 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DB65C061575;
-        Thu, 19 Aug 2021 10:03:52 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id o15so4236381wmr.3;
-        Thu, 19 Aug 2021 10:03:51 -0700 (PDT)
+        with ESMTP id S229514AbhHSTgh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Aug 2021 15:36:37 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFF38C061575;
+        Thu, 19 Aug 2021 12:36:00 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id d4so15213001lfk.9;
+        Thu, 19 Aug 2021 12:36:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oJSyVi1Ti8Nnw90fU6cpGrkDUh7d4poA+u+RmE9yClc=;
-        b=WjO9vG1rxjOXSea0lggzneOK1T6brU84ws+V+SOshWtWLDtP8dw4z3PqYpbiYfKli1
-         rXcVeuPjT7MJg7Hy5j8m3cd8kdbRkCEcM1Y80y8aKWqMDBpsEeU4BdtyUa/ON6dEIpuI
-         ZH83YfvUPLz7N8Eucoioijep/MF/3w0IGFv19+kQ9bZgPKOHNPjpkkiiG7frHJKiLmhR
-         PSWLWci5igVYTxBtqkvlj5fV5Gwf9+1XGIFKjnJNTLfzWugJ7siIAcnkXrphSw12V8Us
-         vFqkDjmlPCNix0bh4GlaOKtAD+MVeEwQ6e6JDKcS6m84MivgDrAwN5keeZsMvCUxJPh5
-         owbA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DULWQbyXgQID8PNJR65q3ui7SrWpcCN+90FL5qtDGW4=;
+        b=pavH6Or3hHtiPfMvi8hlpl/tg+4iNkFsKU223QQBDdOUdi6iU/UGWUvtDPrwHRvATY
+         T93cP1HXuc5W/zHN7xvpRXKJW7BinJL9sVNA6qZxjeijHdmFtCqxrxnpd+WkEHRtVU0B
+         Iyqua5rSNmWSDpSD3gZsArfjTWgs81iBNdQYXU+kNJ+OumOnoCaZh+LP24EMz52MwP27
+         4AWCJslbtOmcFHBYAOMwZEDrmTB/tzURM30c4z+24S3Lj2lVdIHxSFuPOnhXpzmvotQF
+         wvsrbFpOMxH2mR1ZpXZ7XMAP/i3UFW88iZgByQUfkdB9/YhjC/JuWWWMJqO4edcr+32D
+         1LbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oJSyVi1Ti8Nnw90fU6cpGrkDUh7d4poA+u+RmE9yClc=;
-        b=BKL2Kh85MqMVjQCipT10Y8VzeWNi78UB2drISzPw9s+FSouxUA2kPrxo6R5NTnOqTi
-         4UQqoWRUqpVP7APKwz3fFvh0yEpNC8eOgocw0KrmTRDmJrdRxnNm5wqEpFtQTjqWqYao
-         CQFDRmXKnIEaJuTPmV3/1B1Lv3ne5KDKUd0SdE0BN6L2FlFw1TjStYBsTfA+UN/ri6XE
-         mfgCtQA0aAbDusJyY3rw4quMlXaBhKtj9/FK68OEah0gW9rIcmwslMPDrEsGZ4PeNGBr
-         g42gu99ur0LpDa/Rzpy3oE8ac0cbgkHERwglwdZotl2ZKeYWAqgRSyyMv+0p2TGxzk8e
-         99mQ==
-X-Gm-Message-State: AOAM531rlR15nlkjMAuGGIxGX3f1VzLppjg0Kx83lFKgVUH7t3GRI5cg
-        C8KhcY4JCMHJjSV5R2gSmQI=
-X-Google-Smtp-Source: ABdhPJzLX7hjX9RRU2YIQz+WOkf7C4KD77ZHazVOwLC50X1dVFEX0qYgndjCiaQPFM42jC66tRB3Yw==
-X-Received: by 2002:a05:600c:3641:: with SMTP id y1mr14362707wmq.43.1629392630595;
-        Thu, 19 Aug 2021 10:03:50 -0700 (PDT)
-Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id e3sm3493730wrv.65.2021.08.19.10.03.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Aug 2021 10:03:49 -0700 (PDT)
-Date:   Thu, 19 Aug 2021 19:03:48 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DULWQbyXgQID8PNJR65q3ui7SrWpcCN+90FL5qtDGW4=;
+        b=MKJco/gKyQlbu/ORhfO2U9SK1IXfyN/MhtBN5/QYfhCOiA5aCduDu7NBgULnQUVQSp
+         FPA+/SshhskLooLR+AD3cjkXnoFEQOHCMi6nNAbSDwHYAvqdtnpDpi1kK5f+6ScAHis2
+         6xukc/xX/KPlKPeQvKo73x+r6fQr+4duAoA5dSBPn9+DCcIVS3WEy1SDIO0RshL3Khjc
+         mK9mZrRugMl1plgK+B2/HTfs15yVHNyisbn46c27hLqNfyQniDOjsQ76wsxQBFes1pSa
+         eo5ShN1OXVUdsHDVXgrcZIIb5Nqe6HwF0TWjKuuqwjR0JHEPEPcqanep3oshptvyjwRb
+         4oPg==
+X-Gm-Message-State: AOAM5300DGOdpjrsp9rYN9Kw41x6iJj9XLN8IfrljTRwBE8YAtJUIX7R
+        YT2lH5HBucA4vxxD4yEpMC1g+oEIFI0=
+X-Google-Smtp-Source: ABdhPJz8kaZlUqWZzmjPF+roXrLNhHc7Bu21Y9J69HyMCnrDHOaQ6jNYy2BIrPwa/yg8Go50EqboLQ==
+X-Received: by 2002:a05:6512:23aa:: with SMTP id c42mr11397932lfv.55.1629401759119;
+        Thu, 19 Aug 2021 12:35:59 -0700 (PDT)
+Received: from [192.168.2.145] (46-138-120-72.dynamic.spd-mgts.ru. [46.138.120.72])
+        by smtp.googlemail.com with ESMTPSA id l24sm396141lfe.272.2021.08.19.12.35.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Aug 2021 12:35:58 -0700 (PDT)
+Subject: Re: [PATCH v8 01/34] opp: Add dev_pm_opp_sync() helper
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
         Viresh Kumar <vireshk@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>,
         Peter De Schrijver <pdeschrijver@nvidia.com>,
@@ -59,8 +60,8 @@ Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
         Peter Chen <peter.chen@kernel.org>,
         Mark Brown <broonie@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Nishanth Menon <nm@ti.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Richard Weinberger <richard@nod.at>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -69,116 +70,231 @@ Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
         linux-staging@lists.linux.dev, linux-spi@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH v8 20/34] mmc: sdhci-tegra: Add runtime PM and OPP support
-Message-ID: <YR6O9Om+HzMMG8AR@orome.fritz.box>
-References: <20210817012754.8710-1-digetx@gmail.com>
- <20210817012754.8710-21-digetx@gmail.com>
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+References: <20210818043131.7klajx6drvvkftoc@vireshk-i7>
+ <a2a3c41f-c5e4-ee7e-7d48-03af8bac8863@gmail.com>
+ <20210818045307.4brb6cafkh3adjth@vireshk-i7>
+ <080469b3-612b-3a34-86e5-7037a64de2fe@gmail.com>
+ <20210818055849.ybfajzu75ecpdrbn@vireshk-i7>
+ <f1c76f23-086d-ef36-54ea-0511b0ebe0e1@gmail.com>
+ <20210818062723.dqamssfkf7lf7cf7@vireshk-i7>
+ <CAPDyKFrZqWtZOp4MwDN6fShoLLbw5NM039bpE3-shB+fCEZOog@mail.gmail.com>
+ <20210818091417.dvlnsxlgybdsn76x@vireshk-i7>
+ <CAPDyKFrVxhrWGr2pKduehshpLFd_db2NTPGuD7fSqvuHeyzT4w@mail.gmail.com>
+ <20210818095044.e2ntsm45h5cddk7s@vireshk-i7>
+ <CAPDyKFrFF00xGDWPCQnPwF0_QkG4TB2UqggpuBpp8LY_CMKP-A@mail.gmail.com>
+ <0354acbe-d856-4040-f453-8e8164102045@gmail.com>
+ <CAPDyKFoQdn1rm91iFNJwZwpSYcKJBjDLqtJB4KZAkhgY1Grm-Q@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <87073fc2-d7b3-98f4-0067-29430ea2adef@gmail.com>
+Date:   Thu, 19 Aug 2021 22:35:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Zkl/ZGRNLhkdNGO0"
-Content-Disposition: inline
-In-Reply-To: <20210817012754.8710-21-digetx@gmail.com>
-User-Agent: Mutt/2.1.1 (e2a89abc) (2021-07-12)
+In-Reply-To: <CAPDyKFoQdn1rm91iFNJwZwpSYcKJBjDLqtJB4KZAkhgY1Grm-Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+19.08.2021 16:07, Ulf Hansson пишет:
+> On Wed, 18 Aug 2021 at 17:43, Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> 18.08.2021 13:08, Ulf Hansson пишет:
+>>> On Wed, 18 Aug 2021 at 11:50, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>>>>
+>>>> On 18-08-21, 11:41, Ulf Hansson wrote:
+>>>>> On Wed, 18 Aug 2021 at 11:14, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>>>>>> What we need here is just configure. So something like this then:
+>>>>>>
+>>>>>> - genpd->get_performance_state()
+>>>>>>   -> dev_pm_opp_get_current_opp() //New API
+>>>>>>   -> dev_pm_genpd_set_performance_state(dev, current_opp->pstate);
+>>>>>>
+>>>>>> This can be done just once from probe() then.
+>>>>>
+>>>>> How would dev_pm_opp_get_current_opp() work? Do you have a suggestion?
+>>>>
+>>>> The opp core already has a way of finding current OPP, that's what
+>>>> Dmitry is trying to use here. It finds it using clk_get_rate(), if
+>>>> that is zero, it picks the lowest freq possible.
+>>>>
+>>>>> I am sure I understand the problem. When a device is getting probed,
+>>>>> it needs to consume power, how else can the corresponding driver
+>>>>> successfully probe it?
+>>>>
+>>>> Dmitry can answer that better, but a device doesn't necessarily need
+>>>> to consume energy in probe. It can consume bus clock, like APB we
+>>>> have, but the more energy consuming stuff can be left disabled until
+>>>> the time a user comes up. Probe will just end up registering the
+>>>> driver and initializing it.
+>>>
+>>> That's perfectly fine, as then it's likely that it won't vote for an
+>>> OPP, but can postpone that as well.
+>>>
+>>> Perhaps the problem is rather that the HW may already carry a non-zero
+>>> vote made from a bootloader. If the consumer driver tries to clear
+>>> that vote (calling dev_pm_opp_set_rate(dev, 0), for example), it would
+>>> still not lead to any updates of the performance state in genpd,
+>>> because genpd internally has initialized the performance-state to
+>>> zero.
+>>
+>> We don't need to discover internal SoC devices because we use
+>> device-tree on ARM. For most devices power isn't required at a probe
+>> time because probe function doesn't touch h/w at all, thus devices are
+>> left in suspended state after probe.
+>>
+>> We have three components comprising PM on Tegra:
+>>
+>> 1. Power gate
+>> 2. Clock state
+>> 3. Voltage state
+>>
+>> GENPD on/off represents the 'power gate'.
+>>
+>> Clock and reset are controlled by device drivers using clk and rst APIs.
+>>
+>> Voltage state is represented by GENPD's performance level.
+>>
+>> GENPD core assumes that at a first rpm-resume of a consumer device, its
+>> genpd_performance=0. Not true for Tegra because h/w of the device is
+>> preconfigured to a non-zero perf level initially, h/w may not support
+>> zero level at all.
+> 
+> I think you may be misunderstanding genpd's behaviour around this, but
+> let me elaborate.
+> 
+> In genpd_runtime_resume(), we try to restore the performance state for
+> the device that genpd_runtime_suspend() *may* have dropped earlier.
+> That means, if genpd_runtime_resume() is called prior
+> genpd_runtime_suspend() for the first time, it means that
+> genpd_runtime_resume() will *not* restore a performance state, but
+> instead just leave the performance state as is for the device (see
+> genpd_restore_performance_state()).
+> 
+> In other words, a consumer driver may use the following sequence to
+> set an initial performance state for the device during ->probe():
+> 
+> ...
+> rate = clk_get_rate()
+> dev_pm_opp_set_rate(rate)
+> 
+> pm_runtime_enable()
+> pm_runtime_resume_and_get()
+> ...
+> 
+> Note that, it's the consumer driver's responsibility to manage device
+> specific resources, in its ->runtime_suspend|resume() callbacks.
+> Typically that means dealing with clock gating/ungating, for example.
+> 
+> In the other scenario where a consumer driver prefers to *not* call
+> pm_runtime_resume_and_get() in its ->probe(), because it doesn't need
+> to power on the device to complete probing, then we don't want to vote
+> for an OPP at all - and we also want the performance state for the
+> device in genpd to be set to zero. Correct?
 
---Zkl/ZGRNLhkdNGO0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes
 
-On Tue, Aug 17, 2021 at 04:27:40AM +0300, Dmitry Osipenko wrote:
-> The SDHCI on Tegra belongs to the core power domain and we're going to
-> enable GENPD support for the core domain. Now SDHCI must be resumed using
-> runtime PM API in order to initialize the SDHCI power state. The SDHCI
-> clock rate must be changed using OPP API that will reconfigure the power
-> domain performance state in accordance to the rate. Add runtime PM and OPP
-> support to the SDHCI driver.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/mmc/host/sdhci-tegra.c | 146 ++++++++++++++++++++++++---------
->  1 file changed, 105 insertions(+), 41 deletions(-)
->=20
-> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegr=
-a.c
-> index 387ce9cdbd7c..a3583359c972 100644
-> --- a/drivers/mmc/host/sdhci-tegra.c
-> +++ b/drivers/mmc/host/sdhci-tegra.c
-> @@ -15,6 +15,8 @@
->  #include <linux/of.h>
->  #include <linux/of_device.h>
->  #include <linux/pinctrl/consumer.h>
-> +#include <linux/pm_opp.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/reset.h>
->  #include <linux/mmc/card.h>
-> @@ -24,6 +26,8 @@
->  #include <linux/gpio/consumer.h>
->  #include <linux/ktime.h>
-> =20
-> +#include <soc/tegra/common.h>
-> +
->  #include "sdhci-pltfm.h"
->  #include "cqhci.h"
-> =20
-> @@ -123,6 +127,12 @@
->  					 SDHCI_TRNS_BLK_CNT_EN | \
->  					 SDHCI_TRNS_DMA)
-> =20
-> +enum {
-> +	TEGRA_CLK_BULK_SDHCI,
-> +	TEGRA_CLK_BULK_TMCLK,
-> +	TEGRA_CLK_BULK_NUM,
-> +};
-> +
->  struct sdhci_tegra_soc_data {
->  	const struct sdhci_pltfm_data *pdata;
->  	u64 dma_mask;
-> @@ -171,6 +181,8 @@ struct sdhci_tegra {
->  	bool enable_hwcq;
->  	unsigned long curr_clk_rate;
->  	u8 tuned_tap_delay;
-> +
-> +	struct clk_bulk_data clocks[TEGRA_CLK_BULK_NUM];
+> Is this the main problem you are trying to solve, because I think this
+> doesn't work out of the box as of today?
 
-This doesn't seem worth it to me. There's a lot of churn in this driver
-that's only needed to convert this to the clk_bulk API and it makes the
-code a lot more difficult to read, in my opinion.
+The main problem is that the restored performance state is zero for the
+first genpd_runtime_resume(), while it's not zero from the h/w perspective.
 
-It looks like the only benefit that this gives us is that runtime
-suspend and resume become a few lines shorter.
+> There is another concern though, but perhaps it's not a problem after
+> all. Viresh told us that dev_pm_opp_set_rate() may turn on resources
+> like clock/regulators. That could certainly be problematic, in
+> particular if the device and its genpd have OPP tables associated with
+> it and the consumer driver wants to follow the above sequence in
+> probe.
 
-Thierry
+dev_pm_opp_set_rate() won't enable clocks and regulators, but it may
+change the clock rate and voltage. This is also platform/driver specific
+because it's up to OPP user how to configure OPP table. On Tegra we only
+assign clock to OPP table, regulators are unused.
 
---Zkl/ZGRNLhkdNGO0
-Content-Type: application/pgp-signature; name="signature.asc"
+> Viresh, can you please chime in here and elaborate on some of the
+> magic happening behind dev_pm_opp_set_rate() API - is there a problem
+> here or not?
+> 
+>>
+>> GENPD core assumes that consumer devices can work at any performance
+>> level. Not true for Tegra because voltage needs to be set in accordance
+>> to the clock rate before clock is enabled, otherwise h/w won't work
+>> properly, perhaps clock may be unstable or h/w won't be latching.
+> 
+> Correct. Genpd relies on the callers to use the OPP framework if there
+> are constraints like you describe above.
+> 
+> That said, it's not forbidden for a consumer driver to call
+> dev_pm_genpd_set_performance_state() directly, but then it better
+> knows exactly what it's doing.
+> 
+>>
+>> Performance level should be set to 0 while device is suspended.
+> 
+> Do you mean system suspend or runtime suspend? Or both?
 
------BEGIN PGP SIGNATURE-----
+Runtime suspend.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmEejvQACgkQ3SOs138+
-s6GP7Q//aRZFqje0kEFRTOZPc/3kSiWj3ZUdkPxBKI8ZmISgrBH2orJG4ZW3OaNl
-CdiK1hqqEgEsJHuHndJqfCjxgwTwO/0zcGEwU6XcpaP0Zdh/IsIE1Qc4pHPWN7oQ
-Mcu5gLnbaDh+ej6Xpw09BpTDoZtuD20vxOf7g97ZmKlWpKS2sFL4HuKcaYWMxoM0
-43Qh7BuDv4iyY4BFdiNhEsh/Yx/2fFMjU8DQRbggqmePZYAyNDRDqOZ8vBpjmcIe
-Ub0niDGP+iEcPtw2F14RVjhAkVnnw1/v4G1PAZ62bzJ7ZosDM3CuVWs3kf189rXq
-i4xS1NBcSyntT2PBB8aaH6pyu0zCqEHyV8Q2PsCl1B88KdWmvraBlzWSu4cRZeMR
-eIGVeA2YXUhzPfwGUch8dprkivWN2OhHc7V+NFZJcHV16+WEgObbQV6j9MYVBbfO
-ZAuKtQshaQyjY0WcVTEog97Jrb7SYMLlILYwaHey6bGra1sQGK3jl+CEetSjsM6G
-Y3bk4uoBl0s0lsMSh0j1TSrKUOvbOk8xduyNrwloqaiAQRhX2idPvikM3f3OsVRL
-ejSpVy00UNbkUR4xl4v8U2MAJBCGID7q84IqDTwso3xZZ1pgH/H6YMzn2Tw2tTd4
-kDLfxr2aUamBe71mE2uLiEoEuiBCUvQXgl3/Uqkg1+ke17HCIMI=
-=AV2X
------END PGP SIGNATURE-----
+>> Performance level needs to be bumped on rpm-resume of a device in
+>> accordance to h/w state before hardware is enabled.
+> 
+> Assuming there was a performance state set for the device when
+> genpd_runtime_suspend() was called, genpd_runtime_resume() will
+> restore that state according to the sequence you described.
 
---Zkl/ZGRNLhkdNGO0--
+What do you think about adding API that will allow drivers to explicitly
+set the restored performance state of a power domain?
+
+Another option could be to change the GENPD core, making it to set the
+rpm_pstate when dev_pm_genpd_set_performance_state(dev) is invoked and
+device is rpm-suspended, instead of calling the
+genpd->set_performance_state callback.
+
+Then drivers will be able to sync the perf state at a probe time.
+
+What do you think?
+
+diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+index a934c679e6ce..cc15ab9eacc9 100644
+--- a/drivers/base/power/domain.c
++++ b/drivers/base/power/domain.c
+@@ -435,7 +435,7 @@ static void genpd_restore_performance_state(struct
+device *dev,
+ int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int
+state)
+ {
+ 	struct generic_pm_domain *genpd;
+-	int ret;
++	int ret = 0;
+
+ 	genpd = dev_to_genpd_safe(dev);
+ 	if (!genpd)
+@@ -446,7 +446,10 @@ int dev_pm_genpd_set_performance_state(struct
+device *dev, unsigned int state)
+ 		return -EINVAL;
+
+ 	genpd_lock(genpd);
+-	ret = genpd_set_performance_state(dev, state);
++	if (pm_runtime_suspended(dev))
++		dev_gpd_data(dev)->rpm_pstate = state;
++	else
++		ret = genpd_set_performance_state(dev, state);
+ 	genpd_unlock(genpd);
+
+ 	return ret;
+
+
