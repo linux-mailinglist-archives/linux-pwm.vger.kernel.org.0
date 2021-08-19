@@ -2,155 +2,107 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 135F93F132C
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Aug 2021 08:17:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D149D3F16E4
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Aug 2021 11:59:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230447AbhHSGSG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Aug 2021 02:18:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41452 "EHLO
+        id S236149AbhHSKAK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 19 Aug 2021 06:00:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230263AbhHSGSF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Aug 2021 02:18:05 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B94B5C06179A
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Aug 2021 23:17:29 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id mq2-20020a17090b3802b0290178911d298bso4055628pjb.1
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Aug 2021 23:17:29 -0700 (PDT)
+        with ESMTP id S238022AbhHSKAJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Aug 2021 06:00:09 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75652C061764
+        for <linux-pwm@vger.kernel.org>; Thu, 19 Aug 2021 02:59:33 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id x12so8126874wrr.11
+        for <linux-pwm@vger.kernel.org>; Thu, 19 Aug 2021 02:59:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Z7TQEkkTOfvT3y1VcK9cbeGmLxLBDuWce4oY9e31CIQ=;
-        b=n8Z7pceL3Q1hHrYhRGbE2Ft6ysYoV2T29GwsgsIk5zym7iZcje0CXVg1jI36aNnFP1
-         wEt31EiA2dUBQwlv5rK6Pb4jBRjUZnVnX9lq3yYWlZnsAiqoC84b2+sIg5qRcoOEikt2
-         Bl5OLXFHBLycojOK68FIhPW3b2fskqhF3vr/eyYOYKdL7QspG0UOJAgIVnJ/rUe4LZFr
-         9Mx+8O2v0d2rHrH3yazUPQGMQQQiYdzhDIVBgB1HMOdlKqueyQlS0Pa++oE7KDNseaKY
-         ZqQcskpZ4qIHBPun+Nz8BNcPrFRsCGUIgrdD9AWMNWaoX41LuxEow35zOBfD0rRFPHfn
-         o2nQ==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=xtunD2GxO/8/vmP/JIhc/Q4AXeVK5pzMLPGPI0WktNo=;
+        b=ULGrdUlLjfonZ9gXeFBZL1uRfDlE0SqvpHLPwuyDblWuDL6n7yMagTIZsgstsvo+qS
+         r2ts6k9+C4pXp8Sju0Va2gPM+ieguklAU4b9hD9AslIY+NgmsgLibrWbQ1LiZ0Qsk3rH
+         F4JEmqWQWSRFqw+Y6qDkS74exs7H14uKfiSDwl74vGXJMZfBp4C9GqgKKDJXSQ/hupfn
+         oURWGu3f4FfnLlPSov6wUBSXVnpJHIfk9oWzJA427L1hiGyatYZ/YU553dT38q8yqgAn
+         d+ajJsiH6+zxUGDU4WyG1Nhdmg9w9s1BBQAhxibNshdCVsKc6AhrRapWUea8HkBS/5Ng
+         uvpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Z7TQEkkTOfvT3y1VcK9cbeGmLxLBDuWce4oY9e31CIQ=;
-        b=R+gjGbq60BEsvZYoah9iYyQa89kLfo7XhCEjfUIzv69UjQujdgf0Hak7ml5QrQieJY
-         xzUqJ8erxxKW1NDj5gPEeQfSh2yoJlyQ+UjTT7kJn+bWIeBWXhDEWnN4gTDhFTEA/EBa
-         9j+eXYow5Fvb6CLFhop+QbMJPZK514Ynoq/tGB85uBi1MkBRhLAt4yeL0nPy2Caeb4dY
-         oFKxUJiiJLx7DSuf4wVKHbTO1PvC1gAr5J3Sa4UP520nC586+IVtv9k6H9i8Mb3Gt4Y5
-         7jerv9yFKVXk9qfN6IsLFDLxO5qjwQswDqvvbfWn/2PaZqeMZAu8CdgM8MZZSkQbt3xh
-         SFow==
-X-Gm-Message-State: AOAM530MBMFtI7iNujnJDiGkgpTWhWkNgJ7XVeBUtgqZNszS3grk9uU4
-        iuGi0L5XP9zcBGFbEuccv84C3w==
-X-Google-Smtp-Source: ABdhPJwi8ECnFjz7ftlBUkQP1U01xvcbaFwYmCvSxRCVadF/ZCBCreA9Xq0KVJGpteNV1tSqbtF8Eg==
-X-Received: by 2002:a17:90a:ce88:: with SMTP id g8mr13456163pju.116.1629353849006;
-        Wed, 18 Aug 2021 23:17:29 -0700 (PDT)
-Received: from localhost ([122.172.201.85])
-        by smtp.gmail.com with ESMTPSA id r18sm2222724pgk.54.2021.08.18.23.16.21
+         :in-reply-to;
+        bh=xtunD2GxO/8/vmP/JIhc/Q4AXeVK5pzMLPGPI0WktNo=;
+        b=cC00zrfyfBmmeRTm2SqqPhhB/shCTxBvn1Wj0gg5Fltt07HVBtdQjX8gAVKGaQw+Ok
+         +edXe3Dw05JgcStA+FPehcjVaVzvpo06Z30BiM0xY760/DeCCV5558gpHKiWmygItpNq
+         dTdJsIduI3z25Lggg7MVhDEO4wLF8g+QEV1SztECNIr/ewvCnXqxtJz5LBrgSzsuLB8B
+         jGXDQZUZRhWvI6w3vgTg20FlZlkoR3y9Nw+seHbgAT0pfd7i4lZtOxBNKOFySfJJsbCW
+         RPM6z8YL0nCdF/P7p9oUg+SPqa007kEmpQYLh0/9+VMFDlcx03t0JAk38Aicum8Gj0tf
+         V6NQ==
+X-Gm-Message-State: AOAM531Ty2Q+WesxLqW0t8V2e7hVn2Rr5PdXDOYY8E+OoaLsRMbzSYbN
+        dQNzt3FPwciJE77UHylp/pfIZg==
+X-Google-Smtp-Source: ABdhPJyutlGQ6Z6gY20AlGAJAhV+LbVsUxEHKzeIqK38emB1LhIfllep0G5vUV02GJWRWcT0Ec9kgQ==
+X-Received: by 2002:a5d:4290:: with SMTP id k16mr2749296wrq.224.1629367172037;
+        Thu, 19 Aug 2021 02:59:32 -0700 (PDT)
+Received: from google.com ([2.31.167.59])
+        by smtp.gmail.com with ESMTPSA id z5sm7338694wmp.26.2021.08.19.02.59.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Aug 2021 23:16:53 -0700 (PDT)
-Date:   Thu, 19 Aug 2021 11:46:17 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Thu, 19 Aug 2021 02:59:31 -0700 (PDT)
+Date:   Thu, 19 Aug 2021 10:59:29 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Peter Chen <peter.chen@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Richard Weinberger <richard@nod.at>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Lucas Stach <dev@lynxeye.de>, Stefan Agner <stefan@agner.ch>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        linux-staging@lists.linux.dev, linux-spi@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH v8 01/34] opp: Add dev_pm_opp_sync() helper
-Message-ID: <20210819061617.r4kuqxafjstrv3kt@vireshk-i7>
-References: <a2a3c41f-c5e4-ee7e-7d48-03af8bac8863@gmail.com>
- <20210818045307.4brb6cafkh3adjth@vireshk-i7>
- <080469b3-612b-3a34-86e5-7037a64de2fe@gmail.com>
- <20210818055849.ybfajzu75ecpdrbn@vireshk-i7>
- <f1c76f23-086d-ef36-54ea-0511b0ebe0e1@gmail.com>
- <20210818062723.dqamssfkf7lf7cf7@vireshk-i7>
- <CAPDyKFrZqWtZOp4MwDN6fShoLLbw5NM039bpE3-shB+fCEZOog@mail.gmail.com>
- <20210818091417.dvlnsxlgybdsn76x@vireshk-i7>
- <CAPDyKFrVxhrWGr2pKduehshpLFd_db2NTPGuD7fSqvuHeyzT4w@mail.gmail.com>
- <f1314a47-9e8b-58e1-7c3f-0afb1ec8e70a@gmail.com>
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Marek Vasut <marex@denx.de>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] backlight: pwm_bl: Improve bootloader/kernel device
+ handover
+Message-ID: <YR4rgXdHqLzpYfEY@google.com>
+References: <20210722144623.1572816-1-daniel.thompson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f1314a47-9e8b-58e1-7c3f-0afb1ec8e70a@gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20210722144623.1572816-1-daniel.thompson@linaro.org>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 18-08-21, 18:55, Dmitry Osipenko wrote:
-> 18.08.2021 12:41, Ulf Hansson пишет:
+On Thu, 22 Jul 2021, Daniel Thompson wrote:
+
+> Currently there are (at least) two problems in the way pwm_bl starts
+> managing the enable_gpio pin. Both occur when the backlight is initially
+> off and the driver finds the pin not already in output mode and, as a
+> result, unconditionally switches it to output-mode and asserts the signal.
 > 
-> Either way gives the equal result. The new callback allows to remove the
-> boilerplate dev_pm_opp_set_rate(clk_get_rate() code from the rpm-resume
-> of consumer devices, that's it.
+> Problem 1: This could cause the backlight to flicker since, at this stage
+> in driver initialisation, we have no idea what the PWM and regulator are
+> doing (an unconfigured PWM could easily "rest" at 100% duty cycle).
+> 
+> Problem 2: This will cause us not to correctly honour the
+> post_pwm_on_delay (which also risks flickers).
+> 
+> Fix this by moving the code to configure the GPIO output mode until after
+> we have examines the handover state. That allows us to initialize
+> enable_gpio to off if the backlight is currently off and on if the
+> backlight is on.
+> 
+> Reported-by: Marek Vasut <marex@denx.de>
+> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Cc: stable@vger.kernel.org
+> Acked-by: Marek Vasut <marex@denx.de>
+> Tested-by: Marek Vasut <marex@denx.de>
+> ---
+>  drivers/video/backlight/pwm_bl.c | 54 +++++++++++++++++---------------
+>  1 file changed, 28 insertions(+), 26 deletions(-)
 
-It may not be equal, as dev_pm_opp_set_rate() may do additional stuff,
-now or in a later implementation. Currently it only does
-regulator_enable() as a special case, but it can be clk_enable() as
-well. Also, this tries to solve the problem in a tricky/hacky way,
-while all you wanted was to make the genpd aware of what the
-performance state should be.
-
-Your driver can break tomorrow if we started to do more stuff from
-this API at another time.
-
-> > dev_pm_opp_set_rate() is best called from consumer drivers, as they
-> > need to be in control.
-> >> What we need here is just configure. So something like this then:
-> The intent wasn't to use dev_pm_opp_set_rate() from
-> __genpd_dev_pm_attach(), but to set genpd->rpm_pstate in accordance to
-> the h/w configuration.
-
-Right.
-
-> On Tegra we have a chain of PDs and it's not trivial to convert the
-> device's OPP into pstate because only the parent domain can translate
-> the required OPP.
-
-The driver should just be required to make a call, and OPP/genpd core
-should return it a value. This is already done today while setting the
-pstate for a device. The same frameworks must be able to supply a
-value to be used for the device.
-
-> Viresh, please take a look at what I did in [1]. Maybe it could be done
-> in another way.
-
-I looked into this and looked like too much trouble. The
-implementation needs to be simple. I am not sure I understand all the
-problems you faced while doing that, would be better to start with a
-simpler implementation of get_performance_state() kind of API for
-genpd, after the domain is attached and its OPP table is initialized.
-
-Note, that the OPP table isn't required to be fully initialized for
-the device at this point, we can parse the DT as well if needed be.
+Applied, thanks.
 
 -- 
-viresh
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
