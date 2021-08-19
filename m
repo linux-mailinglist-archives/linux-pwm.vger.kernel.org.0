@@ -2,183 +2,116 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E0BA3F1A75
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Aug 2021 15:36:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F07E3F1B2C
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Aug 2021 16:05:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240035AbhHSNhG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Aug 2021 09:37:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59110 "EHLO
+        id S240301AbhHSOGF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 19 Aug 2021 10:06:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240010AbhHSNhG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Aug 2021 09:37:06 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 117A2C061575
-        for <linux-pwm@vger.kernel.org>; Thu, 19 Aug 2021 06:36:30 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id c129-20020a1c35870000b02902e6b6135279so4092286wma.0
-        for <linux-pwm@vger.kernel.org>; Thu, 19 Aug 2021 06:36:29 -0700 (PDT)
+        with ESMTP id S238516AbhHSOGE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Aug 2021 10:06:04 -0400
+Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0FBDC06179A
+        for <linux-pwm@vger.kernel.org>; Thu, 19 Aug 2021 07:05:27 -0700 (PDT)
+Received: by mail-ua1-x92d.google.com with SMTP id u39so2639470uad.10
+        for <linux-pwm@vger.kernel.org>; Thu, 19 Aug 2021 07:05:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dm/L8U1aG5H1oQiUun8vCPahjYzgBeQ9/12UDiYhpmc=;
-        b=outrQLGfLeDnln0w55atm8TK9GxZw7zKW4oMBc0r2wl2OYYndYIIuPCoTifmUFZCUS
-         5q2lqJ30OLy/aKaL1t0dePzR/9T2suTfS+C5TDLYvbWs/ozwngIAf4vEDgi4VyUj6hOu
-         qHLXj29D6+PjPecoGsfQI1HYGVpNh7vJ6sY32dRI7/pc5MzJFhaInZ+MpYP70sP4BMY8
-         ND6PGEQavOVM4v+rjy3sOZKWw8NBH5LbZ1b1FeaxPttCUr1PmGN9pfshNbflqSNJvVmd
-         lWx7Q5kdgSTk/AP867XLyO6YPxmjtaVV0LIa7OM9jFAlWrYRI+BxYej3FP+cvrquhYnw
-         EXAQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z8ppYolHk+6MAlg/iRV3TOW64DDORViSUFtjVS4tPfU=;
+        b=pf8lMOnxg/R18hy9RmRXn53gTyaSPBEYPRXidYbCWDeGyj1Q84GnstXRTsE70HIZwL
+         rOZaYQbJ0JsuexxwGKTbxTnmUkIeE3lCIDKi4y5M7EdG4KOJ33bce1Ym5TIJ8eyXrlgP
+         dbE7l+Rznz9FT+hME0DQqhK7lxhDgOPmbvRDcLaquo7wS/EVnyYYfbE9J5SpPQV1WnQ8
+         fXPIAlBPmH1/Wbcsr6ERwHJaV/U7LQTY8nCTXj0WtrNaCQEnZqZy2yVRdVBh7ZdPgr+l
+         lQknd5LJKpfGihHNxJOG9NmGE/fM0gVDzrjpqFwZqJoFyhmk+xoMBA6IKCATwNl/L1GC
+         MrVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dm/L8U1aG5H1oQiUun8vCPahjYzgBeQ9/12UDiYhpmc=;
-        b=AYlIfYjPJEzD1UeyOgM6ucQZsvDq5rLdaE6EX4Hb4q2OWaXtCNrLzY5xfgPbjDzNaL
-         rFl50j7aIp3TLXUjib4DdSjEJ9yBVKan0TBhka6xDIEm2GkYTsXN0IJ/Piu073S5v9WB
-         kLpDTlftsIsW0x32ES+OzxlMdoMAHxp9mkeoT8Sb4l8w109H8iw7R2TgMw1F1xjotXA2
-         sDu60fCAMn9EvXW/C68W3hUr2a3ZkrDV4Dygdnp9+CrfsEQbNHmBnOpMp2MhPhnA2+Pq
-         8CZxPF1eChBU8ixpv4XyH48e5alh/f9/QGtBtji9Grn8vE1nVipRWRfwPzAmJoZ68dNW
-         q5Lw==
-X-Gm-Message-State: AOAM530B3wUdK1cqaPJLyYzqR72To7ubCieFZRIchN+J/4VHcqEnvbO7
-        N07xJ6J4uh1OGOFwPLYFjqc=
-X-Google-Smtp-Source: ABdhPJykEnGh1qbT5dCE+Ofb4ghkeaat8ZEKFmzgdu37bzmpzSs7J5C9AOGo0eX8TsA8fyJKI7LlXA==
-X-Received: by 2002:a05:600c:210a:: with SMTP id u10mr13918722wml.162.1629380188675;
-        Thu, 19 Aug 2021 06:36:28 -0700 (PDT)
-Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id g12sm3015786wru.85.2021.08.19.06.36.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Aug 2021 06:36:27 -0700 (PDT)
-Date:   Thu, 19 Aug 2021 15:36:26 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
-        kernel@pengutronix.de, Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/3] pwm: Prevent a glitch for legacy drivers
-Message-ID: <YR5eWvpEaLxgdWxD@orome.fritz.box>
-References: <20210701072927.328254-1-u.kleine-koenig@pengutronix.de>
- <20210701072927.328254-3-u.kleine-koenig@pengutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z8ppYolHk+6MAlg/iRV3TOW64DDORViSUFtjVS4tPfU=;
+        b=tD8rKA54ab2zu2VDyjzmjic26ZBB6n/cQL2yMe7O2m8zPdlwUTYm9PuwJnXz0lnNUl
+         9qs5fBDU7Tck2C4ybx6BsEgVwDK/qSw+SKxerIEVfk/ABAcPsfhe7fpm88TLpROVeuO3
+         eBzymNHe7wolm9URolkq+KpSeF3sx0cNs5AYyL1nZs2PBc+kRhig5FtsF0qCZ9FEbaCK
+         SlqHwEha9R13ouagxkzGQnLPXsoeSGZgdbPld33SXPQp4KrkAprPHuzTSQWpiD+4QmBJ
+         ufOwONDsHz4/QYqvMKc3TFXSUrGAQQhQOH+19zSuYWXjrQZ/KdEszXqJ3P8sQEoxIBu2
+         BqVg==
+X-Gm-Message-State: AOAM530m4Wmj1wr5VCFCkpnSK09MbMYmeQRqaxpe5TdrL/Ebe3oAI+iY
+        i952AaAnyXJhIyj1J2a/AhyaHcW1FCo6yunApY7kgQ==
+X-Google-Smtp-Source: ABdhPJy/9RKTdWSvjYHKQ+0uBbarqxq9rsGLaiJcPg/kihysGVgUWTFM+D2WJBPDbj8B50jGA4KtwzpHd41jDaJSEK8=
+X-Received: by 2002:a9f:25a7:: with SMTP id 36mr11206760uaf.129.1629381926495;
+ Thu, 19 Aug 2021 07:05:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="PdUDrqr5Uu9FKJ1x"
-Content-Disposition: inline
-In-Reply-To: <20210701072927.328254-3-u.kleine-koenig@pengutronix.de>
-User-Agent: Mutt/2.1.1 (e2a89abc) (2021-07-12)
+References: <20210817012754.8710-1-digetx@gmail.com> <20210817012754.8710-20-digetx@gmail.com>
+ <YR5ay6+r0hJsUbhy@orome.fritz.box>
+In-Reply-To: <YR5ay6+r0hJsUbhy@orome.fritz.box>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 19 Aug 2021 16:04:50 +0200
+Message-ID: <CAPDyKFqr6NYO89io+6EfwrtELhTMps-tpGcAVbmuQ1_NnOD7Ew@mail.gmail.com>
+Subject: Re: [PATCH v8 19/34] pwm: tegra: Add runtime PM and OPP support
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Peter Chen <peter.chen@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Lucas Stach <dev@lynxeye.de>, Stefan Agner <stefan@agner.ch>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        linux-staging@lists.linux.dev, linux-spi@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu, 19 Aug 2021 at 15:21, Thierry Reding <thierry.reding@gmail.com> wrote:
+>
+> On Tue, Aug 17, 2021 at 04:27:39AM +0300, Dmitry Osipenko wrote:
+> > The PWM on Tegra belongs to the core power domain and we're going to
+> > enable GENPD support for the core domain. Now PWM must be resumed using
+> > runtime PM API in order to initialize the PWM power state. The PWM clock
+> > rate must be changed using OPP API that will reconfigure the power domain
+> > performance state in accordance to the rate. Add runtime PM and OPP
+> > support to the PWM driver.
+> >
+> > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> > ---
+> >  drivers/pwm/pwm-tegra.c | 104 ++++++++++++++++++++++++++++++++--------
+> >  1 file changed, 85 insertions(+), 19 deletions(-)
+>
+> Can this be safely applied independently of the rest of the series, or
+> are there any dependencies on earlier patches?
 
---PdUDrqr5Uu9FKJ1x
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Just to make sure we don't rush something in, I would rather withhold
+all runtime PM related patches in the series, until we have agreed on
+how to fix the in genpd/opp core parts. Simply, because those may very
+well affect the deployments in the drivers.
 
-On Thu, Jul 01, 2021 at 09:29:26AM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> If a running PWM is reconfigured to disabled calling the ->config()
-> callback before disabling the hardware might result in a glitch where
-> the (maybe) new period and duty_cycle are visible on the output before
-> disabling the hardware.
->=20
-> So handle disabling before calling ->config(). Also exit early in this ca=
-se
-> which is possible because period and duty_cycle don't matter for disabled=
- PWMs.
-> In return however ->config has to be called even if state->period =3D=3D
-> pwm->state.period && state->duty_cycle !=3D pwm->state.duty_cycle because=
- setting
-> these might have been skipped in the previous call.
->=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/pwm/core.c | 41 ++++++++++++++++++++++++-----------------
->  1 file changed, 24 insertions(+), 17 deletions(-)
->=20
-> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index 3c72f8963073..20afe6d0bc5e 100644
-> --- a/drivers/pwm/core.c
-> +++ b/drivers/pwm/core.c
-> @@ -568,26 +568,33 @@ static int pwm_apply_legacy(struct pwm_chip *chip, =
-struct pwm_device *pwm,
->  		pwm->state.polarity =3D state->polarity;
->  	}
-> =20
-> -	if (state->period !=3D pwm->state.period ||
-> -	    state->duty_cycle !=3D pwm->state.duty_cycle) {
-> -		err =3D chip->ops->config(pwm->chip, pwm,
-> -					state->duty_cycle,
-> -					state->period);
-> -		if (err)
-> -			return err;
-> +	if (!state->enabled) {
-> +		if (pwm->state.enabled)
-> +			chip->ops->disable(chip, pwm);
-> =20
-> -		pwm->state.period =3D state->period;
-> -		pwm->state.duty_cycle =3D state->duty_cycle;
-> +		return 0;
->  	}
-> =20
-> -	if (state->enabled !=3D pwm->state.enabled) {
-> -		if (!pwm->state.enabled) {
-> -			err =3D chip->ops->enable(chip, pwm);
-> -			if (err)
-> -				return err;
-> -		} else {
-> -			chip->ops->disable(chip, pwm);
-> -		}
-> +	/*
-> +	 * We cannot skip calling ->config even if state->period =3D=3D
-> +	 * pwm->state.period && state->duty_cycle =3D=3D pwm->state.duty_cycle
-> +	 * because we might have exited early in the last call to
-> +	 * pwm_apply_state because of !state->enabled and so the two values in
-> +	 * pwm->state might not be configured in hardware.
-> +	 */
-> +	err =3D chip->ops->config(pwm->chip, pwm,
-> +				state->duty_cycle,
-> +				state->period);
-> +	if (err)
-> +		return err;
-> +
-> +	pwm->state.period =3D state->period;
-> +	pwm->state.duty_cycle =3D state->duty_cycle;
-> +
-> +	if (!pwm->state.enabled) {
-> +		err =3D chip->ops->enable(chip, pwm);
-> +		if (err)
-> +			return err;
->  	}
+>
+> Thierry
 
-I thought we might have discussed this, but I can't find any record of
-it. How is this better than always configuring, whether the PWM is
-disabled or not?
-
-=46rom an atomic point of view, the hardware state is expected to match
-the PWM state that was passed to ->apply() after it returns. That means
-that calling ->get_state() after ->apply() should return the same state
-that was passed to ->apply(). With the above that's no longer true. It
-doesn't actually matter, because legacy drivers don't support
-->get_state(), but conceptually it's not mimicking the atomic API as
-well as it could.
-
-Thierry
-
---PdUDrqr5Uu9FKJ1x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmEeXloACgkQ3SOs138+
-s6ECHw/+Mafef2PXGGfS1Yem3Y2el88VXb6A3YV1NBhO1S3yThJ1GNeoHZagPGl7
-/McoVQL9f7UnDk4i4KSWduHHYB3VdsBP5XluJiJlMIu7MyD2LGUTDaVXmuwhmXQR
-1AWj35Xc9jbdoeCtUxndv3/7GgkXl146gGEzkpnCCM75kqBOFe8b16csnmZC0W/P
-CvWhQ3qzj7cwvrNQskpH+yZkgDhrNiCnoBU3JrGkKaorbfM2hzwGyiFQRoGfqPDb
-BmnRDYpYih+SQiGBfGH5a1FYbNeuMgMHvwZ4zBF2dDt9YkV6hG4spkAoHIyszxhM
-C/bKfxwqeWkKuN/stfupQ4w9endtmXgzBvD5/st6pkBmNQUZ1oNQhx2nevJUthS7
-5RNpmdJCVmTutnCTDYBZV4MMwXuVpgxXOasY8KGggvgZbTl7w1pWlddA47ReQAoX
-unjhO7fWD0a0MwNSZ8MNzlJHhaBF1hAebSXeUSKLfOYRpbrtYx235t/JxDSHFDYR
-2iqwZyF7xRynfM75jlg0V3kwZCS9uCiZA7Lzvh3xJqtzTeHkA1k5FWv1lvzS3s3w
-gs0TQZhJH/dnPFp5X6DyNAD9BRk52ntQ4b1z8FjXBJYcjKw8vSB3XwFsb1yoikKG
-d8wTee/fT9Uh2m/pbUz+SFWjP90FDx5WppQRQT/aKgGut9Pzmw8=
-=ETOt
------END PGP SIGNATURE-----
-
---PdUDrqr5Uu9FKJ1x--
+Kind regards
+Uffe
