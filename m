@@ -2,62 +2,55 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 19F4D3F1C04
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Aug 2021 16:55:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B2793F1D96
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Aug 2021 18:17:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240670AbhHSO4c (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Aug 2021 10:56:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49558 "EHLO
+        id S229980AbhHSQRm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 19 Aug 2021 12:17:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240653AbhHSO4b (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Aug 2021 10:56:31 -0400
-Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9556C06179A
-        for <linux-pwm@vger.kernel.org>; Thu, 19 Aug 2021 07:55:54 -0700 (PDT)
-Received: by mail-vs1-xe2d.google.com with SMTP id k24so4177962vsg.9
-        for <linux-pwm@vger.kernel.org>; Thu, 19 Aug 2021 07:55:54 -0700 (PDT)
+        with ESMTP id S229497AbhHSQRl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Aug 2021 12:17:41 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A644AC061575;
+        Thu, 19 Aug 2021 09:17:04 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id o15so4158257wmr.3;
+        Thu, 19 Aug 2021 09:17:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=mm8paTdT0zaztfhC5Y4WPaOBPl8kLHQHgl7pXYxX3h4=;
-        b=qeDfX1TvtXFpaue7XSJcQGoXvoEPk6keQ3SefhHQYD/RQYSwXL/h7/nJ1tE1n2ZgGf
-         hgNQdBuev8q9YdqAn31QqEn+hl0Fw8o/I7j+pKewMg7BSKDExUMcgAG5ffW6TnVBaweA
-         awPBlmbVNdD0YyJLl/fecYVhU7UH2GjQaH+G3BKTeEFH67xcFXuuVoODzKyHu4OljnuW
-         y3YyyagNQ7/VVdr8UoQMvH7lyjCnnH9zaDfJmZrMJYrsb5yu8bZTEWP6ZCkq4ndYtqKT
-         KiXhZrvSOf9kLkVqOyobXMYfdScN3zuV6Y2fafpateAUvd8nG8k5/FLAhRgrUffP4ZSX
-         UqPQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=60qINEW/AajNCq1e+l/+W08Fyl6DoGCIURNuZ7bsdck=;
+        b=uTqJWSeNGF+lF+nvNnEIkEavsCZHzmRSicfBPYqjqhCUMol7qkO7p4zdXBxXzeS4vT
+         LUXoyy4jqxt9JRa9GA2emnqvcgjM5m2JH6xpgqUnHRqrvhXJ0ra+UdQrGTHBIigAbPLh
+         VtxYJrYzvVlZAFn9BLoC03dGbU6/D7G3RL7V20nMcs7xOj6F0WluZa6ULpmAHfq5dHWJ
+         HXoLsG3Ntc0X9376FP560pBl7c5j6ef3ByAkw7chpgshwtvTwJMn4sKZPsmEYVKGvuIs
+         umScIh5+iEwTdQ0CShvhEEtGLV53HAS6lzbT7CRVhL1cxI0eKkOyVSJRLsE+nSFs10iz
+         Va5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=mm8paTdT0zaztfhC5Y4WPaOBPl8kLHQHgl7pXYxX3h4=;
-        b=m7Mub9JzOp842FkBjCIn7JLjCZj4AY3QO1cqmq0hvsQE6yUL1vMXwleKiYeVpqCIKM
-         EhB6NyzVTBZAVdc7WxmEK6MjJUSiHsvfMKlG1QEjtbxn0FwW9yDVUA0cZ48XlQWbw3Vr
-         is6cCxqC0HRD4ZgbUrUP2VzoO0pOEEyur6vsR15HKw6T4kCP0UaS2abYP1lYGkI/iEJA
-         V1+uJDy2orioK26kqCajlhDXmeRklj/ep2/TSsYiYVVVVARr6USLgwYuPpjnCnIu+/83
-         wG/6pD96oYG1Nhjvuu/HDWRDUg8jhW1vS5PxkJcWVBqBEH0fD2D8tGrmlWILNmppW+AN
-         cwPQ==
-X-Gm-Message-State: AOAM5314BmrC9hYQr2lC9fkXpqdb4fhFVWB4jc2jsW+sYq0gs2iI2RcD
-        v6jHzxUPArTphg801GDNXVX3PbRGnRuQXJSR/aaHnQ==
-X-Google-Smtp-Source: ABdhPJy9lhlHe3ZkjkK69gRHTqfsYZUpyU/u1QO9GNutRCvh27kC0oDOl0UN2vIh0G0BbPGuh3RFsxVqGIQ9yFmBme8=
-X-Received: by 2002:a67:f6d8:: with SMTP id v24mr12929204vso.48.1629384953702;
- Thu, 19 Aug 2021 07:55:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <a2a3c41f-c5e4-ee7e-7d48-03af8bac8863@gmail.com>
- <20210818045307.4brb6cafkh3adjth@vireshk-i7> <080469b3-612b-3a34-86e5-7037a64de2fe@gmail.com>
- <20210818055849.ybfajzu75ecpdrbn@vireshk-i7> <f1c76f23-086d-ef36-54ea-0511b0ebe0e1@gmail.com>
- <20210818062723.dqamssfkf7lf7cf7@vireshk-i7> <CAPDyKFrZqWtZOp4MwDN6fShoLLbw5NM039bpE3-shB+fCEZOog@mail.gmail.com>
- <20210818091417.dvlnsxlgybdsn76x@vireshk-i7> <CAPDyKFrVxhrWGr2pKduehshpLFd_db2NTPGuD7fSqvuHeyzT4w@mail.gmail.com>
- <f1314a47-9e8b-58e1-7c3f-0afb1ec8e70a@gmail.com> <20210819061617.r4kuqxafjstrv3kt@vireshk-i7>
-In-Reply-To: <20210819061617.r4kuqxafjstrv3kt@vireshk-i7>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 19 Aug 2021 16:55:16 +0200
-Message-ID: <CAPDyKFpg8ixT4AEjzVLTwQR7Nn9CctjnLCDS5GwkOrAERquyxw@mail.gmail.com>
-Subject: Re: [PATCH v8 01/34] opp: Add dev_pm_opp_sync() helper
-To:     Viresh Kumar <viresh.kumar@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=60qINEW/AajNCq1e+l/+W08Fyl6DoGCIURNuZ7bsdck=;
+        b=RI1bYk24P1GtNB/U1ZDFhu4TpcFKXTG7nH3BKLxR39aUxac4+JI31pYozRHoTaGhGC
+         JkZ+QKA5Aj77Xhs6GE/SVpQH1SSWpfjJ0QU/hSdpnWY1BH0ldglo5+zLgMHH+q3ZeZuP
+         NXRmBXsZX4QmJLrbIcsMd1EtMNyuzXXRSXh8ascFLYJ2ODo5bQ0O5ZhlTiAUO4KI/19u
+         zVTQf544ImnakiyZKw2eiDnDKi6fuVOS6A2iU8+w+TT6CbZqpizCOjanoOmIrcLN6M0x
+         Vo8jR0ytTa38YscPHCeWkjllG3WAK8ybli5yhlJx04fQrix9RHFyTZTLZZm3W9Z19rns
+         q9XQ==
+X-Gm-Message-State: AOAM532gSRbN7mZM7W2zlml/fE8EnzpVn0zwMuP9iltBqMVYVhPS19l5
+        1WDvJNWtkQuKuCKhWHcokYw=
+X-Google-Smtp-Source: ABdhPJx2olGrXmJhDc92ifXD/T9C9Dyg3QQIU/AaBjuCkLci0TRvThG/zCRGsYcF6TD012k/6ZhEWA==
+X-Received: by 2002:a1c:26c5:: with SMTP id m188mr14633566wmm.19.1629389823304;
+        Thu, 19 Aug 2021 09:17:03 -0700 (PDT)
+Received: from localhost ([217.111.27.204])
+        by smtp.gmail.com with ESMTPSA id e25sm3956144wra.90.2021.08.19.09.17.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Aug 2021 09:17:02 -0700 (PDT)
+Date:   Thu, 19 Aug 2021 18:17:01 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
 Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         Viresh Kumar <vireshk@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>,
@@ -66,7 +59,7 @@ Cc:     Dmitry Osipenko <digetx@gmail.com>,
         Peter Chen <peter.chen@kernel.org>,
         Mark Brown <broonie@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Richard Weinberger <richard@nod.at>,
@@ -87,92 +80,81 @@ Cc:     Dmitry Osipenko <digetx@gmail.com>,
         dri-devel <dri-devel@lists.freedesktop.org>,
         DTML <devicetree@vger.kernel.org>,
         linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8 19/34] pwm: tegra: Add runtime PM and OPP support
+Message-ID: <YR6D/QMDakjlD5Ve@orome.fritz.box>
+References: <20210817012754.8710-1-digetx@gmail.com>
+ <20210817012754.8710-20-digetx@gmail.com>
+ <YR5ay6+r0hJsUbhy@orome.fritz.box>
+ <CAPDyKFqr6NYO89io+6EfwrtELhTMps-tpGcAVbmuQ1_NnOD7Ew@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="v92KmlAbafaPcAq1"
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFqr6NYO89io+6EfwrtELhTMps-tpGcAVbmuQ1_NnOD7Ew@mail.gmail.com>
+User-Agent: Mutt/2.1.1 (e2a89abc) (2021-07-12)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, 19 Aug 2021 at 08:17, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 18-08-21, 18:55, Dmitry Osipenko wrote:
-> > 18.08.2021 12:41, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+
+--v92KmlAbafaPcAq1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Aug 19, 2021 at 04:04:50PM +0200, Ulf Hansson wrote:
+> On Thu, 19 Aug 2021 at 15:21, Thierry Reding <thierry.reding@gmail.com> w=
+rote:
 > >
-> > Either way gives the equal result. The new callback allows to remove th=
-e
-> > boilerplate dev_pm_opp_set_rate(clk_get_rate() code from the rpm-resume
-> > of consumer devices, that's it.
->
-> It may not be equal, as dev_pm_opp_set_rate() may do additional stuff,
-> now or in a later implementation. Currently it only does
-> regulator_enable() as a special case, but it can be clk_enable() as
-> well. Also, this tries to solve the problem in a tricky/hacky way,
-> while all you wanted was to make the genpd aware of what the
-> performance state should be.
->
-> Your driver can break tomorrow if we started to do more stuff from
-> this API at another time.
->
-> > > dev_pm_opp_set_rate() is best called from consumer drivers, as they
-> > > need to be in control.
-> > >> What we need here is just configure. So something like this then:
-> > The intent wasn't to use dev_pm_opp_set_rate() from
-> > __genpd_dev_pm_attach(), but to set genpd->rpm_pstate in accordance to
-> > the h/w configuration.
->
-> Right.
->
-> > On Tegra we have a chain of PDs and it's not trivial to convert the
-> > device's OPP into pstate because only the parent domain can translate
-> > the required OPP.
->
-> The driver should just be required to make a call, and OPP/genpd core
-> should return it a value. This is already done today while setting the
-> pstate for a device. The same frameworks must be able to supply a
-> value to be used for the device.
+> > On Tue, Aug 17, 2021 at 04:27:39AM +0300, Dmitry Osipenko wrote:
+> > > The PWM on Tegra belongs to the core power domain and we're going to
+> > > enable GENPD support for the core domain. Now PWM must be resumed usi=
+ng
+> > > runtime PM API in order to initialize the PWM power state. The PWM cl=
+ock
+> > > rate must be changed using OPP API that will reconfigure the power do=
+main
+> > > performance state in accordance to the rate. Add runtime PM and OPP
+> > > support to the PWM driver.
+> > >
+> > > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> > > ---
+> > >  drivers/pwm/pwm-tegra.c | 104 ++++++++++++++++++++++++++++++++------=
+--
+> > >  1 file changed, 85 insertions(+), 19 deletions(-)
+> >
+> > Can this be safely applied independently of the rest of the series, or
+> > are there any dependencies on earlier patches?
+>=20
+> Just to make sure we don't rush something in, I would rather withhold
+> all runtime PM related patches in the series, until we have agreed on
+> how to fix the in genpd/opp core parts. Simply, because those may very
+> well affect the deployments in the drivers.
 
-Right, that sounds reasonable.
+Okay, understood. I didn't realize this may have an impact on how
+drivers need to cooperate. I'll hold off on applying any of these
+patches until the discussion has settled, then.
 
-We already have pm_genpd_opp_to_performance_state() which translates
-an OPP to a performance state. This function invokes the
-->opp_to_performance_state() for a genpd. Maybe we need to allow a
-genpd to not have ->opp_to_performance_state() callback assigned
-though, but continue up in the hierarchy to see if the parent has the
-callback assigned, to make this work for Tegra?
+Thierry
 
-Perhaps we should add an API dev_pm_genpd_opp_to_performance_state(),
-allowing us to pass the device instead of the genpd. But that's a
-minor thing.
+--v92KmlAbafaPcAq1
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Finally, the precondition to use the above, is to first get a handle
-to an OPP table. This is where I am struggling to find a generic
-solution, because I guess that would be platform or even consumer
-driver specific for how to do this. And at what point should we do
-this?
+-----BEGIN PGP SIGNATURE-----
 
->
-> > Viresh, please take a look at what I did in [1]. Maybe it could be done
-> > in another way.
->
-> I looked into this and looked like too much trouble. The
-> implementation needs to be simple. I am not sure I understand all the
-> problems you faced while doing that, would be better to start with a
-> simpler implementation of get_performance_state() kind of API for
-> genpd, after the domain is attached and its OPP table is initialized.
->
-> Note, that the OPP table isn't required to be fully initialized for
-> the device at this point, we can parse the DT as well if needed be.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmEeg/oACgkQ3SOs138+
+s6HxGg//Ql/ilCJ6m24EOkbDMDHwSFLN7MYgmfi1Muvarf/bqQFb1LIOonS0qeTr
+fHvvi587/6LtOdHE0PNwTl0SEz5UpxSojnZdTDjV2/JdSgy7LeJ2RBbeZ7kxVCMP
+3ud/I9kVkE1BaAtRzX0sqNJOIDA2MG00wBq08+PNS9ihOvipqypiweD5JSaB5MSi
+Gof9qhzVOZV/ONjRZ7Ib0kjig/qx0+lpJ2W/15QdU4/OHp9QP/ONoinEIk9WPaXU
+QveXwGDwo27fi1MQQKsQCwoytQZaaFjqyy3gnZNiAjY6fUikfa0TSvjZBXGJduvf
+YXJJIt1dy09Zk589NliTddgaZE4anOdgW7c02KwLSLw4RxsAgFG8xfj1Z8i9DhWs
+GQGNkYNXlia3rj7uiU6dJGLlhtyNblI96fNGXqnlhnIkuDJvYuKm9BRs9e9gGDva
+qvsD03sjGzToLh26dSvTZa6KPqK7pgqkPyOxP4PuqUNECw5IOfVNXd5S4JKQMHat
+QDO1QwVz9eg29cSSX7oziTvc7b1iS0IqVdtfiDa/SzWC7sdCVn+hCVD+SR5vEDHY
+6KcokLAcDqd8YXs71HDqDz4G3L+P17bEoHjcYIz/zJl+c5r+JDmxuhCHL0Ak7KlO
+BxfqqqYVBPahJsnmVcGVnAMavszy2PwqEQXM9PGZYEevCsi83lo=
+=yoaX
+-----END PGP SIGNATURE-----
 
-Sure, but as I indicated above, you need some kind of input data to
-figure out what OPP table to pick, before you can translate that into
-a performance state. Is that always the clock rate, for example?
-
-Perhaps, we should start with adding a dev_pm_opp_get_from_rate() or
-what do you think? Do you have other suggestions?
-
->
-> --
-> viresh
-
-Kind regards
-Uffe
+--v92KmlAbafaPcAq1--
