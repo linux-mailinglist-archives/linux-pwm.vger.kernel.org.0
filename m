@@ -2,168 +2,183 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 599083F1A5F
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Aug 2021 15:28:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E0BA3F1A75
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Aug 2021 15:36:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240106AbhHSN3M (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Aug 2021 09:29:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57316 "EHLO
+        id S240035AbhHSNhG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 19 Aug 2021 09:37:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240102AbhHSN3M (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Aug 2021 09:29:12 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF99EC061575
-        for <linux-pwm@vger.kernel.org>; Thu, 19 Aug 2021 06:28:35 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id f5so9084460wrm.13
-        for <linux-pwm@vger.kernel.org>; Thu, 19 Aug 2021 06:28:35 -0700 (PDT)
+        with ESMTP id S240010AbhHSNhG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Aug 2021 09:37:06 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 117A2C061575
+        for <linux-pwm@vger.kernel.org>; Thu, 19 Aug 2021 06:36:30 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id c129-20020a1c35870000b02902e6b6135279so4092286wma.0
+        for <linux-pwm@vger.kernel.org>; Thu, 19 Aug 2021 06:36:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=3sAOG6+KCDqPz1V1vilx/hMSA+4bNbqm3jb2fzSKed4=;
-        b=D3b+Xjps5II89Ldxbi/LYwnAfJ+/Qtn1RrkGEAVF8WgTdKvryrKJ5IF26xWkE9UO8p
-         HIz6D7W5ws0ZzNqcWVxBCGVr5G2dqODJXXYUMSXPSK3SYNWvR1un1PKchKVXQq5aD+ZU
-         xqWibB8YGVr9B03mB/nGXNHPEun/bkF8fUQR1kzubU8L1ydy2VrR+bHAxRf121lIFzYu
-         JHVoxMzdCoQ1wboc94P5QUbuFDIyaFOmlZtI/HKSDZAkM7PZ+l+9NLhiEtLJiNgfPe2g
-         ndFlUZk3wkTWIxro78Bv+yEjOI3TVa3Dj1fp8bBBREs+m6pG+xXMlpbm+RlKtaS8Wc6b
-         5JqA==
+        bh=dm/L8U1aG5H1oQiUun8vCPahjYzgBeQ9/12UDiYhpmc=;
+        b=outrQLGfLeDnln0w55atm8TK9GxZw7zKW4oMBc0r2wl2OYYndYIIuPCoTifmUFZCUS
+         5q2lqJ30OLy/aKaL1t0dePzR/9T2suTfS+C5TDLYvbWs/ozwngIAf4vEDgi4VyUj6hOu
+         qHLXj29D6+PjPecoGsfQI1HYGVpNh7vJ6sY32dRI7/pc5MzJFhaInZ+MpYP70sP4BMY8
+         ND6PGEQavOVM4v+rjy3sOZKWw8NBH5LbZ1b1FeaxPttCUr1PmGN9pfshNbflqSNJvVmd
+         lWx7Q5kdgSTk/AP867XLyO6YPxmjtaVV0LIa7OM9jFAlWrYRI+BxYej3FP+cvrquhYnw
+         EXAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3sAOG6+KCDqPz1V1vilx/hMSA+4bNbqm3jb2fzSKed4=;
-        b=V4+xKbo2T/QqvNwWQro6c1ooK7l2u/S/CcyOrs4KqopyCra1JtlKNz5B4aNLBD77u7
-         QWeYSFFBKQVE1HXBmrMkEdSwN6MZ5JcEL7aFX3gXswfWA/D5k1V5O1du0si85MhzGlu3
-         fOs+bV1h/sz8G6qKjKLlpDSOok1PdBGWvicvTqaIyFr5dpqjLBzg9Jk+8nnLedYWzwIe
-         biMA7wYWzz/aQF5o3d2tGMkpDXGXUY5T0Bn5BWoyxAY9DcpaR24yGgyN8+FGVaEw3/4n
-         NODGoBOoUAgNA6qNpTKKLwFAnEVFhQqYYU37BJIS0/zztLx38F2TLnlYFirQ/KZdfMm/
-         h2jg==
-X-Gm-Message-State: AOAM5331mlLdZBdYWfSTdhy5LjFFu7rZIM5cyW7gWPZvKAN7KOAX6JDv
-        aNg+8Z8ecTyw34MmaFou/cg=
-X-Google-Smtp-Source: ABdhPJxpUjisqaBTEoceaRnANYKDukTm5eAAwHschXxuh6k5EtPaCnRSxb9cJZ6OF1p+KknFVET4dQ==
-X-Received: by 2002:adf:e746:: with SMTP id c6mr3821514wrn.276.1629379713936;
-        Thu, 19 Aug 2021 06:28:33 -0700 (PDT)
+        bh=dm/L8U1aG5H1oQiUun8vCPahjYzgBeQ9/12UDiYhpmc=;
+        b=AYlIfYjPJEzD1UeyOgM6ucQZsvDq5rLdaE6EX4Hb4q2OWaXtCNrLzY5xfgPbjDzNaL
+         rFl50j7aIp3TLXUjib4DdSjEJ9yBVKan0TBhka6xDIEm2GkYTsXN0IJ/Piu073S5v9WB
+         kLpDTlftsIsW0x32ES+OzxlMdoMAHxp9mkeoT8Sb4l8w109H8iw7R2TgMw1F1xjotXA2
+         sDu60fCAMn9EvXW/C68W3hUr2a3ZkrDV4Dygdnp9+CrfsEQbNHmBnOpMp2MhPhnA2+Pq
+         8CZxPF1eChBU8ixpv4XyH48e5alh/f9/QGtBtji9Grn8vE1nVipRWRfwPzAmJoZ68dNW
+         q5Lw==
+X-Gm-Message-State: AOAM530B3wUdK1cqaPJLyYzqR72To7ubCieFZRIchN+J/4VHcqEnvbO7
+        N07xJ6J4uh1OGOFwPLYFjqc=
+X-Google-Smtp-Source: ABdhPJykEnGh1qbT5dCE+Ofb4ghkeaat8ZEKFmzgdu37bzmpzSs7J5C9AOGo0eX8TsA8fyJKI7LlXA==
+X-Received: by 2002:a05:600c:210a:: with SMTP id u10mr13918722wml.162.1629380188675;
+        Thu, 19 Aug 2021 06:36:28 -0700 (PDT)
 Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id z8sm2891174wrt.77.2021.08.19.06.28.32
+        by smtp.gmail.com with ESMTPSA id g12sm3015786wru.85.2021.08.19.06.36.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Aug 2021 06:28:32 -0700 (PDT)
-Date:   Thu, 19 Aug 2021 15:28:31 +0200
+        Thu, 19 Aug 2021 06:36:27 -0700 (PDT)
+Date:   Thu, 19 Aug 2021 15:36:26 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 Cc:     Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
         kernel@pengutronix.de, Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 3/3] pwm: Restore initial state if a legacy callback fails
-Message-ID: <YR5cf+UIpc3lLotK@orome.fritz.box>
+Subject: Re: [PATCH 2/3] pwm: Prevent a glitch for legacy drivers
+Message-ID: <YR5eWvpEaLxgdWxD@orome.fritz.box>
 References: <20210701072927.328254-1-u.kleine-koenig@pengutronix.de>
- <20210701072927.328254-4-u.kleine-koenig@pengutronix.de>
+ <20210701072927.328254-3-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="NFDDAHIHqC+jbcN4"
+        protocol="application/pgp-signature"; boundary="PdUDrqr5Uu9FKJ1x"
 Content-Disposition: inline
-In-Reply-To: <20210701072927.328254-4-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20210701072927.328254-3-u.kleine-koenig@pengutronix.de>
 User-Agent: Mutt/2.1.1 (e2a89abc) (2021-07-12)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---NFDDAHIHqC+jbcN4
+--PdUDrqr5Uu9FKJ1x
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 01, 2021 at 09:29:27AM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> It is not entirely accurate to go back to the initial state after e.g.
-> .enable() failed, as .config() still modified the hardware, but this same
-> inconsistency exists for drivers that implement .apply().
+On Thu, Jul 01, 2021 at 09:29:26AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> If a running PWM is reconfigured to disabled calling the ->config()
+> callback before disabling the hardware might result in a glitch where
+> the (maybe) new period and duty_cycle are visible on the output before
+> disabling the hardware.
+>=20
+> So handle disabling before calling ->config(). Also exit early in this ca=
+se
+> which is possible because period and duty_cycle don't matter for disabled=
+ PWMs.
+> In return however ->config has to be called even if state->period =3D=3D
+> pwm->state.period && state->duty_cycle !=3D pwm->state.duty_cycle because=
+ setting
+> these might have been skipped in the previous call.
 >=20
 > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 > ---
->  drivers/pwm/core.c | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
+>  drivers/pwm/core.c | 41 ++++++++++++++++++++++++-----------------
+>  1 file changed, 24 insertions(+), 17 deletions(-)
 >=20
 > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index 20afe6d0bc5e..6e30ef9b9b79 100644
+> index 3c72f8963073..20afe6d0bc5e 100644
 > --- a/drivers/pwm/core.c
 > +++ b/drivers/pwm/core.c
-> @@ -539,10 +539,8 @@ static int pwm_apply_legacy(struct pwm_chip *chip, s=
-truct pwm_device *pwm,
->  			    const struct pwm_state *state)
->  {
->  	int err;
-> +	struct pwm_state initial_state =3D pwm->state;
-> =20
-> -	/*
-> -	 * FIXME: restore the initial state in case of error.
-> -	 */
->  	if (state->polarity !=3D pwm->state.polarity) {
->  		if (!chip->ops->set_polarity)
->  			return -EINVAL;
-> @@ -563,7 +561,7 @@ static int pwm_apply_legacy(struct pwm_chip *chip, st=
-ruct pwm_device *pwm,
-> =20
->  		err =3D chip->ops->set_polarity(chip, pwm, state->polarity);
->  		if (err)
-> -			return err;
-> +			goto rollback;
-> =20
+> @@ -568,26 +568,33 @@ static int pwm_apply_legacy(struct pwm_chip *chip, =
+struct pwm_device *pwm,
 >  		pwm->state.polarity =3D state->polarity;
 >  	}
-> @@ -586,7 +584,7 @@ static int pwm_apply_legacy(struct pwm_chip *chip, st=
-ruct pwm_device *pwm,
->  				state->duty_cycle,
->  				state->period);
->  	if (err)
-> -		return err;
-> +		goto rollback;
 > =20
->  	pwm->state.period =3D state->period;
->  	pwm->state.duty_cycle =3D state->duty_cycle;
-> @@ -594,10 +592,14 @@ static int pwm_apply_legacy(struct pwm_chip *chip, =
-struct pwm_device *pwm,
->  	if (!pwm->state.enabled) {
->  		err =3D chip->ops->enable(chip, pwm);
->  		if (err)
+> -	if (state->period !=3D pwm->state.period ||
+> -	    state->duty_cycle !=3D pwm->state.duty_cycle) {
+> -		err =3D chip->ops->config(pwm->chip, pwm,
+> -					state->duty_cycle,
+> -					state->period);
+> -		if (err)
 > -			return err;
-> +			goto rollback;
+> +	if (!state->enabled) {
+> +		if (pwm->state.enabled)
+> +			chip->ops->disable(chip, pwm);
+> =20
+> -		pwm->state.period =3D state->period;
+> -		pwm->state.duty_cycle =3D state->duty_cycle;
+> +		return 0;
 >  	}
 > =20
->  	return 0;
+> -	if (state->enabled !=3D pwm->state.enabled) {
+> -		if (!pwm->state.enabled) {
+> -			err =3D chip->ops->enable(chip, pwm);
+> -			if (err)
+> -				return err;
+> -		} else {
+> -			chip->ops->disable(chip, pwm);
+> -		}
+> +	/*
+> +	 * We cannot skip calling ->config even if state->period =3D=3D
+> +	 * pwm->state.period && state->duty_cycle =3D=3D pwm->state.duty_cycle
+> +	 * because we might have exited early in the last call to
+> +	 * pwm_apply_state because of !state->enabled and so the two values in
+> +	 * pwm->state might not be configured in hardware.
+> +	 */
+> +	err =3D chip->ops->config(pwm->chip, pwm,
+> +				state->duty_cycle,
+> +				state->period);
+> +	if (err)
+> +		return err;
 > +
-> +rollback:
-> +	pwm->state =3D initial_state;
-> +	return err;
->  }
+> +	pwm->state.period =3D state->period;
+> +	pwm->state.duty_cycle =3D state->duty_cycle;
+> +
+> +	if (!pwm->state.enabled) {
+> +		err =3D chip->ops->enable(chip, pwm);
+> +		if (err)
+> +			return err;
+>  	}
 
-Can't we achieve the same thing by just removing all the updates to
-pwm->state in pwm_apply_legacy()? Patch 1 in the series now does
-pwm->state =3D *state for both the atomic and the legacy cases, so if
-we don't update pwm->state explicitly in pwm_apply_legacy(), then
-there should be no need to rollback, right?
+I thought we might have discussed this, but I can't find any record of
+it. How is this better than always configuring, whether the PWM is
+disabled or not?
 
-What we currently do is a bit redundant anyway. pwm->state =3D *state
-should be a no-op after pwm_apply_legacy().
+=46rom an atomic point of view, the hardware state is expected to match
+the PWM state that was passed to ->apply() after it returns. That means
+that calling ->get_state() after ->apply() should return the same state
+that was passed to ->apply(). With the above that's no longer true. It
+doesn't actually matter, because legacy drivers don't support
+->get_state(), but conceptually it's not mimicking the atomic API as
+well as it could.
 
 Thierry
 
---NFDDAHIHqC+jbcN4
+--PdUDrqr5Uu9FKJ1x
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmEeXH8ACgkQ3SOs138+
-s6FPmRAAgqOx7g7+ZhjfU3x+Db//1VG4Clorc7PZIxvmv5VGBe0bIxC8b/VTgHGV
-ctTfaV3f8DOrc9JBy44hagh48ySzD/RuOPgvrQMDkKDwWlCIKAzXKTSXhjAURF69
-ZnFZnIDewWxCRp9u7kLAg7GSlzOumqrC8diS7vzXvCLiwrA6LGVGl7Xj/0f3ywaE
-yeOXj9t8xudqwdrt9aRhw+jdh05ovG7+unFtAoEHCdAAL+ox6TH/QM4VF1jvnoPs
-CNb734OaCBSDqFBCO+bG8EY+Jfg5uuGB5BdOWgEclM7s3meNcLK0Qvl0Ria0UBrF
-CzroCCctljZ075zfgJT0477eoUzlPt8GLoIaKiu/6F5fk9IAiKax0nRZb9Qsb4Ys
-9MVcvwSjpzLzinUddAT2gIFAhI6/TadLX2c7qejRDgWFb7v8qIYpHhs1EjRmmOk6
-2o1BORsO9N0KrEYUbSOUbbCJDdpRFV1FTr+LlkkwdyfBj4yebLgqdLlUgz7W+mX9
-qk1qqihz7tlSth9iFMoXvlw35N+Syewi4NkBG2b5oDxMtf1N1uoWGVjQ42DnKn9P
-HelZsUH7qhwTavDJeQb5qz7FF6K4vCnz2Z9/jly7RYNLQi5hFcvEYYXseoYox3vV
-ujqx5g81nFOCyJbr5zDu921PjYAzSzCesJ7OZEkTcvH6BZsx8sQ=
-=p9L9
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmEeXloACgkQ3SOs138+
+s6ECHw/+Mafef2PXGGfS1Yem3Y2el88VXb6A3YV1NBhO1S3yThJ1GNeoHZagPGl7
+/McoVQL9f7UnDk4i4KSWduHHYB3VdsBP5XluJiJlMIu7MyD2LGUTDaVXmuwhmXQR
+1AWj35Xc9jbdoeCtUxndv3/7GgkXl146gGEzkpnCCM75kqBOFe8b16csnmZC0W/P
+CvWhQ3qzj7cwvrNQskpH+yZkgDhrNiCnoBU3JrGkKaorbfM2hzwGyiFQRoGfqPDb
+BmnRDYpYih+SQiGBfGH5a1FYbNeuMgMHvwZ4zBF2dDt9YkV6hG4spkAoHIyszxhM
+C/bKfxwqeWkKuN/stfupQ4w9endtmXgzBvD5/st6pkBmNQUZ1oNQhx2nevJUthS7
+5RNpmdJCVmTutnCTDYBZV4MMwXuVpgxXOasY8KGggvgZbTl7w1pWlddA47ReQAoX
+unjhO7fWD0a0MwNSZ8MNzlJHhaBF1hAebSXeUSKLfOYRpbrtYx235t/JxDSHFDYR
+2iqwZyF7xRynfM75jlg0V3kwZCS9uCiZA7Lzvh3xJqtzTeHkA1k5FWv1lvzS3s3w
+gs0TQZhJH/dnPFp5X6DyNAD9BRk52ntQ4b1z8FjXBJYcjKw8vSB3XwFsb1yoikKG
+d8wTee/fT9Uh2m/pbUz+SFWjP90FDx5WppQRQT/aKgGut9Pzmw8=
+=ETOt
 -----END PGP SIGNATURE-----
 
---NFDDAHIHqC+jbcN4--
+--PdUDrqr5Uu9FKJ1x--
