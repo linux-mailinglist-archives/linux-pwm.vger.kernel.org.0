@@ -2,52 +2,52 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E9B03F1E6B
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Aug 2021 18:54:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACC243F1EAD
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Aug 2021 19:03:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230488AbhHSQzM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Aug 2021 12:55:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49610 "EHLO
+        id S232117AbhHSRE3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 19 Aug 2021 13:04:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230089AbhHSQzD (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Aug 2021 12:55:03 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A4AFC061575;
-        Thu, 19 Aug 2021 09:54:26 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id w24so4205722wmi.5;
-        Thu, 19 Aug 2021 09:54:26 -0700 (PDT)
+        with ESMTP id S230312AbhHSRE2 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Aug 2021 13:04:28 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DB65C061575;
+        Thu, 19 Aug 2021 10:03:52 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id o15so4236381wmr.3;
+        Thu, 19 Aug 2021 10:03:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=aclyfjuOk/wnLMaKEbd24lKs07wjNB8D8fDVONKvAwc=;
-        b=c/lGCsN6DJxg4dVOdYAwVArnnLXSoiqLPRg86sjtaNd0rST/SL2r1zNT12Xza98M67
-         p2WAFotge+9e0orCQo5xhADJ8m/1ZrJ0HeuG/9nGkbZkRpyn9HaJRQVSE8gkPQbk+N3T
-         OEaFriJPzFDSPWLGrR5VRrwqHEHyrGBK9GkfSMmx3z+D9ZOaoKKVOV06OsAvv7gRkm/P
-         WUL8kbCGm+MEEbF+hPvUaIT3TkwAW/nc7+YlaL/q4ggf1Tc9zedWbhIiPQok6QN3kiqx
-         qpIL3yKJbcA6oas7ZQsTa9V4fEuv+yMkFHCqh4H2uy+07RVCGu5Lk1eTIyRGjmTNRShE
-         2aZQ==
+        bh=oJSyVi1Ti8Nnw90fU6cpGrkDUh7d4poA+u+RmE9yClc=;
+        b=WjO9vG1rxjOXSea0lggzneOK1T6brU84ws+V+SOshWtWLDtP8dw4z3PqYpbiYfKli1
+         rXcVeuPjT7MJg7Hy5j8m3cd8kdbRkCEcM1Y80y8aKWqMDBpsEeU4BdtyUa/ON6dEIpuI
+         ZH83YfvUPLz7N8Eucoioijep/MF/3w0IGFv19+kQ9bZgPKOHNPjpkkiiG7frHJKiLmhR
+         PSWLWci5igVYTxBtqkvlj5fV5Gwf9+1XGIFKjnJNTLfzWugJ7siIAcnkXrphSw12V8Us
+         vFqkDjmlPCNix0bh4GlaOKtAD+MVeEwQ6e6JDKcS6m84MivgDrAwN5keeZsMvCUxJPh5
+         owbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aclyfjuOk/wnLMaKEbd24lKs07wjNB8D8fDVONKvAwc=;
-        b=ix4hgKqKl2rVey0AjF05vzlstNLCe+2YrTtYsrYQPw8KkkzKo+0bjtdrg0hOEQFHID
-         pSfchqpav1rNpNslYjmfVLd8zARi55ufuoTxtXiCAP4rQa6VpXxGW3OQvBQNbzBU1Baq
-         UdjB/Xw5SDwdDA+MiYRbo3uf5pXz3A2w8/tWNnwB6sRR+eMWgMrpSY6mPb3dmf8tPWMC
-         WKvwT6ydc35wuyBvmhcQ66LW7AsxhytWVvrzaHJFcQmxgmkhXiKZrK1gLQLtwsoPpVa1
-         qP+p9DudKgYOpDagK2ROvNF04Jk6sYH6UYYmDN0tNKIE8I6xIYHyN8FTzPpzgFnTmh+3
-         ELfA==
-X-Gm-Message-State: AOAM5338hfIE6ddqswwr1pdCG6ZpPzesMg0itVWjUwyyPetN80wdmKXY
-        jTMpp4Gbdq3hzbCSOFZkb6E=
-X-Google-Smtp-Source: ABdhPJyPJZuwXxLb6NwJ92Oy1eMbywPQn7wLJyIL+A4Q9LtkgBIuov/1upvaj/jx6Oywu1gSJikUIg==
-X-Received: by 2002:a1c:4c06:: with SMTP id z6mr14316666wmf.53.1629392065061;
-        Thu, 19 Aug 2021 09:54:25 -0700 (PDT)
+        bh=oJSyVi1Ti8Nnw90fU6cpGrkDUh7d4poA+u+RmE9yClc=;
+        b=BKL2Kh85MqMVjQCipT10Y8VzeWNi78UB2drISzPw9s+FSouxUA2kPrxo6R5NTnOqTi
+         4UQqoWRUqpVP7APKwz3fFvh0yEpNC8eOgocw0KrmTRDmJrdRxnNm5wqEpFtQTjqWqYao
+         CQFDRmXKnIEaJuTPmV3/1B1Lv3ne5KDKUd0SdE0BN6L2FlFw1TjStYBsTfA+UN/ri6XE
+         mfgCtQA0aAbDusJyY3rw4quMlXaBhKtj9/FK68OEah0gW9rIcmwslMPDrEsGZ4PeNGBr
+         g42gu99ur0LpDa/Rzpy3oE8ac0cbgkHERwglwdZotl2ZKeYWAqgRSyyMv+0p2TGxzk8e
+         99mQ==
+X-Gm-Message-State: AOAM531rlR15nlkjMAuGGIxGX3f1VzLppjg0Kx83lFKgVUH7t3GRI5cg
+        C8KhcY4JCMHJjSV5R2gSmQI=
+X-Google-Smtp-Source: ABdhPJzLX7hjX9RRU2YIQz+WOkf7C4KD77ZHazVOwLC50X1dVFEX0qYgndjCiaQPFM42jC66tRB3Yw==
+X-Received: by 2002:a05:600c:3641:: with SMTP id y1mr14362707wmq.43.1629392630595;
+        Thu, 19 Aug 2021 10:03:50 -0700 (PDT)
 Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id a11sm3459358wrw.67.2021.08.19.09.54.23
+        by smtp.gmail.com with ESMTPSA id e3sm3493730wrv.65.2021.08.19.10.03.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Aug 2021 09:54:23 -0700 (PDT)
-Date:   Thu, 19 Aug 2021 18:54:22 +0200
+        Thu, 19 Aug 2021 10:03:49 -0700 (PDT)
+Date:   Thu, 19 Aug 2021 19:03:48 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Dmitry Osipenko <digetx@gmail.com>
 Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
@@ -76,151 +76,109 @@ Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
         linux-mmc@vger.kernel.org, linux-media@vger.kernel.org,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-clk@vger.kernel.org
-Subject: Re: [PATCH v8 07/34] clk: tegra: Support runtime PM and power domain
-Message-ID: <YR6Mvips3HAntDy0@orome.fritz.box>
+Subject: Re: [PATCH v8 20/34] mmc: sdhci-tegra: Add runtime PM and OPP support
+Message-ID: <YR6O9Om+HzMMG8AR@orome.fritz.box>
 References: <20210817012754.8710-1-digetx@gmail.com>
- <20210817012754.8710-8-digetx@gmail.com>
- <YR0UBi/ejy+oF4Hm@orome.fritz.box>
- <da7356cb-05ee-ba84-8a7c-6e69d853a805@gmail.com>
- <YR04YHGEluqLIZeo@orome.fritz.box>
- <ad99db08-4696-1636-5829-5260f93dc681@gmail.com>
+ <20210817012754.8710-21-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fB7tjCoYfoEt7dJy"
+        protocol="application/pgp-signature"; boundary="Zkl/ZGRNLhkdNGO0"
 Content-Disposition: inline
-In-Reply-To: <ad99db08-4696-1636-5829-5260f93dc681@gmail.com>
+In-Reply-To: <20210817012754.8710-21-digetx@gmail.com>
 User-Agent: Mutt/2.1.1 (e2a89abc) (2021-07-12)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---fB7tjCoYfoEt7dJy
-Content-Type: text/plain; charset=utf-8
+--Zkl/ZGRNLhkdNGO0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 18, 2021 at 08:11:03PM +0300, Dmitry Osipenko wrote:
-> 18.08.2021 19:42, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Wed, Aug 18, 2021 at 06:05:21PM +0300, Dmitry Osipenko wrote:
-> >> 18.08.2021 17:07, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>> On Tue, Aug 17, 2021 at 04:27:27AM +0300, Dmitry Osipenko wrote:
-> >>> [...]
-> >>>> +struct clk *tegra_clk_register(struct clk_hw *hw)
-> >>>> +{
-> >>>> +	struct platform_device *pdev;
-> >>>> +	struct device *dev =3D NULL;
-> >>>> +	struct device_node *np;
-> >>>> +	const char *dev_name;
-> >>>> +
-> >>>> +	np =3D tegra_clk_get_of_node(hw);
-> >>>> +
-> >>>> +	if (!of_device_is_available(np))
-> >>>> +		goto put_node;
-> >>>> +
-> >>>> +	dev_name =3D kasprintf(GFP_KERNEL, "tegra_clk_%s", hw->init->name);
-> >>>> +	if (!dev_name)
-> >>>> +		goto put_node;
-> >>>> +
-> >>>> +	pdev =3D of_platform_device_create(np, dev_name, NULL);
-> >>>> +	if (!pdev) {
-> >>>> +		pr_err("%s: failed to create device for %pOF\n", __func__, np);
-> >>>> +		kfree(dev_name);
-> >>>> +		goto put_node;
-> >>>> +	}
-> >>>> +
-> >>>> +	dev =3D &pdev->dev;
-> >>>> +	pm_runtime_enable(dev);
-> >>>> +put_node:
-> >>>> +	of_node_put(np);
-> >>>> +
-> >>>> +	return clk_register(dev, hw);
-> >>>> +}
-> >>>
-> >>> This looks wrong. Why do we need struct platform_device objects for e=
-ach
-> >>> of these clocks? That's going to be a massive amount of platform devi=
-ces
-> >>> and they will completely mess up sysfs.
-> >>
-> >> RPM works with a device. It's not a massive amount of devices, it's one
-> >> device for T20 and four devices for T30.
-> >=20
-> > I'm still not sure I understand why we need to call RPM functions on a
-> > clock. And even if they are few, it seems wrong to make these platform
-> > devices.
+On Tue, Aug 17, 2021 at 04:27:40AM +0300, Dmitry Osipenko wrote:
+> The SDHCI on Tegra belongs to the core power domain and we're going to
+> enable GENPD support for the core domain. Now SDHCI must be resumed using
+> runtime PM API in order to initialize the SDHCI power state. The SDHCI
+> clock rate must be changed using OPP API that will reconfigure the power
+> domain performance state in accordance to the rate. Add runtime PM and OPP
+> support to the SDHCI driver.
 >=20
-> Before clock is enabled, we need to raise core voltage. After clock is
-> disabled, the voltage should be dropped. CCF+RPM takes care of handling
-> this for us.
-
-That's the part that I do understand. What I don't understand is why a
-clock needs to be runtime suspend/resumed. Typically we suspend/resume
-devices, and doing so typically involves disabling/enabling clocks. So
-I don't understand why the clocks themselves now need to be runtime
-suspended/resumed.
-
-> > Perhaps they can be simple struct device:s instead? Ideally they would
-> > also be parented to the CAR so that they appear in the right place in
-> > the sysfs hierarchy.
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/mmc/host/sdhci-tegra.c | 146 ++++++++++++++++++++++++---------
+>  1 file changed, 105 insertions(+), 41 deletions(-)
 >=20
-> Could you please clarify what do you mean by 'simple struct device:s'?
-> These clock devices should be OF devices with a of_node and etc,
-> otherwise we can't use OPP framework.
+> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegr=
+a.c
+> index 387ce9cdbd7c..a3583359c972 100644
+> --- a/drivers/mmc/host/sdhci-tegra.c
+> +++ b/drivers/mmc/host/sdhci-tegra.c
+> @@ -15,6 +15,8 @@
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+>  #include <linux/pinctrl/consumer.h>
+> +#include <linux/pm_opp.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/reset.h>
+>  #include <linux/mmc/card.h>
+> @@ -24,6 +26,8 @@
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/ktime.h>
+> =20
+> +#include <soc/tegra/common.h>
+> +
+>  #include "sdhci-pltfm.h"
+>  #include "cqhci.h"
+> =20
+> @@ -123,6 +127,12 @@
+>  					 SDHCI_TRNS_BLK_CNT_EN | \
+>  					 SDHCI_TRNS_DMA)
+> =20
+> +enum {
+> +	TEGRA_CLK_BULK_SDHCI,
+> +	TEGRA_CLK_BULK_TMCLK,
+> +	TEGRA_CLK_BULK_NUM,
+> +};
+> +
+>  struct sdhci_tegra_soc_data {
+>  	const struct sdhci_pltfm_data *pdata;
+>  	u64 dma_mask;
+> @@ -171,6 +181,8 @@ struct sdhci_tegra {
+>  	bool enable_hwcq;
+>  	unsigned long curr_clk_rate;
+>  	u8 tuned_tap_delay;
+> +
+> +	struct clk_bulk_data clocks[TEGRA_CLK_BULK_NUM];
 
-Perhaps I misunderstand the goal of the OPP framework. My understanding
-was that this was to attach a table of operating points with a device so
-that appropriate operating points could be selected and switched to when
-the workload changes.
+This doesn't seem worth it to me. There's a lot of churn in this driver
+that's only needed to convert this to the clk_bulk API and it makes the
+code a lot more difficult to read, in my opinion.
 
-Typically these operating points would be roughly a clock rate and a
-corresponding voltage for a regulator, so that when a certain clock rate
-is requested, the regulator can be set to the matching voltage.
-
-Hm... so is it that each of these clocks that you want to create a
-platform device for has its own regulator? Because the patch series only
-mentions the CORE domain, so I assumed that we would accumulate all the
-clock rates for the clocks that are part of that CORE domain and then
-derive a voltage to be supplied to that CORE domain.
-
-But perhaps I just don't understand correctly how this is tied together.
-
-> We don't have driver for CAR to bind. I guess we could try to add a
-> 'dummy' CAR driver that will create sub-devices for the rpm-clocks, is
-> this what you're wanting?
-
-I got confused by the "tegra-clock" driver that this series was adding.
-This is actually a driver that will bind to the virtual clocks rather
-than the CAR device itself.
-
-For some reason I had assumed that you wanted to create a CAR driver in
-order to get at the struct device embedded in the CAR's platform device
-and use that as the parent for all these clocks.
-
-So even if we absolutely need some struct device for these clocks, maybe
-adding that CAR driver and making the clock struct device:s children of
-the CAR device will help keep a bit of a proper hierarchy in sysfs.
+It looks like the only benefit that this gives us is that runtime
+suspend and resume become a few lines shorter.
 
 Thierry
 
---fB7tjCoYfoEt7dJy
+--Zkl/ZGRNLhkdNGO0
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmEejLwACgkQ3SOs138+
-s6G0uxAAi5HF3oKaz4joxnoDx59LBEnAU5X2o38DOhm+0Z+W0SvoY4JXaYc4shzR
-0HHeqltwuk4WFjAIHLPs+oZdeRBnN7FonvifFOkVCnm+RmlLCXGjfmeaWnkC1+6t
-bAA7Mo+uxVCv07j+l63GFmVs7xbG8pGDdPM4ba6bsokC27Zx2ppqkU6oFhXyR1yu
-kFnZvcZo6HcXczUzizEVMpbaI0HpPY+lWjwZsdm+iCHXea/btjo7xepzOKYlzpj8
-X0C/T2wod6brm9HBkTooHyU4cvX8jJ97hDQ0yi1XrVeIAgPwQ0OvU8fVqM5TtVPl
-T6cNXpUm+2rxC+Q/L9gXCXNevTm6q1czeBqGG0VxHzA5dNpyug9quy61UlDXNkok
-o0I1hGuWXuK81vHCAqYSGCKOMZSqAxco3c83XeLLNxOZarf9/L1TCCSnnvFdmfEq
-/glJcesV2wEMofuIje+RAg5jRQO8pqMzHN+Lw1KmfnBJrQ9K+MKBfyH0aTbKHAnN
-kFM66N+AgjUgwB/sCOv0Vi3xkTstm5aGIVjF46FP9AgZpgronYTi0JNscEGOi1KG
-+VbRfi/SuJHYWlkDjJjsd7I26exe4/v7WH/ZyjUgQ/8/j8TRi+oNik3O0X9gSSYj
-W9DvFcJHSbCCNPKCjsPgtQivHwW/8gnMS6zgzIvKklHiq7YnNlE=
-=fm7o
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmEejvQACgkQ3SOs138+
+s6GP7Q//aRZFqje0kEFRTOZPc/3kSiWj3ZUdkPxBKI8ZmISgrBH2orJG4ZW3OaNl
+CdiK1hqqEgEsJHuHndJqfCjxgwTwO/0zcGEwU6XcpaP0Zdh/IsIE1Qc4pHPWN7oQ
+Mcu5gLnbaDh+ej6Xpw09BpTDoZtuD20vxOf7g97ZmKlWpKS2sFL4HuKcaYWMxoM0
+43Qh7BuDv4iyY4BFdiNhEsh/Yx/2fFMjU8DQRbggqmePZYAyNDRDqOZ8vBpjmcIe
+Ub0niDGP+iEcPtw2F14RVjhAkVnnw1/v4G1PAZ62bzJ7ZosDM3CuVWs3kf189rXq
+i4xS1NBcSyntT2PBB8aaH6pyu0zCqEHyV8Q2PsCl1B88KdWmvraBlzWSu4cRZeMR
+eIGVeA2YXUhzPfwGUch8dprkivWN2OhHc7V+NFZJcHV16+WEgObbQV6j9MYVBbfO
+ZAuKtQshaQyjY0WcVTEog97Jrb7SYMLlILYwaHey6bGra1sQGK3jl+CEetSjsM6G
+Y3bk4uoBl0s0lsMSh0j1TSrKUOvbOk8xduyNrwloqaiAQRhX2idPvikM3f3OsVRL
+ejSpVy00UNbkUR4xl4v8U2MAJBCGID7q84IqDTwso3xZZ1pgH/H6YMzn2Tw2tTd4
+kDLfxr2aUamBe71mE2uLiEoEuiBCUvQXgl3/Uqkg1+ke17HCIMI=
+=AV2X
 -----END PGP SIGNATURE-----
 
---fB7tjCoYfoEt7dJy--
+--Zkl/ZGRNLhkdNGO0--
