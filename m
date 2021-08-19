@@ -2,57 +2,56 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51EB13F20B5
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Aug 2021 21:36:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4AE83F22B3
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Aug 2021 00:09:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234365AbhHSTgj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Aug 2021 15:36:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58896 "EHLO
+        id S236027AbhHSWKc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 19 Aug 2021 18:10:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229514AbhHSTgh (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Aug 2021 15:36:37 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFF38C061575;
-        Thu, 19 Aug 2021 12:36:00 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id d4so15213001lfk.9;
-        Thu, 19 Aug 2021 12:36:00 -0700 (PDT)
+        with ESMTP id S235761AbhHSWK1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Aug 2021 18:10:27 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91E10C061575;
+        Thu, 19 Aug 2021 15:09:50 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id x27so16058559lfu.5;
+        Thu, 19 Aug 2021 15:09:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DULWQbyXgQID8PNJR65q3ui7SrWpcCN+90FL5qtDGW4=;
-        b=pavH6Or3hHtiPfMvi8hlpl/tg+4iNkFsKU223QQBDdOUdi6iU/UGWUvtDPrwHRvATY
-         T93cP1HXuc5W/zHN7xvpRXKJW7BinJL9sVNA6qZxjeijHdmFtCqxrxnpd+WkEHRtVU0B
-         Iyqua5rSNmWSDpSD3gZsArfjTWgs81iBNdQYXU+kNJ+OumOnoCaZh+LP24EMz52MwP27
-         4AWCJslbtOmcFHBYAOMwZEDrmTB/tzURM30c4z+24S3Lj2lVdIHxSFuPOnhXpzmvotQF
-         wvsrbFpOMxH2mR1ZpXZ7XMAP/i3UFW88iZgByQUfkdB9/YhjC/JuWWWMJqO4edcr+32D
-         1LbA==
+        bh=Djc9fORZaX0jUQ208L1CXmP3iTRD6JSYsA+xYiTuRIM=;
+        b=dMU6STbYnm9OflIqSy2qQXqjsJYwl7YMlINi7PykXT2hk4hVpl87FK13Gf1ev8geC3
+         K9caemrLnRsk5kMdD8lgWsp4zIB+EXGhHL8lT9qVG+rY9hboNmGWhYzNYfapsyKLHMRr
+         BuVLkLyNXbyQV+L42XvasmlaKRmpbZ1esPdEDu7e07tVacSCCkZ69VwjPz7/bcAtO3HY
+         MBcCelEAlUxXVzjYivWfZRipGBGcBePWKJgp4sYTzoaLrh6F7gyCw70q5JZvPfAXVxmg
+         BBWjfPLtb9tscP8XQdZrCInxEKvKnskPHBdhH1dH2redmXEI+urWw82oLmmmFLtSnzpf
+         Bcdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=DULWQbyXgQID8PNJR65q3ui7SrWpcCN+90FL5qtDGW4=;
-        b=MKJco/gKyQlbu/ORhfO2U9SK1IXfyN/MhtBN5/QYfhCOiA5aCduDu7NBgULnQUVQSp
-         FPA+/SshhskLooLR+AD3cjkXnoFEQOHCMi6nNAbSDwHYAvqdtnpDpi1kK5f+6ScAHis2
-         6xukc/xX/KPlKPeQvKo73x+r6fQr+4duAoA5dSBPn9+DCcIVS3WEy1SDIO0RshL3Khjc
-         mK9mZrRugMl1plgK+B2/HTfs15yVHNyisbn46c27hLqNfyQniDOjsQ76wsxQBFes1pSa
-         eo5ShN1OXVUdsHDVXgrcZIIb5Nqe6HwF0TWjKuuqwjR0JHEPEPcqanep3oshptvyjwRb
-         4oPg==
-X-Gm-Message-State: AOAM5300DGOdpjrsp9rYN9Kw41x6iJj9XLN8IfrljTRwBE8YAtJUIX7R
-        YT2lH5HBucA4vxxD4yEpMC1g+oEIFI0=
-X-Google-Smtp-Source: ABdhPJz8kaZlUqWZzmjPF+roXrLNhHc7Bu21Y9J69HyMCnrDHOaQ6jNYy2BIrPwa/yg8Go50EqboLQ==
-X-Received: by 2002:a05:6512:23aa:: with SMTP id c42mr11397932lfv.55.1629401759119;
-        Thu, 19 Aug 2021 12:35:59 -0700 (PDT)
+        bh=Djc9fORZaX0jUQ208L1CXmP3iTRD6JSYsA+xYiTuRIM=;
+        b=GI5g613o9nOcGM5Zu/JKwChQ34Y0jE+8HU+o0sK73/nCiYnFm7n9NET2iDA5INaLhp
+         D+5W0DnM/bDwQdk66jCNE4sM7UqcLAirEMFhjRjgM1mihqZgRZEBXgoqfeV3uY3KZ70F
+         jmFz/1MycWaMQ8IkAWXcxbZi4BQ6mkb3X/pa7/3kH3RlAHl70/lBGP+aftg1ssuJKeE5
+         2iusKH3xxJdAuyzMMg4OGCmrwr4wuepcEQ97oXTq4Ea0R1Hka88GeEqGgMJSxqQHDjZj
+         w6R2IiFzcXy6CPZZ8YFc6R/bAkx8GLWvFRQEOl+2MYw1z5iXcG93pLH3ESFui+sd20eX
+         NQEg==
+X-Gm-Message-State: AOAM533ykqtFEYhkB93QeVfxAp/gtLQXIvoUvSjA+tT4vhy4AvbDxJ29
+        oukXegtmHndhl6g2NZwQr2fwJfAYc5w=
+X-Google-Smtp-Source: ABdhPJxvNxcxk5Wqttm8NgLj2sKnLsuL7sNLBaDY6UpJ6+A1Pob5mT38NwjMtPvD9CLOiEzV59Hqsg==
+X-Received: by 2002:a05:6512:3f08:: with SMTP id y8mr11381666lfa.221.1629410988761;
+        Thu, 19 Aug 2021 15:09:48 -0700 (PDT)
 Received: from [192.168.2.145] (46-138-120-72.dynamic.spd-mgts.ru. [46.138.120.72])
-        by smtp.googlemail.com with ESMTPSA id l24sm396141lfe.272.2021.08.19.12.35.57
+        by smtp.googlemail.com with ESMTPSA id z5sm430889lfs.126.2021.08.19.15.09.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Aug 2021 12:35:58 -0700 (PDT)
-Subject: Re: [PATCH v8 01/34] opp: Add dev_pm_opp_sync() helper
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
+        Thu, 19 Aug 2021 15:09:48 -0700 (PDT)
+Subject: Re: [PATCH v8 07/34] clk: tegra: Support runtime PM and power domain
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Viresh Kumar <vireshk@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>,
         Peter De Schrijver <pdeschrijver@nvidia.com>,
@@ -70,38 +69,26 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-usb@vger.kernel.org,
         linux-staging@lists.linux.dev, linux-spi@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-References: <20210818043131.7klajx6drvvkftoc@vireshk-i7>
- <a2a3c41f-c5e4-ee7e-7d48-03af8bac8863@gmail.com>
- <20210818045307.4brb6cafkh3adjth@vireshk-i7>
- <080469b3-612b-3a34-86e5-7037a64de2fe@gmail.com>
- <20210818055849.ybfajzu75ecpdrbn@vireshk-i7>
- <f1c76f23-086d-ef36-54ea-0511b0ebe0e1@gmail.com>
- <20210818062723.dqamssfkf7lf7cf7@vireshk-i7>
- <CAPDyKFrZqWtZOp4MwDN6fShoLLbw5NM039bpE3-shB+fCEZOog@mail.gmail.com>
- <20210818091417.dvlnsxlgybdsn76x@vireshk-i7>
- <CAPDyKFrVxhrWGr2pKduehshpLFd_db2NTPGuD7fSqvuHeyzT4w@mail.gmail.com>
- <20210818095044.e2ntsm45h5cddk7s@vireshk-i7>
- <CAPDyKFrFF00xGDWPCQnPwF0_QkG4TB2UqggpuBpp8LY_CMKP-A@mail.gmail.com>
- <0354acbe-d856-4040-f453-8e8164102045@gmail.com>
- <CAPDyKFoQdn1rm91iFNJwZwpSYcKJBjDLqtJB4KZAkhgY1Grm-Q@mail.gmail.com>
+        linux-mmc@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org
+References: <20210817012754.8710-1-digetx@gmail.com>
+ <20210817012754.8710-8-digetx@gmail.com> <YR0UBi/ejy+oF4Hm@orome.fritz.box>
+ <da7356cb-05ee-ba84-8a7c-6e69d853a805@gmail.com>
+ <YR04YHGEluqLIZeo@orome.fritz.box>
+ <ad99db08-4696-1636-5829-5260f93dc681@gmail.com>
+ <YR6Mvips3HAntDy0@orome.fritz.box>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <87073fc2-d7b3-98f4-0067-29430ea2adef@gmail.com>
-Date:   Thu, 19 Aug 2021 22:35:57 +0300
+Message-ID: <e17bbe8d-7c0f-fc3d-03c7-d75c54c24a43@gmail.com>
+Date:   Fri, 20 Aug 2021 01:09:46 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFoQdn1rm91iFNJwZwpSYcKJBjDLqtJB4KZAkhgY1Grm-Q@mail.gmail.com>
+In-Reply-To: <YR6Mvips3HAntDy0@orome.fritz.box>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -109,192 +96,142 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-19.08.2021 16:07, Ulf Hansson пишет:
-> On Wed, 18 Aug 2021 at 17:43, Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> 18.08.2021 13:08, Ulf Hansson пишет:
->>> On Wed, 18 Aug 2021 at 11:50, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->>>>
->>>> On 18-08-21, 11:41, Ulf Hansson wrote:
->>>>> On Wed, 18 Aug 2021 at 11:14, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->>>>>> What we need here is just configure. So something like this then:
->>>>>>
->>>>>> - genpd->get_performance_state()
->>>>>>   -> dev_pm_opp_get_current_opp() //New API
->>>>>>   -> dev_pm_genpd_set_performance_state(dev, current_opp->pstate);
->>>>>>
->>>>>> This can be done just once from probe() then.
+19.08.2021 19:54, Thierry Reding пишет:
+> On Wed, Aug 18, 2021 at 08:11:03PM +0300, Dmitry Osipenko wrote:
+>> 18.08.2021 19:42, Thierry Reding пишет:
+>>> On Wed, Aug 18, 2021 at 06:05:21PM +0300, Dmitry Osipenko wrote:
+>>>> 18.08.2021 17:07, Thierry Reding пишет:
+>>>>> On Tue, Aug 17, 2021 at 04:27:27AM +0300, Dmitry Osipenko wrote:
+>>>>> [...]
+>>>>>> +struct clk *tegra_clk_register(struct clk_hw *hw)
+>>>>>> +{
+>>>>>> +	struct platform_device *pdev;
+>>>>>> +	struct device *dev = NULL;
+>>>>>> +	struct device_node *np;
+>>>>>> +	const char *dev_name;
+>>>>>> +
+>>>>>> +	np = tegra_clk_get_of_node(hw);
+>>>>>> +
+>>>>>> +	if (!of_device_is_available(np))
+>>>>>> +		goto put_node;
+>>>>>> +
+>>>>>> +	dev_name = kasprintf(GFP_KERNEL, "tegra_clk_%s", hw->init->name);
+>>>>>> +	if (!dev_name)
+>>>>>> +		goto put_node;
+>>>>>> +
+>>>>>> +	pdev = of_platform_device_create(np, dev_name, NULL);
+>>>>>> +	if (!pdev) {
+>>>>>> +		pr_err("%s: failed to create device for %pOF\n", __func__, np);
+>>>>>> +		kfree(dev_name);
+>>>>>> +		goto put_node;
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	dev = &pdev->dev;
+>>>>>> +	pm_runtime_enable(dev);
+>>>>>> +put_node:
+>>>>>> +	of_node_put(np);
+>>>>>> +
+>>>>>> +	return clk_register(dev, hw);
+>>>>>> +}
 >>>>>
->>>>> How would dev_pm_opp_get_current_opp() work? Do you have a suggestion?
+>>>>> This looks wrong. Why do we need struct platform_device objects for each
+>>>>> of these clocks? That's going to be a massive amount of platform devices
+>>>>> and they will completely mess up sysfs.
 >>>>
->>>> The opp core already has a way of finding current OPP, that's what
->>>> Dmitry is trying to use here. It finds it using clk_get_rate(), if
->>>> that is zero, it picks the lowest freq possible.
->>>>
->>>>> I am sure I understand the problem. When a device is getting probed,
->>>>> it needs to consume power, how else can the corresponding driver
->>>>> successfully probe it?
->>>>
->>>> Dmitry can answer that better, but a device doesn't necessarily need
->>>> to consume energy in probe. It can consume bus clock, like APB we
->>>> have, but the more energy consuming stuff can be left disabled until
->>>> the time a user comes up. Probe will just end up registering the
->>>> driver and initializing it.
+>>>> RPM works with a device. It's not a massive amount of devices, it's one
+>>>> device for T20 and four devices for T30.
 >>>
->>> That's perfectly fine, as then it's likely that it won't vote for an
->>> OPP, but can postpone that as well.
->>>
->>> Perhaps the problem is rather that the HW may already carry a non-zero
->>> vote made from a bootloader. If the consumer driver tries to clear
->>> that vote (calling dev_pm_opp_set_rate(dev, 0), for example), it would
->>> still not lead to any updates of the performance state in genpd,
->>> because genpd internally has initialized the performance-state to
->>> zero.
+>>> I'm still not sure I understand why we need to call RPM functions on a
+>>> clock. And even if they are few, it seems wrong to make these platform
+>>> devices.
 >>
->> We don't need to discover internal SoC devices because we use
->> device-tree on ARM. For most devices power isn't required at a probe
->> time because probe function doesn't touch h/w at all, thus devices are
->> left in suspended state after probe.
+>> Before clock is enabled, we need to raise core voltage. After clock is
+>> disabled, the voltage should be dropped. CCF+RPM takes care of handling
+>> this for us.
+> 
+> That's the part that I do understand. What I don't understand is why a
+> clock needs to be runtime suspend/resumed. Typically we suspend/resume
+> devices, and doing so typically involves disabling/enabling clocks. So
+> I don't understand why the clocks themselves now need to be runtime
+> suspended/resumed.
+
+CCF provides RPM management for a device that backs clock. When clock is enabled, it resumes the backing device.
+
+RPM, GENPD and OPP frameworks work with a device. We use all these frameworks here. Since we don't have a dedicated device for a PLL clock, we need to create it in order to leverage the existing generic kernel APIs.
+
+In this case clocks are not runtime suspended/resumed, the device which backs clock is suspended/resumed.
+
+>>> Perhaps they can be simple struct device:s instead? Ideally they would
+>>> also be parented to the CAR so that they appear in the right place in
+>>> the sysfs hierarchy.
 >>
->> We have three components comprising PM on Tegra:
->>
->> 1. Power gate
->> 2. Clock state
->> 3. Voltage state
->>
->> GENPD on/off represents the 'power gate'.
->>
->> Clock and reset are controlled by device drivers using clk and rst APIs.
->>
->> Voltage state is represented by GENPD's performance level.
->>
->> GENPD core assumes that at a first rpm-resume of a consumer device, its
->> genpd_performance=0. Not true for Tegra because h/w of the device is
->> preconfigured to a non-zero perf level initially, h/w may not support
->> zero level at all.
+>> Could you please clarify what do you mean by 'simple struct device:s'?
+>> These clock devices should be OF devices with a of_node and etc,
+>> otherwise we can't use OPP framework.
 > 
-> I think you may be misunderstanding genpd's behaviour around this, but
-> let me elaborate.
+> Perhaps I misunderstand the goal of the OPP framework. My understanding
+> was that this was to attach a table of operating points with a device so
+> that appropriate operating points could be selected and switched to when
+> the workload changes.
 > 
-> In genpd_runtime_resume(), we try to restore the performance state for
-> the device that genpd_runtime_suspend() *may* have dropped earlier.
-> That means, if genpd_runtime_resume() is called prior
-> genpd_runtime_suspend() for the first time, it means that
-> genpd_runtime_resume() will *not* restore a performance state, but
-> instead just leave the performance state as is for the device (see
-> genpd_restore_performance_state()).
+> Typically these operating points would be roughly a clock rate and a
+> corresponding voltage for a regulator, so that when a certain clock rate
+> is requested, the regulator can be set to the matching voltage.
 > 
-> In other words, a consumer driver may use the following sequence to
-> set an initial performance state for the device during ->probe():
+> Hm... so is it that each of these clocks that you want to create a
+> platform device for has its own regulator? Because the patch series only
+> mentions the CORE domain, so I assumed that we would accumulate all the
+> clock rates for the clocks that are part of that CORE domain and then
+> derive a voltage to be supplied to that CORE domain.
 > 
-> ...
-> rate = clk_get_rate()
-> dev_pm_opp_set_rate(rate)
+> But perhaps I just don't understand correctly how this is tied together.
+
+We don't use regulators, we use power domain that controls regulator. GENPD takes care of accumulating performance requests on a per-device basis.
+
+I'm creating platform device for the clocks that require DVFS. These clocks don't use regulator, they are attached to the CORE domain. GENPD framework manages the performance state, aggregating perf votes from each device, i.e. from each clock individually.
+
+You want to reinvent another layer of aggregation on top of GENPD. This doesn't worth the effort, we won't get anything from it, it should be a lot of extra complexity for nothing. We will also lose from it because pm_genpd_summary won't show you a per-device info.
+
+domain                          status          children                           performance
+    /device                                             runtime status
+----------------------------------------------------------------------------------------------
+heg                             on                                                 1000000
+    /devices/soc0/50000000.host1x                       active                     1000000
+    /devices/soc0/50000000.host1x/54140000.gr2d         suspended                  0
+mpe                             off-0                                              0
+vdec                            off-0                                              0
+    /devices/soc0/6001a000.vde                          suspended                  0
+venc                            off-0                                              0
+3d1                             off-0                                              0
+    /devices/genpd:1:54180000.gr3d                      suspended                  0
+3d0                             off-0                                              0
+    /devices/genpd:0:54180000.gr3d                      suspended                  0
+core-domain                     on                                                 1000000
+                                                3d0, 3d1, venc, vdec, mpe, heg
+    /devices/soc0/7d000000.usb                          active                     1000000
+    /devices/soc0/78000400.mmc                          active                     950000
+    /devices/soc0/7000f400.memory-controller            unsupported                1000000
+    /devices/soc0/7000a000.pwm                          active                     1000000
+    /devices/soc0/60006000.clock/tegra_clk_pll_c        active                     1000000
+    /devices/soc0/60006000.clock/tegra_clk_pll_e        suspended                  0
+    /devices/soc0/60006000.clock/tegra_clk_pll_m        active                     1000000
+    /devices/soc0/60006000.clock/tegra_clk_sclk         active                     1000000
+
+
+>> We don't have driver for CAR to bind. I guess we could try to add a
+>> 'dummy' CAR driver that will create sub-devices for the rpm-clocks, is
+>> this what you're wanting?
 > 
-> pm_runtime_enable()
-> pm_runtime_resume_and_get()
-> ...
+> I got confused by the "tegra-clock" driver that this series was adding.
+> This is actually a driver that will bind to the virtual clocks rather
+> than the CAR device itself.
 > 
-> Note that, it's the consumer driver's responsibility to manage device
-> specific resources, in its ->runtime_suspend|resume() callbacks.
-> Typically that means dealing with clock gating/ungating, for example.
+> For some reason I had assumed that you wanted to create a CAR driver in
+> order to get at the struct device embedded in the CAR's platform device
+> and use that as the parent for all these clocks.
 > 
-> In the other scenario where a consumer driver prefers to *not* call
-> pm_runtime_resume_and_get() in its ->probe(), because it doesn't need
-> to power on the device to complete probing, then we don't want to vote
-> for an OPP at all - and we also want the performance state for the
-> device in genpd to be set to zero. Correct?
+> So even if we absolutely need some struct device for these clocks, maybe
+> adding that CAR driver and making the clock struct device:s children of
+> the CAR device will help keep a bit of a proper hierarchy in sysfs.
 
-Yes
-
-> Is this the main problem you are trying to solve, because I think this
-> doesn't work out of the box as of today?
-
-The main problem is that the restored performance state is zero for the
-first genpd_runtime_resume(), while it's not zero from the h/w perspective.
-
-> There is another concern though, but perhaps it's not a problem after
-> all. Viresh told us that dev_pm_opp_set_rate() may turn on resources
-> like clock/regulators. That could certainly be problematic, in
-> particular if the device and its genpd have OPP tables associated with
-> it and the consumer driver wants to follow the above sequence in
-> probe.
-
-dev_pm_opp_set_rate() won't enable clocks and regulators, but it may
-change the clock rate and voltage. This is also platform/driver specific
-because it's up to OPP user how to configure OPP table. On Tegra we only
-assign clock to OPP table, regulators are unused.
-
-> Viresh, can you please chime in here and elaborate on some of the
-> magic happening behind dev_pm_opp_set_rate() API - is there a problem
-> here or not?
-> 
->>
->> GENPD core assumes that consumer devices can work at any performance
->> level. Not true for Tegra because voltage needs to be set in accordance
->> to the clock rate before clock is enabled, otherwise h/w won't work
->> properly, perhaps clock may be unstable or h/w won't be latching.
-> 
-> Correct. Genpd relies on the callers to use the OPP framework if there
-> are constraints like you describe above.
-> 
-> That said, it's not forbidden for a consumer driver to call
-> dev_pm_genpd_set_performance_state() directly, but then it better
-> knows exactly what it's doing.
-> 
->>
->> Performance level should be set to 0 while device is suspended.
-> 
-> Do you mean system suspend or runtime suspend? Or both?
-
-Runtime suspend.
-
->> Performance level needs to be bumped on rpm-resume of a device in
->> accordance to h/w state before hardware is enabled.
-> 
-> Assuming there was a performance state set for the device when
-> genpd_runtime_suspend() was called, genpd_runtime_resume() will
-> restore that state according to the sequence you described.
-
-What do you think about adding API that will allow drivers to explicitly
-set the restored performance state of a power domain?
-
-Another option could be to change the GENPD core, making it to set the
-rpm_pstate when dev_pm_genpd_set_performance_state(dev) is invoked and
-device is rpm-suspended, instead of calling the
-genpd->set_performance_state callback.
-
-Then drivers will be able to sync the perf state at a probe time.
-
-What do you think?
-
-diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-index a934c679e6ce..cc15ab9eacc9 100644
---- a/drivers/base/power/domain.c
-+++ b/drivers/base/power/domain.c
-@@ -435,7 +435,7 @@ static void genpd_restore_performance_state(struct
-device *dev,
- int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int
-state)
- {
- 	struct generic_pm_domain *genpd;
--	int ret;
-+	int ret = 0;
-
- 	genpd = dev_to_genpd_safe(dev);
- 	if (!genpd)
-@@ -446,7 +446,10 @@ int dev_pm_genpd_set_performance_state(struct
-device *dev, unsigned int state)
- 		return -EINVAL;
-
- 	genpd_lock(genpd);
--	ret = genpd_set_performance_state(dev, state);
-+	if (pm_runtime_suspended(dev))
-+		dev_gpd_data(dev)->rpm_pstate = state;
-+	else
-+		ret = genpd_set_performance_state(dev, state);
- 	genpd_unlock(genpd);
-
- 	return ret;
-
-
+Alright, that's easy to do. We will have to move out some clk data out of __init then. I already implemented it as you may see in the above PD summary.
