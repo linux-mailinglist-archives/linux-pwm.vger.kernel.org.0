@@ -2,56 +2,65 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 008153F2B72
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Aug 2021 13:42:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5673B3F2C5A
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Aug 2021 14:42:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240255AbhHTLmt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 20 Aug 2021 07:42:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52550 "EHLO
+        id S240341AbhHTMn1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 20 Aug 2021 08:43:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239508AbhHTLmr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 20 Aug 2021 07:42:47 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0051AC061575;
-        Fri, 20 Aug 2021 04:42:09 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id n5so1471495wro.12;
-        Fri, 20 Aug 2021 04:42:09 -0700 (PDT)
+        with ESMTP id S240487AbhHTMn0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 20 Aug 2021 08:43:26 -0400
+Received: from mail-vk1-xa2d.google.com (mail-vk1-xa2d.google.com [IPv6:2607:f8b0:4864:20::a2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94916C061764
+        for <linux-pwm@vger.kernel.org>; Fri, 20 Aug 2021 05:42:47 -0700 (PDT)
+Received: by mail-vk1-xa2d.google.com with SMTP id l21so2410557vkd.10
+        for <linux-pwm@vger.kernel.org>; Fri, 20 Aug 2021 05:42:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Zv3nHk0fhUUfiKmkGdQkVpe7JiD0JH5HC6GkKoME0XM=;
-        b=hv8rGaUmqEUIYsQVTjvO8jjJY5qWKOVBpKjvHbR2ALvlGnt+TrUnqJIRipQ31QPfBT
-         9z6aa4xgPzgBuOZfUHBwFiZxwzIa5EkHdQFJNOIlYPrea6eD1b1Xw1iRWNp43TVUpkua
-         642qMAsgG+kWt2Gd0QleBBwYwh/Qg0tf2NfaOZzi4wHsahkyErUBOlXvnprhOFLn9299
-         vMtOU+k+/bT0xHD8cQAkFuS4jSeH50Zf9iTB9sV4kFkomGIPqD4fJzO3Pr8y3Qu45GNy
-         fcUI6AXMBNhi1aw1aNU5UITox9gN9CnovPOC5f3PGx3ej70uzEVHrdc183vQ/VP2MP+R
-         PUDw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DYISjpBEEOToJiGr7eeLus3yThDF0D3yVfGWu2HvMcU=;
+        b=sbAjd7HBfYJneIoY/mnOpWfuXar6KBy1hJtDf+FtYpwQL9qPBSV1Q1SrLp/mke9tda
+         lnPpcAKSbzbKoWYNykO7UgK7EqbCcsHhyNSq3o4h/ebwEYWLKQP5qSEEcRNnmfde1+dv
+         kL5htgF1jNGmSu6p+JZCeRljAMwxPtXt/8TdtBEEZmefLgaOkLHaFLpqM5S5DDerT2Gd
+         dwOl4ZAJvSmiKsTXXSx59rzKM9tbJzgykhh8NIT13G+Er+WigrcWruFUoaSZvkHbglFj
+         Ih2gpgETIilvSTJz/9/020EWh8vbGhgdE3wYTA3JpdFdx4M0NOUYCFo8yMzMYok+j6Ko
+         62Dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Zv3nHk0fhUUfiKmkGdQkVpe7JiD0JH5HC6GkKoME0XM=;
-        b=r6YgszPKQovADfWE/bZ04oVYL/+tFSMSCf2gcSjddiBdKCAaYen1SEc6si6il8C5JA
-         szgMNM/yj8ZPAaEYlWx+lyPwQ1O/WZ8H5grmJpdU7n5XuHlbUArzjLDSAK11jf6yWAuZ
-         breKOu0cZkdhfkAscTXPPn25yq/x2sEG5n0zSLZn0YUtpfcBlsojFbMFVRwrHuv5wldk
-         +8KrNW2t7K6kaFB+NeYgUM1Qt4LabRQsTzou87ek+AnOTvU6NnX8Iapj86O8gDkoTDbW
-         I1G/3nae9I7yAPTdKt7WpTkunPt5Pg9wj/DcXfE76VqnH9rVObGLbVE8yqdnKKujHtlC
-         m4hQ==
-X-Gm-Message-State: AOAM533cgKJ5RyyJXPycispnCQQA8elLgjQqjzMsN4hB8OQmtwFZMBVL
-        kGdyh0Xda+7S6yEilBSXllw=
-X-Google-Smtp-Source: ABdhPJzvaxzVDmTxVy2sv674AaUxMMQr/K5z/BhxB4H04EV/dW4MQpr/WCYHvipxQUkHtnS7MrtYBQ==
-X-Received: by 2002:a5d:680e:: with SMTP id w14mr9628802wru.57.1629459727651;
-        Fri, 20 Aug 2021 04:42:07 -0700 (PDT)
-Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id o17sm9617097wmp.13.2021.08.20.04.42.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Aug 2021 04:42:06 -0700 (PDT)
-Date:   Fri, 20 Aug 2021 13:42:05 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DYISjpBEEOToJiGr7eeLus3yThDF0D3yVfGWu2HvMcU=;
+        b=ttobgGXpmWlNTXRxDIg7V7MReaAG3mCXvlVG5DjG8MbQ/1K+QfYKlc1fSIr+Nd6TZ2
+         RNtnTsW/5kXOUHHNQTHQOkmQe0puD+eOVL0DR9Ke2XQfXT4WOT69QQWkn3poa0cW3QSw
+         Tvba9WAMMvHrZfSw/nF5RgJD+7uYNwfi8VqZ+JYXQm4l5G+hlvQIN+OjTlqkH3hzxatA
+         6Xu01rYGmUj2AiO83X8lJUqtsufv+xLfu6YyZj7C4vhGqpY0xfM8nk3mPYlHFGx+Tekg
+         5R2pjS/PcKlzmWRtkXibKzrga6MdtcTrWmXb9/JOFNpBcRL5B2IqUceIuBkB2vy0pepI
+         6yqQ==
+X-Gm-Message-State: AOAM533H2M8tS22LPPdVAKrSQmvOdwyTpTjs5fp6UNRSpFa6S8GVPS8n
+        cd/zi0U2dg2o15eWSjk1ttHMBFtcv82tMbuNf8uw+g==
+X-Google-Smtp-Source: ABdhPJw5kPqhZfL9IyPMgkHmHTdpAs+WbVQfs152V16tDuOrk4oP6svN5Y1tU6QDrDBUsdNXwAwTW5+l79w/I0NKrmk=
+X-Received: by 2002:a1f:1d94:: with SMTP id d142mr15574534vkd.6.1629463365165;
+ Fri, 20 Aug 2021 05:42:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210818043131.7klajx6drvvkftoc@vireshk-i7> <a2a3c41f-c5e4-ee7e-7d48-03af8bac8863@gmail.com>
+ <20210818045307.4brb6cafkh3adjth@vireshk-i7> <080469b3-612b-3a34-86e5-7037a64de2fe@gmail.com>
+ <20210818055849.ybfajzu75ecpdrbn@vireshk-i7> <f1c76f23-086d-ef36-54ea-0511b0ebe0e1@gmail.com>
+ <20210818062723.dqamssfkf7lf7cf7@vireshk-i7> <CAPDyKFrZqWtZOp4MwDN6fShoLLbw5NM039bpE3-shB+fCEZOog@mail.gmail.com>
+ <20210818091417.dvlnsxlgybdsn76x@vireshk-i7> <CAPDyKFrVxhrWGr2pKduehshpLFd_db2NTPGuD7fSqvuHeyzT4w@mail.gmail.com>
+ <20210818095044.e2ntsm45h5cddk7s@vireshk-i7> <CAPDyKFrFF00xGDWPCQnPwF0_QkG4TB2UqggpuBpp8LY_CMKP-A@mail.gmail.com>
+ <0354acbe-d856-4040-f453-8e8164102045@gmail.com> <CAPDyKFoQdn1rm91iFNJwZwpSYcKJBjDLqtJB4KZAkhgY1Grm-Q@mail.gmail.com>
+ <87073fc2-d7b3-98f4-0067-29430ea2adef@gmail.com>
+In-Reply-To: <87073fc2-d7b3-98f4-0067-29430ea2adef@gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 20 Aug 2021 14:42:08 +0200
+Message-ID: <CAPDyKFqSsAk8a5CTNpRT2z4Wvf8BehJKDbVhUKfHc2Jzj7aTNA@mail.gmail.com>
+Subject: Re: [PATCH v8 01/34] opp: Add dev_pm_opp_sync() helper
 To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
         Viresh Kumar <vireshk@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>,
         Peter De Schrijver <pdeschrijver@nvidia.com>,
@@ -59,7 +68,7 @@ Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
         Peter Chen <peter.chen@kernel.org>,
         Mark Brown <broonie@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Richard Weinberger <richard@nod.at>,
@@ -69,238 +78,272 @@ Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
         linux-staging@lists.linux.dev, linux-spi@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH v8 07/34] clk: tegra: Support runtime PM and power domain
-Message-ID: <YR+VDZzTihmpENp6@orome.fritz.box>
-References: <20210817012754.8710-1-digetx@gmail.com>
- <20210817012754.8710-8-digetx@gmail.com>
- <YR0UBi/ejy+oF4Hm@orome.fritz.box>
- <da7356cb-05ee-ba84-8a7c-6e69d853a805@gmail.com>
- <YR04YHGEluqLIZeo@orome.fritz.box>
- <ad99db08-4696-1636-5829-5260f93dc681@gmail.com>
- <YR6Mvips3HAntDy0@orome.fritz.box>
- <e17bbe8d-7c0f-fc3d-03c7-d75c54c24a43@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="e9XWAn30K57OEaiK"
-Content-Disposition: inline
-In-Reply-To: <e17bbe8d-7c0f-fc3d-03c7-d75c54c24a43@gmail.com>
-User-Agent: Mutt/2.1.1 (e2a89abc) (2021-07-12)
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
---e9XWAn30K57OEaiK
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Aug 20, 2021 at 01:09:46AM +0300, Dmitry Osipenko wrote:
-> 19.08.2021 19:54, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Wed, Aug 18, 2021 at 08:11:03PM +0300, Dmitry Osipenko wrote:
-> >> 18.08.2021 19:42, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>> On Wed, Aug 18, 2021 at 06:05:21PM +0300, Dmitry Osipenko wrote:
-> >>>> 18.08.2021 17:07, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>>>> On Tue, Aug 17, 2021 at 04:27:27AM +0300, Dmitry Osipenko wrote:
-> >>>>> [...]
-> >>>>>> +struct clk *tegra_clk_register(struct clk_hw *hw)
-> >>>>>> +{
-> >>>>>> +	struct platform_device *pdev;
-> >>>>>> +	struct device *dev =3D NULL;
-> >>>>>> +	struct device_node *np;
-> >>>>>> +	const char *dev_name;
-> >>>>>> +
-> >>>>>> +	np =3D tegra_clk_get_of_node(hw);
-> >>>>>> +
-> >>>>>> +	if (!of_device_is_available(np))
-> >>>>>> +		goto put_node;
-> >>>>>> +
-> >>>>>> +	dev_name =3D kasprintf(GFP_KERNEL, "tegra_clk_%s", hw->init->nam=
-e);
-> >>>>>> +	if (!dev_name)
-> >>>>>> +		goto put_node;
-> >>>>>> +
-> >>>>>> +	pdev =3D of_platform_device_create(np, dev_name, NULL);
-> >>>>>> +	if (!pdev) {
-> >>>>>> +		pr_err("%s: failed to create device for %pOF\n", __func__, np);
-> >>>>>> +		kfree(dev_name);
-> >>>>>> +		goto put_node;
-> >>>>>> +	}
-> >>>>>> +
-> >>>>>> +	dev =3D &pdev->dev;
-> >>>>>> +	pm_runtime_enable(dev);
-> >>>>>> +put_node:
-> >>>>>> +	of_node_put(np);
-> >>>>>> +
-> >>>>>> +	return clk_register(dev, hw);
-> >>>>>> +}
-> >>>>>
-> >>>>> This looks wrong. Why do we need struct platform_device objects for=
- each
-> >>>>> of these clocks? That's going to be a massive amount of platform de=
-vices
-> >>>>> and they will completely mess up sysfs.
+On Thu, 19 Aug 2021 at 21:35, Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> 19.08.2021 16:07, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Wed, 18 Aug 2021 at 17:43, Dmitry Osipenko <digetx@gmail.com> wrote:
+> >>
+> >> 18.08.2021 13:08, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >>> On Wed, 18 Aug 2021 at 11:50, Viresh Kumar <viresh.kumar@linaro.org> =
+wrote:
 > >>>>
-> >>>> RPM works with a device. It's not a massive amount of devices, it's =
-one
-> >>>> device for T20 and four devices for T30.
+> >>>> On 18-08-21, 11:41, Ulf Hansson wrote:
+> >>>>> On Wed, 18 Aug 2021 at 11:14, Viresh Kumar <viresh.kumar@linaro.org=
+> wrote:
+> >>>>>> What we need here is just configure. So something like this then:
+> >>>>>>
+> >>>>>> - genpd->get_performance_state()
+> >>>>>>   -> dev_pm_opp_get_current_opp() //New API
+> >>>>>>   -> dev_pm_genpd_set_performance_state(dev, current_opp->pstate);
+> >>>>>>
+> >>>>>> This can be done just once from probe() then.
+> >>>>>
+> >>>>> How would dev_pm_opp_get_current_opp() work? Do you have a suggesti=
+on?
+> >>>>
+> >>>> The opp core already has a way of finding current OPP, that's what
+> >>>> Dmitry is trying to use here. It finds it using clk_get_rate(), if
+> >>>> that is zero, it picks the lowest freq possible.
+> >>>>
+> >>>>> I am sure I understand the problem. When a device is getting probed=
+,
+> >>>>> it needs to consume power, how else can the corresponding driver
+> >>>>> successfully probe it?
+> >>>>
+> >>>> Dmitry can answer that better, but a device doesn't necessarily need
+> >>>> to consume energy in probe. It can consume bus clock, like APB we
+> >>>> have, but the more energy consuming stuff can be left disabled until
+> >>>> the time a user comes up. Probe will just end up registering the
+> >>>> driver and initializing it.
 > >>>
-> >>> I'm still not sure I understand why we need to call RPM functions on a
-> >>> clock. And even if they are few, it seems wrong to make these platform
-> >>> devices.
+> >>> That's perfectly fine, as then it's likely that it won't vote for an
+> >>> OPP, but can postpone that as well.
+> >>>
+> >>> Perhaps the problem is rather that the HW may already carry a non-zer=
+o
+> >>> vote made from a bootloader. If the consumer driver tries to clear
+> >>> that vote (calling dev_pm_opp_set_rate(dev, 0), for example), it woul=
+d
+> >>> still not lead to any updates of the performance state in genpd,
+> >>> because genpd internally has initialized the performance-state to
+> >>> zero.
 > >>
-> >> Before clock is enabled, we need to raise core voltage. After clock is
-> >> disabled, the voltage should be dropped. CCF+RPM takes care of handling
-> >> this for us.
-> >=20
-> > That's the part that I do understand. What I don't understand is why a
-> > clock needs to be runtime suspend/resumed. Typically we suspend/resume
-> > devices, and doing so typically involves disabling/enabling clocks. So
-> > I don't understand why the clocks themselves now need to be runtime
-> > suspended/resumed.
->=20
-> CCF provides RPM management for a device that backs clock. When clock
-> is enabled, it resumes the backing device.
->=20
-> RPM, GENPD and OPP frameworks work with a device. We use all these
-> frameworks here. Since we don't have a dedicated device for a PLL
-> clock, we need to create it in order to leverage the existing generic
-> kernel APIs.
->=20
-> In this case clocks are not runtime suspended/resumed, the device
-> which backs clock is suspended/resumed.
->=20
-> >>> Perhaps they can be simple struct device:s instead? Ideally they would
-> >>> also be parented to the CAR so that they appear in the right place in
-> >>> the sysfs hierarchy.
+> >> We don't need to discover internal SoC devices because we use
+> >> device-tree on ARM. For most devices power isn't required at a probe
+> >> time because probe function doesn't touch h/w at all, thus devices are
+> >> left in suspended state after probe.
 > >>
-> >> Could you please clarify what do you mean by 'simple struct device:s'?
-> >> These clock devices should be OF devices with a of_node and etc,
-> >> otherwise we can't use OPP framework.
-> >=20
-> > Perhaps I misunderstand the goal of the OPP framework. My understanding
-> > was that this was to attach a table of operating points with a device so
-> > that appropriate operating points could be selected and switched to when
-> > the workload changes.
-> >=20
-> > Typically these operating points would be roughly a clock rate and a
-> > corresponding voltage for a regulator, so that when a certain clock rate
-> > is requested, the regulator can be set to the matching voltage.
-> >=20
-> > Hm... so is it that each of these clocks that you want to create a
-> > platform device for has its own regulator? Because the patch series only
-> > mentions the CORE domain, so I assumed that we would accumulate all the
-> > clock rates for the clocks that are part of that CORE domain and then
-> > derive a voltage to be supplied to that CORE domain.
-> >=20
-> > But perhaps I just don't understand correctly how this is tied together.
->=20
-> We don't use regulators, we use power domain that controls regulator.
-> GENPD takes care of accumulating performance requests on a per-device
-> basis.
->=20
-> I'm creating platform device for the clocks that require DVFS. These
-> clocks don't use regulator, they are attached to the CORE domain.
-> GENPD framework manages the performance state, aggregating perf votes
-> from each device, i.e. from each clock individually.
->=20
-> You want to reinvent another layer of aggregation on top of GENPD.
-> This doesn't worth the effort, we won't get anything from it, it
-> should be a lot of extra complexity for nothing. We will also lose
-> from it because pm_genpd_summary won't show you a per-device info.
->=20
-> domain                          status          children                 =
-          performance
->     /device                                             runtime status
-> -------------------------------------------------------------------------=
----------------------
-> heg                             on                                       =
-          1000000
->     /devices/soc0/50000000.host1x                       active           =
-          1000000
->     /devices/soc0/50000000.host1x/54140000.gr2d         suspended        =
-          0
-> mpe                             off-0                                    =
-          0
-> vdec                            off-0                                    =
-          0
->     /devices/soc0/6001a000.vde                          suspended        =
-          0
-> venc                            off-0                                    =
-          0
-> 3d1                             off-0                                    =
-          0
->     /devices/genpd:1:54180000.gr3d                      suspended        =
-          0
-> 3d0                             off-0                                    =
-          0
->     /devices/genpd:0:54180000.gr3d                      suspended        =
-          0
-> core-domain                     on                                       =
-          1000000
->                                                 3d0, 3d1, venc, vdec, mpe=
-, heg
->     /devices/soc0/7d000000.usb                          active           =
-          1000000
->     /devices/soc0/78000400.mmc                          active           =
-          950000
->     /devices/soc0/7000f400.memory-controller            unsupported      =
-          1000000
->     /devices/soc0/7000a000.pwm                          active           =
-          1000000
->     /devices/soc0/60006000.clock/tegra_clk_pll_c        active           =
-          1000000
->     /devices/soc0/60006000.clock/tegra_clk_pll_e        suspended        =
-          0
->     /devices/soc0/60006000.clock/tegra_clk_pll_m        active           =
-          1000000
->     /devices/soc0/60006000.clock/tegra_clk_sclk         active           =
-          1000000
->=20
+> >> We have three components comprising PM on Tegra:
+> >>
+> >> 1. Power gate
+> >> 2. Clock state
+> >> 3. Voltage state
+> >>
+> >> GENPD on/off represents the 'power gate'.
+> >>
+> >> Clock and reset are controlled by device drivers using clk and rst API=
+s.
+> >>
+> >> Voltage state is represented by GENPD's performance level.
+> >>
+> >> GENPD core assumes that at a first rpm-resume of a consumer device, it=
+s
+> >> genpd_performance=3D0. Not true for Tegra because h/w of the device is
+> >> preconfigured to a non-zero perf level initially, h/w may not support
+> >> zero level at all.
+> >
+> > I think you may be misunderstanding genpd's behaviour around this, but
+> > let me elaborate.
+> >
+> > In genpd_runtime_resume(), we try to restore the performance state for
+> > the device that genpd_runtime_suspend() *may* have dropped earlier.
+> > That means, if genpd_runtime_resume() is called prior
+> > genpd_runtime_suspend() for the first time, it means that
+> > genpd_runtime_resume() will *not* restore a performance state, but
+> > instead just leave the performance state as is for the device (see
+> > genpd_restore_performance_state()).
+> >
+> > In other words, a consumer driver may use the following sequence to
+> > set an initial performance state for the device during ->probe():
+> >
+> > ...
+> > rate =3D clk_get_rate()
+> > dev_pm_opp_set_rate(rate)
+> >
+> > pm_runtime_enable()
+> > pm_runtime_resume_and_get()
+> > ...
+> >
+> > Note that, it's the consumer driver's responsibility to manage device
+> > specific resources, in its ->runtime_suspend|resume() callbacks.
+> > Typically that means dealing with clock gating/ungating, for example.
+> >
+> > In the other scenario where a consumer driver prefers to *not* call
+> > pm_runtime_resume_and_get() in its ->probe(), because it doesn't need
+> > to power on the device to complete probing, then we don't want to vote
+> > for an OPP at all - and we also want the performance state for the
+> > device in genpd to be set to zero. Correct?
+>
+> Yes
+>
+> > Is this the main problem you are trying to solve, because I think this
+> > doesn't work out of the box as of today?
+>
+> The main problem is that the restored performance state is zero for the
+> first genpd_runtime_resume(), while it's not zero from the h/w perspectiv=
+e.
 
-I suppose if there's really no good way of doing this other than
-providing a struct device, then so be it. I think the cleaned up sysfs
-shown in the summary above looks much better than what the original
-would've looked like.
+This should not be a problem, but can be handled by the consumer driver.
 
-Perhaps an additional tweak to that would be to not create platform
-devices. Instead, just create struct device. Those really have
-everything you need (.of_node, and can be used with RPM and GENPD). As I
-mentioned earlier, platform device implies a CPU-memory-mapped bus,
-which this clearly isn't. It's kind of a separate "bus" if you want, so
-just using struct device directly seems more appropriate.
+genpd_runtime_resume() calls genpd_restore_performance_state() to
+restore a performance state for the device. However, in the scenario
+you describe, "gpd_data->rpm_pstate" is zero, which makes
+genpd_restore_performance_state() to just leave the device's
+performance state as is - it will *not* restore the performance state
+to zero.
 
-We did something similar for XUSB pads, see drivers/phy/tegra/xusb.[ch]
-for an example of how that was done. I think you can do something
-similar here.
+To make the consumer driver deal with this, it would need to call
+dev_pm_opp_set_rate() from within its ->runtime_resume() callback.
 
-Thierry
+>
+> > There is another concern though, but perhaps it's not a problem after
+> > all. Viresh told us that dev_pm_opp_set_rate() may turn on resources
+> > like clock/regulators. That could certainly be problematic, in
+> > particular if the device and its genpd have OPP tables associated with
+> > it and the consumer driver wants to follow the above sequence in
+> > probe.
+>
+> dev_pm_opp_set_rate() won't enable clocks and regulators, but it may
+> change the clock rate and voltage. This is also platform/driver specific
+> because it's up to OPP user how to configure OPP table. On Tegra we only
+> assign clock to OPP table, regulators are unused.
+>
+> > Viresh, can you please chime in here and elaborate on some of the
+> > magic happening behind dev_pm_opp_set_rate() API - is there a problem
+> > here or not?
+> >
+> >>
+> >> GENPD core assumes that consumer devices can work at any performance
+> >> level. Not true for Tegra because voltage needs to be set in accordanc=
+e
+> >> to the clock rate before clock is enabled, otherwise h/w won't work
+> >> properly, perhaps clock may be unstable or h/w won't be latching.
+> >
+> > Correct. Genpd relies on the callers to use the OPP framework if there
+> > are constraints like you describe above.
+> >
+> > That said, it's not forbidden for a consumer driver to call
+> > dev_pm_genpd_set_performance_state() directly, but then it better
+> > knows exactly what it's doing.
+> >
+> >>
+> >> Performance level should be set to 0 while device is suspended.
+> >
+> > Do you mean system suspend or runtime suspend? Or both?
+>
+> Runtime suspend.
 
---e9XWAn30K57OEaiK
-Content-Type: application/pgp-signature; name="signature.asc"
+Alright. So that's already taken care of for us in genpd_runtime_suspend().
 
------BEGIN PGP SIGNATURE-----
+Or perhaps you have discovered some problem with this?
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmEflQ0ACgkQ3SOs138+
-s6GTxBAAux4SgNOWssIQKGH1AEza+rNysC4g84SnOK2hV16+4q73xBZ/8tN5ItTA
-otnOZSkyFT+WrMsnhwQYaLAwrH4GLPMjQfsHEJh0rtMRxgATicvWG8iRAaOyE7+P
-O3lHTRCaNlqNZug7HJwe+k/dhgvtx2Ov8eG4sW9KB87XWtyKTgqG2ZVi10oWR4QA
-2UX42b1HVOlFEo75jjpWSx//8wapKAfc3p42jUKo7f6C6tX1Qf3yuodCgsIJKcju
-u8MYjl6gYLjVsarWKXI6Kq3N6TyL4ZQsPRtSYo0wWCpHYpZTbCQmn6gnwkKyAYG6
-r0OM5yHPSTG+7qoaQ+VPWF2+yyRT5iaZyxfbnMn4EWyTCTW1ShowYMQzl3cmlOWl
-N8N3M30l53820bblYs5uDSFdfZt7iQyVp5pkbm8d8s7UWueV5f3j1Znue6RSxIfq
-9TEDVEmiOd0LmHZiDHFZp3xRifOuXZrcWPA6Rb/O0mJUOMaF8InmV0LXvqBXKJYA
-MkF1upcDfTGT9tniijqabWXatIXUhS26sX9msDvVje+k5ZnBZS6T5cntXcf7dm77
-Wl15axasLk2JGjWrTCfziW2SQTCSdcHdYfvVVa2ph/ZifaSjcy/q5x1/Ugb0BdDI
-dxrGX30qo2XtnO5MWxTL/cwJpm0c+TAyWb9+P8dJpMbQJ921Lnk=
-=BAkl
------END PGP SIGNATURE-----
+>
+> >> Performance level needs to be bumped on rpm-resume of a device in
+> >> accordance to h/w state before hardware is enabled.
+> >
+> > Assuming there was a performance state set for the device when
+> > genpd_runtime_suspend() was called, genpd_runtime_resume() will
+> > restore that state according to the sequence you described.
+>
+> What do you think about adding API that will allow drivers to explicitly
+> set the restored performance state of a power domain?
+>
+> Another option could be to change the GENPD core, making it to set the
+> rpm_pstate when dev_pm_genpd_set_performance_state(dev) is invoked and
+> device is rpm-suspended, instead of calling the
+> genpd->set_performance_state callback.
+>
+> Then drivers will be able to sync the perf state at a probe time.
+>
+> What do you think?
 
---e9XWAn30K57OEaiK--
+I don't think it's needed, see my reply earlier above. However your
+change touches another problem though, see below.
+
+>
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index a934c679e6ce..cc15ab9eacc9 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -435,7 +435,7 @@ static void genpd_restore_performance_state(struct
+> device *dev,
+>  int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int
+> state)
+>  {
+>         struct generic_pm_domain *genpd;
+> -       int ret;
+> +       int ret =3D 0;
+>
+>         genpd =3D dev_to_genpd_safe(dev);
+>         if (!genpd)
+> @@ -446,7 +446,10 @@ int dev_pm_genpd_set_performance_state(struct
+> device *dev, unsigned int state)
+>                 return -EINVAL;
+>
+>         genpd_lock(genpd);
+> -       ret =3D genpd_set_performance_state(dev, state);
+> +       if (pm_runtime_suspended(dev))
+> +               dev_gpd_data(dev)->rpm_pstate =3D state;
+> +       else
+> +               ret =3D genpd_set_performance_state(dev, state);
+>         genpd_unlock(genpd);
+
+This doesn't work for all cases. For example, when a consumer driver
+deploys runtime PM support in its ->probe() according to the below
+sequence:
+
+...
+dev_pm_opp_set_rate(rate)
+pm_runtime_get_noresume()
+pm_runtime_set_active()
+pm_runtime_enable()
+...
+pm_runtime_put()
+...
+
+We need to call genpd_set_performance_state() independently of whether
+the device is runtime suspended or not.
+
+Although, it actually seems like good idea to update
+dev_gpd_data(dev)->rpm_pstate =3D state here, as to make sure
+genpd_runtime_resume() doesn't restore an old/invalid value that was
+saved while dropping the performance state vote for the device in
+genpd_runtime_suspend() earlier.
+
+Let me send a patch for this shortly, to close this window of a possible er=
+ror.
+
+>
+>         return ret;
+>
+>
+
+Kind regards
+Uffe
