@@ -2,65 +2,55 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6669D3F48DA
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Aug 2021 12:47:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC68F3F4C6D
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Aug 2021 16:33:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236214AbhHWKrm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Aug 2021 06:47:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34728 "EHLO
+        id S230197AbhHWOdu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 23 Aug 2021 10:33:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236169AbhHWKrl (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Aug 2021 06:47:41 -0400
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06D44C0613CF
-        for <linux-pwm@vger.kernel.org>; Mon, 23 Aug 2021 03:46:56 -0700 (PDT)
-Received: by mail-lj1-x22d.google.com with SMTP id f2so30713908ljn.1
-        for <linux-pwm@vger.kernel.org>; Mon, 23 Aug 2021 03:46:56 -0700 (PDT)
+        with ESMTP id S229726AbhHWOdt (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Aug 2021 10:33:49 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79958C061575;
+        Mon, 23 Aug 2021 07:33:06 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id q11-20020a7bce8b0000b02902e6880d0accso14275161wmj.0;
+        Mon, 23 Aug 2021 07:33:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UmkfXGaYCdqSsvCrogHGEUgWw+TJ4SlfmjU5MN/PEBE=;
-        b=cjqU7CIQQYnl3N9VSH9OdTpbfhx84HH/grPgOc+tCGAo2Yn2hAV0cMn3z8HTaVOuhA
-         8Brg4z73NnaY2Z/CE8IaG11T82l0gL1ZP2mAHcCMwXtNviOz1cwQ7atSvkRP33js82FC
-         tL3OJS+qxvVYzF3TYhi7jJG99T8jOBJM8RSwrLmSS6vtDNlXueNOFv50Q4BmfSf/V2kW
-         jpK8t4qSsEu0v76ajcR4UzKY9YBd/hRYx4cCU6l6AsBCSBWNe3JTai52Wv7UVRmBdbxJ
-         Pg+Ik2kyI7qbtIeypuO3uLwLKp7JZuw0yQNYCSOl6O3FaQojbcATlzG1xxwJABfP9fIQ
-         rH8g==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kKNTgN3mFZPjHxMm9PJkyaGLg0UeM0w5/suyeTcMCds=;
+        b=Ez/HiDH3tFmVC4uKBvHgtFzVhf5NyUU42y+5Lk7iQk7CbnDkPYMGOlaMnc0A7HLBJw
+         eWugtLu8U4/9o5aEJf48iw+G6cKxrmqxzYQvyXaTFxF/VLYSaCfpeh/+AGmp8SBxu1lB
+         qm3zidvf28w2SRNDLu8OhnQzo5muVjjRhaIGvozxNPOQrjNBvXf8nq85yo6HQzlBKLmU
+         nzja6sHIhvGl2u+EqnRtgSQJl/7h2YONt5JGKSF2dBwOkwinufFPGqE+7KXbsWH7nTD8
+         XY3kngutJ1H7lJa8xJhpA6dHcDU3twBm/CLhiMZ/5aYAACW7FswYmospyPXglG3MHnPd
+         fAnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UmkfXGaYCdqSsvCrogHGEUgWw+TJ4SlfmjU5MN/PEBE=;
-        b=a5I02lQUshj96nuvgxPHeVddCvSpIeymGDA+YREj3txKhaNzuN8GDObxKVfMpbct2G
-         ULNRBK67oVId6i7MMWuot+lVF2zcU+aY/C/MMzS70Hrdb6GwpRjpgXogGI/A0/KRtfvq
-         P5HZFktasUu/qMmAAJI2sqlKEH9QPK7IFS/x1ScOIJm7uXMX8IEBFYu0YQWFiY4ha8pF
-         gaPxIHaS0ptbKHzqHHopuc2g3BTlBw3XFD02w7F+xb+2cGpqa862U44r7/c5x264vsbr
-         veFo22xHBmHGjZXj3p6EVOpyC1R/56ESsh2pJJNsgNVbfiRVoZHD4z416LhM23UzB/Cb
-         eI9Q==
-X-Gm-Message-State: AOAM531bzgu9CcXBIHG9g470+fP9X6Sm6JrZTn7CdtrDYvvW43jblEVy
-        ivV1aqvZWE4i770EhAQ/3IQebzydynuHMP7XMbKfTg==
-X-Google-Smtp-Source: ABdhPJwROTbhLIghdJiFv3Mpx4km5TKucbukHEV5v0NDix1jHpH6ITt9xOVwuMgiEW0EE35GC/hK1ms310RYHiQipIA=
-X-Received: by 2002:a2e:a410:: with SMTP id p16mr25247179ljn.364.1629715615237;
- Mon, 23 Aug 2021 03:46:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210818043131.7klajx6drvvkftoc@vireshk-i7> <a2a3c41f-c5e4-ee7e-7d48-03af8bac8863@gmail.com>
- <20210818045307.4brb6cafkh3adjth@vireshk-i7> <080469b3-612b-3a34-86e5-7037a64de2fe@gmail.com>
- <20210818055849.ybfajzu75ecpdrbn@vireshk-i7> <f1c76f23-086d-ef36-54ea-0511b0ebe0e1@gmail.com>
- <20210818062723.dqamssfkf7lf7cf7@vireshk-i7> <CAPDyKFrZqWtZOp4MwDN6fShoLLbw5NM039bpE3-shB+fCEZOog@mail.gmail.com>
- <20210818091417.dvlnsxlgybdsn76x@vireshk-i7> <CAPDyKFrVxhrWGr2pKduehshpLFd_db2NTPGuD7fSqvuHeyzT4w@mail.gmail.com>
- <20210818095044.e2ntsm45h5cddk7s@vireshk-i7> <CAPDyKFrFF00xGDWPCQnPwF0_QkG4TB2UqggpuBpp8LY_CMKP-A@mail.gmail.com>
- <0354acbe-d856-4040-f453-8e8164102045@gmail.com> <CAPDyKFoQdn1rm91iFNJwZwpSYcKJBjDLqtJB4KZAkhgY1Grm-Q@mail.gmail.com>
- <87073fc2-d7b3-98f4-0067-29430ea2adef@gmail.com> <CAPDyKFqSsAk8a5CTNpRT2z4Wvf8BehJKDbVhUKfHc2Jzj7aTNA@mail.gmail.com>
- <9129a9f0-8c9b-d8e0-ddf5-c8820871fb7f@gmail.com>
-In-Reply-To: <9129a9f0-8c9b-d8e0-ddf5-c8820871fb7f@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 23 Aug 2021 12:46:19 +0200
-Message-ID: <CAPDyKFrWeQVNgxzmiLBXJ2gQW=iFf4aG16xvZ+ag1MkhXs9-BQ@mail.gmail.com>
-Subject: Re: [PATCH v8 01/34] opp: Add dev_pm_opp_sync() helper
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kKNTgN3mFZPjHxMm9PJkyaGLg0UeM0w5/suyeTcMCds=;
+        b=rDtbzYDFMVsFnjXCieQ4cdWvmM7zUm7mAEtu7ImVM7zmvTv67kriqvSr5O/0zWV8d2
+         jAalhv/L1snUONg+A2zewcAeD4PVcJYTqYVG+bI+SH666caSWi0K961y4wT/RMQRnuTi
+         wh53F7lJ/AAleyMAjP9+gITzLAK49B4D+uvhvvqD+I7LQWtkPscycSsZcWZEYacOweqX
+         fItgMygJnPyXf/d9b9yuWHO4lCXtEj4EvJkysMdj+aGnk4a52obsGhrfHRm/+wnTi6MZ
+         A5qsJmhCHgeT8qhdjZAFiYDx/5tggPEDI7BclB/Up5cZYawz395JjGtr0PbIC1y6Twvd
+         rOrA==
+X-Gm-Message-State: AOAM531PRWTDcpOsE5f4gZFA3JUKvlXU7GvZRKKb6GQ6W/QfidFssnMV
+        58iuJAMB3+7CX3GUviVGCyk=
+X-Google-Smtp-Source: ABdhPJxBq4Nvsa0gnzzH4WFHk2SbkxyCPoHtvepGuqxwqRXVQN0QX9rC0+5h+ZD3D695iv58bgjotw==
+X-Received: by 2002:a05:600c:2189:: with SMTP id e9mr16739221wme.125.1629729185109;
+        Mon, 23 Aug 2021 07:33:05 -0700 (PDT)
+Received: from localhost ([217.111.27.204])
+        by smtp.gmail.com with ESMTPSA id w18sm16192391wrg.68.2021.08.23.07.33.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Aug 2021 07:33:03 -0700 (PDT)
+Date:   Mon, 23 Aug 2021 16:33:02 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         Viresh Kumar <vireshk@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>,
@@ -69,7 +59,7 @@ Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
         Peter Chen <peter.chen@kernel.org>,
         Mark Brown <broonie@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Richard Weinberger <richard@nod.at>,
@@ -90,223 +80,101 @@ Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
         dri-devel <dri-devel@lists.freedesktop.org>,
         DTML <devicetree@vger.kernel.org>,
         linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v8 07/34] clk: tegra: Support runtime PM and power domain
+Message-ID: <YSOxnqiia+FqfOX6@orome.fritz.box>
+References: <20210817012754.8710-8-digetx@gmail.com>
+ <YR0UBi/ejy+oF4Hm@orome.fritz.box>
+ <da7356cb-05ee-ba84-8a7c-6e69d853a805@gmail.com>
+ <YR04YHGEluqLIZeo@orome.fritz.box>
+ <ad99db08-4696-1636-5829-5260f93dc681@gmail.com>
+ <YR6Mvips3HAntDy0@orome.fritz.box>
+ <e17bbe8d-7c0f-fc3d-03c7-d75c54c24a43@gmail.com>
+ <YR+VDZzTihmpENp6@orome.fritz.box>
+ <CAPDyKFpJ+TK0w1GZEA7G=rtAjq5ipmVR4P0wy7uHiEGVWRk5yA@mail.gmail.com>
+ <89ea1694-be9e-7654-abeb-22de0ca5255a@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="PvC9h3QplaOMl/PL"
+Content-Disposition: inline
+In-Reply-To: <89ea1694-be9e-7654-abeb-22de0ca5255a@gmail.com>
+User-Agent: Mutt/2.1.1 (e2a89abc) (2021-07-12)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-[...]
 
-> >>>> We have three components comprising PM on Tegra:
-> >>>>
-> >>>> 1. Power gate
-> >>>> 2. Clock state
-> >>>> 3. Voltage state
-> >>>>
-> >>>> GENPD on/off represents the 'power gate'.
-> >>>>
-> >>>> Clock and reset are controlled by device drivers using clk and rst APIs.
-> >>>>
-> >>>> Voltage state is represented by GENPD's performance level.
-> >>>>
-> >>>> GENPD core assumes that at a first rpm-resume of a consumer device, its
-> >>>> genpd_performance=0. Not true for Tegra because h/w of the device is
-> >>>> preconfigured to a non-zero perf level initially, h/w may not support
-> >>>> zero level at all.
-> >>>
-> >>> I think you may be misunderstanding genpd's behaviour around this, but
-> >>> let me elaborate.
-> >>>
-> >>> In genpd_runtime_resume(), we try to restore the performance state for
-> >>> the device that genpd_runtime_suspend() *may* have dropped earlier.
-> >>> That means, if genpd_runtime_resume() is called prior
-> >>> genpd_runtime_suspend() for the first time, it means that
-> >>> genpd_runtime_resume() will *not* restore a performance state, but
-> >>> instead just leave the performance state as is for the device (see
-> >>> genpd_restore_performance_state()).
-> >>>
-> >>> In other words, a consumer driver may use the following sequence to
-> >>> set an initial performance state for the device during ->probe():
-> >>>
-> >>> ...
-> >>> rate = clk_get_rate()
-> >>> dev_pm_opp_set_rate(rate)
-> >>>
-> >>> pm_runtime_enable()
-> >>> pm_runtime_resume_and_get()
-> >>> ...
-> >>>
-> >>> Note that, it's the consumer driver's responsibility to manage device
-> >>> specific resources, in its ->runtime_suspend|resume() callbacks.
-> >>> Typically that means dealing with clock gating/ungating, for example.
-> >>>
-> >>> In the other scenario where a consumer driver prefers to *not* call
-> >>> pm_runtime_resume_and_get() in its ->probe(), because it doesn't need
-> >>> to power on the device to complete probing, then we don't want to vote
-> >>> for an OPP at all - and we also want the performance state for the
-> >>> device in genpd to be set to zero. Correct?
-> >>
-> >> Yes
-> >>
-> >>> Is this the main problem you are trying to solve, because I think this
-> >>> doesn't work out of the box as of today?
-> >>
-> >> The main problem is that the restored performance state is zero for the
-> >> first genpd_runtime_resume(), while it's not zero from the h/w perspective.
-> >
-> > This should not be a problem, but can be handled by the consumer driver.
-> >
-> > genpd_runtime_resume() calls genpd_restore_performance_state() to
-> > restore a performance state for the device. However, in the scenario
-> > you describe, "gpd_data->rpm_pstate" is zero, which makes
-> > genpd_restore_performance_state() to just leave the device's
-> > performance state as is - it will *not* restore the performance state
-> > to zero.
-> >
-> > To make the consumer driver deal with this, it would need to call
-> > dev_pm_opp_set_rate() from within its ->runtime_resume() callback.
-> >
-> >>
-> >>> There is another concern though, but perhaps it's not a problem after
-> >>> all. Viresh told us that dev_pm_opp_set_rate() may turn on resources
-> >>> like clock/regulators. That could certainly be problematic, in
-> >>> particular if the device and its genpd have OPP tables associated with
-> >>> it and the consumer driver wants to follow the above sequence in
-> >>> probe.
-> >>
-> >> dev_pm_opp_set_rate() won't enable clocks and regulators, but it may
-> >> change the clock rate and voltage. This is also platform/driver specific
-> >> because it's up to OPP user how to configure OPP table. On Tegra we only
-> >> assign clock to OPP table, regulators are unused.
-> >>
-> >>> Viresh, can you please chime in here and elaborate on some of the
-> >>> magic happening behind dev_pm_opp_set_rate() API - is there a problem
-> >>> here or not?
-> >>>
-> >>>>
-> >>>> GENPD core assumes that consumer devices can work at any performance
-> >>>> level. Not true for Tegra because voltage needs to be set in accordance
-> >>>> to the clock rate before clock is enabled, otherwise h/w won't work
-> >>>> properly, perhaps clock may be unstable or h/w won't be latching.
-> >>>
-> >>> Correct. Genpd relies on the callers to use the OPP framework if there
-> >>> are constraints like you describe above.
-> >>>
-> >>> That said, it's not forbidden for a consumer driver to call
-> >>> dev_pm_genpd_set_performance_state() directly, but then it better
-> >>> knows exactly what it's doing.
-> >>>
-> >>>>
-> >>>> Performance level should be set to 0 while device is suspended.
-> >>>
-> >>> Do you mean system suspend or runtime suspend? Or both?
-> >>
-> >> Runtime suspend.
-> >
-> > Alright. So that's already taken care of for us in genpd_runtime_suspend().
-> >
-> > Or perhaps you have discovered some problem with this?
-> >
-> >>
-> >>>> Performance level needs to be bumped on rpm-resume of a device in
-> >>>> accordance to h/w state before hardware is enabled.
-> >>>
-> >>> Assuming there was a performance state set for the device when
-> >>> genpd_runtime_suspend() was called, genpd_runtime_resume() will
-> >>> restore that state according to the sequence you described.
-> >>
-> >> What do you think about adding API that will allow drivers to explicitly
-> >> set the restored performance state of a power domain?
-> >>
-> >> Another option could be to change the GENPD core, making it to set the
-> >> rpm_pstate when dev_pm_genpd_set_performance_state(dev) is invoked and
-> >> device is rpm-suspended, instead of calling the
-> >> genpd->set_performance_state callback.
-> >>
-> >> Then drivers will be able to sync the perf state at a probe time.
-> >>
-> >> What do you think?
-> >
-> > I don't think it's needed, see my reply earlier above. However your
-> > change touches another problem though, see below.
-> >
-> >>
-> >> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-> >> index a934c679e6ce..cc15ab9eacc9 100644
-> >> --- a/drivers/base/power/domain.c
-> >> +++ b/drivers/base/power/domain.c
-> >> @@ -435,7 +435,7 @@ static void genpd_restore_performance_state(struct
-> >> device *dev,
-> >>  int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int
-> >> state)
-> >>  {
-> >>         struct generic_pm_domain *genpd;
-> >> -       int ret;
-> >> +       int ret = 0;
-> >>
-> >>         genpd = dev_to_genpd_safe(dev);
-> >>         if (!genpd)
-> >> @@ -446,7 +446,10 @@ int dev_pm_genpd_set_performance_state(struct
-> >> device *dev, unsigned int state)
-> >>                 return -EINVAL;
-> >>
-> >>         genpd_lock(genpd);
-> >> -       ret = genpd_set_performance_state(dev, state);
-> >> +       if (pm_runtime_suspended(dev))
-> >> +               dev_gpd_data(dev)->rpm_pstate = state;
-> >> +       else
-> >> +               ret = genpd_set_performance_state(dev, state);
-> >>         genpd_unlock(genpd);
-> >
-> > This doesn't work for all cases. For example, when a consumer driver
-> > deploys runtime PM support in its ->probe() according to the below
-> > sequence:
-> >
-> > ...
-> > dev_pm_opp_set_rate(rate)
-> > pm_runtime_get_noresume()
-> > pm_runtime_set_active()
-> > pm_runtime_enable()
-> > ...
-> > pm_runtime_put()
-> > ...
-> >
-> > We need to call genpd_set_performance_state() independently of whether
-> > the device is runtime suspended or not.
->
-> I don't see where is the problem in yours example.
->
-> pm_runtime_suspended() = false while RPM is disabled. When device is
-> resumed, the rpm_pstate=0, so it won't change the pstate on resume.
+--PvC9h3QplaOMl/PL
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, you are certainly correct, my bad! I mixed it up with
-pm_runtime_status_suspended(), which only cares about the status.
+On Sat, Aug 21, 2021 at 08:45:54PM +0300, Dmitry Osipenko wrote:
+> 20.08.2021 16:08, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+> >> I suppose if there's really no good way of doing this other than
+> >> providing a struct device, then so be it. I think the cleaned up sysfs
+> >> shown in the summary above looks much better than what the original
+> >> would've looked like.
+> >>
+> >> Perhaps an additional tweak to that would be to not create platform
+> >> devices. Instead, just create struct device. Those really have
+> >> everything you need (.of_node, and can be used with RPM and GENPD). As=
+ I
+> >> mentioned earlier, platform device implies a CPU-memory-mapped bus,
+> >> which this clearly isn't. It's kind of a separate "bus" if you want, so
+> >> just using struct device directly seems more appropriate.
+> >=20
+> > Just a heads up. If you don't use a platform device or have a driver
+> > associated with it for probing, you need to manage the attachment to
+> > genpd yourself. That means calling one of the dev_pm_domain_attach*()
+> > APIs, but that's perfectly fine, ofcourse.
+> >=20
+> >>
+> >> We did something similar for XUSB pads, see drivers/phy/tegra/xusb.[ch]
+> >> for an example of how that was done. I think you can do something
+> >> similar here.
+>=20
+> We need a platform device because we have a platform device driver that
+> must be bound to the device, otherwise PMC driver state won't be synced
+> since it it's synced after all drivers of devices that reference PMC
+> node in DT are probed.
 
-So, after a second thought, your suggestion sounds very much
-reasonable to me! I have also tried to consider all different
-scenarios, including the system suspend/resume path, but I think it
-should be fine.
+I think the causality is the wrong way around. It's more likely that you
+added the platform driver because you have a platform device that you
+want to bind against.
 
-I also think that a patch like the above should be considered as a
-fix, because it actually fixes a problem, according to what I said in
-my earlier reply, below.
+You can have drivers bind to other types of devices, although it's a bit
+more work than abusing platform devices for it.
 
-Fixes : 5937c3ce2122 ("PM: domains: Drop/restore performance state
-votes for devices at runtime PM").
+There's the "auxiliary" bus that seems like it would be a somewhat
+better fit (see Documentation/driver-api/auxiliary_bus.rst), though it
+doesn't look like this fits the purpose exactly. I think a custom bus
+(or perhaps something that could be deployed more broadly across CCF)
+would be more appropriate.
 
->
-> > Although, it actually seems like good idea to update
-> > dev_gpd_data(dev)->rpm_pstate = state here, as to make sure
-> > genpd_runtime_resume() doesn't restore an old/invalid value that was
-> > saved while dropping the performance state vote for the device in
-> > genpd_runtime_suspend() earlier.
-> >
-> > Let me send a patch for this shortly, to close this window of a possible error.
->
-> It will also remove the need to resume device just to change the clock
-> rate, like I needed to do it in the PWM patch of this series.
+Looking around, it seems like clk/imx and clk/samsung abuse the platform
+bus in a similar way, so they would benefit from a "clk" bus as well.
 
-Do you want to send the patch formally? Or do you prefer it if I do it?
+Thierry
 
-Kind regards
-Uffe
+--PvC9h3QplaOMl/PL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmEjsZsACgkQ3SOs138+
+s6HWKw//TNblAAi6ou9PE5WJAlqkp8eN3KFkESiKa0yzPJmK4PheTbR+7TxztdtD
+v78kTE37Wr/vLdqlIV3gfL9ZjFiYhBJinwopw7zGhYIru1NVclli3In+/nQdUoGe
+vqQOmq0yycyituaGXERlH9HrODsY9IG3DP4XqTd9bBz1JfexxnEVxHvXdzWmoQ/i
+pHg7547O5QhpmEMurZ+anNAFCw9J9QhltISWXBSZdl1HDXBF7u7yABLXLggp6RFm
+xJN7I3DdVVYkB091DX8wfW19TXaDcZ4eOtNQ1PdpfL1FgeRhLm48VYhB1CQhSWcs
++uyGzqS2dROvSyoUCXqUxYr4NdijJX17VOpO8BVWcpJMQo97EDNxa6Ga92TmXAV4
+o+NEivB2893mE0b268rDZ128qhimB7qfM9UT8XFuOWTHiwtGanWBQ/OQ0VYBDVvn
+qArreV+6jLdYLjqAiq6DYDoT3s9gVp/xvWfp9F+PW6YlUPldiEUx0eTDK31T4nx2
+xRnoASYIbUDfcHvOQWTmwFm1YLxDad/c+oNuCuFjNtG1P8EzRmmkwz4FU0J4uLGd
+kTxIyxpRrHp1A2gFthkPvtvrucMlVXW/pTMMCSZtPafWNdhQgCohiy0wnW6pI9sg
+v4qJ6n+ieKZRQw1RlSLliu81UJk/CcANuJDeI3CknDm79oVZQDA=
+=YrRu
+-----END PGP SIGNATURE-----
+
+--PvC9h3QplaOMl/PL--
