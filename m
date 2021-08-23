@@ -2,55 +2,56 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC68F3F4C6D
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Aug 2021 16:33:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B39403F4DD2
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Aug 2021 17:54:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230197AbhHWOdu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Aug 2021 10:33:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59498 "EHLO
+        id S231822AbhHWPzP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 23 Aug 2021 11:55:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229726AbhHWOdt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Aug 2021 10:33:49 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79958C061575;
-        Mon, 23 Aug 2021 07:33:06 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id q11-20020a7bce8b0000b02902e6880d0accso14275161wmj.0;
-        Mon, 23 Aug 2021 07:33:06 -0700 (PDT)
+        with ESMTP id S231734AbhHWPzO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Aug 2021 11:55:14 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3124DC061757;
+        Mon, 23 Aug 2021 08:54:31 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id i9so38834301lfg.10;
+        Mon, 23 Aug 2021 08:54:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kKNTgN3mFZPjHxMm9PJkyaGLg0UeM0w5/suyeTcMCds=;
-        b=Ez/HiDH3tFmVC4uKBvHgtFzVhf5NyUU42y+5Lk7iQk7CbnDkPYMGOlaMnc0A7HLBJw
-         eWugtLu8U4/9o5aEJf48iw+G6cKxrmqxzYQvyXaTFxF/VLYSaCfpeh/+AGmp8SBxu1lB
-         qm3zidvf28w2SRNDLu8OhnQzo5muVjjRhaIGvozxNPOQrjNBvXf8nq85yo6HQzlBKLmU
-         nzja6sHIhvGl2u+EqnRtgSQJl/7h2YONt5JGKSF2dBwOkwinufFPGqE+7KXbsWH7nTD8
-         XY3kngutJ1H7lJa8xJhpA6dHcDU3twBm/CLhiMZ/5aYAACW7FswYmospyPXglG3MHnPd
-         fAnw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7mncJ6pduW/52O6ekhmOFTY3dWeez/jgkRyR/0Vdsyw=;
+        b=GjDLwuw1u5t0huse+wcSUJvd9NlDsq9fLH5ifMhjoFLd/jX7arhT4V0b4pMg9fkZx0
+         SFoXhZrGpDe1zyz7PwMpqtrmGVNRg4uenD426vrzx09jDp5+gZwPaSOWi2CzEdhHZN72
+         biZ9w4cugGtwCB8oOkwmNR+z285tRdqilLSsiYBx3KMs+2gRQ2Qufwsaf9Kkn44cA20t
+         ytzwyZjnYP+KTq05NUlj+435IalTyox6/J6oSbEJjWcMz4NbsCi+r8m8O7scEsRH0iPC
+         mwCHAhLhpQqHYFd7f4axkEH/iwpXUU5wQP5pO5DMDqwE7H45GOLzvXAyvPw0J1h3bnVb
+         85LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kKNTgN3mFZPjHxMm9PJkyaGLg0UeM0w5/suyeTcMCds=;
-        b=rDtbzYDFMVsFnjXCieQ4cdWvmM7zUm7mAEtu7ImVM7zmvTv67kriqvSr5O/0zWV8d2
-         jAalhv/L1snUONg+A2zewcAeD4PVcJYTqYVG+bI+SH666caSWi0K961y4wT/RMQRnuTi
-         wh53F7lJ/AAleyMAjP9+gITzLAK49B4D+uvhvvqD+I7LQWtkPscycSsZcWZEYacOweqX
-         fItgMygJnPyXf/d9b9yuWHO4lCXtEj4EvJkysMdj+aGnk4a52obsGhrfHRm/+wnTi6MZ
-         A5qsJmhCHgeT8qhdjZAFiYDx/5tggPEDI7BclB/Up5cZYawz395JjGtr0PbIC1y6Twvd
-         rOrA==
-X-Gm-Message-State: AOAM531PRWTDcpOsE5f4gZFA3JUKvlXU7GvZRKKb6GQ6W/QfidFssnMV
-        58iuJAMB3+7CX3GUviVGCyk=
-X-Google-Smtp-Source: ABdhPJxBq4Nvsa0gnzzH4WFHk2SbkxyCPoHtvepGuqxwqRXVQN0QX9rC0+5h+ZD3D695iv58bgjotw==
-X-Received: by 2002:a05:600c:2189:: with SMTP id e9mr16739221wme.125.1629729185109;
-        Mon, 23 Aug 2021 07:33:05 -0700 (PDT)
-Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id w18sm16192391wrg.68.2021.08.23.07.33.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Aug 2021 07:33:03 -0700 (PDT)
-Date:   Mon, 23 Aug 2021 16:33:02 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7mncJ6pduW/52O6ekhmOFTY3dWeez/jgkRyR/0Vdsyw=;
+        b=IOpKGHvqrd6BLy/vZsEi4QxYtFeeOqNrn5QcSGeZ+5lN/MBYTkGTFqJBOV1k8ly3TM
+         Ojlwfw0HLUc6pT+M3WPK1klUJGn/nzf3dGrbJXhkkoSw8z2d9t1EXb/7S7VhLNsaYZQo
+         e+gfZ69TnaKu99jhOW+Yi8YO3PDNXWflArBxHkhLWHJJktQq/zo6CwEjbB6K/QeIdG46
+         UJMdkfNoGWuJ875iEGA/Twlwv0Ur9cMq2shAGdx4om9hlCR+4KAQLmLHWa7CClMpyoUE
+         BSpjbe32pK64XFoQ9qRh1Io9vewbflVYigrn+6J5eZx/SYiZd+8sUVveS9YHQXdwxCgg
+         EF2A==
+X-Gm-Message-State: AOAM531b3+f8AQBdQ/uobRHY/mYbnT6rZhH/BW/fwpuBAT8yUBQ6fi+k
+        w5w22/1vPJAThf4sjKZK+/fW7k7i+KU=
+X-Google-Smtp-Source: ABdhPJzNDGjnGQzIrcQXTM2iukhjwhqvC5wj3OdYqtfrrWEzlRV302pS9l5Dkjzi+NNxjkL6pb5dHg==
+X-Received: by 2002:a05:6512:3157:: with SMTP id s23mr24865578lfi.247.1629734069444;
+        Mon, 23 Aug 2021 08:54:29 -0700 (PDT)
+Received: from [192.168.2.145] (46-138-120-72.dynamic.spd-mgts.ru. [46.138.120.72])
+        by smtp.googlemail.com with ESMTPSA id u2sm1482543lfr.79.2021.08.23.08.54.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Aug 2021 08:54:28 -0700 (PDT)
+Subject: Re: [PATCH v8 01/34] opp: Add dev_pm_opp_sync() helper
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         Viresh Kumar <vireshk@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>,
@@ -59,8 +60,8 @@ Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
         Peter Chen <peter.chen@kernel.org>,
         Mark Brown <broonie@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Nishanth Menon <nm@ti.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Richard Weinberger <richard@nod.at>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -80,101 +81,85 @@ Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
         dri-devel <dri-devel@lists.freedesktop.org>,
         DTML <devicetree@vger.kernel.org>,
         linux-clk <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH v8 07/34] clk: tegra: Support runtime PM and power domain
-Message-ID: <YSOxnqiia+FqfOX6@orome.fritz.box>
-References: <20210817012754.8710-8-digetx@gmail.com>
- <YR0UBi/ejy+oF4Hm@orome.fritz.box>
- <da7356cb-05ee-ba84-8a7c-6e69d853a805@gmail.com>
- <YR04YHGEluqLIZeo@orome.fritz.box>
- <ad99db08-4696-1636-5829-5260f93dc681@gmail.com>
- <YR6Mvips3HAntDy0@orome.fritz.box>
- <e17bbe8d-7c0f-fc3d-03c7-d75c54c24a43@gmail.com>
- <YR+VDZzTihmpENp6@orome.fritz.box>
- <CAPDyKFpJ+TK0w1GZEA7G=rtAjq5ipmVR4P0wy7uHiEGVWRk5yA@mail.gmail.com>
- <89ea1694-be9e-7654-abeb-22de0ca5255a@gmail.com>
+References: <20210818043131.7klajx6drvvkftoc@vireshk-i7>
+ <a2a3c41f-c5e4-ee7e-7d48-03af8bac8863@gmail.com>
+ <20210818045307.4brb6cafkh3adjth@vireshk-i7>
+ <080469b3-612b-3a34-86e5-7037a64de2fe@gmail.com>
+ <20210818055849.ybfajzu75ecpdrbn@vireshk-i7>
+ <f1c76f23-086d-ef36-54ea-0511b0ebe0e1@gmail.com>
+ <20210818062723.dqamssfkf7lf7cf7@vireshk-i7>
+ <CAPDyKFrZqWtZOp4MwDN6fShoLLbw5NM039bpE3-shB+fCEZOog@mail.gmail.com>
+ <20210818091417.dvlnsxlgybdsn76x@vireshk-i7>
+ <CAPDyKFrVxhrWGr2pKduehshpLFd_db2NTPGuD7fSqvuHeyzT4w@mail.gmail.com>
+ <20210818095044.e2ntsm45h5cddk7s@vireshk-i7>
+ <CAPDyKFrFF00xGDWPCQnPwF0_QkG4TB2UqggpuBpp8LY_CMKP-A@mail.gmail.com>
+ <0354acbe-d856-4040-f453-8e8164102045@gmail.com>
+ <CAPDyKFoQdn1rm91iFNJwZwpSYcKJBjDLqtJB4KZAkhgY1Grm-Q@mail.gmail.com>
+ <87073fc2-d7b3-98f4-0067-29430ea2adef@gmail.com>
+ <CAPDyKFqSsAk8a5CTNpRT2z4Wvf8BehJKDbVhUKfHc2Jzj7aTNA@mail.gmail.com>
+ <9129a9f0-8c9b-d8e0-ddf5-c8820871fb7f@gmail.com>
+ <CAPDyKFrWeQVNgxzmiLBXJ2gQW=iFf4aG16xvZ+ag1MkhXs9-BQ@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <9a783eb3-786b-a3b2-7854-2be6954527db@gmail.com>
+Date:   Mon, 23 Aug 2021 18:54:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="PvC9h3QplaOMl/PL"
-Content-Disposition: inline
-In-Reply-To: <89ea1694-be9e-7654-abeb-22de0ca5255a@gmail.com>
-User-Agent: Mutt/2.1.1 (e2a89abc) (2021-07-12)
+In-Reply-To: <CAPDyKFrWeQVNgxzmiLBXJ2gQW=iFf4aG16xvZ+ag1MkhXs9-BQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+23.08.2021 13:46, Ulf Hansson пишет:
+>>> ...
+>>> dev_pm_opp_set_rate(rate)
+>>> pm_runtime_get_noresume()
+>>> pm_runtime_set_active()
+>>> pm_runtime_enable()
+>>> ...
+>>> pm_runtime_put()
+>>> ...
+>>>
+>>> We need to call genpd_set_performance_state() independently of whether
+>>> the device is runtime suspended or not.
+>>
+>> I don't see where is the problem in yours example.
+>>
+>> pm_runtime_suspended() = false while RPM is disabled. When device is
+>> resumed, the rpm_pstate=0, so it won't change the pstate on resume.
+> 
+> Yes, you are certainly correct, my bad! I mixed it up with
+> pm_runtime_status_suspended(), which only cares about the status.
+> 
+> So, after a second thought, your suggestion sounds very much
+> reasonable to me! I have also tried to consider all different
+> scenarios, including the system suspend/resume path, but I think it
+> should be fine.
 
---PvC9h3QplaOMl/PL
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It could be improved slightly to cover more cases.
 
-On Sat, Aug 21, 2021 at 08:45:54PM +0300, Dmitry Osipenko wrote:
-> 20.08.2021 16:08, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> ...
-> >> I suppose if there's really no good way of doing this other than
-> >> providing a struct device, then so be it. I think the cleaned up sysfs
-> >> shown in the summary above looks much better than what the original
-> >> would've looked like.
-> >>
-> >> Perhaps an additional tweak to that would be to not create platform
-> >> devices. Instead, just create struct device. Those really have
-> >> everything you need (.of_node, and can be used with RPM and GENPD). As=
- I
-> >> mentioned earlier, platform device implies a CPU-memory-mapped bus,
-> >> which this clearly isn't. It's kind of a separate "bus" if you want, so
-> >> just using struct device directly seems more appropriate.
-> >=20
-> > Just a heads up. If you don't use a platform device or have a driver
-> > associated with it for probing, you need to manage the attachment to
-> > genpd yourself. That means calling one of the dev_pm_domain_attach*()
-> > APIs, but that's perfectly fine, ofcourse.
-> >=20
-> >>
-> >> We did something similar for XUSB pads, see drivers/phy/tegra/xusb.[ch]
-> >> for an example of how that was done. I think you can do something
-> >> similar here.
->=20
-> We need a platform device because we have a platform device driver that
-> must be bound to the device, otherwise PMC driver state won't be synced
-> since it it's synced after all drivers of devices that reference PMC
-> node in DT are probed.
+> I also think that a patch like the above should be considered as a
+> fix, because it actually fixes a problem, according to what I said in
+> my earlier reply, below.
+> 
+> Fixes : 5937c3ce2122 ("PM: domains: Drop/restore performance state
+> votes for devices at runtime PM").
+> 
+>>
+>>> Although, it actually seems like good idea to update
+>>> dev_gpd_data(dev)->rpm_pstate = state here, as to make sure
+>>> genpd_runtime_resume() doesn't restore an old/invalid value that was
+>>> saved while dropping the performance state vote for the device in
+>>> genpd_runtime_suspend() earlier.
+>>>
+>>> Let me send a patch for this shortly, to close this window of a possible error.
+>>
+>> It will also remove the need to resume device just to change the clock
+>> rate, like I needed to do it in the PWM patch of this series.
+> 
+> Do you want to send the patch formally? Or do you prefer it if I do it?
 
-I think the causality is the wrong way around. It's more likely that you
-added the platform driver because you have a platform device that you
-want to bind against.
-
-You can have drivers bind to other types of devices, although it's a bit
-more work than abusing platform devices for it.
-
-There's the "auxiliary" bus that seems like it would be a somewhat
-better fit (see Documentation/driver-api/auxiliary_bus.rst), though it
-doesn't look like this fits the purpose exactly. I think a custom bus
-(or perhaps something that could be deployed more broadly across CCF)
-would be more appropriate.
-
-Looking around, it seems like clk/imx and clk/samsung abuse the platform
-bus in a similar way, so they would benefit from a "clk" bus as well.
-
-Thierry
-
---PvC9h3QplaOMl/PL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmEjsZsACgkQ3SOs138+
-s6HWKw//TNblAAi6ou9PE5WJAlqkp8eN3KFkESiKa0yzPJmK4PheTbR+7TxztdtD
-v78kTE37Wr/vLdqlIV3gfL9ZjFiYhBJinwopw7zGhYIru1NVclli3In+/nQdUoGe
-vqQOmq0yycyituaGXERlH9HrODsY9IG3DP4XqTd9bBz1JfexxnEVxHvXdzWmoQ/i
-pHg7547O5QhpmEMurZ+anNAFCw9J9QhltISWXBSZdl1HDXBF7u7yABLXLggp6RFm
-xJN7I3DdVVYkB091DX8wfW19TXaDcZ4eOtNQ1PdpfL1FgeRhLm48VYhB1CQhSWcs
-+uyGzqS2dROvSyoUCXqUxYr4NdijJX17VOpO8BVWcpJMQo97EDNxa6Ga92TmXAV4
-o+NEivB2893mE0b268rDZ128qhimB7qfM9UT8XFuOWTHiwtGanWBQ/OQ0VYBDVvn
-qArreV+6jLdYLjqAiq6DYDoT3s9gVp/xvWfp9F+PW6YlUPldiEUx0eTDK31T4nx2
-xRnoASYIbUDfcHvOQWTmwFm1YLxDad/c+oNuCuFjNtG1P8EzRmmkwz4FU0J4uLGd
-kTxIyxpRrHp1A2gFthkPvtvrucMlVXW/pTMMCSZtPafWNdhQgCohiy0wnW6pI9sg
-v4qJ6n+ieKZRQw1RlSLliu81UJk/CcANuJDeI3CknDm79oVZQDA=
-=YrRu
------END PGP SIGNATURE-----
-
---PvC9h3QplaOMl/PL--
+I'll send the patch.
