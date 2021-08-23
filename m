@@ -2,55 +2,56 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B3833F50D5
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Aug 2021 20:54:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D77F13F5200
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Aug 2021 22:24:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231299AbhHWSz3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Aug 2021 14:55:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35388 "EHLO
+        id S232318AbhHWUYv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 23 Aug 2021 16:24:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230192AbhHWSz2 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Aug 2021 14:55:28 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2937DC061575;
-        Mon, 23 Aug 2021 11:54:45 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id f10so25142951lfv.6;
-        Mon, 23 Aug 2021 11:54:45 -0700 (PDT)
+        with ESMTP id S231773AbhHWUYt (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Aug 2021 16:24:49 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D14C061575;
+        Mon, 23 Aug 2021 13:24:06 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id l18so26085801lji.12;
+        Mon, 23 Aug 2021 13:24:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LLLBnniN0Lx+Mumrz5skT0TPVp1ZGUNcrTmYMEWefMQ=;
-        b=bRXypa0kMDufIBAltELnod4/f5LKxu08gHYATptf+EI6+VVuqGZtQc9IaQGjvFFCgq
-         vbFbH2SdazqvcCAMYk3J4GuHj0e5I7zku8Oa9NfAxUikDOx7zn3pX1WDsTh6UdD8qIGa
-         3eprpmmrxRJAoaM7Gu3ZdgZoGar9lSRCs5JDzMxdRNpVQ+gLcrYDdO8oxckRN909UcKX
-         YtPVujPIzOZGW53g9o6QT7ES0CxEZ1zsz/t/TQNQmOc6LtFG124QbMp5K98LUEYst25J
-         DiyXxjAzvYYQpznD15TTlrtQK87XzYXH/DXwNlvN8BApenm8QR23KvoRjr4Lypahasp2
-         +t8w==
+        bh=J41x529VlTspZMrpThFHJLBr2g65jbs1WO5P40LCen4=;
+        b=okYdM6r/OEM+GpVMmndUDSUnFuATe7k+UqV9Xd6SnEB6FCQnedxeMEPVsABonqs4N4
+         bW0CUVBYgP/wVgNhvKRjjJZHkQWqjAfdAXHaWOprlSkmDVUGTjWH0QHqHe/JDzPhBYMW
+         VS78dI9TbqWyfxbPdEd9M68PCp/85z5U4mMqUTiCNVQcQnpHeloJ5A8DDCAgG+UndNk2
+         4AMRro0QimKicKoXkXK7fx6Xlty7DPO0Rz/T7e7AYrMNjr1lsW8oLXtit6l5wdRItw9Y
+         0sCrelfgm2KgdesCrJhygLOJ6k4XDHAPdBtXpSk4O9XXGH416S+WsJAn5UMZlTogyo6e
+         LVmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=LLLBnniN0Lx+Mumrz5skT0TPVp1ZGUNcrTmYMEWefMQ=;
-        b=tXflJOg0+VzMxn6y2k6Y1r5v87Nob0OemaHlYb+2euBDg7Rv0DSAexmmxngb03UawW
-         MIFRJsA+ejpCrUcXd/H1I9K2YjkjcNKjd+u0I+Ppt+JDaTqwhy3IOKI0UE3cKF8Rb8ch
-         Sgpgw4SLhVk2ay7U4SynA8ebW/BpCZx+HMq55ABfUqyQw0ic18DZQumST7RZbKLeCJSp
-         SrvvQrQCrfq2JOd+dvrK6+BpVJnYCfnxxdGag3k+HVHec7IiKwiaZUxdfwKY2tgrA8I7
-         7ew8FgaY2io+YFVaGlgqrpbGP6+I1DdVD2/Ji/Ur7/uO569pbt8gTGX9P3o6+pmvDXwG
-         Z6AQ==
-X-Gm-Message-State: AOAM531+Tf38LLd3cpfi6D2629+Hvmi6bBhDr4UuJNtPZxtrQoNIrTBQ
-        emb4iz6ou9Z/ZjY6r67AMCXtYBBWxxg=
-X-Google-Smtp-Source: ABdhPJzROMmO2gjb4vwtC02vW+yxH5GZycPshNAf3U2uJx1Cn7HyzCyTxuzs4nwkiF2FdwTHg0lTpw==
-X-Received: by 2002:a05:6512:3d22:: with SMTP id d34mr26136115lfv.326.1629744883418;
-        Mon, 23 Aug 2021 11:54:43 -0700 (PDT)
+        bh=J41x529VlTspZMrpThFHJLBr2g65jbs1WO5P40LCen4=;
+        b=c+Ki09WAWpKNHn30pEOohRcuBryKZ0oCZWnRlMYsf/BXv1d1PQ7vY5h1oBC5GOEkx1
+         +LcEp8GxfNVQvcGut3e77LMHJE703NvsNAc7n7308uonXnsMrGbcsyp+GVVDjoumUtzJ
+         UeBb12Zviuj0fEt1oY9K635IndZgO/Alj/sfjZ+ogj4P5koJvkfFttQT1SN2/ppjU2lB
+         i9fJz1FrDzvxU3FxVE5V0imh8JlsFHX24toC2WdyeHg/mGPDn+XuKkeEe79B+CIf5cKI
+         OypbQ7a6cyk5mNg/8e0NueNILDiJVq0f2S46SuwL/Tr5qKWScbeKvG7D7uJdFH/YWPiw
+         ZwCA==
+X-Gm-Message-State: AOAM532YQShkJEaZg1Jyr68J2f0ggt4AyDAnUDX7sD222MIs27Y8LN4S
+        EXWB12X/GIhvyqCFa1uXdmNNgp+ym84=
+X-Google-Smtp-Source: ABdhPJwqnW4H12JkFByYZki5F25wX7CFl/4OxdrLQBKSJLK7Hp+HrjfGNLOpxwFObeZey6c6a7G84A==
+X-Received: by 2002:a2e:a4db:: with SMTP id p27mr29314648ljm.161.1629750244353;
+        Mon, 23 Aug 2021 13:24:04 -0700 (PDT)
 Received: from [192.168.2.145] (46-138-120-72.dynamic.spd-mgts.ru. [46.138.120.72])
-        by smtp.googlemail.com with ESMTPSA id u18sm1664954lfo.280.2021.08.23.11.54.41
+        by smtp.googlemail.com with ESMTPSA id r2sm854722ljj.14.2021.08.23.13.24.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Aug 2021 11:54:42 -0700 (PDT)
-Subject: Re: [PATCH v8 07/34] clk: tegra: Support runtime PM and power domain
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Mon, 23 Aug 2021 13:24:03 -0700 (PDT)
+Subject: Re: [PATCH v8 01/34] opp: Add dev_pm_opp_sync() helper
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         Viresh Kumar <vireshk@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>,
@@ -80,24 +81,25 @@ Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
         dri-devel <dri-devel@lists.freedesktop.org>,
         DTML <devicetree@vger.kernel.org>,
         linux-clk <linux-clk@vger.kernel.org>
-References: <20210817012754.8710-8-digetx@gmail.com>
- <YR0UBi/ejy+oF4Hm@orome.fritz.box>
- <da7356cb-05ee-ba84-8a7c-6e69d853a805@gmail.com>
- <YR04YHGEluqLIZeo@orome.fritz.box>
- <ad99db08-4696-1636-5829-5260f93dc681@gmail.com>
- <YR6Mvips3HAntDy0@orome.fritz.box>
- <e17bbe8d-7c0f-fc3d-03c7-d75c54c24a43@gmail.com>
- <YR+VDZzTihmpENp6@orome.fritz.box>
- <CAPDyKFpJ+TK0w1GZEA7G=rtAjq5ipmVR4P0wy7uHiEGVWRk5yA@mail.gmail.com>
- <89ea1694-be9e-7654-abeb-22de0ca5255a@gmail.com>
- <YSOxnqiia+FqfOX6@orome.fritz.box>
+References: <080469b3-612b-3a34-86e5-7037a64de2fe@gmail.com>
+ <20210818055849.ybfajzu75ecpdrbn@vireshk-i7>
+ <f1c76f23-086d-ef36-54ea-0511b0ebe0e1@gmail.com>
+ <20210818062723.dqamssfkf7lf7cf7@vireshk-i7>
+ <CAPDyKFrZqWtZOp4MwDN6fShoLLbw5NM039bpE3-shB+fCEZOog@mail.gmail.com>
+ <20210818091417.dvlnsxlgybdsn76x@vireshk-i7>
+ <CAPDyKFrVxhrWGr2pKduehshpLFd_db2NTPGuD7fSqvuHeyzT4w@mail.gmail.com>
+ <f1314a47-9e8b-58e1-7c3f-0afb1ec8e70a@gmail.com>
+ <20210819061617.r4kuqxafjstrv3kt@vireshk-i7>
+ <CAPDyKFpg8ixT4AEjzVLTwQR7Nn9CctjnLCDS5GwkOrAERquyxw@mail.gmail.com>
+ <20210820051843.5mueqpnjbqt3zdzc@vireshk-i7>
+ <CAPDyKFo0rzHT4AhueWjyz9k2ZqUy8N6Od5pbr8sL_m0Jf2AwUg@mail.gmail.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <acd25387-3d2b-460d-3280-eedd064b174b@gmail.com>
-Date:   Mon, 23 Aug 2021 21:54:41 +0300
+Message-ID: <085d1a2e-57b0-222e-c569-12f3c6bc8161@gmail.com>
+Date:   Mon, 23 Aug 2021 23:24:02 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <YSOxnqiia+FqfOX6@orome.fritz.box>
+In-Reply-To: <CAPDyKFo0rzHT4AhueWjyz9k2ZqUy8N6Od5pbr8sL_m0Jf2AwUg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -105,54 +107,58 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-23.08.2021 17:33, Thierry Reding пишет:
-> On Sat, Aug 21, 2021 at 08:45:54PM +0300, Dmitry Osipenko wrote:
->> 20.08.2021 16:08, Ulf Hansson пишет:
->> ...
->>>> I suppose if there's really no good way of doing this other than
->>>> providing a struct device, then so be it. I think the cleaned up sysfs
->>>> shown in the summary above looks much better than what the original
->>>> would've looked like.
->>>>
->>>> Perhaps an additional tweak to that would be to not create platform
->>>> devices. Instead, just create struct device. Those really have
->>>> everything you need (.of_node, and can be used with RPM and GENPD). As I
->>>> mentioned earlier, platform device implies a CPU-memory-mapped bus,
->>>> which this clearly isn't. It's kind of a separate "bus" if you want, so
->>>> just using struct device directly seems more appropriate.
->>>
->>> Just a heads up. If you don't use a platform device or have a driver
->>> associated with it for probing, you need to manage the attachment to
->>> genpd yourself. That means calling one of the dev_pm_domain_attach*()
->>> APIs, but that's perfectly fine, ofcourse.
->>>
->>>>
->>>> We did something similar for XUSB pads, see drivers/phy/tegra/xusb.[ch]
->>>> for an example of how that was done. I think you can do something
->>>> similar here.
->>
->> We need a platform device because we have a platform device driver that
->> must be bound to the device, otherwise PMC driver state won't be synced
->> since it it's synced after all drivers of devices that reference PMC
->> node in DT are probed.
+20.08.2021 15:57, Ulf Hansson пишет:
+...
+>> We already have similar APIs, so that won't be a problem. We also have
+>> a mechanism inside the OPP core, frequency based, which is used to
+>> guess the current OPP. Maybe we can enhance and use that directly
+>> here.
 > 
-> I think the causality is the wrong way around. It's more likely that you
-> added the platform driver because you have a platform device that you
-> want to bind against.
+> After reading the last reply from Dmitry, I am starting to think that
+> the problem he is facing can be described and solved in a much easier
+> way.
 > 
-> You can have drivers bind to other types of devices, although it's a bit
-> more work than abusing platform devices for it.
+> If I am correct, it looks like we don't need to add APIs to get OPPs
+> for a clock rate or set initial performance state values according to
+> the HW in genpd.
 > 
-> There's the "auxiliary" bus that seems like it would be a somewhat
-> better fit (see Documentation/driver-api/auxiliary_bus.rst), though it
-> doesn't look like this fits the purpose exactly. I think a custom bus
-> (or perhaps something that could be deployed more broadly across CCF)
-> would be more appropriate.
-> 
-> Looking around, it seems like clk/imx and clk/samsung abuse the platform
-> bus in a similar way, so they would benefit from a "clk" bus as well.
+> See my other response to Dmitry, let's see where that leads us.
 
-It may be nice to have a dedicated clk bus, but this is too much effort
-for nearly nothing in our case. It shouldn't be a problem to convert
-drivers to use clk bus once it will be implemented. It shouldn't be a
-part of this series, IMO.
+I'm going to start preparing v9 with GENPD performance state syncing moved into driver's probe where appropriate.
+
+It's not clear to me whether it will be okay to add a generic OPP syncing by clock rate or should it be a Tegra-specific helper. Viresh, what do you think about this generic OPP helper:
+
+/**
+ * dev_pm_opp_sync_with_clk_rate() - Sync OPP state with clock rate
+ * @dev:	device for which we do this operation
+ *
+ * Sync OPP table state with the current clock rate of device.
+ *
+ * Return: 0 on success or a negative error value.
+ */
+int dev_pm_opp_sync_with_clk_rate(struct device *dev)
+{
+	struct opp_table *opp_table;
+	int ret = 0;
+
+	/* Device may not have OPP table */
+	opp_table = _find_opp_table(dev);
+	if (IS_ERR(opp_table))
+		return 0;
+
+	/* Device may not use clock */
+	if (IS_ERR(opp_table->clk))
+		goto put_table;
+
+	/* Device may have empty OPP table */
+	if (!_get_opp_count(opp_table))
+		goto put_table;
+
+	ret = dev_pm_opp_set_rate(dev, clk_get_rate(opp_table->clk));
+put_table:
+	/* Drop reference taken by _find_opp_table() */
+	dev_pm_opp_put_opp_table(opp_table);
+
+	return ret;
+}
+EXPORT_SYMBOL_GPL(dev_pm_opp_sync_with_clk_rate);
