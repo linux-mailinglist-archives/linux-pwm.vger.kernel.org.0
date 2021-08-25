@@ -2,57 +2,56 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D6D13F5675
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Aug 2021 05:07:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAC5B3F7225
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Aug 2021 11:45:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234486AbhHXDIX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Aug 2021 23:08:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60940 "EHLO
+        id S239675AbhHYJpx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 25 Aug 2021 05:45:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235244AbhHXDF5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Aug 2021 23:05:57 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFCD2C0612AF
-        for <linux-pwm@vger.kernel.org>; Mon, 23 Aug 2021 20:04:24 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id c4so11363863plh.7
-        for <linux-pwm@vger.kernel.org>; Mon, 23 Aug 2021 20:04:24 -0700 (PDT)
+        with ESMTP id S236314AbhHYJpu (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Aug 2021 05:45:50 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74419C0613C1;
+        Wed, 25 Aug 2021 02:45:04 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id g13so51592399lfj.12;
+        Wed, 25 Aug 2021 02:45:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ftVLBcz2CA6HVw5Sak06NSKiX7H+vKeynT4dia9GcmU=;
-        b=k+9ugNQMNP1T757zCmBjD0HZ4Cm6T3BE+v/X7Wxf65qXhZ4Y1Om/ZwreVVsFldU5ED
-         26Au5VziBd3fTRw9qajnc5Q1bzTZtCXlNbNzYEhhdrLy0j6q3RP41Bfsx2Vet4JiZwHE
-         HpssKarI+iW9nKfS+aZW4kug15wwleM1PIEsfGzs+E/ENGb7NoFhvlaUVQuCR3IWspbE
-         1jdc92yTGvHUY8w5qgAHpd6F4jZjsLSyz7OphX6zYHG1h8uepViMakkTUt9Apji0AqlD
-         h496UE7ulnKIyaYIIz+9WlMWKL7f+UCly0DgUoeMlhVK/OeculmtFoztQ69V1z3oNjW5
-         BaQw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=E7cNoLLVAVafjNCc4brMRUN01zZAHm0abXpnMpPuTt4=;
+        b=XcByKSJRdga/HRYU9DdYIrJkJ5aCKCn6sFPQhJpp+zqLBFptssdthmbwTTqrJU2O1y
+         Fh9T4cOSANuA0NBWqKrxyE6rpE3VUg9YurSVTT9N3ewKp/QELYAgj+C6HkBCJMlVTiOb
+         M7DocgSIXf8gWx7DP6hz+XSoX32UueKJZitZdD1fhIKA/N5U6YwHLEpd41Qt4bCHL0G4
+         ZtJc+vpaJ07T3DdXx/qHSdSN5QI3+K4IqS5ki+/rdR5v1sPFOYpfj0rw4qkKgMj2ioo3
+         hQKDnoVXbW3M/+9DGxJ8r4dLnR6TG4RgZNyl3L7PnWj5GlgkD82og3xcltkjAKoMzhav
+         ZUNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ftVLBcz2CA6HVw5Sak06NSKiX7H+vKeynT4dia9GcmU=;
-        b=olqVrvszlaCPm87gsjiuzBtW4O39/1fcxOYBQ/fHdLrLuViwCWJ45v145j0j6xV9ld
-         18QE/GECHMtm+oJrCKLTSMmY734yzOjQTOMpfk7/g+HQmtgD6xB3a1GsVdmvCU2ptmXU
-         IQj0x3MEn4wM6cZ9tSHpVpn6nnhlZvQvk2o3WDkUK/uyc6dNwNVZKKHGQayg+r8QWpoG
-         9bpFwmTcNlDQBlxA2QLZn4EruMXpYA01ROTaWoQGtQRc9nah/tGdl7NgkJp9V1dprTE4
-         QtL1ZqZ0ZUujaeeV2Pl8+oLUnkkuPSM73gohTYGZD4NKTWLRAlAnaZ/GqzTOi8cndXRs
-         KyKg==
-X-Gm-Message-State: AOAM533UEIjNdSwDRx9D4dPqPIB1gfMnOYIt4BrgX9bYSIqPRt1CPYzc
-        J4Mjpp0wQXmgt95wt+acRMNuvQ==
-X-Google-Smtp-Source: ABdhPJxgNZPrPk9tzmxpkCehrPdfFes88M8DqFhHlA/X7V8qZTGRmqZiqGy9NJMzzCPLtwobPdjSGw==
-X-Received: by 2002:a17:902:e547:b029:12c:563c:4a03 with SMTP id n7-20020a170902e547b029012c563c4a03mr30922945plf.46.1629774264209;
-        Mon, 23 Aug 2021 20:04:24 -0700 (PDT)
-Received: from localhost ([122.172.201.85])
-        by smtp.gmail.com with ESMTPSA id c12sm16184839pfl.56.2021.08.23.20.04.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Aug 2021 20:04:23 -0700 (PDT)
-Date:   Tue, 24 Aug 2021 08:34:21 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E7cNoLLVAVafjNCc4brMRUN01zZAHm0abXpnMpPuTt4=;
+        b=kX4mhi2MEArMqlWwXAvwxKRSEGu+orZ+Tb20DbE0/SOUaNzKWrsE/Cfehguc/rRhAx
+         5wg+NHNHglmQxJ/xrBtTAa6NKP6vSBhpeOYYAna1nYPg8RJPLP9VwIFWyfByBDZ8bWT1
+         qIGnMJpK/7dNAliMmJWJ4MjLjoc/dCHFg9i2BEwNUjkL45XqirzVQXiFLAnybxVFBbE0
+         BtuMCnZ9i+BhxsXFlDe2MmFHhaaBT8ShJQP23ucacRTknPY93RcwHNL1j4lLNbWRLFDp
+         DpY5qorjFG/sdu3Yjd3mYpe4j+WqkBHXrHibLHIOiXEuChK8vvobOqMiMSIjiX7t6NCr
+         dcQA==
+X-Gm-Message-State: AOAM531C/U/yonuXTKSRver+ew/62xRu4iNGbFSP/+qgAQLozoW8b3KW
+        Cv2O9UMmJdQ27ENyPf+g4NIBuVpHmus=
+X-Google-Smtp-Source: ABdhPJxxgQwWKc4KlfaiaB2F9L+jo3PpEaZtT5gXKDmMvuZmO5i5+f3TfZJ4xZuLO6DnWagwNOSZkQ==
+X-Received: by 2002:a05:6512:3190:: with SMTP id i16mr32170681lfe.340.1629884702691;
+        Wed, 25 Aug 2021 02:45:02 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-17-251.dynamic.spd-mgts.ru. [94.29.17.251])
+        by smtp.googlemail.com with ESMTPSA id z13sm2103349ljj.43.2021.08.25.02.45.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Aug 2021 02:45:02 -0700 (PDT)
+Subject: Re: [PATCH v8 20/34] mmc: sdhci-tegra: Add runtime PM and OPP support
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Viresh Kumar <vireshk@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>,
         Peter De Schrijver <pdeschrijver@nvidia.com>,
@@ -60,8 +59,8 @@ Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
         Peter Chen <peter.chen@kernel.org>,
         Mark Brown <broonie@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Nishanth Menon <nm@ti.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Richard Weinberger <richard@nod.at>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -70,78 +69,102 @@ Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-usb@vger.kernel.org,
         linux-staging@lists.linux.dev, linux-spi@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH v8 01/34] opp: Add dev_pm_opp_sync() helper
-Message-ID: <20210824030421.3tjfjkx3c2silbnz@vireshk-i7>
-References: <20210818062723.dqamssfkf7lf7cf7@vireshk-i7>
- <CAPDyKFrZqWtZOp4MwDN6fShoLLbw5NM039bpE3-shB+fCEZOog@mail.gmail.com>
- <20210818091417.dvlnsxlgybdsn76x@vireshk-i7>
- <CAPDyKFrVxhrWGr2pKduehshpLFd_db2NTPGuD7fSqvuHeyzT4w@mail.gmail.com>
- <f1314a47-9e8b-58e1-7c3f-0afb1ec8e70a@gmail.com>
- <20210819061617.r4kuqxafjstrv3kt@vireshk-i7>
- <CAPDyKFpg8ixT4AEjzVLTwQR7Nn9CctjnLCDS5GwkOrAERquyxw@mail.gmail.com>
- <20210820051843.5mueqpnjbqt3zdzc@vireshk-i7>
- <CAPDyKFo0rzHT4AhueWjyz9k2ZqUy8N6Od5pbr8sL_m0Jf2AwUg@mail.gmail.com>
- <085d1a2e-57b0-222e-c569-12f3c6bc8161@gmail.com>
+        linux-mmc@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org
+References: <20210817012754.8710-1-digetx@gmail.com>
+ <20210817012754.8710-21-digetx@gmail.com> <YR6O9Om+HzMMG8AR@orome.fritz.box>
+ <05b7ff28-4c01-fb56-deeb-595a5797394b@gmail.com>
+ <YR+TgfCHKOPS3Ng8@orome.fritz.box>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <5a15647c-bc6a-294d-61c8-91efa33c681e@gmail.com>
+Date:   Wed, 25 Aug 2021 12:45:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <085d1a2e-57b0-222e-c569-12f3c6bc8161@gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <YR+TgfCHKOPS3Ng8@orome.fritz.box>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 23-08-21, 23:24, Dmitry Osipenko wrote:
-> It's not clear to me whether it will be okay to add a generic OPP syncing by clock rate or should it be a Tegra-specific helper. Viresh, what do you think about this generic OPP helper:
+20.08.2021 14:35, Thierry Reding пишет:
+> On Fri, Aug 20, 2021 at 01:37:13AM +0300, Dmitry Osipenko wrote:
+>> 19.08.2021 20:03, Thierry Reding пишет:
+>>> On Tue, Aug 17, 2021 at 04:27:40AM +0300, Dmitry Osipenko wrote:
+>>>> The SDHCI on Tegra belongs to the core power domain and we're going to
+>>>> enable GENPD support for the core domain. Now SDHCI must be resumed using
+>>>> runtime PM API in order to initialize the SDHCI power state. The SDHCI
+>>>> clock rate must be changed using OPP API that will reconfigure the power
+>>>> domain performance state in accordance to the rate. Add runtime PM and OPP
+>>>> support to the SDHCI driver.
+>>>>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  drivers/mmc/host/sdhci-tegra.c | 146 ++++++++++++++++++++++++---------
+>>>>  1 file changed, 105 insertions(+), 41 deletions(-)
+>>>>
+>>>> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+>>>> index 387ce9cdbd7c..a3583359c972 100644
+>>>> --- a/drivers/mmc/host/sdhci-tegra.c
+>>>> +++ b/drivers/mmc/host/sdhci-tegra.c
+>>>> @@ -15,6 +15,8 @@
+>>>>  #include <linux/of.h>
+>>>>  #include <linux/of_device.h>
+>>>>  #include <linux/pinctrl/consumer.h>
+>>>> +#include <linux/pm_opp.h>
+>>>> +#include <linux/pm_runtime.h>
+>>>>  #include <linux/regulator/consumer.h>
+>>>>  #include <linux/reset.h>
+>>>>  #include <linux/mmc/card.h>
+>>>> @@ -24,6 +26,8 @@
+>>>>  #include <linux/gpio/consumer.h>
+>>>>  #include <linux/ktime.h>
+>>>>  
+>>>> +#include <soc/tegra/common.h>
+>>>> +
+>>>>  #include "sdhci-pltfm.h"
+>>>>  #include "cqhci.h"
+>>>>  
+>>>> @@ -123,6 +127,12 @@
+>>>>  					 SDHCI_TRNS_BLK_CNT_EN | \
+>>>>  					 SDHCI_TRNS_DMA)
+>>>>  
+>>>> +enum {
+>>>> +	TEGRA_CLK_BULK_SDHCI,
+>>>> +	TEGRA_CLK_BULK_TMCLK,
+>>>> +	TEGRA_CLK_BULK_NUM,
+>>>> +};
+>>>> +
+>>>>  struct sdhci_tegra_soc_data {
+>>>>  	const struct sdhci_pltfm_data *pdata;
+>>>>  	u64 dma_mask;
+>>>> @@ -171,6 +181,8 @@ struct sdhci_tegra {
+>>>>  	bool enable_hwcq;
+>>>>  	unsigned long curr_clk_rate;
+>>>>  	u8 tuned_tap_delay;
+>>>> +
+>>>> +	struct clk_bulk_data clocks[TEGRA_CLK_BULK_NUM];
+>>>
+>>> This doesn't seem worth it to me. There's a lot of churn in this driver
+>>> that's only needed to convert this to the clk_bulk API and it makes the
+>>> code a lot more difficult to read, in my opinion.
+>>>
+>>> It looks like the only benefit that this gives us is that runtime
+>>> suspend and resume become a few lines shorter.
+>>
+>> The driver probe code looks cleaner with that. You should be looking at
+>> the final result and not at the patch to see it.
 > 
-> /**
->  * dev_pm_opp_sync_with_clk_rate() - Sync OPP state with clock rate
->  * @dev:	device for which we do this operation
->  *
->  * Sync OPP table state with the current clock rate of device.
->  *
->  * Return: 0 on success or a negative error value.
->  */
-> int dev_pm_opp_sync_with_clk_rate(struct device *dev)
-> {
-> 	struct opp_table *opp_table;
-> 	int ret = 0;
-> 
-> 	/* Device may not have OPP table */
-> 	opp_table = _find_opp_table(dev);
-> 	if (IS_ERR(opp_table))
-> 		return 0;
-> 
-> 	/* Device may not use clock */
-> 	if (IS_ERR(opp_table->clk))
-> 		goto put_table;
-> 
-> 	/* Device may have empty OPP table */
-> 	if (!_get_opp_count(opp_table))
-> 		goto put_table;
-> 
-> 	ret = dev_pm_opp_set_rate(dev, clk_get_rate(opp_table->clk));
-> put_table:
-> 	/* Drop reference taken by _find_opp_table() */
-> 	dev_pm_opp_put_opp_table(opp_table);
-> 
-> 	return ret;
-> }
-> EXPORT_SYMBOL_GPL(dev_pm_opp_sync_with_clk_rate);
+> I did look at the final result and didn't find it cleaner at all. =)
 
-I am not sure why you still need this, hope we were going another way
-? Anyway I will have a look at what you have posted now.
-
--- 
-viresh
+There is UAF bug in this patch that was spotted by kasan. The
+sdhci_tegra_soc_data isn't resource-managed, but clk_bulk_data is. I'm
+now thinking that it should be okay to keep tmclk always-on, so I'll
+replace the bulk clks back with the sdhci clk in v9.
