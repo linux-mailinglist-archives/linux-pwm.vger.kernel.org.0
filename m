@@ -2,181 +2,214 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 665D73FCD63
-	for <lists+linux-pwm@lfdr.de>; Tue, 31 Aug 2021 21:20:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C53D3FCE31
+	for <lists+linux-pwm@lfdr.de>; Tue, 31 Aug 2021 22:11:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234715AbhHaTD0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 31 Aug 2021 15:03:26 -0400
-Received: from mail-ot1-f43.google.com ([209.85.210.43]:34768 "EHLO
-        mail-ot1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239894AbhHaTDZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 31 Aug 2021 15:03:25 -0400
-Received: by mail-ot1-f43.google.com with SMTP id k12-20020a056830150c00b0051abe7f680bso432041otp.1;
-        Tue, 31 Aug 2021 12:02:30 -0700 (PDT)
+        id S232808AbhHaUMc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 31 Aug 2021 16:12:32 -0400
+Received: from mail-ot1-f47.google.com ([209.85.210.47]:46634 "EHLO
+        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232018AbhHaUMc (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 31 Aug 2021 16:12:32 -0400
+Received: by mail-ot1-f47.google.com with SMTP id v33-20020a0568300921b0290517cd06302dso599080ott.13;
+        Tue, 31 Aug 2021 13:11:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=g/wylqfbU2Ds4hPrqFZcDGrgHpasbQqYBGt6ciPf6Ao=;
-        b=C+5NmTp7GacbLtFpGLKYv8XdxPwLxeBKRscZaUuuXSKAxn353jxade3LwQGRWYTTUB
-         bkGubHh3sml5S52lnySiRiLeGcz6Ebp3gy5Z9OcfIfcsqKSWsLGAcntWlC4Ju5JngjDY
-         TBl47wSbX0uxxx/UoawKSncNG3jw/TBiZiHXUGxVTl0/ff65M1/BFXGiOTdriDtvpTD5
-         bLURnNpY+IZoEDKUALdqj9oxV8TMFigwKOx53+EljQEtdHz/dI7xhM0DRPJaG+TQlHao
-         iorv0yTC6biXjmAlpZGUkVHacF3CitJLSPdOqQ4zzANP0KgHofWNHZvkuHpOe38LFQJH
-         867Q==
-X-Gm-Message-State: AOAM532u1rDuv5xiQMsEUoeQX3PMxW9Eawju66rrgpFi4TK7Eze3twAk
-        A6fCt1Of2bzmT4pLOdQoPw==
-X-Google-Smtp-Source: ABdhPJxmCHqLpisbCFuJaaVwlzf2HYOCGHVpu86uYy6MTZoZPDeQ6ydgSLYpeUkyXZK5Gs5GmKFt7g==
-X-Received: by 2002:a9d:7d85:: with SMTP id j5mr25303816otn.164.1630436549707;
-        Tue, 31 Aug 2021 12:02:29 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to;
+        bh=xDJ0PmrfTNmUKd+WiQbtsbJY13YkKv2W/xQT4TLd1m8=;
+        b=dIktUSgiH8DoGBEswOa3wh0P/d6ll8LW5GsiBh69orjfTNjk3s0LQacvOK93tij0HC
+         AKl6KIiVyme9NyE+cLcXnd6E6IugE+QTwr/lWuLeI3E9/+Ox7JhSm/pf86yhoqv28v8f
+         VFU905jNRbmzYIY2fxZUdWT8YC/+sUTrbiOSGHpVPbCGhuksoWroqV5irBG65VLfx7o/
+         HF7/a1oHpjrnc7Xznglju4xm8NIktnsvzpcyIsf2iCV75dMkmFJdjR+A1RDx03UvNnDr
+         uDgysI0/uGogvxcDYR4kE+8mSXAJ04Tv1VDIG5R/EWQHhrX9eKFKm1DWGY1diTVPhm6V
+         1W7g==
+X-Gm-Message-State: AOAM531kAzRQ7ddgW2S22X9pG/5FeSY9LFBZwcMU/vr113RQpwcaZPXb
+        0NwhBy9uKSaA4mM5ybirVA==
+X-Google-Smtp-Source: ABdhPJymWrZnT1U/ezUhueNwXieCLmJl8C0jQHRuWUEasrp1MJVlGEmUgItUJ5tc95ePvqM2m8Rs8g==
+X-Received: by 2002:a9d:17c5:: with SMTP id j63mr25565229otj.208.1630440696001;
+        Tue, 31 Aug 2021 13:11:36 -0700 (PDT)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id 4sm3768624ooa.11.2021.08.31.12.02.28
+        by smtp.gmail.com with ESMTPSA id b24sm3814403oic.33.2021.08.31.13.11.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Aug 2021 12:02:29 -0700 (PDT)
-Received: (nullmailer pid 479023 invoked by uid 1000);
-        Tue, 31 Aug 2021 19:02:28 -0000
-Date:   Tue, 31 Aug 2021 14:02:28 -0500
+        Tue, 31 Aug 2021 13:11:35 -0700 (PDT)
+Received: (nullmailer pid 575853 invoked by uid 1000);
+        Tue, 31 Aug 2021 20:11:34 -0000
+Date:   Tue, 31 Aug 2021 15:11:34 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+To:     Sean Anderson <sean.anderson@seco.com>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Alvaro Gamez <alvaro.gamez@hazent.com>,
         Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Balaji Prakash J <bjagadee@codeaurora.org>,
-        Robert Marko <robert.marko@sartura.hr>,
-        Kathiravan T <kathirav@codeaurora.org>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 3/4] dt-bindings: pwm: add IPQ6018 binding
-Message-ID: <YS58xAit1UrEtd0v@robh.at.kernel.org>
-References: <5c95bcf62a9d08208a7da19f0b1cec0689502b9a.1630323987.git.baruch@tkos.co.il>
- <8238dfb5d5e4a40a995f047db36d9a7240431de5.1630323987.git.baruch@tkos.co.il>
+        <u.kleine-koenig@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Lee Jones <lee.jones@linaro.org>, michal.simek@xilinx.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/3] dt-bindings: pwm: Add Xilinx AXI Timer
+Message-ID: <YS6M9jmTmy4EvB4k@robh.at.kernel.org>
+References: <20210826211830.3311140-1-sean.anderson@seco.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8238dfb5d5e4a40a995f047db36d9a7240431de5.1630323987.git.baruch@tkos.co.il>
+In-Reply-To: <20210826211830.3311140-1-sean.anderson@seco.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Aug 30, 2021 at 02:46:26PM +0300, Baruch Siach wrote:
-> DT binding for the PWM block in Qualcomm IPQ6018 SoC.
+On Thu, Aug 26, 2021 at 05:18:28PM -0400, Sean Anderson wrote:
+> This adds a binding for the Xilinx LogiCORE IP AXI Timer. This device is a
+> "soft" block, so it has some parameters which would not be configurable in
+> most hardware. This binding is usually automatically generated by Xilinx's
+> tools, so the names and values of some properties should be kept as they
+> are, if possible. In addition, this binding is already in the kernel at
+> arch/microblaze/boot/dts/system.dts, and in user software such as QEMU.
 > 
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> The existing driver uses the clock-frequency property, or alternatively the
+> /cpus/timebase-frequency property as its frequency input. Because these
+> properties are deprecated, they have not been included with this schema.
+> All new bindings should use the clocks/clock-names properties to specify
+> the parent clock.
+> 
+> Because we need to init timer devices so early in boot, we determine if we
+> should use the PWM driver or the clocksource/clockevent driver by the
+> presence/absence, respectively, of #pwm-cells. Because both counters are
+> used by the PWM, there is no need for a separate property specifying which
+> counters are to be used for the PWM.
+> 
+> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
 > ---
-> This series does not convert the TCSR binding documentation to YAML. As
-> a result, this commit adds new a dt_binding_check warning:
 > 
-> /example-0/syscon@1937000: failed to match any schema with compatible: ['qcom,tcsr-ipq 6018', 'syscon', 'simple-mfd']
+> Changes in v6:
+> - Fix incorrect schema id
+> - Enumerate possible counter widths
 > 
-> If that is a blocker to IPQ6018 PWM support, so be it. Patches will wait
-> for someone else to push them further.
+> Changes in v5:
+> - Update commit message to reflect revisions
+> - Fix indentation lint
+> - Add example for timer binding
+> - Remove xlnx,axi-timer-2.0 compatible string
+> - Move schema into the timer directory
 > 
-> v8:
+> Changes in v4:
+> - Remove references to generate polarity so this can get merged
+> - Predicate PWM driver on the presence of #pwm-cells
+> - Make some properties optional for clocksource drivers
 > 
->   Add size cell to 'reg' (Rob)
+> Changes in v3:
+> - Mark all boolean-as-int properties as deprecated
+> - Add xlnx,pwm and xlnx,gen?-active-low properties.
+> - Make newer replacement properties mutually-exclusive with what they
+>   replace
+> - Add an example with non-deprecated properties only.
 > 
-> v7:
+> Changes in v2:
+> - Use 32-bit addresses for example binding
 > 
->   Use 'reg' instead of 'offset' (Rob)
+>  .../bindings/timer/xlnx,xps-timer.yaml        | 90 +++++++++++++++++++
+>  1 file changed, 90 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
 > 
->   Drop 'clock-names' and 'assigned-clock*' (Bjorn)
-> 
->   Use single cell address/size in example node (Bjorn)
-> 
->   Move '#pwm-cells' lower in example node (Bjorn)
-> 
->   List 'reg' as required
-> 
-> v6:
-> 
->   Device node is child of TCSR; remove phandle (Rob Herring)
-> 
->   Add assigned-clocks/assigned-clock-rates (Uwe Kleine-König)
-> 
-> v5: Use qcom,pwm-regs for phandle instead of direct regs (Bjorn
->     Andersson, Kathiravan T)
-> 
-> v4: Update the binding example node as well (Rob Herring's bot)
-> 
-> v3: s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
-> 
-> v2: Make #pwm-cells const (Rob Herring)
-> ---
->  .../devicetree/bindings/pwm/ipq-pwm.yaml      | 52 +++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml b/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
+> diff --git a/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml b/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
 > new file mode 100644
-> index 000000000000..96bc63e336bf
+> index 000000000000..5be353a642aa
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
-> @@ -0,0 +1,52 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +++ b/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
+> @@ -0,0 +1,90 @@
+> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/pwm/ipq-pwm.yaml#
+> +$id: http://devicetree.org/schemas/timer/xlnx,xps-timer.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Qualcomm IPQ6018 PWM controller
+> +title: Xilinx LogiCORE IP AXI Timer Device Tree Binding
 > +
 > +maintainers:
-> +  - Baruch Siach <baruch@tkos.co.il>
+> +  - Sean Anderson <sean.anderson@seco.com>
 > +
 > +properties:
-> +  "#pwm-cells":
-> +    const: 2
-> +
 > +  compatible:
-> +    const: qcom,ipq6018-pwm
-> +
-> +  reg:
-> +    description: Offset of PWM register in the TCSR block.
-> +    maxItems: 1
+> +    contains:
+> +      const: xlnx,xps-timer-1.00.a
 > +
 > +  clocks:
 > +    maxItems: 1
 > +
+> +  clock-names:
+> +    const: s_axi_aclk
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  xlnx,count-width:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [8, 16, 32]
+> +    default: 32
+> +    description:
+> +      The width of the counter(s), in bits.
+> +
+> +  xlnx,one-timer-only:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [ 0, 1 ]
+> +    description:
+> +      Whether only one timer is present in this block.
+> +
 > +required:
 > +  - compatible
 > +  - reg
-> +  - clocks
-> +  - "#pwm-cells"
+> +  - xlnx,one-timer-only
 > +
-> +additionalProperties: false
+> +allOf:
+> +  - if:
+> +      required:
+> +        - '#pwm-cells'
+> +    then:
+> +      allOf:
+> +        - required:
+> +            - clocks
+> +        - properties:
+> +            xlnx,one-timer-only:
+> +              const: 0
+> +    else:
+> +      required:
+> +        - interrupts
+> +  - if:
+> +      required:
+> +        - clocks
+> +    then:
+> +      required:
+> +        - clock-names
+> +
+> +additionalProperties: true
+
+This needs to be false. What else do you expect to be present?
+
 > +
 > +examples:
 > +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
+> +    timer@800e0000 {
+> +        clock-names = "s_axi_aclk";
+> +        clocks = <&zynqmp_clk 71>;
+> +        compatible = "xlnx,xps-timer-1.00.a";
+> +        reg = <0x800e0000 0x10000>;
+> +        interrupts = <0 39 2>;
+> +        xlnx,count-width = <16>;
+> +        xlnx,one-timer-only = <0x0>;
+> +    };
 > +
-> +    tcsr: syscon@1937000 {
-
-Drop unused (by the example) labels.
-
-> +        compatible = "qcom,tcsr-ipq6018", "syscon", "simple-mfd";
-> +        reg = <0x01937000 0x21000>;
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-
-           ranges = <0 0x1937000 0x21000>;
-
-Otherwise, the address is not translatable.
-
-> +
-> +        pwm: pwm@a010 {
-> +            compatible = "qcom,ipq6018-pwm";
-> +            reg = <0xa010 0x20>;
-> +            clocks = <&gcc GCC_ADSS_PWM_CLK>;
-> +            assigned-clocks = <&gcc GCC_ADSS_PWM_CLK>;
-> +            assigned-clock-rates = <100000000>;
-> +            #pwm-cells = <2>;
-> +        };
+> +    timer@800f0000 {
+> +        #pwm-cells = <0>;
+> +        clock-names = "s_axi_aclk";
+> +        clocks = <&zynqmp_clk 71>;
+> +        compatible = "xlnx,xps-timer-1.00.a";
+> +        reg = <0x800e0000 0x10000>;
+> +        xlnx,count-width = <32>;
+> +        xlnx,one-timer-only = <0x0>;
 > +    };
 > -- 
-> 2.33.0
+> 2.25.1
 > 
 > 
