@@ -2,103 +2,91 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 573513FD70A
-	for <lists+linux-pwm@lfdr.de>; Wed,  1 Sep 2021 11:42:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D5C73FE200
+	for <lists+linux-pwm@lfdr.de>; Wed,  1 Sep 2021 20:11:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243697AbhIAJnZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 1 Sep 2021 05:43:25 -0400
-Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:49642
-        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S243021AbhIAJnY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Sep 2021 05:43:24 -0400
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id C60E340190
-        for <linux-pwm@vger.kernel.org>; Wed,  1 Sep 2021 09:42:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1630489345;
-        bh=Y3RQ54Zm5OFe9AQSuUGmYtHrFrafqN10VZzfx08OW4s=;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-         In-Reply-To:Content-Type;
-        b=ptEwrW+rV4ihnJssfFSdhJjffO4KlZ3CErO5I2fNT3tkhVC/nek8aIRQEP4JMgZOv
-         LoreR12QX0VFgQhAw5Ex7ei7zG8yeEPQmYOt7OfColIUPDGIvkpqjyd+2JtcTJFQB4
-         UiAMRZ91Jv6ClulUOX3R4vZmXXwlBlS80lnM9yz6/H43onTRYY5GiT5rqyOnLUjeQ0
-         hT20eYMNBeRE8MqXRrmv8z7+OHzqWFvaipIlirOgSo3VPvv4YlhcLHYcYqO1EtLWQw
-         rFYGztgDiKx4gE1cxvXokwANYTKuaor2ZEkp1g0yXyk5JTLUQL0gpIXRnNreE6MSbF
-         h/x52xI7FI/uQ==
-Received: by mail-wm1-f70.google.com with SMTP id x125-20020a1c3183000000b002e73f079eefso2594867wmx.0
-        for <linux-pwm@vger.kernel.org>; Wed, 01 Sep 2021 02:42:25 -0700 (PDT)
+        id S1345009AbhIASMa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 1 Sep 2021 14:12:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1346754AbhIASMX (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Sep 2021 14:12:23 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D76EC0612A3
+        for <linux-pwm@vger.kernel.org>; Wed,  1 Sep 2021 11:11:23 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id e7so303576pgk.2
+        for <linux-pwm@vger.kernel.org>; Wed, 01 Sep 2021 11:11:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=2joGkq8i8C5vglZO1FYNTlWqLyr4vSiCXKQYXBVnv4Q=;
+        b=LD3mpzy1s09M3e/Eheelu/QMtbN6lrYJQ+S1BsYhmG4zP9OQuKOeD1zHV2lZaK7Hdt
+         vXoBMumPRACuZhnwd8TYAFIvdImPe0Zn4DA41GnzHGsnpDZPE0wUFWVFNzgpxF6bh6D8
+         CVxTiiIN7w8BVpPirFLytZKK2cFqqV6q9qR8cw4XmdYYgGZs+MdnDeP+neEr/SbnLI2h
+         mwT6gqJ8+HvNCQei5Zu6b3U+/YcUOepEDfVn6t0IkNG5YzxTV8mH8IqZ4zEsqBchdgxI
+         E/zGH3KCiuS7UdfEMBVKPbpzhhPyh4quLRALvE4iCHtswqSZDgWUuzksodIw8OWwGR1Z
+         0RlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Y3RQ54Zm5OFe9AQSuUGmYtHrFrafqN10VZzfx08OW4s=;
-        b=RPnsEG8GYFokkhIdC1HXX8M2jG3L4WSxY5DNEI3I4JoT2e3DMzCOaph/ldWicB2Vsl
-         HkgV9UbVnckU6xuiukuke39V1ySdVwacLuAXDSqm/VGydOl317Bn7cPmjftmTTHAsrR2
-         2vvUo7EMww/mGa2v4ecbH4EoI2BUZ0mvKd7cKX4KdREEIrKJUpYain4r+EE6B99LFrFQ
-         gw+fifG+r2qASVPUKT3bpTXEBm+0C7rOjZljyCCk+nhST0y/LmXEzQqyAa6zX+aZe+Bn
-         pjc9r2pzW8QSXdjYWQYBKB05oT2+2mla0ve9TSJd0+oKwt4e480x1aIGDiEz3D3mtQhs
-         pmzg==
-X-Gm-Message-State: AOAM531EyBCYo7yWW+3UyYRLYYk2rVlsNBThHTrxSCVNzCLXsGnqnNch
-        ER8tGCLuCKcLNs5BT2350YTddU1dPM2039qJeGTNaGLp4dkhwNzMs+kBpiJxXuz5OwGBc9uSrwA
-        bJJHlRtkBun+Fe347EBExQUuGrHrV5Kh3MZQcjg==
-X-Received: by 2002:adf:d239:: with SMTP id k25mr9005598wrh.314.1630489344171;
-        Wed, 01 Sep 2021 02:42:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwR0Z0kzD+pLwVC4xGiQJns7caEYN8rRGrEFZPzMKL7gxFfjGtfCH/P6c84n/PyVciuzn525A==
-X-Received: by 2002:adf:d239:: with SMTP id k25mr9005583wrh.314.1630489344007;
-        Wed, 01 Sep 2021 02:42:24 -0700 (PDT)
-Received: from [192.168.3.211] ([79.98.113.172])
-        by smtp.gmail.com with ESMTPSA id y1sm5096157wmq.43.2021.09.01.02.42.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Sep 2021 02:42:23 -0700 (PDT)
-Subject: Re: [PATCH] pwm: samsung: Simplify using devm_pwmchip_add()
-To:     zhaoxiao <zhaoxiao@uniontech.com>, thierry.reding@gmail.com,
-        lee.jones@linaro.org
-Cc:     u.kleine-koenig@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20210901054230.29678-1-zhaoxiao@uniontech.com>
- <79e46f2f-c3ed-d187-2553-e64e0aac4c13@canonical.com>
- <612f43cc.1c69fb81.205fc.d94bSMTPIN_ADDED_BROKEN@mx.google.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Message-ID: <e4d04494-8c49-b1c5-c0f4-165fc59f516a@canonical.com>
-Date:   Wed, 1 Sep 2021 11:42:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=2joGkq8i8C5vglZO1FYNTlWqLyr4vSiCXKQYXBVnv4Q=;
+        b=fjpcvXkjt75hxmo+CuYC7blbWaluHfmae1ZatP3ZWeVuAUJev5jwov/OG3WGqV4+DX
+         y5S21pc8pc3Fn8PzuXnznjS+E1zwnsBUUtgdvWEe4N0Qc6WlZwYXVqTBnWj8J+vKYBM1
+         voQ7+w7EP3+M//c0qBdZNtzCu+augiYvSxUYxRVpxn9L4RKetNXMyrMRUEbTBHgbH4KR
+         BlcIAqSlJhpkIcWpmNMq33hv+b38QpTv/ASz6/XozhLlbUNK3sSqDLiotl8992ttYV9K
+         dcN6ZPsJ1upWwCtKddM1Xl0XOHUJoSP9WqJsjUhEfyOGbbqEqw9klio+jxNRjbWexl6e
+         Zv/g==
+X-Gm-Message-State: AOAM531JZdrrtf3goTqbVaYQVvoIiU+XcniI/Kkg2BA7CtN7cmTMTMz0
+        zJqNZakMz7mFEHF1XRZMc0E1Jsfj+/HKEHUcZ9fjIyT2mnHDYg==
+X-Google-Smtp-Source: ABdhPJwbbBYGjUEQSS3Bb7EfYk34O3AVuG22pVIF78fkATQG8c+PQmeHgcc35+YrriS74Wl5STB8JbzOasp+8kCVBlk=
+X-Received: by 2002:a67:8c5:: with SMTP id 188mr1017695vsi.4.1630519870726;
+ Wed, 01 Sep 2021 11:11:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <612f43cc.1c69fb81.205fc.d94bSMTPIN_ADDED_BROKEN@mx.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Received: by 2002:ab0:740d:0:0:0:0:0 with HTTP; Wed, 1 Sep 2021 11:11:10 -0700 (PDT)
+From:   CorisBank International <corisbankintlbf@gmail.com>
+Date:   Wed, 1 Sep 2021 11:11:10 -0700
+Message-ID: <CA+25hwzjLgVdtDXYWeuqFBTvAbpc4oxK0dW54s7tjGNyU_m0ow@mail.gmail.com>
+Subject: CORISBANK INTERNATIONAL OFFICIAL NOTIFICATION
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 01/09/2021 11:11, zhaoxiao wrote:
-> Thanks for your advices, This patch is modified with reference to the 
-> patch that has been submitted，example:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/commit/?h=staging-testing&id=66a03c4fd9e95e192c574811a1f4ea8f62992358
-> 
-
-The patch there looks correct, but you cannot apply one code pattern to
-entirely different code and hope it works.
-
-You reference a patch in a driver not using drvdata and having only
-pwmchip_remove() in its remove() callback.
-
-Now you apply it to other drivers and:
-1. Remove drvdata even though it is used,
-2. Delete additional code from remove() callback.
-
-Especially the point (2) is a proof that you don't understand the
-fundamental Linux driver model, so please do not convert code into
-devm-like() before learning it.
+Att: Client
 
 
-Best regards,
-Krzysztof
+CORISBANK INTERNATIONAL URGENT NOTIFICATION
+
+Notification / Notification/ Notification
+
+Note, We are writing to inform you officially that Finally the Central
+Bank Financial Authority have approved to transfer your $8.2Million
+which was signed by late Mrs Rose Banneth the COVID.19 victim to
+transfer to you, Late Mrs Rose Banneth the France Lady contacted us to
+transfer her fund in our bank to you for Orphanage work before she
+died by the COVID.19
+and as it is now, you will receive your fund through our corresponding
+bank in Dubai [Emirate Investment Bank ] for security reason. Please
+you should reconfirm your details to receive the $8.2Million.
+
+Name, Country, Address, occupations, Age, Telephone number, account
+Details so that we can immediately forward to the World Bank to
+transfer the fund.
+You are advised to comply on timely manner to permit this esteem bank
+transfer your fund as scheduled.
+
+We look forward to serving you better
+Your Financial Comfort Is A Priority
+Thank you for choosing Corisbank International.
+
+Sincerely,
+
+----
+
+Mr Diakarya Ouattara
+Managing Director
+Bank Coris
+Burkina Faso
++226 556 163 37
+financial_bf_info@accountant.com
