@@ -2,72 +2,154 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B685D3FF541
-	for <lists+linux-pwm@lfdr.de>; Thu,  2 Sep 2021 23:02:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FA25401505
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Sep 2021 04:41:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238888AbhIBVDN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 2 Sep 2021 17:03:13 -0400
-Received: from mail-oi1-f173.google.com ([209.85.167.173]:45609 "EHLO
-        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234242AbhIBVDN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 2 Sep 2021 17:03:13 -0400
-Received: by mail-oi1-f173.google.com with SMTP id q39so4254683oiw.12;
-        Thu, 02 Sep 2021 14:02:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IG8K7Ak73Pm6+oIzwqp5J2waDXTL9oO9Diu9ISkZy4o=;
-        b=GGCm6hYZTDdDa4GUnXp1lxZzLpEvdLCdPujg0H67qVM0HkcsQaaV6zXPrXA8n49om7
-         2LPdvsQHrrhU0aWWZVUdGlacVXbDCeq/ME+E1fMRhzCKDt8ZVQ3drp5mx37DA9DtDVHI
-         lb1p/yubuNt73N9D2w/I9ffV9YSHljnuTMf4F6Q/eQ/d4Rfd91vCB4FbgEnCUIWbstey
-         L4my/kaznfbzH31YVROvTah5tHYhEPlqMuVIaGvj8xlNaT8h7Cia1fjmsg5PrulNXB0b
-         JHt3B6Ewx7z8n9hsyxxYXActIbnEyv4hu0YbBWFEbL6Ttbp1aI1mIE3ht93j0wIRwS1S
-         HWEg==
-X-Gm-Message-State: AOAM5312H3mqECsjw7jfAt9jmd6Ba/FKa9jlgiFvhYC15s8co9p7W3Vj
-        HuXQ+IOu0oAEAjuNUiYYJg==
-X-Google-Smtp-Source: ABdhPJycAPaGXMQZQwQA6zRj5ZZ6eg7ysG9pNURlWAHTcxdaLDZMnVyOZFbf3yHxdVuQhmrWzWJTdQ==
-X-Received: by 2002:a05:6808:10c8:: with SMTP id s8mr188252ois.6.1630616533982;
-        Thu, 02 Sep 2021 14:02:13 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id u27sm581943otj.6.2021.09.02.14.02.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Sep 2021 14:02:13 -0700 (PDT)
-Received: (nullmailer pid 1417644 invoked by uid 1000);
-        Thu, 02 Sep 2021 21:02:12 -0000
-Date:   Thu, 2 Sep 2021 16:02:12 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        Duc Nguyen <duc.nguyen.ub@renesas.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: Re: [PATCH] dt-bindings: pwm: tpu: Add R-Car V3U device tree bindings
-Message-ID: <YTE71AmRgTzhW2PZ@robh.at.kernel.org>
-References: <20210901090719.35375-1-wsa+renesas@sang-engineering.com>
+        id S238796AbhIFCmv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 5 Sep 2021 22:42:51 -0400
+Received: from twspam01.aspeedtech.com ([211.20.114.71]:40722 "EHLO
+        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232050AbhIFCmv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 5 Sep 2021 22:42:51 -0400
+Received: from mail.aspeedtech.com ([192.168.0.24])
+        by twspam01.aspeedtech.com with ESMTP id 1862MODC004631;
+        Mon, 6 Sep 2021 10:22:24 +0800 (GMT-8)
+        (envelope-from billy_tsai@aspeedtech.com)
+Received: from BillyTsai-pc.aspeed.com (192.168.2.149) by TWMBX02.aspeed.com
+ (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 6 Sep
+ 2021 10:41:44 +0800
+From:   Billy Tsai <billy_tsai@aspeedtech.com>
+To:     <lee.jones@linaro.org>, <robh+dt@kernel.org>, <joel@jms.id.au>,
+        <andrew@aj.id.au>, <thierry.reding@gmail.com>,
+        <u.kleine-koenig@pengutronix.de>, <p.zabel@pengutronix.de>,
+        <billy_tsai@aspeedtech.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>
+CC:     <BMC-SW@aspeedtech.com>
+Subject: [v12 0/2] Support pwm driver for aspeed ast26xx
+Date:   Mon, 6 Sep 2021 10:43:37 +0800
+Message-ID: <20210906024339.21124-1-billy_tsai@aspeedtech.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210901090719.35375-1-wsa+renesas@sang-engineering.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [192.168.2.149]
+X-ClientProxiedBy: TWMBX02.aspeed.com (192.168.0.24) To TWMBX02.aspeed.com
+ (192.168.0.24)
+X-DNSRBL: 
+X-MAIL: twspam01.aspeedtech.com 1862MODC004631
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 01 Sep 2021 11:07:19 +0200, Wolfram Sang wrote:
-> From: Duc Nguyen <duc.nguyen.ub@renesas.com>
-> 
-> Add device tree bindings for TPU with the PWM controller found
-> on R-Car V3U SoCs.
-> 
-> Signed-off-by: Duc Nguyen <duc.nguyen.ub@renesas.com>
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+The legacy driver of aspeed pwm is binding with tach controller and it
+doesn't follow the pwm framworks usage. In addition, the pwm register
+usage of the 6th generation of ast26xx has drastic change. So these
+patch serials add the new aspeed pwm driver to fix up the problem above.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Change since v11:
+- pwm-aspeed-ast2600.c
+  - Request reset controller before clock enable.
+
+Change since v10:
+- pwm-aspeed-ast2600.c
+  - Add more comment to explain the feature of PWM
+  - Fix the naming of some parameters.
+  - Set pin_enable and clk_enable at the same time.
+  - Always set fixed divisor to hw register when apply.
+
+Change since v9:
+- dt-bindings:
+  - Change the naming of tach subnode channel setting property to
+  aspeed,tach-ch.
+- pwm-aspeed-ast2600.c
+  - Fix the naming of some parameters.
+  - Capitalise error messages.
+  - Handling potentially mult overflow when .apply
+
+Change since v8:
+- pwm-aspeed-ast2600.c
+  - Replace "* _BITULL(div_h)" to "<< div_h"
+  - Fix duty_cycle precision problem.
+  - Add the comment about the formula of duty_cycle.
+
+Change since v7:
+- pwm-aspeed-g6.c
+  - Rename the driver: pwm-aspeed-g6.c -> pwm-aspeed-ast2600.c.
+  - Macro remove "_CH" part of the register name.
+  - Unroll the aspeed_pwm_get_period and remove it.
+  - Simplify the formula to get duty_pt
+  - Reduce the number of writing register. Organize all the fields and
+    write them at once.
+
+Change since v6:
+- dt-bindings:
+  - Add blank line between each DT property.
+  - Change the sub-node name from fan to tach-ch.
+- pwm-aspeed-g6.c
+  - Merge aspeed_pwm_set_period and aspeed_pwm_set_duty into .apply.
+  - Convert the factor type to u64 when calculating the period value.
+  - Using ROUND_UP strategy to calculate div_h for finer resolution.
+
+Change since v5:
+- pwm-aspeed-g6.c suggested by Uwe Kleine-König
+  - Move the divide at the end of the calculation.
+  - Unified the prefix of the function name.
+  - Use div64_u64 to calculate the divider of frequency.
+
+Change since v4:
+- dt_binding:
+  - pwm/tach yaml: Replace child-node with additionalProperties
+  - pwm-tach yaml: Replace child-node with patternProperties
+- pwm-aspeed-g6.c suggested by Uwe Kleine-König
+  - The bit definitions contained the name of the register.
+  - Remove single caller function and fold it to the caller.
+  - Avoid to divide by the result of a division.
+  - Remove unnecessary condition in .apply().
+  - Use goto for error handling
+
+Changes since v3:
+- Add the dt_binding for aspeed,ast2600-tach.
+- Describe the pwm/tach as child-node of pwm-tach mfd.
+- Complete the properties of pwm node.
+
+Changes since v2:
+- Remove the tach node, #address-cells and #size-cells from pwm-tach.yaml
+- Add clocks and reset properties to pwm-tach.yaml
+- Kconfig/Makfile sorted alphabetically
+- pwm-aspeed-g6.c suggested by Uwe Kleine-König
+  - Add more hardware descriptions at top of the driver.
+  - Remove unused api request and free
+  - Move the initialize settings of all pwm channel to probe.
+  - Change the method of getting the approximate period.
+  - Read the hardware register values to fill the state for .get_state()
+
+Changes since v1:
+- Fix the dt_binding_check fail suggested by Rob Herring
+- Add depends to PWM_ASPEED_G6 configure suggested by Uwe Kleine-Konig
+- pwm-aspeed-g6.c suggested by Uwe Kleine-König
+  - Fix license header
+  - Use bitfiled.h macro to define register fields
+  - Implement .remove device function
+  - Implement .get_state pwm api
+
+Billy Tsai (2):
+  dt-bindings: Add bindings for aspeed pwm-tach.
+  pwm: Add Aspeed ast2600 PWM support
+
+ .../bindings/hwmon/aspeed,ast2600-tach.yaml   |  68 ++++
+ .../bindings/mfd/aspeed,ast2600-pwm-tach.yaml |  76 ++++
+ .../bindings/pwm/aspeed,ast2600-pwm.yaml      |  64 ++++
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-aspeed-ast2600.c              | 327 ++++++++++++++++++
+ 6 files changed, 546 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed,ast2600-tach.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
+ create mode 100644 Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-aspeed-ast2600.c
+
+-- 
+2.25.1
+
