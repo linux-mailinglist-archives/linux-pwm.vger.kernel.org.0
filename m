@@ -2,75 +2,65 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 04D6C4018E9
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Sep 2021 11:37:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F5D5401925
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Sep 2021 11:47:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241166AbhIFJfp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Sep 2021 05:35:45 -0400
-Received: from mail-vs1-f47.google.com ([209.85.217.47]:40709 "EHLO
-        mail-vs1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240959AbhIFJfp (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Sep 2021 05:35:45 -0400
-Received: by mail-vs1-f47.google.com with SMTP id d6so5057526vsr.7;
-        Mon, 06 Sep 2021 02:34:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NQFFfF/zEfdunIfsPpRNYvnpmnwxrhT5skPdL/QrZU8=;
-        b=W1B7RPuakE6pG9YyfC80x9VEyYbatrqG9xKUxoeeN/jRgq3fuV0TNbqdP3KlGva6B/
-         AhWFV4pFiPRszl92ZA/NQYJB+WBAEHdZ7FPsX3HKt0Kr4LQOq9k/XIzpIiAlYhmu0hTg
-         W5U/bXCsfk4kOypu0+omkiJrFwixYB+0gLWVSp3MYXQq8ZcDSkYSkRi0OgLgDZv8TujK
-         H0/awn9AvCm5skxMAfaAIU1iTmobD4UTWCdL5DpohhAUgwu5gDag6VU8NgmVFQWkGWE6
-         Yhl8QQosl4WpWV7pnsAfBhYzYtdoxcsWTGscZ3iYtLcEXLrKwbU0J0kgr2fEPgttjEtO
-         vTFg==
-X-Gm-Message-State: AOAM530fAje6Ji225SMgl+qmjINiCvibSaD79xmal8m2oQAPgt+CNLAa
-        a+bZ4/FLIWRHH1z+hLOaGKwyvbRFUB7cW4EtKrw=
-X-Google-Smtp-Source: ABdhPJz1ocWeEFkxIrA9SNHJmT14JRHyWs9jv7d4wHGq6h4sdG80MQsns9XKDPBrWDGtZftTFUcboWsbGXKVMSXar4A=
-X-Received: by 2002:a67:efd6:: with SMTP id s22mr5344207vsp.50.1630920880515;
- Mon, 06 Sep 2021 02:34:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210901090719.35375-1-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20210901090719.35375-1-wsa+renesas@sang-engineering.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 6 Sep 2021 11:34:29 +0200
-Message-ID: <CAMuHMdVPjuvTDXkvQVz0qwpdu-UQXd5yxZCNG6Fc5BoB1e-oyg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pwm: tpu: Add R-Car V3U device tree bindings
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
-        Duc Nguyen <duc.nguyen.ub@renesas.com>,
+        id S241571AbhIFJq6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Sep 2021 05:46:58 -0400
+Received: from www.zeus03.de ([194.117.254.33]:33648 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S241609AbhIFJq4 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 6 Sep 2021 05:46:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=k1; bh=NLfJgY6uwZTU51uLNvFJ/KrD/C+
+        2m5rzmP5fszb4Cn0=; b=ORiSJsEXFcHmvdlZF2NRJy4B0t5cN0pM/VPOA2CEoIS
+        acBYw484YFygcKRm6BWiKnoNYqfn/fCUVWlPJzSFAl4zHt4lYruXtzw6yKlFwzxQ
+        PAOHhb83HJ4Ok2vhQdEEb550DSXh+hMf2N3i3Zr2M2rJBLTiPOV62SQaOPb4h6gQ
+        =
+Received: (qmail 420914 invoked from network); 6 Sep 2021 11:45:50 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 6 Sep 2021 11:45:50 +0200
+X-UD-Smtp-Session: l3s3148p1@KSuqg1DLCKMgARa4Ra5MAc3ZBYWvSFq1
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     linux-pwm@vger.kernel.org
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: pwm: tpu: Add R-Car M3-W+ device tree bindings
+Date:   Mon,  6 Sep 2021 11:45:35 +0200
+Message-Id: <20210906094536.45223-1-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.30.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Sep 1, 2021 at 11:08 AM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> From: Duc Nguyen <duc.nguyen.ub@renesas.com>
->
-> Add device tree bindings for TPU with the PWM controller found
-> on R-Car V3U SoCs.
->
-> Signed-off-by: Duc Nguyen <duc.nguyen.ub@renesas.com>
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Add device tree bindings for TPU found on R-Car M3-W+ SoCs.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+ Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
+index 0171a04257b8..1f5c6384182e 100644
+--- a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
+@@ -35,6 +35,7 @@ properties:
+           - renesas,tpu-r8a7794   # R-Car E2
+           - renesas,tpu-r8a7795   # R-Car H3
+           - renesas,tpu-r8a7796   # R-Car M3-W
++          - renesas,tpu-r8a77961  # R-Car M3-W+
+           - renesas,tpu-r8a77965  # R-Car M3-N
+           - renesas,tpu-r8a77970  # R-Car V3M
+           - renesas,tpu-r8a77980  # R-Car V3H
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.30.2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
