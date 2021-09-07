@@ -2,111 +2,88 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 620EF4027A5
-	for <lists+linux-pwm@lfdr.de>; Tue,  7 Sep 2021 13:15:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 629A94029D1
+	for <lists+linux-pwm@lfdr.de>; Tue,  7 Sep 2021 15:37:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245424AbhIGLQh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 7 Sep 2021 07:16:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54824 "EHLO
+        id S1343628AbhIGNiw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 7 Sep 2021 09:38:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244318AbhIGLQg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 Sep 2021 07:16:36 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03489C061575;
-        Tue,  7 Sep 2021 04:15:31 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id k11so81224pll.2;
-        Tue, 07 Sep 2021 04:15:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=O+vtDM7N1inDWNRtsVWvYj/AupNMjks6EQe94H48eVc=;
-        b=Kyfxu5HI8vnXUTSjiCDuY9veVBodyGT5tnyhaITlJTOMUqLE3P01SdL5IGe9x/fUa9
-         s8dYydvcAcJRMlCFDLfQkpnUo3JzDWOs3z9dQ4ulnw4BQbD/BnHaPXdHb5TLRvGjLgoJ
-         t4dPmcKJLzOf7WO/LPuDbS/8LYLWLiVxeMaduG5i1WZqsIxnmx3KtiULU2jc7h4XeY7P
-         5b4D+0ovVVTEV+cthKqlQlAdbXmuadmNI6DoKcV+9OPnXdE0/3cZyykEzMw43VYzLrQm
-         gNFsz8mtM0wvcb3amGtrfQD241QRLRGH1XiQbhcY4SfC3t0GN96jUbbHBIG/x65msx10
-         wcEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=O+vtDM7N1inDWNRtsVWvYj/AupNMjks6EQe94H48eVc=;
-        b=MrFlmD4JtxqkKm/79cH8geOa6NcnpQd56v+goFqmfKoRsCs4pYquKKuOkWGukCL8ho
-         adne4AVileHOtBH6UoLK3sbnHdMy8ll3NF2rc9LOXBX6ja3OJtk6BtH8Fy+/4Y2/qn06
-         47P4wgaTJuHHqX/7zQtw9DJxfrT8CPSL2TEzqmaFfab4M/CEYVUpVHzKxen4SMHmYw5I
-         SnM1nHylRATJp/liwMsYj4jpJKBXe0yYP7+FQJ78vNnohLNDcx9UW7cxFs8q7eS8XB0Q
-         FAKG1tVgU36Bo9IKGcjnzzl6ntyOyeKKvjgYomUme6Jn0EZzxgLEuvKz2pUk0YW2636K
-         XiyQ==
-X-Gm-Message-State: AOAM5327UIMgcJhYHHMxI8SUK0DmnkuBqQr14WcPW6d2hbAeeYm/tsyX
-        ftIcdHjFI4hs7ac/tH5gRdI=
-X-Google-Smtp-Source: ABdhPJxiHJqW1MKSP18+tK3uTQHHGX7r1fOPKTXekMh9uclXRUeb07/sVtBUfRG+jYbF3ZSbYUQvbA==
-X-Received: by 2002:a17:902:a604:b029:12c:dda2:30c4 with SMTP id u4-20020a170902a604b029012cdda230c4mr14291652plq.73.1631013330477;
-        Tue, 07 Sep 2021 04:15:30 -0700 (PDT)
-Received: from localhost.localdomain ([124.126.19.250])
-        by smtp.gmail.com with ESMTPSA id u17sm10357123pfh.184.2021.09.07.04.15.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Sep 2021 04:15:30 -0700 (PDT)
-From:   zhaoxiao <long870912@gmail.com>
-To:     thierry.reding@gmail.com, lee.jones@linaro.org
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zhaoxiao <long870912@gmail.com>
-Subject: [PATCH] pwm: twl: Simplify using devm_pwmchip_add()
-Date:   Tue,  7 Sep 2021 19:15:18 +0800
-Message-Id: <20210907111518.15914-1-long870912@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        with ESMTP id S1344485AbhIGNis (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 Sep 2021 09:38:48 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30AD2C061575
+        for <linux-pwm@vger.kernel.org>; Tue,  7 Sep 2021 06:37:42 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mNbIB-00053L-T9; Tue, 07 Sep 2021 15:37:39 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mNbIA-000289-I1; Tue, 07 Sep 2021 15:37:38 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mNbIA-00088E-FT; Tue, 07 Sep 2021 15:37:38 +0200
+Date:   Tue, 7 Sep 2021 15:37:38 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     zhaoxiao <long870912@gmail.com>
+Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: twl: Simplify using devm_pwmchip_add()
+Message-ID: <20210907133738.s3l4w3csrdvuld6v@pengutronix.de>
+References: <20210907111518.15914-1-long870912@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="g65mzlg4iurgudtc"
+Content-Disposition: inline
+In-Reply-To: <20210907111518.15914-1-long870912@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-With devm_pwmchip_add() we can drop pwmchip_remove() from the device
-remove callback. The latter can then go away, too and as this is the
-only user of platform_get_drvdata(), the respective call to
-platform_set_drvdata() can go, too.
 
-Signed-off-by: zhaoxiao <long870912@gmail.com>
----
- drivers/pwm/pwm-twl-led.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+--g65mzlg4iurgudtc
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pwm/pwm-twl-led.c b/drivers/pwm/pwm-twl-led.c
-index 6c8df5f4e87d..1b4494581274 100644
---- a/drivers/pwm/pwm-twl-led.c
-+++ b/drivers/pwm/pwm-twl-led.c
-@@ -294,22 +294,13 @@ static int twl_pwmled_probe(struct platform_device *pdev)
- 
- 	mutex_init(&twl->mutex);
- 
--	ret = pwmchip_add(&twl->chip);
-+	ret = devm_pwmchip_add(&pdev->dev, &twl->chip);
- 	if (ret < 0)
- 		return ret;
- 
--	platform_set_drvdata(pdev, twl);
--
- 	return 0;
- }
- 
--static int twl_pwmled_remove(struct platform_device *pdev)
--{
--	struct twl_pwmled_chip *twl = platform_get_drvdata(pdev);
--
--	return pwmchip_remove(&twl->chip);
--}
--
- #ifdef CONFIG_OF
- static const struct of_device_id twl_pwmled_of_match[] = {
- 	{ .compatible = "ti,twl4030-pwmled" },
-@@ -325,7 +316,6 @@ static struct platform_driver twl_pwmled_driver = {
- 		.of_match_table = of_match_ptr(twl_pwmled_of_match),
- 	},
- 	.probe = twl_pwmled_probe,
--	.remove = twl_pwmled_remove,
- };
- module_platform_driver(twl_pwmled_driver);
- 
--- 
-2.20.1
+On Tue, Sep 07, 2021 at 07:15:18PM +0800, zhaoxiao wrote:
+> With devm_pwmchip_add() we can drop pwmchip_remove() from the device
+> remove callback. The latter can then go away, too and as this is the
+> only user of platform_get_drvdata(), the respective call to
+> platform_set_drvdata() can go, too.
+>=20
+> Signed-off-by: zhaoxiao <long870912@gmail.com>
 
+A similar patch is already in next as c9bb1c9e5460f6e84e95b65fe4c5bb09d5dff=
+10a
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--g65mzlg4iurgudtc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmE3ax8ACgkQwfwUeK3K
+7AmV6Af/b3do9EdB2z5/5NjmPplRGHlQks7W68yDofy/rL9S2672bXolBT5mckZn
+0+JHDJJbgQRH3k8OVD0w6dcp7fTNkp1x2HgJ8VTWYD8LhH6W/yJwJEUAV6TP1AAd
+38OtBXZ2+7kejeAHJcVPQGIbvxj6fo659M2x2/9JR4bNLaMwoMoPDNdPhn8+MhYO
+pAYzRS82EbQj2Um+GCqPr25UKABMHa2gGW8bzGWd+3oeaQMauH0gkE3gZ87KN/IA
+rmEZCOOpfZlrIdKNzQjenZ0sAtDOi/oKMxe1nMubpaUhVkwx4Xy249CE+Uljg4K8
+9tvAxJnfb8LjZ/k8lCCGuWTbcQKajg==
+=04po
+-----END PGP SIGNATURE-----
+
+--g65mzlg4iurgudtc--
