@@ -2,93 +2,69 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 637C8403400
-	for <lists+linux-pwm@lfdr.de>; Wed,  8 Sep 2021 08:02:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B1494036BE
+	for <lists+linux-pwm@lfdr.de>; Wed,  8 Sep 2021 11:18:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347594AbhIHGDO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 8 Sep 2021 02:03:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56318 "EHLO
+        id S1351356AbhIHJSq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 8 Sep 2021 05:18:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235929AbhIHGDN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Sep 2021 02:03:13 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA967C061575;
-        Tue,  7 Sep 2021 23:02:06 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id k24so1432015pgh.8;
-        Tue, 07 Sep 2021 23:02:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QSiMQk56/574e6Ytth3NtxR5oOiJlmv6sEDHdEKTFyo=;
-        b=IgFLsu6o3wNCcCeMn42KktR94q8Yrri9lzDt01z9KHdDvDiU10Ya3yR2pCoG0MSQhN
-         OH/DJNSXtyVu4jx7LnsUlm/ddTOC2HqB3geYKh5YTgY/dXZQ3A2Ix9FzOq51cA5FC5bY
-         8tgDiW6syjddzGrsXmw9ZyfYsbuOd9LhslnKHMNNu4qGH33sKGjZcUhfX9a3pKXtTKQy
-         peY6CgnmlO2RJc6y2dF7efejCgv1ml/rXyvca1QfPVV7ypspJ8ItzwQ/v1/Z0Mw9Z+8E
-         YvksFqjFR4VX6jiux6VYxYWwbM9PXk4yEVG12aCzXSg7zh7v0KeM7iLA6yjZ8YTEHRco
-         oz6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QSiMQk56/574e6Ytth3NtxR5oOiJlmv6sEDHdEKTFyo=;
-        b=QQAgY0P8FWgJu/Cuc5SXFZfy5Jitdr0ayAlw2OjWyeW1tREJ3mRLbbCUXPLNlqTd5f
-         2jRThANO0Gi1hHPeNXWNXO3lS5Zd8SkMvTMeX//IaO3XPxnEA9jzXVItHPUH0ZuwNq41
-         r7ZKhjjkKR9kDSKk+kRM+J3y4fu4ntiQ4CVx7ifJy0rIIrc6r0cH1Og6SSQnRwAReqwn
-         ahLFsYrGnmQdL959tkYrrMSp9XKj7TCB8IJkP1f8PH2we3HGUWU8R0yUx6GbqsEQJLiw
-         B5tbiQmyDfWru9uLOvRxcKDb1rIVYToHTiMntE5CRL5C4X2yU9FVwC4jQ8vsStg4mhv/
-         1TqQ==
-X-Gm-Message-State: AOAM530LkvOrwQ6o6/Vl3rcW2boUA/eJtZOw3jAiqx6d8kyprrqB93aE
-        brgis+3dMMG7j31JAKA2JlI=
-X-Google-Smtp-Source: ABdhPJxxdD9YVqtlGJqLn3N06MsfBTPT8u9dPdxrf57YIyUwN9QPAc6f+LFz2S6ih/9X2X7CvODp2A==
-X-Received: by 2002:a62:e302:0:b0:3f2:628b:3103 with SMTP id g2-20020a62e302000000b003f2628b3103mr2006006pfh.39.1631080926218;
-        Tue, 07 Sep 2021 23:02:06 -0700 (PDT)
-Received: from localhost.localdomain ([124.126.19.250])
-        by smtp.gmail.com with ESMTPSA id a10sm962969pfg.20.2021.09.07.23.02.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Sep 2021 23:02:05 -0700 (PDT)
-From:   zhaoxiao <long870912@gmail.com>
-To:     thierry.reding@gmail.com, lee.jones@linaro.org
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zhaoxiao <long870912@gmail.com>
-Subject: [PATCH] pwm: ab8500: Don't check the return code of pwmchip_remove()
-Date:   Wed,  8 Sep 2021 14:02:00 +0800
-Message-Id: <20210908060200.7876-1-long870912@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        with ESMTP id S1351327AbhIHJSq (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Sep 2021 05:18:46 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C97D4C061575
+        for <linux-pwm@vger.kernel.org>; Wed,  8 Sep 2021 02:17:38 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mNti4-0002ko-Kl; Wed, 08 Sep 2021 11:17:36 +0200
+Received: from ukl by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mNti3-00020W-RH; Wed, 08 Sep 2021 11:17:35 +0200
+Date:   Wed, 8 Sep 2021 11:17:35 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     zhaoxiao <long870912@gmail.com>
+Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: ab8500: Don't check the return code of
+ pwmchip_remove()
+Message-ID: <20210908091735.yxyr7wqpbyirkw73@pengutronix.de>
+References: <20210908060200.7876-1-long870912@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210908060200.7876-1-long870912@gmail.com>
+User-Agent: NeoMutt/20180716
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-pwmchip_remove() returns always 0. Don't use the value to make it
-possible to eventually change the function to return void. Also the
-driver core ignores the return value of ab8500_pwm_remove()
-and considers the device removed anyhow. So returning early results
-in a resource leak.
+Hello zhaoxiao,
 
-Signed-off-by: zhaoxiao <long870912@gmail.com>
----
- drivers/pwm/pwm-ab8500.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+On Wed, Sep 08, 2021 at 02:02:00PM +0800, zhaoxiao wrote:
+> pwmchip_remove() returns always 0. Don't use the value to make it
+> possible to eventually change the function to return void. Also the
+> driver core ignores the return value of ab8500_pwm_remove()
+> and considers the device removed anyhow. So returning early results
+> in a resource leak.
+> 
+> Signed-off-by: zhaoxiao <long870912@gmail.com>
 
-diff --git a/drivers/pwm/pwm-ab8500.c b/drivers/pwm/pwm-ab8500.c
-index e2a26d9da25b..51132a076f7f 100644
---- a/drivers/pwm/pwm-ab8500.c
-+++ b/drivers/pwm/pwm-ab8500.c
-@@ -113,11 +113,8 @@ static int ab8500_pwm_probe(struct platform_device *pdev)
- static int ab8500_pwm_remove(struct platform_device *pdev)
- {
- 	struct ab8500_pwm_chip *ab8500 = platform_get_drvdata(pdev);
--	int err;
- 
--	err = pwmchip_remove(&ab8500->chip);
--	if (err < 0)
--		return err;
-+	pwmchip_remove(&ab8500->chip);
- 
- 	dev_dbg(&pdev->dev, "pwm driver removed\n");
- 
+Can you please base your patches on top of linux-next? This patch is
+invalid in the presence of 
+https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git/commit/?h=for-next&id=14ac9e17f9bd4bd0dfe18e384a3c2ca8dfbffcc8
+
+So this is waste of your (and my) time :-\
+
+Best regards
+Uwe
+
 -- 
-2.20.1
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
