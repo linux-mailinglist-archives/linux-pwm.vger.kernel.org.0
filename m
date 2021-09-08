@@ -2,92 +2,93 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 255534032F6
-	for <lists+linux-pwm@lfdr.de>; Wed,  8 Sep 2021 05:39:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 637C8403400
+	for <lists+linux-pwm@lfdr.de>; Wed,  8 Sep 2021 08:02:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237516AbhIHDlA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 7 Sep 2021 23:41:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53276 "EHLO
+        id S1347594AbhIHGDO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 8 Sep 2021 02:03:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234220AbhIHDlA (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 Sep 2021 23:41:00 -0400
-Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E58B9C061757
-        for <linux-pwm@vger.kernel.org>; Tue,  7 Sep 2021 20:39:52 -0700 (PDT)
-Received: by mail-oi1-x22a.google.com with SMTP id q39so1324755oiw.12
-        for <linux-pwm@vger.kernel.org>; Tue, 07 Sep 2021 20:39:52 -0700 (PDT)
+        with ESMTP id S235929AbhIHGDN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Sep 2021 02:03:13 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA967C061575;
+        Tue,  7 Sep 2021 23:02:06 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id k24so1432015pgh.8;
+        Tue, 07 Sep 2021 23:02:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:in-reply-to:references:from:user-agent:date:message-id
-         :subject:to:cc;
-        bh=GZ0a+q1qXF7MfrjInrLnr5HFObJ3ogMjBmTjbogeVrw=;
-        b=dX9mbpXkrmh1LTKr1u17bTeswHB33lW+3ok9Bgv+zTTgo6UDGp6SKIJhxNX2bOS042
-         +1ue2wyoNZ9z4Z1lfeJCE3nRIJACi/onP6pdf/H8tGud4qRyk3Mflb3Axqqav7vVAP7B
-         6fPs9wFc6pOED/0ZtVJwISqOuYyc6kwk8eEgc=
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QSiMQk56/574e6Ytth3NtxR5oOiJlmv6sEDHdEKTFyo=;
+        b=IgFLsu6o3wNCcCeMn42KktR94q8Yrri9lzDt01z9KHdDvDiU10Ya3yR2pCoG0MSQhN
+         OH/DJNSXtyVu4jx7LnsUlm/ddTOC2HqB3geYKh5YTgY/dXZQ3A2Ix9FzOq51cA5FC5bY
+         8tgDiW6syjddzGrsXmw9ZyfYsbuOd9LhslnKHMNNu4qGH33sKGjZcUhfX9a3pKXtTKQy
+         peY6CgnmlO2RJc6y2dF7efejCgv1ml/rXyvca1QfPVV7ypspJ8ItzwQ/v1/Z0Mw9Z+8E
+         YvksFqjFR4VX6jiux6VYxYWwbM9PXk4yEVG12aCzXSg7zh7v0KeM7iLA6yjZ8YTEHRco
+         oz6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from
-         :user-agent:date:message-id:subject:to:cc;
-        bh=GZ0a+q1qXF7MfrjInrLnr5HFObJ3ogMjBmTjbogeVrw=;
-        b=0KHcAeYNNdYMZfE46t0XiGMWFim/9pauXxoJAEsbZPvYSNP8ZNrIU3+6ctqLl18uZe
-         usodKTmnjIn210d018a4Zf1oiybAUMw9GR1bZJ6greClKF2kJiPIAyS80a2+pWZiMdz3
-         nToksKjt3Lig33TTzKGXGDhXbTEpEJhq+NJI37nFFLAEQVo7F4UlkqA4bpxocDb9ciEW
-         V/N1pMQbEtxKioUMSczv7bFAxzHw3Bh1LbLnI1WfKvK/0TXB5GC4G05+SxbGijglanYM
-         oPl9IJoTjzMUu50+xFSCFjLjGqn9BGkh/1xYaGH1hSl1Mlwo07r3DQtm1aPVX5UVx5kr
-         W5SQ==
-X-Gm-Message-State: AOAM531AFPMzQHYItgHF122wvVq2jYgCzZg+ZGjROr4ef9WP0jvePaxC
-        O2TCZ2xW1GV5lgs2kSlx6oyUJ1TqJBnvI9DE6v2a00Ad2Hg=
-X-Google-Smtp-Source: ABdhPJxdiiGjJ10TgqGvBQ1/7Lm6AUVwtj/VpCWil2bU6pYVcRN9bsCnM/aq8sDCvKEppqWfKKHKcnIE0NCcnfAWF34=
-X-Received: by 2002:a54:4419:: with SMTP id k25mr1090071oiw.32.1631072392333;
- Tue, 07 Sep 2021 20:39:52 -0700 (PDT)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 8 Sep 2021 03:39:51 +0000
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QSiMQk56/574e6Ytth3NtxR5oOiJlmv6sEDHdEKTFyo=;
+        b=QQAgY0P8FWgJu/Cuc5SXFZfy5Jitdr0ayAlw2OjWyeW1tREJ3mRLbbCUXPLNlqTd5f
+         2jRThANO0Gi1hHPeNXWNXO3lS5Zd8SkMvTMeX//IaO3XPxnEA9jzXVItHPUH0ZuwNq41
+         r7ZKhjjkKR9kDSKk+kRM+J3y4fu4ntiQ4CVx7ifJy0rIIrc6r0cH1Og6SSQnRwAReqwn
+         ahLFsYrGnmQdL959tkYrrMSp9XKj7TCB8IJkP1f8PH2we3HGUWU8R0yUx6GbqsEQJLiw
+         B5tbiQmyDfWru9uLOvRxcKDb1rIVYToHTiMntE5CRL5C4X2yU9FVwC4jQ8vsStg4mhv/
+         1TqQ==
+X-Gm-Message-State: AOAM530LkvOrwQ6o6/Vl3rcW2boUA/eJtZOw3jAiqx6d8kyprrqB93aE
+        brgis+3dMMG7j31JAKA2JlI=
+X-Google-Smtp-Source: ABdhPJxxdD9YVqtlGJqLn3N06MsfBTPT8u9dPdxrf57YIyUwN9QPAc6f+LFz2S6ih/9X2X7CvODp2A==
+X-Received: by 2002:a62:e302:0:b0:3f2:628b:3103 with SMTP id g2-20020a62e302000000b003f2628b3103mr2006006pfh.39.1631080926218;
+        Tue, 07 Sep 2021 23:02:06 -0700 (PDT)
+Received: from localhost.localdomain ([124.126.19.250])
+        by smtp.gmail.com with ESMTPSA id a10sm962969pfg.20.2021.09.07.23.02.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Sep 2021 23:02:05 -0700 (PDT)
+From:   zhaoxiao <long870912@gmail.com>
+To:     thierry.reding@gmail.com, lee.jones@linaro.org
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, zhaoxiao <long870912@gmail.com>
+Subject: [PATCH] pwm: ab8500: Don't check the return code of pwmchip_remove()
+Date:   Wed,  8 Sep 2021 14:02:00 +0800
+Message-Id: <20210908060200.7876-1-long870912@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20210623035039.772660-1-bjorn.andersson@linaro.org>
-References: <20210623035039.772660-1-bjorn.andersson@linaro.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.9.1
-Date:   Wed, 8 Sep 2021 03:39:51 +0000
-Message-ID: <CAE-0n53SLqmXhJBPROeQj2HzShgYoFzDqsi-KCj3dgVHdDWUTA@mail.gmail.com>
-Subject: Re: [PATCH v9 1/2] dt-bindings: leds: Add Qualcomm Light Pulse
- Generator binding
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>, Pavel Machek <pavel@ucw.cz>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Yassine Oudjana <y.oudjana@protonmail.com>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Quoting Bjorn Andersson (2021-06-22 20:50:38)
-> diff --git a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
-> new file mode 100644
-> index 000000000000..10aee61a7ffc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
-> @@ -0,0 +1,164 @@
-[....]
-> +examples:
-> +  - |
-> +    #include <dt-bindings/leds/common.h>
-> +
-> +    lpg {
+pwmchip_remove() returns always 0. Don't use the value to make it
+possible to eventually change the function to return void. Also the
+driver core ignores the return value of ab8500_pwm_remove()
+and considers the device removed anyhow. So returning early results
+in a resource leak.
 
-Should the node name be led or leds?
+Signed-off-by: zhaoxiao <long870912@gmail.com>
+---
+ drivers/pwm/pwm-ab8500.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-> +      compatible = "qcom,pmi8994-lpg";
+diff --git a/drivers/pwm/pwm-ab8500.c b/drivers/pwm/pwm-ab8500.c
+index e2a26d9da25b..51132a076f7f 100644
+--- a/drivers/pwm/pwm-ab8500.c
++++ b/drivers/pwm/pwm-ab8500.c
+@@ -113,11 +113,8 @@ static int ab8500_pwm_probe(struct platform_device *pdev)
+ static int ab8500_pwm_remove(struct platform_device *pdev)
+ {
+ 	struct ab8500_pwm_chip *ab8500 = platform_get_drvdata(pdev);
+-	int err;
+ 
+-	err = pwmchip_remove(&ab8500->chip);
+-	if (err < 0)
+-		return err;
++	pwmchip_remove(&ab8500->chip);
+ 
+ 	dev_dbg(&pdev->dev, "pwm driver removed\n");
+ 
+-- 
+2.20.1
 
-Shouldn't there be a reg property? I see the driver has them hardcoded
-but if this is a child of the spmi node then it should have a reg
-property (or many reg properties).
