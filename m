@@ -2,51 +2,43 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C202F4047CB
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 Sep 2021 11:31:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 207E1404805
+	for <lists+linux-pwm@lfdr.de>; Thu,  9 Sep 2021 11:49:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232887AbhIIJcw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 9 Sep 2021 05:32:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34562 "EHLO
+        id S233242AbhIIJuI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 9 Sep 2021 05:50:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232878AbhIIJcv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Sep 2021 05:32:51 -0400
+        with ESMTP id S231793AbhIIJuG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Sep 2021 05:50:06 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 810CDC061575
-        for <linux-pwm@vger.kernel.org>; Thu,  9 Sep 2021 02:31:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7844BC061575
+        for <linux-pwm@vger.kernel.org>; Thu,  9 Sep 2021 02:48:57 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1mOGPB-000750-Qg; Thu, 09 Sep 2021 11:31:37 +0200
+        id 1mOGfv-0000GQ-DX; Thu, 09 Sep 2021 11:48:55 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1mOGPA-0007e6-JK; Thu, 09 Sep 2021 11:31:36 +0200
+        id 1mOGft-0007fP-K6; Thu, 09 Sep 2021 11:48:53 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1mOGPA-0005bW-Hw; Thu, 09 Sep 2021 11:31:36 +0200
-Date:   Thu, 9 Sep 2021 11:31:36 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Marten Lindahl <martenli@axis.com>
-Cc:     =?utf-8?Q?M=C3=A5rten?= Lindahl <marten.lindahl@axis.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-pwm@vger.kernel.org,
-        kernel@axis.com
-Subject: Re: [PATCH v2] pwm: pwm-samsung: Trigger manual update when
- disabling PWM
-Message-ID: <20210909093136.cusr6sg2tdo47k3z@pengutronix.de>
-References: <20210908155901.18944-1-marten.lindahl@axis.com>
- <20210909080517.rsrohvdqqcnnjv2x@pengutronix.de>
- <20210909092409.GA11367@axis.com>
+        id 1mOGft-0005mw-It; Thu, 09 Sep 2021 11:48:53 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de,
+        =?UTF-8?q?M=C3=A5rten=20Lindahl?= <marten.lindahl@axis.com>
+Subject: [PATCH 0/2] pwm: add might_sleep annotations
+Date:   Thu,  9 Sep 2021 11:48:47 +0200
+Message-Id: <20210909094849.313936-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="plhyax55yky4vev7"
-Content-Disposition: inline
-In-Reply-To: <20210909092409.GA11367@axis.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -55,45 +47,30 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hello,
 
---plhyax55yky4vev7
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+earlier today I noticed that the samsung PWM driver uses
+spin_lock_irqsave() which made me wonder if the PWM functions are used
+in atomic context at all. To find out I suggest adding a might_sleep()
+and look if anyone complains.
 
-Hello Marten,
-
-On Thu, Sep 09, 2021 at 11:24:10AM +0200, Marten Lindahl wrote:
-> If I only move up the definition of __pwm_samsung_manual_update, and
-> leave pwm_samsung_manual_update at its place, the patch becomes quite
-> straightforward and overviewable. Or do you prefer to group the definitio=
-ns
-> of those two functions together?
-
-No strong preference. I found it natural to keep
-__pwm_samsung_manual_update and pwm_samsung_manual_update together, but
-I wouldn't object your suggestion either.
+The first patch should be indisputable, if you know a valid atomic use
+case for pwm_apply_state, please speak up (which would make the second
+patch wrong).
 
 Best regards
 Uwe
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Uwe Kleine-König (2):
+  pwm: Add might_sleep() annotations for !CONFIG_PWM API functions
+  pwm: Make it explicit that pwm_apply_state() might sleep
 
---plhyax55yky4vev7
-Content-Type: application/pgp-signature; name="signature.asc"
+ drivers/pwm/core.c  |  9 +++++++++
+ include/linux/pwm.h | 13 +++++++++++++
+ 2 files changed, 22 insertions(+)
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmE51HUACgkQwfwUeK3K
-7AlAYwf/T4qI6cVigxh83q2bgLMSFJPFmdWwsczNJiDzv+2uxkoMLuMcAAZKd8Wj
-37IAqinZ1lIAdV9pWTs2PQrtoRLiGZo+Yl0TtH3Z3AvVdJLQ32WDvoSX2FdxTGIu
-hJIU3O3J4WsblpHphtY1jE1sTUBfZQA5nHwdoTdolYabj4zSaojrJ2UICMAKAUsK
-6zuCqNgI0n202gItwfhquuBfC/eq0GBOm4dxADt1yK8cNKcZf+9OHYXQ5Wvh3Tuc
-g8yXLkU4TiEoS1462QiSGNKbXsqjldsXYqU9ZimOXmEgU2MZTBcHeBW/UYSZr86c
-bpfpuZPuUbufCAJT2xDZfxA+4jqw3A==
-=o7ZY
------END PGP SIGNATURE-----
+base-commit: 3f2b16734914fa7c53ef7f8a10a63828890dbd37
+-- 
+2.30.2
 
---plhyax55yky4vev7--
