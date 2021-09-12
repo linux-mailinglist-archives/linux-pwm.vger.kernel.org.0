@@ -2,51 +2,51 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E22EE408013
+	by mail.lfdr.de (Postfix) with ESMTP id 3B897408011
 	for <lists+linux-pwm@lfdr.de>; Sun, 12 Sep 2021 22:10:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236533AbhILULK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 12 Sep 2021 16:11:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53868 "EHLO
+        id S236499AbhILULJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 12 Sep 2021 16:11:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236289AbhILULA (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 12 Sep 2021 16:11:00 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D516C061574;
-        Sun, 12 Sep 2021 13:09:44 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id g128so690641wma.5;
-        Sun, 12 Sep 2021 13:09:43 -0700 (PDT)
+        with ESMTP id S236321AbhILULB (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 12 Sep 2021 16:11:01 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7608DC06175F;
+        Sun, 12 Sep 2021 13:09:46 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id y132so5131056wmc.1;
+        Sun, 12 Sep 2021 13:09:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=azJO16PBS0aaEX5vOfJpmf9jn1x1mJqiJpQpMZ0azY4=;
-        b=dgfruC3Cp7h5J9EBqCGafMKFXt20sGTs0YsYPkR7d1TWRr8oLswsvyCKcBSxy4nulu
-         0ZbxVa4QFZQfmClH9qJ+sj0/aqr1Oj4x/2i4oRtkgdsKe6uRyet4NtuDNfxNskm/LaL3
-         8G3liXSQkeLLElx3zNZ5Jg4yey7pZ9YhZxU9IXTtiBUnML34vHWNB7u27oXvTml/Yx+T
-         nKYVv/4i3YYIKnpQV2d8M+QJSBaCu5P1QMYCVCbFOiXdv/zaOWdhIPOBsiZBvSYznQTm
-         1cx/B8qabHGSZgtGF8U4kZD8Mq0cMv4HZzfWjRheyzvnTcjs6shxv/6yp7El7CNX7MWp
-         awFg==
+        bh=XIkaLltNAZEHFO/c9xmZHlt7cmXZw7U8aSqzSL63yiM=;
+        b=ijQ9VUVd3E+yAzhUW8LN+qmTp2ecRP2mmWkjTl8uAZSPA/zpjjwrm91O4PToKeDqC4
+         vFO3mTKegg4IVvavhdrn+MbBPEpbxDgUBdh7DqlctW88vqJAie0ybyRePtB0ZKvhjjSg
+         b/7a3Q6HAWJrkVAy2fywVfzvbX+UyY+AJRdulaqhxB5JkZguuPBwEVKs9rq+R7MQ8oTS
+         T2lYnk8I/S7QPhedjPhkp9y79Iqn8sPawMmPQZytgNJCLQ1cquISSJH4xb8LXTpwJI//
+         DMAae/2QaieRbscwgAfhPwKD2x6lrNKA7L32d8Qadur4oH0Po7NY3LnqcOAePA1x9BPV
+         5e9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=azJO16PBS0aaEX5vOfJpmf9jn1x1mJqiJpQpMZ0azY4=;
-        b=buvAiB0gbKTO8OwAMeloqoen7VqAdHe4eXf0XxMVRmbEKbkbFFWr1DkKMkWYllmN5l
-         pFfPsQoAdNimmhPFXG9lIKhl4GbrmKreWNl4gS8gGzX5yoLZ6ph5msy08cjdz0IGeVFr
-         MurPEFKbNEhThfoPPcgJf5eNrd/Cx4hcctoyhZco2uLOJJYKnrVUmVdePDJF1S/Evoj2
-         hHH2D5Rt9okPDCKNmBgbeGPF/cSP4tmr8pVkdizBF/XrYCy57mNJYuXsuD0redRN9dAc
-         KZfu1o7JFh0sGc7UU8zfgOEWm7Y6ki/q118+jgYpop4mxu+JrZqyYoRFfhssx03JgK6a
-         4BsA==
-X-Gm-Message-State: AOAM532QbIPeEZR8wWk3wrJBC3r6qdjd9+5NaBgssPe3s2BtslvIFVMp
-        oMFWAkPtlFyjctmsfYkGUn4=
-X-Google-Smtp-Source: ABdhPJwmxULcCBMXR6BD0JLAazGByGQYAT6BgoTu1ONDbXSqkFAZZJt5z69GiuVGoP2Im9fwPD+HbA==
-X-Received: by 2002:a7b:c3cc:: with SMTP id t12mr7819882wmj.68.1631477382665;
-        Sun, 12 Sep 2021 13:09:42 -0700 (PDT)
+        bh=XIkaLltNAZEHFO/c9xmZHlt7cmXZw7U8aSqzSL63yiM=;
+        b=Q4wobvxc0kbr4gQiJ2YinfiPl3SZnFabRnqukYGQXvkIgj/eG6fHRS19Gqo9G59ztF
+         QyfCBJfVR2/lpINoSAygQrSicaRBNn+WP4TwOaE9h5psozT6oU9/TQ5jLgnAKcCaVUwY
+         MllCoIza5WlV89oPhajbMVIMvIPoXDe6NgD/GvjpqZcdnK/WYk2qCDZ3K5aD+lnyzFY+
+         G0PclpYSICVs1aPSjDqnWA5pGOKGCQnAxxaSqzqpqTS7AF9bzSeXVoTnUxAtUPwR82Iy
+         y78SKkRrKRfL6W8oi9jyygoyI2pXAfxkPxaNQ9i8FxniNDxWRFZ94epEgg3ZzWrkCIRD
+         KbhQ==
+X-Gm-Message-State: AOAM533qqj7L0x/NNQiSd/wj/EUHocb2ZURV7tYbTZAHB7jJekjcbGB7
+        Y+eW6OsKzHa7thM2JVtMGVQ=
+X-Google-Smtp-Source: ABdhPJxyxUlin+TcDC9SzEGP88oLSNh0QPSkbXUWBt5/tW6RXe2v6I0t3nNYmR/wNfym5p2nWbp1lw==
+X-Received: by 2002:a05:600c:354a:: with SMTP id i10mr1537846wmq.77.1631477385110;
+        Sun, 12 Sep 2021 13:09:45 -0700 (PDT)
 Received: from localhost.localdomain (46-138-83-36.dynamic.spd-mgts.ru. [46.138.83.36])
-        by smtp.gmail.com with ESMTPSA id v10sm5463476wrg.15.2021.09.12.13.09.40
+        by smtp.gmail.com with ESMTPSA id v10sm5463476wrg.15.2021.09.12.13.09.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Sep 2021 13:09:42 -0700 (PDT)
+        Sun, 12 Sep 2021 13:09:44 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -75,9 +75,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-mmc@vger.kernel.org, linux-media@vger.kernel.org,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-clk@vger.kernel.org
-Subject: [PATCH v11 04/34] soc/tegra: Don't print error message when OPPs not available
-Date:   Sun, 12 Sep 2021 23:08:02 +0300
-Message-Id: <20210912200832.12312-5-digetx@gmail.com>
+Subject: [PATCH v11 05/34] dt-bindings: clock: tegra-car: Document new clock sub-nodes
+Date:   Sun, 12 Sep 2021 23:08:03 +0300
+Message-Id: <20210912200832.12312-6-digetx@gmail.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210912200832.12312-1-digetx@gmail.com>
 References: <20210912200832.12312-1-digetx@gmail.com>
@@ -87,33 +87,73 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Previously we assumed that devm_tegra_core_dev_init_opp_table() will
-be used only by drivers that will always have device with OPP table,
-but this is not true anymore. For example now Tegra30 will have OPP table
-for PWM, but Tegra20 not and both use the same driver. Hence let's not
-print the error message about missing OPP table in the common helper,
-we can print it elsewhere.
+Document sub-nodes which describe Tegra SoC clocks that require a higher
+voltage of the core power domain in order to operate properly on a higher
+clock rates.  Each node contains a phandle to OPP table and power domain.
+
+The root PLLs and system clocks don't have any specific device dedicated
+to them, clock controller is in charge of managing power for them.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/soc/tegra/common.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ .../bindings/clock/nvidia,tegra20-car.yaml    | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/drivers/soc/tegra/common.c b/drivers/soc/tegra/common.c
-index cd33e99249c3..a42d4f98c078 100644
---- a/drivers/soc/tegra/common.c
-+++ b/drivers/soc/tegra/common.c
-@@ -111,9 +111,7 @@ int devm_tegra_core_dev_init_opp_table(struct device *dev,
- 	 */
- 	err = devm_pm_opp_of_add_table(dev);
- 	if (err) {
--		if (err == -ENODEV)
--			dev_err_once(dev, "OPP table not found, please update device-tree\n");
--		else
-+		if (err != -ENODEV)
- 			dev_err(dev, "failed to add OPP table: %d\n", err);
+diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra20-car.yaml b/Documentation/devicetree/bindings/clock/nvidia,tegra20-car.yaml
+index 459d2a525393..f832abb7f11a 100644
+--- a/Documentation/devicetree/bindings/clock/nvidia,tegra20-car.yaml
++++ b/Documentation/devicetree/bindings/clock/nvidia,tegra20-car.yaml
+@@ -42,6 +42,36 @@ properties:
+   "#reset-cells":
+     const: 1
  
- 		return err;
++patternProperties:
++  "^(sclk)|(pll-[cem])$":
++    type: object
++    properties:
++      compatible:
++        enum:
++          - nvidia,tegra20-sclk
++          - nvidia,tegra30-sclk
++          - nvidia,tegra30-pllc
++          - nvidia,tegra30-plle
++          - nvidia,tegra30-pllm
++
++      operating-points-v2: true
++
++      clocks:
++        items:
++          - description: node's clock
++
++      power-domains:
++        maxItems: 1
++        description: phandle to the core SoC power domain
++
++    required:
++      - compatible
++      - operating-points-v2
++      - clocks
++      - power-domains
++
++    additionalProperties: false
++
+ required:
+   - compatible
+   - reg
+@@ -59,6 +89,13 @@ examples:
+         reg = <0x60006000 0x1000>;
+         #clock-cells = <1>;
+         #reset-cells = <1>;
++
++        sclk {
++            compatible = "nvidia,tegra20-sclk";
++            operating-points-v2 = <&opp_table>;
++            clocks = <&tegra_car TEGRA20_CLK_SCLK>;
++            power-domains = <&domain>;
++        };
+     };
+ 
+     usb-controller@c5004000 {
 -- 
 2.32.0
 
