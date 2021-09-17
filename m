@@ -2,43 +2,40 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F103E40EFAA
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Sep 2021 04:36:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E758540EFB6
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Sep 2021 04:36:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243325AbhIQChQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 16 Sep 2021 22:37:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34116 "EHLO mail.kernel.org"
+        id S243356AbhIQChl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 16 Sep 2021 22:37:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243135AbhIQCgX (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 16 Sep 2021 22:36:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3089F6124F;
-        Fri, 17 Sep 2021 02:35:01 +0000 (UTC)
+        id S243389AbhIQCg1 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 16 Sep 2021 22:36:27 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4D95F610C8;
+        Fri, 17 Sep 2021 02:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631846102;
-        bh=V4+4fuchadtuptq/x/at9MpE0EbqUI1gLCg/TTB86Xo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CJbyDvADABI7auRSJSZEnI1bszSDsWBcd4ke3uDwNE/qlUj2AchTAuGF2JPy38iLG
-         0lZ5XJ59fW+yotB0zwlZeo4RhsimHUCPwDSTIYmr/VDb4ScttJSq1ayeN2DORRltTW
-         Eh18TnKQOTQfEAeDh6Zy5yFQkkkgZiraE62nmW4JGRVgcRUjAOxzVdMUfVeRdkQSKC
-         SEgqSFupuCXH864+9edWVTQS9Jyci4gbJDK9ML3E7gl6DaI4py2kjzITUJFJAs59WL
-         rzJbK3I9dFf32ASgMMxPkI5NqeeHV++Aox21F4vS7U3Z95ueP3U0WJ/iSfRybYWrER
-         tK4oc4sk0YB5g==
+        s=k20201202; t=1631846106;
+        bh=vZCh2ARLYcUt3OW6Md53MKI/zGAahzNzswRDFu8Ueb0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XsL2Jo+cgXzhhxsy6AhCH2j4fjDvmbauSIW8G59vB8sLmaUXUz+MATKOZsdE+Q0C1
+         NQOJjnBlEy54SqEorbpJhss25xEOZPKh2X0gztKfPIm2PrDKLXOh+ORStBH9vRE5qg
+         YdLDrELMF21gOxr/dyNP7EiMnly2NqedjDkz1BvF/KnY07Pnj3Ab58V4VVX1A5HDxd
+         gWKJh7JYGl9Pi+Jbc/Fna66rswrjUWY8Wy/ZmfDu/2NbJQ5UDbQWdfTNy93Al/4j7U
+         6nhPB2cU0MKTB8b4M5mstmKkrui6cRE6B1iHboQUqlcYOyMkY51CvnMFxyC+pxfeIC
+         lcy8rdMIqrRpQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, fabrice.gasnier@foss.st.com,
-        lee.jones@linaro.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@foss.st.com, linux-pwm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 3/4] pwm: stm32-lp: Don't modify HW state in .remove() callback
-Date:   Thu, 16 Sep 2021 22:34:56 -0400
-Message-Id: <20210917023457.816816-3-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, lee.jones@linaro.org,
+        heiko@sntech.de, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 1/2] pwm: rockchip: Don't modify HW state in .remove() callback
+Date:   Thu, 16 Sep 2021 22:35:03 -0400
+Message-Id: <20210917023504.816909-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210917023457.816816-1-sashal@kernel.org>
-References: <20210917023457.816816-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -50,7 +47,7 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit d44084c93427bb0a9261432db1a8ca76a42d805e ]
+[ Upstream commit 9d768cd7fd42bb0be16f36aec48548fca5260759 ]
 
 A consumer is expected to disable a PWM before calling pwm_put(). And if
 they didn't there is hopefully a good reason (or the consumer needs
@@ -62,21 +59,33 @@ Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-stm32-lp.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/pwm/pwm-rockchip.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-index 28e1f6413476..e92a14007422 100644
---- a/drivers/pwm/pwm-stm32-lp.c
-+++ b/drivers/pwm/pwm-stm32-lp.c
-@@ -224,8 +224,6 @@ static int stm32_pwm_lp_remove(struct platform_device *pdev)
+diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
+index 48bcc853d57a..cf34fb00c054 100644
+--- a/drivers/pwm/pwm-rockchip.c
++++ b/drivers/pwm/pwm-rockchip.c
+@@ -392,20 +392,6 @@ static int rockchip_pwm_remove(struct platform_device *pdev)
  {
- 	struct stm32_pwm_lp *priv = platform_get_drvdata(pdev);
+ 	struct rockchip_pwm_chip *pc = platform_get_drvdata(pdev);
  
--	pwm_disable(&priv->chip.pwms[0]);
+-	/*
+-	 * Disable the PWM clk before unpreparing it if the PWM device is still
+-	 * running. This should only happen when the last PWM user left it
+-	 * enabled, or when nobody requested a PWM that was previously enabled
+-	 * by the bootloader.
+-	 *
+-	 * FIXME: Maybe the core should disable all PWM devices in
+-	 * pwmchip_remove(). In this case we'd only have to call
+-	 * clk_unprepare() after pwmchip_remove().
+-	 *
+-	 */
+-	if (pwm_is_enabled(pc->chip.pwms))
+-		clk_disable(pc->clk);
 -
- 	return pwmchip_remove(&priv->chip);
- }
+ 	clk_unprepare(pc->pclk);
+ 	clk_unprepare(pc->clk);
  
 -- 
 2.30.2
