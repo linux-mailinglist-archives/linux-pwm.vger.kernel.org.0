@@ -2,92 +2,135 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0C4540ED06
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Sep 2021 00:00:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D09840EE79
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Sep 2021 02:49:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240617AbhIPWBj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 16 Sep 2021 18:01:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38654 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240317AbhIPWBj (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 16 Sep 2021 18:01:39 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EF27C061574
-        for <linux-pwm@vger.kernel.org>; Thu, 16 Sep 2021 15:00:18 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id b18so22734487lfb.1
-        for <linux-pwm@vger.kernel.org>; Thu, 16 Sep 2021 15:00:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dYxeJw3YeroKM6/An6mAzn8eNYhfCfCV9PLV4I2gARI=;
-        b=t7YII+ZhPDFrUSuyjj/fygY3MZuzQ0NBeg5Jm+cGpkkAxKRk6mz+oZBoYdLMxrGD8f
-         bce8gYPfEo2LLAfWW/NbYCCAT4Hh951rBha3l6ooqSOwIDl/piwRyOTVTwg4bid5UXhI
-         vs6z1Js41owlA8Q3UKEtCQs9OKjHn0yySjG45s+2KYrZGVH+XRgpFJAfOk0WKu9Wiu3A
-         JwpnZnYRXL4QsBUklB2PMTUoHaYQB5XbuQZ9fWmAAW0oE+59iXGWQh3tnxPDavT+WV0h
-         0wDfoyYf/FyBquJKGvwT5lEYJKL7KtGgcgdJU/bKtEYVgORcs/UvQF3fkyKymAmuhlQu
-         oExg==
+        id S241960AbhIQAud (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 16 Sep 2021 20:50:33 -0400
+Received: from mail-io1-f45.google.com ([209.85.166.45]:42767 "EHLO
+        mail-io1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241940AbhIQAuc (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 16 Sep 2021 20:50:32 -0400
+Received: by mail-io1-f45.google.com with SMTP id b10so10129448ioq.9;
+        Thu, 16 Sep 2021 17:49:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dYxeJw3YeroKM6/An6mAzn8eNYhfCfCV9PLV4I2gARI=;
-        b=ITol0m3Sq7it/N5Q9rfNf+le6w8gdG4XESmiUBxH8EsE9rHLan+awaQZLNHeHhwPFW
-         feQsWD9opk4/OefH996EJdo8ddno4q26+gxNBchnmRW7OXdS8MotyTB6LXcmhbq2NfW/
-         YY9b5YZ+ll0eqiH8KETQF4YLsnWkSmV7AZT61gG0VmvMyObm64tXs5hocWMMm2pUcU/8
-         3mrlVhMOa9vt0nTXHQ/VbvBxe1KwfA0JovQ8eJpC0mRi0GmhfFE/TyL75GHtmGWEr5CL
-         Qdap3FxSQaXkt1LWMBETHLEJaglLWSxVLMay2ejZkpqo6zeXmz4J5k+ePaKpIycw2hJg
-         jLFQ==
-X-Gm-Message-State: AOAM530fSTqr55pG8NpxK1kUxXxHvzfwAzAvFjq4T9tyomfM4k39x/ZF
-        KPe08T76W4ql675dPbhqOatkuAYZkKTXKC0KCSuurQ==
-X-Google-Smtp-Source: ABdhPJzpONGnnlfySn0Wq3vjyZScc6QDgbkxwu3qxwx30S2fEwr5dHP7q6ZqOwWRWGZRMQ3XxGlvvIWmJ/n/OKlOGFc=
-X-Received: by 2002:a19:f249:: with SMTP id d9mr5716153lfk.229.1631829616694;
- Thu, 16 Sep 2021 15:00:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210824164801.28896-1-lakshmi.sowjanya.d@intel.com> <20210824164801.28896-16-lakshmi.sowjanya.d@intel.com>
-In-Reply-To: <20210824164801.28896-16-lakshmi.sowjanya.d@intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 17 Sep 2021 00:00:05 +0200
-Message-ID: <CACRpkdYZpQqYPYLaMrqQxOzvaU2DqaxWOwhfq4=2EK6hMP8oHQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 15/20] pwm: Add capability for PWM Driver managed state
-To:     "D, Lakshmi Sowjanya" <lakshmi.sowjanya.d@intel.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Saha, Tamal" <tamal.saha@intel.com>, bala.senthil@intel.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=O2spRFbCOUOnJB6jpuql0vC/edxjCzLdfxtqH2j6VJY=;
+        b=akoeOCAhxYyq/H1IFVgR7tbJQyPFPJil1DlSfIPvV4zWRkTXnGQrlttUdgj5MIRLyJ
+         x8an9OgrtqRX9a0/UoijksXVKbaSy4LsM5Lb9fSzm16R9WqtwjEbcI2LvJpwVFabPmeb
+         tDWXMINWskGMeMQeLfA/ILTUrooztAorVWMkQcCJ9mSa0DYCaFFwU0gp2J0oKgtFNna4
+         9icVz3G39/Gul0QgGSZUJJ3NPjRNtNXdXXKrwiJPYSf0N8BafF8V+sakYdADmUfSSvIh
+         jC5oJ/gezFy/cGoYPSvEoI2VoJXiYVXPC6ngSfTNZSiCpSrERhMfhP/s96Q9FI81OrVk
+         qTXQ==
+X-Gm-Message-State: AOAM533IM4lqsoeMPpdyMA/G5EZDLMixoiJx62SQ91AmP8fIKoIFj3QS
+        bLHH2GLk716IOAwRzUe75A==
+X-Google-Smtp-Source: ABdhPJzecYiE/DMtj7b8c+o0dRLsJAM1UEhGjCxttMsu3UhHMST0+ADy/DBp106ezADEWTugRBTCtw==
+X-Received: by 2002:a5d:8505:: with SMTP id q5mr6382635ion.53.1631839751026;
+        Thu, 16 Sep 2021 17:49:11 -0700 (PDT)
+Received: from robh.at.kernel.org (96-84-70-89-static.hfc.comcastbusiness.net. [96.84.70.89])
+        by smtp.gmail.com with ESMTPSA id a16sm2663931ili.64.2021.09.16.17.49.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Sep 2021 17:49:10 -0700 (PDT)
+Received: (nullmailer pid 1484028 invoked by uid 1000);
+        Fri, 17 Sep 2021 00:49:06 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Sean Anderson <sean.anderson@seco.com>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        Alvaro Gamez <alvaro.gamez@hazent.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Lee Jones <lee.jones@linaro.org>,
+        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, michal.simek@xilinx.com
+In-Reply-To: <20210916180544.2873770-1-sean.anderson@seco.com>
+References: <20210916180544.2873770-1-sean.anderson@seco.com>
+Subject: Re: [PATCH v7 1/3] dt-bindings: pwm: Add Xilinx AXI Timer
+Date:   Thu, 16 Sep 2021 19:49:06 -0500
+Message-Id: <1631839746.883519.1484027.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Aug 24, 2021 at 6:48 PM <lakshmi.sowjanya.d@intel.com> wrote:
+On Thu, 16 Sep 2021 14:05:41 -0400, Sean Anderson wrote:
+> This adds a binding for the Xilinx LogiCORE IP AXI Timer. This device is a
+> "soft" block, so it has some parameters which would not be configurable in
+> most hardware. This binding is usually automatically generated by Xilinx's
+> tools, so the names and values of some properties should be kept as they
+> are, if possible. In addition, this binding is already in the kernel at
+> arch/microblaze/boot/dts/system.dts, and in user software such as QEMU.
+> 
+> The existing driver uses the clock-frequency property, or alternatively the
+> /cpus/timebase-frequency property as its frequency input. Because these
+> properties are deprecated, they have not been included with this schema.
+> All new bindings should use the clocks/clock-names properties to specify
+> the parent clock.
+> 
+> Because we need to init timer devices so early in boot, we determine if we
+> should use the PWM driver or the clocksource/clockevent driver by the
+> presence/absence, respectively, of #pwm-cells. Because both counters are
+> used by the PWM, there is no need for a separate property specifying which
+> counters are to be used for the PWM.
+> 
+> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
+> ---
+> 
+> Changes in v7:
+> - Add #pwm-cells to properties
+> - Document why additionalProperties is true
+> 
+> Changes in v6:
+> - Enumerate possible counter widths
+> - Fix incorrect schema id
+> 
+> Changes in v5:
+> - Add example for timer binding
+> - Fix indentation lint
+> - Move schema into the timer directory
+> - Remove xlnx,axi-timer-2.0 compatible string
+> - Update commit message to reflect revisions
+> 
+> Changes in v4:
+> - Make some properties optional for clocksource drivers
+> - Predicate PWM driver on the presence of #pwm-cells
+> - Remove references to generate polarity so this can get merged
+> 
+> Changes in v3:
+> - Add an example with non-deprecated properties only.
+> - Add xlnx,pwm and xlnx,gen?-active-low properties.
+> - Make newer replacement properties mutually-exclusive with what they
+>   replace
+> - Mark all boolean-as-int properties as deprecated
+> 
+> Changes in v2:
+> - Use 32-bit addresses for example binding
+> 
+>  .../bindings/timer/xlnx,xps-timer.yaml        | 94 +++++++++++++++++++
+>  1 file changed, 94 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
+> 
 
-> From: Christopher Hall <christopher.s.hall@intel.com>
->
-> Add additional flag that can be set by drivers to indicate that the
-> driver will manage its own PWM state. When calling pwm_ops.apply the
-> driver applies the requested state change to the pwm_device reconciling,
-> if possible, any conflicting requests.
->
-> Intel(R) Timed I/O devices support very limited PWM capabilities. The
-> duty cycle must always be 50% of the period. When changing one parameter
-> at a time through the sysfs interface, it isn't possible for the user or
-> the PWM subsystem to maintain this relation.
->
-> Signed-off-by: Christopher Hall <christopher.s.hall@intel.com>
-> Signed-off-by: Tamal Saha <tamal.saha@intel.com>
-> Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
-> Reviewed-by: Mark Gross <mgross@linux.intel.com>
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-These PWM changes clearly need to be reviewed by the PWM
-subsystem maintainers, and I think all of the output generation
-portions of this really need to go into the PWM subsystem.
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml:71:111: [warning] line too long (154 > 110 characters) (line-length)
 
-Yours,
-Linus Walleij
+dtschema/dtc warnings/errors:
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/patch/1529007
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
