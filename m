@@ -2,282 +2,261 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A64D4119B3
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 Sep 2021 18:23:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27458412C7B
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 Sep 2021 04:43:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229619AbhITQY4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 20 Sep 2021 12:24:56 -0400
-Received: from mail-eopbgr50080.outbound.protection.outlook.com ([40.107.5.80]:60771
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229530AbhITQYz (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 20 Sep 2021 12:24:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k1n1Q88CKc0znDAU+SW87JP8DPtlJaq7JfVnMrf6iCbugtXb/8PgTr/KCVUu6iuyN7/jHIdtTG+sZ4v/yQY0E5zQp3/pvQoCiAvQ32STy1Bg6LJLeuJaNXD+S5ve/LGmoouvaj7w1j42IraDB27ZPnRnE9OL47Bf06bxvjDoiDNF1Cg108xqf9Wk0in++KUoCCeHeg1IZz57xVpsZQhpzNRVoj2X2H5+2w8DGaJrgwtibYca6wSHnOHhccCIFNlhHparqbMzPQl+avG5ESPb4iS35zt7/CYpWUtrI7dLgy6uG3sTPYC8ap262360StvJg8oOAjxJ2/3OnEjLxmxXjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=wn9gnvdqr5sq/9GCl/yxZeyLJM+hUjA+OP3QW5nCxos=;
- b=TNawkrvK6MuJuHCy9hXvGGG+1Jo5Pu/di/zqTPCvbfbmksKacrQ1zqvRVi7kOzEj9vooaoe2WcpYNAkxOyxI0xpN2ac7SY9gF/gxg5HUQDRL179yBtZdnr4ca48pqQ8p+X5NNsfxnPOJMYJb5BZRkr+5P6W7YBbzAgY+vX1tXIWmqhwIMaGHb87UFEnFIsd0AscY/3sdIUzyjif3QKT3Kg9e+KfGdClnDAxZ/QsQZL/Ozn7FMFqRVju1q/pdREuwdv1lgGVV9bZWucFto8Sbi7Z3pba7Sp0wb2gMAY2WBJlq6+uy8gZlqsuCJm7+iVJuh6rV7mwQBP7dyzPa1aKafQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=seco.com; dmarc=pass action=none header.from=seco.com;
- dkim=pass header.d=seco.com; arc=none
+        id S1346276AbhIUCpW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 20 Sep 2021 22:45:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241714AbhIUCC0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 20 Sep 2021 22:02:26 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77C13C140092;
+        Mon, 20 Sep 2021 11:12:01 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id y28so69651217lfb.0;
+        Mon, 20 Sep 2021 11:12:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=secospa.onmicrosoft.com; s=selector2-secospa-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wn9gnvdqr5sq/9GCl/yxZeyLJM+hUjA+OP3QW5nCxos=;
- b=eQSG1x4vW6nq20RCDTi67nLUp6PFab3+ZFijdSuVXUoSpgyOt6mGD8UcC34I+Jy+SiCAtdiR2jkcUd36YVLPyzbYtfmTV2BYI8E2yOO0kPpz2cmm9yRPLWfVyMvg7/BTgMRyKtT21oY4vUL0dbrq/p6OxECrlyFewZ7TXCcg6l8=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=seco.com;
-Received: from DB7PR03MB4523.eurprd03.prod.outlook.com (2603:10a6:10:19::27)
- by DBAPR03MB6549.eurprd03.prod.outlook.com (2603:10a6:10:19b::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4523.17; Mon, 20 Sep
- 2021 16:23:25 +0000
-Received: from DB7PR03MB4523.eurprd03.prod.outlook.com
- ([fe80::a9aa:f363:66e:fadf]) by DB7PR03MB4523.eurprd03.prod.outlook.com
- ([fe80::a9aa:f363:66e:fadf%6]) with mapi id 15.20.4523.018; Mon, 20 Sep 2021
- 16:23:25 +0000
-From:   Sean Anderson <sean.anderson@seco.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: pwm: Add Xilinx AXI Timer
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Alvaro Gamez <alvaro.gamez@hazent.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9hZA8DXDU796DBllGh2WWGpLeIOKX/wCYawIZamWEr4=;
+        b=XIcF64dSuhWpXU4P/tMwGmV8lQvhQX9tGRKgC50NUIq4jcjgk6jyzreRcUc4ijlsPc
+         8ntT1l+mB11fRHg2u+6lR9sjvKVnZZC+YQzpmSYi+kOkFeLf0LgZc+BVTj6MW+qoVP9P
+         v9hPk+NeBy7d+vrDYg4Ok0HgHQN+1dzcA6MUJaqQLxFbKZIJU5EJAd91DOayNweFYUWo
+         8PiI+jxAw0XyEkP9GE8ev6QsPig0p+bopUjkwn1nfNlAhZHU3FpT5qupriLpDVcc9Ipp
+         gc1mYJHjcwhMGsC/RR+v2I8fNLc+UTyr1K9RqPcihY6wmRXqPejmRVX95Dcdud86ue3a
+         MdcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9hZA8DXDU796DBllGh2WWGpLeIOKX/wCYawIZamWEr4=;
+        b=ZVl7/icwrF6ee6bHNWW6ZoDcs6bbZl1I4nNEGUOG2m7MpI0mMF7B9U9ORVI5bsg42Q
+         UFhWr3RzsEH82EG4f3J1PvHrIwB/jv3iOjrbZ3UnCzSdygN2Nmy9z3PHStHe3YgPmoDw
+         a/PjwWntPkAu04u+j4oNaExUCs8utROHmJz7S4uHRDCQ6kR1EsJGXm9N5nU6uv9RjIPv
+         xbd8J/Yq2F8SiNFhZf2hrnIFUIHYG65RVioz2nX59bOmESo6bOUsb+tZ9NpsFyf8LKPL
+         CIBdK8DR3DSZBCijKL6G6E4dp9Cwy4133Edcxd8Ta4YvSSmp5U9FHd5PPtGXhb0Fo7f0
+         scZw==
+X-Gm-Message-State: AOAM532x3QTLlFjSN2zZUsCxZhEKCQG5Lkx4oQHLAOxmnHFOOj06Qpi3
+        l98ttwYJx9vhX9rUCEx3RyM=
+X-Google-Smtp-Source: ABdhPJzgLb+ntOtsBdjSKpDu5pG0fDgi4PQFxcnVU7wR7TnUYidBadrJPisdv9ra5MQ1i8a0c7ZG6g==
+X-Received: by 2002:a05:651c:1b4:: with SMTP id c20mr1178331ljn.484.1632161517564;
+        Mon, 20 Sep 2021 11:11:57 -0700 (PDT)
+Received: from localhost.localdomain (46-138-151-206.dynamic.spd-mgts.ru. [46.138.151.206])
+        by smtp.gmail.com with ESMTPSA id u3sm1775677lju.107.2021.09.20.11.11.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Sep 2021 11:11:57 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Peter Chen <peter.chen@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20210826211830.3311140-1-sean.anderson@seco.com>
- <YS6M9jmTmy4EvB4k@robh.at.kernel.org>
- <eedf3b19-18be-50ca-783e-c9537498db4a@seco.com>
- <CAL_JsqK+vfnGUpuQT=Bb3Zf0q7_M8aOUZao+e4icx+vtx5zssA@mail.gmail.com>
-Message-ID: <0a88491b-7ccf-affe-32b7-ff7eea9726d5@seco.com>
-Date:   Mon, 20 Sep 2021 12:23:20 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <CAL_JsqK+vfnGUpuQT=Bb3Zf0q7_M8aOUZao+e4icx+vtx5zssA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR04CA0020.namprd04.prod.outlook.com
- (2603:10b6:208:d4::33) To DB7PR03MB4523.eurprd03.prod.outlook.com
- (2603:10a6:10:19::27)
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-staging@lists.linux.dev, linux-pwm@vger.kernel.org,
+        linux-mmc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Lucas Stach <dev@lynxeye.de>, Stefan Agner <stefan@agner.ch>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        David Heidelberg <david@ixit.cz>
+Subject: [PATCH v12 00/35] NVIDIA Tegra power management patches for 5.16
+Date:   Mon, 20 Sep 2021 21:11:10 +0300
+Message-Id: <20210920181145.19543-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [172.27.1.65] (50.195.82.171) by MN2PR04CA0020.namprd04.prod.outlook.com (2603:10b6:208:d4::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4523.14 via Frontend Transport; Mon, 20 Sep 2021 16:23:23 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 085d8093-164e-4ca7-9914-08d97c52f8ce
-X-MS-TrafficTypeDiagnostic: DBAPR03MB6549:
-X-Microsoft-Antispam-PRVS: <DBAPR03MB65497F88E1857941D6987C9E96A09@DBAPR03MB6549.eurprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RcnKSiO6Qk0lQyooBcNkkOkCSuxedKt5wOtX+XpA7mjxTfpG9YTPux2Shg0yziiBu1wF1yCEPTbecOetgJPIOOj4v9GKme1IpIcSfqApSiclY8yUZHonkWBA84hQyVdZi7weL8fd0QmZUbybdf5PcS3blevTs3QJH42KxpjdYZyaQzrrpAntLeLwnn2hPg1my40wJeALAdXO4sSazFZrvFjeQRHB7sBZdXl8UoiOhbE81sz+7M6UJDPtRR+WY9RxxKuwtyke+fcgM03q1q/koT2259Nc7woMi8kJ4pXBzgLfqYO199QPTamfrvpCURZHgAhdsf40c5CTgTY5EKyJa2t1juA/f2ZC7PHT/bBE5iFElp+tGshCQiRmxQDuiVoQe9J4oVO674MWWSfJ1q/pZbSNWyD0yRi2ZehZNljVI/AkF8lSpTfys8/o+mhmNNTJwYrm7t5UkH2U2CIerehiZMPWefzVuud+y+tCZTIHEqijz+/oGjRCbQkae3nDO3irlTwmSkQYZN7+WzhW4yaQnxmds1vuaGjhYdk4XxSbJhRg27uZn8XFip6ISqLXCQp0KP7Hj/5OXKu29oVZIyVitPN5j/ZQy1JDNW07ZTI3NBSgy4vEG09HbkUeURGct7SPEQctGqJbp8qTKgdAHhZrbmISjEgjx6w5tpWYEs/XkQM/jjaKDfxiE1xelyQLE6e2sRsTCfLWNIYpHKtyOPttZKrQbZJYxYe3TKT9usNB1nhlUpb8+EEI6ZFmlZ/4Xyio1jfR2ZxS9XCFvU2MMnUsLCi+w8lTVzcasIyIaDtgUp/xL3DF1rAPBV77BWDViYLqb2UCLB1+sbu+hl+L8S9DNiMNw6z8Xxn2uJQHiqoS29A=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR03MB4523.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(6916009)(316002)(7416002)(956004)(6486002)(2906002)(36756003)(31686004)(31696002)(4326008)(38350700002)(5660300002)(83380400001)(16576012)(8936002)(8676002)(966005)(52116002)(2616005)(86362001)(508600001)(53546011)(44832011)(66556008)(66476007)(66946007)(26005)(186003)(38100700002)(54906003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WExPVi9xNjRuMW5hYjdSTlZPN3BlNDk5VkRqcmg1ZDZmV1QyeGNDVzV0aTRI?=
- =?utf-8?B?MGFYc1BFSkNDYmcyUDB5RzRFbW9YcC9xNnRwcC9mcWtoMG82aXNkTkJWbDFY?=
- =?utf-8?B?dS90dEExOTdhY1dSRzdHWWZVZFJNM3V5dWxySDZmQmdwSTZvbkVhOWN2YXVi?=
- =?utf-8?B?RStyVFBtRkZRUjA4YkVLR0kwaDF3TzZPNWhYTzFMVGtHelRBemg3Q2tJSjZY?=
- =?utf-8?B?S1hiSzVEUzBtT2N5L3lJekVUaEhublVmc2pKQlQ1L0dlS0Q4SlAySVFDSmxS?=
- =?utf-8?B?UEtyUDNyMWFKT0FMeVozS05Gb3o1OXdXRkMvTSt4VGE0VUliYnJ3UnQzUHZN?=
- =?utf-8?B?RjNTcGx6dFBpd2Z6dVBhKzQ2clBDdG84Rkh5QytQZ0xMak4rNmRKajZ6TWRS?=
- =?utf-8?B?TVA5VFRyZGdTcXZNR2xWVmRoeTBKbUZqTE9ESW1Vd2plNGppTkdxaWljYTA5?=
- =?utf-8?B?eTJqd2ZYa1d3S1F5VEp4MFhDVFRmUyt3QVFOaXBQV3NocTZhZUVQNCtPcFpp?=
- =?utf-8?B?enFabU5TM0FwanVqVHJiMlpaUzJ4SEdYdFNBK01sN2x0Nk05U3FSOEhyUDl0?=
- =?utf-8?B?bDVldWVZcFl6Rjh5ditxdHE0Z0F2UThndnJDZzNnRjZxYkRXVERGSGoramcz?=
- =?utf-8?B?RS9lTXZ5NlZDQ04zTHBQbGtnVDdweXFtZEJPMU93VU1zbGdzUm1KaWN4RWx1?=
- =?utf-8?B?OTBocGhCQUhRV2VjekhyQUF2WC9pV0Q1dVlZdU1jcFB5dmRMMDlHOXZWUmVP?=
- =?utf-8?B?NXdVRU0yREJFNmlheWxZbnVKNUp3MzE4NjlrTWxEbmRVZDhoS3FEc2Iyd2px?=
- =?utf-8?B?akJsZjBKaWxkSVdHUzQ3SHUrb1VacGJEQ201T3N6YkovR1RjM3NzQ2JYVVJy?=
- =?utf-8?B?NXV1NTRwdUxKZ3pLd3hraFNXcmlVVlpUaUdhOG9OY0JZdm5QZ05tVkE1ckpH?=
- =?utf-8?B?cXlqT1BkcXJEZVhnSkphOU5PYXZXUm1vWlplMGdWaVJIbnRab2tMakxsUWpp?=
- =?utf-8?B?TGljRFdleG9JbHhlVHVPRTlkeXEyRDFQdlFqa29BaEQ5elhxMFFmNnNoZ2gw?=
- =?utf-8?B?eUNtSzRGbW04c3VISndUc3VEZG8vZ3FDTW00TVVPdlUwZnEzbWNrclFyMUJU?=
- =?utf-8?B?eXozdTc3VlJkcHBhS1NUMWk0Uk9ITFBaQ2p6OHBhVzVUczFjTmZLV2o1aEhl?=
- =?utf-8?B?MFBFcW42TVJVbHFIaDdwY3lIY3RZTHBlMldmYm1xYjZHd3VUMktRazRYMzBS?=
- =?utf-8?B?N2pOYWx3YkEzNUF1NVNsY05oVFBxU2s4V0xoQk5ydjBYK2plVmVCVTNsUG1Q?=
- =?utf-8?B?UVBBTkk1T0JvYnMramJmcm5PV3NSSnZsZFZ3ZW9hQUR2T0VSYVBIZzdDMkg5?=
- =?utf-8?B?NGdXdWMyM3JOMHVkeHFwdEIzVS9SZnlSaUtXT0YwaUdTTUN3VS9VQ3NVZ2Ns?=
- =?utf-8?B?cVZKV1BOYWhYYzQ3K0dDNnZCeGdGV2ZpS0VDVHJKNXFadXN2RDQyaVFEWDFV?=
- =?utf-8?B?VU5BeGl1eXpscU9NMW9QM3FFQ0E4bnZlWnJlWGIrNG53cTkvY1hGMHZxRXhj?=
- =?utf-8?B?T3dReHY3Ri9HL1FMYjZaRjIvcGFIZXJSb3o4U2dxdGN6dHNhb05kVTZxUTFV?=
- =?utf-8?B?NGt3VkVKaURCWE5DdjNuTFJINmJXZkFEYjQxSGhNbGJmVDJIWXdiYng3UmxW?=
- =?utf-8?B?akJPZHlCbklHdkw0c08xbTFJcjI0em1VZTJpZSt6RE56QnV3LytwWFE4b2Ny?=
- =?utf-8?Q?lmRY/z4OxKGRsNqphyVPJjsszIFyE9zmzuW12j6?=
-X-OriginatorOrg: seco.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 085d8093-164e-4ca7-9914-08d97c52f8ce
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR03MB4523.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Sep 2021 16:23:25.4036
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: bebe97c3-6438-442e-ade3-ff17aa50e733
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ln352PTmK+TDC7iD0ODxFfyvwQCoZWYA06TIolZIHdzNlrjJmEWuUNpgW+KGKAkXIrN31O4N8eQxzlN4Ur5UKA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR03MB6549
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+This series adds runtime PM support to Tegra drivers and enables core
+voltage scaling for Tegra20/30 SoCs, resolving overheating troubles.
 
+All patches in this series are interdependent and should go via Tegra tree.
 
+Changelog:
 
-On 9/20/21 8:35 AM, Rob Herring wrote:
-> On Thu, Sep 16, 2021 at 12:58 PM Sean Anderson <sean.anderson@seco.com> wrote:
->>
->>
->>
->> On 8/31/21 4:11 PM, Rob Herring wrote:
->> > On Thu, Aug 26, 2021 at 05:18:28PM -0400, Sean Anderson wrote:
->> >> This adds a binding for the Xilinx LogiCORE IP AXI Timer. This device is a
->> >> "soft" block, so it has some parameters which would not be configurable in
->> >> most hardware. This binding is usually automatically generated by Xilinx's
->> >> tools, so the names and values of some properties should be kept as they
->> >> are, if possible. In addition, this binding is already in the kernel at
->> >> arch/microblaze/boot/dts/system.dts, and in user software such as QEMU.
->> >>
->> >> The existing driver uses the clock-frequency property, or alternatively the
->> >> /cpus/timebase-frequency property as its frequency input. Because these
->> >> properties are deprecated, they have not been included with this schema.
->> >> All new bindings should use the clocks/clock-names properties to specify
->> >> the parent clock.
->> >>
->> >> Because we need to init timer devices so early in boot, we determine if we
->> >> should use the PWM driver or the clocksource/clockevent driver by the
->> >> presence/absence, respectively, of #pwm-cells. Because both counters are
->> >> used by the PWM, there is no need for a separate property specifying which
->> >> counters are to be used for the PWM.
->> >>
->> >> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
->> >> ---
->> >>
->> >> Changes in v6:
->> >> - Fix incorrect schema id
->> >> - Enumerate possible counter widths
->> >>
->> >> Changes in v5:
->> >> - Update commit message to reflect revisions
->> >> - Fix indentation lint
->> >> - Add example for timer binding
->> >> - Remove xlnx,axi-timer-2.0 compatible string
->> >> - Move schema into the timer directory
->> >>
->> >> Changes in v4:
->> >> - Remove references to generate polarity so this can get merged
->> >> - Predicate PWM driver on the presence of #pwm-cells
->> >> - Make some properties optional for clocksource drivers
->> >>
->> >> Changes in v3:
->> >> - Mark all boolean-as-int properties as deprecated
->> >> - Add xlnx,pwm and xlnx,gen?-active-low properties.
->> >> - Make newer replacement properties mutually-exclusive with what they
->> >>   replace
->> >> - Add an example with non-deprecated properties only.
->> >>
->> >> Changes in v2:
->> >> - Use 32-bit addresses for example binding
->> >>
->> >>  .../bindings/timer/xlnx,xps-timer.yaml        | 90 +++++++++++++++++++
->> >>  1 file changed, 90 insertions(+)
->> >>  create mode 100644 Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml b/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
->> >> new file mode 100644
->> >> index 000000000000..5be353a642aa
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
->> >> @@ -0,0 +1,90 @@
->> >> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
->> >> +%YAML 1.2
->> >> +---
->> >> +$id: http://devicetree.org/schemas/timer/xlnx,xps-timer.yaml#
->> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> >> +
->> >> +title: Xilinx LogiCORE IP AXI Timer Device Tree Binding
->> >> +
->> >> +maintainers:
->> >> +  - Sean Anderson <sean.anderson@seco.com>
->> >> +
->> >> +properties:
->> >> +  compatible:
->> >> +    contains:
->> >> +      const: xlnx,xps-timer-1.00.a
->> >> +
->> >> +  clocks:
->> >> +    maxItems: 1
->> >> +
->> >> +  clock-names:
->> >> +    const: s_axi_aclk
->> >> +
->> >> +  interrupts:
->> >> +    maxItems: 1
->> >> +
->> >> +  reg:
->> >> +    maxItems: 1
->> >> +
->> >> +  xlnx,count-width:
->> >> +    $ref: /schemas/types.yaml#/definitions/uint32
->> >> +    enum: [8, 16, 32]
->> >> +    default: 32
->> >> +    description:
->> >> +      The width of the counter(s), in bits.
->> >> +
->> >> +  xlnx,one-timer-only:
->> >> +    $ref: /schemas/types.yaml#/definitions/uint32
->> >> +    enum: [ 0, 1 ]
->> >> +    description:
->> >> +      Whether only one timer is present in this block.
->> >> +
->> >> +required:
->> >> +  - compatible
->> >> +  - reg
->> >> +  - xlnx,one-timer-only
->> >> +
->> >> +allOf:
->> >> +  - if:
->> >> +      required:
->> >> +        - '#pwm-cells'
->> >> +    then:
->> >> +      allOf:
->> >> +        - required:
->> >> +            - clocks
->> >> +        - properties:
->> >> +            xlnx,one-timer-only:
->> >> +              const: 0
->> >> +    else:
->> >> +      required:
->> >> +        - interrupts
->> >> +  - if:
->> >> +      required:
->> >> +        - clocks
->> >> +    then:
->> >> +      required:
->> >> +        - clock-names
->> >> +
->> >> +additionalProperties: true
->> >
->> > This needs to be false. What else do you expect to be present?
->>
->> I am going to leave this as true for the next revision to avoid the following error:
->>
->> arch/microblaze/boot/dts/system.dt.yaml: timer@83c00000: 'xlnx,family', 'xlnx,gen0-assert', 'xlnx,gen1-assert', 'xlnx,trig0-assert', 'xlnx,trig1-assert' do not match any of the regexes: 'pinctrl-[0-9]+'
->
-> If I wasn't clear: NAK
->
-> All properties must be documented or removed from .dts files if not needed.
+v12: - Added r-b from Rob Herring to the host1x binding patch.
 
-I am more than fine to document xlnx,trig?-assert, as they are necessary
-for implementing capture support in the future. The xlnx,gen?-assert
-should really be documented as well, as it provides a good sanity check
-for PWM support. However, Micheal has in the past voiced his opinion
-that these properties should not be included (despite specifying
-information which cannot be determined by probing the hardware...).
+     - Added acks from Hans Verkuil to the video decoder patches.
 
-xlnx,family can probably be removed, as I don't believe this device has
-any differences across FPGA families.
+     - In the v11 changelog I forgot to mention that the clk-binding
+       patch was also changed with a corrected regex pattern and removed
+       'clocks' sub-node. This patch needs r-b or ack too.
 
---Sean
+     - Added new "Rename 3d power domains" patch to match the DT schema
+       naming requirement. Thanks to David Heidelberg for spotting this
+       problem.
+
+     - Replaced #ifdef CONFIG_PM_SLEEP with maybe_unused in the MMC patch
+       to make code cleaner.
+
+v11: - Added acks and r-b from Rob Herring, Mark Brown and Miquel Raynal
+       that were given to v8.
+
+     - Corrected order of the new memory controller reset entry in
+       device-trees and host1x DT binding patch, which was requested by
+       Rob Herring.
+
+     - Switched consumer drivers to use power domain state syncing done
+       by new Tegra's common OPP-initialization helper.
+
+     - Made use of new devm_pm_runtime_enable() helper that was added to
+       v5.15 kernel, where appropriate.
+
+     - Added "fuse: Use resource-managed helpers" patch.
+
+     - Converted Tegra20/30 clk drivers to a proper platform drivers,
+       which was requested by Thierry Reding.
+
+     - Removed clk-bulk API usage from the MMC patch, which was requested
+       by Thierry Reding.
+
+     - Changed CORE power domain name to "core" in a new patch
+       "Change name of core power domain".
+
+     - Misc small fixes for problems that I found since v8, like couple
+       typos in error code paths and restored working RPM for Tegra DRM
+       UAPI v1 that was removed in v8 by accident.
+
+v9-v10: Figured out remaining GENPD API changes with Ulf Hansson and
+        Viresh Kumar. The OPP-sync helper that was used in v8 isn't needed
+        anymore because GENPD API now allows consumer drivers to
+        init rpm_pstate of power domains.
+
+v8: - Added new generic dev_pm_opp_sync() helper that syncs OPP state with
+      hardware. All drivers changed to use it. This replaces GENPD attach_dev
+      callback hacks that were used in v7.
+
+    - Added new patch patch "soc/tegra: regulators: Prepare for suspend"
+      that fixes dying Tegra20 SoC after enabling VENC power domain during
+      resume from suspend. It matches to what downstream kernel does on
+      suspend/resume.
+
+    - After a second thought, I dropped patches which added RPM to memory
+      drivers since hardware is always-on and RPM not needed.
+
+    - Replaced the "dummy host1x driver" patch with new "Disable unused
+      host1x hardware" patch, since it's a cleaner solution.
+
+Dmitry Osipenko (35):
+  opp: Change type of dev_pm_opp_attach_genpd(names) argument
+  soc/tegra: Add devm_tegra_core_dev_init_opp_table_common()
+  soc/tegra: pmc: Disable PMC state syncing
+  soc/tegra: Don't print error message when OPPs not available
+  dt-bindings: clock: tegra-car: Document new clock sub-nodes
+  clk: tegra: Support runtime PM and power domain
+  dt-bindings: host1x: Document OPP and power domain properties
+  dt-bindings: host1x: Document Memory Client resets of Host1x, GR2D and
+    GR3D
+  gpu: host1x: Add runtime PM and OPP support
+  gpu: host1x: Add host1x_channel_stop()
+  drm/tegra: dc: Support OPP and SoC core voltage scaling
+  drm/tegra: hdmi: Add OPP support
+  drm/tegra: gr2d: Support generic power domain and runtime PM
+  drm/tegra: gr3d: Support generic power domain and runtime PM
+  drm/tegra: vic: Support system suspend
+  usb: chipidea: tegra: Add runtime PM and OPP support
+  bus: tegra-gmi: Add runtime PM and OPP support
+  pwm: tegra: Add runtime PM and OPP support
+  mmc: sdhci-tegra: Add runtime PM and OPP support
+  mtd: rawnand: tegra: Add runtime PM and OPP support
+  spi: tegra20-slink: Add OPP support
+  media: dt: bindings: tegra-vde: Convert to schema
+  media: dt: bindings: tegra-vde: Document OPP and power domain
+  media: staging: tegra-vde: Support generic power domain
+  soc/tegra: fuse: Reset hardware
+  soc/tegra: fuse: Use resource-managed helpers
+  soc/tegra: regulators: Prepare for suspend
+  soc/tegra: pmc: Rename 3d power domains
+  soc/tegra: pmc: Rename core power domain
+  soc/tegra: pmc: Enable core domain support for Tegra20 and Tegra30
+  ARM: tegra: Add OPP tables and power domains to Tegra20 device-trees
+  ARM: tegra: Add OPP tables and power domains to Tegra30 device-trees
+  ARM: tegra: Add Memory Client resets to Tegra20 GR2D, GR3D and Host1x
+  ARM: tegra: Add Memory Client resets to Tegra30 GR2D, GR3D and Host1x
+  ARM: tegra20/30: Disable unused host1x hardware
+
+ .../bindings/clock/nvidia,tegra20-car.yaml    |   37 +
+ .../display/tegra/nvidia,tegra20-host1x.txt   |   53 +
+ .../bindings/media/nvidia,tegra-vde.txt       |   64 -
+ .../bindings/media/nvidia,tegra-vde.yaml      |  119 ++
+ .../boot/dts/tegra20-acer-a500-picasso.dts    |    1 +
+ arch/arm/boot/dts/tegra20-colibri.dtsi        |    3 +-
+ arch/arm/boot/dts/tegra20-harmony.dts         |    3 +-
+ arch/arm/boot/dts/tegra20-paz00.dts           |    1 +
+ .../arm/boot/dts/tegra20-peripherals-opp.dtsi |  941 +++++++++++
+ arch/arm/boot/dts/tegra20-seaboard.dts        |    3 +-
+ arch/arm/boot/dts/tegra20-tamonten.dtsi       |    3 +-
+ arch/arm/boot/dts/tegra20-trimslice.dts       |    9 +
+ arch/arm/boot/dts/tegra20-ventana.dts         |    1 +
+ arch/arm/boot/dts/tegra20.dtsi                |  116 +-
+ .../tegra30-asus-nexus7-grouper-common.dtsi   |    1 +
+ arch/arm/boot/dts/tegra30-beaver.dts          |    1 +
+ arch/arm/boot/dts/tegra30-cardhu.dtsi         |    1 +
+ arch/arm/boot/dts/tegra30-colibri.dtsi        |   17 +-
+ arch/arm/boot/dts/tegra30-ouya.dts            |    1 +
+ .../arm/boot/dts/tegra30-peripherals-opp.dtsi | 1412 +++++++++++++++++
+ arch/arm/boot/dts/tegra30.dtsi                |  175 +-
+ drivers/bus/tegra-gmi.c                       |   52 +-
+ drivers/clk/tegra/Makefile                    |    1 +
+ drivers/clk/tegra/clk-device.c                |  222 +++
+ drivers/clk/tegra/clk-pll.c                   |    2 +-
+ drivers/clk/tegra/clk-super.c                 |    2 +-
+ drivers/clk/tegra/clk-tegra20.c               |   77 +-
+ drivers/clk/tegra/clk-tegra30.c               |  116 +-
+ drivers/clk/tegra/clk.c                       |   75 +-
+ drivers/clk/tegra/clk.h                       |    2 +
+ drivers/gpu/drm/tegra/dc.c                    |   74 +
+ drivers/gpu/drm/tegra/dc.h                    |    2 +
+ drivers/gpu/drm/tegra/gr2d.c                  |  155 +-
+ drivers/gpu/drm/tegra/gr3d.c                  |  388 ++++-
+ drivers/gpu/drm/tegra/hdmi.c                  |   16 +-
+ drivers/gpu/drm/tegra/vic.c                   |    4 +
+ drivers/gpu/host1x/channel.c                  |    8 +
+ drivers/gpu/host1x/debug.c                    |   15 +
+ drivers/gpu/host1x/dev.c                      |  151 +-
+ drivers/gpu/host1x/dev.h                      |    3 +-
+ drivers/gpu/host1x/hw/channel_hw.c            |   44 +-
+ drivers/gpu/host1x/intr.c                     |    3 -
+ drivers/gpu/host1x/syncpt.c                   |    5 +-
+ drivers/mmc/host/sdhci-tegra.c                |   80 +-
+ drivers/mtd/nand/raw/tegra_nand.c             |   55 +-
+ drivers/opp/core.c                            |    6 +-
+ drivers/pwm/pwm-tegra.c                       |   88 +-
+ drivers/soc/tegra/common.c                    |    4 +-
+ drivers/soc/tegra/fuse/fuse-tegra.c           |   51 +-
+ drivers/soc/tegra/fuse/fuse-tegra20.c         |   33 +-
+ drivers/soc/tegra/fuse/fuse.h                 |    1 +
+ drivers/soc/tegra/pmc.c                       |   27 +-
+ drivers/soc/tegra/regulators-tegra20.c        |   99 ++
+ drivers/soc/tegra/regulators-tegra30.c        |  122 ++
+ drivers/spi/spi-tegra20-slink.c               |   10 +-
+ drivers/staging/media/tegra-vde/vde.c         |   57 +-
+ drivers/usb/chipidea/ci_hdrc_tegra.c          |   53 +-
+ include/linux/host1x.h                        |    1 +
+ include/linux/pm_opp.h                        |    8 +-
+ include/soc/tegra/common.h                    |   24 +
+ 60 files changed, 4741 insertions(+), 357 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/nvidia,tegra-vde.txt
+ create mode 100644 Documentation/devicetree/bindings/media/nvidia,tegra-vde.yaml
+ create mode 100644 drivers/clk/tegra/clk-device.c
+
+-- 
+2.32.0
+
