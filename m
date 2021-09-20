@@ -2,88 +2,200 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C95BF4111B2
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 Sep 2021 11:12:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D52C411497
+	for <lists+linux-pwm@lfdr.de>; Mon, 20 Sep 2021 14:35:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236265AbhITJNX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 20 Sep 2021 05:13:23 -0400
-Received: from www.zeus03.de ([194.117.254.33]:55210 "EHLO mail.zeus03.de"
+        id S234864AbhITMgx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 20 Sep 2021 08:36:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236597AbhITJLT (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 20 Sep 2021 05:11:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=5mI78+BHgh6VFMMJG0mi9Ba98u2z
-        ND/SaUOq/k4m3XM=; b=vDJtvlbSiFggG/CNrIvGnH48Tgl6J96K0ikk6pbNF38t
-        ZKPnp1GQKEySwIsmwnkt/jH2TiUTZTfzUz187USxvTsunEX161iKtqONYXH1dRxR
-        4RrQk+N3diiXPcv+1FTwQlrWDDN+KpOoXqIW8qd5lGzqp4UibQIQQpknBhXfEA0=
-Received: (qmail 2413987 invoked from network); 20 Sep 2021 11:08:52 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 20 Sep 2021 11:08:52 +0200
-X-UD-Smtp-Session: l3s3148p1@JLM9oWnMGosgAwDPXwlxANIWpbLKE1Uh
-Date:   Mon, 20 Sep 2021 11:08:52 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Duc Nguyen <duc.nguyen.ub@renesas.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: Re: [PATCH 1/2] pwm: renesas-tpu: better errno for impossible rates
-Message-ID: <YUhPpJc3ZjM8IYH4@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Duc Nguyen <duc.nguyen.ub@renesas.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-References: <20210915065542.1897-1-wsa+renesas@sang-engineering.com>
- <20210915065542.1897-2-wsa+renesas@sang-engineering.com>
- <20210917082543.2f5wum23nkvmzbdi@pengutronix.de>
+        id S233716AbhITMgw (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 20 Sep 2021 08:36:52 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2134A610A8;
+        Mon, 20 Sep 2021 12:35:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632141326;
+        bh=X6TmFKEMJ7r1hkXSfoYExkSnFh55gCMOKrgmsy914DI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pLzZa5QmYpjLIjol6Ayc/MzKR4Hw27CIpiTujBs1vhNY2hPr3ddIyLLdAeqs3OHQ4
+         +M0H0MTN3skkGIAVvub1xrPkn9jUAKTJ8NOfFeuqYAWq0frdTzRyVZ1fxsqCZCBT8H
+         jmNbAtqOAKL3c8etMA5dvtkNsyILHsMdlCE55iIShzxtxlph9u0LRztL0/f2tfpfnR
+         045Zt9nIBEMIuJfOMW1krCSpZSmGZz8D70JSSv+9ZmGqfkBDXs5ojPGt2yrg2ZCAWo
+         p9H5d43YH4vLtXzr8KShm2jJOna8/eaGashadwhrHvZECZR1UYMMhnM/YseieDodcQ
+         PlSmNkex8H5ag==
+Received: by mail-ed1-f46.google.com with SMTP id v22so56390753edd.11;
+        Mon, 20 Sep 2021 05:35:26 -0700 (PDT)
+X-Gm-Message-State: AOAM530ZX4c+WkrD/2/Zoc7qIGiU/p7KqqeB05cE2QJgX1kzxtvJrzF9
+        +NRXiRZRvr2euCWFMEhUqG957RDMtoO55g2YIg==
+X-Google-Smtp-Source: ABdhPJwF88jQtPjfNvvL1nKjml4PuXc3iZMNOvFq0Gm0Ol5FfAgq3Zb8NcC/qYhD2qqpX1pKJGAY5SQWfgROQcdI244=
+X-Received: by 2002:a05:6402:b23:: with SMTP id bo3mr29186170edb.145.1632141324479;
+ Mon, 20 Sep 2021 05:35:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EQCBVrWDu+yYdQK4"
-Content-Disposition: inline
-In-Reply-To: <20210917082543.2f5wum23nkvmzbdi@pengutronix.de>
+References: <20210826211830.3311140-1-sean.anderson@seco.com>
+ <YS6M9jmTmy4EvB4k@robh.at.kernel.org> <eedf3b19-18be-50ca-783e-c9537498db4a@seco.com>
+In-Reply-To: <eedf3b19-18be-50ca-783e-c9537498db4a@seco.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 20 Sep 2021 07:35:12 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqK+vfnGUpuQT=Bb3Zf0q7_M8aOUZao+e4icx+vtx5zssA@mail.gmail.com>
+Message-ID: <CAL_JsqK+vfnGUpuQT=Bb3Zf0q7_M8aOUZao+e4icx+vtx5zssA@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] dt-bindings: pwm: Add Xilinx AXI Timer
+To:     Sean Anderson <sean.anderson@seco.com>
+Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Alvaro Gamez <alvaro.gamez@hazent.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu, Sep 16, 2021 at 12:58 PM Sean Anderson <sean.anderson@seco.com> wrote:
+>
+>
+>
+> On 8/31/21 4:11 PM, Rob Herring wrote:
+> > On Thu, Aug 26, 2021 at 05:18:28PM -0400, Sean Anderson wrote:
+> >> This adds a binding for the Xilinx LogiCORE IP AXI Timer. This device is a
+> >> "soft" block, so it has some parameters which would not be configurable in
+> >> most hardware. This binding is usually automatically generated by Xilinx's
+> >> tools, so the names and values of some properties should be kept as they
+> >> are, if possible. In addition, this binding is already in the kernel at
+> >> arch/microblaze/boot/dts/system.dts, and in user software such as QEMU.
+> >>
+> >> The existing driver uses the clock-frequency property, or alternatively the
+> >> /cpus/timebase-frequency property as its frequency input. Because these
+> >> properties are deprecated, they have not been included with this schema.
+> >> All new bindings should use the clocks/clock-names properties to specify
+> >> the parent clock.
+> >>
+> >> Because we need to init timer devices so early in boot, we determine if we
+> >> should use the PWM driver or the clocksource/clockevent driver by the
+> >> presence/absence, respectively, of #pwm-cells. Because both counters are
+> >> used by the PWM, there is no need for a separate property specifying which
+> >> counters are to be used for the PWM.
+> >>
+> >> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
+> >> ---
+> >>
+> >> Changes in v6:
+> >> - Fix incorrect schema id
+> >> - Enumerate possible counter widths
+> >>
+> >> Changes in v5:
+> >> - Update commit message to reflect revisions
+> >> - Fix indentation lint
+> >> - Add example for timer binding
+> >> - Remove xlnx,axi-timer-2.0 compatible string
+> >> - Move schema into the timer directory
+> >>
+> >> Changes in v4:
+> >> - Remove references to generate polarity so this can get merged
+> >> - Predicate PWM driver on the presence of #pwm-cells
+> >> - Make some properties optional for clocksource drivers
+> >>
+> >> Changes in v3:
+> >> - Mark all boolean-as-int properties as deprecated
+> >> - Add xlnx,pwm and xlnx,gen?-active-low properties.
+> >> - Make newer replacement properties mutually-exclusive with what they
+> >>   replace
+> >> - Add an example with non-deprecated properties only.
+> >>
+> >> Changes in v2:
+> >> - Use 32-bit addresses for example binding
+> >>
+> >>  .../bindings/timer/xlnx,xps-timer.yaml        | 90 +++++++++++++++++++
+> >>  1 file changed, 90 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml b/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
+> >> new file mode 100644
+> >> index 000000000000..5be353a642aa
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
+> >> @@ -0,0 +1,90 @@
+> >> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/timer/xlnx,xps-timer.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Xilinx LogiCORE IP AXI Timer Device Tree Binding
+> >> +
+> >> +maintainers:
+> >> +  - Sean Anderson <sean.anderson@seco.com>
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    contains:
+> >> +      const: xlnx,xps-timer-1.00.a
+> >> +
+> >> +  clocks:
+> >> +    maxItems: 1
+> >> +
+> >> +  clock-names:
+> >> +    const: s_axi_aclk
+> >> +
+> >> +  interrupts:
+> >> +    maxItems: 1
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +
+> >> +  xlnx,count-width:
+> >> +    $ref: /schemas/types.yaml#/definitions/uint32
+> >> +    enum: [8, 16, 32]
+> >> +    default: 32
+> >> +    description:
+> >> +      The width of the counter(s), in bits.
+> >> +
+> >> +  xlnx,one-timer-only:
+> >> +    $ref: /schemas/types.yaml#/definitions/uint32
+> >> +    enum: [ 0, 1 ]
+> >> +    description:
+> >> +      Whether only one timer is present in this block.
+> >> +
+> >> +required:
+> >> +  - compatible
+> >> +  - reg
+> >> +  - xlnx,one-timer-only
+> >> +
+> >> +allOf:
+> >> +  - if:
+> >> +      required:
+> >> +        - '#pwm-cells'
+> >> +    then:
+> >> +      allOf:
+> >> +        - required:
+> >> +            - clocks
+> >> +        - properties:
+> >> +            xlnx,one-timer-only:
+> >> +              const: 0
+> >> +    else:
+> >> +      required:
+> >> +        - interrupts
+> >> +  - if:
+> >> +      required:
+> >> +        - clocks
+> >> +    then:
+> >> +      required:
+> >> +        - clock-names
+> >> +
+> >> +additionalProperties: true
+> >
+> > This needs to be false. What else do you expect to be present?
+>
+> I am going to leave this as true for the next revision to avoid the following error:
+>
+> arch/microblaze/boot/dts/system.dt.yaml: timer@83c00000: 'xlnx,family', 'xlnx,gen0-assert', 'xlnx,gen1-assert', 'xlnx,trig0-assert', 'xlnx,trig1-assert' do not match any of the regexes: 'pinctrl-[0-9]+'
 
---EQCBVrWDu+yYdQK4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+If I wasn't clear: NAK
 
-Hi Uwe,
+All properties must be documented or removed from .dts files if not needed.
 
-thank you for your detailed review, much appreciated! I will look into
-your suggestions. However, it will probably not be before October
-because it seems some more work and internal discussion is needed
-beforehand. I'll get back to you.
-
-Thanks again and happy hacking,
-
-   Wolfram
-
-
---EQCBVrWDu+yYdQK4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmFIT6AACgkQFA3kzBSg
-Kbb1XQ//YCRJeljcXqNSSAbQp9iylk+Eua3xMivTzm13sde5a2A+oKzD/gQNqQF+
-O6bmoV9sqDXwDr7ChbPGzcmj3sf9vdDq9yKoavIt6+7Kw+szape7xcAUmVS53o7H
-iKEl2mt0J28Y11Sy0KM+mXHRQ1MpzX0yO0Ey1IU6Iubi1SVTj+NcgZxDQ2AK5UhU
-tYuW1YSKNHHoNkx4/bjr//HSa/bLLk1W7U82Ly34i6wI9Dpxo2Qg2eJpNo/hrB40
-3Rj6U9CcgG07UhkcqAiYvwTyQCeQvn8ldjPfAFaZOReia4ek5UGnsr3Rn2922xiP
-IdB+2NR09w1Lx53Mc7ilDr94l1ejvpA+FKOBHsLCflmD1ls/ejo2vTCKiUhIk+F3
-7aWIGXPrxacV1iAAqB2pTNrv++gxInAkUmMywJN3gpxmeRDZ1ANFh7YbtM3bPiw2
-XgF51HB9ZlbjkzGpIMB9kcgqmSZT357pRYiWGuys4kfxuGyg9gmMvagWmrxjQecG
-/IlsChY1AlAStE9xcl+6/EbICbgov3xfNJ4I5AkJ96te9ktPvfcRDxnEJmp29nA0
-C3RTPU2KuYIbgwvy9LG146Ftrz6PqwOBb9MzyQhW+WKi1BZG4U255IuPjOs8utkT
-9aXo3k3Nx6vzc6MWX3eWAMWWh3YBZQfaOvrYqzqBvIGdtnr6IS0=
-=zT9M
------END PGP SIGNATURE-----
-
---EQCBVrWDu+yYdQK4--
+Rob
