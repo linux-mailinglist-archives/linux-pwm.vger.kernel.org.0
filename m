@@ -2,85 +2,89 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DD71414477
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Sep 2021 11:04:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98E5A414B6B
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Sep 2021 16:10:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234154AbhIVJFo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 22 Sep 2021 05:05:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36626 "EHLO
+        id S235600AbhIVOLn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 22 Sep 2021 10:11:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234196AbhIVJFl (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 22 Sep 2021 05:05:41 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01F21C0613D3
-        for <linux-pwm@vger.kernel.org>; Wed, 22 Sep 2021 02:04:12 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id r2so1957922pgl.10
-        for <linux-pwm@vger.kernel.org>; Wed, 22 Sep 2021 02:04:11 -0700 (PDT)
+        with ESMTP id S235464AbhIVOLn (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 22 Sep 2021 10:11:43 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D20BAC061574
+        for <linux-pwm@vger.kernel.org>; Wed, 22 Sep 2021 07:10:12 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id t8so7351350wri.1
+        for <linux-pwm@vger.kernel.org>; Wed, 22 Sep 2021 07:10:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=iTGoqFM8qijEpuvk9WwIalanNU02ORS6d7bs4+cIQLs=;
-        b=TJnA2xZSNDmQVyDaUM5cetFg6piHlBIrzLYbLVA/L+yuikwexToDQQOXDpUqjS5BJS
-         ev7wC9FyVgBp+VojUE2hwZt6QDK94hIW9AkUhEfQrr2hUB2TZJd9m7WYBEDERBU0xf7V
-         HLEZKQ8imbD00ECabdcntHNdsmrEVi+ksDWbU5dQUHdjsrnCC5QGeTJtvQW8Dcb6/Gig
-         QJRmam67JS2cURfi0OZZ7UCHS5xrofx7U94cae+w1tvDEISkHYK4ePwn8jA8i6+Hn04x
-         V91ffa8741JrEfnPeR8hzfEW9746pm38IxXqRqxyeSUIbPBHKepHNewauGgvtvdlq0bs
-         n2Vw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=316eM28pK/8Y6ZPFwh3V4osKtYsZzbtNOZjPZ78hW2o=;
+        b=qgeTRI7MZLWaVeFQzGXTpSsFcyvmu7kjfYlSc+NPJCrhsXvE1fEn07XHZl63akX/A9
+         yQbXdXADzwP00MT27Hew7Q5+BXqnTnHMX2GPMy8eew9d5u8RXyglhqDuge9gsmwXrD8R
+         HAvFLaIw6+HC5YglZjYxDz9U1L+MwF/UV+iop1VTv+4b+TeLv+YtgqdgDzTRzzxMdQBi
+         kVYSpNyYlR+kdCs44djZFix4hbr60HjdLscIRa4b55RCcwpz1lxAKHoewcClaR6+Bjai
+         CEDO1S4JoEByQsW1f8EyZ+aN8rL1sGz/bP6WNU3H2x5Jzjl6OhYQ9HBAhlyBspTGsysg
+         sLHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=iTGoqFM8qijEpuvk9WwIalanNU02ORS6d7bs4+cIQLs=;
-        b=62BGSRWP4PF+42Ns0GtcjgVEHc3c4vhA66QxAtewSHye6ycaHOwayjxEhbZCJR4tY+
-         SZ6Wvep9AuHybeOnNwP0KyB1aqrTGLH2+c2YCusW0bR5YnJj8rdpkKL0kDoVUn45Ii2K
-         DuEv9YFL1SerWWxjkgVLZftOLAJHqYaR+FCbEuxG0mMGcM6ox+YIw7Zeir7+LMW0lWMI
-         iK7GajUBfz5PPyR2q6+njb+0X5cPxiiocrsKsHIDchJTeedxz8aMdHQVCmwxvIz3QhXK
-         eXKWo7n6yura/ZEEvsZEpE0WrjFYLb+iUCipmXf6e9WTDR5XTK/aah07c/4/ClVU+K9V
-         5odQ==
-X-Gm-Message-State: AOAM530Jp8ntTw65Hfk93Nj9A9qpICmRoZzPTqtN9hirxfFbew3E0oi0
-        v+WROp7yFj+lFCoG57vKaxtlNwO0OBxtzHNTmPg=
-X-Google-Smtp-Source: ABdhPJzSBG9U99LUNHcK5yvniZ2TvGsF3RlQLQvBorUg0W0/5QJ3J1WzEmA6R19USIFGxQwjeUn1wqeOl+7hIVPqJUM=
-X-Received: by 2002:a05:6a00:234f:b0:3eb:3ffd:6da2 with SMTP id
- j15-20020a056a00234f00b003eb3ffd6da2mr34198606pfj.15.1632301451198; Wed, 22
- Sep 2021 02:04:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=316eM28pK/8Y6ZPFwh3V4osKtYsZzbtNOZjPZ78hW2o=;
+        b=g9Ed17DSd+puMt+9wSx/PkgvMdom2iVjsb0foTWPW6O6d9cOrojmraYui3MZjkxDoj
+         kb/kXDO5RjpauucORTi98iLf3j8P+45Aj/B+/w29tliIgjFfUooWjGay7/T2FTKsd5Vz
+         YBTfkUM1TR0HoJ++gVi+i/Svq7gC9jtNkEuPAhdP1KvJMmDTlV/wpkTDMY01xB7GQO6r
+         7R8OCWL4E8UtgUYs35cE32MNfBpXNURYiu12FcLX1WORB0jnG3mBnhF11GApdDDtWZz0
+         gHx+R+kR2DdKAoE4rFqHfL008n2oBjgpINA7Wbyvm1HiMvmMMWpmVrF4Frlev1OdOPZg
+         ru3A==
+X-Gm-Message-State: AOAM531KoqXiBSndPYNyE2ZSQSVrqYDmrCb0bJeoWybRJzhYG3WoN4Uy
+        h9c7mw61L71jMkoi0QagPfQnVg==
+X-Google-Smtp-Source: ABdhPJwPWyPwb8fFPniP4WALIolIXo/0F86m+aaMDJzd9oMldjmXMowgEbhBdLf2fAEhdwOQkl2WeQ==
+X-Received: by 2002:a5d:64cd:: with SMTP id f13mr41907210wri.419.1632319811428;
+        Wed, 22 Sep 2021 07:10:11 -0700 (PDT)
+Received: from google.com ([95.148.6.233])
+        by smtp.gmail.com with ESMTPSA id i203sm5875577wma.7.2021.09.22.07.10.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Sep 2021 07:10:10 -0700 (PDT)
+Date:   Wed, 22 Sep 2021 15:10:08 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Balaji Prakash J <bjagadee@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robert Marko <robert.marko@sartura.hr>,
+        Kathiravan T <kathirav@codeaurora.org>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v8 1/4] dt-bindings: mfd: qcom,tcsr: document ipq6018
+ compatible
+Message-ID: <YUs5QAeQnPijfp7z@google.com>
+References: <5c95bcf62a9d08208a7da19f0b1cec0689502b9a.1630323987.git.baruch@tkos.co.il>
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:f393:0:0:0:0 with HTTP; Wed, 22 Sep 2021 02:04:10
- -0700 (PDT)
-From:   susan wong <susanwong096@gmail.com>
-Date:   Wed, 22 Sep 2021 02:04:10 -0700
-Message-ID: <CAB_2jog_+wbY0uTEKJXzerAEjzsC2-Y6bHmQ=DR2HGCmzwQDOQ@mail.gmail.com>
-Subject: Dear Beloved,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5c95bcf62a9d08208a7da19f0b1cec0689502b9a.1630323987.git.baruch@tkos.co.il>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Dear Beloved,
+On Mon, 30 Aug 2021, Baruch Siach wrote:
 
-I am writing this mail to you with heavy tears in my eyes and great
-sorrow in my heart. I am Mrs. Susan Wong. A widow to late Mr. Hamson
-Wong; I am 63 years old, suffering from long time Cancer of the
-breast.
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> ---
+>  Documentation/devicetree/bindings/mfd/qcom,tcsr.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-From all indications my condition is really deteriorating and it's
-quite obvious that I won't live more than 2 months according to my
-doctors. I have some funds I inherited from my late loving husband Mr.
-Hamson, the sum of (4,500,000.00 Million Dollars) which he deposited
-in a bank here and I need honest, truthful and God fearing person that
-can use these funds for Charity work, helping the less privileges, and
-30% of this money will be for your time and effort, while 70% goes to
-charities.
+Applied, thanks.
 
-1) For the sick, less-privileged
-2) For the Widows and the motherless babies
-3) Orphanages or Charity Home.
-
-I look forward to your prompt reply from you for more details.
-
-I will like you to write me on my Email address;
-sosanwong123@gmail.com , to enable us discuss in details. I hope
-hearing from you soonest. Thanks for your understanding.
-
-Yours sincerely
-
-Mrs. Susan Wong
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
