@@ -2,416 +2,274 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB36D4184A3
-	for <lists+linux-pwm@lfdr.de>; Sat, 25 Sep 2021 23:25:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2975D418BA0
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 Sep 2021 00:42:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229993AbhIYV1P (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 25 Sep 2021 17:27:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52244 "EHLO
+        id S230484AbhIZWoI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 26 Sep 2021 18:44:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229966AbhIYV1P (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 25 Sep 2021 17:27:15 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF6FFC061570
-        for <linux-pwm@vger.kernel.org>; Sat, 25 Sep 2021 14:25:39 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mUFAm-0007ap-Em; Sat, 25 Sep 2021 23:25:28 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mUFAf-0004lr-89; Sat, 25 Sep 2021 23:25:21 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mUFAf-0007ik-6c; Sat, 25 Sep 2021 23:25:21 +0200
-Date:   Sat, 25 Sep 2021 23:25:21 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Robert Foss <robert.foss@linaro.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        with ESMTP id S230331AbhIZWoE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 26 Sep 2021 18:44:04 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EDF8C061570;
+        Sun, 26 Sep 2021 15:42:27 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id t10so68463230lfd.8;
+        Sun, 26 Sep 2021 15:42:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ODs6zhlkLMHshS4JHU5fhllhmsoNHoota6CZoe8HKXI=;
+        b=EkHmL4ABihxW4SssDBIHuIY/eDwr54e5Ytg7Q7Ktu9ft8PY97Z0GvHh8jY+TXG3YGS
+         tG6sNz8EB+EgXKgY1UUhTjgYg46rytuQpX/igb4p/t2/yivDqzjoTIP0Rj4a8UXitJFG
+         NRbBXmH8m02A2hjfALc1+8tpbX/lHLuxH3e7WwJyXDo+aFhCgPdL6tqo58LYxIwf9uuM
+         x+v8wpxQAUYroeI2KmLTz5jXzxKv5rW7eDTBAmOPeZdLdwF+OfZfaOZwU1izqJzFvCYe
+         fBNn5z/ubFhJpgw6OFxj4HLwr+eymwun1pelRRBSxcE7yWgZHL/vuZ/A1DZEWk0r7xNn
+         hKjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ODs6zhlkLMHshS4JHU5fhllhmsoNHoota6CZoe8HKXI=;
+        b=VLPmAPzV42jY2QiL6LE+1/YGLtqrvPvzRfI2IU7Yny51sN0hXexHJmVxnMEWxlZ+D2
+         7SrLgw9cMTP4mE17U7dJ7X3pwqZMtpBoAFVJjN7ftr7bKIs43vOZSPt1ej9h5TUJ0Muv
+         eT+9+fOWZNcxPQrGA4IUKRAxV78Bp13iBPhqaWJpGROHkeO/tRX87T756xg5WI/y3VUk
+         vHqkVhkolqOnETqv5+KNt3muqQFi+8PS111DMf/yZkJQh4jSsv0MX/632y39Dved0Ieh
+         Ma3P7plikbbw91kUwdRfnYUJOfVq2q/J4XiCDJJJFXfkZdSv0oPR9wriJFGYtGDXOObi
+         VdLA==
+X-Gm-Message-State: AOAM533NeSxqTpd33UwBCoOHe/zVuzQzF6kpEERSjtge/TzIQqw5EpGr
+        KwRfuw/pximnhysKcuS3qAc=
+X-Google-Smtp-Source: ABdhPJyS3Wy6JAbPibwRzUbxuaTS20mWaQUVTBz2SvN5TuZB2dAM9fG3nH4rhnduRVz0bmM5M/xNxA==
+X-Received: by 2002:a05:6512:688:: with SMTP id t8mr21344530lfe.49.1632696145424;
+        Sun, 26 Sep 2021 15:42:25 -0700 (PDT)
+Received: from localhost.localdomain (46-138-80-108.dynamic.spd-mgts.ru. [46.138.80.108])
+        by smtp.gmail.com with ESMTPSA id m10sm1408899lfr.272.2021.09.26.15.42.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Sep 2021 15:42:25 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Peter Chen <peter.chen@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, Doug Anderson <dianders@google.com>
-Subject: Re: [PATCH v5 2/2] drm/bridge: ti-sn65dsi86: Implement the pwm_chip
-Message-ID: <20210925212521.vwtyaqwstyssn5ne@pengutronix.de>
-References: <20210924021225.846197-1-bjorn.andersson@linaro.org>
- <20210924021225.846197-2-bjorn.andersson@linaro.org>
- <20210924075433.apkdkwur5ar67ge2@pengutronix.de>
- <YU5LeQlSANlt1/jk@builder.lan>
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-staging@lists.linux.dev, linux-pwm@vger.kernel.org,
+        linux-mmc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Lucas Stach <dev@lynxeye.de>, Stefan Agner <stefan@agner.ch>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        David Heidelberg <david@ixit.cz>
+Subject: [PATCH v13 00/35] NVIDIA Tegra power management patches for 5.16
+Date:   Mon, 27 Sep 2021 01:40:23 +0300
+Message-Id: <20210926224058.1252-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7p5usejj7bxwzsag"
-Content-Disposition: inline
-In-Reply-To: <YU5LeQlSANlt1/jk@builder.lan>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+This series adds runtime PM support to Tegra drivers and enables core
+voltage scaling for Tegra20/30 SoCs, resolving overheating troubles.
 
---7p5usejj7bxwzsag
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+All patches in this series are interdependent and should go via Tegra tree.
 
-Hello Bjorn,
+Changelog:
 
-On Fri, Sep 24, 2021 at 05:04:41PM -0500, Bjorn Andersson wrote:
-> On Fri 24 Sep 02:54 CDT 2021, Uwe Kleine-K?nig wrote:
-> > > +static int ti_sn65dsi86_read_u16(struct ti_sn65dsi86 *pdata,
-> > > +				 unsigned int reg, u16 *val)
-> > > +{
-> > > +	unsigned int tmp;
-> > > +	int ret;
-> > > +
-> > > +	ret =3D regmap_read(pdata->regmap, reg, &tmp);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +	*val =3D tmp;
-> > > +
-> > > +	ret =3D regmap_read(pdata->regmap, reg + 1, &tmp);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +	*val |=3D tmp << 8;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  static void ti_sn65dsi86_write_u16(struct ti_sn65dsi86 *pdata,
-> > >  				   unsigned int reg, u16 val)
-> > >  {
-> > > -	regmap_write(pdata->regmap, reg, val & 0xFF);
-> > > -	regmap_write(pdata->regmap, reg + 1, val >> 8);
-> > > +	u8 buf[2] =3D { val & 0xff, val >> 8 };
-> > > +
-> > > +	regmap_bulk_write(pdata->regmap, reg, &buf, ARRAY_SIZE(buf));
-> >=20
-> > Given that ti_sn65dsi86_write_u16 uses regmap_bulk_write I wonder why
-> > ti_sn65dsi86_read_u16 doesn't use regmap_bulk_read.
->=20
-> Seems reasonable to make that use the bulk interface as well and this
-> would look better in its own patch.
+v13: - Fixed compile-test error reported by build bot by reverting the
+       mmc/ patch to v11. The sdhci_suspend/resume_host() functions aren't
+       available with the disabled CONFIG_PM_SLEEP, some code needs the
+       ifdef.
 
-Not sure I understand you here. My position here would be to introduce
-these two functions with a consistent behaviour. If both use bulk or
-both don't use it (and you introduce it later in a separate patch)
-doesn't matter to me.
+     - Added last r-b from Rob Herring for the DT patches.
 
-> > >  static u32 ti_sn_bridge_get_dsi_freq(struct ti_sn65dsi86 *pdata)
-> > > @@ -253,6 +298,12 @@ static void ti_sn_bridge_set_refclk_freq(struct =
-ti_sn65dsi86 *pdata)
-> > > =20
-> > >  	regmap_update_bits(pdata->regmap, SN_DPPLL_SRC_REG, REFCLK_FREQ_MAS=
-K,
-> > >  			   REFCLK_FREQ(i));
-> > > +
-> > > +	/*
-> > > +	 * The PWM refclk is based on the value written to SN_DPPLL_SRC_REG,
-> > > +	 * regardless of its actual sourcing.
-> > > +	 */
-> > > +	pdata->pwm_refclk_freq =3D ti_sn_bridge_refclk_lut[i];
-> > >  }
-> > > =20
-> > >  static void ti_sn65dsi86_enable_comms(struct ti_sn65dsi86 *pdata)
-> > > @@ -1259,9 +1310,283 @@ static struct auxiliary_driver ti_sn_bridge_d=
-river =3D {
-> > >  };
-> > > =20
-> > >  /* -----------------------------------------------------------------=
-------------
-> > > - * GPIO Controller
-> > > + * PWM Controller
-> > > + */
-> > > +#if defined(CONFIG_PWM)
-> > > +static int ti_sn_pwm_pin_request(struct ti_sn65dsi86 *pdata)
-> > > +{
-> > > +	return atomic_xchg(&pdata->pwm_pin_busy, 1) ? -EBUSY : 0;
-> > > +}
-> > > +
-> > > +static void ti_sn_pwm_pin_release(struct ti_sn65dsi86 *pdata)
-> > > +{
-> > > +	atomic_set(&pdata->pwm_pin_busy, 0);
-> > > +}
-> > > +
-> > > +static struct ti_sn65dsi86 *pwm_chip_to_ti_sn_bridge(struct pwm_chip=
- *chip)
-> > > +{
-> > > +	return container_of(chip, struct ti_sn65dsi86, pchip);
-> > > +}
-> > > +
-> > > +static int ti_sn_pwm_request(struct pwm_chip *chip, struct pwm_devic=
-e *pwm)
-> > > +{
-> > > +	struct ti_sn65dsi86 *pdata =3D pwm_chip_to_ti_sn_bridge(chip);
-> > > +
-> > > +	return ti_sn_pwm_pin_request(pdata);
-> > > +}
-> > > +
-> > > +static void ti_sn_pwm_free(struct pwm_chip *chip, struct pwm_device =
-*pwm)
-> > > +{
-> > > +	struct ti_sn65dsi86 *pdata =3D pwm_chip_to_ti_sn_bridge(chip);
-> > > +
-> > > +	ti_sn_pwm_pin_release(pdata);
-> > > +}
-> > > +
-> > > +/*
-> > > + * Limitations:
-> > > + * - The PWM signal is not driven when the chip is powered down, or =
-in its
-> > > + *   reset state and the driver does not implement the "suspend stat=
-e"
-> > > + *   described in the documentation. In order to save power, state->=
-enabled is
-> > > + *   interpreted as denoting if the signal is expected to be valid, =
-and is used
-> > > + *   to determine if the chip needs to be kept powered.
-> > > + * - Changing both period and duty_cycle is not done atomically, nei=
-ther is the
-> > > + *   multi-byte register updates, so the output might briefly be und=
-efined
-> > > + *   during update.
-> > >   */
-> > > +static int ti_sn_pwm_apply(struct pwm_chip *chip, struct pwm_device =
-*pwm,
-> > > +			   const struct pwm_state *state)
-> > > +{
-> > > +	struct ti_sn65dsi86 *pdata =3D pwm_chip_to_ti_sn_bridge(chip);
-> > > +	unsigned int pwm_en_inv;
-> > > +	unsigned int backlight;
-> > > +	unsigned int pre_div;
-> > > +	unsigned int scale;
-> > > +	u64 period_max;
-> > > +	u64 period;
-> > > +	int ret;
-> > > +
-> > > +	if (!pdata->pwm_enabled) {
-> > > +		ret =3D pm_runtime_get_sync(pdata->dev);
-> > > +		if (ret < 0) {
-> > > +			pm_runtime_put_sync(pdata->dev);
-> > > +			return ret;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	if (state->enabled) {
-> > > +		if (!pdata->pwm_enabled) {
-> > > +			/*
-> > > +			 * The chip might have been powered down while we
-> > > +			 * didn't hold a PM runtime reference, so mux in the
-> > > +			 * PWM function on the GPIO pin again.
-> > > +			 */
-> > > +			ret =3D regmap_update_bits(pdata->regmap, SN_GPIO_CTRL_REG,
-> > > +						 SN_GPIO_MUX_MASK << (2 * SN_PWM_GPIO_IDX),
-> > > +						 SN_GPIO_MUX_SPECIAL << (2 * SN_PWM_GPIO_IDX));
-> > > +			if (ret) {
-> > > +				dev_err(pdata->dev, "failed to mux in PWM function\n");
-> > > +				goto out;
-> > > +			}
-> > > +		}
-> > > +
-> > > +		/*
-> > > +		 * Per the datasheet the PWM frequency is given by:
-> > > +		 *
-> > > +		 *                          REFCLK_FREQ
-> > > +		 *   PWM_FREQ =3D -----------------------------------
-> > > +		 *               PWM_PRE_DIV * BACKLIGHT_SCALE + 1
-> > > +		 *
-> > > +		 * Unfortunately the math becomes overly complex unless we
-> > > +		 * assume that this formula is missing parenthesis around
-> > > +		 * BACKLIGHT_SCALE + 1.
-> >=20
-> > We shouldn't assume a different formula than the reference manual
-> > describes because it's complex. The reasoning should be that the
-> > reference manual is wrong and that someone has convinced themselves the
-> > assumed formula is the right one instead.
->=20
-> Given the effort put in to conclude that there must be some parenthesis
-> there, I agree that "assume" might be to weak of a word...
->=20
-> > With the assumed formula: What happens if PWM_PRE_DIV is 0?
->=20
-> Looking at the specification again and I don't see anything prohibiting
-> from writing 0 in the PRE_DIV register, and writing a 0 to the register
-> causes no visual on my backlight from writing 1.
+     - Corrected clk/ PM domain-support patch by not using the
+       devm_tegra_core_dev_init_opp_table_common() helper, which I
+       utilized in v12. The clk driver implements its own power domain
+       state syncing and common helper shouldn't be used. This fixes driver
+       probing for some clocks on some devices. It was reported by
+       Svyatoslav Ryhel for PLLE OPP error on T30 Asus Transformer tablet.
 
-So the backlight behaves identically for PRE_DIV =3D 0 and PRE_DIV =3D 1 as
-far as you can tell?
+v12: - Added r-b from Rob Herring to the host1x binding patch.
 
-> Per our new understanding this should probably have resulted in a period
-> of 0.
+     - Added acks from Hans Verkuil to the video decoder patches.
 
-=2E.. but a period of zero doesn't make sense.
+     - In the v11 changelog I forgot to mention that the clk-binding
+       patch was also changed with a corrected regex pattern and removed
+       'clocks' sub-node. This patch needs r-b or ack too.
 
-> That said, if the formula from the datasheet was correct then we'd
-> have a period T_pwm (given T_ref as refclk pulse length) of:
->=20
->   T_pwm =3D T_ref * (div * scale + 1)
->=20
-> And with div =3D 0 we'd have:
->=20
->   T_pwm =3D T_ref * 1
->=20
-> Which wouldn't give any room for adjusting the duty cycle, and I can
-> still do that. So that's not correct either.
+     - Added new "Rename 3d power domains" patch to match the DT schema
+       naming requirement. Thanks to David Heidelberg for spotting this
+       problem.
 
-I don't see a problem here (just the hardware would be unusual and
-complicated and so more expensive than the simple straigt forward way).
+     - Replaced #ifdef CONFIG_PM_SLEEP with maybe_unused in the MMC patch
+       to make code cleaner.
 
-One way to find out if
+v11: - Added acks and r-b from Rob Herring, Mark Brown and Miquel Raynal
+       that were given to v8.
 
-	 PWM_PRE_DIV * BACKLIGHT_SCALE + 1
-	-----------------------------------
-	            REFCLK_FREQ
+     - Corrected order of the new memory controller reset entry in
+       device-trees and host1x DT binding patch, which was requested by
+       Rob Herring.
 
-or
+     - Switched consumer drivers to use power domain state syncing done
+       by new Tegra's common OPP-initialization helper.
 
-	 PWM_PRE_DIV * (BACKLIGHT_SCALE + 1)
-	-------------------------------------
-	             REFCLK_FREQ
+     - Made use of new devm_pm_runtime_enable() helper that was added to
+       v5.15 kernel, where appropriate.
 
-is the right formula is to program PWM_PRE_DIV=3D1 and BACKLIGHT_SCALE=3D1
-and then check if the backlight is fully on with SN_BACKLIGHT_REG=3D2 (or
-only with SN_BACKLIGHT_REG=3D3).
+     - Added "fuse: Use resource-managed helpers" patch.
 
-> Unfortunately I still don't want to dismantle my working laptop, so I
-> don't know if I can do any better than this. Perhaps they do the typical
-> trick of encoding prediv off-by-1 and the PWM duty is off by a factor
-> of 2. Perhaps the comparator for the prediv counter trips at 1 even
-> though the register is configured at 0...
+     - Converted Tegra20/30 clk drivers to a proper platform drivers,
+       which was requested by Thierry Reding.
 
-I would guess the latter.
+     - Removed clk-bulk API usage from the MMC patch, which was requested
+       by Thierry Reding.
 
-> > > +		/*
-> > > +		 * Maximum T_pwm is 255 * (65535 + 1) / REFCLK_FREQ
-> > > +		 * Limit period to this to avoid overflows
-> > > +		 */
-> > > +		period_max =3D div_u64((u64)NSEC_PER_SEC * 255 * (65535 + 1), pdat=
-a->pwm_refclk_freq);
-> > > +		if (period > period_max)
-> > > +			period =3D period_max;
-> > > +		else
-> > > +			period =3D state->period;
-> > > +
-> > > +		pre_div =3D DIV64_U64_ROUND_UP(period * pdata->pwm_refclk_freq,
-> > > +					     (u64)NSEC_PER_SEC * (BACKLIGHT_SCALE_MAX + 1));
-> > > +		scale =3D div64_u64(period * pdata->pwm_refclk_freq, (u64)NSEC_PER=
-_SEC * pre_div) - 1;
-> >=20
-> > You're loosing precision here as you divide by the result of a division.
->=20
-> As described above, I'm trying to find suitable values for PRE_DIV and
-> BACKLIGHT_SCALE in:
->=20
->   T_pwm * refclk_freq
->  --------------------- =3D PRE_DIV * (BACKLIGHT_SCALE + 1)
->      NSEC_PER_SEC
->=20
-> BACKLIGHT_SCALE must fit in 16 bits and in order to be useful for
-> driving the backlight control be large enough that the resolution
-> (BACKLIGTH =3D [0..BACKLIGHT_SCALE]) covers whatever resolution
-> pwm-backlight might expose.
->=20
-> For the intended use case this seems pretty good, but I presume you
-> could pick better values to get closer to the requested period.
->=20
-> Do you have a better suggestion for how to pick PRE_DIV and
-> BACKLIGHT_SCALE?
+     - Changed CORE power domain name to "core" in a new patch
+       "Change name of core power domain".
 
-My motivation is limited to spend brain cycles here if we're not sure
-we're using the right formula. Maybe my concern is wrong given that
-pre_div isn't only an interim result but an actual register value. I
-will have to think about that when I'm not tired.
+     - Misc small fixes for problems that I found since v8, like couple
+       typos in error code paths and restored working RPM for Tegra DRM
+       UAPI v1 that was removed in v8 by accident.
 
-> > > +static void ti_sn_pwm_get_state(struct pwm_chip *chip, struct pwm_de=
-vice *pwm,
-> > > +				struct pwm_state *state)
-> > > +{
-> > > +	struct ti_sn65dsi86 *pdata =3D pwm_chip_to_ti_sn_bridge(chip);
-> > > +	unsigned int pwm_en_inv;
-> > > +	unsigned int pre_div;
-> > > +	u16 backlight;
-> > > +	u16 scale;
-> > > +	int ret;
-> > > +
-> > > +	ret =3D regmap_read(pdata->regmap, SN_PWM_EN_INV_REG, &pwm_en_inv);
-> > > +	if (ret)
-> > > +		return;
-> > > +
-> > > +	ret =3D ti_sn65dsi86_read_u16(pdata, SN_BACKLIGHT_SCALE_REG, &scale=
-);
-> > > +	if (ret)
-> > > +		return;
-> > > +
-> > > +	ret =3D ti_sn65dsi86_read_u16(pdata, SN_BACKLIGHT_REG, &backlight);
-> > > +	if (ret)
-> > > +		return;
-> > > +
-> > > +	ret =3D regmap_read(pdata->regmap, SN_PWM_PRE_DIV_REG, &pre_div);
-> > > +	if (ret)
-> > > +		return;
-> > > +
-> > > +	state->enabled =3D FIELD_GET(SN_PWM_EN_MASK, pwm_en_inv);
-> > > +	if (FIELD_GET(SN_PWM_INV_MASK, pwm_en_inv))
-> > > +		state->polarity =3D PWM_POLARITY_INVERSED;
-> > > +	else
-> > > +		state->polarity =3D PWM_POLARITY_NORMAL;
-> > > +
-> > > +	state->period =3D DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC * pre_div * (s=
-cale + 1),
-> > > +					 pdata->pwm_refclk_freq);
-> > > +	state->duty_cycle =3D DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC * pre_div =
-* backlight,
-> > > +					     pdata->pwm_refclk_freq);
-> >=20
-> > What happens if scale + 1 < backlight?
->=20
-> When we write the backlight register above, we cap it at scale, so for
-> the typical case that shouldn't happen.
+v9-v10: Figured out remaining GENPD API changes with Ulf Hansson and
+        Viresh Kumar. The OPP-sync helper that was used in v8 isn't needed
+        anymore because GENPD API now allows consumer drivers to
+        init rpm_pstate of power domains.
 
-=2Eget_state() is called before the first .apply(), to the values to
-interpret here originate from the bootloader which might write strange
-settings that the linux driver would never do. So being prudent here is
-IMHO a good idea.
+v8: - Added new generic dev_pm_opp_sync() helper that syncs OPP state with
+      hardware. All drivers changed to use it. This replaces GENPD attach_dev
+      callback hacks that were used in v7.
 
-It's a shame that .get_state() cannot return an error.
+    - Added new patch patch "soc/tegra: regulators: Prepare for suspend"
+      that fixes dying Tegra20 SoC after enabling VENC power domain during
+      resume from suspend. It matches to what downstream kernel does on
+      suspend/resume.
 
-> So I guess the one case when this could happen is if we get_state()
-> before pwm_apply(), when someone else has written broken values
+    - After a second thought, I dropped patches which added RPM to memory
+      drivers since hardware is always-on and RPM not needed.
 
-ack.
+    - Replaced the "dummy host1x driver" patch with new "Disable unused
+      host1x hardware" patch, since it's a cleaner solution.
 
-Best regards
-Uwe
+Dmitry Osipenko (35):
+  opp: Change type of dev_pm_opp_attach_genpd(names) argument
+  soc/tegra: Add devm_tegra_core_dev_init_opp_table_common()
+  soc/tegra: pmc: Disable PMC state syncing
+  soc/tegra: Don't print error message when OPPs not available
+  dt-bindings: clock: tegra-car: Document new clock sub-nodes
+  clk: tegra: Support runtime PM and power domain
+  dt-bindings: host1x: Document OPP and power domain properties
+  dt-bindings: host1x: Document Memory Client resets of Host1x, GR2D and
+    GR3D
+  gpu: host1x: Add runtime PM and OPP support
+  gpu: host1x: Add host1x_channel_stop()
+  drm/tegra: dc: Support OPP and SoC core voltage scaling
+  drm/tegra: hdmi: Add OPP support
+  drm/tegra: gr2d: Support generic power domain and runtime PM
+  drm/tegra: gr3d: Support generic power domain and runtime PM
+  drm/tegra: vic: Support system suspend
+  usb: chipidea: tegra: Add runtime PM and OPP support
+  bus: tegra-gmi: Add runtime PM and OPP support
+  pwm: tegra: Add runtime PM and OPP support
+  mmc: sdhci-tegra: Add runtime PM and OPP support
+  mtd: rawnand: tegra: Add runtime PM and OPP support
+  spi: tegra20-slink: Add OPP support
+  media: dt: bindings: tegra-vde: Convert to schema
+  media: dt: bindings: tegra-vde: Document OPP and power domain
+  media: staging: tegra-vde: Support generic power domain
+  soc/tegra: fuse: Reset hardware
+  soc/tegra: fuse: Use resource-managed helpers
+  soc/tegra: regulators: Prepare for suspend
+  soc/tegra: pmc: Rename 3d power domains
+  soc/tegra: pmc: Rename core power domain
+  soc/tegra: pmc: Enable core domain support for Tegra20 and Tegra30
+  ARM: tegra: Add OPP tables and power domains to Tegra20 device-trees
+  ARM: tegra: Add OPP tables and power domains to Tegra30 device-trees
+  ARM: tegra: Add Memory Client resets to Tegra20 GR2D, GR3D and Host1x
+  ARM: tegra: Add Memory Client resets to Tegra30 GR2D, GR3D and Host1x
+  ARM: tegra20/30: Disable unused host1x hardware
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+ .../bindings/clock/nvidia,tegra20-car.yaml    |   37 +
+ .../display/tegra/nvidia,tegra20-host1x.txt   |   53 +
+ .../bindings/media/nvidia,tegra-vde.txt       |   64 -
+ .../bindings/media/nvidia,tegra-vde.yaml      |  119 ++
+ .../boot/dts/tegra20-acer-a500-picasso.dts    |    1 +
+ arch/arm/boot/dts/tegra20-colibri.dtsi        |    3 +-
+ arch/arm/boot/dts/tegra20-harmony.dts         |    3 +-
+ arch/arm/boot/dts/tegra20-paz00.dts           |    1 +
+ .../arm/boot/dts/tegra20-peripherals-opp.dtsi |  941 +++++++++++
+ arch/arm/boot/dts/tegra20-seaboard.dts        |    3 +-
+ arch/arm/boot/dts/tegra20-tamonten.dtsi       |    3 +-
+ arch/arm/boot/dts/tegra20-trimslice.dts       |    9 +
+ arch/arm/boot/dts/tegra20-ventana.dts         |    1 +
+ arch/arm/boot/dts/tegra20.dtsi                |  116 +-
+ .../tegra30-asus-nexus7-grouper-common.dtsi   |    1 +
+ arch/arm/boot/dts/tegra30-beaver.dts          |    1 +
+ arch/arm/boot/dts/tegra30-cardhu.dtsi         |    1 +
+ arch/arm/boot/dts/tegra30-colibri.dtsi        |   17 +-
+ arch/arm/boot/dts/tegra30-ouya.dts            |    1 +
+ .../arm/boot/dts/tegra30-peripherals-opp.dtsi | 1412 +++++++++++++++++
+ arch/arm/boot/dts/tegra30.dtsi                |  175 +-
+ drivers/bus/tegra-gmi.c                       |   52 +-
+ drivers/clk/tegra/Makefile                    |    1 +
+ drivers/clk/tegra/clk-device.c                |  230 +++
+ drivers/clk/tegra/clk-pll.c                   |    2 +-
+ drivers/clk/tegra/clk-super.c                 |    2 +-
+ drivers/clk/tegra/clk-tegra20.c               |   77 +-
+ drivers/clk/tegra/clk-tegra30.c               |  116 +-
+ drivers/clk/tegra/clk.c                       |   75 +-
+ drivers/clk/tegra/clk.h                       |    2 +
+ drivers/gpu/drm/tegra/dc.c                    |   74 +
+ drivers/gpu/drm/tegra/dc.h                    |    2 +
+ drivers/gpu/drm/tegra/gr2d.c                  |  155 +-
+ drivers/gpu/drm/tegra/gr3d.c                  |  388 ++++-
+ drivers/gpu/drm/tegra/hdmi.c                  |   16 +-
+ drivers/gpu/drm/tegra/vic.c                   |    4 +
+ drivers/gpu/host1x/channel.c                  |    8 +
+ drivers/gpu/host1x/debug.c                    |   15 +
+ drivers/gpu/host1x/dev.c                      |  151 +-
+ drivers/gpu/host1x/dev.h                      |    3 +-
+ drivers/gpu/host1x/hw/channel_hw.c            |   44 +-
+ drivers/gpu/host1x/intr.c                     |    3 -
+ drivers/gpu/host1x/syncpt.c                   |    5 +-
+ drivers/mmc/host/sdhci-tegra.c                |   82 +-
+ drivers/mtd/nand/raw/tegra_nand.c             |   55 +-
+ drivers/opp/core.c                            |    6 +-
+ drivers/pwm/pwm-tegra.c                       |   88 +-
+ drivers/soc/tegra/common.c                    |    4 +-
+ drivers/soc/tegra/fuse/fuse-tegra.c           |   51 +-
+ drivers/soc/tegra/fuse/fuse-tegra20.c         |   33 +-
+ drivers/soc/tegra/fuse/fuse.h                 |    1 +
+ drivers/soc/tegra/pmc.c                       |   27 +-
+ drivers/soc/tegra/regulators-tegra20.c        |   99 ++
+ drivers/soc/tegra/regulators-tegra30.c        |  122 ++
+ drivers/spi/spi-tegra20-slink.c               |   10 +-
+ drivers/staging/media/tegra-vde/vde.c         |   57 +-
+ drivers/usb/chipidea/ci_hdrc_tegra.c          |   53 +-
+ include/linux/host1x.h                        |    1 +
+ include/linux/pm_opp.h                        |    8 +-
+ include/soc/tegra/common.h                    |   24 +
+ 60 files changed, 4751 insertions(+), 357 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/nvidia,tegra-vde.txt
+ create mode 100644 Documentation/devicetree/bindings/media/nvidia,tegra-vde.yaml
+ create mode 100644 drivers/clk/tegra/clk-device.c
 
---7p5usejj7bxwzsag
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.32.0
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmFPk7wACgkQwfwUeK3K
-7AnEOwf+N/6J54akrF+J3lbKi917BOVkoi83lIKZta93CNzHxr2i5MVWVWm/x/rU
-WbXCxPLyuI3bfO+BbcYYo7/lYQlS14Zf9fZg75ZQtXJKZuxHnaKQ4GMY4vLkBqsH
-5NsPaKaGiMp841zPNiVPQPvvAorUzNaiHs5tHYjQYVlcAMXEVcCEgnZavmo+IgUH
-MAL0GJZxS6sW2o9yevofK0HzvEZBLcUhfVvwtYuRNxjVgL9JKwSjub6AKRgNHPT+
-m0rmWiPwqFZai2h+jlNkqAJBpYsiQFFGZjbS1TErH2S4PeMZgjOdORa2cOtG+WrT
-rhXjjc5rPdVe6+HActGI/PlIgEOh7A==
-=bPuQ
------END PGP SIGNATURE-----
-
---7p5usejj7bxwzsag--
