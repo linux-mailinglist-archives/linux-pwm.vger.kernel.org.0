@@ -2,51 +2,51 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14DDB418CA1
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Sep 2021 00:44:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 040EA418CA4
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 Sep 2021 00:44:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232819AbhIZWqY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 26 Sep 2021 18:46:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43328 "EHLO
+        id S232835AbhIZWqZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 26 Sep 2021 18:46:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231586AbhIZWoR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 26 Sep 2021 18:44:17 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F08AC061714;
-        Sun, 26 Sep 2021 15:42:40 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id u18so67075922lfd.12;
-        Sun, 26 Sep 2021 15:42:40 -0700 (PDT)
+        with ESMTP id S231660AbhIZWoS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 26 Sep 2021 18:44:18 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0F9CC061570;
+        Sun, 26 Sep 2021 15:42:41 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id y26so29087723lfa.11;
+        Sun, 26 Sep 2021 15:42:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/zMh2dDaVZoZ4vzZE2pUwfpWmCYNgWoI5eKmTR6g/gI=;
-        b=TPVB0RwXRq+rEkqkQlF6J4GHXH1GJ2ps+9nqJhXZuAGPkdneX7lgZuMNPHZr9uOeCF
-         dMj/G90iS8n1h0BxUFJswCHIquqpp82e9naspyqhTxfpW3x9FhiJ/owb+AixyuWg8GLe
-         TWOUnwO2ds1VKPPejGI6OoP/uUq2mDVATQbKZiPoka3DdoHWrTx6WjVTX4YGSNxrYkue
-         vN3VFRxoB1lFyV3P0fTncx8UAABQvDzR3y8baSAIQB9q5oMRygNb8uY4V3RtnRrznk7j
-         XycZtegYbiU5CvXUsgfUqlWqevOL5wnkN0fgPRg+mnkxN7kKOHEmp1pu0Mmy99ySSek5
-         VnMg==
+        bh=31z6ju9IxXkuW5YuopLRzoIoj/otNjt9+lw55F7t8U0=;
+        b=LLfiLqLR3Uv7MtvTYWmjc+gcUe3dYi7j5vfpS6/nXEonrzdADV499jnt5g3VHYmD2P
+         IaJ9zQyJW0W//HcMG4bBA5YT4Fr5lc1ID60Ts+UOEA9GovTWKNfpdh0YDJCPL44Z6Fg3
+         fJxIp994pumpxP8I7tQp1FOAcJkOoFY2+usFlO+SvVbk1/LGRkkmiMG3iaGgF4UAC2ql
+         0Ri9qBnHW1OOaczmHUjlOfjPGmyKdENaX5Dw0spWFIN7YfCE4HgZSBe2T0njdEUSsEJZ
+         nuNGVhBSXtbuozBRSxrfynWwPezZ2KvPJ2V+KcepW/7yyNDq4dqvqfngbeBJJgDmQpw2
+         /6DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/zMh2dDaVZoZ4vzZE2pUwfpWmCYNgWoI5eKmTR6g/gI=;
-        b=QeumLFSda+V8KX/Vu9YkKfZIW5E4Jfi8M9jmhPuo/YC+eFdjcNPCZtEizZtDjDE635
-         glhrM/fvzOpkaDouJpZLemk/kw+DtvJnbe4IgIFKfbvRJN+K9CDCef24UXCqexNf/LKp
-         4qWhtYmgd6X2h6Fo8h5X4LXUTT5K70KUXvHPc6P6kL5mVtBjyPvvRZdwbk4r2V0l1+1W
-         rwygq7bAGf2OkUhb2PQoonWRDMxZauF5qFfI8iud5qp/1OqZX7AkzpGpaMin4u1LExgg
-         w4VovYLJZdjTFmkkbac26QbkrnCWuw+jQoIGO1VNQ88PHLQipwlNj9tK5k0k8k4oyX0Y
-         QThg==
-X-Gm-Message-State: AOAM531krrODrRgy6UHWseVncKPrbngHs7ZM08B2lKJv9bCCi5GkTKZr
-        ev5wumuwZWsM/93opTDoYQc=
-X-Google-Smtp-Source: ABdhPJxEMLq7ow3WW976CzO5l2U8Li6ZCoWzv72//m9E/QCjgNTeV0WpPTFXp1IrhjC8MsOozgPH6Q==
-X-Received: by 2002:ac2:4a6e:: with SMTP id q14mr21845996lfp.685.1632696158985;
-        Sun, 26 Sep 2021 15:42:38 -0700 (PDT)
+        bh=31z6ju9IxXkuW5YuopLRzoIoj/otNjt9+lw55F7t8U0=;
+        b=ld1o450rbkkDSbhPNs0GuNbjkj3ULRsbVhLLuk+ZGQelRIcvV5hl00+T8L2vIqoWL9
+         SjWSoGYNhigl5oG5NR+IZeNsR+8B58onLusLUeYplvCKugTWwrMt9OJoMApiFqpAbAVx
+         1BfQtoR+DfWAa5dBHBfrWQWh/pH8j/RPHTfyKCNIGL55HAu0YBbYD6/Dy/ldVUbg7dsM
+         YTkGGcKYpzT/Zcfu3C6QvEXxzMh0K2RktBlKnU+vJy/aJDBLhI5VimXZhP6LUU9NX5HR
+         An+nHYhzTagu7nCwDTkYIPprq/dJG7d0bqljaM1g7hEXwIVqkIm+uYlqs3CbRP3zy+9M
+         6TVw==
+X-Gm-Message-State: AOAM5305hXk9egfJmo9C04VA03a7R2fOmyvwMdE6a7tg3A8t9xNMUbux
+        Ur34HjNCsy1FTUu69dh+r98=
+X-Google-Smtp-Source: ABdhPJylJVQRDOfsnswWdBhvajz1HdfChCZWUg3V/0pQG3UKT9LOlK10u4P3TFgY9egIg+K11N0IHA==
+X-Received: by 2002:a05:6512:3c92:: with SMTP id h18mr20860545lfv.656.1632696160164;
+        Sun, 26 Sep 2021 15:42:40 -0700 (PDT)
 Received: from localhost.localdomain (46-138-80-108.dynamic.spd-mgts.ru. [46.138.80.108])
-        by smtp.gmail.com with ESMTPSA id m10sm1408899lfr.272.2021.09.26.15.42.37
+        by smtp.gmail.com with ESMTPSA id m10sm1408899lfr.272.2021.09.26.15.42.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Sep 2021 15:42:38 -0700 (PDT)
+        Sun, 26 Sep 2021 15:42:39 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -73,9 +73,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
         Lucas Stach <dev@lynxeye.de>, Stefan Agner <stefan@agner.ch>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         David Heidelberg <david@ixit.cz>
-Subject: [PATCH v13 11/35] drm/tegra: dc: Support OPP and SoC core voltage scaling
-Date:   Mon, 27 Sep 2021 01:40:34 +0300
-Message-Id: <20210926224058.1252-12-digetx@gmail.com>
+Subject: [PATCH v13 12/35] drm/tegra: hdmi: Add OPP support
+Date:   Mon, 27 Sep 2021 01:40:35 +0300
+Message-Id: <20210926224058.1252-13-digetx@gmail.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210926224058.1252-1-digetx@gmail.com>
 References: <20210926224058.1252-1-digetx@gmail.com>
@@ -85,156 +85,69 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add OPP and SoC core voltage scaling support to the display controller
-driver. This is required for enabling system-wide DVFS on pre-Tegra186
-SoCs.
+The HDMI on Tegra belongs to the core power domain and we're going to
+enable GENPD support for the core domain. Now HDMI driver must use
+OPP API for driving the controller's clock rate because OPP API takes
+care of reconfiguring the domain's performance state based on HDMI clock
+rate. Add OPP support to the HDMI driver.
 
-Tested-by: Peter Geis <pgwipeout@gmail.com> # Ouya T30
-Tested-by: Paul Fertser <fercerpav@gmail.com> # PAZ00 T20
-Tested-by: Nicolas Chauvet <kwizart@gmail.com> # PAZ00 T20 and TK1 T124
-Tested-by: Matt Merhar <mattmerhar@protonmail.com> # Ouya T30
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpu/drm/tegra/dc.c | 74 ++++++++++++++++++++++++++++++++++++++
- drivers/gpu/drm/tegra/dc.h |  2 ++
- 2 files changed, 76 insertions(+)
+ drivers/gpu/drm/tegra/hdmi.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-index a29d64f87563..d4047a14e2b6 100644
---- a/drivers/gpu/drm/tegra/dc.c
-+++ b/drivers/gpu/drm/tegra/dc.c
-@@ -11,9 +11,12 @@
- #include <linux/interconnect.h>
+diff --git a/drivers/gpu/drm/tegra/hdmi.c b/drivers/gpu/drm/tegra/hdmi.c
+index e5d2a4026028..9a87d351a828 100644
+--- a/drivers/gpu/drm/tegra/hdmi.c
++++ b/drivers/gpu/drm/tegra/hdmi.c
+@@ -11,10 +11,13 @@
+ #include <linux/math64.h>
  #include <linux/module.h>
  #include <linux/of_device.h>
-+#include <linux/pm_domain.h>
 +#include <linux/pm_opp.h>
  #include <linux/pm_runtime.h>
+ #include <linux/regulator/consumer.h>
  #include <linux/reset.h>
  
 +#include <soc/tegra/common.h>
- #include <soc/tegra/pmc.h>
++
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_crtc.h>
+ #include <drm/drm_debugfs.h>
+@@ -1195,7 +1198,7 @@ static void tegra_hdmi_encoder_enable(struct drm_encoder *encoder)
+ 	h_back_porch = mode->htotal - mode->hsync_end;
+ 	h_front_porch = mode->hsync_start - mode->hdisplay;
  
- #include <drm/drm_atomic.h>
-@@ -1762,6 +1765,47 @@ int tegra_dc_state_setup_clock(struct tegra_dc *dc,
- 	return 0;
- }
- 
-+static void tegra_dc_update_voltage_state(struct tegra_dc *dc,
-+					  struct tegra_dc_state *state)
-+{
-+	unsigned long rate, pstate;
-+	struct dev_pm_opp *opp;
-+	int err;
-+
-+	if (!dc->has_opp_table)
-+		return;
-+
-+	/* calculate actual pixel clock rate which depends on internal divider */
-+	rate = DIV_ROUND_UP(clk_get_rate(dc->clk) * 2, state->div + 2);
-+
-+	/* find suitable OPP for the rate */
-+	opp = dev_pm_opp_find_freq_ceil(dc->dev, &rate);
-+
-+	if (opp == ERR_PTR(-ERANGE))
-+		opp = dev_pm_opp_find_freq_floor(dc->dev, &rate);
-+
-+	if (IS_ERR(opp)) {
-+		dev_err(dc->dev, "failed to find OPP for %luHz: %pe\n",
-+			rate, opp);
-+		return;
-+	}
-+
-+	pstate = dev_pm_opp_get_required_pstate(opp, 0);
-+	dev_pm_opp_put(opp);
-+
-+	/*
-+	 * The minimum core voltage depends on the pixel clock rate (which
-+	 * depends on internal clock divider of the CRTC) and not on the
-+	 * rate of the display controller clock. This is why we're not using
-+	 * dev_pm_opp_set_rate() API and instead controlling the power domain
-+	 * directly.
-+	 */
-+	err = dev_pm_genpd_set_performance_state(dc->dev, pstate);
-+	if (err)
-+		dev_err(dc->dev, "failed to set power domain state to %lu: %d\n",
-+			pstate, err);
-+}
-+
- static void tegra_dc_commit_state(struct tegra_dc *dc,
- 				  struct tegra_dc_state *state)
- {
-@@ -1801,6 +1845,8 @@ static void tegra_dc_commit_state(struct tegra_dc *dc,
- 		value = SHIFT_CLK_DIVIDER(state->div) | PIXEL_CLK_DIVIDER_PCD1;
- 		tegra_dc_writel(dc, value, DC_DISP_DISP_CLOCK_CONTROL);
- 	}
-+
-+	tegra_dc_update_voltage_state(dc, state);
- }
- 
- static void tegra_dc_stop(struct tegra_dc *dc)
-@@ -1991,6 +2037,13 @@ static void tegra_crtc_atomic_disable(struct drm_crtc *crtc,
- 	err = host1x_client_suspend(&dc->client);
- 	if (err < 0)
- 		dev_err(dc->dev, "failed to suspend: %d\n", err);
-+
-+	if (dc->has_opp_table) {
-+		err = dev_pm_genpd_set_performance_state(dc->dev, 0);
-+		if (err)
-+			dev_err(dc->dev,
-+				"failed to clear power domain state: %d\n", err);
-+	}
- }
- 
- static void tegra_crtc_atomic_enable(struct drm_crtc *crtc,
-@@ -2973,6 +3026,23 @@ static int tegra_dc_couple(struct tegra_dc *dc)
- 	return 0;
- }
- 
-+static int tegra_dc_init_opp_table(struct tegra_dc *dc)
-+{
-+	struct tegra_core_opp_params opp_params = {};
-+	int err;
-+
-+	err = devm_tegra_core_dev_init_opp_table(dc->dev, &opp_params);
-+	if (err && err != -ENODEV)
-+		return err;
-+
-+	if (err)
-+		dc->has_opp_table = false;
-+	else
-+		dc->has_opp_table = true;
-+
-+	return 0;
-+}
-+
- static int tegra_dc_probe(struct platform_device *pdev)
- {
- 	u64 dma_mask = dma_get_mask(pdev->dev.parent);
-@@ -3038,6 +3108,10 @@ static int tegra_dc_probe(struct platform_device *pdev)
- 		tegra_powergate_power_off(dc->powergate);
+-	err = clk_set_rate(hdmi->clk, hdmi->pixel_clock);
++	err = dev_pm_opp_set_rate(hdmi->dev, hdmi->pixel_clock);
+ 	if (err < 0) {
+ 		dev_err(hdmi->dev, "failed to set HDMI clock frequency: %d\n",
+ 			err);
+@@ -1732,7 +1735,14 @@ static int tegra_hdmi_probe(struct platform_device *pdev)
  	}
  
-+	err = tegra_dc_init_opp_table(dc);
-+	if (err < 0)
+ 	platform_set_drvdata(pdev, hdmi);
+-	pm_runtime_enable(&pdev->dev);
++
++	err = devm_pm_runtime_enable(&pdev->dev);
++	if (err)
 +		return err;
 +
- 	dc->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(dc->regs))
- 		return PTR_ERR(dc->regs);
-diff --git a/drivers/gpu/drm/tegra/dc.h b/drivers/gpu/drm/tegra/dc.h
-index 40378308d527..871cfb0cd31c 100644
---- a/drivers/gpu/drm/tegra/dc.h
-+++ b/drivers/gpu/drm/tegra/dc.h
-@@ -100,6 +100,8 @@ struct tegra_dc {
- 	struct drm_info_list *debugfs_files;
++	err = devm_tegra_core_dev_init_opp_table_common(&pdev->dev);
++	if (err)
++		return err;
  
- 	const struct tegra_dc_soc_info *soc;
-+
-+	bool has_opp_table;
- };
+ 	INIT_LIST_HEAD(&hdmi->client.list);
+ 	hdmi->client.ops = &hdmi_client_ops;
+@@ -1753,8 +1763,6 @@ static int tegra_hdmi_remove(struct platform_device *pdev)
+ 	struct tegra_hdmi *hdmi = platform_get_drvdata(pdev);
+ 	int err;
  
- static inline struct tegra_dc *
+-	pm_runtime_disable(&pdev->dev);
+-
+ 	err = host1x_client_unregister(&hdmi->client);
+ 	if (err < 0) {
+ 		dev_err(&pdev->dev, "failed to unregister host1x client: %d\n",
 -- 
 2.32.0
 
