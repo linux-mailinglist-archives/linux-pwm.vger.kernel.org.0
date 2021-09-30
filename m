@@ -2,56 +2,53 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CF8A41D1B6
-	for <lists+linux-pwm@lfdr.de>; Thu, 30 Sep 2021 05:06:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D23E941D1B8
+	for <lists+linux-pwm@lfdr.de>; Thu, 30 Sep 2021 05:06:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347724AbhI3DHm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 29 Sep 2021 23:07:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47294 "EHLO
+        id S1347931AbhI3DHn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 29 Sep 2021 23:07:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347707AbhI3DHl (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 29 Sep 2021 23:07:41 -0400
-Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EEE4C06176C
-        for <linux-pwm@vger.kernel.org>; Wed, 29 Sep 2021 20:05:59 -0700 (PDT)
-Received: by mail-ot1-x329.google.com with SMTP id c26-20020a056830349a00b0054d96d25c1eso5502626otu.9
-        for <linux-pwm@vger.kernel.org>; Wed, 29 Sep 2021 20:05:59 -0700 (PDT)
+        with ESMTP id S1347770AbhI3DHm (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 29 Sep 2021 23:07:42 -0400
+Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5803BC06161C
+        for <linux-pwm@vger.kernel.org>; Wed, 29 Sep 2021 20:06:00 -0700 (PDT)
+Received: by mail-oi1-x234.google.com with SMTP id x124so5505953oix.9
+        for <linux-pwm@vger.kernel.org>; Wed, 29 Sep 2021 20:06:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=a+OqbWheVa9fktnks13xlGqW75vpzjA26oxz+hbw1HY=;
-        b=znAFf3H00WKsy4tsdN/blEqQS1FQG4hLSnbrDru8KT0e+dYyY6FgCCbU6nkQvMc9kq
-         SJHNZa4NxUImqemIzWZvsR4xLbVwebZV96Uq+4O9gslI5AA3PILSzVt3MN9iRzCxN7LP
-         CAOkIM66hRORXfnLoVjBK5ViWi+/2qbnTwEoD0QjvdkaXGB3FQYmPwQbiPOboybsrmwm
-         DE9u0o1/rvbW7VapxxR3YIwrBMaH4pW+6ScA57bR5fusCVomI1ucPNmrFfT026NLrtHJ
-         NlrxGS4OGI0VeL/xk00FV8UVemIGjLVj6YTBiWym/5PzHtU5XsY1XX/qRrIyyeFQ6fv+
-         g1hg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=sDTL0yxYT47N+0jjLEyGdD4ZajCQhNx8OZO23Bvom6A=;
+        b=JmtbCmQrhYNDXZGRKfkIH0HRRStQuRwld6nSinEj6CMvOBT4R7SgwLdKRm7MQ+s5hk
+         BHJ95SI6qznWSrrLE1GzHC4e7e0ElMKW+mFYfeg9+lqVuTTL9px+5xg+Je2MfUKFe+rO
+         hUUcAJp6z370gj87PvvaOgH1Sii++lIJX60jgIUbq4PWXabEz7/XWF2H1eCKnojX4gdi
+         KbWjuN0EJ60lQ+k5Cd7A8pR4F1fL9Ogu6x7MNC6htOvwrWwyZ4G6XDZPOsib/Wb1o+XA
+         zo3xDDQIPPOyYITYmiqW8yi3U6JIv4FpdStnk3n8v7g87QRSymRD21DIhyvuMcK6ghPN
+         C43Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=a+OqbWheVa9fktnks13xlGqW75vpzjA26oxz+hbw1HY=;
-        b=1BmpTtLwLAo1Bf728epIdDAIBDzK4kJyd0s1Dn4xqctE7lv9a0ROyVWx/bonLuF7G9
-         0uctovq2o256WSmONYEmlOvVPLouBmI5ZzYhHSWXOJM3asyhWRg8dcmRg+DQA0zrB70n
-         A3QUdDLu1A2FGU6WqT+6G7UeHnrSe1+Dz07a4jXMT7lMk6Q7h0yAIl7/ktb/lbAPrdDl
-         cuJyZPIiNCwuTjsnrCTzO+d+6kXonfSLF2Zuhi7vvp905TnODKZ5DUM8bbmt8pftpnp6
-         MJ/WRsbHEyPK3gentEUX7igveU6Po/aq8oLITMmsnf0jU+LdttFTmUOVTdVfWh4SBSff
-         /Z3Q==
-X-Gm-Message-State: AOAM530Vbyju0PUKKbDDDh0o9yZkegOML12QdQ30wWAgsDEQK1v31k+g
-        rEqYaZ4KrxuGUeDY571yLHcAJQ==
-X-Google-Smtp-Source: ABdhPJwrm4+8HvOM3408QItprRiTxBwBoUQDHQwU7ALRSUHafsGrE5bjj3mvpHhabTKMRmMGbgo9mA==
-X-Received: by 2002:a05:6830:31ae:: with SMTP id q14mr3156053ots.66.1632971158712;
-        Wed, 29 Sep 2021 20:05:58 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sDTL0yxYT47N+0jjLEyGdD4ZajCQhNx8OZO23Bvom6A=;
+        b=CgoIyvy2e6l5bNbB+qu8SiaH4bkcLCzQv4LZeR2vvBrvDmv/t4ODcfy5asTExgc4Ui
+         G4Ws1cEe2pDZ2ssbrG7k2MkUqCylrlf69lhfDABVC2HWtNfmfXmwelgGjCVPij5lCQ4I
+         j61EYe3O+mOWfi67vhacgPBftXhL/+FW66WAOIjoe1YJHvfAwVxwc0d7vBRM0w5V2OC+
+         SBGBt49hcAkjSzcxsiz+Cc9U0rWWKcfgQ6QBXQMVmvFcJ0MTe3wRaGStqG6O5SCFkuV5
+         Kl7qZXceLqIZsTLRjyxIyX4RF9ZgXXkHBctBUDRPCQ2s2aZyjeKqzFVEAZAoHBalLoFG
+         aJKQ==
+X-Gm-Message-State: AOAM531WgJifLtxH2RgVZEPbn6nlbT0fCwlmQpAGU1hqWJ0Im+JXgXcl
+        pfxnT408KDqRJpZcNlsc1i0ngw==
+X-Google-Smtp-Source: ABdhPJyMU4NRNdVPX4VQVzdWBumOzePFbf0SAxWbaJBtT3aZzpWvEHxUtWR2iKwvTjKobDiRYR6iuw==
+X-Received: by 2002:a54:4f1d:: with SMTP id e29mr880677oiy.179.1632971159696;
+        Wed, 29 Sep 2021 20:05:59 -0700 (PDT)
 Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id s16sm323358otq.78.2021.09.29.20.05.57
+        by smtp.gmail.com with ESMTPSA id s16sm323358otq.78.2021.09.29.20.05.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Sep 2021 20:05:57 -0700 (PDT)
+        Wed, 29 Sep 2021 20:05:59 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+To:     Andrzej Hajda <a.hajda@samsung.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
         Robert Foss <robert.foss@linaro.org>,
         Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
@@ -59,122 +56,56 @@ Cc:     Andrzej Hajda <a.hajda@samsung.com>,
         Jernej Skrabec <jernej.skrabec@gmail.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Doug Anderson <dianders@google.com>
-Subject: [PATCH v6 1/3] pwm: Introduce single-PWM of_xlate function
-Date:   Wed, 29 Sep 2021 22:05:55 -0500
-Message-Id: <20210930030557.1426-1-bjorn.andersson@linaro.org>
+Subject: [PATCH v6 2/3] drm/bridge: ti-sn65dsi86: Use regmap_bulk_write API
+Date:   Wed, 29 Sep 2021 22:05:56 -0500
+Message-Id: <20210930030557.1426-2-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20210930030557.1426-1-bjorn.andersson@linaro.org>
+References: <20210930030557.1426-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The existing pxa driver and the upcoming addition of PWM support in the
-TI sn565dsi86 DSI/eDP bridge driver both has a single PWM channel and
-thereby a need for a of_xlate function with the period as its single
-argument.
+The multi-register u16 write operation can use regmap_bulk_write()
+instead of two separate regmap_write() calls.
 
-Introduce a common helper function in the core that can be used as
-of_xlate by such drivers and migrate the pxa driver to use this.
+It's uncertain if this has any effect on the actual updates of the
+underlying registers, but this at least gives the hardware the
+opportunity and saves us one transation on the bus.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
-Changes since v4:
-- None
+Changes since v5:
+- Extracted this hunk from patch 3.
 
- drivers/pwm/core.c    | 26 ++++++++++++++++++++++++++
- drivers/pwm/pwm-pxa.c | 16 +---------------
- include/linux/pwm.h   |  2 ++
- 3 files changed, 29 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 4527f09a5c50..2c6b155002a2 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -152,6 +152,32 @@ of_pwm_xlate_with_flags(struct pwm_chip *pc, const struct of_phandle_args *args)
- }
- EXPORT_SYMBOL_GPL(of_pwm_xlate_with_flags);
- 
-+struct pwm_device *
-+of_pwm_single_xlate(struct pwm_chip *pc, const struct of_phandle_args *args)
-+{
-+	struct pwm_device *pwm;
-+
-+	if (pc->of_pwm_n_cells < 1)
-+		return ERR_PTR(-EINVAL);
-+
-+	/* validate that one cell is specified, optionally with flags */
-+	if (args->args_count != 1 && args->args_count != 2)
-+		return ERR_PTR(-EINVAL);
-+
-+	pwm = pwm_request_from_chip(pc, 0, NULL);
-+	if (IS_ERR(pwm))
-+		return pwm;
-+
-+	pwm->args.period = args->args[0];
-+	pwm->args.polarity = PWM_POLARITY_NORMAL;
-+
-+	if (args->args_count == 2 && args->args[2] & PWM_POLARITY_INVERTED)
-+		pwm->args.polarity = PWM_POLARITY_INVERSED;
-+
-+	return pwm;
-+}
-+EXPORT_SYMBOL_GPL(of_pwm_single_xlate);
-+
- static void of_pwmchip_add(struct pwm_chip *chip)
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+index 41d48a393e7f..412fb6f564ea 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+@@ -193,8 +193,9 @@ static const struct regmap_config ti_sn65dsi86_regmap_config = {
+ static void ti_sn65dsi86_write_u16(struct ti_sn65dsi86 *pdata,
+ 				   unsigned int reg, u16 val)
  {
- 	if (!chip->dev || !chip->dev->of_node)
-diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
-index a9efdcf839ae..238ec88c130b 100644
---- a/drivers/pwm/pwm-pxa.c
-+++ b/drivers/pwm/pwm-pxa.c
-@@ -148,20 +148,6 @@ static const struct platform_device_id *pxa_pwm_get_id_dt(struct device *dev)
- 	return id ? id->data : NULL;
+-	regmap_write(pdata->regmap, reg, val & 0xFF);
+-	regmap_write(pdata->regmap, reg + 1, val >> 8);
++	u8 buf[2] = { val & 0xff, val >> 8 };
++
++	regmap_bulk_write(pdata->regmap, reg, buf, ARRAY_SIZE(buf));
  }
  
--static struct pwm_device *
--pxa_pwm_of_xlate(struct pwm_chip *pc, const struct of_phandle_args *args)
--{
--	struct pwm_device *pwm;
--
--	pwm = pwm_request_from_chip(pc, 0, NULL);
--	if (IS_ERR(pwm))
--		return pwm;
--
--	pwm->args.period = args->args[0];
--
--	return pwm;
--}
--
- static int pwm_probe(struct platform_device *pdev)
- {
- 	const struct platform_device_id *id = platform_get_device_id(pdev);
-@@ -187,7 +173,7 @@ static int pwm_probe(struct platform_device *pdev)
- 	pc->chip.npwm = (id->driver_data & HAS_SECONDARY_PWM) ? 2 : 1;
- 
- 	if (IS_ENABLED(CONFIG_OF)) {
--		pc->chip.of_xlate = pxa_pwm_of_xlate;
-+		pc->chip.of_xlate = of_pwm_single_xlate;
- 		pc->chip.of_pwm_n_cells = 1;
- 	}
- 
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 725c9b784e60..dd51d4931fdc 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -414,6 +414,8 @@ struct pwm_device *pwm_request_from_chip(struct pwm_chip *chip,
- 
- struct pwm_device *of_pwm_xlate_with_flags(struct pwm_chip *pc,
- 		const struct of_phandle_args *args);
-+struct pwm_device *of_pwm_single_xlate(struct pwm_chip *pc,
-+				       const struct of_phandle_args *args);
- 
- struct pwm_device *pwm_get(struct device *dev, const char *con_id);
- struct pwm_device *of_pwm_get(struct device *dev, struct device_node *np,
+ static u32 ti_sn_bridge_get_dsi_freq(struct ti_sn65dsi86 *pdata)
 -- 
 2.32.0
 
