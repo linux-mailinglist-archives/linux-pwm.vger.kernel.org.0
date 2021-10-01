@@ -2,54 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6436A41EF45
-	for <lists+linux-pwm@lfdr.de>; Fri,  1 Oct 2021 16:19:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC7DA41EF68
+	for <lists+linux-pwm@lfdr.de>; Fri,  1 Oct 2021 16:25:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354386AbhJAOVW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 1 Oct 2021 10:21:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51564 "EHLO
+        id S231820AbhJAO0z (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 1 Oct 2021 10:26:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354366AbhJAOVV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 1 Oct 2021 10:21:21 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BEE9C061775
-        for <linux-pwm@vger.kernel.org>; Fri,  1 Oct 2021 07:19:37 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id y23so125734lfb.0
-        for <linux-pwm@vger.kernel.org>; Fri, 01 Oct 2021 07:19:37 -0700 (PDT)
+        with ESMTP id S1354268AbhJAO0y (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 1 Oct 2021 10:26:54 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46702C0613E2
+        for <linux-pwm@vger.kernel.org>; Fri,  1 Oct 2021 07:25:10 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id e15so39505694lfr.10
+        for <linux-pwm@vger.kernel.org>; Fri, 01 Oct 2021 07:25:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TmYkpMVtb1uSKsqX5euv7WOyLfzbmtOSlOndqVN+8j0=;
-        b=duQY39xT4Fb3Hr1PnbXTs56tkaQqjpQAgYJH7QSZorCPxuVu1w1xjBo4K+zxv2eT/i
-         Gv8vFaPicQua766hZYd2Z4sFxKAhudSPsUf76DMai8U3Fw5bbvcx7fO5WW1P2A848bGM
-         ZQq9OG2u50UNu3Jjx5+mQA6VDCrE6ml8Fh35xGIGRw6EE6eRYolYKa9p+8rWD2ZvBilp
-         uWVK4oDlCgf7DxNBdPej6J24qlMnSVWJnHXL2sfU57hu2pnNnIEFwtPnFm56+42awhNu
-         cSD+lRwaEeSCzPyePp37ympdEiAHaEdnn7LGs+wYp5tVdUW4CxRCTuk1HbDpdUV4ipuJ
-         BGrA==
+        bh=uoTsMILdh2iae8vlYA/uD6rXVrqQcXGr4rKOWNIrfP4=;
+        b=ZX/zp88Hzbtc6VumtwtOf/Oh+OaJ0chzGkXC5wf4sPS8EnMadE1LYVMn+oQGU+kHb8
+         R+gyJ0Wgd6EZVoHYlNsYzRsUaZ5Rp/cdsIRgMegZH1fxe5M9LdMHvWaVupGppgdYzZDW
+         TD5Kr9uQc875LMcukvjCblVlHVTBOl7gxHxMLD9oTeyGDqmxuy531Ve1dY7h60MRyk+C
+         V8sDsQ9/XhH26KEHzkzm/kuAtjxeW7JVdmQ74ybXucxQOcK8nSOutATp4BamK5izx3m/
+         P4rAUs6vctnmnFw0UhIdyFrrMh5OhPkSyPf5wfcKi9tqeuxiNdqmo/N2ZPtT7kOoHYhb
+         jrrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TmYkpMVtb1uSKsqX5euv7WOyLfzbmtOSlOndqVN+8j0=;
-        b=g57RTljCjuyJdQ86ld70piMbv976mt9grYG4wchU21SBKgdqEXbdAsInZHhLfugmp/
-         ocFcisC2rsmZo4JfInTqb3fNhA0006KRrUQnKBweY64t3liXut8MbfDmM4NMimd/+ngF
-         TzRkBBIeAAQxm1qN6g47G3CrExpqJFJMHWZTv87N4GBiD86zi25HVJSz7C/AFoQN+L0S
-         /YDUXhxFYs80wmEuO05vHSJK+jrI5gnEDpUFK7bbdhSU/dNj4lNmQM7pigExdexYvd7K
-         A0DkMKaWjzif7qmEWALt/PDMh00hXvdr69sMWk+oarw+IinqtYzf6wqk5lEExwClTBm1
-         Pr8w==
-X-Gm-Message-State: AOAM530NVo0xbRmy41yrjAVOO+Nn4HvZSX9ARvt1p+mKOtz9RPCKgl0J
-        5nWxhxsDGN6kFulQVYFLdc8ow2Xk32nYDUSRTo/45Q==
-X-Google-Smtp-Source: ABdhPJykzVLbDQqRsm8qwArsDUIjqMsOFjOioC0Mnou3m3mAAqwDg9NoSSc7iCu+AIdRWsUjvdPXt+LHd7gC+IctUuw=
-X-Received: by 2002:a05:6512:2397:: with SMTP id c23mr5560648lfv.358.1633097975362;
- Fri, 01 Oct 2021 07:19:35 -0700 (PDT)
+        bh=uoTsMILdh2iae8vlYA/uD6rXVrqQcXGr4rKOWNIrfP4=;
+        b=Cjlo96LADekvhplGjjewAS/HP9Ad6ryu/lT2nO5cLUtd0knS3tC94Vw9GzW9AGt19T
+         VE2iKIWZnJVgUY2bk7MPwznBbEFuJ5OEKtvHo8ZEYzcr/if3+5zAl9bqy4AZzHrphGbc
+         o3bMVlL/Xr1JqXcOqhQxXXnpPfm77qbs37BXcLvPJzdPZsaBhjmX8HmAGAYjdqi0AjvZ
+         g6JktwGjlCYE0YZBeC5RE0tEEA3KSlO2JjsyW2iLxZlgpAA/pNphGtzTfhU8/Ohry82B
+         wEYxP1UBW+y1HUPObc/xI3iscNso1Pk6G+OClTqyqqvzYP4pGDHd8JHARGI0O0G4vKWd
+         bDJA==
+X-Gm-Message-State: AOAM530m8XtrtE65W357VTyJMzijXyAmvZsH5cBRKiUYBgGMuLf15Srp
+        kLPlHom8K+Dgf9RsUOhXFusjlsUmz8anWMTYs5n4Fg==
+X-Google-Smtp-Source: ABdhPJwSMtJvxBnj9uWeRpU/b3LkJtcHpGm07/8fvonUj3xZI1CXy/1e+tkG9PmEu6jyQxbbL99Gq2H6ljI3UAmND1M=
+X-Received: by 2002:a05:6512:2397:: with SMTP id c23mr5584384lfv.358.1633098308316;
+ Fri, 01 Oct 2021 07:25:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210926224058.1252-1-digetx@gmail.com> <20210926224058.1252-18-digetx@gmail.com>
-In-Reply-To: <20210926224058.1252-18-digetx@gmail.com>
+References: <20210926224058.1252-1-digetx@gmail.com> <20210926224058.1252-21-digetx@gmail.com>
+In-Reply-To: <20210926224058.1252-21-digetx@gmail.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 1 Oct 2021 16:18:59 +0200
-Message-ID: <CAPDyKFoC7Kn9FPjAZLisSKWyYaXr1j2GnyQGNTVg_Dsuku-muA@mail.gmail.com>
-Subject: Re: [PATCH v13 17/35] bus: tegra-gmi: Add runtime PM and OPP support
+Date:   Fri, 1 Oct 2021 16:24:32 +0200
+Message-ID: <CAPDyKFoF2QxZss_h9B1NFqOqgeF=TQ6LajCedGiJ9_P8X5M0NA@mail.gmail.com>
+Subject: Re: [PATCH v13 20/35] mtd: rawnand: tegra: Add runtime PM and OPP support
 To:     Dmitry Osipenko <digetx@gmail.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -86,68 +86,47 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 On Mon, 27 Sept 2021 at 00:42, Dmitry Osipenko <digetx@gmail.com> wrote:
 >
-> The GMI bus on Tegra belongs to the core power domain and we're going to
-> enable GENPD support for the core domain. Now GMI must be resumed using
-> runtime PM API in order to initialize the GMI power state. Add runtime PM
-> and OPP support to the GMI driver.
+> The NAND on Tegra belongs to the core power domain and we're going to
+> enable GENPD support for the core domain. Now NAND must be resumed using
+> runtime PM API in order to initialize the NAND power state. Add runtime PM
+> and OPP support to the NAND driver.
 >
+> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
 > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  drivers/bus/tegra-gmi.c | 52 ++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 46 insertions(+), 6 deletions(-)
+>  drivers/mtd/nand/raw/tegra_nand.c | 55 ++++++++++++++++++++++++++-----
+>  1 file changed, 47 insertions(+), 8 deletions(-)
 >
-> diff --git a/drivers/bus/tegra-gmi.c b/drivers/bus/tegra-gmi.c
-> index a6570789f7af..72ef8a8c236b 100644
-> --- a/drivers/bus/tegra-gmi.c
-> +++ b/drivers/bus/tegra-gmi.c
-> @@ -13,8 +13,11 @@
->  #include <linux/io.h>
->  #include <linux/module.h>
->  #include <linux/of_device.h>
+> diff --git a/drivers/mtd/nand/raw/tegra_nand.c b/drivers/mtd/nand/raw/tegra_nand.c
+> index 32431bbe69b8..098fcc9cb9df 100644
+> --- a/drivers/mtd/nand/raw/tegra_nand.c
+> +++ b/drivers/mtd/nand/raw/tegra_nand.c
+> @@ -17,8 +17,11 @@
+>  #include <linux/mtd/rawnand.h>
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
 > +#include <linux/pm_runtime.h>
 >  #include <linux/reset.h>
 >
 > +#include <soc/tegra/common.h>
 > +
->  #define TEGRA_GMI_CONFIG               0x00
->  #define TEGRA_GMI_CONFIG_GO            BIT(31)
->  #define TEGRA_GMI_BUS_WIDTH_32BIT      BIT(30)
-> @@ -54,9 +57,9 @@ static int tegra_gmi_enable(struct tegra_gmi *gmi)
->  {
->         int err;
->
-> -       err = clk_prepare_enable(gmi->clk);
-> -       if (err < 0) {
-> -               dev_err(gmi->dev, "failed to enable clock: %d\n", err);
-> +       err = pm_runtime_resume_and_get(gmi->dev);
-> +       if (err) {
-> +               pm_runtime_disable(gmi->dev);
->                 return err;
->         }
->
-> @@ -83,7 +86,8 @@ static void tegra_gmi_disable(struct tegra_gmi *gmi)
->         writel(config, gmi->base + TEGRA_GMI_CONFIG);
->
->         reset_control_assert(gmi->rst);
-> -       clk_disable_unprepare(gmi->clk);
-> +
-> +       pm_runtime_put(gmi->dev);
->  }
->
->  static int tegra_gmi_parse_dt(struct tegra_gmi *gmi)
-> @@ -213,6 +217,7 @@ static int tegra_gmi_probe(struct platform_device *pdev)
->         if (!gmi)
+>  #define COMMAND                                        0x00
+>  #define   COMMAND_GO                           BIT(31)
+>  #define   COMMAND_CLE                          BIT(30)
+> @@ -1151,6 +1154,7 @@ static int tegra_nand_probe(struct platform_device *pdev)
 >                 return -ENOMEM;
 >
-> +       platform_set_drvdata(pdev, gmi);
->         gmi->dev = dev;
+>         ctrl->dev = &pdev->dev;
+> +       platform_set_drvdata(pdev, ctrl);
+>         nand_controller_init(&ctrl->controller);
+>         ctrl->controller.ops = &tegra_nand_controller_ops;
 >
->         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> @@ -232,6 +237,14 @@ static int tegra_gmi_probe(struct platform_device *pdev)
->                 return PTR_ERR(gmi->rst);
->         }
+> @@ -1166,14 +1170,22 @@ static int tegra_nand_probe(struct platform_device *pdev)
+>         if (IS_ERR(ctrl->clk))
+>                 return PTR_ERR(ctrl->clk);
 >
-> +       err = devm_pm_runtime_enable(gmi->dev);
+> -       err = clk_prepare_enable(ctrl->clk);
+> +       err = devm_pm_runtime_enable(&pdev->dev);
 > +       if (err)
 > +               return err;
 > +
@@ -155,27 +134,55 @@ On Mon, 27 Sept 2021 at 00:42, Dmitry Osipenko <digetx@gmail.com> wrote:
 > +       if (err)
 > +               return err;
 > +
->         err = tegra_gmi_parse_dt(gmi);
+> +       err = pm_runtime_resume_and_get(&pdev->dev);
 >         if (err)
 >                 return err;
-> @@ -247,8 +260,6 @@ static int tegra_gmi_probe(struct platform_device *pdev)
->                 return err;
+>
+>         err = reset_control_reset(rst);
+>         if (err) {
+>                 dev_err(ctrl->dev, "Failed to reset HW: %d\n", err);
+> -               goto err_disable_clk;
+> +               goto err_put_pm;
 >         }
 >
-> -       platform_set_drvdata(pdev, gmi);
+>         writel_relaxed(HWSTATUS_CMD_DEFAULT, ctrl->regs + HWSTATUS_CMD);
+> @@ -1188,21 +1200,19 @@ static int tegra_nand_probe(struct platform_device *pdev)
+>                                dev_name(&pdev->dev), ctrl);
+>         if (err) {
+>                 dev_err(ctrl->dev, "Failed to get IRQ: %d\n", err);
+> -               goto err_disable_clk;
+> +               goto err_put_pm;
+>         }
+>
+>         writel_relaxed(DMA_MST_CTRL_IS_DONE, ctrl->regs + DMA_MST_CTRL);
+>
+>         err = tegra_nand_chips_init(ctrl->dev, ctrl);
+>         if (err)
+> -               goto err_disable_clk;
 > -
+> -       platform_set_drvdata(pdev, ctrl);
+> +               goto err_put_pm;
+>
+
+There is no corresponding call pm_runtime_put() here. Is it
+intentional to always leave the device runtime resumed after ->probe()
+has succeeded?
+
+I noticed you included some comments about this for some other
+drivers, as those needed more tweaks. Is that also the case for this
+driver?
+
 >         return 0;
+>
+> -err_disable_clk:
+> -       clk_disable_unprepare(ctrl->clk);
+> +err_put_pm:
+> +       pm_runtime_put(ctrl->dev);
+>         return err;
 >  }
 >
-> @@ -262,6 +273,34 @@ static int tegra_gmi_remove(struct platform_device *pdev)
 
-Similar comment as for patch13, for the ->remove() callback.
-
-This problem, which sometimes also exists in the error path in
-->probe() (according to my comments in patch13), seems to be a common
-issue in the series. I will therefore not continue to repeat my
-comment on this for the remaining patches in the series, I think I
-have made my point. :-)
+[...]
 
 Kind regards
 Uffe
