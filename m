@@ -2,145 +2,152 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F6BD41FE14
-	for <lists+linux-pwm@lfdr.de>; Sat,  2 Oct 2021 22:44:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEDDF4204C9
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 Oct 2021 03:46:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234022AbhJBUqh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 2 Oct 2021 16:46:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233975AbhJBUqg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 2 Oct 2021 16:46:36 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 357FBC061714;
-        Sat,  2 Oct 2021 13:44:50 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id j5so48530857lfg.8;
-        Sat, 02 Oct 2021 13:44:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=T5NA95fXjewFVQZ7RXmQGjvZaYL3KLG4ILjTuHYXm9E=;
-        b=VInxURP7xctDXfL0Dl1Z5iIuI8Z57STPldPnyJ+NEoakoMviQJJZLMTDvRJajSYeUA
-         L6hAx+33fXvlxHQdSLAb2swwYgCSXcm4IHTOs4QNGPXy0n+3kc1PaSRsPOeccYBdBeZd
-         i/GVKW6ch0QjgR5Al9izKnsKjtkLP9b6WFxxbgQj5xOtMJ+SSJ3vI3nxrqadHVRi/RnA
-         W6QxtWyfIbdShJzgMDhIpqfX5qzkmNQXHlvgGM11cFUopWEMKunpWxyqUcwKJKYvFAG5
-         +vztm6uVxmXOzcI8Wt5yVr3CSoQmJa2Le0PpZjwLrPdDyp4eM6GhDyuSByQAckD1zOgW
-         c3ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=T5NA95fXjewFVQZ7RXmQGjvZaYL3KLG4ILjTuHYXm9E=;
-        b=o+AkgwIXTGmhQJOReVcp/TKkZzv7PXYcfMekTaitKUtIJwq9Jx49Ek3A6rzLNWnGDw
-         P14BK/n3ooXkpVEH9nCyL8FXZYN7ZEwDQcX/HwTKjBIRyMgJudlk3iv1sfciLtZTSdOR
-         vwOpvOwVQIenigGsvIM5EuTWq+4BDfs+q6YQF1gWnaCKscYOjk/MGgW3xBNn8ZhUdVCZ
-         7xYmRwRBj20i5ZIDmJzuKM5BziIPaasu+aA7E2ExtPF5uOYuwbOaw7T/wguPP+RgSZQ4
-         IMKvmtAHcPJB8dSJI9T5/DLw2qkb2FpwIt50gSksOXa8MP0ZwlDi4BPe4g+NLYlyBgjd
-         yb5A==
-X-Gm-Message-State: AOAM5320QoRG2UTT3/F5jVU3Ku5BPR/cGcwERvAogi3KnHxkjgIS1xsP
-        utURybmrqidGKVMJdilKdqs=
-X-Google-Smtp-Source: ABdhPJzClEAya5hcn4TqFZQoHIn0mpgv86q3zG4rhbGd/Hwr0saEHFeEJIpz6XM0cCQNRVK631z4Mw==
-X-Received: by 2002:a2e:80cd:: with SMTP id r13mr5454584ljg.415.1633207488462;
-        Sat, 02 Oct 2021 13:44:48 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-52-238.dynamic.spd-mgts.ru. [94.29.52.238])
-        by smtp.googlemail.com with ESMTPSA id v27sm1233535lfp.0.2021.10.02.13.44.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 Oct 2021 13:44:47 -0700 (PDT)
-Subject: Re: [PATCH v13 06/35] clk: tegra: Support runtime PM and power domain
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Peter Chen <peter.chen@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Nishanth Menon <nm@ti.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        linux-staging@lists.linux.dev, linux-pwm@vger.kernel.org,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Richard Weinberger <richard@nod.at>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Lucas Stach <dev@lynxeye.de>, Stefan Agner <stefan@agner.ch>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        David Heidelberg <david@ixit.cz>
-References: <20210926224058.1252-1-digetx@gmail.com>
- <20210926224058.1252-7-digetx@gmail.com>
- <CAPDyKFq+LS4Jr1GyC-a-tGWPzGH0JxfJ9wKY=uQEBGYm952azw@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <24101cd6-d3f5-1e74-db39-145ecd30418b@gmail.com>
-Date:   Sat, 2 Oct 2021 23:44:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
-MIME-Version: 1.0
-In-Reply-To: <CAPDyKFq+LS4Jr1GyC-a-tGWPzGH0JxfJ9wKY=uQEBGYm952azw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        id S232156AbhJDBrz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 3 Oct 2021 21:47:55 -0400
+Received: from mail-eopbgr1320133.outbound.protection.outlook.com ([40.107.132.133]:19968
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232053AbhJDBrx (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sun, 3 Oct 2021 21:47:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=m3h0VbPFdFJGkQCZ5/cntFLhBSu9+FxhOR2r6bCfHWZXU7oU7J1bvK0D4yvls1+kRiKVrOpS5gewFeJhKfFOxEIbgPYlWCNURJY9L7LGJU2jo4hBn/ijFV1P6s1QZsLbHmgMaK2tHfMKhUrgUogaegBxI4XA6EiaFCzauxwcxt7wcT2YznRE4nms+6jR7339dNqbxsLM7GnX9sp8VwZA096f7zq6w/d2LgNbn0lZViyXokH1GxB3HY1h+MrS61WB+2BeqHP+mFqRbS7ZSoSSJpfR/xHkgiZi2t449OsP/WOyWqDhvCyLuF0HOzpkK9Jk7FTJ+umQu3cGQVdTxNJBOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lJ0Y1Yn0mN/afGSqEEKviuX6aXidvsbRL7XqzU9Xt3I=;
+ b=ZmCPN6S1hyp2xdo7fZ56ZR7JeiWu04noUww822T24gyInyB1sJZxZr2I7QNMlCT2Jo0i9fXho6kd4ZfmssZZeyKk52T61sfclNqSGaW5WU3TRryfkXGXA0/vrz3izLViYXGXH5k0/vyTB0LXneOKgXG2TnHzMoLIcMwaA/fqNmrziTk2+wEgroye/m8hP+YVHJbtRSdu6rsUE++WY1B4UmsiH3jSUUFBGFdte9VuxeLRgLcM72C6UUMXwTPmbe2teZDsUsGT0zrKocz4ypSAEPhDeDBpkFwnJwzGn9EJ1+s/BPvn/zN7P7ghNm2JwgFQFocl4VpiQ80J+/n6KZI7pg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lJ0Y1Yn0mN/afGSqEEKviuX6aXidvsbRL7XqzU9Xt3I=;
+ b=F9xrs2b3K2nThkG6nP3mwX2w/mA7N84k7pE9QDEkpCjC2Gy1GmfBkn9gXjdyWHiOvOcGKYU1y6VCHbQ2vSUuh4aMsMQGQOFr36KHhV2YYgRXEGhg28NU/PTumjuYOLwW6qXbdaOE+jgZJ3SGG0xb+kAakua+EP3tf32EYm7yEkxkEZL6cGAFedDuCWXA8j7igRd2ArYBahS6vdxLFtxtCphK+jBGnhZf4iJjZP9YYUGIFzp+gLAmAWXYrGn3Usky2mqN7lzNOQjLMVM6Dj+hsDEsZaBDvAN0tKSUhaYJzjNsXybjpAq1yircInmW6BgEwrR0uID+giDi4UPKYc6JiQ==
+Received: from HK0PR06MB3362.apcprd06.prod.outlook.com (2603:1096:203:8b::10)
+ by HK0PR06MB2130.apcprd06.prod.outlook.com (2603:1096:203:42::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.19; Mon, 4 Oct
+ 2021 01:46:01 +0000
+Received: from HK0PR06MB3362.apcprd06.prod.outlook.com
+ ([fe80::190:5c40:6d3c:ca8a]) by HK0PR06MB3362.apcprd06.prod.outlook.com
+ ([fe80::190:5c40:6d3c:ca8a%5]) with mapi id 15.20.4566.022; Mon, 4 Oct 2021
+ 01:46:01 +0000
+From:   Billy Tsai <billy_tsai@aspeedtech.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        BMC-SW <BMC-SW@aspeedtech.com>
+Subject: Re: [v9 1/2] dt-bindings: Add bindings for aspeed pwm-tach.
+Thread-Topic: [v9 1/2] dt-bindings: Add bindings for aspeed pwm-tach.
+Thread-Index: AQHXdI7yKsdmsqvIQUSavJJdmrvZGatBf8qAgADnWgCAgLj9AA==
+Date:   Mon, 4 Oct 2021 01:46:01 +0000
+Message-ID: <A7C9DA11-6880-46EC-BD71-2E1984EBA294@aspeedtech.com>
+References: <20210709065217.6153-1-billy_tsai@aspeedtech.com>
+ <20210709065217.6153-2-billy_tsai@aspeedtech.com>
+ <20210713221431.GA936073@robh.at.kernel.org>
+ <029CA29B-1488-4F73-A9E7-FB9BCD0B987F@aspeedtech.com>
+In-Reply-To: <029CA29B-1488-4F73-A9E7-FB9BCD0B987F@aspeedtech.com>
+Accept-Language: zh-TW, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=aspeedtech.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1de52e1d-1b85-4c29-b4af-08d986d8b88b
+x-ms-traffictypediagnostic: HK0PR06MB2130:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HK0PR06MB21309D81F10043BE094E2F428BAE9@HK0PR06MB2130.apcprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2512;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7QS/+GbjIW4rSAiHWn0FHS2RMSdonwgbbyCfoYDKzGj2OK7MNjYFsfKhwkcWwrsE9hdKXiKNx+bbGbNjbeXeWLMzV3ZMVPurFjnccludRE78ImCt4agwQIvM5hZ3WpMjVmZFJ4Eu83XkA4+jZ9JcxcRkAubq77zHpTaEF8ITZEIsjmwYYK02K1DlXPrxJLDk5shA57uAefpYs8W4FGKi8dkrO57bnkfF6FFRNk5ho0apoKY3KT6M1mJRZZkE3zlila2IRa+G1LuZSmvKYJ5Uis9zoj1zDfltAdshgOOuu7ABQcRR/8xIXCTSr9T5cQpKzV07jkgkrGvAfCPIV64TdWDdDXslPDQUzcjJDrm3OWSy+fJTWcKo5lWPMVwZR6hUmgp/1JQPqPViQ478FEkPnluRTCMOJJ1ii1cQoOTUCXp0X+wm+xHRlUaNKdLRAlBgv5pAELLmO1YKeZSjDFYMRvBHNTw+gKP1Uoprs1AGYxEVkR8ynKd2uajJB/NiQru23hLvRDMxalUFME5NEjuqZIEaBw8YGtTa29TJnc0TMjtZdqHVXjr4Q5ffFniVZ/yFRED4BoyHYq1qNPzqqW6V6kkX65KlIY3rtAlqrOFW3mekNmjfHOsvDHDIk9JKC6ehEr4wjuDWBy1UlL1Z2kweOY+DeqviqFMZqcvSTIY+qb22kGk3JYqMCDpQ1o2G3DFI7F8iaOvaq7ml3E5s3QRNMKtALpGciI4fI5eBAjF0KYvGm39lNClOvpcjOzbczz7k
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0PR06MB3362.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(53546011)(6512007)(71200400001)(5660300002)(316002)(2616005)(83380400001)(4326008)(33656002)(6506007)(6486002)(107886003)(508600001)(2906002)(122000001)(66946007)(38070700005)(36756003)(76116006)(8676002)(186003)(66556008)(86362001)(66446008)(64756008)(7416002)(54906003)(8936002)(6916009)(38100700002)(66476007)(26005)(45980500001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?TVd5MlpBaFRDQnk0eFdtdjJGK2tEeDNhZ1hCL3BTUWZ4UFBWOFgyN0RyUUxp?=
+ =?utf-8?B?RFJXajBnQ3pHSlJHVVNCRHFaR2FTUlFjQVQwL1NyQjdEd0hteHRVeDdiTERJ?=
+ =?utf-8?B?UWhwdGYzVXZDd1dVTHUwaEFwdWZMNkdtYWcxc0FOeko3bm41SDdHNFFHWGNq?=
+ =?utf-8?B?UHU4c2Z6cW95R3BRQ3puWnJEMEFkSmwwZzVkSjF6eXFzb1g4UmlRdFFIdS9G?=
+ =?utf-8?B?eDZ5am5xbURzbjlOdkVGVUdDajFkbEFXd25NV1k4Q2FSOE9TODlTeEUrU0JX?=
+ =?utf-8?B?L0UzR1E1VkY3YllacmVmTy9pODlRR1k0VHFjempXZzYwUUhOMEpwYlZqVzFW?=
+ =?utf-8?B?dVozcC95RTgvSjgyeDJBQkNjMzhvY0QwVXFNNUJFRGpjRWxLdUNzUXhpekhO?=
+ =?utf-8?B?MUNTa1pSVkFzbnFNa01RZ1lqcDlIbHZjVzZET2FiekkyOEQwbFp2OFNuQXAw?=
+ =?utf-8?B?ck9nSS9WNlV4ZEcxUHpabGpOKzRWWUUxUlFIR0NTbHIwMG9WSmZNclpVK3E2?=
+ =?utf-8?B?dnRkVnRscFRrWXQvczYzQW1UTUkrYjFHaWcyWkR1Nkh2emx0cEx2VnQ1NFBC?=
+ =?utf-8?B?NkI2dk9Da0ZJbWFQZDJkdGRYMVlMa0ZXWTR1RGJkOUlRUXp0NWJ3VS92cDRP?=
+ =?utf-8?B?azdMc2R0M2padHR1ZURJMkJRUENaeHpsNFpqVWVFcUFIMnBJeCs4VHMvSDJE?=
+ =?utf-8?B?SkswcHEweW5CR3FSdkFaQVF4R210di9QMlJjbFp3TkFnZWR6bDJ3U2JodHM1?=
+ =?utf-8?B?c1BEVXlUVTJKUjUrTmdpYytXdzd3aWpRall5Qi9PWmtsRGp2QXluWWRzcDhY?=
+ =?utf-8?B?Y1QvNE01YjBReEE3Q0VYR1oxRUZWZmtkaEh0dloyTzlqdmVIQWtFSWVYYUJq?=
+ =?utf-8?B?ZkZxSEdabEN2d3hQeG0vZU44K1ZoL0lENW5JSVRyMk9VTXh4bGtnb2NDYm4y?=
+ =?utf-8?B?UGoxbElzbEprUHJaVnFja2F5c2x3RWRKRW96S0tFZjYrQlhoUnB4Z2Y4ZnFi?=
+ =?utf-8?B?ZU5yQWQ4aXZ5ZGlBdFltcDFmS1dwcVBkNTE3enN4bHNpc0p5aEVWc3U4QVRR?=
+ =?utf-8?B?SSt2cWNQWk1CdGhhVDJKUjJucVlwa0pMZGl5dFBpbzljSWlCTjlLZFlwb2g4?=
+ =?utf-8?B?eXFTOWN4cnpScXJqSFdIdXJjTmxwaHNOQ21zNlFlM2FJeitZL1NDMUlOZ0Qy?=
+ =?utf-8?B?Y2ozU1JKR1BZcTkyK2x1RXJhaktKQkdnZDJsMlgrK2hURURUKytIU1RtWGdQ?=
+ =?utf-8?B?bzFBM3M5QkdNWDk0S0N3MzlZcVo4Tzk2VStLOGFnN2hMYVBYRk45M0tZd3BN?=
+ =?utf-8?B?NDJYaFV3MEFGV1VBZC9VRWoyY2FlZ0hjTkw5SGFYRUI1RW9adWx2UHc2MVRP?=
+ =?utf-8?B?MVU2S0J2NGpnS0lZalk5N2dMQzE1NXRTZ1B3S3hhUkFEeFpUc29YMUVKOGkz?=
+ =?utf-8?B?dFdlODVvalpOZ0d6YzBGdmJweTM1RVE3Zzc3MEhPcUQwTFc4U2p2NERKOEsx?=
+ =?utf-8?B?N2pMMXZwaVN5dGFKMytqTHpnLzBkR012THNDVXdoN1I0bWJpbzBtZ0czczN2?=
+ =?utf-8?B?RUJOS2JXRFNNdU4yay91OG1MUEtSYVdvWW9vMW1LS2h6NVg2Q3FmVmpEaWI0?=
+ =?utf-8?B?a2pNbUFMU3d0anN3d3BwRU54Sy9MZFdpeTBxMXB0Tis4TFVaR211MkFodUVs?=
+ =?utf-8?B?ZkZKbEhRVk9rSzk2VWtmN20rTlY1TkIzWE16OXZ3clkzamJmdkRic3crTGhl?=
+ =?utf-8?B?Ym9uREgrd3JVSzdLZmtIYkFPakZpRW5aa3ZMeWx6a3JvTWFZc09Qei9xVVNx?=
+ =?utf-8?B?VEx0T2R3V3FaUWZ3eHh3QT09?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <584BF32B0E45C64D8F02990057956594@apcprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HK0PR06MB3362.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1de52e1d-1b85-4c29-b4af-08d986d8b88b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Oct 2021 01:46:01.5787
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gU3lDq2JZ2paWztCit2O8qxD88PxEsTgkpSQ93p48vLsMWQU6k0JZt39ESlLP/yPbOOhe9eO0F+VPPnxUskn+UBlYqdHi4cKL1Wo7Y4cQsE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0PR06MB2130
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-01.10.2021 15:32, Ulf Hansson пишет:
->> +static __maybe_unused int tegra_clock_pm_suspend(struct device *dev)
->> +{
->> +       struct tegra_clk_device *clk_dev = dev_get_drvdata(dev);
->> +
->> +       /*
->> +        * Power management of the clock is entangled with the Tegra PMC
->> +        * GENPD because PMC driver enables/disables clocks for toggling
->> +        * of the PD's on/off state.
->> +        *
->> +        * The PMC GENPD is resumed in NOIRQ phase, before RPM of the clocks
->> +        * becomes available, hence PMC can't use clocks at the early resume
->> +        * phase if RPM is involved. For example when 3d clock is enabled,
->> +        * it may enable the parent PLL clock that needs to be RPM-resumed.
->> +        *
->> +        * Secondly, the PLL clocks may be enabled by the low level suspend
->> +        * code, so we need to assume that PLL is in enabled state during
->> +        * suspend.
->> +        *
->> +        * We will keep PLLs and system clock resumed during suspend time.
->> +        * All PLLs on all SoCs are low power and system clock is always-on,
->> +        * so practically not much is changed here.
->> +        */
->> +
->> +       return clk_prepare(clk_dev->hw->clk);
-> I am trying to understand, more exactly, what you intend to achieve
-> with the clk_prepare() here. It looks a bit weird, to me. Can you try
-> to elaborate a bit more on the use case?
-
-The Tegra GENPD driver enable/disable clocks when domain is turned on.
-This can't be done during early system resume, when domains are getting
-turned on by the drivers core, because when clock is enabled, it's
-getting prepared (RPM-resumed) and this preparation fails because
-performance state of the clock goes up and it doesn't work during the
-early resume time since I2C, which applies the state to hardware, is
-suspended and can't work at that early time.
-
-Secondly, Tegra has arch-specific low level assembly which touches
-clocks during last phase of system suspend and in the beginning of
-resume. Hence, clocks should stay prepared during suspend just because
-technically clock should be prepared before it can be enabled.
-
-> Is this rather about making sure that the clock's corresponding PM
-> domain stays powered on during system suspend? In that case, I think
-> there may be an alternative option....
-> 
-
-This is not about domain staying powered on, this is about keeping the
-performance state of the domain high during suspend.
+SGkgUm9iLA0KDQpPbiAyMDIxLzcvMTQsIDEyOjAyIFBNLCAiQmlsbHkgVHNhaSIgPGJpbGx5X3Rz
+YWlAYXNwZWVkdGVjaC5jb20+IHdyb3RlOg0KDQogICAgT24gMjAyMS83LzE0LCA2OjE0IEFNLCAi
+Um9iIEhlcnJpbmciIDxyb2JoQGtlcm5lbC5vcmc+IHdyb3RlOg0KDQogICAgICAgIE9uIEZyaSwg
+SnVsIDA5LCAyMDIxIGF0IDAyOjUyOjE2UE0gKzA4MDAsIEJpbGx5IFRzYWkgd3JvdGU6DQogICAg
+ICAgID4+PiBUaGlzIHBhdGNoIGFkZHMgZGV2aWNlIGJpbmRpbmcgZm9yIGFzcGVlZCBwd20tdGFj
+aCBkZXZpY2Ugd2hpY2ggaXMgYQ0KICAgICAgICA+Pj4gbXVsdGktZnVuY3Rpb24gZGV2aWNlIGlu
+Y2x1ZGUgcHdtIGFuZCB0YWNoIGZ1bmN0aW9uIGFuZCBwd20vdGFjaCBkZXZpY2UNCiAgICAgICAg
+Pj4+IGJpbmRpbmdzIHdoaWNoIHNob3VsZCBiZSB0aGUgY2hpbGQtbm9kZSBvZiBwd20tdGFjaCBk
+ZXZpY2UuDQoNCiAgICAgICAgPj5JJ2xsIHNheSBpdCBhZ2FpbiwgdGhlIGZhbiBjb250cm9sIGgv
+dyBuZWVkcyBzb21lIGNvbW1vbiBiaW5kaW5ncyBmb3IgDQogICAgICAgID4+ZGVzY3JpYmluZyBm
+YW5zIGFuZCBmYW4gY29ubmVjdGlvbnMgdG8gcHdtIGFuZCB0YWNoLiBJJ20gbm90IGdvaW5nIHRv
+IA0KICAgICAgICA+PnNpZ24gb2ZmIG9uIG1vcmUgZmFuIGJpbmRpbmdzIGp1c3QgZG9pbmcgdGhl
+aXIgb3duIHRoaW5nLg0KDQogICAgPiBUaGlzIHBhdGNoIGRvZXNuJ3QgdXNlIHRvIGJpbmRpbmcg
+dGhlIGZhbiBjb250cm9sIGgvdy4gSXQgaXMgdXNlZCB0byBiaW5kaW5nIHRoZSB0d28gaW5kZXBl
+bmRlbnQgaC93IGJsb2Nrcy4NCiAgICA+IE9uZSBpcyB1c2VkIHRvIHByb3ZpZGUgcHdtIG91dHB1
+dCBhbmQgYW5vdGhlciBpcyB1c2VkIHRvIG1vbml0b3IgdGhlIHNwZWVkIG9mIHRoZSBpbnB1dC4N
+CiAgICA+IEl0IGlzIGRpZmZlcmVudCBmcm9tICJhc3BlZWQtcHdtLXRhY2hvLnR4dCIgYW5kICJu
+cGNtNzUwLXB3bS1mYW4udHh0IiB3aGljaCBvbmx5IGZvY3VzIG9uIGZhbiB1c2FnZS4NCiAgICA+
+IEl0IGlzIG1vcmUgbGlrZSB0aGUgImtvbnRyb24sc2wyOGNwbGQueWFtbCIgdGhlIGRldmljZSBp
+bmNsdWRlcyBhIGZhbiBtb25pdG9yIGFuZCBQV00gb3V0cHV0IGRldmljZXMuDQoNCkNhbiB5b3Ug
+Z2l2ZSBtZSBtb3JlIHN1Z2dlc3Rpb25zIGFib3V0IHRoaXMgcGF0Y2g/DQoNClRoYW5rcw0KDQoN
+Cg==
