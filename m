@@ -2,216 +2,212 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE8C042333A
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Oct 2021 00:08:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A15142335B
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 Oct 2021 00:19:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234026AbhJEWKX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 5 Oct 2021 18:10:23 -0400
-Received: from mail-eopbgr60045.outbound.protection.outlook.com ([40.107.6.45]:39171
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231569AbhJEWKW (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 5 Oct 2021 18:10:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oEOWRbhAU4n3c0f/+prGEwb+b3K1bp+xItwY8gD7bmvGSqcvJ6n19QJtD9KigO9ApNkr3SZRAG7CzVB9s+kFFyKgyt3O1a0i7P49/hjx1akSqK9lsek3c3QZ+qLfaYMJHuYAzc1DmyD1wUeIN8mLR4a6iJwzwX5dzg5z2elNYATVFmm+b41AdAvX8Gl+ix03JA/aKIap8yf3bQ4rejtURDDbDAwsKYmWJQ3qnrh2q2Ap0+EldGyjOivpT5pl4DeN6UAvBnK0s5Vi85aPlmpPhEGNSiZIXFrjd3A8eJZF0z0hL8f/Dgbjlm4P66j8qSXkEv0zi/wGXMVwK5gCIvMDOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nClUYm8lWo3uQ8k6jtkikfjjTH4jVseuy/tcCR6WBVE=;
- b=YvW0TnpFTvGPQxhv16py/tJTJ3cNk2pdjZjY2WB0yYPQd37/paxi1IeSOGGXjECvRkKG/7BwqEvdj2cF3pVIzXampTgN14a6f6BoRJT9VcO9nY1NiYtp/E1cI9yZbOZcWXt2HUMPPQoL8wrVSHFVS1MsDh2gdb65qCremdKTUIIZzIjVGMYXFqks83SfNlB1HONMlZN1zO8Qi91TNvmbiGF8XLMFbJrPmwbGko46f/AdFikpyNsoZSCrkggc9HAgXCUx819/Uw/18Ou3Yn4+ObQnKrN2jpLWG01E95Ebx2gRVEdQLZ1SjcNdmLwUW2lecnS1Pm5fqIRzHINHSf9D1g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=seco.com; dmarc=pass action=none header.from=seco.com;
- dkim=pass header.d=seco.com; arc=none
+        id S236711AbhJEWVe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 5 Oct 2021 18:21:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230477AbhJEWVc (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 5 Oct 2021 18:21:32 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71EB7C061749;
+        Tue,  5 Oct 2021 15:19:41 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id u18so1904112lfd.12;
+        Tue, 05 Oct 2021 15:19:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=secospa.onmicrosoft.com; s=selector2-secospa-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nClUYm8lWo3uQ8k6jtkikfjjTH4jVseuy/tcCR6WBVE=;
- b=LvMTZxK4H6P7NZScuAxJHiIZLnXMZC6EPihBB7zXwyPcITvesn/H7wptYwEABwLsC/sbCQN/FLSXYci+OxmaZt9jQu98a1tGGpPbA39f3cG0a9V9PAF4IfMZ+C5hvHjODmsP/V64m26ZPZqsra5hcRndgyBIaiwLr02izsm6z3k=
-Authentication-Results: linutronix.de; dkim=none (message not signed)
- header.d=none;linutronix.de; dmarc=none action=none header.from=seco.com;
-Received: from DB7PR03MB4523.eurprd03.prod.outlook.com (2603:10a6:10:19::27)
- by DB6PR03MB3045.eurprd03.prod.outlook.com (2603:10a6:6:35::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.22; Tue, 5 Oct
- 2021 22:08:29 +0000
-Received: from DB7PR03MB4523.eurprd03.prod.outlook.com
- ([fe80::a9aa:f363:66e:fadf]) by DB7PR03MB4523.eurprd03.prod.outlook.com
- ([fe80::a9aa:f363:66e:fadf%6]) with mapi id 15.20.4566.022; Tue, 5 Oct 2021
- 22:08:29 +0000
-From:   Sean Anderson <sean.anderson@seco.com>
-Subject: Re: [PATCH v7 2/3] clocksource: Rewrite Xilinx AXI timer driver
-To:     Michal Simek <michal.simek@xilinx.com>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Alvaro Gamez <alvaro.gamez@hazent.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20210916180544.2873770-1-sean.anderson@seco.com>
- <20210916180544.2873770-2-sean.anderson@seco.com>
- <696e2f8b-1737-0686-40cb-575a8fa2fa61@xilinx.com>
-Message-ID: <667279a0-1a11-06ad-c764-d9150a5db593@seco.com>
-Date:   Tue, 5 Oct 2021 18:08:24 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <696e2f8b-1737-0686-40cb-575a8fa2fa61@xilinx.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR19CA0042.namprd19.prod.outlook.com
- (2603:10b6:208:19b::19) To DB7PR03MB4523.eurprd03.prod.outlook.com
- (2603:10a6:10:19::27)
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cm3t0jHYi60ikbjIFrElH5F3+z5ZebZ+trrzKBFfgQI=;
+        b=qTAIEXIVB1/IgtvGdtrN/gmvUv6mTJMWYvN+by7UBNwUQz1edq9ynn5KZ4VakUYvgO
+         zdJ521ZSZKHguY4o7B00h080n6+hpVFgPtipWPhr7vdfUedARgQ4xE4HH2lbru46MeqC
+         A5BXLTY8VINH/AMBjZEF/K2gSikuRXhSI2fF9O8ZK3khdgYy8AFAvm2l22TZw2+cK0Up
+         VqGWxTT463F7ck5TyDg0STieTJ5C+qvpbnUQ5kqq4ulMywcZp+kTXt8lcdefcaH+dgKu
+         zq6l/FilsorGHNG/QzimfNCPZRYUNo7SlGD/xBo5UydUfU+gcPwF7E7ckKKrvoh9klYt
+         Rvdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cm3t0jHYi60ikbjIFrElH5F3+z5ZebZ+trrzKBFfgQI=;
+        b=6hhnqyt2XuRgMYLBNC2nV0yG8PsZANtBv+Y+ujv3fVytDqGArizH5YtwnLATxAsUJt
+         OkqBwMbf78zRVcV/+qsOokjE5H3F1aeZGzVtXS+pSe1PoQtFgIESne4ZTE+qLvuM/537
+         Z289c3Z5jopFyyvmvlAzPZe7dkLyna195R2rycn/fFg9FLjF3bN4evkWrl88Ub2T4QNt
+         KA7sENlEZpFF5OvfJWwhjFl/nDzpJ0kMWoys51uuzC5BuPDzs6oSojwX9QtzgH0eBTO0
+         BDoETraINfqc+1dWTIr2Ii28Uuje+EDoIRhyd1noX9fHWJWCZRzdWE9KvHyAMbmhrUnb
+         ZzFA==
+X-Gm-Message-State: AOAM533jef9d3xmw1Rrve3XH/J5Rejztw9KP0UV1G8UZAUuJ+QLFjqbi
+        eYdIGCVA+23UkRg6+MwsUe8=
+X-Google-Smtp-Source: ABdhPJx7DQPDGWTTKyBBQ7on8Zoc9EHE4rfD8+/mmsH+2cs2olWIZx3pD3Yp7kL6x0TZhEN3swGrdg==
+X-Received: by 2002:a2e:5cc6:: with SMTP id q189mr24035068ljb.82.1633472379484;
+        Tue, 05 Oct 2021 15:19:39 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-163-57.dynamic.spd-mgts.ru. [79.139.163.57])
+        by smtp.googlemail.com with ESMTPSA id d19sm2088024lfv.74.2021.10.05.15.19.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Oct 2021 15:19:39 -0700 (PDT)
+Subject: Re: [PATCH v13 06/35] clk: tegra: Support runtime PM and power domain
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Peter Chen <peter.chen@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Nishanth Menon <nm@ti.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        linux-staging@lists.linux.dev, linux-pwm@vger.kernel.org,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Lucas Stach <dev@lynxeye.de>, Stefan Agner <stefan@agner.ch>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        David Heidelberg <david@ixit.cz>
+References: <20210926224058.1252-1-digetx@gmail.com>
+ <20210926224058.1252-7-digetx@gmail.com>
+ <CAPDyKFq+LS4Jr1GyC-a-tGWPzGH0JxfJ9wKY=uQEBGYm952azw@mail.gmail.com>
+ <24101cd6-d3f5-1e74-db39-145ecd30418b@gmail.com>
+ <CAPDyKFreK7976PJL-1zySoza_yXM7rMQ64aODWUZ+U3L-uCa0w@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4bdba8a2-4b9b-ed7d-e6ca-9218d8200a85@gmail.com>
+Date:   Wed, 6 Oct 2021 01:19:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Received: from [172.27.1.65] (50.195.82.171) by MN2PR19CA0042.namprd19.prod.outlook.com (2603:10b6:208:19b::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.15 via Frontend Transport; Tue, 5 Oct 2021 22:08:27 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: dcce67c5-5d44-4917-afde-08d9884ca974
-X-MS-TrafficTypeDiagnostic: DB6PR03MB3045:
-X-Microsoft-Antispam-PRVS: <DB6PR03MB30456A7CD8621931A642537C96AF9@DB6PR03MB3045.eurprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: LLa4hjfYc/tE8WYeQr1TOC0Porh0kanR9RN/79W66GcrkcptFO4Ju6JcMcSaQEfJA0Nux1Ry80Nrs27FmXyS16TVvWPXiymao8BMo/RWjQ5TnIsS0wvwap7kU1g7kPtE7M4sEK6cktErFIXagAJ/x0Ep6Uj7DTmsRr3nmZyeZDVa9ZifI8kormpJkfrCL0nQmlaOCSfTU8K0sa8SiZPhIV8U6Wh2K/ud1OvQAEBe2ssGqk2oOvTh5sr+Eii6OlLY87hhcHJRe0LRdUM+wgFMggmh3AxSOOOIR8DE+AQWKDZwVYtpAcUWAnzqd4TbxmaK8+Pls8kwbuoAaIj7ANwPcdvnCIzvT4k+BrWmLskywQkkoulK5ArZh7roBdKE5xNv8BVmweiWe0TzS5d1izfEpOPxUwjlPlimis41I/3FZ+Hzn+F9wqQfD0zUjII5eOHXVLwGPTKJUTOXDcgGtdFb0UYrzQQGbfUX992M7ugzRiqq33LcOlxYMSv4BzATR5yU86QkxbZCX6peDc3OyNJq7Sy0VV+ylw+BEKrgJ0ClQQNIjtPJ2+6MfBXR4vs9zwHxyEe1UYhPxDjos3N40kj/vsBxgdQwVfVFveIbTlY+cL0qmg7tRH1Ov2ACulho8nw5hGyVw54AQAZ2wuJh/S5R1uycFailzAjfrFpQiB2ZcogripxpRw0qhUEo68jATQo/98Lj3ZKCKgT/3/NKsmW/5xBRm+A9Iqru9ExDUgjFvG3OTjNNpNFIn829nIEmj6zMGeEuEBdqzj59AnMterclpA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR03MB4523.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(2616005)(956004)(2906002)(66946007)(31696002)(186003)(66476007)(53546011)(26005)(66556008)(6666004)(44832011)(7416002)(31686004)(83380400001)(38100700002)(16576012)(6486002)(8936002)(5660300002)(4326008)(38350700002)(52116002)(36756003)(54906003)(316002)(508600001)(8676002)(110136005)(86362001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Y3ZxWCt2M2FKZ0JNcXFlYTBPRzREWU5BTTlRRjFkdEo3d0orOFpOWTlQcExT?=
- =?utf-8?B?VGwzRFBTcnZ4SXlOTWwyUzZGcVRoM2Vyb3BxQjhId1RMd2xmYThwSDBqWWg0?=
- =?utf-8?B?NzJjKzRrc2RLdUtNMzNLd096Umo5Q0JqbSt1d2lTbi9VWi84aGNvVmw1K0t6?=
- =?utf-8?B?UkpNNDRKSUpPbmdPSWJBeEZyYXpRRHZYU1R4d092dm1DZWg2NUZvQnBsY2VC?=
- =?utf-8?B?YXRYWDRnMHVJWjZwbUJ3RnVRZ01hakZRWXAwZHZnd3ZKZzdLMnR6aGE1SVNl?=
- =?utf-8?B?QUZlcnVtOThkZEZWMlNzaEZzRUEwMHgySzhESnNmNnB3a001ZlVpcG90TkMw?=
- =?utf-8?B?bkUvY1c2RVhNbkdYekdmbW02SmQwcmhhcXVlay9mSHh6RzhUcjhGWkJiQnAv?=
- =?utf-8?B?TjE3STg4cFdyVm5NZXpBVGVGc1U2U2VHYXNmUUk0TGFiU0h2ZXNrWks5eGkx?=
- =?utf-8?B?UWpabFNFL1orUE9hMG1nV292eUJPbHhUMTRYUmxMTGJzaWtwaG5vaUdXQjZG?=
- =?utf-8?B?WXJLSFdmY2FodndBMmdKYXo0TmJoNjRiOHF2VVp5OG5tRFBXSWNnVUNJWmYr?=
- =?utf-8?B?eE1xOW9LUWRxbFZ5TGY1Uk9OdHg2cUxSVXZBQzVRVmdKdy9KdHZoOWdmdks3?=
- =?utf-8?B?UDNXc01BMlZPbk1xTGJKTDlqVXl4YkZjNWRQSDlSMmNrQ2RYZ0RYYmF4bVVN?=
- =?utf-8?B?SEh0d01WWFdxWUk4d09jZDVCUi9SZ251aUJSSXkxbStCNU1xWnZKaUpFbHpQ?=
- =?utf-8?B?ZzArc0lNSTRyU3RYcWxOWlV6Ti91V3dCVlRwS2docXlRNkY1YzlSekpkdFI0?=
- =?utf-8?B?N0NVQ0tLcEtybmMxV3NNaEJIUFljZnBuNFBWWDVKbHRjMVlROE5MZUlXVEpo?=
- =?utf-8?B?SnVjY1M0M21NdXpvN0NxaDdHTlFCVzBKaEhCRjB0RVhSaWFrSmpoeW5mNkhY?=
- =?utf-8?B?Uk1nUVpxU2JObVpuMEdncFVjdVRlYmN6eXBNU012MnM3U1hXREFKVE92Qzkw?=
- =?utf-8?B?WFRkMVF1R0RQcVB0RmpjTXZmRExzcVpQeUJ3ZyttdFFLRkxORURWOGVtTGRu?=
- =?utf-8?B?Rng4OUxHdGcrakpQT1VEeThnNTRLUjhpZnh5Y1BsR2E5STQ1cHlneGZ2Zkpm?=
- =?utf-8?B?L1U2RWlyV0E1ZFBSNXBXV1JZTWpMNW04bkxlcUxRcDc4bm9jTjNlV3piK0Rr?=
- =?utf-8?B?aVN1QUt2MmltTGM3TnM4T3VoMTI3OW1tRUFXSVN1WHdmVllPK0pTYlBSdmQr?=
- =?utf-8?B?M0I1M254UWY0elhWRzlXNXdWdzlxb1BsbU96YkNuUnNXTWJXTmNlUzJ2dXp5?=
- =?utf-8?B?d1ZBSEEzRGlSQU1KWis5NkRIZ1JWZjlkSng3ZXBxYnI5V204dmpOY1prY1dj?=
- =?utf-8?B?bldDQVl3emNMSmRQU095M2YwU0xJNkFNOGlXRlJ2U0hmdkZYZDI2VkgzY2h0?=
- =?utf-8?B?RjQ0ZzgvT0xJTUYwZThZZWd1NjJjaElVVUdjUnlValRTd3IzUXQ1K2tEOWZO?=
- =?utf-8?B?SzZvajA5SGZCYnExZ21KSE03cVVKV3ZHeVI1aGUrdVE4UVBaQVNOR1Z3bnpV?=
- =?utf-8?B?enpZR3BLUG55NkxnQ3JGUHErVFgvUTlaWWxOcEViTU1vN3Z0Qms2bHFPTzVj?=
- =?utf-8?B?SGtuMENCYnhSWjhWZTEvTWFhcUs5VXBYTUpybkR0RVM2M0dia0FWK2F3cVRP?=
- =?utf-8?B?NTJnZ2xueXhiUHp4SnhPUGlDNlY2RWIyQjJwRTJFMU04Mk9INy9DbnhKUGpk?=
- =?utf-8?Q?ca/ddRdfQTUSXaYHFhz66z9ie5EBlFrQvZP1q2F?=
-X-OriginatorOrg: seco.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dcce67c5-5d44-4917-afde-08d9884ca974
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR03MB4523.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Oct 2021 22:08:29.2343
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: bebe97c3-6438-442e-ade3-ff17aa50e733
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pZqr/1E5OtuCn++EtARBXuwt/HYs5QmD/Y1GvhJaBwqiuhRRr3v1a7agE8Ku4/ldouh5x0NTCxKFCO/k6CjdyQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR03MB3045
+In-Reply-To: <CAPDyKFreK7976PJL-1zySoza_yXM7rMQ64aODWUZ+U3L-uCa0w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+05.10.2021 16:10, Ulf Hansson пишет:
+> On Sat, 2 Oct 2021 at 22:44, Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> 01.10.2021 15:32, Ulf Hansson пишет:
+>>>> +static __maybe_unused int tegra_clock_pm_suspend(struct device *dev)
+>>>> +{
+>>>> +       struct tegra_clk_device *clk_dev = dev_get_drvdata(dev);
+>>>> +
+>>>> +       /*
+>>>> +        * Power management of the clock is entangled with the Tegra PMC
+>>>> +        * GENPD because PMC driver enables/disables clocks for toggling
+>>>> +        * of the PD's on/off state.
+>>>> +        *
+>>>> +        * The PMC GENPD is resumed in NOIRQ phase, before RPM of the clocks
+>>>> +        * becomes available, hence PMC can't use clocks at the early resume
+>>>> +        * phase if RPM is involved. For example when 3d clock is enabled,
+>>>> +        * it may enable the parent PLL clock that needs to be RPM-resumed.
+>>>> +        *
+>>>> +        * Secondly, the PLL clocks may be enabled by the low level suspend
+>>>> +        * code, so we need to assume that PLL is in enabled state during
+>>>> +        * suspend.
+>>>> +        *
+>>>> +        * We will keep PLLs and system clock resumed during suspend time.
+>>>> +        * All PLLs on all SoCs are low power and system clock is always-on,
+>>>> +        * so practically not much is changed here.
+>>>> +        */
+>>>> +
+>>>> +       return clk_prepare(clk_dev->hw->clk);
+>>> I am trying to understand, more exactly, what you intend to achieve
+>>> with the clk_prepare() here. It looks a bit weird, to me. Can you try
+>>> to elaborate a bit more on the use case?
+>>
+>> The Tegra GENPD driver enable/disable clocks when domain is turned on.
+> 
+> Okay. I noticed that in tegra_genpd_power_on(). And the same clocks
+> are enabled/disabled also in tegra_genpd_power_off(), when powering
+> off the PM domain.
+> 
+> So I guess the problem kind of exists for tegra_genpd_power_off() too?
 
+Both OFF/ON are affected by the same problem. If domain was already
+turned OFF before genpd_suspend_noirq(), then the OFF problem isn't visible.
 
-On 9/24/21 2:52 AM, Michal Simek wrote:
-> Dear Sean,
->
-> On 9/16/21 8:05 PM, Sean Anderson wrote:
->> This rewrites the Xilinx AXI timer driver to be more platform agnostic.
->> Some common code has been split off so it can be reused. These routines
->> currently live in drivers/mfd. The largest changes are summarized below:
->>
->> - We now support any number of timer devices, possibly with only one
->>   counter each. The first counter will be used as a clocksource. Every
->>   other counter will be used as a clockevent. This allocation scheme was
->>   chosen arbitrarily.
->> - We do not use timer_of_init because we need to perform some tasks in
->>   between different stages. For example, we must ensure that ->read and
->>   ->write are initialized before registering the irq. This can only happen
->>   after we have gotten the register base (to detect endianness). We also
->>   have a rather unusual clock initialization sequence in order to remain
->>   backwards compatible. Due to this, it's ok for the initial clock request
->>   to fail, and we do not want other initialization to be undone. Lastly, it
->>   is more convenient to do one allocation for xilinx_clockevent_device than
->>   to do one for timer_of and one for xilinx_timer_priv.
->> - We now pay attention to xlnx,count-width and handle smaller width timers.
->>   The default remains 32.
->> - We access registers using regmap. This automatically deals with
->>   endianness issues, so we no longer have to use our own wrappers. It
->>   also provides locking for clockevents which have to worry about being
->>   interrupted in the middle of a read/modify/write.
->>
->> Note that while the existing timer driver always sets the cpumask to cpu
->> 0, this version sets it to all possible CPUs. I believe this is correct
->> for multiprocessor systems where the timer is not physically wired to a
->> particular CPU's interrupt line. For uniprocessor systems (like most
->> microblaze systems) this makes no difference.
->>
->> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
->> ---
->> This has been tested on microblaze qemu.
->>
->> Changes in v7:
->> - Add dependency on OF_ADDRESS
->>
->> Changes in v6:
->> - Add __init* attributes
->> - Export common symbols
->> - Fix goto'ing incorrect label for cleanup
->> - Remove duplicate regmap_config
->> - Round to closest period in xilinx_timer_get_period to ensure proper
->>   semantics for xilinx_pwm_get_state
->>
->> Changes in v5:
->> - Fix some overflows when setting the max value for clockevent and
->>   sched_clock
->> - Just use clk_register_fixed_rate instead of the "private" version
->> - Remove duplicate register definitions
->> - Remove xilinx_timer_tlr_period
->> - Remove xlnx,axi-timer-2.0 compatible string
->> - Require that callers check arguments to xilinx_timer_tlr_cycles
->> - Use regmap to deal with endianness issues as suggested by Lee
->>
->> Changes in v4:
->> - Break out clock* drivers into their own file
->>
->>  MAINTAINERS                               |   6 +
->>  arch/microblaze/kernel/Makefile           |   3 +-
->>  arch/microblaze/kernel/timer.c            | 326 ----------------------
->>  drivers/clocksource/Kconfig               |  13 +
->>  drivers/clocksource/Makefile              |   1 +
->>  drivers/clocksource/timer-xilinx-common.c |  71 +++++
->>  drivers/clocksource/timer-xilinx.c        | 323 +++++++++++++++++++++
->>  include/clocksource/timer-xilinx.h        |  91 ++++++
->>  8 files changed, 506 insertions(+), 328 deletions(-)
->>  delete mode 100644 arch/microblaze/kernel/timer.c
->>  create mode 100644 drivers/clocksource/timer-xilinx-common.c
->>  create mode 100644 drivers/clocksource/timer-xilinx.c
->>  create mode 100644 include/clocksource/timer-xilinx.h
->
->
-> I have said it couple of times. I won't accept this in this form.
-> I have no problem to move this driver out of microblaze. But I want to
-> see transition from current state to new state and check it with baby
-> steps which are bisectable if any problem happens.
-> Because in this style we end in this patch and it will take some time to
-> find out what it is failing.
+I reproduced the OFF problem by removing the clk prepare/unprepare from
+the suspend/resume of the clk driver and making some extra changes to
+clock tree topology and etc to trigger the problem on Nexus 7.
 
-Unfortunately, I do not have the time do do this at the moment. Because
-these drivers are independent in nature, I propose to drop these changes
-to the timer driver, but leave the common functions split out. In the
-future, I (or you) may come back and make the changes in this patch in
-an incremental fashion. The only change necessary for this driver would
-be to check for #pwm-cells.
+tegra-pmc 7000e400.pmc: failed to turn off PM domain heg: -13
 
---Sean
+I happens from genpd_suspend_noirq() -> tegra_genpd_power_off() -> clk
+-> GENPD -> I2C -> runtime-pm.
+
+-13 is EACCES, it comes from the runtime PM of I2C device. RPM is
+prohibited/disabled during late (NOIRQ) suspend by the drivers core.
+
+>> This can't be done during early system resume, when domains are getting
+>> turned on by the drivers core, because when clock is enabled, it's
+>> getting prepared (RPM-resumed) and this preparation fails because
+>> performance state of the clock goes up and it doesn't work during the
+>> early resume time since I2C, which applies the state to hardware, is
+>> suspended and can't work at that early time.
+> 
+> This sounds complicated and I still don't quite follow all of it, sorry.
+> 
+> So, tegra_genpd_power_on() gets called from genpd_resume_noirq(), when
+> the first device of the attached devices to genpd gets resumed. And
+> vice versa for tegra_genpd_power_off() and genpd_suspend_noirq().
+> 
+> Are you saying that trying to enable/disable clocks from
+> tegra_genpd_power_on|off() in these paths doesn't work, because it
+> would also require the performance state to be changed, which would
+> fail because the I2C bus/driver is suspended?
+
+Yes, but it's actually not I2C bus/driver that is suspended, it's
+runtime PM that is unavailable during NOIRQ. The I2C driver itself is
+suspended after domains are turned OFF and resumed before they are
+enabled. It's just runtime PM API that is unavailable. I'm wondering if
+this could be changed.
+
+I'm also wondering if we could add some 'was_enabled' flag to GENPDs,
+setting it by genpd_suspend_noirq() for the enabled domains, and then
+powering-on GENPDs from genpd_resume_noirq() only if they were in the
+enabled state during genpd_suspend_noirq() time. It actually puzzled me
+for a quite long time why GENPD core enables domains unconditionally
+during early resume. This should solve a part of the problem and it
+makes suspend/resume a bit safer because there is a smaller chance to
+crash hardware during suspend, at least it's easier to debug.
+
+>> Secondly, Tegra has arch-specific low level assembly which touches
+>> clocks during last phase of system suspend and in the beginning of
+>> resume. Hence, clocks should stay prepared during suspend just because
+>> technically clock should be prepared before it can be enabled.
+> 
+> So the low level code is gating and ungating the clock behind the back
+> of the clock driver then? Why is that done like that, more exactly?
+
+I revisited that code again, and it shouldn't touch the clocks.
+I changed that code to not toggle the clocks [1] sometime ago, but
+forgot about it.
+
+[1] https://git.kernel.org/linus/680ae4452
+
+>>> Is this rather about making sure that the clock's corresponding PM
+>>> domain stays powered on during system suspend? In that case, I think
+>>> there may be an alternative option....
+>>>
+>>
+>> This is not about domain staying powered on, this is about keeping the
+>> performance state of the domain high during suspend.
+> 
+> Right, so the PM domain managed in tegra_genpd_power_on|off() can
+> still be powered on/off, as long as the clock remains ungated?
+
+Not ungated, but prepared.
