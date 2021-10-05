@@ -2,53 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A15142335B
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Oct 2021 00:19:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 821004233AE
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 Oct 2021 00:43:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236711AbhJEWVe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 5 Oct 2021 18:21:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42830 "EHLO
+        id S236850AbhJEWpP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 5 Oct 2021 18:45:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230477AbhJEWVc (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 5 Oct 2021 18:21:32 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71EB7C061749;
-        Tue,  5 Oct 2021 15:19:41 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id u18so1904112lfd.12;
-        Tue, 05 Oct 2021 15:19:41 -0700 (PDT)
+        with ESMTP id S230113AbhJEWpO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 5 Oct 2021 18:45:14 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54390C061749;
+        Tue,  5 Oct 2021 15:43:23 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id t9so2291296lfd.1;
+        Tue, 05 Oct 2021 15:43:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
+        h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cm3t0jHYi60ikbjIFrElH5F3+z5ZebZ+trrzKBFfgQI=;
-        b=qTAIEXIVB1/IgtvGdtrN/gmvUv6mTJMWYvN+by7UBNwUQz1edq9ynn5KZ4VakUYvgO
-         zdJ521ZSZKHguY4o7B00h080n6+hpVFgPtipWPhr7vdfUedARgQ4xE4HH2lbru46MeqC
-         A5BXLTY8VINH/AMBjZEF/K2gSikuRXhSI2fF9O8ZK3khdgYy8AFAvm2l22TZw2+cK0Up
-         VqGWxTT463F7ck5TyDg0STieTJ5C+qvpbnUQ5kqq4ulMywcZp+kTXt8lcdefcaH+dgKu
-         zq6l/FilsorGHNG/QzimfNCPZRYUNo7SlGD/xBo5UydUfU+gcPwF7E7ckKKrvoh9klYt
-         Rvdw==
+        bh=QG+ghKl7BYypZZjDut6dTGHyiOgVAsyM1BWUZUWMu5U=;
+        b=Hd/Hgnl41abY2ut8awTV9Znfi0+mLbBx9rjGKMvBmv1GvhO4shIY8zKBANOfUfey6t
+         f5Ia/T7DT6465kZqrrXQThtz+C/Dyv3WwmTVE2S1/knhHJ2ZkcQGMJbpA7lJW8S92LV6
+         d4sMrDbdjRQ26EUeegNXhFT6soeFLf+BrXj5mPF3K+E6tl1/jGMbmKZnQ0VlaBRfoOWR
+         LuKoByxkOGkGhSjkSGOlHwyrskSGBdkV8ouXlaDVeZDQXkFs5OsF+2lgPEibKvUXARwq
+         QkljhBPkuFryLkM004napUFJxFdOqOTZNrXbWHEUeRQ3+onIjoSJKZ6XnhXG+LemKrOd
+         A8Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=cm3t0jHYi60ikbjIFrElH5F3+z5ZebZ+trrzKBFfgQI=;
-        b=6hhnqyt2XuRgMYLBNC2nV0yG8PsZANtBv+Y+ujv3fVytDqGArizH5YtwnLATxAsUJt
-         OkqBwMbf78zRVcV/+qsOokjE5H3F1aeZGzVtXS+pSe1PoQtFgIESne4ZTE+qLvuM/537
-         Z289c3Z5jopFyyvmvlAzPZe7dkLyna195R2rycn/fFg9FLjF3bN4evkWrl88Ub2T4QNt
-         KA7sENlEZpFF5OvfJWwhjFl/nDzpJ0kMWoys51uuzC5BuPDzs6oSojwX9QtzgH0eBTO0
-         BDoETraINfqc+1dWTIr2Ii28Uuje+EDoIRhyd1noX9fHWJWCZRzdWE9KvHyAMbmhrUnb
-         ZzFA==
-X-Gm-Message-State: AOAM533jef9d3xmw1Rrve3XH/J5Rejztw9KP0UV1G8UZAUuJ+QLFjqbi
-        eYdIGCVA+23UkRg6+MwsUe8=
-X-Google-Smtp-Source: ABdhPJx7DQPDGWTTKyBBQ7on8Zoc9EHE4rfD8+/mmsH+2cs2olWIZx3pD3Yp7kL6x0TZhEN3swGrdg==
-X-Received: by 2002:a2e:5cc6:: with SMTP id q189mr24035068ljb.82.1633472379484;
-        Tue, 05 Oct 2021 15:19:39 -0700 (PDT)
+        bh=QG+ghKl7BYypZZjDut6dTGHyiOgVAsyM1BWUZUWMu5U=;
+        b=NKI6DzBBUj47SPHJaqj6L5uQHerhcCXQksJx4tDOH1zx+N1pv6NrMPzSbhiWv/yU5S
+         ZBYvK4WRoqZMlzzoztwywNi9hKE98gSfUXHBh3cpC7kjObydvS8Ea27tfA1lqGmvLVqr
+         mLWkdz/E+hfvRyAjoDBGPDOGhznyeoBn7eVLTAVK7oG0IX4fvvhbdjWz5xn9Ro/lOM5J
+         n/ZGXsKtPa0go78f/essm4XLKivJ7a/5cm3MkZnRQrFpqsa9XzeSuXpPps32NFeitH6d
+         xQvmc1I64tLtG99RgnhjGenIJM6Rz/FNcAc1vpx5rRgUPrtKvauMNcjsHKak4D49bdVG
+         xYhA==
+X-Gm-Message-State: AOAM530T77ZomtnnPADz4neUXMxhHuafoXQrozcjqjl0Z5ZcBz3AbtXw
+        0Pulf/vqDXRs9tEHv214GuQ=
+X-Google-Smtp-Source: ABdhPJxfNs4Gfg7N3fvFBrC2l/U9ZmVjgRHnpJ3ajA7WdQF4gcWUZ5S7J4URL5OZbbHW8d5K2gyE2g==
+X-Received: by 2002:a2e:743:: with SMTP id i3mr24366437ljd.250.1633473801726;
+        Tue, 05 Oct 2021 15:43:21 -0700 (PDT)
 Received: from [192.168.2.145] (79-139-163-57.dynamic.spd-mgts.ru. [79.139.163.57])
-        by smtp.googlemail.com with ESMTPSA id d19sm2088024lfv.74.2021.10.05.15.19.38
+        by smtp.googlemail.com with ESMTPSA id q30sm2086817lfb.108.2021.10.05.15.43.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Oct 2021 15:19:39 -0700 (PDT)
+        Tue, 05 Oct 2021 15:43:21 -0700 (PDT)
 Subject: Re: [PATCH v13 06/35] clk: tegra: Support runtime PM and power domain
+From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Ulf Hansson <ulf.hansson@linaro.org>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -83,13 +84,13 @@ References: <20210926224058.1252-1-digetx@gmail.com>
  <CAPDyKFq+LS4Jr1GyC-a-tGWPzGH0JxfJ9wKY=uQEBGYm952azw@mail.gmail.com>
  <24101cd6-d3f5-1e74-db39-145ecd30418b@gmail.com>
  <CAPDyKFreK7976PJL-1zySoza_yXM7rMQ64aODWUZ+U3L-uCa0w@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <4bdba8a2-4b9b-ed7d-e6ca-9218d8200a85@gmail.com>
-Date:   Wed, 6 Oct 2021 01:19:37 +0300
+ <4bdba8a2-4b9b-ed7d-e6ca-9218d8200a85@gmail.com>
+Message-ID: <74a47158-e2e4-5fd0-3f37-0b50d4ead4d9@gmail.com>
+Date:   Wed, 6 Oct 2021 01:43:20 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFreK7976PJL-1zySoza_yXM7rMQ64aODWUZ+U3L-uCa0w@mail.gmail.com>
+In-Reply-To: <4bdba8a2-4b9b-ed7d-e6ca-9218d8200a85@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -97,117 +98,25 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-05.10.2021 16:10, Ulf Hansson пишет:
-> On Sat, 2 Oct 2021 at 22:44, Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> 01.10.2021 15:32, Ulf Hansson пишет:
->>>> +static __maybe_unused int tegra_clock_pm_suspend(struct device *dev)
->>>> +{
->>>> +       struct tegra_clk_device *clk_dev = dev_get_drvdata(dev);
->>>> +
->>>> +       /*
->>>> +        * Power management of the clock is entangled with the Tegra PMC
->>>> +        * GENPD because PMC driver enables/disables clocks for toggling
->>>> +        * of the PD's on/off state.
->>>> +        *
->>>> +        * The PMC GENPD is resumed in NOIRQ phase, before RPM of the clocks
->>>> +        * becomes available, hence PMC can't use clocks at the early resume
->>>> +        * phase if RPM is involved. For example when 3d clock is enabled,
->>>> +        * it may enable the parent PLL clock that needs to be RPM-resumed.
->>>> +        *
->>>> +        * Secondly, the PLL clocks may be enabled by the low level suspend
->>>> +        * code, so we need to assume that PLL is in enabled state during
->>>> +        * suspend.
->>>> +        *
->>>> +        * We will keep PLLs and system clock resumed during suspend time.
->>>> +        * All PLLs on all SoCs are low power and system clock is always-on,
->>>> +        * so practically not much is changed here.
->>>> +        */
->>>> +
->>>> +       return clk_prepare(clk_dev->hw->clk);
->>> I am trying to understand, more exactly, what you intend to achieve
->>> with the clk_prepare() here. It looks a bit weird, to me. Can you try
->>> to elaborate a bit more on the use case?
->>
->> The Tegra GENPD driver enable/disable clocks when domain is turned on.
+06.10.2021 01:19, Dmitry Osipenko пишет:
+...
+> I reproduced the OFF problem by removing the clk prepare/unprepare from
+> the suspend/resume of the clk driver and making some extra changes to
+> clock tree topology and etc to trigger the problem on Nexus 7.
 > 
-> Okay. I noticed that in tegra_genpd_power_on(). And the same clocks
-> are enabled/disabled also in tegra_genpd_power_off(), when powering
-> off the PM domain.
+> tegra-pmc 7000e400.pmc: failed to turn off PM domain heg: -13
 > 
-> So I guess the problem kind of exists for tegra_genpd_power_off() too?
-
-Both OFF/ON are affected by the same problem. If domain was already
-turned OFF before genpd_suspend_noirq(), then the OFF problem isn't visible.
-
-I reproduced the OFF problem by removing the clk prepare/unprepare from
-the suspend/resume of the clk driver and making some extra changes to
-clock tree topology and etc to trigger the problem on Nexus 7.
-
-tegra-pmc 7000e400.pmc: failed to turn off PM domain heg: -13
-
-I happens from genpd_suspend_noirq() -> tegra_genpd_power_off() -> clk
--> GENPD -> I2C -> runtime-pm.
-
--13 is EACCES, it comes from the runtime PM of I2C device. RPM is
-prohibited/disabled during late (NOIRQ) suspend by the drivers core.
-
->> This can't be done during early system resume, when domains are getting
->> turned on by the drivers core, because when clock is enabled, it's
->> getting prepared (RPM-resumed) and this preparation fails because
->> performance state of the clock goes up and it doesn't work during the
->> early resume time since I2C, which applies the state to hardware, is
->> suspended and can't work at that early time.
+> It happens from genpd_suspend_noirq() -> tegra_genpd_power_off() -> clk
+> -> GENPD -> I2C -> runtime-pm.
 > 
-> This sounds complicated and I still don't quite follow all of it, sorry.
-> 
-> So, tegra_genpd_power_on() gets called from genpd_resume_noirq(), when
-> the first device of the attached devices to genpd gets resumed. And
-> vice versa for tegra_genpd_power_off() and genpd_suspend_noirq().
-> 
-> Are you saying that trying to enable/disable clocks from
-> tegra_genpd_power_on|off() in these paths doesn't work, because it
-> would also require the performance state to be changed, which would
-> fail because the I2C bus/driver is suspended?
+> -13 is EACCES, it comes from the runtime PM of I2C device. RPM is
+> prohibited/disabled during late (NOIRQ) suspend by the drivers core.
 
-Yes, but it's actually not I2C bus/driver that is suspended, it's
-runtime PM that is unavailable during NOIRQ. The I2C driver itself is
-suspended after domains are turned OFF and resumed before they are
-enabled. It's just runtime PM API that is unavailable. I'm wondering if
-this could be changed.
+My bad, I double-checked and it's not I2C RPM that is failing now, but
+the clock's RPM [1], which is also unavailable during NOIRQ.
 
-I'm also wondering if we could add some 'was_enabled' flag to GENPDs,
-setting it by genpd_suspend_noirq() for the enabled domains, and then
-powering-on GENPDs from genpd_resume_noirq() only if they were in the
-enabled state during genpd_suspend_noirq() time. It actually puzzled me
-for a quite long time why GENPD core enables domains unconditionally
-during early resume. This should solve a part of the problem and it
-makes suspend/resume a bit safer because there is a smaller chance to
-crash hardware during suspend, at least it's easier to debug.
+[1]
+https://elixir.free-electrons.com/linux/v5.15-rc4/source/drivers/clk/clk.c#L116
 
->> Secondly, Tegra has arch-specific low level assembly which touches
->> clocks during last phase of system suspend and in the beginning of
->> resume. Hence, clocks should stay prepared during suspend just because
->> technically clock should be prepared before it can be enabled.
-> 
-> So the low level code is gating and ungating the clock behind the back
-> of the clock driver then? Why is that done like that, more exactly?
-
-I revisited that code again, and it shouldn't touch the clocks.
-I changed that code to not toggle the clocks [1] sometime ago, but
-forgot about it.
-
-[1] https://git.kernel.org/linus/680ae4452
-
->>> Is this rather about making sure that the clock's corresponding PM
->>> domain stays powered on during system suspend? In that case, I think
->>> there may be an alternative option....
->>>
->>
->> This is not about domain staying powered on, this is about keeping the
->> performance state of the domain high during suspend.
-> 
-> Right, so the PM domain managed in tegra_genpd_power_on|off() can
-> still be powered on/off, as long as the clock remains ungated?
-
-Not ungated, but prepared.
+Previously it was I2C RPM that was failing in a similar way, but code
+changed a tad since that time.
