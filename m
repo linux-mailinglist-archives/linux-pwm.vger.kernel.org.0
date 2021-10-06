@@ -2,107 +2,286 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E0ED423937
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Oct 2021 09:53:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 235FF423DDF
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 Oct 2021 14:39:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237621AbhJFHzp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 6 Oct 2021 03:55:45 -0400
-Received: from mail.thorsis.com ([92.198.35.195]:46447 "EHLO mail.thorsis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237543AbhJFHzp (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Wed, 6 Oct 2021 03:55:45 -0400
-X-Greylist: delayed 541 seconds by postgrey-1.27 at vger.kernel.org; Wed, 06 Oct 2021 03:55:41 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mail.thorsis.com (Postfix) with ESMTP id 2FB1EF34;
-        Wed,  6 Oct 2021 09:44:48 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at mail.thorsis.com
-Received: from mail.thorsis.com ([127.0.0.1])
-        by localhost (mail.thorsis.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id MA5K6ySVTUwA; Wed,  6 Oct 2021 09:44:48 +0200 (CEST)
-Received: by mail.thorsis.com (Postfix, from userid 109)
-        id EE01A3376; Wed,  6 Oct 2021 09:44:47 +0200 (CEST)
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NO_RECEIVED,
-        NO_RELAYS autolearn=unavailable autolearn_force=no version=3.4.2
-X-Spam-Report: * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
-        *      [score: 0.0000]
-        * -0.0 NO_RELAYS Informational: message was not relayed via SMTP
-        * -0.0 NO_RECEIVED Informational: message has no Received headers
-Date:   Wed, 6 Oct 2021 09:44:34 +0200
-From:   Alexander Dahl <ada@thorsis.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>, Pavel Machek <pavel@ucw.cz>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Yassine Oudjana <y.oudjana@protonmail.com>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Subject: Re: [PATCH v9 1/2] dt-bindings: leds: Add Qualcomm Light Pulse
- Generator binding
-Message-ID: <YV1T4lR+GNAjkuo4@ada.ifak-system.com>
-Mail-Followup-To: Stephen Boyd <swboyd@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>, Pavel Machek <pavel@ucw.cz>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Yassine Oudjana <y.oudjana@protonmail.com>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-References: <20210623035039.772660-1-bjorn.andersson@linaro.org>
- <CAE-0n53SLqmXhJBPROeQj2HzShgYoFzDqsi-KCj3dgVHdDWUTA@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAE-0n53SLqmXhJBPROeQj2HzShgYoFzDqsi-KCj3dgVHdDWUTA@mail.gmail.com>
+        id S238387AbhJFMlL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 6 Oct 2021 08:41:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238416AbhJFMlK (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 6 Oct 2021 08:41:10 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CE08C061749
+        for <linux-pwm@vger.kernel.org>; Wed,  6 Oct 2021 05:39:18 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id t9so9906978lfd.1
+        for <linux-pwm@vger.kernel.org>; Wed, 06 Oct 2021 05:39:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pt+Sx1i9oC8cMVf+wV0+G1/1GyaW/f/U+87KiyoFd/E=;
+        b=xMf9icJn0dugjBCs5EETJwxewMPK+UjZJs0KYkQ+tEswLY8Y3dBB9eTNHx1P1I74NS
+         uUI5ilQPq4HQIhfoBn10OmK0TYfUpJUGARspsbdoXLABNOzo+QHCEBYNQqtp8KkfHt5y
+         5rgwO4l1nEO/qkIK43xyczyY9zOTefr2lTBwMo3yoVkLR70uqjlAQwkhytRA6fQvBCmo
+         38mmmmGjJXtf94GAftHcVeOr9+ASGdyzPc89mvgsEeg3ssJr7d0NZzeAChud6hgWLQ0x
+         CaiyTsOATrGgHO8lc2Hzh8roRCTRT7QTYzscdKXQfmhYcgY68+9elxMF8yXF5L53e23A
+         iVFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pt+Sx1i9oC8cMVf+wV0+G1/1GyaW/f/U+87KiyoFd/E=;
+        b=QiOpNYuR6utx4BWPTldalCnTPUMBMy8giHQO01kVZ+oYjOBFE2TNsAFyEbQ7+vpeEa
+         lZVvHDm2l1EsjUeVdomTnThAshawpdmImhOR2fvN5l4W5y577TbY62kcgQpswre6gRCW
+         DbyNya9WlRGYUC8u3kpWfCxDeZblJgrWIkkHU9gcG30gCcfm2TLjz+W05Vyj/lPDKqem
+         oqOW9dT3VbpIFYsIPr9Jq2Ri+NLjRzgMCPjOhiIdXZihOr9Ed2Foa7kD3oq4fZTD0BT8
+         8Klf6+Q1qPaR7dASciBEWgXkIE9QFOBmTJSJN7tEaD+MSWk20OB1LT9J0Ot1z0vHL8CQ
+         GZEg==
+X-Gm-Message-State: AOAM532AuYWAklIsEgW9nJx3KnDJUfRJl6836gzg+ONjYM6VyygCFmwf
+        KYbmG2kNnolR0VIesqBIuYWdXA10avC+S3QLr/lh9w==
+X-Google-Smtp-Source: ABdhPJwaJVEKqlVek7TGUDap3J+eg+aVlfc7HMdVbc1X8zMSF/wwjX+qoHICL3q8G6NLzKZ0rQnEZO321GxsAccQSGs=
+X-Received: by 2002:a05:651c:20b:: with SMTP id y11mr29225280ljn.463.1633523952478;
+ Wed, 06 Oct 2021 05:39:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210926224058.1252-1-digetx@gmail.com> <20210926224058.1252-7-digetx@gmail.com>
+ <CAPDyKFq+LS4Jr1GyC-a-tGWPzGH0JxfJ9wKY=uQEBGYm952azw@mail.gmail.com>
+ <24101cd6-d3f5-1e74-db39-145ecd30418b@gmail.com> <CAPDyKFreK7976PJL-1zySoza_yXM7rMQ64aODWUZ+U3L-uCa0w@mail.gmail.com>
+ <4bdba8a2-4b9b-ed7d-e6ca-9218d8200a85@gmail.com>
+In-Reply-To: <4bdba8a2-4b9b-ed7d-e6ca-9218d8200a85@gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 6 Oct 2021 14:38:35 +0200
+Message-ID: <CAPDyKFq_-HGPRNiNDmnEbuah0mUYoRUWVs1SvbQ6VNMMwEcXjA@mail.gmail.com>
+Subject: Re: [PATCH v13 06/35] clk: tegra: Support runtime PM and power domain
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Peter Chen <peter.chen@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        linux-staging@lists.linux.dev, linux-pwm@vger.kernel.org,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Lucas Stach <dev@lynxeye.de>, Stefan Agner <stefan@agner.ch>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        David Heidelberg <david@ixit.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hei hei,
+On Wed, 6 Oct 2021 at 00:19, Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> 05.10.2021 16:10, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Sat, 2 Oct 2021 at 22:44, Dmitry Osipenko <digetx@gmail.com> wrote:
+> >>
+> >> 01.10.2021 15:32, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >>>> +static __maybe_unused int tegra_clock_pm_suspend(struct device *dev=
+)
+> >>>> +{
+> >>>> +       struct tegra_clk_device *clk_dev =3D dev_get_drvdata(dev);
+> >>>> +
+> >>>> +       /*
+> >>>> +        * Power management of the clock is entangled with the Tegra=
+ PMC
+> >>>> +        * GENPD because PMC driver enables/disables clocks for togg=
+ling
+> >>>> +        * of the PD's on/off state.
+> >>>> +        *
+> >>>> +        * The PMC GENPD is resumed in NOIRQ phase, before RPM of th=
+e clocks
+> >>>> +        * becomes available, hence PMC can't use clocks at the earl=
+y resume
+> >>>> +        * phase if RPM is involved. For example when 3d clock is en=
+abled,
+> >>>> +        * it may enable the parent PLL clock that needs to be RPM-r=
+esumed.
+> >>>> +        *
+> >>>> +        * Secondly, the PLL clocks may be enabled by the low level =
+suspend
+> >>>> +        * code, so we need to assume that PLL is in enabled state d=
+uring
+> >>>> +        * suspend.
+> >>>> +        *
+> >>>> +        * We will keep PLLs and system clock resumed during suspend=
+ time.
+> >>>> +        * All PLLs on all SoCs are low power and system clock is al=
+ways-on,
+> >>>> +        * so practically not much is changed here.
+> >>>> +        */
+> >>>> +
+> >>>> +       return clk_prepare(clk_dev->hw->clk);
+> >>> I am trying to understand, more exactly, what you intend to achieve
+> >>> with the clk_prepare() here. It looks a bit weird, to me. Can you try
+> >>> to elaborate a bit more on the use case?
+> >>
+> >> The Tegra GENPD driver enable/disable clocks when domain is turned on.
+> >
+> > Okay. I noticed that in tegra_genpd_power_on(). And the same clocks
+> > are enabled/disabled also in tegra_genpd_power_off(), when powering
+> > off the PM domain.
+> >
+> > So I guess the problem kind of exists for tegra_genpd_power_off() too?
+>
+> Both OFF/ON are affected by the same problem. If domain was already
+> turned OFF before genpd_suspend_noirq(), then the OFF problem isn't visib=
+le.
+>
+> I reproduced the OFF problem by removing the clk prepare/unprepare from
+> the suspend/resume of the clk driver and making some extra changes to
+> clock tree topology and etc to trigger the problem on Nexus 7.
+>
+> tegra-pmc 7000e400.pmc: failed to turn off PM domain heg: -13
+>
+> I happens from genpd_suspend_noirq() -> tegra_genpd_power_off() -> clk
+> -> GENPD -> I2C -> runtime-pm.
+>
+> -13 is EACCES, it comes from the runtime PM of I2C device. RPM is
+> prohibited/disabled during late (NOIRQ) suspend by the drivers core.
 
-Am Wed, Sep 08, 2021 at 03:39:51AM +0000 schrieb Stephen Boyd:
-> Quoting Bjorn Andersson (2021-06-22 20:50:38)
-> > diff --git a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
-> > new file mode 100644
-> > index 000000000000..10aee61a7ffc
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
-> > @@ -0,0 +1,164 @@
-> [....]
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/leds/common.h>
-> > +
-> > +    lpg {
-> 
-> Should the node name be led or leds?
+Thanks for the clarification!
 
-If I scan through Documentation/devicetree/bindings/leds and look at
-other devices, it should probably be named "led-controller", right?
+>
+> >> This can't be done during early system resume, when domains are gettin=
+g
+> >> turned on by the drivers core, because when clock is enabled, it's
+> >> getting prepared (RPM-resumed) and this preparation fails because
+> >> performance state of the clock goes up and it doesn't work during the
+> >> early resume time since I2C, which applies the state to hardware, is
+> >> suspended and can't work at that early time.
+> >
+> > This sounds complicated and I still don't quite follow all of it, sorry=
+.
+> >
+> > So, tegra_genpd_power_on() gets called from genpd_resume_noirq(), when
+> > the first device of the attached devices to genpd gets resumed. And
+> > vice versa for tegra_genpd_power_off() and genpd_suspend_noirq().
+> >
+> > Are you saying that trying to enable/disable clocks from
+> > tegra_genpd_power_on|off() in these paths doesn't work, because it
+> > would also require the performance state to be changed, which would
+> > fail because the I2C bus/driver is suspended?
+>
+> Yes, but it's actually not I2C bus/driver that is suspended, it's
+> runtime PM that is unavailable during NOIRQ. The I2C driver itself is
+> suspended after domains are turned OFF and resumed before they are
+> enabled. It's just runtime PM API that is unavailable. I'm wondering if
+> this could be changed.
 
-At least that's what Rob suggested when I converted the leds-pwm
-binding last year, using generic node names:
+In principle what you ask for, is if we can avoid calling
+__pm_runtime_disable() in __device_suspend_late() (and vice versa in
+device_resume_early()).
 
-https://lore.kernel.org/linux-leds/20200922155747.GA2734659@bogus/
+I think the short answer is no, at least from a generic point of view.
+Maybe we can figure out a way to allow this on a per device basis, as
+an opt-in solution. I am not sure what Rafael would think about this,
+let's see.
 
-Greets
-Alex
+Another option to address the problem is already available to use for
+these kinds of cases. This would be to add also a pair of
+->suspend|resume() callbacks to I2C driver. Along the lines of the
+below.
 
-> 
-> > +      compatible = "qcom,pmi8994-lpg";
-> 
-> Shouldn't there be a reg property? I see the driver has them hardcoded
-> but if this is a child of the spmi node then it should have a reg
-> property (or many reg properties).
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.=
+c
+index c883044715f3..589bf872ab25 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -1918,6 +1918,7 @@ static int __maybe_unused
+tegra_i2c_resume(struct device *dev)
+ }
+
+ static const struct dev_pm_ops tegra_i2c_pm =3D {
++       SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_put_noidle, pm_runtime_get_sync)
+        SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(tegra_i2c_suspend, tegra_i2c_resume)
+        SET_RUNTIME_PM_OPS(tegra_i2c_runtime_suspend, tegra_i2c_runtime_res=
+ume,
+                           NULL)
+
+In this way, the device would already be runtime resumed, if there is
+call to pm_runtime_get_sync() from the clock framework due to the
+clk_prepare|unprepare() being called. If that also turns out to happen
+*after* runtime PM has been disabled for the device, the call to
+pm_runtime_get_sync() would still succeed (returning 1, see
+rpm_resume()), rather than a negative error code.
+
+Yes, we may end up runtime resuming the device during system suspend,
+even if it turns out not to be needed. Although, that doesn't seem to
+be the case for the Tegra I2C driver, right?
+
+>
+> I'm also wondering if we could add some 'was_enabled' flag to GENPDs,
+> setting it by genpd_suspend_noirq() for the enabled domains, and then
+> powering-on GENPDs from genpd_resume_noirq() only if they were in the
+> enabled state during genpd_suspend_noirq() time. It actually puzzled me
+> for a quite long time why GENPD core enables domains unconditionally
+> during early resume. This should solve a part of the problem and it
+> makes suspend/resume a bit safer because there is a smaller chance to
+> crash hardware during suspend, at least it's easier to debug.
+
+Just because the PM domain was already off at genpd_suspend_noirq(),
+doesn't mean that it can stay powered off at genpd_resume_noirq(). At
+least as is today.
+
+The main reason why genpd_resume_noirq() powers on the PM domain, is
+because it's not possible for the consumer drivers to rely on runtime
+PM to do it (because runtime PM has been disabled by the PM core).
+
+>
+> >> Secondly, Tegra has arch-specific low level assembly which touches
+> >> clocks during last phase of system suspend and in the beginning of
+> >> resume. Hence, clocks should stay prepared during suspend just because
+> >> technically clock should be prepared before it can be enabled.
+> >
+> > So the low level code is gating and ungating the clock behind the back
+> > of the clock driver then? Why is that done like that, more exactly?
+>
+> I revisited that code again, and it shouldn't touch the clocks.
+> I changed that code to not toggle the clocks [1] sometime ago, but
+> forgot about it.
+>
+> [1] https://git.kernel.org/linus/680ae4452
+>
+> >>> Is this rather about making sure that the clock's corresponding PM
+> >>> domain stays powered on during system suspend? In that case, I think
+> >>> there may be an alternative option....
+> >>>
+> >>
+> >> This is not about domain staying powered on, this is about keeping the
+> >> performance state of the domain high during suspend.
+> >
+> > Right, so the PM domain managed in tegra_genpd_power_on|off() can
+> > still be powered on/off, as long as the clock remains ungated?
+>
+> Not ungated, but prepared.
+
+Okay, thanks for clarifying!
+
+In summary, it sounds like you should be able to fix this problem in
+the I2C driver as I suggested above. If that works, that seems much
+better.
+
+Moreover, it would leave the clocks gated/unprepared when the system
+is fully suspended, which I guess is better from an energy point of
+view?
+
+Kind regards
+Uffe
