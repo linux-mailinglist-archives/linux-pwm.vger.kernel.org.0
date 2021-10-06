@@ -2,136 +2,139 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 869A14235EB
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Oct 2021 04:40:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D8544236E5
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 Oct 2021 06:12:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237205AbhJFCl6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 5 Oct 2021 22:41:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44886 "EHLO
+        id S230199AbhJFEOR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 6 Oct 2021 00:14:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229908AbhJFCl5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 5 Oct 2021 22:41:57 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41FB3C061749;
-        Tue,  5 Oct 2021 19:40:06 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id t9so4046677lfd.1;
-        Tue, 05 Oct 2021 19:40:06 -0700 (PDT)
+        with ESMTP id S230379AbhJFEON (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 6 Oct 2021 00:14:13 -0400
+Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB817C061760
+        for <linux-pwm@vger.kernel.org>; Tue,  5 Oct 2021 21:12:21 -0700 (PDT)
+Received: by mail-ot1-x331.google.com with SMTP id 5-20020a9d0685000000b0054706d7b8e5so1542245otx.3
+        for <linux-pwm@vger.kernel.org>; Tue, 05 Oct 2021 21:12:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jBjl2SKIDUWdGGNNCdNQzm0sXvagxduES6I98oCU5Y8=;
-        b=chv8eTFsLZvhIeL+hkzvYI0WTv6C1hQt4IbTe+2xmGQkTHoN3MvZ0Jtjaf5nJ60yH8
-         Qll610va/L7nfzXyHi9q5H18Ow+SshG+eVNj+gSdDfOq3y7RXIcXU17IFSrdKUsqMGDl
-         Bns94mjB430lIX1L+jpyb63pJy7SuBLUq2Zz5gUmkoa+ld9TdVOzDhd/itLWhWEQUYh6
-         w/ij/t35/Agn1d9bEjw9KP0FJwCJbX0TIcoQQ9rohRXEEbOoZw69in/qeyGnWiJ4R/RF
-         +DxmiKiv3q4SpB4Czd0/XkoQ7itREY7Ra4KeHWPZGr13fZLG2O0bWXrsMD3HPPH5buvd
-         Yn0g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JeqQPQlkPMyybH7Ylv9LL4C+2+30wYTv9mWLfCOyW68=;
+        b=XEjeIZfNuBmJTMi6wtAtetYggf2aHs3GPhHg1KwJz1egGXL5njhCRw3DDPgbsH7cJv
+         OUWOA1oOvi2LLIVGnWT3wGH+TmJA95TyM0M6gC2kao6MWJu+bZzC5cnO84s06z3CI1AA
+         XVvMCCFyDHcpCO8U8QelLmZi7fD9CRI8OYcPo6qSRxfBbT/AxB2YjYAxUJ6hV57S0w7A
+         tv9MugLiCri9LD2ijJPmIfSvtHSZYv6q8bsMiyIMxl6jokP6DoYrt1m4hdtVohghtVTl
+         EEr+bbftzq4eN6V4Bov3juUBbxPCEkxk4V/sQTSbb+6ENfzMeMK65PcTxz1DE8SImzIX
+         +iKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jBjl2SKIDUWdGGNNCdNQzm0sXvagxduES6I98oCU5Y8=;
-        b=4WZuTi/aFT8t0rIWmsNGXbNserSJoChOakY8uTfD8c8w09DW6C1uX9c7zH0O4LT5h6
-         h80Q8hc8S6aBiPGZ+lhWX14WVOyTvrZfEVeaeTUoJ5/KJf0D6u3FsSatLSMjFGJpICso
-         FBFho8zQsDwUsH/9b9QpmvquzW5dZwDdIZCtuYi69Inkm5G4s+XXQzEIpPPNMnrinYkq
-         gpzl+UNoK4YmYwNmPlylIWBxCk/1GRUFWfnECkvCbk9O6EPAV8Nh/HNqv5txVl/oWMF+
-         Yj6wzFjpXEIbULx1tjyJ6VEw1oftLzUZ+Uni2NVOpXDzjd7MC8+yakgjPWBuOHATu0zq
-         Tv7Q==
-X-Gm-Message-State: AOAM5332YZQX7BPuAOuuaHrL9W/Gy61+C/YFzKU72Q1m4YAMBi8dnrdg
-        mOS2Q8XKGdkNNoZJBEjbiXo=
-X-Google-Smtp-Source: ABdhPJz5nDf5e1lLckhTPfcq8ws67JWhBNrPmg70PycmaRWuWT397hKxpbU2YgDLYDLc8supNRztWA==
-X-Received: by 2002:a2e:91d4:: with SMTP id u20mr25686467ljg.81.1633488004426;
-        Tue, 05 Oct 2021 19:40:04 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-163-57.dynamic.spd-mgts.ru. [79.139.163.57])
-        by smtp.googlemail.com with ESMTPSA id o19sm2137695lfg.68.2021.10.05.19.40.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Oct 2021 19:40:03 -0700 (PDT)
-Subject: Re: [PATCH v13 06/35] clk: tegra: Support runtime PM and power domain
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Peter Chen <peter.chen@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Nishanth Menon <nm@ti.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        linux-staging@lists.linux.dev, linux-pwm@vger.kernel.org,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Richard Weinberger <richard@nod.at>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Lucas Stach <dev@lynxeye.de>, Stefan Agner <stefan@agner.ch>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        David Heidelberg <david@ixit.cz>
-References: <20210926224058.1252-1-digetx@gmail.com>
- <20210926224058.1252-7-digetx@gmail.com>
- <CAPDyKFq+LS4Jr1GyC-a-tGWPzGH0JxfJ9wKY=uQEBGYm952azw@mail.gmail.com>
- <24101cd6-d3f5-1e74-db39-145ecd30418b@gmail.com>
- <CAPDyKFreK7976PJL-1zySoza_yXM7rMQ64aODWUZ+U3L-uCa0w@mail.gmail.com>
- <4bdba8a2-4b9b-ed7d-e6ca-9218d8200a85@gmail.com>
- <74a47158-e2e4-5fd0-3f37-0b50d4ead4d9@gmail.com>
-Message-ID: <8597d539-311b-4f04-481c-b48e6a5a882a@gmail.com>
-Date:   Wed, 6 Oct 2021 05:40:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JeqQPQlkPMyybH7Ylv9LL4C+2+30wYTv9mWLfCOyW68=;
+        b=GAwFTvy34pxPhC4k93wwWLVx8W4+7K9lVD4Cv2ow7hT/cL0Nm/FnzGulpLcVmvMUZc
+         MX8IMfIGcO9TEi6h7ZRffduSaY2thqs/A75BOZBr1XtZedxFIeoQq/XC9LnabksSHUZD
+         YRcCQe99njEnjg+iOPR8liwI78CxmxSSarXmkXo2R+Y6qcvDQjOFsctwe65OGyFGTofl
+         RXKbUWuiQuot46jwNx6fQSUMCRZSRwtJrLCUuJfPg2cmBjQxLVE2gszXfHEvd/5nmXtw
+         yCA/yvaSzklsUynvQtiSLST91cHdMaEHx6h9sapJeKCqmDj22u3oikAsNiS7knvrOUsa
+         PSWQ==
+X-Gm-Message-State: AOAM531hOC7+oxLbHz7B58Wz5Ra2+4jDwD0Rp/7spaPsYtfStcEO7gUi
+        aL3wRXrryTHNmjpUqXEzwgao/g==
+X-Google-Smtp-Source: ABdhPJx/5egmLBcK43fNwucfO1oEx4RaFxVzQH0A8+50zHcH+LenRxckCdmVbnSpKpPJhWTVbKHZbA==
+X-Received: by 2002:a9d:12c8:: with SMTP id g66mr276609otg.7.1633493541062;
+        Tue, 05 Oct 2021 21:12:21 -0700 (PDT)
+Received: from yoga ([2600:1700:a0:3dc8:c84c:8eff:fe1e:256f])
+        by smtp.gmail.com with ESMTPSA id u12sm4009329otq.20.2021.10.05.21.12.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Oct 2021 21:12:20 -0700 (PDT)
+Date:   Tue, 5 Oct 2021 23:12:18 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Yassine Oudjana <y.oudjana@protonmail.com>,
+        Luca Weiss <luca@z3ntu.xyz>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH v9 1/2] dt-bindings: leds: Add Qualcomm Light Pulse
+ Generator binding
+Message-ID: <YV0iIlTra++r9dL0@yoga>
+References: <20210623035039.772660-1-bjorn.andersson@linaro.org>
+ <YToluIBXlNJEFhcb@google.com>
 MIME-Version: 1.0
-In-Reply-To: <74a47158-e2e4-5fd0-3f37-0b50d4ead4d9@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YToluIBXlNJEFhcb@google.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-06.10.2021 01:43, Dmitry Osipenko пишет:
-> 06.10.2021 01:19, Dmitry Osipenko пишет:
-> ...
->> I reproduced the OFF problem by removing the clk prepare/unprepare from
->> the suspend/resume of the clk driver and making some extra changes to
->> clock tree topology and etc to trigger the problem on Nexus 7.
->>
->> tegra-pmc 7000e400.pmc: failed to turn off PM domain heg: -13
->>
->> It happens from genpd_suspend_noirq() -> tegra_genpd_power_off() -> clk
->> -> GENPD -> I2C -> runtime-pm.
->>
->> -13 is EACCES, it comes from the runtime PM of I2C device. RPM is
->> prohibited/disabled during late (NOIRQ) suspend by the drivers core.
+On Thu 09 Sep 10:18 CDT 2021, Matthias Kaehlcke wrote:
+
+> On Tue, Jun 22, 2021 at 08:50:38PM -0700, Bjorn Andersson wrote:
+[..]
+> > +  - |
+> > +    #include <dt-bindings/leds/common.h>
+> > +
+> > +    lpg {
+> > +      compatible = "qcom,pmi8994-lpg";
+> > +
+> > +      #address-cells = <1>;
+> > +      #size-cells = <0>;
+> > +
+> > +      qcom,power-source = <1>;
+> > +
+> > +      multi-led {
+> > +        color = <LED_COLOR_ID_RGB>;
+> > +        function = LED_FUNCTION_STATUS;
+> > +
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        led@1 {
+> > +          reg = <1>;
+> > +          color = <LED_COLOR_ID_RED>;
+> > +        };
+> > +
+> > +        led@2 {
+> > +          reg = <2>;
+> > +          color = <LED_COLOR_ID_GREEN>;
+> > +        };
+> > +
+> > +        led@3 {
+> > +          reg = <3>;
+> > +          color = <LED_COLOR_ID_BLUE>;
+> > +        };
+> > +      };
+> > +    };
+> > +  - |
+> > +    lpg {
 > 
-> My bad, I double-checked and it's not I2C RPM that is failing now, but
-> the clock's RPM [1], which is also unavailable during NOIRQ.
+> nit: should the node be named 'lpg-pwm'?
 > 
-> [1]
-> https://elixir.free-electrons.com/linux/v5.15-rc4/source/drivers/clk/clk.c#L116
-> 
-> Previously it was I2C RPM that was failing in a similar way, but code
-> changed a tad since that time.
+> IIUC a PMIC .dtsi could have both a 'lpg' and a 'lpg-pwm' node, even though
+> only one of them can be enabled at any time.
 > 
 
-Just in case, I checked that the suspension order isn't somehow the
-source of the problem by adding links to device tree in order to always
-suspend clocks after the rest of devices and still GENPD gets -EACCESS
-from clk_pm_runtime_get().
+No, there's only the one "LPG", with N channels. The lpg exposes a pwm
+chip and the child nodes may describe LEDs connected to the channels.
+So this example is the configuration where there's no LEDs attached.
 
-RPM is disabled by dpm_suspend_late(), which is invoked before
-dpm_suspend_noirq() [1]. Hence RPM is unavailable in NOIRQ phase in any
-case.
+The compatible is "pwm", because the PM8916 lacks the pattern and RGB
+blocks that makes up the LPG - and is hence named "PWM" in the datasheet
+instead. So perhaps the example should be generically named "pwm"
+instead.
 
-[1]
-https://elixir.bootlin.com/linux/v5.15-rc4/source/kernel/power/suspend.c#L399
+In all other PMICs I know of the hardware block is named "lpg".
+
+Regards,
+Bjorn
+
+> > +      compatible = "qcom,pm8916-pwm";
+> > +      #pwm-cells = <2>;
+> > +    };
