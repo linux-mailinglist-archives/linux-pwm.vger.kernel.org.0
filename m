@@ -2,607 +2,196 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0CFC424C49
-	for <lists+linux-pwm@lfdr.de>; Thu,  7 Oct 2021 05:51:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FC18424FEA
+	for <lists+linux-pwm@lfdr.de>; Thu,  7 Oct 2021 11:19:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240098AbhJGDxW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 6 Oct 2021 23:53:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51918 "EHLO
+        id S240546AbhJGJVW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 7 Oct 2021 05:21:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232310AbhJGDxV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 6 Oct 2021 23:53:21 -0400
-Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D25EC061746
-        for <linux-pwm@vger.kernel.org>; Wed,  6 Oct 2021 20:51:28 -0700 (PDT)
-Received: by mail-ot1-x32b.google.com with SMTP id 77-20020a9d0ed3000000b00546e10e6699so5935840otj.2
-        for <linux-pwm@vger.kernel.org>; Wed, 06 Oct 2021 20:51:28 -0700 (PDT)
+        with ESMTP id S232659AbhJGJVS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 7 Oct 2021 05:21:18 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A86BC061746
+        for <linux-pwm@vger.kernel.org>; Thu,  7 Oct 2021 02:19:25 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id m3so22379716lfu.2
+        for <linux-pwm@vger.kernel.org>; Thu, 07 Oct 2021 02:19:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=AfrdR87+CwTeV/7mViDbHqrFD29I/+viEcRqWA22b28=;
-        b=hKkfK8dsRiN8VdeVSjSbWLJ+cA89j1+M4bKmuB+cCwqum7Is5xp4sGDtxDJrHBqQaD
-         5a1MnTDXkkSIFJw7DeG+HqWlKFCp365yF3A7WWkdc9h1x8EPmdpF87gOQmTEOT8qNDrj
-         TZEvQA9XTQlMNzRT1+VhzPmoIma9ABdEHvG5uVaAlgdRkrwP/w5Q5JsEecCVAcn44LMm
-         IOHimGTfqf7bN2OYgJs0OLnHW9wdv/uCKVn8E8bB42whTvXpqmJf/8Xk6lYNAXy4jVMS
-         Z/HunGQm+DMbgiEwooocAAdHNIA9wkPCaLbbITEADXYqQEqsZQbJ+hEDaGTPBR6BbUwH
-         bCuw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=lm42Xwh2Jm/bg7CFlkLuIvFq/6TymtSrcpKOF86TZ4E=;
+        b=kHtkBo9ZhQK5B1g4gzDepRMdzKt0BA7KDm9S+bG1ZgKaspEmsSEi4cACZ4QVhoSXMX
+         LAfkFrgrWPpYUQwgbd/jFB/KmVdrQAyHi9LRYCkY0mLjcj0rcs/pG+L9ji8mf5hkwZWm
+         oCET0LSGZwPR2S/Po4ecuyfXN/LJokwrNRtgoDL7jxNUmhQLR1EDjkk9LPBIRez4RyVc
+         eTHY3LyShSYeeYkfxXuXf+koCknCWj8EK3Cs9ygH5Mk1jcwi12qvbyJ7fIHV9isXv1Us
+         jGyfzeq8NNyvrlER3/UOZSyUDyr38dWbguKbn5rCOcG20K3+07f6jhOEXzDPnPAMKvBl
+         2ylg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AfrdR87+CwTeV/7mViDbHqrFD29I/+viEcRqWA22b28=;
-        b=XjxgBKKa7/Y+RHnMt4qxlrUYG2r7xaZm6bu0r57/0YjtbvDX3z2qVnAjN3cxhO9muG
-         vCHm9xRBptW5z06v++euveIE8i4+42dXJEJi3tHB1y3Fe8SLbSAoSaFPtvjhm6oE6ifQ
-         azeFVI4gzuYnlFN/64fAsLJ5teeFedzdLlCMQslyQ3DdQ431x71io9B+kxeapDeIy4Ch
-         /TEBDnWMCY46y37wBgsCx2fuw74B1LswrFCD6q17R1jJJkxAtIp7l+IguaAjOiWT4HIo
-         VyAKetuMZin787alvD+iFtWkC8QbMvv1sFJ7N0BzqjZXxJDGoW8lJXakKM7ryaAn6OiO
-         YPVA==
-X-Gm-Message-State: AOAM531nXVCSWMg8aRYezgW1iNrtz3laDkBQJ9/u0XS4xjv9sh99SJEt
-        m+CPJmCFUbW+FWJ78ZPjBtCzsg==
-X-Google-Smtp-Source: ABdhPJzOFeVgqRzEVsHFOnPjSfk9gdDCdCbn7fUZDzChiH0z8gbBcgRrJP1OrvW5cbFjAQ7cFHLHbQ==
-X-Received: by 2002:a05:6830:1e54:: with SMTP id e20mr1832421otj.242.1633578687590;
-        Wed, 06 Oct 2021 20:51:27 -0700 (PDT)
-Received: from ripper ([2600:1700:a0:3dc8:205:1bff:fec0:b9b3])
-        by smtp.gmail.com with ESMTPSA id l2sm1120973otu.23.2021.10.06.20.51.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Oct 2021 20:51:27 -0700 (PDT)
-Date:   Wed, 6 Oct 2021 20:53:07 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Robert Foss <robert.foss@linaro.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Doug Anderson <dianders@google.com>
-Subject: Re: [PATCH v6 3/3] drm/bridge: ti-sn65dsi86: Implement the pwm_chip
-Message-ID: <YV5vIyhy+m+Nx/gQ@ripper>
-References: <20210930030557.1426-1-bjorn.andersson@linaro.org>
- <20210930030557.1426-3-bjorn.andersson@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=lm42Xwh2Jm/bg7CFlkLuIvFq/6TymtSrcpKOF86TZ4E=;
+        b=N0La1DQpZS8uCC5xz8TgABDbvyXxfxrfn6r8wOGW50gaIQfANQMZgfC2whHUCEIGc/
+         V/8V1/kkdm3vFhvOf7zf2OxdqPthcOidMgvmHkc1OdaX09SAtYF7xNzx3LQjsNcwYOHM
+         VfdWn9+txuGE5ezCPiB3uEMWS66rvFIto0e3DLWrcSNw0hrijKT1iAqDP++ZtczYMyVI
+         l443zcvQYuv56tV68OglJaFg0MaEy6pFp+OV5sp0hHjdqjVVjQBFEjyvkfYnMQqW0P/L
+         Aw9hI/aCfdYGeDL0M8CFyDyAciaZ1oZNv1APootMKburc6tRgb0bQWFnNqIIFwn9+02K
+         VjJQ==
+X-Gm-Message-State: AOAM531t2g4UyBaXqIJtvOAZZFN/P9t5TvmpNpxLuFDj5IaZpEngOjpc
+        rG4ytJfoSjEsKDAslPkXg4UD5ZR+tuNNnVo39PUc1g==
+X-Google-Smtp-Source: ABdhPJyLVYNwO6wH7UjbrvAKZXt6rP/z5UNYySvnmg5CD1b+EuFOoKR5sbXNeY4a58mDR28IUl9i55ImMkilW9q3b14=
+X-Received: by 2002:a05:6512:3095:: with SMTP id z21mr3161687lfd.167.1633598363639;
+ Thu, 07 Oct 2021 02:19:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210930030557.1426-3-bjorn.andersson@linaro.org>
+References: <20210926224058.1252-1-digetx@gmail.com> <20210926224058.1252-7-digetx@gmail.com>
+ <CAPDyKFq+LS4Jr1GyC-a-tGWPzGH0JxfJ9wKY=uQEBGYm952azw@mail.gmail.com>
+ <24101cd6-d3f5-1e74-db39-145ecd30418b@gmail.com> <CAPDyKFreK7976PJL-1zySoza_yXM7rMQ64aODWUZ+U3L-uCa0w@mail.gmail.com>
+ <4bdba8a2-4b9b-ed7d-e6ca-9218d8200a85@gmail.com> <74a47158-e2e4-5fd0-3f37-0b50d4ead4d9@gmail.com>
+ <CAPDyKFr2-f1wM+6jF9vWJ-Nq80Zg1Z3qFP6saULOrBi1270HGw@mail.gmail.com>
+ <b06bf794-b8b3-417b-58ef-4d815ca86c95@gmail.com> <4c7b1a4c-c136-3650-8f77-9f98caa506f7@gmail.com>
+ <2dd6bffc-9817-f4b1-0b92-f82f22fcf79a@gmail.com>
+In-Reply-To: <2dd6bffc-9817-f4b1-0b92-f82f22fcf79a@gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 7 Oct 2021 11:18:47 +0200
+Message-ID: <CAPDyKFox6THcxDouW2T7F2W__ZcoJP5GeG+H_a4NQmSqAFZ_oQ@mail.gmail.com>
+Subject: Re: [PATCH v13 06/35] clk: tegra: Support runtime PM and power domain
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Peter Chen <peter.chen@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        linux-staging@lists.linux.dev, linux-pwm@vger.kernel.org,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Lucas Stach <dev@lynxeye.de>, Stefan Agner <stefan@agner.ch>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        David Heidelberg <david@ixit.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed 29 Sep 20:05 PDT 2021, Bjorn Andersson wrote:
+On Thu, 7 Oct 2021 at 01:21, Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> 07.10.2021 01:01, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > 07.10.2021 00:14, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >> 06.10.2021 15:43, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >>> On Wed, 6 Oct 2021 at 00:43, Dmitry Osipenko <digetx@gmail.com> wrote=
+:
+> >>>>
+> >>>> 06.10.2021 01:19, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >>>> ...
+> >>>>> I reproduced the OFF problem by removing the clk prepare/unprepare =
+from
+> >>>>> the suspend/resume of the clk driver and making some extra changes =
+to
+> >>>>> clock tree topology and etc to trigger the problem on Nexus 7.
+> >>>>>
+> >>>>> tegra-pmc 7000e400.pmc: failed to turn off PM domain heg: -13
+> >>>>>
+> >>>>> It happens from genpd_suspend_noirq() -> tegra_genpd_power_off() ->=
+ clk
+> >>>>> -> GENPD -> I2C -> runtime-pm.
+> >>>>>
+> >>>>> -13 is EACCES, it comes from the runtime PM of I2C device. RPM is
+> >>>>> prohibited/disabled during late (NOIRQ) suspend by the drivers core=
+.
+> >>>>
+> >>>> My bad, I double-checked and it's not I2C RPM that is failing now, b=
+ut
+> >>>> the clock's RPM [1], which is also unavailable during NOIRQ.
+> >>>
+> >>> Yes, that sounds reasonable.
+> >>>
+> >>> You would then need a similar patch for the tegra clock driver as I
+> >>> suggested for tegra I2C driver. That should solve the problem, I
+> >>> think.
+> >>>
+> >>>>
+> >>>> [1]
+> >>>> https://elixir.free-electrons.com/linux/v5.15-rc4/source/drivers/clk=
+/clk.c#L116
+> >>>>
+> >>>> Previously it was I2C RPM that was failing in a similar way, but cod=
+e
+> >>>> changed a tad since that time.
+> >>>
+> >>> Alright. In any case, as long as the devices gets suspended in the
+> >>> correct order, I think it should be fine to cook a patch along the
+> >>> lines of what I suggest for the I2C driver as well.
+> >>>
+> >>> It should work, I think. Although, maybe you want to avoid runtime
+> >>> resuming the I2C device, unless it's the device belonging to the PMIC
+> >>> interface, if there is a way to distinguish that for the driver.
+> >>
+> >> Ulf, thank you very much for the suggestions! I was thinking about thi=
+s
+> >> all once again and concluded that the simplest variant will be to just
+> >> remove the suspend ops from the clk driver since neither of PLLs requi=
+re
+> >> high voltage. We now have voltage bumped to a nominal level during
+> >> suspend by Tegra's regulator-coupler driver and it's much higher than
+> >> voltage needed by PLLs. So the problem I was trying to work around
+> >> doesn't really exist anymore.
+> >
+> > I hurried a bit with the conclusion, keep forgetting that I need to
+> > change the clock tree in order to test it all properly :/ It's not fixe=
+d
+> > yet.
+> >
+>
+> Please let me iterate once again. The problem we currently have is that
+> clock may be enabled during NOIRQ time. In order to enable clock, it
+> needs to be prepared. In order to prepare clock, the clock's device
+> needs to be runtime-resumed. The runtime PM is unavailable at the NOIRQ
+> time.
+>
+> To solve this problem we need to prepare clock beforehand.
+>
+> The clock will stay prepared during suspend, but this is not a problem
+> since all the clocks we care about don't require high voltage and
+> voltage is guaranteed to be bumped high during suspend by Tegra's
+> regulator-coupler driver anyways.
+>
+> So everything we need to do is to keep clocks prepared. There are two
+> options how to do that:
+>
+> [1] this patch which explicitly prepares clocks using clk API.
+>
+> [2] Use runtime PM API, like this:
+>
+> static const struct dev_pm_ops tegra_clock_pm =3D {
+>         SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_resume_and_get, pm_runtime_put=
+)
+> };
+>
+> Ulf, are you now okay with the current variant [1] of the patch or you
+> prefer the second [2] option more?
 
-> The SN65DSI86 provides the ability to supply a PWM signal on GPIO 4,
-> with the primary purpose of controlling the backlight of the attached
-> panel. Add an implementation that exposes this using the standard PWM
-> framework, to allow e.g. pwm-backlight to expose this to the user.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+I prefer option [2]. The clock_prepare|unprepare() thingy in option
+[1], looks more like an odd workaround to me.
 
-Any feedback on this?
+Does that make sense to you as well?
 
-Thanks,
-Bjorn
-
-> ---
-> 
-> Changes since v5:
-> - Make ti_sn65dsi86_read_u16() use regmap_bulk_read()
-> - Update the wording related to the formula for the period being wrong to not
->   just say I'm "assuming because it's easier".
-> - Updated comment related to minimum period
-> - Clamp duty <= period in get_state()
-> 
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 366 +++++++++++++++++++++++++-
->  1 file changed, 360 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> index 412fb6f564ea..ccf6496cc9ff 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -4,7 +4,9 @@
->   * datasheet: https://www.ti.com/lit/ds/symlink/sn65dsi86.pdf
->   */
->  
-> +#include <linux/atomic.h>
->  #include <linux/auxiliary_bus.h>
-> +#include <linux/bitfield.h>
->  #include <linux/bits.h>
->  #include <linux/clk.h>
->  #include <linux/debugfs.h>
-> @@ -15,6 +17,7 @@
->  #include <linux/module.h>
->  #include <linux/of_graph.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/pwm.h>
->  #include <linux/regmap.h>
->  #include <linux/regulator/consumer.h>
->  
-> @@ -91,6 +94,13 @@
->  #define SN_ML_TX_MODE_REG			0x96
->  #define  ML_TX_MAIN_LINK_OFF			0
->  #define  ML_TX_NORMAL_MODE			BIT(0)
-> +#define SN_PWM_PRE_DIV_REG			0xA0
-> +#define SN_BACKLIGHT_SCALE_REG			0xA1
-> +#define  BACKLIGHT_SCALE_MAX			0xFFFF
-> +#define SN_BACKLIGHT_REG			0xA3
-> +#define SN_PWM_EN_INV_REG			0xA5
-> +#define  SN_PWM_INV_MASK			BIT(0)
-> +#define  SN_PWM_EN_MASK				BIT(1)
->  #define SN_AUX_CMD_STATUS_REG			0xF4
->  #define  AUX_IRQ_STATUS_AUX_RPLY_TOUT		BIT(3)
->  #define  AUX_IRQ_STATUS_AUX_SHORT		BIT(5)
-> @@ -113,11 +123,14 @@
->  
->  #define SN_LINK_TRAINING_TRIES		10
->  
-> +#define SN_PWM_GPIO_IDX			3 /* 4th GPIO */
-> +
->  /**
->   * struct ti_sn65dsi86 - Platform data for ti-sn65dsi86 driver.
->   * @bridge_aux:   AUX-bus sub device for MIPI-to-eDP bridge functionality.
->   * @gpio_aux:     AUX-bus sub device for GPIO controller functionality.
->   * @aux_aux:      AUX-bus sub device for eDP AUX channel functionality.
-> + * @pwm_aux:      AUX-bus sub device for PWM controller functionality.
->   *
->   * @dev:          Pointer to the top level (i2c) device.
->   * @regmap:       Regmap for accessing i2c.
-> @@ -145,11 +158,17 @@
->   *                bitmap so we can do atomic ops on it without an extra
->   *                lock so concurrent users of our 4 GPIOs don't stomp on
->   *                each other's read-modify-write.
-> + *
-> + * @pchip:        pwm_chip if the PWM is exposed.
-> + * @pwm_enabled:  Used to track if the PWM signal is currently enabled.
-> + * @pwm_pin_busy: Track if GPIO4 is currently requested for GPIO or PWM.
-> + * @pwm_refclk_freq: Cache for the reference clock input to the PWM.
->   */
->  struct ti_sn65dsi86 {
->  	struct auxiliary_device		bridge_aux;
->  	struct auxiliary_device		gpio_aux;
->  	struct auxiliary_device		aux_aux;
-> +	struct auxiliary_device		pwm_aux;
->  
->  	struct device			*dev;
->  	struct regmap			*regmap;
-> @@ -172,6 +191,12 @@ struct ti_sn65dsi86 {
->  	struct gpio_chip		gchip;
->  	DECLARE_BITMAP(gchip_output, SN_NUM_GPIOS);
->  #endif
-> +#if defined(CONFIG_PWM)
-> +	struct pwm_chip			pchip;
-> +	bool				pwm_enabled;
-> +	atomic_t			pwm_pin_busy;
-> +#endif
-> +	unsigned int			pwm_refclk_freq;
->  };
->  
->  static const struct regmap_range ti_sn65dsi86_volatile_ranges[] = {
-> @@ -190,6 +215,21 @@ static const struct regmap_config ti_sn65dsi86_regmap_config = {
->  	.cache_type = REGCACHE_NONE,
->  };
->  
-> +static int ti_sn65dsi86_read_u16(struct ti_sn65dsi86 *pdata,
-> +				 unsigned int reg, u16 *val)
-> +{
-> +	u8 buf[2];
-> +	int ret;
-> +
-> +	ret = regmap_bulk_read(pdata->regmap, reg, buf, ARRAY_SIZE(buf));
-> +	if (ret)
-> +		return ret;
-> +
-> +	*val = buf[0] | (buf[1] << 8);
-> +
-> +	return 0;
-> +}
-> +
->  static void ti_sn65dsi86_write_u16(struct ti_sn65dsi86 *pdata,
->  				   unsigned int reg, u16 val)
->  {
-> @@ -254,6 +294,12 @@ static void ti_sn_bridge_set_refclk_freq(struct ti_sn65dsi86 *pdata)
->  
->  	regmap_update_bits(pdata->regmap, SN_DPPLL_SRC_REG, REFCLK_FREQ_MASK,
->  			   REFCLK_FREQ(i));
-> +
-> +	/*
-> +	 * The PWM refclk is based on the value written to SN_DPPLL_SRC_REG,
-> +	 * regardless of its actual sourcing.
-> +	 */
-> +	pdata->pwm_refclk_freq = ti_sn_bridge_refclk_lut[i];
->  }
->  
->  static void ti_sn65dsi86_enable_comms(struct ti_sn65dsi86 *pdata)
-> @@ -1260,9 +1306,289 @@ static struct auxiliary_driver ti_sn_bridge_driver = {
->  };
->  
->  /* -----------------------------------------------------------------------------
-> - * GPIO Controller
-> + * PWM Controller
->   */
-> +#if defined(CONFIG_PWM)
-> +static int ti_sn_pwm_pin_request(struct ti_sn65dsi86 *pdata)
-> +{
-> +	return atomic_xchg(&pdata->pwm_pin_busy, 1) ? -EBUSY : 0;
-> +}
-> +
-> +static void ti_sn_pwm_pin_release(struct ti_sn65dsi86 *pdata)
-> +{
-> +	atomic_set(&pdata->pwm_pin_busy, 0);
-> +}
-> +
-> +static struct ti_sn65dsi86 *pwm_chip_to_ti_sn_bridge(struct pwm_chip *chip)
-> +{
-> +	return container_of(chip, struct ti_sn65dsi86, pchip);
-> +}
-> +
-> +static int ti_sn_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-> +{
-> +	struct ti_sn65dsi86 *pdata = pwm_chip_to_ti_sn_bridge(chip);
->  
-> +	return ti_sn_pwm_pin_request(pdata);
-> +}
-> +
-> +static void ti_sn_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-> +{
-> +	struct ti_sn65dsi86 *pdata = pwm_chip_to_ti_sn_bridge(chip);
-> +
-> +	ti_sn_pwm_pin_release(pdata);
-> +}
-> +
-> +/*
-> + * Limitations:
-> + * - The PWM signal is not driven when the chip is powered down, or in its
-> + *   reset state and the driver does not implement the "suspend state"
-> + *   described in the documentation. In order to save power, state->enabled is
-> + *   interpreted as denoting if the signal is expected to be valid, and is used
-> + *   to determine if the chip needs to be kept powered.
-> + * - Changing both period and duty_cycle is not done atomically, neither is the
-> + *   multi-byte register updates, so the output might briefly be undefined
-> + *   during update.
-> + */
-> +static int ti_sn_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			   const struct pwm_state *state)
-> +{
-> +	struct ti_sn65dsi86 *pdata = pwm_chip_to_ti_sn_bridge(chip);
-> +	unsigned int pwm_en_inv;
-> +	unsigned int backlight;
-> +	unsigned int pre_div;
-> +	unsigned int scale;
-> +	u64 period_max;
-> +	u64 period;
-> +	int ret;
-> +
-> +	if (!pdata->pwm_enabled) {
-> +		ret = pm_runtime_get_sync(pdata->dev);
-> +		if (ret < 0) {
-> +			pm_runtime_put_sync(pdata->dev);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (state->enabled) {
-> +		if (!pdata->pwm_enabled) {
-> +			/*
-> +			 * The chip might have been powered down while we
-> +			 * didn't hold a PM runtime reference, so mux in the
-> +			 * PWM function on the GPIO pin again.
-> +			 */
-> +			ret = regmap_update_bits(pdata->regmap, SN_GPIO_CTRL_REG,
-> +						 SN_GPIO_MUX_MASK << (2 * SN_PWM_GPIO_IDX),
-> +						 SN_GPIO_MUX_SPECIAL << (2 * SN_PWM_GPIO_IDX));
-> +			if (ret) {
-> +				dev_err(pdata->dev, "failed to mux in PWM function\n");
-> +				goto out;
-> +			}
-> +		}
-> +
-> +		/*
-> +		 * Per the datasheet the PWM frequency is given by:
-> +		 *
-> +		 *                          REFCLK_FREQ
-> +		 *   PWM_FREQ = -----------------------------------
-> +		 *               PWM_PRE_DIV * BACKLIGHT_SCALE + 1
-> +		 *
-> +		 * However, after careful review the author is convinced that
-> +		 * the documentation has lost some parenthesis around
-> +		 * "BACKLIGHT_SCALE + 1".
-> +		 * With that the formula can be written:
-> +		 *
-> +		 *   T_pwm * REFCLK_FREQ = PWM_PRE_DIV * (BACKLIGHT_SCALE + 1)
-> +		 *
-> +		 * In order to keep BACKLIGHT_SCALE within its 16 bits,
-> +		 * PWM_PRE_DIV must be:
-> +		 *
-> +		 *                     T_pwm * REFCLK_FREQ
-> +		 *   PWM_PRE_DIV >= -------------------------
-> +		 *                   BACKLIGHT_SCALE_MAX + 1
-> +		 *
-> +		 * To simplify the search and to favour higher resolution of
-> +		 * the duty cycle over accuracy of the period, the lowest
-> +		 * possible PWM_PRE_DIV is used. Finally the scale is
-> +		 * calculated as:
-> +		 *
-> +		 *                      T_pwm * REFCLK_FREQ
-> +		 *   BACKLIGHT_SCALE = ---------------------- - 1
-> +		 *                          PWM_PRE_DIV
-> +		 *
-> +		 * Here T_pwm is represented in seconds, so appropriate scaling
-> +		 * to nanoseconds is necessary.
-> +		 */
-> +
-> +		/* Minimum T_pwm is 1 / REFCLK_FREQ */
-> +		if (state->period <= NSEC_PER_SEC / pdata->pwm_refclk_freq) {
-> +			ret = -EINVAL;
-> +			goto out;
-> +		}
-> +
-> +		/*
-> +		 * Maximum T_pwm is 255 * (65535 + 1) / REFCLK_FREQ
-> +		 * Limit period to this to avoid overflows
-> +		 */
-> +		period_max = div_u64((u64)NSEC_PER_SEC * 255 * (65535 + 1),
-> +				     pdata->pwm_refclk_freq);
-> +		if (period > period_max)
-> +			period = period_max;
-> +		else
-> +			period = state->period;
-> +
-> +		pre_div = DIV64_U64_ROUND_UP(period * pdata->pwm_refclk_freq,
-> +					     (u64)NSEC_PER_SEC * (BACKLIGHT_SCALE_MAX + 1));
-> +		scale = div64_u64(period * pdata->pwm_refclk_freq, (u64)NSEC_PER_SEC * pre_div) - 1;
-> +
-> +		/*
-> +		 * The documentation has the duty ratio given as:
-> +		 *
-> +		 *     duty          BACKLIGHT
-> +		 *   ------- = ---------------------
-> +		 *    period    BACKLIGHT_SCALE + 1
-> +		 *
-> +		 * Solve for BACKLIGHT, substituting BACKLIGHT_SCALE according
-> +		 * to definition above and adjusting for nanosecond
-> +		 * representation of duty cycle gives us:
-> +		 */
-> +		backlight = div64_u64(state->duty_cycle * pdata->pwm_refclk_freq,
-> +				      (u64)NSEC_PER_SEC * pre_div);
-> +		if (backlight > scale)
-> +			backlight = scale;
-> +
-> +		ret = regmap_write(pdata->regmap, SN_PWM_PRE_DIV_REG, pre_div);
-> +		if (ret) {
-> +			dev_err(pdata->dev, "failed to update PWM_PRE_DIV\n");
-> +			goto out;
-> +		}
-> +
-> +		ti_sn65dsi86_write_u16(pdata, SN_BACKLIGHT_SCALE_REG, scale);
-> +		ti_sn65dsi86_write_u16(pdata, SN_BACKLIGHT_REG, backlight);
-> +	}
-> +
-> +	pwm_en_inv = FIELD_PREP(SN_PWM_EN_MASK, state->enabled) |
-> +		     FIELD_PREP(SN_PWM_INV_MASK, state->polarity == PWM_POLARITY_INVERSED);
-> +	ret = regmap_write(pdata->regmap, SN_PWM_EN_INV_REG, pwm_en_inv);
-> +	if (ret) {
-> +		dev_err(pdata->dev, "failed to update PWM_EN/PWM_INV\n");
-> +		goto out;
-> +	}
-> +
-> +	pdata->pwm_enabled = state->enabled;
-> +out:
-> +
-> +	if (!pdata->pwm_enabled)
-> +		pm_runtime_put_sync(pdata->dev);
-> +
-> +	return ret;
-> +}
-> +
-> +static void ti_sn_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> +				struct pwm_state *state)
-> +{
-> +	struct ti_sn65dsi86 *pdata = pwm_chip_to_ti_sn_bridge(chip);
-> +	unsigned int pwm_en_inv;
-> +	unsigned int pre_div;
-> +	u16 backlight;
-> +	u16 scale;
-> +	int ret;
-> +
-> +	ret = regmap_read(pdata->regmap, SN_PWM_EN_INV_REG, &pwm_en_inv);
-> +	if (ret)
-> +		return;
-> +
-> +	ret = ti_sn65dsi86_read_u16(pdata, SN_BACKLIGHT_SCALE_REG, &scale);
-> +	if (ret)
-> +		return;
-> +
-> +	ret = ti_sn65dsi86_read_u16(pdata, SN_BACKLIGHT_REG, &backlight);
-> +	if (ret)
-> +		return;
-> +
-> +	ret = regmap_read(pdata->regmap, SN_PWM_PRE_DIV_REG, &pre_div);
-> +	if (ret)
-> +		return;
-> +
-> +	state->enabled = FIELD_GET(SN_PWM_EN_MASK, pwm_en_inv);
-> +	if (FIELD_GET(SN_PWM_INV_MASK, pwm_en_inv))
-> +		state->polarity = PWM_POLARITY_INVERSED;
-> +	else
-> +		state->polarity = PWM_POLARITY_NORMAL;
-> +
-> +	state->period = DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC * pre_div * (scale + 1),
-> +					 pdata->pwm_refclk_freq);
-> +	state->duty_cycle = DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC * pre_div * backlight,
-> +					     pdata->pwm_refclk_freq);
-> +
-> +	if (state->duty_cycle > state->period)
-> +		state->duty_cycle = state->period;
-> +}
-> +
-> +static const struct pwm_ops ti_sn_pwm_ops = {
-> +	.request = ti_sn_pwm_request,
-> +	.free = ti_sn_pwm_free,
-> +	.apply = ti_sn_pwm_apply,
-> +	.get_state = ti_sn_pwm_get_state,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static int ti_sn_pwm_probe(struct auxiliary_device *adev,
-> +			   const struct auxiliary_device_id *id)
-> +{
-> +	struct ti_sn65dsi86 *pdata = dev_get_drvdata(adev->dev.parent);
-> +
-> +	pdata->pchip.dev = pdata->dev;
-> +	pdata->pchip.ops = &ti_sn_pwm_ops;
-> +	pdata->pchip.npwm = 1;
-> +	pdata->pchip.of_xlate = of_pwm_single_xlate;
-> +	pdata->pchip.of_pwm_n_cells = 1;
-> +
-> +	return pwmchip_add(&pdata->pchip);
-> +}
-> +
-> +static void ti_sn_pwm_remove(struct auxiliary_device *adev)
-> +{
-> +	struct ti_sn65dsi86 *pdata = dev_get_drvdata(adev->dev.parent);
-> +
-> +	pwmchip_remove(&pdata->pchip);
-> +
-> +	if (pdata->pwm_enabled)
-> +		pm_runtime_put_sync(pdata->dev);
-> +}
-> +
-> +static const struct auxiliary_device_id ti_sn_pwm_id_table[] = {
-> +	{ .name = "ti_sn65dsi86.pwm", },
-> +	{},
-> +};
-> +
-> +static struct auxiliary_driver ti_sn_pwm_driver = {
-> +	.name = "pwm",
-> +	.probe = ti_sn_pwm_probe,
-> +	.remove = ti_sn_pwm_remove,
-> +	.id_table = ti_sn_pwm_id_table,
-> +};
-> +
-> +static int __init ti_sn_pwm_register(void)
-> +{
-> +	return auxiliary_driver_register(&ti_sn_pwm_driver);
-> +}
-> +
-> +static void ti_sn_pwm_unregister(void)
-> +{
-> +	auxiliary_driver_unregister(&ti_sn_pwm_driver);
-> +}
-> +
-> +#else
-> +static inline int ti_sn_pwm_pin_request(struct ti_sn65dsi86 *pdata) { return 0; }
-> +static inline void ti_sn_pwm_pin_release(struct ti_sn65dsi86 *pdata) {}
-> +
-> +static inline int ti_sn_pwm_register(void) { return 0; }
-> +static inline void ti_sn_pwm_unregister(void) {}
-> +#endif
-> +
-> +/* -----------------------------------------------------------------------------
-> + * GPIO Controller
-> + */
->  #if defined(CONFIG_OF_GPIO)
->  
->  static int tn_sn_bridge_of_xlate(struct gpio_chip *chip,
-> @@ -1395,10 +1721,25 @@ static int ti_sn_bridge_gpio_direction_output(struct gpio_chip *chip,
->  	return ret;
->  }
->  
-> +static int ti_sn_bridge_gpio_request(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +	struct ti_sn65dsi86 *pdata = gpiochip_get_data(chip);
-> +
-> +	if (offset == SN_PWM_GPIO_IDX)
-> +		return ti_sn_pwm_pin_request(pdata);
-> +
-> +	return 0;
-> +}
-> +
->  static void ti_sn_bridge_gpio_free(struct gpio_chip *chip, unsigned int offset)
->  {
-> +	struct ti_sn65dsi86 *pdata = gpiochip_get_data(chip);
-> +
->  	/* We won't keep pm_runtime if we're input, so switch there on free */
->  	ti_sn_bridge_gpio_direction_input(chip, offset);
-> +
-> +	if (offset == SN_PWM_GPIO_IDX)
-> +		ti_sn_pwm_pin_release(pdata);
->  }
->  
->  static const char * const ti_sn_bridge_gpio_names[SN_NUM_GPIOS] = {
-> @@ -1420,6 +1761,7 @@ static int ti_sn_gpio_probe(struct auxiliary_device *adev,
->  	pdata->gchip.owner = THIS_MODULE;
->  	pdata->gchip.of_xlate = tn_sn_bridge_of_xlate;
->  	pdata->gchip.of_gpio_n_cells = 2;
-> +	pdata->gchip.request = ti_sn_bridge_gpio_request;
->  	pdata->gchip.free = ti_sn_bridge_gpio_free;
->  	pdata->gchip.get_direction = ti_sn_bridge_gpio_get_direction;
->  	pdata->gchip.direction_input = ti_sn_bridge_gpio_direction_input;
-> @@ -1546,10 +1888,9 @@ static int ti_sn65dsi86_probe(struct i2c_client *client,
->  	 * ordering. The bridge wants the panel to be there when it probes.
->  	 * The panel wants its HPD GPIO (provided by sn65dsi86 on some boards)
->  	 * when it probes. The panel and maybe backlight might want the DDC
-> -	 * bus. Soon the PWM provided by the bridge chip will have the same
-> -	 * problem. Having sub-devices allows the some sub devices to finish
-> -	 * probing even if others return -EPROBE_DEFER and gets us around the
-> -	 * problems.
-> +	 * bus or the pwm_chip. Having sub-devices allows the some sub devices
-> +	 * to finish probing even if others return -EPROBE_DEFER and gets us
-> +	 * around the problems.
->  	 */
->  
->  	if (IS_ENABLED(CONFIG_OF_GPIO)) {
-> @@ -1558,6 +1899,12 @@ static int ti_sn65dsi86_probe(struct i2c_client *client,
->  			return ret;
->  	}
->  
-> +	if (IS_ENABLED(CONFIG_PWM)) {
-> +		ret = ti_sn65dsi86_add_aux_device(pdata, &pdata->pwm_aux, "pwm");
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	/*
->  	 * NOTE: At the end of the AUX channel probe we'll add the aux device
->  	 * for the bridge. This is because the bridge can't be used until the
-> @@ -1601,10 +1948,14 @@ static int __init ti_sn65dsi86_init(void)
->  	if (ret)
->  		goto err_main_was_registered;
->  
-> -	ret = auxiliary_driver_register(&ti_sn_aux_driver);
-> +	ret = ti_sn_pwm_register();
->  	if (ret)
->  		goto err_gpio_was_registered;
->  
-> +	ret = auxiliary_driver_register(&ti_sn_aux_driver);
-> +	if (ret)
-> +		goto err_pwm_was_registered;
-> +
->  	ret = auxiliary_driver_register(&ti_sn_bridge_driver);
->  	if (ret)
->  		goto err_aux_was_registered;
-> @@ -1613,6 +1964,8 @@ static int __init ti_sn65dsi86_init(void)
->  
->  err_aux_was_registered:
->  	auxiliary_driver_unregister(&ti_sn_aux_driver);
-> +err_pwm_was_registered:
-> +	ti_sn_pwm_unregister();
->  err_gpio_was_registered:
->  	ti_sn_gpio_unregister();
->  err_main_was_registered:
-> @@ -1626,6 +1979,7 @@ static void __exit ti_sn65dsi86_exit(void)
->  {
->  	auxiliary_driver_unregister(&ti_sn_bridge_driver);
->  	auxiliary_driver_unregister(&ti_sn_aux_driver);
-> +	ti_sn_pwm_unregister();
->  	ti_sn_gpio_unregister();
->  	i2c_del_driver(&ti_sn65dsi86_driver);
->  }
-> -- 
-> 2.32.0
-> 
+Kind regards
+Uffe
