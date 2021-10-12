@@ -2,80 +2,102 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF32F428B71
-	for <lists+linux-pwm@lfdr.de>; Mon, 11 Oct 2021 12:56:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EB1342A3C2
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Oct 2021 14:02:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236151AbhJKK6Y (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 11 Oct 2021 06:58:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51578 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236160AbhJKK6U (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 11 Oct 2021 06:58:20 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C73D0C06177D
-        for <linux-pwm@vger.kernel.org>; Mon, 11 Oct 2021 03:56:12 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id r10so54860480wra.12
-        for <linux-pwm@vger.kernel.org>; Mon, 11 Oct 2021 03:56:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=DOxN63QWnl4dBNWQl+LufsBrewR+8VuPJnGph7ijSeE=;
-        b=km/+rwE10MGCG3K0BNjxD+A2l394aMlSCDFqBEiDyrs45mObKwVEkOccUp5BPFftJU
-         5cB06txNzUPVxcrxQnkqMq9zaxAqQeR9eoa3+7DqnAg3rX7wMze/dloERdrhczopiGET
-         PvxtLks7kWCMKTs5Q8Mmq12LwUKUT5cPH1x1mszpEwl0kuXWAYNTl0kX4+cL3oWAj8+a
-         6an2wLimFEmscCT9jtQf7FGYav0q/UTa6GRCeFihab7mYp8KZTVzyAi9ONxHllw1wfay
-         OSS3CoE7RnQ2PFKTnc/5Yya8gHnSshWvMzermo1msudbBS7MTk09iY8fA6ci8A/KmFSk
-         +E4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=DOxN63QWnl4dBNWQl+LufsBrewR+8VuPJnGph7ijSeE=;
-        b=r1f5YA5OfXuDcmvX5U4ZoyOYEfxRMHxJeulMf6SI3c2jwYiYmb8d1U1yjVO5RKEbmh
-         y3Y0fjYna5S8GeIG2oKDAcS3cZZPP0PIeMOhVk55txbz2KO5Rqre7S/WUz2JETDJbjKZ
-         QcjDLHtYenck25N0pmR8sA6sxnuv60TebKzEFxY1miilaWcNDsDjezK73tyPJ24aRhvl
-         DCGbYfkrhdR9twaCzwcl75PWB2MYNrd9twZMpHxAQYaWeffwXdcFh/fVbz5yj31Aixw4
-         H6WrcHSfHRjjmd0Yf7u0Yg6NQUI/fHewuQyi0SnPRZdwAUAHheDIybpyK3M5Yykzqy4r
-         Idlg==
-X-Gm-Message-State: AOAM530FXn7n/XlfymG30j7MDArb/r/ljrPA8PVaAPrgo//UJb4Y7SUa
-        7QOys41zAKV6bJQexDLwk1Dc+onUhbR5WJpK3dTlJFxdm/UbRg==
-X-Google-Smtp-Source: ABdhPJxWYMUVxuj7Tly9azrkWxEMXzTPZAklmoVIH4V2ykknMMiBN9imOFz2zTqxux/zk/7pzvFSRlX+C6mfjc7ADy4=
-X-Received: by 2002:adf:8b9a:: with SMTP id o26mr24377548wra.109.1633949760323;
- Mon, 11 Oct 2021 03:56:00 -0700 (PDT)
+        id S236322AbhJLMEU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 12 Oct 2021 08:04:20 -0400
+Received: from www.zeus03.de ([194.117.254.33]:42948 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236282AbhJLMET (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 12 Oct 2021 08:04:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=swnIN0Vy8h2ui1QuoJpRo/wj4mII
+        f+e6qODbS8r12RE=; b=FcTVqPXpG6KFMsO2wAfMeRmaA4VtOUrgd+qE2I7XXqxM
+        MT/TLxQ1JGhbTlFHCOcBaogxjTIHFylbmqvr7Usk9La34tay0sF46FPzrX1EnpxT
+        OePROVFC9x7ClEJT1Y1eejGQQoz++EOZ64XS67VU0UuzS70lDijluqne3JUdXPg=
+Received: (qmail 203684 invoked from network); 12 Oct 2021 14:02:15 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 12 Oct 2021 14:02:15 +0200
+X-UD-Smtp-Session: l3s3148p1@JQjRnSbOoLQgAwDPXw9GANTxpJbLr/qt
+Date:   Tue, 12 Oct 2021 14:02:15 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH] dt-bindings: pwm: tpu: Add R-Car M3-W+ device tree
+ bindings
+Message-ID: <YWV5R1dqpvnPFim5@kunai>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Rob Herring <robh@kernel.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+References: <20210906094536.45223-1-wsa+renesas@sang-engineering.com>
+ <YTjAGLlLvUOF4eO9@robh.at.kernel.org>
 MIME-Version: 1.0
-Received: by 2002:adf:dd8c:0:0:0:0:0 with HTTP; Mon, 11 Oct 2021 03:55:59
- -0700 (PDT)
-Reply-To: ramcharan9910@outlook.com
-From:   "Cr.David Ramcharan" <convy0101@gmail.com>
-Date:   Mon, 11 Oct 2021 03:55:59 -0700
-Message-ID: <CADDRs95718H=K3tUjphEHH_C96xYhoJw7jeCMpt_FfZZjhEXrA@mail.gmail.com>
-Subject: Thank You
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="HfJVpUODR/arx7iB"
+Content-Disposition: inline
+In-Reply-To: <YTjAGLlLvUOF4eO9@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Please I am writing to notify you again on my intention to list your
-name as a beneficiary to the total sum of GBP6.350 million (Six
-million, Three hundred and fifty thousand British Pounds Sterlings) in
-the intent of the deceased (name now withheld since this is my second
-letter to you).
 
-I contacted you because you bear the surname identity and therefore
-can present you as the beneficiary to inherit the account proceeds of
-the deceased since there is no written "WILL" or trace to the deceased
-family relatives. My aim is to present you to my Bank Authorities as
-the Next of Kin to our deceased client. I will guide you all through
-the Claim procedure by providing all relevant Information and guiding
-you in your decisions and response to the Bank Management. All the
-papers will be processed after your acceptance.
+--HfJVpUODR/arx7iB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In your acceptance of this deal, I request that you kindly forward to
-me your letter of acceptance; your current telephone and fax numbers
-,age, occupational status and a forwarding address to enable me submit
-to the Bank Management the details as the Next of Kin to their
-deceased customer. Reply strictly through: ramcharancrdavid@gmail.com
+Hi Rob,
 
-Yours faithfully,
-Cr.David Ramcharan
+> > Add device tree bindings for TPU found on R-Car M3-W+ SoCs.
+> >=20
+> > Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > ---
+> >  Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> >=20
+>=20
+> Acked-by: Rob Herring <robh@kernel.org>
+
+could you apply it, please? Looking at git history, the YAML changes
+for PWM went through your tree.
+
+Thanks and have a nice week,
+
+   Wolfram
+
+
+--HfJVpUODR/arx7iB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmFleUIACgkQFA3kzBSg
+KbaCvg/7B5EVyT/cL0NPbxFqhcqFGAssDR1SPUXb7bLLJc88KLM34/2Wqf/xg/Nb
+xPNNJDkR7JZrghN79TWIDmfqdoLlEcHYD9zUQvSqksXB7ZJcvxk9qB58pSbVwd40
+TjjwBZiVDO6qiTlrODLx/KYik24QCGxPiySi2dY/6E4klDb/IJKrZEbhxrq9sV94
+msf59Qi/lXKN7guBZS3GXoX4CfoyEPMyXY1IdviB9BSYmddqvNbTWjbky7BWV66F
+J+FCkL016cEBn8CZg/rcdxnrTmC//iJHQR37fAvU48JYkCa6JO5Z/awUNy1nZOID
+tdS3k8cjahjwWKpiMVo837ydpHv3wDwnz1lIzZeqWWGvNmOtXIyxh7SROJufVC7A
+KQ1sIGciHHgJGk3VU5nWdDhazbulWKK4ZMUyVoqZ28ehgJ3avd9esjlRW4+Y8zXQ
+SxOz8os/pmyujJnyDc4UdytMYlv/PY6ZOnT6iuW/CtXQCdCEa+t4X6ALrhWTq9Ch
+LL5hcz4q6bbQAccPafcneje7ZI9+b3C3fn3xQ/j+TxWy/EwN9qkx4UivJ4mUGsr6
+qFnrcwi0vNu92axo91owjbaI9vPwH8sy2gH+jWroM0ZrnxA2q6Qc/F8ZDnaMpusI
+mYP/LhIHQda0BGVv4L2cSWT2qVWK4Csgp8xb6iAilmLi0wE0FT8=
+=kb+4
+-----END PGP SIGNATURE-----
+
+--HfJVpUODR/arx7iB--
