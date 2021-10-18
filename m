@@ -2,208 +2,156 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0831943073C
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 Oct 2021 10:38:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA7374318AE
+	for <lists+linux-pwm@lfdr.de>; Mon, 18 Oct 2021 14:15:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245074AbhJQIkj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 17 Oct 2021 04:40:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234310AbhJQIkg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 17 Oct 2021 04:40:36 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D472C061765;
-        Sun, 17 Oct 2021 01:38:24 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id i24so58710405lfj.13;
-        Sun, 17 Oct 2021 01:38:24 -0700 (PDT)
+        id S230346AbhJRMRX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 18 Oct 2021 08:17:23 -0400
+Received: from mail-dm6nam10on2052.outbound.protection.outlook.com ([40.107.93.52]:36960
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229569AbhJRMRW (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 18 Oct 2021 08:17:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fXIpzFMBNbRrkt2k1ZRn2XriNMHwSB0fpcxwd6o80OoO7G3Hs0q99EUwuwLA3Htle75yV5BANhW/3JXDYZoQJrsd1Xhrrlhuf71K99wvr4CvJ3Bi7Ld/XPGZOBfWkEP2h07ZNjgXbIEvEZAW5qoHcFY8Dv/CHOt2fh+ec5BIVftmmJrpAD10JxllVfd9luI9mJdY9SJh++tXRjehj7yXfzsJKLJx4070qSE1ALW1rD5rL5R9xJmOzpWnsR5QOJeiCIbyVZuLxO+Nc37ysaoVMRnRod8xCwGm6A82AnaJnvIymYZeDw1VBGc8J7F9BY7toOAvcw+piFDe3N+r79ynWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vdFTwTJH3m5xaNjGHzlntDlisIK04aBNAg16SARCEdA=;
+ b=I/HE6fdOoOWwndetMPqWmZkDJFYfpXbJ9nlj5mCU3dLw1Bx4r4/EGHQFCddD2lIsUNASaGDffyEUpAcsrZ6MhoL/n17/VDXECm3urCeLJSlSm+Jw7cwYh8lrtQ1iACAH2TM+dSbOCec3x2us6X6pVtYLnxr0QZy++tfTMYlHPuWzHc/9VGFB9dqwd1uuKibmocYIkMey6KMJY5iFzxdDP0N1j9KPyOYx76DqUhVsUM1Q8lCV/WDDIfVZBBi1+m3KO0haQgx1uxhH5KESsav8tZP3ZZwm7kTZVRTozGkKRATQTafE1cIeX0ZO4VL7hc3NxbkF4Xa8czNcZVIePPQpsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=seco.com smtp.mailfrom=xilinx.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
+ dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=opxUgAexG3s+/01pbgkqJfjPAUC0LEyYCXhf01ZbC0c=;
-        b=D7kQyoaL09G2+qKjzlGip7Tt2fmqCCpaZgG45v9JMgbOfXMzpbe/F4Zokvs+VPF/lD
-         WfrP/tvOaQ8QBq3g7FNly2cBTmnmgB1n+NoFfi8LpcH9hw6cxOgxmQsUnhUWqjQsOPdk
-         EUwCSAhuwGMtcYj4aJlAvkIXk38IFW5ZrLYFxPg1cXOn2fOiRk64e8LzpJPHNmNOPPVJ
-         0E1w2kLkFxNQpvmJiOkeYPr8EOUsx5Je8yU7KPsBWr2sFivNGheJ7VSh8C9+gTO/FKEG
-         CVJzyRbEzNl6m5aC5n8JeMKgPz7GJOq6ARqSDsndsJRJcrWKQ8cr/YdS6AaPiYKrPPMN
-         8Cuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=opxUgAexG3s+/01pbgkqJfjPAUC0LEyYCXhf01ZbC0c=;
-        b=ih44PBZ6QNwV7BCEkge3vL2xWF1sbABGl09D6sl7h/QnYGFz/5wjWt67ubeVYjAvDB
-         0AsJwTM7bAWQzyWbh5uGFgGH4NnJpG8imcG2RdTOjHEZjiMEQF0r8E9o0UE8mUPDZYXP
-         97t6ZMgNVc9TVeyL7uW1ylXwpDq9yatvVRS47l6o3Z1JqO2x1UnktZK9a5p9eaw+QIVn
-         mknBiVFPDRg5OkGlJewdtneZk93q2kNUUcVrz95ilod8bMW90x1SK67R0kalOCL4j7F8
-         HnqKsNllCUflAQ/0rgo2adgXZ7uMbephuU1ipnq7beXLqC8qfGVpcHtW2eG8lOCdxvq+
-         ApzA==
-X-Gm-Message-State: AOAM533Vpylkfiae+sWdq/M7elKjeo4WxYcA2Mna4iyKdlO4lXW0H7h+
-        ZZnkiFRQ2xdG5OXMKZTsY+I=
-X-Google-Smtp-Source: ABdhPJxQusOyrULmSzYae9aV203LQo0/dtj0Yz/g3SI3pMK/z/tMpwc72My6KFI8vzlhgvLi1jfZ/w==
-X-Received: by 2002:a05:6512:a8d:: with SMTP id m13mr23749109lfu.305.1634459902328;
-        Sun, 17 Oct 2021 01:38:22 -0700 (PDT)
-Received: from [192.168.2.145] (46-138-48-94.dynamic.spd-mgts.ru. [46.138.48.94])
-        by smtp.googlemail.com with ESMTPSA id r30sm1092639lfp.298.2021.10.17.01.38.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 17 Oct 2021 01:38:21 -0700 (PDT)
-Subject: Re: [PATCH v13 20/35] mtd: rawnand: tegra: Add runtime PM and OPP
- support
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Peter Chen <peter.chen@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Nishanth Menon <nm@ti.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        linux-staging@lists.linux.dev, linux-pwm@vger.kernel.org,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Richard Weinberger <richard@nod.at>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Lucas Stach <dev@lynxeye.de>, Stefan Agner <stefan@agner.ch>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        David Heidelberg <david@ixit.cz>
-References: <20210926224058.1252-1-digetx@gmail.com>
- <20210926224058.1252-21-digetx@gmail.com>
- <CAPDyKFoF2QxZss_h9B1NFqOqgeF=TQ6LajCedGiJ9_P8X5M0NA@mail.gmail.com>
- <0bcbcd3d-2154-03d2-f572-dc9032125c26@gmail.com>
- <CAPDyKFohA9iu2UQfwoc0pCrCGupdwnUTWjKOtP09_C2KaFSo8w@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <073114ea-490b-89a9-e82d-852b34cb11df@gmail.com>
-Date:   Sun, 17 Oct 2021 11:38:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vdFTwTJH3m5xaNjGHzlntDlisIK04aBNAg16SARCEdA=;
+ b=e917YiJ/L8co0Uya7DjVwxGwyxPlJks0QvKV2szRUuV3Aq9ttU0rS4tvmxXuYVmhuDChpjzVlnM4JW3CPs5ujfUP6N/sgMVFlvnrBGML+mXcm0jPbXTaJz5DoujNZea97M6y+LzARknuzuKJ2y/Pzxhv9vM0uU3aNP4TgS+U7aE=
+Received: from SA9PR13CA0083.namprd13.prod.outlook.com (2603:10b6:806:23::28)
+ by CY4PR02MB2360.namprd02.prod.outlook.com (2603:10b6:903:9::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.16; Mon, 18 Oct
+ 2021 12:15:09 +0000
+Received: from SN1NAM02FT0063.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:806:23:cafe::f3) by SA9PR13CA0083.outlook.office365.com
+ (2603:10b6:806:23::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.10 via Frontend
+ Transport; Mon, 18 Oct 2021 12:15:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; seco.com; dkim=none (message not signed)
+ header.d=none;seco.com; dmarc=pass action=none header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com;
+Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
+ SN1NAM02FT0063.mail.protection.outlook.com (10.97.5.98) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4608.15 via Frontend Transport; Mon, 18 Oct 2021 12:15:09 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Mon, 18 Oct 2021 05:15:08 -0700
+Received: from smtp.xilinx.com (172.19.127.96) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.2176.14 via Frontend Transport; Mon, 18 Oct 2021 05:15:08 -0700
+Envelope-to: sean.anderson@seco.com,
+ linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org,
+ thierry.reding@gmail.com,
+ lee.jones@linaro.org,
+ u.kleine-koenig@pengutronix.de,
+ linux-arm-kernel@lists.infradead.org,
+ alvaro.gamez@hazent.com,
+ linux-kernel@vger.kernel.org,
+ robh@kernel.org
+Received: from [10.254.241.49] (port=52278)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1mcRXo-000Fod-JR; Mon, 18 Oct 2021 05:15:08 -0700
+Message-ID: <676342e6-b174-ad81-7a22-3e3e27090654@xilinx.com>
+Date:   Mon, 18 Oct 2021 14:15:05 +0200
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFohA9iu2UQfwoc0pCrCGupdwnUTWjKOtP09_C2KaFSo8w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH v8 1/3] microblaze: timer: Remove unused properties
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+To:     Sean Anderson <sean.anderson@seco.com>,
+        <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        <michal.simek@xilinx.com>, <linux-arm-kernel@lists.infradead.org>,
+        Alvaro Gamez <alvaro.gamez@hazent.com>,
+        <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>
+References: <20211015190025.409426-1-sean.anderson@seco.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+In-Reply-To: <20211015190025.409426-1-sean.anderson@seco.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 46f66b1d-1bb5-46f3-34f4-08d99230edb5
+X-MS-TrafficTypeDiagnostic: CY4PR02MB2360:
+X-Microsoft-Antispam-PRVS: <CY4PR02MB23601F2071C2239345592B79C6BC9@CY4PR02MB2360.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: gh11m1uWbxtVnx+bs/0tbzxC0boGCIUmSo3PYKqPw9DdszwR2SS7ghKasUti8yu5HpyDrROLIcBPr7/pITEq1ewOSr/MfuLaPEBnmZXq7RsNCnI6+Tgjyulem789OZFCeDFg43q9PuoALdFGl4yKxQJG37yiiPEFOJAfNLQkIDiBqH6qQT8x07sM+j/+3qCbmBMvjHwkjVBk1pqjbBTMhTUYBd9Nr83xqVVxwW6fpTKDhvyyNkZJiKyd0rlCOAu6mItPpx+Ts6P40XXzAI32W0lJxAy1ae0kN6rapgNOPDqq9abVhqfTCRsWbJwr8eJa+dEf8bMOdHngmDTv4lABFB7GbKnhN6yaQqlMgwu81qUKwZxUqjSbrIMt9khVG02VvvDcgqFb7JWqWQbiWz2qvNSs6cYZIBnffcCrsy0juWFKMXB1odK8ZecFebKVkeOKqb6iOFHwRzsHuliblT6Se7p37b2Yvt9jwMznEppH8BuHnUo4jnTcsBc1VpHzvzqW8uBUBo4EP+Kd9du3bKwLXN2YEsqfUP+0/DqD2eqbTzQKWFSN4J/hPXJhWxrOmvkbxjxwNRKlWVpmPorV5K1OP0nABjVCVkViy6GZXj4cqLqx7wc7ZWtD+Yg/JLxtgbjPe4pqToeZ9+f7vdvGOEqYBoE4H8mm6hQQ0scexaKTW3hy4l8iSK2XwiVLRVwS2UUTn6lrVGjS4QEwbulU9GiCOWZerFuk7r2BaVQ/rE5r5FqrLjlY+CrsBLYiUBcS57Tw
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(36840700001)(46966006)(36860700001)(31686004)(47076005)(316002)(8936002)(83380400001)(36756003)(53546011)(44832011)(356005)(336012)(6666004)(110136005)(9786002)(4326008)(186003)(5660300002)(7636003)(508600001)(70586007)(54906003)(82310400003)(70206006)(31696002)(26005)(7416002)(426003)(2906002)(8676002)(2616005)(36906005)(50156003)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2021 12:15:09.2987
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 46f66b1d-1bb5-46f3-34f4-08d99230edb5
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0063.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB2360
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-01.10.2021 18:01, Ulf Hansson пишет:
-> On Fri, 1 Oct 2021 at 16:35, Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> 01.10.2021 17:24, Ulf Hansson пишет:
->>> On Mon, 27 Sept 2021 at 00:42, Dmitry Osipenko <digetx@gmail.com> wrote:
->>>>
->>>> The NAND on Tegra belongs to the core power domain and we're going to
->>>> enable GENPD support for the core domain. Now NAND must be resumed using
->>>> runtime PM API in order to initialize the NAND power state. Add runtime PM
->>>> and OPP support to the NAND driver.
->>>>
->>>> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  drivers/mtd/nand/raw/tegra_nand.c | 55 ++++++++++++++++++++++++++-----
->>>>  1 file changed, 47 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/drivers/mtd/nand/raw/tegra_nand.c b/drivers/mtd/nand/raw/tegra_nand.c
->>>> index 32431bbe69b8..098fcc9cb9df 100644
->>>> --- a/drivers/mtd/nand/raw/tegra_nand.c
->>>> +++ b/drivers/mtd/nand/raw/tegra_nand.c
->>>> @@ -17,8 +17,11 @@
->>>>  #include <linux/mtd/rawnand.h>
->>>>  #include <linux/of.h>
->>>>  #include <linux/platform_device.h>
->>>> +#include <linux/pm_runtime.h>
->>>>  #include <linux/reset.h>
->>>>
->>>> +#include <soc/tegra/common.h>
->>>> +
->>>>  #define COMMAND                                        0x00
->>>>  #define   COMMAND_GO                           BIT(31)
->>>>  #define   COMMAND_CLE                          BIT(30)
->>>> @@ -1151,6 +1154,7 @@ static int tegra_nand_probe(struct platform_device *pdev)
->>>>                 return -ENOMEM;
->>>>
->>>>         ctrl->dev = &pdev->dev;
->>>> +       platform_set_drvdata(pdev, ctrl);
->>>>         nand_controller_init(&ctrl->controller);
->>>>         ctrl->controller.ops = &tegra_nand_controller_ops;
->>>>
->>>> @@ -1166,14 +1170,22 @@ static int tegra_nand_probe(struct platform_device *pdev)
->>>>         if (IS_ERR(ctrl->clk))
->>>>                 return PTR_ERR(ctrl->clk);
->>>>
->>>> -       err = clk_prepare_enable(ctrl->clk);
->>>> +       err = devm_pm_runtime_enable(&pdev->dev);
->>>> +       if (err)
->>>> +               return err;
->>>> +
->>>> +       err = devm_tegra_core_dev_init_opp_table_common(&pdev->dev);
->>>> +       if (err)
->>>> +               return err;
->>>> +
->>>> +       err = pm_runtime_resume_and_get(&pdev->dev);
->>>>         if (err)
->>>>                 return err;
->>>>
->>>>         err = reset_control_reset(rst);
->>>>         if (err) {
->>>>                 dev_err(ctrl->dev, "Failed to reset HW: %d\n", err);
->>>> -               goto err_disable_clk;
->>>> +               goto err_put_pm;
->>>>         }
->>>>
->>>>         writel_relaxed(HWSTATUS_CMD_DEFAULT, ctrl->regs + HWSTATUS_CMD);
->>>> @@ -1188,21 +1200,19 @@ static int tegra_nand_probe(struct platform_device *pdev)
->>>>                                dev_name(&pdev->dev), ctrl);
->>>>         if (err) {
->>>>                 dev_err(ctrl->dev, "Failed to get IRQ: %d\n", err);
->>>> -               goto err_disable_clk;
->>>> +               goto err_put_pm;
->>>>         }
->>>>
->>>>         writel_relaxed(DMA_MST_CTRL_IS_DONE, ctrl->regs + DMA_MST_CTRL);
->>>>
->>>>         err = tegra_nand_chips_init(ctrl->dev, ctrl);
->>>>         if (err)
->>>> -               goto err_disable_clk;
->>>> -
->>>> -       platform_set_drvdata(pdev, ctrl);
->>>> +               goto err_put_pm;
->>>>
->>>
->>> There is no corresponding call pm_runtime_put() here. Is it
->>> intentional to always leave the device runtime resumed after ->probe()
->>> has succeeded?
->>>
->>> I noticed you included some comments about this for some other
->>> drivers, as those needed more tweaks. Is that also the case for this
->>> driver?
->>
->> Could you please clarify? There is pm_runtime_put() in both probe-error
->> and remove() code paths here.
-> 
-> I was not considering the error path of ->probe() (or ->remove()), but
-> was rather thinking about when ->probe() completes successfully. Then
-> you keep the device runtime resumed, because you have called
-> pm_runtime_resume_and_get() for it.
-> 
-> Shouldn't you have a corresponding pm_runtime_put() in ->probe(),
-> allowing it to be runtime suspended, until the device is really needed
-> later on. No?
 
-This driver doesn't support active power management. I don't have Tegra
-hardware that uses NAND storage for testing, so it's up to somebody else
-to implement dynamic power management. NAND doesn't require high
-voltages, so it's fine to keep the old driver behaviour by keeping
-hardware resumed since the probe time.
+
+On 10/15/21 21:00, Sean Anderson wrote:
+> This removes properties not used by either the PWM or timer drivers.
+> This lets us set additionalProperties: false.
+> 
+> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
+> ---
+> 
+> Changes in v8:
+> - Remove additional properties from microblaze device tree
+> 
+>   arch/microblaze/boot/dts/system.dts | 5 -----
+>   1 file changed, 5 deletions(-)
+> 
+> diff --git a/arch/microblaze/boot/dts/system.dts b/arch/microblaze/boot/dts/system.dts
+> index b7ee1056779e..22252451ec09 100644
+> --- a/arch/microblaze/boot/dts/system.dts
+> +++ b/arch/microblaze/boot/dts/system.dts
+> @@ -347,12 +347,7 @@ xps_timer_1: timer@83c00000 {
+>   			interrupts = < 3 2 >;
+>   			reg = < 0x83c00000 0x10000 >;
+>   			xlnx,count-width = <0x20>;
+> -			xlnx,family = "virtex5";
+> -			xlnx,gen0-assert = <0x1>;
+> -			xlnx,gen1-assert = <0x1>;
+>   			xlnx,one-timer-only = <0x0>;
+> -			xlnx,trig0-assert = <0x1>;
+> -			xlnx,trig1-assert = <0x1>;
+>   		} ;
+>   	} ;
+>   }  ;
+> 
+
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+
+If you want me to take this via microblaze tree, please let me know.
+
+Thanks,
+Michal
