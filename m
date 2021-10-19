@@ -2,121 +2,219 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60BBF432403
-	for <lists+linux-pwm@lfdr.de>; Mon, 18 Oct 2021 18:43:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EB6F4334EA
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 Oct 2021 13:41:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233165AbhJRQpk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 18 Oct 2021 12:45:40 -0400
-Received: from mail-oi1-f177.google.com ([209.85.167.177]:35451 "EHLO
-        mail-oi1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231793AbhJRQpk (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 18 Oct 2021 12:45:40 -0400
-Received: by mail-oi1-f177.google.com with SMTP id r6so628455oiw.2;
-        Mon, 18 Oct 2021 09:43:28 -0700 (PDT)
+        id S230129AbhJSLnM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 19 Oct 2021 07:43:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235180AbhJSLnH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 19 Oct 2021 07:43:07 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3752C061749
+        for <linux-pwm@vger.kernel.org>; Tue, 19 Oct 2021 04:40:54 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id p16so6818209lfa.2
+        for <linux-pwm@vger.kernel.org>; Tue, 19 Oct 2021 04:40:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=p/y6DgAZycykowwrleZpy70Yak++qIhNqJ9ImugcYMs=;
+        b=gbZb/rIEkq16uEpMdDfbn531uPXxDE2vXRTZ1At7zc8FyijjHf+TaWP9WSCNsx9CRl
+         Ax+uAwkmd3zCdbRdDaM3dpQ6QH2wtz6LdoMLA6+gjkzDI8FsGa3Gg4WLu7V9K5SrUrby
+         y6A+UktAxyprVLbdSpurxxaZ8mnWtv03QgVC25vrqwdz6F5CjpkyH0G67ZL5o2xSalbx
+         z2YLwvEkGXJDZVRENSUyiANgZXnd7Hl65An187cV1TSi/tcYxCoWRVEqIP0BwzqCyQr0
+         hoZBxk1g0lrSFu4sw+cYxe+pvM8G9j1I2iiX+c9B9ryltLhmQtiX2zDR77yR1QolGdKK
+         MOng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/vsPv2SD1Rt8WbOkNW13ZNWlyAjKc3bg4K4BxMrdTKc=;
-        b=Pa6GomVbVXYYe/9ExmVV6kjIEgfq6uTGu8OoluinqdpUSOiTZd7nMFcCHluXIbqmw4
-         I5DpeX3U/Hcg8fg8zzx1e6bfYfHVq99iQ81E8LhiOgidhHSY4ha32kTCz7H91erY0qE7
-         uDYZMpjGrMBGdeWquNXi+BSv3ibalgE1WQGlOeOVwmIpq2An5FlypjmQdse26FIF86Yb
-         UzBI+lAU1YFaI1OU7bXE+hKwSPzps/qLc3cXONFyTNalf3XegM+AqzNGwOtJf9XSDnyN
-         MchZC3ppEXyZ2yaaQVusE/3b85XoSUPcebpE8KIw3PZvZAydLhE04NUy5RoJHXeNT9ff
-         kowg==
-X-Gm-Message-State: AOAM530uSZt1A8JjgzJW0dcWQTK14lrQTnc13P/SPvDAyydjuieXmwfS
-        hQdMOICgtICvx7+J7JBmFQ==
-X-Google-Smtp-Source: ABdhPJxOfGc66L0/rXjSFdldE/BLsaDwndHWOMX5LeqJpkR4KftoMRAgJrb4lXRb41d95MOC+xLB+g==
-X-Received: by 2002:a05:6808:7c8:: with SMTP id f8mr638949oij.146.1634575408315;
-        Mon, 18 Oct 2021 09:43:28 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id ay42sm3156043oib.22.2021.10.18.09.43.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Oct 2021 09:43:27 -0700 (PDT)
-Received: (nullmailer pid 2532419 invoked by uid 1000);
-        Mon, 18 Oct 2021 16:43:26 -0000
-Date:   Mon, 18 Oct 2021 11:43:26 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sean Anderson <sean.anderson@seco.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alvaro Gamez <alvaro.gamez@hazent.com>,
-        devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        michal.simek@xilinx.com, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v8 2/3] dt-bindings: pwm: Add Xilinx AXI Timer
-Message-ID: <YW2kLjjbAYdaDI0l@robh.at.kernel.org>
-References: <20211015190025.409426-1-sean.anderson@seco.com>
- <20211015190025.409426-2-sean.anderson@seco.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=p/y6DgAZycykowwrleZpy70Yak++qIhNqJ9ImugcYMs=;
+        b=QsBg7kRsk1/KO3EjbXt4PFXi9TISMRb9Ve8AakIx720aaZZNKEkyxk+/B6L9BBQfUg
+         1oF/nugoCQbgJ0CRmnxs25iM1EyhEuM1fCxs98Rk6vbBK9NZs4MtMylirweXKUPecpUn
+         HQZmaekOr3dUrHKgVTAZgyKiVZG3131I4y2HOValIpmcpWHowZA3WWeY8sFDR8MAvX0K
+         A3cwi2iieYMqTlYFM5yb4puYF7eqjA9DRbvdv026W6y8dDgdoMXY1y6UNT3Qvs7xy2n+
+         Qt2qTMth8S/Yv2azlsWhwy6L0dKVG7iObXeyPEr19tY/N+U5NOWpmTjQaEHsQjb9z1o8
+         5ymQ==
+X-Gm-Message-State: AOAM5313HXF+4IvdKuazJEBZSqNpk9gec39nFohvaP9E85DAcZtWc3M2
+        YLEJPuOctNOylhDuA3wlvs9u8ovwgDO4ABm7wmRVm3Y3JHw=
+X-Google-Smtp-Source: ABdhPJyiZ8hxPaWs5ZGwktR/58DXEHsnrg2iCZG7+dtLEFQZezq+DvEjCTIwbhL0fm341kLJAfk/05h60QX3kuXQ9G4=
+X-Received: by 2002:a05:6512:3084:: with SMTP id z4mr5314051lfd.167.1634643653278;
+ Tue, 19 Oct 2021 04:40:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211015190025.409426-2-sean.anderson@seco.com>
+References: <20210926224058.1252-1-digetx@gmail.com> <20210926224058.1252-21-digetx@gmail.com>
+ <CAPDyKFoF2QxZss_h9B1NFqOqgeF=TQ6LajCedGiJ9_P8X5M0NA@mail.gmail.com>
+ <0bcbcd3d-2154-03d2-f572-dc9032125c26@gmail.com> <CAPDyKFohA9iu2UQfwoc0pCrCGupdwnUTWjKOtP09_C2KaFSo8w@mail.gmail.com>
+ <073114ea-490b-89a9-e82d-852b34cb11df@gmail.com>
+In-Reply-To: <073114ea-490b-89a9-e82d-852b34cb11df@gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 19 Oct 2021 13:40:16 +0200
+Message-ID: <CAPDyKFoOMvEW0o6=-_bYKhwUcbfeTD4qu-K2tfkdXiR0bErHsw@mail.gmail.com>
+Subject: Re: [PATCH v13 20/35] mtd: rawnand: tegra: Add runtime PM and OPP support
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Peter Chen <peter.chen@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        linux-staging@lists.linux.dev, linux-pwm@vger.kernel.org,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Lucas Stach <dev@lynxeye.de>, Stefan Agner <stefan@agner.ch>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        David Heidelberg <david@ixit.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, 15 Oct 2021 15:00:24 -0400, Sean Anderson wrote:
-> This adds a binding for the Xilinx LogiCORE IP AXI Timer. This device is a
-> "soft" block, so it has some parameters which would not be configurable in
-> most hardware. This binding is usually automatically generated by Xilinx's
-> tools, so the names and values of some properties should be kept as they
-> are, if possible. In addition, this binding is already in the kernel at
-> arch/microblaze/boot/dts/system.dts, and in user software such as QEMU.
-> 
-> The existing driver uses the clock-frequency property, or alternatively the
-> /cpus/timebase-frequency property as its frequency input. Because these
-> properties are deprecated, they have not been included with this schema.
-> All new bindings should use the clocks/clock-names properties to specify
-> the parent clock.
-> 
-> Because we need to init timer devices so early in boot, we determine if we
-> should use the PWM driver or the clocksource/clockevent driver by the
-> presence/absence, respectively, of #pwm-cells. Because both counters are
-> used by the PWM, there is no need for a separate property specifying which
-> counters are to be used for the PWM.
-> 
-> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
-> ---
-> 
-> Changes in v8:
-> - Set additionalProperties: false
-> 
-> Changes in v7:
-> - Add #pwm-cells to properties
-> - Document why additionalProperties is true
-> 
-> Changes in v6:
-> - Enumerate possible counter widths
-> - Fix incorrect schema id
-> 
-> Changes in v5:
-> - Add example for timer binding
-> - Fix indentation lint
-> - Move schema into the timer directory
-> - Remove xlnx,axi-timer-2.0 compatible string
-> - Update commit message to reflect revisions
-> 
-> Changes in v4:
-> - Make some properties optional for clocksource drivers
-> - Predicate PWM driver on the presence of #pwm-cells
-> - Remove references to generate polarity so this can get merged
-> 
-> Changes in v3:
-> - Add an example with non-deprecated properties only.
-> - Add xlnx,pwm and xlnx,gen?-active-low properties.
-> - Make newer replacement properties mutually-exclusive with what they
->   replace
-> - Mark all boolean-as-int properties as deprecated
-> 
-> Changes in v2:
-> - Use 32-bit addresses for example binding
-> 
->  .../bindings/timer/xlnx,xps-timer.yaml        | 92 +++++++++++++++++++
->  1 file changed, 92 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
-> 
+On Sun, 17 Oct 2021 at 10:38, Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> 01.10.2021 18:01, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Fri, 1 Oct 2021 at 16:35, Dmitry Osipenko <digetx@gmail.com> wrote:
+> >>
+> >> 01.10.2021 17:24, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >>> On Mon, 27 Sept 2021 at 00:42, Dmitry Osipenko <digetx@gmail.com> wro=
+te:
+> >>>>
+> >>>> The NAND on Tegra belongs to the core power domain and we're going t=
+o
+> >>>> enable GENPD support for the core domain. Now NAND must be resumed u=
+sing
+> >>>> runtime PM API in order to initialize the NAND power state. Add runt=
+ime PM
+> >>>> and OPP support to the NAND driver.
+> >>>>
+> >>>> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> >>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> >>>> ---
+> >>>>  drivers/mtd/nand/raw/tegra_nand.c | 55 ++++++++++++++++++++++++++--=
+---
+> >>>>  1 file changed, 47 insertions(+), 8 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/mtd/nand/raw/tegra_nand.c b/drivers/mtd/nand/ra=
+w/tegra_nand.c
+> >>>> index 32431bbe69b8..098fcc9cb9df 100644
+> >>>> --- a/drivers/mtd/nand/raw/tegra_nand.c
+> >>>> +++ b/drivers/mtd/nand/raw/tegra_nand.c
+> >>>> @@ -17,8 +17,11 @@
+> >>>>  #include <linux/mtd/rawnand.h>
+> >>>>  #include <linux/of.h>
+> >>>>  #include <linux/platform_device.h>
+> >>>> +#include <linux/pm_runtime.h>
+> >>>>  #include <linux/reset.h>
+> >>>>
+> >>>> +#include <soc/tegra/common.h>
+> >>>> +
+> >>>>  #define COMMAND                                        0x00
+> >>>>  #define   COMMAND_GO                           BIT(31)
+> >>>>  #define   COMMAND_CLE                          BIT(30)
+> >>>> @@ -1151,6 +1154,7 @@ static int tegra_nand_probe(struct platform_de=
+vice *pdev)
+> >>>>                 return -ENOMEM;
+> >>>>
+> >>>>         ctrl->dev =3D &pdev->dev;
+> >>>> +       platform_set_drvdata(pdev, ctrl);
+> >>>>         nand_controller_init(&ctrl->controller);
+> >>>>         ctrl->controller.ops =3D &tegra_nand_controller_ops;
+> >>>>
+> >>>> @@ -1166,14 +1170,22 @@ static int tegra_nand_probe(struct platform_=
+device *pdev)
+> >>>>         if (IS_ERR(ctrl->clk))
+> >>>>                 return PTR_ERR(ctrl->clk);
+> >>>>
+> >>>> -       err =3D clk_prepare_enable(ctrl->clk);
+> >>>> +       err =3D devm_pm_runtime_enable(&pdev->dev);
+> >>>> +       if (err)
+> >>>> +               return err;
+> >>>> +
+> >>>> +       err =3D devm_tegra_core_dev_init_opp_table_common(&pdev->dev=
+);
+> >>>> +       if (err)
+> >>>> +               return err;
+> >>>> +
+> >>>> +       err =3D pm_runtime_resume_and_get(&pdev->dev);
+> >>>>         if (err)
+> >>>>                 return err;
+> >>>>
+> >>>>         err =3D reset_control_reset(rst);
+> >>>>         if (err) {
+> >>>>                 dev_err(ctrl->dev, "Failed to reset HW: %d\n", err);
+> >>>> -               goto err_disable_clk;
+> >>>> +               goto err_put_pm;
+> >>>>         }
+> >>>>
+> >>>>         writel_relaxed(HWSTATUS_CMD_DEFAULT, ctrl->regs + HWSTATUS_C=
+MD);
+> >>>> @@ -1188,21 +1200,19 @@ static int tegra_nand_probe(struct platform_=
+device *pdev)
+> >>>>                                dev_name(&pdev->dev), ctrl);
+> >>>>         if (err) {
+> >>>>                 dev_err(ctrl->dev, "Failed to get IRQ: %d\n", err);
+> >>>> -               goto err_disable_clk;
+> >>>> +               goto err_put_pm;
+> >>>>         }
+> >>>>
+> >>>>         writel_relaxed(DMA_MST_CTRL_IS_DONE, ctrl->regs + DMA_MST_CT=
+RL);
+> >>>>
+> >>>>         err =3D tegra_nand_chips_init(ctrl->dev, ctrl);
+> >>>>         if (err)
+> >>>> -               goto err_disable_clk;
+> >>>> -
+> >>>> -       platform_set_drvdata(pdev, ctrl);
+> >>>> +               goto err_put_pm;
+> >>>>
+> >>>
+> >>> There is no corresponding call pm_runtime_put() here. Is it
+> >>> intentional to always leave the device runtime resumed after ->probe(=
+)
+> >>> has succeeded?
+> >>>
+> >>> I noticed you included some comments about this for some other
+> >>> drivers, as those needed more tweaks. Is that also the case for this
+> >>> driver?
+> >>
+> >> Could you please clarify? There is pm_runtime_put() in both probe-erro=
+r
+> >> and remove() code paths here.
+> >
+> > I was not considering the error path of ->probe() (or ->remove()), but
+> > was rather thinking about when ->probe() completes successfully. Then
+> > you keep the device runtime resumed, because you have called
+> > pm_runtime_resume_and_get() for it.
+> >
+> > Shouldn't you have a corresponding pm_runtime_put() in ->probe(),
+> > allowing it to be runtime suspended, until the device is really needed
+> > later on. No?
+>
+> This driver doesn't support active power management. I don't have Tegra
+> hardware that uses NAND storage for testing, so it's up to somebody else
+> to implement dynamic power management. NAND doesn't require high
+> voltages, so it's fine to keep the old driver behaviour by keeping
+> hardware resumed since the probe time.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Alright, fair enough and thanks for clarifying!
+
+Kind regards
+Uffe
