@@ -2,585 +2,174 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 36100439D27
-	for <lists+linux-pwm@lfdr.de>; Mon, 25 Oct 2021 19:10:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3869E439DD9
+	for <lists+linux-pwm@lfdr.de>; Mon, 25 Oct 2021 19:47:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234311AbhJYRMb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 25 Oct 2021 13:12:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235140AbhJYRLw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 25 Oct 2021 13:11:52 -0400
-Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C00AC061228
-        for <linux-pwm@vger.kernel.org>; Mon, 25 Oct 2021 10:07:50 -0700 (PDT)
-Received: by mail-ot1-x335.google.com with SMTP id s18-20020a0568301e1200b0054e77a16651so15863440otr.7
-        for <linux-pwm@vger.kernel.org>; Mon, 25 Oct 2021 10:07:50 -0700 (PDT)
+        id S233395AbhJYRtc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 25 Oct 2021 13:49:32 -0400
+Received: from mail-db8eur05on2073.outbound.protection.outlook.com ([40.107.20.73]:11835
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S233136AbhJYRtb (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 25 Oct 2021 13:49:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ijj2JCIhytShfPfUe9T/L8tXYNDuoXn7KrqakvsOyYQg0YLK3k9jdyt9dI1OVRn47doBwI3z9HYtcnfXYKu8vq3impjWZ0CvNCQdzipg0QkamDr6zHz96w+ZORvgpupY8ZJ/X6Kze6GwgGsP0f+qN/RJc4k7o3D+b3/QpyoFHKQLPYuSYGCl1cajdo0iNQRNLdCzNR19b5WbpvB6hdNuPO0kwiZ3gulmDmJF8ADbqnlnjtutdwE0u0ZVD9SuG1sUx8f+t48Oyq1X1DF+cDEdlC2OQUKj/hNJStmWKGNWLjlh34HR57ZVcTI2doGUjTlBVoduQ3Pr53Tf1bKV0zS+sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4lNZ1zEqFuhhJkzv1XD8tHZE8Ur0AEzlJ0xt7qlWZls=;
+ b=exEM2UJo/ws0KoF0CXEC5DSGqN0gmirvpejQGJrA7f2FqtDhGZohbP07NAGeBlNQnNGdZ0C2hRuEVSw1YoqBCJc2X4BpdStx3kUkuw5l48Dp2kYKntC05BlCmI6kuLgY1iw/mWqla1eGGjM6+bdR9Wdxdz/Unaj61D2hvGWepGeXzLayAaF8ePKcjYCRl0PpWZ3FAez/JJf73XpGQxs2vOJEe6LPbK6vmDE7ugepEmcczgJVI0CO22PZt5wNWv3+o/MmqHTpPgx8ejDHzeCBKo0hadG20M10dFh7zGO6HzlBiIS8dI4BLpeD+YcEFO0zo0S54Tp7DhrNXiz7qJHr8g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=seco.com; dmarc=pass action=none header.from=seco.com;
+ dkim=pass header.d=seco.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+LfSjKmZZhCcN9vRI8268z9JnP7OYLp/3PjGoTQUAD0=;
-        b=SYumq4bncnvY+DNH239fXF73TAOkyihvFIfQ9d4mCndMU7B/8bUMrhvf0kuPDCiSWc
-         WFMFcfewkutdSBrN9sOo6xVsLSQwlQgVFfygHm/JbqyxxU0oPTsO9FPygG3spw6KsdVM
-         kMbPdZbQhtUkocVi0osISBxOm+zavQ8OuqQLEP6bdNyZCg5+X8PlA2A2XFn2y8H4zZHx
-         VY7PVv4qNNRlxeuwHqk/CJ0Y9Pk4TCyEmcr3xlBT3e30KiT8CEgvS2xxXv0VmGESEN+9
-         LzIZ+zEWs1i8F6G0Nx+sQNBjUKu+pQm9Qg+V0bz83DC3uy0USkvz15o4T3vxQtHXPeXp
-         MYQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+LfSjKmZZhCcN9vRI8268z9JnP7OYLp/3PjGoTQUAD0=;
-        b=eSHOhgyhcrbfxcb0ogdjpqrPLSd1G+SU0+nslUth9KCub9/4pF5uVJIvcBKK3cBF2Q
-         YPMKta1ViLyjoGxqZisrsLC9Wg++0oN/3XlEymuOjzsfTX+s60U9AaEN635q1fjtTzXw
-         e8FP/5kbtcf7rk7UU923zHND9gMgixfTCWVPLNPGs+w7NIH5hg76DdCIKTxEd1brO3/x
-         yk0XIZ9iz4hfCG5gw3Cc89EAZ4f2yP8rL05hb+3lpNkAN2MbwqIGLdOYi3rWhLcM19/U
-         qxGwFOeYBOpyzkW5MBQiETcu5GapdzoM2s9rh16putJ2dazpG3DGm/svN6qPX3vkXPQx
-         PqLQ==
-X-Gm-Message-State: AOAM530alNJodcb7NBN7tpAzEI6EBm1Zgl8h0UcEwOkaNEkRayJXh1Xy
-        1+HZ8JZPXZgORmjNIXG8fVS84A==
-X-Google-Smtp-Source: ABdhPJx/zc0rM4BCz/IK5OvMVUGaK83Kw/5i/82BGkK/Nx2wicd4CzYPrIai/AcUC3ENphrOCGjoQA==
-X-Received: by 2002:a05:6830:2b28:: with SMTP id l40mr15621721otv.162.1635181669641;
-        Mon, 25 Oct 2021 10:07:49 -0700 (PDT)
-Received: from localhost.localdomain ([2600:1700:a0:3dc8:205:1bff:fec0:b9b3])
-        by smtp.gmail.com with ESMTPSA id q2sm3076003ooe.12.2021.10.25.10.07.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Oct 2021 10:07:49 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Robert Foss <robert.foss@linaro.org>
-Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH v7 3/3] drm/bridge: ti-sn65dsi86: Implement the pwm_chip
-Date:   Mon, 25 Oct 2021 10:09:25 -0700
-Message-Id: <20211025170925.3096444-3-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20211025170925.3096444-1-bjorn.andersson@linaro.org>
-References: <20211025170925.3096444-1-bjorn.andersson@linaro.org>
-MIME-Version: 1.0
+ d=secospa.onmicrosoft.com; s=selector2-secospa-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4lNZ1zEqFuhhJkzv1XD8tHZE8Ur0AEzlJ0xt7qlWZls=;
+ b=u0xe9iny91urcR2Ldlps3MYaX5mAvnNp7x0QCl2hPlBFYuyWvwg78NnsSgt7o8Pynqp+B8cLxWkdPEvixjUgmJNWsztisbwGcIRR5f9SvuuCIeSYcbjrozKeNSIthnAVVjB5oBkN4XZYUnVoZuuyrQJzaprytoj20YjBsRL7Unc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=seco.com;
+Received: from DB7PR03MB4523.eurprd03.prod.outlook.com (2603:10a6:10:19::27)
+ by DB7PR03MB3964.eurprd03.prod.outlook.com (2603:10a6:5:39::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.18; Mon, 25 Oct
+ 2021 17:47:07 +0000
+Received: from DB7PR03MB4523.eurprd03.prod.outlook.com
+ ([fe80::a9aa:f363:66e:fadf]) by DB7PR03MB4523.eurprd03.prod.outlook.com
+ ([fe80::a9aa:f363:66e:fadf%6]) with mapi id 15.20.4628.020; Mon, 25 Oct 2021
+ 17:47:07 +0000
+Subject: Re: [PATCH v8 1/3] microblaze: timer: Remove unused properties
+To:     Michal Simek <michal.simek@xilinx.com>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Alvaro Gamez <alvaro.gamez@hazent.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+References: <20211015190025.409426-1-sean.anderson@seco.com>
+ <676342e6-b174-ad81-7a22-3e3e27090654@xilinx.com>
+From:   Sean Anderson <sean.anderson@seco.com>
+Message-ID: <925b0285-1cf3-99c5-e489-b9fd9137a972@seco.com>
+Date:   Mon, 25 Oct 2021 13:47:02 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <676342e6-b174-ad81-7a22-3e3e27090654@xilinx.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MN2PR02CA0028.namprd02.prod.outlook.com
+ (2603:10b6:208:fc::41) To DB7PR03MB4523.eurprd03.prod.outlook.com
+ (2603:10a6:10:19::27)
+MIME-Version: 1.0
+Received: from [172.27.1.65] (50.195.82.171) by MN2PR02CA0028.namprd02.prod.outlook.com (2603:10b6:208:fc::41) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.16 via Frontend Transport; Mon, 25 Oct 2021 17:47:05 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e3d8b917-7c7f-4132-8621-08d997df7651
+X-MS-TrafficTypeDiagnostic: DB7PR03MB3964:
+X-Microsoft-Antispam-PRVS: <DB7PR03MB39647A7F4BBCA0AB5B32342796839@DB7PR03MB3964.eurprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0AFCctNsTYWtwUx6cTqmU4SgSWI/CTgMnLscEPk763Qopca5NkK5mYePTrnjrRsm788Yn5cG2HMPXYhzYeBc9dSP/vTf3+HDQOvuwi5JivDgt8dqG0nM7S5tXLBts7ttAZ8bHdfACXuwodEndgMMeAFVaYDNISnZurUetDXYz8dkpHyXRFNKLQ2i9bNMCtMi4wczSsRaEM4B/KHAAt66mB4MXeV9oKXFvVdXjH/ErQ18MssW5oAsy31NvTRvzYO0IDEnxch8wV3aXVgrsZWhR4XQL+wNlkI9h+/zpDsYmHdJ0U/IlAEty3T+0CCEZbm1GiHTbR1L3DfyOgj/x56TyVIpaMBQeapXiPFyKt6vfMGqTU1CBzhvwrNSrvnam7DtXp+DSE7VFLETXjl+XruPaZ6wB+1wtHE/VYMh0B5PNfd/LZ1pogTyDpOt5TOLwfX9GdrrTo70Th9+S9FugI/EOUUSH/OjjWulK7WRIQ11LS5Osd3kIZU3PSA5NiQO6V9bP98m9cypPADAZIYoHQnyOagQVJXbtlXC32h8n2X4oWY2i8756m5+SbMkQBxBuoOHnHsg4fCrx9hoOkzCl0rYnVjtSy+TohtXf5F94GztVxtZza31qRwvA7TI1jHhqnvCotR5JiW/cJRvxsdJgQemmRfXYCXY2zrfML0TyCQOg4j3MBrTXc+lfgmy7yZvgXFOP5Z/DlwNtfHxQD2ddwDfrhA3LKDU7V71ZZAPM2ui/gNmQ2fDpJK/fuyUA9Xl1A4eCHu6D55/3yqSMOGxfJtMeA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR03MB4523.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(110136005)(6486002)(54906003)(6666004)(956004)(31686004)(66476007)(508600001)(66946007)(316002)(66556008)(36756003)(52116002)(26005)(83380400001)(2906002)(31696002)(38350700002)(38100700002)(8936002)(186003)(4326008)(86362001)(7416002)(16576012)(5660300002)(53546011)(8676002)(44832011)(2616005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VS9iZjMrTlNxalUrZG45dmYrb1BNbDJsSU0zREdhNElTN2JPZXBZd2lpaDha?=
+ =?utf-8?B?TzllWnZHS3hNbGdKZVcrWXdoaTJ1dFYzYlVxd2lJdlJkTzl2QzZKOVhzSmdR?=
+ =?utf-8?B?bTBkSWd2blM2ekhyRHpZRi9WTVdvcnQxbjh1ZWQzbXhpUTVvRTY4UHpRN25y?=
+ =?utf-8?B?blVBME5kRVVzNzc0cHpWZHNvZjdXUnlKVFhOYlF5d092ak95cVFCMmhyV3JQ?=
+ =?utf-8?B?dHYwT1NyZHAwMFYxWlg4T2NlK01DSFloKzNHQWZ6SDdSSVU1WW9DMW94Zi9I?=
+ =?utf-8?B?VjdGWXkzZmE1TnJocVlZa0pBYWxaSUNva3FBdkFWcVZwdGUyd2VoVEFGS2dI?=
+ =?utf-8?B?ZjFOMmRWM2gwK0Z6Q2xRWFc5UkdGS3kxQ2pwYTNGN0tMcDZEL2c3VzlpZW1W?=
+ =?utf-8?B?OWtSR3JheGdPWjBNcG9vWWg5aHh3ZDN0UWs2Rzh0SFZwOFdLei9yRGlXWXlV?=
+ =?utf-8?B?TFVEMkVLdzEzc3NDVWVCdWRmY2JIaWVLTmRDMEM3dk9GYjdia253WW1pcHJ3?=
+ =?utf-8?B?VURYKzNxSmtJSGZZYjlPOU5iWGdNTEUrMXBSTGFWaGxSbTdaN2pUK1dTVVVE?=
+ =?utf-8?B?VHVuMk1tQkZDay93K1Q2ZW5FQmlqSWVmVXZ3blpIOTZkU09BZUJZN2VuYnBP?=
+ =?utf-8?B?U0VmcStBZUZCUk5PYXRONmFLL0J3eFc5bDFJVFhjSDFKVzR2cnFjMGxvOVlZ?=
+ =?utf-8?B?bnl0TVFMSmptRDFZZHQ0WkhCdmwrOUhJU3g2NmZZRVY1ZHRyWGlBVnp6MTdk?=
+ =?utf-8?B?NEpOZWo3c0NQTUFrdWdJcFlEd2hqTVA0Z1ZCdmpBNkU4UmVSRHZvRVJNbW5p?=
+ =?utf-8?B?REo0ZE9veXMrTHBsRElBUTVwSnVFeVpjdVorSFNUYkNIb3ViUnAyeXpQMTQr?=
+ =?utf-8?B?c1g2aG50NlhKRTZBWHRPdUtjc0hSWERTMFNvS2dRNVcwVU9PdXpUWjhNOVNR?=
+ =?utf-8?B?RDZLMlNkajNla1R3cEpvdE01MTl1bEcrTm0wTzdSdDlQY1dzZnM3MWFBR1lT?=
+ =?utf-8?B?Z3A3RWp6aUtma0tZTVhSbmR3UlVweFJYdVQ4OUhWZnhJWlZCL1ZDei9ma2Vy?=
+ =?utf-8?B?a2YvdWNPNDl6R05qQW5ZdHVmbmptSnFvOFk5QTBKdHMvTVk1VEtyWEZIdmlV?=
+ =?utf-8?B?MmlRdzJjaThnc0VUSlV1YmVmU0l3OS84SWthaUFzQUw1QzlDWld3cE9US2Zw?=
+ =?utf-8?B?a2VOWW9ySytIRkZ0WWhOdHBlL3Fmbm9ZMFE1RU9kV0pBdVZ6NzQxV2o4Q1hM?=
+ =?utf-8?B?WjVlNmxjakM5ZGJ5NGpqRVpOclBELyt5aXduaExxNlVzNU1zS2tVT1ZrOFBC?=
+ =?utf-8?B?VEFEbysyQno1dkFHSDQ4aHR5V0ROZGlZMlU2bndYZWZoMlVJbTJncGVMdk5u?=
+ =?utf-8?B?YkY3bTMwNDlFV0ljR0p1YmZ4TW12OVVBK21NaFZkZDEwTkIrMkY3VkRJK2ZL?=
+ =?utf-8?B?WkFTSVRuV0MrWkIrSE9IZTVCL3ZGTXd0dHVhMWlFbDkwN21oMEhyR080aDRO?=
+ =?utf-8?B?U3RTRXhUV3piM25sajJDcHErMjg5TXBEamxuSlJScThUNkFjY3NIYkNZV0xm?=
+ =?utf-8?B?eEpRcWFtQi9XcDZuK1ZuRWR1SzBLN0pLMHkveEZFRXhEWm1aWDArRzQ3eHN0?=
+ =?utf-8?B?VlVaUi9CMXpoMDRFRmtwaG96ejZvRDl4ZkRFK3lKVGFFTFg1ZythaDFOcEVl?=
+ =?utf-8?B?K1MxOHJ5QkNtV0REaWw3dGdrQXNDcE1kTUVRWnpSRkVRMVprdnFZOEJGSWtE?=
+ =?utf-8?B?TmhYWXVQcVAxMTZ6NWFwZ2dIOG5zVkpSN0h4ZGNhd3VGMHlRb0FiTCszc05Q?=
+ =?utf-8?B?UnNwV210QUh2MTVuKy9RYkZiZ3BtT1lteTVJOGlnKzNXbnBZTlZKbGJpSHpy?=
+ =?utf-8?B?dmNVTGlnWDUzOUlyNWN5V0xyQkZPaG5qRjlHU3ViWUh4WkVtZlQ1a0xXVHhT?=
+ =?utf-8?B?OENQWkFDYkZZYnNSaFQ3elRwbXlFeVE2bWlXOEtmU0c4TmhlSXV3b016VCtM?=
+ =?utf-8?B?TU5QVU5la2E2UURWV1Btd2sreDNzd051M1owdmJqbWNxTytLV0VtM2hCOSty?=
+ =?utf-8?B?aFdiT2U5dGlYNXRzQ0I4dS8wTkRmZW1lTG0vSys4TWxDQXdzcXkwUWtHanhR?=
+ =?utf-8?B?V21yYlpCdVB2OEVjdm1mbDVUTklFTHZMOE9SY0duYnY4Nis4Ykp3UzZtMkw4?=
+ =?utf-8?Q?a4w2N0loMKWQCmpYA9kknwI=3D?=
+X-OriginatorOrg: seco.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3d8b917-7c7f-4132-8621-08d997df7651
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR03MB4523.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2021 17:47:07.0130
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bebe97c3-6438-442e-ade3-ff17aa50e733
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IMXx+4U3XfDho4eSgdNKzitj2ZxsRm4B4mDVnL9B6RDOeXHj/7nk/kFWZ+MGbD9AknHAwQsElgcRsxhg7tThNA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR03MB3964
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The SN65DSI86 provides the ability to supply a PWM signal on GPIO 4,
-with the primary purpose of controlling the backlight of the attached
-panel. Add an implementation that exposes this using the standard PWM
-framework, to allow e.g. pwm-backlight to expose this to the user.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
 
-Changes since v6:
-- Updated comment to clarify T_pwm's relationship to PWM_FREQ
-- "period" was used unassigned when compared with period_max
+On 10/18/21 8:15 AM, Michal Simek wrote:
+> 
+> 
+> On 10/15/21 21:00, Sean Anderson wrote:
+>> This removes properties not used by either the PWM or timer drivers.
+>> This lets us set additionalProperties: false.
+>>
+>> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
+>> ---
+>>
+>> Changes in v8:
+>> - Remove additional properties from microblaze device tree
+>>
+>>   arch/microblaze/boot/dts/system.dts | 5 -----
+>>   1 file changed, 5 deletions(-)
+>>
+>> diff --git a/arch/microblaze/boot/dts/system.dts b/arch/microblaze/boot/dts/system.dts
+>> index b7ee1056779e..22252451ec09 100644
+>> --- a/arch/microblaze/boot/dts/system.dts
+>> +++ b/arch/microblaze/boot/dts/system.dts
+>> @@ -347,12 +347,7 @@ xps_timer_1: timer@83c00000 {
+>>               interrupts = < 3 2 >;
+>>               reg = < 0x83c00000 0x10000 >;
+>>               xlnx,count-width = <0x20>;
+>> -            xlnx,family = "virtex5";
+>> -            xlnx,gen0-assert = <0x1>;
+>> -            xlnx,gen1-assert = <0x1>;
+>>               xlnx,one-timer-only = <0x0>;
+>> -            xlnx,trig0-assert = <0x1>;
+>> -            xlnx,trig1-assert = <0x1>;
+>>           } ;
+>>       } ;
+>>   }  ;
+>>
+> 
+> Acked-by: Michal Simek <michal.simek@xilinx.com>
+> 
+> If you want me to take this via microblaze tree, please let me know.
+> 
+> Thanks,
+> Michal
 
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 364 +++++++++++++++++++++++++-
- 1 file changed, 358 insertions(+), 6 deletions(-)
+That's fine by me. This is independent of the other patches here.
 
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index 5b59d8dd3acd..430067a3071c 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -4,7 +4,9 @@
-  * datasheet: https://www.ti.com/lit/ds/symlink/sn65dsi86.pdf
-  */
- 
-+#include <linux/atomic.h>
- #include <linux/auxiliary_bus.h>
-+#include <linux/bitfield.h>
- #include <linux/bits.h>
- #include <linux/clk.h>
- #include <linux/debugfs.h>
-@@ -15,6 +17,7 @@
- #include <linux/module.h>
- #include <linux/of_graph.h>
- #include <linux/pm_runtime.h>
-+#include <linux/pwm.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- 
-@@ -91,6 +94,13 @@
- #define SN_ML_TX_MODE_REG			0x96
- #define  ML_TX_MAIN_LINK_OFF			0
- #define  ML_TX_NORMAL_MODE			BIT(0)
-+#define SN_PWM_PRE_DIV_REG			0xA0
-+#define SN_BACKLIGHT_SCALE_REG			0xA1
-+#define  BACKLIGHT_SCALE_MAX			0xFFFF
-+#define SN_BACKLIGHT_REG			0xA3
-+#define SN_PWM_EN_INV_REG			0xA5
-+#define  SN_PWM_INV_MASK			BIT(0)
-+#define  SN_PWM_EN_MASK				BIT(1)
- #define SN_AUX_CMD_STATUS_REG			0xF4
- #define  AUX_IRQ_STATUS_AUX_RPLY_TOUT		BIT(3)
- #define  AUX_IRQ_STATUS_AUX_SHORT		BIT(5)
-@@ -113,11 +123,14 @@
- 
- #define SN_LINK_TRAINING_TRIES		10
- 
-+#define SN_PWM_GPIO_IDX			3 /* 4th GPIO */
-+
- /**
-  * struct ti_sn65dsi86 - Platform data for ti-sn65dsi86 driver.
-  * @bridge_aux:   AUX-bus sub device for MIPI-to-eDP bridge functionality.
-  * @gpio_aux:     AUX-bus sub device for GPIO controller functionality.
-  * @aux_aux:      AUX-bus sub device for eDP AUX channel functionality.
-+ * @pwm_aux:      AUX-bus sub device for PWM controller functionality.
-  *
-  * @dev:          Pointer to the top level (i2c) device.
-  * @regmap:       Regmap for accessing i2c.
-@@ -145,11 +158,17 @@
-  *                bitmap so we can do atomic ops on it without an extra
-  *                lock so concurrent users of our 4 GPIOs don't stomp on
-  *                each other's read-modify-write.
-+ *
-+ * @pchip:        pwm_chip if the PWM is exposed.
-+ * @pwm_enabled:  Used to track if the PWM signal is currently enabled.
-+ * @pwm_pin_busy: Track if GPIO4 is currently requested for GPIO or PWM.
-+ * @pwm_refclk_freq: Cache for the reference clock input to the PWM.
-  */
- struct ti_sn65dsi86 {
- 	struct auxiliary_device		bridge_aux;
- 	struct auxiliary_device		gpio_aux;
- 	struct auxiliary_device		aux_aux;
-+	struct auxiliary_device		pwm_aux;
- 
- 	struct device			*dev;
- 	struct regmap			*regmap;
-@@ -172,6 +191,12 @@ struct ti_sn65dsi86 {
- 	struct gpio_chip		gchip;
- 	DECLARE_BITMAP(gchip_output, SN_NUM_GPIOS);
- #endif
-+#if defined(CONFIG_PWM)
-+	struct pwm_chip			pchip;
-+	bool				pwm_enabled;
-+	atomic_t			pwm_pin_busy;
-+#endif
-+	unsigned int			pwm_refclk_freq;
- };
- 
- static const struct regmap_range ti_sn65dsi86_volatile_ranges[] = {
-@@ -190,6 +215,21 @@ static const struct regmap_config ti_sn65dsi86_regmap_config = {
- 	.cache_type = REGCACHE_NONE,
- };
- 
-+static int ti_sn65dsi86_read_u16(struct ti_sn65dsi86 *pdata,
-+				 unsigned int reg, u16 *val)
-+{
-+	u8 buf[2];
-+	int ret;
-+
-+	ret = regmap_bulk_read(pdata->regmap, reg, buf, ARRAY_SIZE(buf));
-+	if (ret)
-+		return ret;
-+
-+	*val = buf[0] | (buf[1] << 8);
-+
-+	return 0;
-+}
-+
- static void ti_sn65dsi86_write_u16(struct ti_sn65dsi86 *pdata,
- 				   unsigned int reg, u16 val)
- {
-@@ -254,6 +294,12 @@ static void ti_sn_bridge_set_refclk_freq(struct ti_sn65dsi86 *pdata)
- 
- 	regmap_update_bits(pdata->regmap, SN_DPPLL_SRC_REG, REFCLK_FREQ_MASK,
- 			   REFCLK_FREQ(i));
-+
-+	/*
-+	 * The PWM refclk is based on the value written to SN_DPPLL_SRC_REG,
-+	 * regardless of its actual sourcing.
-+	 */
-+	pdata->pwm_refclk_freq = ti_sn_bridge_refclk_lut[i];
- }
- 
- static void ti_sn65dsi86_enable_comms(struct ti_sn65dsi86 *pdata)
-@@ -1261,9 +1307,287 @@ static struct auxiliary_driver ti_sn_bridge_driver = {
- };
- 
- /* -----------------------------------------------------------------------------
-- * GPIO Controller
-+ * PWM Controller
-  */
-+#if defined(CONFIG_PWM)
-+static int ti_sn_pwm_pin_request(struct ti_sn65dsi86 *pdata)
-+{
-+	return atomic_xchg(&pdata->pwm_pin_busy, 1) ? -EBUSY : 0;
-+}
-+
-+static void ti_sn_pwm_pin_release(struct ti_sn65dsi86 *pdata)
-+{
-+	atomic_set(&pdata->pwm_pin_busy, 0);
-+}
-+
-+static struct ti_sn65dsi86 *pwm_chip_to_ti_sn_bridge(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct ti_sn65dsi86, pchip);
-+}
-+
-+static int ti_sn_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct ti_sn65dsi86 *pdata = pwm_chip_to_ti_sn_bridge(chip);
- 
-+	return ti_sn_pwm_pin_request(pdata);
-+}
-+
-+static void ti_sn_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct ti_sn65dsi86 *pdata = pwm_chip_to_ti_sn_bridge(chip);
-+
-+	ti_sn_pwm_pin_release(pdata);
-+}
-+
-+/*
-+ * Limitations:
-+ * - The PWM signal is not driven when the chip is powered down, or in its
-+ *   reset state and the driver does not implement the "suspend state"
-+ *   described in the documentation. In order to save power, state->enabled is
-+ *   interpreted as denoting if the signal is expected to be valid, and is used
-+ *   to determine if the chip needs to be kept powered.
-+ * - Changing both period and duty_cycle is not done atomically, neither is the
-+ *   multi-byte register updates, so the output might briefly be undefined
-+ *   during update.
-+ */
-+static int ti_sn_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			   const struct pwm_state *state)
-+{
-+	struct ti_sn65dsi86 *pdata = pwm_chip_to_ti_sn_bridge(chip);
-+	unsigned int pwm_en_inv;
-+	unsigned int backlight;
-+	unsigned int pre_div;
-+	unsigned int scale;
-+	u64 period_max;
-+	u64 period;
-+	int ret;
-+
-+	if (!pdata->pwm_enabled) {
-+		ret = pm_runtime_get_sync(pdata->dev);
-+		if (ret < 0) {
-+			pm_runtime_put_sync(pdata->dev);
-+			return ret;
-+		}
-+	}
-+
-+	if (state->enabled) {
-+		if (!pdata->pwm_enabled) {
-+			/*
-+			 * The chip might have been powered down while we
-+			 * didn't hold a PM runtime reference, so mux in the
-+			 * PWM function on the GPIO pin again.
-+			 */
-+			ret = regmap_update_bits(pdata->regmap, SN_GPIO_CTRL_REG,
-+						 SN_GPIO_MUX_MASK << (2 * SN_PWM_GPIO_IDX),
-+						 SN_GPIO_MUX_SPECIAL << (2 * SN_PWM_GPIO_IDX));
-+			if (ret) {
-+				dev_err(pdata->dev, "failed to mux in PWM function\n");
-+				goto out;
-+			}
-+		}
-+
-+		/*
-+		 * Per the datasheet the PWM frequency is given by:
-+		 *
-+		 *                          REFCLK_FREQ
-+		 *   PWM_FREQ = -----------------------------------
-+		 *               PWM_PRE_DIV * BACKLIGHT_SCALE + 1
-+		 *
-+		 * However, after careful review the author is convinced that
-+		 * the documentation has lost some parenthesis around
-+		 * "BACKLIGHT_SCALE + 1".
-+		 *
-+		 * With the period T_pwm = 1/PWM_FREQ this can be written:
-+		 *
-+		 *   T_pwm * REFCLK_FREQ = PWM_PRE_DIV * (BACKLIGHT_SCALE + 1)
-+		 *
-+		 * In order to keep BACKLIGHT_SCALE within its 16 bits,
-+		 * PWM_PRE_DIV must be:
-+		 *
-+		 *                     T_pwm * REFCLK_FREQ
-+		 *   PWM_PRE_DIV >= -------------------------
-+		 *                   BACKLIGHT_SCALE_MAX + 1
-+		 *
-+		 * To simplify the search and to favour higher resolution of
-+		 * the duty cycle over accuracy of the period, the lowest
-+		 * possible PWM_PRE_DIV is used. Finally the scale is
-+		 * calculated as:
-+		 *
-+		 *                      T_pwm * REFCLK_FREQ
-+		 *   BACKLIGHT_SCALE = ---------------------- - 1
-+		 *                          PWM_PRE_DIV
-+		 *
-+		 * Here T_pwm is represented in seconds, so appropriate scaling
-+		 * to nanoseconds is necessary.
-+		 */
-+
-+		/* Minimum T_pwm is 1 / REFCLK_FREQ */
-+		if (state->period <= NSEC_PER_SEC / pdata->pwm_refclk_freq) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+
-+		/*
-+		 * Maximum T_pwm is 255 * (65535 + 1) / REFCLK_FREQ
-+		 * Limit period to this to avoid overflows
-+		 */
-+		period_max = div_u64((u64)NSEC_PER_SEC * 255 * (65535 + 1),
-+				     pdata->pwm_refclk_freq);
-+		period = min(state->period, period_max);
-+
-+		pre_div = DIV64_U64_ROUND_UP(period * pdata->pwm_refclk_freq,
-+					     (u64)NSEC_PER_SEC * (BACKLIGHT_SCALE_MAX + 1));
-+		scale = div64_u64(period * pdata->pwm_refclk_freq, (u64)NSEC_PER_SEC * pre_div) - 1;
-+
-+		/*
-+		 * The documentation has the duty ratio given as:
-+		 *
-+		 *     duty          BACKLIGHT
-+		 *   ------- = ---------------------
-+		 *    period    BACKLIGHT_SCALE + 1
-+		 *
-+		 * Solve for BACKLIGHT, substituting BACKLIGHT_SCALE according
-+		 * to definition above and adjusting for nanosecond
-+		 * representation of duty cycle gives us:
-+		 */
-+		backlight = div64_u64(state->duty_cycle * pdata->pwm_refclk_freq,
-+				      (u64)NSEC_PER_SEC * pre_div);
-+		if (backlight > scale)
-+			backlight = scale;
-+
-+		ret = regmap_write(pdata->regmap, SN_PWM_PRE_DIV_REG, pre_div);
-+		if (ret) {
-+			dev_err(pdata->dev, "failed to update PWM_PRE_DIV\n");
-+			goto out;
-+		}
-+
-+		ti_sn65dsi86_write_u16(pdata, SN_BACKLIGHT_SCALE_REG, scale);
-+		ti_sn65dsi86_write_u16(pdata, SN_BACKLIGHT_REG, backlight);
-+	}
-+
-+	pwm_en_inv = FIELD_PREP(SN_PWM_EN_MASK, state->enabled) |
-+		     FIELD_PREP(SN_PWM_INV_MASK, state->polarity == PWM_POLARITY_INVERSED);
-+	ret = regmap_write(pdata->regmap, SN_PWM_EN_INV_REG, pwm_en_inv);
-+	if (ret) {
-+		dev_err(pdata->dev, "failed to update PWM_EN/PWM_INV\n");
-+		goto out;
-+	}
-+
-+	pdata->pwm_enabled = state->enabled;
-+out:
-+
-+	if (!pdata->pwm_enabled)
-+		pm_runtime_put_sync(pdata->dev);
-+
-+	return ret;
-+}
-+
-+static void ti_sn_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				struct pwm_state *state)
-+{
-+	struct ti_sn65dsi86 *pdata = pwm_chip_to_ti_sn_bridge(chip);
-+	unsigned int pwm_en_inv;
-+	unsigned int pre_div;
-+	u16 backlight;
-+	u16 scale;
-+	int ret;
-+
-+	ret = regmap_read(pdata->regmap, SN_PWM_EN_INV_REG, &pwm_en_inv);
-+	if (ret)
-+		return;
-+
-+	ret = ti_sn65dsi86_read_u16(pdata, SN_BACKLIGHT_SCALE_REG, &scale);
-+	if (ret)
-+		return;
-+
-+	ret = ti_sn65dsi86_read_u16(pdata, SN_BACKLIGHT_REG, &backlight);
-+	if (ret)
-+		return;
-+
-+	ret = regmap_read(pdata->regmap, SN_PWM_PRE_DIV_REG, &pre_div);
-+	if (ret)
-+		return;
-+
-+	state->enabled = FIELD_GET(SN_PWM_EN_MASK, pwm_en_inv);
-+	if (FIELD_GET(SN_PWM_INV_MASK, pwm_en_inv))
-+		state->polarity = PWM_POLARITY_INVERSED;
-+	else
-+		state->polarity = PWM_POLARITY_NORMAL;
-+
-+	state->period = DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC * pre_div * (scale + 1),
-+					 pdata->pwm_refclk_freq);
-+	state->duty_cycle = DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC * pre_div * backlight,
-+					     pdata->pwm_refclk_freq);
-+
-+	if (state->duty_cycle > state->period)
-+		state->duty_cycle = state->period;
-+}
-+
-+static const struct pwm_ops ti_sn_pwm_ops = {
-+	.request = ti_sn_pwm_request,
-+	.free = ti_sn_pwm_free,
-+	.apply = ti_sn_pwm_apply,
-+	.get_state = ti_sn_pwm_get_state,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int ti_sn_pwm_probe(struct auxiliary_device *adev,
-+			   const struct auxiliary_device_id *id)
-+{
-+	struct ti_sn65dsi86 *pdata = dev_get_drvdata(adev->dev.parent);
-+
-+	pdata->pchip.dev = pdata->dev;
-+	pdata->pchip.ops = &ti_sn_pwm_ops;
-+	pdata->pchip.npwm = 1;
-+	pdata->pchip.of_xlate = of_pwm_single_xlate;
-+	pdata->pchip.of_pwm_n_cells = 1;
-+
-+	return pwmchip_add(&pdata->pchip);
-+}
-+
-+static void ti_sn_pwm_remove(struct auxiliary_device *adev)
-+{
-+	struct ti_sn65dsi86 *pdata = dev_get_drvdata(adev->dev.parent);
-+
-+	pwmchip_remove(&pdata->pchip);
-+
-+	if (pdata->pwm_enabled)
-+		pm_runtime_put_sync(pdata->dev);
-+}
-+
-+static const struct auxiliary_device_id ti_sn_pwm_id_table[] = {
-+	{ .name = "ti_sn65dsi86.pwm", },
-+	{},
-+};
-+
-+static struct auxiliary_driver ti_sn_pwm_driver = {
-+	.name = "pwm",
-+	.probe = ti_sn_pwm_probe,
-+	.remove = ti_sn_pwm_remove,
-+	.id_table = ti_sn_pwm_id_table,
-+};
-+
-+static int __init ti_sn_pwm_register(void)
-+{
-+	return auxiliary_driver_register(&ti_sn_pwm_driver);
-+}
-+
-+static void ti_sn_pwm_unregister(void)
-+{
-+	auxiliary_driver_unregister(&ti_sn_pwm_driver);
-+}
-+
-+#else
-+static inline int ti_sn_pwm_pin_request(struct ti_sn65dsi86 *pdata) { return 0; }
-+static inline void ti_sn_pwm_pin_release(struct ti_sn65dsi86 *pdata) {}
-+
-+static inline int ti_sn_pwm_register(void) { return 0; }
-+static inline void ti_sn_pwm_unregister(void) {}
-+#endif
-+
-+/* -----------------------------------------------------------------------------
-+ * GPIO Controller
-+ */
- #if defined(CONFIG_OF_GPIO)
- 
- static int tn_sn_bridge_of_xlate(struct gpio_chip *chip,
-@@ -1396,10 +1720,25 @@ static int ti_sn_bridge_gpio_direction_output(struct gpio_chip *chip,
- 	return ret;
- }
- 
-+static int ti_sn_bridge_gpio_request(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct ti_sn65dsi86 *pdata = gpiochip_get_data(chip);
-+
-+	if (offset == SN_PWM_GPIO_IDX)
-+		return ti_sn_pwm_pin_request(pdata);
-+
-+	return 0;
-+}
-+
- static void ti_sn_bridge_gpio_free(struct gpio_chip *chip, unsigned int offset)
- {
-+	struct ti_sn65dsi86 *pdata = gpiochip_get_data(chip);
-+
- 	/* We won't keep pm_runtime if we're input, so switch there on free */
- 	ti_sn_bridge_gpio_direction_input(chip, offset);
-+
-+	if (offset == SN_PWM_GPIO_IDX)
-+		ti_sn_pwm_pin_release(pdata);
- }
- 
- static const char * const ti_sn_bridge_gpio_names[SN_NUM_GPIOS] = {
-@@ -1421,6 +1760,7 @@ static int ti_sn_gpio_probe(struct auxiliary_device *adev,
- 	pdata->gchip.owner = THIS_MODULE;
- 	pdata->gchip.of_xlate = tn_sn_bridge_of_xlate;
- 	pdata->gchip.of_gpio_n_cells = 2;
-+	pdata->gchip.request = ti_sn_bridge_gpio_request;
- 	pdata->gchip.free = ti_sn_bridge_gpio_free;
- 	pdata->gchip.get_direction = ti_sn_bridge_gpio_get_direction;
- 	pdata->gchip.direction_input = ti_sn_bridge_gpio_direction_input;
-@@ -1547,10 +1887,9 @@ static int ti_sn65dsi86_probe(struct i2c_client *client,
- 	 * ordering. The bridge wants the panel to be there when it probes.
- 	 * The panel wants its HPD GPIO (provided by sn65dsi86 on some boards)
- 	 * when it probes. The panel and maybe backlight might want the DDC
--	 * bus. Soon the PWM provided by the bridge chip will have the same
--	 * problem. Having sub-devices allows the some sub devices to finish
--	 * probing even if others return -EPROBE_DEFER and gets us around the
--	 * problems.
-+	 * bus or the pwm_chip. Having sub-devices allows the some sub devices
-+	 * to finish probing even if others return -EPROBE_DEFER and gets us
-+	 * around the problems.
- 	 */
- 
- 	if (IS_ENABLED(CONFIG_OF_GPIO)) {
-@@ -1559,6 +1898,12 @@ static int ti_sn65dsi86_probe(struct i2c_client *client,
- 			return ret;
- 	}
- 
-+	if (IS_ENABLED(CONFIG_PWM)) {
-+		ret = ti_sn65dsi86_add_aux_device(pdata, &pdata->pwm_aux, "pwm");
-+		if (ret)
-+			return ret;
-+	}
-+
- 	/*
- 	 * NOTE: At the end of the AUX channel probe we'll add the aux device
- 	 * for the bridge. This is because the bridge can't be used until the
-@@ -1602,10 +1947,14 @@ static int __init ti_sn65dsi86_init(void)
- 	if (ret)
- 		goto err_main_was_registered;
- 
--	ret = auxiliary_driver_register(&ti_sn_aux_driver);
-+	ret = ti_sn_pwm_register();
- 	if (ret)
- 		goto err_gpio_was_registered;
- 
-+	ret = auxiliary_driver_register(&ti_sn_aux_driver);
-+	if (ret)
-+		goto err_pwm_was_registered;
-+
- 	ret = auxiliary_driver_register(&ti_sn_bridge_driver);
- 	if (ret)
- 		goto err_aux_was_registered;
-@@ -1614,6 +1963,8 @@ static int __init ti_sn65dsi86_init(void)
- 
- err_aux_was_registered:
- 	auxiliary_driver_unregister(&ti_sn_aux_driver);
-+err_pwm_was_registered:
-+	ti_sn_pwm_unregister();
- err_gpio_was_registered:
- 	ti_sn_gpio_unregister();
- err_main_was_registered:
-@@ -1627,6 +1978,7 @@ static void __exit ti_sn65dsi86_exit(void)
- {
- 	auxiliary_driver_unregister(&ti_sn_bridge_driver);
- 	auxiliary_driver_unregister(&ti_sn_aux_driver);
-+	ti_sn_pwm_unregister();
- 	ti_sn_gpio_unregister();
- 	i2c_del_driver(&ti_sn65dsi86_driver);
- }
--- 
-2.29.2
-
+--Sean
