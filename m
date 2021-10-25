@@ -2,49 +2,49 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A078B43A726
-	for <lists+linux-pwm@lfdr.de>; Tue, 26 Oct 2021 00:46:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9170143A733
+	for <lists+linux-pwm@lfdr.de>; Tue, 26 Oct 2021 00:46:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235238AbhJYWst (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 25 Oct 2021 18:48:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41534 "EHLO
+        id S235272AbhJYWs4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 25 Oct 2021 18:48:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234428AbhJYWsY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 25 Oct 2021 18:48:24 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E38E7C061745;
-        Mon, 25 Oct 2021 15:46:00 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id u21so16869592lff.8;
-        Mon, 25 Oct 2021 15:46:00 -0700 (PDT)
+        with ESMTP id S234711AbhJYWsZ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 25 Oct 2021 18:48:25 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7ACEC061348;
+        Mon, 25 Oct 2021 15:46:01 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id u11so7038641lfs.1;
+        Mon, 25 Oct 2021 15:46:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=aRTBr+1EKwnrblxYU6KiE9Za1tTDPhy0IpCkSUvLN6U=;
-        b=mJZTOApKq8IOETkBdt0w3VrYFXh9qz0d9WTMDTD1iVAGsn3l5A7H9isTyfdXqCahvq
-         kT3D/XjfhGPXgzA91dIphL6c6R18jd01dxkhqkgJlT9/2unbZUcdlCxIkLffAjIRHUrl
-         1ica7yjJCK1gAwEd9o5wgSljQ/hO8UBqZCGcYjd578HRHuMJOn/VPtOhsnSCKUag+TGh
-         SPGwtDbqA1wRjLDFvBCI0hyrlzxhc0FnSzNYxwztW0046REVuMICZfDnqHu+hFf3b2Yu
-         G1OtUHNFOqGd1RaQakv12QOENNLNUs1nTMTSVPj1MsjtQVhs1TSI7Yl1jpwx6sIN/oWp
-         lUDQ==
+        bh=5kVn44UJl6fsxwvVMnWN4rWlwALC4wEkQ8Ltx5Ru85I=;
+        b=bEH2cGpchvDPwkMd9z0LQIcOmk/u440rjJmMCVazujsoPMTB5FQaOYLbejY2sEP9Gx
+         T878kU7T8oIW6d/dHdQfHyNVcW+oMMbcJYsT/VitwqzWZr1NREBLGiqUl0GYqbgHjPtw
+         g1mR2hYLaRScSlzZuq3XBoK45Xa8ByejW+Cva5qJRQZDW9UwMZqBMzjQ2lxIFZg2q4M9
+         Fw6CHUlM/V57XsTOsufGVchiFI80I1KoIl0Gy5iUx5KJzo9YRHEbVn78j57mKV2ZUIuj
+         02dJLQFrBSQokLUL8BOan0yJIsr8oMhTYIk5yHnsv61clvQXVEvQ9X5CyhMV4ugJKLN8
+         bF6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=aRTBr+1EKwnrblxYU6KiE9Za1tTDPhy0IpCkSUvLN6U=;
-        b=SRHTTgQD9pCIvJeWCxmAGpsLQ9QUpAnfpgdKBpIlkaNBlMo5TyqDPe54wcQEbvm07+
-         RJlSh0P/niZyciS9b0khENVo0ScNrHmCOGQjY331zKdlpTsOFmeZ7noctEFZdUuHy2d0
-         yD3NIIWSygcHK5Mu3uQVxWw0LwULBbF3gwpcNdLznniPXUAG13xuDBIUtRsr+XBWvIuk
-         0N9h2LrAprXNwuyzNmifpCpgoACn5lYH928f8tjyLEyZ6yWiz0LN8AC32dbN3uIPSnrB
-         6HYN65C+NM3PcdnajDzq75FoPzHSldFTRelmNkEuQciXkTODCQLkqLbXqwfC3xcng5aM
-         yNsQ==
-X-Gm-Message-State: AOAM533mZIWF3yNVmYjofc4rRL9YgEi5y2n40KpM7k7iNM1CsYVhQj2p
-        FG//A7YBtP8OCyhNxmwBXz0Dcg7bLAI=
-X-Google-Smtp-Source: ABdhPJxnluwGwvlNbP91TjoyX5694jh9Ed0xWwiu4EPUR9Sqz5KQ729bUW5S95vKw1S2HVhrDXf5zA==
-X-Received: by 2002:a05:6512:5c8:: with SMTP id o8mr5890825lfo.339.1635201959292;
-        Mon, 25 Oct 2021 15:45:59 -0700 (PDT)
+        bh=5kVn44UJl6fsxwvVMnWN4rWlwALC4wEkQ8Ltx5Ru85I=;
+        b=zY4+1ImeBCKiubqNWyRrTr0cLWLjJrfXo4KhVBm/TjN+joIf/CYickrgxJ3NU0a3am
+         5S0Lo2bi4Zei5IEQI3DbVTWqMs0I3RIoerfzRpcCzYIEflSe+XcO3vvxsO5wkTEr0Rwp
+         VAi3Elf281uIqr8PWYNEfnyaR750OBPoPEhE1W0JL97O247/oqY64MQOQlztp6HzUptg
+         P8TViRrWE+VUZ7aAtZ7nnG1Jl/rmaZt//sjA+08sw3etSuAKBP/Uo8bWdaTpdTVWPGue
+         +4SuYv1JWMrNaqqff5CSRLz7zBCy7763qpgmehmM3jA9leLRc2PXNPKuzdx8MP8CKVwg
+         Wqjg==
+X-Gm-Message-State: AOAM533RThNT/79AXSyuZzhflT/n5WJxwIDxzNqSQZDCvnIXz3tfc4+v
+        P5ngmx/fS+aXJPFeBxq8Hbk=
+X-Google-Smtp-Source: ABdhPJyFH33zgAFRFRVBFFB9Y/6hkGd0ZRgecxsZqpM+QDY3ZTYFAnvBykhg3Eh7aWgyJB9OIJDR9Q==
+X-Received: by 2002:ac2:4c88:: with SMTP id d8mr11635926lfl.531.1635201960189;
+        Mon, 25 Oct 2021 15:46:00 -0700 (PDT)
 Received: from localhost.localdomain (46-138-41-28.dynamic.spd-mgts.ru. [46.138.41.28])
-        by smtp.gmail.com with ESMTPSA id t20sm2040956lft.240.2021.10.25.15.45.58
+        by smtp.gmail.com with ESMTPSA id t20sm2040956lft.240.2021.10.25.15.45.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 25 Oct 2021 15:45:59 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
@@ -64,9 +64,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-pwm@vger.kernel.org,
         linux-mmc@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-clk@vger.kernel.org, David Heidelberg <david@ixit.cz>
-Subject: [PATCH v14 14/39] drm/tegra: vic: Stop channel on suspend
-Date:   Tue, 26 Oct 2021 01:40:07 +0300
-Message-Id: <20211025224032.21012-15-digetx@gmail.com>
+Subject: [PATCH v14 15/39] drm/tegra: nvdec: Stop channel on suspend
+Date:   Tue, 26 Oct 2021 01:40:08 +0300
+Message-Id: <20211025224032.21012-16-digetx@gmail.com>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20211025224032.21012-1-digetx@gmail.com>
 References: <20211025224032.21012-1-digetx@gmail.com>
@@ -85,14 +85,14 @@ client is registered.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpu/drm/tegra/vic.c | 36 ++++++++++++++++++------------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+ drivers/gpu/drm/tegra/nvdec.c | 29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/vic.c b/drivers/gpu/drm/tegra/vic.c
-index b58e2b99f81a..9622ca96c539 100644
---- a/drivers/gpu/drm/tegra/vic.c
-+++ b/drivers/gpu/drm/tegra/vic.c
-@@ -151,9 +151,13 @@ static int vic_init(struct host1x_client *client)
+diff --git a/drivers/gpu/drm/tegra/nvdec.c b/drivers/gpu/drm/tegra/nvdec.c
+index 48c90e26e90a..0f1146be9d6d 100644
+--- a/drivers/gpu/drm/tegra/nvdec.c
++++ b/drivers/gpu/drm/tegra/nvdec.c
+@@ -112,9 +112,13 @@ static int nvdec_init(struct host1x_client *client)
  		goto free_channel;
  	}
  
@@ -107,7 +107,7 @@ index b58e2b99f81a..9622ca96c539 100644
  
  	/*
  	 * Inherit the DMA parameters (such as maximum segment size) from the
-@@ -163,7 +167,10 @@ static int vic_init(struct host1x_client *client)
+@@ -124,7 +128,10 @@ static int nvdec_init(struct host1x_client *client)
  
  	return 0;
  
@@ -118,8 +118,8 @@ index b58e2b99f81a..9622ca96c539 100644
 +
  	host1x_syncpt_put(client->syncpts[0]);
  free_channel:
- 	host1x_channel_put(vic->channel);
-@@ -188,10 +195,15 @@ static int vic_exit(struct host1x_client *client)
+ 	host1x_channel_put(nvdec->channel);
+@@ -149,10 +156,15 @@ static int nvdec_exit(struct host1x_client *client)
  	if (err < 0)
  		return err;
  
@@ -127,64 +127,55 @@ index b58e2b99f81a..9622ca96c539 100644
 +	pm_runtime_force_suspend(client->dev);
 +
  	host1x_syncpt_put(client->syncpts[0]);
- 	host1x_channel_put(vic->channel);
+ 	host1x_channel_put(nvdec->channel);
  	host1x_client_iommu_detach(client);
  
-+	vic->channel = NULL;
++	nvdec->channel = NULL;
 +
  	if (client->group) {
- 		dma_unmap_single(vic->dev, vic->falcon.firmware.phys,
- 				 vic->falcon.firmware.size, DMA_TO_DEVICE);
-@@ -315,6 +327,8 @@ static int vic_runtime_suspend(struct device *dev)
- 	struct vic *vic = dev_get_drvdata(dev);
- 	int err;
+ 		dma_unmap_single(nvdec->dev, nvdec->falcon.firmware.phys,
+ 				 nvdec->falcon.firmware.size, DMA_TO_DEVICE);
+@@ -267,6 +279,8 @@ static int nvdec_runtime_suspend(struct device *dev)
+ {
+ 	struct nvdec *nvdec = dev_get_drvdata(dev);
  
-+	host1x_channel_stop(vic->channel);
++	host1x_channel_stop(nvdec->channel);
 +
- 	err = reset_control_assert(vic->rst);
- 	if (err < 0)
- 		return err;
-@@ -482,19 +496,8 @@ static int vic_probe(struct platform_device *pdev)
+ 	clk_disable_unprepare(nvdec->clk);
+ 
+ 	return 0;
+@@ -411,10 +425,6 @@ static int nvdec_probe(struct platform_device *pdev)
  		goto exit_falcon;
  	}
  
 -	pm_runtime_enable(&pdev->dev);
--	if (!pm_runtime_enabled(&pdev->dev)) {
--		err = vic_runtime_resume(&pdev->dev);
--		if (err < 0)
--			goto unregister_client;
--	}
 -	pm_runtime_set_autosuspend_delay(&pdev->dev, 500);
 -	pm_runtime_use_autosuspend(&pdev->dev);
 -
  	return 0;
  
--unregister_client:
--	host1x_client_unregister(&vic->client.base);
  exit_falcon:
- 	falcon_exit(&vic->falcon);
- 
-@@ -513,11 +516,6 @@ static int vic_remove(struct platform_device *pdev)
+@@ -435,11 +445,6 @@ static int nvdec_remove(struct platform_device *pdev)
  		return err;
  	}
  
 -	if (pm_runtime_enabled(&pdev->dev))
 -		pm_runtime_disable(&pdev->dev);
 -	else
--		vic_runtime_suspend(&pdev->dev);
+-		nvdec_runtime_suspend(&pdev->dev);
 -
- 	falcon_exit(&vic->falcon);
+ 	falcon_exit(&nvdec->falcon);
  
  	return 0;
-@@ -525,6 +523,8 @@ static int vic_remove(struct platform_device *pdev)
+@@ -447,6 +452,8 @@ static int nvdec_remove(struct platform_device *pdev)
  
- static const struct dev_pm_ops vic_pm_ops = {
- 	SET_RUNTIME_PM_OPS(vic_runtime_suspend, vic_runtime_resume, NULL)
+ static const struct dev_pm_ops nvdec_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(nvdec_runtime_suspend, nvdec_runtime_resume, NULL)
 +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
 +				pm_runtime_force_resume)
  };
  
- struct platform_driver tegra_vic_driver = {
+ struct platform_driver tegra_nvdec_driver = {
 -- 
 2.33.1
 
