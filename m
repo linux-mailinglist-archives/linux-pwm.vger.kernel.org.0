@@ -2,167 +2,117 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 699DF43A7E3
-	for <lists+linux-pwm@lfdr.de>; Tue, 26 Oct 2021 00:50:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1BF243A953
+	for <lists+linux-pwm@lfdr.de>; Tue, 26 Oct 2021 02:38:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234748AbhJYWwy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 25 Oct 2021 18:52:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41696 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235277AbhJYWvG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 25 Oct 2021 18:51:06 -0400
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4DA5C0432CE;
-        Mon, 25 Oct 2021 15:46:23 -0700 (PDT)
-Received: by mail-lj1-x236.google.com with SMTP id u5so15045497ljo.8;
-        Mon, 25 Oct 2021 15:46:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KUl5NgtppOXN7aMrj+VJMJxgtwwCvjbf2LUP4ZJTZHk=;
-        b=dM8HQOakT9lKwnlzX8oDz69wX5j1TjDnrC8XDQpJ3/grT/a5UOQT72pKmmWOeA+nw5
-         hwS1AaicnlAS+Q3JuF+ijqvdVe4Un6yYFhFplrdKyeGItVsGKKcqDiC/7fQHeHpKybn0
-         mi8KXBeDO3NELpLv4ar+VQwjOxNzn0V1FHmGK4K54a2y92lJV8T2Xs4iQadhxe1H5kx8
-         949C5LowvQw9vTNqSPVd5lnBVNk3LEVCdQxC2NHFJOFUZ6q/S9pksA16cLzksRcTmCPm
-         sc8c3tPIr72zAsfojA2oE0GaEnvZY0XTwZQWzo9WhpgugqOWsN43BXToZPztYXToBEiP
-         J7QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KUl5NgtppOXN7aMrj+VJMJxgtwwCvjbf2LUP4ZJTZHk=;
-        b=0zg2zSDegl4tp7i+bvht8eXRQpkx8U53cgDudvdOkMBVGOQlxZEdQ2mUXFXJQeEcML
-         50ppoJEJ54N9ul3m3eOBC5KQs1e4lrFsz9svAvMcb4opz8US+end7skFpporsPAJMbUB
-         b+zc66X90Ro8aumET6vQgIZ/tosR/OMLhMIqlZWPc5r8tBr4pYsUEycK1wGY29ML9mMo
-         dw+jKnlEkyvskuMBd1sAVsjBeMGGW0jo9mbiHbNWGK7JYdQ2YPhe8nNzNg53DNWVNnUU
-         xCVs4IqntNJuWCCatpaEKvIE5hsHV/ctiKSbY1AtexWrtGz5ozZEipX+yw4Ep5HVSgFO
-         W9YQ==
-X-Gm-Message-State: AOAM531homEru0Tl/zg2GDlz5rmSslwx8+VgXb0x0/VNWMSdH4ArGLP2
-        8/+dolnOpJmUQ4yZW7dsbLU=
-X-Google-Smtp-Source: ABdhPJznfzGWMyl02ihP30IcAisfmZn0lCnSMUeLm2QIKB/p5f1vAU2HQg628QiAR5z1U8DIPh6cDw==
-X-Received: by 2002:a05:651c:556:: with SMTP id q22mr21587546ljp.314.1635201982105;
-        Mon, 25 Oct 2021 15:46:22 -0700 (PDT)
-Received: from localhost.localdomain (46-138-41-28.dynamic.spd-mgts.ru. [46.138.41.28])
-        by smtp.gmail.com with ESMTPSA id t20sm2040956lft.240.2021.10.25.15.46.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Oct 2021 15:46:21 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-mmc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-clk@vger.kernel.org, David Heidelberg <david@ixit.cz>
-Subject: [PATCH v14 39/39] ARM: tegra20/30: Disable unused host1x hardware
-Date:   Tue, 26 Oct 2021 01:40:32 +0300
-Message-Id: <20211025224032.21012-40-digetx@gmail.com>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20211025224032.21012-1-digetx@gmail.com>
-References: <20211025224032.21012-1-digetx@gmail.com>
+        id S235639AbhJZAk1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 25 Oct 2021 20:40:27 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:60634 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233957AbhJZAk1 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 25 Oct 2021 20:40:27 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1635208684; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=8mByl3gAGfKf4AoJcCSTiFOyD0EhGvwG2hEw0n8Woe8=; b=ShOHMazzG6zWMmN7tjzpA+or3ydxPng2QOimkIWAN3X5jMm5gA2tACKSoq5ejAnHMiNGTYW8
+ NHBZWUzZ4m8RLXp1Yara7ZF27ILB4TOiwhpX0mkeOZICt6XFteKBbD5/BTIo0t1kHJGBH4R2
+ MbsVDcHNl8JyQdo45l9e34ntDEI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyJkZWM1ZCIsICJsaW51eC1wd21Admdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 61774de9fd91319f0f256d18 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 26 Oct 2021 00:38:01
+ GMT
+Sender: subbaram=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AE8B2C4361A; Tue, 26 Oct 2021 00:38:00 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-5.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        NICE_REPLY_A,SPF_FAIL autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from [10.47.233.232] (Global_NAT1.qualcomm.com [129.46.96.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: subbaram)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2CA92C4338F;
+        Tue, 26 Oct 2021 00:37:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 2CA92C4338F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
+Subject: Re: [PATCH v10 2/2] leds: Add driver for Qualcomm LPG
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Yassine Oudjana <y.oudjana@protonmail.com>,
+        Luca Weiss <luca@z3ntu.xyz>
+References: <20211010043912.136640-1-bjorn.andersson@linaro.org>
+ <20211010043912.136640-2-bjorn.andersson@linaro.org>
+From:   Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Message-ID: <1ad508af-f7cb-a88f-07d8-5731c5a45403@codeaurora.org>
+Date:   Mon, 25 Oct 2021 17:37:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211010043912.136640-2-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-MPE, VI, EPP and ISP were never used and we don't have drivers for them.
-Since these modules are enabled by default in a device-tree, a device is
-created for them, blocking voltage scaling because there is no driver to
-bind, and thus, state of PMC driver is never synced. Disable them.
+Hi Bjorn,
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- arch/arm/boot/dts/tegra20.dtsi | 4 ++++
- arch/arm/boot/dts/tegra30.dtsi | 8 ++++++++
- 2 files changed, 12 insertions(+)
+> +#define LPG_RESOLUTION		512
 
-diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-index 7b69ffc57abe..8010b40d7377 100644
---- a/arch/arm/boot/dts/tegra20.dtsi
-+++ b/arch/arm/boot/dts/tegra20.dtsi
-@@ -59,6 +59,7 @@ mpe@54040000 {
- 			reset-names = "mpe";
- 			power-domains = <&pd_mpe>;
- 			operating-points-v2 = <&mpe_dvfs_opp_table>;
-+			status = "disabled";
- 		};
- 
- 		vi@54080000 {
-@@ -70,6 +71,7 @@ vi@54080000 {
- 			reset-names = "vi";
- 			power-domains = <&pd_venc>;
- 			operating-points-v2 = <&vi_dvfs_opp_table>;
-+			status = "disabled";
- 		};
- 
- 		epp@540c0000 {
-@@ -81,6 +83,7 @@ epp@540c0000 {
- 			reset-names = "epp";
- 			power-domains = <&pd_core>;
- 			operating-points-v2 = <&epp_dvfs_opp_table>;
-+			status = "disabled";
- 		};
- 
- 		isp@54100000 {
-@@ -91,6 +94,7 @@ isp@54100000 {
- 			resets = <&tegra_car 23>;
- 			reset-names = "isp";
- 			power-domains = <&pd_venc>;
-+			status = "disabled";
- 		};
- 
- 		gr2d@54140000 {
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index c1be136aac7d..d961ce3761e6 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -145,6 +145,8 @@ mpe@54040000 {
- 			operating-points-v2 = <&mpe_dvfs_opp_table>;
- 
- 			iommus = <&mc TEGRA_SWGROUP_MPE>;
-+
-+			status = "disabled";
- 		};
- 
- 		vi@54080000 {
-@@ -158,6 +160,8 @@ vi@54080000 {
- 			operating-points-v2 = <&vi_dvfs_opp_table>;
- 
- 			iommus = <&mc TEGRA_SWGROUP_VI>;
-+
-+			status = "disabled";
- 		};
- 
- 		epp@540c0000 {
-@@ -171,6 +175,8 @@ epp@540c0000 {
- 			operating-points-v2 = <&epp_dvfs_opp_table>;
- 
- 			iommus = <&mc TEGRA_SWGROUP_EPP>;
-+
-+			status = "disabled";
- 		};
- 
- 		isp@54100000 {
-@@ -183,6 +189,8 @@ isp@54100000 {
- 			power-domains = <&pd_venc>;
- 
- 			iommus = <&mc TEGRA_SWGROUP_ISP>;
-+
-+			status = "disabled";
- 		};
- 
- 		gr2d@54140000 {
--- 
-2.33.1
+Just a thought. Having this fixed to 9-bit resolution would require a lot of code churn if this driver ends up supporting higher resolution PWM later. Would it be possible to have this as a parameter in "struct lpg_channel" ?
+
+> +static const unsigned int lpg_clk_rates[] = {1024, 32768, 19200000};
+> +static const unsigned int lpg_pre_divs[] = {1, 3, 5, 6};
+> +
+> +static int lpg_calc_freq(struct lpg_channel *chan, uint64_t period)
+> +{
+> +	unsigned int clk, best_clk = 0;
+> +	unsigned int div, best_div = 0;
+> +	unsigned int m, best_m = 0;
+> +	unsigned int error;
+> +	unsigned int best_err = UINT_MAX;
+> +	u64 best_period = 0;
+> +
+> +	/*
+> +	 * The PWM period is determined by:
+> +	 *
+> +	 *          resolution * pre_div * 2^M
+> +	 * period = --------------------------
+> +	 *                   refclk
+> +	 *
+> +	 * With resolution fixed at 2^9 bits, pre_div = {1, 3, 5, 6} and
+> +	 * M = [0..7].
+> +	 *
+> +	 * This allows for periods between 27uS and 384s, as the PWM framework
+> +	 * wants a period of equal or lower length than requested, reject
+> +	 * anything below 27uS.
+> +	 */
+> +	if (period <= (u64)NSEC_PER_SEC * LPG_RESOLUTION / 19200000)
+> +		return -EINVAL;
+> +
+> +	/* Limit period to largest possible value, to avoid overflows */
+> +	if (period > (u64)NSEC_PER_SEC * LPG_RESOLUTION * 6 * (1 << LPG_MAX_M) / 1024)
+> +		period = (u64)NSEC_PER_SEC * LPG_RESOLUTION * 6 * (1 << LPG_MAX_M) / 2014;
+
+s/2014/1024 ?
+
+Thanks,
+Subbaraman
+
 
