@@ -2,127 +2,123 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C6A743CE31
-	for <lists+linux-pwm@lfdr.de>; Wed, 27 Oct 2021 18:01:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB0FC43D107
+	for <lists+linux-pwm@lfdr.de>; Wed, 27 Oct 2021 20:45:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242894AbhJ0QEF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 27 Oct 2021 12:04:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37350 "EHLO
+        id S243638AbhJ0SsO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 27 Oct 2021 14:48:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238820AbhJ0QEF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 27 Oct 2021 12:04:05 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56853C061745
-        for <linux-pwm@vger.kernel.org>; Wed, 27 Oct 2021 09:01:39 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id 188so5513975ljj.4
-        for <linux-pwm@vger.kernel.org>; Wed, 27 Oct 2021 09:01:39 -0700 (PDT)
+        with ESMTP id S243633AbhJ0SsN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 27 Oct 2021 14:48:13 -0400
+Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 947EBC061745
+        for <linux-pwm@vger.kernel.org>; Wed, 27 Oct 2021 11:45:47 -0700 (PDT)
+Received: by mail-qv1-xf2b.google.com with SMTP id a4so2402948qva.12
+        for <linux-pwm@vger.kernel.org>; Wed, 27 Oct 2021 11:45:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tkCgQJkUSUXPKa9PPaG98xGW8ORLrJoeUL+lFNuAKlI=;
-        b=JuXVzxzuz+qv/oGJh4H3FGcoT4i1PRfFmZGPc6lEW/N9sVUHQywzVSA6QOXoew8eMN
-         2VuWytyylFxvVVv4NHBnyfc0Qf66xZSXHV0PNkrxsRogr/txx31V1QIsqMYUDW3/lS/Q
-         puLCWl/i68QH+uN4xJWqYNAHxq8s/ABltDsTffJInX/ueXsemQ/gPVFmTZ93Ha2IFRxA
-         fbB3/Ci3reBmhbmZLY5Agp3ldPGxwIMR97E/B9IL/d5CWC5Xg4LcOyrcEsyeLsDfw7q4
-         1r0gIxWuTyvt/wIwtmEfq/EQYkL7wpbE/0EDTKaVxaRJS8WIN0jvlGqgTJ1Igaa+L78p
-         ZceQ==
+        d=usp.br; s=usp-google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=A8jRX0QKAYjn4xUH+e8/6epT1HZFBjy/zHPwJDB1y2I=;
+        b=K7U4qb/VrSu9y/l5QSpg4GLpjpE4DHWO65bczNlJoB1bhg0hrBqn3A2T9fiY4T9G1g
+         seete8LDVmbo2J1tkmUUXb9HYEP8271eMBDURzJpf5RxcTnfL7vxJJPZS7FPEvONUtud
+         nRu15MNY7Qnclb5uhqiaNzLfSszJN3m+M5eaNSngck+D+4grh5sOhleX8EODccBJs2FN
+         e/05bu5jx8ovF5sjSKKVwJB0UFhySD55QjgCEYrHriMh+olhHW3nyVUzF5iRdD5bNI5n
+         rZ/O0E7ucfpdN4GUAqb5oTr6AHd8AkSJRCpU8Ls4lDq5Gg2fr7xWHHZJZ2oPH8I4Qil4
+         zvEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tkCgQJkUSUXPKa9PPaG98xGW8ORLrJoeUL+lFNuAKlI=;
-        b=M6D3aDs3IjaaC2RwNDJLqIMAr/KDyWfBS6oaHnvj6PkDRWU5+GmdJuPgaa7f7Kw6IL
-         9ASpOqDnGjmCcHlNtUTBjDPtMWSPRYbPp+Ddrr3cSN3ErFTUKMGzntT2c/z2fS++wOLB
-         SUC6193UUr5+DlynvZQg28gWQfGaOrsQsOwpPQTzrhwPJM2TVu3vA5dgP+P6kIZEJboy
-         wgNvuHaQxlM5xkC61Fu8ok+zmIzhJ/sdq/0m1PF4DpOIWL3OEdrA+19oGThWeBVJzfju
-         D26OvgLnmlUtudJe4dUffSQ2CjHC5spvSNVaqA9MxACtva1hjbgU8uQhzTXu2cb89Yq6
-         i73A==
-X-Gm-Message-State: AOAM530ZvSN17VuJxUlvArxrGLERu7LoSn9P6IXM6bTR8k84pCQsDbrw
-        jFFrXHp5o+Cyi2IXNh7+DQAEhYtqL0dR08MWrWYKww==
-X-Google-Smtp-Source: ABdhPJyLTmxvQZ0j5lQGHsFYcydy71+PhRmg+SxpLEXAm87AnzbFNmKI1TyiM271I2tAbjx+BOKyohjDU7jCER0qQM4=
-X-Received: by 2002:a2e:5c45:: with SMTP id q66mr22976435ljb.273.1635350497549;
- Wed, 27 Oct 2021 09:01:37 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding;
+        bh=A8jRX0QKAYjn4xUH+e8/6epT1HZFBjy/zHPwJDB1y2I=;
+        b=LHXkjDXFPrjNiV7ITMxel7MnycLbzGe3SDSndzr/JGdadopUavWdhS9W5BEzDgFz2Q
+         eofjP05J28HR8U2e9icIGl4KmBMZPTBVyjIZN8qVwgoVH4UdRt5EIeaLigPEi8KWPWZU
+         e43LIBjhXxV6JvCP26FtxmzATJSCrG5wwrc+50SO4R6Y8YAvDj55EztQ0HfX9STe7VhW
+         UE+ExB/VBW3oD5y/PeVkoFsgSAkLR4Ugl+HOb9qRyDtQOJzviAAeDErQDpQWrSVJgeH0
+         O4UX6wKJgypxCN0Qr60ewyNN5Kl9lcJQacaZ0ZxV/VgFrB9sfIx+fE46xy1hz0IElM6J
+         3K/g==
+X-Gm-Message-State: AOAM531yz+fKGteHWSXGgCu0ymOYSlNG01a2EcNr940qmahnTWge0m/i
+        I5VVBvf98CnGsMDFWMW1OUaO8g==
+X-Google-Smtp-Source: ABdhPJxctVR5Fb0BHbs0MVwHi/Q9mP9WYyhqidbxuJ/DJ9RSpTJk1zR1ZuujvluUZFWvXr0TH+VRow==
+X-Received: by 2002:a05:6214:cce:: with SMTP id 14mr31764551qvx.49.1635360346759;
+        Wed, 27 Oct 2021 11:45:46 -0700 (PDT)
+Received: from fedora ([187.64.134.142])
+        by smtp.gmail.com with ESMTPSA id i67sm461196qkd.90.2021.10.27.11.45.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Oct 2021 11:45:46 -0700 (PDT)
+Date:   Wed, 27 Oct 2021 15:45:40 -0300
+From:   =?iso-8859-1?Q?Ma=EDra?= Canal <maira.canal@usp.br>
+To:     lee.jones@linaro.org, daniel.thompson@linaro.org,
+        jingoohan1@gmail.com, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de
+Cc:     lkp@intel.com, llvm@lists.linux.dev,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: [PATCH v2] backlight: lp855x: Switch to atomic PWM API
+Message-ID: <YXmeVPIroq96BXfm@fedora>
 MIME-Version: 1.0
-References: <20211025224032.21012-1-digetx@gmail.com>
-In-Reply-To: <20211025224032.21012-1-digetx@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 27 Oct 2021 18:01:01 +0200
-Message-ID: <CAPDyKFrA2Jcb5BmaFmajtdUCmpwoPjAAvPC_MhoWwjDXJynD=w@mail.gmail.com>
-Subject: Re: [PATCH v14 00/39] NVIDIA Tegra power management patches for 5.17
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-mmc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-clk@vger.kernel.org, David Heidelberg <david@ixit.cz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 26 Oct 2021 at 00:45, Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> This series adds runtime PM support to Tegra drivers and enables core
-> voltage scaling for Tegra20/30 SoCs, resolving overheating troubles.
->
-> All patches in this series are interdependent and should go via Tegra tree
-> for simplicity.
->
-> Changelog:
->
-> v14: - Fixed missing runtime PM syncing on removal of drivers, which was
->        spotted by Ulf Hansson in v13.
->
->      - clk-device driver now resumes RPM on system suspend instead of
->        preparing clock which it backs. This was suggested by Ulf Hansson.
->
->      - clk-device driver now syncs power domain performance unconditionally
->        during driver's probe time since GENPD API allows to do this now.
->        It was spotted by Ulf Hansson.
->
->      - Added new "Enable runtime PM during OPP state-syncing" patch, which
->        allows drivers to sync state at any time. Previously drivers were
->        obligated to take care of enabling RPM at the "right" time.
->
->      - Moved runtime PM initialization/uninitialization of DRM drivers that
->        use host1x channel to host1x client init/deinit phase. I noticed that
->        there is UAF problem because RPM-suspend callback waits until channel
->        is idling and channel is already released/freed during driver's removal
->        phase.
->
->      - Added system suspend support to the new NVDEC DRM driver.
->
->      - Added missing pm_runtime_mark_last_busy() to DRM driver.
->
->      - Corrected VDE GENPD patch which previously made video decoder clock
->        always-enabled by mistake if legacy PD code path was used. It was
->        spotted while we were testing VDE on Tegra114 that doesn't support
->        GENPD yet.
->
->      - Added ack from Peter Chen to the USB patch that he gave to v13.
->
->      - Changed OPP table names in accordance to the new naming scheme
->        required by the recent core OPP binding.
->
->      - Added 500MHz memory OPP entry used by ASUS Transformer tablets.
+Remove legacy PWM interface (pwm_config, pwm_enable, pwm_disable) and
+replace it for the atomic PWM API.
 
-Besides those minor nitpicks/questions that I have sent for patch1 and
-patch29, the series looks good to me!
+Signed-off-by: Maíra Canal <maira.canal@usp.br>
+Reported-by: kernel test robot <lkp@intel.com>
+---
+V1 -> V2: Initializing variable and simplyfing conditional loop
+---
+ drivers/video/backlight/lp855x_bl.c | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
 
-Feel free to add, for the whole series:
+diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/backlight/lp855x_bl.c
+index e94932c69f54..a895a8ca6d26 100644
+--- a/drivers/video/backlight/lp855x_bl.c
++++ b/drivers/video/backlight/lp855x_bl.c
+@@ -233,9 +233,8 @@ static int lp855x_configure(struct lp855x *lp)
+ 
+ static void lp855x_pwm_ctrl(struct lp855x *lp, int br, int max_br)
+ {
+-	unsigned int period = lp->pdata->period_ns;
+-	unsigned int duty = br * period / max_br;
+-	struct pwm_device *pwm;
++	struct pwm_device *pwm = NULL;
++	struct pwm_state state;
+ 
+ 	/* request pwm device with the consumer name */
+ 	if (!lp->pwm) {
+@@ -244,19 +243,15 @@ static void lp855x_pwm_ctrl(struct lp855x *lp, int br, int max_br)
+ 			return;
+ 
+ 		lp->pwm = pwm;
+-
+-		/*
+-		 * FIXME: pwm_apply_args() should be removed when switching to
+-		 * the atomic PWM API.
+-		 */
+-		pwm_apply_args(pwm);
+ 	}
+ 
+-	pwm_config(lp->pwm, duty, period);
+-	if (duty)
+-		pwm_enable(lp->pwm);
+-	else
+-		pwm_disable(lp->pwm);
++	pwm_init_state(pwm, &state);
++
++	state.period = lp->pdata->period_ns;
++	state.duty_cycle = br * state.period / max_br;
++	state.enabled = state.duty_cycle;
++
++	pwm_apply_state(pwm, &state);
+ }
+ 
+ static int lp855x_bl_update_status(struct backlight_device *bl)
+-- 
+2.31.1
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-
-Kind regards
-Uffe
