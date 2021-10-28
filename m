@@ -2,203 +2,143 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 996FA43E0F4
-	for <lists+linux-pwm@lfdr.de>; Thu, 28 Oct 2021 14:26:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98EF043E339
+	for <lists+linux-pwm@lfdr.de>; Thu, 28 Oct 2021 16:12:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229981AbhJ1M2k (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 28 Oct 2021 08:28:40 -0400
-Received: from gofer.mess.org ([88.97.38.141]:54929 "EHLO gofer.mess.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229868AbhJ1M2k (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Thu, 28 Oct 2021 08:28:40 -0400
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id 17D26C63F8; Thu, 28 Oct 2021 13:26:11 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mess.org; s=2020;
-        t=1635423971; bh=y3qxEYJL2Lulhgp7KZQDk3Hsdwnvvf4NctUVRGbbEF0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mAKfVr2+8Lrq5V+B3EE3AvkB8MrOTb4CtUmbzGDrhXrZHpEITWLOCk2Eb0ubtdBok
-         GMIF3E1zZcl945dli8isX1DXbSsYOFibkPUuxdpq6mJpLalTtng6+hmouQEbpPAIcC
-         tQAHNXe7tp7kvosdKDTg4YjgV99xzTdUtyhbUk4o/c+oVj0PYe2//CZuL3c/6FHKnd
-         sDFqkZDDD/2oPqsdkFsLJbHbByJSOEgtPLQCe1ERDKbdLTE4OCs8baN1WoZEre6qrs
-         HLLp6XXEyOhV9sdJlQsXoO5BDep4KIlGQisMFMZwedHQZpVHn8FKsd2RqdiIbZHxxv
-         zGXDsFmBMsrew==
-Date:   Thu, 28 Oct 2021 13:26:10 +0100
-From:   Sean Young <sean@mess.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     =?iso-8859-1?Q?Ma=EDra?= Canal <maira.canal@usp.br>, lkp@intel.com,
-        mchehab@kernel.org, thierry.reding@gmail.com, lee.jones@linaro.org,
-        llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        id S231151AbhJ1OPU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 28 Oct 2021 10:15:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230305AbhJ1OPT (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 28 Oct 2021 10:15:19 -0400
+Received: from mail-qv1-xf36.google.com (mail-qv1-xf36.google.com [IPv6:2607:f8b0:4864:20::f36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1660CC061767
+        for <linux-pwm@vger.kernel.org>; Thu, 28 Oct 2021 07:12:53 -0700 (PDT)
+Received: by mail-qv1-xf36.google.com with SMTP id v10so4083895qvb.10
+        for <linux-pwm@vger.kernel.org>; Thu, 28 Oct 2021 07:12:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=usp.br; s=usp-google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=uW58SAoHp5gKtMj6ifGXFk+JxLdoMkUhiHrsFeoWED0=;
+        b=zZ/ta4zcx78S1ykzXCOnSW+WYNsFe+FBlOt0zENV5et2S2CahkS7ZIOC3zheDk2nGg
+         vjdQYf+krCbAL7FueegDec3werSgU3hvjmVnPBoIcAz/RdD3qzDUkDkvKQ1WcoVfC+hh
+         FeeDOw/M5LvhvXnzIlKCL4Q3OF+/F+RmFVOXBlremDHzMl/4j175kLmyPPoPDLC7avkY
+         1sq4cOmRbJ6/K8SNUSGSTWzO7H2gcKviqz7rS7SuE675wvRYqK81cyg8fJsWmvffnuV4
+         j/p/gkdnR0lanuFtdh3jCowa0BWKwoKT//UzTIWdCN3U4fJGRIw9g3FPR4Pmcr2Vl9Ok
+         2wEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding;
+        bh=uW58SAoHp5gKtMj6ifGXFk+JxLdoMkUhiHrsFeoWED0=;
+        b=7Vs50LMC50Wi+lBECLW0mZPzPaClBU3MZSt6I+vvGEPlAki+qnh4l/X5qiq5tQ7OW4
+         uz0EsgdbwMl8VM9MxaRRvPKeSpYkZNqOtffNg3DMuDgoF9NZlKozwNYoTpJiRgDOAiTJ
+         9hdR3kjmfKgG0jzsA8okHLqBlPqI6+RgtkIocEQ+bXwUkgY5bQa1EdP0/InKKuASkyUS
+         1dGpmi0bC9xTln12KL/65tvPacOYm5Ojr5ACk2pVkzKY6qTFTo98THlN/a4eIb+5U5Ih
+         9TRPARMhxk4nyq/5XdJn8yrD5hUtwyQ6nzw5kJXU+RFGr8UjnFYZJz0gWtjjkq0709iT
+         PCsA==
+X-Gm-Message-State: AOAM533QjRuKe03GPXjhegN/5hjgc17A6J8dxuFO138D4YtHYF9WhTSu
+        btRc+Hyllak63vrNirRIodx6Lg==
+X-Google-Smtp-Source: ABdhPJzvjeGfiBQ/MFDfr1Y2HOJ/W8Fc8X/sP1RtFracnUJlEZQuBrRJkLpeNUt51rVx5me0ZSJ+1A==
+X-Received: by 2002:a05:6214:262d:: with SMTP id gv13mr4305114qvb.40.1635430372183;
+        Thu, 28 Oct 2021 07:12:52 -0700 (PDT)
+Received: from fedora ([187.64.134.142])
+        by smtp.gmail.com with ESMTPSA id bi26sm2010360qkb.102.2021.10.28.07.12.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Oct 2021 07:12:51 -0700 (PDT)
+Date:   Thu, 28 Oct 2021 11:12:47 -0300
+From:   =?iso-8859-1?Q?Ma=EDra?= Canal <maira.canal@usp.br>
+To:     sean@mess.org, mchehab@kernel.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v4] media: rc: pwm-ir-tx: Switch to atomic PWM API
-Message-ID: <20211028122610.GA18767@gofer.mess.org>
-References: <YXlxhpZWf2mxJaMi@fedora>
- <20211028064513.guziv6uaivzlk6ki@pengutronix.de>
- <20211028091442.GA16514@gofer.mess.org>
- <20211028111535.x7xgz7domx2lpyfh@pengutronix.de>
+Subject: [PATCH] media: ir-rx51: Switch to atomic PWM API
+Message-ID: <YXqv339PJTHcGxJg@fedora>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211028111535.x7xgz7domx2lpyfh@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
+Remove legacy PWM interface (pwm_config, pwm_enable, pwm_disable) and
+replace it for the atomic PWM API.
 
-On Thu, Oct 28, 2021 at 01:15:35PM +0200, Uwe Kleine-König wrote:
-> On Thu, Oct 28, 2021 at 10:14:42AM +0100, Sean Young wrote:
-> > On Thu, Oct 28, 2021 at 08:45:13AM +0200, Uwe Kleine-König wrote:
-> > > The conversion is right (I think),
-> > 
-> > We still have the problem that the pwm drivers calculate the period
-> > incorrectly by rounding down (except pwm-bcm2835). So the period is not
-> > as good as it could be in most cases, but this driver can't do anything
-> > about that.
-> 
-> Yeah, some time ago I started coding a round_state function
-> (wip at
-> https://git.pengutronix.de/cgit/ukl/linux/commit/?h=pwm-wip&id=ae348eb6a55d6526f30ef4a49819197d9616391e)
-> but this was pushed down on my todo-list by more important stuff.
+Signed-off-by: Maíra Canal <maira.canal@usp.br>
+---
+ drivers/media/rc/ir-rx51.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-That looks great, thank you for working on that!
+diff --git a/drivers/media/rc/ir-rx51.c b/drivers/media/rc/ir-rx51.c
+index a0d9c02a7588..7a643a94e181 100644
+--- a/drivers/media/rc/ir-rx51.c
++++ b/drivers/media/rc/ir-rx51.c
+@@ -19,6 +19,7 @@
+ struct ir_rx51 {
+ 	struct rc_dev *rcdev;
+ 	struct pwm_device *pwm;
++	struct pwm_state *state;
+ 	struct hrtimer timer;
+ 	struct device	     *dev;
+ 	wait_queue_head_t     wqueue;
+@@ -32,22 +33,22 @@ struct ir_rx51 {
+ 
+ static inline void ir_rx51_on(struct ir_rx51 *ir_rx51)
+ {
+-	pwm_enable(ir_rx51->pwm);
++	ir_rx51->state->enabled = true;
++	pwm_apply_state(ir_rx51->pwm, ir_rx51->state);
+ }
+ 
+ static inline void ir_rx51_off(struct ir_rx51 *ir_rx51)
+ {
+-	pwm_disable(ir_rx51->pwm);
++	ir_rx51->state->enabled = false;
++	pwm_apply_state(ir_rx51->pwm, ir_rx51->state);
+ }
+ 
+ static int init_timing_params(struct ir_rx51 *ir_rx51)
+ {
+-	struct pwm_device *pwm = ir_rx51->pwm;
+-	int duty, period = DIV_ROUND_CLOSEST(NSEC_PER_SEC, ir_rx51->freq);
++	struct pwm_state *state = ir_rx51->state;
+ 
+-	duty = DIV_ROUND_CLOSEST(ir_rx51->duty_cycle * period, 100);
+-
+-	pwm_config(pwm, duty, period);
++	state->period = DIV_ROUND_CLOSEST(NSEC_PER_SEC, ir_rx51->freq);
++	pwm_set_relative_duty_cycle(state, ir_rx51->duty_cycle, 100);
+ 
+ 	return 0;
+ }
+@@ -154,6 +155,8 @@ static int ir_rx51_open(struct rc_dev *dev)
+ 		return res;
+ 	}
+ 
++	pwm_init_state(ir_rx51->pwm, ir_rx51->state);
++
+ 	return 0;
+ }
+ 
+@@ -232,13 +235,9 @@ static int ir_rx51_probe(struct platform_device *dev)
+ 	struct rc_dev *rcdev;
+ 
+ 	pwm = pwm_get(&dev->dev, NULL);
+-	if (IS_ERR(pwm)) {
+-		int err = PTR_ERR(pwm);
+-
+-		if (err != -EPROBE_DEFER)
+-			dev_err(&dev->dev, "pwm_get failed: %d\n", err);
+-		return err;
+-	}
++	if (IS_ERR(pwm))
++		return dev_err_probe(&dev->dev, PTR_ERR(pwm), "pwm_get failed: %ld\n",
++				PTR_ERR(pwm));
+ 
+ 	/* Use default, in case userspace does not set the carrier */
+ 	ir_rx51.freq = DIV_ROUND_CLOSEST_ULL(pwm_get_period(pwm), NSEC_PER_SEC);
+-- 
+2.31.1
 
-> If you want to experiment with that ...
-
-I will have a look.
-
-> > > note this could be optimized a bit
-> > > further: state.period only depends on carrier which rarely changes, so
-> > > the calculation could be done in pwm_ir_set_carrier(). Ditto for duty
-> > > which only depends on state.period and pwm_ir->duty_cycle. (This is for
-> > > a separate commit though.)
-> > 
-> > I'm not sure what caching this is much of a win. The calculation is a few
-> > instructions, so you're not winning in the way of speed. On the flip side
-> > you use more memory since pwm_state has to be kmalloc() rather than existing
-> 
-> I tested a bit with this patch on top of Maíra's:
-> 
-> 	diff --git a/drivers/media/rc/pwm-ir-tx.c b/drivers/media/rc/pwm-ir-tx.c
-> 	index 105a9c24f1e3..7585c21775bc 100644
-> 	--- a/drivers/media/rc/pwm-ir-tx.c
-> 	+++ b/drivers/media/rc/pwm-ir-tx.c
-> 	@@ -17,7 +17,7 @@
-> 	 
-> 	 struct pwm_ir {
-> 		struct pwm_device *pwm;
-> 	-	unsigned int carrier;
-> 	+	struct pwm_state state;
-> 		unsigned int duty_cycle;
-> 	 };
-> 	 
-> 	@@ -32,6 +32,7 @@ static int pwm_ir_set_duty_cycle(struct rc_dev *dev, u32 duty_cycle)
-> 		struct pwm_ir *pwm_ir = dev->priv;
-> 	 
-> 		pwm_ir->duty_cycle = duty_cycle;
-> 	+	pwm_set_relative_duty_cycle(&pwm_ir->state, pwm_ir->duty_cycle, 100);
-> 	 
-> 		return 0;
-> 	 }
-> 	@@ -43,7 +44,8 @@ static int pwm_ir_set_carrier(struct rc_dev *dev, u32 carrier)
-> 		if (!carrier)
-> 			return -EINVAL;
-> 	 
-> 	-	pwm_ir->carrier = carrier;
-> 	+	pwm_ir->state.period = DIV_ROUND_CLOSEST(NSEC_PER_SEC, carrier);
-> 	+	pwm_set_relative_duty_cycle(&pwm_ir->state, pwm_ir->duty_cycle, 100);
-> 	 
-> 		return 0;
-> 	 }
-> 	@@ -53,21 +55,15 @@ static int pwm_ir_tx(struct rc_dev *dev, unsigned int *txbuf,
-> 	 {
-> 		struct pwm_ir *pwm_ir = dev->priv;
-> 		struct pwm_device *pwm = pwm_ir->pwm;
-> 	-	struct pwm_state state;
-> 		int i;
-> 		ktime_t edge;
-> 		long delta;
-> 	 
-> 	-	pwm_init_state(pwm, &state);
-> 	-
-> 	-	state.period = DIV_ROUND_CLOSEST(NSEC_PER_SEC, pwm_ir->carrier);
-> 	-	pwm_set_relative_duty_cycle(&state, pwm_ir->duty_cycle, 100);
-> 	-
-> 		edge = ktime_get();
-> 	 
-> 		for (i = 0; i < count; i++) {
-> 	-		state.enabled = !(i % 2);
-> 	-		pwm_apply_state(pwm, &state);
-> 	+		pwm_ir->state.enabled = !(i % 2);
-> 	+		pwm_apply_state(pwm, &pwm_ir->state);
-> 	 
-> 			edge = ktime_add_us(edge, txbuf[i]);
-> 			delta = ktime_us_delta(edge, ktime_get());
-> 	@@ -75,8 +71,8 @@ static int pwm_ir_tx(struct rc_dev *dev, unsigned int *txbuf,
-> 				usleep_range(delta, delta + 10);
-> 		}
-> 	 
-> 	-	state.enabled = false;
-> 	-	pwm_apply_state(pwm, &state);
-> 	+	pwm_ir->state.enabled = false;
-> 	+	pwm_apply_state(pwm, &pwm_ir->state);
-> 	 
-> 		return count;
-> 	 }
-> 	@@ -95,8 +91,9 @@ static int pwm_ir_probe(struct platform_device *pdev)
-> 		if (IS_ERR(pwm_ir->pwm))
-> 			return PTR_ERR(pwm_ir->pwm);
-> 	 
-> 	-	pwm_ir->carrier = 38000;
-> 	-	pwm_ir->duty_cycle = 50;
-> 	+	pwm_ir->state.duty_cycle = 50;
-> 	+	pwm_init_state(pwm_ir->pwm, &pwm_ir->state);
-> 	+	pwm_ir_set_carrier(rcdev, 38000);
-> 	 
-> 		rcdev = devm_rc_allocate_device(&pdev->dev, RC_DRIVER_IR_RAW_TX);
-> 		if (!rcdev)
-> 
-> bloat-o-meter reports (for an arm allmodconfig build)
-> 
-> 	add/remove: 0/0 grow/shrink: 3/1 up/down: 644/-396 (248)
-> 	Function                                     old     new   delta
-> 	pwm_ir_probe                                 372     676    +304
-> 	pwm_ir_set_carrier                           108     292    +184
-> 	pwm_ir_set_duty_cycle                         68     224    +156
-> 	pwm_ir_tx                                    908     512    -396
-> 	Total: Before=2302, After=2550, chg +10.77%
-
-So 248 bytes more after your changes.
-
-> struct pwm_ir increases from 12 bytes to 40 bytes.
-> 
-> The stack space required by pwm_ir_tx decreases from 60 to 36
-> 
-> I don't know exactly how kmalloc works internally. Maybe allocating a
-> structure of size 40 bytes doesn't need more memory than a structure of
-> size 12?
-> 
-> I didn't check how runtimes change, but the size decrease of pwm_ir_tx()
-> is nice and might save a bit of runtime.
-
-I'm not following, how is this decreasing runtime? 
-
-> Probably it depends on your focus if this change is good for you or not.
-
-Decreasing size is of course a good thing.
-
-> > just on the stack, and both ioctl handlers and the probe function need to
-> > recalculate the period/duty cycle, so there is a slight increase in code size.
-> > 
-> > This change does not improve anything measurably and only increases code
-> > complexity.
-> 
-> You did measure?
-
-Thanks for prototyping this.
-
-
-Sean
