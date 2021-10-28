@@ -2,160 +2,78 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6FAB43DB76
-	for <lists+linux-pwm@lfdr.de>; Thu, 28 Oct 2021 08:45:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E98E43DD83
+	for <lists+linux-pwm@lfdr.de>; Thu, 28 Oct 2021 11:14:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229775AbhJ1Grz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 28 Oct 2021 02:47:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38138 "EHLO
+        id S229950AbhJ1JRN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 28 Oct 2021 05:17:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229863AbhJ1Gry (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 28 Oct 2021 02:47:54 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B386C061570
-        for <linux-pwm@vger.kernel.org>; Wed, 27 Oct 2021 23:45:27 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mfzA4-0008LQ-77; Thu, 28 Oct 2021 08:45:16 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mfzA2-0001rL-1N; Thu, 28 Oct 2021 08:45:14 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mfzA2-000369-04; Thu, 28 Oct 2021 08:45:14 +0200
-Date:   Thu, 28 Oct 2021 08:45:13 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     =?utf-8?B?TWHDrXJh?= Canal <maira.canal@usp.br>
-Cc:     sean@mess.org, lkp@intel.com, mchehab@kernel.org,
-        thierry.reding@gmail.com, lee.jones@linaro.org,
+        with ESMTP id S229626AbhJ1JRN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 28 Oct 2021 05:17:13 -0400
+Received: from gofer.mess.org (gofer.mess.org [IPv6:2a02:8011:d000:212::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60D0BC061570;
+        Thu, 28 Oct 2021 02:14:46 -0700 (PDT)
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id 992B6C63F8; Thu, 28 Oct 2021 10:14:42 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mess.org; s=2020;
+        t=1635412482; bh=TcwYNZ9H69bImLZ0/fzU687Op74rMoUC94o75C/+mGk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l/o+pLpHf4DC/vWwSVZTNz1SUwcxoW/GrW6I7a8YFum1o3dbgllj+fwzIs6lt/TXN
+         1FWhVesHP+QMAyuTkLu1M/zsKfKUr9WWdkqxOs6JStsTJq/myiWLHzi5opFPo+w623
+         mF/P5Sqx8Y3R9qBxacNphGCs9Ct9MMsJZs/Lwt9U+WsUSIPVarw1FTjzI3wOApaGd3
+         DFdfuNZZwzE+Me5jdP/Gx/ZJC/FJ5jiJO08nVf9GitDp5lQ0pqOJ7+11MJRdJwhCHa
+         GPPKIteBr19d/GuNKtaU6PB40jrDjrZdtrKOYpvQN9pq31M0/kFCPBn0DsUqhrMkrU
+         VkDSKQfkbzzIQ==
+Date:   Thu, 28 Oct 2021 10:14:42 +0100
+From:   Sean Young <sean@mess.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     =?iso-8859-1?Q?Ma=EDra?= Canal <maira.canal@usp.br>, lkp@intel.com,
+        mchehab@kernel.org, thierry.reding@gmail.com, lee.jones@linaro.org,
         llvm@lists.linux.dev, kbuild-all@lists.01.org,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pwm@vger.kernel.org
 Subject: Re: [PATCH v4] media: rc: pwm-ir-tx: Switch to atomic PWM API
-Message-ID: <20211028064513.guziv6uaivzlk6ki@pengutronix.de>
+Message-ID: <20211028091442.GA16514@gofer.mess.org>
 References: <YXlxhpZWf2mxJaMi@fedora>
+ <20211028064513.guziv6uaivzlk6ki@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mf4wlywlnibmr5pv"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <YXlxhpZWf2mxJaMi@fedora>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211028064513.guziv6uaivzlk6ki@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu, Oct 28, 2021 at 08:45:13AM +0200, Uwe Kleine-König wrote:
+> The conversion is right (I think),
 
---mf4wlywlnibmr5pv
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We still have the problem that the pwm drivers calculate the period
+incorrectly by rounding down (except pwm-bcm2835). So the period is not
+as good as it could be in most cases, but this driver can't do anything
+about that.
 
-On Wed, Oct 27, 2021 at 12:34:30PM -0300, Ma=EDra Canal wrote:
-> Remove legacy PWM interface (pwm_config, pwm_enable, pwm_disable) and
-> replace it for the atomic PWM API.
->=20
-> Signed-off-by: Ma=EDra Canal <maira.canal@usp.br>
-> Reported-by: kernel test robot <lkp@intel.com>
+> note this could be optimized a bit
+> further: state.period only depends on carrier which rarely changes, so
+> the calculation could be done in pwm_ir_set_carrier(). Ditto for duty
+> which only depends on state.period and pwm_ir->duty_cycle. (This is for
+> a separate commit though.)
 
-While it's true that he kernel robot told you about a problem in an
-earlier revision, adding the tag here is misleading, because in the end
-you only see the tag in the commit history, and there is suggests that
-the commit fixes something that was reported in the kernel tree before.
+I'm not sure what caching this is much of a win. The calculation is a few
+instructions, so you're not winning in the way of speed. On the flip side
+you use more memory since pwm_state has to be kmalloc() rather than existing
+just on the stack, and both ioctl handlers and the probe function need to
+recalculate the period/duty cycle, so there is a slight increase in code size.
 
-For this reason I usually only add a thanks after the tripple dash.
+This change does not improve anything measurably and only increases code
+complexity.
 
-Also note this nitpick: Your S-o-b should always be the last thing.
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-> ---
-> V1 -> V2: Assign variables directly and simplify conditional statement
-> V2 -> V3: Fix declaration of undeclared variables
-> V3 -> V4: Fix DIV_ROUND_CLOSEST error with u64 variables
-> ---
->  drivers/media/rc/pwm-ir-tx.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
->=20
-> diff --git a/drivers/media/rc/pwm-ir-tx.c b/drivers/media/rc/pwm-ir-tx.c
-> index 4bc28d2c9cc9..105a9c24f1e3 100644
-> --- a/drivers/media/rc/pwm-ir-tx.c
-> +++ b/drivers/media/rc/pwm-ir-tx.c
-> @@ -53,22 +53,21 @@ static int pwm_ir_tx(struct rc_dev *dev, unsigned int=
- *txbuf,
->  {
->  	struct pwm_ir *pwm_ir =3D dev->priv;
->  	struct pwm_device *pwm =3D pwm_ir->pwm;
-> -	int i, duty, period;
-> +	struct pwm_state state;
-> +	int i;
->  	ktime_t edge;
->  	long delta;
-> =20
-> -	period =3D DIV_ROUND_CLOSEST(NSEC_PER_SEC, pwm_ir->carrier);
-> -	duty =3D DIV_ROUND_CLOSEST(pwm_ir->duty_cycle * period, 100);
-> +	pwm_init_state(pwm, &state);
-> =20
-> -	pwm_config(pwm, duty, period);
-> +	state.period =3D DIV_ROUND_CLOSEST(NSEC_PER_SEC, pwm_ir->carrier);
-> +	pwm_set_relative_duty_cycle(&state, pwm_ir->duty_cycle, 100);
-> =20
->  	edge =3D ktime_get();
-> =20
->  	for (i =3D 0; i < count; i++) {
-> -		if (i % 2) // space
-> -			pwm_disable(pwm);
-> -		else
-> -			pwm_enable(pwm);
-> +		state.enabled =3D !(i % 2);
-> +		pwm_apply_state(pwm, &state);
-> =20
->  		edge =3D ktime_add_us(edge, txbuf[i]);
->  		delta =3D ktime_us_delta(edge, ktime_get());
-> @@ -76,7 +75,8 @@ static int pwm_ir_tx(struct rc_dev *dev, unsigned int *=
-txbuf,
->  			usleep_range(delta, delta + 10);
->  	}
-> =20
-> -	pwm_disable(pwm);
-> +	state.enabled =3D false;
-> +	pwm_apply_state(pwm, &state);
-> =20
->  	return count;
->  }
-
-The conversion is right (I think), note this could be optimized a bit
-further: state.period only depends on carrier which rarely changes, so
-the calculation could be done in pwm_ir_set_carrier(). Ditto for duty
-which only depends on state.period and pwm_ir->duty_cycle. (This is for
-a separate commit though.)
-
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Thanks
-Uwe
+Thanks for your review.
 
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---mf4wlywlnibmr5pv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmF6RvUACgkQwfwUeK3K
-7Anl9Af8CgvGM/ZHx9tafHzheQcFRngBZ+7mNWcXYkutj+S3XAQ/G/W9V+nS9RWc
-j5M9Q/st772Y1X0h7dT0YpUcYiLa2IYlAQlWijolrdFKzuXW7lDiAGDexmI3TAVO
-C/LaJQ4oHUgfr4wULkvQey3FgwXpE6asDxTk+eiIG1zLoADJ5ur38zpqpq1nrQNv
-jl4S3iBgO3BftndvCk0qPN3Ff16XgzjLFvzoXr81nxOJIHfUAmzjaZ8ctJbckN8f
-Qo3dY2KhxgCVJt7DuRytUIS6kYY5or4lh1udF+y0UiS0TiavLk0pvuwegYxJ6Ovq
-mOIZhjNjBObw03KqCaBga9+pU74N7A==
-=V5HL
------END PGP SIGNATURE-----
-
---mf4wlywlnibmr5pv--
+Sean
