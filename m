@@ -2,132 +2,98 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F89243FFED
-	for <lists+linux-pwm@lfdr.de>; Fri, 29 Oct 2021 17:56:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DBF543FFFD
+	for <lists+linux-pwm@lfdr.de>; Fri, 29 Oct 2021 18:02:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230070AbhJ2P67 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Fri, 29 Oct 2021 11:58:59 -0400
-Received: from mail-oi1-f174.google.com ([209.85.167.174]:44965 "EHLO
-        mail-oi1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229607AbhJ2P66 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 29 Oct 2021 11:58:58 -0400
-Received: by mail-oi1-f174.google.com with SMTP id y207so13932305oia.11;
-        Fri, 29 Oct 2021 08:56:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/SMjFsF1c2jJAFrAQjbA6gkypuYLRMtEM9UCUe5CB44=;
-        b=XvruEgbq7nqBo2gsz2lqSNIuzXn6FpXLiQUfC9viytYOUOOubxsaauhvlk/erw/vpH
-         AciuLqAWXCYdmEsrF0CKe9BF+IADh3luNjqBujkPMlQr99xcq55DfpFEeZz+kC6fn8VO
-         pim4ETWFcwQo20zJPFtC/H11hQPevtK61qNNvNEuNGz0dNGsS0r0wm/e6HoJNYMbBOCp
-         ukmC8ao2yWYJ66hYb4U+RFaZtnql/A1T5VrCvmYKRisg5OvLVi2S4d+IHzBXw7dLnbDj
-         /Sqmi7ohii0MYS1VquVNTORF0LIJzcycXiebwZw+tHpZ25cRj/R2/ywYsqyWxktsLzbR
-         4wOw==
-X-Gm-Message-State: AOAM530bRLEOof/BF2tsgePqfh/DyLDffSdjP87y8B814ukz+TUXY2Mv
-        tRx5Dcj3l//1WktkiRYJJnYZU2UG1KiE/LresbM=
-X-Google-Smtp-Source: ABdhPJyt4UMxkF1vsuAi+BGZn90y8TkCvU/MAtayV4OwG5udI4L0shq0uzCyV4nG28Fc/pQknaSM5LL0g9M7DRCchMM=
-X-Received: by 2002:a05:6808:128d:: with SMTP id a13mr2577oiw.51.1635522989816;
- Fri, 29 Oct 2021 08:56:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211025224032.21012-1-digetx@gmail.com> <20211025224032.21012-21-digetx@gmail.com>
- <09c05206-c0e5-9a25-8ffa-b9291f6ea5ae@gmail.com>
-In-Reply-To: <09c05206-c0e5-9a25-8ffa-b9291f6ea5ae@gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 29 Oct 2021 17:56:18 +0200
-Message-ID: <CAJZ5v0i9OtA1nDiv8UXuF3ASdENFYJFV7+nMWm6Pcu=kw8k1aQ@mail.gmail.com>
-Subject: Re: [PATCH v14 20/39] pwm: tegra: Add runtime PM and OPP support
-To:     Dmitry Osipenko <digetx@gmail.com>
+        id S229623AbhJ2QEy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 29 Oct 2021 12:04:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229607AbhJ2QEy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 29 Oct 2021 12:04:54 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B220BC061570
+        for <linux-pwm@vger.kernel.org>; Fri, 29 Oct 2021 09:02:25 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mgUKj-0001W9-3d; Fri, 29 Oct 2021 18:02:21 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mgUKh-0006Al-1t; Fri, 29 Oct 2021 18:02:19 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mgUKh-0003mh-0g; Fri, 29 Oct 2021 18:02:19 +0200
+Date:   Fri, 29 Oct 2021 18:02:16 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
         Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        David Heidelberg <david@ixit.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Rob Herring <robh+dt@kernel.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: pwm: tpu: Add R-Car M3-W+ device tree
+ bindings
+Message-ID: <20211029160216.cggflsvqdggt62h3@pengutronix.de>
+References: <622e5ac9a841e874f772e0d9d200200706914dac.1635337701.git.geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2y6n5cp24bll7th4"
+Content-Disposition: inline
+In-Reply-To: <622e5ac9a841e874f772e0d9d200200706914dac.1635337701.git.geert+renesas@glider.be>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Oct 29, 2021 at 5:20 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> 26.10.2021 01:40, Dmitry Osipenko пишет:
-> > +     ret = devm_pm_runtime_enable(&pdev->dev);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret = devm_tegra_core_dev_init_opp_table_common(&pdev->dev);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret = pm_runtime_resume_and_get(&pdev->dev);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> >       /* Set maximum frequency of the IP */
-> > -     ret = clk_set_rate(pwm->clk, pwm->soc->max_frequency);
-> > +     ret = dev_pm_opp_set_rate(pwm->dev, pwm->soc->max_frequency);
-> >       if (ret < 0) {
-> >               dev_err(&pdev->dev, "Failed to set max frequency: %d\n", ret);
-> > -             return ret;
-> > +             goto put_pm;
-> >       }
-> >
-> >       /*
-> > @@ -278,7 +294,7 @@ static int tegra_pwm_probe(struct platform_device *pdev)
-> >       if (IS_ERR(pwm->rst)) {
-> >               ret = PTR_ERR(pwm->rst);
-> >               dev_err(&pdev->dev, "Reset control is not found: %d\n", ret);
-> > -             return ret;
-> > +             goto put_pm;
-> >       }
-> >
-> >       reset_control_deassert(pwm->rst);
-> > @@ -291,10 +307,15 @@ static int tegra_pwm_probe(struct platform_device *pdev)
-> >       if (ret < 0) {
-> >               dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
-> >               reset_control_assert(pwm->rst);
-> > -             return ret;
-> > +             goto put_pm;
-> >       }
-> >
-> > +     pm_runtime_put(&pdev->dev);
-> > +
-> >       return 0;
-> > +put_pm:
-> > +     pm_runtime_put_sync_suspend(&pdev->dev);
-> > +     return ret;
-> >  }
-> >
-> >  static int tegra_pwm_remove(struct platform_device *pdev)
-> > @@ -305,20 +326,44 @@ static int tegra_pwm_remove(struct platform_device *pdev)
-> >
-> >       reset_control_assert(pc->rst);
-> >
-> > +     pm_runtime_force_suspend(&pdev->dev);
->
-> I just noticed that RPM core doesn't reset RPM-enable count of a device
-> on driver's unbind (pm_runtime_reinit). It was a bad idea to use
-> devm_pm_runtime_enable() + pm_runtime_force_suspend() here, since RPM is
-> disabled twice on driver's removal, and thus, RPM will never be enabled
-> again.
->
-> I'll fix it for PWM and other drivers in this series, in v15.
 
-Well, for the record, IMV using pm_runtime_force_suspend() is
-generally a questionable idea.
+--2y6n5cp24bll7th4
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Oct 27, 2021 at 02:29:22PM +0200, Geert Uytterhoeven wrote:
+> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>=20
+> Add device tree bindings for TPU found on R-Car M3-W+ SoCs.
+>=20
+> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+=46rom the PWM POV:
+
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--2y6n5cp24bll7th4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmF8GwQACgkQwfwUeK3K
+7Ak32Af/XUBSBteU5D4Q4RnsqT8ZzGypJMQPbYaxReT5D72Jr+iSGqCzlXGOMsSX
+Wb8mHyrxIdFFK5gblw5doRTNLALhAbPxzCIq/9ntrW9f5D0RohuBFT8LiH+kiTW/
+OS5yW+3gtVb6LASBFmTqI3uJiF7pFjZbMLpB7ejvesqX+NVMA58EdpkyXIxgBVZX
+kfu48DR6XBbnobBudyFv017QCbDz7/4A+jpe5zgieOdC9iWyFDG/I6bbomwIEX61
+hoscnuNEoSTzL5jS2O9zVmZH+QwRPySKsc6L6FsNdpc8JRWK/jQXM21/7vlOwsjr
+s/qvmxQNmlzzVQyhyM+qW/tkWxLGBg==
+=KKJF
+-----END PGP SIGNATURE-----
+
+--2y6n5cp24bll7th4--
