@@ -2,117 +2,83 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D94544083B
-	for <lists+linux-pwm@lfdr.de>; Sat, 30 Oct 2021 11:27:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F975440882
+	for <lists+linux-pwm@lfdr.de>; Sat, 30 Oct 2021 13:21:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231722AbhJ3JaN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 30 Oct 2021 05:30:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42684 "EHLO
+        id S231843AbhJ3LXc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 30 Oct 2021 07:23:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230394AbhJ3JaM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 30 Oct 2021 05:30:12 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0245BC061570
-        for <linux-pwm@vger.kernel.org>; Sat, 30 Oct 2021 02:27:42 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mgkeJ-0008RA-Kh; Sat, 30 Oct 2021 11:27:39 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mgkeI-00087r-Od; Sat, 30 Oct 2021 11:27:38 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mgkeI-0007Py-Nb; Sat, 30 Oct 2021 11:27:38 +0200
-Date:   Sat, 30 Oct 2021 11:27:36 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Steev Klimaszewski <steev@kali.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v7 1/3] pwm: Introduce single-PWM of_xlate function
-Message-ID: <20211030092736.eam4ahzimiew7erg@pengutronix.de>
-References: <20211025170925.3096444-1-bjorn.andersson@linaro.org>
- <65243a98-61b9-3311-f41d-fa4782448baa@kali.org>
- <CAG3jFytmcFcA5W3vmcpWTWrc36-YFMPZ1wAB8gAJfiHHLWmaCA@mail.gmail.com>
+        with ESMTP id S231792AbhJ3LXc (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 30 Oct 2021 07:23:32 -0400
+Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62DD7C061570
+        for <linux-pwm@vger.kernel.org>; Sat, 30 Oct 2021 04:21:02 -0700 (PDT)
+Received: by mail-il1-x12b.google.com with SMTP id x9so5753280ilu.6
+        for <linux-pwm@vger.kernel.org>; Sat, 30 Oct 2021 04:21:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=usp.br; s=usp-google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=fzrPWdrYK+uGIZVarnBib+gCZxAPn922Wg+8PFfxUYY=;
+        b=hV54KDjgIxufXu2nlKaNsKyOfyFdkMFTxuESLgZDLcZGzORWjUCZGPmiV36nrZifXu
+         now2fZpFn3iBm2cOniogtpXbg8JKzpgy0sNyFGPQ6DWOfcXOq/DrhNyEai+pq7ci6Q5O
+         En4ot6pZd2hSDgERZPTSsFvefeTdLrWRSecqHS4P18dD7AI+1Axvh0gFvmxuLs1V8O2q
+         fXkXKIEVepkOWH3Tc97RBf2XeS2FGpWv8TmNjD4h8+4OjVAhgLfnSZL5LuJMCf0Hs7dW
+         PdpQGH6h462Xl37NZbF/3BtDMB8v1Qu3SVVdLF7ZunpEVPK/buy3zAJZNkrFx/EX51hx
+         9MdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fzrPWdrYK+uGIZVarnBib+gCZxAPn922Wg+8PFfxUYY=;
+        b=5ku/X0iuAMnV51wFwY3wy41VJNHi1bm1tzVaC3LseciFKxTj7GbtChHDz/h8fSAIfF
+         XNns2mtjPmxI/4emYHydx0fuFTuPgpUa0PNZoXI+6yDSzDAjM9U70+QmAUE7xYrR59Yn
+         NQoZLCEZ0CWWfdUzTgD4r/KjyTYT33TxQ7YNotS8Ww8nFGGwRXh6BkrotyKnGoWhOVso
+         CoqBJfBHpzp4v7zfOGR/R9c8SkxSXWJ9/7KEIx/nza/bXP9eElIP4eSPlkqG4YxLsPw5
+         wg6xoIhfKegxBduv44JVdtPQRT3Nx+fO9NUTbBicmz6xRQFZOZ7JGUYPLf34Uw78DqxA
+         xXuw==
+X-Gm-Message-State: AOAM531FweP/TeF5Ak6KIC1F+L5flfZy1OKewbPr86otvMOVhpis8CUl
+        cEFUWDVOOwwaaL2aI5Csn6SQDd3cy5MRo47C7lm+tA==
+X-Google-Smtp-Source: ABdhPJw/kzqj41zeqc4IU3MmFJ/HjzaIYIBb1AsGPPQtCFEpf+XRw7egBEmj0MwxE2dp/sHgp6UXzfxES4guaa1wvQw=
+X-Received: by 2002:a05:6e02:2187:: with SMTP id j7mr6049830ila.323.1635592861248;
+ Sat, 30 Oct 2021 04:21:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cwmpryyacyfxuvhj"
-Content-Disposition: inline
-In-Reply-To: <CAG3jFytmcFcA5W3vmcpWTWrc36-YFMPZ1wAB8gAJfiHHLWmaCA@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+References: <YXqv339PJTHcGxJg@fedora> <20211029111232.soknq7mu3r65laar@pengutronix.de>
+In-Reply-To: <20211029111232.soknq7mu3r65laar@pengutronix.de>
+From:   =?UTF-8?B?TWHDrXJhIENhbmFs?= <maira.canal@usp.br>
+Date:   Sat, 30 Oct 2021 08:20:50 -0300
+Message-ID: <CAH7FV3md_SBTHu9sTp-hLtLd0ERBdXx8HzM=W9hF79X5V=twQA@mail.gmail.com>
+Subject: Re: [PATCH] media: ir-rx51: Switch to atomic PWM API
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Sean Young <sean@mess.org>, mchehab@kernel.org,
+        thierry.reding@gmail.com, Lee Jones <lee.jones@linaro.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hello Uwe,
 
---cwmpryyacyfxuvhj
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Doing this here introduces a change in behaviour. Better do this after
+> pwm_get().
 
-Hello,
+I didn't really get this feedback. Isn't pwm_init_state after pwm_get?
+Or should it be before the error treatment of pwm_get?
 
-On Wed, Oct 27, 2021 at 05:06:02PM +0200, Robert Foss wrote:
-> On Tue, 26 Oct 2021 at 19:21, Steev Klimaszewski <steev@kali.org> wrote:
-> >
-> >
-> > On 10/25/21 12:09 PM, Bjorn Andersson wrote:
-> > > The existing pxa driver and the upcoming addition of PWM support in t=
-he
-> > > TI sn565dsi86 DSI/eDP bridge driver both has a single PWM channel and
-> > > thereby a need for a of_xlate function with the period as its single
-> > > argument.
-> > >
-> > > Introduce a common helper function in the core that can be used as
-> > > of_xlate by such drivers and migrate the pxa driver to use this.
-> > >
-> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > > Tested-by: Steev Klimaszewski <steev@kali.org>
-> > > ---
-> > >
-> [...]
->=20
-> Applied to drm-misc-next.
+> Conceptually this last hunk belongs in a separate patch. And you don't
+> need to repeat PTR_ERR(pwm), as dev_err_probe already emits this
+> information. So
+>
+>         return dev_err_probe(&dev->dev, PTR_ERR(pwm), "pwm_get failed\n")=
+;
+>
+> should be fine.
 
-This is now 3ab7b6ac5d829e60c3b89d415811ff1c9f358c8e in next, the Link:
-added in the commit trailer looks as follows:
+Thank you for the suggestion! I will fix it on v2.
 
-	Link: https://patchwork.freedesktop.org/patch/msgid/20211025170925.3096444=
--1-bjorn.andersson@linaro.org
-
-but this link doesn't work, for me at least. I wonder what's wrong with
-it. If you want to fix it and rewrite the commit, you can also drop the
-duplicated "Tested-by: Steev Klimaszewski <steev@kali.org>".
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---cwmpryyacyfxuvhj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmF9EAQACgkQwfwUeK3K
-7AkmVwf/UC0/COH40s3PAmZkJX3EzO2LlqeXFJDYvZZX4T58leO83achdFzOWtXi
-F9kK3WlNNmggZ32zqDHV1HOE42tnn1wLXc7xqevjiIYWzRrHAlW5bXcRQT1ndDjo
-Tiloo0fTBsi24lmuvWeWPVifk77ZMY4eB/dVovyDilTgvuxo9hf55URQTgnSpD8o
-DVToFokj6ckIESylQgJXCKxiM8vqFSIYQFXSqLFDW/FVYDmA9eVlAeme0bjeHv6p
-3mWJ+rC2A7dNz65qYqPvqM02uy0+2o1tMJ3G/n+idjv16M8areb0Owvh47r1q7/O
-H4TZl0wjy5y8SbZ2l1lo8EaWkVE6pA==
-=KqMO
------END PGP SIGNATURE-----
-
---cwmpryyacyfxuvhj--
+Ma=C3=ADra
