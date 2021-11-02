@@ -2,127 +2,114 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9B58442A65
-	for <lists+linux-pwm@lfdr.de>; Tue,  2 Nov 2021 10:28:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DAD9442CC6
+	for <lists+linux-pwm@lfdr.de>; Tue,  2 Nov 2021 12:37:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229800AbhKBJat (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 2 Nov 2021 05:30:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58024 "EHLO
+        id S230411AbhKBLk0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 2 Nov 2021 07:40:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229770AbhKBJas (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 2 Nov 2021 05:30:48 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E00BC061764
-        for <linux-pwm@vger.kernel.org>; Tue,  2 Nov 2021 02:28:13 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mhq5T-000351-GW; Tue, 02 Nov 2021 10:28:11 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mhq5O-0008TO-HY; Tue, 02 Nov 2021 10:28:06 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mhq5O-0005Hj-Gf; Tue, 02 Nov 2021 10:28:06 +0100
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        Tony Prisk <linux@prisktech.co.nz>
-Subject: [PATCH 2/2] pwm: vt8500: Rename pwm_busy_wait() to make it obviously driver-specific
-Date:   Tue,  2 Nov 2021 10:28:04 +0100
-Message-Id: <20211102092804.296089-3-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20211102092804.296089-1-u.kleine-koenig@pengutronix.de>
-References: <20211102092804.296089-1-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S230128AbhKBLk0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 2 Nov 2021 07:40:26 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D28BC061714
+        for <linux-pwm@vger.kernel.org>; Tue,  2 Nov 2021 04:37:51 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id t21so15633854plr.6
+        for <linux-pwm@vger.kernel.org>; Tue, 02 Nov 2021 04:37:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+LcalwcS+7iwU2Z06DjsWxGkhOqaOpX2CeRBZg6uNxI=;
+        b=u1T+gyQ5y9utIQAL69osfNb3bY8W18tAEGHKXB/yOTt4z6DVkjo0Tm9BVQLQYlQvmi
+         +RyAD+cAN0ZnryDgfEwhDomhWP5aHyg5Ddw+FwF0gZJTl/XAP/yxFxTYru4YWi1yyGvJ
+         Nyj3SvEFcTOcvzmYNQ0CoFLHMwyXenD/+RlY68vQyVJLDAzJrMq+x/p9kEwcpaxEik6P
+         WbrrqPpjnKVAB9bhIp9NOjCOgDYCVxAD9qfdxmvVHjjyUpYw53WETAy8gUPku20d08EZ
+         Mjm5PXINnW3OWZm3X+mTRbx7nnM77l1Hnq9RZ5CYtf9EDulCgVA5ot0Bz2ITNNcoxFE0
+         B+Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+LcalwcS+7iwU2Z06DjsWxGkhOqaOpX2CeRBZg6uNxI=;
+        b=swOZsRmKl/VfL3nR5GwIC23CS1nFwBy1v9RdXeq9d3G1tDWPUVW1pr30vgA9NhEI1b
+         sbvtYxB2/1w09kvYkVKA+Bl6zlDqpQzoThNaAC4Awv2iDGVS9yU4i3lf7W2ylLele0jj
+         JfXVm1YNu3741grCbGf3B3b7d/+AOzzVmxKIJLz+gMuTZauLgK2JY5T6OnG3jp19kI/n
+         aZ6InSfpcdbzVknmTHxIHmKv6jlrb3bJFUGSqx1J9dbDDeISsD3fB5OBFybpRtJo12xs
+         zb7uOTIkb42li1wGk2XaJOWBaNX8dgUeEet9bfmwEkp5uhSfjbT/G6UqsrQIZWEqVZEp
+         86yw==
+X-Gm-Message-State: AOAM532sUNVA7M8GKst910K58rxeZ4jEagP+QH4aMgpnTRBDi8WWelWS
+        mLmZX5HAt0qHsrfSA7cYitlktr7OJvHz7OLGJLKnmg==
+X-Google-Smtp-Source: ABdhPJxlukTujJboXT4S57TaNSXOyAMkRW6XndNn4eisc8fX7Oczi13MU70tOQlUfeLfplvXUQ5IVMFqLcPTtBJr/Uo=
+X-Received: by 2002:a17:90b:3149:: with SMTP id ip9mr1957728pjb.232.1635853071054;
+ Tue, 02 Nov 2021 04:37:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Patch-Hashes: v=1; h=sha256; i=RSm0G5TTKqzOP1s+jhGcVsSt6IapFECC90REsA+WAy8=; m=d6RErcUVDCcRec6zPTV53kL8mx/CF6lAzfW0cgFWiJ8=; p=0yKl+6DiUAx/PLFSZbL97vAoLsERfsHj3ScdmziqJlc=; g=6d9377b080ad10fe932a6d57a1f0d8ed8b949bba
-X-Patch-Sig: m=pgp; i=u.kleine-koenig@pengutronix.de; s=0x0D2511F322BFAB1C1580266BE2DCDD9132669BD6; b=iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmGBBKAACgkQwfwUeK3K7AlYfgf/eBI dfvYhuQe2WR1lU2V69vae89IUvGnqJ1Eh1Jyf6/hFpu5cTbziopfpWgp36XKHQeWQL71UeTDBFX3y ae9uSw6pn2h+mamDpBi+/OdeD8HaFpE/4qoELASeV2s21s1A2cjikpx0g1sRLqGOd9243CX0W9Ax7 vlph3AzFOQZeta7bMQi6PzZPyjhUK7a3cU3Vb3zmSCIftFEZKyfyCdcbSmB10oCKFUJCgy92cRuwC 4wD1HFbYyLjJLnPDbEI44r6j3Vgf/oO0riZxw8hOLbvsBXvD1PKeJdUZ4G6FENDdA7SRXUCfdHBIB ZYpLsZ1deMTKUbl0nR2KTbYPl7wQrAA==
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+References: <20211025170925.3096444-1-bjorn.andersson@linaro.org>
+ <65243a98-61b9-3311-f41d-fa4782448baa@kali.org> <CAG3jFytmcFcA5W3vmcpWTWrc36-YFMPZ1wAB8gAJfiHHLWmaCA@mail.gmail.com>
+ <20211030092736.eam4ahzimiew7erg@pengutronix.de>
+In-Reply-To: <20211030092736.eam4ahzimiew7erg@pengutronix.de>
+From:   Robert Foss <robert.foss@linaro.org>
+Date:   Tue, 2 Nov 2021 12:37:39 +0100
+Message-ID: <CAG3jFyuYE_=73LfkQ7KLL+6ZvrGAORT8z1Cw1kmssgn7ewTENQ@mail.gmail.com>
+Subject: Re: [PATCH v7 1/3] pwm: Introduce single-PWM of_xlate function
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Steev Klimaszewski <steev@kali.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The pwm_ prefix suggests that pwm_busy_wait() is a function provided by
-the pwm core. Use the otherwise consistently used driver prefix for this
-function, too.
+Hey Uwe
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pwm/pwm-vt8500.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+On Sat, 30 Oct 2021 at 11:27, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello,
+>
+> On Wed, Oct 27, 2021 at 05:06:02PM +0200, Robert Foss wrote:
+> > On Tue, 26 Oct 2021 at 19:21, Steev Klimaszewski <steev@kali.org> wrote=
+:
+> > >
+> > >
+> > > On 10/25/21 12:09 PM, Bjorn Andersson wrote:
+> > > > The existing pxa driver and the upcoming addition of PWM support in=
+ the
+> > > > TI sn565dsi86 DSI/eDP bridge driver both has a single PWM channel a=
+nd
+> > > > thereby a need for a of_xlate function with the period as its singl=
+e
+> > > > argument.
+> > > >
+> > > > Introduce a common helper function in the core that can be used as
+> > > > of_xlate by such drivers and migrate the pxa driver to use this.
+> > > >
+> > > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > > Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> > > > Tested-by: Steev Klimaszewski <steev@kali.org>
+> > > > ---
+> > > >
+> > [...]
+> >
+> > Applied to drm-misc-next.
+>
+> This is now 3ab7b6ac5d829e60c3b89d415811ff1c9f358c8e in next, the Link:
+> added in the commit trailer looks as follows:
+>
+>         Link: https://patchwork.freedesktop.org/patch/msgid/2021102517092=
+5.3096444-1-bjorn.andersson@linaro.org
+>
+> but this link doesn't work, for me at least. I wonder what's wrong with
+> it. If you want to fix it and rewrite the commit, you can also drop the
+> duplicated "Tested-by: Steev Klimaszewski <steev@kali.org>".
 
-diff --git a/drivers/pwm/pwm-vt8500.c b/drivers/pwm/pwm-vt8500.c
-index 3203ec1b0d24..7170a315535b 100644
---- a/drivers/pwm/pwm-vt8500.c
-+++ b/drivers/pwm/pwm-vt8500.c
-@@ -56,7 +56,7 @@ struct vt8500_chip {
- #define to_vt8500_chip(chip)	container_of(chip, struct vt8500_chip, chip)
- 
- #define msecs_to_loops(t) (loops_per_jiffy / 1000 * HZ * t)
--static inline void pwm_busy_wait(struct vt8500_chip *vt8500, int nr, u8 bitmask)
-+static inline void vt8500_pwm_busy_wait(struct vt8500_chip *vt8500, int nr, u8 bitmask)
- {
- 	int loops = msecs_to_loops(10);
- 	u32 mask = bitmask << (nr << 8);
-@@ -106,18 +106,18 @@ static int vt8500_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	dc = div64_u64(c, period_ns);
- 
- 	writel(prescale, vt8500->base + REG_SCALAR(pwm->hwpwm));
--	pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_SCALAR_UPDATE);
-+	vt8500_pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_SCALAR_UPDATE);
- 
- 	writel(pv, vt8500->base + REG_PERIOD(pwm->hwpwm));
--	pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_PERIOD_UPDATE);
-+	vt8500_pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_PERIOD_UPDATE);
- 
- 	writel(dc, vt8500->base + REG_DUTY(pwm->hwpwm));
--	pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_DUTY_UPDATE);
-+	vt8500_pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_DUTY_UPDATE);
- 
- 	val = readl(vt8500->base + REG_CTRL(pwm->hwpwm));
- 	val |= CTRL_AUTOLOAD;
- 	writel(val, vt8500->base + REG_CTRL(pwm->hwpwm));
--	pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_CTRL_UPDATE);
-+	vt8500_pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_CTRL_UPDATE);
- 
- 	clk_disable(vt8500->clk);
- 	return 0;
-@@ -138,7 +138,7 @@ static int vt8500_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	val = readl(vt8500->base + REG_CTRL(pwm->hwpwm));
- 	val |= CTRL_ENABLE;
- 	writel(val, vt8500->base + REG_CTRL(pwm->hwpwm));
--	pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_CTRL_UPDATE);
-+	vt8500_pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_CTRL_UPDATE);
- 
- 	return 0;
- }
-@@ -151,7 +151,7 @@ static void vt8500_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	val = readl(vt8500->base + REG_CTRL(pwm->hwpwm));
- 	val &= ~CTRL_ENABLE;
- 	writel(val, vt8500->base + REG_CTRL(pwm->hwpwm));
--	pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_CTRL_UPDATE);
-+	vt8500_pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_CTRL_UPDATE);
- 
- 	clk_disable(vt8500->clk);
- }
-@@ -171,7 +171,7 @@ static int vt8500_pwm_set_polarity(struct pwm_chip *chip,
- 		val &= ~CTRL_INVERT;
- 
- 	writel(val, vt8500->base + REG_CTRL(pwm->hwpwm));
--	pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_CTRL_UPDATE);
-+	vt8500_pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_CTRL_UPDATE);
- 
- 	return 0;
- }
--- 
-2.30.2
+Weirdly patchwork.fd.o[1] doesn't seem to have the series, but does
+have previous versions.
 
+[1] https://patchwork.freedesktop.org/project/dri-devel/patches/?submitter=
+=3D&state=3D*&q=3D_xlate&archive=3Dboth&delegate=3D
