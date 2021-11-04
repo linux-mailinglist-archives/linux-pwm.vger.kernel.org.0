@@ -2,45 +2,52 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E619444F64
-	for <lists+linux-pwm@lfdr.de>; Thu,  4 Nov 2021 07:56:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CFBEF445115
+	for <lists+linux-pwm@lfdr.de>; Thu,  4 Nov 2021 10:28:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230202AbhKDG6o (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 4 Nov 2021 02:58:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53990 "EHLO
+        id S230497AbhKDJan (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 4 Nov 2021 05:30:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230152AbhKDG6l (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 4 Nov 2021 02:58:41 -0400
+        with ESMTP id S230252AbhKDJam (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 4 Nov 2021 05:30:42 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C2ECC061203
-        for <linux-pwm@vger.kernel.org>; Wed,  3 Nov 2021 23:56:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08FC3C061714
+        for <linux-pwm@vger.kernel.org>; Thu,  4 Nov 2021 02:28:04 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1miWf9-00025B-Eb; Thu, 04 Nov 2021 07:55:51 +0100
+        id 1miZ2G-0001z0-3I; Thu, 04 Nov 2021 10:27:52 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1miWf7-0004jB-Mt; Thu, 04 Nov 2021 07:55:49 +0100
+        id 1miZ2D-0004vs-Gv; Thu, 04 Nov 2021 10:27:49 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1miWf7-0005vm-Ln; Thu, 04 Nov 2021 07:55:49 +0100
-Date:   Thu, 4 Nov 2021 07:55:46 +0100
+        id 1miZ2D-0006bU-Fh; Thu, 04 Nov 2021 10:27:49 +0100
+Date:   Thu, 4 Nov 2021 10:27:49 +0100
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     =?utf-8?B?TWHDrXJh?= Canal <maira.canal@usp.br>
-Cc:     daniel.thompson@linaro.org, lee.jones@linaro.org,
-        jingoohan1@gmail.com, thierry.reding@gmail.com,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v5] backlight: lp855x: Switch to atomic PWM API
-Message-ID: <20211104065546.dou3gwyrvdby5zec@pengutronix.de>
-References: <YYLI/b7KcqM8wcEB@fedora>
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Balaji Prakash J <bjagadee@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robert Marko <robert.marko@sartura.hr>,
+        Kathiravan T <kathirav@codeaurora.org>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v8 1/4] dt-bindings: mfd: qcom,tcsr: document ipq6018
+ compatible
+Message-ID: <20211104092749.g5o77cyutustnnxq@pengutronix.de>
+References: <5c95bcf62a9d08208a7da19f0b1cec0689502b9a.1630323987.git.baruch@tkos.co.il>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sfleujravmqpoch7"
+        protocol="application/pgp-signature"; boundary="axfpnblzfqfbqyz7"
 Content-Disposition: inline
-In-Reply-To: <YYLI/b7KcqM8wcEB@fedora>
+In-Reply-To: <5c95bcf62a9d08208a7da19f0b1cec0689502b9a.1630323987.git.baruch@tkos.co.il>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -50,79 +57,35 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---sfleujravmqpoch7
+--axfpnblzfqfbqyz7
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 03, 2021 at 02:38:05PM -0300, Ma=EDra Canal wrote:
-> Remove legacy PWM interface (pwm_config, pwm_enable, pwm_disable) and
-> replace it for the atomic PWM API.
->=20
-> Signed-off-by: Ma=EDra Canal <maira.canal@usp.br>
+On Mon, Aug 30, 2021 at 02:46:24PM +0300, Baruch Siach wrote:
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
 > ---
-> V1 -> V2: Initialize variable and simplify conditional loop
-> V2 -> V3: Fix assignment of NULL variable
-> V3 -> V4: Replace division for pwm_set_relative_duty_cycle
-> V4 -> V5: Fix overwrite of state.period
-> ---
->  drivers/video/backlight/lp855x_bl.c | 21 +++++++++------------
->  1 file changed, 9 insertions(+), 12 deletions(-)
+>  Documentation/devicetree/bindings/mfd/qcom,tcsr.txt | 1 +
+>  1 file changed, 1 insertion(+)
 >=20
-> diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/backligh=
-t/lp855x_bl.c
-> index e94932c69f54..e70a7b72dcf3 100644
-> --- a/drivers/video/backlight/lp855x_bl.c
-> +++ b/drivers/video/backlight/lp855x_bl.c
-> @@ -233,9 +233,8 @@ static int lp855x_configure(struct lp855x *lp)
+> diff --git a/Documentation/devicetree/bindings/mfd/qcom,tcsr.txt b/Docume=
+ntation/devicetree/bindings/mfd/qcom,tcsr.txt
+> index e90519d566a3..c5f4f0ddfcc3 100644
+> --- a/Documentation/devicetree/bindings/mfd/qcom,tcsr.txt
+> +++ b/Documentation/devicetree/bindings/mfd/qcom,tcsr.txt
+> @@ -6,6 +6,7 @@ registers via syscon.
 > =20
->  static void lp855x_pwm_ctrl(struct lp855x *lp, int br, int max_br)
->  {
-> -	unsigned int period =3D lp->pdata->period_ns;
-> -	unsigned int duty =3D br * period / max_br;
->  	struct pwm_device *pwm;
-> +	struct pwm_state state;
-> =20
->  	/* request pwm device with the consumer name */
->  	if (!lp->pwm) {
-> @@ -245,18 +244,16 @@ static void lp855x_pwm_ctrl(struct lp855x *lp, int =
-br, int max_br)
-> =20
->  		lp->pwm =3D pwm;
-> =20
-> -		/*
-> -		 * FIXME: pwm_apply_args() should be removed when switching to
-> -		 * the atomic PWM API.
-> -		 */
-> -		pwm_apply_args(pwm);
-> +		pwm_init_state(lp->pwm, &state);
-> +		state.period =3D lp->pdata->period_ns;
-> +	} else {
-> +		pwm_get_state(lp->pwm, &state);
->  	}
-> =20
-> -	pwm_config(lp->pwm, duty, period);
-> -	if (duty)
-> -		pwm_enable(lp->pwm);
-> -	else
-> -		pwm_disable(lp->pwm);
-> +	pwm_set_relative_duty_cycle(&state, br, max_br);
-> +	state.enabled =3D state.duty_cycle;
-> +
-> +	pwm_apply_state(lp->pwm, &state);
+>  Required properties:
+>  - compatible:	Should contain:
+> +		"qcom,tcsr-ipq6018", "syscon", "simple-mfd" for IPQ6018
+>  		"qcom,tcsr-ipq8064", "syscon" for IPQ8064
+>  		"qcom,tcsr-apq8064", "syscon" for APQ8064
+>  		"qcom,tcsr-msm8660", "syscon" for MSM8660
 
-Looks mostly right, but only on a deeper look into the driver. The
-reason is that in the unmodified code there is always explicitly
-period=3Dlp->pdata->period_ns; while after your change the period is unset
-(and so the previously set period is used).
-
-So either mention in the change log that this driver doesn't modify the
-pwm settings in other places or preferably pick an equivalent conversion
-(plus maybe an optimisation in a separate patch).
-
-If you go the "equivalent conversion" path, please note that
-pwm_set_relative_duty_cycle() isn't equivalent to br * period / max_br,
-as it implements a different rounding.
+I wonder about why qcom,tcsr-ipq6018 should use simple-mfd, but the
+others don't. Assuming there is a deeper reason, mentioning that in the
+commit log (or depending on the reason maybe even in the binding?)
+sounds sensible.
 
 Best regards
 Uwe
@@ -132,19 +95,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---sfleujravmqpoch7
+--axfpnblzfqfbqyz7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmGDg+8ACgkQwfwUeK3K
-7AlpqwgAhJ3hLGHBwYaDtwQGm/cqztts3RbonqNohI6IhObp5RVnitTQXd8PYkob
-+IDHUt5Bm+Q+0onBaFnklhZXNsBQYsQo1cJUAtl1IRLLJDGPOzcD7Yp5wJyb6LXN
-IBFxTR9CsnHweeTlVh09Fucn1ZMQc5TPFDWEE7iJc/9N5qm+IBBCSGiH/RFS34rD
-DWIajVqwkFQ8fMkrhHLb+rMwX6oaicIRYtSRBwi3mGTZveudu1w/5ZOzN/KCpBbh
-UkKEQ4oHVvcDyB9dobQqE9c/4GYbeTy6WFMgv6ROjWy88yoW8N3EtsQwHhg1Vocx
-pj2xjlI7C3iHr4CABid+ptgNTJaTng==
-=jfLr
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmGDp5IACgkQwfwUeK3K
+7AlRiwgAnht5hNJHsev9Rk8E8Qo0hnqepiYdg85X6ffdIPRc4nHYDXRsUZzk4Lh0
+kDiboeyCEtTPF7M5ZxrcZTPc7ImsYdv/kxzcY9M/odxSHCYuGEI3UuTLqMcU53Mx
+ivoxb1jzA38DrMPX/Ux3nXiTVFJGsvykArpye+GibOmZtD5VYncGRF6TKQYOcWe1
+Ab2Fnb7CM9Ev1/sWnG7GUHomADQkUe9P9XKRN1HN34MDxB6mWRG668SZaFbUiNwM
+kOV4rZ1QjXESzK14qNZmLzHSOoKWrzoI3sk3Jbo3tlwDDqje53U2s2WTaSIVlc19
+R17Y3Xf0XPKnmD1sY+jdtlvUz7hRjQ==
+=2T9n
 -----END PGP SIGNATURE-----
 
---sfleujravmqpoch7--
+--axfpnblzfqfbqyz7--
