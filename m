@@ -2,155 +2,124 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C8934458D9
-	for <lists+linux-pwm@lfdr.de>; Thu,  4 Nov 2021 18:43:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE6D9445924
+	for <lists+linux-pwm@lfdr.de>; Thu,  4 Nov 2021 18:59:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232941AbhKDRqT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 4 Nov 2021 13:46:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60294 "EHLO
+        id S234018AbhKDSBh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 4 Nov 2021 14:01:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232262AbhKDRqR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 4 Nov 2021 13:46:17 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4D48C061714
-        for <linux-pwm@vger.kernel.org>; Thu,  4 Nov 2021 10:43:39 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1miglx-00078L-TN; Thu, 04 Nov 2021 18:43:33 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1miglw-0005cC-3C; Thu, 04 Nov 2021 18:43:32 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1miglw-0008JO-1y; Thu, 04 Nov 2021 18:43:32 +0100
-Date:   Thu, 4 Nov 2021 18:43:25 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     =?utf-8?B?TWHDrXJh?= Canal <maira.canal@usp.br>
-Cc:     sean@mess.org, mchehab@kernel.org, thierry.reding@gmail.com,
-        lee.jones@linaro.org, linux-media@vger.kernel.org,
+        with ESMTP id S232141AbhKDSBY (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 4 Nov 2021 14:01:24 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3C22C061203
+        for <linux-pwm@vger.kernel.org>; Thu,  4 Nov 2021 10:58:45 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id w4so3831766qtn.2
+        for <linux-pwm@vger.kernel.org>; Thu, 04 Nov 2021 10:58:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=usp.br; s=usp-google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=OBD4zrSh/ePkUnk6YwhNCFUdHCAqcEy6CNxm9jGbw1E=;
+        b=efsmc+I8Gu0dvNcX1qm770XfceWiNa3/PjnuBuaj57Eve+m8Ihp2497SZvjhu0wk+I
+         dBQdiRuVdsRdQ88zPoJo215J2XIWyysoq3/C4itTTagxytVynpgN3E3C01HBYpWcQzN5
+         d651ofwEbdP+eJ9uYCa6p+0eOB7ZZz5wm2FnG6H2Ldln9MbupAOVrP+0UJ0s8ctCwkok
+         60OXulTTh0i8LdggtkZJtDa7ImVwwg/Tal7donT2Z5PyyPMMA481LCl7tPK3lKCJ70hr
+         V6V0S+cKLvqA04QNH/broFMTpoRi2uaIy4e+50su1yh6ZIePmaXw+RiEPMfOArYRdFDA
+         qufA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding;
+        bh=OBD4zrSh/ePkUnk6YwhNCFUdHCAqcEy6CNxm9jGbw1E=;
+        b=c4Mm+MPhFAGmZ8O2YOLFyjHlPdKjsQMrqyt/Z7+WjU7uPc+4W3lMnMe0BchSU9sT8V
+         /P9OgTLf5JOx2qYSXXVHUvEp4Eha1G5DxPq8OGyaTPWOdz/21YM5R3ZdejiiO60tUA0z
+         01+hu5GB+mpw9j167jvVk/wOZk8CorVsecyzxa3DwGnzq6bAuIodp0Cjegf7sOmNVSL0
+         2AFJl9KaUg4K+Ssq8W+W1cTWtYWuOm3QTejyYwoIzwY278T7cXpuoNmrec2r6o4kBjq3
+         992rSAiIJAP+tgRnlLGtsE6bZS4ntRkdFBdr9AKtjsSIq2HMqvw6GytWYjipjCb4BJU7
+         +/5A==
+X-Gm-Message-State: AOAM533tnjaT8Le/B5EWsXAAlPRTwpS1xDcBkSq3uEu64NQUq5iewQjy
+        msm9ZtU2FWnaIBzT6OCGd0IxFg==
+X-Google-Smtp-Source: ABdhPJz1exMNa5eZlL8wV3nYiOktH4b5Sb1c9IjsFUvBKk4Szp0YFYGCfYBishzhorgUT7jfV+ZwxQ==
+X-Received: by 2002:a05:622a:606:: with SMTP id z6mr57105056qta.253.1636048724933;
+        Thu, 04 Nov 2021 10:58:44 -0700 (PDT)
+Received: from fedora ([187.64.134.142])
+        by smtp.gmail.com with ESMTPSA id 13sm3937167qkc.40.2021.11.04.10.58.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Nov 2021 10:58:44 -0700 (PDT)
+Date:   Thu, 4 Nov 2021 14:58:38 -0300
+From:   =?iso-8859-1?Q?Ma=EDra?= Canal <maira.canal@usp.br>
+To:     daniel.thompson@linaro.org, lee.jones@linaro.org,
+        jingoohan1@gmail.com, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de
+Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v2] media: ir-rx51: Switch to atomic PWM API
-Message-ID: <20211104174325.babrgtoowddzlwtj@pengutronix.de>
-References: <YX8VkdCAe6coHC4w@fedora>
- <20211104152913.uqmmk6z7vppu5pxk@pengutronix.de>
+Subject: [PATCH v6] backlight: lp855x: Switch to atomic PWM API
+Message-ID: <YYQfThRqabp4A7Dz@fedora>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lgsivpieqjcjq3ja"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20211104152913.uqmmk6z7vppu5pxk@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Remove legacy PWM interface (pwm_config, pwm_enable, pwm_disable) and
+replace it for the atomic PWM API.
 
---lgsivpieqjcjq3ja
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Maíra Canal <maira.canal@usp.br>
+---
+V1 -> V2: Initialize variable and simplify conditional loop
+V2 -> V3: Fix assignment of NULL variable
+V3 -> V4: Replace division for pwm_set_relative_duty_cycle
+V4 -> V5: Fix overwrite of state.period
+V5 -> V6: Fix duty cycle rounding and set period outside conditional loop
+---
+ drivers/video/backlight/lp855x_bl.c | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
-On Thu, Nov 04, 2021 at 04:29:13PM +0100, Uwe Kleine-K=F6nig wrote:
-> On Sun, Oct 31, 2021 at 07:15:45PM -0300, Ma=EDra Canal wrote:
-> > Remove legacy PWM interface (pwm_config, pwm_enable, pwm_disable) and
-> > replace it for the atomic PWM API.
-> >=20
-> > Signed-off-by: Ma=EDra Canal <maira.canal@usp.br>
-> > ---
-> > V1 -> V2: remove conceptually wrong chunk of code and correct the posit=
-ion
-> > of pwm_init_state function
-> > ---
-> >  drivers/media/rc/ir-rx51.c | 16 +++++++++-------
-> >  1 file changed, 9 insertions(+), 7 deletions(-)
-> >=20
-> > diff --git a/drivers/media/rc/ir-rx51.c b/drivers/media/rc/ir-rx51.c
-> > index a0d9c02a7588..41d4a4338072 100644
-> > --- a/drivers/media/rc/ir-rx51.c
-> > +++ b/drivers/media/rc/ir-rx51.c
-> > @@ -19,6 +19,7 @@
-> >  struct ir_rx51 {
-> >  	struct rc_dev *rcdev;
-> >  	struct pwm_device *pwm;
-> > +	struct pwm_state *state;
-> >  	struct hrtimer timer;
-> >  	struct device	     *dev;
-> >  	wait_queue_head_t     wqueue;
-> > @@ -32,22 +33,22 @@ struct ir_rx51 {
-> > =20
-> >  static inline void ir_rx51_on(struct ir_rx51 *ir_rx51)
-> >  {
-> > -	pwm_enable(ir_rx51->pwm);
-> > +	ir_rx51->state->enabled =3D true;
-> > +	pwm_apply_state(ir_rx51->pwm, ir_rx51->state);
-> >  }
-> > =20
-> >  static inline void ir_rx51_off(struct ir_rx51 *ir_rx51)
-> >  {
-> > -	pwm_disable(ir_rx51->pwm);
-> > +	ir_rx51->state->enabled =3D false;
-> > +	pwm_apply_state(ir_rx51->pwm, ir_rx51->state);
-> >  }
-> > =20
-> >  static int init_timing_params(struct ir_rx51 *ir_rx51)
-> >  {
-> > -	struct pwm_device *pwm =3D ir_rx51->pwm;
-> > -	int duty, period =3D DIV_ROUND_CLOSEST(NSEC_PER_SEC, ir_rx51->freq);
-> > +	struct pwm_state *state =3D ir_rx51->state;
-> > =20
-> > -	duty =3D DIV_ROUND_CLOSEST(ir_rx51->duty_cycle * period, 100);
-> > -
-> > -	pwm_config(pwm, duty, period);
-> > +	state->period =3D DIV_ROUND_CLOSEST(NSEC_PER_SEC, ir_rx51->freq);
-> > +	pwm_set_relative_duty_cycle(state, ir_rx51->duty_cycle, 100);
-> > =20
-> >  	return 0;
-> >  }
-> > @@ -242,6 +243,7 @@ static int ir_rx51_probe(struct platform_device *de=
-v)
-> > =20
-> >  	/* Use default, in case userspace does not set the carrier */
-> >  	ir_rx51.freq =3D DIV_ROUND_CLOSEST_ULL(pwm_get_period(pwm), NSEC_PER_=
-SEC);
-> > +	pwm_init_state(pwm, ir_rx51.state);
-> >  	pwm_put(pwm);
-> > =20
->=20
-> Orthogonal to this patch I wonder why probe calls pwm_get() and
-> pwm_put(), just to have another call to pwm_get() in the open callback.
->=20
-> Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/backlight/lp855x_bl.c
+index e94932c69f54..8f893cf0cfde 100644
+--- a/drivers/video/backlight/lp855x_bl.c
++++ b/drivers/video/backlight/lp855x_bl.c
+@@ -233,9 +233,8 @@ static int lp855x_configure(struct lp855x *lp)
+ 
+ static void lp855x_pwm_ctrl(struct lp855x *lp, int br, int max_br)
+ {
+-	unsigned int period = lp->pdata->period_ns;
+-	unsigned int duty = br * period / max_br;
+ 	struct pwm_device *pwm;
++	struct pwm_state state;
+ 
+ 	/* request pwm device with the consumer name */
+ 	if (!lp->pwm) {
+@@ -245,18 +244,16 @@ static void lp855x_pwm_ctrl(struct lp855x *lp, int br, int max_br)
+ 
+ 		lp->pwm = pwm;
+ 
+-		/*
+-		 * FIXME: pwm_apply_args() should be removed when switching to
+-		 * the atomic PWM API.
+-		 */
+-		pwm_apply_args(pwm);
++		pwm_init_state(lp->pwm, &state);
++	} else {
++		pwm_get_state(lp->pwm, &state);
+ 	}
+ 
+-	pwm_config(lp->pwm, duty, period);
+-	if (duty)
+-		pwm_enable(lp->pwm);
+-	else
+-		pwm_disable(lp->pwm);
++	state.period = lp->pdata->period_ns;
++	state.duty_cycle = div_u64(br * state.period, max_br);
++	state.enabled = state.duty_cycle;
++
++	pwm_apply_state(lp->pwm, &state);
+ }
+ 
+ static int lp855x_bl_update_status(struct backlight_device *bl)
+-- 
+2.31.1
 
-Oh, I missed something: the member added to struct ir_rx51 must be a
-plain struct pwm_state, not a pointer to it. As suggested here the
-driver runs into a NULL pointer exception.
-
-Best regards
-Uwe
-
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---lgsivpieqjcjq3ja
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmGEG7UACgkQwfwUeK3K
-7AlcgQf/bxCZICjRu36Hjj9cWcps6tWIvZuB3ts1H0nC3STTjPgR/C3GkIuVTA2h
-ICSO7IC91CE969WztomoGUw8PljoJi5xAXmkKa6ciWqsloGGfJAkCnHh1sdE+lq5
-LdBed/h/F00LXHz4mo1tACga31mSmZ7yUsLRu9107QHDhZxrpD+GFTeIr9gih41Q
-AAEy+T5G/m4Scbicpkj/R4wjfedMMCfFCsr3t0ldmsPiXGVibbad4tj+MM2SCBRp
-6d+HXLqfpCvUMZwY4c9x5URpp7jstuZNLRi4GtsaY1hyBIluiSGMcJwhNu2eLLu3
-xCcL2ThTR3C+mmYyjCHn4ByaCVsTJA==
-=uV7a
------END PGP SIGNATURE-----
-
---lgsivpieqjcjq3ja--
