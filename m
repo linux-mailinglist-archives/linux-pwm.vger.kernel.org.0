@@ -2,91 +2,78 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1918444624C
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Nov 2021 11:40:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 826794463FE
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Nov 2021 14:19:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229924AbhKEKnN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 5 Nov 2021 06:43:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60306 "EHLO
+        id S232718AbhKENVh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 5 Nov 2021 09:21:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229763AbhKEKnJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 Nov 2021 06:43:09 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1970C061714
-        for <linux-pwm@vger.kernel.org>; Fri,  5 Nov 2021 03:40:28 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1miwdy-0006fX-CC; Fri, 05 Nov 2021 11:40:22 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1miwdw-0006uo-7K; Fri, 05 Nov 2021 11:40:20 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1miwdw-0002qU-5y; Fri, 05 Nov 2021 11:40:20 +0100
-Date:   Fri, 5 Nov 2021 11:40:17 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+        with ESMTP id S232664AbhKENVe (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 Nov 2021 09:21:34 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E851C061208
+        for <linux-pwm@vger.kernel.org>; Fri,  5 Nov 2021 06:18:55 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id c4so13676813wrd.9
+        for <linux-pwm@vger.kernel.org>; Fri, 05 Nov 2021 06:18:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=7/iipoqAGtlWfjdTn7pIa/UV1IVALV2EMEK2Ldis3ok=;
+        b=ifXSu3YxdOWGJi9BpmMWnOWrVxdbHBjFXP/MC6gBHwOfp/tRp602TJzZp83L8zi9gC
+         4TIiZETw5Zfvmnlrgma13J0NB9/IY0RnIftxjY3qyORHJOa5ft2S1MDCKespwqBDHy5X
+         2fSiRlliFxIdbfA/46iK/DBjX9P8+jmEVwNSbaw7U6MYM/0VZFN9X1l18+oV7is/ugE/
+         Ldzd1ayvE5qOPCENJlcA2S9ktEb3FwxBlyvHejTgnGM5nsut7MW47QXuVPlY2SYQ5iaN
+         EZ/N4vTS6X4oKsJhsaaQ1ItC5COwZR3Gc4xUwW9jGB+JnS8YzhUZ98BISrACH8u0YqK7
+         74rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=7/iipoqAGtlWfjdTn7pIa/UV1IVALV2EMEK2Ldis3ok=;
+        b=LmmYb7Lb8ixxCsMq/8lXh8bmZgFzg7ltGI4Fm9iJ8CasrL38WOJI+Ydg0OgFEC1OhL
+         R00R0S70bc0LfrPi4AsvBDV1MQFoZoOFwqAEP3GDs8tvHolPDFJRRCLPDHWlwqFc7zmm
+         s+rUc+I5U0tPJmaLuoYhcl9d5eM3FsuU0sJbafyqIOnf0lvlS2h4XVMfJsE1Z42pvXt+
+         fqrGzy0Y9AiFVI1+xvggE9hxxcK2M2Bre7yv8JjLp+grm5+qiyoZwMDmqhW779Xv4Wuz
+         nfHIY8OO2Gu3Qaa/eJ1RMacQKMViZdeFXKoak4GH3UpepPCm3ALuvaczn2Qouv6ZENgg
+         66Fg==
+X-Gm-Message-State: AOAM532lOh37i2pK1eZhYppGHVKiO02O1o9eP0pw5Zdc1KrrBhst4egu
+        xDhDJdlW310dY7Qs3gOsVyETvg==
+X-Google-Smtp-Source: ABdhPJwQHnoAVNWxU1bfYrJ+W2Anf3+K6IUO09ZgJAtRW1a3a3m9FMJj2FO8krg/xKbG0Vzc18WZlg==
+X-Received: by 2002:adf:f10d:: with SMTP id r13mr74756968wro.414.1636118333680;
+        Fri, 05 Nov 2021 06:18:53 -0700 (PDT)
+Received: from maple.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
+        by smtp.gmail.com with ESMTPSA id o26sm11155063wmc.17.2021.11.05.06.18.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Nov 2021 06:18:53 -0700 (PDT)
+Date:   Fri, 5 Nov 2021 13:18:51 +0000
+From:   Daniel Thompson <daniel.thompson@linaro.org>
 To:     =?utf-8?B?TWHDrXJh?= Canal <maira.canal@usp.br>
-Cc:     daniel.thompson@linaro.org, lee.jones@linaro.org,
-        jingoohan1@gmail.com, thierry.reding@gmail.com,
+Cc:     lee.jones@linaro.org, jingoohan1@gmail.com,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
         dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 Subject: Re: [PATCH v6] backlight: lp855x: Switch to atomic PWM API
-Message-ID: <20211105104017.65ysrdy5nzccfzmo@pengutronix.de>
+Message-ID: <20211105131851.6p2jmo54b4jts2mo@maple.lan>
 References: <YYQfThRqabp4A7Dz@fedora>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ci2ykdunk5cwiced"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <YYQfThRqabp4A7Dz@fedora>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
---ci2ykdunk5cwiced
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello,
-
-On Thu, Nov 04, 2021 at 02:58:38PM -0300, Ma=EDra Canal wrote:
+On Thu, Nov 04, 2021 at 02:58:38PM -0300, Maíra Canal wrote:
 > Remove legacy PWM interface (pwm_config, pwm_enable, pwm_disable) and
 > replace it for the atomic PWM API.
->=20
-> Signed-off-by: Ma=EDra Canal <maira.canal@usp.br>
+> 
+> Signed-off-by: Maíra Canal <maira.canal@usp.br>
 
-LGTM,
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
-Thanks
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ci2ykdunk5cwiced
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmGFCg4ACgkQwfwUeK3K
-7AkWNQf/SKHSeiYd9w//qWXwmgc6r1QNVz5DIhFauWP9fpTyPfv4KUilZmt18t7E
-iN+Z/4YSC+8LUj88zqTBYawZoE+DkluxSa5eVq6Uis3yynM5eEfVJVU4yyBdNJ+B
-cEr3NAK0sLb49ZenYACy0MImHiDFSjTI7OPu/RBknIHsD2doU/N6kYbBI0ZxCPw/
-OXbO7xH/4VMms11B+CLX6usMMh8e/yRGvVBN/y3OrjY2dY1Pl8yzKxV738slKkGi
-w2Bn0Zb5pDN+fVJVUBK7mUAzp3MjA3t8QQL0L4TtJ6nvhpOWvqEGC8rVMeVfDebW
-PwQqcIYSc3hRkYdQqaNkC6WwMWIfxg==
-=ggPo
------END PGP SIGNATURE-----
-
---ci2ykdunk5cwiced--
+Daniel.
