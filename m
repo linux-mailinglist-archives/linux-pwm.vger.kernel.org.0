@@ -2,100 +2,114 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C0544468D0
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Nov 2021 20:19:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 445F644747D
+	for <lists+linux-pwm@lfdr.de>; Sun,  7 Nov 2021 18:24:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233253AbhKETVw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 5 Nov 2021 15:21:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36814 "EHLO
+        id S231741AbhKGR1X (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 7 Nov 2021 12:27:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232705AbhKETVw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 Nov 2021 15:21:52 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F466C061714
-        for <linux-pwm@vger.kernel.org>; Fri,  5 Nov 2021 12:19:12 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mj4k1-0005ZY-7K; Fri, 05 Nov 2021 20:19:09 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mj4k0-0007jL-AI; Fri, 05 Nov 2021 20:19:08 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mj4k0-0004oa-9N; Fri, 05 Nov 2021 20:19:08 +0100
-Date:   Fri, 5 Nov 2021 20:19:05 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>,
+        with ESMTP id S231618AbhKGR1X (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 7 Nov 2021 12:27:23 -0500
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050::465:202])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BF4FC061570
+        for <linux-pwm@vger.kernel.org>; Sun,  7 Nov 2021 09:24:40 -0800 (PST)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4HnLhj59YMzQjmg;
+        Sun,  7 Nov 2021 18:24:37 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hauke-m.de; s=MBO0001;
+        t=1636305875;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0qDrFbbUdva7Hj0vvtfgxHWkjVV1eDZ7/ERKfM0Dpvw=;
+        b=ptmGYqMARzQrj8m7tG2WZIQdDzhmJbLMTWQZxIGVaQF1BR56lqUxZNUnj4iN+11HNwERcL
+        d/hpyzqx/2rVBs/Zk8BbTIj85Q2+nFUnsc+ZyorwGw5m9mCjtcgKQK+IfJRmDC9fVPClkh
+        tKh9VQtV77Y0iU8n5HiV+4ZMZ3acWULxphqwGs0F6ggvV7HSUbpD8AgOUq8xTG2YJL7f5d
+        +ykRSqEjsPVstjCPcl27Ft1lewaPCkQopo3b9JkOXP0M3umPmLd0+P+TfZSAm4hQTRq3A5
+        Dkngyxtof56fIH2ocWmWB+jdR/d6iki0IChc0ZyL5IUq9eeNdUnCN/+TbChSZg==
+Subject: Re: [PATCH] pwm: img: Implement .apply() callback
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>
-Cc:     linux-pwm@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH 0/3] pwm: Some improvements for legacy drivers
-Message-ID: <20211105191905.i2ixhea2tmr5u7tg@pengutronix.de>
-References: <20210701072927.328254-1-u.kleine-koenig@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
+References: <20211029105617.210178-1-u.kleine-koenig@pengutronix.de>
+From:   Hauke Mehrtens <hauke@hauke-m.de>
+Message-ID: <fd4c37fa-20a1-8883-21db-0905afff8422@hauke-m.de>
+Date:   Sun, 7 Nov 2021 18:24:33 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6rt6v444hs4xihyp"
-Content-Disposition: inline
-In-Reply-To: <20210701072927.328254-1-u.kleine-koenig@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20211029105617.210178-1-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 7442222F
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 10/29/21 12:56 PM, Uwe Kleine-König wrote:
+> To eventually get rid of all legacy drivers convert this driver to the
+> modern world implementing .apply(). This just pushes down a slightly
+> optimized variant of how legacy drivers are handled in the core.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
---6rt6v444hs4xihyp
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I applied this patch on top of kernel 5.10 and the system still boots up 
+on the CI40 and I can make a LED blink.
 
-Hello Thierry,
+Tested-by: Hauke Mehrtens <hauke@hauke-m.de>
 
-On Thu, Jul 01, 2021 at 09:29:24AM +0200, Uwe Kleine-K=F6nig wrote:
-> this is the successor of my earlier patch "pwm: Ensure for legacy
-> drivers that pwm->state stays consistent" that was applied shortly to
-> next until Geert found a problem with it.
->=20
-> I split the patch in three parts now: First the legacy handling is just
-> moved to a separate function without any semantic change. Then a glitch
-> is fixed, but without the regression I introduced initially. In the
-> third and last patch the longstanding FIXME about breaking pwm->state if
-> a callback fails is addressed.
+> ---
+>   drivers/pwm/pwm-img.c | 29 ++++++++++++++++++++++++++---
+>   1 file changed, 26 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-img.c b/drivers/pwm/pwm-img.c
+> index f97f82548293..1f3d6346ab86 100644
+> --- a/drivers/pwm/pwm-img.c
+> +++ b/drivers/pwm/pwm-img.c
+> @@ -184,10 +184,33 @@ static void img_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+>   	pm_runtime_put_autosuspend(chip->dev);
+>   }
+>   
+> +static int img_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			 const struct pwm_state *state)
+> +{
+> +	int err;
+> +
+> +	if (state->polarity != PWM_POLARITY_NORMAL)
+> +		return -EINVAL;
+> +
+> +	if (!state->enabled) {
+> +		if (pwm->state.enabled)
+> +			img_pwm_disable(chip, pwm);
+> +
+> +		return 0;
+> +	}
+> +
+> +	err = img_pwm_config(pwm->chip, pwm, state->duty_cycle, state->period);
+> +	if (err)
+> +		return err;
+> +
+> +	if (!pwm->state.enabled)
+> +		err = img_pwm_enable(chip, pwm);
+> +
+> +	return err;
+> +}
+> +
+>   static const struct pwm_ops img_pwm_ops = {
+> -	.config = img_pwm_config,
+> -	.enable = img_pwm_enable,
+> -	.disable = img_pwm_disable,
+> +	.apply = img_pwm_apply,
+>   	.owner = THIS_MODULE,
+>   };
+>   
+> 
+> base-commit: 3906fe9bb7f1a2c8667ae54e967dc8690824f4ea
+> 
 
-I noticed you collected patches for the current merge window, but among
-others skipped this series.
-
-You mentioned two doubts, but never reacted on my replies that (IMHO)
-should remove your doubts.
-
-Can you please voice your concerns?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---6rt6v444hs4xihyp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmGFg6YACgkQwfwUeK3K
-7AknDQf/Y1Gm75Z3T35YqecWPHCsq3qphXutrBvCr4kdxCTbYp63EfPNAbnuuQiW
-NMj9aj8jnvTeON0vR/I4pZy6PIbbpgtco0Uc7cCgoyIlo1PXdtPyE1Q9bD1pNmUv
-ipzHqw9oq4fdmtcx5ThRxpvQxzhHSq89/Qs7R4gqX/b+921Cn8NAmwPk2srZxILr
-Ep/XDW7dpWAXYJTuObP4kDu58rDoBwoZ5aht3Qw/Pk4LBlTzmKXz1MK/gnb0u0MA
-hZMex5dmqFGvdlXUUQkwNkFAtdYO5p5LkI5siqwtJJ+bhsR9tPq/xsYT7f3Y7Msj
-StImWd031XaHRXsXLfIVOav/EL4Gsg==
-=Ej4w
------END PGP SIGNATURE-----
-
---6rt6v444hs4xihyp--
