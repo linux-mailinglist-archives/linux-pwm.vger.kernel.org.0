@@ -2,51 +2,51 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 046AA44FAB7
-	for <lists+linux-pwm@lfdr.de>; Sun, 14 Nov 2021 20:37:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68A9444FA62
+	for <lists+linux-pwm@lfdr.de>; Sun, 14 Nov 2021 20:36:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236391AbhKNTje (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 14 Nov 2021 14:39:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57578 "EHLO
+        id S236401AbhKNTjh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 14 Nov 2021 14:39:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236248AbhKNTjJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 14 Nov 2021 14:39:09 -0500
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4D55C061767;
-        Sun, 14 Nov 2021 11:36:13 -0800 (PST)
-Received: by mail-lf1-x12c.google.com with SMTP id m27so13151747lfj.12;
-        Sun, 14 Nov 2021 11:36:13 -0800 (PST)
+        with ESMTP id S236254AbhKNTjK (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 14 Nov 2021 14:39:10 -0500
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88883C061202;
+        Sun, 14 Nov 2021 11:36:14 -0800 (PST)
+Received: by mail-lj1-x22e.google.com with SMTP id t11so30718208ljh.6;
+        Sun, 14 Nov 2021 11:36:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pQQ64DHAwVUDK+O7zZPErxA1rL3KEtXVNyJE4UYdy5Q=;
-        b=RRycqGZwIueXzgKSSOzpwNjNa6o/QJ+QS7jxDbxPJ+hGPatfo5zz8HTxHc2u9t62NH
-         7JOaNBfaZj4waNTd+FUfABgSPWSlQCC2E5ejfGtAUYhhhDqRwCuRCjKc+Ajb9aGFQeNR
-         DdsvjPwCmZltNAdZr0oYyOItqi/KK3HPfaLD6twSiLCuqvZQ4bxvjTQkDAgRY10tDQVT
-         xaYLXs5Hn+Q1JoCQkbivp2aYQKkAt2KTeClhJDfRLWY5eE36FFYlyUQTZLHsA/V51KWL
-         54Z/xObrEUu4htF7XcIWl74EZeRoJuAPh+T6wqIOBr/Fh/SG5+MdVYHSgicWWWKHPTrC
-         R/kw==
+        bh=v6s6Y176eM92G3urbum9u/lfNUjhQPz0PnC0xf51/Fs=;
+        b=kxmpEbZsrYeuGpqvbXc+Y8jZAlLJKCqpQBqiX14xcPNo7jWOif712vX9/s7aimAjhi
+         YlY1eZBNNhv8sH07VxmpkcWoRB5FkOi2x7UH4ysKqiuo9ZeygWmjFchBWyl5IvdNe1x9
+         W6/jLsjVHU9iNo6DImtU3xKQA7iA2/YLiZ85KxS7Js4K8lr3hA+Ubb7yvhmkDD67Gbya
+         9iMutsmj2gnHivXOKQKOeIociZQX4TNmJFEEKOsORmG4OqPf5OJ5rLJ/r06qYwzkcW+W
+         bXuDh2C/jegF+xaTP7aASTYY7QaqfViuvpE+tlPjWCX8Epa5nf9+PqjPZiddJVOFLAdW
+         MjOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pQQ64DHAwVUDK+O7zZPErxA1rL3KEtXVNyJE4UYdy5Q=;
-        b=1vg3BbWpjwhDegILUkk/ClEdQQJWytjR/MZq59us6NHeDI1TsATA7oyYwix41XgjKN
-         2pDnlDLBgbCMCVg93i3NXbgYP3uGA1Of6MrzDHZkTRqqB5StiJ12/LMZIGlHL13v0iXK
-         au4T0ZPQEubIdl+q5Q7tNlnrxMocHllCYLHDs2Xct04sQHsZ5bv/a/HNCJJoJtgdhhXU
-         TYeeY0xnfvWIDvo2p2d4Tvty540eVZGt+d9L7NONNc5baBr4XoEcq87iPkU15ckV5pAF
-         YDo0iGJ+rXyBaW3fy187jCMWJOBhyDZNxTLEvYZeumyzGEKrp+hcwA6pAvKErur+mE6q
-         KNsQ==
-X-Gm-Message-State: AOAM531CvozmxWLYJaWbXUvmbtgMtb0O2UWIPfLBUvcLzqFJuYgK/2q2
-        WNXOUnKMBYl218K+sqMdqBk=
-X-Google-Smtp-Source: ABdhPJx8rfbMoBXZQtumsweyBh+F01dCj6bDPAYPmXKgdBjuaP6k7Gj2NTx2ugCwz9uGwHNl7tiXxw==
-X-Received: by 2002:a05:6512:3b90:: with SMTP id g16mr28888069lfv.216.1636918572036;
+        bh=v6s6Y176eM92G3urbum9u/lfNUjhQPz0PnC0xf51/Fs=;
+        b=oZTeEdHdu/vkOrT6McMP/ecWH22o95Tq/x3YA2h/zXYI0tmXMvOrY0bdr4TipXoT/i
+         sMpKZVeg0i3pzBkRVxNLInRjfgAmdAumCoQZhPSmKTv0yGrqPDSpmaX7lHMtQqZzQQZR
+         FxA9N7Of8TQBBva2flG1iapfSzXJ892ztZZPPwJIixh9LGoSQGBoFb+XlGz6xeOZwt8j
+         VwQ/YZ+EPMbrbunhDi8KRUUrJV+dKRA48n2CP1e9/ZeNEh+hh1qEF2+onxQP47JAoGtt
+         fWQnAV6uacQRk2HW1syQOI8kjKk00HJlAz+p9t0HX+vmDE0Fr+ba0M60LU05+RTCpAqI
+         ComQ==
+X-Gm-Message-State: AOAM531k36+ftakq56xd8+IA/cCPqC8UNEe7nUZcPBVS4dVl4pZSLXVD
+        Zxxu+qZcAICdDdZG8cR70xM=
+X-Google-Smtp-Source: ABdhPJzT77hE2tzcj0ks3igJnufShKNdn8bWLA/wWGFj5JjeIPuW5/f+fNS9AU9jzf3kemhW8YnJyg==
+X-Received: by 2002:a2e:b058:: with SMTP id d24mr32403728ljl.237.1636918572975;
         Sun, 14 Nov 2021 11:36:12 -0800 (PST)
 Received: from localhost.localdomain (46-138-46-211.dynamic.spd-mgts.ru. [46.138.46.211])
-        by smtp.gmail.com with ESMTPSA id p18sm1191280lfu.127.2021.11.14.11.36.11
+        by smtp.gmail.com with ESMTPSA id p18sm1191280lfu.127.2021.11.14.11.36.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Nov 2021 11:36:11 -0800 (PST)
+        Sun, 14 Nov 2021 11:36:12 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -64,9 +64,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-pwm@vger.kernel.org,
         linux-mmc@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-clk@vger.kernel.org, David Heidelberg <david@ixit.cz>
-Subject: [PATCH v15 16/39] drm/tegra: submit: Remove pm_runtime_enabled() checks
-Date:   Sun, 14 Nov 2021 22:34:12 +0300
-Message-Id: <20211114193435.7705-17-digetx@gmail.com>
+Subject: [PATCH v15 17/39] drm/tegra: submit: Add missing pm_runtime_mark_last_busy()
+Date:   Sun, 14 Nov 2021 22:34:13 +0300
+Message-Id: <20211114193435.7705-18-digetx@gmail.com>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20211114193435.7705-1-digetx@gmail.com>
 References: <20211114193435.7705-1-digetx@gmail.com>
@@ -76,46 +76,27 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Runtime PM is now universally available, make it mandatory by removing
-the pm_runtime_enabled() checks.
+Runtime PM auto-suspension doesn't work without pm_runtime_mark_last_busy(),
+add it.
 
 Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpu/drm/tegra/submit.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/tegra/submit.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/gpu/drm/tegra/submit.c b/drivers/gpu/drm/tegra/submit.c
-index c32698404e36..3bbd8de5711c 100644
+index 3bbd8de5711c..6d6dd8c35475 100644
 --- a/drivers/gpu/drm/tegra/submit.c
 +++ b/drivers/gpu/drm/tegra/submit.c
-@@ -504,8 +504,7 @@ static void release_job(struct host1x_job *job)
+@@ -504,6 +504,7 @@ static void release_job(struct host1x_job *job)
  	kfree(job_data->used_mappings);
  	kfree(job_data);
  
--	if (pm_runtime_enabled(client->base.dev))
--		pm_runtime_put_autosuspend(client->base.dev);
-+	pm_runtime_put_autosuspend(client->base.dev);
++	pm_runtime_mark_last_busy(client->base.dev);
+ 	pm_runtime_put_autosuspend(client->base.dev);
  }
  
- int tegra_drm_ioctl_channel_submit(struct drm_device *drm, void *data,
-@@ -589,12 +588,10 @@ int tegra_drm_ioctl_channel_submit(struct drm_device *drm, void *data,
- 	}
- 
- 	/* Boot engine. */
--	if (pm_runtime_enabled(context->client->base.dev)) {
--		err = pm_runtime_resume_and_get(context->client->base.dev);
--		if (err < 0) {
--			SUBMIT_ERR(context, "could not power up engine: %d", err);
--			goto unpin_job;
--		}
-+	err = pm_runtime_resume_and_get(context->client->base.dev);
-+	if (err < 0) {
-+		SUBMIT_ERR(context, "could not power up engine: %d", err);
-+		goto unpin_job;
- 	}
- 
- 	job->user_data = job_data;
 -- 
 2.33.1
 
