@@ -2,94 +2,118 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25A7B4546CC
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Nov 2021 14:02:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7935E454954
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Nov 2021 15:54:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237353AbhKQNF1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 17 Nov 2021 08:05:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36490 "EHLO
+        id S229818AbhKQO53 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 17 Nov 2021 09:57:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237224AbhKQNF1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 17 Nov 2021 08:05:27 -0500
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7646C061570;
-        Wed, 17 Nov 2021 05:02:28 -0800 (PST)
-Received: by mail-pj1-x1029.google.com with SMTP id gx15-20020a17090b124f00b001a695f3734aso2591620pjb.0;
-        Wed, 17 Nov 2021 05:02:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=T9wFYxQtaBLY+620FBB4AOdc1g1L+gWeoP+IDYOuvB0=;
-        b=BcGsBKzjpfT2cfhVXPrxaTgTJ6P2hxflSdDTUeB4SFzOvrGTGHnDOmDBLkf3LbNzuy
-         Sj8m4ZlmSfBxNMasl100OtEZKRwcq9M5cRWUSl1sAfWLtfQREkUEJUryGAohg8ITokMt
-         zbMSh9xipRY2nzmJeTpCPbVjMQsfkdEizPVMr+R+5luUL0JAGUb3MZ93YOxP+tNyHW6k
-         mSkv3XeS/MlEgFcTsZUG+wM1wijCDhpp+KswGwNNQmygO2AGd/nscMbQnjAzp+o9buin
-         JwZARNRQ/wxA6wz6hYIL7MoT9mY75ZiwXWlBMRRab/yhES57Vx37nMvkc3OWAoJxTrD8
-         3MCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=T9wFYxQtaBLY+620FBB4AOdc1g1L+gWeoP+IDYOuvB0=;
-        b=EinE86QQMGlyK+Ly/+5UxWUFQcciDtCby8Kg5YqrywdKonjXsFxmFpoMRG0zFz37Tv
-         Psl0PMkVnoWWKvqZZOND+t6O9DGnwjnFWMpk+4F8Pb57E+pKlCRBs/vEQWVwxYWrTQJ0
-         TIqCDShjBLOujBd0x/r6dyGFqRf92jIpECMeAtsvqpy8DRjLtRbTLVELDDjK+ooPf1AJ
-         S8r23VxmHEEyLCCOh4AiBlzO29AkNquKysDzT7ybBMkb5QKMITNoc+8liMlTvPsNiPxO
-         wWu8gpnYy2qdPOP9wUpqgodk/rnaWKQuFtJYV9pqoMyQqx2fXf0heyDs5uLrdkuOmy4y
-         Jx2Q==
-X-Gm-Message-State: AOAM532Ec3kCyGlom+zG2dZhZaw1Ho8/GlV5AiTcloqEzCdot312ZZe8
-        YBtf6KWJTl44BVEBRYi2IwM=
-X-Google-Smtp-Source: ABdhPJw2olpTDo73SDdNXQZ99Vt9E6aBTbKoMzeHqCL1I0bUJDSJokzIal1MceB3KbTIP0/xiM/85g==
-X-Received: by 2002:a17:902:bc85:b0:143:954e:8548 with SMTP id bb5-20020a170902bc8500b00143954e8548mr53668515plb.82.1637154148313;
-        Wed, 17 Nov 2021 05:02:28 -0800 (PST)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id c16sm16929626pgl.82.2021.11.17.05.02.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Nov 2021 05:02:28 -0800 (PST)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: deng.changcheng@zte.com.cn
-To:     u.kleine-koenig@pengutronix.de
-Cc:     cgel.zte@gmail.com, deng.changcheng@zte.com.cn,
-        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
-        zealci@zte.com.cn
-Subject: [PATCH V2] pwm: rcar: Use div64_ul instead of do_div
-Date:   Wed, 17 Nov 2021 13:01:44 +0000
-Message-Id: <20211117130144.161788-1-deng.changcheng@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211117112559.jix3hmx7uwqmuryg@pengutronix.de>
-References: <20211117112559.jix3hmx7uwqmuryg@pengutronix.de>
+        with ESMTP id S231324AbhKQO53 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 17 Nov 2021 09:57:29 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B28C061570
+        for <linux-pwm@vger.kernel.org>; Wed, 17 Nov 2021 06:54:30 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mnMKQ-00016X-SK; Wed, 17 Nov 2021 15:54:26 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mnMKN-000MiE-Mf; Wed, 17 Nov 2021 15:54:22 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mnMKM-0004NQ-FT; Wed, 17 Nov 2021 15:54:22 +0100
+Date:   Wed, 17 Nov 2021 15:54:19 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     cgel.zte@gmail.com
+Cc:     alexandre.belloni@bootlin.com, deng.changcheng@zte.com.cn,
+        lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        ludovic.desroches@microchip.com, nicolas.ferre@microchip.com,
+        thierry.reding@gmail.com, zealci@zte.com.cn
+Subject: Re: [PATCH V2] pwm: Use div64_ul instead of do_div
+Message-ID: <20211117145419.b4wb6zp42rjdpgn5@pengutronix.de>
+References: <20211117112400.bkscb2pyavonpfsn@pengutronix.de>
+ <20211117124653.161699-1-deng.changcheng@zte.com.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bnfcbwayrcwki5lr"
+Content-Disposition: inline
+In-Reply-To: <20211117124653.161699-1-deng.changcheng@zte.com.cn>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Changcheng Deng <deng.changcheng@zte.com.cn>
 
-do_div() does a 64-by-32 division. If the divisor is unsigned long, using
-div64_ul can avoid truncation to 32-bit.
+--bnfcbwayrcwki5lr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: Changcheng Deng <deng.changcheng@zte.com.cn>
----
- drivers/pwm/pwm-rcar.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, Nov 17, 2021 at 12:46:53PM +0000, cgel.zte@gmail.com wrote:
+> From: Changcheng Deng <deng.changcheng@zte.com.cn>
+>=20
+> do_div() does a 64-by-32 division. If the divisor is unsigned long, using
+> div64_ul can avoid truncation to 32-bit.
+>=20
+> Reported-by: Zeal Robot <zealci@zte.com.cn>
+> Signed-off-by: Changcheng Deng <deng.changcheng@zte.com.cn>
+> ---
+>  drivers/pwm/pwm-atmel-hlcdc.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-atmel-hlcdc.c b/drivers/pwm/pwm-atmel-hlcdc.c
+> index a43b2babc809..1ae3d73b9832 100644
+> --- a/drivers/pwm/pwm-atmel-hlcdc.c
+> +++ b/drivers/pwm/pwm-atmel-hlcdc.c
+> @@ -60,7 +60,7 @@ static int atmel_hlcdc_pwm_apply(struct pwm_chip *c, st=
+ruct pwm_device *pwm,
+>  				return -EINVAL;
+> =20
+>  			clk_period_ns =3D (u64)NSEC_PER_SEC * 256;
+> -			do_div(clk_period_ns, clk_freq);
+> +			clk_period_ns =3D div64_ul(clk_period_ns, clk_freq);
+>  		}
+> =20
+>  		/* Errata: cannot use slow clk on some IP revisions */
+> @@ -72,7 +72,7 @@ static int atmel_hlcdc_pwm_apply(struct pwm_chip *c, st=
+ruct pwm_device *pwm,
+>  				return -EINVAL;
+> =20
+>  			clk_period_ns =3D (u64)NSEC_PER_SEC * 256;
+> -			do_div(clk_period_ns, clk_freq);
+> +			clk_period_ns =3D div64_ul(clk_period_ns, clk_freq);
 
-diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
-index b437192380e2..fb475c188e1e 100644
---- a/drivers/pwm/pwm-rcar.c
-+++ b/drivers/pwm/pwm-rcar.c
-@@ -111,7 +111,7 @@ static int rcar_pwm_set_counter(struct rcar_pwm_chip *rp, int div, int duty_ns,
- 	u32 cyc, ph;
- 
- 	one_cycle = (unsigned long long)NSEC_PER_SEC * 100ULL * (1 << div);
--	do_div(one_cycle, clk_rate);
-+	one_cycle = div64_ul(one_cycle, clk_rate);
- 
- 	tmp = period_ns * 100ULL;
- 	do_div(tmp, one_cycle);
--- 
-2.25.1
+The code change is good now, the commit log is as confusing as in v1.
 
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--bnfcbwayrcwki5lr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmGVF5gACgkQwfwUeK3K
+7AnjUggAhXaPzpoPxrVPzZgvAUNVH3kKTY6crrPcmxxN/YCnf/+fOb+dQzKUwe+G
+rt9eIvjGKgWqphuhVYfMImD9+QLzLLeiSOOjddPPE4W30QuKYegeB/8nG/IJHXgg
+vlRwZ3FOKJBPelEJ1W3QFl4gvuuM2U+ucjkx840f1jln0A0Oz+Vhn3yvqZ7Ct1x8
+GgzUpS9x3BcB2XBIyPjpDWEUeAp0gZazAsfLi5UEE40RQ8l6OimhLsTghA8Z0hQF
+ldgzW7bvNr5LHEqYhCXcfBWSwIhMkkhUO/CSqt1GH1qXYx89VV5FawQvzW+Fk9iI
+ilWpkClvveRUCuUxAqc4iCcKhEeFJg==
+=i0MT
+-----END PGP SIGNATURE-----
+
+--bnfcbwayrcwki5lr--
