@@ -2,118 +2,118 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7935E454954
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Nov 2021 15:54:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA9F3454AB5
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Nov 2021 17:12:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229818AbhKQO53 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 17 Nov 2021 09:57:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34652 "EHLO
+        id S234327AbhKQQPY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 17 Nov 2021 11:15:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231324AbhKQO53 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 17 Nov 2021 09:57:29 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B28C061570
-        for <linux-pwm@vger.kernel.org>; Wed, 17 Nov 2021 06:54:30 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mnMKQ-00016X-SK; Wed, 17 Nov 2021 15:54:26 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mnMKN-000MiE-Mf; Wed, 17 Nov 2021 15:54:22 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mnMKM-0004NQ-FT; Wed, 17 Nov 2021 15:54:22 +0100
-Date:   Wed, 17 Nov 2021 15:54:19 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     cgel.zte@gmail.com
-Cc:     alexandre.belloni@bootlin.com, deng.changcheng@zte.com.cn,
-        lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        ludovic.desroches@microchip.com, nicolas.ferre@microchip.com,
-        thierry.reding@gmail.com, zealci@zte.com.cn
-Subject: Re: [PATCH V2] pwm: Use div64_ul instead of do_div
-Message-ID: <20211117145419.b4wb6zp42rjdpgn5@pengutronix.de>
-References: <20211117112400.bkscb2pyavonpfsn@pengutronix.de>
- <20211117124653.161699-1-deng.changcheng@zte.com.cn>
+        with ESMTP id S237919AbhKQQPW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 17 Nov 2021 11:15:22 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E20F8C061570
+        for <linux-pwm@vger.kernel.org>; Wed, 17 Nov 2021 08:12:22 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id d27so5709506wrb.6
+        for <linux-pwm@vger.kernel.org>; Wed, 17 Nov 2021 08:12:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UshUxrcH8TT2TkDIiABSIKerhFaxwdLFBUF1DPuMI1w=;
+        b=C5kOHwbQP8c2wSgIbRv7KI+VlHWzBJSnjnA8ZqPyoMkvijR8430yGFoS6/AKX30j4S
+         /GJ9lOd+T1Bokr/U0LqKK0ZufC0l+sATTllT9XnKTNSeuvKGtCab8eFV+GOFktgJJzL/
+         +BpLddV4tnM4Jtr7x+Q777hqXO4S4x+yioc3YuYJnr/c7orSV6XVLAAug0zhPMFhVq3y
+         Gf/bJzqVIJM+twuZMZl9P4yy784kgXGyXtOfX28K1ETTmDaN8qkE2OVpsX3gdr7px7ZG
+         H8CokVRx46CQEsWmqTm98J0INmq6SSIUFNCjnpR/RN8S4tubaK0MraYkyf19DhmtNfRd
+         T2xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UshUxrcH8TT2TkDIiABSIKerhFaxwdLFBUF1DPuMI1w=;
+        b=0zBRD39Xv7A547+rZ2DIc5//RLHGwGdLW/8d0e6rj5ey0LuoQ8h/LZ4gHYnH77V/1a
+         vOnJd3MjJebzPIELKJIZ7Njs6Bz8MRm1QpIgOJ3sPD3Tuhr3DGkeEWgczWHbGpT4ely9
+         /9jwkOqlbwFwQAtqSZC9o77tfX0vYVfCaP2cEw+onsJalyYS+6p6mHPeM9A3ihkbVSiB
+         WoZv/bRBg2OAnEKtu6DZUw+xk6lm87/RPFbkuZ+mVu70spOKCK+zQYcflZhSlQ7LFqJI
+         Fb8a/zuw+VMpv2mldo2uGnmPkJAOfBaA1i3VSFHCDK8YO42Ch6ECgJawtcGW1paNwm7m
+         Dj1Q==
+X-Gm-Message-State: AOAM530MFW8igeINAZhWWbCwKoNF7LJn2kSsGLtGAaNrJcEdaMP4Xe83
+        L4vvqrezcaJsDYFaNFP6Dm8=
+X-Google-Smtp-Source: ABdhPJwd3/BhVS8wEN937874iSSffD7puuWekF1VMsr/t46+3KrtunCafGUu+BVLz2vem0HCU4/91Q==
+X-Received: by 2002:adf:f60c:: with SMTP id t12mr21744567wrp.341.1637165541487;
+        Wed, 17 Nov 2021 08:12:21 -0800 (PST)
+Received: from orome.fritz.box ([193.209.96.43])
+        by smtp.gmail.com with ESMTPSA id m34sm6872502wms.25.2021.11.17.08.12.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Nov 2021 08:12:20 -0800 (PST)
+Date:   Wed, 17 Nov 2021 17:12:17 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
+        kernel@pengutronix.de, Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 0/3] pwm: Some improvements for legacy drivers
+Message-ID: <YZUp4ZdTpXrpCKjg@orome.fritz.box>
+References: <20210701072927.328254-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bnfcbwayrcwki5lr"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="06V78GaJMtEOBeMJ"
 Content-Disposition: inline
-In-Reply-To: <20211117124653.161699-1-deng.changcheng@zte.com.cn>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20210701072927.328254-1-u.kleine-koenig@pengutronix.de>
+User-Agent: Mutt/2.1.3 (987dde4c) (2021-09-10)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---bnfcbwayrcwki5lr
-Content-Type: text/plain; charset=iso-8859-1
+--06V78GaJMtEOBeMJ
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 17, 2021 at 12:46:53PM +0000, cgel.zte@gmail.com wrote:
-> From: Changcheng Deng <deng.changcheng@zte.com.cn>
+On Thu, Jul 01, 2021 at 09:29:24AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Hello,
 >=20
-> do_div() does a 64-by-32 division. If the divisor is unsigned long, using
-> div64_ul can avoid truncation to 32-bit.
+> this is the successor of my earlier patch "pwm: Ensure for legacy
+> drivers that pwm->state stays consistent" that was applied shortly to
+> next until Geert found a problem with it.
 >=20
-> Reported-by: Zeal Robot <zealci@zte.com.cn>
-> Signed-off-by: Changcheng Deng <deng.changcheng@zte.com.cn>
-> ---
->  drivers/pwm/pwm-atmel-hlcdc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> I split the patch in three parts now: First the legacy handling is just
+> moved to a separate function without any semantic change. Then a glitch
+> is fixed, but without the regression I introduced initially. In the
+> third and last patch the longstanding FIXME about breaking pwm->state if
+> a callback fails is addressed.
 >=20
-> diff --git a/drivers/pwm/pwm-atmel-hlcdc.c b/drivers/pwm/pwm-atmel-hlcdc.c
-> index a43b2babc809..1ae3d73b9832 100644
-> --- a/drivers/pwm/pwm-atmel-hlcdc.c
-> +++ b/drivers/pwm/pwm-atmel-hlcdc.c
-> @@ -60,7 +60,7 @@ static int atmel_hlcdc_pwm_apply(struct pwm_chip *c, st=
-ruct pwm_device *pwm,
->  				return -EINVAL;
-> =20
->  			clk_period_ns =3D (u64)NSEC_PER_SEC * 256;
-> -			do_div(clk_period_ns, clk_freq);
-> +			clk_period_ns =3D div64_ul(clk_period_ns, clk_freq);
->  		}
-> =20
->  		/* Errata: cannot use slow clk on some IP revisions */
-> @@ -72,7 +72,7 @@ static int atmel_hlcdc_pwm_apply(struct pwm_chip *c, st=
-ruct pwm_device *pwm,
->  				return -EINVAL;
-> =20
->  			clk_period_ns =3D (u64)NSEC_PER_SEC * 256;
-> -			do_div(clk_period_ns, clk_freq);
-> +			clk_period_ns =3D div64_ul(clk_period_ns, clk_freq);
+> Uwe Kleine-K=C3=B6nig (3):
+>   pwm: Move legacy driver handling into a dedicated function
+>   pwm: Prevent a glitch for legacy drivers
+>   pwm: Restore initial state if a legacy callback fails
+>=20
+>  drivers/pwm/core.c | 139 ++++++++++++++++++++++++++-------------------
+>  1 file changed, 79 insertions(+), 60 deletions(-)
 
-The code change is good now, the commit log is as confusing as in v1.
+I've applied this to for-next, let's see if this blows up or not.
 
-Best regards
-Uwe
+Thierry
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---bnfcbwayrcwki5lr
+--06V78GaJMtEOBeMJ
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmGVF5gACgkQwfwUeK3K
-7AnjUggAhXaPzpoPxrVPzZgvAUNVH3kKTY6crrPcmxxN/YCnf/+fOb+dQzKUwe+G
-rt9eIvjGKgWqphuhVYfMImD9+QLzLLeiSOOjddPPE4W30QuKYegeB/8nG/IJHXgg
-vlRwZ3FOKJBPelEJ1W3QFl4gvuuM2U+ucjkx840f1jln0A0Oz+Vhn3yvqZ7Ct1x8
-GgzUpS9x3BcB2XBIyPjpDWEUeAp0gZazAsfLi5UEE40RQ8l6OimhLsTghA8Z0hQF
-ldgzW7bvNr5LHEqYhCXcfBWSwIhMkkhUO/CSqt1GH1qXYx89VV5FawQvzW+Fk9iI
-ilWpkClvveRUCuUxAqc4iCcKhEeFJg==
-=i0MT
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmGVKeEACgkQ3SOs138+
+s6FOgA/+JX3nx9RyOQ5q09P9u7/otUc+X9B76n0Uh5yynHHlxM3Up40MOrGKdD1g
+HiP5S0ia1uj51EHgL1OQFBig6FDjaMxCcFi4eeAstdbKt25yfUueFhcdRQybBlAY
+6ES19ZYG8HQjGYpRUGa8usy5VRL4vZa46cSGtZ4gY3MfsaK1gOxSfPrTzZ6ILIo4
+IF8uLy4GbCmszBQLYEBNKI5TgrxSceGeMQ/37S/rP5scr/mwLn69EA/3P05NeKCS
+4EcOs8BYaPpLckpDLEsq6EKiEI/FWQ/t79tMJCp5px8s2qqNkPCa2DikC80eHa9/
+gWxyEklxnQlt2ZJroE/6i0CqxqTxJ05RJ1M1f/Sep4fMjXaONxKVjjt0jATNnQc0
+KgoUYexhWctlBAvHeQGTG7dWl7svx9p8HBZbbhaWCjSbRPnwxnAJ4gDIfCSpOZvw
+70TZ6zbfTKrhQtYGxlrHce8itZu/uL8PKl+gJSfBYD+wv6wp2LMzvv2aGsPN+cm6
+ij4jl7SpIZkK+ioeYonuz5HZ7A5qG1ElYVyVCEpGU46beju4LwSj4j0bWfwp5ynA
+/Q7ccyM3yFEkGUQ1qPVK1bLd/KSRvnjMqPMhcJUK6JYEOFVwkyWlp/ak2vjs3vng
+o07va+e+4PlT9WNWjG3xwHaItAAIuU2leC0jYgoI1nOjEMhCPYM=
+=l+gW
 -----END PGP SIGNATURE-----
 
---bnfcbwayrcwki5lr--
+--06V78GaJMtEOBeMJ--
