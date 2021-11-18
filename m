@@ -2,66 +2,64 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E6794552EA
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Nov 2021 03:53:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 54F6E455305
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Nov 2021 04:02:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242137AbhKRC4Z (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 17 Nov 2021 21:56:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56644 "EHLO
+        id S242392AbhKRDFc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 17 Nov 2021 22:05:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240757AbhKRC4Y (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 17 Nov 2021 21:56:24 -0500
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EFCEC061570;
-        Wed, 17 Nov 2021 18:53:25 -0800 (PST)
-Received: by mail-pg1-x536.google.com with SMTP id s138so3998465pgs.4;
-        Wed, 17 Nov 2021 18:53:25 -0800 (PST)
+        with ESMTP id S242292AbhKRDF2 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 17 Nov 2021 22:05:28 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D74A7C061570;
+        Wed, 17 Nov 2021 19:02:28 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id gx15-20020a17090b124f00b001a695f3734aso4377980pjb.0;
+        Wed, 17 Nov 2021 19:02:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ydhncPFsv4uTLuZsh+u6JueSvp7B3BRJ0masoTgqhuI=;
-        b=mb3zTAth3h1fACQsH7FEUV5uIFnNJXbDFhNSkWGr00eyrTMzC5xd2lVZ87t/FvOcYl
-         EBJ8gfU9WDEILAqTcHLjbSoSSyQ8+s00YkgmCu/KyYBg3O5o2qD8/2FEYmTepqKT0Dbe
-         qdTf0Imuzb5VB+BPi7KeVIyGxlgZWR6PTmYfnJV7mF25U2VCEGAHjkuaSQWWZoAT/lVY
-         Gv2Ar4oGBc0oTisXGFBJscv+82w6itmo8yDfVRXNciPuY/cmM60gXfv120659lq546J1
-         rIHxzZfouTTRlUIlk3DmLAf0yAU7f4OGreqiV5gUi47TN0+RwISGiQacpwep6YK0VWqa
-         v+2w==
+        bh=FdfDVJthM5pyVxZWm3E3cAghysFpOZNuY3ecMXIdjc0=;
+        b=pPIn+oNH7I0U6CM4c9jtQlJ/MNsSQZ1BnY8Ik1mg2+LWfY5vWmOHR7b+17llHXnavL
+         exL8Q0D9ZDZ+upREC3asPJTSawLPOcChL3qhdduBkxCWt5jYeTULY+fYrwS7vYO1p5YO
+         kv3de+tooEE0050mhd8Gjkr1ftjARpfFSmUBTO2Kppy+a5RcI8o6Dpg4LKy5LUlYapWu
+         CmScHAaFGPvHnjy9WR9/oyhW0LQKmopPUKZPUMekakqgkWfSQp6xLeLvuXTs/A5jrwiY
+         uIAaxP92lWLjr6VGH3D9jrLYMGwfEes1FIwkVA51+JR8VxyxFSSBqMRs5Unz9LGJigcu
+         wx6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ydhncPFsv4uTLuZsh+u6JueSvp7B3BRJ0masoTgqhuI=;
-        b=AJkN2L4JJI1emgIy5beZVkktgoiSe1mqbRmZTe4sq8FiuSUS8jndEZies8pW3QZQmQ
-         Tj8ZYx1KIXMhdCF8HwvbW51Z4Epw4U/KSjFYeWoeiIPOVDPKfoSMzcipG3rnLsgJprAP
-         vh3fYkmwCATYZQK6HSBPXCtA9ziBqz2uIYXGQVx2l344mXANYWSxEejZIp9AgaTyiUav
-         aUZsm9SYAfGX5fW9ukfaRMGHvSMRjeImGC6sfETNfCd9oPaygD2fRVJRBJNRO3ed2nyT
-         RL1g3DpX7bPxs+DIqLF2Far+mlX4+hhXoxo9WUKZYhZdNIkSmg/hpdeyZIYxGI3RmaqS
-         jmGg==
-X-Gm-Message-State: AOAM530qb1wku8IVl38zMVSR4N1eARtu6nbNhd2t3z7tNIKqWLHWJUAE
-        1+suGVLiS6ldMKn5Y/ifsv4=
-X-Google-Smtp-Source: ABdhPJwKmBuqdEAZY6Gfx5iVVa9wu63f5hwitNcfw9ahQwz7MzdTxRFaRgy0Ml402jwppSqWaLb0TA==
-X-Received: by 2002:a62:dd0d:0:b0:494:6e7a:23d with SMTP id w13-20020a62dd0d000000b004946e7a023dmr11798803pff.17.1637204005250;
-        Wed, 17 Nov 2021 18:53:25 -0800 (PST)
+        bh=FdfDVJthM5pyVxZWm3E3cAghysFpOZNuY3ecMXIdjc0=;
+        b=qT1ywV/mafcUFcrVq6VtCs2sd3ypSpjNES31dcoz/ycknAf2k2SK47qIfJOMZ4COGk
+         rDuH14vo3CqFLkyRINn9dYfFd2esqY9xltirXPECqsSciXAJNVXEQwIusqXMMxAkYK6T
+         A/LmxrjzgCY/eJOHpMnG/5JS53GmY9Q1P9MGenJuxuyyURDzd+sgJurOtXmkiO83E61g
+         gTg6UcrflA0M/WY9JtRfKeMs/mE4kqXNjiBcCQ2PrFvpYesuLyvOJyGIoOpjbCHQGutT
+         sReOX9Phudzmp6BSaj97e8uVKM40MFuFj26S6Rs39/4V4VCYo3GVvgBWTy7cZrd5+Tlv
+         UY1w==
+X-Gm-Message-State: AOAM533p5KnflbC0bxO423IqVXmhsmOmouP7XHlzvmgB4cHkNN6o1Ees
+        2W9qXsWgzR9ul160ODQa9f8=
+X-Google-Smtp-Source: ABdhPJx4npN9dFxdOsPvhvpv/HYVXZsBAhC13Zy9gQU6YHLgFB+34Eo8heuO5vEz7EKbqgZnK5hlMA==
+X-Received: by 2002:a17:90a:1b45:: with SMTP id q63mr6074281pjq.135.1637204545163;
+        Wed, 17 Nov 2021 19:02:25 -0800 (PST)
 Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id x14sm901326pjl.27.2021.11.17.18.53.22
+        by smtp.gmail.com with ESMTPSA id mg17sm901119pjb.17.2021.11.17.19.02.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Nov 2021 18:53:24 -0800 (PST)
+        Wed, 17 Nov 2021 19:02:24 -0800 (PST)
 From:   cgel.zte@gmail.com
 X-Google-Original-From: deng.changcheng@zte.com.cn
 To:     u.kleine-koenig@pengutronix.de
-Cc:     alexandre.belloni@bootlin.com, cgel.zte@gmail.com,
-        deng.changcheng@zte.com.cn, lee.jones@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, ludovic.desroches@microchip.com,
-        nicolas.ferre@microchip.com, thierry.reding@gmail.com,
+Cc:     cgel.zte@gmail.com, deng.changcheng@zte.com.cn,
+        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
         zealci@zte.com.cn
-Subject: [PATCH V3] pwm: Use div64_ul instead of do_div
-Date:   Thu, 18 Nov 2021 02:52:54 +0000
-Message-Id: <20211118025254.163231-1-deng.changcheng@zte.com.cn>
+Subject: [PATCH V3] pwm: rcar: Use div64_ul instead of do_div
+Date:   Thu, 18 Nov 2021 03:02:15 +0000
+Message-Id: <20211118030215.163306-1-deng.changcheng@zte.com.cn>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211117145419.b4wb6zp42rjdpgn5@pengutronix.de>
-References: <20211117145419.b4wb6zp42rjdpgn5@pengutronix.de>
+In-Reply-To: <20211117130144.161788-1-deng.changcheng@zte.com.cn>
+References: <20211117130144.161788-1-deng.changcheng@zte.com.cn>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -77,31 +75,22 @@ to avoid a possible truncation.
 Reported-by: Zeal Robot <zealci@zte.com.cn>
 Signed-off-by: Changcheng Deng <deng.changcheng@zte.com.cn>
 ---
- drivers/pwm/pwm-atmel-hlcdc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pwm/pwm-rcar.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-atmel-hlcdc.c b/drivers/pwm/pwm-atmel-hlcdc.c
-index a43b2babc809..1ae3d73b9832 100644
---- a/drivers/pwm/pwm-atmel-hlcdc.c
-+++ b/drivers/pwm/pwm-atmel-hlcdc.c
-@@ -60,7 +60,7 @@ static int atmel_hlcdc_pwm_apply(struct pwm_chip *c, struct pwm_device *pwm,
- 				return -EINVAL;
+diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
+index b437192380e2..fb475c188e1e 100644
+--- a/drivers/pwm/pwm-rcar.c
++++ b/drivers/pwm/pwm-rcar.c
+@@ -111,7 +111,7 @@ static int rcar_pwm_set_counter(struct rcar_pwm_chip *rp, int div, int duty_ns,
+ 	u32 cyc, ph;
  
- 			clk_period_ns = (u64)NSEC_PER_SEC * 256;
--			do_div(clk_period_ns, clk_freq);
-+			clk_period_ns = div64_ul(clk_period_ns, clk_freq);
- 		}
+ 	one_cycle = (unsigned long long)NSEC_PER_SEC * 100ULL * (1 << div);
+-	do_div(one_cycle, clk_rate);
++	one_cycle = div64_ul(one_cycle, clk_rate);
  
- 		/* Errata: cannot use slow clk on some IP revisions */
-@@ -72,7 +72,7 @@ static int atmel_hlcdc_pwm_apply(struct pwm_chip *c, struct pwm_device *pwm,
- 				return -EINVAL;
- 
- 			clk_period_ns = (u64)NSEC_PER_SEC * 256;
--			do_div(clk_period_ns, clk_freq);
-+			clk_period_ns = div64_ul(clk_period_ns, clk_freq);
- 		}
- 
- 		for (pres = 0; pres <= ATMEL_HLCDC_PWMPS_MAX; pres++) {
+ 	tmp = period_ns * 100ULL;
+ 	do_div(tmp, one_cycle);
 -- 
 2.25.1
 
