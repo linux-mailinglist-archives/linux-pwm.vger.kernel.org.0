@@ -2,54 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 860154580F6
-	for <lists+linux-pwm@lfdr.de>; Sun, 21 Nov 2021 00:34:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DEE8E4580F7
+	for <lists+linux-pwm@lfdr.de>; Sun, 21 Nov 2021 00:35:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235201AbhKTXhm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 20 Nov 2021 18:37:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44490 "EHLO
+        id S235093AbhKTXiJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 20 Nov 2021 18:38:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235093AbhKTXhm (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 20 Nov 2021 18:37:42 -0500
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E81DC061574
-        for <linux-pwm@vger.kernel.org>; Sat, 20 Nov 2021 15:34:38 -0800 (PST)
-Received: by mail-ed1-x532.google.com with SMTP id t5so59489227edd.0
-        for <linux-pwm@vger.kernel.org>; Sat, 20 Nov 2021 15:34:38 -0800 (PST)
+        with ESMTP id S232375AbhKTXiJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 20 Nov 2021 18:38:09 -0500
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11217C061574
+        for <linux-pwm@vger.kernel.org>; Sat, 20 Nov 2021 15:35:05 -0800 (PST)
+Received: by mail-ed1-x52a.google.com with SMTP id x6so47420992edr.5
+        for <linux-pwm@vger.kernel.org>; Sat, 20 Nov 2021 15:35:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=Tv8HLzUluQkTs0q0uddjhiVOF25UCticbPEqcPKHBjw=;
-        b=fs/FzKGJXmddVV2n/avgGcBD16MmtHPBNm3GBjN5k6cY6p6tIvtTvs18wvvFoGQGPB
-         iY6F6UIySX91OVy6aUhPzd+14km05J3c+40ytmNrtl55O1MUhLbd7Z4rrjwv58HroSFv
-         DsRYB+bhtLU3qO3JwTAmp6Fxmg8Bv9SVYIHjP4/HF6piYdKMqq/JG7d8my600+CWe7W6
-         Kva4o6F4dlYnpkMi9G9AzayFCz+VqDxvCTKCDigGeRxZ6A+sR2qbpmvv5Ofb+sieYyh7
-         YMJhLZ1HcDWXYtC8W3x31wJSj5WcjATXsOnmlFgPKyqP/xm+MwQLQcEKE5PMURWgYWy/
-         6ygA==
+        bh=mHtQSj11k7VuMznmMKnh6/LXN6T5gxNJSVkExRwgo38=;
+        b=oe+qY8jXhpFIPdIuJ46r8t+l4fXZVr0owy4RoE7UmfeBkCmHEoA/LR+ndZTf8j6deu
+         ePM1fwDP/rNWpq4GX2SkJ31SHFRMClOgEoNxqpy9osa+d8dUuC1v2B1x4im7yl/5svVs
+         q14TxWiGUGeOJLfi1VuPP/uBIvcBZj7c9BLXMHI7Nn3UB2O74kVrok3XHP5GC2uACQfW
+         3e66yqObqna4A5nGnHQ7TiK+tfG9l5hiifz2WsaoWEAgsxORUTRCz6lCikJG/M8jrzpB
+         oEAQJJ2BA3rWLhRns9yylVjCIwUNsmPmB380jqArZ2YhLNewqF7toAoj3vMBQ4qf0/W3
+         s2Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Tv8HLzUluQkTs0q0uddjhiVOF25UCticbPEqcPKHBjw=;
-        b=ETXmm+E7DBtjN1xsQr2GSByJKcK2kRb6rttWPKey4texy/d0nec5PHLDpuxdDL8dLb
-         FpN4Hj9gbWlc6wWDfuSTLgZv1R7CGqESe2Z30mgcMRDk/Oory/n2+qMradCxTHzofJ1P
-         5Sm7ol7q818R6GAJ9kcDOrFvOS9OPVZ9wn7Njpu8qlMOTo0qqT2xMxeRoTFMnQB/vQlt
-         c2MLpz/QXFk4q4e+bnubviIu9TIYWvKpHj5zGSr4o+g2foYw3+QoyhJudxRibFueJ8TB
-         M1KS4K25l58gWIKp3EClFK/ZU8eSBJkCnHgKjUyhqbTOrBk8v4pFSahbRx05fpw0xgzE
-         jfrQ==
-X-Gm-Message-State: AOAM530cBSH1QhT61VcHC0Mzp1WZsjfrvdWyGQNwHmKy+v1v9sufnpBo
-        1Q0nLm+IO3D5jgdWAkYOMIn3tfVH1C0X84/+qHDBy1k1sbA=
-X-Google-Smtp-Source: ABdhPJy0tD2Z6ScIRSCnvVicKFa+RTzFVjEzxt9euVHdrHOasoGnTuE5RGOERYAAokG8NbHHWUNdKM2CTwzzMNQPMMk=
-X-Received: by 2002:a17:907:6e8e:: with SMTP id sh14mr24614498ejc.536.1637451276616;
- Sat, 20 Nov 2021 15:34:36 -0800 (PST)
+        bh=mHtQSj11k7VuMznmMKnh6/LXN6T5gxNJSVkExRwgo38=;
+        b=ZCQyNW5mJQZQSeNYcYdx6y3x7Som+5CbVTS77/iqGXF9D+QxiO99p6XmWusdwGiwIS
+         0xtJ1XpPIwqawJ0j7SINV8dkEgFYHOzV7Fllqj+MaX2kZPDHTRBhTrGzuHYsOYkWUBgC
+         tYA4Tg8siVNqS+53y4PjIn5ZmM5dgrXMZnBslZBqSerTISijGLQfKKbVxkA1x6ur67IQ
+         bHb8kfCCp15DfYizMx6gfPlCUhR9TmjHSB6Kc6t2wYRiJOjfFUZEkmeQS0tDQzRTMvSK
+         Suu+Xwcqnjnj0dOImmusir4/Uh4ktENgoGWNGl6V5hr9IM7sX50oJ5phlWmb67Vi9HwU
+         6/wg==
+X-Gm-Message-State: AOAM532DUSQYFOgj7Y5wpqieZq2seURpZVptqLeB8xAxB4j4RONuxAsC
+        r2+JA63SB1qkmwmnI0NYWJsTpywWoQRqUrpRh1o=
+X-Google-Smtp-Source: ABdhPJwK9QpyBEvxzH8bMLZpZxGHDV7efAgsJ1o6DA+L2b42i+vMvbry3bEUxaeBSfdJk9prfR5Or5JegRPUH7AdiBs=
+X-Received: by 2002:a50:da0a:: with SMTP id z10mr43945848edj.298.1637451303501;
+ Sat, 20 Nov 2021 15:35:03 -0800 (PST)
 MIME-Version: 1.0
-References: <20211108134628.120474-1-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20211108134628.120474-1-u.kleine-koenig@pengutronix.de>
+References: <20211108134628.120474-1-u.kleine-koenig@pengutronix.de> <20211108134628.120474-2-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20211108134628.120474-2-u.kleine-koenig@pengutronix.de>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sun, 21 Nov 2021 00:34:25 +0100
-Message-ID: <CAFBinCDW-E6d5HQUn0q_-M-Gi4+tXiGV0NBg16iyBUFJC11e7g@mail.gmail.com>
-Subject: Re: [PATCH 1/4] pwm: meson: Drop always false check from .request()
+Date:   Sun, 21 Nov 2021 00:34:52 +0100
+Message-ID: <CAFBinCBcS=MC_cZQVPBYzFGKmfjpkBKKDO7sa+Yeb8pUzB-O9g@mail.gmail.com>
+Subject: Re: [PATCH 2/4] pwm: meson: Drop useless check for channel data being NULL
 To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -68,10 +68,9 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 On Mon, Nov 8, 2021 at 2:46 PM Uwe Kleine-K=C3=B6nig
 <u.kleine-koenig@pengutronix.de> wrote:
 >
-> In .request() pwm_get_chip_data() returns NULL always since commit
-> e926b12c611c ("pwm: Clear chip_data in pwm_put()"). (And if it didn't
-> returning 0 would be wrong because then .request() wouldn't reenable
-> the clk which the other driver code depends on.)
+> In meson_pwm_free() the function pwm_get_chip_data() always returns a
+> non-NULL pointer because it's only called when the request callback
+> succeeded and this callback calls pwm_set_chip_data() in this case.
 >
 > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
