@@ -2,78 +2,70 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 46E3F45FBB7
-	for <lists+linux-pwm@lfdr.de>; Sat, 27 Nov 2021 03:12:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13F14460477
+	for <lists+linux-pwm@lfdr.de>; Sun, 28 Nov 2021 06:43:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348831AbhK0CPu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 26 Nov 2021 21:15:50 -0500
-Received: from mail.daesangagung.co.id ([117.54.218.101]:44800 "EHLO
-        mail.daesangagung.co.id" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241891AbhK0CNq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 26 Nov 2021 21:13:46 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.daesangagung.co.id (Postfix) with ESMTP id B11F180BC8355;
-        Fri, 26 Nov 2021 00:25:04 +0700 (WIB)
-Received: from mail.daesangagung.co.id ([127.0.0.1])
-        by localhost (mail.daesangagung.co.id [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id KP-98jJa8OIL; Fri, 26 Nov 2021 00:25:04 +0700 (WIB)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.daesangagung.co.id (Postfix) with ESMTP id 9CAE7809F6432;
-        Thu, 25 Nov 2021 20:16:56 +0700 (WIB)
-X-Virus-Scanned: amavisd-new at daesangagung.co.id
-Received: from mail.daesangagung.co.id ([127.0.0.1])
-        by localhost (mail.daesangagung.co.id [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id wLAkd3Q9MCXI; Thu, 25 Nov 2021 20:16:56 +0700 (WIB)
-Received: from User (_gateway [10.0.22.111])
-        by mail.daesangagung.co.id (Postfix) with SMTP id 335C4809F6434;
-        Thu, 25 Nov 2021 11:25:13 +0700 (WIB)
-Reply-To: <sarb_bnk086@meta.ua>
-From:   "Hsbc Bank London" <info@daesangagung.co.id>
-Subject: Your Approved Payment !
-Date:   Wed, 24 Nov 2021 20:25:30 -0800
+        id S233173AbhK1FqS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 28 Nov 2021 00:46:18 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:49674 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230230AbhK1FoR (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sun, 28 Nov 2021 00:44:17 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 4J1y561xCxzGX;
+        Sun, 28 Nov 2021 06:40:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1638078060; bh=euRkxERs/Vo+Ncwnc6oh+QQPM82cBPQuQuUB2BgzLnk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LY3ChcHhLpC97uysDR/7nppfcxComB2E48G/CSr/GJWMZpY0nUf2Ozt/QdF3bO27D
+         KVVscNOrPrvjDeFDDvD8xGhXTpYyqBgTMYDKLE9wEICL5bDVx6hBtk8ejpU6BrId79
+         vbWsoB/iTmCLm+bLT0tuvFrL4/nVF7nyYWv4tALAyWWX2iU7ISeiyJa/5FSEeoDtm6
+         egb154gg0fV3kqNymh1/NYzbwJKJ0ezYVFUVXr4cbByKt/7l8pm0u2iIP/DReChzc2
+         cj5XNAxcI2vANrMDBXNTTKYQJcaUTS+V2hD4R7+BDKXqWKOMu+D+3chFvhgLVLi9p7
+         Ujd618hPUSMCQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.103.3 at mail
+Date:   Sun, 28 Nov 2021 06:40:56 +0100
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Uwe =?iso-8859-2?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-mmc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-clk@vger.kernel.org, David Heidelberg <david@ixit.cz>
+Subject: Re: [PATCH v15 00/39] NVIDIA Tegra power management patches for 5.17
+Message-ID: <YaMWaKqQ+c8G08mJ@qmqm.qmqm.pl>
+References: <20211114193435.7705-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-Id: <20211125042513.335C4809F6434@mail.daesangagung.co.id>
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211114193435.7705-1-digetx@gmail.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-THE WORLDS LOCAL BANK
-International Banking
-FOREIGN EXCHANGE UNIT
+On Sun, Nov 14, 2021 at 10:33:56PM +0300, Dmitry Osipenko wrote:
+> This series adds runtime PM support to Tegra drivers and enables core
+> voltage scaling for Tegra20/30 SoCs, resolving overheating troubles.
+> 
+> All patches in this series are interdependent and should go via Tegra tree
+> for simplicity.
+[...]
 
-RE: MANDATORY RELEASE ORDER OF YOUR OVERDUE FUND
+I would suggest pushing all the fixes to the front of the series (those are
+at least patches 1, 3, 17, 27-31 and 39).
 
-Dear Valued Beneficiary:
-
-We are pleased to inform you that we have finally concluded arrangement towards your refund/lottery pay out which has been delayed for a Long Period of time because of your Cooperation and Dealings with Wrong Officials and importers of banks as your fund returned back to us on the 4th of Jan 2021 when we confirmed the rate of delays and questionable activities that has been related by the previous administrative banks alongside with others that collaborated in delaying the release of your fund after all charges and payments demanded were paid.
-
-Recently, the Ministry of Finance of United Kingdom, Bank of England, HSBC Bank Plc UK and United Kingdom Inland Revenue Services held a meeting on how this fund will be released to the beneficiaries to their designated bank accounts in their country without further delay since we are in the first half of the economic year 2021 and it is now overdue to be released as the said funds belongs to them.
-
-We apologize for the delay of the payment and all the inconveniences that this might have caused you during this period of time. However we have instructed all the banks in the globe which we previously asked to help us pay out this fund to the general public to STOP the process of the release of the fund due to their incompetence and negligence of duty towards the release of this fund. After our findings, some were arrested and charged for theft according to Section 1 of the Theft Act 1978, as amended by the Theft (Amendment) Act 1996 law of the United Kingdom.
-
-The Bank of England Governor (Mr Andrew Bailey) has given serious warning and Instructions and ordered the Inland Revenue Services Department of England to quickly release all on hold funds which are in their escrow account to the sole beneficiaries which you are among those who will receive their Inheritance funds.
-
-Please contact ONLY the Executive member of the Monetary Policy Committee of South African Reserve Bank (Dr Rashad Cassim) on his email: sarb_bnk086@meta.ua to advise you on how to procure the certificate of claim as the law of South Africa demands that without it there will not be any payment whether pending loan amount, lottery fund, inheritance funds or whatsoever fund locally or internationally perhaps you have not yet received it.
-
-Provide below details to Dr Rashad Cassim for his clarification:
-
-Full Name....... Tel.................
-
-Address......... Amount..............
-
-City............ Country.............
-
-Copies of documents pertaining to the fund.
-
-Best Regards,
-Mr.James Emmett.
-Chief Executive Officer, HSBC Bank plc.
-United Kingdom
+Best Regards
+Micha³ Miros³aw
