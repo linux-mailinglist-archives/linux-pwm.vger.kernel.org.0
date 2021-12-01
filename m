@@ -2,145 +2,187 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4160846527D
-	for <lists+linux-pwm@lfdr.de>; Wed,  1 Dec 2021 17:07:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 82E864657AA
+	for <lists+linux-pwm@lfdr.de>; Wed,  1 Dec 2021 21:53:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243047AbhLAQLI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 1 Dec 2021 11:11:08 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:46880 "EHLO
-        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232991AbhLAQLH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Dec 2021 11:11:07 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 51CB5CE1EEF;
-        Wed,  1 Dec 2021 16:07:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81FBDC53FAD;
-        Wed,  1 Dec 2021 16:07:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638374863;
-        bh=WESosVN/5HMxq8EnfCo3XazTasylttxu/o4U2Ep8YXo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IAswSuZn7RFcyKM9Z9Qm3UOk4QOIkQNCzdvhpW2ciZw3s/yUn1We0uNEGrsv42iFw
-         27uvQGz0FbJGvBOcugLGoYTOwYU6vHzhEY1+7AFy0F84SQpgi4J3kLd0EEMuTxIZ6X
-         S7/z+KNJz3DaAki9BYnPNK5LyyvBk/pIDVwlTQHCSKojJkS8VGprmnyskbEw2w705m
-         5kUUVE2KEI9UPoP5ccisCEZfMIAK6PoNg+cBTJCeEZwbCbTPc9CvMfpRnPd8P1D5ib
-         12svFYtpZrVT/fA3qk03SUesWftO2VMZjDPkM/36IqAlzqYDqyKgkno4VQ0SVn5GIy
-         8orINNtf2nmHw==
-Received: by mail-ed1-f42.google.com with SMTP id r25so38383673edq.7;
-        Wed, 01 Dec 2021 08:07:43 -0800 (PST)
-X-Gm-Message-State: AOAM531rQUfMi0pGnAmwmn5FJGSJQAMY9Xy4urq3B+x3zWDsV12M226h
-        OOqiJ/qjHkWGEs4qYPNagDQSYJK/EGAsYPZ9bA==
-X-Google-Smtp-Source: ABdhPJyXBMAt4Cr2JNnD4a9r9qlLbYcUZftirjxrAMuCEVE4eeRilbfBJKZm5YnfnuYDTcRpeAi+rkHbij/tbGB03bk=
-X-Received: by 2002:a17:907:7f25:: with SMTP id qf37mr8173887ejc.147.1638374857271;
- Wed, 01 Dec 2021 08:07:37 -0800 (PST)
-MIME-Version: 1.0
-References: <8137a76d66146dd5c1efa0c46c60de5766b7a349.1638293850.git.baruch@tkos.co.il>
- <62ec6016400e80ee379c07ef2c80abbf7f60bbe2.1638293850.git.baruch@tkos.co.il>
- <1638304586.245688.2968346.nullmailer@robh.at.kernel.org> <87ee6wgc0b.fsf@tarshish>
-In-Reply-To: <87ee6wgc0b.fsf@tarshish>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 1 Dec 2021 10:07:25 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKgRMiK9Uvh=EJDW7n_1Sz79NFQ7_K+RzqZ7nBAoQsJLg@mail.gmail.com>
-Message-ID: <CAL_JsqKgRMiK9Uvh=EJDW7n_1Sz79NFQ7_K+RzqZ7nBAoQsJLg@mail.gmail.com>
-Subject: Re: [PATCH v9 2/3] dt-bindings: pwm: add IPQ6018 binding
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        id S1353295AbhLAU4a (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 1 Dec 2021 15:56:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1353129AbhLAUzA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Dec 2021 15:55:00 -0500
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C3C9C06175B;
+        Wed,  1 Dec 2021 12:51:38 -0800 (PST)
+Received: by mail-pj1-x102f.google.com with SMTP id w33-20020a17090a6ba400b001a722a06212so1726089pjj.0;
+        Wed, 01 Dec 2021 12:51:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oF513HL59Lq2r+t8IJTJGHwJx0tkD87dfhsL+nC0qZs=;
+        b=Gu38bNP42GQE4Q0wImmTZ533tndkyxXvDUIKcsJTjIxxjFfJCiJYD9Wz33X+jnoBhc
+         +jpr+NiaprWjfgXcTDZ9Piw5b3gkZRsZ8kqvNPn1pGzodSq8kqlKhVMpKc87WCBJ2Y/I
+         B3eTDOSzJJXQ4kk5ObP0xNTTU1El/AczBrET8obTDAOH0sOqp1OaudYSr3pUN0LZ38oW
+         ow+aon7mUPajiUVfOWv1VBvPmDE3wYZOjFQCd/zyI4oBp5nyoqkaHatYjiQxdIz3nE5I
+         i6m2D5Ww/igRWPSNkR9m5fH59vNqQLgTp6v/FhNUWC8WT2sWU5PL4aEICwr3YJJhWv/V
+         /uVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oF513HL59Lq2r+t8IJTJGHwJx0tkD87dfhsL+nC0qZs=;
+        b=ipHcxlMfPLSaYUVt2wAI8lcoN1NOnsSj4JjVk5Vp23kZQ+exK67PDjlMOR/yts4O5G
+         aFXCt/stVDB7TWNowWhUaiKdc8CtG1Nl8SmXnn6GsPzGNSUUN6RrsPQJq6hDykRurFZn
+         fxcx31PzH7u+51s3Pga2GmnytGUfm1erCJKRMV6VB6VKR28OpkL1ZVjGYZlm76KtEomb
+         F0C923tyktNJjXQykNr5WDbOI1BvgXI8x+qmxzF/SKgnRDGCJ/VyH1KqJKI2R8eQZE7E
+         kjDOoK8qmC/5WvyAlYFEkKL1enmfCL45z5UO6Rl3wNbJah6Y79DRczlpX7dqN6L//eA7
+         8xKQ==
+X-Gm-Message-State: AOAM530x26KVKYLi4OT8YCbQT1KzOxRE8e7HSZMeR+ns4CdeFnb4ramB
+        UsE0Hi5uBj+CZ9zW76uJwGJzkwAA8s8=
+X-Google-Smtp-Source: ABdhPJy1qEUa/nopWxDTuz1Ua9yO5XGnE1dzsGDNJjYVNCnS9wBraDlcVnsGOkzNzSpxgmK+2E8yGg==
+X-Received: by 2002:a17:902:e294:b0:143:86a8:c56d with SMTP id o20-20020a170902e29400b0014386a8c56dmr10082966plc.22.1638391897408;
+        Wed, 01 Dec 2021 12:51:37 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id p20sm729117pfw.96.2021.12.01.12.51.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Dec 2021 12:51:36 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     devicetree@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
+        ARCHITECTURE), Gregory Fong <gregory.0xf0@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Robert Marko <robert.marko@sartura.hr>,
-        linux-pwm@vger.kernel.org,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, devicetree@vger.kernel.org,
-        Kathiravan T <kathirav@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org,
-        Balaji Prakash J <bjagadee@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Cooper <alcooperx@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
+        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list),
+        linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE),
+        linux-mmc@vger.kernel.org (open list:MULTIMEDIA CARD (MMC), SECURE
+        DIGITAL (SD) AND...),
+        linux-pwm@vger.kernel.org (open list:PWM SUBSYSTEM),
+        linux-crypto@vger.kernel.org (open list:HARDWARE RANDOM NUMBER
+        GENERATOR CORE),
+        linux-rtc@vger.kernel.org (open list:REAL TIME CLOCK (RTC) SUBSYSTEM),
+        linux-pm@vger.kernel.org (open list:THERMAL),
+        linux-usb@vger.kernel.org (open list:USB SUBSYSTEM)
+Subject: [PATCH 00/14] Broadcom DT bindings updates to YAML
+Date:   Wed,  1 Dec 2021 12:50:56 -0800
+Message-Id: <20211201205110.41656-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Nov 30, 2021 at 10:55 PM Baruch Siach <baruch@tkos.co.il> wrote:
->
-> Hi Rob,
->
-> On Tue, Nov 30 2021, Rob Herring wrote:
-> > On Tue, 30 Nov 2021 19:37:29 +0200, Baruch Siach wrote:
-> >> DT binding for the PWM block in Qualcomm IPQ6018 SoC.
-> >>
-> >> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> >> ---
-> >>
-> >> v9:
-> >>
-> >>   Add 'ranges' property to example (Rob)
-> >>
-> >>   Drop label in example (Rob)
-> >>
-> >> v8:
-> >>
-> >>   Add size cell to 'reg' (Rob)
-> >>
-> >> v7:
-> >>
-> >>   Use 'reg' instead of 'offset' (Rob)
-> >>
-> >>   Drop 'clock-names' and 'assigned-clock*' (Bjorn)
-> >>
-> >>   Use single cell address/size in example node (Bjorn)
-> >>
-> >>   Move '#pwm-cells' lower in example node (Bjorn)
-> >>
-> >>   List 'reg' as required
-> >>
-> >> v6:
-> >>
-> >>   Device node is child of TCSR; remove phandle (Rob Herring)
-> >>
-> >>   Add assigned-clocks/assigned-clock-rates (Uwe Kleine-K=C3=B6nig)
-> >>
-> >> v5: Use qcom,pwm-regs for phandle instead of direct regs (Bjorn
-> >>     Andersson, Kathiravan T)
-> >>
-> >> v4: Update the binding example node as well (Rob Herring's bot)
-> >>
-> >> v3: s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
-> >>
-> >> v2: Make #pwm-cells const (Rob Herring)
-> >> ---
-> >>  .../devicetree/bindings/pwm/ipq-pwm.yaml      | 53 ++++++++++++++++++=
-+
-> >>  1 file changed, 53 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
-> >>
-> >
-> > My bot found errors running 'make DT_CHECKER_FLAGS=3D-m dt_binding_chec=
-k'
-> > on your patch (DT_CHECKER_FLAGS is new in v5.13):
-> >
-> > yamllint warnings/errors:
-> >
-> > dtschema/dtc warnings/errors:
-> > Documentation/devicetree/bindings/pwm/ipq-pwm.example.dt.yaml:0:0:
-> > /example-0/syscon@1937000: failed to match any schema with compatible:
-> > ['qcom,tcsr-ipq6018', 'syscon', 'simple-mfd']
->
-> My previous submission[1] had this text above the patch changelog:
->
-> ---
-> This series does not convert the TCSR binding documentation to YAML. As
-> a result, this commit adds new a dt_binding_check warning:
->
-> /example-0/syscon@1937000: failed to match any schema with compatible: ['=
-qcom,tcsr-ipq 6018', 'syscon', 'simple-mfd']
->
-> If that is a blocker to IPQ6018 PWM support, so be it. Patches will wait
-> for someone else to push them further.
+Hi Rob,
 
-That one looks pretty trivial to convert and there are lots of people
-working on QCom stuff, so I'm going to say yes it is required.
+This patch series contains a number of device tree bindings being
+converted to YAML to help with validation.
 
-Rob
+There will be second, and possibly third rounds later on after those
+land in.
+
+Thanks!
+
+Florian Fainelli (14):
+  dt-bindings: mmc: Convert Broadcom STB SDHCI binding to YAML
+  dt-bindings: reset: Convert Broadcom STB reset to YAML
+  dt-bindings: pwm: Convert BCM7038 PWM binding to YAML
+  dt-bindings: rtc: Convert Broadcom STB waketimer to YAML
+  dt-bindings: gpio: Convert Broadcom STB GPIO to YAML
+  dt-binding: interrupt-controller: Convert BCM7038 L1 intc to YAML
+  dt-bindings: interrupt-controller: Convert BCM7120 L2 to YAML
+  dt-bindings: interrupt-controller: Merge BCM3380 with BCM7120
+  dt-bindings: interrupt-controller: Convert Broadcom STB L2 to YAML
+  dt-bindings: rng: Convert iProc RNG200 to YAML
+  dt-bindings: thermal: Convert Broadcom TMON to YAML
+  dt-bindings: ata: Convert Broadcom SATA to YAML
+  dt-bindings: bus: Convert GISB arbiter to YAML
+  dt-bindings: usb: Convert BDC to YAML
+
+ .../bindings/ata/brcm,sata-brcm.txt           |  45 ------
+ .../bindings/ata/brcm,sata-brcm.yaml          |  91 +++++++++++
+ .../devicetree/bindings/bus/brcm,gisb-arb.txt |  34 ----
+ .../bindings/bus/brcm,gisb-arb.yaml           |  66 ++++++++
+ .../bindings/gpio/brcm,brcmstb-gpio.txt       |  83 ----------
+ .../bindings/gpio/brcm,brcmstb-gpio.yaml      | 104 ++++++++++++
+ .../brcm,bcm3380-l2-intc.txt                  |  39 -----
+ .../brcm,bcm7038-l1-intc.txt                  |  61 -------
+ .../brcm,bcm7038-l1-intc.yaml                 |  91 +++++++++++
+ .../brcm,bcm7120-l2-intc.txt                  |  88 -----------
+ .../brcm,bcm7120-l2-intc.yaml                 | 149 ++++++++++++++++++
+ .../interrupt-controller/brcm,l2-intc.txt     |  31 ----
+ .../interrupt-controller/brcm,l2-intc.yaml    |  64 ++++++++
+ .../bindings/mmc/brcm,sdhci-brcmstb.txt       |  53 -------
+ .../bindings/mmc/brcm,sdhci-brcmstb.yaml      | 100 ++++++++++++
+ .../bindings/pwm/brcm,bcm7038-pwm.txt         |  20 ---
+ .../bindings/pwm/brcm,bcm7038-pwm.yaml        |  43 +++++
+ .../bindings/reset/brcm,brcmstb-reset.txt     |  27 ----
+ .../bindings/reset/brcm,brcmstb-reset.yaml    |  48 ++++++
+ .../bindings/rng/brcm,iproc-rng200.txt        |  16 --
+ .../bindings/rng/brcm,iproc-rng200.yaml       |  29 ++++
+ .../bindings/rtc/brcm,brcmstb-waketimer.txt   |  20 ---
+ .../bindings/rtc/brcm,brcmstb-waketimer.yaml  |  44 ++++++
+ .../bindings/thermal/brcm,avs-tmon.txt        |  23 ---
+ .../bindings/thermal/brcm,avs-tmon.yaml       |  57 +++++++
+ .../devicetree/bindings/usb/brcm,bdc.txt      |  29 ----
+ .../devicetree/bindings/usb/brcm,bdc.yaml     |  46 ++++++
+ MAINTAINERS                                   |   6 +-
+ 28 files changed, 935 insertions(+), 572 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/ata/brcm,sata-brcm.txt
+ create mode 100644 Documentation/devicetree/bindings/ata/brcm,sata-brcm.yaml
+ delete mode 100644 Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
+ create mode 100644 Documentation/devicetree/bindings/bus/brcm,gisb-arb.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.yaml
+ delete mode 100644 Documentation/devicetree/bindings/reset/brcm,brcmstb-reset.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/brcm,brcmstb-reset.yaml
+ delete mode 100644 Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt
+ create mode 100644 Documentation/devicetree/bindings/rng/brcm,iproc-rng200.yaml
+ delete mode 100644 Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.yaml
+ delete mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
+ create mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-tmon.yaml
+ delete mode 100644 Documentation/devicetree/bindings/usb/brcm,bdc.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/brcm,bdc.yaml
+
+-- 
+2.25.1
+
