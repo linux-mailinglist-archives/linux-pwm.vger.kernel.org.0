@@ -2,77 +2,145 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F91A464CBD
-	for <lists+linux-pwm@lfdr.de>; Wed,  1 Dec 2021 12:34:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4160846527D
+	for <lists+linux-pwm@lfdr.de>; Wed,  1 Dec 2021 17:07:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348943AbhLALh0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 1 Dec 2021 06:37:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348948AbhLALhY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Dec 2021 06:37:24 -0500
-Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3916AC06175D
-        for <linux-pwm@vger.kernel.org>; Wed,  1 Dec 2021 03:34:00 -0800 (PST)
-Received: by mail-ua1-x935.google.com with SMTP id p2so48102240uad.11
-        for <linux-pwm@vger.kernel.org>; Wed, 01 Dec 2021 03:34:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=l4J9Z+m4hmgZbWtQHlC70w1zjUmiI7wjClCwm6dHAnY=;
-        b=nKE9e+4jEQRb21OhoYPSbxPLfJ2IuSmNXU0U6wmcP4ykCacrWpdbtE0jjuz/hSLLGi
-         3CHjeG+lFmWzoULwCsmlhVFgDEk5dLFaYb51pw7bXGjZ9H8t0j91dP9aL17MRQYkMPZK
-         Snvty/Yp8/ZrWZr2EuFXHqBxUdbU8X39ik45viERJ1Dn7qW8BPCFp2vlafV2okU0kn5j
-         QPTIDY8QJSy8zAVbK10d6+AY0lky+mrQRAAg0uS1DacQStzD/dQtt/uBz/RlGIdZCai/
-         BHep24kmiLdl1nvBvHYMFonu8NoJvJlErv7lbZlg2+2c277BpkzmDA4WwPZoxzlIf0Mh
-         Af5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=l4J9Z+m4hmgZbWtQHlC70w1zjUmiI7wjClCwm6dHAnY=;
-        b=sDBtE/OZR57EZlcPVOJ4eUyufs9U73BOZ73e0f2h4u3stkyE3DZPU7emSZB1E/0j9G
-         Jlxaz8pWd7BYeXSAbugQB6IPutlqihA54gGCn9X5sjXRO1PaW6Cq/8HarHFxPSj5JVxq
-         T3SlNUJvO0fvZ1dUkhGUJlKgPCyA2JKbrLXMjCw9I0+80y8nZPq7APMBeFUWCtZjAmEQ
-         zZDWiYrT9YZCpCiMDM+Zq6mz4lomo8K1Ky9/J8Bav+Q6wRIeiB5UqaPJt0+N9Yjtilbu
-         gncyeZtctA70DZlotkqHfwRuvAkve1hc+0PwZIVbb6I95Q/K/G+HN0mPzcNTcoqTk2kJ
-         7JEw==
-X-Gm-Message-State: AOAM530wG7Uolni8zVIcL938U4XK/QZLdH7eqAfbeM6kVlwQrlyNtuwH
-        WR1WVIhJEAgG7nVQMKlam5bnsP5Ifq5WldjtgvY=
-X-Google-Smtp-Source: ABdhPJwK+H50pzFgfv5CJPfAwBzUdMqIKHh+Ckkuju2lG2knVlJrzqINPiiwPjc/Uz6xuSJez7Fkn5YZPcfa5CPpvro=
-X-Received: by 2002:a67:ef4d:: with SMTP id k13mr6266305vsr.4.1638358439020;
- Wed, 01 Dec 2021 03:33:59 -0800 (PST)
+        id S243047AbhLAQLI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 1 Dec 2021 11:11:08 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:46880 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232991AbhLAQLH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Dec 2021 11:11:07 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 51CB5CE1EEF;
+        Wed,  1 Dec 2021 16:07:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81FBDC53FAD;
+        Wed,  1 Dec 2021 16:07:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638374863;
+        bh=WESosVN/5HMxq8EnfCo3XazTasylttxu/o4U2Ep8YXo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=IAswSuZn7RFcyKM9Z9Qm3UOk4QOIkQNCzdvhpW2ciZw3s/yUn1We0uNEGrsv42iFw
+         27uvQGz0FbJGvBOcugLGoYTOwYU6vHzhEY1+7AFy0F84SQpgi4J3kLd0EEMuTxIZ6X
+         S7/z+KNJz3DaAki9BYnPNK5LyyvBk/pIDVwlTQHCSKojJkS8VGprmnyskbEw2w705m
+         5kUUVE2KEI9UPoP5ccisCEZfMIAK6PoNg+cBTJCeEZwbCbTPc9CvMfpRnPd8P1D5ib
+         12svFYtpZrVT/fA3qk03SUesWftO2VMZjDPkM/36IqAlzqYDqyKgkno4VQ0SVn5GIy
+         8orINNtf2nmHw==
+Received: by mail-ed1-f42.google.com with SMTP id r25so38383673edq.7;
+        Wed, 01 Dec 2021 08:07:43 -0800 (PST)
+X-Gm-Message-State: AOAM531rQUfMi0pGnAmwmn5FJGSJQAMY9Xy4urq3B+x3zWDsV12M226h
+        OOqiJ/qjHkWGEs4qYPNagDQSYJK/EGAsYPZ9bA==
+X-Google-Smtp-Source: ABdhPJyXBMAt4Cr2JNnD4a9r9qlLbYcUZftirjxrAMuCEVE4eeRilbfBJKZm5YnfnuYDTcRpeAi+rkHbij/tbGB03bk=
+X-Received: by 2002:a17:907:7f25:: with SMTP id qf37mr8173887ejc.147.1638374857271;
+ Wed, 01 Dec 2021 08:07:37 -0800 (PST)
 MIME-Version: 1.0
-Sender: unitednationawardwinner@gmail.com
-Received: by 2002:ab0:6c55:0:0:0:0:0 with HTTP; Wed, 1 Dec 2021 03:33:58 -0800 (PST)
-From:   "Mrs. Orgil Baatar" <mrs.orgilbaatar21@gmail.com>
-Date:   Wed, 1 Dec 2021 03:33:58 -0800
-X-Google-Sender-Auth: uTQ_nfkzXaWGWaTWp1BSFqK3Ucs
-Message-ID: <CAJ4dHaSrD-X=xpfKNZV-hXSiMV6mNYrgy5vWCNkKm6iu5RQStg@mail.gmail.com>
-Subject: Your long awaited part payment of $2.5.000.00Usd
-To:     undisclosed-recipients:;
+References: <8137a76d66146dd5c1efa0c46c60de5766b7a349.1638293850.git.baruch@tkos.co.il>
+ <62ec6016400e80ee379c07ef2c80abbf7f60bbe2.1638293850.git.baruch@tkos.co.il>
+ <1638304586.245688.2968346.nullmailer@robh.at.kernel.org> <87ee6wgc0b.fsf@tarshish>
+In-Reply-To: <87ee6wgc0b.fsf@tarshish>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 1 Dec 2021 10:07:25 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKgRMiK9Uvh=EJDW7n_1Sz79NFQ7_K+RzqZ7nBAoQsJLg@mail.gmail.com>
+Message-ID: <CAL_JsqKgRMiK9Uvh=EJDW7n_1Sz79NFQ7_K+RzqZ7nBAoQsJLg@mail.gmail.com>
+Subject: Re: [PATCH v9 2/3] dt-bindings: pwm: add IPQ6018 binding
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Robert Marko <robert.marko@sartura.hr>,
+        linux-pwm@vger.kernel.org,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, devicetree@vger.kernel.org,
+        Kathiravan T <kathirav@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org,
+        Balaji Prakash J <bjagadee@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Attention: Beneficiary, Your long awaited part payment of
-$2.5.000.00Usd (TWO MILLION FIVE Hundred Thousand United State
-Dollars) is ready for immediate release to you, and it was
-electronically credited into an ATM Visa Card for easy delivery.
+On Tue, Nov 30, 2021 at 10:55 PM Baruch Siach <baruch@tkos.co.il> wrote:
+>
+> Hi Rob,
+>
+> On Tue, Nov 30 2021, Rob Herring wrote:
+> > On Tue, 30 Nov 2021 19:37:29 +0200, Baruch Siach wrote:
+> >> DT binding for the PWM block in Qualcomm IPQ6018 SoC.
+> >>
+> >> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> >> ---
+> >>
+> >> v9:
+> >>
+> >>   Add 'ranges' property to example (Rob)
+> >>
+> >>   Drop label in example (Rob)
+> >>
+> >> v8:
+> >>
+> >>   Add size cell to 'reg' (Rob)
+> >>
+> >> v7:
+> >>
+> >>   Use 'reg' instead of 'offset' (Rob)
+> >>
+> >>   Drop 'clock-names' and 'assigned-clock*' (Bjorn)
+> >>
+> >>   Use single cell address/size in example node (Bjorn)
+> >>
+> >>   Move '#pwm-cells' lower in example node (Bjorn)
+> >>
+> >>   List 'reg' as required
+> >>
+> >> v6:
+> >>
+> >>   Device node is child of TCSR; remove phandle (Rob Herring)
+> >>
+> >>   Add assigned-clocks/assigned-clock-rates (Uwe Kleine-K=C3=B6nig)
+> >>
+> >> v5: Use qcom,pwm-regs for phandle instead of direct regs (Bjorn
+> >>     Andersson, Kathiravan T)
+> >>
+> >> v4: Update the binding example node as well (Rob Herring's bot)
+> >>
+> >> v3: s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
+> >>
+> >> v2: Make #pwm-cells const (Rob Herring)
+> >> ---
+> >>  .../devicetree/bindings/pwm/ipq-pwm.yaml      | 53 ++++++++++++++++++=
++
+> >>  1 file changed, 53 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
+> >>
+> >
+> > My bot found errors running 'make DT_CHECKER_FLAGS=3D-m dt_binding_chec=
+k'
+> > on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> >
+> > yamllint warnings/errors:
+> >
+> > dtschema/dtc warnings/errors:
+> > Documentation/devicetree/bindings/pwm/ipq-pwm.example.dt.yaml:0:0:
+> > /example-0/syscon@1937000: failed to match any schema with compatible:
+> > ['qcom,tcsr-ipq6018', 'syscon', 'simple-mfd']
+>
+> My previous submission[1] had this text above the patch changelog:
+>
+> ---
+> This series does not convert the TCSR binding documentation to YAML. As
+> a result, this commit adds new a dt_binding_check warning:
+>
+> /example-0/syscon@1937000: failed to match any schema with compatible: ['=
+qcom,tcsr-ipq 6018', 'syscon', 'simple-mfd']
+>
+> If that is a blocker to IPQ6018 PWM support, so be it. Patches will wait
+> for someone else to push them further.
 
-Your new Payment Reference No.- 6363836,
-Pin Code No: 1787
-Your Certificate of Merit Payment No: 05872,
+That one looks pretty trivial to convert and there are lots of people
+working on QCom stuff, so I'm going to say yes it is required.
 
-Your Names: |
-Address: |
-
-Person to Contact:MR KELLY HALL the Director of the International
-Audit unit ATM Payment Center,
-
-Email: uba-bf@e-ubabf.com
-TELEPHONE: +226 64865611 You can whatsApp the bank
-
-Regards.
-Mrs ORGIL BAATAR
+Rob
