@@ -2,288 +2,461 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BD5946676B
-	for <lists+linux-pwm@lfdr.de>; Thu,  2 Dec 2021 17:01:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EA1F466B87
+	for <lists+linux-pwm@lfdr.de>; Thu,  2 Dec 2021 22:17:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355540AbhLBQEY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 2 Dec 2021 11:04:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229817AbhLBQER (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 2 Dec 2021 11:04:17 -0500
-Received: from mail-ua1-x92b.google.com (mail-ua1-x92b.google.com [IPv6:2607:f8b0:4864:20::92b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2AB3C06174A;
-        Thu,  2 Dec 2021 08:00:54 -0800 (PST)
-Received: by mail-ua1-x92b.google.com with SMTP id n6so56819328uak.1;
-        Thu, 02 Dec 2021 08:00:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U2sZPQd798weph9knxMPMeinCmRojfS8Pfapl2giXJM=;
-        b=jzpN2txMKcqDve7u5vuRi2+S6p2VzSDwNSmwgr2/5gAHntXTVsO8sG16S0sfqGyEUK
-         i5x27dvhK+nePQ8Yv1FdSGF/aNukodMSRBjErWtEoehmr5hBVhIJR+8fxfg19jP0VmLF
-         kDLyA3Rcf/hL1qOS1mxoSB8r7ot6uNKvV7zfnrN4auV/nXuMVm9ZJkxGibAMDmn/SoBe
-         ROrk7jYNBy4vRtneCuKrpYlAlXLqbg6VPDloVm3HCa7hmqiu7kasCokZzPej4vufQLcm
-         C103EOF/74+rSPWk4wyF6S+J+jQQ02uAbpL/QaSvdMcka5dyzJ3Tk3nenPYbgspH8T3x
-         7IvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U2sZPQd798weph9knxMPMeinCmRojfS8Pfapl2giXJM=;
-        b=HRZ3wB4So2gPSE9p3PGj91dZ32K3lvzrb4NYqR0D3dhitPorDeKlwtxAW7rQW0OMGn
-         aijsNxew002ftVOAutuVn3Z3FFYJAYFmUbZQinOWgZqHA7Ucwjb4DOl7WepV6FdPMsVd
-         2p+ZLCA+JoMVdY9jFkBwvrqCm/AG45qyX5PKTXmYqhzxTVJK8M/utfFs6iEpnIp1Jhoh
-         sjTrwkyU2bhK0o9slrhIt556uW4qUz1DgG36+tjrEwOb14Rd/ZEzvTVcwHKCzeJjotUU
-         yWw28KoWYqhGo4K+MN8+jH7A2MdSxIJL5c/Rf5OpcV0fpXNK0BSaQRZY2E7VIxo0ejTS
-         44RA==
-X-Gm-Message-State: AOAM530hese71zCkqrBBUAZbUNYt/GciqMDW2cJ22x9UMV2CGeebhavF
-        ktIsvDhUevpGeD0FvTfafVp21jofAmoM9laPd60=
-X-Google-Smtp-Source: ABdhPJybAreaEhSuo2y2Tbo1YdlgTaiMlhDNtXg5D8QWfVW6+flBljZULwo/BbqpU2HaLcu7I83aSoQSfdCygG1zQUs=
-X-Received: by 2002:ab0:45a8:: with SMTP id u37mr15834000uau.24.1638460853923;
- Thu, 02 Dec 2021 08:00:53 -0800 (PST)
-MIME-Version: 1.0
-References: <20211201205110.41656-1-f.fainelli@gmail.com> <20211201205110.41656-6-f.fainelli@gmail.com>
-In-Reply-To: <20211201205110.41656-6-f.fainelli@gmail.com>
-From:   Gregory Fong <gregory.0xf0@gmail.com>
-Date:   Thu, 2 Dec 2021 08:00:00 -0800
-Message-ID: <CADtm3G7wiNdDq2fagWeSDd_RV_dyfrNy+5e-VL9OKjwGAWzNtg@mail.gmail.com>
-Subject: Re: [PATCH 05/14] dt-bindings: gpio: Convert Broadcom STB GPIO to YAML
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     devicetree@vger.kernel.org,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        id S1377049AbhLBVVG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 2 Dec 2021 16:21:06 -0500
+Received: from mga12.intel.com ([192.55.52.136]:25479 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1377026AbhLBVVD (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 2 Dec 2021 16:21:03 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10186"; a="216862369"
+X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
+   d="scan'208";a="216862369"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 13:17:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
+   d="scan'208";a="603129097"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 02 Dec 2021 13:17:26 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 8B4C4109; Thu,  2 Dec 2021 23:17:31 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Marc Zyngier <maz@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ray Jui <rjui@broadcom.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Baruch Siach <baruch@tkos.co.il>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Tony Lindgren <tony@atomide.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jianqun Xu <jay.xu@rock-chips.com>,
+        Alexandru Ardelean <aardelean@deviqon.com>,
+        Thierry Reding <treding@nvidia.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patches@opensource.cirrus.com,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-power@fi.rohmeurope.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-pwm@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-unisoc@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org
+Cc:     Ray Jui <rjui@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Scott Branden <sbranden@broadcom.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Markus Mayer <mmayer@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Cooper <alcooperx@gmail.com>,
-        Doug Berger <opendmb@gmail.com>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..." 
-        <linux-mmc@vger.kernel.org>,
-        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Keerthy <j-keerthy@ti.com>, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Subject: [PATCH v1 1/3] gpio: Get rid of duplicate of_node assignment in the drivers
+Date:   Thu,  2 Dec 2021 23:08:37 +0200
+Message-Id: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.33.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Florian,
+GPIO library does copy the of_node from the parent device of
+the GPIO chip, there is no need to repeat this in the individual
+drivers. Remove these assignment all at once.
 
-I haven't kept up with the new yaml format, so not entirely sure I
-know what I'm talking about yet, but here are a few comments:
+For the details one may look into the of_gpio_dev_init() implementation.
 
-On Wed, Dec 1, 2021 at 12:51 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> Convert the Broadcom STB GPIO Device Tree binding to YAML to help with
-> validation.
->
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  .../bindings/gpio/brcm,brcmstb-gpio.txt       |  83 --------------
->  .../bindings/gpio/brcm,brcmstb-gpio.yaml      | 104 ++++++++++++++++++
->  MAINTAINERS                                   |   2 +-
->  3 files changed, 105 insertions(+), 84 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
->  create mode 100644 Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.yaml
->
-> diff --git a/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt b/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
-> deleted file mode 100644
-> index 5d468ecd1809..000000000000
-> --- a/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
-> +++ /dev/null
-> @@ -1,83 +0,0 @@
-> [snip]
-> -
-> -- interrupts-extended:
-> -    Alternate form of specifying interrupts and parents that allows for
-> -    multiple parents.  This takes precedence over 'interrupts' and
-> -    'interrupt-parent'.  Wakeup-capable GPIO controllers often route their
-> -    wakeup interrupt lines through a different interrupt controller than the
-> -    primary interrupt line, making this property necessary.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpio-adnp.c            | 1 -
+ drivers/gpio/gpio-amdpt.c           | 4 +---
+ drivers/gpio/gpio-bd70528.c         | 4 +---
+ drivers/gpio/gpio-bd71828.c         | 1 -
+ drivers/gpio/gpio-brcmstb.c         | 1 -
+ drivers/gpio/gpio-davinci.c         | 1 -
+ drivers/gpio/gpio-eic-sprd.c        | 1 -
+ drivers/gpio/gpio-em.c              | 1 -
+ drivers/gpio/gpio-ge.c              | 1 -
+ drivers/gpio/gpio-grgpio.c          | 1 -
+ drivers/gpio/gpio-gw-pld.c          | 1 -
+ drivers/gpio/gpio-mt7621.c          | 1 -
+ drivers/gpio/gpio-mvebu.c           | 1 -
+ drivers/gpio/gpio-omap.c            | 3 ---
+ drivers/gpio/gpio-palmas.c          | 4 +---
+ drivers/gpio/gpio-pmic-eic-sprd.c   | 1 -
+ drivers/gpio/gpio-raspberrypi-exp.c | 1 -
+ drivers/gpio/gpio-rda.c             | 2 --
+ drivers/gpio/gpio-rockchip.c        | 3 ---
+ drivers/gpio/gpio-sama5d2-piobu.c   | 1 -
+ drivers/gpio/gpio-sprd.c            | 1 -
+ drivers/gpio/gpio-stmpe.c           | 1 -
+ drivers/gpio/gpio-tc3589x.c         | 1 -
+ drivers/gpio/gpio-tegra186.c        | 1 -
+ drivers/gpio/gpio-tps65218.c        | 3 ---
+ drivers/gpio/gpio-vf610.c           | 1 -
+ drivers/gpio/gpio-xlp.c             | 1 -
+ 27 files changed, 3 insertions(+), 40 deletions(-)
 
-It looks like interrupts-extended was removed from the new docs, I'm
-assuming that was intentional?
+diff --git a/drivers/gpio/gpio-adnp.c b/drivers/gpio/gpio-adnp.c
+index 8eedfc6451df..cc349d4e4973 100644
+--- a/drivers/gpio/gpio-adnp.c
++++ b/drivers/gpio/gpio-adnp.c
+@@ -458,7 +458,6 @@ static int adnp_gpio_setup(struct adnp *adnp, unsigned int num_gpios,
+ 	chip->ngpio = num_gpios;
+ 	chip->label = adnp->client->name;
+ 	chip->parent = &adnp->client->dev;
+-	chip->of_node = chip->parent->of_node;
+ 	chip->owner = THIS_MODULE;
+ 
+ 	if (is_irq_controller) {
+diff --git a/drivers/gpio/gpio-amdpt.c b/drivers/gpio/gpio-amdpt.c
+index bbf53e289141..afe59fb79821 100644
+--- a/drivers/gpio/gpio-amdpt.c
++++ b/drivers/gpio/gpio-amdpt.c
+@@ -104,9 +104,7 @@ static int pt_gpio_probe(struct platform_device *pdev)
+ 	pt_gpio->gc.request          = pt_gpio_request;
+ 	pt_gpio->gc.free             = pt_gpio_free;
+ 	pt_gpio->gc.ngpio            = PT_TOTAL_GPIO;
+-#if defined(CONFIG_OF_GPIO)
+-	pt_gpio->gc.of_node          = dev->of_node;
+-#endif
++
+ 	ret = gpiochip_add_data(&pt_gpio->gc, pt_gpio);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to register GPIO lib\n");
+diff --git a/drivers/gpio/gpio-bd70528.c b/drivers/gpio/gpio-bd70528.c
+index 397a50d6bc65..6874efc18f41 100644
+--- a/drivers/gpio/gpio-bd70528.c
++++ b/drivers/gpio/gpio-bd70528.c
+@@ -201,9 +201,7 @@ static int bd70528_probe(struct platform_device *pdev)
+ 	bdgpio->gpio.set = bd70528_gpio_set;
+ 	bdgpio->gpio.ngpio = 4;
+ 	bdgpio->gpio.base = -1;
+-#ifdef CONFIG_OF_GPIO
+-	bdgpio->gpio.of_node = dev->parent->of_node;
+-#endif
++
+ 	bdgpio->regmap = dev_get_regmap(dev->parent, NULL);
+ 	if (!bdgpio->regmap)
+ 		return -ENODEV;
+diff --git a/drivers/gpio/gpio-bd71828.c b/drivers/gpio/gpio-bd71828.c
+index c8e382b53f2f..b2ccc320c7b5 100644
+--- a/drivers/gpio/gpio-bd71828.c
++++ b/drivers/gpio/gpio-bd71828.c
+@@ -121,7 +121,6 @@ static int bd71828_probe(struct platform_device *pdev)
+ 	 * "gpio-reserved-ranges" and exclude them from control
+ 	 */
+ 	bdgpio->gpio.ngpio = 4;
+-	bdgpio->gpio.of_node = dev->parent->of_node;
+ 	bdgpio->regmap = dev_get_regmap(dev->parent, NULL);
+ 	if (!bdgpio->regmap)
+ 		return -ENODEV;
+diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
+index 895a79936248..176c264bb959 100644
+--- a/drivers/gpio/gpio-brcmstb.c
++++ b/drivers/gpio/gpio-brcmstb.c
+@@ -703,7 +703,6 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
+ 			goto fail;
+ 		}
+ 
+-		gc->of_node = np;
+ 		gc->owner = THIS_MODULE;
+ 		gc->label = devm_kasprintf(dev, GFP_KERNEL, "%pOF", dev->of_node);
+ 		if (!gc->label) {
+diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+index cb5afaa7ed48..f960587f86a3 100644
+--- a/drivers/gpio/gpio-davinci.c
++++ b/drivers/gpio/gpio-davinci.c
+@@ -254,7 +254,6 @@ static int davinci_gpio_probe(struct platform_device *pdev)
+ #ifdef CONFIG_OF_GPIO
+ 	chips->chip.of_gpio_n_cells = 2;
+ 	chips->chip.parent = dev;
+-	chips->chip.of_node = dev->of_node;
+ 	chips->chip.request = gpiochip_generic_request;
+ 	chips->chip.free = gpiochip_generic_free;
+ #endif
+diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
+index 865ab2b34fdd..8d722e026e9c 100644
+--- a/drivers/gpio/gpio-eic-sprd.c
++++ b/drivers/gpio/gpio-eic-sprd.c
+@@ -609,7 +609,6 @@ static int sprd_eic_probe(struct platform_device *pdev)
+ 	sprd_eic->chip.ngpio = pdata->num_eics;
+ 	sprd_eic->chip.base = -1;
+ 	sprd_eic->chip.parent = &pdev->dev;
+-	sprd_eic->chip.of_node = pdev->dev.of_node;
+ 	sprd_eic->chip.direction_input = sprd_eic_direction_input;
+ 	switch (sprd_eic->type) {
+ 	case SPRD_EIC_DEBOUNCE:
+diff --git a/drivers/gpio/gpio-em.c b/drivers/gpio/gpio-em.c
+index 90b336e6ee27..858e6ebbb584 100644
+--- a/drivers/gpio/gpio-em.c
++++ b/drivers/gpio/gpio-em.c
+@@ -306,7 +306,6 @@ static int em_gio_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	gpio_chip = &p->gpio_chip;
+-	gpio_chip->of_node = dev->of_node;
+ 	gpio_chip->direction_input = em_gio_direction_input;
+ 	gpio_chip->get = em_gio_get;
+ 	gpio_chip->direction_output = em_gio_direction_output;
+diff --git a/drivers/gpio/gpio-ge.c b/drivers/gpio/gpio-ge.c
+index 636952769bc8..f6a3de99f7db 100644
+--- a/drivers/gpio/gpio-ge.c
++++ b/drivers/gpio/gpio-ge.c
+@@ -82,7 +82,6 @@ static int __init gef_gpio_probe(struct platform_device *pdev)
+ 	gc->base = -1;
+ 	gc->ngpio = (u16)(uintptr_t)of_device_get_match_data(&pdev->dev);
+ 	gc->of_gpio_n_cells = 2;
+-	gc->of_node = pdev->dev.of_node;
+ 
+ 	/* This function adds a memory mapped GPIO chip */
+ 	ret = devm_gpiochip_add_data(&pdev->dev, gc, NULL);
+diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
+index f954359c9544..23d447e17a67 100644
+--- a/drivers/gpio/gpio-grgpio.c
++++ b/drivers/gpio/gpio-grgpio.c
+@@ -358,7 +358,6 @@ static int grgpio_probe(struct platform_device *ofdev)
+ 	priv->imask = gc->read_reg(regs + GRGPIO_IMASK);
+ 	priv->dev = &ofdev->dev;
+ 
+-	gc->of_node = np;
+ 	gc->owner = THIS_MODULE;
+ 	gc->to_irq = grgpio_to_irq;
+ 	gc->label = devm_kasprintf(&ofdev->dev, GFP_KERNEL, "%pOF", np);
+diff --git a/drivers/gpio/gpio-gw-pld.c b/drivers/gpio/gpio-gw-pld.c
+index 242112ff60ee..77a3fbd46111 100644
+--- a/drivers/gpio/gpio-gw-pld.c
++++ b/drivers/gpio/gpio-gw-pld.c
+@@ -82,7 +82,6 @@ static int gw_pld_probe(struct i2c_client *client,
+ 	gw->chip.base = -1;
+ 	gw->chip.can_sleep = true;
+ 	gw->chip.parent = dev;
+-	gw->chip.of_node = np;
+ 	gw->chip.owner = THIS_MODULE;
+ 	gw->chip.label = dev_name(dev);
+ 	gw->chip.ngpio = 8;
+diff --git a/drivers/gpio/gpio-mt7621.c b/drivers/gpio/gpio-mt7621.c
+index c3658a597a80..52b49e7a0a80 100644
+--- a/drivers/gpio/gpio-mt7621.c
++++ b/drivers/gpio/gpio-mt7621.c
+@@ -217,7 +217,6 @@ mediatek_gpio_bank_probe(struct device *dev,
+ 	memset(rg, 0, sizeof(*rg));
+ 
+ 	spin_lock_init(&rg->lock);
+-	rg->chip.of_node = node;
+ 	rg->bank = bank;
+ 
+ 	dat = mtk->base + GPIO_REG_DATA + (rg->bank * GPIO_BANK_STRIDE);
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index 8f429d9f3661..4c1f9e1091b7 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -1183,7 +1183,6 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 	mvchip->chip.base = id * MVEBU_MAX_GPIO_PER_BANK;
+ 	mvchip->chip.ngpio = ngpios;
+ 	mvchip->chip.can_sleep = false;
+-	mvchip->chip.of_node = np;
+ 	mvchip->chip.dbg_show = mvebu_gpio_dbg_show;
+ 
+ 	if (soc_variant == MVEBU_GPIO_SOC_VARIANT_A8K)
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index 415e8df89d6f..e099c39e0355 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -1419,9 +1419,6 @@ static int omap_gpio_probe(struct platform_device *pdev)
+ 	bank->is_mpuio = pdata->is_mpuio;
+ 	bank->non_wakeup_gpios = pdata->non_wakeup_gpios;
+ 	bank->regs = pdata->regs;
+-#ifdef CONFIG_OF_GPIO
+-	bank->chip.of_node = of_node_get(node);
+-#endif
+ 
+ 	if (node) {
+ 		if (!of_property_read_bool(node, "ti,gpio-always-on"))
+diff --git a/drivers/gpio/gpio-palmas.c b/drivers/gpio/gpio-palmas.c
+index e8e9029ba5bd..bac10c2faf56 100644
+--- a/drivers/gpio/gpio-palmas.c
++++ b/drivers/gpio/gpio-palmas.c
+@@ -170,9 +170,7 @@ static int palmas_gpio_probe(struct platform_device *pdev)
+ 	palmas_gpio->gpio_chip.set	= palmas_gpio_set;
+ 	palmas_gpio->gpio_chip.get	= palmas_gpio_get;
+ 	palmas_gpio->gpio_chip.parent = &pdev->dev;
+-#ifdef CONFIG_OF_GPIO
+-	palmas_gpio->gpio_chip.of_node = pdev->dev.of_node;
+-#endif
++
+ 	palmas_pdata = dev_get_platdata(palmas->dev);
+ 	if (palmas_pdata && palmas_pdata->gpio_base)
+ 		palmas_gpio->gpio_chip.base = palmas_pdata->gpio_base;
+diff --git a/drivers/gpio/gpio-pmic-eic-sprd.c b/drivers/gpio/gpio-pmic-eic-sprd.c
+index 938285190566..e518490c4b68 100644
+--- a/drivers/gpio/gpio-pmic-eic-sprd.c
++++ b/drivers/gpio/gpio-pmic-eic-sprd.c
+@@ -331,7 +331,6 @@ static int sprd_pmic_eic_probe(struct platform_device *pdev)
+ 	pmic_eic->chip.ngpio = SPRD_PMIC_EIC_NR;
+ 	pmic_eic->chip.base = -1;
+ 	pmic_eic->chip.parent = &pdev->dev;
+-	pmic_eic->chip.of_node = pdev->dev.of_node;
+ 	pmic_eic->chip.direction_input = sprd_pmic_eic_direction_input;
+ 	pmic_eic->chip.request = sprd_pmic_eic_request;
+ 	pmic_eic->chip.free = sprd_pmic_eic_free;
+diff --git a/drivers/gpio/gpio-raspberrypi-exp.c b/drivers/gpio/gpio-raspberrypi-exp.c
+index 64a552ecc2ad..3c414e0005fc 100644
+--- a/drivers/gpio/gpio-raspberrypi-exp.c
++++ b/drivers/gpio/gpio-raspberrypi-exp.c
+@@ -221,7 +221,6 @@ static int rpi_exp_gpio_probe(struct platform_device *pdev)
+ 	rpi_gpio->gc.parent = dev;
+ 	rpi_gpio->gc.label = MODULE_NAME;
+ 	rpi_gpio->gc.owner = THIS_MODULE;
+-	rpi_gpio->gc.of_node = np;
+ 	rpi_gpio->gc.base = -1;
+ 	rpi_gpio->gc.ngpio = NUM_GPIO;
+ 
+diff --git a/drivers/gpio/gpio-rda.c b/drivers/gpio/gpio-rda.c
+index 463846431183..0d03f525dcd3 100644
+--- a/drivers/gpio/gpio-rda.c
++++ b/drivers/gpio/gpio-rda.c
+@@ -240,8 +240,6 @@ static int rda_gpio_probe(struct platform_device *pdev)
+ 	rda_gpio->chip.label = dev_name(dev);
+ 	rda_gpio->chip.ngpio = ngpios;
+ 	rda_gpio->chip.base = -1;
+-	rda_gpio->chip.parent = dev;
+-	rda_gpio->chip.of_node = np;
+ 
+ 	if (rda_gpio->irq >= 0) {
+ 		rda_gpio->irq_chip.name = "rda-gpio",
+diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
+index ce63cbd14d69..577abef578e1 100644
+--- a/drivers/gpio/gpio-rockchip.c
++++ b/drivers/gpio/gpio-rockchip.c
+@@ -566,9 +566,6 @@ static int rockchip_gpiolib_register(struct rockchip_pin_bank *bank)
+ 	gc->ngpio = bank->nr_pins;
+ 	gc->label = bank->name;
+ 	gc->parent = bank->dev;
+-#ifdef CONFIG_OF_GPIO
+-	gc->of_node = of_node_get(bank->of_node);
+-#endif
+ 
+ 	ret = gpiochip_add_data(gc, bank);
+ 	if (ret) {
+diff --git a/drivers/gpio/gpio-sama5d2-piobu.c b/drivers/gpio/gpio-sama5d2-piobu.c
+index b7c950658170..3e95da717fc9 100644
+--- a/drivers/gpio/gpio-sama5d2-piobu.c
++++ b/drivers/gpio/gpio-sama5d2-piobu.c
+@@ -192,7 +192,6 @@ static int sama5d2_piobu_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, piobu);
+ 	piobu->chip.label = pdev->name;
+ 	piobu->chip.parent = &pdev->dev;
+-	piobu->chip.of_node = pdev->dev.of_node;
+ 	piobu->chip.owner = THIS_MODULE,
+ 	piobu->chip.get_direction = sama5d2_piobu_get_direction,
+ 	piobu->chip.direction_input = sama5d2_piobu_direction_input,
+diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
+index 9dd9dabb579e..9bff63990eee 100644
+--- a/drivers/gpio/gpio-sprd.c
++++ b/drivers/gpio/gpio-sprd.c
+@@ -237,7 +237,6 @@ static int sprd_gpio_probe(struct platform_device *pdev)
+ 	sprd_gpio->chip.ngpio = SPRD_GPIO_NR;
+ 	sprd_gpio->chip.base = -1;
+ 	sprd_gpio->chip.parent = &pdev->dev;
+-	sprd_gpio->chip.of_node = pdev->dev.of_node;
+ 	sprd_gpio->chip.request = sprd_gpio_request;
+ 	sprd_gpio->chip.free = sprd_gpio_free;
+ 	sprd_gpio->chip.get = sprd_gpio_get;
+diff --git a/drivers/gpio/gpio-stmpe.c b/drivers/gpio/gpio-stmpe.c
+index dd4d58b4ae49..0fa4f0a93378 100644
+--- a/drivers/gpio/gpio-stmpe.c
++++ b/drivers/gpio/gpio-stmpe.c
+@@ -477,7 +477,6 @@ static int stmpe_gpio_probe(struct platform_device *pdev)
+ 	stmpe_gpio->chip = template_chip;
+ 	stmpe_gpio->chip.ngpio = stmpe->num_gpios;
+ 	stmpe_gpio->chip.parent = &pdev->dev;
+-	stmpe_gpio->chip.of_node = np;
+ 	stmpe_gpio->chip.base = -1;
+ 
+ 	if (IS_ENABLED(CONFIG_DEBUG_FS))
+diff --git a/drivers/gpio/gpio-tc3589x.c b/drivers/gpio/gpio-tc3589x.c
+index 8d158492488f..443fe975bf13 100644
+--- a/drivers/gpio/gpio-tc3589x.c
++++ b/drivers/gpio/gpio-tc3589x.c
+@@ -319,7 +319,6 @@ static int tc3589x_gpio_probe(struct platform_device *pdev)
+ 	tc3589x_gpio->chip.ngpio = tc3589x->num_gpio;
+ 	tc3589x_gpio->chip.parent = &pdev->dev;
+ 	tc3589x_gpio->chip.base = -1;
+-	tc3589x_gpio->chip.of_node = np;
+ 
+ 	girq = &tc3589x_gpio->chip.irq;
+ 	girq->chip = &tc3589x_gpio_irq_chip;
+diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+index c026e7141e4e..7d90df8c097e 100644
+--- a/drivers/gpio/gpio-tegra186.c
++++ b/drivers/gpio/gpio-tegra186.c
+@@ -748,7 +748,6 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
+ 	gpio->gpio.names = (const char * const *)names;
+ 
+ #if defined(CONFIG_OF_GPIO)
+-	gpio->gpio.of_node = pdev->dev.of_node;
+ 	gpio->gpio.of_gpio_n_cells = 2;
+ 	gpio->gpio.of_xlate = tegra186_gpio_of_xlate;
+ #endif /* CONFIG_OF_GPIO */
+diff --git a/drivers/gpio/gpio-tps65218.c b/drivers/gpio/gpio-tps65218.c
+index 912382be48e1..e1d425a18854 100644
+--- a/drivers/gpio/gpio-tps65218.c
++++ b/drivers/gpio/gpio-tps65218.c
+@@ -196,9 +196,6 @@ static int tps65218_gpio_probe(struct platform_device *pdev)
+ 	tps65218_gpio->tps65218 = tps65218;
+ 	tps65218_gpio->gpio_chip = template_chip;
+ 	tps65218_gpio->gpio_chip.parent = &pdev->dev;
+-#ifdef CONFIG_OF_GPIO
+-	tps65218_gpio->gpio_chip.of_node = pdev->dev.of_node;
+-#endif
+ 
+ 	return devm_gpiochip_add_data(&pdev->dev, &tps65218_gpio->gpio_chip,
+ 				      tps65218_gpio);
+diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+index e0f2b67558e7..20780c35da1b 100644
+--- a/drivers/gpio/gpio-vf610.c
++++ b/drivers/gpio/gpio-vf610.c
+@@ -298,7 +298,6 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	gc = &port->gc;
+-	gc->of_node = np;
+ 	gc->parent = dev;
+ 	gc->label = "vf610-gpio";
+ 	gc->ngpio = VF610_GPIO_PER_PORT;
+diff --git a/drivers/gpio/gpio-xlp.c b/drivers/gpio/gpio-xlp.c
+index 0d94d3aef752..9bb0d1c17f67 100644
+--- a/drivers/gpio/gpio-xlp.c
++++ b/drivers/gpio/gpio-xlp.c
+@@ -374,7 +374,6 @@ static int xlp_gpio_probe(struct platform_device *pdev)
+ 	gc->base = 0;
+ 	gc->parent = &pdev->dev;
+ 	gc->ngpio = ngpio;
+-	gc->of_node = pdev->dev.of_node;
+ 	gc->direction_output = xlp_gpio_dir_output;
+ 	gc->direction_input = xlp_gpio_dir_input;
+ 	gc->set = xlp_gpio_set;
+-- 
+2.33.0
 
-> [snip]
-> diff --git a/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.yaml b/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.yaml
-> new file mode 100644
-> index 000000000000..4b7309dc74dc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.yaml
-> @@ -0,0 +1,104 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/brcm,brcmstb-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Broadcom STB "UPG GIO" GPIO controller
-> +
-> +description: >
-> +  The controller's registers are organized as sets of eight 32-bit
-> +  registers with each set controlling a bank of up to 32 pins.  A single
-> +  interrupt is shared for all of the banks handled by the controller.
-> +
-> +maintainers:
-> +  - Doug Berger <opendmb@gmail.com>
-> +  - Florian Fainelli <f.fainelli@gmail.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - brcm,bcm7445-gpio
-> +          - const: brcm,brcmstb-gpio
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description:
-
-Missing folded block scalar marker ('>') above
-
-> +      Define the base and range of the I/O address space containing
-> +      the brcmstb GPIO controller registers
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +    description: >
-> +      The first cell is the pin number (within the controller's
-> +      pin space), and the second is used for the following:
-> +      bit[0]: polarity (0 for active-high, 1 for active-low)
-> +
-> +  gpio-controller: true
-> +
-> +  "brcm,gpio-bank-widths":
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description:
-
-Same here
-
-> +      Number of GPIO lines for each bank.  Number of elements must
-> +      correspond to number of banks suggested by the 'reg' property.
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description:
-
-While it's not necessary while this is only one line, consider adding
-'>' here too.
-
-> +      The interrupt shared by all GPIO lines for this controller.
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +    description: >
-
-This next block could get formatted strangely with '>'; recommend
-using '|' instead
-
-> +      The first cell is the GPIO number, the second should specify
-> +      flags.  The following subset of flags is supported:
-> +      - bits[3:0] trigger type and level flags
-> +        1 = low-to-high edge triggered
-> +        2 = high-to-low edge triggered
-> +        4 = active high level-sensitive
-> +        8 = active low level-sensitive
-> +      Valid combinations are 1, 2, 3, 4, 8.
-> +
-> +  interrupt-controller: true
-> +
-> +  wakeup-source:
-> +    type: boolean
-> +    description: >
-> +      GPIOs for this controller can be used as a wakeup source
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - gpio-controller
-> +  - "#gpio-cells"
-
-Need to add required property "brcm,gpio-bank-widths"
-
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    upg_gio: gpio@f040a700 {
-> +        #gpio-cells = <2>;
-> +        #interrupt-cells = <2>;
-> +        compatible = "brcm,bcm7445-gpio", "brcm,brcmstb-gpio";
-> +        gpio-controller;
-> +        interrupt-controller;
-> +        reg = <0xf040a700 0x80>;
-> +        interrupt-parent = <&irq0_intc>;
-> +        interrupts = <0x6>;
-> +        brcm,gpio-bank-widths = <32 32 32 24>;
-> +    };
-> +
-> +    upg_gio_aon: gpio@f04172c0 {
-> +        #gpio-cells = <2>;
-> +        #interrupt-cells = <2>;
-> +        compatible = "brcm,bcm7445-gpio", "brcm,brcmstb-gpio";
-> +        gpio-controller;
-> +        interrupt-controller;
-> +        reg = <0xf04172c0 0x40>;
-> +        interrupt-parent = <&irq0_aon_intc>;
-> +        interrupts = <0x6>;
-> +        wakeup-source;
-> +        brcm,gpio-bank-widths = <18 4>;
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 913856599623..78161abc384f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3772,7 +3772,7 @@ BROADCOM BRCMSTB GPIO DRIVER
->  M:     Gregory Fong <gregory.0xf0@gmail.com>
-
-Not really related to this patch, but I should probably update this
-entry to reflect current reality. Should that be you and/or Doug?
-
->  L:     bcm-kernel-feedback-list@broadcom.com
->  S:     Supported
-> -F:     Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
-> +F:     Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.yaml
->  F:     drivers/gpio/gpio-brcmstb.c
->
->  BROADCOM BRCMSTB I2C DRIVER
-> --
-> 2.25.1
->
-
-Best regards,
-Gregory
