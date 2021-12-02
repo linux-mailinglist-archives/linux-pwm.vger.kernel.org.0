@@ -2,301 +2,261 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFCD2465A8B
-	for <lists+linux-pwm@lfdr.de>; Thu,  2 Dec 2021 01:18:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 638B8465F33
+	for <lists+linux-pwm@lfdr.de>; Thu,  2 Dec 2021 09:16:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344301AbhLBAVa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 1 Dec 2021 19:21:30 -0500
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:36908 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235723AbhLBAV2 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Dec 2021 19:21:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1638404287; x=1669940287;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=dnRwlM2g208wpzcQ1fHoMh5ABTusv5pFo5cTKx90whg=;
-  b=fpQplsLVPWmj9cfka99XM1Sa8q5h2163Oqm3UXwaPg9V9TC8jKXgYNd8
-   YIgoySkzIde2uL52muRTqdioVpHPpNIA03PdU7cZK943bHZQA8G3IQEka
-   El/ih62EKuvCxhvbxrD5fHdo2O9llYDORvYfb+nuWjjEcpzohRnVFMzfz
-   hVD2YY6VfFnTr4C5DfXQQ/588FJdDmbiTfVTSevQgyDBzOQuLnfM0qwfk
-   6uVoT+IUh7exQ//SKnHzHhRvvlOeofzltk7SiWDLhWaDjbLwts7Sv2HbD
-   /1cyX2QLdbDMswnc5d+JwtNKyjt3a3J5Ki8PLe9FfizWjJUq1XtgCFzLn
-   g==;
-X-IronPort-AV: E=Sophos;i="5.87,280,1631548800"; 
-   d="scan'208";a="291190909"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Dec 2021 07:58:13 +0800
-IronPort-SDR: Jxx3BRQLzQeYu0Kteq4TMzawD6O9NWQrmCalco/JUYdbnaH0KS/BO6GLJxCnU7rPUSuAGE1aWR
- uaHxZd570YCf6eILDs89qWna3dfoaBPcpgepo3nvspICliXq/6uLIX+I9lKA7zecq7ZIWU7OK8
- u2nA7UQlUhZPb1WbaCRu17H8aAiCzeZ8HK4OeP5hWSSEfOaHwKqMfBPdXrYzQm1K0rTXdVenLM
- C+ZCH6/5gvz9lva6uW30iAFn5HYpgof0wW+0ra4C468v7CEz/srX/gEK+nxd63KcR9VR2MI4vz
- UzTBkacbK67wF/i0ixc0ZffD
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 15:32:57 -0800
-IronPort-SDR: Jlmiqijw8Ra3I4xuxoXGlNbVFuBmgMgnxAVawvfI+fhmfQmDIxBqbsqhyVbikwBGnRkluYlxIJ
- CMD9wXyrVO4FkPju2VcoMMZdEWa7CDafLMV7LW8WCb9LVgMuhsE+uwiW5gcjyiQaTpIEOTQkBF
- DEPeSNbxTdHciV1hX+8+BFBQE3NaCWq8UJBPI2dITv/RmNVLBA18kEgV61RMTAai7IdMXQKASv
- b2ZVGgA7eNGx91kiv1dkOB+gFOF/UWPSJo7gcg71Es87Evgjn2ikkcuJ8UWIzkjd+kzlvmvTps
- +4o=
-WDCIronportException: Internal
-Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 15:58:14 -0800
-Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4J4GHm6yGjz1RtVm
-        for <linux-pwm@vger.kernel.org>; Wed,  1 Dec 2021 15:58:12 -0800 (PST)
-Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)"
-        header.d=opensource.wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-        opensource.wdc.com; h=content-transfer-encoding:content-type
-        :in-reply-to:organization:from:references:to:content-language
-        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
-        1638403091; x=1640995092; bh=dnRwlM2g208wpzcQ1fHoMh5ABTusv5pFo5c
-        TKx90whg=; b=Smg8tZ+TvJgoqFK7osdFry7pC21BK7S3yr15mJQjwB/VT9nSMYr
-        7iIvDU9l8vFruHz8R0A0SVuly46XttI5hP7+kfC5nbW0dAzvHaZXyz4ZDsmfd3qB
-        D0Ph8lgqh06/wHt+lro2VpDTfjRFCGMvRHXyhklU38zB6iPfugAApaDMw29xaH6x
-        Pocm/LRy1wZ1rAlLDlzn9u7axyibnyRJDEalhSezz+2Wqhp77ULG7HlRPACEG+Q7
-        fSVIANXzSmOc7Dv7ZW8aIyMLJPlNNQjybxvXCKMmPtm/7CIV298EqCCQ+BEWWo6h
-        LcJe0ZNh1pNmkNb9fwaGI9bsqmnIs91czqw==
-X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
-Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
-        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id xKQ7dsgSeo85 for <linux-pwm@vger.kernel.org>;
-        Wed,  1 Dec 2021 15:58:11 -0800 (PST)
-Received: from [10.225.54.48] (unknown [10.225.54.48])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4J4GHc4pQzz1RtVl;
-        Wed,  1 Dec 2021 15:58:04 -0800 (PST)
-Message-ID: <0cbaad0b-bab0-177e-48ef-5c4f6dd4391a@opensource.wdc.com>
-Date:   Thu, 2 Dec 2021 08:58:03 +0900
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.3.2
-Subject: Re: [PATCH 12/14] dt-bindings: ata: Convert Broadcom SATA to YAML
-Content-Language: en-US
-To:     Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        id S1356081AbhLBIUD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 2 Dec 2021 03:20:03 -0500
+Received: from mga03.intel.com ([134.134.136.65]:42611 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1356065AbhLBIUB (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Thu, 2 Dec 2021 03:20:01 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="236594211"
+X-IronPort-AV: E=Sophos;i="5.87,281,1631602800"; 
+   d="scan'208";a="236594211"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 00:16:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,281,1631602800"; 
+   d="scan'208";a="602636502"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.76]) ([10.237.72.76])
+  by fmsmga002.fm.intel.com with ESMTP; 02 Dec 2021 00:16:33 -0800
+Subject: Re: [PATCH v16 22/40] mmc: sdhci-tegra: Add runtime PM and OPP
+ support
+To:     Dmitry Osipenko <digetx@gmail.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
         Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Markus Mayer <mmayer@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Cooper <alcooperx@gmail.com>,
-        Doug Berger <opendmb@gmail.com>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..." 
-        <linux-mmc@vger.kernel.org>,
-        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
-References: <20211201205110.41656-1-f.fainelli@gmail.com>
- <20211201205110.41656-13-f.fainelli@gmail.com>
-From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Organization: Western Digital
-In-Reply-To: <20211201205110.41656-13-f.fainelli@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Nishanth Menon <nm@ti.com>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-mmc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-clk@vger.kernel.org, David Heidelberg <david@ixit.cz>
+References: <20211130232347.950-1-digetx@gmail.com>
+ <20211130232347.950-23-digetx@gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <fc60f593-cd74-558d-785f-5f0d2ba179cf@intel.com>
+Date:   Thu, 2 Dec 2021 10:16:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.13.0
+MIME-Version: 1.0
+In-Reply-To: <20211130232347.950-23-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 2021/12/02 5:51, Florian Fainelli wrote:
-> Convert the Broadcom SATA3 AHCI controller Device Tree binding to YAML
-> to help with validation.
+On 01/12/2021 01:23, Dmitry Osipenko wrote:
+> The SDHCI on Tegra belongs to the core power domain and we're going to
+> enable GENPD support for the core domain. Now SDHCI must be resumed using
+> runtime PM API in order to initialize the SDHCI power state. The SDHCI
+> clock rate must be changed using OPP API that will reconfigure the power
+> domain performance state in accordance to the rate. Add runtime PM and OPP
+> support to the SDHCI driver.
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
 > ---
->  .../bindings/ata/brcm,sata-brcm.txt           | 45 ---------
->  .../bindings/ata/brcm,sata-brcm.yaml          | 91 +++++++++++++++++++
->  2 files changed, 91 insertions(+), 45 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/ata/brcm,sata-brcm.txt
->  create mode 100644 Documentation/devicetree/bindings/ata/brcm,sata-brcm.yaml
+>  drivers/mmc/host/sdhci-tegra.c | 81 +++++++++++++++++++++++++++-------
+>  1 file changed, 65 insertions(+), 16 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/ata/brcm,sata-brcm.txt b/Documentation/devicetree/bindings/ata/brcm,sata-brcm.txt
-> deleted file mode 100644
-> index b9ae4ce4a0a0..000000000000
-> --- a/Documentation/devicetree/bindings/ata/brcm,sata-brcm.txt
-> +++ /dev/null
-> @@ -1,45 +0,0 @@
-> -* Broadcom SATA3 AHCI Controller
-> -
-> -SATA nodes are defined to describe on-chip Serial ATA controllers.
-> -Each SATA controller should have its own node.
-> -
-> -Required properties:
-> -- compatible         : should be one or more of
-> -			"brcm,bcm7216-ahci"
-> -			"brcm,bcm7425-ahci"
-> -			"brcm,bcm7445-ahci"
-> -			"brcm,bcm-nsp-ahci"
-> -			"brcm,sata3-ahci"
-> -			"brcm,bcm63138-ahci"
-> -- reg                : register mappings for AHCI and SATA_TOP_CTRL
-> -- reg-names          : "ahci" and "top-ctrl"
-> -- interrupts         : interrupt mapping for SATA IRQ
-> -
-> -Optional properties:
-> -
-> -- reset: for "brcm,bcm7216-ahci" must be a valid reset phandle
-> -  pointing to the RESCAL reset controller provider node.
-> -- reset-names: for "brcm,bcm7216-ahci", must be "rescal".
-> -
-> -Also see ahci-platform.txt.
-> -
-> -Example:
-> -
-> -	sata@f045a000 {
-> -		compatible = "brcm,bcm7445-ahci", "brcm,sata3-ahci";
-> -		reg = <0xf045a000 0xa9c>, <0xf0458040 0x24>;
-> -		reg-names = "ahci", "top-ctrl";
-> -		interrupts = <0 30 0>;
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -
-> -		sata0: sata-port@0 {
-> -			reg = <0>;
-> -			phys = <&sata_phy 0>;
-> -		};
-> -
-> -		sata1: sata-port@1 {
-> -			reg = <1>;
-> -			phys = <&sata_phy 1>;
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/ata/brcm,sata-brcm.yaml b/Documentation/devicetree/bindings/ata/brcm,sata-brcm.yaml
-> new file mode 100644
-> index 000000000000..4098d56872ae
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ata/brcm,sata-brcm.yaml
-> @@ -0,0 +1,91 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/ata/brcm,sata-brcm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+> index a5001875876b..6435a75142a6 100644
+> --- a/drivers/mmc/host/sdhci-tegra.c
+> +++ b/drivers/mmc/host/sdhci-tegra.c
+> @@ -15,6 +15,8 @@
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+>  #include <linux/pinctrl/consumer.h>
+> +#include <linux/pm_opp.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/reset.h>
+>  #include <linux/mmc/card.h>
+> @@ -24,6 +26,8 @@
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/ktime.h>
+>  
+> +#include <soc/tegra/common.h>
 > +
-> +title: Broadcom SATA3 AHCI Controller
+>  #include "sdhci-pltfm.h"
+>  #include "cqhci.h"
+>  
+> @@ -760,7 +764,9 @@ static void tegra_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+>  {
+>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>  	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
+> +	struct device *dev = mmc_dev(host->mmc);
+>  	unsigned long host_clk;
+> +	int err;
+>  
+>  	if (!clock)
+>  		return sdhci_set_clock(host, clock);
+> @@ -778,7 +784,12 @@ static void tegra_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+>  	 * from clk_get_rate() is used.
+>  	 */
+>  	host_clk = tegra_host->ddr_signaling ? clock * 2 : clock;
+> -	clk_set_rate(pltfm_host->clk, host_clk);
 > +
-> +description:
-> +  SATA nodes are defined to describe on-chip Serial ATA controllers.
-> +  Each SATA controller should have its own node.
+> +	err = dev_pm_opp_set_rate(dev, host_clk);
+> +	if (err)
+> +		dev_err(dev, "failed to set clk rate to %luHz: %d\n",
+> +			host_clk, err);
 > +
-> +maintainers:
-> +  - Florian Fainelli <f.fainelli@gmail.com>
+>  	tegra_host->curr_clk_rate = host_clk;
+>  	if (tegra_host->ddr_signaling)
+>  		host->max_clk = host_clk;
+> @@ -1705,7 +1716,6 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
+>  				   "failed to get clock\n");
+>  		goto err_clk_get;
+>  	}
+> -	clk_prepare_enable(clk);
+>  	pltfm_host->clk = clk;
+>  
+>  	tegra_host->rst = devm_reset_control_get_exclusive(&pdev->dev,
+> @@ -1716,15 +1726,24 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
+>  		goto err_rst_get;
+>  	}
+>  
+> -	rc = reset_control_assert(tegra_host->rst);
+> +	rc = devm_tegra_core_dev_init_opp_table_common(&pdev->dev);
+>  	if (rc)
+>  		goto err_rst_get;
+>  
+> +	pm_runtime_enable(&pdev->dev);
+> +	rc = pm_runtime_resume_and_get(&pdev->dev);
+> +	if (rc)
+> +		goto err_pm_get;
 > +
-> +allOf:
-> +  - $ref: sata-common.yaml#
+> +	rc = reset_control_assert(tegra_host->rst);
+> +	if (rc)
+> +		goto err_rst_assert;
 > +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - brcm,bcm7216-ahci
-> +          - const: brcm,sata3-ahci
-> +      - items:
-> +          - enum:
-> +              - brcm,bcm7445-ahci
-> +          - const: brcm,sata3-ahci
-> +      - items:
-> +          - enum:
-> +              - brcm,bcm7425-ahci
-> +          - const: brcm,sata3-ahci
-> +      - items:
-> +          - const: brcm,bcm-nsp-ahci
-> +      - items:
-> +          - const: brcm,bcm63138-ahci
+>  	usleep_range(2000, 4000);
+>  
+>  	rc = reset_control_deassert(tegra_host->rst);
+>  	if (rc)
+> -		goto err_rst_get;
+> +		goto err_rst_assert;
+>  
+>  	usleep_range(2000, 4000);
+>  
+> @@ -1736,8 +1755,11 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
+>  
+>  err_add_host:
+>  	reset_control_assert(tegra_host->rst);
+> +err_rst_assert:
+> +	pm_runtime_put_sync_suspend(&pdev->dev);
+> +err_pm_get:
+> +	pm_runtime_disable(&pdev->dev);
+>  err_rst_get:
+> -	clk_disable_unprepare(pltfm_host->clk);
+>  err_clk_get:
+>  	clk_disable_unprepare(tegra_host->tmclk);
+>  err_power_req:
+> @@ -1756,19 +1778,38 @@ static int sdhci_tegra_remove(struct platform_device *pdev)
+>  
+>  	reset_control_assert(tegra_host->rst);
+>  	usleep_range(2000, 4000);
+> -	clk_disable_unprepare(pltfm_host->clk);
+> -	clk_disable_unprepare(tegra_host->tmclk);
+>  
+> +	pm_runtime_put_sync_suspend(&pdev->dev);
+> +	pm_runtime_force_suspend(&pdev->dev);
 > +
-> +  reg:
-> +    minItems: 2
-> +    maxItems: 2
+> +	clk_disable_unprepare(tegra_host->tmclk);
+>  	sdhci_pltfm_free(pdev);
+>  
+>  	return 0;
+>  }
+>  
+> -#ifdef CONFIG_PM_SLEEP
+> -static int __maybe_unused sdhci_tegra_suspend(struct device *dev)
+> +static int __maybe_unused sdhci_tegra_runtime_suspend(struct device *dev)
+>  {
+>  	struct sdhci_host *host = dev_get_drvdata(dev);
+>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
 > +
-> +  reg-names:
-> +    items:
-> +      - const: ahci
-> +      - const: top-ctrl
+> +	clk_disable_unprepare(pltfm_host->clk);
 > +
-> +  interrupts: true
+> +	return 0;
+> +}
 > +
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - brcm,bcm7216-ahci
-> +then:
-> +  properties:
-> +    resets: true
-> +    reset-names:
-> +      items:
-> +        - const: rescal
+> +static int __maybe_unused sdhci_tegra_runtime_resume(struct device *dev)
+> +{
+> +	struct sdhci_host *host = dev_get_drvdata(dev);
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - "#address-cells"
-> +  - "#size-cells"
+> +	return clk_prepare_enable(pltfm_host->clk);
+> +}
 > +
-> +unevaluatedProperties: false
+> +#ifdef CONFIG_PM_SLEEP
+> +static int sdhci_tegra_suspend(struct device *dev)
+> +{
+> +	struct sdhci_host *host = dev_get_drvdata(dev);
+>  	int ret;
+>  
+>  	if (host->mmc->caps2 & MMC_CAP2_CQE) {
+> @@ -1783,17 +1824,22 @@ static int __maybe_unused sdhci_tegra_suspend(struct device *dev)
+>  		return ret;
+>  	}
+>  
+> -	clk_disable_unprepare(pltfm_host->clk);
+> +	ret = pm_runtime_force_suspend(dev);
+> +	if (ret) {
+> +		sdhci_resume_host(host);
+> +		cqhci_resume(host->mmc);
+> +		return ret;
+> +	}
 > +
-> +examples:
-> +  - |
-> +    sata@f045a000 {
-> +        compatible = "brcm,bcm7445-ahci", "brcm,sata3-ahci";
-> +        reg = <0xf045a000 0xa9c>, <0xf0458040 0x24>;
-> +        reg-names = "ahci", "top-ctrl";
-> +        interrupts = <0 30 0>;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        sata0: sata-port@0 {
-> +            reg = <0>;
-> +            phys = <&sata_phy 0>;
-> +        };
-> +
-> +        sata1: sata-port@1 {
-> +            reg = <1>;
-> +            phys = <&sata_phy 1>;
-> +        };
-> +    };
+>  	return 0;
+>  }
+>  
+> -static int __maybe_unused sdhci_tegra_resume(struct device *dev)
+> +static int sdhci_tegra_resume(struct device *dev)
+>  {
+>  	struct sdhci_host *host = dev_get_drvdata(dev);
+> -	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>  	int ret;
+>  
+> -	ret = clk_prepare_enable(pltfm_host->clk);
+> +	ret = pm_runtime_force_resume(dev);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -1812,13 +1858,16 @@ static int __maybe_unused sdhci_tegra_resume(struct device *dev)
+>  suspend_host:
+>  	sdhci_suspend_host(host);
+>  disable_clk:
+> -	clk_disable_unprepare(pltfm_host->clk);
+> +	pm_runtime_force_suspend(dev);
+>  	return ret;
+>  }
+>  #endif
+>  
+> -static SIMPLE_DEV_PM_OPS(sdhci_tegra_dev_pm_ops, sdhci_tegra_suspend,
+> -			 sdhci_tegra_resume);
+> +static const struct dev_pm_ops sdhci_tegra_dev_pm_ops = {
+> +	SET_RUNTIME_PM_OPS(sdhci_tegra_runtime_suspend, sdhci_tegra_runtime_resume,
+> +			   NULL)
+> +	SET_SYSTEM_SLEEP_PM_OPS(sdhci_tegra_suspend, sdhci_tegra_resume)
+> +};
+>  
+>  static struct platform_driver sdhci_tegra_driver = {
+>  	.driver		= {
 > 
 
-Acked-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-
-Rob,
-
-Will take this through your tree ?
-
--- 
-Damien Le Moal
-Western Digital Research
