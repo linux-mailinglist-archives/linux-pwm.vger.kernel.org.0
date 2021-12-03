@@ -2,62 +2,37 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7779467358
-	for <lists+linux-pwm@lfdr.de>; Fri,  3 Dec 2021 09:41:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5916F46775F
+	for <lists+linux-pwm@lfdr.de>; Fri,  3 Dec 2021 13:26:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379240AbhLCIoc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 3 Dec 2021 03:44:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351142AbhLCIob (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 3 Dec 2021 03:44:31 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5CB1C061757
-        for <linux-pwm@vger.kernel.org>; Fri,  3 Dec 2021 00:41:07 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id y12so8297809eda.12
-        for <linux-pwm@vger.kernel.org>; Fri, 03 Dec 2021 00:41:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uLBHn9jsbKV7jZYY7Dm+t8lPDQRTZnoOfAaLgWh49GU=;
-        b=LsIAHi4O7+rAKszJKyJ/QwZwolqgX7Xp85HCfWi/OAlf7oOjExVQVB3A1uF6oJMxXi
-         gPosTZ3PyRq9IbJKMX4ESqDGYZZYcom4XQ8JtyMRl5tOE7xlwAkd4FpJbONadp6pWo7I
-         oUoB99whrPg0HGUqiRetXBExiz97qDkf5NdxXb1GpetgxbWitUxWw81WWVuMwB7DeHg4
-         F4fsE0Im8ySC6EvPdTGuYxXIdnTwT10W+OMVEHRanF7YSviRe6CvO4rDs/Sfax7qLy0G
-         GQ8KIQPRWvs0w82uwlN5lRnk2skx92g4UPLasKF6asjvNdNubK/yYeFyTDsn7OcD+219
-         BK3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uLBHn9jsbKV7jZYY7Dm+t8lPDQRTZnoOfAaLgWh49GU=;
-        b=B27S1m5XB6LtWoi0Tr7tAhcHTP1NDKFrgHGBIH1Xt4RJVsod5aIaWzqNVXtUZB5mOu
-         dCZdNxMHStK63UNDlpHqfj0UHtYqsJYZKXWB1aUj+ORfFxree1ZdBrWnzoYUDTuy8gbT
-         2Uf6rUwCxYaknaFmfr71CX/wOGtZt+xJMLf8tAY+MXLuTrfd6nNFmd+J9h4PDhldpKga
-         OD2v4afT7ihDoAA7Tj/2NEYhz9IZdD5JgFxucqLAtRiegciABE0f/7azb4LJ7fwuhcbY
-         dr29aIQ3+Ru6ZkuX3Nl94cBbj0cDde1UkOIS/DgcREjjyiY/trQXqZxK0hx4c802yLH/
-         isNA==
-X-Gm-Message-State: AOAM533R0Jn3o+a2aLsXMax0sHk4XrDcqSm7yZrMOYHZHz7z5HbqBZiL
-        A1ZKCuW5nCJTw01Ao7niyRqJdHDxg8rj1+4cAim4xA==
-X-Google-Smtp-Source: ABdhPJzNHiauf+pMC5f/US+c9OIXcWbcKMNg90ABw6xCvQOgNu83JV2BIOiQy03TdGH6uVMTEr4y57dSuqO0jiYbpps=
-X-Received: by 2002:a17:907:75f0:: with SMTP id jz16mr22268827ejc.77.1638520866276;
- Fri, 03 Dec 2021 00:41:06 -0800 (PST)
-MIME-Version: 1.0
-References: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 3 Dec 2021 09:40:55 +0100
-Message-ID: <CAMRc=Md-TKUETLzf41D2KeQODac153_AumMTW4928XfJ70GRxQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] gpio: Get rid of duplicate of_node assignment in
- the drivers
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        id S1357294AbhLCMaL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 3 Dec 2021 07:30:11 -0500
+Received: from mga04.intel.com ([192.55.52.120]:8019 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236481AbhLCMaK (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Fri, 3 Dec 2021 07:30:10 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10186"; a="235700117"
+X-IronPort-AV: E=Sophos;i="5.87,284,1631602800"; 
+   d="scan'208";a="235700117"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2021 04:26:46 -0800
+X-IronPort-AV: E=Sophos;i="5.87,284,1631602800"; 
+   d="scan'208";a="678082863"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2021 04:26:35 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mt7d5-001lPG-5I;
+        Fri, 03 Dec 2021 14:25:31 +0200
+Date:   Fri, 3 Dec 2021 14:25:30 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Marc Zyngier <maz@kernel.org>,
         Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
         Sergio Paracuellos <sergio.paracuellos@gmail.com>,
         Chunyan Zhang <chunyan.zhang@unisoc.com>,
         Baruch Siach <baruch@tkos.co.il>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>, Tony Lindgren <tony@atomide.com>,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -98,28 +73,47 @@ Cc:     Marc Zyngier <maz@kernel.org>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         Alexandre Torgue <alexandre.torgue@foss.st.com>,
         Jonathan Hunter <jonathanh@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v1 1/3] gpio: Get rid of duplicate of_node assignment in
+ the drivers
+Message-ID: <YaoMuoONxbJb0prf@smile.fi.intel.com>
+References: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=Md-TKUETLzf41D2KeQODac153_AumMTW4928XfJ70GRxQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Md-TKUETLzf41D2KeQODac153_AumMTW4928XfJ70GRxQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Dec 2, 2021 at 10:17 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> GPIO library does copy the of_node from the parent device of
-> the GPIO chip, there is no need to repeat this in the individual
-> drivers. Remove these assignment all at once.
->
-> For the details one may look into the of_gpio_dev_init() implementation.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
+On Fri, Dec 03, 2021 at 09:40:55AM +0100, Bartosz Golaszewski wrote:
+> On Thu, Dec 2, 2021 at 10:17 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > GPIO library does copy the of_node from the parent device of
+> > the GPIO chip, there is no need to repeat this in the individual
+> > drivers. Remove these assignment all at once.
+> >
+> > For the details one may look into the of_gpio_dev_init() implementation.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> 
+> I have a bad feeling about this but I've gone through the drivers in
+> this patch and it seems like you don't update any of the drivers that
+> use multiple child OF nodes so I can't really point out any obvious
+> bug.
 
-I have a bad feeling about this but I've gone through the drivers in
-this patch and it seems like you don't update any of the drivers that
-use multiple child OF nodes so I can't really point out any obvious
-bug.
+Yes, like I said it's just a series to kick off the conversion.
+I left the corner cases to the last.
 
-I have another change I'm working on that's related, let me send it shortly.
+> I have another change I'm working on that's related, let me send it shortly.
 
-Bart
+Do you mean it should be attached to the series?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
