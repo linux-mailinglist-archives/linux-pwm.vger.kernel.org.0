@@ -2,51 +2,51 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C31446A491
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Dec 2021 19:28:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DECC446A462
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Dec 2021 19:28:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347764AbhLFSbN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Dec 2021 13:31:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47372 "EHLO
+        id S1347795AbhLFSbO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Dec 2021 13:31:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347112AbhLFS34 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Dec 2021 13:29:56 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E40FDC061D5E;
-        Mon,  6 Dec 2021 10:26:26 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id q17so7614770plr.11;
-        Mon, 06 Dec 2021 10:26:26 -0800 (PST)
+        with ESMTP id S1347123AbhLFS35 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Dec 2021 13:29:57 -0500
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE2A9C061359;
+        Mon,  6 Dec 2021 10:26:28 -0800 (PST)
+Received: by mail-pf1-x435.google.com with SMTP id x5so11014783pfr.0;
+        Mon, 06 Dec 2021 10:26:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IlWOtQhuKoAbExjB9TTANbBFdCEDUkxd3U6sjKMMDBU=;
-        b=pzFYLXw+dgQQZ9vnU/aMWUbAlvWMVysoWrco4Ie804B20gDncofnLHx6qA19V9onoz
-         5dhtA3wI7KqTNL0icF2mNs8dmvtldxC82f4ugzSHHYOzn1LhCNGmtl20zrn+aq2oli0b
-         uUiwiQC5u0GFJPLoWCMCEHAWynShCwLnS947U67OM4wrpuifUS7mJF1wZt5p8pfkaATO
-         xVGKFIxgBEN3wrHDB7HWRVrXRBeivh5IU6SuBnYQdNdG8gZn9Ldsx6yUHAcunG/8YDWe
-         ZDLQncVbUuhbggTqkZ4T76sDaXASkGeM759fweoKI7QlRSwBYza2StEUwcd6CymvtHx0
-         1p/A==
+        bh=v2A5xiMCMD01rja8VsVDsIJrjuLJ0aPnQc2VQht4HL0=;
+        b=c9Jsl2hZOfK0CYPT8V2GSfwPGDLRR5wg6YINAn5nKczCXrlhzTlNGzRFKGGjPeJe1L
+         xcEGaTzkkHOWgB9L45gGuzZZUG7Ut9ZJ7dKufiNqNv1bxgPX2p9fOzRu2CdoFh8uLNIz
+         UZ96AUHAk8flm4/uhavpoF/IGLg+6oXhr+LFejLHPxlYlOl95pYWUlchHyru6lKDooL2
+         bmBWmr8VG66nkD9Z1SLxuF/OrdgqSiIXCu3L06erm//1JT1V+I262+CW1FwnnMMrEHh9
+         iQfgmdmLTa0b75zTtlRhkGKuczBcUiODdXe4wElcxw2vuKw3drCoMsgT4g6gb+BerwVs
+         44Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IlWOtQhuKoAbExjB9TTANbBFdCEDUkxd3U6sjKMMDBU=;
-        b=Gp3k1wyPL7FkYEcAAxmGQxo8WXeumrWDN03XJglKQhw5wuCtBHYDpqZTOZTajal55C
-         HvxVQrbSoHmfmqeXXoad2PDPT8QTGVOOIXIRQXgyHdnfCw+cVTGoaX2DQre/vYudzPE6
-         3gu82JLwFpGausHENxhuxTmiJs5kuZSrQyQvXFZyM/SJOPbFui2/0n5uV1fHZEJN3rp2
-         rGL479yPMN2QDbzPoSqi4w6JNSRrnJQ+oVOwI8d13ojipNmLIsnKHqSi5Xgc26BnnPyS
-         x8uU33spqCQxfPKpdlEqN/Fp7RH7QG7iVdASNPskTzzaeBh80/QJX/GPQ8jiPecz2m0R
-         hktQ==
-X-Gm-Message-State: AOAM532n1wYuKc+orPOTeUtjX2tDb3ZyjaaMiFhDF/TWn46WOeFFOpcI
-        +nlEtXC/AgAfSo9QrlBBMNgp8ZViJZg=
-X-Google-Smtp-Source: ABdhPJwxLXZuEFBB8yWKy6KJpxvhIK8eLJgeHKt7kxDuT1bsOthhCiGJYW4+SyHyuycD0ow42bQWgA==
-X-Received: by 2002:a17:90a:fe85:: with SMTP id co5mr261347pjb.110.1638815185903;
-        Mon, 06 Dec 2021 10:26:25 -0800 (PST)
+        bh=v2A5xiMCMD01rja8VsVDsIJrjuLJ0aPnQc2VQht4HL0=;
+        b=XEZkXgWiOFsG3a9iz5m8Tjk0DL2yHSFHMcUnD2C+3+Ex+hbDPGq1wW8LDNo3mEnb2P
+         ak2t+UZJ6eV3WBhYpmNCQGRSKI8sv+FnpZiSEd+cdrh2pX9xDeWI5kM1GLe5+sK0En5N
+         uISCT1bXDkD1sX1iUE5KDAuJbvMlGDTT8LjLUJDEmAbZZnCyOxmLZIsmMXYvgJTSektl
+         e1GBiEuf7gSci2sOB65sx9GRYyVrb/yDth3i+ZduGFqtTAWibDb5NdwRmqMstBp8x5w7
+         +FvTcmER5MRWxi7p3lQE3YSJfzmoPFE96upZzgJeYX8kTsL4ThXBvTnETH2NuVInq9V1
+         tzCQ==
+X-Gm-Message-State: AOAM531MfoOqs/FPZF5FkMtQ0nTt3JciOMX6IxJCruQ6R5ainqwkUeye
+        NiFmyFnSt7HHWtuuQz7LBR6gmQY3AOw=
+X-Google-Smtp-Source: ABdhPJwRnUOiI2e1NM8GsgG18O/2CJ88XFMg7KlTym3Di4SpobO10rebateGY5tG5eLZs3t3nGd7yQ==
+X-Received: by 2002:a63:4c58:: with SMTP id m24mr19807730pgl.597.1638815188066;
+        Mon, 06 Dec 2021 10:26:28 -0800 (PST)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id a22sm12773097pfh.111.2021.12.06.10.26.24
+        by smtp.gmail.com with ESMTPSA id a22sm12773097pfh.111.2021.12.06.10.26.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Dec 2021 10:26:25 -0800 (PST)
+        Mon, 06 Dec 2021 10:26:27 -0800 (PST)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     devicetree@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -89,9 +89,9 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         linux-rtc@vger.kernel.org (open list:REAL TIME CLOCK (RTC) SUBSYSTEM),
         linux-pm@vger.kernel.org (open list:THERMAL),
         linux-usb@vger.kernel.org (open list:USB SUBSYSTEM)
-Subject: [PATCH v2 03/14] dt-bindings: pwm: Convert BCM7038 PWM binding to YAML
-Date:   Mon,  6 Dec 2021 10:26:05 -0800
-Message-Id: <20211206182616.2089677-4-f.fainelli@gmail.com>
+Subject: [PATCH v2 04/14] dt-bindings: rtc: Convert Broadcom STB waketimer to YAML
+Date:   Mon,  6 Dec 2021 10:26:06 -0800
+Message-Id: <20211206182616.2089677-5-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211206182616.2089677-1-f.fainelli@gmail.com>
 References: <20211206182616.2089677-1-f.fainelli@gmail.com>
@@ -101,91 +101,92 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Convert the Broadcom STB BCM7038 PWM Device Tree binding to YAML to help
+Convert the Broadcom STB waketimer Device Tree binding to YAML to help
 with validation.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- .../bindings/pwm/brcm,bcm7038-pwm.txt         | 20 ---------
- .../bindings/pwm/brcm,bcm7038-pwm.yaml        | 43 +++++++++++++++++++
- 2 files changed, 43 insertions(+), 20 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.txt
- create mode 100644 Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.yaml
+ .../bindings/rtc/brcm,brcmstb-waketimer.txt   | 20 ---------
+ .../bindings/rtc/brcm,brcmstb-waketimer.yaml  | 44 +++++++++++++++++++
+ 2 files changed, 44 insertions(+), 20 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.yaml
 
-diff --git a/Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.txt b/Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.txt
+diff --git a/Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.txt b/Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.txt
 deleted file mode 100644
-index 0e662d7f6bd1..000000000000
---- a/Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.txt
+index d946f28502b3..000000000000
+--- a/Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.txt
 +++ /dev/null
 @@ -1,20 +0,0 @@
--Broadcom BCM7038 PWM controller (BCM7xxx Set Top Box PWM controller)
+-Broadcom STB wake-up Timer
+-
+-The Broadcom STB wake-up timer provides a 27Mhz resolution timer, with the
+-ability to wake up the system from low-power suspend/standby modes.
 -
 -Required properties:
--
--- compatible: must be "brcm,bcm7038-pwm"
--- reg: physical base address and length for this controller
--- #pwm-cells: should be 2. See pwm.yaml in this directory for a description
--  of the cells format
--- clocks: a phandle to the reference clock for this block which is fed through
--  its internal variable clock frequency generator
--
+-- compatible     : should contain "brcm,brcmstb-waketimer"
+-- reg            : the register start and length for the WKTMR block
+-- interrupts     : The TIMER interrupt
+-- clocks	 : The phandle to the UPG fixed clock (27Mhz domain)
 -
 -Example:
 -
--	pwm: pwm@f0408000 {
--		compatible = "brcm,bcm7038-pwm";
--		reg = <0xf0408000 0x28>;
--		#pwm-cells = <2>;
--		clocks = <&upg_fixed>;
--	};
-diff --git a/Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.yaml b/Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.yaml
+-waketimer@f0411580 {
+-	compatible = "brcm,brcmstb-waketimer";
+-	reg = <0xf0411580 0x14>;
+-	interrupts = <0x3>;
+-	interrupt-parent = <&aon_pm_l2_intc>;
+-	clocks = <&upg_fixed>;
+-};
+diff --git a/Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.yaml b/Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.yaml
 new file mode 100644
-index 000000000000..4080e098f746
+index 000000000000..9fe079917a98
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.yaml
-@@ -0,0 +1,43 @@
++++ b/Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.yaml
+@@ -0,0 +1,44 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/pwm/brcm,bcm7038-pwm.yaml#
++$id: http://devicetree.org/schemas/rtc/brcm,brcmstb-waketimer.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Broadcom BCM7038 PWM controller (BCM7xxx Set Top Box PWM controller)
++title: Broadcom STB wake-up Timer
 +
 +maintainers:
 +  - Florian Fainelli <f.fainelli@gmail.com>
 +
++description:
++  The Broadcom STB wake-up timer provides a 27Mhz resolution timer, with the
++  ability to wake up the system from low-power suspend/standby modes.
++
 +allOf:
-+  - $ref: pwm.yaml#
++  - $ref: "rtc.yaml#"
 +
 +properties:
 +  compatible:
-+    const: brcm,bcm7038-pwm
++    const: brcm,brcmstb-waketimer
 +
 +  reg:
 +    maxItems: 1
 +
-+  "#pwm-cells":
-+    const: 2
-+
-+  clocks:
++  interrupts:
++    description: the TIMER interrupt
 +    maxItems: 1
 +
-+required:
-+  - compatible
-+  - reg
-+  - "#pwm-cells"
-+  - clocks
++  clocks:
++    description: clock reference in the 27MHz domain
++    maxItems: 1
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    pwm: pwm@f0408000 {
-+       compatible = "brcm,bcm7038-pwm";
-+       reg = <0xf0408000 0x28>;
-+       #pwm-cells = <2>;
-+       clocks = <&upg_fixed>;
++    rtc@f0411580 {
++        compatible = "brcm,brcmstb-waketimer";
++        reg = <0xf0411580 0x14>;
++        interrupts = <0x3>;
++        interrupt-parent = <&aon_pm_l2_intc>;
++        clocks = <&upg_fixed>;
 +    };
 -- 
 2.25.1
