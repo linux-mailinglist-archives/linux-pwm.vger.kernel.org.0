@@ -2,153 +2,192 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 199404696C7
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Dec 2021 14:20:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8F9746A405
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Dec 2021 19:26:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244309AbhLFNXf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Dec 2021 08:23:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56822 "EHLO
+        id S1347035AbhLFS3v (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Dec 2021 13:29:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243876AbhLFNXe (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Dec 2021 08:23:34 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE0C4C061746
-        for <linux-pwm@vger.kernel.org>; Mon,  6 Dec 2021 05:20:05 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id r11so42576922edd.9
-        for <linux-pwm@vger.kernel.org>; Mon, 06 Dec 2021 05:20:05 -0800 (PST)
+        with ESMTP id S1346999AbhLFS3u (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Dec 2021 13:29:50 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1AF3C061354;
+        Mon,  6 Dec 2021 10:26:20 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id z6so7632033plk.6;
+        Mon, 06 Dec 2021 10:26:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hvZZ98+ZsTYkg5d9GGJxZP1sUx5SwZWVJ8siiSeTEiQ=;
-        b=2MOQRTdPkwhZdrDsZF8v1LkIe9VhVcu+CnHsKM9OdXefuBhdam0kh3pKuY/iXJ4jwh
-         zU6Pi0uyyixDjjwk/OQSxSOoc3iQ4xccBh7VU5XFj2RJmmXBFIQ5+C1z5IVbt1IIXZI9
-         dWJnZb7vMFYt3V5p/nBP65LNmmSKgBcIPbBTYhEdVlTDWAEZK/VS4uN6PLzPx/US5RWz
-         mZbpnIm91JPS41EBzCzQXFGe1mimok+Yzh24z3yokPYDAKM6CqgeVZv0RUMAMUb6bGfj
-         4BUxGDcldPfeerU2uRtK9S94iyKNhrpwRqnnngf6pKx2tQNdE8FduPUAGoYjZpp5I9Hz
-         mHRQ==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hE2WN/DCm9N6dOZUu7hJVv+yyUkTDtyJAizkqbQOmeM=;
+        b=ipaMazgxgTpkYikqGl6f7YCz3dX0DH+kDEHQf9IPrXn8Ty2anNzxe5KfYlV9DKm45W
+         6LcK8K52jRcL5K9k/42alehFViSE1QSnRhzjLtXd3eN7VBi5wToe9wdkyXDAGEJgDygg
+         XhSMYxgkyh8wjxjdMyVsvXhk1aE0DQvfO4C5pZBMPZlsUk4V+e2QgcgAzEU0j3AFiSx4
+         h7n9OXSRpGq6ztUgfpDLuXGOVbcSB+Vf/goU2C53KQnpyGTGHsRhf9cwPPeUSkfFFgiA
+         5PBTFLrA8M+fmqv5jj4nU15Nh1TPtq61NJxqjPcus1YOURkR8gu7zepJsCz61vYuF6E4
+         1ikw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hvZZ98+ZsTYkg5d9GGJxZP1sUx5SwZWVJ8siiSeTEiQ=;
-        b=kmIMW+wozaaYcdgKarKBtA2Q4eSQbwScamwqD63mBFuVRzFctV4Z2d2VqPArYlqyYX
-         GXAMzFp2IIvkWSe80Z0R1y6YYic7j/fUOvJanOIFh359dsirQaSEBMumWQc8bIiKIE5F
-         kC4ZMeRqhkkLHgbrRLXe0ZS3olDJEVBa4VQqHjBy2fdOO6E7FdVHCGf67WL4R41y1fCD
-         b/HJLaJUrXdV9dcmf76fUC14BlAUs8vicdIbZql6EDpHM96Zgvc5xVD7tGIj/z83iLGG
-         /f3e3qzZlG+lLQWNzD1Wx1rAnM7B1opmPGqzUOpwm9EZI2+eTJSQXMu0zXax8jP8x3h+
-         zgog==
-X-Gm-Message-State: AOAM531n6E0lg63l8nSQgmyCmqMJjXMAwsLL8BRgqMdGkjY/vi75xpkf
-        j8QPqdo/R2Mx+4WdkTOsxpTJVklKYPd+CxM6BohEpw==
-X-Google-Smtp-Source: ABdhPJxT2dlCIImgLcO5pXZfgOHvmQ1PFmCORP62C543H7xjg6esBcWHlJIUNIvBYImdxEeNXjaXGHzx8AiVjQpaFnY=
-X-Received: by 2002:a17:906:7b53:: with SMTP id n19mr45793820ejo.538.1638796804233;
- Mon, 06 Dec 2021 05:20:04 -0800 (PST)
-MIME-Version: 1.0
-References: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdZbpKqG_uS2N8TW2-HL5CqnuKDpHVCabf66MyQQof0jOw@mail.gmail.com> <Ya4MFMWSyj4YbdNG@smile.fi.intel.com>
-In-Reply-To: <Ya4MFMWSyj4YbdNG@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 6 Dec 2021 14:19:53 +0100
-Message-ID: <CAMRc=MfHir4B3X=Hhkb1_VBQJFE17=YEexDa-+cs2LnFASPRkA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] gpio: Get rid of duplicate of_node assignment in
- the drivers
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hE2WN/DCm9N6dOZUu7hJVv+yyUkTDtyJAizkqbQOmeM=;
+        b=7odm4aRBpSoh/ebdkrGXB3ba3PnSfCw6W2aKzwZYvX6d/s7L7iqSfZVeDYPCVpJf2T
+         uRhIRo+ljNpVAq0Z8mtNXfx4ECPKdp+d2WRWMTdC6PBLhZ0mjp/iksEwHBolIxCoalVg
+         k3ZNGSSfqAa+b17msqH3P+HLhL64qPqr8Hb2zCdJkVT605rb5KW59bBMnzGxd8X9cCun
+         6E63j6GHOoD0Lhz6PUF2FJjo1Fui7oO1+ZokuwHHIMfpLqYXSSIYirOhwzz3D7fzf6pn
+         jSK6dqO3SSv8M3KPpjvxEha/5jC0/cIJiPmxeVQ2HrOWiOCqBD07sAS1OwnQTYmpvTRY
+         DH/w==
+X-Gm-Message-State: AOAM530FLKYcriURdysHPBtcWPD5eI0z+lRPdlZTZHIUCeR2FHMbJHfq
+        w+IOU/1/oBhI+ltGf4mvN09DZIWHpPM=
+X-Google-Smtp-Source: ABdhPJzHrXUEulYgTnv8rmP1N2EktMiXwXTNQXI/qz7ddNDdC9RmNahV0Zhzd5IDB4MUonyGD9AseQ==
+X-Received: by 2002:a17:90b:1892:: with SMTP id mn18mr250556pjb.178.1638815179928;
+        Mon, 06 Dec 2021 10:26:19 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id a22sm12773097pfh.111.2021.12.06.10.26.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Dec 2021 10:26:19 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     devicetree@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
+        ARCHITECTURE), Gregory Fong <gregory.0xf0@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Marc Zyngier <maz@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Tony Lindgren <tony@atomide.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
-        Alexandru Ardelean <aardelean@deviqon.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        patches@opensource.cirrus.com,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-power <linux-power@fi.rohmeurope.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>, linux-pwm@vger.kernel.org,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        linux-unisoc@lists.infradead.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Keerthy <j-keerthy@ti.com>, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Cooper <alcooperx@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
+        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list),
+        linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE),
+        linux-mmc@vger.kernel.org (open list:MULTIMEDIA CARD (MMC), SECURE
+        DIGITAL (SD) AND...),
+        linux-pwm@vger.kernel.org (open list:PWM SUBSYSTEM),
+        linux-crypto@vger.kernel.org (open list:HARDWARE RANDOM NUMBER
+        GENERATOR CORE),
+        linux-rtc@vger.kernel.org (open list:REAL TIME CLOCK (RTC) SUBSYSTEM),
+        linux-pm@vger.kernel.org (open list:THERMAL),
+        linux-usb@vger.kernel.org (open list:USB SUBSYSTEM)
+Subject: [PATCH v2 00/14] Broadcom DT bindings updates to YAML
+Date:   Mon,  6 Dec 2021 10:26:02 -0800
+Message-Id: <20211206182616.2089677-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Dec 6, 2021 at 2:13 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Sun, Dec 05, 2021 at 01:06:07AM +0100, Linus Walleij wrote:
-> > On Thu, Dec 2, 2021 at 10:17 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > > GPIO library does copy the of_node from the parent device of
-> > > the GPIO chip, there is no need to repeat this in the individual
-> > > drivers. Remove these assignment all at once.
-> > >
-> > > For the details one may look into the of_gpio_dev_init() implementation.
-> > >
-> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> >
-> > This is definitely a patch in the right direction, as Bart says
-> > it can be a bit dangerous, the outliers are those drivers that
-> > assign the .dev to something completely different than the
-> > the dev where the of_node is copied from.
->
-> I carefully checked these all and this patch series is only for the cases
-> when I'm sure it's the same device, which is used as parent, and its of_node
-> supplied.
->
-> > The idea was definitely always to only assign it in the core
-> > *unless* there is a reason to have a completely different
-> > of_node for some reason.
-> >
-> > > +++ b/drivers/gpio/gpio-rda.c
-> > > @@ -240,8 +240,6 @@ static int rda_gpio_probe(struct platform_device *pdev)
-> > >         rda_gpio->chip.label = dev_name(dev);
-> > >         rda_gpio->chip.ngpio = ngpios;
-> > >         rda_gpio->chip.base = -1;
-> > > -       rda_gpio->chip.parent = dev;
-> > > -       rda_gpio->chip.of_node = np;
-> >
-> > Mention in the commit message that in this driver
-> > you also drop the the .parent assignment because the
-> > core will handle it.
->
-> Okay, I will update it. Also I'll update to the last codebase (dunno if Bart
-> is going to pull the IB from Lee where one of the drivers is gone: da53cc634cea
-> ("gpio: bd70528 Drop BD70528 support").
->
+Hi Rob,
 
-I didn't plan to, just drop it from your patch.
+This patch series contains a number of device tree bindings being
+converted to YAML to help with validation.
 
-Bart
+There will be second, and possibly third rounds later on after those
+land in.
+
+Thanks!
+
+Changes in v2:
+
+- rebased against dt/next
+- addressed Gregory's feedback on the GPIO binding change
+- added Damien's Acked-by to the ATA binding patch
+
+Florian Fainelli (14):
+  dt-bindings: mmc: Convert Broadcom STB SDHCI binding to YAML
+  dt-bindings: reset: Convert Broadcom STB reset to YAML
+  dt-bindings: pwm: Convert BCM7038 PWM binding to YAML
+  dt-bindings: rtc: Convert Broadcom STB waketimer to YAML
+  dt-bindings: gpio: Convert Broadcom STB GPIO to YAML
+  dt-binding: interrupt-controller: Convert BCM7038 L1 intc to YAML
+  dt-bindings: interrupt-controller: Convert BCM7120 L2 to YAML
+  dt-bindings: interrupt-controller: Merge BCM3380 with BCM7120
+  dt-bindings: interrupt-controller: Convert Broadcom STB L2 to YAML
+  dt-bindings: rng: Convert iProc RNG200 to YAML
+  dt-bindings: thermal: Convert Broadcom TMON to YAML
+  dt-bindings: ata: Convert Broadcom SATA to YAML
+  dt-bindings: bus: Convert GISB arbiter to YAML
+  dt-bindings: usb: Convert BDC to YAML
+
+ .../bindings/ata/brcm,sata-brcm.txt           |  45 ------
+ .../bindings/ata/brcm,sata-brcm.yaml          |  91 +++++++++++
+ .../devicetree/bindings/bus/brcm,gisb-arb.txt |  34 ----
+ .../bindings/bus/brcm,gisb-arb.yaml           |  66 ++++++++
+ .../bindings/gpio/brcm,brcmstb-gpio.txt       |  83 ----------
+ .../bindings/gpio/brcm,brcmstb-gpio.yaml      | 105 ++++++++++++
+ .../brcm,bcm3380-l2-intc.txt                  |  39 -----
+ .../brcm,bcm7038-l1-intc.txt                  |  61 -------
+ .../brcm,bcm7038-l1-intc.yaml                 |  91 +++++++++++
+ .../brcm,bcm7120-l2-intc.txt                  |  88 -----------
+ .../brcm,bcm7120-l2-intc.yaml                 | 149 ++++++++++++++++++
+ .../interrupt-controller/brcm,l2-intc.txt     |  31 ----
+ .../interrupt-controller/brcm,l2-intc.yaml    |  64 ++++++++
+ .../bindings/mmc/brcm,sdhci-brcmstb.txt       |  53 -------
+ .../bindings/mmc/brcm,sdhci-brcmstb.yaml      | 100 ++++++++++++
+ .../bindings/pwm/brcm,bcm7038-pwm.txt         |  20 ---
+ .../bindings/pwm/brcm,bcm7038-pwm.yaml        |  43 +++++
+ .../bindings/reset/brcm,brcmstb-reset.txt     |  27 ----
+ .../bindings/reset/brcm,brcmstb-reset.yaml    |  48 ++++++
+ .../bindings/rng/brcm,iproc-rng200.txt        |  16 --
+ .../bindings/rng/brcm,iproc-rng200.yaml       |  29 ++++
+ .../bindings/rtc/brcm,brcmstb-waketimer.txt   |  20 ---
+ .../bindings/rtc/brcm,brcmstb-waketimer.yaml  |  44 ++++++
+ .../bindings/thermal/brcm,avs-tmon.txt        |  23 ---
+ .../bindings/thermal/brcm,avs-tmon.yaml       |  57 +++++++
+ .../devicetree/bindings/usb/brcm,bdc.txt      |  29 ----
+ .../devicetree/bindings/usb/brcm,bdc.yaml     |  46 ++++++
+ MAINTAINERS                                   |   6 +-
+ 28 files changed, 936 insertions(+), 572 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/ata/brcm,sata-brcm.txt
+ create mode 100644 Documentation/devicetree/bindings/ata/brcm,sata-brcm.yaml
+ delete mode 100644 Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
+ create mode 100644 Documentation/devicetree/bindings/bus/brcm,gisb-arb.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.yaml
+ delete mode 100644 Documentation/devicetree/bindings/reset/brcm,brcmstb-reset.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/brcm,brcmstb-reset.yaml
+ delete mode 100644 Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt
+ create mode 100644 Documentation/devicetree/bindings/rng/brcm,iproc-rng200.yaml
+ delete mode 100644 Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.yaml
+ delete mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
+ create mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-tmon.yaml
+ delete mode 100644 Documentation/devicetree/bindings/usb/brcm,bdc.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/brcm,bdc.yaml
+
+-- 
+2.25.1
+
