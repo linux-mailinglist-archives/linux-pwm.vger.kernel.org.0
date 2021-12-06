@@ -2,55 +2,84 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 893094696B8
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Dec 2021 14:19:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 199404696C7
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Dec 2021 14:20:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244286AbhLFNWi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Dec 2021 08:22:38 -0500
-Received: from mga01.intel.com ([192.55.52.88]:41880 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244255AbhLFNWg (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 6 Dec 2021 08:22:36 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10189"; a="261344036"
-X-IronPort-AV: E=Sophos;i="5.87,291,1631602800"; 
-   d="scan'208";a="261344036"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2021 05:19:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,291,1631602800"; 
-   d="scan'208";a="579370409"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 06 Dec 2021 05:18:54 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 395F1199; Mon,  6 Dec 2021 15:19:00 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        id S244309AbhLFNXf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Dec 2021 08:23:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56822 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243876AbhLFNXe (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Dec 2021 08:23:34 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE0C4C061746
+        for <linux-pwm@vger.kernel.org>; Mon,  6 Dec 2021 05:20:05 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id r11so42576922edd.9
+        for <linux-pwm@vger.kernel.org>; Mon, 06 Dec 2021 05:20:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hvZZ98+ZsTYkg5d9GGJxZP1sUx5SwZWVJ8siiSeTEiQ=;
+        b=2MOQRTdPkwhZdrDsZF8v1LkIe9VhVcu+CnHsKM9OdXefuBhdam0kh3pKuY/iXJ4jwh
+         zU6Pi0uyyixDjjwk/OQSxSOoc3iQ4xccBh7VU5XFj2RJmmXBFIQ5+C1z5IVbt1IIXZI9
+         dWJnZb7vMFYt3V5p/nBP65LNmmSKgBcIPbBTYhEdVlTDWAEZK/VS4uN6PLzPx/US5RWz
+         mZbpnIm91JPS41EBzCzQXFGe1mimok+Yzh24z3yokPYDAKM6CqgeVZv0RUMAMUb6bGfj
+         4BUxGDcldPfeerU2uRtK9S94iyKNhrpwRqnnngf6pKx2tQNdE8FduPUAGoYjZpp5I9Hz
+         mHRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hvZZ98+ZsTYkg5d9GGJxZP1sUx5SwZWVJ8siiSeTEiQ=;
+        b=kmIMW+wozaaYcdgKarKBtA2Q4eSQbwScamwqD63mBFuVRzFctV4Z2d2VqPArYlqyYX
+         GXAMzFp2IIvkWSe80Z0R1y6YYic7j/fUOvJanOIFh359dsirQaSEBMumWQc8bIiKIE5F
+         kC4ZMeRqhkkLHgbrRLXe0ZS3olDJEVBa4VQqHjBy2fdOO6E7FdVHCGf67WL4R41y1fCD
+         b/HJLaJUrXdV9dcmf76fUC14BlAUs8vicdIbZql6EDpHM96Zgvc5xVD7tGIj/z83iLGG
+         /f3e3qzZlG+lLQWNzD1Wx1rAnM7B1opmPGqzUOpwm9EZI2+eTJSQXMu0zXax8jP8x3h+
+         zgog==
+X-Gm-Message-State: AOAM531n6E0lg63l8nSQgmyCmqMJjXMAwsLL8BRgqMdGkjY/vi75xpkf
+        j8QPqdo/R2Mx+4WdkTOsxpTJVklKYPd+CxM6BohEpw==
+X-Google-Smtp-Source: ABdhPJxT2dlCIImgLcO5pXZfgOHvmQ1PFmCORP62C543H7xjg6esBcWHlJIUNIvBYImdxEeNXjaXGHzx8AiVjQpaFnY=
+X-Received: by 2002:a17:906:7b53:: with SMTP id n19mr45793820ejo.538.1638796804233;
+ Mon, 06 Dec 2021 05:20:04 -0800 (PST)
+MIME-Version: 1.0
+References: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdZbpKqG_uS2N8TW2-HL5CqnuKDpHVCabf66MyQQof0jOw@mail.gmail.com> <Ya4MFMWSyj4YbdNG@smile.fi.intel.com>
+In-Reply-To: <Ya4MFMWSyj4YbdNG@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 6 Dec 2021 14:19:53 +0100
+Message-ID: <CAMRc=MfHir4B3X=Hhkb1_VBQJFE17=YEexDa-+cs2LnFASPRkA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] gpio: Get rid of duplicate of_node assignment in
+ the drivers
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Marc Zyngier <maz@kernel.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
         Sergio Paracuellos <sergio.paracuellos@gmail.com>,
         Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
         Baruch Siach <baruch@tkos.co.il>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, Tony Lindgren <tony@atomide.com>,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
         Jianqun Xu <jay.xu@rock-chips.com>,
         Alexandru Ardelean <aardelean@deviqon.com>,
         Thierry Reding <treding@nvidia.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         patches@opensource.cirrus.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-power@fi.rohmeurope.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-unisoc@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-power <linux-power@fi.rohmeurope.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>, linux-pwm@vger.kernel.org,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        linux-unisoc@lists.infradead.org,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
         linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org
-Cc:     Ray Jui <rjui@broadcom.com>,
+        linux-tegra@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Scott Branden <sbranden@broadcom.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
         Gregory Fong <gregory.0xf0@gmail.com>,
         Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
         Keerthy <j-keerthy@ti.com>, Orson Zhai <orsonzhai@gmail.com>,
@@ -70,149 +99,56 @@ Cc:     Ray Jui <rjui@broadcom.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         Alexandre Torgue <alexandre.torgue@foss.st.com>,
         Jonathan Hunter <jonathanh@nvidia.com>
-Subject: [PATCH v2 3/3] gpio: Propagate firmware node from a parent device
-Date:   Mon,  6 Dec 2021 15:18:52 +0200
-Message-Id: <20211206131852.74746-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211206131852.74746-1-andriy.shevchenko@linux.intel.com>
-References: <20211206131852.74746-1-andriy.shevchenko@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-When creating MFD platform devices the firmware node is left unset.
-This, in particular, prevents GPIO library to use it for different
-purposes. Propagate firmware node from the parent device and let
-GPIO library do the right thing.
+On Mon, Dec 6, 2021 at 2:13 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Sun, Dec 05, 2021 at 01:06:07AM +0100, Linus Walleij wrote:
+> > On Thu, Dec 2, 2021 at 10:17 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > > GPIO library does copy the of_node from the parent device of
+> > > the GPIO chip, there is no need to repeat this in the individual
+> > > drivers. Remove these assignment all at once.
+> > >
+> > > For the details one may look into the of_gpio_dev_init() implementation.
+> > >
+> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >
+> > This is definitely a patch in the right direction, as Bart says
+> > it can be a bit dangerous, the outliers are those drivers that
+> > assign the .dev to something completely different than the
+> > the dev where the of_node is copied from.
+>
+> I carefully checked these all and this patch series is only for the cases
+> when I'm sure it's the same device, which is used as parent, and its of_node
+> supplied.
+>
+> > The idea was definitely always to only assign it in the core
+> > *unless* there is a reason to have a completely different
+> > of_node for some reason.
+> >
+> > > +++ b/drivers/gpio/gpio-rda.c
+> > > @@ -240,8 +240,6 @@ static int rda_gpio_probe(struct platform_device *pdev)
+> > >         rda_gpio->chip.label = dev_name(dev);
+> > >         rda_gpio->chip.ngpio = ngpios;
+> > >         rda_gpio->chip.base = -1;
+> > > -       rda_gpio->chip.parent = dev;
+> > > -       rda_gpio->chip.of_node = np;
+> >
+> > Mention in the commit message that in this driver
+> > you also drop the the .parent assignment because the
+> > core will handle it.
+>
+> Okay, I will update it. Also I'll update to the last codebase (dunno if Bart
+> is going to pull the IB from Lee where one of the drivers is gone: da53cc634cea
+> ("gpio: bd70528 Drop BD70528 support").
+>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v2: no change
- drivers/gpio/gpio-arizona.c  | 5 ++---
- drivers/gpio/gpio-tps6586x.c | 5 ++---
- drivers/gpio/gpio-tps65910.c | 6 +++---
- drivers/gpio/gpio-twl6040.c  | 5 ++---
- drivers/gpio/gpio-wm831x.c   | 5 ++---
- 5 files changed, 11 insertions(+), 15 deletions(-)
+I didn't plan to, just drop it from your patch.
 
-diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
-index 2bc173c352ce..02f9ae19cd44 100644
---- a/drivers/gpio/gpio-arizona.c
-+++ b/drivers/gpio/gpio-arizona.c
-@@ -151,6 +151,8 @@ static int arizona_gpio_probe(struct platform_device *pdev)
- 	struct arizona_gpio *arizona_gpio;
- 	int ret;
- 
-+	device_set_node(&pdev->dev, dev_fwnode(pdev->dev.parent));
-+
- 	arizona_gpio = devm_kzalloc(&pdev->dev, sizeof(*arizona_gpio),
- 				    GFP_KERNEL);
- 	if (!arizona_gpio)
-@@ -159,9 +161,6 @@ static int arizona_gpio_probe(struct platform_device *pdev)
- 	arizona_gpio->arizona = arizona;
- 	arizona_gpio->gpio_chip = template_chip;
- 	arizona_gpio->gpio_chip.parent = &pdev->dev;
--#ifdef CONFIG_OF_GPIO
--	arizona_gpio->gpio_chip.of_node = arizona->dev->of_node;
--#endif
- 
- 	switch (arizona->type) {
- 	case WM5102:
-diff --git a/drivers/gpio/gpio-tps6586x.c b/drivers/gpio/gpio-tps6586x.c
-index da0304b764a5..c5713524b581 100644
---- a/drivers/gpio/gpio-tps6586x.c
-+++ b/drivers/gpio/gpio-tps6586x.c
-@@ -77,6 +77,8 @@ static int tps6586x_gpio_probe(struct platform_device *pdev)
- 	struct tps6586x_platform_data *pdata;
- 	struct tps6586x_gpio *tps6586x_gpio;
- 
-+	device_set_node(&pdev->dev, dev_fwnode(pdev->dev.parent));
-+
- 	pdata = dev_get_platdata(pdev->dev.parent);
- 	tps6586x_gpio = devm_kzalloc(&pdev->dev,
- 				sizeof(*tps6586x_gpio), GFP_KERNEL);
-@@ -97,9 +99,6 @@ static int tps6586x_gpio_probe(struct platform_device *pdev)
- 	tps6586x_gpio->gpio_chip.get	= tps6586x_gpio_get;
- 	tps6586x_gpio->gpio_chip.to_irq	= tps6586x_gpio_to_irq;
- 
--#ifdef CONFIG_OF_GPIO
--	tps6586x_gpio->gpio_chip.of_node = pdev->dev.parent->of_node;
--#endif
- 	if (pdata && pdata->gpio_base)
- 		tps6586x_gpio->gpio_chip.base = pdata->gpio_base;
- 	else
-diff --git a/drivers/gpio/gpio-tps65910.c b/drivers/gpio/gpio-tps65910.c
-index 7fa8c841081f..321e6945f0be 100644
---- a/drivers/gpio/gpio-tps65910.c
-+++ b/drivers/gpio/gpio-tps65910.c
-@@ -111,6 +111,8 @@ static int tps65910_gpio_probe(struct platform_device *pdev)
- 	int ret;
- 	int i;
- 
-+	device_set_node(&pdev->dev, dev_fwnode(pdev->dev.parent));
-+
- 	tps65910_gpio = devm_kzalloc(&pdev->dev,
- 				sizeof(*tps65910_gpio), GFP_KERNEL);
- 	if (!tps65910_gpio)
-@@ -137,9 +139,7 @@ static int tps65910_gpio_probe(struct platform_device *pdev)
- 	tps65910_gpio->gpio_chip.set	= tps65910_gpio_set;
- 	tps65910_gpio->gpio_chip.get	= tps65910_gpio_get;
- 	tps65910_gpio->gpio_chip.parent = &pdev->dev;
--#ifdef CONFIG_OF_GPIO
--	tps65910_gpio->gpio_chip.of_node = tps65910->dev->of_node;
--#endif
-+
- 	if (pdata && pdata->gpio_base)
- 		tps65910_gpio->gpio_chip.base = pdata->gpio_base;
- 	else
-diff --git a/drivers/gpio/gpio-twl6040.c b/drivers/gpio/gpio-twl6040.c
-index 648fb418d775..6c3fbf382dba 100644
---- a/drivers/gpio/gpio-twl6040.c
-+++ b/drivers/gpio/gpio-twl6040.c
-@@ -80,6 +80,8 @@ static int gpo_twl6040_probe(struct platform_device *pdev)
- 	struct twl6040 *twl6040 = dev_get_drvdata(twl6040_core_dev);
- 	int ret;
- 
-+	device_set_node(&pdev->dev, dev_fwnode(pdev->dev.parent));
-+
- 	twl6040gpo_chip.base = -1;
- 
- 	if (twl6040_get_revid(twl6040) < TWL6041_REV_ES2_0)
-@@ -88,9 +90,6 @@ static int gpo_twl6040_probe(struct platform_device *pdev)
- 		twl6040gpo_chip.ngpio = 1; /* twl6041 have 1 GPO */
- 
- 	twl6040gpo_chip.parent = &pdev->dev;
--#ifdef CONFIG_OF_GPIO
--	twl6040gpo_chip.of_node = twl6040_core_dev->of_node;
--#endif
- 
- 	ret = devm_gpiochip_add_data(&pdev->dev, &twl6040gpo_chip, NULL);
- 	if (ret < 0) {
-diff --git a/drivers/gpio/gpio-wm831x.c b/drivers/gpio/gpio-wm831x.c
-index 9cf1e5ebb352..7eaf8a28638c 100644
---- a/drivers/gpio/gpio-wm831x.c
-+++ b/drivers/gpio/gpio-wm831x.c
-@@ -262,6 +262,8 @@ static int wm831x_gpio_probe(struct platform_device *pdev)
- 	struct wm831x_pdata *pdata = &wm831x->pdata;
- 	struct wm831x_gpio *wm831x_gpio;
- 
-+	device_set_node(&pdev->dev, dev_fwnode(pdev->dev.parent));
-+
- 	wm831x_gpio = devm_kzalloc(&pdev->dev, sizeof(*wm831x_gpio),
- 				   GFP_KERNEL);
- 	if (wm831x_gpio == NULL)
-@@ -275,9 +277,6 @@ static int wm831x_gpio_probe(struct platform_device *pdev)
- 		wm831x_gpio->gpio_chip.base = pdata->gpio_base;
- 	else
- 		wm831x_gpio->gpio_chip.base = -1;
--#ifdef CONFIG_OF_GPIO
--	wm831x_gpio->gpio_chip.of_node = wm831x->dev->of_node;
--#endif
- 
- 	return devm_gpiochip_add_data(&pdev->dev, &wm831x_gpio->gpio_chip, wm831x_gpio);
- }
--- 
-2.33.0
-
+Bart
