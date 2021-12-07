@@ -2,65 +2,67 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2468D46A433
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Dec 2021 19:27:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DAAB146B197
+	for <lists+linux-pwm@lfdr.de>; Tue,  7 Dec 2021 04:42:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347605AbhLFSag (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Dec 2021 13:30:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47482 "EHLO
+        id S234374AbhLGDp2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Dec 2021 22:45:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347423AbhLFSaS (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Dec 2021 13:30:18 -0500
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BAB9C061746;
-        Mon,  6 Dec 2021 10:26:49 -0800 (PST)
-Received: by mail-pg1-x532.google.com with SMTP id l64so5744411pgl.9;
-        Mon, 06 Dec 2021 10:26:49 -0800 (PST)
+        with ESMTP id S234282AbhLGDp0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Dec 2021 22:45:26 -0500
+Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4279BC061746;
+        Mon,  6 Dec 2021 19:41:57 -0800 (PST)
+Received: by mail-ua1-x92e.google.com with SMTP id l24so23994291uak.2;
+        Mon, 06 Dec 2021 19:41:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JUJ+46P2lZKqa9GcjTNExLZ59H82MAk46ZsUw+ykybM=;
-        b=kU99L9Y51Kn0GGffgfdtTjU/trqWSkETe6sPE8NiMvNFQNV2DltAKs5XPjrhg+Jjdu
-         exnXIWjBG2i4J4LI3YfCX6rl84hDrkLokZvi2WeNmCIw2OzDExSBZNa54ZJ14bH+cRe/
-         a2h61/lL/Pcm1Fy2cqut2yGHOOFNKDqyUOsTTucu/ezxcRk8KbWcuDijMq0EuDx7RxvX
-         Wk+Wy+HfxzPlh5PcKFH0qmcbxMVrAmvOvu8AXclMUXKqWG7P2xu0SlzXjmxYYkpmgkj2
-         yU6HRKB/d5Gw+X17XbYZBqwI713hQgUqw8L2s1tyqIhWFfKnzFLRo3eygriopY6SPs1V
-         CJGA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+WjCLq5iyPbhZoOVbo+nvWb9Wp/JdlLnIPR31C337C8=;
+        b=mZiJ1JWBFc1OWU2CphwdToWib2Fs7VeoMvRyd6OGAUdTYE7JuVX3y18pFnbL9d0SYR
+         qnkGAcFy4HWByFCmfen3y9B+gsUBd2Z4vpiAY8cExnT/X6456PRBzYpHz5lzE8xWOBLE
+         /Opn0hwl+/WEjMpD3cFa2zhWfG+2VM8IZAoAwDwKw4uis+328EKo2LCeWhkZKeKEAT9k
+         n3UXrAemi7nOM0I+lBZxbPlnpXZXWks7fOWw21TwqOUg6+DtBOdhLAZp7S1avVtceNWO
+         6hIZiEiJ4irNSwTkZ0WAOuxz06b1U7vebIqVBU87ZImLwZxD31NuI/0Q7jK48HpCxsG6
+         jbJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JUJ+46P2lZKqa9GcjTNExLZ59H82MAk46ZsUw+ykybM=;
-        b=VBSE6auKRm98cbTtPJeVtdnJ4kthb/4nGfliom7PpaCzXo0Dbou3fQNBeLHNlvfLcf
-         ybdB28r6u5zgPx96BilTJ0DUs94MpTsuvpUvgYmaCGmGEYLJabfW7eBeFpbYdSxSEY+f
-         9iYYen8z31C7/3Yz6BXm7XaHM+DhEeJQdrHtLIiX/DgwzSZOOAPg6V7TRdps735hCZZa
-         2CgGu5SU22EwjqaKE13sP8oaMGWZdLasZSE3H6eAMRDM6c+Rj9fbYNMRPIzvLGKbKf1P
-         S44y2cCPu6JYx+eOtOPeLZ0GVmqhXm8NMwj+ncW7eKwADol0BLAd3H4/L3Dyhnj44GN5
-         M6YQ==
-X-Gm-Message-State: AOAM533sokH1jIbPgKbyVFDla6TFcnAbme73VtHGdbaXaxX4FfQoRHAL
-        YLrvyTZGbaInpzrJEQy8Yn0b78U3Seg=
-X-Google-Smtp-Source: ABdhPJyigbdo9ZoRF96SOLo/9a6fD0t0h/AKLi0RxRvpjjnuQwdBtTHDjlTwh+2xmgk5SXv2yxaa1Q==
-X-Received: by 2002:a05:6a00:1ac9:b0:49f:b38d:fe7 with SMTP id f9-20020a056a001ac900b0049fb38d0fe7mr38788631pfv.63.1638815208600;
-        Mon, 06 Dec 2021 10:26:48 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id a22sm12773097pfh.111.2021.12.06.10.26.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Dec 2021 10:26:48 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     devicetree@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+WjCLq5iyPbhZoOVbo+nvWb9Wp/JdlLnIPR31C337C8=;
+        b=5b7/eFbJEOeL9ZNIuyZyAlpO52UWbGZLaf1bg2jfeQ4GVl9evTE4oJzyD9m1cSI9P/
+         DVPyXnB3/68ID+cisJSTq0toGmcK37hgecZUF+s5nTmSNshi7xyjIvERRCANsf5p2Cef
+         yJcC3400mMfT63OzCTqBEdCLqzU8xaCSeUwhc4bGPHFTFKW2b3+ptNWmWBzWiIc0kMa9
+         vZG8GfYGc42M+t896RoqpVEKnJpiKiqgug+D23TQaG32kECWATHpfW8SP/GLfqEUa5hf
+         WwNhY9eNgtRg13me9cjXzUQuEuMd15/WNRvBlpPMtNKPGOv6A2JBl3sGakYnONJo0rIu
+         Ki8w==
+X-Gm-Message-State: AOAM532t6a257QWxIXJkyZ7p6GAsPVSWe/vD+jR6CfEsncfkwhk3ZcV8
+        X+LhJLOcsUU2w0747qhtduReT7g/GebIhBzAkg0d1blr0+c=
+X-Google-Smtp-Source: ABdhPJx6RQZ3n6olyV3sCz9AbKmYBKhNAk0yZ773fOAPjf8R3q9XrHTi0PcC2P6/Zcqz0XN+NMNLS7cMSGYejK/S3F0=
+X-Received: by 2002:ab0:6813:: with SMTP id z19mr46872879uar.28.1638848516162;
+ Mon, 06 Dec 2021 19:41:56 -0800 (PST)
+MIME-Version: 1.0
+References: <20211206182616.2089677-1-f.fainelli@gmail.com> <20211206182616.2089677-6-f.fainelli@gmail.com>
+In-Reply-To: <20211206182616.2089677-6-f.fainelli@gmail.com>
+From:   Gregory Fong <gregory.0xf0@gmail.com>
+Date:   Mon, 6 Dec 2021 19:41:29 -0800
+Message-ID: <CADtm3G5Sh5sFhq7ye=aJbzd0v_FiqOPt_RAE3v_qWFQ+jH5bEQ@mail.gmail.com>
+Subject: Re: [PATCH v2 05/14] dt-bindings: gpio: Convert Broadcom STB GPIO to YAML
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     devicetree@vger.kernel.org,
         Damien Le Moal <damien.lemoal@opensource.wdc.com>,
         Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
-        ARCHITECTURE), Gregory Fong <gregory.0xf0@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Marc Zyngier <maz@kernel.org>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Herbert Xu <herbert@gondor.apana.org.au>,
@@ -76,143 +78,31 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Al Cooper <alcooperx@gmail.com>,
         Doug Berger <opendmb@gmail.com>,
-        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
-        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list),
-        linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
-        ARM ARCHITECTURE),
-        linux-mmc@vger.kernel.org (open list:MULTIMEDIA CARD (MMC), SECURE
-        DIGITAL (SD) AND...),
-        linux-pwm@vger.kernel.org (open list:PWM SUBSYSTEM),
-        linux-crypto@vger.kernel.org (open list:HARDWARE RANDOM NUMBER
-        GENERATOR CORE),
-        linux-rtc@vger.kernel.org (open list:REAL TIME CLOCK (RTC) SUBSYSTEM),
-        linux-pm@vger.kernel.org (open list:THERMAL),
-        linux-usb@vger.kernel.org (open list:USB SUBSYSTEM)
-Subject: [PATCH v2 14/14] dt-bindings: usb: Convert BDC to YAML
-Date:   Mon,  6 Dec 2021 10:26:16 -0800
-Message-Id: <20211206182616.2089677-15-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211206182616.2089677-1-f.fainelli@gmail.com>
-References: <20211206182616.2089677-1-f.fainelli@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..." 
+        <linux-mmc@vger.kernel.org>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Convert the Broadcom BDC device controller Device Tree binding to YAML
-to help with validation.
+On Mon, Dec 6, 2021 at 10:26 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> Convert the Broadcom STB GPIO Device Tree binding to YAML to help with
+> validation.
+>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- .../devicetree/bindings/usb/brcm,bdc.txt      | 29 ------------
- .../devicetree/bindings/usb/brcm,bdc.yaml     | 46 +++++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 47 insertions(+), 30 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/usb/brcm,bdc.txt
- create mode 100644 Documentation/devicetree/bindings/usb/brcm,bdc.yaml
-
-diff --git a/Documentation/devicetree/bindings/usb/brcm,bdc.txt b/Documentation/devicetree/bindings/usb/brcm,bdc.txt
-deleted file mode 100644
-index c9f52b97cef1..000000000000
---- a/Documentation/devicetree/bindings/usb/brcm,bdc.txt
-+++ /dev/null
-@@ -1,29 +0,0 @@
--Broadcom USB Device Controller (BDC)
--====================================
--
--Required properties:
--
--- compatible: must be one of:
--                "brcm,bdc-udc-v2"
--                "brcm,bdc"
--- reg: the base register address and length
--- interrupts: the interrupt line for this controller
--
--Optional properties:
--
--On Broadcom STB platforms, these properties are required:
--
--- phys: phandle to one or two USB PHY blocks
--        NOTE: Some SoC's have a single phy and some have
--        USB 2.0 and USB 3.0 phys
--- clocks: phandle to the functional clock of this block
--
--Example:
--
--        bdc@f0b02000 {
--                compatible = "brcm,bdc-udc-v2";
--                reg = <0xf0b02000 0xfc4>;
--                interrupts = <0x0 0x60 0x0>;
--                phys = <&usbphy_0 0x0>;
--                clocks = <&sw_usbd>;
--        };
-diff --git a/Documentation/devicetree/bindings/usb/brcm,bdc.yaml b/Documentation/devicetree/bindings/usb/brcm,bdc.yaml
-new file mode 100644
-index 000000000000..48831b62ab31
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/brcm,bdc.yaml
-@@ -0,0 +1,46 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/usb/brcm,bdc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Broadcom USB Device Controller (BDC)
-+
-+maintainers:
-+  - Al Cooper <alcooperx@gmail.com>
-+  - Florian Fainelli <f.fainelli@gmail.com>
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - brcm,bdc-udc-v2
-+          - brcm,bdc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts: true
-+
-+  phys:
-+    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+        bdc@f0b02000 {
-+                compatible = "brcm,bdc-udc-v2";
-+                reg = <0xf0b02000 0xfc4>;
-+                interrupts = <0x0 0x60 0x0>;
-+                phys = <&usbphy_0 0x0>;
-+                clocks = <&sw_usbd>;
-+        };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2109b6fe8ea3..b18c7fa42a4f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3679,7 +3679,7 @@ M:	Al Cooper <alcooperx@gmail.com>
- L:	linux-usb@vger.kernel.org
- L:	bcm-kernel-feedback-list@broadcom.com
- S:	Maintained
--F:	Documentation/devicetree/bindings/usb/brcm,bdc.txt
-+F:	Documentation/devicetree/bindings/usb/brcm,bdc.yaml
- F:	drivers/usb/gadget/udc/bdc/
- 
- BROADCOM BMIPS CPUFREQ DRIVER
--- 
-2.25.1
-
+Acked-by: Gregory Fong <gregory.0xf0@gmail.com>
