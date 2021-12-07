@@ -2,40 +2,41 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB0D646B50F
-	for <lists+linux-pwm@lfdr.de>; Tue,  7 Dec 2021 09:04:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 113E346B51B
+	for <lists+linux-pwm@lfdr.de>; Tue,  7 Dec 2021 09:06:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232083AbhLGIHh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 7 Dec 2021 03:07:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232071AbhLGIHh (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 Dec 2021 03:07:37 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66E45C061746
-        for <linux-pwm@vger.kernel.org>; Tue,  7 Dec 2021 00:04:07 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1muVRw-0007zm-Lm; Tue, 07 Dec 2021 09:03:44 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1muVRh-003BVK-7H; Tue, 07 Dec 2021 09:03:28 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1muVRg-0004V5-7f; Tue, 07 Dec 2021 09:03:28 +0100
-Date:   Tue, 7 Dec 2021 09:03:25 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
+        id S230128AbhLGIKA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 7 Dec 2021 03:10:00 -0500
+Received: from bzq-84-110-109-230.cablep.bezeqint.net ([84.110.109.230]:49865
+        "EHLO mx.tkos.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S229512AbhLGIJ7 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 Dec 2021 03:09:59 -0500
+Received: from tarshish (unknown [10.0.8.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx.tkos.co.il (Postfix) with ESMTPS id E1A8A440855;
+        Tue,  7 Dec 2021 10:06:08 +0200 (IST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
+        s=default; t=1638864370;
+        bh=esweGkmM1TaFxAsLsotS7LKsL2FjaGbpG3oTnnMt2EY=;
+        h=References:From:To:Cc:Subject:Date:In-reply-to:From;
+        b=GcPgxTp47EJex9304Cwrh1a93q3dHMKWiHIjz8ZTn4NegGPU69yqh7Su5vmg5fO+P
+         Kh7nqdgkBIpI3Rf9UzzHq/x7N7cBaA/7R0ZE12PQaFHPd0XT3nfMmWwSoc6YNW6HJ/
+         sY7u4RIykgN0trrfVUJdtS/HSKo97dqJciT8yZxSr0wjGT9g5g4otk+PHV0JYm9p9k
+         P9YzQWW8WWhUeig+fPqnm1HPGtUlIZxk5urZr4h4aKbE+4xA9oZm9Je0d93bTim8GN
+         1As0GD0fgMDT/yrRdfvnw9AkNJRlBW1Fj0uJad+Crzam3J4mee0elu9epTaexUTQ7t
+         Pqt45gjbFAkpw==
+References: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
+ <20211207080325.6hfokrrcs45iucx6@pengutronix.de>
+User-agent: mu4e 1.6.10; emacs 27.1
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marc Zyngier <maz@kernel.org>,
         Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
         Sergio Paracuellos <sergio.paracuellos@gmail.com>,
         Chunyan Zhang <chunyan.zhang@unisoc.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Baruch Siach <baruch@tkos.co.il>,
         Tony Lindgren <tony@atomide.com>,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -75,53 +76,32 @@ Cc:     Marc Zyngier <maz@kernel.org>,
         Jonathan Hunter <jonathanh@nvidia.com>
 Subject: Re: [PATCH v1 1/3] gpio: Get rid of duplicate of_node assignment in
  the drivers
-Message-ID: <20211207080325.6hfokrrcs45iucx6@pengutronix.de>
-References: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
+Date:   Tue, 07 Dec 2021 10:05:08 +0200
+In-reply-to: <20211207080325.6hfokrrcs45iucx6@pengutronix.de>
+Message-ID: <87ilw0on3z.fsf@tarshish>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xelnb7q2ptte2x6e"
-Content-Disposition: inline
-In-Reply-To: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Uwe,
 
---xelnb7q2ptte2x6e
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Dec 07 2021, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Andy,
+>
+> you Cc: linux-pwm and the pwm maintainers in this series. I don't spot
+> anything pwm specific here (apart from touching gpio-mvebu which also
+> contains a PWM driver). Do I miss something?
 
-Hello Andy,
+That's probably because of drivers/gpio/gpio-mvebu.c that appears in the
+MAINTAINERS PWM entry.
 
-you Cc: linux-pwm and the pwm maintainers in this series. I don't spot
-anything pwm specific here (apart from touching gpio-mvebu which also
-contains a PWM driver). Do I miss something?
-
-Best regards
-Uwe
+baruch
 
 --=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---xelnb7q2ptte2x6e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmGvFUoACgkQwfwUeK3K
-7Ak2FAf/a3x5Co4mVUxKnXqmGwHXz7g+sVyT+Syp0AbNKmLSwV/jFmFT6Zy9u/ee
-Tv34gVXuYPBNDch6VBo47qrv8omMZtiQvE6l0bU4pmjYU9kriMmE4l65BQqexZaM
-bM0EDY+/6GNToLwCq7AXD6l/waEl7lwtO/KcLZHowCSWr7opyg23EoTgDCyxLUwv
-ceSVjNXqAAd4NzyHf63suy2ID66QzItCoRNbOrOBtIi1Vo5RM0SgZbN8ODyXKIWu
-sGCnBiaseRnCv31VkHPE/hsgFXIEwQbtMwohgWfD7YlrkmpOh3Bi29Em95cRuVIo
-tZQmPFwDQcMgt/4UuHdm2lxVcYjgyQ==
-=gmyE
------END PGP SIGNATURE-----
-
---xelnb7q2ptte2x6e--
+                                                     ~. .~   Tk Open Systems
+=3D}------------------------------------------------ooO--U--Ooo------------=
+{=3D
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
