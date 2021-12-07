@@ -2,222 +2,133 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3490D46B327
-	for <lists+linux-pwm@lfdr.de>; Tue,  7 Dec 2021 07:46:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B4ECD46B4FC
+	for <lists+linux-pwm@lfdr.de>; Tue,  7 Dec 2021 09:00:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235614AbhLGGtb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 7 Dec 2021 01:49:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47792 "EHLO
+        id S231898AbhLGIEM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 7 Dec 2021 03:04:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232354AbhLGGta (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 Dec 2021 01:49:30 -0500
-Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CED3C061746;
-        Mon,  6 Dec 2021 22:46:01 -0800 (PST)
-Received: by mail-qk1-x72c.google.com with SMTP id t6so13791183qkg.1;
-        Mon, 06 Dec 2021 22:46:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zbba/UkaBqT6lJeesV5XnDR8ly5tsCHkshlo7j8jGmI=;
-        b=Q+yWS6IouAezP2RtXT7wfG4/tNxdp9ZXLR+wW9lKJBMyDsJlbJ5H3xZ0rKJ6fVBHbG
-         dSSqWRMXnedRWTkImMBJ02GzPEnNeRFyXRgjK0GwRALs2WOZh06MkTmzmmR7igDS3WRT
-         n9cK0g2H5P2BlLtjlmxoUtb2D+/i7e+uibXPM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zbba/UkaBqT6lJeesV5XnDR8ly5tsCHkshlo7j8jGmI=;
-        b=PhdEVnI6dYg00PJuLWCH4y5EPtMAWlnBMK+HS90cks0zUYxf0c+2OEqIOXlT6TazA6
-         quf9bdlAGZFGsNJCgaYlUdWjrwT4XlqcvoOAWGzgsxu3LioqzvrHaQ0kFpYJREfmsPPW
-         WNIoi4Ig4REY6cM0d57zLHEcKcxaxFnGD4aGMgIiaacCIIwBjCqxytsbdjHwEP/1Vu5l
-         vpCfJHyVjbz19+Z4+kYrXcfcgdb7L/Louf45bKbQDNjqOSqc5fp+uJSdeGFEPUS3Lv2W
-         q6XH/0woghnTs32D9l2bPVSZ+aURWXXQ7yQQ8azK6cBX6gxSMr4qs73LVGu8dh8EyS+n
-         yusA==
-X-Gm-Message-State: AOAM5335po9MDdykn8MXnDfsFc325PhaBygqT/CcUaFvTOtTL4znnAAN
-        nqlNPmBnSo+g7cnh1WUsrmOaHZfVKaXwGwnSE74=
-X-Google-Smtp-Source: ABdhPJwMyI+isbOcD9jb1sDe2P/kVRSvemDmcx2g+X8998rktI8XFF6NjHYwG35zn7OuoJyPRSFLT3eZWu86DISifLQ=
-X-Received: by 2002:a05:620a:1004:: with SMTP id z4mr37420042qkj.243.1638859560150;
- Mon, 06 Dec 2021 22:46:00 -0800 (PST)
-MIME-Version: 1.0
-References: <20211130055933.32708-1-billy_tsai@aspeedtech.com>
-In-Reply-To: <20211130055933.32708-1-billy_tsai@aspeedtech.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Tue, 7 Dec 2021 06:45:47 +0000
-Message-ID: <CACPK8XfM4C7v3keXaxMs9SkqNzb8XWbZ6QvcZXWcy3ZKJCrvWQ@mail.gmail.com>
-Subject: Re: [v14 0/2] Support pwm driver for aspeed ast26xx
-To:     Billy Tsai <billy_tsai@aspeedtech.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Jean Delvare <jdelvare@suse.com>, Andrew Jeffery <andrew@aj.id.au>,
-        Lee Jones <lee.jones@linaro.org>,
+        with ESMTP id S231894AbhLGIEM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 Dec 2021 03:04:12 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 665B8C061746
+        for <linux-pwm@vger.kernel.org>; Tue,  7 Dec 2021 00:00:42 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1muVOQ-0007PQ-FL; Tue, 07 Dec 2021 09:00:06 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1muVOM-003B7k-DF; Tue, 07 Dec 2021 09:00:01 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1muVOL-00046X-3Z; Tue, 07 Dec 2021 09:00:01 +0100
+Date:   Tue, 7 Dec 2021 08:59:58 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     devicetree@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>,
         Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-hwmon@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org, BMC-SW <BMC-SW@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Cooper <alcooperx@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..." 
+        <linux-mmc@vger.kernel.org>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v2 03/14] dt-bindings: pwm: Convert BCM7038 PWM binding
+ to YAML
+Message-ID: <20211207075958.fsw6hcvpocnwokot@pengutronix.de>
+References: <20211206182616.2089677-1-f.fainelli@gmail.com>
+ <20211206182616.2089677-4-f.fainelli@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="icyezc67xbpvw2hr"
+Content-Disposition: inline
+In-Reply-To: <20211206182616.2089677-4-f.fainelli@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Billy,
 
-On Tue, 30 Nov 2021 at 05:58, Billy Tsai <billy_tsai@aspeedtech.com> wrote:
->
-> The legacy driver of aspeed pwm is binding with tach controller and it
-> doesn't follow the pwm framworks usage. In addition, the pwm register
-> usage of the 6th generation of ast26xx has drastic change. So these
-> patch serials add the new aspeed pwm driver to fix up the problem above.
+--icyezc67xbpvw2hr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sorry for not taking a look earlier. Well done on making it this far.
+Hello,
 
-There's a few things that need to be addressed before merging this.
+On Mon, Dec 06, 2021 at 10:26:05AM -0800, Florian Fainelli wrote:
+> Convert the Broadcom STB BCM7038 PWM Device Tree binding to YAML to help
+> with validation.
+>=20
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Firstly, the bindings need fixing up. I think these should be the one
-file. The device tree bindings are supposed to describe the hardware,
-and it doesn't make sense to separate them out just because we plan on
-using two subsystems to implement the functionality.
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
-Rob, please chime in if you would prefer something different.
+I assume you intend to take these patches all together via the bcm tree?
 
-Secondly, we need to clarify why this is a pwm driver and not a hwmon
-driver like we had for the 2500 hardware, and that you're planning on
-submitting a hwmon driver for the other half of the registers.
+Best regards
+Uwe
 
-Finally, do you really need to use regmap? It's lots of overhead for a
-mmio driver, and I like to see it avoided where possible. I know the
-regions are shared, but are there any individual registers shared?
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-Cheers,
+--icyezc67xbpvw2hr
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Joel
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmGvFHsACgkQwfwUeK3K
+7Am9zgf9F6D7Bcmxx5leYwqjEfbY0JtJ3JTkZmn3TENEY7kofnBMDZ9DvgsvnamU
+9GlECGVZSlUN/w6jWu1AEVpchAWRj7R+rzlwLuACXqZuhAAQIanbu/OUm3hjyODa
+EsYa/UNfNYPRtb02YYMeMqSbWWHW7QLNahOTlCs0vPYZqY89qGOK3S4fLtPpxMMT
+CXYHUvAxBFFAXV1Vc63YYok++9FYu66Xwx2JAC71ETrejR/OfTQm9ZwHuzu5Fz73
+kSCtdWm96QyJFhkgrkHlon+KkZcFAmR3LG2E3Pe/AQeNZ2h4ZvQ6DAKHwgdOjfQD
+VY3xAxykgM6YmDnYURchttBrwq9bWw==
+=R7jM
+-----END PGP SIGNATURE-----
 
-
->
-> Change since v13:
-> - pwm-aspeed-ast2600.c
->   - Fix the usage of the braces to meet the coding-style.rst
->   - Use min function to reduce the times of division.
->
-> Change since v12:
-> - pwm-aspeed-ast2600.c
->   - Fix the comment about the duty cycle and period of the PWM.
->   - Configured to max period when request period > max period.
->   - Remove unnecessary curly braces.
->
-> Change since v11:
-> - pwm-aspeed-ast2600.c
->   - Request reset controller before clock enable.
->
-> Change since v10:
-> - pwm-aspeed-ast2600.c
->   - Add more comment to explain the feature of PWM
->   - Fix the naming of some parameters.
->   - Set pin_enable and clk_enable at the same time.
->   - Always set fixed divisor to hw register when apply.
->
-> Change since v9:
-> - dt-bindings:
->   - Change the naming of tach subnode channel setting property to
->   aspeed,tach-ch.
-> - pwm-aspeed-ast2600.c
->   - Fix the naming of some parameters.
->   - Capitalise error messages.
->   - Handling potentially mult overflow when .apply
->
-> Change since v8:
-> - pwm-aspeed-ast2600.c
->   - Replace "* _BITULL(div_h)" to "<< div_h"
->   - Fix duty_cycle precision problem.
->   - Add the comment about the formula of duty_cycle.
->
-> Change since v7:
-> - pwm-aspeed-g6.c
->   - Rename the driver: pwm-aspeed-g6.c -> pwm-aspeed-ast2600.c.
->   - Macro remove "_CH" part of the register name.
->   - Unroll the aspeed_pwm_get_period and remove it.
->   - Simplify the formula to get duty_pt
->   - Reduce the number of writing register. Organize all the fields and
->     write them at once.
->
-> Change since v6:
-> - dt-bindings:
->   - Add blank line between each DT property.
->   - Change the sub-node name from fan to tach-ch.
-> - pwm-aspeed-g6.c
->   - Merge aspeed_pwm_set_period and aspeed_pwm_set_duty into .apply.
->   - Convert the factor type to u64 when calculating the period value.
->   - Using ROUND_UP strategy to calculate div_h for finer resolution.
->
-> Change since v5:
-> - pwm-aspeed-g6.c suggested by Uwe Kleine-K=C3=B6nig
->   - Move the divide at the end of the calculation.
->   - Unified the prefix of the function name.
->   - Use div64_u64 to calculate the divider of frequency.
->
-> Change since v4:
-> - dt_binding:
->   - pwm/tach yaml: Replace child-node with additionalProperties
->   - pwm-tach yaml: Replace child-node with patternProperties
-> - pwm-aspeed-g6.c suggested by Uwe Kleine-K=C3=B6nig
->   - The bit definitions contained the name of the register.
->   - Remove single caller function and fold it to the caller.
->   - Avoid to divide by the result of a division.
->   - Remove unnecessary condition in .apply().
->   - Use goto for error handling
->
-> Changes since v3:
-> - Add the dt_binding for aspeed,ast2600-tach.
-> - Describe the pwm/tach as child-node of pwm-tach mfd.
-> - Complete the properties of pwm node.
->
-> Changes since v2:
-> - Remove the tach node, #address-cells and #size-cells from pwm-tach.yaml
-> - Add clocks and reset properties to pwm-tach.yaml
-> - Kconfig/Makfile sorted alphabetically
-> - pwm-aspeed-g6.c suggested by Uwe Kleine-K=C3=B6nig
->   - Add more hardware descriptions at top of the driver.
->   - Remove unused api request and free
->   - Move the initialize settings of all pwm channel to probe.
->   - Change the method of getting the approximate period.
->   - Read the hardware register values to fill the state for .get_state()
->
-> Changes since v1:
-> - Fix the dt_binding_check fail suggested by Rob Herring
-> - Add depends to PWM_ASPEED_G6 configure suggested by Uwe Kleine-Konig
-> - pwm-aspeed-g6.c suggested by Uwe Kleine-K=C3=B6nig
->   - Fix license header
->   - Use bitfiled.h macro to define register fields
->   - Implement .remove device function
->   - Implement .get_state pwm api
->
-> Billy Tsai (2):
->   dt-bindings: Add bindings for aspeed pwm-tach.
->   pwm: Add Aspeed ast2600 PWM support
->
->  .../bindings/hwmon/aspeed,ast2600-tach.yaml   |  68 ++++
->  .../bindings/mfd/aspeed,ast2600-pwm-tach.yaml |  76 ++++
->  .../bindings/pwm/aspeed,ast2600-pwm.yaml      |  64 ++++
->  drivers/pwm/Kconfig                           |  10 +
->  drivers/pwm/Makefile                          |   1 +
->  drivers/pwm/pwm-aspeed-ast2600.c              | 325 ++++++++++++++++++
->  6 files changed, 544 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed,ast260=
-0-tach.yaml
->  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed,ast2600-=
-pwm-tach.yaml
->  create mode 100644 Documentation/devicetree/bindings/pwm/aspeed,ast2600-=
-pwm.yaml
->  create mode 100644 drivers/pwm/pwm-aspeed-ast2600.c
->
-> --
-> 2.25.1
->
+--icyezc67xbpvw2hr--
