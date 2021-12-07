@@ -2,110 +2,98 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F1E446B964
-	for <lists+linux-pwm@lfdr.de>; Tue,  7 Dec 2021 11:45:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D62846BBBB
+	for <lists+linux-pwm@lfdr.de>; Tue,  7 Dec 2021 13:49:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235328AbhLGKtD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 7 Dec 2021 05:49:03 -0500
-Received: from mga09.intel.com ([134.134.136.24]:16355 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234582AbhLGKtC (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 7 Dec 2021 05:49:02 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10190"; a="237359618"
-X-IronPort-AV: E=Sophos;i="5.87,293,1631602800"; 
-   d="scan'208";a="237359618"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 02:44:21 -0800
-X-IronPort-AV: E=Sophos;i="5.87,293,1631602800"; 
-   d="scan'208";a="563425275"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 02:44:11 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1muXwD-003B63-00;
-        Tue, 07 Dec 2021 12:43:09 +0200
-Date:   Tue, 7 Dec 2021 12:43:08 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Marc Zyngier <maz@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Tony Lindgren <tony@atomide.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
-        Alexandru Ardelean <aardelean@deviqon.com>,
-        Thierry Reding <treding@nvidia.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patches@opensource.cirrus.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-power@fi.rohmeurope.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-unisoc@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Keerthy <j-keerthy@ti.com>, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v1 1/3] gpio: Get rid of duplicate of_node assignment in
- the drivers
-Message-ID: <Ya86vFcRJjM30xQ/@smile.fi.intel.com>
-References: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
- <20211207080325.6hfokrrcs45iucx6@pengutronix.de>
- <87ilw0on3z.fsf@tarshish>
+        id S230306AbhLGMwf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 7 Dec 2021 07:52:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230433AbhLGMwc (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 7 Dec 2021 07:52:32 -0500
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2311C061746;
+        Tue,  7 Dec 2021 04:49:01 -0800 (PST)
+Received: by mail-wm1-x32a.google.com with SMTP id o19-20020a1c7513000000b0033a93202467so2158126wmc.2;
+        Tue, 07 Dec 2021 04:49:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=003o6qv6dkzNBNfZwP8xBp2krZAz15Si05X9uJWzJWI=;
+        b=QKa2IyAQVymy0YxSgF59yVluL/19zjOyZOXmidGalHxh6HrxENkyDLcVOA9ip7iC7j
+         i+ZEx7UHHjgjTbBGDrZP69aSk8w/FZCKCPsi23bzCwEr927ME7/U07VAXbl+f4wXBnIA
+         TmQRrk3HLp3j2Ah87Kx8VJh8JfzvCs8ojQ2SB46l0mc0WduER5/uIZnmWHYcjBcfAC87
+         ux1pMyH0s0kBXdK+xNq5uA84GgUNZptsKGGrW80USCvd57MiBrsZubFDriNnQ94JQvy8
+         +crAaxdDpXJSp1cH+CcfRN+RwGsbIDTz+B2+5L8sKBTpAvy05Oaznrczv/m1jTFdInsI
+         /zJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=003o6qv6dkzNBNfZwP8xBp2krZAz15Si05X9uJWzJWI=;
+        b=OE+2CEh65vt9FmGAg2Lw4pRSKzQYrwwIORqkaoGRwbH3258SiP4ojprQw+wo2anPhm
+         suMDmWisMhwfbeITDte+QFi2fuqlGO+s/2zz1007H3zcv6S1HwVAu9RGZzURF+Eu0jRM
+         +LICc+wntVjbeWOVLqTWhcRVEi47TUeeH7OwYKXnqokgGacDAUPK5fEo1Jmt+lf93wtI
+         kk+muoOXQOt0NgSkRZyr9Ori3CIRxqNjX6HHGBMXWySR6ttv5gY99dnw29X2y8gZny+n
+         GxU/JjTza/t8JfSmeHmMMkHfaIeB1B7ldnHLr6VBPYdFlhLhnayKiOypsr61EeYrw3FB
+         4UuQ==
+X-Gm-Message-State: AOAM532vL3vL3rdNCT5udY2THyqOvVBozbVAEjmhPmmqoNWdjicsd+1P
+        XCS0tky1xP2Ba59bgyLZvmMKm0l+PGMiog==
+X-Google-Smtp-Source: ABdhPJyT491icpRVv/tyzgBcLunKRmD/r/fkBQrDuhccROoRK/xex8kTA9OevKKTzSmk5U4XvO9RAw==
+X-Received: by 2002:a7b:cf18:: with SMTP id l24mr6798762wmg.145.1638881340535;
+        Tue, 07 Dec 2021 04:49:00 -0800 (PST)
+Received: from localhost ([193.209.96.43])
+        by smtp.gmail.com with ESMTPSA id s8sm14462489wro.19.2021.12.07.04.48.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Dec 2021 04:48:59 -0800 (PST)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH] dt-bindings: pwm: Avoid selecting schema on node name match
+Date:   Tue,  7 Dec 2021 13:48:55 +0100
+Message-Id: <20211207124855.399223-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <87ilw0on3z.fsf@tarshish>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Dec 07, 2021 at 10:05:08AM +0200, Baruch Siach wrote:
-> On Tue, Dec 07 2021, Uwe Kleine-König wrote:
-> > Hello Andy,
-> >
-> > you Cc: linux-pwm and the pwm maintainers in this series. I don't spot
-> > anything pwm specific here (apart from touching gpio-mvebu which also
-> > contains a PWM driver). Do I miss something?
+From: Thierry Reding <treding@nvidia.com>
 
-Thanks for your eagle eye! For the record I don't do this list manually,
-I used the get_maintainer.pl's heuristics [1]. Usually it gives me more
-than 95% correct prediction, so I believe here is no smoke without flame
-(and it seems what Baruch discovered as well).
+Currently any node whose name starts with the "pwm-" prefix will match
+this schema and in turn required the "#pwm-cells" property. Avoid this
+by marking the schema with select: false, therefore only activating the
+schema when directly included from a PWM controller schema file.
 
-> That's probably because of drivers/gpio/gpio-mvebu.c that appears in the
-> MAINTAINERS PWM entry.
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+Rob,
 
-[1]: https://github.com/andy-shev/home-bin-tools/blob/master/ge2maintainer.sh
+I've seen this used in some other schema files, but wanted to
+double-check with you if this is the correct solution for this problem.
 
+Thanks,
+Thierry
+
+ Documentation/devicetree/bindings/pwm/pwm.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pwm/pwm.yaml b/Documentation/devicetree/bindings/pwm/pwm.yaml
+index 2effe6c0de6b..3c01f85029e5 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/pwm.yaml
+@@ -9,6 +9,8 @@ title: PWM controllers (providers)
+ maintainers:
+   - Thierry Reding <thierry.reding@gmail.com>
+ 
++select: false
++
+ properties:
+   $nodename:
+     pattern: "^pwm(@.*|-[0-9a-f])*$"
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.33.1
 
