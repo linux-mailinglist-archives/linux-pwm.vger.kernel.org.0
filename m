@@ -2,41 +2,55 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9335646D49F
-	for <lists+linux-pwm@lfdr.de>; Wed,  8 Dec 2021 14:44:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 51FD346D9D2
+	for <lists+linux-pwm@lfdr.de>; Wed,  8 Dec 2021 18:33:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234627AbhLHNsK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 8 Dec 2021 08:48:10 -0500
-Received: from mail-oi1-f170.google.com ([209.85.167.170]:37831 "EHLO
-        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234398AbhLHNsH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Dec 2021 08:48:07 -0500
-Received: by mail-oi1-f170.google.com with SMTP id bj13so4210216oib.4;
-        Wed, 08 Dec 2021 05:44:35 -0800 (PST)
+        id S237963AbhLHRhQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 8 Dec 2021 12:37:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237956AbhLHRhO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Dec 2021 12:37:14 -0500
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42AEDC0617A2;
+        Wed,  8 Dec 2021 09:33:42 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id np3so2409224pjb.4;
+        Wed, 08 Dec 2021 09:33:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=j51/wboThEFJzNlTL2/MvStE5Zhc5RgdP9nJ3GHQLi4=;
+        b=SbSD6mZJ015HeEhL/uBJxeceiYhXjXXX8O35V590Ke94L+Ypdy2WwxDQgcz/dz+vI1
+         9iApRbSY2daO38A2/c4VBdCm5/hoAefgOIeLm7P1O52CMdhCW27CIQQo7jkS6qbbrUPO
+         3WKj6PRExiHs43Nuk8VacP7HVUjibVx1bhNJbIiCWvhO4QqWIEn592JcsURU3789agcG
+         ncOxe6HUt2my0cYlDUL8RcSTK9JgX7BPA1pZ7AH8yULqG5uz/ZBHDwvocVsgM8St6ejv
+         1/1FST6raHCiQCFH3cNSEMmx22jHFteyEfVTMXXiJo2nr++5nPj6rqfaXIrTBjcOd4vi
+         jvTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=AZBxD1twEMvgqXTIpZvt6tYC7fmZq91YhBKnG1gw4/g=;
-        b=Ctio7YKmVOvmIo2alUmlLxrFwZj+5ThytJlAoYT5Eo2vB6Up7mCWUAWVCnSAqL1AoZ
-         kUGHlUiaeCqqeS9NohO8VS8NukDe1VihtmfdtUlB1QWFhJtglT0HmZxTxxt/JcaNsm7Q
-         lEVx6lDOYwfxLq5Mlh3nu4bGh+QPxTQ0JRYAAXSwL5AKWQWxQRxRAOh8D5N00O1ksmph
-         TKWrv+sm79hKOoVTTgEI41xSQqy7ef4vaq+5UrJROGhJRiybacJx0Z4/szbp3zDzvS/m
-         LVYgEtjjKcAWqtuD6QFftT8/nWm1uTf+sIMJR7XRxdL3Bbrp546bqDxwndZq3dy5ek+/
-         RLWA==
-X-Gm-Message-State: AOAM530Dv2Chsg2D8+cKegheS8aOl9Sniucup+UxiPFzPAHAipNcX8sf
-        D5owCTKIxu2mCaglG/wWSA==
-X-Google-Smtp-Source: ABdhPJw4CWIcu/zTZI0dRGziIGXUDpc471o4rTBw285IjDnHYfSE7mTOtDyDKGZQGTPSbpBTZ+LVug==
-X-Received: by 2002:a05:6808:124d:: with SMTP id o13mr11998548oiv.91.1638971074539;
-        Wed, 08 Dec 2021 05:44:34 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id n189sm602044oif.33.2021.12.08.05.44.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Dec 2021 05:44:33 -0800 (PST)
-Received: (nullmailer pid 3857736 invoked by uid 1000);
-        Wed, 08 Dec 2021 13:44:28 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=j51/wboThEFJzNlTL2/MvStE5Zhc5RgdP9nJ3GHQLi4=;
+        b=2r2ZvMPjWwNnf4Uog3b8BzKL7PsJVAYqvAKUuh6M7dFIo79wT3R+a2XzPFsf4/YBX3
+         gcgsUxl5CIg5fZsESW6futNxVGEN5BrqPZZaN0tHg2VJqAUYuFQuG6+geP/drKtvOwEG
+         wD0FNIdYS2/4NxkO52kyD/QkSMHPkJv3AyGZW9YGLIJ6u0iw5K3OV0fD5F426SuGiXXN
+         80FJQFpxe2VTplfG42OVMyuFvxPnQFTYHWScymghZucYE7ACEN4aQuRH1oqVtxzAleVW
+         urQj5LyEiExxVdiyzNvvQavF3jI6VPlYoTLYiZQ+vVmNdDlXLV1OtRdQ2nu76Fv4kkRP
+         z9qQ==
+X-Gm-Message-State: AOAM530AfHmYwKR5Y/NbxYHgSnWiLWJV8pog4ejg+wA+452uS5wpDKDX
+        AFOLdm10Rps3an3MNx6fkGlpHLhRF9U=
+X-Google-Smtp-Source: ABdhPJyY3AKgLSvRqD8BVr8X+ATPHvvEnFQBIBZfXeEJiyOz1hIwOAXlFSUT2pXiD/r3MLJpe5zcrA==
+X-Received: by 2002:a17:90a:e012:: with SMTP id u18mr8961529pjy.103.1638984821458;
+        Wed, 08 Dec 2021 09:33:41 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id n31sm3801031pfv.176.2021.12.08.09.33.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Dec 2021 09:33:40 -0800 (PST)
+Subject: Re: [PATCH v3 13/15] dt-bindings: ata: Convert Broadcom SATA to YAML
+To:     Rob Herring <robh@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
 Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org,
         linux-mmc@vger.kernel.org, Markus Mayer <mmayer@broadcom.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
@@ -44,8 +58,8 @@ Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org,
         bcm-kernel-feedback-list@broadcom.com,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-pm@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
         Damien Le Moal <damien.lemoal@opensource.wdc.com>,
@@ -65,68 +79,48 @@ Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org,
         linux-crypto@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         devicetree@vger.kernel.org
-In-Reply-To: <20211208003727.3596577-14-f.fainelli@gmail.com>
-References: <20211208003727.3596577-1-f.fainelli@gmail.com> <20211208003727.3596577-14-f.fainelli@gmail.com>
-Subject: Re: [PATCH v3 13/15] dt-bindings: ata: Convert Broadcom SATA to YAML
-Date:   Wed, 08 Dec 2021 07:44:28 -0600
-Message-Id: <1638971068.770579.3857735.nullmailer@robh.at.kernel.org>
+References: <20211208003727.3596577-1-f.fainelli@gmail.com>
+ <20211208003727.3596577-14-f.fainelli@gmail.com>
+ <1638971068.770579.3857735.nullmailer@robh.at.kernel.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <dd170216-fedd-45a1-a3a5-efc99b9f6197@gmail.com>
+Date:   Wed, 8 Dec 2021 09:33:38 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <1638971068.770579.3857735.nullmailer@robh.at.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 07 Dec 2021 16:37:24 -0800, Florian Fainelli wrote:
-> Convert the Broadcom SATA3 AHCI controller Device Tree binding to YAML
-> to help with validation.
+On 12/8/21 5:44 AM, Rob Herring wrote:
+> On Tue, 07 Dec 2021 16:37:24 -0800, Florian Fainelli wrote:
+>> Convert the Broadcom SATA3 AHCI controller Device Tree binding to YAML
+>> to help with validation.
+>>
+>> Acked-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>> ---
+>>  .../bindings/ata/brcm,sata-brcm.txt           | 45 ---------
+>>  .../bindings/ata/brcm,sata-brcm.yaml          | 98 +++++++++++++++++++
+>>  2 files changed, 98 insertions(+), 45 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/ata/brcm,sata-brcm.txt
+>>  create mode 100644 Documentation/devicetree/bindings/ata/brcm,sata-brcm.yaml
+>>
 > 
-> Acked-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  .../bindings/ata/brcm,sata-brcm.txt           | 45 ---------
->  .../bindings/ata/brcm,sata-brcm.yaml          | 98 +++++++++++++++++++
->  2 files changed, 98 insertions(+), 45 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/ata/brcm,sata-brcm.txt
->  create mode 100644 Documentation/devicetree/bindings/ata/brcm,sata-brcm.yaml
+> Running 'make dtbs_check' with the schema in this patch gives the
+> following warnings. Consider if they are expected or the schema is
+> incorrect. These may not be new warnings.
 > 
+> Note that it is not yet a requirement to have 0 warnings for dtbs_check.
+> This will change in the future.
+> 
+> Full log is available here: https://patchwork.ozlabs.org/patch/1565011
 
-Running 'make dtbs_check' with the schema in this patch gives the
-following warnings. Consider if they are expected or the schema is
-incorrect. These may not be new warnings.
-
-Note that it is not yet a requirement to have 0 warnings for dtbs_check.
-This will change in the future.
-
-Full log is available here: https://patchwork.ozlabs.org/patch/1565011
-
-
-ahci@41000: $nodename:0: 'ahci@41000' does not match '^sata(@.*)?$'
-	arch/arm/boot/dts/bcm958522er.dt.yaml
-	arch/arm/boot/dts/bcm958525er.dt.yaml
-	arch/arm/boot/dts/bcm958525xmc.dt.yaml
-	arch/arm/boot/dts/bcm958622hr.dt.yaml
-	arch/arm/boot/dts/bcm958623hr.dt.yaml
-	arch/arm/boot/dts/bcm958625hr.dt.yaml
-	arch/arm/boot/dts/bcm958625k.dt.yaml
-	arch/arm/boot/dts/bcm958625-meraki-mx64-a0.dt.yaml
-	arch/arm/boot/dts/bcm958625-meraki-mx64.dt.yaml
-	arch/arm/boot/dts/bcm958625-meraki-mx64w-a0.dt.yaml
-	arch/arm/boot/dts/bcm958625-meraki-mx64w.dt.yaml
-	arch/arm/boot/dts/bcm958625-meraki-mx65.dt.yaml
-	arch/arm/boot/dts/bcm958625-meraki-mx65w.dt.yaml
-	arch/arm/boot/dts/bcm988312hr.dt.yaml
-
-ahci@41000: Unevaluated properties are not allowed ('#address-cells', '#size-cells', 'sata-port@0', 'sata-port@1' were unexpected)
-	arch/arm/boot/dts/bcm958522er.dt.yaml
-	arch/arm/boot/dts/bcm958525er.dt.yaml
-	arch/arm/boot/dts/bcm958525xmc.dt.yaml
-	arch/arm/boot/dts/bcm958622hr.dt.yaml
-	arch/arm/boot/dts/bcm958623hr.dt.yaml
-	arch/arm/boot/dts/bcm958625hr.dt.yaml
-	arch/arm/boot/dts/bcm958625k.dt.yaml
-	arch/arm/boot/dts/bcm958625-meraki-mx64-a0.dt.yaml
-	arch/arm/boot/dts/bcm958625-meraki-mx64.dt.yaml
-	arch/arm/boot/dts/bcm958625-meraki-mx64w-a0.dt.yaml
-	arch/arm/boot/dts/bcm958625-meraki-mx64w.dt.yaml
-	arch/arm/boot/dts/bcm958625-meraki-mx65.dt.yaml
-	arch/arm/boot/dts/bcm958625-meraki-mx65w.dt.yaml
-	arch/arm/boot/dts/bcm988312hr.dt.yaml
-
+Likewise, those indicate that the preceding patch which renames the sata
+controller unit name has not been applied.
+-- 
+Florian
