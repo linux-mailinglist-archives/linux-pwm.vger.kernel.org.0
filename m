@@ -2,99 +2,94 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 599C446DB83
-	for <lists+linux-pwm@lfdr.de>; Wed,  8 Dec 2021 19:48:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E05B46E5BE
+	for <lists+linux-pwm@lfdr.de>; Thu,  9 Dec 2021 10:42:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239349AbhLHSwK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 8 Dec 2021 13:52:10 -0500
-Received: from mail-oi1-f176.google.com ([209.85.167.176]:42752 "EHLO
-        mail-oi1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229528AbhLHSwK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Dec 2021 13:52:10 -0500
-Received: by mail-oi1-f176.google.com with SMTP id n66so5301944oia.9;
-        Wed, 08 Dec 2021 10:48:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6YjhuViXtPXp3dsrpk4roLFD9TEKz0peQX8DFf+iFDo=;
-        b=3VaPy+xKsOiTKrvybEeg0ngY0R4KPatIAh5vrAJ7ZURwXCQJR/GQUG7r0satxkY93f
-         VO9Zmry8RiKYMYZaRLotiSGrqp0QxtqHdBZJTorw8YllilVAqUlyaTGTLT0graeAl8y7
-         2SIblHzFvabpHxg78BbrVo1q6Nym/lxy9vynKNJXzUdIp79eMn7/rPpwXbLTqJvLxToi
-         PNeJ+FYaxzNBalAaXiRplXZhMBumzHldDJ64rzZfGOYKEvq5aLVQwAdICgmCuNRDbOaU
-         jsy3kIdzju9Rs1rzsEk8syUoAN8QV7I4p8l9vt6LQsgo7ZYE6mQTkJ8WlUB5RB5+JTQ7
-         AxmA==
-X-Gm-Message-State: AOAM532SEsLT/vRg4nedO44yc85KL+g1jUaiwtfw6vkO8UcLlOWvSWNi
-        yHChYyg86V4IwMHlp3S4+A==
-X-Google-Smtp-Source: ABdhPJzrH1ZX4zJrvvxGzDXPKiEehaJEepTh+YVYNkGXoRk/ABIfxTFRN/va9qN0UQ+aaMAy8FZ57w==
-X-Received: by 2002:a54:480a:: with SMTP id j10mr1338294oij.34.1638989317740;
-        Wed, 08 Dec 2021 10:48:37 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id j5sm616267ots.68.2021.12.08.10.48.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Dec 2021 10:48:37 -0800 (PST)
-Received: (nullmailer pid 133093 invoked by uid 1000);
-        Wed, 08 Dec 2021 18:48:36 -0000
-Date:   Wed, 8 Dec 2021 12:48:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pwm: Avoid selecting schema on node name
- match
-Message-ID: <YbD+BJFv0DhIKFdE@robh.at.kernel.org>
-References: <20211207124855.399223-1-thierry.reding@gmail.com>
+        id S230423AbhLIJph convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Thu, 9 Dec 2021 04:45:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230525AbhLIJpg (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Dec 2021 04:45:36 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D35FC061746
+        for <linux-pwm@vger.kernel.org>; Thu,  9 Dec 2021 01:42:03 -0800 (PST)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1mvFvk-0001TL-1T; Thu, 09 Dec 2021 10:41:36 +0100
+Received: from pza by lupine with local (Exim 4.94.2)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1mvFve-0004Ge-0z; Thu, 09 Dec 2021 10:41:30 +0100
+Message-ID: <ab45adc2e305c79286f6b63fa42cfd78983cb757.camel@pengutronix.de>
+Subject: Re: [PATCH v3 02/15] dt-bindings: reset: Convert Broadcom STB reset
+ to YAML
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org
+Cc:     Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Cooper <alcooperx@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..." 
+        <linux-mmc@vger.kernel.org>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
+Date:   Thu, 09 Dec 2021 10:41:29 +0100
+In-Reply-To: <20211208003727.3596577-3-f.fainelli@gmail.com>
+References: <20211208003727.3596577-1-f.fainelli@gmail.com>
+         <20211208003727.3596577-3-f.fainelli@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.38.3-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211207124855.399223-1-thierry.reding@gmail.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Dec 07, 2021 at 01:48:55PM +0100, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
+On Tue, 2021-12-07 at 16:37 -0800, Florian Fainelli wrote:
+> Convert the Broadcom STB SW_INIT style reset controller binding to YAML.
 > 
-> Currently any node whose name starts with the "pwm-" prefix will match
-> this schema and in turn required the "#pwm-cells" property. Avoid this
-> by marking the schema with select: false, therefore only activating the
-> schema when directly included from a PWM controller schema file.
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Pinctrl nodes? I'd rather change pin node names.
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
-> Rob,
-> 
-> I've seen this used in some other schema files, but wanted to
-> double-check with you if this is the correct solution for this problem.
-
-I suppose this is fine. This schema is just about pointless as each 
-producer has to define #pwm-cells anyways.
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-> 
-> Thanks,
-> Thierry
-> 
->  Documentation/devicetree/bindings/pwm/pwm.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm.yaml b/Documentation/devicetree/bindings/pwm/pwm.yaml
-> index 2effe6c0de6b..3c01f85029e5 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/pwm.yaml
-> @@ -9,6 +9,8 @@ title: PWM controllers (providers)
->  maintainers:
->    - Thierry Reding <thierry.reding@gmail.com>
->  
-> +select: false
-> +
->  properties:
->    $nodename:
->      pattern: "^pwm(@.*|-[0-9a-f])*$"
-> -- 
-> 2.33.1
-> 
-> 
+regards
+Philipp
