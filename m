@@ -2,89 +2,251 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 298F046F547
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 Dec 2021 21:56:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20C9346F66E
+	for <lists+linux-pwm@lfdr.de>; Thu,  9 Dec 2021 23:05:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232354AbhLIU7g (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 9 Dec 2021 15:59:36 -0500
-Received: from mail-ot1-f46.google.com ([209.85.210.46]:43902 "EHLO
-        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231237AbhLIU7f (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Dec 2021 15:59:35 -0500
-Received: by mail-ot1-f46.google.com with SMTP id i5-20020a05683033e500b0057a369ac614so7514427otu.10;
-        Thu, 09 Dec 2021 12:56:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=UGHddj+fTMSPCf5h9ElwKaz36LUbyEjOeDU7AiQrxew=;
-        b=A3N17UfPBhHpFnN8GKFYzfszM5PdOw/V1DoX1b+F9feIawMufiik7H6icszq13wldI
-         NdNFNNqTALy54E7ArycMvFs8GE++bRn9uLYmf/A/byxJhwwj+2SXcoGm5Vwn4J4IVUmP
-         L1EB8gO4G8cy+njwfaysGPis22wm4VCQwmNaKWvbz8A2ivPOwkK7W7PhZa51dFxf5BdJ
-         m7oP9851G2fs8um2ZvK/R+7h+hWtxpx0kjMVEavKB0HRwqbhh6I1kq06K1isCiu4WGVz
-         hnQc5HQ6Q+aGax3uKQkmkOuV6od7t75mfZGoIf+p+DUz2KCAm8LeAJB8aahsJybH1PcG
-         PCYQ==
-X-Gm-Message-State: AOAM530+1QFGL+xB3CeZvd3lZa8HSpQgqRvyJnm/UBXDONzB2HIGlTSA
-        DVebf2RlvF8w6WylsqWUyGFpQB3Uow==
-X-Google-Smtp-Source: ABdhPJxBxB2TnQi+NkjobCQwu4jg+eWB3a+XHkZE/sSaPZ2eUvxCNhhDrHRpeaKzAkX3nBtbTK89Fw==
-X-Received: by 2002:a05:6830:2053:: with SMTP id f19mr7352299otp.295.1639083361383;
-        Thu, 09 Dec 2021 12:56:01 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id m22sm216445ooj.8.2021.12.09.12.56.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Dec 2021 12:56:00 -0800 (PST)
-Received: (nullmailer pid 3925939 invoked by uid 1000);
-        Thu, 09 Dec 2021 20:55:59 -0000
-From:   Rob Herring <robh@kernel.org>
+        id S232284AbhLIWJJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 9 Dec 2021 17:09:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230193AbhLIWJJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Dec 2021 17:09:09 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19365C061746
+        for <linux-pwm@vger.kernel.org>; Thu,  9 Dec 2021 14:05:35 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mvRXa-0002RP-Bg; Thu, 09 Dec 2021 23:05:26 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mvRXX-003f7u-Fl; Thu, 09 Dec 2021 23:05:22 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mvRXW-00051D-0H; Thu, 09 Dec 2021 23:05:22 +0100
+Date:   Thu, 9 Dec 2021 23:05:21 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Nikita Travkin <nikita@trvn.ru>
-Cc:     sboyd@kernel.org, u.kleine-koenig@pengutronix.de,
-        masneyb@onstation.org, robh+dt@kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, lee.jones@linaro.org,
-        linus.walleij@linaro.org, linux-pwm@vger.kernel.org,
-        thierry.reding@gmail.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20211209162020.105255-2-nikita@trvn.ru>
-References: <20211209162020.105255-1-nikita@trvn.ru> <20211209162020.105255-2-nikita@trvn.ru>
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: Document clk based PWM controller
-Date:   Thu, 09 Dec 2021 14:55:59 -0600
-Message-Id: <1639083359.641868.3925938.nullmailer@robh.at.kernel.org>
+Cc:     thierry.reding@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org,
+        sboyd@kernel.org, linus.walleij@linaro.org, masneyb@onstation.org,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, kernel@pengutronix.de,
+        pza@pengutronix.de
+Subject: Re: [PATCH 2/2] pwm: Add clock based PWM output driver
+Message-ID: <20211209220521.ho54edpxedzffdl4@pengutronix.de>
+References: <20211209162020.105255-1-nikita@trvn.ru>
+ <20211209162020.105255-3-nikita@trvn.ru>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ttutiro6uyymh5hx"
+Content-Disposition: inline
+In-Reply-To: <20211209162020.105255-3-nikita@trvn.ru>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, 09 Dec 2021 21:20:19 +0500, Nikita Travkin wrote:
-> Add YAML devicetree binding for clk based PWM controller
-> 
-> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
-> ---
->  .../devicetree/bindings/pwm/clk-pwm.yaml      | 45 +++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/clk-pwm.yaml
-> 
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+--ttutiro6uyymh5hx
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-yamllint warnings/errors:
+Hello,
 
-dtschema/dtc warnings/errors:
-./Documentation/devicetree/bindings/pwm/clk-pwm.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/pwm/clk-pwm.yaml#
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pwm/clk-pwm.example.dt.yaml: pwm-flash: $nodename:0: 'pwm-flash' does not match '^pwm(@.*|-[0-9a-f])*$'
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pwm/clk-pwm.yaml
+On Thu, Dec 09, 2021 at 09:20:20PM +0500, Nikita Travkin wrote:
+> +#define to_pwm_clk_chip(_chip) container_of(_chip, struct pwm_clk_chip, =
+chip)
+> +
+> +static int pwm_clk_apply(struct pwm_chip *pwm_chip, struct pwm_device *p=
+wm,
+> +			 const struct pwm_state *state)
+> +{
+> +	struct pwm_clk_chip *chip =3D to_pwm_clk_chip(pwm_chip);
+> +	int ret;
+> +	u32 rate;
+> +
+> +	if (!state->enabled && !pwm->state.enabled)
+> +		return 0;
+> +
+> +	if (state->enabled && !pwm->state.enabled) {
+> +		ret =3D clk_enable(chip->clk);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	if (!state->enabled && pwm->state.enabled) {
+> +		clk_disable(chip->clk);
+> +		return 0;
+> +	}
 
-doc reference errors (make refcheckdocs):
+This can be written a bit more compact as:
 
-See https://patchwork.ozlabs.org/patch/1565817
+	if (!state->enabled) {
+		if (pwm->state.enabled)
+			clk_disable(chip->clk);
+		return 0;
+	} else if (!pwm->state.enabled) {
+		ret =3D clk_enable(chip->clk);
+		if (ret)
+			return ret;
+	}
 
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
+personally I find my version also easier to read, but that might be
+subjective.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+Missing handling for polarity. Either refuse inverted polarity, or set
+the duty_cycle to state->period - state->duty_cycle in the inverted
+case.
 
-pip3 install dtschema --upgrade
+> +	rate =3D div64_u64(NSEC_PER_SEC, state->period);
 
-Please check and re-submit.
+Please round up here, as .apply() should never implement a period bigger
+than requested. This also automatically improves the behaviour if
+state->period > NSEC_PER_SEC.
 
+> +	ret =3D clk_set_rate(chip->clk, rate);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return clk_set_duty_cycle(chip->clk, state->duty_cycle, state->period);
+
+Is it possible to enable only after the duty cycle is set? This way we
+could prevent in some cases that a wrong setting makes it to the output.
+
+As there is not a single function to set rate (i.e. period) and
+duty_cycle it's not possible to prevent all glitches.
+
+Can you please note that in a paragraph at the beginning of the driver
+as does e.g. drivers/pwm/pwm-sl28cpld.c. (Please stick to the format,
+i.e.  "Limitations:" and then all items without an empty line, to make
+this greppable.)
+
+> +}
+> +
+> +static const struct pwm_ops pwm_clk_ops =3D {
+> +	.apply =3D pwm_clk_apply,
+> +	.owner =3D THIS_MODULE,
+> +};
+> +
+> +static int pwm_clk_probe(struct platform_device *pdev)
+> +{
+> +	struct pwm_clk_chip *chip;
+> +	int ret;
+> +
+> +	chip =3D devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
+> +	if (!chip)
+> +		return -ENOMEM;
+> +
+> +	chip->clk =3D devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(chip->clk)) {
+> +		dev_err(&pdev->dev, "Failed to get clock: %ld\n", PTR_ERR(chip->clk));
+> +		return PTR_ERR(chip->clk);
+
+Please use dev_err_probe() here and in the other error paths below.
+
+> +	}
+> +
+> +	chip->chip.dev =3D &pdev->dev;
+> +	chip->chip.ops =3D &pwm_clk_ops;
+> +	chip->chip.of_xlate =3D of_pwm_xlate_with_flags;
+> +	chip->chip.of_pwm_n_cells =3D 2;
+> +	chip->chip.base =3D 0;
+
+Please drop this line (see commit f9a8ee8c8bcd)
+
+> +	chip->chip.npwm =3D 1;
+> +
+> +	ret =3D clk_prepare(chip->clk);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Failed to prepare clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret =3D pwmchip_add(&chip->chip);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Failed to add pwm chip: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, chip);
+> +	return 0;
+> +}
+> +
+> +static int pwm_clk_remove(struct platform_device *pdev)
+> +{
+> +	struct pwm_clk_chip *chip =3D platform_get_drvdata(pdev);
+> +
+> +	clk_unprepare(chip->clk);
+> +
+> +	pwmchip_remove(&chip->chip);
+
+This is bad. clk_unprepare() stops the output which must not happen
+before pwmchip_remove() returns. What happens if the PWM (and so the
+clk) is still on and you call clk_unprepare? Is this allowed at all if
+the enable count might be > 0?
+
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id pwm_clk_dt_ids[] =3D {
+> +	{ .compatible =3D "clk-pwm", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, pwm_clk_dt_ids);
+> +
+> +static struct platform_driver pwm_clk_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "clk-pwm",
+
+Hmm, is this name sane? I would have expected that a driver called
+"clk-pwm" exposes a clk using a PWM. OTOH there is a "pwm-clock" driver
+that does exactly that. To complete the confusion the function prefix of
+said driver is clk_pwm_ and this one used pwm_clk_ ...
+
+> +		.of_match_table =3D pwm_clk_dt_ids,
+> +	},
+> +	.probe =3D pwm_clk_probe,
+> +	.remove =3D pwm_clk_remove,
+> +};
+> +module_platform_driver(pwm_clk_driver);
+> +
+> +MODULE_ALIAS("platform:clk-pwm");
+> +MODULE_AUTHOR("Nikita Travkin <nikita@trvn.ru>");
+> +MODULE_DESCRIPTION("Clock based PWM driver");
+> +MODULE_LICENSE("GPL v2");
+
+MODULE_LICENSE("GPL");
+
+is the more usual today (and has the same meaning).
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ttutiro6uyymh5hx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmGyfZ4ACgkQwfwUeK3K
+7AmmfwgAn/L8nXaCNoA4Va34xDb0ppsFJnItJI/th85XEf/G+FOq4c6MM0AFigGN
+TxaLq1l8KKfydDRWBbHdUS3CblNF5wRdQQGfo3hrfeAYW8e2R25M5RzTU8sjKwGZ
+RxdgjVg6VcSgPp4bd0Rvr1xy7ZyruHup9Pb/rNWDb9kq0YW7qjqFX0HX2Pm77YjW
+0we8MA3rsq1lJ3pdThGZ24nhM/RoiSuakOrzqS1OC7TpBIL0ciZgDp+E1QvuJSJJ
+ET4ZZ7O1KNMPQVlgFCvfu8nmZ7LyFevJ9LmwBEJJB+Yc3tuP2QIiMGt7BxX46Kl1
+Frjbj/JFKlY2jKTMm40/akjR84Tw9g==
+=rTdx
+-----END PGP SIGNATURE-----
+
+--ttutiro6uyymh5hx--
