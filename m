@@ -2,113 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C057146FD3F
-	for <lists+linux-pwm@lfdr.de>; Fri, 10 Dec 2021 10:02:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BB2846FE46
+	for <lists+linux-pwm@lfdr.de>; Fri, 10 Dec 2021 10:57:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236143AbhLJJFx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 10 Dec 2021 04:05:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35926 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231148AbhLJJFx (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 10 Dec 2021 04:05:53 -0500
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42766C061746;
-        Fri, 10 Dec 2021 01:02:18 -0800 (PST)
-Received: by mail-wm1-x32a.google.com with SMTP id r9-20020a7bc089000000b00332f4abf43fso6743468wmh.0;
-        Fri, 10 Dec 2021 01:02:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=MdaIHZ5/pQUfuGiEbbFFG6tuVAMBcF8aqzVNiDnYLAI=;
-        b=HVqhMJozw4/HA5ahMts87Vgd5EyYJ0Xg/9CpeIPW28V9VHSU0GrzAFeASscfvCPRUS
-         cKBsaqtTl5/tDZg+v7kAoR4u5ovxHSeMNqiRXgPSUP6vT3vLR3lmbuKN7YVIQ5VXVDQo
-         PIncURH3wTIjoWe33ZQzxmeaC6KdksmzVa81/b7EDmlxpZjqj3UYIN8AN+Yk9LgE0f+W
-         TXVa/619REDJ11tIIYLJElE5bpYlZIGjylgCzFUG/KusQ9JwXLETmLOXzz8zwW6ycrGe
-         SH6kF+ynZKkFvJWPla2rft2yQB0DROiOzonQPWeCLdueIQof+/8GigLDO+tcHU7GmJh8
-         wMrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=MdaIHZ5/pQUfuGiEbbFFG6tuVAMBcF8aqzVNiDnYLAI=;
-        b=Ze4MAtf961XpS+wMmoQMmCvjjDUbMZErBBQxIGw3rjqMRg+oQ82lRvdRDiTq3U57IU
-         5aiYnsfooHKVDy87nDc8DRu7gqtDa+coSfO6dQMpkMdt0H2xj3fQRQwUh3LMsk14tuyG
-         LkWKM+RW1yqNGDPZDY8xky2vkqSSi6MbHOUl5gn/TyKXqxBRNAAnvfDozywx3e+GlQUw
-         rpYNzb75MsiIuBWP5mN1fNWtLSnZ3G4wlaDP4uKwu9JLCyMVoEXHK+EqnGQu+H28wxka
-         10AUyKLaYUjElwts/GLUmSBSPSjeo6rRy9lsAJ/0ZJD52cp9uwGHKdjlmx5gdZTlSyee
-         qK7A==
-X-Gm-Message-State: AOAM533onuHF85Fm7jueIBBdM24OV9QDmDmv6V8WKU7/sCkzgRWOMj3p
-        IAZB1mm77ZwJRuqTZEuxQ6PZOj/8+kDA9UJW+QAMRg==
-X-Google-Smtp-Source: ABdhPJxAm9AhRn7Sc1V5eDL7G9+DTtw3mEtlhENMgURGLeNCEojPRJ94fCYOSclt0IH5JJWoIEzOkg==
-X-Received: by 2002:a1c:ed0a:: with SMTP id l10mr14907617wmh.140.1639126936816;
-        Fri, 10 Dec 2021 01:02:16 -0800 (PST)
-Received: from [192.168.0.210] (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.googlemail.com with ESMTPSA id m14sm2715410wrp.28.2021.12.10.01.02.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Dec 2021 01:02:16 -0800 (PST)
-Message-ID: <a51bc835-f707-7ba6-5112-20592bb3ca31@gmail.com>
-Date:   Fri, 10 Dec 2021 09:02:15 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH] pwm: atmel: remove redundant initialization of variable
- timeout
-Content-Language: en-US
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        id S236428AbhLJKBC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 10 Dec 2021 05:01:02 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:46100 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231352AbhLJKBC (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 10 Dec 2021 05:01:02 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id AC5C5CE24DA
+        for <linux-pwm@vger.kernel.org>; Fri, 10 Dec 2021 09:57:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB64EC00446;
+        Fri, 10 Dec 2021 09:57:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639130244;
+        bh=6TK5KJYUieI7fot8D+MAUimgBqski6Hv+qhdP/pOEzE=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=GhJBtsvdEx9Gt+SSMCnPwE1HF0KyPEM9BGxCHmeT9iGuWhPECcsrjZYo61Oj08W1g
+         lgTJyxT/0Nw0aE139ksZWDmnd2SVs3Pe2vf78xX7TnVrOwsxZNkVYGvMzEbW5cq3wL
+         JSNSVRV3mIHOdo6HIyiqrL+AWFSzQq1trdH4DPYolLVnw9RIhowC72+WHAd8KbBi8w
+         PerCUtyLuwB03qkYagfzIf9aLozeoCVOY5n7NZw4XrvnAJCIHze3LcQRQZBHxeePFH
+         8ixSCakE43AcOsCGKaglZKsnpoer2sOKGSh0mRPVVSU7hILv6qnsBdu41W6ESb6IP3
+         NtUdS6L9UHy+Q==
+Message-ID: <aa94635e2afc50158a60a6adb2bc89bbdf8f056b.camel@kernel.org>
+Subject: Re: [PATCH] pwm: raspberrypi-poe: Drop assignment to struct
+ pwmchip::base
+From:   nicolas saenz julienne <nsaenz@kernel.org>
+To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20211210002250.639251-1-colin.i.king@gmail.com>
- <20211210074536.lawpsch2i5bwyew7@pengutronix.de>
-From:   "Colin King (gmail)" <colin.i.king@gmail.com>
-In-Reply-To: <20211210074536.lawpsch2i5bwyew7@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Lee Jones <lee.jones@linaro.org>
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
+Date:   Fri, 10 Dec 2021 10:57:21 +0100
+In-Reply-To: <20211209220851.1319460-1-u.kleine-koenig@pengutronix.de>
+References: <20211209220851.1319460-1-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.1 (3.42.1-1.fc35) 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 10/12/2021 07:45, Uwe Kleine-König wrote:
-> On Fri, Dec 10, 2021 at 12:22:50AM +0000, Colin Ian King wrote:
->> The variable timeout is being initialized with a value that is never
->> read, it is being re-assigned the same value later on. Remove the
->> redundant initialization and keep the latter assignment because it's
->> closer to the use of the variable.
->>
->> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
->> ---
->>   drivers/pwm/pwm-atmel.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
->> index 98b34ea9f38e..8e00a4286145 100644
->> --- a/drivers/pwm/pwm-atmel.c
->> +++ b/drivers/pwm/pwm-atmel.c
->> @@ -271,7 +271,7 @@ static void atmel_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm,
->>   			      bool disable_clk)
->>   {
->>   	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
->> -	unsigned long timeout = jiffies + 2 * HZ;
->> +	unsigned long timeout;
->>   
->>   	atmel_pwm_wait_nonpending(atmel_pwm, pwm->hwpwm);
+On Thu, 2021-12-09 at 23:08 +0100, Uwe Kleine-König wrote:
+> Since commit f9a8ee8c8bcd ("pwm: Always allocate PWM chip base ID
+> dynamically") there is no effect any more for assigning this variable.
 > 
-> Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> 
-> Did you spot this by using some static checker? If so, maybe attribute
-> it in the commit log?
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> ---
 
-Just clang.
+Reviewed-by: Nicolas Saenz Julienne <nsaenz@kernel.org>
 
-> 
-> Thanks
-> Uwe
-> 
-
+Regards,
+Nicolas
