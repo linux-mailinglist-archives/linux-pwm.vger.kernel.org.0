@@ -2,111 +2,115 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6BC446F8B5
-	for <lists+linux-pwm@lfdr.de>; Fri, 10 Dec 2021 02:44:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1449146FC08
+	for <lists+linux-pwm@lfdr.de>; Fri, 10 Dec 2021 08:46:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233753AbhLJBsZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 9 Dec 2021 20:48:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51576 "EHLO
+        id S233908AbhLJHtl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 10 Dec 2021 02:49:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233756AbhLJBsX (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Dec 2021 20:48:23 -0500
-Received: from mail-ot1-x32c.google.com (mail-ot1-x32c.google.com [IPv6:2607:f8b0:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76E4DC061D5E
-        for <linux-pwm@vger.kernel.org>; Thu,  9 Dec 2021 17:44:49 -0800 (PST)
-Received: by mail-ot1-x32c.google.com with SMTP id x19-20020a9d7053000000b0055c8b39420bso8219965otj.1
-        for <linux-pwm@vger.kernel.org>; Thu, 09 Dec 2021 17:44:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+eO70K6UpvUWOOZ26eI9byqpsVA1ZqLATKw9Ubqfa08=;
-        b=vwyKOTWHjgLrit+GLm9IJ66Zn1fCOfM1L+YBmfjIKF1WCwaK3dzS3Olklz2j83VtRo
-         T4jlfQ0ubaLPKehFAlrC5ij37ETxxxsBxSQnoBTcj8pr2AENLzTyfqQps4Lke9spO05l
-         xk4vf9rHG9Ijo3AkNslw7pY7KKVDKQ5kmk/XOcky9KW+dCp1njcukQO+fH1g5yqUNVkm
-         eq2GwY8m1SEXsiDwtX55G9M3F0XmWaufzrVVBA9fIbADOXtbBGVaLVD7JUHJhraR9vAY
-         ClB67OR58t4WytNRPFup+KydBuZ0oEjeceswc8C+g4c3wFfNF5RQoLM+yd69ac1wWbi1
-         nugg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+eO70K6UpvUWOOZ26eI9byqpsVA1ZqLATKw9Ubqfa08=;
-        b=fhIm5zDKFXxM5wpsmK3IwnMuyHbfYXEd29grXFpZW1+3Iv3+Ccaxvt5EWyKC6xFPUK
-         MM+x2O5RdrrosiVKWUr1zdQncg9EM0JMxxbZWvFA0h2+AyBJM0qkvy4VWMTfK2/WAJUk
-         V8ws6CNR0h9mZOKdmcZltbR+niEtnBlMIRimI5eaN4aD7voz/Uh84Vh3adgOCVDCegaH
-         /itSqm077YBeccUJv1EbjA8NbUwNh5ryawcV3JH5osQehMUopkhtui/h5KnS7kBXy83u
-         ZGpZC18xDM9dCqaLMRmNWsW/PiK7qQgGEppzEW6CDm02nC/F0bAKLwCac8Q3f0+16/AP
-         eC7A==
-X-Gm-Message-State: AOAM530ZaPyYP5x34qnoKDmPrQjCN/e33GfCQhJFr/AaRyeIb0EdL1XJ
-        tPHs2+YDnzB+KrfRyLC1icmCYwb79jtgDxE1BEsTAg==
-X-Google-Smtp-Source: ABdhPJwGGn/Iig24LM6iz+DDamWnJx6uVjLFPjLZrobVVHzAlLnv6hIu3SxbsvwG+AZSo3Ul47rGkcksDTGd/v0hlu4=
-X-Received: by 2002:a9d:74d0:: with SMTP id a16mr8654576otl.237.1639100688280;
- Thu, 09 Dec 2021 17:44:48 -0800 (PST)
-MIME-Version: 1.0
-References: <20211208003727.3596577-1-f.fainelli@gmail.com> <20211208003727.3596577-6-f.fainelli@gmail.com>
-In-Reply-To: <20211208003727.3596577-6-f.fainelli@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 10 Dec 2021 02:44:36 +0100
-Message-ID: <CACRpkdYmCT9imMFY_0ZHebAYj40D3m48X+DZnjPUGgAqHEpZqg@mail.gmail.com>
-Subject: Re: [PATCH v3 05/15] dt-bindings: gpio: Convert Broadcom STB GPIO to YAML
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     devicetree@vger.kernel.org, Gregory Fong <gregory.0xf0@gmail.com>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        with ESMTP id S232216AbhLJHtl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 10 Dec 2021 02:49:41 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B8F2C0617A1
+        for <linux-pwm@vger.kernel.org>; Thu,  9 Dec 2021 23:46:06 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mvabM-0003H5-Aw; Fri, 10 Dec 2021 08:45:56 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mvabL-003jMu-Is; Fri, 10 Dec 2021 08:45:54 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mvabK-0002Np-GS; Fri, 10 Dec 2021 08:45:54 +0100
+Date:   Fri, 10 Dec 2021 08:45:36 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Colin Ian King <colin.i.king@gmail.com>
+Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
+        Lee Jones <lee.jones@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Markus Mayer <mmayer@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Cooper <alcooperx@gmail.com>,
-        Doug Berger <opendmb@gmail.com>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..." 
-        <linux-mmc@vger.kernel.org>,
-        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: atmel: remove redundant initialization of variable
+ timeout
+Message-ID: <20211210074536.lawpsch2i5bwyew7@pengutronix.de>
+References: <20211210002250.639251-1-colin.i.king@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="g5yndpvfpnnutbpm"
+Content-Disposition: inline
+In-Reply-To: <20211210002250.639251-1-colin.i.king@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Dec 8, 2021 at 1:37 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
 
-> Convert the Broadcom STB GPIO Device Tree binding to YAML to help with
-> validation.
->
-> Acked-by: Gregory Fong <gregory.0xf0@gmail.com>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+--g5yndpvfpnnutbpm
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Looks good to me.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On Fri, Dec 10, 2021 at 12:22:50AM +0000, Colin Ian King wrote:
+> The variable timeout is being initialized with a value that is never
+> read, it is being re-assigned the same value later on. Remove the
+> redundant initialization and keep the latter assignment because it's
+> closer to the use of the variable.
+>=20
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
+>  drivers/pwm/pwm-atmel.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
+> index 98b34ea9f38e..8e00a4286145 100644
+> --- a/drivers/pwm/pwm-atmel.c
+> +++ b/drivers/pwm/pwm-atmel.c
+> @@ -271,7 +271,7 @@ static void atmel_pwm_disable(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+>  			      bool disable_clk)
+>  {
+>  	struct atmel_pwm_chip *atmel_pwm =3D to_atmel_pwm_chip(chip);
+> -	unsigned long timeout =3D jiffies + 2 * HZ;
+> +	unsigned long timeout;
+> =20
+>  	atmel_pwm_wait_nonpending(atmel_pwm, pwm->hwpwm);
 
-Yours,
-Linus Walleij
+Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Did you spot this by using some static checker? If so, maybe attribute
+it in the commit log?
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--g5yndpvfpnnutbpm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmGzBZgACgkQwfwUeK3K
+7Ancbwf/Y9NIGfzWvo0izlxUFno6IppPuEmbAsX1KzxbrjwHYR4EPTMvTKZ9uO51
+839xuKr0RrXJ9U6mEns0tdc3AJ9YyFtTvz7eeRJKoTCtOAtJAxunOcAfzG1NY8ad
+6g2T+//11dbuaYWI+lZSNep2+ZYmN5tj2wkfo/ujMOWWHFEbjOw4OyvItvCzJNiw
+GTuuDrDewi+l/hzz9FBxROc7p4Tb6MZ51CvthADMR6z6tpeTyX0A7IOdtXWyMPTe
+1C2JGwEq4cE3u9Wg9ANNMgMdfzcPywdGwkz1cO9qf8r8sA/Sm53F4RLTx9C98E+l
+FbHjlJdKGtehZ9AJRaur6Kbd/gYtFA==
+=kDwy
+-----END PGP SIGNATURE-----
+
+--g5yndpvfpnnutbpm--
