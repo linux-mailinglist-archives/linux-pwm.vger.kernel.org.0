@@ -2,123 +2,95 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3953146F75D
-	for <lists+linux-pwm@lfdr.de>; Fri, 10 Dec 2021 00:25:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68E9546F7FA
+	for <lists+linux-pwm@lfdr.de>; Fri, 10 Dec 2021 01:22:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234357AbhLIX3F (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 9 Dec 2021 18:29:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48736 "EHLO
+        id S233061AbhLJA01 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 9 Dec 2021 19:26:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229760AbhLIX3E (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Dec 2021 18:29:04 -0500
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89849C061746;
-        Thu,  9 Dec 2021 15:25:30 -0800 (PST)
-Received: by mail-pf1-x42a.google.com with SMTP id k64so6813759pfd.11;
-        Thu, 09 Dec 2021 15:25:30 -0800 (PST)
+        with ESMTP id S231253AbhLJA01 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Dec 2021 19:26:27 -0500
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6CD3C061746;
+        Thu,  9 Dec 2021 16:22:52 -0800 (PST)
+Received: by mail-wr1-x430.google.com with SMTP id u1so12393417wru.13;
+        Thu, 09 Dec 2021 16:22:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yhEn+HsKVEOR2ZpkrPt9obsTlAm0mNe3CjhrGQZngwI=;
-        b=HNCXaHWJiaTGGztOMHPy+t3lPvmxmOLZT3uIKev1QNrU/rHBQK6Z6olmY8gekpBQyn
-         nM1hmrtkgpu3l6PQJ0ErWY6cPQMGA5AVFY4N2FIVs6zD7QxnUTAF+wzB8+qdCA2npE/4
-         Sh2CPMx6cjHIAE+x6nwrjVE4pdIfSFxbaPeQFkM7+tWdx5bJtbJaXBgfSD+ZiTmGBloX
-         ECruT7f5A1ixZ6eJh/E3/iESO/kANeYPYTSjz2n7rNxBqJrU0q5Yb5reVV3Osm8ovTqd
-         8a8FczZJ2PuzPGnjzoukH1pRiitGz4Ly75J/47dUXxUHI/xgKbBAFEHBU/uO3asB39pe
-         Judw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cdBf1B+Hmwd5PFbci4WK17kIT5lJDcYDTMQv5xnAW20=;
+        b=XGl4tq5LgiZbSqKAOn+ysQaWs9Ud00eLcjg8LQL63s1N9VJpwojM+ii3ZCj9jrbTFf
+         7/xZS/XN+38lmzQKcoxF37REFWCB/xJFeCn6QAoXXDpwNuayPb9vI4V7BSrh5DrGUBTx
+         FVQFtGeOftnqB0okfbnHchQW6tVLkc+nYKhYbqskQlXhyRfb1UhY6jF4/t3dvL/u7xy6
+         Hc/3foigwLLY5w05CkCJC6ZBzbKdQRA4mzVfUSk1rqAwdaC361dMs9PmP0tVz6DVfmn2
+         TCaWg2UPbFltGB4oKG8bNwHXUe2C2crA467AGOmk4gcDZ0GZOyfZiq4FquHW9tFp+Ias
+         ha0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=yhEn+HsKVEOR2ZpkrPt9obsTlAm0mNe3CjhrGQZngwI=;
-        b=Ckl74ZAVXtT1OKsc2lBcPGu/llNTZNRJdoezVlQ4FwF4+4YOVrMs4A4S9SQcKDEYEU
-         ZnhNuiIz/aG4YFjnjcAVqEkRK4FirT4Cl4qtWHzdBIhcyOretfSqcfsB4f3s1ZLIP+oI
-         vRWkP0Ypf/9d3z6T4pu9N0WbQRM3LTWaCky3pbaAQNBU60HgPSKWbcX3oE2WJQeQ6jNK
-         wiR/bOO4zHNWbCLXLYcZEw+RXPxeANScp/hLEq7nAQTFhWIqX8rV61fGxL3ZBj2gYz0J
-         Kz1ab/vLsqMAiCqzchyrkCoDANfMW2yEF1ZZsCngRfDZhRnm933NvLtruwPtL97I3Pdx
-         MXvQ==
-X-Gm-Message-State: AOAM532FUVXVAn1DwJ+rESUWEBXLYNQpiJYP++h4+k1gnVg8bD67ngSE
-        HjOV980yDQ6s4q9QQ7SqV1bl/sIfV40=
-X-Google-Smtp-Source: ABdhPJwyRsGr6WPGru0RwXtRfzS/xGpPNhtpJ1LzcXxk2gAonJHkTvUA09py2j6SL/Ur7wRnrcBw2Q==
-X-Received: by 2002:a65:58cc:: with SMTP id e12mr33921891pgu.59.1639092329633;
-        Thu, 09 Dec 2021 15:25:29 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id y18sm703960pfp.190.2021.12.09.15.25.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Dec 2021 15:25:29 -0800 (PST)
-Subject: Re: [PATCH v3 02/15] dt-bindings: reset: Convert Broadcom STB reset
- to YAML
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        devicetree@vger.kernel.org
-Cc:     Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        bh=cdBf1B+Hmwd5PFbci4WK17kIT5lJDcYDTMQv5xnAW20=;
+        b=yqsTpl2KH3izHFQZP6hPH2IGc5KkyuxVpVT3TszX+deEmckZyQGyb4yLCR5DllT9rA
+         qyCD++plc+p1hfIeO3no5T5j46PjIKGEV7I4eRJsjTkACMQBhdnH9p9fAKqd+rpPmYfT
+         NyfsoO4e/hgz3dQq/2xDuPvrVt9IZT0LTX8XALGOamJDn5ewskdGsmI5NGYyonVrFVAR
+         mScDLrmWLh3qxmFpRnBTiMJj/BSKCzcUQmBK3jWo+9adfL4DnGKFEkKiGZSzBX07uViM
+         dy28+3cMGaaMmafU/KFXFD5yq9HYMcAEO12A0UVMXGA1/j/Cm+ka6iZo9hcPHlFB9Pr6
+         1DPA==
+X-Gm-Message-State: AOAM530awORe89UsjSjj3wi//jeqIUN3HKbMbT6puc/TW7y8ckyMGcao
+        hnH06PEpJNLsQNWNOZaTP84=
+X-Google-Smtp-Source: ABdhPJzWzdcnndKgHrrbfchtD2CenirzjjQWpiV0qB3iXOCkjaAAb2cyvHup07E4RiiJpmpypLoPdw==
+X-Received: by 2002:adf:cd06:: with SMTP id w6mr10503491wrm.431.1639095771325;
+        Thu, 09 Dec 2021 16:22:51 -0800 (PST)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id g13sm1525012wrd.57.2021.12.09.16.22.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Dec 2021 16:22:51 -0800 (PST)
+From:   Colin Ian King <colin.i.king@gmail.com>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Markus Mayer <mmayer@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Cooper <alcooperx@gmail.com>,
-        Doug Berger <opendmb@gmail.com>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..." 
-        <linux-mmc@vger.kernel.org>,
-        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
-References: <20211208003727.3596577-1-f.fainelli@gmail.com>
- <20211208003727.3596577-3-f.fainelli@gmail.com>
- <ab45adc2e305c79286f6b63fa42cfd78983cb757.camel@pengutronix.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <d68a6115-b076-1eb8-77c1-e0728e8e82dd@gmail.com>
-Date:   Thu, 9 Dec 2021 15:25:24 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pwm: atmel: remove redundant initialization of variable timeout
+Date:   Fri, 10 Dec 2021 00:22:50 +0000
+Message-Id: <20211210002250.639251-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-In-Reply-To: <ab45adc2e305c79286f6b63fa42cfd78983cb757.camel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 12/9/21 1:41 AM, Philipp Zabel wrote:
-> On Tue, 2021-12-07 at 16:37 -0800, Florian Fainelli wrote:
->> Convert the Broadcom STB SW_INIT style reset controller binding to YAML.
->>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> 
-> Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+The variable timeout is being initialized with a value that is never
+read, it is being re-assigned the same value later on. Remove the
+redundant initialization and keep the latter assignment because it's
+closer to the use of the variable.
 
-Thanks, sorry for not carrying your Ack that you provided in v2 already.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/pwm/pwm-atmel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
+index 98b34ea9f38e..8e00a4286145 100644
+--- a/drivers/pwm/pwm-atmel.c
++++ b/drivers/pwm/pwm-atmel.c
+@@ -271,7 +271,7 @@ static void atmel_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			      bool disable_clk)
+ {
+ 	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
+-	unsigned long timeout = jiffies + 2 * HZ;
++	unsigned long timeout;
+ 
+ 	atmel_pwm_wait_nonpending(atmel_pwm, pwm->hwpwm);
+ 
 -- 
-Florian
+2.34.1
+
