@@ -2,209 +2,106 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EC0A4714C1
-	for <lists+linux-pwm@lfdr.de>; Sat, 11 Dec 2021 17:33:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8415471787
+	for <lists+linux-pwm@lfdr.de>; Sun, 12 Dec 2021 02:25:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231444AbhLKQd0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 11 Dec 2021 11:33:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39720 "EHLO
+        id S232378AbhLLBZ3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 11 Dec 2021 20:25:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231395AbhLKQd0 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 11 Dec 2021 11:33:26 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A248C061714
-        for <linux-pwm@vger.kernel.org>; Sat, 11 Dec 2021 08:33:26 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mw5JK-00055E-J5; Sat, 11 Dec 2021 17:33:22 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mw5JG-003zLa-LX; Sat, 11 Dec 2021 17:33:17 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mw5JF-0007nU-Kr; Sat, 11 Dec 2021 17:33:17 +0100
-Date:   Sat, 11 Dec 2021 17:33:14 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Nikita Travkin <nikita@trvn.ru>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        sboyd@kernel.org, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        thierry.reding@gmail.com, ~postmarketos/upstreaming@lists.sr.ht,
-        kernel@pengutronix.de, pza@pengutronix.de, lee.jones@linaro.org,
-        masneyb@onstation.org
-Subject: Re: [PATCH 2/2] pwm: Add clock based PWM output driver
-Message-ID: <20211211163314.azn562syhybmjk6q@pengutronix.de>
-References: <20211209162020.105255-1-nikita@trvn.ru>
- <20211209162020.105255-3-nikita@trvn.ru>
- <20211209220521.ho54edpxedzffdl4@pengutronix.de>
- <2d88f192dfbf1fdc1c5bbb23cf85857e@trvn.ru>
+        with ESMTP id S229622AbhLLBZ2 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 11 Dec 2021 20:25:28 -0500
+Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A70CC061714
+        for <linux-pwm@vger.kernel.org>; Sat, 11 Dec 2021 17:25:28 -0800 (PST)
+Received: by mail-ua1-x934.google.com with SMTP id y5so23252318ual.7
+        for <linux-pwm@vger.kernel.org>; Sat, 11 Dec 2021 17:25:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=W3a+UOJsNc9ZqMkKYG+PXJQrvd2n9lHBewMUav5hoUo=;
+        b=qXE1eOiy1+fTZ4qdWlCw8Mh15pl1nD5A7sg7U5uBhmMVwJbT3vgpbDBt9r5OXvIyjt
+         eOh1hZCKu5dXFKA3G8vmkDdQezxmOHFpSHOlX/ZguhRZcNv1vO1zzzoBMlRiGvPWaH7f
+         NrUWpx4rI0a/s6slbMdvJGNFc08YX+d3kgA7bUIRCoM5UGKDLM/sn8NlX8QFObdnArCI
+         YOzDgYZXT6tSuikq7pxqW1HK6jsSjhOa7f0dWWxrHROQ7yhsPML33i41u3NaH3ABhJB/
+         x1TeUyPLvH4Nry9CcPMh72LM6kXIrvFa0bSp1vKqq7oRun0X7EuKj4HUtlzw8iVbdgd3
+         zLIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to:content-transfer-encoding;
+        bh=W3a+UOJsNc9ZqMkKYG+PXJQrvd2n9lHBewMUav5hoUo=;
+        b=s8v1e7PCVkUqXpLu6fsd2eFmn8kx47ebcpLilBKb+wEE0kUO3SVVI7hpk7uECP3lPC
+         oUlMDiqGa4F8Pj5in2DyztOliQv1ZzgatRd8qcS80CvqzUjag9Tpz3O5v+uNmA5iLolh
+         +kxeq9Wj5MjGthideYDopwHlhM9DVMiT0jYs/cTnoLkoDoKsoZO7MdXSnpVN8o6raMd+
+         sfSd1MLJS0OuWoeellt8w4EDOiuCuw01zJMdvcRaW4+OSRrq3qVsFDn4gdQylb0xcxSH
+         k0g9IVh60Ca1U0lGS1ejd4z4HvBvrW6yvs5fuAF3KdgxWFeun92+yeM4bn7384r6RHPY
+         PjMQ==
+X-Gm-Message-State: AOAM531HYFPv2Pkt5E/11FsgV1O2MXPyoxf7WAVWOIQQn+MKe/EbxBIL
+        fkDqaSlx+uA9FtkEmosrE+nq4MGFgD81o6u64bg=
+X-Google-Smtp-Source: ABdhPJwKPddQyyKhWn9zElPKGQgwlJVyJPP8r6DDIACNMH48W70Vpw8SHkun9msymqG8oW8DTeNI8HzcT1S63umc5nw=
+X-Received: by 2002:a67:e18e:: with SMTP id e14mr21013796vsl.49.1639272327471;
+ Sat, 11 Dec 2021 17:25:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wc64e6udmdaf433d"
-Content-Disposition: inline
-In-Reply-To: <2d88f192dfbf1fdc1c5bbb23cf85857e@trvn.ru>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Sender: mcdonnalouise@gmail.com
+Received: by 2002:a05:612c:197:b0:23d:f525:588 with HTTP; Sat, 11 Dec 2021
+ 17:25:27 -0800 (PST)
+From:   Jackie Fowler <jackiefowler597@gmail.com>
+Date:   Sun, 12 Dec 2021 01:25:27 +0000
+X-Google-Sender-Auth: xcLgkLgyadRK327nJNFCjoCbzDw
+Message-ID: <CAPVGnmVuwzayZcb6num-u2zvP_RYdxGehOe-LKEtB6FXJGgr4Q@mail.gmail.com>
+Subject: Hello
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Gooday dear,
 
---wc64e6udmdaf433d
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  I sent this mail praying it will get to you in a good condition of
+health, since I myself are in a very critical health condition in
+which I sleep every night without knowing if I may be alive to see the
+next day. I bring peace and love to you. It is by the grace of God, I
+had no choice than to do what is lawful and right in the sight of God
+for eternal life and in the sight of man, for witness of God=E2=80=99s merc=
+y
+and glory upon my life. I am Ms.Jackie Fowler,a widow and citizen of
+Canada.I am suffering from a long time brain tumor, It has defiled all
+forms of medical treatment, and right now I have about a few months to
+leave, according to medical experts. The situation has gotten
+complicated recently with my inability to hear proper, am
+communicating with you with the help of the chief nurse herein the
+hospital, from all indication my conditions is really deteriorating
+and it is quite obvious that, according to my doctors they have
+advised me that I may not live too long, Because this illness has
+gotten to a very bad stage. I plead that you will not expose or betray
+this trust and confidence that I am about to repose on you for the
+mutual benefit of the orphans and the less privilege. I have some
+funds I inherited from my late husband, the sum of ($ 12,500,000.00
+Dollars).Having known my condition, I decided to donate this fund to
+you believing that you will utilize it the way i am going to instruct
+herein.
 
-Hello,
-
-On Fri, Dec 10, 2021 at 06:13:34PM +0500, Nikita Travkin wrote:
-> Uwe Kleine-K=C3=B6nig =D0=BF=D0=B8=D1=81=D0=B0=D0=BB(=D0=B0) 10.12.2021 0=
-3:05:
-> > Hello,
-> >=20
-> > On Thu, Dec 09, 2021 at 09:20:20PM +0500, Nikita Travkin wrote:
-> >> +#define to_pwm_clk_chip(_chip) container_of(_chip, struct pwm_clk_chi=
-p, chip)
-> >> +
-> >> +static int pwm_clk_apply(struct pwm_chip *pwm_chip, struct pwm_device=
- *pwm,
-> >> +			 const struct pwm_state *state)
-> >> +{
-> >> +	struct pwm_clk_chip *chip =3D to_pwm_clk_chip(pwm_chip);
-> >> +	int ret;
-> >> +	u32 rate;
-> >> +
-> >> +	if (!state->enabled && !pwm->state.enabled)
-> >> +		return 0;
-> >> +
-> >> +	if (state->enabled && !pwm->state.enabled) {
-> >> +		ret =3D clk_enable(chip->clk);
-> >> +		if (ret)
-> >> +			return ret;
-> >> +	}
-> >> +
-> >> +	if (!state->enabled && pwm->state.enabled) {
-> >> +		clk_disable(chip->clk);
-> >> +		return 0;
-> >> +	}
-> >=20
-> > This can be written a bit more compact as:
-> >=20
-> > 	if (!state->enabled) {
-> > 		if (pwm->state.enabled)
-> > 			clk_disable(chip->clk);
-> > 		return 0;
-> > 	} else if (!pwm->state.enabled) {
-> > 		ret =3D clk_enable(chip->clk);
-> > 		if (ret)
-> > 			return ret;
-> > 	}
-> >=20
-> > personally I find my version also easier to read, but that might be
-> > subjective.
->=20
-> Having three discrete checks for three possible outcomes is a bit
-> easier for me to understand, but I have no preference and can change
-> it to your version.=20
->=20
-> > Missing handling for polarity. Either refuse inverted polarity, or set
-> > the duty_cycle to state->period - state->duty_cycle in the inverted
-> > case.
->=20
-> Will add the latter.
->=20
-> >=20
-> >> +	rate =3D div64_u64(NSEC_PER_SEC, state->period);
-> >=20
-> > Please round up here, as .apply() should never implement a period bigger
-> > than requested. This also automatically improves the behaviour if
-> > state->period > NSEC_PER_SEC.
->=20
-> Will do. I'm not sure if the underlying clock drivers guarantee the
-> chosen rate to be rounded in line with that however, e.g. qcom SoC
-
-This is a problem that most drivers have. Very few use clk_set_rate, but
-also clk_get_rate is subject to (much smaller) rounding issues.
-There doesn't seem to be an agreement that this is important enough to
-address.
-
-> clocks that I target use lookup tables to find the closest rate
-> with known M/N config values and set that. (So unless one makes sure
-> the table has all the required rates, period is not guaranteed.)
->=20
-> This is not an issue for my use cases though: Don't think any
-> of the led or haptic motor controllers I've seen in my devices
-> need a perfect rate.
->=20
-> I think this is another line into the "Limitations" description
-> that was suggested later.
->=20
-> >=20
-> >> +	ret =3D clk_set_rate(chip->clk, rate);
-> >> +	if (ret)
-> >> +		return ret;
-> >> +
-> >> +	return clk_set_duty_cycle(chip->clk, state->duty_cycle, state->perio=
-d);
-> >=20
-> > Is it possible to enable only after the duty cycle is set? This way we
-> > could prevent in some cases that a wrong setting makes it to the output.
-> >=20
->=20
-> Will move clk_enable() as the last action. After that it makes more
-> sense to "squash" two leftover checks for disabled state so will do
-> that as well.
->=20
-> ... Except moving it caused a nice big WARNING from my clock controller...
->=20
-> [   76.353557] gcc_camss_gp1_clk status stuck at 'off'
-> [   76.353593] WARNING: CPU: 2 PID: 97 at drivers/clk/qcom/clk-branch.c:9=
-1 clk_branch_wait+0x144/0x160
-> (...)
-> [   76.571531] Call trace:
-> [   76.578644]  clk_branch_wait+0x144/0x160
-> [   76.580903]  clk_branch2_enable+0x34/0x44
-> [   76.585069]  clk_core_enable+0x6c/0xc0
-> [   76.588974]  clk_enable+0x30/0x50
-> [   76.592620]  pwm_clk_apply+0xb0/0xe4
-> [   76.596007]  pwm_apply_state+0x6c/0x1ec
-> [   76.599651]  sgm3140_brightness_set+0xb4/0x190 [leds_sgm3140]
->=20
-> (Which doesn't stop it from working afaict, but very much undesirable
-> for me.)
-> Unsure if this is something common or just a quirk of this specific
-> driver but I'd rather take a little glitch on the output than
-> make clock driver unhappy knowing how picky this hardware sometimes is...
-
-I think clk_set_rate for a disabled clk isn't well defined.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---wc64e6udmdaf433d
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmG00sYACgkQwfwUeK3K
-7Alwagf/TNj+NPSBwOGmiIUsxBSdyPzfOA2mg/3/P/jOq+i2zG1Kes9jPVbGWXVL
-W8fIh8M2kvkSGy6ubbmHb6jE2Kj/5ya78BNAMALrmOWP08SFDy1ZwsSOQgCPfNpj
-reFmScHzSG90EKRIeurKzL0xCifQt+Ht9sUtyyJq9c6m7LlC8OTq9Yu6HZS4mU2Z
-E9AuEQSvxXMovsrN9NDc+L3AnkE8S1vbT3Mw9j6iqnaQmLkie2CK4JOlOv9GfUIG
-/QOLKDztqTX7MyY4PknBEKG4ARIZZIDko20GcRP2IRQiVnCk4+HW/sZmnl4stzHK
-OiCRMPbudUyTSx7tDscINAMiYFOGqQ==
-=b9KV
------END PGP SIGNATURE-----
-
---wc64e6udmdaf433d--
+ I need you to assist me and reclaim this money and use it for Charity
+works, for orphanages and gives justice and help to the poor, needy
+and widows says The Lord." Jeremiah 22:15-16.=E2=80=9C and also build schoo=
+ls
+for less privilege that will be named after my late husband if
+possible and to promote the word of God and the effort that the house
+of God is maintained. I do not want a situation where this money will
+be used in an ungodly manner. That's why I'm taking this decision. I'm
+not afraid of death, so I know where I'm going. I accept this decision
+because I do not have any child who will inherit this money after I
+die. Please I want your sincerely and urgent answer to know if you
+will be able to execute this project for the glory of God, and I will
+give you more information on how the fund will be transferred to your
+bank account. May the grace, peace, love and the truth in the Word of
+God be with you and all those that you love and care for.
+I'm waiting for your immediate reply.
+Best Regard's.
+Ms.Jackie Fowler.
+Writting From the hospital.
+May God Bless you,
