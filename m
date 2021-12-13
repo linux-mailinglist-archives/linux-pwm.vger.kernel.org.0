@@ -2,112 +2,83 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 508C6472E93
-	for <lists+linux-pwm@lfdr.de>; Mon, 13 Dec 2021 15:10:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2822B473000
+	for <lists+linux-pwm@lfdr.de>; Mon, 13 Dec 2021 16:03:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238738AbhLMOKs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 13 Dec 2021 09:10:48 -0500
-Received: from mga14.intel.com ([192.55.52.115]:3399 "EHLO mga14.intel.com"
+        id S239880AbhLMPDt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 13 Dec 2021 10:03:49 -0500
+Received: from box.trvn.ru ([194.87.146.52]:47229 "EHLO box.trvn.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238725AbhLMOKs (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Mon, 13 Dec 2021 09:10:48 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10196"; a="238961836"
-X-IronPort-AV: E=Sophos;i="5.88,202,1635231600"; 
-   d="scan'208";a="238961836"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 06:05:41 -0800
-X-IronPort-AV: E=Sophos;i="5.88,202,1635231600"; 
-   d="scan'208";a="609028967"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 06:05:31 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1mwlwO-005dxK-9w;
-        Mon, 13 Dec 2021 16:04:32 +0200
-Date:   Mon, 13 Dec 2021 16:04:32 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Tony Lindgren <tony@atomide.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
-        Alexandru Ardelean <aardelean@deviqon.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        patches@opensource.cirrus.com,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-power <linux-power@fi.rohmeurope.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        linux-unisoc@lists.infradead.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Keerthy <j-keerthy@ti.com>, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v1 1/3] gpio: Get rid of duplicate of_node assignment in
- the drivers
-Message-ID: <YbdS8E6lHGzWniba@smile.fi.intel.com>
-References: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=Meve=W3yvPmakFap-s6cOY1GUq7c1VjJE2dEH4f0+shag@mail.gmail.com>
+        id S231924AbhLMPDt (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 13 Dec 2021 10:03:49 -0500
+Received: from authenticated-user (box.trvn.ru [194.87.146.52])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by box.trvn.ru (Postfix) with ESMTPSA id 7599341913;
+        Mon, 13 Dec 2021 20:03:45 +0500 (+05)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
+        t=1639407826; bh=xaECMniEgeLQimWXB5Wx+TWe2YFpdAVS8hZchSxL7Q8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JT9rv1BpAwgKcN+I8uQSrKLev9bLLp3byJWVpjEfoz6IhvJRiK1BuQDW5+N1IME5W
+         YxzsoSMPMgjwEnOBnWfZ4uMTfiEXzWMVBk5vfA3hDYtCgENt8rXrvIBNEx2TggljfE
+         UX/3X9n2+lSUlY60zAbrZ7WDD/TCmQBwyfZ+kRe5gVri4S9zbMTAu1HCt++ddQIRXe
+         5wIBYcODMu31qKLiXQKUn+sbfDFiW/JpXmdmlV2T0RNukOcPAkcvoONrD5DdAI7v3g
+         8pS8gZ4mpZKcEcIuoQXersnbUM4lSZpFVI0KF03jv+GypKS1mLKHQk3HxzaieHXrc9
+         1BXWAUUbRKrYw==
+From:   Nikita Travkin <nikita@trvn.ru>
+To:     thierry.reding@gmail.com, lee.jones@linaro.org
+Cc:     u.kleine-koenig@pengutronix.de, robh+dt@kernel.org,
+        sboyd@kernel.org, linus.walleij@linaro.org, masneyb@onstation.org,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Nikita Travkin <nikita@trvn.ru>
+Subject: [PATCH v2 0/2] Clock based PWM output driver
+Date:   Mon, 13 Dec 2021 20:03:33 +0500
+Message-Id: <20211213150335.51888-1-nikita@trvn.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Meve=W3yvPmakFap-s6cOY1GUq7c1VjJE2dEH4f0+shag@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Dec 13, 2021 at 02:50:57PM +0100, Bartosz Golaszewski wrote:
-> On Thu, Dec 2, 2021 at 10:17 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > GPIO library does copy the of_node from the parent device of
-> > the GPIO chip, there is no need to repeat this in the individual
-> > drivers. Remove these assignment all at once.
-> >
-> > For the details one may look into the of_gpio_dev_init() implementation.
+This series introduces an "adapter" driver that allows PWM consumers
+to control clock outputs with duty-cycle control.
 
-> If there are no objections, I am willing to apply this to give it some
-> time in next and get the work on dropping the OF APIs from gpiolib
-> going.
+Some platforms (e.g. some Qualcomm chipsets) have "General Purpose"
+clocks that can be muxed to GPIO outputs and used as PWM outputs. 
+Those outputs may be connected to various peripherals such as
+leds in display backlight or haptic feedback motor driver. 
 
-There was a v2 sent out.
+To avoid re-implementing every single PWM consumer driver with clk
+support (like in [1]) and don't put the burden of providing the PWM
+sources on the clock drivers (as was proposed in [2]), clk based
+pwm controller driver is introduced.
 
-  Message-Id: <20211206131852.74746-1-andriy.shevchenko@linux.intel.com>
+There is an existing driver that provides the opposite function
+in drivers/clk/clk-pwm.c with a compatible "pwm-clock" so the new
+driver uses the opposite naming scheme: drivers/pwm/pwm-clk.c
+and compatible "clk-pwm". 
+
+Changes in v2:
+ - Fix filename in the DT schema.
+ - Address Uwe's review comments.
+
+[1] - https://lore.kernel.org/lkml/20191205002503.13088-1-masneyb@onstation.org/
+[2] - https://lore.kernel.org/lkml/CACRpkdZxu1LfK11OHEx5L_4kyjMZ7qERpvDzFj5u3Pk2kD1qRA@mail.gmail.com/
+
+Nikita Travkin (2):
+  dt-bindings: pwm: Document clk based PWM controller
+  pwm: Add clock based PWM output driver
+
+ .../devicetree/bindings/pwm/clk-pwm.yaml      |  45 ++++++
+ drivers/pwm/Kconfig                           |  10 ++
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-clk.c                         | 143 ++++++++++++++++++
+ 4 files changed, 199 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/clk-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-clk.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.30.2
 
