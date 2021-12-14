@@ -2,96 +2,115 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8393B474AA6
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Dec 2021 19:19:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C45D9474AE9
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Dec 2021 19:29:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236971AbhLNSTA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 14 Dec 2021 13:19:00 -0500
-Received: from mail-oi1-f169.google.com ([209.85.167.169]:33479 "EHLO
-        mail-oi1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231978AbhLNSS6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 14 Dec 2021 13:18:58 -0500
-Received: by mail-oi1-f169.google.com with SMTP id q25so28420671oiw.0;
-        Tue, 14 Dec 2021 10:18:57 -0800 (PST)
+        id S237041AbhLNS3A (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 14 Dec 2021 13:29:00 -0500
+Received: from mail-ot1-f52.google.com ([209.85.210.52]:34420 "EHLO
+        mail-ot1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230203AbhLNS26 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 14 Dec 2021 13:28:58 -0500
+Received: by mail-ot1-f52.google.com with SMTP id x19-20020a9d7053000000b0055c8b39420bso21893205otj.1;
+        Tue, 14 Dec 2021 10:28:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Mvdsg6llGN/7VFr3EJ9FR5h23YkPCcuvXHiPhrb5GWA=;
-        b=73I8W0ra+mZVDBkuYemOFSNInndzHiNBNTa67aBm8o0JJIfS9dwf98aYbbNFw/mCqN
-         RDFaKS+YRjl3MIPy8DUXP7czZUeE2RzkLouh4tplzrQbA9+le3RPgv1qHYCjh4k6ADSV
-         P0sahZpMq78NM5C9vKa97ABBxrnHEs8QiGmSAcH33ANvBLn0QLFh9ht+t7CpNzmo3C9L
-         CjHtCThXaqp9IoPneZtcmGwbW/Wj8ruiTjxx6EfPLdcrK6QLJbDIGNrc2TbQ5UserdnM
-         8QVr8NdUfmwpDG8kXeGkTpF+pLK49ZRD9wBp22a/xPyEcYTaGIe9r0sBtGyYerDVJ91V
-         xSGA==
-X-Gm-Message-State: AOAM533vaiKjRPCTjttmoqF0RPaOBBi+C/KX9Subc9GxVlhfpGl1B4OU
-        PLzL7pmA6U7zCKbPg77zHg==
-X-Google-Smtp-Source: ABdhPJx5WQOC8qPu9t/pvopPhIpOxwBorGnVfEAlvoMoPyBsBHXPZltR+v6aHvFYxJ40AoIloFOlZg==
-X-Received: by 2002:a05:6808:3d2:: with SMTP id o18mr34588823oie.14.1639505937359;
-        Tue, 14 Dec 2021 10:18:57 -0800 (PST)
+        bh=ec7FIqDV1eh0nWs0ieSF7kRvELIz9yZoti3SZMyr6Z4=;
+        b=Yb8VtNnlDrON1A+So8NwWB0vKHt5rFGe4uGT1nvRq6ewd7x3LZT3aDKMP2OjkOLZxS
+         /xeIMxyHGVT87njQyPDYNHieQl0xnNqbuvFGG28C5Uv14NgjAYXjMkqFvIzcwF5DGo/j
+         HFfFQePw9vOkkKBdDE3aGf/9NK6ax7wfckuMY5xB8C9q+bkaaBLi8Fi0tn54P6TufdP6
+         OGOMfPIVHY8kJEY+wGM5ijXL1VA/dmvcyIVwMn/s7z4mAX2kCjZMhgndVWiqjIgSQw/B
+         uaF4snfVSLwG38V4d93f3yMDjgG8BZSkda3vc5jEouAKEMqS+vEc18NKe6HyNpK0sOXf
+         G9xg==
+X-Gm-Message-State: AOAM533ACC+4r+V3Sf0emdFyEQ3udBmszBdCnn9PrznwU7qQ1uZChgth
+        sCxnR+SA/J8QM6yoHhnkPA==
+X-Google-Smtp-Source: ABdhPJzUem8yjSvP+Lgu17uRUc1SGESD4X7Fx0l1fGs6fceVyZYQPmbVY5NFkIQsvgkwjlyGy+WB2g==
+X-Received: by 2002:a05:6830:4428:: with SMTP id q40mr5526277otv.171.1639506537308;
+        Tue, 14 Dec 2021 10:28:57 -0800 (PST)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id p6sm118558oof.0.2021.12.14.10.18.55
+        by smtp.gmail.com with ESMTPSA id 16sm112932oix.46.2021.12.14.10.28.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Dec 2021 10:18:56 -0800 (PST)
-Received: (nullmailer pid 3669534 invoked by uid 1000);
-        Tue, 14 Dec 2021 18:18:55 -0000
-Date:   Tue, 14 Dec 2021 12:18:55 -0600
+        Tue, 14 Dec 2021 10:28:56 -0800 (PST)
+Received: (nullmailer pid 3683781 invoked by uid 1000);
+        Tue, 14 Dec 2021 18:28:54 -0000
+Date:   Tue, 14 Dec 2021 12:28:54 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Doug Berger <opendmb@gmail.com>,
-        linux-rtc@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Scott Branden <sbranden@broadcom.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
+Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org,
+        linux-mmc@vger.kernel.org, Markus Mayer <mmayer@broadcom.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Ray Jui <rjui@broadcom.com>, Amit Kucheria <amitk@kernel.org>,
         bcm-kernel-feedback-list@broadcom.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-crypto@vger.kernel.org, Amit Kucheria <amitk@kernel.org>,
-        Markus Mayer <mmayer@broadcom.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Ray Jui <rjui@broadcom.com>, Marc Zyngier <maz@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mmc@vger.kernel.org,
+        linux-pm@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-ide@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Scott Branden <sbranden@broadcom.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Al Cooper <alcooperx@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
         Gregory Fong <gregory.0xf0@gmail.com>,
-        linux-kernel@vger.kernel.org, Al Cooper <alcooperx@gmail.com>,
-        linux-ide@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Ulf Hansson <ulf.hansson@linaro.org>, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 11/15] dt-bindings: thermal: Convert Broadcom TMON to
- YAML
-Message-ID: <YbjgD+EJgy5Qmdmc@robh.at.kernel.org>
+        linux-rtc@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 13/15] dt-bindings: ata: Convert Broadcom SATA to YAML
+Message-ID: <YbjiZkK4HpWq90oG@robh.at.kernel.org>
 References: <20211208003727.3596577-1-f.fainelli@gmail.com>
- <20211208003727.3596577-12-f.fainelli@gmail.com>
+ <20211208003727.3596577-14-f.fainelli@gmail.com>
+ <1638971068.770579.3857735.nullmailer@robh.at.kernel.org>
+ <dd170216-fedd-45a1-a3a5-efc99b9f6197@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211208003727.3596577-12-f.fainelli@gmail.com>
+In-Reply-To: <dd170216-fedd-45a1-a3a5-efc99b9f6197@gmail.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 07 Dec 2021 16:37:22 -0800, Florian Fainelli wrote:
-> Convert the Broadcom AVS TMON Device Tree binding to YAML to help with
-> validation.
+On Wed, Dec 08, 2021 at 09:33:38AM -0800, Florian Fainelli wrote:
+> On 12/8/21 5:44 AM, Rob Herring wrote:
+> > On Tue, 07 Dec 2021 16:37:24 -0800, Florian Fainelli wrote:
+> >> Convert the Broadcom SATA3 AHCI controller Device Tree binding to YAML
+> >> to help with validation.
+> >>
+> >> Acked-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+> >> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> >> ---
+> >>  .../bindings/ata/brcm,sata-brcm.txt           | 45 ---------
+> >>  .../bindings/ata/brcm,sata-brcm.yaml          | 98 +++++++++++++++++++
+> >>  2 files changed, 98 insertions(+), 45 deletions(-)
+> >>  delete mode 100644 Documentation/devicetree/bindings/ata/brcm,sata-brcm.txt
+> >>  create mode 100644 Documentation/devicetree/bindings/ata/brcm,sata-brcm.yaml
+> >>
+> > 
+> > Running 'make dtbs_check' with the schema in this patch gives the
+> > following warnings. Consider if they are expected or the schema is
+> > incorrect. These may not be new warnings.
+> > 
+> > Note that it is not yet a requirement to have 0 warnings for dtbs_check.
+> > This will change in the future.
+> > 
+> > Full log is available here: https://patchwork.ozlabs.org/patch/1565011
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  .../bindings/thermal/brcm,avs-tmon.txt        | 23 --------
->  .../bindings/thermal/brcm,avs-tmon.yaml       | 57 +++++++++++++++++++
->  MAINTAINERS                                   |  2 +-
->  3 files changed, 58 insertions(+), 24 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
->  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-tmon.yaml
-> 
+> Likewise, those indicate that the preceding patch which renames the sata
+> controller unit name has not been applied.
 
-Applied, thanks!
+I looked at that, but it was the unevaluated properties I was worried 
+about. However, the example has the same thing, but no errors. I think 
+running with DT_SCHEMA_FILES means sata-common.yaml is not included. 
+I'll have to look into that.
+
+Rob
+
